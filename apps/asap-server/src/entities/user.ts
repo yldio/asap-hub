@@ -11,13 +11,12 @@ import {
   Role,
   userRole,
 } from '@asap-hub/model';
-import { GraphqlUser, RestUser } from '@asap-hub/squidex';
+import { RestUser } from '@asap-hub/squidex';
 
 import { parseDate, createURL } from '../utils/squidex';
 import { FetchUserQuery, UsersContentFragment } from '../gql/graphql';
 import { isTeamRole } from './team';
 import logger from '../utils/logger';
-import { usersContentQueryFragment } from '../queries/users.queries';
 
 export type CMSOrcidWork = OrcidWork;
 
@@ -95,28 +94,28 @@ export const parseGraphQLUserTeamConnections = (
       },
     ];
   }, []);
-type BaseProperties = 'id' | 'created' | 'lastModified';
-type BaseFlatDataProperties =
+type GraphQLUserRequiredFlatDataProperties =
   | 'email'
   | 'firstName'
   | 'institution'
   | 'jobTitle'
   | 'lastModifiedDate'
   | 'lastName';
-type FlatData = UsersContentFragment['flatData'];
-type RequiredFlatData = Pick<FlatData, BaseFlatDataProperties>;
-type OptionalFlatData = Omit<FlatData, BaseFlatDataProperties>;
-type UserGQL = Pick<UsersContentFragment, BaseProperties> & {
-  flatData: RequiredFlatData & Partial<OptionalFlatData>;
+type GraphQLUserFlatData = UsersContentFragment['flatData'];
+type GraphQLUserRequiredFlatData = Pick<
+  GraphQLUserFlatData,
+  GraphQLUserRequiredFlatDataProperties
+>;
+type GraphQLUserOptionalFlatData = Partial<
+  Omit<GraphQLUserFlatData, GraphQLUserRequiredFlatDataProperties>
+>;
+type GraphQLUser = Omit<UsersContentFragment, 'flatData'> & {
+  flatData: GraphQLUserRequiredFlatData & GraphQLUserOptionalFlatData;
 };
 
-export const parseGraphQLUser = (
-  // item: NonNullable<FetchUserQuery['findUsersContent']>,
-  item: UserGQL,
-): UserResponse => {
+export const parseGraphQLUser = (item: GraphQLUser): UserResponse => {
   const flatTeams = item.flatData.teams || [];
-  const flatAvatar: NonNullable<GraphqlUser['flatData']>['avatar'] =
-    item.flatData.avatar || [];
+  const flatAvatar = item.flatData.avatar || [];
   const flatQuestions = item.flatData.questions || [];
   const flatExpertiseAndResourceTags =
     item.flatData.expertiseAndResourceTags || [];

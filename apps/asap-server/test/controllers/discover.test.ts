@@ -7,6 +7,8 @@ import {
   squidexDiscoverResponse,
   discoverResponse,
 } from '../fixtures/discover.fixtures';
+import { FETCH_DISCOVER } from '../../src/queries/discover.queries';
+import { print } from 'graphql';
 
 describe('Discover controller', () => {
   const discover = new Discover();
@@ -22,7 +24,9 @@ describe('Discover controller', () => {
   describe('Fetch method', () => {
     test('Should return an empty result', async () => {
       nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_DISCOVER),
+        })
         .reply(200, {
           data: {
             queryDiscoverContents: [
@@ -44,7 +48,9 @@ describe('Discover controller', () => {
 
     test('Should return an empty result when no resource doesnt exist', async () => {
       nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_DISCOVER),
+        })
         .reply(200, {
           data: {
             queryDiscoverContents: [],
@@ -64,7 +70,9 @@ describe('Discover controller', () => {
 
     test('Should return the discover information', async () => {
       nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_DISCOVER),
+        })
         .reply(200, {
           data: squidexDiscoverResponse,
         });

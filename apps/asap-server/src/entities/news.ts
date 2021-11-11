@@ -22,16 +22,16 @@ export const parseGraphQLNews = (item: NewsFragment): NewsResponse => {
   return {
     id: item.id,
     created: createdDate,
-    title: item.flatData?.title || '',
-    shortText: item.flatData?.shortText || '',
-    text: item.flatData?.text || undefined,
-    link: item.flatData?.link || undefined,
-    linkText: item.flatData?.linkText || undefined,
+    title: item.flatData.title || '',
+    shortText: item.flatData.shortText || '',
+    text: item.flatData.text || undefined,
+    link: item.flatData.link || undefined,
+    linkText: item.flatData.linkText || undefined,
     type:
       item.flatData.type && isNewsType(item.flatData.type)
         ? item.flatData.type
         : 'News',
-    thumbnail: item.flatData?.thumbnail?.length
+    thumbnail: item.flatData.thumbnail?.length
       ? createURL(item.flatData.thumbnail.map((t) => t.id))[0]
       : undefined,
   };

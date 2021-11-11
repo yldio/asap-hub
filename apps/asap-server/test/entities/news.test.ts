@@ -1,4 +1,4 @@
-import { config, GraphqlNews } from '@asap-hub/squidex';
+import { config } from '@asap-hub/squidex';
 import { parseNews, parseGraphQLNews } from '../../src/entities';
 
 describe('parse news entities', () => {
@@ -38,7 +38,7 @@ describe('parse news entities', () => {
 describe('parse GraphQL news entities', () => {
   test('parse handles thumbnails', async () => {
     const date = new Date().toISOString();
-    const news: GraphqlNews = {
+    const news = {
       id: 'uuid',
       created: date,
       lastModified: date,
@@ -49,6 +49,8 @@ describe('parse GraphQL news entities', () => {
         shortText: 'shortText',
         thumbnail: [{ id: 'uuid' }],
         text: 'text',
+        link: 'http://a.link',
+        linkText: 'Link text',
       },
     };
 
@@ -61,5 +63,28 @@ describe('parse GraphQL news entities', () => {
       text: 'text',
       thumbnail: `${config.baseUrl}/api/assets/${config.appName}/uuid`,
     });
+  });
+  test.each`
+    description    | type         | expected
+    ${'invalid'}   | ${'invalid'} | ${'News'}
+    ${'undefined'} | ${undefined} | ${'News'}
+  `('parse handles $description type', async ({ type, expected }) => {
+    const date = new Date().toISOString();
+    const news = {
+      id: 'uuid',
+      created: date,
+      lastModified: date,
+      data: null,
+      flatData: {
+        type,
+        title: 'Title',
+        shortText: 'shortText',
+        thumbnail: [{ id: 'uuid' }],
+        text: 'text',
+        link: 'http://a.link',
+        linkText: 'Link text',
+      },
+    };
+    expect(parseGraphQLNews(news).type).toEqual(expected);
   });
 });

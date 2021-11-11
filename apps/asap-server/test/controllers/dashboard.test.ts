@@ -3,6 +3,8 @@ import Dashboard from '../../src/controllers/dashboard';
 import { config } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import { dashboardResponse } from '../fixtures/dashboard.fixtures';
+import { FETCH_DASHBOARD } from '../../src/queries/dashboard.queries';
+import { print } from 'graphql';
 
 describe('Dashboard controller', () => {
   const dashboard = new Dashboard();
@@ -18,7 +20,9 @@ describe('Dashboard controller', () => {
   describe('Fetch method', () => {
     test('Should return an empty result when the client returns an empty array of data', async () => {
       nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_DASHBOARD),
+        })
         .reply(200, {
           data: {
             queryDashboardContents: [{ flatData: { news: [], pages: [] } }],
@@ -35,7 +39,9 @@ describe('Dashboard controller', () => {
 
     test('Should return an empty result when the client returns an empty array of data', async () => {
       nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_DASHBOARD),
+        })
         .reply(200, {
           data: {
             queryDashboardContents: [],
@@ -52,7 +58,9 @@ describe('Dashboard controller', () => {
 
     test('Should return an empty result when the client returns nulls', async () => {
       nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_DASHBOARD),
+        })
         .reply(200, {
           data: {
             queryDashboardContents: [{ flatData: { news: null, pages: null } }],
@@ -69,7 +77,9 @@ describe('Dashboard controller', () => {
 
     test('Should return the dashboard news', async () => {
       nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_DASHBOARD),
+        })
         .reply(200, {
           data: {
             queryDashboardContents: [

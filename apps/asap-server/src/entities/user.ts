@@ -59,39 +59,41 @@ export const userUpdateSchema = Joi.object({
   .min(1)
   .required();
 
-type GraphqlUserTeam = NonNullable<
+export type GraphqlUserTeam = NonNullable<
   NonNullable<FetchUserQuery['findUsersContent']>['flatData']['teams']
 >[number];
-export const parseGraphQLUserTeamConnection = (
-  item: GraphqlUserTeam,
-): UserTeam => {
-  if (item.id === null) {
-    throw new Error('Invalid user-team connection');
-  }
 
-  const team = item.id[0];
-  if (!team) {
-    throw new Error(`User team connection is not defined`);
-  }
-  const displayName = team.flatData?.displayName;
-  const proposal = team.flatData?.proposal;
-
-  if (!item.role || !isTeamRole(item.role)) {
-    throw new Error(`Invalid team role: ${item.role}`);
-  }
-
-  return {
-    id: team.id,
-    role: item.role,
-    mainResearchInterests: item.mainResearchInterests
-      ? item.mainResearchInterests
-      : undefined,
-    responsibilities: item.responsibilities ? item.responsibilities : undefined,
-    proposal: proposal?.length ? proposal[0]?.id : undefined,
-    displayName: displayName || '',
-  };
-};
-
+export const parseGraphQLUserTeamConnections = (
+  teams: GraphqlUserTeam[],
+): UserTeam[] =>
+  teams.reduce((acc: UserTeam[], item) => {
+    if (item.id === null || !item.id[0]) {
+      logger.warn(`Team Connection is undefined`);
+      return acc;
+    }
+    const team = item.id[0];
+    const displayName = team.flatData?.displayName;
+    const proposal = team.flatData?.proposal;
+    if (!item.role || !isTeamRole(item.role)) {
+      logger.warn(`Invalid team role: ${item.role}`);
+      return acc;
+    }
+    return [
+      ...acc,
+      {
+        id: team.id,
+        role: item.role,
+        mainResearchInterests: item.mainResearchInterests
+          ? item.mainResearchInterests
+          : undefined,
+        responsibilities: item.responsibilities
+          ? item.responsibilities
+          : undefined,
+        proposal: proposal?.length ? proposal[0]?.id : undefined,
+        displayName: displayName || '',
+      },
+    ];
+  }, []);
 export const parseGraphQLUser = (
   item: NonNullable<FetchUserQuery['findUsersContent']>,
 ): UserResponse => {
@@ -107,9 +109,7 @@ export const parseGraphQLUser = (
     item.flatData.role && isUserRole(item.flatData.role)
       ? item.flatData.role
       : 'Guest';
-  const teams: UserTeam[] = (flatTeams || []).map(
-    parseGraphQLUserTeamConnection,
-  );
+  const teams = parseGraphQLUserTeamConnections(flatTeams || []);
 
   const orcid = item.flatData.orcid || undefined;
   // merge both and remove null values

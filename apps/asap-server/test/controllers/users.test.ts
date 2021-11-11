@@ -237,26 +237,6 @@ describe('Users controller', () => {
 
       await expect(users.fetchById('not-found')).rejects.toThrow('Not Found');
     });
-    test('Should throw when user teams dont have id', async () => {
-      const response = getGraphqlResponseFetchUser();
-      response.data.findUsersContent!.flatData!.teams =
-        response.data.findUsersContent!.flatData!.teams!.map((item) => ({
-          ...item,
-          id: [],
-        }));
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: 'user-id',
-          },
-        })
-        .reply(200, response);
-
-      await expect(users.fetchById('user-id')).rejects.toThrow(
-        'User team connection is not defined',
-      );
-    });
 
     test('Should return the user when they are found, even if they are not onboarded', async () => {
       const nonOnboardedUserResponse = getGraphqlResponseFetchUser();
@@ -293,29 +273,12 @@ describe('Users controller', () => {
       expect(result).toEqual(getUserResponse());
     });
 
-    test('Should throw an error when the team connection is invalid', async () => {
-      const mockResponse = getGraphqlResponseFetchUser();
-      mockResponse.data.findUsersContent!.flatData.teams![0]!.id = null;
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: 'user-id',
-          },
-        })
-        .reply(200, mockResponse);
-
-      await expect(users.fetchById('user-id')).rejects.toThrow(
-        'Invalid user-team connection',
-      );
-    });
-
-    test('Should throw an error when the team role is invalid', async () => {
+    test('Should filter out a team when the team role is invalid', async () => {
       const mockResponse = getGraphqlResponseFetchUser();
       mockResponse.data.findUsersContent!.flatData.teams![0]!.role =
         'invalid role';
-
+      const expectedResponse = getUserResponse();
+      expectedResponse.teams = [];
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
           query: print(FETCH_USER),
@@ -325,9 +288,8 @@ describe('Users controller', () => {
         })
         .reply(200, mockResponse);
 
-      await expect(users.fetchById('user-id')).rejects.toThrow(
-        'Invalid team role: invalid role',
-      );
+      const result = await users.fetchById('user-id');
+      expect(result).toEqual(expectedResponse);
     });
 
     test('Should skip the user lab if it does not have a name', async () => {

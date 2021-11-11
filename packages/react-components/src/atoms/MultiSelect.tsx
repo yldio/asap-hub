@@ -43,12 +43,19 @@ const MultiSelect: FC<MultiSelectProps> = ({
 }) => {
   const [inputValues, setInputValues] = useState(values);
   const [validationMsg, setValidationMsg] = useState('');
+  let inputRef: Select<OptionTypeBase, true> | null;
 
   return (
-    <div css={containerStyles}>
+    <div
+      css={containerStyles}
+      onContextMenu={() => {
+        inputRef?.blur();
+      }}
+    >
       <Select<OptionTypeBase, true>
         inputId={id}
         isDisabled={!enabled}
+        ref={(ref) => (inputRef = ref)}
         isMulti
         options={suggestions.map((suggestion) => ({
           value: suggestion,

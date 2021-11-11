@@ -5,6 +5,7 @@ import {
   reset,
   getOverrides,
   setManualOverrides,
+  Flag,
 } from '@asap-hub/flags';
 
 type Flags = Pick<
@@ -12,40 +13,34 @@ type Flags = Pick<
   'isEnabled' | 'reset' | 'disable'
 >;
 
-const FF = 'ASAP_FF';
-
-const getCookieByName = (cookies: string, name: string) =>
+const parseCookie = (cookies: string, flag: Flag) =>
   cookies.split(';').reduce((acc, cookie) => {
     const [key, val] = cookie.split('=');
+    const flagName = key.split('_').slice(1).join('_');
+    const validateCookie = (val: string) => {
+      try {
+        const parsed = JSON.parse(val);
+        return typeof parsed === 'boolean' ? parsed : false;
+      } catch (e) {
+        return false;
+      }
+    };
 
-    if (key.trim() === name) val;
-    return acc;
-  }, '');
-
-const parseCookie = (cookies: string) => {
-  try {
-    const parsed = JSON.parse(getCookieByName(document.cookie, FF));
-    if (Array.isArray(parsed)) return false;
-    if (Object.keys(parsed).length === 0) return false;
-    return parsed;
-  } catch (e) {
-    return false;
-  }
-};
+    return key.trim().endsWith(flag)
+      ? { [flagName]: validateCookie(val) }
+      : acc;
+  }, {});
 
 export const FlagsContext = createContext<Flags>({
   isEnabled: (flag) => {
-    setManualOverrides(parseCookie(document.cookie));
+    setManualOverrides(parseCookie(document.cookie, flag));
     return isEnabled(flag);
   },
   disable: (flag) => {
-    setManualOverrides(parseCookie(document.cookie));
+    setManualOverrides(parseCookie(document.cookie, flag));
     return disable(flag);
   },
-  reset: () => {
-    setManualOverrides(parseCookie(document.cookie));
-    return reset();
-  },
+  reset,
 });
 
 export const LiveFlagsProvider: FC<Record<string, never>> = ({ children }) => {

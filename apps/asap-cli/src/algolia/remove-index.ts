@@ -10,7 +10,7 @@ export const removeAlgoliaIndex = async ({
   algoliaAppId,
   algoliaCiApiKey,
   indexName,
-}: RemoveAlgoliaArgs) => {
+}: RemoveAlgoliaArgs): Promise<void> => {
   const index = algoliasearch(algoliaAppId, algoliaCiApiKey).initIndex(
     indexName,
   );

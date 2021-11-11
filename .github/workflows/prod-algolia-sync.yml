@@ -1,10 +1,10 @@
 name: PROD - Sync Algolia with squidex
 on:
   schedule:
-      - cron: '0 10 * * *' # Once a day: 10am
+    - cron: '0 10 * * *' # Once a day: 10am
   workflow_dispatch:
 jobs:
-  replace_prod_index:
+  sync_prod_index:
     runs-on: ubuntu-18.04
     env:
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_PROD }}

@@ -12,10 +12,8 @@ export const moveAlgoliaIndex = async ({
   algoliaCiApiKey,
   indexNameFrom,
   indexNameTo,
-}: MoveAlgoliaArgs) => {
+}: MoveAlgoliaArgs): Promise<void> => {
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
 
   await client.moveIndex(indexNameFrom, indexNameTo);
 };
-
-

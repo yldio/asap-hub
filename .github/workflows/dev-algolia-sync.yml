@@ -2,7 +2,7 @@ name: DEV - Sync Algolia with squidex
 on:
   workflow_dispatch:
 jobs:
-  create_squidex_ro_dump:
+  sync_dev_index:
     runs-on: ubuntu-18.04
     env:
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_DEV }}

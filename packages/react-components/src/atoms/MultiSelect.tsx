@@ -55,7 +55,9 @@ const MultiSelect: FC<MultiSelectProps> = ({
       <Select<OptionTypeBase, true>
         inputId={id}
         isDisabled={!enabled}
-        ref={(ref) => (inputRef = ref)}
+        ref={(ref) => {
+          inputRef = ref;
+        }}
         isMulti
         options={suggestions.map((suggestion) => ({
           value: suggestion,

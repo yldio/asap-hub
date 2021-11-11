@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import algoliasearch from 'algoliasearch';
 
 export type RemoveAlgoliaArgs = {

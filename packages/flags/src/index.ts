@@ -26,7 +26,7 @@ export const isEnabled = (flag: Flag): boolean =>
 
 export const getOverrides = (): Flags => overrides;
 
-export const setManualOverrides = (flags?: Record<string, boolean>): void => {
+export const currentOverrides = (flags?: Record<string, boolean>): void => {
   overrides = Object.entries(overrides).reduce<Record<string, boolean>>(
     (acc, [name, val]) => {
       if (typeof val === 'boolean') {

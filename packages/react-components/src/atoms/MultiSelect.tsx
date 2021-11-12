@@ -45,13 +45,12 @@ const MultiSelect: FC<MultiSelectProps> = ({
   const [validationMsg, setValidationMsg] = useState('');
   let inputRef: Select<OptionTypeBase, true> | null;
 
+  const handleOnContextMenu = () => {
+    inputRef?.blur();
+  };
+
   return (
-    <div
-      css={containerStyles}
-      onContextMenu={() => {
-        inputRef?.blur();
-      }}
-    >
+    <div css={containerStyles} onContextMenu={handleOnContextMenu}>
       <Select<OptionTypeBase, true>
         inputId={id}
         isDisabled={!enabled}

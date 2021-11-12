@@ -2,8 +2,9 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
+import Select from 'react-select';
+import { ember, fern, pine, steel } from '../../colors';
 import MultiSelect from '../MultiSelect';
-import { ember, pine, fern } from '../../colors';
 
 it('shows the selected value', () => {
   const { getByText } = render(
@@ -108,6 +109,30 @@ describe('invalidity', () => {
     expect(queryByText('Nope.')).toBeNull();
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).toBe(
       fern.rgb,
+    );
+  });
+
+  it('blurs the multiselect when right click (onContextMenu)', () => {
+    const blurSelect = jest.spyOn(Select.prototype, 'blur');
+    const { getByRole, queryByText } = render(
+      <MultiSelect
+        suggestions={['LHR', 'LGW']}
+        customValidationMessage="Nope."
+      />,
+    );
+    const input = getByRole('textbox');
+
+    fireEvent.focusIn(input);
+    expect(queryByText('Nope.')).toBeNull();
+    expect(findParentWithStyle(input, 'borderColor')?.borderColor).toBe(
+      fern.rgb,
+    );
+    const parent = findParentWithStyle(input, 'flexBasis')?.element;
+    fireEvent.contextMenu(parent!);
+    expect(blurSelect).toHaveBeenCalledTimes(1);
+
+    expect(findParentWithStyle(input, 'borderColor')?.borderColor).toBe(
+      steel.rgb,
     );
   });
 });

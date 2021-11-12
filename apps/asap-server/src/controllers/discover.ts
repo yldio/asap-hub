@@ -7,58 +7,9 @@ import {
   parseGraphQLPage,
   parseGraphQLNews,
 } from '../entities';
-import { FetchUserQuery } from '../gql/graphql';
+import { FetchDiscoverQuery } from '../gql/graphql';
 
-export const query = `
-{
-    queryDiscoverContents {
-      flatData {
-        aboutUs
-        training {
-          id
-          created
-          flatData {
-            type
-            shortText
-            text
-            title
-            link
-            linkText
-            thumbnail {
-              id
-            }
-          }
-        }
-        pages {
-          id
-          created
-          flatData {
-            shortText
-            text
-            title
-            link
-            linkText
-          }
-        }
-        members {
-          id
-          created
-          flatData {
-            avatar {
-              id
-            }
-            email
-            firstName
-            institution
-            jobTitle
-            lastModifiedDate
-            lastName
-          }
-        }
-      }
-    }
-  }
-`;
+import { FETCH_DISCOVER } from '../queries/discover.queries';
 
 export interface SquidexDiscoverResponse {
   queryDiscoverContents: {
@@ -79,12 +30,14 @@ export default class Discover implements DiscoverController {
   }
 
   async fetch(): Promise<DiscoverResponse> {
-    const res = await this.client.request<SquidexDiscoverResponse, unknown>(
-      query,
-    );
+    const { queryDiscoverContents } = await this.client.request<
+      FetchDiscoverQuery,
+      unknown
+    >(FETCH_DISCOVER);
     if (
-      res.queryDiscoverContents.length === 0 ||
-      !res.queryDiscoverContents[0]
+      !queryDiscoverContents ||
+      queryDiscoverContents.length === 0 ||
+      !queryDiscoverContents[0]
     ) {
       return {
         aboutUs: '',
@@ -94,18 +47,12 @@ export default class Discover implements DiscoverController {
       };
     }
 
-    const [content] = res.queryDiscoverContents;
+    const [{ flatData }] = queryDiscoverContents;
     return {
-      aboutUs: content.flatData.aboutUs || '',
-      training: content.flatData.training?.map(parseGraphQLNews) ?? [],
-      members:
-        content.flatData.members?.map((member) =>
-          parseGraphQLUser(
-            // @todo remove the cast https://trello.com/c/5vW6YMsL/1694-replace-graphql-types-with-the-generated-ones-news
-            member as NonNullable<FetchUserQuery['findUsersContent']>,
-          ),
-        ) ?? [],
-      pages: content.flatData.pages?.map(parseGraphQLPage) ?? [],
+      aboutUs: flatData.aboutUs || '',
+      training: flatData.training?.map(parseGraphQLNews) ?? [],
+      members: flatData.members?.map(parseGraphQLUser) ?? [],
+      pages: flatData.pages?.map(parseGraphQLPage) ?? [],
     };
   }
 }

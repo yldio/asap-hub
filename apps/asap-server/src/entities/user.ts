@@ -11,10 +11,10 @@ import {
   Role,
   userRole,
 } from '@asap-hub/model';
-import { GraphqlUser, RestUser } from '@asap-hub/squidex';
+import { RestUser } from '@asap-hub/squidex';
 
 import { parseDate, createURL } from '../utils/squidex';
-import { FetchUserQuery } from '../gql/graphql';
+import { FetchUserQuery, UsersContentFragment } from '../gql/graphql';
 import { isTeamRole } from './team';
 import logger from '../utils/logger';
 
@@ -94,12 +94,29 @@ export const parseGraphQLUserTeamConnections = (
       },
     ];
   }, []);
-export const parseGraphQLUser = (
-  item: NonNullable<FetchUserQuery['findUsersContent']>,
-): UserResponse => {
+
+type GraphQLUserRequiredFlatDataProperties =
+  | 'email'
+  | 'firstName'
+  | 'institution'
+  | 'jobTitle'
+  | 'lastModifiedDate'
+  | 'lastName';
+type GraphQLUserFlatData = UsersContentFragment['flatData'];
+type GraphQLUserRequiredFlatData = Pick<
+  GraphQLUserFlatData,
+  GraphQLUserRequiredFlatDataProperties
+>;
+type GraphQLUserOptionalFlatData = Partial<
+  Omit<GraphQLUserFlatData, GraphQLUserRequiredFlatDataProperties>
+>;
+type GraphQLUser = Omit<UsersContentFragment, 'flatData'> & {
+  flatData: GraphQLUserRequiredFlatData & GraphQLUserOptionalFlatData;
+};
+
+export const parseGraphQLUser = (item: GraphQLUser): UserResponse => {
   const flatTeams = item.flatData.teams || [];
-  const flatAvatar: NonNullable<GraphqlUser['flatData']>['avatar'] =
-    item.flatData.avatar || [];
+  const flatAvatar = item.flatData.avatar || [];
   const flatQuestions = item.flatData.questions || [];
   const flatExpertiseAndResourceTags =
     item.flatData.expertiseAndResourceTags || [];

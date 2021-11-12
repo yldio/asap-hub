@@ -1,6 +1,8 @@
 import { ListResponse } from './common';
 
-export type NewsType = 'News' | 'Event' | 'Training';
+export const newsType = ['News', 'Event', 'Training'] as const;
+
+export type NewsType = typeof newsType[number];
 
 export interface NewsResponse {
   id: string;

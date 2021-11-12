@@ -43,8 +43,9 @@ const MultiSelect: FC<MultiSelectProps> = ({
 }) => {
   const [inputValues, setInputValues] = useState(values);
   const [validationMsg, setValidationMsg] = useState('');
-  let inputRef: Select<OptionTypeBase, true> | null;
 
+  // This is to handle a bug with Select where the right click would make it impossoble to write
+  let inputRef: Select<OptionTypeBase, true> | null;
   const handleOnContextMenu = () => {
     inputRef?.blur();
   };

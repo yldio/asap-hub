@@ -3,7 +3,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import Select from 'react-select';
-import { ember, fern, pine, steel } from '../../colors';
+import { ember, fern, pine } from '../../colors';
 import MultiSelect from '../MultiSelect';
 
 it('shows the selected value', () => {
@@ -112,7 +112,7 @@ describe('invalidity', () => {
     );
   });
 
-  it('blurs the multiselect when right click (onContextMenu)', () => {
+  it('blurs the multiselect when right clicked (handle right click bug)', async () => {
     const blurSelect = jest.spyOn(Select.prototype, 'blur');
     const { getByRole, queryByText } = render(
       <MultiSelect
@@ -121,18 +121,15 @@ describe('invalidity', () => {
       />,
     );
     const input = getByRole('textbox');
-
     fireEvent.focusIn(input);
+
     expect(queryByText('Nope.')).toBeNull();
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).toBe(
       fern.rgb,
     );
+
     const parent = findParentWithStyle(input, 'flexBasis')?.element;
     fireEvent.contextMenu(parent!);
     expect(blurSelect).toHaveBeenCalledTimes(1);
-
-    expect(findParentWithStyle(input, 'borderColor')?.borderColor).toBe(
-      steel.rgb,
-    );
   });
 });

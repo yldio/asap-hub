@@ -4,6 +4,8 @@ import { isEnabled, disable } from '@asap-hub/flags';
 
 import { useFlags, LiveFlagsProvider } from '../flags';
 
+const originalCookie = document.cookie;
+
 describe('useFlags', () => {
   it('provides the isEnabled flag method', () => {
     disable('PERSISTENT_EXAMPLE');
@@ -28,6 +30,36 @@ describe('useFlags', () => {
     } = renderHook(useFlags);
     current.reset();
     expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
+  });
+
+  it('overrides the feature flag if the cookie matches a valid feature flag', () => {
+    disable('PERSISTENT_EXAMPLE');
+
+    const {
+      result: { current },
+    } = renderHook(useFlags);
+
+    expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
+
+    document.cookie = 'ASAP_PERSISTENT_EXAMPLE=2';
+    expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
+
+    document.cookie = 'ASAP_PERSISTENT_EXAMPLE={}';
+    expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
+
+    document.cookie = 'ASAP_PERSISTENT_EXAMPLE=[]';
+    expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
+
+    document.cookie = "ASAP_PERSISTENT_EXAMPLE=''";
+    expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
+
+    document.cookie = 'ASAP_PERSISTENT_EXAMPLE=True';
+    expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
+
+    document.cookie = 'ASAP_PERSISTENT_EXAMPLE=true';
+    expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
+
+    document.cookie = originalCookie;
   });
 });
 

@@ -13,6 +13,7 @@ export const calendarWebhookFactory = (eventBridge: EventBridge): Handler =>
       request: lambda.Request<WebhookPayload<Calendar>>,
     ): Promise<lambda.Response> => {
       validateRequest(request);
+      logger.info(`Event fired: payload ${JSON.stringify(request.payload)}`);
 
       const type = getEventType(request.payload.type);
 

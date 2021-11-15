@@ -5,44 +5,38 @@ import {
   reset,
   getOverrides,
   setCurrentOverrides,
-  Flag,
 } from '@asap-hub/flags';
 
 type Flags = Pick<
   typeof import('@asap-hub/flags'),
-  'isEnabled' | 'reset' | 'disable'
+  'isEnabled' | 'reset' | 'disable' | 'setCurrentOverrides'
 >;
 
-const parseCookie = (cookies: string, flag: Flag) =>
+const parseCookie = (cookies: string) =>
   cookies
     .split(';')
     .reduce<Record<string, boolean> | undefined>((acc, cookie) => {
       const [key, val] = cookie.split('=');
       const flagName = key.split('_').slice(1).join('_');
-      const validateCookie = (str: string) => {
+      const getFlag = (str: string) => {
         try {
           const parsed = JSON.parse(str);
-          return typeof parsed === 'boolean' ? parsed : false;
+          return typeof parsed === 'boolean'
+            ? { [flagName]: parsed }
+            : undefined;
         } catch (e) {
-          return false;
+          return undefined;
         }
       };
 
-      return key.trim().endsWith(flag)
-        ? { [flagName]: validateCookie(val) }
-        : acc;
+      return key.trim().startsWith('ASAP') ? getFlag(val) : acc;
     }, undefined);
 
 export const FlagsContext = createContext<Flags>({
-  isEnabled: (flag) => {
-    setCurrentOverrides(parseCookie(document.cookie, flag));
-    return isEnabled(flag);
-  },
-  disable: (flag) => {
-    setCurrentOverrides(parseCookie(document.cookie, flag));
-    return disable(flag);
-  },
+  isEnabled,
+  disable,
   reset,
+  setCurrentOverrides: () => setCurrentOverrides(parseCookie(document.cookie)),
 });
 
 export const LiveFlagsProvider: FC<Record<string, never>> = ({ children }) => {
@@ -58,6 +52,7 @@ export const LiveFlagsProvider: FC<Record<string, never>> = ({ children }) => {
       reset();
       setOverrides(getOverrides());
     }, []),
+    setCurrentOverrides,
   };
 
   return (

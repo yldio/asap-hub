@@ -1,11 +1,11 @@
 import { css } from '@emotion/react';
 
-import { noop } from '../utils';
-import { getButtonStyles, getButtonChildren } from '../button';
-import { themeStyles } from './Link';
+import { getButtonChildren, getButtonStyles } from '../button';
 import { defaultThemeVariant, ThemeVariant } from '../theme';
+import { noop } from '../utils';
+import { styles as linkStyles, themeStyles } from './Link';
 
-const linkStyles = css({
+const buttonAsLinkStyles = css({
   display: 'inline',
   '> svg': {
     minHeight: '1em',
@@ -15,13 +15,7 @@ const linkStyles = css({
   padding: 0,
   border: 'none',
   outline: 'none',
-
   cursor: 'pointer',
-
-  textDecoration: 'underline',
-  ':hover, :focus': {
-    textDecoration: 'none',
-  },
   color: 'unset',
   backgroundColor: 'unset',
 });
@@ -72,7 +66,7 @@ const Button: React.FC<ButtonProps> = ({
     }}
     css={
       linkStyle
-        ? [linkStyles, theme && themeStyles[theme]]
+        ? [linkStyles, buttonAsLinkStyles, theme && themeStyles[theme]]
         : getButtonStyles({ primary, small, enabled, active, children })
     }
   >

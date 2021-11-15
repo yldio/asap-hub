@@ -1,4 +1,5 @@
 export { default as alertIcon } from './alert';
+export { default as asapLogo } from './asap-logo';
 export { default as calendarIcon } from './calendar';
 export { default as cardViewIcon } from './card-view';
 export { default as chevronCircleDownIcon } from './chevron-circle-down';
@@ -24,6 +25,7 @@ export { default as googleDriveIcon } from './google-drive';
 export { default as googleIcon } from './google';
 export { default as googleScholarIcon } from './google-scholar';
 export { default as googleSigninLightNormalIcon } from './google-signin-light-normal';
+export { default as gp2Logo } from './gp2-logo';
 export { default as groupsIcon } from './groups';
 export { default as hidePasswordIcon } from './hide-password';
 export { default as infoIcon } from './info';

@@ -8,6 +8,7 @@ import {
   BasicLayout,
   GoogleTagManager,
   ToastStack,
+  UtilityBar,
 } from '@asap-hub/react-components';
 import { staticPages, welcome, logout } from '@asap-hub/routing';
 
@@ -81,9 +82,11 @@ const App: FC<Record<string, never>> = () => {
             <Frame title={null}>
               <Switch>
                 <Route path={welcome.template}>
-                  <ToastStack>
-                    <Welcome />
-                  </ToastStack>
+                  <UtilityBar>
+                    <ToastStack>
+                      <Welcome />
+                    </ToastStack>
+                  </UtilityBar>
                 </Route>
                 <Route path={logout.template}>
                   <Frame title="Logout">

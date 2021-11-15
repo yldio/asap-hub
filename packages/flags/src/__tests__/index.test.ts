@@ -1,4 +1,10 @@
-import { isEnabled, disable, reset, getOverrides, currentOverrides } from '..';
+import {
+  isEnabled,
+  disable,
+  reset,
+  getOverrides,
+  setCurrentOverrides,
+} from '..';
 
 const originalNodeEnv = process.env.NODE_ENV;
 beforeEach(() => {
@@ -26,12 +32,12 @@ describe('in test', () => {
     process.env.NODE_ENV = 'test';
   });
 
-  describe('currentOverrides,', () => {
+  describe('setCurrentOverrides,', () => {
     it('overrides a given set of flags', () => {
       disable('PERSISTENT_EXAMPLE');
       disable('ALGOLIA_RESEARCH_OUTPUTS');
 
-      currentOverrides({
+      setCurrentOverrides({
         PERSISTENT_EXAMPLE: true,
         ALGOLIA_RESEARCH_OUTPUTS: true,
       });
@@ -41,7 +47,7 @@ describe('in test', () => {
     });
 
     it('handles when is called without arguments', () => {
-      currentOverrides();
+      setCurrentOverrides();
       expect(getOverrides()).toMatchObject({});
       expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
     });

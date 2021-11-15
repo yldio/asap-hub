@@ -4,7 +4,7 @@ import {
   disable,
   reset,
   getOverrides,
-  currentOverrides,
+  setCurrentOverrides,
   Flag,
 } from '@asap-hub/flags';
 
@@ -35,11 +35,11 @@ const parseCookie = (cookies: string, flag: Flag) =>
 
 export const FlagsContext = createContext<Flags>({
   isEnabled: (flag) => {
-    currentOverrides(parseCookie(document.cookie, flag));
+    setCurrentOverrides(parseCookie(document.cookie, flag));
     return isEnabled(flag);
   },
   disable: (flag) => {
-    currentOverrides(parseCookie(document.cookie, flag));
+    setCurrentOverrides(parseCookie(document.cookie, flag));
     return disable(flag);
   },
   reset,

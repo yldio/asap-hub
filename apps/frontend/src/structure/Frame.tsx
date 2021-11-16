@@ -1,6 +1,7 @@
 import { Suspense, ComponentProps } from 'react';
 import { Titled } from 'react-titled';
-import { Loading } from '@asap-hub/react-components';
+import { Loading, ErrorCard } from '@asap-hub/react-components';
+import { ErrorBoundary as SentryErrorBoundary } from '@sentry/react';
 
 import ErrorBoundary from './ErrorBoundary';
 
@@ -31,20 +32,33 @@ const Frame: React.FC<FrameProps> = ({
   </ErrorBoundary>
 );
 
-export const SearchFrame: React.FC<Pick<FrameProps, 'title'>> = ({
+export const SearchFrame: React.FC<FrameProps> = ({
   children,
-  ...props
+  title,
+  fallback = <Loading />,
 }) => (
-  <Frame
-    {...props}
-    boundaryProps={{
-      description:
-        'We’re sorry, we couldn’t fetch search results due to an error.',
-      refreshLink: true,
-    }}
+  <SentryErrorBoundary
+    fallback={
+      <ErrorCard
+        title={'Something went wrong'}
+        description={
+          'We’re sorry, we couldn’t fetch search results due to an error.'
+        }
+      />
+    }
   >
-    {children}
-  </Frame>
+    <Titled
+      title={(parentTitle) =>
+        title
+          ? parentTitle
+            ? `${title} | ${parentTitle}`
+            : title
+          : parentTitle
+      }
+    >
+      <Suspense fallback={fallback}>{children}</Suspense>
+    </Titled>
+  </SentryErrorBoundary>
 );
 
 export default Frame;

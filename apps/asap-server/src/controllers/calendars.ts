@@ -171,6 +171,7 @@ export default class Calendars implements CalendarController {
     const res = await this.calendars.patch(calendarId, update);
     return parseCalendar(res);
   }
+
   async fetchVersion(calendarId: string): Promise<number> {
     const { findCalendarsContent: calendar } = await this.graphqlClient.request<
       FetchCalendarVersionQuery,

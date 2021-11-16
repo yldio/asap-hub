@@ -68,6 +68,9 @@ export const calendarCreatedHandlerFactory =
 
       const version = await calendarController.fetchVersion(payload.id);
       logger.info(`Current calendar: ${JSON.stringify(version)}`);
+      if (version > (payload.version as number)) {
+        return 'OK';
+      }
 
       if (payload.dataOld.resourceId) {
         try {

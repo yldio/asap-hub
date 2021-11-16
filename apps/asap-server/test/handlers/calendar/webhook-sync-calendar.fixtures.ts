@@ -1,6 +1,8 @@
 import { WebhookPayload, Calendar } from '@asap-hub/squidex';
 
-export const getCalendarCreateEvent = (): WebhookPayload<Calendar> => ({
+export const getCalendarCreateEvent = (
+  version: number = 0,
+): WebhookPayload<Calendar> => ({
   type: 'CalendarsCreated',
   payload: {
     $type: 'EnrichedContentEvent',
@@ -28,16 +30,18 @@ export const getCalendarCreateEvent = (): WebhookPayload<Calendar> => ({
     appId: 'efd5bee9-bbb9-42f0-8c60-6dccf71ab542,asap-hub-dev',
     timestamp: '2021-02-15T13:11:25Z',
     name: 'CalendarsCreated',
-    version: 0,
+    version,
   },
   timestamp: '2021-02-15T13:11:25Z',
 });
 
-export const getCalendarUpdateEvent = (): WebhookPayload<Calendar> => ({
+export const getCalendarUpdateEvent = (
+  version: number = 0,
+): WebhookPayload<Calendar> => ({
   ...getCalendarCreateEvent(),
   type: 'CalendarsUpdated',
   payload: {
-    ...getCalendarCreateEvent().payload,
+    ...getCalendarCreateEvent(version).payload,
     dataOld: {
       name: {
         iv: 'Awesome Calendar',

@@ -122,6 +122,7 @@ export default class Calendars implements CalendarController {
     if (!calendar) {
       throw Boom.notFound();
     }
+    logger.info(`calendar found: ${JSON.stringify(calendar)}`);
 
     if (!validatePropertiesRequired(calendar.flatData)) {
       throw Boom.badGateway('Missing required data');

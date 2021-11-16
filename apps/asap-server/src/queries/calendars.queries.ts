@@ -17,3 +17,14 @@ export const FETCH_CALENDAR = gql`
     }
   }
 `;
+
+export const FETCH_CALENDAR_VERSION = gql`
+  query FetchCalendarVersion($id: String!) {
+    findCalendarsContent(id: $id) {
+      id
+      created
+      lastModified
+      version
+    }
+  }
+`;

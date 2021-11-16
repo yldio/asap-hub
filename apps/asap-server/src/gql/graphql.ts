@@ -4286,6 +4286,16 @@ export type FetchCalendarQuery = {
   >;
 };
 
+export type FetchCalendarVersionQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchCalendarVersionQuery = {
+  findCalendarsContent: Maybe<
+    Pick<Calendars, 'id' | 'created' | 'lastModified' | 'version'>
+  >;
+};
+
 export type FetchDashboardQueryVariables = Exact<{ [key: string]: never }>;
 
 export type FetchDashboardQuery = {
@@ -10780,6 +10790,63 @@ export const FetchCalendarDocument = {
     },
   ],
 } as unknown as DocumentNode<FetchCalendarQuery, FetchCalendarQueryVariables>;
+export const FetchCalendarVersionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchCalendarVersion' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findCalendarsContent' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'created' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lastModified' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'version' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchCalendarVersionQuery,
+  FetchCalendarVersionQueryVariables
+>;
 export const FetchDashboardDocument = {
   kind: 'Document',
   definitions: [

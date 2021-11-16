@@ -67,6 +67,9 @@ export const calendarCreatedHandlerFactory =
         return 'OK';
       }
 
+      const currentCalendar = await calendarController.fetchById(payload.id);
+      logger.info(`Current calendar: ${JSON.stringify(currentCalendar)}`);
+
       if (payload.dataOld.resourceId) {
         try {
           await unsubscribe(payload.dataOld.resourceId?.iv, payload.id);

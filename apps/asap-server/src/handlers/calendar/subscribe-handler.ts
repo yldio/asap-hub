@@ -66,6 +66,14 @@ export const calendarCreatedHandlerFactory =
         return 'OK';
       }
 
+      const version = await calendarController.fetchVersion(payload.id);
+      if (version > (payload.version as number)) {
+        logger.info(
+          `version ${version} is older than current version: ${payload.version}`,
+        );
+        return 'OK';
+      }
+
       if (payload.dataOld.resourceId) {
         try {
           await unsubscribe(payload.dataOld.resourceId?.iv, payload.id);

@@ -12,7 +12,10 @@ import {
   getCalendarsRestResponse,
   getRestCalendar,
 } from '../fixtures/calendars.fixtures';
-import { FETCH_CALENDAR } from '../../src/queries/calendars.queries';
+import {
+  FETCH_CALENDAR,
+  FETCH_CALENDAR_VERSION,
+} from '../../src/queries/calendars.queries';
 
 describe('Calendars controller', () => {
   const calendars = new Calendars();
@@ -349,6 +352,56 @@ describe('Calendars controller', () => {
       const result = await calendars.getSyncToken(calendarId);
 
       expect(result).toEqual(restCalendar.data.syncToken!.iv);
+    });
+  });
+  describe('getVersion method', () => {
+    test('Should throw an error when the calendar is not found', async () => {
+      const calendarId = 'not-found';
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_CALENDAR_VERSION),
+          variables: {
+            id: calendarId,
+          },
+        })
+        .reply(200, {
+          data: {
+            findCalendarsContent: null,
+          },
+        });
+
+      await expect(calendars.fetchVersion(calendarId)).rejects.toThrow(
+        notFound(),
+      );
+    });
+
+    test('Should return the calendar response', async () => {
+      const calendarId = 'calendar-id-1';
+      const version = 42;
+      const calendarVersionGraphqlResponse = {
+        data: {
+          findCalendarsContent: {
+            id: 'cc5f74e0-c611-4043-abde-cd3c0d5a3414',
+            created: '2021-01-07T16:44:09Z',
+            lastModified: '2021-01-07T16:44:09Z',
+            version,
+          },
+        },
+      };
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_CALENDAR_VERSION),
+          variables: {
+            id: calendarId,
+          },
+        })
+        .reply(200, calendarVersionGraphqlResponse);
+
+      const result = await calendars.fetchVersion(calendarId);
+
+      expect(result).toBe(version);
     });
   });
 });

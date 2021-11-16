@@ -14,10 +14,15 @@ import {
 import { parseCalendar } from '../entities';
 import logger from '../utils/logger';
 import { validatePropertiesRequired } from '../utils/squidex';
-import { FETCH_CALENDAR } from '../queries/calendars.queries';
+import {
+  FETCH_CALENDAR,
+  FETCH_CALENDAR_VERSION,
+} from '../queries/calendars.queries';
 import {
   FetchCalendarQuery,
   FetchCalendarQueryVariables,
+  FetchCalendarVersionQuery,
+  FetchCalendarVersionQueryVariables,
 } from '../gql/graphql';
 
 export default class Calendars implements CalendarController {
@@ -166,6 +171,19 @@ export default class Calendars implements CalendarController {
     const res = await this.calendars.patch(calendarId, update);
     return parseCalendar(res);
   }
+
+  async fetchVersion(calendarId: string): Promise<number> {
+    const { findCalendarsContent: calendar } = await this.graphqlClient.request<
+      FetchCalendarVersionQuery,
+      FetchCalendarVersionQueryVariables
+    >(FETCH_CALENDAR_VERSION, { id: calendarId });
+
+    if (!calendar) {
+      throw Boom.notFound();
+    }
+
+    return calendar.version;
+  }
 }
 
 export interface CalendarController {
@@ -187,6 +205,7 @@ export interface CalendarController {
 
   fetchById(id: string, options?: { raw: false }): Promise<CalendarResponse>;
   fetchById(id: string, options?: { raw: true }): Promise<CalendarRaw>;
+  fetchVersion(calendarId: string): Promise<number>;
 }
 
 export type CalendarRaw = Calendar & {

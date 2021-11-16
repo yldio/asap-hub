@@ -1,12 +1,12 @@
-import { ReactNode } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
+import { ReactNode } from 'react';
 
-import { fern, paper, pine } from '../colors';
-import { ThemeVariant, defaultThemeVariant } from '../theme';
-import { getButtonStyles, getButtonChildren } from '../button';
 import { Anchor } from '.';
+import { getButtonChildren, getButtonStyles } from '../button';
+import { fern, paper, pine } from '../colors';
+import { defaultThemeVariant, ThemeVariant } from '../theme';
 
-const styles = css({
+export const styles = css({
   textDecoration: 'underline',
   ':hover': {
     textDecoration: 'underline',

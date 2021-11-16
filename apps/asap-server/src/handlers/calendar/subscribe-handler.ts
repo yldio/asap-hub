@@ -5,6 +5,7 @@ import { Auth } from 'googleapis';
 import * as Sentry from '@sentry/serverless';
 import { framework as lambda } from '@asap-hub/services-common';
 import { WebhookPayload, Calendar } from '@asap-hub/squidex';
+
 import {
   googleApiUrl,
   asapApiUrl,

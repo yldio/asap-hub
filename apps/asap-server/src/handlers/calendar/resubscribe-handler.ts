@@ -39,7 +39,7 @@ export const resubscribeCalendarsHandlerFactory =
               resourceId: null,
             });
           } catch (error) {
-            logger.error(error, `Error during unsubscribing from the calendar`);
+            logger.error(error, 'Error during unsubscribing from the calendar');
           }
         }
 

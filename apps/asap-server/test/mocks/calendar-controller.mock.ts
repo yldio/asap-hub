@@ -7,5 +7,4 @@ export const calendarControllerMock: jest.Mocked<CalendarController> = {
   fetchById: jest.fn(),
   getSyncToken: jest.fn(),
   update: jest.fn(),
-  fetchVersion: jest.fn(),
 };

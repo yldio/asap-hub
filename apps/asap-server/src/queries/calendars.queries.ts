@@ -6,6 +6,7 @@ export const FETCH_CALENDAR = gql`
       id
       created
       lastModified
+      version
       flatData {
         googleCalendarId
         name
@@ -14,17 +15,6 @@ export const FETCH_CALENDAR = gql`
         resourceId
         expirationDate
       }
-    }
-  }
-`;
-
-export const FETCH_CALENDAR_VERSION = gql`
-  query FetchCalendarVersion($id: String!) {
-    findCalendarsContent(id: $id) {
-      id
-      created
-      lastModified
-      version
     }
   }
 `;

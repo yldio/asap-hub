@@ -13,16 +13,10 @@ import {
 } from '../utils/instrumented-client';
 import { parseCalendar } from '../entities';
 import logger from '../utils/logger';
-import { validatePropertiesRequired } from '../utils/squidex';
-import {
-  FETCH_CALENDAR,
-  FETCH_CALENDAR_VERSION,
-} from '../queries/calendars.queries';
+import { FETCH_CALENDAR } from '../queries/calendars.queries';
 import {
   FetchCalendarQuery,
   FetchCalendarQueryVariables,
-  FetchCalendarVersionQuery,
-  FetchCalendarVersionQueryVariables,
 } from '../gql/graphql';
 
 export default class Calendars implements CalendarController {
@@ -112,11 +106,11 @@ export default class Calendars implements CalendarController {
   }
 
   fetchById(id: string, options?: { raw: false }): Promise<CalendarResponse>;
-  fetchById(id: string, options?: { raw: true }): Promise<CalendarRaw>;
+  fetchById(id: string, options?: { raw: true }): Promise<CalendarRawResponse>;
   async fetchById(
     calendarId: string,
     options?: { raw: boolean },
-  ): Promise<CalendarRaw | CalendarResponse> {
+  ): Promise<CalendarRawResponse | CalendarResponse> {
     const calendarResponse = await this.graphqlClient.request<
       FetchCalendarQuery,
       FetchCalendarQueryVariables
@@ -128,30 +122,32 @@ export default class Calendars implements CalendarController {
       throw Boom.notFound();
     }
 
-    if (!validatePropertiesRequired(calendar.flatData)) {
+    const { googleCalendarId, color, name } = calendar.flatData;
+    if (!googleCalendarId || !name || !color) {
       throw Boom.badGateway('Missing required data');
     }
 
-    if (!isGoogleLegacyCalendarColor(calendar.flatData.color)) {
+    if (!isGoogleLegacyCalendarColor(color)) {
       throw Boom.badGateway('Invalid colour');
     }
 
     if (options?.raw === true) {
       return {
         id: calendar.id,
-        googleCalendarId: calendar.flatData.googleCalendarId,
-        color: calendar.flatData.color,
-        name: calendar.flatData.name,
-        expirationDate: calendar.flatData.expirationDate,
+        version: calendar.version,
+        googleCalendarId,
+        color,
+        name,
+        expirationDate: calendar.flatData.expirationDate ?? undefined,
         resourceId: calendar.flatData.resourceId,
-        syncToken: calendar.flatData.syncToken,
+        syncToken: calendar.flatData.syncToken ?? undefined,
       };
     }
 
     return {
-      id: calendar.flatData.googleCalendarId,
-      name: calendar.flatData.name,
-      color: calendar.flatData.color,
+      id: googleCalendarId,
+      name,
+      color,
     };
   }
 
@@ -170,19 +166,6 @@ export default class Calendars implements CalendarController {
     }, {} as { [key: string]: { iv: unknown } });
     const res = await this.calendars.patch(calendarId, update);
     return parseCalendar(res);
-  }
-
-  async fetchVersion(calendarId: string): Promise<number> {
-    const { findCalendarsContent: calendar } = await this.graphqlClient.request<
-      FetchCalendarVersionQuery,
-      FetchCalendarVersionQueryVariables
-    >(FETCH_CALENDAR_VERSION, { id: calendarId });
-
-    if (!calendar) {
-      throw Boom.notFound();
-    }
-
-    return calendar.version;
   }
 }
 
@@ -204,10 +187,12 @@ export interface CalendarController {
   ) => Promise<CalendarResponse>;
 
   fetchById(id: string, options?: { raw: false }): Promise<CalendarResponse>;
-  fetchById(id: string, options?: { raw: true }): Promise<CalendarRaw>;
-  fetchVersion(calendarId: string): Promise<number>;
+  fetchById(id: string, options?: { raw: true }): Promise<CalendarRawResponse>;
 }
 
 export type CalendarRaw = Calendar & {
   id: string;
+};
+export type CalendarRawResponse = CalendarRaw & {
+  version: number;
 };

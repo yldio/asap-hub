@@ -1,4 +1,7 @@
-import { CalendarRaw } from '../../src/controllers/calendars';
+import {
+  CalendarRaw,
+  CalendarRawResponse,
+} from '../../src/controllers/calendars';
 import { CalendarResponse } from '@asap-hub/model';
 import {
   Calendar,
@@ -16,6 +19,10 @@ export const getCalendarRaw = (): CalendarRaw => ({
   resourceId: 'resource-id',
   expirationDate: 1617196357000,
   googleCalendarId: '3@group.calendar.google.com',
+});
+export const getCalendarRawResponse = (): CalendarRawResponse => ({
+  ...getCalendarRaw(),
+  version: 42,
 });
 
 export const getCalendarResponse = (): CalendarResponse => ({
@@ -121,6 +128,7 @@ export const getCalendarsGraphqlResponse = (): {
       id: 'cc5f74e0-c611-4043-abde-cd3c0d5a3414',
       created: '2021-01-07T16:44:09Z',
       lastModified: '2021-01-07T16:44:09Z',
+      version: 42,
       flatData: {
         googleCalendarId: '3@group.calendar.google.com',
         color: '#2952A3',

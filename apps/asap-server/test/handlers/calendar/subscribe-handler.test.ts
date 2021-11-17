@@ -20,6 +20,7 @@ import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
 import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
 import { Alerts } from '../../../src/utils/alerts';
 import { CalendarEventType } from '../../../src/handlers/webhooks/webhook-calendar';
+import { CalendarRawResponse } from '../../../src/controllers/calendars';
 
 describe('Calendar Webhook', () => {
   const subscribe: jest.MockedFunction<SubscribeToEventChanges> = jest.fn();
@@ -28,10 +29,13 @@ describe('Calendar Webhook', () => {
   const alerts: jest.Mocked<Alerts> = {
     error: jest.fn(),
   };
+  const fetchById = jest.fn(() =>
+    Promise.resolve({ version: 23 } as CalendarRawResponse),
+  );
   const handler = calendarCreatedHandlerFactory(
     subscribe,
     unsubscribe,
-    calendarControllerMock,
+    { ...calendarControllerMock, fetchById },
     alerts,
   );
 
@@ -149,19 +153,8 @@ describe('Calendar Webhook', () => {
       });
 
       test('Should skip subscription and unsubscribing and return 200 when the version is old', async () => {
-        const calendarUpdateEvent = getCalendarUpdateEvent(23);
+        const calendarUpdateEvent = getCalendarUpdateEvent(11);
         subscribe.mockResolvedValueOnce({ resourceId, expiration });
-        const calendarMock = {
-          ...calendarControllerMock,
-          fetchVersion: jest.fn(() => Promise.resolve(42)),
-        };
-
-        const handler = calendarCreatedHandlerFactory(
-          subscribe,
-          unsubscribe,
-          calendarMock,
-          alerts,
-        );
 
         const res = await handler(
           getEvent('CalendarUpdated', calendarUpdateEvent),
@@ -190,21 +183,10 @@ describe('Calendar Webhook', () => {
         expect(subscribe).toHaveBeenCalled();
       });
       test('Should not unsubscribe or subscribe is the version is old', async () => {
-        const calendarUpdateEvent = getCalendarUpdateEvent(23);
+        const calendarUpdateEvent = getCalendarUpdateEvent(11);
         calendarUpdateEvent.payload.dataOld!.resourceId = undefined;
         subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
-        const calendarMock = {
-          ...calendarControllerMock,
-          fetchVersion: jest.fn(() => Promise.resolve(42)),
-        };
-
-        const handler = calendarCreatedHandlerFactory(
-          subscribe,
-          unsubscribe,
-          calendarMock,
-          alerts,
-        );
         const res = await handler(
           getEvent('CalendarUpdated', calendarUpdateEvent),
         );

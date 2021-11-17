@@ -66,10 +66,13 @@ export const calendarCreatedHandlerFactory =
         return 'OK';
       }
 
-      const currentVersion = await calendarController.fetchVersion(payload.id);
-      if (currentVersion > (payload.version as number)) {
-        logger.error(
-          `version recieved (${payload.version}) is older than current version: ${currentVersion}`,
+      const { version } = await calendarController.fetchById(payload.id, {
+        raw: true,
+      });
+
+      if (version > (payload.version as number)) {
+        logger.warn(
+          `version recieved (${payload.version}) is older than current version: ${version}`,
         );
         return 'OK';
       }

@@ -36,7 +36,7 @@ export const getCalendarCreateEvent = (
 });
 
 export const getCalendarUpdateEvent = (
-  version: number = 0,
+  version: number = 42,
 ): WebhookPayload<Calendar> => ({
   ...getCalendarCreateEvent(),
   type: 'CalendarsUpdated',

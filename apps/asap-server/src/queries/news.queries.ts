@@ -5,6 +5,7 @@ export const newsQueryFragment = gql`
     id
     created
     lastModified
+    version
     flatData {
       title
       shortText

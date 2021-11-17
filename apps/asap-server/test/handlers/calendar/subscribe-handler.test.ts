@@ -20,7 +20,7 @@ import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
 import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
 import { Alerts } from '../../../src/utils/alerts';
 import { CalendarEventType } from '../../../src/handlers/webhooks/webhook-calendar';
-import { CalendarRawResponse } from '../../../src/controllers/calendars';
+import { CalendarRaw } from '../../../src/controllers/calendars';
 
 describe('Calendar Webhook', () => {
   const subscribe: jest.MockedFunction<SubscribeToEventChanges> = jest.fn();
@@ -30,7 +30,7 @@ describe('Calendar Webhook', () => {
     error: jest.fn(),
   };
   const fetchById = jest.fn(() =>
-    Promise.resolve({ version: 23 } as CalendarRawResponse),
+    Promise.resolve({ version: 23 } as CalendarRaw),
   );
   const handler = calendarCreatedHandlerFactory(
     subscribe,

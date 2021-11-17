@@ -6,7 +6,7 @@ import { print } from 'graphql';
 import Calendars from '../../src/controllers/calendars';
 import { identity } from '../helpers/squidex';
 import {
-  getCalendarRawResponse,
+  getCalendarRaw,
   getCalendarResponse,
   getCalendarsGraphqlResponse,
   getCalendarsRestResponse,
@@ -131,6 +131,7 @@ describe('Calendars controller', () => {
           resourceId: 'resource-id',
           syncToken: 'sync-token',
           expirationDate: 1614697798681,
+          version: 42,
         },
         {
           id: 'cms-calendar-id-2',
@@ -140,6 +141,7 @@ describe('Calendars controller', () => {
           resourceId: 'resource-id-2',
           syncToken: 'sync-token-2',
           expirationDate: 1614697621081,
+          version: 42,
         },
       ]);
     });
@@ -232,7 +234,7 @@ describe('Calendars controller', () => {
 
       const result = await calendars.fetchById(calendarId, { raw: true });
 
-      expect(result).toEqual(getCalendarRawResponse());
+      expect(result).toEqual(getCalendarRaw());
     });
   });
 

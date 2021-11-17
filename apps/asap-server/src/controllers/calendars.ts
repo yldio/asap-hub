@@ -77,6 +77,7 @@ export default class Calendars implements CalendarController {
         expirationDate: restCalendar.data.expirationDate?.iv,
         resourceId: restCalendar.data.resourceId?.iv,
         syncToken: restCalendar.data.syncToken?.iv,
+        version: restCalendar.version,
       }),
     );
   }
@@ -106,11 +107,11 @@ export default class Calendars implements CalendarController {
   }
 
   fetchById(id: string, options?: { raw: false }): Promise<CalendarResponse>;
-  fetchById(id: string, options?: { raw: true }): Promise<CalendarRawResponse>;
+  fetchById(id: string, options?: { raw: true }): Promise<CalendarRaw>;
   async fetchById(
     calendarId: string,
     options?: { raw: boolean },
-  ): Promise<CalendarRawResponse | CalendarResponse> {
+  ): Promise<CalendarRaw | CalendarResponse> {
     const calendarResponse = await this.graphqlClient.request<
       FetchCalendarQuery,
       FetchCalendarQueryVariables
@@ -187,12 +188,10 @@ export interface CalendarController {
   ) => Promise<CalendarResponse>;
 
   fetchById(id: string, options?: { raw: false }): Promise<CalendarResponse>;
-  fetchById(id: string, options?: { raw: true }): Promise<CalendarRawResponse>;
+  fetchById(id: string, options?: { raw: true }): Promise<CalendarRaw>;
 }
 
 export type CalendarRaw = Calendar & {
   id: string;
-};
-export type CalendarRawResponse = CalendarRaw & {
   version: number;
 };

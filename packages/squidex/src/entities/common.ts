@@ -2,6 +2,7 @@ export interface Entity {
   id: string;
   created: string;
   lastModified: string;
+  version: number;
 }
 
 export interface Rest<T> {

@@ -5,6 +5,7 @@ export const researchOutputContentQueryFragment = gql`
     id
     created
     lastModified
+    version
     flatData {
       title
       type
@@ -29,6 +30,7 @@ export const researchOutputContentQueryFragment = gql`
           id
           created
           lastModified
+          version
           flatData {
             avatar {
               id
@@ -100,6 +102,7 @@ export const researchOutputContentQueryFragment = gql`
           id
           created
           lastModified
+          version
           flatData {
             name
             orcid
@@ -117,6 +120,7 @@ export const researchOutputContentQueryFragment = gql`
       id
       created
       lastModified
+      version
       flatData {
         displayName
       }

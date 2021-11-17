@@ -13,6 +13,7 @@ export const FETCH_DISCOVER = gql`
           id
           created
           lastModified
+          version
           flatData {
             shortText
             text
@@ -25,6 +26,7 @@ export const FETCH_DISCOVER = gql`
           id
           created
           lastModified
+          version
           flatData {
             avatar {
               id

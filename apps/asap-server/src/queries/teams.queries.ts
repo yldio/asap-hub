@@ -6,6 +6,7 @@ export const teamsContentQueryFragment = gql`
     id
     created
     lastModified
+    version
     flatData {
       applicationNumber
       displayName
@@ -28,6 +29,7 @@ export const teamsContentQueryFragment = gql`
       id
       created
       lastModified
+      version
       flatData {
         avatar {
           id

@@ -11,6 +11,7 @@ import { RestUser } from '@asap-hub/squidex';
 const user: RestUser = {
   id: 'userId',
   lastModified: '2020-09-25T11:06:27.164Z',
+  version: 42,
   created: '2020-09-24T11:06:27.164Z',
   data: {
     role: {

@@ -1,7 +1,4 @@
-import {
-  CalendarRaw,
-  CalendarRawResponse,
-} from '../../src/controllers/calendars';
+import { CalendarRaw } from '../../src/controllers/calendars';
 import { CalendarResponse } from '@asap-hub/model';
 import {
   Calendar,
@@ -19,9 +16,6 @@ export const getCalendarRaw = (): CalendarRaw => ({
   resourceId: 'resource-id',
   expirationDate: 1617196357000,
   googleCalendarId: '3@group.calendar.google.com',
-});
-export const getCalendarRawResponse = (): CalendarRawResponse => ({
-  ...getCalendarRaw(),
   version: 42,
 });
 
@@ -43,6 +37,7 @@ export const getCalendarUpdatedWebhookEvent = (): WebhookPayload<Calendar> => ({
     createdBy: 'subject:5ff5f26d7c171c647fd68bb4',
     lastModifiedBy: 'client:asap-hub:default',
     data: getRestCalendar().data,
+    version: 42,
   },
 });
 
@@ -59,6 +54,7 @@ export const getCalendarPublishedWebhookEvent =
       createdBy: 'subject:5ff5f26d7c171c647fd68bb4',
       lastModifiedBy: 'client:asap-hub:default',
       data: getRestCalendar().data,
+      version: 42,
     },
   });
 
@@ -86,6 +82,7 @@ export const getRestCalendar = (): RestCalendar => ({
   },
   created: '2021-01-07T16:44:09Z',
   lastModified: '2021-01-07T16:44:09Z',
+  version: 42,
 });
 
 export const getCalendarsRestResponse = (): Results<RestCalendar> => ({
@@ -103,6 +100,7 @@ export const getCalendarsRestResponse = (): Results<RestCalendar> => ({
       },
       created: '2021-01-07T16:44:09Z',
       lastModified: '2021-01-07T16:44:09Z',
+      version: 42,
     },
     {
       id: 'cms-calendar-id-2',
@@ -116,6 +114,7 @@ export const getCalendarsRestResponse = (): Results<RestCalendar> => ({
       },
       created: '2021-01-07T16:44:09Z',
       lastModified: '2021-01-07T16:44:09Z',
+      version: 42,
     },
   ],
 });

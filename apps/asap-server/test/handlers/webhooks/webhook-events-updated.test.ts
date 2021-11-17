@@ -26,6 +26,7 @@ const fetchCalendarRawResponse: RestCalendar = {
   },
   created: '2021-01-07T16:44:09Z',
   lastModified: '2021-01-07T16:44:09Z',
+  version: 42,
 };
 
 describe('Event Webhook', () => {

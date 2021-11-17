@@ -15,6 +15,7 @@ export const getGraphqlResponseFetchUsers = (): {
           id: 'user-id-2',
           created: '2020-09-23T20:45:22Z',
           lastModified: '2020-10-26T15:33:18Z',
+          version: 42,
           flatData: {
             biography: 'some biography',
             institution: 'some institution',
@@ -89,6 +90,7 @@ export const getGraphQLUser = (): NonNullable<
 > => ({
   id: 'user-id-1',
   lastModified: '2020-10-26T15:33:18Z',
+  version: 42,
   created: '2020-09-23T20:45:22Z',
   flatData: {
     biography: 'some bio',
@@ -199,6 +201,7 @@ export const patchResponse: RestUser = {
   },
   created: '2020-09-25T09:42:51Z',
   lastModified: '2020-09-25T09:42:51Z',
+  version: 42,
 };
 export const fetchUserResponse = patchResponse;
 
@@ -339,6 +342,7 @@ export const updateUserEvent: WebhookPayload<User> = {
     id: 'userId',
     created: '2020-07-31T14:11:58Z',
     lastModified: '2020-07-31T15:49:41Z',
+    version: 42,
     data: {
       role: {
         iv: 'Grantee',
@@ -413,6 +417,7 @@ export const userPublishedEvent: WebhookPayload<User> = {
     id: 'userId',
     created: '2020-07-31T15:52:33Z',
     lastModified: '2020-07-31T15:52:33Z',
+    version: 42,
     data: {
       firstName: { iv: 'Gil' },
       lastName: { iv: 'Eanes' },

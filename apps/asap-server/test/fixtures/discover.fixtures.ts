@@ -11,6 +11,7 @@ export const squidexDiscoverResponse: SquidexDiscoverResponse = {
             id: 'uuid',
             created: '2020-09-24T11:06:27.164Z',
             lastModified: '2020-10-15T17:55:21Z',
+            version: 42,
             flatData: {
               title: 'Title',
               text: 'Content',
@@ -25,6 +26,7 @@ export const squidexDiscoverResponse: SquidexDiscoverResponse = {
             id: 'uuid',
             created: '2020-09-24T11:06:27.164Z',
             lastModified: '2020-10-15T17:55:21Z',
+            version: 42,
             flatData: {
               path: '/',
               title: 'Title',
@@ -37,6 +39,7 @@ export const squidexDiscoverResponse: SquidexDiscoverResponse = {
             id: 'uuid',
             created: '2020-09-24T11:06:27.164Z',
             lastModified: '2020-10-15T17:55:21Z',
+            version: 42,
             flatData: {
               path: '/',
               title: 'Title',
@@ -48,6 +51,7 @@ export const squidexDiscoverResponse: SquidexDiscoverResponse = {
             id: 'uuid-1',
             created: '2020-10-15T17:55:21Z',
             lastModified: '2020-10-15T17:55:21Z',
+            version: 42,
             flatData: {
               avatar: [
                 {
@@ -64,6 +68,7 @@ export const squidexDiscoverResponse: SquidexDiscoverResponse = {
             id: 'uuid-2',
             created: '2020-10-14T17:55:21Z',
             lastModified: '2020-10-15T17:55:21Z',
+            version: 42,
             flatData: {
               email: null,
               firstName: 'Jon',

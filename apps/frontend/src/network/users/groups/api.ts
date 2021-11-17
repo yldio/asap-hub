@@ -1,12 +1,13 @@
 import { ListGroupResponse } from '@asap-hub/model';
 import { API_BASE_URL } from '@asap-hub/frontend/src/config';
+import { createSentryHeaders } from '../../../api-util';
 
 export const getUserGroups = async (
   id: string,
   authorization: string,
 ): Promise<ListGroupResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/users/${id}/groups`, {
-    headers: { authorization },
+    headers: { authorization, ...createSentryHeaders() },
   });
   if (!resp.ok) {
     if (resp.status === 404) {

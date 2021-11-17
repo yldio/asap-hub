@@ -1,7 +1,11 @@
 import { ResearchOutputResponse, ResearchOutputType } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch/lite';
 
-import { GetListOptions } from '../api-util';
+import {
+  createListApiUrl,
+  createSentryHeaders,
+  GetListOptions,
+} from '../api-util';
 import { API_BASE_URL } from '../config';
 
 export type ResearchOutputListOptions = GetListOptions & {
@@ -14,7 +18,7 @@ export const getResearchOutput = async (
   authorization: string,
 ): Promise<ResearchOutputResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/research-outputs/${id}`, {
-    headers: { authorization },
+    headers: { authorization, ...createSentryHeaders() },
   });
   if (!resp.ok) {
     if (resp.status === 404) {
@@ -77,3 +81,22 @@ export const getResearchOutputs = (
   }).catch((error: Error) => {
     throw new Error(`Could not search: ${error.message}`);
   });
+
+export const getResearchOutputsLegacy = async (
+  options: GetListOptions,
+  authorization: string,
+): Promise<ListResearchOutputResponse> => {
+  const resp = await fetch(
+    createListApiUrl('research-outputs', options).toString(),
+    {
+      headers: { authorization, ...createSentryHeaders() },
+    },
+  );
+
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch research output list. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};

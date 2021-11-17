@@ -5,7 +5,11 @@ import {
 } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch/lite';
 
-import { createListApiUrl, GetListOptions } from '../api-util';
+import {
+  createListApiUrl,
+  createSentryHeaders,
+  GetListOptions,
+} from '../api-util';
 import { API_BASE_URL } from '../config';
 
 export type ResearchOutputListOptions = GetListOptions & {
@@ -18,7 +22,7 @@ export const getResearchOutput = async (
   authorization: string,
 ): Promise<ResearchOutputResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/research-outputs/${id}`, {
-    headers: { authorization },
+    headers: { authorization, ...createSentryHeaders() },
   });
   if (!resp.ok) {
     if (resp.status === 404) {
@@ -88,7 +92,7 @@ export const getResearchOutputsLegacy = async (
   const resp = await fetch(
     createListApiUrl('research-outputs', options).toString(),
     {
-      headers: { authorization },
+      headers: { authorization, ...createSentryHeaders() },
     },
   );
 

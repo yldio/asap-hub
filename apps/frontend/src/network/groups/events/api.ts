@@ -1,6 +1,9 @@
 import { ListEventResponse } from '@asap-hub/model';
 
-import { createListApiUrl } from '@asap-hub/frontend/src/api-util';
+import {
+  createListApiUrl,
+  createSentryHeaders,
+} from '@asap-hub/frontend/src/api-util';
 import { GetEventListOptions } from '@asap-hub/frontend/src/events/options';
 
 export const getGroupEvents = async (
@@ -13,7 +16,7 @@ export const getGroupEvents = async (
   else if (options.after) url.searchParams.append('after', options.after);
 
   const resp = await fetch(url.toString(), {
-    headers: { authorization },
+    headers: { authorization, ...createSentryHeaders() },
   });
   if (!resp.ok) {
     if (resp.status === 404) {

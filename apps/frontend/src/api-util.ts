@@ -1,3 +1,4 @@
+import { configureScope } from '@sentry/react';
 import { API_BASE_URL } from './config';
 
 export type GetListOptions = {
@@ -22,4 +23,14 @@ export const createListApiUrl = (
   filters.forEach((filter) => url.searchParams.append('filter', filter));
 
   return url;
+};
+
+export const createSentryHeaders = () => {
+  const transactionId = Math.random().toString(36).substr(2, 9);
+  configureScope((scope) => {
+    scope.setTag('transaction_id', transactionId);
+  });
+  return {
+    'X-Transaction-Id': transactionId,
+  };
 };

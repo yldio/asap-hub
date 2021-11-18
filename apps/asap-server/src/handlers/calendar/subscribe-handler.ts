@@ -57,6 +57,7 @@ export const calendarCreatedHandlerFactory =
       `Received a '${eventType}' event for the calendar ${payload.id}`,
     );
 
+    logger.debug(`Event payload: ${JSON.stringify(payload)}`);
     if (eventType === 'CalendarsUpdated') {
       if (
         !payload.dataOld ||

@@ -1,6 +1,7 @@
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
-import { disable } from '@asap-hub/flags';
+import { useFlags } from '@asap-hub/react-context';
 import { render } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import { ComponentProps } from 'react';
 
 import UserProfileResearchOutputs from '../UserProfileResearchOutputs';
@@ -16,7 +17,10 @@ const baseProps: ComponentProps<typeof UserProfileResearchOutputs> = {
   listViewHref: '',
 };
 it('renders a coming soon text (REGRESSION)', () => {
-  disable('RESEARCH_OUTPUTS_ON_AUTHOR_PROFILE');
+  const {
+    result: { current },
+  } = renderHook(useFlags);
+  current.disable('RESEARCH_OUTPUTS_ON_AUTHOR_PROFILE');
   const { getByText } = render(<UserProfileResearchOutputs {...baseProps} />);
 
   expect(getByText(/more\sto\scome/i)).toBeVisible();

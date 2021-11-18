@@ -21,23 +21,19 @@ import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
 import { Alerts } from '../../../src/utils/alerts';
 import { CalendarEventType } from '../../../src/handlers/webhooks/webhook-calendar';
 import { CalendarRaw } from '../../../src/controllers/calendars';
+import {
+  firstSaveGeneratedPayload,
+  firstSavePayload,
+} from './fixtures/payload';
 
-describe('Calendar Webhook', () => {
+describe('Calendar handler', () => {
   const subscribe: jest.MockedFunction<SubscribeToEventChanges> = jest.fn();
   const unsubscribe: jest.MockedFunction<UnsubscribeFromEventChanges> =
     jest.fn();
   const alerts: jest.Mocked<Alerts> = {
     error: jest.fn(),
   };
-  const fetchById = jest.fn(() =>
-    Promise.resolve({ version: 23 } as CalendarRaw),
-  );
-  const handler = calendarCreatedHandlerFactory(
-    subscribe,
-    unsubscribe,
-    { ...calendarControllerMock, fetchById },
-    alerts,
-  );
+  const handler = generateHandler(23, subscribe, unsubscribe, alerts);
 
   afterEach(() => {
     subscribe.mockClear();
@@ -215,6 +211,135 @@ describe('Calendar Webhook', () => {
       expect(alerts.error).toBeCalledWith(error);
     });
   });
+  describe('multilple calls', () => {
+    test('events played in order should update accordingly', async () => {
+      const firstEvent = getCalendarUpdateEvent(28);
+      const firstEventGenerated = generatedPayload(29);
+      const secondEvent = getCalendarUpdateEvent(30);
+      const secondEventGenerated = generatedPayload(31);
+      const currentVersion1 = await updateEventExpects(
+        23,
+        firstEvent,
+        subscribe,
+        unsubscribe,
+      );
+      const currentVersion2 = await ignoredEventExpects(
+        currentVersion1,
+        firstEventGenerated,
+        subscribe,
+        unsubscribe,
+      );
+      const currentVersion3 = await updateEventExpects(
+        currentVersion2,
+        secondEvent,
+        subscribe,
+        unsubscribe,
+      );
+      await ignoredEventExpects(
+        currentVersion3,
+        secondEventGenerated,
+        subscribe,
+        unsubscribe,
+      );
+    });
+    test('first event should be ignore if after the second', async () => {
+      const firstEvent = getCalendarUpdateEvent(28);
+      const secondEvent = getCalendarUpdateEvent(29);
+      const secondEventGenerated = firstSaveGeneratedPayload(30);
+      const currentVersion1 = await updateEventExpects(
+        23,
+        secondEvent,
+        subscribe,
+        unsubscribe,
+      );
+      const currentVersion2 = await ignoredEventExpects(
+        currentVersion1,
+        firstEvent,
+        subscribe,
+        unsubscribe,
+      );
+      await ignoredEventExpects(
+        currentVersion2,
+        secondEventGenerated,
+        subscribe,
+        unsubscribe,
+      );
+    });
+    const generatedPayload = (version: number) => {
+      const event = getCalendarUpdateEvent(version);
+      const calendarId = 'a-calendar-id';
+      event.payload.dataOld!.googleCalendarId.iv = calendarId;
+      event.payload.data.googleCalendarId.iv = calendarId;
+      return event;
+    };
+
+    const updateEventExpects: EventExpects = async (
+      currentVersion,
+      event,
+      subscribe,
+      unsubscribe,
+    ) => {
+      jest.clearAllMocks();
+      const handler = generateHandler(
+        currentVersion,
+        subscribe,
+        unsubscribe,
+        alerts,
+      );
+      const resourceId = 'some-resource-id';
+      const expiration = 123456;
+      subscribe.mockResolvedValueOnce({ resourceId, expiration });
+
+      const res = await handler(getEvent('CalendarUpdated', event));
+
+      expect(res).toBe('OK');
+      const { dataOld, id, data, version } = event.payload;
+      expect(unsubscribe).toHaveBeenCalledWith(dataOld!.resourceId!.iv, id);
+      expect(calendarControllerMock.update).toHaveBeenCalledWith(id, {
+        resourceId: null,
+      });
+      expect(subscribe).toHaveBeenCalledWith(data.googleCalendarId.iv, id);
+      expect(calendarControllerMock.update).toHaveBeenCalledWith(id, {
+        resourceId,
+        expirationDate: expiration,
+      });
+      return version;
+    };
+
+    const ignoredEventExpects: EventExpects = async (
+      currentVersion,
+      event,
+      subscribe,
+      unsubscribe,
+    ) => {
+      jest.clearAllMocks();
+      const handler = generateHandler(
+        currentVersion,
+        subscribe,
+        unsubscribe,
+        alerts,
+      );
+      const res = await handler(getEvent('CalendarUpdated', event));
+      expect(res).toBe('OK');
+      expect(unsubscribe).not.toHaveBeenCalled();
+      expect(subscribe).not.toHaveBeenCalled();
+      expect(calendarControllerMock.update).not.toHaveBeenCalled();
+      return currentVersion;
+    };
+    type EventExpects = (
+      currentVersion: number,
+      event: WebhookPayload<Calendar>,
+      subscribe: jest.MockedFunction<
+        (
+          calendarId: string,
+          subscriptionId: string,
+        ) => Promise<{ resourceId: string; expiration: number }>
+      >,
+      unsubscribe: jest.MockedFunction<
+        (resourceId: string, channelId: string) => Promise<void>
+      >,
+    ) => Promise<number>;
+  });
 });
 
 describe('Subscription', () => {
@@ -308,3 +433,27 @@ const getEvent = (
     detail || getCalendarCreateEvent(),
     type || 'CalendarCreated',
   );
+function generateHandler(
+  currentVersion: number,
+  subscribe: jest.MockedFunction<
+    (
+      calendarId: string,
+      subscriptionId: string,
+    ) => Promise<{ resourceId: string; expiration: number }>
+  >,
+  unsubscribe: jest.MockedFunction<
+    (resourceId: string, channelId: string) => Promise<void>
+  >,
+  alerts: jest.Mocked<Alerts>,
+) {
+  const fetchById = jest.fn(() =>
+    Promise.resolve({ version: currentVersion } as CalendarRaw),
+  );
+  const handler = calendarCreatedHandlerFactory(
+    subscribe,
+    unsubscribe,
+    { ...calendarControllerMock, fetchById },
+    alerts,
+  );
+  return handler;
+}

@@ -1,7 +1,6 @@
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
-import { useFlags } from '@asap-hub/react-context';
+import { disable } from '@asap-hub/flags';
 import { render } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
 import { ComponentProps } from 'react';
 
 import TeamProfileOutputs from '../TeamProfileOutputs';
@@ -17,20 +16,14 @@ const baseProps: ComponentProps<typeof TeamProfileOutputs> = {
   listViewHref: '',
 };
 it('renders a coming soon text (REGRESSION)', () => {
-  const {
-    result: { current },
-  } = renderHook(useFlags);
-  current.disable('ALGOLIA_RESEARCH_OUTPUTS');
-
+  disable('ALGOLIA_RESEARCH_OUTPUTS');
   const { getByText } = render(<TeamProfileOutputs {...baseProps} />);
+
   expect(getByText(/more\sto\scome/i)).toBeVisible();
   expect(getByText(/research\soutputs/i)).toBeVisible();
 });
 it('renders output cards (REGRESSION)', () => {
-  const {
-    result: { current },
-  } = renderHook(useFlags);
-  current.disable('ALGOLIA_RESEARCH_OUTPUTS');
+  disable('ALGOLIA_RESEARCH_OUTPUTS');
   const { getAllByRole } = render(
     <TeamProfileOutputs
       {...baseProps}

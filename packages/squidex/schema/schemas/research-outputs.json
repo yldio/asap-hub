@@ -84,7 +84,7 @@
         "properties": {
           "fieldType": "String",
           "allowedValues": [
-            "Grand Document",
+            "Grant Document",
             "Presentation",
             "Protocol",
             "Dataset",
@@ -133,9 +133,7 @@
             "Cloning",
             "Imaging",
             "Model System",
-            "Proposal",
             "Protein expression",
-            "Report",
             "Sample Collection",
             "Shipment Procedures",
             "3D Printing",
@@ -146,7 +144,9 @@
             "Compounds",
             "Plasmid",
             "Protein",
-            "Viral Vector"
+            "Viral Vector",
+            "Proposal",
+            "Report"
           ],
           "isUnique": false,
           "inlineEditable": true,

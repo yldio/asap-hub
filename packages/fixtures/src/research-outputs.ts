@@ -17,7 +17,7 @@ const researchOutputResponse: Omit<
   lastModifiedDate: '2020-12-10T20:36:54Z',
   title: 'Output',
   description: 'description',
-  type: 'Proposal',
+  type: 'Grant Document',
   subTypes: ['3D Printing'],
   tags: ['test', 'tag'],
   authors: [

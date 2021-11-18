@@ -84,12 +84,12 @@ describe('getResearchOutputs', () => {
   it('builds a multiple filter query', async () => {
     await getResearchOutputs(mockIndex, {
       ...options,
-      filters: new Set<ResearchOutputType>(['Article', 'Proposal']),
+      filters: new Set<ResearchOutputType>(['Article', 'Grant Document']),
     });
 
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
-      expect.objectContaining({ filters: '(type:Article OR type:Proposal)' }),
+      expect.objectContaining({ filters: '(type:Article OR type:Proposal OR type:"Grant Document")' }),
     );
   });
 
@@ -135,14 +135,14 @@ describe('getResearchOutputs', () => {
   it('adds teamId to type filters', async () => {
     await getResearchOutputs(mockIndex, {
       ...options,
-      filters: new Set<ResearchOutputType>(['Article', 'Proposal']),
+      filters: new Set<ResearchOutputType>(['Article', 'Grant Document']),
       teamId: '12345',
     });
 
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
       expect.objectContaining({
-        filters: '(type:Article OR type:Proposal) AND teams.id:"12345"',
+        filters: '(type:Article OR type:Proposal OR type:"Grant Document") AND teams.id:"12345"',
       }),
     );
   });
@@ -176,14 +176,14 @@ describe('getResearchOutputs', () => {
   it('adds userId to type filters', async () => {
     await getResearchOutputs(mockIndex, {
       ...options,
-      filters: new Set<ResearchOutputType>(['Article', 'Proposal']),
+      filters: new Set<ResearchOutputType>(['Article', 'Grant Document']),
       userId: '12345',
     });
 
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
       expect.objectContaining({
-        filters: '(type:Article OR type:Proposal) AND authors.id:"12345"',
+        filters: '(type:Article OR type:Proposal OR type:"Grant Document") AND authors.id:"12345"',
       }),
     );
   });

@@ -10,7 +10,7 @@ export type ResearchOutputsSearchProps = {
 };
 
 export const researchOutputFilters: Option<ResearchOutputType>[] = [
-  { label: 'Proposal', value: 'Proposal' },
+  { label: 'Grant Document', value: 'Grant Document' },
   { label: 'Presentation', value: 'Presentation' },
   { label: 'Protocol', value: 'Protocol' },
   { label: 'Dataset', value: 'Dataset' },

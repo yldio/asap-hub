@@ -60,7 +60,7 @@ describe('ResearchOutputs controller', () => {
         .map(({ displayName }) => expect(displayName).toEqual(''));
     });
 
-    test('Should default type to Proposal and title to an empty string when missing', async () => {
+    test('Should default type to Grant Document and title to an empty string when missing', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       squidexGraphqlResponse.findResearchOutputsContent!.flatData.type = null;
       squidexGraphqlResponse.findResearchOutputsContent!.flatData.title = null;
@@ -71,7 +71,7 @@ describe('ResearchOutputs controller', () => {
       const result = await researchOutputs.fetchById(researchOutputId);
 
       expect(result.title).toEqual('');
-      expect(result.type).toEqual('Proposal');
+      expect(result.type).toEqual('Grant Document');
     });
 
     test('Should default sharingStatus to Network Only when missing', async () => {
@@ -454,7 +454,7 @@ describe('ResearchOutputs controller', () => {
       test('Should pass the filter parameter as a squidex filter', async () => {
         await researchOutputs.fetch({
           ...defaultParams,
-          filter: ['Proposal', 'Presentation'],
+          filter: ['Grant Document', 'Presentation'],
         });
 
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
@@ -462,7 +462,7 @@ describe('ResearchOutputs controller', () => {
           {
             ...expectedDefaultParams,
             filter:
-              "(data/type/iv eq 'Proposal' or data/type/iv eq 'Presentation')",
+              "(data/type/iv eq 'Proposal' or data/type/iv eq 'Grant Document' or data/type/iv eq 'Presentation')",
           },
         );
       });
@@ -471,11 +471,11 @@ describe('ResearchOutputs controller', () => {
         await researchOutputs.fetch({
           ...defaultParams,
           search: 'Title',
-          filter: ['Proposal', 'Presentation'],
+          filter: ['Grant Document', 'Presentation'],
         });
 
         const expectedFilter =
-          "(data/type/iv eq 'Proposal' or data/type/iv eq 'Presentation') " +
+          "(data/type/iv eq 'Proposal' or data/type/iv eq 'Grant Document' or data/type/iv eq 'Presentation') " +
           "and (contains(data/title/iv, 'Title') or contains(data/tags/iv, 'Title'))";
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),

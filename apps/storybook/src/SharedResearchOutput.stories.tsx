@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import {
   SharedResearchOutput,
-  SharedResearchProposal,
+  SharedResearchGrantDocument,
 } from '@asap-hub/react-components';
 import {
   text,
@@ -84,6 +84,6 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
 });
 
 export const Normal = () => <SharedResearchOutput {...props()} />;
-export const Proposal = () => (
-  <SharedResearchProposal {...props()} type="Proposal" />
+export const GrantDocument = () => (
+  <SharedResearchGrantDocument {...props()} type="Grant Document" />
 );

@@ -54,7 +54,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
   lastModified: '2021-05-14T14:48:46Z',
   flatData: {
     title: 'Test Proposal 1234',
-    type: 'Proposal',
+    type: 'Grant Document',
     description: 'Text',
     link: null,
     addedDate: null,
@@ -255,7 +255,7 @@ export const getResearchOutputResponse =
   (): DeepWriteable<ResearchOutputResponse> => ({
     id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
     created: '2020-09-23T16:34:26.842Z',
-    type: 'Proposal',
+    type: 'Grant Document',
     subTypes: ['3D Printing'],
     title: 'Test Proposal 1234',
     description: 'Text',

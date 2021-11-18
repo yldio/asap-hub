@@ -1,6 +1,6 @@
 import {
   NotFoundPage,
-  SharedResearchProposal,
+  SharedResearchGrantDocument,
   SharedResearchOutput,
 } from '@asap-hub/react-components';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
@@ -15,13 +15,16 @@ const ResearchOutput: React.FC = () => {
   );
   const researchOutputData = useResearchOutputById(researchOutputId);
   const backHref = useBackHref() ?? sharedResearch({}).$;
-  const ProposalTemplateTypes = ['Proposal', 'Grand Document'];
+  const GrantDocumentTemplateTypes = ['Proposal', 'Grant Document'];
 
   if (researchOutputData) {
     return (
       <Frame title={researchOutputData.title}>
-        {ProposalTemplateTypes.includes(researchOutputData.type) ? (
-          <SharedResearchProposal {...researchOutputData} backHref={backHref} />
+        {GrantDocumentTemplateTypes.includes(researchOutputData.type) ? (
+          <SharedResearchGrantDocument
+            {...researchOutputData}
+            backHref={backHref}
+          />
         ) : (
           <SharedResearchOutput {...researchOutputData} backHref={backHref} />
         )}

@@ -25,7 +25,7 @@ const postedStyles = css({
   color: lead.rgb,
 });
 
-type SharedResearchProposalProps = Pick<
+type SharedResearchGrantDocumentProps = Pick<
   ResearchOutputResponse,
   | 'created'
   | 'addedDate'
@@ -38,7 +38,7 @@ type SharedResearchProposalProps = Pick<
   backHref: string;
 };
 
-const SharedResearchProposal: React.FC<SharedResearchProposalProps> = ({
+const SharedResearchGrantDocument: React.FC<SharedResearchGrantDocumentProps> = ({
   created,
   addedDate,
   teams,
@@ -74,4 +74,4 @@ const SharedResearchProposal: React.FC<SharedResearchProposalProps> = ({
   </div>
 );
 
-export default SharedResearchProposal;
+export default SharedResearchGrantDocument;

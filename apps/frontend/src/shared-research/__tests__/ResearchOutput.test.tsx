@@ -25,7 +25,7 @@ beforeEach(() => {
   mockGetResearchOutput.mockClear();
   mockGetResearchOutput.mockResolvedValue({
     ...createResearchOutputResponse(),
-    type: 'Proposal',
+    type: 'Grant Document',
     id,
   });
 });
@@ -69,27 +69,27 @@ const renderComponent = async () => {
   return result;
 };
 
-describe('a proposal research output', () => {
+describe('a Grant Document research output', () => {
   it('renders with its teams', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
-      type: 'Proposal',
+      type: 'Grant Document',
       teams: [
         {
-          displayName: 'Proposal Team',
+          displayName: 'Grant Document Team',
           id: '123',
         },
       ],
-      title: 'Proposal title!',
+      title: 'Grant Document title!',
     });
     const { getByRole, getByText } = await renderComponent();
-    expect(getByText(/proposal team/i)).toBeVisible();
-    expect(getByRole('heading').textContent).toEqual('Proposal title!');
+    expect(getByText(/grant document team/i)).toBeVisible();
+    expect(getByRole('heading').textContent).toEqual('Grant Document title!');
   });
   it('links to a teams', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
-      type: 'Proposal',
+      type: 'Grant Document',
       teams: [
         {
           id: '0d074988-60c3-41e4-9f3a-e40cc65e5f4a',
@@ -106,18 +106,18 @@ describe('a proposal research output', () => {
   });
 });
 
-describe('a non-proposal research output', () => {
+describe('a not-grant-document research output', () => {
   it('renders with tags', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
       type: 'Protocol',
       tags: ['Example Tag'],
-      title: 'Proposal title!',
+      title: 'Not-Grant-Document title!',
     });
     const { getByRole, getByText } = await renderComponent();
     expect(getByText(/Example Tag/i)).toBeVisible();
     expect(getByRole('heading', { level: 1 }).textContent).toEqual(
-      'Proposal title!',
+      'Not-Grant-Document title!',
     );
   });
 });

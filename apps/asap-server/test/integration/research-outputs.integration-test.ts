@@ -12,7 +12,7 @@ describe('Research Outputs', () => {
   const randomTitle = chance.guid();
 
   const researchOutput: Partial<ResearchOutput> = {
-    type: 'Proposal',
+    type: 'Grant Document',
     title: randomTitle,
     description: 'Research Output Description',
     sharingStatus: 'Network Only',
@@ -32,7 +32,7 @@ describe('Research Outputs', () => {
     });
 
     const expectedResponse: Partial<ResearchOutputResponse> = {
-      type: 'Proposal',
+      type: 'Grant Document',
       title: randomTitle,
       description: 'Research Output Description',
       sharingStatus: 'Network Only',

@@ -147,7 +147,7 @@ export {
   SharedResearchList,
   SharedResearchOutput,
   SharedResearchPage,
-  SharedResearchProposal,
+  SharedResearchGrantDocument,
   SigninForm,
   SigninPage,
   ExpertiseAndResourcesModal,

@@ -2,17 +2,17 @@ import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
-import SharedResearchProposal from '../SharedResearchProposal';
+import SharedResearchGrantDocument from '../SharedResearchGrantDocument';
 
-const props: ComponentProps<typeof SharedResearchProposal> = {
+const props: ComponentProps<typeof SharedResearchGrantDocument> = {
   ...createResearchOutputResponse(),
   backHref: '#',
 };
 it('renders a proposal title and content', () => {
   const { getByText } = render(
-    <SharedResearchProposal
+    <SharedResearchGrantDocument
       {...props}
-      type="Proposal"
+      type="Grant Document"
       title="title"
       description="content"
     />,
@@ -24,7 +24,7 @@ it('renders a proposal title and content', () => {
 
 it("renders a proposal with two team's information", () => {
   const { getByText } = render(
-    <SharedResearchProposal
+    <SharedResearchGrantDocument
       {...props}
       teams={[
         {
@@ -49,7 +49,7 @@ it("renders a proposal with two team's information", () => {
 });
 it('falls back to created date when added date omitted', () => {
   const { getByText, rerender } = render(
-    <SharedResearchProposal
+    <SharedResearchGrantDocument
       {...props}
       created={new Date(2019, 1, 1, 1).toISOString()}
       addedDate={new Date(2020, 1, 1, 1).toISOString()}
@@ -57,7 +57,7 @@ it('falls back to created date when added date omitted', () => {
   );
   expect(getByText(/2020/)).toBeVisible();
   rerender(
-    <SharedResearchProposal
+    <SharedResearchGrantDocument
       {...props}
       created={new Date(2019, 1, 1, 1).toISOString()}
       addedDate={undefined}
@@ -68,11 +68,11 @@ it('falls back to created date when added date omitted', () => {
 
 it('displays contact pm card when there are contact emails', () => {
   const { queryByText, getByText, rerender } = render(
-    <SharedResearchProposal {...props} contactEmails={[]} />,
+    <SharedResearchGrantDocument {...props} contactEmails={[]} />,
   );
   expect(queryByText(/contact pm/i)).not.toBeInTheDocument();
   rerender(
-    <SharedResearchProposal {...props} contactEmails={['blah@gmail.com']} />,
+    <SharedResearchGrantDocument {...props} contactEmails={['blah@gmail.com']} />,
   );
   expect(getByText(/contact pm/i).closest('a')).toHaveAttribute(
     'href',

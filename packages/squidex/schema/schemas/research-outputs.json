@@ -84,7 +84,7 @@
         "properties": {
           "fieldType": "String",
           "allowedValues": [
-            "Proposal",
+            "Grand Document",
             "Presentation",
             "Protocol",
             "Dataset",
@@ -133,7 +133,9 @@
             "Cloning",
             "Imaging",
             "Model System",
+            "Proposal",
             "Protein expression",
+            "Report",
             "Sample Collection",
             "Shipment Procedures",
             "3D Printing",

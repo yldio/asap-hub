@@ -15,11 +15,12 @@ const ResearchOutput: React.FC = () => {
   );
   const researchOutputData = useResearchOutputById(researchOutputId);
   const backHref = useBackHref() ?? sharedResearch({}).$;
+  const ProposalTemplateTypes = ['Proposal', 'Grand Document'];
 
   if (researchOutputData) {
     return (
       <Frame title={researchOutputData.title}>
-        {researchOutputData.type === 'Proposal' ? (
+        {ProposalTemplateTypes.includes(researchOutputData.type) ? (
           <SharedResearchProposal {...researchOutputData} backHref={backHref} />
         ) : (
           <SharedResearchOutput {...researchOutputData} backHref={backHref} />

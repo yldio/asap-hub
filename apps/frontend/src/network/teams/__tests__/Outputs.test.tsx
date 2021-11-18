@@ -7,8 +7,7 @@ import {
   createResearchOutputResponse,
 } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
-import { useFlags } from '@asap-hub/react-context';
-import { renderHook } from '@testing-library/react-hooks';
+import { disable } from '@asap-hub/flags';
 import { ResearchOutputResponse } from '@asap-hub/model';
 
 import { RecoilRoot } from 'recoil';
@@ -96,11 +95,7 @@ const renderOutputs = async (
 };
 
 it('generates a link to the output (REGRESSION)', async () => {
-  const {
-    result: { current },
-  } = renderHook(useFlags);
-  current.disable('ALGOLIA_RESEARCH_OUTPUTS');
-
+  disable('ALGOLIA_RESEARCH_OUTPUTS');
   const { getByText } = await renderOutputs([
     { ...createResearchOutputResponse(), id: 'ro0', title: 'Some RO' },
   ]);
@@ -108,10 +103,7 @@ it('generates a link to the output (REGRESSION)', async () => {
 });
 
 it('generates a link back to the team (REGRESSION)', async () => {
-  const {
-    result: { current },
-  } = renderHook(useFlags);
-  current.disable('ALGOLIA_RESEARCH_OUTPUTS');
+  disable('ALGOLIA_RESEARCH_OUTPUTS');
 
   const { getByText } = await renderOutputs([
     {

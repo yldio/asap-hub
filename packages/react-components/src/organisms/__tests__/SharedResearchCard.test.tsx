@@ -1,8 +1,7 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
-import { useFlags } from '@asap-hub/react-context';
-import { renderHook } from '@testing-library/react-hooks';
+import { disable } from '@asap-hub/flags';
 
 import SharedResearchCard from '../SharedResearchCard';
 
@@ -118,11 +117,7 @@ it('displays link component when presentation link property is present', () => {
 });
 
 it('does not display authors (REGRESSION)', () => {
-  const {
-    result: { current },
-  } = renderHook(useFlags);
-  current.disable('RESEARCH_OUTPUT_SHOW_AUTHORS_LIST');
-
+  disable('RESEARCH_OUTPUT_SHOW_AUTHORS_LIST');
   const { queryByText } = render(
     <SharedResearchCard
       {...sharedResearchCardProps}

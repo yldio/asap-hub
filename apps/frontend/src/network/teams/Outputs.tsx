@@ -3,8 +3,7 @@ import {
   ResearchOutputsSearch,
 } from '@asap-hub/react-components';
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
-import { Flag } from '@asap-hub/flags';
+import { isEnabled } from '@asap-hub/flags';
 import { network } from '@asap-hub/routing';
 import format from 'date-fns/format';
 
@@ -24,7 +23,6 @@ type OutputsListProps = {
   filters: Set<string>;
   teamId: string;
   teamOutputs: ReadonlyArray<ResearchOutputResponse>;
-  isEnabled: (flag: Flag) => boolean;
 };
 type OutputsProps = {
   teamId: string;
@@ -36,7 +34,6 @@ const OutputsList: React.FC<OutputsListProps> = ({
   filters,
   teamId,
   teamOutputs,
-  isEnabled,
 }) => {
   const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
@@ -90,7 +87,6 @@ const OutputsList: React.FC<OutputsListProps> = ({
 };
 
 const Outputs: React.FC<OutputsProps> = ({ teamOutputs, teamId }) => {
-  const { isEnabled } = useFlags();
   const {
     filters,
     searchQuery,
@@ -115,7 +111,6 @@ const Outputs: React.FC<OutputsProps> = ({ teamOutputs, teamId }) => {
           teamOutputs={teamOutputs}
           searchQuery={debouncedSearchQuery}
           filters={filters}
-          isEnabled={isEnabled}
         />
       </SearchFrame>
     </article>

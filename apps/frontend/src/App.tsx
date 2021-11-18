@@ -3,7 +3,6 @@ import { Router, Switch, Route } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-last-location';
 import { init, reactRouterV5Instrumentation } from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
-import { useFlags } from '@asap-hub/react-context';
 
 import {
   BasicLayout,
@@ -69,12 +68,9 @@ const Content = lazy(loadContent);
 const AuthenticatedApp = lazy(loadAuthenticatedApp);
 
 const App: FC<Record<string, never>> = () => {
-  const { setCurrentOverrides } = useFlags();
-
   useEffect(() => {
     loadAuthenticatedApp().then(loadContent).then(loadWelcome);
-    setCurrentOverrides();
-  }, [setCurrentOverrides]);
+  }, []);
 
   return (
     <Frame title="ASAP Hub">

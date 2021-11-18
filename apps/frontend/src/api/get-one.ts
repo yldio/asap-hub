@@ -3,6 +3,7 @@ import { UseFetchObjectReturn } from 'use-http';
 import { API_BASE_URL } from '../config';
 import { useFetchOptions } from './util';
 import useSafeFetch from './use-safe-fetch';
+import { createSentryHeaders } from '../api-util';
 
 export type OneResult<T> = Omit<UseFetchObjectReturn<T>, 'error'>;
 export const useGetOne = <T>(
@@ -12,7 +13,7 @@ export const useGetOne = <T>(
   const url = new URL(endpoint, `${API_BASE_URL}/`).toString();
   const { error, ...result } = useSafeFetch<T>(
     url,
-    useFetchOptions({ authenticated }, {}),
+    useFetchOptions({ authenticated }, { headers: createSentryHeaders() }),
   );
   const {
     response: { status, statusText },

@@ -2,7 +2,11 @@ import { UseFetchObjectReturn } from 'use-http';
 
 import { useFetchOptions } from './util';
 import useSafeFetch from './use-safe-fetch';
-import { GetListOptions, createListApiUrl } from '../api-util';
+import {
+  GetListOptions,
+  createListApiUrl,
+  createSentryHeaders,
+} from '../api-util';
 
 export type ListResult<T> = Omit<UseFetchObjectReturn<T>, 'error'> &
   ({ loading: true; data: T | undefined } | { loading: false; data: T });
@@ -11,7 +15,10 @@ export const useGetList = <T>(
   parameters: GetListOptions,
 ): ListResult<T> => {
   const url = createListApiUrl(endpoint, parameters).toString();
-  const { error, ...result } = useSafeFetch<T>(url, useFetchOptions());
+  const { error, ...result } = useSafeFetch<T>(
+    url,
+    useFetchOptions(undefined, { headers: createSentryHeaders() }),
+  );
 
   if (error) {
     const { name, message, stack } = error;

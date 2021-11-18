@@ -73,7 +73,7 @@ const UsersList: FC<UsersListProps> = ({
             href={user.id && network({}).users({}).user({ userId: user.id }).$}
           >
             <div css={userStyles}>
-              <Avatar {...user} />
+              <Avatar {...user} imageUrl={user.avatarUrl} />
               <span css={nameStyles}>{user.displayName}</span>
             </div>
           </Link>

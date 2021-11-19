@@ -430,7 +430,7 @@ describe('ResearchOutputs controller', () => {
 
       const result = await researchOutputs.fetch({ take: 10, skip: 0 });
 
-      expect(result.items[0].type).toEqual('Grant Document');
+      expect(result.items[0]!.type).toEqual('Grant Document');
     });
 
     describe('Parameters', () => {

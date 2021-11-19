@@ -136,6 +136,7 @@ const isSharingStatus = (
   (sharingStatuses as ReadonlyArray<string>).includes(status);
 
 const isResearchOutputType = (type: string): type is ResearchOutputType =>
+  type !== 'Proposal' &&
   (researchOutputTypes as ReadonlyArray<string>).includes(type);
 
 const isResearchOutputSubtype = (

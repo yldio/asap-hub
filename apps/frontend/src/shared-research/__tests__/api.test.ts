@@ -90,7 +90,7 @@ describe('getResearchOutputs', () => {
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
       expect.objectContaining({
-        filters: '(type:Article OR type:Proposal OR type:"Grant Document")'
+        filters: '(type:Article OR type:Proposal OR type:"Grant Document")',
       }),
     );
   });
@@ -144,7 +144,8 @@ describe('getResearchOutputs', () => {
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
       expect.objectContaining({
-        filters: '(type:Article OR type:Proposal OR type:"Grant Document") AND teams.id:"12345"',
+        filters:
+          '(type:Article OR type:Proposal OR type:"Grant Document") AND teams.id:"12345"',
       }),
     );
   });
@@ -185,7 +186,8 @@ describe('getResearchOutputs', () => {
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
       expect.objectContaining({
-        filters: '(type:Article OR type:Proposal OR type:"Grant Document") AND authors.id:"12345"',
+        filters:
+          '(type:Article OR type:Proposal OR type:"Grant Document") AND authors.id:"12345"',
       }),
     );
   });

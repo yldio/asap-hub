@@ -50,7 +50,7 @@ export const researchOutputSubtypes = [
   'Protein',
   'Viral Vector',
   'Proposal',
-  'Report'
+  'Report',
 ] as const;
 
 export type ResearchOutputSubtype = typeof researchOutputSubtypes[number];

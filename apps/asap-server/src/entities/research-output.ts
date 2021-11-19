@@ -79,7 +79,10 @@ export const parseGraphQLResearchOutput = (
     id: output.id,
     created: parseDate(output.created).toISOString(),
     link: data.link || undefined,
-    type: data.type && isResearchOutputType(data.type) ? data.type : 'Grant Document',
+    type:
+      data.type && isResearchOutputType(data.type)
+        ? data.type
+        : 'Grant Document',
     subTypes:
       data.subtype && isResearchOutputSubtype(data.subtype)
         ? [data.subtype]

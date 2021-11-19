@@ -69,11 +69,14 @@ export default class ResearchOutputs implements ResearchOutputController {
 
     const grantDocumentInterceptor = (word: string): string[] => {
       if (word === 'Grant Document') {
-        return [`data/type/iv eq 'Proposal'`, `data/type/iv eq 'Grant Document'`]
+        return [
+          `data/type/iv eq 'Proposal'`,
+          `data/type/iv eq 'Grant Document'`,
+        ];
       }
 
       return [`data/type/iv eq '${word}'`];
-    }
+    };
 
     const filterQ = (filter || [])
       .reduce(

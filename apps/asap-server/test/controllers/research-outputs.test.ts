@@ -360,8 +360,11 @@ describe('ResearchOutputs controller', () => {
 
     test('Should replace Proposal with Grant Document on single ResearchOutput', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      squidexGraphqlResponse.findResearchOutputsContent!.flatData.type = 'Proposal';
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(squidexGraphqlResponse);
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.type =
+        'Proposal';
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
@@ -419,8 +422,11 @@ describe('ResearchOutputs controller', () => {
 
     test('Should replace Proposal with Grant Document on ResearchOutputs', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputsGraphqlResponse();
-      squidexGraphqlResponse.queryResearchOutputsContentsWithTotal!.items![0]!.flatData.type = 'Proposal';
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(squidexGraphqlResponse);
+      squidexGraphqlResponse.queryResearchOutputsContentsWithTotal!.items![0]!.flatData.type =
+        'Proposal';
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
 
       const result = await researchOutputs.fetch({ take: 10, skip: 0 });
 

@@ -17,8 +17,6 @@ export const researchOutputRouteFactory = (
     async (req, res: Response<ListResearchOutputResponse>) => {
       const { query } = req;
 
-      console.warn('niezgoda', {query});
-
       const options = framework.validate(
         'query',
         query,

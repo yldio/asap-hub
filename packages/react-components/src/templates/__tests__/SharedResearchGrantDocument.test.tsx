@@ -17,7 +17,7 @@ it('renders a proposal title and content', () => {
       description="content"
     />,
   );
-  expect(getByText(/proposal/i)).toBeVisible();
+  expect(getByText(/grant document/i)).toBeVisible();
   expect(getByText(/title/i, { selector: 'h1' })).toBeVisible();
   expect(getByText(/content/i)).toBeVisible();
 });
@@ -72,7 +72,10 @@ it('displays contact pm card when there are contact emails', () => {
   );
   expect(queryByText(/contact pm/i)).not.toBeInTheDocument();
   rerender(
-    <SharedResearchGrantDocument {...props} contactEmails={['blah@gmail.com']} />,
+    <SharedResearchGrantDocument
+      {...props}
+      contactEmails={['blah@gmail.com']}
+    />,
   );
   expect(getByText(/contact pm/i).closest('a')).toHaveAttribute(
     'href',

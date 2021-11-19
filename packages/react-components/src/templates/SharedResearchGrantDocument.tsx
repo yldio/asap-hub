@@ -38,40 +38,41 @@ type SharedResearchGrantDocumentProps = Pick<
   backHref: string;
 };
 
-const SharedResearchGrantDocument: React.FC<SharedResearchGrantDocumentProps> = ({
-  created,
-  addedDate,
-  teams,
-  description,
-  title,
-  type,
-  contactEmails,
-  backHref,
-}) => (
-  <div css={containerStyles}>
-    <BackLink href={backHref} />
-    <div css={cardsStyles}>
-      <Card>
-        <Pill>{type}</Pill>
-        <Display styleAsHeading={3}>{title}</Display>
-        <AssociationList type="Team" inline associations={teams} />
-        <RichText toc text={description} />
-        <div css={postedStyles}>
-          <Caption asParagraph>
-            Date Added: {formatDate(new Date(addedDate || created))}
-          </Caption>
-        </div>
-      </Card>
-      {!!contactEmails.length && (
-        <div>
-          <CtaCard href={createMailTo(contactEmails)} buttonText="Contact PM">
-            <strong>Interested in what you have seen?</strong>
-            <br /> Reach out to the PMs associated with this output
-          </CtaCard>
-        </div>
-      )}
+const SharedResearchGrantDocument: React.FC<SharedResearchGrantDocumentProps> =
+  ({
+    created,
+    addedDate,
+    teams,
+    description,
+    title,
+    type,
+    contactEmails,
+    backHref,
+  }) => (
+    <div css={containerStyles}>
+      <BackLink href={backHref} />
+      <div css={cardsStyles}>
+        <Card>
+          <Pill>{type}</Pill>
+          <Display styleAsHeading={3}>{title}</Display>
+          <AssociationList type="Team" inline associations={teams} />
+          <RichText toc text={description} />
+          <div css={postedStyles}>
+            <Caption asParagraph>
+              Date Added: {formatDate(new Date(addedDate || created))}
+            </Caption>
+          </div>
+        </Card>
+        {!!contactEmails.length && (
+          <div>
+            <CtaCard href={createMailTo(contactEmails)} buttonText="Contact PM">
+              <strong>Interested in what you have seen?</strong>
+              <br /> Reach out to the PMs associated with this output
+            </CtaCard>
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
 
 export default SharedResearchGrantDocument;

@@ -39,7 +39,6 @@ export { default as SharedResearchList } from './SharedResearchList';
 export { default as SharedResearchOutput } from './SharedResearchOutput';
 export { default as SharedResearchPage } from './SharedResearchPage';
 export { default as SharedResearchPageHeader } from './SharedResearchPageHeader';
-export { default as SharedResearchProposal } from './SharedResearchProposal';
 export { default as SigninForm } from './SigninForm';
 export { default as SigninPage } from './SigninPage';
 export { default as ExpertiseAndResourcesModal } from './ExpertiseAndResourcesModal';

@@ -36,6 +36,7 @@ export const researchOutputTypeFilters: Record<
   { filter: string }
 > = {
   Proposal: { filter: 'type:Proposal' },
+  'Grant Document': { filter: 'type:"Grant Document"' },
   Presentation: { filter: 'type:Presentation' },
   Protocol: { filter: 'type:Protocol' },
   Dataset: { filter: 'type:Dataset' },

@@ -2,13 +2,17 @@ import { ReactNode, ComponentProps } from 'react';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import { useLocation } from 'react-router-dom';
 import { ErrorCard } from '@asap-hub/react-components';
+import { ErrorBoundary as SentryErrorBoundary } from '@sentry/react';
 
 type ErrorBoundaryProps = { children: ReactNode } & Partial<
-  ComponentProps<typeof ErrorCard>
+  ComponentProps<typeof ErrorCard> & {
+    wrapper?: 'ReactErrorBoundary' | 'SentryErrorBoundary';
+  }
 >;
 
 const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
   children,
+  wrapper = 'ReactErrorBoundary',
   ...errorCardProps
 }) => {
   let pathname = '';
@@ -21,16 +25,35 @@ const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
     // no routing, no way to get out of the error state
   }
 
-  return (
-    <ReactErrorBoundary
-      fallbackRender={({ error }) => (
-        <ErrorCard error={error} {...errorCardProps} />
-      )}
-      resetKeys={[pathname, search]}
-    >
-      {children}
-    </ReactErrorBoundary>
-  );
+  switch (wrapper) {
+    case 'SentryErrorBoundary': {
+      return (
+        <SentryErrorBoundary
+          fallback={
+            <ErrorCard
+              title={'Something went wrong'}
+              refreshLink={true}
+              error={new Error()}
+            />
+          }
+        >
+          {children}
+        </SentryErrorBoundary>
+      );
+    }
+    default: {
+      return (
+        <ReactErrorBoundary
+          fallbackRender={({ error }) => (
+            <ErrorCard error={error} {...errorCardProps} />
+          )}
+          resetKeys={[pathname, search]}
+        >
+          {children}
+        </ReactErrorBoundary>
+      );
+    }
+  }
 };
 
 export default ErrorBoundary;

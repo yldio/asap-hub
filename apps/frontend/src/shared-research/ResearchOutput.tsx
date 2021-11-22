@@ -18,23 +18,24 @@ const ResearchOutput: React.FC = () => {
   const GrantDocumentTemplateTypes = ['Proposal', 'Grant Document'];
 
   if (researchOutputData) {
-    const type =
-      researchOutputData.type === 'Proposal'
-        ? 'Grant Document'
-        : researchOutputData.type;
+    const researchOutputUpdatedData = {
+      ...researchOutputData,
+      type:
+        researchOutputData.type === 'Proposal'
+          ? 'Grant Document'
+          : researchOutputData.type,
+    };
 
     return (
       <Frame title={researchOutputData.title}>
         {GrantDocumentTemplateTypes.includes(researchOutputData.type) ? (
           <SharedResearchGrantDocument
-            {...researchOutputData}
-            type={type}
+            {...researchOutputUpdatedData}
             backHref={backHref}
           />
         ) : (
           <SharedResearchOutput
-            {...researchOutputData}
-            type={type}
+            {...researchOutputUpdatedData}
             backHref={backHref}
           />
         )}

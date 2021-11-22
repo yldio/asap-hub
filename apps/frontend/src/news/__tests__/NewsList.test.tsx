@@ -1,13 +1,17 @@
 import nock from 'nock';
+import { RecoilRoot } from 'recoil';
+import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { authTestUtils } from '@asap-hub/react-components';
+
 import { renderHook } from '@testing-library/react-hooks';
 import { createNewsResponse } from '@asap-hub/fixtures';
 import { usePagination, usePaginationParams } from '../../hooks';
 
 import NewsAndEventsPage from '../Routes';
 import { API_BASE_URL } from '../../config';
+import { refreshNewsItemState } from '../state';
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
 const newsRequest = ({
   pageSize,
@@ -17,7 +21,7 @@ const newsRequest = ({
   numberOfItems: number;
 }) =>
   nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
+    reqheaders: { authorization: 'Bearer id_token' },
   })
     .get('/news')
     .query(true)
@@ -28,19 +32,25 @@ const newsRequest = ({
       ),
     });
 
-const renderPage = async () => {
+const renderPage = async (newsResponse = createNewsResponse(1)) => {
   const result = render(
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.WhenReady>
-        <authTestUtils.LoggedIn user={undefined}>
-          <MemoryRouter initialEntries={['/news']}>
-            <Route path="/news">
-              <NewsAndEventsPage />
-            </Route>
-          </MemoryRouter>
-        </authTestUtils.LoggedIn>
-      </authTestUtils.WhenReady>
-    </authTestUtils.Auth0Provider>,
+    <RecoilRoot
+      initializeState={({ set }) =>
+        set(refreshNewsItemState(newsResponse.id), Math.random())
+      }
+    >
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter initialEntries={['/news']}>
+              <Route path="/news">
+                <NewsAndEventsPage />
+              </Route>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </RecoilRoot>,
   );
 
   await waitFor(() =>

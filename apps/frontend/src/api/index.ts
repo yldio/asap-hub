@@ -3,5 +3,4 @@
 // and we organize our code by feature area.
 
 export * from './discover';
-export * from './news';
 export * from './pages';

@@ -1,12 +1,16 @@
 import nock from 'nock';
+import { RecoilRoot } from 'recoil';
+import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { NewsResponse } from '@asap-hub/model';
-import { authTestUtils } from '@asap-hub/react-components';
 import { news } from '@asap-hub/routing';
+import { createNewsResponse } from '@asap-hub/fixtures';
 
 import News from '../News';
 import { API_BASE_URL } from '../../config';
+import { refreshNewsItemState } from '../state';
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
 const newsOrEvent: NewsResponse = {
   id: '55724942-3408-4ad6-9a73-14b92226ffb6',
@@ -15,21 +19,29 @@ const newsOrEvent: NewsResponse = {
   type: 'News',
 };
 
-const renderPage = async () => {
+const renderPage = async (newsResponse = createNewsResponse(1)) => {
   const result = render(
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.WhenReady>
-        <authTestUtils.LoggedIn user={undefined}>
-          <MemoryRouter
-            initialEntries={[news({}).article({ articleId: newsOrEvent.id }).$]}
-          >
-            <Route path={news.template + news({}).article.template}>
-              <News />
-            </Route>
-          </MemoryRouter>
-        </authTestUtils.LoggedIn>
-      </authTestUtils.WhenReady>
-    </authTestUtils.Auth0Provider>,
+    <RecoilRoot
+      initializeState={({ set }) =>
+        set(refreshNewsItemState(newsResponse.id), Math.random())
+      }
+    >
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter
+              initialEntries={[
+                news({}).article({ articleId: newsOrEvent.id }).$,
+              ]}
+            >
+              <Route path={news.template + news({}).article.template}>
+                <News />
+              </Route>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </RecoilRoot>,
   );
 
   await waitFor(() =>
@@ -48,7 +60,7 @@ describe('news detail page', () => {
     nock.cleanAll();
     nockInterceptor = nock(API_BASE_URL, {
       reqheaders: {
-        authorization: 'Bearer token',
+        authorization: 'Bearer id_token',
       },
     }).get('/news/55724942-3408-4ad6-9a73-14b92226ffb6');
   });

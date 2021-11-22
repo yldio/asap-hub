@@ -13,7 +13,6 @@ import {
 } from '../utils/instrumented-client';
 import { parseCalendar } from '../entities';
 import logger from '../utils/logger';
-import { validatePropertiesRequired } from '../utils/squidex';
 import { FETCH_CALENDAR } from '../queries/calendars.queries';
 import {
   FetchCalendarQuery,
@@ -78,6 +77,7 @@ export default class Calendars implements CalendarController {
         expirationDate: restCalendar.data.expirationDate?.iv,
         resourceId: restCalendar.data.resourceId?.iv,
         syncToken: restCalendar.data.syncToken?.iv,
+        version: restCalendar.version,
       }),
     );
   }
@@ -123,30 +123,32 @@ export default class Calendars implements CalendarController {
       throw Boom.notFound();
     }
 
-    if (!validatePropertiesRequired(calendar.flatData)) {
+    const { googleCalendarId, color, name } = calendar.flatData;
+    if (!googleCalendarId || !name || !color) {
       throw Boom.badGateway('Missing required data');
     }
 
-    if (!isGoogleLegacyCalendarColor(calendar.flatData.color)) {
+    if (!isGoogleLegacyCalendarColor(color)) {
       throw Boom.badGateway('Invalid colour');
     }
 
     if (options?.raw === true) {
       return {
         id: calendar.id,
-        googleCalendarId: calendar.flatData.googleCalendarId,
-        color: calendar.flatData.color,
-        name: calendar.flatData.name,
-        expirationDate: calendar.flatData.expirationDate,
+        version: calendar.version,
+        googleCalendarId,
+        color,
+        name,
+        expirationDate: calendar.flatData.expirationDate ?? undefined,
         resourceId: calendar.flatData.resourceId,
-        syncToken: calendar.flatData.syncToken,
+        syncToken: calendar.flatData.syncToken ?? undefined,
       };
     }
 
     return {
-      id: calendar.flatData.googleCalendarId,
-      name: calendar.flatData.name,
-      color: calendar.flatData.color,
+      id: googleCalendarId,
+      name,
+      color,
     };
   }
 
@@ -191,4 +193,5 @@ export interface CalendarController {
 
 export type CalendarRaw = Calendar & {
   id: string;
+  version: number;
 };

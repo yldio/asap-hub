@@ -14,6 +14,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
           id: 'group-id-1',
           created: '2020-12-11T14:33:50Z',
           lastModified: '2020-12-11T15:06:26Z',
+          version: 42,
           flatData: {
             description: 'A test Group',
             name: "JT's Group",
@@ -23,6 +24,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                 id: 'uuid-thumbnail-1',
                 created: '2020-12-11T14:33:50Z',
                 lastModified: '2020-12-11T15:06:26Z',
+                version: 42,
               },
             ],
             tools: [
@@ -35,6 +37,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                 id: 'calendar-id-1',
                 created: '2020-12-11T14:33:50Z',
                 lastModified: '2020-12-11T15:06:26Z',
+                version: 42,
                 flatData: {
                   color: '#B1365F',
                   googleCalendarId: 'hub@asap.science',
@@ -47,6 +50,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                 id: 'team-id-1',
                 created: '2020-12-11T14:33:50Z',
                 lastModified: '2020-12-11T15:06:26Z',
+                version: 42,
                 flatData: {
                   applicationNumber: 'ASAP-000592',
                   displayName: 'Lee, M',
@@ -76,6 +80,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                     id: 'user-id-1',
                     created: '2020-12-11T14:33:50Z',
                     lastModified: '2020-12-11T15:06:26Z',
+                    version: 42,
                     flatData: {
                       avatar: [
                         {
@@ -130,6 +135,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                               id: 'team-id-2',
                               created: '2020-12-11T14:33:50Z',
                               lastModified: '2020-12-11T15:06:26Z',
+                              version: 42,
                               flatData: {
                                 displayName: 'Rio, D',
                                 proposal: [],
@@ -149,6 +155,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                     id: 'user-id-2',
                     created: '2020-12-11T14:33:50Z',
                     lastModified: '2020-12-11T15:06:26Z',
+                    version: 42,
                     flatData: {
                       avatar: [],
                       social: [
@@ -192,6 +199,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
           id: 'group-id-2',
           created: '2020-12-11T14:33:50Z',
           lastModified: '2020-12-11T15:06:26Z',
+          version: 42,
           flatData: {
             description: 'A test Group',
             name: "FP's Group",
@@ -207,6 +215,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                 id: 'calendar-id-1',
                 created: '2020-12-11T14:33:50Z',
                 lastModified: '2020-12-11T15:06:26Z',
+                version: 42,
                 flatData: {
                   color: '#B1365F',
                   googleCalendarId: 'hub@asap.science',
@@ -351,6 +360,7 @@ export const getGraphqlGroup = (): GraphqlGroup => ({
   id: 'group-id-1',
   created: '2020-12-11T14:33:50Z',
   lastModified: '2020-12-11T15:06:26Z',
+  version: 42,
   flatData: {
     description: 'A test Group',
     name: "JT's Group",
@@ -360,6 +370,7 @@ export const getGraphqlGroup = (): GraphqlGroup => ({
         id: 'uuid-thumbnail-1',
         created: '2020-12-11T14:33:50Z',
         lastModified: '2020-12-11T15:06:26Z',
+        version: 42,
       },
     ],
     tools: [
@@ -372,6 +383,7 @@ export const getGraphqlGroup = (): GraphqlGroup => ({
         id: 'calendar-id-1',
         created: '2020-12-11T14:33:50Z',
         lastModified: '2020-12-11T15:06:26Z',
+        version: 42,
         flatData: {
           color: '#B1365F',
           googleCalendarId: 'hub@asap.science',
@@ -384,6 +396,7 @@ export const getGraphqlGroup = (): GraphqlGroup => ({
         id: 'team-id-1',
         created: '2020-12-11T14:33:50Z',
         lastModified: '2020-12-11T15:06:26Z',
+        version: 42,
         flatData: {
           applicationNumber: 'ASAP-000592',
           displayName: 'Lee, M',
@@ -413,6 +426,7 @@ export const getGraphqlGroup = (): GraphqlGroup => ({
             id: 'user-id-1',
             created: '2020-12-11T14:33:50Z',
             lastModified: '2020-12-11T15:06:26Z',
+            version: 42,
             flatData: {
               avatar: [
                 {
@@ -467,6 +481,7 @@ export const getGraphqlGroup = (): GraphqlGroup => ({
                       id: 'team-id-2',
                       created: '2020-12-11T14:33:50Z',
                       lastModified: '2020-12-11T15:06:26Z',
+                      version: 42,
                       flatData: {
                         displayName: 'Rio, D',
                         proposal: [],
@@ -486,6 +501,7 @@ export const getGraphqlGroup = (): GraphqlGroup => ({
             id: 'user-id-2',
             created: '2020-12-11T14:33:50Z',
             lastModified: '2020-12-11T15:06:26Z',
+            version: 42,
             flatData: {
               avatar: [],
               social: [

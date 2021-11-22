@@ -12,6 +12,7 @@ export const FETCH_DASHBOARD = gql`
           id
           created
           lastModified
+          version
           flatData {
             path
             title

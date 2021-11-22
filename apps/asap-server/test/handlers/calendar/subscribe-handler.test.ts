@@ -20,20 +20,26 @@ import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
 import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
 import { Alerts } from '../../../src/utils/alerts';
 import { CalendarEventType } from '../../../src/handlers/webhooks/webhook-calendar';
+import { CalendarRaw } from '../../../src/controllers/calendars';
+import {
+  inOrderfirstSave,
+  inOrderfirstSaveUpdateFromUnSubscribe,
+  inOrderSecondSave,
+  inOrderSecondUpdateFromSubscribe,
+  outOfOrderFirstSave,
+  outOfOrderSecondSave,
+  outOfOrderSecondUpdateFromUnsubscribe,
+  outOfOrderSecondUpdateFromSubscribe,
+} from './fixtures/payload';
 
-describe('Calendar Webhook', () => {
+describe('Calendar handler', () => {
   const subscribe: jest.MockedFunction<SubscribeToEventChanges> = jest.fn();
   const unsubscribe: jest.MockedFunction<UnsubscribeFromEventChanges> =
     jest.fn();
   const alerts: jest.Mocked<Alerts> = {
     error: jest.fn(),
   };
-  const handler = calendarCreatedHandlerFactory(
-    subscribe,
-    unsubscribe,
-    calendarControllerMock,
-    alerts,
-  );
+  const handler = generateHandler(23, subscribe, unsubscribe, alerts);
 
   afterEach(() => {
     subscribe.mockClear();
@@ -123,44 +129,74 @@ describe('Calendar Webhook', () => {
       expect(subscribe).not.toHaveBeenCalled();
     });
 
-    test('Should unsubscribe and remove the resourceId then resubscribe if the calendar ID changed', async () => {
+    describe('Calendar ID changed', () => {
       const resourceId = 'some-resource-id';
       const expiration = 123456;
-      const calendarUpdateEvent = getCalendarUpdateEvent();
-      subscribe.mockResolvedValueOnce({ resourceId, expiration });
+      test('Should unsubscribe and remove the resourceId then resubscribe', async () => {
+        const calendarUpdateEvent = getCalendarUpdateEvent();
+        subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
-      const res = await handler(
-        getEvent('CalendarUpdated', calendarUpdateEvent),
-      );
+        const res = await handler(
+          getEvent('CalendarUpdated', calendarUpdateEvent),
+        );
 
-      expect(res).toBe('OK');
-      expect(unsubscribe).toHaveBeenCalledWith(
-        calendarUpdateEvent.payload.dataOld!.resourceId!.iv,
-        calendarUpdateEvent.payload.id,
-      );
-      expect(calendarControllerMock.update).toHaveBeenCalledWith(
-        calendarUpdateEvent.payload.id,
-        {
-          resourceId: null,
-        },
-      );
-      expect(subscribe).toHaveBeenCalled();
+        expect(res).toBe('OK');
+        expect(unsubscribe).toHaveBeenCalledWith(
+          calendarUpdateEvent.payload.dataOld!.resourceId!.iv,
+          calendarUpdateEvent.payload.id,
+        );
+        expect(calendarControllerMock.update).toHaveBeenCalledWith(
+          calendarUpdateEvent.payload.id,
+          {
+            resourceId: null,
+          },
+        );
+        expect(subscribe).toHaveBeenCalled();
+      });
+
+      test('Should skip subscription and unsubscribing and return 200 when the version is old', async () => {
+        const calendarUpdateEvent = getCalendarUpdateEvent(11);
+        subscribe.mockResolvedValueOnce({ resourceId, expiration });
+
+        const res = await handler(
+          getEvent('CalendarUpdated', calendarUpdateEvent),
+        );
+
+        expect(res).toBe('OK');
+        expect(unsubscribe).not.toHaveBeenCalled();
+        expect(subscribe).not.toHaveBeenCalled();
+      });
     });
 
-    test('Should not unsubscribe if the old resource ID was not defined', async () => {
+    describe('Old resource was not defined', () => {
       const resourceId = 'some-resource-id';
       const expiration = 123456;
-      const calendarUpdateEvent = getCalendarUpdateEvent();
-      calendarUpdateEvent.payload.dataOld!.resourceId = undefined;
-      subscribe.mockResolvedValueOnce({ resourceId, expiration });
+      test('Should not unsubscribe', async () => {
+        const calendarUpdateEvent = getCalendarUpdateEvent();
+        calendarUpdateEvent.payload.dataOld!.resourceId = undefined;
+        subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
-      const res = await handler(
-        getEvent('CalendarUpdated', calendarUpdateEvent),
-      );
+        const res = await handler(
+          getEvent('CalendarUpdated', calendarUpdateEvent),
+        );
 
-      expect(res).toBe('OK');
-      expect(unsubscribe).not.toHaveBeenCalled();
-      expect(subscribe).toHaveBeenCalled();
+        expect(res).toBe('OK');
+        expect(unsubscribe).not.toHaveBeenCalled();
+        expect(subscribe).toHaveBeenCalled();
+      });
+      test('Should not unsubscribe or subscribe is the version is old', async () => {
+        const calendarUpdateEvent = getCalendarUpdateEvent(11);
+        calendarUpdateEvent.payload.dataOld!.resourceId = undefined;
+        subscribe.mockResolvedValueOnce({ resourceId, expiration });
+
+        const res = await handler(
+          getEvent('CalendarUpdated', calendarUpdateEvent),
+        );
+
+        expect(res).toBe('OK');
+        expect(unsubscribe).not.toHaveBeenCalled();
+        expect(subscribe).not.toHaveBeenCalled();
+      });
     });
 
     test('Should alert and continue to subscription even when unsubscribing failed', async () => {
@@ -180,6 +216,157 @@ describe('Calendar Webhook', () => {
       expect(subscribe).toHaveBeenCalled();
       expect(alerts.error).toBeCalledWith(error);
     });
+  });
+  describe('multilple calls', () => {
+    test(`events played in order should update accordingly.
+    The first event invalidates a calender,
+    the second event should update to a valid calendar.
+    Events are fired when we call the update method on calendar controller.
+    (this updates the record in SquidEx firing an event)
+    `, async () => {
+      const firstEvent = inOrderfirstSave();
+      const firstEventUpdate = inOrderfirstSaveUpdateFromUnSubscribe();
+      const secondEvent = inOrderSecondSave();
+      const secondEventUpdate = inOrderSecondUpdateFromSubscribe();
+      const currentVersion1 = await updateEventExpects(
+        27,
+        firstEvent,
+        subscribe,
+        unsubscribe,
+      );
+      expect(currentVersion1).toBe(28);
+      const currentVersion2 = await ignoredEventExpects(
+        currentVersion1,
+        firstEventUpdate,
+        subscribe,
+        unsubscribe,
+      );
+      expect(currentVersion2).toBe(29);
+      const currentVersion3 = await updateEventExpects(
+        currentVersion2,
+        secondEvent,
+        subscribe,
+        unsubscribe,
+      );
+      expect(currentVersion3).toBe(30);
+      const currentVersion4 = await ignoredEventExpects(
+        currentVersion3,
+        secondEventUpdate,
+        subscribe,
+        unsubscribe,
+      );
+      expect(currentVersion4).toBe(31);
+    });
+
+    test(`first event should be ignore if after the second.
+    The first save event is ignored, as the second has been generated by
+    another save on the UI.
+    The second runs and unsubscribes as it still has a reference to the
+    rsourceId.
+    `, async () => {
+      const firstEvent = outOfOrderFirstSave();
+      const secondEvent = outOfOrderSecondSave();
+      const secondEventUpdate1 = outOfOrderSecondUpdateFromUnsubscribe();
+      const secondEventUpdate2 = outOfOrderSecondUpdateFromSubscribe();
+      const currentVersion1 = await updateEventExpects(
+        31,
+        secondEvent,
+        subscribe,
+        unsubscribe,
+      );
+      expect(currentVersion1).toBe(33);
+      const currentVersion2 = await ignoredEventExpects(
+        currentVersion1,
+        firstEvent,
+        subscribe,
+        unsubscribe,
+        true,
+      );
+      expect(currentVersion2).toBe(33);
+      const currentVersion3 = await ignoredEventExpects(
+        currentVersion2,
+        secondEventUpdate1,
+        subscribe,
+        unsubscribe,
+      );
+      expect(currentVersion3).toBe(34);
+      const currentVersion4 = await ignoredEventExpects(
+        currentVersion2,
+        secondEventUpdate2,
+        subscribe,
+        unsubscribe,
+      );
+      expect(currentVersion4).toBe(35);
+    });
+
+    const updateEventExpects: EventExpects = async (
+      currentVersion,
+      event,
+      subscribe,
+      unsubscribe,
+    ) => {
+      jest.clearAllMocks();
+      const handler = generateHandler(
+        currentVersion,
+        subscribe,
+        unsubscribe,
+        alerts,
+      );
+      const resourceId = 'some-resource-id';
+      const expiration = 123456;
+      subscribe.mockResolvedValueOnce({ resourceId, expiration });
+
+      const res = await handler(getEvent('CalendarUpdated', event));
+
+      expect(res).toBe('OK');
+      const { dataOld, id, data, version } = event.payload;
+      expect(unsubscribe).toHaveBeenCalledWith(dataOld!.resourceId!.iv, id);
+      expect(calendarControllerMock.update).toHaveBeenCalledWith(id, {
+        resourceId: null,
+      });
+      expect(subscribe).toHaveBeenCalledWith(data.googleCalendarId.iv, id);
+      expect(calendarControllerMock.update).toHaveBeenCalledWith(id, {
+        resourceId,
+        expirationDate: expiration,
+      });
+      return version;
+    };
+
+    const ignoredEventExpects: EventExpects = async (
+      currentVersion,
+      event,
+      subscribe,
+      unsubscribe,
+      outOfOrder = false,
+    ) => {
+      jest.clearAllMocks();
+      const handler = generateHandler(
+        currentVersion,
+        subscribe,
+        unsubscribe,
+        alerts,
+      );
+      const res = await handler(getEvent('CalendarUpdated', event));
+      expect(res).toBe('OK');
+      expect(unsubscribe).not.toHaveBeenCalled();
+      expect(subscribe).not.toHaveBeenCalled();
+      expect(calendarControllerMock.update).not.toHaveBeenCalled();
+      return outOfOrder ? currentVersion : event.payload.version;
+    };
+    type EventExpects = (
+      currentVersion: number,
+      event: WebhookPayload<Calendar>,
+      subscribe: jest.MockedFunction<
+        (
+          calendarId: string,
+          subscriptionId: string,
+        ) => Promise<{ resourceId: string; expiration: number }>
+      >,
+      unsubscribe: jest.MockedFunction<
+        (resourceId: string, channelId: string) => Promise<void>
+      >,
+      outOfOrder?: boolean,
+    ) => Promise<number>;
   });
 });
 
@@ -274,3 +461,27 @@ const getEvent = (
     detail || getCalendarCreateEvent(),
     type || 'CalendarCreated',
   );
+function generateHandler(
+  currentVersion: number,
+  subscribe: jest.MockedFunction<
+    (
+      calendarId: string,
+      subscriptionId: string,
+    ) => Promise<{ resourceId: string; expiration: number }>
+  >,
+  unsubscribe: jest.MockedFunction<
+    (resourceId: string, channelId: string) => Promise<void>
+  >,
+  alerts: jest.Mocked<Alerts>,
+) {
+  const fetchById = jest.fn(() =>
+    Promise.resolve({ version: currentVersion } as CalendarRaw),
+  );
+  const handler = calendarCreatedHandlerFactory(
+    subscribe,
+    unsubscribe,
+    { ...calendarControllerMock, fetchById },
+    alerts,
+  );
+  return handler;
+}

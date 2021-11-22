@@ -4272,7 +4272,7 @@ export type FetchCalendarQueryVariables = Exact<{
 
 export type FetchCalendarQuery = {
   findCalendarsContent: Maybe<
-    Pick<Calendars, 'id' | 'created' | 'lastModified'> & {
+    Pick<Calendars, 'id' | 'created' | 'lastModified' | 'version'> & {
       flatData: Pick<
         CalendarsFlatDataDto,
         | 'googleCalendarId'
@@ -4294,7 +4294,10 @@ export type FetchDashboardQuery = {
       flatData: {
         news: Maybe<
           Array<
-            Pick<NewsAndEvents, 'id' | 'created' | 'lastModified'> & {
+            Pick<
+              NewsAndEvents,
+              'id' | 'created' | 'lastModified' | 'version'
+            > & {
               flatData: Pick<
                 NewsAndEventsFlatDataDto,
                 'title' | 'shortText' | 'text' | 'type' | 'link' | 'linkText'
@@ -4304,7 +4307,7 @@ export type FetchDashboardQuery = {
         >;
         pages: Maybe<
           Array<
-            Pick<Pages, 'id' | 'created' | 'lastModified'> & {
+            Pick<Pages, 'id' | 'created' | 'lastModified' | 'version'> & {
               flatData: Pick<
                 PagesFlatDataDto,
                 'path' | 'title' | 'shortText' | 'text' | 'link' | 'linkText'
@@ -4325,7 +4328,10 @@ export type FetchDiscoverQuery = {
       flatData: Pick<DiscoverFlatDataDto, 'aboutUs'> & {
         training: Maybe<
           Array<
-            Pick<NewsAndEvents, 'id' | 'created' | 'lastModified'> & {
+            Pick<
+              NewsAndEvents,
+              'id' | 'created' | 'lastModified' | 'version'
+            > & {
               flatData: Pick<
                 NewsAndEventsFlatDataDto,
                 'title' | 'shortText' | 'text' | 'type' | 'link' | 'linkText'
@@ -4335,7 +4341,7 @@ export type FetchDiscoverQuery = {
         >;
         pages: Maybe<
           Array<
-            Pick<Pages, 'id' | 'created' | 'lastModified'> & {
+            Pick<Pages, 'id' | 'created' | 'lastModified' | 'version'> & {
               flatData: Pick<
                 PagesFlatDataDto,
                 'shortText' | 'text' | 'title' | 'link' | 'linkText'
@@ -4345,7 +4351,7 @@ export type FetchDiscoverQuery = {
         >;
         members: Maybe<
           Array<
-            Pick<Users, 'id' | 'created' | 'lastModified'> & {
+            Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
               flatData: Pick<
                 UsersFlatDataDto,
                 | 'email'
@@ -4365,7 +4371,7 @@ export type FetchDiscoverQuery = {
 
 export type EventContentFragment = Pick<
   Events,
-  'id' | 'lastModified' | 'created'
+  'id' | 'lastModified' | 'version' | 'created'
 > & {
   flatData: Pick<
     EventsFlatDataDto,
@@ -4398,7 +4404,7 @@ export type EventContentFragment = Pick<
         >;
         referencingGroupsContents: Maybe<
           Array<
-            Pick<Groups, 'id' | 'created' | 'lastModified'> & {
+            Pick<Groups, 'id' | 'created' | 'lastModified' | 'version'> & {
               flatData: Pick<
                 GroupsFlatDataDto,
                 'name' | 'description' | 'tags'
@@ -4408,7 +4414,10 @@ export type EventContentFragment = Pick<
                 >;
                 teams: Maybe<
                   Array<
-                    Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+                    Pick<
+                      Teams,
+                      'id' | 'created' | 'lastModified' | 'version'
+                    > & {
                       flatData: Pick<
                         TeamsFlatDataDto,
                         | 'applicationNumber'
@@ -4421,7 +4430,7 @@ export type EventContentFragment = Pick<
                           Array<
                             Pick<
                               ResearchOutputs,
-                              'id' | 'created' | 'lastModified'
+                              'id' | 'created' | 'lastModified' | 'version'
                             > & {
                               flatData: Pick<
                                 ResearchOutputsFlatDataDto,
@@ -4447,7 +4456,10 @@ export type EventContentFragment = Pick<
                                   Array<
                                     | ({ __typename: 'ExternalAuthors' } & Pick<
                                         ExternalAuthors,
-                                        'id' | 'created' | 'lastModified'
+                                        | 'id'
+                                        | 'created'
+                                        | 'lastModified'
+                                        | 'version'
                                       > & {
                                           flatData: Pick<
                                             ExternalAuthorsFlatDataDto,
@@ -4456,7 +4468,10 @@ export type EventContentFragment = Pick<
                                         })
                                     | ({ __typename: 'Users' } & Pick<
                                         Users,
-                                        'id' | 'created' | 'lastModified'
+                                        | 'id'
+                                        | 'created'
+                                        | 'lastModified'
+                                        | 'version'
                                       > & {
                                           flatData: Pick<
                                             UsersFlatDataDto,
@@ -4576,7 +4591,10 @@ export type EventContentFragment = Pick<
                                 Array<
                                   Pick<
                                     Teams,
-                                    'id' | 'created' | 'lastModified'
+                                    | 'id'
+                                    | 'created'
+                                    | 'lastModified'
+                                    | 'version'
                                   > & {
                                     flatData: Pick<
                                       TeamsFlatDataDto,
@@ -4621,7 +4639,10 @@ export type EventContentFragment = Pick<
                       };
                       referencingUsersContents: Maybe<
                         Array<
-                          Pick<Users, 'id' | 'created' | 'lastModified'> & {
+                          Pick<
+                            Users,
+                            'id' | 'created' | 'lastModified' | 'version'
+                          > & {
                             flatData: Pick<
                               UsersFlatDataDto,
                               | 'biography'
@@ -4723,7 +4744,10 @@ export type EventContentFragment = Pick<
                     Pick<GroupsDataLeadersChildDto, 'role'> & {
                       user: Maybe<
                         Array<
-                          Pick<Users, 'id' | 'created' | 'lastModified'> & {
+                          Pick<
+                            Users,
+                            'id' | 'created' | 'lastModified' | 'version'
+                          > & {
                             flatData: Pick<
                               UsersFlatDataDto,
                               | 'biography'
@@ -4855,7 +4879,7 @@ export type FetchEventsQuery = {
     Pick<EventsResultDto, 'total'> & {
       items: Maybe<
         Array<
-          Pick<Events, 'id' | 'lastModified' | 'created'> & {
+          Pick<Events, 'id' | 'lastModified' | 'version' | 'created'> & {
             flatData: Pick<
               EventsFlatDataDto,
               | 'description'
@@ -4887,7 +4911,10 @@ export type FetchEventsQuery = {
                   >;
                   referencingGroupsContents: Maybe<
                     Array<
-                      Pick<Groups, 'id' | 'created' | 'lastModified'> & {
+                      Pick<
+                        Groups,
+                        'id' | 'created' | 'lastModified' | 'version'
+                      > & {
                         flatData: Pick<
                           GroupsFlatDataDto,
                           'name' | 'description' | 'tags'
@@ -4902,7 +4929,10 @@ export type FetchEventsQuery = {
                           >;
                           teams: Maybe<
                             Array<
-                              Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+                              Pick<
+                                Teams,
+                                'id' | 'created' | 'lastModified' | 'version'
+                              > & {
                                 flatData: Pick<
                                   TeamsFlatDataDto,
                                   | 'applicationNumber'
@@ -4915,7 +4945,10 @@ export type FetchEventsQuery = {
                                     Array<
                                       Pick<
                                         ResearchOutputs,
-                                        'id' | 'created' | 'lastModified'
+                                        | 'id'
+                                        | 'created'
+                                        | 'lastModified'
+                                        | 'version'
                                       > & {
                                         flatData: Pick<
                                           ResearchOutputsFlatDataDto,
@@ -4946,6 +4979,7 @@ export type FetchEventsQuery = {
                                                   | 'id'
                                                   | 'created'
                                                   | 'lastModified'
+                                                  | 'version'
                                                 > & {
                                                     flatData: Pick<
                                                       ExternalAuthorsFlatDataDto,
@@ -4957,6 +4991,7 @@ export type FetchEventsQuery = {
                                                   | 'id'
                                                   | 'created'
                                                   | 'lastModified'
+                                                  | 'version'
                                                 > & {
                                                     flatData: Pick<
                                                       UsersFlatDataDto,
@@ -5082,7 +5117,10 @@ export type FetchEventsQuery = {
                                           Array<
                                             Pick<
                                               Teams,
-                                              'id' | 'created' | 'lastModified'
+                                              | 'id'
+                                              | 'created'
+                                              | 'lastModified'
+                                              | 'version'
                                             > & {
                                               flatData: Pick<
                                                 TeamsFlatDataDto,
@@ -5133,7 +5171,10 @@ export type FetchEventsQuery = {
                                   Array<
                                     Pick<
                                       Users,
-                                      'id' | 'created' | 'lastModified'
+                                      | 'id'
+                                      | 'created'
+                                      | 'lastModified'
+                                      | 'version'
                                     > & {
                                       flatData: Pick<
                                         UsersFlatDataDto,
@@ -5249,7 +5290,10 @@ export type FetchEventsQuery = {
                                   Array<
                                     Pick<
                                       Users,
-                                      'id' | 'created' | 'lastModified'
+                                      | 'id'
+                                      | 'created'
+                                      | 'lastModified'
+                                      | 'version'
                                     > & {
                                       flatData: Pick<
                                         UsersFlatDataDto,
@@ -5392,7 +5436,7 @@ export type FetchEventQueryVariables = Exact<{
 
 export type FetchEventQuery = {
   findEventsContent: Maybe<
-    Pick<Events, 'id' | 'lastModified' | 'created'> & {
+    Pick<Events, 'id' | 'lastModified' | 'version' | 'created'> & {
       flatData: Pick<
         EventsFlatDataDto,
         | 'description'
@@ -5424,7 +5468,7 @@ export type FetchEventQuery = {
             >;
             referencingGroupsContents: Maybe<
               Array<
-                Pick<Groups, 'id' | 'created' | 'lastModified'> & {
+                Pick<Groups, 'id' | 'created' | 'lastModified' | 'version'> & {
                   flatData: Pick<
                     GroupsFlatDataDto,
                     'name' | 'description' | 'tags'
@@ -5436,7 +5480,10 @@ export type FetchEventQuery = {
                     >;
                     teams: Maybe<
                       Array<
-                        Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+                        Pick<
+                          Teams,
+                          'id' | 'created' | 'lastModified' | 'version'
+                        > & {
                           flatData: Pick<
                             TeamsFlatDataDto,
                             | 'applicationNumber'
@@ -5449,7 +5496,7 @@ export type FetchEventQuery = {
                               Array<
                                 Pick<
                                   ResearchOutputs,
-                                  'id' | 'created' | 'lastModified'
+                                  'id' | 'created' | 'lastModified' | 'version'
                                 > & {
                                   flatData: Pick<
                                     ResearchOutputsFlatDataDto,
@@ -5477,7 +5524,10 @@ export type FetchEventQuery = {
                                             __typename: 'ExternalAuthors';
                                           } & Pick<
                                             ExternalAuthors,
-                                            'id' | 'created' | 'lastModified'
+                                            | 'id'
+                                            | 'created'
+                                            | 'lastModified'
+                                            | 'version'
                                           > & {
                                               flatData: Pick<
                                                 ExternalAuthorsFlatDataDto,
@@ -5486,7 +5536,10 @@ export type FetchEventQuery = {
                                             })
                                         | ({ __typename: 'Users' } & Pick<
                                             Users,
-                                            'id' | 'created' | 'lastModified'
+                                            | 'id'
+                                            | 'created'
+                                            | 'lastModified'
+                                            | 'version'
                                           > & {
                                               flatData: Pick<
                                                 UsersFlatDataDto,
@@ -5609,7 +5662,10 @@ export type FetchEventQuery = {
                                     Array<
                                       Pick<
                                         Teams,
-                                        'id' | 'created' | 'lastModified'
+                                        | 'id'
+                                        | 'created'
+                                        | 'lastModified'
+                                        | 'version'
                                       > & {
                                         flatData: Pick<
                                           TeamsFlatDataDto,
@@ -5654,7 +5710,10 @@ export type FetchEventQuery = {
                           };
                           referencingUsersContents: Maybe<
                             Array<
-                              Pick<Users, 'id' | 'created' | 'lastModified'> & {
+                              Pick<
+                                Users,
+                                'id' | 'created' | 'lastModified' | 'version'
+                              > & {
                                 flatData: Pick<
                                   UsersFlatDataDto,
                                   | 'biography'
@@ -5761,7 +5820,10 @@ export type FetchEventQuery = {
                         Pick<GroupsDataLeadersChildDto, 'role'> & {
                           user: Maybe<
                             Array<
-                              Pick<Users, 'id' | 'created' | 'lastModified'> & {
+                              Pick<
+                                Users,
+                                'id' | 'created' | 'lastModified' | 'version'
+                              > & {
                                 flatData: Pick<
                                   UsersFlatDataDto,
                                   | 'biography'
@@ -5898,13 +5960,13 @@ export type FetchGroupCalendarQuery = {
 
 export type GroupsContentFragment = Pick<
   Groups,
-  'id' | 'created' | 'lastModified'
+  'id' | 'created' | 'lastModified' | 'version'
 > & {
   flatData: Pick<GroupsFlatDataDto, 'name' | 'description' | 'tags'> & {
     tools: Maybe<Array<Pick<GroupsDataToolsChildDto, 'slack' | 'googleDrive'>>>;
     teams: Maybe<
       Array<
-        Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+        Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
           flatData: Pick<
             TeamsFlatDataDto,
             | 'applicationNumber'
@@ -5915,7 +5977,10 @@ export type GroupsContentFragment = Pick<
           > & {
             outputs?: Maybe<
               Array<
-                Pick<ResearchOutputs, 'id' | 'created' | 'lastModified'> & {
+                Pick<
+                  ResearchOutputs,
+                  'id' | 'created' | 'lastModified' | 'version'
+                > & {
                   flatData: Pick<
                     ResearchOutputsFlatDataDto,
                     | 'title'
@@ -5940,7 +6005,7 @@ export type GroupsContentFragment = Pick<
                       Array<
                         | ({ __typename: 'ExternalAuthors' } & Pick<
                             ExternalAuthors,
-                            'id' | 'created' | 'lastModified'
+                            'id' | 'created' | 'lastModified' | 'version'
                           > & {
                               flatData: Pick<
                                 ExternalAuthorsFlatDataDto,
@@ -5949,7 +6014,7 @@ export type GroupsContentFragment = Pick<
                             })
                         | ({ __typename: 'Users' } & Pick<
                             Users,
-                            'id' | 'created' | 'lastModified'
+                            'id' | 'created' | 'lastModified' | 'version'
                           > & {
                               flatData: Pick<
                                 UsersFlatDataDto,
@@ -6056,7 +6121,10 @@ export type GroupsContentFragment = Pick<
                   };
                   referencingTeamsContents?: Maybe<
                     Array<
-                      Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+                      Pick<
+                        Teams,
+                        'id' | 'created' | 'lastModified' | 'version'
+                      > & {
                         flatData: Pick<TeamsFlatDataDto, 'displayName'>;
                         referencingUsersContents: Maybe<
                           Array<{
@@ -6086,7 +6154,7 @@ export type GroupsContentFragment = Pick<
           };
           referencingUsersContents: Maybe<
             Array<
-              Pick<Users, 'id' | 'created' | 'lastModified'> & {
+              Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
                 flatData: Pick<
                   UsersFlatDataDto,
                   | 'biography'
@@ -6184,7 +6252,7 @@ export type GroupsContentFragment = Pick<
         Pick<GroupsDataLeadersChildDto, 'role'> & {
           user: Maybe<
             Array<
-              Pick<Users, 'id' | 'created' | 'lastModified'> & {
+              Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
                 flatData: Pick<
                   UsersFlatDataDto,
                   | 'biography'
@@ -6304,7 +6372,7 @@ export type FetchGroupsQuery = {
     Pick<GroupsResultDto, 'total'> & {
       items: Maybe<
         Array<
-          Pick<Groups, 'id' | 'created' | 'lastModified'> & {
+          Pick<Groups, 'id' | 'created' | 'lastModified' | 'version'> & {
             flatData: Pick<
               GroupsFlatDataDto,
               'name' | 'description' | 'tags'
@@ -6314,7 +6382,7 @@ export type FetchGroupsQuery = {
               >;
               teams: Maybe<
                 Array<
-                  Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+                  Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
                     flatData: Pick<
                       TeamsFlatDataDto,
                       | 'applicationNumber'
@@ -6327,7 +6395,7 @@ export type FetchGroupsQuery = {
                         Array<
                           Pick<
                             ResearchOutputs,
-                            'id' | 'created' | 'lastModified'
+                            'id' | 'created' | 'lastModified' | 'version'
                           > & {
                             flatData: Pick<
                               ResearchOutputsFlatDataDto,
@@ -6353,7 +6421,10 @@ export type FetchGroupsQuery = {
                                 Array<
                                   | ({ __typename: 'ExternalAuthors' } & Pick<
                                       ExternalAuthors,
-                                      'id' | 'created' | 'lastModified'
+                                      | 'id'
+                                      | 'created'
+                                      | 'lastModified'
+                                      | 'version'
                                     > & {
                                         flatData: Pick<
                                           ExternalAuthorsFlatDataDto,
@@ -6362,7 +6433,10 @@ export type FetchGroupsQuery = {
                                       })
                                   | ({ __typename: 'Users' } & Pick<
                                       Users,
-                                      'id' | 'created' | 'lastModified'
+                                      | 'id'
+                                      | 'created'
+                                      | 'lastModified'
+                                      | 'version'
                                     > & {
                                         flatData: Pick<
                                           UsersFlatDataDto,
@@ -6482,7 +6556,7 @@ export type FetchGroupsQuery = {
                               Array<
                                 Pick<
                                   Teams,
-                                  'id' | 'created' | 'lastModified'
+                                  'id' | 'created' | 'lastModified' | 'version'
                                 > & {
                                   flatData: Pick<
                                     TeamsFlatDataDto,
@@ -6527,7 +6601,10 @@ export type FetchGroupsQuery = {
                     };
                     referencingUsersContents: Maybe<
                       Array<
-                        Pick<Users, 'id' | 'created' | 'lastModified'> & {
+                        Pick<
+                          Users,
+                          'id' | 'created' | 'lastModified' | 'version'
+                        > & {
                           flatData: Pick<
                             UsersFlatDataDto,
                             | 'biography'
@@ -6629,7 +6706,10 @@ export type FetchGroupsQuery = {
                   Pick<GroupsDataLeadersChildDto, 'role'> & {
                     user: Maybe<
                       Array<
-                        Pick<Users, 'id' | 'created' | 'lastModified'> & {
+                        Pick<
+                          Users,
+                          'id' | 'created' | 'lastModified' | 'version'
+                        > & {
                           flatData: Pick<
                             UsersFlatDataDto,
                             | 'biography'
@@ -6753,14 +6833,14 @@ export type FetchGroupQueryVariables = Exact<{
 
 export type FetchGroupQuery = {
   findGroupsContent: Maybe<
-    Pick<Groups, 'id' | 'created' | 'lastModified'> & {
+    Pick<Groups, 'id' | 'created' | 'lastModified' | 'version'> & {
       flatData: Pick<GroupsFlatDataDto, 'name' | 'description' | 'tags'> & {
         tools: Maybe<
           Array<Pick<GroupsDataToolsChildDto, 'slack' | 'googleDrive'>>
         >;
         teams: Maybe<
           Array<
-            Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+            Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
               flatData: Pick<
                 TeamsFlatDataDto,
                 | 'applicationNumber'
@@ -6771,7 +6851,10 @@ export type FetchGroupQuery = {
               > & {
                 outputs?: Maybe<
                   Array<
-                    Pick<ResearchOutputs, 'id' | 'created' | 'lastModified'> & {
+                    Pick<
+                      ResearchOutputs,
+                      'id' | 'created' | 'lastModified' | 'version'
+                    > & {
                       flatData: Pick<
                         ResearchOutputsFlatDataDto,
                         | 'title'
@@ -6796,7 +6879,7 @@ export type FetchGroupQuery = {
                           Array<
                             | ({ __typename: 'ExternalAuthors' } & Pick<
                                 ExternalAuthors,
-                                'id' | 'created' | 'lastModified'
+                                'id' | 'created' | 'lastModified' | 'version'
                               > & {
                                   flatData: Pick<
                                     ExternalAuthorsFlatDataDto,
@@ -6805,7 +6888,7 @@ export type FetchGroupQuery = {
                                 })
                             | ({ __typename: 'Users' } & Pick<
                                 Users,
-                                'id' | 'created' | 'lastModified'
+                                'id' | 'created' | 'lastModified' | 'version'
                               > & {
                                   flatData: Pick<
                                     UsersFlatDataDto,
@@ -6921,7 +7004,10 @@ export type FetchGroupQuery = {
                       };
                       referencingTeamsContents?: Maybe<
                         Array<
-                          Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+                          Pick<
+                            Teams,
+                            'id' | 'created' | 'lastModified' | 'version'
+                          > & {
                             flatData: Pick<TeamsFlatDataDto, 'displayName'>;
                             referencingUsersContents: Maybe<
                               Array<{
@@ -6951,7 +7037,7 @@ export type FetchGroupQuery = {
               };
               referencingUsersContents: Maybe<
                 Array<
-                  Pick<Users, 'id' | 'created' | 'lastModified'> & {
+                  Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
                     flatData: Pick<
                       UsersFlatDataDto,
                       | 'biography'
@@ -7051,7 +7137,7 @@ export type FetchGroupQuery = {
             Pick<GroupsDataLeadersChildDto, 'role'> & {
               user: Maybe<
                 Array<
-                  Pick<Users, 'id' | 'created' | 'lastModified'> & {
+                  Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
                     flatData: Pick<
                       UsersFlatDataDto,
                       | 'biography'
@@ -7164,7 +7250,7 @@ export type FetchGroupQuery = {
 
 export type NewsFragment = Pick<
   NewsAndEvents,
-  'id' | 'created' | 'lastModified'
+  'id' | 'created' | 'lastModified' | 'version'
 > & {
   flatData: Pick<
     NewsAndEventsFlatDataDto,
@@ -7174,7 +7260,7 @@ export type NewsFragment = Pick<
 
 export type ResearchOutputContentFragment = Pick<
   ResearchOutputs,
-  'id' | 'created' | 'lastModified'
+  'id' | 'created' | 'lastModified' | 'version'
 > & {
   flatData: Pick<
     ResearchOutputsFlatDataDto,
@@ -7200,11 +7286,11 @@ export type ResearchOutputContentFragment = Pick<
       Array<
         | ({ __typename: 'ExternalAuthors' } & Pick<
             ExternalAuthors,
-            'id' | 'created' | 'lastModified'
+            'id' | 'created' | 'lastModified' | 'version'
           > & { flatData: Pick<ExternalAuthorsFlatDataDto, 'name' | 'orcid'> })
         | ({ __typename: 'Users' } & Pick<
             Users,
-            'id' | 'created' | 'lastModified'
+            'id' | 'created' | 'lastModified' | 'version'
           > & {
               flatData: Pick<
                 UsersFlatDataDto,
@@ -7298,7 +7384,7 @@ export type ResearchOutputContentFragment = Pick<
   };
   referencingTeamsContents?: Maybe<
     Array<
-      Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+      Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
         flatData: Pick<TeamsFlatDataDto, 'displayName'>;
         referencingUsersContents: Maybe<
           Array<{
@@ -7325,7 +7411,7 @@ export type FetchResearchOutputQueryVariables = Exact<{
 
 export type FetchResearchOutputQuery = {
   findResearchOutputsContent: Maybe<
-    Pick<ResearchOutputs, 'id' | 'created' | 'lastModified'> & {
+    Pick<ResearchOutputs, 'id' | 'created' | 'lastModified' | 'version'> & {
       flatData: Pick<
         ResearchOutputsFlatDataDto,
         | 'title'
@@ -7350,13 +7436,13 @@ export type FetchResearchOutputQuery = {
           Array<
             | ({ __typename: 'ExternalAuthors' } & Pick<
                 ExternalAuthors,
-                'id' | 'created' | 'lastModified'
+                'id' | 'created' | 'lastModified' | 'version'
               > & {
                   flatData: Pick<ExternalAuthorsFlatDataDto, 'name' | 'orcid'>;
                 })
             | ({ __typename: 'Users' } & Pick<
                 Users,
-                'id' | 'created' | 'lastModified'
+                'id' | 'created' | 'lastModified' | 'version'
               > & {
                   flatData: Pick<
                     UsersFlatDataDto,
@@ -7453,7 +7539,7 @@ export type FetchResearchOutputQuery = {
       };
       referencingTeamsContents?: Maybe<
         Array<
-          Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+          Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
             flatData: Pick<TeamsFlatDataDto, 'displayName'>;
             referencingUsersContents: Maybe<
               Array<{
@@ -7487,7 +7573,10 @@ export type FetchResearchOutputsQuery = {
     Pick<ResearchOutputsResultDto, 'total'> & {
       items: Maybe<
         Array<
-          Pick<ResearchOutputs, 'id' | 'created' | 'lastModified'> & {
+          Pick<
+            ResearchOutputs,
+            'id' | 'created' | 'lastModified' | 'version'
+          > & {
             flatData: Pick<
               ResearchOutputsFlatDataDto,
               | 'title'
@@ -7512,7 +7601,7 @@ export type FetchResearchOutputsQuery = {
                 Array<
                   | ({ __typename: 'ExternalAuthors' } & Pick<
                       ExternalAuthors,
-                      'id' | 'created' | 'lastModified'
+                      'id' | 'created' | 'lastModified' | 'version'
                     > & {
                         flatData: Pick<
                           ExternalAuthorsFlatDataDto,
@@ -7521,7 +7610,7 @@ export type FetchResearchOutputsQuery = {
                       })
                   | ({ __typename: 'Users' } & Pick<
                       Users,
-                      'id' | 'created' | 'lastModified'
+                      'id' | 'created' | 'lastModified' | 'version'
                     > & {
                         flatData: Pick<
                           UsersFlatDataDto,
@@ -7622,7 +7711,7 @@ export type FetchResearchOutputsQuery = {
             };
             referencingTeamsContents?: Maybe<
               Array<
-                Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+                Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
                   flatData: Pick<TeamsFlatDataDto, 'displayName'>;
                   referencingUsersContents: Maybe<
                     Array<{
@@ -7649,7 +7738,7 @@ export type FetchResearchOutputsQuery = {
 
 export type TeamsContentFragment = Pick<
   Teams,
-  'id' | 'created' | 'lastModified'
+  'id' | 'created' | 'lastModified' | 'version'
 > & {
   flatData: Pick<
     TeamsFlatDataDto,
@@ -7661,7 +7750,7 @@ export type TeamsContentFragment = Pick<
   > & {
     outputs?: Maybe<
       Array<
-        Pick<ResearchOutputs, 'id' | 'created' | 'lastModified'> & {
+        Pick<ResearchOutputs, 'id' | 'created' | 'lastModified' | 'version'> & {
           flatData: Pick<
             ResearchOutputsFlatDataDto,
             | 'title'
@@ -7686,7 +7775,7 @@ export type TeamsContentFragment = Pick<
               Array<
                 | ({ __typename: 'ExternalAuthors' } & Pick<
                     ExternalAuthors,
-                    'id' | 'created' | 'lastModified'
+                    'id' | 'created' | 'lastModified' | 'version'
                   > & {
                       flatData: Pick<
                         ExternalAuthorsFlatDataDto,
@@ -7695,7 +7784,7 @@ export type TeamsContentFragment = Pick<
                     })
                 | ({ __typename: 'Users' } & Pick<
                     Users,
-                    'id' | 'created' | 'lastModified'
+                    'id' | 'created' | 'lastModified' | 'version'
                   > & {
                       flatData: Pick<
                         UsersFlatDataDto,
@@ -7796,7 +7885,7 @@ export type TeamsContentFragment = Pick<
           };
           referencingTeamsContents?: Maybe<
             Array<
-              Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+              Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
                 flatData: Pick<TeamsFlatDataDto, 'displayName'>;
                 referencingUsersContents: Maybe<
                   Array<{
@@ -7824,7 +7913,7 @@ export type TeamsContentFragment = Pick<
   };
   referencingUsersContents: Maybe<
     Array<
-      Pick<Users, 'id' | 'created' | 'lastModified'> & {
+      Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
         flatData: Pick<
           UsersFlatDataDto,
           | 'biography'
@@ -7915,7 +8004,7 @@ export type FetchTeamQueryVariables = Exact<{
 
 export type FetchTeamQuery = {
   findTeamsContent: Maybe<
-    Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+    Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
       flatData: Pick<
         TeamsFlatDataDto,
         | 'applicationNumber'
@@ -7926,7 +8015,10 @@ export type FetchTeamQuery = {
       > & {
         outputs?: Maybe<
           Array<
-            Pick<ResearchOutputs, 'id' | 'created' | 'lastModified'> & {
+            Pick<
+              ResearchOutputs,
+              'id' | 'created' | 'lastModified' | 'version'
+            > & {
               flatData: Pick<
                 ResearchOutputsFlatDataDto,
                 | 'title'
@@ -7951,7 +8043,7 @@ export type FetchTeamQuery = {
                   Array<
                     | ({ __typename: 'ExternalAuthors' } & Pick<
                         ExternalAuthors,
-                        'id' | 'created' | 'lastModified'
+                        'id' | 'created' | 'lastModified' | 'version'
                       > & {
                           flatData: Pick<
                             ExternalAuthorsFlatDataDto,
@@ -7960,7 +8052,7 @@ export type FetchTeamQuery = {
                         })
                     | ({ __typename: 'Users' } & Pick<
                         Users,
-                        'id' | 'created' | 'lastModified'
+                        'id' | 'created' | 'lastModified' | 'version'
                       > & {
                           flatData: Pick<
                             UsersFlatDataDto,
@@ -8065,7 +8157,7 @@ export type FetchTeamQuery = {
               };
               referencingTeamsContents?: Maybe<
                 Array<
-                  Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+                  Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
                     flatData: Pick<TeamsFlatDataDto, 'displayName'>;
                     referencingUsersContents: Maybe<
                       Array<{
@@ -8093,7 +8185,7 @@ export type FetchTeamQuery = {
       };
       referencingUsersContents: Maybe<
         Array<
-          Pick<Users, 'id' | 'created' | 'lastModified'> & {
+          Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
             flatData: Pick<
               UsersFlatDataDto,
               | 'biography'
@@ -8193,7 +8285,7 @@ export type FetchTeamsQuery = {
     Pick<TeamsResultDto, 'total'> & {
       items: Maybe<
         Array<
-          Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+          Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
             flatData: Pick<
               TeamsFlatDataDto,
               | 'applicationNumber'
@@ -8204,7 +8296,10 @@ export type FetchTeamsQuery = {
             > & {
               outputs?: Maybe<
                 Array<
-                  Pick<ResearchOutputs, 'id' | 'created' | 'lastModified'> & {
+                  Pick<
+                    ResearchOutputs,
+                    'id' | 'created' | 'lastModified' | 'version'
+                  > & {
                     flatData: Pick<
                       ResearchOutputsFlatDataDto,
                       | 'title'
@@ -8229,7 +8324,7 @@ export type FetchTeamsQuery = {
                         Array<
                           | ({ __typename: 'ExternalAuthors' } & Pick<
                               ExternalAuthors,
-                              'id' | 'created' | 'lastModified'
+                              'id' | 'created' | 'lastModified' | 'version'
                             > & {
                                 flatData: Pick<
                                   ExternalAuthorsFlatDataDto,
@@ -8238,7 +8333,7 @@ export type FetchTeamsQuery = {
                               })
                           | ({ __typename: 'Users' } & Pick<
                               Users,
-                              'id' | 'created' | 'lastModified'
+                              'id' | 'created' | 'lastModified' | 'version'
                             > & {
                                 flatData: Pick<
                                   UsersFlatDataDto,
@@ -8348,7 +8443,10 @@ export type FetchTeamsQuery = {
                     };
                     referencingTeamsContents?: Maybe<
                       Array<
-                        Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+                        Pick<
+                          Teams,
+                          'id' | 'created' | 'lastModified' | 'version'
+                        > & {
                           flatData: Pick<TeamsFlatDataDto, 'displayName'>;
                           referencingUsersContents: Maybe<
                             Array<{
@@ -8378,7 +8476,7 @@ export type FetchTeamsQuery = {
             };
             referencingUsersContents: Maybe<
               Array<
-                Pick<Users, 'id' | 'created' | 'lastModified'> & {
+                Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
                   flatData: Pick<
                     UsersFlatDataDto,
                     | 'biography'
@@ -8477,7 +8575,7 @@ export type FetchTeamsQuery = {
 
 export type UsersContentFragment = Pick<
   Users,
-  'id' | 'created' | 'lastModified'
+  'id' | 'created' | 'lastModified' | 'version'
 > & {
   flatData: Pick<
     UsersFlatDataDto,
@@ -8562,7 +8660,7 @@ export type FetchUserQueryVariables = Exact<{
 
 export type FetchUserQuery = {
   findUsersContent: Maybe<
-    Pick<Users, 'id' | 'created' | 'lastModified'> & {
+    Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
       flatData: Pick<
         UsersFlatDataDto,
         | 'biography'
@@ -8653,7 +8751,7 @@ export type FetchUsersQuery = {
     Pick<UsersResultDto, 'total'> & {
       items: Maybe<
         Array<
-          Pick<Users, 'id' | 'created' | 'lastModified'> & {
+          Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
             flatData: Pick<
               UsersFlatDataDto,
               | 'biography'
@@ -8756,6 +8854,7 @@ export const ResearchOutputContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'created' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lastModified' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'flatData' },
@@ -8824,6 +8923,10 @@ export const ResearchOutputContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'lastModified' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'version' },
                             },
                             {
                               kind: 'Field',
@@ -9213,6 +9316,10 @@ export const ResearchOutputContentFragmentDoc = {
                             },
                             {
                               kind: 'Field',
+                              name: { kind: 'Name', value: 'version' },
+                            },
+                            {
+                              kind: 'Field',
                               name: { kind: 'Name', value: 'flatData' },
                               selectionSet: {
                                 kind: 'SelectionSet',
@@ -9288,6 +9395,7 @@ export const ResearchOutputContentFragmentDoc = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'lastModified' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'version' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },
@@ -9373,6 +9481,7 @@ export const TeamsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'created' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lastModified' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'flatData' },
@@ -9479,6 +9588,7 @@ export const TeamsContentFragmentDoc = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'lastModified' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'version' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },
@@ -9785,6 +9895,7 @@ export const GroupsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'created' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lastModified' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'flatData' },
@@ -9845,6 +9956,10 @@ export const GroupsContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'lastModified' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'version' },
                             },
                             {
                               kind: 'Field',
@@ -10279,6 +10394,7 @@ export const EventContentFragmentDoc = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lastModified' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
           { kind: 'Field', name: { kind: 'Name', value: 'created' } },
           {
             kind: 'Field',
@@ -10428,6 +10544,7 @@ export const NewsFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'created' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lastModified' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'flatData' },
@@ -10474,6 +10591,7 @@ export const UsersContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'created' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lastModified' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'flatData' },
@@ -10745,6 +10863,7 @@ export const FetchCalendarDocument = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'lastModified' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'version' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },
@@ -10832,6 +10951,10 @@ export const FetchDashboardDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'lastModified' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'version' },
                             },
                             {
                               kind: 'Field',
@@ -10940,6 +11063,10 @@ export const FetchDiscoverDocument = {
                             },
                             {
                               kind: 'Field',
+                              name: { kind: 'Name', value: 'version' },
+                            },
+                            {
+                              kind: 'Field',
                               name: { kind: 'Name', value: 'flatData' },
                               selectionSet: {
                                 kind: 'SelectionSet',
@@ -10987,6 +11114,10 @@ export const FetchDiscoverDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'lastModified' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'version' },
                             },
                             {
                               kind: 'Field',

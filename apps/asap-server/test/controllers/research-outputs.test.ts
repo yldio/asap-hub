@@ -216,6 +216,7 @@ describe('ResearchOutputs controller', () => {
         id: '3099015c-c9ed-40fd-830a-8fe1b6ec0482',
         created: '2021-06-04T09:37:54Z',
         lastModified: '2021-06-04T09:37:54Z',
+        version: 42,
         flatData: {
           name: 'test external author',
           orcid: '23423423',

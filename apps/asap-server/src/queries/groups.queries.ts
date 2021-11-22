@@ -6,6 +6,7 @@ export const groupContentQueryFragment = gql`
     id
     created
     lastModified
+    version
     flatData {
       name
       description
@@ -23,6 +24,7 @@ export const groupContentQueryFragment = gql`
           id
           created
           lastModified
+          version
           flatData {
             avatar {
               id

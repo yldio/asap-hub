@@ -33,6 +33,7 @@ export const referencingUsersContentsResponse = ({
     id: 'user-id-1',
     created: '2020-09-25T09:42:51.132Z',
     lastModified: '2020-09-25T09:42:51.132Z',
+    version: 42,
     flatData: {
       avatar,
       email: 'cristiano@ronaldo.com',
@@ -60,6 +61,7 @@ export const referencingUsersContentsResponse = ({
               id: 'team-id-1',
               created: '2020-09-23T20:33:36Z',
               lastModified: '2020-11-26T11:56:04Z',
+              version: 42,
               flatData: {
                 displayName: 'Schipa, A',
               },
@@ -92,6 +94,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
           id: 'team-id-1',
           created: '2020-09-23T20:33:36Z',
           lastModified: '2020-11-26T11:56:04Z',
+          version: 42,
           flatData: {
             applicationNumber: 'ASAP-000420',
             displayName: 'Schipa, A',
@@ -100,6 +103,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                 id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
                 created: '2020-09-17T08:18:01Z',
                 lastModified: '2020-10-21T13:11:50.000Z',
+                version: 42,
                 flatData: {
                   link: null,
                   publishDate: null,
@@ -118,6 +122,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                 id: '7198d072-de87-4b80-90ca-4a1abe67952e',
                 created: '2020-11-24T16:33:30Z',
                 lastModified: '2020-11-26T13:45:49.000Z',
+                version: 42,
                 flatData: {
                   link: 'docs.google.com',
                   publishDate: null,
@@ -155,6 +160,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
               id: 'user-id-1',
               created: '2020-09-25T09:42:51.132Z',
               lastModified: '2020-09-25T09:42:51.132Z',
+              version: 42,
               flatData: {
                 avatar: [
                   {
@@ -175,6 +181,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                         id: 'team-id-1',
                         created: '2020-09-23T20:33:36Z',
                         lastModified: '2020-11-26T11:56:04Z',
+                        version: 42,
                         flatData: {
                           displayName: 'Schipa, A',
                         },
@@ -199,6 +206,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
           id: 'team-id-2',
           created: '2020-09-23T20:29:45Z',
           lastModified: '2020-10-26T20:54:00Z',
+          version: 42,
           flatData: {
             applicationNumber: 'ASAP-000463',
             displayName: 'John T.',
@@ -215,6 +223,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
               id: 'user-id-2',
               created: '2020-09-25T09:42:51.132Z',
               lastModified: '2020-09-25T09:42:51.132Z',
+              version: 42,
               flatData: {
                 avatar: [
                   {
@@ -235,6 +244,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                         id: 'team-id-2',
                         created: '2020-09-23T20:33:36Z',
                         lastModified: '2020-11-26T11:56:04Z',
+                        version: 42,
                         flatData: {
                           displayName: 'Schipa, A',
                         },
@@ -254,6 +264,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
               id: 'user-id-3',
               created: '2020-09-25T09:42:51.132Z',
               lastModified: '2020-09-25T09:42:51.132Z',
+              version: 42,
               flatData: {
                 avatar: [
                   {
@@ -274,6 +285,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                         id: 'team-id-2',
                         created: '2020-09-23T20:33:36Z',
                         lastModified: '2020-11-26T11:56:04Z',
+                        version: 42,
                         flatData: {
                           displayName: 'Schipa, A',
                         },
@@ -295,6 +307,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
           id: 'team-id-3',
           created: '2020-09-23T20:29:52Z',
           lastModified: '2020-09-23T20:29:52Z',
+          version: 42,
           flatData: {
             applicationNumber: 'ASAP-000312',
             displayName: 'Zac T.',
@@ -310,6 +323,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
               id: 'user-id-4',
               created: '2020-09-25T09:42:51.132Z',
               lastModified: '2020-09-25T09:42:51.132Z',
+              version: 42,
               flatData: {
                 avatar: [
                   {
@@ -330,6 +344,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                         id: 'team-id-3',
                         created: '2020-09-23T20:33:36Z',
                         lastModified: '2020-11-26T11:56:04Z',
+                        version: 42,
                         flatData: {
                           displayName: 'Schipa, A',
                         },
@@ -516,6 +531,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
       id: 'team-id-1',
       created: '2020-09-23T20:33:36Z',
       lastModified: '2020-11-26T11:56:04Z',
+      version: 42,
       flatData: {
         applicationNumber: 'ASAP-000420',
         displayName: 'Schipa, A',
@@ -524,6 +540,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
             id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
             created: '2020-09-17T08:18:01Z',
             lastModified: '2020-10-21T13:11:50.000Z',
+            version: 42,
             flatData: {
               link: null,
               publishDate: null,
@@ -542,6 +559,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
             id: '7198d072-de87-4b80-90ca-4a1abe67952e',
             created: '2020-11-24T16:33:30Z',
             lastModified: '2020-11-26T13:45:49.000Z',
+            version: 42,
             flatData: {
               link: 'docs.google.com',
               publishDate: null,
@@ -559,6 +577,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
                 id: 'team-id-1',
                 created: '2020-09-23T20:33:36Z',
                 lastModified: '2020-11-26T11:56:04Z',
+                version: 42,
                 flatData: {
                   displayName: 'Schipa, A',
                 },
@@ -567,6 +586,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
                 id: 'team-id-2',
                 created: '2020-09-23T20:33:36Z',
                 lastModified: '2020-11-26T11:56:04Z',
+                version: 42,
                 flatData: {
                   displayName: 'Team, B',
                 },
@@ -590,6 +610,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
           id: 'user-id-1',
           created: '2020-09-25T09:42:51.132Z',
           lastModified: '2020-09-25T09:42:51.132Z',
+          version: 42,
           flatData: {
             avatar: [
               {
@@ -610,6 +631,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
                     id: 'team-id-1',
                     created: '2020-09-23T20:33:36Z',
                     lastModified: '2020-11-26T11:56:04Z',
+                    version: 42,
                     flatData: {
                       displayName: 'Schipa, A',
                       tools: [],
@@ -728,6 +750,7 @@ export const getUpdateTeamResponse = (tools: TeamTool[] = []): RestTeam => ({
   },
   created: '2020-09-08T16:35:28Z',
   lastModified: '2020-09-08T16:35:28Z',
+  version: 42,
 });
 
 export type GraphTeamTool = NonNullable<
@@ -742,6 +765,7 @@ export const getGraphQlTeamResponse = (
       id: 'team-id-1',
       created: '2020-09-23T20:33:36Z',
       lastModified: '2020-11-26T11:56:04Z',
+      version: 42,
       flatData: {
         applicationNumber: 'ASAP-000420',
         displayName: 'Schipa, A',
@@ -801,6 +825,7 @@ export const updateResponseTeam: { total: number; items: RestUser[] } = {
       },
       created: '2020-09-25T09:42:51Z',
       lastModified: '2020-09-25T09:42:51Z',
+      version: 42,
     },
   ],
 };
@@ -839,6 +864,7 @@ const getTeamsEvent = (
     id: 'teamId',
     created: '2021-10-04T16:55:30Z',
     lastModified: '2021-10-05T12:49:49Z',
+    version: 42,
     data,
     dataOld,
   },

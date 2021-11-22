@@ -30,6 +30,7 @@ export const fetchUserResponse: RestUser = {
   },
   created: '2020-08-27T13:20:57Z',
   lastModified: '2020-08-31T13:57:51Z',
+  version: 42,
 };
 
 export const updateUserEvent: WebhookPayload<User> = {
@@ -41,6 +42,7 @@ export const updateUserEvent: WebhookPayload<User> = {
     id: 'userId',
     created: '2020-07-31T14:11:58Z',
     lastModified: '2020-07-31T15:49:41Z',
+    version: 42,
     data: {
       role: {
         iv: 'Grantee',
@@ -115,6 +117,7 @@ export const createUserEvent: WebhookPayload<User> = {
     id: 'userId',
     created: '2020-07-31T15:52:33Z',
     lastModified: '2020-07-31T15:52:33Z',
+    version: 42,
     data: {
       firstName: { iv: 'Gil' },
       lastName: { iv: 'Eanes' },

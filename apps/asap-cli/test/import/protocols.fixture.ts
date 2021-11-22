@@ -31,6 +31,7 @@ export const createProtocolsRequest: Omit<
 export const fetchProtocolsResponse: CreateResearchOutput = {
   id: 'uuid',
   lastModified: '2020-09-25T11:06:27.164Z',
+  version: 42,
   created: '2020-09-24T11:06:27.164Z',
   data: createProtocolsRequest,
 };
@@ -38,6 +39,7 @@ export const fetchProtocolsResponse: CreateResearchOutput = {
 export const fetchUserResponse: RestUser = {
   id: 'user-uuid-1',
   lastModified: '2020-09-25T11:06:27.164Z',
+  version: 42,
   created: '2020-09-24T11:06:27.164Z',
   data: {
     avatar: { iv: [] },
@@ -63,6 +65,7 @@ export const fetchUserResponse: RestUser = {
 export const fetchTeamResponse: RestTeam = {
   id: 'team-uuid-1',
   lastModified: '2020-09-25T11:06:27.164Z',
+  version: 42,
   created: '2020-09-24T11:06:27.164Z',
   data: {
     applicationNumber: { iv: 'app-number' },

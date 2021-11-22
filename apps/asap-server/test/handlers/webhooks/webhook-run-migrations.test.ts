@@ -206,6 +206,7 @@ describe('Run-migrations Webhook', () => {
           {
             created: '',
             lastModified: '',
+            version: 42,
             id: '',
             data: {
               name: { iv: '1-test-migration.ts' },
@@ -232,6 +233,7 @@ describe('Run-migrations Webhook', () => {
           {
             created: '',
             lastModified: '',
+            version: 42,
             id: 'test-ID-2',
             data: {
               name: { iv: '2-test-migration.ts' },
@@ -240,6 +242,7 @@ describe('Run-migrations Webhook', () => {
           {
             created: '',
             lastModified: '',
+            version: 42,
             id: 'test-ID-1',
             data: {
               name: { iv: '1-test-migration.ts' },
@@ -252,6 +255,7 @@ describe('Run-migrations Webhook', () => {
       squidexClientMock.fetchOne.mockResolvedValueOnce({
         created: '',
         lastModified: '',
+        version: 42,
         id: 'test-ID-2',
         data: {
           name: { iv: '2-test-migration.ts' },
@@ -274,6 +278,7 @@ describe('Run-migrations Webhook', () => {
           {
             created: '',
             lastModified: '',
+            version: 42,
             id: '',
             data: {
               name: { iv: '1-test-migration.ts' },
@@ -301,6 +306,7 @@ describe('Run-migrations Webhook', () => {
           {
             created: '',
             lastModified: '',
+            version: 42,
             id: 'test-ID-1',
             data: {
               name: { iv: '1-test-migration.ts' },
@@ -313,6 +319,7 @@ describe('Run-migrations Webhook', () => {
       squidexClientMock.fetchOne.mockResolvedValueOnce({
         created: '',
         lastModified: '',
+        version: 42,
         id: 'test-ID-2',
         data: {
           name: { iv: '2-test-migration.ts' },

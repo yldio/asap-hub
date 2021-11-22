@@ -32,7 +32,11 @@ const ResearchOutput: React.FC = () => {
             backHref={backHref}
           />
         ) : (
-          <SharedResearchOutput {...researchOutputData} backHref={backHref} />
+          <SharedResearchOutput
+            {...researchOutputData}
+            type={type}
+            backHref={backHref}
+          />
         )}
       </Frame>
     );

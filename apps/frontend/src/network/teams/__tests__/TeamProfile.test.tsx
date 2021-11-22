@@ -8,8 +8,8 @@ import {
   createTeamResponse,
 } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
-
-import { disable } from '@asap-hub/flags';
+import { useFlags } from '@asap-hub/react-context';
+import { renderHook } from '@testing-library/react-hooks';
 import {
   Auth0Provider,
   WhenReady,
@@ -82,7 +82,10 @@ it('renders the about info', async () => {
 });
 
 it('navigates to the outputs tab (REGRESSION)', async () => {
-  disable('ALGOLIA_RESEARCH_OUTPUTS');
+  const {
+    result: { current },
+  } = renderHook(useFlags);
+  current.disable('ALGOLIA_RESEARCH_OUTPUTS');
   const { getByText, findByText } = await renderTeamProfile();
 
   userEvent.click(getByText(/outputs/i, { selector: 'nav *' }));

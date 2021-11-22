@@ -3,7 +3,8 @@ import {
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
-import { disable } from '@asap-hub/flags';
+import { useFlags } from '@asap-hub/react-context';
+import { renderHook } from '@testing-library/react-hooks';
 
 import SharedResearchOutputHeaderCard from '../SharedResearchOutputHeaderCard';
 
@@ -57,7 +58,10 @@ it('falls back to created date when added date omitted', () => {
 });
 
 it('does not show authors (REGRESSION)', () => {
-  disable('RESEARCH_OUTPUT_SHOW_AUTHORS_LIST');
+  const {
+    result: { current },
+  } = renderHook(useFlags);
+  current.disable('RESEARCH_OUTPUT_SHOW_AUTHORS_LIST');
   const { queryByText } = render(
     <SharedResearchOutputHeaderCard
       {...createResearchOutputResponse()}

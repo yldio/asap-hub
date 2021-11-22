@@ -10,7 +10,7 @@ import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import { isEnabled } from '@asap-hub/flags';
+import { useFlags } from '@asap-hub/react-context';
 
 import {
   getResearchOutput,
@@ -111,6 +111,7 @@ export const usePrefetchResearchOutputsLegacy = (
     filters: new Set(),
   },
 ) => {
+  const { isEnabled } = useFlags();
   const authorization = useRecoilValue(authorizationState);
   const [researchOutputs, setResearchOutputs] = useRecoilState(
     researchOutputsState(options),
@@ -133,6 +134,7 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
     researchOutputsState(options),
   );
   const { index } = useAlgolia();
+  const { isEnabled } = useFlags();
   if (isEnabled('ALGOLIA_RESEARCH_OUTPUTS') && researchOutputs === undefined) {
     throw getResearchOutputs(index, options)
       .then(

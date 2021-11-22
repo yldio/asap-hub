@@ -1,7 +1,7 @@
 import { SharedResearchList } from '@asap-hub/react-components';
 import { sharedResearch } from '@asap-hub/routing';
 import { format } from 'date-fns';
-import { isEnabled } from '@asap-hub/flags';
+import { useFlags } from '@asap-hub/react-context';
 
 import { useResearchOutputs } from './state';
 import { usePaginationParams, usePagination } from '../hooks';
@@ -22,6 +22,7 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
   searchQuery = '',
   filters = new Set(),
 }) => {
+  const { isEnabled } = useFlags();
   const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
   const result = useResearchOutputs({

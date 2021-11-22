@@ -2,7 +2,8 @@ import { Suspense } from 'react';
 import { User } from '@asap-hub/auth';
 import { render, waitFor } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
-import { disable } from '@asap-hub/flags';
+import { useFlags } from '@asap-hub/react-context';
+import { renderHook } from '@testing-library/react-hooks';
 
 import Dashboard from '../Dashboard';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -82,9 +83,12 @@ it('renders dashboard with news and events', async () => {
 });
 
 it('prefetches research outputs (REGRESSION)', async () => {
+  const {
+    result: { current },
+  } = renderHook(useFlags);
   const { rerender } = await renderDashboard({});
   expect(mockGetResearchOutputsLegacy).not.toHaveBeenCalled();
-  disable('ALGOLIA_RESEARCH_OUTPUTS');
+  current.disable('ALGOLIA_RESEARCH_OUTPUTS');
 
   rerender(
     <Suspense fallback="loading">

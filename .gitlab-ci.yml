@@ -53,6 +53,13 @@ stages:
 
 build:ts:
   image: $INTEGRATION_DOCKER_IMAGE
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+      variables:
+        REACT_APP_SENTRY_DSN: ${REACT_APP_SENTRY_DSN_DEV}
+    - if: $CI_COMMIT_BRANCH != 'master'
+      variables:
+        REACT_APP_SENTRY_DSN: ''
   artifacts:
     expire_in: 2 weeks
     paths:
@@ -62,10 +69,10 @@ build:ts:
     - source ci/env-setup.sh
     - export REACT_APP_API_BASE_URL=$ASAP_API_URL
     - export REACT_APP_ALGOLIA_INDEX=$ALGOLIA_INDEX
-    - export REACT_APP_ALGOLIA_APP_ID=0
-    - export REACT_APP_RELEASE=''
-    - export REACT_APP_SENTRY_DSN=$REACT_APP_SENTRY_DNS_DEV
-    - export REACT_APP_ENVIRONMENT="local"
+    - export REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)
+    - export REACT_APP_RELEASE=${CI_PIPELINE_ID}-dev
+    - export REACT_APP_SENTRY_DSN=$REACT_APP_SENTRY_DSN
+    - export REACT_APP_ENVIRONMENT="development"
     - yarn run build
     - export CI_REPO_OWNER="$CI_PROJECT_NAMESPACE"
     - export CI_REPO_NAME="$CI_PROJECT_NAME"

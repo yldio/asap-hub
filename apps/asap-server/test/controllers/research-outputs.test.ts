@@ -434,6 +434,19 @@ describe('ResearchOutputs controller', () => {
       expect(result.items[0]!.type).toEqual('Grant Document');
     });
 
+    test('Should return Grant Document on ResearchOutputs', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputsGraphqlResponse();
+      squidexGraphqlResponse.queryResearchOutputsContentsWithTotal!.items![0]!.flatData.type =
+        'Grant Document';
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const result = await researchOutputs.fetch({ take: 10, skip: 0 });
+
+      expect(result.items[0]!.type).toEqual('Grant Document');
+    });
+
     describe('Parameters', () => {
       const defaultParams = {
         take: 8,

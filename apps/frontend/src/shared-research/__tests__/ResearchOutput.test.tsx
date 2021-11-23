@@ -25,7 +25,7 @@ beforeEach(() => {
   mockGetResearchOutput.mockClear();
   mockGetResearchOutput.mockResolvedValue({
     ...createResearchOutputResponse(),
-    type: 'Article'
+    type: 'Article',
     id,
   });
 });

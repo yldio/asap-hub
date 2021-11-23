@@ -1,7 +1,4 @@
-import {
-  NotFoundPage,
-  SharedResearchOutput,
-} from '@asap-hub/react-components';
+import { NotFoundPage, SharedResearchOutput } from '@asap-hub/react-components';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 
 import { useBackHref } from '../hooks';

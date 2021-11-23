@@ -5,12 +5,11 @@ import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { NewsResponse } from '@asap-hub/model';
 import { news } from '@asap-hub/routing';
-import { createNewsResponse } from '@asap-hub/fixtures';
 
 import News from '../News';
 import { API_BASE_URL } from '../../config';
-import { refreshNewsItemState } from '../state';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { refreshNewsItemState } from '../state';
 
 const newsOrEvent: NewsResponse = {
   id: '55724942-3408-4ad6-9a73-14b92226ffb6',
@@ -19,11 +18,11 @@ const newsOrEvent: NewsResponse = {
   type: 'News',
 };
 
-const renderPage = async (newsResponse = createNewsResponse(1)) => {
+const renderPage = async () => {
   const result = render(
     <RecoilRoot
       initializeState={({ set }) =>
-        set(refreshNewsItemState(newsResponse.id), Math.random())
+        set(refreshNewsItemState(newsOrEvent.id), Math.random())
       }
     >
       <Suspense fallback="loading">
@@ -65,11 +64,20 @@ describe('news detail page', () => {
     }).get('/news/55724942-3408-4ad6-9a73-14b92226ffb6');
   });
 
+  it('renders not found when the request returns a 404', async () => {
+    nockInterceptor.reply(404);
+
+    const { getByRole } = await renderPage();
+    await waitFor(() => nock.isDone());
+    expect(getByRole('heading').textContent).toContain(
+      'Sorry! We can’t seem to find that page.',
+    );
+  });
+
   it('renders title', async () => {
     nockInterceptor.reply(200, newsOrEvent);
 
     const { getByRole } = await renderPage();
-
     await waitFor(() => nock.isDone());
     expect(getByRole('heading').textContent).toContain('News Title');
   });

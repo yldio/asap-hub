@@ -52,7 +52,7 @@ describe('getNews', () => {
 });
 
 describe('getNewsById', () => {
-  it('makes an authorized GET request for the group id', async () => {
+  it('makes an authorized GET request for the newsItem id', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/news/42')
       .reply(200, {});
@@ -60,10 +60,10 @@ describe('getNewsById', () => {
     expect(nock.isDone()).toBe(true);
   });
 
-  it('returns a successfully fetched group', async () => {
-    const group = createNewsResponse('42');
-    nock(API_BASE_URL).get('/news/42').reply(200, group);
-    expect(await getNewsById('42', '')).toEqual(group);
+  it('returns a successfully fetched newsItem', async () => {
+    const newsItem = createNewsResponse('42');
+    nock(API_BASE_URL).get('/news/42').reply(200, newsItem);
+    expect(await getNewsById('42', '')).toEqual(newsItem);
   });
 
   it('returns undefined for a 404', async () => {

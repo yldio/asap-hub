@@ -44,6 +44,7 @@ const serverlessConfig: AWS = {
       cors: {
         allowedOrigins: [ASAP_APP_URL],
         allowCredentials: true,
+        allowedHeaders: ['authorization', 'x-transaction-id'],
       },
     },
     logs: {

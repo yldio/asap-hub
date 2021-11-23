@@ -25,35 +25,22 @@ const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
     // no routing, no way to get out of the error state
   }
 
-  switch (wrapper) {
-    case 'SentryErrorBoundary': {
-      return (
-        <SentryErrorBoundary
-          fallback={
-            <ErrorCard
-              title={'Something went wrong'}
-              refreshLink={true}
-              error={new Error()}
-            />
-          }
-        >
-          {children}
-        </SentryErrorBoundary>
-      );
-    }
-    default: {
-      return (
-        <ReactErrorBoundary
-          fallbackRender={({ error }) => (
-            <ErrorCard error={error} {...errorCardProps} />
-          )}
-          resetKeys={[pathname, search]}
-        >
-          {children}
-        </ReactErrorBoundary>
-      );
-    }
-  }
+  return wrapper === 'SentryErrorBoundary' ? (
+    <SentryErrorBoundary
+      fallback={({ error }) => <ErrorCard error={error} {...errorCardProps} />}
+    >
+      {children}
+    </SentryErrorBoundary>
+  ) : (
+    <ReactErrorBoundary
+      fallbackRender={({ error }) => (
+        <ErrorCard error={error} {...errorCardProps} />
+      )}
+      resetKeys={[pathname, search]}
+    >
+      {children}
+    </ReactErrorBoundary>
+  );
 };
 
 export default ErrorBoundary;

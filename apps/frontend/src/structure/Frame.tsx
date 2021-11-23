@@ -1,4 +1,4 @@
-import { Suspense, ComponentProps } from 'react';
+import React, { Suspense, ComponentProps, ReactNode } from 'react';
 import { Titled } from 'react-titled';
 import { Loading } from '@asap-hub/react-components';
 
@@ -6,35 +6,51 @@ import ErrorBoundary from './ErrorBoundary';
 
 type FrameProps = {
   title: string | null; // explicit null, omitting prop not allowed to make sure title is not forgotten when adding a page
-  boundaryProps?: Omit<ComponentProps<typeof ErrorBoundary>, 'children'>;
-  fallback?: ComponentProps<typeof Suspense>['fallback'];
-  wrapper?: 'ReactErrorBoundary' | 'SentryErrorBoundary';
+  children: ReactNode;
+  fallback: ComponentProps<typeof Suspense>['fallback'];
 };
 
-const Frame: React.FC<FrameProps> = ({
+type FrameBoundaryProps = {
+  title: string | null; // explicit null, omitting prop not allowed to make sure title is not forgotten when adding a page
+  boundaryProps?: Omit<ComponentProps<typeof ErrorBoundary>, 'children'>;
+  fallback?: ComponentProps<typeof Suspense>['fallback'];
+};
+
+const Frame = ({ fallback, children, title }: FrameProps) => (
+  <Titled
+    title={(parentTitle) =>
+      title ? (parentTitle ? `${title} | ${parentTitle}` : title) : parentTitle
+    }
+  >
+    <Suspense fallback={fallback}>{children}</Suspense>
+  </Titled>
+);
+
+const DefaultFrame: React.FC<FrameBoundaryProps> = ({
   children,
   title,
   boundaryProps,
-  wrapper = 'ReactErrorBoundary',
   fallback = <Loading />,
 }) => (
-  <ErrorBoundary {...boundaryProps} wrapper={wrapper}>
-    <Titled
-      title={(parentTitle) =>
-        title
-          ? parentTitle
-            ? `${title} | ${parentTitle}`
-            : title
-          : parentTitle
-      }
-    >
-      <Suspense fallback={fallback}>{children}</Suspense>
-    </Titled>
+  <ErrorBoundary {...boundaryProps} wrapper={'ReactErrorBoundary'}>
+    <Frame title={title} fallback={fallback}>
+      {children}
+    </Frame>
   </ErrorBoundary>
 );
 
-export const SearchFrame: React.FC<FrameProps> = (boundaryProps) => (
-  <Frame wrapper="SentryErrorBoundary" {...boundaryProps} />
-);
+export const SearchFrame: React.FC<Omit<FrameBoundaryProps, 'boundaryProps'>> =
+  ({ children, title, fallback = <Loading /> }) => (
+    <ErrorBoundary
+      title={'Something went wrong'}
+      refreshLink={true}
+      error={new Error()}
+      wrapper="SentryErrorBoundary"
+    >
+      <Frame title={title} fallback={fallback}>
+        {children}
+      </Frame>
+    </ErrorBoundary>
+  );
 
-export default Frame;
+export default DefaultFrame;

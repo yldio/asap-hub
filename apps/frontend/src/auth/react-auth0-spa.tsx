@@ -12,6 +12,7 @@ import {
   Auth0Client,
   RedirectLoginResult,
 } from '@auth0/auth0-spa-js';
+import { useLocation } from 'react-router-dom';
 
 const DEFAULT_REDIRECT_CALLBACK = () =>
   window.history.replaceState({}, document.title, window.location.pathname);
@@ -30,16 +31,12 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
   const [auth0Client, setAuth0Client] = useState<Auth0Client>();
   const [loading, setLoading] = useState(true);
   const [popupOpen, setPopupOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const initAuth0 = async () => {
       const auth0FromHook = new Auth0Client(initOptions);
       setAuth0Client(auth0FromHook);
-      try {
-        await auth0FromHook.checkSession(); // use refresh token to get new access token if required
-        // eslint-disable-next-line
-      } catch (error) {} // Invalid refresh token proceed as if user isn't logged in
-
       if (
         window.location.search.includes('code=') &&
         window.location.search.includes('state=')
@@ -62,6 +59,21 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     initAuth0();
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      if (auth0Client) {
+        try {
+          await auth0Client.checkSession(); // use refresh token to get new access token if required
+          // eslint-disable-next-line
+        } catch (error) {} // Invalid refresh token proceed as if user isn't logged in
+        const isAuthenticated = await auth0Client.isAuthenticated();
+        setIsAuthenticated(isAuthenticated);
+      }
+    };
+    checkSession();
+    // eslint-disable-next-line
+  }, [location]);
 
   const loginWithPopup: Auth0['loginWithPopup'] = async (...args) => {
     if (!auth0Client) {

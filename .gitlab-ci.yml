@@ -220,8 +220,22 @@ verify:branch:
     - deploy:squidex:branch
     - deploy:sls:branch
   script:
-    - yarn workspace @asap-hub/e2e-tests run playwright install
     - ASAP_API_URL=$API_URL yarn test:e2e
+
+e2e:branch:
+  <<: *tmpl_branch
+  stage: verify-dev
+  image: mcr.microsoft.com/playwright:focal
+  variables:
+    API_URL: https://api-$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
+  needs:
+    - build:ts
+    - build:native
+    - deploy:squidex:branch
+    - deploy:sls:branch
+  script:
+    - yarn workspace @asap-hub/e2e-tests run playwright install
+    - yarn workspace @asap-hub/e2e-tests run playwright test
 
 verify:schema:branch:
   <<: *tmpl_branch

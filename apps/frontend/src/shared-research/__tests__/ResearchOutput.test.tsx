@@ -84,7 +84,7 @@ describe('a grant document research output', () => {
     });
     const { getByRole, getByText } = await renderComponent();
 
-    expect(getByText(/proposal team/i)).toBeVisible();
+    expect(getByText(/grant document team/i)).toBeVisible();
     expect(getByRole('heading', { level: 1 }).textContent).toEqual(
       'Grant Document title!',
     );

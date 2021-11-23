@@ -33,7 +33,7 @@
     "test": "LANG=en_US TZ=UTC jest",
     "test:browser": "yarn test --config=packages/react-components/jest-browser.config.js",
     "test:build-output": "yarn test --config=jest-build-output.config.js",
-    "test:e2e": "yarn test --config=apps/e2e-tests/jest-e2e.config.js",
+    "test:e2e": "yarn test --config=apps/e2e-tests/jest-e2e.config.js && yarn workspace @asap-hub/e2e-tests run playwright test",
     "test:integration": "yarn test --config=jest-integration.config.js",
     "watch:babel": "yarn workspaces foreach -vpi -j 1000 run watch:babel",
     "watch:typecheck": "yarn build:typecheck -w",

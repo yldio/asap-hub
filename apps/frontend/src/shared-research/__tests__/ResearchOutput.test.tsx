@@ -25,7 +25,7 @@ beforeEach(() => {
   mockGetResearchOutput.mockClear();
   mockGetResearchOutput.mockResolvedValue({
     ...createResearchOutputResponse(),
-    type: 'Grant Document',
+    type: 'Article'
     id,
   });
 });
@@ -69,7 +69,7 @@ const renderComponent = async () => {
   return result;
 };
 
-describe('a Grant Document research output', () => {
+describe('a grant document research output', () => {
   it('renders with its teams', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
@@ -83,8 +83,11 @@ describe('a Grant Document research output', () => {
       title: 'Grant Document title!',
     });
     const { getByRole, getByText } = await renderComponent();
-    expect(getByText(/grant document team/i)).toBeVisible();
-    expect(getByRole('heading').textContent).toEqual('Grant Document title!');
+
+    expect(getByText(/proposal team/i)).toBeVisible();
+    expect(getByRole('heading', { level: 1 }).textContent).toEqual(
+      'Grant Document title!',
+    );
   });
   it('links to a teams', async () => {
     mockGetResearchOutput.mockResolvedValue({

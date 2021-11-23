@@ -6,6 +6,7 @@ export const eventContentFragment = gql`
   fragment EventContent on Events {
     id
     lastModified
+    version
     created
     flatData {
       description

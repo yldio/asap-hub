@@ -57,12 +57,24 @@ export const calendarCreatedHandlerFactory =
       `Received a '${eventType}' event for the calendar ${payload.id}`,
     );
 
+    logger.debug(`Event payload: ${JSON.stringify(payload)}`);
     if (eventType === 'CalendarsUpdated') {
       if (
         !payload.dataOld ||
         !payload.dataOld.googleCalendarId ||
         payload.dataOld.googleCalendarId.iv === payload.data.googleCalendarId.iv
       ) {
+        return 'OK';
+      }
+
+      const { version } = await calendarController.fetchById(payload.id, {
+        raw: true,
+      });
+
+      if (version > (payload.version as number)) {
+        logger.warn(
+          `version recieved (${payload.version}) is older than current version: ${version}`,
+        );
         return 'OK';
       }
 

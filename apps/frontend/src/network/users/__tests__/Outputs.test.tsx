@@ -4,7 +4,8 @@ import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createAlgoliaResearchOutputResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
-import { disable } from '@asap-hub/flags';
+import { useFlags } from '@asap-hub/react-context';
+import { renderHook } from '@testing-library/react-hooks';
 
 import { RecoilRoot } from 'recoil';
 import Outputs from '../Outputs';
@@ -90,7 +91,11 @@ const renderOutputs = async (
 };
 
 it('shows the coming soon text  (REGRESSION)', async () => {
-  disable('RESEARCH_OUTPUTS_ON_AUTHOR_PROFILE');
+  const {
+    result: { current },
+  } = renderHook(useFlags);
+  current.disable('RESEARCH_OUTPUTS_ON_AUTHOR_PROFILE');
+
   const { getByText } = await renderOutputs();
   expect(getByText(/more\sto\scome/i)).toBeVisible();
 });

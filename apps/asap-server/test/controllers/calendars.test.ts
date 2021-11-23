@@ -131,6 +131,7 @@ describe('Calendars controller', () => {
           resourceId: 'resource-id',
           syncToken: 'sync-token',
           expirationDate: 1614697798681,
+          version: 42,
         },
         {
           id: 'cms-calendar-id-2',
@@ -140,6 +141,7 @@ describe('Calendars controller', () => {
           resourceId: 'resource-id-2',
           syncToken: 'sync-token-2',
           expirationDate: 1614697621081,
+          version: 42,
         },
       ]);
     });

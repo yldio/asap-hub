@@ -6,6 +6,7 @@ export const FETCH_CALENDAR = gql`
       id
       created
       lastModified
+      version
       flatData {
         googleCalendarId
         name

@@ -33,6 +33,7 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
       },
       created: '2020-08-27T13:20:57Z',
       lastModified: '2020-08-31T13:57:51Z',
+      version: 42,
     },
     {
       id: '62d80950-1a81-446d-b5b0-34173394c505',
@@ -63,6 +64,7 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
       },
       created: '2020-08-27T13:20:57Z',
       lastModified: '2020-08-31T13:57:51Z',
+      version: 42,
     },
   ],
 };

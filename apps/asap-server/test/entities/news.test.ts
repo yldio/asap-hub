@@ -9,6 +9,7 @@ describe('parse news entities', () => {
         id: 'uuid',
         created: date,
         lastModified: date,
+        version: 42,
         data: {
           type: {
             iv: 'News',
@@ -42,6 +43,7 @@ describe('parse GraphQL news entities', () => {
       id: 'uuid',
       created: date,
       lastModified: date,
+      version: 42,
       data: null,
       flatData: {
         type: 'News',
@@ -74,6 +76,7 @@ describe('parse GraphQL news entities', () => {
       id: 'uuid',
       created: date,
       lastModified: date,
+      version: 42,
       data: null,
       flatData: {
         type,

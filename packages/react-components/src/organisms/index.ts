@@ -34,6 +34,7 @@ export { default as ResultList } from './ResultList';
 export { default as RichText } from './RichText';
 export { default as RichTextCard } from './RichTextCard';
 export { default as SearchAndFilter } from './SearchAndFilter';
+export { default as SharedResearchAdditionalInformationCard } from './SharedResearchAdditionalInformationCard';
 export { default as SharedResearchCard } from './SharedResearchCard';
 export { default as SharedResearchListCard } from './SharedResearchListCard';
 export { default as SharedResearchMetadata } from './SharedResearchMetadata';

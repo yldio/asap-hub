@@ -226,6 +226,7 @@ export const getRestEvent = (): RestEvent => ({
   id: 'squidex-event-id',
   created: '2021-02-23T19:32:00Z',
   lastModified: '2021-02-23T19:32:00Z',
+  version: 42,
   data: {
     googleId: { iv: 'google-event-id' },
     title: { iv: 'Event Tittle' },

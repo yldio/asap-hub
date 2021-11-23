@@ -52,6 +52,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   created: '2020-09-23T16:34:26.842Z',
   lastModified: '2021-05-14T14:48:46Z',
+  version: 42,
   flatData: {
     title: 'Test Proposal 1234',
     type: 'Grant Document',
@@ -91,6 +92,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
       id: 'team-id-1',
       created: '2020-09-23T20:33:36Z',
       lastModified: '2020-11-26T11:56:04Z',
+      version: 42,
       flatData: {
         displayName: 'Team A',
       },
@@ -179,6 +181,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
       id: 'team-id-2',
       created: '2020-09-23T20:33:36Z',
       lastModified: '2020-11-26T11:56:04Z',
+      version: 42,
       flatData: {
         displayName: 'Team B',
       },
@@ -193,6 +196,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
                     id: 'team-id-2',
                     created: '2020-09-23T20:33:36Z',
                     lastModified: '2020-11-26T11:56:04Z',
+                    version: 42,
                     flatData: {},
                   },
                 ],
@@ -211,6 +215,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
                     id: 'team-id-2',
                     created: '2020-09-23T20:33:36Z',
                     lastModified: '2020-11-26T11:56:04Z',
+                    version: 42,
                     flatData: {},
                   },
                 ],
@@ -229,6 +234,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
                     id: 'team-id-2',
                     created: '2020-09-23T20:33:36Z',
                     lastModified: '2020-11-26T11:56:04Z',
+                    version: 42,
                     flatData: {},
                   },
                 ],
@@ -241,6 +247,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
           id: '94adc252-cf5e-4950-bbcf-339e46d326a0',
           created: '2020-09-23T20:33:36Z',
           lastModified: '2020-11-26T11:56:04Z',
+          version: 42,
           flatData: {
             email: 'notapm4@example.com',
             teams: null,
@@ -304,6 +311,7 @@ export const getResearchOutputWebhookPayload = (
     id,
     created: '2020-07-31T14:11:58Z',
     lastModified: '2020-07-31T15:49:41Z',
+    version: 42,
     data: {
       type: { iv: 'Article' },
       title: { iv: 'Research Output' },

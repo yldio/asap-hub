@@ -7,7 +7,8 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/frontend/src/auth/test-utils';
-import { disable } from '@asap-hub/flags';
+import { useFlags } from '@asap-hub/react-context';
+import { renderHook } from '@testing-library/react-hooks';
 
 import Routes from '../Routes';
 import { getResearchOutputsLegacy, getResearchOutputs } from '../api';
@@ -46,7 +47,10 @@ const renderSharedResearchPage = async (pathname: string, query = '') => {
 
 describe('the shared research listing page (REGRESSION)', () => {
   it('allows typing in search queries (REGRESSION)', async () => {
-    disable('ALGOLIA_RESEARCH_OUTPUTS');
+    const {
+      result: { current },
+    } = renderHook(useFlags);
+    current.disable('ALGOLIA_RESEARCH_OUTPUTS');
     const { getByRole } = await renderSharedResearchPage('/shared-research');
     const searchBox = getByRole('searchbox') as HTMLInputElement;
 
@@ -55,7 +59,10 @@ describe('the shared research listing page (REGRESSION)', () => {
   });
 
   it('allows selection of filters (REGRESSION)', async () => {
-    disable('ALGOLIA_RESEARCH_OUTPUTS');
+    const {
+      result: { current },
+    } = renderHook(useFlags);
+    current.disable('ALGOLIA_RESEARCH_OUTPUTS');
 
     const { getByText, getByLabelText } = await renderSharedResearchPage(
       '/shared-research',
@@ -76,7 +83,10 @@ describe('the shared research listing page (REGRESSION)', () => {
   });
 
   it('reads filters from url (REGRESSION)', async () => {
-    disable('ALGOLIA_RESEARCH_OUTPUTS');
+    const {
+      result: { current },
+    } = renderHook(useFlags);
+    current.disable('ALGOLIA_RESEARCH_OUTPUTS');
     const { getByText, getByLabelText } = await renderSharedResearchPage(
       '/shared-research',
       '?filter=Grant+Document',

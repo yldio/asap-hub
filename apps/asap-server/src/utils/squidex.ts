@@ -23,22 +23,6 @@ export const sanitiseForSquidex = (text: string): string =>
     .replace(/#/g, '%23')
     .replace(/&/g, '%26');
 
-export const validatePropertiesRequired = <
-  T extends { [key: string]: unknown },
->(
-  entity: T,
-): entity is RequiredAndNonNullable<T> => {
-  const keys = Object.keys(entity);
-
-  for (const prop of keys) {
-    if (typeof entity[prop] === 'undefined' || entity[prop] === null) {
-      return false;
-    }
-  }
-
-  return true;
-};
-
 export type RequiredAndNonNullable<T> = Required<
   {
     [Property in keyof T]: NonNullable<T[Property]>;

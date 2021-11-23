@@ -6,6 +6,7 @@ export const fetchTeamsResponse: { total: number; items: RestTeam[] } = {
     {
       id: 'team-uuid-1',
       lastModified: '2020-09-25T11:06:27.164Z',
+      version: 42,
       created: '2020-09-24T11:06:27.164Z',
       data: {
         displayName: { iv: 'team' },
@@ -24,6 +25,7 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
     {
       id: 'userId1',
       lastModified: '2020-09-25T11:06:27.164Z',
+      version: 42,
       created: '2020-09-24T11:06:27.164Z',
       data: {
         avatar: { iv: [] },
@@ -48,6 +50,7 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
     {
       id: 'userId2',
       lastModified: '2020-09-25T11:06:27.164Z',
+      version: 42,
       created: '2020-09-24T11:06:27.164Z',
       data: {
         avatar: { iv: [] },
@@ -72,6 +75,7 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
     {
       id: 'userId3',
       lastModified: '2020-09-25T11:06:27.164Z',
+      version: 42,
       created: '2020-09-24T11:06:27.164Z',
       data: {
         avatar: { iv: [] },

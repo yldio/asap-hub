@@ -27,6 +27,7 @@ export const newsSquidexApiResponse: {
         },
       },
       lastModified: '2020-09-25T09:42:51Z',
+      version: 42,
       created: '2020-09-08T16:35:28Z',
     },
     {
@@ -49,6 +50,7 @@ export const newsSquidexApiResponse: {
         },
       },
       lastModified: '2020-09-25T09:42:51Z',
+      version: 42,
       created: '2020-09-16T14:31:19Z',
     },
   ],

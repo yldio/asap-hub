@@ -1,8 +1,6 @@
 import { ComponentProps } from 'react';
-import {
-  SharedResearchOutput,
-  SharedResearchGrantDocument,
-} from '@asap-hub/react-components';
+import { SharedResearchOutput } from '@asap-hub/react-components';
+
 import {
   text,
   date,
@@ -26,12 +24,7 @@ export default {
 
 const props = (): ComponentProps<typeof SharedResearchOutput> => ({
   ...createResearchOutputResponse(),
-  description: text(
-    'Description',
-    `Neural control of muscle function is fundamental to animal behavior. In many cases, specific muscles can generate multiple distinct behaviors. Nonetheless, individual muscle cells are generally regarded as the smallest units of motor control. Here we report that muscle cells can alter their behavioral output by contracting subcellularly.
-    <b>Bold Text</b> <a href="http://example.com"> link </a>
-    `,
-  ),
+  type: 'Article',
   title: text(
     'Title',
     'Molecular actions of PD-associated pathological proteins using in vitro human pluripotent stem cell-derived brain',
@@ -83,7 +76,29 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
   labs: createLabs({ labs: number('Number of labs', 2) }),
 });
 
-export const Normal = () => <SharedResearchOutput {...props()} />;
+export const Normal = () => (
+  <SharedResearchOutput
+    {...props()}
+    description={text(
+      'Description',
+      `Neural control of muscle function is fundamental to animal behavior. In many cases, specific muscles can generate multiple distinct behaviors. Nonetheless, individual muscle cells are generally regarded as the smallest units of motor control. Here we report that muscle cells can alter their behavioral output by contracting subcellularly.
+    <b>Bold Text</b> <a href="http://example.com"> link </a>
+    `,
+    )}
+  />
+);
 export const GrantDocument = () => (
-  <SharedResearchGrantDocument {...props()} type="Grant Document" />
+  <SharedResearchOutput
+    {...props()}
+    type="Grant Document"
+    accessInstructions={undefined}
+    description={text(
+      'Description',
+      `<h1>Example</h1>
+      Neural control of muscle function is fundamental to animal behavior. In many cases, specific muscles can generate multiple distinct behaviors. Nonetheless, individual muscle cells are generally regarded as the smallest units of motor control. Here we report that muscle cells can alter their behavioral output by contracting subcellularly.
+      <h2>Example 2</h2>
+      <b>Bold Text</b> <a href="http://example.com"> link </a>
+    `,
+    )}
+  />
 );

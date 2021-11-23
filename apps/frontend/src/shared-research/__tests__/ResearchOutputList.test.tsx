@@ -6,8 +6,6 @@ import {
   createAlgoliaResearchOutputResponse,
 } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
-import { useFlags } from '@asap-hub/react-context';
-import { renderHook } from '@testing-library/react-hooks';
 import userEvent from '@testing-library/user-event';
 
 import ResearchOutputList from '../ResearchOutputList';
@@ -75,23 +73,6 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-it('renders a list of research outputs (REGRESSION)', async () => {
-  const {
-    result: { current },
-  } = renderHook(useFlags);
-  current.disable('ALGOLIA_RESEARCH_OUTPUTS');
-  mockGetResearchOutputsLegacy.mockResolvedValue({
-    ...createListResearchOutputResponse(2),
-    items: createListResearchOutputResponse(2).items.map((item, index) => ({
-      ...item,
-      title: `Test Output ${index}`,
-    })),
-  });
-  const { container } = await renderResearchOutputList();
-  expect(container.textContent).toContain('Test Output 0');
-  expect(container.textContent).toContain('Test Output 1');
-});
-
 it('renders a list of research outputs', async () => {
   mockGetResearchOutputs.mockResolvedValue({
     ...createAlgoliaResearchOutputResponse(2),
@@ -103,18 +84,6 @@ it('renders a list of research outputs', async () => {
   const { container } = await renderResearchOutputList();
   expect(container.textContent).toContain('Test Output 0');
   expect(container.textContent).toContain('Test Output 1');
-});
-
-it('does not show export link when feature flag disabled (REGRESSION)', async () => {
-  const {
-    result: { current },
-  } = renderHook(useFlags);
-  current.disable('ALGOLIA_RESEARCH_OUTPUTS');
-  mockGetResearchOutputsLegacy.mockResolvedValue(
-    createListResearchOutputResponse(2),
-  );
-  const { queryByText } = await renderResearchOutputList();
-  expect(queryByText(/export/i)).toBeNull();
 });
 
 it('triggers and export with the same parameters', async () => {

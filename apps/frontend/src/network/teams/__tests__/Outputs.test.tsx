@@ -7,8 +7,6 @@ import {
   createResearchOutputResponse,
 } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
-import { useFlags } from '@asap-hub/react-context';
-import { renderHook } from '@testing-library/react-hooks';
 import { ResearchOutputResponse } from '@asap-hub/model';
 
 import { RecoilRoot } from 'recoil';
@@ -80,7 +78,7 @@ const renderOutputs = async (
               <Route
                 path={network({}).teams({}).team({ teamId }).outputs({}).$}
               >
-                <Outputs teamOutputs={teamOutputs} teamId={teamId} />
+                <Outputs teamId={teamId} />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -94,36 +92,6 @@ const renderOutputs = async (
   );
   return result;
 };
-
-it('generates a link to the output (REGRESSION)', async () => {
-  const {
-    result: { current },
-  } = renderHook(useFlags);
-  current.disable('ALGOLIA_RESEARCH_OUTPUTS');
-
-  const { getByText } = await renderOutputs([
-    { ...createResearchOutputResponse(), id: 'ro0', title: 'Some RO' },
-  ]);
-  expect(getByText(/Some RO/).closest('a')!.href).toMatch(/ro0$/);
-});
-
-it('generates a link back to the team (REGRESSION)', async () => {
-  const {
-    result: { current },
-  } = renderHook(useFlags);
-  current.disable('ALGOLIA_RESEARCH_OUTPUTS');
-
-  const { getByText } = await renderOutputs([
-    {
-      ...createResearchOutputResponse(),
-      teams: [{ id: '42', displayName: 'Some Team' }],
-    },
-  ]);
-  expect(getByText(/Some Team/).closest('a')).toHaveAttribute(
-    'href',
-    expect.stringMatching(/42$/),
-  );
-});
 
 it('renders search and filter', async () => {
   const { getByRole } = await renderOutputs([

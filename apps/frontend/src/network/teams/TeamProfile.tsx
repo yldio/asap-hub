@@ -44,7 +44,7 @@ const TeamProfile: FC<Record<string, never>> = () => {
             </Route>
             <Route path={path + route({ teamId }).outputs.template}>
               <SearchFrame title="outputs">
-                <Outputs teamId={teamId} teamOutputs={team.outputs} />
+                <Outputs teamId={teamId} />
               </SearchFrame>
             </Route>
             {team.tools && (

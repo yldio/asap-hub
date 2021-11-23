@@ -1,10 +1,9 @@
-export type Flag = 'PERSISTENT_EXAMPLE' | 'ALGOLIA_RESEARCH_OUTPUTS';
+export type Flag = 'PERSISTENT_EXAMPLE';
 
 export type Flags = Partial<Record<Flag, boolean>>;
 let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
-  ALGOLIA_RESEARCH_OUTPUTS: true,
 };
 
 const envDefaults: Record<string, boolean> = {

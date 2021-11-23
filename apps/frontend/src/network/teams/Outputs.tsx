@@ -2,9 +2,6 @@ import {
   TeamProfileOutputs,
   ResearchOutputsSearch,
 } from '@asap-hub/react-components';
-import { ResearchOutputResponse } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
-import { Flag } from '@asap-hub/flags';
 import { network } from '@asap-hub/routing';
 import format from 'date-fns/format';
 
@@ -23,20 +20,15 @@ type OutputsListProps = {
   searchQuery: string;
   filters: Set<string>;
   teamId: string;
-  teamOutputs: ReadonlyArray<ResearchOutputResponse>;
-  isEnabled: (flag: Flag) => boolean;
 };
 type OutputsProps = {
   teamId: string;
-  teamOutputs: ReadonlyArray<ResearchOutputResponse>;
 };
 
 const OutputsList: React.FC<OutputsListProps> = ({
   searchQuery,
   filters,
   teamId,
-  teamOutputs,
-  isEnabled,
 }) => {
   const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
@@ -70,9 +62,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
     );
   return (
     <TeamProfileOutputs
-      researchOutputs={
-        isEnabled('ALGOLIA_RESEARCH_OUTPUTS') ? result.items : teamOutputs
-      }
+      researchOutputs={result.items}
       exportResults={exportResults}
       numberOfItems={result.total}
       numberOfPages={numberOfPages}
@@ -89,8 +79,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   );
 };
 
-const Outputs: React.FC<OutputsProps> = ({ teamOutputs, teamId }) => {
-  const { isEnabled } = useFlags();
+const Outputs: React.FC<OutputsProps> = ({ teamId }) => {
   const {
     filters,
     searchQuery,
@@ -101,21 +90,17 @@ const Outputs: React.FC<OutputsProps> = ({ teamOutputs, teamId }) => {
 
   return (
     <article>
-      {isEnabled('ALGOLIA_RESEARCH_OUTPUTS') && (
-        <ResearchOutputsSearch
-          onChangeSearch={setSearchQuery}
-          searchQuery={searchQuery}
-          onChangeFilter={toggleFilter}
-          filters={filters}
-        />
-      )}
+      <ResearchOutputsSearch
+        onChangeSearch={setSearchQuery}
+        searchQuery={searchQuery}
+        onChangeFilter={toggleFilter}
+        filters={filters}
+      />
       <SearchFrame title="outputs">
         <OutputsList
           teamId={teamId}
-          teamOutputs={teamOutputs}
           searchQuery={debouncedSearchQuery}
           filters={filters}
-          isEnabled={isEnabled}
         />
       </SearchFrame>
     </article>

@@ -2,6 +2,7 @@ import { Route, Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { ErrorBoundary as SentryErrorBoundary } from '@sentry/react';
 
 import ErrorBoundary from '../ErrorBoundary';
 
@@ -10,6 +11,25 @@ mockConsoleError();
 const Throw: React.FC<Record<string, never>> = () => {
   throw new Error('oops');
 };
+
+jest.mock('@sentry/react');
+
+it('supports sentry error boundary', () => {
+  const { rerender } = render(
+    <ErrorBoundary>
+      <Throw />
+    </ErrorBoundary>,
+  );
+  expect(SentryErrorBoundary).not.toHaveBeenCalled();
+
+  rerender(
+    <ErrorBoundary wrapper={'SentryErrorBoundary'}>
+      <Throw />
+    </ErrorBoundary>,
+  );
+
+  expect(SentryErrorBoundary).toHaveBeenCalled();
+});
 
 it('catches child errors', async () => {
   const { container } = render(

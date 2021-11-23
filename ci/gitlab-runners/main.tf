@@ -40,8 +40,8 @@ module "vpc" {
 
 module "gitlab-runner" {
   source  = "npalm/gitlab-runner/aws"
-  version = "4.23.0"
-  
+  version = "4.35.0"
+
   aws_region  = var.aws_region
   environment = var.environment
 
@@ -59,9 +59,9 @@ module "gitlab-runner" {
   docker_machine_download_url   = "https://gitlab-docker-machine-downloads.s3.amazonaws.com/v0.16.2-gitlab.10/docker-machine-Linux-x86_64"
   docker_machine_spot_price_bid = "0.06"
 
-  gitlab_runner_version = 
+  gitlab_runner_version = "13.8.0"
   gitlab_runner_registration_config = {
-    registration_token = var.registration_token
+    registration_token = aws_ssm_parameter.gitlab_runner_registration_token.value
     tag_list           = "docker-spot-runner"
     description        = "runner default - auto"
     locked_to_project  = "true"
@@ -111,5 +111,16 @@ resource "null_resource" "cancel_spot_requests" {
   provisioner "local-exec" {
     when    = destroy
     command = "../../bin/cancel-spot-instances.sh ${self.triggers.environment}"
+  }
+}
+resource "aws_ssm_parameter" "gitlab_runner_registration_token" {
+  name        = "gitlab-registration-token"
+  type        = "SecureString"
+  value       = "Please fill manually."
+  description = "Gitlab registration token for a new runner."
+
+  lifecycle {
+    # the secret is set manually
+    ignore_changes = [value]
   }
 }

@@ -27,10 +27,7 @@ variable "runner_name" {
 variable "gitlab_url" {
   description = "URL of the gitlab instance to connect to."
   type        = string
-  default     = "https://gitlab.com"
-}
-
-variable "registration_token" {
+  default     = "https://gitlab.com/"
 }
 
 variable "timezone" {

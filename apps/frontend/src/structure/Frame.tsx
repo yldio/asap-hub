@@ -43,7 +43,7 @@ export const SearchFrame: React.FC<Omit<FrameBoundaryProps, 'boundaryProps'>> =
   ({ children, title, fallback = <Loading /> }) => (
     <ErrorBoundary
       title={'Something went wrong'}
-      refreshLink={true}
+      description={'There was a problem with your search, please try again.'}
       error={new Error()}
       wrapper="SentryErrorBoundary"
     >

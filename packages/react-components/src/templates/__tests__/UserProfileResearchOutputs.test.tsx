@@ -1,7 +1,5 @@
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
-import { useFlags } from '@asap-hub/react-context';
 import { render } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
 import { ComponentProps } from 'react';
 
 import UserProfileResearchOutputs from '../UserProfileResearchOutputs';
@@ -16,16 +14,6 @@ const baseProps: ComponentProps<typeof UserProfileResearchOutputs> = {
   cardViewHref: '',
   listViewHref: '',
 };
-it('renders a coming soon text (REGRESSION)', () => {
-  const {
-    result: { current },
-  } = renderHook(useFlags);
-  current.disable('RESEARCH_OUTPUTS_ON_AUTHOR_PROFILE');
-  const { getByText } = render(<UserProfileResearchOutputs {...baseProps} />);
-
-  expect(getByText(/more\sto\scome/i)).toBeVisible();
-  expect(getByText(/research\soutputs/i)).toBeVisible();
-});
 
 it('renders output cards', () => {
   const { getAllByRole, queryByText } = render(

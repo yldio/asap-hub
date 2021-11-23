@@ -3,8 +3,6 @@ import {
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
-import { useFlags } from '@asap-hub/react-context';
-import { renderHook } from '@testing-library/react-hooks';
 
 import SharedResearchOutputHeaderCard from '../SharedResearchOutputHeaderCard';
 
@@ -55,20 +53,6 @@ it('falls back to created date when added date omitted', () => {
     />,
   );
   expect(getByText(/2011/)).toBeVisible();
-});
-
-it('does not show authors (REGRESSION)', () => {
-  const {
-    result: { current },
-  } = renderHook(useFlags);
-  current.disable('RESEARCH_OUTPUT_SHOW_AUTHORS_LIST');
-  const { queryByText } = render(
-    <SharedResearchOutputHeaderCard
-      {...createResearchOutputResponse()}
-      authors={[{ ...createUserResponse(), displayName: 'John Doe' }]}
-    />,
-  );
-  expect(queryByText('John Doe')).not.toBeInTheDocument();
 });
 
 it('shows authors', () => {

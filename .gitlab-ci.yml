@@ -220,6 +220,7 @@ verify:branch:
     - deploy:squidex:branch
     - deploy:sls:branch
   script:
+    - yarn workspace @asap-hub/e2e-tests run playwright install
     - ASAP_API_URL=$API_URL yarn test:e2e
 
 verify:schema:branch:

@@ -15,7 +15,7 @@ export const Normal = () => (
     searchQuery={text('Search Query', '')}
     filterTitle={text('Filter Title', 'TYPE OF OUTPUTS')}
     filterOptions={[
-      { label: 'Grant Documentdata/type/iv', value: '1' },
+      { label: 'Grant Document', value: '1' },
       { label: 'Dataset', value: '2' },
       { label: 'Bioinformatics', value: '3' },
       { label: 'Protocol', value: '4' },

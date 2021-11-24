@@ -227,7 +227,7 @@ e2e:branch:
   stage: verify-dev
   image: mcr.microsoft.com/playwright:focal
   variables:
-    API_URL: https://api-$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
+    APP_URL: https://$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
   needs:
     - build:ts
     - build:native
@@ -235,7 +235,7 @@ e2e:branch:
     - deploy:sls:branch
   script:
     - yarn workspace @asap-hub/e2e-tests run playwright install
-    - ASAP_API_URL=$API_URL yarn workspace @asap-hub/e2e-tests run playwright test
+    - ASAP_APP_URL=$APP_URL yarn workspace @asap-hub/e2e-tests run playwright test
 
 verify:schema:branch:
   <<: *tmpl_branch

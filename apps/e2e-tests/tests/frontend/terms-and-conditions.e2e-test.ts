@@ -4,7 +4,7 @@ import { config } from '../../config';
 test('Should be able to see the terms-and-conditions page', async ({
   page,
 }) => {
-  await page.goto(`${config.apiOrigin}/terms-and-conditions`);
+  await page.goto(`${config.appUrl}/terms-and-conditions`);
 
   const h1 = page.locator('h1').first();
 

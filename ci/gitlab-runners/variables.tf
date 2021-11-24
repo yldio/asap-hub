@@ -1,13 +1,13 @@
 variable "aws_region" {
   description = "AWS region."
   type        = string
-  default     = "eu-west-1"
+  default     = "ap-southeast-2"
 }
 
 variable "environment" {
   description = "A name that identifies the environment, will used as prefix and for tagging."
   type        = string
-  default     = "runners-default"
+  default     = "asap-gitlab-runner"
 }
 
 variable "public_ssh_key_filename" {
@@ -21,7 +21,7 @@ variable "private_ssh_key_filename" {
 variable "runner_name" {
   description = "Name of the runner, will be used in the runner config.toml"
   type        = string
-  default     = "default-auto"
+  default     = "gitlab-runner"
 }
 
 variable "gitlab_url" {
@@ -30,8 +30,11 @@ variable "gitlab_url" {
   default     = "https://gitlab.com/"
 }
 
+variable "registration_token" {
+}
+
 variable "timezone" {
   description = "Name of the timezone that the runner will be used in."
   type        = string
-  default     = "Europe/Amsterdam"
+  default     = "Europe/London"
 }

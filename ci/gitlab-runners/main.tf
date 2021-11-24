@@ -10,11 +10,11 @@ data "aws_security_group" "default" {
 terraform {
   backend "s3" {
     bucket = "s3-terraform-asap-hub-state"
-    key    = "global/aws/terraform.tfstate"
+    key    = "global/aws/gitlab-runner-austrialia.tfstate"
     region = "eu-west-1"
   }
 
-  required_version = ">= 0.14"
+  required_version = ">= 1.0.11"
 }
 
 
@@ -54,18 +54,23 @@ module "gitlab-runner" {
   runners_gitlab_url       = var.gitlab_url
   enable_runner_ssm_access = true
 
+  # set this to some unique value if you want to set up runners in 2 or more regions
+  cache_bucket_prefix = "aus"
+
   gitlab_runner_security_group_ids = [data.aws_security_group.default.id]
 
   docker_machine_download_url   = "https://gitlab-docker-machine-downloads.s3.amazonaws.com/v0.16.2-gitlab.10/docker-machine-Linux-x86_64"
-  docker_machine_spot_price_bid = "0.06"
+  docker_machine_spot_price_bid = "0.09"
+  docker_machine_instance_type = "m5.xlarge"
+  gitlab_runner_version         = "14.5.0"
+  runners_concurrent = 10
 
-  gitlab_runner_version = "13.8.0"
   gitlab_runner_registration_config = {
-    registration_token = aws_ssm_parameter.gitlab_runner_registration_token.value
-    tag_list           = "docker-spot-runner"
+    registration_token = var.registration_token
+    tag_list           = "docker_spot_runner"
     description        = "runner default - auto"
     locked_to_project  = "true"
-    run_untagged       = "false"
+    run_untagged       = "true"
     maximum_timeout    = "3600"
   }
 
@@ -91,15 +96,24 @@ module "gitlab-runner" {
     }
   ]
 
-  # working 10 to 6 :)
+  # working 8 to 6
   runners_machine_autoscaling = [
     {
-      periods    = ["\"* * 0-10,18-23 * * mon-fri *\"", "\"* * * * * sat,sun *\""]
+      periods    = ["\"* * 0-8,18-23 * * mon-fri *\"", "\"* * * * * sat,sun *\""]
       idle_count = 0
       idle_time  = 60
       timezone   = var.timezone
     }
   ]
+
+  runners_pre_build_script = <<EOT
+  '''
+  echo 'multiline 1'
+  echo 'multiline 2'
+  '''
+  EOT
+
+  runners_post_build_script = "\"echo 'single line'\""
 }
 
 resource "null_resource" "cancel_spot_requests" {
@@ -110,17 +124,6 @@ resource "null_resource" "cancel_spot_requests" {
 
   provisioner "local-exec" {
     when    = destroy
-    command = "../../bin/cancel-spot-instances.sh ${self.triggers.environment}"
-  }
-}
-resource "aws_ssm_parameter" "gitlab_runner_registration_token" {
-  name        = "gitlab-registration-token"
-  type        = "SecureString"
-  value       = "Please fill manually."
-  description = "Gitlab registration token for a new runner."
-
-  lifecycle {
-    # the secret is set manually
-    ignore_changes = [value]
+    command = "./bin/cancel-spot-instances.sh ${self.triggers.environment}"
   }
 }

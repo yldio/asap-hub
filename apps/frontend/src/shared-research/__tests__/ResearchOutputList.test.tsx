@@ -1,16 +1,13 @@
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import {
-  createListResearchOutputResponse,
-  createAlgoliaResearchOutputResponse,
-} from '@asap-hub/fixtures';
+import { createAlgoliaResearchOutputResponse } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
 import userEvent from '@testing-library/user-event';
 
 import ResearchOutputList from '../ResearchOutputList';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getResearchOutputsLegacy, getResearchOutputs } from '../api';
+import { getResearchOutputs } from '../api';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { researchOutputsState } from '../state';
 import { createCsvFileStream, MAX_ALGOLIA_RESULTS } from '../export';
@@ -22,19 +19,9 @@ const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
 >;
 
-const mockGetResearchOutputsLegacy =
-  getResearchOutputsLegacy as jest.MockedFunction<
-    typeof getResearchOutputsLegacy
-  >;
-
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
 >;
-afterEach(() => {
-  mockGetResearchOutputsLegacy
-    .mockClear()
-    .mockResolvedValue(createListResearchOutputResponse(1));
-});
 
 const renderResearchOutputList = async (searchQuery = '') => {
   const result = render(

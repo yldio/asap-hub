@@ -13,7 +13,6 @@ import {
 import {
   getResearchOutput,
   getResearchOutputs,
-  getResearchOutputsLegacy,
   ResearchOutputListOptions,
 } from './api';
 import { authorizationState } from '../auth/state';
@@ -100,7 +99,6 @@ export const useResearchOutputById = (id: string) =>
   useRecoilValue(researchOutputState(id));
 
 export const useResearchOutputs = (options: ResearchOutputListOptions) => {
-  const authorization = useRecoilValue(authorizationState);
   const [researchOutputs, setResearchOutputs] = useRecoilState(
     researchOutputsState(options),
   );
@@ -113,16 +111,6 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
           items: data.hits,
         }),
       )
-      .then(setResearchOutputs)
-      .catch(setResearchOutputs);
-  } else if (researchOutputs === undefined) {
-    if (options.teamId || options.userId) {
-      return {
-        total: 0,
-        items: [],
-      };
-    }
-    throw getResearchOutputsLegacy(options, authorization)
       .then(setResearchOutputs)
       .catch(setResearchOutputs);
   }

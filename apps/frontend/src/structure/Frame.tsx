@@ -32,7 +32,7 @@ const DefaultFrame: React.FC<FrameBoundaryProps> = ({
   boundaryProps,
   fallback = <Loading />,
 }) => (
-  <ErrorBoundary {...boundaryProps} wrapper={'ReactErrorBoundary'}>
+  <ErrorBoundary {...boundaryProps}>
     <Frame title={title} fallback={fallback}>
       {children}
     </Frame>
@@ -45,7 +45,7 @@ export const SearchFrame: React.FC<Omit<FrameBoundaryProps, 'boundaryProps'>> =
       title={'Something went wrong'}
       description={'There was a problem with your search, please try again.'}
       error={new Error()}
-      wrapper="SentryErrorBoundary"
+      sentryReporting={true}
     >
       <Frame title={title} fallback={fallback}>
         {children}

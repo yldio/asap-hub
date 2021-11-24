@@ -59,7 +59,7 @@ describe('error boundary', () => {
 describe('sentry error boundary', () => {
   it('catches child errors', async () => {
     const { container } = render(
-      <ErrorBoundary wrapper="SentryErrorBoundary">
+      <ErrorBoundary sentryReporting={true}>
         <Throw />
       </ErrorBoundary>,
     );
@@ -69,7 +69,7 @@ describe('sentry error boundary', () => {
   it('Overrides title and description when error thrown', async () => {
     const { container } = render(
       <ErrorBoundary
-        wrapper={'SentryErrorBoundary'}
+        sentryReporting={true}
         title="Something went wrong"
         description="There was a problem with your request"
       >

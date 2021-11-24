@@ -1,11 +1,5 @@
 import { ListTeamResponse, TeamResponse, TeamTool } from '@asap-hub/model';
-import {
-  config,
-  GraphqlResearchOutputAuthors,
-  RestTeam,
-  Team,
-  WebhookPayload,
-} from '@asap-hub/squidex';
+import { config, RestTeam, Team, WebhookPayload } from '@asap-hub/squidex';
 import { RestUser } from '@asap-hub/squidex';
 import {
   ResponseFetchTeams,
@@ -18,11 +12,7 @@ import {
   UsersDataTeamsChildDto,
   UsersFlatDataDto,
 } from '../../src/gql/graphql';
-import {
-  getSquidexResearchOutputGraphqlResponseAuthors,
-  getSquidexGraphqlResearchOutput,
-} from './research-output.fixtures';
-import { fetchExpectation, getGraphQLUser } from './users.fixtures';
+import { getGraphQLUser } from './users.fixtures';
 
 export const referencingUsersContentsResponse = ({
   avatar,
@@ -210,7 +200,6 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
           flatData: {
             applicationNumber: 'ASAP-000463',
             displayName: 'John T.',
-            outputs: null,
             projectSummary: null,
             projectTitle:
               'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
@@ -311,7 +300,6 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
           flatData: {
             applicationNumber: 'ASAP-000312',
             displayName: 'Zac T.',
-            outputs: null,
             projectSummary: 'Its good',
             projectTitle: 'This is good',
             expertiseAndResourceTags: [],
@@ -470,7 +458,6 @@ export const getListTeamResponse = (): ListTeamResponse => ({
       projectTitle:
         'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
       expertiseAndResourceTags: [],
-      outputs: [],
       members: [
         {
           id: 'user-id-2',
@@ -501,7 +488,6 @@ export const getListTeamResponse = (): ListTeamResponse => ({
       displayName: 'Zac T.',
       labCount: 2,
       expertiseAndResourceTags: [],
-      outputs: [],
       members: [
         {
           avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-user-id-4`,
@@ -745,7 +731,6 @@ export const getUpdateTeamResponse = (tools: TeamTool[] = []): RestTeam => ({
       iv: 'Wi dalev fu jusjuh buw nauzi kas ma. Fo ajelo pu vaenusug ezuhsi resdudif ebsofak tav dan mumooz awgabu meki gicub bowec afegeir tozab umefarow.',
     },
     expertiseAndResourceTags: { iv: [] },
-    outputs: { iv: [] },
     tools: { iv: tools },
   },
   created: '2020-09-08T16:35:28Z',
@@ -769,7 +754,6 @@ export const getGraphQlTeamResponse = (
       flatData: {
         applicationNumber: 'ASAP-000420',
         displayName: 'Schipa, A',
-        outputs: [getSquidexGraphqlResearchOutput()],
         projectSummary: null,
         projectTitle:
           'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
@@ -842,7 +826,6 @@ const getTeamsEvent = (
     proposal: { iv: [] },
     projectTitle: { iv: 'Team Project' },
     projectSummary: { iv: '' },
-    outputs: { iv: ['5434911260ba'] },
     tools: { iv: [] },
   },
   dataOld = {
@@ -852,7 +835,6 @@ const getTeamsEvent = (
     proposal: { iv: [] },
     projectTitle: { iv: 'Team Project' },
     projectSummary: { iv: '' },
-    outputs: { iv: ['5434911260ba'] },
     tools: { iv: [] },
   },
 ): WebhookPayload<Team> => ({

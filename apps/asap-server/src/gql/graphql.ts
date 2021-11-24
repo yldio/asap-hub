@@ -11915,7 +11915,7 @@ export const FetchTeamsDocument = {
             name: { kind: 'Name', value: 'withResearchOutputs' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
-          defaultValue: { kind: 'BooleanValue', value: true },
+          defaultValue: { kind: 'BooleanValue', value: false },
         },
         {
           kind: 'VariableDefinition',

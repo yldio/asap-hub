@@ -14,7 +14,6 @@ export interface Team<T = string> {
     description?: string;
     name: string;
   }[];
-  outputs: T[];
 }
 
 export interface RestTeam extends Entity, Rest<Team> {}

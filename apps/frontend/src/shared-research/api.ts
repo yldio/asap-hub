@@ -1,11 +1,7 @@
-import {
-  ResearchOutputResponse,
-  ListResearchOutputResponse,
-  ResearchOutputType,
-} from '@asap-hub/model';
+import { ResearchOutputResponse, ResearchOutputType } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch/lite';
 
-import { createListApiUrl, GetListOptions } from '../api-util';
+import { GetListOptions } from '../api-util';
 import { API_BASE_URL } from '../config';
 
 export type ResearchOutputListOptions = GetListOptions & {

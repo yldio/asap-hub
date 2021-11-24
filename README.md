@@ -1,6 +1,6 @@
 # asap-hub
 
-> The monorepo for the backend, frontend, and infrastructure of the [ASAP](https://parkinsonsroadmap.org/) hub.
+> The monorepo, for the backend, frontend, and infrastructure of the [ASAP](https://parkinsonsroadmap.org/) hub.
 
 ## Requirements
 

@@ -235,7 +235,7 @@ e2e:branch:
     - deploy:sls:branch
   script:
     - yarn workspace @asap-hub/e2e-tests run playwright install
-    - yarn workspace @asap-hub/e2e-tests run playwright test
+    - ASAP_API_URL=$API_URL yarn workspace @asap-hub/e2e-tests run playwright test
 
 verify:schema:branch:
   <<: *tmpl_branch

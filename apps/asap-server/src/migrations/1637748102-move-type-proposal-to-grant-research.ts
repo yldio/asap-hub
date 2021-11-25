@@ -3,7 +3,7 @@ import {
   RestResearchOutput,
   Results,
   Squidex,
-} from '../../../../packages/squidex';
+} from '@asap-hub/squidex';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 
 interface Fetcher {
@@ -63,7 +63,8 @@ export default class MoveResearchOutputTextToDescription extends Migration {
       (researchOutput) =>
         squidexClient.patch(researchOutput.id, {
           type: { iv: 'Proposal' },
-          subtype: { iv: null },
+          // @ts-ignore
+          subtype: null,
         }),
     );
   };

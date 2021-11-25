@@ -1,9 +1,5 @@
 /* istanbul ignore file */
-import {
-  RestResearchOutput,
-  Results,
-  Squidex,
-} from '@asap-hub/squidex';
+import { RestResearchOutput, Results, Squidex } from '@asap-hub/squidex';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 
 interface Fetcher {

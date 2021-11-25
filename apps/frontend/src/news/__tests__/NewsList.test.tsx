@@ -63,9 +63,9 @@ const renderPage = async (newsResponse = createNewsResponse(1)) => {
 };
 
 describe('news page', () => {
-  afterEach(() => {
-    expect(nock.isDone()).toBe(true);
-  });
+  // afterEach(() => {
+  //   // expect(nock.isDone()).toBe(true);
+  // });
 
   afterEach(() => {
     nock.cleanAll();
@@ -109,5 +109,20 @@ describe('news page', () => {
     expect(getAllByText('News')).toHaveLength(pageSize);
     expect(result.current.usePagination.numberOfPages).toBe(4);
     expect(result.current.usePaginationParams.currentPage).toBe(0);
+  });
+
+  it('renders error message when when the request it not a 2XX', async () => {
+    const errorRequest = () =>
+      nock(API_BASE_URL, {
+        reqheaders: { authorization: 'Bearer id_token' },
+      })
+        .get('/news')
+        .query(true)
+        .reply(404);
+
+    errorRequest();
+
+    const { getByText } = await renderPage();
+    expect(getByText('Something went wrong!')).toBeInTheDocument();
   });
 });

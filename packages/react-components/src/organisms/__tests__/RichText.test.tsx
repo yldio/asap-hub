@@ -101,6 +101,21 @@ describe('with toc', () => {
       new URL(`#${heading2.id}`, globalThis.location.href).toString(),
     );
   });
+  it('only displays toc heading when toc enabled', () => {
+    const { queryByRole, rerender } = render(
+      <RichText text={'<h1>heading 1</h1><h2>heading 2</h2>'} />,
+    );
+    expect(queryByRole('heading', { level: 2 })).not.toBeInTheDocument();
+    rerender(<RichText toc text={'<h1>heading 1</h1><h2>heading 2</h2>'} />);
+    expect(queryByRole('heading', { level: 2 })).toBeInTheDocument();
+  });
+
+  it('does not display toc heading when there are no headings in the contents', () => {
+    const { queryByRole } = render(
+      <RichText toc text={'<p>some text without headings</p>'} />,
+    );
+    expect(queryByRole('heading', { level: 2 })).not.toBeInTheDocument();
+  });
 });
 
 describe('with poorText', () => {

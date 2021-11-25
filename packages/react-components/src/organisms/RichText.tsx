@@ -1,4 +1,9 @@
-import { createElement, HTMLAttributes, AnchorHTMLAttributes } from 'react';
+import {
+  createElement,
+  HTMLAttributes,
+  AnchorHTMLAttributes,
+  ReactElement,
+} from 'react';
 import { css } from '@emotion/react';
 
 import unified from 'unified';
@@ -8,8 +13,16 @@ import rehypeSlug from 'rehype-slug';
 import rehypeToc from 'rehype-toc';
 import rehypeReact, { ComponentLike } from 'rehype-react';
 import githubSanitizationSchema from 'hast-util-sanitize/lib/github';
+import { renderToStaticMarkup } from 'react-dom/server';
 
-import { Paragraph, Headline4, Headline5, Headline6, Link } from '../atoms';
+import {
+  Paragraph,
+  Headline4,
+  Headline5,
+  Headline6,
+  Link,
+  Headline2,
+} from '../atoms';
 import { isTextChildren, isAllowedChildren } from '../text';
 import { ErrorCard } from '../molecules';
 import { perRem } from '../pixels';
@@ -113,11 +126,24 @@ const styles = css({
   '.toc-level-1': {
     padding: 0,
   },
+  '.toc-level-2': {
+    paddingLeft: `${18 / perRem}em`,
+  },
   'p > strong, h4, h5, h6': {
     color: charcoal.rgb,
   },
   img: { height: 'auto', maxWidth: '100%' },
 });
+
+const tableOfContentsStyles = css({
+  color: charcoal.rgb,
+});
+
+const hasClass = (html: string, className: string): boolean => {
+  const doc = document.createElement('DIV');
+  doc.innerHTML = html;
+  return !!doc.querySelectorAll(`.${className}`).length;
+};
 
 const RichText: React.FC<RichTextProps | PoorTextProps> = ({
   toc = false,
@@ -162,7 +188,9 @@ const RichText: React.FC<RichTextProps | PoorTextProps> = ({
   });
 
   if (toc) {
-    processor = processor.use(rehypeSlug).use(rehypeToc);
+    processor = processor
+      .use(rehypeSlug)
+      .use(rehypeToc, { headings: ['h1', 'h2'] });
   }
 
   processor = processor.use(rehypeReact, {
@@ -171,10 +199,19 @@ const RichText: React.FC<RichTextProps | PoorTextProps> = ({
   });
 
   const { result } = processor.processSync(text);
+  const hasTocItems =
+    hasClass(renderToStaticMarkup(result as ReactElement), 'toc-item') || false;
   return (
-    <div css={styles}>
-      <>{result}</>
-    </div>
+    <>
+      <div css={styles}>
+        {toc && hasTocItems && (
+          <span css={tableOfContentsStyles}>
+            <Headline2 styleAsHeading={4}>Contents</Headline2>
+          </span>
+        )}
+        <>{result}</>
+      </div>
+    </>
   );
 };
 

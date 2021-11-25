@@ -28,7 +28,7 @@ it('calls the onChangeFilter when filter is selected', () => {
     <ResearchOutputsSearch {...props} />,
   );
   userEvent.click(getByText('Filters'));
-  userEvent.click(getByLabelText('Proposal'));
+  userEvent.click(getByLabelText('Grant Document'));
 
-  expect(props.onChangeFilter).toHaveBeenCalledWith('Proposal');
+  expect(props.onChangeFilter).toHaveBeenCalledWith('Grant Document');
 });

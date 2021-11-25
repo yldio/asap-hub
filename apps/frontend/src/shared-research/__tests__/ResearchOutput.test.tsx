@@ -76,14 +76,15 @@ describe('a grant document research output', () => {
       type: 'Grant Document',
       teams: [
         {
-          displayName: 'Proposal Team',
+          displayName: 'Grant Document Team',
           id: '123',
         },
       ],
       title: 'Grant Document title!',
     });
     const { getByRole, getByText } = await renderComponent();
-    expect(getByText(/proposal team/i)).toBeVisible();
+
+    expect(getByText(/grant document team/i)).toBeVisible();
     expect(getByRole('heading', { level: 1 }).textContent).toEqual(
       'Grant Document title!',
     );
@@ -108,18 +109,18 @@ describe('a grant document research output', () => {
   });
 });
 
-describe('a non-proposal research output', () => {
+describe('a not-grant-document research output', () => {
   it('renders with tags', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
       type: 'Protocol',
       tags: ['Example Tag'],
-      title: 'Proposal title!',
+      title: 'Not-Grant-Document title!',
     });
     const { getByRole, getByText } = await renderComponent();
     expect(getByText(/Example Tag/i)).toBeVisible();
     expect(getByRole('heading', { level: 1 }).textContent).toEqual(
-      'Proposal title!',
+      'Not-Grant-Document title!',
     );
   });
 });

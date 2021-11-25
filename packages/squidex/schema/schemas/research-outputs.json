@@ -84,7 +84,7 @@
         "properties": {
           "fieldType": "String",
           "allowedValues": [
-            "Proposal",
+            "Grant Document",
             "Presentation",
             "Protocol",
             "Dataset",
@@ -144,7 +144,9 @@
             "Compounds",
             "Plasmid",
             "Protein",
-            "Viral Vector"
+            "Viral Vector",
+            "Proposal",
+            "Report"
           ],
           "isUnique": false,
           "inlineEditable": true,

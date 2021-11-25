@@ -124,7 +124,7 @@ it('renders a list of research outputs', async () => {
 it('calls getResearchOutputs with the right arguments', async () => {
   const searchQuery = 'searchterm';
   const userId = '12345';
-  const filters = new Set(['Proposal']);
+  const filters = new Set(['Grant Document']);
   mockGetResearchOutputs.mockResolvedValue({
     ...createAlgoliaResearchOutputResponse(2),
   });
@@ -136,7 +136,7 @@ it('calls getResearchOutputs with the right arguments', async () => {
   userEvent.type(getByRole('searchbox'), searchQuery);
 
   userEvent.click(getByText('Filters'));
-  const checkbox = getByLabelText('Proposal');
+  const checkbox = getByLabelText('Grant Document');
   expect(checkbox).not.toBeChecked();
 
   userEvent.click(checkbox);
@@ -154,7 +154,7 @@ it('calls getResearchOutputs with the right arguments', async () => {
 });
 
 it('triggers and export with the same parameters', async () => {
-  const filters = new Set(['Proposal']);
+  const filters = new Set(['Grant Document']);
   const searchQuery = 'Some Search';
   const userId = '12345';
   mockGetResearchOutputs.mockResolvedValue({
@@ -167,7 +167,7 @@ it('triggers and export with the same parameters', async () => {
   );
   userEvent.type(getByRole('searchbox'), searchQuery);
   userEvent.click(getByText('Filters'));
-  userEvent.click(getByLabelText('Proposal'));
+  userEvent.click(getByLabelText('Grant Document'));
   await waitFor(() =>
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(expect.anything(), {
       searchQuery,

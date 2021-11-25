@@ -79,7 +79,10 @@ export const parseGraphQLResearchOutput = (
     id: output.id,
     created: parseDate(output.created).toISOString(),
     link: data.link || undefined,
-    type: data.type && isResearchOutputType(data.type) ? data.type : 'Proposal',
+    type:
+      data.type && isResearchOutputType(data.type)
+        ? data.type
+        : 'Grant Document',
     subTypes:
       data.subtype && isResearchOutputSubtype(data.subtype)
         ? [data.subtype]
@@ -133,6 +136,7 @@ const isSharingStatus = (
   (sharingStatuses as ReadonlyArray<string>).includes(status);
 
 const isResearchOutputType = (type: string): type is ResearchOutputType =>
+  type !== 'Proposal' &&
   (researchOutputTypes as ReadonlyArray<string>).includes(type);
 
 const isResearchOutputSubtype = (

@@ -4,6 +4,7 @@ import { UserResponse } from './user';
 import { Lab } from './lab';
 
 export const researchOutputTypes = [
+  'Grant Document',
   'Proposal',
   'Presentation',
   'Dataset',
@@ -49,6 +50,8 @@ export const researchOutputSubtypes = [
   'Plasmid',
   'Protein',
   'Viral Vector',
+  'Proposal',
+  'Report',
 ] as const;
 
 export type ResearchOutputSubtype = typeof researchOutputSubtypes[number];
@@ -94,8 +97,8 @@ export type ResearchOutputResponse = {
 };
 
 export const researchOutputLabels: Record<ResearchOutputType, string> = {
-  Proposal: 'Open External Link',
   'Grant Document': 'Open External Link',
+  Proposal: 'Open External Link',
   Presentation: 'View on Google',
   Dataset: 'Open External Link',
   Bioinformatics: 'Open External Link',

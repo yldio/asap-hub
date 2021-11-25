@@ -69,14 +69,14 @@ describe('the shared research listing page (REGRESSION)', () => {
     );
 
     userEvent.click(getByText('Filters'));
-    const checkbox = getByLabelText('Proposal');
+    const checkbox = getByLabelText('Grant Document');
     expect(checkbox).not.toBeChecked();
 
     userEvent.click(checkbox);
     expect(checkbox).toBeChecked();
     await waitFor(() => {
       expect(mockGetResearchOutputsLegacy).toHaveBeenLastCalledWith(
-        expect.objectContaining({ filters: new Set(['Proposal']) }),
+        expect.objectContaining({ filters: new Set(['Grant Document']) }),
         expect.anything(),
       );
     });
@@ -89,15 +89,15 @@ describe('the shared research listing page (REGRESSION)', () => {
     current.disable('ALGOLIA_RESEARCH_OUTPUTS');
     const { getByText, getByLabelText } = await renderSharedResearchPage(
       '/shared-research',
-      '?filter=Proposal',
+      '?filter=Grant+Document',
     );
 
     userEvent.click(getByText('Filters'));
-    const checkbox = getByLabelText('Proposal');
+    const checkbox = getByLabelText('Grant Document');
     expect(checkbox).toBeChecked();
 
     expect(mockGetResearchOutputsLegacy).toHaveBeenLastCalledWith(
-      expect.objectContaining({ filters: new Set(['Proposal']) }),
+      expect.objectContaining({ filters: new Set(['Grant Document']) }),
       expect.anything(),
     );
   });
@@ -118,7 +118,7 @@ describe('the shared research listing page', () => {
     );
 
     userEvent.click(getByText('Filters'));
-    const checkbox = getByLabelText('Proposal');
+    const checkbox = getByLabelText('Grant Document');
     expect(checkbox).not.toBeChecked();
 
     userEvent.click(checkbox);
@@ -126,7 +126,7 @@ describe('the shared research listing page', () => {
     await waitFor(() => {
       expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
         expect.anything(),
-        expect.objectContaining({ filters: new Set(['Proposal']) }),
+        expect.objectContaining({ filters: new Set(['Grant Document']) }),
       );
     });
   });
@@ -134,16 +134,16 @@ describe('the shared research listing page', () => {
   it('reads filters from url', async () => {
     const { getByText, getByLabelText } = await renderSharedResearchPage(
       '/shared-research',
-      '?filter=Proposal',
+      '?filter=Grant+Document',
     );
 
     userEvent.click(getByText('Filters'));
-    const checkbox = getByLabelText('Proposal');
+    const checkbox = getByLabelText('Grant Document');
     expect(checkbox).toBeChecked();
 
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
       expect.anything(),
-      expect.objectContaining({ filters: new Set(['Proposal']) }),
+      expect.objectContaining({ filters: new Set(['Grant Document']) }),
     );
   });
 });

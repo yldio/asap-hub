@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import { SharedResearchOutput } from '@asap-hub/react-components';
+
 import {
   text,
   date,

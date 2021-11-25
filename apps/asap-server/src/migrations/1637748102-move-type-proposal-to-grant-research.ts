@@ -7,7 +7,7 @@ interface Fetcher {
 }
 
 interface ItemProcessor {
-  (researchOutput: RestResearchOutput): any;
+  (researchOutput: RestResearchOutput): unknown;
 }
 
 const fetchSquidex =

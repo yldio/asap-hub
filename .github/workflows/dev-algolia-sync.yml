@@ -37,3 +37,5 @@ jobs:
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_MESSAGE: 'Algolia Dev sync complete'
+          SLACK_ICON: https://cdn0.iconfinder.com/data/icons/artificial-intelligence-and-machine-learning-glyph/48/AI-Icon-17-128.png
+          SLACK_USERNAME: ASAP robot

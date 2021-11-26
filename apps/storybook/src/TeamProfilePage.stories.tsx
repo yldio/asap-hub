@@ -22,7 +22,6 @@ const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
   lastModifiedDate: formatISO(subDays(new Date(), 2)),
   labCount: number('Lab count', 15),
   expertiseAndResourceTags: [],
-  outputs: [],
   teamListElementId: 'uuid',
   pointOfContact: {
     id: '2',

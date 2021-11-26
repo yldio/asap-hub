@@ -119,7 +119,7 @@ export const FETCH_TEAMS = gql`
     $top: Int
     $skip: Int
     $filter: String
-    $withResearchOutputs: Boolean = true
+    $withResearchOutputs: Boolean = false
     $withTeams: Boolean = false
   ) {
     queryTeamsContentsWithTotal(

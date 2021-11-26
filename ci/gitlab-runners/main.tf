@@ -67,10 +67,10 @@ module "gitlab-runner" {
 
   gitlab_runner_registration_config = {
     registration_token = var.registration_token
-    tag_list           = "docker_spot_runner"
+    tag_list           = "docker-spot-runner"
     description        = "runner default - auto"
     locked_to_project  = "true"
-    run_untagged       = "true"
+    run_untagged       = "false"
     maximum_timeout    = "3600"
   }
 
@@ -106,14 +106,6 @@ module "gitlab-runner" {
     }
   ]
 
-  runners_pre_build_script = <<EOT
-  '''
-  echo 'multiline 1'
-  echo 'multiline 2'
-  '''
-  EOT
-
-  runners_post_build_script = "\"echo 'single line'\""
 }
 
 resource "null_resource" "cancel_spot_requests" {

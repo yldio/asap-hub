@@ -60,7 +60,7 @@ export default class MoveResearchOutputTextToDescription extends Migration {
       (researchOutput) =>
         squidexClient.patch(researchOutput.id, {
           type: { iv: 'Proposal' },
-          subtype: null as unknown as {iv: ResearchOutputSubtype}
+          subtype: null as unknown as { iv: ResearchOutputSubtype },
         }),
     );
   };

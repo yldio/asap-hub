@@ -1,5 +1,7 @@
 /* istanbul ignore file */
 import { RestResearchOutput, Results, Squidex } from '@asap-hub/squidex';
+import { ResearchOutputSubtype } from '@asap-hub/model';
+
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 
 interface Fetcher {
@@ -50,7 +52,6 @@ export default class MoveResearchOutputTextToDescription extends Migration {
     );
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   down = async (): Promise<void> => {
     const squidexClient = new Squidex<RestResearchOutput>('research-outputs');
 
@@ -59,8 +60,7 @@ export default class MoveResearchOutputTextToDescription extends Migration {
       (researchOutput) =>
         squidexClient.patch(researchOutput.id, {
           type: { iv: 'Proposal' },
-          // @ts-ignore
-          subtype: null,
+          subtype: null as unknown as {iv: ResearchOutputSubtype}
         }),
     );
   };

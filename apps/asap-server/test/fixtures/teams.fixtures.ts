@@ -81,6 +81,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
       total: 3,
       items: [
         {
+          __typename: 'Teams',
           id: 'team-id-1',
           created: '2020-09-23T20:33:36Z',
           lastModified: '2020-11-26T11:56:04Z',
@@ -128,6 +129,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                   {
                     id: [
                       {
+                        __typename: 'Teams',
                         id: 'team-id-1',
                         created: '2020-09-23T20:33:36Z',
                         lastModified: '2020-11-26T11:56:04Z',
@@ -153,6 +155,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
           ],
         },
         {
+          __typename: 'Teams',
           id: 'team-id-2',
           created: '2020-09-23T20:29:45Z',
           lastModified: '2020-10-26T20:54:00Z',
@@ -190,6 +193,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                   {
                     id: [
                       {
+                        __typename: 'Teams',
                         id: 'team-id-2',
                         created: '2020-09-23T20:33:36Z',
                         lastModified: '2020-11-26T11:56:04Z',
@@ -231,6 +235,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                   {
                     id: [
                       {
+                        __typename: 'Teams',
                         id: 'team-id-2',
                         created: '2020-09-23T20:33:36Z',
                         lastModified: '2020-11-26T11:56:04Z',
@@ -253,6 +258,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
           ],
         },
         {
+          __typename: 'Teams',
           id: 'team-id-3',
           created: '2020-09-23T20:29:52Z',
           lastModified: '2020-09-23T20:29:52Z',
@@ -289,6 +295,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                   {
                     id: [
                       {
+                        __typename: 'Teams',
                         id: 'team-id-3',
                         created: '2020-09-23T20:33:36Z',
                         lastModified: '2020-11-26T11:56:04Z',
@@ -427,6 +434,7 @@ export const getListTeamResponse = (): ListTeamResponse => ({
 export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
   data: {
     findTeamsContent: {
+      __typename: 'Teams',
       id: 'team-id-1',
       created: '2020-09-23T20:33:36Z',
       lastModified: '2020-11-26T11:56:04Z',
@@ -468,6 +476,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
               {
                 id: [
                   {
+                    __typename: 'Teams',
                     id: 'team-id-1',
                     created: '2020-09-23T20:33:36Z',
                     lastModified: '2020-11-26T11:56:04Z',

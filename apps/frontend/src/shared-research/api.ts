@@ -1,7 +1,7 @@
 import { ResearchOutputResponse, ResearchOutputType } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch/lite';
 
-import { GetListOptions } from '../api-util';
+import { createSentryHeaders, GetListOptions } from '../api-util';
 import { API_BASE_URL } from '../config';
 
 export type ResearchOutputListOptions = GetListOptions & {
@@ -14,7 +14,7 @@ export const getResearchOutput = async (
   authorization: string,
 ): Promise<ResearchOutputResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/research-outputs/${id}`, {
-    headers: { authorization },
+    headers: { authorization, ...createSentryHeaders() },
   });
   if (!resp.ok) {
     if (resp.status === 404) {

@@ -9,7 +9,6 @@ interface CheckAuthProps {
 const CheckAuth: FC<CheckAuthProps> = ({ children }) => {
   const { isAuthenticated, loading, checkSession } = useAuth0();
   const location = useLocation();
-
   useEffect(() => {
     if (checkSession) checkSession();
   }, [location]);

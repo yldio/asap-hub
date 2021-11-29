@@ -29,7 +29,7 @@ it('Checks auth0 is still logged in when changing pages', async () => {
         <Auth0Provider>
           <MemoryRouter>
             <CheckAuth>
-              {(isAuthenticated) => (
+              {({ isAuthenticated }) => (
                 <>Authenticated: {isAuthenticated ? 'true' : 'false'}</>
               )}
             </CheckAuth>

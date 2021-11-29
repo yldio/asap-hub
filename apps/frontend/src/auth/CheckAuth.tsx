@@ -11,7 +11,7 @@ const CheckAuth: FC<CheckAuthProps> = ({ children }) => {
   const location = useLocation();
   useEffect(() => {
     if (checkSession) checkSession();
-  }, [location]);
+  }, [location, checkSession]);
 
   if (loading) {
     return <Loading />;

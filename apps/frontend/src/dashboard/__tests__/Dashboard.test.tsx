@@ -2,12 +2,9 @@ import { Suspense } from 'react';
 import { User } from '@asap-hub/auth';
 import { render, waitFor } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
-import { useFlags } from '@asap-hub/react-context';
-import { renderHook } from '@testing-library/react-hooks';
 
 import Dashboard from '../Dashboard';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getResearchOutputsLegacy } from '../../shared-research/api';
 import { refreshDashboardState } from '../state';
 import { getDashboard } from '../api';
 
@@ -22,11 +19,6 @@ afterEach(() => {
 const mockGetDashboard = getDashboard as jest.MockedFunction<
   typeof getDashboard
 >;
-
-const mockGetResearchOutputsLegacy =
-  getResearchOutputsLegacy as jest.MockedFunction<
-    typeof getResearchOutputsLegacy
-  >;
 
 const renderDashboard = async (user: Partial<User>) => {
   const result = render(
@@ -80,28 +72,4 @@ it('renders dashboard with news and events', async () => {
 
   expect(await findByText(/john/i, { selector: 'h1' })).toBeVisible();
   expect(queryAllByText(/title/i, { selector: 'h2' }).length).toBe(2);
-});
-
-it('prefetches research outputs (REGRESSION)', async () => {
-  const {
-    result: { current },
-  } = renderHook(useFlags);
-  const { rerender } = await renderDashboard({});
-  expect(mockGetResearchOutputsLegacy).not.toHaveBeenCalled();
-  current.disable('ALGOLIA_RESEARCH_OUTPUTS');
-
-  rerender(
-    <Suspense fallback="loading">
-      <RecoilRoot>
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <Dashboard />
-          </WhenReady>
-        </Auth0Provider>
-      </RecoilRoot>
-    </Suspense>,
-  );
-  await waitFor(() =>
-    expect(mockGetResearchOutputsLegacy).toHaveBeenCalledTimes(1),
-  );
 });

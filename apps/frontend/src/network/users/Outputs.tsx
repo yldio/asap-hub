@@ -1,4 +1,3 @@
-import { useFlags } from '@asap-hub/react-context';
 import {
   UserProfileResearchOutputs,
   UserProfileSearchAndFilter,
@@ -91,17 +90,14 @@ const Outputs: React.FC<OutputsProps> = ({ userId }) => {
     setSearchQuery,
     debouncedSearchQuery,
   } = useSearch();
-  const { isEnabled } = useFlags();
   return (
     <article>
-      {isEnabled('RESEARCH_OUTPUTS_ON_AUTHOR_PROFILE') && (
-        <UserProfileSearchAndFilter
-          onChangeSearch={setSearchQuery}
-          searchQuery={searchQuery}
-          onChangeFilter={toggleFilter}
-          filters={filters}
-        />
-      )}
+      <UserProfileSearchAndFilter
+        onChangeSearch={setSearchQuery}
+        searchQuery={searchQuery}
+        onChangeFilter={toggleFilter}
+        filters={filters}
+      />
       <SearchFrame title="outputs">
         <OutputsList
           userId={userId}

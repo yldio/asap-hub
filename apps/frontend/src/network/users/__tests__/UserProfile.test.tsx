@@ -9,7 +9,7 @@ import {
 } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 import { UserResponse } from '@asap-hub/model';
-import { ToastContext, useFlags } from '@asap-hub/react-context';
+import { ToastContext } from '@asap-hub/react-context';
 import userEvent from '@testing-library/user-event';
 import { readFileSync } from 'fs';
 import {
@@ -20,7 +20,6 @@ import { join } from 'path';
 import imageCompression from 'browser-image-compression';
 import { Auth0Client } from '@auth0/auth0-spa-js';
 import { Auth0User, Auth0 } from '@asap-hub/auth';
-import { renderHook } from '@testing-library/react-hooks';
 
 import UserProfile from '../UserProfile';
 import { getUser, patchUser, postUserAvatar } from '../api';
@@ -145,17 +144,6 @@ it('navigates to the background tab', async () => {
   expect(await findByText('My Bio')).toBeVisible();
 });
 
-it('navigates to the outputs tab (regression)', async () => {
-  const {
-    result: { current },
-  } = renderHook(useFlags);
-  current.disable('RESEARCH_OUTPUTS_ON_AUTHOR_PROFILE');
-  const { findByText } = await renderUserProfile(createUserResponse());
-
-  userEvent.click(await findByText(/output/i, { selector: 'nav *' }));
-  expect(await findByText(/research.+outputs/i)).toBeVisible();
-});
-
 it('navigates to the outputs tab', async () => {
   mockGetResearchOutputs.mockResolvedValue({
     ...createAlgoliaResearchOutputResponse(1),
@@ -164,12 +152,12 @@ it('navigates to the outputs tab', async () => {
       title: `Test Output ${index}`,
     })),
   });
-  const { findByText, getByRole } = await renderUserProfile(
+  const { findByText, findByRole } = await renderUserProfile(
     createUserResponse(),
   );
 
   userEvent.click(await findByText(/output/i, { selector: 'nav *' }));
-  expect(getByRole('searchbox')).toHaveAttribute(
+  expect(await findByRole('searchbox')).toHaveAttribute(
     'placeholder',
     'Enter a keyword, method, resource…',
   );

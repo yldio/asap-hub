@@ -7,17 +7,11 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/frontend/src/auth/test-utils';
-import { useFlags } from '@asap-hub/react-context';
-import { renderHook } from '@testing-library/react-hooks';
 
 import Routes from '../Routes';
-import { getResearchOutputsLegacy, getResearchOutputs } from '../api';
+import { getResearchOutputs } from '../api';
 
 jest.mock('../api');
-const mockGetResearchOutputsLegacy =
-  getResearchOutputsLegacy as jest.MockedFunction<
-    typeof getResearchOutputsLegacy
-  >;
 
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
@@ -44,64 +38,6 @@ const renderSharedResearchPage = async (pathname: string, query = '') => {
   );
   return result;
 };
-
-describe('the shared research listing page (REGRESSION)', () => {
-  it('allows typing in search queries (REGRESSION)', async () => {
-    const {
-      result: { current },
-    } = renderHook(useFlags);
-    current.disable('ALGOLIA_RESEARCH_OUTPUTS');
-    const { getByRole } = await renderSharedResearchPage('/shared-research');
-    const searchBox = getByRole('searchbox') as HTMLInputElement;
-
-    userEvent.type(searchBox, 'test123');
-    expect(searchBox.value).toEqual('test123');
-  });
-
-  it('allows selection of filters (REGRESSION)', async () => {
-    const {
-      result: { current },
-    } = renderHook(useFlags);
-    current.disable('ALGOLIA_RESEARCH_OUTPUTS');
-
-    const { getByText, getByLabelText } = await renderSharedResearchPage(
-      '/shared-research',
-    );
-
-    userEvent.click(getByText('Filters'));
-    const checkbox = getByLabelText('Grant Document');
-    expect(checkbox).not.toBeChecked();
-
-    userEvent.click(checkbox);
-    expect(checkbox).toBeChecked();
-    await waitFor(() => {
-      expect(mockGetResearchOutputsLegacy).toHaveBeenLastCalledWith(
-        expect.objectContaining({ filters: new Set(['Grant Document']) }),
-        expect.anything(),
-      );
-    });
-  });
-
-  it('reads filters from url (REGRESSION)', async () => {
-    const {
-      result: { current },
-    } = renderHook(useFlags);
-    current.disable('ALGOLIA_RESEARCH_OUTPUTS');
-    const { getByText, getByLabelText } = await renderSharedResearchPage(
-      '/shared-research',
-      '?filter=Grant+Document',
-    );
-
-    userEvent.click(getByText('Filters'));
-    const checkbox = getByLabelText('Grant Document');
-    expect(checkbox).toBeChecked();
-
-    expect(mockGetResearchOutputsLegacy).toHaveBeenLastCalledWith(
-      expect.objectContaining({ filters: new Set(['Grant Document']) }),
-      expect.anything(),
-    );
-  });
-});
 
 describe('the shared research listing page', () => {
   it('allows typing in search queries', async () => {

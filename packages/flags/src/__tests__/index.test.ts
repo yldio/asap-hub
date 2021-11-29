@@ -35,15 +35,12 @@ describe('in test', () => {
   describe('setCurrentOverrides,', () => {
     it('overrides a given set of flags', () => {
       disable('PERSISTENT_EXAMPLE');
-      disable('ALGOLIA_RESEARCH_OUTPUTS');
 
       setCurrentOverrides({
         PERSISTENT_EXAMPLE: true,
-        ALGOLIA_RESEARCH_OUTPUTS: true,
       });
 
       expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
-      expect(isEnabled('ALGOLIA_RESEARCH_OUTPUTS')).toBe(true);
     });
 
     it('handles when is called without arguments', () => {

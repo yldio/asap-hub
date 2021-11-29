@@ -1,6 +1,5 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { ComponentProps } from 'react';
-import { useFlags } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 
 import { Card, Display } from '../atoms';
@@ -54,35 +53,27 @@ const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardPro
     lastUpdatedPartial,
     labs,
     ...props
-  }) => {
-    const { isEnabled } = useFlags();
-
-    return (
-      <Card>
-        <SharedResearchMetadata {...props} />
-        <Display styleAsHeading={3}>{title}</Display>
-        {isEnabled('RESEARCH_OUTPUT_SHOW_AUTHORS_LIST') && (
-          <UsersList users={authors} />
-        )}
-        <div css={associationStyles}>
-          <AssociationList
-            type="Lab"
-            inline
-            associations={labs.map(({ name, id }) => ({
-              displayName: name,
-              id,
-            }))}
-          />
-          <AssociationList type="Team" inline associations={teams} />
-        </div>
-        <div css={[timestampStyles, captionStyles]}>
-          <span>
-            Date added: {formatDate(new Date(addedDate || created))} ·{' '}
-          </span>
-          <span>Last updated: {formatDate(new Date(lastUpdatedPartial))}</span>
-        </div>
-      </Card>
-    );
-  };
+  }) => (
+    <Card>
+      <SharedResearchMetadata {...props} />
+      <Display styleAsHeading={3}>{title}</Display>
+      <UsersList users={authors} />
+      <div css={associationStyles}>
+        <AssociationList
+          type="Lab"
+          inline
+          associations={labs.map(({ name, id }) => ({
+            displayName: name,
+            id,
+          }))}
+        />
+        <AssociationList type="Team" inline associations={teams} />
+      </div>
+      <div css={[timestampStyles, captionStyles]}>
+        <span>Date added: {formatDate(new Date(addedDate || created))} · </span>
+        <span>Last updated: {formatDate(new Date(lastUpdatedPartial))}</span>
+      </div>
+    </Card>
+  );
 
 export default SharedResearchOutputHeaderCard;

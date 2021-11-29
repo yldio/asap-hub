@@ -1,11 +1,7 @@
-import {
-  ResearchOutputResponse,
-  ListResearchOutputResponse,
-  ResearchOutputType,
-} from '@asap-hub/model';
+import { ResearchOutputResponse, ResearchOutputType } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch/lite';
 
-import { createListApiUrl, GetListOptions } from '../api-util';
+import { GetListOptions } from '../api-util';
 import { API_BASE_URL } from '../config';
 
 export type ResearchOutputListOptions = GetListOptions & {
@@ -81,22 +77,3 @@ export const getResearchOutputs = (
   }).catch((error: Error) => {
     throw new Error(`Could not search: ${error.message}`);
   });
-
-export const getResearchOutputsLegacy = async (
-  options: GetListOptions,
-  authorization: string,
-): Promise<ListResearchOutputResponse> => {
-  const resp = await fetch(
-    createListApiUrl('research-outputs', options).toString(),
-    {
-      headers: { authorization },
-    },
-  );
-
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch research output list. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-  return resp.json();
-};

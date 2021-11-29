@@ -1,4 +1,3 @@
-import useDeepCompareEffect from 'use-deep-compare-effect';
 import {
   atomFamily,
   selectorFamily,
@@ -10,17 +9,13 @@ import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 
 import {
   getResearchOutput,
   getResearchOutputs,
-  getResearchOutputsLegacy,
   ResearchOutputListOptions,
 } from './api';
-import { GetListOptions } from '../api-util';
 import { authorizationState } from '../auth/state';
-import { CARD_VIEW_PAGE_SIZE } from '../hooks';
 import { useAlgolia } from '../hooks/algolia';
 
 const researchOutputIndexState = atomFamily<
@@ -103,39 +98,12 @@ export const researchOutputState = atomFamily<
 export const useResearchOutputById = (id: string) =>
   useRecoilValue(researchOutputState(id));
 
-export const usePrefetchResearchOutputsLegacy = (
-  options: GetListOptions = {
-    currentPage: 0,
-    pageSize: CARD_VIEW_PAGE_SIZE,
-    searchQuery: '',
-    filters: new Set(),
-  },
-) => {
-  const { isEnabled } = useFlags();
-  const authorization = useRecoilValue(authorizationState);
-  const [researchOutputs, setResearchOutputs] = useRecoilState(
-    researchOutputsState(options),
-  );
-  useDeepCompareEffect(() => {
-    if (
-      !isEnabled('ALGOLIA_RESEARCH_OUTPUTS') &&
-      researchOutputs === undefined
-    ) {
-      getResearchOutputsLegacy(options, authorization)
-        .then(setResearchOutputs)
-        .catch();
-    }
-  }, [authorization, researchOutputs, options, setResearchOutputs]);
-};
-
 export const useResearchOutputs = (options: ResearchOutputListOptions) => {
-  const authorization = useRecoilValue(authorizationState);
   const [researchOutputs, setResearchOutputs] = useRecoilState(
     researchOutputsState(options),
   );
   const { index } = useAlgolia();
-  const { isEnabled } = useFlags();
-  if (isEnabled('ALGOLIA_RESEARCH_OUTPUTS') && researchOutputs === undefined) {
+  if (researchOutputs === undefined) {
     throw getResearchOutputs(index, options)
       .then(
         (data): ListResearchOutputResponse => ({
@@ -143,16 +111,6 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
           items: data.hits,
         }),
       )
-      .then(setResearchOutputs)
-      .catch(setResearchOutputs);
-  } else if (researchOutputs === undefined) {
-    if (options.teamId || options.userId) {
-      return {
-        total: 0,
-        items: [],
-      };
-    }
-    throw getResearchOutputsLegacy(options, authorization)
       .then(setResearchOutputs)
       .catch(setResearchOutputs);
   }

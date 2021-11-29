@@ -79,9 +79,9 @@ const App: FC<Record<string, never>> = () => {
   return (
     <Frame title="ASAP Hub">
       <GoogleTagManager containerId={GTM_CONTAINER_ID} />
-      <Router history={history}>
-        <AuthProvider>
-          <SentryAuth0 />
+      <AuthProvider>
+        <SentryAuth0 />
+        <Router history={history}>
           <LastLocationProvider>
             <Frame title={null}>
               <Switch>
@@ -129,8 +129,8 @@ const App: FC<Record<string, never>> = () => {
               </Switch>
             </Frame>
           </LastLocationProvider>
-        </AuthProvider>
-      </Router>
+        </Router>
+      </AuthProvider>
     </Frame>
   );
 };

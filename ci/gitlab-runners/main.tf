@@ -54,7 +54,6 @@ module "gitlab-runner" {
   runners_gitlab_url       = var.gitlab_url
   enable_runner_ssm_access = true
 
-  # set this to some unique value if you want to set up runners in 2 or more regions
   cache_bucket_prefix = "aus"
 
   gitlab_runner_security_group_ids = [data.aws_security_group.default.id]

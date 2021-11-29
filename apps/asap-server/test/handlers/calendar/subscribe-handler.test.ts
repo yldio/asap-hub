@@ -152,7 +152,7 @@ describe('Calendar handler', () => {
         expect(subscribe).toHaveBeenCalled();
       });
 
-      test('Should skip subscription and unsubscribing and return 200 when the version is old', async () => {
+      test.skip('Should skip subscription and unsubscribing and return 200 when the version is old', async () => {
         const calendarUpdateEvent = getCalendarUpdateEvent(11);
         subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
@@ -182,7 +182,7 @@ describe('Calendar handler', () => {
         expect(unsubscribe).not.toHaveBeenCalled();
         expect(subscribe).toHaveBeenCalled();
       });
-      test('Should not unsubscribe or subscribe is the version is old', async () => {
+      test.skip('Should not unsubscribe or subscribe is the version is old', async () => {
         const calendarUpdateEvent = getCalendarUpdateEvent(11);
         calendarUpdateEvent.payload.dataOld!.resourceId = undefined;
         subscribe.mockResolvedValueOnce({ resourceId, expiration });
@@ -215,7 +215,7 @@ describe('Calendar handler', () => {
       expect(alerts.error).toBeCalledWith(error);
     });
   });
-  describe('multilple calls', () => {
+  describe.skip('multilple calls', () => {
     test(`events played in order should update accordingly.
     The first event invalidates a calender,
     the second event should update to a valid calendar.

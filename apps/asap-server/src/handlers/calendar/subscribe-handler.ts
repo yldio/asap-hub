@@ -67,16 +67,16 @@ export const calendarCreatedHandlerFactory =
         return 'OK';
       }
 
-      const { version } = await calendarController.fetchById(payload.id, {
-        raw: true,
-      });
+      // const { version } = await calendarController.fetchById(payload.id, {
+      //   raw: true,
+      // });
 
-      if (version > (payload.version as number)) {
-        logger.warn(
-          `version recieved (${payload.version}) is older than current version: ${version}`,
-        );
-        return 'OK';
-      }
+      // if (version > (payload.version as number)) {
+      //   logger.warn(
+      //     `version recieved (${payload.version}) is older than current version: ${version}`,
+      //   );
+      //   return 'OK';
+      // }
 
       if (payload.dataOld.resourceId) {
         try {

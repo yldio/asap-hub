@@ -32,8 +32,3 @@ jobs:
         run: yarn run algolia import -s ./ro.json -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE -t ./apps/asap-server/scripts/algolia-transformation.js
       - name: Move temporary index to the prod one
         run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE -i $ALGOLIA_RESEARCH_OUTPUT_INDEX
-      - uses: ./.github/actions/slack/
-        if: always()
-        with:
-          message: Algolia Dev Sync
-          webhook: ${{ secrets.SLACK_WEBHOOK }}

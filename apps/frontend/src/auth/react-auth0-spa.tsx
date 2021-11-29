@@ -110,6 +110,16 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
           throw new Error('Auth0 client not initialized');
         };
 
+  const checkSession = async () => {
+    if (auth0Client) {
+      try {
+        await auth0Client.checkSession(); // use refresh token to get new access token if required
+        // eslint-disable-next-line
+      } catch (error) {} // Invalid refresh token proceed as if user isn't logged in
+      const isAuthenticated = await auth0Client.isAuthenticated();
+      setIsAuthenticated(isAuthenticated);
+    }
+  };
   const auth0: Auth0 = {
     isAuthenticated,
     user,
@@ -125,6 +135,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     getTokenWithPopup:
       getSafeAuth0ClientProperty('getTokenWithPopup').bind(auth0Client),
     logout: getSafeAuth0ClientProperty('logout').bind(auth0Client),
+    checkSession,
   };
 
   return (

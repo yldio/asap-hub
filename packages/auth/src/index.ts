@@ -37,6 +37,7 @@ export type Auth0 = {
   readonly user?: Auth0User;
   readonly loading: boolean;
   readonly popupOpen: boolean;
+  readonly checkSession?: Promise<void>;
 } & Pick<
   Auth0Client,
   | 'getIdTokenClaims'

@@ -63,9 +63,9 @@ const renderPage = async (newsResponse = createNewsResponse(1)) => {
 };
 
 describe('news page', () => {
-  // afterEach(() => {
-  //   // expect(nock.isDone()).toBe(true);
-  // });
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+  });
 
   afterEach(() => {
     nock.cleanAll();

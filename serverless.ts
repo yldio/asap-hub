@@ -267,7 +267,7 @@ const serverlessConfig: AWS = {
               'detail-type': ['UserPublished'],
             },
             retryPolicy: {
-              maximumRetryAttempts: 2,
+              maximumRetryAttempts: 10,
             },
           },
         },

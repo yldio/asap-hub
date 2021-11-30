@@ -233,6 +233,9 @@ const serverlessConfig: AWS = {
               source: ['asap.calendar'],
               'detail-type': ['CalendarCreated', 'CalendarUpdated'],
             },
+            retryPolicy: {
+              maximumRetryAttempts: 7,
+            },
           },
         },
       ],

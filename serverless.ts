@@ -45,6 +45,7 @@ const serverlessConfig: AWS = {
         allowedOrigins: [ASAP_APP_URL],
         allowCredentials: true,
         allowedHeaders: ['authorization', 'x-transaction-id'],
+        allowedMethods: ['options', 'post', 'get', 'put', 'delete'],
       },
     },
     logs: {

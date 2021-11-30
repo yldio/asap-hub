@@ -90,7 +90,8 @@
             "Dataset",
             "Bioinformatics",
             "Lab Resource",
-            "Article"
+            "Article",
+            "Proposal"
           ],
           "isUnique": false,
           "inlineEditable": true,

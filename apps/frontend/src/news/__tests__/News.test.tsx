@@ -1,4 +1,3 @@
-import nock from 'nock';
 import { RecoilRoot } from 'recoil';
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
@@ -7,9 +6,12 @@ import { NewsResponse } from '@asap-hub/model';
 import { news } from '@asap-hub/routing';
 
 import News from '../News';
-import { API_BASE_URL } from '../../config';
+
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { refreshNewsItemState } from '../state';
+import { getNewsById } from '../api';
+
+jest.mock('../api');
 
 const newsOrEvent: NewsResponse = {
   id: '55724942-3408-4ad6-9a73-14b92226ffb6',
@@ -17,6 +19,8 @@ const newsOrEvent: NewsResponse = {
   title: 'News Title',
   type: 'News',
 };
+
+const mockGetNewsById = getNewsById as jest.MockedFunction<typeof getNewsById>;
 
 const renderPage = async () => {
   const result = render(
@@ -53,32 +57,23 @@ const renderPage = async () => {
 };
 
 describe('news detail page', () => {
-  let nockInterceptor: nock.Interceptor;
-
   beforeEach(() => {
-    nock.cleanAll();
-    nockInterceptor = nock(API_BASE_URL, {
-      reqheaders: {
-        authorization: 'Bearer id_token',
-      },
-    }).get('/news/55724942-3408-4ad6-9a73-14b92226ffb6');
+    mockGetNewsById.mockClear();
   });
 
-  it('renders not found when the request returns a 404', async () => {
-    nockInterceptor.reply(404);
+  it('renders not found when the request doesnt return a NewsResponse Object', async () => {
+    mockGetNewsById.mockResolvedValue(undefined);
 
     const { getByRole } = await renderPage();
-    await waitFor(() => nock.isDone());
     expect(getByRole('heading').textContent).toContain(
       'Sorry! We can’t seem to find that page.',
     );
   });
 
   it('renders title', async () => {
-    nockInterceptor.reply(200, newsOrEvent);
+    mockGetNewsById.mockResolvedValue(newsOrEvent);
 
     const { getByRole } = await renderPage();
-    await waitFor(() => nock.isDone());
     expect(getByRole('heading').textContent).toContain('News Title');
   });
 });

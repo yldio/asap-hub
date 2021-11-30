@@ -1,4 +1,3 @@
-import nock from 'nock';
 import { RecoilRoot } from 'recoil';
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
@@ -9,28 +8,25 @@ import { createNewsResponse } from '@asap-hub/fixtures';
 import { usePagination, usePaginationParams } from '../../hooks';
 
 import NewsAndEventsPage from '../Routes';
-import { API_BASE_URL } from '../../config';
 import { refreshNewsItemState } from '../state';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
-const newsRequest = ({
-  pageSize,
-  numberOfItems,
-}: {
-  pageSize: number;
-  numberOfItems: number;
-}) =>
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer id_token' },
-  })
-    .get('/news')
-    .query(true)
-    .reply(200, {
-      total: numberOfItems,
-      items: Array.from({ length: pageSize }).map((_, idx) =>
-        createNewsResponse(idx + 1),
-      ),
-    });
+import { getNews } from '../api';
+
+jest.mock('../api');
+
+const mockGetNews = getNews as jest.MockedFunction<typeof getNews>;
+
+const getMockedResponse = (pageSize = 10, numberOfItems = 10) => ({
+  total: numberOfItems,
+  items: Array.from({ length: pageSize }, (_, idx) =>
+    createNewsResponse(idx + 1),
+  ),
+});
+beforeEach(() => {
+  mockGetNews.mockClear();
+  mockGetNews.mockResolvedValue(getMockedResponse(10, 10));
+});
 
 const renderPage = async (newsResponse = createNewsResponse(1)) => {
   const result = render(
@@ -63,25 +59,15 @@ const renderPage = async (newsResponse = createNewsResponse(1)) => {
 };
 
 describe('news page', () => {
-  afterEach(() => {
-    expect(nock.isDone()).toBe(true);
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   it('renders the page title', async () => {
-    newsRequest({ pageSize: 10, numberOfItems: 20 });
     const { getByText } = await renderPage();
-
     expect(getByText('News and Events')).toBeVisible();
   });
 
   it('renders a counter with the total number of items', async () => {
     const pageSize = 10;
     const numberOfItems = 20;
-    newsRequest({ pageSize, numberOfItems });
+    mockGetNews.mockResolvedValue(getMockedResponse(pageSize, numberOfItems));
 
     const { getByText } = await renderPage();
     expect(getByText(`${numberOfItems} results found`)).toBeVisible();
@@ -90,7 +76,7 @@ describe('news page', () => {
   it('renders a paginated list of news', async () => {
     const pageSize = 5;
     const numberOfItems = 20;
-    newsRequest({ pageSize, numberOfItems });
+    mockGetNews.mockResolvedValue(getMockedResponse(pageSize, numberOfItems));
 
     const { result } = renderHook(
       () => ({
@@ -112,15 +98,7 @@ describe('news page', () => {
   });
 
   it('renders error message when when the request it not a 2XX', async () => {
-    const errorRequest = () =>
-      nock(API_BASE_URL, {
-        reqheaders: { authorization: 'Bearer id_token' },
-      })
-        .get('/news')
-        .query(true)
-        .reply(404);
-
-    errorRequest();
+    mockGetNews.mockRejectedValue(new Error('error'));
 
     const { getByText } = await renderPage();
     expect(getByText('Something went wrong!')).toBeInTheDocument();

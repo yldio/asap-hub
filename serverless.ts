@@ -234,7 +234,8 @@ const serverlessConfig: AWS = {
               'detail-type': ['CalendarCreated', 'CalendarUpdated'],
             },
             retryPolicy: {
-              maximumRetryAttempts: 7,
+              maximumRetryAttempts: 185,
+              maximumEventAge: 3600,
             },
           },
         },

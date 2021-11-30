@@ -235,7 +235,6 @@ const serverlessConfig: AWS = {
             },
             retryPolicy: {
               maximumRetryAttempts: 185,
-              maximumEventAge: 3600,
             },
           },
         },

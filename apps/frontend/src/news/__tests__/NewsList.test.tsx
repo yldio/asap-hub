@@ -25,7 +25,6 @@ const getMockedResponse = (pageSize = 10, numberOfItems = 10) => ({
 });
 beforeEach(() => {
   mockGetNews.mockClear();
-  mockGetNews.mockResolvedValue(getMockedResponse(10, 10));
 });
 
 const renderPage = async (newsResponse = createNewsResponse(1)) => {

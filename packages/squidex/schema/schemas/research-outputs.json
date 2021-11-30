@@ -85,7 +85,6 @@
           "fieldType": "String",
           "allowedValues": [
             "Grant Document",
-            "Proposal",
             "Presentation",
             "Protocol",
             "Dataset",

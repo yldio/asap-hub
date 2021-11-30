@@ -96,6 +96,11 @@ const serverlessConfig: AWS = {
     iamRoleStatements: [
       {
         Effect: 'Allow',
+        Action: 'sqs:*',
+        Resource: '*',
+      },
+      {
+        Effect: 'Allow',
         Action: 'secretsmanager:*',
         Resource: {
           'Fn::Join': [
@@ -240,6 +245,23 @@ const serverlessConfig: AWS = {
             pattern: {
               source: ['asap.calendar'],
               'detail-type': ['CalendarCreated', 'CalendarUpdated'],
+            },
+            deadLetterQueueArn: {
+              'Fn::GetAtt': ['CalendarSubscriptionDLQ', 'Arn'],
+            },
+            retryPolicy: {
+              maximumRetryAttempts: 7,
+            },
+            iamRoleStatementsInherit: true,
+            iamRoleStatements: {
+              Effect: 'Allow',
+              Action: ['sqs:sendMessage'],
+              Principal: {
+                AWS: '*',
+              },
+              Resource: {
+                'Fn::GetAtt': ['CalendarSubscriptionDLQ', 'Arn'],
+              },
             },
           },
         },
@@ -894,6 +916,40 @@ const serverlessConfig: AWS = {
                 // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-aliastarget.html#cfn-route53-aliastarget-hostedzoneid
                 HostedZoneId: 'Z2FDTNDATAQYW2',
               },
+            },
+          ],
+        },
+      },
+      CalendarSubscriptionDLQ: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName:
+            '${self:service}-${self:provider.stage}-calendar-subscription-dlq',
+        },
+      },
+      CalendarSubscriptionDLQPolicy: {
+        Type: 'AWS::SQS::QueuePolicy',
+        Properties: {
+          PolicyDocument: {
+            Id: '${self:service}-${self:provider.stage}-calendar-subscription-dlq-policy',
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Sid: 'Publisher-statement-id',
+                Effect: 'Allow',
+                Principal: {
+                  AWS: '*',
+                },
+                Action: 'sqs:*',
+                Resource: {
+                  'Fn::GetAtt': ['CalendarSubscriptionDLQ', 'Arn'],
+                },
+              },
+            ],
+          },
+          Queues: [
+            {
+              Ref: 'CalendarSubscriptionDLQ',
             },
           ],
         },

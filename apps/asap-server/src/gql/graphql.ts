@@ -5572,8 +5572,6 @@ export type FetchGroupsQueryVariables = Exact<{
   top: Maybe<Scalars['Int']>;
   skip: Maybe<Scalars['Int']>;
   filter: Maybe<Scalars['String']>;
-  withResearchOutputs?: Maybe<Scalars['Boolean']>;
-  withTeams?: Maybe<Scalars['Boolean']>;
 }>;
 
 export type FetchGroupsQuery = {
@@ -5838,8 +5836,6 @@ export type FetchGroupsQuery = {
 
 export type FetchGroupQueryVariables = Exact<{
   id: Scalars['String'];
-  withResearchOutputs?: Maybe<Scalars['Boolean']>;
-  withTeams?: Maybe<Scalars['Boolean']>;
 }>;
 
 export type FetchGroupQuery = {
@@ -9772,24 +9768,6 @@ export const FetchGroupsDocument = {
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
         },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'withResearchOutputs' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
-          defaultValue: { kind: 'BooleanValue', value: false },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'withTeams' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
-          defaultValue: { kind: 'BooleanValue', value: false },
-        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -9876,24 +9854,6 @@ export const FetchGroupDocument = {
               name: { kind: 'Name', value: 'String' },
             },
           },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'withResearchOutputs' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
-          defaultValue: { kind: 'BooleanValue', value: false },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'withTeams' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
-          defaultValue: { kind: 'BooleanValue', value: false },
         },
       ],
       selectionSet: {

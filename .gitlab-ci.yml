@@ -186,6 +186,7 @@ deploy:sls:branch:
     - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
     - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
+    - export SLS_DEBUG=*
     - source ci/env-setup.sh
     - yarn sls deploy --verbose
 

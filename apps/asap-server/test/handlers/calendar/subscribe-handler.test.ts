@@ -88,8 +88,7 @@ describe('Calendar handler', () => {
     });
 
     test('Should return 502 and alert when the subscription was unsuccessful', async () => {
-      const errorMessage =
-        'Channel id 238c6b46-706e-11eb-9439-0242ac130002 not unique';
+      const errorMessage = 'Error occurred in handler';
       const error = new Error(errorMessage);
       subscribe.mockRejectedValueOnce(error);
 

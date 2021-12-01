@@ -111,7 +111,7 @@ export const calendarCreatedHandlerFactory =
         logger.error(error, 'Error subscribing to the calendar');
         alerts.error(error);
 
-        throw error;
+        throw new Error('Error occurred in handler');
       }
 
       return 'OK';

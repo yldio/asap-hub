@@ -1,5 +1,6 @@
 import Joi from '@hapi/joi';
 import {
+  ResearchOutputResponse,
   TeamResponse,
   TeamRole,
   TeamMember,
@@ -7,7 +8,9 @@ import {
   TeamTool,
   teamRole,
 } from '@asap-hub/model';
+import { GraphqlResearchOutput } from '@asap-hub/squidex';
 
+import { parseGraphQLResearchOutput } from './research-output';
 import { parseDate, createURL } from '../utils/squidex';
 import { FetchTeamQuery } from '../gql/graphql';
 
@@ -77,6 +80,7 @@ export const parseGraphQLTeamMember = (
 export const parseGraphQLTeam = (
   team: NonNullable<FetchTeamQuery['findTeamsContent']>,
 ): TeamResponse => {
+  const flatOutputs = team.flatData.outputs || [];
   const displayName = team.flatData.displayName || '';
 
   const members =
@@ -99,6 +103,26 @@ export const parseGraphQLTeam = (
       ];
     }, [] as TeamTool[]) || [];
 
+  const outputs: ResearchOutputResponse[] = flatOutputs
+    .map((o) => {
+      const output = parseGraphQLResearchOutput(o, {
+        includeAuthors: true,
+      }) as Omit<ResearchOutputResponse, 'teams' | 'team'>;
+
+      return {
+        ...output,
+        teams: (o as GraphqlResearchOutput).referencingTeamsContents?.map(
+          (t) => ({
+            displayName: t.flatData?.displayName || '',
+            id: t.id,
+          }),
+        ) || [{ id: team.id, displayName }],
+      };
+    })
+    .sort(
+      (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime(),
+    );
+
   const labCount = members
     .flatMap((member) => member.labs || [])
     .filter(
@@ -116,6 +140,7 @@ export const parseGraphQLTeam = (
     projectTitle: team.flatData.projectTitle,
     lastModifiedDate: parseDate(team.lastModified).toISOString(),
     expertiseAndResourceTags: team.flatData.expertiseAndResourceTags ?? [],
+    outputs,
     tools,
     pointOfContact: members.find(({ role }) => role === 'Project Manager'),
     members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),

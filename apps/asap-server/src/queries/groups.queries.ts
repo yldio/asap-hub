@@ -110,7 +110,13 @@ export const groupContentQueryFragment = gql`
 `;
 
 export const FETCH_GROUPS = gql`
-  query FetchGroups($top: Int, $skip: Int, $filter: String) {
+  query FetchGroups(
+    $top: Int
+    $skip: Int
+    $filter: String
+    $withResearchOutputs: Boolean = false
+    $withTeams: Boolean = false
+  ) {
     queryGroupsContentsWithTotal(
       top: $top
       skip: $skip
@@ -127,7 +133,11 @@ export const FETCH_GROUPS = gql`
 `;
 
 export const FETCH_GROUP = gql`
-  query FetchGroup($id: String!) {
+  query FetchGroup(
+    $id: String!
+    $withResearchOutputs: Boolean = false
+    $withTeams: Boolean = false
+  ) {
     findGroupsContent(id: $id) {
       ...GroupsContent
     }

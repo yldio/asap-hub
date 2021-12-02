@@ -40,6 +40,22 @@ The csv format needs to respect the following structure:
 - researcherId
 - twitter
 
+## protocols
+
+The command purpose is to automate the process of inserting bulk protocols.
+
+`yarn node apps/asap-cli/build-cjs/cli.js import protocols </path/to/file>.csv`
+
+- teamLeadPILastName
+- linkToProtocols
+- name
+- version
+- protocolAuthors
+- createdDate
+- contact
+- keywords
+- abstract
+
 ## Environment Variables
 
 - SQUIDEX_CLIENT_ID

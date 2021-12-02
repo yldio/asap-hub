@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { researchOutputContentQueryFragment } from './research-outputs.queries';
 
 export const teamsContentQueryFragment = gql`
   fragment TeamsContent on Teams {
@@ -9,6 +10,9 @@ export const teamsContentQueryFragment = gql`
     flatData {
       applicationNumber
       displayName
+      outputs @include(if: $withResearchOutputs) {
+        ...ResearchOutputContent
+      }
       projectSummary
       projectTitle
       expertiseAndResourceTags
@@ -94,10 +98,15 @@ export const teamsContentQueryFragment = gql`
       }
     }
   }
+  ${researchOutputContentQueryFragment}
 `;
 
 export const FETCH_TEAM = gql`
-  query FetchTeam($id: String!) {
+  query FetchTeam(
+    $id: String!
+    $withResearchOutputs: Boolean = false
+    $withTeams: Boolean = false
+  ) {
     findTeamsContent(id: $id) {
       ...TeamsContent
     }
@@ -106,7 +115,13 @@ export const FETCH_TEAM = gql`
 `;
 
 export const FETCH_TEAMS = gql`
-  query FetchTeams($top: Int, $skip: Int, $filter: String) {
+  query FetchTeams(
+    $top: Int
+    $skip: Int
+    $filter: String
+    $withResearchOutputs: Boolean = true
+    $withTeams: Boolean = false
+  ) {
     queryTeamsContentsWithTotal(
       top: $top
       skip: $skip

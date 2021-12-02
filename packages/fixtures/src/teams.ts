@@ -24,6 +24,7 @@ const listTeamResponseItem: Omit<ListTeamResponse['items'][0], 'id'> = {
   projectTitle:
     'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
   expertiseAndResourceTags: [],
+  outputs: [],
   members: [],
   lastModifiedDate: '2020-09-07T17:36:54Z',
   labCount: 0,

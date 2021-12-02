@@ -21,7 +21,7 @@ export const parseGraphQLGroup = (
   const createdDate = parseDate(item.created).toISOString();
   const teams: GroupTeam[] = (item.flatData.teams || []).map((t) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { members, labCount, ...team } = parseGraphQLTeam(t);
+    const { members, outputs, labCount, ...team } = parseGraphQLTeam(t);
     return team;
   });
   const calendars: CalendarResponse[] = (item.flatData?.calendars || []).map(

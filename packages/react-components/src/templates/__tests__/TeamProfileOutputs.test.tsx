@@ -13,6 +13,8 @@ const baseProps: ComponentProps<typeof TeamProfileOutputs> = {
   isListView: false,
   cardViewHref: '',
   listViewHref: '',
+  hasOutputs: true,
+  ownTeam: true,
 };
 
 it('renders output cards', () => {

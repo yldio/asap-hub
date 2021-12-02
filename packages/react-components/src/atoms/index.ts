@@ -15,6 +15,7 @@ export { default as Headline5 } from './Headline5';
 export { default as Headline6 } from './Headline6';
 export { default as Label } from './Label';
 export { default as Link } from './Link';
+export { default as LinkConditional } from './LinkConditional';
 export { default as MultiSelect } from './MultiSelect';
 export { default as NavigationLink } from './NavigationLink';
 export { default as Overlay } from './Overlay';

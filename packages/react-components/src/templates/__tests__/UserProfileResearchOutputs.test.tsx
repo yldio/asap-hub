@@ -13,6 +13,9 @@ const baseProps: ComponentProps<typeof UserProfileResearchOutputs> = {
   isListView: false,
   cardViewHref: '',
   listViewHref: '',
+  hasOutputs: true,
+  ownUser: true,
+  firstName: 'Tess',
 };
 
 it('renders output cards', () => {

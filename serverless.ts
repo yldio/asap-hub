@@ -249,6 +249,7 @@ const serverlessConfig: AWS = {
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: '${env:SENTRY_DSN_CALENDAR}',
       },
+      onError: { Ref: 'CalendarSubscribeFailureSNS' },
     },
     resubscribeCalendars: {
       handler:
@@ -896,6 +897,87 @@ const serverlessConfig: AWS = {
               },
             },
           ],
+        },
+      },
+      CalendarSubscribeFailureSNS: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName:
+            '${self:service}-${self:provider.stage}-calendar-subscribe-failure',
+        },
+      },
+      CalendarSubscribeFailureSNSPolicy: {
+        Type: 'AWS::SNS::TopicPolicy',
+        Properties: {
+          PolicyDocument: {
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Effect: 'Allow',
+                Sid: 'Calendar-Subscribe-Failure-SNS-policy',
+                Principal: {
+                  AWS: '*',
+                },
+                Action: 'sns:Publish',
+                Resource: {
+                  Ref: 'CalendarSubscribeFailureSNS',
+                },
+              },
+            ],
+          },
+          Topics: [
+            {
+              Ref: 'CalendarSubscribeFailureSNS',
+            },
+          ],
+        },
+      },
+
+      CalendarSubscribeDLQ: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName:
+            '${self:service}-${self:provider.stage}-calendar-subscribe-dlq',
+        },
+      },
+      CalendarSubscribeDLQPolicy: {
+        Type: 'AWS::SQS::QueuePolicy',
+        Properties: {
+          PolicyDocument: {
+            Id: '${self:service}-${self:provider.stage}-calendar-subscribe-dlq-policy',
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Sid: 'Publisher-statement-id',
+                Effect: 'Allow',
+                Principal: {
+                  AWS: '*',
+                },
+                Action: 'sqs:*',
+                Resource: {
+                  'Fn::GetAtt': [`CalendarSubscribeDLQ`, 'Arn'],
+                },
+              },
+            ],
+          },
+          Queues: [
+            {
+              Ref: `CalendarSubscribeDLQ`,
+            },
+          ],
+        },
+      },
+      CalendarSubscribeDLQSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Endpoint: {
+            'Fn::GetAtt': [`CalendarSubscribeDLQ`, 'Arn'],
+          },
+          Protocol: 'sqs',
+          TopicArn: {
+            Ref: 'CalendarSubscribeFailureSNS',
+          },
+          FilterPolicy: {},
         },
       },
     },

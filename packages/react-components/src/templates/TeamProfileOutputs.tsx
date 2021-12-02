@@ -58,7 +58,7 @@ const TeamProfileOutputs: React.FC<TeamProfileOutputsProps> = ({
               contact your PM
             </LinkConditional>
             . In the meantime, try exploring research outputs shared by the
-            network."
+            network.
           </>
         }
       />

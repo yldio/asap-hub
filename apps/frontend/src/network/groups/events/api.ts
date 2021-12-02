@@ -15,6 +15,11 @@ export const getGroupEvents = async (
   if (options.before) url.searchParams.append('before', options.before);
   else if (options.after) url.searchParams.append('after', options.after);
 
+  if (options.sort) {
+    url.searchParams.set('sortBy', options.sort.sortBy);
+    url.searchParams.set('sortOrder', options.sort.sortOrder);
+  }
+
   const resp = await fetch(url.toString(), {
     headers: { authorization, ...createSentryHeaders() },
   });

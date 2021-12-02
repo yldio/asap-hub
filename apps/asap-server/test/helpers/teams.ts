@@ -12,7 +12,6 @@ export const createRandomTeam = (): Promise<RestTeam> => {
     projectTitle: { iv: chance.sentence() },
     projectSummary: { iv: chance.paragraph() },
     expertiseAndResourceTags: { iv: [] },
-    outputs: { iv: [] },
   };
 
   return teams.create(team);

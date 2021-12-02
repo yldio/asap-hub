@@ -59,9 +59,6 @@ const insertTeam = async (data: Data, cache: Cache): Promise<RestTeam> => {
     expertiseAndResourceTags: {
       iv: [],
     },
-    outputs: {
-      iv: [],
-    },
   };
 
   if (

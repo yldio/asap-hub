@@ -54,3 +54,45 @@ it('renders output cards', () => {
 
   expect(queryByText(/more\sto\scome/i)).not.toBeInTheDocument();
 });
+
+it('renders the no output page for your own team', () => {
+  const { getByTitle, getByRole, getByText, rerender } = render(
+    <TeamProfileOutputs {...baseProps} hasOutputs={false} ownTeam={true} />,
+  );
+  expect(getByTitle('Research')).toBeInTheDocument();
+  expect(getByRole('heading', { level: 1 }).textContent).toMatch(/Your team/i);
+  expect(getByText(/contact your PM/i).closest('a')).toBeNull();
+  rerender(
+    <TeamProfileOutputs
+      {...baseProps}
+      hasOutputs={false}
+      ownTeam={true}
+      contactEmail="example@example.com"
+    />,
+  );
+  expect(getByText(/contact your PM/i).closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/example@example/i),
+  );
+});
+
+it('renders the no output page for another team', () => {
+  const { getByTitle, getByRole, getByText, rerender } = render(
+    <TeamProfileOutputs {...baseProps} hasOutputs={false} ownTeam={false} />,
+  );
+  expect(getByTitle('Research')).toBeInTheDocument();
+  expect(getByRole('heading', { level: 1 }).textContent).toMatch(/This team/i);
+  expect(getByText(/contact the PM/i).closest('a')).toBeNull();
+  rerender(
+    <TeamProfileOutputs
+      {...baseProps}
+      hasOutputs={false}
+      ownTeam={false}
+      contactEmail="example@example.com"
+    />,
+  );
+  expect(getByText(/contact the PM/i).closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/example@example/i),
+  );
+});

@@ -18,6 +18,7 @@ import {
 
 jest.mock('../../../shared-research/api');
 jest.mock('../../../shared-research/export');
+jest.mock('../api');
 
 afterEach(() => {
   jest.clearAllMocks();

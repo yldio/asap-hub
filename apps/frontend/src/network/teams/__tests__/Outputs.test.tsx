@@ -2,12 +2,8 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {
-  createAlgoliaResearchOutputResponse,
-  createResearchOutputResponse,
-} from '@asap-hub/fixtures';
+import { createAlgoliaResearchOutputResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
-import { ResearchOutputResponse } from '@asap-hub/model';
 
 import { RecoilRoot } from 'recoil';
 import Outputs from '../Outputs';
@@ -22,6 +18,7 @@ import {
 
 jest.mock('../../../shared-research/api');
 jest.mock('../../../shared-research/export');
+jest.mock('../api');
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -36,7 +33,6 @@ const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
 >;
 
 const renderOutputs = async (
-  teamOutputs: ResearchOutputResponse[],
   searchQuery = '',
   filters = new Set<string>(),
   teamId = '42',
@@ -94,9 +90,7 @@ const renderOutputs = async (
 };
 
 it('renders search and filter', async () => {
-  const { getByRole } = await renderOutputs([
-    { ...createResearchOutputResponse(), id: 'ro0', title: 'Some RO' },
-  ]);
+  const { getByRole } = await renderOutputs();
   expect(
     (getByRole('searchbox') as HTMLInputElement).placeholder,
   ).toMatchInlineSnapshot(`"Enter a keyword, method, resource…"`);
@@ -110,7 +104,7 @@ it('renders a list of research outputs', async () => {
       title: `Test Output ${index}`,
     })),
   });
-  const { container } = await renderOutputs([], '');
+  const { container } = await renderOutputs('');
   expect(container.textContent).toContain('Test Output 0');
   expect(container.textContent).toContain('Test Output 1');
 });
@@ -123,7 +117,6 @@ it('calls getResearchOutputs with the right arguments', async () => {
     ...createAlgoliaResearchOutputResponse(2),
   });
   const { getByRole, getByText, getByLabelText } = await renderOutputs(
-    [],
     searchQuery,
     filters,
     teamId,
@@ -157,7 +150,6 @@ it('triggers and export with the same parameters', async () => {
     ...createAlgoliaResearchOutputResponse(2),
   });
   const { getByRole, getByText, getByLabelText } = await renderOutputs(
-    [],
     searchQuery,
     filters,
     teamId,

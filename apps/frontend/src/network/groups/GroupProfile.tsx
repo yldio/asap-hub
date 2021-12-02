@@ -88,7 +88,7 @@ const GroupProfile: FC = () => {
               searchQuery={searchQuery}
               onChangeSearchQuery={setSearchQuery}
             >
-              <Frame title="Upcoming Events">
+              <Frame title="Past Events">
                 <EventList
                   past
                   currentTime={currentTime}

@@ -19,6 +19,8 @@ describe('getGroupEvents', () => {
         take: '10',
         skip: '0',
         before: new Date('2021-01-01T11:00:00').toISOString(),
+        sortBy: 'endDate',
+        sortOrder: 'desc',
       })
       .reply(200, {});
     await getGroupEvents(

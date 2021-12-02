@@ -1,7 +1,6 @@
-import { NewsPageBody, Loading } from '@asap-hub/react-components';
+import { NewsPageBody } from '@asap-hub/react-components';
 import { usePagination, usePaginationParams } from '../hooks';
-
-import { useNews } from '../api';
+import { useNews } from './state';
 
 const NewsList: React.FC<Record<string, never>> = () => {
   const { currentPage, pageSize } = usePaginationParams();
@@ -13,21 +12,17 @@ const NewsList: React.FC<Record<string, never>> = () => {
   });
 
   const { numberOfPages, renderPageHref } = usePagination(
-    result.data?.total || 0,
+    result.total || 0,
     pageSize,
   );
 
-  if (result.loading) {
-    return <Loading />;
-  }
-
   return (
     <NewsPageBody
-      news={result.data.items}
+      news={result.items}
       numberOfPages={numberOfPages}
       renderPageHref={renderPageHref}
       currentPage={currentPage}
-      numberOfItems={result.data?.total}
+      numberOfItems={result.total}
     />
   );
 };

@@ -49,14 +49,7 @@ export const eventContentFragment = gql`
 `;
 
 export const FETCH_EVENTS = gql`
-  query FetchEvents(
-    $top: Int
-    $skip: Int
-    $filter: String
-    $order: String
-    $withResearchOutputs: Boolean = false
-    $withTeams: Boolean = false
-  ) {
+  query FetchEvents($top: Int, $skip: Int, $filter: String, $order: String) {
     queryEventsContentsWithTotal(
       top: $top
       skip: $skip
@@ -73,11 +66,7 @@ export const FETCH_EVENTS = gql`
 `;
 
 export const FETCH_EVENT = gql`
-  query FetchEvent(
-    $id: String!
-    $withResearchOutputs: Boolean = false
-    $withTeams: Boolean = false
-  ) {
+  query FetchEvent($id: String!) {
     findEventsContent(id: $id) {
       ...EventContent
     }

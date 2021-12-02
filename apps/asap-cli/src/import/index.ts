@@ -4,6 +4,8 @@ import through from 'through2-concurrent';
 import { createReadStream } from 'fs';
 import insertUsers from './users/insert';
 import parseUsers from './users/parse';
+import insertProtocols from './protocols/insert';
+import parseProtocols from './protocols/parse';
 
 /* eslint-disable no-unused-vars */
 const parse =
@@ -34,4 +36,6 @@ const users = parse(
   }),
 );
 
-export { users };
+const protocols = parse(parseProtocols, insertProtocols);
+
+export { users, protocols };

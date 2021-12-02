@@ -113,7 +113,7 @@ yargs(hideBin(process.argv))
           type: 'string',
         }),
     handler: async ({ path, entity }) =>
-      importers[entity as 'users'](path as string),
+      importers[entity as 'users' | 'protocols'](path as string),
   })
   .demandCommand(1)
   .help('h')

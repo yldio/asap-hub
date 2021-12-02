@@ -1,4 +1,5 @@
 import { ListResponse } from './common';
+import { ResearchOutputResponse } from './research-output';
 import { Lab } from './lab';
 
 export const teamRole = [
@@ -44,6 +45,7 @@ export interface TeamResponse
   lastModifiedDate: string;
   pointOfContact?: TeamMember;
   tools?: TeamTool[];
+  outputs: ResearchOutputResponse[];
   labCount: number;
 }
 

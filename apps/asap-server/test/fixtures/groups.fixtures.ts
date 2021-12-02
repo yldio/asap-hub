@@ -47,7 +47,6 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
             ],
             teams: [
               {
-                __typename: 'Teams',
                 id: 'team-id-1',
                 created: '2020-12-11T14:33:50Z',
                 lastModified: '2020-12-11T15:06:26Z',
@@ -133,7 +132,6 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                           mainResearchInterests: null,
                           id: [
                             {
-                              __typename: 'Teams',
                               id: 'team-id-2',
                               created: '2020-12-11T14:33:50Z',
                               lastModified: '2020-12-11T15:06:26Z',
@@ -395,7 +393,6 @@ export const getGraphqlGroup = (): GraphqlGroup => ({
     ],
     teams: [
       {
-        __typename: 'Teams',
         id: 'team-id-1',
         created: '2020-12-11T14:33:50Z',
         lastModified: '2020-12-11T15:06:26Z',
@@ -481,7 +478,6 @@ export const getGraphqlGroup = (): GraphqlGroup => ({
                   mainResearchInterests: null,
                   id: [
                     {
-                      __typename: 'Teams',
                       id: 'team-id-2',
                       created: '2020-12-11T14:33:50Z',
                       lastModified: '2020-12-11T15:06:26Z',

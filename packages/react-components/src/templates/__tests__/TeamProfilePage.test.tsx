@@ -13,6 +13,7 @@ const boilerplateProps: Omit<
   lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),
   members: [],
   expertiseAndResourceTags: [],
+  outputs: [],
   teamListElementId: '',
   labCount: 15,
 };

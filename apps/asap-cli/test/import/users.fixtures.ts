@@ -13,6 +13,7 @@ export const fetchTeamsResponse: { total: number; items: RestTeam[] } = {
         applicationNumber: { iv: 'app' },
         projectTitle: { iv: 'title' },
         expertiseAndResourceTags: { iv: [] },
+        outputs: { iv: [] },
       },
     },
   ],

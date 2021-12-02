@@ -936,6 +936,7 @@ const serverlessConfig: AWS = {
       CalendarSubscribeDLQ: {
         Type: 'AWS::SQS::Queue',
         Properties: {
+          MessageRetentionPeriod: 1_209_600, // 14 days
           QueueName:
             '${self:service}-${self:provider.stage}-calendar-subscribe-dlq',
         },
@@ -951,11 +952,18 @@ const serverlessConfig: AWS = {
                 Sid: 'Publisher-statement-id',
                 Effect: 'Allow',
                 Principal: {
-                  AWS: '*',
+                  Service: 'sns.amazonaws.com',
                 },
-                Action: 'sqs:*',
+                Action: 'sqs:SendMessage',
                 Resource: {
                   'Fn::GetAtt': [`CalendarSubscribeDLQ`, 'Arn'],
+                },
+                Condition: {
+                  ArnEquals: {
+                    'aws:SourceArn': {
+                      Ref: 'CalendarSubscribeFailureSNS',
+                    },
+                  },
                 },
               },
             ],

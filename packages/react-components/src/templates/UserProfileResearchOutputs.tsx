@@ -41,15 +41,19 @@ const UserProfileResearchOutputs: React.FC<UserProfileOutputsProps> = ({
   <div css={styles}>
     {hasOutputs ? (
       <SharedResearchList {...props} />
-    ) : ownUser ? (
-      <NoOutputsPage
-        title="You haven’t shared any research."
-        description="To add research to your profile, contact your PM. In the meantime, try exploring research outputs shared by the network."
-      />
     ) : (
       <NoOutputsPage
-        title={`${firstName} hasn’t shared any research.`}
-        description="It looks like this user has no shared outputs. In the meantime, try exploring research outputs shared by the network."
+        {...(ownUser
+          ? {
+              title: 'You haven’t shared any research.',
+              description:
+                'To add research to your profile, contact your PM. In the meantime, try exploring research outputs shared by the network.',
+            }
+          : {
+              title: `${firstName} hasn’t shared any research.`,
+              description:
+                'It looks like this user has no shared outputs. In the meantime, try exploring research outputs shared by the network.',
+            })}
       />
     )}
   </div>

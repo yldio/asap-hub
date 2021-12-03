@@ -898,6 +898,53 @@ const serverlessConfig: AWS = {
           ],
         },
       },
+
+      SubscribeCalendarDLQ: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          MessageRetentionPeriod: 1_209_600, // 14 days
+          QueueName:
+            '${self:service}-${self:provider.stage}-subscribe-calendar-dlq',
+        },
+      },
+      SubscribeCalendarDLQPolicy: {
+        Type: 'AWS::SQS::QueuePolicy',
+        Properties: {
+          PolicyDocument: {
+            Id: '${self:service}-${self:provider.stage}-subscribe-calendar-dlq-policy',
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Sid: 'Publisher-statement-id',
+                Effect: 'Allow',
+                Principal: {
+                  AWS: '*',
+                },
+                Action: 'sqs:SendMessage',
+                Resource: {
+                  'Fn::GetAtt': [`SubscribeCalendarDLQ`, 'Arn'],
+                },
+              },
+            ],
+          },
+          Queues: [
+            {
+              Ref: `SubscribeCalendarDLQ`,
+            },
+          ],
+        },
+      },
+    },
+    extensions: {
+      SubscribeCalendarLambdaFunction: {
+        Properties: {
+          DeadLetterConfig: {
+            TargetArn: {
+              'Fn::GetAtt': ['SubscribeCalendarDLQ', 'Arn'],
+            },
+          },
+        },
+      },
     },
   },
 };

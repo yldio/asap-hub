@@ -31,8 +31,8 @@ export const calendarCreatedHandlerFactory =
   ) =>
   async (
     event: EventBridgeEvent<CalendarEventType, WebhookPayload<Calendar>>,
-  ): Promise<'OK' | 'ERROR'> => {
-    logger.debug(event, 'Event input');
+  ): Promise<'OK'> => {
+    logger.debug(JSON.stringify(event, null, 2), 'Event input');
 
     const bodySchema = Joi.object({
       type: Joi.string().required(),
@@ -111,7 +111,7 @@ export const calendarCreatedHandlerFactory =
         logger.error(error, 'Error subscribing to the calendar');
         alerts.error(error);
 
-        return 'ERROR';
+        throw error;
       }
 
       return 'OK';

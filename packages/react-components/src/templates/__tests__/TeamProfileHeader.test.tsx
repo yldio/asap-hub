@@ -11,7 +11,6 @@ const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   projectTitle: 'Unknown',
   members: [],
   expertiseAndResourceTags: [],
-  outputs: [],
   lastModifiedDate: formatISO(new Date()),
   teamListElementId: '',
   labCount: 15,

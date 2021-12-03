@@ -1,5 +1,4 @@
-import { Rest, Entity, Graphql } from './common';
-import { GraphqlResearchOutput } from './research-output';
+import { Rest, Entity, Graphql, GraphqlWithTypename } from './common';
 import { GraphqlUser } from './user';
 
 export interface Team<T = string> {
@@ -14,13 +13,15 @@ export interface Team<T = string> {
     description?: string;
     name: string;
   }[];
-  outputs: T[];
 }
 
 export interface RestTeam extends Entity, Rest<Team> {}
 // TODO: REMOVE old proposal type
-export interface GraphqlTeam
+
+export interface GraphqlTeamEntity
   extends Entity,
-    Graphql<Team<GraphqlResearchOutput | { id: string }>> {
+    Graphql<Team<{ id: string }>> {
   referencingUsersContents?: GraphqlUser[];
 }
+
+export type GraphqlTeam = GraphqlWithTypename<GraphqlTeamEntity, 'Teams'>;

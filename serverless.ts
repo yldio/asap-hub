@@ -399,6 +399,26 @@ const serverlessConfig: AWS = {
         EVENT_SOURCE: 'asap.teams',
       },
     },
+    invalidateCache: {
+      handler:
+        'apps/asap-server/src/handlers/invalidate-cache/index-handler.handler',
+      events: [
+        {
+          s3: {
+            bucket: { Ref: 'FrontendBucket' },
+            event: 's3:ObjectCreated:*',
+            rules: [
+              {
+                prefix: 'index',
+                suffix: '.html',
+              },
+            ],
+            existing: true,
+          },
+        },
+      ],
+      environment: {},
+    },
     indexTeamResearchOutputs: {
       handler: 'apps/asap-server/src/handlers/teams/index-handler.handler',
       events: [

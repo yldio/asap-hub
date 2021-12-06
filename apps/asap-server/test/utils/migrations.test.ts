@@ -54,20 +54,24 @@ describe('Migration utils', () => {
     });
 
     test('Should invoke the given processing function with the results from each iteration', async () => {
-      const mockFetchResult: Results<RestUser> = {
-        items: [restUserMock],
+      const mockFetchFirstResult: Results<RestUser> = {
+        items: Array(10).fill(restUserMock),
+        total: 11,
+      };
+      const mockFetchSecondResult: Results<RestUser> = {
+        items: Array(1).fill(restUserMock),
         total: 11,
       };
 
       // resolve twice
-      mockFetch.mockResolvedValueOnce(mockFetchResult);
-      mockFetch.mockResolvedValueOnce(mockFetchResult);
+      mockFetch.mockResolvedValueOnce(mockFetchFirstResult);
+      mockFetch.mockResolvedValueOnce(mockFetchSecondResult);
 
       const processingFunction = jest.fn();
 
       await applyToAllItemsInCollection('user', processingFunction);
 
-      expect(processingFunction).toBeCalledTimes(2);
+      expect(processingFunction).toBeCalledTimes(11);
       expect(processingFunction).toBeCalledWith(
         restUserMock,
         expect.any(Squidex),

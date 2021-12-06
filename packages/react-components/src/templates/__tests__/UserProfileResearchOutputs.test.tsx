@@ -13,6 +13,9 @@ const baseProps: ComponentProps<typeof UserProfileResearchOutputs> = {
   isListView: false,
   cardViewHref: '',
   listViewHref: '',
+  hasOutputs: true,
+  ownUser: true,
+  firstName: 'Tess',
 };
 
 it('renders output cards', () => {
@@ -51,4 +54,33 @@ it('renders output cards', () => {
   expect(teamLink).toHaveAttribute('href', expect.stringMatching(/uuid-team$/));
 
   expect(queryByText(/more\sto\scome/i)).not.toBeInTheDocument();
+});
+
+it('renders the no output page for your own user', () => {
+  const { getByTitle, getByRole } = render(
+    <UserProfileResearchOutputs
+      {...baseProps}
+      hasOutputs={false}
+      ownUser={true}
+    />,
+  );
+  expect(getByTitle('Research')).toBeInTheDocument();
+  expect(getByRole('heading', { level: 1 }).textContent).toMatch(
+    /You haven’t/i,
+  );
+});
+
+it('renders the no output page for another user', () => {
+  const { getByTitle, getByRole } = render(
+    <UserProfileResearchOutputs
+      {...baseProps}
+      hasOutputs={false}
+      ownUser={false}
+      firstName="PersonA"
+    />,
+  );
+  expect(getByTitle('Research')).toBeInTheDocument();
+  expect(getByRole('heading', { level: 1 }).textContent).toMatch(
+    /PersonA hasn’t/i,
+  );
 });

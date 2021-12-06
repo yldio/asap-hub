@@ -4,7 +4,8 @@ import {
 } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import format from 'date-fns/format';
-import React from 'react';
+import { ComponentProps, FC } from 'react';
+import { useCurrentUser } from '@asap-hub/react-context';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';
@@ -16,8 +17,12 @@ import {
 } from '../../shared-research/export';
 import { useResearchOutputs } from '../../shared-research/state';
 import { SearchFrame } from '../../structure/Frame';
+import { useUserById } from './state';
 
-type OutputsListProps = {
+type OutputsListProps = Pick<
+  ComponentProps<typeof UserProfileResearchOutputs>,
+  'hasOutputs' | 'ownUser' | 'firstName'
+> & {
   searchQuery: string;
   filters: Set<string>;
   userId: string;
@@ -31,6 +36,9 @@ const OutputsList: React.FC<OutputsListProps> = ({
   searchQuery,
   filters,
   userId,
+  firstName,
+  hasOutputs,
+  ownUser,
 }) => {
   const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
@@ -78,11 +86,14 @@ const OutputsList: React.FC<OutputsListProps> = ({
       listViewHref={
         network({}).users({}).user({ userId }).outputs({}).$ + listViewParams
       }
+      ownUser={ownUser}
+      hasOutputs={hasOutputs}
+      firstName={firstName}
     />
   );
 };
 
-const Outputs: React.FC<OutputsProps> = ({ userId }) => {
+const Outputs: FC<OutputsProps> = ({ userId }) => {
   const {
     filters,
     searchQuery,
@@ -90,19 +101,34 @@ const Outputs: React.FC<OutputsProps> = ({ userId }) => {
     setSearchQuery,
     debouncedSearchQuery,
   } = useSearch();
+  const { currentPage, pageSize } = usePaginationParams();
+  const hasOutputs = !!useResearchOutputs({
+    searchQuery: '',
+    filters: new Set(),
+    currentPage,
+    pageSize,
+    userId,
+  }).total;
+  const ownUser = useCurrentUser()?.id === userId;
+  const firstName = useUserById(userId)?.firstName;
   return (
     <article>
-      <UserProfileSearchAndFilter
-        onChangeSearch={setSearchQuery}
-        searchQuery={searchQuery}
-        onChangeFilter={toggleFilter}
-        filters={filters}
-      />
-      <SearchFrame title="outputs">
+      {hasOutputs && (
+        <UserProfileSearchAndFilter
+          onChangeSearch={setSearchQuery}
+          searchQuery={searchQuery}
+          onChangeFilter={toggleFilter}
+          filters={filters}
+        />
+      )}
+      <SearchFrame title="">
         <OutputsList
           userId={userId}
           searchQuery={debouncedSearchQuery}
           filters={filters}
+          hasOutputs={hasOutputs}
+          ownUser={ownUser}
+          firstName={firstName}
         />
       </SearchFrame>
     </article>

@@ -8,6 +8,7 @@ import {
   largeDesktopScreen,
   tabletScreen,
 } from '../pixels';
+import NoOutputsPage from './NoOutputsPage';
 
 const styles = css({
   padding: `${24 / perRem}em calc(${36 / perRem}em + ${vminLinearCalc(
@@ -22,11 +23,39 @@ const styles = css({
   },
 });
 
-const UserProfileResearchOutputs: React.FC<
-  ComponentProps<typeof SharedResearchList>
-> = ({ ...props }) => (
+export type UserProfileOutputsProps = Omit<
+  ComponentProps<typeof SharedResearchList>,
+  'children'
+> & {
+  ownUser: boolean;
+  hasOutputs: boolean;
+  firstName?: string;
+};
+
+const UserProfileResearchOutputs: React.FC<UserProfileOutputsProps> = ({
+  hasOutputs,
+  ownUser,
+  firstName,
+  ...props
+}) => (
   <div css={styles}>
-    <SharedResearchList {...props} />
+    {hasOutputs ? (
+      <SharedResearchList {...props} />
+    ) : (
+      <NoOutputsPage
+        {...(ownUser
+          ? {
+              title: 'You haven’t shared any research.',
+              description:
+                'To add research to your profile, contact your PM. In the meantime, try exploring research outputs shared by the network.',
+            }
+          : {
+              title: `${firstName} hasn’t shared any research.`,
+              description:
+                'It looks like this user has no shared outputs. In the meantime, try exploring research outputs shared by the network.',
+            })}
+      />
+    )}
   </div>
 );
 

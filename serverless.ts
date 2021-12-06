@@ -417,7 +417,11 @@ const serverlessConfig: AWS = {
           },
         },
       ],
-      environment: {},
+      environment: {
+        CLOUDFRONT_DISTRIBUTION_ID: {
+          Ref: 'CloudFrontDistribution',
+        },
+      },
     },
     indexTeamResearchOutputs: {
       handler: 'apps/asap-server/src/handlers/teams/index-handler.handler',

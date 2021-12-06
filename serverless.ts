@@ -135,6 +135,11 @@ const serverlessConfig: AWS = {
           ],
         },
       },
+      {
+        Effect: 'Allow',
+        Action: ['cloudfront:CreateInvalidation'],
+        Resource: ['*'],
+      },
     ],
   },
   package: {
@@ -922,7 +927,6 @@ const serverlessConfig: AWS = {
           ],
         },
       },
-
       SubscribeCalendarDLQ: {
         Type: 'AWS::SQS::Queue',
         Properties: {

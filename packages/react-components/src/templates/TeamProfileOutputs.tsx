@@ -46,43 +46,37 @@ const TeamProfileOutputs: React.FC<TeamProfileOutputsProps> = ({
         cardViewHref={cardViewHref}
         listViewHref={listViewHref}
       />
+    ) : ownTeam ? (
+      <NoOutputsPage
+        title="Your team hasn’t shared any research."
+        description={
+          <>
+            To start sharing research,{' '}
+            <LinkConditional
+              href={contactEmail ? createMailTo(contactEmail) : contactEmail}
+            >
+              contact your PM
+            </LinkConditional>
+            . In the meantime, try exploring research outputs shared by the
+            network.
+          </>
+        }
+      />
     ) : (
       <NoOutputsPage
-        {...(ownTeam
-          ? {
-              description: (
-                <>
-                  To start sharing research,{' '}
-                  <LinkConditional
-                    href={
-                      contactEmail ? createMailTo(contactEmail) : contactEmail
-                    }
-                  >
-                    contact your PM
-                  </LinkConditional>
-                  . In the meantime, try exploring research outputs shared by
-                  the network.
-                </>
-              ),
-              title: 'Your team hasn’t shared any research.',
-            }
-          : {
-              title: 'This team hasn’t shared any research.',
-              description: (
-                <>
-                  To learn more about this team’s work,{' '}
-                  <LinkConditional
-                    href={
-                      contactEmail ? createMailTo(contactEmail) : contactEmail
-                    }
-                  >
-                    contact the PM
-                  </LinkConditional>
-                  . In the meantime, try exploring research outputs shared by
-                  the network.
-                </>
-              ),
-            })}
+        title="This team hasn’t shared any research."
+        description={
+          <>
+            To learn more about this team’s work,{' '}
+            <LinkConditional
+              href={contactEmail ? createMailTo(contactEmail) : contactEmail}
+            >
+              contact the PM
+            </LinkConditional>
+            . In the meantime, try exploring research outputs shared by the
+            network.
+          </>
+        }
       />
     )}
   </div>

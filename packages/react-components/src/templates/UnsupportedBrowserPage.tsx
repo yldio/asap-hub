@@ -19,13 +19,12 @@ const UnsupportedBrowserPage: React.FC<Record<string, never>> = () => (
     <BannerCard type="warning">
       <Display styleAsHeading={2}>Browser not supported</Display>
       <Paragraph primary accent="lead">
-        The ASAP Hub is not available on the browser you are using. To visit the
-        ASAP Hub please use a supported browser (such as{' '}
+        Unfortunately, ASAP Hub is not available on the browser you are using.
+        Please ensure you are using the latest version of a supported browser (
         <Link href="https://www.google.com/chrome/">Google Chrome</Link>,{' '}
         <Link href="https://www.apple.com/safari/">Safari</Link>,{' '}
         <Link href="https://www.microsoft.com/edge">Edge</Link> or{' '}
-        <Link href="https://www.mozilla.org/firefox">Firefox</Link>) and update
-        your browser if it is out of date.
+        <Link href="https://www.mozilla.org/firefox">Firefox</Link>)
       </Paragraph>
     </BannerCard>
   </div>

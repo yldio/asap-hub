@@ -19,9 +19,10 @@ const mockGetNews = getNews as jest.MockedFunction<typeof getNews>;
 
 const getMockedResponse = (pageSize = 10, numberOfItems = 10) => ({
   total: numberOfItems,
-  items: Array.from({ length: pageSize }, (_, idx) =>
-    createNewsResponse(idx + 1),
-  ),
+  items: Array.from({ length: pageSize }, (_, idx) => ({
+    ...createNewsResponse(idx + 1),
+    title: 'News Item',
+  })),
 });
 beforeEach(() => {
   mockGetNews.mockClear();
@@ -59,8 +60,9 @@ const renderPage = async (newsResponse = createNewsResponse(1)) => {
 
 describe('news page', () => {
   it('renders the page title', async () => {
-    const { getByText } = await renderPage();
-    expect(getByText('News and Events')).toBeVisible();
+    const { getByRole } = await renderPage();
+
+    expect(getByRole('heading', { level: 1 })).toHaveTextContent(/News/i);
   });
 
   it('renders a counter with the total number of items', async () => {
@@ -91,7 +93,7 @@ describe('news page', () => {
     );
 
     const { getAllByText } = await renderPage();
-    expect(getAllByText('News')).toHaveLength(pageSize);
+    expect(getAllByText('News Item')).toHaveLength(pageSize);
     expect(result.current.usePagination.numberOfPages).toBe(4);
     expect(result.current.usePaginationParams.currentPage).toBe(0);
   });

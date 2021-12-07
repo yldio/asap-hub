@@ -38,9 +38,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   contactEmails,
   ...props
 }) => {
-  const isGrantDocument = (
-    ['Grant Document', 'Proposal'] as ResearchOutputType[]
-  ).includes(props.type);
+  const isGrantDocument = props.type === 'Grant Document';
   return (
     <div css={containerStyles}>
       <BackLink href={backHref} />

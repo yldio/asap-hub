@@ -140,7 +140,7 @@ describe('getResearchOutputs', () => {
       '',
       expect.objectContaining({
         filters:
-          '(type:Article OR type:Proposal OR type:"Grant Document") AND teams.id:"12345"',
+          '(type:Article OR type:"Grant Document") AND teams.id:"12345"',
       }),
     );
   });
@@ -182,7 +182,7 @@ describe('getResearchOutputs', () => {
       '',
       expect.objectContaining({
         filters:
-          '(type:Article OR type:Proposal OR type:"Grant Document") AND authors.id:"12345"',
+          '(type:Article OR type:"Grant Document") AND authors.id:"12345"',
       }),
     );
   });

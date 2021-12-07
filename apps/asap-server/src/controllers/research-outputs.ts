@@ -67,21 +67,10 @@ export default class ResearchOutputs implements ResearchOutputController {
       )
       .join(' or ');
 
-    const grantDocumentInterceptor = (word: string): string[] => {
-      if (word === 'Grant Document') {
-        return [
-          `data/type/iv eq 'Proposal'`,
-          `data/type/iv eq 'Grant Document'`,
-        ];
-      }
-
-      return [`data/type/iv eq '${word}'`];
-    };
-
     const filterQ = (filter || [])
       .reduce(
         (acc: string[], word: string) =>
-          acc.concat(grantDocumentInterceptor(word)),
+          acc.concat([`data/type/iv eq '${word}'`]),
         [],
       )
       .join(' or ');

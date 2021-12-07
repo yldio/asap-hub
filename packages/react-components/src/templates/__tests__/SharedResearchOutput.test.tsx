@@ -52,18 +52,6 @@ describe('Grant Documents', () => {
     expect(queryByText(/additional information/i)).not.toBeInTheDocument();
   });
 
-  it('does not display additional information when data provided for proposals ((REGRESSION))', () => {
-    const { queryByText } = render(
-      <SharedResearchOutput
-        {...props}
-        type="Proposal"
-        usedInPublication={true}
-      />,
-    );
-    expect(queryByText(/additional information/i)).not.toBeInTheDocument();
-  });
-});
-
 describe('Not Grant Documents', () => {
   it('displays access instructions when data provided', () => {
     const { queryByText, getByText, rerender } = render(

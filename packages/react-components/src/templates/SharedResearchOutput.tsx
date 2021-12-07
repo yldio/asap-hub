@@ -39,6 +39,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   ...props
 }) => {
   const isGrantDocument = props.type === 'Grant Document';
+
   return (
     <div css={containerStyles}>
       <BackLink href={backHref} />

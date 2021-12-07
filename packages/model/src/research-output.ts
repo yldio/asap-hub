@@ -11,7 +11,6 @@ export const researchOutputTypes = [
   'Protocol',
   'Lab Resource',
   'Article',
-  'Grant Document',
 ] as const;
 
 export type ResearchOutputType = typeof researchOutputTypes[number];

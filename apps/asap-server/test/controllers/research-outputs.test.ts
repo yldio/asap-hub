@@ -489,7 +489,7 @@ describe('ResearchOutputs controller', () => {
         });
 
         const expectedFilter =
-          "(ata/type/iv eq 'Grant Document' or data/type/iv eq 'Presentation') " +
+          "(data/type/iv eq 'Grant Document' or data/type/iv eq 'Presentation') " +
           "and (contains(data/title/iv, 'Title') or contains(data/tags/iv, 'Title'))";
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),

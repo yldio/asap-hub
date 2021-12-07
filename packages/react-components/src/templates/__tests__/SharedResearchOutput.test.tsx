@@ -51,6 +51,7 @@ describe('Grant Documents', () => {
     );
     expect(queryByText(/additional information/i)).not.toBeInTheDocument();
   });
+});
 
 describe('Not Grant Documents', () => {
   it('displays access instructions when data provided', () => {

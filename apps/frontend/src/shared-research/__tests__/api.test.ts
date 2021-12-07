@@ -139,8 +139,7 @@ describe('getResearchOutputs', () => {
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
       expect.objectContaining({
-        filters:
-          '(type:Article OR type:"Grant Document") AND teams.id:"12345"',
+        filters: '(type:Article OR type:"Grant Document") AND teams.id:"12345"',
       }),
     );
   });

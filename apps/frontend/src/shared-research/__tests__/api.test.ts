@@ -85,7 +85,7 @@ describe('getResearchOutputs', () => {
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
       expect.objectContaining({
-        filters: '(type:Article OR type:Proposal OR type:"Grant Document")',
+        filters: '(type:Article OR type:"Grant Document")',
       }),
     );
   });

@@ -1,12 +1,17 @@
+import {
+  CloudFrontClient,
+  CreateInvalidationCommand,
+} from '@aws-sdk/client-cloudfront';
 import { createHandler } from '../../../src/handlers/invalidate-cache/index-handler';
-const mockCreateInvalidation = jest.fn();
+const mockSend = jest.fn();
 
-jest.mock('aws-sdk', () => ({
-  CloudFront: jest.fn(() => ({
-    createInvalidation: jest.fn((options) => ({
-      promise: () => mockCreateInvalidation(options),
-    })),
+jest.mock('@aws-sdk/client-cloudfront', () => ({
+  CloudFrontClient: jest.fn().mockImplementation(() => ({
+    send: mockSend,
   })),
+  CreateInvalidationCommand: jest
+    .fn()
+    .mockImplementation(() => ({ isMock: true })),
 }));
 
 describe('invalidate cache', () => {
@@ -25,7 +30,10 @@ describe('invalidate cache', () => {
     };
     const handler = createHandler(distributionId);
     await handler(event);
-    expect(mockCreateInvalidation).toHaveBeenCalledWith({
+    expect(CloudFrontClient).toHaveBeenCalledWith({
+      apiVersion: '2020-05-31',
+    });
+    expect(CreateInvalidationCommand).toHaveBeenCalledWith({
       DistributionId: distributionId,
       InvalidationBatch: {
         CallerReference: dateReference,
@@ -35,5 +43,6 @@ describe('invalidate cache', () => {
         },
       },
     });
+    expect(mockSend).toHaveBeenCalledWith({ isMock: true });
   });
 });

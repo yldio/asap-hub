@@ -12,7 +12,7 @@ type ErrorBoundaryProps = { children: ReactNode } & Partial<
 
 const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
   children,
-  sentryReporting = false,
+  sentryReporting = true,
   ...errorCardProps
 }) => {
   let pathname = '';

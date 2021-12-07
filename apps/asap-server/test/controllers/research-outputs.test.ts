@@ -358,6 +358,7 @@ describe('ResearchOutputs controller', () => {
         );
       });
     });
+  });
 
   describe('Fetch method', () => {
     test('Should fetch the research output from squidex graphql', async () => {

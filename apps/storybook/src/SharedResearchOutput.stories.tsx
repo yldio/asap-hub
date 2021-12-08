@@ -91,7 +91,6 @@ export const GrantDocument = () => (
   <SharedResearchOutput
     {...props()}
     type="Grant Document"
-    accessInstructions={undefined}
     description={text(
       'Description',
       `<h1>Example</h1>

@@ -38,8 +38,9 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   contactEmails,
   ...props
 }) => {
-  const isGrantDocument = props.type === 'Grant Document';
-
+  const isGrantDocument = ['Grant Document', 'Presentation'].includes(
+    props.type,
+  );
   return (
     <div css={containerStyles}>
       <BackLink href={backHref} />
@@ -62,7 +63,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             )}
           </Card>
         )}
-        {accessInstructions && (
+        {!isGrantDocument && accessInstructions && (
           <Card>
             <div css={{ paddingBottom: `${12 / perRem}em` }}>
               <Headline2 styleAsHeading={4}>Access Instructions</Headline2>

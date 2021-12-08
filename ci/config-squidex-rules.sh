@@ -1,6 +1,14 @@
 # Uses dir passed as argument or default one
 backupPath=${1:-"packages/squidex/schema/rules"}
 
+echo "backup path"
+echo $backupPath
+echo "files in path - before"
+find $backupPath \
+  -type f \( -name "*.json" -not -name "__rule.json" \) \
+  -print0 | xargs -t -0 -I @file \
+ cat @file
+
 # Replace PLACEHOLDERS with variable available on the CI
 find $backupPath \
   -type f \( -name "*.json" -not -name "__rule.json" \) \
@@ -12,3 +20,9 @@ find $backupPath \
   -type f \( -name "*.json" -not -name "__rule.json" \) \
   -print0 | xargs -t -0 -I @file \
   sed -i 's#ASAP_API_URL#'"$ASAP_API_URL"'#' @file
+
+echo "files in path - after"
+find $backupPath \
+  -type f \( -name "*.json" -not -name "__rule.json" \) \
+  -print0 | xargs -t -0 -I @file \
+ cat @file

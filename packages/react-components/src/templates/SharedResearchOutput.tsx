@@ -1,6 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { css } from '@emotion/react';
-import { ResearchOutputResponse, ResearchOutputType } from '@asap-hub/model';
+import { ResearchOutputResponse } from '@asap-hub/model';
 
 import { Card, Headline2, Divider } from '../atoms';
 import { perRem } from '../pixels';
@@ -38,9 +38,8 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   contactEmails,
   ...props
 }) => {
-  const isGrantDocument = (
-    ['Grant Document', 'Proposal'] as ResearchOutputType[]
-  ).includes(props.type);
+  const isGrantDocument = props.type === 'Grant Document';
+
   return (
     <div css={containerStyles}>
       <BackLink href={backHref} />

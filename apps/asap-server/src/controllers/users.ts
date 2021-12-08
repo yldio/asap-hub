@@ -3,7 +3,12 @@ import {
   UserPatchRequest,
   UserResponse,
 } from '@asap-hub/model';
-import { config, GraphqlUser, RestUser } from '@asap-hub/squidex';
+import {
+  config,
+  GraphqlUser,
+  RestUser,
+  SquidexGraphqlClient,
+} from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
 import FormData from 'form-data';
@@ -18,10 +23,7 @@ import {
 } from '../gql/graphql';
 import { FETCH_USER, FETCH_USERS } from '../queries/users.queries';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
-import {
-  InstrumentedSquidex,
-  InstrumentedSquidexGraphql,
-} from '../utils/instrumented-client';
+import { InstrumentedSquidex } from '../utils/instrumented-client';
 import { sanitiseForSquidex } from '../utils/squidex';
 import { FetchOptions } from '../utils/types';
 
@@ -78,12 +80,11 @@ const fetchByCode = async (code: string, client: Got): Promise<RestUser> => {
 
 export default class Users implements UserController {
   users: InstrumentedSquidex<RestUser>;
+  client: SquidexGraphqlClient;
 
-  client: InstrumentedSquidexGraphql;
-
-  constructor(ctxHeaders?: Record<string, string>) {
-    this.client = new InstrumentedSquidexGraphql(ctxHeaders);
-    this.users = new InstrumentedSquidex('users', ctxHeaders);
+  constructor(squidexGraphlClient: SquidexGraphqlClient) {
+    this.client = squidexGraphlClient;
+    this.users = new InstrumentedSquidex('users');
   }
 
   async update(id: string, update: UserPatchRequest): Promise<UserResponse> {

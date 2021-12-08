@@ -29,6 +29,7 @@ const rightIndicatorStyles = css({
     alignItems: 'center',
   },
 });
+const MAX_ALGOLIA_QUERY_LENGTH = 512;
 
 type SearchProps = Pick<
   ComponentProps<typeof TextField>,
@@ -59,6 +60,7 @@ const SearchField: React.FC<SearchProps> = (props) => {
     <div css={clearButtonStyles}>
       <TextField
         {...props}
+        maxLength={MAX_ALGOLIA_QUERY_LENGTH}
         type="search"
         leftIndicator={searchIcon}
         rightIndicator={

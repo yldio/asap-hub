@@ -2,7 +2,7 @@ import {
   CloudFrontClient,
   CreateInvalidationCommand,
 } from '@aws-sdk/client-cloudfront';
-import { createHandler } from '../../../src/handlers/invalidate-cache/index-handler';
+import { createHandler } from '../../../src/handlers/invalidate-cache/invalidate-handler';
 const mockSend = jest.fn();
 
 jest.mock('@aws-sdk/client-cloudfront', () => ({

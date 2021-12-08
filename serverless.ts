@@ -406,7 +406,7 @@ const serverlessConfig: AWS = {
     },
     invalidateCache: {
       handler:
-        'apps/asap-server/src/handlers/invalidate-cache/index-handler.handler',
+        'apps/asap-server/src/handlers/invalidate-cache/invalidate-handler.handler',
       events: [
         {
           s3: {

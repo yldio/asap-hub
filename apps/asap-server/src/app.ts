@@ -72,7 +72,11 @@ export const appFactory = (libs: Libs = {}): Express => {
   const pageController = libs.pageController || new Pages();
   const researchOutputController =
     libs.researchOutputController || new ResearchOutputs(squidexGraphlClient);
+<<<<<<< HEAD
   const teamController = libs.teamController || new Teams(squidexGraphlClient);
+=======
+  const teamController = libs.teamController || new Teams();
+>>>>>>> 8957516a (add mock server tests to user controller)
   const userController = libs.userController || new Users(squidexGraphlClient);
 
   // Handlers

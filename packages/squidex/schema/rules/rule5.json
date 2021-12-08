@@ -1,0 +1,25 @@
+{
+  "$schema": "./../__json/rule.json",
+  "isEnabled": true,
+  "name": "Google Calendar added - trigger sync copy",
+  "trigger": {
+    "triggerType": "ContentChanged",
+    "schemas": [
+      {
+        "schemaId": "calendars",
+        "condition": "event.type == 'Created' || event.type == 'Updated'"
+      }
+    ],
+    "handleAll": false
+  },
+  "action": {
+    "url": "ASAP_API_URL/webhook/calendars",
+    "method": "POST",
+    "payload": "",
+    "payloadType": "",
+    "headers": "",
+    "sharedSecret": "SQUIDEX_SHARED_SECRET",
+    "isFrozen": true,
+    "actionType": "Webhook"
+  }
+}

@@ -17,7 +17,7 @@ export const Normal = () => {
     {
       Network: network({}).$,
       'Shared Research': sharedResearch({}).$,
-      'News and Events': news({}).$,
+      News: news({}).$,
       'Discover ASAP': discover({}).$,
       None: '/none',
     },

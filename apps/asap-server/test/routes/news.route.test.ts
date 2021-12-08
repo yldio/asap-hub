@@ -18,7 +18,7 @@ describe('/news/ route', () => {
   });
 
   describe('GET /news', () => {
-    test('Should return 200 when no news and events exist', async () => {
+    test('Should return 200 when no news exists', async () => {
       newsControllerMock.fetch.mockResolvedValueOnce({
         total: 0,
         items: [],

@@ -47,7 +47,7 @@ it('renders dashboard header', async () => {
   expect(await findByText(/welcome/i, { selector: 'h1' })).toBeVisible();
 });
 
-it('renders dashboard with news and events', async () => {
+it('renders dashboard with news', async () => {
   mockGetDashboard.mockResolvedValue({
     news: [
       {

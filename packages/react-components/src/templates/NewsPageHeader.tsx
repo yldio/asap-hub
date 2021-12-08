@@ -20,12 +20,11 @@ const textStyles = css({
 
 const NewsAndEventsPageHeader: React.FC = () => (
   <header css={containerStyles}>
-    <Display styleAsHeading={2}>News and Events</Display>
+    <Display styleAsHeading={2}>News</Display>
     <div css={textStyles}>
       <Paragraph accent="lead">
-        Stay up to date with all the latest activity from ASAP. You'll be able
-        to access current news, upcoming events and invaluable training
-        materials here.
+        Stay up to date with all the latest activity from the CRN. You'll be
+        able to access news and newsletters
       </Paragraph>
     </div>
   </header>

@@ -72,8 +72,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             </li>
             <li>
               <Paragraph primary accent="lead">
-                Stay up date with{' '}
-                <Link href={newsRoute({}).$}>News and Events</Link>
+                Stay up date with <Link href={newsRoute({}).$}>News</Link>
               </Paragraph>
             </li>
             {teamId ? (

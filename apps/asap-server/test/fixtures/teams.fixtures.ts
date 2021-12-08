@@ -40,6 +40,7 @@ export const referencingUsersContentsResponse = ({
       orcid: '',
       orcidWorks: [],
       responsibilities: '',
+      researchInterests: '',
       reachOut: '',
       lastModifiedDate: '2020-11-26T11:56:04Z',
       orcidLastModifiedDate: '2020-11-26T11:56:04Z',
@@ -125,6 +126,8 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                 institution: 'Dollar General Corporation',
                 connections: [],
                 biography: '',
+                responsibilities: '',
+                researchInterests: '',
                 teams: [
                   {
                     id: [
@@ -354,6 +357,8 @@ export const getListTeamResponse = (): ListTeamResponse => ({
           email: 'cristiano@ronaldo.com',
           role: 'Lead PI (Core Leadership)',
           avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-user-id-1`,
+          responsibilities: '',
+          researchInterests: '',
           labs: [
             { id: 'cd7be4902', name: 'Barcelona' },
             { id: 'cd7be4905', name: 'Glasgow' },
@@ -472,6 +477,8 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
             institution: 'Dollar General Corporation',
             connections: [],
             biography: '',
+            researchInterests: '',
+            responsibilities: '',
             teams: [
               {
                 id: [
@@ -523,6 +530,8 @@ export const fetchTeamByIdExpectation: TeamResponse = {
         { id: 'cd7be4902', name: 'Barcelona' },
         { id: 'cd7be4905', name: 'Glasgow' },
       ],
+      responsibilities: '',
+      researchInterests: '',
     },
   ],
   projectTitle:
@@ -599,6 +608,8 @@ export const updateResponseTeam: { total: number; items: RestUser[] } = {
         institution: { iv: 'Dollar General Corporation' },
         avatar: { iv: ['uuid-user-id-1'] },
         expertiseAndResourceTags: { iv: [] },
+        researchInterests: { iv: 'some research interests' },
+        responsibilities: { iv: 'some responsibilities' },
         orcidWorks: { iv: [] },
         teams: {
           iv: [

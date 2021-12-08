@@ -3890,6 +3890,7 @@ export type UsersDataDto = {
   orcidWorks: Maybe<UsersDataOrcidWorksDto>;
   questions: Maybe<UsersDataQuestionsDto>;
   reachOut: Maybe<UsersDataReachOutDto>;
+  researchInterests: Maybe<UsersDataResearchInterestsDto>;
   responsibilities: Maybe<UsersDataResponsibilitiesDto>;
   role: Maybe<UsersDataRoleDto>;
   social: Maybe<UsersDataSocialDto>;
@@ -3962,6 +3963,7 @@ export type UsersDataInputDto = {
   orcidWorks: Maybe<UsersDataOrcidWorksInputDto>;
   questions: Maybe<UsersDataQuestionsInputDto>;
   reachOut: Maybe<UsersDataReachOutInputDto>;
+  researchInterests: Maybe<UsersDataResearchInterestsInputDto>;
   responsibilities: Maybe<UsersDataResponsibilitiesInputDto>;
   role: Maybe<UsersDataRoleInputDto>;
   social: Maybe<UsersDataSocialInputDto>;
@@ -4131,15 +4133,23 @@ export type UsersDataReachOutInputDto = {
   iv: Maybe<Scalars['String']>;
 };
 
+/** The structure of the Research Interests field of the Users content type. */
+export type UsersDataResearchInterestsDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Research Interests field of the Users content input type. */
+export type UsersDataResearchInterestsInputDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
 /** The structure of the Responsibilities field of the Users content type. */
 export type UsersDataResponsibilitiesDto = {
-  /** Responsibilities on the ASAP Hub (only relevant for "Staff" users) */
   iv: Maybe<Scalars['String']>;
 };
 
 /** The structure of the Responsibilities field of the Users content input type. */
 export type UsersDataResponsibilitiesInputDto = {
-  /** Responsibilities on the ASAP Hub (only relevant for "Staff" users) */
   iv: Maybe<Scalars['String']>;
 };
 
@@ -4249,7 +4259,7 @@ export type UsersFlatDataDto = {
   questions: Maybe<Array<UsersDataQuestionsChildDto>>;
   /** Reach out reasons (only relevant for "Staff" users) */
   reachOut: Maybe<Scalars['String']>;
-  /** Responsibilities on the ASAP Hub (only relevant for "Staff" users) */
+  researchInterests: Maybe<Scalars['String']>;
   responsibilities: Maybe<Scalars['String']>;
   /** Role on the ASAP Hub */
   role: Maybe<Scalars['String']>;
@@ -4461,8 +4471,9 @@ export type EventContentFragment = Pick<
                               | 'orcidLastSyncDate'
                               | 'expertiseAndResourceTags'
                               | 'expertiseAndResourceDescription'
-                              | 'role'
                               | 'responsibilities'
+                              | 'researchInterests'
+                              | 'role'
                               | 'reachOut'
                             > & {
                               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -4566,8 +4577,9 @@ export type EventContentFragment = Pick<
                               | 'orcidLastSyncDate'
                               | 'expertiseAndResourceTags'
                               | 'expertiseAndResourceDescription'
-                              | 'role'
+                              | 'researchInterests'
                               | 'responsibilities'
+                              | 'role'
                               | 'reachOut'
                             > & {
                               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -4778,8 +4790,9 @@ export type FetchEventsQuery = {
                                         | 'orcidLastSyncDate'
                                         | 'expertiseAndResourceTags'
                                         | 'expertiseAndResourceDescription'
-                                        | 'role'
                                         | 'responsibilities'
+                                        | 'researchInterests'
+                                        | 'role'
                                         | 'reachOut'
                                       > & {
                                         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -4897,8 +4910,9 @@ export type FetchEventsQuery = {
                                         | 'orcidLastSyncDate'
                                         | 'expertiseAndResourceTags'
                                         | 'expertiseAndResourceDescription'
-                                        | 'role'
+                                        | 'researchInterests'
                                         | 'responsibilities'
+                                        | 'role'
                                         | 'reachOut'
                                       > & {
                                         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -5108,8 +5122,9 @@ export type FetchEventQuery = {
                                   | 'orcidLastSyncDate'
                                   | 'expertiseAndResourceTags'
                                   | 'expertiseAndResourceDescription'
-                                  | 'role'
                                   | 'responsibilities'
+                                  | 'researchInterests'
+                                  | 'role'
                                   | 'reachOut'
                                 > & {
                                   avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -5218,8 +5233,9 @@ export type FetchEventQuery = {
                                   | 'orcidLastSyncDate'
                                   | 'expertiseAndResourceTags'
                                   | 'expertiseAndResourceDescription'
-                                  | 'role'
+                                  | 'researchInterests'
                                   | 'responsibilities'
+                                  | 'role'
                                   | 'reachOut'
                                 > & {
                                   avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -5379,8 +5395,9 @@ export type GroupsContentFragment = Pick<
                   | 'orcidLastSyncDate'
                   | 'expertiseAndResourceTags'
                   | 'expertiseAndResourceDescription'
-                  | 'role'
                   | 'responsibilities'
+                  | 'researchInterests'
+                  | 'role'
                   | 'reachOut'
                 > & {
                   avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -5477,8 +5494,9 @@ export type GroupsContentFragment = Pick<
                   | 'orcidLastSyncDate'
                   | 'expertiseAndResourceTags'
                   | 'expertiseAndResourceDescription'
-                  | 'role'
+                  | 'researchInterests'
                   | 'responsibilities'
+                  | 'role'
                   | 'reachOut'
                 > & {
                   avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -5629,8 +5647,9 @@ export type FetchGroupsQuery = {
                             | 'orcidLastSyncDate'
                             | 'expertiseAndResourceTags'
                             | 'expertiseAndResourceDescription'
-                            | 'role'
                             | 'responsibilities'
+                            | 'researchInterests'
+                            | 'role'
                             | 'reachOut'
                           > & {
                             avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -5734,8 +5753,9 @@ export type FetchGroupsQuery = {
                             | 'orcidLastSyncDate'
                             | 'expertiseAndResourceTags'
                             | 'expertiseAndResourceDescription'
-                            | 'role'
+                            | 'researchInterests'
                             | 'responsibilities'
+                            | 'role'
                             | 'reachOut'
                           > & {
                             avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -5881,8 +5901,9 @@ export type FetchGroupQuery = {
                       | 'orcidLastSyncDate'
                       | 'expertiseAndResourceTags'
                       | 'expertiseAndResourceDescription'
-                      | 'role'
                       | 'responsibilities'
+                      | 'researchInterests'
+                      | 'role'
                       | 'reachOut'
                     > & {
                       avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -5981,8 +6002,9 @@ export type FetchGroupQuery = {
                       | 'orcidLastSyncDate'
                       | 'expertiseAndResourceTags'
                       | 'expertiseAndResourceDescription'
-                      | 'role'
+                      | 'researchInterests'
                       | 'responsibilities'
+                      | 'role'
                       | 'reachOut'
                     > & {
                       avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -6135,8 +6157,9 @@ export type ResearchOutputContentFragment = Pick<
                 | 'orcidLastSyncDate'
                 | 'expertiseAndResourceTags'
                 | 'expertiseAndResourceDescription'
-                | 'role'
                 | 'responsibilities'
+                | 'researchInterests'
+                | 'role'
                 | 'reachOut'
               > & {
                 avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -6287,8 +6310,9 @@ export type FetchResearchOutputQuery = {
                     | 'orcidLastSyncDate'
                     | 'expertiseAndResourceTags'
                     | 'expertiseAndResourceDescription'
-                    | 'role'
                     | 'responsibilities'
+                    | 'researchInterests'
+                    | 'role'
                     | 'reachOut'
                   > & {
                     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -6455,8 +6479,9 @@ export type FetchResearchOutputsQuery = {
                           | 'orcidLastSyncDate'
                           | 'expertiseAndResourceTags'
                           | 'expertiseAndResourceDescription'
-                          | 'role'
                           | 'responsibilities'
+                          | 'researchInterests'
+                          | 'role'
                           | 'reachOut'
                         > & {
                           avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -6599,8 +6624,9 @@ export type TeamsContentFragment = Pick<
           | 'orcidLastSyncDate'
           | 'expertiseAndResourceTags'
           | 'expertiseAndResourceDescription'
-          | 'role'
           | 'responsibilities'
+          | 'researchInterests'
+          | 'role'
           | 'reachOut'
         > & {
           avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -6704,8 +6730,9 @@ export type FetchTeamQuery = {
               | 'orcidLastSyncDate'
               | 'expertiseAndResourceTags'
               | 'expertiseAndResourceDescription'
-              | 'role'
               | 'responsibilities'
+              | 'researchInterests'
+              | 'role'
               | 'reachOut'
             > & {
               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -6820,8 +6847,9 @@ export type FetchTeamsQuery = {
                     | 'orcidLastSyncDate'
                     | 'expertiseAndResourceTags'
                     | 'expertiseAndResourceDescription'
-                    | 'role'
                     | 'responsibilities'
+                    | 'researchInterests'
+                    | 'role'
                     | 'reachOut'
                   > & {
                     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -6920,8 +6948,9 @@ export type UsersContentFragment = Pick<
     | 'orcidLastSyncDate'
     | 'expertiseAndResourceTags'
     | 'expertiseAndResourceDescription'
-    | 'role'
+    | 'researchInterests'
     | 'responsibilities'
+    | 'role'
     | 'reachOut'
   > & {
     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -7004,8 +7033,9 @@ export type FetchUserQuery = {
         | 'orcidLastSyncDate'
         | 'expertiseAndResourceTags'
         | 'expertiseAndResourceDescription'
-        | 'role'
+        | 'researchInterests'
         | 'responsibilities'
+        | 'role'
         | 'reachOut'
       > & {
         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -7095,8 +7125,9 @@ export type FetchUsersQuery = {
               | 'orcidLastSyncDate'
               | 'expertiseAndResourceTags'
               | 'expertiseAndResourceDescription'
-              | 'role'
+              | 'researchInterests'
               | 'responsibilities'
+              | 'role'
               | 'reachOut'
             > & {
               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -7386,6 +7417,14 @@ export const TeamsContentFragmentDoc = {
                       },
                       {
                         kind: 'Field',
+                        name: { kind: 'Name', value: 'responsibilities' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'researchInterests' },
+                      },
+                      {
+                        kind: 'Field',
                         name: { kind: 'Name', value: 'teams' },
                         selectionSet: {
                           kind: 'SelectionSet',
@@ -7498,10 +7537,6 @@ export const TeamsContentFragmentDoc = {
                         },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'role' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'responsibilities' },
-                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'reachOut' },
@@ -7793,6 +7828,20 @@ export const GroupsContentFragmentDoc = {
                                   },
                                   {
                                     kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'researchInterests',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'responsibilities',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
                                     name: { kind: 'Name', value: 'teams' },
                                     selectionSet: {
                                       kind: 'SelectionSet',
@@ -7940,13 +7989,6 @@ export const GroupsContentFragmentDoc = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'role' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'responsibilities',
-                                    },
                                   },
                                   {
                                     kind: 'Field',
@@ -8497,6 +8539,20 @@ export const ResearchOutputContentFragmentDoc = {
                                   },
                                   {
                                     kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'responsibilities',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'researchInterests',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
                                     name: { kind: 'Name', value: 'teams' },
                                     selectionSet: {
                                       kind: 'SelectionSet',
@@ -8644,13 +8700,6 @@ export const ResearchOutputContentFragmentDoc = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'role' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'responsibilities',
-                                    },
                                   },
                                   {
                                     kind: 'Field',
@@ -8973,6 +9022,14 @@ export const UsersContentFragmentDoc = {
                 },
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'researchInterests' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'responsibilities' },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'teams' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -9073,10 +9130,6 @@ export const UsersContentFragmentDoc = {
                   },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'role' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'responsibilities' },
-                },
                 { kind: 'Field', name: { kind: 'Name', value: 'reachOut' } },
                 {
                   kind: 'Field',

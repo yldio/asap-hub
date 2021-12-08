@@ -68,6 +68,8 @@ export const parseGraphQLTeamMember = (
     displayName: `${user.flatData.firstName} ${user.flatData.lastName}`,
     role,
     labs,
+    researchInterests: user.flatData.researchInterests ?? undefined,
+    responsibilities: user.flatData.responsibilities ?? undefined,
     avatarUrl: flatAvatar.length
       ? createURL(flatAvatar.map((a) => a.id))[0]
       : undefined,

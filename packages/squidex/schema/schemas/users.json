@@ -233,7 +233,7 @@
             "name": "mainResearchInterests",
             "isHidden": false,
             "isLocked": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "properties": {
               "fieldType": "String",
               "isUnique": false,
@@ -250,7 +250,7 @@
             "name": "responsibilities",
             "isHidden": false,
             "isLocked": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "properties": {
               "fieldType": "String",
               "isUnique": false,
@@ -599,6 +599,42 @@
           "label": "Research Tab",
           "hints": "This data shows up in the first tab",
           "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "responsabilities",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "TextArea",
+          "label": "Responsabilities",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "researchInterests",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "TextArea",
+          "label": "Research Interests",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
@@ -1064,25 +1100,6 @@
           "label": "Reach Out",
           "hints": "Reach out reasons (only relevant for \"Staff\" users)",
           "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "responsibilities",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": true,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Responsibilities",
-          "hints": "Responsibilities on the ASAP Hub (only relevant for \"Staff\" users)",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false

@@ -38,6 +38,8 @@ export const usersContentQueryFragment = gql`
       }
       expertiseAndResourceTags
       expertiseAndResourceDescription
+      researchInterests
+      responsibilities
       teams {
         role
         mainResearchInterests
@@ -63,7 +65,6 @@ export const usersContentQueryFragment = gql`
         website2
       }
       role
-      responsibilities
       reachOut
       labs {
         id

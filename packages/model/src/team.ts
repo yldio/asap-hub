@@ -34,6 +34,8 @@ export interface TeamMember {
   role: TeamRole;
   avatarUrl?: string;
   labs?: Lab[];
+  researchInterests?: string;
+  responsibilities?: string;
 }
 
 export interface TeamResponse

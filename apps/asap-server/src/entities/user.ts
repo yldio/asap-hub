@@ -35,6 +35,8 @@ export const userUpdateSchema = Joi.object({
   city: Joi.string().allow(''),
   expertiseAndResourceTags: Joi.array().items(Joi.string()),
   expertiseAndResourceDescription: Joi.string().allow(''),
+  responsibilities: Joi.string().allow(''),
+  researchInterests: Joi.string().allow(''),
   questions: Joi.array().items(Joi.string()),
   teams: Joi.array().items(
     Joi.object({
@@ -209,6 +211,8 @@ export const parseGraphQLUser = (item: GraphQLUser): UserResponse => {
     expertiseAndResourceTags: flatExpertiseAndResourceTags,
     expertiseAndResourceDescription:
       item.flatData.expertiseAndResourceDescription ?? undefined,
+    responsibilities: item.flatData.responsibilities || undefined,
+    researchInterests: item.flatData?.researchInterests ?? undefined,
     lastModifiedDate: item.flatData.lastModifiedDate || createdDate,
     teams,
     social,
@@ -216,7 +220,6 @@ export const parseGraphQLUser = (item: GraphQLUser): UserResponse => {
       ? createURL(flatAvatar.map((a) => a.id))[0]
       : undefined,
     role,
-    responsibilities: item.flatData.responsibilities || undefined,
     reachOut: item.flatData.reachOut || undefined,
     labs: flatLabs || [],
   };

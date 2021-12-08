@@ -26,6 +26,8 @@ describe('parseGraphQLTeamMember', () => {
         { id: 'cd7be4905', name: 'Glasgow' },
       ],
       avatarUrl: undefined,
+      responsibilities: '',
+      researchInterests: '',
     });
   });
   it('should throw when teamRole dont match TeamRoles', () => {

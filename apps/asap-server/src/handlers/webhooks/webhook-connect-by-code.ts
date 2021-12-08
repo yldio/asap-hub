@@ -5,6 +5,7 @@ import { http } from '../../utils/instrumented-framework';
 import Users from '../../controllers/users';
 import { Handler } from '../../utils/types';
 import validateRequest from '../../utils/validate-auth0-request';
+import { SquidexGraphql } from '@asap-hub/squidex';
 
 export const handler: Handler = http(
   async (request: lambda.Request): Promise<lambda.Response> => {
@@ -24,7 +25,8 @@ export const handler: Handler = http(
       userId: string;
     };
 
-    const users = new Users(request.headers);
+    const squidexGraphqlClientMock = new SquidexGraphql();
+    const users = new Users(squidexGraphqlClientMock);
     await users.connectByCode(code, userId);
 
     return {

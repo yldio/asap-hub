@@ -72,7 +72,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const researchOutputController =
     libs.researchOutputController || new ResearchOutputs(squidexGraphlClient);
   const teamController = libs.teamController || new Teams();
-  const userController = libs.userController || new Users();
+  const userController = libs.userController || new Users(squidexGraphlClient);
 
   // Handlers
   const authHandler = libs.authHandler || authHandlerFactory(decodeToken);

@@ -10,6 +10,7 @@ import { loadSchemaSync } from '@graphql-tools/load';
 import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { getSquidexGraphqlResearchOutput } from '../fixtures/research-output.fixtures';
+import { getGraphQLUser } from '../fixtures/users.fixtures';
 
 export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
   const schema = loadSchemaSync('../../src/schema/schema.graphql', {
@@ -22,6 +23,11 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     JsonScalar: () => {},
     ResearchOutputs: () => getSquidexGraphqlResearchOutput(),
     ResearchOutputsResultDto: () => ({
+      items: [...new Array(1)],
+      total: 1,
+    }),
+    Users: () => getGraphQLUser(),
+    UsersResultDto: () => ({
       items: [...new Array(1)],
       total: 1,
     }),

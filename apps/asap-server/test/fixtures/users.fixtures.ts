@@ -326,6 +326,11 @@ export const fetchExpectation: ListUserResponse = {
   ],
 };
 
+export const getListUserResponse = (): ListUserResponse => ({
+  total: 1,
+  items: [getUserResponse()],
+});
+
 export const restUserMock = patchResponse;
 
 export const userPatchRequest: UserPatchRequest = {

@@ -10,7 +10,10 @@ export default class MoveResearchOutputTextToDescription extends Migration {
     await applyToAllItemsInCollection<RestResearchOutput>(
       'research-outputs',
       async (researchOutput, squidexClient) => {
-        if (researchOutput.data.type.iv === 'Proposal' as unknown as ResearchOutputType) {
+        if (
+          researchOutput.data.type.iv ===
+          ('Proposal' as unknown as ResearchOutputType)
+        ) {
           await squidexClient.patch(researchOutput.id, {
             type: { iv: 'Grant Document' },
             subtype: { iv: 'Proposal' },

@@ -119,6 +119,7 @@ check:format:
 test:unit:
   <<: *tmpl_test
   cache:
+    key: jest-cache
     paths:
       - .jest-cache/
   artifacts:

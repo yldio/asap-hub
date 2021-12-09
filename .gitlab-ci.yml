@@ -134,7 +134,7 @@ test:browser:
   <<: *tmpl_test
   image: mcr.microsoft.com/playwright:bionic
   script:
-    - yarn run test:browser --no-cache
+    - yarn run test:browser
   needs:
     - build:native
 

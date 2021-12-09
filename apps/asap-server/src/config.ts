@@ -27,6 +27,7 @@ const {
   EMAIL_SENDER,
   EMAIL_BCC,
   EMAIL_RETURN,
+  CLOUDFRONT_DISTRIBUTION_ID,
 } = process.env;
 
 export const origin = APP_ORIGIN || 'https://dev.hub.asap.science';
@@ -61,3 +62,4 @@ export const userInviteBcc = EMAIL_BCC || 'hub.invites.dev@asap.science';
 export const userInviteReturn = EMAIL_RETURN || 'hub.invites.dev@asap.science';
 export const eventBus = EVENT_BUS || 'asap-events-dev';
 export const eventSource = EVENT_SOURCE || '';
+export const cloudfrontDistributionId = CLOUDFRONT_DISTRIBUTION_ID || '';

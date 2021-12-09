@@ -16,6 +16,7 @@ import {
 } from './users.fixtures';
 import { createEventBridgeEventMock } from '../../test/helpers/events';
 import { ResearchOutputEventType } from '../../src/handlers/webhooks/webhook-research-output';
+import { getGraphqlTeam } from './teams.fixtures';
 
 export const getSquidexResearchOutputsGraphqlResponse =
   (): FetchResearchOutputsQuery => ({
@@ -87,175 +88,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
       },
     ],
   },
-  referencingTeamsContents: [
-    {
-      id: 'team-id-1',
-      created: '2020-09-23T20:33:36Z',
-      lastModified: '2020-11-26T11:56:04Z',
-      version: 42,
-      flatData: {
-        displayName: 'Team A',
-      },
-      referencingUsersContents: [
-        {
-          flatData: {
-            email: 'pm1@example.com',
-            teams: [
-              {
-                id: [
-                  {
-                    id: 'team-id-1',
-                    created: '2020-09-23T20:33:36Z',
-                    lastModified: '2020-11-26T11:56:04Z',
-                    flatData: {},
-                  },
-                ],
-                role: 'Project Manager',
-              },
-            ],
-          },
-        },
-        {
-          flatData: {
-            email: 'pm1@example.com',
-            teams: [
-              {
-                id: [
-                  {
-                    id: 'team-id-1',
-                    created: '2020-09-23T20:33:36Z',
-                    lastModified: '2020-11-26T11:56:04Z',
-                    flatData: {},
-                  },
-                ],
-                role: 'Project Manager',
-              },
-            ],
-          },
-        },
-        {
-          flatData: {
-            email: 'notapm1@example.com',
-            teams: null,
-          },
-        },
-        {
-          flatData: {
-            email: 'notapm2@example.com',
-            teams: [
-              {
-                id: [
-                  {
-                    id: 'wrong-team-id',
-                    created: '2020-09-23T20:33:36Z',
-                    lastModified: '2020-11-26T11:56:04Z',
-                    flatData: {},
-                  },
-                ],
-                role: 'Project Manager',
-              },
-            ],
-          },
-        },
-        {
-          flatData: {
-            email: 'notapm3@example.com',
-            teams: [
-              {
-                id: [
-                  {
-                    id: 'team-id-1',
-                    created: '2020-09-23T20:33:36Z',
-                    lastModified: '2020-11-26T11:56:04Z',
-                    flatData: {},
-                  },
-                ],
-                role: 'Key Personnel',
-              },
-            ],
-          },
-        },
-      ],
-    },
-    {
-      id: 'team-id-2',
-      created: '2020-09-23T20:33:36Z',
-      lastModified: '2020-11-26T11:56:04Z',
-      version: 42,
-      flatData: {
-        displayName: 'Team B',
-      },
-      referencingUsersContents: [
-        {
-          flatData: {
-            email: 'pm2@example.com',
-            teams: [
-              {
-                id: [
-                  {
-                    id: 'team-id-2',
-                    created: '2020-09-23T20:33:36Z',
-                    lastModified: '2020-11-26T11:56:04Z',
-                    version: 42,
-                    flatData: {},
-                  },
-                ],
-                role: 'Project Manager',
-              },
-            ],
-          },
-        },
-        {
-          flatData: {
-            email: 'pm2@example.com',
-            teams: [
-              {
-                id: [
-                  {
-                    id: 'team-id-2',
-                    created: '2020-09-23T20:33:36Z',
-                    lastModified: '2020-11-26T11:56:04Z',
-                    version: 42,
-                    flatData: {},
-                  },
-                ],
-                role: 'Project Manager',
-              },
-            ],
-          },
-        },
-        {
-          flatData: {
-            email: 'multiple-pms-on-same-team@example.com',
-            teams: [
-              {
-                id: [
-                  {
-                    id: 'team-id-2',
-                    created: '2020-09-23T20:33:36Z',
-                    lastModified: '2020-11-26T11:56:04Z',
-                    version: 42,
-                    flatData: {},
-                  },
-                ],
-                role: 'Project Manager',
-              },
-            ],
-          },
-        },
-        {
-          id: '94adc252-cf5e-4950-bbcf-339e46d326a0',
-          created: '2020-09-23T20:33:36Z',
-          lastModified: '2020-11-26T11:56:04Z',
-          version: 42,
-          flatData: {
-            email: 'notapm4@example.com',
-            teams: null,
-          },
-        },
-      ],
-    },
-  ],
+  referencingTeamsContents: [getGraphqlTeam()],
 });
 
 export const getResearchOutputResponse =
@@ -268,10 +101,7 @@ export const getResearchOutputResponse =
     description: 'Text',
     tags: ['tag', 'test'],
     authors: (fetchExpectation as DeepWriteable<ListUserResponse>).items,
-    teams: [
-      { id: 'team-id-1', displayName: 'Team A' },
-      { id: 'team-id-2', displayName: 'Team B' },
-    ],
+    teams: [{ id: 'team-id-1', displayName: 'Team A' }],
     publishDate: '2021-05-21T13:18:31Z',
     labCatalogNumber: 'http://example.com',
     doi: '10.5555/YFRU1371',
@@ -282,7 +112,7 @@ export const getResearchOutputResponse =
     sharingStatus: 'Network Only',
     asapFunded: true,
     usedInPublication: false,
-    contactEmails: ['multiple-pms-on-same-team@example.com'],
+    contactEmails: [],
     labs: [
       { id: '99c78dd7-627e-4fbd-aaec-d1977895189e', name: 'Test' },
       { id: 'cd7be402-84d7-4d21-a360-82e2695f2dd9', name: 'mike' },

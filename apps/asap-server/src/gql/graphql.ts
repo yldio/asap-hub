@@ -4473,6 +4473,7 @@ export type EventContentFragment = Pick<
                               | 'expertiseAndResourceDescription'
                               | 'role'
                               | 'responsibilities'
+                              | 'researchInterests'
                               | 'reachOut'
                             > & {
                               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -4578,6 +4579,7 @@ export type EventContentFragment = Pick<
                               | 'expertiseAndResourceDescription'
                               | 'role'
                               | 'responsibilities'
+                              | 'researchInterests'
                               | 'reachOut'
                             > & {
                               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -4790,6 +4792,7 @@ export type FetchEventsQuery = {
                                         | 'expertiseAndResourceDescription'
                                         | 'role'
                                         | 'responsibilities'
+                                        | 'researchInterests'
                                         | 'reachOut'
                                       > & {
                                         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -4909,6 +4912,7 @@ export type FetchEventsQuery = {
                                         | 'expertiseAndResourceDescription'
                                         | 'role'
                                         | 'responsibilities'
+                                        | 'researchInterests'
                                         | 'reachOut'
                                       > & {
                                         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -5120,6 +5124,7 @@ export type FetchEventQuery = {
                                   | 'expertiseAndResourceDescription'
                                   | 'role'
                                   | 'responsibilities'
+                                  | 'researchInterests'
                                   | 'reachOut'
                                 > & {
                                   avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -5230,6 +5235,7 @@ export type FetchEventQuery = {
                                   | 'expertiseAndResourceDescription'
                                   | 'role'
                                   | 'responsibilities'
+                                  | 'researchInterests'
                                   | 'reachOut'
                                 > & {
                                   avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -5391,6 +5397,7 @@ export type GroupsContentFragment = Pick<
                   | 'expertiseAndResourceDescription'
                   | 'role'
                   | 'responsibilities'
+                  | 'researchInterests'
                   | 'reachOut'
                 > & {
                   avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -5489,6 +5496,7 @@ export type GroupsContentFragment = Pick<
                   | 'expertiseAndResourceDescription'
                   | 'role'
                   | 'responsibilities'
+                  | 'researchInterests'
                   | 'reachOut'
                 > & {
                   avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -5641,6 +5649,7 @@ export type FetchGroupsQuery = {
                             | 'expertiseAndResourceDescription'
                             | 'role'
                             | 'responsibilities'
+                            | 'researchInterests'
                             | 'reachOut'
                           > & {
                             avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -5746,6 +5755,7 @@ export type FetchGroupsQuery = {
                             | 'expertiseAndResourceDescription'
                             | 'role'
                             | 'responsibilities'
+                            | 'researchInterests'
                             | 'reachOut'
                           > & {
                             avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -5893,6 +5903,7 @@ export type FetchGroupQuery = {
                       | 'expertiseAndResourceDescription'
                       | 'role'
                       | 'responsibilities'
+                      | 'researchInterests'
                       | 'reachOut'
                     > & {
                       avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -5993,6 +6004,7 @@ export type FetchGroupQuery = {
                       | 'expertiseAndResourceDescription'
                       | 'role'
                       | 'responsibilities'
+                      | 'researchInterests'
                       | 'reachOut'
                     > & {
                       avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -6147,6 +6159,7 @@ export type ResearchOutputContentFragment = Pick<
                 | 'expertiseAndResourceDescription'
                 | 'role'
                 | 'responsibilities'
+                | 'researchInterests'
                 | 'reachOut'
               > & {
                 avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -6299,6 +6312,7 @@ export type FetchResearchOutputQuery = {
                     | 'expertiseAndResourceDescription'
                     | 'role'
                     | 'responsibilities'
+                    | 'researchInterests'
                     | 'reachOut'
                   > & {
                     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -6467,6 +6481,7 @@ export type FetchResearchOutputsQuery = {
                           | 'expertiseAndResourceDescription'
                           | 'role'
                           | 'responsibilities'
+                          | 'researchInterests'
                           | 'reachOut'
                         > & {
                           avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -6611,6 +6626,7 @@ export type TeamsContentFragment = Pick<
           | 'expertiseAndResourceDescription'
           | 'role'
           | 'responsibilities'
+          | 'researchInterests'
           | 'reachOut'
         > & {
           avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -6716,6 +6732,7 @@ export type FetchTeamQuery = {
               | 'expertiseAndResourceDescription'
               | 'role'
               | 'responsibilities'
+              | 'researchInterests'
               | 'reachOut'
             > & {
               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -6832,6 +6849,7 @@ export type FetchTeamsQuery = {
                     | 'expertiseAndResourceDescription'
                     | 'role'
                     | 'responsibilities'
+                    | 'researchInterests'
                     | 'reachOut'
                   > & {
                     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -7517,6 +7535,10 @@ export const TeamsContentFragmentDoc = {
                       },
                       {
                         kind: 'Field',
+                        name: { kind: 'Name', value: 'researchInterests' },
+                      },
+                      {
+                        kind: 'Field',
                         name: { kind: 'Name', value: 'reachOut' },
                       },
                       {
@@ -7959,6 +7981,13 @@ export const GroupsContentFragmentDoc = {
                                     name: {
                                       kind: 'Name',
                                       value: 'responsibilities',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'researchInterests',
                                     },
                                   },
                                   {
@@ -8663,6 +8692,13 @@ export const ResearchOutputContentFragmentDoc = {
                                     name: {
                                       kind: 'Name',
                                       value: 'responsibilities',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'researchInterests',
                                     },
                                   },
                                   {

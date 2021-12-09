@@ -83,6 +83,7 @@ export const groupContentQueryFragment = gql`
             }
             role
             responsibilities
+            researchInterests
             reachOut
             labs {
               id

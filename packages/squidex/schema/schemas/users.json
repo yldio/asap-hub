@@ -31,6 +31,8 @@
       "city",
       "institution",
       "jobTitle",
+      "responsibilities",
+      "researchInterests",
       "expertiseAndResourceDescription",
       "expertiseAndResourceTags",
       "questions",
@@ -39,8 +41,6 @@
       "contactEmail",
       "orcidWorks",
       "orcidLastSyncDate",
-      "responsibilities",
-      "researchInterests",
       "reachOut",
       "meta.created",
       "meta.createdBy.avatar",
@@ -234,7 +234,7 @@
             "name": "mainResearchInterests",
             "isHidden": false,
             "isLocked": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "properties": {
               "fieldType": "String",
               "isUnique": false,
@@ -251,7 +251,7 @@
             "name": "responsibilities",
             "isHidden": false,
             "isLocked": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "properties": {
               "fieldType": "String",
               "isUnique": false,
@@ -609,7 +609,7 @@
         "name": "responsibilities",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": false,
+        "isDisabled": true,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
@@ -628,7 +628,7 @@
         "name": "researchInterests",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": false,
+        "isDisabled": true,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",

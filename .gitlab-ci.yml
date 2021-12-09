@@ -167,10 +167,13 @@ deploy:squidex:branch:
     - aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
     - tar -xf $MOST_RECENT_BACKUP
     - source ci/env-setup.sh
+    # replaces placeholders in squidex rules.
     - ./ci/config-squidex-rules.sh
     # Check if this is the first run of squidex-app-create - cache is persisted between PR workflows
     - export FIRST_RUN=$(test -f "first_run/squidex_app_create" && echo "false" || echo "true")
+    # imports from backup into squidex. Runs one time only on first run of PR.
     - ./ci/import-squidex-data.sh
+    # applies schema updates to squidex.
     - ./ci/update-squidex-schema.sh
     # Store a random file in the cached directory to mark completion of squidex-app-create
     - mkdir -p first_run && touch first_run/squidex_app_create

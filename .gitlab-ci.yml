@@ -127,6 +127,7 @@ test:unit:
     paths:
       - coverage
   script:
+    - ls
     - yarn run test --coverage
     - yarn codecov
 

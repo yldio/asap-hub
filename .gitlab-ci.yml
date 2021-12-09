@@ -123,14 +123,14 @@ test:unit:
     paths:
       - coverage
   script:
-    - yarn run test --no-cache --coverage
+    - yarn run test --coverage
     - yarn codecov
 
 test:browser:
   <<: *tmpl_test
   image: mcr.microsoft.com/playwright:bionic
   script:
-    - yarn run test:browser
+    - yarn run test:browser --no-cache
   needs:
     - build:native
 

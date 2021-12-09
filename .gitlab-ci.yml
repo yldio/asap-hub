@@ -127,7 +127,6 @@ test:unit:
     paths:
       - coverage
   script:
-    - ls -lah .jest-cache/
     - yarn run test --coverage
     - yarn codecov
 
@@ -135,7 +134,7 @@ test:browser:
   <<: *tmpl_test
   image: mcr.microsoft.com/playwright:bionic
   script:
-    - yarn run test:browser
+    - yarn run test:browser --no-cache
   needs:
     - build:native
 

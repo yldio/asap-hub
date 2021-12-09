@@ -11,6 +11,7 @@ import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { getSquidexGraphqlResearchOutput } from '../fixtures/research-output.fixtures';
 import { getGraphQLUser } from '../fixtures/users.fixtures';
+import { getGraphqlTeam } from '../fixtures/teams.fixtures';
 
 export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
   const schema = loadSchemaSync('../../src/schema/schema.graphql', {
@@ -31,12 +32,20 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
       items: [...new Array(1)],
       total: 1,
     }),
+    Teams: () => getGraphqlTeam(),
+    TeamsResultDto: () => ({
+      items: [...new Array(1)],
+      total: 1,
+    }),
   };
   const store = createMockStore({
     schema,
     mocks,
     typePolicies: {
       UsersDataTeamsChildDto: {
+        keyFieldName: false,
+      },
+      Teams: {
         keyFieldName: false,
       },
     },

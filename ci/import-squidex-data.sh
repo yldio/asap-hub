@@ -25,8 +25,8 @@ else
     echo 'Skipping app creation and data import'
 fi
 
-# apply schema changes on top of dev backup
-export SQ_SYNC_SCHEMA_OUTPUT="$(sq sync in packages/squidex/schema -t schemas --delete)"
+# apply schema and rule changes on top of dev backup
+export SQ_SYNC_SCHEMA_OUTPUT="$(sq sync in packages/squidex/schema -t schemas rules --delete)"
 if echo "$SQ_SYNC_SCHEMA_OUTPUT" | grep -q -i -E 'warn|error|fail|exception'; then
     echo "Data import failure - sq sync in packages/squidex/schema -t schemas --delete failed:"
     echo $SQ_SYNC_SCHEMA_OUTPUT

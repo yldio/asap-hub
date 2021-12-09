@@ -40,6 +40,7 @@ export const referencingUsersContentsResponse = ({
       orcid: '',
       orcidWorks: [],
       responsibilities: '',
+      researchInterests: '',
       reachOut: '',
       lastModifiedDate: '2020-11-26T11:56:04Z',
       orcidLastModifiedDate: '2020-11-26T11:56:04Z',

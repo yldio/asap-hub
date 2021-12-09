@@ -54,6 +54,7 @@ export interface User<
   questions: { question: string }[];
   role: Role;
   responsibilities?: string;
+  researchInterests?: string;
   reachOut?: string;
   teams: TConnection[];
   social?: TSocial[];

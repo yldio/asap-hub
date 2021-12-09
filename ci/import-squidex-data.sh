@@ -25,10 +25,10 @@ else
     echo 'Skipping app creation and data import'
 fi
 
-# apply schema changes on top of dev backup
-export SQ_SYNC_SCHEMA_OUTPUT="$(sq sync in packages/squidex/schema -t schemas --delete)"
+# apply schema and rule changes on top of dev backup
+export SQ_SYNC_SCHEMA_OUTPUT="$(sq sync in packages/squidex/schema -t schemas -t rules --delete)"
 if echo "$SQ_SYNC_SCHEMA_OUTPUT" | grep -q -i -E 'warn|error|fail|exception'; then
-    echo "Data import failure - sq sync in packages/squidex/schema -t schemas --delete failed:"
+    echo "Data import failure - sq sync in packages/squidex/schema -t schemas -t rules --delete failed:"
     echo $SQ_SYNC_SCHEMA_OUTPUT
     unset SQ_SYNC_SCHEMA_OUTPUT
     unset IFS
@@ -40,7 +40,7 @@ if [ "$PRINT_SYNC_LOGS_ON_SUCCESS" = true ]; then
     echo "sq sync in backup successful output:"
     echo $SQ_SYNC_OUTPUT
     echo "---------------------------------------------"
-    echo "sq sync in packages/squidex/schema -t schemas --delete successful output:"
+    echo "sq sync in packages/squidex/schema -t schemas -t rules --delete successful output:"
     echo $SQ_SYNC_SCHEMA_OUTPUT
 fi
 

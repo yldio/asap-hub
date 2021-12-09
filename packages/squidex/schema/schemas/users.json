@@ -2,7 +2,7 @@
   "$schema": "./../__json/schema.json",
   "name": "users",
   "isSingleton": false,
-  "schemaType": "Default",
+  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -234,7 +234,7 @@
             "name": "mainResearchInterests",
             "isHidden": false,
             "isLocked": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "properties": {
               "fieldType": "String",
               "isUnique": false,
@@ -251,7 +251,7 @@
             "name": "responsibilities",
             "isHidden": false,
             "isLocked": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "properties": {
               "fieldType": "String",
               "isUnique": false,

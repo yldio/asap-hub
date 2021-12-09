@@ -118,6 +118,9 @@ check:format:
 
 test:unit:
   <<: *tmpl_test
+  cache:
+    paths:
+      - .jest-cache/
   artifacts:
     expire_in: 5 day
     paths:

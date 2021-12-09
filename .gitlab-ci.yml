@@ -122,8 +122,12 @@ test:unit:
     expire_in: 5 day
     paths:
       - coverage
+  cache:
+    key: jest-cache
+    paths:
+      - .jest-cache/
   script:
-    - ls -lah
+     - ls -lah .jest-cache/
     - yarn run test --coverage
     - yarn codecov
 

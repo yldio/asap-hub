@@ -13,6 +13,7 @@ import { getSquidexGraphqlResearchOutput } from '../fixtures/research-output.fix
 import { getGraphQLUser } from '../fixtures/users.fixtures';
 import { getGraphqlTeam } from '../fixtures/teams.fixtures';
 import { getGraphqlGroup } from '../fixtures/groups.fixtures';
+import { getSquidexGraphqlDiscover } from '../fixtures/discover.fixtures';
 
 export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
   const schema = loadSchemaSync('../../src/schema/schema.graphql', {
@@ -40,6 +41,11 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     }),
     Teams: () => getGraphqlTeam(),
     TeamsResultDto: () => ({
+      items: [...new Array(1)],
+      total: 1,
+    }),
+    Discover: () => getSquidexGraphqlDiscover(),
+    DiscoveryResultDto: () => ({
       items: [...new Array(1)],
       total: 1,
     }),

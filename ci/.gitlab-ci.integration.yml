@@ -7,7 +7,7 @@ variables:
 
 build:docker-images:
   image: $BASE_DOCKER_IMAGE
-  stage: .pre
+  stage: build
   services:
     - docker:19.03.12-dind
   script:

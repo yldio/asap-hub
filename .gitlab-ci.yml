@@ -40,6 +40,7 @@ workflow:
 stages:
   - build
   - test
+  - check
   - prepare-dev
   - deploy-dev
   - verify-dev
@@ -71,7 +72,7 @@ prepare:squidex:branch:
     - python ci/integration/scripts/create-app.py
     - export MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket "asap-hub-dev-data-backup" --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
     - aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
-    - tar -xf $MOST_RECENT_BACKUP
+    - tar -xf $MOST_RECENT_BACKUP #todo
     - source ci/env-setup.sh
     # replaces placeholders in squidex rules.
     - ./ci/config-squidex-rules.sh
@@ -133,13 +134,10 @@ build:sls:package:
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
     - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
     - source ci/env-setup.sh
+    - yarn rebuild # Duplicated for performance
+    - yarn build:typecheck # Duplicated for performance
+    - yarn build:babel # Duplicated for performance
     - yarn sls package
-  needs:
-    - build:ts
-    - build:native
-  dependencies:
-    - build:ts
-    - build:native
 
 build:native:
   artifacts:
@@ -160,21 +158,6 @@ build:native:
     - echo "no script property found"
   needs: []
   stage: test
-
-check:packages:
-  <<: *tmpl_test
-  script:
-    - yarn install --immutable --immutable-cache
-
-check:constraints:
-  <<: *tmpl_test
-  script:
-    - yarn constraints
-
-check:format:
-  <<: *tmpl_test
-  script:
-    - yarn run lint:format
 
 test:unit:
   <<: *tmpl_test
@@ -201,6 +184,28 @@ test:build-output:
   needs:
     - build:ts
 
+##############
+# stage check #
+##############
+
+check:packages:
+  script:
+    - yarn install --immutable --immutable-cache
+  stage: check
+  needs: []
+
+check:constraints:
+  script:
+    - yarn constraints
+  stage: check
+  needs: []
+
+check:format:
+  script:
+    - yarn run lint:format
+  stage: check
+  needs: []
+
 ####################
 # stage deploy-dev #
 ####################
@@ -216,11 +221,11 @@ deploy:sls:branch:
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
     - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
     - source ci/env-setup.sh
-    - yarn sls deploy --package --verbose
-  needs:
-    - build:sls:package
+    - yarn sls deploy --package .serverless --verbose
   dependencies:
     - build:sls:package
+    - build:native
+    - build:ts
 
 deploy:sls:development:
   <<: *tmpl_master

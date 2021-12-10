@@ -7,7 +7,7 @@ variables:
 
 build:docker-images:
   image: $BASE_DOCKER_IMAGE
-  stage: .pre
+  stage: .post
   services:
     - docker:19.03.12-dind
   script:
@@ -16,6 +16,7 @@ build:docker-images:
     - docker push $SQUIDEX_BASE_DOCKER_IMAGE
     - docker build -t $INTEGRATION_DOCKER_IMAGE . -f ci/integration/Dockerfile
     - docker push $INTEGRATION_DOCKER_IMAGE
+  needs: []
 
 test:integration:
   image: $INTEGRATION_DOCKER_IMAGE
@@ -34,6 +35,7 @@ test:integration:
     # If tests fail return exit code now
     - exit $test_exit_code
   stage: test
+  needs: []
 
 .tmpl:sync: &tmpl_sync
   image: $SQUIDEX_BASE_DOCKER_IMAGE

@@ -50,6 +50,42 @@ stages:
 ###############
 # stage build #
 ###############
+prepare:squidex:branch:
+  <<: *tmpl_branch
+  image: $INTEGRATION_DOCKER_IMAGE
+  stage: build
+  environment:
+    name: review/$CI_EXTERNAL_PULL_REQUEST_IID
+    url: https://$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
+    auto_stop_in: 3 days
+  variables:
+    <<: *tmpl_branch_variables
+  cache:
+    key: '$CI_EXTERNAL_PULL_REQUEST_IID'
+    paths:
+      - first_run/
+  script:
+    - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}
+    - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
+    - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
+    - python ci/integration/scripts/create-app.py
+    - export MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket "asap-hub-dev-data-backup" --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
+    - aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
+    - tar -xf $MOST_RECENT_BACKUP
+    - source ci/env-setup.sh
+    # replaces placeholders in squidex rules.
+    - ./ci/config-squidex-rules.sh
+    # Check if this is the first run of squidex-app-create - cache is persisted between PR workflows
+    - export FIRST_RUN=$(test -f "first_run/squidex_app_create" && echo "false" || echo "true")
+    # imports from backup into squidex. Runs one time only on first run of PR.
+    - ./ci/import-squidex-data.sh
+    # applies schema updates to squidex.
+    - ./ci/update-squidex-schema.sh
+    # Store a random file in the cached directory to mark completion of squidex-app-create
+    - echo "Caching successful import"
+    - mkdir -p first_run
+    - touch first_run/squidex_app_create
+  needs: []
 
 build:ts:
   image: $INTEGRATION_DOCKER_IMAGE
@@ -168,40 +204,6 @@ test:build-output:
 ####################
 # stage deploy-dev #
 ####################
-deploy:squidex:branch:
-  <<: *tmpl_branch
-  image: $INTEGRATION_DOCKER_IMAGE
-  stage: deploy-dev
-  environment:
-    name: review/$CI_EXTERNAL_PULL_REQUEST_IID
-    url: https://$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
-    auto_stop_in: 3 days
-  variables:
-    <<: *tmpl_branch_variables
-  cache:
-    key: '$CI_EXTERNAL_PULL_REQUEST_IID'
-    paths:
-      - first_run/
-  script:
-    - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}
-    - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
-    - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
-    - python ci/integration/scripts/create-app.py
-    - export MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket "asap-hub-dev-data-backup" --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
-    - aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
-    - tar -xf $MOST_RECENT_BACKUP
-    - source ci/env-setup.sh
-    # replaces placeholders in squidex rules.
-    - ./ci/config-squidex-rules.sh
-    # Check if this is the first run of squidex-app-create - cache is persisted between PR workflows
-    - export FIRST_RUN=$(test -f "first_run/squidex_app_create" && echo "false" || echo "true")
-    # imports from backup into squidex. Runs one time only on first run of PR.
-    - ./ci/import-squidex-data.sh
-    # applies schema updates to squidex.
-    - ./ci/update-squidex-schema.sh
-    # Store a random file in the cached directory to mark completion of squidex-app-create
-    - mkdir -p first_run && touch first_run/squidex_app_create
-
 deploy:sls:branch:
   <<: *tmpl_branch
   image: $INTEGRATION_DOCKER_IMAGE
@@ -248,7 +250,7 @@ verify:branch:
   needs:
     - build:ts
     - build:native
-    - deploy:squidex:branch
+    - prepare:squidex:branch
     - deploy:sls:branch
   script:
     - ASAP_API_URL=$API_URL yarn test:e2e
@@ -262,7 +264,7 @@ e2e:branch:
   needs:
     - build:ts
     - build:native
-    - deploy:squidex:branch
+    - prepare:squidex:branch
     - deploy:sls:branch
   script:
     - yarn workspace @asap-hub/e2e-tests run playwright install
@@ -275,10 +277,8 @@ verify:schema:branch:
   variables:
     API_URL: https://api-$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
   needs:
-    - build:ts
     - build:native
-    - deploy:squidex:branch
-    - deploy:sls:branch
+    - prepare:squidex:branch
   script:
     - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID

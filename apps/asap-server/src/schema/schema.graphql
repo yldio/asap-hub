@@ -3998,6 +3998,7 @@ type UsersDataDto {
   orcidWorks: UsersDataOrcidWorksDto
   questions: UsersDataQuestionsDto
   reachOut: UsersDataReachOutDto
+  researchInterests: UsersDataResearchInterestsDto
   responsibilities: UsersDataResponsibilitiesDto
   role: UsersDataRoleDto
   social: UsersDataSocialDto
@@ -4070,6 +4071,7 @@ input UsersDataInputDto {
   orcidWorks: UsersDataOrcidWorksInputDto
   questions: UsersDataQuestionsInputDto
   reachOut: UsersDataReachOutInputDto
+  researchInterests: UsersDataResearchInterestsInputDto
   responsibilities: UsersDataResponsibilitiesInputDto
   role: UsersDataRoleInputDto
   social: UsersDataSocialInputDto
@@ -4237,15 +4239,23 @@ input UsersDataReachOutInputDto {
   iv: String
 }
 
+"""The structure of the Research Interests field of the Users content type."""
+type UsersDataResearchInterestsDto {
+  iv: String
+}
+
+"""The structure of the Research Interests field of the Users content input type."""
+input UsersDataResearchInterestsInputDto {
+  iv: String
+}
+
 """The structure of the Responsibilities field of the Users content type."""
 type UsersDataResponsibilitiesDto {
-  """Responsibilities on the ASAP Hub (only relevant for "Staff" users)"""
   iv: String
 }
 
 """The structure of the Responsibilities field of the Users content input type."""
 input UsersDataResponsibilitiesInputDto {
-  """Responsibilities on the ASAP Hub (only relevant for "Staff" users)"""
   iv: String
 }
 
@@ -4355,7 +4365,7 @@ type UsersFlatDataDto {
   questions: [UsersDataQuestionsChildDto!]
   """Reach out reasons (only relevant for "Staff" users)"""
   reachOut: String
-  """Responsibilities on the ASAP Hub (only relevant for "Staff" users)"""
+  researchInterests: String
   responsibilities: String
   """Role on the ASAP Hub"""
   role: String

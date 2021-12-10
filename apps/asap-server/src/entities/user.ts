@@ -217,6 +217,7 @@ export const parseGraphQLUser = (item: GraphQLUser): UserResponse => {
       : undefined,
     role,
     responsibilities: item.flatData.responsibilities || undefined,
+    researchInterests: item.flatData.researchInterests ?? undefined,
     reachOut: item.flatData.reachOut || undefined,
     labs: flatLabs || [],
   };
@@ -279,6 +280,7 @@ export const parseUser = (user: RestUser): UserResponse => {
       (user.data.avatar?.iv && createURL(user.data.avatar.iv)[0]) ?? undefined,
     role: user.data.role.iv === 'Hidden' ? 'Guest' : user.data.role.iv,
     responsibilities: user.data.responsibilities?.iv,
+    researchInterests: user.data.researchInterests?.iv ?? undefined,
     reachOut: user.data.reachOut?.iv,
     labs: (user.data.labs?.iv || []).map((lab) => ({
       id: lab.id,

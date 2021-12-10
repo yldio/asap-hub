@@ -130,6 +130,7 @@ export interface UserResponse extends Invitee {
   orcidWorks?: OrcidWork[];
   reachOut?: string;
   responsibilities?: string;
+  researchInterests?: string;
   role: Role;
   social?: UserSocialLinks;
   labs: Lab[];

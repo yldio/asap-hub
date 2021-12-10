@@ -84,6 +84,7 @@ export const teamsContentQueryFragment = gql`
         }
         role
         responsibilities
+        researchInterests
         reachOut
         labs {
           id

@@ -1,7 +1,11 @@
-import { GraphqlPage, GraphqlNews, GraphqlUser } from '@asap-hub/squidex';
+import {
+  GraphqlPage,
+  GraphqlNews,
+  GraphqlUser,
+  SquidexGraphqlClient,
+} from '@asap-hub/squidex';
 import { DiscoverResponse } from '@asap-hub/model';
 
-import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import {
   parseGraphQLUser,
   parseGraphQLPage,
@@ -23,17 +27,18 @@ export interface SquidexDiscoverResponse {
 }
 
 export default class Discover implements DiscoverController {
-  client: InstrumentedSquidexGraphql;
+  client: SquidexGraphqlClient;
 
-  constructor(ctxHeaders?: Record<string, string>) {
-    this.client = new InstrumentedSquidexGraphql(ctxHeaders);
+  constructor(squidexGraphlClient: SquidexGraphqlClient) {
+    this.client = squidexGraphlClient;
   }
 
   async fetch(): Promise<DiscoverResponse> {
-    const { queryDiscoverContents } = await this.client.request<
-      FetchDiscoverQuery,
-      unknown
-    >(FETCH_DISCOVER);
+    const data = await this.client.request<FetchDiscoverQuery, unknown>(
+      FETCH_DISCOVER,
+    );
+
+    const { queryDiscoverContents } = data;
     if (
       !queryDiscoverContents ||
       queryDiscoverContents.length === 0 ||

@@ -63,7 +63,8 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   // Controllers
   const calendarController = libs.calendarController || new Calendars();
-  const dashboardController = libs.dashboardController || new Dashboard();
+  const dashboardController =
+    libs.dashboardController || new Dashboard(squidexGraphlClient);
   const newsController = libs.newsController || new News();
   const discoverController =
     libs.discoverController || new Discover(squidexGraphlClient);

@@ -1,19 +1,19 @@
-import { DashboardResponse } from '@asap-hub/model';
+import type { DashboardResponse } from '@asap-hub/model';
+import type { SquidexGraphqlClient } from '@asap-hub/squidex';
 
-import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import { parseGraphQLPage, parseGraphQLNews } from '../entities';
 import { FETCH_DASHBOARD } from '../queries/dashboard.queries';
-import { FetchDashboardQuery } from '../gql/graphql';
+import type { FetchDashboardQuery } from '../gql/graphql';
 
 export interface DashboardController {
   fetch: () => Promise<DashboardResponse>;
 }
 
 export default class Dashboard {
-  client: InstrumentedSquidexGraphql;
+  client: SquidexGraphqlClient;
 
-  constructor(ctxHeaders?: Record<string, string>) {
-    this.client = new InstrumentedSquidexGraphql(ctxHeaders);
+  constructor(squidexGraphlClient: SquidexGraphqlClient) {
+    this.client = squidexGraphlClient;
   }
 
   async fetch(): Promise<DashboardResponse> {

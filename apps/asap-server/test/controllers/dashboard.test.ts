@@ -26,7 +26,8 @@ describe('Dashboard controller', () => {
       test('Should fetch the discover from squidex graphql', async () => {
         const result = await dashboardMockGraphql.fetch();
 
-        expect(result).toMatchObject(squidexGraphqlDashboardResponse);
+        const expected = squidexGraphqlDashboardResponse();
+        expect(result).toMatchObject(expected);
       });
     });
     describe('with intercepted http layer', () => {

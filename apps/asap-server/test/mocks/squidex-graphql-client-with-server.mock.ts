@@ -21,40 +21,26 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     cwd: __dirname,
     loaders: [new GraphQLFileLoader()],
   });
+  const resultDto = () => ({
+    items: [...new Array(1)],
+    total: 1,
+  });
   const mocks = {
     Int: () => 8,
     Instant: () => '2021-10-12T15:42:05Z',
     JsonScalar: () => {},
     Groups: () => getGraphqlGroup(),
-    GroupsResultDto: () => ({
-      items: [...new Array(1)],
-      total: 1,
-    }),
+    GroupsResultDto: resultDto,
     ResearchOutputs: () => getSquidexGraphqlResearchOutput(),
-    ResearchOutputsResultDto: () => ({
-      items: [...new Array(1)],
-      total: 1,
-    }),
+    ResearchOutputsResultDto: resultDto,
     Users: () => getGraphQLUser(),
-    UsersResultDto: () => ({
-      items: [...new Array(1)],
-      total: 1,
-    }),
+    UsersResultDto: resultDto,
     Teams: () => getGraphqlTeam(),
-    TeamsResultDto: () => ({
-      items: [...new Array(1)],
-      total: 1,
-    }),
+    TeamsResultDto: resultDto,
     Discover: () => getSquidexGraphqlDiscover(),
-    DiscoveryResultDto: () => ({
-      items: [...new Array(1)],
-      total: 1,
-    }),
+    DiscoveryResultDto: resultDto,
     Dashboard: () => getSquidexGraphqlDashboard(),
-    DashboardResultDto: () => ({
-      items: [...new Array(1)],
-      total: 1,
-    }),
+    DashboardResultDto: resultDto,
   };
   const store = createMockStore({
     schema,

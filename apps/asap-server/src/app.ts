@@ -63,7 +63,8 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   // Controllers
   const calendarController = libs.calendarController || new Calendars();
-  const dashboardController = libs.dashboardController || new Dashboard();
+  const dashboardController =
+    libs.dashboardController || new Dashboard(squidexGraphlClient);
   const newsController = libs.newsController || new News();
   const discoverController =
     libs.discoverController || new Discover(squidexGraphlClient);
@@ -73,11 +74,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const pageController = libs.pageController || new Pages();
   const researchOutputController =
     libs.researchOutputController || new ResearchOutputs(squidexGraphlClient);
-<<<<<<< HEAD
   const teamController = libs.teamController || new Teams(squidexGraphlClient);
-=======
-  const teamController = libs.teamController || new Teams();
->>>>>>> 8957516a (add mock server tests to user controller)
   const userController = libs.userController || new Users(squidexGraphlClient);
 
   // Handlers

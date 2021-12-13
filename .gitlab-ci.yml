@@ -118,6 +118,10 @@ check:format:
 
 test:unit:
   <<: *tmpl_test
+  cache:
+    key: jest-cache
+    paths:
+      - .jest-cache/
   artifacts:
     expire_in: 5 day
     paths:

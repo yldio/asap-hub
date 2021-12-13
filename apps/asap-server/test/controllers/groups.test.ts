@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { config } from '@asap-hub/squidex';
+import { config, SquidexGraphql } from '@asap-hub/squidex';
 import { print } from 'graphql';
 import Groups from '../../src/controllers/groups';
 import { identity } from '../helpers/squidex';
@@ -7,235 +7,271 @@ import * as fixtures from '../fixtures/groups.fixtures';
 import { FetchOptions } from '../../src/utils/types';
 import {
   getGroupResponse,
+  getListGroupResponse,
   getResponseFetchGroup,
 } from '../fixtures/groups.fixtures';
 import { FETCH_GROUP, FETCH_GROUPS } from '../../src/queries/groups.queries';
-
-const groups = new Groups();
+import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 
 describe('Group controller', () => {
+  const squidexGraphqlClient = new SquidexGraphql();
+  const groupController = new Groups(squidexGraphqlClient);
+
+  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
+  const groupControllerMockGraphql = new Groups(squidexGraphqlClientMockServer);
+
   beforeAll(() => {
     identity();
   });
 
-  afterEach(() => {
-    expect(nock.isDone()).toBe(true);
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   describe('Fetch method', () => {
-    test('Should return an empty result', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_GROUPS),
-          variables: {
-            filter: '',
-            top: 50,
-            skip: 0,
-          },
-        })
-        .reply(200, {
-          data: {
-            queryGroupsContentsWithTotal: {
-              total: 0,
-              items: [],
+    describe('with mock-server', () => {
+      test('Should fetch the groups from squidex graphql', async () => {
+        const result = await groupControllerMockGraphql.fetch({});
+
+        expect(result).toMatchObject(getListGroupResponse());
+      });
+    });
+
+    describe('with intercepted http layer', () => {
+      afterEach(() => {
+        expect(nock.isDone()).toBe(true);
+      });
+
+      afterEach(() => {
+        nock.cleanAll();
+      });
+
+      test('Should return an empty result', async () => {
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_GROUPS),
+            variables: {
+              filter: '',
+              top: 50,
+              skip: 0,
             },
-          },
-        });
-
-      const result = await groups.fetch({});
-      expect(result).toEqual({ items: [], total: 0 });
-    });
-    test('Should return an empty result when the client returns a response with queryGroupsContentsWithTotal property set to null', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_GROUPS),
-          variables: {
-            filter: '',
-            top: 50,
-            skip: 0,
-          },
-        })
-        .reply(200, {
-          data: {
-            queryGroupsContentsWithTotal: {
-              total: 0,
-              items: null,
+          })
+          .reply(200, {
+            data: {
+              queryGroupsContentsWithTotal: {
+                total: 0,
+                items: [],
+              },
             },
-          },
-        });
+          });
 
-      const result = await groups.fetch({});
-      expect(result).toEqual({ items: [], total: 0 });
-    });
-    test('Should return an empty result when the client returns a response with item property set to null', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_GROUPS),
-          variables: {
-            filter: '',
-            top: 50,
-            skip: 0,
-          },
-        })
-        .reply(200, {
-          data: {
-            queryGroupsContentsWithTotal: null,
-          },
-        });
+        const result = await groupController.fetch({});
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+      test('Should return an empty result when the client returns a response with queryGroupsContentsWithTotal property set to null', async () => {
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_GROUPS),
+            variables: {
+              filter: '',
+              top: 50,
+              skip: 0,
+            },
+          })
+          .reply(200, {
+            data: {
+              queryGroupsContentsWithTotal: {
+                total: 0,
+                items: null,
+              },
+            },
+          });
 
-      const result = await groups.fetch({});
-      expect(result).toEqual({ items: [], total: 0 });
-    });
+        const result = await groupController.fetch({});
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+      test('Should return an empty result when the client returns a response with item property set to null', async () => {
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_GROUPS),
+            variables: {
+              filter: '',
+              top: 50,
+              skip: 0,
+            },
+          })
+          .reply(200, {
+            data: {
+              queryGroupsContentsWithTotal: null,
+            },
+          });
 
-    test('Should query with filters and return the groups', async () => {
-      const fetchOptions: FetchOptions = {
-        take: 12,
-        skip: 2,
-        search: 'first last',
-      };
+        const result = await groupController.fetch({});
+        expect(result).toEqual({ items: [], total: 0 });
+      });
 
-      const expetedFilter =
-        "(contains(data/name/iv, 'first')" +
-        " or contains(data/description/iv, 'first')" +
-        " or contains(data/tags/iv, 'first'))" +
-        ' and' +
-        " (contains(data/name/iv, 'last')" +
-        " or contains(data/description/iv, 'last')" +
-        " or contains(data/tags/iv, 'last'))";
+      test('Should query with filters and return the groups', async () => {
+        const fetchOptions: FetchOptions = {
+          take: 12,
+          skip: 2,
+          search: 'first last',
+        };
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_GROUPS),
-          variables: {
-            filter: expetedFilter,
-            top: 12,
-            skip: 2,
-          },
-        })
-        .reply(200, fixtures.queryGroupsResponse);
+        const expetedFilter =
+          "(contains(data/name/iv, 'first')" +
+          " or contains(data/description/iv, 'first')" +
+          " or contains(data/tags/iv, 'first'))" +
+          ' and' +
+          " (contains(data/name/iv, 'last')" +
+          " or contains(data/description/iv, 'last')" +
+          " or contains(data/tags/iv, 'last'))";
 
-      const result = await groups.fetch(fetchOptions);
-      expect(result).toEqual(fixtures.listGroupsResponse);
-    });
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_GROUPS),
+            variables: {
+              filter: expetedFilter,
+              top: 12,
+              skip: 2,
+            },
+          })
+          .reply(200, fixtures.queryGroupsResponse);
 
-    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
-      const fetchOptions: FetchOptions = {
-        take: 12,
-        skip: 2,
-        search: "'",
-      };
+        const result = await groupController.fetch(fetchOptions);
+        expect(result).toEqual(fixtures.listGroupsResponse);
+      });
 
-      const expectedFilter =
-        "(contains(data/name/iv, '%27%27')" +
-        " or contains(data/description/iv, '%27%27')" +
-        " or contains(data/tags/iv, '%27%27'))";
+      test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+        const fetchOptions: FetchOptions = {
+          take: 12,
+          skip: 2,
+          search: "'",
+        };
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_GROUPS),
-          variables: {
-            filter: expectedFilter,
-            top: 12,
-            skip: 2,
-          },
-        })
-        .reply(200, fixtures.queryGroupsResponse);
+        const expectedFilter =
+          "(contains(data/name/iv, '%27%27')" +
+          " or contains(data/description/iv, '%27%27')" +
+          " or contains(data/tags/iv, '%27%27'))";
 
-      const result = await groups.fetch(fetchOptions);
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_GROUPS),
+            variables: {
+              filter: expectedFilter,
+              top: 12,
+              skip: 2,
+            },
+          })
+          .reply(200, fixtures.queryGroupsResponse);
 
-      expect(result).toEqual(fixtures.listGroupsResponse);
-    });
+        const result = await groupController.fetch(fetchOptions);
 
-    test('Should sanitise double quotation mark by encoding to hex', async () => {
-      const fetchOptions: FetchOptions = {
-        take: 12,
-        skip: 2,
-        search: '"',
-      };
+        expect(result).toEqual(fixtures.listGroupsResponse);
+      });
 
-      const expectedFilter =
-        "(contains(data/name/iv, '%22')" +
-        " or contains(data/description/iv, '%22')" +
-        " or contains(data/tags/iv, '%22'))";
+      test('Should sanitise double quotation mark by encoding to hex', async () => {
+        const fetchOptions: FetchOptions = {
+          take: 12,
+          skip: 2,
+          search: '"',
+        };
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_GROUPS),
-          variables: {
-            filter: expectedFilter,
-            top: 12,
-            skip: 2,
-          },
-        })
-        .reply(200, fixtures.queryGroupsResponse);
+        const expectedFilter =
+          "(contains(data/name/iv, '%22')" +
+          " or contains(data/description/iv, '%22')" +
+          " or contains(data/tags/iv, '%22'))";
 
-      const result = await groups.fetch(fetchOptions);
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_GROUPS),
+            variables: {
+              filter: expectedFilter,
+              top: 12,
+              skip: 2,
+            },
+          })
+          .reply(200, fixtures.queryGroupsResponse);
 
-      expect(result).toEqual(fixtures.listGroupsResponse);
+        const result = await groupController.fetch(fetchOptions);
+
+        expect(result).toEqual(fixtures.listGroupsResponse);
+      });
     });
   });
 
   describe('Fetch by id method', () => {
-    test("Should return 404 when the group doesn't exist", async () => {
-      const groupId = 'not-found';
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_GROUP),
-          variables: {
-            id: groupId,
-          },
-        })
-        .reply(200, {
-          data: {
-            findGroupsContent: null,
-          },
-        });
+    describe('with mock-server', () => {
+      test.only('Should fetch the groups from squidex graphql', async () => {
+        const result = await groupControllerMockGraphql.fetchById('group-id-1');
 
-      await expect(groups.fetchById(groupId)).rejects.toThrow('Not Found');
+        expect(result).toMatchObject(getGroupResponse());
+      });
     });
 
-    test('Should return the group', async () => {
-      const groupId = 'group-id-1';
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_GROUP),
-          variables: {
-            id: groupId,
-          },
-        })
-        .reply(200, getResponseFetchGroup());
+    describe('with intercepted http layer', () => {
+      afterEach(() => {
+        expect(nock.isDone()).toBe(true);
+      });
 
-      const result = await groups.fetchById(groupId);
-      expect(result).toEqual(getGroupResponse());
-    });
+      afterEach(() => {
+        nock.cleanAll();
+      });
 
-    test('Should return the group when the leader user is undefined (ie entity marked as a draft) and skip the leader', async () => {
-      const groupId = 'group-id-1';
-      const responseFetchGroup = getResponseFetchGroup();
-      responseFetchGroup.data.findGroupsContent.flatData!.leaders![0]!.user =
-        [];
+      test("Should return 404 when the group doesn't exist", async () => {
+        const groupId = 'not-found';
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_GROUP),
+            variables: {
+              id: groupId,
+            },
+          })
+          .reply(200, {
+            data: {
+              findGroupsContent: null,
+            },
+          });
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_GROUP),
-          variables: {
-            id: groupId,
-          },
-        })
-        .reply(200, responseFetchGroup);
+        await expect(groupController.fetchById(groupId)).rejects.toThrow(
+          'Not Found',
+        );
+      });
 
-      const result = await groups.fetchById(groupId);
+      test('Should return the group', async () => {
+        const groupId = 'group-id-1';
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_GROUP),
+            variables: {
+              id: groupId,
+            },
+          })
+          .reply(200, getResponseFetchGroup());
 
-      const expectedGroupResponse = getGroupResponse();
-      expect(result).toEqual(
-        expect.objectContaining({
-          leaders: [expectedGroupResponse.leaders[1]],
-        }),
-      );
+        const result = await groupController.fetchById(groupId);
+        expect(result).toEqual(getGroupResponse());
+      });
+
+      test('Should return the group when the leader user is undefined (ie entity marked as a draft) and skip the leader', async () => {
+        const groupId = 'group-id-1';
+        const responseFetchGroup = getResponseFetchGroup();
+        responseFetchGroup.data.findGroupsContent!.flatData!.leaders![0]!.user =
+          [];
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_GROUP),
+            variables: {
+              id: groupId,
+            },
+          })
+          .reply(200, responseFetchGroup);
+
+        const result = await groupController.fetchById(groupId);
+
+        const expectedGroupResponse = getGroupResponse();
+        expect(result).toEqual(
+          expect.objectContaining({
+            leaders: [expectedGroupResponse.leaders[1]],
+          }),
+        );
+      });
     });
   });
 
@@ -262,7 +298,7 @@ describe('Group controller', () => {
           },
         });
 
-      const result = await groups.fetchByTeamId(teamUUID, {});
+      const result = await groupController.fetchByTeamId(teamUUID, {});
       expect(result).toEqual({ items: [], total: 0 });
     });
 
@@ -287,7 +323,10 @@ describe('Group controller', () => {
         })
         .reply(200, fixtures.queryGroupsResponse);
 
-      const result = await groups.fetchByTeamId(teamUUID, fetchOptions);
+      const result = await groupController.fetchByTeamId(
+        teamUUID,
+        fetchOptions,
+      );
       expect(result).toEqual(fixtures.listGroupsResponse);
     });
   });
@@ -333,7 +372,7 @@ describe('Group controller', () => {
           },
         });
 
-      const result = await groups.fetchByUserId(
+      const result = await groupController.fetchByUserId(
         userUUID,
         ['team-id-1', 'team-id-3'],
         {},
@@ -368,7 +407,7 @@ describe('Group controller', () => {
         })
         .reply(200, fixtures.queryGroupsResponse);
 
-      const result = await groups.fetchByUserId(
+      const result = await groupController.fetchByUserId(
         userUUID,
         ['team-id-1', 'team-id-3'],
         {},

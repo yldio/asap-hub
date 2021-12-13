@@ -28,7 +28,8 @@ describe('Discover controller', () => {
       test('Should fetch the discover from squidex graphql', async () => {
         const result = await discoverMockGraphql.fetch();
 
-        expect(result).toMatchObject(squidexGraphqlDiscoverResponse);
+        const expected = squidexGraphqlDiscoverResponse();
+        expect(result).toMatchObject(expected);
       });
     });
     describe('with intercepted http layer', () => {

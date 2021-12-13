@@ -24,7 +24,7 @@ export const dashboardResponse: DashboardResponse = {
   ],
   pages: [],
 };
-export const squidexGraphqlDashboardFlatData = {
+const squidexGraphqlDashboardFlatData = () => ({
   news: [
     {
       id: 'guid-news-1',
@@ -64,16 +64,16 @@ export const squidexGraphqlDashboardFlatData = {
     },
   ],
   pages: [],
-};
+});
 
 export const getSquidexGraphqlDashboard = () => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   created: '2020-09-23T16:34:26.842Z',
   lastModified: '2021-05-14T14:48:46Z',
   version: 42,
-  flatData: squidexGraphqlDashboardFlatData,
+  flatData: squidexGraphqlDashboardFlatData(),
 });
-export const squidexGraphqlDashboardResponse = {
+export const squidexGraphqlDashboardResponse = () => ({
   news: [
     {
       created: '2020-09-24T11:06:27.164Z',
@@ -95,4 +95,4 @@ export const squidexGraphqlDashboardResponse = {
     },
   ],
   pages: [],
-};
+});

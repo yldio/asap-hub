@@ -1,11 +1,11 @@
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
+import { SquidexGraphql } from '@asap-hub/squidex';
 import { http } from '../../utils/instrumented-framework';
 
 import Users from '../../controllers/users';
 import { Handler } from '../../utils/types';
 import validateRequest from '../../utils/validate-auth0-request';
-import { SquidexGraphql } from '@asap-hub/squidex';
 
 export const handler: Handler = http(
   async (request: lambda.Request): Promise<lambda.Response> => {

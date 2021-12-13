@@ -161,7 +161,7 @@ export const discoverResponse: DiscoverResponse = {
   aboutUs: '<p>content<p>',
 };
 
-export const squidexGraphqlDiscoverFlatData = {
+const squidexGraphqlDiscoverFlatData = () => ({
   training: [
     {
       id: 'uuid-training-1',
@@ -236,17 +236,17 @@ export const squidexGraphqlDiscoverFlatData = {
     },
   ],
   aboutUs: '<p>content<p>',
-};
+});
 
 export const getSquidexGraphqlDiscover = () => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   created: '2020-09-23T16:34:26.842Z',
   lastModified: '2021-05-14T14:48:46Z',
   version: 42,
-  flatData: squidexGraphqlDiscoverFlatData,
+  flatData: squidexGraphqlDiscoverFlatData(),
 });
 
-export const squidexGraphqlDiscoverResponse = {
+export const squidexGraphqlDiscoverResponse = () => ({
   aboutUs: '<p>content<p>',
   training: [
     {
@@ -327,4 +327,4 @@ export const squidexGraphqlDiscoverResponse = {
       title: 'Title',
     },
   ],
-};
+});

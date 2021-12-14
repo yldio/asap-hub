@@ -2,7 +2,7 @@ import { appFactory } from '../../src/app';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { dashboardControllerMock } from '../mocks/dashboard-controller.mock';
 import supertest from 'supertest';
-import { dashboardResponse } from '../fixtures/dashboard.fixtures';
+import { squidexGraphqlDashboardResponse } from '../fixtures/dashboard.fixtures';
 
 describe('/dashboard/ route', () => {
   const app = appFactory({
@@ -27,6 +27,7 @@ describe('/dashboard/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
+      const dashboardResponse = squidexGraphqlDashboardResponse();
       dashboardControllerMock.fetch.mockResolvedValueOnce(dashboardResponse);
 
       const response = await supertest(app).get('/dashboard');

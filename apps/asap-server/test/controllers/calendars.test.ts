@@ -11,7 +11,6 @@ import {
   getCalendarsGraphqlResponse,
   getCalendarsRestResponse,
   getRestCalendar,
-  squidexGraphqlCalendarsResponse,
 } from '../fixtures/calendars.fixtures';
 import { FETCH_CALENDAR } from '../../src/queries/calendars.queries';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
@@ -164,7 +163,7 @@ describe('Calendars controller', () => {
       test('Should fetch the users from squidex graphql', async () => {
         const result = await calendarsMockGraphql.fetchById('calendar-id-1');
 
-        const expected = squidexGraphqlCalendarsResponse();
+        const expected = getCalendarResponse();
         expect(result).toMatchObject(expected);
       });
     });

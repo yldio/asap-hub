@@ -5,7 +5,6 @@ import { DiscoverResponse } from '@asap-hub/model';
 import nock from 'nock';
 import {
   squidexDiscoverResponse,
-  discoverResponse,
   squidexGraphqlDiscoverResponse,
 } from '../fixtures/discover.fixtures';
 import { FETCH_DISCOVER } from '../../src/queries/discover.queries';
@@ -95,7 +94,8 @@ describe('Discover controller', () => {
 
         const result = await discover.fetch();
 
-        expect(result).toEqual(discoverResponse);
+        const discoverResponse = squidexGraphqlDiscoverResponse();
+        expect(result).toMatchObject(discoverResponse);
       });
     });
   });

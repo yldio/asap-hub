@@ -3,7 +3,7 @@ import Dashboard from '../../src/controllers/dashboard';
 import { config, SquidexGraphql } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import {
-  dashboardResponse,
+  squidexGraphqlDashboardFlatData,
   squidexGraphqlDashboardResponse,
 } from '../fixtures/dashboard.fixtures';
 import { FETCH_DASHBOARD } from '../../src/queries/dashboard.queries';
@@ -105,33 +105,7 @@ describe('Dashboard controller', () => {
             data: {
               queryDashboardContents: [
                 {
-                  flatData: {
-                    news: [
-                      {
-                        id: 'news-1',
-                        flatData: {
-                          title: 'News 1',
-                          type: 'News',
-                          shortText: 'Short text of news 1',
-                          text: '<p>text</p>',
-                          thumbnail: [{ id: 'thumbnail-uuid1' }],
-                        },
-                        created: '2020-09-08T16:35:28Z',
-                      },
-                      {
-                        id: 'news-2',
-                        flatData: {
-                          title: 'Event 2',
-                          type: 'Event',
-                          shortText: 'Short text of event 2',
-                          text: '<p>text</p>',
-                          thumbnail: [{ id: 'thumbnail-uuid2' }],
-                        },
-                        created: '2020-09-16T14:31:19Z',
-                      },
-                    ],
-                    pages: null,
-                  },
+                  flatData: squidexGraphqlDashboardFlatData(),
                 },
               ],
             },
@@ -139,7 +113,7 @@ describe('Dashboard controller', () => {
 
         const result = await dashboard.fetch();
 
-        expect(result).toEqual(dashboardResponse);
+        expect(result).toEqual(squidexGraphqlDashboardResponse());
       });
     });
   });

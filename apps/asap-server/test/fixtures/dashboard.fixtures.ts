@@ -1,30 +1,7 @@
 import { DashboardResponse } from '@asap-hub/model';
 import { config } from '@asap-hub/squidex';
 
-export const dashboardResponse: DashboardResponse = {
-  news: [
-    {
-      id: 'news-1',
-      title: 'News 1',
-      type: 'News',
-      shortText: 'Short text of news 1',
-      text: '<p>text</p>',
-      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/thumbnail-uuid1`,
-      created: '2020-09-08T16:35:28.000Z',
-    },
-    {
-      id: 'news-2',
-      title: 'Event 2',
-      type: 'Event',
-      shortText: 'Short text of event 2',
-      text: '<p>text</p>',
-      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/thumbnail-uuid2`,
-      created: '2020-09-16T14:31:19.000Z',
-    },
-  ],
-  pages: [],
-};
-const squidexGraphqlDashboardFlatData = () => ({
+export const squidexGraphqlDashboardFlatData = () => ({
   news: [
     {
       id: 'guid-news-1',
@@ -38,8 +15,8 @@ const squidexGraphqlDashboardFlatData = () => ({
         text: '<p>text</p>',
         thumbnail: [
           {
-            id: 'news-url-1',
-            thumbnailUrl: `${config.baseUrl}/api/assets/${config.appName}/thumbnail-uuid4`,
+            id: 'thumbnail-uuid1',
+            thumbnailUrl: `${config.baseUrl}/api/assets/${config.appName}/thumbnail-uuid1`,
           },
         ],
       },
@@ -56,7 +33,7 @@ const squidexGraphqlDashboardFlatData = () => ({
         text: '<p>text</p>',
         thumbnail: [
           {
-            id: 'news-url-2',
+            id: 'thumbnail-uuid2',
             thumbnailUrl: `${config.baseUrl}/api/assets/${config.appName}/thumbnail-uuid2`,
           },
         ],
@@ -73,16 +50,14 @@ export const getSquidexGraphqlDashboard = () => ({
   version: 42,
   flatData: squidexGraphqlDashboardFlatData(),
 });
-export const squidexGraphqlDashboardResponse = () => ({
+export const squidexGraphqlDashboardResponse = (): DashboardResponse => ({
   news: [
     {
       created: '2020-09-24T11:06:27.164Z',
       id: 'guid-news-1',
       shortText: 'Short text of news 1',
       text: '<p>text</p>',
-      thumbnail: expect.stringMatching(
-        /https:\/\/cloud.squidex.io\/api\/assets\/(.+)\/news-url-1/,
-      ),
+      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/thumbnail-uuid1`,
       title: 'News 1',
       type: 'News',
     },
@@ -91,9 +66,7 @@ export const squidexGraphqlDashboardResponse = () => ({
       id: 'guid-news-2',
       shortText: 'Short text of event 2',
       text: '<p>text</p>',
-      thumbnail: expect.stringMatching(
-        /https:\/\/cloud.squidex.io\/api\/assets\/(.+)\/news-url-2/,
-      ),
+      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/thumbnail-uuid2`,
       title: 'Event 2',
       type: 'Event',
     },

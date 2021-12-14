@@ -281,7 +281,9 @@ export const squidexGraphqlDiscoverResponse = () => ({
       lastModifiedDate: '2020-10-15T17:55:21Z',
       teams: [],
       social: {},
-      avatarUrl: 'https://cloud.squidex.io/api/assets/1153/uuid-1',
+      avatarUrl: expect.stringMatching(
+        /https:\/\/cloud.squidex.io\/api\/assets\/(.+)\/uuid-1/,
+      ),
       role: 'Guest',
       responsibilities: undefined,
       reachOut: undefined,

@@ -21,9 +21,6 @@ include:
   variables: &tmpl_deploy_variables
     NODE_ENV: production
     NODE_OPTIONS: '--max_old_space_size=4096'
-  dependencies:
-    - build:ts
-    - build:native
 
 variables:
   ASAP_HOSTNAME: hub.asap.science
@@ -49,6 +46,51 @@ stages:
 ###############
 # stage build #
 ###############
+.build:ts:
+  image: $INTEGRATION_DOCKER_IMAGE
+  artifacts:
+    expire_in: 2 weeks
+    paths:
+      - 'packages/*/build*'
+      - 'apps/*/build*'
+  before_script:
+    - source ci/env-setup.sh
+    - export REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)
+    - export REACT_APP_ALGOLIA_INDEX=$ALGOLIA_INDEX
+    - export REACT_APP_API_BASE_URL=$ASAP_API_URL
+    - export REACT_APP_ENVIRONMENT="development"
+    - export REACT_APP_RELEASE=${CI_PIPELINE_ID}-dev
+    - export REACT_APP_SENTRY_DSN=$REACT_APP_SENTRY_DSN
+  script:
+    - yarn run build
+  needs: []
+  stage: build
+
+build:ts:branch:
+  extends: .build:ts
+  variables:
+    REACT_APP_SENTRY_DSN: ''
+  rules:
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
+
+build:ts:dev:
+  extends: .build:ts
+  variables:
+    REACT_APP_SENTRY_DSN: ${REACT_APP_SENTRY_DSN_DEV}
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+
+build:ts:prod:
+  extends: .build:ts
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+  before_script:
+    - export AUTH_FRONTEND_BASE_URL=$ASAP_APP_URL/.auth/
+    - export REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-prod" --query Parameter.Value --output text)
+    - export REACT_APP_ALGOLIA_INDEX="asap-hub_research_outputs_prod"
+    - export REACT_APP_API_BASE_URL=$ASAP_API_URL
+    - export REACT_APP_ENVIRONMENT="production"
+    - export REACT_APP_RELEASE=${CI_PIPELINE_ID}-production
 
 prepare:squidex:branch:
   <<: *tmpl_branch
@@ -87,34 +129,7 @@ prepare:squidex:branch:
     - touch first_run/squidex_app_create
   needs: []
 
-build:ts:
-  image: $INTEGRATION_DOCKER_IMAGE
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
-      variables:
-        REACT_APP_SENTRY_DSN: ${REACT_APP_SENTRY_DSN_DEV}
-    - if: $CI_COMMIT_BRANCH != 'master'
-      variables:
-        REACT_APP_SENTRY_DSN: ''
-  artifacts:
-    expire_in: 2 weeks
-    paths:
-      - 'packages/*/build*'
-      - 'apps/*/build*'
-  script:
-    - source ci/env-setup.sh
-    - export REACT_APP_API_BASE_URL=$ASAP_API_URL
-    - export REACT_APP_ALGOLIA_INDEX=$ALGOLIA_INDEX
-    - export REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)
-    - export REACT_APP_RELEASE=${CI_PIPELINE_ID}-dev
-    - export REACT_APP_SENTRY_DSN=$REACT_APP_SENTRY_DSN
-    - export REACT_APP_ENVIRONMENT="development"
-    - yarn run build
-  needs: []
-  stage: build
-
-build:sls:package:
-  <<: *tmpl_branch
+.build:sls:package:
   image: $INTEGRATION_DOCKER_IMAGE
   stage: build
   variables:
@@ -133,6 +148,21 @@ build:sls:package:
     - yarn build:typecheck # Duplicated for performance
     - yarn build:babel # Duplicated for performance
     - yarn sls package
+
+build:sls:package:branch:
+  extends: .build:sls:package
+  rules:
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
+
+build:sls:package:dev:
+  extends: .build:sls:package
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+
+build:sls:package:prod:
+  extends: .build:sls:package
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
 
 build:native:
   artifacts:
@@ -172,11 +202,13 @@ test:browser:
   stage: test
 
 test:build-output:
+  rules:
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
   script:
     - yarn run test:build-output
-  needs:
-    - build:ts
   stage: test
+  needs:
+    - build:ts:branch
 
 ##############
 # stage check #
@@ -209,9 +241,9 @@ check:bundlewatch:
     - yarn bundlewatch
   stage: check
   needs:
-    - build:ts
+    - build:ts:branch
   dependencies:
-    - build:ts
+    - build:ts:branch
 
 ####################
 # stage deploy-dev #
@@ -231,9 +263,9 @@ deploy:sls:branch:
     - source ci/env-setup.sh
     - yarn sls deploy --package .serverless --verbose
   dependencies:
-    - build:sls:package
     - build:native
-    - build:ts
+    - build:sls:package
+    - build:ts:branch
 
 deploy:sls:development:
   <<: *tmpl_master
@@ -247,7 +279,7 @@ deploy:sls:development:
     SLS_STAGE: 'dev'
   stage: deploy-dev
   needs:
-    - build:ts
+    - build:ts:dev
     - build:native
 
 ####################
@@ -259,11 +291,6 @@ verify:branch:
   stage: verify-dev
   variables:
     API_URL: https://api-$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
-  needs:
-    - build:ts
-    - build:native
-    - prepare:squidex:branch
-    - deploy:sls:branch
   script:
     - ASAP_API_URL=$API_URL yarn test:e2e
 
@@ -273,11 +300,6 @@ e2e:branch:
   image: mcr.microsoft.com/playwright:focal
   variables:
     APP_URL: https://$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
-  needs:
-    - build:ts
-    - build:native
-    - prepare:squidex:branch
-    - deploy:sls:branch
   script:
     - yarn workspace @asap-hub/e2e-tests run playwright install
     - ASAP_APP_URL=$APP_URL yarn workspace @asap-hub/e2e-tests run playwright test
@@ -303,10 +325,6 @@ verify:schema:branch:
 report:frontend:release:dev:
   <<: *tmpl_master
   stage: verify-dev
-  needs:
-    - build:ts
-    - build:native
-    - deploy:sls:development
   script:
     - yarn install --immutable --immutable-cache
     - export FRONTEND_SENTRY_RELEASE_AUTH_TOKEN=$FRONTEND_SENTRY_RELEASE_AUTH_TOKEN
@@ -319,10 +337,6 @@ verify:development:
   environment:
     name: dev
     url: $ASAP_APP_URL
-  needs:
-    - build:ts
-    - build:native
-    - deploy:sls:development
   script:
     - yarn test:e2e
 
@@ -334,18 +348,6 @@ deploy:sls:production:
   <<: *tmpl_master
   <<: *tmpl_deploy
   image: $INTEGRATION_DOCKER_IMAGE
-  artifacts:
-    paths:
-      - 'apps/*/build*'
-      - 'packages/*/build*'
-  before_script:
-    - export AUTH_FRONTEND_BASE_URL=$ASAP_APP_URL/.auth/
-    - export REACT_APP_API_BASE_URL=$ASAP_API_URL
-    - export REACT_APP_RELEASE=${CI_PIPELINE_ID}-production
-    - export REACT_APP_ENVIRONMENT="production"
-    - export REACT_APP_ALGOLIA_INDEX="asap-hub_research_outputs_prod"
-    - export REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-prod" --query Parameter.Value --output text)
-    - yarn run build # create production build
   environment:
     name: production
     url: $ASAP_APP_URL
@@ -353,14 +355,9 @@ deploy:sls:production:
     <<: *tmpl_master_variables
     <<: *tmpl_deploy_variables
   stage: deploy-prod
-  needs:
-    - build:ts
+  dependencies:
+    - build:ts:prod
     - build:native
-    - test:unit
-    - test:browser
-    - test:build-output
-    - sync:squidex:production
-    - verify:development
 
 #####################
 # stage verify-prod #
@@ -369,8 +366,6 @@ deploy:sls:production:
 report:frontend:release:production:
   <<: *tmpl_master
   stage: verify-prod
-  needs:
-    - deploy:sls:production
   script:
     - yarn install --immutable --immutable-cache
     - export FRONTEND_SENTRY_RELEASE_AUTH_TOKEN=$FRONTEND_SENTRY_RELEASE_AUTH_TOKEN
@@ -383,9 +378,5 @@ verify:production:
   environment:
     name: production
     url: $ASAP_APP_URL
-  needs:
-    - build:ts
-    - build:native
-    - deploy:sls:production
   script:
     - yarn test:e2e

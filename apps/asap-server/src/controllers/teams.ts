@@ -1,10 +1,5 @@
 import Boom from '@hapi/boom';
-import {
-  RestTeam,
-  RestUser,
-  GraphqlTeam,
-  SquidexGraphqlClient,
-} from '@asap-hub/squidex';
+import { RestTeam, GraphqlTeam, SquidexGraphqlClient } from '@asap-hub/squidex';
 import { ListTeamResponse, TeamResponse, TeamTool } from '@asap-hub/model';
 
 import { InstrumentedSquidex } from '../utils/instrumented-client';
@@ -54,12 +49,10 @@ export type FetchTeamsOptions = {
 
 export default class Teams implements TeamController {
   teamRestClient: InstrumentedSquidex<RestTeam>;
-  userRestClient: InstrumentedSquidex<RestUser>;
   graphqlClient: SquidexGraphqlClient;
 
   constructor(squidexGraphlClient: SquidexGraphqlClient) {
     this.graphqlClient = squidexGraphlClient;
-    this.userRestClient = new InstrumentedSquidex('users');
     this.teamRestClient = new InstrumentedSquidex('teams');
   }
 

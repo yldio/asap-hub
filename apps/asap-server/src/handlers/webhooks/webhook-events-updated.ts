@@ -1,5 +1,5 @@
 import Boom from '@hapi/boom';
-import { RestCalendar } from '@asap-hub/squidex';
+import { RestCalendar, SquidexGraphql } from '@asap-hub/squidex';
 import { framework as lambda } from '@asap-hub/services-common';
 
 import { Handler } from '../../utils/types';
@@ -72,8 +72,9 @@ const syncCalendar = syncCalendarFactory(
   syncEventFactory(new Events()),
   getJWTCredentials,
 );
+const squidexGraphqlClient = new SquidexGraphql();
 
 export const handler: Handler = webhookEventUpdatedHandlerFactory(
-  new Calendars(),
+  new Calendars(squidexGraphqlClient),
   syncCalendar,
 );

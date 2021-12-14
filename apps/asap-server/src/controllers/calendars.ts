@@ -1,31 +1,33 @@
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
-import { RestCalendar, Calendar, Query } from '@asap-hub/squidex';
+import type {
+  RestCalendar,
+  Calendar,
+  Query,
+  SquidexGraphqlClient,
+} from '@asap-hub/squidex';
 import {
   ListCalendarResponse,
   CalendarResponse,
   isGoogleLegacyCalendarColor,
 } from '@asap-hub/model';
 
-import {
-  InstrumentedSquidex,
-  InstrumentedSquidexGraphql,
-} from '../utils/instrumented-client';
+import { InstrumentedSquidex } from '../utils/instrumented-client';
 import { parseCalendar } from '../entities';
 import logger from '../utils/logger';
 import { FETCH_CALENDAR } from '../queries/calendars.queries';
-import {
+import type {
   FetchCalendarQuery,
   FetchCalendarQueryVariables,
 } from '../gql/graphql';
 
 export default class Calendars implements CalendarController {
   calendars: InstrumentedSquidex<RestCalendar>;
-  graphqlClient: InstrumentedSquidexGraphql;
+  client: SquidexGraphqlClient;
 
-  constructor() {
+  constructor(squidexGraphlClient: SquidexGraphqlClient) {
     this.calendars = new InstrumentedSquidex('calendars');
-    this.graphqlClient = new InstrumentedSquidexGraphql();
+    this.client = squidexGraphlClient;
   }
 
   async fetch(options: {
@@ -112,7 +114,7 @@ export default class Calendars implements CalendarController {
     calendarId: string,
     options?: { raw: boolean },
   ): Promise<CalendarRaw | CalendarResponse> {
-    const calendarResponse = await this.graphqlClient.request<
+    const calendarResponse = await this.client.request<
       FetchCalendarQuery,
       FetchCalendarQueryVariables
     >(FETCH_CALENDAR, { id: calendarId });

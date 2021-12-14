@@ -82,8 +82,8 @@ export default class Users implements UserController {
   users: InstrumentedSquidex<RestUser>;
   client: SquidexGraphqlClient;
 
-  constructor(squidexGraphlClient: SquidexGraphqlClient) {
-    this.client = squidexGraphlClient;
+  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
+    this.client = squidexGraphqlClient;
     this.users = new InstrumentedSquidex('users');
   }
 

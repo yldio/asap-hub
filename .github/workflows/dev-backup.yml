@@ -1,7 +1,7 @@
 name: DEV - Create database backups
 on:
   schedule:
-    - cron: '0 7 * * FRI' # Every Friday at 7am UTC
+    - cron: '0 7 * * MON-FRI' # At 07:00 UTC on every day-of-week from Monday through Friday.
   workflow_dispatch:
 jobs:
   make_squidex_backup:

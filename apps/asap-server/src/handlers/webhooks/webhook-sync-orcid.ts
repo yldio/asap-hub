@@ -1,6 +1,6 @@
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
-import { WebhookPayload, User } from '@asap-hub/squidex';
+import { WebhookPayload, User, SquidexGraphql } from '@asap-hub/squidex';
 import { http } from '../../utils/instrumented-framework';
 
 import { Handler } from '../../utils/types';
@@ -30,7 +30,8 @@ export const handler: Handler = http(
       bodySchema,
     ) as WebhookPayload<User>;
 
-    const users = new Users(request.headers);
+    const squidexGraphqlClient = new SquidexGraphql();
+    const users = new Users(squidexGraphqlClient);
     const { id } = payload;
     const newOrcid = payload.data.orcid?.iv;
 

@@ -1,12 +1,10 @@
 import { ListTeamResponse, TeamResponse, TeamTool } from '@asap-hub/model';
 import { config, RestTeam, Team, WebhookPayload } from '@asap-hub/squidex';
 import { RestUser } from '@asap-hub/squidex';
-import {
-  ResponseFetchTeams,
-  ResponseFetchTeam,
-} from '../../src/controllers/teams';
+import { ResponseFetchTeam } from '../../src/controllers/teams';
 import {
   FetchTeamQuery,
+  FetchTeamsQuery,
   Labs,
   UsersDataQuestionsChildDto,
   UsersDataTeamsChildDto,
@@ -75,360 +73,36 @@ export const referencingUsersContentsResponse = ({
   },
 ];
 
-export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
-  data: {
-    queryTeamsContentsWithTotal: {
-      total: 3,
-      items: [
-        {
-          __typename: 'Teams',
-          id: 'team-id-1',
-          created: '2020-09-23T20:33:36Z',
-          lastModified: '2020-11-26T11:56:04Z',
-          version: 42,
-          flatData: {
-            applicationNumber: 'ASAP-000420',
-            displayName: 'Schipa, A',
-            projectSummary: null,
-            projectTitle:
-              'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
-            expertiseAndResourceTags: ['Animal resources'],
-            proposal: [
-              {
-                id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
-              },
-            ],
-            tools: [
-              {
-                url: 'testUrl',
-                name: 'slack',
-                description: 'this is a test',
-              },
-            ],
-          },
-          referencingUsersContents: [
-            {
-              id: 'user-id-1',
-              created: '2020-09-25T09:42:51.132Z',
-              lastModified: '2020-09-25T09:42:51.132Z',
-              version: 42,
-              flatData: {
-                avatar: [
-                  {
-                    id: 'uuid-user-id-1',
-                  },
-                ],
-                email: 'cristiano@ronaldo.com',
-                firstName: 'Cristiano',
-                lastName: 'Ronaldo',
-                jobTitle: 'Junior',
-                institution: 'Dollar General Corporation',
-                connections: [],
-                biography: '',
-                teams: [
-                  {
-                    id: [
-                      {
-                        __typename: 'Teams',
-                        id: 'team-id-1',
-                        created: '2020-09-23T20:33:36Z',
-                        lastModified: '2020-11-26T11:56:04Z',
-                        version: 42,
-                        flatData: {
-                          displayName: 'Schipa, A',
-                        },
-                      },
-                    ],
-                    role: 'Lead PI (Core Leadership)',
-                  },
-                ],
-                questions: [],
-                expertiseAndResourceTags: [],
-                role: 'Grantee',
-                onboarded: true,
-                labs: [
-                  { id: 'cd7be4902', flatData: { name: 'Barcelona' } },
-                  { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
-                ],
-              },
-            },
-          ],
-        },
-        {
-          __typename: 'Teams',
-          id: 'team-id-2',
-          created: '2020-09-23T20:29:45Z',
-          lastModified: '2020-10-26T20:54:00Z',
-          version: 42,
-          flatData: {
-            applicationNumber: 'ASAP-000463',
-            displayName: 'John T.',
-            projectSummary: null,
-            projectTitle:
-              'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
-            expertiseAndResourceTags: [],
-            proposal: null,
-            tools: null,
-          },
-          referencingUsersContents: [
-            {
-              id: 'user-id-2',
-              created: '2020-09-25T09:42:51.132Z',
-              lastModified: '2020-09-25T09:42:51.132Z',
-              version: 42,
-              flatData: {
-                avatar: [
-                  {
-                    id: 'uuid-user-id-2',
-                  },
-                ],
-                email: 'john@ed.ma',
-                firstName: 'John',
-                lastName: 'Travista',
-                jobTitle: 'Junior',
-                institution: 'Dollar General Corporation',
-                connections: [],
-                biography: '',
-                teams: [
-                  {
-                    id: [
-                      {
-                        __typename: 'Teams',
-                        id: 'team-id-2',
-                        created: '2020-09-23T20:33:36Z',
-                        lastModified: '2020-11-26T11:56:04Z',
-                        version: 42,
-                        flatData: {
-                          displayName: 'Schipa, A',
-                        },
-                      },
-                    ],
-                    role: 'Lead PI (Core Leadership)',
-                  },
-                ],
-                questions: [],
-                expertiseAndResourceTags: [],
-                role: 'Grantee',
-                onboarded: true,
-                labs: [],
-              },
-            },
-            {
-              id: 'user-id-3',
-              created: '2020-09-25T09:42:51.132Z',
-              lastModified: '2020-09-25T09:42:51.132Z',
-              version: 42,
-              flatData: {
-                avatar: [
-                  {
-                    id: 'uuid-user-id-3',
-                  },
-                ],
-                email: 'bill@ed.ma',
-                firstName: 'Bill',
-                lastName: 'Travista',
-                jobTitle: 'Junior',
-                institution: 'Dollar General Corporation',
-                connections: [],
-                biography: '',
-                teams: [
-                  {
-                    id: [
-                      {
-                        __typename: 'Teams',
-                        id: 'team-id-2',
-                        created: '2020-09-23T20:33:36Z',
-                        lastModified: '2020-11-26T11:56:04Z',
-                        version: 42,
-                        flatData: {
-                          displayName: 'Schipa, A',
-                        },
-                      },
-                    ],
-                    role: 'Key Personnel',
-                  },
-                ],
-                questions: [],
-                expertiseAndResourceTags: [],
-                role: 'Grantee',
-                onboarded: true,
-                labs: [],
-              },
-            },
-          ],
-        },
-        {
-          __typename: 'Teams',
-          id: 'team-id-3',
-          created: '2020-09-23T20:29:52Z',
-          lastModified: '2020-09-23T20:29:52Z',
-          version: 42,
-          flatData: {
-            applicationNumber: 'ASAP-000312',
-            displayName: 'Zac T.',
-            projectSummary: 'Its good',
-            projectTitle: 'This is good',
-            expertiseAndResourceTags: [],
-            proposal: null,
-            tools: null,
-          },
-          referencingUsersContents: [
-            {
-              id: 'user-id-4',
-              created: '2020-09-25T09:42:51.132Z',
-              lastModified: '2020-09-25T09:42:51.132Z',
-              version: 42,
-              flatData: {
-                avatar: [
-                  {
-                    id: 'uuid-user-id-4',
-                  },
-                ],
-                email: 'seb@.da',
-                firstName: 'Seb',
-                lastName: 'Oliver',
-                jobTitle: 'Junior',
-                institution: 'Dollar General Corporation',
-                connections: [],
-                biography: '',
-                teams: [
-                  {
-                    id: [
-                      {
-                        __typename: 'Teams',
-                        id: 'team-id-3',
-                        created: '2020-09-23T20:33:36Z',
-                        lastModified: '2020-11-26T11:56:04Z',
-                        version: 42,
-                        flatData: {
-                          displayName: 'Schipa, A',
-                        },
-                      },
-                    ],
-                    role: 'Lead PI (Core Leadership)',
-                  },
-                ],
-                questions: [],
-                expertiseAndResourceTags: [],
-                role: 'Grantee',
-                onboarded: true,
-                labs: [
-                  { id: 'cd7be4904', flatData: { name: 'Manchester' } },
-                  { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
-                ],
-              },
-            },
-          ],
-        },
-      ],
-    },
-  },
+export const getListTeamResponse = (): ListTeamResponse => ({
+  total: 1,
+  items: [getTeamResponse()],
 });
 
-export const graphQlTeamsResponseSingle: { data: ResponseFetchTeams } = {
-  data: {
-    queryTeamsContentsWithTotal: {
-      total: 1,
-      items: [
-        getGraphQlTeamsResponse().data.queryTeamsContentsWithTotal.items[0]!,
-      ],
-    },
-  },
-};
-
-export const getListTeamResponse = (): ListTeamResponse => ({
-  total: 3,
-  items: [
+export const getTeamResponse = (): TeamResponse => ({
+  id: 'team-id-1',
+  displayName: 'Team A',
+  lastModifiedDate: '2020-11-26T11:56:04.000Z',
+  labCount: 2,
+  expertiseAndResourceTags: ['Animal resources'],
+  members: [
     {
-      id: 'team-id-1',
-      displayName: 'Schipa, A',
-      lastModifiedDate: '2020-11-26T11:56:04.000Z',
-      labCount: 2,
-      expertiseAndResourceTags: ['Animal resources'],
-      members: [
-        {
-          id: 'user-id-1',
-          displayName: 'Cristiano Ronaldo',
-          firstName: 'Cristiano',
-          lastName: 'Ronaldo',
-          email: 'cristiano@ronaldo.com',
-          role: 'Lead PI (Core Leadership)',
-          avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-user-id-1`,
-          labs: [
-            { id: 'cd7be4902', name: 'Barcelona' },
-            { id: 'cd7be4905', name: 'Glasgow' },
-          ],
-        },
+      id: 'user-id-1',
+      email: 'H@rdy.io',
+      firstName: 'Tom',
+      lastName: 'Hardy',
+      displayName: 'Tom Hardy',
+      role: 'Lead PI (Core Leadership)',
+      avatarUrl: undefined,
+      labs: [
+        { id: 'cd7be4902', name: 'Brighton' },
+        { id: 'cd7be4903', name: 'Liverpool' },
       ],
-      projectTitle:
-        'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
-      proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
-      tools: [
-        {
-          url: 'testUrl',
-          name: 'slack',
-          description: 'this is a test',
-        },
-      ],
-    },
-    {
-      id: 'team-id-2',
-      displayName: 'John T.',
-      labCount: 0,
-      projectTitle:
-        'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
-      expertiseAndResourceTags: [],
-      members: [
-        {
-          id: 'user-id-2',
-          firstName: 'John',
-          lastName: 'Travista',
-          avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-user-id-2`,
-          email: 'john@ed.ma',
-          displayName: 'John Travista',
-          role: 'Lead PI (Core Leadership)',
-          labs: [],
-        },
-        {
-          id: 'user-id-3',
-          firstName: 'Bill',
-          lastName: 'Travista',
-          avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-user-id-3`,
-          email: 'bill@ed.ma',
-          displayName: 'Bill Travista',
-          role: 'Key Personnel',
-          labs: [],
-        },
-      ],
-      lastModifiedDate: '2020-10-26T20:54:00.000Z',
-      tools: [],
-    },
-    {
-      id: 'team-id-3',
-      displayName: 'Zac T.',
-      labCount: 2,
-      expertiseAndResourceTags: [],
-      members: [
-        {
-          avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-user-id-4`,
-          displayName: 'Seb Oliver',
-          email: 'seb@.da',
-          firstName: 'Seb',
-          id: 'user-id-4',
-          lastName: 'Oliver',
-          role: 'Lead PI (Core Leadership)',
-          labs: [
-            { id: 'cd7be4904', name: 'Manchester' },
-            { id: 'cd7be4905', name: 'Glasgow' },
-          ],
-        },
-      ],
-      tools: [],
-      projectTitle: 'This is good',
-      projectSummary: 'Its good',
-      lastModifiedDate: '2020-09-23T20:29:52.000Z',
     },
   ],
+  projectTitle:
+    'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+  proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
+  tools: [],
 });
 
 export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
@@ -555,30 +229,44 @@ export type GraphTeamTool = NonNullable<
   NonNullable<FetchTeamQuery['findTeamsContent']>['flatData']['tools']
 >[number];
 
+export const getGraphqlTeam = (
+  tools: GraphTeamTool[] = [],
+  id: string = 'team-id-1',
+): NonNullable<FetchTeamQuery['findTeamsContent']> => ({
+  id,
+  created: '2020-09-23T20:33:36Z',
+  lastModified: '2020-11-26T11:56:04Z',
+  version: 42,
+  flatData: {
+    applicationNumber: 'ASAP-000420',
+    displayName: 'Team A',
+    projectSummary: null,
+    projectTitle:
+      'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+    expertiseAndResourceTags: ['Animal resources'],
+    proposal: [
+      {
+        id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
+      },
+    ],
+    tools,
+  },
+  referencingUsersContents: [getGraphQLUser(undefined, id)],
+});
+
 export const getGraphQlTeamResponse = (
-  tools: GraphTeamTool[] | null = [],
+  tools: GraphTeamTool[] = [],
 ): { data: FetchTeamQuery } => ({
   data: {
-    findTeamsContent: {
-      id: 'team-id-1',
-      created: '2020-09-23T20:33:36Z',
-      lastModified: '2020-11-26T11:56:04Z',
-      version: 42,
-      flatData: {
-        applicationNumber: 'ASAP-000420',
-        displayName: 'Schipa, A',
-        projectSummary: null,
-        projectTitle:
-          'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
-        expertiseAndResourceTags: ['Animal resources'],
-        proposal: [
-          {
-            id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
-          },
-        ],
-        tools,
-      },
-      referencingUsersContents: [getGraphQLUser()],
+    findTeamsContent: getGraphqlTeam(tools),
+  },
+});
+
+export const getGraphQlTeamsResponse = (): { data: FetchTeamsQuery } => ({
+  data: {
+    queryTeamsContentsWithTotal: {
+      total: 1,
+      items: [getGraphqlTeam()],
     },
   },
 });

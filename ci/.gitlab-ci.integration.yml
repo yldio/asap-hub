@@ -50,10 +50,10 @@ test:integration:
 
 sync:squidex:dev:
   <<: *tmpl_sync
-  stage: prepare-dev
+  stage: deploy-dev
 
 sync:squidex:production:
   <<: *tmpl_sync
-  stage: prepare-prod
+  stage: deploy-prod
   environment:
     name: production

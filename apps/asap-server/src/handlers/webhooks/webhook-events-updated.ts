@@ -68,11 +68,11 @@ export const webhookEventUpdatedHandlerFactory = (
     };
   }, logger);
 
+const squidexGraphqlClient = new SquidexGraphql();
 const syncCalendar = syncCalendarFactory(
-  syncEventFactory(new Events()),
+  syncEventFactory(new Events(squidexGraphqlClient)),
   getJWTCredentials,
 );
-const squidexGraphqlClient = new SquidexGraphql();
 
 export const handler: Handler = webhookEventUpdatedHandlerFactory(
   new Calendars(squidexGraphqlClient),

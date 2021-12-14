@@ -1,6 +1,6 @@
 import nock from 'nock';
 import { Settings } from 'luxon';
-import { config, Event } from '@asap-hub/squidex';
+import { config, Event, SquidexGraphql } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import Events from '../../src/controllers/events';
 import { ListEventResponse, EventStatus } from '@asap-hub/model';
@@ -11,6 +11,8 @@ import {
   findEventResponse,
   eventResponse,
   getRestEvent,
+  squidexGraphqlEventsResponse,
+  squidexGraphqlEventResponse,
 } from '../fixtures/events.fixtures';
 import { queryGroupsResponse } from '../fixtures/groups.fixtures';
 import { print } from 'graphql';
@@ -20,115 +22,113 @@ import {
   FETCH_GROUP_CALENDAR,
 } from '../../src/queries/events.queries';
 import { FetchEventQuery, FetchEventsQuery } from '../../src/gql/graphql';
+import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 
 describe('Event controller', () => {
-  const events = new Events();
+  const squidexGraphqlClientMock = new SquidexGraphql();
+  const events = new Events(squidexGraphqlClientMock);
+
+  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
+  const eventsMockGraphql = new Events(squidexGraphqlClientMockServer);
 
   beforeAll(() => {
     identity();
   });
 
-  afterEach(() => {
-    expect(nock.isDone()).toBe(true);
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   describe('Fetch method', () => {
-    test('Should return an empty result when the client returns an empty array of data', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_EVENTS),
-          variables: {
-            filter: 'data/hidden/iv ne true and data/endDate/iv lt before',
-            order: '',
-            top: 10,
-            skip: 0,
-          },
-        })
-        .reply(200, {
-          data: {
-            queryEventsContentsWithTotal: {
-              total: 0,
-              items: [],
-            },
-          },
+    describe('with mock-server', () => {
+      test('Should fetch the users from squidex graphql', async () => {
+        const result = await eventsMockGraphql.fetch({
+          after: '1',
         });
 
-      const result = await events.fetch({
-        before: 'before',
-      });
-
-      const expectedResponse: ListEventResponse = {
-        total: 0,
-        items: [],
-      };
-
-      expect(result).toEqual(expectedResponse);
-    });
-
-    test('Should return a list of events', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_EVENTS),
-          variables: {
-            filter: 'data/hidden/iv ne true and data/endDate/iv lt before',
-            order: '',
-            top: 10,
-            skip: 0,
-          },
-        })
-        .reply(200, fetchEventsResponse);
-
-      const result = await events.fetch({
-        before: 'before',
-      });
-
-      expect(result).toEqual(listEventResponse);
-    });
-
-    test('Should return event thumbnail', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_EVENTS),
-          variables: {
-            filter: 'data/hidden/iv ne true and data/endDate/iv lt before',
-            order: '',
-            top: 10,
-            skip: 0,
-          },
-        })
-        .reply(200, fetchEventsResponse);
-
-      const result = await events.fetch({
-        before: 'before',
-      });
-
-      expect(result).toEqual(listEventResponse);
-    });
-
-    test('Should apply the filter to remove hidden events by default', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_EVENTS),
-          variables: {
-            filter: 'data/hidden/iv ne true and data/endDate/iv gt after-date',
-            order: '',
-            top: 10,
-            skip: 0,
-          },
-        })
-        .reply(200, fetchEventsResponse);
-
-      await events.fetch({
-        after: 'after-date',
+        const expected = squidexGraphqlEventsResponse();
+        expect(result).toMatchObject(expected);
       });
     });
 
-    describe('Date filters', () => {
-      test('Should apply the "after" filter to the end-date', async () => {
+    describe('with intercepted http layer', () => {
+      afterEach(() => {
+        expect(nock.isDone()).toBe(true);
+      });
+
+      afterEach(() => {
+        nock.cleanAll();
+      });
+
+      test('Should return an empty result when the client returns an empty array of data', async () => {
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_EVENTS),
+            variables: {
+              filter: 'data/hidden/iv ne true and data/endDate/iv lt before',
+              order: '',
+              top: 10,
+              skip: 0,
+            },
+          })
+          .reply(200, {
+            data: {
+              queryEventsContentsWithTotal: {
+                total: 0,
+                items: [],
+              },
+            },
+          });
+
+        const result = await events.fetch({
+          before: 'before',
+        });
+
+        const expectedResponse: ListEventResponse = {
+          total: 0,
+          items: [],
+        };
+
+        expect(result).toEqual(expectedResponse);
+      });
+
+      test('Should return a list of events', async () => {
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_EVENTS),
+            variables: {
+              filter: 'data/hidden/iv ne true and data/endDate/iv lt before',
+              order: '',
+              top: 10,
+              skip: 0,
+            },
+          })
+          .reply(200, fetchEventsResponse);
+
+        const result = await events.fetch({
+          before: 'before',
+        });
+
+        expect(result).toEqual(listEventResponse);
+      });
+
+      test('Should return event thumbnail', async () => {
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_EVENTS),
+            variables: {
+              filter: 'data/hidden/iv ne true and data/endDate/iv lt before',
+              order: '',
+              top: 10,
+              skip: 0,
+            },
+          })
+          .reply(200, fetchEventsResponse);
+
+        const result = await events.fetch({
+          before: 'before',
+        });
+
+        expect(result).toEqual(listEventResponse);
+      });
+
+      test('Should apply the filter to remove hidden events by default', async () => {
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
             query: print(FETCH_EVENTS),
@@ -147,110 +147,131 @@ describe('Event controller', () => {
         });
       });
 
-      test('Should apply the "before" filter to the end-date', async () => {
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_EVENTS),
-            variables: {
-              filter:
-                'data/hidden/iv ne true and data/endDate/iv lt before-date',
-              order: '',
-              top: 10,
-              skip: 0,
-            },
-          })
-          .reply(200, fetchEventsResponse);
+      describe('Date filters', () => {
+        test('Should apply the "after" filter to the end-date', async () => {
+          nock(config.baseUrl)
+            .post(`/api/content/${config.appName}/graphql`, {
+              query: print(FETCH_EVENTS),
+              variables: {
+                filter:
+                  'data/hidden/iv ne true and data/endDate/iv gt after-date',
+                order: '',
+                top: 10,
+                skip: 0,
+              },
+            })
+            .reply(200, fetchEventsResponse);
 
-        await events.fetch({
-          before: 'before-date',
+          await events.fetch({
+            after: 'after-date',
+          });
         });
-      });
 
-      test('Should apply both the "after" and "before" filters', async () => {
-        const expectedFilter =
-          'data/hidden/iv ne true and data/endDate/iv gt after-date and data/endDate/iv lt before-date';
+        test('Should apply the "before" filter to the end-date', async () => {
+          nock(config.baseUrl)
+            .post(`/api/content/${config.appName}/graphql`, {
+              query: print(FETCH_EVENTS),
+              variables: {
+                filter:
+                  'data/hidden/iv ne true and data/endDate/iv lt before-date',
+                order: '',
+                top: 10,
+                skip: 0,
+              },
+            })
+            .reply(200, fetchEventsResponse);
 
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_EVENTS),
-            variables: {
-              filter: expectedFilter,
-              order: '',
-              top: 10,
-              skip: 0,
-            },
-          })
-          .reply(200, fetchEventsResponse);
-
-        await events.fetch({
-          after: 'after-date',
-          before: 'before-date',
+          await events.fetch({
+            before: 'before-date',
+          });
         });
-      });
 
-      test('Should apply search query params', async () => {
-        const expectedFilter =
-          "(contains(data/title/iv, 'a') or contains(data/tags/iv, 'a')) and data/hidden/iv ne true and data/endDate/iv gt after-date";
+        test('Should apply both the "after" and "before" filters', async () => {
+          const expectedFilter =
+            'data/hidden/iv ne true and data/endDate/iv gt after-date and data/endDate/iv lt before-date';
 
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_EVENTS),
-            variables: {
-              filter: expectedFilter,
-              order: '',
-              top: 10,
-              skip: 0,
-            },
-          })
-          .reply(200, fetchEventsResponse);
+          nock(config.baseUrl)
+            .post(`/api/content/${config.appName}/graphql`, {
+              query: print(FETCH_EVENTS),
+              variables: {
+                filter: expectedFilter,
+                order: '',
+                top: 10,
+                skip: 0,
+              },
+            })
+            .reply(200, fetchEventsResponse);
 
-        await events.fetch({
-          after: 'after-date',
-          search: 'a',
+          await events.fetch({
+            after: 'after-date',
+            before: 'before-date',
+          });
         });
-      });
 
-      test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
-        const expectedFilter =
-          "(contains(data/title/iv, '%27%27') or contains(data/tags/iv, '%27%27')) and data/hidden/iv ne true and data/endDate/iv gt after-date";
+        test('Should apply search query params', async () => {
+          const expectedFilter =
+            "(contains(data/title/iv, 'a') or contains(data/tags/iv, 'a')) and data/hidden/iv ne true and data/endDate/iv gt after-date";
 
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_EVENTS),
-            variables: {
-              filter: expectedFilter,
-              order: '',
-              top: 10,
-              skip: 0,
-            },
-          })
-          .reply(200, fetchEventsResponse);
+          nock(config.baseUrl)
+            .post(`/api/content/${config.appName}/graphql`, {
+              query: print(FETCH_EVENTS),
+              variables: {
+                filter: expectedFilter,
+                order: '',
+                top: 10,
+                skip: 0,
+              },
+            })
+            .reply(200, fetchEventsResponse);
 
-        await events.fetch({
-          after: 'after-date',
-          search: "'",
+          await events.fetch({
+            after: 'after-date',
+            search: 'a',
+          });
         });
-      });
 
-      test('Should sanitise double quotation mark by encoding to hex', async () => {
-        const expectedFilter =
-          "(contains(data/title/iv, '%22') or contains(data/tags/iv, '%22')) and data/hidden/iv ne true and data/endDate/iv gt after-date";
+        test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+          const expectedFilter =
+            "(contains(data/title/iv, '%27%27') or contains(data/tags/iv, '%27%27')) and data/hidden/iv ne true and data/endDate/iv gt after-date";
 
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_EVENTS),
-            variables: {
-              filter: expectedFilter,
-              order: '',
-              top: 10,
-              skip: 0,
-            },
-          })
-          .reply(200, fetchEventsResponse);
+          nock(config.baseUrl)
+            .post(`/api/content/${config.appName}/graphql`, {
+              query: print(FETCH_EVENTS),
+              variables: {
+                filter: expectedFilter,
+                order: '',
+                top: 10,
+                skip: 0,
+              },
+            })
+            .reply(200, fetchEventsResponse);
 
-        await events.fetch({
-          after: 'after-date',
-          search: '"',
+          await events.fetch({
+            after: 'after-date',
+            search: "'",
+          });
+        });
+
+        test('Should sanitise double quotation mark by encoding to hex', async () => {
+          const expectedFilter =
+            "(contains(data/title/iv, '%22') or contains(data/tags/iv, '%22')) and data/hidden/iv ne true and data/endDate/iv gt after-date";
+
+          nock(config.baseUrl)
+            .post(`/api/content/${config.appName}/graphql`, {
+              query: print(FETCH_EVENTS),
+              variables: {
+                filter: expectedFilter,
+                order: '',
+                top: 10,
+                skip: 0,
+              },
+            })
+            .reply(200, fetchEventsResponse);
+
+          await events.fetch({
+            after: 'after-date',
+            search: '"',
+          });
         });
       });
     });
@@ -503,6 +524,14 @@ describe('Event controller', () => {
   });
 
   describe('Past event materials states', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
     const eventId = 'group-id-1';
     const eventBase = JSON.parse(
       JSON.stringify(
@@ -651,133 +680,168 @@ describe('Event controller', () => {
   });
 
   describe('Fetch by id method', () => {
-    test('Should throw a Not Found error when the event is not found', async () => {
-      const eventId = 'not-found';
+    describe('with mock-server', () => {
+      test('Should fetch the users from squidex graphql', async () => {
+        const result = await eventsMockGraphql.fetchById('event-id-1');
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
-        .reply(200, {
-          data: {
-            findEventsContent: null,
-          },
-        });
-
-      await expect(events.fetchById(eventId)).rejects.toThrow('Not Found');
-    });
-
-    test('Should return the event', async () => {
-      const eventId = 'group-id-1';
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_EVENT),
-          variables: {
-            id: eventId,
-          },
-        })
-        .reply(200, findEventResponse);
-
-      const result = await events.fetchById(eventId);
-      expect(result).toEqual(eventResponse);
-    });
-
-    describe('Event link', () => {
-      let fakeDate: jest.MockedFunction<typeof Date.now>;
-      const realDate = Date.now.bind(Date);
-
-      beforeAll(() => {
-        fakeDate = jest.fn<number, []>();
-        Settings.now = fakeDate;
+        const expected = squidexGraphqlEventResponse();
+        expect(result).toMatchObject(expected);
       });
+    });
 
-      afterAll(() => {
-        Settings.now = realDate;
+    describe('with intercepted http layer', () => {
+      afterEach(() => {
+        expect(nock.isDone()).toBe(true);
       });
 
       afterEach(() => {
-        fakeDate.mockClear();
+        nock.cleanAll();
       });
-
-      test('Should reveal the event link when the event starts in less than 24h from now', async () => {
-        const event = graphqlEvent;
-        event.flatData!.meetingLink = 'some-link';
-
-        // mock todays date to year 06/06/2020
-        fakeDate.mockReturnValue(
-          new Date('2020-06-06T13:00:00.000Z').getTime(),
-        );
-        // change event start date to 06/06/2020, one hour from the above
-        event.flatData!.startDate = '2020-06-06T14:00:00Z';
-
-        const fetchEventResponse: { data: FetchEventQuery } = {
-          data: {
-            findEventsContent: event,
-          },
-        };
+      test('Should throw a Not Found error when the event is not found', async () => {
+        const eventId = 'not-found';
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
-          .reply(200, fetchEventResponse);
+          .reply(200, {
+            data: {
+              findEventsContent: null,
+            },
+          });
 
-        const response = await events.fetchById(event.id);
-
-        expect(response.meetingLink).toBe('some-link');
+        await expect(events.fetchById(eventId)).rejects.toThrow('Not Found');
       });
 
-      test('Should reveal the event link when the event start date is in the past', async () => {
-        const event = graphqlEvent;
-        event.flatData!.meetingLink = 'some-link';
-
-        // mock todays date to year 2021
-        fakeDate.mockReturnValueOnce(
-          new Date('2021-06-06T13:00:00.000Z').getTime(),
-        );
-        // change event start date to 2020
-        event.flatData!.startDate = '2020-06-06T14:00:00Z';
-
-        const fetchEventResponse: { data: FetchEventQuery } = {
-          data: {
-            findEventsContent: event,
-          },
-        };
+      test('Should return the event', async () => {
+        const eventId = 'group-id-1';
 
         nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
-          .reply(200, fetchEventResponse);
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_EVENT),
+            variables: {
+              id: eventId,
+            },
+          })
+          .reply(200, findEventResponse);
 
-        const response = await events.fetchById(event.id);
-
-        expect(response.meetingLink).toBe('some-link');
+        const result = await events.fetchById(eventId);
+        expect(result).toEqual(eventResponse);
       });
 
-      test('Should remove the event link when the event starts in more than 24h from now', async () => {
-        const event = graphqlEvent;
-        event.flatData!.meetingLink = 'some-link';
+      describe('Event link', () => {
+        let fakeDate: jest.MockedFunction<typeof Date.now>;
+        const realDate = Date.now.bind(Date);
 
-        // mock todays date to year 2020
-        fakeDate.mockReturnValueOnce(
-          new Date('2020-06-06T13:00:00.000Z').getTime(),
-        );
-        // change event start date to year 2021
-        event.flatData!.startDate = '2021-06-06T13:00:00Z';
+        beforeAll(() => {
+          fakeDate = jest.fn<number, []>();
+          Settings.now = fakeDate;
+        });
 
-        const fetchEventResponse: { data: FetchEventQuery } = {
-          data: {
-            findEventsContent: event,
-          },
-        };
+        afterAll(() => {
+          Settings.now = realDate;
+        });
 
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
-          .reply(200, fetchEventResponse);
+        afterEach(() => {
+          fakeDate.mockClear();
+        });
 
-        const response = await events.fetchById(event.id);
-        expect(response.meetingLink).toBeUndefined();
+        test('Should reveal the event link when the event starts in less than 24h from now', async () => {
+          const event = graphqlEvent;
+          event.flatData!.meetingLink = 'some-link';
+
+          // mock todays date to year 06/06/2020
+          fakeDate.mockReturnValue(
+            new Date('2020-06-06T13:00:00.000Z').getTime(),
+          );
+          // change event start date to 06/06/2020, one hour from the above
+          event.flatData!.startDate = '2020-06-06T14:00:00Z';
+
+          const fetchEventResponse: { data: FetchEventQuery } = {
+            data: {
+              findEventsContent: event,
+            },
+          };
+
+          nock(config.baseUrl)
+            .post(
+              `/api/content/${config.appName}/graphql`,
+              (body) => body.query,
+            )
+            .reply(200, fetchEventResponse);
+
+          const response = await events.fetchById(event.id);
+
+          expect(response.meetingLink).toBe('some-link');
+        });
+
+        test('Should reveal the event link when the event start date is in the past', async () => {
+          const event = graphqlEvent;
+          event.flatData!.meetingLink = 'some-link';
+
+          // mock todays date to year 2021
+          fakeDate.mockReturnValueOnce(
+            new Date('2021-06-06T13:00:00.000Z').getTime(),
+          );
+          // change event start date to 2020
+          event.flatData!.startDate = '2020-06-06T14:00:00Z';
+
+          const fetchEventResponse: { data: FetchEventQuery } = {
+            data: {
+              findEventsContent: event,
+            },
+          };
+
+          nock(config.baseUrl)
+            .post(
+              `/api/content/${config.appName}/graphql`,
+              (body) => body.query,
+            )
+            .reply(200, fetchEventResponse);
+
+          const response = await events.fetchById(event.id);
+
+          expect(response.meetingLink).toBe('some-link');
+        });
+
+        test('Should remove the event link when the event starts in more than 24h from now', async () => {
+          const event = graphqlEvent;
+          event.flatData!.meetingLink = 'some-link';
+
+          // mock todays date to year 2020
+          fakeDate.mockReturnValueOnce(
+            new Date('2020-06-06T13:00:00.000Z').getTime(),
+          );
+          // change event start date to year 2021
+          event.flatData!.startDate = '2021-06-06T13:00:00Z';
+
+          const fetchEventResponse: { data: FetchEventQuery } = {
+            data: {
+              findEventsContent: event,
+            },
+          };
+
+          nock(config.baseUrl)
+            .post(
+              `/api/content/${config.appName}/graphql`,
+              (body) => body.query,
+            )
+            .reply(200, fetchEventResponse);
+
+          const response = await events.fetchById(event.id);
+          expect(response.meetingLink).toBeUndefined();
+        });
       });
     });
   });
 
   describe('Event groups', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
     const eventId = 'group-id-1';
 
     test('Should return the first group when event calendar is referenced by multiple groups', async () => {
@@ -852,6 +916,14 @@ describe('Event controller', () => {
   });
 
   describe('Create method', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
     const calendarId = 'squidex-calendar-id';
     const eventData: Event = {
       googleId: 'google-event-id',
@@ -897,6 +969,14 @@ describe('Event controller', () => {
   });
 
   describe('Update method', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
     const eventId = 'event-id';
     const eventData: Partial<Event> = {
       tags: ['kubernetes'],
@@ -925,6 +1005,13 @@ describe('Event controller', () => {
   });
 
   describe('fetchByGoogleId method', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
     const googleId = 'google-event-id';
     const filter = `data/googleId/iv eq '${googleId}'`;
 

@@ -69,7 +69,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const newsController = libs.newsController || new News();
   const discoverController =
     libs.discoverController || new Discover(squidexGraphlClient);
-  const eventController = libs.eventController || new Events();
+  const eventController =
+    libs.eventController || new Events(squidexGraphlClient);
   const groupController =
     libs.groupController || new Groups(squidexGraphlClient);
   const pageController = libs.pageController || new Pages();

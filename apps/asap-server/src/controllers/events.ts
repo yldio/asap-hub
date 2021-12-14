@@ -1,11 +1,8 @@
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
-import { RestEvent, Event } from '@asap-hub/squidex';
-import {
-  InstrumentedSquidexGraphql,
-  InstrumentedSquidex,
-} from '../utils/instrumented-client';
+import { RestEvent, Event, SquidexGraphqlClient } from '@asap-hub/squidex';
+import { InstrumentedSquidex } from '../utils/instrumented-client';
 import { parseGraphQLEvent } from '../entities/event';
 import { AllOrNone, FetchOptions } from '../utils/types';
 
@@ -34,12 +31,12 @@ export interface EventController {
 }
 
 export default class Events implements EventController {
-  client: InstrumentedSquidexGraphql;
+  client: SquidexGraphqlClient;
 
   events: InstrumentedSquidex<RestEvent>;
 
-  constructor() {
-    this.client = new InstrumentedSquidexGraphql();
+  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
+    this.client = squidexGraphqlClient;
     this.events = new InstrumentedSquidex('events');
   }
 

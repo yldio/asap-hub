@@ -1,6 +1,6 @@
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
-import type {
+import {
   RestCalendar,
   Calendar,
   Query,
@@ -16,7 +16,7 @@ import { InstrumentedSquidex } from '../utils/instrumented-client';
 import { parseCalendar } from '../entities';
 import logger from '../utils/logger';
 import { FETCH_CALENDAR } from '../queries/calendars.queries';
-import type {
+import {
   FetchCalendarQuery,
   FetchCalendarQueryVariables,
 } from '../gql/graphql';

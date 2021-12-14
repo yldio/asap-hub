@@ -1,9 +1,9 @@
-import type { DashboardResponse } from '@asap-hub/model';
-import type { SquidexGraphqlClient } from '@asap-hub/squidex';
+import { DashboardResponse } from '@asap-hub/model';
+import { SquidexGraphqlClient } from '@asap-hub/squidex';
 
 import { parseGraphQLPage, parseGraphQLNews } from '../entities';
 import { FETCH_DASHBOARD } from '../queries/dashboard.queries';
-import type { FetchDashboardQuery } from '../gql/graphql';
+import { FetchDashboardQuery } from '../gql/graphql';
 
 export interface DashboardController {
   fetch: () => Promise<DashboardResponse>;

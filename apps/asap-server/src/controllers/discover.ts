@@ -1,17 +1,17 @@
-import type {
+import {
   GraphqlPage,
   GraphqlNews,
   GraphqlUser,
   SquidexGraphqlClient,
 } from '@asap-hub/squidex';
-import type { DiscoverResponse } from '@asap-hub/model';
+import { DiscoverResponse } from '@asap-hub/model';
 
 import {
   parseGraphQLUser,
   parseGraphQLPage,
   parseGraphQLNews,
 } from '../entities';
-import type { FetchDiscoverQuery } from '../gql/graphql';
+import { FetchDiscoverQuery } from '../gql/graphql';
 
 import { FETCH_DISCOVER } from '../queries/discover.queries';
 

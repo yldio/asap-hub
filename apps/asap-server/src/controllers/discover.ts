@@ -29,8 +29,8 @@ export interface SquidexDiscoverResponse {
 export default class Discover implements DiscoverController {
   client: SquidexGraphqlClient;
 
-  constructor(squidexGraphlClient: SquidexGraphqlClient) {
-    this.client = squidexGraphlClient;
+  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
+    this.client = squidexGraphqlClient;
   }
 
   async fetch(): Promise<DiscoverResponse> {

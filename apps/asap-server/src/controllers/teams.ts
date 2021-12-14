@@ -48,12 +48,12 @@ export type FetchTeamsOptions = {
 };
 
 export default class Teams implements TeamController {
-  teamRestClient: InstrumentedSquidex<RestTeam>;
-  graphqlClient: SquidexGraphqlClient;
+  teams: InstrumentedSquidex<RestTeam>;
+  client: SquidexGraphqlClient;
 
-  constructor(squidexGraphlClient: SquidexGraphqlClient) {
-    this.graphqlClient = squidexGraphlClient;
-    this.teamRestClient = new InstrumentedSquidex('teams');
+  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
+    this.client = squidexGraphqlClient;
+    this.teams = new InstrumentedSquidex('teams');
   }
 
   async update(id: string, tools: TeamTool[]): Promise<TeamResponse> {
@@ -67,7 +67,7 @@ export default class Teams implements TeamController {
       ),
     );
 
-    await this.teamRestClient.patch(id, { tools: { iv: cleanUpdate } });
+    await this.teams.patch(id, { tools: { iv: cleanUpdate } });
     return this.fetchById(id);
   }
 
@@ -91,7 +91,7 @@ export default class Teams implements TeamController {
       )
       .join(' and ');
 
-    const { queryTeamsContentsWithTotal } = await this.graphqlClient.request<
+    const { queryTeamsContentsWithTotal } = await this.client.request<
       FetchTeamsQuery,
       FetchTeamsQueryVariables
     >(FETCH_TEAMS, {
@@ -142,7 +142,7 @@ export default class Teams implements TeamController {
     teamId: string,
     options?: FetchTeamOptions,
   ): Promise<TeamResponse> {
-    const teamResponse = await this.graphqlClient.request<
+    const teamResponse = await this.client.request<
       FetchTeamQuery,
       FetchTeamQueryVariables
     >(FETCH_TEAM, { id: teamId });

@@ -12,8 +12,8 @@ export interface DashboardController {
 export default class Dashboard {
   client: SquidexGraphqlClient;
 
-  constructor(squidexGraphlClient: SquidexGraphqlClient) {
-    this.client = squidexGraphlClient;
+  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
+    this.client = squidexGraphqlClient;
   }
 
   async fetch(): Promise<DashboardResponse> {

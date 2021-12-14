@@ -25,9 +25,9 @@ export default class Calendars implements CalendarController {
   calendars: InstrumentedSquidex<RestCalendar>;
   client: SquidexGraphqlClient;
 
-  constructor(squidexGraphlClient: SquidexGraphqlClient) {
+  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
     this.calendars = new InstrumentedSquidex('calendars');
-    this.client = squidexGraphlClient;
+    this.client = squidexGraphqlClient;
   }
 
   async fetch(options: {

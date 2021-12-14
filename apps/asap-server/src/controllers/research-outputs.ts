@@ -20,18 +20,17 @@ import {
 } from '../gql/graphql';
 
 export default class ResearchOutputs implements ResearchOutputController {
-  squidexGraphlClient: SquidexGraphqlClient;
+  client: SquidexGraphqlClient;
 
-  constructor(squidexGraphlClient: SquidexGraphqlClient) {
-    this.squidexGraphlClient = squidexGraphlClient;
+  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
+    this.client = squidexGraphqlClient;
   }
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {
-    const researchOutputGraphqlResponse =
-      await this.squidexGraphlClient.request<
-        FetchResearchOutputQuery,
-        FetchResearchOutputQueryVariables
-      >(FETCH_RESEARCH_OUTPUT, { id, withTeams: true });
+    const researchOutputGraphqlResponse = await this.client.request<
+      FetchResearchOutputQuery,
+      FetchResearchOutputQueryVariables
+    >(FETCH_RESEARCH_OUTPUT, { id, withTeams: true });
 
     const { findResearchOutputsContent: researchOutputContent } =
       researchOutputGraphqlResponse;
@@ -90,16 +89,15 @@ export default class ResearchOutputs implements ResearchOutputController {
       .filter(Boolean)
       .join(' and ');
 
-    const { queryResearchOutputsContentsWithTotal } =
-      await this.squidexGraphlClient.request<
-        FetchResearchOutputsQuery,
-        FetchResearchOutputsQueryVariables
-      >(FETCH_RESEARCH_OUTPUTS, {
-        top: take,
-        skip,
-        filter: filterGraphql,
-        withTeams: true,
-      });
+    const { queryResearchOutputsContentsWithTotal } = await this.client.request<
+      FetchResearchOutputsQuery,
+      FetchResearchOutputsQueryVariables
+    >(FETCH_RESEARCH_OUTPUTS, {
+      top: take,
+      skip,
+      filter: filterGraphql,
+      withTeams: true,
+    });
 
     if (queryResearchOutputsContentsWithTotal === null) {
       logger.warn('queryResearchOutputsContentsWithTotal returned null');

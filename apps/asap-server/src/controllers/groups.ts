@@ -39,10 +39,10 @@ export interface GroupController {
 }
 
 export default class Groups implements GroupController {
-  graphqlClient: SquidexGraphqlClient;
+  client: SquidexGraphqlClient;
 
-  constructor(squidexGraphlClient: SquidexGraphqlClient) {
-    this.graphqlClient = squidexGraphlClient;
+  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
+    this.client = squidexGraphqlClient;
   }
 
   async fetchGroups(
@@ -50,7 +50,7 @@ export default class Groups implements GroupController {
     options: FetchOptions,
   ): Promise<ListGroupResponse> {
     const { take = 50, skip = 0 } = options;
-    const { queryGroupsContentsWithTotal } = await this.graphqlClient.request<
+    const { queryGroupsContentsWithTotal } = await this.client.request<
       FetchGroupsQuery,
       FetchGroupsQueryVariables
     >(FETCH_GROUPS, { filter, top: take, skip });
@@ -100,7 +100,7 @@ export default class Groups implements GroupController {
   }
 
   async fetchById(groupId: string): Promise<GroupResponse> {
-    const { findGroupsContent: group } = await this.graphqlClient.request<
+    const { findGroupsContent: group } = await this.client.request<
       FetchGroupQuery,
       FetchGroupQueryVariables
     >(FETCH_GROUP, { id: groupId });

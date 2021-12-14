@@ -2,9 +2,10 @@ import {
   getMeetingMaterial,
   parseGraphQLEvent,
 } from '../../src/entities/event';
-import { graphqlEvent } from '../fixtures/events.fixtures';
+import { getSquidexGraphqlEvents } from '../fixtures/events.fixtures';
 
 describe('events entity', () => {
+  const graphqlEvent = getSquidexGraphqlEvents();
   describe('parseGraphQLEvent', () => {
     it(`throws when provided event doesn't have a calendar`, () => {
       const event = {

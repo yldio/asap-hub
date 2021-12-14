@@ -242,3 +242,51 @@ export const getRestEvent = (): RestEvent => ({
     hidden: { iv: false },
   },
 });
+export const getSquidexGraphqlEvents = () => ({
+  id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+  created: '2020-09-23T16:34:26.842Z',
+  lastModified: '2021-05-14T14:48:46Z',
+  version: 42,
+  flatData: squidexGraphqlEventsFlatData(),
+});
+
+const squidexGraphqlEventsFlatData = () => ({
+  description: 'This event is awesome',
+  endDate: '2009-12-24T16:20:14Z',
+  startDate: '2009-12-02T16:19:31Z',
+  meetingLink: 'https://zoom.com/room/123',
+  status: 'Confirmed',
+  tags: [],
+  title: 'Example Event',
+  calendar: [
+    {
+      flatData: {
+        googleCalendarId:
+          'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
+        color: '#125A12' as const,
+        name: 'Tech 1 - Sequencing/omics',
+      },
+      referencingGroupsContents: [],
+    },
+  ],
+});
+
+export const squidexGraphqlEventsResponse = () => ({
+  items: [squidexGraphqlEventResponse()],
+  total: 1,
+});
+
+export const squidexGraphqlEventResponse = () => ({
+  description: 'This event is awesome',
+  meetingLink: 'https://zoom.com/room/123',
+  endDate: '2009-12-24T16:20:14.000Z',
+  startDate: '2009-12-02T16:19:31.000Z',
+  status: 'Confirmed',
+  tags: [],
+  title: 'Example Event',
+  calendar: {
+    color: '#125A12',
+    name: 'Tech 1 - Sequencing/omics',
+    id: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
+  },
+});

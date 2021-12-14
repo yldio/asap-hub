@@ -16,6 +16,7 @@ import { getGraphqlGroup } from '../fixtures/groups.fixtures';
 import { getSquidexGraphqlDiscover } from '../fixtures/discover.fixtures';
 import { getSquidexGraphqlDashboard } from '../fixtures/dashboard.fixtures';
 import { getSquidexGraphqlCalendars } from '../fixtures/calendars.fixtures';
+import { getSquidexGraphqlEvents } from '../fixtures/events.fixtures';
 
 export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
   const schema = loadSchemaSync('../../src/schema/schema.graphql', {
@@ -44,6 +45,8 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     DashboardResultDto: resultDto,
     Calendars: () => getSquidexGraphqlCalendars(),
     CalendarsResultDto: resultDto,
+    Events: () => getSquidexGraphqlEvents(),
+    EventsResultDto: resultDto,
   };
   const store = createMockStore({
     schema,
@@ -56,6 +59,9 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
         keyFieldName: false,
       },
       Groups: {
+        keyFieldName: false,
+      },
+      Events: {
         keyFieldName: false,
       },
     },

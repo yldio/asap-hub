@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { config } from '@asap-hub/squidex';
+import { config, SquidexGraphql } from '@asap-hub/squidex';
 import { badGateway, notFound } from '@hapi/boom';
 import { print } from 'graphql';
 
@@ -11,25 +11,30 @@ import {
   getCalendarsGraphqlResponse,
   getCalendarsRestResponse,
   getRestCalendar,
+  squidexGraphqlCalendarsResponse,
 } from '../fixtures/calendars.fixtures';
 import { FETCH_CALENDAR } from '../../src/queries/calendars.queries';
+import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 
 describe('Calendars controller', () => {
-  const calendars = new Calendars();
+  const squidexGraphqlClientMock = new SquidexGraphql();
+  const calendars = new Calendars(squidexGraphqlClientMock);
+
+  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
+  const calendarsMockGraphql = new Calendars(squidexGraphqlClientMockServer);
 
   beforeAll(() => {
     identity();
   });
 
-  afterEach(() => {
-    expect(nock.isDone()).toBe(true);
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   describe('Fetch method', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
     test('Should return an empty result when the no calendars are found', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/calendars`)
@@ -80,6 +85,13 @@ describe('Calendars controller', () => {
   });
 
   describe('FetchRaw method', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
     test('Should return an empty result when the no calendars are found', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/calendars`)
@@ -148,97 +160,124 @@ describe('Calendars controller', () => {
   });
 
   describe('FetchById method', () => {
-    test('Should throw an error when the calendar is not found', async () => {
-      const calendarId = 'not-found';
+    describe('with mock-server', () => {
+      test('Should fetch the users from squidex graphql', async () => {
+        const result = await calendarsMockGraphql.fetchById('calendar-id-1');
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_CALENDAR),
-          variables: {
-            id: calendarId,
-          },
-        })
-        .reply(200, {
-          data: {
-            findCalendarsContent: null,
-          },
-        });
-
-      await expect(calendars.fetchById(calendarId)).rejects.toThrow(notFound());
+        const expected = squidexGraphqlCalendarsResponse();
+        expect(result).toMatchObject(expected);
+      });
     });
 
-    test('Should return the calendar response', async () => {
-      const calendarId = 'calendar-id-1';
+    describe('with intercepted http layer', () => {
+      afterEach(() => {
+        expect(nock.isDone()).toBe(true);
+      });
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_CALENDAR),
-          variables: {
-            id: calendarId,
-          },
-        })
-        .reply(200, getCalendarsGraphqlResponse());
+      afterEach(() => {
+        nock.cleanAll();
+      });
+      test('Should throw an error when the calendar is not found', async () => {
+        const calendarId = 'not-found';
 
-      const result = await calendars.fetchById(calendarId);
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_CALENDAR),
+            variables: {
+              id: calendarId,
+            },
+          })
+          .reply(200, {
+            data: {
+              findCalendarsContent: null,
+            },
+          });
 
-      expect(result).toEqual(getCalendarResponse());
-    });
+        await expect(calendars.fetchById(calendarId)).rejects.toThrow(
+          notFound(),
+        );
+      });
 
-    test('Should throw if squidex response has invalid colour', async () => {
-      const id = 'calendar-id-1';
-      const response = getCalendarsGraphqlResponse();
-      response.data.findCalendarsContent!.flatData.color = 'invalid';
+      test('Should return the calendar response', async () => {
+        const calendarId = 'calendar-id-1';
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_CALENDAR),
-          variables: {
-            id,
-          },
-        })
-        .reply(200, response);
-      await expect(calendars.fetchById(id)).rejects.toThrow(
-        badGateway('Invalid colour'),
-      );
-    });
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_CALENDAR),
+            variables: {
+              id: calendarId,
+            },
+          })
+          .reply(200, getCalendarsGraphqlResponse());
 
-    test('Should throw if missing required data', async () => {
-      const id = 'calendar-id-1';
-      const response = getCalendarsGraphqlResponse();
-      response.data.findCalendarsContent!.flatData.color = null;
+        const result = await calendars.fetchById(calendarId);
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_CALENDAR),
-          variables: {
-            id,
-          },
-        })
-        .reply(200, response);
-      await expect(calendars.fetchById(id)).rejects.toThrow(
-        badGateway('Missing required data'),
-      );
-    });
+        expect(result).toEqual(getCalendarResponse());
+      });
 
-    test('Should return the calendar raw response', async () => {
-      const calendarId = 'calendar-id-1';
+      test('Should throw if squidex response has invalid colour', async () => {
+        const id = 'calendar-id-1';
+        const response = getCalendarsGraphqlResponse();
+        response.data.findCalendarsContent!.flatData.color = 'invalid';
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_CALENDAR),
-          variables: {
-            id: calendarId,
-          },
-        })
-        .reply(200, getCalendarsGraphqlResponse());
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_CALENDAR),
+            variables: {
+              id,
+            },
+          })
+          .reply(200, response);
+        await expect(calendars.fetchById(id)).rejects.toThrow(
+          badGateway('Invalid colour'),
+        );
+      });
 
-      const result = await calendars.fetchById(calendarId, { raw: true });
+      test('Should throw if missing required data', async () => {
+        const id = 'calendar-id-1';
+        const response = getCalendarsGraphqlResponse();
+        response.data.findCalendarsContent!.flatData.color = null;
 
-      expect(result).toEqual(getCalendarRaw());
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_CALENDAR),
+            variables: {
+              id,
+            },
+          })
+          .reply(200, response);
+        await expect(calendars.fetchById(id)).rejects.toThrow(
+          badGateway('Missing required data'),
+        );
+      });
+
+      test('Should return the calendar raw response', async () => {
+        const calendarId = 'calendar-id-1';
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_CALENDAR),
+            variables: {
+              id: calendarId,
+            },
+          })
+          .reply(200, getCalendarsGraphqlResponse());
+
+        const result = await calendars.fetchById(calendarId, { raw: true });
+
+        expect(result).toEqual(getCalendarRaw());
+      });
     });
   });
 
   describe('FetchByResourceId method', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
     const resourceId = 'resource-id';
     test('Should throw Bad Gateway when squidex throws an error', async () => {
       nock(config.baseUrl)
@@ -298,59 +337,77 @@ describe('Calendars controller', () => {
   });
 
   describe('Update method', () => {
-    test('Should throw when calendar does not exist', async () => {
-      nock(config.baseUrl)
-        .patch(`/api/content/${config.appName}/calendars/calendar-not-found`)
-        .reply(404);
+    describe('with intercepted http layer', () => {
+      afterEach(() => {
+        expect(nock.isDone()).toBe(true);
+      });
 
-      await expect(calendars.update('calendar-not-found', {})).rejects.toThrow(
-        'Not Found',
-      );
-    });
+      afterEach(() => {
+        nock.cleanAll();
+      });
+      test('Should throw when calendar does not exist', async () => {
+        nock(config.baseUrl)
+          .patch(`/api/content/${config.appName}/calendars/calendar-not-found`)
+          .reply(404);
 
-    test('Should return the calendars', async () => {
-      const syncToken = 'google-sync-token';
-      const calendarId = 'calendar-id';
-      const restCalendar = getRestCalendar();
+        await expect(
+          calendars.update('calendar-not-found', {}),
+        ).rejects.toThrow('Not Found');
+      });
 
-      nock(config.baseUrl)
-        .patch(`/api/content/${config.appName}/calendars/${calendarId}`, {
-          syncToken: { iv: syncToken },
-        })
-        .reply(200, restCalendar);
+      test('Should return the calendars', async () => {
+        const syncToken = 'google-sync-token';
+        const calendarId = 'calendar-id';
+        const restCalendar = getRestCalendar();
 
-      const result = await calendars.update(calendarId, { syncToken });
+        nock(config.baseUrl)
+          .patch(`/api/content/${config.appName}/calendars/${calendarId}`, {
+            syncToken: { iv: syncToken },
+          })
+          .reply(200, restCalendar);
 
-      expect(result).toEqual({
-        id: restCalendar.data.googleCalendarId.iv,
-        color: restCalendar.data.color.iv,
-        name: restCalendar.data.name.iv,
+        const result = await calendars.update(calendarId, { syncToken });
+
+        expect(result).toEqual({
+          id: restCalendar.data.googleCalendarId.iv,
+          color: restCalendar.data.color.iv,
+          name: restCalendar.data.name.iv,
+        });
       });
     });
   });
 
   describe('getSyncToken method', () => {
-    test('Should throw when calendar does not exist', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/calendars/calendar-not-found`)
-        .reply(404);
+    describe('with intercepted http layer', () => {
+      afterEach(() => {
+        expect(nock.isDone()).toBe(true);
+      });
 
-      await expect(
-        calendars.getSyncToken('calendar-not-found'),
-      ).rejects.toThrow('Not Found');
-    });
+      afterEach(() => {
+        nock.cleanAll();
+      });
+      test('Should throw when calendar does not exist', async () => {
+        nock(config.baseUrl)
+          .get(`/api/content/${config.appName}/calendars/calendar-not-found`)
+          .reply(404);
 
-    test('Should return the syncToken', async () => {
-      const calendarId = 'calendar-id';
-      const restCalendar = getRestCalendar();
+        await expect(
+          calendars.getSyncToken('calendar-not-found'),
+        ).rejects.toThrow('Not Found');
+      });
 
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/calendars/${calendarId}`)
-        .reply(200, restCalendar);
+      test('Should return the syncToken', async () => {
+        const calendarId = 'calendar-id';
+        const restCalendar = getRestCalendar();
 
-      const result = await calendars.getSyncToken(calendarId);
+        nock(config.baseUrl)
+          .get(`/api/content/${config.appName}/calendars/${calendarId}`)
+          .reply(200, restCalendar);
 
-      expect(result).toEqual(restCalendar.data.syncToken!.iv);
+        const result = await calendars.getSyncToken(calendarId);
+
+        expect(result).toEqual(restCalendar.data.syncToken!.iv);
+      });
     });
   });
 });

@@ -8,8 +8,8 @@ export const handler = async (): Promise<lambda.Response> => {
   const ONE_MONTH = 1000 * 60 * 60 * 24 * 31;
 
   const limit = pLimit(5);
-  const squidexGraphqlClientMock = new SquidexGraphql();
-  const users = new Users(squidexGraphqlClientMock);
+  const squidexGraphqlClient = new SquidexGraphql();
+  const users = new Users(squidexGraphqlClient);
   const squidexUsers: Squidex<RestUser> = new Squidex('users');
 
   const { items: outdatedUsers } = await squidexUsers.fetch({

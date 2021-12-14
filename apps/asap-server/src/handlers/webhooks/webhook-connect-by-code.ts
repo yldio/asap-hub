@@ -25,8 +25,8 @@ export const handler: Handler = http(
       userId: string;
     };
 
-    const squidexGraphqlClientMock = new SquidexGraphql();
-    const users = new Users(squidexGraphqlClientMock);
+    const squidexGraphqlClient = new SquidexGraphql();
+    const users = new Users(squidexGraphqlClient);
     await users.connectByCode(code, userId);
 
     return {

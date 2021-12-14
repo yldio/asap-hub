@@ -30,8 +30,8 @@ export const handler: Handler = http(
       bodySchema,
     ) as WebhookPayload<User>;
 
-    const squidexGraphqlClientMock = new SquidexGraphql();
-    const users = new Users(squidexGraphqlClientMock);
+    const squidexGraphqlClient = new SquidexGraphql();
+    const users = new Users(squidexGraphqlClient);
     const { id } = payload;
     const newOrcid = payload.data.orcid?.iv;
 

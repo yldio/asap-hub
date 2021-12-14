@@ -5,8 +5,8 @@ import Users from '../../src/controllers/users';
 import { createUser, createRandomOrcid } from '../helpers/users';
 
 const chance = new Chance();
-const squidexGraphqlClientMock = new SquidexGraphql();
-const users = new Users(squidexGraphqlClientMock);
+const squidexGraphqlClient = new SquidexGraphql();
+const users = new Users(squidexGraphqlClient);
 
 describe('Users', () => {
   it('Should create and fetch a user', async () => {

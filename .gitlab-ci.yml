@@ -49,6 +49,7 @@ stages:
 ###############
 # stage build #
 ###############
+
 prepare:squidex:branch:
   <<: *tmpl_branch
   image: $INTEGRATION_DOCKER_IMAGE
@@ -150,6 +151,7 @@ build:native:
 ##############
 # stage test #
 ##############
+
 test:unit:
   cache:
     key: jest-cache
@@ -205,6 +207,7 @@ check:format:
 ####################
 # stage deploy-dev #
 ####################
+
 deploy:sls:branch:
   <<: *tmpl_branch
   image: $INTEGRATION_DOCKER_IMAGE

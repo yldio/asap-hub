@@ -10,6 +10,9 @@ import { loadSchemaSync } from '@graphql-tools/load';
 import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { getSquidexGraphqlResearchOutput } from '../fixtures/research-output.fixtures';
+import { getGraphQLUser } from '../fixtures/users.fixtures';
+import { getGraphqlTeam } from '../fixtures/teams.fixtures';
+import { getGraphqlGroup } from '../fixtures/groups.fixtures';
 
 export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
   const schema = loadSchemaSync('../../src/schema/schema.graphql', {
@@ -20,8 +23,23 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     Int: () => 8,
     Instant: () => '2021-10-12T15:42:05Z',
     JsonScalar: () => {},
+    Groups: () => getGraphqlGroup(),
+    GroupsResultDto: () => ({
+      items: [...new Array(1)],
+      total: 1,
+    }),
     ResearchOutputs: () => getSquidexGraphqlResearchOutput(),
     ResearchOutputsResultDto: () => ({
+      items: [...new Array(1)],
+      total: 1,
+    }),
+    Users: () => getGraphQLUser(),
+    UsersResultDto: () => ({
+      items: [...new Array(1)],
+      total: 1,
+    }),
+    Teams: () => getGraphqlTeam(),
+    TeamsResultDto: () => ({
       items: [...new Array(1)],
       total: 1,
     }),
@@ -31,6 +49,12 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     mocks,
     typePolicies: {
       UsersDataTeamsChildDto: {
+        keyFieldName: false,
+      },
+      Teams: {
+        keyFieldName: false,
+      },
+      Groups: {
         keyFieldName: false,
       },
     },

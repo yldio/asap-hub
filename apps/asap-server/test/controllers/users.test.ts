@@ -1,4 +1,4 @@
-import { config } from '@asap-hub/squidex';
+import { config, SquidexGraphql } from '@asap-hub/squidex';
 import { print } from 'graphql';
 import matches from 'lodash.matches';
 import nock from 'nock';
@@ -12,450 +12,484 @@ import {
   fetchUserResponse,
   getGraphqlResponseFetchUser,
   getGraphqlResponseFetchUsers,
+  getListUserResponse,
   getUserResponse,
   patchResponse,
 } from '../fixtures/users.fixtures';
-
-const users = new Users();
+import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 
 describe('Users controller', () => {
+  const squidexGraphqlClientMock = new SquidexGraphql();
+  const users = new Users(squidexGraphqlClientMock);
+
+  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
+  const usersMockGraphql = new Users(squidexGraphqlClientMockServer);
+
   beforeAll(() => {
     identity();
   });
 
-  afterEach(() => {
-    expect(nock.isDone()).toBe(true);
+  describe('Fetch', () => {
+    describe('with mock-server', () => {
+      test('Should fetch the users from squidex graphql', async () => {
+        const result = await usersMockGraphql.fetch({});
+
+        expect(result).toMatchObject(getListUserResponse());
+      });
+    });
+
+    describe('with intercepted http layer', () => {
+      afterEach(() => {
+        expect(nock.isDone()).toBe(true);
+      });
+
+      afterEach(() => {
+        nock.cleanAll();
+      });
+
+      test('Should return an empty result', async () => {
+        const mockResponse = getGraphqlResponseFetchUsers();
+        mockResponse.data.queryUsersContentsWithTotal!.items = [];
+        mockResponse.data.queryUsersContentsWithTotal!.total = 0;
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USERS),
+            variables: {
+              filter: "data/onboarded/iv eq true and data/role/iv ne 'Hidden'",
+              top: 8,
+              skip: 0,
+            },
+          })
+          .reply(200, mockResponse);
+
+        const result = await users.fetch({});
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test('Should return an empty result when the client returns a response with query property set to null', async () => {
+        const mockResponse = getGraphqlResponseFetchUsers();
+        mockResponse.data.queryUsersContentsWithTotal = null;
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USERS),
+            variables: {
+              top: 8,
+              skip: 0,
+              filter: "data/onboarded/iv eq true and data/role/iv ne 'Hidden'",
+            },
+          })
+          .reply(200, mockResponse);
+
+        const result = await users.fetch({});
+        expect(result).toEqual({ total: 0, items: [] });
+      });
+
+      test('Should return an empty result when the client returns a response with items property set to null', async () => {
+        const mockResponse = getGraphqlResponseFetchUsers();
+        mockResponse.data.queryUsersContentsWithTotal!.items = null;
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USERS),
+            variables: {
+              top: 8,
+              skip: 0,
+              filter: "data/onboarded/iv eq true and data/role/iv ne 'Hidden'",
+            },
+          })
+          .reply(200, mockResponse);
+
+        const result = await users.fetch({});
+        expect(result).toEqual({ total: 0, items: [] });
+      });
+
+      test('Should query with filters and return the users', async () => {
+        const fetchOptions: FetchOptions = {
+          take: 12,
+          skip: 2,
+          search: 'first last',
+          filter: ['role', 'Staff'],
+        };
+
+        const filterQuery =
+          "(data/teams/iv/role eq 'role' or data/role/iv eq 'Staff')" +
+          ' and' +
+          ' data/onboarded/iv eq true' +
+          ' and' +
+          " data/role/iv ne 'Hidden'" +
+          ' and' +
+          " ((contains(data/firstName/iv, 'first')" +
+          " or contains(data/lastName/iv, 'first')" +
+          " or contains(data/institution/iv, 'first')" +
+          " or contains(data/expertiseAndResourceTags/iv, 'first'))" +
+          ' and' +
+          " (contains(data/firstName/iv, 'last')" +
+          " or contains(data/lastName/iv, 'last')" +
+          " or contains(data/institution/iv, 'last')" +
+          " or contains(data/expertiseAndResourceTags/iv, 'last')))";
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USERS),
+            variables: {
+              filter: filterQuery,
+              top: 12,
+              skip: 2,
+            },
+          })
+          .reply(200, getGraphqlResponseFetchUsers);
+
+        const result = await users.fetch(fetchOptions);
+        expect(result).toEqual(fetchExpectation);
+      });
+
+      test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+        const fetchOptions: FetchOptions = {
+          take: 12,
+          skip: 2,
+          search: "'",
+        };
+
+        const expectedFilter =
+          "data/onboarded/iv eq true and data/role/iv ne 'Hidden' and" +
+          " ((contains(data/firstName/iv, '%27%27')" +
+          " or contains(data/lastName/iv, '%27%27')" +
+          " or contains(data/institution/iv, '%27%27')" +
+          " or contains(data/expertiseAndResourceTags/iv, '%27%27')))";
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USERS),
+            variables: {
+              filter: expectedFilter,
+              top: 12,
+              skip: 2,
+            },
+          })
+          .reply(200, getGraphqlResponseFetchUsers);
+
+        const result = await users.fetch(fetchOptions);
+
+        expect(result).toEqual(fetchExpectation);
+      });
+
+      test('Should sanitise double quotation mark by encoding to hex', async () => {
+        const fetchOptions: FetchOptions = {
+          take: 12,
+          skip: 2,
+          search: '"',
+        };
+
+        const expectedFilter =
+          "data/onboarded/iv eq true and data/role/iv ne 'Hidden' and" +
+          " ((contains(data/firstName/iv, '%22')" +
+          " or contains(data/lastName/iv, '%22')" +
+          " or contains(data/institution/iv, '%22')" +
+          " or contains(data/expertiseAndResourceTags/iv, '%22')))";
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USERS),
+            variables: {
+              filter: expectedFilter,
+              top: 12,
+              skip: 2,
+            },
+          })
+          .reply(200, getGraphqlResponseFetchUsers);
+
+        const result = await users.fetch(fetchOptions);
+
+        expect(result).toEqual(fetchExpectation);
+      });
+
+      test('Should search with special characters', async () => {
+        const fetchOptions: FetchOptions = {
+          take: 12,
+          skip: 2,
+          search: 'Solène',
+        };
+
+        const expectedFilter =
+          "data/onboarded/iv eq true and data/role/iv ne 'Hidden' and" +
+          " ((contains(data/firstName/iv, 'Solène')" +
+          " or contains(data/lastName/iv, 'Solène')" +
+          " or contains(data/institution/iv, 'Solène')" +
+          " or contains(data/expertiseAndResourceTags/iv, 'Solène')))";
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USERS),
+            variables: {
+              filter: expectedFilter,
+              top: 12,
+              skip: 2,
+            },
+          })
+          .reply(200, getGraphqlResponseFetchUsers);
+
+        const result = await users.fetch(fetchOptions);
+
+        expect(result).toEqual(fetchExpectation);
+      });
+    });
   });
 
-  afterEach(() => {
-    nock.cleanAll();
-  });
+  describe('FetchById', () => {
+    describe('with mock-server', () => {
+      test('Should fetch the users from squidex graphql', async () => {
+        const result = await usersMockGraphql.fetchById('user-id');
 
-  describe('fetch', () => {
-    test('Should return an empty result', async () => {
-      const mockResponse = getGraphqlResponseFetchUsers();
-      mockResponse.data.queryUsersContentsWithTotal!.items = [];
-      mockResponse.data.queryUsersContentsWithTotal!.total = 0;
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USERS),
-          variables: {
-            filter: "data/onboarded/iv eq true and data/role/iv ne 'Hidden'",
-            top: 8,
-            skip: 0,
-          },
-        })
-        .reply(200, mockResponse);
-
-      const result = await users.fetch({});
-      expect(result).toEqual({ items: [], total: 0 });
+        expect(result).toMatchObject(getUserResponse());
+      });
     });
 
-    test('Should return an empty result when the client returns a response with query property set to null', async () => {
-      const mockResponse = getGraphqlResponseFetchUsers();
-      mockResponse.data.queryUsersContentsWithTotal = null;
+    describe('with intercepted http layer', () => {
+      afterEach(() => {
+        expect(nock.isDone()).toBe(true);
+      });
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USERS),
-          variables: {
-            top: 8,
-            skip: 0,
-            filter: "data/onboarded/iv eq true and data/role/iv ne 'Hidden'",
+      afterEach(() => {
+        nock.cleanAll();
+      });
+
+      test('Should throw when user is not found', async () => {
+        const mockResponse = getGraphqlResponseFetchUser();
+        mockResponse.data.findUsersContent = null;
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USER),
+            variables: {
+              id: 'not-found',
+            },
+          })
+          .reply(200, mockResponse);
+
+        await expect(users.fetchById('not-found')).rejects.toThrow('Not Found');
+      });
+
+      test('Should return the user when they are found, even if they are not onboarded', async () => {
+        const nonOnboardedUserResponse = getGraphqlResponseFetchUser();
+        nonOnboardedUserResponse.data.findUsersContent!.flatData.onboarded =
+          false;
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USER),
+            variables: {
+              id: 'user-id',
+            },
+          })
+          .reply(200, nonOnboardedUserResponse);
+
+        const result = await users.fetchById('user-id');
+
+        expect(result.id).toEqual(
+          nonOnboardedUserResponse.data.findUsersContent!.id,
+        );
+      });
+
+      test('Should return the user when it finds it', async () => {
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USER),
+            variables: {
+              id: 'user-id',
+            },
+          })
+          .reply(200, getGraphqlResponseFetchUser());
+
+        const result = await users.fetchById('user-id');
+        expect(result).toEqual(getUserResponse());
+      });
+
+      test('Should filter out a team when the team role is invalid', async () => {
+        const mockResponse = getGraphqlResponseFetchUser();
+        mockResponse.data.findUsersContent!.flatData.teams![0]!.role =
+          'invalid role';
+        const expectedResponse = getUserResponse();
+        expectedResponse.teams = [];
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USER),
+            variables: {
+              id: 'user-id',
+            },
+          })
+          .reply(200, mockResponse);
+
+        const result = await users.fetchById('user-id');
+        expect(result).toEqual(expectedResponse);
+      });
+
+      test('Should skip the user lab if it does not have a name', async () => {
+        const mockResponse = getGraphqlResponseFetchUser();
+        mockResponse.data.findUsersContent!.flatData.labs = [
+          {
+            id: 'lab1',
+            flatData: {
+              name: 'lab 1',
+            },
           },
-        })
-        .reply(200, mockResponse);
-
-      const result = await users.fetch({});
-      expect(result).toEqual({ total: 0, items: [] });
-    });
-
-    test('Should return an empty result when the client returns a response with items property set to null', async () => {
-      const mockResponse = getGraphqlResponseFetchUsers();
-      mockResponse.data.queryUsersContentsWithTotal!.items = null;
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USERS),
-          variables: {
-            top: 8,
-            skip: 0,
-            filter: "data/onboarded/iv eq true and data/role/iv ne 'Hidden'",
+          {
+            id: 'lab2',
+            flatData: {
+              name: null,
+            },
           },
-        })
-        .reply(200, mockResponse);
-
-      const result = await users.fetch({});
-      expect(result).toEqual({ total: 0, items: [] });
-    });
-
-    test('Should query with filters and return the users', async () => {
-      const fetchOptions: FetchOptions = {
-        take: 12,
-        skip: 2,
-        search: 'first last',
-        filter: ['role', 'Staff'],
-      };
-
-      const filterQuery =
-        "(data/teams/iv/role eq 'role' or data/role/iv eq 'Staff')" +
-        ' and' +
-        ' data/onboarded/iv eq true' +
-        ' and' +
-        " data/role/iv ne 'Hidden'" +
-        ' and' +
-        " ((contains(data/firstName/iv, 'first')" +
-        " or contains(data/lastName/iv, 'first')" +
-        " or contains(data/institution/iv, 'first')" +
-        " or contains(data/expertiseAndResourceTags/iv, 'first'))" +
-        ' and' +
-        " (contains(data/firstName/iv, 'last')" +
-        " or contains(data/lastName/iv, 'last')" +
-        " or contains(data/institution/iv, 'last')" +
-        " or contains(data/expertiseAndResourceTags/iv, 'last')))";
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USERS),
-          variables: {
-            filter: filterQuery,
-            top: 12,
-            skip: 2,
+          {
+            id: 'lab3',
+            flatData: {
+              name: 'lab 3',
+            },
           },
-        })
-        .reply(200, getGraphqlResponseFetchUsers);
+        ];
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USER),
+            variables: {
+              id: 'user-id',
+            },
+          })
+          .reply(200, mockResponse);
 
-      const result = await users.fetch(fetchOptions);
-      expect(result).toEqual(fetchExpectation);
-    });
+        const result = await users.fetchById('user-id');
 
-    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
-      const fetchOptions: FetchOptions = {
-        take: 12,
-        skip: 2,
-        search: "'",
-      };
-
-      const expectedFilter =
-        "data/onboarded/iv eq true and data/role/iv ne 'Hidden' and" +
-        " ((contains(data/firstName/iv, '%27%27')" +
-        " or contains(data/lastName/iv, '%27%27')" +
-        " or contains(data/institution/iv, '%27%27')" +
-        " or contains(data/expertiseAndResourceTags/iv, '%27%27')))";
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USERS),
-          variables: {
-            filter: expectedFilter,
-            top: 12,
-            skip: 2,
-          },
-        })
-        .reply(200, getGraphqlResponseFetchUsers);
-
-      const result = await users.fetch(fetchOptions);
-
-      expect(result).toEqual(fetchExpectation);
-    });
-
-    test('Should sanitise double quotation mark by encoding to hex', async () => {
-      const fetchOptions: FetchOptions = {
-        take: 12,
-        skip: 2,
-        search: '"',
-      };
-
-      const expectedFilter =
-        "data/onboarded/iv eq true and data/role/iv ne 'Hidden' and" +
-        " ((contains(data/firstName/iv, '%22')" +
-        " or contains(data/lastName/iv, '%22')" +
-        " or contains(data/institution/iv, '%22')" +
-        " or contains(data/expertiseAndResourceTags/iv, '%22')))";
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USERS),
-          variables: {
-            filter: expectedFilter,
-            top: 12,
-            skip: 2,
-          },
-        })
-        .reply(200, getGraphqlResponseFetchUsers);
-
-      const result = await users.fetch(fetchOptions);
-
-      expect(result).toEqual(fetchExpectation);
-    });
-
-    test('Should search with special characters', async () => {
-      const fetchOptions: FetchOptions = {
-        take: 12,
-        skip: 2,
-        search: 'Solène',
-      };
-
-      const expectedFilter =
-        "data/onboarded/iv eq true and data/role/iv ne 'Hidden' and" +
-        " ((contains(data/firstName/iv, 'Solène')" +
-        " or contains(data/lastName/iv, 'Solène')" +
-        " or contains(data/institution/iv, 'Solène')" +
-        " or contains(data/expertiseAndResourceTags/iv, 'Solène')))";
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USERS),
-          variables: {
-            filter: expectedFilter,
-            top: 12,
-            skip: 2,
-          },
-        })
-        .reply(200, getGraphqlResponseFetchUsers);
-
-      const result = await users.fetch(fetchOptions);
-
-      expect(result).toEqual(fetchExpectation);
-    });
-  });
-
-  describe('fetchById', () => {
-    test('Should throw when user is not found', async () => {
-      const mockResponse = getGraphqlResponseFetchUser();
-      mockResponse.data.findUsersContent = null;
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: 'not-found',
-          },
-        })
-        .reply(200, mockResponse);
-
-      await expect(users.fetchById('not-found')).rejects.toThrow('Not Found');
-    });
-
-    test('Should return the user when they are found, even if they are not onboarded', async () => {
-      const nonOnboardedUserResponse = getGraphqlResponseFetchUser();
-      nonOnboardedUserResponse.data.findUsersContent!.flatData.onboarded =
-        false;
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: 'user-id',
-          },
-        })
-        .reply(200, nonOnboardedUserResponse);
-
-      const result = await users.fetchById('user-id');
-
-      expect(result.id).toEqual(
-        nonOnboardedUserResponse.data.findUsersContent!.id,
-      );
-    });
-
-    test('Should return the user when it finds it', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: 'user-id',
-          },
-        })
-        .reply(200, getGraphqlResponseFetchUser());
-
-      const result = await users.fetchById('user-id');
-      expect(result).toEqual(getUserResponse());
-    });
-
-    test('Should filter out a team when the team role is invalid', async () => {
-      const mockResponse = getGraphqlResponseFetchUser();
-      mockResponse.data.findUsersContent!.flatData.teams![0]!.role =
-        'invalid role';
-      const expectedResponse = getUserResponse();
-      expectedResponse.teams = [];
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: 'user-id',
-          },
-        })
-        .reply(200, mockResponse);
-
-      const result = await users.fetchById('user-id');
-      expect(result).toEqual(expectedResponse);
-    });
-
-    test('Should skip the user lab if it does not have a name', async () => {
-      const mockResponse = getGraphqlResponseFetchUser();
-      mockResponse.data.findUsersContent!.flatData.labs = [
-        {
-          id: 'lab1',
-          flatData: {
+        expect(result.labs).toEqual([
+          {
+            id: 'lab1',
             name: 'lab 1',
           },
-        },
-        {
-          id: 'lab2',
-          flatData: {
-            name: null,
-          },
-        },
-        {
-          id: 'lab3',
-          flatData: {
+          {
+            id: 'lab3',
             name: 'lab 3',
           },
-        },
-      ];
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: 'user-id',
+        ]);
+      });
+
+      test('Should skip the user orcid work if it does not have an ID or a lastModifiedDate', async () => {
+        const mockResponse = getGraphqlResponseFetchUser();
+        mockResponse.data.findUsersContent!.flatData.orcidWorks = [
+          {
+            id: 'id1',
+            doi: 'doi1',
+            lastModifiedDate: 'lastModifiedDate1',
+            publicationDate: 'publicationDate1',
+            title: 'title1',
+            type: 'ANNOTATION',
           },
-        })
-        .reply(200, mockResponse);
-
-      const result = await users.fetchById('user-id');
-
-      expect(result.labs).toEqual([
-        {
-          id: 'lab1',
-          name: 'lab 1',
-        },
-        {
-          id: 'lab3',
-          name: 'lab 3',
-        },
-      ]);
-    });
-
-    test('Should skip the user orcid work if it does not have an ID or a lastModifiedDate', async () => {
-      const mockResponse = getGraphqlResponseFetchUser();
-      mockResponse.data.findUsersContent!.flatData.orcidWorks = [
-        {
-          id: 'id1',
-          doi: 'doi1',
-          lastModifiedDate: 'lastModifiedDate1',
-          publicationDate: 'publicationDate1',
-          title: 'title1',
-          type: 'ANNOTATION',
-        },
-        {
-          id: null,
-          doi: 'doi2',
-          lastModifiedDate: 'lastModifiedDate2',
-          publicationDate: 'publicationDate2',
-          title: 'title2',
-          type: 'ANNOTATION',
-        },
-        {
-          id: 'id3',
-          doi: 'doi3',
-          lastModifiedDate: 'lastModifiedDate3',
-          publicationDate: 'publicationDate3',
-          title: 'title3',
-          type: 'ANNOTATION',
-        },
-        {
-          id: 'id4',
-          doi: 'doi4',
-          lastModifiedDate: null,
-          publicationDate: 'publicationDate4',
-          title: 'title4',
-          type: 'ANNOTATION',
-        },
-      ];
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: 'user-id',
+          {
+            id: null,
+            doi: 'doi2',
+            lastModifiedDate: 'lastModifiedDate2',
+            publicationDate: 'publicationDate2',
+            title: 'title2',
+            type: 'ANNOTATION',
           },
-        })
-        .reply(200, mockResponse);
-
-      const result = await users.fetchById('user-id');
-
-      expect(result.orcidWorks).toMatchObject([
-        {
-          id: 'id1',
-        },
-        {
-          id: 'id3',
-        },
-      ]);
-    });
-
-    test('Should default the user orcid work type to UNDEFINED if it is not present or invalid', async () => {
-      const mockResponse = getGraphqlResponseFetchUser();
-      mockResponse.data.findUsersContent!.flatData.orcidWorks = [
-        {
-          id: 'id1',
-          doi: 'doi1',
-          lastModifiedDate: 'lastModifiedDate1',
-          publicationDate: 'publicationDate1',
-          title: 'title1',
-          type: null,
-        },
-        {
-          id: 'id2',
-          doi: 'doi2',
-          lastModifiedDate: 'lastModifiedDate2',
-          publicationDate: 'publicationDate2',
-          title: 'title2',
-          type: 'invalid',
-        },
-      ];
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: 'user-id',
+          {
+            id: 'id3',
+            doi: 'doi3',
+            lastModifiedDate: 'lastModifiedDate3',
+            publicationDate: 'publicationDate3',
+            title: 'title3',
+            type: 'ANNOTATION',
           },
-        })
-        .reply(200, mockResponse);
-
-      const result = await users.fetchById('user-id');
-
-      expect(result.orcidWorks).toMatchObject([
-        {
-          id: 'id1',
-          type: 'UNDEFINED',
-        },
-        {
-          id: 'id2',
-          type: 'UNDEFINED',
-        },
-      ]);
-    });
-
-    test('Should default onboarded flag to true when its null', async () => {
-      const userWithNoOnboardedFlagResponse = getGraphqlResponseFetchUser();
-      userWithNoOnboardedFlagResponse.data.findUsersContent!.flatData!.onboarded =
-        null;
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: 'user-id',
+          {
+            id: 'id4',
+            doi: 'doi4',
+            lastModifiedDate: null,
+            publicationDate: 'publicationDate4',
+            title: 'title4',
+            type: 'ANNOTATION',
           },
-        })
-        .reply(200, userWithNoOnboardedFlagResponse);
+        ];
 
-      const result = await users.fetchById('user-id');
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USER),
+            variables: {
+              id: 'user-id',
+            },
+          })
+          .reply(200, mockResponse);
 
-      expect(result.onboarded).toEqual(true);
+        const result = await users.fetchById('user-id');
+
+        expect(result.orcidWorks).toMatchObject([
+          {
+            id: 'id1',
+          },
+          {
+            id: 'id3',
+          },
+        ]);
+      });
+
+      test('Should default the user orcid work type to UNDEFINED if it is not present or invalid', async () => {
+        const mockResponse = getGraphqlResponseFetchUser();
+        mockResponse.data.findUsersContent!.flatData.orcidWorks = [
+          {
+            id: 'id1',
+            doi: 'doi1',
+            lastModifiedDate: 'lastModifiedDate1',
+            publicationDate: 'publicationDate1',
+            title: 'title1',
+            type: null,
+          },
+          {
+            id: 'id2',
+            doi: 'doi2',
+            lastModifiedDate: 'lastModifiedDate2',
+            publicationDate: 'publicationDate2',
+            title: 'title2',
+            type: 'invalid',
+          },
+        ];
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USER),
+            variables: {
+              id: 'user-id',
+            },
+          })
+          .reply(200, mockResponse);
+
+        const result = await users.fetchById('user-id');
+
+        expect(result.orcidWorks).toMatchObject([
+          {
+            id: 'id1',
+            type: 'UNDEFINED',
+          },
+          {
+            id: 'id2',
+            type: 'UNDEFINED',
+          },
+        ]);
+      });
+
+      test('Should default onboarded flag to true when its null', async () => {
+        const userWithNoOnboardedFlagResponse = getGraphqlResponseFetchUser();
+        userWithNoOnboardedFlagResponse.data.findUsersContent!.flatData!.onboarded =
+          null;
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USER),
+            variables: {
+              id: 'user-id',
+            },
+          })
+          .reply(200, userWithNoOnboardedFlagResponse);
+
+        const result = await users.fetchById('user-id');
+
+        expect(result.onboarded).toEqual(true);
+      });
     });
   });
 
@@ -463,83 +497,109 @@ describe('Users controller', () => {
     const code = 'some-uuid-code';
     const filter = `data/connections/iv/code eq '${code}'`;
 
-    test('Should throw 403 when no user is found', async () => {
-      const mockResponse = getGraphqlResponseFetchUsers();
-      mockResponse.data.queryUsersContentsWithTotal!.items = [];
-      mockResponse.data.queryUsersContentsWithTotal!.total = 0;
+    describe('with mock-server', () => {
+      test('Should fetch the user by code from squidex graphql', async () => {
+        const result = await usersMockGraphql.fetchByCode(code);
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USERS),
-          variables: {
-            filter,
-            top: 1,
-            skip: 0,
-          },
-        })
-        .reply(200, mockResponse);
-
-      await expect(users.fetchByCode(code)).rejects.toThrow('Forbidden');
+        expect(result).toMatchObject(getUserResponse());
+      });
     });
 
-    test('Should throw 403 when the query returns null', async () => {
-      const mockResponse = getGraphqlResponseFetchUsers();
-      mockResponse.data.queryUsersContentsWithTotal = null;
+    describe('with intercepted http layer', () => {
+      afterEach(() => {
+        expect(nock.isDone()).toBe(true);
+      });
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USERS),
-          variables: {
-            filter,
-            top: 1,
-            skip: 0,
-          },
-        })
-        .reply(200, mockResponse);
+      afterEach(() => {
+        nock.cleanAll();
+      });
 
-      await expect(users.fetchByCode(code)).rejects.toThrow('Forbidden');
-    });
+      test('Should throw 403 when no user is found', async () => {
+        const mockResponse = getGraphqlResponseFetchUsers();
+        mockResponse.data.queryUsersContentsWithTotal!.items = [];
+        mockResponse.data.queryUsersContentsWithTotal!.total = 0;
 
-    test('Should throw when it finds more than one user', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USERS),
-          variables: {
-            filter,
-            top: 1,
-            skip: 0,
-          },
-        })
-        .reply(200, getGraphqlResponseFetchUsers);
-
-      await expect(users.fetchByCode(code)).rejects.toThrow('Forbidden');
-    });
-
-    test('Should return user when it finds it', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USERS),
-          variables: {
-            filter,
-            top: 1,
-            skip: 0,
-          },
-        })
-        .reply(200, {
-          data: {
-            queryUsersContentsWithTotal: {
-              total: 1,
-              items: [getGraphqlResponseFetchUser().data.findUsersContent],
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USERS),
+            variables: {
+              filter,
+              top: 1,
+              skip: 0,
             },
-          },
-        });
+          })
+          .reply(200, mockResponse);
 
-      const result = await users.fetchByCode(code);
-      expect(result).toEqual(getUserResponse());
+        await expect(users.fetchByCode(code)).rejects.toThrow('Forbidden');
+      });
+
+      test('Should throw 403 when the query returns null', async () => {
+        const mockResponse = getGraphqlResponseFetchUsers();
+        mockResponse.data.queryUsersContentsWithTotal = null;
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USERS),
+            variables: {
+              filter,
+              top: 1,
+              skip: 0,
+            },
+          })
+          .reply(200, mockResponse);
+
+        await expect(users.fetchByCode(code)).rejects.toThrow('Forbidden');
+      });
+
+      test('Should throw when it finds more than one user', async () => {
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USERS),
+            variables: {
+              filter,
+              top: 1,
+              skip: 0,
+            },
+          })
+          .reply(200, getGraphqlResponseFetchUsers);
+
+        await expect(users.fetchByCode(code)).rejects.toThrow('Forbidden');
+      });
+
+      test('Should return user when it finds it', async () => {
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_USERS),
+            variables: {
+              filter,
+              top: 1,
+              skip: 0,
+            },
+          })
+          .reply(200, {
+            data: {
+              queryUsersContentsWithTotal: {
+                total: 1,
+                items: [getGraphqlResponseFetchUser().data.findUsersContent],
+              },
+            },
+          });
+
+        const result = await users.fetchByCode(code);
+        expect(result).toEqual(getUserResponse());
+      });
     });
   });
 
   describe('update', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
     const userId = 'user-id';
 
     test('Should throw when sync asset fails', async () => {
@@ -766,6 +826,14 @@ describe('Users controller', () => {
   });
 
   describe('updateAvatar', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
     test('Should throw when sync asset fails', async () => {
       nock(config.baseUrl)
         .post(`/api/apps/${config.appName}/assets`)
@@ -816,6 +884,14 @@ describe('Users controller', () => {
   });
 
   describe('connectByCode', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
     test('Should throw forbidden when doesn find connection code', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users`)
@@ -926,6 +1002,14 @@ describe('Users controller', () => {
   });
 
   describe('syncOrcidProfile', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
     const userId = 'userId';
     const orcid = '363-98-9330';
 

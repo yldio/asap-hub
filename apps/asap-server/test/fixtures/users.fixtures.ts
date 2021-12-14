@@ -86,10 +86,11 @@ export const getGraphqlResponseFetchUsers = (): {
   },
 });
 
-export const getGraphQLUser = (): NonNullable<
-  FetchUserQuery['findUsersContent']
-> => ({
-  id: 'user-id-1',
+export const getGraphQLUser = (
+  id: string = 'user-id-1',
+  teamId: string = 'team-id-1',
+): NonNullable<FetchUserQuery['findUsersContent']> => ({
+  id,
   lastModified: '2020-10-26T15:33:18Z',
   version: 42,
   created: '2020-09-23T20:45:22Z',
@@ -140,7 +141,7 @@ export const getGraphQLUser = (): NonNullable<
         responsibilities: 'some team responsibilities',
         id: [
           {
-            id: 'team-id-1',
+            id: teamId,
             flatData: {
               displayName: 'Team A',
               proposal: [{ id: 'proposalId1' }],
@@ -325,6 +326,11 @@ export const fetchExpectation: ListUserResponse = {
     },
   ],
 };
+
+export const getListUserResponse = (): ListUserResponse => ({
+  total: 1,
+  items: [getUserResponse()],
+});
 
 export const restUserMock = patchResponse;
 

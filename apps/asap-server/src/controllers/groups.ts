@@ -1,9 +1,7 @@
 import Boom from '@hapi/boom';
-import { GraphqlGroup } from '@asap-hub/squidex';
+import { GraphqlGroup, SquidexGraphqlClient } from '@asap-hub/squidex';
 import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
 import uniqBy from 'lodash.uniqby';
-
-import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import { FetchOptions } from '../utils/types';
 import { parseGraphQLGroup } from '../entities';
 import { sanitiseForSquidex } from '../utils/squidex';
@@ -41,10 +39,10 @@ export interface GroupController {
 }
 
 export default class Groups implements GroupController {
-  client: InstrumentedSquidexGraphql;
+  graphqlClient: SquidexGraphqlClient;
 
-  constructor(ctxHeaders?: Record<string, string>) {
-    this.client = new InstrumentedSquidexGraphql(ctxHeaders);
+  constructor(squidexGraphlClient: SquidexGraphqlClient) {
+    this.graphqlClient = squidexGraphlClient;
   }
 
   async fetchGroups(
@@ -52,7 +50,7 @@ export default class Groups implements GroupController {
     options: FetchOptions,
   ): Promise<ListGroupResponse> {
     const { take = 50, skip = 0 } = options;
-    const { queryGroupsContentsWithTotal } = await this.client.request<
+    const { queryGroupsContentsWithTotal } = await this.graphqlClient.request<
       FetchGroupsQuery,
       FetchGroupsQueryVariables
     >(FETCH_GROUPS, { filter, top: take, skip });
@@ -102,7 +100,7 @@ export default class Groups implements GroupController {
   }
 
   async fetchById(groupId: string): Promise<GroupResponse> {
-    const { findGroupsContent: group } = await this.client.request<
+    const { findGroupsContent: group } = await this.graphqlClient.request<
       FetchGroupQuery,
       FetchGroupQueryVariables
     >(FETCH_GROUP, { id: groupId });

@@ -1,9 +1,10 @@
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
-import { http } from '../../utils/instrumented-framework';
+import { SquidexGraphql } from '@asap-hub/squidex';
 
 import Users from '../../controllers/users';
 import { Handler } from '../../utils/types';
+import { http } from '../../utils/instrumented-framework';
 import validateRequest from '../../utils/validate-auth0-request';
 
 export const handler: Handler = http(
@@ -24,7 +25,8 @@ export const handler: Handler = http(
       userId: string;
     };
 
-    const users = new Users(request.headers);
+    const squidexGraphqlClient = new SquidexGraphql();
+    const users = new Users(squidexGraphqlClient);
     await users.connectByCode(code, userId);
 
     return {

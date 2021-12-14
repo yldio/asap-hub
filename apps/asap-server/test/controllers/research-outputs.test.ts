@@ -5,11 +5,15 @@ import {
   getSquidexResearchOutputGraphqlResponse,
   getSquidexResearchOutputsGraphqlResponse,
 } from '../fixtures/research-output.fixtures';
-import { getGraphqlResponseFetchUsers } from '../fixtures/users.fixtures';
+import {
+  getGraphqlResponseFetchUsers,
+  getGraphQLUser,
+} from '../fixtures/users.fixtures';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { FetchResearchOutputQuery } from '../../src/gql/graphql';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
+import { getGraphqlTeam } from '../fixtures/teams.fixtures';
 
 describe('ResearchOutputs controller', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
@@ -290,37 +294,76 @@ describe('ResearchOutputs controller', () => {
       expect(result.authors).toEqual(expectedAuthorsResponse);
     });
 
-    test('Should return a list of PM emails', async () => {
-      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        squidexGraphqlResponse,
-      );
+    describe('PM emails', () => {
+      test('Should return a list of PM emails', async () => {
+        const squidexGraphqlResponse =
+          getSquidexResearchOutputGraphqlResponse();
 
-      const result = await researchOutputs.fetchById(researchOutputId);
-      expect(result.contactEmails).toEqual([
-        'pm1@example.com',
-        'pm2@example.com',
-        'multiple-pms-on-same-team@example.com',
-      ]);
-    });
+        // Two PMs on one team
+        const pm1 = getGraphQLUser();
+        pm1.flatData.email = 'pm1@example.com';
+        pm1.flatData.teams![0]!.role = 'Project Manager';
+        const pm2 = getGraphQLUser();
+        pm2.flatData.email = 'pm2@example.com';
+        pm2.flatData.teams![0]!.role = 'Project Manager';
+        squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents![0]!.referencingUsersContents! =
+          [pm1, pm2];
 
-    test('PM emails should be deduplicated', async () => {
-      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        squidexGraphqlResponse,
-      );
+        // And one on another team
+        const pm3 = getGraphQLUser();
+        pm3.flatData.email = 'pm3@example.com';
+        pm3.flatData.teams![0]!.role = 'Project Manager';
+        const team = getGraphqlTeam();
+        team.referencingUsersContents = [pm3];
+        squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents!.push(
+          team,
+        );
 
-      const result = await researchOutputs.fetchById(researchOutputId);
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
 
-      // Both these PMs are duplicated in the fixture
-      expect(
-        result.contactEmails.filter((email) => email === 'pm1@example.com')
-          .length,
-      ).toEqual(1);
-      expect(
-        result.contactEmails.filter((email) => email === 'pm2@example.com')
-          .length,
-      ).toEqual(1);
+        const result = await researchOutputs.fetchById(researchOutputId);
+        expect(result.contactEmails).toEqual([
+          'pm1@example.com',
+          'pm2@example.com',
+          'pm3@example.com',
+        ]);
+      });
+
+      test('PM emails should be deduplicated', async () => {
+        const squidexGraphqlResponse =
+          getSquidexResearchOutputGraphqlResponse();
+
+        // Two PMs on one team
+        const pm1 = getGraphQLUser();
+        pm1.flatData.email = 'pm1@example.com';
+        pm1.flatData.teams![0]!.role = 'Project Manager';
+        const pm2 = getGraphQLUser();
+        pm2.flatData.email = 'pm2@example.com';
+        pm2.flatData.teams![0]!.role = 'Project Manager';
+        squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents![0]!.referencingUsersContents! =
+          [pm1, pm2];
+
+        // Same one on another team
+        const team = getGraphqlTeam();
+        team.referencingUsersContents = [pm1];
+        squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents!.push(
+          team,
+        );
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await researchOutputs.fetchById(researchOutputId);
+
+        // Both these PMs are duplicated in the fixture
+        expect(result.contactEmails).toEqual([
+          'pm1@example.com',
+          'pm2@example.com',
+        ]);
+      });
     });
 
     describe('Last Updated Partial field', () => {

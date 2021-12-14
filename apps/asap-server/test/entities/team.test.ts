@@ -4,7 +4,7 @@ import {
 } from '../../src/entities/team';
 import { FetchTeamQuery } from '../../src/gql/graphql';
 import {
-  graphQlTeamsResponseSingle,
+  getGraphQlTeamsResponse,
   referencingUsersContentsResponse,
 } from '../fixtures/teams.fixtures';
 
@@ -59,7 +59,7 @@ describe('parseGraphQLTeamMember', () => {
 });
 describe('parseGraphQLTeam', () => {
   const team = {
-    ...graphQlTeamsResponseSingle.data.queryTeamsContentsWithTotal.items[0],
+    ...getGraphQlTeamsResponse().data.queryTeamsContentsWithTotal!.items![0],
   };
   it('should throw when projectTitle is null', () => {
     const teamWithInvalidProjectTitle = {

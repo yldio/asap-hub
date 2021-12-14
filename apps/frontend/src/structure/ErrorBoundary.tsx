@@ -6,13 +6,13 @@ import { ErrorBoundary as SentryErrorBoundary } from '@sentry/react';
 
 type ErrorBoundaryProps = { children: ReactNode } & Partial<
   ComponentProps<typeof ErrorCard> & {
-    sentryReporting: boolean;
+    disableSentryReporting: boolean;
   }
 >;
 
 const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
   children,
-  sentryReporting = true,
+  disableSentryReporting = false,
   ...errorCardProps
 }) => {
   let pathname = '';
@@ -25,13 +25,7 @@ const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
     // no routing, no way to get out of the error state
   }
 
-  return sentryReporting ? (
-    <SentryErrorBoundary
-      fallback={({ error }) => <ErrorCard error={error} {...errorCardProps} />}
-    >
-      {children}
-    </SentryErrorBoundary>
-  ) : (
+  return disableSentryReporting ? (
     <ReactErrorBoundary
       fallbackRender={({ error }) => (
         <ErrorCard error={error} {...errorCardProps} />
@@ -40,6 +34,12 @@ const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
     >
       {children}
     </ReactErrorBoundary>
+  ) : (
+    <SentryErrorBoundary
+      fallback={({ error }) => <ErrorCard error={error} {...errorCardProps} />}
+    >
+      {children}
+    </SentryErrorBoundary>
   );
 };
 

@@ -14,7 +14,7 @@ const Throw: React.FC<Record<string, never>> = () => {
 describe('error boundary', () => {
   it('catches child errors', async () => {
     const { container } = render(
-      <ErrorBoundary sentryReporting={false}>
+      <ErrorBoundary disableSentryReporting={true}>
         <Throw />
       </ErrorBoundary>,
     );
@@ -24,7 +24,7 @@ describe('error boundary', () => {
   it('Overrides title and description when error thrown', async () => {
     const { container } = render(
       <ErrorBoundary
-        sentryReporting={false}
+        disableSentryReporting={true}
         title="Something went wrong"
         description="There was a problem with your request"
       >
@@ -42,7 +42,7 @@ describe('error boundary', () => {
     const history = createMemoryHistory({ initialEntries: ['/throw'] });
     const { container } = render(
       <Router history={history}>
-        <ErrorBoundary sentryReporting={false}>
+        <ErrorBoundary disableSentryReporting={true}>
           <Route path="/home">at home</Route>
           <Route path="/throw">
             <Throw />

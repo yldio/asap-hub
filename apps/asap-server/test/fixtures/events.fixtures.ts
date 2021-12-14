@@ -1,13 +1,8 @@
 import { RestEvent, config } from '@asap-hub/squidex';
 import { listGroupsResponse, queryGroupsResponse } from './groups.fixtures';
 import { ListEventResponse, EventResponse } from '@asap-hub/model';
-import {
-  EventContentFragment,
-  FetchEventQuery,
-  FetchEventsQuery,
-} from '../../src/gql/graphql';
 
-export const fetchEventsResponse: { data: FetchEventsQuery } = {
+export const fetchEventsResponse = {
   data: {
     queryEventsContentsWithTotal: {
       total: 2,
@@ -96,8 +91,7 @@ export const fetchEventsResponse: { data: FetchEventsQuery } = {
         },
       ],
     },
-    // eslint-disable-next-line
-  } as any as FetchEventsQuery, // @todo Remove with fixtures work
+  },
 };
 
 export const listEventResponse: ListEventResponse = {
@@ -188,34 +182,7 @@ export const eventResponse: EventResponse = {
   group: listGroupsResponse.items[0],
 };
 
-export const graphqlEvent = {
-  id: 'afcee0ec-fcd5-479c-9809-e397636f815a',
-  created: '2021-02-08T16:04:56Z',
-  lastModified: '2021-02-08T16:22:12Z',
-  flatData: {
-    description: 'This event is awesome',
-    endDate: '2009-12-24T16:20:14Z',
-    startDate: '2009-12-02T16:19:31Z',
-    meetingLink: 'https://zoom.com/room/123',
-    status: 'Confirmed',
-    tags: [],
-    title: 'Example Event',
-    calendar: [
-      {
-        flatData: {
-          googleCalendarId:
-            'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
-          color: '#125A12' as const,
-          name: 'Tech 1 - Sequencing/omics',
-        },
-        referencingGroupsContents: [],
-      },
-    ],
-  },
-  // eslint-disable-next-line
-} as any as EventContentFragment; // @todo Remove with fixtures work
-
-export const findEventResponse: { data: FetchEventQuery } = {
+export const findEventResponse = {
   data: {
     findEventsContent:
       fetchEventsResponse.data.queryEventsContentsWithTotal!.items![0]!,
@@ -258,6 +225,27 @@ const squidexGraphqlEventsFlatData = () => ({
   status: 'Confirmed',
   tags: [],
   title: 'Example Event',
+  startDateTimeZone: 'UTC',
+  endDateTimeZone: 'UTC',
+  notesPermanentlyUnavailable: false,
+  notes: 'These are the notes from the meeting',
+  videoRecordingPermanentlyUnavailable: false,
+  videoRecording: '<embeded>video</embeded>',
+  presentationPermanentlyUnavailable: true,
+  presentation: '<embeded>presentation</embeded>',
+  meetingMaterialsPermanentlyUnavailable: true,
+  meetingMaterials: [
+    {
+      title: 'My additional link',
+      url: 'https://link.pt/additional-material',
+    },
+  ],
+  thumbnail: [
+    {
+      id: 'uuid-thumbnail-2',
+    },
+  ],
+  eventLink: 'https://zoom.com/room/123',
   calendar: [
     {
       flatData: {

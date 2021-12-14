@@ -7,12 +7,12 @@ import { ListEventResponse, EventStatus } from '@asap-hub/model';
 import {
   fetchEventsResponse,
   listEventResponse,
-  graphqlEvent,
   findEventResponse,
   eventResponse,
   getRestEvent,
   squidexGraphqlEventsResponse,
   squidexGraphqlEventResponse,
+  getSquidexGraphqlEvents,
 } from '../fixtures/events.fixtures';
 import { queryGroupsResponse } from '../fixtures/groups.fixtures';
 import { print } from 'graphql';
@@ -21,10 +21,10 @@ import {
   FETCH_EVENTS,
   FETCH_GROUP_CALENDAR,
 } from '../../src/queries/events.queries';
-import { FetchEventQuery, FetchEventsQuery } from '../../src/gql/graphql';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 
 describe('Event controller', () => {
+  const graphqlEvent = getSquidexGraphqlEvents();
   const squidexGraphqlClientMock = new SquidexGraphql();
   const events = new Events(squidexGraphqlClientMock);
 
@@ -439,7 +439,7 @@ describe('Event controller', () => {
         // change event start date to 06/06/2020, one hour from the above
         event.flatData!.startDate = '2020-06-06T14:00:00Z';
 
-        const fetchEventsResponse: { data: FetchEventsQuery } = {
+        const fetchEventsResponse = {
           data: {
             queryEventsContentsWithTotal: {
               total: 2,
@@ -470,7 +470,7 @@ describe('Event controller', () => {
         // change event start date to 2020
         event.flatData!.startDate = '2020-06-06T14:00:00Z';
 
-        const fetchEventsResponse: { data: FetchEventsQuery } = {
+        const fetchEventsResponse = {
           data: {
             queryEventsContentsWithTotal: {
               total: 2,
@@ -501,7 +501,7 @@ describe('Event controller', () => {
         // change event start date to year 2021
         event.flatData!.startDate = '2021-06-06T13:00:00Z';
 
-        const fetchEventsResponse: { data: FetchEventsQuery } = {
+        const fetchEventsResponse = {
           data: {
             queryEventsContentsWithTotal: {
               total: 2,
@@ -755,7 +755,7 @@ describe('Event controller', () => {
           // change event start date to 06/06/2020, one hour from the above
           event.flatData!.startDate = '2020-06-06T14:00:00Z';
 
-          const fetchEventResponse: { data: FetchEventQuery } = {
+          const fetchEventResponse = {
             data: {
               findEventsContent: event,
             },
@@ -784,7 +784,7 @@ describe('Event controller', () => {
           // change event start date to 2020
           event.flatData!.startDate = '2020-06-06T14:00:00Z';
 
-          const fetchEventResponse: { data: FetchEventQuery } = {
+          const fetchEventResponse = {
             data: {
               findEventsContent: event,
             },
@@ -813,7 +813,7 @@ describe('Event controller', () => {
           // change event start date to year 2021
           event.flatData!.startDate = '2021-06-06T13:00:00Z';
 
-          const fetchEventResponse: { data: FetchEventQuery } = {
+          const fetchEventResponse = {
             data: {
               findEventsContent: event,
             },

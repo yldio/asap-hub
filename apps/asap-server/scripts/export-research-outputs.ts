@@ -1,10 +1,10 @@
 import { promises as fs } from 'fs';
 import { ListResearchOutputResponse } from '@asap-hub/model';
+import { SquidexGraphql } from '@asap-hub/squidex';
 import ResearchOutputs from '../src/controllers/research-outputs';
-import { InstrumentedSquidexGraphql } from '../src/utils/instrumented-client';
 
 const main = async () => {
-  const controller = new ResearchOutputs(new InstrumentedSquidexGraphql());
+  const controller = new ResearchOutputs(new SquidexGraphql());
   const file = await fs.open('ro.json', 'w');
 
   let recordCount = 0;

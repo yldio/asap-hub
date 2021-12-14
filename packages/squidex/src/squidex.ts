@@ -265,3 +265,8 @@ export class Squidex<
     }
   }
 }
+
+export type SquidexRestClient<
+  T extends { id: string; data: Record<string, unknown> },
+  C extends { id: string; data: Record<string, unknown> } = T,
+> = Squidex<T, C>;

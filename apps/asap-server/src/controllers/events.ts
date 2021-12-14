@@ -1,8 +1,14 @@
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
-import { RestEvent, Event, SquidexGraphqlClient } from '@asap-hub/squidex';
-import { InstrumentedSquidex } from '../utils/instrumented-client';
+import {
+  RestEvent,
+  Event,
+  SquidexGraphqlClient,
+  Squidex,
+  SquidexGraphql,
+  SquidexRestClient,
+} from '@asap-hub/squidex';
 import { parseGraphQLEvent } from '../entities/event';
 import { AllOrNone, FetchOptions } from '../utils/types';
 
@@ -32,11 +38,11 @@ export interface EventController {
 
 export default class Events implements EventController {
   squidexGraphqlClient: SquidexGraphqlClient;
-  squidexRestClient: InstrumentedSquidex<RestEvent>;
+  eventSquidexRestClient: SquidexRestClient<RestEvent>;
 
-  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
-    this.squidexGraphqlClient = squidexGraphqlClient;
-    this.squidexRestClient = new InstrumentedSquidex('events');
+  constructor() {
+    this.squidexGraphqlClient = new SquidexGraphql();
+    this.eventSquidexRestClient = new Squidex('events');
   }
 
   async fetch(options: FetchEventsOptions): Promise<ListEventResponse> {
@@ -148,16 +154,16 @@ export default class Events implements EventController {
   // This functions are used by the sync google events script
   // and return RestEvents for the sake of simplicity
   async create(event: Event): Promise<RestEvent> {
-    return this.squidexRestClient.create(toEventData(event));
+    return this.eventSquidexRestClient.create(toEventData(event));
   }
 
   async update(eventId: string, event: Partial<Event>): Promise<RestEvent> {
-    return this.squidexRestClient.patch(eventId, toEventData(event));
+    return this.eventSquidexRestClient.patch(eventId, toEventData(event));
   }
 
   async fetchByGoogleId(googleId: string): Promise<RestEvent | null> {
     const [err, res] = await Intercept(
-      this.squidexRestClient.client
+      this.eventSquidexRestClient.client
         .get('events', {
           searchParams: {
             $top: 1,

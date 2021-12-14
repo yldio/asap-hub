@@ -30,8 +30,8 @@ export interface GroupController {
 export default class Groups implements GroupController {
   squidexGraphqlClient: SquidexGraphqlClient;
 
-  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
-    this.squidexGraphqlClient = squidexGraphqlClient;
+  constructor(squidexGraphlClient: SquidexGraphqlClient) {
+    this.squidexGraphqlClient = squidexGraphlClient;
   }
 
   async fetchGroups(

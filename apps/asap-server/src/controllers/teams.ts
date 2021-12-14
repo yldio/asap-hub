@@ -1,8 +1,14 @@
 import Boom from '@hapi/boom';
-import { RestTeam, SquidexGraphqlClient } from '@asap-hub/squidex';
+import {
+  RestTeam,
+  RestUser,
+  GraphqlTeam,
+  SquidexGraphqlClient,
+  SquidexRestClient,
+  Squidex,
+} from '@asap-hub/squidex';
 import { ListTeamResponse, TeamResponse, TeamTool } from '@asap-hub/model';
 
-import { InstrumentedSquidex } from '../utils/instrumented-client';
 import { parseGraphQLTeam } from '../entities';
 import { sanitiseForSquidex } from '../utils/squidex';
 import { FETCH_TEAM, FETCH_TEAMS } from '../queries/teams.queries';
@@ -37,12 +43,14 @@ export type FetchTeamsOptions = {
   showTeamTools?: string[];
 };
 export default class Teams implements TeamController {
-  squidexRestClient: InstrumentedSquidex<RestTeam>;
-  squidexGraphqlClient: SquidexGraphqlClient;
+  teamSquidexRestClient: SquidexRestClient<RestTeam>;
+  userSquidexRestClient: SquidexRestClient<RestUser>;
+  squidexGraphlClient: SquidexGraphqlClient;
 
-  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
-    this.squidexGraphqlClient = squidexGraphqlClient;
-    this.squidexRestClient = new InstrumentedSquidex('teams');
+  constructor(squidexGraphlClient: SquidexGraphqlClient) {
+    this.squidexGraphlClient = squidexGraphlClient;
+    this.userSquidexRestClient = new Squidex('users');
+    this.teamSquidexRestClient = new Squidex('teams');
   }
 
   async update(id: string, tools: TeamTool[]): Promise<TeamResponse> {
@@ -56,7 +64,7 @@ export default class Teams implements TeamController {
       ),
     );
 
-    await this.squidexRestClient.patch(id, { tools: { iv: cleanUpdate } });
+    await this.teamSquidexRestClient.patch(id, { tools: { iv: cleanUpdate } });
     return this.fetchById(id);
   }
 
@@ -81,7 +89,7 @@ export default class Teams implements TeamController {
       .join(' and ');
 
     const { queryTeamsContentsWithTotal } =
-      await this.squidexGraphqlClient.request<
+      await this.squidexGraphlClient.request<
         FetchTeamsQuery,
         FetchTeamsQueryVariables
       >(FETCH_TEAMS, {
@@ -132,7 +140,7 @@ export default class Teams implements TeamController {
     teamId: string,
     options?: FetchTeamOptions,
   ): Promise<TeamResponse> {
-    const teamResponse = await this.squidexGraphqlClient.request<
+    const teamResponse = await this.squidexGraphlClient.request<
       FetchTeamQuery,
       FetchTeamQueryVariables
     >(FETCH_TEAM, { id: teamId });

@@ -3,7 +3,14 @@ import {
   UserPatchRequest,
   UserResponse,
 } from '@asap-hub/model';
-import { config, RestUser, SquidexGraphqlClient } from '@asap-hub/squidex';
+import {
+  config,
+  GraphqlUser,
+  RestUser,
+  Squidex,
+  SquidexGraphqlClient,
+  SquidexRestClient,
+} from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
 import FormData from 'form-data';
@@ -18,7 +25,6 @@ import {
 } from '../gql/graphql';
 import { FETCH_USER, FETCH_USERS } from '../queries/users.queries';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
-import { InstrumentedSquidex } from '../utils/instrumented-client';
 import { sanitiseForSquidex } from '../utils/squidex';
 import { FetchOptions } from '../utils/types';
 
@@ -63,12 +69,12 @@ const fetchByCode = async (code: string, client: Got): Promise<RestUser> => {
 };
 
 export default class Users implements UserController {
-  squidexRestClient: InstrumentedSquidex<RestUser>;
-  squidexGraphqlClient: SquidexGraphqlClient;
+  userSquidexRestClient: SquidexRestClient<RestUser>;
+  squidexGraphlClient: SquidexGraphqlClient;
 
-  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
-    this.squidexGraphqlClient = squidexGraphqlClient;
-    this.squidexRestClient = new InstrumentedSquidex('users');
+  constructor(squidexGraphlClient: SquidexGraphqlClient) {
+    this.squidexGraphlClient = squidexGraphlClient;
+    this.userSquidexRestClient = new Squidex('users');
   }
 
   async update(id: string, update: UserPatchRequest): Promise<UserResponse> {
@@ -102,11 +108,11 @@ export default class Users implements UserController {
     }, {} as { [key: string]: { iv: unknown } });
 
     if (!isFullUpdate) {
-      await this.squidexRestClient.patch(id, cleanUpdate);
+      await this.userSquidexRestClient.patch(id, cleanUpdate);
       return this.fetchById(id);
     }
 
-    const user = await this.squidexRestClient.fetchById(id);
+    const user = await this.userSquidexRestClient.fetchById(id);
 
     // update only contains the team the user is trying to change
     // we need to merge it with the ones on the DB, replacing the updated props
@@ -143,7 +149,7 @@ export default class Users implements UserController {
     /* eslint-enable @typescript-eslint/no-non-null-assertion, no-param-reassign */
 
     const updatedData = { ...user.data, ...cleanUpdate };
-    await this.squidexRestClient.put(id, updatedData);
+    await this.userSquidexRestClient.put(id, updatedData);
 
     // use fetch for proper user teams hydration
     return this.fetchById(id);
@@ -195,7 +201,7 @@ export default class Users implements UserController {
       .trim();
 
     const { queryUsersContentsWithTotal } =
-      await this.squidexGraphqlClient.request<
+      await this.squidexGraphlClient.request<
         FetchUsersQuery,
         FetchUsersQueryVariables
       >(FETCH_USERS, { filter: queryFilter, top: take, skip });
@@ -223,7 +229,7 @@ export default class Users implements UserController {
   }
 
   async fetchById(id: string): Promise<UserResponse> {
-    const { findUsersContent } = await this.squidexGraphqlClient.request<
+    const { findUsersContent } = await this.squidexGraphlClient.request<
       FetchUserQuery,
       FetchUserQueryVariables
     >(FETCH_USER, { id });
@@ -236,7 +242,7 @@ export default class Users implements UserController {
 
   async fetchByCode(code: string): Promise<UserResponse> {
     const { queryUsersContentsWithTotal } =
-      await this.squidexGraphqlClient.request<
+      await this.squidexGraphlClient.request<
         FetchUsersQuery,
         FetchUsersQueryVariables
       >(FETCH_USERS, {
@@ -268,7 +274,7 @@ export default class Users implements UserController {
       contentType,
     });
 
-    const { id: assetId } = await this.squidexRestClient.client
+    const { id: assetId } = await this.userSquidexRestClient.client
       .post('assets', {
         prefixUrl: `${config.baseUrl}/api/apps/${config.appName}`,
         headers: form.getHeaders(),
@@ -276,7 +282,7 @@ export default class Users implements UserController {
       })
       .json();
 
-    await this.squidexRestClient.patch(id, { avatar: { iv: [assetId] } });
+    await this.userSquidexRestClient.patch(id, { avatar: { iv: [assetId] } });
 
     // use fetch for proper user teams hydration
     return this.fetchById(id);
@@ -286,7 +292,10 @@ export default class Users implements UserController {
     welcomeCode: string,
     userId: string,
   ): Promise<UserResponse> {
-    const user = await fetchByCode(welcomeCode, this.squidexRestClient.client);
+    const user = await fetchByCode(
+      welcomeCode,
+      this.userSquidexRestClient.client,
+    );
     if (user.data.connections.iv?.find(({ code }) => code === userId)) {
       return Promise.resolve(parseUser(user));
     }
@@ -295,7 +304,7 @@ export default class Users implements UserController {
       { code: userId },
     ]);
 
-    const res = await this.squidexRestClient.patch(user.id, {
+    const res = await this.userSquidexRestClient.patch(user.id, {
       email: { iv: user.data.email.iv },
       connections: { iv: connections },
     });
@@ -309,7 +318,7 @@ export default class Users implements UserController {
   ): Promise<UserResponse> {
     let fetchedUser;
     if (!cachedUser) {
-      fetchedUser = await this.squidexRestClient.fetchById(id);
+      fetchedUser = await this.userSquidexRestClient.fetchById(id);
     }
 
     const user = cachedUser || (fetchedUser as RestUser);
@@ -330,7 +339,7 @@ export default class Users implements UserController {
       update.orcidWorks = { iv: works.slice(0, 10) };
     }
 
-    const updatedUser = await this.squidexRestClient.patch(user.id, update);
+    const updatedUser = await this.userSquidexRestClient.patch(user.id, update);
     return parseUser(updatedUser);
   }
 }

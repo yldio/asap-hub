@@ -150,15 +150,7 @@ build:native:
 ##############
 # stage test #
 ##############
-
-.tmpl:test: &tmpl_test
-  script:
-    - echo "no script property found"
-  needs: []
-  stage: test
-
 test:unit:
-  <<: *tmpl_test
   cache:
     key: jest-cache
     paths:
@@ -170,21 +162,23 @@ test:unit:
   script:
     - yarn run test --coverage
     - yarn codecov
+  needs: []
+  stage: test
 
 test:browser:
-  <<: *tmpl_test
   image: mcr.microsoft.com/playwright:bionic
   script:
     - yarn run test:browser
   needs:
     - build:native
+  stage: test
 
 test:build-output:
-  <<: *tmpl_test
   script:
     - yarn run test:build-output
   needs:
     - build:ts
+  stage: test
 
 ##############
 # stage check #

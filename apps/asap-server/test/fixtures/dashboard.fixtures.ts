@@ -80,7 +80,9 @@ export const squidexGraphqlDashboardResponse = () => ({
       id: 'guid-news-1',
       shortText: 'Short text of news 1',
       text: '<p>text</p>',
-      thumbnail: 'https://cloud.squidex.io/api/assets/1153/news-url-1',
+      thumbnail: expect.stringMatching(
+        /https:\/\/cloud.squidex.io\/api\/assets\/(.+)\/news-url-1/,
+      ),
       title: 'News 1',
       type: 'News',
     },
@@ -89,7 +91,9 @@ export const squidexGraphqlDashboardResponse = () => ({
       id: 'guid-news-2',
       shortText: 'Short text of event 2',
       text: '<p>text</p>',
-      thumbnail: 'https://cloud.squidex.io/api/assets/1153/news-url-2',
+      thumbnail: expect.stringMatching(
+        /https:\/\/cloud.squidex.io\/api\/assets\/(.+)\/news-url-2/,
+      ),
       title: 'Event 2',
       type: 'Event',
     },

@@ -143,9 +143,3 @@ const squidexGraphqlCalendarsFlatData = () => ({
   syncToken: 'sync-token',
   expirationDate: 1617196357000,
 });
-
-export const squidexGraphqlCalendarsResponse = () => ({
-  color: '#2952A3',
-  id: '3@group.calendar.google.com',
-  name: 'Tech 4a - iPSCs - 3D & Co-cultures',
-});

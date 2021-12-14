@@ -15,5 +15,4 @@ export interface NewsResponse {
   linkText?: string;
   created: string;
 }
-
 export type ListNewsResponse = ListResponse<NewsResponse>;

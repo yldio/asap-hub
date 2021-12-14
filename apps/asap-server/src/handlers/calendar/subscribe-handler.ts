@@ -4,7 +4,7 @@ import Joi from '@hapi/joi';
 import { Auth } from 'googleapis';
 import * as Sentry from '@sentry/serverless';
 import { framework as lambda } from '@asap-hub/services-common';
-import { WebhookPayload, Calendar } from '@asap-hub/squidex';
+import { WebhookPayload, Calendar, SquidexGraphql } from '@asap-hub/squidex';
 
 import {
   googleApiUrl,
@@ -197,11 +197,11 @@ Sentry.AWSLambda.init({
   environment,
   release: currentRevision,
 });
-
+const squidexGraphqlClient = new SquidexGraphql();
 const webhookHandler = calendarCreatedHandlerFactory(
   subscribeToEventChangesFactory(getJWTCredentialsAWS),
   unsubscribeFromEventChangesFactory(getJWTCredentialsAWS),
-  new Calendars(),
+  new Calendars(squidexGraphqlClient),
   new AlertsSentry(Sentry.captureException.bind(Sentry)),
 );
 

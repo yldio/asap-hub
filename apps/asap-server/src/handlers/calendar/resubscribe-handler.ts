@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import { SquidexGraphql } from '@asap-hub/squidex';
 import Calendars, { CalendarController } from '../../controllers/calendars';
 import {
   UnsubscribeFromEventChanges,
@@ -60,9 +61,10 @@ export const resubscribeCalendarsHandlerFactory =
       }),
     );
   };
+const squidexGraphqlClient = new SquidexGraphql();
 
 export const handler = resubscribeCalendarsHandlerFactory(
-  new Calendars(),
+  new Calendars(squidexGraphqlClient),
   unsubscribeFromEventChangesFactory(getJWTCredentials),
   subscribeToEventChangesFactory(getJWTCredentials),
 );

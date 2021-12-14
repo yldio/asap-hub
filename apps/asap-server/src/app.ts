@@ -62,7 +62,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const squidexGraphlClient = new InstrumentedSquidexGraphql();
 
   // Controllers
-  const calendarController = libs.calendarController || new Calendars();
+  const calendarController =
+    libs.calendarController || new Calendars(squidexGraphlClient);
   const dashboardController =
     libs.dashboardController || new Dashboard(squidexGraphlClient);
   const newsController = libs.newsController || new News();

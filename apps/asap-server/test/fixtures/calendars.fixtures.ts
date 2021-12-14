@@ -139,3 +139,26 @@ export const getCalendarsGraphqlResponse = (): {
     },
   },
 });
+
+export const getSquidexGraphqlCalendars = () => ({
+  id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+  created: '2020-09-23T16:34:26.842Z',
+  lastModified: '2021-05-14T14:48:46Z',
+  version: 42,
+  flatData: squidexGraphqlCalendarsFlatData(),
+});
+
+const squidexGraphqlCalendarsFlatData = () => ({
+  googleCalendarId: '3@group.calendar.google.com',
+  color: '#2952A3',
+  name: 'Tech 4a - iPSCs - 3D & Co-cultures',
+  resourceId: 'resource-id',
+  syncToken: 'sync-token',
+  expirationDate: 1617196357000,
+});
+
+export const squidexGraphqlCalendarsResponse = () => ({
+  color: '#2952A3',
+  id: '3@group.calendar.google.com',
+  name: 'Tech 4a - iPSCs - 3D & Co-cultures',
+});

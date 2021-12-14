@@ -45,7 +45,6 @@ export const SearchFrame: React.FC<Omit<FrameBoundaryProps, 'boundaryProps'>> =
       title={'Something went wrong'}
       description={'There was a problem with your search, please try again.'}
       error={new Error()}
-      sentryReporting={true}
     >
       <Frame title={title} fallback={fallback}>
         {children}

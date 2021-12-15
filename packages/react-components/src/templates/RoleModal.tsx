@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, Fragment } from 'react';
 import { UserPatchRequest, UserResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
@@ -49,7 +49,6 @@ const RoleModal: React.FC<RoleModalProps> = ({
 
   return (
     <EditModal
-      key="s"
       title={'Your Role on ASAP'}
       dirty={
         newResearchInterests !== researchInterests ||
@@ -73,7 +72,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
           <div css={fieldsContainer}>
             <div css={textFieldsContainerStyles}>
               {teams.map(({ displayName, role, id }) => (
-                <>
+                <Fragment key={id}>
                   <LabeledTextField
                     key={`team-${id}`}
                     title="Team"
@@ -87,11 +86,11 @@ const RoleModal: React.FC<RoleModalProps> = ({
                     value={role}
                     options={[{ label: role, value: role }]}
                   />
-                </>
+                </Fragment>
               ))}
-              {labs.map(({ name, id: labID }) => (
+              {labs.map(({ name, id }) => (
                 <LabeledTextField
-                  key={`lab${labID}`}
+                  key={`lab-${id}`}
                   title="Lab"
                   value={name}
                   enabled={false}

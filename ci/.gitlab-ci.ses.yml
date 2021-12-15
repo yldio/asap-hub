@@ -5,7 +5,7 @@ deploy:ses:prod:
     - yarn workspace @asap-hub/messages deploy $SES_REGION
   stage: deploy-prod
   needs:
-    - build:ts
+    - build:ts:prod
   variables:
     SLS_STAGE: production
     APP_ORIGIN: $ASAP_APP_URL
@@ -17,4 +17,4 @@ deploy:ses:dev:
     - yarn workspace @asap-hub/messages deploy $SES_SANDBOX_REGION
   stage: deploy-dev
   needs:
-    - build:ts
+    - build:ts:dev

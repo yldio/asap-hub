@@ -38,6 +38,7 @@ stages:
   - check
   - deploy-dev
   - verify-dev
+  - prepare-prod
   - deploy-prod
   - verify-prod
 
@@ -81,6 +82,9 @@ build:ts:prod:
   extends: .build:ts
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
+  environment:
+    name: production
+    url: $ASAP_APP_URL
   before_script:
     - export AUTH_FRONTEND_BASE_URL=$ASAP_APP_URL/.auth/
     - export REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-prod" --query Parameter.Value --output text)

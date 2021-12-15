@@ -3,7 +3,10 @@ import algoliasearch, { SearchClient } from 'algoliasearch';
 import ResearchOutputs, {
   ResearchOutputController,
 } from '../../controllers/research-outputs';
-import { ResearchOutputEventType } from '../webhooks/webhook-research-output';
+import {
+  ResearchOutputEventType,
+  ResearchOutputWebhookPayload,
+} from '../webhooks/webhook-research-output';
 import {
   algoliaAppId,
   algoliaIndexApiKey,
@@ -18,7 +21,7 @@ export const indexResearchOutputHandler = (
 ): ((
   event: EventBridgeEvent<
     ResearchOutputEventType,
-    SquidexWebhookResearchOutputPayload
+    ResearchOutputWebhookPayload
   >,
 ) => Promise<void>) => {
   const algoliaIndex = algoliaClient.initIndex(algoliaResearchOutputIndex);
@@ -26,7 +29,7 @@ export const indexResearchOutputHandler = (
   return async (
     event: EventBridgeEvent<
       ResearchOutputEventType,
-      SquidexWebhookResearchOutputPayload
+      ResearchOutputWebhookPayload
     >,
   ): Promise<void> => {
     logger.debug(`Event ${event['detail-type']}`);
@@ -51,19 +54,6 @@ export const indexResearchOutputHandler = (
       }
       throw e;
     }
-  };
-};
-
-export type SquidexWebhookResearchOutputPayload = {
-  type:
-    | 'ResearchOutputsPublished'
-    | 'ResearchOutputsUpdated'
-    | 'ResearchOutputsUnpublished'
-    | 'ResearchOutputsDeleted';
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: 'Published' | 'Updated' | 'Unpublished' | 'Deleted';
-    id: string;
   };
 };
 

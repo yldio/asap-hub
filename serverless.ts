@@ -277,7 +277,31 @@ const serverlessConfig: AWS = {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
               source: ['asap.user'],
-              'detail-type': ['UserPublished'],
+              'detail-type': ['UserCreated'],
+            },
+            retryPolicy: {
+              maximumRetryAttempts: 2,
+            },
+          },
+        },
+      ],
+      environment: {
+        SES_REGION: `\${ssm:ses-region-${envAlias}}`,
+        EMAIL_SENDER: `\${ssm:email-invite-sender-${envAlias}}`,
+        EMAIL_BCC: `\${ssm:email-invite-bcc-${envAlias}}`,
+        EMAIL_RETURN: `\${ssm:email-invite-return-${envAlias}}`,
+        SENTRY_DSN: '${env:SENTRY_DSN_USER_INVITE}',
+      },
+    },
+    indexUser: {
+      handler: 'apps/asap-server/src/handlers/user/index-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: ['asap.user'],
+              'detail-type': ['UserCreated', 'UserUpdated', 'UserDeleted'],
             },
             retryPolicy: {
               maximumRetryAttempts: 2,

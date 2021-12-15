@@ -49,6 +49,15 @@ export type ResearchOutputEventType =
   | 'ResearchOutputUpdated'
   | 'ResearchOutputDeleted';
 
+export type ResearchOutputWebhookPayload = {
+  type: ResearchOutputEventType;
+  payload: {
+    $type: 'EnrichedContentEvent';
+    type: 'Published' | 'Updated' | 'Unpublished' | 'Deleted';
+    id: string;
+  };
+};
+
 const getEventType = (
   customType: string,
 ): ResearchOutputEventType | undefined => {

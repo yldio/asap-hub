@@ -34,10 +34,12 @@ describe('RoleModal', () => {
     );
   });
 
-  it('renders default values into text inputs', async () => {
+  it('renders default values into inputs', async () => {
     const { getByLabelText, getAllByLabelText } = render(
       <RoleModal
         {...props}
+        researchInterests={undefined}
+        responsibilities={undefined}
         labs={[
           { name: 'Lab 1', id: 'lab-1' },
           { name: 'Lab 2', id: 'lab-2' },
@@ -49,10 +51,8 @@ describe('RoleModal', () => {
       />,
       { wrapper: StaticRouter },
     );
-    expect(getByLabelText(/main.+interests/i)).toHaveValue(
-      'mainResearchInterests',
-    );
-    expect(getByLabelText(/responsibilities/i)).toHaveValue('responsibilities');
+    expect(getByLabelText(/main.+interests/i)).toHaveValue('');
+    expect(getByLabelText(/responsibilities/i)).toHaveValue('');
     expect(getAllByLabelText(/team/i)).toHaveLength(2);
     expect(getAllByLabelText(/team/i)[0]).toHaveValue('Team 1');
     expect(getAllByLabelText(/team/i)[1]).toHaveValue('Team 2');

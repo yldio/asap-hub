@@ -1,6 +1,5 @@
-import Got from 'got';
+import Got, { RequestError } from 'got';
 import decode from 'jwt-decode';
-import Boom from '@hapi/boom';
 import squidex from './config';
 
 /* eslint-disable camelcase */
@@ -9,41 +8,51 @@ interface JwtToken {
   exp: number;
 }
 
-let token: Promise<string> | null;
-export const getAccessToken = async (): Promise<string> => {
-  if (token) {
-    const tk1 = await token;
-    if (tk1) {
-      const jwt = decode<JwtToken>(tk1);
-      const currentTime = Date.now() / 1000;
+export const getAccessTokenFactory = () => {
+  let tokenP: Promise<string>;
 
-      if (currentTime > jwt.exp) {
-        return tk1;
+  return async (): Promise<string> => {
+    if (tokenP) {
+      const tk1 = await tokenP;
+      if (tk1) {
+        const jwt = decode<JwtToken>(tk1);
+        const currentTime = Date.now() / 1000;
+
+        if (currentTime > jwt.exp) {
+          return tk1;
+        }
       }
     }
-  }
 
-  const url = `${squidex.baseUrl}/identity-server/connect/token`;
-  token = Got.post(url, {
-    form: {
-      grant_type: 'client_credentials',
-      scope: 'squidex-api',
-      client_id: squidex.clientId,
-      client_secret: squidex.clientSecret,
-    },
-  })
-    .json()
-    .then((r: unknown) => {
-      const { access_token: accessToken } = r as { access_token: string };
-      return accessToken;
-    });
+    tokenP = fetchToken();
 
-  if (token) {
-    return token;
-  }
-
-  throw Boom.badImplementation();
+    return tokenP;
+  };
 };
+
+const fetchToken = async () => {
+  const url = `${squidex.baseUrl}/identity-server/connect/token`;
+  try {
+    const response = await Got.post(url, {
+      form: {
+        grant_type: 'client_credentials',
+        scope: 'squidex-api',
+        client_id: squidex.clientId,
+        client_secret: squidex.clientSecret,
+      },
+    }).json<{ access_token: string }>();
+
+    return response.access_token;
+  } catch (error) {
+    if (error instanceof RequestError) {
+      error.message = `Request to Squidex failed (code ${error.code}), response: ${error.response?.body}`;
+    }
+
+    throw error;
+  }
+};
+
+export type GetAccessToken = ReturnType<typeof getAccessTokenFactory>;
 
 const create = (
   clientOptions: { unpublished: boolean } = { unpublished: false },
@@ -62,7 +71,7 @@ const create = (
     hooks: {
       beforeRequest: [
         async (options): Promise<void> => {
-          const tk = await getAccessToken();
+          const tk = await getAccessTokenFactory();
 
           /* eslint-disable no-param-reassign */
           options.headers = {

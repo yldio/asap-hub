@@ -1,3 +1,4 @@
+import { SquidexGraphqlError } from '@asap-hub/squidex';
 import ResearchOutputs from '../../src/controllers/research-outputs';
 import {
   getListResearchOutputResponse,
@@ -46,6 +47,28 @@ describe('ResearchOutputs controller', () => {
 
       await expect(researchOutputs.fetchById(researchOutputId)).rejects.toThrow(
         'Not Found',
+      );
+    });
+
+    test('Should throw an error with a specific error message when the graphql client throws one', async () => {
+      squidexGraphqlClientMock.request.mockRejectedValueOnce(
+        new SquidexGraphqlError(
+          {
+            status: 521,
+            errors: [
+              {
+                message: 'some error message',
+                path: ['asdasdas'],
+                locations: [],
+              },
+            ],
+          },
+          { query: 'some query' },
+        ),
+      );
+
+      await expect(researchOutputs.fetchById(researchOutputId)).rejects.toThrow(
+        'some error message',
       );
     });
 

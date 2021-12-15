@@ -65,6 +65,9 @@ stages:
   stage: build
 
 build:ts:branch:
+  environment:
+    name: dev
+    url: http://google.com
   extends: .build:ts
   variables:
     REACT_APP_SENTRY_DSN: ''
@@ -145,6 +148,9 @@ prepare:squidex:branch:
 
 build:sls:package:branch:
   extends: .build:sls:package
+  environment:
+    name: dev
+    url: http://api.google.com/
   variables:
     <<: *tmpl_branch_variables
     <<: *tmpl_deploy_variables

@@ -50,7 +50,7 @@ test:integration:
 
 sync:squidex:dev:
   <<: *tmpl_sync
-  stage: deploy-dev
+  stage: prepare-dev
 
 sync:squidex:production:
   <<: *tmpl_sync

@@ -415,6 +415,8 @@ const serverlessConfig: AWS = {
             rules: [
               {
                 prefix: 'index',
+              },
+              {
                 suffix: '.html',
               },
             ],

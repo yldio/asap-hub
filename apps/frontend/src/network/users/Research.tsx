@@ -2,11 +2,12 @@ import { useRouteMatch, Route, Redirect } from 'react-router-dom';
 import {
   UserProfileResearch,
   TeamMembershipModal,
+  RoleModal,
   OpenQuestionsModal,
   ExpertiseAndResourcesModal,
 } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
-import { useCurrentUser } from '@asap-hub/react-context';
+import { useCurrentUser, useFlags } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 
 import { usePatchUserById } from './state';
@@ -20,6 +21,8 @@ type ResearchProps = {
 const Research: React.FC<ResearchProps> = ({ user }) => {
   const { id } = useCurrentUser() ?? {};
   const { path } = useRouteMatch();
+  const { isEnabled } = useFlags();
+
   const route = network({}).users({}).user({ userId: user.id }).research({});
 
   const patchUser = usePatchUserById(user.id);
@@ -33,13 +36,16 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
             <GroupsCard user={user} />
           </Frame>
         }
-        teams={user.teams.map((team) => ({
-          ...team,
-          editHref:
-            id === user.id
-              ? route.editTeamMembership({ teamId: team.id }).$
-              : undefined,
-        }))}
+        teams={user.teams.map((team) => {
+          const editHref = isEnabled('UPDATED_ROLE_SECTION')
+            ? route.editRole({}).$
+            : route.editTeamMembership({ teamId: team.id }).$;
+
+          return {
+            ...team,
+            editHref: id === user.id ? editHref : undefined,
+          };
+        })}
         editExpertiseAndResourcesHref={
           id === user.id ? route.editExpertiseAndResources({}).$ : undefined
         }
@@ -50,6 +56,16 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
       />
       {id === user.id && (
         <>
+          <Route path={path + route.editRole.template}>
+            <Frame title="Edit Role">
+              <RoleModal
+                teams={user.teams}
+                labs={user.labs}
+                backHref={route.$}
+                onSave={patchUser}
+              />
+            </Frame>
+          </Route>
           <Route
             path={path + route.editTeamMembership.template}
             render={({

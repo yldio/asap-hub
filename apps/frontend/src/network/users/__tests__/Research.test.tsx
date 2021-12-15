@@ -1,10 +1,12 @@
 import { ComponentProps, FC, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { render, RenderResult, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
 import userEvent from '@testing-library/user-event';
 import { network } from '@asap-hub/routing';
+import { renderHook } from '@testing-library/react-hooks';
+import { useFlags } from '@asap-hub/react-context';
 
 import { Auth0Provider } from '@asap-hub/frontend/src/auth/test-utils';
 import Research from '../Research';
@@ -97,40 +99,125 @@ describe('when editing', () => {
       },
     ],
   };
-
-  let result!: RenderResult;
-  beforeEach(async () => {
-    result = render(<Research user={user} />, { wrapper });
-    await result.findAllByLabelText(/edit/i);
-  });
-  describe('team membership', () => {
+  describe('role', () => {
     it('opens and closes the dialog', async () => {
+      const {
+        result: { current },
+      } = renderHook(useFlags);
+
+      current.reset();
       const {
         getByText,
         queryByText,
         findByLabelText,
-        getByDisplayValue,
         queryByDisplayValue,
-      } = result;
+        findAllByLabelText,
+      } = render(<Research user={user} />, { wrapper });
 
-      userEvent.click(await findByLabelText(/edit.+team/i));
-      expect(getByDisplayValue('My Interests')).toBeVisible();
+      await findAllByLabelText(/edit/i);
+      userEvent.click(await findByLabelText(/edit.+role/i));
+      expect(getByText('Your Role on ASAP')).toBeVisible();
 
       userEvent.click(getByText(/close/i));
       await waitFor(() => {
         expect(queryByText(/loading/i)).not.toBeInTheDocument();
-        expect(queryByDisplayValue('My Interests')).not.toBeInTheDocument();
+        expect(
+          queryByDisplayValue('Your Role on ASAP'),
+        ).not.toBeInTheDocument();
       });
     });
 
     it('saves the changes from the dialog', async () => {
       const {
+        result: { current },
+      } = renderHook(useFlags);
+
+      current.reset();
+      const {
+        getByText,
+        queryByText,
+        findByLabelText,
+        findAllByLabelText,
+        getByDisplayValue,
+        getByRole,
+      } = render(<Research user={user} />, { wrapper });
+
+      await findAllByLabelText(/edit/i);
+      userEvent.click(await findByLabelText(/edit.+role/i));
+      expect(getByText('Your Role on ASAP')).toBeVisible();
+
+      const [interestsInput, responsibilitiesInput] = [
+        getByRole('textbox', {
+          name: 'Main research interests (Required)',
+        }),
+        getByRole('textbox', {
+          name: 'Your responsibilities (Required) Tip: Refer to yourself in the third person.',
+        }),
+      ];
+
+      userEvent.type(interestsInput, 'My Interests 1');
+      expect(getByDisplayValue('My Interests 1')).toBeVisible();
+      userEvent.type(responsibilitiesInput, 'My Responsibilities 1');
+      expect(getByDisplayValue('My Responsibilities 1')).toBeVisible();
+
+      userEvent.click(getByText(/save/i));
+      await waitFor(() => {
+        expect(queryByText(/loading/i)).not.toBeInTheDocument();
+        expect(interestsInput).not.toBeInTheDocument();
+        expect(responsibilitiesInput).not.toBeInTheDocument();
+      });
+
+      expect(mockPatchUser).toHaveBeenCalledWith(
+        id,
+        {
+          researchInterests: 'My Interests 1',
+          responsibilities: 'My Responsibilities 1',
+        },
+        expect.any(String),
+      );
+    });
+  });
+  describe('team membership (REGRESSION)', () => {
+    it('opens and closes the dialog', async () => {
+      const {
+        result: { current },
+      } = renderHook(useFlags);
+      current.disable('UPDATED_ROLE_SECTION');
+
+      const {
         getByText,
         queryByText,
         findByLabelText,
         getByDisplayValue,
         queryByDisplayValue,
-      } = result;
+        findAllByLabelText,
+      } = render(<Research user={user} />, { wrapper });
+
+      await findAllByLabelText(/edit/i);
+      userEvent.click(await findByLabelText(/edit.+team/i));
+      expect(getByDisplayValue('My Interests')).toBeVisible();
+
+      userEvent.click(getByText(/close/i));
+      expect(queryByText(/loading/i)).not.toBeInTheDocument();
+      expect(queryByDisplayValue('interests')).not.toBeInTheDocument();
+    });
+
+    it('saves the changes from the dialog', async () => {
+      const {
+        result: { current },
+      } = renderHook(useFlags);
+      current.disable('UPDATED_ROLE_SECTION');
+
+      const {
+        getByText,
+        queryByText,
+        findByLabelText,
+        getByDisplayValue,
+        queryByDisplayValue,
+        findAllByLabelText,
+      } = render(<Research user={user} />, { wrapper });
+
+      await findAllByLabelText(/edit/i);
 
       userEvent.click(await findByLabelText(/example.+team/i));
       userEvent.type(getByDisplayValue('My Interests'), ' 2');
@@ -167,8 +254,10 @@ describe('when editing', () => {
         findByLabelText,
         getByDisplayValue,
         queryByDisplayValue,
-      } = result;
+        findAllByLabelText,
+      } = render(<Research user={user} />, { wrapper });
 
+      await findAllByLabelText(/edit/i);
       userEvent.click(await findByLabelText(/edit.+resources/i));
       expect(getByDisplayValue('Expertise Description')).toBeVisible();
 
@@ -189,8 +278,10 @@ describe('when editing', () => {
         getByDisplayValue,
         getByLabelText,
         queryByDisplayValue,
-      } = result;
+        findAllByLabelText,
+      } = render(<Research user={user} />, { wrapper });
 
+      await findAllByLabelText(/edit/i);
       userEvent.click(await findByLabelText(/edit.+resources/i));
       userEvent.type(getByDisplayValue('Expertise Description'), ' 2');
       expect(getByDisplayValue('Expertise Description 2')).toBeVisible();
@@ -224,8 +315,10 @@ describe('when editing', () => {
         findByLabelText,
         getByDisplayValue,
         queryByDisplayValue,
-      } = result;
+        findAllByLabelText,
+      } = render(<Research user={user} />, { wrapper });
 
+      await findAllByLabelText(/edit/i);
       userEvent.click(await findByLabelText(/edit.+questions/i));
       expect(getByDisplayValue('question 1')).toBeVisible();
 
@@ -243,8 +336,10 @@ describe('when editing', () => {
         findByLabelText,
         getByDisplayValue,
         queryByDisplayValue,
-      } = result;
+        findAllByLabelText,
+      } = render(<Research user={user} />, { wrapper });
 
+      await findAllByLabelText(/edit/i);
       userEvent.click(await findByLabelText(/edit.+questions/i));
       userEvent.type(getByDisplayValue('question 1'), ' a');
       expect(getByDisplayValue('question 1 a')).toBeVisible();

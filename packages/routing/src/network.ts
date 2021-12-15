@@ -23,6 +23,8 @@ const user = (() => {
     {},
   );
   const editQuestions = route('/edit-questions', {}, {});
+
+  const editRole = route('/edit-role', {}, {});
   const editTeamMembership = route(
     '/edit-team-membership/:teamId',
     { teamId: stringParser },
@@ -38,6 +40,7 @@ const user = (() => {
       editExpertiseAndResources,
       editQuestions,
       editTeamMembership,
+      editRole,
     },
   );
 

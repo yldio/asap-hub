@@ -38,6 +38,7 @@ stages:
   - check
   - deploy-dev
   - verify-dev
+  - prepare-prod
   - deploy-prod
   - verify-prod
 

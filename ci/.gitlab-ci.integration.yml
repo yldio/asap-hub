@@ -54,6 +54,6 @@ sync:squidex:dev:
 
 sync:squidex:production:
   <<: *tmpl_sync
-  stage: deploy-prod
+  stage: prepare-prod
   environment:
     name: production

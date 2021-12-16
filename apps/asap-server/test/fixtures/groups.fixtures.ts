@@ -1,14 +1,10 @@
 import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
 import { config } from '@asap-hub/squidex';
-import {
-  ResponseFetchGroups,
-  ResponseFetchGroup,
-} from '../../src/controllers/groups';
 import { FetchGroupQuery } from '../../src/gql/graphql';
 import { getGraphqlTeam } from './teams.fixtures';
 import { getGraphQLUser, getUserResponse } from './users.fixtures';
 
-export const queryGroupsResponse: { data: ResponseFetchGroups } = {
+export const queryGroupsResponse = {
   data: {
     queryGroupsContentsWithTotal: {
       total: 2,
@@ -413,7 +409,7 @@ export const getResponseFetchGroup = (): { data: FetchGroupQuery } => ({
   },
 });
 
-export const findGroupResponse: { data: ResponseFetchGroup } = {
+export const findGroupResponse = {
   data: {
     findGroupsContent:
       queryGroupsResponse.data.queryGroupsContentsWithTotal.items[0]!,

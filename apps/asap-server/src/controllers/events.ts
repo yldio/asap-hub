@@ -31,13 +31,12 @@ export interface EventController {
 }
 
 export default class Events implements EventController {
-  client: SquidexGraphqlClient;
-
-  events: InstrumentedSquidex<RestEvent>;
+  squidexGraphqlClient: SquidexGraphqlClient;
+  squidexRestClient: InstrumentedSquidex<RestEvent>;
 
   constructor(squidexGraphqlClient: SquidexGraphqlClient) {
-    this.client = squidexGraphqlClient;
-    this.events = new InstrumentedSquidex('events');
+    this.squidexGraphqlClient = squidexGraphqlClient;
+    this.squidexRestClient = new InstrumentedSquidex('events');
   }
 
   async fetch(options: FetchEventsOptions): Promise<ListEventResponse> {
@@ -84,7 +83,7 @@ export default class Events implements EventController {
     }
 
     if (groupId) {
-      const { findGroupsContent } = await this.client.request<
+      const { findGroupsContent } = await this.squidexGraphqlClient.request<
         FetchGroupCalendarQuery,
         FetchGroupCalendarQueryVariables
       >(FETCH_GROUP_CALENDAR, {
@@ -102,15 +101,16 @@ export default class Events implements EventController {
       filters.push(`data/calendar/iv in [${calendarIds.join(', ')}]`);
     }
 
-    const { queryEventsContentsWithTotal } = await this.client.request<
-      FetchEventsQuery,
-      FetchEventsQueryVariables
-    >(FETCH_EVENTS, {
-      filter: filters.join(' and '),
-      top: take,
-      skip,
-      order: orderby,
-    });
+    const { queryEventsContentsWithTotal } =
+      await this.squidexGraphqlClient.request<
+        FetchEventsQuery,
+        FetchEventsQueryVariables
+      >(FETCH_EVENTS, {
+        filter: filters.join(' and '),
+        top: take,
+        skip,
+        order: orderby,
+      });
 
     if (
       !queryEventsContentsWithTotal?.total ||
@@ -132,10 +132,11 @@ export default class Events implements EventController {
   }
 
   async fetchById(eventId: string): Promise<EventResponse> {
-    const { findEventsContent: event } = await this.client.request<
-      FetchEventQuery,
-      FetchEventQueryVariables
-    >(FETCH_EVENT, { id: eventId });
+    const { findEventsContent: event } =
+      await this.squidexGraphqlClient.request<
+        FetchEventQuery,
+        FetchEventQueryVariables
+      >(FETCH_EVENT, { id: eventId });
 
     if (!event) {
       throw Boom.notFound();
@@ -147,16 +148,16 @@ export default class Events implements EventController {
   // This functions are used by the sync google events script
   // and return RestEvents for the sake of simplicity
   async create(event: Event): Promise<RestEvent> {
-    return this.events.create(toEventData(event));
+    return this.squidexRestClient.create(toEventData(event));
   }
 
   async update(eventId: string, event: Partial<Event>): Promise<RestEvent> {
-    return this.events.patch(eventId, toEventData(event));
+    return this.squidexRestClient.patch(eventId, toEventData(event));
   }
 
   async fetchByGoogleId(googleId: string): Promise<RestEvent | null> {
     const [err, res] = await Intercept(
-      this.events.client
+      this.squidexRestClient.client
         .get('events', {
           searchParams: {
             $top: 1,

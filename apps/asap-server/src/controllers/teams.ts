@@ -1,5 +1,5 @@
 import Boom from '@hapi/boom';
-import { RestTeam, GraphqlTeam, SquidexGraphqlClient } from '@asap-hub/squidex';
+import { RestTeam, SquidexGraphqlClient } from '@asap-hub/squidex';
 import { ListTeamResponse, TeamResponse, TeamTool } from '@asap-hub/model';
 
 import { InstrumentedSquidex } from '../utils/instrumented-client';
@@ -13,16 +13,6 @@ import {
   FetchTeamsQueryVariables,
 } from '../gql/graphql';
 import logger from '../utils/logger';
-
-export interface ResponseFetchTeams {
-  queryTeamsContentsWithTotal: {
-    total: number;
-    items: GraphqlTeam[];
-  };
-}
-export interface ResponseFetchTeam {
-  findTeamsContent: GraphqlTeam;
-}
 
 export interface TeamController {
   update: (id: string, tools: TeamTool[]) => Promise<TeamResponse>;
@@ -46,14 +36,13 @@ export type FetchTeamsOptions = {
   // leave undefined to return all teams' tools
   showTeamTools?: string[];
 };
-
 export default class Teams implements TeamController {
-  teams: InstrumentedSquidex<RestTeam>;
-  client: SquidexGraphqlClient;
+  squidexRestClient: InstrumentedSquidex<RestTeam>;
+  squidexGraphqlClient: SquidexGraphqlClient;
 
   constructor(squidexGraphqlClient: SquidexGraphqlClient) {
-    this.client = squidexGraphqlClient;
-    this.teams = new InstrumentedSquidex('teams');
+    this.squidexGraphqlClient = squidexGraphqlClient;
+    this.squidexRestClient = new InstrumentedSquidex('teams');
   }
 
   async update(id: string, tools: TeamTool[]): Promise<TeamResponse> {
@@ -67,7 +56,7 @@ export default class Teams implements TeamController {
       ),
     );
 
-    await this.teams.patch(id, { tools: { iv: cleanUpdate } });
+    await this.squidexRestClient.patch(id, { tools: { iv: cleanUpdate } });
     return this.fetchById(id);
   }
 
@@ -91,14 +80,15 @@ export default class Teams implements TeamController {
       )
       .join(' and ');
 
-    const { queryTeamsContentsWithTotal } = await this.client.request<
-      FetchTeamsQuery,
-      FetchTeamsQueryVariables
-    >(FETCH_TEAMS, {
-      filter: searchQ,
-      top: take,
-      skip,
-    });
+    const { queryTeamsContentsWithTotal } =
+      await this.squidexGraphqlClient.request<
+        FetchTeamsQuery,
+        FetchTeamsQueryVariables
+      >(FETCH_TEAMS, {
+        filter: searchQ,
+        top: take,
+        skip,
+      });
 
     if (queryTeamsContentsWithTotal === null) {
       logger.warn('queryTeamsContentsWithTotal returned null');
@@ -142,7 +132,7 @@ export default class Teams implements TeamController {
     teamId: string,
     options?: FetchTeamOptions,
   ): Promise<TeamResponse> {
-    const teamResponse = await this.client.request<
+    const teamResponse = await this.squidexGraphqlClient.request<
       FetchTeamQuery,
       FetchTeamQueryVariables
     >(FETCH_TEAM, { id: teamId });

@@ -1,5 +1,5 @@
 import Boom from '@hapi/boom';
-import { GraphqlGroup, SquidexGraphqlClient } from '@asap-hub/squidex';
+import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
 import uniqBy from 'lodash.uniqby';
 import { FetchOptions } from '../utils/types';
@@ -12,17 +12,6 @@ import {
   FetchGroupsQuery,
   FetchGroupsQueryVariables,
 } from '../gql/graphql';
-
-export interface ResponseFetchGroups {
-  queryGroupsContentsWithTotal: {
-    total: number;
-    items: GraphqlGroup[];
-  };
-}
-
-export interface ResponseFetchGroup {
-  findGroupsContent: GraphqlGroup;
-}
 
 export interface GroupController {
   fetch: (options: FetchOptions) => Promise<ListGroupResponse>;
@@ -39,10 +28,10 @@ export interface GroupController {
 }
 
 export default class Groups implements GroupController {
-  client: SquidexGraphqlClient;
+  squidexGraphqlClient: SquidexGraphqlClient;
 
   constructor(squidexGraphqlClient: SquidexGraphqlClient) {
-    this.client = squidexGraphqlClient;
+    this.squidexGraphqlClient = squidexGraphqlClient;
   }
 
   async fetchGroups(
@@ -50,10 +39,11 @@ export default class Groups implements GroupController {
     options: FetchOptions,
   ): Promise<ListGroupResponse> {
     const { take = 50, skip = 0 } = options;
-    const { queryGroupsContentsWithTotal } = await this.client.request<
-      FetchGroupsQuery,
-      FetchGroupsQueryVariables
-    >(FETCH_GROUPS, { filter, top: take, skip });
+    const { queryGroupsContentsWithTotal } =
+      await this.squidexGraphqlClient.request<
+        FetchGroupsQuery,
+        FetchGroupsQueryVariables
+      >(FETCH_GROUPS, { filter, top: take, skip });
 
     if (queryGroupsContentsWithTotal === null) {
       return {
@@ -100,10 +90,11 @@ export default class Groups implements GroupController {
   }
 
   async fetchById(groupId: string): Promise<GroupResponse> {
-    const { findGroupsContent: group } = await this.client.request<
-      FetchGroupQuery,
-      FetchGroupQueryVariables
-    >(FETCH_GROUP, { id: groupId });
+    const { findGroupsContent: group } =
+      await this.squidexGraphqlClient.request<
+        FetchGroupQuery,
+        FetchGroupQueryVariables
+      >(FETCH_GROUP, { id: groupId });
 
     if (!group) {
       throw Boom.notFound();

@@ -3,7 +3,7 @@ import {
   ResearchOutputResponse,
   ListResearchOutputResponse,
 } from '@asap-hub/model';
-import { GraphqlResearchOutput, SquidexGraphqlClient } from '@asap-hub/squidex';
+import { SquidexGraphqlClient } from '@asap-hub/squidex';
 
 import { parseGraphQLResearchOutput } from '../entities/research-output';
 import { sanitiseForSquidex } from '../utils/squidex';
@@ -20,17 +20,18 @@ import {
 } from '../gql/graphql';
 
 export default class ResearchOutputs implements ResearchOutputController {
-  client: SquidexGraphqlClient;
+  squidexGraphqlClient: SquidexGraphqlClient;
 
   constructor(squidexGraphqlClient: SquidexGraphqlClient) {
-    this.client = squidexGraphqlClient;
+    this.squidexGraphqlClient = squidexGraphqlClient;
   }
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {
-    const researchOutputGraphqlResponse = await this.client.request<
-      FetchResearchOutputQuery,
-      FetchResearchOutputQueryVariables
-    >(FETCH_RESEARCH_OUTPUT, { id, withTeams: true });
+    const researchOutputGraphqlResponse =
+      await this.squidexGraphqlClient.request<
+        FetchResearchOutputQuery,
+        FetchResearchOutputQueryVariables
+      >(FETCH_RESEARCH_OUTPUT, { id, withTeams: true });
 
     const { findResearchOutputsContent: researchOutputContent } =
       researchOutputGraphqlResponse;
@@ -78,15 +79,16 @@ export default class ResearchOutputs implements ResearchOutputController {
       .filter(Boolean)
       .join(' and ');
 
-    const { queryResearchOutputsContentsWithTotal } = await this.client.request<
-      FetchResearchOutputsQuery,
-      FetchResearchOutputsQueryVariables
-    >(FETCH_RESEARCH_OUTPUTS, {
-      top: take,
-      skip,
-      filter: filterGraphql,
-      withTeams: true,
-    });
+    const { queryResearchOutputsContentsWithTotal } =
+      await this.squidexGraphqlClient.request<
+        FetchResearchOutputsQuery,
+        FetchResearchOutputsQueryVariables
+      >(FETCH_RESEARCH_OUTPUTS, {
+        top: take,
+        skip,
+        filter: filterGraphql,
+        withTeams: true,
+      });
 
     if (queryResearchOutputsContentsWithTotal === null) {
       logger.warn('queryResearchOutputsContentsWithTotal returned null');
@@ -129,15 +131,4 @@ export interface ResearchOutputController {
   }) => Promise<ListResearchOutputResponse>;
 
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
-}
-
-export interface ResponseFetchResearchOutput {
-  findResearchOutputsContent: GraphqlResearchOutput;
-}
-
-export interface ResponseFetchResearchOutputs {
-  queryResearchOutputsContentsWithTotal: {
-    total: number;
-    items: GraphqlResearchOutput[];
-  };
 }

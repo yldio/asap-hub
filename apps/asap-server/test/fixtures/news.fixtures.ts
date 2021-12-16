@@ -1,5 +1,5 @@
 import { config, RestNews } from '@asap-hub/squidex';
-import type { ListNewsResponse } from '@asap-hub/model';
+import { ListNewsResponse } from '@asap-hub/model';
 
 export const newsSquidexApiResponse: {
   total: number;

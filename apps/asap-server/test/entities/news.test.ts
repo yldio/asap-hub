@@ -37,7 +37,11 @@ describe('parse news entities', () => {
 });
 
 describe('parse GraphQL news entities', () => {
-  test('parse handles thumbnails', async () => {
+  test.each`
+    description       | thumbnail           | expected
+    ${'no thumbnail'} | ${undefined}        | ${undefined}
+    ${'thumbnail'}    | ${[{ id: 'uuid' }]} | ${`${config.baseUrl}/api/assets/${config.appName}/uuid`}
+  `('parse handles $description', async ({ thumbnail, expected }) => {
     const date = new Date().toISOString();
     const news = {
       id: 'uuid',
@@ -49,7 +53,7 @@ describe('parse GraphQL news entities', () => {
         type: 'News',
         title: 'Title',
         shortText: 'shortText',
-        thumbnail: [{ id: 'uuid' }],
+        thumbnail,
         text: 'text',
         link: 'http://a.link',
         linkText: 'Link text',
@@ -63,7 +67,7 @@ describe('parse GraphQL news entities', () => {
       title: 'Title',
       shortText: 'shortText',
       text: 'text',
-      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/uuid`,
+      thumbnail: expected,
     });
   });
   test.each`

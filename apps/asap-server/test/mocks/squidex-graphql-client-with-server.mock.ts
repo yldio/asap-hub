@@ -13,36 +13,40 @@ import { getSquidexGraphqlResearchOutput } from '../fixtures/research-output.fix
 import { getGraphQLUser } from '../fixtures/users.fixtures';
 import { getGraphqlTeam } from '../fixtures/teams.fixtures';
 import { getGraphqlGroup } from '../fixtures/groups.fixtures';
+import { getSquidexGraphqlDiscover } from '../fixtures/discover.fixtures';
+import { getSquidexGraphqlDashboard } from '../fixtures/dashboard.fixtures';
+import { getSquidexGraphqlCalendars } from '../fixtures/calendars.fixtures';
+import { getSquidexGraphqlEvents } from '../fixtures/events.fixtures';
 
 export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
   const schema = loadSchemaSync('../../src/schema/schema.graphql', {
     cwd: __dirname,
     loaders: [new GraphQLFileLoader()],
   });
+  const resultDto = () => ({
+    items: [...new Array(1)],
+    total: 1,
+  });
   const mocks = {
     Int: () => 8,
     Instant: () => '2021-10-12T15:42:05Z',
     JsonScalar: () => {},
     Groups: () => getGraphqlGroup(),
-    GroupsResultDto: () => ({
-      items: [...new Array(1)],
-      total: 1,
-    }),
+    GroupsResultDto: resultDto,
     ResearchOutputs: () => getSquidexGraphqlResearchOutput(),
-    ResearchOutputsResultDto: () => ({
-      items: [...new Array(1)],
-      total: 1,
-    }),
+    ResearchOutputsResultDto: resultDto,
     Users: () => getGraphQLUser(),
-    UsersResultDto: () => ({
-      items: [...new Array(1)],
-      total: 1,
-    }),
+    UsersResultDto: resultDto,
     Teams: () => getGraphqlTeam(),
-    TeamsResultDto: () => ({
-      items: [...new Array(1)],
-      total: 1,
-    }),
+    TeamsResultDto: resultDto,
+    Discover: () => getSquidexGraphqlDiscover(),
+    DiscoveryResultDto: resultDto,
+    Dashboard: () => getSquidexGraphqlDashboard(),
+    DashboardResultDto: resultDto,
+    Calendars: () => getSquidexGraphqlCalendars(),
+    CalendarsResultDto: resultDto,
+    Events: () => getSquidexGraphqlEvents(),
+    EventsResultDto: resultDto,
   };
   const store = createMockStore({
     schema,
@@ -55,6 +59,9 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
         keyFieldName: false,
       },
       Groups: {
+        keyFieldName: false,
+      },
+      Events: {
         keyFieldName: false,
       },
     },

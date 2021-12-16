@@ -3,7 +3,7 @@ import {
   ResearchOutputResponse,
   ListResearchOutputResponse,
 } from '@asap-hub/model';
-import { GraphqlResearchOutput, SquidexGraphqlClient } from '@asap-hub/squidex';
+import { SquidexGraphqlClient } from '@asap-hub/squidex';
 
 import { parseGraphQLResearchOutput } from '../entities/research-output';
 import { sanitiseForSquidex } from '../utils/squidex';
@@ -20,15 +20,15 @@ import {
 } from '../gql/graphql';
 
 export default class ResearchOutputs implements ResearchOutputController {
-  squidexGraphlClient: SquidexGraphqlClient;
+  squidexGraphqlClient: SquidexGraphqlClient;
 
-  constructor(squidexGraphlClient: SquidexGraphqlClient) {
-    this.squidexGraphlClient = squidexGraphlClient;
+  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
+    this.squidexGraphqlClient = squidexGraphqlClient;
   }
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {
     const researchOutputGraphqlResponse =
-      await this.squidexGraphlClient.request<
+      await this.squidexGraphqlClient.request<
         FetchResearchOutputQuery,
         FetchResearchOutputQueryVariables
       >(FETCH_RESEARCH_OUTPUT, { id, withTeams: true });
@@ -80,7 +80,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       .join(' and ');
 
     const { queryResearchOutputsContentsWithTotal } =
-      await this.squidexGraphlClient.request<
+      await this.squidexGraphqlClient.request<
         FetchResearchOutputsQuery,
         FetchResearchOutputsQueryVariables
       >(FETCH_RESEARCH_OUTPUTS, {
@@ -131,15 +131,4 @@ export interface ResearchOutputController {
   }) => Promise<ListResearchOutputResponse>;
 
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
-}
-
-export interface ResponseFetchResearchOutput {
-  findResearchOutputsContent: GraphqlResearchOutput;
-}
-
-export interface ResponseFetchResearchOutputs {
-  queryResearchOutputsContentsWithTotal: {
-    total: number;
-    items: GraphqlResearchOutput[];
-  };
 }

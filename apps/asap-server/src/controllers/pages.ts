@@ -1,18 +1,17 @@
 import { RestPage } from '@asap-hub/squidex';
 import { PageResponse } from '@asap-hub/model';
-
 import { InstrumentedSquidex } from '../utils/instrumented-client';
 import { parsePage } from '../entities';
 
 export default class Pages implements PageController {
-  pages: InstrumentedSquidex<RestPage>;
+  squidexRestClient: InstrumentedSquidex<RestPage>;
 
   constructor(ctxHeaders?: Record<string, string>) {
-    this.pages = new InstrumentedSquidex('pages', ctxHeaders);
+    this.squidexRestClient = new InstrumentedSquidex('pages', ctxHeaders);
   }
 
   async fetchByPath(path: string): Promise<PageResponse> {
-    const page = await this.pages.fetchOne({
+    const page = await this.squidexRestClient.fetchOne({
       filter: { path: 'data.path.iv', op: 'eq', value: path },
     });
 

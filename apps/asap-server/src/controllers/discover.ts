@@ -1,39 +1,27 @@
-import { GraphqlPage, GraphqlNews, GraphqlUser } from '@asap-hub/squidex';
+import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { DiscoverResponse } from '@asap-hub/model';
-
-import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import {
   parseGraphQLUser,
   parseGraphQLPage,
   parseGraphQLNews,
 } from '../entities';
 import { FetchDiscoverQuery } from '../gql/graphql';
-
 import { FETCH_DISCOVER } from '../queries/discover.queries';
 
-export interface SquidexDiscoverResponse {
-  queryDiscoverContents: {
-    flatData: {
-      aboutUs: string;
-      training: GraphqlNews[];
-      members: GraphqlUser[];
-      pages: GraphqlPage[];
-    };
-  }[];
-}
-
 export default class Discover implements DiscoverController {
-  client: InstrumentedSquidexGraphql;
+  squidexGraphqlClient: SquidexGraphqlClient;
 
-  constructor(ctxHeaders?: Record<string, string>) {
-    this.client = new InstrumentedSquidexGraphql(ctxHeaders);
+  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
+    this.squidexGraphqlClient = squidexGraphqlClient;
   }
 
   async fetch(): Promise<DiscoverResponse> {
-    const { queryDiscoverContents } = await this.client.request<
+    const data = await this.squidexGraphqlClient.request<
       FetchDiscoverQuery,
       unknown
     >(FETCH_DISCOVER);
+
+    const { queryDiscoverContents } = data;
     if (
       !queryDiscoverContents ||
       queryDiscoverContents.length === 0 ||

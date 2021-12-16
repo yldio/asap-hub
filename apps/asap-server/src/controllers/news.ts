@@ -1,21 +1,23 @@
 import { ListNewsResponse, NewsResponse } from '@asap-hub/model';
 import { RestNews } from '@asap-hub/squidex';
-
 import { InstrumentedSquidex } from '../utils/instrumented-client';
 import { parseNews } from '../entities';
 
 export default class News implements NewsController {
-  news: InstrumentedSquidex<RestNews>;
+  squidexRestClient: InstrumentedSquidex<RestNews>;
 
   constructor(ctxHeaders?: Record<string, string>) {
-    this.news = new InstrumentedSquidex('news-and-events', ctxHeaders);
+    this.squidexRestClient = new InstrumentedSquidex(
+      'news-and-events',
+      ctxHeaders,
+    );
   }
 
   async fetch(options: {
     take: number;
     skip: number;
   }): Promise<ListNewsResponse> {
-    const { total, items } = await this.news.fetch({
+    const { total, items } = await this.squidexRestClient.fetch({
       ...options,
       filter: {
         path: 'data.type.iv',
@@ -32,7 +34,7 @@ export default class News implements NewsController {
   }
 
   async fetchById(id: string): Promise<NewsResponse> {
-    const result = await this.news.fetchById(id);
+    const result = await this.squidexRestClient.fetchById(id);
     return parseNews(result);
   }
 }

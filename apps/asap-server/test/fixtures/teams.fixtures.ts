@@ -1,7 +1,6 @@
 import { ListTeamResponse, TeamResponse, TeamTool } from '@asap-hub/model';
 import { config, RestTeam, Team, WebhookPayload } from '@asap-hub/squidex';
 import { RestUser } from '@asap-hub/squidex';
-import { ResponseFetchTeam } from '../../src/controllers/teams';
 import {
   FetchTeamQuery,
   FetchTeamsQuery,
@@ -106,7 +105,7 @@ export const getTeamResponse = (): TeamResponse => ({
   tools: [],
 });
 
-export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
+export const graphQlTeamResponse = {
   data: {
     findTeamsContent: {
       __typename: 'Teams',

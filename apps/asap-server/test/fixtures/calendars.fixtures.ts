@@ -9,7 +9,7 @@ import {
 import { FetchCalendarQuery } from '../../src/gql/graphql';
 
 export const getCalendarRaw = (): CalendarRaw => ({
-  id: 'cc5f74e0-c611-4043-abde-cd3c0d5a3414',
+  id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   color: '#2952A3',
   name: 'Tech 4a - iPSCs - 3D & Co-cultures',
   syncToken: 'sync-token',
@@ -123,19 +123,23 @@ export const getCalendarsGraphqlResponse = (): {
   data: NonNullable<FetchCalendarQuery>;
 } => ({
   data: {
-    findCalendarsContent: {
-      id: 'cc5f74e0-c611-4043-abde-cd3c0d5a3414',
-      created: '2021-01-07T16:44:09Z',
-      lastModified: '2021-01-07T16:44:09Z',
-      version: 42,
-      flatData: {
-        googleCalendarId: '3@group.calendar.google.com',
-        color: '#2952A3',
-        name: 'Tech 4a - iPSCs - 3D & Co-cultures',
-        resourceId: 'resource-id',
-        syncToken: 'sync-token',
-        expirationDate: 1617196357000,
-      },
-    },
+    findCalendarsContent: getSquidexGraphqlCalendars(),
   },
+});
+
+export const getSquidexGraphqlCalendars = () => ({
+  id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+  created: '2020-09-23T16:34:26.842Z',
+  lastModified: '2021-05-14T14:48:46Z',
+  version: 42,
+  flatData: squidexGraphqlCalendarsFlatData(),
+});
+
+const squidexGraphqlCalendarsFlatData = () => ({
+  googleCalendarId: '3@group.calendar.google.com',
+  color: '#2952A3',
+  name: 'Tech 4a - iPSCs - 3D & Co-cultures',
+  resourceId: 'resource-id',
+  syncToken: 'sync-token',
+  expirationDate: 1617196357000,
 });

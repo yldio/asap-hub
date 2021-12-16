@@ -59,21 +59,25 @@ export const appFactory = (libs: Libs = {}): Express => {
   const errorHandler = errorHandlerFactory();
 
   // Clients
-  const squidexGraphlClient = new InstrumentedSquidexGraphql();
+  const squidexGraphqlClient = new InstrumentedSquidexGraphql();
 
   // Controllers
-  const calendarController = libs.calendarController || new Calendars();
-  const dashboardController = libs.dashboardController || new Dashboard();
+  const calendarController =
+    libs.calendarController || new Calendars(squidexGraphqlClient);
+  const dashboardController =
+    libs.dashboardController || new Dashboard(squidexGraphqlClient);
   const newsController = libs.newsController || new News();
-  const discoverController = libs.discoverController || new Discover();
-  const eventController = libs.eventController || new Events();
+  const discoverController =
+    libs.discoverController || new Discover(squidexGraphqlClient);
+  const eventController =
+    libs.eventController || new Events(squidexGraphqlClient);
   const groupController =
-    libs.groupController || new Groups(squidexGraphlClient);
+    libs.groupController || new Groups(squidexGraphqlClient);
   const pageController = libs.pageController || new Pages();
   const researchOutputController =
-    libs.researchOutputController || new ResearchOutputs(squidexGraphlClient);
-  const teamController = libs.teamController || new Teams(squidexGraphlClient);
-  const userController = libs.userController || new Users(squidexGraphlClient);
+    libs.researchOutputController || new ResearchOutputs(squidexGraphqlClient);
+  const teamController = libs.teamController || new Teams(squidexGraphqlClient);
+  const userController = libs.userController || new Users(squidexGraphqlClient);
 
   // Handlers
   const authHandler = libs.authHandler || authHandlerFactory(decodeToken);

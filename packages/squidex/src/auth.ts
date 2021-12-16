@@ -8,28 +8,6 @@ interface JwtToken {
   exp: number;
 }
 
-export const getAccessTokenFactory = () => {
-  let tokenP: Promise<string>;
-
-  return async (): Promise<string> => {
-    if (tokenP) {
-      const tk1 = await tokenP;
-      if (tk1) {
-        const jwt = decode<JwtToken>(tk1);
-        const currentTime = Date.now() / 1000;
-
-        if (currentTime > jwt.exp) {
-          return tk1;
-        }
-      }
-    }
-
-    tokenP = fetchToken();
-
-    return tokenP;
-  };
-};
-
 const fetchToken = async () => {
   const url = `${squidex.baseUrl}/identity-server/connect/token`;
   try {
@@ -52,10 +30,37 @@ const fetchToken = async () => {
   }
 };
 
+export const getAccessTokenFactory = (): (() => Promise<string>) => {
+  let tokenP: Promise<string> | undefined;
+
+  return async (): Promise<string> => {
+    if (tokenP) {
+      try {
+        const tk1 = await tokenP;
+        if (tk1) {
+          const jwt = decode<JwtToken>(tk1);
+          const currentTime = Date.now() / 1000;
+
+          if (currentTime > jwt.exp) {
+            return tk1;
+          }
+        }
+      } catch (error) {
+        tokenP = undefined;
+      }
+    }
+
+    tokenP = fetchToken();
+
+    return tokenP;
+  };
+};
+
 export type GetAccessToken = ReturnType<typeof getAccessTokenFactory>;
 
 const create = (
   clientOptions: { unpublished: boolean } = { unpublished: false },
+  getAccessToken: GetAccessToken,
 ): typeof Got => {
   const headers: Record<string, string> = {
     'content-type': 'application/json',
@@ -71,7 +76,7 @@ const create = (
     hooks: {
       beforeRequest: [
         async (options): Promise<void> => {
-          const tk = await getAccessTokenFactory();
+          const tk = await getAccessToken();
 
           /* eslint-disable no-param-reassign */
           options.headers = {

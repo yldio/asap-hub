@@ -5,7 +5,7 @@ import {
   GraphqlTeam,
   SquidexGraphqlClient,
   SquidexRestClient,
-  Squidex,
+  SquidexRest,
 } from '@asap-hub/squidex';
 import { ListTeamResponse, TeamResponse, TeamTool } from '@asap-hub/model';
 
@@ -49,8 +49,8 @@ export default class Teams implements TeamController {
 
   constructor(squidexGraphlClient: SquidexGraphqlClient) {
     this.squidexGraphlClient = squidexGraphlClient;
-    this.userSquidexRestClient = new Squidex('users');
-    this.teamSquidexRestClient = new Squidex('teams');
+    this.userSquidexRestClient = new SquidexRest('users');
+    this.teamSquidexRestClient = new SquidexRest('teams');
   }
 
   async update(id: string, tools: TeamTool[]): Promise<TeamResponse> {

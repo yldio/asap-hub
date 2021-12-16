@@ -4,7 +4,7 @@ import { SES } from 'aws-sdk';
 import { EventBridgeEvent } from 'aws-lambda';
 import { v4 as uuidV4 } from 'uuid';
 import * as Sentry from '@sentry/serverless';
-import { RestUser, Squidex } from '@asap-hub/squidex';
+import { RestUser, SquidexRest, SquidexRestClient } from '@asap-hub/squidex';
 import {
   origin,
   sentryDsn,
@@ -16,7 +16,7 @@ import { SendEmail, sendEmailFactory } from '../../utils/send-email';
 import logger from '../../utils/logger';
 
 export const inviteHandlerFactory =
-  (sendEmail: SendEmail, userClient: Squidex<RestUser>) =>
+  (sendEmail: SendEmail, userClient: SquidexRestClient<RestUser>) =>
   async (event: UserEventBridgeEvent): Promise<void> => {
     let user: RestUser;
 
@@ -95,7 +95,7 @@ Sentry.AWSLambda.init({
 });
 
 export const handler = Sentry.AWSLambda.wrapHandler(
-  inviteHandlerFactory(sendEmailFactory(ses), new Squidex('users')),
+  inviteHandlerFactory(sendEmailFactory(ses), new SquidexRest('users')),
 );
 
 export type SquidexWebhookUserPayload = {

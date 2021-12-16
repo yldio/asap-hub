@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 import { ResearchOutputSharingStatus, DecisionOption } from '@asap-hub/model';
-import { RestResearchOutput, Results, Squidex } from '@asap-hub/squidex';
+import { RestResearchOutput, Results, SquidexRest } from '@asap-hub/squidex';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 
 // The results we get from the squidex might not have the default values yet
@@ -15,9 +15,12 @@ type OldRestResearchOutput = Omit<
 
 export default class SetResearchOutputDefaultFields extends Migration {
   up = async (): Promise<void> => {
-    const squidexClient = new Squidex<RestResearchOutput>('research-outputs', {
-      unpublished: true,
-    });
+    const squidexClient = new SquidexRest<RestResearchOutput>(
+      'research-outputs',
+      {
+        unpublished: true,
+      },
+    );
 
     let pointer = 0;
     let result: Results<OldRestResearchOutput>;

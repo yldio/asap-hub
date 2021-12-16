@@ -1,13 +1,16 @@
 /* istanbul ignore file */
-import { RestResearchOutput, Results, Squidex } from '@asap-hub/squidex';
+import { RestResearchOutput, Results, SquidexRest } from '@asap-hub/squidex';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 import logger from '../utils/logger';
 
 export default class MoveResearchOutputTextToDescription extends Migration {
   up = async (): Promise<void> => {
-    const squidexClient = new Squidex<RestResearchOutput>('research-outputs', {
-      unpublished: true,
-    });
+    const squidexClient = new SquidexRest<RestResearchOutput>(
+      'research-outputs',
+      {
+        unpublished: true,
+      },
+    );
 
     let pointer = 0;
     let result: Results<RestResearchOutput>;
@@ -46,9 +49,12 @@ export default class MoveResearchOutputTextToDescription extends Migration {
   };
 
   down = async (): Promise<void> => {
-    const squidexClient = new Squidex<RestResearchOutput>('research-outputs', {
-      unpublished: true,
-    });
+    const squidexClient = new SquidexRest<RestResearchOutput>(
+      'research-outputs',
+      {
+        unpublished: true,
+      },
+    );
 
     let pointer = 0;
     let result: Results<RestResearchOutput>;

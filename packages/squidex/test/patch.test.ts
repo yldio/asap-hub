@@ -1,7 +1,7 @@
 import nock from 'nock';
 import config from '../src/config';
-import { Squidex } from '../src/squidex';
-import { identity } from './identity';
+import { Squidex } from '../src/rest';
+import { getAccessTokenMock } from './mocks/access-token.mock';
 
 interface Content {
   id: string;
@@ -14,9 +14,7 @@ interface Content {
 
 const collection = 'contents';
 describe('squidex wrapper', () => {
-  beforeAll(() => {
-    identity();
-  });
+  const client = new Squidex<Content>(collection, getAccessTokenMock);
 
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
@@ -32,10 +30,12 @@ describe('squidex wrapper', () => {
         message: 'The model is not valid',
       });
 
-    const client = new Squidex<Content>(collection);
-
     await expect(() =>
-      client.patch(42, { array: { iv: 'value' } }),
+      client.patch('42', {
+        string: {
+          iv: 'value',
+        },
+      }),
     ).rejects.toThrow('Bad Request');
   });
 
@@ -46,8 +46,6 @@ describe('squidex wrapper', () => {
         details: 'invalid_client',
         statusCode: 400,
       });
-
-    const client = new Squidex<Content>(collection);
 
     await expect(() =>
       client.patch('42', {
@@ -62,7 +60,6 @@ describe('squidex wrapper', () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/${collection}/42`)
       .reply(404);
-    const client = new Squidex<Content>(collection);
 
     await expect(() =>
       client.patch('42', {
@@ -77,7 +74,6 @@ describe('squidex wrapper', () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/${collection}/42`)
       .reply(500);
-    const client = new Squidex<Content>(collection);
 
     await expect(() =>
       client.patch('42', {
@@ -104,7 +100,6 @@ describe('squidex wrapper', () => {
         },
       });
 
-    const client = new Squidex<Content>(collection);
     const result = await client.patch('42', {
       string: {
         iv: 'value',

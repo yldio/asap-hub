@@ -1,6 +1,6 @@
 import encode from 'jwt-encode';
 import nock from 'nock';
-import { GetAccessToken, getAccessTokenFactory } from '../src/client';
+import { GetAccessToken, getAccessTokenFactory } from '../src/auth';
 import config from '../src/config';
 
 describe('Get Access Token', () => {
@@ -93,5 +93,34 @@ describe('Get Access Token', () => {
     await Promise.all([p1, p2]);
 
     scope.isDone();
+  });
+
+  test('Should retry after a failed attempt', async () => {
+    nock(config.baseUrl)
+      .post(
+        '/identity-server/connect/token',
+        `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
+          config.clientId,
+        )}&client_secret=${config.clientSecret}`,
+      )
+      .reply(521, { error: 'some error' });
+
+    await expect(getAccessToken()).rejects.toThrow();
+
+    nock(config.baseUrl)
+      .post(
+        '/identity-server/connect/token',
+        `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
+          config.clientId,
+        )}&client_secret=${config.clientSecret}`,
+      )
+      .reply(200, {
+        access_token: mockToken,
+        expires_in: 2592000,
+        token_type: 'Bearer',
+        scope: 'squidex-api',
+      });
+
+    expect(await getAccessToken()).toBe(mockToken);
   });
 });

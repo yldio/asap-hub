@@ -1,13 +1,19 @@
-import { RestUser, Results, Squidex } from '@asap-hub/squidex';
+import {
+  RestUser,
+  Results,
+  SquidexRest,
+  SquidexRestClient,
+} from '@asap-hub/squidex';
 import { applyToAllItemsInCollection } from '../../src/utils/migrations';
 import { restUserMock } from '../fixtures/users.fixtures';
 
-const mockFetch: jest.MockedFunction<Squidex<RestUser>['fetch']> = jest.fn();
+const mockFetch: jest.MockedFunction<SquidexRestClient<RestUser>['fetch']> =
+  jest.fn();
 const mockConstructor = jest.fn();
 
 jest.mock('@asap-hub/squidex', () => ({
   ...jest.requireActual('@asap-hub/squidex'),
-  Squidex: class Squidex {
+  SquidexRest: class SquidexRest {
     constructor(collection: string) {
       mockConstructor(collection);
     }
@@ -49,7 +55,7 @@ describe('Migration utils', () => {
       expect(processingFunction).toBeCalledTimes(2);
       expect(processingFunction).toBeCalledWith(
         restUserMock,
-        expect.any(Squidex),
+        expect.any(SquidexRest),
       );
     });
 
@@ -74,7 +80,7 @@ describe('Migration utils', () => {
       expect(processingFunction).toBeCalledTimes(11);
       expect(processingFunction).toBeCalledWith(
         restUserMock,
-        expect.any(Squidex),
+        expect.any(SquidexRest),
       );
     });
   });

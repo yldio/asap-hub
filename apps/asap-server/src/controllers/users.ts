@@ -7,8 +7,8 @@ import {
   config,
   GraphqlUser,
   RestUser,
-  Squidex,
   SquidexGraphqlClient,
+  SquidexRest,
   SquidexRestClient,
 } from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
@@ -74,7 +74,7 @@ export default class Users implements UserController {
 
   constructor(squidexGraphlClient: SquidexGraphqlClient) {
     this.squidexGraphlClient = squidexGraphlClient;
-    this.userSquidexRestClient = new Squidex('users');
+    this.userSquidexRestClient = new SquidexRest('users');
   }
 
   async update(id: string, update: UserPatchRequest): Promise<UserResponse> {

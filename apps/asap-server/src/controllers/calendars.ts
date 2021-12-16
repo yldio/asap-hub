@@ -4,9 +4,9 @@ import {
   RestCalendar,
   Calendar,
   Query,
-  Squidex,
   SquidexGraphql,
   SquidexGraphqlClient,
+  SquidexRest,
   SquidexRestClient,
 } from '@asap-hub/squidex';
 import {
@@ -27,7 +27,7 @@ export default class Calendars implements CalendarController {
   squidexGraphqlClient: SquidexGraphqlClient;
 
   constructor() {
-    this.calendarSquidexRestClient = new Squidex('calendars');
+    this.calendarSquidexRestClient = new SquidexRest('calendars');
     this.squidexGraphqlClient = new SquidexGraphql();
   }
 

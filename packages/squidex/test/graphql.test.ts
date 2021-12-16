@@ -1,24 +1,19 @@
-import { ClientError, gql } from 'graphql-request';
+import { gql } from 'graphql-request';
 import nock from 'nock';
-import { GetAccessToken, getAccessTokenFactory } from '../src/client';
+import { GetAccessToken } from '../src/auth';
 import config from '../src/config';
 import { SquidexGraphql, SquidexGraphqlError } from '../src/graphql';
-
-const mockGetAccessToken: jest.MockedFunction<GetAccessToken> = jest.fn();
-
-jest.mock('../src/client', () => ({
-  getAccessTokenFactory: () => mockGetAccessToken,
-}));
+import { getAccessTokenMock } from './mocks/access-token.mock';
 
 describe('Squidex Graphql Client', () => {
   afterEach(() => {
     nock.cleanAll();
   });
 
-  const squidexGraphqlClient = new SquidexGraphql();
+  const squidexGraphqlClient = new SquidexGraphql(getAccessTokenMock);
 
   test('Should throw an error which contains the error message when the identity call fails', async () => {
-    mockGetAccessToken.mockImplementationOnce(async () => {
+    getAccessTokenMock.mockImplementationOnce(async () => {
       throw new Error('request error');
     });
 
@@ -28,7 +23,7 @@ describe('Squidex Graphql Client', () => {
   });
 
   describe('with the auth token', () => {
-    mockGetAccessToken.mockResolvedValue('some-token');
+    getAccessTokenMock.mockResolvedValue('some-token');
 
     test('returns data from the graphql query', async () => {
       nock(config.baseUrl)

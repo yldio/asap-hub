@@ -1,6 +1,10 @@
-import { Squidex, ResearchOutput, RestResearchOutput } from '@asap-hub/squidex';
+import {
+  ResearchOutput,
+  RestResearchOutput,
+  SquidexRest,
+} from '@asap-hub/squidex';
 
-const researchOutputs = new Squidex<RestResearchOutput>('research-outputs');
+const researchOutputs = new SquidexRest<RestResearchOutput>('research-outputs');
 
 export const createResearchOutput = (
   overwrites?: Partial<ResearchOutput>,

@@ -2,6 +2,7 @@ import { useRouteMatch, Route, Redirect } from 'react-router-dom';
 import {
   UserProfileResearch,
   TeamMembershipModal,
+  RoleModal,
   OpenQuestionsModal,
   ExpertiseAndResourcesModal,
 } from '@asap-hub/react-components';
@@ -50,6 +51,18 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
       />
       {id === user.id && (
         <>
+          <Route path={path + route.editRole.template}>
+            <Frame title="Edit Role">
+              <RoleModal
+                teams={user.teams}
+                labs={user.labs}
+                backHref={route.$}
+                onSave={patchUser}
+                researchInterests={user.researchInterests}
+                responsibilities={user.responsibilities}
+              />
+            </Frame>
+          </Route>
           <Route
             path={path + route.editTeamMembership.template}
             render={({

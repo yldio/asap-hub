@@ -154,6 +154,8 @@ export interface UserPatchRequest {
   city?: string;
   expertiseAndResourceTags?: string[];
   expertiseAndResourceDescription?: string;
+  responsibilities?: string;
+  researchInterests?: string;
   questions?: string[];
   teams?: Pick<UserTeam, 'id' | 'mainResearchInterests' | 'responsibilities'>[];
   social?: Omit<UserSocialLinks, 'orcid'>;

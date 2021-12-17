@@ -2,7 +2,6 @@ import { EventBridge } from 'aws-sdk';
 import { framework as lambda } from '@asap-hub/services-common';
 import { ResearchOutput, WebhookPayload } from '@asap-hub/squidex';
 import { Handler } from '../../utils/types';
-import { http } from '../../utils/instrumented-framework';
 import validateRequest from '../../utils/validate-squidex-request';
 import { eventBus, eventSource } from '../../config';
 import logger from '../../utils/logger';
@@ -10,10 +9,8 @@ import logger from '../../utils/logger';
 export const researchOutputWebhookFactory = (
   eventBridge: EventBridge,
 ): Handler =>
-  http(
-    async (
-      request: lambda.Request<WebhookPayload<ResearchOutput>>,
-    ): Promise<lambda.Response> => {
+  lambda.http(
+    async (request: lambda.Request<WebhookPayload<ResearchOutput>>) => {
       validateRequest(request);
 
       const type = getEventType(request.payload.type);

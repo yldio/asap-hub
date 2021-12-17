@@ -1,8 +1,6 @@
 import { SearchClient } from 'algoliasearch';
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
-import { UserMetadataResponse } from '@asap-hub/model';
-import { http } from '../../../utils/instrumented-framework';
 import { UserController } from '../../../controllers/users';
 import validateRequest from '../../../utils/validate-auth0-request';
 import { Handler } from '../../../utils/types';
@@ -12,9 +10,7 @@ export const fetchUserByCodeHandlerFactory = (
   userController: UserController,
   algoliaClient: SearchClient,
 ): Handler =>
-  http(async (request: lambda.Request): Promise<
-    lambda.Response<UserMetadataResponse>
-  > => {
+  lambda.http(async (request) => {
     await validateRequest(request);
 
     const paramsSchema = Joi.object({

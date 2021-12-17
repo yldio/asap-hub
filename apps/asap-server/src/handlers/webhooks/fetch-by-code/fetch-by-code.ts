@@ -49,13 +49,22 @@ export const fetchUserByCodeHandlerFactory = (
     };
   });
 
+const getAuth0TokenTtl = async (): Promise<number> => {
+  try {
+    return (
+      (await management.getJWTConfiguration())?.lifetimeInSeconds ||
+      algoliaApiKeyDefaultTtl
+    );
+  } catch {
+    return algoliaApiKeyDefaultTtl;
+  }
+};
+
 const getAlgoliaApiKeyValidUntil = async (headers: Record<string, string>) => {
   const auth0ServerCurrentTimestamp =
     +(headers[auth0Config.currentTimestampHeader] || 0) || Date.now();
 
-  const auth0TokenTtl =
-    (await management.getJWTConfiguration())?.lifetimeInSeconds ||
-    algoliaApiKeyDefaultTtl;
+  let auth0TokenTtl = await getAuth0TokenTtl();
 
   return (
     auth0ServerCurrentTimestamp +

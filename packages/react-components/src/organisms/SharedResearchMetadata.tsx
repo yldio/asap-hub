@@ -1,4 +1,4 @@
-import { researchOutputLabels, ResearchOutputResponse } from '@asap-hub/model';
+import { ResearchOutputResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
 import { perRem } from '../pixels';
@@ -23,9 +23,7 @@ const SharedResearchMetadata: React.FC<SharedResearchMetadataProps> = ({
 }) => (
   <div css={styles}>
     <PillList pills={[type, ...subTypes]} />
-    {link ? (
-      <ExternalLink label={researchOutputLabels[type]} href={link} />
-    ) : null}
+    {link ? <ExternalLink href={link} /> : null}
   </div>
 );
 

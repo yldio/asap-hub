@@ -10,35 +10,36 @@ const containerStyles = css({
   display: 'flex',
 });
 const borderWidth = 1;
-const styles = css({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height: '24px',
-  width: 'max-content',
-  minWidth: '24px',
-  color: fern.rgb,
-  borderRadius: `${36 / perRem}em`,
-  boxSizing: 'border-box',
-  border: `${borderWidth}px solid ${fern.rgb}`,
-  margin: `${12 / perRem}em 0`,
-  padding: `0 ${(12 - borderWidth) / perRem}em`,
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    padding: 0,
-  },
-  svg: {
-    stroke: fern.rgb,
-    width: `${17.8 / perRem}em`,
-    height: `${17.8 / perRem}em`,
-  },
-  ':hover, :focus': {
-    color: pine.rgb,
-    borderColor: pine.rgb,
-    svg: {
-      stroke: pine.rgb,
+const styles = (withLabel = true) =>
+  css({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '24px',
+    width: 'max-content',
+    minWidth: '24px',
+    color: fern.rgb,
+    borderRadius: `${36 / perRem}em`,
+    boxSizing: 'border-box',
+    border: `${borderWidth}px solid ${fern.rgb}`,
+    margin: `${12 / perRem}em 0`,
+    padding: withLabel ? `0 ${(12 - borderWidth) / perRem}em` : 0,
+    [`@media (max-width: ${mobileScreen.max}px)`]: {
+      padding: 0,
     },
-  },
-});
+    svg: {
+      stroke: fern.rgb,
+      width: `${17.8 / perRem}em`,
+      height: `${17.8 / perRem}em`,
+    },
+    ':hover, :focus': {
+      color: pine.rgb,
+      borderColor: pine.rgb,
+      svg: {
+        stroke: pine.rgb,
+      },
+    },
+  });
 
 const textStyles = css({
   paddingTop: `${1 / perRem}em`,
@@ -56,11 +57,11 @@ type ExternalLinkProps = {
 const ExternalLink: React.FC<ExternalLinkProps> = ({
   href,
   icon = externalLinkIcon,
-  label = 'External Link',
+  label,
 }) => (
   <div css={containerStyles}>
     <Anchor href={href}>
-      <div css={styles}>
+      <div css={styles(!!label)}>
         {icon}
         <div css={[textStyles, linkStyles.light]}>{label}</div>
       </div>

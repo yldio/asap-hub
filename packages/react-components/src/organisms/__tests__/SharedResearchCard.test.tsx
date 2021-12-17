@@ -80,39 +80,45 @@ it('displays lab icon and name when present', () => {
 });
 
 it('displays link component when link property present', () => {
-  const { getByText } = render(
+  const { getByTitle } = render(
     <SharedResearchCard
       {...sharedResearchCardProps}
       type={'Presentation'}
       link={'https://example.com'}
     />,
   );
-  const link = getByText(/google/i).closest('a');
-  expect(link).toHaveAttribute('href', 'https://example.com');
+  expect(getByTitle('External Link').closest('a')).toHaveAttribute(
+    'href',
+    'https://example.com',
+  );
 });
 
 it('displays link component when protocol link property is present', () => {
-  const { getByText } = render(
+  const { getByTitle } = render(
     <SharedResearchCard
       {...sharedResearchCardProps}
       type={'Protocol'}
       link={'https://example.com'}
     />,
   );
-  const link = getByText(/protocols.io/i).closest('a');
-  expect(link).toHaveAttribute('href', 'https://example.com');
+  expect(getByTitle('External Link').closest('a')).toHaveAttribute(
+    'href',
+    'https://example.com',
+  );
 });
 
 it('displays link component when presentation link property is present', () => {
-  const { getByText } = render(
+  const { getByTitle } = render(
     <SharedResearchCard
       {...sharedResearchCardProps}
       type={'Presentation'}
       link={'https://example.com'}
     />,
   );
-  const link = getByText(/view\son\sgoogle/i).closest('a');
-  expect(link).toHaveAttribute('href', 'https://example.com');
+  expect(getByTitle('External Link').closest('a')).toHaveAttribute(
+    'href',
+    'https://example.com',
+  );
 });
 
 it('displays authors when present', () => {

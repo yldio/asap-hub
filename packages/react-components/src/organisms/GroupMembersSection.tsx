@@ -26,7 +26,12 @@ const GroupMembersSection: React.FC<GroupMembersSectionProps> = ({
       <MembersList
         singleColumn
         members={leaders.map(({ user, role }) => ({
-          ...user,
+          id: user.id,
+          displayName: user.displayName,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          avatarUrl: user.avatarUrl,
+          teams: user.teams,
           role,
         }))}
       />

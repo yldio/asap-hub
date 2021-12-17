@@ -74,10 +74,12 @@ const MembersList: React.FC<MembersListProps> = ({
   <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
     {members.map(({ id, displayName, role, teams, labs = [], ...member }) => {
       const href = network({}).users({}).user({ userId: id }).$;
-      const labsList = getUniqueCommaStringWithSuffix(
-        labs.map((lab) => lab.name),
-        'Lab',
-      );
+      const labsList = labs.length
+        ? getUniqueCommaStringWithSuffix(
+            labs.map((lab) => lab.name),
+            'Lab',
+          )
+        : undefined;
       return (
         <li key={id} css={{ display: 'contents' }}>
           <Anchor href={href} css={{ display: 'contents' }}>
@@ -103,18 +105,20 @@ const MembersList: React.FC<MembersListProps> = ({
               {role}
             </div>
           </Anchor>
-          <Anchor href={href} css={{ display: 'contents' }}>
-            <div
-              css={[
-                addToColumnStyles,
-                singleColumn || multiColumnAddToColumnStyles,
-                textStyles,
-                labStyles,
-              ]}
-            >
-              {labsList && <Ellipsis>{labsList}</Ellipsis>}
-            </div>
-          </Anchor>
+          {labsList && (
+            <Anchor href={href} css={{ display: 'contents' }}>
+              <div
+                css={[
+                  addToColumnStyles,
+                  singleColumn || multiColumnAddToColumnStyles,
+                  textStyles,
+                  labStyles,
+                ]}
+              >
+                {labsList && <Ellipsis>{labsList}</Ellipsis>}
+              </div>
+            </Anchor>
+          )}
           <ul
             css={[
               addToColumnStyles,

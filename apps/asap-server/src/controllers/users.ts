@@ -5,7 +5,6 @@ import {
 } from '@asap-hub/model';
 import {
   config,
-  GraphqlUser,
   RestUser,
   SquidexGraphqlClient,
   SquidexRest,

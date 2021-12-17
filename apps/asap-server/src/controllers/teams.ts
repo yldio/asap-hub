@@ -2,7 +2,6 @@ import Boom from '@hapi/boom';
 import {
   RestTeam,
   RestUser,
-  GraphqlTeam,
   SquidexGraphqlClient,
   SquidexRestClient,
   SquidexRest,

@@ -59,7 +59,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const errorHandler = errorHandlerFactory();
 
   // Clients
-  const squidexGraphlClient = new SquidexGraphql();
+  const squidexGraphqlClient = new SquidexGraphql();
 
   // Controllers
   const calendarController =

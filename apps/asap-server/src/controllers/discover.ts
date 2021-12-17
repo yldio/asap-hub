@@ -1,10 +1,4 @@
-import {
-  GraphqlPage,
-  GraphqlNews,
-  GraphqlUser,
-  SquidexGraphqlClient,
-  SquidexGraphql,
-} from '@asap-hub/squidex';
+import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { DiscoverResponse } from '@asap-hub/model';
 import {
   parseGraphQLUser,
@@ -17,8 +11,8 @@ import { FETCH_DISCOVER } from '../queries/discover.queries';
 export default class Discover implements DiscoverController {
   squidexGraphqlClient: SquidexGraphqlClient;
 
-  constructor() {
-    this.squidexGraphqlClient = new SquidexGraphql();
+  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
+    this.squidexGraphqlClient = squidexGraphqlClient;
   }
 
   async fetch(): Promise<DiscoverResponse> {
@@ -27,7 +21,6 @@ export default class Discover implements DiscoverController {
       unknown
     >(FETCH_DISCOVER);
 
-    const { queryDiscoverContents } = data;
     if (
       !queryDiscoverContents ||
       queryDiscoverContents.length === 0 ||

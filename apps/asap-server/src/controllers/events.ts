@@ -5,7 +5,6 @@ import {
   RestEvent,
   Event,
   SquidexGraphqlClient,
-  SquidexGraphql,
   SquidexRestClient,
   SquidexRest,
 } from '@asap-hub/squidex';
@@ -40,8 +39,8 @@ export default class Events implements EventController {
   squidexGraphqlClient: SquidexGraphqlClient;
   eventSquidexRestClient: SquidexRestClient<RestEvent>;
 
-  constructor() {
-    this.squidexGraphqlClient = new SquidexGraphql();
+  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
+    this.squidexGraphqlClient = squidexGraphqlClient;
     this.eventSquidexRestClient = new SquidexRest('events');
   }
 

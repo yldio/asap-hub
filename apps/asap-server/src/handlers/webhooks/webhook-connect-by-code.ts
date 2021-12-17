@@ -7,7 +7,7 @@ import { Handler } from '../../utils/types';
 import validateRequest from '../../utils/validate-auth0-request';
 
 export const handler: Handler = lambda.http(async (request) => {
-  await validateRequest(request);
+  validateRequest(request);
 
   const bodySchema = Joi.object({
     code: Joi.string().required(),

@@ -7,7 +7,7 @@ import validateRequest from '../../utils/validate-squidex-request';
 
 export const userWebhookFactory = (eventBridge: EventBridge): Handler =>
   lambda.http(async (request: lambda.Request<WebhookPayload<User>>) => {
-    await validateRequest(request);
+    validateRequest(request);
 
     if (request.payload?.type !== 'UsersPublished') {
       return {

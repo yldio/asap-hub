@@ -7,7 +7,7 @@ import Users from '../../controllers/users';
 import validateRequest from '../../utils/validate-squidex-request';
 
 export const handler: Handler = lambda.http(async (request) => {
-  await validateRequest(request);
+  validateRequest(request);
 
   const bodySchema = Joi.object({
     type: Joi.string().required(),

@@ -373,6 +373,18 @@ const serverlessConfig: AWS = {
         EVENT_SOURCE: 'asap.user',
       },
     },
+    trial: {
+      handler: 'apps/asap-server/src/handlers/webhooks/trial.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'GET',
+            path: '/webhook/trial',
+          },
+        },
+      ],
+      environment: {},
+    },
     researchOutputUpserted: {
       handler:
         'apps/asap-server/src/handlers/webhooks/webhook-research-output.handler',

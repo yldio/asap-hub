@@ -1,11 +1,13 @@
 import {
   UserProfileResearchOutputs,
   UserProfileSearchAndFilter,
+  utils,
 } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import format from 'date-fns/format';
 import { ComponentProps, FC } from 'react';
 import { useCurrentUser } from '@asap-hub/react-context';
+import { UserResponse } from '@asap-hub/model';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';
@@ -22,11 +24,12 @@ import { useUserById } from './state';
 type OutputsListProps = Pick<
   ComponentProps<typeof UserProfileResearchOutputs>,
   'hasOutputs' | 'ownUser' | 'firstName'
-> & {
-  searchQuery: string;
-  filters: Set<string>;
-  userId: string;
-};
+> &
+  Pick<UserResponse, 'lastName'> & {
+    searchQuery: string;
+    filters: Set<string>;
+    userId: string;
+  };
 
 type OutputsProps = {
   userId: string;
@@ -37,6 +40,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   filters,
   userId,
   firstName,
+  lastName,
   hasOutputs,
   ownUser,
 }) => {
@@ -60,7 +64,9 @@ const OutputsList: React.FC<OutputsListProps> = ({
     algoliaResultsToStream(
       createCsvFileStream(
         { headers: true },
-        `SharedOutputs_${format(new Date(), 'MMddyy')}.csv`,
+        `SharedOutputs_${utils.titleCase(firstName)}${utils.titleCase(
+          lastName,
+        )}_${format(new Date(), 'MMddyy')}.csv`,
       ),
       (paginationParams) =>
         getResearchOutputs(index, {
@@ -110,7 +116,7 @@ const Outputs: FC<OutputsProps> = ({ userId }) => {
     userId,
   }).total;
   const ownUser = useCurrentUser()?.id === userId;
-  const firstName = useUserById(userId)?.firstName;
+  const user = useUserById(userId);
   return (
     <article>
       {hasOutputs && (
@@ -128,7 +134,8 @@ const Outputs: FC<OutputsProps> = ({ userId }) => {
           filters={filters}
           hasOutputs={hasOutputs}
           ownUser={ownUser}
-          firstName={firstName}
+          firstName={user?.firstName ?? ''}
+          lastName={user?.lastName ?? ''}
         />
       </SearchFrame>
     </article>

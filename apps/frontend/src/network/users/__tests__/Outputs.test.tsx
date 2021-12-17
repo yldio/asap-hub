@@ -2,7 +2,10 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createAlgoliaResearchOutputResponse } from '@asap-hub/fixtures';
+import {
+  createAlgoliaResearchOutputResponse,
+  createUserResponse,
+} from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 
 import { RecoilRoot } from 'recoil';
@@ -15,6 +18,8 @@ import {
   createCsvFileStream,
   MAX_ALGOLIA_RESULTS,
 } from '../../../shared-research/export';
+import { getUser } from '../api';
+import { refreshUserState } from '../state';
 
 jest.mock('../../../shared-research/api');
 jest.mock('../../../shared-research/export');
@@ -23,6 +28,8 @@ jest.mock('../api');
 afterEach(() => {
   jest.clearAllMocks();
 });
+
+const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
@@ -39,7 +46,8 @@ const renderOutputs = async (
 ) => {
   const result = render(
     <RecoilRoot
-      initializeState={({ reset }) => {
+      initializeState={({ reset, set }) => {
+        set(refreshUserState(userId), Math.random());
         reset(
           researchOutputsState({
             searchQuery,
@@ -142,7 +150,12 @@ it('calls getResearchOutputs with the right arguments', async () => {
   );
 });
 
-it('triggers and export with the same parameters', async () => {
+it('triggers export with the same parameters and custom filename', async () => {
+  mockGetUser.mockResolvedValue({
+    ...createUserResponse(),
+    firstName: 'John',
+    lastName: 'Smith',
+  });
   const filters = new Set(['Grant Document']);
   const searchQuery = 'Some Search';
   const userId = '12345';
@@ -170,7 +183,7 @@ it('triggers and export with the same parameters', async () => {
   userEvent.click(getByText(/export/i));
   expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
     expect.anything(),
-    expect.stringMatching(/SharedOutputs_\d+\.csv/),
+    expect.stringMatching(/SharedOutputs_JohnSmith_\d+\.csv/),
   );
   await waitFor(() =>
     expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {

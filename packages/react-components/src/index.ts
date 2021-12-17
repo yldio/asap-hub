@@ -1,8 +1,10 @@
 import * as pixels from './pixels';
 import * as text from './text';
+import * as utils from './utils';
+
 import * as authTestUtils from './auth-test-utils';
 
-export { pixels, text, authTestUtils };
+export { pixels, text, authTestUtils, utils };
 
 export * from './icons';
 export * from './images';

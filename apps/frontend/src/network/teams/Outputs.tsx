@@ -1,6 +1,7 @@
 import {
   TeamProfileOutputs,
   ResearchOutputsSearch,
+  utils,
 } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import format from 'date-fns/format';
@@ -23,6 +24,7 @@ type OutputsListProps = Pick<
   ComponentProps<typeof TeamProfileOutputs>,
   'hasOutputs' | 'ownTeam' | 'contactEmail'
 > & {
+  displayName: string;
   searchQuery: string;
   filters: Set<string>;
   teamId: string;
@@ -38,6 +40,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   hasOutputs,
   ownTeam,
   contactEmail,
+  displayName,
 }) => {
   const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
@@ -58,7 +61,9 @@ const OutputsList: React.FC<OutputsListProps> = ({
     algoliaResultsToStream(
       createCsvFileStream(
         { headers: true },
-        `SharedOutputs_${format(new Date(), 'MMddyy')}.csv`,
+        `SharedOutputs_${utils
+          .titleCase(displayName)
+          .replace(/[\W_]+/g, '')}_${format(new Date(), 'MMddyy')}.csv`,
       ),
       (paginationParams) =>
         getResearchOutputs(index, {
@@ -107,8 +112,7 @@ const Outputs: React.FC<OutputsProps> = ({ teamId }) => {
     pageSize,
     teamId,
   }).total;
-
-  const contactEmail = useTeamById(teamId)?.pointOfContact?.email;
+  const team = useTeamById(teamId);
 
   const ownTeam = !!(useCurrentUser()?.teams ?? []).filter(
     ({ id }) => id === teamId,
@@ -130,7 +134,8 @@ const Outputs: React.FC<OutputsProps> = ({ teamId }) => {
           filters={filters}
           hasOutputs={hasOutputs}
           ownTeam={ownTeam}
-          contactEmail={contactEmail}
+          contactEmail={team?.pointOfContact?.email}
+          displayName={team?.displayName ?? ''}
         />
       </SearchFrame>
     </article>

@@ -1,5 +1,5 @@
 import type { User } from '@asap-hub/auth';
-import { consfig as auth0Config } from '@asap-hub/auth';
+import { config as auth0Config } from '@asap-hub/auth';
 
 import type { UserMetadataResponse } from '@asap-hub/model';
 import { URL, URLSearchParams } from 'url';

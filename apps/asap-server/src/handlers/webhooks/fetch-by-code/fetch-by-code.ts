@@ -37,15 +37,8 @@ export const fetchUserByCodeHandlerFactory = (
 
     const user = await userController.fetchByCode(code);
 
-    const auth0ServerCurrentTimestamp =
-      +(request.headers[auth0Config.currentTimestampHeader] || 0) || Date.now();
-    const auth0TokenTtl =
-      (await management.getJWTConfiguration())?.lifetimeInSeconds ||
-      algoliaApiKeyDefaultTtl;
-    const algoliaApiKeyTtl = auth0TokenTtl + algoliaApiKeyTtlExtensionInSeconds;
-
     const apiKey = algoliaClient.generateSecuredApiKey(algoliaSearchApiKey, {
-      validUntil: auth0ServerCurrentTimestamp + algoliaApiKeyTtl, // which is one minute over the TTL of the ID token
+      validUntil: await getAlgoliaApiKeyValidUntil(request.headers), // which is one minute over the TTL of the ID token
     });
 
     return {
@@ -55,3 +48,18 @@ export const fetchUserByCodeHandlerFactory = (
       },
     };
   });
+
+const getAlgoliaApiKeyValidUntil = async (headers: Record<string, string>) => {
+  const auth0ServerCurrentTimestamp =
+    +(headers[auth0Config.currentTimestampHeader] || 0) || Date.now();
+
+  const auth0TokenTtl =
+    (await management.getJWTConfiguration())?.lifetimeInSeconds ||
+    algoliaApiKeyDefaultTtl;
+
+  return (
+    auth0ServerCurrentTimestamp +
+    auth0TokenTtl +
+    algoliaApiKeyTtlExtensionInSeconds
+  );
+};

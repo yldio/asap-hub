@@ -1013,7 +1013,7 @@ describe('Users controller', () => {
     const userId = 'userId';
     const orcid = '363-98-9330';
 
-    test.only('Throws when user does not exist', async () => {
+    test('Throws when user does not exist', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users/user-not-found`)
         .reply(404);

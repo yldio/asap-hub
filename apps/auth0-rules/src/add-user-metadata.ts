@@ -1,4 +1,6 @@
 import type { User } from '@asap-hub/auth';
+import { consfig as auth0Config } from '@asap-hub/auth';
+
 import type { UserMetadataResponse } from '@asap-hub/model';
 import { URL, URLSearchParams } from 'url';
 import got from 'got';
@@ -40,6 +42,7 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
     } = await got(`${apiURL}/webhook/users/${auth0User.user_id}`, {
       headers: {
         Authorization: `Basic ${apiSharedSecret}`,
+        [auth0Config]: `${Date.now()}`,
       },
       timeout: 10000,
     }).json<UserMetadataResponse>();

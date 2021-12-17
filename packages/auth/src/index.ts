@@ -4,7 +4,9 @@ import type { UserMetadataResponse, UserResponse } from '@asap-hub/model';
 import * as config from './config';
 import auth0PubKeys from './pubKeys';
 
-export { config, auth0PubKeys };
+export { auth0PubKeys, config };
+
+export * as management from './auth0/management';
 
 export type User = Pick<
   UserMetadataResponse,

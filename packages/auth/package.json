@@ -14,12 +14,14 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "^7.14.0",
-    "@types/jest": "^26.0.23"
+    "@types/jest": "^26.0.23",
+    "auth0": "^2.37.0"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@auth0/auth0-spa-js": "^1.15.0",
+    "@types/auth0": "^2.34.8",
     "@types/node": "^14.14.45"
   }
 }

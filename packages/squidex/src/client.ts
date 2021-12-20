@@ -12,16 +12,26 @@ interface JwtToken {
 let token: Promise<string> | null;
 export const getAccessToken = async (): Promise<string> => {
   if (token) {
+    // eslint-disable-next-line no-console
+    console.log('accessing the existing token');
+
     const tk1 = await token;
     if (tk1) {
       const jwt = decode<JwtToken>(tk1);
       const currentTime = Date.now() / 1000;
 
       if (currentTime > jwt.exp) {
+        // eslint-disable-next-line no-console
+        console.log('returning the existing token');
         return tk1;
       }
+      // eslint-disable-next-line no-console
+      console.log('stale token');
     }
   }
+
+  // eslint-disable-next-line no-console
+  console.log('fetching new token');
 
   const url = `${squidex.baseUrl}/identity-server/connect/token`;
   token = Got.post(url, {

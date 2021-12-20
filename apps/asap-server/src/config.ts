@@ -55,7 +55,7 @@ export const algoliaIndexApiKey = ALGOLIA_INDEX_API_KEY || '';
 export const algoliaCiApiKey = ALGOLIA_API_KEY || '';
 export const algoliaResearchOutputIndex =
   ALGOLIA_RESEARCH_OUTPUT_INDEX || 'asap-hub_research_outputs_dev';
-export const algoliaApiKeyTtl = 36060; // in [seconds] = 10 hours + 1 min - 1 minute is to account for network delays, and off-sync clocks between servers
+export const algoliaApiKeyTtl = 36060; // in [seconds] = 10 hours + 1 min - 1 minute is to account for network delays and off-sync clocks between servers
 export const sesRegion = SES_REGION || 'eu-west-1';
 export const userInviteSender = EMAIL_SENDER || `"ASAP Hub" <hub@asap.science>`;
 export const userInviteBcc = EMAIL_BCC || 'hub.invites.dev@asap.science';

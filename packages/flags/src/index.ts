@@ -2,7 +2,7 @@ export type Flag = 'PERSISTENT_EXAMPLE' | 'UPDATED_ROLE_SECTION';
 
 export type Flags = Partial<Record<Flag, boolean>>;
 let overrides: Flags = {
-  UPDATED_ROLE_SECTION: false,
+  // UPDATED_ROLE_SECTION: false,
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
 };

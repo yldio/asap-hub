@@ -18,7 +18,7 @@ test('http returns 400 on invalid body', async () => {
   expect(result.statusCode).toStrictEqual(400);
 });
 
-test('http returns statuCode of Boom error', async () => {
+test('http returns statusCode of Boom error', async () => {
   const handler = http(async (_) => {
     throw Boom.forbidden();
   });

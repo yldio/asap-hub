@@ -1,9 +1,18 @@
 import Boom from '@hapi/boom';
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
+import * as Sentry from '@sentry/serverless';
+import { sentryDsn, environment, currentRevision } from '../../config';
 
-export const handler = (
+Sentry.AWSLambda.init({
+  dsn: sentryDsn,
+  tracesSampleRate: 1.0,
+  environment,
+  release: currentRevision,
+});
+
+const handle = async (
   event: APIGatewayProxyEventV2,
-): APIGatewayProxyResultV2 => {
+): Promise<APIGatewayProxyResultV2<never>> => {
   const { q } = event.queryStringParameters || { q: '1' };
 
   if (q === '1') {
@@ -35,3 +44,5 @@ export const handler = (
     body: 'created',
   };
 };
+
+export const handler = Sentry.AWSLambda.wrapHandler(handle);

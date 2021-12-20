@@ -78,8 +78,8 @@ const UserProfileRole: React.FC<UserProfileRoleProps> = ({
                   </div>
                 );
                 return [
-                  <div css={gridDividerStyle}>
-                    <Divider key={`sep-${id}`} />
+                  <div css={gridDividerStyle} key={`sep-${id}`}>
+                    <Divider />
                   </div>,
                   component,
                 ];

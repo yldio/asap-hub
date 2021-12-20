@@ -1,34 +1,34 @@
-import React, { ComponentProps, ReactNode, useEffect, useState } from 'react';
-import { UserResponse } from '@asap-hub/model';
+import React, { ComponentProps, ReactNode } from 'react';
+import { UserResponse, UserTeam } from '@asap-hub/model';
 
 import {
   ProfileExpertiseAndResources,
   QuestionsSection,
   ProfileCardList,
+  UserProfileBackground,
 } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
 import UserProfileRole from '../organisms/UserProfileRole';
 import { useFlags } from '@asap-hub/react-context';
-import { isEnabled, setCurrentOverrides } from '@asap-hub/flags';
 
-//TODO: this type is confusing
 type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
-  Pick<ComponentProps<typeof UserProfileRole>, 'firstName'> &
   Pick<
-    UserResponse,
-    | 'email'
-    | 'contactEmail'
-    | 'labs'
-    | 'teams'
-    | 'displayName'
-    | 'researchInterests'
-    | 'responsibilities'
-  > & {
+    ComponentProps<typeof UserProfileBackground>,
+    'firstName' | 'displayName'
+  > &
+  Pick<UserResponse, 'email' | 'contactEmail' | 'labs'> & {
+    teams: Array<
+      UserTeam & {
+        editHref?: string;
+      }
+    >;
+  } & {
     userProfileGroupsCard?: ReactNode;
     editExpertiseAndResourcesHref?: string;
     editQuestionsHref?: string;
+    editRoleHref?: string;
     isOwnProfile?: boolean;
   };
 
@@ -45,43 +45,53 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   userProfileGroupsCard,
   editExpertiseAndResourcesHref,
   editQuestionsHref,
+  editRoleHref,
+  teams,
   ...roleProps
 }) => {
-  const { isEnabled, setCurrentOverrides } = useFlags();
-  useEffect(() => {
-    setCurrentOverrides();
-    console.log(isEnabled('UPDATED_ROLE_SECTION'));
-  }, [setCurrentOverrides]);
+  const { isEnabled } = useFlags();
+
+  const teamsSection = teams.map((team) => ({
+    card: (
+      <UserProfileBackground
+        key={team.id}
+        {...team}
+        firstName={firstName}
+        labs={labs}
+      />
+    ),
+    editLink:
+      team.editHref !== undefined
+        ? {
+            href: team.editHref,
+            label: `Edit role on ${team.displayName}`,
+          }
+        : undefined,
+  }));
+  const roleSection = [
+    {
+      card: (
+        <UserProfileRole
+          firstName={firstName}
+          labs={labs}
+          teams={teams}
+          {...roleProps}
+        ></UserProfileRole>
+      ),
+      editLink:
+        editRoleHref === undefined
+          ? undefined
+          : {
+              href: editRoleHref,
+              label: 'Edit team role',
+            },
+    },
+  ];
 
   return (
     <ProfileCardList>
       {[
-        // ...teams.map((team) => ({
-        //   card: (
-        //     <UserProfileBackground
-        //       key={team.id}
-        //       {...team}
-        //       firstName={firstName}
-        //       labs={labs}
-        //     />
-        //   ),
-        //   editLink:
-        //     team.editHref !== undefined
-        //       ? {
-        //           href: team.editHref,
-        //           label: `Edit role on ${team.displayName}`,
-        //         }
-        //       : undefined,
-        // })),
-        {
-          card: (
-            <UserProfileRole
-              firstName={firstName}
-              labs={labs}
-              {...roleProps}
-            ></UserProfileRole>
-          ),
-        },
+        ...(isEnabled('UPDATED_ROLE_SECTION') ? roleSection : teamsSection),
         {
           card: (
             <ProfileExpertiseAndResources

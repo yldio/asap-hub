@@ -47,6 +47,7 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
         editQuestionsHref={
           id === user.id ? route.editQuestions({}).$ : undefined
         }
+        editRoleHref={id === user.id ? route.editRole({}).$ : undefined}
         isOwnProfile={id === user.id}
       />
       {id === user.id && (

@@ -8,7 +8,7 @@ import {
 import { identity } from '../../../helpers/squidex';
 import {
   fetchUserByCodeHandlerFactory,
-  getValidUntil,
+  getValidUntilTimestampInSeconds,
 } from '../../../../src/handlers/webhooks/fetch-by-code/fetch-by-code';
 import { SearchClient } from 'algoliasearch';
 import { userControllerMock } from '../../../mocks/user-controller.mock';
@@ -25,7 +25,7 @@ describe('Fetch-user-by-code handler', () => {
 
   describe('Check if algolia validUntil is in correct format(seconds)', () => {
     jest.spyOn(Date, 'now').mockReturnValueOnce(1000);
-    expect(getValidUntil(1)).toStrictEqual(2);
+    expect(getValidUntilTimestampInSeconds(1)).toStrictEqual(2);
   });
 
   describe('Validation', () => {

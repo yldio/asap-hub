@@ -2,17 +2,13 @@ import encode from 'jwt-encode';
 import nock from 'nock';
 import { GetAccessToken, getAccessTokenFactory } from '../src/auth';
 import config from '../src/config';
+import { getMockToken } from './mocks/access-token.mock';
 
 describe('Get Access Token', () => {
   let getAccessToken: GetAccessToken;
 
-  const mockToken = encode(
-    {
-      exp: Math.floor((new Date().getTime() + 1) / 1000),
-      nbf: Math.floor(new Date().getTime() / 1000),
-    },
-    'secret',
-  );
+  const oneHourFromNow = new Date(new Date().getTime() + 3600 * 1000);
+  const mockToken = getMockToken(oneHourFromNow);
 
   beforeEach(() => {
     getAccessToken = getAccessTokenFactory();
@@ -40,6 +36,61 @@ describe('Get Access Token', () => {
     expect(await getAccessToken()).toBe(mockToken);
   });
 
+  describe('Expiration and caching for multiple requests', () => {
+    test('Should use the cached token with expiration date ahead of current time', async () => {
+      const oneHourFromNow = new Date(new Date().getTime() + 3600 * 1000);
+      const mockTokenFresh = getMockToken(oneHourFromNow);
+
+      const nockScope = nock(config.baseUrl)
+        .post(
+          '/identity-server/connect/token',
+          `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
+            config.clientId,
+          )}&client_secret=${config.clientSecret}`,
+        )
+        .reply(200, {
+          access_token: mockTokenFresh,
+          expires_in: Math.floor(oneHourFromNow.getTime() / 1000),
+          token_type: 'Bearer',
+          scope: 'squidex-api',
+        });
+
+      // fetch the token
+      await getAccessToken();
+      // the token should be cached and be used as it is still valid
+      await getAccessToken();
+
+      expect(nockScope.isDone()).toBe(true);
+    });
+
+    test('Should not use the cached token with expiration date in the past and fetch a new one', async () => {
+      const oneHourAgo = new Date(new Date().getTime() - 3600 * 1000);
+      const mockTokenStale = getMockToken(oneHourAgo);
+
+      const nockScope = nock(config.baseUrl)
+        .post(
+          '/identity-server/connect/token',
+          `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
+            config.clientId,
+          )}&client_secret=${config.clientSecret}`,
+        )
+        .twice()
+        .reply(200, {
+          access_token: mockTokenStale,
+          expires_in: Math.floor(oneHourAgo.getTime() / 1000),
+          token_type: 'Bearer',
+          scope: 'squidex-api',
+        });
+
+      // fetch the token
+      await getAccessToken();
+      // the token should be cached but expired and therefore it should call the auth endpoint twice
+      await getAccessToken();
+
+      expect(nockScope.isDone()).toBe(true);
+    });
+  });
+
   test('Should throw an exception and attach squidex response to the error message', async () => {
     nock(config.baseUrl)
       .post(
@@ -51,26 +102,6 @@ describe('Get Access Token', () => {
       .reply(521, { error: 'some error' });
 
     await expect(getAccessToken()).rejects.toThrow('some error');
-  });
-
-  test('Should call Squidex only once for multiple consecutive requests', async () => {
-    const scope = nock(config.baseUrl)
-      .post(
-        '/identity-server/connect/token',
-        `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
-          config.clientId,
-        )}&client_secret=${config.clientSecret}`,
-      )
-      .reply(200, {
-        access_token: mockToken,
-        expires_in: 2592000,
-        token_type: 'Bearer',
-        scope: 'squidex-api',
-      });
-    await getAccessToken();
-    await getAccessToken();
-
-    scope.isDone();
   });
 
   test('Should send out only a single request and await the response when multiple requests are sent at once', async () => {

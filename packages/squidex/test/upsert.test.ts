@@ -1,7 +1,8 @@
 import nock from 'nock';
 import config from '../src/config';
-import { Squidex } from '../src/squidex';
+import { Squidex } from '../src/rest';
 import { identity } from './identity';
+import { getAccessTokenMock } from './mocks/access-token.mock';
 
 interface Content {
   id: string;
@@ -15,9 +16,7 @@ interface Content {
 const collection = 'contents';
 describe('squidex wrapper - upsert', () => {
   const contentId = 'content-id';
-  beforeAll(() => {
-    identity();
-  });
+  const client = new Squidex<Content>(collection, getAccessTokenMock);
 
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
@@ -32,8 +31,6 @@ describe('squidex wrapper - upsert', () => {
         details: ['Request  body has an invalid format'],
         message: 'The model is not valid',
       });
-
-    const client = new Squidex<Content>(collection);
 
     // JSON parse/stringify so TS won't complain
     await expect(() =>
@@ -59,8 +56,6 @@ describe('squidex wrapper - upsert', () => {
         statusCode: 400,
       });
 
-    const client = new Squidex<Content>(collection);
-
     await expect(() =>
       client.upsert(contentId, {
         string: {
@@ -79,8 +74,6 @@ describe('squidex wrapper - upsert', () => {
         statusCode: 409,
       });
 
-    const client = new Squidex<Content>(collection);
-
     await expect(() =>
       client.upsert(contentId, {
         string: {
@@ -95,7 +88,6 @@ describe('squidex wrapper - upsert', () => {
       .patch(`/api/content/${config.appName}/${collection}/${contentId}`)
       .query(() => true)
       .reply(500);
-    const client = new Squidex<Content>(collection);
 
     await expect(() =>
       client.upsert(contentId, {
@@ -125,7 +117,6 @@ describe('squidex wrapper - upsert', () => {
         },
       });
 
-    const client = new Squidex<Content>(collection);
     const result = await client.upsert(contentId, {
       string: {
         iv: 'value',
@@ -161,7 +152,6 @@ describe('squidex wrapper - upsert', () => {
         },
       });
 
-    const client = new Squidex<Content>(collection);
     const result = await client.upsert(
       contentId,
       {

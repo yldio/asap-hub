@@ -1,6 +1,11 @@
 import pLimit from 'p-limit';
 import { framework as lambda } from '@asap-hub/services-common';
-import { Squidex, RestUser, SquidexGraphql } from '@asap-hub/squidex';
+import {
+  SquidexRest,
+  RestUser,
+  SquidexGraphql,
+  SquidexRestClient,
+} from '@asap-hub/squidex';
 
 import Users from '../../controllers/users';
 
@@ -10,7 +15,7 @@ export const handler = async (): Promise<lambda.Response> => {
   const limit = pLimit(5);
   const squidexGraphqlClient = new SquidexGraphql();
   const users = new Users(squidexGraphqlClient);
-  const squidexUsers: Squidex<RestUser> = new Squidex('users');
+  const squidexUsers: SquidexRestClient<RestUser> = new SquidexRest('users');
 
   const { items: outdatedUsers } = await squidexUsers.fetch({
     take: 30,

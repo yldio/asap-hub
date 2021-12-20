@@ -1,7 +1,7 @@
 import nock from 'nock';
 import config from '../src/config';
-import { Squidex } from '../src/squidex';
-import { identity } from './identity';
+import { Squidex } from '../src/rest';
+import { getAccessTokenMock } from './mocks/access-token.mock';
 
 interface Content {
   id: string;
@@ -14,9 +14,7 @@ interface Content {
 
 const collection = 'contents';
 describe('squidex wrapper', () => {
-  beforeAll(() => {
-    identity();
-  });
+  const client = new Squidex<Content>(collection, getAccessTokenMock);
 
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
@@ -32,8 +30,6 @@ describe('squidex wrapper', () => {
         statusCode: 400,
       });
 
-    const client = new Squidex<Content>(collection);
-
     await expect(() => client.fetch()).rejects.toThrow('Unauthorized');
   });
 
@@ -42,7 +38,6 @@ describe('squidex wrapper', () => {
       .get(`/api/content/${config.appName}/${collection}`)
       .query(() => true)
       .reply(500);
-    const client = new Squidex<Content>(collection);
 
     await expect(() => client.fetch()).rejects.toThrow('squidex');
   });
@@ -68,7 +63,6 @@ describe('squidex wrapper', () => {
         ],
       });
 
-    const client = new Squidex<Content>(collection);
     const result = await client.fetch();
     expect(result.items).toEqual([
       {
@@ -91,7 +85,6 @@ describe('squidex wrapper', () => {
       )
       .reply(404);
 
-    const client = new Squidex<Content>(collection);
     const result = await client.fetch();
     expect(result).toEqual({ total: 0, items: [] });
   });
@@ -121,7 +114,7 @@ describe('squidex wrapper', () => {
         ],
       });
 
-    const client = new Squidex<Content>(collection, {
+    const client = new Squidex<Content>(collection, getAccessTokenMock, {
       unpublished: true,
     });
     const result = await client.fetch();

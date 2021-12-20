@@ -1,9 +1,9 @@
 import Chance from 'chance';
 
-import { Squidex, RestTeam } from '@asap-hub/squidex';
+import { RestTeam, SquidexRest, SquidexRestClient } from '@asap-hub/squidex';
 
 const chance = new Chance();
-const teams: Squidex<RestTeam> = new Squidex('teams');
+const teams: SquidexRestClient<RestTeam> = new SquidexRest('teams');
 
 export const createRandomTeam = (): Promise<RestTeam> => {
   const team = {

@@ -1,7 +1,7 @@
 import nock from 'nock';
 import config from '../src/config';
-import { Squidex } from '../src/squidex';
-import { identity } from './identity';
+import { Squidex } from '../src/rest';
+import { getAccessTokenMock } from './mocks/access-token.mock';
 
 interface Content {
   id: string;
@@ -14,9 +14,7 @@ interface Content {
 
 const collection = 'contents';
 describe('squidex wrapper', () => {
-  beforeAll(() => {
-    identity();
-  });
+  const client = new Squidex<Content>(collection, getAccessTokenMock);
 
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
@@ -27,7 +25,6 @@ describe('squidex wrapper', () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/${collection}/42`)
       .reply(404);
-    const client = new Squidex<Content>(collection);
 
     await expect(() => client.fetchById('42')).rejects.toThrow('Not Found');
   });
@@ -40,8 +37,6 @@ describe('squidex wrapper', () => {
         statusCode: 400,
       });
 
-    const client = new Squidex<Content>(collection);
-
     await expect(() => client.fetchById('42')).rejects.toThrow('Unauthorized');
   });
 
@@ -49,7 +44,6 @@ describe('squidex wrapper', () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/${collection}/42`)
       .reply(500);
-    const client = new Squidex<Content>(collection);
 
     await expect(() => client.fetchById('42')).rejects.toThrow('squidex');
   });
@@ -66,7 +60,6 @@ describe('squidex wrapper', () => {
         },
       });
 
-    const client = new Squidex<Content>(collection);
     const result = await client.fetchById('42');
     expect(result).toEqual({
       id: '42',
@@ -103,7 +96,6 @@ describe('squidex wrapper', () => {
         ],
       });
 
-    const client = new Squidex<Content>(collection);
     const result = await client.fetchOne({
       filter: {
         path: 'data.string.iv',
@@ -139,7 +131,6 @@ describe('squidex wrapper', () => {
         items: [],
       });
 
-    const client = new Squidex<Content>(collection);
     await expect(() =>
       client.fetchOne({
         filter: {

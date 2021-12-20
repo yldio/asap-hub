@@ -1,7 +1,7 @@
 import nock from 'nock';
 import config from '../src/config';
-import { Squidex } from '../src/squidex';
-import { identity } from './identity';
+import { Squidex } from '../src/rest';
+import { getAccessTokenMock } from './mocks/access-token.mock';
 
 interface Content {
   id: string;
@@ -14,9 +14,7 @@ interface Content {
 
 const collection = 'contents';
 describe('squidex wrapper', () => {
-  beforeAll(() => {
-    identity();
-  });
+  const client = new Squidex<Content>(collection, getAccessTokenMock);
 
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
@@ -31,8 +29,6 @@ describe('squidex wrapper', () => {
         statusCode: 400,
       });
 
-    const client = new Squidex<Content>(collection);
-
     await expect(() => client.delete('42')).rejects.toThrow('Unauthorized');
   });
 
@@ -40,7 +36,6 @@ describe('squidex wrapper', () => {
     nock(config.baseUrl)
       .delete(`/api/content/${config.appName}/${collection}/42`)
       .reply(500);
-    const client = new Squidex<Content>(collection);
 
     await expect(() => client.delete('42')).rejects.toThrow('squidex');
   });
@@ -50,7 +45,6 @@ describe('squidex wrapper', () => {
       .delete(`/api/content/${config.appName}/${collection}/42`)
       .reply(204);
 
-    const client = new Squidex<Content>(collection);
     await client.delete('42');
   });
 });

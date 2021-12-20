@@ -1,6 +1,6 @@
 import Got from 'got';
 import Boom from '@hapi/boom';
-import createClient from './client';
+import createClient, { GetAccessToken } from './auth';
 
 export interface Results<T> {
   total: number;
@@ -46,7 +46,6 @@ export interface ODataQuery {
   $orderby?: string;
   $search?: string;
 }
-
 export class Squidex<
   T extends { id: string; data: Record<string, unknown> },
   C extends { id: string; data: Record<string, unknown> } = T,
@@ -56,10 +55,11 @@ export class Squidex<
 
   constructor(
     collection: string,
+    getAccessToken: GetAccessToken,
     options?: Parameters<typeof createClient>[0],
   ) {
     this.collection = collection;
-    this.client = createClient(options);
+    this.client = createClient(options, getAccessToken);
   }
 
   async fetch(query: ODataQuery | Query = {}): Promise<Results<T>> {
@@ -265,3 +265,8 @@ export class Squidex<
     }
   }
 }
+
+export type SquidexRestClient<
+  T extends { id: string; data: Record<string, unknown> },
+  C extends { id: string; data: Record<string, unknown> } = T,
+> = Squidex<T, C>;

@@ -5,13 +5,14 @@ import {
   Calendar,
   Query,
   SquidexGraphqlClient,
+  SquidexRest,
+  SquidexRestClient,
 } from '@asap-hub/squidex';
 import {
   ListCalendarResponse,
   CalendarResponse,
   isGoogleLegacyCalendarColor,
 } from '@asap-hub/model';
-import { InstrumentedSquidex } from '../utils/instrumented-client';
 import { parseCalendar } from '../entities';
 import logger from '../utils/logger';
 import { FETCH_CALENDAR } from '../queries/calendars.queries';
@@ -21,11 +22,11 @@ import {
 } from '../gql/graphql';
 
 export default class Calendars implements CalendarController {
-  squidexRestClient: InstrumentedSquidex<RestCalendar>;
+  calendarSquidexRestClient: SquidexRestClient<RestCalendar>;
   squidexGraphqlClient: SquidexGraphqlClient;
 
   constructor(squidexGraphqlClient: SquidexGraphqlClient) {
-    this.squidexRestClient = new InstrumentedSquidex('calendars');
+    this.calendarSquidexRestClient = new SquidexRest('calendars');
     this.squidexGraphqlClient = squidexGraphqlClient;
   }
 
@@ -34,11 +35,12 @@ export default class Calendars implements CalendarController {
     skip: number;
   }): Promise<ListCalendarResponse> {
     const { take = 50, skip = 0 } = options;
-    const { total, items: calendars } = await this.squidexRestClient.fetch({
-      take,
-      skip,
-      sort: [{ path: 'data.name.iv', order: 'ascending' }],
-    });
+    const { total, items: calendars } =
+      await this.calendarSquidexRestClient.fetch({
+        take,
+        skip,
+        sort: [{ path: 'data.name.iv', order: 'ascending' }],
+      });
 
     return {
       total,
@@ -67,7 +69,9 @@ export default class Calendars implements CalendarController {
       };
     }
 
-    const { items: calendars } = await this.squidexRestClient.fetch(query);
+    const { items: calendars } = await this.calendarSquidexRestClient.fetch(
+      query,
+    );
 
     return calendars.map(
       (restCalendar): CalendarRaw => ({
@@ -85,7 +89,7 @@ export default class Calendars implements CalendarController {
 
   async fetchByResourceId(resourceId: string): Promise<RestCalendar> {
     const [err, res] = await Intercept(
-      this.squidexRestClient.client
+      this.calendarSquidexRestClient.client
         .get('calendars', {
           searchParams: {
             $top: 1,
@@ -154,7 +158,7 @@ export default class Calendars implements CalendarController {
   }
 
   async getSyncToken(calendarId: string): Promise<string | undefined> {
-    const res = await this.squidexRestClient.fetchById(calendarId);
+    const res = await this.calendarSquidexRestClient.fetchById(calendarId);
     return res.data.syncToken?.iv;
   }
 
@@ -166,7 +170,7 @@ export default class Calendars implements CalendarController {
       acc[key] = { iv: value };
       return acc;
     }, {} as { [key: string]: { iv: unknown } });
-    const res = await this.squidexRestClient.patch(calendarId, update);
+    const res = await this.calendarSquidexRestClient.patch(calendarId, update);
     return parseCalendar(res);
   }
 }

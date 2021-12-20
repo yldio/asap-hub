@@ -1,8 +1,8 @@
-import { Squidex } from '@asap-hub/squidex';
+import { SquidexRestClient } from '@asap-hub/squidex';
 
 export const getSquidexClientMock = <
   T extends { id: string; data: Record<string, unknown> },
->(): jest.Mocked<Squidex<T>> => ({
+>(): jest.Mocked<SquidexRestClient<T>> => ({
   client: null as any,
   collection: 'some collection',
   fetch: jest.fn(),

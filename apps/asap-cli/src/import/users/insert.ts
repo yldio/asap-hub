@@ -2,17 +2,17 @@
 
 import Intercept from 'apr-intercept';
 import {
-  Squidex,
   RestTeam,
   RestUser,
+  SquidexRest,
   UserTeamConnection,
 } from '@asap-hub/squidex';
 import { HTTPError } from 'got';
 import { Data } from './parse';
 import log from '../../logger';
 
-const teams = new Squidex<RestTeam>('teams');
-const users = new Squidex<RestUser>('users');
+const teams = new SquidexRest<RestTeam>('teams');
+const users = new SquidexRest<RestUser>('users');
 
 interface Cache {
   [key: string]: Promise<RestTeam | RestUser>;

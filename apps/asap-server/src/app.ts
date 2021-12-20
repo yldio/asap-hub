@@ -6,6 +6,7 @@ import { Logger } from 'pino';
 import pinoHttp from 'pino-http';
 import AWSXray from 'aws-xray-sdk';
 import * as Sentry from '@sentry/serverless';
+import { SquidexGraphql } from '@asap-hub/squidex';
 
 import decodeToken from './utils/validate-token';
 
@@ -39,7 +40,6 @@ import { discoverRouteFactory } from './routes/discover.route';
 import pinoLogger, { redaction } from './utils/logger';
 import { userLoggerHandler } from './middleware/user-logger-handler';
 import { permissionHandler } from './middleware/permission-handler';
-import { InstrumentedSquidexGraphql } from './utils/instrumented-client';
 import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 
 export const appFactory = (libs: Libs = {}): Express => {
@@ -59,7 +59,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const errorHandler = errorHandlerFactory();
 
   // Clients
-  const squidexGraphqlClient = new InstrumentedSquidexGraphql();
+  const squidexGraphqlClient = new SquidexGraphql();
 
   // Controllers
   const calendarController =

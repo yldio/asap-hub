@@ -1,5 +1,6 @@
 import { DashboardResponse } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
+
 import { parseGraphQLPage, parseGraphQLNews } from '../entities';
 import { FETCH_DASHBOARD } from '../queries/dashboard.queries';
 import { FetchDashboardQuery } from '../gql/graphql';

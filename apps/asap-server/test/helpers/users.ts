@@ -1,10 +1,10 @@
 import Chance from 'chance';
-import { Squidex, User } from '@asap-hub/squidex';
+import { SquidexRest, User } from '@asap-hub/squidex';
 import { TeamRole, UserResponse, Invitee } from '@asap-hub/model';
 import { RestTeam, RestUser } from '@asap-hub/squidex';
 import { parseUser } from '../../src/entities';
 
-const users = new Squidex<RestUser>('users');
+const users = new SquidexRest<RestUser>('users');
 const chance = new Chance();
 
 export type TestUserResponse = UserResponse & {

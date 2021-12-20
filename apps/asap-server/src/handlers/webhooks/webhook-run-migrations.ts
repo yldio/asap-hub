@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Query, RestMigration, Squidex } from '@asap-hub/squidex';
+import {
+  Query,
+  RestMigration,
+  SquidexRest,
+  SquidexRestClient,
+} from '@asap-hub/squidex';
 import { isBoom } from '@hapi/boom';
 import { Handler } from 'aws-lambda';
 import { promises as fsPromise } from 'fs';
@@ -7,12 +12,12 @@ import path from 'path';
 import { Logger } from 'pino';
 import pinoLogger from '../../utils/logger';
 
-const squidexClient = new Squidex<RestMigration>('migrations');
+const squidexClient = new SquidexRest<RestMigration>('migrations');
 
 export const runFactory =
   (
     logger: Logger,
-    client: Squidex<RestMigration>,
+    client: SquidexRestClient<RestMigration>,
     readDir: typeof fsPromise.readdir,
     importModule: ImportModuleFromPath,
   ): Handler =>
@@ -70,7 +75,7 @@ export const runFactory =
 export const rollbackFactory =
   (
     logger: Logger,
-    client: Squidex<RestMigration>,
+    client: SquidexRestClient<RestMigration>,
     importModule: ImportModuleFromPath,
   ): Handler =>
   async () => {
@@ -137,7 +142,8 @@ const getMigrationPathsFromDirectoryFactory =
       .sort();
 
 const getLatestMigrationPathFromDbFactory =
-  (client: Squidex<RestMigration>) => async (): Promise<string | null> => {
+  (client: SquidexRestClient<RestMigration>) =>
+  async (): Promise<string | null> => {
     const query: Query = {
       take: 1,
       skip: 0,
@@ -186,11 +192,12 @@ const getMigrationsFromPathsFactory =
     return migrations;
   };
 
-const filterUnexecutedMigrationsFactory = (client: Squidex<RestMigration>) =>
-  filterMigrationsFactory(client);
+const filterUnexecutedMigrationsFactory = (
+  client: SquidexRestClient<RestMigration>,
+) => filterMigrationsFactory(client);
 
 const filterMigrationsFactory =
-  (client: Squidex<RestMigration>) => (migrationPaths: string[]) => {
+  (client: SquidexRestClient<RestMigration>) => (migrationPaths: string[]) => {
     const asyncFilter = async <T>(
       arr: T[],
       predicate: (elem: T) => Promise<boolean>,
@@ -218,7 +225,7 @@ const filterMigrationsFactory =
   };
 
 const saveExecutedMigrationFactory =
-  (client: Squidex<RestMigration>) =>
+  (client: SquidexRestClient<RestMigration>) =>
   async (migration: string): Promise<void> => {
     await client.create({
       name: {
@@ -228,7 +235,7 @@ const saveExecutedMigrationFactory =
   };
 
 const removeExecutedMigrationFactory =
-  (client: Squidex<RestMigration>) =>
+  (client: SquidexRestClient<RestMigration>) =>
   async (migration: string): Promise<void> => {
     const migrationRecord = await client.fetchOne({
       filter: { path: 'data/name/iv', op: 'eq', value: migration },

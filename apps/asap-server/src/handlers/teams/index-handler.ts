@@ -1,5 +1,6 @@
 import { EventBridgeEvent } from 'aws-lambda';
 import algoliasearch, { SearchClient } from 'algoliasearch';
+import { SquidexGraphql } from '@asap-hub/squidex';
 import { TeamsEventType } from '../webhooks/webhook-teams';
 import ResearchOutputs, {
   ResearchOutputController,
@@ -10,7 +11,6 @@ import {
   algoliaResearchOutputIndex,
 } from '../../config';
 import logger from '../../utils/logger';
-import { InstrumentedSquidexGraphql } from '../../utils/instrumented-client';
 
 export const indexResearchOutputByTeamHandler = (
   researchOutputController: ResearchOutputController,
@@ -71,6 +71,6 @@ export type SquidexWebhookTeamPayload = {
 };
 
 export const handler = indexResearchOutputByTeamHandler(
-  new ResearchOutputs(new InstrumentedSquidexGraphql()),
+  new ResearchOutputs(new SquidexGraphql()),
   algoliasearch(algoliaAppId, algoliaIndexApiKey),
 );

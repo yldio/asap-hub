@@ -6,13 +6,19 @@ import {
   auth0SharedSecret as secret,
 } from '../../../../src/config';
 import { identity } from '../../../helpers/squidex';
-import {
-  fetchUserByCodeHandlerFactory,
-  getValidUntilTimestampInSeconds,
-} from '../../../../src/handlers/webhooks/fetch-by-code/fetch-by-code';
+import { fetchUserByCodeHandlerFactory } from '../../../../src/handlers/webhooks/fetch-by-code/fetch-by-code';
 import { SearchClient } from 'algoliasearch';
 import { userControllerMock } from '../../../mocks/user-controller.mock';
 import { getUserResponse } from '../../../fixtures/users.fixtures';
+
+const successfulApiGatewayEvent = getApiGatewayEvent({
+  pathParameters: {
+    code: 'welcomeCode',
+  },
+  headers: {
+    Authorization: `Basic ${secret}`,
+  },
+});
 
 describe('Fetch-user-by-code handler', () => {
   const algoliaClientMock = {
@@ -23,10 +29,25 @@ describe('Fetch-user-by-code handler', () => {
     algoliaClientMock,
   );
 
-  describe('Check if algolia validUntil is in correct format(seconds)', () => {
-    expect(
-      getValidUntilTimestampInSeconds({ date: new Date(1000), ttl: 1 }),
-    ).toStrictEqual(2);
+  it('checks if algolia validUntil is in correct format(seconds)', async () => {
+    const customHandler = fetchUserByCodeHandlerFactory(
+      userControllerMock,
+      algoliaClientMock,
+      new Date(1000),
+      1,
+    );
+
+    algoliaClientMock.generateSecuredApiKey.mockReturnValueOnce('test-api-key');
+    userControllerMock.fetchByCode.mockResolvedValueOnce(getUserResponse());
+
+    await customHandler(successfulApiGatewayEvent);
+
+    expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith(
+      algoliaSearchApiKey,
+      {
+        validUntil: expect.any(Number),
+      },
+    );
   });
 
   describe('Validation', () => {
@@ -110,16 +131,7 @@ describe('Fetch-user-by-code handler', () => {
     test('returns status 200 and user data when the user exists', async () => {
       userControllerMock.fetchByCode.mockResolvedValueOnce(getUserResponse());
 
-      const result = (await handler(
-        getApiGatewayEvent({
-          pathParameters: {
-            code: 'welcomeCode',
-          },
-          headers: {
-            Authorization: `Basic ${secret}`,
-          },
-        }),
-      )) as APIGatewayProxyResult;
+      const result = (await handler(successfulApiGatewayEvent)) as APIGatewayProxyResult;
 
       expect(result.statusCode).toStrictEqual(200);
       expect(JSON.parse(result.body)).toMatchObject(getUserResponse());

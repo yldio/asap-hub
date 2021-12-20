@@ -11,6 +11,8 @@ import { algoliaApiKeyTtl, algoliaSearchApiKey } from '../../../config';
 export const fetchUserByCodeHandlerFactory = (
   userController: UserController,
   algoliaClient: SearchClient,
+  date = new Date(),
+  ttl = algoliaApiKeyTtl,
 ): Handler =>
   http(async (request: lambda.Request): Promise<
     lambda.Response<UserMetadataResponse>
@@ -32,8 +34,8 @@ export const fetchUserByCodeHandlerFactory = (
     const user = await userController.fetchByCode(code);
     const apiKey = algoliaClient.generateSecuredApiKey(algoliaSearchApiKey, {
       validUntil: getValidUntilTimestampInSeconds({
-        date: new Date(),
-        ttl: algoliaApiKeyTtl,
+        date,
+        ttl,
       }),
     });
 

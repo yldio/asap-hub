@@ -6,7 +6,10 @@ import {
   auth0SharedSecret as secret,
 } from '../../../../src/config';
 import { identity } from '../../../helpers/squidex';
-import { fetchUserByCodeHandlerFactory } from '../../../../src/handlers/webhooks/fetch-by-code/fetch-by-code';
+import {
+  fetchUserByCodeHandlerFactory,
+  getValidUntil,
+} from '../../../../src/handlers/webhooks/fetch-by-code/fetch-by-code';
 import { SearchClient } from 'algoliasearch';
 import { userControllerMock } from '../../../mocks/user-controller.mock';
 import { getUserResponse } from '../../../fixtures/users.fixtures';
@@ -19,6 +22,11 @@ describe('Fetch-user-by-code handler', () => {
     userControllerMock,
     algoliaClientMock,
   );
+
+  describe('Check if algolia validUntil is in correct format(seconds)', () => {
+    jest.spyOn(Date, 'now').mockReturnValueOnce(1000);
+    expect(getValidUntil(1)).toStrictEqual(2);
+  });
 
   describe('Validation', () => {
     test("return 400 when code isn't present", async () => {

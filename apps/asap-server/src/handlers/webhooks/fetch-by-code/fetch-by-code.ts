@@ -31,7 +31,7 @@ export const fetchUserByCodeHandlerFactory = (
 
     const user = await userController.fetchByCode(code);
     const apiKey = algoliaClient.generateSecuredApiKey(algoliaSearchApiKey, {
-      validUntil: Math.floor(Date.now() / 1000) + algoliaApiKeyTtl, // which is one minute over the TTL of the ID token
+      validUntil: getValidUntil(algoliaApiKeyTtl), // which is one minute over the TTL of the ID token
     });
 
     return {
@@ -41,3 +41,6 @@ export const fetchUserByCodeHandlerFactory = (
       },
     };
   });
+
+export const getValidUntil = (ttl: number): number =>
+  Math.floor(Date.now() / 1000) + Math.floor(ttl);

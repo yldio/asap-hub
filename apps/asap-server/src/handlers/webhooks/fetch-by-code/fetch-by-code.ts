@@ -31,7 +31,10 @@ export const fetchUserByCodeHandlerFactory = (
 
     const user = await userController.fetchByCode(code);
     const apiKey = algoliaClient.generateSecuredApiKey(algoliaSearchApiKey, {
-      validUntil: getValidUntilTimestampInSeconds(algoliaApiKeyTtl),
+      validUntil: getValidUntilTimestampInSeconds({
+        date: new Date(),
+        ttl: algoliaApiKeyTtl,
+      }),
     });
 
     return {
@@ -42,5 +45,13 @@ export const fetchUserByCodeHandlerFactory = (
     };
   });
 
-export const getValidUntilTimestampInSeconds = (ttl: number): number =>
-  Math.floor(Date.now() / 1000) + Math.floor(ttl);
+export type GetValidUntilTimestampInSecondsArgs = {
+  date: Date;
+  ttl: number;
+};
+
+export const getValidUntilTimestampInSeconds = ({
+  date,
+  ttl,
+}: GetValidUntilTimestampInSecondsArgs): number =>
+  Math.floor(date.getTime() / 1000) + Math.floor(ttl);

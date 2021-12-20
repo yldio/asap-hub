@@ -24,8 +24,9 @@ describe('Fetch-user-by-code handler', () => {
   );
 
   describe('Check if algolia validUntil is in correct format(seconds)', () => {
-    jest.spyOn(Date, 'now').mockReturnValueOnce(1000);
-    expect(getValidUntilTimestampInSeconds(1)).toStrictEqual(2);
+    expect(
+      getValidUntilTimestampInSeconds({ date: new Date(1000), ttl: 1 }),
+    ).toStrictEqual(2);
   });
 
   describe('Validation', () => {

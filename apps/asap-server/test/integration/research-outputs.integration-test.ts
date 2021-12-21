@@ -17,6 +17,7 @@ describe('Research Outputs', () => {
     sharingStatus: 'Network Only',
     asapFunded: 'Not Sure',
     usedInAPublication: 'Not Sure',
+    addedDate: '2021-05-21T13:18:31Z',
   };
 
   test('Valid dois should succeed', async () => {

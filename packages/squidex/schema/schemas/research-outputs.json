@@ -171,7 +171,7 @@
           "label": "Added Date",
           "hints": "Date output was shared with ASAP Network (different from publication date)",
           "placeholder": "",
-          "isRequired": false,
+          "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": true
         }

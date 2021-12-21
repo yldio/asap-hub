@@ -16,6 +16,7 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/frontend/src/auth/test-utils';
+import { disable } from '@asap-hub/flags';
 import { join } from 'path';
 import imageCompression from 'browser-image-compression';
 import { Auth0Client } from '@auth0/auth0-spa-js';
@@ -183,6 +184,7 @@ it("links to the user's team", async () => {
 });
 
 it("links to the user's team proposal", async () => {
+  disable('UPDATED_ROLE_SECTION');
   const { findByText } = await renderUserProfile({
     ...createUserResponse(),
     teams: [

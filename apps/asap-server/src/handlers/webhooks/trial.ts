@@ -8,41 +8,51 @@ Sentry.AWSLambda.init({
   tracesSampleRate: 1.0,
   environment,
   release: currentRevision,
+  beforeSend: (event) => {
+    console.log('Sentry event', event);
+    return event;
+  },
+  enabled: true,
+  debug: true,
+  onFatalError: (error) => {
+    console.error('Sentry fatal error', error);
+  },
 });
+console.log('Sentry initialized');
 
-const handle = async (
-  event: APIGatewayProxyEventV2,
-): Promise<APIGatewayProxyResultV2<never>> => {
-  const { q } = event.queryStringParameters || { q: '1' };
+export const handler = Sentry.AWSLambda.wrapHandler(
+  async (
+    event: APIGatewayProxyEventV2,
+  ): Promise<APIGatewayProxyResultV2<never>> => {
+    const { q } = event.queryStringParameters || { q: '1' };
 
-  if (q === '1') {
+    if (q === '1') {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: 'Hello, world!',
+        }),
+      };
+    }
+    if (q === '2') {
+      return {
+        statusCode: 501,
+        body: JSON.stringify({
+          message: 'Hello, not implmented world!',
+        }),
+      };
+    }
+
+    if (q === '3') {
+      throw new Error('Hello, error world!');
+    }
+    if (q === '4') {
+      throw Boom.conflict('Hello, conflict world!');
+    }
+
     return {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: 'Hello, world!',
-      }),
+      statusCode: 201,
+      body: 'createad',
     };
-  }
-  if (q === '2') {
-    return {
-      statusCode: 501,
-      body: JSON.stringify({
-        message: 'Hello, not implmented world!',
-      }),
-    };
-  }
-
-  if (q === '3') {
-    throw new Error('Hello, error world!');
-  }
-  if (q === '4') {
-    throw Boom.conflict('Hello, conflict world!');
-  }
-
-  return {
-    statusCode: 201,
-    body: 'created',
-  };
-};
-
-export const handler = Sentry.AWSLambda.wrapHandler(handle);
+  },
+);

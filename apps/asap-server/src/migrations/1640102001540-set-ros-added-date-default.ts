@@ -15,14 +15,13 @@ export default class SetResearchOutputAddedDateDefault extends Migration {
       result = await squidexClient.fetch({
         $top: 10,
         $skip: pointer,
-        $filter: `data/addedDate/iv eq ''`,
         $orderby: 'created asc',
       });
 
       for (const researchOutput of result.items) {
         await squidexClient.patch(researchOutput.id, {
           addedDate: {
-            iv: researchOutput.created,
+            iv: researchOutput.data.addedDate?.iv ?? researchOutput.created,
           },
         });
       }

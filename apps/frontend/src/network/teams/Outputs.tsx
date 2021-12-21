@@ -61,7 +61,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
     algoliaResultsToStream(
       createCsvFileStream(
         { headers: true },
-        `SharedOutputs_${utils
+        `SharedOutputs_Team${utils
           .titleCase(displayName)
           .replace(/[\W_]+/g, '')}_${format(new Date(), 'MMddyy')}.csv`,
       ),

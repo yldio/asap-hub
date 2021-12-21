@@ -5,6 +5,7 @@ import {
   getCommaAndString,
   getCounterString,
 } from '../index';
+import { titleCase } from '../text';
 
 describe('getCounterString', () => {
   it('can add the singular form to a given term, when value is equal to 1', () => {
@@ -90,6 +91,14 @@ describe('getUniqueList', () => {
           'lab',
         ),
       ).toEqual('BCN one lab, LON two lab and MAD three lab');
+    });
+  });
+
+  describe('titleCase', () => {
+    it('capitalizes the first letter of each word', () => {
+      expect(titleCase('lab')).toEqual('Lab');
+      expect(titleCase('lab abc123')).toEqual('Lab Abc123');
+      expect(titleCase('')).toEqual('');
     });
   });
 });

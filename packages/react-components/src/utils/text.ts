@@ -30,3 +30,9 @@ export const getUniqueCommaStringWithSuffix = (
   suffix: string,
 ): string =>
   getCommaAndString(getUniqueList(array).map((s) => appendSuffix(s, suffix)));
+
+export const titleCase = (string: string): string =>
+  string.replace(
+    /\w\S*/g,
+    (str) => `${str.charAt(0).toUpperCase()}${str.substr(1).toLowerCase()}`,
+  );

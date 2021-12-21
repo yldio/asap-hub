@@ -1,3 +1,4 @@
+import { UserResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { SharedResearchList } from '.';
@@ -26,11 +27,11 @@ const styles = css({
 export type UserProfileOutputsProps = Omit<
   ComponentProps<typeof SharedResearchList>,
   'children'
-> & {
-  ownUser: boolean;
-  hasOutputs: boolean;
-  firstName?: string;
-};
+> &
+  Pick<UserResponse, 'firstName'> & {
+    ownUser: boolean;
+    hasOutputs: boolean;
+  };
 
 const UserProfileResearchOutputs: React.FC<UserProfileOutputsProps> = ({
   hasOutputs,

@@ -2,7 +2,10 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createAlgoliaResearchOutputResponse } from '@asap-hub/fixtures';
+import {
+  createAlgoliaResearchOutputResponse,
+  createTeamResponse,
+} from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 
 import { RecoilRoot } from 'recoil';
@@ -15,6 +18,7 @@ import {
   createCsvFileStream,
   MAX_ALGOLIA_RESULTS,
 } from '../../../shared-research/export';
+import { getTeam } from '../api';
 
 jest.mock('../../../shared-research/api');
 jest.mock('../../../shared-research/export');
@@ -27,6 +31,8 @@ afterEach(() => {
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
 >;
+
+const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
 
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
@@ -142,7 +148,11 @@ it('calls getResearchOutputs with the right arguments', async () => {
   );
 });
 
-it('triggers and export with the same parameters', async () => {
+it('triggers export with the same parameters and custom file name', async () => {
+  mockGetTeam.mockResolvedValue({
+    ...createTeamResponse(),
+    displayName: 'example team 123',
+  });
   const filters = new Set(['Grant Document']);
   const searchQuery = 'Some Search';
   const teamId = '12345';
@@ -170,7 +180,7 @@ it('triggers and export with the same parameters', async () => {
   userEvent.click(getByText(/export/i));
   expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
     expect.anything(),
-    expect.stringMatching(/SharedOutputs_\d+\.csv/),
+    expect.stringMatching(/SharedOutputs_TeamExampleTeam123_\d+\.csv/),
   );
   await waitFor(() =>
     expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {

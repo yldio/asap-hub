@@ -46,9 +46,10 @@ const textStyles = css({
   color: lead.rgb,
 });
 
-const labStyles = css({
-  padding: `0 0 ${24 / perRem}em`,
-});
+const labStyles = (hide = true) =>
+  css({
+    padding: hide ? 0 : `0 0 ${24 / perRem}em`,
+  });
 const teamStyles = css({
   listStyle: 'none',
   margin: 0,
@@ -74,12 +75,10 @@ const MembersList: React.FC<MembersListProps> = ({
   <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
     {members.map(({ id, displayName, role, teams, labs = [], ...member }) => {
       const href = network({}).users({}).user({ userId: id }).$;
-      const labsList = labs.length
-        ? getUniqueCommaStringWithSuffix(
-            labs.map((lab) => lab.name),
-            'Lab',
-          )
-        : undefined;
+      const labsList = getUniqueCommaStringWithSuffix(
+        labs.map((lab) => lab.name),
+        'Lab',
+      );
       return (
         <li key={id} css={{ display: 'contents' }}>
           <Anchor href={href} css={{ display: 'contents' }}>
@@ -105,20 +104,19 @@ const MembersList: React.FC<MembersListProps> = ({
               {role}
             </div>
           </Anchor>
-          {labsList && (
-            <Anchor href={href} css={{ display: 'contents' }}>
-              <div
-                css={[
-                  addToColumnStyles,
-                  singleColumn || multiColumnAddToColumnStyles,
-                  textStyles,
-                  labStyles,
-                ]}
-              >
-                {labsList && <Ellipsis>{labsList}</Ellipsis>}
-              </div>
-            </Anchor>
-          )}
+          <Anchor href={href} css={{ display: 'contents' }}>
+            <div
+              css={[
+                addToColumnStyles,
+                singleColumn || multiColumnAddToColumnStyles,
+                textStyles,
+                labStyles(!labsList.length),
+              ]}
+            >
+              {labsList && <Ellipsis>{labsList}</Ellipsis>}
+            </div>
+          </Anchor>
+
           <ul
             css={[
               addToColumnStyles,

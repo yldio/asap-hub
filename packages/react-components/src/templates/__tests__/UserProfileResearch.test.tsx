@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
+import { disable } from '@asap-hub/flags';
 
 import UserProfileResearch from '../UserProfileResearch';
 
@@ -53,7 +54,8 @@ it('does not render an edit button by default', () => {
   const { queryByLabelText } = render(<UserProfileResearch {...commonProps} />);
   expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
 });
-it('renders an edit button for the role on the team', () => {
+it('renders an edit button for the role on the team (REGRESSION)', () => {
+  disable('UPDATED_ROLE_SECTION');
   const { getByLabelText } = render(
     <UserProfileResearch
       {...commonProps}

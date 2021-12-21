@@ -1,5 +1,6 @@
 import React, { ComponentProps, ReactNode } from 'react';
 import { UserResponse, UserTeam } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 
 import {
   ProfileExpertiseAndResources,
@@ -10,7 +11,6 @@ import {
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
 import UserProfileRole from '../organisms/UserProfileRole';
-import { useFlags } from '@asap-hub/react-context';
 
 type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
   ComponentProps<typeof ProfileExpertiseAndResources> &

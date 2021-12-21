@@ -32,7 +32,7 @@ it('displays created date when addedDate is undefined', () => {
   const { getByText } = render(
     <SharedResearchCard
       {...sharedResearchCardProps}
-      addedDate={undefined}
+      addedDate={new Date(2020, 6, 12, 14, 32).toISOString()}
       created={new Date(2020, 6, 12, 14, 32).toISOString()}
     />,
   );

@@ -5,7 +5,7 @@ import { config, SquidexGraphql, SquidexRest } from '../src';
 describe('Squidex package', () => {
   const mockToken = encode(
     {
-      exp: Math.floor((new Date().getTime() + 1) / 1000),
+      exp: Math.floor((new Date().getTime() + 3600 * 1000) / 1000),
       nbf: Math.floor(new Date().getTime() / 1000),
     },
     'secret',

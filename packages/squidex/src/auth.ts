@@ -41,7 +41,7 @@ export const getAccessTokenFactory = (): (() => Promise<string>) => {
           const jwt = decode<JwtToken>(tk1);
           const currentTime = Date.now() / 1000;
 
-          if (currentTime > jwt.exp) {
+          if (currentTime < jwt.exp) {
             return tk1;
           }
         }

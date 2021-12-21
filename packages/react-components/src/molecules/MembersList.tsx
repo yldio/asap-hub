@@ -46,10 +46,9 @@ const textStyles = css({
   color: lead.rgb,
 });
 
-const labStyles = (hide = true) =>
-  css({
-    padding: hide ? 0 : `0 0 ${24 / perRem}em`,
-  });
+const labStyles = css({
+  padding: `0 0 ${24 / perRem}em`,
+});
 const teamStyles = css({
   listStyle: 'none',
   margin: 0,
@@ -110,7 +109,7 @@ const MembersList: React.FC<MembersListProps> = ({
                 addToColumnStyles,
                 singleColumn || multiColumnAddToColumnStyles,
                 textStyles,
-                labStyles(!labsList.length),
+                !!labsList.length && labStyles,
               ]}
             >
               {labsList && <Ellipsis>{labsList}</Ellipsis>}

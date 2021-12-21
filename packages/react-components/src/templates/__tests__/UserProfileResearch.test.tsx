@@ -74,6 +74,13 @@ it('renders an edit button for the role on the team (REGRESSION)', () => {
     expect.stringMatching(/42$/),
   );
 });
+it('renders an edit button for the role on the teams', () => {
+  const { getByLabelText } = render(
+    <UserProfileResearch {...commonProps} editRoleHref="/edit-role" />,
+  );
+  expect(getByLabelText(/edit.+role/i)).toHaveAttribute('href', '/edit-role');
+});
+
 it('renders an edit button for the expertiseAndResourceTags list', () => {
   const { getByLabelText } = render(
     <UserProfileResearch

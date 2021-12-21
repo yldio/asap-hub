@@ -3,7 +3,6 @@ import { RestCalendar, SquidexGraphql } from '@asap-hub/squidex';
 import { framework as lambda } from '@asap-hub/services-common';
 
 import { Handler } from '../../utils/types';
-import { http } from '../../utils/instrumented-framework';
 import Calendars, { CalendarController } from '../../controllers/calendars';
 import {
   SyncCalendar,
@@ -19,7 +18,7 @@ export const webhookEventUpdatedHandlerFactory = (
   calendars: CalendarController,
   syncCalendar: SyncCalendar,
 ): Handler =>
-  http(async (request: lambda.Request): Promise<lambda.Response> => {
+  lambda.http(async (request) => {
     logger.debug(JSON.stringify(request, null, 2), 'Request');
 
     const channelToken = request.headers['x-goog-channel-token'];
@@ -66,7 +65,7 @@ export const webhookEventUpdatedHandlerFactory = (
     return {
       statusCode: 200,
     };
-  }, logger);
+  });
 
 const squidexGraphqlClient = new SquidexGraphql();
 const syncCalendar = syncCalendarFactory(

@@ -15,7 +15,7 @@ export default class SetResearchOutputAddedDateDefault extends Migration {
       result = await squidexClient.fetch({
         $top: 10,
         $skip: pointer,
-        $filter: `data/addedDate/iv eq ''`,
+        $filter: `exists(data/addedDate/iv) eq false`,
         $orderby: 'created asc',
       });
 

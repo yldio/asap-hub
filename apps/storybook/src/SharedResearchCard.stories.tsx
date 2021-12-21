@@ -23,6 +23,9 @@ export const Normal = () => (
     created={new Date(
       date('Created Date', new Date(2020, 6, 4, 14, 32)),
     ).toISOString()}
+    addedDate={new Date(
+      date('Created Date', new Date(2020, 6, 4, 14, 32)),
+    ).toISOString()}
     teams={createListTeamResponse(number('Number of Teams', 3)).items}
     labs={createLabs({ labs: number('Number of labs', 2) })}
     authors={createListUserResponse(number('Number of Authors', 5)).items}

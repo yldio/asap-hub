@@ -11,6 +11,15 @@ import { SearchClient } from 'algoliasearch';
 import { userControllerMock } from '../../../mocks/user-controller.mock';
 import { getUserResponse } from '../../../fixtures/users.fixtures';
 
+const successfulApiGatewayEvent = getApiGatewayEvent({
+  pathParameters: {
+    code: 'welcomeCode',
+  },
+  headers: {
+    Authorization: `Basic ${secret}`,
+  },
+});
+
 describe('Fetch-user-by-code handler', () => {
   const algoliaClientMock = {
     generateSecuredApiKey: jest.fn(),
@@ -19,6 +28,31 @@ describe('Fetch-user-by-code handler', () => {
     userControllerMock,
     algoliaClientMock,
   );
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('checks if algolia validUntil is in correct format(seconds)', async () => {
+    const customHandler = fetchUserByCodeHandlerFactory(
+      userControllerMock,
+      algoliaClientMock,
+      new Date(1000),
+      1,
+    );
+
+    algoliaClientMock.generateSecuredApiKey.mockReturnValueOnce('test-api-key');
+    userControllerMock.fetchByCode.mockResolvedValueOnce(getUserResponse());
+
+    await customHandler(successfulApiGatewayEvent);
+
+    expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith(
+      algoliaSearchApiKey,
+      {
+        validUntil: expect.any(Number),
+      },
+    );
+  });
 
   describe('Validation', () => {
     test("return 400 when code isn't present", async () => {
@@ -102,14 +136,7 @@ describe('Fetch-user-by-code handler', () => {
       userControllerMock.fetchByCode.mockResolvedValueOnce(getUserResponse());
 
       const result = (await handler(
-        getApiGatewayEvent({
-          pathParameters: {
-            code: 'welcomeCode',
-          },
-          headers: {
-            Authorization: `Basic ${secret}`,
-          },
-        }),
+        successfulApiGatewayEvent,
       )) as APIGatewayProxyResult;
 
       expect(result.statusCode).toStrictEqual(200);
@@ -142,6 +169,44 @@ describe('Fetch-user-by-code handler', () => {
           validUntil: expect.any(Number),
         },
       );
+    });
+
+    describe('Algolia token expiration', () => {
+      beforeAll(() => {
+        // this is to prevent from real time elapse
+        jest.useFakeTimers();
+      });
+      afterAll(() => {
+        jest.useRealTimers();
+      });
+
+      test('should ask for a key with expiration which is 601 minutes (10 hours 1 minute) ahead of now', async () => {
+        const now = new Date();
+        const tenHoursOneMinuteLater = new Date(now.getTime() + 601 * 60000);
+
+        await handler(
+          getApiGatewayEvent({
+            pathParameters: {
+              code: 'welcomeCode',
+            },
+            headers: {
+              Authorization: `Basic ${secret}`,
+            },
+          }),
+        );
+
+        // get the unix timestamp in seconds and round it
+        const expectedValidUntil = Math.floor(
+          tenHoursOneMinuteLater.getTime() / 1000,
+        );
+
+        expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith(
+          algoliaSearchApiKey,
+          {
+            validUntil: expectedValidUntil,
+          },
+        );
+      });
     });
 
     test('should return status 500 when algolia API key generation fails', async () => {

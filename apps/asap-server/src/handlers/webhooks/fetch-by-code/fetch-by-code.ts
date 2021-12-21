@@ -9,6 +9,8 @@ import { algoliaApiKeyTtl, algoliaSearchApiKey } from '../../../config';
 export const fetchUserByCodeHandlerFactory = (
   userController: UserController,
   algoliaClient: SearchClient,
+  date = new Date(),
+  ttl = algoliaApiKeyTtl,
 ): Handler =>
   lambda.http(async (request) => {
     await validateRequest(request);
@@ -27,7 +29,10 @@ export const fetchUserByCodeHandlerFactory = (
 
     const user = await userController.fetchByCode(code);
     const apiKey = algoliaClient.generateSecuredApiKey(algoliaSearchApiKey, {
-      validUntil: Date.now() + algoliaApiKeyTtl, // which is one minute over the TTL of the ID token
+      validUntil: getValidUntilTimestampInSeconds({
+        date,
+        ttl,
+      }),
     });
 
     return {
@@ -37,3 +42,14 @@ export const fetchUserByCodeHandlerFactory = (
       },
     };
   });
+
+export type GetValidUntilTimestampInSecondsArgs = {
+  date: Date;
+  ttl: number;
+};
+
+export const getValidUntilTimestampInSeconds = ({
+  date,
+  ttl,
+}: GetValidUntilTimestampInSecondsArgs): number =>
+  Math.floor(date.getTime() / 1000) + Math.floor(ttl);

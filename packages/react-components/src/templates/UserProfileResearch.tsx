@@ -18,7 +18,10 @@ type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
     ComponentProps<typeof UserProfileBackground>,
     'firstName' | 'displayName'
   > &
-  Pick<UserResponse, 'email' | 'contactEmail' | 'labs'> & {
+  Pick<
+    UserResponse,
+    'email' | 'contactEmail' | 'labs' | 'researchInterests' | 'responsibilities'
+  > & {
     teams: Array<
       UserTeam & {
         editHref?: string;
@@ -68,15 +71,21 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
           }
         : undefined,
   }));
+  const isRoleEmpty =
+    !labs.length &&
+    !teams.length &&
+    !roleProps.researchInterests &&
+    !roleProps.responsibilities;
+  const showRoleSection = isOwnProfile ? true : !isRoleEmpty;
   const roleSection = [
-    {
+    showRoleSection && {
       card: (
         <UserProfileRole
           firstName={firstName}
           labs={labs}
           teams={teams}
           {...roleProps}
-        ></UserProfileRole>
+        />
       ),
       editLink:
         editRoleHref === undefined

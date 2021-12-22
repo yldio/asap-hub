@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { css } from '@emotion/react';
 import { UserResponse, Lab } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { UserProfileContext } from '@asap-hub/react-context';
 
 import { Card, Divider, Headline2, Headline3, Link } from '../atoms';
-import { perRem } from '../pixels';
+import { perRem, tabletScreen } from '../pixels';
 import UserProfilePlaceholderCard from './UserProfilePlaceholderCard';
 import { getUniqueCommaStringWithSuffix } from '../utils';
 
@@ -16,20 +16,41 @@ type UserProfileRoleProps = Pick<
   labs?: Lab[];
 };
 
-const dynamicContainerStyles = css({
+const containerStyle = css({
   display: 'grid',
-  gridTemplateColumns: ' 1fr 1fr',
-  marginBottom: `${24 / perRem}em`,
+
+  gridColumnGap: `${18 / perRem}em`,
+
+  margin: 0,
+  marginTop: `${24 / perRem}em`,
+
+  padding: 0,
+  listStyle: 'none',
 });
-const gridRowStyle = css({
-  gridColumn: '1 / -1',
-  display: 'flex',
+
+const titleStyle = css({
+  fontWeight: 'bold',
 });
-const gridDividerStyle = css({
-  gridColumn: '1 / -1',
-});
-const teamContentStyle = css({
-  flex: 1,
+
+const listItemStyle = css({
+  display: 'grid',
+
+  gridTemplateColumns: '1fr',
+  gridTemplateRows: '1fr 1fr',
+  gridRowGap: `${12 / perRem}em`,
+
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    gridAutoFlow: 'column',
+    gridTemplateColumns: '1fr 1fr',
+
+    '&:not(:first-of-type)': {
+      gridTemplateRows: '1fr',
+    },
+
+    [`&:not(:first-of-type) > :nth-child(odd)`]: {
+      display: 'none',
+    },
+  },
 });
 
 const detailsContentStyle = css({
@@ -61,31 +82,19 @@ const UserProfileRole: React.FC<UserProfileRoleProps> = ({
       </Headline2>
       <div>
         {!!teams.length && (
-          <div css={dynamicContainerStyles}>
-            <Headline3 styleAsHeading={5}>Team</Headline3>
-            <Headline3 styleAsHeading={5}>Role</Headline3>
-
-            {teams
-              .flatMap(({ displayName, role, id }) => {
-                const component = (
-                  <div css={gridRowStyle} key={`comp-${id}`}>
-                    <div css={teamContentStyle}>
-                      <Link href={teamHref(id)}>Team {displayName}</Link>
-                    </div>
-                    <div css={teamContentStyle}>
-                      <p css={textStyle}>{role}</p>
-                    </div>
-                  </div>
-                );
-                return [
-                  <div css={gridDividerStyle} key={`sep-${id}`}>
-                    <Divider />
-                  </div>,
-                  component,
-                ];
-              })
-              .slice(1)}
-          </div>
+          <ul css={containerStyle}>
+            {teams.map(({ displayName, role, id }, idx) => (
+              <Fragment key={`team-${idx}`}>
+                {idx === 0 || <Divider />}
+                <li key={idx} css={listItemStyle}>
+                  <div css={[titleStyle]}>Team</div>
+                  <Link href={teamHref(id)}>Team {displayName}</Link>
+                  <div css={[titleStyle]}>Role</div>
+                  <div>{role}</div>
+                </li>
+              </Fragment>
+            ))}
+          </ul>
         )}
         {!!labsList.length && (
           <div css={detailsContentStyle}>

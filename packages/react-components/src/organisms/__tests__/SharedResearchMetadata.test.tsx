@@ -22,9 +22,23 @@ it('renders all (sub)types', () => {
   expect(second).toHaveTextContent(/code/i);
   expect(third).toHaveTextContent(/imag/i);
 });
+
 it('renders a link if available', () => {
   const { getByRole } = render(
     <SharedResearchMetadata {...props} link="https://example.com" />,
   );
+
   expect(getByRole('link')).toHaveAttribute('href', 'https://example.com');
+});
+
+it('renders a labeled link if available', () => {
+  const { getByRole, getByText } = render(
+    <SharedResearchMetadata
+      {...props}
+      label={'example label'}
+      link="https://example.com"
+    />,
+  );
+  expect(getByRole('link')).toHaveAttribute('href', 'https://example.com');
+  expect(getByText('example label')).toBeInTheDocument();
 });

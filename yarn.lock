@@ -355,7 +355,7 @@ __metadata:
     chance: ^1.1.7
     cors: ^2.8.5
     csv-parse: ^4.15.4
-    debug: ^4.3.2
+    debug: ^4.3.3
     express: ^4.17.1
     express-async-errors: ^3.1.1
     form-data: ^3.0.1
@@ -809,7 +809,7 @@ __metadata:
     aws-lambda: ^1.0.6
     chance: ^1.1.7
     cross-fetch: ^3.1.4
-    debug: ^4.3.2
+    debug: ^4.3.3
     got: ^11.8.2
     graphql: ^15.5.0
     graphql-request: ^3.4.0
@@ -841,7 +841,7 @@ __metadata:
     apr-intercept: ^3.0.4
     chance: ^1.1.7
     cross-fetch: ^3.1.4
-    debug: ^4.3.2
+    debug: ^4.3.3
     got: ^11.8.2
     graphql: ^15.5.0
     graphql-request: ^3.4.0
@@ -16579,7 +16579,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:^4.3.1, debug@npm:^4.3.2":
+"debug@npm:^4.3.1":
   version: 4.3.2
   resolution: "debug@npm:4.3.2"
   dependencies:
@@ -16588,6 +16588,18 @@ __metadata:
     supports-color:
       optional: true
   checksum: 820ea160e267e23c953c9ed87e7ad93494d8cda2f7349af5e7e3bb236d23707ee3022f477d5a7d2ee86ef2bf7d60aa9ab22d1f58080d7deb9dccd073585e1e43
+  languageName: node
+  linkType: hard
+
+"debug@npm:^4.3.3":
+  version: 4.3.3
+  resolution: "debug@npm:4.3.3"
+  dependencies:
+    ms: 2.1.2
+  peerDependenciesMeta:
+    supports-color:
+      optional: true
+  checksum: 14472d56fe4a94dbcfaa6dbed2dd3849f1d72ba78104a1a328047bb564643ca49df0224c3a17fa63533fd11dd3d4c8636cd861191232a2c6735af00cc2d4de16
   languageName: node
   linkType: hard
 

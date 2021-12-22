@@ -1,33 +1,20 @@
 /* istanbul ignore file */
-import { RestResearchOutput, Results, SquidexRest } from '@asap-hub/squidex';
+import { RestResearchOutput } from '@asap-hub/squidex';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
+import { applyToAllItemsInCollection } from '../utils/migrations';
 
 export default class SetResearchOutputAddedDateDefault extends Migration {
   up = async (): Promise<void> => {
-    const squidexClient = new SquidexRest<RestResearchOutput>(
+    await applyToAllItemsInCollection<RestResearchOutput>(
       'research-outputs',
-    );
-
-    let pointer = 0;
-    let result: Results<RestResearchOutput>;
-
-    do {
-      result = await squidexClient.fetch({
-        $top: 10,
-        $skip: pointer,
-        $orderby: 'created asc',
-      });
-
-      for (const researchOutput of result.items) {
+      async (researchOutput, squidexClient) => {
         await squidexClient.patch(researchOutput.id, {
           addedDate: {
             iv: researchOutput.data.addedDate?.iv ?? researchOutput.created,
           },
         });
-      }
-
-      pointer += 10;
-    } while (pointer < result.total);
+      },
+    );
   };
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

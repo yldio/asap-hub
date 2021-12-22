@@ -48,7 +48,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
       <AssociationList type="Team" inline max={3} associations={teams} />
     </div>
     <Caption accent={'lead'} asParagraph>
-      Date Added: {formatDate(new Date(addedDate || created))}
+      Date Added: {formatDate(new Date(addedDate))}
     </Caption>
   </Card>
 );

@@ -95,7 +95,7 @@ export const parseGraphQLResearchOutput = (
     doi: data.doi || undefined,
     accession: data.accession || undefined,
     rrid: data.rrid || undefined,
-    addedDate: data.addedDate || undefined,
+    addedDate: data.addedDate,
     lastUpdatedPartial:
       data.lastUpdatedPartial || output.lastModified || output.created,
     accessInstructions: data.accessInstructions || undefined,

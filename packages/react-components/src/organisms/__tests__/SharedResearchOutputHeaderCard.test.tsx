@@ -49,7 +49,7 @@ it('falls back to created date when added date omitted', () => {
     <SharedResearchOutputHeaderCard
       {...createResearchOutputResponse()}
       created={new Date(2011, 1, 1, 1).toISOString()}
-      addedDate={undefined}
+      addedDate={new Date(2011, 1, 1, 1).toISOString()}
     />,
   );
   expect(getByText(/2011/)).toBeVisible();

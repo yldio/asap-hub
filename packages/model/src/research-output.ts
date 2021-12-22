@@ -79,7 +79,7 @@ export type ResearchOutputResponse = {
   readonly doi?: string;
   readonly accession?: string;
   readonly rrid?: string;
-  readonly addedDate?: string;
+  readonly addedDate: string;
   readonly lastModifiedDate?: string;
   readonly lastUpdatedPartial: string;
   readonly accessInstructions?: string;

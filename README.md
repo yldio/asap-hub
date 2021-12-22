@@ -108,4 +108,4 @@ The down function is triggered by `asap-hub-{env}-rollbackMigrations`
 
 The source code of this project is licensed under the MIT License.
 A copy of it can be found [alongside the repository files](LICENSE.txt).
-This repository contains some externally created content, such as logos, that are not included in this licensing.
+This repository contains some externally created content, such as logos, that are not included in this licensing

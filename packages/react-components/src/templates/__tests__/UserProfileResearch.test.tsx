@@ -24,7 +24,7 @@ it('renders the role on ASAP when is ownProfile and doesnt have labs, teams resp
   );
   expect(queryByText(/role.+asap/i)).toBeInTheDocument();
 });
-it('renders the role on ASAP labs, teams responsabilites or researchInterest are deined', () => {
+it('renders the role on ASAP when labs, teams responsabilites or researchInterest are defined', () => {
   const { queryByText, rerender } = render(
     <UserProfileResearch {...commonProps} />,
   );
@@ -83,10 +83,17 @@ it('renders opens questions when questions provided', () => {
   expect(getByText(/open questions/i)).toBeVisible();
 });
 
+it('does not render an edit button by default (REGRESSION)', () => {
+  disable('UPDATED_ROLE_SECTION');
+  const { queryByLabelText } = render(<UserProfileResearch {...commonProps} />);
+  expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
+});
+
 it('does not render an edit button by default', () => {
   const { queryByLabelText } = render(<UserProfileResearch {...commonProps} />);
   expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
 });
+
 it('renders an edit button for the role on the team (REGRESSION)', () => {
   disable('UPDATED_ROLE_SECTION');
   const { getByLabelText } = render(

@@ -85,7 +85,18 @@ it('renders opens questions when questions provided', () => {
 
 it('does not render an edit button by default (REGRESSION)', () => {
   disable('UPDATED_ROLE_SECTION');
-  const { queryByLabelText } = render(<UserProfileResearch {...commonProps} />);
+  const { queryByLabelText } = render(
+    <UserProfileResearch
+      {...commonProps}
+      teams={[
+        {
+          id: '42',
+          displayName: 'Team',
+          role: 'Lead PI (Core Leadership)',
+        },
+      ]}
+    />,
+  );
   expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
 });
 

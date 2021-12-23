@@ -1,9 +1,9 @@
+import { ComponentProps } from 'react';
 import { number, text } from '@storybook/addon-knobs';
 import { UserProfileRole } from '@asap-hub/react-components';
 import { createLabs, createListTeamResponse } from '@asap-hub/fixtures';
 
 import { UserProfileDecorator } from './user-profile';
-import { ComponentProps } from 'react';
 
 export default {
   title: 'Organisms / User Profile / Role',

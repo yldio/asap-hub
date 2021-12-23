@@ -12,12 +12,15 @@ const defaultProps = {
 };
 
 it('generates a heading', () => {
-  const { getByText } = render(<UserProfileRole {...defaultProps} />);
-  expect(getByText(/role.on.asap/i).tagName).toBe('H2');
+  const { getByRole } = render(<UserProfileRole {...defaultProps} />);
+
+  expect(getByRole('heading', { level: 2 }).textContent).toMatchInlineSnapshot(
+    `"Phillip's Role on ASAP Network"`,
+  );
 });
 
 it('renders a link to team page', () => {
-  const { getAllByRole } = render(
+  const { getByRole } = render(
     <UserProfileRole
       {...defaultProps}
       teams={[
@@ -29,35 +32,32 @@ it('renders a link to team page', () => {
       ]}
     />,
   );
-
-  const links = (getAllByRole('link') as HTMLAnchorElement[]).map(
-    ({ href }) => href,
-  );
-  expect(links).toMatchInlineSnapshot(`
-    Array [
-      "http://localhost/network/teams/42",
-    ]
-  `);
+  expect(getByRole('link')).toHaveAttribute('href', '/network/teams/42');
 });
 
 it('renders responsibilities if present', () => {
-  const { rerender, queryAllByText } = render(
+  const { rerender, queryByText, queryAllByText } = render(
     <UserProfileRole {...defaultProps} responsibilities={undefined} />,
   );
-  expect(queryAllByText(/responsibilities/i)).toHaveLength(0);
+  expect(queryByText(/responsibilities/i)).not.toBeInTheDocument();
 
-  rerender(<UserProfileRole {...defaultProps} />);
+  rerender(
+    <UserProfileRole
+      {...defaultProps}
+      responsibilities="my defined responsibilities"
+    />,
+  );
 
   expect(queryAllByText(/responsibilities/i).length).toBeGreaterThan(0);
 });
 
 it('renders placeholder if no responsibilities provided for your own profile', () => {
-  const { rerender, queryAllByText } = render(
+  const { rerender, queryByText, queryAllByText } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
       <UserProfileRole {...defaultProps} responsibilities={undefined} />,
     </UserProfileContext.Provider>,
   );
-  expect(queryAllByText(/responsibilities/i)).toHaveLength(0);
+  expect(queryByText(/responsibilities/i)).not.toBeInTheDocument();
 
   rerender(
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>
@@ -69,24 +69,29 @@ it('renders placeholder if no responsibilities provided for your own profile', (
 });
 
 it('renders mainResearchInterests if present', () => {
-  const { rerender, queryAllByText } = render(
+  const { rerender, queryByText, queryAllByText } = render(
     <UserProfileRole {...defaultProps} researchInterests={undefined} />,
   );
 
-  expect(queryAllByText(/interests/i)).toHaveLength(0);
+  expect(queryByText(/interests/i)).not.toBeInTheDocument();
 
-  rerender(<UserProfileRole {...defaultProps} />);
+  rerender(
+    <UserProfileRole
+      {...defaultProps}
+      researchInterests="my defined research interests"
+    />,
+  );
 
   expect(queryAllByText(/interests/i).length).toBeGreaterThan(0);
 });
 
 it('renders placeholder for your own profile when there is no mainResearchInterests', () => {
-  const { rerender, queryAllByText } = render(
+  const { rerender, queryByText, queryAllByText } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
       <UserProfileRole {...defaultProps} researchInterests={undefined} />
     </UserProfileContext.Provider>,
   );
-  expect(queryAllByText(/interests/i)).toHaveLength(0);
+  expect(queryByText(/interests/i)).not.toBeInTheDocument();
 
   rerender(
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>

@@ -61,7 +61,7 @@ it('renders placeholder if no responsibilities provided for your own profile', (
 
   rerender(
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>
-      <UserProfileRole {...defaultProps} />,
+      <UserProfileRole {...defaultProps} responsibilities={undefined} />,
     </UserProfileContext.Provider>,
   );
 
@@ -90,7 +90,7 @@ it('renders placeholder for your own profile when there is no mainResearchIntere
 
   rerender(
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>
-      <UserProfileRole {...defaultProps} />
+      <UserProfileRole {...defaultProps} researchInterests={undefined} />
     </UserProfileContext.Provider>,
   );
 

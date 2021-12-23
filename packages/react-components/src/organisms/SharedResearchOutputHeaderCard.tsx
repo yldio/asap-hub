@@ -1,4 +1,4 @@
-import { ResearchOutputResponse } from '@asap-hub/model';
+import { ResearchOutputResponse, researchOutputLabels } from '@asap-hub/model';
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
@@ -55,7 +55,10 @@ const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardPro
     ...props
   }) => (
     <Card>
-      <SharedResearchMetadata {...props} />
+      <SharedResearchMetadata
+        {...props}
+        label={researchOutputLabels[props.type]}
+      />
       <Display styleAsHeading={3}>{title}</Display>
       <UsersList users={authors} />
       <div css={associationStyles}>

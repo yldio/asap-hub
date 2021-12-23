@@ -19,7 +19,7 @@ type UserProfileRoleProps = Pick<
 const containerStyle = css({
   display: 'grid',
 
-  gridColumnGap: `${18 / perRem}em`,
+  gridColumnGap: `${12 / perRem}em`,
 
   margin: 0,
   marginTop: `${24 / perRem}em`,
@@ -79,8 +79,9 @@ const UserProfileRole: React.FC<UserProfileRoleProps> = ({
       <Headline2 styleAsHeading={3}>
         {firstName}'s Role on ASAP Network
       </Headline2>
-      <div>
-        {!!teams.length && (
+
+      {!!teams.length && (
+        <div css={detailsContentStyle}>
           <ul css={containerStyle}>
             {teams.map(({ displayName, role, id }, idx) => (
               <Fragment key={`team-${idx}`}>
@@ -94,42 +95,42 @@ const UserProfileRole: React.FC<UserProfileRoleProps> = ({
               </Fragment>
             ))}
           </ul>
-        )}
-        {!!labsList.length && (
-          <div css={detailsContentStyle}>
-            <Headline3 styleAsHeading={5}>Labs</Headline3>
-            <span>{labsList}</span>
-          </div>
-        )}
-        {(researchInterests || isOwnProfile) && (
-          <div css={detailsContentStyle}>
-            <Headline3 styleAsHeading={5}>Main Research Interests</Headline3>
-            {researchInterests ? (
-              <p css={textStyle}>{researchInterests}</p>
-            ) : (
-              <UserProfilePlaceholderCard title="What are your main research interests?">
-                Tell the network what your main research interests are to easily
-                find researchers with similar interests.
-              </UserProfilePlaceholderCard>
-            )}
-          </div>
-        )}
-        {(responsibilities || isOwnProfile) && (
-          <div css={detailsContentStyle}>
-            <Headline3 styleAsHeading={5}>
-              {firstName}'s Responsibilities
-            </Headline3>
-            {responsibilities ? (
-              <p css={textStyle}>{responsibilities}</p>
-            ) : (
-              <UserProfilePlaceholderCard title="Which responsibilities do you have in your project?">
-                Tell others about the role you play in your team. This will
-                encourage collaboration.
-              </UserProfilePlaceholderCard>
-            )}
-          </div>
-        )}
-      </div>
+        </div>
+      )}
+      {!!labsList.length && (
+        <div css={detailsContentStyle}>
+          <Headline3 styleAsHeading={5}>Labs</Headline3>
+          <span>{labsList}</span>
+        </div>
+      )}
+      {(researchInterests || isOwnProfile) && (
+        <div css={detailsContentStyle}>
+          <Headline3 styleAsHeading={5}>Main Research Interests</Headline3>
+          {researchInterests ? (
+            <p css={textStyle}>{researchInterests}</p>
+          ) : (
+            <UserProfilePlaceholderCard title="What are your main research interests?">
+              Tell the network what your main research interests are to easily
+              find researchers with similar interests.
+            </UserProfilePlaceholderCard>
+          )}
+        </div>
+      )}
+      {(responsibilities || isOwnProfile) && (
+        <div css={detailsContentStyle}>
+          <Headline3 styleAsHeading={5}>
+            {firstName}'s Responsibilities
+          </Headline3>
+          {responsibilities ? (
+            <p css={textStyle}>{responsibilities}</p>
+          ) : (
+            <UserProfilePlaceholderCard title="Which responsibilities do you have in your project?">
+              Tell others about the role you play in your team. This will
+              encourage collaboration.
+            </UserProfilePlaceholderCard>
+          )}
+        </div>
+      )}
     </Card>
   );
 };

@@ -106,6 +106,7 @@ export {
   ToolCard,
   UserNavigation,
   UserProfileBackground,
+  UserProfileRole,
   UserProfileBiography,
   UserProfileGroups,
   UserProfilePlaceholderCard,

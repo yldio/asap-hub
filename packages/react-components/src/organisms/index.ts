@@ -48,6 +48,7 @@ export { default as ToastStack } from './ToastStack';
 export { default as ToolCard } from './ToolCard';
 export { default as UserNavigation } from './UserNavigation';
 export { default as UserProfileBackground } from './UserProfileBackground';
+export { default as UserProfileRole } from './UserProfileRole';
 export { default as UserProfileBiography } from './UserProfileBiography';
 export { default as UserProfileGroups } from './UserProfileGroups';
 export { default as UserProfilePlaceholderCard } from './UserProfilePlaceholderCard';

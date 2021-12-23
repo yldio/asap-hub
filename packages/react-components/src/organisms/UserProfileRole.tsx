@@ -70,7 +70,6 @@ const UserProfileRole: React.FC<UserProfileRoleProps> = ({
 }) => {
   const teamHref = (id: string) => network({}).teams({}).team({ teamId: id }).$;
   const { isOwnProfile } = useContext(UserProfileContext);
-
   const labsList = getUniqueCommaStringWithSuffix(
     labs.map((lab) => lab.name),
     'Lab',

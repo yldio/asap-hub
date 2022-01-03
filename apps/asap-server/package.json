@@ -38,7 +38,7 @@
     "chance": "^1.1.7",
     "cors": "^2.8.5",
     "csv-parse": "^4.15.4",
-    "debug": "^4.3.2",
+    "debug": "^4.3.3",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "form-data": "^3.0.1",

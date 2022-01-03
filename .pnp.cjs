@@ -3968,7 +3968,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "debug",
-        "virtual:03521872bb82e3ff7affe7946294318d145e1a831fd21e7b3a7ee72ece884fb79b27691a5b77ba2cdd4cce281491c0184530bfb4ded06afddbca359d8f6fc3f0#npm:4.3.2"
+        "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.3"
       ],
       [
         "decamelize",
@@ -10289,7 +10289,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["chance", "npm:1.1.7"],
             ["cors", "npm:2.8.5"],
             ["csv-parse", "npm:4.15.4"],
-            ["debug", "virtual:03521872bb82e3ff7affe7946294318d145e1a831fd21e7b3a7ee72ece884fb79b27691a5b77ba2cdd4cce281491c0184530bfb4ded06afddbca359d8f6fc3f0#npm:4.3.2"],
+            ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.3"],
             ["express", "npm:4.17.1"],
             ["express-async-errors", "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:3.1.1"],
             ["form-data", "npm:3.0.1"],
@@ -11076,7 +11076,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["aws-lambda", "npm:1.0.6"],
             ["chance", "npm:1.1.7"],
             ["cross-fetch", "npm:3.1.4"],
-            ["debug", "virtual:03521872bb82e3ff7affe7946294318d145e1a831fd21e7b3a7ee72ece884fb79b27691a5b77ba2cdd4cce281491c0184530bfb4ded06afddbca359d8f6fc3f0#npm:4.3.2"],
+            ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.3"],
             ["got", "npm:11.8.2"],
             ["graphql", "npm:15.5.0"],
             ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.4.0"],
@@ -11110,7 +11110,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["apr-intercept", "npm:3.0.4"],
             ["chance", "npm:1.1.7"],
             ["cross-fetch", "npm:3.1.4"],
-            ["debug", "virtual:03521872bb82e3ff7affe7946294318d145e1a831fd21e7b3a7ee72ece884fb79b27691a5b77ba2cdd4cce281491c0184530bfb4ded06afddbca359d8f6fc3f0#npm:4.3.2"],
+            ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.3"],
             ["got", "npm:11.8.2"],
             ["graphql", "npm:15.5.0"],
             ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.4.0"],
@@ -33832,6 +33832,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
+        ["npm:4.3.3", {
+          "packageLocation": "./.yarn/cache/debug-npm-4.3.3-710fd4cc7f-14472d56fe.zip/node_modules/debug/",
+          "packageDependencies": [
+            ["debug", "npm:4.3.3"]
+          ],
+          "linkType": "SOFT",
+        }],
         ["virtual:03521872bb82e3ff7affe7946294318d145e1a831fd21e7b3a7ee72ece884fb79b27691a5b77ba2cdd4cce281491c0184530bfb4ded06afddbca359d8f6fc3f0#npm:4.3.2", {
           "packageLocation": "./.yarn/__virtual__/debug-virtual-dffc7a8389/0/cache/debug-npm-4.3.2-f0148b6afe-820ea160e2.zip/node_modules/debug/",
           "packageDependencies": [
@@ -33921,6 +33928,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packagePeers": [
             "@types/supports-color",
             "supports-color"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.3", {
+          "packageLocation": "./.yarn/__virtual__/debug-virtual-47a0d9c8a4/0/cache/debug-npm-4.3.3-710fd4cc7f-14472d56fe.zip/node_modules/debug/",
+          "packageDependencies": [
+            ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.3"],
+            ["@types/supports-color", null],
+            ["ms", "npm:2.1.2"],
+            ["supports-color", "npm:9.0.2"]
+          ],
+          "packagePeers": [
+            "@types/supports-color"
           ],
           "linkType": "HARD",
         }],

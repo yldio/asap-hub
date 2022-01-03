@@ -1,5 +1,6 @@
 import Got, { RequestError } from 'got';
 import decode from 'jwt-decode';
+import Debug from 'debug';
 import squidex from './config';
 
 /* eslint-disable camelcase */
@@ -8,9 +9,13 @@ interface JwtToken {
   exp: number;
 }
 
+const debug = Debug('squidex');
+
 const fetchToken = async () => {
   const url = `${squidex.baseUrl}/identity-server/connect/token`;
   try {
+    debug('Fetching new squidex auth token');
+
     const response = await Got.post(url, {
       form: {
         grant_type: 'client_credentials',
@@ -42,8 +47,11 @@ export const getAccessTokenFactory = (): (() => Promise<string>) => {
           const currentTime = Date.now() / 1000;
 
           if (currentTime < jwt.exp) {
+            debug('Using cached auth token');
             return tk1;
           }
+
+          debug('Cached auth token expired');
         }
       } catch (error) {
         tokenP = undefined;

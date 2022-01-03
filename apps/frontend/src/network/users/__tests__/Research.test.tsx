@@ -5,6 +5,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
 import userEvent from '@testing-library/user-event';
 import { network } from '@asap-hub/routing';
+import { disable } from '@asap-hub/flags';
 
 import { Auth0Provider } from '@asap-hub/frontend/src/auth/test-utils';
 import Research from '../Research';
@@ -100,6 +101,7 @@ describe('when editing', () => {
 
   let result!: RenderResult;
   beforeEach(async () => {
+    disable('UPDATED_ROLE_SECTION');
     result = render(<Research user={user} />, { wrapper });
     await result.findAllByLabelText(/edit/i);
   });

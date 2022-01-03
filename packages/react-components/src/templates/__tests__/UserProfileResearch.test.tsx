@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
+import { disable } from '@asap-hub/flags';
 
 import UserProfileResearch from '../UserProfileResearch';
 
@@ -13,8 +14,26 @@ const commonProps: ComponentProps<typeof UserProfileResearch> = {
   labs: [],
 };
 
-it('renders the role on ASAP', () => {
-  const { getByText } = render(
+it('doesnt renders the role on ASAP when is not ownProfile and doesnt have labs, teams responsabilites or researchInterest', () => {
+  const { queryByText } = render(<UserProfileResearch {...commonProps} />);
+  expect(queryByText(/role.+asap/i)).not.toBeInTheDocument();
+});
+it('renders the role on ASAP when is ownProfile and doesnt have labs, teams responsabilites or researchInterest', () => {
+  const { queryByText } = render(
+    <UserProfileResearch {...commonProps} isOwnProfile={true} />,
+  );
+  expect(queryByText(/role.+asap/i)).toBeInTheDocument();
+});
+it('renders the role on ASAP when labs, teams responsabilites or researchInterest are defined', () => {
+  const { queryByText, rerender } = render(
+    <UserProfileResearch {...commonProps} />,
+  );
+  expect(queryByText(/role.+asap/i)).not.toBeInTheDocument();
+  rerender(
+    <UserProfileResearch {...commonProps} labs={[{ id: '1', name: 'Lab' }]} />,
+  );
+  expect(queryByText(/role.+asap/i)).toBeInTheDocument();
+  rerender(
     <UserProfileResearch
       {...commonProps}
       teams={[
@@ -22,11 +41,26 @@ it('renders the role on ASAP', () => {
           id: '42',
           displayName: 'Team',
           role: 'Lead PI (Core Leadership)',
+          editHref: '/edit-team-membership/42',
         },
       ]}
     />,
   );
-  expect(getByText(/role.+asap/i)).toBeVisible();
+  expect(queryByText(/role.+asap/i)).toBeInTheDocument();
+  rerender(
+    <UserProfileResearch
+      {...commonProps}
+      responsibilities="My responsibilities"
+    />,
+  );
+  expect(queryByText(/role.+asap/i)).toBeInTheDocument();
+  rerender(
+    <UserProfileResearch
+      {...commonProps}
+      researchInterests="My research interest"
+    />,
+  );
+  expect(queryByText(/role.+asap/i)).toBeInTheDocument();
 });
 
 it('renders the expertiseAndResourceTags list', () => {
@@ -49,11 +83,30 @@ it('renders opens questions when questions provided', () => {
   expect(getByText(/open questions/i)).toBeVisible();
 });
 
+it('does not render an edit button by default (REGRESSION)', () => {
+  disable('UPDATED_ROLE_SECTION');
+  const { queryByLabelText } = render(
+    <UserProfileResearch
+      {...commonProps}
+      teams={[
+        {
+          id: '42',
+          displayName: 'Team',
+          role: 'Lead PI (Core Leadership)',
+        },
+      ]}
+    />,
+  );
+  expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
+});
+
 it('does not render an edit button by default', () => {
   const { queryByLabelText } = render(<UserProfileResearch {...commonProps} />);
   expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
 });
-it('renders an edit button for the role on the team', () => {
+
+it('renders an edit button for the role on the team (REGRESSION)', () => {
+  disable('UPDATED_ROLE_SECTION');
   const { getByLabelText } = render(
     <UserProfileResearch
       {...commonProps}
@@ -72,6 +125,17 @@ it('renders an edit button for the role on the team', () => {
     expect.stringMatching(/42$/),
   );
 });
+it('renders an edit button for the role on the teams', () => {
+  const { getByLabelText } = render(
+    <UserProfileResearch
+      {...commonProps}
+      editRoleHref="/edit-role"
+      responsibilities="my responsabilites"
+    />,
+  );
+  expect(getByLabelText(/edit.+role/i)).toHaveAttribute('href', '/edit-role');
+});
+
 it('renders an edit button for the expertiseAndResourceTags list', () => {
   const { getByLabelText } = render(
     <UserProfileResearch

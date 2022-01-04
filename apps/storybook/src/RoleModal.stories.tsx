@@ -1,6 +1,6 @@
-import { createLabs, createTeamResponse } from '@asap-hub/fixtures';
+import { createLabs, createUserTeams } from '@asap-hub/fixtures';
 import { RoleModal } from '@asap-hub/react-components';
-import { number } from '@storybook/addon-knobs';
+import { number, select, text } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
 
 export default {
@@ -12,11 +12,10 @@ export const Normal = () => (
   <StaticRouter>
     <RoleModal
       backHref="#"
-      labs={createLabs({ labs: number('Labs', 2, { min: 0 }) })}
-      teams={Array.from({ length: number('Teams', 5) }, (__, i) => ({
-        ...createTeamResponse({}, i),
-        role: 'Collaborating PI',
-      }))}
+      firstName={text('First name', 'John')}
+      labs={createLabs({ labs: number('Labs', 1, { min: 0 }) })}
+      teams={createUserTeams({ teams: number('Teams', 1, { min: 0 }) })}
+      role={select('ASAP Hub Role', ['Staff', 'Grantee', 'Guest'], 'Grantee')}
     />
   </StaticRouter>
 );

@@ -269,6 +269,26 @@
         ]
       },
       {
+        "name": "reachOut",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": true,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Reach Out",
+          "hints": "Reach out reasons (only relevant for \"Staff\" users)",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
         "name": "separatorHeader",
         "isHidden": false,
         "isLocked": false,
@@ -1069,43 +1089,6 @@
             }
           }
         ]
-      },
-      {
-        "name": "separatorStaffOnly",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "UI",
-          "editor": "Separator",
-          "label": "ASAP Staff Only (Currently not in use)",
-          "hints": "Only fill out these fields if the user is an ASAP staff person",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "reachOut",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": true,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Reach Out",
-          "hints": "Reach out reasons (only relevant for \"Staff\" users)",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
       }
     ],
     "previewUrls": {

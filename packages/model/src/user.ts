@@ -155,6 +155,7 @@ export interface UserPatchRequest {
   expertiseAndResourceTags?: string[];
   expertiseAndResourceDescription?: string;
   responsibilities?: string;
+  reachOut?: string;
   researchInterests?: string;
   questions?: string[];
   teams?: Pick<UserTeam, 'id' | 'mainResearchInterests' | 'responsibilities'>[];

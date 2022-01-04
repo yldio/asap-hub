@@ -14,7 +14,13 @@ import { perRem, tabletScreen } from '../pixels';
 
 type RoleModalProps = Pick<
   UserResponse,
-  'teams' | 'labs' | 'researchInterests' | 'responsibilities'
+  | 'teams'
+  | 'labs'
+  | 'researchInterests'
+  | 'responsibilities'
+  | 'role'
+  | 'reachOut'
+  | 'firstName'
 > & {
   onSave?: (data: UserPatchRequest) => Promise<void>;
   backHref: string;
@@ -39,6 +45,9 @@ const RoleModal: React.FC<RoleModalProps> = ({
   labs,
   researchInterests = '',
   responsibilities = '',
+  reachOut = '',
+  firstName,
+  role,
   onSave = noop,
   backHref,
 }) => {
@@ -46,6 +55,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
     useState(researchInterests);
   const [newResponsibilities, setNewResponsibilities] =
     useState(responsibilities);
+  const [newReachOut, setNewReachOut] = useState(reachOut);
 
   return (
     <EditModal
@@ -59,6 +69,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
         onSave({
           researchInterests: newResearchInterests.trim(),
           responsibilities: newResponsibilities.trim(),
+          reachOut: newReachOut.trim(),
         })
       }
     >
@@ -71,7 +82,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
           </Paragraph>
           <div css={fieldsContainer}>
             <div css={textFieldsContainerStyles}>
-              {teams.map(({ displayName, role, id }) => (
+              {teams.map(({ displayName, role: teamRole, id }) => (
                 <Fragment key={id}>
                   <LabeledTextField
                     key={`team-${id}`}
@@ -83,8 +94,8 @@ const RoleModal: React.FC<RoleModalProps> = ({
                     key={`team${id}-role`}
                     title="Role"
                     enabled={false}
-                    value={role}
-                    options={[{ label: role, value: role }]}
+                    value={teamRole}
+                    options={[{ label: teamRole, value: teamRole }]}
                   />
                 </Fragment>
               ))}
@@ -98,17 +109,19 @@ const RoleModal: React.FC<RoleModalProps> = ({
               ))}
             </div>
           </div>
-          <LabeledTextArea
-            required
-            title="Main research interests"
-            subtitle="(Required)"
-            placeholder="Example: Randy is interested in membrane assembly, vesicular transport, and membrane fusion among organelles of the secretary pathway."
-            getValidationMessage={() => 'Please add your research interests.'}
-            maxLength={200}
-            enabled={!isSaving}
-            value={newResearchInterests}
-            onChange={setNewResearchInterests}
-          />
+          {role !== 'Staff' && (
+            <LabeledTextArea
+              required
+              title="Main research interests"
+              subtitle="(Required)"
+              placeholder="Example: Randy is interested in membrane assembly, vesicular transport, and membrane fusion among organelles of the secretary pathway."
+              getValidationMessage={() => 'Please add your research interests.'}
+              maxLength={200}
+              enabled={!isSaving}
+              value={newResearchInterests}
+              onChange={setNewResearchInterests}
+            />
+          )}
           <LabeledTextArea
             required
             title="Your responsibilities"
@@ -121,6 +134,18 @@ const RoleModal: React.FC<RoleModalProps> = ({
             onChange={setNewResponsibilities}
             tip="Tip: Refer to yourself in the third person."
           />
+          {role === 'Staff' && (
+            <LabeledTextArea
+              title={`Reach out to ${firstName} if…`}
+              subtitle="(Optional)"
+              placeholder="E.g: You have questions about preclinical tools/data sharing, subgroup meetings or collaboration opportunities…"
+              tip="Tip: refer to yourself in the third person."
+              maxLength={200}
+              enabled={!isSaving}
+              value={newReachOut}
+              onChange={setNewReachOut}
+            />
+          )}
         </>
       )}
     </EditModal>

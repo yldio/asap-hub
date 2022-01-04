@@ -119,7 +119,7 @@ it('disables the form elements while submitting', async () => {
   );
 });
 
-it('shows validation message for inexistent Main research interests', async () => {
+it.skip('shows validation message for inexistent Main research interests', async () => {
   const { getByLabelText, findByText } = render(
     <TeamMembershipModal
       {...props}

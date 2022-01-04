@@ -2395,6 +2395,18 @@ type Groups implements Content {
   version: Int!
 }
 
+"""The structure of the This group is active field of the Groups content type."""
+type GroupsDataActiveDto {
+  """Active groups have Subscribe buttons and Calendar and Upcoming Events tabs"""
+  iv: Boolean
+}
+
+"""The structure of the This group is active field of the Groups content input type."""
+input GroupsDataActiveInputDto {
+  """Active groups have Subscribe buttons and Calendar and Upcoming Events tabs"""
+  iv: Boolean
+}
+
 """The structure of the Calendars field of the Groups content type."""
 type GroupsDataCalendarsDto {
   iv: [Calendars!]
@@ -2417,6 +2429,7 @@ input GroupsDataDescriptionInputDto {
 
 """The structure of the Groups data type."""
 type GroupsDataDto {
+  active: GroupsDataActiveDto
   calendars: GroupsDataCalendarsDto
   description: GroupsDataDescriptionDto
   leaders: GroupsDataLeadersDto
@@ -2429,6 +2442,7 @@ type GroupsDataDto {
 
 """The structure of the Groups data input type."""
 input GroupsDataInputDto {
+  active: GroupsDataActiveInputDto
   calendars: GroupsDataCalendarsInputDto
   description: GroupsDataDescriptionInputDto
   leaders: GroupsDataLeadersInputDto
@@ -2525,6 +2539,8 @@ input GroupsDataToolsInputDto {
 
 """The structure of the flat Groups data type."""
 type GroupsFlatDataDto {
+  """Active groups have Subscribe buttons and Calendar and Upcoming Events tabs"""
+  active: Boolean
   calendars: [Calendars!]
   description: String
   leaders: [GroupsDataLeadersChildDto!]

@@ -2361,6 +2361,18 @@ export type Groups = Content & {
   version: Scalars['Int'];
 };
 
+/** The structure of the This group is active field of the Groups content type. */
+export type GroupsDataActiveDto = {
+  /** Active groups have Subscribe buttons and Calendar and Upcoming Events tabs */
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the This group is active field of the Groups content input type. */
+export type GroupsDataActiveInputDto = {
+  /** Active groups have Subscribe buttons and Calendar and Upcoming Events tabs */
+  iv: Maybe<Scalars['Boolean']>;
+};
+
 /** The structure of the Calendars field of the Groups content type. */
 export type GroupsDataCalendarsDto = {
   iv: Maybe<Array<Calendars>>;
@@ -2383,6 +2395,7 @@ export type GroupsDataDescriptionInputDto = {
 
 /** The structure of the Groups data type. */
 export type GroupsDataDto = {
+  active: Maybe<GroupsDataActiveDto>;
   calendars: Maybe<GroupsDataCalendarsDto>;
   description: Maybe<GroupsDataDescriptionDto>;
   leaders: Maybe<GroupsDataLeadersDto>;
@@ -2395,6 +2408,7 @@ export type GroupsDataDto = {
 
 /** The structure of the Groups data input type. */
 export type GroupsDataInputDto = {
+  active: Maybe<GroupsDataActiveInputDto>;
   calendars: Maybe<GroupsDataCalendarsInputDto>;
   description: Maybe<GroupsDataDescriptionInputDto>;
   leaders: Maybe<GroupsDataLeadersInputDto>;
@@ -2491,6 +2505,8 @@ export type GroupsDataToolsInputDto = {
 
 /** The structure of the flat Groups data type. */
 export type GroupsFlatDataDto = {
+  /** Active groups have Subscribe buttons and Calendar and Upcoming Events tabs */
+  active: Maybe<Scalars['Boolean']>;
   calendars: Maybe<Array<Calendars>>;
   description: Maybe<Scalars['String']>;
   leaders: Maybe<Array<GroupsDataLeadersChildDto>>;

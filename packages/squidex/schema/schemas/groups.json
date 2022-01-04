@@ -64,6 +64,24 @@
         }
       },
       {
+        "name": "active",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Boolean",
+          "defaultValue": true,
+          "inlineEditable": true,
+          "editor": "Toggle",
+          "label": "This group is active",
+          "hints": "Active groups have Subscribe buttons and Calendar and Upcoming Events tabs",
+          "isRequired": true,
+          "isRequiredOnPublish": true,
+          "isHalfWidth": true
+        }
+      },
+      {
         "name": "tags",
         "isHidden": false,
         "isLocked": false,

@@ -1,12 +1,12 @@
 import { CalendarRaw } from '../../src/controllers/calendars';
-import { CalendarResponse } from '@asap-hub/model';
+import { CalendarResponse, ListCalendarResponse } from '@asap-hub/model';
 import {
   Calendar,
   RestCalendar,
   Results,
   WebhookPayload,
 } from '@asap-hub/squidex';
-import { FetchCalendarQuery } from '../../src/gql/graphql';
+import { FetchCalendarQuery, FetchCalendarsQuery } from '../../src/gql/graphql';
 
 export const getCalendarRaw = (): CalendarRaw => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
@@ -23,6 +23,11 @@ export const getCalendarResponse = (): CalendarResponse => ({
   id: '3@group.calendar.google.com',
   color: '#2952A3',
   name: 'Tech 4a - iPSCs - 3D & Co-cultures',
+});
+
+export const getListCalendarResponse = (): ListCalendarResponse => ({
+  items: [getCalendarResponse()],
+  total: 1,
 });
 
 export const getCalendarUpdatedWebhookEvent = (): WebhookPayload<Calendar> => ({
@@ -123,16 +128,23 @@ export const getCalendarsGraphqlResponse = (): {
   data: NonNullable<FetchCalendarQuery>;
 } => ({
   data: {
-    findCalendarsContent: getSquidexGraphqlCalendars(),
+    findCalendarsContent: getSquidexGraphqlCalendar(),
   },
 });
 
-export const getSquidexGraphqlCalendars = () => ({
+export const getSquidexGraphqlCalendar = () => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   created: '2020-09-23T16:34:26.842Z',
   lastModified: '2021-05-14T14:48:46Z',
   version: 42,
   flatData: squidexGraphqlCalendarsFlatData(),
+});
+
+export const getSquidexCalendarsGraphqlResponse = (): FetchCalendarsQuery => ({
+  queryCalendarsContentsWithTotal: {
+    items: [getSquidexGraphqlCalendar()],
+    total: 1,
+  },
 });
 
 const squidexGraphqlCalendarsFlatData = () => ({

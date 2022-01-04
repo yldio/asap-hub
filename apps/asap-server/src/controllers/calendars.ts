@@ -13,12 +13,14 @@ import {
   CalendarResponse,
   isGoogleLegacyCalendarColor,
 } from '@asap-hub/model';
-import { parseCalendar } from '../entities';
+import { parseGraphqlCalendar, parseRestCalendar } from '../entities';
 import logger from '../utils/logger';
-import { FETCH_CALENDAR } from '../queries/calendars.queries';
+import { FETCH_CALENDAR, FETCH_CALENDARS } from '../queries/calendars.queries';
 import {
   FetchCalendarQuery,
   FetchCalendarQueryVariables,
+  FetchCalendarsQuery,
+  FetchCalendarsQueryVariables,
 } from '../gql/graphql';
 
 export default class Calendars implements CalendarController {
@@ -35,16 +37,39 @@ export default class Calendars implements CalendarController {
     skip: number;
   }): Promise<ListCalendarResponse> {
     const { take = 50, skip = 0 } = options;
-    const { total, items: calendars } =
-      await this.calendarSquidexRestClient.fetch({
-        take,
+
+    const { queryCalendarsContentsWithTotal } =
+      await this.squidexGraphqlClient.request<
+        FetchCalendarsQuery,
+        FetchCalendarsQueryVariables
+      >(FETCH_CALENDARS, {
+        top: take,
         skip,
-        sort: [{ path: 'data.name.iv', order: 'ascending' }],
+        filter: '',
+        order: 'data/name/iv asc',
       });
+
+    if (queryCalendarsContentsWithTotal === null) {
+      logger.warn('queryCalendarsContentsWithTotal returned null');
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
+    const { total, items: calendars } = queryCalendarsContentsWithTotal;
+
+    if (calendars === null) {
+      logger.warn('queryCalendarsContentsWithTotal items returned null');
+      return {
+        total: 0,
+        items: [],
+      };
+    }
 
     return {
       total,
-      items: calendars.map(parseCalendar),
+      items: calendars.map(parseGraphqlCalendar),
     };
   }
 
@@ -171,7 +196,7 @@ export default class Calendars implements CalendarController {
       return acc;
     }, {} as { [key: string]: { iv: unknown } });
     const res = await this.calendarSquidexRestClient.patch(calendarId, update);
-    return parseCalendar(res);
+    return parseRestCalendar(res);
   }
 }
 

@@ -3,8 +3,12 @@ import * as graphql from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
-  '\n  query FetchCalendar($id: String!) {\n    findCalendarsContent(id: $id) {\n      id\n      created\n      lastModified\n      version\n      flatData {\n        googleCalendarId\n        name\n        color\n        syncToken\n        resourceId\n        expirationDate\n      }\n    }\n  }\n':
+  '\n  fragment CalendarsContent on Calendars {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      googleCalendarId\n      name\n      color\n      syncToken\n      resourceId\n      expirationDate\n    }\n  }\n':
+    graphql.CalendarsContentFragmentDoc,
+  '\n  query FetchCalendar($id: String!) {\n    findCalendarsContent(id: $id) {\n      ...CalendarsContent\n    }\n  }\n  \n':
     graphql.FetchCalendarDocument,
+  '\n  query FetchCalendars($top: Int, $skip: Int, $filter: String, $order: String) {\n    queryCalendarsContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: $order\n    ) {\n      total\n      items {\n        ...CalendarsContent\n      }\n    }\n  }\n  \n':
+    graphql.FetchCalendarsDocument,
   '\n  query FetchDashboard {\n    queryDashboardContents {\n      flatData {\n        news {\n          ...News\n        }\n        pages {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            path\n            title\n            shortText\n            text\n            link\n            linkText\n          }\n        }\n      }\n    }\n  }\n  \n':
     graphql.FetchDashboardDocument,
   '\n  query FetchDiscover {\n    queryDiscoverContents {\n      flatData {\n        aboutUs\n        training {\n          ...News\n        }\n        pages {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            shortText\n            text\n            title\n            link\n            linkText\n          }\n        }\n        members {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            avatar {\n              id\n            }\n            email\n            firstName\n            institution\n            jobTitle\n            lastModifiedDate\n            lastName\n          }\n        }\n      }\n    }\n  }\n  \n':
@@ -46,8 +50,14 @@ const documents = {
 };
 
 export function gql(
-  source: '\n  query FetchCalendar($id: String!) {\n    findCalendarsContent(id: $id) {\n      id\n      created\n      lastModified\n      version\n      flatData {\n        googleCalendarId\n        name\n        color\n        syncToken\n        resourceId\n        expirationDate\n      }\n    }\n  }\n',
-): typeof documents['\n  query FetchCalendar($id: String!) {\n    findCalendarsContent(id: $id) {\n      id\n      created\n      lastModified\n      version\n      flatData {\n        googleCalendarId\n        name\n        color\n        syncToken\n        resourceId\n        expirationDate\n      }\n    }\n  }\n'];
+  source: '\n  fragment CalendarsContent on Calendars {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      googleCalendarId\n      name\n      color\n      syncToken\n      resourceId\n      expirationDate\n    }\n  }\n',
+): typeof documents['\n  fragment CalendarsContent on Calendars {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      googleCalendarId\n      name\n      color\n      syncToken\n      resourceId\n      expirationDate\n    }\n  }\n'];
+export function gql(
+  source: '\n  query FetchCalendar($id: String!) {\n    findCalendarsContent(id: $id) {\n      ...CalendarsContent\n    }\n  }\n  \n',
+): typeof documents['\n  query FetchCalendar($id: String!) {\n    findCalendarsContent(id: $id) {\n      ...CalendarsContent\n    }\n  }\n  \n'];
+export function gql(
+  source: '\n  query FetchCalendars($top: Int, $skip: Int, $filter: String, $order: String) {\n    queryCalendarsContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: $order\n    ) {\n      total\n      items {\n        ...CalendarsContent\n      }\n    }\n  }\n  \n',
+): typeof documents['\n  query FetchCalendars($top: Int, $skip: Int, $filter: String, $order: String) {\n    queryCalendarsContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: $order\n    ) {\n      total\n      items {\n        ...CalendarsContent\n      }\n    }\n  }\n  \n'];
 export function gql(
   source: '\n  query FetchDashboard {\n    queryDashboardContents {\n      flatData {\n        news {\n          ...News\n        }\n        pages {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            path\n            title\n            shortText\n            text\n            link\n            linkText\n          }\n        }\n      }\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchDashboard {\n    queryDashboardContents {\n      flatData {\n        news {\n          ...News\n        }\n        pages {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            path\n            title\n            shortText\n            text\n            link\n            linkText\n          }\n        }\n      }\n    }\n  }\n  \n'];

@@ -112,6 +112,7 @@ export {
   UserProfileGroups,
   UserProfilePlaceholderCard,
   UserProfileRecentWorks,
+  HelpSection,
 } from './organisms';
 export {
   BasicLayout,

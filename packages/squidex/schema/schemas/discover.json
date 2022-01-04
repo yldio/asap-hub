@@ -88,6 +88,25 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
+      },
+      {
+        "name": "scientificAdvisoryBoard",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "mustBePublished": false,
+          "editor": "List",
+          "schemaIds": ["users"],
+          "label": "Scientific Advisory Board",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
       }
     ],
     "previewUrls": {},

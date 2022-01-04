@@ -7,7 +7,7 @@ import {
 import SharedResearchOutputHeaderCard from '../SharedResearchOutputHeaderCard';
 
 it('renders an output with an external link if available', () => {
-  const { queryByTitle, getByTitle, rerender } = render(
+  const { queryByTitle, getByTitle, getByText, rerender } = render(
     <SharedResearchOutputHeaderCard
       {...createResearchOutputResponse()}
       link={undefined}
@@ -24,6 +24,7 @@ it('renders an output with an external link if available', () => {
     'href',
     'http://example.com',
   );
+  expect(getByText('Open External Link')).toBeInTheDocument();
 });
 
 it('renders an output with a last updated date', () => {

@@ -15,15 +15,17 @@ const styles = css({
 type SharedResearchMetadataProps = Pick<
   ResearchOutputResponse,
   'type' | 'subTypes' | 'link'
->;
+> & { label?: string };
+
 const SharedResearchMetadata: React.FC<SharedResearchMetadataProps> = ({
   type,
   subTypes,
   link,
+  label,
 }) => (
   <div css={styles}>
     <PillList pills={[type, ...subTypes]} />
-    {link ? <ExternalLink href={link} /> : null}
+    {link ? <ExternalLink href={link} label={label} /> : null}
   </div>
 );
 

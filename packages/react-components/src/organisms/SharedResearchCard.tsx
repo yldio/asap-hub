@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { ResearchOutputResponse } from '@asap-hub/model';
+import { ResearchOutputResponse, researchOutputLabels } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
@@ -33,7 +33,10 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   ...props
 }) => (
   <Card>
-    <SharedResearchMetadata {...props} />
+    <SharedResearchMetadata
+      {...props}
+      label={researchOutputLabels[props.type]}
+    />
     <Anchor href={sharedResearch({}).researchOutput({ researchOutputId }).$}>
       <Headline2 styleAsHeading={4}>{title}</Headline2>
     </Anchor>

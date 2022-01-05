@@ -1,6 +1,9 @@
 import { DiscoverResponse, UserResponse } from '@asap-hub/model';
 import { config } from '@asap-hub/squidex';
-import { FetchDiscoverQuery, ScientificAdvisoryBoardDiscoveryResponse } from '../../src/gql/graphql';
+import {
+  FetchDiscoverQuery,
+  ScientificAdvisoryBoardDiscoveryResponse,
+} from '../../src/gql/graphql';
 
 const discoveryMembersResponse: ReadonlyArray<UserResponse> = [
   {

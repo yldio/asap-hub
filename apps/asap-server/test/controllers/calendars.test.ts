@@ -38,10 +38,7 @@ describe('Calendars controller', () => {
   describe('Fetch method', () => {
     describe('with mock-server', () => {
       test('Should fetch the calendars from squidex graphql', async () => {
-        const result = await calendarsMockGraphqlServer.fetch({
-          take: 8,
-          skip: 0,
-        });
+        const result = await calendarsMockGraphqlServer.fetch();
 
         expect(result).toMatchObject(getListCalendarResponse());
       });
@@ -56,10 +53,7 @@ describe('Calendars controller', () => {
           squidexGraphqlResponse,
         );
 
-        const result = await calendarsMockGraphlClient.fetch({
-          take: 10,
-          skip: 5,
-        });
+        const result = await calendarsMockGraphlClient.fetch();
 
         expect(result).toEqual({ total: 0, items: [] });
       });
@@ -71,10 +65,7 @@ describe('Calendars controller', () => {
           squidexGraphqlResponse,
         );
 
-        const result = await calendarsMockGraphlClient.fetch({
-          take: 10,
-          skip: 5,
-        });
+        const result = await calendarsMockGraphlClient.fetch();
 
         expect(result).toEqual({ total: 0, items: [] });
       });
@@ -86,26 +77,23 @@ describe('Calendars controller', () => {
           squidexGraphqlResponse,
         );
 
-        const result = await calendarsMockGraphlClient.fetch({
-          take: 10,
-          skip: 5,
-        });
+        const result = await calendarsMockGraphlClient.fetch();
 
         expect(result).toEqual({ total: 0, items: [] });
       });
 
-      test('Should call the client with the correct parameters', async () => {
+      test('Should call the client with the default pagination parameters (pagination disabled)', async () => {
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           getSquidexCalendarsGraphqlResponse(),
         );
 
-        await calendarsMockGraphlClient.fetch({ take: 13, skip: 9 });
+        await calendarsMockGraphlClient.fetch();
 
         expect(squidexGraphqlClientMock.request).toBeCalledWith(
           expect.anything(),
           {
-            top: 13,
-            skip: 9,
+            top: 50,
+            skip: 0,
             filter: '',
             order: 'data/name/iv asc',
           },
@@ -138,10 +126,7 @@ describe('Calendars controller', () => {
           squidexGraphqlResponse,
         );
 
-        const result = await calendarsMockGraphlClient.fetch({
-          take: 10,
-          skip: 5,
-        });
+        const result = await calendarsMockGraphlClient.fetch();
 
         const expectedCalendar1 = getCalendarResponse();
         expectedCalendar1.id = calendar1Active.flatData.googleCalendarId;
@@ -173,10 +158,7 @@ describe('Calendars controller', () => {
           squidexGraphqlResponse,
         );
 
-        const result = await calendarsMockGraphlClient.fetch({
-          take: 10,
-          skip: 5,
-        });
+        const result = await calendarsMockGraphlClient.fetch();
 
         expect(result).toEqual({
           total: 0,
@@ -205,10 +187,7 @@ describe('Calendars controller', () => {
           squidexGraphqlResponse,
         );
 
-        const result = await calendarsMockGraphlClient.fetch({
-          take: 10,
-          skip: 5,
-        });
+        const result = await calendarsMockGraphlClient.fetch();
 
         const expectedListCalendarResponse = getListCalendarResponse();
         expectedListCalendarResponse.items[0]!.id =

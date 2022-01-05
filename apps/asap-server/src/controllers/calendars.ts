@@ -32,11 +32,9 @@ export default class Calendars implements CalendarController {
     this.squidexGraphqlClient = squidexGraphqlClient;
   }
 
-  async fetch(options: {
-    take: number;
-    skip: number;
-  }): Promise<ListCalendarResponse> {
-    const { take = 50, skip = 0 } = options;
+  async fetch(): Promise<ListCalendarResponse> {
+    const take = 50;
+    const skip = 0;
 
     const { queryCalendarsContentsWithTotal } =
       await this.squidexGraphqlClient.request<

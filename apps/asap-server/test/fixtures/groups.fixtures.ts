@@ -365,6 +365,7 @@ export const getGraphqlGroup = (): NonNullable<
   lastModified: '2020-12-11T15:06:26Z',
   version: 42,
   flatData: {
+    active: true,
     description: 'A test Group',
     name: "JT's Group",
     tags: ['coding'],

@@ -6,7 +6,12 @@ import {
   Results,
   WebhookPayload,
 } from '@asap-hub/squidex';
-import { FetchCalendarQuery, FetchCalendarsQuery } from '../../src/gql/graphql';
+import {
+  FetchCalendarQuery,
+  FetchCalendarsQuery,
+  FetchEventQuery,
+} from '../../src/gql/graphql';
+import { getGraphqlGroup } from './groups.fixtures';
 
 export const getCalendarRaw = (): CalendarRaw => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
@@ -140,13 +145,14 @@ export const getSquidexGraphqlCalendar = (): NonNullable<
   lastModified: '2021-05-14T14:48:46Z',
   version: 42,
   flatData: squidexGraphqlCalendarsFlatData(),
-  referencingGroupsContents: [
-    {
-      flatData: {
-        active: true,
-      },
-    },
-  ],
+  referencingGroupsContents: [getGraphqlGroup()],
+});
+
+export const getSquidexGraphqlEventCalendar = (): NonNullable<
+  NonNullable<FetchEventQuery['findEventsContent']>['flatData']['calendar']
+>[number] => ({
+  flatData: squidexGraphqlCalendarsFlatData(),
+  referencingGroupsContents: [getGraphqlGroup()],
 });
 
 export const getSquidexCalendarsGraphqlResponse = (): FetchCalendarsQuery => ({

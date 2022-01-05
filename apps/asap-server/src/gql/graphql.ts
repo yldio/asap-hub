@@ -4486,7 +4486,7 @@ export type EventContentFragment = Pick<
             Pick<Groups, 'id' | 'created' | 'lastModified' | 'version'> & {
               flatData: Pick<
                 GroupsFlatDataDto,
-                'name' | 'description' | 'tags'
+                'name' | 'active' | 'description' | 'tags'
               > & {
                 tools: Maybe<
                   Array<Pick<GroupsDataToolsChildDto, 'slack' | 'googleDrive'>>
@@ -4795,7 +4795,7 @@ export type FetchEventsQuery = {
                       > & {
                         flatData: Pick<
                           GroupsFlatDataDto,
-                          'name' | 'description' | 'tags'
+                          'name' | 'active' | 'description' | 'tags'
                         > & {
                           tools: Maybe<
                             Array<
@@ -5135,7 +5135,7 @@ export type FetchEventQuery = {
                 Pick<Groups, 'id' | 'created' | 'lastModified' | 'version'> & {
                   flatData: Pick<
                     GroupsFlatDataDto,
-                    'name' | 'description' | 'tags'
+                    'name' | 'active' | 'description' | 'tags'
                   > & {
                     tools: Maybe<
                       Array<
@@ -5422,7 +5422,10 @@ export type GroupsContentFragment = Pick<
   Groups,
   'id' | 'created' | 'lastModified' | 'version'
 > & {
-  flatData: Pick<GroupsFlatDataDto, 'name' | 'description' | 'tags'> & {
+  flatData: Pick<
+    GroupsFlatDataDto,
+    'name' | 'active' | 'description' | 'tags'
+  > & {
     tools: Maybe<Array<Pick<GroupsDataToolsChildDto, 'slack' | 'googleDrive'>>>;
     teams: Maybe<
       Array<
@@ -5665,7 +5668,7 @@ export type FetchGroupsQuery = {
           Pick<Groups, 'id' | 'created' | 'lastModified' | 'version'> & {
             flatData: Pick<
               GroupsFlatDataDto,
-              'name' | 'description' | 'tags'
+              'name' | 'active' | 'description' | 'tags'
             > & {
               tools: Maybe<
                 Array<Pick<GroupsDataToolsChildDto, 'slack' | 'googleDrive'>>
@@ -5926,7 +5929,10 @@ export type FetchGroupQueryVariables = Exact<{
 export type FetchGroupQuery = {
   findGroupsContent: Maybe<
     Pick<Groups, 'id' | 'created' | 'lastModified' | 'version'> & {
-      flatData: Pick<GroupsFlatDataDto, 'name' | 'description' | 'tags'> & {
+      flatData: Pick<
+        GroupsFlatDataDto,
+        'name' | 'active' | 'description' | 'tags'
+      > & {
         tools: Maybe<
           Array<Pick<GroupsDataToolsChildDto, 'slack' | 'googleDrive'>>
         >;
@@ -7736,6 +7742,7 @@ export const GroupsContentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'active' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'description' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
                 {

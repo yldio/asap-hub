@@ -1,11 +1,8 @@
 import { DiscoverResponse, UserResponse } from '@asap-hub/model';
 import { config } from '@asap-hub/squidex';
-import {
-  FetchDiscoverQuery,
-  ScientificAdvisoryBoardDiscoveryResponse,
-} from '../../src/gql/graphql';
+import { FetchDiscoverQuery } from '../../src/gql/graphql';
 
-const discoveryMembersResponse: ReadonlyArray<UserResponse> = [
+const discoverMembersResponse: ReadonlyArray<UserResponse> = [
   {
     id: 'uuid-members-1',
     onboarded: true,
@@ -61,6 +58,8 @@ const discoveryMembersResponse: ReadonlyArray<UserResponse> = [
   },
 ];
 
+const discoverScientificAdvisoryBoardResponse = discoverMembersResponse;
+
 const squidexGraphqlDiscoverFlatData = () => ({
   training: [
     {
@@ -112,46 +111,8 @@ const squidexGraphqlDiscoverFlatData = () => ({
       },
     },
   ],
-  members: [
-    {
-      id: 'uuid-members-1',
-      created: '2020-10-15T17:55:21Z',
-      lastModified: '2020-10-15T17:55:21Z',
-      version: 42,
-      flatData: {
-        avatar: [
-          {
-            id: 'uuid-1',
-          },
-        ],
-        email: 'john@example.com',
-        firstName: 'John',
-        lastModifiedDate: '2020-10-15T17:55:21Z',
-        lastName: 'Doe',
-        institution: 'ASAP',
-        jobTitle: 'Job title',
-      },
-    },
-    {
-      id: 'uuid-members-2',
-      created: '2020-10-14T17:55:21Z',
-      lastModified: '2020-10-15T17:55:21Z',
-      version: 42,
-      flatData: {
-        email: null,
-        lastModifiedDate: '2020-10-15T17:55:21Z',
-        lastName: 'Do',
-        firstName: 'John',
-        institution: 'ASAP',
-        jobTitle: 'Job title',
-        avatar: [
-          {
-            id: 'uuid-2',
-          },
-        ],
-      },
-    },
-  ],
+  members: discoverMembersResponse,
+  scientificAdvisoryBoard: discoverScientificAdvisoryBoardResponse,
   aboutUs: '<p>content<p>',
 });
 
@@ -176,8 +137,8 @@ export const squidexGraphqlDiscoverResponse = (): DiscoverResponse => ({
       type: 'Training',
     },
   ],
-  members: discoveryMembersResponse,
-  scientificAdvisoryBoard: ScientificAdvisoryBoardDiscoveryResponse,
+  members: discoverMembersResponse,
+  scientificAdvisoryBoard: discoverScientificAdvisoryBoardResponse,
   pages: [
     {
       id: 'uuid-pages-1',

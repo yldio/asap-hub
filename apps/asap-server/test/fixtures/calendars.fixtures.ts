@@ -132,12 +132,21 @@ export const getCalendarsGraphqlResponse = (): {
   },
 });
 
-export const getSquidexGraphqlCalendar = () => ({
+export const getSquidexGraphqlCalendar = (): NonNullable<
+  NonNullable<FetchCalendarsQuery['queryCalendarsContentsWithTotal']>['items']
+>[number] => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   created: '2020-09-23T16:34:26.842Z',
   lastModified: '2021-05-14T14:48:46Z',
   version: 42,
   flatData: squidexGraphqlCalendarsFlatData(),
+  referencingGroupsContents: [
+    {
+      flatData: {
+        active: true,
+      },
+    },
+  ],
 });
 
 export const getSquidexCalendarsGraphqlResponse = (): FetchCalendarsQuery => ({

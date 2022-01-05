@@ -13,6 +13,7 @@ import {
   getListCalendarResponse,
   getRestCalendar,
   getSquidexCalendarsGraphqlResponse,
+  getSquidexGraphqlCalendar,
 } from '../fixtures/calendars.fixtures';
 import { FETCH_CALENDAR } from '../../src/queries/calendars.queries';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
@@ -109,6 +110,111 @@ describe('Calendars controller', () => {
             order: 'data/name/iv asc',
           },
         );
+      });
+
+      test('Should skip the calendars which belong to an inactive group', async () => {
+        const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
+        const calendar1Active = getSquidexGraphqlCalendar();
+        calendar1Active.flatData.googleCalendarId = 'calendar1@google.com';
+        calendar1Active.referencingGroupsContents![0]!.flatData.active = true;
+
+        const calendar2Inactive = getSquidexGraphqlCalendar();
+        calendar2Inactive.flatData.googleCalendarId = 'calendar2@google.com';
+        calendar2Inactive.referencingGroupsContents![0]!.flatData.active =
+          false;
+
+        const calendar3Active = getSquidexGraphqlCalendar();
+        calendar3Active.flatData.googleCalendarId = 'calendar3@google.com';
+        calendar3Active.referencingGroupsContents![0]!.flatData.active = true;
+
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [
+          calendar1Active,
+          calendar2Inactive,
+          calendar3Active,
+        ];
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 3;
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await calendarsMockGraphlClient.fetch({
+          take: 10,
+          skip: 5,
+        });
+
+        const expectedCalendar1 = getCalendarResponse();
+        expectedCalendar1.id = calendar1Active.flatData.googleCalendarId;
+
+        const expectedCalendar2 = getCalendarResponse();
+        expectedCalendar2.id = calendar3Active.flatData.googleCalendarId;
+
+        expect(result).toEqual({
+          total: 2,
+          items: [expectedCalendar1, expectedCalendar2],
+        });
+      });
+
+      test('Should skip the calendars which do not belong to any group', async () => {
+        const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
+
+        const calendar1 = getSquidexGraphqlCalendar();
+        calendar1.referencingGroupsContents = null;
+        const calendar2 = getSquidexGraphqlCalendar();
+        calendar2.referencingGroupsContents = [];
+
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [
+          calendar1,
+          calendar2,
+        ];
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 2;
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await calendarsMockGraphlClient.fetch({
+          take: 10,
+          skip: 5,
+        });
+
+        expect(result).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+
+      test('Should not skip the calendars which belong to multiple groups of which at least one is active', async () => {
+        const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
+        const calendar = getSquidexGraphqlCalendar();
+        calendar.flatData.googleCalendarId = 'calendar1@google.com';
+        calendar.referencingGroupsContents! = [
+          {
+            flatData: { active: false },
+          },
+          {
+            flatData: { active: true },
+          },
+        ];
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [
+          calendar,
+        ];
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 1;
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await calendarsMockGraphlClient.fetch({
+          take: 10,
+          skip: 5,
+        });
+
+        const expectedListCalendarResponse = getListCalendarResponse();
+        expectedListCalendarResponse.items[0]!.id =
+          calendar.flatData.googleCalendarId;
+
+        expect(result).toEqual(expectedListCalendarResponse);
       });
     });
   });

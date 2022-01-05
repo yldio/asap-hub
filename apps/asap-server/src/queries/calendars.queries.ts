@@ -14,6 +14,11 @@ export const calendarContentQueryFragment = gql`
       resourceId
       expirationDate
     }
+    referencingGroupsContents {
+      flatData {
+        active
+      }
+    }
   }
 `;
 

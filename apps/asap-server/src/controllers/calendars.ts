@@ -57,7 +57,7 @@ export default class Calendars implements CalendarController {
       };
     }
 
-    const { total, items: calendars } = queryCalendarsContentsWithTotal;
+    const { items: calendars } = queryCalendarsContentsWithTotal;
 
     if (calendars === null) {
       logger.warn('queryCalendarsContentsWithTotal items returned null');
@@ -67,9 +67,17 @@ export default class Calendars implements CalendarController {
       };
     }
 
+    const activeCalendars = calendars.filter(
+      (calendar) =>
+        calendar.referencingGroupsContents &&
+        calendar.referencingGroupsContents.findIndex(
+          (group) => group.flatData.active === true,
+        ) !== -1,
+    );
+
     return {
-      total,
-      items: calendars.map(parseGraphqlCalendar),
+      total: activeCalendars.length,
+      items: activeCalendars.map(parseGraphqlCalendar),
     };
   }
 

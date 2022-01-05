@@ -4305,6 +4305,9 @@ export type CalendarsContentFragment = Pick<
     | 'resourceId'
     | 'expirationDate'
   >;
+  referencingGroupsContents: Maybe<
+    Array<{ flatData: Pick<GroupsFlatDataDto, 'active'> }>
+  >;
 };
 
 export type FetchCalendarQueryVariables = Exact<{
@@ -4322,6 +4325,9 @@ export type FetchCalendarQuery = {
         | 'syncToken'
         | 'resourceId'
         | 'expirationDate'
+      >;
+      referencingGroupsContents: Maybe<
+        Array<{ flatData: Pick<GroupsFlatDataDto, 'active'> }>
       >;
     }
   >;
@@ -4348,6 +4354,9 @@ export type FetchCalendarsQuery = {
               | 'syncToken'
               | 'resourceId'
               | 'expirationDate'
+            >;
+            referencingGroupsContents: Maybe<
+              Array<{ flatData: Pick<GroupsFlatDataDto, 'active'> }>
             >;
           }
         >
@@ -7287,6 +7296,28 @@ export const CalendarsContentFragmentDoc = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'expirationDate' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'referencingGroupsContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'active' },
+                      },
+                    ],
+                  },
                 },
               ],
             },

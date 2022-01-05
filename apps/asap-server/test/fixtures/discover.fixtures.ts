@@ -177,7 +177,7 @@ export const squidexGraphqlDiscoverResponse = (): DiscoverResponse => ({
     },
   ],
   members: discoveryMembersResponse,
-  scientificAdvisoryBoard: scientificAdvisoryBoardResponce,
+  scientificAdvisoryBoard: ScientificAdvisoryBoardDiscoveryResponse,
   pages: [
     {
       id: 'uuid-pages-1',

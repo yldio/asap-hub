@@ -4331,6 +4331,21 @@ export type FetchDashboardQuery = {
 };
 
 export type FetchDiscoverQueryVariables = Exact<{ [key: string]: never }>;
+export type MembersDiscoveryResponse = Maybe<
+Array<
+  Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+    flatData: Pick<
+      UsersFlatDataDto,
+      | 'email'
+      | 'firstName'
+      | 'institution'
+      | 'jobTitle'
+      | 'lastModifiedDate'
+      | 'lastName'
+    > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+  }
+>
+>;
 
 export type FetchDiscoverQuery = {
   queryDiscoverContents: Maybe<
@@ -4359,21 +4374,8 @@ export type FetchDiscoverQuery = {
             }
           >
         >;
-        members: Maybe<
-          Array<
-            Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-              flatData: Pick<
-                UsersFlatDataDto,
-                | 'email'
-                | 'firstName'
-                | 'institution'
-                | 'jobTitle'
-                | 'lastModifiedDate'
-                | 'lastName'
-              > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-            }
-          >
-        >;
+        members: MembersDiscoveryResponse;
+        scientificAdvisoryBoard: MembersDiscoveryResponse;
       };
     }>
   >;

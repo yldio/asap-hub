@@ -4402,6 +4402,7 @@ export type FetchDashboardQuery = {
 
 export type FetchDiscoverQueryVariables = Exact<{ [key: string]: never }>;
 <<<<<<< HEAD
+<<<<<<< HEAD
 export type DiscoverMembersResponse = Maybe<
   Array<
     Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
@@ -4434,6 +4435,9 @@ Array<
 >
 >>>>>>> 91380c01 (Frontend and backend website)
 =======
+=======
+export type DiscoverMembersResponse = Maybe<
+>>>>>>> 349989bd (Fix)
   Array<
     Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
       flatData: Pick<
@@ -4478,12 +4482,17 @@ export type FetchDiscoverQuery = {
           >
         >;
 <<<<<<< HEAD
+<<<<<<< HEAD
         members: DiscoverMembersResponse;
         scientificAdvisoryBoard: DiscoverMembersResponse;
 =======
         members: MembersDiscoveryResponse;
         scientificAdvisoryBoard: MembersDiscoveryResponse;
 >>>>>>> 91380c01 (Frontend and backend website)
+=======
+        members: DiscoverMembersResponse;
+        scientificAdvisoryBoard: DiscoverMembersResponse;
+>>>>>>> 349989bd (Fix)
       };
     }>
   >;

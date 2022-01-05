@@ -1,10 +1,8 @@
 import { DiscoverResponse, UserResponse } from '@asap-hub/model';
 import { config } from '@asap-hub/squidex';
-import {
-  FetchDiscoverQuery
-} from '../../src/gql/graphql';
+import { FetchDiscoverQuery } from '../../src/gql/graphql';
 
-const discoveryMembersResponse: ReadonlyArray<UserResponse> = [
+const discoverMembersResponse: ReadonlyArray<UserResponse> = [
   {
     id: 'uuid-members-1',
     onboarded: true,
@@ -59,6 +57,8 @@ const discoveryMembersResponse: ReadonlyArray<UserResponse> = [
     labs: [],
   },
 ];
+
+const discoverScientificAdvisoryBoardResponse = discoverMembersResponse;
 
 const squidexGraphqlDiscoverFlatData = () => ({
   training: [
@@ -176,8 +176,8 @@ export const squidexGraphqlDiscoverResponse = (): DiscoverResponse => ({
       type: 'Training',
     },
   ],
-  members: discoveryMembersResponse,
-  scientificAdvisoryBoard: discoveryMembersResponse,
+  members: [],
+  scientificAdvisoryBoard: [],
   pages: [
     {
       id: 'uuid-pages-1',

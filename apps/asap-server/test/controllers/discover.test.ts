@@ -47,7 +47,7 @@ describe('Discover controller', () => {
           .reply(200, {
             data: {
               queryDiscoverContents: [
-                { flatData: { aboutUs: null, pages: null, members: null } },
+                { flatData: { aboutUs: null, pages: null, members: null, scientificAdvisoryBoard: null } },
               ],
             },
           });
@@ -58,6 +58,7 @@ describe('Discover controller', () => {
           aboutUs: '',
           training: [],
           members: [],
+          scientificAdvisoryBoard: [],
           pages: [],
         };
         expect(result).toEqual(expectedResponse);
@@ -79,6 +80,7 @@ describe('Discover controller', () => {
           aboutUs: '',
           training: [],
           members: [],
+          scientificAdvisoryBoard: [],
           pages: [],
         };
         expect(result).toEqual(expectedResponse);

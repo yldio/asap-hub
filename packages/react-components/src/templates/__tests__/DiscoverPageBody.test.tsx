@@ -9,6 +9,7 @@ const props: ComponentProps<typeof DiscoverPageBody> = {
   pages: [createPageResponse('1'), createPageResponse('2')],
   training: [],
   members: [],
+  scientificAdvisoryBoard: []
 };
 
 it('renders grantee guidance page cards', () => {

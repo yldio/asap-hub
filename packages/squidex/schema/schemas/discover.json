@@ -83,7 +83,7 @@
           "mustBePublished": false,
           "editor": "List",
           "schemaIds": ["users"],
-          "label": "Members",
+          "label": "ASAP Team",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false

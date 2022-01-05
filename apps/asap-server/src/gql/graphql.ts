@@ -4418,6 +4418,7 @@ export type DiscoverMembersResponse = Maybe<
   >
 =======
 export type MembersDiscoveryResponse = Maybe<
+<<<<<<< HEAD
 Array<
   Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
     flatData: Pick<
@@ -4432,6 +4433,21 @@ Array<
   }
 >
 >>>>>>> 91380c01 (Frontend and backend website)
+=======
+  Array<
+    Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+      flatData: Pick<
+        UsersFlatDataDto,
+        | 'email'
+        | 'firstName'
+        | 'institution'
+        | 'jobTitle'
+        | 'lastModifiedDate'
+        | 'lastName'
+      > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+    }
+  >
+>>>>>>> e2234315 (fix:format)
 >;
 
 export type FetchDiscoverQuery = {

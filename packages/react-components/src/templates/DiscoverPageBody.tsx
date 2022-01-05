@@ -31,12 +31,17 @@ type DashboardPageBodyProps = Omit<
     readonly training: ComponentProps<typeof NewsSection>['news'];
     readonly scientificAdvisoryBoard: ReadonlyArray<
 <<<<<<< HEAD
+<<<<<<< HEAD
       Omit<ComponentProps<typeof MembersList>['members'][0], 'teams'>
     >;
 =======
     Omit<ComponentProps<typeof MembersList>['members'][0], 'teams'>
   >;
 >>>>>>> 91380c01 (Frontend and backend website)
+=======
+      Omit<ComponentProps<typeof MembersList>['members'][0], 'teams'>
+    >;
+>>>>>>> e2234315 (fix:format)
   };
 
 const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
@@ -44,7 +49,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   aboutUs,
   training,
   members,
-  scientificAdvisoryBoard
+  scientificAdvisoryBoard,
 }) => (
   <div css={styles}>
     {pages.length ? (
@@ -68,13 +73,19 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
     ) : null}
     {scientificAdvisoryBoard.length ? (
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e2234315 (fix:format)
       <TeamMembersSection
         title={'Meet the Scientific Advisory Board'}
         members={scientificAdvisoryBoard}
       />
+<<<<<<< HEAD
 =======
       <TeamMembersSection title={'Meet the Scientific Advisory Board'} members={scientificAdvisoryBoard} />
 >>>>>>> 91380c01 (Frontend and backend website)
+=======
+>>>>>>> e2234315 (fix:format)
     ) : null}
     <HelpSection />
   </div>

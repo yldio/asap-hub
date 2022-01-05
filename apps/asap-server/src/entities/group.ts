@@ -13,7 +13,7 @@ import { parseGraphQLTeam } from './team';
 import { parseGraphQLUser } from './user';
 import { parseGraphqlCalendar } from './calendar';
 import { parseDate, createURL } from '../utils/squidex';
-import { FetchGroupQuery, Calendars } from '../gql/graphql';
+import { FetchGroupQuery } from '../gql/graphql';
 
 export const parseGraphQLGroup = (
   item: NonNullable<FetchGroupQuery['findGroupsContent']>,
@@ -25,7 +25,7 @@ export const parseGraphQLGroup = (
     return team;
   });
   const calendars: CalendarResponse[] = (item.flatData?.calendars || []).map(
-    (c) => parseGraphqlCalendar(c as Calendars), // @todo remove cast
+    (c) => parseGraphqlCalendar(c),
   );
 
   const leaders = (item.flatData.leaders || []).reduce(

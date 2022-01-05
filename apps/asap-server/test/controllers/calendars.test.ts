@@ -100,6 +100,19 @@ describe('Calendars controller', () => {
         );
       });
 
+      test('Should default the calendar color to #333333', async () => {
+        const calendarResponse = getSquidexCalendarsGraphqlResponse();
+        calendarResponse.queryCalendarsContentsWithTotal!.items![0]!.flatData.color =
+          null;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          calendarResponse,
+        );
+
+        const response = await calendarsMockGraphlClient.fetch();
+
+        expect(response.items[0]!.color).toBe('#333333');
+      });
+
       test('Should skip the calendars which belong to an inactive group', async () => {
         const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
         const calendar1Active = getSquidexGraphqlCalendar();

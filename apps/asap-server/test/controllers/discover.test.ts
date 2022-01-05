@@ -47,7 +47,14 @@ describe('Discover controller', () => {
           .reply(200, {
             data: {
               queryDiscoverContents: [
-                { flatData: { aboutUs: null, pages: null, members: null, scientificAdvisoryBoard: null } },
+                {
+                  flatData: {
+                    aboutUs: null,
+                    pages: null,
+                    members: null,
+                    scientificAdvisoryBoard: null,
+                  },
+                },
               ],
             },
           });

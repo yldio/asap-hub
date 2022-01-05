@@ -8,6 +8,7 @@ import {
   HelpSection,
   NewsSection,
 } from '../organisms';
+import { MembersList } from '../molecules';
 import { perRem } from '../pixels';
 import { Display, Card } from '../atoms';
 
@@ -28,6 +29,9 @@ type DashboardPageBodyProps = Omit<
   Omit<ComponentProps<typeof TeamMembersSection>, 'title'> & {
     readonly aboutUs: string;
     readonly training: ComponentProps<typeof NewsSection>['news'];
+    readonly scientificAdvisoryBoard: ReadonlyArray<
+    Omit<ComponentProps<typeof MembersList>['members'][0], 'teams'>
+  >;
   };
 
 const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
@@ -35,6 +39,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   aboutUs,
   training,
   members,
+  scientificAdvisoryBoard
 }) => (
   <div css={styles}>
     {pages.length ? (
@@ -55,6 +60,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
     ) : null}
     {members.length ? (
       <TeamMembersSection title={'Meet the ASAP team'} members={members} />
+    ) : null}
+    {scientificAdvisoryBoard.length ? (
+      <TeamMembersSection title={'Meet the Scientific Advisory Board'} members={scientificAdvisoryBoard} />
     ) : null}
     <HelpSection />
   </div>

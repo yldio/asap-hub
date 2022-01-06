@@ -6,7 +6,7 @@ import {
   isEventStatus,
 } from '@asap-hub/model';
 
-import { parseGraphQLCalendar } from './calendar';
+import { parseGraphqlCalendar } from './calendar';
 import { parseDate, createURL } from '../utils/squidex';
 import { parseGraphQLGroup } from './group';
 import { EventContentFragment } from '../gql/graphql';
@@ -30,7 +30,8 @@ export const parseGraphQLEvent = (
   if (!item.flatData.calendar?.[0]) {
     throw new Error(`Event (${item.id}) doesn't have a calendar"`);
   }
-  const calendar = parseGraphQLCalendar(item.flatData.calendar[0]);
+
+  const calendar = parseGraphqlCalendar(item.flatData.calendar[0]);
   const group =
     item.flatData.calendar![0].referencingGroupsContents?.map((calGroup) =>
       parseGraphQLGroup(calGroup),

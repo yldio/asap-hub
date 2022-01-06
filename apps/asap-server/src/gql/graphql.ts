@@ -4292,6 +4292,24 @@ export type UsersResultDto = {
   total: Scalars['Int'];
 };
 
+export type CalendarsContentFragment = Pick<
+  Calendars,
+  'id' | 'created' | 'lastModified' | 'version'
+> & {
+  flatData: Pick<
+    CalendarsFlatDataDto,
+    | 'googleCalendarId'
+    | 'name'
+    | 'color'
+    | 'syncToken'
+    | 'resourceId'
+    | 'expirationDate'
+  >;
+  referencingGroupsContents: Maybe<
+    Array<{ flatData: Pick<GroupsFlatDataDto, 'active'> }>
+  >;
+};
+
 export type FetchCalendarQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -4307,6 +4325,41 @@ export type FetchCalendarQuery = {
         | 'syncToken'
         | 'resourceId'
         | 'expirationDate'
+      >;
+      referencingGroupsContents: Maybe<
+        Array<{ flatData: Pick<GroupsFlatDataDto, 'active'> }>
+      >;
+    }
+  >;
+};
+
+export type FetchCalendarsQueryVariables = Exact<{
+  top: Maybe<Scalars['Int']>;
+  skip: Maybe<Scalars['Int']>;
+  filter: Maybe<Scalars['String']>;
+  order: Maybe<Scalars['String']>;
+}>;
+
+export type FetchCalendarsQuery = {
+  queryCalendarsContentsWithTotal: Maybe<
+    Pick<CalendarsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<Calendars, 'id' | 'created' | 'lastModified' | 'version'> & {
+            flatData: Pick<
+              CalendarsFlatDataDto,
+              | 'googleCalendarId'
+              | 'name'
+              | 'color'
+              | 'syncToken'
+              | 'resourceId'
+              | 'expirationDate'
+            >;
+            referencingGroupsContents: Maybe<
+              Array<{ flatData: Pick<GroupsFlatDataDto, 'active'> }>
+            >;
+          }
+        >
       >;
     }
   >;
@@ -4433,7 +4486,7 @@ export type EventContentFragment = Pick<
             Pick<Groups, 'id' | 'created' | 'lastModified' | 'version'> & {
               flatData: Pick<
                 GroupsFlatDataDto,
-                'name' | 'description' | 'tags'
+                'name' | 'active' | 'description' | 'tags'
               > & {
                 tools: Maybe<
                   Array<Pick<GroupsDataToolsChildDto, 'slack' | 'googleDrive'>>
@@ -4742,7 +4795,7 @@ export type FetchEventsQuery = {
                       > & {
                         flatData: Pick<
                           GroupsFlatDataDto,
-                          'name' | 'description' | 'tags'
+                          'name' | 'active' | 'description' | 'tags'
                         > & {
                           tools: Maybe<
                             Array<
@@ -5082,7 +5135,7 @@ export type FetchEventQuery = {
                 Pick<Groups, 'id' | 'created' | 'lastModified' | 'version'> & {
                   flatData: Pick<
                     GroupsFlatDataDto,
-                    'name' | 'description' | 'tags'
+                    'name' | 'active' | 'description' | 'tags'
                   > & {
                     tools: Maybe<
                       Array<
@@ -5369,7 +5422,10 @@ export type GroupsContentFragment = Pick<
   Groups,
   'id' | 'created' | 'lastModified' | 'version'
 > & {
-  flatData: Pick<GroupsFlatDataDto, 'name' | 'description' | 'tags'> & {
+  flatData: Pick<
+    GroupsFlatDataDto,
+    'name' | 'active' | 'description' | 'tags'
+  > & {
     tools: Maybe<Array<Pick<GroupsDataToolsChildDto, 'slack' | 'googleDrive'>>>;
     teams: Maybe<
       Array<
@@ -5612,7 +5668,7 @@ export type FetchGroupsQuery = {
           Pick<Groups, 'id' | 'created' | 'lastModified' | 'version'> & {
             flatData: Pick<
               GroupsFlatDataDto,
-              'name' | 'description' | 'tags'
+              'name' | 'active' | 'description' | 'tags'
             > & {
               tools: Maybe<
                 Array<Pick<GroupsDataToolsChildDto, 'slack' | 'googleDrive'>>
@@ -5873,7 +5929,10 @@ export type FetchGroupQueryVariables = Exact<{
 export type FetchGroupQuery = {
   findGroupsContent: Maybe<
     Pick<Groups, 'id' | 'created' | 'lastModified' | 'version'> & {
-      flatData: Pick<GroupsFlatDataDto, 'name' | 'description' | 'tags'> & {
+      flatData: Pick<
+        GroupsFlatDataDto,
+        'name' | 'active' | 'description' | 'tags'
+      > & {
         tools: Maybe<
           Array<Pick<GroupsDataToolsChildDto, 'slack' | 'googleDrive'>>
         >;
@@ -7209,6 +7268,71 @@ export type FetchUsersQuery = {
   >;
 };
 
+export const CalendarsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CalendarsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Calendars' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastModified' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'googleCalendarId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'color' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'syncToken' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'resourceId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'expirationDate' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'referencingGroupsContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'active' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CalendarsContentFragment, unknown>;
 export const TeamsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -7618,6 +7742,7 @@ export const GroupsContentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'active' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'description' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
                 {
@@ -9217,36 +9342,107 @@ export const FetchCalendarDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'created' } },
                 {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'lastModified' },
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'CalendarsContent' },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'version' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...CalendarsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchCalendarQuery, FetchCalendarQueryVariables>;
+export const FetchCalendarsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchCalendars' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'top' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'filter' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryCalendarsContentsWithTotal' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'top' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'filter' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderby' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'flatData' },
+                  name: { kind: 'Name', value: 'items' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
                       {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'googleCalendarId' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'color' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'syncToken' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'resourceId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'expirationDate' },
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'CalendarsContent' },
                       },
                     ],
                   },
@@ -9257,8 +9453,9 @@ export const FetchCalendarDocument = {
         ],
       },
     },
+    ...CalendarsContentFragmentDoc.definitions,
   ],
-} as unknown as DocumentNode<FetchCalendarQuery, FetchCalendarQueryVariables>;
+} as unknown as DocumentNode<FetchCalendarsQuery, FetchCalendarsQueryVariables>;
 export const FetchDashboardDocument = {
   kind: 'Document',
   definitions: [

@@ -9,6 +9,7 @@ export const groupContentQueryFragment = gql`
     version
     flatData {
       name
+      active
       description
       tags
       tools {

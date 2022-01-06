@@ -1,5 +1,9 @@
 import { RestEvent, config } from '@asap-hub/squidex';
-import { listGroupsResponse, queryGroupsResponse } from './groups.fixtures';
+import {
+  getGraphqlGroup,
+  listGroupsResponse,
+  queryGroupsResponse,
+} from './groups.fixtures';
 import { ListEventResponse, EventResponse } from '@asap-hub/model';
 
 export const fetchEventsResponse = {
@@ -213,7 +217,7 @@ export const getSquidexGraphqlEvents = () => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   created: '2020-09-23T16:34:26.842Z',
   lastModified: '2021-05-14T14:48:46Z',
-  version: 42,
+  version: 43,
   flatData: squidexGraphqlEventsFlatData(),
 });
 
@@ -254,7 +258,7 @@ const squidexGraphqlEventsFlatData = () => ({
         color: '#125A12' as const,
         name: 'Tech 1 - Sequencing/omics',
       },
-      referencingGroupsContents: [],
+      referencingGroupsContents: [getGraphqlGroup()],
     },
   ],
 });

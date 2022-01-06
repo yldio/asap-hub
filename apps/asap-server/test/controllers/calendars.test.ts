@@ -10,75 +10,203 @@ import {
   getCalendarResponse,
   getCalendarsGraphqlResponse,
   getCalendarsRestResponse,
+  getListCalendarResponse,
   getRestCalendar,
+  getSquidexCalendarsGraphqlResponse,
+  getSquidexGraphqlCalendar,
 } from '../fixtures/calendars.fixtures';
 import { FETCH_CALENDAR } from '../../src/queries/calendars.queries';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
+import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
 describe('Calendars controller', () => {
-  const squidexGraphqlClientMock = new SquidexGraphql();
-  const calendars = new Calendars(squidexGraphqlClientMock);
+  const squidexGraphqlClient = new SquidexGraphql();
+  const calendars = new Calendars(squidexGraphqlClient);
+
+  const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
+  const calendarsMockGraphlClient = new Calendars(squidexGraphqlClientMock);
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-  const calendarsMockGraphql = new Calendars(squidexGraphqlClientMockServer);
+  const calendarsMockGraphqlServer = new Calendars(
+    squidexGraphqlClientMockServer,
+  );
 
   beforeAll(() => {
     identity();
   });
 
   describe('Fetch method', () => {
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
+    describe('with mock-server', () => {
+      test('Should fetch the calendars from squidex graphql', async () => {
+        const result = await calendarsMockGraphqlServer.fetch();
+
+        expect(result).toMatchObject(getListCalendarResponse());
+      });
     });
 
-    afterEach(() => {
-      nock.cleanAll();
-    });
-    test('Should return an empty result when the no calendars are found', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/calendars`)
-        .query({
-          q: JSON.stringify({
-            take: 50,
+    describe('with intercepted http layer', () => {
+      test('Should return an empty result when the client returns an empty array of data', async () => {
+        const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 0;
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await calendarsMockGraphlClient.fetch();
+
+        expect(result).toEqual({ total: 0, items: [] });
+      });
+
+      test('Should return an empty result when the client returns a response with query property set to null', async () => {
+        const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal = null;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await calendarsMockGraphlClient.fetch();
+
+        expect(result).toEqual({ total: 0, items: [] });
+      });
+
+      test('Should return an empty result when the client returns a response with items property set to null', async () => {
+        const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = null;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await calendarsMockGraphlClient.fetch();
+
+        expect(result).toEqual({ total: 0, items: [] });
+      });
+
+      test('Should call the client with the default pagination parameters (pagination disabled)', async () => {
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          getSquidexCalendarsGraphqlResponse(),
+        );
+
+        await calendarsMockGraphlClient.fetch();
+
+        expect(squidexGraphqlClientMock.request).toBeCalledWith(
+          expect.anything(),
+          {
+            top: 50,
             skip: 0,
-            sort: [{ path: 'data.name.iv', order: 'ascending' }],
-          }),
-        })
-        .reply(200, { total: 0, items: [] });
+            filter: '',
+            order: 'data/name/iv asc',
+          },
+        );
+      });
 
-      const result = await calendars.fetch({ take: 50, skip: 0 });
+      test('Should default the calendar color to #333333', async () => {
+        const calendarResponse = getSquidexCalendarsGraphqlResponse();
+        calendarResponse.queryCalendarsContentsWithTotal!.items![0]!.flatData.color =
+          null;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          calendarResponse,
+        );
 
-      expect(result).toEqual({ total: 0, items: [] });
-    });
+        const response = await calendarsMockGraphlClient.fetch();
 
-    test('Should return the the calendars', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/calendars`)
-        .query({
-          q: JSON.stringify({
-            take: 20,
-            skip: 10,
-            sort: [{ path: 'data.name.iv', order: 'ascending' }],
-          }),
-        })
-        .reply(200, getCalendarsRestResponse());
+        expect(response.items[0]!.color).toBe('#333333');
+      });
 
-      const result = await calendars.fetch({ take: 20, skip: 10 });
+      test('Should skip the calendars which belong to an inactive group', async () => {
+        const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
+        const calendar1Active = getSquidexGraphqlCalendar();
+        calendar1Active.flatData.googleCalendarId = 'calendar1@google.com';
+        calendar1Active.referencingGroupsContents![0]!.flatData.active = true;
 
-      expect(result).toEqual({
-        total: 2,
-        items: [
+        const calendar2Inactive = getSquidexGraphqlCalendar();
+        calendar2Inactive.flatData.googleCalendarId = 'calendar2@google.com';
+        calendar2Inactive.referencingGroupsContents![0]!.flatData.active =
+          false;
+
+        const calendar3Active = getSquidexGraphqlCalendar();
+        calendar3Active.flatData.googleCalendarId = 'calendar3@google.com';
+        calendar3Active.referencingGroupsContents![0]!.flatData.active = true;
+
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [
+          calendar1Active,
+          calendar2Inactive,
+          calendar3Active,
+        ];
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 3;
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await calendarsMockGraphlClient.fetch();
+
+        const expectedCalendar1 = getCalendarResponse();
+        expectedCalendar1.id = calendar1Active.flatData.googleCalendarId;
+
+        const expectedCalendar2 = getCalendarResponse();
+        expectedCalendar2.id = calendar3Active.flatData.googleCalendarId;
+
+        expect(result).toEqual({
+          total: 2,
+          items: [expectedCalendar1, expectedCalendar2],
+        });
+      });
+
+      test('Should skip the calendars which do not belong to any group', async () => {
+        const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
+
+        const calendar1 = getSquidexGraphqlCalendar();
+        calendar1.referencingGroupsContents = null;
+        const calendar2 = getSquidexGraphqlCalendar();
+        calendar2.referencingGroupsContents = [];
+
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [
+          calendar1,
+          calendar2,
+        ];
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 2;
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await calendarsMockGraphlClient.fetch();
+
+        expect(result).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+
+      test('Should not skip the calendars which belong to multiple groups of which at least one is active', async () => {
+        const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
+        const calendar = getSquidexGraphqlCalendar();
+        calendar.flatData.googleCalendarId = 'calendar1@google.com';
+        calendar.referencingGroupsContents! = [
           {
-            id: 'calendar-id-1',
-            color: '#5C1158',
-            name: 'Kubernetes Meetups',
+            flatData: { active: false },
           },
           {
-            id: 'calendar-id-2',
-            color: '#B1365F',
-            name: 'Service Mesh Conferences',
+            flatData: { active: true },
           },
-        ],
+        ];
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [
+          calendar,
+        ];
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 1;
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await calendarsMockGraphlClient.fetch();
+
+        const expectedListCalendarResponse = getListCalendarResponse();
+        expectedListCalendarResponse.items[0]!.id =
+          calendar.flatData.googleCalendarId;
+
+        expect(result).toEqual(expectedListCalendarResponse);
       });
     });
   });
@@ -91,6 +219,7 @@ describe('Calendars controller', () => {
     afterEach(() => {
       nock.cleanAll();
     });
+
     test('Should return an empty result when the no calendars are found', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/calendars`)
@@ -103,7 +232,10 @@ describe('Calendars controller', () => {
         })
         .reply(200, { total: 0, items: [] });
 
-      const result = await calendars.fetchRaw({ take: 50, skip: 0 });
+      const result = await calendars.fetchRaw({
+        take: 50,
+        skip: 0,
+      });
 
       expect(result).toEqual([]);
     });
@@ -161,7 +293,9 @@ describe('Calendars controller', () => {
   describe('FetchById method', () => {
     describe('with mock-server', () => {
       test('Should fetch the users from squidex graphql', async () => {
-        const result = await calendarsMockGraphql.fetchById('calendar-id-1');
+        const result = await calendarsMockGraphqlServer.fetchById(
+          'calendar-id-1',
+        );
 
         const expected = getCalendarResponse();
         expect(result).toMatchObject(expected);
@@ -176,6 +310,7 @@ describe('Calendars controller', () => {
       afterEach(() => {
         nock.cleanAll();
       });
+
       test('Should throw an error when the calendar is not found', async () => {
         const calendarId = 'not-found';
 
@@ -262,7 +397,9 @@ describe('Calendars controller', () => {
           })
           .reply(200, getCalendarsGraphqlResponse());
 
-        const result = await calendars.fetchById(calendarId, { raw: true });
+        const result = await calendars.fetchById(calendarId, {
+          raw: true,
+        });
 
         expect(result).toEqual(getCalendarRaw());
       });
@@ -364,7 +501,9 @@ describe('Calendars controller', () => {
         })
         .reply(200, restCalendar);
 
-      const result = await calendars.update(calendarId, { syncToken });
+      const result = await calendars.update(calendarId, {
+        syncToken,
+      });
 
       expect(result).toEqual({
         id: restCalendar.data.googleCalendarId.iv,
@@ -382,6 +521,7 @@ describe('Calendars controller', () => {
     afterEach(() => {
       nock.cleanAll();
     });
+
     test('Should throw when calendar does not exist', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/calendars/calendar-not-found`)

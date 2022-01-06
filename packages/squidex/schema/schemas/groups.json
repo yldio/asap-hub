@@ -17,6 +17,7 @@
       "thumbnail",
       "name",
       "calendars",
+      "active",
       "tags",
       "description",
       "teams",

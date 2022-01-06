@@ -39,6 +39,23 @@ export const FETCH_DISCOVER = gql`
             lastName
           }
         }
+        scientificAdvisoryBoard {
+          id
+          created
+          lastModified
+          version
+          flatData {
+            avatar {
+              id
+            }
+            email
+            firstName
+            institution
+            jobTitle
+            lastModifiedDate
+            lastName
+          }
+        }
       }
     }
   }

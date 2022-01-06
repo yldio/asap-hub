@@ -38,6 +38,7 @@ it('renders discover header', async () => {
     .reply(200, {
       aboutUs: '',
       members: [],
+      scientificAdvisoryBoard: [],
       pages: [],
       training: [],
     });
@@ -57,6 +58,7 @@ it('renders discover with guidance, about and members', async () => {
       aboutUs: '<h1>About us</h1>',
       pages: [createPageResponse('1'), createPageResponse('2')],
       members: [createUserResponse()],
+      scientificAdvisoryBoard: [createUserResponse()],
     } as DiscoverResponse);
 
   const { queryAllByText, getByText } = await renderDiscover();
@@ -83,6 +85,7 @@ it('renders discover with training', async () => {
       aboutUs: '<h1>About us</h1>',
       pages: [createPageResponse('1'), createPageResponse('2')],
       members: [],
+      scientificAdvisoryBoard: [],
     } as DiscoverResponse);
 
   const { getByText } = await renderDiscover();
@@ -106,6 +109,7 @@ it('renders discover with members', async () => {
           displayName: 'John Doe',
         },
       ],
+      scientificAdvisoryBoard: [],
     } as DiscoverResponse);
 
   const { getByText } = await renderDiscover();
@@ -123,6 +127,7 @@ it('sets the member roles to Staff', async () => {
       aboutUs: '',
       pages: [],
       members: [{ ...createUserResponse(), role: 'Guest' }],
+      scientificAdvisoryBoard: [],
     } as DiscoverResponse);
 
   const { getByText } = await renderDiscover();

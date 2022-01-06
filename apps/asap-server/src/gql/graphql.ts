@@ -1788,6 +1788,7 @@ export type DiscoverDataInputDto = {
   aboutUs: Maybe<DiscoverDataAboutUsInputDto>;
   members: Maybe<DiscoverDataMembersInputDto>;
   pages: Maybe<DiscoverDataPagesInputDto>;
+  scientificAdvisoryBoard: Maybe<DiscoverDataScientificAdvisoryBoardInputDto>;
   training: Maybe<DiscoverDataTrainingInputDto>;
 };
 
@@ -1808,6 +1809,11 @@ export type DiscoverDataPagesDto = {
 
 /** The structure of the Grantee Guidance field of the Discover ASAP content input type. */
 export type DiscoverDataPagesInputDto = {
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Scientific Advisory Board field of the Discover ASAP content input type. */
+export type DiscoverDataScientificAdvisoryBoardInputDto = {
   iv: Maybe<Array<Scalars['String']>>;
 };
 

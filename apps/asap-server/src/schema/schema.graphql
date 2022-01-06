@@ -1818,6 +1818,7 @@ input DiscoverDataInputDto {
   aboutUs: DiscoverDataAboutUsInputDto
   members: DiscoverDataMembersInputDto
   pages: DiscoverDataPagesInputDto
+  scientificAdvisoryBoard: DiscoverDataScientificAdvisoryBoardInputDto
   training: DiscoverDataTrainingInputDto
 }
 
@@ -1838,6 +1839,11 @@ type DiscoverDataPagesDto {
 
 """The structure of the Grantee Guidance field of the Discover ASAP content input type."""
 input DiscoverDataPagesInputDto {
+  iv: [String!]
+}
+
+"""The structure of the Scientific Advisory Board field of the Discover ASAP content input type."""
+input DiscoverDataScientificAdvisoryBoardInputDto {
   iv: [String!]
 }
 

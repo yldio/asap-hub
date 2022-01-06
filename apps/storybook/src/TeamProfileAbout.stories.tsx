@@ -33,6 +33,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
       firstName: 'Daniel',
       lastName: 'Ramirez',
       role: 'Lead PI (Core Leadership)',
+      email: 'daniel@asap.com',
     },
     {
       id: '2',
@@ -40,6 +41,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
       firstName: 'Peter',
       lastName: 'Venkman',
       role: 'Project Manager',
+      email: 'peter@asap.com',
       avatarUrl: text(
         'Member 2 Avatar URL',
         'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
@@ -51,6 +53,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
       firstName: 'Tess',
       lastName: 'Goetz',
       role: 'Collaborating PI',
+      email: 'tess@asap.com',
     },
     {
       id: '4',
@@ -58,6 +61,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
       firstName: 'Robin',
       lastName: 'Peploe',
       role: 'Collaborating PI',
+      email: 'robin@asap.com',
     },
     {
       id: '5',
@@ -65,6 +69,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
       firstName: 'Alice',
       lastName: 'Lane',
       role: 'Collaborating PI',
+      email: 'alice@asap.com',
     },
     {
       id: '6',
@@ -72,6 +77,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
       firstName: 'Philip',
       lastName: 'Mars',
       role: 'Collaborating PI',
+      email: 'philip@asap.com',
     },
     {
       id: '7',
@@ -79,6 +85,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
       firstName: 'Emanuel',
       lastName: 'Depay',
       role: 'Collaborating PI',
+      email: 'emanuel@asap.com',
     },
   ],
 });

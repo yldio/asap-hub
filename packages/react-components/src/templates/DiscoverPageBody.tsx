@@ -1,4 +1,6 @@
 import { css } from '@emotion/react';
+import { DiscoverResponse } from '@asap-hub/model';
+
 import {
   PagesSection,
   RichText,
@@ -8,7 +10,6 @@ import {
 } from '../organisms';
 import { perRem } from '../pixels';
 import { Display, Card } from '../atoms';
-import { DiscoverResponse } from '@asap-hub/model';
 
 const styles = css({
   display: 'grid',

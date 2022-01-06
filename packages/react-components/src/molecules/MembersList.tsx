@@ -23,7 +23,7 @@ const multiColumnContainerStyles = css({
 });
 
 const avatarStyles = css({
-  gridRowEnd: 'span 4',
+  gridRowEnd: 'span 3',
   paddingTop: `${12 / perRem}em`,
 });
 
@@ -57,13 +57,11 @@ const teamStyles = css({
 
 interface MembersListProps {
   readonly members: ReadonlyArray<
-    Pick<UserResponse, 'id' | 'displayName'> &
-      Partial<
-        Pick<UserResponse, 'firstName' | 'lastName' | 'avatarUrl' | 'labs'>
-      > & {
-        readonly role: string;
-        readonly teams: ReadonlyArray<Pick<UserTeam, 'id' | 'displayName'>>;
-      }
+    {
+      firstLine: string;
+      secondLine: string;
+      thirdLine: string | ReadonlyArray<Pick<UserTeam, 'id' | 'displayName'>>;
+    } & Pick<UserResponse, 'id' | 'firstName' | 'lastName' | 'avatarUrl'>
   >;
   singleColumn?: boolean;
 }
@@ -72,12 +70,8 @@ const MembersList: React.FC<MembersListProps> = ({
   singleColumn = false,
 }) => (
   <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
-    {members.map(({ id, displayName, role, teams, labs = [], ...member }) => {
+    {members.map(({ id, firstLine, secondLine, thirdLine, ...member }) => {
       const href = network({}).users({}).user({ userId: id }).$;
-      const labsList = getUniqueCommaStringWithSuffix(
-        labs.map((lab) => lab.name),
-        'Lab',
-      );
       return (
         <li key={id} css={{ display: 'contents' }}>
           <Anchor href={href} css={{ display: 'contents' }}>
@@ -90,7 +84,7 @@ const MembersList: React.FC<MembersListProps> = ({
             </div>
           </Anchor>
           <Anchor href={href} css={{ display: 'contents' }}>
-            <div css={nameStyles}>{displayName}</div>
+            <div css={nameStyles}>{firstLine}</div>
           </Anchor>
           <Anchor href={href} css={{ display: 'contents' }}>
             <div
@@ -100,7 +94,7 @@ const MembersList: React.FC<MembersListProps> = ({
                 textStyles,
               ]}
             >
-              {role}
+              {secondLine}
             </div>
           </Anchor>
           <Anchor href={href} css={{ display: 'contents' }}>
@@ -112,24 +106,23 @@ const MembersList: React.FC<MembersListProps> = ({
                 labStyles,
               ]}
             >
-              {labsList && <Ellipsis>{labsList}</Ellipsis>}
+              <Ellipsis>
+                {thirdLine instanceof Array
+                  ? thirdLine.map((team) => (
+                      <li key={team.id}>
+                        <Link
+                          href={
+                            network({}).teams({}).team({ teamId: team.id }).$
+                          }
+                        >
+                          Team {team.displayName}
+                        </Link>
+                      </li>
+                    ))
+                  : thirdLine}
+              </Ellipsis>
             </div>
           </Anchor>
-          <ul
-            css={[
-              addToColumnStyles,
-              singleColumn || multiColumnAddToColumnStyles,
-              teamStyles,
-            ]}
-          >
-            {teams.map((team) => (
-              <li key={team.id}>
-                <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
-                  Team {team.displayName}
-                </Link>
-              </li>
-            ))}
-          </ul>
         </li>
       );
     })}

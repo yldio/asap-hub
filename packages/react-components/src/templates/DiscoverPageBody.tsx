@@ -1,6 +1,4 @@
-import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
-import { MembersList } from '../molecules';
 import {
   PagesSection,
   RichText,
@@ -10,6 +8,7 @@ import {
 } from '../organisms';
 import { perRem } from '../pixels';
 import { Display, Card } from '../atoms';
+import { DiscoverResponse } from '@asap-hub/model';
 
 const styles = css({
   display: 'grid',
@@ -21,19 +20,7 @@ const aboutUsStyles = css({
   paddingTop: `${24 / perRem}em`,
 });
 
-type DashboardPageBodyProps = Omit<
-  ComponentProps<typeof PagesSection>,
-  'title'
-> &
-  Omit<ComponentProps<typeof TeamMembersSection>, 'title'> & {
-    readonly aboutUs: string;
-    readonly training: ComponentProps<typeof NewsSection>['news'];
-    readonly scientificAdvisoryBoard: ReadonlyArray<
-      Omit<ComponentProps<typeof MembersList>['members'][0], 'teams'>
-    >;
-  };
-
-const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
+const DiscoverPageBody: React.FC<DiscoverResponse> = ({
   pages,
   aboutUs,
   training,
@@ -58,16 +45,55 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
       </section>
     ) : null}
     {members.length ? (
-      <TeamMembersSection title={'Meet the team'} members={members} />
+      <TeamMembersSection
+        title={'Meet the ASAP team'}
+        members={members.map(
+          ({
+            displayName,
+            jobTitle,
+            institution,
+            firstName,
+            lastName,
+            avatarUrl,
+            id,
+          }) => ({
+            firstLine: displayName,
+            secondLine: jobTitle || '',
+            thirdLine: institution || '',
+            avatarUrl,
+            firstName,
+            lastName,
+            id,
+          }),
+        )}
+      />
     ) : null}
     {scientificAdvisoryBoard.length ? (
       <TeamMembersSection
         title={'Meet the Scientific Advisory Board'}
-        members={scientificAdvisoryBoard}
+        members={scientificAdvisoryBoard.map(
+          ({
+            displayName,
+            jobTitle,
+            institution,
+            firstName,
+            lastName,
+            avatarUrl,
+            id,
+          }) => ({
+            firstLine: displayName,
+            secondLine: jobTitle || '',
+            thirdLine: institution || '',
+            avatarUrl,
+            firstName,
+            lastName,
+            id,
+          }),
+        )}
       />
     ) : null}
     <HelpSection />
   </div>
 );
 
-export default DashboardPageBody;
+export default DiscoverPageBody;

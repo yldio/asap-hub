@@ -5,7 +5,6 @@ import { network } from '@asap-hub/routing';
 import { perRem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
 import { Link, Avatar, Anchor, Ellipsis } from '../atoms';
-import { getUniqueCommaStringWithSuffix } from '../utils';
 
 const containerStyles = css({
   margin: 0,
@@ -49,19 +48,15 @@ const textStyles = css({
 const labStyles = css({
   padding: `0 0 ${24 / perRem}em`,
 });
-const teamStyles = css({
-  listStyle: 'none',
-  margin: 0,
-  padding: `0 0 ${24 / perRem}em`,
-});
 
 interface MembersListProps {
   readonly members: ReadonlyArray<
     {
-      firstLine: string;
-      secondLine: string;
-      thirdLine: string | ReadonlyArray<Pick<UserTeam, 'id' | 'displayName'>>;
-    } & Pick<UserResponse, 'id' | 'firstName' | 'lastName' | 'avatarUrl'>
+      firstLine?: string;
+      secondLine?: string;
+      thirdLine?: string | ReadonlyArray<Pick<UserTeam, 'id' | 'displayName'>>;
+    } & Pick<UserResponse, 'id'> &
+      Partial<Pick<UserResponse, 'firstName' | 'lastName' | 'avatarUrl'>>
   >;
   singleColumn?: boolean;
 }

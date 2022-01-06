@@ -9,16 +9,16 @@ it('renders name and role for each member', async () => {
       members={[
         {
           ...createListUserResponse(1).items[0],
-          displayName: 'Bat Man',
-          role: 'Boss',
-          teams: [],
+          firstLine: 'Bat Man',
+          secondLine: 'Boss',
+          thirdLine: [],
         },
         {
           ...createListUserResponse(2).items[1],
           id: '1337',
-          displayName: 'Some One',
-          role: 'Apprentice',
-          teams: [],
+          firstLine: 'Some One',
+          secondLine: 'Apprentice',
+          thirdLine: [],
         },
       ]}
     />,
@@ -38,21 +38,16 @@ it('only show lab information if the user is on a lab', async () => {
       members={[
         {
           ...createListUserResponse(1).items[0],
-          displayName: 'Bat Man',
-          role: 'Boss',
-          teams: [],
-          labs: [
-            { id: 'cd7be4904', name: 'Manchester' },
-            { id: 'cd7be4905', name: 'Glasgow' },
-          ],
+          firstLine: 'Bat Man',
+          secondLine: 'Boss',
+          thirdLine: 'Manchester Lab and Glasgow Lab ',
         },
         {
           ...createListUserResponse(2).items[1],
           id: '1337',
-          displayName: 'Some One',
-          role: 'Apprentice',
-          teams: [],
-          labs: [],
+          firstLine: 'Some One',
+          secondLine: 'Apprentice',
+          thirdLine: [],
         },
       ]}
     />,
@@ -65,9 +60,9 @@ it('renders a team link for each team provided', async () => {
       members={[
         {
           ...createUserResponse(),
-          displayName: 'Bat Man',
-          role: 'Boss',
-          teams: [
+          firstLine: 'Bat Man',
+          secondLine: 'Boss',
+          thirdLine: [
             {
               displayName: 'DC',
               id: 'dc',

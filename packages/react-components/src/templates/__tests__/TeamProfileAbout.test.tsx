@@ -49,6 +49,7 @@ it('renders the team list', () => {
           firstName: 'John',
           lastName: 'Doe',
           role: 'Project Manager',
+          email: 'johndoe@asap.com',
         },
       ]}
     />,

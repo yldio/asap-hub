@@ -61,7 +61,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
               labs = [],
             }) => ({
               firstLine: displayName,
-              secondLine: role || '',
+              secondLine: role,
               thirdLine: getUniqueCommaStringWithSuffix(
                 labs.map((lab) => lab.name),
                 'Lab',

@@ -1855,7 +1855,6 @@ input DiscoverDataTrainingInputDto {
 type DiscoverFlatDataDto {
   aboutUs: String
   members: [Users!]
-  scientificAdvisoryBoard: [Users!]
   pages: [Pages!]
   training: [NewsAndEvents!]
 }

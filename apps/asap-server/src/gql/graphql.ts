@@ -1825,7 +1825,6 @@ export type DiscoverDataTrainingInputDto = {
 export type DiscoverFlatDataDto = {
   aboutUs: Maybe<Scalars['String']>;
   members: Maybe<Array<Users>>;
-  scientificAdvisoryBoard: Maybe<Array<Users>>;
   pages: Maybe<Array<Pages>>;
   training: Maybe<Array<NewsAndEvents>>;
 };
@@ -4348,21 +4347,6 @@ export type FetchDashboardQuery = {
 };
 
 export type FetchDiscoverQueryVariables = Exact<{ [key: string]: never }>;
-export type DiscoverMembersResponse = Maybe<
-  Array<
-    Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-      flatData: Pick<
-        UsersFlatDataDto,
-        | 'email'
-        | 'firstName'
-        | 'institution'
-        | 'jobTitle'
-        | 'lastModifiedDate'
-        | 'lastName'
-      > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-    }
-  >
->;
 
 export type FetchDiscoverQuery = {
   queryDiscoverContents: Maybe<
@@ -4391,8 +4375,21 @@ export type FetchDiscoverQuery = {
             }
           >
         >;
-        members: DiscoverMembersResponse;
-        scientificAdvisoryBoard: DiscoverMembersResponse;
+        members: Maybe<
+          Array<
+            Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+              flatData: Pick<
+                UsersFlatDataDto,
+                | 'email'
+                | 'firstName'
+                | 'institution'
+                | 'jobTitle'
+                | 'lastModifiedDate'
+                | 'lastName'
+              > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+            }
+          >
+        >;
       };
     }>
   >;

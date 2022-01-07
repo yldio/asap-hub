@@ -4413,61 +4413,6 @@ export type FetchDashboardQuery = {
 };
 
 export type FetchDiscoverQueryVariables = Exact<{ [key: string]: never }>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-export type DiscoverMembersResponse = Maybe<
-  Array<
-    Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-      flatData: Pick<
-        UsersFlatDataDto,
-        | 'email'
-        | 'firstName'
-        | 'institution'
-        | 'jobTitle'
-        | 'lastModifiedDate'
-        | 'lastName'
-      > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-    }
-  >
-=======
-export type MembersDiscoveryResponse = Maybe<
-<<<<<<< HEAD
-Array<
-  Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-    flatData: Pick<
-      UsersFlatDataDto,
-      | 'email'
-      | 'firstName'
-      | 'institution'
-      | 'jobTitle'
-      | 'lastModifiedDate'
-      | 'lastName'
-    > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-  }
->
->>>>>>> 91380c01 (Frontend and backend website)
-=======
-=======
-export type DiscoverMembersResponse = Maybe<
->>>>>>> 349989bd (Fix)
-  Array<
-    Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-      flatData: Pick<
-        UsersFlatDataDto,
-        | 'email'
-        | 'firstName'
-        | 'institution'
-        | 'jobTitle'
-        | 'lastModifiedDate'
-        | 'lastName'
-      > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-    }
-  >
->>>>>>> e2234315 (fix:format)
->;
-=======
->>>>>>> 76b6406a (Fix schema)
 
 export type FetchDiscoverQuery = {
   queryDiscoverContents: Maybe<
@@ -4496,20 +4441,6 @@ export type FetchDiscoverQuery = {
             }
           >
         >;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-        members: DiscoverMembersResponse;
-        scientificAdvisoryBoard: DiscoverMembersResponse;
-=======
-        members: MembersDiscoveryResponse;
-        scientificAdvisoryBoard: MembersDiscoveryResponse;
->>>>>>> 91380c01 (Frontend and backend website)
-=======
-        members: DiscoverMembersResponse;
-        scientificAdvisoryBoard: DiscoverMembersResponse;
->>>>>>> 349989bd (Fix)
-=======
         members: Maybe<
           Array<
             Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
@@ -4525,9 +4456,6 @@ export type FetchDiscoverQuery = {
             }
           >
         >;
-<<<<<<< HEAD
->>>>>>> 76b6406a (Fix schema)
-=======
         scientificAdvisoryBoard: Maybe<
           Array<
             Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
@@ -4543,7 +4471,6 @@ export type FetchDiscoverQuery = {
             }
           >
         >;
->>>>>>> 215ed9a1 (fix schema)
       };
     }>
   >;

@@ -50,6 +50,7 @@ it('renders the team list', () => {
           lastName: 'Doe',
           role: 'Project Manager',
           email: 'johndoe@asap.com',
+          labs: [{ name: 'Doe', id: '1' }],
         },
       ]}
     />,
@@ -61,6 +62,8 @@ it('renders the team list', () => {
     'href',
     expect.stringMatching(/uuid/i),
   );
+  expect(getByText('Project Manager')).toBeInTheDocument();
+  expect(getByText('Doe Lab')).toBeInTheDocument();
 });
 
 it('renders the expertise and resources list', () => {

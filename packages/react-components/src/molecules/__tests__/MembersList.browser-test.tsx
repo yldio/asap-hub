@@ -8,8 +8,10 @@ import { getBoundingClientRect } from '../../browser-test-utils';
 
 const [firstUser, secondUser] = createListUserResponse(2).items.map((user) => ({
   ...user,
+  firstLine: user.displayName,
+  secondLine: user.role,
+  thirdLine: 'Team',
   href: '#0',
-  teams: [],
 }));
 
 it('respects the singleColumn prop', async () => {

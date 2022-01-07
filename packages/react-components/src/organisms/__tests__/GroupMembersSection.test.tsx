@@ -14,7 +14,18 @@ it('renders a list of leaders', async () => {
           user: {
             ...createListUserResponse(1).items[0],
             displayName: 'Bat Man',
-            teams: [],
+            teams: [
+              {
+                displayName: 'One',
+                id: 't0',
+                role: 'Co-PI (Core Leadership)',
+              },
+              {
+                displayName: 'Two',
+                id: 't1',
+                role: 'Collaborating PI',
+              },
+            ],
           },
           role: 'Chair',
         },
@@ -22,7 +33,13 @@ it('renders a list of leaders', async () => {
           user: {
             ...createListUserResponse(2).items[1],
             displayName: 'Some One',
-            teams: [],
+            teams: [
+              {
+                displayName: 'One',
+                id: 't0',
+                role: 'Co-PI (Core Leadership)',
+              },
+            ],
           },
           role: 'Project Manager',
         },
@@ -31,9 +48,13 @@ it('renders a list of leaders', async () => {
     />,
   );
   expect(getByText('Bat Man').closest('li')).toHaveTextContent('Chair');
+  expect(getByText('Bat Man').closest('li')).toHaveTextContent(
+    'Multiple Teams',
+  );
   expect(getByText('Some One').closest('li')).toHaveTextContent(
     'Project Manager',
   );
+  expect(getByText('Some One').closest('li')).toHaveTextContent('One');
 });
 
 it('shows the number of teams', async () => {

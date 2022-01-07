@@ -4,7 +4,7 @@ import { network } from '@asap-hub/routing';
 
 import { perRem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
-import { Link, Avatar, Anchor, Ellipsis } from '../atoms';
+import { Link, Avatar, Anchor } from '../atoms';
 
 const containerStyles = css({
   margin: 0,

@@ -101,21 +101,16 @@ const MembersList: React.FC<MembersListProps> = ({
                 labStyles,
               ]}
             >
-              <Ellipsis>
-                {thirdLine instanceof Array
-                  ? thirdLine.map((team) => (
-                      <li key={team.id}>
-                        <Link
-                          href={
-                            network({}).teams({}).team({ teamId: team.id }).$
-                          }
-                        >
-                          Team {team.displayName}
-                        </Link>
-                      </li>
-                    ))
-                  : thirdLine}
-              </Ellipsis>
+              {thirdLine instanceof Array
+                ? thirdLine.map((team) => (
+                    <Link
+                      key={team.id}
+                      href={network({}).teams({}).team({ teamId: team.id }).$}
+                    >
+                      Team {team.displayName}
+                    </Link>
+                  ))
+                : thirdLine}
             </div>
           </Anchor>
         </li>

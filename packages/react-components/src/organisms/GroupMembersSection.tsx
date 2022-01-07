@@ -29,7 +29,7 @@ const GroupMembersSection: React.FC<GroupMembersSectionProps> = ({
           ...user,
           firstLine: user.displayName,
           secondLine: role,
-          thirdLine: user.teams,
+          thirdLine: user.teams.length <= 1 ? user.teams : 'Multiple Teams',
         }))}
       />
       <Headline3 styleAsHeading={4}>Teams ({teams.length})</Headline3>

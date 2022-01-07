@@ -1793,12 +1793,12 @@ export type DiscoverDataInputDto = {
   training: Maybe<DiscoverDataTrainingInputDto>;
 };
 
-/** The structure of the Members field of the Discover ASAP content type. */
+/** The structure of the ASAP Team field of the Discover ASAP content type. */
 export type DiscoverDataMembersDto = {
   iv: Maybe<Array<Users>>;
 };
 
-/** The structure of the Members field of the Discover ASAP content input type. */
+/** The structure of the ASAP Team field of the Discover ASAP content input type. */
 export type DiscoverDataMembersInputDto = {
   iv: Maybe<Array<Scalars['String']>>;
 };

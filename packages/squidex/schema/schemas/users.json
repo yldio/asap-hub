@@ -269,26 +269,6 @@
         ]
       },
       {
-        "name": "reachOut",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": true,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Reach Out",
-          "hints": "Reach out reasons (only relevant for \"Staff\" users)",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
         "name": "separatorHeader",
         "isHidden": false,
         "isLocked": false,
@@ -657,6 +637,27 @@
           "contentType": "Unspecified",
           "editor": "TextArea",
           "label": "Research Interests",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "reachOut",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "minLength": 0,
+          "maxLength": 200,
+          "contentType": "Unspecified",
+          "editor": "TextArea",
+          "label": "Reach Out",
+          "hints": "Reach out reasons (only relevant for \"Staff\" users)",
+          "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false

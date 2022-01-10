@@ -20,7 +20,7 @@
   "unretrievableAttributes": null,
   "optionalWords": null,
   "queryLanguages": ["en"],
-  "replicas": [],
+  "replicas": ["ros_added_date_desc"],
   "attributesForFaceting": ["teams.id", "type", "authors.id"],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

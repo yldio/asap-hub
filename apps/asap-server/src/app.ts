@@ -4,6 +4,7 @@ import express, { Express, RequestHandler } from 'express';
 import { Tracer } from 'opentracing';
 import { Logger } from 'pino';
 import pinoHttp from 'pino-http';
+import AWS from 'aws-sdk';
 import AWSXray from 'aws-xray-sdk';
 import * as Sentry from '@sentry/serverless';
 import { SquidexGraphql } from '@asap-hub/squidex';
@@ -105,9 +106,9 @@ export const appFactory = (libs: Libs = {}): Express => {
    */
 
   /* istanbul ignore next */
-  if (libs.xRay) {
-    app.use(libs.xRay.express.openSegment('default'));
-    libs.xRay.middleware.enableDynamicNaming('*.hub.asap.science');
+  if (libs.awsXRay) {
+    app.use(libs.awsXRay.express.openSegment('default'));
+    libs.awsXRay.middleware.enableDynamicNaming('*.hub.asap.science');
   }
 
   /* istanbul ignore next */
@@ -167,8 +168,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   });
 
   /* istanbul ignore next */
-  if (libs.xRay) {
-    app.use(libs.xRay.express.closeSegment());
+  if (libs.awsXRay) {
+    app.use(libs.awsXRay.express.closeSegment());
   }
 
   /* istanbul ignore next */
@@ -198,7 +199,8 @@ export type Libs = {
   logger?: Logger;
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];
-  xRay?: typeof AWSXray;
+  awsXRay?: typeof AWSXray;
+  awsSdk?: typeof AWS;
   sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
   sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
   sentryTransactionIdHandler?: RequestHandler;

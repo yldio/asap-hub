@@ -59,7 +59,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
       </section>
     ) : null}
     {members.length ? (
-      <TeamMembersSection title={'Meet the ASAP team'} members={members} />
+      <TeamMembersSection title={'Meet the team'} members={members} />
     ) : null}
     {scientificAdvisoryBoard.length ? (
       <TeamMembersSection

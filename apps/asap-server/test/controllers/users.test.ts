@@ -1,7 +1,7 @@
-import { config, SquidexGraphql } from '@asap-hub/squidex';
+import { config, RestUser, SquidexGraphql } from '@asap-hub/squidex';
 import { print } from 'graphql';
 import matches from 'lodash.matches';
-import nock from 'nock';
+import nock, { DataMatcherMap } from 'nock';
 import Users from '../../src/controllers/users';
 import { identity } from '../helpers/squidex';
 import { FETCH_USER, FETCH_USERS } from '../../src/queries/users.queries';
@@ -727,62 +727,28 @@ describe('Users controller', () => {
       });
     });
 
-    test('Should update and delete user team properties', async () => {
+    test('Should update Research Interests and Responsibility', async () => {
       const mockResponse = getGraphqlResponseFetchUser();
-      mockResponse.data.findUsersContent!.flatData.teams = [
-        {
-          role: 'Lead PI (Core Leadership)',
-          mainResearchInterests: null,
-          responsibilities: null,
-          id: [
-            {
-              id: 'team-id-1',
-              flatData: {
-                displayName: 'Jackson, M',
-                proposal: [{ id: 'proposal-id-1' }],
-              },
-            },
-          ],
+      mockResponse.data.findUsersContent!.flatData.researchInterests =
+        'new research interests';
+      mockResponse.data.findUsersContent!.flatData.responsibilities =
+        'new responsibilities';
+
+      const expectedPatchRequest: Partial<RestUser['data']> = {
+        researchInterests: {
+          iv: 'new research interests',
         },
-        {
-          role: 'Collaborating PI',
-          responsibilities: 'I do stuff',
-          mainResearchInterests: 'orthodox',
-          id: [
-            {
-              id: 'team-id-3',
-              flatData: {
-                displayName: 'Tarantino, M',
-                proposal: [{ id: 'proposal-id-2' }],
-              },
-            },
-          ],
+        responsibilities: {
+          iv: 'new responsibilities',
         },
-      ];
+      };
 
       nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users/${userId}`)
+        .patch(
+          `/api/content/${config.appName}/users/${userId}`,
+          expectedPatchRequest as DataMatcherMap,
+        )
         .reply(200, fetchUserResponse)
-        .put(`/api/content/${config.appName}/users/${userId}`, {
-          ...fetchUserResponse.data,
-          teams: {
-            iv: [
-              {
-                role: 'Lead PI (Core Leadership)',
-                id: ['team-id-1'],
-                mainResearchInterests: null,
-                responsibilities: null,
-              },
-              {
-                role: 'Collaborating PI',
-                id: ['team-id-3'],
-                responsibilities: 'I do stuff',
-                mainResearchInterests: 'orthodox',
-              },
-            ],
-          },
-        } as { [k: string]: any })
-        .reply(200, fetchUserResponse) // this response is ignored
         .post(`/api/content/${config.appName}/graphql`, {
           query: print(FETCH_USER),
           variables: {
@@ -792,36 +758,11 @@ describe('Users controller', () => {
         .reply(200, mockResponse);
 
       const result = await users.update(userId, {
-        teams: [
-          {
-            id: 'team-id-1',
-            responsibilities: '',
-            mainResearchInterests: '',
-          },
-          {
-            id: 'team-id-3',
-            responsibilities: 'I do stuff',
-            mainResearchInterests: 'orthodox',
-          },
-        ],
+        researchInterests: 'new research interests',
+        responsibilities: 'new responsibilities',
       });
-
-      expect(result.teams).toEqual([
-        {
-          id: 'team-id-1',
-          displayName: 'Jackson, M',
-          proposal: 'proposal-id-1',
-          role: 'Lead PI (Core Leadership)',
-        },
-        {
-          displayName: 'Tarantino, M',
-          id: 'team-id-3',
-          proposal: 'proposal-id-2',
-          role: 'Collaborating PI',
-          responsibilities: 'I do stuff',
-          mainResearchInterests: 'orthodox',
-        },
-      ]);
+      expect(result.researchInterests).toEqual('new research interests');
+      expect(result.responsibilities).toEqual('new responsibilities');
     });
   });
 

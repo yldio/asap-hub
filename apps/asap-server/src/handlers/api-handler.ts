@@ -23,8 +23,8 @@ const lsTracer = new LightStep.Tracer({
   nodejs_instrumentation: true,
 });
 
-AWSXray.captureHTTPsGlobal(http, true);
-AWSXray.captureHTTPsGlobal(https, true);
+AWSXray.captureHTTPsGlobal(http);
+AWSXray.captureHTTPsGlobal(https);
 AWSXray.capturePromise();
 
 Sentry.AWSLambda.init({

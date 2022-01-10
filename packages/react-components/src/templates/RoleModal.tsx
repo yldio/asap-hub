@@ -138,7 +138,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
             <LabeledTextArea
               title={`Reach out to ${firstName} if…`}
               subtitle="(Optional)"
-              placeholder="E.g: You have questions about preclinical tools/data sharing, subgroup meetings or collaboration opportunities…"
+              placeholder="E.g: You have questions about preclinical tools/data sharing, subgroup meetings or collaboration opportunities."
               tip="Tip: refer to yourself in the third person."
               maxLength={200}
               enabled={!isSaving}

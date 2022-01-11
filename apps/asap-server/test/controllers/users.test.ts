@@ -24,7 +24,7 @@ describe('Users controller', () => {
   const squidexGraphqlClient = new SquidexGraphql();
   const users = new Users(squidexGraphqlClient);
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const usersMockGraphlClient = new Users(squidexGraphqlClientMock);
+  const usersMockGraphqlClient = new Users(squidexGraphqlClientMock);
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
   const usersMockGraphql = new Users(squidexGraphqlClientMockServer);
@@ -43,87 +43,45 @@ describe('Users controller', () => {
     });
 
     describe('with intercepted http layer', () => {
-      afterEach(() => {
-        expect(nock.isDone()).toBe(true);
-      });
-
-      afterEach(() => {
-        nock.cleanAll();
-      });
-
       test('Should return an empty result', async () => {
         const mockResponse = getSquidexUsersGraphqlResponse();
         mockResponse.queryUsersContentsWithTotal!.items = [];
         mockResponse.queryUsersContentsWithTotal!.total = 0;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-        const result = await usersMockGraphlClient.fetch({});
+        const result = await usersMockGraphqlClient.fetch({});
         expect(result).toEqual({ items: [], total: 0 });
       });
 
       test('Should return an empty result when the client returns a response with query property set to null', async () => {
-        const mockResponse = getGraphqlResponseFetchUsers();
-        mockResponse.data.queryUsersContentsWithTotal = null;
+        const mockResponse = getSquidexUsersGraphqlResponse();
+        mockResponse.queryUsersContentsWithTotal = null;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_USERS),
-            variables: {
-              top: 8,
-              skip: 0,
-              filter: "data/onboarded/iv eq true and data/role/iv ne 'Hidden'",
-            },
-          })
-          .reply(200, mockResponse);
-
-        const result = await users.fetch({});
-        expect(result).toEqual({ total: 0, items: [] });
-      });
-      test('Should return an empty result when the client returns a response with query property set to null', async () => {
-        const mockResponse = getGraphqlResponseFetchUsers();
-        mockResponse.data.queryUsersContentsWithTotal = null;
-
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_USERS),
-            variables: {
-              top: 8,
-              skip: 0,
-              filter: "data/onboarded/iv eq true and data/role/iv ne 'Hidden'",
-            },
-          })
-          .reply(200, mockResponse);
-
-        const result = await users.fetch({});
+        const result = await usersMockGraphqlClient.fetch({});
         expect(result).toEqual({ total: 0, items: [] });
       });
 
       test('Should return an empty result when the client returns a response with items property set to null', async () => {
-        const mockResponse = getGraphqlResponseFetchUsers();
-        mockResponse.data.queryUsersContentsWithTotal!.items = null;
+        const mockResponse = getSquidexUsersGraphqlResponse();
+        mockResponse.queryUsersContentsWithTotal!.items = null;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_USERS),
-            variables: {
-              top: 8,
-              skip: 0,
-              filter: "data/onboarded/iv eq true and data/role/iv ne 'Hidden'",
-            },
-          })
-          .reply(200, mockResponse);
-
-        const result = await users.fetch({});
+        const result = await usersMockGraphqlClient.fetch({});
         expect(result).toEqual({ total: 0, items: [] });
       });
 
       test('Should query with filters and return the users', async () => {
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          getSquidexUsersGraphqlResponse(),
+        );
         const fetchOptions: FetchOptions = {
           take: 12,
           skip: 2,
           search: 'first last',
           filter: ['role', 'Staff'],
         };
+        await usersMockGraphqlClient.fetch(fetchOptions);
 
         const filterQuery =
           "(data/teams/iv/role eq 'role' or data/role/iv eq 'Staff')" +
@@ -141,28 +99,26 @@ describe('Users controller', () => {
           " or contains(data/lastName/iv, 'last')" +
           " or contains(data/institution/iv, 'last')" +
           " or contains(data/expertiseAndResourceTags/iv, 'last')))";
-
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_USERS),
-            variables: {
-              filter: filterQuery,
-              top: 12,
-              skip: 2,
-            },
-          })
-          .reply(200, getGraphqlResponseFetchUsers);
-
-        const result = await users.fetch(fetchOptions);
-        expect(result).toEqual(fetchExpectation);
+        expect(squidexGraphqlClientMock.request).toBeCalledWith(
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: filterQuery,
+          },
+        );
       });
 
       test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          getSquidexUsersGraphqlResponse(),
+        );
         const fetchOptions: FetchOptions = {
           take: 12,
           skip: 2,
           search: "'",
         };
+        await usersMockGraphqlClient.fetch(fetchOptions);
 
         const expectedFilter =
           "data/onboarded/iv eq true and data/role/iv ne 'Hidden' and" +
@@ -171,28 +127,26 @@ describe('Users controller', () => {
           " or contains(data/institution/iv, '%27%27')" +
           " or contains(data/expertiseAndResourceTags/iv, '%27%27')))";
 
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_USERS),
-            variables: {
-              filter: expectedFilter,
-              top: 12,
-              skip: 2,
-            },
-          })
-          .reply(200, getGraphqlResponseFetchUsers);
-
-        const result = await users.fetch(fetchOptions);
-
-        expect(result).toEqual(fetchExpectation);
+        expect(squidexGraphqlClientMock.request).toBeCalledWith(
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: expectedFilter,
+          },
+        );
       });
 
       test('Should sanitise double quotation mark by encoding to hex', async () => {
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          getSquidexUsersGraphqlResponse(),
+        );
         const fetchOptions: FetchOptions = {
           take: 12,
           skip: 2,
           search: '"',
         };
+        await usersMockGraphqlClient.fetch(fetchOptions);
 
         const expectedFilter =
           "data/onboarded/iv eq true and data/role/iv ne 'Hidden' and" +
@@ -201,28 +155,26 @@ describe('Users controller', () => {
           " or contains(data/institution/iv, '%22')" +
           " or contains(data/expertiseAndResourceTags/iv, '%22')))";
 
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_USERS),
-            variables: {
-              filter: expectedFilter,
-              top: 12,
-              skip: 2,
-            },
-          })
-          .reply(200, getGraphqlResponseFetchUsers);
-
-        const result = await users.fetch(fetchOptions);
-
-        expect(result).toEqual(fetchExpectation);
+        expect(squidexGraphqlClientMock.request).toBeCalledWith(
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: expectedFilter,
+          },
+        );
       });
 
       test('Should search with special characters', async () => {
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          getSquidexUsersGraphqlResponse(),
+        );
         const fetchOptions: FetchOptions = {
           take: 12,
           skip: 2,
           search: 'Solène',
         };
+        await usersMockGraphqlClient.fetch(fetchOptions);
 
         const expectedFilter =
           "data/onboarded/iv eq true and data/role/iv ne 'Hidden' and" +
@@ -231,20 +183,14 @@ describe('Users controller', () => {
           " or contains(data/institution/iv, 'Solène')" +
           " or contains(data/expertiseAndResourceTags/iv, 'Solène')))";
 
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_USERS),
-            variables: {
-              filter: expectedFilter,
-              top: 12,
-              skip: 2,
-            },
-          })
-          .reply(200, getGraphqlResponseFetchUsers);
-
-        const result = await users.fetch(fetchOptions);
-
-        expect(result).toEqual(fetchExpectation);
+        expect(squidexGraphqlClientMock.request).toBeCalledWith(
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: expectedFilter,
+          },
+        );
       });
     });
   });

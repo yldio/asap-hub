@@ -24,7 +24,7 @@ describe('Calendars controller', () => {
   const calendars = new Calendars(squidexGraphqlClient);
 
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const calendarsMockGraphlClient = new Calendars(squidexGraphqlClientMock);
+  const calendarsMockGraphqlClient = new Calendars(squidexGraphqlClientMock);
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
   const calendarsMockGraphqlServer = new Calendars(
@@ -53,7 +53,7 @@ describe('Calendars controller', () => {
           squidexGraphqlResponse,
         );
 
-        const result = await calendarsMockGraphlClient.fetch();
+        const result = await calendarsMockGraphqlClient.fetch();
 
         expect(result).toEqual({ total: 0, items: [] });
       });
@@ -65,7 +65,7 @@ describe('Calendars controller', () => {
           squidexGraphqlResponse,
         );
 
-        const result = await calendarsMockGraphlClient.fetch();
+        const result = await calendarsMockGraphqlClient.fetch();
 
         expect(result).toEqual({ total: 0, items: [] });
       });
@@ -77,7 +77,7 @@ describe('Calendars controller', () => {
           squidexGraphqlResponse,
         );
 
-        const result = await calendarsMockGraphlClient.fetch();
+        const result = await calendarsMockGraphqlClient.fetch();
 
         expect(result).toEqual({ total: 0, items: [] });
       });
@@ -87,7 +87,7 @@ describe('Calendars controller', () => {
           getSquidexCalendarsGraphqlResponse(),
         );
 
-        await calendarsMockGraphlClient.fetch();
+        await calendarsMockGraphqlClient.fetch();
 
         expect(squidexGraphqlClientMock.request).toBeCalledWith(
           expect.anything(),
@@ -108,7 +108,7 @@ describe('Calendars controller', () => {
           calendarResponse,
         );
 
-        const response = await calendarsMockGraphlClient.fetch();
+        const response = await calendarsMockGraphqlClient.fetch();
 
         expect(response.items[0]!.color).toBe('#333333');
       });
@@ -139,7 +139,7 @@ describe('Calendars controller', () => {
           squidexGraphqlResponse,
         );
 
-        const result = await calendarsMockGraphlClient.fetch();
+        const result = await calendarsMockGraphqlClient.fetch();
 
         const expectedCalendar1 = getCalendarResponse();
         expectedCalendar1.id = calendar1Active.flatData.googleCalendarId;
@@ -179,7 +179,7 @@ describe('Calendars controller', () => {
           squidexGraphqlResponse,
         );
 
-        const result = await calendarsMockGraphlClient.fetch();
+        const result = await calendarsMockGraphqlClient.fetch();
 
         expect(result).toEqual({
           total: 2,
@@ -208,7 +208,7 @@ describe('Calendars controller', () => {
           squidexGraphqlResponse,
         );
 
-        const result = await calendarsMockGraphlClient.fetch();
+        const result = await calendarsMockGraphqlClient.fetch();
 
         const expectedListCalendarResponse = getListCalendarResponse();
         expectedListCalendarResponse.items[0]!.id =

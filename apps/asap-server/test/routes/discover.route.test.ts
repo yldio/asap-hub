@@ -16,6 +16,7 @@ describe('/discover/ route', () => {
         aboutUs: '',
         training: [],
         members: [],
+        scientificAdvisoryBoard: [],
         pages: [],
       });
 
@@ -26,6 +27,7 @@ describe('/discover/ route', () => {
         aboutUs: '',
         training: [],
         members: [],
+        scientificAdvisoryBoard: [],
         pages: [],
       });
     });

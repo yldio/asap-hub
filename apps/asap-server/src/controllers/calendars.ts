@@ -66,11 +66,15 @@ export default class Calendars implements CalendarController {
     }
 
     const activeCalendars = calendars.filter(
-      (calendar) =>
-        calendar.referencingGroupsContents &&
-        calendar.referencingGroupsContents.findIndex(
+      (calendar) => {
+        if (!calendar?.referencingGroupsContents) {
+          return true;
+        }
+
+        return calendar.referencingGroupsContents.findIndex(
           (group) => group.flatData.active === true,
-        ) !== -1,
+        ) !== -1;
+      }
     );
 
     return {

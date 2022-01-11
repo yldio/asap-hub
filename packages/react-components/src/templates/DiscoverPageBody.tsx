@@ -59,8 +59,8 @@ const DiscoverPageBody: React.FC<DiscoverResponse> = ({
             id,
           }) => ({
             firstLine: displayName,
-            secondLine: jobTitle || '',
-            thirdLine: institution || '',
+            secondLine: jobTitle,
+            thirdLine: institution,
             avatarUrl,
             firstName,
             lastName,

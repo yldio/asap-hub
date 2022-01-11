@@ -3,7 +3,7 @@ import { createUserResponse, createListUserResponse } from '@asap-hub/fixtures';
 
 import MembersList from '../MembersList';
 
-it('renders name and role for each member', async () => {
+it('renders first, second and third line for each member', async () => {
   const { getAllByRole } = render(
     <MembersList
       members={[
@@ -11,7 +11,38 @@ it('renders name and role for each member', async () => {
           ...createListUserResponse(1).items[0],
           firstLine: 'Bat Man',
           secondLine: 'Boss',
-          thirdLine: [],
+          thirdLine: 'Multiple Teams',
+        },
+        {
+          ...createListUserResponse(2).items[1],
+          id: '1337',
+          firstLine: 'Some One',
+          secondLine: 'Apprentice',
+          thirdLine: 'Multiple Teams',
+        },
+      ]}
+    />,
+  );
+  const items = getAllByRole('listitem');
+  expect(items).toHaveLength(2);
+  const [batman, someone] = items;
+  expect(batman).toHaveTextContent('Bat Man');
+  expect(batman).toHaveTextContent('Boss');
+  expect(batman).toHaveTextContent('Multiple Teams');
+  expect(someone).toHaveTextContent('Some One');
+  expect(someone).toHaveTextContent('Apprentice');
+  expect(someone).toHaveTextContent('Multiple Teams');
+});
+
+it('only shows thirdLine  if the user has that data', async () => {
+  const { getAllByRole } = render(
+    <MembersList
+      members={[
+        {
+          ...createListUserResponse(1).items[0],
+          firstLine: 'Bat Man',
+          secondLine: 'Boss',
+          thirdLine: 'Manchester Lab and Glasgow Lab',
         },
         {
           ...createListUserResponse(2).items[1],
@@ -26,35 +57,10 @@ it('renders name and role for each member', async () => {
   const items = getAllByRole('listitem');
   expect(items).toHaveLength(2);
   const [batman, someone] = items;
-  expect(batman).toHaveTextContent('Bat Man');
-  expect(batman).toHaveTextContent('Boss');
-  expect(someone).toHaveTextContent('Some One');
-  expect(someone).toHaveTextContent('Apprentice');
+  expect(batman).toHaveTextContent('Manchester Lab and Glasgow Lab');
+  expect(someone).not.toHaveTextContent('Lab');
 });
-
-it('only show lab information if the user is on a lab', async () => {
-  const { queryAllByText } = render(
-    <MembersList
-      members={[
-        {
-          ...createListUserResponse(1).items[0],
-          firstLine: 'Bat Man',
-          secondLine: 'Boss',
-          thirdLine: 'Manchester Lab and Glasgow Lab ',
-        },
-        {
-          ...createListUserResponse(2).items[1],
-          id: '1337',
-          firstLine: 'Some One',
-          secondLine: 'Apprentice',
-          thirdLine: [],
-        },
-      ]}
-    />,
-  );
-  expect(queryAllByText('Manchester Lab and Glasgow Lab')).toHaveLength(1);
-});
-it('renders a team link for each team provided', async () => {
+it('renders a team link if a teamList is provided for thirdLine', async () => {
   const { getByText } = render(
     <MembersList
       members={[
@@ -67,10 +73,6 @@ it('renders a team link for each team provided', async () => {
               displayName: 'DC',
               id: 'dc',
             },
-            {
-              displayName: 'Arkham',
-              id: 'arkham',
-            },
           ],
         },
       ]}
@@ -80,8 +82,20 @@ it('renders a team link for each team provided', async () => {
     'href',
     expect.stringMatching(/dc$/),
   );
-  expect(getByText(/team.arkham/i).closest('a')).toHaveAttribute(
-    'href',
-    expect.stringMatching(/arkham$/),
+});
+
+it('accepts undefined value for first, second and third line', async () => {
+  const { getAllByRole } = render(
+    <MembersList
+      members={[
+        {
+          ...createListUserResponse(1).items[0],
+        },
+      ]}
+    />,
   );
+  const items = getAllByRole('listitem');
+  expect(items).toHaveLength(1);
+  const [user] = items;
+  expect(user).toHaveTextContent('AK');
 });

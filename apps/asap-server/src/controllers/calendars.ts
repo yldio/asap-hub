@@ -66,7 +66,10 @@ export default class Calendars implements CalendarController {
     }
 
     const activeCalendars = calendars.filter((calendar) => {
-      if (!calendar?.referencingGroupsContents || calendar.referencingGroupsContents.length === 0) {
+      if (
+        !calendar?.referencingGroupsContents ||
+        calendar.referencingGroupsContents.length === 0
+      ) {
         return true;
       }
 

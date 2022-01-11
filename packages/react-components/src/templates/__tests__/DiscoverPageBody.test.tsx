@@ -1,5 +1,9 @@
 import { ComponentProps } from 'react';
-import { createPageResponse, createNewsResponse } from '@asap-hub/fixtures';
+import {
+  createPageResponse,
+  createNewsResponse,
+  createUserResponse,
+} from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 
 import DiscoverPageBody from '../DiscoverPageBody';
@@ -9,6 +13,7 @@ const props: ComponentProps<typeof DiscoverPageBody> = {
   pages: [createPageResponse('1'), createPageResponse('2')],
   training: [],
   members: [],
+  scientificAdvisoryBoard: [],
 };
 
 it('renders grantee guidance page cards', () => {
@@ -61,4 +66,34 @@ it('renders training information', () => {
   expect(
     queryAllByRole('heading').map(({ textContent }) => textContent),
   ).toEqual(['Training', 'News 1 title', 'News 2 title']);
+});
+
+it('renders members information', () => {
+  const { queryAllByRole } = render(
+    <DiscoverPageBody
+      {...props}
+      pages={[]}
+      aboutUs={''}
+      members={[createUserResponse()]}
+    />,
+  );
+
+  expect(
+    queryAllByRole('heading').map(({ textContent }) => textContent),
+  ).toEqual(['Meet the team']);
+});
+
+it('renders scientific advisory board information', () => {
+  const { queryAllByRole } = render(
+    <DiscoverPageBody
+      {...props}
+      pages={[]}
+      aboutUs={''}
+      scientificAdvisoryBoard={[createUserResponse()]}
+    />,
+  );
+
+  expect(
+    queryAllByRole('heading').map(({ textContent }) => textContent),
+  ).toEqual(['Meet the Scientific Advisory Board']);
 });

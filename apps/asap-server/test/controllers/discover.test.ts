@@ -58,6 +58,7 @@ describe('Discover controller', () => {
           aboutUs: '',
           training: [],
           members: [],
+          scientificAdvisoryBoard: [],
           pages: [],
         };
         expect(result).toEqual(expectedResponse);
@@ -79,6 +80,7 @@ describe('Discover controller', () => {
           aboutUs: '',
           training: [],
           members: [],
+          scientificAdvisoryBoard: [],
           pages: [],
         };
         expect(result).toEqual(expectedResponse);

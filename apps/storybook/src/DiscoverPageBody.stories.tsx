@@ -6,6 +6,60 @@ export default {
   title: 'Templates / Discover / Page Body',
 };
 
+const members = [
+  {
+    id: '1',
+    displayName: 'Daniel Ramirez',
+    firstName: 'Daniel',
+    lastName: 'Ramirez',
+    role: 'Staff',
+  },
+  {
+    id: '2',
+    displayName: 'Peter Venkman',
+    firstName: 'Peter',
+    lastName: 'Venkman',
+    role: 'Staff',
+  },
+  {
+    id: '3',
+    displayName: 'Tess W. B. Goetz',
+    firstName: 'Tess',
+    lastName: 'Goetz',
+    role: 'Staff',
+  },
+  {
+    id: '4',
+    displayName: 'Robin Peploe',
+    firstName: 'Robin',
+    lastName: 'Peploe',
+    role: 'Staff',
+  },
+  {
+    id: '5',
+    displayName: 'Alice Lane',
+    firstName: 'Alice',
+    lastName: 'Lane',
+    role: 'Staff',
+  },
+  {
+    id: '6',
+    displayName: 'Philip Mars',
+    firstName: 'Philip',
+    lastName: 'Mars',
+    role: 'Staff',
+  },
+  {
+    id: '7',
+    displayName: 'Emmanuel Depay',
+    firstName: 'Emanuel',
+    lastName: 'Depay',
+    role: 'Staff',
+  },
+];
+
+const scientificAdvisoryBoard = members;
+
 const props = (): ComponentProps<typeof DiscoverPageBody> => ({
   pages: [
     {
@@ -39,57 +93,8 @@ const props = (): ComponentProps<typeof DiscoverPageBody> => ({
       thumbnail: 'https://picsum.photos/200',
     },
   ],
-  members: [
-    {
-      id: '1',
-      displayName: 'Daniel Ramirez',
-      firstName: 'Daniel',
-      lastName: 'Ramirez',
-      role: 'Staff',
-    },
-    {
-      id: '2',
-      displayName: 'Peter Venkman',
-      firstName: 'Peter',
-      lastName: 'Venkman',
-      role: 'Staff',
-    },
-    {
-      id: '3',
-      displayName: 'Tess W. B. Goetz',
-      firstName: 'Tess',
-      lastName: 'Goetz',
-      role: 'Staff',
-    },
-    {
-      id: '4',
-      displayName: 'Robin Peploe',
-      firstName: 'Robin',
-      lastName: 'Peploe',
-      role: 'Staff',
-    },
-    {
-      id: '5',
-      displayName: 'Alice Lane',
-      firstName: 'Alice',
-      lastName: 'Lane',
-      role: 'Staff',
-    },
-    {
-      id: '6',
-      displayName: 'Philip Mars',
-      firstName: 'Philip',
-      lastName: 'Mars',
-      role: 'Staff',
-    },
-    {
-      id: '7',
-      displayName: 'Emmanuel Depay',
-      firstName: 'Emanuel',
-      lastName: 'Depay',
-      role: 'Staff',
-    },
-  ],
+  members,
+  scientificAdvisoryBoard,
   aboutUs: text('About Us', ''),
 });
 

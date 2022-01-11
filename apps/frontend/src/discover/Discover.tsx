@@ -28,6 +28,11 @@ const Discover: FC<Record<string, never>> = () => {
         role: 'Staff',
         teams: [],
       })),
+      scientificAdvisoryBoard: data.scientificAdvisoryBoard.map((member) => ({
+        ...member,
+        role: 'Staff',
+        teams: [],
+      })),
     };
     return (
       <DiscoverPage>

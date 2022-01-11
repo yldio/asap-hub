@@ -652,7 +652,7 @@
           "fieldType": "String",
           "isUnique": false,
           "minLength": 0,
-          "maxLength": 200,
+          "maxLength": 250,
           "contentType": "Unspecified",
           "editor": "TextArea",
           "label": "Reach Out",

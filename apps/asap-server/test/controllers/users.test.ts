@@ -741,7 +741,7 @@ describe('Users controller', () => {
     });
   });
 
-  describe.skip('connectByCode', () => {
+  describe('connectByCode', () => {
     afterEach(() => {
       expect(nock.isDone()).toBe(true);
     });
@@ -859,7 +859,7 @@ describe('Users controller', () => {
     });
   });
 
-  describe.skip('syncOrcidProfile', () => {
+  describe('syncOrcidProfile', () => {
     afterEach(() => {
       expect(nock.isDone()).toBe(true);
     });

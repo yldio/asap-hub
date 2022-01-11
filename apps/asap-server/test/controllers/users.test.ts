@@ -440,7 +440,7 @@ describe('Users controller', () => {
     });
   });
 
-  describe.skip('update', () => {
+  describe('update', () => {
     afterEach(() => {
       expect(nock.isDone()).toBe(true);
     });
@@ -464,41 +464,30 @@ describe('Users controller', () => {
     });
 
     test('Should update job title through a clean-update', async () => {
+      const mockResponse = getSquidexUserGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
       nock(config.baseUrl)
         .patch(`/api/content/${config.appName}/users/${userId}`, {
           jobTitle: { iv: 'CEO' },
         })
-        .reply(200, fetchUserResponse)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: userId,
-          },
-        })
-        .reply(200, getGraphqlResponseFetchUser());
+        .reply(200, fetchUserResponse);
 
-      expect(await users.update(userId, { jobTitle: 'CEO' })).toEqual(
-        getUserResponse(),
-      );
+      expect(
+        await usersMockGraphqlClient.update(userId, { jobTitle: 'CEO' }),
+      ).toEqual(getUserResponse());
     });
 
     test('Should update the country and city through a clean-update', async () => {
+      const mockResponse = getSquidexUserGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
       nock(config.baseUrl)
         .patch(`/api/content/${config.appName}/users/${userId}`, {
           country: { iv: 'United Kingdom' },
           city: { iv: 'Brighton' },
         })
-        .reply(200, fetchUserResponse)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: userId,
-          },
-        })
-        .reply(200, getGraphqlResponseFetchUser());
-
+        .reply(200, fetchUserResponse);
       expect(
-        await users.update(userId, {
+        await usersMockGraphqlClient.update(userId, {
           country: 'United Kingdom',
           city: 'Brighton',
         }),
@@ -506,8 +495,9 @@ describe('Users controller', () => {
     });
 
     test('Should delete user fields', async () => {
-      const mockResponse = getGraphqlResponseFetchUser();
-      mockResponse.data.findUsersContent!.flatData.contactEmail = null;
+      const mockResponse = getSquidexUserGraphqlResponse();
+      mockResponse.findUsersContent!.flatData.contactEmail = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users/${userId}`)
@@ -516,27 +506,20 @@ describe('Users controller', () => {
           ...fetchUserResponse.data,
           contactEmail: { iv: null },
         } as { [k: string]: any })
-        .reply(200, fetchUserResponse) // this response is ignored
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: userId,
-          },
-        })
-        .reply(200, mockResponse);
+        .reply(200, fetchUserResponse); // this response is ignored
 
-      const result = await users.update(userId, {
+      const result = await usersMockGraphqlClient.update(userId, {
         contactEmail: '',
       });
       expect(result.contactEmail).not.toBeDefined();
     });
 
     test('Should update social and questions', async () => {
-      const mockResponse = getGraphqlResponseFetchUser();
-      mockResponse.data.findUsersContent!.flatData.questions = [
+      const mockResponse = getSquidexUserGraphqlResponse();
+      mockResponse.findUsersContent!.flatData.questions = [
         { question: 'To be or not to be?' },
       ];
-      mockResponse.data.findUsersContent!.flatData.social = [
+      mockResponse.findUsersContent!.flatData.social = [
         {
           github: 'johnytiago',
           googleScholar: null,
@@ -548,22 +531,16 @@ describe('Users controller', () => {
           website2: null,
         },
       ];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       nock(config.baseUrl)
         .patch(`/api/content/${config.appName}/users/${userId}`, {
           questions: { iv: [{ question: 'To be or not to be?' }] },
           social: { iv: [{ github: 'johnytiago' }] },
         } as { [k: string]: any })
-        .reply(200, fetchUserResponse)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: userId,
-          },
-        })
-        .reply(200, mockResponse);
+        .reply(200, fetchUserResponse);
 
-      const result = await users.update(userId, {
+      const result = await usersMockGraphqlClient.update(userId, {
         questions: ['To be or not to be?'],
         social: {
           github: 'johnytiago',
@@ -615,8 +592,8 @@ describe('Users controller', () => {
     });
 
     test('Should update and delete user team properties', async () => {
-      const mockResponse = getGraphqlResponseFetchUser();
-      mockResponse.data.findUsersContent!.flatData.teams = [
+      const mockResponse = getSquidexUserGraphqlResponse();
+      mockResponse.findUsersContent!.flatData.teams = [
         {
           role: 'Lead PI (Core Leadership)',
           mainResearchInterests: null,
@@ -646,6 +623,7 @@ describe('Users controller', () => {
           ],
         },
       ];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users/${userId}`)
@@ -669,16 +647,9 @@ describe('Users controller', () => {
             ],
           },
         } as { [k: string]: any })
-        .reply(200, fetchUserResponse) // this response is ignored
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: userId,
-          },
-        })
-        .reply(200, mockResponse);
+        .reply(200, fetchUserResponse); // this response is ignored
 
-      const result = await users.update(userId, {
+      const result = await usersMockGraphqlClient.update(userId, {
         teams: [
           {
             id: 'team-id-1',

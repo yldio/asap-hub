@@ -683,7 +683,7 @@ describe('Users controller', () => {
     });
   });
 
-  describe.skip('updateAvatar', () => {
+  describe('updateAvatar', () => {
     afterEach(() => {
       expect(nock.isDone()).toBe(true);
     });
@@ -717,22 +717,17 @@ describe('Users controller', () => {
     });
 
     test('should return 200 when syncs asset and updates users profile', async () => {
+      const mockResponse = getSquidexUserGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
       nock(config.baseUrl)
         .post(`/api/apps/${config.appName}/assets`)
         .reply(200, { id: 'squidex-asset-id' })
         .patch(`/api/content/${config.appName}/users/user-id`, {
           avatar: { iv: ['squidex-asset-id'] },
         })
-        .reply(200, patchResponse)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: 'user-id',
-          },
-        })
-        .reply(200, getGraphqlResponseFetchUser());
+        .reply(200, patchResponse);
 
-      const result = await users.updateAvatar(
+      const result = await usersMockGraphqlClient.updateAvatar(
         'user-id',
         Buffer.from('avatar'),
         'image/jpeg',

@@ -11,6 +11,7 @@ import {
   fetchUserResponse,
   getGraphqlResponseFetchUser,
   getListUserResponse,
+  getSquidexUserGraphqlResponse,
   getSquidexUsersGraphqlResponse,
   getUserResponse,
   patchResponse,
@@ -193,7 +194,7 @@ describe('Users controller', () => {
     });
   });
 
-  describe.skip('FetchById', () => {
+  describe('FetchById', () => {
     describe('with mock-server', () => {
       test('Should fetch the users from squidex graphql', async () => {
         const result = await usersMockGraphql.fetchById('user-id');
@@ -203,87 +204,53 @@ describe('Users controller', () => {
     });
 
     describe('with intercepted http layer', () => {
-      afterEach(() => {
-        expect(nock.isDone()).toBe(true);
-      });
-
-      afterEach(() => {
-        nock.cleanAll();
-      });
-
       test('Should throw when user is not found', async () => {
-        const mockResponse = getGraphqlResponseFetchUser();
-        mockResponse.data.findUsersContent = null;
+        const mockResponse = getSquidexUserGraphqlResponse();
+        mockResponse.findUsersContent = null;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_USER),
-            variables: {
-              id: 'not-found',
-            },
-          })
-          .reply(200, mockResponse);
-
-        await expect(users.fetchById('not-found')).rejects.toThrow('Not Found');
+        await expect(
+          usersMockGraphqlClient.fetchById('not-found'),
+        ).rejects.toThrow('Not Found');
       });
 
       test('Should return the user when they are found, even if they are not onboarded', async () => {
-        const nonOnboardedUserResponse = getGraphqlResponseFetchUser();
-        nonOnboardedUserResponse.data.findUsersContent!.flatData.onboarded =
-          false;
+        const nonOnboardedUserResponse = getSquidexUserGraphqlResponse();
+        nonOnboardedUserResponse.findUsersContent!.flatData.onboarded = false;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          nonOnboardedUserResponse,
+        );
 
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_USER),
-            variables: {
-              id: 'user-id',
-            },
-          })
-          .reply(200, nonOnboardedUserResponse);
-
-        const result = await users.fetchById('user-id');
+        const result = await usersMockGraphqlClient.fetchById('user-id');
 
         expect(result.id).toEqual(
-          nonOnboardedUserResponse.data.findUsersContent!.id,
+          nonOnboardedUserResponse.findUsersContent!.id,
         );
       });
 
       test('Should return the user when it finds it', async () => {
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_USER),
-            variables: {
-              id: 'user-id',
-            },
-          })
-          .reply(200, getGraphqlResponseFetchUser());
+        const mockResponse = getSquidexUserGraphqlResponse();
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-        const result = await users.fetchById('user-id');
+        const result = await usersMockGraphqlClient.fetchById('user-id');
         expect(result).toEqual(getUserResponse());
       });
 
       test('Should filter out a team when the team role is invalid', async () => {
-        const mockResponse = getGraphqlResponseFetchUser();
-        mockResponse.data.findUsersContent!.flatData.teams![0]!.role =
+        const mockResponse = getSquidexUserGraphqlResponse();
+        mockResponse.findUsersContent!.flatData.teams![0]!.role =
           'invalid role';
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
         const expectedResponse = getUserResponse();
         expectedResponse.teams = [];
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_USER),
-            variables: {
-              id: 'user-id',
-            },
-          })
-          .reply(200, mockResponse);
 
-        const result = await users.fetchById('user-id');
+        const result = await usersMockGraphqlClient.fetchById('user-id');
         expect(result).toEqual(expectedResponse);
       });
 
       test('Should skip the user lab if it does not have a name', async () => {
-        const mockResponse = getGraphqlResponseFetchUser();
-        mockResponse.data.findUsersContent!.flatData.labs = [
+        const mockResponse = getSquidexUserGraphqlResponse();
+        mockResponse.findUsersContent!.flatData.labs = [
           {
             id: 'lab1',
             flatData: {
@@ -303,16 +270,9 @@ describe('Users controller', () => {
             },
           },
         ];
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_USER),
-            variables: {
-              id: 'user-id',
-            },
-          })
-          .reply(200, mockResponse);
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-        const result = await users.fetchById('user-id');
+        const result = await usersMockGraphqlClient.fetchById('user-id');
 
         expect(result.labs).toEqual([
           {
@@ -327,8 +287,8 @@ describe('Users controller', () => {
       });
 
       test('Should skip the user orcid work if it does not have an ID or a lastModifiedDate', async () => {
-        const mockResponse = getGraphqlResponseFetchUser();
-        mockResponse.data.findUsersContent!.flatData.orcidWorks = [
+        const mockResponse = getSquidexUserGraphqlResponse();
+        mockResponse.findUsersContent!.flatData.orcidWorks = [
           {
             id: 'id1',
             doi: 'doi1',
@@ -362,17 +322,9 @@ describe('Users controller', () => {
             type: 'ANNOTATION',
           },
         ];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_USER),
-            variables: {
-              id: 'user-id',
-            },
-          })
-          .reply(200, mockResponse);
-
-        const result = await users.fetchById('user-id');
+        const result = await usersMockGraphqlClient.fetchById('user-id');
 
         expect(result.orcidWorks).toMatchObject([
           {
@@ -385,8 +337,8 @@ describe('Users controller', () => {
       });
 
       test('Should default the user orcid work type to UNDEFINED if it is not present or invalid', async () => {
-        const mockResponse = getGraphqlResponseFetchUser();
-        mockResponse.data.findUsersContent!.flatData.orcidWorks = [
+        const mockResponse = getSquidexUserGraphqlResponse();
+        mockResponse.findUsersContent!.flatData.orcidWorks = [
           {
             id: 'id1',
             doi: 'doi1',
@@ -404,17 +356,9 @@ describe('Users controller', () => {
             type: 'invalid',
           },
         ];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_USER),
-            variables: {
-              id: 'user-id',
-            },
-          })
-          .reply(200, mockResponse);
-
-        const result = await users.fetchById('user-id');
+        const result = await usersMockGraphqlClient.fetchById('user-id');
 
         expect(result.orcidWorks).toMatchObject([
           {
@@ -429,20 +373,14 @@ describe('Users controller', () => {
       });
 
       test('Should default onboarded flag to true when its null', async () => {
-        const userWithNoOnboardedFlagResponse = getGraphqlResponseFetchUser();
-        userWithNoOnboardedFlagResponse.data.findUsersContent!.flatData!.onboarded =
+        const userWithNoOnboardedFlagResponse = getSquidexUserGraphqlResponse();
+        userWithNoOnboardedFlagResponse.findUsersContent!.flatData!.onboarded =
           null;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          userWithNoOnboardedFlagResponse,
+        );
 
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_USER),
-            variables: {
-              id: 'user-id',
-            },
-          })
-          .reply(200, userWithNoOnboardedFlagResponse);
-
-        const result = await users.fetchById('user-id');
+        const result = await usersMockGraphqlClient.fetchById('user-id');
 
         expect(result.onboarded).toEqual(true);
       });

@@ -14,6 +14,11 @@ export const getSquidexUsersGraphqlResponse = (
     total,
   },
 });
+export const getSquidexUserGraphqlResponse = (
+  { total = 1 } = { total: 1 },
+): FetchUserQuery => ({
+  findUsersContent: getGraphQLUser(),
+});
 
 //TODO: Remove
 export const getGraphqlResponseFetchUsers = (): {
@@ -171,6 +176,7 @@ export const getGraphQLUser = (
   },
 });
 
+//TODO: Remove
 export const getGraphqlResponseFetchUser = (): { data: FetchUserQuery } => ({
   data: {
     findUsersContent: getGraphQLUser(),

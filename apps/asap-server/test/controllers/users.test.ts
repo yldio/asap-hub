@@ -18,13 +18,11 @@ import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-clie
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
 describe('Users controller', () => {
-  const squidexGraphqlClient = new SquidexGraphql();
-  const users = new Users(squidexGraphqlClient);
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
   const usersMockGraphqlClient = new Users(squidexGraphqlClientMock);
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-  const usersMockGraphql = new Users(squidexGraphqlClientMockServer);
+  const usersMockGraphqlServer = new Users(squidexGraphqlClientMockServer);
 
   beforeAll(() => {
     identity();
@@ -33,7 +31,7 @@ describe('Users controller', () => {
   describe('Fetch', () => {
     describe('with mock-server', () => {
       test('Should fetch the users from squidex graphql', async () => {
-        const result = await usersMockGraphql.fetch({});
+        const result = await usersMockGraphqlServer.fetch({});
 
         expect(result).toMatchObject(getListUserResponse());
       });
@@ -195,7 +193,7 @@ describe('Users controller', () => {
   describe('FetchById', () => {
     describe('with mock-server', () => {
       test('Should fetch the users from squidex graphql', async () => {
-        const result = await usersMockGraphql.fetchById('user-id');
+        const result = await usersMockGraphqlServer.fetchById('user-id');
 
         expect(result).toMatchObject(getUserResponse());
       });
@@ -390,7 +388,7 @@ describe('Users controller', () => {
 
     describe('with mock-server', () => {
       test('Should fetch the user by code from squidex graphql', async () => {
-        const result = await usersMockGraphql.fetchByCode(code);
+        const result = await usersMockGraphqlServer.fetchByCode(code);
 
         expect(result).toMatchObject(getUserResponse());
       });
@@ -456,9 +454,9 @@ describe('Users controller', () => {
         })
         .reply(404);
 
-      await expect(users.update(userId, { jobTitle: 'CEO' })).rejects.toThrow(
-        'Not Found',
-      );
+      await expect(
+        usersMockGraphqlClient.update(userId, { jobTitle: 'CEO' }),
+      ).rejects.toThrow('Not Found');
     });
 
     test('Should update job title through a clean-update', async () => {
@@ -690,7 +688,11 @@ describe('Users controller', () => {
         .reply(500);
 
       await expect(
-        users.updateAvatar('user-id', Buffer.from('avatar'), 'image/jpeg'),
+        usersMockGraphqlClient.updateAvatar(
+          'user-id',
+          Buffer.from('avatar'),
+          'image/jpeg',
+        ),
       ).rejects.toThrow();
     });
 
@@ -704,7 +706,11 @@ describe('Users controller', () => {
         .reply(500);
 
       await expect(
-        users.updateAvatar('user-id', Buffer.from('avatar'), 'image/jpeg'),
+        usersMockGraphqlClient.updateAvatar(
+          'user-id',
+          Buffer.from('avatar'),
+          'image/jpeg',
+        ),
       ).rejects.toThrow();
     });
 
@@ -747,7 +753,7 @@ describe('Users controller', () => {
         .reply(404);
 
       await expect(
-        users.connectByCode('invalid-code', 'user-id'),
+        usersMockGraphqlClient.connectByCode('invalid-code', 'user-id'),
       ).rejects.toThrow('Forbidden');
     });
 
@@ -764,7 +770,10 @@ describe('Users controller', () => {
         })
         .reply(200, { total: 1, items: [connectedUser] });
 
-      const result = await users.connectByCode('asapWelcomeCode', userId);
+      const result = await usersMockGraphqlClient.connectByCode(
+        'asapWelcomeCode',
+        userId,
+      );
       expect(result).toBeDefined();
     });
 
@@ -782,7 +791,10 @@ describe('Users controller', () => {
         })
         .reply(200, { total: 1, items: [connectedUser] });
 
-      const result = await users.connectByCode('asapWelcomeCode', userId);
+      const result = await usersMockGraphqlClient.connectByCode(
+        'asapWelcomeCode',
+        userId,
+      );
       expect(result).toBeDefined();
     });
 
@@ -810,7 +822,10 @@ describe('Users controller', () => {
           $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
         })
         .reply(200, { total: 1, items: [connectedUser] });
-      const result = await users.connectByCode('asapWelcomeCode', userId);
+      const result = await usersMockGraphqlClient.connectByCode(
+        'asapWelcomeCode',
+        userId,
+      );
       expect(result).toBeDefined();
       expect(result.teams).toEqual([
         {
@@ -841,7 +856,10 @@ describe('Users controller', () => {
         })
         .reply(200, patchedUser);
 
-      const result = await users.connectByCode('asapWelcomeCode', userId);
+      const result = await usersMockGraphqlClient.connectByCode(
+        'asapWelcomeCode',
+        userId,
+      );
       expect(result).toBeDefined();
     });
   });
@@ -863,9 +881,9 @@ describe('Users controller', () => {
         .get(`/api/content/${config.appName}/users/user-not-found`)
         .reply(404);
 
-      await expect(users.syncOrcidProfile('user-not-found')).rejects.toThrow(
-        'Not Found',
-      );
+      await expect(
+        usersMockGraphqlClient.syncOrcidProfile('user-not-found'),
+      ).rejects.toThrow('Not Found');
     });
 
     test('Should update user profile even when ORCID returns 500', async () => {
@@ -881,7 +899,7 @@ describe('Users controller', () => {
         .times(3)
         .reply(502);
 
-      const result = await users.syncOrcidProfile(userId);
+      const result = await usersMockGraphqlClient.syncOrcidProfile(userId);
       expect(result).toBeDefined(); // we only care that the update is made
     });
 
@@ -905,7 +923,7 @@ describe('Users controller', () => {
         .get(`/v2.1/${orcid}/works`)
         .reply(200, orcidFixtures.orcidWorksResponse);
 
-      const result = await users.syncOrcidProfile(userId);
+      const result = await usersMockGraphqlClient.syncOrcidProfile(userId);
       expect(result).toBeDefined(); // we only care that the update is made
     });
 
@@ -927,7 +945,10 @@ describe('Users controller', () => {
         .get(`/v2.1/${orcid}/works`)
         .reply(200, orcidFixtures.orcidWorksResponse);
 
-      const result = await users.syncOrcidProfile(userId, fetchUserResponse);
+      const result = await usersMockGraphqlClient.syncOrcidProfile(
+        userId,
+        fetchUserResponse,
+      );
       expect(result).toBeDefined(); // we only care that the update is made
     });
   });

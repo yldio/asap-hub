@@ -65,17 +65,17 @@ export default class Calendars implements CalendarController {
       };
     }
 
-    const activeCalendars = calendars.filter(
-      (calendar) => {
-        if (!calendar?.referencingGroupsContents) {
-          return true;
-        }
-
-        return calendar.referencingGroupsContents.findIndex(
-          (group) => group.flatData.active === true,
-        ) !== -1;
+    const activeCalendars = calendars.filter((calendar) => {
+      if (!calendar?.referencingGroupsContents || calendar.referencingGroupsContents.length === 0) {
+        return true;
       }
-    );
+
+      return (
+        calendar.referencingGroupsContents.findIndex(
+          (group) => group.flatData.active === true,
+        ) !== -1
+      );
+    });
 
     return {
       total: activeCalendars.length,

@@ -1780,6 +1780,7 @@ export type DiscoverDataDto = {
   aboutUs: Maybe<DiscoverDataAboutUsDto>;
   members: Maybe<DiscoverDataMembersDto>;
   pages: Maybe<DiscoverDataPagesDto>;
+  scientificAdvisoryBoard: Maybe<DiscoverDataScientificAdvisoryBoardDto>;
   training: Maybe<DiscoverDataTrainingDto>;
 };
 
@@ -1788,15 +1789,16 @@ export type DiscoverDataInputDto = {
   aboutUs: Maybe<DiscoverDataAboutUsInputDto>;
   members: Maybe<DiscoverDataMembersInputDto>;
   pages: Maybe<DiscoverDataPagesInputDto>;
+  scientificAdvisoryBoard: Maybe<DiscoverDataScientificAdvisoryBoardInputDto>;
   training: Maybe<DiscoverDataTrainingInputDto>;
 };
 
-/** The structure of the Members field of the Discover ASAP content type. */
+/** The structure of the ASAP Team field of the Discover ASAP content type. */
 export type DiscoverDataMembersDto = {
   iv: Maybe<Array<Users>>;
 };
 
-/** The structure of the Members field of the Discover ASAP content input type. */
+/** The structure of the ASAP Team field of the Discover ASAP content input type. */
 export type DiscoverDataMembersInputDto = {
   iv: Maybe<Array<Scalars['String']>>;
 };
@@ -1808,6 +1810,16 @@ export type DiscoverDataPagesDto = {
 
 /** The structure of the Grantee Guidance field of the Discover ASAP content input type. */
 export type DiscoverDataPagesInputDto = {
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Scientific Advisory Board field of the Discover ASAP content type. */
+export type DiscoverDataScientificAdvisoryBoardDto = {
+  iv: Maybe<Array<Users>>;
+};
+
+/** The structure of the Scientific Advisory Board field of the Discover ASAP content input type. */
+export type DiscoverDataScientificAdvisoryBoardInputDto = {
   iv: Maybe<Array<Scalars['String']>>;
 };
 
@@ -1826,6 +1838,7 @@ export type DiscoverFlatDataDto = {
   aboutUs: Maybe<Scalars['String']>;
   members: Maybe<Array<Users>>;
   pages: Maybe<Array<Pages>>;
+  scientificAdvisoryBoard: Maybe<Array<Users>>;
   training: Maybe<Array<NewsAndEvents>>;
 };
 

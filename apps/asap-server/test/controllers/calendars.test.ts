@@ -153,13 +153,21 @@ describe('Calendars controller', () => {
         });
       });
 
-      test('Should skip the calendars which do not belong to any group', async () => {
+      test('Should show the calendars which do not belong to any group', async () => {
         const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
 
         const calendar1 = getSquidexGraphqlCalendar();
+        calendar1.flatData.googleCalendarId = 'calendar1@google.com';
         calendar1.referencingGroupsContents = null;
         const calendar2 = getSquidexGraphqlCalendar();
+        calendar2.flatData.googleCalendarId = 'calendar1@google.com';
         calendar2.referencingGroupsContents = [];
+
+        const expectedCalendar1 = getCalendarResponse();
+        expectedCalendar1.id = calendar1.flatData.googleCalendarId;
+
+        const expectedCalendar2 = getCalendarResponse();
+        expectedCalendar2.id = calendar2.flatData.googleCalendarId;
 
         squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [
           calendar1,
@@ -174,8 +182,8 @@ describe('Calendars controller', () => {
         const result = await calendarsMockGraphlClient.fetch();
 
         expect(result).toEqual({
-          total: 0,
-          items: [],
+          total: 2,
+          items: [expectedCalendar1, expectedCalendar2],
         });
       });
 

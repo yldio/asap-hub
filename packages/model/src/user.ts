@@ -158,7 +158,7 @@ export interface UserPatchRequest {
   reachOut?: string;
   researchInterests?: string;
   questions?: string[];
-  teams?: Pick<UserTeam, 'id'>[];
+  teams?: Pick<UserTeam, 'id' | 'mainResearchInterests' | 'responsibilities'>[];
   social?: Omit<UserSocialLinks, 'orcid'>;
   onboarded?: boolean;
 }

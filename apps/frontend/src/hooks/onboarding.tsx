@@ -30,6 +30,8 @@ const fieldToStep: Record<
   questions: 'Questions',
   expertiseAndResourceTags: 'Expertise',
   teams: 'Role',
+  researchInterests: 'Role',
+  responsibilities: 'Role',
 };
 
 const steps = (

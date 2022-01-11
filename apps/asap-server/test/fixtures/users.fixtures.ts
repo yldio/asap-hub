@@ -176,13 +176,6 @@ export const getGraphQLUser = (
   },
 });
 
-//TODO: Remove
-export const getGraphqlResponseFetchUser = (): { data: FetchUserQuery } => ({
-  data: {
-    findUsersContent: getGraphQLUser(),
-  },
-});
-
 export const patchResponse: RestUser = {
   id: 'userId',
   data: {

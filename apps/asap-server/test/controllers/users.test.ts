@@ -4,12 +4,10 @@ import matches from 'lodash.matches';
 import nock, { DataMatcherMap } from 'nock';
 import Users from '../../src/controllers/users';
 import { identity } from '../helpers/squidex';
-import { FETCH_USER } from '../../src/queries/users.queries';
 import { FetchOptions } from '../../src/utils/types';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import {
   fetchUserResponse,
-  getGraphqlResponseFetchUser,
   getListUserResponse,
   getSquidexUserGraphqlResponse,
   getSquidexUsersGraphqlResponse,
@@ -554,11 +552,12 @@ describe('Users controller', () => {
     });
 
     test('Should update Research Interests and Responsibility', async () => {
-      const mockResponse = getGraphqlResponseFetchUser();
-      mockResponse.data.findUsersContent!.flatData.researchInterests =
+      const mockResponse = getSquidexUserGraphqlResponse();
+      mockResponse.findUsersContent!.flatData.researchInterests =
         'new research interests';
-      mockResponse.data.findUsersContent!.flatData.responsibilities =
+      mockResponse.findUsersContent!.flatData.responsibilities =
         'new responsibilities';
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       const expectedPatchRequest: Partial<RestUser['data']> = {
         researchInterests: {
@@ -574,16 +573,9 @@ describe('Users controller', () => {
           `/api/content/${config.appName}/users/${userId}`,
           expectedPatchRequest as DataMatcherMap,
         )
-        .reply(200, fetchUserResponse)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_USER),
-          variables: {
-            id: userId,
-          },
-        })
-        .reply(200, mockResponse);
+        .reply(200, fetchUserResponse);
 
-      const result = await users.update(userId, {
+      const result = await usersMockGraphqlClient.update(userId, {
         researchInterests: 'new research interests',
         responsibilities: 'new responsibilities',
       });

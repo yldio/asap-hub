@@ -37,6 +37,7 @@ export const userUpdateSchema = Joi.object({
   expertiseAndResourceDescription: Joi.string().allow(''),
   researchInterests: Joi.string().allow(''),
   responsibilities: Joi.string().allow(''),
+  reachOut: Joi.string().allow('').max(250),
   questions: Joi.array().items(Joi.string()),
   teams: Joi.array().items(
     Joi.object({

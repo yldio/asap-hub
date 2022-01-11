@@ -61,6 +61,9 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
                 onSave={patchUser}
                 researchInterests={user.researchInterests}
                 responsibilities={user.responsibilities}
+                role={user.role}
+                reachOut={user.reachOut}
+                firstName={user.firstName}
               />
             </Frame>
           </Route>

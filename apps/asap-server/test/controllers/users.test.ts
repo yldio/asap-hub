@@ -13,14 +13,18 @@ import {
   getGraphqlResponseFetchUser,
   getGraphqlResponseFetchUsers,
   getListUserResponse,
+  getSquidexUsersGraphqlResponse,
   getUserResponse,
   patchResponse,
 } from '../fixtures/users.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
+import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
 describe('Users controller', () => {
-  const squidexGraphqlClientMock = new SquidexGraphql();
-  const users = new Users(squidexGraphqlClientMock);
+  const squidexGraphqlClient = new SquidexGraphql();
+  const users = new Users(squidexGraphqlClient);
+  const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
+  const usersMockGraphlClient = new Users(squidexGraphqlClientMock);
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
   const usersMockGraphql = new Users(squidexGraphqlClientMockServer);
@@ -48,25 +52,33 @@ describe('Users controller', () => {
       });
 
       test('Should return an empty result', async () => {
+        const mockResponse = getSquidexUsersGraphqlResponse();
+        mockResponse.queryUsersContentsWithTotal!.items = [];
+        mockResponse.queryUsersContentsWithTotal!.total = 0;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await usersMockGraphlClient.fetch({});
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test('Should return an empty result when the client returns a response with query property set to null', async () => {
         const mockResponse = getGraphqlResponseFetchUsers();
-        mockResponse.data.queryUsersContentsWithTotal!.items = [];
-        mockResponse.data.queryUsersContentsWithTotal!.total = 0;
+        mockResponse.data.queryUsersContentsWithTotal = null;
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
             query: print(FETCH_USERS),
             variables: {
-              filter: "data/onboarded/iv eq true and data/role/iv ne 'Hidden'",
               top: 8,
               skip: 0,
+              filter: "data/onboarded/iv eq true and data/role/iv ne 'Hidden'",
             },
           })
           .reply(200, mockResponse);
 
         const result = await users.fetch({});
-        expect(result).toEqual({ items: [], total: 0 });
+        expect(result).toEqual({ total: 0, items: [] });
       });
-
       test('Should return an empty result when the client returns a response with query property set to null', async () => {
         const mockResponse = getGraphqlResponseFetchUsers();
         mockResponse.data.queryUsersContentsWithTotal = null;

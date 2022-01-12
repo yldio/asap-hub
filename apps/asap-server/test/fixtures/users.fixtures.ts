@@ -10,7 +10,9 @@ export const getSquidexUsersGraphqlResponse = (
   { total = 1 } = { total: 1 },
 ): FetchUsersQuery => ({
   queryUsersContentsWithTotal: {
-    items: Array(total).fill(getGraphQLUser()),
+    items: [...Array(total)].fill(getGraphQLUser()).map((_, index) => ({
+      ...getGraphQLUser(`user-id-${index + 1}`),
+    })),
     total,
   },
 });

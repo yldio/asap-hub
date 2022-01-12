@@ -1,5 +1,4 @@
-import { config, RestUser, SquidexGraphql } from '@asap-hub/squidex';
-import { print } from 'graphql';
+import { config, RestUser } from '@asap-hub/squidex';
 import matches from 'lodash.matches';
 import nock, { DataMatcherMap } from 'nock';
 import Users from '../../src/controllers/users';

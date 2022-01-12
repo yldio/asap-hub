@@ -162,6 +162,10 @@ export const getSquidexCalendarsGraphqlResponse = (): FetchCalendarsQuery => ({
   },
 });
 
+export const getSquidexCalendarGraphqlResponse = (): FetchCalendarQuery => ({
+  findCalendarsContent: getSquidexGraphqlCalendar(),
+});
+
 const squidexGraphqlCalendarsFlatData = () => ({
   googleCalendarId: '3@group.calendar.google.com',
   color: '#2952A3',

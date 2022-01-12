@@ -31,7 +31,7 @@ export const getSquidexResearchOutputGraphqlResponseAuthors = (): NonNullable<
     FetchResearchOutputQuery['findResearchOutputsContent']
   >['flatData']['authors']
 > =>
-  getGraphqlResponseFetchUsers().data.queryUsersContentsWithTotal!.items!.map(
+  getGraphqlResponseFetchUsers().queryUsersContentsWithTotal!.items!.map(
     (item) => ({
       __typename: 'Users',
       ...item,

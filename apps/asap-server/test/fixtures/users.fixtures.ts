@@ -8,33 +8,27 @@ import {
 
 export const getSquidexUsersGraphqlResponse = (
   { total = 1 } = { total: 1 },
-): FetchUsersQuery => ({
-  queryUsersContentsWithTotal: {
-    items: [...Array(total)].fill(getGraphQLUser()).map((_, index) => ({
-      ...getGraphQLUser({ id: `user-id-${index + 1}` }),
-    })),
-    total,
-  },
-});
+): FetchUsersQuery =>
+  generateGraphqlFetchUsersResponse(
+    [...Array(total)]
+      .fill(getGraphQLUser())
+      .map((_, index) => getGraphQLUser({ id: `user-id-${index + 1}` })),
+  );
 export const getSquidexUserGraphqlResponse = (): FetchUserQuery => ({
   findUsersContent: getGraphQLUser(),
 });
 
-const generateGraphqlResponseFetchUsers = (
+const generateGraphqlFetchUsersResponse = (
   items: NonNullable<FetchUserQuery['findUsersContent']>[],
-): { data: FetchUsersQuery } => ({
-  data: {
-    queryUsersContentsWithTotal: {
-      total: items.length,
-      items,
-    },
+): FetchUsersQuery => ({
+  queryUsersContentsWithTotal: {
+    total: items.length,
+    items,
   },
 });
 
-export const getGraphqlResponseFetchUsers = (): {
-  data: FetchUsersQuery;
-} =>
-  generateGraphqlResponseFetchUsers([
+export const getGraphqlResponseFetchUsers = (): FetchUsersQuery =>
+  generateGraphqlFetchUsersResponse([
     getGraphQLUser(),
     getGraphQLUser({
       id: 'user-id-2',
@@ -151,8 +145,8 @@ export type GraphQLUserTeamFlatData = NonNullable<
   FetchUserQuery['findUsersContent']
 >['flatData'];
 type GraphQLUserTeam = NonNullable<GraphQLUserTeamFlatData['teams']>[0];
-
 type GraphQLUserTeamId = NonNullable<GraphQLUserTeam['id']>[0];
+
 export const getGraphQLUserTeam = (
   team: Partial<GraphQLUserTeam> = {},
 ): GraphQLUserTeam => ({

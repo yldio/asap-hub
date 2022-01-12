@@ -11,109 +11,92 @@ export const getSquidexUsersGraphqlResponse = (
 ): FetchUsersQuery => ({
   queryUsersContentsWithTotal: {
     items: [...Array(total)].fill(getGraphQLUser()).map((_, index) => ({
-      ...getGraphQLUser(`user-id-${index + 1}`),
+      ...getGraphQLUser({ id: `user-id-${index + 1}` }),
     })),
     total,
   },
 });
-export const getSquidexUserGraphqlResponse = (
-  { total = 1 } = { total: 1 },
-): FetchUserQuery => ({
+export const getSquidexUserGraphqlResponse = (): FetchUserQuery => ({
   findUsersContent: getGraphQLUser(),
 });
 
-//TODO: Remove
-export const getGraphqlResponseFetchUsers = (): {
-  data: FetchUsersQuery;
-} => ({
+const generateGraphqlResponseFetchUsers = (
+  items: NonNullable<FetchUserQuery['findUsersContent']>[],
+): { data: FetchUsersQuery } => ({
   data: {
     queryUsersContentsWithTotal: {
-      total: 2,
-      items: [
-        getGraphQLUser(),
-        {
-          id: 'user-id-2',
-          created: '2020-09-23T20:45:22Z',
-          lastModified: '2020-10-26T15:33:18Z',
-          version: 42,
-          flatData: {
-            biography: 'some biography',
-            institution: 'some institution',
-            jobTitle: 'some job title',
-            onboarded: true,
-            orcidLastModifiedDate: null,
-            orcidLastSyncDate: null,
-            orcidWorks: [
-              {
-                doi: 'test-doi',
-                id: '987-654-321',
-                lastModifiedDate: '2020-10-26T15:33:18Z',
-                publicationDate: {},
-                type: 'BOOK',
-                title: 'orcid work title 2',
-              },
-            ],
-            reachOut: 'some reach out',
-            responsibilities: 'some responsibilities',
-            researchInterests: 'some research interests',
-            city: 'some city',
-            country: 'some country',
-            contactEmail: 'some@contact.email',
-            degree: 'some degree',
-            orcid: 'orcid',
-            avatar: null,
-            email: 'iwillbeback@arnold.com',
-            firstName: 'Arnold',
-            lastModifiedDate: null,
-            lastName: 'Schwatzneger',
-            questions: [],
-            expertiseAndResourceTags: [],
-            expertiseAndResourceDescription: 'Amazing person',
-            social: [
-              {
-                github: 'awesome',
-                googleScholar: null,
-                linkedIn: null,
-                researcherId: null,
-                researchGate: null,
-                twitter: null,
-                website1: null,
-                website2: null,
-              },
-            ],
-            teams: [
-              {
-                role: 'Project Manager',
-                mainResearchInterests: 'cover',
-                responsibilities: 'increase coverage',
-                id: [
-                  {
-                    id: 'team-id-2',
-                    flatData: {
-                      displayName: 'Team B',
-                      proposal: [{ id: 'proposalId' }],
-                    },
-                  },
-                ],
-              },
-            ],
-            role: 'Grantee',
-            labs: [],
-          },
-        },
-      ],
+      total: items.length,
+      items,
     },
   },
 });
 
+export const getGraphqlResponseFetchUsers = (): {
+  data: FetchUsersQuery;
+} =>
+  generateGraphqlResponseFetchUsers([
+    getGraphQLUser(),
+    getGraphQLUser({
+      id: 'user-id-2',
+      flatData: {
+        biography: 'some biography',
+        orcidWorks: [
+          {
+            doi: 'test-doi',
+            id: '987-654-321',
+            lastModifiedDate: '2020-10-26T15:33:18Z',
+            publicationDate: {},
+            type: 'BOOK',
+            title: 'orcid work title 2',
+          },
+        ],
+        city: 'some city',
+        country: 'some country',
+        contactEmail: 'some@contact.email',
+        degree: 'some degree',
+        orcid: 'orcid',
+        email: 'iwillbeback@arnold.com',
+        firstName: 'Arnold',
+        lastName: 'Schwatzneger',
+        expertiseAndResourceDescription: 'Amazing person',
+        social: [
+          {
+            github: 'awesome',
+          },
+        ],
+        teams: [
+          {
+            role: 'Project Manager',
+            mainResearchInterests: 'cover',
+            responsibilities: 'increase coverage',
+            id: [
+              {
+                id: 'team-id-2',
+                flatData: {
+                  displayName: 'Team B',
+                  proposal: [{ id: 'proposalId' }],
+                },
+              },
+            ],
+          },
+        ],
+        labs: [] as NonNullable<GraphQLUserTeamFlatData['labs']>,
+        expertiseAndResourceTags: [] as NonNullable<
+          GraphQLUserTeamFlatData['expertiseAndResourceTags']
+        >,
+        questions: [] as NonNullable<GraphQLUserTeamFlatData['questions']>,
+      } as GraphQLUserTeamFlatData,
+    }),
+  ]);
+
 export const getGraphQLUser = (
-  id: string = 'user-id-1',
-  teamId: string = 'team-id-1',
+  user: Partial<NonNullable<FetchUserQuery['findUsersContent']>> = {},
 ): NonNullable<FetchUserQuery['findUsersContent']> => ({
-  id,
+  id: 'user-id-1',
   lastModified: '2020-10-26T15:33:18Z',
   version: 42,
   created: '2020-09-23T20:45:22Z',
+  ...user,
   flatData: {
     biography: 'some bio',
     institution: 'some institution',
@@ -133,16 +116,20 @@ export const getGraphQLUser = (
     city: 'London',
     lastModifiedDate: '',
     questions: [{ question: 'Question 1' }, { question: 'Question 2' }],
-    expertiseAndResourceTags: [
+    expertiseAndResourceDescription: null,
+    orcid: '123-456-789',
+    social: null,
+    degree: 'MPH',
+    role: 'Grantee',
+    ...user?.flatData,
+    expertiseAndResourceTags: user?.flatData?.expertiseAndResourceTags || [
       'expertise 1',
       'expertise 2',
       'expertise 3',
       'expertise 4',
       'expertise 5',
     ],
-    expertiseAndResourceDescription: null,
-    orcid: '123-456-789',
-    orcidWorks: [
+    orcidWorks: user?.flatData?.orcidWorks || [
       {
         id: '123-456-789',
         doi: 'test-doi',
@@ -152,29 +139,46 @@ export const getGraphQLUser = (
         title: 'orcid work title',
       },
     ],
-    social: null,
-    degree: 'MPH',
-    teams: [
-      {
-        role: 'Lead PI (Core Leadership)',
-        mainResearchInterests: 'some team mainResearchInterests',
-        responsibilities: 'some team responsibilities',
-        id: [
-          {
-            id: teamId,
-            flatData: {
-              displayName: 'Team A',
-              proposal: [{ id: 'proposalId1' }],
-            },
-          },
-        ],
-      },
-    ],
-    role: 'Grantee',
-    labs: [
+    teams: user?.flatData?.teams || [getGraphQLUserTeam()],
+    labs: user?.flatData?.labs || [
       { id: 'cd7be4902', flatData: { name: 'Brighton' } },
       { id: 'cd7be4903', flatData: { name: 'Liverpool' } },
     ],
+  },
+});
+
+export type GraphQLUserTeamFlatData = NonNullable<
+  FetchUserQuery['findUsersContent']
+>['flatData'];
+type GraphQLUserTeam = NonNullable<GraphQLUserTeamFlatData['teams']>[0];
+
+type GraphQLUserTeamId = NonNullable<GraphQLUserTeam['id']>[0];
+export const getGraphQLUserTeam = (
+  team: Partial<GraphQLUserTeam> = {},
+): GraphQLUserTeam => ({
+  role: 'Lead PI (Core Leadership)',
+  mainResearchInterests: 'some team mainResearchInterests',
+  responsibilities: 'some team responsibilities',
+  ...team,
+  id: team?.id || [
+    {
+      id: 'team-id-1',
+      flatData: {
+        displayName: 'Team A',
+        proposal: [{ id: 'proposalId1' }],
+      },
+    },
+  ],
+});
+export const getGraphQLUserTeamId = (
+  id: Partial<GraphQLUserTeamId> = {},
+): GraphQLUserTeamId => ({
+  id: 'team-id-1',
+  ...id,
+  flatData: {
+    displayName: 'Team A',
+    proposal: [{ id: 'proposalId1' }],
+    ...id.flatData,
   },
 });
 

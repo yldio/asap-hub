@@ -349,6 +349,8 @@ export const userPatchRequest: UserPatchRequest = {
   teams: [
     {
       id: 'team-id-1',
+      mainResearchInterests: 'interests',
+      responsibilities: 'responsibilities',
     },
   ],
 };

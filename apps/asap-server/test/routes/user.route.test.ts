@@ -334,6 +334,7 @@ describe('/users/ route', () => {
           teams: [
             {
               id: 'team-id-1000',
+              responsibilities: 'I do stuff',
             },
           ],
         });

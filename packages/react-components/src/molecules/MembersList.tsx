@@ -4,7 +4,7 @@ import { network } from '@asap-hub/routing';
 
 import { perRem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
-import { Link, Avatar, Anchor } from '../atoms';
+import { Link, Avatar, Anchor, Ellipsis } from '../atoms';
 
 const containerStyles = css({
   margin: 0,
@@ -43,6 +43,7 @@ const multiColumnAddToColumnStyles = css({
 });
 const textStyles = css({
   color: lead.rgb,
+  minHeight: `${24 / perRem}em`,
 });
 
 const labStyles = css({
@@ -89,7 +90,7 @@ const MembersList: React.FC<MembersListProps> = ({
                 textStyles,
               ]}
             >
-              {secondLine}
+              <Ellipsis>{secondLine}</Ellipsis>
             </div>
           </Anchor>
           <Anchor href={href} css={{ display: 'contents' }}>
@@ -101,16 +102,18 @@ const MembersList: React.FC<MembersListProps> = ({
                 labStyles,
               ]}
             >
-              {thirdLine instanceof Array
-                ? thirdLine.map((team) => (
-                    <Link
-                      key={team.id}
-                      href={network({}).teams({}).team({ teamId: team.id }).$}
-                    >
-                      Team {team.displayName}
-                    </Link>
-                  ))
-                : thirdLine}
+              <Ellipsis>
+                {thirdLine instanceof Array
+                  ? thirdLine.map((team) => (
+                      <Link
+                        key={team.id}
+                        href={network({}).teams({}).team({ teamId: team.id }).$}
+                      >
+                        Team {team.displayName}
+                      </Link>
+                    ))
+                  : thirdLine}
+              </Ellipsis>
             </div>
           </Anchor>
         </li>

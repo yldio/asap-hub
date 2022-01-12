@@ -22,11 +22,11 @@ describe('/users/ route', () => {
       ...userMock,
       teams: [
         {
-          id: 'some-id-1',
+          id: 'team-id-1',
           role: 'Project Manager',
         },
         {
-          id: 'some-id-2',
+          id: 'team-id-2',
           role: 'Project Manager',
         },
       ],

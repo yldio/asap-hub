@@ -1,6 +1,6 @@
 import { UserResponse } from '@asap-hub/model';
 
-export const userResponse: UserResponse = {
+export const getUserResponse = (): UserResponse => ({
   id: 'userId',
   onboarded: true,
   displayName: 'Cristiano Ronaldo',
@@ -21,8 +21,6 @@ export const userResponse: UserResponse = {
       displayName: 'Jackson, M',
       role: 'Lead PI (Core Leadership)',
       proposal: 'proposal-id-1',
-      mainResearchInterests: 'Exact',
-      responsibilities: 'Make sure coverage is high',
     },
     {
       id: 'team-id-3',
@@ -51,4 +49,6 @@ export const userResponse: UserResponse = {
     { id: 'cd7be4902', name: 'Barcelona' },
     { id: 'cd7be4905', name: 'Glasgow' },
   ],
-};
+  researchInterests: 'Exact',
+  responsibilities: 'Make sure coverage is high',
+});

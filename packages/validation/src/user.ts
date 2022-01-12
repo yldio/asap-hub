@@ -17,6 +17,8 @@ export type UserValidationFields = Partial<
     | 'country'
     | 'biography'
     | 'expertiseAndResourceTags'
+    | 'responsibilities'
+    | 'researchInterests'
   >
 >;
 
@@ -32,12 +34,7 @@ export const isUserOnboardable = (
     response.questions = { valid: false };
   }
 
-  if (
-    user.teams.length === 0 ||
-    user.teams.map((team) => team.mainResearchInterests).filter(Boolean)
-      .length === 0 ||
-    user.teams.map((team) => team.responsibilities).filter(Boolean).length === 0
-  ) {
+  if (user.teams.length === 0) {
     response.teams = { valid: false };
   }
 
@@ -63,6 +60,14 @@ export const isUserOnboardable = (
 
   if (user.expertiseAndResourceTags.length < 5) {
     response.expertiseAndResourceTags = { valid: false };
+  }
+
+  if (!user.responsibilities) {
+    response.responsibilities = { valid: false };
+  }
+
+  if (!user.researchInterests) {
+    response.researchInterests = { valid: false };
   }
 
   if (Object.keys(response).length === 0) {

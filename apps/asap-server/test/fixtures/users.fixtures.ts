@@ -344,6 +344,15 @@ export const userPatchRequest: UserPatchRequest = {
   onboarded: true,
   country: 'United Kingdom',
   city: 'Manchester',
+  responsibilities: 'responsibilities',
+  researchInterests: 'research interests',
+  teams: [
+    {
+      id: 'team-id-1',
+      mainResearchInterests: 'interests',
+      responsibilities: 'responsibilities',
+    },
+  ],
 };
 
 export const updateUserEvent: WebhookPayload<User> = {

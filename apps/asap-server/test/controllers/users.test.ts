@@ -1,7 +1,7 @@
-import { config, SquidexGraphql } from '@asap-hub/squidex';
+import { config, RestUser, SquidexGraphql } from '@asap-hub/squidex';
 import { print } from 'graphql';
 import matches from 'lodash.matches';
-import nock from 'nock';
+import nock, { DataMatcherMap } from 'nock';
 import Users from '../../src/controllers/users';
 import { identity } from '../helpers/squidex';
 import { FETCH_USER, FETCH_USERS } from '../../src/queries/users.queries';
@@ -725,6 +725,44 @@ describe('Users controller', () => {
         github: 'johnytiago',
         orcid: '123-456-789',
       });
+    });
+
+    test('Should update Research Interests and Responsibility', async () => {
+      const mockResponse = getGraphqlResponseFetchUser();
+      mockResponse.data.findUsersContent!.flatData.researchInterests =
+        'new research interests';
+      mockResponse.data.findUsersContent!.flatData.responsibilities =
+        'new responsibilities';
+
+      const expectedPatchRequest: Partial<RestUser['data']> = {
+        researchInterests: {
+          iv: 'new research interests',
+        },
+        responsibilities: {
+          iv: 'new responsibilities',
+        },
+      };
+
+      nock(config.baseUrl)
+        .patch(
+          `/api/content/${config.appName}/users/${userId}`,
+          expectedPatchRequest as DataMatcherMap,
+        )
+        .reply(200, fetchUserResponse)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_USER),
+          variables: {
+            id: userId,
+          },
+        })
+        .reply(200, mockResponse);
+
+      const result = await users.update(userId, {
+        researchInterests: 'new research interests',
+        responsibilities: 'new responsibilities',
+      });
+      expect(result.researchInterests).toEqual('new research interests');
+      expect(result.responsibilities).toEqual('new responsibilities');
     });
 
     test('Should update and delete user team properties', async () => {

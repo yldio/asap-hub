@@ -91,12 +91,12 @@ const serverlessConfig: AWS = {
           ? 'dev'
           : `CI-${SLS_STAGE}`
       }`,
-      ALGOLIA_RESEARCH_OUTPUT_REPLICA: `asap-hub_research_outputs_replica_${
+      ALGOLIA_RESEARCH_OUTPUT_REPLICA: `asap-hub_research_outputs_${
         SLS_STAGE === 'production'
-          ? 'prod'
+          ? 'prod-replica'
           : SLS_STAGE === 'dev'
-          ? 'dev'
-          : `CI-${SLS_STAGE}`
+          ? 'dev-replica'
+          : `CI-${SLS_STAGE}-replica`
       }`,
       CURRENT_REVISION: '${env:CI_COMMIT_SHA}',
     },

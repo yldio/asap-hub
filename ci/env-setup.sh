@@ -5,5 +5,5 @@ if [ ! -z $CI_EXTERNAL_PULL_REQUEST_IID ]; then
     export ASAP_API_URL="https://api-${CI_EXTERNAL_PULL_REQUEST_IID}.${ASAP_HOSTNAME}"
     export ASAP_APP_URL="https://${CI_EXTERNAL_PULL_REQUEST_IID}.${ASAP_HOSTNAME}"
     export ALGOLIA_INDEX="asap-hub_research_outputs_CI-${CI_EXTERNAL_PULL_REQUEST_IID}"
-    export ALGOLIA_REPLICA="asap-hub_research_outputs_replica_CI-${CI_EXTERNAL_PULL_REQUEST_IID}"
+    export ALGOLIA_REPLICA="asap-hub_research_outputs_CI-${CI_EXTERNAL_PULL_REQUEST_IID}-replica"
 fi

@@ -26,8 +26,6 @@ const insertMembership = (
   const newTeam: UserTeamConnection<string> = {
     id: [team.id],
     role: data.role,
-    mainResearchInterests: data.researchInterest,
-    responsibilities: data.responsibilities,
   };
 
   return users.patch(user.id, {
@@ -115,6 +113,8 @@ const insertUser = async (
     expertiseAndResourceDescription,
     asapRole,
     social,
+    researchInterest,
+    responsibilities,
   } = data;
 
   const user: RestUser['data'] = {
@@ -167,6 +167,12 @@ const insertUser = async (
     },
     labs: {
       iv: [],
+    },
+    researchInterests: {
+      iv: researchInterest,
+    },
+    responsibilities: {
+      iv: responsibilities,
     },
   };
 

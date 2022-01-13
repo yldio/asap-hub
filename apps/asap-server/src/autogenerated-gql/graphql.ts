@@ -4594,12 +4594,7 @@ export type EventContentFragment = Pick<
                               >;
                               teams: Maybe<
                                 Array<
-                                  Pick<
-                                    UsersDataTeamsChildDto,
-                                    | 'role'
-                                    | 'mainResearchInterests'
-                                    | 'responsibilities'
-                                  > & {
+                                  Pick<UsersDataTeamsChildDto, 'role'> & {
                                     id: Maybe<
                                       Array<
                                         Pick<Teams, 'id'> & {
@@ -4700,12 +4695,7 @@ export type EventContentFragment = Pick<
                               >;
                               teams: Maybe<
                                 Array<
-                                  Pick<
-                                    UsersDataTeamsChildDto,
-                                    | 'role'
-                                    | 'mainResearchInterests'
-                                    | 'responsibilities'
-                                  > & {
+                                  Pick<UsersDataTeamsChildDto, 'role'> & {
                                     id: Maybe<
                                       Array<
                                         Pick<Teams, 'id'> & {
@@ -4918,9 +4908,7 @@ export type FetchEventsQuery = {
                                           Array<
                                             Pick<
                                               UsersDataTeamsChildDto,
-                                              | 'role'
-                                              | 'mainResearchInterests'
-                                              | 'responsibilities'
+                                              'role'
                                             > & {
                                               id: Maybe<
                                                 Array<
@@ -5038,9 +5026,7 @@ export type FetchEventsQuery = {
                                           Array<
                                             Pick<
                                               UsersDataTeamsChildDto,
-                                              | 'role'
-                                              | 'mainResearchInterests'
-                                              | 'responsibilities'
+                                              'role'
                                             > & {
                                               id: Maybe<
                                                 Array<
@@ -5248,12 +5234,7 @@ export type FetchEventQuery = {
                                   >;
                                   teams: Maybe<
                                     Array<
-                                      Pick<
-                                        UsersDataTeamsChildDto,
-                                        | 'role'
-                                        | 'mainResearchInterests'
-                                        | 'responsibilities'
-                                      > & {
+                                      Pick<UsersDataTeamsChildDto, 'role'> & {
                                         id: Maybe<
                                           Array<
                                             Pick<Teams, 'id'> & {
@@ -5359,12 +5340,7 @@ export type FetchEventQuery = {
                                   >;
                                   teams: Maybe<
                                     Array<
-                                      Pick<
-                                        UsersDataTeamsChildDto,
-                                        | 'role'
-                                        | 'mainResearchInterests'
-                                        | 'responsibilities'
-                                      > & {
+                                      Pick<UsersDataTeamsChildDto, 'role'> & {
                                         id: Maybe<
                                           Array<
                                             Pick<Teams, 'id'> & {
@@ -5519,10 +5495,7 @@ export type GroupsContentFragment = Pick<
                   >;
                   teams: Maybe<
                     Array<
-                      Pick<
-                        UsersDataTeamsChildDto,
-                        'role' | 'mainResearchInterests' | 'responsibilities'
-                      > & {
+                      Pick<UsersDataTeamsChildDto, 'role'> & {
                         id: Maybe<
                           Array<
                             Pick<Teams, 'id'> & {
@@ -5618,10 +5591,7 @@ export type GroupsContentFragment = Pick<
                   >;
                   teams: Maybe<
                     Array<
-                      Pick<
-                        UsersDataTeamsChildDto,
-                        'role' | 'mainResearchInterests' | 'responsibilities'
-                      > & {
+                      Pick<UsersDataTeamsChildDto, 'role'> & {
                         id: Maybe<
                           Array<
                             Pick<Teams, 'id'> & {
@@ -5773,12 +5743,7 @@ export type FetchGroupsQuery = {
                             >;
                             teams: Maybe<
                               Array<
-                                Pick<
-                                  UsersDataTeamsChildDto,
-                                  | 'role'
-                                  | 'mainResearchInterests'
-                                  | 'responsibilities'
-                                > & {
+                                Pick<UsersDataTeamsChildDto, 'role'> & {
                                   id: Maybe<
                                     Array<
                                       Pick<Teams, 'id'> & {
@@ -5879,12 +5844,7 @@ export type FetchGroupsQuery = {
                             >;
                             teams: Maybe<
                               Array<
-                                Pick<
-                                  UsersDataTeamsChildDto,
-                                  | 'role'
-                                  | 'mainResearchInterests'
-                                  | 'responsibilities'
-                                > & {
+                                Pick<UsersDataTeamsChildDto, 'role'> & {
                                   id: Maybe<
                                     Array<
                                       Pick<Teams, 'id'> & {
@@ -6028,12 +5988,7 @@ export type FetchGroupQuery = {
                       >;
                       teams: Maybe<
                         Array<
-                          Pick<
-                            UsersDataTeamsChildDto,
-                            | 'role'
-                            | 'mainResearchInterests'
-                            | 'responsibilities'
-                          > & {
+                          Pick<UsersDataTeamsChildDto, 'role'> & {
                             id: Maybe<
                               Array<
                                 Pick<Teams, 'id'> & {
@@ -6129,12 +6084,7 @@ export type FetchGroupQuery = {
                       >;
                       teams: Maybe<
                         Array<
-                          Pick<
-                            UsersDataTeamsChildDto,
-                            | 'role'
-                            | 'mainResearchInterests'
-                            | 'responsibilities'
-                          > & {
+                          Pick<UsersDataTeamsChildDto, 'role'> & {
                             id: Maybe<
                               Array<
                                 Pick<Teams, 'id'> & {
@@ -6284,10 +6234,7 @@ export type ResearchOutputContentFragment = Pick<
                 >;
                 teams: Maybe<
                   Array<
-                    Pick<
-                      UsersDataTeamsChildDto,
-                      'role' | 'mainResearchInterests' | 'responsibilities'
-                    > & {
+                    Pick<UsersDataTeamsChildDto, 'role'> & {
                       id: Maybe<
                         Array<
                           Pick<Teams, 'id'> & {
@@ -6437,10 +6384,7 @@ export type FetchResearchOutputQuery = {
                     >;
                     teams: Maybe<
                       Array<
-                        Pick<
-                          UsersDataTeamsChildDto,
-                          'role' | 'mainResearchInterests' | 'responsibilities'
-                        > & {
+                        Pick<UsersDataTeamsChildDto, 'role'> & {
                           id: Maybe<
                             Array<
                               Pick<Teams, 'id'> & {
@@ -6606,12 +6550,7 @@ export type FetchResearchOutputsQuery = {
                           >;
                           teams: Maybe<
                             Array<
-                              Pick<
-                                UsersDataTeamsChildDto,
-                                | 'role'
-                                | 'mainResearchInterests'
-                                | 'responsibilities'
-                              > & {
+                              Pick<UsersDataTeamsChildDto, 'role'> & {
                                 id: Maybe<
                                   Array<
                                     Pick<Teams, 'id'> & {
@@ -6749,10 +6688,7 @@ export type TeamsContentFragment = Pick<
           questions: Maybe<Array<Pick<UsersDataQuestionsChildDto, 'question'>>>;
           teams: Maybe<
             Array<
-              Pick<
-                UsersDataTeamsChildDto,
-                'role' | 'mainResearchInterests' | 'responsibilities'
-              > & {
+              Pick<UsersDataTeamsChildDto, 'role'> & {
                 id: Maybe<
                   Array<
                     Pick<Teams, 'id'> & {
@@ -6857,10 +6793,7 @@ export type FetchTeamQuery = {
               >;
               teams: Maybe<
                 Array<
-                  Pick<
-                    UsersDataTeamsChildDto,
-                    'role' | 'mainResearchInterests' | 'responsibilities'
-                  > & {
+                  Pick<UsersDataTeamsChildDto, 'role'> & {
                     id: Maybe<
                       Array<
                         Pick<Teams, 'id'> & {
@@ -6974,10 +6907,7 @@ export type FetchTeamsQuery = {
                     >;
                     teams: Maybe<
                       Array<
-                        Pick<
-                          UsersDataTeamsChildDto,
-                          'role' | 'mainResearchInterests' | 'responsibilities'
-                        > & {
+                        Pick<UsersDataTeamsChildDto, 'role'> & {
                           id: Maybe<
                             Array<
                               Pick<Teams, 'id'> & {
@@ -7073,10 +7003,7 @@ export type UsersContentFragment = Pick<
     questions: Maybe<Array<Pick<UsersDataQuestionsChildDto, 'question'>>>;
     teams: Maybe<
       Array<
-        Pick<
-          UsersDataTeamsChildDto,
-          'role' | 'mainResearchInterests' | 'responsibilities'
-        > & {
+        Pick<UsersDataTeamsChildDto, 'role'> & {
           id: Maybe<
             Array<
               Pick<Teams, 'id'> & {
@@ -7158,10 +7085,7 @@ export type FetchUserQuery = {
         questions: Maybe<Array<Pick<UsersDataQuestionsChildDto, 'question'>>>;
         teams: Maybe<
           Array<
-            Pick<
-              UsersDataTeamsChildDto,
-              'role' | 'mainResearchInterests' | 'responsibilities'
-            > & {
+            Pick<UsersDataTeamsChildDto, 'role'> & {
               id: Maybe<
                 Array<
                   Pick<Teams, 'id'> & {
@@ -7252,10 +7176,7 @@ export type FetchUsersQuery = {
               >;
               teams: Maybe<
                 Array<
-                  Pick<
-                    UsersDataTeamsChildDto,
-                    'role' | 'mainResearchInterests' | 'responsibilities'
-                  > & {
+                  Pick<UsersDataTeamsChildDto, 'role'> & {
                     id: Maybe<
                       Array<
                         Pick<Teams, 'id'> & {
@@ -7592,17 +7513,6 @@ export const TeamsContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'role' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'mainResearchInterests',
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'responsibilities' },
                             },
                             {
                               kind: 'Field',
@@ -8004,20 +7914,6 @@ export const GroupsContentFragmentDoc = {
                                         {
                                           kind: 'Field',
                                           name: { kind: 'Name', value: 'role' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'mainResearchInterests',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'responsibilities',
-                                          },
                                         },
                                         {
                                           kind: 'Field',
@@ -8718,20 +8614,6 @@ export const ResearchOutputContentFragmentDoc = {
                                         },
                                         {
                                           kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'mainResearchInterests',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'responsibilities',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
                                           name: { kind: 'Name', value: 'id' },
                                           selectionSet: {
                                             kind: 'SelectionSet',
@@ -9196,14 +9078,6 @@ export const UsersContentFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'role' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'mainResearchInterests' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'responsibilities' },
-                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'id' },

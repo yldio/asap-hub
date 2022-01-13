@@ -5,7 +5,6 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
 import userEvent from '@testing-library/user-event';
 import { network } from '@asap-hub/routing';
-import { disable } from '@asap-hub/flags';
 
 import { Auth0Provider } from '@asap-hub/frontend/src/auth/test-utils';
 import Research from '../Research';
@@ -92,59 +91,36 @@ describe('when editing', () => {
         ...createTeamResponse(),
         id: '1',
         role: 'Collaborating PI',
-        mainResearchInterests: 'My Interests',
         displayName: 'Example Team',
-        responsibilities: 'My Responsibilities',
       },
     ],
   };
 
   let result!: RenderResult;
   beforeEach(async () => {
-    disable('UPDATED_ROLE_SECTION');
     result = render(<Research user={user} />, { wrapper });
     await result.findAllByLabelText(/edit/i);
   });
   describe('team membership', () => {
     it('opens and closes the dialog', async () => {
-      const {
-        getByText,
-        queryByText,
-        findByLabelText,
-        getByDisplayValue,
-        queryByDisplayValue,
-      } = result;
+      const { getByText, queryByText, findByLabelText } = result;
 
-      userEvent.click(await findByLabelText(/edit.+team/i));
-      expect(getByDisplayValue('My Interests')).toBeVisible();
+      userEvent.click(await findByLabelText(/edit.+role/i));
 
       userEvent.click(getByText(/close/i));
       await waitFor(() => {
         expect(queryByText(/loading/i)).not.toBeInTheDocument();
-        expect(queryByDisplayValue('My Interests')).not.toBeInTheDocument();
       });
     });
 
     it('saves the changes from the dialog', async () => {
-      const {
-        getByText,
-        queryByText,
-        findByLabelText,
-        getByDisplayValue,
-        queryByDisplayValue,
-      } = result;
+      const { getByText, queryByText, findByLabelText } = result;
 
       userEvent.click(await findByLabelText(/example.+team/i));
-      userEvent.type(getByDisplayValue('My Interests'), ' 2');
-      expect(getByDisplayValue('My Interests 2')).toBeVisible();
-
-      userEvent.type(getByDisplayValue('My Responsibilities'), ' 2');
-      expect(getByDisplayValue('My Responsibilities 2')).toBeVisible();
 
       userEvent.click(getByText(/save/i));
       await waitFor(() => {
         expect(queryByText(/loading/i)).not.toBeInTheDocument();
-        expect(queryByDisplayValue('My Interests 2')).not.toBeInTheDocument();
       });
       expect(mockPatchUser).toHaveBeenCalledWith(
         id,
@@ -152,8 +128,6 @@ describe('when editing', () => {
           teams: [
             {
               id: '1',
-              mainResearchInterests: 'My Interests 2',
-              responsibilities: 'My Responsibilities 2',
             },
           ],
         },

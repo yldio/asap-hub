@@ -1,6 +1,5 @@
 import React, { ComponentProps, ReactNode } from 'react';
 import { UserResponse, UserTeam } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 
 import {
   ProfileExpertiseAndResources,
@@ -52,25 +51,6 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   teams,
   ...roleProps
 }) => {
-  const { isEnabled } = useFlags();
-
-  const teamsSection = teams.map((team) => ({
-    card: (
-      <UserProfileBackground
-        key={team.id}
-        {...team}
-        firstName={firstName}
-        labs={labs}
-      />
-    ),
-    editLink:
-      team.editHref !== undefined
-        ? {
-            href: team.editHref,
-            label: `Edit role on ${team.displayName}`,
-          }
-        : undefined,
-  }));
   const isRoleEmpty =
     !labs.length &&
     !teams.length &&
@@ -100,7 +80,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   return (
     <ProfileCardList>
       {[
-        ...(isEnabled('UPDATED_ROLE_SECTION') ? roleSection : teamsSection),
+        ...roleSection,
         {
           card: (
             <ProfileExpertiseAndResources

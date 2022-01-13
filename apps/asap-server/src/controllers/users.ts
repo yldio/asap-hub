@@ -113,40 +113,6 @@ export default class Users implements UserController {
 
     const user = await this.userSquidexRestClient.fetchById(id);
 
-    // update only contains the team the user is trying to change
-    // we need to merge it with the ones on the DB, replacing the updated props
-    // and deleting them if update is an empty string.
-    /* eslint-disable @typescript-eslint/no-non-null-assertion, no-param-reassign */
-    if (update.teams?.length) {
-      cleanUpdate.teams = {
-        iv: user.data.teams?.iv?.map(
-          (team: {
-            id: string[];
-            responsibilities?: string | null;
-            mainResearchInterests?: string | null;
-          }) => {
-            const teamUpdates = update.teams!.find(
-              ({ id: teamId }) => team.id[0] === teamId,
-            );
-            if (teamUpdates?.mainResearchInterests?.trim) {
-              team.mainResearchInterests =
-                teamUpdates.mainResearchInterests.trim() === ''
-                  ? null
-                  : teamUpdates.mainResearchInterests;
-            }
-            if (teamUpdates?.responsibilities?.trim) {
-              team.responsibilities =
-                teamUpdates.responsibilities.trim() === ''
-                  ? null
-                  : teamUpdates.responsibilities;
-            }
-            return team;
-          },
-        ),
-      };
-    }
-    /* eslint-enable @typescript-eslint/no-non-null-assertion, no-param-reassign */
-
     const updatedData = { ...user.data, ...cleanUpdate };
     await this.userSquidexRestClient.put(id, updatedData);
 

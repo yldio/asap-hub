@@ -56,8 +56,6 @@ export const getGraphqlResponseFetchUsers = (): FetchUsersQuery =>
         teams: [
           {
             role: 'Project Manager',
-            mainResearchInterests: 'cover',
-            responsibilities: 'increase coverage',
             id: [
               {
                 id: 'team-id-2',
@@ -131,8 +129,6 @@ export const getGraphQLUser = (
     teams: user?.flatData?.teams || [
       {
         role: 'Lead PI (Core Leadership)',
-        mainResearchInterests: 'some team mainResearchInterests',
-        responsibilities: 'some team responsibilities',
         id: [
           {
             id: 'team-id-1',
@@ -180,8 +176,6 @@ export const patchResponse: RestUser = {
         {
           id: ['team-id-1'],
           role: 'Lead PI (Core Leadership)',
-          mainResearchInterests: 'Exact',
-          responsibilities: 'Make sure coverage is high',
         },
         {
           id: ['team-id-3'],
@@ -251,8 +245,6 @@ export const getUserResponse = (): UserResponse => ({
       role: 'Lead PI (Core Leadership)',
       displayName: 'Team A',
       proposal: 'proposalId1',
-      mainResearchInterests: 'some team mainResearchInterests',
-      responsibilities: 'some team responsibilities',
     },
   ],
   role: 'Grantee',
@@ -307,8 +299,6 @@ export const fetchExpectation: ListUserResponse = {
           id: 'team-id-2',
           role: 'Project Manager',
           displayName: 'Team B',
-          mainResearchInterests: 'cover',
-          responsibilities: 'increase coverage',
           proposal: 'proposalId',
         },
       ],
@@ -337,8 +327,6 @@ export const userPatchRequest: UserPatchRequest = {
   teams: [
     {
       id: 'team-id-1',
-      mainResearchInterests: 'interests',
-      responsibilities: 'responsibilities',
     },
   ],
 };

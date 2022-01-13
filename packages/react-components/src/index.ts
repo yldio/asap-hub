@@ -155,7 +155,6 @@ export {
   SharedResearchPage,
   SigninForm,
   SigninPage,
-  TeamMembershipModal,
   TeamProfileAbout,
   TeamProfileOutputs,
   TeamProfilePage,

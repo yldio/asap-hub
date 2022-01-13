@@ -43,7 +43,6 @@ export { default as SharedResearchPage } from './SharedResearchPage';
 export { default as SharedResearchPageHeader } from './SharedResearchPageHeader';
 export { default as SigninForm } from './SigninForm';
 export { default as SigninPage } from './SigninPage';
-export { default as TeamMembershipModal } from './TeamMembershipModal';
 export { default as TeamProfileAbout } from './TeamProfileAbout';
 export { default as TeamProfileHeader } from './TeamProfileHeader';
 export { default as TeamProfileOutputs } from './TeamProfileOutputs';

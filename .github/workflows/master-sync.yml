@@ -23,7 +23,6 @@ jobs:
       - name: Synchronize Development Schema
         run: |
           yarn run algolia:upload
-          yarn run algolia:set:replica
           yarn run algolia:upload:replica
       - name: Setup Production Environment Variables
         run: |

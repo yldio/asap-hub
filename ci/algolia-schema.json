@@ -20,7 +20,7 @@
   "unretrievableAttributes": null,
   "optionalWords": null,
   "queryLanguages": ["en"],
-  "replicas": [],
+  "replicas": ["asap-hub_research_outputs_CI-1274-replica"],
   "attributesForFaceting": ["teams.id", "type", "authors.id"],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

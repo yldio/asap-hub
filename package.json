@@ -18,7 +18,6 @@
     "algolia:download": "algolia getsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX | prettier --parser json > ./ci/algolia-schema.json",
     "algolia:upload": "algolia setsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX -s ./ci/algolia-schema.json",
     "algolia:upload:replica": "algolia setsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_REPLICA -s ./ci/algolia-replica-schema.json",
-    "algolia:set:replica": "algolia setsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX -p '{replicas: [${ALGOLIA_RESEARCH_OUTPUT_INDEX}-replica]}'",
     "build": "yarn build:typecheck && yarn build:babel && yarn workspaces foreach -vpt run typecheck && yarn workspaces foreach -vpt run build",
     "build:babel": "yarn workspaces foreach -vp run build:babel",
     "build:typecheck": "tsc -b -v $(node scripts/get-composite-ts-projects.js)",

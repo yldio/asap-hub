@@ -20,5 +20,4 @@ jobs:
       - name: Synchronize Schema
         run: |
           yarn run algolia:upload
-          yarn run algolia:set:replica
           yarn run algolia:upload:replica

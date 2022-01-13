@@ -57,7 +57,7 @@ stages:
     - source ci/env-setup.sh
     - export REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)
     - export REACT_APP_ALGOLIA_INDEX=$ALGOLIA_INDEX
-    - export REACT_APP_ALGOLIA_REPLICA=$ALGOLIA_REPLICA
+    - export REACT_APP_ALGOLIA_INDEX_REPLICA=$ALGOLIA_INDEX_REPLICA
     - export REACT_APP_API_BASE_URL=$ASAP_API_URL
     - export REACT_APP_ENVIRONMENT="development"
     - export REACT_APP_RELEASE=${CI_PIPELINE_ID}-dev
@@ -351,7 +351,7 @@ build:ts:prod:
     - export AUTH_FRONTEND_BASE_URL=$ASAP_APP_URL/.auth/
     - export REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-prod" --query Parameter.Value --output text)
     - export REACT_APP_ALGOLIA_INDEX="asap-hub_research_outputs_prod"
-    - export REACT_APP_ALGOLIA_REPLICA="asap-hub_research_outputs_prod-replica"
+    - export REACT_APP_ALGOLIA_INDEX_REPLICA="asap-hub_research_outputs_prod-replica"
     - export REACT_APP_API_BASE_URL=$ASAP_API_URL
     - export REACT_APP_ENVIRONMENT="production"
     - export REACT_APP_RELEASE=${CI_PIPELINE_ID}-production

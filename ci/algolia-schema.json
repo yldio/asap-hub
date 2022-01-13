@@ -20,7 +20,7 @@
   "unretrievableAttributes": null,
   "optionalWords": null,
   "queryLanguages": ["en"],
-  "replicas": ["{{ALGOLIA_RESEARCH_OUTPUT_REPLICA}}"],
+  "replicas": ["{{ALGOLIA_RESEARCH_OUTPUT_INDEX_REPLICA}}"],
   "attributesForFaceting": ["teams.id", "type", "authors.id"],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

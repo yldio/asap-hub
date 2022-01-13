@@ -91,7 +91,7 @@ const serverlessConfig: AWS = {
           ? 'dev'
           : `CI-${SLS_STAGE}`
       }`,
-      ALGOLIA_RESEARCH_OUTPUT_REPLICA: `asap-hub_research_outputs_${
+      ALGOLIA_RESEARCH_OUTPUT_INDEX_REPLICA: `asap-hub_research_outputs_${
         SLS_STAGE === 'production'
           ? 'prod-replica'
           : SLS_STAGE === 'dev'

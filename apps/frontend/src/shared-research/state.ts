@@ -16,7 +16,7 @@ import {
   ResearchOutputListOptions,
 } from './api';
 import { authorizationState } from '../auth/state';
-import { useAlgolia } from '../hooks/algolia';
+import { INDEX, useAlgolia } from '../hooks/algolia';
 
 const researchOutputIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -98,13 +98,16 @@ export const researchOutputState = atomFamily<
 export const useResearchOutputById = (id: string) =>
   useRecoilValue(researchOutputState(id));
 
-export const useResearchOutputs = (options: ResearchOutputListOptions) => {
+export const useResearchOutputs = ({
+  searchIndex = INDEX.primary,
+  ...options
+}: ResearchOutputListOptions & { searchIndex?: string }) => {
   const [researchOutputs, setResearchOutputs] = useRecoilState(
     researchOutputsState(options),
   );
-  const { index } = useAlgolia();
+  const { client } = useAlgolia();
   if (researchOutputs === undefined) {
-    throw getResearchOutputs(index, options)
+    throw getResearchOutputs(client.initIndex(searchIndex), options)
       .then(
         (data): ListResearchOutputResponse => ({
           total: data.nbHits,

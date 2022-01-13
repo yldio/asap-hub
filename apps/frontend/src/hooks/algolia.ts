@@ -3,7 +3,16 @@ import algoliasearch from 'algoliasearch/lite';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { User } from '@asap-hub/auth';
 
-import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '../config';
+import {
+  ALGOLIA_APP_ID,
+  ALGOLIA_INDEX,
+  ALGOLIA_INDEX_REPLICA,
+} from '../config';
+
+export const INDEX = {
+  primary: ALGOLIA_INDEX,
+  'asc(addedDate)': ALGOLIA_INDEX_REPLICA,
+};
 
 export const useAlgolia = () => {
   const initAlgolia = (user: User | null) => {

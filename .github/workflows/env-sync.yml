@@ -20,5 +20,6 @@ jobs:
           echo "ALGOLIA_RESEARCH_OUTPUT_INDEX_REPLICA=asap-hub_research_outputs_CI-${{github.event.number}}-replica" >> $GITHUB_ENV
       - name: Synchronize Schema
         run: |
+          yarn run prealgolia:upload:replica
           yarn run algolia:upload
           yarn run algolia:upload:replica

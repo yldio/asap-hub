@@ -107,7 +107,7 @@ const props = (): ComponentProps<typeof DiscoverPageBody> => ({
       thumbnail: 'https://picsum.photos/200',
     },
   ],
-  members: members,
+  members,
   scientificAdvisoryBoard: members,
   aboutUs: text('About Us', ''),
 });

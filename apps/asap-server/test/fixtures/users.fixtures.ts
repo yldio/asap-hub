@@ -128,7 +128,22 @@ export const getGraphQLUser = (
         title: 'orcid work title',
       },
     ],
-    teams: user?.flatData?.teams || [getGraphQLUserTeam()],
+    teams: user?.flatData?.teams || [
+      {
+        role: 'Lead PI (Core Leadership)',
+        mainResearchInterests: 'some team mainResearchInterests',
+        responsibilities: 'some team responsibilities',
+        id: [
+          {
+            id: 'team-id-1',
+            flatData: {
+              displayName: 'Team A',
+              proposal: [{ id: 'proposalId1' }],
+            },
+          },
+        ],
+      },
+    ],
     labs: user?.flatData?.labs || [
       { id: 'cd7be4902', flatData: { name: 'Brighton' } },
       { id: 'cd7be4903', flatData: { name: 'Liverpool' } },
@@ -136,40 +151,9 @@ export const getGraphQLUser = (
   },
 });
 
-export type GraphQLUserTeamFlatData = NonNullable<
+type GraphQLUserTeamFlatData = NonNullable<
   FetchUserQuery['findUsersContent']
 >['flatData'];
-type GraphQLUserTeam = NonNullable<GraphQLUserTeamFlatData['teams']>[0];
-type GraphQLUserTeamId = NonNullable<GraphQLUserTeam['id']>[0];
-
-export const getGraphQLUserTeam = (
-  team: Partial<GraphQLUserTeam> = {},
-): GraphQLUserTeam => ({
-  role: 'Lead PI (Core Leadership)',
-  mainResearchInterests: 'some team mainResearchInterests',
-  responsibilities: 'some team responsibilities',
-  ...team,
-  id: team?.id || [
-    {
-      id: 'team-id-1',
-      flatData: {
-        displayName: 'Team A',
-        proposal: [{ id: 'proposalId1' }],
-      },
-    },
-  ],
-});
-export const getGraphQLUserTeamId = (
-  id: Partial<GraphQLUserTeamId> = {},
-): GraphQLUserTeamId => ({
-  id: 'team-id-1',
-  ...id,
-  flatData: {
-    displayName: 'Team A',
-    proposal: [{ id: 'proposalId1' }],
-    ...id.flatData,
-  },
-});
 
 export const patchResponse: RestUser = {
   id: 'userId',

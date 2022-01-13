@@ -403,7 +403,8 @@ describe('Users controller', () => {
     });
 
     test('Should throw when it finds more than one user', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse({ total: 2 });
+      const mockResponse = getSquidexUsersGraphqlResponse();
+      mockResponse.queryUsersContentsWithTotal!.total = 2;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       await expect(usersMockGraphqlClient.fetchByCode(code)).rejects.toThrow(
@@ -412,7 +413,7 @@ describe('Users controller', () => {
     });
 
     test('Should return user when it finds it', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse({ total: 1 });
+      const mockResponse = getSquidexUsersGraphqlResponse();
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       const result = await usersMockGraphqlClient.fetchByCode(code);

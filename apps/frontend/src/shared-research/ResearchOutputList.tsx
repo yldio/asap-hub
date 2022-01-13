@@ -1,10 +1,9 @@
 import { SharedResearchList } from '@asap-hub/react-components';
 import { sharedResearch } from '@asap-hub/routing';
 import { format } from 'date-fns';
-
 import { useResearchOutputs } from './state';
 import { usePaginationParams, usePagination } from '../hooks';
-import { useAlgolia } from '../hooks/algolia';
+import { INDEX, useAlgolia } from '../hooks/algolia';
 import { getResearchOutputs } from './api';
 import {
   createCsvFileStream,
@@ -28,8 +27,10 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
     filters,
     currentPage,
     pageSize,
+    searchIndex: !searchQuery.length ? INDEX['asc(addedDate)'] : INDEX.primary,
   });
-  const { index } = useAlgolia();
+
+  const { client } = useAlgolia();
 
   const { numberOfPages, renderPageHref } = usePagination(
     result?.total || 0,
@@ -42,11 +43,16 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
         `SharedOutputs_${format(new Date(), 'MMddyy')}.csv`,
       ),
       (paginationParams) =>
-        getResearchOutputs(index, {
-          filters,
-          searchQuery,
-          ...paginationParams,
-        }),
+        getResearchOutputs(
+          client.initIndex(
+            !searchQuery.length ? INDEX['asc(addedDate)'] : INDEX.primary,
+          ),
+          {
+            filters,
+            searchQuery,
+            ...paginationParams,
+          },
+        ),
       researchOutputToCSV,
     );
 

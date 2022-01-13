@@ -8,7 +8,7 @@ import userEvent from '@testing-library/user-event';
 import ResearchOutputList from '../ResearchOutputList';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getResearchOutputs } from '../api';
-import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
+import { CARD_VIEW_PAGE_SIZE, INDEX } from '../../hooks';
 import { researchOutputsState } from '../state';
 import { createCsvFileStream, MAX_ALGOLIA_RESULTS } from '../export';
 
@@ -42,7 +42,7 @@ const renderResearchOutputList = async (searchQuery = '') => {
           <WhenReady>
             <MemoryRouter initialEntries={['/shared-research']}>
               <Route path="/shared-research">
-                <ResearchOutputList />
+                <ResearchOutputList searchQuery={searchQuery} />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -84,15 +84,51 @@ it('triggers and export with the same parameters', async () => {
     expect.stringMatching(/SharedOutputs_\d+\.csv/),
   );
   expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
-    searchQuery: '',
+    searchQuery: 'example',
     filters: new Set(),
     currentPage: 0,
     pageSize: CARD_VIEW_PAGE_SIZE,
   });
   expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
-    searchQuery: '',
+    searchQuery: 'example',
     filters: new Set(),
     currentPage: 0,
     pageSize: MAX_ALGOLIA_RESULTS,
   });
+});
+
+it('defaults to the replica when there is no search query', async () => {
+  mockGetResearchOutputs.mockResolvedValue(
+    createAlgoliaResearchOutputResponse(2, {}),
+  );
+  await renderResearchOutputList();
+  expect(mockGetResearchOutputs).toHaveBeenCalledWith(
+    expect.objectContaining({
+      indexName: INDEX['asc(addedDate)'],
+    }),
+    {
+      searchQuery: '',
+      filters: new Set(),
+      currentPage: 0,
+      pageSize: CARD_VIEW_PAGE_SIZE,
+    },
+  );
+});
+
+it('uses the main index when there is a search query', async () => {
+  mockGetResearchOutputs.mockResolvedValue(
+    createAlgoliaResearchOutputResponse(2, {}),
+  );
+  await renderResearchOutputList('bio');
+  expect(mockGetResearchOutputs).toHaveBeenCalledWith(
+    expect.objectContaining({
+      indexName: INDEX.primary,
+    }),
+    {
+      searchQuery: 'bio',
+      filters: new Set(),
+      currentPage: 0,
+      pageSize: CARD_VIEW_PAGE_SIZE,
+    },
+  );
 });

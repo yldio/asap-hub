@@ -21,7 +21,7 @@ const {
   ALGOLIA_INDEX_API_KEY,
   ALGOLIA_API_KEY,
   ALGOLIA_RESEARCH_OUTPUT_INDEX,
-  ALGOLIA_RESEARCH_OUTPUT_REPLICA,
+  ALGOLIA_RESEARCH_OUTPUT_INDEX_REPLICA,
   SES_REGION,
   EVENT_BUS,
   EVENT_SOURCE,
@@ -57,7 +57,8 @@ export const algoliaCiApiKey = ALGOLIA_API_KEY || '';
 export const algoliaResearchOutputIndex =
   ALGOLIA_RESEARCH_OUTPUT_INDEX || 'asap-hub_research_outputs_dev';
 export const algoliaResearchOutputReplica =
-  ALGOLIA_RESEARCH_OUTPUT_REPLICA || 'asap-hub_research_outputs_replica_dev';
+  ALGOLIA_RESEARCH_OUTPUT_INDEX_REPLICA ||
+  'asap-hub_research_outputs_dev-replica';
 export const algoliaApiKeyTtl = 36060; // in [seconds] = 10 hours + 1 min - 1 minute is to account for network delays and off-sync clocks between servers
 export const sesRegion = SES_REGION || 'eu-west-1';
 export const userInviteSender = EMAIL_SENDER || `"ASAP Hub" <hub@asap.science>`;

@@ -11,7 +11,7 @@ import {
 
 export const INDEX = {
   primary: ALGOLIA_INDEX,
-  'asc(addedDate)': ALGOLIA_INDEX_REPLICA,
+  'desc(addedDate)': ALGOLIA_INDEX_REPLICA,
 };
 
 export const useAlgolia = () => {

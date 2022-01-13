@@ -6,8 +6,8 @@ export const ALGOLIA_APP_ID =
 export const ALGOLIA_INDEX =
   process.env.REACT_APP_ALGOLIA_INDEX || 'asap-hub_research_outputs_dev';
 export const ALGOLIA_INDEX_REPLICA =
-  process.env.REACT_APP_ALGOLIA_INDEX ||
-  'asap-hub_research_outputs_replica_dev';
+  process.env.REACT_APP_ALGOLIA_INDEX_REPLICA ||
+  'asap-hub_research_outputs_dev-replica';
 export const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN;
 export const ENVIRONMENT = process.env.REACT_APP_ENVIRONMENT || 'local';
 export const RELEASE = process.env.REACT_APP_RELEASE;

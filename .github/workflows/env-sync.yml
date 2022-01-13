@@ -17,7 +17,9 @@ jobs:
           echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "::add-mask::$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)"
           echo "ALGOLIA_RESEARCH_OUTPUT_INDEX=asap-hub_research_outputs_CI-${{github.event.number}}" >> $GITHUB_ENV
+          echo "ALGOLIA_RESEARCH_OUTPUT_INDEX_REPLICA=asap-hub_research_outputs_CI-${{github.event.number}}-replica" >> $GITHUB_ENV
       - name: Synchronize Schema
         run: |
+          yarn run prealgolia:upload
           yarn run algolia:upload
           yarn run algolia:upload:replica

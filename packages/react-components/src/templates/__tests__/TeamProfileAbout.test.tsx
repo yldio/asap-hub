@@ -49,6 +49,7 @@ it('renders the team list', () => {
           firstName: 'John',
           lastName: 'Doe',
           role: 'Project Manager',
+          email: 'johndoe@asap.com',
         },
       ]}
     />,
@@ -60,6 +61,42 @@ it('renders the team list', () => {
     'href',
     expect.stringMatching(/uuid/i),
   );
+  expect(getByText('Project Manager')).toBeInTheDocument();
+});
+it('shows the lab list when present on member list', () => {
+  const { queryByText, rerender } = render(
+    <TeamProfileAbout
+      {...props}
+      members={[
+        {
+          id: 'uuid',
+          displayName: 'John Doe',
+          firstName: 'John',
+          lastName: 'Doe',
+          role: 'Project Manager',
+          email: 'johndoe@asap.com',
+        },
+      ]}
+    />,
+  );
+  expect(queryByText('Lab')).not.toBeInTheDocument();
+  rerender(
+    <TeamProfileAbout
+      {...props}
+      members={[
+        {
+          id: 'uuid',
+          displayName: 'John Doe',
+          firstName: 'John',
+          lastName: 'Doe',
+          role: 'Project Manager',
+          email: 'johndoe@asap.com',
+          labs: [{ name: 'Doe', id: '1' }],
+        },
+      ]}
+    />,
+  );
+  expect(queryByText('Doe Lab')).toBeInTheDocument();
 });
 
 it('renders the expertise and resources list', () => {

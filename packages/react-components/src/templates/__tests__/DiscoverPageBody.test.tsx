@@ -68,32 +68,38 @@ it('renders training information', () => {
   ).toEqual(['Training', 'News 1 title', 'News 2 title']);
 });
 
-it('renders members information', () => {
+it('renders members section', () => {
   const { queryAllByRole } = render(
-    <DiscoverPageBody
-      {...props}
-      pages={[]}
-      aboutUs={''}
-      members={[createUserResponse()]}
-    />,
+    <DiscoverPageBody {...props} members={[createUserResponse()]} />,
   );
 
   expect(
     queryAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(['Meet the team']);
+  ).toEqual([
+    'Grantee Guidance',
+    'Page 1 title',
+    'Page 2 title',
+    'About us',
+    'About us content',
+    'Meet the ASAP team',
+  ]);
 });
-
-it('renders scientific advisory board information', () => {
+it('renders scientific Advisory Board section', () => {
   const { queryAllByRole } = render(
     <DiscoverPageBody
       {...props}
-      pages={[]}
-      aboutUs={''}
       scientificAdvisoryBoard={[createUserResponse()]}
     />,
   );
 
   expect(
     queryAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(['Meet the Scientific Advisory Board']);
+  ).toEqual([
+    'Grantee Guidance',
+    'Page 1 title',
+    'Page 2 title',
+    'About us',
+    'About us content',
+    'Meet the Scientific Advisory Board',
+  ]);
 });

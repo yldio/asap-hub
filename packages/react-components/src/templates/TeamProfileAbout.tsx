@@ -10,6 +10,7 @@ import {
 } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
+import { getUniqueCommaStringWithSuffix } from '../utils/text';
 
 const styles = css({
   display: 'grid',
@@ -18,8 +19,7 @@ const styles = css({
 
 type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
-  Omit<ComponentProps<typeof TeamMembersSection>, 'title'> &
-  Pick<TeamResponse, 'pointOfContact'> & {
+  Pick<TeamResponse, 'pointOfContact' | 'members'> & {
     teamGroupsCard?: React.ReactNode;
     readonly teamListElementId: string;
   };
@@ -49,7 +49,30 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
     ) : null}
     {members.length ? (
       <section id={teamListElementId}>
-        <TeamMembersSection members={members} />
+        <TeamMembersSection
+          members={members.map(
+            ({
+              displayName,
+              role,
+              firstName,
+              lastName,
+              avatarUrl,
+              id,
+              labs = [],
+            }) => ({
+              firstLine: displayName,
+              secondLine: role,
+              thirdLine: getUniqueCommaStringWithSuffix(
+                labs.map((lab) => lab.name),
+                'Lab',
+              ),
+              avatarUrl,
+              firstName,
+              lastName,
+              id,
+            }),
+          )}
+        />
       </section>
     ) : null}
     {teamGroupsCard}

@@ -107,6 +107,8 @@ it('renders discover with members', async () => {
           ...createUserResponse(),
           id: 'uuid',
           displayName: 'John Doe',
+          jobTitle: 'CEO',
+          institution: 'ASAP',
         },
       ],
       scientificAdvisoryBoard: [],
@@ -114,26 +116,9 @@ it('renders discover with members', async () => {
 
   const { getByText } = await renderDiscover();
   expect(getByText('John Doe').closest('a')!.href).toContain('uuid');
+  expect(getByText('CEO')).toBeInTheDocument();
+  expect(getByText('ASAP')).toBeInTheDocument();
 });
-
-it('sets the member roles to Staff', async () => {
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/discover')
-    .once()
-    .reply(200, {
-      training: [],
-      aboutUs: '',
-      pages: [],
-      members: [{ ...createUserResponse(), role: 'Guest' }],
-      scientificAdvisoryBoard: [],
-    } as DiscoverResponse);
-
-  const { getByText } = await renderDiscover();
-  expect(getByText('Staff')).toBeVisible();
-});
-
 it('renders discover with scientific advisory board', async () => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
@@ -156,22 +141,4 @@ it('renders discover with scientific advisory board', async () => {
 
   const { getByText } = await renderDiscover();
   expect(getByText('John Doe').closest('a')!.href).toContain('uuid');
-});
-
-it('sets the scientific advisory board roles to Staff', async () => {
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/discover')
-    .once()
-    .reply(200, {
-      training: [],
-      aboutUs: '',
-      pages: [],
-      members: [],
-      scientificAdvisoryBoard: [{ ...createUserResponse(), role: 'Guest' }],
-    } as DiscoverResponse);
-
-  const { getByText } = await renderDiscover();
-  expect(getByText('Staff')).toBeVisible();
 });

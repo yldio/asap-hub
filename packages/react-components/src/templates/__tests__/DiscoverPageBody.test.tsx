@@ -84,3 +84,22 @@ it('renders members section', () => {
     'Meet the ASAP team',
   ]);
 });
+it('renders scientific Advisory Board section', () => {
+  const { queryAllByRole } = render(
+    <DiscoverPageBody
+      {...props}
+      scientificAdvisoryBoard={[createUserResponse()]}
+    />,
+  );
+
+  expect(
+    queryAllByRole('heading').map(({ textContent }) => textContent),
+  ).toEqual([
+    'Grantee Guidance',
+    'Page 1 title',
+    'Page 2 title',
+    'About us',
+    'About us content',
+    'Meet the Scientific Advisory Board',
+  ]);
+});

@@ -20,7 +20,7 @@
   "unretrievableAttributes": null,
   "optionalWords": null,
   "queryLanguages": ["en"],
-  "replicas": ["ALGOLIA_RESEARCH_OUTPUT_INDEX_REPLICA"],
+  "replicas": ["asap-hub_research_outputs_CI-1275-replica"],
   "attributesForFaceting": ["teams.id", "type", "authors.id"],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

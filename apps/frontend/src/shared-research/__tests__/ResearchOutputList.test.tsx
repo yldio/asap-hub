@@ -104,7 +104,7 @@ it('defaults to the replica when there is no search query', async () => {
   await renderResearchOutputList();
   expect(mockGetResearchOutputs).toHaveBeenCalledWith(
     expect.objectContaining({
-      indexName: INDEX['asc(addedDate)'],
+      indexName: INDEX['desc(addedDate)'],
     }),
     {
       searchQuery: '',

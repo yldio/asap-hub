@@ -69,10 +69,6 @@ const editPersonalInfoStyles = css({
   justifySelf: 'end',
 });
 
-const staffContainerStyles = css({
-  paddingBottom: `${36 / perRem}em`,
-});
-
 const personalInfoStyles = css({
   gridArea: 'personal-info',
 
@@ -110,9 +106,6 @@ const contactNoEditStyles = css({
 
 const socialIconStyles = css({
   gridArea: 'social',
-});
-const socialIconStaffStyles = css({
-  gridColumnStart: 'contact',
 });
 
 const tabNavStyles = css({
@@ -185,7 +178,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   const { isOwnProfile } = useContext(UserProfileContext);
 
   return (
-    <header css={[containerStyles, role === 'Staff' && staffContainerStyles]}>
+    <header css={[containerStyles]}>
       <section css={personalInfoStyles}>
         <div>
           <div css={{ display: 'flex' }}>
@@ -261,16 +254,14 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
       <section
         css={[contactStyles, editContactInfoHref ? null : contactNoEditStyles]}
       >
-        {role !== 'Staff' ? (
-          <Link
-            small
-            buttonStyle
-            primary
-            href={createMailTo(contactEmail || email)}
-          >
-            Contact
-          </Link>
-        ) : null}
+        <Link
+          small
+          buttonStyle
+          primary
+          href={createMailTo(contactEmail || email)}
+        >
+          Contact
+        </Link>
       </section>
       {editContactInfoHref && (
         <div css={editContactStyles}>
@@ -285,17 +276,15 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
           </Link>
         </div>
       )}
-      <div css={[socialIconStyles, role === 'Staff' && socialIconStaffStyles]}>
+      <div css={[socialIconStyles]}>
         <SocialIcons {...social} />
       </div>
       <div css={tabNavStyles}>
-        {role !== 'Staff' ? (
-          <TabNav>
-            <TabLink href={tabRoutes.research({}).$}>Research</TabLink>
-            <TabLink href={tabRoutes.about({}).$}>Background</TabLink>
-            <TabLink href={tabRoutes.outputs({}).$}>Shared Outputs</TabLink>
-          </TabNav>
-        ) : null}
+        <TabNav>
+          <TabLink href={tabRoutes.research({}).$}>Research</TabLink>
+          <TabLink href={tabRoutes.about({}).$}>Background</TabLink>
+          <TabLink href={tabRoutes.outputs({}).$}>Shared Outputs</TabLink>
+        </TabNav>
       </div>
     </header>
   );

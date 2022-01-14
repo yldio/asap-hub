@@ -6,6 +6,7 @@ import {
   QuestionsSection,
   ProfileCardList,
   UserProfileBackground,
+  HelpSection,
 } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
@@ -19,7 +20,12 @@ type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
   > &
   Pick<
     UserResponse,
-    'email' | 'contactEmail' | 'labs' | 'researchInterests' | 'responsibilities'
+    | 'email'
+    | 'contactEmail'
+    | 'labs'
+    | 'researchInterests'
+    | 'responsibilities'
+    | 'role'
   > & {
     teams: Array<
       UserTeam & {
@@ -49,6 +55,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   editQuestionsHref,
   editRoleHref,
   teams,
+  role,
   ...roleProps
 }) => {
   const isRoleEmpty =
@@ -64,6 +71,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
           firstName={firstName}
           labs={labs}
           teams={teams}
+          role={role}
           {...roleProps}
         />
       ),
@@ -76,7 +84,6 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
             },
     },
   ];
-
   return (
     <ProfileCardList>
       {[
@@ -97,7 +104,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
                   label: 'Edit expertise and resources',
                 },
         },
-        {
+        role !== 'Staff' && {
           card: (
             <QuestionsSection firstName={firstName} questions={questions} />
           ),
@@ -109,19 +116,24 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
                   label: 'Edit open questions',
                 },
         },
-        userProfileGroupsCard !== undefined && {
-          card: userProfileGroupsCard,
-        },
-        isOwnProfile || {
-          card: (
-            <CtaCard
-              href={createMailTo(contactEmail || email)}
-              buttonText="Contact"
-            >
-              <strong>Interested in what you have seen?</strong> <br />
-              Why not get in touch with {displayName}?
-            </CtaCard>
-          ),
+        userProfileGroupsCard !== undefined &&
+          role !== 'Staff' && {
+            card: userProfileGroupsCard,
+          },
+        !isOwnProfile &&
+          role !== 'Staff' && {
+            card: (
+              <CtaCard
+                href={createMailTo(contactEmail || email)}
+                buttonText="Contact"
+              >
+                <strong>Interested in what you have seen?</strong> <br />
+                Why not get in touch with {displayName}?
+              </CtaCard>
+            ),
+          },
+        role === 'Staff' && {
+          card: <HelpSection />,
         },
       ]}
     </ProfileCardList>

@@ -9,6 +9,7 @@ const defaultProps = {
   teams: [],
   researchInterests: 'These are my research interest',
   responsibilities: 'these are my responsibilities',
+  role: 'Grantee' as const,
 };
 
 it('generates a heading', () => {

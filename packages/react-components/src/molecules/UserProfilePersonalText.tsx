@@ -1,7 +1,7 @@
 import { FC, Fragment, useContext } from 'react';
 import { css } from '@emotion/react';
 import { UserResponse } from '@asap-hub/model';
-import { discover, network } from '@asap-hub/routing';
+import { network } from '@asap-hub/routing';
 import { UserProfileContext } from '@asap-hub/react-context';
 
 import { Link, Paragraph, Ellipsis } from '../atoms';
@@ -65,12 +65,6 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
           </span>
         ) : null}
 
-        {role === 'Staff' ? (
-          <>
-            <br />
-            ASAP Staff on <Link href={discover({}).$}>Team ASAP</Link>
-          </>
-        ) : null}
         {!!labsList.length && (
           <>
             <br />

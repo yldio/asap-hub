@@ -26,24 +26,16 @@ const loadAbout = () =>
   import(/* webpackChunkName: "network-profile-about" */ './About');
 const loadOutputs = () =>
   import(/* webpackChunkName: "network-profile-outputs" */ './Outputs');
-const loadStaff = () =>
-  import(/* webpackChunkName: "network-profile-staff" */ './Staff');
 const loadEditing = () =>
   import(/* webpackChunkName: "network-editing" */ './Editing');
 const Research = lazy(loadResearch);
 const About = lazy(loadAbout);
 const Outputs = lazy(loadOutputs);
-const Staff = lazy(loadStaff);
 const Editing = lazy(loadEditing);
-loadResearch().then(loadStaff);
 
 const User: FC<Record<string, never>> = () => {
   useEffect(() => {
-    loadResearch()
-      .then(loadStaff)
-      .then(loadAbout)
-      .then(loadOutputs)
-      .then(loadEditing);
+    loadResearch().then(loadAbout).then(loadOutputs).then(loadEditing);
   }, []);
 
   const route = network({}).users({}).user;
@@ -101,9 +93,7 @@ const User: FC<Record<string, never>> = () => {
       <UserProfileContext.Provider value={{ isOwnProfile }}>
         <Frame title={user.displayName}>
           <UserProfilePage {...profilePageProps}>
-            {user.role === 'Staff' ? (
-              <Staff {...user} />
-            ) : (
+            {
               <>
                 <Switch>
                   <Route path={path + tabRoutes.research.template}>
@@ -129,7 +119,7 @@ const User: FC<Record<string, never>> = () => {
                   </Route>
                 )}
               </>
-            )}
+            }
           </UserProfilePage>
         </Frame>
       </UserProfileContext.Provider>

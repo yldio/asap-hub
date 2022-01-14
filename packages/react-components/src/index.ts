@@ -166,7 +166,6 @@ export {
   UserProfileResearch,
   UserProfileResearchOutputs,
   UserProfileSearchAndFilter,
-  UserProfileStaff,
   RoleModal,
   WelcomePage,
 } from './templates';

@@ -11,6 +11,7 @@ const commonProps: ComponentProps<typeof UserProfileResearch> = {
   expertiseAndResourceTags: [],
   questions: [],
   labs: [],
+  role: 'Grantee',
 };
 
 it('doesnt renders the role on ASAP when is not ownProfile and doesnt have labs, teams responsabilites or researchInterest', () => {

@@ -53,5 +53,4 @@ export { default as UserProfileBiography } from './UserProfileBiography';
 export { default as UserProfileGroups } from './UserProfileGroups';
 export { default as UserProfilePlaceholderCard } from './UserProfilePlaceholderCard';
 export { default as UserProfileRecentWorks } from './UserProfileRecentWorks';
-export { default as UserProfileStaffBackground } from './UserProfileStaffBackground';
 export { default as WelcomeCard } from './WelcomeCard';

@@ -105,12 +105,21 @@ it('renders continue the event conversation when group with slack provided', () 
   expect(queryByTitle(/slack/i)).not.toBeInTheDocument();
 });
 
-it('renders calendar list', () => {
-  const { getByText } = render(
+it('renders calendar list for active groups', () => {
+  const { queryByText, rerender } = render(
     <EventPage
       {...props}
+      group={{ ...props.group!, active: true }}
       calendar={{ ...createCalendarResponse(), name: 'Event Calendar' }}
     />,
   );
-  expect(getByText('Event Calendar')).toBeVisible();
+  expect(queryByText('Event Calendar')).toBeVisible();
+  rerender(
+    <EventPage
+      {...props}
+      group={{ ...props.group!, active: false }}
+      calendar={{ ...createCalendarResponse(), name: 'Event Calendar' }}
+    />,
+  );
+  expect(queryByText('Event Calendar')).not.toBeInTheDocument();
 });

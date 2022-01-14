@@ -13,8 +13,7 @@
     "teams.displayName",
     "authors.displayName",
     "type",
-    "authors.firstName",
-    "__meta.type"
+    "authors.firstName"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,
@@ -22,7 +21,7 @@
   "optionalWords": null,
   "queryLanguages": ["en"],
   "replicas": [],
-  "attributesForFaceting": ["teams.id", "type", "authors.id"],
+  "attributesForFaceting": ["teams.id", "type", "authors.id", "__meta.type"],
   "attributesToSnippet": null,
   "attributesToHighlight": null,
   "paginationLimitedTo": 1000,

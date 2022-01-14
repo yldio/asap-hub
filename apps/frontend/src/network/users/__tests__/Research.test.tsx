@@ -86,6 +86,8 @@ describe('when editing', () => {
     questions: ['question 1', 'question 2', 'question 3', 'question 4'],
     id,
     expertiseAndResourceDescription: 'Expertise Description',
+    researchInterests: 'My Interests',
+    responsibilities: 'My Responsibilities',
     teams: [
       {
         ...createTeamResponse(),
@@ -103,10 +105,12 @@ describe('when editing', () => {
   });
   describe('team membership', () => {
     it('opens and closes the dialog', async () => {
-      const { getByText, queryByText, findByLabelText } = result;
+      const { getByText, queryByText, findByLabelText, getByDisplayValue } =
+        result;
 
       userEvent.click(await findByLabelText(/edit.+role/i));
-
+      expect(getByDisplayValue('My Interests')).toBeVisible();
+      expect(getByText(/close/i)).toBeInTheDocument();
       userEvent.click(getByText(/close/i));
       await waitFor(() => {
         expect(queryByText(/loading/i)).not.toBeInTheDocument();
@@ -116,20 +120,20 @@ describe('when editing', () => {
     it('saves the changes from the dialog', async () => {
       const { getByText, queryByText, findByLabelText } = result;
 
-      userEvent.click(await findByLabelText(/example.+team/i));
+      userEvent.click(await findByLabelText(/edit.+role/i));
 
       userEvent.click(getByText(/save/i));
+
       await waitFor(() => {
         expect(queryByText(/loading/i)).not.toBeInTheDocument();
       });
+
       expect(mockPatchUser).toHaveBeenCalledWith(
         id,
         {
-          teams: [
-            {
-              id: '1',
-            },
-          ],
+          researchInterests: 'My Interests',
+          responsibilities: 'My Responsibilities',
+          reachOut: '',
         },
         expect.any(String),
       );

@@ -26,13 +26,18 @@ const main = async () => {
       await file.write(',\n');
     }
 
-    await file.write(JSON.stringify(
-      records.items.map((item) => ({
-        ...item,
-        __meta: {
-          type: 'research-output'
-        }
-      })), null, 2).slice(1, -1));
+    await file.write(
+      JSON.stringify(
+        records.items.map((item) => ({
+          ...item,
+          __meta: {
+            type: 'research-output',
+          },
+        })),
+        null,
+        2,
+      ).slice(1, -1),
+    );
 
     page++;
     recordCount += records.items.length;

@@ -89,14 +89,14 @@ const UserProfileRole: React.FC<UserProfileRoleProps> = ({
       {!!teams.length && (
         <div css={detailsContentStyle}>
           <ul css={containerStyle}>
-            {teams.map(({ displayName, role, id }, idx) => (
+            {teams.map(({ displayName, role: teamRole, id }, idx) => (
               <Fragment key={`team-${idx}`}>
                 {idx === 0 || <Divider />}
                 <li key={idx} css={listItemStyle}>
                   <div css={[titleStyle]}>Team</div>
                   <Link href={teamHref(id)}>Team {displayName}</Link>
                   <div css={[titleStyle]}>Role</div>
-                  <div>{role}</div>
+                  <div>{teamRole}</div>
                 </li>
               </Fragment>
             ))}

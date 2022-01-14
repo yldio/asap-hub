@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { UserProfileResearch } from '@asap-hub/react-components';
-import { array, text, boolean } from '@storybook/addon-knobs';
+import { array, text, boolean, select } from '@storybook/addon-knobs';
 import { TeamRole } from '@asap-hub/model';
 
 export default {
@@ -41,6 +41,7 @@ const props = (): ComponentProps<typeof UserProfileResearch> => ({
     ? 'User Profile Groups Placeholder'
     : undefined,
   isOwnProfile: boolean(`Is own profile`, false),
+  role: select('ASAP Hub Role', ['Staff', 'Grantee', 'Guest'], 'Grantee'),
 });
 
 export const ViewOnly = () => <UserProfileResearch {...props()} />;

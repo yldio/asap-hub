@@ -56,7 +56,6 @@ const RoleModal: React.FC<RoleModalProps> = ({
   const [newResponsibilities, setNewResponsibilities] =
     useState(responsibilities);
   const [newReachOut, setNewReachOut] = useState(reachOut);
-
   return (
     <EditModal
       title={'Your Role on ASAP'}

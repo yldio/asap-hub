@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { number, text } from '@storybook/addon-knobs';
+import { number, select, text } from '@storybook/addon-knobs';
 import { UserProfileRole } from '@asap-hub/react-components';
 import { createLabs, createListTeamResponse } from '@asap-hub/fixtures';
 
@@ -20,7 +20,9 @@ const props = (): ComponentProps<typeof UserProfileRole> => {
     ),
     researchInterests: text('Research Interests', 'My research Interests'),
     responsibilities: text('Responsibilities', 'My responsibilities'),
+    reachOut: text('Reach Out', 'You need help setting up your profile'),
     labs: createLabs({ labs: numberOfLabs }),
+    role: select('ASAP Hub Role', ['Staff', 'Grantee', 'Guest'], 'Grantee'),
   };
 };
 

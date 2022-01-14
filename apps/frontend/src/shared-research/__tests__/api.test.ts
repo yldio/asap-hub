@@ -72,7 +72,9 @@ describe('getResearchOutputs', () => {
 
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
-      expect.objectContaining({ filters: '(type:Article)' }),
+      expect.objectContaining({
+        filters: '(type:Article) AND __meta.type:"research-output"',
+      }),
     );
   });
 
@@ -85,7 +87,8 @@ describe('getResearchOutputs', () => {
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
       expect.objectContaining({
-        filters: '(type:Article OR type:"Grant Document")',
+        filters:
+          '(type:Article OR type:"Grant Document") AND __meta.type:"research-output"',
       }),
     );
   });
@@ -98,7 +101,9 @@ describe('getResearchOutputs', () => {
 
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
-      expect.objectContaining({ filters: '(type:Article)' }),
+      expect.objectContaining({
+        filters: '(type:Article) AND __meta.type:"research-output"',
+      }),
     );
   });
 
@@ -110,7 +115,9 @@ describe('getResearchOutputs', () => {
 
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
-      expect.objectContaining({ filters: 'teams.id:"12345"' }),
+      expect.objectContaining({
+        filters: 'teams.id:"12345" AND __meta.type:"research-output"',
+      }),
     );
   });
 
@@ -124,7 +131,8 @@ describe('getResearchOutputs', () => {
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
       expect.objectContaining({
-        filters: '(type:Article) AND teams.id:"12345"',
+        filters:
+          '(type:Article) AND teams.id:"12345" AND __meta.type:"research-output"',
       }),
     );
   });
@@ -139,7 +147,8 @@ describe('getResearchOutputs', () => {
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
       expect.objectContaining({
-        filters: '(type:Article OR type:"Grant Document") AND teams.id:"12345"',
+        filters:
+          '(type:Article OR type:"Grant Document") AND teams.id:"12345" AND __meta.type:"research-output"',
       }),
     );
   });
@@ -151,7 +160,9 @@ describe('getResearchOutputs', () => {
 
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
-      expect.objectContaining({ filters: 'authors.id:"12345"' }),
+      expect.objectContaining({
+        filters: 'authors.id:"12345" AND __meta.type:"research-output"',
+      }),
     );
   });
 
@@ -165,7 +176,8 @@ describe('getResearchOutputs', () => {
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
       expect.objectContaining({
-        filters: '(type:Article) AND authors.id:"12345"',
+        filters:
+          '(type:Article) AND authors.id:"12345" AND __meta.type:"research-output"',
       }),
     );
   });
@@ -181,7 +193,7 @@ describe('getResearchOutputs', () => {
       '',
       expect.objectContaining({
         filters:
-          '(type:Article OR type:"Grant Document") AND authors.id:"12345"',
+          '(type:Article OR type:"Grant Document") AND authors.id:"12345" AND __meta.type:"research-output"',
       }),
     );
   });

@@ -238,6 +238,7 @@ export const listGroupsResponse: ListGroupResponse = {
   items: [
     {
       id: 'group-id-1',
+      active: true,
       createdDate: '2020-12-11T14:33:50.000Z',
       lastModifiedDate: '2020-12-11T15:06:26.000Z',
       name: "JT's Group",
@@ -338,6 +339,7 @@ export const listGroupsResponse: ListGroupResponse = {
     },
     {
       id: 'group-id-2',
+      active: true,
       createdDate: '2020-12-11T14:33:50.000Z',
       lastModifiedDate: '2020-12-11T15:06:26.000Z',
       name: "FP's Group",
@@ -419,6 +421,7 @@ export const findGroupResponse = {
 
 export const getGroupResponse = (): GroupResponse => ({
   id: 'group-id-1',
+  active: true,
   createdDate: '2020-12-11T14:33:50.000Z',
   lastModifiedDate: '2020-12-11T15:06:26.000Z',
   name: "JT's Group",

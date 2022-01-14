@@ -8,6 +8,7 @@ import GroupProfileHeader from '../GroupProfileHeader';
 
 const props: ComponentProps<typeof GroupProfileHeader> = {
   id: '42',
+  active: true,
   name: 'Group Name',
   numberOfTeams: 2,
   lastModifiedDate: '2021-01-01',

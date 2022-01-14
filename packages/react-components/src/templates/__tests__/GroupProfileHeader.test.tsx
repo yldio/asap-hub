@@ -47,11 +47,18 @@ it('shows the last updated date', () => {
   );
 });
 
-it('renders the navigation', () => {
-  const { getAllByRole } = render(<GroupProfileHeader {...props} />);
+it('renders the navigation for active and inactive groups', () => {
+  const { getAllByRole, rerender } = render(
+    <GroupProfileHeader {...props} active={true} />,
+  );
   expect(
     getAllByRole('listitem').map(({ textContent }) => textContent),
   ).toEqual(['About', 'Calendar', 'Upcoming Events', 'Past Events']);
+
+  rerender(<GroupProfileHeader {...props} active={false} />);
+  expect(
+    getAllByRole('listitem').map(({ textContent }) => textContent),
+  ).toEqual(['About', 'Past Events']);
 });
 
 it('preserves the search query when navigating', () => {

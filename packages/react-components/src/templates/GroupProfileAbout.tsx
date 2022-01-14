@@ -45,7 +45,11 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
   return (
     <div css={styles}>
       <GroupInformation tags={tags} description={description} />
-      <GroupTools calendarId={calendars[0] && calendars[0].id} tools={tools} />
+      <GroupTools
+        calendarId={calendars[0] && calendars[0].id}
+        tools={tools}
+        active={active}
+      />
       <div id={membersSectionId}>
         <GroupMembersSection teams={teams} leaders={leaders} />
       </div>

@@ -1,0 +1,10 @@
+name: Synchronize Environment
+on:
+  pull_request:
+jobs:
+  test-job:
+    runs-on: ubuntu-18.04
+    container: registry.gitlab.com/yldio/asap-hub/squidex-utils:latest
+    steps:
+      - name: sq test
+        run: sq

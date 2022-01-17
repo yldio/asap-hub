@@ -29,7 +29,3 @@ jobs:
           NODE_ENV: 'production'
       - name: Test
         run: yarn run test --coverage
-      - name: Package
-        run: |
-          source ci/env-setup.sh
-          yarn sls package

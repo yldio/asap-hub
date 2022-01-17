@@ -88,7 +88,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
       },
     ],
   },
-  referencingTeamsContents: [getGraphqlTeam()],
+  referencingTeamsContents: [getGraphqlTeam()]
 });
 
 export const getResearchOutputResponse =

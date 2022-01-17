@@ -1,4 +1,5 @@
 import Boom from '@hapi/boom';
+import { ResearchOutputSearchResponse } from '@asap-hub/algolia';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   indexResearchOutputHandler,
@@ -6,7 +7,7 @@ import {
 } from '../../../src/handlers/research-output/index-handler';
 import { ResearchOutputEventType } from '../../../src/handlers/webhooks/webhook-research-output';
 import {
-  getResearchOutputResponse,
+  getResearchOutputResponse as getResearchOutputApiResponse,
   getResearchOutputEvent,
 } from '../../fixtures/research-output.fixtures';
 import {
@@ -14,6 +15,15 @@ import {
   algoliaIndexMock,
 } from '../../mocks/algolia-client.mock';
 import { researchOutputControllerMock } from '../../mocks/research-outputs-controller.mock';
+
+const getResearchOutputResponse = (): ResearchOutputSearchResponse => {
+  const researchOutputResponse = getResearchOutputApiResponse()
+  return {
+    ...researchOutputResponse,
+    objectID: researchOutputResponse.id,
+    __meta: { type: 'research-output' }
+  };
+}
 
 describe('Research Output index handler', () => {
   const indexHandler = indexResearchOutputHandler(

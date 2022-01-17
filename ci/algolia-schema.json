@@ -39,7 +39,7 @@
     "exact",
     "custom"
   ],
-  "customRanking": null,
+  "customRanking": ["desc(addedDate)"],
   "separatorsToIndex": "",
   "removeWordsIfNoResults": "none",
   "queryType": "prefixLast",

@@ -17,13 +17,13 @@ import {
 import { researchOutputControllerMock } from '../../mocks/research-outputs-controller.mock';
 
 const getResearchOutputResponse = (): ResearchOutputSearchResponse => {
-  const researchOutputResponse = getResearchOutputApiResponse()
+  const researchOutputResponse = getResearchOutputApiResponse();
   return {
     ...researchOutputResponse,
     objectID: researchOutputResponse.id,
-    __meta: { type: 'research-output' }
+    __meta: { type: 'research-output' },
   };
-}
+};
 
 describe('Research Output index handler', () => {
   const indexHandler = indexResearchOutputHandler(

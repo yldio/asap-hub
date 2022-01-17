@@ -27,7 +27,7 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
     filters,
     currentPage,
     pageSize,
-    searchIndex: !searchQuery.length ? INDEX['desc(addedDate)'] : INDEX.primary,
+    searchIndex: !searchQuery.length ? INDEX.ROSListing : INDEX.primary,
   });
 
   const { client } = useAlgolia();
@@ -45,7 +45,7 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
       (paginationParams) =>
         getResearchOutputs(
           client.initIndex(
-            !searchQuery.length ? INDEX['desc(addedDate)'] : INDEX.primary,
+            !searchQuery.length ? INDEX.ROSListing : INDEX.primary,
           ),
           {
             filters,

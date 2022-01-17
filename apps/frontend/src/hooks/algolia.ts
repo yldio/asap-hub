@@ -11,7 +11,7 @@ import {
 
 export const INDEX = {
   primary: ALGOLIA_INDEX,
-  'desc(addedDate)': ALGOLIA_INDEX_REPLICA,
+  ROSListing: ALGOLIA_INDEX_REPLICA,
 };
 
 export const useAlgolia = () => {

@@ -609,6 +609,10 @@ describe('ResearchOutputs controller', () => {
       });
     });
   });
+
+  describe('create', () => {
+    test('Should create the research output from squidex rest', async () => {});
+  });
 });
 
 type Author = NonNullable<

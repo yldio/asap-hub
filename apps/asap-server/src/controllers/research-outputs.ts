@@ -4,7 +4,12 @@ import {
   ListResearchOutputResponse,
   ResearchOutput,
 } from '@asap-hub/model';
-import { SquidexGraphqlClient } from '@asap-hub/squidex';
+import {
+  SquidexGraphqlClient,
+  SquidexRestClient,
+  SquidexRest,
+  RestResearchOutput,
+} from '@asap-hub/squidex';
 
 import { parseGraphQLResearchOutput } from '../entities/research-output';
 import { sanitiseForSquidex } from '../utils/squidex';
@@ -22,12 +27,25 @@ import {
 
 export default class ResearchOutputs implements ResearchOutputController {
   squidexGraphqlClient: SquidexGraphqlClient;
+  researchOutputSquidexRestClient: SquidexRestClient<RestResearchOutput>;
 
   constructor(squidexGraphqlClient: SquidexGraphqlClient) {
     this.squidexGraphqlClient = squidexGraphqlClient;
+    this.researchOutputSquidexRestClient = new SquidexRest('research-outputs');
   }
-  async create(researchOutput: ResearchOutput) {
-    return '1223';
+  async create(researchOutputData: ResearchOutput) {
+    const researchOutput = Object.entries(researchOutputData).reduce(
+      (acc, [key, value]) => {
+        acc[key] = { iv: value };
+        return acc;
+      },
+      {} as { [key: string]: { iv: unknown } },
+    );
+    const { id } = await this.researchOutputSquidexRestClient.create(
+      researchOutput as RestResearchOutput['data'],
+      false,
+    );
+    return id;
   }
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {

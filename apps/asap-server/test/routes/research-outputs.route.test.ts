@@ -135,7 +135,6 @@ describe('/research-outputs/ route', () => {
         title: researchOutput.title,
         usedInPublication: researchOutput.usedInPublication,
         addedDate: researchOutput.addedDate,
-        status: 'Draft',
       });
 
       expect(researchOutputControllerMock.fetchById).toBeCalledWith('abc123');

@@ -97,7 +97,7 @@ export type ResearchOutput = Required<
     | 'link'
     | 'type'
   >
-> & { status: string };
+>;
 
 export type ResearchOutputResponse = {
   readonly id: string;

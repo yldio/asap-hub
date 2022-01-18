@@ -70,7 +70,6 @@ export const researchOutputRouteFactory = (
       sharingStatus,
       usedInPublication,
       addedDate,
-      status: 'Draft',
     });
 
     const result = await researchOutputController.fetchById(id);

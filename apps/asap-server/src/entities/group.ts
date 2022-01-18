@@ -69,6 +69,7 @@ export const parseGraphQLGroup = (
   return {
     id: item.id,
     createdDate,
+    active: item.flatData.active ?? true,
     name: item.flatData.name || '',
     tags: item.flatData.tags || [],
     description: item.flatData.description || '',

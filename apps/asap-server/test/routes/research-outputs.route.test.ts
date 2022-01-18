@@ -111,4 +111,29 @@ describe('/research-outputs/ route', () => {
       );
     });
   });
+
+  describe('POST /research-outputs/', () => {
+    test('Should return a 200 when is hit', async () => {
+      const researchOutput = getResearchOutputResponse();
+
+      researchOutputControllerMock.create.mockResolvedValueOnce('abc123');
+      researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+        researchOutput,
+      );
+      const response = await supertest(app)
+        .post('/research-outputs')
+        .send(researchOutput)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(201);
+
+      expect(researchOutputControllerMock.create).toBeCalledWith({
+        type: researchOutput.type,
+      });
+
+      expect(researchOutputControllerMock.fetchById).toBeCalledWith('abc123');
+
+      expect(response.body).toEqual(researchOutput);
+    });
+  });
 });

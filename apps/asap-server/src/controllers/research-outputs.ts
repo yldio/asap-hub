@@ -25,6 +25,9 @@ export default class ResearchOutputs implements ResearchOutputController {
   constructor(squidexGraphqlClient: SquidexGraphqlClient) {
     this.squidexGraphqlClient = squidexGraphqlClient;
   }
+  async create(researchOutput: ResearchOutputResponse) {
+    return '1223';
+  }
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {
     const researchOutputGraphqlResponse =
@@ -131,4 +134,5 @@ export interface ResearchOutputController {
   }) => Promise<ListResearchOutputResponse>;
 
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
+  create: (researchOutput: ResearchOutputResponse) => Promise<string>;
 }

@@ -5,7 +5,9 @@ import {
 import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
 import { Response, Router } from 'express';
-import { ResearchOutputController } from '../controllers/research-outputs';
+import ResearchOutputs, {
+  ResearchOutputController,
+} from '../controllers/research-outputs';
 
 export const researchOutputRouteFactory = (
   researchOutputController: ResearchOutputController,
@@ -48,6 +50,18 @@ export const researchOutputRouteFactory = (
       res.json(result);
     },
   );
+
+  researchOutputRoutes.post('/research-outputs', async (req, res) => {
+    const { type } = req.body;
+
+    const id = await researchOutputController.create({
+      type,
+    } as ResearchOutputResponse);
+
+    const result = await researchOutputController.fetchById(id);
+
+    res.status(201).json(result);
+  });
 
   return researchOutputRoutes;
 };

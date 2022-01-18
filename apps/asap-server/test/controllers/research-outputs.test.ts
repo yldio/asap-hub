@@ -634,6 +634,27 @@ describe('ResearchOutputs controller', () => {
       const id = await researchOutputs.create(researchOutput);
       expect(id).toEqual(90210);
     });
+    test('should throw when fails to create the research output - 400', async () => {
+      const researchOutput = { type: 1 } as unknown as ResearchOutput;
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/research-outputs?publish=false`)
+        .reply(400);
+
+      await expect(researchOutputs.create(researchOutput)).rejects.toThrow(
+        'Bad Request',
+      );
+    });
+
+    test('should throw when fails to create the research output - 500', async () => {
+      const researchOutput = { type: 1 } as unknown as ResearchOutput;
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/research-outputs?publish=false`)
+        .reply(500);
+
+      await expect(researchOutputs.create(researchOutput)).rejects.toThrow(
+        'Internal Server',
+      );
+    });
   });
 });
 

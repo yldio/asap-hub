@@ -141,5 +141,33 @@ describe('/research-outputs/ route', () => {
 
       expect(response.body).toEqual(researchOutput);
     });
+
+    test('Should return a 404 error when creating a research output fails', async () => {
+      const researchOutput = getResearchOutputResponse();
+      researchOutputControllerMock.create.mockRejectedValueOnce(
+        Boom.notFound(),
+      );
+
+      await supertest(app)
+        .post('/research-outputs')
+        .send(researchOutput)
+        .set('Accept', 'application/json')
+        .expect(404);
+    });
+
+    test('Should return a 404 error when fails to fetch newly created research output', async () => {
+      const researchOutput = getResearchOutputResponse();
+
+      researchOutputControllerMock.create.mockResolvedValueOnce('abc123');
+      researchOutputControllerMock.fetchById.mockRejectedValueOnce(
+        Boom.notFound(),
+      );
+
+      await supertest(app)
+        .post('/research-outputs')
+        .send(researchOutput)
+        .set('Accept', 'application/json')
+        .expect(404);
+    });
   });
 });

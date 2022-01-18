@@ -6,24 +6,30 @@ import { ResearchOutputSearchIndex } from '../../src/indexes/research-output';
 
 const saveObjectResponse: SaveObjectResponse = {
   taskID: 1,
-  objectID: '1'
+  objectID: '1',
 };
 
 const deleteObjectResponse: DeleteResponse = {
-  taskID: 1
+  taskID: 1,
 };
 
-const getAlgoliaSearchIndexMock = () => ({
-  saveObject: (): SaveObjectResponse => saveObjectResponse,
-  deleteObject: (): DeleteResponse => deleteObjectResponse,
-} as unknown as AlgoliaSearchIndex);
+const getAlgoliaSearchIndexMock = () =>
+  ({
+    saveObject: (): SaveObjectResponse => saveObjectResponse,
+    deleteObject: (): DeleteResponse => deleteObjectResponse,
+  } as unknown as AlgoliaSearchIndex);
 
 describe('Research Outputs Index', () => {
   it('should save entity', async () => {
     const algoliaSearchIndexMock = getAlgoliaSearchIndexMock();
-    const algoliaSaveObjectSpy = jest.spyOn(algoliaSearchIndexMock, 'saveObject');
+    const algoliaSaveObjectSpy = jest.spyOn(
+      algoliaSearchIndexMock,
+      'saveObject',
+    );
 
-    const researchOutputSearchIndex = new ResearchOutputSearchIndex(algoliaSearchIndexMock);
+    const researchOutputSearchIndex = new ResearchOutputSearchIndex(
+      algoliaSearchIndexMock,
+    );
 
     const researchOutput = createResearchOutputResponse();
     const response = await researchOutputSearchIndex.save(researchOutput);
@@ -32,15 +38,20 @@ describe('Research Outputs Index', () => {
     expect(algoliaSaveObjectSpy).toBeCalledWith({
       ...researchOutput,
       objectID: researchOutput.id,
-      __meta: { 'type': 'research-output' },
+      __meta: { type: 'research-output' },
     });
   });
 
   it('should remove entity', async () => {
     const algoliaSearchIndexMock = getAlgoliaSearchIndexMock();
-    const algoliaSaveObjectSpy = jest.spyOn(algoliaSearchIndexMock, 'deleteObject');
+    const algoliaSaveObjectSpy = jest.spyOn(
+      algoliaSearchIndexMock,
+      'deleteObject',
+    );
 
-    const researchOutputSearchIndex = new ResearchOutputSearchIndex(algoliaSearchIndexMock);
+    const researchOutputSearchIndex = new ResearchOutputSearchIndex(
+      algoliaSearchIndexMock,
+    );
 
     const researchOutputId = '1';
     const response = await researchOutputSearchIndex.remove(researchOutputId);

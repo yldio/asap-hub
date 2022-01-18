@@ -99,6 +99,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@algolia/client-common@npm:*":
+  version: 4.12.0
+  resolution: "@algolia/client-common@npm:4.12.0"
+  dependencies:
+    "@algolia/requester-common": 4.12.0
+    "@algolia/transporter": 4.12.0
+  checksum: dee730abd94f57e73b1c2a921405927b0dc2c5e61978dac58df758fa6d64238b85866458efffe925c7461a543f6d3e5faef92f3cd07237f4f44d027d30305bc9
+  languageName: node
+  linkType: hard
+
 "@algolia/client-common@npm:4.10.3":
   version: 4.10.3
   resolution: "@algolia/client-common@npm:4.10.3"
@@ -116,16 +126,6 @@ __metadata:
     "@algolia/requester-common": 4.11.0
     "@algolia/transporter": 4.11.0
   checksum: 791fda2cc2c8d86012b72c5e1d22bdd7a89f37a497f176e875105b55297112ac41f735e53b1980aac35b13d908b791d4de7c017a5b74e73358c46b9f728f03b3
-  languageName: node
-  linkType: hard
-
-"@algolia/client-common@npm:4.12.0, @algolia/client-common@npm:^4.11.0":
-  version: 4.12.0
-  resolution: "@algolia/client-common@npm:4.12.0"
-  dependencies:
-    "@algolia/requester-common": 4.12.0
-    "@algolia/transporter": 4.12.0
-  checksum: dee730abd94f57e73b1c2a921405927b0dc2c5e61978dac58df758fa6d64238b85866458efffe925c7461a543f6d3e5faef92f3cd07237f4f44d027d30305bc9
   languageName: node
   linkType: hard
 
@@ -159,17 +159,6 @@ __metadata:
     "@algolia/requester-common": 4.11.0
     "@algolia/transporter": 4.11.0
   checksum: 3e6c518a43ba9f327a338d428ba709bb78100faf107888f4500743f802e7ad384f1e7b8647f6d68e4bcca389ffb19e7f29b0d0d8af15a45df7b0eaa21da3740c
-  languageName: node
-  linkType: hard
-
-"@algolia/client-search@npm:^4.11.0":
-  version: 4.12.0
-  resolution: "@algolia/client-search@npm:4.12.0"
-  dependencies:
-    "@algolia/client-common": 4.12.0
-    "@algolia/requester-common": 4.12.0
-    "@algolia/transporter": 4.12.0
-  checksum: f059bf5b92e1e6a25b2b8988c1440b441542cde850c941b596c98c4cbf7eadc83358827381bc168564e6332ba7cb5ae4aa54d17759744a8f2ff376e39b1244d0
   languageName: node
   linkType: hard
 
@@ -304,8 +293,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/algolia@workspace:packages/algolia"
   dependencies:
-    "@algolia/client-common": ^4.11.0
-    "@algolia/client-search": ^4.11.0
+    "@algolia/client-common": "*"
+    "@algolia/client-search": "*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": ^7.14.0

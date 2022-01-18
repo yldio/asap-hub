@@ -10090,16 +10090,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@algolia/transporter", "npm:4.11.0"]
           ],
           "linkType": "HARD",
-        }],
-        ["npm:4.12.0", {
-          "packageLocation": "./.yarn/cache/@algolia-client-search-npm-4.12.0-9120157150-f059bf5b92.zip/node_modules/@algolia/client-search/",
-          "packageDependencies": [
-            ["@algolia/client-search", "npm:4.12.0"],
-            ["@algolia/client-common", "npm:4.12.0"],
-            ["@algolia/requester-common", "npm:4.12.0"],
-            ["@algolia/transporter", "npm:4.12.0"]
-          ],
-          "linkType": "HARD",
         }]
       ]],
       ["@algolia/logger-common", [
@@ -10245,7 +10235,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/algolia", "workspace:packages/algolia"],
             ["@algolia/client-common", "npm:4.12.0"],
-            ["@algolia/client-search", "npm:4.12.0"],
+            ["@algolia/client-search", "npm:4.10.3"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],

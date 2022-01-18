@@ -1,5 +1,5 @@
 import React, { ComponentProps, ReactNode } from 'react';
-import { UserResponse, UserTeam } from '@asap-hub/model';
+import { UserResponse } from '@asap-hub/model';
 
 import {
   ProfileExpertiseAndResources,
@@ -13,23 +13,8 @@ import UserProfileRole from '../organisms/UserProfileRole';
 
 type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
-  Pick<
-    UserResponse,
-    | 'email'
-    | 'contactEmail'
-    | 'labs'
-    | 'researchInterests'
-    | 'responsibilities'
-    | 'role'
-    | 'displayName'
-    | 'firstName'
-  > & {
-    teams: Array<
-      UserTeam & {
-        editHref?: string;
-      }
-    >;
-  } & {
+  Pick<UserResponse, 'email' | 'contactEmail' | 'displayName'> &
+  ComponentProps<typeof UserProfileRole> & {
     userProfileGroupsCard?: ReactNode;
     editExpertiseAndResourcesHref?: string;
     editQuestionsHref?: string;

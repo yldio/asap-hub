@@ -41,7 +41,6 @@ it('renders the role on ASAP when labs, teams responsabilites or researchInteres
           id: '42',
           displayName: 'Team',
           role: 'Lead PI (Core Leadership)',
-          editHref: '/edit-team-membership/42',
         },
       ]}
     />,

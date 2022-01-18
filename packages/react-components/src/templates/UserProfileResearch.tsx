@@ -84,6 +84,37 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
             },
     },
   ];
+  const staffCards = [
+    !isOwnProfile && {
+      card: <HelpSection />,
+    },
+  ];
+  const defaultCards = [
+    {
+      card: <QuestionsSection firstName={firstName} questions={questions} />,
+      editLink:
+        editQuestionsHref === undefined
+          ? undefined
+          : {
+              href: editQuestionsHref,
+              label: 'Edit open questions',
+            },
+    },
+    userProfileGroupsCard !== undefined && {
+      card: userProfileGroupsCard,
+    },
+    !isOwnProfile && {
+      card: (
+        <CtaCard
+          href={createMailTo(contactEmail || email)}
+          buttonText="Contact"
+        >
+          <strong>Interested in what you have seen?</strong> <br />
+          Why not get in touch with {displayName}?
+        </CtaCard>
+      ),
+    },
+  ];
   return (
     <ProfileCardList>
       {[
@@ -104,37 +135,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
                   label: 'Edit expertise and resources',
                 },
         },
-        role !== 'Staff' && {
-          card: (
-            <QuestionsSection firstName={firstName} questions={questions} />
-          ),
-          editLink:
-            editQuestionsHref === undefined
-              ? undefined
-              : {
-                  href: editQuestionsHref,
-                  label: 'Edit open questions',
-                },
-        },
-        userProfileGroupsCard !== undefined &&
-          role !== 'Staff' && {
-            card: userProfileGroupsCard,
-          },
-        !isOwnProfile &&
-          role !== 'Staff' && {
-            card: (
-              <CtaCard
-                href={createMailTo(contactEmail || email)}
-                buttonText="Contact"
-              >
-                <strong>Interested in what you have seen?</strong> <br />
-                Why not get in touch with {displayName}?
-              </CtaCard>
-            ),
-          },
-        role === 'Staff' && {
-          card: <HelpSection />,
-        },
+        ...(role === 'Staff' ? staffCards : defaultCards),
       ]}
     </ProfileCardList>
   );

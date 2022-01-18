@@ -24,7 +24,8 @@ export class ResearchOutputSearchIndex extends SearchIndex<
     return this.saveObject(researchOutput.id, researchOutput);
   }
 
-  protected static getEntityName(): 'research-output' {
+  // eslint-disable-next-line class-methods-use-this
+  protected getEntityName(): 'research-output' {
     return 'research-output';
   }
 }

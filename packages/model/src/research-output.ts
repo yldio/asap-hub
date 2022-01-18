@@ -86,6 +86,19 @@ export const isInternalAuthor = (
   author: ExternalAuthor | UserResponse,
 ): author is UserResponse => (author as UserResponse).id !== undefined;
 
+export type ResearchOutput = Required<
+  Pick<
+    ResearchOutputResponse,
+    | 'title'
+    | 'addedDate'
+    | 'asapFunded'
+    | 'sharingStatus'
+    | 'usedInPublication'
+    | 'link'
+    | 'type'
+  >
+> & { status: string };
+
 export type ResearchOutputResponse = {
   readonly id: string;
   readonly type: ResearchOutputType;

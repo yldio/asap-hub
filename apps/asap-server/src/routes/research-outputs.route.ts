@@ -52,11 +52,26 @@ export const researchOutputRouteFactory = (
   );
 
   researchOutputRoutes.post('/research-outputs', async (req, res) => {
-    const { type } = req.body;
+    const {
+      type,
+      link,
+      title,
+      asapFunded,
+      sharingStatus,
+      usedInPublication,
+      addedDate,
+    } = req.body;
 
     const id = await researchOutputController.create({
       type,
-    } as ResearchOutputResponse);
+      link,
+      title,
+      asapFunded,
+      sharingStatus,
+      usedInPublication,
+      addedDate,
+      status: 'Draft',
+    });
 
     const result = await researchOutputController.fetchById(id);
 

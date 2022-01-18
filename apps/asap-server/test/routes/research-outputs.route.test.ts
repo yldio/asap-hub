@@ -129,6 +129,13 @@ describe('/research-outputs/ route', () => {
 
       expect(researchOutputControllerMock.create).toBeCalledWith({
         type: researchOutput.type,
+        link: researchOutput.link,
+        asapFunded: researchOutput.asapFunded,
+        sharingStatus: researchOutput.sharingStatus,
+        title: researchOutput.title,
+        usedInPublication: researchOutput.usedInPublication,
+        addedDate: researchOutput.addedDate,
+        status: 'Draft',
       });
 
       expect(researchOutputControllerMock.fetchById).toBeCalledWith('abc123');

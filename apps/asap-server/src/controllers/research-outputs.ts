@@ -2,6 +2,7 @@ import Boom from '@hapi/boom';
 import {
   ResearchOutputResponse,
   ListResearchOutputResponse,
+  ResearchOutput,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 
@@ -25,7 +26,7 @@ export default class ResearchOutputs implements ResearchOutputController {
   constructor(squidexGraphqlClient: SquidexGraphqlClient) {
     this.squidexGraphqlClient = squidexGraphqlClient;
   }
-  async create(researchOutput: ResearchOutputResponse) {
+  async create(researchOutput: ResearchOutput) {
     return '1223';
   }
 
@@ -134,5 +135,5 @@ export interface ResearchOutputController {
   }) => Promise<ListResearchOutputResponse>;
 
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
-  create: (researchOutput: ResearchOutputResponse) => Promise<string>;
+  create: (researchOutput: ResearchOutput) => Promise<string>;
 }

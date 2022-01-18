@@ -5,9 +5,7 @@ import {
 import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
 import { Response, Router } from 'express';
-import ResearchOutputs, {
-  ResearchOutputController,
-} from '../controllers/research-outputs';
+import { ResearchOutputController } from '../controllers/research-outputs';
 
 export const researchOutputRouteFactory = (
   researchOutputController: ResearchOutputController,

@@ -12,7 +12,7 @@ import {
 } from '@asap-hub/squidex';
 
 import { parseGraphQLResearchOutput } from '../entities/research-output';
-import { sanitiseForSquidex } from '../utils/squidex';
+import { parseToSquidex, sanitiseForSquidex } from '../utils/squidex';
 import {
   FETCH_RESEARCH_OUTPUT,
   FETCH_RESEARCH_OUTPUTS,
@@ -33,14 +33,8 @@ export default class ResearchOutputs implements ResearchOutputController {
     this.squidexGraphqlClient = squidexGraphqlClient;
     this.researchOutputSquidexRestClient = new SquidexRest('research-outputs');
   }
-  async create(researchOutputData: ResearchOutput) {
-    const researchOutput = Object.entries(researchOutputData).reduce(
-      (acc, [key, value]) => {
-        acc[key] = { iv: value };
-        return acc;
-      },
-      {} as { [key: string]: { iv: unknown } },
-    );
+  async create(researchOutputData: ResearchOutput): Promise<string> {
+    const researchOutput = parseToSquidex(researchOutputData);
     const { id } = await this.researchOutputSquidexRestClient.create(
       researchOutput as RestResearchOutput['data'],
       false,

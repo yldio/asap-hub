@@ -86,19 +86,6 @@ export const isInternalAuthor = (
   author: ExternalAuthor | UserResponse,
 ): author is UserResponse => (author as UserResponse).id !== undefined;
 
-export type ResearchOutput = Required<
-  Pick<
-    ResearchOutputResponse,
-    | 'title'
-    | 'addedDate'
-    | 'asapFunded'
-    | 'sharingStatus'
-    | 'usedInPublication'
-    | 'link'
-    | 'type'
-  >
->;
-
 export type ResearchOutputResponse = {
   readonly id: string;
   readonly type: ResearchOutputType;
@@ -128,6 +115,19 @@ export type ResearchOutputResponse = {
 
   readonly labs: Lab[];
 };
+
+export type ResearchOutput = Required<
+  Pick<
+    ResearchOutputResponse,
+    | 'title'
+    | 'addedDate'
+    | 'asapFunded'
+    | 'sharingStatus'
+    | 'usedInPublication'
+    | 'link'
+    | 'type'
+  >
+>;
 
 export const researchOutputLabels: Record<ResearchOutputType, string> = {
   'Grant Document': 'Open External Link',

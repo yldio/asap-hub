@@ -1,6 +1,13 @@
 name: DEV - Sync Algolia with squidex
 on:
   workflow_dispatch:
+    inputs:
+      entity:
+        type: choice
+        description: Choose which entity to sync
+        options:
+          - users
+          - research-outputs
 jobs:
   sync_dev_index:
     runs-on: ubuntu-18.04
@@ -12,6 +19,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: 'us-east-1'
+      ENTITY: ${{ github.event.inputs.entity }}"
     steps:
       - name: Checkout
         uses: actions/checkout@master

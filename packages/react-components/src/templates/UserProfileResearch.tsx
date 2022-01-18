@@ -5,7 +5,6 @@ import {
   ProfileExpertiseAndResources,
   QuestionsSection,
   ProfileCardList,
-  UserProfileBackground,
   HelpSection,
 } from '../organisms';
 import { CtaCard } from '../molecules';
@@ -15,10 +14,6 @@ import UserProfileRole from '../organisms/UserProfileRole';
 type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
   Pick<
-    ComponentProps<typeof UserProfileBackground>,
-    'firstName' | 'displayName'
-  > &
-  Pick<
     UserResponse,
     | 'email'
     | 'contactEmail'
@@ -26,6 +21,8 @@ type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
     | 'researchInterests'
     | 'responsibilities'
     | 'role'
+    | 'displayName'
+    | 'firstName'
   > & {
     teams: Array<
       UserTeam & {

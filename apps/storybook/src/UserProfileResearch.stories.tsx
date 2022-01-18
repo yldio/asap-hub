@@ -14,6 +14,9 @@ const props = (): ComponentProps<typeof UserProfileResearch> => ({
   email: text('Email', 'me@example.com'),
   contactEmail: text('Contact email', 'contact@example.com'),
   labs: [],
+  researchInterests: 'My Research interests',
+  responsibilities: 'My responsibilities',
+  reachOut: 'If you need my help',
   teams: [
     {
       id: '42',
@@ -50,9 +53,9 @@ export const Editable = () => (
     {...props()}
     editExpertiseAndResourcesHref="#edit-expertise-and-resources"
     editQuestionsHref="#edit-questions"
+    editRoleHref="#edit-role"
     teams={props().teams.map((team) => ({
       ...team,
-      editHref: `#edit-team-membership-${team.id}`,
     }))}
   />
 );

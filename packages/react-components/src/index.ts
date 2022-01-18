@@ -107,7 +107,6 @@ export {
   ToastStack,
   ToolCard,
   UserNavigation,
-  UserProfileBackground,
   UserProfileRole,
   UserProfileBiography,
   UserProfileGroups,

@@ -123,3 +123,14 @@ it('renders calendar list for active groups', () => {
   );
   expect(queryByText('Event Calendar')).not.toBeInTheDocument();
 });
+
+it('renders calendar list for events with missing group', () => {
+  const { queryByText } = render(
+    <EventPage
+      {...props}
+      group={undefined}
+      calendar={{ ...createCalendarResponse(), name: 'Event Calendar' }}
+    />,
+  );
+  expect(queryByText('Event Calendar')).toBeInTheDocument();
+});

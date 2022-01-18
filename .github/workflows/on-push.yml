@@ -34,4 +34,4 @@ jobs:
           path: .jest-cache
           key: ${{ runner.os }}-jest
       - name: Test
-        run: yarn test --coverage --maxWorkers=4
+        run: yarn test --coverage --maxWorkers=3

@@ -21,8 +21,6 @@ const onboardableUser: UserResponse = {
     {
       id: 'a',
       role: 'Co-PI (Core Leadership)',
-      mainResearchInterests: 'a',
-      responsibilities: 'a',
     },
   ],
   institution: 'a',

@@ -62,6 +62,8 @@ const body = {
   labs: {
     iv: [],
   },
+  researchInterests: { iv: 'Research Interests' },
+  responsibilities: { iv: 'Responsibilities' },
 };
 
 describe('Import user', () => {
@@ -151,8 +153,6 @@ describe('Import user', () => {
             {
               id: ['team-uuid-1'],
               role: 'Lead PI (Core Leadership)',
-              mainResearchInterests: 'Interests',
-              responsibilities: 'Responsibilities',
             },
           ],
         },

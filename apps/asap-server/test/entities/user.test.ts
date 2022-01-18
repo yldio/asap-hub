@@ -21,11 +21,9 @@ describe('parseGraphQLUserTeamConnections', () => {
     const parsedTeams = parseGraphQLUserTeamConnections(teams);
     expect(parsedTeams).toEqual([
       {
-        mainResearchInterests: 'some team mainResearchInterests',
         displayName: 'Team A',
         id: 'team-id-1',
         proposal: 'proposalId1',
-        responsibilities: 'some team responsibilities',
         role: 'Lead PI (Core Leadership)',
       },
     ]);

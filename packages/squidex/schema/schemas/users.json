@@ -229,42 +229,6 @@
               "isRequiredOnPublish": false,
               "isHalfWidth": true
             }
-          },
-          {
-            "name": "mainResearchInterests",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": true,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": true,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Main Research Interests",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "responsibilities",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": true,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": true,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Responsibilities",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
           }
         ]
       },

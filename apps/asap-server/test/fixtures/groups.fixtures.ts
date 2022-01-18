@@ -128,8 +128,6 @@ export const queryGroupsResponse = {
                       teams: [
                         {
                           role: 'Co-PI (Core Leadership)',
-                          responsibilities: null,
-                          mainResearchInterests: null,
                           id: [
                             {
                               __typename: 'Teams',

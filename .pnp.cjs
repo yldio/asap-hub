@@ -10237,6 +10237,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@algolia/client-common", "npm:4.12.0"],
             ["@algolia/client-search", "npm:4.10.3"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/fixtures", "workspace:packages/fixtures"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],
             ["algoliasearch", "npm:4.11.0"]

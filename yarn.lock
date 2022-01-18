@@ -296,6 +296,7 @@ __metadata:
     "@algolia/client-common": "*"
     "@algolia/client-search": "*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": ^7.14.0
     algoliasearch: ^4.11.0

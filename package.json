@@ -38,7 +38,7 @@
     "watch:babel": "yarn workspaces foreach -vpi -j 1000 run watch:babel",
     "watch:typecheck": "yarn build:typecheck -w",
     "schema:update": "./apps/asap-server/scripts/schema-update.sh",
-    "ro:export": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --project ./apps/asap-server/tsconfig.json --files=./apps/asap-server/@types ./apps/asap-server/scripts/export-research-outputs.ts",
+    "export:entity": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --project ./apps/asap-server/tsconfig.json --files=./apps/asap-server/@types ./apps/asap-server/scripts/cli.ts export",
     "algolia:remove-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:remove-index",
     "algolia:move-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:move-index"
   },

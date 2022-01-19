@@ -19,24 +19,25 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: 'us-east-1'
-      ENTITY: ${{ github.event.inputs.entity }}"
+      ENTITY: ${{ github.event.inputs.entity }}
+      FILENAME: 'data-dump.json'
     steps:
       - name: Checkout
         uses: actions/checkout@master
       - name: Build
         run: yarn build
-      - name: Download the Research Outputs
-        run: yarn ro:export
+      - name: Download the entity data
+        run: yarn export:entity $ENTITY -f $FILENAME
       - name: Setup Environment Variables
         run: |
           echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "::add-mask::$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)"
-          echo "ALGOLIA_RESEARCH_OUTPUT_INDEX=asap-hub_research_outputs_dev" >> $GITHUB_ENV
-          echo "ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE=asap-hub_research_outputs_dev_restore" >> $GITHUB_ENV
+          echo "ALGOLIA_INDEX=asap-hub_$ENTITY_dev" >> $GITHUB_ENV
+          echo "ALGOLIA_INDEX_RESTORE=asap-hub_$ENTITY_dev_restore" >> $GITHUB_ENV
       - name: Copy index settings to a temporary index
-        run: yarn run algolia transferindexconfig -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE
+        run: yarn run algolia transferindexconfig -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_INDEX_RESTORE
       - name: Import records into the temporary index
-        run: yarn run algolia import -s ./ro.json -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE -t ./apps/asap-server/scripts/algolia-transformation.js
-      - name: Move temporary index to the prod one
-        run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE -i $ALGOLIA_RESEARCH_OUTPUT_INDEX
+        run: yarn run algolia import -s ./ro.json -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_RESTORE -t ./apps/asap-server/scripts/algolia-transformation.js
+      - name: Move temporary index onto the dev one
+        run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_RESTORE -i $ALGOLIA_INDEX

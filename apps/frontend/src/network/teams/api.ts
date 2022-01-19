@@ -67,3 +67,37 @@ export const patchTeam = async (
   }
   return resp.json();
 };
+
+interface CreateTeamResearchOutput {
+  type: ResearchOutputType;
+  link: string;
+  title: string;
+  asapFunded: boolean;
+  usedInPublication: boolean;
+  sharingStatus: ResearchOutputSharingStatus;
+  addedDate: string;
+}
+export const createTeamResearchOutput = async (
+  teamId: string,
+  researchOutput: CreateTeamResearchOutput,
+  authorization: string,
+) => {
+  const resp = await fetch(`${API_BASE_URL}/research-outputs`, {
+    method: 'POST',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify({
+      ...researchOutput,
+      teamId,
+    }),
+  });
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to create research output for teamId: ${teamId} Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};

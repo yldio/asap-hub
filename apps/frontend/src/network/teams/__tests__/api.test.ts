@@ -1,9 +1,13 @@
 import nock from 'nock';
 import { createTeamResponse, createListTeamResponse } from '@asap-hub/fixtures';
-import { TeamResponse } from '@asap-hub/model';
+import {
+  ResearchOutputSharingStatus,
+  ResearchOutputType,
+  TeamResponse,
+} from '@asap-hub/model';
 
 import { API_BASE_URL } from '../../../config';
-import { getTeam, patchTeam, getTeams } from '../api';
+import { getTeam, patchTeam, getTeams, createTeamResearchOutput } from '../api';
 import { GetListOptions } from '../../../api-util';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
@@ -123,6 +127,41 @@ describe('patchTeam', () => {
       patchTeam('42', patch, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to update team with id 42. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+describe('createTeamResearchOutput', () => {
+  const teamId = '90210';
+  const payload = {
+    type: 'Bioinformatics' as ResearchOutputType,
+    link: 'http://a-link',
+    title: 'A title',
+    asapFunded: true,
+    usedInPublication: true,
+    sharingStatus: 'Public' as ResearchOutputSharingStatus,
+    addedDate: '2020-01-01',
+  };
+  it('makes an authorized POST request to create a research output', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .post('/research-outputs', { ...payload, teamId })
+      .reply(201, payload);
+
+    const response = await createTeamResearchOutput(
+      teamId,
+      payload,
+      'Bearer x',
+    );
+    expect(nock.isDone()).toBe(true);
+    expect(response).toEqual(payload);
+  });
+
+  it('errors for an error status', async () => {
+    nock(API_BASE_URL).post('/research-outputs').reply(500, {});
+
+    await expect(
+      createTeamResearchOutput(teamId, payload, 'Bearer x'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to create research output for teamId: 90210 Expected status 201. Received status 500."`,
     );
   });
 });

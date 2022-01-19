@@ -1,10 +1,11 @@
 import { css } from '@emotion/react';
 
-import { Display, Paragraph } from '../atoms';
+import { Display, Paragraph, Button } from '../atoms';
 import { perRem } from '../pixels';
 import { steel, paper } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { ResearchOutput } from '@asap-hub/model';
+import React from 'react';
 
 const visualHeaderStyles = css({
   marginBottom: `${30 / perRem}em`,
@@ -19,32 +20,45 @@ const textStyles = css({
   maxWidth: `${720 / perRem}em`,
 });
 
-type TeamCreateOutputPageProps = { researchOutput: Partial<ResearchOutput> };
+type TeamCreateOutputPageProps = {
+  onCreate: () => void;
+  researchOutput: Partial<ResearchOutput>;
+};
 
-const TeamCreateOutputHeader: React.FC<TeamCreateOutputPageProps> = ({
-  researchOutput,
+type TeamCreateOutputHeaderProps = {
+  type: string;
+};
+
+const TeamCreateOutputHeader: React.FC<TeamCreateOutputHeaderProps> = ({
+  type,
 }) => (
   <header>
     <div css={visualHeaderStyles}>
-      <Display styleAsHeading={2}>
-        Share {researchOutput.type?.toLowerCase()}
-      </Display>
+      <Display styleAsHeading={2}>Share {type.toLowerCase()}</Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
-          Add your {researchOutput.type?.toLowerCase()} code to your third party
-          publication platform (e.g. Github) before sharing on the hub.
+          Add your {type.toLowerCase()} code to your third party publication
+          platform (e.g. Github) before sharing on the hub.
         </Paragraph>
       </div>
     </div>
   </header>
 );
 
-// const TeamCreateOutputForm: React.FC = () => (
-//   <Button onClick={onGoBack}>Back</Button>
-// );
+const TeamCreateOutputForm: React.FC<{ onCreate: () => void }> = ({
+  onCreate,
+}) => <Button onClick={onCreate}>Back</Button>;
 
 const TeamCreateOutputPage: React.FC<TeamCreateOutputPageProps> = ({
   researchOutput,
-}) => <TeamCreateOutputHeader researchOutput={researchOutput} />;
+  onCreate,
+}) => {
+  return (
+    <>
+      <TeamCreateOutputHeader type={researchOutput.type || 'unknown'} />
+      <TeamCreateOutputForm onCreate={onCreate} />
+    </>
+  );
+};
 
 export default TeamCreateOutputPage;

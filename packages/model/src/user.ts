@@ -96,8 +96,6 @@ export interface UserTeam {
   displayName?: string;
   proposal?: string;
   role: TeamRole;
-  mainResearchInterests?: string;
-  responsibilities?: string;
 }
 
 export interface UserSocialLinks {
@@ -155,9 +153,10 @@ export interface UserPatchRequest {
   expertiseAndResourceTags?: string[];
   expertiseAndResourceDescription?: string;
   responsibilities?: string;
+  reachOut?: string;
   researchInterests?: string;
   questions?: string[];
-  teams?: Pick<UserTeam, 'id' | 'mainResearchInterests' | 'responsibilities'>[];
+  teams?: Pick<UserTeam, 'id'>[];
   social?: Omit<UserSocialLinks, 'orcid'>;
   onboarded?: boolean;
 }

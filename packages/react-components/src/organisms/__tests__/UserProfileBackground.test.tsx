@@ -57,7 +57,7 @@ it('renders proposal if present', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborating PI"
-      mainResearchInterests="text"
+      researchInterests="text"
       proposal="42"
       labs={[]}
     />,
@@ -142,7 +142,7 @@ it('renders mainResearchInterests if present', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborating PI"
-      mainResearchInterests="text"
+      researchInterests="text"
       labs={[]}
     />,
   );

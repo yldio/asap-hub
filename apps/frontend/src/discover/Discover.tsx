@@ -20,19 +20,10 @@ const Discover: FC<Record<string, never>> = () => {
   }
 
   if (data) {
-    // ASAP Staff role is based on job title and institution
-    const discover = {
-      ...data,
-      members: data.members.map((member) => ({
-        ...member,
-        role: 'Staff',
-        teams: [],
-      })),
-    };
     return (
       <DiscoverPage>
         <Frame title={null}>
-          <Body {...discover} />
+          <Body {...data} />
         </Frame>
       </DiscoverPage>
     );

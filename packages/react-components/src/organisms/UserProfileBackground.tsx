@@ -10,7 +10,9 @@ import UserProfilePlaceholderCard from './UserProfilePlaceholderCard';
 import { getUniqueCommaStringWithSuffix } from '../utils';
 
 type UserProfileBackgroundProps = UserTeam &
-  Pick<UserResponse, 'firstName'> & { labs?: Lab[] };
+  Pick<UserResponse, 'firstName' | 'researchInterests' | 'responsibilities'> & {
+    labs?: Lab[];
+  };
 
 const dynamicContainerStyles = css({
   display: 'flex',
@@ -49,7 +51,7 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
   id,
   displayName,
   role,
-  mainResearchInterests = '',
+  researchInterests = '',
   responsibilities = '',
   proposal,
   labs = [],
@@ -84,11 +86,11 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
             <span>{labsList}</span>
           </div>
         )}
-        {(mainResearchInterests || isOwnProfile) && (
+        {(researchInterests || isOwnProfile) && (
           <div css={detailsContentStyle}>
             <Headline3 styleAsHeading={5}>Main Research Interests</Headline3>
-            {mainResearchInterests ? (
-              <p css={textStyle}>{mainResearchInterests}</p>
+            {researchInterests ? (
+              <p css={textStyle}>{researchInterests}</p>
             ) : (
               <UserProfilePlaceholderCard title="What are your main research interests?">
                 Tell the network what your main research interests are to easily

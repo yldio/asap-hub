@@ -30,6 +30,8 @@ const fieldToStep: Record<
   questions: 'Questions',
   expertiseAndResourceTags: 'Expertise',
   teams: 'Role',
+  researchInterests: 'Role',
+  responsibilities: 'Role',
 };
 
 const steps = (
@@ -49,7 +51,7 @@ const steps = (
       .users({})
       .user({ userId: user.id })
       .research({})
-      .editTeamMembership({ teamId: user.teams[0]?.id }).$,
+      .editRole({}).$,
   },
   Expertise: {
     label: 'Expertise',

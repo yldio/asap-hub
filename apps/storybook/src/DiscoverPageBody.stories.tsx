@@ -6,6 +6,74 @@ export default {
   title: 'Templates / Discover / Page Body',
 };
 
+const baseMemberProps = {
+  onboarded: true,
+  lastModifiedDate: '',
+  createdDate: '',
+  teams: [],
+  expertiseAndResourceTags: [],
+  email: '',
+  labs: [],
+  questions: [],
+};
+const members = [
+  {
+    ...baseMemberProps,
+    id: '1',
+    displayName: 'Daniel Ramirez',
+    firstName: 'Daniel',
+    lastName: 'Ramirez',
+    role: 'Staff' as const,
+  },
+  {
+    ...baseMemberProps,
+    id: '2',
+    displayName: 'Peter Venkman',
+    firstName: 'Peter',
+    lastName: 'Venkman',
+    role: 'Staff' as const,
+  },
+  {
+    ...baseMemberProps,
+    id: '3',
+    displayName: 'Tess W. B. Goetz',
+    firstName: 'Tess',
+    lastName: 'Goetz',
+    role: 'Staff' as const,
+  },
+  {
+    ...baseMemberProps,
+    id: '4',
+    displayName: 'Robin Peploe',
+    firstName: 'Robin',
+    lastName: 'Peploe',
+    role: 'Staff' as const,
+  },
+  {
+    ...baseMemberProps,
+    id: '5',
+    displayName: 'Alice Lane',
+    firstName: 'Alice',
+    lastName: 'Lane',
+    role: 'Staff' as const,
+  },
+  {
+    ...baseMemberProps,
+    id: '6',
+    displayName: 'Philip Mars',
+    firstName: 'Philip',
+    lastName: 'Mars',
+    role: 'Staff' as const,
+  },
+  {
+    ...baseMemberProps,
+    id: '7',
+    displayName: 'Emmanuel Depay',
+    firstName: 'Emanuel',
+    lastName: 'Depay',
+    role: 'Staff' as const,
+  },
+];
 const props = (): ComponentProps<typeof DiscoverPageBody> => ({
   pages: [
     {
@@ -39,57 +107,8 @@ const props = (): ComponentProps<typeof DiscoverPageBody> => ({
       thumbnail: 'https://picsum.photos/200',
     },
   ],
-  members: [
-    {
-      id: '1',
-      displayName: 'Daniel Ramirez',
-      firstName: 'Daniel',
-      lastName: 'Ramirez',
-      role: 'Staff',
-    },
-    {
-      id: '2',
-      displayName: 'Peter Venkman',
-      firstName: 'Peter',
-      lastName: 'Venkman',
-      role: 'Staff',
-    },
-    {
-      id: '3',
-      displayName: 'Tess W. B. Goetz',
-      firstName: 'Tess',
-      lastName: 'Goetz',
-      role: 'Staff',
-    },
-    {
-      id: '4',
-      displayName: 'Robin Peploe',
-      firstName: 'Robin',
-      lastName: 'Peploe',
-      role: 'Staff',
-    },
-    {
-      id: '5',
-      displayName: 'Alice Lane',
-      firstName: 'Alice',
-      lastName: 'Lane',
-      role: 'Staff',
-    },
-    {
-      id: '6',
-      displayName: 'Philip Mars',
-      firstName: 'Philip',
-      lastName: 'Mars',
-      role: 'Staff',
-    },
-    {
-      id: '7',
-      displayName: 'Emmanuel Depay',
-      firstName: 'Emanuel',
-      lastName: 'Depay',
-      role: 'Staff',
-    },
-  ],
+  members,
+  scientificAdvisoryBoard: members,
   aboutUs: text('About Us', ''),
 });
 

@@ -17,8 +17,9 @@ it('renders the content', async () => {
           id: '42',
           firstName: 'Phillip',
           lastName: 'Mars',
-          displayName: 'Phillip Mars, PhD',
-          role: 'Collaborating PI',
+          firstLine: 'Phillip Mars, PhD',
+          secondLine: 'Collaborating PI',
+          thirdLine: 'Mars lab',
         },
       ]}
     />,
@@ -27,4 +28,5 @@ it('renders the content', async () => {
   expect(getByText('Title')).toBeVisible();
   expect(getByText('Phillip Mars, PhD')).toBeVisible();
   expect(getByText('Collaborating PI')).toBeVisible();
+  expect(getByText('Mars lab')).toBeVisible();
 });

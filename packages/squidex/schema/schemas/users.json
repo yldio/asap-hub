@@ -229,42 +229,6 @@
               "isRequiredOnPublish": false,
               "isHalfWidth": true
             }
-          },
-          {
-            "name": "mainResearchInterests",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": true,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Main Research Interests",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "responsibilities",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": true,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Responsibilities",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
           }
         ]
       },
@@ -609,7 +573,7 @@
         "name": "responsibilities",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
@@ -628,7 +592,7 @@
         "name": "researchInterests",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
@@ -637,6 +601,27 @@
           "contentType": "Unspecified",
           "editor": "TextArea",
           "label": "Research Interests",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "reachOut",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "minLength": 0,
+          "maxLength": 250,
+          "contentType": "Unspecified",
+          "editor": "TextArea",
+          "label": "Reach Out",
+          "hints": "Reach out reasons (only relevant for \"Staff\" users)",
+          "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
@@ -1069,43 +1054,6 @@
             }
           }
         ]
-      },
-      {
-        "name": "separatorStaffOnly",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "UI",
-          "editor": "Separator",
-          "label": "ASAP Staff Only (Currently not in use)",
-          "hints": "Only fill out these fields if the user is an ASAP staff person",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "reachOut",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": true,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Reach Out",
-          "hints": "Reach out reasons (only relevant for \"Staff\" users)",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
       }
     ],
     "previewUrls": {

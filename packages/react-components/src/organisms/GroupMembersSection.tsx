@@ -27,7 +27,9 @@ const GroupMembersSection: React.FC<GroupMembersSectionProps> = ({
         singleColumn
         members={leaders.map(({ user, role }) => ({
           ...user,
-          role,
+          firstLine: user.displayName,
+          secondLine: role,
+          thirdLine: user.teams.length <= 1 ? user.teams : 'Multiple Teams',
         }))}
       />
       <Headline3 styleAsHeading={4}>Teams ({teams.length})</Headline3>

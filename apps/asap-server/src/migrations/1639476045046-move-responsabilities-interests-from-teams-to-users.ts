@@ -1,4 +1,5 @@
 /* istanbul ignore file */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RestUser } from '@asap-hub/squidex';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 import { applyToAllItemsInCollection } from '../utils/migrations';
@@ -11,15 +12,19 @@ export default class AddDefaultOnboardedFieldsToUser extends Migration {
         await squidexClient.patch(user.id, {
           researchInterests: {
             iv:
-              user.data.teams.iv?.find(
-                (team) => !!team.mainResearchInterests?.length,
-              )?.mainResearchInterests ?? '',
+              (
+                user.data.teams.iv?.find(
+                  (team) => !!(team as any).mainResearchInterests?.length,
+                ) as any
+              ).mainResearchInterests ?? '',
           },
           responsibilities: {
             iv:
-              user.data.teams.iv?.find(
-                (team) => !!team.responsibilities?.length,
-              )?.responsibilities ?? '',
+              (
+                user.data.teams.iv?.find(
+                  (team) => !!(team as any).responsibilities?.length,
+                ) as any
+              ).responsibilities ?? '',
           },
         });
       },

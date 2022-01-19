@@ -40,6 +40,7 @@ it('renders discover header', async () => {
       members: [],
       pages: [],
       training: [],
+      scientificAdvisoryBoard: [],
     });
 
   const { getByText } = await renderDiscover();
@@ -57,6 +58,7 @@ it('renders discover with guidance, about and members', async () => {
       aboutUs: '<h1>About us</h1>',
       pages: [createPageResponse('1'), createPageResponse('2')],
       members: [createUserResponse()],
+      scientificAdvisoryBoard: [createUserResponse()],
     } as DiscoverResponse);
 
   const { queryAllByText, getByText } = await renderDiscover();
@@ -83,6 +85,7 @@ it('renders discover with training', async () => {
       aboutUs: '<h1>About us</h1>',
       pages: [createPageResponse('1'), createPageResponse('2')],
       members: [],
+      scientificAdvisoryBoard: [],
     } as DiscoverResponse);
 
   const { getByText } = await renderDiscover();
@@ -104,15 +107,19 @@ it('renders discover with members', async () => {
           ...createUserResponse(),
           id: 'uuid',
           displayName: 'John Doe',
+          jobTitle: 'CEO',
+          institution: 'ASAP',
         },
       ],
+      scientificAdvisoryBoard: [],
     } as DiscoverResponse);
 
   const { getByText } = await renderDiscover();
   expect(getByText('John Doe').closest('a')!.href).toContain('uuid');
+  expect(getByText('CEO')).toBeInTheDocument();
+  expect(getByText('ASAP')).toBeInTheDocument();
 });
-
-it('sets the member roles to Staff', async () => {
+it('renders discover with scientific advisory board', async () => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
@@ -122,9 +129,16 @@ it('sets the member roles to Staff', async () => {
       training: [],
       aboutUs: '',
       pages: [],
-      members: [{ ...createUserResponse(), role: 'Guest' }],
+      members: [],
+      scientificAdvisoryBoard: [
+        {
+          ...createUserResponse(),
+          id: 'uuid',
+          displayName: 'John Doe',
+        },
+      ],
     } as DiscoverResponse);
 
   const { getByText } = await renderDiscover();
-  expect(getByText('Staff')).toBeVisible();
+  expect(getByText('John Doe').closest('a')!.href).toContain('uuid');
 });

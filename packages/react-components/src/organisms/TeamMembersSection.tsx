@@ -16,9 +16,7 @@ const TeamMembersSection: React.FC<TeamMembersSectionProps> = ({
 }) => (
   <Card>
     <Headline2 styleAsHeading={3}>{title}</Headline2>
-    <MembersList
-      members={members.map((member) => ({ ...member, teams: [] }))}
-    />
+    <MembersList members={members} />
   </Card>
 );
 

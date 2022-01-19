@@ -17,9 +17,7 @@ export type User = Pick<
   | 'avatarUrl'
   | 'algoliaApiKey'
 > & {
-  teams: ReadonlyArray<
-    Omit<UserResponse['teams'][0], 'mainResearchInterests' | 'responsibilities'>
-  >;
+  teams: ReadonlyArray<UserResponse['teams'][0]>;
 };
 
 export interface Auth0User {

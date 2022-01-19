@@ -22,7 +22,7 @@ export const WithTeam = () => (
     members={createListUserResponse(number('Number of members', 6)).items.map(
       (member) => ({
         ...member,
-        teams: Array(number('Number of teams', 1))
+        teams: Array(number('Number of teams', 2))
           .fill(null)
           .map((_, i) => ({ id: `${i}`, displayName: `${i + 1}` })),
       }),

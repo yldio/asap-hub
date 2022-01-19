@@ -26,11 +26,12 @@ const button = css({
   },
 });
 
-type GroupToolsProps = Pick<GroupResponse, 'tools'> & {
+type GroupToolsProps = Pick<GroupResponse, 'tools' | 'active'> & {
   readonly calendarId?: GroupResponse['calendars'][0]['id'];
 };
 
 const GroupTools: React.FC<GroupToolsProps> = ({
+  active,
   calendarId,
   tools: { slack, googleDrive },
 }) => (
@@ -54,7 +55,7 @@ const GroupTools: React.FC<GroupToolsProps> = ({
           </Link>
         </li>
       )}
-      {calendarId && (
+      {calendarId && active && (
         <li css={button}>
           <CalendarLink id={calendarId}>Subscribe to Calendar</CalendarLink>
         </li>

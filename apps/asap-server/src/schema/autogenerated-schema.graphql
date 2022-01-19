@@ -1810,6 +1810,7 @@ type DiscoverDataDto {
   aboutUs: DiscoverDataAboutUsDto
   members: DiscoverDataMembersDto
   pages: DiscoverDataPagesDto
+  scientificAdvisoryBoard: DiscoverDataScientificAdvisoryBoardDto
   training: DiscoverDataTrainingDto
 }
 
@@ -1818,15 +1819,16 @@ input DiscoverDataInputDto {
   aboutUs: DiscoverDataAboutUsInputDto
   members: DiscoverDataMembersInputDto
   pages: DiscoverDataPagesInputDto
+  scientificAdvisoryBoard: DiscoverDataScientificAdvisoryBoardInputDto
   training: DiscoverDataTrainingInputDto
 }
 
-"""The structure of the Members field of the Discover ASAP content type."""
+"""The structure of the ASAP Team field of the Discover ASAP content type."""
 type DiscoverDataMembersDto {
   iv: [Users!]
 }
 
-"""The structure of the Members field of the Discover ASAP content input type."""
+"""The structure of the ASAP Team field of the Discover ASAP content input type."""
 input DiscoverDataMembersInputDto {
   iv: [String!]
 }
@@ -1838,6 +1840,16 @@ type DiscoverDataPagesDto {
 
 """The structure of the Grantee Guidance field of the Discover ASAP content input type."""
 input DiscoverDataPagesInputDto {
+  iv: [String!]
+}
+
+"""The structure of the Scientific Advisory Board field of the Discover ASAP content type."""
+type DiscoverDataScientificAdvisoryBoardDto {
+  iv: [Users!]
+}
+
+"""The structure of the Scientific Advisory Board field of the Discover ASAP content input type."""
+input DiscoverDataScientificAdvisoryBoardInputDto {
   iv: [String!]
 }
 
@@ -1856,6 +1868,7 @@ type DiscoverFlatDataDto {
   aboutUs: String
   members: [Users!]
   pages: [Pages!]
+  scientificAdvisoryBoard: [Users!]
   training: [NewsAndEvents!]
 }
 

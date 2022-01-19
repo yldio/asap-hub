@@ -38,14 +38,15 @@ type GroupProfileHeaderProps = {
   readonly numberOfTeams: number;
   readonly lastModifiedDate: string;
   readonly groupTeamsHref: string;
+  readonly active: boolean;
 } & ComponentProps<typeof EventSearch>;
 const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
   id,
+  active,
   name,
   numberOfTeams,
   lastModifiedDate,
   groupTeamsHref,
-
   searchQuery,
   onChangeSearchQuery,
 }) => {
@@ -89,10 +90,15 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
         </div>
         <TabNav>
           <TabLink href={route.about({}).$}>About</TabLink>
-          <TabLink href={route.calendar({}).$}>Calendar</TabLink>
-          <TabLink href={route.upcoming({}).$ + queryParamString(searchQuery)}>
-            Upcoming Events
-          </TabLink>
+          {active && <TabLink href={route.calendar({}).$}>Calendar</TabLink>}
+          {active && (
+            <TabLink
+              href={route.upcoming({}).$ + queryParamString(searchQuery)}
+            >
+              Upcoming Events
+            </TabLink>
+          )}
+
           <TabLink href={route.past({}).$ + queryParamString(searchQuery)}>
             Past Events
           </TabLink>

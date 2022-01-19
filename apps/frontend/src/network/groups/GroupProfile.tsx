@@ -40,6 +40,7 @@ const GroupProfile: FC = () => {
   if (group) {
     const props: ComponentProps<typeof GroupProfilePage> = {
       id: group.id,
+      active: group.active,
       name: group.name,
       lastModifiedDate: group.lastModifiedDate,
       numberOfTeams: group.teams.length,

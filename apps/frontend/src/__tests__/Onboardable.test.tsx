@@ -21,8 +21,6 @@ const onboardableUser: UserResponse = {
     {
       id: 'a',
       role: 'Co-PI (Core Leadership)',
-      mainResearchInterests: 'a',
-      responsibilities: 'a',
     },
   ],
   institution: 'a',
@@ -31,6 +29,8 @@ const onboardableUser: UserResponse = {
   country: 'a',
   expertiseAndResourceTags: ['1', '2', '3', '4', '5'],
   biography: 'Biography',
+  researchInterests: 'a',
+  responsibilities: 'a',
 };
 
 it('is undefined when there is no logged in user', async () => {

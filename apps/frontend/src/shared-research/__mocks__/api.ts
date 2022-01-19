@@ -1,10 +1,8 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
-import {
-  createResearchOutputResponse,
-  createAlgoliaResearchOutputResponse,
-} from '@asap-hub/fixtures';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 import { SearchResponse } from '@algolia/client-search';
+import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 
 export const getResearchOutput = jest.fn(
   async (id: string): Promise<ResearchOutputResponse> => ({
@@ -15,5 +13,5 @@ export const getResearchOutput = jest.fn(
 
 export const getResearchOutputs = jest.fn(
   async (): Promise<Partial<SearchResponse<ResearchOutputResponse>>> =>
-    createAlgoliaResearchOutputResponse(2),
+    createResearchOutputListAlgoliaResponse(2),
 );

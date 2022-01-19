@@ -2,14 +2,12 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {
-  createAlgoliaResearchOutputResponse,
-  createTeamResponse,
-} from '@asap-hub/fixtures';
+import { createTeamResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 
 import { RecoilRoot } from 'recoil';
 import Outputs from '../Outputs';
+import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getResearchOutputs } from '../../../shared-research/api';
 import { researchOutputsState } from '../../../shared-research/state';
@@ -104,8 +102,8 @@ it('renders search and filter', async () => {
 
 it('renders a list of research outputs', async () => {
   mockGetResearchOutputs.mockResolvedValue({
-    ...createAlgoliaResearchOutputResponse(2),
-    hits: createAlgoliaResearchOutputResponse(2).hits.map((hit, index) => ({
+    ...createResearchOutputListAlgoliaResponse(2),
+    hits: createResearchOutputListAlgoliaResponse(2).hits.map((hit, index) => ({
       ...hit,
       title: `Test Output ${index}`,
     })),
@@ -120,7 +118,7 @@ it('calls getResearchOutputs with the right arguments', async () => {
   const searchQuery = 'searchterm';
   const teamId = '1234';
   mockGetResearchOutputs.mockResolvedValue({
-    ...createAlgoliaResearchOutputResponse(2),
+    ...createResearchOutputListAlgoliaResponse(2),
   });
   const { getByRole, getByText, getByLabelText } = await renderOutputs(
     searchQuery,
@@ -157,7 +155,7 @@ it('triggers export with the same parameters and custom file name', async () => 
   const searchQuery = 'Some Search';
   const teamId = '12345';
   mockGetResearchOutputs.mockResolvedValue({
-    ...createAlgoliaResearchOutputResponse(2),
+    ...createResearchOutputListAlgoliaResponse(2),
   });
   const { getByRole, getByText, getByLabelText } = await renderOutputs(
     searchQuery,

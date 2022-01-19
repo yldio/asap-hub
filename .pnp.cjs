@@ -10553,6 +10553,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/frontend", "workspace:apps/frontend"],
             ["@algolia/client-search", "npm:4.10.3"],
+            ["@asap-hub/algolia", "workspace:packages/algolia"],
             ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],

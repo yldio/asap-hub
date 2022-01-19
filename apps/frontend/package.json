@@ -47,6 +47,7 @@
     "web-streams-polyfill": "^3.1.1"
   },
   "devDependencies": {
+    "@asap-hub/algolia": "workspace:*",
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",

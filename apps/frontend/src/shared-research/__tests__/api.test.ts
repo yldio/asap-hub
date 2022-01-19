@@ -1,12 +1,12 @@
 import nock from 'nock';
 
-import {
-  createResearchOutputResponse,
-  createAlgoliaResearchOutputResponse,
-} from '@asap-hub/fixtures';
 import { SearchIndex } from 'algoliasearch/lite';
 import { ResearchOutputType } from '@asap-hub/model';
 
+import {
+  createResearchOutputAlgoliaResponse,
+  createResearchOutputListAlgoliaResponse,
+} from '../../__fixtures__/algolia';
 import { getResearchOutput, getResearchOutputs } from '../api';
 import { API_BASE_URL } from '../../config';
 import { GetListOptions } from '../../api-util';
@@ -30,7 +30,7 @@ describe('getResearchOutputs', () => {
   // how to make more generic query building that can be tested in isolation
   const mockedSearch: jest.MockedFunction<SearchIndex['search']> = jest
     .fn()
-    .mockResolvedValue(createAlgoliaResearchOutputResponse(10));
+    .mockResolvedValue(createResearchOutputListAlgoliaResponse(10));
 
   const mockIndex = {
     search: mockedSearch,
@@ -216,7 +216,7 @@ describe('getResearchOutput', () => {
   });
 
   it('returns a successfully fetched research output', async () => {
-    const researchOutput = createResearchOutputResponse();
+    const researchOutput = createResearchOutputAlgoliaResponse();
     nock(API_BASE_URL).get('/research-outputs/42').reply(200, researchOutput);
     expect(await getResearchOutput('42', '')).toEqual(researchOutput);
   });

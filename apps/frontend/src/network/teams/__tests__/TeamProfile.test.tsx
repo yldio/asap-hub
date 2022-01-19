@@ -3,15 +3,14 @@ import { RecoilRoot } from 'recoil';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';
-import {
-  createAlgoliaResearchOutputResponse,
-  createTeamResponse,
-} from '@asap-hub/fixtures';
+import { createTeamResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/frontend/src/auth/test-utils';
+
+import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import TeamProfile from '../TeamProfile';
 import { getTeam } from '../api';
 import { refreshTeamState } from '../state';
@@ -81,7 +80,7 @@ it('renders the about info', async () => {
 
 it('navigates to the outputs tab', async () => {
   mockGetResearchOutputs.mockResolvedValue({
-    ...createAlgoliaResearchOutputResponse(1),
+    ...createResearchOutputListAlgoliaResponse(1),
   });
   const { getByText, findByText } = await renderTeamProfile();
 

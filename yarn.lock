@@ -592,6 +592,7 @@ __metadata:
   resolution: "@asap-hub/frontend@workspace:apps/frontend"
   dependencies:
     "@algolia/client-search": "*"
+    "@asap-hub/algolia": "workspace:*"
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"

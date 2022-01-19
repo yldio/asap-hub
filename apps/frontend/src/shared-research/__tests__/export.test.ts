@@ -2,13 +2,13 @@ import {
   createResearchOutputResponse,
   createTeamResponse,
   createUserResponse,
-  createAlgoliaResponse,
 } from '@asap-hub/fixtures';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { CsvFormatterStream, Row } from '@fast-csv/format';
 import { waitFor } from '@testing-library/dom';
 import streamSaver from 'streamsaver';
 
+import { createAlgoliaResponse } from '../../__fixtures__/algolia';
 import {
   researchOutputToCSV,
   createCsvFileStream,

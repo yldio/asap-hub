@@ -42,7 +42,7 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
         `SharedOutputs_${format(new Date(), 'MMddyy')}.csv`,
       ),
       (paginationParams) =>
-        getResearchOutputs(index, {
+        getResearchOutputs(index.researchOutput, {
           filters,
           searchQuery,
           ...paginationParams,

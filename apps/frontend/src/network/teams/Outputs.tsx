@@ -66,7 +66,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
           .replace(/[\W_]+/g, '')}_${format(new Date(), 'MMddyy')}.csv`,
       ),
       (paginationParams) =>
-        getResearchOutputs(index, {
+        getResearchOutputs(index.researchOutput, {
           filters,
           searchQuery,
           teamId,

@@ -1,6 +1,6 @@
 import nock from 'nock';
 
-import { SearchIndex } from 'algoliasearch/lite';
+import { ResearchOutputSearchIndex } from '@asap-hub/algolia';
 import { ResearchOutputType } from '@asap-hub/model';
 
 import {
@@ -28,13 +28,12 @@ const options: GetListOptions = {
 describe('getResearchOutputs', () => {
   // This mock is pretty basic. @todo: Refactor into something reusable and think about
   // how to make more generic query building that can be tested in isolation
-  const mockedSearch: jest.MockedFunction<SearchIndex['search']> = jest
-    .fn()
-    .mockResolvedValue(createResearchOutputListAlgoliaResponse(10));
+  const mockedSearch: jest.MockedFunction<ResearchOutputSearchIndex['search']> =
+    jest.fn().mockResolvedValue(createResearchOutputListAlgoliaResponse(10));
 
   const mockIndex = {
     search: mockedSearch,
-  } as jest.Mocked<SearchIndex>;
+  } as jest.Mocked<ResearchOutputSearchIndex>;
 
   beforeEach(() => {
     jest.clearAllMocks();

@@ -1,7 +1,6 @@
 import { EventBridgeEvent } from 'aws-lambda';
-import algoliasearch, { SearchClient } from 'algoliasearch';
+import { algoliasearch, SearchClient, ResearchOutputSearchIndex } from '@asap-hub/algolia';
 import { SquidexGraphql } from '@asap-hub/squidex';
-import { ResearchOutputSearchIndex } from '@asap-hub/algolia';
 import ResearchOutputs, {
   ResearchOutputController,
 } from '../../controllers/research-outputs';

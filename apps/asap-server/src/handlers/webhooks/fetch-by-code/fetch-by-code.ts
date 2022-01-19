@@ -1,4 +1,4 @@
-import { SearchClient } from 'algoliasearch';
+import { SearchClient } from '@asap-hub/algolia';
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
 import { UserController } from '../../../controllers/users';

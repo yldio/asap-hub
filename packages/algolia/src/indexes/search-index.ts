@@ -4,7 +4,7 @@ import { WaitablePromise } from '@algolia/client-common';
 import { DeleteResponse, SaveObjectResponse } from '@algolia/client-search';
 
 export abstract class SearchIndex<TObject, TEntityName extends string> {
-  public constructor(private index: AlgoliaSearchIndex) {
+  public constructor(protected index: AlgoliaSearchIndex) {
     // do nothing
   }
 

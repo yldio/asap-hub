@@ -1,4 +1,4 @@
-import { SearchResponse } from '@algolia/client-search';
+import { SearchResponse } from '@asap-hub/algolia';
 import { isInternalAuthor, ResearchOutputResponse } from '@asap-hub/model';
 import { CsvFormatterStream, Row, format } from '@fast-csv/format';
 import { WritableStream } from 'web-streams-polyfill/ponyfill';
@@ -93,15 +93,18 @@ export const createCsvFileStream = (
   return csvStream;
 };
 
-export const algoliaResultsToStream = async <V>(
+export const algoliaResultsToStream = async <
+  TEntity extends Record<string, unknown>,
+  TEntityName extends string,
+>(
   csvStream: CsvFormatterStream<Row, Row>,
   getResults: ({
     currentPage,
     pageSize,
   }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
-    Promise<SearchResponse<V>>
+    Promise<SearchResponse<TEntity, TEntityName>>
   >,
-  transform: (result: V) => Row,
+  transform: (result: TEntity) => Row,
 ) => {
   let morePages = true;
   let currentPage = 0;

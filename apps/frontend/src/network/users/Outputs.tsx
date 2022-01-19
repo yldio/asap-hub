@@ -69,7 +69,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
         )}_${format(new Date(), 'MMddyy')}.csv`,
       ),
       (paginationParams) =>
-        getResearchOutputs(index, {
+        getResearchOutputs(index.researchOutput, {
           filters,
           searchQuery,
           userId,

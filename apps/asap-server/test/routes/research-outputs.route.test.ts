@@ -122,7 +122,7 @@ describe('/research-outputs/ route', () => {
       );
       const response = await supertest(app)
         .post('/research-outputs')
-        .send(researchOutput)
+        .send({ ...researchOutput, teamId: researchOutput.teams[0]?.id })
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(201);
@@ -135,6 +135,7 @@ describe('/research-outputs/ route', () => {
         title: researchOutput.title,
         usedInPublication: researchOutput.usedInPublication,
         addedDate: researchOutput.addedDate,
+        teams: [{ id: researchOutput.teams[0]?.id }],
       });
 
       expect(researchOutputControllerMock.fetchById).toBeCalledWith('abc123');

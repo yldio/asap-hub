@@ -2,6 +2,8 @@ import {
   TeamResponse,
   TeamPatchRequest,
   ListTeamResponse,
+  ResearchOutputType,
+  ResearchOutputSharingStatus,
 } from '@asap-hub/model';
 import { API_BASE_URL } from '../../config';
 import {

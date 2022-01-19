@@ -229,12 +229,12 @@ describe('ResearchOutputs controller', () => {
     test('Should return a mix of internal and external authors', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       const squidexUser1 = {
-        ...getGraphqlResponseFetchUsers().data.queryUsersContentsWithTotal!
+        ...getGraphqlResponseFetchUsers().queryUsersContentsWithTotal!
           .items![0],
         __typename: 'Users',
       } as InternalUser;
       const squidexUser2 = {
-        ...getGraphqlResponseFetchUsers().data.queryUsersContentsWithTotal!
+        ...getGraphqlResponseFetchUsers().queryUsersContentsWithTotal!
           .items![1],
         __typename: 'Users',
       } as InternalUser;
@@ -277,21 +277,21 @@ describe('ResearchOutputs controller', () => {
     test('Should not return the non-onboarded authors', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       const squidexUser1 = {
-        ...getGraphqlResponseFetchUsers().data.queryUsersContentsWithTotal!
+        ...getGraphqlResponseFetchUsers().queryUsersContentsWithTotal!
           .items![0],
         __typename: 'Users',
         flatData: {
-          ...getGraphqlResponseFetchUsers().data.queryUsersContentsWithTotal!
+          ...getGraphqlResponseFetchUsers().queryUsersContentsWithTotal!
             .items![0]!.flatData,
           onboarded: false,
         },
       } as InternalUser;
       const squidexUser2 = {
-        ...getGraphqlResponseFetchUsers().data.queryUsersContentsWithTotal!
+        ...getGraphqlResponseFetchUsers().queryUsersContentsWithTotal!
           .items![1],
         __typename: 'Users',
         flatData: {
-          ...getGraphqlResponseFetchUsers().data.queryUsersContentsWithTotal!
+          ...getGraphqlResponseFetchUsers().queryUsersContentsWithTotal!
             .items![1]!.flatData,
           onboarded: true,
         },

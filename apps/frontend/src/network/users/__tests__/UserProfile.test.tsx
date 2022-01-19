@@ -12,7 +12,6 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/frontend/src/auth/test-utils';
-import { disable } from '@asap-hub/flags';
 import { join } from 'path';
 import imageCompression from 'browser-image-compression';
 import { Auth0Client } from '@auth0/auth0-spa-js';
@@ -178,34 +177,6 @@ it("links to the user's team", async () => {
       await findByText('Kool Krew', { exact: false, selector: 'h2 ~ * *' })
     ).closest('a')!.href,
   ).toContain('42');
-});
-
-it("links to the user's team proposal", async () => {
-  disable('UPDATED_ROLE_SECTION');
-  const { findByText } = await renderUserProfile({
-    ...createUserResponse(),
-    teams: [
-      {
-        ...createUserTeams({ teams: 1 })[0],
-        proposal: '1337',
-      },
-    ],
-  });
-  expect((await findByText(/proposal/i)).closest('a')!.href).toContain('1337');
-});
-it('does not show a proposal for a user whose team has none', async () => {
-  const { queryByText } = await renderUserProfile({
-    ...createUserResponse(),
-    teams: [
-      {
-        ...createUserTeams({ teams: 1 })[0],
-        proposal: undefined,
-      },
-    ],
-  });
-  await waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument());
-
-  expect(queryByText(/proposal/i)).not.toBeInTheDocument();
 });
 
 it('renders the 404 page for a missing user', async () => {

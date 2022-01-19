@@ -24,6 +24,7 @@ export const isGroupRole = (data: string | null): data is GroupRole =>
   groupRole.includes(data as GroupRole);
 export interface GroupResponse {
   readonly id: string;
+  readonly active: boolean;
   readonly createdDate: string;
   readonly name: string;
   readonly tags: ReadonlyArray<string>;

@@ -3,7 +3,6 @@ import { isUserOnboardable } from '@asap-hub/validation';
 import { network } from '@asap-hub/routing';
 import { User } from '@auth0/auth0-spa-js';
 import { OnboardingFooter } from '@asap-hub/react-components';
-import { useFlags } from '@asap-hub/react-context';
 
 import { useUserById } from '../network/users/state';
 import { useCurrentUserProfileTabRoute } from './current-user-profile-tab-route';
@@ -38,7 +37,6 @@ const fieldToStep: Record<
 const steps = (
   profileTab: NonNullable<ReturnType<typeof useCurrentUserProfileTabRoute>>,
   user: User,
-  isRoleSectionEnabled: boolean,
 ): Record<
   typeof orderedSteps[number],
   { modalHref: string; label: string }
@@ -49,17 +47,11 @@ const steps = (
   },
   Role: {
     label: 'Role',
-    modalHref: isRoleSectionEnabled
-      ? network({})
-          .users({})
-          .user({ userId: user.id })
-          .research({})
-          .editRole({}).$
-      : network({})
-          .users({})
-          .user({ userId: user.id })
-          .research({})
-          .editTeamMembership({ teamId: user.teams[0]?.id }).$,
+    modalHref: network({})
+      .users({})
+      .user({ userId: user.id })
+      .research({})
+      .editRole({}).$,
   },
   Expertise: {
     label: 'Expertise',
@@ -88,18 +80,13 @@ const steps = (
 });
 
 export const useOnboarding = (id: string): UserOnboardingResult | undefined => {
-  const { isEnabled } = useFlags();
   const user = useUserById(id);
   const profileTab = useCurrentUserProfileTabRoute();
   if (!user || !profileTab) {
     return undefined;
   }
   const { isOnboardable, ...onboardingValidation } = isUserOnboardable(user);
-  const stepDetails = steps(
-    profileTab,
-    user,
-    isEnabled('UPDATED_ROLE_SECTION'),
-  );
+  const stepDetails = steps(profileTab, user);
 
   return {
     isOnboardable,

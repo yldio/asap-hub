@@ -1,7 +1,6 @@
-import { useRouteMatch, Route, Redirect } from 'react-router-dom';
+import { useRouteMatch, Route } from 'react-router-dom';
 import {
   UserProfileResearch,
-  TeamMembershipModal,
   RoleModal,
   OpenQuestionsModal,
   ExpertiseAndResourcesModal,
@@ -67,30 +66,6 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
               />
             </Frame>
           </Route>
-          <Route
-            path={path + route.editTeamMembership.template}
-            render={({
-              match: {
-                params: { teamId },
-              },
-            }) => {
-              const team = user.teams.find(
-                ({ id: currentTeamId }) => currentTeamId === teamId,
-              );
-              return team ? (
-                <Frame title="Edit Team Membership">
-                  <TeamMembershipModal
-                    {...team}
-                    labs={user.labs}
-                    backHref={route.$}
-                    onSave={patchUser}
-                  />
-                </Frame>
-              ) : (
-                <Redirect to={route.$} />
-              );
-            }}
-          />
           <Route path={path + route.editQuestions.template}>
             <Frame title="Edit Open Questions">
               <OpenQuestionsModal

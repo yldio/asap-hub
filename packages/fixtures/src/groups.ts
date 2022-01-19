@@ -28,6 +28,7 @@ export const createGroupResponse = (
   const id = `g-${itemIndex}`;
   return {
     id,
+    active: true,
     createdDate: '2021-01-12T11:09:04.000Z',
     lastModifiedDate: '2021-01-12T11:10:04.000Z',
     name: `Group ${itemIndex + 1}`,

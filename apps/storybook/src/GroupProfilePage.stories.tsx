@@ -1,5 +1,5 @@
 import { GroupProfilePage } from '@asap-hub/react-components';
-import { select, text } from '@storybook/addon-knobs';
+import { boolean, select, text } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
 import { network } from '@asap-hub/routing';
 
@@ -34,6 +34,7 @@ export const Normal = () => {
       <GroupProfilePage
         id="42"
         name="My Group"
+        active={boolean('Group Active', true)}
         numberOfTeams={5}
         groupTeamsHref="#"
         lastModifiedDate="2021-01-01"

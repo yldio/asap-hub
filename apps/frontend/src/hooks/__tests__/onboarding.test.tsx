@@ -5,7 +5,6 @@ import { RecoilRoot } from 'recoil';
 import { MemoryRouter } from 'react-router-dom';
 import { UserResponse } from '@asap-hub/model';
 import { createUserResponse } from '@asap-hub/fixtures';
-import { disable } from '@asap-hub/flags';
 
 import { useOnboarding } from '../onboarding';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -146,34 +145,6 @@ describe('useOnboarding', () => {
             .user({ userId: user.id })
             .about({})
             .editBiography({}).$,
-        );
-      });
-    });
-  });
-
-  it('calculates the modal href for the role step with the feature flag off', async () => {
-    const user = {
-      ...emptyUser,
-      expertiseAndResourceTags: ['1', '2', '3', '4', '5'],
-    };
-    mockGetUser.mockResolvedValue(user);
-
-    disable('UPDATED_ROLE_SECTION');
-
-    const { result } = renderHook(() => useOnboarding(user.id), {
-      wrapper: wrapper({ user }),
-    });
-
-    await act(async () => {
-      await waitFor(() => {
-        const [, role] = result.current?.incompleteSteps ?? [];
-
-        expect(role.modalHref).toBe(
-          network({})
-            .users({})
-            .user({ userId: user.id })
-            .research({})
-            .editTeamMembership({ teamId: user.teams[0]?.id }).$,
         );
       });
     });

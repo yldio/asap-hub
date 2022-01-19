@@ -1,9 +1,15 @@
 import { render, fireEvent } from '@testing-library/react';
+import { ComponentProps } from 'react';
 
 import GroupTools from '../GroupTools';
 
+const props: ComponentProps<typeof GroupTools> = {
+  tools: {},
+  active: true,
+};
+
 it('renders group tools header', () => {
-  const { getByRole } = render(<GroupTools tools={{}} />);
+  const { getByRole } = render(<GroupTools {...props} />);
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(
     `"Group Tools"`,
   );
@@ -11,7 +17,7 @@ it('renders group tools header', () => {
 
 it('renders a slack tool', () => {
   const { getByRole, getByTitle, getByText } = render(
-    <GroupTools tools={{ slack: 'http://asap.slack.com' }} />,
+    <GroupTools {...props} tools={{ slack: 'http://asap.slack.com' }} />,
   );
   expect(getByText(/join slack/i)).toBeVisible();
   expect(getByTitle('Slack')).toBeInTheDocument();
@@ -20,7 +26,10 @@ it('renders a slack tool', () => {
 
 it('renders a google drive tool', () => {
   const { getByRole, getByTitle, getByText } = render(
-    <GroupTools tools={{ googleDrive: 'http://drive.google.com/123' }} />,
+    <GroupTools
+      {...props}
+      tools={{ googleDrive: 'http://drive.google.com/123' }}
+    />,
   );
   expect(getByText('Access Google Drive')).toBeVisible();
   expect(getByTitle('Google Drive')).toBeInTheDocument();
@@ -32,7 +41,7 @@ it('renders a google drive tool', () => {
 
 it('renders the subscribe button', () => {
   const { getByText, queryAllByRole } = render(
-    <GroupTools calendarId="12w3" tools={{}} />,
+    <GroupTools {...props} calendarId="12w3" />,
   );
 
   const subscribe = getByText(/subscribe/i);
@@ -47,4 +56,13 @@ it('renders the subscribe button', () => {
       "webcal://calendar.google.com/calendar/ical/12w3/public/basic.ics",
     ]
   `);
+});
+
+it('hides the subscribe button for inactive groups', () => {
+  const { getByText, queryByText, rerender } = render(
+    <GroupTools {...props} calendarId="12w3" active={true} />,
+  );
+  expect(getByText(/subscribe/i)).toBeVisible();
+  rerender(<GroupTools {...props} calendarId="12w3" active={false} />);
+  expect(queryByText(/subscribe/i)).not.toBeInTheDocument();
 });

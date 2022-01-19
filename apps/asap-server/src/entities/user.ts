@@ -45,8 +45,6 @@ export const userUpdateSchema = Joi.object({
   teams: Joi.array().items(
     Joi.object({
       id: Joi.string().required(),
-      responsibilities: Joi.string().allow(''),
-      mainResearchInterests: Joi.string().allow(''),
     }).required(),
   ),
   social: Joi.object({
@@ -87,12 +85,6 @@ export const parseGraphQLUserTeamConnections = (
       {
         id: team.id,
         role: item.role,
-        mainResearchInterests: item.mainResearchInterests
-          ? item.mainResearchInterests
-          : undefined,
-        responsibilities: item.responsibilities
-          ? item.responsibilities
-          : undefined,
         proposal: proposal?.length ? proposal[0]?.id : undefined,
         displayName: displayName || '',
       },
@@ -241,10 +233,6 @@ export const parseUser = (user: RestUser): UserResponse => {
           id: id[0],
           displayName: 'Unknown',
           ...t,
-          mainResearchInterests: t.mainResearchInterests
-            ? t.mainResearchInterests
-            : undefined,
-          responsibilities: t.responsibilities ? t.responsibilities : undefined,
         },
       ];
     }, []) || [];

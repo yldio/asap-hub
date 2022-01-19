@@ -60,8 +60,6 @@ export const groupContentQueryFragment = gql`
             expertiseAndResourceDescription
             teams {
               role
-              mainResearchInterests
-              responsibilities
               id {
                 id
                 flatData {

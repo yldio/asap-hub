@@ -42,7 +42,7 @@ const TeamProfile: FC<Record<string, never>> = () => {
         <Switch>
           <Route path={path + route({ teamId }).createOutput.template}>
             <Frame title="create output">
-              <TeamCreateOutputPage />
+              <TeamCreateOutputPage researchOutputType="Bioinformatics" />
             </Frame>
           </Route>
           <TeamProfilePage teamListElementId={teamListElementId} {...team}>

@@ -94,7 +94,7 @@ export const isResearchOutputSubtype = (
   (researchOutputSubtypes as ReadonlyArray<string>).includes(subtype);
 
 export const researchOutputMapSubtype = (
-  subtype?: string,
+  subtype?: string | null,
 ): ResearchOutputSubtype | null => {
   if (subtype) {
     if (

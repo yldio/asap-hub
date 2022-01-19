@@ -59,4 +59,25 @@ describe('Research Outputs Index', () => {
     expect(response).toEqual(deleteObjectResponse);
     expect(algoliaSaveObjectSpy).toBeCalledWith(researchOutputId);
   });
+
+  it('should perform search', async () => {
+    const algoliaSearchIndexMock = getAlgoliaSearchIndexMock();
+    const algoliaSearchSpy = jest.spyOn(algoliaSearchIndexMock, 'search');
+
+    const researchOutputSearchIndex = new ResearchOutputSearchIndex(
+      algoliaSearchIndexMock,
+    );
+
+    const response = await researchOutputSearchIndex.search('query', {
+      hitsPerPage: 10,
+      page: 2,
+      filters: 'some-filters',
+    });
+
+    expect(response).toEqual(deleteObjectResponse);
+    expect(algoliaSearchSpy).toBeCalledWith([
+      'query',
+      { hitsPerPage: 10, page: 2, filters: 'some-filters' },
+    ]);
+  });
 });

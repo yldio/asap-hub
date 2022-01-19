@@ -17,6 +17,7 @@ jest.mock('@asap-hub/algolia', () => {
   mockInitIndex.mockImplementation(() => ({} as SearchIndex));
 
   return {
+    ...jest.requireActual('@asap-hub/algolia'),
     algoliasearchLite: jest.fn().mockImplementation(() => ({
       initIndex: mockInitIndex,
     })),

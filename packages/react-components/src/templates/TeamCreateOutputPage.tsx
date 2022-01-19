@@ -4,7 +4,7 @@ import { Display, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
 import { steel, paper } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { ResearchOutputType } from '@asap-hub/model';
+import { ResearchOutput } from '@asap-hub/model';
 
 const visualHeaderStyles = css({
   marginBottom: `${30 / perRem}em`,
@@ -19,19 +19,19 @@ const textStyles = css({
   maxWidth: `${720 / perRem}em`,
 });
 
-type TeamCreateOutputPageProps = { researchOutputType: ResearchOutputType };
+type TeamCreateOutputPageProps = { researchOutput: Partial<ResearchOutput> };
 
 const TeamCreateOutputHeader: React.FC<TeamCreateOutputPageProps> = ({
-  researchOutputType,
+  researchOutput,
 }) => (
   <header>
     <div css={visualHeaderStyles}>
       <Display styleAsHeading={2}>
-        Share {researchOutputType.toLowerCase()}
+        Share {researchOutput.type?.toLowerCase()}
       </Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
-          Add your {researchOutputType.toLowerCase()} code to your third party
+          Add your {researchOutput.type?.toLowerCase()} code to your third party
           publication platform (e.g. Github) before sharing on the hub.
         </Paragraph>
       </div>
@@ -44,7 +44,7 @@ const TeamCreateOutputHeader: React.FC<TeamCreateOutputPageProps> = ({
 // );
 
 const TeamCreateOutputPage: React.FC<TeamCreateOutputPageProps> = ({
-  researchOutputType,
-}) => <TeamCreateOutputHeader researchOutputType={researchOutputType} />;
+  researchOutput,
+}) => <TeamCreateOutputHeader researchOutput={researchOutput} />;
 
 export default TeamCreateOutputPage;

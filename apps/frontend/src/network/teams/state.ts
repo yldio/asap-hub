@@ -6,6 +6,8 @@ import {
   useSetRecoilState,
   DefaultValue,
   useRecoilState,
+  atom,
+  selector,
 } from 'recoil';
 import {
   TeamResponse,
@@ -13,7 +15,13 @@ import {
   ListTeamResponse,
 } from '@asap-hub/model';
 
-import { getTeam, patchTeam, getTeams } from './api';
+import {
+  getTeam,
+  patchTeam,
+  getTeams,
+  CreateTeamResearchOutput,
+  createTeamResearchOutput,
+} from './api';
 import { authorizationState } from '../../auth/state';
 import { GetListOptions } from '../../api-util';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
@@ -83,6 +91,24 @@ const patchedTeamState = atomFamily<TeamResponse | undefined, string>({
   default: undefined,
 });
 
+const postTeamResearchOutputState = atom<CreateTeamResearchOutput>({
+  key: 'postResearchOutput',
+  default: {
+    type: 'Bioinformatics',
+    link: 'https://hub.asap.science/',
+    title: 'Output created through the ROMS form',
+    asapFunded: false,
+    sharingStatus: 'Network Only',
+    usedInPublication: false,
+    addedDate: Date.now().toString(),
+  },
+});
+
+export const teamResearchOutputState = selector<CreateTeamResearchOutput>({
+  key: 'teamResearchOutput',
+  get: ({ get }) => get(postTeamResearchOutputState),
+});
+
 const teamState = selectorFamily<TeamResponse | undefined, string>({
   key: 'team',
   get:
@@ -120,10 +146,17 @@ export const useTeams = (options: GetListOptions) => {
 };
 
 export const useTeamById = (id: string) => useRecoilValue(teamState(id));
+export const useResearchOutput = () => useRecoilValue(teamResearchOutputState);
 export const usePatchTeamById = (id: string) => {
   const authorization = useRecoilValue(authorizationState);
   const setPatchedTeam = useSetRecoilState(patchedTeamState(id));
   return async (patch: TeamPatchRequest) => {
     setPatchedTeam(await patchTeam(id, patch, authorization));
+  };
+};
+export const usePostTeamResearchOutput = (teamId: string) => {
+  const authorization = useRecoilValue(authorizationState);
+  return async (payload: CreateTeamResearchOutput) => {
+    await createTeamResearchOutput(teamId, payload, authorization);
   };
 };

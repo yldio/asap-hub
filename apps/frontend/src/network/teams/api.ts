@@ -68,7 +68,7 @@ export const patchTeam = async (
   return resp.json();
 };
 
-interface CreateTeamResearchOutput {
+export interface CreateTeamResearchOutput {
   type: ResearchOutputType;
   link: string;
   title: string;

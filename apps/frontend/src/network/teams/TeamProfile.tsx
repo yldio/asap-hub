@@ -9,7 +9,7 @@ import {
 import { network, useRouteParams } from '@asap-hub/routing';
 import { v4 as uuid } from 'uuid';
 
-import { useTeamById } from './state';
+import { useTeamById, useResearchOutput } from './state';
 import Frame, { SearchFrame } from '../../structure/Frame';
 
 const loadAbout = () =>
@@ -31,6 +31,7 @@ const TeamProfile: FC<Record<string, never>> = () => {
   const { teamId } = useRouteParams(route);
 
   const team = useTeamById(teamId);
+  const researchOutput = useResearchOutput();
   useEffect(() => {
     loadAbout()
       .then(team?.tools ? loadWorkspace : undefined)
@@ -42,7 +43,7 @@ const TeamProfile: FC<Record<string, never>> = () => {
         <Switch>
           <Route path={path + route({ teamId }).createOutput.template}>
             <Frame title="create output">
-              <TeamCreateOutputPage researchOutputType="Bioinformatics" />
+              <TeamCreateOutputPage researchOutput={researchOutput} />
             </Frame>
           </Route>
           <TeamProfilePage teamListElementId={teamListElementId} {...team}>

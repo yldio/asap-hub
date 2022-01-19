@@ -4337,8 +4337,6 @@ input UsersDataSocialInputDto {
 """The structure of the Teams nested schema."""
 type UsersDataTeamsChildDto {
   id: [Teams!]
-  mainResearchInterests: String
-  responsibilities: String
   """Attention: Check if this user needs to be added to Smart Simple"""
   role: String
 }
@@ -4346,8 +4344,6 @@ type UsersDataTeamsChildDto {
 """The structure of the Teams nested schema."""
 input UsersDataTeamsChildInputDto {
   id: [String!]
-  mainResearchInterests: String
-  responsibilities: String
   """Attention: Check if this user needs to be added to Smart Simple"""
   role: String
 }

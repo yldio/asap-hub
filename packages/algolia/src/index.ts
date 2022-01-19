@@ -2,9 +2,12 @@ import algoliasearchfn, {
   SearchIndex as AlgoliaSearchIndex,
   SearchClient as AlgoliaSearchClient,
 } from 'algoliasearch';
-import algoliasearchLiteFn from 'algoliasearch/lite';
+import algoliasearchLiteFn, {
+  SearchClient as AlgoliaSearchClientLite,
+} from 'algoliasearch/lite';
 
 export type SearchClient = AlgoliaSearchClient;
+export type SearchClientLite = AlgoliaSearchClientLite;
 export type SearchIndex = AlgoliaSearchIndex;
 
 export * from './types/response';

@@ -2,7 +2,10 @@ import { SearchIndex as AlgoliaSearchIndex } from 'algoliasearch';
 import { DeleteResponse, SaveObjectResponse } from '@algolia/client-search';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
-import { ResearchOutputSearchIndex } from '../../src/indexes/research-output';
+import {
+  ResearchOutputSearchIndex,
+  ResearchOutputSearchResponse,
+} from '../../src/indexes/research-output';
 
 const saveObjectResponse: SaveObjectResponse = {
   taskID: 1,
@@ -13,10 +16,29 @@ const deleteObjectResponse: DeleteResponse = {
   taskID: 1,
 };
 
+const searchResponse: ResearchOutputSearchResponse = {
+  hits: [
+    {
+      ...createResearchOutputResponse(),
+      objectID: '1',
+      __meta: { type: 'research-output' },
+    },
+  ],
+  page: 0,
+  nbHits: 2,
+  nbPages: 1,
+  hitsPerPage: 10,
+  processingTimeMS: 1000,
+  exhaustiveNbHits: true,
+  query: 'query',
+  params: '',
+};
+
 const getAlgoliaSearchIndexMock = () =>
   ({
     saveObject: (): SaveObjectResponse => saveObjectResponse,
     deleteObject: (): DeleteResponse => deleteObjectResponse,
+    search: async (): Promise<ResearchOutputSearchResponse> => searchResponse,
   } as unknown as AlgoliaSearchIndex);
 
 describe('Research Outputs Index', () => {
@@ -70,14 +92,15 @@ describe('Research Outputs Index', () => {
 
     const response = await researchOutputSearchIndex.search('query', {
       hitsPerPage: 10,
-      page: 2,
+      page: 0,
       filters: 'some-filters',
     });
 
-    expect(response).toEqual(deleteObjectResponse);
-    expect(algoliaSearchSpy).toBeCalledWith([
-      'query',
-      { hitsPerPage: 10, page: 2, filters: 'some-filters' },
-    ]);
+    expect(response).toEqual(searchResponse);
+    expect(algoliaSearchSpy).toBeCalledWith('query', {
+      hitsPerPage: 10,
+      page: 0,
+      filters: 'some-filters',
+    });
   });
 });

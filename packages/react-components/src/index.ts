@@ -159,6 +159,7 @@ export {
   TeamProfileAbout,
   TeamProfileOutputs,
   TeamProfilePage,
+  TeamCreateOutputPage,
   TeamProfileWorkspace,
   ToolModal,
   UnsupportedBrowserPage,

@@ -1,6 +1,10 @@
 import { useEffect, FC, lazy, useState } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
-import { TeamProfilePage, NotFoundPage } from '@asap-hub/react-components';
+import {
+  TeamProfilePage,
+  TeamCreateOutputPage,
+  NotFoundPage,
+} from '@asap-hub/react-components';
 
 import { network, useRouteParams } from '@asap-hub/routing';
 import { v4 as uuid } from 'uuid';
@@ -35,8 +39,13 @@ const TeamProfile: FC<Record<string, never>> = () => {
   if (team) {
     return (
       <Frame title={team.displayName}>
-        <TeamProfilePage teamListElementId={teamListElementId} {...team}>
-          <Switch>
+        <Switch>
+          <Route path={path + route({ teamId }).createOutput.template}>
+            <Frame title="create output">
+              <TeamCreateOutputPage />
+            </Frame>
+          </Route>
+          <TeamProfilePage teamListElementId={teamListElementId} {...team}>
             <Route path={path + route({ teamId }).about.template}>
               <Frame title="About">
                 <About teamListElementId={teamListElementId} team={team} />
@@ -55,8 +64,8 @@ const TeamProfile: FC<Record<string, never>> = () => {
               </Route>
             )}
             <Redirect to={route({ teamId }).about({}).$} />
-          </Switch>
-        </TeamProfilePage>
+          </TeamProfilePage>
+        </Switch>
       </Frame>
     );
   }

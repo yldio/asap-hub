@@ -4231,8 +4231,6 @@ export type UsersDataSocialInputDto = {
 /** The structure of the Teams nested schema. */
 export type UsersDataTeamsChildDto = {
   id: Maybe<Array<Teams>>;
-  mainResearchInterests: Maybe<Scalars['String']>;
-  responsibilities: Maybe<Scalars['String']>;
   /** Attention: Check if this user needs to be added to Smart Simple */
   role: Maybe<Scalars['String']>;
 };
@@ -4240,8 +4238,6 @@ export type UsersDataTeamsChildDto = {
 /** The structure of the Teams nested schema. */
 export type UsersDataTeamsChildInputDto = {
   id: Maybe<Array<Scalars['String']>>;
-  mainResearchInterests: Maybe<Scalars['String']>;
-  responsibilities: Maybe<Scalars['String']>;
   /** Attention: Check if this user needs to be added to Smart Simple */
   role: Maybe<Scalars['String']>;
 };

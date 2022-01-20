@@ -103,4 +103,25 @@ describe('Research Outputs Index', () => {
       filters: 'some-filters AND __meta.type:"research-output"',
     });
   });
+
+  it('should perform search without filters', async () => {
+    const algoliaSearchIndexMock = getAlgoliaSearchIndexMock();
+    const algoliaSearchSpy = jest.spyOn(algoliaSearchIndexMock, 'search');
+
+    const researchOutputSearchIndex = new ResearchOutputSearchIndex(
+      algoliaSearchIndexMock,
+    );
+
+    const response = await researchOutputSearchIndex.search('query', {
+      hitsPerPage: 10,
+      page: 0
+    });
+
+    expect(response).toEqual(searchResponse);
+    expect(algoliaSearchSpy).toBeCalledWith('query', {
+      hitsPerPage: 10,
+      page: 0,
+      filters: '__meta.type:"research-output"',
+    });
+  });
 });

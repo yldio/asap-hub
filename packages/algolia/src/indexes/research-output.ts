@@ -40,7 +40,7 @@ export class ResearchOutputSearchIndex extends SearchIndex<
       ...requestOptions,
       filters: requestOptions?.filters
         ? `${requestOptions.filters} AND __meta.type:"research-output"`
-        : '__meta.type:"research-output',
+        : '__meta.type:"research-output"',
     };
 
     return this.index.search<ResearchOutputSearchResponseEntity>(

@@ -3,6 +3,7 @@ import {
   ListUserResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
+import { ResearchOutputSearchResponseEntity } from '@asap-hub/algolia';
 import { WebhookPayload, ResearchOutput } from '@asap-hub/squidex';
 import { Rest } from '@asap-hub/squidex/src/entities/common';
 import {
@@ -176,3 +177,14 @@ export const getResearchOutputEvent = (
     eventType,
     id,
   );
+
+export const getResearchOutputAlgoliaResponse =
+  (): ResearchOutputSearchResponseEntity => {
+    const response = getResearchOutputResponse();
+
+    return {
+      ...response,
+      objectID: response.id,
+      __meta: { type: 'research-output' },
+    };
+  };

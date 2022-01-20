@@ -1,4 +1,8 @@
-import algoliasearch, { SearchClient, SearchIndex } from 'algoliasearch/lite';
+import {
+  algoliasearchLite,
+  SearchClient,
+  SearchIndex,
+} from '@asap-hub/algolia';
 import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '@asap-hub/frontend/src/config';
 import { renderHook } from '@testing-library/react-hooks';
 import { RecoilRoot } from 'recoil';
@@ -8,15 +12,19 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
 var mockInitIndex: jest.MockedFunction<SearchClient['initIndex']>;
 
-jest.mock('algoliasearch/lite', () => {
+jest.mock('@asap-hub/algolia', () => {
   mockInitIndex = jest.fn();
   mockInitIndex.mockImplementation(() => ({} as SearchIndex));
-  return jest.fn().mockImplementation(() => ({
-    initIndex: mockInitIndex,
-  }));
+
+  return {
+    ...jest.requireActual('@asap-hub/algolia'),
+    algoliasearchLite: jest.fn().mockImplementation(() => ({
+      initIndex: mockInitIndex,
+    })),
+  };
 });
-const mockAlgoliasearch = algoliasearch as jest.MockedFunction<
-  typeof algoliasearch
+const mockAlgoliasearch = algoliasearchLite as jest.MockedFunction<
+  typeof algoliasearchLite
 >;
 
 describe('useAlgolia', () => {

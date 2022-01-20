@@ -1,5 +1,9 @@
 import { EventBridgeEvent } from 'aws-lambda';
-import algoliasearch, { SearchClient } from 'algoliasearch';
+import {
+  algoliasearch,
+  SearchClient,
+  ResearchOutputSearchIndex,
+} from '@asap-hub/algolia';
 import { SquidexGraphql } from '@asap-hub/squidex';
 import ResearchOutputs, {
   ResearchOutputController,
@@ -21,7 +25,9 @@ export const indexResearchOutputHandler = (
     SquidexWebhookResearchOutputPayload
   >,
 ) => Promise<void>) => {
-  const algoliaIndex = algoliaClient.initIndex(algoliaResearchOutputIndex);
+  const searchIndex = new ResearchOutputSearchIndex(
+    algoliaClient.initIndex(algoliaResearchOutputIndex),
+  );
 
   return async (
     event: EventBridgeEvent<
@@ -38,15 +44,12 @@ export const indexResearchOutputHandler = (
 
       logger.debug(`Fetched research-output ${researchOutput.id}`);
 
-      await algoliaIndex.saveObject({
-        ...researchOutput,
-        objectID: researchOutput.id,
-      });
+      await searchIndex.save(researchOutput);
 
       logger.debug(`Saved research-output ${researchOutput.id}`);
     } catch (e) {
       if (e?.output?.statusCode === 404) {
-        await algoliaIndex.deleteObject(event.detail.payload.id);
+        await searchIndex.remove(event.detail.payload.id);
         return;
       }
       throw e;

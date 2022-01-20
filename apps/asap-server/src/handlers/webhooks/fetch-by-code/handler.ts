@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 import { SquidexGraphql } from '@asap-hub/squidex';
-import algoliasearch from 'algoliasearch';
+import { algoliasearch } from '@asap-hub/algolia';
 import { algoliaAppId, algoliaSearchApiKey } from '../../../config';
 import Users from '../../../controllers/users';
 import { Handler } from '../../../utils/types';

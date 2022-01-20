@@ -104,7 +104,7 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
   );
   const { index } = useAlgolia();
   if (researchOutputs === undefined) {
-    throw getResearchOutputs(index, options)
+    throw getResearchOutputs(index.researchOutput, options)
       .then(
         (data): ListResearchOutputResponse => ({
           total: data.nbHits,

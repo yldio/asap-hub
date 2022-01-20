@@ -87,6 +87,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:apps/storybook"
       },
       {
+        "name": "@asap-hub/algolia",
+        "reference": "workspace:packages/algolia"
+      },
+      {
         "name": "@asap-hub/auth",
         "reference": "workspace:packages/auth"
       },
@@ -146,6 +150,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "enableTopLevelFallback": true,
     "ignorePatternData": "(^(?:\\.yarn\\/sdks(?:\\/(?!\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?)|$))$)",
     "fallbackExclusionList": [
+      ["@asap-hub/algolia", ["workspace:packages/algolia"]],
       ["@asap-hub/asap-cli", ["workspace:apps/asap-cli"]],
       ["@asap-hub/asap-server", ["workspace:apps/asap-server"]],
       ["@asap-hub/auth", ["workspace:packages/auth"]],
@@ -209,7 +214,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@algolia/client-common",
-        "npm:4.11.0"
+        "npm:4.12.0"
       ],
       [
         "@algolia/client-personalization",
@@ -254,6 +259,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@ardatan/fetch-event-source",
         "npm:2.0.2"
+      ],
+      [
+        "@asap-hub/algolia",
+        "workspace:packages/algolia"
       ],
       [
         "@asap-hub/asap-cli",
@@ -9955,6 +9964,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@algolia/cache-common", "npm:4.11.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:4.12.0", {
+          "packageLocation": "./.yarn/cache/@algolia-cache-common-npm-4.12.0-f20c56488e-3d52a57ff3.zip/node_modules/@algolia/cache-common/",
+          "packageDependencies": [
+            ["@algolia/cache-common", "npm:4.12.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@algolia/cache-in-memory", [
@@ -10031,6 +10047,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@algolia/transporter", "npm:4.11.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:4.12.0", {
+          "packageLocation": "./.yarn/cache/@algolia-client-common-npm-4.12.0-7ded53ec4e-dee730abd9.zip/node_modules/@algolia/client-common/",
+          "packageDependencies": [
+            ["@algolia/client-common", "npm:4.12.0"],
+            ["@algolia/requester-common", "npm:4.12.0"],
+            ["@algolia/transporter", "npm:4.12.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@algolia/client-personalization", [
@@ -10081,6 +10106,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@algolia/logger-common", "npm:4.11.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:4.12.0", {
+          "packageLocation": "./.yarn/cache/@algolia-logger-common-npm-4.12.0-276e2e970c-37f969db49.zip/node_modules/@algolia/logger-common/",
+          "packageDependencies": [
+            ["@algolia/logger-common", "npm:4.12.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@algolia/logger-console", [
@@ -10117,6 +10149,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@algolia/requester-common", "npm:4.11.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:4.12.0", {
+          "packageLocation": "./.yarn/cache/@algolia-requester-common-npm-4.12.0-5600d71606-f1fe357479.zip/node_modules/@algolia/requester-common/",
+          "packageDependencies": [
+            ["@algolia/requester-common", "npm:4.12.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@algolia/requester-node-http", [
@@ -10149,6 +10188,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@algolia/requester-common", "npm:4.11.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:4.12.0", {
+          "packageLocation": "./.yarn/cache/@algolia-transporter-npm-4.12.0-3bf77c4c4b-025cef43fb.zip/node_modules/@algolia/transporter/",
+          "packageDependencies": [
+            ["@algolia/transporter", "npm:4.12.0"],
+            ["@algolia/cache-common", "npm:4.12.0"],
+            ["@algolia/logger-common", "npm:4.12.0"],
+            ["@algolia/requester-common", "npm:4.12.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@arcanis/slice-ansi", [
@@ -10178,6 +10227,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ardatan/fetch-event-source", "npm:2.0.2"]
           ],
           "linkType": "HARD",
+        }]
+      ]],
+      ["@asap-hub/algolia", [
+        ["workspace:packages/algolia", {
+          "packageLocation": "./packages/algolia/",
+          "packageDependencies": [
+            ["@asap-hub/algolia", "workspace:packages/algolia"],
+            ["@algolia/client-common", "npm:4.12.0"],
+            ["@algolia/client-search", "npm:4.10.3"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/fixtures", "workspace:packages/fixtures"],
+            ["@asap-hub/model", "workspace:packages/model"],
+            ["@babel/runtime-corejs3", "npm:7.14.0"],
+            ["algoliasearch", "npm:4.11.0"]
+          ],
+          "linkType": "SOFT",
         }]
       ]],
       ["@asap-hub/asap-cli", [
@@ -10228,6 +10293,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/asap-server", "workspace:apps/asap-server"],
             ["@algolia/cli", "npm:4.0.8"],
+            ["@asap-hub/algolia", "workspace:packages/algolia"],
             ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/message-templates", "workspace:packages/message-templates"],
             ["@asap-hub/model", "workspace:packages/model"],
@@ -10281,7 +10347,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/stream-json", "npm:1.7.1"],
             ["@types/supertest", "npm:2.0.11"],
             ["@types/uuid", "npm:8.3.0"],
-            ["algoliasearch", "npm:4.11.0"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
             ["aws-sdk", "npm:2.907.0"],
@@ -10486,7 +10551,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./apps/frontend/",
           "packageDependencies": [
             ["@asap-hub/frontend", "workspace:apps/frontend"],
-            ["@algolia/client-search", "npm:4.10.3"],
+            ["@asap-hub/algolia", "workspace:packages/algolia"],
             ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
@@ -10522,7 +10587,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.4.1"],
             ["@types/uuid", "npm:8.3.0"],
-            ["algoliasearch", "npm:4.11.0"],
             ["browser-image-compression", "npm:1.0.14"],
             ["browserslist-useragent-regexp", "npm:3.0.0"],
             ["cross-env", "npm:7.0.3"],

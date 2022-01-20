@@ -1,4 +1,4 @@
-import { SearchClient, SearchIndex } from 'algoliasearch';
+import { SearchClient, SearchIndex } from '@asap-hub/algolia';
 
 export const algoliaIndexMock = {
   saveObject: jest.fn(),

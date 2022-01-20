@@ -72,8 +72,8 @@ export interface CreateTeamResearchOutput {
   type: ResearchOutputType;
   link: string;
   title: string;
-  asapFunded: boolean;
-  usedInPublication: boolean;
+  asapFunded: string;
+  usedInPublication: string;
   sharingStatus: ResearchOutputSharingStatus;
   addedDate: string;
 }

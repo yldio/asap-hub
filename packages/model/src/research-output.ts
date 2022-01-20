@@ -126,7 +126,7 @@ export type ResearchOutput = Required<
     | 'usedInPublication'
     | 'link'
     | 'type'
-  > & { teams: { id: string }[] }
+  >
 >;
 
 export const researchOutputLabels: Record<ResearchOutputType, string> = {

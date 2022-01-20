@@ -58,7 +58,6 @@ export const researchOutputRouteFactory = (
       sharingStatus,
       usedInPublication,
       addedDate,
-      teamId,
     } = req.body;
 
     const id = await researchOutputController.create({
@@ -69,12 +68,9 @@ export const researchOutputRouteFactory = (
       sharingStatus,
       usedInPublication,
       addedDate,
-      teams: [{ id: teamId }],
     });
 
-    const result = await researchOutputController.fetchById(id);
-
-    res.status(201).json(result);
+    res.status(201).json({ id });
   });
 
   return researchOutputRoutes;

@@ -1,11 +1,11 @@
+import React from 'react';
 import { css } from '@emotion/react';
 
 import { Display, Paragraph, Button } from '../atoms';
 import { perRem } from '../pixels';
 import { steel, paper } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { ResearchOutput } from '@asap-hub/model';
-import React from 'react';
+// import { ResearchOutput } from '@asap-hub/model';
 
 const visualHeaderStyles = css({
   marginBottom: `${30 / perRem}em`,
@@ -22,7 +22,7 @@ const textStyles = css({
 
 type TeamCreateOutputPageProps = {
   onCreate: () => void;
-  researchOutput: Partial<ResearchOutput>;
+  researchOutput: any;
 };
 
 type TeamCreateOutputHeaderProps = {
@@ -52,13 +52,11 @@ const TeamCreateOutputForm: React.FC<{ onCreate: () => void }> = ({
 const TeamCreateOutputPage: React.FC<TeamCreateOutputPageProps> = ({
   researchOutput,
   onCreate,
-}) => {
-  return (
-    <>
-      <TeamCreateOutputHeader type={researchOutput.type || 'unknown'} />
-      <TeamCreateOutputForm onCreate={onCreate} />
-    </>
-  );
-};
+}) => (
+  <>
+    <TeamCreateOutputHeader type={researchOutput.type || 'unknown'} />
+    <TeamCreateOutputForm onCreate={onCreate} />
+  </>
+);
 
 export default TeamCreateOutputPage;

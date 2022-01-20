@@ -117,9 +117,7 @@ describe('/research-outputs/ route', () => {
       const researchOutput = getResearchOutputResponse();
 
       researchOutputControllerMock.create.mockResolvedValueOnce('abc123');
-      researchOutputControllerMock.fetchById.mockResolvedValueOnce(
-        researchOutput,
-      );
+
       const response = await supertest(app)
         .post('/research-outputs')
         .send({ ...researchOutput, teamId: researchOutput.teams[0]?.id })
@@ -135,40 +133,22 @@ describe('/research-outputs/ route', () => {
         title: researchOutput.title,
         usedInPublication: researchOutput.usedInPublication,
         addedDate: researchOutput.addedDate,
-        teams: [{ id: researchOutput.teams[0]?.id }],
       });
 
-      expect(researchOutputControllerMock.fetchById).toBeCalledWith('abc123');
-
-      expect(response.body).toEqual(researchOutput);
+      expect(response.body).toEqual(expect.objectContaining({ id: 'abc123' }));
     });
 
-    test('Should return a 404 error when creating a research output fails', async () => {
+    test('Should return a 500 error when creating a research output fails', async () => {
       const researchOutput = getResearchOutputResponse();
       researchOutputControllerMock.create.mockRejectedValueOnce(
-        Boom.notFound(),
+        Boom.badImplementation(),
       );
 
       await supertest(app)
         .post('/research-outputs')
         .send(researchOutput)
         .set('Accept', 'application/json')
-        .expect(404);
-    });
-
-    test('Should return a 404 error when fails to fetch newly created research output', async () => {
-      const researchOutput = getResearchOutputResponse();
-
-      researchOutputControllerMock.create.mockResolvedValueOnce('abc123');
-      researchOutputControllerMock.fetchById.mockRejectedValueOnce(
-        Boom.notFound(),
-      );
-
-      await supertest(app)
-        .post('/research-outputs')
-        .send(researchOutput)
-        .set('Accept', 'application/json')
-        .expect(404);
+        .expect(500);
     });
   });
 });

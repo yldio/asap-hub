@@ -97,10 +97,10 @@ const postTeamResearchOutputState = atom<CreateTeamResearchOutput>({
     type: 'Bioinformatics',
     link: 'https://hub.asap.science/',
     title: 'Output created through the ROMS form',
-    asapFunded: false,
+    asapFunded: 'No',
     sharingStatus: 'Network Only',
-    usedInPublication: false,
-    addedDate: Date.now().toString(),
+    usedInPublication: 'No',
+    addedDate: new Date().toISOString(),
   },
 });
 

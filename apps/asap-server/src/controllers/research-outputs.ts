@@ -34,12 +34,16 @@ export default class ResearchOutputs implements ResearchOutputController {
     this.researchOutputSquidexRestClient = new SquidexRest('research-outputs');
   }
   async create(researchOutputData: ResearchOutput): Promise<string> {
-    const researchOutput = parseToSquidex(researchOutputData);
-    const { id } = await this.researchOutputSquidexRestClient.create(
-      researchOutput as RestResearchOutput['data'],
+    const { usedInPublication, ...researchOutput } =
+      parseToSquidex(researchOutputData);
+    const response = await this.researchOutputSquidexRestClient.create(
+      {
+        usedInAPublication: usedInPublication,
+        ...researchOutput,
+      } as RestResearchOutput['data'],
       false,
     );
-    return id;
+    return response.id;
   }
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {

@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { config, SquidexGraphql } from '@asap-hub/squidex';
+import { config, GraphqlTeam, SquidexGraphql } from '@asap-hub/squidex';
 import { print } from 'graphql';
 import {
   getGraphQlTeamsResponse,
@@ -13,6 +13,7 @@ import {
   GraphTeamTool,
   getGraphqlTeam,
   getTeamResponse,
+  GraphTeamOutputs,
 } from '../fixtures/teams.fixtures';
 import Teams from '../../src/controllers/teams';
 import { identity } from '../helpers/squidex';
@@ -223,9 +224,9 @@ describe('Team controller', () => {
 
         test('Should return all the team tools by default', async () => {
           const squidexTeamResponse = getGraphQlTeamsResponse();
-          const team1 = getGraphqlTeam();
-          const team2 = getGraphqlTeam();
-          const team3 = getGraphqlTeam();
+          const team1 = getGraphqlTeam({});
+          const team2 = getGraphqlTeam({});
+          const team3 = getGraphqlTeam({});
           team1.flatData!.tools = [];
           team2.flatData!.tools = tools;
           team3.flatData!.tools = tools;
@@ -284,9 +285,9 @@ describe('Team controller', () => {
           ];
 
           const squidexTeamResponse = getGraphQlTeamsResponse();
-          const team1 = getGraphqlTeam();
-          const team2 = getGraphqlTeam();
-          const team3 = getGraphqlTeam();
+          const team1 = getGraphqlTeam({});
+          const team2 = getGraphqlTeam({});
+          const team3 = getGraphqlTeam({});
           team1.flatData!.tools = brokenUrlTools;
           team2.flatData!.tools = brokenNameTools;
           team3.flatData!.tools = fullTools;
@@ -320,9 +321,9 @@ describe('Team controller', () => {
 
         test('Should select the teams for which the tools should be returned and mark the rest of them as undefined', async () => {
           const squidexTeamResponse = getGraphQlTeamsResponse();
-          const team1 = getGraphqlTeam(undefined, 'team-id-1');
-          const team2 = getGraphqlTeam(undefined, 'team-id-2');
-          const team3 = getGraphqlTeam(undefined, 'team-id-3');
+          const team1 = getGraphqlTeam({ id: 'team-id-1' });
+          const team2 = getGraphqlTeam({ id: 'team-id-2' });
+          const team3 = getGraphqlTeam({ id: 'team-id-3' });
           team1.flatData!.tools = tools;
           team2.flatData!.tools = tools;
           team3.flatData!.tools = [];
@@ -478,7 +479,7 @@ describe('Team controller', () => {
         test('Should return the tools as an empty array when they are defined as null in squidex', async () => {
           const teamId = 'team-id-1';
 
-          const tools = null;
+          const tools = null as unknown as GraphTeamTool[];
 
           nock(config.baseUrl)
             .post(`/api/content/${config.appName}/graphql`, {
@@ -487,7 +488,7 @@ describe('Team controller', () => {
                 id: teamId,
               },
             })
-            .reply(200, getGraphQlTeamResponse(tools as any));
+            .reply(200, getGraphQlTeamResponse({ tools }));
 
           const result = await teamController.fetchById(teamId);
 
@@ -513,7 +514,7 @@ describe('Team controller', () => {
                 id: teamId,
               },
             })
-            .reply(200, getGraphQlTeamResponse(tools));
+            .reply(200, getGraphQlTeamResponse({ tools }));
 
           const result = await teamController.fetchById(teamId);
 
@@ -543,7 +544,7 @@ describe('Team controller', () => {
                 id: teamId,
               },
             })
-            .reply(200, getGraphQlTeamResponse(tools));
+            .reply(200, getGraphQlTeamResponse({ tools }));
 
           const result = await teamController.fetchById(teamId, {
             showTools: true,
@@ -568,7 +569,7 @@ describe('Team controller', () => {
                 id: teamId,
               },
             })
-            .reply(200, getGraphQlTeamResponse(tools));
+            .reply(200, getGraphQlTeamResponse({ tools }));
 
           const result = await teamController.fetchById(teamId);
 
@@ -593,7 +594,7 @@ describe('Team controller', () => {
                 id: teamId,
               },
             })
-            .reply(200, getGraphQlTeamResponse(tools));
+            .reply(200, getGraphQlTeamResponse({ tools }));
 
           const result = await teamController.fetchById(teamId, {
             showTools: false,
@@ -890,7 +891,7 @@ describe('Team controller', () => {
             id: teamId,
           },
         })
-        .reply(200, getGraphQlTeamResponse(toolsResponse));
+        .reply(200, getGraphQlTeamResponse({ tools: toolsResponse }));
 
       const result = await teamController.update(teamId, [
         {
@@ -906,6 +907,44 @@ describe('Team controller', () => {
           name: 'good link',
         },
       ]);
+    });
+  });
+  describe('merge method', () => {
+    test('Should merge the output field', async () => {
+      const teamId = 'team-id-1';
+      const existingOutputs = ['output-1'] as unknown as GraphTeamOutputs;
+
+      const firstResponse = getGraphQlTeamResponse({
+        outputs: existingOutputs,
+      });
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_TEAM),
+          variables: {
+            id: teamId,
+          },
+        })
+        .reply(200, firstResponse)
+        .patch(`/api/content/${config.appName}/teams/${teamId}`, {
+          outputs: { iv: ['output-1', 'output-2'] },
+        })
+        .reply(200, getUpdateTeamResponse()) // response is not used
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_TEAM),
+          variables: {
+            id: teamId,
+          },
+        })
+        .reply(
+          200,
+          getGraphQlTeamResponse({
+            outputs: ['output-1', 'output-2'] as unknown as GraphTeamOutputs,
+          }),
+        );
+
+      const result = await teamController.merge(teamId, ['output-2']);
+
+      expect(result.outputs).toEqual(['output-1', 'output-2']);
     });
   });
 });

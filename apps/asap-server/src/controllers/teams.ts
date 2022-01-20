@@ -67,6 +67,15 @@ export default class Teams implements TeamController {
     return this.fetchById(id);
   }
 
+  async merge(id: string, outputs: string[]): Promise<TeamResponse> {
+    const { outputs: existingOutputs = [] } = await this.fetchById(id);
+
+    await this.teamSquidexRestClient.patch(id, {
+      outputs: { iv: [...existingOutputs, ...outputs] },
+    });
+    return this.fetchById(id);
+  }
+
   async fetch(options: FetchTeamsOptions): Promise<ListTeamResponse> {
     const { take = 8, skip = 0, search } = options;
 

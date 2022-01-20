@@ -393,7 +393,7 @@ export const getSquidexGraphqlGroup = (): NonNullable<
         },
       },
     ],
-    teams: [getGraphqlTeam()],
+    teams: [getGraphqlTeam({})],
     leaders: [
       {
         role: 'Chair',
@@ -442,6 +442,7 @@ export const getGroupResponse = (): GroupResponse => ({
         'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
       proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
       tools: [],
+      outputs: [],
     },
   ],
   leaders: [

@@ -9,7 +9,7 @@ export type GroupTools = {
   readonly googleCalendar?: string;
 };
 
-export type GroupTeam = Omit<TeamResponse, 'members' | 'outputs' | 'labCount'>;
+export type GroupTeam = Omit<TeamResponse, 'members' | 'labCount'>;
 
 export const groupRole = ['Chair', 'Project Manager'] as const;
 

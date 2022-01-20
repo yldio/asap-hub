@@ -40,7 +40,7 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     ResearchOutputsResultDto: resultDto,
     Users: () => getGraphQLUser(),
     UsersResultDto: resultDto,
-    Teams: () => getGraphqlTeam(),
+    Teams: () => getGraphqlTeam({}),
     TeamsResultDto: resultDto,
     Discover: () => getSquidexGraphqlDiscover(),
     DiscoveryResultDto: resultDto,

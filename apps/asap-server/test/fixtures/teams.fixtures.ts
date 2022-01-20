@@ -103,6 +103,7 @@ export const getTeamResponse = (): TeamResponse => ({
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
   tools: [],
+  outputs: [],
 });
 
 export const graphQlTeamResponse = {
@@ -228,11 +229,19 @@ export const getUpdateTeamResponse = (tools: TeamTool[] = []): RestTeam => ({
 export type GraphTeamTool = NonNullable<
   NonNullable<FetchTeamQuery['findTeamsContent']>['flatData']['tools']
 >[number];
+export type GraphTeamOutputs = NonNullable<
+  NonNullable<FetchTeamQuery['findTeamsContent']>['flatData']['outputs']
+>;
 
-export const getGraphqlTeam = (
-  tools: GraphTeamTool[] = [],
-  id: string = 'team-id-1',
-): NonNullable<FetchTeamQuery['findTeamsContent']> => {
+export const getGraphqlTeam = ({
+  tools = [],
+  id = 'team-id-1',
+  outputs = [],
+}: Partial<{
+  tools: GraphTeamTool[];
+  id: string;
+  outputs: GraphTeamOutputs;
+}>): NonNullable<FetchTeamQuery['findTeamsContent']> => {
   const referencingUsersContents = getGraphQLUser();
   referencingUsersContents.flatData.teams![0]!.id![0]!.id = id;
 
@@ -254,16 +263,23 @@ export const getGraphqlTeam = (
         },
       ],
       tools,
+      outputs,
     },
     referencingUsersContents: [referencingUsersContents],
   };
 };
 
 export const getGraphQlTeamResponse = (
-  tools: GraphTeamTool[] = [],
+  {
+    tools = [],
+    outputs = [],
+  }: Partial<{ tools: GraphTeamTool[]; outputs: GraphTeamOutputs }> = {
+    tools: [],
+    outputs: [],
+  },
 ): { data: FetchTeamQuery } => ({
   data: {
-    findTeamsContent: getGraphqlTeam(tools),
+    findTeamsContent: getGraphqlTeam({ tools, outputs }),
   },
 });
 
@@ -271,7 +287,7 @@ export const getGraphQlTeamsResponse = (): { data: FetchTeamsQuery } => ({
   data: {
     queryTeamsContentsWithTotal: {
       total: 1,
-      items: [getGraphqlTeam()],
+      items: [getGraphqlTeam({})],
     },
   },
 });

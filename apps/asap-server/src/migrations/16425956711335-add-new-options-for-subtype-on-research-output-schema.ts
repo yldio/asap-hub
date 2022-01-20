@@ -4,7 +4,7 @@ import { RestResearchOutput } from '@asap-hub/squidex';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
-export default class SetResearchOutputAddedDateDefault extends Migration {
+export default class MapResearchOutputDeprecatedSubtype extends Migration {
   up = async (): Promise<void> => {
     await applyToAllItemsInCollection<RestResearchOutput>(
       'research-outputs',

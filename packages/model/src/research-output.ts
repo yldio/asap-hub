@@ -93,20 +93,18 @@ export const isResearchOutputSubtype = (
 ): subtype is ResearchOutputSubtype =>
   (researchOutputSubtypes as ReadonlyArray<string>).includes(subtype);
 
+export const isResearchOutputDeprecatedSubtype = (
+  subtype: string,
+): subtype is ResearchOutputDeprecatedSubtype =>
+  (researchOutputDeprecatedSubtypes as ReadonlyArray<string>).includes(subtype);
+
 export const researchOutputMapSubtype = (
   subtype?: string | null,
 ): ResearchOutputSubtype | null => {
   if (subtype) {
-    if (
-      Object.prototype.hasOwnProperty.call(
-        researchOutputDeprecatedSubtypeToResearchOutputSubtypeMap,
-        subtype,
-      )
-    ) {
+    if (isResearchOutputDeprecatedSubtype(subtype)) {
       const mappedSubtype: ResearchOutputSubtype =
-        researchOutputDeprecatedSubtypeToResearchOutputSubtypeMap[
-          subtype as ResearchOutputDeprecatedSubtype
-        ];
+        researchOutputDeprecatedSubtypeToResearchOutputSubtypeMap[subtype];
 
       return isResearchOutputSubtype(mappedSubtype) ? mappedSubtype : null;
     }

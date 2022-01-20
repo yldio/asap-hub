@@ -4538,6 +4538,7 @@ export type EventContentFragment = Pick<
                             >
                           >
                         >;
+                        outputs: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
                       };
                       referencingUsersContents: Maybe<
                         Array<
@@ -4843,6 +4844,9 @@ export type FetchEventsQuery = {
                                         'description' | 'name' | 'url'
                                       >
                                     >
+                                  >;
+                                  outputs: Maybe<
+                                    Array<Pick<ResearchOutputs, 'id'>>
                                   >;
                                 };
                                 referencingUsersContents: Maybe<
@@ -5175,6 +5179,7 @@ export type FetchEventQuery = {
                                 >
                               >
                             >;
+                            outputs: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
                           };
                           referencingUsersContents: Maybe<
                             Array<
@@ -5444,6 +5449,7 @@ export type GroupsContentFragment = Pick<
                 Pick<TeamsDataToolsChildDto, 'description' | 'name' | 'url'>
               >
             >;
+            outputs: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
           };
           referencingUsersContents: Maybe<
             Array<
@@ -5687,6 +5693,7 @@ export type FetchGroupsQuery = {
                           >
                         >
                       >;
+                      outputs: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
                     };
                     referencingUsersContents: Maybe<
                       Array<
@@ -5937,6 +5944,7 @@ export type FetchGroupQuery = {
                     Pick<TeamsDataToolsChildDto, 'description' | 'name' | 'url'>
                   >
                 >;
+                outputs: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
               };
               referencingUsersContents: Maybe<
                 Array<
@@ -6639,6 +6647,7 @@ export type TeamsContentFragment = Pick<
     tools: Maybe<
       Array<Pick<TeamsDataToolsChildDto, 'description' | 'name' | 'url'>>
     >;
+    outputs: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
   };
   referencingUsersContents: Maybe<
     Array<
@@ -6742,6 +6751,7 @@ export type FetchTeamQuery = {
         tools: Maybe<
           Array<Pick<TeamsDataToolsChildDto, 'description' | 'name' | 'url'>>
         >;
+        outputs: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
       };
       referencingUsersContents: Maybe<
         Array<
@@ -6856,6 +6866,7 @@ export type FetchTeamsQuery = {
                   Pick<TeamsDataToolsChildDto, 'description' | 'name' | 'url'>
                 >
               >;
+              outputs: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
             };
             referencingUsersContents: Maybe<
               Array<
@@ -7340,6 +7351,16 @@ export const TeamsContentFragmentDoc = {
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'outputs' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                     ],
                   },
                 },

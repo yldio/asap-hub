@@ -114,7 +114,7 @@ describe('Research Outputs Index', () => {
 
     const response = await researchOutputSearchIndex.search('query', {
       hitsPerPage: 10,
-      page: 0
+      page: 0,
     });
 
     expect(response).toEqual(searchResponse);

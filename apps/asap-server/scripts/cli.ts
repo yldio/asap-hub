@@ -5,18 +5,24 @@ import { exportEntity } from './export-entity';
 
 // eslint-disable-next-line no-unused-expressions
 yargs(hideBin(process.argv))
-  .command<{ entity: string }>({
+  .command<{ entity: string; filename?: string }>({
     command: 'export <entity>',
     describe: 'export entity data to JSON',
     builder: (cli) =>
-      cli.positional('entity', {
-        describe: 'specific an entity to import',
-        type: 'string',
-        choices: ['users', 'research-outputs'],
-        demandOption: true,
-      }),
-    handler: async ({ entity }) =>
-      exportEntity(entity as 'users' | 'research-outputs'),
+      cli
+        .positional('entity', {
+          describe: 'specific an entity to import',
+          type: 'string',
+          choices: ['users', 'research-outputs'],
+          demandOption: true,
+        })
+        .option('filename', {
+          alias: 'f',
+          type: 'string',
+          description: 'The output file name',
+        }),
+    handler: async ({ entity, filename }) =>
+      exportEntity(entity as 'users' | 'research-outputs', filename),
   })
   .demandCommand(1)
   .help('h')

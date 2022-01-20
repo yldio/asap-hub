@@ -6,13 +6,14 @@ import Users from '../src/controllers/users';
 
 export const exportEntity = async (
   entity: 'users' | 'research-outputs',
+  filename?: string,
 ): Promise<void> => {
   const controllerMap = {
     users: Users,
     'research-outputs': ResearchOutputs,
   };
   const controller = new controllerMap[entity](new SquidexGraphql());
-  const file = await fs.open(`${entity}.json`, 'w');
+  const file = await fs.open(filename || `${entity}.json`, 'w');
 
   let recordCount = 0;
   let total: number;

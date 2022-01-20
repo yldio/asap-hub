@@ -36,9 +36,16 @@ export class ResearchOutputSearchIndex extends SearchIndex<
     query: string,
     requestOptions?: SearchOptions,
   ): Promise<ResearchOutputSearchResponse> {
+    const options: SearchOptions = {
+      ...requestOptions,
+      filters: requestOptions?.filters
+        ? `${requestOptions.filters} AND __meta.type:"research-output"`
+        : '__meta.type:"research-output',
+    };
+
     return this.index.search<ResearchOutputSearchResponseEntity>(
       query,
-      requestOptions,
+      options,
     );
   }
 

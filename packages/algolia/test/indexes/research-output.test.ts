@@ -100,7 +100,7 @@ describe('Research Outputs Index', () => {
     expect(algoliaSearchSpy).toBeCalledWith('query', {
       hitsPerPage: 10,
       page: 0,
-      filters: 'some-filters',
+      filters: 'some-filters AND __meta.type:"research-output"',
     });
   });
 });

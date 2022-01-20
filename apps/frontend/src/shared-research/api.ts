@@ -59,9 +59,8 @@ export const getAllFilters = (
     : typeFilters;
   const teamFilter = teamId ? `teams.id:"${teamId}"` : '';
   const authorFilter = userId ? `authors.id:"${userId}"` : '';
-  const entityType = '__meta.type:"research-output"';
 
-  return [typeFiltersWithParenthesis, teamFilter, authorFilter, entityType]
+  return [typeFiltersWithParenthesis, teamFilter, authorFilter]
     .filter(Boolean)
     .join(' AND ');
 };

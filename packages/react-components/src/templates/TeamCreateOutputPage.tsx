@@ -1,11 +1,11 @@
 import React from 'react';
 import { css } from '@emotion/react';
 
+import { ResearchOutput } from '@asap-hub/model';
 import { Display, Paragraph, Button } from '../atoms';
 import { perRem } from '../pixels';
 import { steel, paper } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
-// import { ResearchOutput } from '@asap-hub/model';
 
 const visualHeaderStyles = css({
   marginBottom: `${30 / perRem}em`,
@@ -22,7 +22,7 @@ const textStyles = css({
 
 type TeamCreateOutputPageProps = {
   onCreate: () => void;
-  researchOutput: any;
+  researchOutput: ResearchOutput;
 };
 
 type TeamCreateOutputHeaderProps = {

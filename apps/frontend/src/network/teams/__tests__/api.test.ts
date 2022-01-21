@@ -136,8 +136,8 @@ describe('createTeamResearchOutput', () => {
     type: 'Bioinformatics' as ResearchOutputType,
     link: 'http://a-link',
     title: 'A title',
-    asapFunded: 'Not sure',
-    usedInPublication: 'Not sure',
+    asapFunded: false,
+    usedInPublication: false,
     sharingStatus: 'Public' as ResearchOutputSharingStatus,
     addedDate: '2020-01-01',
   };

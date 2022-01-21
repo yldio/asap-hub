@@ -86,18 +86,7 @@ const patchedTeamState = atomFamily<TeamResponse | undefined, string>({
   default: undefined,
 });
 
-const postTeamResearchOutputState = atom<
-  Pick<
-    ResearchOutput,
-    | 'type'
-    | 'link'
-    | 'title'
-    | 'asapFunded'
-    | 'sharingStatus'
-    | 'usedInPublication'
-    | 'addedDate'
-  >
->({
+const postTeamResearchOutputState = atom<ResearchOutput>({
   key: 'postResearchOutput',
   default: {
     type: 'Bioinformatics',
@@ -110,7 +99,7 @@ const postTeamResearchOutputState = atom<
   },
 });
 
-export const teamResearchOutputState = selector<Partial<ResearchOutput>>({
+export const teamResearchOutputState = selector<ResearchOutput>({
   key: 'teamResearchOutput',
   get: ({ get }) => get(postTeamResearchOutputState),
 });

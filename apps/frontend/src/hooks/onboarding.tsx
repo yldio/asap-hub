@@ -10,6 +10,7 @@ import { useCurrentUserProfileTabRoute } from './current-user-profile-tab-route'
 export type UserOnboardingResult = NonNullable<
   ComponentProps<typeof OnboardingFooter>['onboardable']
 >;
+
 const orderedSteps = [
   'Details',
   'Role',
@@ -33,8 +34,43 @@ const fieldToStep: Record<
   researchInterests: 'Role',
   responsibilities: 'Role',
 };
-
-const steps = (
+const staffSteps = (
+  profileTab: NonNullable<ReturnType<typeof useCurrentUserProfileTabRoute>>,
+  user: User,
+): Omit<
+  Record<typeof orderedSteps[number], { modalHref: string; label: string }>,
+  'Questions'
+> => ({
+  Details: {
+    label: 'Details',
+    modalHref: profileTab({}).editPersonalInfo({}).$,
+  },
+  Role: {
+    label: 'Role',
+    modalHref: network({})
+      .users({})
+      .user({ userId: user.id })
+      .research({})
+      .editRole({}).$,
+  },
+  Expertise: {
+    label: 'Expertise',
+    modalHref: network({})
+      .users({})
+      .user({ userId: user.id })
+      .research({})
+      .editExpertiseAndResources({}).$,
+  },
+  Biography: {
+    label: 'Biography',
+    modalHref: network({})
+      .users({})
+      .user({ userId: user.id })
+      .about({})
+      .editBiography({}).$,
+  },
+});
+const defaultSteps = (
   profileTab: NonNullable<ReturnType<typeof useCurrentUserProfileTabRoute>>,
   user: User,
 ): Record<
@@ -82,12 +118,15 @@ const steps = (
 export const useOnboarding = (id: string): UserOnboardingResult | undefined => {
   const user = useUserById(id);
   const profileTab = useCurrentUserProfileTabRoute();
+
   if (!user || !profileTab) {
     return undefined;
   }
   const { isOnboardable, ...onboardingValidation } = isUserOnboardable(user);
-  const stepDetails = steps(profileTab, user);
-
+  const stepDetails =
+    user.role === 'Staff'
+      ? staffSteps(profileTab, user)
+      : defaultSteps(profileTab, user);
   return {
     isOnboardable,
     totalSteps: Object.keys(stepDetails).length,

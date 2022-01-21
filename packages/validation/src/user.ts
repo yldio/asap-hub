@@ -30,12 +30,18 @@ export const isUserOnboardable = (
   user: UserResponse,
 ): UserValidationResponse => {
   const response: Omit<UserValidationResponse, 'isOnboardable'> = {};
-  if (user.questions.length < 2) {
-    response.questions = { valid: false };
-  }
 
-  if (user.teams.length === 0) {
-    response.teams = { valid: false };
+  if (user.role !== 'Staff') {
+    if (user.questions.length < 2) {
+      response.questions = { valid: false };
+    }
+
+    if (user.teams.length === 0) {
+      response.teams = { valid: false };
+    }
+    if (!user.researchInterests) {
+      response.researchInterests = { valid: false };
+    }
   }
 
   if (!user.institution) {
@@ -64,10 +70,6 @@ export const isUserOnboardable = (
 
   if (!user.responsibilities) {
     response.responsibilities = { valid: false };
-  }
-
-  if (!user.researchInterests) {
-    response.researchInterests = { valid: false };
   }
 
   if (Object.keys(response).length === 0) {

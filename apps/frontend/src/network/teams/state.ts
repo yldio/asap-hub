@@ -13,7 +13,7 @@ import {
   TeamResponse,
   TeamPatchRequest,
   ListTeamResponse,
-  CreateTeamResearchOutput,
+  ResearchOutput,
 } from '@asap-hub/model';
 
 import { getTeam, patchTeam, getTeams, createTeamResearchOutput } from './api';
@@ -86,20 +86,31 @@ const patchedTeamState = atomFamily<TeamResponse | undefined, string>({
   default: undefined,
 });
 
-const postTeamResearchOutputState = atom<CreateTeamResearchOutput>({
+const postTeamResearchOutputState = atom<
+  Pick<
+    ResearchOutput,
+    | 'type'
+    | 'link'
+    | 'title'
+    | 'asapFunded'
+    | 'sharingStatus'
+    | 'usedInPublication'
+    | 'addedDate'
+  >
+>({
   key: 'postResearchOutput',
   default: {
     type: 'Bioinformatics',
     link: 'https://hub.asap.science/',
     title: 'Output created through the ROMS form',
-    asapFunded: 'No',
+    asapFunded: false,
     sharingStatus: 'Network Only',
-    usedInPublication: 'No',
+    usedInPublication: false,
     addedDate: new Date().toISOString(),
   },
 });
 
-export const teamResearchOutputState = selector<CreateTeamResearchOutput>({
+export const teamResearchOutputState = selector<Partial<ResearchOutput>>({
   key: 'teamResearchOutput',
   get: ({ get }) => get(postTeamResearchOutputState),
 });
@@ -151,7 +162,7 @@ export const usePatchTeamById = (id: string) => {
 };
 export const usePostTeamResearchOutput = (teamId: string) => {
   const authorization = useRecoilValue(authorizationState);
-  return async (payload: CreateTeamResearchOutput) => {
+  return async (payload: Partial<ResearchOutput>) => {
     await createTeamResearchOutput(teamId, payload, authorization);
   };
 };

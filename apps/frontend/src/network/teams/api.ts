@@ -2,7 +2,7 @@ import {
   TeamResponse,
   TeamPatchRequest,
   ListTeamResponse,
-  CreateTeamResearchOutput,
+  ResearchOutput,
 } from '@asap-hub/model';
 import { API_BASE_URL } from '../../config';
 import {
@@ -69,7 +69,7 @@ export const patchTeam = async (
 
 export const createTeamResearchOutput = async (
   teamId: string,
-  researchOutput: CreateTeamResearchOutput,
+  researchOutput: Partial<ResearchOutput>,
   authorization: string,
 ) => {
   const resp = await fetch(`${API_BASE_URL}/research-outputs`, {

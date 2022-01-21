@@ -1,11 +1,11 @@
 import React from 'react';
-import { CreateTeamResearchOutput } from '@asap-hub/model';
+import { ResearchOutput } from '@asap-hub/model';
 
 import { TeamCreateOutputHeader, TeamCreateOutputForm } from '../organisms';
 
 type TeamCreateOutputPageProps = {
   onCreate: () => void;
-  researchOutput: CreateTeamResearchOutput;
+  researchOutput: ResearchOutput;
 };
 
 const TeamCreateOutputPage: React.FC<TeamCreateOutputPageProps> = ({
@@ -13,7 +13,7 @@ const TeamCreateOutputPage: React.FC<TeamCreateOutputPageProps> = ({
   onCreate,
 }) => (
   <>
-    <TeamCreateOutputHeader type={researchOutput.type || 'unknown'} />
+    <TeamCreateOutputHeader type={researchOutput.type} />
     <TeamCreateOutputForm onCreate={onCreate} />
   </>
 );

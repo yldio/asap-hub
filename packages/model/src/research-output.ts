@@ -140,13 +140,3 @@ export const researchOutputLabels: Record<ResearchOutputType, string> = {
 };
 
 export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;
-
-export interface CreateTeamResearchOutput {
-  type: ResearchOutputType;
-  link: string;
-  title: string;
-  asapFunded: string;
-  usedInPublication: string;
-  sharingStatus: ResearchOutputSharingStatus;
-  addedDate: string;
-}

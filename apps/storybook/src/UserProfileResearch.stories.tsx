@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { UserProfileResearch } from '@asap-hub/react-components';
-import { array, text, boolean } from '@storybook/addon-knobs';
+import { array, text, boolean, select } from '@storybook/addon-knobs';
 import { TeamRole } from '@asap-hub/model';
 
 export default {
@@ -14,6 +14,9 @@ const props = (): ComponentProps<typeof UserProfileResearch> => ({
   email: text('Email', 'me@example.com'),
   contactEmail: text('Contact email', 'contact@example.com'),
   labs: [],
+  researchInterests: 'My Research interests',
+  responsibilities: 'My responsibilities',
+  reachOut: 'If you need my help',
   teams: [
     {
       id: '42',
@@ -41,6 +44,7 @@ const props = (): ComponentProps<typeof UserProfileResearch> => ({
     ? 'User Profile Groups Placeholder'
     : undefined,
   isOwnProfile: boolean(`Is own profile`, false),
+  role: select('ASAP Hub Role', ['Staff', 'Grantee', 'Guest'], 'Grantee'),
 });
 
 export const ViewOnly = () => <UserProfileResearch {...props()} />;
@@ -49,9 +53,9 @@ export const Editable = () => (
     {...props()}
     editExpertiseAndResourcesHref="#edit-expertise-and-resources"
     editQuestionsHref="#edit-questions"
+    editRoleHref="#edit-role"
     teams={props().teams.map((team) => ({
       ...team,
-      editHref: `#edit-team-membership-${team.id}`,
     }))}
   />
 );

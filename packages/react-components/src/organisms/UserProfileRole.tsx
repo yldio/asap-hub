@@ -1,6 +1,6 @@
 import React, { Fragment, useContext } from 'react';
 import { css } from '@emotion/react';
-import { UserResponse, Lab } from '@asap-hub/model';
+import { UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { UserProfileContext } from '@asap-hub/react-context';
 
@@ -11,10 +11,14 @@ import { getUniqueCommaStringWithSuffix } from '../utils';
 
 type UserProfileRoleProps = Pick<
   UserResponse,
-  'firstName' | 'teams' | 'researchInterests' | 'responsibilities'
-> & {
-  labs?: Lab[];
-};
+  | 'firstName'
+  | 'teams'
+  | 'researchInterests'
+  | 'responsibilities'
+  | 'role'
+  | 'reachOut'
+  | 'labs'
+>;
 
 const containerStyle = css({
   display: 'grid',
@@ -67,6 +71,8 @@ const UserProfileRole: React.FC<UserProfileRoleProps> = ({
   firstName,
   researchInterests,
   responsibilities,
+  role,
+  reachOut,
 }) => {
   const teamHref = (id: string) => network({}).teams({}).team({ teamId: id }).$;
   const { isOwnProfile } = useContext(UserProfileContext);
@@ -83,14 +89,14 @@ const UserProfileRole: React.FC<UserProfileRoleProps> = ({
       {!!teams.length && (
         <div css={detailsContentStyle}>
           <ul css={containerStyle}>
-            {teams.map(({ displayName, role, id }, idx) => (
+            {teams.map(({ displayName, role: teamRole, id }, idx) => (
               <Fragment key={`team-${idx}`}>
                 {idx === 0 || <Divider />}
                 <li key={idx} css={listItemStyle}>
                   <div css={[titleStyle]}>Team</div>
                   <Link href={teamHref(id)}>Team {displayName}</Link>
                   <div css={[titleStyle]}>Role</div>
-                  <div>{role}</div>
+                  <div>{teamRole}</div>
                 </li>
               </Fragment>
             ))}
@@ -103,7 +109,7 @@ const UserProfileRole: React.FC<UserProfileRoleProps> = ({
           <span>{labsList}</span>
         </div>
       )}
-      {(researchInterests || isOwnProfile) && (
+      {(researchInterests || isOwnProfile) && role !== 'Staff' && (
         <div css={detailsContentStyle}>
           <Headline3 styleAsHeading={5}>Main Research Interests</Headline3>
           {researchInterests ? (
@@ -127,6 +133,21 @@ const UserProfileRole: React.FC<UserProfileRoleProps> = ({
             <UserProfilePlaceholderCard title="Which responsibilities do you have in your project?">
               Tell others about the role you play in your team. This will
               encourage collaboration.
+            </UserProfilePlaceholderCard>
+          )}
+        </div>
+      )}
+      {(reachOut || isOwnProfile) && role === 'Staff' && (
+        <div css={detailsContentStyle}>
+          <Headline3 styleAsHeading={5}>
+            Reach out to {firstName} for help with...
+          </Headline3>
+          {reachOut ? (
+            <p css={textStyle}>{reachOut}</p>
+          ) : (
+            <UserProfilePlaceholderCard title="If at all, why should grantees ever need to contact you?">
+              This will help the Hub to direct grantees to the right point of
+              contact.
             </UserProfilePlaceholderCard>
           )}
         </div>

@@ -45,7 +45,7 @@ const propsViewOnly = (): Omit<
       'Avatar URL',
       'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
     ),
-    role: select('Role', ['Grantee', 'Guest'], 'Grantee'),
+    role: select('Role', ['Grantee', 'Guest', 'Staff'], 'Grantee'),
     social: {
       twitter: text('Twitter Handle', '123'),
       github: text('Github Handle', '123'),
@@ -90,9 +90,3 @@ export const Normal = () => {
     </StaticRouter>
   );
 };
-
-export const Staff = () => (
-  <UserProfilePage {...propsViewOnly()} role="Staff">
-    Page Content
-  </UserProfilePage>
-);

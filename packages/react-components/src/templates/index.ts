@@ -56,6 +56,5 @@ export { default as UserProfilePage } from './UserProfilePage';
 export { default as UserProfileResearch } from './UserProfileResearch';
 export { default as UserProfileResearchOutputs } from './UserProfileResearchOutputs';
 export { default as UserProfileSearchAndFilter } from './UserProfileSearchAndFilter';
-export { default as UserProfileStaff } from './UserProfileStaff';
 export { default as RoleModal } from './RoleModal';
 export { default as WelcomePage } from './WelcomePage';

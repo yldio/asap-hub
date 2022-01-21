@@ -16,6 +16,18 @@ jobs:
           echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "::add-mask::$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)"
-          echo "ALGOLIA_RESEARCH_OUTPUT_INDEX=asap-hub_research_outputs_CI-${{github.event.number}}" >> $GITHUB_ENV
-      - name: Synchronize Schema
-        run: yarn run algolia:upload
+      - name: Synchronize Research Output Index Schema
+        run: ALGOLIA_INDEX=asap-hub_research_outputs_CI-${{github.event.number}} SCHEMA_FILENAME=research-outputs yarn run algolia:upload-schema
+      - name: Synchronize User Index Schema
+        run: ALGOLIA_INDEX=asap-hub_users_CI-${{github.event.number}} SCHEMA_FILENAME=users yarn run algolia:upload-schema
+  notify_failure:
+    runs-on: ubuntu-18.04
+    needs: [sync_algolia_settings]
+    if: failure()
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: ./.github/actions/slack/
+        with:
+          message: Environment sync
+          webhook: ${{ secrets.SLACK_WEBHOOK }}

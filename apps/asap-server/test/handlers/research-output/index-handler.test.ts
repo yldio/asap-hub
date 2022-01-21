@@ -6,7 +6,7 @@ import {
 } from '../../../src/handlers/research-output/index-handler';
 import { ResearchOutputEventType } from '../../../src/handlers/webhooks/webhook-research-output';
 import {
-  getResearchOutputResponse,
+  getResearchOutputAlgoliaResponse,
   getResearchOutputEvent,
 } from '../../fixtures/research-output.fixtures';
 import {
@@ -23,7 +23,7 @@ describe('Research Output index handler', () => {
   afterEach(() => jest.clearAllMocks());
 
   test('Should fetch the research-output and create a record in Algolia when research-output is created', async () => {
-    const researchOutputResponse = getResearchOutputResponse();
+    const researchOutputResponse = getResearchOutputAlgoliaResponse();
     researchOutputControllerMock.fetchById.mockResolvedValueOnce(
       researchOutputResponse,
     );
@@ -37,7 +37,7 @@ describe('Research Output index handler', () => {
   });
 
   test('Should fetch the research-output and create a record in Algolia when research-output is updated', async () => {
-    const researchOutputResponse = getResearchOutputResponse();
+    const researchOutputResponse = getResearchOutputAlgoliaResponse();
     researchOutputControllerMock.fetchById.mockResolvedValueOnce(
       researchOutputResponse,
     );
@@ -86,9 +86,9 @@ describe('Research Output index handler', () => {
   test('Should throw the algolia error when saving the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    researchOutputControllerMock.fetchById.mockResolvedValueOnce({
-      ...getResearchOutputResponse(),
-    });
+    researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+      getResearchOutputAlgoliaResponse(),
+    );
     algoliaIndexMock.saveObject.mockRejectedValueOnce(algoliaError);
 
     await expect(indexHandler(updateEvent('ro-1234'))).rejects.toThrow(
@@ -112,7 +112,7 @@ describe('Research Output index handler', () => {
     test('receives the events created and updated in correct order', async () => {
       const roID = 'ro-1234';
       const researchOutputResponse = {
-        ...getResearchOutputResponse(),
+        ...getResearchOutputAlgoliaResponse(),
         id: roID,
       };
 
@@ -134,7 +134,7 @@ describe('Research Output index handler', () => {
     test('receives the events created and updated in reverse order', async () => {
       const roID = 'ro-1234';
       const researchOutputResponse = {
-        ...getResearchOutputResponse(),
+        ...getResearchOutputAlgoliaResponse(),
         id: roID,
       };
 

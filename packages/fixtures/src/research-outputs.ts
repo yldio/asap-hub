@@ -2,10 +2,8 @@ import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import { SearchResponse } from '@algolia/client-search';
 
 import { listUserResponseItem } from './users';
-import { createAlgoliaResponse } from './util';
 
 const researchOutputResponse: Omit<
   ListResearchOutputResponse['items'][0],
@@ -53,16 +51,5 @@ export const createListResearchOutputResponse = (
     createResearchOutputResponse(itemIndex),
   ),
 });
-
-export const createAlgoliaResearchOutputResponse = (
-  items: number,
-  responseOverride?: Parameters<typeof createAlgoliaResponse>['1'],
-): SearchResponse<ResearchOutputResponse> =>
-  createAlgoliaResponse(
-    Array.from({ length: items }, (_, itemIndex) =>
-      createResearchOutputResponse(itemIndex),
-    ),
-    responseOverride,
-  );
 
 export default createListResearchOutputResponse;

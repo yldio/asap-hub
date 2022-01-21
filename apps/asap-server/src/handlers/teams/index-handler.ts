@@ -1,5 +1,5 @@
 import { EventBridgeEvent } from 'aws-lambda';
-import algoliasearch, { SearchClient } from 'algoliasearch';
+import { algoliasearch, SearchClient } from '@asap-hub/algolia';
 import { SquidexGraphql } from '@asap-hub/squidex';
 import { TeamsEventType } from '../webhooks/webhook-teams';
 import ResearchOutputs, {

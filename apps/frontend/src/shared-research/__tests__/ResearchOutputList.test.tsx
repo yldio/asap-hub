@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { createAlgoliaResearchOutputResponse } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
 import userEvent from '@testing-library/user-event';
 
+import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import ResearchOutputList from '../ResearchOutputList';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getResearchOutputs } from '../api';
@@ -62,8 +62,8 @@ beforeEach(() => {
 
 it('renders a list of research outputs', async () => {
   mockGetResearchOutputs.mockResolvedValue({
-    ...createAlgoliaResearchOutputResponse(2),
-    hits: createAlgoliaResearchOutputResponse(2).hits.map((hit, index) => ({
+    ...createResearchOutputListAlgoliaResponse(2),
+    hits: createResearchOutputListAlgoliaResponse(2).hits.map((hit, index) => ({
       ...hit,
       title: `Test Output ${index}`,
     })),
@@ -75,7 +75,7 @@ it('renders a list of research outputs', async () => {
 
 it('triggers and export with the same parameters', async () => {
   mockGetResearchOutputs.mockResolvedValue(
-    createAlgoliaResearchOutputResponse(2),
+    createResearchOutputListAlgoliaResponse(2),
   );
   const { getByText } = await renderResearchOutputList('example');
   userEvent.click(getByText(/export/i));

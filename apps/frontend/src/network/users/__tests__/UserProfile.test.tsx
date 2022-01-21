@@ -2,11 +2,7 @@ import { ContextType, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import {
-  createAlgoliaResearchOutputResponse,
-  createUserResponse,
-  createUserTeams,
-} from '@asap-hub/fixtures';
+import { createUserResponse, createUserTeams } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 import { UserResponse } from '@asap-hub/model';
 import { ToastContext } from '@asap-hub/react-context';
@@ -21,6 +17,7 @@ import imageCompression from 'browser-image-compression';
 import { Auth0Client } from '@auth0/auth0-spa-js';
 import { Auth0User, Auth0 } from '@asap-hub/auth';
 
+import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import UserProfile from '../UserProfile';
 import { getUser, patchUser, postUserAvatar } from '../api';
 import { refreshUserState } from '../state';
@@ -146,8 +143,8 @@ it('navigates to the background tab', async () => {
 
 it('navigates to the outputs tab', async () => {
   mockGetResearchOutputs.mockResolvedValue({
-    ...createAlgoliaResearchOutputResponse(1),
-    hits: createAlgoliaResearchOutputResponse(1).hits.map((hit, index) => ({
+    ...createResearchOutputListAlgoliaResponse(1),
+    hits: createResearchOutputListAlgoliaResponse(1).hits.map((hit, index) => ({
       ...hit,
       title: `Test Output ${index}`,
     })),

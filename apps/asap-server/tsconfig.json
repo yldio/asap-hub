@@ -11,6 +11,7 @@
   "include": ["src", "scripts", "test", "test/**/*.json", "@types/**/*.d.ts"],
   "references": [
     { "path": "../../packages/auth" },
+    { "path": "../../packages/algolia" },
     { "path": "../../packages/model" },
     { "path": "../../packages/services-common" },
     { "path": "../../packages/squidex" },

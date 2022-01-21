@@ -1,5 +1,9 @@
 import { promises as fs } from 'fs';
-import { ListResearchOutputResponse } from '@asap-hub/model';
+import { ResearchOutputSearchResponseEntity } from '@asap-hub/algolia';
+import {
+  ListResearchOutputResponse,
+  ResearchOutputResponse,
+} from '@asap-hub/model';
 import { SquidexGraphql } from '@asap-hub/squidex';
 import ResearchOutputs from '../src/controllers/research-outputs';
 
@@ -26,7 +30,23 @@ const main = async () => {
       await file.write(',\n');
     }
 
-    await file.write(JSON.stringify(records.items, null, 2).slice(1, -1));
+    await file.write(
+      JSON.stringify(
+        records.items.map(
+          (
+            item: ResearchOutputResponse,
+          ): ResearchOutputSearchResponseEntity => ({
+            ...item,
+            objectID: item.id,
+            __meta: {
+              type: 'research-output',
+            },
+          }),
+        ),
+        null,
+        2,
+      ).slice(1, -1),
+    );
 
     page++;
     recordCount += records.items.length;

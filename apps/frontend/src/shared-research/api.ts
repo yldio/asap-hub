@@ -1,5 +1,5 @@
 import { ResearchOutputResponse, ResearchOutputType } from '@asap-hub/model';
-import { SearchIndex } from 'algoliasearch/lite';
+import { ResearchOutputSearchIndex } from '@asap-hub/algolia';
 
 import { createSentryHeaders, GetListOptions } from '../api-util';
 import { API_BASE_URL } from '../config';
@@ -66,13 +66,15 @@ export const getAllFilters = (
 };
 
 export const getResearchOutputs = (
-  { search }: SearchIndex,
+  index: ResearchOutputSearchIndex,
   options: ResearchOutputListOptions,
 ) =>
-  search<ResearchOutputResponse>(options.searchQuery, {
-    page: options.currentPage ?? 0,
-    hitsPerPage: options.pageSize ?? 10,
-    filters: getAllFilters(options.filters, options.teamId, options.userId),
-  }).catch((error: Error) => {
-    throw new Error(`Could not search: ${error.message}`);
-  });
+  index
+    .search(options.searchQuery, {
+      page: options.currentPage ?? 0,
+      hitsPerPage: options.pageSize ?? 10,
+      filters: getAllFilters(options.filters, options.teamId, options.userId),
+    })
+    .catch((error: Error) => {
+      throw new Error(`Could not search: ${error.message}`);
+    });

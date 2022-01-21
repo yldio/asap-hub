@@ -14,7 +14,6 @@
     "release:frontend": "node ./scripts/sentry-release.js"
   },
   "dependencies": {
-    "@algolia/client-search": "*",
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/flags": "workspace:*",
     "@asap-hub/model": "workspace:*",
@@ -27,7 +26,6 @@
     "@fast-csv/format": "^4.3.5",
     "@sentry/react": "^6.11.0",
     "@sentry/tracing": "^6.11.0",
-    "algoliasearch": "^4.11.0",
     "browser-image-compression": "^1.0.14",
     "date-fns": "^2.21.3",
     "history": "^4",
@@ -47,6 +45,7 @@
     "web-streams-polyfill": "^3.1.1"
   },
   "devDependencies": {
+    "@asap-hub/algolia": "workspace:*",
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",

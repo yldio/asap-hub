@@ -27,3 +27,5 @@ export const getTeams = jest.fn(
   async ({ pageSize }: GetListOptions): Promise<ListTeamResponse> =>
     createListTeamResponse(pageSize ?? 10),
 );
+
+export const createTeamResearchOutput = jest.fn();

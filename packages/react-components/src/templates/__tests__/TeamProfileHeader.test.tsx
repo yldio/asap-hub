@@ -1,7 +1,9 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-import { subYears, formatISO } from 'date-fns';
+import { formatISO } from 'date-fns';
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
+import { disable } from '@asap-hub/flags';
+import { fireEvent } from '@testing-library/dom';
 
 import TeamProfileHeader from '../TeamProfileHeader';
 
@@ -23,16 +25,6 @@ it('renders the name as the top-level heading', () => {
 
   expect(getByRole('heading')).toHaveTextContent('John, D');
   expect(getByRole('heading').tagName).toBe('H1');
-});
-
-it('generates the last updated text', () => {
-  const { container } = render(
-    <TeamProfileHeader
-      {...boilerplateProps}
-      lastModifiedDate={formatISO(subYears(new Date(), 2))}
-    />,
-  );
-  expect(container).toHaveTextContent(/update.* 2 years ago/);
 });
 
 it('renders a list of members', () => {
@@ -65,6 +57,7 @@ it('renders no more than 5 members', () => {
 });
 
 it('renders a contact button when there is a pointOfContact', () => {
+  disable('ROMS_FORM');
   const { getByText } = render(
     <TeamProfileHeader
       {...boilerplateProps}
@@ -86,27 +79,27 @@ it('renders a contact button when there is a pointOfContact', () => {
 });
 
 it('renders a lab count for multiple labs', () => {
-  const { container } = render(
+  const { getByText } = render(
     <TeamProfileHeader {...boilerplateProps} labCount={23} />,
   );
 
-  expect(container).toHaveTextContent(/23 Labs/);
+  expect(getByText(/23 Labs/i)).toBeVisible();
 });
 
 it('renders a lab count for a single lab using singular form', () => {
-  const { container } = render(
+  const { getByText } = render(
     <TeamProfileHeader {...boilerplateProps} labCount={1} />,
   );
 
-  expect(container).toHaveTextContent(/1 Lab(?!s)/);
+  expect(getByText(/1 Lab(?!s)/i)).toBeVisible();
 });
 
-it('does not display labs when 0 labs are avaialble', () => {
-  const { container } = render(
+it('does not display labs when 0 labs are available', () => {
+  const { queryByText } = render(
     <TeamProfileHeader {...boilerplateProps} labCount={0} />,
   );
 
-  expect(container).not.toHaveTextContent(/Lab/);
+  expect(queryByText(/Labs/i)).toBeNull();
 });
 
 it('renders tabs', () => {
@@ -129,4 +122,13 @@ it('renders workspace tabs when tools provided', () => {
     'Team Workspace',
     'Team Outputs',
   ]);
+});
+
+it('renders share an output button dropdown', () => {
+  const { getByText, queryByText } = render(
+    <TeamProfileHeader {...boilerplateProps} />,
+  );
+  expect(queryByText(/article/i)).not.toBeVisible();
+  fireEvent.click(getByText('Share an output'));
+  expect(queryByText(/article/i)).toBeVisible();
 });

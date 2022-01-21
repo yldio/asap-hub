@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
+import { isEnabled } from '@asap-hub/flags';
 
 import { Anchor, Link, TabLink, Display, Avatar } from '../atoms';
 import { DropdownButton, TabNav } from '../molecules';
@@ -10,7 +11,6 @@ import { perRem, mobileScreen } from '../pixels';
 import { lead, paper } from '../colors';
 import { labIcon, libraryIcon, plusIcon } from '../icons';
 import { getCounterString } from '../utils';
-import { isEnabled } from '@asap-hub/flags';
 
 const MAX_MEMBER_AVATARS = 5;
 const MEMBER_AVATAR_BORDER_WIDTH = 1;

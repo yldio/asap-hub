@@ -116,6 +116,7 @@ export {
   UserProfileRecentWorks,
   HelpSection,
   TeamCreateOutputHeader,
+  TeamCreateOutputForm,
 } from './organisms';
 export {
   BasicLayout,

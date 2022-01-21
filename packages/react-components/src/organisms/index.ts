@@ -54,3 +54,4 @@ export { default as UserProfilePlaceholderCard } from './UserProfilePlaceholderC
 export { default as UserProfileRecentWorks } from './UserProfileRecentWorks';
 export { default as WelcomeCard } from './WelcomeCard';
 export { default as TeamCreateOutputHeader } from './TeamCreateOutputHeader';
+export { default as TeamCreateOutputForm } from './TeamCreateOutputForm';

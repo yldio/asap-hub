@@ -27,14 +27,13 @@ jobs:
           echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
       - name: upload to S3
         run: aws s3api put-object --bucket $BUCKET_NAME --key $FILE_NAME --body $FILE_NAME --storage-class STANDARD_IA
-  make_algolia_backup:
+  make_algolia_backups:
     runs-on: ubuntu-18.04
     env:
-      BUCKET_NAME: 'asap-hub-dev-algolia-backup'
+      BUCKET_NAME: 'asap-hub-dev-algolia-backup-v2'
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: 'us-east-1'
-      ALGOLIA_INDEX: 'asap-hub_research_outputs_dev'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -42,12 +41,18 @@ jobs:
         run: |
           echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
-      - name: Run the backup
+          echo "DIR_NAME=$(date +%s| cut -b1-13)" >> $GITHUB_ENV
+      - name: Run the backup for Research Outputs
         run: |
-          export DIR_NAME=$(date +%s| cut -b1-13)
-          mkdir $DIR_NAME
-          yarn workspace @asap-hub/asap-server run algolia export -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -o "../../$DIR_NAME"
-          echo "DIR_NAME=$DIR_NAME" >> $GITHUB_ENV
+          export ALGOLIA_INDEX=asap-hub_research_outputs_dev
+          mkdir research-outputs/$DIR_NAME -p
+          yarn workspace @asap-hub/asap-server run algolia export -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -o "../../research-outputs/${DIR_NAME}"
+      - name: Run the backup for users
+        run: |
+          export ALGOLIA_INDEX=asap-hub_users_dev
+          mkdir users/$DIR_NAME -p
+          yarn workspace @asap-hub/asap-server run algolia export -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -o "../../users/${DIR_NAME}"
       - name: Upload to S3
         run: |
-          aws s3 cp $DIR_NAME s3://$BUCKET_NAME/$DIR_NAME --recursive --storage-class STANDARD_IA
+          aws s3 cp research-outputs/$DIR_NAME s3://$BUCKET_NAME/research-outputs/$DIR_NAME --recursive --storage-class STANDARD_IA
+          aws s3 cp users/$DIR_NAME s3://$BUCKET_NAME/users/$DIR_NAME --recursive --storage-class STANDARD_IA

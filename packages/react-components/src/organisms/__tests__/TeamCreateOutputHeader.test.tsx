@@ -4,7 +4,9 @@ import TeamCreateOutputHeader from '../TeamCreateOutputHeader';
 describe('TeamCreateOutputHeader', () => {
   test('renders the research output type in the header', () => {
     render(<TeamCreateOutputHeader type="Bioinformatics" />);
-    expect(screen.getByText('Share bioinformatics')).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /Share bioinformatics/i }),
+    ).toBeInTheDocument();
   });
 
   test('renders the research output type in the description', () => {

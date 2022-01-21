@@ -44,11 +44,18 @@ jobs:
         run: |
           echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
-      - name: Delete the index
+      - name: Delete Research Output Index
         run: |
           cd apps/asap-server
           export ALGOLIA_INDEX=asap-hub_research_outputs_CI-$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          yarn workspace @asap-hub/asap-server run algolia deleteindicespattern -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -r "^$ALGOLIA_INDEX$" -x false
+          echo "^${ALGOLIA_INDEX}$"
+          # yarn workspace @asap-hub/asap-server run algolia deleteindicespattern -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -r "^${ALGOLIA_INDEX}$" -x false
+      - name: Delete User Index
+        run: |
+          cd apps/asap-server
+          export ALGOLIA_INDEX=asap-hub_users_CI-$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          echo "^${ALGOLIA_INDEX}$"
+          # yarn workspace @asap-hub/asap-server run algolia deleteindicespattern -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -r "^${ALGOLIA_INDEX}$" -x false
   notify_failure:
     runs-on: ubuntu-18.04
     needs: [sls_teardown, delete_algolia_indice]

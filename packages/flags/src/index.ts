@@ -1,4 +1,4 @@
-export type Flag = 'PERSISTENT_EXAMPLE';
+export type Flag = 'PERSISTENT_EXAMPLE' | 'ROMS_FORM';
 
 export type Flags = Partial<Record<Flag, boolean>>;
 let overrides: Flags = {

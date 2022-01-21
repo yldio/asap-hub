@@ -5,6 +5,7 @@ export { default as BannerCard } from './BannerCard';
 export { default as CalendarLink } from './CalendarLink';
 export { default as Collapsible } from './Collapsible';
 export { default as CtaCard } from './CtaCard';
+export { default as DropdownButton } from './DropdownButton';
 export { default as ErrorCard } from './ErrorCard';
 export { default as EventInfo } from './EventInfo';
 export { default as EventMaterialComingSoon } from './EventMaterialComingSoon';

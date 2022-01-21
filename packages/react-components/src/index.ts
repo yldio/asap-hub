@@ -11,6 +11,7 @@ export * from './images';
 export * from './theme';
 
 export {
+  Anchor,
   Avatar,
   Button,
   Caption,
@@ -34,6 +35,7 @@ export {
   AssociationList,
   BackLink,
   BannerCard,
+  DropdownButton,
   CalendarLink,
   Collapsible,
   CtaCard,

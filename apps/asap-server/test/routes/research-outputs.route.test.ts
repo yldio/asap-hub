@@ -3,14 +3,17 @@ import Boom from '@hapi/boom';
 import { appFactory } from '../../src/app';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { researchOutputControllerMock } from '../mocks/research-outputs-controller.mock';
+import { teamControllerMock } from '../mocks/team-controller.mock';
 import {
   getListResearchOutputResponse,
   getResearchOutputResponse,
 } from '../fixtures/research-output.fixtures';
+import { getTeamResponse } from '../fixtures/teams.fixtures';
 
 describe('/research-outputs/ route', () => {
   const app = appFactory({
     researchOutputController: researchOutputControllerMock,
+    teamController: teamControllerMock,
     authHandler: authHandlerMock,
   });
 
@@ -113,10 +116,11 @@ describe('/research-outputs/ route', () => {
   });
 
   describe('POST /research-outputs/', () => {
-    test('Should return a 200 when is hit', async () => {
+    test('Should return a 201 when is hit', async () => {
       const researchOutput = getResearchOutputResponse();
 
       researchOutputControllerMock.create.mockResolvedValueOnce('abc123');
+      teamControllerMock.merge.mockResolvedValueOnce(getTeamResponse());
 
       const response = await supertest(app)
         .post('/research-outputs')
@@ -143,6 +147,18 @@ describe('/research-outputs/ route', () => {
       researchOutputControllerMock.create.mockRejectedValueOnce(
         Boom.badImplementation(),
       );
+
+      await supertest(app)
+        .post('/research-outputs')
+        .send(researchOutput)
+        .set('Accept', 'application/json')
+        .expect(500);
+    });
+
+    test('Should return a 500 error when merging research outputs fails', async () => {
+      const researchOutput = getResearchOutputResponse();
+      researchOutputControllerMock.create.mockResolvedValueOnce('abc123');
+      teamControllerMock.merge.mockRejectedValueOnce(Boom.badImplementation());
 
       await supertest(app)
         .post('/research-outputs')

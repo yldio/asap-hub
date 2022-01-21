@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { config, GraphqlTeam, SquidexGraphql } from '@asap-hub/squidex';
+import { config, SquidexGraphql } from '@asap-hub/squidex';
 import { print } from 'graphql';
 import {
   getGraphQlTeamsResponse,
@@ -910,7 +910,7 @@ describe('Team controller', () => {
     });
   });
   describe('merge method', () => {
-    test('Should merge the output field', async () => {
+    test('Should merge the output field and maintains existing fields', async () => {
       const teamId = 'team-id-1';
       const existingOutputs = ['output-1'] as unknown as GraphTeamOutputs;
 
@@ -945,6 +945,42 @@ describe('Team controller', () => {
       const result = await teamController.merge(teamId, ['output-2']);
 
       expect(result.outputs).toEqual(['output-1', 'output-2']);
+    });
+    test('Should not create duplicate', async () => {
+      const teamId = 'team-id-1';
+      const existingOutputs = ['output-1'] as unknown as GraphTeamOutputs;
+
+      const firstResponse = getGraphQlTeamResponse({
+        outputs: existingOutputs,
+      });
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_TEAM),
+          variables: {
+            id: teamId,
+          },
+        })
+        .reply(200, firstResponse)
+        .patch(`/api/content/${config.appName}/teams/${teamId}`, {
+          outputs: { iv: ['output-1'] },
+        })
+        .reply(200, getUpdateTeamResponse()) // response is not used
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_TEAM),
+          variables: {
+            id: teamId,
+          },
+        })
+        .reply(
+          200,
+          getGraphQlTeamResponse({
+            outputs: ['output-1'] as unknown as GraphTeamOutputs,
+          }),
+        );
+
+      const result = await teamController.merge(teamId, ['output-1']);
+
+      expect(result.outputs).toEqual(['output-1']);
     });
   });
 });

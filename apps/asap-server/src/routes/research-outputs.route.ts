@@ -6,9 +6,11 @@ import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
 import { Response, Router } from 'express';
 import { ResearchOutputController } from '../controllers/research-outputs';
+import { TeamController } from '../controllers/teams';
 
 export const researchOutputRouteFactory = (
   researchOutputController: ResearchOutputController,
+  teamController: TeamController,
 ): Router => {
   const researchOutputRoutes = Router();
 
@@ -58,6 +60,7 @@ export const researchOutputRouteFactory = (
       sharingStatus,
       usedInPublication,
       addedDate,
+      teamId,
     } = req.body;
 
     const id = await researchOutputController.create({
@@ -69,6 +72,8 @@ export const researchOutputRouteFactory = (
       usedInPublication,
       addedDate,
     });
+
+    await teamController.merge(teamId, [id]);
 
     res.status(201).json({ id });
   });

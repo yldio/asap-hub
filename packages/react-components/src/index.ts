@@ -115,6 +115,7 @@ export {
   UserProfilePlaceholderCard,
   UserProfileRecentWorks,
   HelpSection,
+  TeamCreateOutputHeader,
 } from './organisms';
 export {
   BasicLayout,

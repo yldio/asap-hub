@@ -1,7 +1,8 @@
 import React from 'react';
 import { css } from '@emotion/react';
 
-import { ResearchOutput } from '@asap-hub/model';
+import {   CreateTeamResearchOutput,
+} from '@asap-hub/model';
 import { Display, Paragraph, Button } from '../atoms';
 import { perRem } from '../pixels';
 import { steel, paper } from '../colors';
@@ -22,7 +23,7 @@ const textStyles = css({
 
 type TeamCreateOutputPageProps = {
   onCreate: () => void;
-  researchOutput: ResearchOutput;
+  researchOutput: CreateTeamResearchOutput;
 };
 
 type TeamCreateOutputHeaderProps = {

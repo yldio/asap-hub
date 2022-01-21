@@ -2,8 +2,7 @@ import {
   TeamResponse,
   TeamPatchRequest,
   ListTeamResponse,
-  ResearchOutputType,
-  ResearchOutputSharingStatus,
+  CreateTeamResearchOutput,
 } from '@asap-hub/model';
 import { API_BASE_URL } from '../../config';
 import {
@@ -68,15 +67,6 @@ export const patchTeam = async (
   return resp.json();
 };
 
-export interface CreateTeamResearchOutput {
-  type: ResearchOutputType;
-  link: string;
-  title: string;
-  asapFunded: string;
-  usedInPublication: string;
-  sharingStatus: ResearchOutputSharingStatus;
-  addedDate: string;
-}
 export const createTeamResearchOutput = async (
   teamId: string,
   researchOutput: CreateTeamResearchOutput,

@@ -13,15 +13,10 @@ import {
   TeamResponse,
   TeamPatchRequest,
   ListTeamResponse,
+  CreateTeamResearchOutput,
 } from '@asap-hub/model';
 
-import {
-  getTeam,
-  patchTeam,
-  getTeams,
-  CreateTeamResearchOutput,
-  createTeamResearchOutput,
-} from './api';
+import { getTeam, patchTeam, getTeams, createTeamResearchOutput } from './api';
 import { authorizationState } from '../../auth/state';
 import { GetListOptions } from '../../api-util';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';

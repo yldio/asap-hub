@@ -36,7 +36,10 @@ jobs:
           echo "ALGOLIA_INDEX=asap-hub_$ENTITY_dev" >> $GITHUB_ENV
           echo "ALGOLIA_INDEX_RESTORE=asap-hub_$ENTITY_dev_restore" >> $GITHUB_ENV
       - name: Copy index settings to a temporary index
-        run: yarn run algolia transferindexconfig -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_INDEX_RESTORE
+        run: |
+          echo $ALGOLIA_INDEX
+          echo $ALGOLIA_INDEX_RESTORE
+          yarn run algolia transferindexconfig -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_INDEX_RESTORE
       - name: Import records into the temporary index
         run: yarn run algolia import -s ./ro.json -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_RESTORE -t ./apps/asap-server/scripts/algolia-transformation.js
       - name: Move temporary index onto the dev one

@@ -15,8 +15,6 @@
     "url": "https://github.com/yldio/asap-hub.git"
   },
   "scripts": {
-    "algolia:download": "algolia getsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX | prettier --parser json > ./ci/algolia-schema.json",
-    "algolia:upload": "algolia setsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX -s ./ci/algolia-schema.json",
     "build": "yarn build:typecheck && yarn build:babel && yarn workspaces foreach -vpt run typecheck && yarn workspaces foreach -vpt run build",
     "build:babel": "yarn workspaces foreach -vp run build:babel",
     "build:typecheck": "tsc -b -v $(node scripts/get-composite-ts-projects.js)",
@@ -40,7 +38,9 @@
     "schema:update": "./apps/asap-server/scripts/schema-update.sh",
     "export:entity": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --project ./apps/asap-server/tsconfig.json --files=./apps/asap-server/@types ./apps/asap-server/scripts/cli.ts export",
     "algolia:remove-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:remove-index",
-    "algolia:move-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:move-index"
+    "algolia:move-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:move-index",
+    "algolia:download-schema": "algolia getsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX | prettier --parser json > ./ci/$SCHEMA_FILENAME.json",
+    "algolia:upload-schema": "algolia setsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -s ./ci/algolia-schema/$SCHEMA_FILENAME.json"
   },
   "resolutions": {
     "encoding": "0.1.13"

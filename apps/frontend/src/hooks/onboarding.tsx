@@ -19,9 +19,16 @@ const orderedSteps = [
   'Biography',
 ] as const;
 
+const staffOrderedSteps = [
+  'Details',
+  'Role',
+  'Expertise',
+  'Biography',
+] as const;
+
 const fieldToStep: Record<
   keyof Omit<ReturnType<typeof isUserOnboardable>, 'isOnboardable'>,
-  typeof orderedSteps[number]
+  typeof orderedSteps[number] | typeof staffOrderedSteps[number]
 > = {
   city: 'Details',
   institution: 'Details',
@@ -37,9 +44,9 @@ const fieldToStep: Record<
 const staffSteps = (
   profileTab: NonNullable<ReturnType<typeof useCurrentUserProfileTabRoute>>,
   user: User,
-): Omit<
-  Record<typeof orderedSteps[number], { modalHref: string; label: string }>,
-  'Questions'
+): Record<
+  typeof staffOrderedSteps[number],
+  { modalHref: string; label: string }
 > => ({
   Details: {
     label: 'Details',
@@ -123,13 +130,30 @@ export const useOnboarding = (id: string): UserOnboardingResult | undefined => {
     return undefined;
   }
   const { isOnboardable, ...onboardingValidation } = isUserOnboardable(user);
-  const stepDetails =
-    user.role === 'Staff'
-      ? staffSteps(profileTab, user)
-      : defaultSteps(profileTab, user);
+
+  if (user.role === 'Staff') {
+    return {
+      isOnboardable,
+      totalSteps: Object.keys(staffSteps(profileTab, user)).length,
+      incompleteSteps: staffOrderedSteps.reduce<
+        UserOnboardingResult['incompleteSteps']
+      >((acc, stepKey) => {
+        const fieldsToCheck = Object.entries(fieldToStep)
+          .filter(([, step]) => step === stepKey)
+          .map(([field]) => field);
+
+        return fieldsToCheck.some((field) =>
+          Object.keys(onboardingValidation).includes(field),
+        )
+          ? [...acc, staffSteps(profileTab, user)[stepKey]]
+          : acc;
+      }, []),
+    };
+  }
+
   return {
     isOnboardable,
-    totalSteps: Object.keys(stepDetails).length,
+    totalSteps: Object.keys(defaultSteps(profileTab, user)).length,
     incompleteSteps: orderedSteps.reduce<
       UserOnboardingResult['incompleteSteps']
     >((acc, stepKey) => {
@@ -140,7 +164,7 @@ export const useOnboarding = (id: string): UserOnboardingResult | undefined => {
       return fieldsToCheck.some((field) =>
         Object.keys(onboardingValidation).includes(field),
       )
-        ? [...acc, stepDetails[stepKey]]
+        ? [...acc, defaultSteps(profileTab, user)[stepKey]]
         : acc;
     }, []),
   };

@@ -9,28 +9,6 @@ describe('isUserOnboardable validation', () => {
     });
   });
 
-  test('Should fail if the user is not part of any team', async () => {
-    const userIncompleteResponse: UserResponse = {
-      ...getUserResponse(),
-      teams: [],
-    };
-
-    expect(isUserOnboardable(userIncompleteResponse)).toEqual({
-      isOnboardable: false,
-      teams: { valid: false },
-    });
-  });
-
-  test('Should fail if Research Interests are missing from user profile', async () => {
-    const userResponse: UserResponse = getUserResponse();
-    userResponse.researchInterests = null;
-
-    expect(isUserOnboardable(userResponse)).toEqual({
-      isOnboardable: false,
-      researchInterests: { valid: false },
-    });
-  });
-
   test('Should fail if Resonsibilities are missing from user profile', async () => {
     const userResponse: UserResponse = getUserResponse();
     userResponse.responsibilities = null;
@@ -38,30 +16,6 @@ describe('isUserOnboardable validation', () => {
     expect(isUserOnboardable(userResponse)).toEqual({
       isOnboardable: false,
       responsibilities: { valid: false },
-    });
-  });
-
-  test('Should fail if Research Questions are missing from user profile', async () => {
-    const userIncompleteResponse: UserResponse = {
-      ...getUserResponse(),
-      questions: [],
-    };
-
-    expect(isUserOnboardable(userIncompleteResponse)).toEqual({
-      isOnboardable: false,
-      questions: { valid: false },
-    });
-  });
-
-  test('Should fail if only a single Research Question is provided in user profile', async () => {
-    const userIncompleteResponse: UserResponse = {
-      ...getUserResponse(),
-      questions: ['question 1'],
-    };
-
-    expect(isUserOnboardable(userIncompleteResponse)).toEqual({
-      isOnboardable: false,
-      questions: { valid: false },
     });
   });
 
@@ -150,6 +104,93 @@ describe('isUserOnboardable validation', () => {
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
       biography: { valid: false },
+    });
+  });
+
+  describe('When user role is not Staff', () => {
+    test('Should fail if the user is not part of any team', async () => {
+      const userIncompleteResponse: UserResponse = {
+        ...getUserResponse(),
+        role: 'Grantee',
+        teams: [],
+      };
+
+      expect(isUserOnboardable(userIncompleteResponse)).toEqual({
+        isOnboardable: false,
+        teams: { valid: false },
+      });
+    });
+
+    test('Should fail if Research Interests are missing from user profile', async () => {
+      const userResponse: UserResponse = {
+        ...getUserResponse(),
+        role: 'Grantee',
+        researchInterests: null,
+      };
+
+      expect(isUserOnboardable(userResponse)).toEqual({
+        isOnboardable: false,
+        researchInterests: { valid: false },
+      });
+    });
+    test('Should fail if Research Questions are missing from user profile', async () => {
+      const userIncompleteResponse: UserResponse = {
+        ...getUserResponse(),
+        role: 'Grantee',
+        questions: [],
+      };
+
+      expect(isUserOnboardable(userIncompleteResponse)).toEqual({
+        isOnboardable: false,
+        questions: { valid: false },
+      });
+    });
+
+    test('Should fail if only a single Research Question is provided in user profile', async () => {
+      const userIncompleteResponse: UserResponse = {
+        ...getUserResponse(),
+        role: 'Grantee',
+        questions: ['question 1'],
+      };
+
+      expect(isUserOnboardable(userIncompleteResponse)).toEqual({
+        isOnboardable: false,
+        questions: { valid: false },
+      });
+    });
+  });
+  describe('when user role is Staff', () => {
+    test('Should pass when the user is not part of any team', async () => {
+      const userIncompleteResponse: UserResponse = {
+        ...getUserResponse(),
+        role: 'Staff',
+        teams: [],
+      };
+      expect(isUserOnboardable(userIncompleteResponse)).toEqual({
+        isOnboardable: true,
+      });
+    });
+    test('Should pass with Research Interests missing from user profile', async () => {
+      const userResponse: UserResponse = {
+        ...getUserResponse(),
+        role: 'Staff',
+        researchInterests: null,
+      };
+
+      expect(isUserOnboardable(userResponse)).toEqual({
+        isOnboardable: true,
+      });
+    });
+    test('Should pass with Research Questions missing from user profile', async () => {
+      const userIncompleteResponse: UserResponse = {
+        ...getUserResponse(),
+        role: 'Staff',
+        questions: [],
+      };
+
+      expect(isUserOnboardable(userIncompleteResponse)).toEqual({
+        isOnboardable: true,
+      });
     });
   });
 });

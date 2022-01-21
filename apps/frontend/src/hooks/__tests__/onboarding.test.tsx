@@ -149,4 +149,22 @@ describe('useOnboarding', () => {
       });
     });
   });
+  describe('when user role is Staff', () => {
+    it('returns all steps required to complete the profile', async () => {
+      const user = { ...emptyUser, role: 'Staff' as const };
+      mockGetUser.mockResolvedValue(user);
+
+      const { result } = renderHook(() => useOnboarding(user.id), {
+        wrapper: wrapper({ user }),
+      });
+
+      await act(async () => {
+        await waitFor(() => {
+          expect(
+            (result.current?.incompleteSteps ?? []).map(({ label }) => label),
+          ).toEqual(['Details', 'Role', 'Expertise', 'Biography']);
+        });
+      });
+    });
+  });
 });

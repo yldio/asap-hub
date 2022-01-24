@@ -86,7 +86,7 @@ const patchedTeamState = atomFamily<TeamResponse | undefined, string>({
   default: undefined,
 });
 
-const postTeamResearchOutputState = atom<ResearchOutput>({
+export const postTeamResearchOutputState = atom<ResearchOutput>({
   key: 'postResearchOutput',
   default: {
     type: 'Bioinformatics',

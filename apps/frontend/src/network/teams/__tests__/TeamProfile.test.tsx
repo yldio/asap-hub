@@ -11,70 +11,27 @@ import {
 } from '@asap-hub/frontend/src/auth/test-utils';
 
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
+import { ResearchOutput } from '@asap-hub/model';
 import TeamProfile from '../TeamProfile';
 import { getTeam, createTeamResearchOutput } from '../api';
-import { refreshTeamState } from '../state';
+import { refreshTeamState, postTeamResearchOutputState } from '../state';
 import { getResearchOutputs } from '../../../shared-research/api';
 
 jest.mock('../api');
 jest.mock('../groups/api');
 jest.mock('../../../shared-research/api');
 
-const renderPage = async (
-  teamResponse = createTeamResponse(),
-  { teamId = teamResponse.id } = {},
-  initialEntries?: string,
-) => {
-  const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
-  mockGetTeam.mockImplementation(async (id) =>
-    id === teamResponse.id ? teamResponse : undefined,
-  );
-
-  const result = render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshTeamState(teamResponse.id), Math.random())
-      }
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                initialEntries ?? network({}).teams({}).team({ teamId }).$,
-              ]}
-            >
-              <Route
-                path={
-                  network.template +
-                  network({}).teams.template +
-                  network({}).teams({}).team.template
-                }
-                component={TeamProfile}
-              />
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
-  );
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  return result;
-};
-
 describe('TeamProfile', () => {
+  afterEach(() => jest.clearAllMocks());
   describe('TeamCreateOutputPage', () => {
-    // beforeEach(() => {
-    //   jest.useFakeTimers('modern');
-    // });
-    // afterEach(() => {
-    //   jest.useRealTimers();
-    // });
-    // afterEach(() => {
-    //   jest.clearAllMocks();
-    // });
+    const dateReference = '2021-12-28T14:45:00.000Z';
+    beforeEach(() =>
+      jest
+        .useFakeTimers('modern')
+        .setSystemTime(new Date(dateReference).getTime()),
+    );
+    afterEach(() => jest.useRealTimers());
+
     test('renders the header info', async () => {
       const teamResponse = createTeamResponse();
       const teamId = teamResponse.id;
@@ -102,7 +59,7 @@ describe('TeamProfile', () => {
       expect(createTeamResearchOutput).toHaveBeenCalledWith(
         't0',
         expect.objectContaining({
-          addedDate: expect.any(String),
+          addedDate: dateReference,
           asapFunded: false,
           link: 'https://hub.asap.science/',
           sharingStatus: 'Network Only',
@@ -182,4 +139,58 @@ describe('TeamProfile', () => {
       expect(container.querySelector(hash)).toHaveTextContent(/team members/i);
     });
   });
+  const getPostTeamResearchOutputState = (): ResearchOutput => ({
+    type: 'Bioinformatics',
+    link: 'https://hub.asap.science/',
+    title: 'Output created through the ROMS form',
+    asapFunded: false,
+    sharingStatus: 'Network Only',
+    usedInPublication: false,
+    addedDate: new Date().toISOString(),
+  });
+
+  const renderPage = async (
+    teamResponse = createTeamResponse(),
+    { teamId = teamResponse.id } = {},
+    initialEntries?: string,
+  ) => {
+    const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
+    mockGetTeam.mockImplementation(async (id) =>
+      id === teamResponse.id ? teamResponse : undefined,
+    );
+
+    const result = render(
+      <RecoilRoot
+        initializeState={({ set }) => {
+          set(postTeamResearchOutputState, getPostTeamResearchOutputState());
+          set(refreshTeamState(teamResponse.id), Math.random());
+        }}
+      >
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  initialEntries ?? network({}).teams({}).team({ teamId }).$,
+                ]}
+              >
+                <Route
+                  path={
+                    network.template +
+                    network({}).teams.template +
+                    network({}).teams({}).team.template
+                  }
+                  component={TeamProfile}
+                />
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>,
+    );
+    await waitFor(() =>
+      expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    return result;
+  };
 });

@@ -115,7 +115,6 @@ export type ResearchOutputResponse = {
 
   readonly labs: Lab[];
 };
-
 export type ResearchOutput = Required<
   Pick<
     ResearchOutputResponse,

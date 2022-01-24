@@ -4,18 +4,12 @@
   "hitsPerPage": 20,
   "maxValuesPerFacet": 100,
   "version": 2,
-  "attributesToIndex": [
-    "displayName",
-    "firstName",
-    "lastName"
-  ],
+  "attributesToIndex": ["displayName", "firstName", "lastName"],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,
   "unretrievableAttributes": null,
   "optionalWords": null,
-  "queryLanguages": [
-    "en"
-  ],
+  "queryLanguages": ["en"],
   "replicas": [],
   "attributesForFaceting": [],
   "attributesToSnippet": null,
@@ -42,11 +36,6 @@
   "highlightPreTag": "<em>",
   "highlightPostTag": "</em>",
   "snippetEllipsisText": "",
-  "alternativesAsExact": [
-    "ignorePlurals",
-    "singleWordSynonym"
-  ],
-  "indexLanguages": [
-    "en"
-  ]
+  "alternativesAsExact": ["ignorePlurals", "singleWordSynonym"],
+  "indexLanguages": ["en"]
 }

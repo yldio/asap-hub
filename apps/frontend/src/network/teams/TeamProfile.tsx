@@ -7,13 +7,10 @@ import {
 } from '@asap-hub/react-components';
 
 import { network, useRouteParams } from '@asap-hub/routing';
+import { ResearchOutput } from '@asap-hub/model';
 import { v4 as uuid } from 'uuid';
 
-import {
-  useTeamById,
-  useResearchOutput,
-  usePostTeamResearchOutput,
-} from './state';
+import { useTeamById, usePostTeamResearchOutput } from './state';
 import Frame, { SearchFrame } from '../../structure/Frame';
 
 const loadAbout = () =>
@@ -36,7 +33,16 @@ const TeamProfile: FC<Record<string, never>> = () => {
 
   const team = useTeamById(teamId);
   const createResearchOutput = usePostTeamResearchOutput(teamId);
-  const researchOutput = useResearchOutput();
+  const researchOutput: ResearchOutput = {
+    type: 'Bioinformatics',
+    link: 'https://hub.asap.science/',
+    title: 'Output created through the ROMS form',
+    asapFunded: false,
+    sharingStatus: 'Network Only',
+    usedInPublication: false,
+    addedDate: new Date().toISOString(),
+  };
+
   useEffect(() => {
     loadAbout()
       .then(team?.tools ? loadWorkspace : undefined)

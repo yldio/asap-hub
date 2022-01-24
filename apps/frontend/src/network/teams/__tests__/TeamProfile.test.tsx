@@ -11,10 +11,9 @@ import {
 } from '@asap-hub/frontend/src/auth/test-utils';
 
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
-import { ResearchOutput } from '@asap-hub/model';
 import TeamProfile from '../TeamProfile';
 import { getTeam, createTeamResearchOutput } from '../api';
-import { refreshTeamState, postTeamResearchOutputState } from '../state';
+import { refreshTeamState } from '../state';
 import { getResearchOutputs } from '../../../shared-research/api';
 
 jest.mock('../api');
@@ -24,13 +23,16 @@ jest.mock('../../../shared-research/api');
 describe('TeamProfile', () => {
   afterEach(() => jest.clearAllMocks());
   describe('TeamCreateOutputPage', () => {
-    const dateReference = '2021-12-28T14:45:00.000Z';
+    const dateReference = '2021-12-28T14:45';
     beforeEach(() =>
       jest
         .useFakeTimers('modern')
         .setSystemTime(new Date(dateReference).getTime()),
     );
-    afterEach(() => jest.useRealTimers());
+    afterEach(() => {
+      jest.runOnlyPendingTimers();
+      jest.useRealTimers();
+    });
 
     test('renders the header info', async () => {
       const teamResponse = createTeamResponse();
@@ -39,7 +41,10 @@ describe('TeamProfile', () => {
       await renderPage(
         teamResponse,
         undefined,
-        network({}).teams({}).team({ teamId }).createOutput({}).$,
+        network({})
+          .teams({})
+          .team({ teamId })
+          .createOutput({ type: 'Bioinformatics' }).$,
       );
       expect(
         screen.getByRole('heading', { name: /Share bioinformatics/i }),
@@ -52,14 +57,18 @@ describe('TeamProfile', () => {
       await renderPage(
         teamResponse,
         undefined,
-        network({}).teams({}).team({ teamId }).createOutput({}).$,
+        network({})
+          .teams({})
+          .team({ teamId })
+          .createOutput({ type: 'Bioinformatics' }).$,
       );
+
       const button = screen.getByRole('button', { name: /Share/i });
       userEvent.click(button);
       expect(createTeamResearchOutput).toHaveBeenCalledWith(
         't0',
         expect.objectContaining({
-          addedDate: dateReference,
+          addedDate: expect.stringContaining(dateReference),
           asapFunded: false,
           link: 'https://hub.asap.science/',
           sharingStatus: 'Network Only',
@@ -139,15 +148,6 @@ describe('TeamProfile', () => {
       expect(container.querySelector(hash)).toHaveTextContent(/team members/i);
     });
   });
-  const getPostTeamResearchOutputState = (): ResearchOutput => ({
-    type: 'Bioinformatics',
-    link: 'https://hub.asap.science/',
-    title: 'Output created through the ROMS form',
-    asapFunded: false,
-    sharingStatus: 'Network Only',
-    usedInPublication: false,
-    addedDate: new Date().toISOString(),
-  });
 
   const renderPage = async (
     teamResponse = createTeamResponse(),
@@ -161,10 +161,9 @@ describe('TeamProfile', () => {
 
     const result = render(
       <RecoilRoot
-        initializeState={({ set }) => {
-          set(postTeamResearchOutputState, getPostTeamResearchOutputState());
-          set(refreshTeamState(teamResponse.id), Math.random());
-        }}
+        initializeState={({ set }) =>
+          set(refreshTeamState(teamResponse.id), Math.random())
+        }
       >
         <Suspense fallback="loading">
           <Auth0Provider user={{}}>

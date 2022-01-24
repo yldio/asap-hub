@@ -6,8 +6,6 @@ import {
   useSetRecoilState,
   DefaultValue,
   useRecoilState,
-  atom,
-  selector,
 } from 'recoil';
 import {
   TeamResponse,
@@ -86,24 +84,6 @@ const patchedTeamState = atomFamily<TeamResponse | undefined, string>({
   default: undefined,
 });
 
-export const postTeamResearchOutputState = atom<ResearchOutput>({
-  key: 'postResearchOutput',
-  default: {
-    type: 'Bioinformatics',
-    link: 'https://hub.asap.science/',
-    title: 'Output created through the ROMS form',
-    asapFunded: false,
-    sharingStatus: 'Network Only',
-    usedInPublication: false,
-    addedDate: new Date().toISOString(),
-  },
-});
-
-export const teamResearchOutputState = selector<ResearchOutput>({
-  key: 'teamResearchOutput',
-  get: ({ get }) => get(postTeamResearchOutputState),
-});
-
 const teamState = selectorFamily<TeamResponse | undefined, string>({
   key: 'team',
   get:
@@ -141,7 +121,6 @@ export const useTeams = (options: GetListOptions) => {
 };
 
 export const useTeamById = (id: string) => useRecoilValue(teamState(id));
-export const useResearchOutput = () => useRecoilValue(teamResearchOutputState);
 export const usePatchTeamById = (id: string) => {
   const authorization = useRecoilValue(authorizationState);
   const setPatchedTeam = useSetRecoilState(patchedTeamState(id));

@@ -166,5 +166,31 @@ describe('useOnboarding', () => {
         });
       });
     });
+    it('returns no incomplete steps if user has all information', async () => {
+      const user = {
+        ...emptyUser,
+        role: 'Staff' as const,
+        biography: 'my biography',
+        institution: 'UCLA',
+        jobTitle: 'PG',
+        city: 'California',
+        country: 'USA',
+        expertiseAndResourceTags: ['1', '2', '3', '4', '5'],
+        responsibilities: '3pt Shooter',
+      };
+      mockGetUser.mockResolvedValue(user);
+
+      const { result } = renderHook(() => useOnboarding(user.id), {
+        wrapper: wrapper({ user }),
+      });
+
+      await act(async () => {
+        await waitFor(() => {
+          expect(
+            (result.current?.incompleteSteps ?? []).map(({ label }) => label),
+          ).toEqual([]);
+        });
+      });
+    });
   });
 });

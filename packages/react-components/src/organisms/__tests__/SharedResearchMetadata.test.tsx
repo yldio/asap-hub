@@ -13,14 +13,14 @@ it('renders all (sub)types', () => {
     <SharedResearchMetadata
       {...props}
       type="Article"
-      subTypes={['Code', 'Imaging']}
+      subTypes={['Code', 'Assay']}
     />,
   );
   expect(getAllByRole('listitem')).toHaveLength(3);
   const [first, second, third] = getAllByRole('listitem');
   expect(first).toHaveTextContent(/article/i);
   expect(second).toHaveTextContent(/code/i);
-  expect(third).toHaveTextContent(/imag/i);
+  expect(third).toHaveTextContent(/assay/i);
 });
 
 it('renders a link if available', () => {

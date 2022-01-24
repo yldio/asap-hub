@@ -1,10 +1,8 @@
 import {
+  isResearchOutputType,
   ResearchOutputResponse,
   ResearchOutputSharingStatus,
-  ResearchOutputSubtype,
-  researchOutputSubtypes,
-  ResearchOutputType,
-  researchOutputTypes,
+  researchOutputMapSubtype,
   sharingStatuses,
   TeamResponse,
 } from '@asap-hub/model';
@@ -78,6 +76,8 @@ export const parseGraphQLResearchOutput = (
   const uniqueContactEmails = [...new Set(filteredContactEmails)];
 
   const data = output.flatData;
+  const subType = researchOutputMapSubtype(data.subtype);
+  const subTypes = subType ? [subType] : [];
 
   return {
     id: output.id,
@@ -87,10 +87,7 @@ export const parseGraphQLResearchOutput = (
       data.type && isResearchOutputType(data.type)
         ? data.type
         : 'Grant Document',
-    subTypes:
-      data.subtype && isResearchOutputSubtype(data.subtype)
-        ? [data.subtype]
-        : [],
+    subTypes,
     title: data.title || '',
     description: data.description || '',
     tags: data.tags || [],
@@ -138,14 +135,6 @@ const isSharingStatus = (
   status: string,
 ): status is ResearchOutputSharingStatus =>
   (sharingStatuses as ReadonlyArray<string>).includes(status);
-
-const isResearchOutputType = (type: string): type is ResearchOutputType =>
-  (researchOutputTypes as ReadonlyArray<string>).includes(type);
-
-const isResearchOutputSubtype = (
-  subtype: string,
-): subtype is ResearchOutputSubtype =>
-  (researchOutputSubtypes as ReadonlyArray<string>).includes(subtype);
 
 type FetchResearchOutputTeamContents = NonNullable<
   NonNullable<

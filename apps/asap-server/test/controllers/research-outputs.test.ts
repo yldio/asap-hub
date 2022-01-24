@@ -628,6 +628,8 @@ describe('ResearchOutputs controller', () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/research-outputs?publish=false`, {
           type: { iv: 'test' },
+          asapFunded: { iv: 'Not Sure' },
+          usedInAPublication: { iv: 'Not Sure' },
         })
         .reply(201, { id: 90210 });
 

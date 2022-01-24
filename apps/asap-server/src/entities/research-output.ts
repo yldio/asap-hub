@@ -1,5 +1,6 @@
 import {
   isResearchOutputType,
+  DecisionOption,
   ResearchOutputResponse,
   ResearchOutputSharingStatus,
   researchOutputMapSubtype,
@@ -130,6 +131,13 @@ const convertDecisionToBoolean = (
   decision: string | null,
 ): boolean | undefined =>
   decision && ['Yes', 'No'].includes(decision) ? decision === 'Yes' : undefined;
+
+export const convertBooleanToDecision = (bool?: boolean): DecisionOption => {
+  if (typeof bool === 'undefined') {
+    return 'Not Sure';
+  }
+  return bool ? 'Yes' : 'No';
+};
 
 const isSharingStatus = (
   status: string,

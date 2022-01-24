@@ -14,9 +14,9 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
     type: 'Bioinformatics',
     link: 'https://hub.asap.science/',
     title: 'Output created through the ROMS form',
-    asapFunded: false,
+    asapFunded: undefined,
     sharingStatus: 'Network Only',
-    usedInPublication: false,
+    usedInPublication: undefined,
     addedDate: new Date().toISOString(),
   });
 

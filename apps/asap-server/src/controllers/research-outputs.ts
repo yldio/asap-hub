@@ -11,7 +11,10 @@ import {
   RestResearchOutput,
 } from '@asap-hub/squidex';
 
-import { parseGraphQLResearchOutput } from '../entities/research-output';
+import {
+  convertBooleanToDecision,
+  parseGraphQLResearchOutput,
+} from '../entities/research-output';
 import { parseToSquidex, sanitiseForSquidex } from '../utils/squidex';
 import {
   FETCH_RESEARCH_OUTPUT,
@@ -34,12 +37,18 @@ export default class ResearchOutputs implements ResearchOutputController {
     this.researchOutputSquidexRestClient = new SquidexRest('research-outputs');
   }
   async create(researchOutputData: ResearchOutput): Promise<string> {
-    const { usedInPublication, ...researchOutput } =
-      parseToSquidex(researchOutputData);
+    const { usedInPublication, ...researchOutput } = parseToSquidex({
+      ...researchOutputData,
+      asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
+      usedInPublication: convertBooleanToDecision(
+        researchOutputData.usedInPublication,
+      ),
+    });
+
     const response = await this.researchOutputSquidexRestClient.create(
       {
-        usedInAPublication: usedInPublication,
         ...researchOutput,
+        usedInAPublication: usedInPublication,
       } as RestResearchOutput['data'],
       false,
     );

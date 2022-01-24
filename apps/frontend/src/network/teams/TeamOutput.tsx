@@ -1,9 +1,5 @@
-import { NotFoundPage, TeamCreateOutputPage } from '@asap-hub/react-components';
-import {
-  ResearchOutput,
-  ResearchOutputType,
-  researchOutputTypes,
-} from '@asap-hub/model';
+import { TeamCreateOutputPage } from '@asap-hub/react-components';
+import { ResearchOutput } from '@asap-hub/model';
 import React, { useState } from 'react';
 
 import { usePostTeamResearchOutput } from './state';
@@ -24,22 +20,14 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
     addedDate: new Date().toISOString(),
   });
 
-  if (isResearchOutputType('Bioinformatics')) {
-    return (
-      <Frame title="create output">
-        <TeamCreateOutputPage
-          researchOutput={researchOutput}
-          onCreate={() => createResearchOutput(researchOutput)}
-        />
-      </Frame>
-    );
-  }
-  return <NotFoundPage />;
+  return (
+    <Frame title="create output">
+      <TeamCreateOutputPage
+        researchOutput={researchOutput}
+        onCreate={() => createResearchOutput(researchOutput)}
+      />
+    </Frame>
+  );
 };
 
 export default TeamOutput;
-
-const isResearchOutputType = (type: string): type is ResearchOutputType =>
-  (researchOutputTypes as ReadonlyArray<string>)
-    .map((s) => s.toLowerCase())
-    .includes(type.toLowerCase());

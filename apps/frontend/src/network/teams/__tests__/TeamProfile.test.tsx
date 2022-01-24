@@ -44,7 +44,7 @@ describe('TeamProfile', () => {
         network({})
           .teams({})
           .team({ teamId })
-          .createOutput({ type: 'Bioinformatics' }).$,
+          .createOutput({ outputType: 'Bioinformatics' }).$,
       );
       expect(
         screen.getByRole('heading', { name: /Share bioinformatics/i }),

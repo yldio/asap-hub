@@ -1,17 +1,13 @@
 import { useEffect, FC, lazy, useState } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
-import {
-  TeamProfilePage,
-  TeamCreateOutputPage,
-  NotFoundPage,
-} from '@asap-hub/react-components';
+import { TeamProfilePage, NotFoundPage } from '@asap-hub/react-components';
 
 import { network, useRouteParams } from '@asap-hub/routing';
-import { ResearchOutput } from '@asap-hub/model';
 import { v4 as uuid } from 'uuid';
 
-import { useTeamById, usePostTeamResearchOutput } from './state';
+import { useTeamById } from './state';
 import Frame, { SearchFrame } from '../../structure/Frame';
+import TeamOutput from './TeamOutput';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -32,16 +28,6 @@ const TeamProfile: FC<Record<string, never>> = () => {
   const { teamId } = useRouteParams(route);
 
   const team = useTeamById(teamId);
-  const createResearchOutput = usePostTeamResearchOutput(teamId);
-  const researchOutput: ResearchOutput = {
-    type: 'Bioinformatics',
-    link: 'https://hub.asap.science/',
-    title: 'Output created through the ROMS form',
-    asapFunded: false,
-    sharingStatus: 'Network Only',
-    usedInPublication: false,
-    addedDate: new Date().toISOString(),
-  };
 
   useEffect(() => {
     loadAbout()
@@ -53,12 +39,7 @@ const TeamProfile: FC<Record<string, never>> = () => {
       <Frame title={team.displayName}>
         <Switch>
           <Route path={path + route({ teamId }).createOutput.template}>
-            <Frame title="create output">
-              <TeamCreateOutputPage
-                researchOutput={researchOutput}
-                onCreate={() => createResearchOutput(researchOutput)}
-              />
-            </Frame>
+            <TeamOutput teamId={teamId} />
           </Route>
           <TeamProfilePage teamListElementId={teamListElementId} {...team}>
             <Route path={path + route({ teamId }).about.template}>

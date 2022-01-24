@@ -19,7 +19,7 @@ export const Normal = () => (
       'Tracing the Origin and Progression of Parkinson’s Disease through the Neuro-Immune Interactome',
     )}
     type="Article"
-    subTypes={['Code', 'Assays', 'Cloning', 'Imaging']}
+    subTypes={['Code', 'Plasmid', 'Cloning', 'Microscopy & Imaging']}
     created={new Date(
       date('Created Date', new Date(2020, 6, 4, 14, 32)),
     ).toISOString()}

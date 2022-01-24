@@ -16,43 +16,106 @@ export const researchOutputTypes = [
 export type ResearchOutputType = typeof researchOutputTypes[number];
 
 export const researchOutputSubtypes = [
+  '3D Printing',
   'ASAP annual meeting',
   'ASAP subgroup meeting',
+  'Analysis',
+  'Animal Model',
+  'Antibody',
+  'Assay',
+  'Behavioral',
+  'Biosample',
+  'Cell Culture & Differentiation',
+  'Cell line',
+  'Cloning',
+  'Code',
+  'Compound',
+  'Data portal',
+  'Electrophysiology',
   'External meeting',
-  'Preprint',
-  'Published',
   'Genetic Data - DNA',
   'Genetic Data - RNA',
-  'Protein Data',
+  'Genotyping',
   'Microscopy',
-  'Electrophysiology',
-  'Mass Spectrometry',
-  'Code',
-  'Data portal',
-  'Web Portal',
-  'Analysis',
-  'Assays',
-  'Cell Culture & Differentiation',
-  'Cloning',
-  'Imaging',
+  'Microscopy & Imaging',
   'Model System',
+  'Plasmid',
+  'Preprint',
+  'Proposal',
+  'Protein Data',
   'Protein expression',
-  'Sample Collection',
-  'Shipment Procedures',
-  '3D Printing',
+  'Published',
+  'Report',
+  'Sample Prep',
+  'Shipment Procedure',
+  'Software',
+  'Spectroscopy',
+  'Teem meeting',
+  'Viral Vector',
+] as const;
+
+export const researchOutputDeprecatedSubtypes = [
   'Animal Models',
   'Antibodies',
-  'Biosample',
-  'Cell line',
+  'Assays',
   'Compounds',
-  'Plasmid',
-  'Protein',
-  'Viral Vector',
-  'Proposal',
-  'Report',
+  'Imaging',
+  'Sample Collection',
+  'Web Portal',
+  'Mass Spectrometry',
 ] as const;
 
 export type ResearchOutputSubtype = typeof researchOutputSubtypes[number];
+export type ResearchOutputDeprecatedSubtype =
+  typeof researchOutputDeprecatedSubtypes[number];
+
+export const researchOutputDeprecatedSubtypeToResearchOutputSubtypeMap: Record<
+  ResearchOutputDeprecatedSubtype,
+  ResearchOutputSubtype
+> = {
+  'Animal Models': 'Animal Model',
+  Antibodies: 'Antibody',
+  Assays: 'Assay',
+  Compounds: 'Compound',
+  Imaging: 'Microscopy & Imaging',
+  'Sample Collection': 'Sample Prep',
+  'Web Portal': 'Software',
+  'Mass Spectrometry': 'Spectroscopy',
+};
+
+export const isResearchOutputType = (
+  type: string,
+): type is ResearchOutputType =>
+  (researchOutputTypes as ReadonlyArray<string>).includes(type);
+
+export const isResearchOutputSubtype = (
+  subtype: string,
+): subtype is ResearchOutputSubtype =>
+  (researchOutputSubtypes as ReadonlyArray<string>).includes(subtype);
+
+export const isResearchOutputDeprecatedSubtype = (
+  subtype: string,
+): subtype is ResearchOutputDeprecatedSubtype =>
+  (researchOutputDeprecatedSubtypes as ReadonlyArray<string>).includes(subtype);
+
+export const researchOutputMapSubtype = (
+  subtype?: string | null,
+): ResearchOutputSubtype | null => {
+  if (subtype) {
+    if (isResearchOutputDeprecatedSubtype(subtype)) {
+      const mappedSubtype: ResearchOutputSubtype =
+        researchOutputDeprecatedSubtypeToResearchOutputSubtypeMap[subtype];
+
+      return isResearchOutputSubtype(mappedSubtype) ? mappedSubtype : null;
+    }
+
+    if (isResearchOutputSubtype(subtype)) {
+      return subtype;
+    }
+  }
+
+  return null;
+};
 
 export const sharingStatuses = ['Public', 'Network Only'] as const;
 

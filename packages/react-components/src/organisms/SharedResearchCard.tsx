@@ -18,7 +18,14 @@ const associationStyles = css({
 
 type SharedResearchCardProps = Pick<
   ResearchOutputResponse,
-  'id' | 'created' | 'addedDate' | 'teams' | 'labs' | 'title' | 'authors'
+  | 'id'
+  | 'created'
+  | 'addedDate'
+  | 'teams'
+  | 'labs'
+  | 'title'
+  | 'authors'
+  | 'subTypes'
 > &
   ComponentProps<typeof SharedResearchMetadata>;
 

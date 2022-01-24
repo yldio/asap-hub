@@ -11,6 +11,7 @@ const commonProps: ComponentProps<typeof UserProfileResearch> = {
   expertiseAndResourceTags: [],
   questions: [],
   labs: [],
+  role: 'Grantee',
 };
 
 it('doesnt renders the role on ASAP when is not ownProfile and doesnt have labs, teams responsabilites or researchInterest', () => {
@@ -40,7 +41,6 @@ it('renders the role on ASAP when labs, teams responsabilites or researchInteres
           id: '42',
           displayName: 'Team',
           role: 'Lead PI (Core Leadership)',
-          editHref: '/edit-team-membership/42',
         },
       ]}
     />,
@@ -72,16 +72,6 @@ it('renders the expertiseAndResourceTags list', () => {
   expect(getByText(/expertise/i, { selector: 'h2' })).toBeVisible();
   expect(getByText('Neurological Diseases')).toBeVisible();
 });
-it('renders opens questions when questions provided', () => {
-  const { getByText } = render(
-    <UserProfileResearch
-      {...commonProps}
-      questions={['What is the meaning of life?']}
-    />,
-  );
-  expect(getByText(/open questions/i)).toBeVisible();
-});
-
 it('does not render an edit button by default (REGRESSION)', () => {
   const { queryByLabelText } = render(
     <UserProfileResearch
@@ -126,61 +116,119 @@ it('renders an edit button for the expertiseAndResourceTags list', () => {
     '/edit-expertise-and-resources',
   );
 });
-it('renders an edit button for the questions list', () => {
-  const { getByLabelText } = render(
-    <UserProfileResearch
-      {...commonProps}
-      editQuestionsHref="/edit-questions"
-    />,
-  );
-  expect(getByLabelText(/edit.+question/i)).toHaveAttribute(
-    'href',
-    '/edit-questions',
-  );
+
+describe('When the role is not staff', () => {
+  const granteeRole = { ...commonProps, role: 'Grantee' as const };
+  it('renders opens questions when questions provided', () => {
+    const { getByText } = render(
+      <UserProfileResearch
+        {...granteeRole}
+        questions={['What is the meaning of life?']}
+      />,
+    );
+    expect(getByText(/open questions/i)).toBeVisible();
+  });
+  it('renders an edit button for the questions list', () => {
+    const { getByLabelText } = render(
+      <UserProfileResearch
+        {...granteeRole}
+        editQuestionsHref="/edit-questions"
+      />,
+    );
+    expect(getByLabelText(/edit.+question/i)).toHaveAttribute(
+      'href',
+      '/edit-questions',
+    );
+  });
+  it('create mailto for email when contactEmail not present', () => {
+    const { getByText } = render(
+      <UserProfileResearch {...granteeRole} email="email@example.com" />,
+    );
+    expect(getByText(/contact/i).closest('a')).toHaveAttribute(
+      'href',
+      'mailto:email@example.com',
+    );
+  });
+
+  it('create mailto for contactEmail', () => {
+    const { getByText } = render(
+      <UserProfileResearch
+        {...granteeRole}
+        email="email@example.com"
+        contactEmail="contactEmail@example.com"
+      />,
+    );
+    expect(getByText(/contact/i).closest('a')).toHaveAttribute(
+      'href',
+      'mailto:contactEmail@example.com',
+    );
+  });
+  it('doesnt render contact card if isOwnProfile is true', async () => {
+    const { queryByText } = render(
+      <UserProfileResearch
+        {...granteeRole}
+        email="email@example.com"
+        contactEmail="contactEmail@example.com"
+        isOwnProfile={true}
+      />,
+    );
+    expect(queryByText(/contact/i)).not.toBeInTheDocument();
+  });
+
+  it('renders user profile groups card', () => {
+    const { getByText } = render(
+      <UserProfileResearch
+        {...granteeRole}
+        userProfileGroupsCard={'UserProfileGroups'}
+      />,
+    );
+    expect(getByText(/userprofilegroups/i)).toBeVisible();
+  });
 });
 
-it('create mailto for email when contactEmail not present', () => {
-  const { getByText } = render(
-    <UserProfileResearch {...commonProps} email="email@example.com" />,
-  );
-  expect(getByText(/contact/i).closest('a')).toHaveAttribute(
-    'href',
-    'mailto:email@example.com',
-  );
-});
+describe('When the role is staff', () => {
+  const staffRole = { ...commonProps, role: 'Staff' as const };
 
-it('create mailto for contactEmail', () => {
-  const { getByText } = render(
-    <UserProfileResearch
-      {...commonProps}
-      email="email@example.com"
-      contactEmail="contactEmail@example.com"
-    />,
-  );
-  expect(getByText(/contact/i).closest('a')).toHaveAttribute(
-    'href',
-    'mailto:contactEmail@example.com',
-  );
-});
-
-it('doesnt render contact card if isOwnProfile is true', async () => {
-  const { queryByText } = render(
-    <UserProfileResearch
-      {...commonProps}
-      email="email@example.com"
-      contactEmail="contactEmail@example.com"
-      isOwnProfile={true}
-    />,
-  );
-  expect(queryByText(/contact/i)).not.toBeInTheDocument();
-});
-
-it('renders user profile groups card', () => {
-  const { getByText } = render(
-    <UserProfileResearch
-      {...commonProps}
-      userProfileGroupsCard={'UserProfileGroups'}
-    />,
-  );
-  expect(getByText(/userprofilegroups/i)).toBeVisible();
+  it('doesnt renders opens questions even when provided', () => {
+    const { queryByText } = render(
+      <UserProfileResearch
+        {...staffRole}
+        questions={['What is the meaning of life?']}
+      />,
+    );
+    expect(queryByText(/open questions/i)).not.toBeInTheDocument();
+  });
+  it('create mailto for Support email', () => {
+    const { getByText } = render(
+      <UserProfileResearch
+        {...staffRole}
+        email="email@example.com"
+        contactEmail="contactEmail@example.com"
+      />,
+    );
+    expect(getByText(/contact/i).closest('a')).toHaveAttribute(
+      'href',
+      'mailto:techsupport@asap.science?subject=ASAP+Hub%3A+Tech+support',
+    );
+  });
+  it('doesnt render contact card if isOwnProfile is true', async () => {
+    const { queryByText } = render(
+      <UserProfileResearch
+        {...staffRole}
+        email="email@example.com"
+        contactEmail="contactEmail@example.com"
+        isOwnProfile={true}
+      />,
+    );
+    expect(queryByText(/contact/i)).not.toBeInTheDocument();
+  });
+  it('doesnt render user profile groups card', () => {
+    const { queryByText } = render(
+      <UserProfileResearch
+        {...staffRole}
+        userProfileGroupsCard={'UserProfileGroups'}
+      />,
+    );
+    expect(queryByText(/userprofilegroups/i)).not.toBeInTheDocument();
+  });
 });

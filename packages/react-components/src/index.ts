@@ -107,7 +107,6 @@ export {
   ToastStack,
   ToolCard,
   UserNavigation,
-  UserProfileBackground,
   UserProfileRole,
   UserProfileBiography,
   UserProfileGroups,
@@ -166,7 +165,6 @@ export {
   UserProfileResearch,
   UserProfileResearchOutputs,
   UserProfileSearchAndFilter,
-  UserProfileStaff,
   RoleModal,
   WelcomePage,
 } from './templates';

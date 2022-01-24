@@ -86,21 +86,6 @@ it('is rendered for avatar', () => {
   expect(getByLabelText(/upload.+avatar/i)).not.toHaveAttribute('disabled');
 });
 
-it('generates staff profile without contact and tabs', () => {
-  const { queryByText } = render(
-    <UserProfileHeader
-      {...boilerplateProps}
-      email="test@test.com"
-      role="Staff"
-    />,
-  );
-
-  expect(queryByText(/contact/i)).not.toBeInTheDocument();
-  expect(queryByText(/research/i)).not.toBeInTheDocument();
-  expect(queryByText(/background/i)).not.toBeInTheDocument();
-  expect(queryByText(/outputs/i)).not.toBeInTheDocument();
-});
-
 it('shows placeholder text for degree on own profile when omitted', () => {
   const { queryByText, rerender } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>

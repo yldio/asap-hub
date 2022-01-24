@@ -202,17 +202,6 @@ describe('a header edit button', () => {
 
     expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
   });
-  it('is not rendered on your own staff profile', async () => {
-    const { queryByText, queryByLabelText } = await renderUserProfile({
-      ...createUserResponse(),
-      role: 'Staff',
-    });
-    await waitFor(() =>
-      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
-
-    expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
-  });
 
   it('is rendered for personal info on your own profile', async () => {
     const { findByLabelText } = await renderUserProfile();

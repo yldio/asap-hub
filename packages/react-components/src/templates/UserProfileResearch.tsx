@@ -1,11 +1,11 @@
 import React, { ComponentProps, ReactNode } from 'react';
-import { UserResponse, UserTeam } from '@asap-hub/model';
+import { UserResponse } from '@asap-hub/model';
 
 import {
   ProfileExpertiseAndResources,
   QuestionsSection,
   ProfileCardList,
-  UserProfileBackground,
+  HelpSection,
 } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
@@ -13,20 +13,8 @@ import UserProfileRole from '../organisms/UserProfileRole';
 
 type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
-  Pick<
-    ComponentProps<typeof UserProfileBackground>,
-    'firstName' | 'displayName'
-  > &
-  Pick<
-    UserResponse,
-    'email' | 'contactEmail' | 'labs' | 'researchInterests' | 'responsibilities'
-  > & {
-    teams: Array<
-      UserTeam & {
-        editHref?: string;
-      }
-    >;
-  } & {
+  Pick<UserResponse, 'email' | 'contactEmail' | 'displayName'> &
+  ComponentProps<typeof UserProfileRole> & {
     userProfileGroupsCard?: ReactNode;
     editExpertiseAndResourcesHref?: string;
     editQuestionsHref?: string;
@@ -49,6 +37,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   editQuestionsHref,
   editRoleHref,
   teams,
+  role,
   ...roleProps
 }) => {
   const isRoleEmpty =
@@ -64,6 +53,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
           firstName={firstName}
           labs={labs}
           teams={teams}
+          role={role}
           {...roleProps}
         />
       ),
@@ -76,7 +66,37 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
             },
     },
   ];
-
+  const staffCards = [
+    !isOwnProfile && {
+      card: <HelpSection />,
+    },
+  ];
+  const defaultCards = [
+    {
+      card: <QuestionsSection firstName={firstName} questions={questions} />,
+      editLink:
+        editQuestionsHref === undefined
+          ? undefined
+          : {
+              href: editQuestionsHref,
+              label: 'Edit open questions',
+            },
+    },
+    userProfileGroupsCard !== undefined && {
+      card: userProfileGroupsCard,
+    },
+    !isOwnProfile && {
+      card: (
+        <CtaCard
+          href={createMailTo(contactEmail || email)}
+          buttonText="Contact"
+        >
+          <strong>Interested in what you have seen?</strong> <br />
+          Why not get in touch with {displayName}?
+        </CtaCard>
+      ),
+    },
+  ];
   return (
     <ProfileCardList>
       {[
@@ -97,32 +117,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
                   label: 'Edit expertise and resources',
                 },
         },
-        {
-          card: (
-            <QuestionsSection firstName={firstName} questions={questions} />
-          ),
-          editLink:
-            editQuestionsHref === undefined
-              ? undefined
-              : {
-                  href: editQuestionsHref,
-                  label: 'Edit open questions',
-                },
-        },
-        userProfileGroupsCard !== undefined && {
-          card: userProfileGroupsCard,
-        },
-        isOwnProfile || {
-          card: (
-            <CtaCard
-              href={createMailTo(contactEmail || email)}
-              buttonText="Contact"
-            >
-              <strong>Interested in what you have seen?</strong> <br />
-              Why not get in touch with {displayName}?
-            </CtaCard>
-          ),
-        },
+        ...(role === 'Staff' ? staffCards : defaultCards),
       ]}
     </ProfileCardList>
   );

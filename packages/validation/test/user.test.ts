@@ -3,13 +3,13 @@ import { isUserOnboardable } from '../src/user';
 import { getUserResponse } from './fixtures/user.fixtures';
 
 describe('isUserOnboardable validation', () => {
-  test('Should pass if the user profile is complete', async () => {
+  it('Should pass if the user profile is complete', async () => {
     expect(isUserOnboardable(getUserResponse())).toEqual({
       isOnboardable: true,
     });
   });
 
-  test('Should fail if Resonsibilities are missing from user profile', async () => {
+  it('Should fail if Resonsibilities are missing from user profile', async () => {
     const userResponse: UserResponse = getUserResponse();
     userResponse.responsibilities = null;
 
@@ -19,7 +19,7 @@ describe('isUserOnboardable validation', () => {
     });
   });
 
-  test('Should fail if Institution is missing from user profile', async () => {
+  it('Should fail if Institution is missing from user profile', async () => {
     const userIncompleteResponse: UserResponse = {
       ...getUserResponse(),
       institution: undefined,
@@ -31,7 +31,7 @@ describe('isUserOnboardable validation', () => {
     });
   });
 
-  test('Should fail if Job Title is missing from user profile', async () => {
+  it('Should fail if Job Title is missing from user profile', async () => {
     const userIncompleteResponse: UserResponse = {
       ...getUserResponse(),
       jobTitle: undefined,
@@ -43,7 +43,7 @@ describe('isUserOnboardable validation', () => {
     });
   });
 
-  test('Should fail if City is missing from user profile', async () => {
+  it('Should fail if City is missing from user profile', async () => {
     const userIncompleteResponse: UserResponse = {
       ...getUserResponse(),
       city: undefined,
@@ -55,7 +55,7 @@ describe('isUserOnboardable validation', () => {
     });
   });
 
-  test('Should fail if Country is missing from user profile', async () => {
+  it('Should fail if Country is missing from user profile', async () => {
     const userIncompleteResponse: UserResponse = {
       ...getUserResponse(),
       country: undefined,
@@ -67,7 +67,7 @@ describe('isUserOnboardable validation', () => {
     });
   });
 
-  test('Should fail if Expertise and Resources are missing from user profile', async () => {
+  it('Should fail if Expertise and Resources are missing from user profile', async () => {
     const userIncompleteResponse: UserResponse = {
       ...getUserResponse(),
       expertiseAndResourceTags: [],
@@ -79,7 +79,7 @@ describe('isUserOnboardable validation', () => {
     });
   });
 
-  test('Should fail if fewer than 5 Expertise and Resources are provided in user profile', async () => {
+  it('Should fail if fewer than 5 Expertise and Resources are provided in user profile', async () => {
     const userIncompleteResponse: UserResponse = {
       ...getUserResponse(),
       expertiseAndResourceTags: [
@@ -95,7 +95,7 @@ describe('isUserOnboardable validation', () => {
       expertiseAndResourceTags: { valid: false },
     });
   });
-  test('Should fail if biography is missing from user profile', async () => {
+  it('Should fail if biography is missing from user profile', async () => {
     const userIncompleteResponse: UserResponse = {
       ...getUserResponse(),
       biography: undefined,
@@ -108,7 +108,7 @@ describe('isUserOnboardable validation', () => {
   });
 
   describe('When user role is not Staff', () => {
-    test('Should fail if the user is not part of any team', async () => {
+    it('Should fail if the user is not part of any team', async () => {
       const userIncompleteResponse: UserResponse = {
         ...getUserResponse(),
         role: 'Grantee',
@@ -121,7 +121,7 @@ describe('isUserOnboardable validation', () => {
       });
     });
 
-    test('Should fail if Research Interests are missing from user profile', async () => {
+    it('Should fail if Research Interests are missing from user profile', async () => {
       const userResponse: UserResponse = {
         ...getUserResponse(),
         role: 'Grantee',
@@ -133,7 +133,7 @@ describe('isUserOnboardable validation', () => {
         researchInterests: { valid: false },
       });
     });
-    test('Should fail if Research Questions are missing from user profile', async () => {
+    it('Should fail if Research Questions are missing from user profile', async () => {
       const userIncompleteResponse: UserResponse = {
         ...getUserResponse(),
         role: 'Grantee',
@@ -146,7 +146,7 @@ describe('isUserOnboardable validation', () => {
       });
     });
 
-    test('Should fail if only a single Research Question is provided in user profile', async () => {
+    it('Should fail if only a single Research Question is provided in user profile', async () => {
       const userIncompleteResponse: UserResponse = {
         ...getUserResponse(),
         role: 'Grantee',
@@ -160,7 +160,7 @@ describe('isUserOnboardable validation', () => {
     });
   });
   describe('when user role is Staff', () => {
-    test('Should pass when the user is not part of any team', async () => {
+    it('Should pass when the user is not part of any team', async () => {
       const userIncompleteResponse: UserResponse = {
         ...getUserResponse(),
         role: 'Staff',
@@ -170,7 +170,7 @@ describe('isUserOnboardable validation', () => {
         isOnboardable: true,
       });
     });
-    test('Should pass with Research Interests missing from user profile', async () => {
+    it('Should pass with Research Interests missing from user profile', async () => {
       const userResponse: UserResponse = {
         ...getUserResponse(),
         role: 'Staff',
@@ -181,7 +181,7 @@ describe('isUserOnboardable validation', () => {
         isOnboardable: true,
       });
     });
-    test('Should pass with Research Questions missing from user profile', async () => {
+    it('Should pass with Research Questions missing from user profile', async () => {
       const userIncompleteResponse: UserResponse = {
         ...getUserResponse(),
         role: 'Staff',

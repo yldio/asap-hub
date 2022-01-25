@@ -13,7 +13,7 @@ const TeamCreateOutputPage: React.FC<TeamCreateOutputPageProps> = ({
   onCreate,
 }) => (
   <>
-    <TeamCreateOutputHeader type={researchOutput.type} />
+    <TeamCreateOutputHeader researchOutput={researchOutput} />
     <TeamCreateOutputForm onCreate={onCreate} />
   </>
 );

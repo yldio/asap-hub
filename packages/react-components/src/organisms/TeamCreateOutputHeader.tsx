@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { ResearchOutputType } from '@asap-hub/model';
+import { ResearchOutput } from '@asap-hub/model';
 
 import { Display, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
@@ -8,7 +8,7 @@ import { steel, paper } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 
 type TeamCreateOutputHeaderProps = {
-  type: ResearchOutputType;
+  researchOutput: ResearchOutput;
 };
 
 const visualHeaderStyles = css({
@@ -25,15 +25,17 @@ const textStyles = css({
 });
 
 const TeamCreateOutputHeader: React.FC<TeamCreateOutputHeaderProps> = ({
-  type,
+  researchOutput,
 }) => (
   <header>
     <div css={visualHeaderStyles}>
-      <Display styleAsHeading={2}>Share {type.toLowerCase()}</Display>
+      <Display styleAsHeading={2}>
+        Share {researchOutput.type.toLowerCase()}
+      </Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
-          Add your {type.toLowerCase()} code to your third party publication
-          platform (e.g. Github) before sharing on the hub.
+          Add your {researchOutput.type.toLowerCase()} code to your third party
+          publication platform (e.g. Github) before sharing on the hub.
         </Paragraph>
       </div>
     </div>

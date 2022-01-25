@@ -2,7 +2,7 @@ import Boom from '@hapi/boom';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
 import uniqBy from 'lodash.uniqby';
-import { FetchOptions } from '../utils/types';
+import { FetchOptions, FetchPaginationOptions } from '../utils/types';
 import { parseGraphQLGroup } from '../entities';
 import { sanitiseForSquidex } from '../utils/squidex';
 import { FETCH_GROUP, FETCH_GROUPS } from '../queries/groups.queries';
@@ -104,7 +104,7 @@ export default class Groups implements GroupController {
 
   async fetchByTeamId(
     teamId: string | string[],
-    options: FetchOptions,
+    options: FetchPaginationOptions,
   ): Promise<ListGroupResponse> {
     const filter = Array.isArray(teamId)
       ? `data/teams/iv in [${teamId.map((id) => `'${id}'`).join(', ')}]`

@@ -2,12 +2,15 @@ import supertest from 'supertest';
 import Boom from '@hapi/boom';
 import { appFactory } from '../../src/app';
 import { FetchOptions } from '../../src/utils/types';
-import * as fixtures from '../fixtures/groups.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { eventControllerMock } from '../mocks/event-controller.mock';
 import { ListEventResponse } from '@asap-hub/model';
 import { FetchEventsOptions } from '../../src/controllers/events';
+import {
+  getGroupResponse,
+  getListGroupResponse,
+} from '../fixtures/groups.fixtures';
 
 describe('/groups/ route', () => {
   const app = appFactory({
@@ -37,13 +40,11 @@ describe('/groups/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      groupControllerMock.fetch.mockResolvedValueOnce(
-        fixtures.listGroupsResponse,
-      );
+      groupControllerMock.fetch.mockResolvedValueOnce(getListGroupResponse());
 
       const response = await supertest(app).get('/groups/');
 
-      expect(response.body).toEqual(fixtures.listGroupsResponse);
+      expect(response.body).toEqual(getListGroupResponse());
     });
 
     test('Should call the controller with the right parameters', async () => {
@@ -88,13 +89,11 @@ describe('/groups/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      groupControllerMock.fetchById.mockResolvedValueOnce(
-        fixtures.groupResponse,
-      );
+      groupControllerMock.fetchById.mockResolvedValueOnce(getGroupResponse());
 
       const response = await supertest(app).get('/groups/123');
 
-      expect(response.body).toEqual(fixtures.groupResponse);
+      expect(response.body).toEqual(getGroupResponse());
     });
   });
 

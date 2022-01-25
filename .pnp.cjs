@@ -9837,11 +9837,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "yargs",
-        "npm:17.2.1"
+        "npm:17.3.1"
       ],
       [
         "yargs-parser",
-        "npm:20.2.3"
+        "npm:18.1.3"
       ],
       [
         "yauzl",
@@ -10282,7 +10282,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pump", "npm:3.0.0"],
             ["through2-concurrent", "npm:2.0.0"],
             ["uuid", "npm:8.3.2"],
-            ["yargs", "npm:17.2.1"]
+            ["yargs", "npm:17.3.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -10347,6 +10347,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/stream-json", "npm:1.7.1"],
             ["@types/supertest", "npm:2.0.11"],
             ["@types/uuid", "npm:8.3.0"],
+            ["algoliasearch", "npm:4.11.0"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
             ["aws-sdk", "npm:2.907.0"],
@@ -57919,17 +57920,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:17.2.1", {
-          "packageLocation": "./.yarn/cache/yargs-npm-17.2.1-592dabfd58-451aac46f8.zip/node_modules/yargs/",
+        ["npm:17.3.1", {
+          "packageLocation": "./.yarn/cache/yargs-npm-17.3.1-26b02c35fd-64fc2e32c5.zip/node_modules/yargs/",
           "packageDependencies": [
-            ["yargs", "npm:17.2.1"],
+            ["yargs", "npm:17.3.1"],
             ["cliui", "npm:7.0.3"],
             ["escalade", "npm:3.1.1"],
             ["get-caller-file", "npm:2.0.5"],
             ["require-directory", "npm:2.1.1"],
-            ["string-width", "npm:4.2.0"],
+            ["string-width", "npm:4.2.3"],
             ["y18n", "npm:5.0.8"],
-            ["yargs-parser", "npm:20.2.3"]
+            ["yargs-parser", "npm:21.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -57957,6 +57958,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/yargs-parser-npm-20.2.3-d0c9b251ab-73996c9692.zip/node_modules/yargs-parser/",
           "packageDependencies": [
             ["yargs-parser", "npm:20.2.3"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:21.0.0", {
+          "packageLocation": "./.yarn/cache/yargs-parser-npm-21.0.0-d564c0a5d4-1e205fca1c.zip/node_modules/yargs-parser/",
+          "packageDependencies": [
+            ["yargs-parser", "npm:21.0.0"]
           ],
           "linkType": "HARD",
         }]

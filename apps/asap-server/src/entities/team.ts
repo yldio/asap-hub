@@ -117,7 +117,8 @@ export const parseGraphQLTeam = (
     lastModifiedDate: parseDate(team.lastModified).toISOString(),
     expertiseAndResourceTags: team.flatData.expertiseAndResourceTags ?? [],
     tools,
-    outputs: (team.flatData.outputs as unknown as string[]) ?? undefined,
+    outputs:
+      (team.flatData.outputs as unknown as { id: string }[]) ?? undefined,
     pointOfContact: members.find(({ role }) => role === 'Project Manager'),
     members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
     projectSummary: team.flatData.projectSummary ?? undefined,

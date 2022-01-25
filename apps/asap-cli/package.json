@@ -11,6 +11,7 @@
     "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "dependencies": {
+    "@asap-hub/algolia": "workspace:*",
     "@asap-hub/message-templates": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/services-common": "workspace:*",

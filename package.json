@@ -15,8 +15,10 @@
     "url": "https://github.com/yldio/asap-hub.git"
   },
   "scripts": {
-    "algolia:download": "algolia getsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX | prettier --parser json > ./ci/algolia-schema.json",
-    "algolia:upload": "algolia setsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX -s ./ci/algolia-schema.json",
+    "algolia:download": "yarn workspace @asap-hub/algolia run algolia getsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX | prettier --parser json > ./ci/algolia-schema.json",
+    "algolia:upload": "yarn workspace @asap-hub/algolia run algolia setsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX -s ./ci/algolia-schema.json",
+    "algolia:remove-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:remove-index",
+    "algolia:move-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:move-index",
     "build": "yarn build:typecheck && yarn build:babel && yarn workspaces foreach -vpt run typecheck && yarn workspaces foreach -vpt run build",
     "build:babel": "yarn workspaces foreach -vp run build:babel",
     "build:typecheck": "tsc -b -v $(node scripts/get-composite-ts-projects.js)",
@@ -38,9 +40,7 @@
     "watch:babel": "yarn workspaces foreach -vpi -j 1000 run watch:babel",
     "watch:typecheck": "yarn build:typecheck -w",
     "schema:update": "./apps/asap-server/scripts/schema-update.sh",
-    "export:entity": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --project ./apps/asap-server/tsconfig.json --files=./apps/asap-server/@types ./apps/asap-server/scripts/cli.ts export",
-    "algolia:remove-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:remove-index",
-    "algolia:move-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:move-index"
+    "export:entity": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --project ./apps/asap-server/tsconfig.json --files=./apps/asap-server/@types ./apps/asap-server/scripts/cli.ts export"
   },
   "resolutions": {
     "encoding": "0.1.13"
@@ -147,8 +147,6 @@
     "webpack": "^5.37.0"
   },
   "dependencies": {
-    "@algolia/cli": "^4.0.8",
-    "algoliasearch": "^4.11.0",
     "ts-node": "^9.1.1"
   }
 }

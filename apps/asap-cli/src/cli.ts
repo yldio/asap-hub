@@ -5,11 +5,10 @@
 
 'use strict';
 
+import { removeAlgoliaIndex, moveAlgoliaIndex } from '@asap-hub/algolia';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import * as importers from './import';
-import { removeAlgoliaIndex } from './algolia/remove-index';
-import { moveAlgoliaIndex } from './algolia/move-index';
 
 // eslint-disable-next-line no-unused-expressions
 yargs(hideBin(process.argv))

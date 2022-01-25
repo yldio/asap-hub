@@ -12,6 +12,8 @@ export type SearchIndex = AlgoliaSearchIndex;
 
 export * from './types/response';
 export * from './indexes/research-output';
+export * from './scripts/move-index';
+export * from './scripts/remove-index';
 
 export const algoliasearch = algoliasearchfn;
 export const algoliasearchLite = algoliasearchLiteFn;

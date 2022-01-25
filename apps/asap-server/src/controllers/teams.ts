@@ -72,7 +72,14 @@ export default class Teams implements TeamController {
     const { outputs: existingOutputs = [] } = await this.fetchById(id);
 
     await this.teamSquidexRestClient.patch(id, {
-      outputs: { iv: [...new Set([...existingOutputs, ...outputs])] },
+      outputs: {
+        iv: [
+          ...new Set([
+            ...existingOutputs.map(({ id: outputId }) => outputId),
+            ...outputs,
+          ]),
+        ],
+      },
     });
     return this.fetchById(id);
   }

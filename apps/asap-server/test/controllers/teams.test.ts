@@ -912,7 +912,7 @@ describe('Team controller', () => {
   describe('merge method', () => {
     test('Should merge the output field and maintains existing fields', async () => {
       const teamId = 'team-id-1';
-      const existingOutputs = ['output-1'] as unknown as GraphTeamOutputs;
+      const existingOutputs = [{ id: 'output-1' }] as GraphTeamOutputs;
 
       const firstResponse = getGraphQlTeamResponse({
         outputs: existingOutputs,
@@ -938,17 +938,20 @@ describe('Team controller', () => {
         .reply(
           200,
           getGraphQlTeamResponse({
-            outputs: ['output-1', 'output-2'] as unknown as GraphTeamOutputs,
+            outputs: [
+              { id: 'output-1' },
+              { id: 'output-2' },
+            ] as unknown as GraphTeamOutputs,
           }),
         );
 
       const result = await teamController.merge(teamId, ['output-2']);
 
-      expect(result.outputs).toEqual(['output-1', 'output-2']);
+      expect(result.outputs).toEqual([{ id: 'output-1' }, { id: 'output-2' }]);
     });
     test('Should not create duplicate', async () => {
       const teamId = 'team-id-1';
-      const existingOutputs = ['output-1'] as unknown as GraphTeamOutputs;
+      const existingOutputs = [{ id: 'output-1' }] as GraphTeamOutputs;
 
       const firstResponse = getGraphQlTeamResponse({
         outputs: existingOutputs,
@@ -974,13 +977,13 @@ describe('Team controller', () => {
         .reply(
           200,
           getGraphQlTeamResponse({
-            outputs: ['output-1'] as unknown as GraphTeamOutputs,
+            outputs: [{ id: 'output-1' }] as unknown as GraphTeamOutputs,
           }),
         );
 
       const result = await teamController.merge(teamId, ['output-1']);
 
-      expect(result.outputs).toEqual(['output-1']);
+      expect(result.outputs).toEqual([{ id: 'output-1' }]);
     });
   });
 });

@@ -1,3 +1,4 @@
+import { disable } from '@asap-hub/flags';
 import {
   Auth0Provider,
   WhenReady,
@@ -17,6 +18,22 @@ describe('TeamOutput', () => {
       screen.getByRole('heading', { name: /Share bioinformatics/i }),
     ).toBeInTheDocument();
   });
+
+  test('Shows NotFoundPage when feature flag is off', async () => {
+    disable('ROMS_FORM');
+
+    const teamId = 'team-id';
+    await renderPage(teamId);
+    expect(
+      screen.queryByRole('heading', { name: /Share bioinformatics/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', {
+        name: /Sorry! We can’t seem to find that page/i,
+      }),
+    ).toBeInTheDocument();
+  });
+
   const renderPage = async (teamId: string) => {
     const result = render(
       <RecoilRoot

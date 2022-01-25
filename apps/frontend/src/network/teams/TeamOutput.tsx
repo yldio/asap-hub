@@ -1,5 +1,6 @@
-import { TeamCreateOutputPage } from '@asap-hub/react-components';
+import { NotFoundPage, TeamCreateOutputPage } from '@asap-hub/react-components';
 import { ResearchOutput } from '@asap-hub/model';
+import { isEnabled } from '@asap-hub/flags';
 import React, { useState } from 'react';
 
 import { usePostTeamResearchOutput } from './state';
@@ -20,14 +21,19 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
     addedDate: new Date().toISOString(),
   });
 
-  return (
-    <Frame title="create output">
-      <TeamCreateOutputPage
-        researchOutput={researchOutput}
-        onCreate={() => createResearchOutput(researchOutput)}
-      />
-    </Frame>
-  );
+  const showCreateOutputPage = isEnabled('ROMS_FORM');
+
+  if (showCreateOutputPage) {
+    return (
+      <Frame title="create output">
+        <TeamCreateOutputPage
+          researchOutput={researchOutput}
+          onCreate={() => createResearchOutput(researchOutput)}
+        />
+      </Frame>
+    );
+  }
+  return <NotFoundPage />;
 };
 
 export default TeamOutput;

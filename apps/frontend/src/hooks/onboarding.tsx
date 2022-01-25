@@ -10,6 +10,7 @@ import { useCurrentUserProfileTabRoute } from './current-user-profile-tab-route'
 export type UserOnboardingResult = NonNullable<
   ComponentProps<typeof OnboardingFooter>['onboardable']
 >;
+
 const orderedSteps = [
   'Details',
   'Role',
@@ -18,9 +19,16 @@ const orderedSteps = [
   'Biography',
 ] as const;
 
+const staffOrderedSteps = [
+  'Details',
+  'Role',
+  'Expertise',
+  'Biography',
+] as const;
+
 const fieldToStep: Record<
   keyof Omit<ReturnType<typeof isUserOnboardable>, 'isOnboardable'>,
-  typeof orderedSteps[number]
+  typeof orderedSteps[number] | typeof staffOrderedSteps[number]
 > = {
   city: 'Details',
   institution: 'Details',
@@ -33,8 +41,43 @@ const fieldToStep: Record<
   researchInterests: 'Role',
   responsibilities: 'Role',
 };
-
-const steps = (
+const staffSteps = (
+  profileTab: NonNullable<ReturnType<typeof useCurrentUserProfileTabRoute>>,
+  user: User,
+): Record<
+  typeof staffOrderedSteps[number],
+  { modalHref: string; label: string }
+> => ({
+  Details: {
+    label: 'Details',
+    modalHref: profileTab({}).editPersonalInfo({}).$,
+  },
+  Role: {
+    label: 'Role',
+    modalHref: network({})
+      .users({})
+      .user({ userId: user.id })
+      .research({})
+      .editRole({}).$,
+  },
+  Expertise: {
+    label: 'Expertise',
+    modalHref: network({})
+      .users({})
+      .user({ userId: user.id })
+      .research({})
+      .editExpertiseAndResources({}).$,
+  },
+  Biography: {
+    label: 'Biography',
+    modalHref: network({})
+      .users({})
+      .user({ userId: user.id })
+      .about({})
+      .editBiography({}).$,
+  },
+});
+const defaultSteps = (
   profileTab: NonNullable<ReturnType<typeof useCurrentUserProfileTabRoute>>,
   user: User,
 ): Record<
@@ -82,15 +125,35 @@ const steps = (
 export const useOnboarding = (id: string): UserOnboardingResult | undefined => {
   const user = useUserById(id);
   const profileTab = useCurrentUserProfileTabRoute();
+
   if (!user || !profileTab) {
     return undefined;
   }
   const { isOnboardable, ...onboardingValidation } = isUserOnboardable(user);
-  const stepDetails = steps(profileTab, user);
+
+  if (user.role === 'Staff') {
+    return {
+      isOnboardable,
+      totalSteps: Object.keys(staffSteps(profileTab, user)).length,
+      incompleteSteps: staffOrderedSteps.reduce<
+        UserOnboardingResult['incompleteSteps']
+      >((acc, stepKey) => {
+        const fieldsToCheck = Object.entries(fieldToStep)
+          .filter(([, step]) => step === stepKey)
+          .map(([field]) => field);
+
+        return fieldsToCheck.some((field) =>
+          Object.keys(onboardingValidation).includes(field),
+        )
+          ? [...acc, staffSteps(profileTab, user)[stepKey]]
+          : acc;
+      }, []),
+    };
+  }
 
   return {
     isOnboardable,
-    totalSteps: Object.keys(stepDetails).length,
+    totalSteps: Object.keys(defaultSteps(profileTab, user)).length,
     incompleteSteps: orderedSteps.reduce<
       UserOnboardingResult['incompleteSteps']
     >((acc, stepKey) => {
@@ -101,7 +164,7 @@ export const useOnboarding = (id: string): UserOnboardingResult | undefined => {
       return fieldsToCheck.some((field) =>
         Object.keys(onboardingValidation).includes(field),
       )
-        ? [...acc, stepDetails[stepKey]]
+        ? [...acc, defaultSteps(profileTab, user)[stepKey]]
         : acc;
     }, []),
   };

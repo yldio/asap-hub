@@ -11,7 +11,7 @@ import { refreshTeamState } from '../state';
 import TeamOutput from '../TeamOutput';
 
 describe('TeamOutput', () => {
-  test('Renders the research output', async () => {
+  it('Renders the research output', async () => {
     const teamId = 'team-id';
     await renderPage(teamId);
     expect(
@@ -19,7 +19,7 @@ describe('TeamOutput', () => {
     ).toBeInTheDocument();
   });
 
-  test('Shows NotFoundPage when feature flag is off', async () => {
+  it('Shows NotFoundPage when feature flag is off', async () => {
     disable('ROMS_FORM');
 
     const teamId = 'team-id';

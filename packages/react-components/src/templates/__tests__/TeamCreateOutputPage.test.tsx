@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import TeamCreateOutputPage from '../TeamCreateOutputPage';
 
 describe('TeamCreateOutputPage', () => {
-  test('renders the research output type in the header', () => {
+  it('renders the research output type in the header', () => {
     const researchOutput = createResearchOutputResponse();
 
     const onCreateSpy = jest.fn();
@@ -20,7 +20,7 @@ describe('TeamCreateOutputPage', () => {
       screen.getByRole('heading', { name: /Share grant document/i }),
     ).toBeInTheDocument();
   });
-  test('clicking button will trigger the callback', () => {
+  it('clicking button will trigger the callback', () => {
     const researchOutput = createResearchOutputResponse();
 
     const onCreateSpy = jest.fn();

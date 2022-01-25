@@ -34,7 +34,7 @@ describe('TeamProfile', () => {
       jest.useRealTimers();
     });
 
-    test('renders the header info', async () => {
+    it('renders the header info', async () => {
       const teamResponse = createTeamResponse();
       const teamId = teamResponse.id;
 
@@ -50,7 +50,7 @@ describe('TeamProfile', () => {
         screen.getByRole('heading', { name: /Share bioinformatics/i }),
       ).toBeInTheDocument();
     });
-    test('submits to api', async () => {
+    it('submits to api', async () => {
       const teamResponse = createTeamResponse();
       const teamId = teamResponse.id;
 

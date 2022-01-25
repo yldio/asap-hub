@@ -69,12 +69,12 @@ describe('TeamProfile', () => {
         't0',
         expect.objectContaining({
           addedDate: expect.stringContaining(dateReference),
-          asapFunded: false,
+          asapFunded: undefined,
           link: 'https://hub.asap.science/',
           sharingStatus: 'Network Only',
           title: 'Output created through the ROMS form',
           type: 'Bioinformatics',
-          usedInPublication: false,
+          usedInPublication: undefined,
         }),
         'Bearer id_token',
       );

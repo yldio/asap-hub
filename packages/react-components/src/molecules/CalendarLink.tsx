@@ -53,7 +53,8 @@ const CalendarLink: React.FC<CalendarLinkProps> = ({
     <DropdownButton
       buttonChildren={(menuShown) => (
         <>
-          {children} {menuShown ? chevronUpIcon : chevronDownIcon}
+          <span>{children}</span>
+          {menuShown ? chevronUpIcon : chevronDownIcon}
         </>
       )}
     >

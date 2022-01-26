@@ -69,7 +69,7 @@ const pointOfContactStyles = css({
 
 const membersContainerStyles = css({
   gridArea: 'members',
-  paddingBottom: `${12 / perRem}em`,
+  padding: `${12 / perRem}em 0`,
 
   display: 'grid',
   gridAutoFlow: 'column',

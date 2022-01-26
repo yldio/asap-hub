@@ -23,6 +23,14 @@ describe('useFlags', () => {
     expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
   });
 
+  it('provides the enable flag method', () => {
+    const {
+      result: { current },
+    } = renderHook(useFlags);
+    current.enable('PERSISTENT_EXAMPLE');
+    expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
+  });
+
   it('provides the reset flags method', () => {
     disable('PERSISTENT_EXAMPLE');
     const {

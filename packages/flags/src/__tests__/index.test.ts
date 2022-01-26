@@ -4,6 +4,7 @@ import {
   reset,
   getOverrides,
   setCurrentOverrides,
+  enable,
 } from '..';
 
 const originalNodeEnv = process.env.NODE_ENV;
@@ -56,9 +57,21 @@ describe('in test', () => {
     });
 
     it('changes the overrides identity', () => {
-      const prevOverrides = getOverrides();
+      const previousOverrides = getOverrides();
       disable('PERSISTENT_EXAMPLE');
-      expect(getOverrides()).not.toBe(prevOverrides);
+      expect(getOverrides()).not.toBe(previousOverrides);
+    });
+  });
+  describe('enable', () => {
+    it('disables a flag', () => {
+      enable('PERSISTENT_EXAMPLE');
+      expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
+    });
+
+    it('changes the overrides identity', () => {
+      const previousOverrides = getOverrides();
+      enable('PERSISTENT_EXAMPLE');
+      expect(getOverrides()).not.toBe(previousOverrides);
     });
   });
 

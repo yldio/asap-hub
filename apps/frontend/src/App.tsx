@@ -51,6 +51,7 @@ init({
   ignoreErrors: [
     /Failed to fetch \w+.*? list. Expected status 2xx. Received status 401/g,
     /Loading chunk [0-9]*? failed/g,
+    /Object Not Found Matching Id:\d/g,
   ],
 });
 

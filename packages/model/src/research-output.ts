@@ -54,18 +54,7 @@ export const researchOutputSubtypes = [
   'Viral Vector',
 ] as const;
 
-export const researchOutputDeprecatedSubtypes = ['Teem meeting'] as const;
-
 export type ResearchOutputSubtype = typeof researchOutputSubtypes[number];
-export type ResearchOutputDeprecatedSubtype =
-  typeof researchOutputDeprecatedSubtypes[number];
-
-export const researchOutputDeprecatedSubtypeToResearchOutputSubtypeMap: Record<
-  ResearchOutputDeprecatedSubtype,
-  ResearchOutputSubtype
-> = {
-  'Teem meeting': 'Team meeting',
-};
 
 export const isResearchOutputType = (
   type: string,
@@ -76,30 +65,6 @@ export const isResearchOutputSubtype = (
   subtype: string,
 ): subtype is ResearchOutputSubtype =>
   (researchOutputSubtypes as ReadonlyArray<string>).includes(subtype);
-
-export const isResearchOutputDeprecatedSubtype = (
-  subtype: string,
-): subtype is ResearchOutputDeprecatedSubtype =>
-  (researchOutputDeprecatedSubtypes as ReadonlyArray<string>).includes(subtype);
-
-export const researchOutputMapSubtype = (
-  subtype?: string | null,
-): ResearchOutputSubtype | null => {
-  if (subtype) {
-    if (isResearchOutputDeprecatedSubtype(subtype)) {
-      const mappedSubtype: ResearchOutputSubtype =
-        researchOutputDeprecatedSubtypeToResearchOutputSubtypeMap[subtype];
-
-      return isResearchOutputSubtype(mappedSubtype) ? mappedSubtype : null;
-    }
-
-    if (isResearchOutputSubtype(subtype)) {
-      return subtype;
-    }
-  }
-
-  return null;
-};
 
 export const sharingStatuses = ['Public', 'Network Only'] as const;
 

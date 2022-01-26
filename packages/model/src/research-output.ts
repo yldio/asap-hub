@@ -54,9 +54,7 @@ export const researchOutputSubtypes = [
   'Viral Vector',
 ] as const;
 
-export const researchOutputDeprecatedSubtypes = [
-  'Teem meeting'
-] as const;
+export const researchOutputDeprecatedSubtypes = ['Teem meeting'] as const;
 
 export type ResearchOutputSubtype = typeof researchOutputSubtypes[number];
 export type ResearchOutputDeprecatedSubtype =

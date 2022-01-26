@@ -96,9 +96,8 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
   useEffect(() => {
     const handleClickOutside = (event: Event) => {
       if (
-        reference &&
         reference.current &&
-        !reference?.current?.contains(event.target as Node)
+        !reference.current.contains(event.target as Node)
       ) {
         setMenuShown(false);
       }

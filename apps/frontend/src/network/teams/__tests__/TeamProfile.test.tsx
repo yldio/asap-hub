@@ -69,7 +69,7 @@ describe('TeamProfile', () => {
         network({})
           .teams({})
           .team({ teamId })
-          .createOutput({ type: 'Bioinformatics' }).$,
+          .createOutput({ outputType: 'Bioinformatics' }).$,
       );
 
       const button = screen.getByRole('button', { name: /Share/i });

@@ -66,15 +66,15 @@ export const isResearchOutputSubtype = (
 ): subtype is ResearchOutputSubtype =>
   (researchOutputSubtypes as ReadonlyArray<string>).includes(subtype);
 
-  export const researchOutputMapSubtype = (
-    subtype?: string | null,
-  ): ResearchOutputSubtype | null => {
-    if (subtype && isResearchOutputSubtype(subtype)) {
-      return subtype;
-    }
+export const researchOutputMapSubtype = (
+  subtype?: string | null,
+): ResearchOutputSubtype | null => {
+  if (subtype && isResearchOutputSubtype(subtype)) {
+    return subtype;
+  }
 
-    return null;
-  };
+  return null;
+};
 
 export const sharingStatuses = ['Public', 'Network Only'] as const;
 

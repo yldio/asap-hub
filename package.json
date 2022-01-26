@@ -16,9 +16,10 @@
   },
   "scripts": {
     "algolia:download": "yarn workspace @asap-hub/algolia run algolia getsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX | prettier --parser json > ./ci/algolia-schema.json",
-    "algolia:upload": "yarn workspace @asap-hub/algolia run algolia setsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX -s ./ci/algolia-schema.json",
-    "algolia:remove-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:remove-index",
     "algolia:move-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:move-index",
+    "algolia:remove-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:remove-index",
+    "algolia:remove-records": "yarn node apps/asap-cli/build-cjs/cli.js algolia:remove-records",
+    "algolia:upload": "yarn workspace @asap-hub/algolia run algolia setsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX -s ./ci/algolia-schema.json",
     "build": "yarn build:typecheck && yarn build:babel && yarn workspaces foreach -vpt run typecheck && yarn workspaces foreach -vpt run build",
     "build:babel": "yarn workspaces foreach -vp run build:babel",
     "build:typecheck": "tsc -b -v $(node scripts/get-composite-ts-projects.js)",

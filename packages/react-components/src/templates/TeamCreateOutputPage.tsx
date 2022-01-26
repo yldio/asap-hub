@@ -1,12 +1,10 @@
-import React from 'react';
-import { ResearchOutput } from '@asap-hub/model';
+import React, { ComponentProps } from 'react';
 
 import { TeamCreateOutputHeader, TeamCreateOutputForm } from '../organisms';
 
-type TeamCreateOutputPageProps = {
-  onCreate: () => void;
-  researchOutput: ResearchOutput;
-};
+type TeamCreateOutputPageProps = ComponentProps<typeof TeamCreateOutputHeader> &
+  ComponentProps<typeof TeamCreateOutputForm> &
+  ComponentProps<typeof TeamCreateOutputHeader>;
 
 const TeamCreateOutputPage: React.FC<TeamCreateOutputPageProps> = ({
   researchOutput,

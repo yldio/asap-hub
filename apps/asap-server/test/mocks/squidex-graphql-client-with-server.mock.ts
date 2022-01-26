@@ -12,7 +12,7 @@ import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { getSquidexGraphqlResearchOutput } from '../fixtures/research-output.fixtures';
 import { getGraphQLUser } from '../fixtures/users.fixtures';
 import { getGraphqlTeam } from '../fixtures/teams.fixtures';
-import { getGraphqlGroup } from '../fixtures/groups.fixtures';
+import { getSquidexGraphqlGroup } from '../fixtures/groups.fixtures';
 import { getSquidexGraphqlDiscover } from '../fixtures/discover.fixtures';
 import { getSquidexGraphqlDashboard } from '../fixtures/dashboard.fixtures';
 import { getSquidexGraphqlCalendar } from '../fixtures/calendars.fixtures';
@@ -34,7 +34,7 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     Int: () => 8,
     Instant: () => '2021-10-12T15:42:05Z',
     JsonScalar: () => {},
-    Groups: () => getGraphqlGroup(),
+    Groups: () => getSquidexGraphqlGroup(),
     GroupsResultDto: resultDto,
     ResearchOutputs: () => getSquidexGraphqlResearchOutput(),
     ResearchOutputsResultDto: resultDto,

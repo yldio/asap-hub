@@ -50,19 +50,12 @@ export const researchOutputSubtypes = [
   'Shipment Procedure',
   'Software',
   'Spectroscopy',
-  'Teem meeting',
+  'Team meeting',
   'Viral Vector',
 ] as const;
 
 export const researchOutputDeprecatedSubtypes = [
-  'Animal Models',
-  'Antibodies',
-  'Assays',
-  'Compounds',
-  'Imaging',
-  'Sample Collection',
-  'Web Portal',
-  'Mass Spectrometry',
+  'Teem meeting'
 ] as const;
 
 export type ResearchOutputSubtype = typeof researchOutputSubtypes[number];
@@ -73,14 +66,7 @@ export const researchOutputDeprecatedSubtypeToResearchOutputSubtypeMap: Record<
   ResearchOutputDeprecatedSubtype,
   ResearchOutputSubtype
 > = {
-  'Animal Models': 'Animal Model',
-  Antibodies: 'Antibody',
-  Assays: 'Assay',
-  Compounds: 'Compound',
-  Imaging: 'Microscopy & Imaging',
-  'Sample Collection': 'Sample Prep',
-  'Web Portal': 'Software',
-  'Mass Spectrometry': 'Spectroscopy',
+  'Teem meeting': 'Team meeting',
 };
 
 export const isResearchOutputType = (

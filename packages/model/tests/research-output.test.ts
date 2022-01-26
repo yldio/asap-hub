@@ -11,7 +11,7 @@ describe('Research Output Model', () => {
       expect(isResearchOutputType('Dataset')).toEqual(true);
     });
 
-    it('should not recognize correct type', () => {
+    it('should not recognize incorrect type', () => {
       expect(isResearchOutputType('NotADataset')).toEqual(false);
     });
   });
@@ -26,7 +26,7 @@ describe('Research Output Model', () => {
     });
 
     it('should recognize deprecated subtype', () => {
-      expect(isResearchOutputDeprecatedSubtype('Assays')).toEqual(true);
+      expect(isResearchOutputDeprecatedSubtype('Teem meeting')).toEqual(true);
     });
 
     it('should not recognize incorrect deprecated subtype', () => {
@@ -34,7 +34,7 @@ describe('Research Output Model', () => {
     });
 
     it('should map deprecated subtype', () => {
-      expect(researchOutputMapSubtype('Assays')).toEqual('Assay');
+      expect(researchOutputMapSubtype('Teem meeting')).toEqual('Team meeting');
     });
 
     it('should pass not deprecated subtype', () => {

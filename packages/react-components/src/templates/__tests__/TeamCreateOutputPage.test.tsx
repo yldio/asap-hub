@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import { ResearchOutput } from '@asap-hub/model';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { useFlags } from '@asap-hub/react-context';
 import { renderHook } from '@testing-library/react-hooks';
@@ -23,7 +22,7 @@ describe('TeamCreateOutputPage', () => {
 
     render(
       <TeamCreateOutputPage
-        researchOutput={researchOutput as ResearchOutput}
+        researchOutput={researchOutput}
         onCreate={onCreateSpy}
       />,
     );
@@ -38,7 +37,7 @@ describe('TeamCreateOutputPage', () => {
 
     render(
       <TeamCreateOutputPage
-        researchOutput={researchOutput as ResearchOutput}
+        researchOutput={researchOutput}
         onCreate={onCreateSpy}
       />,
     );

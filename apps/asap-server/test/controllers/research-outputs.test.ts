@@ -11,7 +11,7 @@ import {
   getSquidexResearchOutputsGraphqlResponse,
 } from '../fixtures/research-output.fixtures';
 import {
-  getGraphqlTeam,
+  getSquidexGraphqlTeam,
   getUpdateTeamResponse,
 } from '../fixtures/teams.fixtures';
 import {
@@ -345,7 +345,7 @@ describe('ResearchOutputs controller', () => {
         const pm3 = getGraphQLUser();
         pm3.flatData.email = 'pm3@example.com';
         pm3.flatData.teams![0]!.role = 'Project Manager';
-        const team = getGraphqlTeam({});
+        const team = getSquidexGraphqlTeam({});
         team.referencingUsersContents = [pm3];
         squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents!.push(
           team,
@@ -378,7 +378,7 @@ describe('ResearchOutputs controller', () => {
           [pm1, pm2];
 
         // Same one on another team
-        const team = getGraphqlTeam({});
+        const team = getSquidexGraphqlTeam({});
         team.referencingUsersContents = [pm1];
         squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents!.push(
           team,

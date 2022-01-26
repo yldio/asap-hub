@@ -14,7 +14,7 @@ import { ResearchOutputInputData } from '../../src/controllers/research-outputs'
 import { ResearchOutputEventType } from '../../src/handlers/webhooks/webhook-research-output';
 import { DeepWriteable } from '../../src/utils/types';
 import { createEventBridgeEventMock } from '../../test/helpers/events';
-import { getGraphqlTeam } from './teams.fixtures';
+import { getSquidexGraphqlTeam } from './teams.fixtures';
 import {
   fetchExpectation,
   getGraphqlResponseFetchUsers,
@@ -90,7 +90,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
       },
     ],
   },
-  referencingTeamsContents: [getGraphqlTeam({})],
+  referencingTeamsContents: [getSquidexGraphqlTeam({})],
 });
 
 export const getResearchOutputResponse =

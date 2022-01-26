@@ -9,6 +9,8 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/frontend/src/auth/test-utils';
+import { useFlags } from '@asap-hub/react-context';
+import { renderHook } from '@testing-library/react-hooks';
 
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import TeamProfile from '../TeamProfile';
@@ -24,11 +26,18 @@ describe('TeamProfile', () => {
   afterEach(() => jest.clearAllMocks());
   describe('TeamCreateOutputPage', () => {
     const dateReference = '2021-12-28T14:45';
-    beforeEach(() =>
+    beforeEach(() => {
+      const {
+        result: {
+          current: { enable },
+        },
+      } = renderHook(useFlags);
+
+      enable('ROMS_FORM');
       jest
         .useFakeTimers('modern')
-        .setSystemTime(new Date(dateReference).getTime()),
-    );
+        .setSystemTime(new Date(dateReference).getTime());
+    });
     afterEach(() => {
       jest.runOnlyPendingTimers();
       jest.useRealTimers();

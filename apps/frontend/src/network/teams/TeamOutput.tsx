@@ -1,6 +1,6 @@
 import { NotFoundPage, TeamCreateOutputPage } from '@asap-hub/react-components';
 import { ResearchOutput } from '@asap-hub/model';
-import { isEnabled } from '@asap-hub/flags';
+import { useFlags } from '@asap-hub/react-context';
 import React, { useState } from 'react';
 
 import { usePostTeamResearchOutput } from './state';
@@ -10,6 +10,7 @@ type TeamOutputProps = {
   teamId: string;
 };
 const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
+  const { isEnabled } = useFlags();
   const createResearchOutput = usePostTeamResearchOutput(teamId);
   const [researchOutput] = useState<ResearchOutput>({
     type: 'Bioinformatics',

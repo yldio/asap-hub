@@ -2,6 +2,7 @@ import { useContext, useState, useCallback, createContext, FC } from 'react';
 import {
   isEnabled,
   disable,
+  enable,
   reset,
   getOverrides,
   setCurrentOverrides,
@@ -9,7 +10,7 @@ import {
 
 type Flags = Pick<
   typeof import('@asap-hub/flags'),
-  'isEnabled' | 'reset' | 'disable' | 'setCurrentOverrides'
+  'isEnabled' | 'reset' | 'disable' | 'setCurrentOverrides' | 'enable'
 >;
 
 const parseCookie = (cookies: string) =>
@@ -36,6 +37,7 @@ export const FlagsContext = createContext<Flags>({
   isEnabled,
   disable,
   reset,
+  enable,
   setCurrentOverrides: () => setCurrentOverrides(parseCookie(document.cookie)),
 });
 
@@ -46,6 +48,10 @@ export const LiveFlagsProvider: FC<Record<string, never>> = ({ children }) => {
     isEnabled,
     disable: useCallback((flag) => {
       disable(flag);
+      setOverrides(getOverrides());
+    }, []),
+    enable: useCallback((flag) => {
+      enable(flag);
       setOverrides(getOverrides());
     }, []),
     reset: useCallback(() => {

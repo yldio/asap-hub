@@ -1,9 +1,10 @@
-import { disable } from '@asap-hub/flags';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/frontend/src/auth/test-utils';
+import { useFlags } from '@asap-hub/react-context';
 import { render, screen, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import { Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -12,14 +13,29 @@ import TeamOutput from '../TeamOutput';
 
 describe('TeamOutput', () => {
   it('Renders the research output', async () => {
+    const {
+      result: {
+        current: { enable },
+      },
+    } = renderHook(useFlags);
+
+    enable('ROMS_FORM');
+
     const teamId = 'team-id';
     await renderPage(teamId);
+
     expect(
       screen.getByRole('heading', { name: /Share bioinformatics/i }),
     ).toBeInTheDocument();
   });
 
   it('Shows NotFoundPage when feature flag is off', async () => {
+    const {
+      result: {
+        current: { disable },
+      },
+    } = renderHook(useFlags);
+
     disable('ROMS_FORM');
 
     const teamId = 'team-id';

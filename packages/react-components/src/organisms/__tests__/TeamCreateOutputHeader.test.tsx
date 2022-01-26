@@ -1,9 +1,20 @@
 import { createResearchOutput } from '@asap-hub/fixtures';
 import { render, screen } from '@testing-library/react';
+import { useFlags } from '@asap-hub/react-context';
+import { renderHook } from '@testing-library/react-hooks';
 
 import TeamCreateOutputHeader from '../TeamCreateOutputHeader';
 
 describe('TeamCreateOutputHeader', () => {
+  beforeEach(() => {
+    const {
+      result: {
+        current: { disable },
+      },
+    } = renderHook(useFlags);
+
+    disable('ROMS_FORM');
+  });
   it('renders the research output type in the header', () => {
     render(<TeamCreateOutputHeader researchOutput={createResearchOutput()} />);
     expect(

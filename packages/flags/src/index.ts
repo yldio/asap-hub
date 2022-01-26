@@ -34,6 +34,11 @@ export const setCurrentOverrides = (flags?: Record<string, boolean>): void => {
 export const disable = (flag: Flag): void => {
   overrides = { ...overrides, [flag]: false };
 };
+
+export const enable = (flag: Flag): void => {
+  overrides = { ...overrides, [flag]: true };
+};
+
 export const reset = (): void => {
   overrides = {};
 };

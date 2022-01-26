@@ -18,9 +18,6 @@ const visualHeaderStyles = css({
   }em `,
   background: paper.rgb,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
-});
-
-const textStyles = css({
   maxWidth: `${720 / perRem}em`,
 });
 
@@ -32,7 +29,7 @@ const TeamCreateOutputHeader: React.FC<TeamCreateOutputHeaderProps> = ({
       <Display styleAsHeading={2}>
         Share {researchOutput.type.toLowerCase()}
       </Display>
-      <div css={textStyles}>
+      <div>
         <Paragraph accent="lead">
           Add your {researchOutput.type.toLowerCase()} code to your third party
           publication platform (e.g. Github) before sharing on the hub.

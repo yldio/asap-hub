@@ -193,4 +193,7 @@ export interface ResearchOutputController {
   ) => Promise<Partial<ResearchOutputResponse>>;
 }
 
-type ResearchOutputRequest = ResearchOutput & { teamId: string };
+export type ResearchOutputRequest = Pick<
+  ResearchOutput,
+  'type' | 'link' | 'sharingStatus' | 'addedDate' | 'title'
+> & { teamId: string; asapFunded?: boolean; usedInPublication?: boolean };

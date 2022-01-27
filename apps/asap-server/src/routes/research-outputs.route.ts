@@ -52,6 +52,8 @@ export const researchOutputRouteFactory = (
   );
 
   researchOutputRoutes.post('/research-outputs', async (req, res) => {
+    const { body } = req;
+
     const {
       type,
       link,
@@ -61,7 +63,7 @@ export const researchOutputRouteFactory = (
       usedInPublication,
       addedDate,
       teamId,
-    } = req.body;
+    } = framework.validate('body', body, createSchema);
 
     const id = await researchOutputController.create({
       type,
@@ -80,6 +82,16 @@ export const researchOutputRouteFactory = (
 
   return researchOutputRoutes;
 };
+const createSchema = Joi.object({
+  type: Joi.string().required(),
+  link: Joi.string().required(),
+  title: Joi.string().required(),
+  asapFunded: Joi.boolean().required(),
+  sharingStatus: Joi.string().required(),
+  usedInPublication: Joi.boolean().required(),
+  addedDate: Joi.string().required(),
+  teamId: Joi.string().required(),
+}).required();
 
 const querySchema = Joi.object({
   take: Joi.number(),

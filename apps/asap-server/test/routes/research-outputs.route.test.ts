@@ -116,15 +116,34 @@ describe('/research-outputs/ route', () => {
   });
 
   describe('POST /research-outputs/', () => {
+    const getCreateResearchOutput = () => {
+      const {
+        type,
+        title,
+        asapFunded,
+        sharingStatus,
+        usedInPublication,
+        addedDate,
+      } = getResearchOutputResponse();
+      return {
+        type,
+        link: 'http://a.link',
+        title,
+        asapFunded,
+        sharingStatus,
+        usedInPublication,
+        addedDate,
+      };
+    };
     test('Should return a 201 when is hit', async () => {
-      const researchOutput = getResearchOutputResponse();
+      const researchOutput = getCreateResearchOutput();
 
       researchOutputControllerMock.create.mockResolvedValueOnce('abc123');
       teamControllerMock.merge.mockResolvedValueOnce(getTeamResponse());
 
       const response = await supertest(app)
         .post('/research-outputs')
-        .send({ ...researchOutput, teamId: researchOutput.teams[0]?.id })
+        .send({ ...researchOutput, teamId: 'team-id-1' })
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(201);
@@ -143,28 +162,60 @@ describe('/research-outputs/ route', () => {
     });
 
     test('Should return a 500 error when creating a research output fails', async () => {
-      const researchOutput = getResearchOutputResponse();
+      const researchOutput = getCreateResearchOutput();
       researchOutputControllerMock.create.mockRejectedValueOnce(
         Boom.badImplementation(),
       );
 
       await supertest(app)
         .post('/research-outputs')
-        .send(researchOutput)
+        .send({ ...researchOutput, teamId: 'team-id-1' })
         .set('Accept', 'application/json')
         .expect(500);
     });
 
     test('Should return a 500 error when merging research outputs fails', async () => {
-      const researchOutput = getResearchOutputResponse();
+      const researchOutput = getCreateResearchOutput();
       researchOutputControllerMock.create.mockResolvedValueOnce('abc123');
       teamControllerMock.merge.mockRejectedValueOnce(Boom.badImplementation());
 
       await supertest(app)
         .post('/research-outputs')
-        .send(researchOutput)
+        .send({ ...researchOutput, teamId: 'team-id-1' })
         .set('Accept', 'application/json')
         .expect(500);
+    });
+    describe('Parameter validation', () => {
+      test('Should return a validation error when the arguments are not valid', async () => {
+        const response = await supertest(app).post('/research-outputs/').send({
+          unknown_field: 2,
+        });
+
+        expect(response.status).toBe(400);
+      });
+      test.each([
+        'type',
+        'link',
+        'title',
+        'asapFunded',
+        'sharingStatus',
+        'usedInPublication',
+        'addedDate',
+      ])(
+        'Should return a validation error when %s is missing',
+        async (field) => {
+          const researchOutput = getCreateResearchOutput();
+          const response = await supertest(app)
+            .post('/research-outputs/')
+            .send({
+              ...researchOutput,
+              teamId: 'team-id-1',
+              [field]: undefined,
+            });
+
+          expect(response.status).toBe(400);
+        },
+      );
     });
   });
 });

@@ -1,12 +1,12 @@
-import supertest from 'supertest';
 import Boom from '@hapi/boom';
+import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { authHandlerMock } from '../mocks/auth-handler.mock';
-import { researchOutputControllerMock } from '../mocks/research-outputs-controller.mock';
 import {
   getListResearchOutputResponse,
   getResearchOutputResponse,
 } from '../fixtures/research-output.fixtures';
+import { authHandlerMock } from '../mocks/auth-handler.mock';
+import { researchOutputControllerMock } from '../mocks/research-outputs-controller.mock';
 
 describe('/research-outputs/ route', () => {
   const app = appFactory({
@@ -183,15 +183,7 @@ describe('/research-outputs/ route', () => {
 
         expect(response.status).toBe(400);
       });
-      test.each([
-        'type',
-        'link',
-        'title',
-        'asapFunded',
-        'sharingStatus',
-        'usedInPublication',
-        'addedDate',
-      ])(
+      test.each(['type', 'link', 'title', 'sharingStatus', 'addedDate'])(
         'Should return a validation error when %s is missing',
         async (field) => {
           const researchOutput = getCreateResearchOutput();

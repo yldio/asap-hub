@@ -85,9 +85,9 @@ const createSchema = Joi.object({
   type: Joi.string().required(),
   link: Joi.string().required(),
   title: Joi.string().required(),
-  asapFunded: Joi.boolean().required(),
+  asapFunded: Joi.boolean(),
   sharingStatus: Joi.string().required(),
-  usedInPublication: Joi.boolean().required(),
+  usedInPublication: Joi.boolean(),
   addedDate: Joi.string().required(),
   teamId: Joi.string().required(),
 }).required();

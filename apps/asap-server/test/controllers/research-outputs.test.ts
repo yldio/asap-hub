@@ -645,7 +645,7 @@ describe('ResearchOutputs controller', () => {
         })
         .reply(200, getUpdateTeamResponse()); // response is not used
 
-      const id = await researchOutputs.create(researchOutput, teamId);
+      const id = await researchOutputs.create({ ...researchOutput, teamId });
       expect(id).toEqual({ id: researchOutputId });
     });
     test('should throw when fails to create the research output - 400', async () => {
@@ -656,7 +656,7 @@ describe('ResearchOutputs controller', () => {
         .reply(400);
 
       await expect(
-        researchOutputs.create(researchOutput, teamId),
+        researchOutputs.create({ ...researchOutput, teamId }),
       ).rejects.toThrow('Bad Request');
     });
 
@@ -668,7 +668,7 @@ describe('ResearchOutputs controller', () => {
         .reply(500);
 
       await expect(
-        researchOutputs.create(researchOutput, teamId),
+        researchOutputs.create({ ...researchOutput, teamId }),
       ).rejects.toThrow('Internal Server');
     });
   });

@@ -146,18 +146,16 @@ describe('/research-outputs/ route', () => {
         .expect('Content-Type', /json/)
         .expect(201);
 
-      expect(researchOutputControllerMock.create).toBeCalledWith(
-        {
-          type: researchOutput.type,
-          link: researchOutput.link,
-          asapFunded: researchOutput.asapFunded,
-          sharingStatus: researchOutput.sharingStatus,
-          title: researchOutput.title,
-          usedInPublication: researchOutput.usedInPublication,
-          addedDate: researchOutput.addedDate,
-        },
+      expect(researchOutputControllerMock.create).toBeCalledWith({
+        type: researchOutput.type,
+        link: researchOutput.link,
+        asapFunded: researchOutput.asapFunded,
+        sharingStatus: researchOutput.sharingStatus,
+        title: researchOutput.title,
+        usedInPublication: researchOutput.usedInPublication,
+        addedDate: researchOutput.addedDate,
         teamId,
-      );
+      });
 
       expect(response.body).toEqual(expect.objectContaining({ id: 'abc123' }));
     });

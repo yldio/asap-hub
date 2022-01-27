@@ -63,18 +63,16 @@ export const researchOutputRouteFactory = (
       teamId,
     } = framework.validate('body', body, createSchema);
 
-    const researchOutput = await researchOutputController.create(
-      {
-        type,
-        link,
-        title,
-        asapFunded,
-        sharingStatus,
-        usedInPublication,
-        addedDate,
-      },
+    const researchOutput = await researchOutputController.create({
+      type,
+      link,
+      title,
+      asapFunded,
+      sharingStatus,
+      usedInPublication,
+      addedDate,
       teamId,
-    );
+    });
 
     res.status(201).json(researchOutput);
   });

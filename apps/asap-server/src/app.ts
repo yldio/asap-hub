@@ -95,7 +95,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   const pageRoutes = pageRouteFactory(pageController);
   const researchOutputsRoutes = researchOutputRouteFactory(
     researchOutputController,
-    teamController,
   );
   const teamRoutes = teamRouteFactory(groupController, teamController);
   const userRoutes = userRouteFactory(userController, groupController);

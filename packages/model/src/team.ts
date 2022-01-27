@@ -45,7 +45,7 @@ export interface TeamResponse
   pointOfContact?: TeamMember;
   tools?: TeamTool[];
   labCount: number;
-  outputs?: { id: string }[];
+  outputs?: string[];
 }
 
 export type ListTeamResponse = ListResponse<TeamResponse>;

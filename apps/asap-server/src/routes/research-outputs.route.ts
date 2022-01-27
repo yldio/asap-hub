@@ -6,11 +6,9 @@ import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
 import { Response, Router } from 'express';
 import { ResearchOutputController } from '../controllers/research-outputs';
-import { TeamController } from '../controllers/teams';
 
 export const researchOutputRouteFactory = (
   researchOutputController: ResearchOutputController,
-  teamController: TeamController,
 ): Router => {
   const researchOutputRoutes = Router();
 
@@ -65,7 +63,7 @@ export const researchOutputRouteFactory = (
       teamId,
     } = framework.validate('body', body, createSchema);
 
-    const id = await researchOutputController.create(
+    const researchOutput = await researchOutputController.create(
       {
         type,
         link,
@@ -78,7 +76,7 @@ export const researchOutputRouteFactory = (
       teamId,
     );
 
-    res.status(201).json({ id });
+    res.status(201).json(researchOutput);
   });
 
   return researchOutputRoutes;

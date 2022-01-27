@@ -137,7 +137,7 @@ export default class ResearchOutputs implements ResearchOutputController {
   async create(
     researchOutputData: ResearchOutput,
     teamId: string,
-  ): Promise<string> {
+  ): Promise<Partial<ResearchOutputResponse>> {
     const { usedInPublication, ...researchOutput } = parseToSquidex({
       ...researchOutputData,
       asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
@@ -146,27 +146,25 @@ export default class ResearchOutputs implements ResearchOutputController {
       ),
     });
 
-    const response = await this.researchOutputSquidexRestClient.create(
-      {
-        ...researchOutput,
-        usedInAPublication: usedInPublication,
-      } as RestResearchOutput['data'],
-      false,
-    );
-    const merge = async (id: string, outputs: string[]): Promise<void> => {
-      const {
-        data: { outputs: existingOutputs = { iv: [] } },
-      } = await this.teamSquidexRestClient.fetchById(id);
+    const { id: researchOutputId } =
+      await this.researchOutputSquidexRestClient.create(
+        {
+          ...researchOutput,
+          usedInAPublication: usedInPublication,
+        } as RestResearchOutput['data'],
+        false,
+      );
+    const {
+      data: { outputs: existingOutputs = { iv: [] } },
+    } = await this.teamSquidexRestClient.fetchById(teamId);
 
-      await this.teamSquidexRestClient.patch(id, {
-        outputs: {
-          iv: [...new Set([...existingOutputs.iv, ...outputs])],
-        },
-      });
-    };
-    await merge(teamId, [response.id]);
+    await this.teamSquidexRestClient.patch(teamId, {
+      outputs: {
+        iv: [...new Set([...existingOutputs.iv, researchOutputId])],
+      },
+    });
 
-    return response.id;
+    return { id: researchOutputId };
   }
 }
 
@@ -179,5 +177,8 @@ export interface ResearchOutputController {
   }) => Promise<ListResearchOutputResponse>;
 
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
-  create: (researchOutput: ResearchOutput, teamId: string) => Promise<string>;
+  create: (
+    researchOutput: ResearchOutput,
+    teamId: string,
+  ) => Promise<Partial<ResearchOutputResponse>>;
 }

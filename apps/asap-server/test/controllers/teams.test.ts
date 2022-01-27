@@ -13,7 +13,6 @@ import {
   GraphTeamTool,
   getGraphqlTeam,
   getTeamResponse,
-  GraphTeamOutputs,
 } from '../fixtures/teams.fixtures';
 import Teams from '../../src/controllers/teams';
 import { identity } from '../helpers/squidex';
@@ -907,83 +906,6 @@ describe('Team controller', () => {
           name: 'good link',
         },
       ]);
-    });
-  });
-  describe('merge method', () => {
-    test('Should merge the output field and maintains existing fields', async () => {
-      const teamId = 'team-id-1';
-      const existingOutputs = [{ id: 'output-1' }] as GraphTeamOutputs;
-
-      const firstResponse = getGraphQlTeamResponse({
-        outputs: existingOutputs,
-      });
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_TEAM),
-          variables: {
-            id: teamId,
-          },
-        })
-        .reply(200, firstResponse)
-        .patch(`/api/content/${config.appName}/teams/${teamId}`, {
-          outputs: { iv: ['output-1', 'output-2'] },
-        })
-        .reply(200, getUpdateTeamResponse()) // response is not used
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_TEAM),
-          variables: {
-            id: teamId,
-          },
-        })
-        .reply(
-          200,
-          getGraphQlTeamResponse({
-            outputs: [
-              { id: 'output-1' },
-              { id: 'output-2' },
-            ] as unknown as GraphTeamOutputs,
-          }),
-        );
-
-      const result = await teamController.merge(teamId, ['output-2']);
-
-      expect(result.outputs).toEqual([{ id: 'output-1' }, { id: 'output-2' }]);
-    });
-    test('Should not create duplicate', async () => {
-      const teamId = 'team-id-1';
-      const existingOutputs = [{ id: 'output-1' }] as GraphTeamOutputs;
-
-      const firstResponse = getGraphQlTeamResponse({
-        outputs: existingOutputs,
-      });
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_TEAM),
-          variables: {
-            id: teamId,
-          },
-        })
-        .reply(200, firstResponse)
-        .patch(`/api/content/${config.appName}/teams/${teamId}`, {
-          outputs: { iv: ['output-1'] },
-        })
-        .reply(200, getUpdateTeamResponse()) // response is not used
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_TEAM),
-          variables: {
-            id: teamId,
-          },
-        })
-        .reply(
-          200,
-          getGraphQlTeamResponse({
-            outputs: [{ id: 'output-1' }] as unknown as GraphTeamOutputs,
-          }),
-        );
-
-      const result = await teamController.merge(teamId, ['output-1']);
-
-      expect(result.outputs).toEqual([{ id: 'output-1' }]);
     });
   });
 });

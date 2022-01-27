@@ -3,23 +3,19 @@ import Boom from '@hapi/boom';
 import { appFactory } from '../../src/app';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { researchOutputControllerMock } from '../mocks/research-outputs-controller.mock';
-import { teamControllerMock } from '../mocks/team-controller.mock';
 import {
   getListResearchOutputResponse,
   getResearchOutputResponse,
 } from '../fixtures/research-output.fixtures';
-import { getTeamResponse } from '../fixtures/teams.fixtures';
 
 describe('/research-outputs/ route', () => {
   const app = appFactory({
     researchOutputController: researchOutputControllerMock,
-    teamController: teamControllerMock,
     authHandler: authHandlerMock,
   });
 
   afterEach(() => {
-    researchOutputControllerMock.fetch.mockReset();
-    researchOutputControllerMock.fetchById.mockReset();
+    jest.resetAllMocks();
   });
 
   describe('GET /research-outputs', () => {
@@ -137,26 +133,31 @@ describe('/research-outputs/ route', () => {
     };
     test('Should return a 201 when is hit', async () => {
       const researchOutput = getCreateResearchOutput();
+      const teamId = 'team-id-1';
 
-      researchOutputControllerMock.create.mockResolvedValueOnce('abc123');
-      teamControllerMock.merge.mockResolvedValueOnce(getTeamResponse());
+      researchOutputControllerMock.create.mockResolvedValueOnce({
+        id: 'abc123',
+      });
 
       const response = await supertest(app)
         .post('/research-outputs')
-        .send({ ...researchOutput, teamId: 'team-id-1' })
+        .send({ ...researchOutput, teamId })
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(201);
 
-      expect(researchOutputControllerMock.create).toBeCalledWith({
-        type: researchOutput.type,
-        link: researchOutput.link,
-        asapFunded: researchOutput.asapFunded,
-        sharingStatus: researchOutput.sharingStatus,
-        title: researchOutput.title,
-        usedInPublication: researchOutput.usedInPublication,
-        addedDate: researchOutput.addedDate,
-      });
+      expect(researchOutputControllerMock.create).toBeCalledWith(
+        {
+          type: researchOutput.type,
+          link: researchOutput.link,
+          asapFunded: researchOutput.asapFunded,
+          sharingStatus: researchOutput.sharingStatus,
+          title: researchOutput.title,
+          usedInPublication: researchOutput.usedInPublication,
+          addedDate: researchOutput.addedDate,
+        },
+        teamId,
+      );
 
       expect(response.body).toEqual(expect.objectContaining({ id: 'abc123' }));
     });
@@ -174,17 +175,6 @@ describe('/research-outputs/ route', () => {
         .expect(500);
     });
 
-    test('Should return a 500 error when merging research outputs fails', async () => {
-      const researchOutput = getCreateResearchOutput();
-      researchOutputControllerMock.create.mockResolvedValueOnce('abc123');
-      teamControllerMock.merge.mockRejectedValueOnce(Boom.badImplementation());
-
-      await supertest(app)
-        .post('/research-outputs')
-        .send({ ...researchOutput, teamId: 'team-id-1' })
-        .set('Accept', 'application/json')
-        .expect(500);
-    });
     describe('Parameter validation', () => {
       test('Should return a validation error when the arguments are not valid', async () => {
         const response = await supertest(app).post('/research-outputs/').send({

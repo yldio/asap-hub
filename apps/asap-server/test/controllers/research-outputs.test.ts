@@ -677,6 +677,37 @@ describe('ResearchOutputs controller', () => {
         researchOutputs.create(researchOutputRequest),
       ).rejects.toThrow('Internal Server');
     });
+    test('should throw when research output cannot be found', async () => {
+      const researchOutputRequest = getResearchOutputRequest();
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/research-outputs?publish=false`)
+        .reply(201)
+        .get(
+          `/api/content/${config.appName}/teams/${researchOutputRequest.teamId}`,
+        )
+        .reply(404);
+
+      await expect(
+        researchOutputs.create(researchOutputRequest),
+      ).rejects.toThrow('Not Found');
+    });
+    test('should throw when research output association cannot be made', async () => {
+      const researchOutputRequest = getResearchOutputRequest();
+      const teamId = researchOutputRequest.teamId;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/research-outputs?publish=false`)
+        .reply(201)
+        .get(`/api/content/${config.appName}/teams/${teamId}`)
+        .reply(200, { data: { id: teamId, outputs: { iv: ['output-1'] } } })
+        .patch(`/api/content/${config.appName}/teams/${teamId}`)
+        .reply(500);
+
+      await expect(
+        researchOutputs.create(researchOutputRequest),
+      ).rejects.toThrow('Internal Server');
+    });
   });
 });
 

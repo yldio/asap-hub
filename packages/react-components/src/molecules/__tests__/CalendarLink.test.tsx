@@ -16,14 +16,6 @@ it('renders a subscribe button with custom text', () => {
   expect(link.textContent).toContain('Text');
 });
 
-it('renders a modal on click', () => {
-  const { getByRole, getAllByRole } = render(<CalendarLink id="123" />);
-
-  fireEvent.click(getByRole('button'));
-  const items = getAllByRole('listitem');
-  expect(items.length).toEqual(4);
-});
-
 it('renders calendar links on modal', () => {
   const { getByRole, getAllByRole } = render(<CalendarLink id="123" />);
 
@@ -38,16 +30,28 @@ it('renders calendar links on modal', () => {
   `);
 });
 
-it('renders calendar links on modal and hide it on click outside', () => {
-  const { getByRole, getAllByRole, queryAllByRole } = render(
-    <>
-      <h1>Element</h1>
-      <CalendarLink id="123" />
-    </>,
-  );
+describe('Copies text to clipboard', () => {
+  const originalNavigator = window.navigator;
+  Object.assign(window.navigator, {
+    clipboard: {
+      writeText: () => {},
+    },
+  });
 
-  fireEvent.click(getByRole('button'));
-  getAllByRole('listitem').forEach((e) => expect(e).toBeVisible());
-  fireEvent.mouseDown(getByRole('heading'));
-  queryAllByRole('listitem').forEach((e) => expect(e).not.toBeVisible());
+  beforeEach(() => {
+    jest.spyOn(window.navigator.clipboard, 'writeText');
+  });
+  afterEach(() => {
+    Object.assign(window.navigator, originalNavigator);
+  });
+
+  it('copies the calendar link to clipboard', () => {
+    const { getByRole, getByText } = render(<CalendarLink id="12345" />);
+
+    fireEvent.click(getByRole('button'));
+    fireEvent.click(getByText(/Copy link/i));
+    expect(navigator.clipboard.writeText).toHaveBeenLastCalledWith(
+      expect.stringMatching(/12345/i),
+    );
+  });
 });

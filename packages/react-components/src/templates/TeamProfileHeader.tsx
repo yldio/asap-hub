@@ -1,15 +1,15 @@
 import { css } from '@emotion/react';
-import { formatDistance } from 'date-fns';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
+import { isEnabled } from '@asap-hub/flags';
 
-import { Anchor, Link, TabLink, Display, Paragraph, Avatar } from '../atoms';
-import { TabNav } from '../molecules';
+import { Anchor, Link, TabLink, Display, Avatar } from '../atoms';
+import { DropdownButton, TabNav } from '../molecules';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { perRem, mobileScreen } from '../pixels';
-import { paper } from '../colors';
-import { labIcon } from '../icons';
+import { lead, paper } from '../colors';
+import { labIcon, libraryIcon, plusIcon } from '../icons';
 import { getCounterString } from '../utils';
 
 const MAX_MEMBER_AVATARS = 5;
@@ -20,7 +20,7 @@ const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(10)} 0`,
 });
 
-const sectionStyles = css({
+const contactSectionStyles = css({
   alignItems: 'center',
 
   display: 'grid',
@@ -28,22 +28,37 @@ const sectionStyles = css({
 
   grid: `
     "members" auto
+    "lab"    auto
     "contact" auto
-    "update"  auto
   `,
 
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     grid: `
-      "contact members update" / max-content 1fr max-content
+      "contact members"
+      "lab lab"/ max-content 1fr
     `,
   },
 });
 
-const updateContainerStyles = css({
-  gridArea: 'update',
-  alignSelf: 'end',
-});
+const createSectionStyles = css({
+  alignItems: 'center',
 
+  display: 'grid',
+  gridColumnGap: `${16 / perRem}em`,
+
+  grid: `
+    "members" auto
+    "lab"    auto
+    "create" auto
+  `,
+
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    grid: `
+      "members create"
+      "lab lab"/ 1fr max-content
+    `,
+  },
+});
 const pointOfContactStyles = css({
   gridArea: 'contact',
   display: 'flex',
@@ -54,6 +69,7 @@ const pointOfContactStyles = css({
 
 const membersContainerStyles = css({
   gridArea: 'members',
+  padding: `${12 / perRem}em 0`,
 
   display: 'grid',
   gridAutoFlow: 'column',
@@ -65,6 +81,20 @@ const membersContainerStyles = css({
     ${6 / perRem}em
     minmax(auto, ${36 + MEMBER_AVATAR_BORDER_WIDTH * 2}px)
   `,
+});
+const labCountStyles = css({
+  gridArea: 'lab',
+  display: 'flex',
+  alignItems: 'center',
+  padding: `${12 / perRem}em 0`,
+  color: lead.rgb,
+});
+const createStyles = css({
+  gridArea: 'create',
+  display: 'flex',
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    display: 'block',
+  },
 });
 const membersListStyles = css({
   display: 'contents',
@@ -79,10 +109,14 @@ const listItemStyles = css({
   borderRadius: '50%',
   position: 'relative',
 });
-const labCountStyles = css({
+const dropdownButtonStyling = css({
   display: 'flex',
-  alignItems: 'center',
-  padding: `${12 / perRem}em 0`,
+  columnGap: `${9 / perRem}em`,
+});
+const dropdownItemStyling = css({
+  display: 'flex',
+  columnGap: `${12 / perRem}em`,
+  fontWeight: 'normal',
 });
 const iconStyles = css({
   display: 'inline-grid',
@@ -96,7 +130,6 @@ type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   id,
   displayName,
-  lastModifiedDate,
   members,
   pointOfContact,
   tools,
@@ -104,10 +137,13 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   labCount,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
+  const showCreateButton = isEnabled('ROMS_FORM');
   return (
     <header css={containerStyles}>
       <Display styleAsHeading={2}>Team {displayName}</Display>
-      <section css={sectionStyles}>
+      <section
+        css={showCreateButton ? createSectionStyles : contactSectionStyles}
+      >
         <div css={membersContainerStyles}>
           <ul css={membersListStyles}>
             {members
@@ -139,7 +175,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             </li>
           </ul>
         </div>
-        {pointOfContact && (
+        {pointOfContact && !showCreateButton && (
           <div css={pointOfContactStyles}>
             <Link
               buttonStyle
@@ -157,14 +193,36 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             <span>{getCounterString(labCount, 'Lab')}</span>
           </div>
         )}
-        {lastModifiedDate && (
-          <div css={updateContainerStyles}>
-            <Paragraph accent="lead">
-              <small>
-                Last updated:{' '}
-                {formatDistance(new Date(), new Date(lastModifiedDate))} ago
-              </small>
-            </Paragraph>
+        {showCreateButton && (
+          <div css={createStyles}>
+            <DropdownButton
+              buttonChildren={() => (
+                <span css={dropdownButtonStyling}>
+                  {plusIcon}
+                  Share an output
+                </span>
+              )}
+            >
+              <Anchor href="#">
+                <span css={dropdownItemStyling}>{libraryIcon} Article </span>
+              </Anchor>
+              <Anchor href="#">
+                <span css={dropdownItemStyling}>
+                  {libraryIcon} Bioinformatics
+                </span>
+              </Anchor>
+              <Anchor href="#">
+                <span css={dropdownItemStyling}>{libraryIcon} Dataset </span>
+              </Anchor>
+              <Anchor href="#">
+                <span css={dropdownItemStyling}>
+                  {libraryIcon} Lab Resource
+                </span>
+              </Anchor>
+              <Anchor href="#">
+                <span css={dropdownItemStyling}>{libraryIcon} Protocol </span>
+              </Anchor>
+            </DropdownButton>
           </div>
         )}
       </section>

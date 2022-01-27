@@ -1,7 +1,7 @@
 import {
   isResearchOutputType,
   isResearchOutputSubtype,
-  researchOutputMapSubtype
+  researchOutputMapSubtype,
 } from '../src/research-output';
 
 describe('Research Output Model', () => {
@@ -24,12 +24,8 @@ describe('Research Output Model', () => {
       expect(isResearchOutputSubtype('NotAReport')).toEqual(false);
     });
 
-    it('should map deprecated subtype', () => {
-      expect(researchOutputMapSubtype('Assays')).toEqual('Assay');
-    });
-
-    it('should pass not deprecated subtype', () => {
-      expect(researchOutputMapSubtype('Cloning')).toEqual('Cloning');
+    it('should map subtype', () => {
+      expect(researchOutputMapSubtype('Analysis')).toEqual('Analysis');
     });
 
     it('should return null on not known subtype', () => {

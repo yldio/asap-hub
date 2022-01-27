@@ -138,6 +138,14 @@ export default class ResearchOutputs implements ResearchOutputController {
     researchOutputData: ResearchOutput,
     teamId: string,
   ): Promise<Partial<ResearchOutputResponse>> {
+    const { id: researchOutputId } = await this.createResearchOutput(
+      researchOutputData,
+    );
+    await this.associateResearchOutputToTeam(teamId, researchOutputId);
+
+    return { id: researchOutputId };
+  }
+  private async createResearchOutput(researchOutputData: ResearchOutput) {
     const { usedInPublication, ...researchOutput } = parseToSquidex({
       ...researchOutputData,
       asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
@@ -146,25 +154,28 @@ export default class ResearchOutputs implements ResearchOutputController {
       ),
     });
 
-    const { id: researchOutputId } =
-      await this.researchOutputSquidexRestClient.create(
-        {
-          ...researchOutput,
-          usedInAPublication: usedInPublication,
-        } as RestResearchOutput['data'],
-        false,
-      );
+    return this.researchOutputSquidexRestClient.create(
+      {
+        ...researchOutput,
+        usedInAPublication: usedInPublication,
+      } as RestResearchOutput['data'],
+      false,
+    );
+  }
+
+  private async associateResearchOutputToTeam(
+    teamId: string,
+    researchOutputId: string,
+  ) {
     const {
       data: { outputs: existingOutputs = { iv: [] } },
     } = await this.teamSquidexRestClient.fetchById(teamId);
 
     await this.teamSquidexRestClient.patch(teamId, {
       outputs: {
-        iv: [...new Set([...existingOutputs.iv, researchOutputId])],
+        iv: [...existingOutputs.iv, researchOutputId],
       },
     });
-
-    return { id: researchOutputId };
   }
 }
 

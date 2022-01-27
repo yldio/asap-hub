@@ -5,7 +5,11 @@
 
 'use strict';
 
-import { removeAlgoliaIndex, moveAlgoliaIndex, removeAlgoliaRecords } from '@asap-hub/algolia';
+import {
+  removeAlgoliaIndex,
+  moveAlgoliaIndex,
+  removeAlgoliaRecords,
+} from '@asap-hub/algolia';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import * as importers from './import';

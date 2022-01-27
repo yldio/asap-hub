@@ -50,38 +50,11 @@ export const researchOutputSubtypes = [
   'Shipment Procedure',
   'Software',
   'Spectroscopy',
-  'Teem meeting',
+  'Team meeting',
   'Viral Vector',
 ] as const;
 
-export const researchOutputDeprecatedSubtypes = [
-  'Animal Models',
-  'Antibodies',
-  'Assays',
-  'Compounds',
-  'Imaging',
-  'Sample Collection',
-  'Web Portal',
-  'Mass Spectrometry',
-] as const;
-
 export type ResearchOutputSubtype = typeof researchOutputSubtypes[number];
-export type ResearchOutputDeprecatedSubtype =
-  typeof researchOutputDeprecatedSubtypes[number];
-
-export const researchOutputDeprecatedSubtypeToResearchOutputSubtypeMap: Record<
-  ResearchOutputDeprecatedSubtype,
-  ResearchOutputSubtype
-> = {
-  'Animal Models': 'Animal Model',
-  Antibodies: 'Antibody',
-  Assays: 'Assay',
-  Compounds: 'Compound',
-  Imaging: 'Microscopy & Imaging',
-  'Sample Collection': 'Sample Prep',
-  'Web Portal': 'Software',
-  'Mass Spectrometry': 'Spectroscopy',
-};
 
 export const isResearchOutputType = (
   type: string,
@@ -93,25 +66,11 @@ export const isResearchOutputSubtype = (
 ): subtype is ResearchOutputSubtype =>
   (researchOutputSubtypes as ReadonlyArray<string>).includes(subtype);
 
-export const isResearchOutputDeprecatedSubtype = (
-  subtype: string,
-): subtype is ResearchOutputDeprecatedSubtype =>
-  (researchOutputDeprecatedSubtypes as ReadonlyArray<string>).includes(subtype);
-
 export const researchOutputMapSubtype = (
   subtype?: string | null,
 ): ResearchOutputSubtype | null => {
-  if (subtype) {
-    if (isResearchOutputDeprecatedSubtype(subtype)) {
-      const mappedSubtype: ResearchOutputSubtype =
-        researchOutputDeprecatedSubtypeToResearchOutputSubtypeMap[subtype];
-
-      return isResearchOutputSubtype(mappedSubtype) ? mappedSubtype : null;
-    }
-
-    if (isResearchOutputSubtype(subtype)) {
-      return subtype;
-    }
+  if (subtype && isResearchOutputSubtype(subtype)) {
+    return subtype;
   }
 
   return null;

@@ -1,5 +1,5 @@
-import Got from 'got';
 import Boom from '@hapi/boom';
+import Got from 'got';
 import createClient, { GetAccessToken } from './auth';
 
 export interface Results<T> {

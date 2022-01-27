@@ -9,6 +9,7 @@ import {
   SquidexRestClient,
   SquidexRest,
   RestResearchOutput,
+  RestTeam,
 } from '@asap-hub/squidex';
 
 import {
@@ -31,28 +32,12 @@ import {
 export default class ResearchOutputs implements ResearchOutputController {
   squidexGraphqlClient: SquidexGraphqlClient;
   researchOutputSquidexRestClient: SquidexRestClient<RestResearchOutput>;
+  teamSquidexRestClient: SquidexRestClient<RestTeam>;
 
   constructor(squidexGraphqlClient: SquidexGraphqlClient) {
     this.squidexGraphqlClient = squidexGraphqlClient;
     this.researchOutputSquidexRestClient = new SquidexRest('research-outputs');
-  }
-  async create(researchOutputData: ResearchOutput): Promise<string> {
-    const { usedInPublication, ...researchOutput } = parseToSquidex({
-      ...researchOutputData,
-      asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
-      usedInPublication: convertBooleanToDecision(
-        researchOutputData.usedInPublication,
-      ),
-    });
-
-    const response = await this.researchOutputSquidexRestClient.create(
-      {
-        ...researchOutput,
-        usedInAPublication: usedInPublication,
-      } as RestResearchOutput['data'],
-      false,
-    );
-    return response.id;
+    this.teamSquidexRestClient = new SquidexRest('teams');
   }
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {
@@ -149,6 +134,40 @@ export default class ResearchOutputs implements ResearchOutputController {
       ),
     };
   }
+  async create(
+    researchOutputData: ResearchOutput,
+    teamId: string,
+  ): Promise<string> {
+    const { usedInPublication, ...researchOutput } = parseToSquidex({
+      ...researchOutputData,
+      asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
+      usedInPublication: convertBooleanToDecision(
+        researchOutputData.usedInPublication,
+      ),
+    });
+
+    const response = await this.researchOutputSquidexRestClient.create(
+      {
+        ...researchOutput,
+        usedInAPublication: usedInPublication,
+      } as RestResearchOutput['data'],
+      false,
+    );
+    const merge = async (id: string, outputs: string[]): Promise<void> => {
+      const {
+        data: { outputs: existingOutputs = { iv: [] } },
+      } = await this.teamSquidexRestClient.fetchById(id);
+
+      await this.teamSquidexRestClient.patch(id, {
+        outputs: {
+          iv: [...new Set([...existingOutputs.iv, ...outputs])],
+        },
+      });
+    };
+    await merge(teamId, [response.id]);
+
+    return response.id;
+  }
 }
 
 export interface ResearchOutputController {
@@ -160,5 +179,5 @@ export interface ResearchOutputController {
   }) => Promise<ListResearchOutputResponse>;
 
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
-  create: (researchOutput: ResearchOutput) => Promise<string>;
+  create: (researchOutput: ResearchOutput, teamId: string) => Promise<string>;
 }

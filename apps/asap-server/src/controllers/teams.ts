@@ -26,7 +26,6 @@ export interface TeamController {
     teamId: string,
     options?: FetchTeamOptions,
   ) => Promise<TeamResponse>;
-  merge: (id: string, outputs: string[]) => Promise<TeamResponse>;
 }
 
 type FetchTeamOptions = {
@@ -65,22 +64,6 @@ export default class Teams implements TeamController {
     );
 
     await this.teamSquidexRestClient.patch(id, { tools: { iv: cleanUpdate } });
-    return this.fetchById(id);
-  }
-
-  async merge(id: string, outputs: string[]): Promise<TeamResponse> {
-    const { outputs: existingOutputs = [] } = await this.fetchById(id);
-
-    await this.teamSquidexRestClient.patch(id, {
-      outputs: {
-        iv: [
-          ...new Set([
-            ...existingOutputs.map(({ id: outputId }) => outputId),
-            ...outputs,
-          ]),
-        ],
-      },
-    });
     return this.fetchById(id);
   }
 

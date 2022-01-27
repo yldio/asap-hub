@@ -65,17 +65,18 @@ export const researchOutputRouteFactory = (
       teamId,
     } = framework.validate('body', body, createSchema);
 
-    const id = await researchOutputController.create({
-      type,
-      link,
-      title,
-      asapFunded,
-      sharingStatus,
-      usedInPublication,
-      addedDate,
-    });
-
-    await teamController.merge(teamId, [id]);
+    const id = await researchOutputController.create(
+      {
+        type,
+        link,
+        title,
+        asapFunded,
+        sharingStatus,
+        usedInPublication,
+        addedDate,
+      },
+      teamId,
+    );
 
     res.status(201).json({ id });
   });

@@ -7,7 +7,6 @@ import { v4 as uuid } from 'uuid';
 
 import { useTeamById } from './state';
 import Frame, { SearchFrame } from '../../structure/Frame';
-import TeamOutput from './TeamOutput';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -15,6 +14,11 @@ const loadOutputs = () =>
   import(/* webpackChunkName: "network-team-outputs" */ './Outputs');
 const loadWorkspace = () =>
   import(/* webpackChunkName: "network-team-workspace" */ './Workspace');
+
+const loadTeamOutput = () =>
+  import(/* webpackChunkName: "network-team-workspace" */ './TeamOutput');
+
+const TeamOutput = lazy(loadTeamOutput);
 const About = lazy(loadAbout);
 const Outputs = lazy(loadOutputs);
 const Workspace = lazy(loadWorkspace);

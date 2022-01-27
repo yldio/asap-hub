@@ -1,7 +1,7 @@
 import {
   isResearchOutputType,
   isResearchOutputSubtype,
-  researchOutputMapSubtype
+  researchOutputMapSubtype,
 } from '../src/research-output';
 
 describe('Research Output Model', () => {

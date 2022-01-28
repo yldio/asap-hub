@@ -5,4 +5,4 @@ export default {
   component: TeamCreateOutputForm,
 };
 
-export const Normal = () => <TeamCreateOutputForm onCreate={() => {}} />;
+export const Normal = () => <TeamCreateOutputForm />;

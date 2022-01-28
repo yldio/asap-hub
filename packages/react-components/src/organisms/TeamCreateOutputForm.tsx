@@ -1,7 +1,8 @@
 import { css } from '@emotion/react';
 import { Button } from '../atoms';
-import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
+import { perRem } from '../pixels';
+import { noop } from '../utils';
 
 const controlsContainerStyles = css({
   display: 'grid',
@@ -15,7 +16,7 @@ const controlsContainerStyles = css({
 });
 
 const TeamCreateOutputForm: React.FC<{ onCreate: () => void }> = ({
-  onCreate,
+  onCreate = noop,
 }) => (
   <div css={controlsContainerStyles}>
     <Button primary onClick={onCreate}>

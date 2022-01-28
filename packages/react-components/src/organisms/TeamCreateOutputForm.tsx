@@ -15,7 +15,11 @@ const controlsContainerStyles = css({
   }em `,
 });
 
-const TeamCreateOutputForm: React.FC<{ onCreate: () => void }> = ({
+type TeamCreateOutputFormProps = {
+  onCreate?: () => void;
+};
+
+const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   onCreate = noop,
 }) => (
   <div css={controlsContainerStyles}>

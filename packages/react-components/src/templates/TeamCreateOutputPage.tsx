@@ -1,10 +1,8 @@
 import React, { ComponentProps } from 'react';
-
-import { TeamCreateOutputHeader, TeamCreateOutputForm } from '../organisms';
+import { TeamCreateOutputForm, TeamCreateOutputHeader } from '../organisms';
 
 type TeamCreateOutputPageProps = ComponentProps<typeof TeamCreateOutputHeader> &
-  ComponentProps<typeof TeamCreateOutputForm> &
-  ComponentProps<typeof TeamCreateOutputHeader>;
+  ComponentProps<typeof TeamCreateOutputForm>;
 
 const TeamCreateOutputPage: React.FC<TeamCreateOutputPageProps> = ({
   researchOutput,

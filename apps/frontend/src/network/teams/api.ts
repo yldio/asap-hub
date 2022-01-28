@@ -1,15 +1,16 @@
 import {
-  TeamResponse,
-  TeamPatchRequest,
   ListTeamResponse,
   ResearchOutput,
+  ResearchOutputResponse,
+  TeamPatchRequest,
+  TeamResponse,
 } from '@asap-hub/model';
-import { API_BASE_URL } from '../../config';
 import {
-  GetListOptions,
   createListApiUrl,
   createSentryHeaders,
+  GetListOptions,
 } from '../../api-util';
+import { API_BASE_URL } from '../../config';
 
 export const getTeam = async (
   id: string,
@@ -67,10 +68,15 @@ export const patchTeam = async (
   return resp.json();
 };
 
-export const createTeamResearchOutput = async (
+export type CreateTeamResearchOutput = (
   teamId: string,
   researchOutput: Partial<ResearchOutput>,
   authorization: string,
+) => Promise<Partial<ResearchOutputResponse>>;
+export const createTeamResearchOutput: CreateTeamResearchOutput = async (
+  teamId,
+  researchOutput,
+  authorization,
 ) => {
   const resp = await fetch(`${API_BASE_URL}/research-outputs`, {
     method: 'POST',

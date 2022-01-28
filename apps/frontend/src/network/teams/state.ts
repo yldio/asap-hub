@@ -1,23 +1,22 @@
-import useDeepCompareEffect from 'use-deep-compare-effect';
 import {
-  atomFamily,
-  selectorFamily,
-  useRecoilValue,
-  useSetRecoilState,
-  DefaultValue,
-  useRecoilState,
-} from 'recoil';
-import {
-  TeamResponse,
-  TeamPatchRequest,
   ListTeamResponse,
   ResearchOutput,
+  TeamPatchRequest,
+  TeamResponse,
 } from '@asap-hub/model';
-
-import { getTeam, patchTeam, getTeams, createTeamResearchOutput } from './api';
-import { authorizationState } from '../../auth/state';
+import {
+  atomFamily,
+  DefaultValue,
+  selectorFamily,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+} from 'recoil';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { GetListOptions } from '../../api-util';
+import { authorizationState } from '../../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
+import { createTeamResearchOutput, getTeam, getTeams, patchTeam } from './api';
 
 const teamIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,

@@ -1,10 +1,11 @@
+import { createListTeamResponse, createTeamResponse } from '@asap-hub/fixtures';
 import {
-  TeamResponse,
-  TeamPatchRequest,
   ListTeamResponse,
+  TeamPatchRequest,
+  TeamResponse,
 } from '@asap-hub/model';
-import { createTeamResponse, createListTeamResponse } from '@asap-hub/fixtures';
 import { GetListOptions } from '../../../api-util';
+import { CreateTeamResearchOutput } from '../api';
 
 export const getTeam = jest.fn(
   async (id: string): Promise<TeamResponse> => ({
@@ -28,4 +29,7 @@ export const getTeams = jest.fn(
     createListTeamResponse(pageSize ?? 10),
 );
 
-export const createTeamResearchOutput = jest.fn();
+export const createTeamResearchOutput: jest.Mocked<CreateTeamResearchOutput> =
+  jest.fn(async () => ({
+    id: 'research-output-id',
+  }));

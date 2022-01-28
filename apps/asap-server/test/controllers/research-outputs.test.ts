@@ -10,10 +10,7 @@ import {
   getSquidexResearchOutputGraphqlResponse,
   getSquidexResearchOutputsGraphqlResponse,
 } from '../fixtures/research-output.fixtures';
-import {
-  getSquidexGraphqlTeam,
-  getUpdateTeamResponse,
-} from '../fixtures/teams.fixtures';
+import { getSquidexGraphqlTeam } from '../fixtures/teams.fixtures';
 import {
   getGraphqlResponseFetchUsers,
   getGraphQLUser,
@@ -650,7 +647,7 @@ describe('ResearchOutputs controller', () => {
         .patch(`/api/content/${config.appName}/teams/${teamId}`, {
           outputs: { iv: ['output-1', researchOutputId] },
         })
-        .reply(200, getUpdateTeamResponse()); // response is not used
+        .reply(200);
 
       const id = await researchOutputs.create(researchOutputRequest);
       expect(id).toEqual({ id: researchOutputId });

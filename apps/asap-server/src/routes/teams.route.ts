@@ -27,7 +27,7 @@ export const teamRouteFactory = (
       'query',
       query,
       fetchQuerySchema,
-    ) as unknown as FetchTeamsOptions;
+    ) as FetchTeamsOptions;
 
     const result = await teamsController.fetch({
       ...options,
@@ -84,7 +84,7 @@ export const teamRouteFactory = (
         'query',
         query,
         querySchema,
-      ) as unknown as FetchOptions;
+      ) as FetchOptions;
 
       const result = await groupsController.fetchByTeamId(teamId, options);
 

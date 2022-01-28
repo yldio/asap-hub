@@ -1,5 +1,5 @@
-import { ListTeamResponse, TeamResponse, TeamTool } from '@asap-hub/model';
-import { RestTeam, Team, WebhookPayload } from '@asap-hub/squidex';
+import { ListTeamResponse, TeamResponse } from '@asap-hub/model';
+import { Team, WebhookPayload } from '@asap-hub/squidex';
 import {
   FetchTeamQuery,
   FetchTeamsQuery,
@@ -99,25 +99,6 @@ export const getSquidexTeamsGraphqlResponse = (): FetchTeamsQuery => ({
     total: 1,
     items: [getSquidexGraphqlTeam({})],
   },
-});
-
-export const getUpdateTeamResponse = (tools: TeamTool[] = []): RestTeam => ({
-  id: 'team-id-1',
-  data: {
-    displayName: { iv: 'Cristiano Ronaldo' },
-    applicationNumber: { iv: 'hofded' },
-    projectTitle: {
-      iv: 'Ce fe kok ob lovkad pim cukiviw lakwujuz vilid camiduci nim ca perkeb mekkaho wuculate re huppoljop.',
-    },
-    projectSummary: {
-      iv: 'Wi dalev fu jusjuh buw nauzi kas ma. Fo ajelo pu vaenusug ezuhsi resdudif ebsofak tav dan mumooz awgabu meki gicub bowec afegeir tozab umefarow.',
-    },
-    expertiseAndResourceTags: { iv: [] },
-    tools: { iv: tools },
-  },
-  created: '2020-09-08T16:35:28Z',
-  lastModified: '2020-09-08T16:35:28Z',
-  version: 42,
 });
 
 const getTeamsEvent = (

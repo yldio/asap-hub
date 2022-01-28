@@ -115,6 +115,8 @@ export {
   UserProfilePlaceholderCard,
   UserProfileRecentWorks,
   HelpSection,
+  TeamCreateOutputHeader,
+  TeamCreateOutputForm,
 } from './organisms';
 export {
   BasicLayout,
@@ -159,6 +161,7 @@ export {
   TeamProfileAbout,
   TeamProfileOutputs,
   TeamProfilePage,
+  TeamCreateOutputPage,
   TeamProfileWorkspace,
   ToolModal,
   UnsupportedBrowserPage,

@@ -23,6 +23,14 @@ describe('useFlags', () => {
     expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
   });
 
+  it('provides the enable flag method', () => {
+    const {
+      result: { current },
+    } = renderHook(useFlags);
+    current.enable('PERSISTENT_EXAMPLE');
+    expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
+  });
+
   it('provides the reset flags method', () => {
     disable('PERSISTENT_EXAMPLE');
     const {
@@ -79,6 +87,9 @@ describe('LiveFlagsProvider', () => {
         <button onClick={() => flags.disable('PERSISTENT_EXAMPLE')}>
           disable {index}
         </button>
+        <button onClick={() => flags.enable('PERSISTENT_EXAMPLE')}>
+          enable {index}
+        </button>
         <button onClick={flags.reset}>reset {index}</button>
       </div>
     );
@@ -92,6 +103,18 @@ describe('LiveFlagsProvider', () => {
 
     fireEvent.click(getByText('disable'));
     expect(getByText('enabled: false')).toBeVisible();
+  });
+
+  it('updates a component on enable', () => {
+    const { getByText } = render(<TestComponent />, {
+      wrapper: LiveFlagsProvider,
+    });
+
+    fireEvent.click(getByText('disable'));
+    expect(getByText('enabled: false')).toBeVisible();
+
+    fireEvent.click(getByText('enable'));
+    expect(getByText('enabled: true')).toBeVisible();
   });
 
   it('updates a component on reset', () => {

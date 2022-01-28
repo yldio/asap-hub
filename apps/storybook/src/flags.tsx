@@ -5,12 +5,13 @@ import { Flag } from '@asap-hub/flags';
 import { FlagsContext, useFlags } from '@asap-hub/react-context';
 
 const DisableFlag: FC<{ flag: Flag }> = ({ flag, children }) => {
-  const { isEnabled, disable, reset } = useFlags();
+  const { isEnabled, disable, reset, enable } = useFlags();
   return (
     <FlagsContext.Provider
       value={{
         disable,
         reset,
+        enable,
         isEnabled: (f) => (f === flag ? false : isEnabled(f)),
         setCurrentOverrides: () => {},
       }}

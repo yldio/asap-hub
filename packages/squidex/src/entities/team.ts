@@ -8,6 +8,7 @@ export interface Team<T = string> {
   projectTitle: string;
   proposal?: T[];
   expertiseAndResourceTags: string[];
+  outputs?: string[];
   tools?: {
     url: string;
     description?: string;

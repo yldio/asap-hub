@@ -223,9 +223,9 @@ describe('Team controller', () => {
 
         test('Should return all the team tools by default', async () => {
           const squidexTeamResponse = getGraphQlTeamsResponse();
-          const team1 = getGraphqlTeam();
-          const team2 = getGraphqlTeam();
-          const team3 = getGraphqlTeam();
+          const team1 = getGraphqlTeam({});
+          const team2 = getGraphqlTeam({});
+          const team3 = getGraphqlTeam({});
           team1.flatData!.tools = [];
           team2.flatData!.tools = tools;
           team3.flatData!.tools = tools;
@@ -284,9 +284,9 @@ describe('Team controller', () => {
           ];
 
           const squidexTeamResponse = getGraphQlTeamsResponse();
-          const team1 = getGraphqlTeam();
-          const team2 = getGraphqlTeam();
-          const team3 = getGraphqlTeam();
+          const team1 = getGraphqlTeam({});
+          const team2 = getGraphqlTeam({});
+          const team3 = getGraphqlTeam({});
           team1.flatData!.tools = brokenUrlTools;
           team2.flatData!.tools = brokenNameTools;
           team3.flatData!.tools = fullTools;
@@ -320,9 +320,9 @@ describe('Team controller', () => {
 
         test('Should select the teams for which the tools should be returned and mark the rest of them as undefined', async () => {
           const squidexTeamResponse = getGraphQlTeamsResponse();
-          const team1 = getGraphqlTeam(undefined, 'team-id-1');
-          const team2 = getGraphqlTeam(undefined, 'team-id-2');
-          const team3 = getGraphqlTeam(undefined, 'team-id-3');
+          const team1 = getGraphqlTeam({ id: 'team-id-1' });
+          const team2 = getGraphqlTeam({ id: 'team-id-2' });
+          const team3 = getGraphqlTeam({ id: 'team-id-3' });
           team1.flatData!.tools = tools;
           team2.flatData!.tools = tools;
           team3.flatData!.tools = [];
@@ -478,7 +478,7 @@ describe('Team controller', () => {
         test('Should return the tools as an empty array when they are defined as null in squidex', async () => {
           const teamId = 'team-id-1';
 
-          const tools = null;
+          const tools = null as unknown as GraphTeamTool[];
 
           nock(config.baseUrl)
             .post(`/api/content/${config.appName}/graphql`, {
@@ -487,7 +487,7 @@ describe('Team controller', () => {
                 id: teamId,
               },
             })
-            .reply(200, getGraphQlTeamResponse(tools as any));
+            .reply(200, getGraphQlTeamResponse({ tools }));
 
           const result = await teamController.fetchById(teamId);
 
@@ -513,7 +513,7 @@ describe('Team controller', () => {
                 id: teamId,
               },
             })
-            .reply(200, getGraphQlTeamResponse(tools));
+            .reply(200, getGraphQlTeamResponse({ tools }));
 
           const result = await teamController.fetchById(teamId);
 
@@ -543,7 +543,7 @@ describe('Team controller', () => {
                 id: teamId,
               },
             })
-            .reply(200, getGraphQlTeamResponse(tools));
+            .reply(200, getGraphQlTeamResponse({ tools }));
 
           const result = await teamController.fetchById(teamId, {
             showTools: true,
@@ -568,7 +568,7 @@ describe('Team controller', () => {
                 id: teamId,
               },
             })
-            .reply(200, getGraphQlTeamResponse(tools));
+            .reply(200, getGraphQlTeamResponse({ tools }));
 
           const result = await teamController.fetchById(teamId);
 
@@ -593,7 +593,7 @@ describe('Team controller', () => {
                 id: teamId,
               },
             })
-            .reply(200, getGraphQlTeamResponse(tools));
+            .reply(200, getGraphQlTeamResponse({ tools }));
 
           const result = await teamController.fetchById(teamId, {
             showTools: false,
@@ -890,7 +890,7 @@ describe('Team controller', () => {
             id: teamId,
           },
         })
-        .reply(200, getGraphQlTeamResponse(toolsResponse));
+        .reply(200, getGraphQlTeamResponse({ tools: toolsResponse }));
 
       const result = await teamController.update(teamId, [
         {

@@ -49,8 +49,46 @@ export const researchOutputRouteFactory = (
     },
   );
 
+  researchOutputRoutes.post('/research-outputs', async (req, res) => {
+    const { body } = req;
+
+    const {
+      type,
+      link,
+      title,
+      asapFunded,
+      sharingStatus,
+      usedInPublication,
+      addedDate,
+      teamId,
+    } = framework.validate('body', body, createSchema);
+
+    const researchOutput = await researchOutputController.create({
+      type,
+      link,
+      title,
+      asapFunded,
+      sharingStatus,
+      usedInPublication,
+      addedDate,
+      teamId,
+    });
+
+    res.status(201).json(researchOutput);
+  });
+
   return researchOutputRoutes;
 };
+const createSchema = Joi.object({
+  type: Joi.string().required(),
+  link: Joi.string().required(),
+  title: Joi.string().required(),
+  asapFunded: Joi.boolean(),
+  sharingStatus: Joi.string().required(),
+  usedInPublication: Joi.boolean(),
+  addedDate: Joi.string().required(),
+  teamId: Joi.string().required(),
+}).required();
 
 const querySchema = Joi.object({
   take: Joi.number(),

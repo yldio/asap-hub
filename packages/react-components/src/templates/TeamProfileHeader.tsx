@@ -1,15 +1,14 @@
-import { css } from '@emotion/react';
+import { isEnabled } from '@asap-hub/flags';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
-import { isEnabled } from '@asap-hub/flags';
-
-import { Anchor, Link, TabLink, Display, Avatar } from '../atoms';
-import { DropdownButton, TabNav } from '../molecules';
-import { contentSidePaddingWithNavigation } from '../layout';
-import { createMailTo } from '../mail';
-import { perRem, mobileScreen } from '../pixels';
+import { css } from '@emotion/react';
+import { Anchor, Avatar, Display, Link, TabLink } from '../atoms';
 import { lead, paper } from '../colors';
 import { labIcon, libraryIcon, plusIcon } from '../icons';
+import { contentSidePaddingWithNavigation } from '../layout';
+import { createMailTo } from '../mail';
+import { DropdownButton, TabNav } from '../molecules';
+import { mobileScreen, perRem } from '../pixels';
 import { getCounterString } from '../utils';
 
 const MAX_MEMBER_AVATARS = 5;
@@ -203,23 +202,27 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
                 </span>
               )}
             >
-              <Anchor href="#">
+              <Anchor href={route.createOutput({ outputType: 'article' }).$}>
                 <span css={dropdownItemStyling}>{libraryIcon} Article </span>
               </Anchor>
-              <Anchor href="#">
+              <Anchor
+                href={route.createOutput({ outputType: 'bioinformatics' }).$}
+              >
                 <span css={dropdownItemStyling}>
                   {libraryIcon} Bioinformatics
                 </span>
               </Anchor>
-              <Anchor href="#">
+              <Anchor href={route.createOutput({ outputType: 'dataset' }).$}>
                 <span css={dropdownItemStyling}>{libraryIcon} Dataset </span>
               </Anchor>
-              <Anchor href="#">
+              <Anchor
+                href={route.createOutput({ outputType: 'lab-resource' }).$}
+              >
                 <span css={dropdownItemStyling}>
                   {libraryIcon} Lab Resource
                 </span>
               </Anchor>
-              <Anchor href="#">
+              <Anchor href={route.createOutput({ outputType: 'protocol' }).$}>
                 <span css={dropdownItemStyling}>{libraryIcon} Protocol </span>
               </Anchor>
             </DropdownButton>

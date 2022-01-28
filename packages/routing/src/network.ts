@@ -65,11 +65,16 @@ const team = (() => {
   const tool = route('/:toolIndex', { toolIndex: stringParser }, {});
   const tools = route('/tools', {}, { tool });
   const workspace = route('/workspace', {}, { tools });
+  const createOutput = route(
+    '/create-output/:outputType',
+    { outputType: stringParser },
+    {},
+  );
 
   return route(
     '/:teamId',
     { teamId: stringParser },
-    { about, workspace, outputs },
+    { about, workspace, outputs, createOutput },
   );
 })();
 const teams = route('/teams', {}, { team });

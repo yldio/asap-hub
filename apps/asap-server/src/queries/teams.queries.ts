@@ -20,6 +20,9 @@ export const teamsContentQueryFragment = gql`
         name
         url
       }
+      outputs {
+        id
+      }
     }
     referencingUsersContents(filter: "data/onboarded/iv eq true") {
       id

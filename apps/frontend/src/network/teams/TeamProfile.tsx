@@ -1,12 +1,10 @@
-import { useEffect, FC, lazy, useState } from 'react';
-import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
-import { TeamProfilePage, NotFoundPage } from '@asap-hub/react-components';
-
+import { NotFoundPage, TeamProfilePage } from '@asap-hub/react-components';
 import { network, useRouteParams } from '@asap-hub/routing';
+import { FC, lazy, useEffect, useState } from 'react';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
-
-import { useTeamById } from './state';
 import Frame, { SearchFrame } from '../../structure/Frame';
+import { useTeamById } from './state';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -14,6 +12,11 @@ const loadOutputs = () =>
   import(/* webpackChunkName: "network-team-outputs" */ './Outputs');
 const loadWorkspace = () =>
   import(/* webpackChunkName: "network-team-workspace" */ './Workspace');
+
+const loadTeamOutput = () =>
+  import(/* webpackChunkName: "network-team-workspace" */ './TeamOutput');
+
+const TeamOutput = lazy(loadTeamOutput);
 const About = lazy(loadAbout);
 const Outputs = lazy(loadOutputs);
 const Workspace = lazy(loadWorkspace);
@@ -27,6 +30,7 @@ const TeamProfile: FC<Record<string, never>> = () => {
   const { teamId } = useRouteParams(route);
 
   const team = useTeamById(teamId);
+
   useEffect(() => {
     loadAbout()
       .then(team?.tools ? loadWorkspace : undefined)
@@ -35,8 +39,13 @@ const TeamProfile: FC<Record<string, never>> = () => {
   if (team) {
     return (
       <Frame title={team.displayName}>
-        <TeamProfilePage teamListElementId={teamListElementId} {...team}>
-          <Switch>
+        <Switch>
+          <Route path={path + route({ teamId }).createOutput.template}>
+            <Frame title="Share Output">
+              <TeamOutput teamId={teamId} />
+            </Frame>
+          </Route>
+          <TeamProfilePage teamListElementId={teamListElementId} {...team}>
             <Route path={path + route({ teamId }).about.template}>
               <Frame title="About">
                 <About teamListElementId={teamListElementId} team={team} />
@@ -55,8 +64,8 @@ const TeamProfile: FC<Record<string, never>> = () => {
               </Route>
             )}
             <Redirect to={route({ teamId }).about({}).$} />
-          </Switch>
-        </TeamProfilePage>
+          </TeamProfilePage>
+        </Switch>
       </Frame>
     );
   }

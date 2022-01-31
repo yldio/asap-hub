@@ -1,0 +1,16 @@
+name: Remove a single environment
+on:
+  workflow_dispatch:
+    inputs:
+      prNumber:
+        required: true
+        type: string
+        description: Choose which PR number to destroy
+jobs:
+  log-the-inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "PR Number: $PR_NUMBER"
+        env:
+          PR_NUMBER: ${{ github.event.inputs.prNumber }}

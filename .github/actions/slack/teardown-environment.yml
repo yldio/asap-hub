@@ -1,0 +1,15 @@
+on:
+  workflow_call:
+    inputs:
+      prName:
+        required: true
+        type: string
+        description: Choose which PR number to destroy
+    jobs:
+      log-the-inputs:
+        runs-on: ubuntu-latest
+        steps:
+          - run: |
+              echo "PR Number: $PR_NUMBER"
+            env:
+              PR_NUMBER: ${{ inputs.prNumber }}

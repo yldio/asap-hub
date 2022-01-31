@@ -217,7 +217,8 @@
                 "Co-PI (Core Leadership)",
                 "Project Manager",
                 "Collaborating PI",
-                "Key Personnel"
+                "Key Personnel",
+                "ASAP Staff"
               ],
               "isUnique": false,
               "inlineEditable": true,

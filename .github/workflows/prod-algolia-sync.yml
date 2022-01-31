@@ -20,7 +20,7 @@ jobs:
       - name: Build
         run: yarn build
       - name: Download the Research Outputs
-        run: yarn ro:export
+        run: yarn export:entity research-outputs -f ro.json
       - name: Setup Environment Variables
         run: |
           echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-prod' --query Parameter.Value --output text)" >> $GITHUB_ENV
@@ -29,9 +29,11 @@ jobs:
           echo "ALGOLIA_RESEARCH_OUTPUT_INDEX=asap-hub_research_outputs_prod" >> $GITHUB_ENV
           echo "ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE=asap-hub_research_outputs_prod_restore" >> $GITHUB_ENV
       - name: Copy index settings to a temporary index
-        run: yarn run algolia transferindexconfig -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE
+        run: yarn workspace @asap-hub/algolia run algolia transferindexconfig -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE
       - name: Import records into the temporary index
-        run: yarn run algolia import -s ./ro.json -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE -t ./apps/asap-server/scripts/algolia-transformation.js
+        env:
+          ENTITY_TYPE: 'research-output'
+        run: yarn workspace @asap-hub/algolia run algolia import -s "../../ro.json" -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE -t ./scripts/algolia-transformation.js
       - name: Move temporary index to the prod one
         run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE -i $ALGOLIA_RESEARCH_OUTPUT_INDEX
       - uses: ./.github/actions/slack/

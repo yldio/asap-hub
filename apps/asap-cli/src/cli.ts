@@ -5,11 +5,14 @@
 
 'use strict';
 
+import {
+  removeAlgoliaIndex,
+  moveAlgoliaIndex,
+  removeAlgoliaRecords,
+} from '@asap-hub/algolia';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import * as importers from './import';
-import { removeAlgoliaIndex } from './algolia/remove-index';
-import { moveAlgoliaIndex } from './algolia/move-index';
 
 // eslint-disable-next-line no-unused-expressions
 yargs(hideBin(process.argv))
@@ -114,6 +117,53 @@ yargs(hideBin(process.argv))
         }),
     handler: async ({ path, entity }) =>
       importers[entity as 'users'](path as string),
+  })
+  .command({
+    command: 'algolia:remove-records',
+    describe: 'removes all the records by the entity type',
+    builder: (cli) =>
+      cli
+        .option('appid', {
+          alias: 'a',
+          type: 'string',
+          description: 'The App ID',
+          demandOption: true,
+        })
+        .option('apikey', {
+          alias: 'k',
+          type: 'string',
+          description: 'The API key',
+          demandOption: true,
+        })
+        .option('index', {
+          alias: 'n',
+          type: 'string',
+          description: 'Name of the index to remove',
+          demandOption: true,
+        })
+        .option('entityType', {
+          alias: 'e',
+          type: 'string',
+          description: 'Entity meta type',
+          demandOption: true,
+        }),
+    handler: async ({
+      index,
+      appid,
+      apikey,
+      entityType,
+    }: {
+      index: string;
+      appid: string;
+      apikey: string;
+      entityType: string;
+    }) =>
+      removeAlgoliaRecords({
+        algoliaAppId: appid,
+        algoliaCiApiKey: apikey,
+        indexName: index,
+        entityType,
+      }),
   })
   .demandCommand(1)
   .help('h')

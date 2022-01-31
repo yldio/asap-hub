@@ -5,7 +5,10 @@ import { FetchOptions } from '../../src/utils/types';
 import * as fixtures from '../fixtures/groups.fixtures';
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { teamControllerMock } from '../mocks/team-controller.mock';
-import { getListTeamResponse, teamResponse } from '../fixtures/teams.fixtures';
+import {
+  getListTeamResponse,
+  getTeamResponse,
+} from '../fixtures/teams.fixtures';
 import { AuthHandler } from '../../src/middleware/auth-handler';
 import { userMock } from '../../src/utils/__mocks__/validate-token';
 import { User } from '@asap-hub/auth';
@@ -193,6 +196,7 @@ describe('/teams/ route', () => {
   });
 
   describe('GET /teams/{team_id}', () => {
+    const teamResponse = getTeamResponse();
     test('Should return a 404 error when the team or members are not found', async () => {
       teamControllerMock.fetchById.mockRejectedValueOnce(Boom.notFound());
 
@@ -249,6 +253,7 @@ describe('/teams/ route', () => {
   });
 
   describe('PATCH /teams/{team_id}', () => {
+    const teamResponse = getTeamResponse();
     test('Should return a 400 error when the payload is invalid', async () => {
       const response = await supertest(app).patch('/teams/123').send({
         tools: 'something',

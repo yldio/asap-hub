@@ -1,3 +1,7 @@
+import { SquidexGraphqlClient } from '@asap-hub/squidex';
+import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
+import { loadSchemaSync } from '@graphql-tools/load';
+import { addMocksToSchema, createMockStore } from '@graphql-tools/mock';
 import {
   ASTNode,
   DocumentNode,
@@ -5,18 +9,14 @@ import {
   graphql,
   print,
 } from 'graphql';
-import { addMocksToSchema, createMockStore } from '@graphql-tools/mock';
-import { loadSchemaSync } from '@graphql-tools/load';
-import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
-import { SquidexGraphqlClient } from '@asap-hub/squidex';
-import { getSquidexGraphqlResearchOutput } from '../fixtures/research-output.fixtures';
-import { getGraphQLUser } from '../fixtures/users.fixtures';
-import { getGraphqlTeam } from '../fixtures/teams.fixtures';
-import { getSquidexGraphqlGroup } from '../fixtures/groups.fixtures';
-import { getSquidexGraphqlDiscover } from '../fixtures/discover.fixtures';
-import { getSquidexGraphqlDashboard } from '../fixtures/dashboard.fixtures';
 import { getSquidexGraphqlCalendar } from '../fixtures/calendars.fixtures';
+import { getSquidexGraphqlDashboard } from '../fixtures/dashboard.fixtures';
+import { getSquidexGraphqlDiscover } from '../fixtures/discover.fixtures';
 import { getSquidexGraphqlEvents } from '../fixtures/events.fixtures';
+import { getSquidexGraphqlGroup } from '../fixtures/groups.fixtures';
+import { getSquidexGraphqlResearchOutput } from '../fixtures/research-output.fixtures';
+import { getSquidexGraphqlTeam } from '../fixtures/teams.fixtures';
+import { getGraphQLUser } from '../fixtures/users.fixtures';
 
 export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
   const schema = loadSchemaSync(
@@ -40,7 +40,7 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     ResearchOutputsResultDto: resultDto,
     Users: () => getGraphQLUser(),
     UsersResultDto: resultDto,
-    Teams: () => getGraphqlTeam({}),
+    Teams: () => getSquidexGraphqlTeam({}),
     TeamsResultDto: resultDto,
     Discover: () => getSquidexGraphqlDiscover(),
     DiscoveryResultDto: resultDto,

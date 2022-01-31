@@ -10,10 +10,7 @@ import {
   getSquidexResearchOutputGraphqlResponse,
   getSquidexResearchOutputsGraphqlResponse,
 } from '../fixtures/research-output.fixtures';
-import {
-  getGraphqlTeam,
-  getUpdateTeamResponse,
-} from '../fixtures/teams.fixtures';
+import { getSquidexGraphqlTeam } from '../fixtures/teams.fixtures';
 import {
   getGraphqlResponseFetchUsers,
   getGraphQLUser,
@@ -345,7 +342,7 @@ describe('ResearchOutputs controller', () => {
         const pm3 = getGraphQLUser();
         pm3.flatData.email = 'pm3@example.com';
         pm3.flatData.teams![0]!.role = 'Project Manager';
-        const team = getGraphqlTeam({});
+        const team = getSquidexGraphqlTeam({});
         team.referencingUsersContents = [pm3];
         squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents!.push(
           team,
@@ -378,7 +375,7 @@ describe('ResearchOutputs controller', () => {
           [pm1, pm2];
 
         // Same one on another team
-        const team = getGraphqlTeam({});
+        const team = getSquidexGraphqlTeam({});
         team.referencingUsersContents = [pm1];
         squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents!.push(
           team,
@@ -650,7 +647,7 @@ describe('ResearchOutputs controller', () => {
         .patch(`/api/content/${config.appName}/teams/${teamId}`, {
           outputs: { iv: ['output-1', researchOutputId] },
         })
-        .reply(200, getUpdateTeamResponse()); // response is not used
+        .reply(200);
 
       const id = await researchOutputs.create(researchOutputRequest);
       expect(id).toEqual({ id: researchOutputId });

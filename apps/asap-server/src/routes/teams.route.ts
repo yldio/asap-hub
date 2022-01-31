@@ -9,9 +9,8 @@ import { framework } from '@asap-hub/services-common';
 import Boom from '@hapi/boom';
 import Joi from '@hapi/joi';
 import { Response, Router } from 'express';
-
 import { GroupController } from '../controllers/groups';
-import { TeamController } from '../controllers/teams';
+import { FetchTeamsOptions, TeamController } from '../controllers/teams';
 import { teamUpdateSchema } from '../entities/team';
 import { FetchOptions } from '../utils/types';
 
@@ -28,12 +27,7 @@ export const teamRouteFactory = (
       'query',
       query,
       fetchQuerySchema,
-    ) as unknown as {
-      take: number;
-      skip: number;
-      search?: string;
-      filter?: string[] | string;
-    };
+    ) as FetchTeamsOptions;
 
     const result = await teamsController.fetch({
       ...options,
@@ -90,7 +84,7 @@ export const teamRouteFactory = (
         'query',
         query,
         querySchema,
-      ) as unknown as FetchOptions;
+      ) as FetchOptions;
 
       const result = await groupsController.fetchByTeamId(teamId, options);
 

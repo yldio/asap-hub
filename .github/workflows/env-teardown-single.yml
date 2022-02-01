@@ -2,6 +2,12 @@ name: Remove a single environment
 on:
   pull_request:
     types: [assigned]
+  workflow_dispatch:
+    inputs:
+      prNumber:
+        required: true
+        type: string
+        description: Choose which PR number to destroy
 jobs:
   log-the-inputs:
     runs-on: ubuntu-latest
@@ -15,7 +21,8 @@ jobs:
     container:
       image: registry.gitlab.com/yldio/asap-hub/node-python-sq:latest
     env:
-      SLS_STAGE: ${{ github.event.number || github.event.inputs.prNumber }}
+      PR_NUMBER: ${{ github.event.number || github.event.inputs.prNumber }}}
+      SLS_STAGE: ${{ env.PR_NUMBER }}
       NODE_ENV: 'production'
       ASAP_HOSTNAME: 'hub.asap.science'
       ASAP_API_URL: 'https://api-${{  github.event.number }}.hub.asap.science'
@@ -31,8 +38,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Rebuild dependencies
-        # run: yarn rebuild
-        run: echo $SLS_STAGE
+        run: yarn rebuild
+      - name: log environment
+        run: echo ${{ env.SLS_STAGE }}
+      # - name: Remove CF Stack
+      #   if: ${{ env.SLS_STAGE != 'production' }}
+      #   run: yarn sls remove --verbose
+      #   continue-on-error: true
+      # - name: Delete PR Squidex App
+      #   run: python ci/integration/scripts/delete-app.py
 
   delete_algolia_indice:
     runs-on: ubuntu-18.04
@@ -46,4 +60,12 @@ jobs:
       - name: echo the index
         run: |
           export ALGOLIA_INDEX=asap-hub_research_outputs_CI-$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          export ALGOLIA_INDEX2=asap-hub_research_outputs_CI-{{ github.event.number }}
           echo $ALGOLIA_INDEX
+          echo $ALGOLIA_INDEX2
+  # pr_status:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #       - uses: actions/github-script@v5
+  #         with:
+  #           script: |

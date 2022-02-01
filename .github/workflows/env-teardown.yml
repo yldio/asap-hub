@@ -1,7 +1,7 @@
 name: Remove Environment
 on:
   pull_request:
-    types: [assigned]
+    types: [closed]
   workflow_dispatch:
     inputs:
       prNumber:

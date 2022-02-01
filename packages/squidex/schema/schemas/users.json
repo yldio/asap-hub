@@ -10,7 +10,10 @@
       "label": "Users",
       "validateOnPublish": false
     },
-    "scripts": {},
+    "scripts": {
+      "create": "if(JSON.stringify(ctx.data.teams.iv).indexOf('ASAP Staff') > 0  && ctx.data.role.iv !== 'Staff') {\n    reject('Error message goes here')\n}",
+      "update": "if(JSON.stringify(ctx.data.teams.iv).indexOf('ASAP Staff') > 0  && ctx.data.role.iv !== 'Staff') {\n    reject('Error message goes here')\n}"
+    },
     "fieldsInReferences": ["firstName", "lastName", "orcid"],
     "fieldsInLists": [
       "meta.status.color",

@@ -9,29 +9,33 @@ on:
         type: string
         description: Choose which PR number to destroy
 jobs:
-  log-the-inputs:
+  setup:
     runs-on: ubuntu-latest
+    env:
+      PR_NUMBER: ${{ github.event.number || github.event.inputs.prNumber }}
+    outputs:
+      pr_number: ${{ steps.build_step.outputs.pr_number }}
     steps:
-      - run: |
-          echo "PR Number: $PR_NUMBER"
-        env:
-          PR_NUMBER: ${{ github.event.number }}
+      - name: Build
+        id: build_step
+        run: |
+          echo "::set-output name=pr_number::$PR_NUMBER"
   sls_teardown:
+    needs: setup
     runs-on: ubuntu-18.04
     container:
       image: registry.gitlab.com/yldio/asap-hub/node-python-sq:latest
     env:
-      PR_NUMBER: ${{ github.event.number || github.event.inputs.prNumber }}}
-      SLS_STAGE: ${{ env.PR_NUMBER }}
+      SLS_STAGE: ${{ needs.setup.outputs.pr_number }}
       NODE_ENV: 'production'
       ASAP_HOSTNAME: 'hub.asap.science'
-      ASAP_API_URL: 'https://api-${{  github.event.number }}.hub.asap.science'
-      ASAP_APP_URL: 'https://${{ github.event.number  }}.hub.asap.science'
+      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr_number }}.hub.asap.science'
+      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr_number }}.hub.asap.science'
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
-      SQUIDEX_APP_NAME: ${{ github.event.number }}
+      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr_number }}
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
     steps:
@@ -39,16 +43,15 @@ jobs:
         uses: actions/checkout@v2
       - name: Rebuild dependencies
         run: yarn rebuild
-      - name: log environment
-        run: echo ${{ env.SLS_STAGE }}
-      # - name: Remove CF Stack
-      #   if: ${{ env.SLS_STAGE != 'production' }}
-      #   run: yarn sls remove --verbose
-      #   continue-on-error: true
-      # - name: Delete PR Squidex App
-      #   run: python ci/integration/scripts/delete-app.py
+      - name: Remove CF Stack
+        if: ${{ env.SLS_STAGE != 'production' }}
+        run: yarn sls remove --verbose
+        continue-on-error: true
+      - name: Delete PR Squidex App
+        run: python ci/integration/scripts/delete-app.py
 
   delete_algolia_indice:
+    needs: setup
     runs-on: ubuntu-18.04
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -57,15 +60,23 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: echo the index
+      - name: Fetch the Algolia keys
         run: |
-          export ALGOLIA_INDEX=asap-hub_research_outputs_CI-$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          export ALGOLIA_INDEX2=asap-hub_research_outputs_CI-{{ github.event.number }}
-          echo $ALGOLIA_INDEX
-          echo $ALGOLIA_INDEX2
-  # pr_status:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #       - uses: actions/github-script@v5
-  #         with:
-  #           script: |
+          echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
+          echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
+      - name: Delete the index
+        run: |
+          cd apps/asap-server
+          export ALGOLIA_INDEX=asap-hub_research_outputs_CI-${{ needs.setup.outputs.pr_number }}
+          yarn workspace @asap-hub/asap-server run algolia deleteindicespattern -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -r "^$ALGOLIA_INDEX$" -x false
+  notify_failure:
+    runs-on: ubuntu-18.04
+    needs: [sls_teardown, delete_algolia_indice]
+    if: failure()
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: ./.github/actions/slack/
+        with:
+          message: Environment teardown
+          webhook: ${{ secrets.SLACK_WEBHOOK }}

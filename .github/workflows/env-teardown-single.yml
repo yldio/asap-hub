@@ -43,9 +43,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Fetch the Algolia keys
+      - name: echo the index
         run: |
           export ALGOLIA_INDEX=asap-hub_research_outputs_CI-$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-      - name: Delete the index
-        run: |
           echo $ALGOLIA_INDEX

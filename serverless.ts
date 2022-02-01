@@ -315,6 +315,26 @@ const serverlessConfig: AWS = {
         ALGOLIA_INDEX_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
       },
     },
+    indexUser: {
+      handler:
+        'apps/asap-server/src/handlers/user/index-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: ['asap.user'],
+              'detail-type': [
+                'UserPublished',
+              ],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_INDEX_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+      },
+    },
     eventsUpdated: {
       timeout: 300,
       handler:

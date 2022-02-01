@@ -2,13 +2,19 @@ name: Remove Environment
 on:
   pull_request:
     types: [closed]
+  workflow_dispatch:
+    inputs:
+      prNumber:
+        required: true
+        type: string
+        description: Choose which PR number to destroy
 jobs:
   sls_teardown:
     runs-on: ubuntu-18.04
     container:
       image: registry.gitlab.com/yldio/asap-hub/node-python-sq:latest
     env:
-      SLS_STAGE: ${{ github.event.number }}
+      SLS_STAGE: ${{ github.event.number || github.event.inputs.prNumber }}
       NODE_ENV: 'production'
       ASAP_HOSTNAME: 'hub.asap.science'
       ASAP_API_URL: 'https://api-${{  github.event.number }}.hub.asap.science'
@@ -24,39 +30,40 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Rebuild dependencies
-        run: yarn rebuild
-      - name: Remove CF Stack
-        if: ${{ env.SLS_STAGE != 'production' }}
-        run: yarn sls remove --verbose
-        continue-on-error: true
-      - name: Delete PR Squidex App
-        run: python ci/integration/scripts/delete-app.py
-  delete_algolia_indice:
-    runs-on: ubuntu-18.04
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_DEFAULT_REGION: 'us-east-1'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Fetch the Algolia keys
-        run: |
-          echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
-          echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
-      - name: Delete the index
-        run: |
-          cd apps/asap-server
-          export ALGOLIA_INDEX=asap-hub_research_outputs_CI-$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          yarn workspace @asap-hub/asap-server run algolia deleteindicespattern -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -r "^$ALGOLIA_INDEX$" -x false
-  notify_failure:
-    runs-on: ubuntu-18.04
-    needs: [sls_teardown, delete_algolia_indice]
-    if: failure()
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - uses: ./.github/actions/slack/
-        with:
-          message: Environment teardown
-          webhook: ${{ secrets.SLACK_WEBHOOK }}
+        # run: yarn rebuild
+        run: echo $SLS_STAGE
+      # - name: Remove CF Stack
+      #   if: ${{ env.SLS_STAGE != 'production' }}
+      #   run: yarn sls remove --verbose
+      #   continue-on-error: true
+      # - name: Delete PR Squidex App
+      #   run: python ci/integration/scripts/delete-app.py
+  # delete_algolia_indice:
+  #   runs-on: ubuntu-18.04
+  #   env:
+  #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #     AWS_DEFAULT_REGION: 'us-east-1'
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: Fetch the Algolia keys
+  #       run: |
+  #         echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
+  #         echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
+  #     - name: Delete the index
+  #       run: |
+  #         cd apps/asap-server
+  #         export ALGOLIA_INDEX=asap-hub_research_outputs_CI-$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+  #         yarn workspace @asap-hub/asap-server run algolia deleteindicespattern -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -r "^$ALGOLIA_INDEX$" -x false
+  # notify_failure:
+  #   runs-on: ubuntu-18.04
+  #   needs: [sls_teardown, delete_algolia_indice]
+  #   if: failure()
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - uses: ./.github/actions/slack/
+  #       with:
+  #         message: Environment teardown
+  #         webhook: ${{ secrets.SLACK_WEBHOOK }}

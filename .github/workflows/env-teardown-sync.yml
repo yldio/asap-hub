@@ -26,15 +26,25 @@ jobs:
       - uses: actions/github-script@v5
         with:
           script: |
-            const availableApps = ${{ steps.get_envs.outputs.availableApps }};
+            const availableApps = ${{ steps.get_envs.outputs.availableApps}} ;
             const openPrsRequest = await github.rest.pulls.list({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              state: 'open'
+              state: 'open',
             });
-            const openPrs = openPrsRequest.data.map(({number}) => number.toString() );
+            const openPrs = openPrsRequest.data.map(({ number }) => number.toString());
+            const badPrs = availableApps.filter((prNumber) => !openPrs.includes(prNumber));
             availableApps
               .filter((prNumber) => !openPrs.includes(prNumber))
-              .forEach(
-                console.log
-              )
+              .forEach((id) => {
+                console.log(id);
+              });
+            github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'env-teardown.yml',
+              ref: 'fix/environment-teardown-2',
+              inputs: {
+                prNumber: badPrs[0],
+              },
+            });

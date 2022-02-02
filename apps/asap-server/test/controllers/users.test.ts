@@ -75,7 +75,7 @@ describe('Users controller', () => {
       await usersMockGraphqlClient.fetch(fetchOptions);
 
       const filterQuery =
-        "(data/teams/iv/role eq 'role' or data/role/iv eq 'Staff')" +
+        "(data/teams/iv/role eq 'role' or data/teams/iv/role eq 'Staff')" +
         ' and' +
         ' data/onboarded/iv eq true' +
         ' and' +

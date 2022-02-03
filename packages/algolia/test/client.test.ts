@@ -13,7 +13,7 @@ describe('Algolia Search Client', () => {
   test('Should save the entity', async () => {
     const researchOutput = createResearchOutputResponse();
 
-    await algoliaSearchClient.save('research-output', researchOutput);
+    await algoliaSearchClient.save(researchOutput);
 
     expect(algoliaSearchIndex.saveObject).toBeCalledWith({
       ...researchOutput,
@@ -54,9 +54,7 @@ describe('Algolia Search Client', () => {
   });
 
   test('Should search user entity', async () => {
-    algoliaSearchIndex.search.mockResolvedValueOnce(
-      searchUserResponse,
-    );
+    algoliaSearchIndex.search.mockResolvedValueOnce(searchUserResponse);
 
     const response = await algoliaSearchClient.searchEntity('user', 'query');
 

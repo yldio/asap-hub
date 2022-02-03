@@ -1,4 +1,4 @@
-import { SearchIndex } from 'algoliasearch';
+import { SearchClient, SearchIndex } from 'algoliasearch';
 
 export const getAlgoliaSearchIndexMock = (): jest.Mocked<SearchIndex> =>
   ({

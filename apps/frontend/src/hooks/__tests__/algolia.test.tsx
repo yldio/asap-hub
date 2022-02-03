@@ -1,31 +1,22 @@
-import {
-  algoliasearchLite,
-  SearchClient,
-  SearchIndex,
-} from '@asap-hub/algolia';
-import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '@asap-hub/frontend/src/config';
+import { ALGOLIA_INDEX } from '@asap-hub/frontend/src/config';
 import { renderHook } from '@testing-library/react-hooks';
 import { RecoilRoot } from 'recoil';
+import { algoliaSearchClientFactory } from '@asap-hub/algolia';
 
 import { useAlgolia } from '../algolia';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
-var mockInitIndex: jest.MockedFunction<SearchClient['initIndex']>;
+var mockAlgoliaSearchClientFactory: jest.MockedFunction<
+  typeof algoliaSearchClientFactory
+>;
 
 jest.mock('@asap-hub/algolia', () => {
-  mockInitIndex = jest.fn();
-  mockInitIndex.mockImplementation(() => ({} as SearchIndex));
-
+  mockAlgoliaSearchClientFactory = jest.fn().mockReturnValue({});
   return {
     ...jest.requireActual('@asap-hub/algolia'),
-    algoliasearchLite: jest.fn().mockImplementation(() => ({
-      initIndex: mockInitIndex,
-    })),
+    algoliaSearchClientFactory: mockAlgoliaSearchClientFactory,
   };
 });
-const mockAlgoliasearch = algoliasearchLite as jest.MockedFunction<
-  typeof algoliasearchLite
->;
 
 describe('useAlgolia', () => {
   it('throws when user is not provided', () => {
@@ -45,12 +36,7 @@ describe('useAlgolia', () => {
       ),
     });
     await waitForNextUpdate();
-    expect(mockInitIndex).toHaveBeenCalledWith(ALGOLIA_INDEX);
-    expect(mockAlgoliasearch).toHaveBeenCalledWith(
-      ALGOLIA_APP_ID,
-      'algolia key',
-    );
+    expect(mockAlgoliaSearchClientFactory).toHaveBeenCalledWith(ALGOLIA_INDEX);
     expect(result.current.client).toBeDefined();
-    expect(result.current.index).toBeDefined();
   });
 });

@@ -10239,6 +10239,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],
+            ["@types/node", "npm:17.0.14"],
             ["algoliasearch", "npm:4.11.0"]
           ],
           "linkType": "SOFT",
@@ -26502,6 +26503,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-14.17.18-89c5bb75f1-386f1ce851.zip/node_modules/@types/node/",
           "packageDependencies": [
             ["@types/node", "npm:14.17.18"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:17.0.14", {
+          "packageLocation": "./.yarn/cache/@types-node-npm-17.0.14-b146771fcf-cc059ce296.zip/node_modules/@types/node/",
+          "packageDependencies": [
+            ["@types/node", "npm:17.0.14"]
           ],
           "linkType": "HARD",
         }]

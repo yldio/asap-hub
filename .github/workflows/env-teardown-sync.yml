@@ -10,6 +10,8 @@ jobs:
     env:
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
+    outputs:
+      badPrs: ${{ steps.bad_prs.outputs.badPrs }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -24,6 +26,8 @@ jobs:
         run: |
           echo "The outputs were ${{ steps.get_envs.outputs.availableApps }}"
       - uses: actions/github-script@v5
+        id: bad_prs
+        name: Find PRs with bad Squidex Environments
         with:
           script: |
             const availableApps = ${{ steps.get_envs.outputs.availableApps}} ;
@@ -34,17 +38,35 @@ jobs:
             });
             const openPrs = openPrsRequest.data.map(({ number }) => number.toString());
             const badPrs = availableApps.filter((prNumber) => !openPrs.includes(prNumber));
-            availableApps
-              .filter((prNumber) => !openPrs.includes(prNumber))
+            badPrs
               .forEach((id) => {
                 console.log(id);
               });
-            github.rest.actions.createWorkflowDispatch({
+            const workflow = await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'env-teardown.yml',
-              ref: 'fix/environment-teardown-2',
+              ref: 'master',
               inputs: {
                 prNumber: badPrs[0],
               },
             });
+            console.log(workflow);
+
+            core.setOutput('badPrs', [badPrs[0]]);
+  destroy:
+    needs: [ setup ]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        value: ${{fromJson(needs.setup.outputs.badPrs)}}
+    steps:
+      - name: Log PR Number
+        run: |
+          echo "Process Id: ${{ matrix.value }}"
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Destroys Environments
+        uses: ./.github/workflows/env-teardown.yml
+        with:
+          prNubmer: ${{ matrix.value }}

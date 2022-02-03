@@ -8,6 +8,11 @@ on:
         required: true
         type: string
         description: Choose which PR number to destroy
+  workflow_call:
+    inputs:
+      prNumber:
+        required: true
+        type: string
 jobs:
   setup:
     runs-on: ubuntu-latest

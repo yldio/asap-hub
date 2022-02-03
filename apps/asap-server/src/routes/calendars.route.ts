@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
 import { CalendarController } from '../controllers/calendars';
+import { FetchPaginationOptions } from '../utils/types';
 
 export const calendarRouteFactory = (
   calendarController: CalendarController,
@@ -15,10 +16,7 @@ export const calendarRouteFactory = (
       'query',
       parameters,
       querySchema,
-    ) as unknown as {
-      take: number;
-      skip: number;
-    };
+    ) as FetchPaginationOptions;
 
     const result = await calendarController.fetch(query);
 

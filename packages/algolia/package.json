@@ -22,6 +22,7 @@
     "@algolia/cli": "^4.0.8",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
-    "@asap-hub/model": "workspace:*"
+    "@asap-hub/model": "workspace:*",
+    "@types/node": "^17.0.14"
   }
 }

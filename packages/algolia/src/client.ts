@@ -1,21 +1,39 @@
 import { SearchIndex } from 'algoliasearch';
-import {
-  SearchOptions,
-  SearchResponse,
-} from '@algolia/client-search';
+import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { ResearchOutputResponse, UserResponse } from '@asap-hub/model';
 
-export class AlgoliaSearchClient {
-  public constructor(protected index: SearchIndex) {}
+type EntityResponses = {
+  'research-output': ResearchOutputResponse;
+  user: UserResponse;
+};
 
-  save = async <T extends keyof EntityResponses>(
-    entityType: T,
-    payload: EntityResponses[T],
+export type EntityRecord<T extends keyof EntityResponses> =
+  EntityResponses[T] & {
+    objectID: string;
+    __meta: {
+      type: T;
+    };
+  };
+
+export const getEntityType = (
+  entity: EntityResponses[keyof EntityResponses],
+): keyof EntityResponses => {
+  if ('title' in entity) {
+    return 'research-output';
+  }
+
+  return 'user';
+};
+export class AlgoliaSearchClient {
+  public constructor(private index: SearchIndex) {}
+
+  save = async (
+    payload: EntityResponses[keyof EntityResponses],
   ): Promise<void> => {
     await this.index.saveObject({
       ...payload,
       objectID: payload.id,
-      __meta: { type: entityType },
+      __meta: { type: getEntityType(payload) },
     });
   };
 
@@ -38,14 +56,3 @@ export class AlgoliaSearchClient {
     return this.index.search<EntityRecord<T>>(query, options);
   }
 }
-
-type EntityResponses = {
-  'research-output': ResearchOutputResponse;
-  user: UserResponse;
-};
-export type EntityRecord<T extends keyof EntityResponses> = EntityResponses[T] & {
-  objectID: string;
-  __meta: {
-    type: T;
-  };
-};

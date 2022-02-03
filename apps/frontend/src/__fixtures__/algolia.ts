@@ -1,20 +1,10 @@
-import {
-  ResearchOutputSearchResponse,
-  ResearchOutputSearchResponseEntity,
-  SearchResponse,
-  SearchResponseEntityMetadata,
-} from '@asap-hub/algolia';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
-import { ResearchOutputResponse } from '@asap-hub/model';
+import { SearchResponse, EntityRecord } from '@asap-hub/algolia';
 
-export const createAlgoliaResponse = <
-  TEntity extends Record<string, unknown>,
-  TEntityName extends string,
->(
-  data: TEntity[],
-  overrides: Partial<SearchResponse<TEntity, TEntityName>> = {},
-  type: string = 'research-output',
-): SearchResponse<TEntity, TEntityName> => ({
+export const createAlgoliaResponse = (
+  data: EntityRecord<'research-output'>[],
+  overrides: Partial<SearchResponse<EntityRecord<'research-output'>>> = {},
+): SearchResponse<EntityRecord<'research-output'>> => ({
   nbHits: data.length,
   page: 0,
   nbPages: 1,
@@ -28,13 +18,13 @@ export const createAlgoliaResponse = <
   hits: data.map((item, i) => ({
     ...item,
     objectID: `${i}`,
-    __meta: { type } as SearchResponseEntityMetadata<TEntityName>,
+    __meta: { type: 'research-output' },
   })),
 });
 
 export const createResearchOutputAlgoliaResponse = (
   itemIndex = 0,
-): ResearchOutputSearchResponseEntity => {
+): EntityRecord<'research-output'> => {
   const response = createResearchOutputResponse(itemIndex);
 
   return {
@@ -46,9 +36,9 @@ export const createResearchOutputAlgoliaResponse = (
 
 export const createResearchOutputListAlgoliaResponse = (
   items: number,
-  responseOverride?: ResearchOutputSearchResponse,
-): ResearchOutputSearchResponse =>
-  createAlgoliaResponse<ResearchOutputResponse, 'research-output'>(
+  responseOverride?: SearchResponse<EntityRecord<'research-output'>>,
+): SearchResponse<EntityRecord<'research-output'>> =>
+  createAlgoliaResponse(
     Array.from({ length: items }, (_, itemIndex) =>
       createResearchOutputAlgoliaResponse(itemIndex),
     ),

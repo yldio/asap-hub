@@ -1,23 +1,41 @@
-name: Remove Environment
+name: Remove environment
 on:
   pull_request:
     types: [closed]
+  workflow_dispatch:
+    inputs:
+      prNumber:
+        required: true
+        type: string
+        description: Choose which PR number to destroy
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    env:
+      PR_NUMBER: ${{ github.event.number || github.event.inputs.prNumber }}
+    outputs:
+      pr_number: ${{ steps.build_step.outputs.pr_number }}
+    steps:
+      - name: Build
+        id: build_step
+        run: |
+          echo "::set-output name=pr_number::$PR_NUMBER"
   sls_teardown:
+    needs: setup
     runs-on: ubuntu-18.04
     container:
       image: registry.gitlab.com/yldio/asap-hub/node-python-sq:latest
     env:
-      SLS_STAGE: ${{ github.event.number }}
+      SLS_STAGE: ${{ needs.setup.outputs.pr_number }}
       NODE_ENV: 'production'
       ASAP_HOSTNAME: 'hub.asap.science'
-      ASAP_API_URL: 'https://api-${{  github.event.number }}.hub.asap.science'
-      ASAP_APP_URL: 'https://${{ github.event.number  }}.hub.asap.science'
+      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr_number }}.hub.asap.science'
+      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr_number }}.hub.asap.science'
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
-      SQUIDEX_APP_NAME: ${{ github.event.number }}
+      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr_number }}
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
     steps:
@@ -26,12 +44,14 @@ jobs:
       - name: Rebuild dependencies
         run: yarn rebuild
       - name: Remove CF Stack
-        if: ${{ env.SLS_STAGE != 'production' }}
+        if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
         run: yarn sls remove --verbose
         continue-on-error: true
       - name: Delete PR Squidex App
         run: python ci/integration/scripts/delete-app.py
+
   delete_algolia_indice:
+    needs: setup
     runs-on: ubuntu-18.04
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -47,7 +67,7 @@ jobs:
       - name: Delete the index
         run: |
           cd apps/asap-server
-          export ALGOLIA_INDEX=asap-hub_research_outputs_CI-$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          export ALGOLIA_INDEX=asap-hub_research_outputs_CI-${{ needs.setup.outputs.pr_number }}
           yarn workspace @asap-hub/asap-server run algolia deleteindicespattern -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -r "^$ALGOLIA_INDEX$" -x false
   notify_failure:
     runs-on: ubuntu-18.04

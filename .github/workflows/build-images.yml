@@ -15,59 +15,18 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-southeast-2
-
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
       - name: Checkout
         uses: actions/checkout@v2
-      # - name: Get Account ID
-      #   run: |
-      #     local caller_identity
-      #     caller_identity=$(aws sts get-caller-identity)
-      #     local account_id
-      #     account_id=$(
-      #       echo $caller_identity | jq -r '.Account'
-      #     )
-      #     core.setOutput('account_id', account_id);
-      #     echo '::set-output name=SELECTED_COLOR::'$account_id
-
       - name: Build and push
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: asap-hub
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          # docker build -t squidex2/build . -f dev/base.Dockerfile
-
           BASE_IMAGE_NAME=$ECR_REGISTRY/$ECR_REPOSITORY/squidex-utils
-
-
           docker build -t $BASE_IMAGE_NAME:$IMAGE_TAG . -f dev/base.Dockerfile --target base
-          # docker tag $BASE_IMAGE_NAME:$IMAGE_TAG $BASE_IMAGE_NAME:latest
-          # docker push $BASE_IMAGE_NAME:$IMAGE_TAG $BASE_IMAGE_NAME:latest
-          docker push $BASE_IMAGE_NAME:$IMAGE_TAG
-  # squidex:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #     - name: Build and push
-  #       uses: docker/build-push-action@v2
-  #       with:
-  #         context: .
-  #         file: dev/base.Dockerfile
-  #         push: false
-  #         tags: squidex/build:latest
-  # integration:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #     - name: Build and push
-  #       uses: docker/build-push-action@v2
-  #       with:
-  #         context: .
-  #         file: ci/integration/Dockerfile
-  #         push: false
-  #         tags: integration/build:latest
+          docker tag $BASE_IMAGE_NAME:$IMAGE_TAG $BASE_IMAGE_NAME:latest
+          docker push $BASE_IMAGE_NAME:$IMAGE_TAG $BASE_IMAGE_NAME:latest

@@ -40,7 +40,13 @@ jobs:
         run: |
           # docker build -t squidex2/build . -f dev/base.Dockerfile
 
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . -f dev/base.Dockerfile --target base
+          BASE_IMAGE_NAME=$ECR_REGISTRY/$ECR_REPOSITORY/squidex-utils
+
+
+          docker build -t $BASE_IMAGE_NAME:$IMAGE_TAG . -f dev/base.Dockerfile --target base
+          # docker tag $BASE_IMAGE_NAME:$IMAGE_TAG $BASE_IMAGE_NAME:latest
+          # docker push $BASE_IMAGE_NAME:$IMAGE_TAG $BASE_IMAGE_NAME:latest
+          docker push $BASE_IMAGE_NAME:$IMAGE_TAG
   # squidex:
   #   runs-on: ubuntu-latest
   #   steps:

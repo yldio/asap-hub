@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
 import { CalendarController } from '../controllers/calendars';
-import { FetchPaginationOptions } from '../utils/types';
 
 export const calendarRouteFactory = (
   calendarController: CalendarController,
@@ -12,11 +11,7 @@ export const calendarRouteFactory = (
   calendarRoutes.get('/calendars', async (req, res) => {
     const parameters = req.query;
 
-    const query = framework.validate(
-      'query',
-      parameters,
-      querySchema,
-    ) as FetchPaginationOptions;
+    const query = framework.validate('query', parameters, querySchema);
 
     const result = await calendarController.fetch(query);
 

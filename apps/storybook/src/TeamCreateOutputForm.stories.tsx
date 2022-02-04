@@ -5,4 +5,6 @@ export default {
   component: TeamCreateOutputForm,
 };
 
-export const Normal = () => <TeamCreateOutputForm />;
+export const Normal = () => (
+  <TeamCreateOutputForm suggestions={['A53T', 'Activity assay']} />
+);

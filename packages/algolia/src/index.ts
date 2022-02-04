@@ -3,7 +3,11 @@ import { AlgoliaSearchClient } from './client';
 import * as config from './config';
 
 export type { SearchResponse } from '@algolia/client-search';
-export type { AlgoliaSearchClient, EntityRecord } from './client';
+export type {
+  AlgoliaSearchClient,
+  EntityRecord,
+  EntityResponses,
+} from './client';
 export * from './scripts/move-index';
 export * from './scripts/remove-index';
 export * from './scripts/remove-records';
@@ -17,11 +21,12 @@ export const algoliaSearchClientFactory = (
   algoliaIndex: string,
   algoliaApiKey?: string,
 ): AlgoliaSearchClient => {
-  if (algoliaApiKey) {
-    algoliaSearchClientNative.updateApiKey(algoliaApiKey);
-  }
+  const algoliaSearchClient = algoliasearch(
+    config.algoliaAppId,
+    algoliaApiKey || config.algoliaApiKey,
+  );
 
-  const index = algoliaSearchClientNative.initIndex(algoliaIndex);
+const index = algoliaSearchClient.initIndex(algoliaIndex);
 
   return new AlgoliaSearchClient(index);
 };

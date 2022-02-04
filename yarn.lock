@@ -300,7 +300,7 @@ __metadata:
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": ^7.14.0
-    "@types/node": ^17.0.14
+    "@types/node": ^14.14.45
     algoliasearch: ^4.11.0
   languageName: unknown
   linkType: soft
@@ -10394,13 +10394,6 @@ __metadata:
   version: 14.14.27
   resolution: "@types/node@npm:14.14.27"
   checksum: 2233bd0e781aba08e5c10cceb11a0e9ff698a9c4f00997294ffa5a03692ddabb60917010d113e4ebbd5b0028071d526eb79681c5df6297ed25639c7a6414763f
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^17.0.14":
-  version: 17.0.14
-  resolution: "@types/node@npm:17.0.14"
-  checksum: cc059ce29686bad5890685f45741826a1a7d1d27382464f6d5fa00b72ba239f6f5b8245a7fa5a56c23ce928030dc76b165a4ab0b86dc078f05b44597d8fe1a46
   languageName: node
   linkType: hard
 

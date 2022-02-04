@@ -36,7 +36,7 @@ export const createResearchOutputAlgoliaResponse = (
 
 export const createResearchOutputListAlgoliaResponse = (
   items: number,
-  responseOverride?: SearchResponse<EntityRecord<'research-output'>>,
+  responseOverride?: Partial<SearchResponse<EntityRecord<'research-output'>>>,
 ): SearchResponse<EntityRecord<'research-output'>> =>
   createAlgoliaResponse(
     Array.from({ length: items }, (_, itemIndex) =>

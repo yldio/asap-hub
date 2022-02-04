@@ -29,20 +29,20 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
     currentPage,
     pageSize,
   });
-  const { index } = useAlgolia();
+  const { client } = useAlgolia();
 
   const { numberOfPages, renderPageHref } = usePagination(
     result?.total || 0,
     pageSize,
   );
   const exportResults = () =>
-    algoliaResultsToStream(
+    algoliaResultsToStream<'research-output'>(
       createCsvFileStream(
         { headers: true },
         `SharedOutputs_${format(new Date(), 'MMddyy')}.csv`,
       ),
       (paginationParams) =>
-        getResearchOutputs(index.researchOutput, {
+        getResearchOutputs(client, {
           filters,
           searchQuery,
           ...paginationParams,

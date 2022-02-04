@@ -29,4 +29,4 @@ jobs:
           BASE_IMAGE_NAME=$ECR_REGISTRY/$ECR_REPOSITORY/squidex-utils
           docker build -t $BASE_IMAGE_NAME:$IMAGE_TAG . -f dev/base.Dockerfile --target base
           docker tag $BASE_IMAGE_NAME:$IMAGE_TAG $BASE_IMAGE_NAME:latest
-          docker push $BASE_IMAGE_NAME:$IMAGE_TAG $BASE_IMAGE_NAME:latest
+          docker push --all-tags $BASE_IMAGE_NAME

@@ -6,35 +6,62 @@ on:
       - 'build-docker-images'
 
 jobs:
-  squidex:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Build and push
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: dev/base.Dockerfile
-          push: false
-          tags: squidex/build:latest
   squidex2:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Build and push
-        run: |
-          docker build -t squidex2/build . -f dev/base.Dockerfile
-  integration:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Build and push
-        uses: docker/build-push-action@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          context: .
-          file: ci/integration/Dockerfile
-          push: false
-          tags: integration/build:latest
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Checkout
+        uses: actions/checkout@v2
+      # - name: Get Account ID
+      #   run: |
+      #     local caller_identity
+      #     caller_identity=$(aws sts get-caller-identity)
+      #     local account_id
+      #     account_id=$(
+      #       echo $caller_identity | jq -r '.Account'
+      #     )
+      #     core.setOutput('account_id', account_id);
+      #     echo '::set-output name=SELECTED_COLOR::'$account_id
+
+      - name: Build and push
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: asap-hub
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # docker build -t squidex2/build . -f dev/base.Dockerfile
+
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . -f dev/base.Dockerfile --target base
+  # squidex:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: Build and push
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         context: .
+  #         file: dev/base.Dockerfile
+  #         push: false
+  #         tags: squidex/build:latest
+  # integration:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: Build and push
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         context: .
+  #         file: ci/integration/Dockerfile
+  #         push: false
+  #         tags: integration/build:latest

@@ -18,6 +18,14 @@ jobs:
           file: dev/base.Dockerfile
           push: false
           tags: squidex/build:latest
+  squidex2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build and push
+        run: |
+          docker build -t squidex2/build . -f dev/base.Dockerfile
   integration:
     runs-on: ubuntu-latest
     steps:

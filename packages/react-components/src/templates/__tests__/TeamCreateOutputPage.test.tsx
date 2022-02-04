@@ -23,6 +23,7 @@ it('renders the research output type in the header', () => {
     <TeamCreateOutputPage
       researchOutput={researchOutput}
       onCreate={onCreateSpy}
+      suggestions={[]}
     />,
   );
   expect(
@@ -38,6 +39,7 @@ it('clicking button will trigger the callback', () => {
     <TeamCreateOutputPage
       researchOutput={researchOutput}
       onCreate={onCreateSpy}
+      suggestions={[]}
     />,
   );
   const button = screen.getByRole('button', { name: /Share/i });

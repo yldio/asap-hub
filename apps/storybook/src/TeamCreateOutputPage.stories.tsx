@@ -8,6 +8,7 @@ export default {
 
 export const Normal = () => (
   <TeamCreateOutputPage
+    suggestions={['A53T', 'Activity assay']}
     researchOutput={createResearchOutput()}
     onCreate={() => {}}
   />

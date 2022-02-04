@@ -3,19 +3,20 @@
 variables:
   INTEGRATION_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/node-python-sq:latest
   SQUIDEX_BASE_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/squidex-utils:latest
-  BASE_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/docker:19.03.12
 
 build:docker-images:
-  image: $BASE_DOCKER_IMAGE
-  stage: .post
-  services:
-    - docker:19.03.12-dind
-  script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $SQUIDEX_BASE_DOCKER_IMAGE . -f dev/base.Dockerfile
-    - docker push $SQUIDEX_BASE_DOCKER_IMAGE
-    - docker build -t $INTEGRATION_DOCKER_IMAGE . -f ci/integration/Dockerfile
-    - docker push $INTEGRATION_DOCKER_IMAGE
+  stage: pre
+  script: |
+    export_registry_information() {
+      local caller_identity
+      caller_identity=$(aws sts get-caller-identity)
+      local account_id
+      account_id=$(echo $caller_identity | jq -r '.Account')
+      ECR_REGISTRY="$account_id.dkr.ecr.ap-southeast-2.amazonaws.com/asap-hub"
+      export INTEGRATION_DOCKER_IMAGE2="$ECR_REGISTRY/node-python-sq:latest"
+    }
+
+    export_registry_information
   needs: []
 
 test:integration:

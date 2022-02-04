@@ -1,12 +1,6 @@
-import {
-  algoliasearch,
-  SearchClient,
-} from '@asap-hub/algolia';
+import { algoliasearch, SearchClient } from '@asap-hub/algolia';
 import { SquidexGraphql } from '@asap-hub/squidex';
-import {
-  algoliaAppId,
-  algoliaIndexApiKey,
-} from '../../config';
+import { algoliaAppId, algoliaIndexApiKey } from '../../config';
 import logger from '../../utils/logger';
 import { UserController } from '../../controllers/users';
 import { UserEventBridgeEvent } from './invite-handler';

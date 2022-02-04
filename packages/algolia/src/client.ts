@@ -2,7 +2,7 @@ import { SearchIndex } from 'algoliasearch';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { ResearchOutputResponse, UserResponse } from '@asap-hub/model';
 
-type EntityResponses = {
+export type EntityResponses = {
   'research-output': ResearchOutputResponse;
   user: UserResponse;
 };
@@ -25,6 +25,7 @@ export const getEntityType = (
   return 'user';
 };
 export class AlgoliaSearchClient {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   public constructor(private index: SearchIndex) {}
 
   save = async (

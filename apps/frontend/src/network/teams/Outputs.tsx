@@ -58,7 +58,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   );
   const { client } = useAlgolia();
   const exportResults = () =>
-    algoliaResultsToStream(
+    algoliaResultsToStream<'research-output'>(
       createCsvFileStream(
         { headers: true },
         `SharedOutputs_Team${utils

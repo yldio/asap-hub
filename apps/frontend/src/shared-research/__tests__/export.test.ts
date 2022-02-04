@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   createResearchOutputResponse,
   createTeamResponse,
@@ -219,7 +220,7 @@ describe('algoliaResultsToStream', () => {
       mockCsvStream as unknown as CsvFormatterStream<Row, Row>,
       (parameters) =>
         Promise.resolve(
-          createAlgoliaResponse([parameters], {
+          createAlgoliaResponse([parameters as any], {
             nbPages: 1,
           }),
         ),
@@ -240,7 +241,7 @@ describe('algoliaResultsToStream', () => {
       mockCsvStream as unknown as CsvFormatterStream<Row, Row>,
       (parameters) =>
         Promise.resolve(
-          createAlgoliaResponse([parameters], {
+          createAlgoliaResponse([parameters as any], {
             nbPages: 3,
           }),
         ),
@@ -273,11 +274,11 @@ describe('algoliaResultsToStream', () => {
       mockCsvStream as unknown as CsvFormatterStream<Row, Row>,
       () =>
         Promise.resolve(
-          createAlgoliaResponse([{ example: 'a' }], {
+          createAlgoliaResponse([{ example: 'a' } as any], {
             nbPages: 2,
           }),
         ),
-      (a) => ({ example: `${a.example}-b` }),
+      (a: any) => ({ example: `${a.example}-b` }),
     );
     expect(mockCsvStream.write).toHaveBeenCalledWith(
       expect.objectContaining({

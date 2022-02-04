@@ -11,8 +11,16 @@ it('renders the text in an <h3>', () => {
 
 it('applies the text margin', () => {
   const { getByText } = render(<Headline3>text</Headline3>);
-  const { marginTop } = getComputedStyle(getByText('text'));
+  const { margin, marginTop } = getComputedStyle(getByText('text'));
   expect(marginTop).toMatchInlineSnapshot(`"12px"`);
+  expect(margin).toMatchInlineSnapshot(`""`);
+});
+
+it('applies no margin on noMargin equals true', () => {
+  const { getByText } = render(<Headline3 noMargin={true}>text</Headline3>);
+  const { margin, marginTop } = getComputedStyle(getByText('text'));
+  expect(marginTop).toMatchInlineSnapshot(`"0px"`);
+  expect(margin).toMatchInlineSnapshot(`"0px"`);
 });
 
 it('renders the text in large font', () => {

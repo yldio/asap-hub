@@ -6,7 +6,7 @@ on:
       - 'build-docker-images'
 
 jobs:
-  squidex2:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS credentials
@@ -20,7 +20,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build and push
+      - name: Build and push squidex
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: asap-hub
@@ -28,5 +28,15 @@ jobs:
         run: |
           BASE_IMAGE_NAME=$ECR_REGISTRY/$ECR_REPOSITORY/squidex-utils
           docker build -t $BASE_IMAGE_NAME:$IMAGE_TAG . -f dev/base.Dockerfile --target base
+          docker tag $BASE_IMAGE_NAME:$IMAGE_TAG $BASE_IMAGE_NAME:latest
+          docker push --all-tags $BASE_IMAGE_NAME
+      - name: Build and push integration
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: asap-hub
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          BASE_IMAGE_NAME=$ECR_REGISTRY/$ECR_REPOSITORY/node-python-sq
+          docker build -t $BASE_IMAGE_NAME:$IMAGE_TAG . -f dev/base.Dockerfile --target integration
           docker tag $BASE_IMAGE_NAME:$IMAGE_TAG $BASE_IMAGE_NAME:latest
           docker push --all-tags $BASE_IMAGE_NAME

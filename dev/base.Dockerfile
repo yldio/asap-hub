@@ -13,7 +13,7 @@ RUN wget https://github.com/Squidex/squidex-samples/releases/download/cli-v7.12/
     unzip linux-x64.zip && \
     mv sq /bin
 
-FROM base
+FROM base AS integration
 
 WORKDIR /app
 

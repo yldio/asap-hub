@@ -10,14 +10,19 @@ const clickShare = () => {
 
 it('click on button calls callback method (keywords are optional)', () => {
   const spyOnCreate = jest.fn();
-  render(<TeamCreateOutputForm onCreate={spyOnCreate} />);
+  render(<TeamCreateOutputForm onCreate={spyOnCreate} suggestions={[]} />);
   clickShare();
   expect(spyOnCreate).toHaveBeenCalledWith({ keywords: [] });
 });
 
 it('will pass keywords added to onCreate', () => {
   const spyOnCreate = jest.fn();
-  const { getByText } = render(<TeamCreateOutputForm onCreate={spyOnCreate} />);
+  const { getByText } = render(
+    <TeamCreateOutputForm
+      onCreate={spyOnCreate}
+      suggestions={['Western Blot']}
+    />,
+  );
   userEvent.type(getByText(/add a keyword/i), 'Western');
   fireEvent.keyDown(getByText('Western Blot'), {
     keyCode: ENTER_KEYCODE,

@@ -5,9 +5,14 @@ export default {
   component: TeamCreateOutputExtraInformationCard,
 };
 
+const suggestions = ['A53T', 'Activity assay'];
+
 export const Normal = () => (
-  <TeamCreateOutputExtraInformationCard values={[]} />
+  <TeamCreateOutputExtraInformationCard values={[]} suggestions={suggestions} />
 );
 export const Filled = () => (
-  <TeamCreateOutputExtraInformationCard values={['A53T', 'Activity assay']} />
+  <TeamCreateOutputExtraInformationCard
+    values={suggestions}
+    suggestions={suggestions}
+  />
 );

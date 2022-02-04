@@ -1,7 +1,7 @@
+import React from 'react';
 import { NotFoundPage, TeamCreateOutputPage } from '@asap-hub/react-components';
-import { ResearchOutput } from '@asap-hub/model';
+import { ResearchOutputPostRequest, ResearchOutputType } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
-import React, { useState } from 'react';
 
 import {
   network,
@@ -20,7 +20,7 @@ const useParamOutputType = (teamId: string): OutputTypeParameter => {
 
 export function paramOutputTypeToResearchOutputType(
   data: OutputTypeParameter,
-): ResearchOutput['type'] {
+): ResearchOutputType {
   switch (data) {
     case 'article':
       return 'Article';
@@ -42,29 +42,36 @@ type TeamOutputProps = {
 };
 const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   const paramOutputType = useParamOutputType(teamId);
-  const outputType = paramOutputTypeToResearchOutputType(paramOutputType);
+  const type = paramOutputTypeToResearchOutputType(paramOutputType);
 
   const { isEnabled } = useFlags();
-  const createResearchOutput = usePostTeamResearchOutput(teamId);
-  const [researchOutput] = useState<ResearchOutput>({
-    type: outputType,
+
+  const createResearchOutput = usePostTeamResearchOutput();
+
+  const defaultOutput: ResearchOutputPostRequest = {
+    teamId,
+    type,
     link: 'https://hub.asap.science/',
     title: 'Output created through the ROMS form',
     asapFunded: undefined,
-    sharingStatus: 'Network Only',
+    sharingStatus: 'Network Only' as const,
     usedInPublication: undefined,
     addedDate: new Date().toISOString(),
-  });
+    description: 'example',
+    tags: [],
+  };
 
   const showCreateOutputPage = isEnabled('ROMS_FORM');
 
   if (showCreateOutputPage) {
     return (
-      <Frame title="create output">
+      <Frame title="Share Research Output">
         <TeamCreateOutputPage
-          suggestions={researchSuggestions}
-          researchOutput={researchOutput}
-          onCreate={() => createResearchOutput(researchOutput)}
+          tagSuggestions={researchSuggestions}
+          type={type}
+          onSave={(output) =>
+            createResearchOutput({ ...defaultOutput, ...output })
+          }
         />
       </Frame>
     );

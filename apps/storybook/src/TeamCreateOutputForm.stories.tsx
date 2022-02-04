@@ -6,5 +6,5 @@ export default {
 };
 
 export const Normal = () => (
-  <TeamCreateOutputForm suggestions={['A53T', 'Activity assay']} />
+  <TeamCreateOutputForm tagSuggestions={['A53T', 'Activity assay']} />
 );

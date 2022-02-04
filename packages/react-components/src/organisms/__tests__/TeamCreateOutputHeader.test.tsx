@@ -1,7 +1,7 @@
-import { createResearchOutput } from '@asap-hub/fixtures';
 import { useFlags } from '@asap-hub/react-context';
 import { render, screen } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
+
 import TeamCreateOutputHeader from '../TeamCreateOutputHeader';
 
 beforeEach(() => {
@@ -43,11 +43,7 @@ it.each([
 ] as const)(
   'renders the $type research output',
   ({ type, headingName, text }) => {
-    render(
-      <TeamCreateOutputHeader
-        researchOutput={createResearchOutput({ type })}
-      />,
-    );
+    render(<TeamCreateOutputHeader type={type} />);
     expect(
       screen.getByRole('heading', { name: headingName }),
     ).toBeInTheDocument();
@@ -56,11 +52,7 @@ it.each([
 );
 
 it('falls back to a generic description otherwise', () => {
-  render(
-    <TeamCreateOutputHeader
-      researchOutput={createResearchOutput({ type: 'Presentation' })}
-    />,
-  );
+  render(<TeamCreateOutputHeader type="Presentation" />);
   expect(
     screen.getByRole('heading', { name: /Share a resource/i }),
   ).toBeInTheDocument();

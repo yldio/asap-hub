@@ -1,5 +1,4 @@
 import { TeamCreateOutputPage } from '@asap-hub/react-components';
-import { createResearchOutput } from '@asap-hub/fixtures';
 
 export default {
   title: 'Templates / Team Profile / Team Create Output Page',
@@ -8,8 +7,7 @@ export default {
 
 export const Normal = () => (
   <TeamCreateOutputPage
-    suggestions={['A53T', 'Activity assay']}
-    researchOutput={createResearchOutput()}
-    onCreate={() => {}}
+    tagSuggestions={['A53T', 'Activity assay']}
+    type="Article"
   />
 );

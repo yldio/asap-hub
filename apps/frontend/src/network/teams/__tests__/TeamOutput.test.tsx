@@ -35,7 +35,7 @@ it('Shows NotFoundPage when feature flag is off', async () => {
   const teamId = 'team-id';
   await renderPage({ teamId, featureFlagEnabled: false });
   expect(
-    screen.queryByRole('heading', { name: /Share bioinformatics/i }),
+    screen.queryByRole('heading', { name: /Share/i }),
   ).not.toBeInTheDocument();
   expect(
     screen.getByRole('heading', {

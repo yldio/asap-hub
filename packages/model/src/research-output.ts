@@ -115,16 +115,21 @@ export type ResearchOutputResponse = {
 
   readonly labs: Lab[];
 };
-export type ResearchOutput = Pick<
-  ResearchOutputResponse,
-  | 'title'
-  | 'addedDate'
-  | 'asapFunded'
-  | 'sharingStatus'
-  | 'usedInPublication'
-  | 'link'
-  | 'type'
->;
+
+export type ResearchOutputPostRequest = {
+  teamId: string;
+
+  description: string;
+  type: ResearchOutputType;
+  title: string;
+  tags: string[];
+  link: string;
+
+  addedDate: string;
+  asapFunded?: boolean;
+  sharingStatus: ResearchOutputSharingStatus;
+  usedInPublication?: boolean;
+};
 
 export const researchOutputLabels: Record<ResearchOutputType, string> = {
   'Grant Document': 'Open External Link',

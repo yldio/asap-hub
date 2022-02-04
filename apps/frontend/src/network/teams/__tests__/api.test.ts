@@ -1,6 +1,7 @@
 import nock from 'nock';
 import { createTeamResponse, createListTeamResponse } from '@asap-hub/fixtures';
 import {
+  ResearchOutputPostRequest,
   ResearchOutputSharingStatus,
   ResearchOutputType,
   TeamResponse,
@@ -131,8 +132,8 @@ describe('patchTeam', () => {
   });
 });
 describe('createTeamResearchOutput', () => {
-  const teamId = '90210';
-  const payload = {
+  const payload: ResearchOutputPostRequest = {
+    teamId: '90210',
     type: 'Bioinformatics' as ResearchOutputType,
     link: 'http://a-link',
     title: 'A title',
@@ -140,26 +141,23 @@ describe('createTeamResearchOutput', () => {
     usedInPublication: false,
     sharingStatus: 'Public' as ResearchOutputSharingStatus,
     addedDate: '2020-01-01',
+    description: '',
+    tags: [],
   };
   it('makes an authorized POST request to create a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .post('/research-outputs', { ...payload, teamId })
-      .reply(201, payload);
+      .post('/research-outputs', payload)
+      .reply(201, { id: 123 });
 
-    const response = await createTeamResearchOutput(
-      teamId,
-      payload,
-      'Bearer x',
-    );
+    await createTeamResearchOutput(payload, 'Bearer x');
     expect(nock.isDone()).toBe(true);
-    expect(response).toEqual(payload);
   });
 
   it('errors for an error status', async () => {
     nock(API_BASE_URL).post('/research-outputs').reply(500, {});
 
     await expect(
-      createTeamResearchOutput(teamId, payload, 'Bearer x'),
+      createTeamResearchOutput(payload, 'Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to create research output for teamId: 90210 Expected status 201. Received status 500."`,
     );

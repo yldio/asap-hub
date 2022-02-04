@@ -1,6 +1,6 @@
 import {
   ListResearchOutputResponse,
-  ResearchOutput,
+  ResearchOutputPostRequest,
   ResearchOutputResponse,
 } from '@asap-hub/model';
 import {
@@ -138,7 +138,7 @@ export default class ResearchOutputs implements ResearchOutputController {
   async create({
     teamId,
     ...researchOutputData
-  }: ResearchOutputInputData): Promise<Partial<ResearchOutputResponse>> {
+  }: ResearchOutputPostRequest): Promise<Partial<ResearchOutputResponse>> {
     const { id: researchOutputId } = await this.createResearchOutput(
       researchOutputData,
     );
@@ -146,7 +146,9 @@ export default class ResearchOutputs implements ResearchOutputController {
 
     return { id: researchOutputId };
   }
-  private async createResearchOutput(researchOutputData: ResearchOutput) {
+  private async createResearchOutput(
+    researchOutputData: Omit<ResearchOutputPostRequest, 'teamId'>,
+  ) {
     const { usedInPublication, ...researchOutput } = parseToSquidex({
       ...researchOutputData,
       asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
@@ -189,11 +191,6 @@ export interface ResearchOutputController {
 
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
   create: (
-    researchOutputRequest: ResearchOutputInputData,
+    researchOutputRequest: ResearchOutputPostRequest,
   ) => Promise<Partial<ResearchOutputResponse>>;
 }
-
-export type ResearchOutputInputData = Pick<
-  ResearchOutput,
-  'type' | 'link' | 'sharingStatus' | 'addedDate' | 'title'
-> & { teamId: string; asapFunded?: boolean; usedInPublication?: boolean };

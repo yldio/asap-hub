@@ -24,9 +24,7 @@ describe('User index handler', () => {
 
   test('Should fetch the research-output and create a record in Algolia when research-output is updated', async () => {
     const userResponse = getUserResponse();
-    userControllerMock.fetchById.mockResolvedValueOnce(
-      userResponse,
-    );
+    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
 
     await indexHandler(updateEvent('user-1234'));
 

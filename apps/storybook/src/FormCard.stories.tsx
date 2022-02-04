@@ -1,10 +1,12 @@
 import { FormCard } from '@asap-hub/react-components';
+import { text } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Molecules / FormCard',
-  component: FormCard,
+  title: 'Molecules / Form Card',
 };
 
 export const Normal = () => (
-  <FormCard title={'What are you sharing?'}>Card content</FormCard>
+  <FormCard title={text('Title', 'What are you sharing?')}>
+    Card content
+  </FormCard>
 );

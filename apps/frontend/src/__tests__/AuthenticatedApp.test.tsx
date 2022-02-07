@@ -27,7 +27,7 @@ const wrapper: FC<Record<string, never>> = ({ children }) => (
   </authTestUtils.Auth0Provider>
 );
 
-xit('syncs the auth state to recoil', async () => {
+it.skip('syncs the auth state to recoil', async () => {
   MockDashboard.mockImplementation(() => {
     const authorization = useRecoilValue(authorizationState);
     return <>{authorization}</>;

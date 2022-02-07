@@ -23,7 +23,7 @@ export const indexResearchOutputHandler =
 
     try {
       const foundUsers = await userController.fetch({
-        search: `labs/id eq "${event.id}"`,
+        search: `data/labs/iv eq "${event.id}"`,
       });
 
       if (foundUsers?.total > 0) {

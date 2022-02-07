@@ -14,7 +14,7 @@ const dividerStyles = css({
 const FormCard: React.FC<FormCardProps> = ({ children, title }) => (
   <Card padding={false}>
     <div role="presentation" css={[paddingStyles]}>
-      <Headline3 noMargin={true}>{title}</Headline3>
+      <Headline3>{title}</Headline3>
     </div>
     <hr color={steel.hex} css={[dividerStyles]} />
     <div css={[paddingStyles]}>{children}</div>

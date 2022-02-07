@@ -2,7 +2,7 @@
 
 variables:
   INTEGRATION_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/node-python-sq:latest
-  INTEGRATION_DOCKER_IMAGE2: $ECR_REGISTRY/node-python-sq:latest
+  INTEGRATION_DOCKER_IMAGE2: 249832953260.dkr.ecr.ap-southeast-2.amazonaws.com/asap-hub/node-python-sq:latest
   SQUIDEX_BASE_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/squidex-utils:latest
 
 # build:registry:

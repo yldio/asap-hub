@@ -1,0 +1,65 @@
+import { framework as lambda } from '@asap-hub/services-common';
+import { UserLabConnection, WebhookPayload } from '@asap-hub/squidex';
+import { EventBridge } from 'aws-sdk';
+import { eventBus, eventSource } from '../../config';
+import logger from '../../utils/logger';
+import { Handler } from '../../utils/types';
+import validateRequest from '../../utils/validate-squidex-request';
+
+export const labsWebhookFactory = (eventBridge: EventBridge): Handler =>
+  lambda.http(
+    async (request: lambda.Request<WebhookPayload<UserLabConnection>>) => {
+      await validateRequest(request);
+
+      const type = getEventType(request.payload.type);
+      logger.debug(`Event type ${type}`);
+
+      if (!type) {
+        return {
+          statusCode: 204,
+        };
+      }
+
+      await eventBridge
+        .putEvents({
+          Entries: [
+            {
+              EventBusName: eventBus,
+              Source: eventSource,
+              DetailType: type,
+              Detail: JSON.stringify(request.payload),
+            },
+          ],
+        })
+        .promise();
+
+      return {
+        statusCode: 200,
+      };
+    },
+  );
+
+const userEventTypes = ['LabPublished', 'LabUpdated', 'LabDeleted'] as const;
+export type UserEventType = typeof userEventTypes[number];
+
+const getEventType = (customType: string): UserEventType | undefined => {
+  switch (customType) {
+    case 'LabsPublished':
+      return 'LabPublished';
+
+    case 'LabsUpdated':
+      return 'LabUpdated';
+
+    case 'LabsUnpublished':
+      return 'LabDeleted';
+
+    case 'LabsDeleted':
+      return 'LabDeleted';
+
+    default:
+      return undefined;
+  }
+};
+
+const eventBridge = new EventBridge();
+export const handler: Handler = labsWebhookFactory(eventBridge);

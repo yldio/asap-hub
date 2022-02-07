@@ -381,6 +381,21 @@ const serverlessConfig: AWS = {
         EVENT_SOURCE: 'asap.calendar',
       },
     },
+    labUpserted: {
+      handler: 'apps/asap-server/src/handlers/webhooks/webhook-lab.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/labs',
+          },
+        },
+      ],
+      environment: {
+        EVENT_BUS: 'asap-events-${self:provider.stage}',
+        EVENT_SOURCE: 'asap.labs',
+      },
+    },
     userUpserted: {
       handler: 'apps/asap-server/src/handlers/webhooks/webhook-user.handler',
       events: [

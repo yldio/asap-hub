@@ -2,22 +2,26 @@
 
 variables:
   INTEGRATION_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/node-python-sq:latest
+  INTEGRATION_DOCKER_IMAGE2: $ECR_REGISTRY/node-python-sq:latest
   SQUIDEX_BASE_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/squidex-utils:latest
 
-build:docker-images:
-  stage: pre
-  script: |
-    export_registry_information() {
-      local caller_identity
-      caller_identity=$(aws sts get-caller-identity)
-      local account_id
-      account_id=$(echo $caller_identity | jq -r '.Account')
-      ECR_REGISTRY="$account_id.dkr.ecr.ap-southeast-2.amazonaws.com/asap-hub"
-      export INTEGRATION_DOCKER_IMAGE2="$ECR_REGISTRY/node-python-sq:latest"
-    }
+# build:registry:
+#   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+#   stage: .pre
+#   script: |
+#     export_registry_information() {
+#       local caller_identity
+#       caller_identity=$(aws sts get-caller-identity)
+#       local account_id
+#       account_id=$(echo $caller_identity | jq -r '.Account')
+#       ECR_REGISTRY="$account_id.dkr.ecr.ap-southeast-2.amazonaws.com/asap-hub"
+#       export INTEGRATION_DOCKER_IMAGE2="$ECR_REGISTRY/node-python-sq:latest"
+#       export INTEGRATION_DOCKER_IMAGE3="$ECR_REGISTRY/node-python-sq:latest"
+#       echo "Done export"
+#     }
 
-    export_registry_information
-  needs: []
+#     export_registry_information
+#   needs: []
 
 test:integration:
   image: $INTEGRATION_DOCKER_IMAGE

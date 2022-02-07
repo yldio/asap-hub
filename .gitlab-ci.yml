@@ -34,7 +34,6 @@ workflow:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
 
 stages:
-  - pre
   - build
   - test
   - check

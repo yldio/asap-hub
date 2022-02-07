@@ -29,19 +29,17 @@ export class AlgoliaSearchClient {
     // do nothing
   }
 
-  save = async (
-    payload: EntityResponses[keyof EntityResponses],
-  ): Promise<void> => {
+  async save(payload: EntityResponses[keyof EntityResponses]): Promise<void> {
     await this.index.saveObject({
       ...payload,
       objectID: payload.id,
       __meta: { type: getEntityType(payload) },
     });
-  };
+  }
 
-  remove = async (objectID: string): Promise<void> => {
+  async remove(objectID: string): Promise<void> {
     await this.index.deleteObject(objectID);
-  };
+  }
 
   async searchEntity<T extends keyof EntityResponses>(
     entityType: T,

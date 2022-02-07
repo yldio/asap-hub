@@ -78,7 +78,11 @@ const configErrors = [];
       );
     const projectReferencePaths = projectReferences.map(({ path }) => path);
     dependencyWorkspacePaths.forEach((dependencyWorkspacePath) => {
-      const dependencyDir = resolve(rootDir, dependencyWorkspacePath);
+      const dependencyDirUnnormalized = resolve(
+        rootDir,
+        dependencyWorkspacePath,
+      );
+      const dependencyDir = dependencyDirUnnormalized.replaceAll('\\', '/');
       if (
         !projectReferencePaths.includes(dependencyDir) &&
         existsSync(resolve(dependencyDir, 'tsconfig.json'))

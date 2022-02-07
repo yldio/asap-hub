@@ -1,27 +1,6 @@
-# https://gitlab.com/yldio/asap-hub/-/ci/lint
-
 variables:
-  INTEGRATION_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/node-python-sq:latest
-  INTEGRATION_DOCKER_IMAGE2: 249832953260.dkr.ecr.ap-southeast-2.amazonaws.com/asap-hub/node-python-sq:latest
-  SQUIDEX_BASE_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/squidex-utils:latest
-
-# build:registry:
-#   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
-#   stage: .pre
-#   script: |
-#     export_registry_information() {
-#       local caller_identity
-#       caller_identity=$(aws sts get-caller-identity)
-#       local account_id
-#       account_id=$(echo $caller_identity | jq -r '.Account')
-#       ECR_REGISTRY="$account_id.dkr.ecr.ap-southeast-2.amazonaws.com/asap-hub"
-#       export INTEGRATION_DOCKER_IMAGE2="$ECR_REGISTRY/node-python-sq:latest"
-#       export INTEGRATION_DOCKER_IMAGE3="$ECR_REGISTRY/node-python-sq:latest"
-#       echo "Done export"
-#     }
-
-#     export_registry_information
-#   needs: []
+  INTEGRATION_DOCKER_IMAGE: $ECR_REGISTRY/$ECR_PROJECT/node-python-sq:latest
+  SQUIDEX_BASE_DOCKER_IMAGE: $ECR_REGISTRY/s$ECR_PROJECT/quidex-utils:latest
 
 test:integration:
   image: $INTEGRATION_DOCKER_IMAGE

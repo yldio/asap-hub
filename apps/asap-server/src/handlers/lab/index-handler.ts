@@ -26,6 +26,8 @@ export const indexResearchOutputHandler =
         search: `data/labs/iv eq "${event.id}"`,
       });
 
+      logger.info(`Found users: ${foundUsers}`)
+
       if (foundUsers?.total > 0) {
         for (const user of foundUsers.items) {
           await algoliaClient.save(user);

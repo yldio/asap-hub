@@ -25,8 +25,9 @@ export const getEntityType = (
   return 'user';
 };
 export class AlgoliaSearchClient {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public constructor(private index: SearchIndex) {}
+  public constructor(private index: SearchIndex) {
+    // do nothing
+  }
 
   save = async (
     payload: EntityResponses[keyof EntityResponses],

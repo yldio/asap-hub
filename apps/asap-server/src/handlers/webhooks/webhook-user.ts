@@ -2,6 +2,7 @@ import { framework as lambda } from '@asap-hub/services-common';
 import { User, WebhookPayload } from '@asap-hub/squidex';
 import { EventBridge } from 'aws-sdk';
 import { eventBus, eventSource } from '../../config';
+import logger from '../../utils/logger';
 import { Handler } from '../../utils/types';
 import validateRequest from '../../utils/validate-squidex-request';
 
@@ -9,7 +10,10 @@ export const userWebhookFactory = (eventBridge: EventBridge): Handler =>
   lambda.http(async (request: lambda.Request<WebhookPayload<User>>) => {
     await validateRequest(request);
 
-    if (request.payload?.type !== 'UsersPublished') {
+    const type = getEventType(request.payload.type);
+    logger.debug(`Event type ${type}`);
+
+    if (!type) {
       return {
         statusCode: 204,
       };
@@ -21,7 +25,7 @@ export const userWebhookFactory = (eventBridge: EventBridge): Handler =>
           {
             EventBusName: eventBus,
             Source: eventSource,
-            DetailType: 'UserPublished',
+            DetailType: type,
             Detail: JSON.stringify(request.payload),
           },
         ],
@@ -32,6 +36,28 @@ export const userWebhookFactory = (eventBridge: EventBridge): Handler =>
       statusCode: 200,
     };
   });
+
+const userEventTypes = ['UserPublished', 'UserUpdated', 'UserDeleted'] as const;
+export type UserEventType = typeof userEventTypes[number];
+
+const getEventType = (customType: string): UserEventType | undefined => {
+  switch (customType) {
+    case 'UsersPublished':
+      return 'UserPublished';
+
+    case 'UsersUpdated':
+      return 'UserUpdated';
+
+    case 'UsersUnpublished':
+      return 'UserDeleted';
+
+    case 'UsersDeleted':
+      return 'UserDeleted';
+
+    default:
+      return undefined;
+  }
+};
 
 const eventBridge = new EventBridge();
 export const handler: Handler = userWebhookFactory(eventBridge);

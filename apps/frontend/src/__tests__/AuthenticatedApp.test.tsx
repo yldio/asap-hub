@@ -32,9 +32,14 @@ it('syncs the auth state to recoil', async () => {
     const authorization = useRecoilValue(authorizationState);
     return <>{authorization}</>;
   });
-  const { queryByText, getByText } = render(<AuthenticatedApp />, { wrapper });
-  await waitFor(() => {
-    expect(queryByText(/loading/i)).not.toBeInTheDocument();
-    expect(getByText(/Bearer token/i)).toBeVisible();
+  const { queryByText, getByText } = render(<AuthenticatedApp />, {
+    wrapper,
   });
+  await waitFor(
+    () => {
+      expect(queryByText(/loading/i)).not.toBeInTheDocument();
+      expect(getByText(/Bearer token/i)).toBeVisible();
+    },
+    { timeout: 2000 },
+  );
 });

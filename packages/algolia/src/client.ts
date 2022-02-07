@@ -1,5 +1,10 @@
 import { SearchIndex } from 'algoliasearch';
-import { SearchOptions, SearchResponse } from '@algolia/client-search';
+import {
+  SearchOptions,
+  SearchResponse,
+  BatchActionType,
+  BatchRequest,
+} from '@algolia/client-search';
 import { ResearchOutputResponse, UserResponse } from '@asap-hub/model';
 
 export type EntityResponses = {
@@ -24,9 +29,30 @@ export const getEntityType = (
 
   return 'user';
 };
+
+export type AlgoliaBatchRequest = {
+  action: BatchActionType;
+  body: EntityResponses[keyof EntityResponses];
+};
+
 export class AlgoliaSearchClient {
   public constructor(private index: SearchIndex) {
     // do nothing
+  }
+
+  async batch(requests: AlgoliaBatchRequest[]): Promise<void> {
+    await this.index.batch(
+      requests.map(
+        ({ action, body }): BatchRequest => ({
+          action,
+          body: {
+            ...body,
+            objectID: body.id,
+            __meta: { type: getEntityType(body) },
+          },
+        }),
+      ),
+    );
   }
 
   async save(payload: EntityResponses[keyof EntityResponses]): Promise<void> {

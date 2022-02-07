@@ -3,6 +3,7 @@ import { SquidexGraphql } from '@asap-hub/squidex';
 import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
+  BatchRequest,
 } from '@asap-hub/algolia';
 import ResearchOutputs, { UserController } from '../../controllers/users';
 import { LabEventType } from '../webhooks/webhook-lab';
@@ -26,14 +27,19 @@ export const indexResearchOutputHandler =
         search: `data/labs/iv eq "${event.id}"`,
       });
 
-      logger.info(`Found users: ${foundUsers}`)
+      logger.info(`Found users: ${foundUsers}`);
 
       if (foundUsers?.total > 0) {
-        for (const user of foundUsers.items) {
-          await algoliaClient.save(user);
+        await algoliaClient.batch(
+          foundUsers.items.map(
+            (user): BatchRequest => ({
+              action: 'updateObject',
+              body: user,
+            }),
+          ),
+        );
 
-          logger.debug(`Saved user ${user.id}`);
-        }
+        logger.debug(`Updated ${foundUsers.total} users`);
       }
     } catch (e) {
       if (e?.output?.statusCode === 404) {

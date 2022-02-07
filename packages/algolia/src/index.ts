@@ -2,9 +2,10 @@ import algoliasearch from 'algoliasearch';
 import { AlgoliaSearchClient } from './client';
 import * as config from './config';
 
-export type { SearchResponse } from '@algolia/client-search';
+export type { SearchResponse, BatchActionType } from '@algolia/client-search';
 export type {
   AlgoliaSearchClient,
+  AlgoliaBatchRequest as BatchRequest,
   EntityRecord,
   EntityResponses,
 } from './client';

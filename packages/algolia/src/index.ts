@@ -26,7 +26,7 @@ export const algoliaSearchClientFactory = (
     algoliaApiKey || config.algoliaApiKey,
   );
 
-const index = algoliaSearchClient.initIndex(algoliaIndex);
+  const index = algoliaSearchClient.initIndex(algoliaIndex);
 
   return new AlgoliaSearchClient(index);
 };

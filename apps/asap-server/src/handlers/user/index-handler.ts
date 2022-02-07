@@ -1,55 +1,61 @@
-import { algoliasearch, SearchClient } from '@asap-hub/algolia';
+import { EventBridgeEvent } from 'aws-lambda';
 import { SquidexGraphql } from '@asap-hub/squidex';
-import { algoliaAppId, algoliaIndexApiKey } from '../../config';
+import {
+  AlgoliaSearchClient,
+  algoliaSearchClientFactory,
+} from '@asap-hub/algolia';
+import { algoliaIndex } from '../../config';
 import logger from '../../utils/logger';
-import { UserController } from '../../controllers/users';
-import { UserEventBridgeEvent } from './invite-handler';
+import Users, { UserController } from '../../controllers/users';
+import { UserEventType } from '../webhooks/webhook-user';
 
-export const indexUserHandler = (
-  userController: UserController,
-  algoliaClient: SearchClient,
-): ((event: UserEventBridgeEvent) => Promise<void>) => {
-  // const searchIndex = new ResearchOutputSearchIndex(
-  //   algoliaClient.initIndex(algoliaResearchOutputIndex),
-  // );
-
-  return async (event: UserEventBridgeEvent): Promise<void> => {
+export const indexUserHandler =
+  (
+    userController: UserController,
+    algoliaClient: AlgoliaSearchClient,
+  ): ((
+    event: EventBridgeEvent<UserEventType, SquidexWebhookUserPayload>,
+  ) => Promise<void>) =>
+  async (event: UserIndexEventBridgeEvent): Promise<void> => {
     logger.debug(`Event ${event['detail-type']}`);
 
-    // try {
-    //   const researchOutput = await userController.fetchById(
-    //     event.detail.payload.id,
-    //   );
+    try {
+      const user = await userController.fetchById(event.detail.payload.id);
 
-    //   logger.debug(`Fetched research-output ${researchOutput.id}`);
+      logger.debug(`Fetched user ${user.id}`);
 
-    //   await searchIndex.save(researchOutput);
+      await algoliaClient.save(user);
 
-    //   logger.debug(`Saved research-output ${researchOutput.id}`);
-    // } catch (e) {
-    //   if (e?.output?.statusCode === 404) {
-    //     await searchIndex.remove(event.detail.payload.id);
-    //     return;
-    //   }
-    //   throw e;
-    // }
+      logger.debug(`Saved user ${user.id}`);
+    } catch (e) {
+      if (e?.output?.statusCode === 404) {
+        await algoliaClient.remove(event.detail.payload.id);
+        return;
+      }
+      throw e;
+    }
   };
-};
 
-export type SquidexWebhookResearchOutputPayload = {
+export type SquidexWebhookUserPayload = {
   type:
-    | 'ResearchOutputsPublished'
-    | 'ResearchOutputsUpdated'
-    | 'ResearchOutputsUnpublished'
-    | 'ResearchOutputsDeleted';
+    | 'UsersPublished'
+    | 'UsersCreated'
+    | 'UsersUpdated'
+    | 'UsersUnpublished'
+    | 'UsersDeleted';
   payload: {
     $type: 'EnrichedContentEvent';
-    type: 'Published' | 'Updated' | 'Unpublished' | 'Deleted';
+    type: 'Published' | 'Updated' | 'Unpublished' | 'Deleted' | 'Created';
     id: string;
   };
 };
 
 export const handler = indexUserHandler(
-  new ResearchOutputs(new SquidexGraphql()),
-  algoliasearch(algoliaAppId, algoliaIndexApiKey),
+  new Users(new SquidexGraphql()),
+  algoliaSearchClientFactory(algoliaIndex),
 );
+
+export type UserIndexEventBridgeEvent = EventBridgeEvent<
+  'UserPublished' | 'UserCreated' | 'UserUpdated' | 'UserDeleted',
+  SquidexWebhookUserPayload
+>;

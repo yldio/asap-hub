@@ -3,8 +3,11 @@ import { ResearchOutput } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
 import React, { useState } from 'react';
 
-import { network, useRouteParams } from '@asap-hub/routing';
-import { OutputTypeParameter } from '@asap-hub/routing/build';
+import {
+  network,
+  useRouteParams,
+  OutputTypeParameter,
+} from '@asap-hub/routing';
 import { usePostTeamResearchOutput } from './state';
 import Frame from '../../structure/Frame';
 import researchSuggestions from './research-suggestions';

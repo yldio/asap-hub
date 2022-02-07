@@ -6,7 +6,7 @@ import { useFlags } from '@asap-hub/react-context';
 import { render, screen, waitFor } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
 import { Suspense } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { network, OutputTypeParameter } from '@asap-hub/routing';
 import { refreshTeamState } from '../state';
@@ -14,7 +14,7 @@ import TeamOutput, { paramOutputTypeToResearchOutputType } from '../TeamOutput';
 
 it('Renders the research output', async () => {
   const teamId = 'team-id';
-  await renderPage({ teamId });
+  await renderPage({ teamId, outputType: 'bioinformatics' });
 
   expect(
     screen.getByRole('heading', { name: /Share bioinformatics/i }),
@@ -32,7 +32,7 @@ it('switches research output type based on parameter', async () => {
 
 it('Shows NotFoundPage when feature flag is off', async () => {
   const teamId = 'team-id';
-  await renderPage({ teamId });
+  await renderPage({ teamId, featureFlagEnabled: false });
   expect(
     screen.queryByRole('heading', { name: /Share bioinformatics/i }),
   ).not.toBeInTheDocument();
@@ -98,6 +98,12 @@ const renderPage = async ({
     disable('ROMS_FORM');
   }
 
+  const path =
+    network.template +
+    network({}).teams.template +
+    network({}).teams({}).team.template +
+    network({}).teams({}).team({ teamId }).createOutput.template;
+
   const result = render(
     <RecoilRoot
       initializeState={({ set }) =>
@@ -108,12 +114,16 @@ const renderPage = async ({
         <Auth0Provider user={{}}>
           <WhenReady>
             <StaticRouter
-              location={network({})
-                .teams({})
-                .team({ teamId })
-                .createOutput({ outputType })}
+              location={
+                network({})
+                  .teams({})
+                  .team({ teamId })
+                  .createOutput({ outputType }).$
+              }
             >
-              <TeamOutput teamId={teamId} />
+              <Route path={path}>
+                <TeamOutput teamId={teamId} />
+              </Route>
             </StaticRouter>
           </WhenReady>
         </Auth0Provider>

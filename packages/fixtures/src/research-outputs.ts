@@ -53,7 +53,9 @@ export const createListResearchOutputResponse = (
   ),
 });
 
-export const createResearchOutput = (override?: Partial<ResearchOutput>): ResearchOutput => ({
+export const createResearchOutput = (
+  override?: Partial<ResearchOutput>,
+): ResearchOutput => ({
   type: 'Bioinformatics',
   link: 'https://hub.asap.science/',
   title: 'Output created through the ROMS form',
@@ -61,6 +63,6 @@ export const createResearchOutput = (override?: Partial<ResearchOutput>): Resear
   sharingStatus: 'Network Only',
   usedInPublication: false,
   addedDate: new Date().toISOString(),
-  ...override
+  ...override,
 });
 export default createListResearchOutputResponse;

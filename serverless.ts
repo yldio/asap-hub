@@ -393,7 +393,30 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         EVENT_BUS: 'asap-events-${self:provider.stage}',
-        EVENT_SOURCE: 'asap.labs',
+        EVENT_SOURCE: 'asap.lab',
+      },
+    },
+    indexLab: {
+      handler: 'apps/asap-server/src/handlers/lab/index-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: ['asap.lab'],
+              'detail-type': [
+                'LabPublished',
+                'LabUpdated',
+                'LabCreated',
+                'LabDeleted',
+              ],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `asap-hub_${envRef}`,
       },
     },
     userUpserted: {

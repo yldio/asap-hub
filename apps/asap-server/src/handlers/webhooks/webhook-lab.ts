@@ -39,10 +39,10 @@ export const labsWebhookFactory = (eventBridge: EventBridge): Handler =>
     },
   );
 
-const userEventTypes = ['LabPublished', 'LabUpdated', 'LabDeleted'] as const;
-export type UserEventType = typeof userEventTypes[number];
+const labEventTypes = ['LabPublished', 'LabUpdated', 'LabDeleted'] as const;
+export type LabEventType = typeof labEventTypes[number];
 
-const getEventType = (customType: string): UserEventType | undefined => {
+const getEventType = (customType: string): LabEventType | undefined => {
   switch (customType) {
     case 'LabsPublished':
       return 'LabPublished';

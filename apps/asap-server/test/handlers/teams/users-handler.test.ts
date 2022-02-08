@@ -1,32 +1,32 @@
 import { EventBridgeEvent } from 'aws-lambda';
+import { indexUserHandler } from '../../../src/handlers/teams/users-handler';
 import {
-  indexResearchOutputByTeamHandler,
+  TeamsEventType,
   SquidexWebhookTeamPayload,
-} from '../../../src/handlers/teams/index-handler';
-import { TeamsEventType } from '../../../src/handlers/webhooks/webhook-teams';
+} from '../../../src/handlers/webhooks/webhook-teams';
 import { createEventBridgeEventMock } from '../../helpers/events';
-import { getResearchOutputResponse } from '../../fixtures/research-output.fixtures';
-import { researchOutputControllerMock } from '../../mocks/research-outputs-controller.mock';
+import { getUserResponse } from '../../fixtures/users.fixtures';
+import { userControllerMock } from '../../mocks/user-controller.mock';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 
-describe('Team Research Outputs Index', () => {
-  const indexHandler = indexResearchOutputByTeamHandler(
-    researchOutputControllerMock,
+describe('Team Users Index', () => {
+  const indexHandler = indexUserHandler(
+    userControllerMock,
     algoliaSearchClientMock,
   );
 
   afterEach(() => jest.clearAllMocks());
 
-  test('Should fetch every research output and create a record on Algolia', async () => {
+  test('Should fetch every user and create a record on Algolia', async () => {
     const outputs = [
-      { ...getResearchOutputResponse(), id: 'research-outputs-1' },
-      { ...getResearchOutputResponse(), id: 'research-outputs-2' },
-      { ...getResearchOutputResponse(), id: 'research-outputs-3' },
+      { ...getUserResponse(), id: 'user-1' },
+      { ...getUserResponse(), id: 'user-2' },
+      { ...getUserResponse(), id: 'user-3' },
     ];
 
-    researchOutputControllerMock.fetchById.mockResolvedValueOnce(outputs[0]!);
-    researchOutputControllerMock.fetchById.mockRejectedValue(new Error());
-    researchOutputControllerMock.fetchById.mockResolvedValueOnce(outputs[2]!);
+    userControllerMock.fetchById.mockResolvedValueOnce(outputs[0]!);
+    userControllerMock.fetchById.mockRejectedValue(new Error());
+    userControllerMock.fetchById.mockResolvedValueOnce(outputs[2]!);
 
     const updateEvent = getEvent();
 
@@ -43,7 +43,7 @@ describe('Team Research Outputs Index', () => {
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(outputs[2]);
   });
 
-  test('Should not trigger algolia save when there are no research outputs associated with the team', async () => {
+  test('Should not trigger algolia save when there are no users associated with the team', async () => {
     const updateEvent = getEvent();
     updateEvent.detail.payload = {
       ...updateEvent.detail.payload,

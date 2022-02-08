@@ -10,7 +10,7 @@ describe('Algolia Search Client', () => {
   const algoliaSearchIndex = getAlgoliaSearchIndexMock();
   const algoliaSearchClient = new AlgoliaSearchClient(algoliaSearchIndex);
 
-  test('Should save the entity', async () => {
+  test('Should save the Research Output', async () => {
     const researchOutput = createResearchOutputResponse();
 
     await algoliaSearchClient.save(researchOutput);
@@ -19,6 +19,18 @@ describe('Algolia Search Client', () => {
       ...researchOutput,
       objectID: researchOutput.id,
       __meta: { type: 'research-output' },
+    });
+  });
+
+  test('Should save the User', async () => {
+    const user = createUserResponse();
+
+    await algoliaSearchClient.save(user);
+
+    expect(algoliaSearchIndex.saveObject).toBeCalledWith({
+      ...user,
+      objectID: user.id,
+      __meta: { type: 'user' },
     });
   });
 

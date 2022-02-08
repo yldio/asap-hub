@@ -1,6 +1,6 @@
 variables:
   INTEGRATION_DOCKER_IMAGE: $ECR_REGISTRY/$ECR_PROJECT/node-python-sq:latest
-  SQUIDEX_BASE_DOCKER_IMAGE: $ECR_REGISTRY/s$ECR_PROJECT/squidex-utils:latest
+  SQUIDEX_BASE_DOCKER_IMAGE: $ECR_REGISTRY/$ECR_PROJECT/squidex-utils:latest
 
 test:integration:
   image: $INTEGRATION_DOCKER_IMAGE

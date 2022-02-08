@@ -23,9 +23,7 @@ include:
 variables:
   ASAP_HOSTNAME: hub.asap.science
   PLAYWRIGHT_BROWSERS_PATH: 0
-  # BASE_NODE_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/node:14.17-alpine
 
-# image: $BASE_NODE_IMAGE
 image: node:14.17-alpine
 
 workflow:
@@ -115,6 +113,22 @@ prepare:squidex:branch:
     - echo "Caching successful import"
     - mkdir -p first_run
     - touch first_run/squidex_app_create
+
+sync:test:pr:
+  image: $SQUIDEX_BASE_DOCKER_IMAGE
+  before_script:
+    - ./ci/config-squidex-rules.sh
+  script:
+    - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}
+    - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
+    - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
+    - sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
+    - sq config use $SQUIDEX_APP_NAME
+    - sq sync in packages/squidex/schema -t schemas -t rules --delete
+  needs:
+    - prepare:squidex:branch
+  rules:
+    - if: $CI_COMMIT_BRANCH != 'master'
 
 .build:sls:package:
   image: $INTEGRATION_DOCKER_IMAGE

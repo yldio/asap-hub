@@ -3,7 +3,7 @@ name: Build Docker Images
 on:
   push:
     branches:
-      - 'master'
+      - 'build-docker-images'
 
 jobs:
   build:
@@ -27,7 +27,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           BASE_IMAGE_NAME=$ECR_REGISTRY/$ECR_REPOSITORY
-          docker build -t $BASE_IMAGE_NAME:$IMAGE_TAG . -f dev/base.Dockerfile --target base
+          docker build -t $BASE_IMAGE_NAME:$IMAGE_TAG . -f ci/Dockerfile --target base
           docker tag $BASE_IMAGE_NAME:$IMAGE_TAG $BASE_IMAGE_NAME:latest
           docker push --all-tags $BASE_IMAGE_NAME
       - name: Build and push integration
@@ -37,6 +37,6 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           BASE_IMAGE_NAME=$ECR_REGISTRY/$ECR_REPOSITORY
-          docker build -t $BASE_IMAGE_NAME:$IMAGE_TAG . -f dev/base.Dockerfile --target integration
+          docker build -t $BASE_IMAGE_NAME:$IMAGE_TAG . -f ci/Dockerfile --target integration
           docker tag $BASE_IMAGE_NAME:$IMAGE_TAG $BASE_IMAGE_NAME:latest
           docker push --all-tags $BASE_IMAGE_NAME

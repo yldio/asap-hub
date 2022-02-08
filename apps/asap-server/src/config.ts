@@ -51,7 +51,8 @@ export const currentRevision = CURRENT_REVISION || 'default';
 export const sentryDsn = SENTRY_DSN;
 export const algoliaAppId = ALGOLIA_APP_ID || 'LVYWOPQ0A9';
 export const algoliaSearchApiKey = ALGOLIA_SEARCH_API_KEY || '';
-export const algoliaIndexApiKey = ALGOLIA_INDEX_API_KEY || '';
+export const algoliaIndexApiKey =
+  ALGOLIA_INDEX_API_KEY || ALGOLIA_API_KEY || '';
 export const algoliaCiApiKey = ALGOLIA_API_KEY || '';
 export const algoliaIndex = ALGOLIA_INDEX || 'asap-hub_research_outputs_dev';
 export const algoliaApiKeyTtl = 36060; // in [seconds] = 10 hours + 1 min - 1 minute is to account for network delays and off-sync clocks between servers

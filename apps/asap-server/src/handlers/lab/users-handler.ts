@@ -41,12 +41,17 @@ export const indexLabUsersHandler =
 
         logger.debug(`Updated ${foundUsers.total} users`);
       }
-    } catch (e) {
-      if (e?.output?.statusCode === 404) {
+    } catch (error) {
+      if (error?.output?.statusCode === 404) {
         return;
       }
 
-      throw e;
+      console.error(
+        'An error while updating users',
+        JSON.stringify(error, null, 2),
+      );
+
+      throw error;
     }
   };
 

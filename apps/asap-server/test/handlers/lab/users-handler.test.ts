@@ -31,7 +31,7 @@ describe('Lab Users handler', () => {
   test('Should fetch the user and create a record in Algolia when lab is created', async () => {
     const usersResponse = getListUserResponse();
     const usersBatchResponse = getUsersBatchCall(usersResponse);
-    userControllerMock.fetchByLabId.mockResolvedValueOnce(usersResponse);
+    userControllerMock.fetchByRelationship.mockResolvedValueOnce(usersResponse);
 
     await indexHandler(createEvent('lab-1234'));
 
@@ -43,7 +43,7 @@ describe('Lab Users handler', () => {
   test('Should fetch the user and create a record in Algolia when lab is updated', async () => {
     const usersResponse = getListUserResponse();
     const usersBatchResponse = getUsersBatchCall(usersResponse);
-    userControllerMock.fetchByLabId.mockResolvedValueOnce(usersResponse);
+    userControllerMock.fetchByRelationship.mockResolvedValueOnce(usersResponse);
 
     await indexHandler(updateEvent('lab-1234'));
 
@@ -57,7 +57,7 @@ describe('Lab Users handler', () => {
     const usersBatchResponse = getUsersBatchCall(usersResponse);
 
     const event = unpublishedEvent('lab-1234');
-    userControllerMock.fetchByLabId.mockResolvedValueOnce(usersResponse);
+    userControllerMock.fetchByRelationship.mockResolvedValueOnce(usersResponse);
 
     await indexHandler(event);
 
@@ -71,7 +71,7 @@ describe('Lab Users handler', () => {
     const usersBatchResponse = getUsersBatchCall(usersResponse);
 
     const event = deleteEvent('lab-1234');
-    userControllerMock.fetchByLabId.mockResolvedValueOnce(usersResponse);
+    userControllerMock.fetchByRelationship.mockResolvedValueOnce(usersResponse);
 
     await indexHandler(event);
 
@@ -81,7 +81,7 @@ describe('Lab Users handler', () => {
   });
 
   test('Should throw an error and do not trigger algolia when the lab request fails with another error code', async () => {
-    userControllerMock.fetchByLabId.mockRejectedValue(Boom.badData());
+    userControllerMock.fetchByRelationship.mockRejectedValue(Boom.badData());
 
     await expect(indexHandler(createEvent('lab-1234'))).rejects.toThrow(
       Boom.badData(),
@@ -92,7 +92,7 @@ describe('Lab Users handler', () => {
   test('Should throw the algolia error when saving the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    userControllerMock.fetchByLabId.mockResolvedValueOnce(
+    userControllerMock.fetchByRelationship.mockResolvedValueOnce(
       getListUserResponse(),
     );
     algoliaSearchClientMock.batch.mockRejectedValueOnce(algoliaError);
@@ -111,7 +111,7 @@ describe('Lab Users handler', () => {
       };
       const usersBatchResponse = getUsersBatchCall(usersResponse);
 
-      userControllerMock.fetchByLabId.mockResolvedValue({
+      userControllerMock.fetchByRelationship.mockResolvedValue({
         ...usersResponse,
       });
 
@@ -132,7 +132,7 @@ describe('Lab Users handler', () => {
       };
       const usersBatchResponse = getUsersBatchCall(usersResponse);
 
-      userControllerMock.fetchByLabId.mockResolvedValue(usersResponse);
+      userControllerMock.fetchByRelationship.mockResolvedValue(usersResponse);
 
       await indexHandler(updateEvent(userID));
       await indexHandler(createEvent(userID));
@@ -149,7 +149,7 @@ describe('Lab Users handler', () => {
       const unpublishedEv = unpublishedEvent(userID);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchByLabId.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchByRelationship.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.batch.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.batch.mockRejectedValue(algoliaError);
 
@@ -166,7 +166,7 @@ describe('Lab Users handler', () => {
       const unpublishedEv = unpublishedEvent(userID);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchByLabId.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchByRelationship.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.batch.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.batch.mockRejectedValue(algoliaError);
 
@@ -183,7 +183,7 @@ describe('Lab Users handler', () => {
       const deleteEv = deleteEvent(userID);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchByLabId.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchByRelationship.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.batch.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.batch.mockRejectedValue(algoliaError);
 
@@ -201,7 +201,7 @@ describe('Lab Users handler', () => {
       const deleteEv = deleteEvent(userID);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchByLabId.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchByRelationship.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.batch.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.batch.mockRejectedValue(algoliaError);
 
@@ -219,7 +219,7 @@ describe('Lab Users handler', () => {
       const deleteEv = deleteEvent(userID);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchByLabId.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchByRelationship.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.batch.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.batch.mockRejectedValue(algoliaError);
 
@@ -237,7 +237,7 @@ describe('Lab Users handler', () => {
       const deleteEv = deleteEvent(userID);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchByLabId.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchByRelationship.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.batch.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.batch.mockRejectedValue(algoliaError);
 
@@ -255,7 +255,7 @@ describe('Lab Users handler', () => {
       const unpublishedEv = unpublishedEvent(userID);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchByLabId.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchByRelationship.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.batch.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.batch.mockRejectedValue(algoliaError);
 
@@ -273,7 +273,7 @@ describe('Lab Users handler', () => {
       const unpublishedEv = unpublishedEvent(userID);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchByLabId.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchByRelationship.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.batch.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.batch.mockRejectedValue(algoliaError);
 

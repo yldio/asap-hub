@@ -28,7 +28,9 @@ export const indexLabUsersHandler =
       const fetchFunction = (
         skip: number,
       ): Promise<ListResponse<UserResponse>> =>
-        userController.fetchByLabId(event.detail.payload.id, { skip });
+        userController.fetchByRelationship('labs', event.detail.payload.id, {
+          skip,
+        });
 
       const processingFunction = async (
         foundUsers: ListResponse<UserResponse>,

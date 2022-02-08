@@ -7,10 +7,11 @@ type TeamCreateOutputPageProps = ComponentProps<typeof TeamCreateOutputHeader> &
 const TeamCreateOutputPage: React.FC<TeamCreateOutputPageProps> = ({
   researchOutput,
   onCreate,
+  suggestions,
 }) => (
   <>
     <TeamCreateOutputHeader researchOutput={researchOutput} />
-    <TeamCreateOutputForm onCreate={onCreate} />
+    <TeamCreateOutputForm onCreate={onCreate} suggestions={suggestions} />
   </>
 );
 

@@ -30,6 +30,7 @@ const priorities: Record<TeamRole, number> = {
   'Co-PI (Core Leadership)': 3,
   'Collaborating PI': 4,
   'Key Personnel': 5,
+  'ASAP Staff': 6,
 };
 
 export const parseGraphQLTeamMember = (

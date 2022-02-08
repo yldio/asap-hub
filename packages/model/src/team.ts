@@ -7,6 +7,7 @@ export const teamRole = [
   'Collaborating PI',
   'Project Manager',
   'Key Personnel',
+  'ASAP Staff',
 ] as const;
 
 export type TeamRole = typeof teamRole[number];

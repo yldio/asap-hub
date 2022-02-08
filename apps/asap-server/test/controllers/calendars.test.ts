@@ -13,26 +13,28 @@ import {
   getSquidexCalendarGraphqlResponse,
   getSquidexCalendarsGraphqlResponse,
   getSquidexGraphqlCalendar,
+  calendarsListRestResponse,
 } from '../fixtures/calendars.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
 describe('Calendars controller', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const calendarsMockGraphqlClient = new Calendars(squidexGraphqlClientMock);
+  const calendarsController = new Calendars(squidexGraphqlClientMock);
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-  const calendarsMockGraphqlServer = new Calendars(
+  const calendarsControllerMockGraphql = new Calendars(
     squidexGraphqlClientMockServer,
   );
 
   beforeAll(() => {
     identity();
+    jest.resetAllMocks();
   });
 
   describe('Fetch method', () => {
     test('Should fetch the calendars from squidex graphql', async () => {
-      const result = await calendarsMockGraphqlServer.fetch();
+      const result = await calendarsControllerMockGraphql.fetch();
 
       expect(result).toMatchObject(getListCalendarResponse());
     });
@@ -45,7 +47,7 @@ describe('Calendars controller', () => {
         squidexGraphqlResponse,
       );
 
-      const result = await calendarsMockGraphqlClient.fetch();
+      const result = await calendarsController.fetch();
 
       expect(result).toEqual({ total: 0, items: [] });
     });
@@ -57,7 +59,7 @@ describe('Calendars controller', () => {
         squidexGraphqlResponse,
       );
 
-      const result = await calendarsMockGraphqlClient.fetch();
+      const result = await calendarsController.fetch();
 
       expect(result).toEqual({ total: 0, items: [] });
     });
@@ -69,7 +71,7 @@ describe('Calendars controller', () => {
         squidexGraphqlResponse,
       );
 
-      const result = await calendarsMockGraphqlClient.fetch();
+      const result = await calendarsController.fetch();
 
       expect(result).toEqual({ total: 0, items: [] });
     });
@@ -79,7 +81,7 @@ describe('Calendars controller', () => {
         getSquidexCalendarsGraphqlResponse(),
       );
 
-      await calendarsMockGraphqlClient.fetch();
+      await calendarsController.fetch();
 
       expect(squidexGraphqlClientMock.request).toBeCalledWith(
         expect.anything(),
@@ -98,7 +100,7 @@ describe('Calendars controller', () => {
         null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(calendarResponse);
 
-      const response = await calendarsMockGraphqlClient.fetch();
+      const response = await calendarsController.fetch();
 
       expect(response.items[0]!.color).toBe('#333333');
     });
@@ -128,7 +130,7 @@ describe('Calendars controller', () => {
         squidexGraphqlResponse,
       );
 
-      const result = await calendarsMockGraphqlClient.fetch();
+      const result = await calendarsController.fetch();
 
       const expectedCalendar1 = getCalendarResponse();
       expectedCalendar1.id = calendar1Active.flatData.googleCalendarId;
@@ -168,7 +170,7 @@ describe('Calendars controller', () => {
         squidexGraphqlResponse,
       );
 
-      const result = await calendarsMockGraphqlClient.fetch();
+      const result = await calendarsController.fetch();
 
       expect(result).toEqual({
         total: 2,
@@ -197,7 +199,7 @@ describe('Calendars controller', () => {
         squidexGraphqlResponse,
       );
 
-      const result = await calendarsMockGraphqlClient.fetch();
+      const result = await calendarsController.fetch();
 
       const expectedListCalendarResponse = getListCalendarResponse();
       expectedListCalendarResponse.items[0]!.id =
@@ -228,7 +230,7 @@ describe('Calendars controller', () => {
         })
         .reply(200, { total: 0, items: [] });
 
-      const result = await calendarsMockGraphqlClient.fetchRaw({
+      const result = await calendarsController.fetchRaw({
         take: 50,
         skip: 0,
       });
@@ -255,40 +257,19 @@ describe('Calendars controller', () => {
         })
         .reply(200, getCalendarsRestResponse());
 
-      const result = await calendarsMockGraphqlClient.fetchRaw({
+      const result = await calendarsController.fetchRaw({
         take: 50,
         skip: 0,
         maxExpiration,
       });
 
-      expect(result).toEqual([
-        {
-          id: 'cms-calendar-id-1',
-          googleCalendarId: 'calendar-id-1',
-          color: '#5C1158',
-          name: 'Kubernetes Meetups',
-          resourceId: 'resource-id',
-          syncToken: 'sync-token',
-          expirationDate: 1614697798681,
-          version: 42,
-        },
-        {
-          id: 'cms-calendar-id-2',
-          googleCalendarId: 'calendar-id-2',
-          color: '#B1365F',
-          name: 'Service Mesh Conferences',
-          resourceId: 'resource-id-2',
-          syncToken: 'sync-token-2',
-          expirationDate: 1614697621081,
-          version: 42,
-        },
-      ]);
+      expect(result).toEqual(calendarsListRestResponse());
     });
   });
 
   describe('FetchById method', () => {
     test('Should fetch the users from squidex graphql', async () => {
-      const result = await calendarsMockGraphqlServer.fetchById(
+      const result = await calendarsControllerMockGraphql.fetchById(
         'calendar-id-1',
       );
 
@@ -304,9 +285,9 @@ describe('Calendars controller', () => {
         squidexGraphqlResponse,
       );
 
-      await expect(
-        calendarsMockGraphqlClient.fetchById(calendarId),
-      ).rejects.toThrow(notFound());
+      await expect(calendarsController.fetchById(calendarId)).rejects.toThrow(
+        notFound(),
+      );
     });
 
     test('Should return the calendar response', async () => {
@@ -316,7 +297,7 @@ describe('Calendars controller', () => {
         squidexGraphqlResponse,
       );
 
-      const result = await calendarsMockGraphqlClient.fetchById(calendarId);
+      const result = await calendarsController.fetchById(calendarId);
 
       expect(result).toEqual(getCalendarResponse());
     });
@@ -329,7 +310,7 @@ describe('Calendars controller', () => {
         squidexGraphqlResponse,
       );
 
-      await expect(calendarsMockGraphqlClient.fetchById(id)).rejects.toThrow(
+      await expect(calendarsController.fetchById(id)).rejects.toThrow(
         badGateway('Invalid colour'),
       );
     });
@@ -342,7 +323,7 @@ describe('Calendars controller', () => {
         squidexGraphqlResponse,
       );
 
-      await expect(calendarsMockGraphqlClient.fetchById(id)).rejects.toThrow(
+      await expect(calendarsController.fetchById(id)).rejects.toThrow(
         badGateway('Missing required data'),
       );
     });
@@ -354,7 +335,7 @@ describe('Calendars controller', () => {
         squidexGraphqlResponse,
       );
 
-      const result = await calendarsMockGraphqlClient.fetchById(calendarId, {
+      const result = await calendarsController.fetchById(calendarId, {
         raw: true,
       });
 
@@ -381,7 +362,7 @@ describe('Calendars controller', () => {
         .reply(500);
 
       await expect(
-        calendarsMockGraphqlClient.fetchByResourceId(resourceId),
+        calendarsController.fetchByResourceId(resourceId),
       ).rejects.toThrow('Bad Gateway');
     });
 
@@ -392,27 +373,18 @@ describe('Calendars controller', () => {
           $top: 1,
           $filter: `data/resourceId/iv eq '${resourceId}'`,
         })
-        .reply(200, { total: 0, items: [] });
+        .reply(200, {
+          total: 0,
+          items: [],
+        });
 
       await expect(
-        calendarsMockGraphqlClient.fetchByResourceId(resourceId),
+        calendarsController.fetchByResourceId(resourceId),
       ).rejects.toThrow('Not Found');
     });
 
     test('Should return the calendar when finds it', async () => {
-      const rawCalendarResponse = {
-        id: 'cms-calendar-id-1',
-        data: {
-          id: { iv: 'calendar-id-1' },
-          color: { iv: '#5C1158' },
-          name: { iv: 'Kubernetes Meetups' },
-          syncToken: { iv: 'google-sync-token' },
-          resourceId: { iv: resourceId },
-          expirationDate: { iv: '2021-01-07T16:44:09Z' },
-        },
-        created: '2021-01-07T16:44:09Z',
-        lastModified: '2021-01-07T16:44:09Z',
-      };
+      const rawCalendarResponse = getCalendarRaw();
 
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/calendars`)
@@ -422,9 +394,7 @@ describe('Calendars controller', () => {
         })
         .reply(200, { total: 1, items: [rawCalendarResponse] });
 
-      const result = await calendarsMockGraphqlClient.fetchByResourceId(
-        resourceId,
-      );
+      const result = await calendarsController.fetchByResourceId(resourceId);
 
       expect(result).toEqual(rawCalendarResponse);
     });
@@ -444,7 +414,7 @@ describe('Calendars controller', () => {
         .reply(404);
 
       await expect(
-        calendarsMockGraphqlClient.update('calendar-not-found', {}),
+        calendarsController.update('calendar-not-found', {}),
       ).rejects.toThrow('Not Found');
     });
 
@@ -459,7 +429,7 @@ describe('Calendars controller', () => {
         })
         .reply(200, restCalendar);
 
-      const result = await calendarsMockGraphqlClient.update(calendarId, {
+      const result = await calendarsController.update(calendarId, {
         syncToken,
       });
 
@@ -486,7 +456,7 @@ describe('Calendars controller', () => {
         .reply(404);
 
       await expect(
-        calendarsMockGraphqlClient.getSyncToken('calendar-not-found'),
+        calendarsController.getSyncToken('calendar-not-found'),
       ).rejects.toThrow('Not Found');
     });
 
@@ -498,7 +468,7 @@ describe('Calendars controller', () => {
         .get(`/api/content/${config.appName}/calendars/${calendarId}`)
         .reply(200, restCalendar);
 
-      const result = await calendarsMockGraphqlClient.getSyncToken(calendarId);
+      const result = await calendarsController.getSyncToken(calendarId);
 
       expect(result).toEqual(restCalendar.data.syncToken!.iv);
     });

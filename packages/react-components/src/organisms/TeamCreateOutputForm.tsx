@@ -1,8 +1,10 @@
 import { css } from '@emotion/react';
+import { ComponentProps, useCallback, useState } from 'react';
 import { Button } from '../atoms';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { perRem } from '../pixels';
 import { noop } from '../utils';
+import { TeamCreateOutputExtraInformationCard } from './index';
 
 const controlsContainerStyles = css({
   display: 'grid',
@@ -15,18 +17,41 @@ const controlsContainerStyles = css({
   }em `,
 });
 
-type TeamCreateOutputFormProps = {
-  onCreate?: () => void;
+const formContainerStyles = css({
+  display: 'flex',
+  justifyContent: 'center',
+  flexDirection: 'column',
+});
+
+type TeamCreateOutputFormProps = Pick<
+  ComponentProps<typeof TeamCreateOutputExtraInformationCard>,
+  'suggestions'
+> & {
+  onCreate?: (data: { keywords: string[] }) => void;
 };
 
 const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
+  suggestions,
   onCreate = noop,
-}) => (
-  <div css={controlsContainerStyles}>
-    <Button primary onClick={onCreate}>
-      Share
-    </Button>
-  </div>
-);
+}) => {
+  const [keywords, setKeywords] = useState<string[]>([]);
+  const onCreateFilled = useCallback(() => {
+    onCreate({ keywords });
+  }, [onCreate, keywords]);
+  return (
+    <div css={formContainerStyles}>
+      <TeamCreateOutputExtraInformationCard
+        suggestions={suggestions}
+        values={keywords}
+        onChange={setKeywords}
+      />
+      <div css={controlsContainerStyles}>
+        <Button primary onClick={onCreateFilled}>
+          Share
+        </Button>
+      </div>
+    </div>
+  );
+};
 
 export default TeamCreateOutputForm;

@@ -11,14 +11,7 @@ export const calendarRouteFactory = (
   calendarRoutes.get('/calendars', async (req, res) => {
     const parameters = req.query;
 
-    const query = framework.validate(
-      'query',
-      parameters,
-      querySchema,
-    ) as unknown as {
-      take: number;
-      skip: number;
-    };
+    const query = framework.validate('query', parameters, querySchema);
 
     const result = await calendarController.fetch(query);
 

@@ -1,16 +1,21 @@
 import { SearchResponse } from '@algolia/client-search';
+import { ResearchOutputResponse } from '@asap-hub/model';
 import {
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
-import { AlgoliaSearchClient, EntityRecord } from '../src/client';
+import {
+  AlgoliaSearchClient,
+  EntityRecord,
+  getEntityType,
+} from '../src/client';
 import { getAlgoliaSearchIndexMock } from './mocks/algolia.mocks';
 
 describe('Algolia Search Client', () => {
   const algoliaSearchIndex = getAlgoliaSearchIndexMock();
   const algoliaSearchClient = new AlgoliaSearchClient(algoliaSearchIndex);
 
-  test('Should save the entity', async () => {
+  it('Should save the entity', async () => {
     const researchOutput = createResearchOutputResponse();
 
     await algoliaSearchClient.save(researchOutput);
@@ -22,7 +27,28 @@ describe('Algolia Search Client', () => {
     });
   });
 
-  test('Should remove the entity', async () => {
+  it('Should do batch on entities', async () => {
+    await algoliaSearchClient.batch([
+      {
+        action: 'updateObject',
+        body: { id: 'ro-id', title: 'ro-title' } as ResearchOutputResponse,
+      },
+    ]);
+
+    expect(algoliaSearchIndex.batch).toBeCalledWith([
+      {
+        action: 'updateObject',
+        body: {
+          id: 'ro-id',
+          objectID: 'ro-id',
+          title: 'ro-title',
+          __meta: { type: 'research-output' },
+        },
+      },
+    ]);
+  });
+
+  it('Should remove the entity', async () => {
     const researchOutputId = '1';
 
     await algoliaSearchClient.remove(researchOutputId);
@@ -30,7 +56,7 @@ describe('Algolia Search Client', () => {
     expect(algoliaSearchIndex.deleteObject).toBeCalledWith(researchOutputId);
   });
 
-  test('Should search research-output entity', async () => {
+  it('Should search research-output entity', async () => {
     algoliaSearchIndex.search.mockResolvedValueOnce(
       searchResearchOutputResponse,
     );
@@ -53,7 +79,7 @@ describe('Algolia Search Client', () => {
     });
   });
 
-  test('Should search user entity', async () => {
+  it('Should search user entity', async () => {
     algoliaSearchIndex.search.mockResolvedValueOnce(searchUserResponse);
 
     const response = await algoliaSearchClient.searchEntity('user', 'query');
@@ -61,6 +87,18 @@ describe('Algolia Search Client', () => {
     expect(response).toEqual(searchUserResponse);
     expect(algoliaSearchIndex.search).toBeCalledWith('query', {
       filters: '__meta.type:"user"',
+    });
+  });
+
+  describe('getEntityType', () => {
+    it('should return research-output when it have a title field', () => {
+      expect(
+        getEntityType({ title: 'test title' } as ResearchOutputResponse),
+      ).toEqual('research-output');
+    });
+
+    it('should return user when it does not have a title field', () => {
+      expect(getEntityType({} as ResearchOutputResponse)).toEqual('user');
     });
   });
 });

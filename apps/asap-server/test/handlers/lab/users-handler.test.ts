@@ -15,10 +15,11 @@ import { getLabEvent } from '../../fixtures/labs.fixtures';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user-controller.mock';
 
-const getUsersBatchCall = (users: ListUserResponse): BatchRequest[] => users.items.map(user => ({
-  action: 'updateObject',
-  body: user
-}));
+const getUsersBatchCall = (users: ListUserResponse): BatchRequest[] =>
+  users.items.map((user) => ({
+    action: 'updateObject',
+    body: user,
+  }));
 
 describe('Lab Users handler', () => {
   const indexHandler = indexLabUsersHandler(
@@ -34,7 +35,9 @@ describe('Lab Users handler', () => {
 
     await indexHandler(createEvent('lab-1234'));
 
-    expect(algoliaSearchClientMock.batch).toHaveBeenCalledWith(usersBatchResponse);
+    expect(algoliaSearchClientMock.batch).toHaveBeenCalledWith(
+      usersBatchResponse,
+    );
   });
 
   test('Should fetch the user and create a record in Algolia when lab is updated', async () => {
@@ -44,7 +47,9 @@ describe('Lab Users handler', () => {
 
     await indexHandler(updateEvent('lab-1234'));
 
-    expect(algoliaSearchClientMock.batch).toHaveBeenCalledWith(usersBatchResponse);
+    expect(algoliaSearchClientMock.batch).toHaveBeenCalledWith(
+      usersBatchResponse,
+    );
   });
 
   test('Should fetch the user and update the record in Algolia when lab is unpublished', async () => {
@@ -56,7 +61,9 @@ describe('Lab Users handler', () => {
 
     await indexHandler(event);
 
-    expect(algoliaSearchClientMock.batch).toHaveBeenCalledWith(usersBatchResponse);
+    expect(algoliaSearchClientMock.batch).toHaveBeenCalledWith(
+      usersBatchResponse,
+    );
   });
 
   test('Should fetch the user and remove the record in Algolia when lab is deleted', async () => {
@@ -68,7 +75,9 @@ describe('Lab Users handler', () => {
 
     await indexHandler(event);
 
-    expect(algoliaSearchClientMock.batch).toHaveBeenCalledWith(usersBatchResponse);
+    expect(algoliaSearchClientMock.batch).toHaveBeenCalledWith(
+      usersBatchResponse,
+    );
   });
 
   test('Should throw an error and do not trigger algolia when the lab request fails with another error code', async () => {
@@ -108,7 +117,9 @@ describe('Lab Users handler', () => {
       await indexHandler(updateEvent(userID));
 
       expect(algoliaSearchClientMock.batch).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.batch).toHaveBeenCalledWith(usersBatchResponse);
+      expect(algoliaSearchClientMock.batch).toHaveBeenCalledWith(
+        usersBatchResponse,
+      );
     });
 
     test('receives the events created and updated in reverse order', async () => {
@@ -125,7 +136,9 @@ describe('Lab Users handler', () => {
       await indexHandler(createEvent(userID));
 
       expect(algoliaSearchClientMock.batch).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.batch).toHaveBeenCalledWith(usersBatchResponse);
+      expect(algoliaSearchClientMock.batch).toHaveBeenCalledWith(
+        usersBatchResponse,
+      );
     });
 
     test('receives the events created and unpublished in correct order', async () => {
@@ -156,7 +169,7 @@ describe('Lab Users handler', () => {
       algoliaSearchClientMock.batch.mockRejectedValue(algoliaError);
 
       await indexHandler(unpublishedEv);
-      const updateResonse = await indexHandler(createEv)
+      const updateResonse = await indexHandler(createEv);
       expect(updateResonse).toBeUndefined();
 
       expect(algoliaSearchClientMock.batch).not.toHaveBeenCalled();
@@ -192,7 +205,7 @@ describe('Lab Users handler', () => {
 
       await indexHandler(deleteEv);
 
-      const updateResonse = await indexHandler(createEv)
+      const updateResonse = await indexHandler(createEv);
       expect(updateResonse).toBeUndefined();
 
       expect(algoliaSearchClientMock.batch).not.toHaveBeenCalled();
@@ -228,7 +241,7 @@ describe('Lab Users handler', () => {
 
       await indexHandler(deleteEv);
 
-      const updateResonse = await indexHandler(updateEv)
+      const updateResonse = await indexHandler(updateEv);
       expect(updateResonse).toBeUndefined();
 
       expect(algoliaSearchClientMock.batch).not.toHaveBeenCalled();
@@ -264,7 +277,7 @@ describe('Lab Users handler', () => {
 
       await indexHandler(unpublishedEv);
 
-      const updateResonse = await indexHandler(updateEv)
+      const updateResonse = await indexHandler(updateEv);
       expect(updateResonse).toBeUndefined();
 
       expect(algoliaSearchClientMock.batch).not.toHaveBeenCalled();

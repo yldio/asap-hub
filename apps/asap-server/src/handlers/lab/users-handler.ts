@@ -27,10 +27,10 @@ export const indexLabUsersHandler =
         search: `data/labs/iv eq "${event.id}"`,
       });
 
-      logger.info(`Found users: ${foundUsers}`);
+      logger.info(`Found ${foundUsers.total} users`);
 
       if (foundUsers?.total > 0) {
-        await algoliaClient.batch(
+        const algoliaResponse = await algoliaClient.batch(
           foundUsers.items.map(
             (user): BatchRequest => ({
               action: 'updateObject',
@@ -39,7 +39,7 @@ export const indexLabUsersHandler =
           ),
         );
 
-        logger.debug(`Updated ${foundUsers.total} users`);
+        logger.debug(`Updated ${foundUsers.total} users with algolia response: ${algoliaResponse}`);
       }
     } catch (error) {
       if (error?.output?.statusCode === 404) {

@@ -53,6 +53,8 @@ stages:
     paths:
       - 'packages/*/build*'
       - 'apps/*/build*'
+  variables:
+    NODE_ENV: 'production'
   before_script:
     - source ci/env-setup.sh
     - export REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)

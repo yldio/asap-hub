@@ -6216,6 +6216,14 @@ export type FetchGroupQuery = {
   >;
 };
 
+export type FetchLabsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type FetchLabsQuery = {
+  queryLabsContents: Maybe<
+    Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
+  >;
+};
+
 export type NewsFragment = Pick<
   NewsAndEvents,
   'id' | 'created' | 'lastModified' | 'version'
@@ -10350,6 +10358,41 @@ export const FetchGroupDocument = {
     ...GroupsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchGroupQuery, FetchGroupQueryVariables>;
+export const FetchLabsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchLabs' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryLabsContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FetchLabsQuery, FetchLabsQueryVariables>;
 export const FetchResearchOutputDocument = {
   kind: 'Document',
   definitions: [

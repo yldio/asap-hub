@@ -4,7 +4,6 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import { algoliaIndex } from '../../config';
 import logger from '../../utils/logger';
 import Users, { UserController } from '../../controllers/users';
 import { UserEventType } from '../webhooks/webhook-user';
@@ -54,7 +53,7 @@ export type SquidexWebhookUserPayload = {
 
 export const handler = indexUserHandler(
   new Users(new SquidexGraphql()),
-  algoliaSearchClientFactory(algoliaIndex),
+  algoliaSearchClientFactory(),
 );
 
 export type UserIndexEventBridgeEvent = EventBridgeEvent<

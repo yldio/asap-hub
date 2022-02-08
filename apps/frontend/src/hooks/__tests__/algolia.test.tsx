@@ -36,10 +36,10 @@ describe('useAlgolia', () => {
       ),
     });
     await waitForNextUpdate();
-    expect(mockAlgoliaSearchClientFactory).toHaveBeenCalledWith(
-      ALGOLIA_INDEX,
-      'algolia key',
-    );
+    expect(mockAlgoliaSearchClientFactory).toHaveBeenCalledWith({
+      algoliaIndex: ALGOLIA_INDEX,
+      algoliaApiKey: 'algolia key',
+    });
     expect(result.current.client).toBeDefined();
   });
 });

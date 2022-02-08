@@ -17,10 +17,10 @@ export const useAlgolia = () => {
       throw new Error('Algolia unavailable while not logged in');
     }
 
-    const client = algoliaSearchClientFactory(
-      ALGOLIA_INDEX,
-      user.algoliaApiKey,
-    );
+    const client = algoliaSearchClientFactory({
+      algoliaIndex: ALGOLIA_INDEX,
+      algoliaApiKey: user.algoliaApiKey,
+    });
 
     return {
       client,

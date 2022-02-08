@@ -8,7 +8,6 @@ import ResearchOutputs, {
   ResearchOutputController,
 } from '../../controllers/research-outputs';
 import { ResearchOutputEventType } from '../webhooks/webhook-research-output';
-import { algoliaIndex } from '../../config';
 import logger from '../../utils/logger';
 
 export const indexResearchOutputHandler =
@@ -63,5 +62,5 @@ export type SquidexWebhookResearchOutputPayload = {
 
 export const handler = indexResearchOutputHandler(
   new ResearchOutputs(new SquidexGraphql()),
-  algoliaSearchClientFactory(algoliaIndex),
+  algoliaSearchClientFactory(),
 );

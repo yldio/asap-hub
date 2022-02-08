@@ -17,16 +17,23 @@ export const algoliaSearchClientNative = algoliasearch(
   config.algoliaApiKey,
 );
 
-export const algoliaSearchClientFactory = (
-  algoliaIndex: string,
-  algoliaApiKey?: string,
-): AlgoliaSearchClient => {
+type AlgoliaSearchClientFactoryParams = {
+  algoliaIndex?: string;
+  algoliaApiKey?: string;
+};
+
+export const algoliaSearchClientFactory = ({
+  algoliaIndex,
+  algoliaApiKey,
+}: AlgoliaSearchClientFactoryParams | undefined = {}): AlgoliaSearchClient => {
   const algoliaSearchClient = algoliasearch(
     config.algoliaAppId,
     algoliaApiKey || config.algoliaApiKey,
   );
 
-  const index = algoliaSearchClient.initIndex(algoliaIndex);
+  const index = algoliaSearchClient.initIndex(
+    algoliaIndex || config.algoliaIndex,
+  );
 
   return new AlgoliaSearchClient(index);
 };

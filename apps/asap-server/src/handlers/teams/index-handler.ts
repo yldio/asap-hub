@@ -8,7 +8,6 @@ import { TeamsEventType } from '../webhooks/webhook-teams';
 import ResearchOutputs, {
   ResearchOutputController,
 } from '../../controllers/research-outputs';
-import { algoliaIndex } from '../../config';
 import logger from '../../utils/logger';
 
 export const indexResearchOutputByTeamHandler =
@@ -66,5 +65,5 @@ export type SquidexWebhookTeamPayload = {
 
 export const handler = indexResearchOutputByTeamHandler(
   new ResearchOutputs(new SquidexGraphql()),
-  algoliaSearchClientFactory(algoliaIndex),
+  algoliaSearchClientFactory(),
 );

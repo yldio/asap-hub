@@ -92,7 +92,9 @@ describe('Lab Users handler', () => {
   test('Should throw the algolia error when saving the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    userControllerMock.fetchByLabId.mockResolvedValueOnce(getListUserResponse());
+    userControllerMock.fetchByLabId.mockResolvedValueOnce(
+      getListUserResponse(),
+    );
     algoliaSearchClientMock.batch.mockRejectedValueOnce(algoliaError);
 
     await expect(indexHandler(updateEvent('lab-1234'))).rejects.toThrow(

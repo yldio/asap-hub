@@ -26,9 +26,9 @@ export const indexLabUsersHandler =
 
     try {
       const fetchFunction = (
-        top: number,
+        skip: number,
       ): Promise<ListResponse<UserResponse>> =>
-        userController.fetchByLabId(event.detail.payload.id, { skip: top });
+        userController.fetchByLabId(event.detail.payload.id, { skip });
 
       const processingFunction = async (
         foundUsers: ListResponse<UserResponse>,

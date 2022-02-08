@@ -34,9 +34,9 @@ export const applyToAllItemsInCollection = async <
 };
 
 export const loopOverCustomCollection = async <TResponse>(
-  fetcher: (top: number) => Promise<ListResponse<TResponse>>,
+  fetcher: (skip: number) => Promise<ListResponse<TResponse>>,
   processEntities: (result: ListResponse<TResponse>) => void,
-) => {
+): Promise<void> => {
   let pointer = 0;
   let results: ListResponse<TResponse>;
 

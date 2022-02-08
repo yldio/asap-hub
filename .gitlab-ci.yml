@@ -115,7 +115,7 @@ prepare:squidex:branch:
     - touch first_run/squidex_app_create
 
 sync:test:pr:
-  image: $SQUIDEX_BASE_DOCKER_IMAGE
+  image: $INTEGRATION_DOCKER_IMAGE
   before_script:
     - ./ci/config-squidex-rules.sh
   script:

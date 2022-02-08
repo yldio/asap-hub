@@ -32,6 +32,8 @@ export const indexUserHandler =
         await algoliaClient.remove(event.detail.payload.id);
         return;
       }
+
+      logger.error(e, 'Error saving user to Algolia');
       throw e;
     }
   };

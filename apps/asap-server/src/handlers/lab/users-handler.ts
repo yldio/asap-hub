@@ -23,11 +23,10 @@ export const indexLabUsersHandler =
     logger.debug(`Event ${event['detail-type']}`);
 
     try {
-      const foundUsers = await userController.fetch({
-        search: `data/labs/iv eq "${event.id}"`,
-      });
-
-      logger.info(`Found ${foundUsers.total} users`);
+      const foundUsers = await userController.fetchByLabId(
+        event.detail.payload.id,
+        { take: 10, skip: 0 },
+      );
 
       if (foundUsers?.total > 0) {
         const algoliaResponse = await algoliaClient.batch(
@@ -39,7 +38,9 @@ export const indexLabUsersHandler =
           ),
         );
 
-        logger.debug(`Updated ${foundUsers.total} users with algolia response: ${algoliaResponse}`);
+        logger.debug(
+          `Updated ${foundUsers.total} users with algolia response: ${algoliaResponse}`,
+        );
       }
     } catch (error) {
       if (error?.output?.statusCode === 404) {

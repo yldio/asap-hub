@@ -10,7 +10,10 @@
       "label": "Users",
       "validateOnPublish": false
     },
-    "scripts": {},
+    "scripts": {
+      "create": "if(JSON.stringify(ctx.data.teams.iv).indexOf('ASAP Staff') > 0  && ctx.data.role.iv !== 'Staff') {\n    reject('Only Staff can be given this team role. Change ASAP Hub Role to \"Staff\".')\n}",
+      "update": "if(JSON.stringify(ctx.data.teams.iv).indexOf('ASAP Staff') > 0  && ctx.data.role.iv !== 'Staff') {\n    reject('Only Staff can be given this team role. Change ASAP Hub Role to \"Staff\".')\n}"
+    },
     "fieldsInReferences": ["firstName", "lastName", "orcid"],
     "fieldsInLists": [
       "meta.status.color",
@@ -217,7 +220,8 @@
                 "Co-PI (Core Leadership)",
                 "Project Manager",
                 "Collaborating PI",
-                "Key Personnel"
+                "Key Personnel",
+                "ASAP Staff"
               ],
               "isUnique": false,
               "inlineEditable": true,

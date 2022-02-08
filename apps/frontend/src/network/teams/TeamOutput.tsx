@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 
 import { usePostTeamResearchOutput } from './state';
 import Frame from '../../structure/Frame';
+import researchSuggestions from './research-suggestions';
 
 type TeamOutputProps = {
   teamId: string;
@@ -28,6 +29,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
     return (
       <Frame title="create output">
         <TeamCreateOutputPage
+          suggestions={researchSuggestions}
           researchOutput={researchOutput}
           onCreate={() => createResearchOutput(researchOutput)}
         />

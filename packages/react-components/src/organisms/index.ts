@@ -55,3 +55,4 @@ export { default as UserProfileRecentWorks } from './UserProfileRecentWorks';
 export { default as WelcomeCard } from './WelcomeCard';
 export { default as TeamCreateOutputHeader } from './TeamCreateOutputHeader';
 export { default as TeamCreateOutputForm } from './TeamCreateOutputForm';
+export { default as TeamCreateOutputExtraInformationCard } from './TeamCreateOutputExtraInformationCard';

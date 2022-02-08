@@ -68,6 +68,7 @@ export {
   UserMenuButton,
   UsersList,
   UtilityBar,
+  FormCard,
 } from './molecules';
 export {
   AdditionalMaterials,
@@ -117,6 +118,7 @@ export {
   HelpSection,
   TeamCreateOutputHeader,
   TeamCreateOutputForm,
+  TeamCreateOutputExtraInformationCard,
 } from './organisms';
 export {
   BasicLayout,

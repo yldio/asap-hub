@@ -143,13 +143,11 @@ export default class Users implements UserController {
     ].join(' and ');
 
     const filterRoles = (filter || [])
-      .filter((word) => word !== 'Staff')
       .reduce(
         (acc: string[], word: string) =>
           acc.concat([`data/teams/iv/role eq '${word}'`]),
         [],
       )
-      .concat(filter?.includes('Staff') ? `data/role/iv eq 'Staff'` : [])
       .join(' or ');
 
     const filterHidden = "data/role/iv ne 'Hidden'";

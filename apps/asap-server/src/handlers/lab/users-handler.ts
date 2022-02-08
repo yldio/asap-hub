@@ -46,11 +46,6 @@ export const indexLabUsersHandler =
         return;
       }
 
-      console.error(
-        'An error while updating users',
-        JSON.stringify(error, null, 2),
-      );
-
       throw error;
     }
   };

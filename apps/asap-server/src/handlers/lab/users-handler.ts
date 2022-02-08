@@ -1,4 +1,5 @@
 import { EventBridgeEvent } from 'aws-lambda';
+import { ListResponse, UserResponse } from '@asap-hub/model';
 import { SquidexGraphql } from '@asap-hub/squidex';
 import {
   AlgoliaSearchClient,
@@ -8,6 +9,7 @@ import {
 import Users, { UserController } from '../../controllers/users';
 import { LabEventType } from '../webhooks/webhook-lab';
 import { algoliaIndex } from '../../config';
+import { loopOverCustomCollection } from '../../utils/migrations';
 import logger from '../../utils/logger';
 
 export const indexLabUsersHandler =
@@ -23,12 +25,18 @@ export const indexLabUsersHandler =
     logger.debug(`Event ${event['detail-type']}`);
 
     try {
-      const foundUsers = await userController.fetchByLabId(
-        event.detail.payload.id,
-        { take: 10, skip: 0 },
-      );
+      const fetchFunction = (
+        top: number,
+      ): Promise<ListResponse<UserResponse>> =>
+        userController.fetchByLabId(event.detail.payload.id, { skip: top });
 
-      if (foundUsers?.total > 0) {
+      const processingFunction = async (
+        foundUsers: ListResponse<UserResponse>,
+      ) => {
+        logger.info(
+          `Found ${foundUsers.total} users. Processing ${foundUsers.items.length} users.`,
+        );
+
         const algoliaResponse = await algoliaClient.batch(
           foundUsers.items.map(
             (user): BatchRequest => ({
@@ -38,10 +46,12 @@ export const indexLabUsersHandler =
           ),
         );
 
-        logger.debug(
+        logger.info(
           `Updated ${foundUsers.total} users with algolia response: ${algoliaResponse}`,
         );
-      }
+      };
+
+      await loopOverCustomCollection(fetchFunction, processingFunction);
     } catch (error) {
       if (error?.output?.statusCode === 404) {
         return;

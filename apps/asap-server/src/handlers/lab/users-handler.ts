@@ -5,12 +5,12 @@ import {
   algoliaSearchClientFactory,
   BatchRequest,
 } from '@asap-hub/algolia';
-import ResearchOutputs, { UserController } from '../../controllers/users';
+import Users, { UserController } from '../../controllers/users';
 import { LabEventType } from '../webhooks/webhook-lab';
 import { algoliaIndex } from '../../config';
 import logger from '../../utils/logger';
 
-export const indexResearchOutputHandler =
+export const indexLabUsersHandler =
   (
     userController: UserController,
     algoliaClient: AlgoliaSearchClient,
@@ -59,7 +59,7 @@ export type SquidexWebhookLabPayload = {
   };
 };
 
-export const handler = indexResearchOutputHandler(
-  new ResearchOutputs(new SquidexGraphql()),
+export const handler = indexLabUsersHandler(
+  new Users(new SquidexGraphql()),
   algoliaSearchClientFactory(algoliaIndex),
 );

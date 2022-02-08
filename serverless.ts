@@ -397,7 +397,7 @@ const serverlessConfig: AWS = {
       },
     },
     indexLab: {
-      handler: 'apps/asap-server/src/handlers/lab/index-handler.handler',
+      handler: 'apps/asap-server/src/handlers/lab/users-handler.handler',
       events: [
         {
           eventBridge: {

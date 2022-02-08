@@ -1,16 +1,18 @@
 import { EventBridgeEvent } from 'aws-lambda';
+import { ListResponse, UserResponse } from '@asap-hub/model';
 import { SquidexGraphql } from '@asap-hub/squidex';
 import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
   BatchRequest,
 } from '@asap-hub/algolia';
-import ResearchOutputs, { UserController } from '../../controllers/users';
+import Users, { UserController } from '../../controllers/users';
 import { LabEventType } from '../webhooks/webhook-lab';
 import { algoliaIndex } from '../../config';
+import { loopOverCustomCollection } from '../../utils/migrations';
 import logger from '../../utils/logger';
 
-export const indexResearchOutputHandler =
+export const indexLabUsersHandler =
   (
     userController: UserController,
     algoliaClient: AlgoliaSearchClient,
@@ -23,14 +25,19 @@ export const indexResearchOutputHandler =
     logger.debug(`Event ${event['detail-type']}`);
 
     try {
-      const foundUsers = await userController.fetch({
-        search: `data/labs/iv eq "${event.id}"`,
-      });
+      const fetchFunction = (
+        skip: number,
+      ): Promise<ListResponse<UserResponse>> =>
+        userController.fetchByLabId(event.detail.payload.id, { skip });
 
-      logger.info(`Found users: ${foundUsers}`);
+      const processingFunction = async (
+        foundUsers: ListResponse<UserResponse>,
+      ) => {
+        logger.info(
+          `Found ${foundUsers.total} users. Processing ${foundUsers.items.length} users.`,
+        );
 
-      if (foundUsers?.total > 0) {
-        await algoliaClient.batch(
+        const algoliaResponse = await algoliaClient.batch(
           foundUsers.items.map(
             (user): BatchRequest => ({
               action: 'updateObject',
@@ -39,14 +46,18 @@ export const indexResearchOutputHandler =
           ),
         );
 
-        logger.debug(`Updated ${foundUsers.total} users`);
-      }
-    } catch (e) {
-      if (e?.output?.statusCode === 404) {
+        logger.info(
+          `Updated ${foundUsers.total} users with algolia response: ${algoliaResponse}`,
+        );
+      };
+
+      await loopOverCustomCollection(fetchFunction, processingFunction);
+    } catch (error) {
+      if (error?.output?.statusCode === 404) {
         return;
       }
 
-      throw e;
+      throw error;
     }
   };
 
@@ -59,7 +70,7 @@ export type SquidexWebhookLabPayload = {
   };
 };
 
-export const handler = indexResearchOutputHandler(
-  new ResearchOutputs(new SquidexGraphql()),
+export const handler = indexLabUsersHandler(
+  new Users(new SquidexGraphql()),
   algoliaSearchClientFactory(algoliaIndex),
 );

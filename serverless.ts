@@ -396,8 +396,8 @@ const serverlessConfig: AWS = {
         EVENT_SOURCE: 'asap.lab',
       },
     },
-    indexLab: {
-      handler: 'apps/asap-server/src/handlers/lab/index-handler.handler',
+    indexLabUsers: {
+      handler: 'apps/asap-server/src/handlers/lab/users-handler.handler',
       events: [
         {
           eventBridge: {

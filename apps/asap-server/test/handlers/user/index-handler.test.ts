@@ -16,7 +16,7 @@ describe('User index handler', () => {
     const userResponse = getUserResponse();
     userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
 
-    await indexHandler(createEvent('user-1234'));
+    await indexHandler(createEvent());
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(userResponse);
   });
 
@@ -24,13 +24,13 @@ describe('User index handler', () => {
     const userResponse = getUserResponse();
     userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
 
-    await indexHandler(updateEvent('user-1234'));
+    await indexHandler(updateEvent());
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(userResponse);
   });
 
   test('Should fetch the user and remove the record in Algolia when user is unpublished', async () => {
-    const event = unpublishedEvent('user-1234');
+    const event = unpublishedEvent();
 
     userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
 
@@ -42,7 +42,7 @@ describe('User index handler', () => {
   });
 
   test('Should fetch the user and remove the record in Algolia when user is deleted', async () => {
-    const event = deleteEvent('user-1234');
+    const event = deleteEvent();
 
     userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
 
@@ -56,9 +56,7 @@ describe('User index handler', () => {
   test('Should throw an error and do not trigger algolia when the user request fails with another error code', async () => {
     userControllerMock.fetchById.mockRejectedValue(Boom.badData());
 
-    await expect(indexHandler(createEvent('user-1234'))).rejects.toThrow(
-      Boom.badData(),
-    );
+    await expect(indexHandler(createEvent())).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
   });
 
@@ -68,9 +66,7 @@ describe('User index handler', () => {
     userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
     algoliaSearchClientMock.save.mockRejectedValueOnce(algoliaError);
 
-    await expect(indexHandler(updateEvent('user-1234'))).rejects.toThrow(
-      algoliaError,
-    );
+    await expect(indexHandler(updateEvent())).rejects.toThrow(algoliaError);
   });
 
   test('Should throw the algolia error when deleting the record fails', async () => {
@@ -80,9 +76,7 @@ describe('User index handler', () => {
 
     algoliaSearchClientMock.remove.mockRejectedValueOnce(algoliaError);
 
-    await expect(indexHandler(deleteEvent('user-1234'))).rejects.toThrow(
-      algoliaError,
-    );
+    await expect(indexHandler(deleteEvent())).rejects.toThrow(algoliaError);
   });
 
   describe('Should process the events, handle race conditions and not rely on the order of the events', () => {
@@ -283,14 +277,14 @@ describe('User index handler', () => {
   });
 });
 
-const unpublishedEvent = (id: string) =>
+const unpublishedEvent = (id: string = 'user-1234') =>
   getUserEvent(id, 'UsersUnpublished', 'UserDeleted');
 
-const deleteEvent = (id: string) =>
+const deleteEvent = (id: string = 'user-1234') =>
   getUserEvent(id, 'UsersDeleted', 'UserDeleted');
 
-const createEvent = (id: string) =>
+const createEvent = (id: string = 'user-1234') =>
   getUserEvent(id, 'UsersPublished', 'UserPublished');
 
-const updateEvent = (id: string) =>
+const updateEvent = (id: string = 'user-1234') =>
   getUserEvent(id, 'UsersUpdated', 'UserUpdated');

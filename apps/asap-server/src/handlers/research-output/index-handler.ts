@@ -1,4 +1,3 @@
-import { EventBridgeEvent } from 'aws-lambda';
 import { SquidexGraphql } from '@asap-hub/squidex';
 import {
   AlgoliaSearchClient,
@@ -9,23 +8,17 @@ import ResearchOutputs, {
 } from '../../controllers/research-outputs';
 import { ResearchOutputEventType } from '../webhooks/webhook-research-output';
 import logger from '../../utils/logger';
+import { EventBridgeHandler } from '../../utils/types';
 
 export const indexResearchOutputHandler =
   (
     researchOutputController: ResearchOutputController,
     algoliaClient: AlgoliaSearchClient,
-  ): ((
-    event: EventBridgeEvent<
-      ResearchOutputEventType,
-      SquidexWebhookResearchOutputPayload
-    >,
-  ) => Promise<void>) =>
-  async (
-    event: EventBridgeEvent<
-      ResearchOutputEventType,
-      SquidexWebhookResearchOutputPayload
-    >,
-  ): Promise<void> => {
+  ): EventBridgeHandler<
+    ResearchOutputEventType,
+    SquidexWebhookResearchOutputPayload
+  > =>
+  async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
     try {

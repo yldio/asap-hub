@@ -7,15 +7,14 @@ import {
 import logger from '../../utils/logger';
 import Users, { UserController } from '../../controllers/users';
 import { UserEventType } from '../webhooks/webhook-user';
+import { EventBridgeHandler } from '../../utils/types';
 
 export const indexUserHandler =
   (
     userController: UserController,
     algoliaClient: AlgoliaSearchClient,
-  ): ((
-    event: EventBridgeEvent<UserEventType, SquidexWebhookUserPayload>,
-  ) => Promise<void>) =>
-  async (event: UserIndexEventBridgeEvent): Promise<void> => {
+  ): EventBridgeHandler<UserEventType, SquidexWebhookUserPayload> =>
+  async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
     try {

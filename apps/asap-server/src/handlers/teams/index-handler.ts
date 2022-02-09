@@ -1,4 +1,3 @@
-import { EventBridgeEvent } from 'aws-lambda';
 import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
@@ -9,17 +8,14 @@ import ResearchOutputs, {
   ResearchOutputController,
 } from '../../controllers/research-outputs';
 import logger from '../../utils/logger';
+import { EventBridgeHandler } from '../../utils/types';
 
 export const indexResearchOutputByTeamHandler =
   (
     researchOutputController: ResearchOutputController,
     algoliaClient: AlgoliaSearchClient,
-  ): ((
-    event: EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>,
-  ) => Promise<void>) =>
-  async (
-    event: EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>,
-  ): Promise<void> => {
+  ): EventBridgeHandler<TeamsEventType, SquidexWebhookTeamPayload> =>
+  async (event) => {
     const outputsIds = Array.from(
       new Set(
         (event.detail.payload.data.outputs.iv ?? []).concat(

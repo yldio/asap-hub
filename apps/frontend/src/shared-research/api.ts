@@ -1,5 +1,5 @@
 import { ResearchOutputResponse, ResearchOutputType } from '@asap-hub/model';
-import { ResearchOutputSearchIndex } from '@asap-hub/algolia';
+import { AlgoliaSearchClient } from '@asap-hub/algolia';
 
 import { createSentryHeaders, GetListOptions } from '../api-util';
 import { API_BASE_URL } from '../config';
@@ -66,11 +66,11 @@ export const getAllFilters = (
 };
 
 export const getResearchOutputs = (
-  index: ResearchOutputSearchIndex,
+  client: AlgoliaSearchClient,
   options: ResearchOutputListOptions,
 ) =>
-  index
-    .search(options.searchQuery, {
+  client
+    .searchEntity('research-output', options.searchQuery, {
       page: options.currentPage ?? 0,
       hitsPerPage: options.pageSize ?? 10,
       filters: getAllFilters(options.filters, options.teamId, options.userId),

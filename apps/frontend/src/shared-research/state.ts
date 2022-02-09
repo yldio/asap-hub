@@ -102,9 +102,9 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
   const [researchOutputs, setResearchOutputs] = useRecoilState(
     researchOutputsState(options),
   );
-  const { index } = useAlgolia();
+  const { client } = useAlgolia();
   if (researchOutputs === undefined) {
-    throw getResearchOutputs(index.researchOutput, options)
+    throw getResearchOutputs(client, options)
       .then(
         (data): ListResearchOutputResponse => ({
           total: data.nbHits,

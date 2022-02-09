@@ -17,7 +17,7 @@ import logger from '../../utils/logger';
 
 export const inviteHandlerFactory =
   (sendEmail: SendEmail, userClient: SquidexRestClient<RestUser>) =>
-  async (event: UserEventBridgeEvent): Promise<void> => {
+  async (event: UserInviteEventBridgeEvent): Promise<void> => {
     let user: RestUser;
 
     try {
@@ -107,7 +107,7 @@ export type SquidexWebhookUserPayload = {
   };
 };
 
-export type UserEventBridgeEvent = EventBridgeEvent<
+export type UserInviteEventBridgeEvent = EventBridgeEvent<
   'UserPublished',
   SquidexWebhookUserPayload
 >;

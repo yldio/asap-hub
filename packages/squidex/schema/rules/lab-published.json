@@ -1,19 +1,19 @@
 {
   "$schema": "./../__json/rule.json",
   "isEnabled": true,
-  "name": "User updated",
+  "name": "Labs updated",
   "trigger": {
     "triggerType": "ContentChanged",
     "schemas": [
       {
-        "schemaId": "users",
+        "schemaId": "labs",
         "condition": "event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
       }
     ],
     "handleAll": false
   },
   "action": {
-    "url": "ASAP_API_URL/webhook/users",
+    "url": "ASAP_API_URL/webhook/labs",
     "method": "POST",
     "sharedSecret": "SQUIDEX_SHARED_SECRET",
     "isFrozen": true,

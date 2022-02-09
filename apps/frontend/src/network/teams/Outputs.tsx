@@ -56,9 +56,9 @@ const OutputsList: React.FC<OutputsListProps> = ({
     result.total,
     pageSize,
   );
-  const { index } = useAlgolia();
+  const { client } = useAlgolia();
   const exportResults = () =>
-    algoliaResultsToStream(
+    algoliaResultsToStream<'research-output'>(
       createCsvFileStream(
         { headers: true },
         `SharedOutputs_Team${utils
@@ -66,7 +66,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
           .replace(/[\W_]+/g, '')}_${format(new Date(), 'MMddyy')}.csv`,
       ),
       (paginationParams) =>
-        getResearchOutputs(index.researchOutput, {
+        getResearchOutputs(client, {
           filters,
           searchQuery,
           teamId,

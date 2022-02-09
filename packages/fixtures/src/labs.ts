@@ -1,6 +1,6 @@
-import { Lab } from '@asap-hub/model/src/lab';
+import { LabResponse } from '@asap-hub/model';
 
-export const createLabs = ({ labs = 1 }: { labs?: number }): Lab[] =>
+export const createLabs = ({ labs = 1 }: { labs?: number }): LabResponse[] =>
   Array.from({ length: labs }, (_, index) => ({
     id: `l${index}`,
     name: `Example ${index + 1}`,

@@ -1,13 +1,13 @@
 import { framework as lambda } from '@asap-hub/services-common';
-import { User, WebhookPayload } from '@asap-hub/squidex';
+import { Lab, WebhookPayload } from '@asap-hub/squidex';
 import { EventBridge } from 'aws-sdk';
 import { eventBus, eventSource } from '../../config';
 import logger from '../../utils/logger';
 import { Handler } from '../../utils/types';
 import validateRequest from '../../utils/validate-squidex-request';
 
-export const userWebhookFactory = (eventBridge: EventBridge): Handler =>
-  lambda.http(async (request: lambda.Request<WebhookPayload<User>>) => {
+export const labsWebhookFactory = (eventBridge: EventBridge): Handler =>
+  lambda.http(async (request: lambda.Request<WebhookPayload<Lab>>) => {
     await validateRequest(request);
 
     const type = getEventType(request.payload.type);
@@ -37,22 +37,32 @@ export const userWebhookFactory = (eventBridge: EventBridge): Handler =>
     };
   });
 
-const userEventTypes = ['UserPublished', 'UserUpdated', 'UserDeleted'] as const;
-export type UserEventType = typeof userEventTypes[number];
+const labEventTypes = ['LabPublished', 'LabUpdated', 'LabDeleted'] as const;
+export type LabEventType = typeof labEventTypes[number];
 
-const getEventType = (customType: string): UserEventType | undefined => {
+const labSquidexEventTypes = [
+  'LabsPublished',
+  'LabsUpdated',
+  'LabsUnpublished',
+  'LabsDeleted',
+];
+export type SquidexLabEventType = typeof labSquidexEventTypes[number];
+
+const getEventType = (
+  customType: SquidexLabEventType | unknown,
+): LabEventType | undefined => {
   switch (customType) {
-    case 'UsersPublished':
-      return 'UserPublished';
+    case 'LabsPublished':
+      return 'LabPublished';
 
-    case 'UsersUpdated':
-      return 'UserUpdated';
+    case 'LabsUpdated':
+      return 'LabUpdated';
 
-    case 'UsersUnpublished':
-      return 'UserDeleted';
+    case 'LabsUnpublished':
+      return 'LabDeleted';
 
-    case 'UsersDeleted':
-      return 'UserDeleted';
+    case 'LabsDeleted':
+      return 'LabDeleted';
 
     default:
       return undefined;
@@ -60,4 +70,4 @@ const getEventType = (customType: string): UserEventType | undefined => {
 };
 
 const eventBridge = new EventBridge();
-export const handler: Handler = userWebhookFactory(eventBridge);
+export const handler: Handler = labsWebhookFactory(eventBridge);

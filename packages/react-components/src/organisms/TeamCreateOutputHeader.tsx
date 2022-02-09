@@ -2,6 +2,7 @@ import React from 'react';
 import { css } from '@emotion/react';
 import { ResearchOutput } from '@asap-hub/model';
 
+import { news } from '@asap-hub/routing';
 import { Display, Link, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
@@ -21,7 +22,7 @@ const visualHeaderStyles = css({
   maxWidth: `${720 / perRem}em`,
 });
 
-const headerCopy = ({ outputType }: { outputType: ResearchOutput['type'] }) => {
+const headerCopy = (outputType: ResearchOutput['type']) => {
   switch (outputType) {
     case 'Protocol':
       return 'Share a protocol';
@@ -41,35 +42,28 @@ const headerCopy = ({ outputType }: { outputType: ResearchOutput['type'] }) => {
 const SubheaderCopy: React.FC<{ outputType: ResearchOutput['type'] }> = ({
   outputType,
 }) => {
+  const protocolsIoLink = news({}).article({
+    articleId: '7d3dd1ec-14ef-441c-8a2c-19a23d6264f3',
+  }).$;
+  const zenodoLink = news({}).article({
+    articleId: '735944ac-5641-431f-8984-bf53972dfd4e',
+  }).$;
   switch (outputType) {
     case 'Protocol':
       return (
         <>
           Add your protocol to a repository (e.g. protocols.io) before sharing
           on the Hub. Find out{' '}
-          <Link
-            href={
-              'https://hub.asap.science/news/7d3dd1ec-14ef-441c-8a2c-19a23d6264f3'
-            }
-          >
-            how to add to protocols.io
-          </Link>{' '}
-          to get started.
+          <Link href={protocolsIoLink}>how to add to protocols.io</Link> to get
+          started.
         </>
       );
     case 'Dataset':
       return (
         <>
           Add your dataset to a platform (e.g. Zenodo) before sharing on the
-          Hub. Find out{' '}
-          <Link
-            href={
-              'https://hub.asap.science/news/735944ac-5641-431f-8984-bf53972dfd4e'
-            }
-          >
-            how to add to Zenodo
-          </Link>{' '}
-          to get started.
+          Hub. Find out <Link href={zenodoLink}>how to add to Zenodo</Link> to
+          get started.
         </>
       );
     case 'Bioinformatics':
@@ -106,9 +100,7 @@ const TeamCreateOutputHeader: React.FC<TeamCreateOutputHeaderProps> = ({
 }) => (
   <header>
     <div css={visualHeaderStyles}>
-      <Display styleAsHeading={2}>
-        {headerCopy({ outputType: researchOutput.type })}
-      </Display>
+      <Display styleAsHeading={2}>{headerCopy(researchOutput.type)}</Display>
       <div>
         <Paragraph accent="lead">
           <SubheaderCopy outputType={researchOutput.type} />

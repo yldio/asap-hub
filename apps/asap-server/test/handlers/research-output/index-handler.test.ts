@@ -6,43 +6,48 @@ import {
 } from '../../../src/handlers/research-output/index-handler';
 import { ResearchOutputEventType } from '../../../src/handlers/webhooks/webhook-research-output';
 import {
+  getResearchOutputAlgoliaResponse,
   getResearchOutputEvent,
-  getResearchOutputResponse,
 } from '../../fixtures/research-output.fixtures';
-import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
+import {
+  algoliaClientMock,
+  algoliaIndexMock,
+} from '../../mocks/algolia-client.mock';
 import { researchOutputControllerMock } from '../../mocks/research-outputs-controller.mock';
 
 describe('Research Output index handler', () => {
   const indexHandler = indexResearchOutputHandler(
     researchOutputControllerMock,
-    algoliaSearchClientMock,
+    algoliaClientMock,
   );
   afterEach(() => jest.clearAllMocks());
 
   test('Should fetch the research-output and create a record in Algolia when research-output is created', async () => {
-    const researchOutputResponse = getResearchOutputResponse();
+    const researchOutputResponse = getResearchOutputAlgoliaResponse();
     researchOutputControllerMock.fetchById.mockResolvedValueOnce(
       researchOutputResponse,
     );
 
     await indexHandler(createEvent('ro-1234'));
 
-    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(
-      researchOutputResponse,
-    );
+    expect(algoliaIndexMock.saveObject).toHaveBeenCalledWith({
+      ...researchOutputResponse,
+      objectID: researchOutputResponse.id,
+    });
   });
 
   test('Should fetch the research-output and create a record in Algolia when research-output is updated', async () => {
-    const researchOutputResponse = getResearchOutputResponse();
+    const researchOutputResponse = getResearchOutputAlgoliaResponse();
     researchOutputControllerMock.fetchById.mockResolvedValueOnce(
       researchOutputResponse,
     );
 
     await indexHandler(updateEvent('ro-1234'));
 
-    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(
-      researchOutputResponse,
-    );
+    expect(algoliaIndexMock.saveObject).toHaveBeenCalledWith({
+      ...researchOutputResponse,
+      objectID: researchOutputResponse.id,
+    });
   });
 
   test('Should fetch the research-output and remove the record in Algolia when research-output is unpublished', async () => {
@@ -52,7 +57,7 @@ describe('Research Output index handler', () => {
 
     await indexHandler(event);
 
-    expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+    expect(algoliaIndexMock.deleteObject).toHaveBeenCalledWith(
       event.detail.payload.id,
     );
   });
@@ -64,7 +69,7 @@ describe('Research Output index handler', () => {
 
     await indexHandler(event);
 
-    expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+    expect(algoliaIndexMock.deleteObject).toHaveBeenCalledWith(
       event.detail.payload.id,
     );
   });
@@ -75,16 +80,16 @@ describe('Research Output index handler', () => {
     await expect(indexHandler(createEvent('ro-1234'))).rejects.toThrow(
       Boom.badData(),
     );
-    expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
+    expect(algoliaIndexMock.deleteObject).not.toHaveBeenCalled();
   });
 
   test('Should throw the algolia error when saving the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
     researchOutputControllerMock.fetchById.mockResolvedValueOnce(
-      getResearchOutputResponse(),
+      getResearchOutputAlgoliaResponse(),
     );
-    algoliaSearchClientMock.save.mockRejectedValueOnce(algoliaError);
+    algoliaIndexMock.saveObject.mockRejectedValueOnce(algoliaError);
 
     await expect(indexHandler(updateEvent('ro-1234'))).rejects.toThrow(
       algoliaError,
@@ -96,7 +101,7 @@ describe('Research Output index handler', () => {
 
     researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
 
-    algoliaSearchClientMock.remove.mockRejectedValueOnce(algoliaError);
+    algoliaIndexMock.deleteObject.mockRejectedValueOnce(algoliaError);
 
     await expect(indexHandler(deleteEvent('ro-1234'))).rejects.toThrow(
       algoliaError,
@@ -107,7 +112,7 @@ describe('Research Output index handler', () => {
     test('receives the events created and updated in correct order', async () => {
       const roID = 'ro-1234';
       const researchOutputResponse = {
-        ...getResearchOutputResponse(),
+        ...getResearchOutputAlgoliaResponse(),
         id: roID,
       };
 
@@ -118,17 +123,18 @@ describe('Research Output index handler', () => {
       await indexHandler(createEvent(roID));
       await indexHandler(updateEvent(roID));
 
-      expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
-      expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(
-        researchOutputResponse,
-      );
+      expect(algoliaIndexMock.deleteObject).not.toHaveBeenCalled();
+      expect(algoliaIndexMock.saveObject).toHaveBeenCalledTimes(2);
+      expect(algoliaIndexMock.saveObject).toHaveBeenCalledWith({
+        ...researchOutputResponse,
+        objectID: researchOutputResponse.id,
+      });
     });
 
     test('receives the events created and updated in reverse order', async () => {
       const roID = 'ro-1234';
       const researchOutputResponse = {
-        ...getResearchOutputResponse(),
+        ...getResearchOutputAlgoliaResponse(),
         id: roID,
       };
 
@@ -139,11 +145,12 @@ describe('Research Output index handler', () => {
       await indexHandler(updateEvent(roID));
       await indexHandler(createEvent(roID));
 
-      expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
-      expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(
-        researchOutputResponse,
-      );
+      expect(algoliaIndexMock.deleteObject).not.toHaveBeenCalled();
+      expect(algoliaIndexMock.saveObject).toHaveBeenCalledTimes(2);
+      expect(algoliaIndexMock.saveObject).toHaveBeenCalledWith({
+        ...researchOutputResponse,
+        objectID: researchOutputResponse.id,
+      });
     });
 
     test('receives the events created and unpublished in correct order', async () => {
@@ -153,15 +160,15 @@ describe('Research Output index handler', () => {
       const algoliaError = new Error('ERROR');
 
       researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
-      algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
-      algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
+      algoliaIndexMock.deleteObject.mockResolvedValueOnce({ taskID: 1 });
+      algoliaIndexMock.deleteObject.mockRejectedValue(algoliaError);
 
       await indexHandler(createEv);
       await expect(indexHandler(unpublishedEv)).rejects.toEqual(algoliaError);
 
-      expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
-      expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
+      expect(algoliaIndexMock.deleteObject).toHaveBeenCalledTimes(2);
+      expect(algoliaIndexMock.deleteObject).toHaveBeenCalledWith(
         unpublishedEv.detail.payload.id,
       );
     });
@@ -173,15 +180,15 @@ describe('Research Output index handler', () => {
       const algoliaError = new Error('ERROR');
 
       researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
-      algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
-      algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
+      algoliaIndexMock.deleteObject.mockResolvedValueOnce({ taskID: 1 });
+      algoliaIndexMock.deleteObject.mockRejectedValue(algoliaError);
 
       await indexHandler(unpublishedEv);
       await expect(indexHandler(createEv)).rejects.toEqual(algoliaError);
 
-      expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
-      expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
+      expect(algoliaIndexMock.deleteObject).toHaveBeenCalledTimes(2);
+      expect(algoliaIndexMock.deleteObject).toHaveBeenCalledWith(
         unpublishedEv.detail.payload.id,
       );
     });
@@ -193,15 +200,15 @@ describe('Research Output index handler', () => {
       const algoliaError = new Error('ERROR');
 
       researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
-      algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
-      algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
+      algoliaIndexMock.deleteObject.mockResolvedValueOnce({ taskID: 1 });
+      algoliaIndexMock.deleteObject.mockRejectedValue(algoliaError);
 
       await indexHandler(createEv);
       await expect(indexHandler(deleteEv)).rejects.toEqual(algoliaError);
 
-      expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
-      expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
+      expect(algoliaIndexMock.deleteObject).toHaveBeenCalledTimes(2);
+      expect(algoliaIndexMock.deleteObject).toHaveBeenCalledWith(
         deleteEv.detail.payload.id,
       );
     });
@@ -213,15 +220,15 @@ describe('Research Output index handler', () => {
       const algoliaError = new Error('ERROR');
 
       researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
-      algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
-      algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
+      algoliaIndexMock.deleteObject.mockResolvedValueOnce({ taskID: 1 });
+      algoliaIndexMock.deleteObject.mockRejectedValue(algoliaError);
 
       await indexHandler(deleteEv);
       await expect(indexHandler(createEv)).rejects.toEqual(algoliaError);
 
-      expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
-      expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
+      expect(algoliaIndexMock.deleteObject).toHaveBeenCalledTimes(2);
+      expect(algoliaIndexMock.deleteObject).toHaveBeenCalledWith(
         deleteEv.detail.payload.id,
       );
     });
@@ -233,15 +240,15 @@ describe('Research Output index handler', () => {
       const algoliaError = new Error('ERROR');
 
       researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
-      algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
-      algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
+      algoliaIndexMock.deleteObject.mockResolvedValueOnce({ taskID: 1 });
+      algoliaIndexMock.deleteObject.mockRejectedValue(algoliaError);
 
       await indexHandler(updateEv);
       await expect(indexHandler(deleteEv)).rejects.toEqual(algoliaError);
 
-      expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
-      expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
+      expect(algoliaIndexMock.deleteObject).toHaveBeenCalledTimes(2);
+      expect(algoliaIndexMock.deleteObject).toHaveBeenCalledWith(
         deleteEv.detail.payload.id,
       );
     });
@@ -253,15 +260,15 @@ describe('Research Output index handler', () => {
       const algoliaError = new Error('ERROR');
 
       researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
-      algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
-      algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
+      algoliaIndexMock.deleteObject.mockResolvedValueOnce({ taskID: 1 });
+      algoliaIndexMock.deleteObject.mockRejectedValue(algoliaError);
 
       await indexHandler(deleteEv);
       await expect(indexHandler(updateEv)).rejects.toEqual(algoliaError);
 
-      expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
-      expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
+      expect(algoliaIndexMock.deleteObject).toHaveBeenCalledTimes(2);
+      expect(algoliaIndexMock.deleteObject).toHaveBeenCalledWith(
         deleteEv.detail.payload.id,
       );
     });
@@ -272,15 +279,15 @@ describe('Research Output index handler', () => {
       const algoliaError = new Error('ERROR');
 
       researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
-      algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
-      algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
+      algoliaIndexMock.deleteObject.mockResolvedValueOnce({ taskID: 1 });
+      algoliaIndexMock.deleteObject.mockRejectedValue(algoliaError);
 
       await indexHandler(updateEv);
       await expect(indexHandler(unpublishedEv)).rejects.toEqual(algoliaError);
 
-      expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
-      expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
+      expect(algoliaIndexMock.deleteObject).toHaveBeenCalledTimes(2);
+      expect(algoliaIndexMock.deleteObject).toHaveBeenCalledWith(
         unpublishedEv.detail.payload.id,
       );
     });
@@ -292,15 +299,15 @@ describe('Research Output index handler', () => {
       const algoliaError = new Error('ERROR');
 
       researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
-      algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
-      algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
+      algoliaIndexMock.deleteObject.mockResolvedValueOnce({ taskID: 1 });
+      algoliaIndexMock.deleteObject.mockRejectedValue(algoliaError);
 
       await indexHandler(unpublishedEv);
       await expect(indexHandler(updateEv)).rejects.toEqual(algoliaError);
 
-      expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
-      expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
+      expect(algoliaIndexMock.deleteObject).toHaveBeenCalledTimes(2);
+      expect(algoliaIndexMock.deleteObject).toHaveBeenCalledWith(
         unpublishedEv.detail.payload.id,
       );
     });

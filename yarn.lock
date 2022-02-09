@@ -300,7 +300,6 @@ __metadata:
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": ^7.14.0
-    "@types/node": ^14.14.45
     algoliasearch: ^4.11.0
   languageName: unknown
   linkType: soft

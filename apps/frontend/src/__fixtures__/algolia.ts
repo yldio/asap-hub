@@ -1,16 +1,20 @@
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
-  EntityRecord,
-  RESEARCH_OUTPUT_ENTITY_TYPE,
-  EntityResponses,
-  SearchEntityResponse,
+  ResearchOutputSearchResponse,
+  ResearchOutputSearchResponseEntity,
+  SearchResponse,
+  SearchResponseEntityMetadata,
 } from '@asap-hub/algolia';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import { ResearchOutputResponse } from '@asap-hub/model';
 
-export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
-  type: EntityType,
-  data: EntityResponses[EntityType][],
-  overrides: Partial<SearchEntityResponse<EntityType>> = {},
-): SearchEntityResponse<EntityType> => ({
+export const createAlgoliaResponse = <
+  TEntity extends Record<string, unknown>,
+  TEntityName extends string,
+>(
+  data: TEntity[],
+  overrides: Partial<SearchResponse<TEntity, TEntityName>> = {},
+  type: string = 'research-output',
+): SearchResponse<TEntity, TEntityName> => ({
   nbHits: data.length,
   page: 0,
   nbPages: 1,
@@ -24,13 +28,13 @@ export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
   hits: data.map((item, i) => ({
     ...item,
     objectID: `${i}`,
-    __meta: { type },
+    __meta: { type } as SearchResponseEntityMetadata<TEntityName>,
   })),
 });
 
-export const createResearchOutputAlgoliaRecord = (
+export const createResearchOutputAlgoliaResponse = (
   itemIndex = 0,
-): EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE> => {
+): ResearchOutputSearchResponseEntity => {
   const response = createResearchOutputResponse(itemIndex);
 
   return {
@@ -42,14 +46,11 @@ export const createResearchOutputAlgoliaRecord = (
 
 export const createResearchOutputListAlgoliaResponse = (
   items: number,
-  responseOverride?: Partial<
-    SearchEntityResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE>
-  >,
-): SearchEntityResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE> =>
-  createAlgoliaResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
-    RESEARCH_OUTPUT_ENTITY_TYPE,
+  responseOverride?: ResearchOutputSearchResponse,
+): ResearchOutputSearchResponse =>
+  createAlgoliaResponse<ResearchOutputResponse, 'research-output'>(
     Array.from({ length: items }, (_, itemIndex) =>
-      createResearchOutputAlgoliaRecord(itemIndex),
+      createResearchOutputAlgoliaResponse(itemIndex),
     ),
     responseOverride,
   );

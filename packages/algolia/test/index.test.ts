@@ -1,45 +1,11 @@
-import algoliasearch, { SearchClient } from 'algoliasearch';
-import { algoliaSearchClientFactory } from '../src';
-import * as config from '../src/config';
+import { algoliasearch, algoliasearchLite } from '../src/index';
 
-jest.mock('algoliasearch');
-
-const algoliasearchMock = algoliasearch as jest.MockedFunction<
-  typeof algoliasearch
->;
-const algoliaSearchClientMock = {
-  initIndex: jest.fn(),
-} as unknown as jest.Mocked<SearchClient>;
-algoliasearchMock.mockReturnValue(algoliaSearchClientMock);
-
-describe('Algolia Search Client Factory', () => {
-  beforeAll(() => {
-    jest.clearAllMocks();
+describe('ASAP Hub Algolia package', () => {
+  it('should expose algoliasearch', () => {
+    expect(algoliasearch).toBeInstanceOf(Function);
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  test('Should instantiate with defaults', () => {
-    algoliaSearchClientFactory();
-
-    expect(algoliasearchMock).toBeCalledWith(
-      config.algoliaAppId,
-      config.algoliaApiKey,
-    );
-    expect(algoliaSearchClientMock.initIndex).toBeCalledWith(
-      config.algoliaIndex,
-    );
-  });
-
-  test('Should instantiate with a custom api key and index', () => {
-    algoliaSearchClientFactory({
-      algoliaApiKey: 'test-key',
-      algoliaIndex: 'test-index',
-    });
-
-    expect(algoliasearchMock).toBeCalledWith(config.algoliaAppId, 'test-key');
-    expect(algoliaSearchClientMock.initIndex).toBeCalledWith('test-index');
+  it('should expose algoliasearchLite', () => {
+    expect(algoliasearchLite).toBeInstanceOf(Function);
   });
 });

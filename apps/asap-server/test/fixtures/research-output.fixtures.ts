@@ -1,3 +1,4 @@
+import { ResearchOutputSearchResponseEntity } from '@asap-hub/algolia';
 import {
   ListResearchOutputResponse,
   ListUserResponse,
@@ -177,6 +178,17 @@ export const getResearchOutputEvent = (
     eventType,
     id,
   );
+
+export const getResearchOutputAlgoliaResponse =
+  (): ResearchOutputSearchResponseEntity => {
+    const response = getResearchOutputResponse();
+
+    return {
+      ...response,
+      objectID: response.id,
+      __meta: { type: 'research-output' },
+    };
+  };
 
 export const getResearchOutputRequest = (): ResearchOutputInputData => ({
   type: 'Bioinformatics',

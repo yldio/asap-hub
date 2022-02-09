@@ -5,7 +5,7 @@ import url from 'url';
 import { origin } from '../../../src/config';
 import {
   inviteHandlerFactory,
-  UserInviteEventBridgeEvent,
+  UserEventBridgeEvent,
 } from '../../../src/handlers/user/invite-handler';
 import { SendEmail } from '../../../src/utils/send-email';
 import { restUserMock } from '../../fixtures/users.fixtures';
@@ -173,9 +173,7 @@ describe('Invite Handler', () => {
   });
 });
 
-const getEventBridgeEventMock = (
-  userId?: string,
-): UserInviteEventBridgeEvent => ({
+const getEventBridgeEventMock = (userId?: string): UserEventBridgeEvent => ({
   id: 'test-id',
   version: '1',
   account: 'test-account',

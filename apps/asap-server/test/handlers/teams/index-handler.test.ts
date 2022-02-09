@@ -5,14 +5,17 @@ import {
 } from '../../../src/handlers/teams/index-handler';
 import { TeamsEventType } from '../../../src/handlers/webhooks/webhook-teams';
 import { createEventBridgeEventMock } from '../../helpers/events';
+import {
+  algoliaClientMock,
+  algoliaIndexMock,
+} from '../../mocks/algolia-client.mock';
 import { getResearchOutputResponse } from '../../fixtures/research-output.fixtures';
 import { researchOutputControllerMock } from '../../mocks/research-outputs-controller.mock';
-import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 
 describe('Team Research Outputs Index', () => {
   const indexHandler = indexResearchOutputByTeamHandler(
     researchOutputControllerMock,
-    algoliaSearchClientMock,
+    algoliaClientMock,
   );
 
   afterEach(() => jest.clearAllMocks());
@@ -38,9 +41,18 @@ describe('Team Research Outputs Index', () => {
 
     await indexHandler(updateEvent);
 
-    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(outputs[0]);
-    expect(algoliaSearchClientMock.save).not.toHaveBeenCalledWith(outputs[1]);
-    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(outputs[2]);
+    expect(algoliaIndexMock.saveObject).toHaveBeenCalledWith({
+      ...outputs[0],
+      objectID: outputs[0]!.id,
+    });
+    expect(algoliaIndexMock.saveObject).not.toHaveBeenCalledWith({
+      ...outputs[1],
+      objectID: outputs[1]!.id,
+    });
+    expect(algoliaIndexMock.saveObject).toHaveBeenCalledWith({
+      ...outputs[2],
+      objectID: outputs[2]!.id,
+    });
   });
 
   test('Should not trigger algolia save when there are no research outputs associated with the team', async () => {
@@ -56,7 +68,7 @@ describe('Team Research Outputs Index', () => {
     };
 
     await indexHandler(updateEvent);
-    expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
+    expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
   });
 });
 

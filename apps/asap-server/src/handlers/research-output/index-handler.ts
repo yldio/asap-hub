@@ -1,40 +1,24 @@
-import { EventBridgeEvent } from 'aws-lambda';
-import {
-  algoliasearch,
-  SearchClient,
-  ResearchOutputSearchIndex,
-} from '@asap-hub/algolia';
 import { SquidexGraphql } from '@asap-hub/squidex';
+import {
+  AlgoliaSearchClient,
+  algoliaSearchClientFactory,
+} from '@asap-hub/algolia';
 import ResearchOutputs, {
   ResearchOutputController,
 } from '../../controllers/research-outputs';
 import { ResearchOutputEventType } from '../webhooks/webhook-research-output';
-import {
-  algoliaAppId,
-  algoliaIndexApiKey,
-  algoliaResearchOutputIndex,
-} from '../../config';
 import logger from '../../utils/logger';
+import { EventBridgeHandler } from '../../utils/types';
 
-export const indexResearchOutputHandler = (
-  researchOutputController: ResearchOutputController,
-  algoliaClient: SearchClient,
-): ((
-  event: EventBridgeEvent<
+export const indexResearchOutputHandler =
+  (
+    researchOutputController: ResearchOutputController,
+    algoliaClient: AlgoliaSearchClient,
+  ): EventBridgeHandler<
     ResearchOutputEventType,
     SquidexWebhookResearchOutputPayload
-  >,
-) => Promise<void>) => {
-  const searchIndex = new ResearchOutputSearchIndex(
-    algoliaClient.initIndex(algoliaResearchOutputIndex),
-  );
-
-  return async (
-    event: EventBridgeEvent<
-      ResearchOutputEventType,
-      SquidexWebhookResearchOutputPayload
-    >,
-  ): Promise<void> => {
+  > =>
+  async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
     try {
@@ -44,18 +28,17 @@ export const indexResearchOutputHandler = (
 
       logger.debug(`Fetched research-output ${researchOutput.id}`);
 
-      await searchIndex.save(researchOutput);
+      await algoliaClient.save(researchOutput);
 
       logger.debug(`Saved research-output ${researchOutput.id}`);
     } catch (e) {
       if (e?.output?.statusCode === 404) {
-        await searchIndex.remove(event.detail.payload.id);
+        await algoliaClient.remove(event.detail.payload.id);
         return;
       }
       throw e;
     }
   };
-};
 
 export type SquidexWebhookResearchOutputPayload = {
   type:
@@ -72,5 +55,5 @@ export type SquidexWebhookResearchOutputPayload = {
 
 export const handler = indexResearchOutputHandler(
   new ResearchOutputs(new SquidexGraphql()),
-  algoliasearch(algoliaAppId, algoliaIndexApiKey),
+  algoliaSearchClientFactory(),
 );

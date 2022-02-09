@@ -1,5 +1,6 @@
 import { APIGatewayProxyResult } from 'aws-lambda';
 import Boom from '@hapi/boom';
+import { SearchClient } from 'algoliasearch';
 import { getApiGatewayEvent } from '../../../helpers/events';
 import {
   algoliaSearchApiKey,
@@ -7,7 +8,6 @@ import {
 } from '../../../../src/config';
 import { identity } from '../../../helpers/squidex';
 import { fetchUserByCodeHandlerFactory } from '../../../../src/handlers/webhooks/fetch-by-code/fetch-by-code';
-import { SearchClient } from '@asap-hub/algolia';
 import { userControllerMock } from '../../../mocks/user-controller.mock';
 import { getUserResponse } from '../../../fixtures/users.fixtures';
 

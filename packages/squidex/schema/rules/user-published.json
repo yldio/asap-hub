@@ -1,13 +1,13 @@
 {
   "$schema": "./../__json/rule.json",
   "isEnabled": true,
-  "name": "User published",
+  "name": "User updated",
   "trigger": {
     "triggerType": "ContentChanged",
     "schemas": [
       {
         "schemaId": "users",
-        "condition": "event.type == 'Published'"
+        "condition": "event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
       }
     ],
     "handleAll": false

@@ -4,6 +4,7 @@ import {
   utils,
 } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
+import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
 import format from 'date-fns/format';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
@@ -58,7 +59,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   );
   const { client } = useAlgolia();
   const exportResults = () =>
-    algoliaResultsToStream<'research-output'>(
+    algoliaResultsToStream<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
       createCsvFileStream(
         { headers: true },
         `SharedOutputs_Team${utils

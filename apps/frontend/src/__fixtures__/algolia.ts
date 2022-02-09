@@ -1,10 +1,16 @@
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
-import { SearchResponse, EntityRecord } from '@asap-hub/algolia';
+import {
+  SearchResponse,
+  EntityRecord,
+  RESEARCH_OUTPUT_ENTITY_TYPE,
+} from '@asap-hub/algolia';
 
 export const createAlgoliaResponse = (
-  data: EntityRecord<'research-output'>[],
-  overrides: Partial<SearchResponse<EntityRecord<'research-output'>>> = {},
-): SearchResponse<EntityRecord<'research-output'>> => ({
+  data: EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE>[],
+  overrides: Partial<
+    SearchResponse<EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE>>
+  > = {},
+): SearchResponse<EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE>> => ({
   nbHits: data.length,
   page: 0,
   nbPages: 1,
@@ -24,7 +30,7 @@ export const createAlgoliaResponse = (
 
 export const createResearchOutputAlgoliaResponse = (
   itemIndex = 0,
-): EntityRecord<'research-output'> => {
+): EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE> => {
   const response = createResearchOutputResponse(itemIndex);
 
   return {
@@ -36,8 +42,10 @@ export const createResearchOutputAlgoliaResponse = (
 
 export const createResearchOutputListAlgoliaResponse = (
   items: number,
-  responseOverride?: Partial<SearchResponse<EntityRecord<'research-output'>>>,
-): SearchResponse<EntityRecord<'research-output'>> =>
+  responseOverride?: Partial<
+    SearchResponse<EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE>>
+  >,
+): SearchResponse<EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE>> =>
   createAlgoliaResponse(
     Array.from({ length: items }, (_, itemIndex) =>
       createResearchOutputAlgoliaResponse(itemIndex),

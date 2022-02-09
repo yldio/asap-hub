@@ -3,7 +3,12 @@ import {
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
-import { AlgoliaSearchClient, EntityRecord } from '../src/client';
+import {
+  AlgoliaSearchClient,
+  EntityRecord,
+  RESEARCH_OUTPUT_ENTITY_TYPE,
+  USER_ENTITY_TYPE,
+} from '../src/client';
 import { getAlgoliaSearchIndexMock } from './mocks/algolia.mocks';
 
 describe('Algolia Search Client', () => {
@@ -78,7 +83,7 @@ describe('Algolia Search Client', () => {
 });
 
 const searchResearchOutputResponse: SearchResponse<
-  EntityRecord<'research-output'>
+  EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE>
 > = {
   hits: [
     {
@@ -97,7 +102,9 @@ const searchResearchOutputResponse: SearchResponse<
   params: '',
 };
 
-const searchUserResponse: SearchResponse<EntityRecord<'user'>> = {
+const searchUserResponse: SearchResponse<
+  EntityRecord<typeof USER_ENTITY_TYPE>
+> = {
   hits: [
     {
       ...createUserResponse(),

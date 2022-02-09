@@ -1,4 +1,8 @@
-import { EntityRecord, SearchResponse } from '@asap-hub/algolia';
+import {
+  EntityRecord,
+  RESEARCH_OUTPUT_ENTITY_TYPE,
+  SearchResponse,
+} from '@asap-hub/algolia';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
@@ -12,6 +16,7 @@ export const getResearchOutput = jest.fn(
 );
 
 export const getResearchOutputs = jest.fn(
-  async (): Promise<Partial<SearchResponse<EntityRecord<'research-output'>>>> =>
-    createResearchOutputListAlgoliaResponse(2),
+  async (): Promise<
+    Partial<SearchResponse<EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE>>>
+  > => createResearchOutputListAlgoliaResponse(2),
 );

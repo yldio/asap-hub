@@ -8,6 +8,7 @@ import format from 'date-fns/format';
 import { ComponentProps, FC } from 'react';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { UserResponse } from '@asap-hub/model';
+import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';
@@ -61,7 +62,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   );
   const { client } = useAlgolia();
   const exportResults = () =>
-    algoliaResultsToStream<'research-output'>(
+    algoliaResultsToStream<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
       createCsvFileStream(
         { headers: true },
         `SharedOutputs_${utils.titleCase(firstName)}${utils.titleCase(

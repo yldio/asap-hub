@@ -2,9 +2,12 @@ import { SearchIndex } from 'algoliasearch';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { ResearchOutputResponse, UserResponse } from '@asap-hub/model';
 
+export const RESEARCH_OUTPUT_ENTITY_TYPE = 'research-output';
+export const USER_ENTITY_TYPE = 'user';
+
 export type EntityResponses = {
-  'research-output': ResearchOutputResponse;
-  user: UserResponse;
+  [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse;
+  [USER_ENTITY_TYPE]: UserResponse;
 };
 
 export type EntityRecord<T extends keyof EntityResponses> =

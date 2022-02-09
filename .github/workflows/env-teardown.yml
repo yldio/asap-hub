@@ -37,21 +37,17 @@ jobs:
         id: image_name
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: asap-hub/squidex-utils
+          ECR_REPOSITORY: asap-hub/node-python-sq
           IMAGE_TAG: 'latest'
           AWS_REGION: ap-southeast-2
-          GITHUB_TOKEN: ${{ secrets.GH_API_ACCESS_TOKEN }}
         run: |
           BASE_IMAGE_NAME=$ECR_REGISTRY/$ECR_REPOSITORY
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          AWS_ECR_PASSWORD=$(aws ecr get-login-password --region $AWS_REGION)
-
-          gh secret set AWS_ECR_PASSWORD --body "$AWS_ECR_PASSWORD"
   sls_teardown:
     needs: setup
     runs-on: ubuntu-18.04
     container:
-      image: '249832953260.dkr.ecr.ap-southeast-2.amazonaws.com/asap-hub/squidex-utils'
+      image: ${{ needs.setup.outputs.image }}
       credentials:
         username: AWS
         # Here is the password retrieved as a secret that is set by the `login` job

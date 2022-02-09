@@ -43,7 +43,3 @@ declare global {
   type Instant = string & { __type: 'SquidexDate' };
   type JsonScalar = Record<string, unknown> & { __type: 'JsonScalar' };
 }
-
-export type EventBridgeHandler<TDetailType extends string, TDetail> = (
-  event: EventBridgeEvent<TDetailType, TDetail>,
-) => Promise<void>;

@@ -1,7 +1,10 @@
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
+import { SearchClient, SearchIndex } from '@asap-hub/algolia';
 
-export const algoliaSearchClientMock = {
-  save: jest.fn(),
-  remove: jest.fn(),
-  searchEntity: jest.fn(),
-} as unknown as jest.Mocked<AlgoliaSearchClient>;
+export const algoliaIndexMock = {
+  saveObject: jest.fn(),
+  deleteObject: jest.fn(),
+} as unknown as jest.Mocked<SearchIndex>;
+
+export const algoliaClientMock = {
+  initIndex: jest.fn().mockReturnValue(algoliaIndexMock),
+} as unknown as jest.Mocked<SearchClient>;

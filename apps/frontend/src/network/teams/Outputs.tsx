@@ -4,7 +4,6 @@ import {
   utils,
 } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
-import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
 import format from 'date-fns/format';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
@@ -57,9 +56,9 @@ const OutputsList: React.FC<OutputsListProps> = ({
     result.total,
     pageSize,
   );
-  const { client } = useAlgolia();
+  const { index } = useAlgolia();
   const exportResults = () =>
-    algoliaResultsToStream<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
+    algoliaResultsToStream(
       createCsvFileStream(
         { headers: true },
         `SharedOutputs_Team${utils
@@ -67,7 +66,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
           .replace(/[\W_]+/g, '')}_${format(new Date(), 'MMddyy')}.csv`,
       ),
       (paginationParams) =>
-        getResearchOutputs(client, {
+        getResearchOutputs(index.researchOutput, {
           filters,
           searchQuery,
           teamId,

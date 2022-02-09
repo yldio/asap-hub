@@ -1,7 +1,6 @@
-import { format } from 'date-fns';
 import { SharedResearchList } from '@asap-hub/react-components';
 import { sharedResearch } from '@asap-hub/routing';
-import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
+import { format } from 'date-fns';
 
 import { useResearchOutputs } from './state';
 import { usePaginationParams, usePagination } from '../hooks';
@@ -30,20 +29,20 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
     currentPage,
     pageSize,
   });
-  const { client } = useAlgolia();
+  const { index } = useAlgolia();
 
   const { numberOfPages, renderPageHref } = usePagination(
     result?.total || 0,
     pageSize,
   );
   const exportResults = () =>
-    algoliaResultsToStream<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
+    algoliaResultsToStream(
       createCsvFileStream(
         { headers: true },
         `SharedOutputs_${format(new Date(), 'MMddyy')}.csv`,
       ),
       (paginationParams) =>
-        getResearchOutputs(client, {
+        getResearchOutputs(index.researchOutput, {
           filters,
           searchQuery,
           ...paginationParams,

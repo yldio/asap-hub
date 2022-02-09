@@ -14,14 +14,10 @@ import {
 } from '../../config';
 import { SendEmail, sendEmailFactory } from '../../utils/send-email';
 import logger from '../../utils/logger';
-import { EventBridgeHandler } from '../../utils/types';
 
 export const inviteHandlerFactory =
-  (
-    sendEmail: SendEmail,
-    userClient: SquidexRestClient<RestUser>,
-  ): EventBridgeHandler<'UserPublished', SquidexWebhookUserPayload> =>
-  async (event) => {
+  (sendEmail: SendEmail, userClient: SquidexRestClient<RestUser>) =>
+  async (event: UserEventBridgeEvent): Promise<void> => {
     let user: RestUser;
 
     try {
@@ -111,7 +107,7 @@ export type SquidexWebhookUserPayload = {
   };
 };
 
-export type UserInviteEventBridgeEvent = EventBridgeEvent<
+export type UserEventBridgeEvent = EventBridgeEvent<
   'UserPublished',
   SquidexWebhookUserPayload
 >;

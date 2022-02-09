@@ -21,12 +21,6 @@ const {
 
 const region = process.env.AWS_REGION as AWS['provider']['region'];
 const envAlias = SLS_STAGE === 'production' ? 'prod' : 'dev';
-const envRef =
-  SLS_STAGE === 'production'
-    ? 'prod'
-    : SLS_STAGE === 'dev'
-    ? 'dev'
-    : `CI-${SLS_STAGE}`;
 
 const service = paramCase(pkg.name);
 export const plugins = [
@@ -89,7 +83,14 @@ const serverlessConfig: AWS = {
       LOG_LEVEL: SLS_STAGE === 'production' ? 'error' : 'info',
       NODE_OPTIONS: '--enable-source-maps',
       ALGOLIA_APP_ID: `\${ssm:algolia-app-id-${envAlias}}`,
-      ALGOLIA_API_KEY: `\${ssm:algolia-search-api-key-${envAlias}}`,
+      ALGOLIA_SEARCH_API_KEY: `\${ssm:algolia-search-api-key-${envAlias}}`,
+      ALGOLIA_RESEARCH_OUTPUT_INDEX: `asap-hub_research_outputs_${
+        SLS_STAGE === 'production'
+          ? 'prod'
+          : SLS_STAGE === 'dev'
+          ? 'dev'
+          : `CI-${SLS_STAGE}`
+      }`,
       CURRENT_REVISION: '${env:CI_COMMIT_SHA}',
     },
     iamRoleStatements: [
@@ -204,7 +205,6 @@ const serverlessConfig: AWS = {
       environment: {
         AUTH0_CLIENT_ID: `\${ssm:auth0-client-id-${envAlias}}`,
         AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
-        ALGOLIA_SEARCH_API_KEY: `\${ssm:algolia-search-api-key-${envAlias}}`,
       },
     },
     auth0ConnectByCode: {
@@ -312,31 +312,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_research_outputs_${envRef}`,
-      },
-    },
-    indexUser: {
-      handler: 'apps/asap-server/src/handlers/user/index-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: ['asap.user'],
-              'detail-type': [
-                'UserPublished',
-                'UserUpdated',
-                'UserCreated',
-                'UserDeleted',
-              ],
-            },
-          },
-        },
-      ],
-      environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+        ALGOLIA_INDEX_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
       },
     },
     eventsUpdated: {
@@ -382,7 +358,7 @@ const serverlessConfig: AWS = {
         EVENT_SOURCE: 'asap.calendar',
       },
     },
-    userUpserted: {
+    userPublished: {
       handler: 'apps/asap-server/src/handlers/webhooks/webhook-user.handler',
       events: [
         {
@@ -468,8 +444,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_research_outputs_${envRef}`,
+        ALGOLIA_INDEX_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
       },
     },
     ...(NODE_ENV === 'production'

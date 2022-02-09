@@ -13,10 +13,14 @@ describe('User index handler', () => {
   afterEach(() => jest.clearAllMocks());
 
   test('Should fetch the user and create a record in Algolia when the user is created', async () => {
+    const event = createEvent();
     const userResponse = getUserResponse();
     userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
 
-    await indexHandler(createEvent());
+    await indexHandler(event);
+    expect(userControllerMock.fetchById).toHaveBeenCalledWith(
+      event.detail.payload.id,
+    );
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(userResponse);
   });
 

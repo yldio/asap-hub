@@ -2,11 +2,9 @@ import nock from 'nock';
 
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { ResearchOutputType } from '@asap-hub/model';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
-import {
-  createResearchOutputAlgoliaResponse,
-  createResearchOutputListAlgoliaResponse,
-} from '../../__fixtures__/algolia';
+import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getResearchOutput, getResearchOutputs } from '../api';
 import { API_BASE_URL } from '../../config';
 import { GetListOptions } from '../../api-util';
@@ -221,7 +219,7 @@ describe('getResearchOutput', () => {
   });
 
   it('returns a successfully fetched research output', async () => {
-    const researchOutput = createResearchOutputAlgoliaResponse();
+    const researchOutput = createResearchOutputResponse();
     nock(API_BASE_URL).get('/research-outputs/42').reply(200, researchOutput);
     expect(await getResearchOutput('42', '')).toEqual(researchOutput);
   });

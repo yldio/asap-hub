@@ -28,7 +28,6 @@ describe('User index handler', () => {
     userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
 
     await indexHandler(updateEvent('user-1234'));
-
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(userResponse);
   });
 

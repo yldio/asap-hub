@@ -460,6 +460,7 @@ export const getUserWebhookPayload = (
     | 'UsersUpdated'
     | 'UsersUnpublished'
     | 'UsersDeleted',
+
 ): WebhookPayload<User> => ({
   type,
   timestamp: '2021-02-15T13:11:25Z',

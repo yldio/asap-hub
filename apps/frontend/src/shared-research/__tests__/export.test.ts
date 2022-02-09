@@ -227,10 +227,7 @@ describe('algoliaResultsToStream', () => {
       (a) => a,
     );
     expect(mockCsvStream.write).toHaveBeenCalledWith(
-      expect.objectContaining({
-        currentPage: 0,
-        pageSize: 10000,
-      }),
+      expect.objectContaining(createResearchOutputResponse()),
     );
     expect(mockCsvStream.write).toHaveBeenCalledTimes(1);
     expect(mockCsvStream.end).toHaveBeenCalledTimes(1);
@@ -249,20 +246,20 @@ describe('algoliaResultsToStream', () => {
     );
     expect(mockCsvStream.write).toHaveBeenCalledWith(
       expect.objectContaining({
-        currentPage: 0,
-        pageSize: 10000,
+        ...createResearchOutputResponse(),
+        title: '0',
       }),
     );
     expect(mockCsvStream.write).toHaveBeenCalledWith(
       expect.objectContaining({
-        currentPage: 1,
-        pageSize: 10000,
+        ...createResearchOutputResponse(),
+        title: '1',
       }),
     );
     expect(mockCsvStream.write).toHaveBeenCalledWith(
       expect.objectContaining({
-        currentPage: 2,
-        pageSize: 10000,
+        ...createResearchOutputResponse(),
+        title: '2',
       }),
     );
     expect(mockCsvStream.write).toHaveBeenCalledTimes(3);
@@ -282,7 +279,7 @@ describe('algoliaResultsToStream', () => {
     );
     expect(mockCsvStream.write).toHaveBeenCalledWith(
       expect.objectContaining({
-        example: 'a-b',
+        title: 'a-b',
       }),
     );
     expect(mockCsvStream.write).toHaveBeenCalledTimes(2);

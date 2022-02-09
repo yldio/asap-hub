@@ -32,6 +32,7 @@ export const indexUserHandler =
         await algoliaClient.remove(event.detail.payload.id);
         return;
       }
+
       throw e;
     }
   };

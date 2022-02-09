@@ -22,7 +22,7 @@ export const createAlgoliaResponse = (
   })),
 });
 
-export const createResearchOutputAlgoliaResponse = (
+export const createResearchOutputAlgoliaRecord = (
   itemIndex = 0,
 ): EntityRecord<'research-output'> => {
   const response = createResearchOutputResponse(itemIndex);
@@ -40,7 +40,7 @@ export const createResearchOutputListAlgoliaResponse = (
 ): SearchResponse<EntityRecord<'research-output'>> =>
   createAlgoliaResponse(
     Array.from({ length: items }, (_, itemIndex) =>
-      createResearchOutputAlgoliaResponse(itemIndex),
+      createResearchOutputAlgoliaRecord(itemIndex),
     ),
     responseOverride,
   );

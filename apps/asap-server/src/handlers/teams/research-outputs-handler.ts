@@ -56,3 +56,4 @@ export const handler = indexResearchOutputByTeamHandler(
   new ResearchOutputs(new SquidexGraphql()),
   algoliaSearchClientFactory(algoliaIndex),
 );
+

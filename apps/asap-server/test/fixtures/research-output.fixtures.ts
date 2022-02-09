@@ -178,17 +178,6 @@ export const getResearchOutputEvent = (
     id,
   );
 
-export const getResearchOutputAlgoliaResponse =
-  (): ResearchOutputSearchResponseEntity => {
-    const response = getResearchOutputResponse();
-
-    return {
-      ...response,
-      objectID: response.id,
-      __meta: { type: 'research-output' },
-    };
-  };
-
 export const getResearchOutputRequest = (): ResearchOutputPostRequest => ({
   type: 'Bioinformatics' as const,
   link: 'https://hub.asap.science/',

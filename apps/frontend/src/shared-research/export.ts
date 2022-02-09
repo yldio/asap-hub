@@ -2,11 +2,7 @@ import { isInternalAuthor, ResearchOutputResponse } from '@asap-hub/model';
 import { CsvFormatterStream, Row, format } from '@fast-csv/format';
 import { WritableStream } from 'web-streams-polyfill/ponyfill';
 import streamSaver from 'streamsaver';
-import {
-  EntityRecord,
-  SearchResponse,
-  EntityResponses,
-} from '@asap-hub/algolia';
+import { EntityResponses, SearchEntityResponse } from '@asap-hub/algolia';
 
 import { GetListOptions } from '../api-util';
 
@@ -103,7 +99,7 @@ export const algoliaResultsToStream = async <T extends keyof EntityResponses>(
     currentPage,
     pageSize,
   }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
-    Promise<SearchResponse<EntityRecord<T>>>
+    Promise<SearchEntityResponse<T>>
   >,
   transform: (result: EntityResponses[T]) => Row,
 ) => {

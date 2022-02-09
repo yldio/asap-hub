@@ -10,6 +10,9 @@ export type EntityResponses = {
   [USER_ENTITY_TYPE]: UserResponse;
 };
 
+export type SearchEntityResponse<TEntityType extends keyof EntityResponses> =
+  SearchResponse<EntityRecord<TEntityType>>;
+
 export type EntityRecord<T extends keyof EntityResponses> =
   EntityResponses[T] & {
     objectID: string;
@@ -48,7 +51,7 @@ export class AlgoliaSearchClient {
     entityType: T,
     query: string,
     requestOptions?: SearchOptions,
-  ): Promise<SearchResponse<EntityRecord<T>>> {
+  ): Promise<SearchEntityResponse<T>> {
     const options: SearchOptions = {
       ...requestOptions,
       filters: requestOptions?.filters

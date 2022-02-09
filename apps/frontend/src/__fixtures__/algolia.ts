@@ -1,16 +1,16 @@
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
-  SearchResponse,
   EntityRecord,
   RESEARCH_OUTPUT_ENTITY_TYPE,
   EntityResponses,
+  SearchEntityResponse,
 } from '@asap-hub/algolia';
 
 export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
   type: EntityType,
   data: EntityResponses[EntityType][],
-  overrides: Partial<SearchResponse<EntityRecord<EntityType>>> = {},
-): SearchResponse<EntityRecord<EntityType>> => ({
+  overrides: Partial<SearchEntityResponse<EntityType>> = {},
+): SearchEntityResponse<EntityType> => ({
   nbHits: data.length,
   page: 0,
   nbPages: 1,
@@ -43,9 +43,9 @@ export const createResearchOutputAlgoliaRecord = (
 export const createResearchOutputListAlgoliaResponse = (
   items: number,
   responseOverride?: Partial<
-    SearchResponse<EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE>>
+    SearchEntityResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE>
   >,
-): SearchResponse<EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE>> =>
+): SearchEntityResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE> =>
   createAlgoliaResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
     RESEARCH_OUTPUT_ENTITY_TYPE,
     Array.from({ length: items }, (_, itemIndex) =>

@@ -1,5 +1,4 @@
 const { join, dirname } = require('path');
-const regexpEscape = require('escape-string-regexp');
 
 const root = dirname(require.resolve('asap-hub/package.json'), '..');
 
@@ -29,10 +28,9 @@ module.exports = {
     '^@asap-hub/([^/]+)$': '@asap-hub/$1/src',
   },
   modulePathIgnorePatterns: [
-    'build(-cjs)?',
-    'coverage',
-    `${regexpEscape(root)  }/coverage/`,
-    `${regexpEscape(root)  }/packages/services-common/src/cms/`,
+    '<rootDir>/build(-cjs)?',
+    '<rootDir>/coverage',
+    `<rootDir>/packages/services-common/src/cms/`,
   ],
   testPathIgnorePatterns,
 

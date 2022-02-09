@@ -204,6 +204,7 @@ const serverlessConfig: AWS = {
       environment: {
         AUTH0_CLIENT_ID: `\${ssm:auth0-client-id-${envAlias}}`,
         AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
+        ALGOLIA_SEARCH_API_KEY: `\${ssm:algolia-search-api-key-${envAlias}}`,
       },
     },
     auth0ConnectByCode: {

@@ -10,9 +10,6 @@ export type EntityResponses = {
   [USER_ENTITY_TYPE]: UserResponse;
 };
 
-export type SearchEntityResponse<TEntityType extends keyof EntityResponses> =
-  SearchResponse<EntityRecord<TEntityType>>;
-
 export type EntityRecord<T extends keyof EntityResponses> =
   EntityResponses[T] & {
     objectID: string;
@@ -20,6 +17,9 @@ export type EntityRecord<T extends keyof EntityResponses> =
       type: T;
     };
   };
+
+export type SearchEntityResponse<TEntityType extends keyof EntityResponses> =
+  SearchResponse<EntityRecord<TEntityType>>;
 
 export const getEntityType = (
   entity: EntityResponses[keyof EntityResponses],

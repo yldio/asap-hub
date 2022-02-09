@@ -51,7 +51,7 @@ export type SquidexWebhookUserPayload = {
     created: string;
     lastModified: string;
     version: number;
-    data: Record<string, unknown>;
+    data: { [x: string]: { iv: unknown } | null };
   };
 };
 

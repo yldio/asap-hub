@@ -1,8 +1,5 @@
 import Boom from '@hapi/boom';
-import { EventBridgeEvent } from 'aws-lambda';
 import { indexUserHandler } from '../../../src/handlers/user/index-handler';
-import { SquidexWebhookUserPayload } from '../../../src/handlers/user/invite-handler';
-import { UserEventType } from '../../../src/handlers/webhooks/webhook-user';
 import { getUserEvent, getUserResponse } from '../../fixtures/users.fixtures';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user-controller.mock';
@@ -287,25 +284,13 @@ describe('User index handler', () => {
 });
 
 const unpublishedEvent = (id: string) =>
-  getUserEvent(id, 'UsersUnpublished', 'UserDeleted') as EventBridgeEvent<
-    UserEventType,
-    SquidexWebhookUserPayload
-  >;
+  getUserEvent(id, 'UsersUnpublished', 'UserDeleted');
 
 const deleteEvent = (id: string) =>
-  getUserEvent(id, 'UsersDeleted', 'UserDeleted') as EventBridgeEvent<
-    UserEventType,
-    SquidexWebhookUserPayload
-  >;
+  getUserEvent(id, 'UsersDeleted', 'UserDeleted');
 
 const createEvent = (id: string) =>
-  getUserEvent(id, 'UsersPublished', 'UserPublished') as EventBridgeEvent<
-    UserEventType,
-    SquidexWebhookUserPayload
-  >;
+  getUserEvent(id, 'UsersPublished', 'UserPublished');
 
 const updateEvent = (id: string) =>
-  getUserEvent(id, 'UsersUpdated', 'UserUpdated') as EventBridgeEvent<
-    UserEventType,
-    SquidexWebhookUserPayload
-  >;
+  getUserEvent(id, 'UsersUpdated', 'UserUpdated');

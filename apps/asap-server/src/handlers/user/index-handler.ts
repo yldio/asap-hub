@@ -43,10 +43,15 @@ export type SquidexWebhookUserPayload = {
     | 'UsersUpdated'
     | 'UsersUnpublished'
     | 'UsersDeleted';
+  timestamp: string;
   payload: {
     $type: 'EnrichedContentEvent';
     type: 'Published' | 'Updated' | 'Unpublished' | 'Deleted' | 'Created';
     id: string;
+    created: string;
+    lastModified: string;
+    version: number;
+    data: Record<string, unknown>;
   };
 };
 

@@ -24,7 +24,7 @@ export type EntityRecord<T extends keyof EntityResponses> =
 export const getEntityType = (
   entity: EntityResponses[keyof EntityResponses],
 ): keyof EntityResponses => {
-  if ('title' in entity) {
+  if ('title' in entity && 'sharingStatus' in entity) {
     return 'research-output';
   }
 

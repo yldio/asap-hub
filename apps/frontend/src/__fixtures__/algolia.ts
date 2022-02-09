@@ -3,14 +3,14 @@ import {
   SearchResponse,
   EntityRecord,
   RESEARCH_OUTPUT_ENTITY_TYPE,
+  EntityResponses,
 } from '@asap-hub/algolia';
 
-export const createAlgoliaResponse = (
-  data: EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE>[],
-  overrides: Partial<
-    SearchResponse<EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE>>
-  > = {},
-): SearchResponse<EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE>> => ({
+export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
+  type: EntityType,
+  data: EntityResponses[EntityType][],
+  overrides: Partial<SearchResponse<EntityRecord<EntityType>>> = {},
+): SearchResponse<EntityRecord<EntityType>> => ({
   nbHits: data.length,
   page: 0,
   nbPages: 1,
@@ -24,11 +24,11 @@ export const createAlgoliaResponse = (
   hits: data.map((item, i) => ({
     ...item,
     objectID: `${i}`,
-    __meta: { type: 'research-output' },
+    __meta: { type },
   })),
 });
 
-export const createResearchOutputAlgoliaResponse = (
+export const createResearchOutputAlgoliaRecord = (
   itemIndex = 0,
 ): EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE> => {
   const response = createResearchOutputResponse(itemIndex);
@@ -46,9 +46,10 @@ export const createResearchOutputListAlgoliaResponse = (
     SearchResponse<EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE>>
   >,
 ): SearchResponse<EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE>> =>
-  createAlgoliaResponse(
+  createAlgoliaResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
+    RESEARCH_OUTPUT_ENTITY_TYPE,
     Array.from({ length: items }, (_, itemIndex) =>
-      createResearchOutputAlgoliaResponse(itemIndex),
+      createResearchOutputAlgoliaRecord(itemIndex),
     ),
     responseOverride,
   );

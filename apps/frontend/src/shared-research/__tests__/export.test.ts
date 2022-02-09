@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   createResearchOutputResponse,
   createTeamResponse,
@@ -218,19 +217,20 @@ describe('algoliaResultsToStream', () => {
   it('streams one page of results', async () => {
     await algoliaResultsToStream(
       mockCsvStream as unknown as CsvFormatterStream<Row, Row>,
-      (parameters) =>
+      () =>
         Promise.resolve(
-          createAlgoliaResponse([parameters as any], {
-            nbPages: 1,
-          }),
+          createAlgoliaResponse(
+            'research-output',
+            [createResearchOutputResponse()],
+            {
+              nbPages: 1,
+            },
+          ),
         ),
       (a) => a,
     );
     expect(mockCsvStream.write).toHaveBeenCalledWith(
-      expect.objectContaining({
-        currentPage: 0,
-        pageSize: 10000,
-      }),
+      expect.objectContaining(createResearchOutputResponse()),
     );
     expect(mockCsvStream.write).toHaveBeenCalledTimes(1);
     expect(mockCsvStream.end).toHaveBeenCalledTimes(1);
@@ -241,28 +241,37 @@ describe('algoliaResultsToStream', () => {
       mockCsvStream as unknown as CsvFormatterStream<Row, Row>,
       (parameters) =>
         Promise.resolve(
-          createAlgoliaResponse([parameters as any], {
-            nbPages: 3,
-          }),
+          createAlgoliaResponse(
+            'research-output',
+            [
+              {
+                ...createResearchOutputResponse(),
+                title: `${parameters.currentPage}`,
+              },
+            ],
+            {
+              nbPages: 3,
+            },
+          ),
         ),
       (a) => a,
     );
     expect(mockCsvStream.write).toHaveBeenCalledWith(
       expect.objectContaining({
-        currentPage: 0,
-        pageSize: 10000,
+        ...createResearchOutputResponse(),
+        title: '0',
       }),
     );
     expect(mockCsvStream.write).toHaveBeenCalledWith(
       expect.objectContaining({
-        currentPage: 1,
-        pageSize: 10000,
+        ...createResearchOutputResponse(),
+        title: '1',
       }),
     );
     expect(mockCsvStream.write).toHaveBeenCalledWith(
       expect.objectContaining({
-        currentPage: 2,
-        pageSize: 10000,
+        ...createResearchOutputResponse(),
+        title: '2',
       }),
     );
     expect(mockCsvStream.write).toHaveBeenCalledTimes(3);
@@ -274,15 +283,19 @@ describe('algoliaResultsToStream', () => {
       mockCsvStream as unknown as CsvFormatterStream<Row, Row>,
       () =>
         Promise.resolve(
-          createAlgoliaResponse([{ example: 'a' } as any], {
-            nbPages: 2,
-          }),
+          createAlgoliaResponse(
+            'research-output',
+            [{ ...createResearchOutputResponse(), title: 'a' }],
+            {
+              nbPages: 2,
+            },
+          ),
         ),
-      (a: any) => ({ example: `${a.example}-b` }),
+      (a: ResearchOutputResponse) => ({ title: `${a.title}-b` }),
     );
     expect(mockCsvStream.write).toHaveBeenCalledWith(
       expect.objectContaining({
-        example: 'a-b',
+        title: 'a-b',
       }),
     );
     expect(mockCsvStream.write).toHaveBeenCalledTimes(2);

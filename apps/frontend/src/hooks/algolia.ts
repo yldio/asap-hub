@@ -5,7 +5,7 @@ import {
   AlgoliaSearchClient,
 } from '@asap-hub/algolia';
 import { User } from '@asap-hub/auth';
-import { ALGOLIA_INDEX } from '../config';
+import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '../config';
 
 export type AlgoliaHook = {
   client: AlgoliaSearchClient;
@@ -18,6 +18,7 @@ export const useAlgolia = () => {
     }
 
     const client = algoliaSearchClientFactory({
+      algoliaAppId: ALGOLIA_APP_ID,
       algoliaIndex: ALGOLIA_INDEX,
       algoliaApiKey: user.algoliaApiKey,
     });

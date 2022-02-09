@@ -16,14 +16,16 @@ export const algoliaSearchClientNative = algoliasearch(
 type AlgoliaSearchClientFactoryParams = {
   algoliaIndex?: string;
   algoliaApiKey?: string;
+  algoliaAppId?: string;
 };
 
 export const algoliaSearchClientFactory = ({
   algoliaIndex,
   algoliaApiKey,
+  algoliaAppId,
 }: AlgoliaSearchClientFactoryParams | undefined = {}): AlgoliaSearchClient => {
   const algoliaSearchClient = algoliasearch(
-    config.algoliaAppId,
+    algoliaAppId || config.algoliaAppId,
     algoliaApiKey || config.algoliaApiKey,
   );
 

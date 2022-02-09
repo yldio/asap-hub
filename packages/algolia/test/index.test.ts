@@ -36,10 +36,11 @@ describe('Algolia Search Client Factory', () => {
   test('Should instantiate with a custom api key and index', () => {
     algoliaSearchClientFactory({
       algoliaApiKey: 'test-key',
+      algoliaAppId: 'test-app-id',
       algoliaIndex: 'test-index',
     });
 
-    expect(algoliasearchMock).toBeCalledWith(config.algoliaAppId, 'test-key');
+    expect(algoliasearchMock).toBeCalledWith('test-app-id', 'test-key');
     expect(algoliaSearchClientMock.initIndex).toBeCalledWith('test-index');
   });
 });

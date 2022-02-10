@@ -32,7 +32,6 @@
     "start:backend": "yarn workspace @asap-hub/asap-server start",
     "start:frontend": "yarn workspace @asap-hub/frontend start",
     "start:sb": "yarn workspace @asap-hub/storybook start",
-    "start:squidex": "docker-compose -f dev/docker-compose.yaml up",
     "test": "LANG=en_US TZ=UTC jest",
     "test:browser": "yarn test --config=packages/react-components/jest-browser.config.js",
     "test:build-output": "yarn test --config=jest-build-output.config.js",

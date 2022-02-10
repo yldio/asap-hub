@@ -1,4 +1,4 @@
-export interface Lab {
+export interface LabResponse {
   id: string;
   name: string;
 }

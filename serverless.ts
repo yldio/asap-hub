@@ -338,6 +338,44 @@ const serverlessConfig: AWS = {
         ALGOLIA_INDEX: `asap-hub_${envRef}`,
       },
     },
+    labUpserted: {
+      handler: 'apps/asap-server/src/handlers/webhooks/webhook-lab.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/labs',
+          },
+        },
+      ],
+      environment: {
+        EVENT_BUS: 'asap-events-${self:provider.stage}',
+        EVENT_SOURCE: 'asap.lab',
+      },
+    },
+    indexLabUsers: {
+      handler: 'apps/asap-server/src/handlers/lab/users-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: ['asap.lab'],
+              'detail-type': [
+                'LabPublished',
+                'LabUpdated',
+                'LabCreated',
+                'LabDeleted',
+              ],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+      },
+    },
     eventsUpdated: {
       timeout: 300,
       handler:
@@ -454,7 +492,26 @@ const serverlessConfig: AWS = {
       },
     },
     indexTeamResearchOutputs: {
-      handler: 'apps/asap-server/src/handlers/teams/index-handler.handler',
+      handler:
+        'apps/asap-server/src/handlers/teams/research-outputs-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: ['asap.teams'],
+              'detail-type': ['TeamsCreated', 'TeamsUpdated', 'TeamsDeleted'],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `asap-hub_research_outputs_${envRef}`,
+      },
+    },
+    indexTeamUsers: {
+      handler: 'apps/asap-server/src/handlers/teams/users-handler.handler',
       events: [
         {
           eventBridge: {

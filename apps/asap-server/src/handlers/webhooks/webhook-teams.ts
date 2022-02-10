@@ -55,5 +55,20 @@ const getEventType = (customType: string): TeamsEventType | undefined => {
   return undefined;
 };
 
+export type SquidexWebhookTeamPayload = {
+  type: 'TeamsCreated' | 'TeamsUpdated';
+  payload: {
+    $type: 'EnrichedContentEvent';
+    type: 'Created';
+    id: string;
+    data: {
+      outputs: { iv: string[] };
+    };
+    dataOld?: {
+      outputs: { iv: string[] };
+    };
+  };
+};
+
 const eventBridge = new EventBridge();
 export const handler: Handler = teamsWebhookFactory(eventBridge);

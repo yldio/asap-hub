@@ -1,6 +1,8 @@
 import algoliasearch, { SearchClient } from 'algoliasearch';
-import { algoliaSearchClientFactory } from '../src';
-import * as config from '../src/config';
+import {
+  algoliaSearchClientFactory,
+  algoliaSearchClientNativeFactory,
+} from '../src';
 
 jest.mock('algoliasearch');
 
@@ -12,7 +14,7 @@ const algoliaSearchClientMock = {
 } as unknown as jest.Mocked<SearchClient>;
 algoliasearchMock.mockReturnValue(algoliaSearchClientMock);
 
-describe('Algolia Search Client Factory', () => {
+describe('Algolia Search Client', () => {
   beforeAll(() => {
     jest.clearAllMocks();
   });
@@ -21,19 +23,7 @@ describe('Algolia Search Client Factory', () => {
     jest.clearAllMocks();
   });
 
-  test('Should instantiate with defaults', () => {
-    algoliaSearchClientFactory();
-
-    expect(algoliasearchMock).toBeCalledWith(
-      config.algoliaAppId,
-      config.algoliaApiKey,
-    );
-    expect(algoliaSearchClientMock.initIndex).toBeCalledWith(
-      config.algoliaIndex,
-    );
-  });
-
-  test('Should instantiate with a custom api key and index', () => {
+  test('Should instantiate the Search Client', () => {
     algoliaSearchClientFactory({
       algoliaApiKey: 'test-key',
       algoliaAppId: 'test-app-id',
@@ -42,5 +32,17 @@ describe('Algolia Search Client Factory', () => {
 
     expect(algoliasearchMock).toBeCalledWith('test-app-id', 'test-key');
     expect(algoliaSearchClientMock.initIndex).toBeCalledWith('test-index');
+  });
+
+  test('Should instantiate the native client', () => {
+    algoliaSearchClientNativeFactory({
+      algoliaApiKey: 'native-test-key',
+      algoliaAppId: 'native-test-app-id',
+    });
+
+    expect(algoliasearchMock).toBeCalledWith(
+      'native-test-app-id',
+      'native-test-key',
+    );
   });
 });

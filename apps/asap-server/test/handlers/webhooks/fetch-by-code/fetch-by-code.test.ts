@@ -3,7 +3,7 @@ import Boom from '@hapi/boom';
 import { SearchClient } from 'algoliasearch';
 import { getApiGatewayEvent } from '../../../helpers/events';
 import {
-  algoliaSearchApiKey,
+  algoliaApiKey,
   auth0SharedSecret as secret,
 } from '../../../../src/config';
 import { identity } from '../../../helpers/squidex';
@@ -47,7 +47,7 @@ describe('Fetch-user-by-code handler', () => {
     await customHandler(successfulApiGatewayEvent);
 
     expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith(
-      algoliaSearchApiKey,
+      algoliaApiKey,
       {
         validUntil: expect.any(Number),
       },
@@ -164,7 +164,7 @@ describe('Fetch-user-by-code handler', () => {
         algoliaApiKey: mockApiKey,
       });
       expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith(
-        algoliaSearchApiKey,
+        algoliaApiKey,
         {
           validUntil: expect.any(Number),
         },
@@ -201,7 +201,7 @@ describe('Fetch-user-by-code handler', () => {
         );
 
         expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith(
-          algoliaSearchApiKey,
+          algoliaApiKey,
           {
             validUntil: expectedValidUntil,
           },

@@ -1,4 +1,4 @@
-import { ALGOLIA_INDEX } from '@asap-hub/frontend/src/config';
+import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '@asap-hub/frontend/src/config';
 import { renderHook } from '@testing-library/react-hooks';
 import { RecoilRoot } from 'recoil';
 import { algoliaSearchClientFactory } from '@asap-hub/algolia';
@@ -38,6 +38,7 @@ describe('useAlgolia', () => {
     await waitForNextUpdate();
     expect(mockAlgoliaSearchClientFactory).toHaveBeenCalledWith({
       algoliaIndex: ALGOLIA_INDEX,
+      algoliaAppId: ALGOLIA_APP_ID,
       algoliaApiKey: 'algolia key',
     });
     expect(result.current.client).toBeDefined();

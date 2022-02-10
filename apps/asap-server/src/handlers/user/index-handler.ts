@@ -8,6 +8,7 @@ import logger from '../../utils/logger';
 import Users, { UserController } from '../../controllers/users';
 import { UserEventType } from '../webhooks/webhook-user';
 import { EventBridgeHandler } from '../../utils/types';
+import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 
 export const indexUserHandler =
   (
@@ -57,7 +58,7 @@ export type SquidexWebhookUserPayload = {
 
 export const handler = indexUserHandler(
   new Users(new SquidexGraphql()),
-  algoliaSearchClientFactory(),
+  algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
 );
 
 export type UserIndexEventBridgeEvent = EventBridgeEvent<

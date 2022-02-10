@@ -9,6 +9,7 @@ import ResearchOutputs, {
 } from '../../controllers/research-outputs';
 import logger from '../../utils/logger';
 import { EventBridgeHandler } from '../../utils/types';
+import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 
 export const indexResearchOutputByTeamHandler =
   (
@@ -61,5 +62,5 @@ export type SquidexWebhookTeamPayload = {
 
 export const handler = indexResearchOutputByTeamHandler(
   new ResearchOutputs(new SquidexGraphql()),
-  algoliaSearchClientFactory(),
+  algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
 );

@@ -1,6 +1,5 @@
-import algoliasearch from 'algoliasearch';
+import algoliasearch, { SearchClient } from 'algoliasearch';
 import { AlgoliaSearchClient } from './client';
-import * as config from './config';
 
 export type { SearchResponse } from '@algolia/client-search';
 export * from './client';
@@ -8,30 +7,30 @@ export * from './scripts/move-index';
 export * from './scripts/remove-index';
 export * from './scripts/remove-records';
 
-export const algoliaSearchClientNative = algoliasearch(
-  config.algoliaAppId,
-  config.algoliaApiKey,
-);
-
-type AlgoliaSearchClientFactoryParams = {
-  algoliaIndex?: string;
-  algoliaApiKey?: string;
-  algoliaAppId?: string;
+type AlgoliaSearchClientNativeFactoryParams = {
+  algoliaApiKey: string;
+  algoliaAppId: string;
 };
+
+export const algoliaSearchClientNativeFactory = ({
+  algoliaApiKey,
+  algoliaAppId,
+}: AlgoliaSearchClientNativeFactoryParams): SearchClient =>
+  algoliasearch(algoliaAppId, algoliaApiKey);
+
+type AlgoliaSearchClientFactoryParams =
+  AlgoliaSearchClientNativeFactoryParams & {
+    algoliaIndex: string;
+  };
 
 export const algoliaSearchClientFactory = ({
   algoliaIndex,
   algoliaApiKey,
   algoliaAppId,
-}: AlgoliaSearchClientFactoryParams | undefined = {}): AlgoliaSearchClient => {
-  const algoliaSearchClient = algoliasearch(
-    algoliaAppId || config.algoliaAppId,
-    algoliaApiKey || config.algoliaApiKey,
-  );
+}: AlgoliaSearchClientFactoryParams): AlgoliaSearchClient => {
+  const algoliaSearchClient = algoliasearch(algoliaAppId, algoliaApiKey);
 
-  const index = algoliaSearchClient.initIndex(
-    algoliaIndex || config.algoliaIndex,
-  );
+  const index = algoliaSearchClient.initIndex(algoliaIndex);
 
   return new AlgoliaSearchClient(index);
 };

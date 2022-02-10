@@ -1,13 +1,13 @@
 import { APIGatewayProxyResult } from 'aws-lambda';
 import Boom from '@hapi/boom';
+import { SearchClient } from 'algoliasearch';
 import { getApiGatewayEvent } from '../../../helpers/events';
 import {
-  algoliaSearchApiKey,
+  algoliaApiKey,
   auth0SharedSecret as secret,
 } from '../../../../src/config';
 import { identity } from '../../../helpers/squidex';
 import { fetchUserByCodeHandlerFactory } from '../../../../src/handlers/webhooks/fetch-by-code/fetch-by-code';
-import { SearchClient } from '@asap-hub/algolia';
 import { userControllerMock } from '../../../mocks/user-controller.mock';
 import { getUserResponse } from '../../../fixtures/users.fixtures';
 
@@ -47,7 +47,7 @@ describe('Fetch-user-by-code handler', () => {
     await customHandler(successfulApiGatewayEvent);
 
     expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith(
-      algoliaSearchApiKey,
+      algoliaApiKey,
       {
         validUntil: expect.any(Number),
       },
@@ -164,7 +164,7 @@ describe('Fetch-user-by-code handler', () => {
         algoliaApiKey: mockApiKey,
       });
       expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith(
-        algoliaSearchApiKey,
+        algoliaApiKey,
         {
           validUntil: expect.any(Number),
         },
@@ -201,7 +201,7 @@ describe('Fetch-user-by-code handler', () => {
         );
 
         expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith(
-          algoliaSearchApiKey,
+          algoliaApiKey,
           {
             validUntil: expectedValidUntil,
           },

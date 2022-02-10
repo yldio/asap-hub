@@ -1,28 +1,22 @@
-import { EventBridgeEvent } from 'aws-lambda';
-import { algoliasearch, SearchClient } from '@asap-hub/algolia';
+import {
+  AlgoliaSearchClient,
+  algoliaSearchClientFactory,
+} from '@asap-hub/algolia';
 import { SquidexGraphql } from '@asap-hub/squidex';
 import { TeamsEventType } from '../webhooks/webhook-teams';
 import ResearchOutputs, {
   ResearchOutputController,
 } from '../../controllers/research-outputs';
-import {
-  algoliaAppId,
-  algoliaIndexApiKey,
-  algoliaResearchOutputIndex,
-} from '../../config';
 import logger from '../../utils/logger';
+import { EventBridgeHandler } from '../../utils/types';
+import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 
-export const indexResearchOutputByTeamHandler = (
-  researchOutputController: ResearchOutputController,
-  algoliaClient: SearchClient,
-): ((
-  event: EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>,
-) => Promise<void>) => {
-  const algoliaIndex = algoliaClient.initIndex(algoliaResearchOutputIndex);
-
-  return async (
-    event: EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>,
-  ): Promise<void> => {
+export const indexResearchOutputByTeamHandler =
+  (
+    researchOutputController: ResearchOutputController,
+    algoliaClient: AlgoliaSearchClient,
+  ): EventBridgeHandler<TeamsEventType, SquidexWebhookTeamPayload> =>
+  async (event) => {
     const outputsIds = Array.from(
       new Set(
         (event.detail.payload.data.outputs.iv ?? []).concat(
@@ -42,10 +36,7 @@ export const indexResearchOutputByTeamHandler = (
 
           logger.debug(`Fetched ${JSON.stringify(researchOutput.id)}`);
 
-          await algoliaIndex.saveObject({
-            ...researchOutput,
-            objectID: researchOutput.id,
-          });
+          await algoliaClient.save(researchOutput);
 
           logger.debug(`Saved research-output with id ${id}`);
         }),
@@ -53,7 +44,6 @@ export const indexResearchOutputByTeamHandler = (
       logger.info(JSON.stringify(teamOutputsResults));
     }
   };
-};
 
 export type SquidexWebhookTeamPayload = {
   type: 'TeamsCreated' | 'TeamsUpdated';
@@ -72,5 +62,5 @@ export type SquidexWebhookTeamPayload = {
 
 export const handler = indexResearchOutputByTeamHandler(
   new ResearchOutputs(new SquidexGraphql()),
-  algoliasearch(algoliaAppId, algoliaIndexApiKey),
+  algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
 );

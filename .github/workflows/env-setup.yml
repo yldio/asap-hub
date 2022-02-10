@@ -22,6 +22,8 @@ jobs:
       - name: Download the files and restore the index
         run: |
           aws s3 cp s3://$BUCKET_NAME/$MOST_RECENT_BACKUP_DIR $MOST_RECENT_BACKUP_DIR --recursive
-          export ALGOLIA_INDEX=asap-hub_research_outputs_CI-$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           export ALGOLIA_BACKUP=$(readlink -f $MOST_RECENT_BACKUP_DIR)
+          export ALGOLIA_RO_INDEX=asap-hub_research_outputs_CI-${{ github.event.number }}
+          yarn workspace @asap-hub/asap-server run algolia import -s $ALGOLIA_BACKUP -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RO_INDEX
+          export ALGOLIA_INDEX=asap-hub_CI-${{ github.event.number }}
           yarn workspace @asap-hub/asap-server run algolia import -s $ALGOLIA_BACKUP -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX

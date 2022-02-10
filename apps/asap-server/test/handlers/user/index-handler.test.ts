@@ -1,54 +1,42 @@
 import Boom from '@hapi/boom';
-import { EventBridgeEvent } from 'aws-lambda';
-import {
-  indexResearchOutputHandler,
-  SquidexWebhookResearchOutputPayload,
-} from '../../../src/handlers/research-output/index-handler';
-import { ResearchOutputEventType } from '../../../src/handlers/webhooks/webhook-research-output';
-import {
-  getResearchOutputEvent,
-  getResearchOutputResponse,
-} from '../../fixtures/research-output.fixtures';
+import { indexUserHandler } from '../../../src/handlers/user/index-handler';
+import { getUserEvent, getUserResponse } from '../../fixtures/users.fixtures';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
-import { researchOutputControllerMock } from '../../mocks/research-outputs-controller.mock';
+import { userControllerMock } from '../../mocks/user-controller.mock';
 
-describe('Research Output index handler', () => {
-  const indexHandler = indexResearchOutputHandler(
-    researchOutputControllerMock,
+describe('User index handler', () => {
+  const indexHandler = indexUserHandler(
+    userControllerMock,
     algoliaSearchClientMock,
   );
+
   afterEach(() => jest.clearAllMocks());
 
-  test('Should fetch the research-output and create a record in Algolia when research-output is created', async () => {
-    const researchOutputResponse = getResearchOutputResponse();
-    researchOutputControllerMock.fetchById.mockResolvedValueOnce(
-      researchOutputResponse,
-    );
+  test('Should fetch the user and create a record in Algolia when the user is created', async () => {
+    const event = createEvent();
+    const userResponse = getUserResponse();
+    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
 
-    await indexHandler(createEvent('ro-1234'));
-
-    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(
-      researchOutputResponse,
+    await indexHandler(event);
+    expect(userControllerMock.fetchById).toHaveBeenCalledWith(
+      event.detail.payload.id,
     );
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(userResponse);
   });
 
-  test('Should fetch the research-output and create a record in Algolia when research-output is updated', async () => {
-    const researchOutputResponse = getResearchOutputResponse();
-    researchOutputControllerMock.fetchById.mockResolvedValueOnce(
-      researchOutputResponse,
-    );
+  test('Should fetch the user and create a record in Algolia when user is updated', async () => {
+    const userResponse = getUserResponse();
+    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
 
-    await indexHandler(updateEvent('ro-1234'));
+    await indexHandler(updateEvent());
 
-    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(
-      researchOutputResponse,
-    );
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(userResponse);
   });
 
-  test('Should fetch the research-output and remove the record in Algolia when research-output is unpublished', async () => {
-    const event = unpublishedEvent('ro-1234');
+  test('Should fetch the user and remove the record in Algolia when user is unpublished', async () => {
+    const event = unpublishedEvent();
 
-    researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
 
     await indexHandler(event);
 
@@ -57,10 +45,10 @@ describe('Research Output index handler', () => {
     );
   });
 
-  test('Should fetch the research-output and remove the record in Algolia when research-output is deleted', async () => {
-    const event = deleteEvent('ro-1234');
+  test('Should fetch the user and remove the record in Algolia when user is deleted', async () => {
+    const event = deleteEvent();
 
-    researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
 
     await indexHandler(event);
 
@@ -69,90 +57,76 @@ describe('Research Output index handler', () => {
     );
   });
 
-  test('Should throw an error and do not trigger algolia when the research-output request fails with another error code', async () => {
-    researchOutputControllerMock.fetchById.mockRejectedValue(Boom.badData());
+  test('Should throw an error and do not trigger algolia when the user request fails with another error code', async () => {
+    userControllerMock.fetchById.mockRejectedValue(Boom.badData());
 
-    await expect(indexHandler(createEvent('ro-1234'))).rejects.toThrow(
-      Boom.badData(),
-    );
+    await expect(indexHandler(createEvent())).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
   });
 
   test('Should throw the algolia error when saving the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    researchOutputControllerMock.fetchById.mockResolvedValueOnce(
-      getResearchOutputResponse(),
-    );
+    userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
     algoliaSearchClientMock.save.mockRejectedValueOnce(algoliaError);
 
-    await expect(indexHandler(updateEvent('ro-1234'))).rejects.toThrow(
-      algoliaError,
-    );
+    await expect(indexHandler(updateEvent())).rejects.toThrow(algoliaError);
   });
 
   test('Should throw the algolia error when deleting the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
 
     algoliaSearchClientMock.remove.mockRejectedValueOnce(algoliaError);
 
-    await expect(indexHandler(deleteEvent('ro-1234'))).rejects.toThrow(
-      algoliaError,
-    );
+    await expect(indexHandler(deleteEvent())).rejects.toThrow(algoliaError);
   });
 
   describe('Should process the events, handle race conditions and not rely on the order of the events', () => {
     test('receives the events created and updated in correct order', async () => {
-      const roID = 'ro-1234';
-      const researchOutputResponse = {
-        ...getResearchOutputResponse(),
-        id: roID,
+      const userId = 'user-1234';
+      const userResponse = {
+        ...getUserResponse(),
+        id: userId,
       };
 
-      researchOutputControllerMock.fetchById.mockResolvedValue({
-        ...researchOutputResponse,
+      userControllerMock.fetchById.mockResolvedValue({
+        ...userResponse,
       });
 
-      await indexHandler(createEvent(roID));
-      await indexHandler(updateEvent(roID));
+      await indexHandler(createEvent(userId));
+      await indexHandler(updateEvent(userId));
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(
-        researchOutputResponse,
-      );
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(userResponse);
     });
 
     test('receives the events created and updated in reverse order', async () => {
-      const roID = 'ro-1234';
-      const researchOutputResponse = {
-        ...getResearchOutputResponse(),
-        id: roID,
+      const userId = 'user-1234';
+      const userResponse = {
+        ...getUserResponse(),
+        id: userId,
       };
 
-      researchOutputControllerMock.fetchById.mockResolvedValue(
-        researchOutputResponse,
-      );
+      userControllerMock.fetchById.mockResolvedValue(userResponse);
 
-      await indexHandler(updateEvent(roID));
-      await indexHandler(createEvent(roID));
+      await indexHandler(updateEvent(userId));
+      await indexHandler(createEvent(userId));
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(
-        researchOutputResponse,
-      );
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(userResponse);
     });
 
     test('receives the events created and unpublished in correct order', async () => {
-      const roID = 'ro-1234';
-      const createEv = createEvent(roID);
-      const unpublishedEv = unpublishedEvent(roID);
+      const userId = 'user-1234';
+      const createEv = createEvent(userId);
+      const unpublishedEv = unpublishedEvent(userId);
       const algoliaError = new Error('ERROR');
 
-      researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -167,12 +141,12 @@ describe('Research Output index handler', () => {
     });
 
     test('receives the events created and unpublished in reverse order', async () => {
-      const roID = 'ro-1234';
-      const createEv = createEvent(roID);
-      const unpublishedEv = unpublishedEvent(roID);
+      const userId = 'user-1234';
+      const createEv = createEvent(userId);
+      const unpublishedEv = unpublishedEvent(userId);
       const algoliaError = new Error('ERROR');
 
-      researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -187,12 +161,12 @@ describe('Research Output index handler', () => {
     });
 
     test('receives the events created and deleted in correct order', async () => {
-      const roID = 'ro-1234';
-      const createEv = createEvent(roID);
-      const deleteEv = deleteEvent(roID);
+      const userId = 'user-1234';
+      const createEv = createEvent(userId);
+      const deleteEv = deleteEvent(userId);
       const algoliaError = new Error('ERROR');
 
-      researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -207,12 +181,12 @@ describe('Research Output index handler', () => {
     });
 
     test('receives the events created and deleted in reverse order', async () => {
-      const roID = 'ro-1234';
-      const createEv = createEvent(roID);
-      const deleteEv = deleteEvent(roID);
+      const userId = 'user-1234';
+      const createEv = createEvent(userId);
+      const deleteEv = deleteEvent(userId);
       const algoliaError = new Error('ERROR');
 
-      researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -227,12 +201,12 @@ describe('Research Output index handler', () => {
     });
 
     test('receives the events updated and deleted in correct order', async () => {
-      const roID = 'ro-1234';
-      const updateEv = updateEvent(roID);
-      const deleteEv = deleteEvent(roID);
+      const userId = 'user-1234';
+      const updateEv = updateEvent(userId);
+      const deleteEv = deleteEvent(userId);
       const algoliaError = new Error('ERROR');
 
-      researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -247,12 +221,12 @@ describe('Research Output index handler', () => {
     });
 
     test('receives the events updated and deleted in reverse order', async () => {
-      const roID = 'ro-1234';
-      const updateEv = updateEvent(roID);
-      const deleteEv = deleteEvent(roID);
+      const userId = 'user-1234';
+      const updateEv = updateEvent(userId);
+      const deleteEv = deleteEvent(userId);
       const algoliaError = new Error('ERROR');
 
-      researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -266,12 +240,12 @@ describe('Research Output index handler', () => {
       );
     });
     test('receives the events updated and unpublished in correct order', async () => {
-      const roID = 'ro-1234';
-      const updateEv = updateEvent(roID);
-      const unpublishedEv = unpublishedEvent(roID);
+      const userId = 'user-1234';
+      const updateEv = updateEvent(userId);
+      const unpublishedEv = unpublishedEvent(userId);
       const algoliaError = new Error('ERROR');
 
-      researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -286,12 +260,12 @@ describe('Research Output index handler', () => {
     });
 
     test('receives the events updated and unpublished in reverse order', async () => {
-      const roID = 'ro-1234';
-      const updateEv = updateEvent(roID);
-      const unpublishedEv = unpublishedEvent(roID);
+      const userId = 'user-1234';
+      const updateEv = updateEvent(userId);
+      const unpublishedEv = unpublishedEvent(userId);
       const algoliaError = new Error('ERROR');
 
-      researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -307,42 +281,14 @@ describe('Research Output index handler', () => {
   });
 });
 
-const unpublishedEvent = (id: string) =>
-  getResearchOutputEvent(
-    id,
-    'ResearchOutputsUnpublished',
-    'ResearchOutputDeleted',
-  ) as EventBridgeEvent<
-    ResearchOutputEventType,
-    SquidexWebhookResearchOutputPayload
-  >;
+const unpublishedEvent = (id: string = 'user-1234') =>
+  getUserEvent(id, 'UsersUnpublished', 'UserDeleted');
 
-const deleteEvent = (id: string) =>
-  getResearchOutputEvent(
-    id,
-    'ResearchOutputsDeleted',
-    'ResearchOutputDeleted',
-  ) as EventBridgeEvent<
-    ResearchOutputEventType,
-    SquidexWebhookResearchOutputPayload
-  >;
+const deleteEvent = (id: string = 'user-1234') =>
+  getUserEvent(id, 'UsersDeleted', 'UserDeleted');
 
-const createEvent = (id: string) =>
-  getResearchOutputEvent(
-    id,
-    'ResearchOutputsPublished',
-    'ResearchOutputCreated',
-  ) as EventBridgeEvent<
-    ResearchOutputEventType,
-    SquidexWebhookResearchOutputPayload
-  >;
+const createEvent = (id: string = 'user-1234') =>
+  getUserEvent(id, 'UsersPublished', 'UserPublished');
 
-const updateEvent = (id: string) =>
-  getResearchOutputEvent(
-    id,
-    'ResearchOutputsUpdated',
-    'ResearchOutputUpdated',
-  ) as EventBridgeEvent<
-    ResearchOutputEventType,
-    SquidexWebhookResearchOutputPayload
-  >;
+const updateEvent = (id: string = 'user-1234') =>
+  getUserEvent(id, 'UsersUpdated', 'UserUpdated');

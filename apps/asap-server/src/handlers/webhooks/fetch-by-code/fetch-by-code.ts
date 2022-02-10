@@ -1,10 +1,10 @@
-import { SearchClient } from '@asap-hub/algolia';
+import { SearchClient } from 'algoliasearch';
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
 import { UserController } from '../../../controllers/users';
 import validateRequest from '../../../utils/validate-auth0-request';
 import { Handler } from '../../../utils/types';
-import { algoliaApiKeyTtl, algoliaSearchApiKey } from '../../../config';
+import { algoliaApiKeyTtl, algoliaApiKey } from '../../../config';
 
 export const fetchUserByCodeHandlerFactory = (
   userController: UserController,
@@ -28,7 +28,7 @@ export const fetchUserByCodeHandlerFactory = (
     };
 
     const user = await userController.fetchByCode(code);
-    const apiKey = algoliaClient.generateSecuredApiKey(algoliaSearchApiKey, {
+    const apiKey = algoliaClient.generateSecuredApiKey(algoliaApiKey, {
       validUntil: getValidUntilTimestampInSeconds({
         date,
         ttl,

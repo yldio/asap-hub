@@ -70,7 +70,6 @@ Refer to [this Yarn documentation page](https://yarnpkg.com/advanced/editor-sdks
 
 Individual `packages` or `apps` may contain their own readme files as deemed necessary.
 The [`docs`](docs) folder contains overall architecture / decision documentation.
-The [`dev`](dev) folder contains documentation regarding the local dev environment for the backend.
 
 ## Squidex schema changes and graphql
 

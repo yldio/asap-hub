@@ -1,4 +1,4 @@
-export type Flag = 'PERSISTENT_EXAMPLE' | 'ROMS_FORM';
+export type Flag = 'PERSISTENT_EXAMPLE' | 'ROMS_FORM' | 'ALGOLIA_USER_SEARCH';
 
 export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {

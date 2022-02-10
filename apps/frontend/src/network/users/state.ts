@@ -12,12 +12,19 @@ import {
   UserPatchRequest,
   ListUserResponse,
 } from '@asap-hub/model';
-import { useAuth0 } from '@asap-hub/react-context';
+import { useAuth0, useFlags } from '@asap-hub/react-context';
 
 import { authorizationState } from '@asap-hub/frontend/src/auth/state';
-import { getUser, patchUser, postUserAvatar, getUsers } from './api';
+import {
+  getUser,
+  patchUser,
+  postUserAvatar,
+  getUsers,
+  getUsersWithAlgolia,
+} from './api';
 import { GetListOptions } from '../../api-util';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
+import { useAlgolia } from '../../hooks/algolia';
 
 const userIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -112,8 +119,16 @@ export const usePrefetchUsers = (
 export const useUsers = (options: GetListOptions) => {
   const authorization = useRecoilValue(authorizationState);
   const [users, setUsers] = useRecoilState(usersState(options));
+  const algoliaClient = useAlgolia();
+  const useAlgoliaSearch = useFlags().isEnabled('ALGOLIA_USER_SEARCH');
   if (users === undefined) {
-    throw getUsers(options, authorization).then(setUsers).catch(setUsers);
+    if (useAlgoliaSearch) {
+      throw getUsersWithAlgolia(algoliaClient.client, options)
+        .then(setUsers)
+        .catch(setUsers);
+    } else {
+      throw getUsers(options, authorization).then(setUsers).catch(setUsers);
+    }
   }
   if (users instanceof Error) {
     throw users;

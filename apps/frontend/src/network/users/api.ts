@@ -5,6 +5,10 @@ import {
   ListUserResponse,
 } from '@asap-hub/model';
 
+import {
+  AlgoliaSearchClient,
+  SearchEntityResponse,
+} from '@asap-hub/algolia/build';
 import { API_BASE_URL } from '../../config';
 import {
   GetListOptions,
@@ -28,6 +32,23 @@ export const getUser = async (
     );
   }
   return resp.json();
+};
+
+export const getUsersWithAlgolia = async (
+  algoliaClient: AlgoliaSearchClient,
+  { searchQuery, filters, currentPage, pageSize }: GetListOptions,
+): Promise<ListUserResponse> => {
+  const algoliaFilters = Array.from(filters)
+    .map((filter) => `teams.role:"${filter}"`)
+    .join(' OR ');
+
+  const result = await algoliaClient.searchEntity('user', searchQuery, {
+    filters: algoliaFilters,
+    page: currentPage ?? undefined,
+    hitsPerPage: pageSize ?? undefined,
+  });
+
+  return { items: result.hits, total: result.nbHits };
 };
 
 export const getUsers = async (

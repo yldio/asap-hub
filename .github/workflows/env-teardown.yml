@@ -23,7 +23,7 @@ jobs:
           echo "::set-output name=pr-number::$PR_NUMBER"
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Genrate Image Name
+      - name: Generate Image Name
         uses: ./.github/actions/ecr-registry
         id: image-name
         with:

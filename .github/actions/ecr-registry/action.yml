@@ -20,7 +20,7 @@ inputs:
     default: 8bf2c61ef5a3d31df5b6d670085335fe4de93734
 outputs:
   image-name:
-    description: "Name of image"
+    description: 'Name of image'
     value: ${{ steps.get-image-name.outputs.image-name }}
 runs:
   using: 'composite'

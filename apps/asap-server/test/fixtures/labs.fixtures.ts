@@ -1,9 +1,12 @@
+import { EventBridgeEvent } from 'aws-lambda';
+
 import { LabResponse } from '@asap-hub/model';
 import { Lab, WebhookPayload } from '@asap-hub/squidex';
 import {
   LabEventType,
   SquidexLabEventType,
 } from '../../src/handlers/webhooks/webhook-lab';
+import { SquidexWebhookLabPayload } from '../../src/handlers/lab/users-handler';
 import { createEventBridgeEventMock } from '../helpers/events';
 
 export const getLabResponse = (): LabResponse => ({
@@ -40,3 +43,27 @@ export const getLabEvent = (
     eventType,
     id,
   );
+
+export const unpublishedEvent = (id: string) =>
+  getLabEvent(id, 'LabsUnpublished', 'LabDeleted') as EventBridgeEvent<
+    LabEventType,
+    SquidexWebhookLabPayload
+  >;
+
+export const deleteEvent = (id: string) =>
+  getLabEvent(id, 'LabsDeleted', 'LabDeleted') as EventBridgeEvent<
+    LabEventType,
+    SquidexWebhookLabPayload
+  >;
+
+export const createEvent = (id: string) =>
+  getLabEvent(id, 'LabsPublished', 'LabPublished') as EventBridgeEvent<
+    LabEventType,
+    SquidexWebhookLabPayload
+  >;
+
+export const updateEvent = (id: string) =>
+  getLabEvent(id, 'LabsUpdated', 'LabPublished') as EventBridgeEvent<
+    LabEventType,
+    SquidexWebhookLabPayload
+  >;

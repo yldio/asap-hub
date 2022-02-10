@@ -1,17 +1,15 @@
 import Boom from '@hapi/boom';
-import { EventBridgeEvent } from 'aws-lambda';
 
 import { ListUserResponse } from '@asap-hub/model';
 import { BatchRequest } from '@asap-hub/algolia';
+import { indexLabUsersHandler } from '../../../src/handlers/lab/users-handler';
 import {
-  indexLabUsersHandler,
-  SquidexWebhookLabPayload,
-} from '../../../src/handlers/lab/users-handler';
-import { LabEventType } from '../../../src/handlers/webhooks/webhook-lab';
+  createEvent,
+  deleteEvent,
+  updateEvent,
+  unpublishedEvent,
+} from '../../fixtures/labs.fixtures';
 import { getListUserResponse } from '../../fixtures/users.fixtures';
-
-import { getLabEvent } from '../../fixtures/labs.fixtures';
-
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user-controller.mock';
 
@@ -286,27 +284,3 @@ describe('Lab Users handler', () => {
     });
   });
 });
-
-const unpublishedEvent = (id: string) =>
-  getLabEvent(id, 'LabsUnpublished', 'LabDeleted') as EventBridgeEvent<
-    LabEventType,
-    SquidexWebhookLabPayload
-  >;
-
-const deleteEvent = (id: string) =>
-  getLabEvent(id, 'LabsDeleted', 'LabDeleted') as EventBridgeEvent<
-    LabEventType,
-    SquidexWebhookLabPayload
-  >;
-
-const createEvent = (id: string) =>
-  getLabEvent(id, 'LabsPublished', 'LabPublished') as EventBridgeEvent<
-    LabEventType,
-    SquidexWebhookLabPayload
-  >;
-
-const updateEvent = (id: string) =>
-  getLabEvent(id, 'LabsUpdated', 'LabPublished') as EventBridgeEvent<
-    LabEventType,
-    SquidexWebhookLabPayload
-  >;

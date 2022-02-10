@@ -53,7 +53,7 @@ describe('TeamProfile', () => {
         network({})
           .teams({})
           .team({ teamId })
-          .createOutput({ outputType: 'Bioinformatics' }).$,
+          .createOutput({ outputType: 'bioinformatics' }).$,
       );
       expect(
         screen.getByRole('heading', { name: /Share bioinformatics/i }),
@@ -69,7 +69,7 @@ describe('TeamProfile', () => {
         network({})
           .teams({})
           .team({ teamId })
-          .createOutput({ outputType: 'Bioinformatics' }).$,
+          .createOutput({ outputType: 'bioinformatics' }).$,
       );
 
       const button = screen.getByRole('button', { name: /Share/i });

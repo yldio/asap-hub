@@ -26,9 +26,7 @@ it('renders the research output type in the header', () => {
       suggestions={[]}
     />,
   );
-  expect(
-    screen.getByRole('heading', { name: /Share grant document/i }),
-  ).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /Share/i })).toBeInTheDocument();
 });
 it('clicking button will trigger the callback', () => {
   const researchOutput = createResearchOutputResponse();

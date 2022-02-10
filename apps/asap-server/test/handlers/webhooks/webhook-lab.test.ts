@@ -10,8 +10,6 @@ import { createSignedPayload } from '../../helpers/webhooks';
 import { getApiGatewayEvent } from '../../helpers/events';
 import { eventBus, eventSource } from '../../../src/config';
 
-const x = ['LabsPublished', 'LabsUpdated', 'LabsUnpublished', 'LabsDeleted'];
-
 describe('Labs webhook', () => {
   const evenBridgeMock = {
     putEvents: jest.fn().mockReturnValue({ promise: jest.fn() }),

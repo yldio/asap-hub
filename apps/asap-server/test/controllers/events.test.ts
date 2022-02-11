@@ -408,7 +408,7 @@ describe('Event controller', () => {
         jest.clearAllMocks();
       });
 
-      test('Should return permanentlyUnavailable details if details are permanentlyUnavailable on the CMS', async () => {
+      test('Should return empty (null) if details are permanentlyUnavailable on the CMS', async () => {
         const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
         eventsGraphqlResponse.queryEventsContentsWithTotal!.items![0]!.flatData.notesPermanentlyUnavailable =
           true;
@@ -423,24 +423,27 @@ describe('Event controller', () => {
           eventsGraphqlResponse,
         );
 
-        const result = await eventsController.fetch({
-          before: 'before',
-        });
+        const result = await eventsController.fetch({ before: 'before' });
+
         expect(result.items[0]?.notes).toBeNull();
         expect(result.items[0]?.videoRecording).toBeNull();
         expect(result.items[0]?.meetingMaterials).toBeNull();
+        expect(result.items[0]?.presentation).toBeNull();
       });
 
-      test('Should return permanentlyUnavailable details if enough time has passed and details are empty', async () => {
+      test('Should return empty (null) details if the event is 4 days old and details are empty', async () => {
         const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
+
+        eventsGraphqlResponse.queryEventsContentsWithTotal!.items![0]!.flatData.endDate =
+          '2021-05-20T02:00:00Z';
         eventsGraphqlResponse.queryEventsContentsWithTotal!.items![0]!.flatData.notes =
-          null;
+          '';
         eventsGraphqlResponse.queryEventsContentsWithTotal!.items![0]!.flatData.videoRecording =
-          null;
+          '';
         eventsGraphqlResponse.queryEventsContentsWithTotal!.items![0]!.flatData.presentation =
-          null;
+          '';
         eventsGraphqlResponse.queryEventsContentsWithTotal!.items![0]!.flatData.meetingMaterials =
-          null;
+          [];
 
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           eventsGraphqlResponse,
@@ -454,7 +457,7 @@ describe('Event controller', () => {
         expect(result.items[0]?.presentation).toBeNull();
       });
 
-      test('Should return empty (undefined) details if empty but the event is fresh', async () => {
+      test('Should return empty (undefined) details if the event is less than 4 days old and details are empty', async () => {
         const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
         eventsGraphqlResponse.queryEventsContentsWithTotal!.items![0]!.flatData.endDate =
           new Date().toISOString();

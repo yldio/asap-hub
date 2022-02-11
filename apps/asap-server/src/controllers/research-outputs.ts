@@ -138,7 +138,7 @@ export default class ResearchOutputs implements ResearchOutputController {
   async create({
     teamId,
     ...researchOutputData
-  }: ResearchOutputPostRequest): Promise<Partial<ResearchOutputResponse>> {
+  }: ResearchOutputInputData): Promise<Partial<ResearchOutputResponse>> {
     const { id: researchOutputId } = await this.createResearchOutput(
       researchOutputData,
     );
@@ -191,6 +191,7 @@ export interface ResearchOutputController {
 
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
   create: (
-    researchOutputRequest: ResearchOutputPostRequest,
+    researchOutputRequest: ResearchOutputInputData,
   ) => Promise<Partial<ResearchOutputResponse>>;
 }
+export type ResearchOutputInputData = ResearchOutputPostRequest;

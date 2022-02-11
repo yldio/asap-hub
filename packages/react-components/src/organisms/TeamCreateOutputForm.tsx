@@ -52,7 +52,9 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
 
   return (
     <Form
-      dirty={tags !== [] || title !== '' || description !== '' || link !== ''}
+      dirty={
+        tags.length !== 0 || title !== '' || description !== '' || link !== ''
+      }
       onSave={onSaveCallback}
     >
       {({ isSaving, onSave: onClick }) => (

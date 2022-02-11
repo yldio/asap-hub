@@ -1,6 +1,5 @@
 import {
   ListResearchOutputResponse,
-  ResearchOutput,
   ResearchOutputResponse,
 } from '@asap-hub/model';
 
@@ -53,16 +52,4 @@ export const createListResearchOutputResponse = (
   ),
 });
 
-export const createResearchOutput = (
-  override?: Partial<ResearchOutput>,
-): ResearchOutput => ({
-  type: 'Bioinformatics',
-  link: 'https://hub.asap.science/',
-  title: 'Output created through the ROMS form',
-  asapFunded: false,
-  sharingStatus: 'Network Only',
-  usedInPublication: false,
-  addedDate: new Date().toISOString(),
-  ...override,
-});
 export default createListResearchOutputResponse;

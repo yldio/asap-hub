@@ -5,14 +5,19 @@ export default {
   component: TeamCreateOutputExtraInformationCard,
 };
 
-const suggestions = ['A53T', 'Activity assay'];
+const tagSuggestions = ['A53T', 'Activity assay'];
 
 export const Normal = () => (
-  <TeamCreateOutputExtraInformationCard values={[]} suggestions={suggestions} />
+  <TeamCreateOutputExtraInformationCard
+    isSaving={false}
+    tags={[]}
+    tagSuggestions={tagSuggestions}
+  />
 );
 export const Filled = () => (
   <TeamCreateOutputExtraInformationCard
-    values={suggestions}
-    suggestions={suggestions}
+    isSaving={false}
+    tags={tagSuggestions}
+    tagSuggestions={tagSuggestions}
   />
 );

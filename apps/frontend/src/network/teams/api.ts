@@ -1,6 +1,6 @@
 import {
   ListTeamResponse,
-  ResearchOutput,
+  ResearchOutputPostRequest,
   ResearchOutputResponse,
   TeamPatchRequest,
   TeamResponse,
@@ -68,16 +68,10 @@ export const patchTeam = async (
   return resp.json();
 };
 
-export type CreateTeamResearchOutput = (
-  teamId: string,
-  researchOutput: Partial<ResearchOutput>,
+export const createTeamResearchOutput = async (
+  researchOutput: ResearchOutputPostRequest,
   authorization: string,
-) => Promise<Partial<ResearchOutputResponse>>;
-export const createTeamResearchOutput: CreateTeamResearchOutput = async (
-  teamId,
-  researchOutput,
-  authorization,
-) => {
+): Promise<Pick<ResearchOutputResponse, 'id'>> => {
   const resp = await fetch(`${API_BASE_URL}/research-outputs`, {
     method: 'POST',
     headers: {
@@ -85,14 +79,13 @@ export const createTeamResearchOutput: CreateTeamResearchOutput = async (
       'content-type': 'application/json',
       ...createSentryHeaders(),
     },
-    body: JSON.stringify({
-      ...researchOutput,
-      teamId,
-    }),
+    body: JSON.stringify(researchOutput),
   });
   if (!resp.ok) {
     throw new Error(
-      `Failed to create research output for teamId: ${teamId} Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      `Failed to create research output for teamId: ${
+        researchOutput.teamId
+      } Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
   return resp.json();

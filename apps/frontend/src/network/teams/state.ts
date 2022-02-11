@@ -1,6 +1,6 @@
 import {
   ListTeamResponse,
-  ResearchOutput,
+  ResearchOutputPostRequest,
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
@@ -127,10 +127,9 @@ export const usePatchTeamById = (id: string) => {
     setPatchedTeam(await patchTeam(id, patch, authorization));
   };
 };
-export const usePostTeamResearchOutput = (teamId: string) => {
+export const usePostTeamResearchOutput = () => {
   const authorization = useRecoilValue(authorizationState);
-  return async (payload: Partial<ResearchOutput>) => {
+  return (payload: ResearchOutputPostRequest) =>
     // TODO: Store the response in the state
-    await createTeamResearchOutput(teamId, payload, authorization);
-  };
+    createTeamResearchOutput(payload, authorization);
 };

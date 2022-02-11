@@ -9,9 +9,20 @@ import { Suspense } from 'react';
 import { StaticRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { network, OutputTypeParameter } from '@asap-hub/routing';
-import { ResearchOutput } from '@asap-hub/model';
+import { ResearchOutputType } from '@asap-hub/model';
+import { fireEvent } from '@testing-library/dom';
+import userEvent from '@testing-library/user-event';
+
+import { createTeamResearchOutput } from '../api';
 import { refreshTeamState } from '../state';
 import TeamOutput, { paramOutputTypeToResearchOutputType } from '../TeamOutput';
+
+jest.mock('../api');
+
+const mockCreateTeamResearchOutput =
+  createTeamResearchOutput as jest.MockedFunction<
+    typeof createTeamResearchOutput
+  >;
 
 it('Renders the research output', async () => {
   const teamId = 'team-id';
@@ -35,7 +46,7 @@ it('Shows NotFoundPage when feature flag is off', async () => {
   const teamId = 'team-id';
   await renderPage({ teamId, featureFlagEnabled: false });
   expect(
-    screen.queryByRole('heading', { name: /Share bioinformatics/i }),
+    screen.queryByRole('heading', { name: /Share/i }),
   ).not.toBeInTheDocument();
   expect(
     screen.getByRole('heading', {
@@ -44,7 +55,44 @@ it('Shows NotFoundPage when feature flag is off', async () => {
   ).toBeInTheDocument();
 });
 
-it.each<{ param: OutputTypeParameter; outputType: ResearchOutput['type'] }>([
+it('can submit a form when form data is valid', async () => {
+  const teamId = 'team-id';
+  await renderPage({ teamId, outputType: 'lab-resource' });
+
+  fireEvent.change(screen.getByLabelText(/url/i), {
+    target: { value: 'http://example.com' },
+  });
+  fireEvent.change(screen.getByLabelText(/title/i), {
+    target: { value: 'example title' },
+  });
+  fireEvent.change(screen.getByLabelText(/description/i), {
+    target: { value: 'example description' },
+  });
+  const button = screen.getByRole('button', { name: /Share/i });
+
+  userEvent.click(button);
+
+  await waitFor(() => {
+    expect(mockCreateTeamResearchOutput).toHaveBeenCalledWith(
+      {
+        type: 'Lab Resource',
+        addedDate: expect.anything(),
+        tags: [],
+        asapFunded: undefined,
+        usedInPublication: undefined,
+        sharingStatus: 'Network Only',
+        teamId: 'team-id',
+        link: 'http://example.com',
+        title: 'example title',
+        description: 'example description',
+      },
+      expect.anything(),
+    );
+    expect(button).toBeEnabled();
+  });
+});
+
+it.each<{ param: OutputTypeParameter; outputType: ResearchOutputType }>([
   { param: 'article', outputType: 'Article' },
   { param: 'bioinformatics', outputType: 'Bioinformatics' },
   { param: 'dataset', outputType: 'Dataset' },

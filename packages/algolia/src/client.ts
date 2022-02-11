@@ -50,14 +50,14 @@ export class AlgoliaSearchClient {
       requests.map(
         ({ action, body }): AlgoliaBatchRequest => ({
           action,
-          body: this.getAlgoliaObject(body),
+          body: AlgoliaSearchClient.getAlgoliaObject(body),
         }),
       ),
     );
   }
 
   async save(payload: EntityResponses[keyof EntityResponses]): Promise<void> {
-    await this.index.saveObject(this.getAlgoliaObject(payload));
+    await this.index.saveObject(AlgoliaSearchClient.getAlgoliaObject(payload));
   }
 
   async remove(objectID: string): Promise<void> {
@@ -79,7 +79,7 @@ export class AlgoliaSearchClient {
     return this.index.search<EntityRecord<T>>(query, options);
   }
 
-  private getAlgoliaObject(
+  private static getAlgoliaObject(
     body: EntityResponses[keyof EntityResponses],
   ): Record<string, unknown> {
     return {

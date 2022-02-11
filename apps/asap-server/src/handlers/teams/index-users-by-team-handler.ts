@@ -38,7 +38,7 @@ export const indexTeamsUsersHandler =
       );
       const fullfiledUsersPromises = usersPromise.filter(
         ({ status }) => status === 'fulfilled',
-      ) as PromiseFulfilledResult<UserResponse>[];
+      ) as { value: UserResponse }[];
       const batchRequests = fullfiledUsersPromises.map(
         ({ value }): BatchRequest => ({
           action: 'updateObject',

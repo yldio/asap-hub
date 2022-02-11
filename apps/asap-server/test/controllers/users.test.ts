@@ -847,74 +847,44 @@ describe('Users controller', () => {
     });
   });
 
-  describe('FetchByRelationship', () => {
-    it('Should fetch the users by labs relationship from squidex', async () => {
-      const result = await usersMockGraphqlServer.fetchByRelationship(
-        'labs',
-        'lab-id',
-        {},
-      );
+  describe('fetchByLabId', () => {
+    it('Should fetch the users by lab id from squidex', async () => {
+      const result = await usersMockGraphqlServer.fetchByLabId('lab-id', {});
 
       expect(result).toMatchObject(getListUserResponse());
     });
 
-    it('Should return empty when empty result on fetch the users by labs relationship from squidex', async () => {
+    it('Should return empty when empty result on fetch the users by lab id from squidex', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
       mockResponse.queryUsersContentsWithTotal = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-      const result = await usersMockGraphqlClient.fetchByRelationship(
-        'labs',
+      const result = await usersMockGraphqlClient.fetchByLabId(
         'not-found-lab-id',
         {},
       );
       expect(result).toEqual({ items: [], total: 0 });
     });
 
-    it('Should return empty when items is null on fetch the users by labs relationship from squidex', async () => {
+    it('Should return empty when items is null on fetch the users by lab id from squidex', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
       mockResponse.queryUsersContentsWithTotal!.items = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-      const result = await usersMockGraphqlClient.fetchByRelationship(
-        'labs',
+      const result = await usersMockGraphqlClient.fetchByLabId(
         'not-found-lab-id',
         {},
       );
       expect(result).toEqual({ items: [], total: 0 });
     });
 
-    it('Should return empty when fetch the users by labs relationship from squidex', async () => {
+    it('Should return empty when fetch the users by lab id from squidex', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
       mockResponse.queryUsersContentsWithTotal!.items = [];
       mockResponse.queryUsersContentsWithTotal!.total = 0;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-      const result = await usersMockGraphqlClient.fetchByRelationship(
-        'labs',
-        'not-found-lab-id',
-        {},
-      );
-      expect(result).toEqual({ items: [], total: 0 });
-    });
-
-    it('Should fetch the users by teams relationship from squidex', async () => {
-      const result = await usersMockGraphqlServer.fetchByRelationship(
-        'teams',
-        'lab-id',
-        {},
-      );
-
-      expect(result).toMatchObject(getListUserResponse());
-    });
-    it('Should return empty when fetch the users by teams relationship from squidex', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      mockResponse.queryUsersContentsWithTotal!.items = [];
-      mockResponse.queryUsersContentsWithTotal!.total = 0;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-      const result = await usersMockGraphqlClient.fetchByRelationship(
-        'teams',
+      const result = await usersMockGraphqlClient.fetchByLabId(
         'not-found-lab-id',
         {},
       );

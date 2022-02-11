@@ -1,4 +1,5 @@
 import { TeamCreateOutputPage } from '@asap-hub/react-components';
+import { StaticRouter } from 'react-router-dom';
 
 export default {
   title: 'Templates / Team Profile / Team Create Output Page',
@@ -6,8 +7,10 @@ export default {
 };
 
 export const Normal = () => (
-  <TeamCreateOutputPage
-    tagSuggestions={['A53T', 'Activity assay']}
-    type="Article"
-  />
+  <StaticRouter>
+    <TeamCreateOutputPage
+      tagSuggestions={['A53T', 'Activity assay']}
+      type="Article"
+    />
+  </StaticRouter>
 );

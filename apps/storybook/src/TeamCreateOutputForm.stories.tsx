@@ -1,4 +1,5 @@
 import { TeamCreateOutputForm } from '@asap-hub/react-components';
+import { StaticRouter } from 'react-router-dom';
 
 export default {
   title: 'Organisms / Team Profile / Team Create Output Form',
@@ -6,5 +7,7 @@ export default {
 };
 
 export const Normal = () => (
-  <TeamCreateOutputForm tagSuggestions={['A53T', 'Activity assay']} />
+  <StaticRouter>
+    <TeamCreateOutputForm tagSuggestions={['A53T', 'Activity assay']} />
+  </StaticRouter>
 );

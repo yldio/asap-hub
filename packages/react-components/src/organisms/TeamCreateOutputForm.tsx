@@ -1,6 +1,9 @@
 import { css } from '@emotion/react';
 import { ComponentProps, useCallback, useState } from 'react';
-import { ResearchOutputPostRequest } from '@asap-hub/model';
+import {
+  ResearchOutputPostRequest,
+  ResearchOutputResponse,
+} from '@asap-hub/model';
 
 import {
   TeamCreateOutputFormSharingCard,
@@ -29,7 +32,9 @@ type TeamCreateOutputFormProps = Pick<
   ComponentProps<typeof TeamCreateOutputExtraInformationCard>,
   'tagSuggestions'
 > & {
-  onSave?: (output: Partial<ResearchOutputPostRequest>) => void;
+  onSave?: (
+    output: Partial<ResearchOutputPostRequest>,
+  ) => Promise<Pick<ResearchOutputResponse, 'id'>>;
 };
 
 const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
@@ -41,8 +46,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [description, setDescription] =
     useState<ResearchOutputPostRequest['description']>('');
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>('');
-  const onSaveCallback = useCallback(() => {
-    onSave({ tags, link, description, title });
+  const onSaveCallback = useCallback(async () => {
+    await onSave({ tags, link, description, title });
   }, [onSave, tags, link, description, title]);
 
   return (
@@ -69,7 +74,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           />
           <div css={formControlsContainerStyles}>
             <div style={{ display: 'block' }}>
-              <Button primary onClick={onClick}>
+              <Button enabled={!isSaving} primary onClick={onClick}>
                 Share
               </Button>
             </div>

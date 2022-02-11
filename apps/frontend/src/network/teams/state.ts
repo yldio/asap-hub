@@ -129,8 +129,7 @@ export const usePatchTeamById = (id: string) => {
 };
 export const usePostTeamResearchOutput = () => {
   const authorization = useRecoilValue(authorizationState);
-  return async (payload: ResearchOutputPostRequest) => {
+  return (payload: ResearchOutputPostRequest) =>
     // TODO: Store the response in the state
-    await createTeamResearchOutput(payload, authorization);
-  };
+    createTeamResearchOutput(payload, authorization);
 };

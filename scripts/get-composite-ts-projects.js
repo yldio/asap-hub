@@ -29,7 +29,8 @@ const configErrors = [];
   projects.forEach((projectDir) => {
     const dir = resolve(parentDir, projectDir);
 
-    let dependencies, devDependencies;
+    let dependencies;
+    let devDependencies;
     // read package.json
     try {
       ({ dependencies = {}, devDependencies = {} } = require(resolve(
@@ -78,7 +79,11 @@ const configErrors = [];
       );
     const projectReferencePaths = projectReferences.map(({ path }) => path);
     dependencyWorkspacePaths.forEach((dependencyWorkspacePath) => {
-      const dependencyDir = resolve(rootDir, dependencyWorkspacePath);
+      const dependencyDirUnnormalized = resolve(
+        rootDir,
+        dependencyWorkspacePath,
+      );
+      const dependencyDir = dependencyDirUnnormalized.replace(/\\/g, '/');
       if (
         !projectReferencePaths.includes(dependencyDir) &&
         existsSync(resolve(dependencyDir, 'tsconfig.json'))

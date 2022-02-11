@@ -4,7 +4,10 @@ import { appFactory } from '../../src/app';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { eventControllerMock } from '../mocks/event-controller.mock';
 import { FetchEventsOptions } from '../../src/controllers/events';
-import { eventResponse, listEventResponse } from '../fixtures/events.fixtures';
+import {
+  getEventResponse,
+  listEventResponse,
+} from '../fixtures/events.fixtures';
 
 describe('/events/ routes', () => {
   const app = appFactory({
@@ -234,11 +237,11 @@ describe('/events/ routes', () => {
     });
 
     test('Should return the results correctly', async () => {
-      eventControllerMock.fetchById.mockResolvedValueOnce(eventResponse);
+      eventControllerMock.fetchById.mockResolvedValueOnce(getEventResponse());
 
       const response = await supertest(app).get('/events/123');
 
-      expect(response.body).toEqual(eventResponse);
+      expect(response.body).toEqual(getEventResponse());
     });
   });
 });

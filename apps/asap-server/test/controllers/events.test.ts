@@ -3,13 +3,12 @@ import { config } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import {
   listEventResponse,
-  eventResponse,
+  getEventResponse,
+  getEventRestResponse,
   getRestEvent,
   getSquidexGraphqlEvents,
   getSquidexEventsGraphqlResponse,
   getSquidexEventGraphqlResponse,
-  eventRestResponse,
-  squidexRestEvent,
 } from '../fixtures/events.fixtures';
 import {
   getSquidexGraphqlGroup,
@@ -513,7 +512,7 @@ describe('Event controller', () => {
 
     test('Should fetch the event from squidex graphql', async () => {
       const result = await eventsControllerMockGraphql.fetchById(eventId);
-      expect(result).toMatchObject(eventResponse);
+      expect(result).toMatchObject(getEventResponse());
     });
 
     test('Should throw a Not Found error when the event is not found', async () => {
@@ -538,7 +537,7 @@ describe('Event controller', () => {
       );
 
       const result = await eventsController.fetchById(eventId);
-      expect(result).toMatchObject({ ...eventResponse, id: eventId });
+      expect(result).toMatchObject({ ...getEventResponse(), id: eventId });
     });
 
     describe('Event link', () => {
@@ -608,7 +607,7 @@ describe('Event controller', () => {
         );
 
         const result = await eventsController.fetchById(eventId);
-        expect(result).toMatchObject(eventResponse);
+        expect(result).toMatchObject(getEventResponse());
       });
 
       test('Should return one group when event calendar is referenced by single group', async () => {
@@ -621,7 +620,7 @@ describe('Event controller', () => {
         );
 
         const result = await eventsController.fetchById(eventId);
-        expect(result).toMatchObject(eventResponse);
+        expect(result).toMatchObject(getEventResponse());
       });
 
       test('Should return not return group when event calendar is not referenced by any group', async () => {
@@ -634,7 +633,10 @@ describe('Event controller', () => {
         );
 
         const result = await eventsController.fetchById(eventId);
-        expect(result).toMatchObject({ ...eventResponse, group: undefined });
+        expect(result).toMatchObject({
+          ...getEventResponse(),
+          group: undefined,
+        });
       });
     });
   });
@@ -651,11 +653,11 @@ describe('Event controller', () => {
       nock(config.baseUrl)
         .post(
           `/api/content/${config.appName}/events?publish=true`,
-          squidexRestEvent(),
+          getRestEvent().data,
         )
         .reply(200, getRestEvent());
 
-      await eventsController.create(eventRestResponse);
+      await eventsController.create(getEventRestResponse());
     });
 
     test('Should throw when squidex return an error', async () => {
@@ -664,7 +666,7 @@ describe('Event controller', () => {
         .reply(404);
 
       await expect(
-        eventsController.create(eventRestResponse),
+        eventsController.create(getEventRestResponse()),
       ).rejects.toThrow();
     });
   });

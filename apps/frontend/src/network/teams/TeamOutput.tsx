@@ -1,6 +1,10 @@
 import React from 'react';
 import { NotFoundPage, TeamCreateOutputPage } from '@asap-hub/react-components';
-import { ResearchOutputPostRequest, ResearchOutputType } from '@asap-hub/model';
+import {
+  ResearchOutputPostRequest,
+  ResearchOutputSharingStatus,
+  ResearchOutputType,
+} from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
 
 import {
@@ -54,7 +58,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
     link: 'https://hub.asap.science/',
     title: 'Output created through the ROMS form',
     asapFunded: undefined,
-    sharingStatus: 'Network Only' as const,
+    sharingStatus: 'Network Only',
     usedInPublication: undefined,
     addedDate: new Date().toISOString(),
     description: 'example',

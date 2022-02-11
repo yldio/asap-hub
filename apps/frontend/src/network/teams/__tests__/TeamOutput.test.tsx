@@ -9,6 +9,7 @@ import { Suspense } from 'react';
 import { StaticRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { network, OutputTypeParameter } from '@asap-hub/routing';
+import { ResearchOutput } from '@asap-hub/model';
 import { refreshTeamState } from '../state';
 import TeamOutput, { paramOutputTypeToResearchOutputType } from '../TeamOutput';
 
@@ -43,36 +44,15 @@ it('Shows NotFoundPage when feature flag is off', async () => {
   ).toBeInTheDocument();
 });
 
-describe('paramOutputTypeToResearchOutputType', () => {
-  it('maps from article to Article', () => {
-    expect(paramOutputTypeToResearchOutputType('article')).toEqual('Article');
-  });
-
-  it('maps from bioinformatics to Bioinformatics', () => {
-    expect(paramOutputTypeToResearchOutputType('bioinformatics')).toEqual(
-      'Bioinformatics',
-    );
-  });
-
-  it('maps from dataset to Dataset', () => {
-    expect(paramOutputTypeToResearchOutputType('dataset')).toEqual('Dataset');
-  });
-
-  it('maps from lab-resource to Lab Resource', () => {
-    expect(paramOutputTypeToResearchOutputType('lab-resource')).toEqual(
-      'Lab Resource',
-    );
-  });
-
-  it('maps from protocol to Protocol', () => {
-    expect(paramOutputTypeToResearchOutputType('protocol')).toEqual('Protocol');
-  });
-
-  it('defaults to article on unknown input', () => {
-    expect(
-      paramOutputTypeToResearchOutputType('unknown' as OutputTypeParameter),
-    ).toEqual('Article');
-  });
+it.each<{ param: OutputTypeParameter; outputType: ResearchOutput['type'] }>([
+  { param: 'article', outputType: 'Article' },
+  { param: 'bioinformatics', outputType: 'Bioinformatics' },
+  { param: 'dataset', outputType: 'Dataset' },
+  { param: 'lab-resource', outputType: 'Lab Resource' },
+  { param: 'protocol', outputType: 'Protocol' },
+  { param: 'unknown' as OutputTypeParameter, outputType: 'Article' },
+])('maps from $param to $outputType', ({ param, outputType }) => {
+  expect(paramOutputTypeToResearchOutputType(param)).toEqual(outputType);
 });
 
 interface RenderPageOptions {

@@ -7,23 +7,20 @@ import {
   BatchRequest,
 } from '@asap-hub/algolia';
 import Users, { UserController } from '../../controllers/users';
-import {
-  TeamsEventType,
-  SquidexWebhookTeamPayload,
-} from '../webhooks/webhook-teams';
+import { LabEventType } from '../webhooks/webhook-lab';
+import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import { loopOverCustomCollection } from '../../utils/migrations';
 import logger from '../../utils/logger';
-import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 
-export const indexTeamsUsersHandler =
+export const indexLabUsersHandler =
   (
     userController: UserController,
     algoliaClient: AlgoliaSearchClient,
   ): ((
-    event: EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>,
+    event: EventBridgeEvent<LabEventType, SquidexWebhookLabPayload>,
   ) => Promise<void>) =>
   async (
-    event: EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>,
+    event: EventBridgeEvent<LabEventType, SquidexWebhookLabPayload>,
   ): Promise<void> => {
     logger.debug(`Event ${event['detail-type']}`);
 
@@ -31,7 +28,7 @@ export const indexTeamsUsersHandler =
       const fetchFunction = (
         skip: number,
       ): Promise<ListResponse<UserResponse>> =>
-        userController.fetchByRelationship('teams', event.detail.payload.id, {
+        userController.fetchByLabId(event.detail.payload.id, {
           skip,
         });
 
@@ -66,12 +63,20 @@ export const indexTeamsUsersHandler =
     }
   };
 
-export const handler = indexTeamsUsersHandler(
-  new Users(new SquidexGraphql()),
-  algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
-);
+export type SquidexWebhookLabPayload = {
+  type: 'LabsPublished' | 'LabsUpdated' | 'LabsUnpublished' | 'LabsDeleted';
+  payload: {
+    $type: 'EnrichedContentEvent';
+    type: 'Published' | 'Updated' | 'Unpublished' | 'Deleted';
+    id: string;
+  };
+};
 
-export type UserIndexEventBridgeEvent = EventBridgeEvent<
-  TeamsEventType,
-  SquidexWebhookTeamPayload
->;
+export const handler = indexLabUsersHandler(
+  new Users(new SquidexGraphql()),
+  algoliaSearchClientFactory({
+    algoliaApiKey,
+    algoliaAppId,
+    algoliaIndex,
+  }),
+);

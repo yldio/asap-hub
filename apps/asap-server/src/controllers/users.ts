@@ -27,17 +27,11 @@ import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 import { sanitiseForSquidex } from '../utils/squidex';
 import { FetchOptions } from '../utils/types';
 
-export type UserRelatedEntity = 'labs' | 'teams';
-
 export interface UserController {
   fetch(options: FetchOptions): Promise<ListUserResponse>;
   fetchById(id: string): Promise<UserResponse>;
   fetchByCode(code: string): Promise<UserResponse>;
-  fetchByRelationship(
-    relatedEntityName: UserRelatedEntity,
-    relatedEntityId: string,
-    options: FetchOptions,
-  ): Promise<ListUserResponse>;
+  fetchByLabId(labId: string, options: FetchOptions): Promise<ListUserResponse>;
   connectByCode(welcomeCode: string, userId: string): Promise<UserResponse>;
   update(id: string, update: UserPatchRequest): Promise<UserResponse>;
   updateAvatar(
@@ -233,20 +227,12 @@ export default class Users implements UserController {
     return parseGraphQLUser(items[0]);
   }
 
-  async fetchByRelationship(
-    relatedEntityName: UserRelatedEntity,
-    relatedEntityId: string,
+  async fetchByLabId(
+    labId: string,
     options: FetchOptions,
   ): Promise<ListUserResponse> {
     const { take = 8, skip = 0 } = options;
-
-    const queryFilter = ((entityName: UserRelatedEntity, entityId: string) => {
-      if (entityName === 'labs') {
-        return `data/labs/iv eq '${entityId}'`;
-      }
-
-      return `data/teams/iv eq '${entityId}'`;
-    })(relatedEntityName, relatedEntityId);
+    const queryFilter = `data/labs/iv eq '${labId}'`;
 
     const { queryUsersContentsWithTotal } =
       await this.squidexGraphlClient.request<

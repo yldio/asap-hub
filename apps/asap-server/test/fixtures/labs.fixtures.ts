@@ -6,7 +6,7 @@ import {
   LabEventType,
   SquidexLabEventType,
 } from '../../src/handlers/webhooks/webhook-lab';
-import { SquidexWebhookLabPayload } from '../../src/handlers/lab/users-handler';
+import { SquidexWebhookLabPayload } from '../../src/handlers/lab/index-users-by-lab-handler';
 import { createEventBridgeEventMock } from '../helpers/events';
 
 export const getLabResponse = (): LabResponse => ({
@@ -33,6 +33,10 @@ export const getLabWebhookPayload = (
   },
 });
 
+export type LabEventGenerator = (
+  id: string,
+) => EventBridgeEvent<LabEventType, SquidexWebhookLabPayload>;
+
 export const getLabEvent = (
   id: string,
   squidexEvent: SquidexLabEventType,
@@ -44,25 +48,25 @@ export const getLabEvent = (
     id,
   );
 
-export const unpublishedEvent = (id: string) =>
+export const unpublishedEvent: LabEventGenerator = (id: string) =>
   getLabEvent(id, 'LabsUnpublished', 'LabDeleted') as EventBridgeEvent<
     LabEventType,
     SquidexWebhookLabPayload
   >;
 
-export const deleteEvent = (id: string) =>
+export const deleteEvent: LabEventGenerator = (id: string) =>
   getLabEvent(id, 'LabsDeleted', 'LabDeleted') as EventBridgeEvent<
     LabEventType,
     SquidexWebhookLabPayload
   >;
 
-export const createEvent = (id: string) =>
+export const createEvent: LabEventGenerator = (id: string) =>
   getLabEvent(id, 'LabsPublished', 'LabPublished') as EventBridgeEvent<
     LabEventType,
     SquidexWebhookLabPayload
   >;
 
-export const updateEvent = (id: string) =>
+export const updateEvent: LabEventGenerator = (id: string) =>
   getLabEvent(id, 'LabsUpdated', 'LabPublished') as EventBridgeEvent<
     LabEventType,
     SquidexWebhookLabPayload

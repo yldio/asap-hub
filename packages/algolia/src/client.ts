@@ -50,22 +50,14 @@ export class AlgoliaSearchClient {
       requests.map(
         ({ action, body }): AlgoliaBatchRequest => ({
           action,
-          body: {
-            ...body,
-            objectID: body.id,
-            __meta: { type: getEntityType(body) },
-          },
+          body: this.getAlgoliaObject(body),
         }),
       ),
     );
   }
 
   async save(payload: EntityResponses[keyof EntityResponses]): Promise<void> {
-    await this.index.saveObject({
-      ...payload,
-      objectID: payload.id,
-      __meta: { type: getEntityType(payload) },
-    });
+    await this.index.saveObject(this.getAlgoliaObject(payload));
   }
 
   async remove(objectID: string): Promise<void> {
@@ -85,5 +77,15 @@ export class AlgoliaSearchClient {
     };
 
     return this.index.search<EntityRecord<T>>(query, options);
+  }
+
+  private getAlgoliaObject(
+    body: EntityResponses[keyof EntityResponses],
+  ): Record<string, unknown> {
+    return {
+      ...body,
+      objectID: body.id,
+      __meta: { type: getEntityType(body) },
+    };
   }
 }

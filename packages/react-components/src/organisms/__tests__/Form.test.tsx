@@ -168,6 +168,29 @@ describe('when saving', () => {
         act(resolveSave);
       });
 
+      it('resets to initial state once a saved form matches the default state', async () => {
+        const { getByText, rerender } = result;
+
+        userEvent.click(getByText(/^save/i));
+        await waitFor(() =>
+          expect(getByText(/^save/i).closest('button')).toBeEnabled(),
+        );
+        rerender(
+          <Router history={history}>
+            <Form {...props} onSave={handleSave}>
+              {({ onSave: onSubmit, isSaving }) => (
+                <>
+                  <Link to={'/another-url'}>Navigate away</Link>
+                  <Button primary enabled={!isSaving} onClick={onSubmit}>
+                    save
+                  </Button>
+                </>
+              )}
+            </Form>
+          </Router>,
+        );
+      });
+
       it('re-enables the save button', async () => {
         const { getByText } = result;
 

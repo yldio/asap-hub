@@ -9,14 +9,13 @@ import { Suspense } from 'react';
 import { StaticRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { network, OutputTypeParameter } from '@asap-hub/routing';
-
+import { ResearchOutputType } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
 import { createTeamResearchOutput } from '../api';
 import { refreshTeamState } from '../state';
 import TeamOutput, { paramOutputTypeToResearchOutputType } from '../TeamOutput';
-import { ResearchOutputType } from '@asap-hub/model';
 
 jest.mock('../api');
 

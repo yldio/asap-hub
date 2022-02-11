@@ -1,11 +1,6 @@
 import nock from 'nock';
 import { createTeamResponse, createListTeamResponse } from '@asap-hub/fixtures';
-import {
-  ResearchOutputPostRequest,
-  ResearchOutputSharingStatus,
-  ResearchOutputType,
-  TeamResponse,
-} from '@asap-hub/model';
+import { ResearchOutputPostRequest, TeamResponse } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../../../config';
 import { getTeam, patchTeam, getTeams, createTeamResearchOutput } from '../api';
@@ -134,12 +129,12 @@ describe('patchTeam', () => {
 describe('createTeamResearchOutput', () => {
   const payload: ResearchOutputPostRequest = {
     teamId: '90210',
-    type: 'Bioinformatics' as ResearchOutputType,
+    type: 'Bioinformatics',
     link: 'http://a-link',
     title: 'A title',
     asapFunded: false,
     usedInPublication: false,
-    sharingStatus: 'Public' as ResearchOutputSharingStatus,
+    sharingStatus: 'Public',
     addedDate: '2020-01-01',
     description: '',
     tags: [],

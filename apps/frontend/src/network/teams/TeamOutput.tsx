@@ -1,10 +1,6 @@
 import React from 'react';
 import { NotFoundPage, TeamCreateOutputPage } from '@asap-hub/react-components';
-import {
-  ResearchOutputPostRequest,
-  ResearchOutputSharingStatus,
-  ResearchOutputType,
-} from '@asap-hub/model';
+import { ResearchOutputPostRequest, ResearchOutputType } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
 
 import {

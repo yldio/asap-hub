@@ -7,30 +7,30 @@ import {
   enable,
 } from '..';
 
-const originalNodeEnv = process.env.NODE_ENV;
+const originalNodeEnv = process.env.REACT_APP_ENVIRONMENT;
 beforeEach(() => {
-  process.env.NODE_ENV = 'unknown';
+  process.env.REACT_APP_ENVIRONMENT = 'unknown';
 });
 afterEach(() => {
-  process.env.NODE_ENV = originalNodeEnv;
+  process.env.REACT_APP_ENVIRONMENT = originalNodeEnv;
 });
 
 it('disables flags in unknown environments', () => {
-  process.env.NODE_ENV = 'unknown';
+  process.env.REACT_APP_ENVIRONMENT = 'unknown';
   expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
 });
 it.each(['test', 'development'])('enables flags in %s', (nodeEnv) => {
-  process.env.NODE_ENV = nodeEnv;
+  process.env.REACT_APP_ENVIRONMENT = nodeEnv;
   expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
 });
 it.each(['production'])('disables flags in %s', (nodeEnv) => {
-  process.env.NODE_ENV = nodeEnv;
+  process.env.REACT_APP_ENVIRONMENT = nodeEnv;
   expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
 });
 
 describe('in test', () => {
   beforeEach(() => {
-    process.env.NODE_ENV = 'test';
+    process.env.REACT_APP_ENVIRONMENT = 'test';
   });
 
   describe('setCurrentOverrides,', () => {

@@ -51,7 +51,7 @@ it.each<{ param: OutputTypeParameter; outputType: ResearchOutput['type'] }>([
   { param: 'lab-resource', outputType: 'Lab Resource' },
   { param: 'protocol', outputType: 'Protocol' },
   { param: 'unknown' as OutputTypeParameter, outputType: 'Article' },
-] as const)('maps from $param to $outputType', ({ param, outputType }) => {
+])('maps from $param to $outputType', ({ param, outputType }) => {
   expect(paramOutputTypeToResearchOutputType(param)).toEqual(outputType);
 });
 

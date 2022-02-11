@@ -17,19 +17,32 @@ const MultiValueRemove = (
 const containerStyles = css({
   flexBasis: '100%',
 });
+
+export type ComplexValue = { value: string; label: string };
+
 type MultiSelectProps = {
   readonly customValidationMessage?: string;
-
   readonly id?: string;
-  readonly suggestions: ReadonlyArray<string>;
   readonly enabled?: boolean;
-
   readonly placeholder?: string;
+} & Pick<ComponentProps<typeof Select>, 'noOptionsMessage'>;
 
+type SimpleValuesMultiSelecletProps = MultiSelectProps & {
   readonly values?: string[];
   readonly onChange?: (newValues: string[]) => void;
-} & Pick<ComponentProps<typeof Select>, 'noOptionsMessage'>;
-const MultiSelect: FC<MultiSelectProps> = ({
+  readonly suggestions?: ReadonlyArray<string>;
+  readonly isSimple: true;
+};
+type ComplexValuesMultiSelecletProps = MultiSelectProps & {
+  readonly values?: ComplexValue[];
+  readonly onChange?: (newValues: ComplexValue[]) => void;
+  readonly suggestions?: ReadonlyArray<ComplexValue>;
+  readonly isSimple: false;
+};
+
+const MultiSelect: FC<
+  SimpleValuesMultiSelecletProps | ComplexValuesMultiSelecletProps
+> = ({
   customValidationMessage = '',
 
   id,
@@ -37,12 +50,22 @@ const MultiSelect: FC<MultiSelectProps> = ({
   enabled = true,
   placeholder = '',
   noOptionsMessage,
-
+  isSimple,
   values = [],
   onChange = noop,
 }) => {
   const [inputValues, setInputValues] = useState(values);
   const [validationMsg, setValidationMsg] = useState('');
+
+  const options: ComplexValue[] | undefined = suggestions?.map(
+    (suggestion: string | ComplexValue) =>
+      isSimple
+        ? ({
+            value: suggestion,
+            label: suggestion,
+          } as ComplexValue)
+        : (suggestion as ComplexValue),
+  );
 
   // This is to handle a bug with Select where the right click would make it impossoble to write
   let inputRef: Select<OptionTypeBase, true> | null;
@@ -59,18 +82,21 @@ const MultiSelect: FC<MultiSelectProps> = ({
           inputRef = ref;
         }}
         isMulti
-        options={suggestions.map((suggestion) => ({
-          value: suggestion,
-          label: suggestion,
-        }))}
-        value={inputValues.map((value) => ({
-          value,
-          label: value,
-        }))}
+        options={options}
+        value={inputValues.map((value: string | ComplexValue) =>
+          isSimple
+            ? {
+                value,
+                label: value,
+              }
+            : value,
+        )}
         onFocus={() => setValidationMsg('')}
         onBlur={() => setValidationMsg(customValidationMessage)}
         onChange={(options) => {
-          const newValues = options.map(({ value }) => value);
+          const newValues = options.map(({ value, label }) =>
+            isSimple ? value : { value, label },
+          );
           setInputValues(newValues);
           onChange(newValues);
         }}

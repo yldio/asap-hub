@@ -1,7 +1,8 @@
-import React from 'react';
-import { NotFoundPage, TeamCreateOutputPage } from '@asap-hub/react-components';
+import React, { useEffect, useState } from 'react';
 import { ResearchOutputPostRequest, ResearchOutputType } from '@asap-hub/model';
+import { Lab } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
+import { useRecoilValue } from 'recoil';
 
 import {
   network,
@@ -9,6 +10,9 @@ import {
   OutputTypeParameter,
 } from '@asap-hub/routing';
 import { usePostTeamResearchOutput } from './state';
+import { authorizationState } from '../../auth/state';
+import { getLabs } from './api';
+import { TeamCreateOutputPage, NotFoundPage } from '@asap-hub/react-components';
 import Frame from '../../structure/Frame';
 import researchSuggestions from './research-suggestions';
 
@@ -61,6 +65,11 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
     addedDate: new Date().toISOString(),
     tags: [],
   };
+  const authorization = useRecoilValue(authorizationState);
+  const [labSuggestions, setlabSuggestions] = useState<ReadonlyArray<Lab>>([]);
+  useEffect(() => {
+    getLabs(authorization).then(setlabSuggestions);
+  }, []);
 
   const showCreateOutputPage = isEnabled('ROMS_FORM');
 
@@ -70,6 +79,10 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
         <TeamCreateOutputPage
           tagSuggestions={researchSuggestions}
           type={type}
+          labSuggestions={labSuggestions.map(({ id, name }) => ({
+            value: id,
+            label: name,
+          }))}
           onSave={(output) =>
             createResearchOutput({
               ...defaultOutput,

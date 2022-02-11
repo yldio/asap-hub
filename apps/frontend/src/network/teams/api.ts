@@ -5,6 +5,7 @@ import {
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
+import { LabsResponse } from '@asap-hub/model/src/lab';
 import {
   createListApiUrl,
   createSentryHeaders,
@@ -86,6 +87,23 @@ export const createTeamResearchOutput = async (
       `Failed to create research output for teamId: ${
         researchOutput.teamId
       } Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};
+
+export const getLabs = async (authorization: string): Promise<LabsResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/labs`, {
+    method: 'GET',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+  });
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch labs. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
   return resp.json();

@@ -15,17 +15,12 @@ const mainStyles = css({
 
 const TeamCreateOutputPage: React.FC<TeamCreateOutputPageProps> = ({
   type,
-  onSave,
-  tagSuggestions,
+  ...formProps
 }) => (
   <>
     <TeamCreateOutputHeader type={type} />
     <main css={mainStyles}>
-      <TeamCreateOutputForm
-        onSave={onSave}
-        tagSuggestions={tagSuggestions}
-        type={type}
-      />
+      <TeamCreateOutputForm {...formProps} />
     </main>
   </>
 );

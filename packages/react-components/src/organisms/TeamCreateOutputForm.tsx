@@ -1,3 +1,4 @@
+import { Lab } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import {
@@ -10,10 +11,13 @@ import {
   TeamCreateOutputFormSharingCard,
   TeamCreateOutputExtraInformationCard,
   Form,
-} from '.';
+} from './index';
 import { Button } from '../atoms';
 import { perRem } from '../pixels';
 import { noop } from '../utils';
+
+import { ComplexValue } from '../atoms/MultiSelect';
+import TeamCreateOutputContributorsCard from './TeamCreateOutputContributorsCard';
 
 const contentStyles = css({
   display: 'grid',
@@ -33,6 +37,9 @@ type TeamCreateOutputFormProps = Pick<
   ComponentProps<typeof TeamCreateOutputExtraInformationCard>,
   'tagSuggestions'
 > & {
+  labSuggestions: ComponentProps<
+    typeof TeamCreateOutputContributorsCard
+  >['suggestions'];
   onSave?: (
     output: Partial<ResearchOutputPostRequest>,
   ) => Promise<Pick<ResearchOutputResponse, 'id'>>;
@@ -43,12 +50,14 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   onSave = noop,
   tagSuggestions,
   type,
+  labSuggestions,
 }) => {
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
   const [subTypes, setSubtypes] = useState<
     ResearchOutputPostRequest['subTypes']
   >([]);
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>('');
+  const [labs, setLabs] = useState<ComplexValue[]>([]);
   const [description, setDescription] =
     useState<ResearchOutputPostRequest['description']>('');
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>('');
@@ -62,7 +71,21 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         link !== '' ||
         subTypes.length !== 0
       }
-      onSave={() => onSave({ tags, link, description, title, subTypes })}
+      onSave={() =>
+        onSave({
+          tags,
+          link,
+          description,
+          title,
+          subTypes,
+          labs: labs.map(
+            ({ value, label }: ComplexValue): Lab => ({
+              name: label,
+              id: value,
+            }),
+          ),
+        })
+      }
     >
       {({ isSaving, onSave: onClick }) => (
         <div css={contentStyles}>
@@ -83,6 +106,12 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             tagSuggestions={tagSuggestions}
             tags={tags}
             onChange={setTags}
+          />
+
+          <TeamCreateOutputContributorsCard
+            suggestions={labSuggestions}
+            values={labs}
+            onChange={setLabs}
           />
           <div css={formControlsContainerStyles}>
             <div style={{ display: 'block' }}>

@@ -1,7 +1,10 @@
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { EventBridge } from 'aws-sdk';
 import { Lab } from '@asap-hub/squidex';
-import { labsWebhookFactory } from '../../../src/handlers/webhooks/webhook-lab';
+import {
+  labsWebhookFactory,
+  SquidexLabEventType,
+} from '../../../src/handlers/webhooks/webhook-lab';
 import {
   createEvent,
   getLabWebhookPayload,
@@ -10,7 +13,7 @@ import { createSignedPayload } from '../../helpers/webhooks';
 import { getApiGatewayEvent } from '../../helpers/events';
 import { eventBus, eventSource } from '../../../src/config';
 
-describe('Labs webhook', () => {
+describe('Labs event webhook', () => {
   const evenBridgeMock = {
     putEvents: jest.fn().mockReturnValue({ promise: jest.fn() }),
   } as unknown as jest.Mocked<EventBridge>;
@@ -43,59 +46,33 @@ describe('Labs webhook', () => {
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
   });
 
-  it('Should put the labs-created event into the event bus and return 200', async () => {
-    const res = (await handler(
-      createSignedPayload(getLabWebhookPayload('lab-id', 'LabsPublished')),
-    )) as APIGatewayProxyResult;
+  test.concurrent.each([
+    ['LabsPublished', 'LabPublished'],
+    ['LabsUpdated', 'LabUpdated'],
+    ['LabsUnpublished', 'LabDeleted'],
+    ['LabsDeleted', 'LabDeleted'],
+  ])(
+    'Should put the labs %s event into the event bus and return 200',
+    async (givenEventType, expectedDetailType) => {
+      const payload = getLabWebhookPayload(
+        'lab-id',
+        givenEventType as SquidexLabEventType,
+      );
+      const res = (await handler(
+        createSignedPayload(payload),
+      )) as APIGatewayProxyResult;
 
-    expect(res.statusCode).toStrictEqual(200);
-    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
-      Entries: [
-        {
-          EventBusName: eventBus,
-          Source: eventSource,
-          DetailType: 'LabPublished',
-          Detail: JSON.stringify(
-            getLabWebhookPayload('lab-id', 'LabsPublished'),
-          ),
-        },
-      ],
-    });
-  });
-
-  it('Should put the labs-updated event into the event bus and return 200', async () => {
-    const res = (await handler(
-      createSignedPayload(getLabWebhookPayload('lab-id', 'LabsUpdated')),
-    )) as APIGatewayProxyResult;
-
-    expect(res.statusCode).toStrictEqual(200);
-    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
-      Entries: [
-        {
-          EventBusName: eventBus,
-          Source: eventSource,
-          DetailType: 'LabUpdated',
-          Detail: JSON.stringify(getLabWebhookPayload('lab-id', 'LabsUpdated')),
-        },
-      ],
-    });
-  });
-
-  it('Should put the labs-deleted event into the event bus and return 200', async () => {
-    const res = (await handler(
-      createSignedPayload(getLabWebhookPayload('lab-id', 'LabsDeleted')),
-    )) as APIGatewayProxyResult;
-
-    expect(res.statusCode).toStrictEqual(200);
-    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
-      Entries: [
-        {
-          EventBusName: eventBus,
-          Source: eventSource,
-          DetailType: 'LabDeleted',
-          Detail: JSON.stringify(getLabWebhookPayload('lab-id', 'LabsDeleted')),
-        },
-      ],
-    });
-  });
+      expect(res.statusCode).toStrictEqual(200);
+      expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
+        Entries: [
+          {
+            EventBusName: eventBus,
+            Source: eventSource,
+            DetailType: expectedDetailType,
+            Detail: JSON.stringify(payload),
+          },
+        ],
+      });
+    },
+  );
 });

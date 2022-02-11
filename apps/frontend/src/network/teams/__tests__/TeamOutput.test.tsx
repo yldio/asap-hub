@@ -49,9 +49,11 @@ it.each([
   ['dataset', 'Dataset'],
   ['lab-resource', 'Lab Resource'],
   ['protocol', 'Protocol'],
-  ['unknown' as OutputTypeParameter, 'Article'],
+  ['unknown', 'Article'],
 ])('maps from %s to %s', (param, outputType) => {
-  expect(paramOutputTypeToResearchOutputType(param)).toEqual(outputType);
+  expect(
+    paramOutputTypeToResearchOutputType(param as OutputTypeParameter),
+  ).toEqual(outputType);
 });
 
 interface RenderPageOptions {

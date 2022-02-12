@@ -32,7 +32,7 @@
   "optionalWords": null,
   "queryLanguages": ["en"],
   "replicas": [],
-  "attributesForFaceting": ["teams.id", "type", "authors.id", "__meta.type"],
+  "attributesForFaceting": ["teams.id", "type", "authors.id", "__meta.type", "teams.role"],
   "attributesToSnippet": null,
   "attributesToHighlight": null,
   "paginationLimitedTo": 1000,

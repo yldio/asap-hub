@@ -1,9 +1,8 @@
 import { config, RestUser } from '@asap-hub/squidex';
 import matches from 'lodash.matches';
 import nock, { DataMatcherMap } from 'nock';
-import Users from '../../src/controllers/users';
+import Users, { FetchUsersOptions } from '../../src/controllers/users';
 import { identity } from '../helpers/squidex';
-import { FetchOptions } from '../../src/utils/types';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import {
   fetchUserResponse,
@@ -66,16 +65,18 @@ describe('Users controller', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
-      const fetchOptions: FetchOptions = {
+      const fetchOptions: FetchUsersOptions = {
         take: 12,
         skip: 2,
         search: 'first last',
-        filter: ['role', 'Staff'],
+        filter: { role: ['role', 'Staff'], labId: ['lab-123', 'lab-456'] },
       };
       await usersMockGraphqlClient.fetch(fetchOptions);
 
       const filterQuery =
         "(data/teams/iv/role eq 'role' or data/teams/iv/role eq 'Staff')" +
+        ' and' +
+        " (data/labs/iv eq 'lab-123' or data/labs/iv eq 'lab-456')" +
         ' and' +
         ' data/onboarded/iv eq true' +
         ' and' +
@@ -104,7 +105,7 @@ describe('Users controller', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
-      const fetchOptions: FetchOptions = {
+      const fetchOptions: FetchUsersOptions = {
         take: 12,
         skip: 2,
         search: "'",
@@ -132,7 +133,7 @@ describe('Users controller', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
-      const fetchOptions: FetchOptions = {
+      const fetchOptions: FetchUsersOptions = {
         take: 12,
         skip: 2,
         search: '"',
@@ -160,7 +161,7 @@ describe('Users controller', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
-      const fetchOptions: FetchOptions = {
+      const fetchOptions: FetchUsersOptions = {
         take: 12,
         skip: 2,
         search: 'Solène',
@@ -847,9 +848,11 @@ describe('Users controller', () => {
     });
   });
 
-  describe('fetchByLabId', () => {
+  describe('fetch using labId filter', () => {
     it('Should fetch the users by lab id from squidex', async () => {
-      const result = await usersMockGraphqlServer.fetchByLabId('lab-id', {});
+      const result = await usersMockGraphqlServer.fetch({
+        filter: { labId: ['lab-id'] },
+      });
 
       expect(result).toMatchObject(getListUserResponse());
     });
@@ -859,10 +862,9 @@ describe('Users controller', () => {
       mockResponse.queryUsersContentsWithTotal = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-      const result = await usersMockGraphqlClient.fetchByLabId(
-        'not-found-lab-id',
-        {},
-      );
+      const result = await usersMockGraphqlClient.fetch({
+        filter: { labId: ['not-found-lab-id'] },
+      });
       expect(result).toEqual({ items: [], total: 0 });
     });
 
@@ -871,10 +873,9 @@ describe('Users controller', () => {
       mockResponse.queryUsersContentsWithTotal!.items = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-      const result = await usersMockGraphqlClient.fetchByLabId(
-        'not-found-lab-id',
-        {},
-      );
+      const result = await usersMockGraphqlClient.fetch({
+        filter: { labId: ['not-found-lab-id'] },
+      });
       expect(result).toEqual({ items: [], total: 0 });
     });
 
@@ -884,11 +885,37 @@ describe('Users controller', () => {
       mockResponse.queryUsersContentsWithTotal!.total = 0;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-      const result = await usersMockGraphqlClient.fetchByLabId(
-        'not-found-lab-id',
-        {},
-      );
+      const result = await usersMockGraphqlClient.fetch({
+        filter: { labId: ['not-found-lab-id'] },
+      });
       expect(result).toEqual({ items: [], total: 0 });
+    });
+
+    it('Should query with labId filter and return the users', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexUsersGraphqlResponse(),
+      );
+      const fetchOptions: FetchUsersOptions = {
+        take: 12,
+        skip: 2,
+        filter: { labId: ['lab-123', 'lab-456'] },
+      };
+      await usersMockGraphqlClient.fetch(fetchOptions);
+
+      const filterQuery =
+        "(data/labs/iv eq 'lab-123' or data/labs/iv eq 'lab-456')" +
+        ' and' +
+        ' data/onboarded/iv eq true' +
+        ' and' +
+        " data/role/iv ne 'Hidden'";
+      expect(squidexGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 12,
+          skip: 2,
+          filter: filterQuery,
+        },
+      );
     });
   });
 });

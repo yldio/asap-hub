@@ -56,7 +56,7 @@ describe('Index Users on Lab event handler', () => {
   afterEach(() => jest.clearAllMocks());
 
   test('Should throw an error and do not trigger algolia when the lab request fails with another error code', async () => {
-    userControllerMock.fetchByLabId.mockRejectedValue(Boom.badData());
+    userControllerMock.fetch.mockRejectedValue(Boom.badData());
 
     await expect(indexHandler(createEvent('lab-1234'))).rejects.toThrow(
       Boom.badData(),
@@ -67,9 +67,7 @@ describe('Index Users on Lab event handler', () => {
   test('Should throw the algolia error when saving the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    userControllerMock.fetchByLabId.mockResolvedValueOnce(
-      getListUserResponse(),
-    );
+    userControllerMock.fetch.mockResolvedValueOnce(getListUserResponse());
     algoliaSearchClientMock.batch.mockRejectedValueOnce(algoliaError);
 
     await expect(indexHandler(updateEvent('lab-1234'))).rejects.toThrow(
@@ -84,7 +82,7 @@ describe('Index Users on Lab event handler', () => {
       const usersBatchResponse = getUsersBatchCall(usersResponse);
 
       const event = eventA('lab-1234');
-      userControllerMock.fetchByLabId.mockResolvedValueOnce(usersResponse);
+      userControllerMock.fetch.mockResolvedValueOnce(usersResponse);
 
       await indexHandler(event);
 
@@ -104,7 +102,7 @@ describe('Index Users on Lab event handler', () => {
           id: userID,
         };
         const usersBatchResponse = getUsersBatchCall(usersResponse);
-        userControllerMock.fetchByLabId.mockResolvedValue(usersResponse);
+        userControllerMock.fetch.mockResolvedValue(usersResponse);
 
         await indexHandler(eventA(userID));
         await indexHandler(eventB(userID));
@@ -119,7 +117,7 @@ describe('Index Users on Lab event handler', () => {
     test.concurrent.each(possibleRacingConditionEvents)(
       'recieves the events %s when lab does not exist',
       async (name, eventA, eventB) => {
-        userControllerMock.fetchByLabId.mockRejectedValue(Boom.notFound());
+        userControllerMock.fetch.mockRejectedValue(Boom.notFound());
 
         await indexHandler(eventA('user-1234'));
 

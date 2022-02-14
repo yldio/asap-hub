@@ -27,11 +27,17 @@ import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 import { sanitiseForSquidex } from '../utils/squidex';
 import { FetchOptions } from '../utils/types';
 
+export type FetchUsersFilter2 = {
+  role?: string[];
+  labId?: string[];
+};
+
+export type FetchUsersOptions = FetchOptions<FetchUsersFilter2>;
+
 export interface UserController {
-  fetch(options: FetchOptions): Promise<ListUserResponse>;
+  fetch(options: FetchUsersOptions): Promise<ListUserResponse>;
   fetchById(id: string): Promise<UserResponse>;
   fetchByCode(code: string): Promise<UserResponse>;
-  fetchByLabId(labId: string, options: FetchOptions): Promise<ListUserResponse>;
   connectByCode(welcomeCode: string, userId: string): Promise<UserResponse>;
   update(id: string, update: UserPatchRequest): Promise<UserResponse>;
   updateAvatar(
@@ -121,8 +127,8 @@ export default class Users implements UserController {
     return this.fetchById(id);
   }
 
-  async fetch(options: FetchOptions): Promise<ListUserResponse> {
-    const { take = 8, skip = 0, search, filter } = options;
+  async fetch(options: FetchUsersOptions): Promise<ListUserResponse> {
+    const { take = 8, skip = 0, search } = options;
 
     const searchFilter = [
       ...(search || '')
@@ -143,10 +149,18 @@ export default class Users implements UserController {
         ),
     ].join(' and ');
 
-    const filterRoles = (filter || [])
+    const filterRoles = (options?.filter?.role || [])
       .reduce(
         (acc: string[], word: string) =>
           acc.concat([`data/teams/iv/role eq '${word}'`]),
+        [],
+      )
+      .join(' or ');
+
+    const filterLabs = (options?.filter?.labId || [])
+      .reduce(
+        (acc: string[], labId: string) =>
+          acc.concat([`data/labs/iv eq '${labId}'`]),
         [],
       )
       .join(' or ');
@@ -156,6 +170,7 @@ export default class Users implements UserController {
 
     const queryFilter = [
       filterRoles && `(${filterRoles})`,
+      filterLabs && `(${filterLabs})`,
       filterNonOnboarded,
       filterHidden,
       searchFilter && `(${searchFilter})`,
@@ -225,41 +240,6 @@ export default class Users implements UserController {
     }
 
     return parseGraphQLUser(items[0]);
-  }
-
-  async fetchByLabId(
-    labId: string,
-    options: FetchOptions,
-  ): Promise<ListUserResponse> {
-    const { take = 8, skip = 0 } = options;
-    const queryFilter = `data/labs/iv eq '${labId}'`;
-
-    const { queryUsersContentsWithTotal } =
-      await this.squidexGraphlClient.request<
-        FetchUsersQuery,
-        FetchUsersQueryVariables
-      >(FETCH_USERS, { filter: queryFilter, top: take, skip });
-
-    if (queryUsersContentsWithTotal === null) {
-      return {
-        total: 0,
-        items: [],
-      };
-    }
-
-    const { total, items } = queryUsersContentsWithTotal;
-
-    if (items === null) {
-      return {
-        total: 0,
-        items: [],
-      };
-    }
-
-    return {
-      total,
-      items: items.map(parseGraphQLUser),
-    };
   }
 
   async updateAvatar(

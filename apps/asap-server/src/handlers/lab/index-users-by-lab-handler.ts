@@ -28,7 +28,10 @@ export const indexLabUsersHandler =
       const fetchFunction = (
         skip: number,
       ): Promise<ListResponse<UserResponse>> =>
-        userController.fetchByLabId(event.detail.payload.id, {
+        userController.fetch({
+          filter: {
+            labId: [event.detail.payload.id],
+          },
           skip,
         });
 

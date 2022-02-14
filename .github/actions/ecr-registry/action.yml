@@ -4,12 +4,10 @@ inputs:
   repository-name:
     description: 'Name of the repository'
     required: true
-  aws-access-key-id:
-    description: 'AWS Access Key ID'
-    required: true
-  aws-secret-access-key:
-    description: 'AWS Access Key'
-    required: true
+  aws-account-id:
+    description: 'AWS Access Account ID'
+    required: false
+    default: '249832953260'
   aws-region:
     description: 'AWS Region for ECR'
     required: false
@@ -25,24 +23,15 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ inputs.aws-access-key-id }}
-        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
-        aws-region: ${{ inputs.aws-region }}
-        mask-aws-account-id: no
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
     - name: Output Image Name
       id: get-image-name
       shell: bash
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ inputs.repository-name }}
+        ACCOUNT_ID: ${{ inputs.aws-account-id }}
+        REPOSITORY: ${{ inputs.aws-repository }}
+        REPOSITORY_NAME: ${{ inputs.repository-name }}
         IMAGE_TAG: ${{ inputs.image-tag }}
-        AWS_REGION: ${{ inputs.aws-region }}
+        REGION: ${{ inputs.aws-region }}
       run: |
-        IMAGE_NAME="$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG"
         echo "::set-output name=image-name::$IMAGE_NAME"

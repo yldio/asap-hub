@@ -2,6 +2,7 @@ import {
   ListResearchOutputResponse,
   ListUserResponse,
   ResearchOutputResponse,
+  ResearchOutputPostRequest,
 } from '@asap-hub/model';
 import { ResearchOutput, WebhookPayload } from '@asap-hub/squidex';
 import { Rest } from '@asap-hub/squidex/src/entities/common';
@@ -177,8 +178,8 @@ export const getResearchOutputEvent = (
     id,
   );
 
-export const getResearchOutputRequest = (): ResearchOutputInputData => ({
-  type: 'Bioinformatics',
+export const getResearchOutputRequest = (): ResearchOutputPostRequest => ({
+  type: 'Bioinformatics' as const,
   link: 'https://hub.asap.science/',
   title: 'Output created through the ROMS form',
   asapFunded: undefined,
@@ -186,4 +187,6 @@ export const getResearchOutputRequest = (): ResearchOutputInputData => ({
   usedInPublication: undefined,
   addedDate: new Date().toISOString(),
   teamId: 'team-id-1',
+  description: 'An example description',
+  tags: ['tag1'],
 });

@@ -1,32 +1,30 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { StaticRouter } from 'react-router-dom';
+
 import TeamCreateOutputForm from '../TeamCreateOutputForm';
-import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 
 const clickShare = () => {
   const button = screen.getByRole('button', { name: /Share/i });
   userEvent.click(button);
 };
 
-it('click on button calls callback method (keywords are optional)', () => {
-  const spyOnCreate = jest.fn();
-  render(<TeamCreateOutputForm onCreate={spyOnCreate} suggestions={[]} />);
-  clickShare();
-  expect(spyOnCreate).toHaveBeenCalledWith({ keywords: [] });
+it('renders the form', async () => {
+  const { getByText } = render(
+    <StaticRouter>
+      <TeamCreateOutputForm tagSuggestions={[]} />
+    </StaticRouter>,
+  );
+  expect(getByText(/What are you sharing/i)).toBeVisible();
 });
 
-it('will pass keywords added to onCreate', () => {
-  const spyOnCreate = jest.fn();
-  const { getByText } = render(
-    <TeamCreateOutputForm
-      onCreate={spyOnCreate}
-      suggestions={['Western Blot']}
-    />,
+it('does not save when the form is missing data', async () => {
+  const saveFn = jest.fn();
+  render(
+    <StaticRouter>
+      <TeamCreateOutputForm onSave={saveFn} tagSuggestions={[]} />
+    </StaticRouter>,
   );
-  userEvent.type(getByText(/add a keyword/i), 'Western');
-  fireEvent.keyDown(getByText('Western Blot'), {
-    keyCode: ENTER_KEYCODE,
-  });
   clickShare();
-  expect(spyOnCreate).toHaveBeenCalledWith({ keywords: ['Western Blot'] });
+  expect(saveFn).not.toHaveBeenCalled();
 });

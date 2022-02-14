@@ -1,5 +1,6 @@
 import {
   ListResearchOutputResponse,
+  ResearchOutputPostRequest,
   ResearchOutputResponse,
 } from '@asap-hub/model';
 import { framework } from '@asap-hub/services-common';
@@ -52,35 +53,19 @@ export const researchOutputRouteFactory = (
   researchOutputRoutes.post('/research-outputs', async (req, res) => {
     const { body } = req;
 
-    const {
-      type,
-      link,
-      title,
-      asapFunded,
-      sharingStatus,
-      usedInPublication,
-      addedDate,
-      teamId,
-    } = framework.validate('body', body, createSchema);
+    const createRequest = framework.validate('body', body, createSchema);
 
-    const researchOutput = await researchOutputController.create({
-      type,
-      link,
-      title,
-      asapFunded,
-      sharingStatus,
-      usedInPublication,
-      addedDate,
-      teamId,
-    });
+    const researchOutput = await researchOutputController.create(createRequest);
 
     res.status(201).json(researchOutput);
   });
 
   return researchOutputRoutes;
 };
-const createSchema = Joi.object({
+const createSchema = Joi.object<ResearchOutputPostRequest>({
   type: Joi.string().required(),
+  description: Joi.string().required(),
+  tags: Joi.array().required(),
   link: Joi.string().required(),
   title: Joi.string().required(),
   asapFunded: Joi.boolean(),

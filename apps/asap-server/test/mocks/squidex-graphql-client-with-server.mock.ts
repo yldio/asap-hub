@@ -12,7 +12,7 @@ import {
 import { getSquidexGraphqlCalendar } from '../fixtures/calendars.fixtures';
 import { getSquidexGraphqlDashboard } from '../fixtures/dashboard.fixtures';
 import { getSquidexGraphqlDiscover } from '../fixtures/discover.fixtures';
-import { getSquidexGraphqlEvents } from '../fixtures/events.fixtures';
+import { getSquidexGraphqlEvent } from '../fixtures/events.fixtures';
 import { getSquidexGraphqlGroup } from '../fixtures/groups.fixtures';
 import { getSquidexGraphqlResearchOutput } from '../fixtures/research-output.fixtures';
 import { getSquidexGraphqlTeam } from '../fixtures/teams.fixtures';
@@ -48,7 +48,7 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     DashboardResultDto: resultDto,
     Calendars: () => getSquidexGraphqlCalendar(),
     CalendarsResultDto: resultDto,
-    Events: () => getSquidexGraphqlEvents(),
+    Events: () => getSquidexGraphqlEvent(),
     EventsResultDto: resultDto,
   };
   const store = createMockStore({

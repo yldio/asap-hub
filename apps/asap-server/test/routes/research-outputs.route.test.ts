@@ -1,3 +1,4 @@
+import { ResearchOutputPostRequest } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
@@ -112,7 +113,7 @@ describe('/research-outputs/ route', () => {
   });
 
   describe('POST /research-outputs/', () => {
-    const getCreateResearchOutput = () => {
+    const getCreateResearchOutput = (): ResearchOutputPostRequest => {
       const {
         type,
         title,
@@ -120,6 +121,8 @@ describe('/research-outputs/ route', () => {
         sharingStatus,
         usedInPublication,
         addedDate,
+        description,
+        tags,
       } = getResearchOutputResponse();
       return {
         type,
@@ -129,11 +132,16 @@ describe('/research-outputs/ route', () => {
         sharingStatus,
         usedInPublication,
         addedDate,
+        teamId: '123',
+        description,
+        tags,
       };
     };
     test('Should return a 201 when is hit', async () => {
-      const researchOutput = getCreateResearchOutput();
-      const teamId = 'team-id-1';
+      const createResearchOutputRequest = {
+        ...getCreateResearchOutput(),
+        teamId: 'team-id-1',
+      };
 
       researchOutputControllerMock.create.mockResolvedValueOnce({
         id: 'abc123',
@@ -141,21 +149,14 @@ describe('/research-outputs/ route', () => {
 
       const response = await supertest(app)
         .post('/research-outputs')
-        .send({ ...researchOutput, teamId })
+        .send(createResearchOutputRequest)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(201);
 
-      expect(researchOutputControllerMock.create).toBeCalledWith({
-        type: researchOutput.type,
-        link: researchOutput.link,
-        asapFunded: researchOutput.asapFunded,
-        sharingStatus: researchOutput.sharingStatus,
-        title: researchOutput.title,
-        usedInPublication: researchOutput.usedInPublication,
-        addedDate: researchOutput.addedDate,
-        teamId,
-      });
+      expect(researchOutputControllerMock.create).toBeCalledWith(
+        createResearchOutputRequest,
+      );
 
       expect(response.body).toEqual(expect.objectContaining({ id: 'abc123' }));
     });

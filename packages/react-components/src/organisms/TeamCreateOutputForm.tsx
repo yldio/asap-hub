@@ -1,57 +1,89 @@
 import { css } from '@emotion/react';
 import { ComponentProps, useCallback, useState } from 'react';
+import {
+  ResearchOutputPostRequest,
+  ResearchOutputResponse,
+} from '@asap-hub/model';
+
+import {
+  TeamCreateOutputFormSharingCard,
+  TeamCreateOutputExtraInformationCard,
+  Form,
+} from '.';
 import { Button } from '../atoms';
-import { contentSidePaddingWithNavigation } from '../layout';
 import { perRem } from '../pixels';
 import { noop } from '../utils';
-import { TeamCreateOutputExtraInformationCard } from './index';
 
-const controlsContainerStyles = css({
+const contentStyles = css({
   display: 'grid',
-  gridAutoFlow: 'column',
-  alignItems: 'end',
-  justifyContent: 'end',
-  columnGap: `${12 / perRem}em`,
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} ${
-    48 / perRem
-  }em `,
+  gridTemplateColumns: '1fr',
+  maxWidth: `${800 / perRem}em`,
+  justifyContent: 'center',
+  gridAutoFlow: 'row',
+  rowGap: `${36 / perRem}em`,
 });
 
-const formContainerStyles = css({
+const formControlsContainerStyles = css({
   display: 'flex',
-  justifyContent: 'center',
-  flexDirection: 'column',
+  justifyContent: 'end',
 });
 
 type TeamCreateOutputFormProps = Pick<
   ComponentProps<typeof TeamCreateOutputExtraInformationCard>,
-  'suggestions'
+  'tagSuggestions'
 > & {
-  onCreate?: (data: { keywords: string[] }) => void;
+  onSave?: (
+    output: Partial<ResearchOutputPostRequest>,
+  ) => Promise<Pick<ResearchOutputResponse, 'id'>>;
 };
 
 const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
-  suggestions,
-  onCreate = noop,
+  onSave = noop,
+  tagSuggestions: suggestions,
 }) => {
-  const [keywords, setKeywords] = useState<string[]>([]);
-  const onCreateFilled = useCallback(() => {
-    onCreate({ keywords });
-  }, [onCreate, keywords]);
+  const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
+  const [title, setTitle] = useState<ResearchOutputPostRequest['title']>('');
+  const [description, setDescription] =
+    useState<ResearchOutputPostRequest['description']>('');
+  const [link, setLink] = useState<ResearchOutputPostRequest['link']>('');
+  const onSaveCallback = useCallback(async () => {
+    await onSave({ tags, link, description, title });
+  }, [onSave, tags, link, description, title]);
+
   return (
-    <div css={formContainerStyles}>
-      <TeamCreateOutputExtraInformationCard
-        suggestions={suggestions}
-        values={keywords}
-        onChange={setKeywords}
-      />
-      <div css={controlsContainerStyles}>
-        <Button primary onClick={onCreateFilled}>
-          Share
-        </Button>
-      </div>
-    </div>
+    <Form
+      dirty={
+        tags.length !== 0 || title !== '' || description !== '' || link !== ''
+      }
+      onSave={onSaveCallback}
+    >
+      {({ isSaving, onSave: onClick }) => (
+        <div css={contentStyles}>
+          <TeamCreateOutputFormSharingCard
+            isSaving={isSaving}
+            description={description}
+            onChangeDescription={setDescription}
+            title={title}
+            onChangeTitle={setTitle}
+            link={link}
+            onChangeLink={setLink}
+          />
+          <TeamCreateOutputExtraInformationCard
+            isSaving={isSaving}
+            tagSuggestions={suggestions}
+            tags={tags}
+            onChange={setTags}
+          />
+          <div css={formControlsContainerStyles}>
+            <div style={{ display: 'block' }}>
+              <Button enabled={!isSaving} primary onClick={onClick}>
+                Share
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </Form>
   );
 };
-
 export default TeamCreateOutputForm;

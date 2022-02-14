@@ -14,7 +14,7 @@ const loadWorkspace = () =>
   import(/* webpackChunkName: "network-team-workspace" */ './Workspace');
 
 const loadTeamOutput = () =>
-  import(/* webpackChunkName: "network-team-workspace" */ './TeamOutput');
+  import(/* webpackChunkName: "network-team-team-output" */ './TeamOutput');
 
 const TeamOutput = lazy(loadTeamOutput);
 const About = lazy(loadAbout);
@@ -34,7 +34,8 @@ const TeamProfile: FC<Record<string, never>> = () => {
   useEffect(() => {
     loadAbout()
       .then(team?.tools ? loadWorkspace : undefined)
-      .then(loadOutputs);
+      .then(loadOutputs)
+      .then(loadTeamOutput);
   }, [team]);
   if (team) {
     return (

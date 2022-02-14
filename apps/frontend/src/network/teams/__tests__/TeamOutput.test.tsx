@@ -9,8 +9,20 @@ import { Suspense } from 'react';
 import { StaticRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { network, OutputTypeParameter } from '@asap-hub/routing';
+import { ResearchOutputType } from '@asap-hub/model';
+import { fireEvent } from '@testing-library/dom';
+import userEvent from '@testing-library/user-event';
+
+import { createTeamResearchOutput } from '../api';
 import { refreshTeamState } from '../state';
 import TeamOutput, { paramOutputTypeToResearchOutputType } from '../TeamOutput';
+
+jest.mock('../api');
+
+const mockCreateTeamResearchOutput =
+  createTeamResearchOutput as jest.MockedFunction<
+    typeof createTeamResearchOutput
+  >;
 
 it('Renders the research output', async () => {
   const teamId = 'team-id';
@@ -34,7 +46,7 @@ it('Shows NotFoundPage when feature flag is off', async () => {
   const teamId = 'team-id';
   await renderPage({ teamId, featureFlagEnabled: false });
   expect(
-    screen.queryByRole('heading', { name: /Share bioinformatics/i }),
+    screen.queryByRole('heading', { name: /Share/i }),
   ).not.toBeInTheDocument();
   expect(
     screen.getByRole('heading', {
@@ -43,36 +55,52 @@ it('Shows NotFoundPage when feature flag is off', async () => {
   ).toBeInTheDocument();
 });
 
-describe('paramOutputTypeToResearchOutputType', () => {
-  it('maps from article to Article', () => {
-    expect(paramOutputTypeToResearchOutputType('article')).toEqual('Article');
-  });
+it('can submit a form when form data is valid', async () => {
+  const teamId = 'team-id';
+  await renderPage({ teamId, outputType: 'lab-resource' });
 
-  it('maps from bioinformatics to Bioinformatics', () => {
-    expect(paramOutputTypeToResearchOutputType('bioinformatics')).toEqual(
-      'Bioinformatics',
+  fireEvent.change(screen.getByLabelText(/url/i), {
+    target: { value: 'http://example.com' },
+  });
+  fireEvent.change(screen.getByLabelText(/title/i), {
+    target: { value: 'example title' },
+  });
+  fireEvent.change(screen.getByLabelText(/description/i), {
+    target: { value: 'example description' },
+  });
+  const button = screen.getByRole('button', { name: /Share/i });
+
+  userEvent.click(button);
+
+  await waitFor(() => {
+    expect(mockCreateTeamResearchOutput).toHaveBeenCalledWith(
+      {
+        type: 'Lab Resource',
+        addedDate: expect.anything(),
+        tags: [],
+        asapFunded: undefined,
+        usedInPublication: undefined,
+        sharingStatus: 'Network Only',
+        teamId: 'team-id',
+        link: 'http://example.com',
+        title: 'example title',
+        description: 'example description',
+      },
+      expect.anything(),
     );
+    expect(button).toBeEnabled();
   });
+});
 
-  it('maps from dataset to Dataset', () => {
-    expect(paramOutputTypeToResearchOutputType('dataset')).toEqual('Dataset');
-  });
-
-  it('maps from lab-resource to Lab Resource', () => {
-    expect(paramOutputTypeToResearchOutputType('lab-resource')).toEqual(
-      'Lab Resource',
-    );
-  });
-
-  it('maps from protocol to Protocol', () => {
-    expect(paramOutputTypeToResearchOutputType('protocol')).toEqual('Protocol');
-  });
-
-  it('defaults to article on unknown input', () => {
-    expect(
-      paramOutputTypeToResearchOutputType('unknown' as OutputTypeParameter),
-    ).toEqual('Article');
-  });
+it.each<{ param: OutputTypeParameter; outputType: ResearchOutputType }>([
+  { param: 'article', outputType: 'Article' },
+  { param: 'bioinformatics', outputType: 'Bioinformatics' },
+  { param: 'dataset', outputType: 'Dataset' },
+  { param: 'lab-resource', outputType: 'Lab Resource' },
+  { param: 'protocol', outputType: 'Protocol' },
+  { param: 'unknown' as OutputTypeParameter, outputType: 'Article' },
+])('maps from $param to $outputType', ({ param, outputType }) => {
+  expect(paramOutputTypeToResearchOutputType(param)).toEqual(outputType);
 });
 
 interface RenderPageOptions {

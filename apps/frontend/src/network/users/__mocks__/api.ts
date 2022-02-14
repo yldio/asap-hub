@@ -39,6 +39,7 @@ export const getUsers = jest.fn(
   async ({ pageSize }: GetListOptions): Promise<ListUserResponse> =>
     createListUserResponse(pageSize ?? 10),
 );
+export const getUsersWithAlgolia = jest.fn(() => createListUserResponse(10));
 
 export const getInstitutions = jest.fn(
   async (): Promise<InstitutionsResponse> => ({

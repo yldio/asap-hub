@@ -15,7 +15,7 @@ jobs:
         uses: ./.github/actions/ecr-registry
         id: image-name
         with:
-          repository-name: asap-hub/squidex-utils
+          repository: asap-hub/squidex-utils
   make_squidex_backup:
     needs: setup
     runs-on: ubuntu-18.04

@@ -29,8 +29,8 @@ runs:
       env:
         ACCOUNT_ID: ${{ inputs.aws-account-id }}
         REGION: ${{ inputs.aws-region }}
-        REPOSITORY: ${{ inputs.aws-repository }}
+        REPOSITORY: ${{ inputs.repository }}
         IMAGE_TAG: ${{ inputs.image-tag }}
       run: |
-        IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG"
+        IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPOSITORY:$IMAGE_TAG"
         echo "::set-output name=image-name::$IMAGE_NAME"

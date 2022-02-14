@@ -27,9 +27,7 @@ jobs:
         uses: ./.github/actions/ecr-registry
         id: image-name
         with:
-          repository-name: asap-hub/node-python-sq
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          repository: asap-hub/node-python-sq
   sls_teardown:
     needs: setup
     runs-on: ubuntu-18.04

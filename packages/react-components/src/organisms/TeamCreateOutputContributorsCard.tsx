@@ -1,9 +1,9 @@
-import { ComponentProps } from 'react';
+import { ComplexValuesMultiSelecletProps } from '../atoms/MultiSelect';
 import { FormCard, LabeledMultiSelect } from '../molecules';
 import { noop } from '../utils';
 
 type TeamCreateOutputContributorsProps = Pick<
-  ComponentProps<typeof LabeledMultiSelect>,
+  ComplexValuesMultiSelecletProps,
   'suggestions' | 'values' | 'onChange'
 >;
 

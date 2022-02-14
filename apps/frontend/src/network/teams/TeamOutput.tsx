@@ -72,7 +72,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   const [labSuggestions, setlabSuggestions] = useState<ReadonlyArray<Lab>>([]);
   useEffect(() => {
     getLabs(authorization).then(setlabSuggestions);
-  }, []);
+  }, [authorization]);
 
   const showCreateOutputPage = isEnabled('ROMS_FORM');
 

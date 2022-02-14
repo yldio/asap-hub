@@ -25,15 +25,16 @@ type MultiSelectProps = {
   readonly id?: string;
   readonly enabled?: boolean;
   readonly placeholder?: string;
+  readonly isSimple?: boolean;
 } & Pick<ComponentProps<typeof Select>, 'noOptionsMessage'>;
 
-type SimpleValuesMultiSelecletProps = MultiSelectProps & {
+export type SimpleValuesMultiSelecletProps = MultiSelectProps & {
   readonly values?: string[];
   readonly onChange?: (newValues: string[]) => void;
   readonly suggestions?: ReadonlyArray<string>;
   readonly isSimple?: true;
 };
-type ComplexValuesMultiSelecletProps = MultiSelectProps & {
+export type ComplexValuesMultiSelecletProps = MultiSelectProps & {
   readonly values?: ComplexValue[];
   readonly onChange?: (newValues: ComplexValue[]) => void;
   readonly suggestions?: ReadonlyArray<ComplexValue>;

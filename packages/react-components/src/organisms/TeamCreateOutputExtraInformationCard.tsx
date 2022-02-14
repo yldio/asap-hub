@@ -1,6 +1,6 @@
 import { ResearchOutputPostRequest } from '@asap-hub/model';
-import { ComponentProps } from 'react';
 import { Link } from '../atoms';
+import { SimpleValuesMultiSelecletProps } from '../atoms/MultiSelect';
 import { mailToSupport } from '../mail';
 import { FormCard, LabeledMultiSelect } from '../molecules';
 import { noop } from '../utils';
@@ -9,7 +9,7 @@ type TeamCreateOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
   'tags'
 > & {
-  tagSuggestions: ComponentProps<typeof LabeledMultiSelect>['suggestions'];
+  tagSuggestions: SimpleValuesMultiSelecletProps['suggestions'];
   onChange?: (values: string[]) => void;
   isSaving: boolean;
 };

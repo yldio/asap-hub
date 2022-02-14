@@ -55,3 +55,11 @@ To build new images:
   `INTEGRATION_DOCKER_IMAGE: $ECR_REGISTRY/$ECR_PROJECT/node-python-sq:24fd3be959653a9b5ff966e104e74396bcb0e8c1@sha256:5426a5b0f9eceb566f14a1e916979648cf4c80087a77dc34f020d346125bca76`
 
 - Update .github/actions/ecr-registry/action.yml to point to the correct SHA. (image-tag needs to have it's default value updated).
+
+## To update the node image
+
+- `docker pull node:14.17-alpine`
+- `docker images` find Image ID for node:14.16-alpine
+- `aws-vault exec USER-asap -- aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 249832953260.dkr.ecr.ap-southeast-2.amazonaws.com`
+- `docker tag 7a0c075c0bf6 249832953260.dkr.ecr.ap-southeast-2.amazonaws.com/asap-hub/node:14.17-alpine`
+- `docker push 249832953260.dkr.ecr.ap-southeast-2.amazonaws.com/asap-hub/node:14.17-alpine`

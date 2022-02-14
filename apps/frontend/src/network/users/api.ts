@@ -5,10 +5,7 @@ import {
   ListUserResponse,
 } from '@asap-hub/model';
 
-import {
-  AlgoliaSearchClient,
-  SearchEntityResponse,
-} from '@asap-hub/algolia/build';
+import type { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { API_BASE_URL } from '../../config';
 import {
   GetListOptions,
@@ -43,7 +40,7 @@ export const getUsersWithAlgolia = async (
     .join(' OR ');
 
   const result = await algoliaClient.searchEntity('user', searchQuery, {
-    filters: algoliaFilters,
+    filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,
   });

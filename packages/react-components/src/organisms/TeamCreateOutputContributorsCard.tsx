@@ -18,6 +18,7 @@ const TeamCreateOutputContributorsCard: React.FC<TeamCreateOutputContributorsPro
         placeholder="Start typing..."
         values={values}
         onChange={onChange}
+        isSimple={false}
       />
     </FormCard>
   );

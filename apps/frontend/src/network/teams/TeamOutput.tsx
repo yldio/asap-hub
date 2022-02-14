@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ResearchOutputPostRequest, ResearchOutputType } from '@asap-hub/model';
-import { Lab } from '@asap-hub/model';
+import {
+  ResearchOutputPostRequest,
+  ResearchOutputType,
+  Lab,
+} from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
 import { useRecoilValue } from 'recoil';
+import { TeamCreateOutputPage, NotFoundPage } from '@asap-hub/react-components';
 
 import {
   network,
@@ -12,7 +16,6 @@ import {
 import { usePostTeamResearchOutput } from './state';
 import { authorizationState } from '../../auth/state';
 import { getLabs } from './api';
-import { TeamCreateOutputPage, NotFoundPage } from '@asap-hub/react-components';
 import Frame from '../../structure/Frame';
 import researchSuggestions from './research-suggestions';
 

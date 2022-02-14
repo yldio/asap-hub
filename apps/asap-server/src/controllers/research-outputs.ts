@@ -157,6 +157,14 @@ export default class ResearchOutputs implements ResearchOutputController {
       usedInPublication: convertBooleanToDecision(
         researchOutputData.usedInPublication,
       ),
+      labs: researchOutputData.labs.reduce(
+        (acc, { name, id }) => {
+          acc.name.push(name);
+          acc.id.push(id);
+          return acc;
+        },
+        { name: [], id: [] },
+      ),
     });
 
     return this.researchOutputSquidexRestClient.create(

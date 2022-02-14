@@ -31,7 +31,7 @@ type SimpleValuesMultiSelecletProps = MultiSelectProps & {
   readonly values?: string[];
   readonly onChange?: (newValues: string[]) => void;
   readonly suggestions?: ReadonlyArray<string>;
-  readonly isSimple: true;
+  readonly isSimple?: true;
 };
 type ComplexValuesMultiSelecletProps = MultiSelectProps & {
   readonly values?: ComplexValue[];
@@ -50,7 +50,7 @@ const MultiSelect: FC<
   enabled = true,
   placeholder = '',
   noOptionsMessage,
-  isSimple,
+  isSimple = true,
   values = [],
   onChange = noop,
 }) => {

@@ -15,7 +15,7 @@ jobs:
         uses: ./.github/actions/ecr-registry
         id: image-name
         with:
-          repository-name: asap-hub/squidex-utils
+          repository: asap-hub/squidex-utils
   make_squidex_backup:
     needs: setup
     runs-on: ubuntu-18.04
@@ -33,4 +33,37 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
       - name: Add the configuration
-        run: echo "testing"
+        run: sq config add $SQUIDEX_APP $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET
+      - name: Run sync
+        run: sq sync out ./backup
+      - name: Tar the files
+        run: |
+          FILE_NAME=$(date +%s| cut -b1-13)-squidex-dev-backup.tar.gz && \
+          tar -czf $FILE_NAME backup/ && \
+          echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
+      - name: upload to S3
+        run: aws s3api put-object --bucket $BUCKET_NAME --key $FILE_NAME --body $FILE_NAME --storage-class STANDARD_IA
+  make_algolia_backup:
+    runs-on: ubuntu-18.04
+    env:
+      BUCKET_NAME: 'asap-hub-dev-algolia-backup'
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: 'us-east-1'
+      ALGOLIA_INDEX: 'asap-hub_research_outputs_dev'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Fetch the Algolia keys
+        run: |
+          echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
+          echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
+      - name: Run the backup
+        run: |
+          export DIR_NAME=$(date +%s| cut -b1-13)
+          mkdir $DIR_NAME
+          yarn workspace @asap-hub/asap-server run algolia export -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -o "../../$DIR_NAME"
+          echo "DIR_NAME=$DIR_NAME" >> $GITHUB_ENV
+      - name: Upload to S3
+        run: |
+          aws s3 cp $DIR_NAME s3://$BUCKET_NAME/$DIR_NAME --recursive --storage-class STANDARD_IA

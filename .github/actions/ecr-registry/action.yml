@@ -1,7 +1,7 @@
 name: 'ECR Repository Name'
 description: 'Outputs the name of the image'
 inputs:
-  repository-name:
+  repository:
     description: 'Name of the repository'
     required: true
   aws-account-id:
@@ -28,10 +28,9 @@ runs:
       shell: bash
       env:
         ACCOUNT_ID: ${{ inputs.aws-account-id }}
-        REPOSITORY: ${{ inputs.aws-repository }}
-        REPOSITORY_NAME: ${{ inputs.repository-name }}
-        IMAGE_TAG: ${{ inputs.image-tag }}
         REGION: ${{ inputs.aws-region }}
+        REPOSITORY: ${{ inputs.repository }}
+        IMAGE_TAG: ${{ inputs.image-tag }}
       run: |
-        IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG"
+        IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPOSITORY:$IMAGE_TAG"
         echo "::set-output name=image-name::$IMAGE_NAME"

@@ -2,15 +2,17 @@ name: Setup
 
 on:
   workflow_call:
+    outputs:
+      pr-number:
+        description: "The current PR number"
+        value: ${{ github.event.number || github.event.inputs.prNumber }}
+      secondword:
+        description: "The second output string"
+        value: ${{ jobs.example_job.outputs.output2 }}
 
 jobs:
   setup:
     runs-on: ubuntu-latest
-    env:
-      PR_NUMBER: ${{ github.event.number || github.event.inputs.prNumber }}
-    outputs:
-      pr-number: ${{ steps.build-step.outputs.pr-number }}
-      image-name: ${{ steps.image-name.outputs.image-name }}
     steps:
       - name: Build
         id: build-step

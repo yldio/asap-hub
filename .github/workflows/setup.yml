@@ -54,9 +54,9 @@ jobs:
           IMAGE_TAG: ${{ inputs.image-tag }}
           NODE_VERSION: ${{ inputs.node-version }}
         run: |
-          INTEGRATION_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/node-python-sq:$IMAGE_TAG"
-          SQUIDEX_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/squidex-utils:$IMAGE_TAG"
-          NODE_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/node:$NODE_VERSION-alpine"
+          INTEGRATION_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/asap-hub/node-python-sq:$IMAGE_TAG"
+          SQUIDEX_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/asap-hub/squidex-utils:$IMAGE_TAG"
+          NODE_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/asap-hub/node:$NODE_VERSION-alpine"
           echo "::set-output name=integration-image-name::$INTEGRATION_IMAGE_NAME"
           echo "::set-output name=squidex-image-name::$SQUIDEX_IMAGE_NAME"
           echo "::set-output name=node-image-name::$NODE_IMAGE_NAME"

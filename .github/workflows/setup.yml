@@ -29,19 +29,23 @@ on:
         value: ${{ github.event.number || github.event.inputs.prNumber }}
       integration-image-name:
         description: 'Name of integration image'
-        value: ${{ steps.get-image-name.outputs.integration-image-name }}
+        value: ${{ jobs.image-names.outputs.integration-image-name }}
       squidex-image-name:
         description: 'Name of Squidex image'
-        value: ${{ steps.get-image-name.outputs.squidex-image-name }}
+        value: ${{ jobs.image-names.outputs.squidex-image-name }}
       node-image-name:
         description: 'Name of node image'
-        value: ${{ steps.get-image-name.outputs.node-image-name }}
+        value: ${{ jobs.image-names.outputs.node-image-name }}
 jobs:
-  setup:
+  image-names:
     runs-on: ubuntu-latest
+    outputs:
+      integration-image-name: ${{ steps.get-image-names.outputs.integration-image-name }}
+      squidex-image-name: ${{ steps.get-image-names.outputs.squidex-image-name }}
+      node-image-name: ${{ steps.get-image-names.outputs.node-image-name }}
     steps:
       - name: Output Image Name
-        id: get-image-name
+        id: get-image-names
         shell: bash
         env:
           ACCOUNT_ID: ${{ inputs.aws-account-id }}
@@ -53,6 +57,6 @@ jobs:
           INTEGRATION_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/node-python-sq:$IMAGE_TAG"
           SQUIDEX_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/squidex-utils:$IMAGE_TAG"
           NODE_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/node:$NODE_VERSION-alpine"
-          echo "::set-output name=integration-image-name::$IMAGE_NAME"
-          echo "::set-output name=squidex-image-name::$IMAGE_NAME"
-          echo "::set-output name=node-image-name::$IMAGE_NAME"
+          echo "::set-output name=integration-image-name::$INTEGRATION_IMAGE_NAME"
+          echo "::set-output name=squidex-image-name::$SQUIDEX_IMAGE_NAME"
+          echo "::set-output name=node-image-name::$NODE_IMAGE_NAME"

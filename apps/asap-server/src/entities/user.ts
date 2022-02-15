@@ -192,7 +192,9 @@ export const parseGraphQLUser = (item: GraphQLUser): UserResponse => {
                 orcidWork.type && isOrcidWorkType(orcidWork.type)
                   ? orcidWork.type
                   : 'UNDEFINED',
-              publicationDate: orcidWork.publicationDate,
+              publicationDate: getOrcidWorkPublicationDate(
+                orcidWork.publicationDate,
+              ),
               lastModifiedDate: orcidWork.lastModifiedDate,
             },
           ];
@@ -217,6 +219,28 @@ export const parseGraphQLUser = (item: GraphQLUser): UserResponse => {
     reachOut: item.flatData.reachOut || undefined,
     labs: flatLabs || [],
   };
+};
+
+const getOrcidWorkPublicationDate = (
+  input: NonNullable<
+    GraphQLUser['flatData']['orcidWorks']
+  >[number]['publicationDate'],
+): OrcidWork['publicationDate'] => {
+  const date: OrcidWork['publicationDate'] = {};
+
+  if (typeof input.day === 'string') {
+    date.day = input.day;
+  }
+
+  if (typeof input.month === 'string') {
+    date.month = input.month;
+  }
+
+  if (typeof input.year === 'string') {
+    date.year = input.year;
+  }
+
+  return date;
 };
 
 export const parseUser = (user: RestUser): UserResponse => {

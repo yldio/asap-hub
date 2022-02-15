@@ -1,4 +1,5 @@
 import { config, RestUser } from '@asap-hub/squidex';
+import { UserResponse } from '@asap-hub/model';
 import matches from 'lodash.matches';
 import nock, { DataMatcherMap } from 'nock';
 import Users from '../../src/controllers/users';
@@ -355,6 +356,74 @@ describe('Users controller', () => {
           type: 'UNDEFINED',
         },
       ]);
+    });
+
+    test('Should return the valid publication date', async () => {
+      const mockResponse = getSquidexUserGraphqlResponse();
+      mockResponse.findUsersContent!.flatData.orcidWorks = [
+        {
+          id: 'id1',
+          doi: 'doi1',
+          lastModifiedDate: 'lastModifiedDate1',
+          publicationDate: {
+            year: '2020',
+            month: '09',
+            day: '08',
+          },
+          title: 'title1',
+          type: 'ANNOTATION',
+        },
+      ];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await usersMockGraphqlClient.fetchById('user-id');
+
+      const expectedOrcidWorksPublicationDate: NonNullable<
+        UserResponse['orcidWorks']
+      >[number]['publicationDate'] = {
+        year: '2020',
+        month: '09',
+        day: '08',
+      };
+
+      expect(result.orcidWorks![0]!.publicationDate).toEqual(
+        expectedOrcidWorksPublicationDate,
+      );
+    });
+
+    test('Should default the publication to an empty object when it is not valid', async () => {
+      const mockResponse = getSquidexUserGraphqlResponse();
+      mockResponse.findUsersContent!.flatData.orcidWorks = [
+        {
+          id: 'id1',
+          doi: 'doi1',
+          lastModifiedDate: 'lastModifiedDate1',
+          title: 'title1',
+          publicationDate: {
+            year: {
+              Type: 5,
+            },
+            month: {
+              Type: 5,
+            },
+            day: {
+              Type: 5,
+            },
+          },
+          type: 'ANNOTATION',
+        },
+      ];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await usersMockGraphqlClient.fetchById('user-id');
+
+      const expectedOrcidWorksPublicationDate: NonNullable<
+        UserResponse['orcidWorks']
+      >[number]['publicationDate'] = {};
+
+      expect(result.orcidWorks![0]!.publicationDate).toEqual(
+        expectedOrcidWorksPublicationDate,
+      );
     });
 
     test('Should default onboarded flag to true when its null', async () => {

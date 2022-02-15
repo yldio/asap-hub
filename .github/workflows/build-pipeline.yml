@@ -6,7 +6,7 @@ on:
 jobs:
   setup:
     uses: ./.github/workflows/setup.yml
-  build:
+  echo:
     needs: setup
     runs-on: ubuntu-latest
     env:
@@ -21,3 +21,20 @@ jobs:
           echo "integration image $INTEGRATION_IMAGE"
           echo "squidex image $SQUIDEX_IMAGE"
           echo "node $NODE_IMAGE"
+
+  test:
+    needs: setup
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.node-image-name }}
+      credentials:
+        username: AWS
+        password: ${{ secrets.AWS_ECR_PASSWORD }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Unit Tests
+        run: |
+          yarn run test --coverage
+          yarn codecov

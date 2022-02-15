@@ -10,29 +10,12 @@ on:
         description: Choose which PR number to destroy
 jobs:
   setup:
-    runs-on: ubuntu-latest
-    env:
-      PR_NUMBER: ${{ github.event.number || github.event.inputs.prNumber }}
-    outputs:
-      pr-number: ${{ steps.build-step.outputs.pr-number }}
-      image-name: ${{ steps.image-name.outputs.image-name }}
-    steps:
-      - name: Build
-        id: build-step
-        run: |
-          echo "::set-output name=pr-number::$PR_NUMBER"
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Generate Image Name
-        uses: ./.github/actions/ecr-registry
-        id: image-name
-        with:
-          repository: asap-hub/node-python-sq
+    uses: ./.github/workflows/setup.yml
   sls_teardown:
     needs: setup
     runs-on: ubuntu-18.04
     container:
-      image: ${{ needs.setup.outputs.image-name }}
+      image: ${{ needs.setup.outputs.integration-image-name }}
       credentials:
         username: AWS
         password: ${{ secrets.AWS_ECR_PASSWORD }}

@@ -2,7 +2,6 @@ export type Flag = 'PERSISTENT_EXAMPLE' | 'ROMS_FORM';
 
 export type Flags = Partial<Record<Flag, boolean>>;
 let overrides: Flags = {
-  ROMS_FORM: false,
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
 };
@@ -15,7 +14,7 @@ const envDefaults: Record<string, boolean> = {
 
 export const isEnabled = (flag: Flag): boolean =>
   overrides[flag] ??
-  envDefaults[process.env.NODE_ENV ?? 'development'] ??
+  envDefaults[process.env.REACT_APP_ENVIRONMENT ?? 'development'] ??
   false;
 
 export const getOverrides = (): Flags => overrides;

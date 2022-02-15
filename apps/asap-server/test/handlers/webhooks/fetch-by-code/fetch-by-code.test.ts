@@ -33,7 +33,7 @@ describe('Fetch-user-by-code handler', () => {
     jest.clearAllMocks();
   });
 
-  it('checks if algolia validUntil is in correct format(seconds)', async () => {
+  test('checks if algolia validUntil is in correct format(seconds)', async () => {
     const customHandler = fetchUserByCodeHandlerFactory(
       userControllerMock,
       algoliaClientMock,

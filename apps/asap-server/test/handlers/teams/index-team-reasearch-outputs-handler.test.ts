@@ -2,7 +2,7 @@ import { EventBridgeEvent } from 'aws-lambda';
 import {
   indexResearchOutputByTeamHandler,
   SquidexWebhookTeamPayload,
-} from '../../../src/handlers/teams/research-outputs-handler';
+} from '../../../src/handlers/teams/index-team-reasearch-outputs-handler';
 import { TeamsEventType } from '../../../src/handlers/webhooks/webhook-teams';
 import { createEventBridgeEventMock } from '../../helpers/events';
 import { getResearchOutputResponse } from '../../fixtures/research-output.fixtures';

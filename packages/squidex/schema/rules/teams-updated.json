@@ -7,7 +7,7 @@
     "schemas": [
       {
         "schemaId": "teams",
-        "condition": "event.type === 'Published' || event.type === 'Updated' || event.type === 'Deleted'"
+        "condition": "event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
       }
     ],
     "handleAll": false

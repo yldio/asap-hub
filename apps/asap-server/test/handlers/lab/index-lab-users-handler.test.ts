@@ -1,24 +1,18 @@
 import Boom from '@hapi/boom';
+
 import { ListUserResponse } from '@asap-hub/model';
 import { BatchRequest } from '@asap-hub/algolia';
-import { indexTeamsUsersHandler } from '../../../src/handlers/teams/index-users-by-team-handler';
+import { indexLabUsersHandler } from '../../../src/handlers/lab/index-labs-users-handler';
 import {
-  getUserResponse,
-  getListUserResponse,
-} from '../../fixtures/users.fixtures';
-
-import {
-  getTeamResponse,
   createEvent,
+  deleteEvent,
   updateEvent,
   unpublishedEvent,
-  deleteEvent,
-  TeamEventGenerator,
-} from '../../fixtures/teams.fixtures';
-
+  LabEventGenerator,
+} from '../../fixtures/labs.fixtures';
+import { getListUserResponse } from '../../fixtures/users.fixtures';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user-controller.mock';
-import { teamControllerMock } from '../../mocks/team-controller.mock';
 
 const getUsersBatchCall = (users: ListUserResponse): BatchRequest[] =>
   users.items.map((user) => ({
@@ -26,7 +20,7 @@ const getUsersBatchCall = (users: ListUserResponse): BatchRequest[] =>
     body: user,
   }));
 
-const possibleEvents: [string, TeamEventGenerator][] = [
+const possibleEvents: [string, LabEventGenerator][] = [
   ['created', createEvent],
   ['updated', updateEvent],
   ['unpublished', unpublishedEvent],
@@ -35,8 +29,8 @@ const possibleEvents: [string, TeamEventGenerator][] = [
 
 const possibleRacingConditionEvents: [
   string,
-  TeamEventGenerator,
-  TeamEventGenerator,
+  LabEventGenerator,
+  LabEventGenerator,
 ][] = [
   ['created and updated', createEvent, updateEvent],
   ['updated and created', updateEvent, createEvent],
@@ -54,19 +48,17 @@ const possibleRacingConditionEvents: [
   ['unpublished and updated', unpublishedEvent, updateEvent],
 ];
 
-describe('Index Users on Team event handler', () => {
-  const indexHandler = indexTeamsUsersHandler(
-    teamControllerMock,
+describe('Index Users on Lab event handler', () => {
+  const indexHandler = indexLabUsersHandler(
     userControllerMock,
     algoliaSearchClientMock,
   );
-
   afterEach(() => jest.clearAllMocks());
 
-  test('Should throw an error and do not trigger algolia when the team request fails with another error code', async () => {
-    teamControllerMock.fetchById.mockRejectedValue(Boom.badData());
+  test('Should throw an error and do not trigger algolia when the lab request fails with another error code', async () => {
+    userControllerMock.fetch.mockRejectedValue(Boom.badData());
 
-    await expect(indexHandler(createEvent('team-1234'))).rejects.toThrow(
+    await expect(indexHandler(createEvent('lab-1234'))).rejects.toThrow(
       Boom.badData(),
     );
     expect(algoliaSearchClientMock.batch).not.toHaveBeenCalled();
@@ -75,22 +67,24 @@ describe('Index Users on Team event handler', () => {
   test('Should throw the algolia error when saving the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    teamControllerMock.fetchById.mockResolvedValueOnce(getTeamResponse());
+    userControllerMock.fetch.mockResolvedValueOnce(getListUserResponse());
     algoliaSearchClientMock.batch.mockRejectedValueOnce(algoliaError);
 
-    await expect(indexHandler(updateEvent('team-1234'))).rejects.toThrow(
+    await expect(indexHandler(updateEvent('lab-1234'))).rejects.toThrow(
       algoliaError,
     );
   });
 
   test.concurrent.each(possibleEvents)(
-    'Should index users when team event %s occurs',
+    'Should index users when lab event %s occurs',
     async (name, eventA) => {
-      const usersBatchResponse = getUsersBatchCall(getListUserResponse());
-      teamControllerMock.fetchById.mockResolvedValueOnce(getTeamResponse());
-      userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
+      const usersResponse = getListUserResponse();
+      const usersBatchResponse = getUsersBatchCall(usersResponse);
 
-      await indexHandler(eventA('team-1234'));
+      const event = eventA('lab-1234');
+      userControllerMock.fetch.mockResolvedValueOnce(usersResponse);
+
+      await indexHandler(event);
 
       expect(algoliaSearchClientMock.batch).toHaveBeenCalledWith(
         usersBatchResponse,
@@ -100,31 +94,23 @@ describe('Index Users on Team event handler', () => {
 
   describe('Should process the events, handle race conditions and not rely on the order of the events', () => {
     test.concurrent.each(possibleRacingConditionEvents)(
-      'recieves the events %s',
+      'recieves the events %s when lab exists',
       async (name, eventA, eventB) => {
-        teamControllerMock.fetchById.mockResolvedValue(getTeamResponse());
-        userControllerMock.fetchById.mockResolvedValue(getUserResponse());
+        const userID = 'user-1234';
+        const usersResponse = {
+          ...getListUserResponse(),
+          id: userID,
+        };
+        const usersBatchResponse = getUsersBatchCall(usersResponse);
+        userControllerMock.fetch.mockResolvedValue(usersResponse);
 
-        await indexHandler(eventA('team-1234'));
-        await indexHandler(eventB('team-1234'));
+        await indexHandler(eventA(userID));
+        await indexHandler(eventB(userID));
 
         expect(algoliaSearchClientMock.batch).toHaveBeenCalledTimes(2);
         expect(algoliaSearchClientMock.batch).toHaveBeenCalledWith(
-          getUsersBatchCall(getListUserResponse()),
+          usersBatchResponse,
         );
-      },
-    );
-
-    test.concurrent.each(possibleRacingConditionEvents)(
-      'recieves the events %s when team is not found',
-      async (name, eventA, eventB) => {
-        teamControllerMock.fetchById.mockRejectedValue(Boom.notFound());
-
-        await indexHandler(eventA('team-1234'));
-        const updateResonse = await indexHandler(eventB('team-1234'));
-
-        expect(updateResonse).toBeUndefined();
-        expect(algoliaSearchClientMock.batch).not.toHaveBeenCalled();
       },
     );
   });

@@ -28,38 +28,30 @@ export const indexTeamsUsersHandler =
   ): Promise<void> => {
     logger.debug(`Event ${event['detail-type']}`);
 
-    try {
-      const team = await teamController.fetchById(event.detail.payload.id);
+    const team = await teamController.fetchById(event.detail.payload.id);
 
-      logger.info(`Found ${team?.members?.length || 0} team members.`);
+    logger.info(`Found ${team?.members?.length || 0} team members.`);
 
-      const usersPromise = await Promise.allSettled(
-        team?.members?.map(({ id }) => userController.fetchById(id)) ?? [],
-      );
-      const fullfiledUsersPromises = usersPromise.filter(
-        ({ status }) => status === 'fulfilled',
-      ) as { value: UserResponse }[];
-      const batchRequests = fullfiledUsersPromises.map(
-        ({ value }): BatchRequest => ({
-          action: 'updateObject',
-          body: value,
-        }),
-      );
+    const usersPromise = await Promise.allSettled(
+      team?.members?.map(({ id }) => userController.fetchById(id)) ?? [],
+    );
+    const fullfiledUsersPromises = usersPromise.filter(
+      ({ status }) => status === 'fulfilled',
+    ) as { value: UserResponse }[];
+    const batchRequests = fullfiledUsersPromises.map(
+      ({ value }): BatchRequest => ({
+        action: 'updateObject',
+        body: value,
+      }),
+    );
 
-      logger.info(`Fetched ${batchRequests.length} users.`);
+    logger.info(`Fetched ${batchRequests.length} users.`);
 
-      const algoliaResponse = await algoliaClient.batch(batchRequests);
+    const algoliaResponse = await algoliaClient.batch(batchRequests);
 
-      logger.info(
-        `Updated ${batchRequests.length} users with algolia response: ${algoliaResponse}`,
-      );
-    } catch (error) {
-      if (error?.output?.statusCode === 404) {
-        return;
-      }
-
-      throw error;
-    }
+    logger.info(
+      `Updated ${batchRequests.length} users with algolia response: ${algoliaResponse}`,
+    );
   };
 
 export const handler = indexTeamsUsersHandler(

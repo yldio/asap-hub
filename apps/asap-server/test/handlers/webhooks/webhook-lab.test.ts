@@ -23,7 +23,7 @@ describe('Labs event webhook', () => {
     jest.clearAllMocks();
   });
 
-  it('Should return 403 when the request is not signed correctly', async () => {
+  test('Should return 403 when the request is not signed correctly', async () => {
     const event = getApiGatewayEvent({
       headers: {
         'x-signature': 'XYZ',
@@ -37,7 +37,7 @@ describe('Labs event webhook', () => {
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
   });
 
-  it('Should return 204 and not raise an event when the event type is not supported', async () => {
+  test('Should return 204 and not raise an event when the event type is not supported', async () => {
     const res = (await handler(
       createSignedPayload<Lab>(getLabWebhookPayload('lab-id', 'not-supported')),
     )) as APIGatewayProxyResult;

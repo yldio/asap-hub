@@ -355,7 +355,7 @@ const serverlessConfig: AWS = {
     },
     indexLabUsers: {
       handler:
-        'apps/asap-server/src/handlers/lab/index-users-by-lab-handler.handler',
+        'apps/asap-server/src/handlers/lab/index-lab-users-handler.handler',
       events: [
         {
           eventBridge: {
@@ -494,7 +494,7 @@ const serverlessConfig: AWS = {
     },
     indexTeamResearchOutputs: {
       handler:
-        'apps/asap-server/src/handlers/teams/research-outputs-handler.handler',
+        'apps/asap-server/src/handlers/teams/index-team-reasearch-outputs-handler.handler',
       events: [
         {
           eventBridge: {
@@ -513,7 +513,7 @@ const serverlessConfig: AWS = {
     },
     indexTeamUsers: {
       handler:
-        'apps/asap-server/src/handlers/teams/index-users-by-team-handler.handler',
+        'apps/asap-server/src/handlers/teams/index-team-users-handler.handler',
       events: [
         {
           eventBridge: {

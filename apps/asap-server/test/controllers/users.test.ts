@@ -27,13 +27,13 @@ describe('Users controller', () => {
   });
 
   describe('Fetch', () => {
-    it('Should fetch the users from squidex graphql', async () => {
+    test('Should fetch the users from squidex graphql', async () => {
       const result = await usersMockGraphqlServer.fetch({});
 
       expect(result).toMatchObject(getListUserResponse());
     });
 
-    it('Should return an empty result', async () => {
+    test('Should return an empty result', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
       mockResponse.queryUsersContentsWithTotal!.items = [];
       mockResponse.queryUsersContentsWithTotal!.total = 0;
@@ -43,7 +43,7 @@ describe('Users controller', () => {
       expect(result).toEqual({ items: [], total: 0 });
     });
 
-    it('Should return an empty result when the client returns a response with query property set to null', async () => {
+    test('Should return an empty result when the client returns a response with query property set to null', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
       mockResponse.queryUsersContentsWithTotal = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
@@ -52,7 +52,7 @@ describe('Users controller', () => {
       expect(result).toEqual({ total: 0, items: [] });
     });
 
-    it('Should return an empty result when the client returns a response with items property set to null', async () => {
+    test('Should return an empty result when the client returns a response with items property set to null', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
       mockResponse.queryUsersContentsWithTotal!.items = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
@@ -61,7 +61,7 @@ describe('Users controller', () => {
       expect(result).toEqual({ total: 0, items: [] });
     });
 
-    it('Should query with filters and return the users', async () => {
+    test('Should query with filters and return the users', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
@@ -101,7 +101,7 @@ describe('Users controller', () => {
       );
     });
 
-    it('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
@@ -129,7 +129,7 @@ describe('Users controller', () => {
       );
     });
 
-    it('Should sanitise double quotation mark by encoding to hex', async () => {
+    test('Should sanitise double quotation mark by encoding to hex', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
@@ -157,7 +157,7 @@ describe('Users controller', () => {
       );
     });
 
-    it('Should search with special characters', async () => {
+    test('Should search with special characters', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
@@ -187,13 +187,13 @@ describe('Users controller', () => {
   });
 
   describe('FetchById', () => {
-    it('Should fetch the users from squidex graphql', async () => {
+    test('Should fetch the users from squidex graphql', async () => {
       const result = await usersMockGraphqlServer.fetchById('user-id');
 
       expect(result).toMatchObject(getUserResponse());
     });
 
-    it('Should throw when user is not found', async () => {
+    test('Should throw when user is not found', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       mockResponse.findUsersContent = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
@@ -203,7 +203,7 @@ describe('Users controller', () => {
       ).rejects.toThrow('Not Found');
     });
 
-    it('Should return the user when they are found, even if they are not onboarded', async () => {
+    test('Should return the user when they are found, even if they are not onboarded', async () => {
       const nonOnboardedUserResponse = getSquidexUserGraphqlResponse();
       nonOnboardedUserResponse.findUsersContent!.flatData.onboarded = false;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -215,7 +215,7 @@ describe('Users controller', () => {
       expect(result.id).toEqual(nonOnboardedUserResponse.findUsersContent!.id);
     });
 
-    it('Should return the user when it finds it', async () => {
+    test('Should return the user when it finds it', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
@@ -223,7 +223,7 @@ describe('Users controller', () => {
       expect(result).toEqual(getUserResponse());
     });
 
-    it('Should filter out a team when the team role is invalid', async () => {
+    test('Should filter out a team when the team role is invalid', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       mockResponse.findUsersContent!.flatData.teams![0]!.role = 'invalid role';
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
@@ -234,7 +234,7 @@ describe('Users controller', () => {
       expect(result).toEqual(expectedResponse);
     });
 
-    it('Should skip the user lab if it does not have a name', async () => {
+    test('Should skip the user lab if it does not have a name', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       mockResponse.findUsersContent!.flatData.labs = [
         {
@@ -272,7 +272,7 @@ describe('Users controller', () => {
       ]);
     });
 
-    it('Should skip the user orcid work if it does not have an ID or a lastModifiedDate', async () => {
+    test('Should skip the user orcid work if it does not have an ID or a lastModifiedDate', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       mockResponse.findUsersContent!.flatData.orcidWorks = [
         {
@@ -322,7 +322,7 @@ describe('Users controller', () => {
       ]);
     });
 
-    it('Should default the user orcid work type to UNDEFINED if it is not present or invalid', async () => {
+    test('Should default the user orcid work type to UNDEFINED if it is not present or invalid', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       mockResponse.findUsersContent!.flatData.orcidWorks = [
         {
@@ -358,7 +358,7 @@ describe('Users controller', () => {
       ]);
     });
 
-    it('Should default onboarded flag to true when its null', async () => {
+    test('Should default onboarded flag to true when its null', async () => {
       const userWithNoOnboardedFlagResponse = getSquidexUserGraphqlResponse();
       userWithNoOnboardedFlagResponse.findUsersContent!.flatData!.onboarded =
         null;
@@ -375,13 +375,13 @@ describe('Users controller', () => {
   describe('fetchByCode', () => {
     const code = 'some-uuid-code';
 
-    it('Should fetch the user by code from squidex graphql', async () => {
+    test('Should fetch the user by code from squidex graphql', async () => {
       const result = await usersMockGraphqlServer.fetchByCode(code);
 
       expect(result).toMatchObject(getUserResponse());
     });
 
-    it('Should throw 403 when no user is found', async () => {
+    test('Should throw 403 when no user is found', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
       mockResponse.queryUsersContentsWithTotal!.items = [];
       mockResponse.queryUsersContentsWithTotal!.total = 0;
@@ -392,7 +392,7 @@ describe('Users controller', () => {
       );
     });
 
-    it('Should throw 403 when the query returns null', async () => {
+    test('Should throw 403 when the query returns null', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
       mockResponse.queryUsersContentsWithTotal = null;
 
@@ -403,7 +403,7 @@ describe('Users controller', () => {
       );
     });
 
-    it('Should throw when it finds more than one user', async () => {
+    test('Should throw when it finds more than one user', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
       mockResponse.queryUsersContentsWithTotal!.total = 2;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
@@ -413,7 +413,7 @@ describe('Users controller', () => {
       );
     });
 
-    it('Should return user when it finds it', async () => {
+    test('Should return user when it finds it', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
@@ -433,7 +433,7 @@ describe('Users controller', () => {
 
     const userId = 'user-id';
 
-    it('Should throw when sync asset fails', async () => {
+    test('Should throw when sync asset fails', async () => {
       nock(config.baseUrl)
         .patch(`/api/content/${config.appName}/users/${userId}`, {
           jobTitle: { iv: 'CEO' },
@@ -445,7 +445,7 @@ describe('Users controller', () => {
       ).rejects.toThrow('Not Found');
     });
 
-    it('Should update job title through a clean-update', async () => {
+    test('Should update job title through a clean-update', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
       nock(config.baseUrl)
@@ -459,7 +459,7 @@ describe('Users controller', () => {
       ).toEqual(getUserResponse());
     });
 
-    it('Should update the country and city through a clean-update', async () => {
+    test('Should update the country and city through a clean-update', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
       nock(config.baseUrl)
@@ -476,7 +476,7 @@ describe('Users controller', () => {
       ).toEqual(getUserResponse());
     });
 
-    it('Should delete user fields', async () => {
+    test('Should delete user fields', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       mockResponse.findUsersContent!.flatData.contactEmail = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
@@ -496,7 +496,7 @@ describe('Users controller', () => {
       expect(result.contactEmail).not.toBeDefined();
     });
 
-    it('Should update social and questions', async () => {
+    test('Should update social and questions', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       mockResponse.findUsersContent!.flatData.questions = [
         { question: 'To be or not to be?' },
@@ -535,7 +535,7 @@ describe('Users controller', () => {
       });
     });
 
-    it('Should update Research Interests and Responsibility', async () => {
+    test('Should update Research Interests and Responsibility', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       mockResponse.findUsersContent!.flatData.researchInterests =
         'new research interests';
@@ -577,7 +577,7 @@ describe('Users controller', () => {
       nock.cleanAll();
     });
 
-    it('Should throw when sync asset fails', async () => {
+    test('Should throw when sync asset fails', async () => {
       nock(config.baseUrl)
         .post(`/api/apps/${config.appName}/assets`)
         .reply(500);
@@ -591,7 +591,7 @@ describe('Users controller', () => {
       ).rejects.toThrow();
     });
 
-    it('should throw when fails to update user - squidex error', async () => {
+    test('should throw when fails to update user - squidex error', async () => {
       nock(config.baseUrl)
         .post(`/api/apps/${config.appName}/assets`)
         .reply(200, { id: 'squidex-asset-id' })
@@ -609,7 +609,7 @@ describe('Users controller', () => {
       ).rejects.toThrow();
     });
 
-    it('should return 200 when syncs asset and updates users profile', async () => {
+    test('should return 200 when syncs asset and updates users profile', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
       nock(config.baseUrl)
@@ -638,7 +638,7 @@ describe('Users controller', () => {
       nock.cleanAll();
     });
 
-    it('Should throw forbidden when doesn find connection code', async () => {
+    test('Should throw forbidden when doesn find connection code', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users`)
         .query({
@@ -652,7 +652,7 @@ describe('Users controller', () => {
       ).rejects.toThrow('Forbidden');
     });
 
-    it('Shouldnt do anything if connecting with existing code', async () => {
+    test('Shouldnt do anything if connecting with existing code', async () => {
       const userId = 'google-oauth2|token';
       const connectedUser = JSON.parse(JSON.stringify(patchResponse));
       connectedUser.data.connections.iv = [{ code: userId }];
@@ -672,7 +672,7 @@ describe('Users controller', () => {
       expect(result).toBeDefined();
     });
 
-    it('Shouldnt do anything if connecting with existing code', async () => {
+    test('Shouldnt do anything if connecting with existing code', async () => {
       const userId = 'google-oauth2|token';
       const connectedUser = JSON.parse(JSON.stringify(patchResponse));
       connectedUser.data.connections.iv = [{ code: userId }];
@@ -693,7 +693,7 @@ describe('Users controller', () => {
       expect(result).toBeDefined();
     });
 
-    it('Should filter teams where teamId is undefined', async () => {
+    test('Should filter teams where teamId is undefined', async () => {
       const userId = 'google-oauth2|token';
       const connectedUser = JSON.parse(JSON.stringify(patchResponse));
       connectedUser.data.connections.iv = [{ code: userId }];
@@ -733,7 +733,7 @@ describe('Users controller', () => {
       ]);
     });
 
-    it('Should connect user', async () => {
+    test('Should connect user', async () => {
       const userId = 'google-oauth2|token';
       const patchedUser = JSON.parse(JSON.stringify(patchResponse));
       patchedUser.data.connections.iv = [{ code: userId }];
@@ -771,7 +771,7 @@ describe('Users controller', () => {
     const userId = 'userId';
     const orcid = '363-98-9330';
 
-    it('Throws when user does not exist', async () => {
+    test('Throws when user does not exist', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users/user-not-found`)
         .reply(404);
@@ -781,7 +781,7 @@ describe('Users controller', () => {
       ).rejects.toThrow('Not Found');
     });
 
-    it('Should update user profile even when ORCID returns 500', async () => {
+    test('Should update user profile even when ORCID returns 500', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users/${userId}`)
         .reply(200, fetchUserResponse)
@@ -798,7 +798,7 @@ describe('Users controller', () => {
       expect(result).toBeDefined(); // we only care that the update is made
     });
 
-    it('Should successfully fetch and update user - with id', async () => {
+    test('Should successfully fetch and update user - with id', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users/${userId}`)
         .reply(200, fetchUserResponse)
@@ -822,7 +822,7 @@ describe('Users controller', () => {
       expect(result).toBeDefined(); // we only care that the update is made
     });
 
-    it('Should successfully fetch and update user - with user', async () => {
+    test('Should successfully fetch and update user - with user', async () => {
       nock(config.baseUrl)
         .patch(
           `/api/content/${config.appName}/users/${userId}`,
@@ -845,77 +845,6 @@ describe('Users controller', () => {
         fetchUserResponse,
       );
       expect(result).toBeDefined(); // we only care that the update is made
-    });
-  });
-
-  describe('fetch using labId filter', () => {
-    it('Should fetch the users by lab id from squidex', async () => {
-      const result = await usersMockGraphqlServer.fetch({
-        filter: { labId: ['lab-id'] },
-      });
-
-      expect(result).toMatchObject(getListUserResponse());
-    });
-
-    it('Should return empty when empty result on fetch the users by lab id from squidex', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      mockResponse.queryUsersContentsWithTotal = null;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-      const result = await usersMockGraphqlClient.fetch({
-        filter: { labId: ['not-found-lab-id'] },
-      });
-      expect(result).toEqual({ items: [], total: 0 });
-    });
-
-    it('Should return empty when items is null on fetch the users by lab id from squidex', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      mockResponse.queryUsersContentsWithTotal!.items = null;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-      const result = await usersMockGraphqlClient.fetch({
-        filter: { labId: ['not-found-lab-id'] },
-      });
-      expect(result).toEqual({ items: [], total: 0 });
-    });
-
-    it('Should return empty when fetch the users by lab id from squidex', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      mockResponse.queryUsersContentsWithTotal!.items = [];
-      mockResponse.queryUsersContentsWithTotal!.total = 0;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-      const result = await usersMockGraphqlClient.fetch({
-        filter: { labId: ['not-found-lab-id'] },
-      });
-      expect(result).toEqual({ items: [], total: 0 });
-    });
-
-    it('Should query with labId filter and return the users', async () => {
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexUsersGraphqlResponse(),
-      );
-      const fetchOptions: FetchUsersOptions = {
-        take: 12,
-        skip: 2,
-        filter: { labId: ['lab-123', 'lab-456'] },
-      };
-      await usersMockGraphqlClient.fetch(fetchOptions);
-
-      const filterQuery =
-        "(data/labs/iv eq 'lab-123' or data/labs/iv eq 'lab-456')" +
-        ' and' +
-        ' data/onboarded/iv eq true' +
-        ' and' +
-        " data/role/iv ne 'Hidden'";
-      expect(squidexGraphqlClientMock.request).toBeCalledWith(
-        expect.anything(),
-        {
-          top: 12,
-          skip: 2,
-          filter: filterQuery,
-        },
-      );
     });
   });
 });

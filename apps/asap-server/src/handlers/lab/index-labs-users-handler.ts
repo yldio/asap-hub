@@ -24,46 +24,36 @@ export const indexLabUsersHandler =
   ): Promise<void> => {
     logger.debug(`Event ${event['detail-type']}`);
 
-    try {
-      const fetchFunction = (
-        skip: number,
-      ): Promise<ListResponse<UserResponse>> =>
-        userController.fetch({
-          filter: {
-            labId: [event.detail.payload.id],
-          },
-          skip,
-        });
+    const fetchFunction = (skip: number): Promise<ListResponse<UserResponse>> =>
+      userController.fetch({
+        filter: {
+          labId: [event.detail.payload.id],
+        },
+        skip,
+      });
 
-      const processingFunction = async (
-        foundUsers: ListResponse<UserResponse>,
-      ) => {
-        logger.info(
-          `Found ${foundUsers.total} users. Processing ${foundUsers.items.length} users.`,
-        );
+    const processingFunction = async (
+      foundUsers: ListResponse<UserResponse>,
+    ) => {
+      logger.info(
+        `Found ${foundUsers.total} users. Processing ${foundUsers.items.length} users.`,
+      );
 
-        const algoliaResponse = await algoliaClient.batch(
-          foundUsers.items.map(
-            (user): BatchRequest => ({
-              action: 'updateObject',
-              body: user,
-            }),
-          ),
-        );
+      const algoliaResponse = await algoliaClient.batch(
+        foundUsers.items.map(
+          (user): BatchRequest => ({
+            action: 'updateObject',
+            body: user,
+          }),
+        ),
+      );
 
-        logger.info(
-          `Updated ${foundUsers.total} users with algolia response: ${algoliaResponse}`,
-        );
-      };
+      logger.info(
+        `Updated ${foundUsers.total} users with algolia response: ${algoliaResponse}`,
+      );
+    };
 
-      await loopOverCustomCollection(fetchFunction, processingFunction);
-    } catch (error) {
-      if (error?.output?.statusCode === 404) {
-        return;
-      }
-
-      throw error;
-    }
+    await loopOverCustomCollection(fetchFunction, processingFunction);
   };
 
 export type SquidexWebhookLabPayload = {

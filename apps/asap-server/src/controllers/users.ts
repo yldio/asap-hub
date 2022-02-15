@@ -27,12 +27,12 @@ import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 import { sanitiseForSquidex } from '../utils/squidex';
 import { FetchOptions } from '../utils/types';
 
-export type FetchUsersFilter2 = {
+export type FetchUsersFilter = {
   role?: string[];
   labId?: string[];
 };
 
-export type FetchUsersOptions = FetchOptions<FetchUsersFilter2>;
+export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
 
 export interface UserController {
   fetch(options: FetchUsersOptions): Promise<ListUserResponse>;

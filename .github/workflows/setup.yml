@@ -21,14 +21,3 @@ jobs:
       - name: Generate Image Name
         uses: ./.github/actions/ecr-registry
         id: image-name
-        with:
-          repository: asap-hub/node-python-sq
-  build:
-    needs: setup
-    runs-on: ubuntu-latest
-    env:
-      PR_NUMBER: ${{ needs.setup.outputs.pr-number }}
-    steps:
-      - name: Start
-        run: |
-          echo "Started $PR_NUMBER"

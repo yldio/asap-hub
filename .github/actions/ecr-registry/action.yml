@@ -1,9 +1,6 @@
 name: 'ECR Repository Name'
 description: 'Outputs the name of the image'
 inputs:
-  repository:
-    description: 'Name of the repository'
-    required: true
   aws-account-id:
     description: 'AWS Access Account ID'
     required: false
@@ -16,10 +13,20 @@ inputs:
     description: 'Image Tag'
     required: false
     default: 8bf2c61ef5a3d31df5b6d670085335fe4de93734
+  node-version:
+    description: 'Node Version'
+    required: false
+    default: '14.17'
 outputs:
-  image-name:
-    description: 'Name of image'
-    value: ${{ steps.get-image-name.outputs.image-name }}
+  integration-image-name:
+    description: 'Name of integration image'
+    value: ${{ steps.get-image-name.outputs.integration-image-name }}
+  squidex-image-name:
+    description: 'Name of Squidex image'
+    value: ${{ steps.get-image-name.outputs.squidex-image-name }}
+  node-image-name:
+    description: 'Name of node image'
+    value: ${{ steps.get-image-name.outputs.node-image-name }}
 runs:
   using: 'composite'
   steps:
@@ -31,6 +38,11 @@ runs:
         REGION: ${{ inputs.aws-region }}
         REPOSITORY: ${{ inputs.repository }}
         IMAGE_TAG: ${{ inputs.image-tag }}
+        NODE_VERSION: ${{ inputs.node-version }}
       run: |
-        IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPOSITORY:$IMAGE_TAG"
-        echo "::set-output name=image-name::$IMAGE_NAME"
+        INTEGRATION_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/node-python-sq:$IMAGE_TAG"
+        SQUIDEX_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/squidex-utils:$IMAGE_TAG"
+        NODE_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/node:$NODE_VERSION-alpine"
+        echo "::set-output name=integration-image-name::$IMAGE_NAME"
+        echo "::set-output name=squidex-image-name::$IMAGE_NAME"
+        echo "::set-output name=node-image-name::$IMAGE_NAME"

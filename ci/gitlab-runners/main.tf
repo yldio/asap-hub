@@ -7,6 +7,8 @@ data "aws_security_group" "default" {
   vpc_id = module.vpc.vpc_id
 }
 
+data "aws_caller_identity" "current" {}
+
 terraform {
   backend "s3" {
     bucket = "s3-terraform-asap-hub-state"
@@ -37,7 +39,6 @@ module "vpc" {
     Environment = var.environment
   }
 }
-
 module "gitlab-runner" {
   source  = "npalm/gitlab-runner/aws"
   version = "4.35.0"
@@ -60,9 +61,9 @@ module "gitlab-runner" {
 
   docker_machine_download_url   = "https://gitlab-docker-machine-downloads.s3.amazonaws.com/v0.16.2-gitlab.10/docker-machine-Linux-x86_64"
   docker_machine_spot_price_bid = "0.09"
-  docker_machine_instance_type = "m5.xlarge"
-  gitlab_runner_version         = "14.5.0"
-  runners_concurrent = 10
+  docker_machine_instance_type  = "m5.xlarge"
+  gitlab_runner_version         = "14.7.0"
+  runners_concurrent            = 10
 
   gitlab_runner_registration_config = {
     registration_token = var.registration_token
@@ -74,7 +75,6 @@ module "gitlab-runner" {
   }
 
   tags = {
-    "tf-aws-gitlab-runner:example"           = "runner-default"
     "tf-aws-gitlab-runner:instancelifecycle" = "spot:yes"
   }
 
@@ -104,6 +104,13 @@ module "gitlab-runner" {
       timezone   = var.timezone
     }
   ]
+  runners_install_amazon_ecr_credential_helper = "true"
+  runners_environment_vars = ["DOCKER_AUTH_CONFIG=${jsonencode({
+    "credHelpers" = { "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com" : "ecr-login" }
+    })}"
+  ]
+
+
 
 }
 

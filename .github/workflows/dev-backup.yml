@@ -4,10 +4,26 @@ on:
     - cron: '0 7 * * MON-FRI' # At 07:00 UTC on every day-of-week from Monday through Friday.
   workflow_dispatch:
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      image-name: ${{ steps.image-name.outputs.image-name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Generate Image Name
+        uses: ./.github/actions/ecr-registry
+        id: image-name
+        with:
+          repository: asap-hub/squidex-utils
   make_squidex_backup:
+    needs: setup
     runs-on: ubuntu-18.04
     container:
-      image: registry.gitlab.com/yldio/asap-hub/squidex-utils
+      image: ${{ needs.setup.outputs.image-name }}
+      credentials:
+        username: AWS
+        password: ${{ secrets.AWS_ECR_PASSWORD }}
     env:
       SQUIDEX_APP: 'asap-hub-dev'
       BUCKET_NAME: 'asap-hub-dev-data-backup'

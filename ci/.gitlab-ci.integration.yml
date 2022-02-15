@@ -1,22 +1,6 @@
-# https://gitlab.com/yldio/asap-hub/-/ci/lint
-
 variables:
-  INTEGRATION_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/node-python-sq:latest
-  SQUIDEX_BASE_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/squidex-utils:latest
-  BASE_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/docker:19.03.12
-
-build:docker-images:
-  image: $BASE_DOCKER_IMAGE
-  stage: .post
-  services:
-    - docker:19.03.12-dind
-  script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $SQUIDEX_BASE_DOCKER_IMAGE . -f dev/base.Dockerfile
-    - docker push $SQUIDEX_BASE_DOCKER_IMAGE
-    - docker build -t $INTEGRATION_DOCKER_IMAGE . -f ci/integration/Dockerfile
-    - docker push $INTEGRATION_DOCKER_IMAGE
-  needs: []
+  INTEGRATION_DOCKER_IMAGE: $ECR_REGISTRY/$ECR_PROJECT/node-python-sq:8bf2c61ef5a3d31df5b6d670085335fe4de93734@sha256:251301f4a3a498760382cc08adc35254111c4ff2432a88029868b0a846d5d9e2
+  SQUIDEX_BASE_DOCKER_IMAGE: $ECR_REGISTRY/$ECR_PROJECT/squidex-utils:8bf2c61ef5a3d31df5b6d670085335fe4de93734@sha256:c1be14ab75043ce8053208fa4cbeeed26d6711183aaabfd4083c6d837ef23291
 
 test:integration:
   image: $INTEGRATION_DOCKER_IMAGE

@@ -1,6 +1,6 @@
 # GitLab runners on AWS
 
-The implementation relies on the https://github.com/npalm/terraform-aws-gitlab-runner terraform module.
+The implementation relies on the <https://github.com/npalm/terraform-aws-gitlab-runner> terraform module.
 We use the [runner default example](https://github.com/npalm/terraform-aws-gitlab-runner/tree/develop/examples/runner-default) with some tweaks.
 
 - We use s3 backend to store state
@@ -10,9 +10,9 @@ We use the [runner default example](https://github.com/npalm/terraform-aws-gitla
 
 To set it up use `terraform` and you should be presented with a prompt to insert the `registration_token` from [gitlab to enable installation of a specific runner](https://gitlab.com/yldio/asap-hub/-/settings/ci_cd) :
 
-```
-$ terraform init
-$ terraform apply
+```sh
+terraform init
+terraform apply
 ```
 
 ## Prerequisites

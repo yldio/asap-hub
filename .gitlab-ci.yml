@@ -23,7 +23,7 @@ include:
 variables:
   ASAP_HOSTNAME: hub.asap.science
   PLAYWRIGHT_BROWSERS_PATH: 0
-  BASE_NODE_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/node:14.17-alpine
+  BASE_NODE_IMAGE: $ECR_REGISTRY/$ECR_PROJECT/node:14.17-alpine
 
 image: $BASE_NODE_IMAGE
 

@@ -2,12 +2,16 @@ name: Build Pipeline
 
 on:
   pull_request:
-  workflow_dispatch:
 
 jobs:
+  setup:
+    uses: ./.github/workflows/setup.yml
   build:
+    needs: setup
     runs-on: ubuntu-latest
+    env:
+      PR_NUMBER: ${{ needs.setup.outputs.pr-number }}
     steps:
       - name: Start
         run: |
-          echo "Started"
+          echo "Started $PR_NUMBER"

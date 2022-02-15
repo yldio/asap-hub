@@ -2,24 +2,57 @@ name: Setup
 
 on:
   workflow_call:
+    inputs:
+      aws-account-id:
+        description: 'AWS Access Account ID'
+        required: false
+        default: '249832953260'
+        type: string
+      aws-region:
+        description: 'AWS Region for ECR'
+        required: false
+        default: ap-southeast-2
+        type: string
+      image-tag:
+        description: 'Image Tag'
+        required: false
+        default: 8bf2c61ef5a3d31df5b6d670085335fe4de93734
+        type: string
+      node-version:
+        description: 'Node Version'
+        required: false
+        default: '14.17'
+        type: string
     outputs:
       pr-number:
         description: "The current PR number"
         value: ${{ github.event.number || github.event.inputs.prNumber }}
-      secondword:
-        description: "The second output string"
-        value: ${{ jobs.example_job.outputs.output2 }}
-
+      integration-image-name:
+        description: 'Name of integration image'
+        value: ${{ steps.get-image-name.outputs.integration-image-name }}
+      squidex-image-name:
+        description: 'Name of Squidex image'
+        value: ${{ steps.get-image-name.outputs.squidex-image-name }}
+      node-image-name:
+        description: 'Name of node image'
+        value: ${{ steps.get-image-name.outputs.node-image-name }}
 jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - name: Build
-        id: build-step
+      - name: Output Image Name
+        id: get-image-name
+        shell: bash
+        env:
+          ACCOUNT_ID: ${{ inputs.aws-account-id }}
+          REGION: ${{ inputs.aws-region }}
+          REPOSITORY: ${{ inputs.repository }}
+          IMAGE_TAG: ${{ inputs.image-tag }}
+          NODE_VERSION: ${{ inputs.node-version }}
         run: |
-          echo "::set-output name=pr-number::$PR_NUMBER"
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Generate Image Name
-        uses: ./.github/actions/ecr-registry
-        id: image-name
+          INTEGRATION_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/node-python-sq:$IMAGE_TAG"
+          SQUIDEX_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/squidex-utils:$IMAGE_TAG"
+          NODE_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/node:$NODE_VERSION-alpine"
+          echo "::set-output name=integration-image-name::$IMAGE_NAME"
+          echo "::set-output name=squidex-image-name::$IMAGE_NAME"
+          echo "::set-output name=node-image-name::$IMAGE_NAME"

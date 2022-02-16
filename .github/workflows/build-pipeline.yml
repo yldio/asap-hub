@@ -25,15 +25,20 @@ jobs:
   test:
     needs: setup
     runs-on: ubuntu-latest
-    container:
-      image: ${{ needs.setup.outputs.node-image-name }}
-      credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+    # container:
+    #   image: ${{ needs.setup.outputs.node-image-name }}
+    #   credentials:
+    #     username: AWS
+    #     password: ${{ secrets.AWS_ECR_PASSWORD }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2.4.1
+        with:
+          node-version: '16'
+          cache: 'yarn'
       - name: Build
         run: |
           source ci/env-setup.sh

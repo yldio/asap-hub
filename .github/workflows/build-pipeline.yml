@@ -34,6 +34,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Build
+        run: |
+          source ci/env-setup.sh
+          yarn build
+        env:
+          NODE_ENV: 'production'
       - uses: actions/cache@v1
         name: Cache Jest cache
         id: cache-jest-cache

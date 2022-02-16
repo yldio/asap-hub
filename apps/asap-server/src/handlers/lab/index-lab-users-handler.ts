@@ -4,7 +4,6 @@ import { SquidexGraphql } from '@asap-hub/squidex';
 import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
-  BatchRequest,
 } from '@asap-hub/algolia';
 import Users, { UserController } from '../../controllers/users';
 import { LabEventType } from '../webhooks/webhook-lab';
@@ -48,14 +47,7 @@ export const indexLabUsersHandler =
         `Found ${foundUsers.total} users. Processing ${foundUsers.items.length} users.`,
       );
 
-      await algoliaClient.batch(
-        foundUsers.items.map(
-          (user): BatchRequest => ({
-            action: 'updateObject',
-            body: user,
-          }),
-        ),
-      );
+      await algoliaClient.saveMany(foundUsers.items);
 
       logger.info(`Updated ${foundUsers.total} users.`);
     };

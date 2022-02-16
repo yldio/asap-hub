@@ -1,10 +1,5 @@
 import { SearchIndex } from 'algoliasearch';
-import {
-  BatchActionType,
-  BatchRequest as AlgoliaBatchRequest,
-  SearchOptions,
-  SearchResponse,
-} from '@algolia/client-search';
+import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { ResearchOutputResponse, UserResponse } from '@asap-hub/model';
 
 export const RESEARCH_OUTPUT_ENTITY_TYPE = 'research-output';
@@ -13,11 +8,6 @@ export const USER_ENTITY_TYPE = 'user';
 export type EntityResponses = {
   [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse;
   [USER_ENTITY_TYPE]: UserResponse;
-};
-
-export type BatchRequest = {
-  action: BatchActionType;
-  body: EntityResponses[keyof EntityResponses];
 };
 
 export type EntityRecord<T extends keyof EntityResponses> =
@@ -45,19 +35,16 @@ export class AlgoliaSearchClient {
     // do nothing
   }
 
-  async batch(requests: BatchRequest[]): Promise<void> {
-    await this.index.batch(
-      requests.map(
-        ({ action, body }): AlgoliaBatchRequest => ({
-          action,
-          body: AlgoliaSearchClient.getAlgoliaObject(body),
-        }),
-      ),
-    );
-  }
-
   async save(payload: EntityResponses[keyof EntityResponses]): Promise<void> {
     await this.index.saveObject(AlgoliaSearchClient.getAlgoliaObject(payload));
+  }
+
+  async saveMany(
+    payloads: readonly EntityResponses[keyof EntityResponses][],
+  ): Promise<void> {
+    await this.index.saveObjects(
+      payloads.map(AlgoliaSearchClient.getAlgoliaObject),
+    );
   }
 
   async remove(objectID: string): Promise<void> {

@@ -17,37 +17,34 @@ describe('Algolia Search Client', () => {
   const algoliaSearchIndex = getAlgoliaSearchIndexMock();
   const algoliaSearchClient = new AlgoliaSearchClient(algoliaSearchIndex);
 
-  it('Should do batch on entities', async () => {
-    await algoliaSearchClient.batch(
+  test('Should do save many on entities', async () => {
+    await algoliaSearchClient.saveMany(
       Array(100)
         .fill({})
-        .map((value, index) => ({
-          action: 'updateObject',
-          body: {
-            id: `ro-id-${index}`,
-            title: 'ro-title',
-            sharingStatus: 'Public',
-          } as ResearchOutputResponse,
-        })),
+        .map(
+          (value, index) =>
+            ({
+              id: `ro-id-${index}`,
+              title: 'ro-title',
+              sharingStatus: 'Public',
+            } as ResearchOutputResponse),
+        ) as readonly ResearchOutputResponse[],
     );
 
-    expect(algoliaSearchIndex.batch).toBeCalledWith(
+    expect(algoliaSearchIndex.saveObjects).toBeCalledWith(
       Array(100)
         .fill({})
         .map((value, index) => ({
-          action: 'updateObject',
-          body: {
-            id: `ro-id-${index}`,
-            objectID: `ro-id-${index}`,
-            title: 'ro-title',
-            sharingStatus: 'Public',
-            __meta: { type: 'research-output' },
-          },
+          id: `ro-id-${index}`,
+          objectID: `ro-id-${index}`,
+          title: 'ro-title',
+          sharingStatus: 'Public',
+          __meta: { type: 'research-output' },
         })),
     );
   });
 
-  it('Should save the Research Output', async () => {
+  test('Should save the Research Output', async () => {
     const researchOutput = createResearchOutputResponse();
 
     await algoliaSearchClient.save(researchOutput);
@@ -59,7 +56,7 @@ describe('Algolia Search Client', () => {
     });
   });
 
-  it('Should save the User', async () => {
+  test('Should save the User', async () => {
     const user = createUserResponse();
 
     await algoliaSearchClient.save(user);
@@ -71,7 +68,7 @@ describe('Algolia Search Client', () => {
     });
   });
 
-  it('Should remove the entity', async () => {
+  test('Should remove the entity', async () => {
     const researchOutputId = '1';
 
     await algoliaSearchClient.remove(researchOutputId);
@@ -79,7 +76,7 @@ describe('Algolia Search Client', () => {
     expect(algoliaSearchIndex.deleteObject).toBeCalledWith(researchOutputId);
   });
 
-  it('Should search research-output entity', async () => {
+  test('Should search research-output entity', async () => {
     algoliaSearchIndex.search.mockResolvedValueOnce(
       searchResearchOutputResponse,
     );
@@ -102,7 +99,7 @@ describe('Algolia Search Client', () => {
     });
   });
 
-  it('Should search user entity', async () => {
+  test('Should search user entity', async () => {
     algoliaSearchIndex.search.mockResolvedValueOnce(searchUserResponse);
 
     const response = await algoliaSearchClient.searchEntity('user', 'query');
@@ -114,7 +111,7 @@ describe('Algolia Search Client', () => {
   });
 
   describe('getEntityType', () => {
-    it('should return research-output when it have a title and sharingStatus fields', () => {
+    test('should return research-output when it was a title and sharingStatus fields', () => {
       expect(
         getEntityType({
           title: 'test title',
@@ -123,7 +120,7 @@ describe('Algolia Search Client', () => {
       ).toEqual('research-output');
     });
 
-    it('should return user when it does not have a title field', () => {
+    test("should return user when it didn't have a title field", () => {
       expect(getEntityType({} as ResearchOutputResponse)).toEqual('user');
     });
   });

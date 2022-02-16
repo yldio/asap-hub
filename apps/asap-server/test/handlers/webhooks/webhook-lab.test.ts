@@ -46,7 +46,7 @@ describe('Labs event webhook', () => {
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
   });
 
-  test.concurrent.each([
+  test.each([
     ['LabsPublished', 'LabPublished'],
     ['LabsUpdated', 'LabUpdated'],
     ['LabsUnpublished', 'LabDeleted'],

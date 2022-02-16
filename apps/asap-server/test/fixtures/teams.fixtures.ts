@@ -147,6 +147,14 @@ export const getTeamsEvent = (
 export const getTeamsCreated = getTeamsEvent('Published', 'TeamsPublished');
 export const getTeamsUpdated = getTeamsEvent('Updated', 'TeamsUpdated');
 export const getTeamsDeleted = getTeamsEvent('Deleted', 'TeamsDeleted');
+export const getTeamsUnpublished = getTeamsEvent('Deleted', 'TeamsUnpublished');
+
+export const getPossibleTeamEvents: [string, string, WebhookPayload<Team>][] = [
+  ['teams-created', 'TeamsCreated', getTeamsCreated],
+  ['teams-unpublished', 'TeamsDeleted', getTeamsUnpublished],
+  ['teams-updated', 'TeamsUpdated', getTeamsUpdated],
+  ['teams-deleted', 'TeamsDeleted', getTeamsDeleted],
+];
 
 export const getTeamsEventbridgeEvent = (
   id: string,

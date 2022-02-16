@@ -9,7 +9,10 @@ import {
 import Users, { UserController } from '../../controllers/users';
 import { LabEventType } from '../webhooks/webhook-lab';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
-import { loopOverCustomCollection } from '../../utils/loop-over-custom-colection';
+import {
+  loopOverCustomCollection,
+  LoopOverCustomCollectionFetchOptions,
+} from '../../utils/loop-over-custom-colection';
 import logger from '../../utils/logger';
 
 export const indexLabUsersHandler =
@@ -24,12 +27,18 @@ export const indexLabUsersHandler =
   ): Promise<void> => {
     logger.debug(`Event ${event['detail-type']}`);
 
-    const fetchFunction = (skip: number): Promise<ListResponse<UserResponse>> =>
+    const fetchFunction = ({
+      skip,
+      take,
+    }: LoopOverCustomCollectionFetchOptions): Promise<
+      ListResponse<UserResponse>
+    > =>
       userController.fetch({
         filter: {
           labId: [event.detail.payload.id],
         },
         skip,
+        take,
       });
 
     const processingFunction = async (
@@ -51,7 +60,7 @@ export const indexLabUsersHandler =
       logger.info(`Updated ${foundUsers.total} users.`);
     };
 
-    await loopOverCustomCollection(fetchFunction, processingFunction);
+    await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
 
 export type SquidexWebhookLabPayload = {

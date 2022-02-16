@@ -51,7 +51,7 @@ describe('Research output webhook', () => {
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
   });
 
-  test.concurrent.each([
+  test.each([
     ['ResearchOutputsPublished', 'ResearchOutputCreated'],
     ['ResearchOutputsUpdated', 'ResearchOutputUpdated'],
     ['ResearchOutputsUnpublished', 'ResearchOutputDeleted'],

@@ -6,6 +6,7 @@ import {
   getTeamsCreated,
   getTeamsUpdated,
   getTeamsDeleted,
+  getPossibleTeamEvents,
 } from '../../fixtures/teams.fixtures';
 import { createSignedPayload } from '../../helpers/webhooks';
 import { getApiGatewayEvent } from '../../helpers/events';
@@ -47,57 +48,24 @@ describe('Teams webhook', () => {
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
   });
 
-  test('Should put the teams-created event into the event bus and return 200', async () => {
-    const res = (await handler(
-      createSignedPayload(getTeamsCreated),
-    )) as APIGatewayProxyResult;
+  test.each(getPossibleTeamEvents)(
+    'Should put the %s event into the event bus and return 200',
+    async (_, eventName, eventBody) => {
+      const res = (await handler(
+        createSignedPayload(eventBody),
+      )) as APIGatewayProxyResult;
 
-    expect(res.statusCode).toStrictEqual(200);
-    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
-      Entries: [
-        {
-          EventBusName: eventBus,
-          Source: eventSource,
-          DetailType: 'TeamsCreated',
-          Detail: JSON.stringify(getTeamsCreated),
-        },
-      ],
-    });
-  });
-
-  test('Should put the teams-updated event into the event bus and return 200', async () => {
-    const res = (await handler(
-      createSignedPayload(getTeamsUpdated),
-    )) as APIGatewayProxyResult;
-
-    expect(res.statusCode).toStrictEqual(200);
-    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
-      Entries: [
-        {
-          EventBusName: eventBus,
-          Source: eventSource,
-          DetailType: 'TeamsUpdated',
-          Detail: JSON.stringify(getTeamsUpdated),
-        },
-      ],
-    });
-  });
-
-  test('Should put the teams-deleted event into the event bus and return 200', async () => {
-    const res = (await handler(
-      createSignedPayload(getTeamsDeleted),
-    )) as APIGatewayProxyResult;
-
-    expect(res.statusCode).toStrictEqual(200);
-    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
-      Entries: [
-        {
-          EventBusName: eventBus,
-          Source: eventSource,
-          DetailType: 'TeamsDeleted',
-          Detail: JSON.stringify(getTeamsDeleted),
-        },
-      ],
-    });
-  });
+      expect(res.statusCode).toStrictEqual(200);
+      expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
+        Entries: [
+          {
+            EventBusName: eventBus,
+            Source: eventSource,
+            DetailType: eventName,
+            Detail: JSON.stringify(eventBody),
+          },
+        ],
+      });
+    },
+  );
 });

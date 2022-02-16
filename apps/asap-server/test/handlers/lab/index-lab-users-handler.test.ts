@@ -75,7 +75,7 @@ describe('Index Users on Lab event handler', () => {
     );
   });
 
-  test.concurrent.each(possibleEvents)(
+  test.each(possibleEvents)(
     'Should index users when lab event %s occurs',
     async (name, eventA) => {
       const usersResponse = getListUserResponse();
@@ -93,7 +93,7 @@ describe('Index Users on Lab event handler', () => {
   );
 
   describe('Should process the events, handle race conditions and not rely on the order of the events', () => {
-    test.concurrent.each(possibleRacingConditionEvents)(
+    test.each(possibleRacingConditionEvents)(
       'recieves the events %s when lab exists',
       async (name, eventA, eventB) => {
         const userID = 'user-1234';

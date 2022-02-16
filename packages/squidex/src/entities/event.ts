@@ -31,6 +31,7 @@ export interface Event<TCalendar = string, TThumbnail = string> {
 
   // Future event details
   meetingLink?: string;
+  hideMeetingLink?: boolean;
   thumbnail?: TThumbnail[];
   tags: string[];
 }

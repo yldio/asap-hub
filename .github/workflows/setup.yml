@@ -25,7 +25,7 @@ on:
         type: string
     outputs:
       pr-number:
-        description: "The current PR number"
+        description: 'The current PR number'
         value: ${{ github.event.number || github.event.inputs.prNumber }}
       integration-image-name:
         description: 'Name of integration image'

@@ -312,7 +312,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+        ALGOLIA_INDEX: `asap-hub_research_outputs_${envRef}`,
       },
     },
     indexUser: {
@@ -503,7 +503,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+        ALGOLIA_INDEX: `asap-hub_research_outputs_${envRef}`,
       },
     },
     indexTeamUsers: {

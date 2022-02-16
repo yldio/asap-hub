@@ -4,8 +4,6 @@ import { Team } from '@asap-hub/squidex';
 import { teamsWebhookFactory } from '../../../src/handlers/webhooks/webhook-teams';
 import {
   getTeamsCreated,
-  getTeamsUpdated,
-  getTeamsDeleted,
   getPossibleTeamEvents,
 } from '../../fixtures/teams.fixtures';
 import { createSignedPayload } from '../../helpers/webhooks';

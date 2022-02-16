@@ -19,6 +19,7 @@
       "calendar",
       "status",
       "hidden",
+      "hideMeetingLink",
       "meetingLink",
       "tags",
       "notesPermanentlyUnavailable",
@@ -171,7 +172,24 @@
           "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": false
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "hideMeetingLink",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Boolean",
+          "defaultValue": true,
+          "inlineEditable": true,
+          "editor": "Checkbox",
+          "label": "Hide Meeting Link",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
         }
       },
       {

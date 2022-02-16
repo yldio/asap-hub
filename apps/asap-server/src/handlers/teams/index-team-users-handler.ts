@@ -41,7 +41,7 @@ export const indexTeamUsersHandler =
           teamId: [event.detail.payload.id],
         },
         skip,
-        take
+        take,
       });
 
     const processingFunction = async (

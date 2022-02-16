@@ -59,5 +59,4 @@ jobs:
           NODE_ENV: 'production'
         run: |
           echo $(node --version)
-          yarn workspace @asap-hub/storybook run build
           yarn run build

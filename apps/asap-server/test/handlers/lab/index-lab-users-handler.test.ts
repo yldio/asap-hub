@@ -2,7 +2,7 @@ import Boom from '@hapi/boom';
 
 import { ListUserResponse } from '@asap-hub/model';
 import { BatchRequest } from '@asap-hub/algolia';
-import { indexLabUsersHandler } from '../../../src/handlers/lab/index-labs-users-handler';
+import { indexLabUsersHandler } from '../../../src/handlers/lab/index-lab-users-handler';
 import {
   createEvent,
   deleteEvent,

@@ -1,14 +1,10 @@
 import Boom from '@hapi/boom';
 import { ListUserResponse } from '@asap-hub/model';
 import { BatchRequest } from '@asap-hub/algolia';
-import { indexTeamsUsersHandler } from '../../../src/handlers/teams/index-team-users-handler';
-import {
-  getUserResponse,
-  getListUserResponse,
-} from '../../fixtures/users.fixtures';
+import { indexTeamUsersHandler } from '../../../src/handlers/teams/index-team-users-handler';
+import { getListUserResponse } from '../../fixtures/users.fixtures';
 
 import {
-  getTeamResponse,
   createEvent,
   updateEvent,
   unpublishedEvent,
@@ -18,7 +14,6 @@ import {
 
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user-controller.mock';
-import { teamControllerMock } from '../../mocks/team-controller.mock';
 
 const getUsersBatchCall = (users: ListUserResponse): BatchRequest[] =>
   users.items.map((user) => ({
@@ -55,16 +50,14 @@ const possibleRacingConditionEvents: [
 ];
 
 describe('Index Users on Team event handler', () => {
-  const indexHandler = indexTeamsUsersHandler(
-    teamControllerMock,
+  const indexHandler = indexTeamUsersHandler(
     userControllerMock,
     algoliaSearchClientMock,
   );
-
   afterEach(() => jest.clearAllMocks());
 
   test('Should throw an error and do not trigger algolia when the team request fails with another error code', async () => {
-    teamControllerMock.fetchById.mockRejectedValue(Boom.badData());
+    userControllerMock.fetch.mockRejectedValue(Boom.badData());
 
     await expect(indexHandler(createEvent('team-1234'))).rejects.toThrow(
       Boom.badData(),
@@ -75,7 +68,7 @@ describe('Index Users on Team event handler', () => {
   test('Should throw the algolia error when saving the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    teamControllerMock.fetchById.mockResolvedValueOnce(getTeamResponse());
+    userControllerMock.fetch.mockResolvedValueOnce(getListUserResponse());
     algoliaSearchClientMock.batch.mockRejectedValueOnce(algoliaError);
 
     await expect(indexHandler(updateEvent('team-1234'))).rejects.toThrow(
@@ -86,11 +79,13 @@ describe('Index Users on Team event handler', () => {
   test.concurrent.each(possibleEvents)(
     'Should index users when team event %s occurs',
     async (name, eventA) => {
-      const usersBatchResponse = getUsersBatchCall(getListUserResponse());
-      teamControllerMock.fetchById.mockResolvedValueOnce(getTeamResponse());
-      userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
+      const usersResponse = getListUserResponse();
+      const usersBatchResponse = getUsersBatchCall(usersResponse);
 
-      await indexHandler(eventA('team-1234'));
+      const event = eventA('team-1234');
+      userControllerMock.fetch.mockResolvedValueOnce(usersResponse);
+
+      await indexHandler(event);
 
       expect(algoliaSearchClientMock.batch).toHaveBeenCalledWith(
         usersBatchResponse,
@@ -100,17 +95,22 @@ describe('Index Users on Team event handler', () => {
 
   describe('Should process the events, handle race conditions and not rely on the order of the events', () => {
     test.concurrent.each(possibleRacingConditionEvents)(
-      'recieves the events %s',
+      'recieves the events %s when team exists',
       async (name, eventA, eventB) => {
-        teamControllerMock.fetchById.mockResolvedValue(getTeamResponse());
-        userControllerMock.fetchById.mockResolvedValue(getUserResponse());
+        const userID = 'user-1234';
+        const usersResponse = {
+          ...getListUserResponse(),
+          id: userID,
+        };
+        const usersBatchResponse = getUsersBatchCall(usersResponse);
+        userControllerMock.fetch.mockResolvedValue(usersResponse);
 
-        await indexHandler(eventA('team-1234'));
-        await indexHandler(eventB('team-1234'));
+        await indexHandler(eventA(userID));
+        await indexHandler(eventB(userID));
 
         expect(algoliaSearchClientMock.batch).toHaveBeenCalledTimes(2);
         expect(algoliaSearchClientMock.batch).toHaveBeenCalledWith(
-          getUsersBatchCall(getListUserResponse()),
+          usersBatchResponse,
         );
       },
     );

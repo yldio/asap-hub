@@ -1,5 +1,5 @@
 import { EventBridgeEvent } from 'aws-lambda';
-import { UserResponse } from '@asap-hub/model';
+import { ListResponse, UserResponse } from '@asap-hub/model';
 import { SquidexGraphql } from '@asap-hub/squidex';
 import {
   AlgoliaSearchClient,
@@ -7,17 +7,16 @@ import {
   BatchRequest,
 } from '@asap-hub/algolia';
 import Users, { UserController } from '../../controllers/users';
-import Teams, { TeamController } from '../../controllers/teams';
 import {
   TeamsEventType,
   SquidexWebhookTeamPayload,
 } from '../webhooks/webhook-teams';
+import { loopOverCustomCollection } from '../../utils/loop-over-custom-colection';
 import logger from '../../utils/logger';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 
-export const indexTeamsUsersHandler =
+export const indexTeamUsersHandler =
   (
-    teamController: TeamController,
     userController: UserController,
     algoliaClient: AlgoliaSearchClient,
   ): ((
@@ -28,34 +27,37 @@ export const indexTeamsUsersHandler =
   ): Promise<void> => {
     logger.debug(`Event ${event['detail-type']}`);
 
-    const team = await teamController.fetchById(event.detail.payload.id);
+    const fetchFunction = (skip: number): Promise<ListResponse<UserResponse>> =>
+      userController.fetch({
+        filter: {
+          teamId: [event.detail.payload.id],
+        },
+        skip,
+      });
 
-    logger.info(`Found ${team?.members?.length || 0} team members.`);
+    const processingFunction = async (
+      foundUsers: ListResponse<UserResponse>,
+    ) => {
+      logger.info(
+        `Found ${foundUsers.total} users. Processing ${foundUsers.items.length} users.`,
+      );
 
-    const usersPromise = await Promise.allSettled(
-      team?.members?.map(({ id }) => userController.fetchById(id)) ?? [],
-    );
-    const fullfiledUsersPromises = usersPromise.filter(
-      ({ status }) => status === 'fulfilled',
-    ) as { value: UserResponse }[];
-    const batchRequests = fullfiledUsersPromises.map(
-      ({ value }): BatchRequest => ({
-        action: 'updateObject',
-        body: value,
-      }),
-    );
+      await algoliaClient.batch(
+        foundUsers.items.map(
+          (user): BatchRequest => ({
+            action: 'updateObject',
+            body: user,
+          }),
+        ),
+      );
 
-    logger.info(`Fetched ${batchRequests.length} users.`);
+      logger.info(`Updated ${foundUsers.total} users.`);
+    };
 
-    const algoliaResponse = await algoliaClient.batch(batchRequests);
-
-    logger.info(
-      `Updated ${batchRequests.length} users with algolia response: ${algoliaResponse}`,
-    );
+    await loopOverCustomCollection(fetchFunction, processingFunction);
   };
 
-export const handler = indexTeamsUsersHandler(
-  new Teams(new SquidexGraphql()),
+export const handler = indexTeamUsersHandler(
   new Users(new SquidexGraphql()),
   algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
 );

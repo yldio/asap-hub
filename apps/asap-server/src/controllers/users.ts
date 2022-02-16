@@ -30,6 +30,7 @@ import { FetchOptions } from '../utils/types';
 export type FetchUsersFilter = {
   role?: string[];
   labId?: string[];
+  teamId?: string[];
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
@@ -165,10 +166,19 @@ export default class Users implements UserController {
       )
       .join(' or ');
 
+    const filterTeams = (options?.filter?.teamId || [])
+      .reduce(
+        (acc: string[], teamId: string) =>
+          acc.concat([`data/teams/iv/id eq '${teamId}'`]),
+        [],
+      )
+      .join(' or ');
+
     const filterHidden = "data/role/iv ne 'Hidden'";
     const filterNonOnboarded = 'data/onboarded/iv eq true';
 
     const queryFilter = [
+      filterTeams && `(${filterTeams})`,
       filterRoles && `(${filterRoles})`,
       filterLabs && `(${filterLabs})`,
       filterNonOnboarded,

@@ -48,9 +48,7 @@ export const indexLabUsersHandler =
         ),
       );
 
-      logger.info(
-        `Updated ${foundUsers.total} users with algolia response: ${algoliaResponse}`,
-      );
+      logger.info(`Updated ${foundUsers.total} users.`);
     };
 
     await loopOverCustomCollection(fetchFunction, processingFunction);

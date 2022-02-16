@@ -69,12 +69,18 @@ describe('Users controller', () => {
         take: 12,
         skip: 2,
         search: 'first last',
-        filter: { role: ['role', 'Staff'], labId: ['lab-123', 'lab-456'] },
+        filter: {
+          role: ['role', 'Staff'],
+          labId: ['lab-123', 'lab-456'],
+          teamId: ['team-123', 'team-456'],
+        },
       };
       await usersMockGraphqlClient.fetch(fetchOptions);
 
       const filterQuery =
-        "(data/teams/iv/role eq 'role' or data/teams/iv/role eq 'Staff')" +
+        "(data/teams/iv/id eq 'team-123' or data/teams/iv/id eq 'team-456')" +
+        ' and' +
+        " (data/teams/iv/role eq 'role' or data/teams/iv/role eq 'Staff')" +
         ' and' +
         " (data/labs/iv eq 'lab-123' or data/labs/iv eq 'lab-456')" +
         ' and' +

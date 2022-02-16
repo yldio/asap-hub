@@ -39,7 +39,7 @@ export const indexLabUsersHandler =
         `Found ${foundUsers.total} users. Processing ${foundUsers.items.length} users.`,
       );
 
-      const algoliaResponse = await algoliaClient.batch(
+      await algoliaClient.batch(
         foundUsers.items.map(
           (user): BatchRequest => ({
             action: 'updateObject',

@@ -54,10 +54,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          cache: 'yarn'
       - name: Build
         env:
           NODE_ENV: 'production'
         run: |
           echo $(node --version)
-          yarn rebuild
           yarn run build

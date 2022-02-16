@@ -362,12 +362,7 @@ const serverlessConfig: AWS = {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
               source: ['asap.lab'],
-              'detail-type': [
-                'LabPublished',
-                'LabUpdated',
-                'LabCreated',
-                'LabDeleted',
-              ],
+              'detail-type': ['LabCreated', 'LabUpdated', 'LabDeleted'],
             },
           },
         },

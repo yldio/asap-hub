@@ -48,6 +48,10 @@ const getEventType = (customType: string): TeamsEventType | undefined => {
     return 'TeamsUpdated';
   }
 
+  if (customType === 'TeamsUnpublished') {
+    return 'TeamsDeleted';
+  }
+
   if (customType === 'TeamsDeleted') {
     return 'TeamsDeleted';
   }

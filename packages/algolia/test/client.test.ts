@@ -18,29 +18,29 @@ describe('Algolia Search Client', () => {
   const algoliaSearchClient = new AlgoliaSearchClient(algoliaSearchIndex);
 
   it('Should do batch on entities', async () => {
-    await algoliaSearchClient.batch([
-      {
+    await algoliaSearchClient.batch(
+      Array(100).map((value, index) => ({
         action: 'updateObject',
         body: {
-          id: 'ro-id',
+          id: `ro-id-${index}`,
           title: 'ro-title',
           sharingStatus: 'Public',
         } as ResearchOutputResponse,
-      },
-    ]);
+      })),
+    );
 
-    expect(algoliaSearchIndex.batch).toBeCalledWith([
-      {
+    expect(algoliaSearchIndex.batch).toBeCalledWith(
+      Array(100).map((value, index) => ({
         action: 'updateObject',
         body: {
           id: 'ro-id',
-          objectID: 'ro-id',
+          objectID: `ro-id-${index}`,
           title: 'ro-title',
           sharingStatus: 'Public',
           __meta: { type: 'research-output' },
         },
-      },
-    ]);
+      })),
+    );
   });
 
   it('Should save the Research Output', async () => {

@@ -46,7 +46,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
+      image: ${{ needs.setup.outputs.node-image-name }}
       credentials:
         username: AWS
         password: ${{ secrets.AWS_ECR_PASSWORD }}
@@ -58,5 +58,6 @@ jobs:
         env:
           NODE_ENV: 'production'
         run: |
+          echo $(node --version)
           source ci/env-setup.sh
           yarn build

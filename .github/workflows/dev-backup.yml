@@ -50,7 +50,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: 'us-east-1'
-      ALGOLIA_INDEX: 'asap-hub_research_outputs_dev'
+      ALGOLIA_INDEX: 'asap-hub_dev'
     steps:
       - name: Checkout
         uses: actions/checkout@v2

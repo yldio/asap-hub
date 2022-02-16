@@ -9,7 +9,7 @@ import {
 import Users, { UserController } from '../../controllers/users';
 import { LabEventType } from '../webhooks/webhook-lab';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
-import { loopOverCustomCollection } from '../../utils/migrations';
+import { loopOverCustomCollection } from '../../utils/loop-over-custom-colection';
 import logger from '../../utils/logger';
 
 export const indexLabUsersHandler =

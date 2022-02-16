@@ -6,7 +6,7 @@ import {
   LabEventType,
   SquidexLabEventType,
 } from '../../src/handlers/webhooks/webhook-lab';
-import { SquidexWebhookLabPayload } from '../../src/handlers/lab/index-labs-users-handler';
+import { SquidexWebhookLabPayload } from '../../src/handlers/lab/index-lab-users-handler';
 import { createEventBridgeEventMock } from '../helpers/events';
 
 export const getLabResponse = (): LabResponse => ({

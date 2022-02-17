@@ -408,6 +408,7 @@ __metadata:
     "@types/supertest": ^2.0.11
     "@types/uuid": ^8.3.0
     "@types/yargs": ^17.0.5
+    ajv: ^8.10.0
     algoliasearch: ^4.11.0
     apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
@@ -12113,6 +12114,18 @@ __metadata:
     require-from-string: ^2.0.2
     uri-js: ^4.2.2
   checksum: ed481c275cea8648ca527526cd26a6546462a1cc3a466ec105de1d4a8c51d9b1108a0e0b26a8fbd8e83afce6a842a043da693c4b749668724eb5f9fd7586f2d6
+  languageName: node
+  linkType: hard
+
+"ajv@npm:^8.10.0":
+  version: 8.10.0
+  resolution: "ajv@npm:8.10.0"
+  dependencies:
+    fast-deep-equal: ^3.1.1
+    json-schema-traverse: ^1.0.0
+    require-from-string: ^2.0.2
+    uri-js: ^4.2.2
+  checksum: 3594728ef1e31219ef97bfacb203d0d72db8ad5c35d6d0578e38ee453e4537c2bf927dad144bb84b0c893f661d71b58337d4643e8ee2f2a6e1d63b041c92fe82
   languageName: node
   linkType: hard
 

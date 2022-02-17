@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import { UserPatchRequest, UserResponse } from '@asap-hub/model';
+import { UserResponse } from '@asap-hub/model';
 import { framework } from '@asap-hub/services-common';
 import { isUserOnboardable } from '@asap-hub/validation';
 import Boom, { isBoom } from '@hapi/boom';
@@ -9,9 +9,12 @@ import { Response, Router } from 'express';
 import parseURI from 'parse-data-url';
 import { GroupController } from '../controllers/groups';
 import { UserController } from '../controllers/users';
-import { userUpdateSchema } from '../entities/user';
 import { permissionHandler } from '../middleware/permission-handler';
 import { FetchOptions } from '../utils/types';
+import {
+  validateUserInput,
+  validateUserParameters,
+} from '../validation/user.validation';
 
 export const userPublicRouteFactory = (
   userController: UserController,
@@ -161,17 +164,9 @@ export const userRouteFactory = (
   });
 
   userRoutes.patch('/users/:userId', async (req, res) => {
-    const { userId } = framework.validate(
-      'parameters',
-      req.params,
-      paramSchema,
-    );
+    const { userId } = validateUserParameters(req.params);
 
-    const update = framework.validate(
-      'payload',
-      req.body,
-      userUpdateSchema,
-    ) as UserPatchRequest;
+    const payload = validateUserInput(req.body);
 
     // user is trying to update someone else
     if (req.loggedInUser!.id !== userId) {
@@ -180,15 +175,15 @@ export const userRouteFactory = (
 
     // user trying to change a team he doesn't belong to
     if (
-      update.teams &&
-      !update.teams.every(({ id }) =>
+      payload.teams &&
+      !payload.teams.every(({ id }) =>
         req.loggedInUser!.teams.find((t) => t.id === id),
       )
     ) {
       throw Boom.forbidden();
     }
 
-    const { onboarded, ...userProfileUpdate } = update;
+    const { onboarded, ...userProfileUpdate } = payload;
 
     const result = await userController.update(userId, userProfileUpdate);
 

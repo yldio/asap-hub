@@ -16,7 +16,7 @@ export const Normal = () => (
 export const Empty = () => <LabeledDateField title="Creation Date" />;
 export const Invalid = () => (
   <LabeledDateField
-    title="Creation Date"
+    title={text('Title', 'Creation Date')}
     value={new Date()}
     customValidationMessage={text(
       'Validation Error Message',

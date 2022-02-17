@@ -1,6 +1,8 @@
 import { fireEvent } from '@testing-library/dom';
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
+import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import TeamCreateOutputFormSharingCard from '../TeamCreateOutputFormSharingCard';
 
 const props: ComponentProps<typeof TeamCreateOutputFormSharingCard> = {
@@ -12,7 +14,7 @@ const props: ComponentProps<typeof TeamCreateOutputFormSharingCard> = {
   type: 'Article',
 };
 it('renders the card with provided values', () => {
-  const { getByDisplayValue, getByText } = render(
+  const { getByDisplayValue } = render(
     <TeamCreateOutputFormSharingCard
       {...props}
       type="Article"
@@ -56,4 +58,33 @@ it.each`
   const input = getByLabelText(label);
   fireEvent.change(input, { target: { value: 'test' } });
   expect(onChangeFn).toHaveBeenLastCalledWith('test');
+});
+
+it('triggers an on change for type', async () => {
+  const onChangeFn = jest.fn();
+
+  const { getByLabelText } = render(
+    <TeamCreateOutputFormSharingCard
+      {...props}
+      type="Article"
+      onChangeSubtypes={onChangeFn}
+    />,
+  );
+
+  userEvent.type(getByLabelText(/type/i), 'Preprint');
+  fireEvent.keyDown(getByLabelText(/type/i), {
+    keyCode: ENTER_KEYCODE,
+  });
+
+  expect(onChangeFn).toHaveBeenCalledWith(['Preprint']);
+});
+
+it('shows the custom no options message for type', async () => {
+  const { getByLabelText, getByText } = render(
+    <TeamCreateOutputFormSharingCard {...props} type="Article" />,
+  );
+
+  userEvent.type(getByLabelText(/type/i), 'asdflkjasdflkj');
+
+  expect(getByText('Sorry, no types match asdflkjasdflkj')).toBeVisible();
 });

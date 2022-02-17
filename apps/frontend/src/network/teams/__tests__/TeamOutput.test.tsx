@@ -18,6 +18,7 @@ import { refreshTeamState } from '../state';
 import TeamOutput, { paramOutputTypeToResearchOutputType } from '../TeamOutput';
 
 jest.mock('../api');
+const ENTER_KEYCODE = 13;
 
 const mockCreateTeamResearchOutput =
   createTeamResearchOutput as jest.MockedFunction<
@@ -68,6 +69,10 @@ it('can submit a form when form data is valid', async () => {
   fireEvent.change(screen.getByLabelText(/description/i), {
     target: { value: 'example description' },
   });
+  userEvent.type(screen.getByLabelText(/type/i), 'Animal Model');
+  fireEvent.keyDown(screen.getByLabelText(/type/i), {
+    keyCode: ENTER_KEYCODE,
+  });
   const button = screen.getByRole('button', { name: /Share/i });
 
   userEvent.click(button);
@@ -85,6 +90,7 @@ it('can submit a form when form data is valid', async () => {
         link: 'http://example.com',
         title: 'example title',
         description: 'example description',
+        subTypes: ['Animal Model'],
       },
       expect.anything(),
     );

@@ -44,7 +44,7 @@ jobs:
         run: yarn test --coverage --maxWorkers=3
   build:
     needs: setup
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
       credentials:

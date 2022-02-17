@@ -1,16 +1,27 @@
 import { USER_SOCIAL_WEBSITE } from '@asap-hub/validation';
-import { ResearchOutputPostRequest } from '@asap-hub/model';
+import {
+  ResearchOutputPostRequest,
+  ResearchOutputSubtype,
+  researchOutputTypeToSubtype,
+} from '@asap-hub/model';
 
 import { globeIcon } from '../icons';
-import { LabeledTextArea, LabeledTextField, FormCard } from '../molecules';
+import {
+  LabeledTextArea,
+  LabeledTextField,
+  FormCard,
+  LabeledDropdown,
+} from '../molecules';
+import { noop } from '../utils';
 
 type TeamCreateOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
-  'link' | 'title' | 'description'
+  'link' | 'title' | 'description' | 'subTypes' | 'type'
 > & {
-  onChangeLink: (newValue: string) => void;
-  onChangeTitle: (newValue: string) => void;
-  onChangeDescription: (newValue: string) => void;
+  onChangeLink?: (newValue: string) => void;
+  onChangeTitle?: (newValue: string) => void;
+  onChangeDescription?: (newValue: string) => void;
+  onChangeSubtypes?: (newValue: ResearchOutputSubtype[]) => void;
   isSaving: boolean;
 };
 
@@ -20,9 +31,12 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
     link,
     title,
     description,
-    onChangeDescription,
-    onChangeLink,
-    onChangeTitle,
+    type,
+    subTypes,
+    onChangeDescription = noop,
+    onChangeLink = noop,
+    onChangeTitle = noop,
+    onChangeSubtypes = noop,
   }) => (
     <FormCard title="What are you sharing?">
       <LabeledTextField
@@ -38,6 +52,27 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
         required
         labelIndicator={globeIcon}
         placeholder="https://example.com"
+      />
+      <LabeledDropdown<ResearchOutputSubtype>
+        title="Type"
+        subtitle="(required)"
+        options={[...researchOutputTypeToSubtype[type].values()].map(
+          (option) => ({
+            value: option,
+            label: option,
+          }),
+        )}
+        onChange={(subType) => onChangeSubtypes([subType])}
+        getValidationMessage={() =>
+          'Please enter a valid URL, starting with http://'
+        }
+        value={subTypes[0] ?? ''}
+        enabled={!isSaving}
+        required
+        noOptionsMessage={(option) =>
+          `Sorry, no types match ${option.inputValue}`
+        }
+        placeholder="Choose a type"
       />
       <LabeledTextField
         title="Title"

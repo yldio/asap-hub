@@ -56,8 +56,9 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
     asapFunded: undefined,
     sharingStatus: 'Network Only',
     usedInPublication: undefined,
-    addedDate: new Date().toISOString(),
     description: 'example',
+    subTypes: [],
+    addedDate: new Date().toISOString(),
     tags: [],
   };
 
@@ -70,7 +71,11 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
           tagSuggestions={researchSuggestions}
           type={type}
           onSave={(output) =>
-            createResearchOutput({ ...defaultOutput, ...output })
+            createResearchOutput({
+              ...defaultOutput,
+              ...output,
+              addedDate: new Date().toISOString(),
+            })
           }
         />
       </Frame>

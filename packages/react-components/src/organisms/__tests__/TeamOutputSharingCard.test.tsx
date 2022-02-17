@@ -8,9 +8,8 @@ const props: ComponentProps<typeof TeamCreateOutputFormSharingCard> = {
   isSaving: false,
   title: '',
   link: '',
-  onChangeDescription: jest.fn(),
-  onChangeLink: jest.fn(),
-  onChangeTitle: jest.fn(),
+  subTypes: [],
+  type: 'Article',
 };
 it('renders the card with provided values', () => {
   const { getByDisplayValue } = render(

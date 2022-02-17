@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "start-storybook --quiet -c config -p 3001",
-    "build": "build-storybook --debug-webpack -c config -o build",
+    "build": "build-storybook --quiet -c config -o build",
     "typecheck": "tsc"
   },
   "dependencies": {

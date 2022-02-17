@@ -3,7 +3,6 @@ import { withKnobs } from '@storybook/addon-knobs';
 import { addDecorator, addParameters } from '@storybook/react';
 
 
-addDecorator(withKnobs({ escapeHTML: false }));
 addDecorator((story) => (
   <>
     <GlobalStyles />
@@ -11,6 +10,7 @@ addDecorator((story) => (
   </>
 ));
 
+addDecorator(withKnobs({ escapeHTML: false }));
 addParameters({
   viewport: {
     viewports: {

@@ -44,12 +44,12 @@ jobs:
         run: yarn test --coverage --maxWorkers=3
   build:
     needs: setup
-    runs-on: ubuntu-18.04
-    # container:
-    #   image: ${{ needs.setup.outputs.integration-image-name }}
-    #   credentials:
-    #     username: AWS
-    #     password: ${{ secrets.AWS_ECR_PASSWORD }}
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: AWS
+        password: ${{ secrets.AWS_ECR_PASSWORD }}
 
     steps:
       - name: Checkout
@@ -72,5 +72,6 @@ jobs:
           REACT_APP_SENTRY_DSN: 'test'
         run: |
           echo $(node --version)
+          ls -la
           echo "run build"
           yarn run build

@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { render } from '@testing-library/react';
-import { ExternalAuthor, UserResponse } from '@asap-hub/model';
+import { ExternalAuthorResponse, UserResponse } from '@asap-hub/model';
 
 import UsersList from '../UsersList';
 import { userPlaceholderIcon } from '../../icons';
@@ -21,7 +21,7 @@ it('falls back to a placeholder icon for an external user', () => {
       users={[
         {
           displayName: 'John Doe',
-        } as ExternalAuthor,
+        } as ExternalAuthorResponse,
       ]}
     />,
   );
@@ -36,7 +36,7 @@ it('does not link external users', () => {
       users={[
         {
           displayName: 'John Doe',
-        } as ExternalAuthor,
+        } as ExternalAuthorResponse,
       ]}
     />,
   );
@@ -52,7 +52,7 @@ describe('maximum users', () => {
           () =>
             ({
               displayName: 'John Doe',
-            } as ExternalAuthor),
+            } as ExternalAuthorResponse),
         )}
       />,
     );
@@ -67,7 +67,7 @@ describe('maximum users', () => {
           () =>
             ({
               displayName: 'John Doe',
-            } as ExternalAuthor),
+            } as ExternalAuthorResponse),
         )}
       />,
     );

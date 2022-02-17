@@ -1,6 +1,7 @@
 import { TeamResponse } from './team';
 import { ListResponse } from './common';
 import { UserResponse } from './user';
+import { ExternalAuthorResponse } from './external-author';
 import { Lab } from './lab';
 
 export const researchOutputTypes = [
@@ -80,10 +81,8 @@ export const sharingStatuses = ['Public', 'Network Only'] as const;
 
 export type ResearchOutputSharingStatus = typeof sharingStatuses[number];
 
-export type ExternalAuthor = Pick<UserResponse, 'displayName' | 'orcid'>;
-
 export const isInternalAuthor = (
-  author: ExternalAuthor | UserResponse,
+  author: ExternalAuthorResponse | UserResponse,
 ): author is UserResponse => (author as UserResponse).id !== undefined;
 
 export type ResearchOutputResponse = {
@@ -109,7 +108,7 @@ export type ResearchOutputResponse = {
   readonly asapFunded?: boolean;
   readonly usedInPublication?: boolean;
 
-  readonly authors: ReadonlyArray<UserResponse | ExternalAuthor>;
+  readonly authors: ReadonlyArray<UserResponse | ExternalAuthorResponse>;
   readonly teams: ReadonlyArray<Pick<TeamResponse, 'id' | 'displayName'>>;
   readonly contactEmails: string[];
 

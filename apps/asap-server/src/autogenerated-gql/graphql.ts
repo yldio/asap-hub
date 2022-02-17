@@ -5423,6 +5423,43 @@ export type FetchGroupCalendarQuery = {
   }>;
 };
 
+export type ExternalAuthorsContentFragment = Pick<
+  ExternalAuthors,
+  'id' | 'created' | 'lastModified' | 'version'
+> & { flatData: Pick<ExternalAuthorsFlatDataDto, 'name' | 'orcid'> };
+
+export type FetchExternalAuthorQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchExternalAuthorQuery = {
+  findExternalAuthorsContent: Maybe<
+    Pick<ExternalAuthors, 'id' | 'created' | 'lastModified' | 'version'> & {
+      flatData: Pick<ExternalAuthorsFlatDataDto, 'name' | 'orcid'>;
+    }
+  >;
+};
+
+export type FetchExternalAuthorsQueryVariables = Exact<{
+  top: Maybe<Scalars['Int']>;
+  skip: Maybe<Scalars['Int']>;
+}>;
+
+export type FetchExternalAuthorsQuery = {
+  queryExternalAuthorsContentsWithTotal: Maybe<
+    Pick<ExternalAuthorsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<
+            ExternalAuthors,
+            'id' | 'created' | 'lastModified' | 'version'
+          > & { flatData: Pick<ExternalAuthorsFlatDataDto, 'name' | 'orcid'> }
+        >
+      >;
+    }
+  >;
+};
+
 export type GroupsContentFragment = Pick<
   Groups,
   'id' | 'created' | 'lastModified' | 'version'
@@ -8316,6 +8353,39 @@ export const EventContentFragmentDoc = {
     ...GroupsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<EventContentFragment, unknown>;
+export const ExternalAuthorsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ExternalAuthorsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ExternalAuthors' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastModified' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ExternalAuthorsContentFragment, unknown>;
 export const NewsFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -9966,6 +10036,145 @@ export const FetchGroupCalendarDocument = {
 } as unknown as DocumentNode<
   FetchGroupCalendarQuery,
   FetchGroupCalendarQueryVariables
+>;
+export const FetchExternalAuthorDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchExternalAuthor' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findExternalAuthorsContent' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'ExternalAuthorsContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ExternalAuthorsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchExternalAuthorQuery,
+  FetchExternalAuthorQueryVariables
+>;
+export const FetchExternalAuthorsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchExternalAuthors' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'top' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'queryExternalAuthorsContentsWithTotal',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'top' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderby' },
+                value: {
+                  kind: 'StringValue',
+                  value: 'data/name/iv',
+                  block: false,
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ExternalAuthorsContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ExternalAuthorsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchExternalAuthorsQuery,
+  FetchExternalAuthorsQueryVariables
 >;
 export const FetchGroupsDocument = {
   kind: 'Document',

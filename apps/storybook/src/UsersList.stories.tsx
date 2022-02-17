@@ -1,5 +1,5 @@
 import { createListUserResponse } from '@asap-hub/fixtures';
-import { ExternalAuthor } from '@asap-hub/model';
+import { ExternalAuthorResponse } from '@asap-hub/model';
 import { UsersList } from '@asap-hub/react-components';
 import { number } from '@storybook/addon-knobs';
 
@@ -19,7 +19,7 @@ export const External = () => (
     users={Array(number('Number of Users', 3))
       .fill(null)
       .map(
-        (_, i): ExternalAuthor => ({
+        (_, i): ExternalAuthorResponse => ({
           displayName: `John Number ${i + 1}`,
         }),
       )}

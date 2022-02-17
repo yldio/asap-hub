@@ -45,11 +45,11 @@ jobs:
   build:
     needs: setup
     runs-on: ubuntu-18.04
-    container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
-      credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+    # container:
+    #   image: ${{ needs.setup.outputs.integration-image-name }}
+    #   credentials:
+    #     username: AWS
+    #     password: ${{ secrets.AWS_ECR_PASSWORD }}
 
     steps:
       - name: Checkout
@@ -72,13 +72,5 @@ jobs:
           REACT_APP_SENTRY_DSN: 'test'
         run: |
           echo $(node --version)
-          echo "Building typecheck..."
-          yarn build:typecheck
-          echo "Babel..."
-          yarn build:babel
-          echo "typechecking..."
-          yarn workspaces foreach -vpt run typecheck
-          echo "building"
-          yarn workspaces foreach -vpt run build
           echo "run build"
           yarn run build

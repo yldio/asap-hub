@@ -2649,15 +2649,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "ajv",
-        "npm:6.12.4"
-      ],
-      [
-        "ajv-errors",
-        "virtual:2b49db17d1e4e8854e6e7543c07eb7bc19ec9da65a1b99b9cb28e764846d419e5ecd6e057ad65249f2b928862ffd70dbf8a7c79643ccdd7c1c40cab5b59aa03f#npm:1.0.1"
-      ],
-      [
-        "ajv-keywords",
-        "virtual:f84d18c473fad3c01e1cf352f81ad13de804ca40da5bf6e752464a2e78dcb097ad579b06da5ff33a55ba9957fb9c74909b99fc5e215420a3f9b5dc87ad71363b#npm:3.5.2"
+        "npm:8.10.0"
       ],
       [
         "algoliasearch",
@@ -10333,6 +10325,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/supertest", "npm:2.0.11"],
             ["@types/uuid", "npm:8.3.0"],
             ["@types/yargs", "npm:17.0.5"],
+            ["ajv", "npm:8.10.0"],
             ["algoliasearch", "npm:4.11.0"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
@@ -28466,6 +28459,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/ajv-npm-7.0.3-545a75c2d2-ed481c275c.zip/node_modules/ajv/",
           "packageDependencies": [
             ["ajv", "npm:7.0.3"],
+            ["fast-deep-equal", "npm:3.1.1"],
+            ["json-schema-traverse", "npm:1.0.0"],
+            ["require-from-string", "npm:2.0.2"],
+            ["uri-js", "npm:4.2.2"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:8.10.0", {
+          "packageLocation": "./.yarn/cache/ajv-npm-8.10.0-951733a67b-3594728ef1.zip/node_modules/ajv/",
+          "packageDependencies": [
+            ["ajv", "npm:8.10.0"],
             ["fast-deep-equal", "npm:3.1.1"],
             ["json-schema-traverse", "npm:1.0.0"],
             ["require-from-string", "npm:2.0.2"],

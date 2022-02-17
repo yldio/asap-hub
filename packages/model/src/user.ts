@@ -145,7 +145,7 @@ export interface UserPatchRequest {
   biography?: string;
   jobTitle?: string;
   institution?: string;
-  degree?: UserDegree;
+  degree?: UserDegree | '';
   country?: string;
   city?: string;
   expertiseAndResourceTags?: string[];

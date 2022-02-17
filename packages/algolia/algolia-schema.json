@@ -24,7 +24,9 @@
     "country",
     "orcid",
     "expertiseAndResourceTags",
-    "email"
+    "email",
+    "contactEmail",
+    "id"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,

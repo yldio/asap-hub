@@ -74,7 +74,9 @@ jobs:
           echo $(node --version)
           ls -la apps/storybook
           echo "run build on container"
-          yarn run build
+          # yarn run build
+          du
+          yarn workspace @asap-hub/storybook build
   build-no-container:
     needs: setup
     runs-on: ubuntu-latest
@@ -102,5 +104,8 @@ jobs:
           echo $(node --version)
           ls -la apps/storybook
           echo "run build on no container"
-          yarn run build
+          # yarn run build
+          du
+          yarn workspace @asap-hub/storybook build
+
 

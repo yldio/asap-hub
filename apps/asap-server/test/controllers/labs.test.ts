@@ -18,17 +18,17 @@ describe('labs controller', () => {
   });
   describe('fetch', () => {
     it('Should fetch labs from squidex graphql', async () => {
-      const result = await labsMockGraphql.fetch();
+      const result = await labsMockGraphql.fetch({});
       expect(result).toMatchObject(getLabsResponse());
     });
     it('Should return an empty array when the client returns null', async () => {
       const squidexGraphqlResponse = getSquidexLabsGraphqlResponse();
-      squidexGraphqlResponse.queryLabsContents = null;
+      squidexGraphqlResponse.queryLabsContentsWithTotal = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
       );
-      const result = await labs.fetch();
-      expect(result).toMatchObject([]);
+      const result = await labs.fetch({});
+      expect(result).toMatchObject({ items: [], total: 0 });
     });
   });
 });

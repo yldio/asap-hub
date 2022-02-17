@@ -1,11 +1,11 @@
 import {
+  ListLabsResponse,
   ListTeamResponse,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
-import { LabsResponse } from '@asap-hub/model/src/lab';
 import {
   createListApiUrl,
   createSentryHeaders,
@@ -92,8 +92,11 @@ export const createTeamResearchOutput = async (
   return resp.json();
 };
 
-export const getLabs = async (authorization: string): Promise<LabsResponse> => {
-  const resp = await fetch(`${API_BASE_URL}/labs`, {
+export const getLabs = async (
+  options: GetListOptions,
+  authorization: string,
+): Promise<ListLabsResponse> => {
+  const resp = await fetch(createListApiUrl('labs', options).toString(), {
     method: 'GET',
     headers: {
       authorization,

@@ -10,6 +10,7 @@ import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 const props: ComponentProps<typeof TeamCreateOutputForm> = {
   tagSuggestions: [],
   type: 'Article',
+  getLabSuggestions: jest.fn(),
 };
 
 const clickShare = () => {

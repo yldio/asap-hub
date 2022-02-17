@@ -16,8 +16,8 @@ import { Button } from '../atoms';
 import { perRem } from '../pixels';
 import { noop } from '../utils';
 
-import { ComplexValue } from '../atoms/MultiSelect';
 import TeamCreateOutputContributorsCard from './TeamCreateOutputContributorsCard';
+import { OptionValue } from '../atoms/AsyncMultiSelect';
 
 const contentStyles = css({
   display: 'grid',
@@ -37,9 +37,9 @@ type TeamCreateOutputFormProps = Pick<
   ComponentProps<typeof TeamCreateOutputExtraInformationCard>,
   'tagSuggestions'
 > & {
-  labSuggestions: ComponentProps<
+  getLabSuggestions: ComponentProps<
     typeof TeamCreateOutputContributorsCard
-  >['suggestions'];
+  >['loadOptions'];
   onSave?: (
     output: Partial<ResearchOutputPostRequest>,
   ) => Promise<Pick<ResearchOutputResponse, 'id'>>;
@@ -50,18 +50,17 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   onSave = noop,
   tagSuggestions,
   type,
-  labSuggestions,
+  getLabSuggestions,
 }) => {
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
   const [subTypes, setSubtypes] = useState<
     ResearchOutputPostRequest['subTypes']
   >([]);
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>('');
-  const [labs, setLabs] = useState<ComplexValue[]>([]);
+  const [labs, setLabs] = useState<OptionValue[]>([]);
   const [description, setDescription] =
     useState<ResearchOutputPostRequest['description']>('');
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>('');
-
   return (
     <Form
       dirty={
@@ -79,7 +78,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           title,
           subTypes,
           labs: labs.map(
-            ({ value, label }: ComplexValue): Lab => ({
+            ({ value, label }: OptionValue): Lab => ({
               name: label,
               id: value,
             }),
@@ -109,7 +108,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           />
 
           <TeamCreateOutputContributorsCard
-            suggestions={labSuggestions}
+            loadOptions={getLabSuggestions}
             values={labs}
             onChange={setLabs}
           />

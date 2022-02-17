@@ -1,6 +1,6 @@
 import { EventBridgeEvent } from 'aws-lambda';
 
-import { LabResponse } from '@asap-hub/model';
+import { LabResponse, ListLabsResponse } from '@asap-hub/model';
 import { Lab, WebhookPayload } from '@asap-hub/squidex';
 import {
   LabEventType,
@@ -74,48 +74,30 @@ export const updateEvent: LabEventGenerator = (id: string) =>
   >;
 
 export const getSquidexGraphqlLab = () => ({
-  flatData: { name: 'Manzini' },
-  id: 'a8a57909-d901-4d2d-ba91-20f48738bbad',
+  flatData: { name: 'Simpson' },
+  id: '12345',
 });
 
 export const getSquidexGraphqlLabs = () => [
   {
-    flatData: { name: 'Manzini' },
-    id: 'a8a57909-d901-4d2d-ba91-20f48738bbad',
-  },
-  {
-    flatData: { name: 'Alessi' },
-    id: '6532f0f3-9bb5-4eed-9685-0ea7b59c1d13',
-  },
-  {
-    flatData: { name: 'Olsen' },
-    id: '859bd247-1e49-4c88-a2c0-585b6e13ad05',
-  },
-  {
-    flatData: { name: 'Johnson' },
-    id: 'f2235d49-af87-4834-8f0f-57cc1a4354a9',
-  },
-  {
-    flatData: { name: 'Campbell' },
-    id: 'a61a6e09-29f3-46f4-99db-b03e50dce6b3',
-  },
-  {
-    flatData: { name: 'mike' },
-    id: 'cd7be402-84d7-4d21-a360-82e2695f2dd9',
+    flatData: { name: 'Simpson' },
+    id: '12345',
   },
 ];
 
-export const getLabsResponse = (): LabsResponse => [
-  {
-    name: 'Manzini',
-    id: 'a8a57909-d901-4d2d-ba91-20f48738bbad',
-  },
-  {
-    name: 'Manzini',
-    id: 'a8a57909-d901-4d2d-ba91-20f48738bbad',
-  },
-];
+export const getLabsResponse = (): ListLabsResponse => ({
+  total: 1,
+  items: [
+    {
+      name: 'Simpson',
+      id: '12345',
+    },
+  ],
+});
 
 export const getSquidexLabsGraphqlResponse = (): FetchLabsQuery => ({
-  queryLabsContents: getSquidexGraphqlLabs(),
+  queryLabsContentsWithTotal: {
+    total: getSquidexGraphqlLabs().length,
+    items: getSquidexGraphqlLabs(),
+  },
 });

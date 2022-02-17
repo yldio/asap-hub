@@ -1,5 +1,8 @@
+import { ListResponse } from './common';
+
 export interface LabResponse {
   id: string;
   name: string;
 }
-export type LabsResponse = ReadonlyArray<Lab>;
+
+export type ListLabsResponse = ListResponse<LabResponse>;

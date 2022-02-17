@@ -33,7 +33,9 @@ const documents = {
     graphql.FetchGroupsDocument,
   '\n  query FetchGroup($id: String!) {\n    findGroupsContent(id: $id) {\n      ...GroupsContent\n    }\n  }\n  \n':
     graphql.FetchGroupDocument,
-  '\n  query FetchLabs {\n    queryLabsContents {\n      flatData {\n        name\n      }\n      id\n    }\n  }\n':
+  '\n  fragment LabsContent on Labs {\n    id\n    flatData {\n      name\n    }\n  }\n':
+    graphql.LabsContentFragmentDoc,
+  '\n  query FetchLabs($top: Int, $skip: Int, $filter: String) {\n    queryLabsContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: "data/name/iv"\n    ) {\n      total\n      items {\n        ...LabsContent\n      }\n    }\n  }\n  \n':
     graphql.FetchLabsDocument,
   '\n  fragment News on NewsAndEvents {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      title\n      shortText\n      text\n      type\n      thumbnail {\n        id\n      }\n      link\n      linkText\n    }\n  }\n':
     graphql.NewsFragmentDoc,
@@ -103,8 +105,11 @@ export function gql(
   source: '\n  query FetchGroup($id: String!) {\n    findGroupsContent(id: $id) {\n      ...GroupsContent\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchGroup($id: String!) {\n    findGroupsContent(id: $id) {\n      ...GroupsContent\n    }\n  }\n  \n'];
 export function gql(
-  source: '\n  query FetchLabs {\n    queryLabsContents {\n      flatData {\n        name\n      }\n      id\n    }\n  }\n',
-): typeof documents['\n  query FetchLabs {\n    queryLabsContents {\n      flatData {\n        name\n      }\n      id\n    }\n  }\n'];
+  source: '\n  fragment LabsContent on Labs {\n    id\n    flatData {\n      name\n    }\n  }\n',
+): typeof documents['\n  fragment LabsContent on Labs {\n    id\n    flatData {\n      name\n    }\n  }\n'];
+export function gql(
+  source: '\n  query FetchLabs($top: Int, $skip: Int, $filter: String) {\n    queryLabsContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: "data/name/iv"\n    ) {\n      total\n      items {\n        ...LabsContent\n      }\n    }\n  }\n  \n',
+): typeof documents['\n  query FetchLabs($top: Int, $skip: Int, $filter: String) {\n    queryLabsContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: "data/name/iv"\n    ) {\n      total\n      items {\n        ...LabsContent\n      }\n    }\n  }\n  \n'];
 export function gql(
   source: '\n  fragment News on NewsAndEvents {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      title\n      shortText\n      text\n      type\n      thumbnail {\n        id\n      }\n      link\n      linkText\n    }\n  }\n',
 ): typeof documents['\n  fragment News on NewsAndEvents {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      title\n      shortText\n      text\n      type\n      thumbnail {\n        id\n      }\n      link\n      linkText\n    }\n  }\n'];

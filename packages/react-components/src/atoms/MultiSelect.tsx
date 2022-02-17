@@ -6,7 +6,7 @@ import { reactMultiSelectStyles } from '../select';
 import { noop } from '../utils';
 import { crossIcon } from '../icons';
 
-const MultiValueRemove = (
+export const MultiValueRemove = (
   props: ComponentProps<typeof components.MultiValueRemove>,
 ) => (
   <components.MultiValueRemove {...props}>
@@ -17,8 +17,6 @@ const MultiValueRemove = (
 const containerStyles = css({
   flexBasis: '100%',
 });
-
-export type ComplexValue = { value: string; label: string };
 
 type MultiSelectProps = {
   readonly customValidationMessage?: string;
@@ -34,16 +32,8 @@ export type SimpleValuesMultiSelecletProps = MultiSelectProps & {
   readonly suggestions?: ReadonlyArray<string>;
   readonly isSimple?: true;
 };
-export type ComplexValuesMultiSelecletProps = MultiSelectProps & {
-  readonly values?: ComplexValue[];
-  readonly onChange?: (newValues: ComplexValue[]) => void;
-  readonly suggestions?: ReadonlyArray<ComplexValue>;
-  readonly isSimple: false;
-};
 
-const MultiSelect: FC<
-  SimpleValuesMultiSelecletProps | ComplexValuesMultiSelecletProps
-> = ({
+const MultiSelect: FC<SimpleValuesMultiSelecletProps> = ({
   customValidationMessage = '',
 
   id,
@@ -58,15 +48,10 @@ const MultiSelect: FC<
   const [inputValues, setInputValues] = useState(values);
   const [validationMsg, setValidationMsg] = useState('');
 
-  const options: ComplexValue[] | undefined = suggestions?.map(
-    (suggestion: string | ComplexValue) =>
-      isSimple
-        ? ({
-            value: suggestion,
-            label: suggestion,
-          } as ComplexValue)
-        : (suggestion as ComplexValue),
-  );
+  const options = suggestions?.map((suggestion: string) => ({
+    value: suggestion,
+    label: suggestion,
+  }));
 
   // This is to handle a bug with Select where the right click would make it impossoble to write
   let inputRef: Select<OptionTypeBase, true> | null;
@@ -84,7 +69,7 @@ const MultiSelect: FC<
         }}
         isMulti
         options={options}
-        value={inputValues.map((value: string | ComplexValue) =>
+        value={inputValues.map((value: string) =>
           isSimple
             ? {
                 value,

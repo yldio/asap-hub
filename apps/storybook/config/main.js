@@ -7,6 +7,15 @@ module.exports = {
     require.resolve('storybook-addon-designs/register'),
 
     require.resolve('@storybook/addon-viewport/register'),
+    {
+      name: "@storybook/addon-postcss",
+      options: {
+        postcssLoaderOptions: {
+          implementation: require("postcss"),
+        },
+      },
+    },
+
   ],
   webpackFinal: async (config, { configType }) => {
     // config.module.rules.push({

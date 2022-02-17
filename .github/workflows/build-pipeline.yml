@@ -72,4 +72,13 @@ jobs:
           REACT_APP_SENTRY_DSN: 'test'
         run: |
           echo $(node --version)
+          echo "Building typecheck..."
+          yarn build:typecheck
+          echo "Babel..."
+          yarn build:babel
+          echo "typechecking..."
+          yarn workspaces foreach -vpt run typecheck
+          echo "building"
+          yarn workspaces foreach -vpt run build
+          echo "run build"
           yarn run build

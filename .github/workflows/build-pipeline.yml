@@ -72,5 +72,7 @@ jobs:
           REACT_APP_SENTRY_DSN: 'test'
         run: |
           echo $(node --version)
-          echo "run build"
+          ls -la apps/storybook
+          ls -la apps/storybook/node_modules
+          echo "run build on container"
           yarn run build

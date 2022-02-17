@@ -44,7 +44,7 @@ jobs:
         run: yarn test --coverage --maxWorkers=3
   build:
     needs: setup
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
       credentials:
@@ -72,13 +72,6 @@ jobs:
           REACT_APP_SENTRY_DSN: 'test'
         run: |
           echo $(node --version)
-          echo "Building typecheck..."
-          yarn build:typecheck
-          echo "Babel..."
-          yarn build:babel
-          echo "typechecking..."
-          yarn workspaces foreach -vpt run typecheck
-          echo "building"
-          yarn workspaces foreach -vpt run build
+          ls -la
           echo "run build"
           yarn run build

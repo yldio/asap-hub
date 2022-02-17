@@ -408,6 +408,183 @@ describe('/users/ route', () => {
 
         expect(response.status).toBe(400);
       });
+
+      test.each([
+        'contactEmail',
+        'firstName',
+        'lastName',
+        'jobTitle',
+        'degree',
+        'institution',
+        'biography',
+        'country',
+        'city',
+        'expertiseAndResourceDescription',
+        'researchInterests',
+        'responsibilities',
+        'reachOut',
+      ])(
+        'Should be able to provide an empty string for the %s parameter ',
+        async (parameter) => {
+          const response = await supertest(appWithMockedAuth)
+            .patch(`/users/${userId}`)
+            .send({ [parameter]: '' });
+
+          expect(response.status).toBe(200);
+        },
+      );
+
+      test.each([
+        'contactEmail',
+        'firstName',
+        'lastName',
+        'jobTitle',
+        'degree',
+        'institution',
+        'biography',
+        'country',
+        'city',
+        'expertiseAndResourceDescription',
+        'researchInterests',
+        'responsibilities',
+        'reachOut',
+      ])(
+        'Should not be able to provide null for the %s parameter ',
+        async (parameter) => {
+          const response = await supertest(appWithMockedAuth)
+            .patch(`/users/${userId}`)
+            .send({ [parameter]: null });
+
+          expect(response.status).toBe(400);
+        },
+      );
+
+      test.each([
+        'contactEmail',
+        'firstName',
+        'lastName',
+        'jobTitle',
+        'institution',
+        'biography',
+        'country',
+        'city',
+        'expertiseAndResourceDescription',
+        'researchInterests',
+        'responsibilities',
+        'reachOut',
+      ])(
+        'Should be able to provide a random string for the %s parameter ',
+        async (parameter) => {
+          const response = await supertest(appWithMockedAuth)
+            .patch(`/users/${userId}`)
+            .send({ [parameter]: 'some random string' });
+
+          expect(response.status).toBe(200);
+        },
+      );
+
+      test.each(['expertiseAndResourceTags', 'questions'])(
+        'Should be able to provide an array of strings for the %s parameter ',
+        async (parameter) => {
+          const response = await supertest(appWithMockedAuth)
+            .patch(`/users/${userId}`)
+            .send({ [parameter]: ['some random', 'string'] });
+
+          expect(response.status).toBe(200);
+        },
+      );
+
+      test.each(['expertiseAndResourceTags', 'questions'])(
+        'Should not accept a string for the %s parameter ',
+        async (parameter) => {
+          const response = await supertest(appWithMockedAuth)
+            .patch(`/users/${userId}`)
+            .send({ [parameter]: 'random string' });
+
+          expect(response.status).toBe(400);
+        },
+      );
+
+      test('Should be able to provide a list of objects containing IDs for the teams parameter ', async () => {
+        const response = await supertest(appWithMockedAuth)
+          .patch(`/users/${userId}`)
+          .send({ teams: [{ id: 'team-id-1' }, { id: 'team-id-2' }] });
+
+        expect(response.status).toBe(200);
+      });
+
+      test('Should not accept a list of arbitrary objects for the teams parameter ', async () => {
+        const response = await supertest(appWithMockedAuth)
+          .patch(`/users/${userId}`)
+          .send({
+            teams: [
+              { something: 'something' },
+              { anything: 'anything at all' },
+            ],
+          });
+
+        expect(response.status).toBe(400);
+      });
+
+      test('Should be able to provide the right object for the social parameter ', async () => {
+        const response = await supertest(appWithMockedAuth)
+          .patch(`/users/${userId}`)
+          .send({
+            social: {
+              website1: 'some string',
+              website2: 'some string',
+              linkedIn: 'some string',
+              researcherId: 'some string',
+              twitter: 'some string',
+              github: 'some string',
+              googleScholar: 'some string',
+              researchGate: 'some string',
+            },
+          });
+
+        expect(response.status).toBe(200);
+      });
+
+      test('Should be able to provide a string of 250 characters for the reachOut', async () => {
+        const response = await supertest(appWithMockedAuth)
+          .patch(`/users/${userId}`)
+          .send({
+            reachOut: 'x'.repeat(250),
+          });
+
+        expect(response.status).toBe(200);
+      });
+
+      test('Should not accept a string of over 250 characters for the reachOut', async () => {
+        const response = await supertest(appWithMockedAuth)
+          .patch(`/users/${userId}`)
+          .send({
+            reachOut: 'x'.repeat(251),
+          });
+
+        expect(response.status).toBe(400);
+      });
+
+      describe('degree', () => {
+        test.each(['BA', 'BSc', 'MSc', 'PhD', 'MD', 'PhD, MD'])(
+          'Should accept the %s degree',
+          async (degree) => {
+            const response = await supertest(appWithMockedAuth)
+              .patch(`/users/${userId}`)
+              .send({ degree });
+
+            expect(response.status).toBe(200);
+          },
+        );
+
+        test('Should not accept any random degree', async () => {
+          const response = await supertest(appWithMockedAuth)
+            .patch(`/users/${userId}`)
+            .send({ degree: 'blah' });
+
+          expect(response.status).toBe(400);
+        });
+      });
     });
 
     describe('Profile completeness validation', () => {

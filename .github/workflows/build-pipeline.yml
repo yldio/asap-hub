@@ -47,9 +47,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: node:14
-      credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+      # credentials:
+      #   username: AWS
+      #   password: ${{ secrets.AWS_ECR_PASSWORD }}
 
     steps:
       - name: Checkout

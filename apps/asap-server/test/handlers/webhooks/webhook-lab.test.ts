@@ -1,20 +1,23 @@
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { EventBridge } from 'aws-sdk';
-import { Team } from '@asap-hub/squidex';
-import { teamsWebhookFactory } from '../../../src/handlers/webhooks/webhook-teams';
+import { Lab } from '@asap-hub/squidex';
 import {
-  getTeamsCreated,
-  getPossibleTeamEvents,
-} from '../../fixtures/teams.fixtures';
+  labsWebhookFactory,
+  SquidexLabEventType,
+} from '../../../src/handlers/webhooks/webhook-lab';
+import {
+  createEvent,
+  getLabWebhookPayload,
+} from '../../fixtures/labs.fixtures';
 import { createSignedPayload } from '../../helpers/webhooks';
 import { getApiGatewayEvent } from '../../helpers/events';
 import { eventBus, eventSource } from '../../../src/config';
 
-describe('Teams webhook', () => {
+describe('Labs event webhook', () => {
   const evenBridgeMock = {
     putEvents: jest.fn().mockReturnValue({ promise: jest.fn() }),
   } as unknown as jest.Mocked<EventBridge>;
-  const handler = teamsWebhookFactory(evenBridgeMock);
+  const handler = labsWebhookFactory(evenBridgeMock);
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -25,7 +28,7 @@ describe('Teams webhook', () => {
       headers: {
         'x-signature': 'XYZ',
       },
-      body: JSON.stringify(getTeamsCreated),
+      body: JSON.stringify(createEvent('lab-id')),
     });
 
     const res = (await handler(event)) as APIGatewayProxyResult;
@@ -36,21 +39,27 @@ describe('Teams webhook', () => {
 
   test('Should return 204 and not raise an event when the event type is not supported', async () => {
     const res = (await handler(
-      createSignedPayload<Team>({
-        ...getTeamsCreated,
-        type: 'SomeEvent',
-      }),
+      createSignedPayload<Lab>(getLabWebhookPayload('lab-id', 'not-supported')),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(204);
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
   });
 
-  test.each(getPossibleTeamEvents)(
-    'Should put the %s event into the event bus and return 200',
-    async (_, eventName, eventBody) => {
+  test.each([
+    ['LabsPublished', 'LabPublished'],
+    ['LabsUpdated', 'LabUpdated'],
+    ['LabsUnpublished', 'LabDeleted'],
+    ['LabsDeleted', 'LabDeleted'],
+  ])(
+    'Should put the labs %s event into the event bus and return 200',
+    async (givenEventType, expectedDetailType) => {
+      const payload = getLabWebhookPayload(
+        'lab-id',
+        givenEventType as SquidexLabEventType,
+      );
       const res = (await handler(
-        createSignedPayload(eventBody),
+        createSignedPayload(payload),
       )) as APIGatewayProxyResult;
 
       expect(res.statusCode).toStrictEqual(200);
@@ -59,8 +68,8 @@ describe('Teams webhook', () => {
           {
             EventBusName: eventBus,
             Source: eventSource,
-            DetailType: eventName,
-            Detail: JSON.stringify(eventBody),
+            DetailType: expectedDetailType,
+            Detail: JSON.stringify(payload),
           },
         ],
       });

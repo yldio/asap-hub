@@ -9,7 +9,7 @@ const squidexGraphqlClient = new SquidexGraphql();
 const users = new Users(squidexGraphqlClient);
 
 describe('Users', () => {
-  it('Should create and fetch a user', async () => {
+  test('Should create and fetch a user', async () => {
     const firstName = chance.guid();
     const orcid = createRandomOrcid();
 

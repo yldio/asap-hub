@@ -59,7 +59,12 @@ export const userRouteFactory = (
       querySchemaWithFilter,
     ) as unknown as FetchOptions;
 
-    const result = await userController.fetch(options);
+    const userFetchOptions = {
+      ...options,
+      filter: options.filter && { role: options.filter },
+    };
+
+    const result = await userController.fetch(userFetchOptions);
 
     res.json(result);
   });

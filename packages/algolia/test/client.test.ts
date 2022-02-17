@@ -1,10 +1,12 @@
 import { SearchResponse } from '@algolia/client-search';
+import { ResearchOutputResponse } from '@asap-hub/model';
 import {
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
 import {
   AlgoliaSearchClient,
+  getEntityType,
   EntityRecord,
   RESEARCH_OUTPUT_ENTITY_TYPE,
   USER_ENTITY_TYPE,
@@ -14,6 +16,33 @@ import { getAlgoliaSearchIndexMock } from './mocks/algolia.mocks';
 describe('Algolia Search Client', () => {
   const algoliaSearchIndex = getAlgoliaSearchIndexMock();
   const algoliaSearchClient = new AlgoliaSearchClient(algoliaSearchIndex);
+
+  test('Should do save many on entities', async () => {
+    await algoliaSearchClient.saveMany(
+      Array(100)
+        .fill({})
+        .map(
+          (value, index) =>
+            ({
+              id: `ro-id-${index}`,
+              title: 'ro-title',
+              sharingStatus: 'Public',
+            } as ResearchOutputResponse),
+        ) as readonly ResearchOutputResponse[],
+    );
+
+    expect(algoliaSearchIndex.saveObjects).toBeCalledWith(
+      Array(100)
+        .fill({})
+        .map((value, index) => ({
+          id: `ro-id-${index}`,
+          objectID: `ro-id-${index}`,
+          title: 'ro-title',
+          sharingStatus: 'Public',
+          __meta: { type: 'research-output' },
+        })),
+    );
+  });
 
   test('Should save the Research Output', async () => {
     const researchOutput = createResearchOutputResponse();
@@ -78,6 +107,21 @@ describe('Algolia Search Client', () => {
     expect(response).toEqual(searchUserResponse);
     expect(algoliaSearchIndex.search).toBeCalledWith('query', {
       filters: '__meta.type:"user"',
+    });
+  });
+
+  describe('getEntityType', () => {
+    test('should return research-output when it was a title and sharingStatus fields', () => {
+      expect(
+        getEntityType({
+          title: 'test title',
+          sharingStatus: 'Public',
+        } as ResearchOutputResponse),
+      ).toEqual('research-output');
+    });
+
+    test("should return user when it didn't have a title field", () => {
+      expect(getEntityType({} as ResearchOutputResponse)).toEqual('user');
     });
   });
 });

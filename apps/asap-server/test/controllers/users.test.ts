@@ -2,9 +2,8 @@ import { config, RestUser } from '@asap-hub/squidex';
 import { UserResponse } from '@asap-hub/model';
 import matches from 'lodash.matches';
 import nock, { DataMatcherMap } from 'nock';
-import Users from '../../src/controllers/users';
+import Users, { FetchUsersOptions } from '../../src/controllers/users';
 import { identity } from '../helpers/squidex';
-import { FetchOptions } from '../../src/utils/types';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import {
   fetchUserResponse,
@@ -67,16 +66,24 @@ describe('Users controller', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
-      const fetchOptions: FetchOptions = {
+      const fetchOptions: FetchUsersOptions = {
         take: 12,
         skip: 2,
         search: 'first last',
-        filter: ['role', 'Staff'],
+        filter: {
+          role: ['role', 'Staff'],
+          labId: ['lab-123', 'lab-456'],
+          teamId: ['team-123', 'team-456'],
+        },
       };
       await usersMockGraphqlClient.fetch(fetchOptions);
 
       const filterQuery =
-        "(data/teams/iv/role eq 'role' or data/teams/iv/role eq 'Staff')" +
+        "(data/teams/iv/id eq 'team-123' or data/teams/iv/id eq 'team-456')" +
+        ' and' +
+        " (data/teams/iv/role eq 'role' or data/teams/iv/role eq 'Staff')" +
+        ' and' +
+        " (data/labs/iv eq 'lab-123' or data/labs/iv eq 'lab-456')" +
         ' and' +
         ' data/onboarded/iv eq true' +
         ' and' +
@@ -105,7 +112,7 @@ describe('Users controller', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
-      const fetchOptions: FetchOptions = {
+      const fetchOptions: FetchUsersOptions = {
         take: 12,
         skip: 2,
         search: "'",
@@ -133,7 +140,7 @@ describe('Users controller', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
-      const fetchOptions: FetchOptions = {
+      const fetchOptions: FetchUsersOptions = {
         take: 12,
         skip: 2,
         search: '"',
@@ -161,7 +168,7 @@ describe('Users controller', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
-      const fetchOptions: FetchOptions = {
+      const fetchOptions: FetchUsersOptions = {
         take: 12,
         skip: 2,
         search: 'Solène',

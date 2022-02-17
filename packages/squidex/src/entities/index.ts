@@ -1,4 +1,5 @@
 export * from './calendar';
+export * from './lab';
 export * from './news';
 export * from './page';
 export * from './research-output';

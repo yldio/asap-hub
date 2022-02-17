@@ -36,11 +36,15 @@ export class AlgoliaSearchClient {
   }
 
   async save(payload: EntityResponses[keyof EntityResponses]): Promise<void> {
-    await this.index.saveObject({
-      ...payload,
-      objectID: payload.id,
-      __meta: { type: getEntityType(payload) },
-    });
+    await this.index.saveObject(AlgoliaSearchClient.getAlgoliaObject(payload));
+  }
+
+  async saveMany(
+    payloads: readonly EntityResponses[keyof EntityResponses][],
+  ): Promise<void> {
+    await this.index.saveObjects(
+      payloads.map(AlgoliaSearchClient.getAlgoliaObject),
+    );
   }
 
   async remove(objectID: string): Promise<void> {
@@ -60,5 +64,15 @@ export class AlgoliaSearchClient {
     };
 
     return this.index.search<EntityRecord<T>>(query, options);
+  }
+
+  private static getAlgoliaObject(
+    body: EntityResponses[keyof EntityResponses],
+  ): Record<string, unknown> {
+    return {
+      ...body,
+      objectID: body.id,
+      __meta: { type: getEntityType(body) },
+    };
   }
 }

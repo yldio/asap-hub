@@ -13,7 +13,7 @@ describe('parseGraphQLTeamMember', () => {
   const teamMember = {
     ...referencingUsersContentsResponse,
   };
-  it('should parse teamMember', () => {
+  test('should parse teamMember', () => {
     const parsedTeamMember = parseGraphQLTeamMember(teamMember, 'team-id-1');
     expect(parsedTeamMember).toEqual({
       id: 'user-id-1',
@@ -29,7 +29,7 @@ describe('parseGraphQLTeamMember', () => {
       avatarUrl: undefined,
     });
   });
-  it('should throw when teamRole dont match TeamRoles', () => {
+  test('should throw when teamRole dont match TeamRoles', () => {
     const invalidTeamRole = {
       ...teamMember.flatData.teams![0]!,
       role: 'invalid role',
@@ -45,7 +45,7 @@ describe('parseGraphQLTeamMember', () => {
       parseGraphQLTeamMember(teamMemberWithInvalidRole, 'team-id-1'),
     ).toThrow('Invalid team role on user user-id-1 : invalid role');
   });
-  it('should throw when email is null', () => {
+  test('should throw when email is null', () => {
     const teamMemberWithMissingEmail = {
       ...teamMember,
       flatData: {
@@ -62,7 +62,7 @@ describe('parseGraphQLTeam', () => {
   const team = {
     ...getSquidexTeamsGraphqlResponse().queryTeamsContentsWithTotal!.items![0],
   };
-  it('should throw when projectTitle is null', () => {
+  test('should throw when projectTitle is null', () => {
     const teamWithInvalidProjectTitle = {
       ...team,
       flatData: {

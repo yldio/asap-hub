@@ -48,11 +48,30 @@ const getEventType = (customType: string): TeamsEventType | undefined => {
     return 'TeamsUpdated';
   }
 
+  if (customType === 'TeamsUnpublished') {
+    return 'TeamsDeleted';
+  }
+
   if (customType === 'TeamsDeleted') {
     return 'TeamsDeleted';
   }
 
   return undefined;
+};
+
+export type SquidexWebhookTeamPayload = {
+  type: 'TeamsCreated' | 'TeamsUpdated';
+  payload: {
+    $type: 'EnrichedContentEvent';
+    type: 'Created';
+    id: string;
+    data: {
+      outputs: { iv: string[] };
+    };
+    dataOld?: {
+      outputs: { iv: string[] };
+    };
+  };
 };
 
 const eventBridge = new EventBridge();

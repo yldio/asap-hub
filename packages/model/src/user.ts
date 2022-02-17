@@ -1,6 +1,6 @@
 import { ListResponse } from './common';
 import { TeamRole } from './team';
-import { Lab } from './lab';
+import { LabResponse } from './lab';
 
 export const userRole = ['Staff', 'Grantee', 'Guest', 'Hidden'] as const;
 
@@ -131,7 +131,7 @@ export interface UserResponse extends Invitee {
   researchInterests?: string;
   role: Role;
   social?: UserSocialLinks;
-  labs: Lab[];
+  labs: LabResponse[];
 }
 
 export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {

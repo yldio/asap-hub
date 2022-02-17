@@ -1,3 +1,4 @@
+const path = require('path');
 module.exports = {
   stories: ['../src/**/*.stories.tsx'],
   addons: [
@@ -7,8 +8,7 @@ module.exports = {
 
     require.resolve('@storybook/addon-viewport/register'),
   ],
-  webpackFinal: (config) => {
-    console.log(config);
+  webpackFinal: async (config, { configType }) => {
     // config.module.rules.push({
     //   test: /\.tsx?$/,
     //   exclude: /node_modules/,
@@ -34,6 +34,9 @@ module.exports = {
 
     // config.resolve.extensions.push('.mjs');
 
+    config.resolve.modules = [path.resolve(__dirname, ".."), "node_modules"];
+
+    console.log(`The final webpack config`,  config, configType);
     return config;
   },
 };

@@ -8,7 +8,6 @@ module.exports = {
     require.resolve('@storybook/addon-viewport/register'),
   ],
   webpackFinal: (config) => {
-    console.log(config);
     // config.module.rules.push({
     //   test: /\.tsx?$/,
     //   exclude: /node_modules/,
@@ -34,6 +33,8 @@ module.exports = {
 
     // config.resolve.extensions.push('.mjs');
 
+    config.resolve.modules.push('src');
+    console.log(`The final webpack config`,  config );
     return config;
   },
 };

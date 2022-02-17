@@ -1,7 +1,9 @@
-import { withKnobs } from '@storybook/addon-knobs';
-import { addParameters, addDecorator } from '@storybook/react';
 import { GlobalStyles, pixels } from '@asap-hub/react-components';
+import { withKnobs } from '@storybook/addon-knobs';
+import { addDecorator, addParameters } from '@storybook/react';
 
+
+addDecorator(withKnobs({ escapeHTML: false }));
 addDecorator((story) => (
   <>
     <GlobalStyles />
@@ -9,7 +11,6 @@ addDecorator((story) => (
   </>
 ));
 
-addDecorator(withKnobs({ escapeHTML: false }));
 addParameters({
   viewport: {
     viewports: {

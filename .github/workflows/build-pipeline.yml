@@ -54,9 +54,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          cache: 'yarn'
+      # - uses: actions/setup-node@v2
+      #   with:
+      #     cache: 'yarn'
       - name: Build
         env:
           NODE_ENV: 'production'
@@ -72,6 +72,5 @@ jobs:
           REACT_APP_SENTRY_DSN: 'test'
         run: |
           echo $(node --version)
-          ls -la
           echo "run build"
           yarn run build

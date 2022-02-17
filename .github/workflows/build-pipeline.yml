@@ -73,6 +73,5 @@ jobs:
         run: |
           echo $(node --version)
           ls -la apps/storybook
-          ls -la apps/storybook/node_modules
           echo "run build on container"
           yarn run build

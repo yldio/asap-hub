@@ -76,36 +76,40 @@ jobs:
           echo "run build on container"
           # yarn run build
           du
+          yarn workspace @asap-hub/react-components build
+          du
           yarn workspace @asap-hub/storybook build
-  # build-no-container:
-  #   needs: setup
-  #   runs-on: ubuntu-latest
+  build-no-container:
+    needs: setup
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #     - uses: actions/setup-node@v2
-  #       with:
-  #         node-version: '14'
-  #     - name: Build
-  #       env:
-  #         NODE_ENV: 'production'
-  #         ASAP_HOSTNAME: 'hub.asap.science'
-  #         ASAP_API_URL: 'https://api-${11}.${ASAP_HOSTNAME}'
-  #         ASAP_APP_URL: 'https://${11}.${ASAP_HOSTNAME}'
-  #         ALGOLIA_INDEX: 'asap-hub_research_outputs_CI-${11}'
-  #         REACT_APP_ALGOLIA_APP_ID: 'test'
-  #         REACT_APP_ALGOLIA_INDEX: 'test'
-  #         REACT_APP_API_BASE_URL: 'http://api-${11}.${ASAP_HOSTNAME}'
-  #         REACT_APP_ENVIRONMENT: 'development'
-  #         REACT_APP_RELEASE: '${23}-dev'
-  #         REACT_APP_SENTRY_DSN: 'test'
-  #       run: |
-  #         echo $(node --version)
-  #         ls -la apps/storybook
-  #         echo "run build on no container"
-  #         # yarn run build
-  #         du
-  #         yarn workspace @asap-hub/storybook build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Build
+        env:
+          NODE_ENV: 'production'
+          ASAP_HOSTNAME: 'hub.asap.science'
+          ASAP_API_URL: 'https://api-${11}.${ASAP_HOSTNAME}'
+          ASAP_APP_URL: 'https://${11}.${ASAP_HOSTNAME}'
+          ALGOLIA_INDEX: 'asap-hub_research_outputs_CI-${11}'
+          REACT_APP_ALGOLIA_APP_ID: 'test'
+          REACT_APP_ALGOLIA_INDEX: 'test'
+          REACT_APP_API_BASE_URL: 'http://api-${11}.${ASAP_HOSTNAME}'
+          REACT_APP_ENVIRONMENT: 'development'
+          REACT_APP_RELEASE: '${23}-dev'
+          REACT_APP_SENTRY_DSN: 'test'
+        run: |
+          echo $(node --version)
+          ls -la apps/storybook
+          echo "run build on no container"
+          # yarn run build
+          du
+          yarn workspace @asap-hub/react-components build
+          du
+          yarn workspace @asap-hub/storybook build
 
 

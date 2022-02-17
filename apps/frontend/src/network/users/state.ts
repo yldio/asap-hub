@@ -19,8 +19,8 @@ import {
   getUser,
   patchUser,
   postUserAvatar,
+  getUsersLegacy,
   getUsers,
-  getUsersWithAlgolia,
 } from './api';
 import { GetListOptions } from '../../api-util';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
@@ -112,7 +112,7 @@ export const usePrefetchUsers = (
   const [users, setUsers] = useRecoilState(usersState(options));
   useDeepCompareEffect(() => {
     if (users === undefined) {
-      getUsers(options, authorization).then(setUsers).catch();
+      getUsersLegacy(options, authorization).then(setUsers).catch();
     }
   }, [authorization, options, setUsers, users]);
 };
@@ -123,11 +123,13 @@ export const useUsers = (options: GetListOptions) => {
   const useAlgoliaSearch = useFlags().isEnabled('ALGOLIA_USER_SEARCH');
   if (users === undefined) {
     if (useAlgoliaSearch) {
-      throw getUsersWithAlgolia(algoliaClient.client, options)
+      throw getUsers(algoliaClient.client, options)
         .then(setUsers)
         .catch(setUsers);
     } else {
-      throw getUsers(options, authorization).then(setUsers).catch(setUsers);
+      throw getUsersLegacy(options, authorization)
+        .then(setUsers)
+        .catch(setUsers);
     }
   }
   if (users instanceof Error) {

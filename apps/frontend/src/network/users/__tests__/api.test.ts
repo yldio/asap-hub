@@ -1,28 +1,26 @@
 import nock from 'nock';
 import {
+  UserAvatarPostRequest,
   UserPatchRequest,
   UserResponse,
-  UserAvatarPostRequest,
 } from '@asap-hub/model';
-import { createUserResponse, createListUserResponse } from '@asap-hub/fixtures';
+import { createListUserResponse, createUserResponse } from '@asap-hub/fixtures';
 
-import type {
-  AlgoliaSearchClient,
-  SearchEntityResponse,
-} from '@asap-hub/algolia';
+import type { AlgoliaSearchClient } from '@asap-hub/algolia';
 
 import {
+  getInstitutions,
   getUser,
+  getUsersLegacy,
+  getUsers,
+  InstitutionsResponse,
   patchUser,
   postUserAvatar,
-  getUsers,
-  getInstitutions,
-  InstitutionsResponse,
-  getUsersWithAlgolia,
 } from '../api';
 import { API_BASE_URL } from '../../../config';
 import { GetListOptions } from '../../../api-util';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
+import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 
 jest.mock('../../../config');
 
@@ -37,13 +35,13 @@ const options: GetListOptions = {
   searchQuery: '',
 };
 
-describe('getUsers', () => {
+describe('getUsersLegacy', () => {
   it('makes an authorized GET request for users', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/users')
       .query({ take: '10', skip: '0' })
       .reply(200, {});
-    await getUsers(options, 'Bearer x');
+    await getUsersLegacy(options, 'Bearer x');
     expect(nock.isDone()).toBe(true);
   });
 
@@ -53,7 +51,7 @@ describe('getUsers', () => {
       .get('/users')
       .query({ take: '10', skip: '0' })
       .reply(200, users);
-    expect(await getUsers(options, '')).toEqual(users);
+    expect(await getUsersLegacy(options, '')).toEqual(users);
   });
 
   it('errors for error status', async () => {
@@ -62,14 +60,14 @@ describe('getUsers', () => {
       .query({ take: '10', skip: '0' })
       .reply(500);
     await expect(
-      getUsers(options, ''),
+      getUsersLegacy(options, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch user list. Expected status 2xx. Received status 500."`,
     );
   });
 });
 
-describe('getUsersWithAlgolia', () => {
+describe('getUsers', () => {
   const searchEntity: jest.MockedFunction<AlgoliaSearchClient['searchEntity']> =
     jest.fn();
 
@@ -86,14 +84,11 @@ describe('getUsersWithAlgolia', () => {
 
   beforeEach(() => {
     searchEntity.mockReset();
-    searchEntity.mockResolvedValue({
-      hits: [],
-      nbHits: 0,
-    } as unknown as SearchEntityResponse<'user'>);
+    searchEntity.mockResolvedValue(createAlgoliaResponse('user', []));
   });
 
   it('will not filter users by default', async () => {
-    await getUsersWithAlgolia(algoliaSearchClient, {
+    await getUsers(algoliaSearchClient, {
       ...defaultOptions,
     });
     expect(searchEntity).toHaveBeenCalledWith(
@@ -106,7 +101,7 @@ describe('getUsersWithAlgolia', () => {
   });
 
   it('will not default to not specifying page and limits hits per page by default', async () => {
-    await getUsersWithAlgolia(algoliaSearchClient, {
+    await getUsers(algoliaSearchClient, {
       ...defaultOptions,
     });
     expect(searchEntity).toHaveBeenCalledWith(
@@ -120,7 +115,7 @@ describe('getUsersWithAlgolia', () => {
   });
 
   it('will pass the search query to algolia', async () => {
-    await getUsersWithAlgolia(algoliaSearchClient, {
+    await getUsers(algoliaSearchClient, {
       ...defaultOptions,
       searchQuery: 'Hello World!',
     });
@@ -132,7 +127,7 @@ describe('getUsersWithAlgolia', () => {
   });
 
   it('can filter the users by a single team role', async () => {
-    await getUsersWithAlgolia(algoliaSearchClient, {
+    await getUsers(algoliaSearchClient, {
       ...defaultOptions,
       filters: new Set(['Collaborating PI']),
     });
@@ -142,7 +137,7 @@ describe('getUsersWithAlgolia', () => {
   });
 
   it('can filter the users by multiple team roles (OR)', async () => {
-    await getUsersWithAlgolia(algoliaSearchClient, {
+    await getUsers(algoliaSearchClient, {
       ...defaultOptions,
       filters: new Set(['Collaborating PI', 'Project Manager']),
     });
@@ -174,9 +169,9 @@ describe('getUsersWithAlgolia', () => {
       query: '',
       params: '',
     });
-    expect(
-      await getUsersWithAlgolia(algoliaSearchClient, defaultOptions),
-    ).toEqual(transformedUsers);
+    expect(await getUsers(algoliaSearchClient, defaultOptions)).toEqual(
+      transformedUsers,
+    );
   });
 });
 

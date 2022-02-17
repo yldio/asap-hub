@@ -10,14 +10,14 @@ import {
 import { network } from '@asap-hub/routing';
 
 import Network from '../Network';
-import { getUsers } from '../users/api';
+import { useUsers } from '../users/state';
 import { getTeams } from '../teams/api';
 
-jest.mock('../users/api');
+jest.mock('../users/state');
 jest.mock('../teams/api');
 jest.mock('../groups/api');
 
-const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
+const mockUseUsers = useUsers as jest.MockedFunction<typeof useUsers>;
 const mockGetTeams = getTeams as jest.MockedFunction<typeof getTeams>;
 
 const renderNetworkPage = async (pathname: string, query = '') => {
@@ -78,11 +78,12 @@ describe('the network page', () => {
       fireEvent.click(toggle);
       expect(searchBox.value).toEqual('test123');
       await waitFor(() => {
-        const [[options]] = mockGetUsers.mock.calls.slice(-1);
-        expect(options).toMatchObject({
-          searchQuery: 'test123',
-          filters: new Set(),
-        });
+        expect(mockUseUsers).toHaveBeenLastCalledWith(
+          expect.objectContaining({
+            searchQuery: 'test123',
+            filters: new Set(),
+          }),
+        );
       });
     });
   });
@@ -149,11 +150,10 @@ describe('the network page', () => {
     userEvent.click(checkbox);
     expect(checkbox).toBeChecked();
     await waitFor(() =>
-      expect(mockGetUsers).toHaveBeenLastCalledWith(
+      expect(mockUseUsers).toHaveBeenLastCalledWith(
         expect.objectContaining({
           filters: new Set(['Lead PI (Core Leadership)']),
         }),
-        expect.anything(),
       ),
     );
   });
@@ -168,11 +168,10 @@ describe('the network page', () => {
     const checkbox = getByLabelText('Lead PI');
     expect(checkbox).toBeChecked();
     await waitFor(() =>
-      expect(mockGetUsers).toHaveBeenLastCalledWith(
+      expect(mockUseUsers).toHaveBeenLastCalledWith(
         expect.objectContaining({
           filters: new Set(['Lead PI (Core Leadership)']),
         }),
-        expect.anything(),
       ),
     );
   });

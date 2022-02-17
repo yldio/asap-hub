@@ -31,7 +31,7 @@ export const getUser = async (
   return resp.json();
 };
 
-export const getUsersWithAlgolia = async (
+export const getUsers = async (
   algoliaClient: AlgoliaSearchClient,
   { searchQuery, filters, currentPage, pageSize }: GetListOptions,
 ): Promise<ListUserResponse> => {
@@ -48,7 +48,7 @@ export const getUsersWithAlgolia = async (
   return { items: result.hits, total: result.nbHits };
 };
 
-export const getUsers = async (
+export const getUsersLegacy = async (
   options: GetListOptions,
   authorization: string,
 ): Promise<ListUserResponse> => {

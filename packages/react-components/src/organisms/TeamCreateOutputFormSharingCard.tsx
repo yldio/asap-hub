@@ -63,9 +63,7 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
           }),
         )}
         onChange={(subType) => onChangeSubtypes([subType])}
-        getValidationMessage={() =>
-          'Please enter a valid URL, starting with http://'
-        }
+        getValidationMessage={() => 'Please choose a type'}
         value={subTypes[0] ?? ''}
         enabled={!isSaving}
         required

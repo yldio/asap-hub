@@ -12,17 +12,20 @@ const props: ComponentProps<typeof TeamCreateOutputFormSharingCard> = {
   type: 'Article',
 };
 it('renders the card with provided values', () => {
-  const { getByDisplayValue } = render(
+  const { getByDisplayValue, getByText } = render(
     <TeamCreateOutputFormSharingCard
       {...props}
+      type="Article"
       description="description"
       link="http://example.com"
       title="title"
+      subTypes={['Preprint']}
     />,
   );
   expect(getByDisplayValue('description')).toBeVisible();
   expect(getByDisplayValue('http://example.com')).toBeVisible();
   expect(getByDisplayValue('title')).toBeVisible();
+  expect(getByDisplayValue('Preprint')).toBeVisible();
 });
 
 it.each`
@@ -30,6 +33,7 @@ it.each`
   ${'Description'} | ${/description/i} | ${'Please enter a description'}
   ${'Url'}         | ${/URL/i}         | ${'Please enter a valid URL, starting with http://'}
   ${'Title'}       | ${/title/i}       | ${'Please enter a title'}
+  ${'Subtype'}     | ${/type/i}        | ${'Please choose a type'}
 `('shows error message for missing value $title', async ({ label, error }) => {
   const { getByLabelText, findByText } = render(
     <TeamCreateOutputFormSharingCard {...props} />,

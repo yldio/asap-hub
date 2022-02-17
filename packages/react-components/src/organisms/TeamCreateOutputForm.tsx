@@ -47,7 +47,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
   const [subTypes, setSubtypes] = useState<
     ResearchOutputPostRequest['subTypes']
-  >([]);
+  >(['Preprint']);
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>('');
   const [description, setDescription] =
     useState<ResearchOutputPostRequest['description']>('');

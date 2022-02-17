@@ -34,7 +34,7 @@ module.exports = {
 
     // config.resolve.extensions.push('.mjs');
 
-    config.resolve.modules = [path.resolve(__dirname, ".."), "node_modules"];
+    config.resolve.modules = [path.resolve(__dirname, "../src"), "node_modules"];
 
     console.log(`The final webpack config`,  config, configType);
     return config;

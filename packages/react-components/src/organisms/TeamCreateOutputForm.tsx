@@ -1,4 +1,4 @@
-import { Lab } from '@asap-hub/model';
+import { LabResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import {
@@ -78,7 +78,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           title,
           subTypes,
           labs: labs.map(
-            ({ value, label }: OptionValue): Lab => ({
+            ({ value, label }: OptionValue): LabResponse => ({
               name: label,
               id: value,
             }),

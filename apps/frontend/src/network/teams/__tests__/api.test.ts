@@ -139,6 +139,7 @@ describe('createTeamResearchOutput', () => {
     description: '',
     tags: [],
     subTypes: [],
+    labs: [{ id: '1', name: 'Lab name' }],
   };
   it('makes an authorized POST request to create a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })

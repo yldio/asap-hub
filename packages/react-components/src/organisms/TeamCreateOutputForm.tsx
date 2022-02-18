@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { ComponentProps, useCallback, useState } from 'react';
+import { ComponentProps, useState } from 'react';
 import {
   ResearchOutputPostRequest,
   ResearchOutputResponse,
@@ -52,9 +52,6 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [description, setDescription] =
     useState<ResearchOutputPostRequest['description']>('');
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>('');
-  const onSaveCallback = useCallback(async () => {
-    await onSave({ tags, link, description, title, subTypes });
-  }, [onSave, tags, link, description, title, subTypes]);
 
   return (
     <Form
@@ -65,7 +62,9 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         link !== '' ||
         subTypes.length !== 0
       }
-      onSave={onSaveCallback}
+      onSave={async () => {
+        await onSave({ tags, link, description, title, subTypes });
+      }}
     >
       {({ isSaving, onSave: onClick }) => (
         <div css={contentStyles}>

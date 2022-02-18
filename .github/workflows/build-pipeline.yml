@@ -86,7 +86,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        script: [constraints, 'lint:format']
+        script: [constraints, 'lint:format', "check:packages"]
     steps:
       - name: Checkout
         uses: actions/checkout@v2

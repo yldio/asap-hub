@@ -48,11 +48,6 @@ const MultiSelect: FC<SimpleValuesMultiSelecletProps> = ({
   const [inputValues, setInputValues] = useState(values);
   const [validationMsg, setValidationMsg] = useState('');
 
-  const options = suggestions?.map((suggestion: string) => ({
-    value: suggestion,
-    label: suggestion,
-  }));
-
   // This is to handle a bug with Select where the right click would make it impossoble to write
   let inputRef: Select<OptionTypeBase, true> | null;
   const handleOnContextMenu = () => {
@@ -68,7 +63,10 @@ const MultiSelect: FC<SimpleValuesMultiSelecletProps> = ({
           inputRef = ref;
         }}
         isMulti
-        options={options}
+        options={suggestions?.map((suggestion: string) => ({
+          value: suggestion,
+          label: suggestion,
+        }))}
         value={inputValues.map((value: string) =>
           isSimple
             ? {

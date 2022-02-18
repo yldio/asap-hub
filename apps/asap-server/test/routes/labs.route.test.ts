@@ -18,7 +18,7 @@ describe('/labs/ route', () => {
     it('should return 200 when no labs exists', async () => {
       labsControlerMock.fetch.mockResolvedValueOnce({ total: 0, items: [] });
 
-      const response = await supertest(app).get('/news');
+      const response = await supertest(app).get('/labs');
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({ total: 0, items: [] });

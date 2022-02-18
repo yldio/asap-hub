@@ -1,10 +1,10 @@
-import { LabResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import {
   ResearchOutputPostRequest,
   ResearchOutputResponse,
   ResearchOutputType,
+  LabResponse,
 } from '@asap-hub/model';
 
 import {

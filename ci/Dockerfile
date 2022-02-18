@@ -23,8 +23,8 @@ WORKDIR /app
 #   wget -qO- https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN apt-get update
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash
-RUN apt-get install -yqq nodejs yarn python3-pip git && \
-  npm i -g npm@^6
+RUN apt-get install -yqq nodejs python3-pip git
+RUN  npm i -g npm@^6 yarn
 
 COPY ci/integration/scripts/requirements.txt .
 RUN pip install -r requirements.txt

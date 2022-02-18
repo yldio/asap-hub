@@ -6,7 +6,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
   apt-get install -y python3-pip software-properties-common wget curl unzip dirmngr gnupg apt-transport-https ca-certificates awscli
 
-# RUN ln -s /usr/bin/pip3 /usr/bin/pip
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
 RUN wget https://github.com/Squidex/squidex-samples/releases/download/cli-v7.12/linux-x64.zip && \
@@ -17,13 +16,9 @@ FROM base AS integration
 
 WORKDIR /app
 
-# RUN echo "deb https://deb.nodesource.com/node_14.x buster main" > /etc/apt/sources.list.d/nodesource.list && \
-#   wget -qO- https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
-#   echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list && \
-#   wget -qO- https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN apt-get update
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash
-RUN apt-get install -yqq nodejs python3-pip git
+RUN apt-get install -yqq nodejs git
 RUN  npm i -g npm@^6 yarn
 
 COPY ci/integration/scripts/requirements.txt .

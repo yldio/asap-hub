@@ -19,5 +19,4 @@ jobs:
         env:
           NODE_ENV: 'production'
         run: |
-          source ci/env-setup.sh
-          yarn build
+          yarn run build

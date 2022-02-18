@@ -4837,7 +4837,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "find-cache-dir",
-        "npm:3.3.1"
+        "npm:2.1.0"
       ],
       [
         "find-file-up",
@@ -6321,7 +6321,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "loader-utils",
-        "npm:1.4.0"
+        "npm:2.0.0"
       ],
       [
         "locate-path",
@@ -11210,7 +11210,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/history", "npm:4.7.8"],
             ["@types/react", "npm:17.0.5"],
             ["@types/react-router-dom", "npm:5.1.7"],
-            ["babel-loader", "virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#npm:8.2.3"],
             ["babel-preset-react-app", "npm:10.0.0"],
             ["core-js", "npm:3.12.1"],
             ["date-fns", "npm:2.21.3"],
@@ -29866,13 +29865,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["npm:8.2.3", {
-          "packageLocation": "./.yarn/cache/babel-loader-npm-8.2.3-855681b984-78e1e1a919.zip/node_modules/babel-loader/",
-          "packageDependencies": [
-            ["babel-loader", "npm:8.2.3"]
-          ],
-          "linkType": "SOFT",
-        }],
         ["virtual:2a9312f545c3efe19c5818a7c0f68e13b06902d867e3d248b05fd878c36c0107655bf669fe546a5359bcab747f3b25928239999c0144ef649d29640b469b9666#npm:8.2.2", {
           "packageLocation": "./.yarn/__virtual__/babel-loader-virtual-d442f9303f/0/cache/babel-loader-npm-8.2.2-b4e600c2c5-df5092ef98.zip/node_modules/babel-loader/",
           "packageDependencies": [
@@ -29885,27 +29877,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["make-dir", "npm:3.1.0"],
             ["schema-utils", "npm:2.7.1"],
             ["webpack", "virtual:316ef608983362b7f2b96c472ec46b3e7477f0b0fa2775a189e5f0544c786cb2f4a20f98da68f0deb7db61825b9a6b67198976aca410d12dcefb9fd8c2477630#npm:4.46.0"]
-          ],
-          "packagePeers": [
-            "@babel/core",
-            "@types/babel__core",
-            "@types/webpack",
-            "webpack"
-          ],
-          "linkType": "HARD",
-        }],
-        ["virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#npm:8.2.3", {
-          "packageLocation": "./.yarn/__virtual__/babel-loader-virtual-173a4d0667/0/cache/babel-loader-npm-8.2.3-855681b984-78e1e1a919.zip/node_modules/babel-loader/",
-          "packageDependencies": [
-            ["babel-loader", "virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#npm:8.2.3"],
-            ["@babel/core", "npm:7.14.2"],
-            ["@types/babel__core", null],
-            ["@types/webpack", null],
-            ["find-cache-dir", "npm:3.3.1"],
-            ["loader-utils", "npm:1.4.0"],
-            ["make-dir", "npm:3.1.0"],
-            ["schema-utils", "npm:2.7.1"],
-            ["webpack", null]
           ],
           "packagePeers": [
             "@babel/core",

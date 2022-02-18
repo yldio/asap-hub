@@ -26,10 +26,7 @@ describe('External Authors controller', () => {
 
       expect(result).toMatchObject({
         total: 8,
-        items: [
-          getExternalAuthorResponse(),
-          getExternalAuthorResponse()
-        ]
+        items: [getExternalAuthorResponse(), getExternalAuthorResponse()],
       });
     });
 

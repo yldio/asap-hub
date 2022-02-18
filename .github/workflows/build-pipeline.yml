@@ -4,52 +4,13 @@ on:
   pull_request:
 
 jobs:
-  setup:
-    uses: ./.github/workflows/setup.yml
-  echo:
-    needs: setup
-    runs-on: ubuntu-latest
-    env:
-      PR_NUMBER: ${{ needs.setup.outputs.pr-number }}
-      INTEGRATION_IMAGE: ${{ needs.setup.outputs.integration-image-name }}
-      SQUIDEX_IMAGE: ${{ needs.setup.outputs.squidex-image-name }}
-      NODE_IMAGE: ${{ needs.setup.outputs.node-image-name }}
-    steps:
-      - name: Start
-        run: |
-          echo "Started $PR_NUMBER"
-          echo "integration image $INTEGRATION_IMAGE"
-          echo "squidex image $SQUIDEX_IMAGE"
-          echo "node $NODE_IMAGE"
-
-  test:
-    needs: setup
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ needs.setup.outputs.node-image-name }}
-      credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - uses: actions/cache@v1
-        name: Cache Jest cache
-        id: cache-jest-cache
-        with:
-          path: .jest-cache
-          key: ${{ runner.os }}-jest
-      - name: Test
-        run: yarn test --coverage --maxWorkers=3
   build:
-    needs: setup
     runs-on: ubuntu-latest
     container:
       image: node:16
-      credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+#      credentials:
+#        username: AWS
+#        password: ${{ secrets.AWS_ECR_PASSWORD }}
 
     steps:
       - name: Checkout

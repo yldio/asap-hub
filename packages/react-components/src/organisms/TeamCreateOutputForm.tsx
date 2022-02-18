@@ -62,9 +62,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         link !== '' ||
         subTypes.length !== 0
       }
-      onSave={async () => {
-        await onSave({ tags, link, description, title, subTypes });
-      }}
+      onSave={() => onSave({ tags, link, description, title, subTypes })}
     >
       {({ isSaving, onSave: onClick }) => (
         <div css={contentStyles}>

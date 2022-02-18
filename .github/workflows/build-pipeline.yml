@@ -52,10 +52,6 @@ jobs:
         password: ${{ secrets.AWS_ECR_PASSWORD }}
 
     steps:
-      - name: Obtain Latest Git ONLY within container for checkout
-        run: |
-          apt-get update
-          apt-get install -y git
       - name: Checkout
         uses: actions/checkout@v2
       # - uses: actions/setup-node@v2
@@ -77,9 +73,8 @@ jobs:
         run: |
           git --version
           echo $(node --version)
-          ls -la /__w/asap-hub
-          echo "run build on container"
-          yarn run build
+          ls
+          yarn build
   # build-no-container:
   #   needs: setup
   #   runs-on: ubuntu-latest

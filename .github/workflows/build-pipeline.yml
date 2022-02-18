@@ -22,26 +22,26 @@ jobs:
           echo "squidex image $SQUIDEX_IMAGE"
           echo "node $NODE_IMAGE"
 
-  # test:
-  #   needs: setup
-  #   runs-on: ubuntu-latest
-  #   container:
-  #     image: ${{ needs.setup.outputs.node-image-name }}
-  #     credentials:
-  #       username: AWS
-  #       password: ${{ secrets.AWS_ECR_PASSWORD }}
+  test:
+    needs: setup
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.node-image-name }}
+      credentials:
+        username: AWS
+        password: ${{ secrets.AWS_ECR_PASSWORD }}
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #     - uses: actions/cache@v1
-  #       name: Cache Jest cache
-  #       id: cache-jest-cache
-  #       with:
-  #         path: .jest-cache
-  #         key: ${{ runner.os }}-jest
-  #     - name: Test
-  #       run: yarn test --coverage --maxWorkers=3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        name: Cache Jest cache
+        id: cache-jest-cache
+        with:
+          path: .jest-cache
+          key: ${{ runner.os }}-jest
+      - name: Test
+        run: yarn test --coverage --maxWorkers=3
   build:
     needs: setup
     runs-on: ubuntu-latest

@@ -22,7 +22,7 @@ jobs:
           echo "squidex image $SQUIDEX_IMAGE"
           echo "node $NODE_IMAGE"
 
-  test:
+  test-unit:
     needs: setup
     runs-on: ubuntu-latest
     container:
@@ -54,18 +54,46 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: 'us-east-1'
+      - name: Get Algolia App id
+        id: get-algolia-app-id
+        run: |
+          REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)
+          echo "::set-output name=id::$REACT_APP_ALGOLIA_APP_ID"
       - name: Build
         env:
           NODE_ENV: 'production'
           ASAP_HOSTNAME: 'hub.asap.science'
-          ASAP_API_URL: 'https://api-${11}.${ASAP_HOSTNAME}'
-          ASAP_APP_URL: 'https://${11}.${ASAP_HOSTNAME}'
-          ALGOLIA_INDEX: 'asap-hub_research_outputs_CI-${11}'
-          REACT_APP_ALGOLIA_APP_ID: 'test'
-          REACT_APP_ALGOLIA_INDEX: 'test'
-          REACT_APP_API_BASE_URL: 'http://api-${11}.${ASAP_HOSTNAME}'
+          ASAP_API_URL: 'https://api-${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
+          ASAP_APP_URL: 'https://${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
+          ALGOLIA_INDEX: 'asap-hub_research_outputs_CI-${ needs.setup.outputs.pr-number }'
+          REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
+          REACT_APP_ALGOLIA_INDEX: $ALGOLIA_INDEX
+          REACT_APP_API_BASE_URL: 'http://api-${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
           REACT_APP_ENVIRONMENT: 'development'
-          REACT_APP_RELEASE: '${23}-dev'
-          REACT_APP_SENTRY_DSN: 'test'
+          REACT_APP_RELEASE: '${GITHUB_RUN_ID}-dev'
+          REACT_APP_SENTRY_DSN: ''
         run: |
           yarn build
+
+  check:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        script: [constraints, 'lint:format']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Check
+        run: |
+          yarn ${{ matrix.script }}
+          yarn constraints

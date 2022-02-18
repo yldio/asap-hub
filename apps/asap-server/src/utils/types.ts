@@ -16,9 +16,9 @@ export type FetchPaginationOptions = {
   skip?: number;
 };
 
-export type FetchOptions = {
+export type FetchOptions<TFilter = string[]> = {
   search?: string;
-  filter?: string[];
+  filter?: TFilter;
 } & FetchPaginationOptions;
 
 export type GraphqlFetchOptions = {

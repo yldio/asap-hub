@@ -20,7 +20,7 @@ describe('events entity', () => {
         `Event (example) doesn't have a calendar`,
       );
     });
-    it('throws when provided an invalid event status', () => {
+    test('throws when provided an invalid event status', () => {
       const event = {
         ...graphqlEvent,
         id: 'example',

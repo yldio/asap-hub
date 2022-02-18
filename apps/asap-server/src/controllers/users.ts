@@ -27,8 +27,16 @@ import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 import { sanitiseForSquidex } from '../utils/squidex';
 import { FetchOptions } from '../utils/types';
 
+export type FetchUsersFilter = {
+  role?: string[];
+  labId?: string[];
+  teamId?: string[];
+};
+
+export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
+
 export interface UserController {
-  fetch(options: FetchOptions): Promise<ListUserResponse>;
+  fetch(options: FetchUsersOptions): Promise<ListUserResponse>;
   fetchById(id: string): Promise<UserResponse>;
   fetchByCode(code: string): Promise<UserResponse>;
   connectByCode(welcomeCode: string, userId: string): Promise<UserResponse>;
@@ -120,8 +128,8 @@ export default class Users implements UserController {
     return this.fetchById(id);
   }
 
-  async fetch(options: FetchOptions): Promise<ListUserResponse> {
-    const { take = 8, skip = 0, search, filter } = options;
+  async fetch(options: FetchUsersOptions): Promise<ListUserResponse> {
+    const { take = 8, skip = 0, search } = options;
 
     const searchFilter = [
       ...(search || '')
@@ -142,10 +150,26 @@ export default class Users implements UserController {
         ),
     ].join(' and ');
 
-    const filterRoles = (filter || [])
+    const filterRoles = (options?.filter?.role || [])
       .reduce(
         (acc: string[], word: string) =>
           acc.concat([`data/teams/iv/role eq '${word}'`]),
+        [],
+      )
+      .join(' or ');
+
+    const filterLabs = (options?.filter?.labId || [])
+      .reduce(
+        (acc: string[], labId: string) =>
+          acc.concat([`data/labs/iv eq '${labId}'`]),
+        [],
+      )
+      .join(' or ');
+
+    const filterTeams = (options?.filter?.teamId || [])
+      .reduce(
+        (acc: string[], teamId: string) =>
+          acc.concat([`data/teams/iv/id eq '${teamId}'`]),
         [],
       )
       .join(' or ');
@@ -154,7 +178,9 @@ export default class Users implements UserController {
     const filterNonOnboarded = 'data/onboarded/iv eq true';
 
     const queryFilter = [
+      filterTeams && `(${filterTeams})`,
       filterRoles && `(${filterRoles})`,
+      filterLabs && `(${filterLabs})`,
       filterNonOnboarded,
       filterHidden,
       searchFilter && `(${searchFilter})`,

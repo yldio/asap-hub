@@ -6,7 +6,7 @@ describe('parseGraphQLGroup', () => {
   const group = getSquidexGraphqlGroup() as NonNullable<
     FetchGroupQuery['findGroupsContent']
   >;
-  it('should throw when Leaders group roles are invalid', () => {
+  test('should throw when Leaders group roles are invalid', () => {
     const invalidLeaders = [
       { ...group.flatData.leaders![0]!, role: 'invalid role' },
     ];

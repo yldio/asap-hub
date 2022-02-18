@@ -41,6 +41,12 @@ export const researchOutputWebhookFactory = (
     },
   );
 
+export type SquidexResearchOutputsEventType =
+  | 'ResearchOutputsPublished'
+  | 'ResearchOutputsUpdated'
+  | 'ResearchOutputsUnpublished'
+  | 'ResearchOutputsDeleted';
+
 export type ResearchOutputEventType =
   | 'ResearchOutputCreated'
   | 'ResearchOutputUpdated'

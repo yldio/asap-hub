@@ -2,7 +2,7 @@ import { TeamResponse } from './team';
 import { ListResponse } from './common';
 import { UserResponse } from './user';
 import { ExternalAuthorResponse } from './external-author';
-import { Lab } from './lab';
+import { LabResponse } from './lab';
 
 export const researchOutputTypes = [
   'Grant Document',
@@ -112,7 +112,7 @@ export type ResearchOutputResponse = {
   readonly teams: ReadonlyArray<Pick<TeamResponse, 'id' | 'displayName'>>;
   readonly contactEmails: string[];
 
-  readonly labs: Lab[];
+  readonly labs: LabResponse[];
 };
 
 export type ResearchOutputPostRequest = {

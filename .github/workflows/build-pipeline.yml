@@ -42,6 +42,19 @@ jobs:
           key: ${{ runner.os }}-jest
       - name: Test
         run: yarn test --coverage --maxWorkers=3
+  test-integration:
+    needs: setup
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.node-image-name }}
+      credentials:
+        username: AWS
+        password: ${{ secrets.AWS_ECR_PASSWORD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Test
+        run: echo "Test"
   build:
     needs: setup
     runs-on: ubuntu-latest

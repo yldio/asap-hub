@@ -6,7 +6,7 @@ import Users from '../src/controllers/users';
 import ExternalAuthors from '../src/controllers/external-authors';
 
 export const exportEntity = async (
-  entity: 'users' | 'research-outputs',
+  entity: 'users' | 'research-outputs' | 'external-authors',
   filename?: string,
 ): Promise<void> => {
   const controllerMap = {

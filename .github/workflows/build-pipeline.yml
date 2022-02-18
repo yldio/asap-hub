@@ -3,6 +3,8 @@ name: Build Pipeline
 on:
   pull_request:
 
+env:
+  NODE_OPTIONS: '--max_old_space_size=4096'
 jobs:
   setup:
     uses: ./.github/workflows/setup.yml

@@ -100,7 +100,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        script: [constraints, 'lint:format', "check:packages"]
+        script: [constraints, 'lint:format', 'check:packages']
     steps:
       - name: Checkout
         uses: actions/checkout@v2

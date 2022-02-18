@@ -46,7 +46,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
+      image: node:16
       credentials:
         username: AWS
         password: ${{ secrets.AWS_ECR_PASSWORD }}

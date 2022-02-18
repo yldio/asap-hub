@@ -85,6 +85,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         script: [constraints, 'lint:format', "check:packages"]
     steps:

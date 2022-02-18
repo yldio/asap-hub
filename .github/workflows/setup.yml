@@ -16,7 +16,7 @@ on:
       image-tag:
         description: 'Image Tag'
         required: false
-        default: d460ece538906a4902c25bc2507f1dbe1e7a78d5
+        default: 05719baeced244443b83805cd751974e189b7144
         type: string
       node-version:
         description: 'Node Version'

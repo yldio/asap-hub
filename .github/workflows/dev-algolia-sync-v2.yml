@@ -61,8 +61,6 @@ jobs:
         run: |
           yarn export:entity $ENTITY -f $ENTITY.json
           yarn workspace @asap-hub/algolia run algolia import -s "../../${ENTITY}.json" -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -t ./scripts/algolia-transformation.js
-      - name: Override dev index with the temp one
-        run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -i $ALGOLIA_INDEX
       - name: Import External Authors (EXTERNAL_AUTHORS | ALL)
         if: ${{ github.event.inputs.entity == 'external-authors' || github.event.inputs.entity == 'all'}}
         env:

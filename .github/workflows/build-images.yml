@@ -29,7 +29,7 @@ jobs:
         run: |
           IMAGE_NAME=$ECR_REGISTRY/$ECR_REPOSITORY
           docker build -t $IMAGE_NAME:$IMAGE_TAG . -f ci/Dockerfile --target base
-          # docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest
+          docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest
           docker push --all-tags $IMAGE_NAME
       - name: Build and push integration
         env:
@@ -39,5 +39,5 @@ jobs:
         run: |
           IMAGE_NAME=$ECR_REGISTRY/$ECR_REPOSITORY
           docker build -t $IMAGE_NAME:$IMAGE_TAG . -f ci/Dockerfile --target integration
-          # docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest
+          docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest
           docker push --all-tags $IMAGE_NAME

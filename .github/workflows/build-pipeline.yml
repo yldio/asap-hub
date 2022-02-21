@@ -209,3 +209,21 @@ jobs:
       - name: Bundle watch
         run: |
           yarn bundlewatch
+  test-build-output:
+    needs: [setup, build]
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: AWS
+        password: ${{ secrets.AWS_ECR_PASSWORD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download build arctifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: build-output
+      - name: Test output
+        run: |
+          yarn run test:build-output

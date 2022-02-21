@@ -134,6 +134,13 @@ jobs:
       SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
+      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
+      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
+      SQUIDEX_SHARED_SECRET_TEST: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
+      CURRENT_REVISION: ${{ github.sha }}
+      SENTRY_DSN_API: ${{ secrets.SENTRY_DSN_API }}
+      SENTRY_DSN_CALENDAR: ${{ secrets.SENTRY_DSN_CALENDAR }}
+      SENTRY_DSN_USER_INVITE: ${{ secrets.SENTRY_DSN_USER_INVITE }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -148,3 +155,4 @@ jobs:
           name: sls-package
           path: '.serverless'
           retention-days: 14
+

@@ -238,10 +238,10 @@ jobs:
     needs: [setup, rebuild]
     runs-on: ubuntu-latest
     container:
-      image: ${{ needs.setup.outputs.node-image-name }}
-      credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+      image: mcr.microsoft.com/playwright:bionic
+      # credentials:
+      #   username: AWS
+      #   password: ${{ secrets.AWS_ECR_PASSWORD }}
     # services:
     #   playwright:
     #     image: mcr.microsoft.com/playwright:bionic

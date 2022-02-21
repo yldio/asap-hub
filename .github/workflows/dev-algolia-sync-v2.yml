@@ -13,61 +13,15 @@ on:
           - all
 jobs:
   sync_dev_index:
-    runs-on: ubuntu-18.04
-    env:
+    uses: ./.github/workflows/algolia-sync-v2.yml
+    with:
+      entity: ${{ github.event.inputs.entity }}
+      ALGOLIA_INDEX: 'asap-hub_dev'
+      SQUIDEX_APP_NAME: 'asap-hub-dev'
+      SSM_ALGOLIA_APP_ID_NAME: 'algolia-app-id-dev'
+      SSM_ALGOLIA_API_KEY_NAME: 'algolia-api-key-ci-dev'
+    secrets:
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_DEV }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_DEV }}
-      SQUIDEX_APP_NAME: asap-hub-dev
-      SQUIDEX_BASE_URL: https://cloud.squidex.io
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_DEFAULT_REGION: 'us-east-1'
-      ALGOLIA_INDEX: 'asap-hub_dev'
-      ALGOLIA_INDEX_TEMP: 'asap-hub_dev_temp'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@master
-      - name: Build
-        run: yarn build
-      - name: Setup Environment Variables
-        run: |
-          echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
-          echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
-          echo "::add-mask::$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)"
-      - name: Copy index without data to a temporary index (ALL)
-        if: ${{ github.event.inputs.entity == 'all'}}
-        run: yarn workspace @asap-hub/algolia run algolia transferindexconfig -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_INDEX_TEMP
-      - name: Copy index with data to a temporary index (ENTITY)
-        if: ${{ github.event.inputs.entity != 'all'}}
-        run: yarn workspace @asap-hub/algolia run algolia transferindex -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_INDEX_TEMP
-      - name: Remove the entity data (ENTITY)
-        if: ${{ github.event.inputs.entity != 'all'}}
-        env:
-          ENTITY_TYPE: ${{ github.event.inputs.entity == 'users' && 'user' || 'research-output' }}
-        run: yarn algolia:remove-records -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -e $ENTITY_TYPE
-      - name: Import Research Outputs (ROs | ALL)
-        if: ${{ github.event.inputs.entity == 'research-outputs' || github.event.inputs.entity == 'all'}}
-        env:
-          ENTITY: 'research-outputs'
-          ENTITY_TYPE: 'research-output'
-        run: |
-          yarn export:entity $ENTITY -f $ENTITY.json
-          yarn workspace @asap-hub/algolia run algolia import -s "../../${ENTITY}.json" -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -t ./scripts/algolia-transformation.js
-      - name: Import Users (USERs | ALL)
-        if: ${{ github.event.inputs.entity == 'users' || github.event.inputs.entity == 'all'}}
-        env:
-          ENTITY: 'users'
-          ENTITY_TYPE: 'user'
-        run: |
-          yarn export:entity $ENTITY -f $ENTITY.json
-          yarn workspace @asap-hub/algolia run algolia import -s "../../${ENTITY}.json" -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -t ./scripts/algolia-transformation.js
-      - name: Import External Authors (EXTERNAL_AUTHORS | ALL)
-        if: ${{ github.event.inputs.entity == 'external-authors' || github.event.inputs.entity == 'all'}}
-        env:
-          ENTITY: 'external-authors'
-          ENTITY_TYPE: 'external-author'
-        run: |
-          yarn export:entity $ENTITY -f $ENTITY.json
-          yarn workspace @asap-hub/algolia run algolia import -s "../../${ENTITY}.json" -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -t ./scripts/algolia-transformation.js
-      - name: Override dev index with the temp one
-        run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -i $ALGOLIA_INDEX

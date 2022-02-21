@@ -23,11 +23,6 @@ jobs:
           echo "integration image $INTEGRATION_IMAGE"
           echo "squidex image $SQUIDEX_IMAGE"
           echo "node $NODE_IMAGE"
-          echo "the repo name: $GITHUB_REPOSITORY"
-          echo "the repo name: ${{ github.repository }}"
-
-          echo "REPOSITORY_NAME=$(echo $GITHUB_REPOSITORY | awk -F / '{print $2}')" >> $GITHUB_ENV
-          echo "the repo name: $REPOSITORY_NAME"
 
   test-unit:
     needs: setup
@@ -207,8 +202,8 @@ jobs:
     env:
       CI_REPO_OWNER: ${{ github.repository_owner }}
       CI_REPO: ${{ github.repository }}
-      CI_COMMIT_SHA:  ${{ github.sha }}
-      CI_BRANCH: ${{ github.ref_name }}
+      CI_COMMIT_SHA: ${{ github.sha }}
+      CI_BRANCH: ${{ github.head_ref }}
       BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
     steps:
       - name: Checkout
@@ -217,10 +212,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: build-output
-      # set CI_REPO_NAME
       - name: Bundle watch
         run: |
-          echo "yarn bundlewatch"
+          CI_REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F / '{print $2}')
+          yarn bundlewatch
   test-build-output:
     needs: [setup, build]
     runs-on: ubuntu-latest

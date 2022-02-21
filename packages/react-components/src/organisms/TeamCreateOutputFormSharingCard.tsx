@@ -56,7 +56,7 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
       <LabeledDropdown<ResearchOutputSubtype>
         title="Type"
         subtitle="(required)"
-        description={`Select the option that applies to this ${type.toLowerCase()}`}
+        description={`Select the option that applies to this ${type.toLowerCase()}.`}
         options={[...researchOutputTypeToSubtype[type].values()].map(
           (option) => ({
             value: option,

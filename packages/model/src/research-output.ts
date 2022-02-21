@@ -64,6 +64,7 @@ export const researchOutputTypeToSubtype: Record<
     'Behavioral',
     'Electrophysiology',
     'Genetic Data - DNA',
+    'Genetic Data - RNA',
     'Protein Data',
     'Microscopy & Imaging',
     'Spectroscopy',

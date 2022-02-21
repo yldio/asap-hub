@@ -227,3 +227,18 @@ jobs:
       - name: Test output
         run: |
           yarn run test:build-output
+  test-browser:
+    needs: [setup, rebuild]
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:bionic
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download build arctifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: rebuild-output
+      - name: Test browser
+        run: |
+          yarn run test:browser

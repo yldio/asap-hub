@@ -39,5 +39,23 @@ describe('External Authors controller', () => {
       const result = await usersMockGraphqlClient.fetch({});
       expect(result).toEqual({ items: [], total: 0 });
     });
+
+    test('Should use take and skip parameters', async () => {
+      const mockResponse = getSquidexExternalAuthorsGraphqlResponse();
+      mockResponse.queryExternalAuthorsContentsWithTotal!.items = [];
+      mockResponse.queryExternalAuthorsContentsWithTotal!.total = 0;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await usersMockGraphqlClient.fetch({ take: 15, skip: 11 });
+      expect(result).toEqual({ items: [], total: 0 });
+
+      expect(squidexGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 15,
+          skip: 11
+        },
+      );
+    });
   });
 });

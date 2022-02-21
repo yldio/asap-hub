@@ -185,14 +185,27 @@ jobs:
           path: .yarn/unplugged/
       - name: Generate Package
         run: |
-          # yarn rebuild # Duplicated for performance
-          # yarn build:typecheck # Duplicated for performance
-          # yarn build:babel # Duplicated for performance
-          ls -la
-          ls -la apps/asap-server
           yarn sls package
       - uses: actions/upload-artifact@v2
         with:
           name: sls-package
           path: '.serverless'
           retention-days: 14
+  bundlewatch:
+    needs: [setup, build]
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: AWS
+        password: ${{ secrets.AWS_ECR_PASSWORD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download build arctifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: build-output
+      - name: Bundle watch
+        run: |
+          yarn bundlewatch

@@ -238,7 +238,13 @@ jobs:
     needs: [setup, rebuild]
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:bionic
+      image: mcr.microsoft.com/playwright:focal
+      # credentials:
+      #   username: AWS
+      #   password: ${{ secrets.AWS_ECR_PASSWORD }}
+    # services:
+    #   playwright:
+    #     image: mcr.microsoft.com/playwright:bionic
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -247,6 +253,9 @@ jobs:
         with:
           name: rebuild-output
           path: .yarn/unplugged/
+      - name: Install Playwright
+        run: |
+          yarn workspace @asap-hub/react-components run playwright install --with-deps
       - name: Test browser
         run: |
           yarn run test:browser

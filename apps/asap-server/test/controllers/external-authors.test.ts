@@ -53,7 +53,7 @@ describe('External Authors controller', () => {
         expect.anything(),
         {
           top: 15,
-          skip: 11
+          skip: 11,
         },
       );
     });

@@ -189,5 +189,5 @@ export const getResearchOutputRequest = (): ResearchOutputPostRequest => ({
   description: 'An example description',
   tags: ['tag1'],
   subTypes: ['3D Printing'],
-  labs: [{ id: '1', name: 'lab1' }],
+  labs: ['lab1'],
 });

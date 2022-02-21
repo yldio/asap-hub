@@ -148,5 +148,5 @@ export const useLabSuggestions = () => {
         { searchQuery, filters: new Set(), currentPage: null, pageSize: null },
         authorization,
       )
-    ).items.map(({ id, name }) => ({ label: name, value: id }));
+    ).items.map(({ id, name }) => ({ label: `${name} Lab`, value: id }));
 };

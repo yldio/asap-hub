@@ -4,7 +4,6 @@ import {
   ResearchOutputPostRequest,
   ResearchOutputResponse,
   ResearchOutputType,
-  LabResponse,
 } from '@asap-hub/model';
 
 import {
@@ -77,12 +76,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           description,
           title,
           subTypes,
-          labs: labs.map(
-            ({ value, label }: OptionValue): LabResponse => ({
-              name: label,
-              id: value,
-            }),
-          ),
+          labs: labs.map(({ value }: OptionValue) => value),
         })
       }
     >
@@ -108,6 +102,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           />
 
           <TeamCreateOutputContributorsCard
+            isSaving={isSaving}
             loadOptions={getLabSuggestions}
             values={labs}
             onChange={setLabs}

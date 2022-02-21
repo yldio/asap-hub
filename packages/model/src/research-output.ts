@@ -175,7 +175,7 @@ export type ResearchOutputPostRequest = {
   tags: string[];
   link: string;
 
-  labs?: LabResponse[];
+  labs?: string[];
 
   addedDate: string;
   asapFunded?: boolean;

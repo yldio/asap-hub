@@ -138,7 +138,7 @@ describe('/research-outputs/ route', () => {
         description,
         tags,
         subTypes,
-        labs,
+        labs: labs.map(({ id }) => id),
       };
     };
     test('Should return a 201 when is hit', async () => {

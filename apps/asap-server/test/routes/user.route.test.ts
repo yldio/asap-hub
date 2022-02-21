@@ -349,12 +349,13 @@ describe('/users/ route', () => {
       expect(response.status).toBe(404);
     });
 
-    test('Should call the controller method with the correct parameters', async () => {
+    test('Should call the controller method with the correct parameters and remove ignored nulls and undefined parameters', async () => {
       userControllerMock.update.mockResolvedValueOnce(getUserResponse());
 
       const requestParams = {
         ...userPatchRequest,
         firstName: undefined, // should be ignored
+        contactEmail: null, // should be ignored
       };
       await supertest(appWithMockedAuth)
         .patch(`/users/${userId}`)
@@ -429,13 +430,13 @@ describe('/users/ route', () => {
         'responsibilities',
         'reachOut',
       ])(
-        'Should not be able to provide null for the %s parameter ',
+        'Should be able to provide null for the %s parameter ',
         async (parameter) => {
           const response = await supertest(appWithMockedAuth)
             .patch(`/users/${userId}`)
             .send({ [parameter]: null });
 
-          expect(response.status).toBe(400);
+          expect(response.status).toBe(200);
         },
       );
 
@@ -546,16 +547,23 @@ describe('/users/ route', () => {
       });
 
       describe('degree', () => {
-        test.each(['BA', 'BSc', 'MSc', 'PhD', 'MD', 'PhD, MD'])(
-          'Should accept the %s degree',
-          async (degree) => {
-            const response = await supertest(appWithMockedAuth)
-              .patch(`/users/${userId}`)
-              .send({ degree });
+        test.each([
+          'BA',
+          'BSc',
+          'MD',
+          'MSc',
+          'MD, PhD',
+          'PhD',
+          'MPH',
+          'MA',
+          'MBA',
+        ])('Should accept the %s degree', async (degree) => {
+          const response = await supertest(appWithMockedAuth)
+            .patch(`/users/${userId}`)
+            .send({ degree });
 
-            expect(response.status).toBe(200);
-          },
-        );
+          expect(response.status).toBe(200);
+        });
 
         test('Should not accept any random degree', async () => {
           const response = await supertest(appWithMockedAuth)

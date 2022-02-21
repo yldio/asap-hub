@@ -246,6 +246,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: rebuild-output
+          path: .yarn/unplugged/
       - name: Test browser
         run: |
           yarn run test:browser

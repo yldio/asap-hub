@@ -238,10 +238,18 @@ jobs:
     needs: [setup, rebuild]
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:bionic
+      image: ${{ needs.setup.outputs.node-image-name }}
+      credentials:
+        username: AWS
+        password: ${{ secrets.AWS_ECR_PASSWORD }}
+    # services:
+    #   playwright:
+    #     image: mcr.microsoft.com/playwright:bionic
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Install Playwright
+        run: npx playwright install --with-deps
       - name: Download build arctifacts
         uses: actions/download-artifact@v2
         with:

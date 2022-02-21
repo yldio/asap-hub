@@ -103,6 +103,28 @@ jobs:
             packages/**/build*
           retention-days: 1
 
+  rebuild:
+    needs: setup
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: AWS
+        password: ${{ secrets.AWS_ECR_PASSWORD }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Re-Build
+        run: |
+          yarn rebuild
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: rebuild-output
+          path: |
+            .yarn/unplugged/
+          retention-days: 1
   check:
     needs: setup
     runs-on: ubuntu-latest
@@ -121,7 +143,7 @@ jobs:
           yarn ${{ matrix.script }}
           yarn constraints
   build-sls-package:
-    needs: [setup, build]
+    needs: [setup, build, rebuild]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
@@ -152,15 +174,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Download a single artifact
+      - name: Download build arctifacts
         uses: actions/download-artifact@v2
         with:
           name: build-output
-      - name: Build
+      - name: Download rebuild artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: rebuild-output
+          path: .yarn/unplugged/
+      - name: Generate Package
         run: |
           # yarn rebuild # Duplicated for performance
           # yarn build:typecheck # Duplicated for performance
           # yarn build:babel # Duplicated for performance
+          ls -la
+          ls -la apps/asap-server
           yarn sls package
       - uses: actions/upload-artifact@v2
         with:

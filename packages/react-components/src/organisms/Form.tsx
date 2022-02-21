@@ -43,14 +43,17 @@ const Form = <T extends void | Record<string, unknown>>({
       setStatus('isSaving');
       try {
         const result = await onSave();
-        if (!formRef.current) return;
-        setStatus('hasSaved');
+        if (formRef.current) {
+          setStatus('hasSaved');
+        }
         return result;
       } catch {
-        if (!formRef.current) return;
-        setStatus('hasError');
+        if (formRef.current) {
+          setStatus('hasError');
+        }
       }
     }
+    return Promise.resolve();
   };
 
   return (

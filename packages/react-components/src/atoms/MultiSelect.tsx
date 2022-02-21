@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { ComponentProps, FC, useState } from 'react';
+import { ComponentProps, FC, ReactElement, useState } from 'react';
 import Select, { components, OptionTypeBase } from 'react-select';
 import { validationMessageStyles } from '../form';
 import { reactMultiSelectStyles } from '../select';
@@ -8,7 +8,7 @@ import { crossIcon } from '../icons';
 
 export const MultiValueRemove = (
   props: ComponentProps<typeof components.MultiValueRemove>,
-) => (
+): ReactElement => (
   <components.MultiValueRemove {...props}>
     {crossIcon}
   </components.MultiValueRemove>

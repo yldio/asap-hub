@@ -40,6 +40,24 @@ describe('External Authors controller', () => {
       expect(result).toEqual({ items: [], total: 0 });
     });
 
+    test('Should return an empty result when the client returns a response with query property set to null', async () => {
+      const mockResponse = getSquidexExternalAuthorsGraphqlResponse();
+      mockResponse.queryExternalAuthorsContentsWithTotal = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await usersMockGraphqlClient.fetch({});
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return an empty result when the client returns a response with items property set to null', async () => {
+      const mockResponse = getSquidexExternalAuthorsGraphqlResponse();
+      mockResponse.queryExternalAuthorsContentsWithTotal!.items = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await usersMockGraphqlClient.fetch({});
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
     test('Should use take and skip parameters', async () => {
       const mockResponse = getSquidexExternalAuthorsGraphqlResponse();
       mockResponse.queryExternalAuthorsContentsWithTotal!.items = [];

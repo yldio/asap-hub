@@ -89,7 +89,7 @@ const serverlessConfig: AWS = {
       LOG_LEVEL: SLS_STAGE === 'production' ? 'error' : 'info',
       NODE_OPTIONS: '--enable-source-maps',
       ALGOLIA_APP_ID: `\${ssm:algolia-app-id-${envAlias}}`,
-      CURRENT_REVISION: '${env:CI_COMMIT_SHA}',
+      CURRENT_REVISION: '${env:CURRENT_REVISION}',
     },
     iamRoleStatements: [
       {

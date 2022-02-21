@@ -94,6 +94,14 @@ jobs:
           REACT_APP_SENTRY_DSN: ''
         run: |
           yarn build
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-output
+          path: |
+            apps/**/build*
+            packages/**/build*
+          retention-days: 1
 
   check:
     needs: setup
@@ -113,7 +121,7 @@ jobs:
           yarn ${{ matrix.script }}
           yarn constraints
   build-sls-package:
-    needs: setup
+    needs: [setup, build]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
@@ -144,15 +152,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Download a single artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build-output
       - name: Build
         run: |
-          yarn rebuild # Duplicated for performance
-          yarn build:typecheck # Duplicated for performance
-          yarn build:babel # Duplicated for performance
+          # yarn rebuild # Duplicated for performance
+          # yarn build:typecheck # Duplicated for performance
+          # yarn build:babel # Duplicated for performance
           yarn sls package
       - uses: actions/upload-artifact@v2
         with:
           name: sls-package
           path: '.serverless'
           retention-days: 14
-

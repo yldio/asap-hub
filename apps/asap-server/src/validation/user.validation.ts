@@ -1,4 +1,4 @@
-import { UserPatchRequest } from '@asap-hub/model';
+import { userDegree, UserPatchRequest } from '@asap-hub/model';
 import { JSONSchemaType } from 'ajv';
 import { validateInput } from './';
 
@@ -12,19 +12,7 @@ const userInputValidationSchema: JSONSchemaType<UserPatchRequest> = {
     lastName: { type: 'string', nullable: true },
     degree: {
       type: 'string',
-      enum: [
-        'BA',
-        'BSc',
-        'MSc',
-        'PhD',
-        'MD',
-        'MD, PhD',
-        'MPH',
-        'MA',
-        'MBA',
-        '',
-        null,
-      ],
+      enum: [...userDegree, '', null],
       nullable: true,
     },
     institution: { type: 'string', nullable: true },

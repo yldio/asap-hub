@@ -166,7 +166,7 @@ jobs:
           # yarn build:typecheck
           # yarn build:babel
           # yarn workspaces foreach -vpt run typecheck
-          yarn workspaces foreach -vpt run build
+          yarn workspaces foreach -vpt -j 2 run build
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v2
         with:

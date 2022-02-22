@@ -472,7 +472,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         EVENT_BUS: 'asap-events-${self:provider.stage}',
-        EVENT_SOURCE: 'asap.external-authors',
+        EVENT_SOURCE: 'asap.external-author',
       },
     },
     researchOutputUpserted: {

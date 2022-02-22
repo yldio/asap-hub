@@ -68,6 +68,32 @@ jobs:
       - name: Delete App
         if: always()
         run: python ci/integration/scripts/delete-app.py
+  typecheck:
+    needs: setup
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: AWS
+        password: ${{ secrets.AWS_ECR_PASSWORD }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: Build typecheck
+        env:
+          NODE_ENV: 'production'
+        run: |
+          yarn build:typecheck
+      - name: Typecheck
+        run: |
+          yarn workspaces foreach -vpt run typecheck
   build:
     needs: setup
     runs-on: ubuntu-latest
@@ -91,7 +117,7 @@ jobs:
         run: |
           REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)
           echo "::set-output name=id::$REACT_APP_ALGOLIA_APP_ID"
-      - name: Build 1
+      - name: Build Babel
         env:
           NODE_ENV: 'production'
           ASAP_HOSTNAME: 'hub.asap.science'
@@ -105,31 +131,8 @@ jobs:
           REACT_APP_RELEASE: '${GITHUB_RUN_ID}-dev'
           REACT_APP_SENTRY_DSN: ''
         run: |
-          # yarn build
-          yarn build:typecheck
-          # yarn build:babel
-          # yarn workspaces foreach -vpt run typecheck
-          # yarn workspaces foreach -vpt run build
-      - name: Build 2
-        env:
-          NODE_ENV: 'production'
-          ASAP_HOSTNAME: 'hub.asap.science'
-          ASAP_API_URL: 'https://api-${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
-          ASAP_APP_URL: 'https://${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
-          ALGOLIA_INDEX: 'asap-hub_research_outputs_CI-${ needs.setup.outputs.pr-number }'
-          REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
-          REACT_APP_ALGOLIA_INDEX: $ALGOLIA_INDEX
-          REACT_APP_API_BASE_URL: 'http://api-${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
-          REACT_APP_ENVIRONMENT: 'development'
-          REACT_APP_RELEASE: '${GITHUB_RUN_ID}-dev'
-          REACT_APP_SENTRY_DSN: ''
-        run: |
-          # yarn build
-          # yarn build:typecheck
           yarn build:babel
-          # yarn workspaces foreach -vpt run typecheck
-          # yarn workspaces foreach -vpt run build
-      - name: Build 3
+      - name: Build
         env:
           NODE_ENV: 'production'
           ASAP_HOSTNAME: 'hub.asap.science'
@@ -143,29 +146,6 @@ jobs:
           REACT_APP_RELEASE: '${GITHUB_RUN_ID}-dev'
           REACT_APP_SENTRY_DSN: ''
         run: |
-          # yarn build
-          # yarn build:typecheck
-          # yarn build:babel
-          yarn workspaces foreach -vpt run typecheck
-          # yarn workspaces foreach -vpt run build
-      - name: Build 4
-        env:
-          NODE_ENV: 'production'
-          ASAP_HOSTNAME: 'hub.asap.science'
-          ASAP_API_URL: 'https://api-${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
-          ASAP_APP_URL: 'https://${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
-          ALGOLIA_INDEX: 'asap-hub_research_outputs_CI-${ needs.setup.outputs.pr-number }'
-          REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
-          REACT_APP_ALGOLIA_INDEX: $ALGOLIA_INDEX
-          REACT_APP_API_BASE_URL: 'http://api-${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
-          REACT_APP_ENVIRONMENT: 'development'
-          REACT_APP_RELEASE: '${GITHUB_RUN_ID}-dev'
-          REACT_APP_SENTRY_DSN: ''
-        run: |
-          # yarn build
-          # yarn build:typecheck
-          # yarn build:babel
-          # yarn workspaces foreach -vpt run typecheck
           yarn workspaces foreach -vpt --exclude asap-hub run build
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v2

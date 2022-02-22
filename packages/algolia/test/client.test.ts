@@ -68,6 +68,22 @@ describe('Algolia Search Client', () => {
     });
   });
 
+  test('Should saveEntity - the Research Output', async () => {
+    const researchOutput = createResearchOutputResponse();
+
+    await algoliaSearchClient.saveEntity({
+      data: researchOutput,
+      type: 'research-output',
+      id: 'ro-id',
+    });
+
+    expect(algoliaSearchIndex.saveObject).toBeCalledWith({
+      ...researchOutput,
+      objectID: researchOutput.id,
+      __meta: { type: 'research-output' },
+    });
+  });
+
   test('Should remove the entity', async () => {
     const researchOutputId = '1';
 

@@ -91,11 +91,6 @@ jobs:
         run: |
           REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)
           echo "::set-output name=id::$REACT_APP_ALGOLIA_APP_ID"
-      - name: Build typecheck
-        env:
-          NODE_ENV: 'production'
-        run: |
-          yarn build:typecheck
       - name: Build
         env:
           NODE_ENV: 'production'

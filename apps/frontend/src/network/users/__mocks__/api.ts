@@ -20,6 +20,7 @@ export const patchUser = jest.fn(
     return {
       ...user,
       ...patch,
+      degree: patch.degree === '' ? undefined : patch.degree,
       teams: user.teams.map((team, i) => ({ ...team, ...patch.teams?.[i] })),
     };
   },

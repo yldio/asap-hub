@@ -106,14 +106,22 @@ jobs:
           REACT_APP_SENTRY_DSN: ''
         run: |
           yarn build
-      - name: 'Upload Artifact'
-        uses: actions/upload-artifact@v2
+      - name: Cache Build Output
+        uses: actions/cache@v2
+        id: restore-build
         with:
-          name: build-output
           path: |
             apps/**/build*
             packages/**/build*
-          retention-days: 1
+          key: build-output-${{ github.sha }}
+      # - name: 'Upload Artifact'
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: build-output
+      #     path: |
+      #       apps/**/build*
+      #       packages/**/build*
+      #     retention-days: 1
 
   rebuild:
     needs: setup
@@ -187,10 +195,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Download build arctifacts
-        uses: actions/download-artifact@v2
+      - name: Cache Build Output
+        uses: actions/cache@v2
+        id: restore-build
         with:
-          name: build-output
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-output-${{ github.sha }}
       - name: Download rebuild artifact
         uses: actions/download-artifact@v2
         with:
@@ -221,10 +233,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Download build arctifacts
-        uses: actions/download-artifact@v2
+      - name: Cache Build Output
+        uses: actions/cache@v2
+        id: restore-build
         with:
-          name: build-output
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-output-${{ github.sha }}
       - name: Bundle watch
         run: |
           CI_REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F / '{print $2}')
@@ -240,10 +256,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Download build arctifacts
-        uses: actions/download-artifact@v2
+      - name: Cache Build Output
+        uses: actions/cache@v2
+        id: restore-build
         with:
-          name: build-output
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-output-${{ github.sha }}
       - name: Test output
         run: |
           yarn run test:build-output

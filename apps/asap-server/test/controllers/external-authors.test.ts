@@ -2,6 +2,7 @@ import ExternalAuthors from '../../src/controllers/external-authors';
 import { identity } from '../helpers/squidex';
 import {
   getExternalAuthorResponse,
+  getSquidexExternalAuthorGraphqlResponse,
   getSquidexExternalAuthorsGraphqlResponse,
 } from '../fixtures/external-authors.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
@@ -74,6 +75,32 @@ describe('External Authors controller', () => {
           skip: 11,
         },
       );
+    });
+  });
+
+  describe('FetchById', () => {
+    test('Should fetch the users from squidex graphql', async () => {
+      const result = await usersMockGraphqlServer.fetchById('user-id');
+
+      expect(result).toMatchObject(getExternalAuthorResponse());
+    });
+
+    test('Should throw when user is not found', async () => {
+      const mockResponse = getSquidexExternalAuthorGraphqlResponse();
+      mockResponse.findExternalAuthorsContent = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      await expect(
+        usersMockGraphqlClient.fetchById('not-found'),
+      ).rejects.toThrow('Not Found');
+    });
+
+    test('Should return the user when it finds it', async () => {
+      const mockResponse = getSquidexExternalAuthorGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await usersMockGraphqlClient.fetchById('user-id');
+      expect(result).toEqual(getExternalAuthorResponse());
     });
   });
 });

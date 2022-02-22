@@ -40,6 +40,13 @@ export const userWebhookFactory = (eventBridge: EventBridge): Handler =>
 const userEventTypes = ['UserPublished', 'UserUpdated', 'UserDeleted'] as const;
 export type UserEventType = typeof userEventTypes[number];
 
+export type UserSquidexEventType =
+  | 'UsersCreated'
+  | 'UsersPublished'
+  | 'UsersUpdated'
+  | 'UsersUnpublished'
+  | 'UsersDeleted';
+
 const getEventType = (customType: string): UserEventType | undefined => {
   switch (customType) {
     case 'UsersPublished':
@@ -57,6 +64,20 @@ const getEventType = (customType: string): UserEventType | undefined => {
     default:
       return undefined;
   }
+};
+
+export type SquidexWebhookUserPayload = {
+  type: UserSquidexEventType;
+  timestamp: string;
+  payload: {
+    $type: 'EnrichedContentEvent';
+    type: 'Published' | 'Updated' | 'Unpublished' | 'Deleted' | 'Created';
+    id: string;
+    created: string;
+    lastModified: string;
+    version: number;
+    data: { [x: string]: { iv: unknown } | null };
+  };
 };
 
 const eventBridge = new EventBridge();

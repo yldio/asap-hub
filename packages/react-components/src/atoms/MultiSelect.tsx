@@ -23,17 +23,12 @@ type MultiSelectProps = {
   readonly id?: string;
   readonly enabled?: boolean;
   readonly placeholder?: string;
-  readonly isSimple?: boolean;
-} & Pick<ComponentProps<typeof Select>, 'noOptionsMessage'>;
-
-export type SimpleValuesMultiSelecletProps = MultiSelectProps & {
   readonly values?: string[];
   readonly onChange?: (newValues: string[]) => void;
   readonly suggestions?: ReadonlyArray<string>;
-  readonly isSimple?: true;
-};
+} & Pick<ComponentProps<typeof Select>, 'noOptionsMessage'>;
 
-const MultiSelect: FC<SimpleValuesMultiSelecletProps> = ({
+const MultiSelect: FC<MultiSelectProps> = ({
   customValidationMessage = '',
 
   id,
@@ -41,7 +36,6 @@ const MultiSelect: FC<SimpleValuesMultiSelecletProps> = ({
   enabled = true,
   placeholder = '',
   noOptionsMessage,
-  isSimple = true,
   values = [],
   onChange = noop,
 }) => {
@@ -67,20 +61,14 @@ const MultiSelect: FC<SimpleValuesMultiSelecletProps> = ({
           value: suggestion,
           label: suggestion,
         }))}
-        value={inputValues.map((value: string) =>
-          isSimple
-            ? {
-                value,
-                label: value,
-              }
-            : value,
-        )}
+        value={inputValues.map((value: string) => ({
+          value,
+          label: value,
+        }))}
         onFocus={() => setValidationMsg('')}
         onBlur={() => setValidationMsg(customValidationMessage)}
         onChange={(options) => {
-          const newValues = options.map(({ value, label }) =>
-            isSimple ? value : { value, label },
-          );
+          const newValues = options.map(({ value }) => value);
           setInputValues(newValues);
           onChange(newValues);
         }}

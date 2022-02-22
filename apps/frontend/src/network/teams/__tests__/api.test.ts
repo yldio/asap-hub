@@ -1,9 +1,19 @@
 import nock from 'nock';
-import { createTeamResponse, createListTeamResponse } from '@asap-hub/fixtures';
+import {
+  createTeamResponse,
+  createListTeamResponse,
+  createListLabsResponse,
+} from '@asap-hub/fixtures';
 import { ResearchOutputPostRequest, TeamResponse } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../../../config';
-import { getTeam, patchTeam, getTeams, createTeamResearchOutput } from '../api';
+import {
+  getTeam,
+  patchTeam,
+  getTeams,
+  createTeamResearchOutput,
+  getLabs,
+} from '../api';
 import { GetListOptions } from '../../../api-util';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
@@ -157,6 +167,33 @@ describe('createTeamResearchOutput', () => {
       createTeamResearchOutput(payload, 'Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to create research output for teamId: 90210 Expected status 201. Received status 500."`,
+    );
+  });
+});
+describe('getLabs', () => {
+  it('makes an authorized GET request for labs', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/labs')
+      .query({ take: '10', skip: '0' })
+      .reply(200, {});
+    await getLabs(options, 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('returns successfully fetched labs', async () => {
+    const labs = createListLabsResponse(1);
+    nock(API_BASE_URL)
+      .get('/labs')
+      .query({ take: '10', skip: '0' })
+      .reply(200, labs);
+    expect(await getLabs(options, '')).toEqual(labs);
+  });
+  it('errors for error status', async () => {
+    nock(API_BASE_URL).get('/labs').query({ take: '10', skip: '0' }).reply(500);
+    await expect(
+      getLabs(options, ''),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch labs. Expected status 2xx. Received status 500."`,
     );
   });
 });

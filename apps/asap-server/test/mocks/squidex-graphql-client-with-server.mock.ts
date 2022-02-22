@@ -17,6 +17,7 @@ import { getSquidexGraphqlGroup } from '../fixtures/groups.fixtures';
 import { getSquidexGraphqlResearchOutput } from '../fixtures/research-output.fixtures';
 import { getSquidexGraphqlTeam } from '../fixtures/teams.fixtures';
 import { getGraphQLUser } from '../fixtures/users.fixtures';
+import { getGraphQLExternalAuthor } from '../fixtures/external-authors.fixtures';
 
 export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
   const schema = loadSchemaSync(
@@ -31,6 +32,8 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     total: 1,
   });
   const mocks = {
+    ExternalAuthors: () => getGraphQLExternalAuthor(),
+    ExternalAuthorsDto: () => resultDto,
     Int: () => 8,
     Instant: () => '2021-10-12T15:42:05Z',
     JsonScalar: () => {},
@@ -55,6 +58,9 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     schema,
     mocks,
     typePolicies: {
+      ExternalAuthors: {
+        keyFieldName: false,
+      },
       UsersDataTeamsChildDto: {
         keyFieldName: false,
       },

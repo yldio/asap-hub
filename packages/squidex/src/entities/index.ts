@@ -5,6 +5,7 @@ export * from './page';
 export * from './research-output';
 export * from './team';
 export * from './user';
+export * from './external-author';
 export * from './group';
 export * from './event';
 export * from './webhook';

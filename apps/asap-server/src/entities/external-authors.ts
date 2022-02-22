@@ -1,0 +1,9 @@
+import { ExternalAuthorResponse } from '@asap-hub/model';
+import { GraphqlExternalAuthor } from '@asap-hub/squidex';
+
+export const parseGraphQLExternalAuthor = (
+  item: GraphqlExternalAuthor,
+): ExternalAuthorResponse => ({
+  orcid: item.flatData?.orcid || undefined,
+  displayName: item.flatData?.name || '',
+});

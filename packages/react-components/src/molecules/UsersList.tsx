@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { css } from '@emotion/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import {
-  ExternalAuthor,
+  ExternalAuthorResponse,
   UserResponse,
   isInternalAuthor,
 } from '@asap-hub/model';
@@ -57,7 +57,7 @@ interface UsersListProps {
         UserResponse,
         'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'id'
       >
-    | ExternalAuthor
+    | ExternalAuthorResponse
   >;
   max?: number;
 }

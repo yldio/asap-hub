@@ -3,14 +3,16 @@ import { ListResponse } from '@asap-hub/model';
 import { SquidexGraphql } from '@asap-hub/squidex';
 import ResearchOutputs from '../src/controllers/research-outputs';
 import Users from '../src/controllers/users';
+import ExternalAuthors from '../src/controllers/external-authors';
 
 export const exportEntity = async (
-  entity: 'users' | 'research-outputs',
+  entity: 'users' | 'research-outputs' | 'external-authors',
   filename?: string,
 ): Promise<void> => {
   const controllerMap = {
     users: Users,
     'research-outputs': ResearchOutputs,
+    'external-authors': ExternalAuthors,
   };
   const controller = new controllerMap[entity](new SquidexGraphql());
   const file = await fs.open(filename || `${entity}.json`, 'w');

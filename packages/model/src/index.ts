@@ -1,6 +1,7 @@
 export * from './common';
 export * from './dashboard';
 export * from './discover';
+export * from './external-author';
 export * from './news';
 export * from './page';
 export * from './research-output';

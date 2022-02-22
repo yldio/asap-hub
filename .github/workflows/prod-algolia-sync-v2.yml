@@ -11,6 +11,7 @@ on:
         options:
           - users
           - research-outputs
+          - external-authors
           - all
 jobs:
   sync_prod_index:
@@ -59,6 +60,14 @@ jobs:
         env:
           ENTITY: 'users'
           ENTITY_TYPE: 'user'
+        run: |
+          yarn export:entity $ENTITY -f $ENTITY.json
+          yarn workspace @asap-hub/algolia run algolia import -s "../../${ENTITY}.json" -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -t ./scripts/algolia-transformation.js
+      - name: Import External Authors (EXTERNAL_AUTHORS | ALL)
+        if: ${{ github.event.inputs.entity == 'external-authors' || github.event.inputs.entity == 'all'}}
+        env:
+          ENTITY: 'external-authors'
+          ENTITY_TYPE: 'external-author'
         run: |
           yarn export:entity $ENTITY -f $ENTITY.json
           yarn workspace @asap-hub/algolia run algolia import -s "../../${ENTITY}.json" -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -t ./scripts/algolia-transformation.js

@@ -86,11 +86,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - name: Build typecheck
-        env:
-          NODE_ENV: 'production'
-        run: |
-          yarn build:typecheck
       - name: Typecheck
         run: |
           yarn workspaces foreach -vpt run typecheck
@@ -117,6 +112,11 @@ jobs:
         run: |
           REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)
           echo "::set-output name=id::$REACT_APP_ALGOLIA_APP_ID"
+      - name: Build typecheck
+        env:
+          NODE_ENV: 'production'
+        run: |
+          yarn build:typecheck
       - name: Build Babel
         env:
           NODE_ENV: 'production'

@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import { UserResponse } from '@asap-hub/model';
-import { framework } from '@asap-hub/services-common';
 import { isUserOnboardable } from '@asap-hub/validation';
 import Boom, { isBoom } from '@hapi/boom';
-import Joi from '@hapi/joi';
 import { Response, Router } from 'express';
 import parseURI from 'parse-data-url';
 import { GroupController } from '../controllers/groups';
 import { UserController } from '../controllers/users';
 import { permissionHandler } from '../middleware/permission-handler';
-import { FetchOptions } from '../utils/types';
 import {
-  validateUserInput,
+  validateUserPatchRequest,
   validateUserParameters,
+  validateUserPostRequestInput,
+  validateUserInviteParameters,
 } from '../validation/user.validation';
+import { validateFetchOptions } from '../validation';
 
 export const userPublicRouteFactory = (
   userController: UserController,
@@ -24,11 +24,8 @@ export const userPublicRouteFactory = (
   userPublicRoutes.get<{ code: string }>(
     '/users/invites/:code',
     async (req, res: Response<UserPublicResponse>) => {
-      const { code } = framework.validate(
-        'parameters',
-        req.params,
-        publicParamSchema,
-      );
+      const { code } = validateUserInviteParameters(req.params);
+
       try {
         const result = await userController.fetchByCode(code);
 
@@ -56,11 +53,7 @@ export const userRouteFactory = (
   const userRoutes = Router();
 
   userRoutes.get('/users', permissionHandler, async (req, res) => {
-    const options = framework.validate(
-      'query',
-      req.query,
-      querySchemaWithFilter,
-    ) as unknown as FetchOptions;
+    const options = validateFetchOptions(req.query);
 
     const userFetchOptions = {
       ...options,
@@ -73,11 +66,8 @@ export const userRouteFactory = (
   });
 
   userRoutes.get<{ userId: string }>('/users/:userId', async (req, res) => {
-    const { userId } = framework.validate(
-      'parameters',
-      req.params,
-      paramSchema,
-    );
+    const { userId } = validateUserParameters(req.params);
+
     if (
       req.loggedInUser?.onboarded !== true &&
       userId !== req.loggedInUser?.id
@@ -99,12 +89,8 @@ export const userRouteFactory = (
     async (req, res) => {
       const { query, params } = req;
 
-      const { userId } = framework.validate('parameters', params, paramSchema);
-      const options = framework.validate(
-        'query',
-        query,
-        querySchema,
-      ) as unknown as FetchOptions;
+      const { userId } = validateUserParameters(params);
+      const options = validateFetchOptions(query);
 
       const user = await userController.fetchById(userId!);
       const teams = user.teams.map((t) => t.id);
@@ -119,22 +105,14 @@ export const userRouteFactory = (
   );
 
   userRoutes.post('/users/:userId/avatar', async (req, res) => {
-    const { userId } = framework.validate(
-      'parameters',
-      req.params,
-      paramSchema,
-    );
+    const { userId } = validateUserParameters(req.params);
 
     // user is trying to update someone else
     if (req.loggedInUser!.id !== userId) {
       throw Boom.forbidden();
     }
 
-    const payload = framework.validate(
-      'payload',
-      req.body,
-      Joi.object({ avatar: Joi.string().required() }).required(),
-    ) as { avatar: string };
+    const payload = validateUserPostRequestInput(req.body);
 
     const parsed = parseURI(payload.avatar);
 
@@ -166,7 +144,7 @@ export const userRouteFactory = (
   userRoutes.patch('/users/:userId', async (req, res) => {
     const { userId } = validateUserParameters(req.params);
 
-    const payload = validateUserInput(req.body);
+    const payload = validateUserPatchRequest(req.body);
 
     // user is trying to update someone else
     if (req.loggedInUser!.id !== userId) {
@@ -207,23 +185,5 @@ export const userRouteFactory = (
 
   return userRoutes;
 };
-
-const querySchema = Joi.object({
-  take: Joi.number(),
-  skip: Joi.number(),
-  search: Joi.string(),
-}).required();
-
-const querySchemaWithFilter = querySchema.append({
-  filter: Joi.array().items(Joi.string()).single(),
-});
-
-const paramSchema = Joi.object({
-  userId: Joi.string().required(),
-});
-
-const publicParamSchema = Joi.object({
-  code: Joi.string().required(),
-});
 
 type UserPublicResponse = Pick<UserResponse, 'id' | 'displayName'>;

@@ -2,7 +2,7 @@ import { userDegree, UserPatchRequest } from '@asap-hub/model';
 import { JSONSchemaType } from 'ajv';
 import { validateInput } from './';
 
-const userInputValidationSchema: JSONSchemaType<UserPatchRequest> = {
+const userPatchRequestValidationSchema: JSONSchemaType<UserPatchRequest> = {
   type: 'object',
   properties: {
     jobTitle: { type: 'string', nullable: true },
@@ -58,15 +58,36 @@ const userInputValidationSchema: JSONSchemaType<UserPatchRequest> = {
   additionalProperties: false,
 };
 
-export const validateUserInput = validateInput(userInputValidationSchema, {
-  skipNull: true,
-});
+export const validateUserPatchRequest = validateInput(
+  userPatchRequestValidationSchema,
+  {
+    skipNull: true,
+  },
+);
+
+type UserPostRequest = { avatar: string };
+
+const userPostRequestValidationSchema: JSONSchemaType<UserPostRequest> = {
+  type: 'object',
+  properties: {
+    avatar: { type: 'string' },
+  },
+  required: ['avatar'],
+  additionalProperties: false,
+};
+
+export const validateUserPostRequestInput = validateInput(
+  userPostRequestValidationSchema,
+  {
+    skipNull: false,
+  },
+);
 
 type UserParameters = {
   userId: string;
 };
 
-const userParametersSchema: JSONSchemaType<UserParameters> = {
+const userParametersValidationSchema: JSONSchemaType<UserParameters> = {
   type: 'object',
   properties: {
     userId: { type: 'string' },
@@ -75,4 +96,32 @@ const userParametersSchema: JSONSchemaType<UserParameters> = {
   additionalProperties: false,
 };
 
-export const validateUserParameters = validateInput(userParametersSchema);
+export const validateUserParameters = validateInput(
+  userParametersValidationSchema,
+  {
+    skipNull: false,
+    coerce: true,
+  },
+);
+
+type UserInviteParameters = {
+  code: string;
+};
+
+const userInviteParametersValidationSchema: JSONSchemaType<UserInviteParameters> =
+  {
+    type: 'object',
+    properties: {
+      code: { type: 'string' },
+    },
+    required: ['code'],
+    additionalProperties: false,
+  };
+
+export const validateUserInviteParameters = validateInput(
+  userInviteParametersValidationSchema,
+  {
+    skipNull: false,
+    coerce: true,
+  },
+);

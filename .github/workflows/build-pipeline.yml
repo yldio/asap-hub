@@ -54,10 +54,10 @@ jobs:
         username: AWS
         password: ${{ secrets.AWS_ECR_PASSWORD }}
     env:
-      BASE_APP_NAME: ${{ needs.setup.ouputs.pr-number }}
-      SQUIDEX_APP_NAME: $BASE_APP_NAME-$GITHUB_RUN_ID
+      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number || github.head_ref }}-${{ github.run_id }}-github
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
+      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -65,7 +65,7 @@ jobs:
         run: python ci/integration/scripts/create-app.py
       - name: Test
         run: yarn test:integration
-      - name: Upload test results
+      - name: Delete App
         if: always()
         run: python ci/integration/scripts/delete-app.py
   build:

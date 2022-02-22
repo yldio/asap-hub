@@ -5,6 +5,8 @@ import { ResearchOutputResponse, UserResponse } from '@asap-hub/model';
 export const RESEARCH_OUTPUT_ENTITY_TYPE = 'research-output';
 export const USER_ENTITY_TYPE = 'user';
 
+export type EntityType = 'research-output' | 'user' | 'external-author';
+
 export type EntityResponses = {
   [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse;
   [USER_ENTITY_TYPE]: UserResponse;
@@ -30,6 +32,13 @@ export const getEntityType = (
 
   return 'user';
 };
+
+export type Entity = {
+  id: string;
+  type: EntityType;
+  data: { [key: string]: unknown };
+};
+
 export class AlgoliaSearchClient {
   public constructor(private index: SearchIndex) {
     // do nothing
@@ -37,6 +46,14 @@ export class AlgoliaSearchClient {
 
   async save(payload: EntityResponses[keyof EntityResponses]): Promise<void> {
     await this.index.saveObject(AlgoliaSearchClient.getAlgoliaObject(payload));
+  }
+
+  async saveEntity({ id, type, data }: Entity): Promise<void> {
+    await this.index.saveObject({
+      ...data,
+      objectID: id,
+      __meta: { type },
+    });
   }
 
   async saveMany(

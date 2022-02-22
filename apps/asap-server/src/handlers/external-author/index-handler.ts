@@ -31,11 +31,15 @@ export const indexExternalAuthorHandler =
         event.detail.payload.id,
       );
 
-      logger.debug(`Fetched external author ${externalauthor.id}`);
+      logger.debug(`Fetched external author ${externalauthor.displayName}`);
 
-      await algoliaClient.save(externalauthor);
+      await algoliaClient.saveEntity({
+        id: event.detail.payload.id,
+        type: 'external-author',
+        data: externalauthor,
+      });
 
-      logger.debug(`Saved external author  ${externalauthor.id}`);
+      logger.debug(`Saved external author  ${externalauthor.displayName}`);
     } catch (e) {
       if (e?.output?.statusCode === 404) {
         await algoliaClient.remove(event.detail.payload.id);

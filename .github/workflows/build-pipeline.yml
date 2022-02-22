@@ -23,7 +23,6 @@ jobs:
           echo "integration image $INTEGRATION_IMAGE"
           echo "squidex image $SQUIDEX_IMAGE"
           echo "node $NODE_IMAGE"
-
   test-unit:
     needs: setup
     runs-on: ubuntu-latest
@@ -51,11 +50,21 @@ jobs:
       credentials:
         username: AWS
         password: ${{ secrets.AWS_ECR_PASSWORD }}
+    env:
+      BASE_APP_NAME: ${{ needs.setup.ouputs.pr-number }}
+      SQUIDEX_APP_NAME: $BASE_APP_NAME-$GITHUB_RUN_ID
+      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Setup
+        run: python ci/integration/scripts/create-app.py
       - name: Test
-        run: echo "Test"
+        run: yarn test:integration
+      - name: Upload test results
+        if: always()
+        run: python ci/integration/scripts/delete-app.py
   build:
     needs: setup
     runs-on: ubuntu-latest
@@ -239,12 +248,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:focal
-      # credentials:
-      #   username: AWS
-      #   password: ${{ secrets.AWS_ECR_PASSWORD }}
-    # services:
-    #   playwright:
-    #     image: mcr.microsoft.com/playwright:bionic
     steps:
       - name: Checkout
         uses: actions/checkout@v2

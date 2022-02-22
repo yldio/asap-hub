@@ -44,7 +44,7 @@ jobs:
           path: .jest-cache
           key: ${{ runner.os }}-jest
       - name: Test
-        run: yarn test --coverage --maxWorkers=3
+        run: yarn test --coverage --maxWorkers=2
   test-integration:
     needs: setup
     runs-on: ubuntu-latest
@@ -72,7 +72,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
+      image: ${{ needs.setup.outputs.node-image-name }}
       credentials:
         username: AWS
         password: ${{ secrets.AWS_ECR_PASSWORD }}
@@ -140,6 +140,11 @@ jobs:
   check:
     needs: setup
     runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: AWS
+        password: ${{ secrets.AWS_ECR_PASSWORD }}
     strategy:
       fail-fast: false
       matrix:
@@ -147,13 +152,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
       - name: Check
         run: |
           yarn ${{ matrix.script }}
-          yarn constraints
   build-sls-package:
     needs: [setup, build, rebuild]
     runs-on: ubuntu-latest

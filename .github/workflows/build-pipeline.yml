@@ -30,19 +30,20 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     container:
-      image: ${{ needs.setup.outputs.node-image-name }}
+      image: ${{ needs.setup.outputs.integration-image-name }}
       credentials:
         username: AWS
         password: ${{ secrets.AWS_ECR_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        name: Cache Jest cache
-        id: cache-jest-cache
+      - name: Cache Jest cache
+        uses: actions/cache@v2
+        id: jest-cache
         with:
-          path: .jest-cache
-          key: ${{ runner.os }}-jest
+          path: |
+            .jest-cache/
+          key: jest-cache
       - name: Test
         run: yarn test --coverage --maxWorkers=2
   test-integration:

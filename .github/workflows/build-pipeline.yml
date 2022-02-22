@@ -23,6 +23,9 @@ jobs:
           echo "integration image $INTEGRATION_IMAGE"
           echo "squidex image $SQUIDEX_IMAGE"
           echo "node $NODE_IMAGE"
+          echo "GITHUB_HEAD_REF $GITHUB_HEAD_REF"
+          echo "GITHUB_REF $GITHUB_REF"
+          echo "GITHUB_BASE_REF $GITHUB_BASE_REF"
   test-unit:
     needs: setup
     runs-on: ubuntu-latest

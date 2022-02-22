@@ -438,6 +438,22 @@ const serverlessConfig: AWS = {
         EVENT_SOURCE: 'asap.user',
       },
     },
+    externalAuthorUpserted: {
+      handler:
+        'apps/asap-server/src/handlers/webhooks/webhook-external-author.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/external-authors',
+          },
+        },
+      ],
+      environment: {
+        EVENT_BUS: 'asap-events-${self:provider.stage}',
+        EVENT_SOURCE: 'asap.external-author',
+      },
+    },
     researchOutputUpserted: {
       handler:
         'apps/asap-server/src/handlers/webhooks/webhook-research-output.handler',

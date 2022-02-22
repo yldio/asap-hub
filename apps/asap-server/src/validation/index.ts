@@ -1,5 +1,5 @@
 import Boom from '@hapi/boom';
-import Ajv, { JSONSchemaType } from 'ajv';
+import Ajv, { JSONSchemaType, ValidateFunction } from 'ajv';
 import { NullableOptionalProperties } from '../utils/types';
 
 const ajv = new Ajv();
@@ -20,21 +20,21 @@ export function validateInput<T>(
     skipNull?: boolean;
   },
 ): (data: any) => NonNullable<T> | NullableOptionalProperties<T> {
-  const validation = ajv.compile(schema);
+  const ajvValidation = ajv.compile(schema);
 
   return (data) => {
-    if (validation(data)) {
+    if (validate(ajvValidation, data)) {
       if (options?.skipNull) {
         return Object.entries(data).reduce(
           (obj, [key, val]) => (val === null ? obj : { ...obj, [key]: val }),
-          {},
-        ) as NonNullable<T>;
+          {} as NonNullable<T>,
+        );
       }
 
-      return data as NullableOptionalProperties<T>;
+      return data;
     }
 
-    const errors = validation.errors;
+    const errors = ajvValidation.errors;
 
     throw Boom.badRequest(
       `Error "${errors?.[0]?.propertyName}": ${errors?.[0]?.message}`,
@@ -44,3 +44,12 @@ export function validateInput<T>(
     );
   };
 }
+
+// AJV requires setting every optional property nullable in the validatio schema
+// however marking it as nullable does not enforce the null types
+// The below wrapper-type will make every optional property nullable too
+// see: https://github.com/ajv-validator/ajv/issues/1664
+const validate = <T>(
+  ajvValidation: ValidateFunction<T>,
+  data: any,
+): data is NullableOptionalProperties<T> => ajvValidation(data);

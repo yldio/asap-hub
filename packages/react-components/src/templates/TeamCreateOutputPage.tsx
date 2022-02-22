@@ -21,7 +21,11 @@ const TeamCreateOutputPage: React.FC<TeamCreateOutputPageProps> = ({
   <>
     <TeamCreateOutputHeader type={type} />
     <main css={mainStyles}>
-      <TeamCreateOutputForm onSave={onSave} tagSuggestions={tagSuggestions} />
+      <TeamCreateOutputForm
+        onSave={onSave}
+        tagSuggestions={tagSuggestions}
+        type={type}
+      />
     </main>
   </>
 );

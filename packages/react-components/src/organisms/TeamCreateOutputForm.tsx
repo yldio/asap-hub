@@ -1,8 +1,9 @@
 import { css } from '@emotion/react';
-import { ComponentProps, useCallback, useState } from 'react';
+import { ComponentProps, useState } from 'react';
 import {
   ResearchOutputPostRequest,
   ResearchOutputResponse,
+  ResearchOutputType,
 } from '@asap-hub/model';
 
 import {
@@ -35,31 +36,38 @@ type TeamCreateOutputFormProps = Pick<
   onSave?: (
     output: Partial<ResearchOutputPostRequest>,
   ) => Promise<Pick<ResearchOutputResponse, 'id'>>;
+  type: ResearchOutputType;
 };
 
 const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   onSave = noop,
-  tagSuggestions: suggestions,
+  tagSuggestions,
+  type,
 }) => {
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
+  const [subTypes, setSubtypes] = useState<
+    ResearchOutputPostRequest['subTypes']
+  >([]);
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>('');
   const [description, setDescription] =
     useState<ResearchOutputPostRequest['description']>('');
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>('');
-  const onSaveCallback = useCallback(async () => {
-    await onSave({ tags, link, description, title });
-  }, [onSave, tags, link, description, title]);
 
   return (
     <Form
       dirty={
-        tags.length !== 0 || title !== '' || description !== '' || link !== ''
+        tags.length !== 0 ||
+        title !== '' ||
+        description !== '' ||
+        link !== '' ||
+        subTypes.length !== 0
       }
-      onSave={onSaveCallback}
+      onSave={() => onSave({ tags, link, description, title, subTypes })}
     >
       {({ isSaving, onSave: onClick }) => (
         <div css={contentStyles}>
           <TeamCreateOutputFormSharingCard
+            type={type}
             isSaving={isSaving}
             description={description}
             onChangeDescription={setDescription}
@@ -67,10 +75,12 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangeTitle={setTitle}
             link={link}
             onChangeLink={setLink}
+            subTypes={subTypes}
+            onChangeSubtypes={setSubtypes}
           />
           <TeamCreateOutputExtraInformationCard
             isSaving={isSaving}
-            tagSuggestions={suggestions}
+            tagSuggestions={tagSuggestions}
             tags={tags}
             onChange={setTags}
           />

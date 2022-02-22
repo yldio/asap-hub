@@ -13,21 +13,21 @@ const styles = css({
   overflow: 'auto',
 });
 
-type FormProps = {
-  onSave?: () => void | Promise<void>;
+type FormProps<T> = {
+  onSave?: () => void | Promise<T | void>;
   validate?: () => boolean;
   dirty: boolean; // mandatory so that it cannot be forgotten
   children: (state: {
     isSaving: boolean;
-    onSave: () => void | Promise<void>;
+    onSave: () => void | Promise<T | void>;
   }) => ReactNode;
 };
-const Form: React.FC<FormProps> = ({
+const Form = <T extends void | Record<string, unknown>>({
   dirty,
   children,
   validate = () => true,
   onSave = noop,
-}) => {
+}: FormProps<T>): React.ReactElement => {
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] =
     useState<'initial' | 'isSaving' | 'hasError' | 'hasSaved'>('initial');
@@ -42,14 +42,18 @@ const Form: React.FC<FormProps> = ({
     if (formRef.current!.reportValidity() && parentValidation) {
       setStatus('isSaving');
       try {
-        await onSave();
-        if (!formRef.current) return;
-        setStatus('hasSaved');
+        const result = await onSave();
+        if (formRef.current) {
+          setStatus('hasSaved');
+        }
+        return result;
       } catch {
-        if (!formRef.current) return;
-        setStatus('hasError');
+        if (formRef.current) {
+          setStatus('hasError');
+        }
       }
     }
+    return Promise.resolve();
   };
 
   return (

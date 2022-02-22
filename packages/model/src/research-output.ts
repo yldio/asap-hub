@@ -37,7 +37,6 @@ export const researchOutputSubtypes = [
   'Genetic Data - DNA',
   'Genetic Data - RNA',
   'Genotyping',
-  'Microscopy',
   'Microscopy & Imaging',
   'Model System',
   'Plasmid',
@@ -56,6 +55,57 @@ export const researchOutputSubtypes = [
 ] as const;
 
 export type ResearchOutputSubtype = typeof researchOutputSubtypes[number];
+
+export const researchOutputTypeToSubtype: Record<
+  ResearchOutputType,
+  Set<ResearchOutputSubtype>
+> = {
+  Article: new Set<ResearchOutputSubtype>(['Preprint', 'Published']),
+  Dataset: new Set<ResearchOutputSubtype>([
+    'Behavioral',
+    'Electrophysiology',
+    'Genetic Data - DNA',
+    'Genetic Data - RNA',
+    'Protein Data',
+    'Microscopy & Imaging',
+    'Spectroscopy',
+  ]),
+  Bioinformatics: new Set<ResearchOutputSubtype>([
+    'Code',
+    'Data portal',
+    'Software',
+  ]),
+  Protocol: new Set<ResearchOutputSubtype>([
+    '3D Printing',
+    'Analysis',
+    'Assay',
+    'Cell Culture & Differentiation',
+    'Cloning',
+    'Genotyping',
+    'Microscopy & Imaging',
+    'Model System',
+    'Protein expression',
+    'Sample Prep',
+    'Shipment Procedure',
+  ]),
+  'Lab Resource': new Set<ResearchOutputSubtype>([
+    'Animal Model',
+    'Antibody',
+    'Assay',
+    'Biosample',
+    'Cell line',
+    'Compound',
+    'Plasmid',
+    'Viral Vector',
+  ]),
+  Presentation: new Set<ResearchOutputSubtype>([
+    'ASAP annual meeting',
+    'ASAP subgroup meeting',
+    'External meeting',
+    'Team meeting',
+  ]),
+  'Grant Document': new Set<ResearchOutputSubtype>(['Proposal', 'Report']),
+};
 
 export const isResearchOutputType = (
   type: string,
@@ -120,6 +170,7 @@ export type ResearchOutputPostRequest = {
 
   description: string;
   type: ResearchOutputType;
+  subTypes: ResearchOutputSubtype[];
   title: string;
   tags: string[];
   link: string;

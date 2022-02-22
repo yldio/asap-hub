@@ -631,12 +631,16 @@ describe('ResearchOutputs controller', () => {
       const {
         usedInPublication: _,
         teamId: __,
+        subTypes: ___,
         ...squidexResearchOutput
       } = parseToSquidex(researchOutputRequest);
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/research-outputs?publish=false`, {
           ...squidexResearchOutput,
+          ...(researchOutputRequest.subTypes && {
+            subtype: { iv: researchOutputRequest.subTypes[0] },
+          }),
           asapFunded: { iv: 'Not Sure' },
           usedInAPublication: { iv: 'Not Sure' },
         })

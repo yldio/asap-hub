@@ -31,6 +31,7 @@ export const Normal = () => (
       },
       'LHR',
     )}
+    description={text('Description', 'Please select your origin airport')}
     enabled={boolean('Enabled', true)}
   />
 );
@@ -50,6 +51,7 @@ export const Required = () => (
     ]}
     value=""
     enabled={boolean('Enabled', true)}
+    description={text('Description', '')}
   />
 );
 export const EmptyOption = () => (
@@ -67,6 +69,7 @@ export const EmptyOption = () => (
       { value: 'SEN', label: 'Southend' },
     ]}
     value=""
+    description={text('Description', '')}
     enabled={boolean('Enabled', true)}
   />
 );
@@ -88,6 +91,7 @@ export const Invalid = () => (
       'Validation Error Message',
       'This airport is currently closed.',
     )}
+    description={text('Description', '')}
     enabled={boolean('Enabled', true)}
   />
 );

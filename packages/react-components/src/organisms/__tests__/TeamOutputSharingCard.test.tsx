@@ -1,6 +1,8 @@
 import { fireEvent } from '@testing-library/dom';
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
+import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import TeamCreateOutputFormSharingCard from '../TeamCreateOutputFormSharingCard';
 
 const props: ComponentProps<typeof TeamCreateOutputFormSharingCard> = {
@@ -8,22 +10,24 @@ const props: ComponentProps<typeof TeamCreateOutputFormSharingCard> = {
   isSaving: false,
   title: '',
   link: '',
-  onChangeDescription: jest.fn(),
-  onChangeLink: jest.fn(),
-  onChangeTitle: jest.fn(),
+  subTypes: [],
+  type: 'Article',
 };
 it('renders the card with provided values', () => {
   const { getByDisplayValue } = render(
     <TeamCreateOutputFormSharingCard
       {...props}
+      type="Article"
       description="description"
       link="http://example.com"
       title="title"
+      subTypes={['Preprint']}
     />,
   );
   expect(getByDisplayValue('description')).toBeVisible();
   expect(getByDisplayValue('http://example.com')).toBeVisible();
   expect(getByDisplayValue('title')).toBeVisible();
+  expect(getByDisplayValue('Preprint')).toBeVisible();
 });
 
 it.each`
@@ -31,6 +35,7 @@ it.each`
   ${'Description'} | ${/description/i} | ${'Please enter a description'}
   ${'Url'}         | ${/URL/i}         | ${'Please enter a valid URL, starting with http://'}
   ${'Title'}       | ${/title/i}       | ${'Please enter a title'}
+  ${'Subtype'}     | ${/type/i}        | ${'Please choose a type'}
 `('shows error message for missing value $title', async ({ label, error }) => {
   const { getByLabelText, findByText } = render(
     <TeamCreateOutputFormSharingCard {...props} />,
@@ -53,4 +58,33 @@ it.each`
   const input = getByLabelText(label);
   fireEvent.change(input, { target: { value: 'test' } });
   expect(onChangeFn).toHaveBeenLastCalledWith('test');
+});
+
+it('triggers an on change for type', async () => {
+  const onChangeFn = jest.fn();
+
+  const { getByLabelText } = render(
+    <TeamCreateOutputFormSharingCard
+      {...props}
+      type="Article"
+      onChangeSubtypes={onChangeFn}
+    />,
+  );
+
+  userEvent.type(getByLabelText(/type/i), 'Preprint');
+  fireEvent.keyDown(getByLabelText(/type/i), {
+    keyCode: ENTER_KEYCODE,
+  });
+
+  expect(onChangeFn).toHaveBeenCalledWith(['Preprint']);
+});
+
+it('shows the custom no options message for type', async () => {
+  const { getByLabelText, getByText } = render(
+    <TeamCreateOutputFormSharingCard {...props} type="Article" />,
+  );
+
+  userEvent.type(getByLabelText(/type/i), 'asdflkjasdflkj');
+
+  expect(getByText('Sorry, no types match asdflkjasdflkj')).toBeVisible();
 });

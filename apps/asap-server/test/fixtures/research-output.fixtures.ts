@@ -188,4 +188,5 @@ export const getResearchOutputRequest = (): ResearchOutputPostRequest => ({
   teamId: 'team-id-1',
   description: 'An example description',
   tags: ['tag1'],
+  subTypes: ['3D Printing'],
 });

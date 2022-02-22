@@ -2,6 +2,8 @@ import {
   ListResearchOutputResponse,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
+  researchOutputSubtypes,
+  researchOutputTypes,
 } from '@asap-hub/model';
 import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
@@ -63,7 +65,12 @@ export const researchOutputRouteFactory = (
   return researchOutputRoutes;
 };
 const createSchema = Joi.object<ResearchOutputPostRequest>({
-  type: Joi.string().required(),
+  type: Joi.string()
+    .required()
+    .valid(...researchOutputTypes),
+  subTypes: Joi.array()
+    .single()
+    .items(Joi.string().valid(...researchOutputSubtypes)),
   description: Joi.string().required(),
   tags: Joi.array().required(),
   link: Joi.string().required(),

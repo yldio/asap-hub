@@ -123,6 +123,7 @@ describe('/research-outputs/ route', () => {
         addedDate,
         description,
         tags,
+        subTypes,
       } = getResearchOutputResponse();
       return {
         type,
@@ -135,6 +136,7 @@ describe('/research-outputs/ route', () => {
         teamId: '123',
         description,
         tags,
+        subTypes,
       };
     };
     test('Should return a 201 when is hit', async () => {

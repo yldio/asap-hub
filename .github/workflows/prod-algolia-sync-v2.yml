@@ -5,9 +5,10 @@ on:
   workflow_dispatch:
     inputs:
       entity:
-        required: true
+        required: false
         type: choice
         description: Choose which entity to sync
+        default: all
         options:
           - users
           - research-outputs

@@ -198,6 +198,7 @@ export type FetchEventsOptions = (
     }
 ) & { groupId?: string } & SortOptions &
   FetchOptions;
+
 type SortOptions = AllOrNone<{
   sortBy: 'startDate' | 'endDate';
   sortOrder: 'asc' | 'desc';

@@ -64,7 +64,7 @@ jobs:
         if: ${{ inputs.entity != 'all'}}
         env:
           ENTITY_TYPE: ${{ (inputs.entity == 'users' && 'user') || (inputs.entity == 'research-outputs' && 'research-output') || (inputs.entity == 'external-authors' && 'external-author') }}
-        run: yarn algolia:remove-records -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -e $ENTITY_TYPE
+        run: yarn algolia:remove-records -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -e $ENTITY_TYPE
       - name: Import Research Outputs (ROs | ALL)
         if: ${{ inputs.entity == 'research-outputs' || inputs.entity == 'all'}}
         env:

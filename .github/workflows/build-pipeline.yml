@@ -21,6 +21,24 @@ jobs:
           echo "GITHUB_HEAD_REF $GITHUB_HEAD_REF"
           echo "GITHUB_REF $GITHUB_REF"
           echo "GITHUB_BASE_REF $GITHUB_BASE_REF"
+          echo "event: ${{ toJSON(github) }}"
+          echo "***************************************************"
+          echo "***************************************************"
+          echo "***************************************************"
+          echo "***************************************************"
+          echo "***************************************************"
+          echo "***************************************************"
+          echo "***************************************************"
+          echo "***************************************************"
+          echo "event: ${{ toJSON(github.event) }}"
+      - name: Is Pull Request updated
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'synchronize' }}
+        run: |
+          echo "This is a pull request which has been updated"
+      - name: Is Pull Request opened
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'opened' }}
+        run: |
+          echo "This is a pull request which has been updated"
   test-unit:
     needs: setup
     runs-on: ubuntu-latest

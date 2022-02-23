@@ -13,8 +13,8 @@ runs:
     - name: Slack Notification
       uses: rtCamp/action-slack-notify@v2
       env:
-        SLACK_WEBHOOK: ${{ inputs.webhook }}
+        SLACK_WEBHOOK: ${{ inputs.webhook }} - with status ${{ job.status }}
         SLACK_MESSAGE: ${{ inputs.message }}
         SLACK_ICON: https://asap-misc.s3.eu-west-1.amazonaws.com/robot.png
         SLACK_USERNAME: ASAP robot
-        SLACK_COLOR: ${{ inputs.color || job.status }}
+        SLACK_COLOR: ${{ (job.status == 'success' && '#00FF00') || '#FF0000' }}

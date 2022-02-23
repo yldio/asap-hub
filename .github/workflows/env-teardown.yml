@@ -91,4 +91,3 @@ jobs:
         with:
           message: Environment teardown has failed
           webhook: ${{ secrets.SLACK_WEBHOOK }}
-          color: '#ff0000'

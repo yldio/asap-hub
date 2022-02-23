@@ -34,4 +34,3 @@ jobs:
         with:
           message: Algolia Development & Production Sync
           webhook: ${{ secrets.SLACK_WEBHOOK }}
-          color: '#ff0000'

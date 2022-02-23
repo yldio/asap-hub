@@ -48,4 +48,3 @@ jobs:
         with:
           message: Squidex Prod Backup
           webhook: ${{ secrets.SLACK_WEBHOOK }}
-          color: '#ff0000'

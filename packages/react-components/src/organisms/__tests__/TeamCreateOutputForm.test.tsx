@@ -68,6 +68,7 @@ it('can submit a form when form data is valid', async () => {
       title: 'example title',
       description: 'example description',
       subTypes: ['Animal Model'],
+      labs: [],
     });
     expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
   });

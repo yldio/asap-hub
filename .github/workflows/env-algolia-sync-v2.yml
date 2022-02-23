@@ -1,19 +1,20 @@
 name: PR Env - Sync Algolia with squidex V2
 on:
-  workflow_dispatch:
-    inputs:
-      pr-number:
-        required: true
-        type: string
-        description: The PR number to run for
-      entity:
-        required: true
-        type: choice
-        description: Choose which entity to sync
-        options:
-          - users
-          - research-outputs
-          - all
+  pull_request:
+#  workflow_dispatch:
+#    inputs:
+#      pr-number:
+#        required: true
+#        type: string
+#        description: The PR number to run for
+#      entity:
+#        required: true
+#        type: choice
+#        description: Choose which entity to sync
+#        options:
+#          - users
+#          - research-outputs
+#          - all
 jobs:
   sync_env_index:
     uses: ./.github/workflows/algolia-sync-v2.yml

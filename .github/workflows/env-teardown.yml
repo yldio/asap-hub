@@ -60,6 +60,8 @@ jobs:
         continue-on-error: true
       - name: Delete PR Squidex App
         run: python ci/integration/scripts/delete-app.py
+      - name: Fail
+        run: exit 1
 
   delete_algolia_indice:
     needs: setup

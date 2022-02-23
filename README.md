@@ -2,6 +2,8 @@
 
 > The monorepo for the backend, frontend, and infrastructure of the [ASAP](https://parkinsonsroadmap.org/) hub
 
+[![Build Pipeline](https://github.com/yldio/asap-hub/actions/workflows/build-pipeline.yml/badge.svg)](https://github.com/yldio/asap-hub/actions/workflows/build-pipeline.yml)
+
 ## Requirements
 
 ### Node.js

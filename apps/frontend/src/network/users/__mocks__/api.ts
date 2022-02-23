@@ -35,11 +35,11 @@ export const postUserAvatar = jest.fn(
   },
 );
 
-export const getUsers = jest.fn(
+export const getUsersLegacy = jest.fn(
   async ({ pageSize }: GetListOptions): Promise<ListUserResponse> =>
     createListUserResponse(pageSize ?? 10),
 );
-export const getUsersWithAlgolia = jest.fn(() => createListUserResponse(10));
+export const getUsers = jest.fn(() => createListUserResponse(10));
 
 export const getInstitutions = jest.fn(
   async (): Promise<InstitutionsResponse> => ({

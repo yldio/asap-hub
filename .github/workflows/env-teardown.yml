@@ -43,6 +43,10 @@ jobs:
         continue-on-error: true
       - name: Delete PR Squidex App
         run: python ci/integration/scripts/delete-app.py
+      - name: Delete PR Squidex App created by github
+        env:
+          SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}-github
+        run: python ci/integration/scripts/delete-app.py
 
   delete_algolia_indice:
     needs: setup

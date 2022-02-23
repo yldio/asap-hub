@@ -10,11 +10,31 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Slack Notification
+    - name: Slack Notification on Success
+      if: success()
       uses: rtCamp/action-slack-notify@v2
       env:
-        SLACK_WEBHOOK: ${{ inputs.webhook }} - with status ${{ job.status }}
+        SLACK_WEBHOOK: ${{ inputs.webhook }}
         SLACK_MESSAGE: ${{ inputs.message }}
         SLACK_ICON: https://asap-misc.s3.eu-west-1.amazonaws.com/robot.png
         SLACK_USERNAME: ASAP robot
-        SLACK_COLOR: ${{ (success() && '#00FF00') || (failure() && '#FF0000') || '#E3256B' }}
+        SLACK_COLOR: '#00FF00'
+
+    - name: Slack Notification on Failure
+      if: failure()
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ inputs.webhook }}
+        SLACK_MESSAGE: ${{ inputs.message }}
+        SLACK_ICON: https://asap-misc.s3.eu-west-1.amazonaws.com/robot.png
+        SLACK_USERNAME: ASAP robot
+        SLACK_COLOR: '#FF0000'
+    - name: Slack Notification on Cancelation
+      if: cancelled()
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ inputs.webhook }}
+        SLACK_MESSAGE: ${{ inputs.message }}
+        SLACK_ICON: https://asap-misc.s3.eu-west-1.amazonaws.com/robot.png
+        SLACK_USERNAME: ASAP robot
+        SLACK_COLOR: '#E3256B'

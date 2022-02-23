@@ -28,6 +28,8 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
+      SLACK_WEBHOOK:
+        required: false
 
 jobs:
   sync:
@@ -46,7 +48,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       - name: Build
-        run: yarn workspaces foreach -vptR --from '{@asap-hub/asap-cli,@asap-hub/asap-server}' run build:babel
+        run: yarn exec "yarn workspaces foreach -vptR --from '{@asap-hub/asap-cli,@asap-hub/asap-server}' run build:babel"
       - name: Setup Environment Variables
         run: |
           echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name '${{ inputs.SSM_ALGOLIA_APP_ID_NAME }}' --query Parameter.Value --output text)" >> $GITHUB_ENV
@@ -61,7 +63,7 @@ jobs:
       - name: Remove the entity data (ENTITY)
         if: ${{ inputs.entity != 'all'}}
         env:
-          ENTITY_TYPE: ${{ (inputs.entity == 'users' && 'user') || (inputs.entity == 'research-outputs' && 'research-output') || 'external-author' }}
+          ENTITY_TYPE: ${{ (inputs.entity == 'users' && 'user') || (inputs.entity == 'research-outputs' && 'research-output') || (inputs.entity == 'external-authors' && 'external-author') }}
         run: yarn algolia:remove-records -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -e $ENTITY_TYPE
       - name: Import Research Outputs (ROs | ALL)
         if: ${{ inputs.entity == 'research-outputs' || inputs.entity == 'all'}}
@@ -89,3 +91,8 @@ jobs:
           yarn workspace @asap-hub/algolia run algolia import -s "../../${ENTITY}.json" -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -t ./scripts/algolia-transformation.js
       - name: Override index with the temp one
         run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -i $ALGOLIA_INDEX
+      - uses: ./.github/actions/slack/
+        if: ${{ failure() && secrets.SLACK_WEBHOOK }}
+        with:
+          message: Algolia Prod Sync
+          webhook: ${{ secrets.SLACK_WEBHOOK }}

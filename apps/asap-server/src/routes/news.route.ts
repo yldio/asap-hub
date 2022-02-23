@@ -1,7 +1,9 @@
 import { Router } from 'express';
-import { framework } from '@asap-hub/services-common';
-import Joi from '@hapi/joi';
 import { NewsController } from '../controllers/news';
+import { validateFetchPaginationOptions } from "../validation";
+import {
+  validateNewsParameters,
+} from '../validation/news.validation';
 
 export const newsRouteFactory = (newsController: NewsController): Router => {
   const newsRoutes = Router();
@@ -9,14 +11,7 @@ export const newsRouteFactory = (newsController: NewsController): Router => {
   newsRoutes.get('/news', async (req, res) => {
     const { query } = req;
 
-    const options = framework.validate(
-      'query',
-      query,
-      fetchQuerySchema,
-    ) as unknown as {
-      take: number;
-      skip: number;
-    };
+    const options = validateFetchPaginationOptions(query);
 
     const result = await newsController.fetch(options);
 
@@ -25,7 +20,7 @@ export const newsRouteFactory = (newsController: NewsController): Router => {
 
   newsRoutes.get<{ newsId: string }>('/news/:newsId', async (req, res) => {
     const { params } = req;
-    const { newsId } = framework.validate('parameters', params, paramSchema);
+    const { newsId } = validateNewsParameters(params);
 
     const result = await newsController.fetchById(newsId);
 
@@ -34,12 +29,3 @@ export const newsRouteFactory = (newsController: NewsController): Router => {
 
   return newsRoutes;
 };
-
-const paramSchema = Joi.object({
-  newsId: Joi.string().required(),
-});
-
-const fetchQuerySchema = Joi.object({
-  take: Joi.number(),
-  skip: Joi.number(),
-}).required();

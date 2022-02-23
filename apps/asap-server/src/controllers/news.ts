@@ -10,9 +10,9 @@ export default class News implements NewsController {
     this.newsSquidexRestClient = new SquidexRest('news-and-events');
   }
 
-  async fetch(options: {
-    take: number;
-    skip: number;
+  async fetch(options?: {
+    take?: number;
+    skip?: number;
   }): Promise<ListNewsResponse> {
     const { total, items } = await this.newsSquidexRestClient.fetch({
       ...options,
@@ -37,6 +37,9 @@ export default class News implements NewsController {
 }
 
 export interface NewsController {
-  fetch: (options: { take: number; skip: number }) => Promise<ListNewsResponse>;
+  fetch: (options?: {
+    take?: number;
+    skip?: number;
+  }) => Promise<ListNewsResponse>;
   fetchById: (id: string) => Promise<NewsResponse>;
 }

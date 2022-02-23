@@ -3,6 +3,12 @@ schema {
   mutation: AppMutations
 }
 
+"Enable Memory Caching"
+directive @cache(
+  """Cache duration in seconds."""
+  duration: Int = 600
+) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+
 """The app mutations."""
 type AppMutations {
   """Change a Calendars content."""
@@ -1437,6 +1443,8 @@ type Asset {
   pixelWidth: Int @deprecated(reason: "Use 'metadata' field instead.")
   """The file name as slug."""
   slug: String!
+  """The source URL of the asset."""
+  sourceUrl: String!
   """The asset tags."""
   tags: [String!]!
   """The thumbnail URL to the asset."""
@@ -1711,6 +1719,58 @@ type Dashboard implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
+  """Query News content items."""
+  referencesNewsAndEventsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [NewsAndEvents!]
+  """Query News content items with total count."""
+  referencesNewsAndEventsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): NewsAndEventsResultDto
+  """Query Pages content items."""
+  referencesPagesContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Pages!]
+  """Query Pages content items with total count."""
+  referencesPagesContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): PagesResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -1793,6 +1853,84 @@ type Discover implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
+  """Query News content items."""
+  referencesNewsAndEventsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [NewsAndEvents!]
+  """Query News content items with total count."""
+  referencesNewsAndEventsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): NewsAndEventsResultDto
+  """Query Pages content items."""
+  referencesPagesContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Pages!]
+  """Query Pages content items with total count."""
+  referencesPagesContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): PagesResultDto
+  """Query Users content items."""
+  referencesUsersContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Users!]
+  """Query Users content items with total count."""
+  referencesUsersContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): UsersResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -1920,6 +2058,32 @@ type Events implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
+  """Query Calendars content items."""
+  referencesCalendarsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Calendars!]
+  """Query Calendars content items with total count."""
+  referencesCalendarsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): CalendarsResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -2412,6 +2576,84 @@ type Groups implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
+  """Query Calendars content items."""
+  referencesCalendarsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Calendars!]
+  """Query Calendars content items with total count."""
+  referencesCalendarsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): CalendarsResultDto
+  """Query Teams content items."""
+  referencesTeamsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Teams!]
+  """Query Teams content items with total count."""
+  referencesTeamsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): TeamsResultDto
+  """Query Users content items."""
+  referencesUsersContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Users!]
+  """Query Users content items with total count."""
+  referencesUsersContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): UsersResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -3223,6 +3465,84 @@ type ResearchOutputs implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
+  """Query External authors content items."""
+  referencesExternalAuthorsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [ExternalAuthors!]
+  """Query External authors content items with total count."""
+  referencesExternalAuthorsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): ExternalAuthorsResultDto
+  """Query Labs content items."""
+  referencesLabsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Labs!]
+  """Query Labs content items with total count."""
+  referencesLabsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): LabsResultDto
+  """Query Users content items."""
+  referencesUsersContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Users!]
+  """Query Users content items with total count."""
+  referencesUsersContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): UsersResultDto
   """Query Teams content items."""
   referencingTeamsContents(
     """Optional OData filter."""
@@ -3615,6 +3935,32 @@ type Teams implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
+  """Query Research Outputs content items."""
+  referencesResearchOutputsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [ResearchOutputs!]
+  """Query Research Outputs content items with total count."""
+  referencesResearchOutputsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): ResearchOutputsResultDto
   """Query Groups content items."""
   referencingGroupsContents(
     """Optional OData filter."""
@@ -3851,6 +4197,58 @@ type Users implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
+  """Query Labs content items."""
+  referencesLabsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Labs!]
+  """Query Labs content items with total count."""
+  referencesLabsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): LabsResultDto
+  """Query Teams content items."""
+  referencesTeamsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Teams!]
+  """Query Teams content items with total count."""
+  referencesTeamsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): TeamsResultDto
   """Query Discover ASAP content items."""
   referencingDiscoverContents(
     """Optional OData filter."""

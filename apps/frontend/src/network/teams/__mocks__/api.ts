@@ -1,5 +1,10 @@
-import { createListTeamResponse, createTeamResponse } from '@asap-hub/fixtures';
 import {
+  createListLabsResponse,
+  createListTeamResponse,
+  createTeamResponse,
+} from '@asap-hub/fixtures';
+import {
+  ListLabsResponse,
   ListTeamResponse,
   TeamPatchRequest,
   TeamResponse,
@@ -34,3 +39,7 @@ export const createTeamResearchOutput: jest.Mocked<
 > = jest.fn(async () => ({
   id: 'research-output-id',
 }));
+
+export const getLabs = jest.fn(
+  async (): Promise<ListLabsResponse> => createListLabsResponse(5),
+);

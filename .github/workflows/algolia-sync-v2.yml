@@ -44,6 +44,7 @@ jobs:
       AWS_DEFAULT_REGION: 'us-east-1'
       ALGOLIA_INDEX: ${{ inputs.ALGOLIA_INDEX }}
       ALGOLIA_INDEX_TEMP: ${{ inputs.ALGOLIA_INDEX }}_temp'
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     steps:
       - name: Checkout
         uses: actions/checkout@master
@@ -92,7 +93,7 @@ jobs:
       - name: Override index with the temp one
         run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -i $ALGOLIA_INDEX
       - uses: ./.github/actions/slack/
-        if: ${{ failure() && secrets.SLACK_WEBHOOK }}
+        if: ${{ failure() && env.SLACK_WEBHOOK }}
         with:
           message: Algolia Prod Sync
-          webhook: ${{ secrets.SLACK_WEBHOOK }}
+          webhook: ${{ env.SLACK_WEBHOOK }}

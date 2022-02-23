@@ -2652,6 +2652,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:8.10.0"
       ],
       [
+        "ajv-formats",
+        "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:2.1.1"
+      ],
+      [
         "algoliasearch",
         "npm:4.11.0"
       ],
@@ -10342,6 +10346,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/uuid", "npm:8.3.0"],
             ["@types/yargs", "npm:17.0.5"],
             ["ajv", "npm:8.10.0"],
+            ["ajv-formats", "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:2.1.1"],
             ["algoliasearch", "npm:4.11.0"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
@@ -28504,6 +28509,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ajv-errors", "virtual:2b49db17d1e4e8854e6e7543c07eb7bc19ec9da65a1b99b9cb28e764846d419e5ecd6e057ad65249f2b928862ffd70dbf8a7c79643ccdd7c1c40cab5b59aa03f#npm:1.0.1"],
             ["@types/ajv", null],
             ["ajv", "npm:6.12.4"]
+          ],
+          "packagePeers": [
+            "@types/ajv",
+            "ajv"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["ajv-formats", [
+        ["npm:2.1.1", {
+          "packageLocation": "./.yarn/cache/ajv-formats-npm-2.1.1-3cec02eae9-4a287d937f.zip/node_modules/ajv-formats/",
+          "packageDependencies": [
+            ["ajv-formats", "npm:2.1.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:2.1.1", {
+          "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-d3e29540d8/0/cache/ajv-formats-npm-2.1.1-3cec02eae9-4a287d937f.zip/node_modules/ajv-formats/",
+          "packageDependencies": [
+            ["ajv-formats", "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:2.1.1"],
+            ["@types/ajv", null],
+            ["ajv", "npm:8.10.0"]
           ],
           "packagePeers": [
             "@types/ajv",

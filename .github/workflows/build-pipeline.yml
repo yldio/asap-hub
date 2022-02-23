@@ -11,18 +11,12 @@ jobs:
   echo:
     needs: setup
     runs-on: ubuntu-latest
-    env:
-      PR_NUMBER: ${{ needs.setup.outputs.pr-number }}
-      INTEGRATION_IMAGE: ${{ needs.setup.outputs.integration-image-name }}
-      SQUIDEX_IMAGE: ${{ needs.setup.outputs.squidex-image-name }}
-      NODE_IMAGE: ${{ needs.setup.outputs.node-image-name }}
     steps:
       - name: Start
         run: |
-          echo "Started $PR_NUMBER"
-          echo "integration image $INTEGRATION_IMAGE"
-          echo "squidex image $SQUIDEX_IMAGE"
-          echo "node $NODE_IMAGE"
+          echo "Started ${{ needs.setup.outputs.pr-number }}"
+          echo "integration image ${{ needs.setup.outputs.integration-image-name }}"
+          echo "squidex image ${{ needs.setup.outputs.squidex-image-name }}"
           echo "GITHUB_HEAD_REF $GITHUB_HEAD_REF"
           echo "GITHUB_REF $GITHUB_REF"
           echo "GITHUB_BASE_REF $GITHUB_BASE_REF"

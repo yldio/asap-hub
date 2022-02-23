@@ -1,4 +1,4 @@
-import { DropdownButton, Anchor } from '@asap-hub/react-components';
+import { DropdownButton, libraryIcon } from '@asap-hub/react-components';
 
 export default {
   title: 'Molecules / Dropdown Button',
@@ -9,8 +9,8 @@ export const Normal = () => (
   <DropdownButton
     buttonChildren={(menuShown) => (menuShown ? 'open' : 'closed')}
   >
-    <Anchor href="#">Article</Anchor>
-    <Anchor href="#">Bioinformatics</Anchor>
-    <Anchor href="#">Dataset</Anchor>
+    {{ item: <>{libraryIcon} Article</>, href: '#' }}
+    {{ item: <>{libraryIcon} Bioinformatics</>, href: '#' }}
+    {{ item: <>{libraryIcon} Dataset</>, href: '#' }}
   </DropdownButton>
 );

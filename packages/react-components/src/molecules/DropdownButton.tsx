@@ -157,7 +157,7 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
               <li key={`drop-${index}`} css={itemStyles}>
                 {href ? (
                   <Anchor href={href}>
-                    <div css={itemContentStyles}>{item}</div>
+                    <span css={itemContentStyles}>{item}</span>
                   </Anchor>
                 ) : (
                   <button css={resetButtonStyles} onClick={onClick}>

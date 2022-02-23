@@ -10,13 +10,15 @@ it('renders a DropdownButton', () => {
 });
 
 it('renders a DropdownButton link item', () => {
-  const { getByText } = render(
+  const { getByText, getByRole } = render(
     <DropdownButton buttonChildren={() => <>Example</>}>
-      {{ item: 'example', href: 'http://example.com' }}
-      {{ item: 'link2', href: '#' }}
+      {{ item: 'Link', href: 'http://example.com' }}
+      {{ item: 'Second Item', href: '#' }}
     </DropdownButton>,
   );
-  expect(getByText('example').closest('a')).toHaveAttribute(
+  fireEvent.click(getByRole('button'));
+  expect(getByText('Link')).toBeVisible();
+  expect(getByText('Link').closest('a')).toHaveAttribute(
     'href',
     'http://example.com',
   );
@@ -27,7 +29,7 @@ it('renders a dropdownButton button item', () => {
   const { getByText, getByRole } = render(
     <DropdownButton buttonChildren={() => <>Example</>}>
       {{ item: 'Example Button', onClick }}
-      {{ item: 'link2', href: '#' }}
+      {{ item: 'Second Item', href: '#' }}
     </DropdownButton>,
   );
   fireEvent.click(getByRole('button'));

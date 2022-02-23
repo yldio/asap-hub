@@ -18,9 +18,20 @@ jobs:
           echo "Started ${{ needs.setup.outputs.pr-number }}"
           echo "integration image ${{ needs.setup.outputs.integration-image-name }}"
           echo "squidex image ${{ needs.setup.outputs.squidex-image-name }}"
-          echo "GITHUB_HEAD_REF $GITHUB_HEAD_REF"
-          echo "GITHUB_REF $GITHUB_REF"
-          echo "GITHUB_BASE_REF $GITHUB_BASE_REF"
+          echo "run id: ${{ github.run_id }}"
+          echo "run number: ${{ github.run_number }}"
+          echo "run attempt: ${{ github.run_attempt }}"
+          echo "branch name: ${{ github.head_ref }}"
+          echo "event name: ${{ github.event_name }}"
+
+      - name: Is Pull Request updated
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'synchronize' }}
+        run: |
+          echo "This is a pull request which has been updated"
+      - name: Is Pull Request opened
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'opened' }}
+        run: |
+          echo "This is a pull request which has been opened"
   test-unit:
     needs: setup
     runs-on: ubuntu-latest

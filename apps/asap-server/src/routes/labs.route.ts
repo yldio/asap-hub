@@ -1,7 +1,7 @@
 import { framework } from '@asap-hub/services-common';
-import Joi from '@hapi/joi';
 import { Router } from 'express';
 import { LabsController } from '../controllers/labs';
+import { querySchema } from './teams.route';
 import { FetchOptions } from '../utils/types';
 
 export const labsRouteFactory = (labsController: LabsController): Router => {
@@ -21,9 +21,3 @@ export const labsRouteFactory = (labsController: LabsController): Router => {
 
   return labsRoutes;
 };
-
-const querySchema = Joi.object({
-  take: Joi.number(),
-  skip: Joi.number(),
-  search: Joi.string(),
-}).required();

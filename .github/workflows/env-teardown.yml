@@ -53,7 +53,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Rebuild dependencies
-        run: exit 1 && yarn rebuild
+        run: yarn rebuild
       - name: Remove CF Stack
         if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
         run: yarn sls remove --verbose
@@ -73,7 +73,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Fetch the Algolia keys
         run: |
-          exit 1
           echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
       - name: Delete the index

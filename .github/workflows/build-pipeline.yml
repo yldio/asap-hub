@@ -222,6 +222,25 @@ jobs:
         run: |
           CI_REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F / '{print $2}')
           yarn bundlewatch
+  upload-build-artifacts:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache Build Output
+        uses: actions/cache@v2
+        id: restore-build
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-output-${{ github.sha }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build-output
+          path: apps/**/build*
+          retention-days: 14
   test-build-output:
     needs: [setup, build]
     runs-on: ubuntu-latest

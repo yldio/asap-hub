@@ -1,6 +1,12 @@
-import { useState, useEffect, useRef, ReactNode } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  ReactNode,
+  MouseEventHandler,
+} from 'react';
 import { css } from '@emotion/react';
-import { Button } from '../atoms';
+import { Anchor, Button } from '../atoms';
 import { perRem, mobileScreen, formTargetWidth } from '../pixels';
 
 import {
@@ -64,10 +70,29 @@ const listStyles = css({
   },
 });
 
-const itemStyles = css({
+const itemContentStyles = css({
   display: 'flex',
-  whiteSpace: 'nowrap',
+  columnGap: `${15 / perRem}rem`,
   padding: `${12 / perRem}rem ${16 / perRem}rem`,
+  fontWeight: 'normal',
+});
+
+const resetButtonStyles = css({
+  padding: 0,
+  margin: 0,
+  border: 0,
+  background: 'none',
+  cursor: 'pointer',
+  color: 'inherit',
+
+  ':focus': {
+    outline: 'none',
+    boxShadow: 'none',
+  },
+});
+
+const itemStyles = css({
+  whiteSpace: 'nowrap',
   color: lead.rgb,
 
   ':hover': {
@@ -80,8 +105,19 @@ const itemStyles = css({
   },
 });
 
+type LinkItemData = {
+  item: ReactNode;
+  onClick?: undefined;
+  href: string;
+};
+type ButtonItemData = {
+  item: ReactNode;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+  href?: undefined;
+};
+
 type DropdownButtonProps = {
-  children?: React.ReactElement[];
+  children?: ReadonlyArray<LinkItemData | ButtonItemData>;
   buttonChildren: (menuShown: boolean) => ReactNode;
 };
 
@@ -117,9 +153,17 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
       <div css={menuWrapperStyles}>
         <div css={[menuContainerStyles, menuShown && showMenuStyles]}>
           <ul css={listStyles}>
-            {children.map((child, index) => (
-              <li key={`drop-${index}`}>
-                <div css={itemStyles}>{child}</div>
+            {children.map(({ item, href, onClick }, index) => (
+              <li key={`drop-${index}`} css={itemStyles}>
+                {href ? (
+                  <Anchor href={href}>
+                    <div css={itemContentStyles}>{item}</div>
+                  </Anchor>
+                ) : (
+                  <button css={resetButtonStyles} onClick={onClick}>
+                    <span css={itemContentStyles}>{item}</span>
+                  </button>
+                )}
               </li>
             ))}
           </ul>

@@ -12,9 +12,9 @@ it('renders a dropdownButton button', () => {
 it('renders a modal on click', () => {
   const { getByRole, getAllByRole } = render(
     <DropdownButton buttonChildren={() => <>test</>}>
-      <div>1</div>
-      <div>2</div>
-      <div>3</div>
+      {{ item: '1', href: '#' }}
+      {{ item: '2', href: '#' }}
+      {{ item: '3', href: '#' }}
     </DropdownButton>,
   );
 
@@ -31,9 +31,9 @@ it('renders calendar links on modal and hides it on outside click', () => {
     <>
       <h1>Element</h1>
       <DropdownButton buttonChildren={() => <>test</>}>
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
+        {{ item: '1', href: '#' }}
+        {{ item: '2', href: '#' }}
+        {{ item: '3', href: '#' }}
       </DropdownButton>
     </>,
   );

@@ -7,6 +7,9 @@ inputs:
   webhook:
     description: 'Slack webhook'
     required: true
+  status:
+    description: 'Status'
+    required: true
 runs:
   using: 'composite'
   steps:

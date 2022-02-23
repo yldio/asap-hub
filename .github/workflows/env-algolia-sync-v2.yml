@@ -18,9 +18,9 @@ jobs:
   sync_env_index:
     uses: ./.github/workflows/algolia-sync-v2.yml
     with:
-      entity: 'all'
-      ALGOLIA_INDEX: 'asap-hub_CI-${{github.event.number}}'
-      SQUIDEX_APP_NAME: ${{ github.event.number }}
+      entity: ${{ github.event.inputs.entity }}
+      ALGOLIA_INDEX: 'asap-hub_CI-${{github.event.inputs.pr-number}}'
+      SQUIDEX_APP_NAME: ${{ github.event.inputs.pr-number }}
       SSM_ALGOLIA_APP_ID_NAME: 'algolia-app-id-dev'
       SSM_ALGOLIA_API_KEY_NAME: 'algolia-api-key-ci-dev'
     secrets:

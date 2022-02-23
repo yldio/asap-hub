@@ -58,5 +58,20 @@ describe('TeamCreateOutputContributorsCard', () => {
         { label: 'One Lab', value: '1' },
       ]);
     });
+    it('should render message when there is no match', async () => {
+      const loadOptions = jest.fn();
+      loadOptions.mockReturnValue(new Promise((resolve) => resolve([])));
+      const { getByLabelText, queryByText } = render(
+        <TeamCreateOutputContributorsCard
+          {...props}
+          loadOptions={loadOptions}
+        />,
+      );
+      userEvent.click(getByLabelText(/Labs/i));
+      await waitFor(() =>
+        expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+      );
+      expect(queryByText(/no labs match/i)).toBeInTheDocument();
+    });
   });
 });

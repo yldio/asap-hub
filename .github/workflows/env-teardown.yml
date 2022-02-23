@@ -77,7 +77,6 @@ jobs:
           echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
       - name: Delete the index
         run: |
-          exit 1
           cd apps/asap-server
           export ALGOLIA_INDEX=asap-hub_research_outputs_CI-${{ needs.setup.outputs.pr-number }}
           yarn workspace @asap-hub/asap-server run algolia deleteindicespattern -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -r "^$ALGOLIA_INDEX$" -x false

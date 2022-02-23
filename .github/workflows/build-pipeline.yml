@@ -288,3 +288,40 @@ jobs:
       - name: Test browser
         run: |
           yarn run test:browser
+  prepare-squidex:
+    needs: setup
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: AWS
+        password: ${{ secrets.AWS_ECR_PASSWORD }}
+    env:
+      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}-github
+      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
+      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup App
+        if: ${{ github.event.action == 'opened' }}
+        run: python ci/integration/scripts/create-app.py
+      - name: Import data
+        if: ${{ github.event.action == 'opened' }}
+        run: |
+          echo "Import data"
+      - name: update schema
+        run: echo "update schema"
+  # notify_failure:
+  #   runs-on: ubuntu-latest
+  #   needs: [sls_teardown, delete_algolia_indice]
+  #   if: failure()
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - uses: ./.github/actions/slack/
+  #       with:
+  #         message: PR Failed
+  #         webhook: ${{ secrets.SLACK_WEBHOOK }}

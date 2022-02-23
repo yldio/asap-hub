@@ -1,15 +1,16 @@
 import { ResearchOutputPostRequest } from '@asap-hub/model';
 import { Link } from '../atoms';
-import { SimpleValuesMultiSelecletProps } from '../atoms/MultiSelect';
+
 import { mailToSupport } from '../mail';
 import { FormCard, LabeledMultiSelect } from '../molecules';
+import { SyncLabeledMultiSelectProps } from '../molecules/LabeledMultiSelect';
 import { noop } from '../utils';
 
 type TeamCreateOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
   'tags'
 > & {
-  tagSuggestions: SimpleValuesMultiSelecletProps['suggestions'];
+  tagSuggestions: SyncLabeledMultiSelectProps['suggestions'];
   onChange?: (values: string[]) => void;
   isSaving: boolean;
 };

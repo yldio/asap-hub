@@ -20,7 +20,7 @@ const TeamCreateOutputPage: React.FC<TeamCreateOutputPageProps> = ({
   <>
     <TeamCreateOutputHeader type={type} />
     <main css={mainStyles}>
-      <TeamCreateOutputForm {...formProps} />
+      <TeamCreateOutputForm {...formProps} type={type} />
     </main>
   </>
 );

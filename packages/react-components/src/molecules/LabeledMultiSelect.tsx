@@ -18,11 +18,11 @@ type LabeledMultiSelectProps = {
   readonly subtitle?: React.ReactNode;
   readonly description?: ReactNode;
 };
-type SyncLabeledMultiSelectProps = {
+export type SyncLabeledMultiSelectProps = {
   isAsync?: false;
 } & LabeledMultiSelectProps &
   Exclude<ComponentProps<typeof MultiSelect>, 'id'>;
-type AsyncLabeledMultiSelectProps = {
+export type AsyncLabeledMultiSelectProps = {
   isAsync: true;
 } & LabeledMultiSelectProps &
   ComponentProps<typeof AsyncMultiSelect>;

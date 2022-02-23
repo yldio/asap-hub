@@ -9,18 +9,6 @@ env:
 jobs:
   setup:
     uses: ./.github/workflows/setup.yml
-  echo:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Start
-        run: |
-          echo "Started ${{ needs.setup.outputs.pr-number }}"
-          echo "integration image ${{ needs.setup.outputs.integration-image-name }}"
-          echo "squidex image ${{ needs.setup.outputs.squidex-image-name }}"
-          echo "GITHUB_HEAD_REF $GITHUB_HEAD_REF"
-          echo "GITHUB_REF $GITHUB_REF"
-          echo "GITHUB_BASE_REF $GITHUB_BASE_REF"
   test-unit:
     needs: setup
     runs-on: ubuntu-latest

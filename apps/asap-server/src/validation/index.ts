@@ -1,9 +1,16 @@
 import Boom from '@hapi/boom';
 import Ajv, { JSONSchemaType, ValidateFunction } from 'ajv';
-import { FetchOptions, NullableOptionalProperties } from '../utils/types';
+import addFormats from 'ajv-formats';
+import {
+  FetchOptions,
+  FetchPaginationOptions,
+  NullableOptionalProperties,
+} from '../utils/types';
 
-const ajv = new Ajv();
-const ajvCoerced = new Ajv({ coerceTypes: true });
+const ajv = new Ajv({ useDefaults: true });
+const ajvCoerced = new Ajv({ coerceTypes: true, useDefaults: true });
+addFormats(ajv, ['date-time']);
+addFormats(ajvCoerced, ['date-time']);
 
 // The below has to be declared as a function due to:
 // https://github.com/ajv-validator/ajv/issues/1814
@@ -59,7 +66,7 @@ const validate = <T>(
   data: any,
 ): data is NullableOptionalProperties<T> => ajvValidation(data);
 
-const fetchOptionsValidationSchema: JSONSchemaType<FetchOptions> = {
+export const fetchOptionsValidationSchema: JSONSchemaType<FetchOptions> = {
   type: 'object',
   properties: {
     take: { type: 'number', nullable: true },
@@ -76,6 +83,24 @@ const fetchOptionsValidationSchema: JSONSchemaType<FetchOptions> = {
 
 export const validateFetchOptions = validateInput(
   fetchOptionsValidationSchema,
+  {
+    skipNull: true,
+    coerce: true,
+  },
+);
+
+const fetchPaginationOptionsValidationSchema: JSONSchemaType<FetchPaginationOptions> =
+  {
+    type: 'object',
+    properties: {
+      take: { type: 'number', nullable: true },
+      skip: { type: 'number', nullable: true },
+    },
+    additionalProperties: false,
+  };
+
+export const validateFetchPaginationOptions = validateInput(
+  fetchPaginationOptionsValidationSchema,
   {
     skipNull: true,
     coerce: true,

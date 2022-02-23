@@ -78,7 +78,7 @@ jobs:
       - name: Delete the index
         run: |
           cd apps/asap-server
-          export ALGOLIA_INDEX=asap-hub_research_outputs_CI-${{ needs.setup.outputs.pr-number }}
+          export ALGOLIA_INDEX=asap-hub_CI-${{ needs.setup.outputs.pr-number }}
           yarn workspace @asap-hub/asap-server run algolia deleteindicespattern -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -r "^$ALGOLIA_INDEX$" -x false
   notify_failure:
     runs-on: ubuntu-18.04

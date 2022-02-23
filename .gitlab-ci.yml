@@ -351,7 +351,7 @@ build:ts:prod:
   before_script:
     - export AUTH_FRONTEND_BASE_URL=$ASAP_APP_URL/.auth/
     - export REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-prod" --query Parameter.Value --output text)
-    - export REACT_APP_ALGOLIA_INDEX="asap-hub_research_outputs_prod"
+    - export REACT_APP_ALGOLIA_INDEX="asap-hub_prod"
     - export REACT_APP_API_BASE_URL=$ASAP_API_URL
     - export REACT_APP_ENVIRONMENT="production"
     - export REACT_APP_RELEASE=${CI_PIPELINE_ID}-production

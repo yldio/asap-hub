@@ -30,7 +30,11 @@ jobs:
           IMAGE_NAME=$ECR_REGISTRY/$ECR_REPOSITORY
           docker build -t $IMAGE_NAME:$IMAGE_TAG . -f ci/Dockerfile --target base
           docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest
-          docker push --all-tags $IMAGE_NAME
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+      - name: push squidex
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: docker push --all-tags ${{ env.IMAGE_NAME }}
+
       - name: Build and push integration
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -40,4 +44,7 @@ jobs:
           IMAGE_NAME=$ECR_REGISTRY/$ECR_REPOSITORY
           docker build -t $IMAGE_NAME:$IMAGE_TAG . -f ci/Dockerfile --target integration
           docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest
-          docker push --all-tags $IMAGE_NAME
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+      - name: push integration
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: docker push --all-tags ${{ env.IMAGE_NAME }}

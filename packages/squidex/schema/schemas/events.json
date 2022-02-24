@@ -19,8 +19,8 @@
       "calendar",
       "status",
       "hidden",
-      "hideMeetingLink",
       "meetingLink",
+      "hideMeetingLink",
       "tags",
       "notesPermanentlyUnavailable",
       "notes",
@@ -187,7 +187,7 @@
           "inlineEditable": true,
           "editor": "Checkbox",
           "label": "Hide Meeting Link",
-          "isRequired": false,
+          "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": true
         }

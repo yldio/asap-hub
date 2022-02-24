@@ -71,6 +71,7 @@ const props = (): ComponentProps<typeof EventCard> => {
     meetingLink: boolean('has meeting link', true)
       ? 'http://example.com'
       : undefined,
+    hideMeetingLink: boolean('hide meeting Link', false),
     meetingMaterials:
       meetingMaterials === 'Yes'
         ? [{ title: 'example', url: 'http://example.com' }]

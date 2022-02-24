@@ -183,7 +183,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Boolean",
-          "defaultValue": true,
+          "defaultValue": false,
           "inlineEditable": true,
           "editor": "Checkbox",
           "label": "Hide Meeting Link",

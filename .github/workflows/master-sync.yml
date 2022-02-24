@@ -34,3 +34,4 @@ jobs:
         with:
           message: Algolia Development & Production Sync
           webhook: ${{ secrets.SLACK_WEBHOOK }}
+          status: failure

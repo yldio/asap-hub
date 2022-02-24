@@ -97,3 +97,4 @@ jobs:
         with:
           message: Algolia Prod Sync
           webhook: ${{ env.SLACK_WEBHOOK }}
+          status: failure

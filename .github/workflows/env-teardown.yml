@@ -91,3 +91,4 @@ jobs:
         with:
           message: Environment teardown
           webhook: ${{ secrets.SLACK_WEBHOOK }}
+          status: failure

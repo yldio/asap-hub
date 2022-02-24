@@ -1,0 +1,2 @@
+ignore:
+  - 'apps/asap-server/src/migrations'

@@ -2,19 +2,48 @@ import { render, fireEvent } from '@testing-library/react';
 
 import DropdownButton from '../DropdownButton';
 
-it('renders a dropdownButton button', () => {
+it('renders a DropdownButton', () => {
   const { getByRole } = render(
     <DropdownButton buttonChildren={() => <>Example</>} />,
   );
   expect(getByRole('button').textContent).toContain('Example');
 });
 
+it('renders a DropdownButton link item', () => {
+  const { getByText, getByRole } = render(
+    <DropdownButton buttonChildren={() => <>Example</>}>
+      {{ item: 'Link', href: 'http://example.com' }}
+      {{ item: 'Second Item', href: '#' }}
+    </DropdownButton>,
+  );
+  fireEvent.click(getByRole('button'));
+  expect(getByText('Link')).toBeVisible();
+  expect(getByText('Link').closest('a')).toHaveAttribute(
+    'href',
+    'http://example.com',
+  );
+});
+
+it('renders a dropdownButton button item', () => {
+  const onClick = jest.fn();
+  const { getByText, getByRole } = render(
+    <DropdownButton buttonChildren={() => <>Example</>}>
+      {{ item: 'Example Button', onClick }}
+      {{ item: 'Second Item', href: '#' }}
+    </DropdownButton>,
+  );
+  fireEvent.click(getByRole('button'));
+  fireEvent.click(getByText('Example Button'));
+
+  expect(onClick).toHaveBeenCalled();
+});
+
 it('renders a modal on click', () => {
   const { getByRole, getAllByRole } = render(
     <DropdownButton buttonChildren={() => <>test</>}>
-      <div>1</div>
-      <div>2</div>
-      <div>3</div>
+      {{ item: '1', href: '#' }}
+      {{ item: '2', href: '#' }}
+      {{ item: '3', href: '#' }}
     </DropdownButton>,
   );
 
@@ -31,9 +60,9 @@ it('renders calendar links on modal and hides it on outside click', () => {
     <>
       <h1>Element</h1>
       <DropdownButton buttonChildren={() => <>test</>}>
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
+        {{ item: '1', href: '#' }}
+        {{ item: '2', href: '#' }}
+        {{ item: '3', href: '#' }}
       </DropdownButton>
     </>,
   );

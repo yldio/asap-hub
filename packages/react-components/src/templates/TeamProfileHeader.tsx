@@ -112,11 +112,6 @@ const dropdownButtonStyling = css({
   display: 'flex',
   columnGap: `${9 / perRem}em`,
 });
-const dropdownItemStyling = css({
-  display: 'flex',
-  columnGap: `${12 / perRem}em`,
-  fontWeight: 'normal',
-});
 const iconStyles = css({
   display: 'inline-grid',
   paddingRight: `${12 / perRem}em`,
@@ -202,29 +197,26 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
                 </span>
               )}
             >
-              <Anchor href={route.createOutput({ outputType: 'article' }).$}>
-                <span css={dropdownItemStyling}>{libraryIcon} Article </span>
-              </Anchor>
-              <Anchor
-                href={route.createOutput({ outputType: 'bioinformatics' }).$}
-              >
-                <span css={dropdownItemStyling}>
-                  {libraryIcon} Bioinformatics
-                </span>
-              </Anchor>
-              <Anchor href={route.createOutput({ outputType: 'dataset' }).$}>
-                <span css={dropdownItemStyling}>{libraryIcon} Dataset </span>
-              </Anchor>
-              <Anchor
-                href={route.createOutput({ outputType: 'lab-resource' }).$}
-              >
-                <span css={dropdownItemStyling}>
-                  {libraryIcon} Lab Resource
-                </span>
-              </Anchor>
-              <Anchor href={route.createOutput({ outputType: 'protocol' }).$}>
-                <span css={dropdownItemStyling}>{libraryIcon} Protocol </span>
-              </Anchor>
+              {{
+                item: <>{libraryIcon} Article</>,
+                href: route.createOutput({ outputType: 'article' }).$,
+              }}
+              {{
+                item: <>{libraryIcon} Bioinformatics</>,
+                href: route.createOutput({ outputType: 'bioinformatics' }).$,
+              }}
+              {{
+                item: <>{libraryIcon} Dataset</>,
+                href: route.createOutput({ outputType: 'dataset' }).$,
+              }}
+              {{
+                item: <>{libraryIcon} Lab Resource</>,
+                href: route.createOutput({ outputType: 'lab-resource' }).$,
+              }}
+              {{
+                item: <>{libraryIcon} Protocol</>,
+                href: route.createOutput({ outputType: 'protocol' }).$,
+              }}
             </DropdownButton>
           </div>
         )}

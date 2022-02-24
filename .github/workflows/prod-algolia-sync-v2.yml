@@ -1,13 +1,14 @@
-name: PROD - Sync Algolia with Squidex V2
+name: PROD - Sync Algolia with squidex V2
 on:
   schedule:
     - cron: '0 10 * * *' # Once a day: 10am
   workflow_dispatch:
     inputs:
       entity:
-        required: true
+        required: false
         type: choice
         description: Choose which entity to sync
+        default: all
         options:
           - users
           - research-outputs
@@ -15,12 +16,16 @@ on:
           - all
 jobs:
   sync_prod_index:
-    runs-on: ubuntu-18.04
-    env:
+    uses: ./.github/workflows/algolia-sync-v2.yml
+    with:
+      entity: ${{ github.event.inputs.entity }}
+      ALGOLIA_INDEX: 'asap-hub_prod'
+      SQUIDEX_APP_NAME: 'asap-hub'
+      SSM_ALGOLIA_APP_ID_NAME: 'algolia-app-id-prod'
+      SSM_ALGOLIA_API_KEY_NAME: 'algolia-api-key-ci-prod'
+    secrets:
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_PROD }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_PROD }}
-      SQUIDEX_APP_NAME: asap-hub
-      SQUIDEX_BASE_URL: https://cloud.squidex.io
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: 'us-east-1'

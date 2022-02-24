@@ -367,10 +367,13 @@ jobs:
           ./ci/config-squidex-rules.sh
           FIRST_RUN="true" ./ci/import-squidex-data.sh
       - name: update schema
-        run: |
-          sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
-          sq config use $SQUIDEX_APP_NAME
-          sq sync in packages/squidex/schema -t schemas -t rules --delete
+        uses: ./.github/actions/squidex-sync
+        with:
+          squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
+          squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
+          squidex-client-secret: ${{ env.SQUIDEX_CLIENT_SECRET }}
+          squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
+
   verify-schema:
     needs: [setup, prepare-squidex, rebuild]
     runs-on: ubuntu-latest

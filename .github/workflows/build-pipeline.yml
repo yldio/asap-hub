@@ -17,6 +17,8 @@ jobs:
       credentials:
         username: AWS
         password: ${{ secrets.AWS_ECR_PASSWORD }}
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -28,7 +30,9 @@ jobs:
             .jest-cache/
           key: jest-cache
       - name: Test
-        run: yarn test --coverage --maxWorkers=2
+        run: |
+          yarn test --coverage --maxWorkers=2
+          yarn codecov
   test-integration:
     needs: setup
     runs-on: ubuntu-latest

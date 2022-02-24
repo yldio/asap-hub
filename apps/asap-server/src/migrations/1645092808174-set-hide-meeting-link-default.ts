@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { RestEvent } from '@asap-hub/squidex';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 import { applyToAllItemsInCollection } from '../utils/migrations';

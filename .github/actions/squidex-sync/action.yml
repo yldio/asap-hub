@@ -1,0 +1,29 @@
+name: 'Sync Squidex'
+description: 'Syncs the Squidex schema'
+inputs:
+  squidex-app-name:
+    description: 'Squidex App Name'
+    required: true
+  squidex-client-id:
+    description: 'Squidex Client ID'
+    required: true
+  squidex-client-secret:
+    description: 'Squidex Client Secret'
+    required: true
+  squidex-base-url:
+    description: 'Squidex Base Url'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Sync
+      shell: bash
+      run: |
+        sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
+        sq config use $SQUIDEX_APP_NAME
+        sq sync in packages/squidex/schema -t schemas -t rules --delete
+      env:
+        SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
+        SQUIDEX_CLIENT_ID: ${{ inputs.squidex-client-id }}
+        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-client-secret }}
+        SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}

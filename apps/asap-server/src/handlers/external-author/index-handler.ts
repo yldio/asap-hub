@@ -17,7 +17,7 @@ import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 
 export const indexExternalAuthorHandler =
   (
-    externalauthorController: ExternalAuthorsController,
+    externalAuthorController: ExternalAuthorsController,
     algoliaClient: AlgoliaSearchClient,
   ): EventBridgeHandler<
     ExternalAuthorEventType,
@@ -27,21 +27,21 @@ export const indexExternalAuthorHandler =
     logger.debug(`Event ${event['detail-type']}`);
 
     try {
-      const externalauthor = await externalauthorController.fetchById(
+      const externalAuthor = await externalAuthorController.fetchById(
         event.detail.payload.id,
       );
 
-      logger.debug(`Fetched external author ${externalauthor.displayName}`);
+      logger.debug(`Fetched external author ${externalAuthor.displayName}`);
 
       await algoliaClient.save({
         data: {
-          ...externalauthor,
+          ...externalAuthor,
           id: event.detail.payload.id,
         },
         type: 'external-author',
       });
 
-      logger.debug(`Saved external author  ${externalauthor.displayName}`);
+      logger.debug(`Saved external author  ${externalAuthor.displayName}`);
     } catch (e) {
       if (e?.output?.statusCode === 404) {
         await algoliaClient.remove(event.detail.payload.id);

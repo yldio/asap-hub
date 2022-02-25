@@ -76,4 +76,30 @@ describe('External Authors controller', () => {
       );
     });
   });
+
+  describe('FetchById', () => {
+    test('Should fetch the user from squidex graphql', async () => {
+      const result = await usersMockGraphqlServer.fetchById('user-id');
+
+      expect(result).toMatchObject(getExternalAuthorResponse());
+    });
+
+    test('Should throw when user is not found', async () => {
+      const mockResponse = getSquidexExternalAuthorGraphqlResponse();
+      mockResponse.findExternalAuthorsContent = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      await expect(
+        usersMockGraphqlClient.fetchById('not-found'),
+      ).rejects.toThrow('Not Found');
+    });
+
+    test('Should return the user when it finds it', async () => {
+      const mockResponse = getSquidexExternalAuthorGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await usersMockGraphqlClient.fetchById('user-id');
+      expect(result).toEqual(getExternalAuthorResponse());
+    });
+  });
 });

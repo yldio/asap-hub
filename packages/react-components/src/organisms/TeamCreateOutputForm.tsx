@@ -16,7 +16,6 @@ import { perRem } from '../pixels';
 import { noop } from '../utils';
 
 import TeamCreateOutputContributorsCard from './TeamCreateOutputContributorsCard';
-import { OptionValue } from '../atoms/AsyncMultiSelect';
 
 const contentStyles = css({
   display: 'grid',
@@ -38,7 +37,7 @@ type TeamCreateOutputFormProps = Pick<
 > & {
   getLabSuggestions: ComponentProps<
     typeof TeamCreateOutputContributorsCard
-  >['loadOptions'];
+  >['labSuggestions'];
   onSave?: (
     output: Partial<ResearchOutputPostRequest>,
   ) => Promise<Pick<ResearchOutputResponse, 'id'>>;
@@ -56,7 +55,9 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
     ResearchOutputPostRequest['subTypes']
   >([]);
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>('');
-  const [labs, setLabs] = useState<OptionValue[]>([]);
+  const [labs, setLabs] = useState<
+    NonNullable<ComponentProps<typeof TeamCreateOutputContributorsCard>['labs']>
+  >([]);
   const [description, setDescription] =
     useState<ResearchOutputPostRequest['description']>('');
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>('');
@@ -67,7 +68,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         title !== '' ||
         description !== '' ||
         link !== '' ||
-        subTypes.length !== 0
+        subTypes.length !== 0 ||
+        labs.length !== 0
       }
       onSave={() =>
         onSave({
@@ -76,7 +78,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           description,
           title,
           subTypes,
-          labs: labs.map(({ value }: OptionValue) => value),
+          labs: labs ? labs.map(({ value }) => value) : [],
         })
       }
     >
@@ -103,9 +105,9 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
 
           <TeamCreateOutputContributorsCard
             isSaving={isSaving}
-            loadOptions={getLabSuggestions}
-            values={labs}
-            onChange={setLabs}
+            labSuggestions={getLabSuggestions}
+            labs={labs}
+            onChangeLabs={setLabs}
           />
           <div css={formControlsContainerStyles}>
             <div style={{ display: 'block' }}>

@@ -1,17 +1,21 @@
-import { AsyncMultiSelectProps } from '../atoms/AsyncMultiSelect';
+import { ComponentPropsWithRef } from 'react';
 
 import { FormCard, LabeledMultiSelect } from '../molecules';
 import { noop } from '../utils';
 
-type TeamCreateOutputContributorsProps = Pick<
-  AsyncMultiSelectProps,
-  'values' | 'onChange' | 'loadOptions'
-> & {
+type TeamCreateOutputContributorsProps = {
+  labSuggestions: ComponentPropsWithRef<
+    typeof LabeledMultiSelect
+  >['loadOptions'];
+  readonly labs: ComponentPropsWithRef<typeof LabeledMultiSelect>['values'];
+  readonly onChangeLabs: ComponentPropsWithRef<
+    typeof LabeledMultiSelect
+  >['onChange'];
   readonly isSaving: boolean;
 };
 
 const TeamCreateOutputContributorsCard: React.FC<TeamCreateOutputContributorsProps> =
-  ({ onChange = noop, values, loadOptions, isSaving }) => (
+  ({ onChangeLabs = noop, labs, labSuggestions, isSaving }) => (
     <FormCard title="Who were the contributors?">
       <LabeledMultiSelect
         title="Labs"
@@ -19,10 +23,10 @@ const TeamCreateOutputContributorsCard: React.FC<TeamCreateOutputContributorsPro
         subtitle="(optional)"
         enabled={!isSaving}
         placeholder="Start typing..."
-        loadOptions={loadOptions}
-        onChange={(options) => onChange(options.map(({ value }) => value))}
-        values={values}
-        noOptionsMessage={({ inputValue }: { inputValue: string }) =>
+        loadOptions={labSuggestions}
+        onChange={onChangeLabs}
+        values={labs}
+        noOptionsMessage={({ inputValue }) =>
           `Sorry, no labs match ${inputValue}`
         }
       />

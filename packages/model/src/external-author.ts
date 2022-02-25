@@ -3,7 +3,7 @@ import { UserResponse } from './user';
 
 export type ExternalAuthorResponse = Pick<
   UserResponse,
-  'id' | 'displayName' | 'orcid'
+  'displayName' | 'orcid'
 >;
 
 export type ListExternalAuthorResponse = ListResponse<ExternalAuthorResponse>;

@@ -79,7 +79,7 @@ describe('External Authors controller', () => {
   });
 
   describe('FetchById', () => {
-    test('Should fetch the users from squidex graphql', async () => {
+    test('Should fetch the user from squidex graphql', async () => {
       const result = await usersMockGraphqlServer.fetchById('user-id');
 
       expect(result).toMatchObject(getExternalAuthorResponse());

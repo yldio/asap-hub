@@ -10,6 +10,8 @@ jobs:
   setup:
     uses: ./.github/workflows/setup.yml
   test-unit:
+    permissions:
+      packages: read
     needs: setup
     runs-on: ubuntu-latest
     container:

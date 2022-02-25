@@ -1,7 +1,6 @@
 import { JSONSchemaType } from 'ajv';
 import { FetchEventsOptions } from '../controllers/events';
-import { fetchOptionsValidationSchema } from './';
-import { validateInput } from './';
+import { validateInput, fetchOptionsValidationSchema } from '.';
 
 const eventFetchValidationSchema: JSONSchemaType<FetchEventsOptions> = {
   type: 'object',

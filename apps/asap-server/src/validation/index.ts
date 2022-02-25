@@ -21,15 +21,18 @@ export function validateInput<T, B extends boolean>(
     coerce?: boolean;
   },
 ): (
-  data: any,
+  data: Record<string, unknown>,
 ) => B extends true ? NonNullable<T> : NullableOptionalProperties<T>;
+// eslint-disable-next-line no-redeclare
 export function validateInput<T>(
   schema: JSONSchemaType<T>,
   options?: {
     skipNull?: boolean;
     coerce?: boolean;
   },
-): (data: any) => NonNullable<T> | NullableOptionalProperties<T> {
+): (
+  data: Record<string, unknown>,
+) => NonNullable<T> | NullableOptionalProperties<T> {
   const ajvValidation = (options?.coerce ? ajvCoerced : ajv).compile(schema);
 
   return (data) => {
@@ -44,7 +47,7 @@ export function validateInput<T>(
       return data;
     }
 
-    const errors = ajvValidation.errors;
+    const { errors } = ajvValidation;
 
     throw Boom.badRequest(
       `Error "${errors?.[0]?.propertyName || errors?.[0]?.instancePath}": ${
@@ -63,7 +66,7 @@ export function validateInput<T>(
 // see: https://github.com/ajv-validator/ajv/issues/1664
 const validate = <T>(
   ajvValidation: ValidateFunction<T>,
-  data: any,
+  data: Record<string, unknown>,
 ): data is NullableOptionalProperties<T> => ajvValidation(data);
 
 export const fetchOptionsValidationSchema: JSONSchemaType<FetchOptions> = {

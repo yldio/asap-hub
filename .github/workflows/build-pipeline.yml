@@ -13,10 +13,10 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
+      image: ghcr.io/yldio/node:14.19-alpine
       credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     env:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:

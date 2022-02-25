@@ -25,7 +25,9 @@ export const Normal = () => (
       'Movement Disorders',
       'ARJP (Autosomal recessive juvenile parkinsonism)',
     ]}
-    values={['Neurological Diseases', 'Cell Biology', 'Clinical Neurology']}
+    values={['Neurological Diseases', 'Cell Biology', 'Clinical Neurology'].map(
+      (value) => ({ label: value, value }),
+    )}
     noOptionsMessage={() => text('No Options Message', 'No options!')}
   />
 );

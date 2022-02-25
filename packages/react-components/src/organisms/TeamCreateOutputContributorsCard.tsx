@@ -20,12 +20,11 @@ const TeamCreateOutputContributorsCard: React.FC<TeamCreateOutputContributorsPro
         enabled={!isSaving}
         placeholder="Start typing..."
         loadOptions={loadOptions}
-        onChange={onChange}
+        onChange={(options) => onChange(options.map(({ value }) => value))}
         values={values}
         noOptionsMessage={({ inputValue }: { inputValue: string }) =>
           `Sorry, no labs match ${inputValue}`
         }
-        isAsync
       />
     </FormCard>
   );

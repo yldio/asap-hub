@@ -77,11 +77,18 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
                 subtitle="(Required)"
                 description="Select 5 to 10 keywords that best apply to your work."
                 placeholder="Start typing…"
-                values={newExpertiseAndResourceTags}
+                values={newExpertiseAndResourceTags.map((tag) => ({
+                  label: tag,
+                  value: tag,
+                }))}
                 enabled={!isSaving}
-                onChange={(newValue: string[]) => {
-                  setNewExpertiseAndResourceTags(newValue);
-                  validateExpertiseAndResources(newValue)
+                onChange={(newValues) => {
+                  setNewExpertiseAndResourceTags(
+                    newValues.map(({ value }) => value),
+                  );
+                  validateExpertiseAndResources(
+                    newValues.map(({ value }) => value),
+                  )
                     ? setExpertiseAndResourcesCustomValidationMessage('')
                     : setExpertiseAndResourcesCustomValidationMessage(
                         `Please add a minimum of ${MINIMUM_EXPERTISE_AND_RESOURCES} tags`,

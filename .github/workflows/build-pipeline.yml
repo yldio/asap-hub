@@ -265,8 +265,6 @@ jobs:
         run: |
           yarn run test:build-output
   test-browser:
-    permissions:
-      packages: read
     needs: [setup, rebuild]
     runs-on: ubuntu-latest
     container:
@@ -288,14 +286,16 @@ jobs:
         run: |
           yarn run test:browser
   prepare-squidex:
+    permissions:
+      packages: read
     needs: setup
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
       credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     env:
       SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}-github
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
@@ -331,13 +331,15 @@ jobs:
           squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
 
   verify-schema:
+    permissions:
+      packages: read
     needs: [setup, prepare-squidex, rebuild]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
       credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     env:
       SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}-github
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}

@@ -2,17 +2,17 @@
 import {
   ListGroupResponse,
   ListTeamResponse,
-  TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
-import { framework } from '@asap-hub/services-common';
 import Boom from '@hapi/boom';
-import Joi from '@hapi/joi';
 import { Response, Router } from 'express';
 import { GroupController } from '../controllers/groups';
-import { FetchTeamsOptions, TeamController } from '../controllers/teams';
-import { teamUpdateSchema } from '../entities/team';
-import { FetchOptions } from '../utils/types';
+import { TeamController } from '../controllers/teams';
+import { validateFetchOptions } from '../validation';
+import {
+  validateTeamParameters,
+  validateTeamPatchRequest,
+} from '../validation/team.validation';
 
 export const teamRouteFactory = (
   groupsController: GroupController,
@@ -23,11 +23,7 @@ export const teamRouteFactory = (
   teamRoutes.get('/teams', async (req, res: Response<ListTeamResponse>) => {
     const { query } = req;
 
-    const options = framework.validate(
-      'query',
-      query,
-      fetchQuerySchema,
-    ) as FetchTeamsOptions;
+    const options = validateFetchOptions(query);
 
     const result = await teamsController.fetch({
       ...options,
@@ -41,7 +37,7 @@ export const teamRouteFactory = (
     '/teams/:teamId',
     async (req, res: Response<TeamResponse>) => {
       const { params } = req;
-      const { teamId } = framework.validate('parameters', params, paramSchema);
+      const { teamId } = validateTeamParameters(params);
 
       const showTools = !!req.loggedInUser?.teams.find(
         (team) => team.id === teamId,
@@ -58,12 +54,8 @@ export const teamRouteFactory = (
     async (req, res: Response<TeamResponse>) => {
       const { body, params } = req;
 
-      const { teamId } = framework.validate('parameters', params, paramSchema);
-      const { tools } = framework.validate(
-        'payload',
-        body,
-        teamUpdateSchema,
-      ) as TeamPatchRequest;
+      const { teamId } = validateTeamParameters(params);
+      const { tools } = validateTeamPatchRequest(body);
 
       if (!req.loggedInUser!.teams.find(({ id }) => id === teamId)) {
         throw Boom.forbidden();
@@ -79,12 +71,8 @@ export const teamRouteFactory = (
     '/teams/:teamId/groups',
     async (req, res: Response<ListGroupResponse>) => {
       const { query, params } = req;
-      const { teamId } = framework.validate('parameters', params, paramSchema);
-      const options = framework.validate(
-        'query',
-        query,
-        querySchema,
-      ) as FetchOptions;
+      const { teamId } = validateTeamParameters(params);
+      const options = validateFetchOptions(query);
 
       const result = await groupsController.fetchByTeamId(teamId, options);
 
@@ -94,20 +82,3 @@ export const teamRouteFactory = (
 
   return teamRoutes;
 };
-
-export const querySchema = Joi.object({
-  take: Joi.number(),
-  skip: Joi.number(),
-  search: Joi.string(),
-}).required();
-
-const paramSchema = Joi.object({
-  teamId: Joi.string().required(),
-});
-
-const fetchQuerySchema = Joi.object({
-  take: Joi.number(),
-  skip: Joi.number(),
-  search: Joi.string(),
-  filter: Joi.array().items(Joi.string()).single(),
-}).required();

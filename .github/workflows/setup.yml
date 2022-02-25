@@ -3,25 +3,10 @@ name: Setup
 on:
   workflow_call:
     inputs:
-      aws-account-id:
-        description: 'AWS Access Account ID'
-        required: false
-        default: '249832953260'
-        type: string
-      aws-region:
-        description: 'AWS Region for ECR'
-        required: false
-        default: ap-southeast-2
-        type: string
       image-tag:
         description: 'Image Tag'
         required: false
-        default: 3832bee3b58efae7fb29e5c8517140300c4c9daf
-        type: string
-      node-version:
-        description: 'Node Version'
-        required: false
-        default: '14.17'
+        default: 22019e25047e6e45e9f1e3d36fb7bc4fb56f944b
         type: string
     outputs:
       pr-number:
@@ -33,30 +18,22 @@ on:
       squidex-image-name:
         description: 'Name of Squidex image'
         value: ${{ jobs.image-names.outputs.squidex-image-name }}
-      node-image-name:
-        description: 'Name of node image'
-        value: ${{ jobs.image-names.outputs.node-image-name }}
 jobs:
   image-names:
     runs-on: ubuntu-latest
     outputs:
       integration-image-name: ${{ steps.get-image-names.outputs.integration-image-name }}
       squidex-image-name: ${{ steps.get-image-names.outputs.squidex-image-name }}
-      node-image-name: ${{ steps.get-image-names.outputs.node-image-name }}
     steps:
       - name: Output Image Name
         id: get-image-names
         shell: bash
         env:
-          ACCOUNT_ID: ${{ inputs.aws-account-id }}
-          REGION: ${{ inputs.aws-region }}
-          REPOSITORY: ${{ inputs.repository }}
           IMAGE_TAG: ${{ inputs.image-tag }}
           NODE_VERSION: ${{ inputs.node-version }}
         run: |
-          INTEGRATION_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/asap-hub/node-python-sq:$IMAGE_TAG"
-          SQUIDEX_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/asap-hub/squidex-utils:$IMAGE_TAG"
-          NODE_IMAGE_NAME="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/asap-hub/node:$NODE_VERSION-alpine"
+          REPOSITORY="ghcr.io/yldio/asap-hub"
+          INTEGRATION_IMAGE_NAME="$REPOSITORY/node-python-sq:$IMAGE_TAG"
+          SQUIDEX_IMAGE_NAME="$REPOSITORY/squidex-utils:$IMAGE_TAG"
           echo "::set-output name=integration-image-name::$INTEGRATION_IMAGE_NAME"
           echo "::set-output name=squidex-image-name::$SQUIDEX_IMAGE_NAME"
-          echo "::set-output name=node-image-name::$NODE_IMAGE_NAME"

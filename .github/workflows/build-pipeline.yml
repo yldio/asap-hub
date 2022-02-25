@@ -15,7 +15,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/node:14.19-alpine
+      image: ${{ needs.setup.outputs.integration-image-name }}
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -36,13 +36,15 @@ jobs:
           yarn test --coverage --maxWorkers=2
           yarn codecov
   test-integration:
+    permissions:
+      packages: read
     needs: setup
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
       credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     env:
       SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number || github.head_ref }}-${{ github.run_id }}-github
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
@@ -59,13 +61,15 @@ jobs:
         if: always()
         run: python ci/integration/scripts/delete-app.py
   build:
+    permissions:
+      packages: read
     needs: setup
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
       credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Checkout
@@ -105,13 +109,15 @@ jobs:
             packages/**/build*
           key: build-output-${{ github.sha }}
   rebuild:
+    permissions:
+      packages: read
     needs: setup
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
       credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Checkout
@@ -127,13 +133,15 @@ jobs:
             .yarn/unplugged/
           key: rebuild-output-${{ github.sha }}
   check:
+    permissions:
+      packages: read
     needs: setup
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
       credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     strategy:
       fail-fast: false
       matrix:
@@ -145,13 +153,15 @@ jobs:
         run: |
           yarn ${{ matrix.script }}
   build-sls-package:
+    permissions:
+      packages: read
     needs: [setup, build, rebuild]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
       credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     env:
       SLS_STAGE: ${{ needs.setup.outputs.pr-number }}
       NODE_ENV: 'production'
@@ -200,13 +210,15 @@ jobs:
           path: '.serverless'
           retention-days: 14
   bundlewatch:
+    permissions:
+      packages: read
     needs: [setup, build]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
       credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     env:
       CI_REPO_OWNER: ${{ github.repository_owner }}
       CI_REPO: ${{ github.repository }}
@@ -229,6 +241,8 @@ jobs:
           CI_REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F / '{print $2}')
           yarn bundlewatch
   upload-build-artifacts:
+    permissions:
+      packages: read
     needs: [build]
     runs-on: ubuntu-latest
     steps:
@@ -248,13 +262,15 @@ jobs:
           path: apps/**/build*
           retention-days: 14
   test-build-output:
+    permissions:
+      packages: read
     needs: [setup, build]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
       credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -270,6 +286,8 @@ jobs:
         run: |
           yarn run test:build-output
   test-browser:
+    permissions:
+      packages: read
     needs: [setup, rebuild]
     runs-on: ubuntu-latest
     container:

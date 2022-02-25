@@ -382,5 +382,5 @@ jobs:
         uses: actions/checkout@v2
       - uses: ./.github/actions/slack/
         with:
-          message: "Build Failed on GitHub: ${{ needs.setup.outputs.pr-number || github.head_ref }}"
+          message: 'Build Failed on GitHub: ${{ needs.setup.outputs.pr-number || github.head_ref }}'
           webhook: ${{ secrets.SLACK_WEBHOOK }}

@@ -1410,6 +1410,8 @@ export type Asset = {
   pixelWidth: Maybe<Scalars['Int']>;
   /** The file name as slug. */
   slug: Scalars['String'];
+  /** The source URL of the asset. */
+  sourceUrl: Scalars['String'];
   /** The asset tags. */
   tags: Array<Scalars['String']>;
   /** The thumbnail URL to the asset. */
@@ -1681,6 +1683,14 @@ export type Dashboard = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query News content items. */
+  referencesNewsAndEventsContents: Maybe<Array<NewsAndEvents>>;
+  /** Query News content items with total count. */
+  referencesNewsAndEventsContentsWithTotal: Maybe<NewsAndEventsResultDto>;
+  /** Query Pages content items. */
+  referencesPagesContents: Maybe<Array<Pages>>;
+  /** Query Pages content items with total count. */
+  referencesPagesContentsWithTotal: Maybe<PagesResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -1689,6 +1699,42 @@ export type Dashboard = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Dashboard content type. */
+export type DashboardReferencesNewsAndEventsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Dashboard content type. */
+export type DashboardReferencesNewsAndEventsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Dashboard content type. */
+export type DashboardReferencesPagesContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Dashboard content type. */
+export type DashboardReferencesPagesContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
 };
 
 /** The structure of the Dashboard data type. */
@@ -1763,6 +1809,18 @@ export type Discover = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query News content items. */
+  referencesNewsAndEventsContents: Maybe<Array<NewsAndEvents>>;
+  /** Query News content items with total count. */
+  referencesNewsAndEventsContentsWithTotal: Maybe<NewsAndEventsResultDto>;
+  /** Query Pages content items. */
+  referencesPagesContents: Maybe<Array<Pages>>;
+  /** Query Pages content items with total count. */
+  referencesPagesContentsWithTotal: Maybe<PagesResultDto>;
+  /** Query Users content items. */
+  referencesUsersContents: Maybe<Array<Users>>;
+  /** Query Users content items with total count. */
+  referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -1771,6 +1829,60 @@ export type Discover = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Discover ASAP content type. */
+export type DiscoverReferencesNewsAndEventsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Discover ASAP content type. */
+export type DiscoverReferencesNewsAndEventsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Discover ASAP content type. */
+export type DiscoverReferencesPagesContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Discover ASAP content type. */
+export type DiscoverReferencesPagesContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Discover ASAP content type. */
+export type DiscoverReferencesUsersContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Discover ASAP content type. */
+export type DiscoverReferencesUsersContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
 };
 
 /** The structure of the About Us field of the Discover ASAP content type. */
@@ -1890,6 +2002,10 @@ export type Events = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Calendars content items. */
+  referencesCalendarsContents: Maybe<Array<Calendars>>;
+  /** Query Calendars content items with total count. */
+  referencesCalendarsContentsWithTotal: Maybe<CalendarsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -1898,6 +2014,24 @@ export type Events = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencesCalendarsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencesCalendarsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
 };
 
 /** The structure of the Calendar field of the Events content type. */
@@ -1929,6 +2063,7 @@ export type EventsDataDto = {
   eventLink: Maybe<EventsDataEventLinkDto>;
   googleId: Maybe<EventsDataGoogleIdDto>;
   hidden: Maybe<EventsDataHiddenDto>;
+  hideMeetingLink: Maybe<EventsDataHideMeetingLinkDto>;
   meetingLink: Maybe<EventsDataMeetingLinkDto>;
   meetingMaterials: Maybe<EventsDataMeetingMaterialsDto>;
   meetingMaterialsPermanentlyUnavailable: Maybe<EventsDataMeetingMaterialsPermanentlyUnavailableDto>;
@@ -1998,6 +2133,16 @@ export type EventsDataHiddenInputDto = {
   iv: Maybe<Scalars['Boolean']>;
 };
 
+/** The structure of the Hide Meeting Link field of the Events content type. */
+export type EventsDataHideMeetingLinkDto = {
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Hide Meeting Link field of the Events content input type. */
+export type EventsDataHideMeetingLinkInputDto = {
+  iv: Maybe<Scalars['Boolean']>;
+};
+
 /** The structure of the Events data input type. */
 export type EventsDataInputDto = {
   calendar: Maybe<EventsDataCalendarInputDto>;
@@ -2007,6 +2152,7 @@ export type EventsDataInputDto = {
   eventLink: Maybe<EventsDataEventLinkInputDto>;
   googleId: Maybe<EventsDataGoogleIdInputDto>;
   hidden: Maybe<EventsDataHiddenInputDto>;
+  hideMeetingLink: Maybe<EventsDataHideMeetingLinkInputDto>;
   meetingLink: Maybe<EventsDataMeetingLinkInputDto>;
   meetingMaterials: Maybe<EventsDataMeetingMaterialsInputDto>;
   meetingMaterialsPermanentlyUnavailable: Maybe<EventsDataMeetingMaterialsPermanentlyUnavailableInputDto>;
@@ -2212,6 +2358,7 @@ export type EventsFlatDataDto = {
   googleId: Maybe<Scalars['String']>;
   /** Hidden events will NOT show on the Hub. (Note: any event cancelled on GCal will be hidden by default. To show a cancelled event on the Hub, you have to manually un-hide the event here) */
   hidden: Maybe<Scalars['Boolean']>;
+  hideMeetingLink: Maybe<Scalars['Boolean']>;
   meetingLink: Maybe<Scalars['String']>;
   /** If permanently unavailable box is ticked, any content you put here will be ignored. */
   meetingMaterials: Maybe<Array<EventsDataMeetingMaterialsChildDto>>;
@@ -2378,6 +2525,18 @@ export type Groups = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Calendars content items. */
+  referencesCalendarsContents: Maybe<Array<Calendars>>;
+  /** Query Calendars content items with total count. */
+  referencesCalendarsContentsWithTotal: Maybe<CalendarsResultDto>;
+  /** Query Teams content items. */
+  referencesTeamsContents: Maybe<Array<Teams>>;
+  /** Query Teams content items with total count. */
+  referencesTeamsContentsWithTotal: Maybe<TeamsResultDto>;
+  /** Query Users content items. */
+  referencesUsersContents: Maybe<Array<Users>>;
+  /** Query Users content items with total count. */
+  referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -2386,6 +2545,60 @@ export type Groups = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Groups content type. */
+export type GroupsReferencesCalendarsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Groups content type. */
+export type GroupsReferencesCalendarsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Groups content type. */
+export type GroupsReferencesTeamsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Groups content type. */
+export type GroupsReferencesTeamsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Groups content type. */
+export type GroupsReferencesUsersContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Groups content type. */
+export type GroupsReferencesUsersContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
 };
 
 /** The structure of the This group is active field of the Groups content type. */
@@ -3151,6 +3364,18 @@ export type ResearchOutputs = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query External authors content items. */
+  referencesExternalAuthorsContents: Maybe<Array<ExternalAuthors>>;
+  /** Query External authors content items with total count. */
+  referencesExternalAuthorsContentsWithTotal: Maybe<ExternalAuthorsResultDto>;
+  /** Query Labs content items. */
+  referencesLabsContents: Maybe<Array<Labs>>;
+  /** Query Labs content items with total count. */
+  referencesLabsContentsWithTotal: Maybe<LabsResultDto>;
+  /** Query Users content items. */
+  referencesUsersContents: Maybe<Array<Users>>;
+  /** Query Users content items with total count. */
+  referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
   /** Query Teams content items. */
   referencingTeamsContents: Maybe<Array<Teams>>;
   /** Query Teams content items with total count. */
@@ -3163,6 +3388,60 @@ export type ResearchOutputs = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesExternalAuthorsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesExternalAuthorsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesLabsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesLabsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesUsersContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesUsersContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
 };
 
 /** The structure of a Research Outputs content type. */
@@ -3527,6 +3806,10 @@ export type Teams = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Research Outputs content items. */
+  referencesResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
+  /** Query Research Outputs content items with total count. */
+  referencesResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** Query Groups content items. */
   referencingGroupsContents: Maybe<Array<Groups>>;
   /** Query Groups content items with total count. */
@@ -3543,6 +3826,24 @@ export type Teams = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Teams content type. */
+export type TeamsReferencesResearchOutputsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Teams content type. */
+export type TeamsReferencesResearchOutputsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
 };
 
 /** The structure of a Teams content type. */
@@ -3755,6 +4056,14 @@ export type Users = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Labs content items. */
+  referencesLabsContents: Maybe<Array<Labs>>;
+  /** Query Labs content items with total count. */
+  referencesLabsContentsWithTotal: Maybe<LabsResultDto>;
+  /** Query Teams content items. */
+  referencesTeamsContents: Maybe<Array<Teams>>;
+  /** Query Teams content items with total count. */
+  referencesTeamsContentsWithTotal: Maybe<TeamsResultDto>;
   /** Query Discover ASAP content items. */
   referencingDiscoverContents: Maybe<Array<Discover>>;
   /** Query Discover ASAP content items with total count. */
@@ -3775,6 +4084,42 @@ export type Users = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencesLabsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencesLabsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencesTeamsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencesTeamsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */

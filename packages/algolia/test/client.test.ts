@@ -1,12 +1,11 @@
 import { SearchResponse } from '@algolia/client-search';
-import { ResearchOutputResponse } from '@asap-hub/model';
+import { ResearchOutputResponse, UserResponse } from '@asap-hub/model';
 import {
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
 import {
   AlgoliaSearchClient,
-  getEntityType,
   EntityRecord,
   RESEARCH_OUTPUT_ENTITY_TYPE,
   USER_ENTITY_TYPE,
@@ -18,17 +17,17 @@ describe('Algolia Search Client', () => {
   const algoliaSearchClient = new AlgoliaSearchClient(algoliaSearchIndex);
 
   test('Should do save many on entities', async () => {
-    await algoliaSearchClient.saveMany(
+    await algoliaSearchClient.saveMany<ResearchOutputResponse>(
       Array(100)
         .fill({})
-        .map(
-          (value, index) =>
-            ({
-              id: `ro-id-${index}`,
-              title: 'ro-title',
-              sharingStatus: 'Public',
-            } as ResearchOutputResponse),
-        ) as readonly ResearchOutputResponse[],
+        .map((_, index) => ({
+          data: {
+            id: `ro-id-${index}`,
+            title: 'ro-title',
+            sharingStatus: 'Public',
+          } as ResearchOutputResponse,
+          type: 'research-output',
+        })),
     );
 
     expect(algoliaSearchIndex.saveObjects).toBeCalledWith(
@@ -47,7 +46,10 @@ describe('Algolia Search Client', () => {
   test('Should save the Research Output', async () => {
     const researchOutput = createResearchOutputResponse();
 
-    await algoliaSearchClient.save(researchOutput);
+    await algoliaSearchClient.save<ResearchOutputResponse>({
+      data: researchOutput,
+      type: 'research-output',
+    });
 
     expect(algoliaSearchIndex.saveObject).toBeCalledWith({
       ...researchOutput,
@@ -59,28 +61,15 @@ describe('Algolia Search Client', () => {
   test('Should save the User', async () => {
     const user = createUserResponse();
 
-    await algoliaSearchClient.save(user);
+    await algoliaSearchClient.save<UserResponse>({
+      data: user,
+      type: 'user',
+    });
 
     expect(algoliaSearchIndex.saveObject).toBeCalledWith({
       ...user,
       objectID: user.id,
       __meta: { type: 'user' },
-    });
-  });
-
-  test('Should saveEntity - the Research Output', async () => {
-    const researchOutput = createResearchOutputResponse();
-
-    await algoliaSearchClient.saveEntity({
-      data: researchOutput,
-      type: 'research-output',
-      id: 'ro-id',
-    });
-
-    expect(algoliaSearchIndex.saveObject).toBeCalledWith({
-      ...researchOutput,
-      objectID: researchOutput.id,
-      __meta: { type: 'research-output' },
     });
   });
 
@@ -123,21 +112,6 @@ describe('Algolia Search Client', () => {
     expect(response).toEqual(searchUserResponse);
     expect(algoliaSearchIndex.search).toBeCalledWith('query', {
       filters: '__meta.type:"user"',
-    });
-  });
-
-  describe('getEntityType', () => {
-    test('should return research-output when it was a title and sharingStatus fields', () => {
-      expect(
-        getEntityType({
-          title: 'test title',
-          sharingStatus: 'Public',
-        } as ResearchOutputResponse),
-      ).toEqual('research-output');
-    });
-
-    test("should return user when it didn't have a title field", () => {
-      expect(getEntityType({} as ResearchOutputResponse)).toEqual('user');
     });
   });
 });

@@ -23,7 +23,10 @@ export const indexUserHandler =
 
       logger.debug(`Fetched user ${user.id}`);
 
-      await algoliaClient.save(user);
+      await algoliaClient.save({
+        data: user,
+        type: 'user',
+      });
 
       logger.debug(`Saved user ${user.id}`);
     } catch (e) {

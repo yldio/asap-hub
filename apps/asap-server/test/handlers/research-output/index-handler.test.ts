@@ -27,9 +27,10 @@ describe('Research Output index handler', () => {
 
     await indexHandler(createEvent('ro-1234'));
 
-    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(
-      researchOutputResponse,
-    );
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: researchOutputResponse,
+      type: 'research-output',
+    });
   });
 
   test('Should fetch the research-output and create a record in Algolia when research-output is updated', async () => {
@@ -40,9 +41,10 @@ describe('Research Output index handler', () => {
 
     await indexHandler(updateEvent('ro-1234'));
 
-    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(
-      researchOutputResponse,
-    );
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: researchOutputResponse,
+      type: 'research-output',
+    });
   });
 
   test('Should fetch the research-output and remove the record in Algolia when research-output is unpublished', async () => {
@@ -120,9 +122,10 @@ describe('Research Output index handler', () => {
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(
-        researchOutputResponse,
-      );
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+        data: researchOutputResponse,
+        type: 'research-output',
+      });
     });
 
     test('receives the events created and updated in reverse order', async () => {
@@ -141,9 +144,10 @@ describe('Research Output index handler', () => {
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(
-        researchOutputResponse,
-      );
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+        data: researchOutputResponse,
+        type: 'research-output',
+      });
     });
 
     test('receives the events created and unpublished in correct order', async () => {

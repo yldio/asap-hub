@@ -29,7 +29,10 @@ export const indexResearchOutputHandler =
 
       logger.debug(`Fetched research-output ${researchOutput.id}`);
 
-      await algoliaClient.save(researchOutput);
+      await algoliaClient.save({
+        data: researchOutput,
+        type: 'research-output',
+      });
 
       logger.debug(`Saved research-output ${researchOutput.id}`);
     } catch (e) {

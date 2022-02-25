@@ -26,9 +26,8 @@ describe('External Author index handler', () => {
     expect(externalAuthorControllerMock.fetchById).toHaveBeenCalledWith(
       event.detail.payload.id,
     );
-    expect(algoliaSearchClientMock.saveEntity).toHaveBeenCalledWith({
-      data: externalauthorResponse,
-      id: expect.anything(),
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: { ...externalauthorResponse, id: 'external-author-1234' },
       type: 'external-author',
     });
   });
@@ -41,9 +40,8 @@ describe('External Author index handler', () => {
 
     await indexHandler(updateEvent());
 
-    expect(algoliaSearchClientMock.saveEntity).toHaveBeenCalledWith({
-      data: externalauthorResponse,
-      id: expect.anything(),
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: { ...externalauthorResponse, id: 'external-author-1234' },
       type: 'external-author',
     });
   });
@@ -85,7 +83,7 @@ describe('External Author index handler', () => {
     externalAuthorControllerMock.fetchById.mockResolvedValueOnce(
       getExternalAuthorResponse(),
     );
-    algoliaSearchClientMock.saveEntity.mockRejectedValueOnce(algoliaError);
+    algoliaSearchClientMock.save.mockRejectedValueOnce(algoliaError);
 
     await expect(indexHandler(updateEvent())).rejects.toThrow(algoliaError);
   });
@@ -104,9 +102,8 @@ describe('External Author index handler', () => {
     test('receives the events created and updated in correct order', async () => {
       const externalauthorId = 'external-author-1234';
       const externalauthorResponse = {
-        data: getExternalAuthorResponse(),
+        data: { ...getExternalAuthorResponse(), id: externalauthorId },
         type: 'external-author',
-        id: externalauthorId,
       };
 
       externalAuthorControllerMock.fetchById.mockResolvedValue({
@@ -117,8 +114,8 @@ describe('External Author index handler', () => {
       await indexHandler(updateEvent(externalauthorId));
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
-      expect(algoliaSearchClientMock.saveEntity).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.saveEntity).toHaveBeenCalledWith(
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(
         externalauthorResponse,
       );
     });
@@ -126,9 +123,8 @@ describe('External Author index handler', () => {
     test('receives the events created and updated in reverse order', async () => {
       const externalauthorId = 'external-author-1234';
       const externalauthorResponse = {
-        data: getExternalAuthorResponse(),
+        data: { ...getExternalAuthorResponse(), id: 'external-author-1234' },
         type: 'external-author',
-        id: externalauthorId,
       };
 
       externalAuthorControllerMock.fetchById.mockResolvedValue(
@@ -139,8 +135,8 @@ describe('External Author index handler', () => {
       await indexHandler(createEvent(externalauthorId));
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
-      expect(algoliaSearchClientMock.saveEntity).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.saveEntity).toHaveBeenCalledWith(
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(
         externalauthorResponse,
       );
     });
@@ -158,7 +154,7 @@ describe('External Author index handler', () => {
       await indexHandler(createEv);
       await expect(indexHandler(unpublishedEv)).rejects.toEqual(algoliaError);
 
-      expect(algoliaSearchClientMock.saveEntity).not.toHaveBeenCalled();
+      expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
         unpublishedEv.detail.payload.id,
@@ -178,7 +174,7 @@ describe('External Author index handler', () => {
       await indexHandler(unpublishedEv);
       await expect(indexHandler(createEv)).rejects.toEqual(algoliaError);
 
-      expect(algoliaSearchClientMock.saveEntity).not.toHaveBeenCalled();
+      expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
         unpublishedEv.detail.payload.id,
@@ -198,7 +194,7 @@ describe('External Author index handler', () => {
       await indexHandler(createEv);
       await expect(indexHandler(deleteEv)).rejects.toEqual(algoliaError);
 
-      expect(algoliaSearchClientMock.saveEntity).not.toHaveBeenCalled();
+      expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
         deleteEv.detail.payload.id,
@@ -218,7 +214,7 @@ describe('External Author index handler', () => {
       await indexHandler(deleteEv);
       await expect(indexHandler(createEv)).rejects.toEqual(algoliaError);
 
-      expect(algoliaSearchClientMock.saveEntity).not.toHaveBeenCalled();
+      expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
         deleteEv.detail.payload.id,
@@ -238,7 +234,7 @@ describe('External Author index handler', () => {
       await indexHandler(updateEv);
       await expect(indexHandler(deleteEv)).rejects.toEqual(algoliaError);
 
-      expect(algoliaSearchClientMock.saveEntity).not.toHaveBeenCalled();
+      expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
         deleteEv.detail.payload.id,
@@ -258,7 +254,7 @@ describe('External Author index handler', () => {
       await indexHandler(deleteEv);
       await expect(indexHandler(updateEv)).rejects.toEqual(algoliaError);
 
-      expect(algoliaSearchClientMock.saveEntity).not.toHaveBeenCalled();
+      expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
         deleteEv.detail.payload.id,
@@ -277,7 +273,7 @@ describe('External Author index handler', () => {
       await indexHandler(updateEv);
       await expect(indexHandler(unpublishedEv)).rejects.toEqual(algoliaError);
 
-      expect(algoliaSearchClientMock.saveEntity).not.toHaveBeenCalled();
+      expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
         unpublishedEv.detail.payload.id,
@@ -297,7 +293,7 @@ describe('External Author index handler', () => {
       await indexHandler(unpublishedEv);
       await expect(indexHandler(updateEv)).rejects.toEqual(algoliaError);
 
-      expect(algoliaSearchClientMock.saveEntity).not.toHaveBeenCalled();
+      expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
         unpublishedEv.detail.payload.id,

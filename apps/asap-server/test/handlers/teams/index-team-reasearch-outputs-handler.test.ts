@@ -38,9 +38,15 @@ describe('Team Research Outputs Index', () => {
 
     await indexHandler(updateEvent);
 
-    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(outputs[0]);
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: outputs[0],
+      type: 'research-output',
+    });
     expect(algoliaSearchClientMock.save).not.toHaveBeenCalledWith(outputs[1]);
-    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(outputs[2]);
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: outputs[2],
+      type: 'research-output',
+    });
   });
 
   test('Should not trigger algolia save when there are no research outputs associated with the team', async () => {

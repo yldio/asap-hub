@@ -21,7 +21,10 @@ describe('User index handler', () => {
     expect(userControllerMock.fetchById).toHaveBeenCalledWith(
       event.detail.payload.id,
     );
-    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(userResponse);
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: userResponse,
+      type: 'user',
+    });
   });
 
   test('Should fetch the user and create a record in Algolia when user is updated', async () => {
@@ -30,7 +33,10 @@ describe('User index handler', () => {
 
     await indexHandler(updateEvent());
 
-    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(userResponse);
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: userResponse,
+      type: 'user',
+    });
   });
 
   test('Should fetch the user and remove the record in Algolia when user is unpublished', async () => {
@@ -100,7 +106,10 @@ describe('User index handler', () => {
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(userResponse);
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+        data: userResponse,
+        type: 'user',
+      });
     });
 
     test('receives the events created and updated in reverse order', async () => {
@@ -117,7 +126,10 @@ describe('User index handler', () => {
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(userResponse);
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+        data: userResponse,
+        type: 'user',
+      });
     });
 
     test('receives the events created and unpublished in correct order', async () => {

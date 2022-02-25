@@ -36,7 +36,10 @@ export const indexResearchOutputByTeamHandler =
 
           logger.debug(`Fetched ${JSON.stringify(researchOutput.id)}`);
 
-          await algoliaClient.save(researchOutput);
+          await algoliaClient.save({
+            data: researchOutput,
+            type: 'research-output',
+          });
 
           logger.debug(`Saved research-output with id ${id}`);
         }),

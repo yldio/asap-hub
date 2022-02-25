@@ -78,7 +78,7 @@ describe('Index Users on Lab event handler', () => {
       await indexHandler(event);
 
       expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith(
-        usersResponse.items,
+        usersResponse.items.map((data) => ({ data, type: 'user' })),
       );
     },
   );
@@ -100,11 +100,11 @@ describe('Index Users on Lab event handler', () => {
         expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledTimes(2);
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           1,
-          usersResponse.items,
+          usersResponse.items.map((data) => ({ data, type: 'user' })),
         );
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           2,
-          usersResponse.items,
+          usersResponse.items.map((data) => ({ data, type: 'user' })),
         );
       },
     );

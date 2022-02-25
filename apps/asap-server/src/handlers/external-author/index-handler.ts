@@ -33,10 +33,12 @@ export const indexExternalAuthorHandler =
 
       logger.debug(`Fetched external author ${externalauthor.displayName}`);
 
-      await algoliaClient.saveEntity({
-        id: event.detail.payload.id,
+      await algoliaClient.save({
+        data: {
+          ...externalauthor,
+          id: event.detail.payload.id,
+        },
         type: 'external-author',
-        data: externalauthor,
       });
 
       logger.debug(`Saved external author  ${externalauthor.displayName}`);

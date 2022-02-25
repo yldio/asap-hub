@@ -21,30 +21,51 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build and push squidex
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build squidex
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: asap-hub/squidex-utils
+          IMAGE_NAME: asap-hub/squidex-utils
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          IMAGE_NAME=$ECR_REGISTRY/$ECR_REPOSITORY
-          docker build -t $IMAGE_NAME:$IMAGE_TAG . -f ci/Dockerfile --target base
-          docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest
-          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+          docker build -t $IMAGE_NAME . -f ci/Dockerfile --target base
+          ECR_IMAGE_NAME=$ECR_REGISTRY/$IMAGE_NAME
+          GHCR_IMAGE_NAME=ghcr.io/yldio/$IMAGE_NAME
+          docker tag $IMAGE_NAME $ECR_IMAGE_NAME:$IMAGE_TAG
+          docker tag $IMAGE_NAME $GHCR_IMAGE_NAME:$IMAGE_TAG
+          docker tag $IMAGE_NAME $ECR_IMAGE_NAME:latest
+          docker tag $IMAGE_NAME $GHCR_IMAGE_NAME:latest
+
+          echo "ECR_IMAGE_NAME=$ECR_IMAGE_NAME" >> $GITHUB_ENV
+          echo "GHCR_IMAGE_NAME=$GHCR_IMAGE_NAME" >> $GITHUB_ENV
       - name: push squidex
         if: ${{ github.event_name == 'workflow_dispatch' }}
-        run: docker push --all-tags ${{ env.IMAGE_NAME }}
+        run: |
+          docker push --all-tags ${{ env.GHCR_IMAGE_NAME }}
+          docker push --all-tags ${{ env.ECR_IMAGE_NAME }}
 
-      - name: Build and push integration
+      - name: Build integration
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: asap-hub/node-python-sq
+          IMAGE_NAME: asap-hub/node-python-sq
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          IMAGE_NAME=$ECR_REGISTRY/$ECR_REPOSITORY
-          docker build -t $IMAGE_NAME:$IMAGE_TAG . -f ci/Dockerfile --target integration
-          docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest
-          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+          docker build -t $IMAGE_NAME . -f ci/Dockerfile --target integration
+          ECR_IMAGE_NAME=$ECR_REGISTRY/$IMAGE_NAME
+          GHCR_IMAGE_NAME=ghcr.io/yldio/$IMAGE_NAME
+          docker tag $IMAGE_NAME $ECR_IMAGE_NAME:$IMAGE_TAG
+          docker tag $IMAGE_NAME $GHCR_IMAGE_NAME:$IMAGE_TAG
+          docker tag $IMAGE_NAME $ECR_IMAGE_NAME:latest
+          docker tag $IMAGE_NAME $GHCR_IMAGE_NAME:latest
+          echo "ECR_IMAGE_NAME=$ECR_IMAGE_NAME" >> $GITHUB_ENV
+          echo "GHCR_IMAGE_NAME=$GHCR_IMAGE_NAME" >> $GITHUB_ENV
       - name: push integration
         if: ${{ github.event_name == 'workflow_dispatch' }}
-        run: docker push --all-tags ${{ env.IMAGE_NAME }}
+        run: |
+          docker push --all-tags ${{ env.ECR_IMAGE_NAME }}
+          docker push --all-tags ${{ env.GHCR_IMAGE_NAME }}

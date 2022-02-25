@@ -151,6 +151,7 @@ describe('/research-outputs/ route', () => {
         teams: teams.map(({ id }) => id),
       };
     };
+
     test('Should return a 201 when is hit', async () => {
       const createResearchOutputRequest = {
         ...getCreateResearchOutput(),
@@ -163,10 +164,9 @@ describe('/research-outputs/ route', () => {
       const response = await supertest(app)
         .post('/research-outputs')
         .send(createResearchOutputRequest)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(201);
+        .set('Accept', 'application/json');
 
+      expect(response.status).toBe(201);
       expect(researchOutputControllerMock.create).toBeCalledWith(
         createResearchOutputRequest,
       );

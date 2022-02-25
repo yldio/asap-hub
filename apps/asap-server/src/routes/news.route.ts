@@ -1,9 +1,7 @@
 import { Router } from 'express';
 import { NewsController } from '../controllers/news';
-import { validateFetchPaginationOptions } from "../validation";
-import {
-  validateNewsParameters,
-} from '../validation/news.validation';
+import { validateFetchPaginationOptions } from '../validation';
+import { validateNewsParameters } from '../validation/news.validation';
 
 export const newsRouteFactory = (newsController: NewsController): Router => {
   const newsRoutes = Router();

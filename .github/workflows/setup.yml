@@ -6,7 +6,7 @@ on:
       image-tag:
         description: 'Image Tag'
         required: false
-        default: 22019e25047e6e45e9f1e3d36fb7bc4fb56f944b
+        default: 1de8c60b2214fbca2e0959aa7f473c55bbc2e014
         type: string
     outputs:
       pr-number:

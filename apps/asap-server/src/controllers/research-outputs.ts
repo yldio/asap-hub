@@ -62,8 +62,8 @@ export default class ResearchOutputs implements ResearchOutputController {
   }
 
   async fetch(options: {
-    take: number;
-    skip: number;
+    take?: number;
+    skip?: number;
     search?: string;
     filter?: string[];
   }): Promise<ListResearchOutputResponse> {
@@ -185,8 +185,8 @@ export default class ResearchOutputs implements ResearchOutputController {
 
 export interface ResearchOutputController {
   fetch: (options: {
-    take: number;
-    skip: number;
+    take?: number;
+    skip?: number;
     search?: string;
     filter?: string[];
   }) => Promise<ListResearchOutputResponse>;

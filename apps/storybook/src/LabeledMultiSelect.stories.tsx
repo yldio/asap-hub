@@ -1,5 +1,6 @@
 import { LabeledMultiSelect } from '@asap-hub/react-components';
 import { text } from '@storybook/addon-knobs';
+import { ComponentPropsWithRef } from 'react';
 
 export default {
   title: 'Molecules / Labeled Multi Select',
@@ -44,5 +45,35 @@ export const Invalid = () => (
       'Validation Error Message',
       'This airport is currently closed.',
     )}
+  />
+);
+
+const loadOptionsMock = (suggestions: string[]) => {
+  const options = suggestions.map((value) => ({ label: value, value }));
+  return (
+    inputValue = '',
+  ): Promise<
+    NonNullable<ComponentPropsWithRef<typeof LabeledMultiSelect>['values']>
+  > =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(
+          options.filter(({ label }) =>
+            label.toLowerCase().includes(inputValue.toLowerCase()),
+          ),
+        );
+      }, 2000);
+    });
+};
+
+export const Async = () => (
+  <LabeledMultiSelect
+    loadOptions={loadOptionsMock(['LHR', 'LGW', 'STN', 'LTN', 'LCY', 'SEN'])}
+    title={text('Title', 'Airport')}
+    subtitle={text('Subtitle', '(Required)')}
+    description={text('Description', 'Pick some airports')}
+    values={[]}
+    placeholder={text('Placeholder', 'Please select some airports')}
+    noOptionsMessage={() => text('No Options Message', 'No options!')}
   />
 );

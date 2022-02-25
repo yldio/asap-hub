@@ -85,7 +85,7 @@ jobs:
           ASAP_HOSTNAME: 'hub.asap.science'
           ASAP_API_URL: 'https://api-${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
           ASAP_APP_URL: 'https://${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
-          ALGOLIA_INDEX: 'asap-hub_research_outputs_CI-${ needs.setup.outputs.pr-number }'
+          ALGOLIA_INDEX: 'asap-hub_CI-${ needs.setup.outputs.pr-number }'
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
           REACT_APP_ALGOLIA_INDEX: $ALGOLIA_INDEX
           REACT_APP_API_BASE_URL: 'http://api-${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
@@ -156,7 +156,7 @@ jobs:
       ASAP_HOSTNAME: 'hub.asap.science'
       ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
       ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
-      ALGOLIA_INDEX: 'asap-hub_research_outputs_CI-${{ needs.setup.outputs.pr-number }}'
+      ALGOLIA_INDEX: 'asap-hub_outputs_CI-${{ needs.setup.outputs.pr-number }}'
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}

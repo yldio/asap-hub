@@ -10,7 +10,7 @@ import {
 export const RESEARCH_OUTPUT_ENTITY_TYPE = 'research-output';
 export const USER_ENTITY_TYPE = 'user';
 export const EXTERNAL_AUTHOR_ENTITY_TYPE = 'external-author';
-export const LAB_ENTITY_TYPE = 'Lab';
+export const LAB_ENTITY_TYPE = 'lab';
 
 export type EntityResponses = {
   [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse & { id: string };

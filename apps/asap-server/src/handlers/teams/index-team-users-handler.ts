@@ -50,7 +50,7 @@ export const indexTeamUsersHandler =
         `Found ${foundUsers.total} users. Processing ${foundUsers.items.length} users.`,
       );
 
-      await algoliaClient.saveMany<UserResponse>(
+      await algoliaClient.saveMany(
         foundUsers.items.map((data) => ({
           data,
           type: 'user',

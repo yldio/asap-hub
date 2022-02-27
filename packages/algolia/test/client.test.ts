@@ -17,7 +17,7 @@ describe('Algolia Search Client', () => {
   const algoliaSearchClient = new AlgoliaSearchClient(algoliaSearchIndex);
 
   test('Should do save many on entities', async () => {
-    await algoliaSearchClient.saveMany<ResearchOutputResponse>(
+    await algoliaSearchClient.saveMany(
       Array(100)
         .fill({})
         .map((_, index) => ({
@@ -46,7 +46,7 @@ describe('Algolia Search Client', () => {
   test('Should save the Research Output', async () => {
     const researchOutput = createResearchOutputResponse();
 
-    await algoliaSearchClient.save<ResearchOutputResponse>({
+    await algoliaSearchClient.save({
       data: researchOutput,
       type: 'research-output',
     });
@@ -61,7 +61,7 @@ describe('Algolia Search Client', () => {
   test('Should save the User', async () => {
     const user = createUserResponse();
 
-    await algoliaSearchClient.save<UserResponse>({
+    await algoliaSearchClient.save({
       data: user,
       type: 'user',
     });

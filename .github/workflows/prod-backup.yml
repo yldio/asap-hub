@@ -38,3 +38,4 @@ jobs:
         with:
           message: Squidex Prod Backup
           webhook: ${{ secrets.SLACK_WEBHOOK }}
+          status: failure

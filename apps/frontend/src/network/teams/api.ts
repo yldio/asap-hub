@@ -1,5 +1,4 @@
 import {
-  ListLabsResponse,
   ListTeamResponse,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
@@ -87,26 +86,6 @@ export const createTeamResearchOutput = async (
       `Failed to create research output for teamId: ${
         researchOutput.teamId
       } Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-  return resp.json();
-};
-
-export const getLabs = async (
-  options: GetListOptions,
-  authorization: string,
-): Promise<ListLabsResponse> => {
-  const resp = await fetch(createListApiUrl('labs', options).toString(), {
-    method: 'GET',
-    headers: {
-      authorization,
-      'content-type': 'application/json',
-      ...createSentryHeaders(),
-    },
-  });
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch labs. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
   return resp.json();

@@ -10,7 +10,6 @@ import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 const props: ComponentProps<typeof TeamCreateOutputForm> = {
   tagSuggestions: [],
   type: 'Article',
-  getLabSuggestions: jest.fn(),
 };
 
 const clickShare = () => {
@@ -40,23 +39,9 @@ it('does not save when the form is missing data', async () => {
 
 it('can submit a form when form data is valid', async () => {
   const saveFn = jest.fn();
-  const getLabSuggestions = jest.fn();
-  getLabSuggestions.mockReturnValue(
-    new Promise((resolve) =>
-      resolve([
-        { label: 'One Lab', value: '1' },
-        { label: 'Two Lab', value: '2' },
-      ]),
-    ),
-  );
   render(
     <StaticRouter>
-      <TeamCreateOutputForm
-        {...props}
-        type="Lab Resource"
-        onSave={saveFn}
-        getLabSuggestions={getLabSuggestions}
-      />
+      <TeamCreateOutputForm {...props} type="Lab Resource" onSave={saveFn} />
     </StaticRouter>,
   );
 
@@ -73,11 +58,6 @@ it('can submit a form when form data is valid', async () => {
   fireEvent.keyDown(screen.getByLabelText(/type/i), {
     keyCode: ENTER_KEYCODE,
   });
-  userEvent.click(screen.getByLabelText(/Labs/i));
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  userEvent.click(screen.getByText('One Lab'));
   clickShare();
 
   await waitFor(() => {
@@ -87,7 +67,6 @@ it('can submit a form when form data is valid', async () => {
       title: 'example title',
       description: 'example description',
       subTypes: ['Animal Model'],
-      labs: ['1'],
     });
     expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
   });

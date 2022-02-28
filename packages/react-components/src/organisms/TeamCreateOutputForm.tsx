@@ -10,13 +10,10 @@ import {
   TeamCreateOutputFormSharingCard,
   TeamCreateOutputExtraInformationCard,
   Form,
-} from './index';
+} from '.';
 import { Button } from '../atoms';
 import { perRem } from '../pixels';
 import { noop } from '../utils';
-
-import TeamCreateOutputContributorsCard from './TeamCreateOutputContributorsCard';
-import { OptionValue } from '../atoms/AsyncMultiSelect';
 
 const contentStyles = css({
   display: 'grid',
@@ -36,9 +33,6 @@ type TeamCreateOutputFormProps = Pick<
   ComponentProps<typeof TeamCreateOutputExtraInformationCard>,
   'tagSuggestions'
 > & {
-  getLabSuggestions: ComponentProps<
-    typeof TeamCreateOutputContributorsCard
-  >['loadOptions'];
   onSave?: (
     output: Partial<ResearchOutputPostRequest>,
   ) => Promise<Pick<ResearchOutputResponse, 'id'>>;
@@ -49,17 +43,16 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   onSave = noop,
   tagSuggestions,
   type,
-  getLabSuggestions,
 }) => {
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
   const [subTypes, setSubtypes] = useState<
     ResearchOutputPostRequest['subTypes']
   >([]);
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>('');
-  const [labs, setLabs] = useState<OptionValue[]>([]);
   const [description, setDescription] =
     useState<ResearchOutputPostRequest['description']>('');
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>('');
+
   return (
     <Form
       dirty={
@@ -69,16 +62,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         link !== '' ||
         subTypes.length !== 0
       }
-      onSave={() =>
-        onSave({
-          tags,
-          link,
-          description,
-          title,
-          subTypes,
-          labs: labs.map(({ value }: OptionValue) => value),
-        })
-      }
+      onSave={() => onSave({ tags, link, description, title, subTypes })}
     >
       {({ isSaving, onSave: onClick }) => (
         <div css={contentStyles}>
@@ -99,13 +83,6 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             tagSuggestions={tagSuggestions}
             tags={tags}
             onChange={setTags}
-          />
-
-          <TeamCreateOutputContributorsCard
-            isSaving={isSaving}
-            loadOptions={getLabSuggestions}
-            values={labs}
-            onChange={setLabs}
           />
           <div css={formControlsContainerStyles}>
             <div style={{ display: 'block' }}>

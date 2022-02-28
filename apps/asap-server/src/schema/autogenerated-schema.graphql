@@ -2123,7 +2123,6 @@ type EventsDataDto {
   eventLink: EventsDataEventLinkDto
   googleId: EventsDataGoogleIdDto
   hidden: EventsDataHiddenDto
-  hideMeetingLink: EventsDataHideMeetingLinkDto
   meetingLink: EventsDataMeetingLinkDto
   meetingMaterials: EventsDataMeetingMaterialsDto
   meetingMaterialsPermanentlyUnavailable: EventsDataMeetingMaterialsPermanentlyUnavailableDto
@@ -2193,16 +2192,6 @@ input EventsDataHiddenInputDto {
   iv: Boolean
 }
 
-"""The structure of the Hide Meeting Link field of the Events content type."""
-type EventsDataHideMeetingLinkDto {
-  iv: Boolean
-}
-
-"""The structure of the Hide Meeting Link field of the Events content input type."""
-input EventsDataHideMeetingLinkInputDto {
-  iv: Boolean
-}
-
 """The structure of the Events data input type."""
 input EventsDataInputDto {
   calendar: EventsDataCalendarInputDto
@@ -2212,7 +2201,6 @@ input EventsDataInputDto {
   eventLink: EventsDataEventLinkInputDto
   googleId: EventsDataGoogleIdInputDto
   hidden: EventsDataHiddenInputDto
-  hideMeetingLink: EventsDataHideMeetingLinkInputDto
   meetingLink: EventsDataMeetingLinkInputDto
   meetingMaterials: EventsDataMeetingMaterialsInputDto
   meetingMaterialsPermanentlyUnavailable: EventsDataMeetingMaterialsPermanentlyUnavailableInputDto
@@ -2418,7 +2406,6 @@ type EventsFlatDataDto {
   googleId: String
   """Hidden events will NOT show on the Hub. (Note: any event cancelled on GCal will be hidden by default. To show a cancelled event on the Hub, you have to manually un-hide the event here)"""
   hidden: Boolean
-  hideMeetingLink: Boolean
   meetingLink: String
   """If permanently unavailable box is ticked, any content you put here will be ignored."""
   meetingMaterials: [EventsDataMeetingMaterialsChildDto!]

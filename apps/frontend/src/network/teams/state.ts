@@ -16,13 +16,7 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import { GetListOptions } from '../../api-util';
 import { authorizationState } from '../../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
-import {
-  createTeamResearchOutput,
-  getLabs,
-  getTeam,
-  getTeams,
-  patchTeam,
-} from './api';
+import { createTeamResearchOutput, getTeam, getTeams, patchTeam } from './api';
 
 const teamIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -138,15 +132,4 @@ export const usePostTeamResearchOutput = () => {
   return (payload: ResearchOutputPostRequest) =>
     // TODO: Store the response in the state
     createTeamResearchOutput(payload, authorization);
-};
-
-export const useLabSuggestions = () => {
-  const authorization = useRecoilValue(authorizationState);
-  return async (searchQuery: string) =>
-    (
-      await getLabs(
-        { searchQuery, filters: new Set(), currentPage: null, pageSize: null },
-        authorization,
-      )
-    ).items.map(({ id, name }) => ({ label: `${name} Lab`, value: id }));
 };

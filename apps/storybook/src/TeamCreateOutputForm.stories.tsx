@@ -13,13 +13,6 @@ export const Normal = () => (
     <TeamCreateOutputForm
       tagSuggestions={['A53T', 'Activity assay']}
       type={select('type', researchOutputTypes, 'Article')}
-      getLabSuggestions={() =>
-        new Promise((resolve) => {
-          setTimeout(() => {
-            resolve([{ label: 'lab name', id: '1' }]);
-          }, 1000);
-        })
-      }
     />
   </StaticRouter>
 );

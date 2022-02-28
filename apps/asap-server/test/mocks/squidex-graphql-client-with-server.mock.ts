@@ -14,7 +14,6 @@ import { getSquidexGraphqlDashboard } from '../fixtures/dashboard.fixtures';
 import { getSquidexGraphqlDiscover } from '../fixtures/discover.fixtures';
 import { getSquidexGraphqlEvent } from '../fixtures/events.fixtures';
 import { getSquidexGraphqlGroup } from '../fixtures/groups.fixtures';
-import { getSquidexGraphqlLab } from '../fixtures/labs.fixtures';
 import { getSquidexGraphqlResearchOutput } from '../fixtures/research-output.fixtures';
 import { getSquidexGraphqlTeam } from '../fixtures/teams.fixtures';
 import { getGraphQLUser } from '../fixtures/users.fixtures';
@@ -54,8 +53,6 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     CalendarsResultDto: resultDto,
     Events: () => getSquidexGraphqlEvent(),
     EventsResultDto: resultDto,
-    Labs: () => getSquidexGraphqlLab(),
-    LabsResultDto: resultDto,
   };
   const store = createMockStore({
     schema,

@@ -1,14 +1,14 @@
 import { css } from '@emotion/react';
-import { ComponentProps, FC, ReactElement, useState } from 'react';
+import { ComponentProps, FC, useState } from 'react';
 import Select, { components, OptionTypeBase } from 'react-select';
 import { validationMessageStyles } from '../form';
 import { reactMultiSelectStyles } from '../select';
 import { noop } from '../utils';
 import { crossIcon } from '../icons';
 
-export const MultiValueRemove = (
+const MultiValueRemove = (
   props: ComponentProps<typeof components.MultiValueRemove>,
-): ReactElement => (
+) => (
   <components.MultiValueRemove {...props}>
     {crossIcon}
   </components.MultiValueRemove>
@@ -17,17 +17,18 @@ export const MultiValueRemove = (
 const containerStyles = css({
   flexBasis: '100%',
 });
-
 type MultiSelectProps = {
   readonly customValidationMessage?: string;
+
   readonly id?: string;
+  readonly suggestions: ReadonlyArray<string>;
   readonly enabled?: boolean;
+
   readonly placeholder?: string;
+
   readonly values?: string[];
   readonly onChange?: (newValues: string[]) => void;
-  readonly suggestions?: ReadonlyArray<string>;
 } & Pick<ComponentProps<typeof Select>, 'noOptionsMessage'>;
-
 const MultiSelect: FC<MultiSelectProps> = ({
   customValidationMessage = '',
 
@@ -36,6 +37,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
   enabled = true,
   placeholder = '',
   noOptionsMessage,
+
   values = [],
   onChange = noop,
 }) => {
@@ -57,11 +59,11 @@ const MultiSelect: FC<MultiSelectProps> = ({
           inputRef = ref;
         }}
         isMulti
-        options={suggestions?.map((suggestion: string) => ({
+        options={suggestions.map((suggestion) => ({
           value: suggestion,
           label: suggestion,
         }))}
-        value={inputValues.map((value: string) => ({
+        value={inputValues.map((value) => ({
           value,
           label: value,
         }))}

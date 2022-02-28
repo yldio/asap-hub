@@ -17,7 +17,6 @@ const {
   ASAP_HOSTNAME = 'hub.asap.science',
   AWS_ACM_CERTIFICATE_ARN,
   SLS_STAGE = 'development',
-  CI_COMMIT_SHA,
 } = process.env;
 
 const region = process.env.AWS_REGION as AWS['provider']['region'];
@@ -90,9 +89,7 @@ const serverlessConfig: AWS = {
       LOG_LEVEL: SLS_STAGE === 'production' ? 'error' : 'info',
       NODE_OPTIONS: '--enable-source-maps',
       ALGOLIA_APP_ID: `\${ssm:algolia-app-id-${envAlias}}`,
-      CURRENT_REVISION: CI_COMMIT_SHA
-        ? '${env:CI_COMMIT_SHA}'
-        : '${env:CURRENT_REVISION}',
+      CURRENT_REVISION: '${env:CI_COMMIT_SHA}',
     },
     iamRoleStatements: [
       {

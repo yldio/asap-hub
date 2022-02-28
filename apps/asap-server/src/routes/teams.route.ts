@@ -95,7 +95,7 @@ export const teamRouteFactory = (
   return teamRoutes;
 };
 
-export const querySchema = Joi.object({
+const querySchema = Joi.object({
   take: Joi.number(),
   skip: Joi.number(),
   search: Joi.string(),

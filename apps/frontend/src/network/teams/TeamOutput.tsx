@@ -1,14 +1,14 @@
 import React from 'react';
-import { NotFoundPage, TeamCreateOutputPage } from '@asap-hub/react-components';
 import { ResearchOutputPostRequest, ResearchOutputType } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
+import { TeamCreateOutputPage, NotFoundPage } from '@asap-hub/react-components';
 
 import {
   network,
   useRouteParams,
   OutputTypeParameter,
 } from '@asap-hub/routing';
-import { usePostTeamResearchOutput } from './state';
+import { useLabSuggestions, usePostTeamResearchOutput } from './state';
 import Frame from '../../structure/Frame';
 import researchSuggestions from './research-suggestions';
 
@@ -62,6 +62,8 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
     tags: [],
   };
 
+  const getLabSuggestions = useLabSuggestions();
+
   const showCreateOutputPage = isEnabled('ROMS_FORM');
 
   if (showCreateOutputPage) {
@@ -70,6 +72,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
         <TeamCreateOutputPage
           tagSuggestions={researchSuggestions}
           type={type}
+          getLabSuggestions={getLabSuggestions}
           onSave={(output) =>
             createResearchOutput({
               ...defaultOutput,

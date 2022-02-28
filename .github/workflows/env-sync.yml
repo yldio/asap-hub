@@ -18,5 +18,4 @@ jobs:
           echo "::add-mask::$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)"
       - name: Synchronize Schema
         run: |
-          ALGOLIA_INDEX=asap-hub_research_outputs_CI-${{github.event.number}} yarn run algolia:upload
           ALGOLIA_INDEX=asap-hub_CI-${{github.event.number}} yarn run algolia:upload

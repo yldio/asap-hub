@@ -65,6 +65,7 @@ export const syncEventFactory =
         googleEvent.status.slice(1)) as EventStatus, // TODO: use lowercase
       calendar: [squidexCalendarId],
       hidden: false,
+      hideMeetingLink: false,
     };
 
     try {

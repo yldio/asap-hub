@@ -5,25 +5,15 @@ on:
   workflow_dispatch:
 jobs:
   setup:
-    runs-on: ubuntu-latest
-    outputs:
-      image-name: ${{ steps.image-name.outputs.image-name }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Generate Image Name
-        uses: ./.github/actions/ecr-registry
-        id: image-name
-        with:
-          repository: asap-hub/squidex-utils
+    uses: ./.github/workflows/setup.yml
   make_squidex_backup:
     needs: setup
     runs-on: ubuntu-18.04
     container:
-      image: ${{ needs.setup.outputs.image-name }}
+      image: ${{ needs.setup.outputs.squidex-image-name }}
       credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     env:
       SQUIDEX_APP: 'asap-hub-dev'
       BUCKET_NAME: 'asap-hub-dev-data-backup'
@@ -50,7 +40,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: 'us-east-1'
-      ALGOLIA_INDEX: 'asap-hub_research_outputs_dev'
+      ALGOLIA_INDEX: 'asap-hub_dev'
     steps:
       - name: Checkout
         uses: actions/checkout@v2

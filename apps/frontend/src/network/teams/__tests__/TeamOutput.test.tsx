@@ -58,6 +58,7 @@ it('Shows NotFoundPage when feature flag is off', async () => {
 
 it('can submit a form when form data is valid', async () => {
   const teamId = 'team-id';
+
   await renderPage({ teamId, outputType: 'lab-resource' });
 
   fireEvent.change(screen.getByLabelText(/url/i), {
@@ -73,6 +74,11 @@ it('can submit a form when form data is valid', async () => {
   fireEvent.keyDown(screen.getByLabelText(/type/i), {
     keyCode: ENTER_KEYCODE,
   });
+  userEvent.click(screen.getByLabelText(/Labs/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
+  userEvent.click(screen.getByText('Example 1 Lab'));
   const button = screen.getByRole('button', { name: /Share/i });
 
   userEvent.click(button);
@@ -91,6 +97,7 @@ it('can submit a form when form data is valid', async () => {
         title: 'example title',
         description: 'example description',
         subTypes: ['Animal Model'],
+        labs: ['l0'],
       },
       expect.anything(),
     );

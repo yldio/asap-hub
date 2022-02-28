@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { createEventResponse } from '@asap-hub/fixtures';
 import { addMinutes, subDays, subMinutes } from 'date-fns';
 
@@ -81,6 +81,30 @@ describe('current events', () => {
     expect(getByText(/currently happening/i)).toBeVisible();
     expect(getByTitle(/clock/i)).toBeInTheDocument();
     expect(getByText(/join/i)).toHaveAttribute('href', 'http://example.com');
+  });
+
+  it('hides the meeting link when hideMeetingLink is set to true', () => {
+    const { rerender } = render(
+      <EventCard
+        {...props}
+        meetingLink="http://example.com"
+        hideMeetingLink={false}
+      />,
+    );
+    expect(screen.getByText(/join/i)).toHaveAttribute(
+      'href',
+      'http://example.com',
+    );
+
+    rerender(
+      <EventCard
+        {...props}
+        meetingLink="http://example.com"
+        hideMeetingLink={true}
+      />,
+    );
+
+    expect(screen.queryByText(/join/i)).toBeNull();
   });
 });
 

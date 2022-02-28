@@ -49,7 +49,5 @@ export type EventBridgeHandler<TDetailType extends string, TDetail> = (
 ) => Promise<void>;
 
 export type NullableOptionalProperties<T> = {
-  [P in keyof Required<T>]: Pick<T, P> extends Required<Pick<T, P>>
-    ? T[P]
-    : T[P] | null;
+  [P in keyof T]: Pick<T, P> extends Required<Pick<T, P>> ? T[P] : T[P] | null;
 };

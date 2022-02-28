@@ -17,6 +17,7 @@ type EventCardProps = ComponentProps<typeof EventInfo> &
     | 'tags'
     | 'status'
     | 'meetingLink'
+    | 'hideMeetingLink'
     | 'notes'
     | 'videoRecording'
     | 'presentation'
@@ -47,7 +48,7 @@ const EventCard: React.FC<EventCardProps> = ({ status, tags, ...props }) => {
         toastContent: (
           <span>
             This event is currently happening.{' '}
-            {props.meetingLink && (
+            {props.meetingLink && !props.hideMeetingLink && (
               <Link href={props.meetingLink}>Join the meeting now</Link>
             )}
           </span>

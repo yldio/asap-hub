@@ -29,6 +29,7 @@ const contentStyles = css({
 const formControlsContainerStyles = css({
   display: 'flex',
   justifyContent: 'end',
+  paddingBottom: `${200 / perRem}em`, // Hack for labs selector
 });
 
 type TeamCreateOutputFormProps = Pick<

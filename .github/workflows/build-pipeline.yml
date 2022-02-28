@@ -384,3 +384,4 @@ jobs:
         with:
           message: 'Build Failed on GitHub: ${{ needs.setup.outputs.pr-number || github.head_ref }}'
           webhook: ${{ secrets.SLACK_WEBHOOK }}
+          status: failure

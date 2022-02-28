@@ -10,32 +10,15 @@ on:
         description: Choose which PR number to destroy
 jobs:
   setup:
-    runs-on: ubuntu-latest
-    env:
-      PR_NUMBER: ${{ github.event.number || github.event.inputs.prNumber }}
-    outputs:
-      pr-number: ${{ steps.build-step.outputs.pr-number }}
-      image-name: ${{ steps.image-name.outputs.image-name }}
-    steps:
-      - name: Build
-        id: build-step
-        run: |
-          echo "::set-output name=pr-number::$PR_NUMBER"
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Generate Image Name
-        uses: ./.github/actions/ecr-registry
-        id: image-name
-        with:
-          repository: asap-hub/node-python-sq
+    uses: ./.github/workflows/setup.yml
   sls_teardown:
     needs: setup
     runs-on: ubuntu-18.04
     container:
-      image: ${{ needs.setup.outputs.image-name }}
+      image: ${{ needs.setup.outputs.integration-image-name }}
       credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     env:
       SLS_STAGE: ${{ needs.setup.outputs.pr-number }}
       NODE_ENV: 'production'
@@ -45,7 +28,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
       SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
@@ -78,7 +61,7 @@ jobs:
       - name: Delete the index
         run: |
           cd apps/asap-server
-          export ALGOLIA_INDEX=asap-hub_research_outputs_CI-${{ needs.setup.outputs.pr-number }}
+          export ALGOLIA_INDEX=asap-hub_CI-${{ needs.setup.outputs.pr-number }}
           yarn workspace @asap-hub/asap-server run algolia deleteindicespattern -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -r "^$ALGOLIA_INDEX$" -x false
   notify_failure:
     runs-on: ubuntu-18.04

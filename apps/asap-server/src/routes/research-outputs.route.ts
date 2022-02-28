@@ -56,7 +56,6 @@ export const researchOutputRouteFactory = (
     const { body } = req;
 
     const createRequest = framework.validate('body', body, createSchema);
-
     const researchOutput = await researchOutputController.create(createRequest);
 
     res.status(201).json(researchOutput);
@@ -80,6 +79,7 @@ const createSchema = Joi.object<ResearchOutputPostRequest>({
   usedInPublication: Joi.boolean(),
   addedDate: Joi.string().required(),
   teamId: Joi.string().required(),
+  labs: Joi.array().required(),
 }).required();
 
 const querySchema = Joi.object({

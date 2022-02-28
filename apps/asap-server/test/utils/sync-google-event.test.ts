@@ -37,6 +37,7 @@ describe('Sync calendar util hook', () => {
       calendar: [squidexCalendarId],
       tags: [],
       hidden: false,
+      hideMeetingLink: false,
     });
   });
 
@@ -65,6 +66,7 @@ describe('Sync calendar util hook', () => {
         status: 'Confirmed',
         calendar: [squidexCalendarId],
         hidden: false,
+        hideMeetingLink: false,
       },
     );
   });
@@ -98,6 +100,7 @@ describe('Sync calendar util hook', () => {
         status: 'Confirmed',
         calendar: [squidexCalendarId],
         hidden: false,
+        hideMeetingLink: false,
       },
     );
   });
@@ -147,6 +150,7 @@ describe('Sync calendar util hook', () => {
         calendar: ['squidex-calendar-id'],
         tags: [],
         hidden: true,
+        hideMeetingLink: false,
       });
     });
 
@@ -179,6 +183,7 @@ describe('Sync calendar util hook', () => {
           status: 'Cancelled',
           calendar: [squidexCalendarId],
           hidden: true,
+          hideMeetingLink: false,
         },
       );
     });
@@ -213,6 +218,7 @@ describe('Sync calendar util hook', () => {
           status: 'Cancelled',
           calendar: [squidexCalendarId],
           hidden: true,
+          hideMeetingLink: false,
         },
       );
     });
@@ -246,6 +252,7 @@ describe('Sync calendar util hook', () => {
           status: 'Cancelled',
           calendar: [squidexCalendarId],
           hidden: false,
+          hideMeetingLink: false,
         },
       );
     });
@@ -279,6 +286,7 @@ describe('Sync calendar util hook', () => {
           status: 'Cancelled',
           calendar: [squidexCalendarId],
           hidden: false,
+          hideMeetingLink: false,
         },
       );
     });
@@ -312,8 +320,41 @@ describe('Sync calendar util hook', () => {
           status: 'Tentative',
           calendar: [squidexCalendarId],
           hidden: true,
+          hideMeetingLink: false,
         },
       );
+    });
+  });
+
+  describe('Hide Meeting Link', () => {
+    test('Should create an event and mark the field hideMeetingLink as false', async () => {
+      const event = getGoogleEvent();
+
+      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
+
+      await syncEvent(
+        event,
+        googleCalendarId,
+        squidexCalendarId,
+        defaultCalendarTimezone,
+      );
+
+      expect(eventControllerMock.update).not.toHaveBeenCalled();
+      expect(eventControllerMock.create).toHaveBeenCalledTimes(1);
+      expect(eventControllerMock.create).toHaveBeenCalledWith({
+        googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
+        title: 'Event Title',
+        description: 'Event Description',
+        startDate: '2021-02-27T00:00:00.000Z',
+        startDateTimeZone: 'Europe/Lisbon',
+        endDate: '2021-02-28T00:00:00.000Z',
+        endDateTimeZone: 'Europe/Lisbon',
+        status: 'Confirmed',
+        calendar: ['squidex-calendar-id'],
+        tags: [],
+        hidden: false,
+        hideMeetingLink: false,
+      });
     });
   });
 
@@ -386,6 +427,7 @@ describe('Sync calendar util hook', () => {
       calendar: [squidexCalendarId],
       tags: [],
       hidden: false,
+      hideMeetingLink: false,
     });
   });
 
@@ -419,6 +461,7 @@ describe('Sync calendar util hook', () => {
       calendar: [squidexCalendarId],
       tags: [],
       hidden: false,
+      hideMeetingLink: false,
     });
   });
 

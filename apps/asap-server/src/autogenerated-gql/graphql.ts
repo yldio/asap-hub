@@ -4857,6 +4857,7 @@ export type EventContentFragment = Pick<
     | 'startDate'
     | 'startDateTimeZone'
     | 'meetingLink'
+    | 'hideMeetingLink'
     | 'eventLink'
     | 'status'
     | 'tags'
@@ -5154,6 +5155,7 @@ export type FetchEventsQuery = {
               | 'startDate'
               | 'startDateTimeZone'
               | 'meetingLink'
+              | 'hideMeetingLink'
               | 'eventLink'
               | 'status'
               | 'tags'
@@ -5496,6 +5498,7 @@ export type FetchEventQuery = {
         | 'startDate'
         | 'startDateTimeZone'
         | 'meetingLink'
+        | 'hideMeetingLink'
         | 'eventLink'
         | 'status'
         | 'tags'
@@ -6557,6 +6560,26 @@ export type FetchGroupQuery = {
         >;
         thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
       };
+    }
+  >;
+};
+
+export type LabsContentFragment = Pick<Labs, 'id'> & {
+  flatData: Pick<LabsFlatDataDto, 'name'>;
+};
+
+export type FetchLabsQueryVariables = Exact<{
+  top: Maybe<Scalars['Int']>;
+  skip: Maybe<Scalars['Int']>;
+  filter: Maybe<Scalars['String']>;
+}>;
+
+export type FetchLabsQuery = {
+  queryLabsContentsWithTotal: Maybe<
+    Pick<LabsResultDto, 'total'> & {
+      items: Maybe<
+        Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
+      >;
     }
   >;
 };
@@ -8612,6 +8635,10 @@ export const EventContentFragmentDoc = {
                   name: { kind: 'Name', value: 'startDateTimeZone' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'meetingLink' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'hideMeetingLink' },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'eventLink' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'status' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
@@ -8759,6 +8786,35 @@ export const ExternalAuthorsContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ExternalAuthorsContentFragment, unknown>;
+export const LabsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LabsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Labs' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<LabsContentFragment, unknown>;
 export const NewsFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -10695,6 +10751,100 @@ export const FetchGroupDocument = {
     ...GroupsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchGroupQuery, FetchGroupQueryVariables>;
+export const FetchLabsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchLabs' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'top' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'filter' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryLabsContentsWithTotal' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'top' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'filter' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderby' },
+                value: {
+                  kind: 'StringValue',
+                  value: 'data/name/iv',
+                  block: false,
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LabsContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...LabsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchLabsQuery, FetchLabsQueryVariables>;
 export const FetchResearchOutputDocument = {
   kind: 'Document',
   definitions: [

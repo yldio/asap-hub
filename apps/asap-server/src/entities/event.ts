@@ -107,6 +107,7 @@ export const parseGraphQLEvent = (
     ),
     thumbnail,
     meetingLink,
+    hideMeetingLink: item.flatData.hideMeetingLink || false,
     status: item.flatData.status,
     tags: item.flatData.tags ?? [],
     calendar,

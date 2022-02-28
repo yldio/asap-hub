@@ -17,8 +17,8 @@ jobs:
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
       credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     env:
       SLS_STAGE: ${{ needs.setup.outputs.pr-number }}
       NODE_ENV: 'production'

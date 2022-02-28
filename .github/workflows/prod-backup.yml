@@ -12,8 +12,8 @@ jobs:
     container:
       image: ${{ needs.setup.outputs.squidex-image-name }}
       credentials:
-        username: AWS
-        password: ${{ secrets.AWS_ECR_PASSWORD }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     env:
       SQUIDEX_APP: 'asap-hub'
       BUCKET_NAME: 'asap-hub-production-data-backup'

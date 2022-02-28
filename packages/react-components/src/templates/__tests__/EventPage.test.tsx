@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { addDays, formatISO, subDays, subYears } from 'date-fns';
 import {
   createCalendarResponse,
@@ -40,26 +40,11 @@ it('renders the event description', () => {
   expect(getByText('My Desc')).toBeVisible();
 });
 
-it("renders the join event button, when 'hideMeetingLink' is set to false", () => {
-  const { rerender } = render(
-    <EventPage
-      {...props}
-      endDate={addDays(new Date(), 100).toISOString()}
-      meetingLink={'link'}
-      hideMeetingLink={false}
-    />,
+it('renders the join event section', () => {
+  const { getAllByText } = render(
+    <EventPage {...props} endDate={addDays(new Date(), 100).toISOString()} />,
   );
-  expect(screen.getAllByText(/join the meeting/i)).not.toHaveLength(0);
-
-  rerender(
-    <EventPage
-      {...props}
-      endDate={addDays(new Date(), 100).toISOString()}
-      meetingLink={'link'}
-      hideMeetingLink={true}
-    />,
-  );
-  expect(screen.queryAllByText(/join the meeting/i)).toHaveLength(0);
+  expect(getAllByText(/join/i)).not.toHaveLength(0);
 });
 
 it('renders the event notes', () => {

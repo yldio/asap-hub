@@ -79,7 +79,7 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
                 placeholder="Start typing…"
                 values={newExpertiseAndResourceTags}
                 enabled={!isSaving}
-                onChange={(newValue: string[]) => {
+                onChange={(newValue) => {
                   setNewExpertiseAndResourceTags(newValue);
                   validateExpertiseAndResources(newValue)
                     ? setExpertiseAndResourcesCustomValidationMessage('')

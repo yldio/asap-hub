@@ -5,12 +5,22 @@ on:
   workflow_dispatch:
 jobs:
   setup:
-    uses: ./.github/workflows/setup.yml
+    runs-on: ubuntu-latest
+    outputs:
+      image-name: ${{ steps.image-name.outputs.image-name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Generate Image Name
+        uses: ./.github/actions/ecr-registry
+        id: image-name
+        with:
+          repository: asap-hub/squidex-utils
   make_backup:
     needs: setup
     runs-on: ubuntu-18.04
     container:
-      image: ${{ needs.setup.outputs.squidex-image-name }}
+      image: ${{ needs.setup.outputs.image-name }}
       credentials:
         username: AWS
         password: ${{ secrets.AWS_ECR_PASSWORD }}

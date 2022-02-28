@@ -15,7 +15,6 @@ export const eventContentFragment = gql`
       startDate
       startDateTimeZone
       meetingLink
-      hideMeetingLink
       eventLink
       status
       tags

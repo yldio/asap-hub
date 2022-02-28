@@ -643,7 +643,6 @@ describe('ResearchOutputs controller', () => {
           }),
           asapFunded: { iv: 'Not Sure' },
           usedInAPublication: { iv: 'Not Sure' },
-          labs: { iv: ['lab1'] },
         })
         .reply(201, { id: researchOutputId })
         .get(`/api/content/${config.appName}/teams/${teamId}`)

@@ -33,7 +33,6 @@ type EventPageProps = ComponentProps<typeof EventInfo> &
     | 'videoRecording'
     | 'presentation'
     | 'meetingMaterials'
-    | 'hideMeetingLink'
     | 'calendar'
     | 'group'
   > & {
@@ -43,7 +42,6 @@ const EventPage: React.FC<EventPageProps> = ({
   backHref,
   lastModifiedDate,
   calendar,
-  hideMeetingLink,
   ...props
 }) => (
   <div css={containerStyles}>
@@ -57,7 +55,7 @@ const EventPage: React.FC<EventPageProps> = ({
             {formatDistance(new Date(), new Date(lastModifiedDate))} ago
           </small>
         </Paragraph>
-        {!hideMeetingLink && <JoinEvent {...props} />}
+        <JoinEvent {...props} />
         <EventAbout {...props} />
       </Card>
       <EventMaterials {...props} />

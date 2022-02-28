@@ -41,8 +41,6 @@ import pinoLogger, { redaction } from './utils/logger';
 import { userLoggerHandler } from './middleware/user-logger-handler';
 import { permissionHandler } from './middleware/permission-handler';
 import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
-import Labs, { LabsController } from './controllers/labs';
-import { labsRouteFactory } from './routes/labs.route';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -80,7 +78,6 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.researchOutputController || new ResearchOutputs(squidexGraphqlClient);
   const teamController = libs.teamController || new Teams(squidexGraphqlClient);
   const userController = libs.userController || new Users(squidexGraphqlClient);
-  const labsController = libs.labsController || new Labs(squidexGraphqlClient);
 
   // Handlers
   const authHandler = libs.authHandler || authHandlerFactory(decodeToken);
@@ -102,7 +99,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   const teamRoutes = teamRouteFactory(groupController, teamController);
   const userRoutes = userRouteFactory(userController, groupController);
   const userPublicRoutes = userPublicRouteFactory(userController);
-  const labsRoutes = labsRouteFactory(labsController);
 
   /**
    * --- end of dependency inection
@@ -161,7 +157,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(groupRoutes);
   app.use(researchOutputsRoutes);
   app.use(teamRoutes);
-  app.use(labsRoutes);
 
   app.get('*', async (_req, res) => {
     res.status(404).json({
@@ -198,7 +193,6 @@ export type Libs = {
   researchOutputController?: ResearchOutputController;
   teamController?: TeamController;
   userController?: UserController;
-  labsController?: LabsController;
   authHandler?: AuthHandler;
   tracer?: Tracer;
   logger?: Logger;

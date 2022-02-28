@@ -36,7 +36,6 @@ export interface EventResponse {
       }[]
     | null;
   meetingLink?: string;
-  hideMeetingLink?: boolean;
 
   calendar: CalendarResponse;
   group?: GroupResponse;

@@ -1,6 +1,6 @@
-import { GlobalStyles, pixels } from '@asap-hub/react-components';
 import { withKnobs } from '@storybook/addon-knobs';
-import { addDecorator, addParameters } from '@storybook/react';
+import { addParameters, addDecorator } from '@storybook/react';
+import { GlobalStyles, pixels } from '@asap-hub/react-components';
 
 addDecorator((story) => (
   <>

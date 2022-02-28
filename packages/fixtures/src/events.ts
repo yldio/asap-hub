@@ -25,6 +25,7 @@ export const createEventResponse = (
   title: `Event ${itemIndex}`,
   lastModifiedDate: new Date().toISOString(),
   meetingLink: 'https://example.com/meeting',
+  hideMeetingLink: false,
   notes: 'Meeting notes go here',
   presentation: 'Presentation',
   videoRecording: 'Video Recording',

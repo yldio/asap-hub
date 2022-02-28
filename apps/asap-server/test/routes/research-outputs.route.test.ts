@@ -124,6 +124,7 @@ describe('/research-outputs/ route', () => {
         description,
         tags,
         subTypes,
+        labs,
       } = getResearchOutputResponse();
       return {
         type,
@@ -137,6 +138,7 @@ describe('/research-outputs/ route', () => {
         description,
         tags,
         subTypes,
+        labs: labs.map(({ id }) => id),
       };
     };
     test('Should return a 201 when is hit', async () => {

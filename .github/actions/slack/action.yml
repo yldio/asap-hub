@@ -7,9 +7,6 @@ inputs:
   webhook:
     description: 'Slack webhook'
     required: true
-  status:
-    description: 'Status'
-    required: true
 runs:
   using: 'composite'
   steps:
@@ -20,4 +17,4 @@ runs:
         SLACK_MESSAGE: ${{ inputs.message }}
         SLACK_ICON: https://asap-misc.s3.eu-west-1.amazonaws.com/robot.png
         SLACK_USERNAME: ASAP robot
-        SLACK_COLOR: ${{ (inputs.status == 'success' && '#35a64f') || (inputs.status == 'failure' && '#FF0000') || '#E3256B' }}
+        SLACK_COLOR: ${{ job.status }}

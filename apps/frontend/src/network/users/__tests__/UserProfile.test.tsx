@@ -115,6 +115,7 @@ const renderUserProfile = async (
   return result;
 };
 
+jest.retryTimes(3);
 it('renders the personal info', async () => {
   const { findByText } = await renderUserProfile({
     ...createUserResponse(),

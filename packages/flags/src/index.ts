@@ -1,7 +1,8 @@
 export type Flag = 'PERSISTENT_EXAMPLE' | 'ROMS_FORM';
 
-export type Flags = Partial<Record<Flag, boolean>>;
+export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
+  ROMS_FORM: undefined,
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
 };
@@ -20,11 +21,9 @@ export const isEnabled = (flag: Flag): boolean =>
 export const getOverrides = (): Flags => overrides;
 
 export const setCurrentOverrides = (flags?: Record<string, boolean>): void => {
-  overrides = Object.entries(overrides).reduce<Record<string, boolean>>(
+  overrides = Object.entries(overrides).reduce<Record<string, boolean | undefined>>(
     (acc, [name, val]) => {
-      if (typeof val === 'boolean') {
-        acc[name] = flags && flags[name] !== undefined ? flags[name] : val;
-      }
+      acc[name] = flags && flags[name] !== undefined ? flags[name] : val;
       return acc;
     },
     {},

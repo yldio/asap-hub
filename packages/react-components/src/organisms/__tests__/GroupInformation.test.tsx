@@ -28,8 +28,8 @@ it('does not shows ellipses and show more button on long descriptions', () => {
     <GroupInformation {...props} description={'The best group '.repeat(100)} />,
   );
 
-  expect(queryByText(/…/)).toBeVisible();
-  expect(queryByText(/show more/i)).toBeVisible();
+  expect(queryByText(/…/)).toBeNull();
+  expect(queryByText(/show more/i)).toBeNull();
 });
 
 it('displays tags', () => {

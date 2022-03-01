@@ -1,10 +1,29 @@
 import { SearchClient } from 'algoliasearch';
-import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
+import { JSONSchemaType } from 'ajv';
 import { UserController } from '../../../controllers/users';
 import validateRequest from '../../../utils/validate-auth0-request';
 import { Handler } from '../../../utils/types';
 import { algoliaApiKeyTtl, algoliaApiKey } from '../../../config';
+import { validateInput } from '../../../validation';
+
+type Params = {
+  code: string;
+};
+
+const paramsSchema: JSONSchemaType<Params> = {
+  type: 'object',
+  properties: {
+    code: { type: 'string' },
+  },
+  required: ['code'],
+  additionalProperties: false,
+};
+
+const validateParams = validateInput(paramsSchema, {
+  skipNull: false,
+  coerce: true,
+});
 
 export const fetchUserByCodeHandlerFactory = (
   userController: UserController,
@@ -15,17 +34,7 @@ export const fetchUserByCodeHandlerFactory = (
   lambda.http(async (request) => {
     await validateRequest(request);
 
-    const paramsSchema = Joi.object({
-      code: Joi.string().required(),
-    }).required();
-
-    const { code } = lambda.validate(
-      'params',
-      request.params,
-      paramsSchema,
-    ) as {
-      code: string;
-    };
+    const { code } = validateParams(request.params as never);
 
     const user = await userController.fetchByCode(code);
     const apiKey = algoliaClient.generateSecuredApiKey(algoliaApiKey, {

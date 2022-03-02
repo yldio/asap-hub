@@ -87,17 +87,13 @@ jobs:
           echo "::set-output name=id::$REACT_APP_ALGOLIA_APP_ID"
       - name: Build
         env:
-          NODE_ENV: 'production'
-          ASAP_HOSTNAME: 'hub.asap.science'
-          ASAP_API_URL: 'https://api-${ needs.setup.outputs.pr-number }-gh.${ASAP_HOSTNAME}'
-          ASAP_APP_URL: 'https://${ needs.setup.outputs.pr-number }-gh.${ASAP_HOSTNAME}'
-          ALGOLIA_INDEX: 'asap-hub_CI-${ needs.setup.outputs.pr-number }'
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
           REACT_APP_ALGOLIA_INDEX: $ALGOLIA_INDEX
           REACT_APP_API_BASE_URL: 'http://api-${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
           REACT_APP_ENVIRONMENT: 'development'
           REACT_APP_RELEASE: '${GITHUB_RUN_ID}-dev'
           REACT_APP_SENTRY_DSN: ''
+          REACT_APP_GTM_CONTAINER_ID: ${{ secrets.REACT_APP_GTM_CONTAINER_ID}}
         run: |
           yarn build
       - name: Cache Build Output
@@ -169,17 +165,17 @@ jobs:
       ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-gh.hub.asap.science'
       ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}-gh.hub.asap.science'
       ALGOLIA_INDEX: 'asap-hub_CI-${ needs.setup.outputs.pr-number }'
+
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
-      AWS_REGION: 'eu-west-2'
-      # AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
       SQUIDEX_APP_NAME: '${{ needs.setup.outputs.pr-number }}-github'
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
       LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
       SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
-      SQUIDEX_SHARED_SECRET_TEST: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
       CURRENT_REVISION: ${{ github.sha }}
       SENTRY_DSN_API: ${{ secrets.SENTRY_DSN_API }}
       SENTRY_DSN_CALENDAR: ${{ secrets.SENTRY_DSN_CALENDAR }}
@@ -209,7 +205,7 @@ jobs:
         with:
           name: sls-package
           path: '.serverless'
-          retention-days: 14
+          retention-days: 1
   bundlewatch:
     permissions:
       packages: read

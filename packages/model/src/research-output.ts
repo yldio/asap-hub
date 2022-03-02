@@ -131,10 +131,6 @@ export const sharingStatuses = ['Public', 'Network Only'] as const;
 
 export type ResearchOutputSharingStatus = typeof sharingStatuses[number];
 
-export const isInternalAuthor = (
-  author: ExternalAuthorResponse | UserResponse,
-): author is UserResponse => (author as UserResponse).id !== undefined;
-
 export type ResearchOutputResponse = {
   readonly id: string;
   readonly type: ResearchOutputType;

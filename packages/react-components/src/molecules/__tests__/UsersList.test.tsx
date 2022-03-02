@@ -1,13 +1,22 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { render } from '@testing-library/react';
-import { ExternalAuthorResponse, UserResponse } from '@asap-hub/model';
+import { ExternalAuthorResponse } from '@asap-hub/model';
+import { createUserResponse } from '@asap-hub/fixtures';
 
 import UsersList from '../UsersList';
 import { userPlaceholderIcon } from '../../icons';
 
 it('links to an internal user', () => {
   const { getByText } = render(
-    <UsersList users={[{ id: '42', displayName: 'John' } as UserResponse]} />,
+    <UsersList
+      users={[
+        {
+          ...createUserResponse(),
+          displayName: 'John',
+          id: '42',
+        },
+      ]}
+    />,
   );
   expect(getByText('John').closest('a')).toHaveAttribute(
     'href',
@@ -20,6 +29,7 @@ it('falls back to a placeholder icon for an external user', () => {
     <UsersList
       users={[
         {
+          id: 'external-author-1',
           displayName: 'John Doe',
         } as ExternalAuthorResponse,
       ]}
@@ -35,6 +45,7 @@ it('does not link external users', () => {
     <UsersList
       users={[
         {
+          id: 'external-author-1',
           displayName: 'John Doe',
         } as ExternalAuthorResponse,
       ]}

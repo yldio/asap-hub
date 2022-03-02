@@ -125,7 +125,7 @@ it('displays authors when present', () => {
   const { getByText } = render(
     <SharedResearchCard
       {...sharedResearchCardProps}
-      authors={[{ displayName: 'ab' }]}
+      authors={[{ id: 'external-author-1', displayName: 'ab' }]}
     />,
   );
   expect(getByText('ab')).toBeVisible();

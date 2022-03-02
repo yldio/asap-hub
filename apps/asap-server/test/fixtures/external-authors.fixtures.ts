@@ -41,6 +41,7 @@ export const getGraphQLExternalAuthor = (
 });
 
 export const getExternalAuthorResponse = (): ExternalAuthorResponse => ({
+  id: 'external-author-id-1',
   displayName: 'external author one',
   orcid: 'orcid-1',
 });
@@ -50,6 +51,10 @@ export const getListExternalAuthorResponse =
     total: 2,
     items: [
       getExternalAuthorResponse(),
-      { displayName: 'external author two', orcid: 'orcid-2' },
+      {
+        id: 'external-author-id-2',
+        displayName: 'external author two',
+        orcid: 'orcid-2',
+      },
     ],
   });

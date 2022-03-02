@@ -12,29 +12,31 @@ export const USER_ENTITY_TYPE = 'user';
 export const EXTERNAL_AUTHOR_ENTITY_TYPE = 'external-author';
 export const LAB_ENTITY_TYPE = 'lab';
 
+export type ID = { id: string };
+
 export type Payload =
   | {
-      data: ResearchOutputResponse & { id: string };
+      data: ResearchOutputResponse & ID;
       type: 'research-output';
     }
   | {
-      data: UserResponse & { id: string };
+      data: UserResponse & ID;
       type: 'user';
     }
   | {
-      data: ExternalAuthorResponse & { id: string };
+      data: ExternalAuthorResponse & ID;
       type: 'external-author';
     }
   | {
-      data: LabResponse & { id: string };
+      data: LabResponse & ID;
       type: 'lab';
     };
 
 export type EntityResponses = {
-  [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse & { id: string };
-  [USER_ENTITY_TYPE]: UserResponse & { id: string };
-  [EXTERNAL_AUTHOR_ENTITY_TYPE]: ExternalAuthorResponse & { id: string };
-  [LAB_ENTITY_TYPE]: LabResponse & { id: string };
+  [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse & ID;
+  [USER_ENTITY_TYPE]: UserResponse & ID;
+  [EXTERNAL_AUTHOR_ENTITY_TYPE]: ExternalAuthorResponse & ID;
+  [LAB_ENTITY_TYPE]: LabResponse & ID;
 };
 
 export type EntityRecord<T extends keyof EntityResponses> =
@@ -84,6 +86,12 @@ export class AlgoliaSearchClient {
     };
 
     return this.index.search<EntityRecord<T>>(query, options);
+  }
+
+  public static toPayload(
+    type: keyof EntityResponses,
+  ): (data: Payload['data']) => Payload {
+    return (data: Payload['data']): Payload => ({ data, type } as Payload);
   }
 
   private static getAlgoliaObject(

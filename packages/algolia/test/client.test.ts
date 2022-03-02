@@ -114,6 +114,13 @@ describe('Algolia Search Client', () => {
       filters: '__meta.type:"user"',
     });
   });
+
+  test('Should create payload', () => {
+    expect(AlgoliaSearchClient.toPayload('user')('data')).toEqual({
+      data: 'data',
+      type: 'user',
+    });
+  });
 });
 
 const searchResearchOutputResponse: SearchResponse<

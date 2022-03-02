@@ -1,8 +1,9 @@
-import { isInternalAuthor, ResearchOutputResponse } from '@asap-hub/model';
+import { EntityResponses, SearchEntityResponse } from '@asap-hub/algolia';
+import { ResearchOutputResponse } from '@asap-hub/model';
+import { isInternalUser } from '@asap-hub/validation';
 import { CsvFormatterStream, Row, format } from '@fast-csv/format';
 import { WritableStream } from 'web-streams-polyfill/ponyfill';
 import streamSaver from 'streamsaver';
-import { EntityResponses, SearchEntityResponse } from '@asap-hub/algolia';
 
 import { GetListOptions } from '../api-util';
 
@@ -49,7 +50,7 @@ export const researchOutputToCSV = (
     .map(
       (user) =>
         `${user.displayName}${user.orcid ? ` (${user.orcid})` : ''}${
-          isInternalAuthor(user) ? '' : ' [ext]'
+          isInternalUser(user) ? '' : ' [ext]'
         }`,
     )
     .join(','),

@@ -8,7 +8,11 @@ import {
   useRouteParams,
   OutputTypeParameter,
 } from '@asap-hub/routing';
-import { useLabSuggestions, usePostTeamResearchOutput } from './state';
+import {
+  useLabSuggestions,
+  usePostTeamResearchOutput,
+  useAuthorSuggestions,
+} from './state';
 import Frame from '../../structure/Frame';
 import researchSuggestions from './research-suggestions';
 
@@ -63,6 +67,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   };
 
   const getLabSuggestions = useLabSuggestions();
+  const getAuthorSuggestions = useAuthorSuggestions();
 
   const showCreateOutputPage = isEnabled('ROMS_FORM');
 
@@ -73,6 +78,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
           tagSuggestions={researchSuggestions}
           type={type}
           getLabSuggestions={getLabSuggestions}
+          getAuthorSuggestions={getAuthorSuggestions}
           onSave={(output) =>
             createResearchOutput({
               ...defaultOutput,

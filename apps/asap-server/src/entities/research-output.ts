@@ -39,6 +39,7 @@ export const parseGraphQLResearchOutput = (
               }
 
               return {
+                id: author.id,
                 displayName: author.flatData?.name,
                 orcid: author.flatData?.orcid,
               };

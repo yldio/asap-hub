@@ -11249,6 +11249,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/validation", "workspace:packages/validation"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/fixtures", "workspace:packages/fixtures"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/runtime-corejs3", "npm:7.14.0"]
           ],

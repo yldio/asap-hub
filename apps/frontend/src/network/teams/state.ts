@@ -23,6 +23,8 @@ import {
   getTeams,
   patchTeam,
 } from './api';
+import { getUsers } from '../users/api';
+import { useAlgolia } from '../../hooks/algolia';
 
 const teamIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -149,4 +151,24 @@ export const useLabSuggestions = () => {
         authorization,
       )
     ).items.map(({ id, name }) => ({ label: `${name} Lab`, value: id }));
+};
+
+export const useAuthorSuggestions = () => {
+  const algoliaClient = useAlgolia();
+
+  return async (searchQuery: string) => {
+    const options: GetListOptions = {
+      searchQuery,
+      currentPage: null,
+      pageSize: null,
+      filters: new Set(),
+    };
+
+    return (await getUsers(algoliaClient.client, options)).items.map(
+      ({ id, displayName }) => ({
+        label: displayName,
+        value: id,
+      }),
+    );
+  };
 };

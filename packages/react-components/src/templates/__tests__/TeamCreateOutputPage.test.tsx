@@ -26,6 +26,7 @@ it('renders the research output type in the header', () => {
         onSave={onCreateSpy}
         tagSuggestions={[]}
         getLabSuggestions={jest.fn()}
+        getAuthorSuggestions={jest.fn()}
       />
     </StaticRouter>,
   );
@@ -41,6 +42,7 @@ it('clicking button will trigger the callback', () => {
         onSave={onCreateSpy}
         tagSuggestions={[]}
         getLabSuggestions={jest.fn()}
+        getAuthorSuggestions={jest.fn()}
       />
     </StaticRouter>,
   );

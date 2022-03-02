@@ -1,12 +1,9 @@
 import { FC } from 'react';
 import { css } from '@emotion/react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import {
-  ExternalAuthorResponse,
-  UserResponse,
-  isInternalAuthor,
-} from '@asap-hub/model';
+import { ExternalAuthorResponse, UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
+import { isInternalUser } from '@asap-hub/validation';
 
 import { Avatar, Link } from '../atoms';
 import { perRem } from '../pixels';
@@ -55,7 +52,7 @@ interface UsersListProps {
   users: ReadonlyArray<
     | Pick<
         UserResponse,
-        'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'id'
+        'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'id' | 'email'
       >
     | ExternalAuthorResponse
   >;
@@ -68,7 +65,7 @@ const UsersList: FC<UsersListProps> = ({
   <ul css={listStyles}>
     {users.slice(0, max).map((user, i) => (
       <li key={`author-${i}`} css={itemStyles}>
-        {isInternalAuthor(user) ? (
+        {isInternalUser(user) ? (
           <Link
             href={user.id && network({}).users({}).user({ userId: user.id }).$}
           >

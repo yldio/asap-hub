@@ -1,18 +1,17 @@
 import 'source-map-support/register';
 import { EventBridgeEvent } from 'aws-lambda';
-import Joi from '@hapi/joi';
 import { Auth } from 'googleapis';
 import * as Sentry from '@sentry/serverless';
-import { framework as lambda } from '@asap-hub/services-common';
-import { WebhookPayload, Calendar, SquidexGraphql } from '@asap-hub/squidex';
+import { Calendar, SquidexGraphql, WebhookPayload } from '@asap-hub/squidex';
 
+import { JSONSchemaType } from 'ajv';
 import {
-  googleApiUrl,
   asapApiUrl,
-  googleApiToken,
-  sentryDsn,
   currentRevision,
   environment,
+  googleApiToken,
+  googleApiUrl,
+  sentryDsn,
 } from '../../config';
 import Calendars, { CalendarController } from '../../controllers/calendars';
 import getJWTCredentialsAWS, {
@@ -21,6 +20,68 @@ import getJWTCredentialsAWS, {
 import logger from '../../utils/logger';
 import { Alerts, AlertsSentry } from '../../utils/alerts';
 import { CalendarEventType } from '../webhooks/webhook-calendar';
+import { NullableOptionalProperties } from '../../utils/types';
+import { validateInput } from '../../validation';
+
+type RestCalendar = NullableOptionalProperties<{
+  googleCalendarId: {
+    iv: string;
+  };
+  resourceId?: {
+    iv: string;
+  };
+}>;
+
+const calendarSchema: JSONSchemaType<RestCalendar> = {
+  type: 'object',
+  properties: {
+    googleCalendarId: {
+      type: 'object',
+      properties: { iv: { type: 'string' } },
+      required: ['iv'],
+    },
+    resourceId: {
+      type: 'object',
+      properties: { iv: { type: 'string' } },
+      required: ['iv'],
+      nullable: true,
+    },
+  },
+  required: ['googleCalendarId'],
+};
+
+type WebhookPayloadCalendar = NullableOptionalProperties<{
+  type: string;
+  payload: NullableOptionalProperties<{
+    id: string;
+    data: RestCalendar;
+    dataOld?: RestCalendar;
+    version: number;
+  }>;
+}>;
+
+const bodySchema: JSONSchemaType<WebhookPayloadCalendar> = {
+  type: 'object',
+  properties: {
+    type: { type: 'string' },
+    payload: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        data: calendarSchema,
+        dataOld: { ...calendarSchema, nullable: true },
+        version: { type: 'number' },
+      },
+      required: ['data', 'id', 'version'],
+    },
+  },
+  required: ['type', 'payload'],
+};
+
+const validateBody = validateInput(bodySchema, {
+  skipNull: false,
+  coerce: true,
+});
 
 export const calendarCreatedHandlerFactory =
   (
@@ -34,24 +95,7 @@ export const calendarCreatedHandlerFactory =
   ): Promise<'OK'> => {
     logger.debug(JSON.stringify(event, null, 2), 'Event input');
 
-    const bodySchema = Joi.object({
-      type: Joi.string().required(),
-      payload: Joi.object({
-        id: Joi.string().required(),
-        data: Joi.object().required(),
-        dataOld: Joi.object(),
-      })
-        .unknown()
-        .required(),
-    })
-      .unknown()
-      .required();
-
-    const { type: eventType, payload } = lambda.validate(
-      'body',
-      event.detail,
-      bodySchema,
-    );
+    const { type: eventType, payload } = validateBody(event.detail as never);
 
     logger.info(
       `Received a '${eventType}' event for the calendar ${payload.id}`,

@@ -78,7 +78,7 @@ export const externalAuthorPublishedEvent: WebhookPayload<ExternalAuthor> = {
   payload: {
     $type: 'EnrichedContentEvent',
     type: 'Published',
-    id: 'userId',
+    id: 'externalAuthorId',
     created: '2020-07-31T15:52:33Z',
     lastModified: '2020-07-31T15:52:33Z',
     version: 42,

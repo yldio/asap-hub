@@ -12,31 +12,29 @@ export const USER_ENTITY_TYPE = 'user';
 export const EXTERNAL_AUTHOR_ENTITY_TYPE = 'external-author';
 export const LAB_ENTITY_TYPE = 'lab';
 
-export type ID = { id: string };
-
 export type Payload =
   | {
-      data: ResearchOutputResponse & ID;
+      data: ResearchOutputResponse;
       type: 'research-output';
     }
   | {
-      data: UserResponse & ID;
+      data: UserResponse;
       type: 'user';
     }
   | {
-      data: ExternalAuthorResponse & ID;
+      data: ExternalAuthorResponse;
       type: 'external-author';
     }
   | {
-      data: LabResponse & ID;
+      data: LabResponse;
       type: 'lab';
     };
 
 export type EntityResponses = {
-  [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse & ID;
-  [USER_ENTITY_TYPE]: UserResponse & ID;
-  [EXTERNAL_AUTHOR_ENTITY_TYPE]: ExternalAuthorResponse & ID;
-  [LAB_ENTITY_TYPE]: LabResponse & ID;
+  [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse;
+  [USER_ENTITY_TYPE]: UserResponse;
+  [EXTERNAL_AUTHOR_ENTITY_TYPE]: ExternalAuthorResponse;
+  [LAB_ENTITY_TYPE]: LabResponse;
 };
 
 export type EntityRecord<T extends keyof EntityResponses> =

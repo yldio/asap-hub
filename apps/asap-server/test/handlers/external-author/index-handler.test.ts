@@ -27,7 +27,7 @@ describe('External Author index handler', () => {
       event.detail.payload.id,
     );
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: { ...externalauthorResponse, id: 'external-author-1234' },
+      data: externalauthorResponse,
       type: 'external-author',
     });
   });
@@ -41,7 +41,7 @@ describe('External Author index handler', () => {
     await indexHandler(updateEvent());
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: { ...externalauthorResponse, id: 'external-author-1234' },
+      data: externalauthorResponse,
       type: 'external-author',
     });
   });

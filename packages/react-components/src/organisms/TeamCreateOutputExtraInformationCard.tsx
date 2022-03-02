@@ -22,11 +22,11 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
         title="Additional Keywords"
         description="Increase the discoverability of this output by adding tags."
         subtitle="(optional)"
-        values={tags}
+        values={tags.map((tag) => ({ label: tag, value: tag }))}
         enabled={!isSaving}
         suggestions={tagSuggestions}
         placeholder="Add a keyword (E.g. Cell Biology)"
-        onChange={onChange}
+        onChange={(options) => onChange(options.map(({ value }) => value))}
       />
 
       <Link href={mailToSupport({ subject: 'New keyword' }).toString()}>

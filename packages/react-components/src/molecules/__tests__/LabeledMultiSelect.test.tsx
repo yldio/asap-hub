@@ -9,7 +9,7 @@ it('renders a labeled multi select, passing through props', () => {
       subtitle="Subtitle"
       description="Description"
       suggestions={['Value']}
-      values={['Value']}
+      values={[{ label: 'Value', value: 'Value' }]}
     />,
   );
   expect(getByLabelText(/Title/i)).toBeVisible();

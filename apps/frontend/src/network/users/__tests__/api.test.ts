@@ -1,22 +1,26 @@
 import nock from 'nock';
 import {
+  UserAvatarPostRequest,
   UserPatchRequest,
   UserResponse,
-  UserAvatarPostRequest,
 } from '@asap-hub/model';
-import { createUserResponse, createListUserResponse } from '@asap-hub/fixtures';
+import { createListUserResponse, createUserResponse } from '@asap-hub/fixtures';
+
+import type { AlgoliaSearchClient } from '@asap-hub/algolia';
 
 import {
+  getInstitutions,
   getUser,
+  getUsersLegacy,
+  getUsers,
+  InstitutionsResponse,
   patchUser,
   postUserAvatar,
-  getUsers,
-  getInstitutions,
-  InstitutionsResponse,
 } from '../api';
 import { API_BASE_URL } from '../../../config';
 import { GetListOptions } from '../../../api-util';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
+import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 
 jest.mock('../../../config');
 
@@ -31,13 +35,13 @@ const options: GetListOptions = {
   searchQuery: '',
 };
 
-describe('getUsers', () => {
+describe('getUsersLegacy', () => {
   it('makes an authorized GET request for users', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/users')
       .query({ take: '10', skip: '0' })
       .reply(200, {});
-    await getUsers(options, 'Bearer x');
+    await getUsersLegacy(options, 'Bearer x');
     expect(nock.isDone()).toBe(true);
   });
 
@@ -47,7 +51,7 @@ describe('getUsers', () => {
       .get('/users')
       .query({ take: '10', skip: '0' })
       .reply(200, users);
-    expect(await getUsers(options, '')).toEqual(users);
+    expect(await getUsersLegacy(options, '')).toEqual(users);
   });
 
   it('errors for error status', async () => {
@@ -56,9 +60,117 @@ describe('getUsers', () => {
       .query({ take: '10', skip: '0' })
       .reply(500);
     await expect(
-      getUsers(options, ''),
+      getUsersLegacy(options, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch user list. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+
+describe('getUsers', () => {
+  const searchEntity: jest.MockedFunction<AlgoliaSearchClient['searchEntity']> =
+    jest.fn();
+
+  const algoliaSearchClient = {
+    searchEntity,
+  } as unknown as AlgoliaSearchClient;
+
+  const defaultOptions: GetListOptions = {
+    searchQuery: '',
+    pageSize: null,
+    currentPage: null,
+    filters: new Set(),
+  };
+
+  beforeEach(() => {
+    searchEntity.mockReset();
+    searchEntity.mockResolvedValue(createAlgoliaResponse('user', []));
+  });
+
+  it('will not filter users by default', async () => {
+    await getUsers(algoliaSearchClient, {
+      ...defaultOptions,
+    });
+    expect(searchEntity).toHaveBeenCalledWith(
+      'user',
+      '',
+      expect.objectContaining({
+        filters: undefined,
+      }),
+    );
+  });
+
+  it('will not default to not specifying page and limits hits per page by default', async () => {
+    await getUsers(algoliaSearchClient, {
+      ...defaultOptions,
+    });
+    expect(searchEntity).toHaveBeenCalledWith(
+      'user',
+      '',
+      expect.objectContaining({
+        hitsPerPage: undefined,
+        page: undefined,
+      }),
+    );
+  });
+
+  it('will pass the search query to algolia', async () => {
+    await getUsers(algoliaSearchClient, {
+      ...defaultOptions,
+      searchQuery: 'Hello World!',
+    });
+    expect(searchEntity).toHaveBeenCalledWith(
+      'user',
+      'Hello World!',
+      expect.objectContaining({}),
+    );
+  });
+
+  it('can filter the users by a single team role', async () => {
+    await getUsers(algoliaSearchClient, {
+      ...defaultOptions,
+      filters: new Set(['Collaborating PI']),
+    });
+    expect(searchEntity).toHaveBeenCalledWith('user', '', {
+      filters: 'teams.role:"Collaborating PI"',
+    });
+  });
+
+  it('can filter the users by multiple team roles (OR)', async () => {
+    await getUsers(algoliaSearchClient, {
+      ...defaultOptions,
+      filters: new Set(['Collaborating PI', 'Project Manager']),
+    });
+    expect(searchEntity).toHaveBeenCalledWith('user', '', {
+      filters: 'teams.role:"Collaborating PI" OR teams.role:"Project Manager"',
+    });
+  });
+
+  it('returns successfully fetched users', async () => {
+    const users = createListUserResponse(1);
+    const transformedUsers = {
+      ...users,
+      items: users.items.map((item) => ({
+        ...item,
+        objectID: '',
+        __meta: {
+          type: 'user' as const,
+        },
+      })),
+    };
+    searchEntity.mockResolvedValueOnce({
+      hits: transformedUsers.items,
+      nbHits: transformedUsers.total,
+      page: 0,
+      nbPages: 0,
+      hitsPerPage: 0,
+      processingTimeMS: 0,
+      exhaustiveNbHits: false,
+      query: '',
+      params: '',
+    });
+    expect(await getUsers(algoliaSearchClient, defaultOptions)).toEqual(
+      transformedUsers,
     );
   });
 });

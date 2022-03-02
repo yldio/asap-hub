@@ -1,6 +1,8 @@
 import { css } from '@emotion/react';
 import { ComponentProps, FC, ReactElement, useState } from 'react';
-import Select, { components, OptionTypeBase } from 'react-select';
+import Select, { components, OptionsType, OptionTypeBase } from 'react-select';
+import AsyncSelect from 'react-select/async';
+
 import { validationMessageStyles } from '../form';
 import { reactMultiSelectStyles } from '../select';
 import { noop } from '../utils';
@@ -18,19 +20,32 @@ const containerStyles = css({
   flexBasis: '100%',
 });
 
+type RefType =
+  | Select<OptionTypeBase, true>
+  | AsyncSelect<OptionTypeBase, true>
+  | null;
+
 type MultiSelectProps = {
   readonly customValidationMessage?: string;
   readonly id?: string;
   readonly enabled?: boolean;
   readonly placeholder?: string;
-  readonly values?: string[];
-  readonly onChange?: (newValues: string[]) => void;
-  readonly suggestions?: ReadonlyArray<string>;
-} & Pick<ComponentProps<typeof Select>, 'noOptionsMessage'>;
+  readonly onChange?: (newValues: OptionsType<OptionTypeBase>) => void;
+  readonly values?: OptionsType<OptionTypeBase>;
+} & (
+  | (Pick<ComponentProps<typeof Select>, 'noOptionsMessage'> & {
+      readonly suggestions: ReadonlyArray<string>;
+      readonly loadOptions?: undefined;
+    })
+  | (Pick<
+      ComponentProps<typeof AsyncSelect>,
+      'loadOptions' | 'noOptionsMessage'
+    > & { suggestions?: undefined })
+);
 
 const MultiSelect: FC<MultiSelectProps> = ({
   customValidationMessage = '',
-
+  loadOptions,
   id,
   suggestions,
   enabled = true,
@@ -42,41 +57,51 @@ const MultiSelect: FC<MultiSelectProps> = ({
   const [inputValues, setInputValues] = useState(values);
   const [validationMsg, setValidationMsg] = useState('');
 
-  // This is to handle a bug with Select where the right click would make it impossoble to write
-  let inputRef: Select<OptionTypeBase, true> | null;
+  // This is to handle a bug with Select where the right click would make it impossible to write
+  let inputRef: RefType = null;
   const handleOnContextMenu = () => {
     inputRef?.blur();
   };
 
+  const commonProps = {
+    inputId: id,
+    isDisabled: !enabled,
+    isMulti: true as const,
+    placeholder,
+    value: inputValues,
+    components: { MultiValueRemove },
+    noOptionsMessage,
+    styles: reactMultiSelectStyles(!!validationMsg),
+
+    ref: (ref: RefType) => {
+      inputRef = ref;
+    },
+    onFocus: () => setValidationMsg(''),
+    onBlur: () => setValidationMsg(customValidationMessage),
+    onChange: (options: OptionsType<OptionTypeBase>) => {
+      setInputValues(options);
+      onChange(options);
+    },
+  };
+
   return (
     <div css={containerStyles} onContextMenu={handleOnContextMenu}>
-      <Select<OptionTypeBase, true>
-        inputId={id}
-        isDisabled={!enabled}
-        ref={(ref) => {
-          inputRef = ref;
-        }}
-        isMulti
-        options={suggestions?.map((suggestion: string) => ({
-          value: suggestion,
-          label: suggestion,
-        }))}
-        value={inputValues.map((value: string) => ({
-          value,
-          label: value,
-        }))}
-        onFocus={() => setValidationMsg('')}
-        onBlur={() => setValidationMsg(customValidationMessage)}
-        onChange={(options) => {
-          const newValues = options.map(({ value }) => value);
-          setInputValues(newValues);
-          onChange(newValues);
-        }}
-        placeholder={placeholder}
-        components={{ MultiValueRemove }}
-        noOptionsMessage={noOptionsMessage}
-        styles={reactMultiSelectStyles(!!validationMsg)}
-      />
+      {suggestions ? (
+        <Select<OptionTypeBase, true>
+          {...commonProps}
+          options={suggestions.map((suggestion) => ({
+            value: suggestion,
+            label: suggestion,
+          }))}
+        />
+      ) : (
+        <AsyncSelect<OptionTypeBase, true>
+          {...commonProps}
+          loadOptions={loadOptions}
+          cacheOptions
+          defaultOptions
+        />
+      )}
       <div css={validationMessageStyles}>{validationMsg}</div>
     </div>
   );

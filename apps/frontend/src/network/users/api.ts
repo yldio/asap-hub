@@ -5,6 +5,7 @@ import {
   ListUserResponse,
 } from '@asap-hub/model';
 
+import type { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { API_BASE_URL } from '../../config';
 import {
   GetListOptions,
@@ -31,6 +32,23 @@ export const getUser = async (
 };
 
 export const getUsers = async (
+  algoliaClient: AlgoliaSearchClient,
+  { searchQuery, filters, currentPage, pageSize }: GetListOptions,
+): Promise<ListUserResponse> => {
+  const algoliaFilters = Array.from(filters)
+    .map((filter) => `teams.role:"${filter}"`)
+    .join(' OR ');
+
+  const result = await algoliaClient.searchEntity('user', searchQuery, {
+    filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,
+    page: currentPage ?? undefined,
+    hitsPerPage: pageSize ?? undefined,
+  });
+
+  return { items: result.hits, total: result.nbHits };
+};
+
+export const getUsersLegacy = async (
   options: GetListOptions,
   authorization: string,
 ): Promise<ListUserResponse> => {

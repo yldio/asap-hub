@@ -271,6 +271,7 @@ describe('ResearchOutputs controller', () => {
       const expectedAuthorsResponse: ResearchOutputResponse['authors'] = [
         authors[0]!,
         {
+          id: '3099015c-c9ed-40fd-830a-8fe1b6ec0482',
           displayName: externalAuthor.flatData!.name!,
           orcid: externalAuthor.flatData!.orcid!,
         },

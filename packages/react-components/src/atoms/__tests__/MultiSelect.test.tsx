@@ -1,6 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import { fireEvent, render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
+import { waitFor } from '@testing-library/dom';
 
 import Select from 'react-select';
 import { ember, fern, pine } from '../../colors';
@@ -8,7 +9,10 @@ import MultiSelect from '../MultiSelect';
 
 it('shows the selected value', () => {
   const { getByText } = render(
-    <MultiSelect suggestions={['LHR']} values={['LHR']} />,
+    <MultiSelect
+      suggestions={['LHR']}
+      values={[{ label: 'LHR', value: 'LHR' }]}
+    />,
   );
   expect(getByText('LHR')).toBeVisible();
 });
@@ -36,7 +40,9 @@ it('opens a menu to select from on click', () => {
 
   userEvent.click(getByDisplayValue(''));
   userEvent.click(getByText('LGW'));
-  expect(handleChange).toHaveBeenLastCalledWith(['LGW']);
+  expect(handleChange).toHaveBeenLastCalledWith([
+    { label: 'LGW', value: 'LGW' },
+  ]);
 });
 
 it('opens a filtered menu to select from when typing', () => {
@@ -49,7 +55,9 @@ it('opens a filtered menu to select from when typing', () => {
   expect(queryByText('LGW')).not.toBeInTheDocument();
 
   userEvent.click(getByText('LTN'));
-  expect(handleChange).toHaveBeenLastCalledWith(['LTN']);
+  expect(handleChange).toHaveBeenLastCalledWith([
+    { label: 'LTN', value: 'LTN' },
+  ]);
 });
 
 it('does not allow non-suggested input', () => {
@@ -131,5 +139,42 @@ describe('invalidity', () => {
     const parent = findParentWithStyle(input, 'flexBasis')?.element;
     fireEvent.contextMenu(parent!);
     expect(blurSelect).toHaveBeenCalledTimes(1);
+  });
+});
+
+/// New ones
+describe('Async', () => {
+  it('shows the no option message when there are no options', async () => {
+    const loadOptionsEmpty = jest.fn().mockResolvedValue([]);
+    const { getByDisplayValue, getByText, queryByText } = render(
+      <MultiSelect
+        loadOptions={loadOptionsEmpty}
+        noOptionsMessage={() => 'No options'}
+      />,
+    );
+    userEvent.type(getByDisplayValue(''), 'LT');
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    expect(getByText(/no options/i)).toBeVisible();
+  });
+  it('opens a menu to select from on click', async () => {
+    const loadOptions = jest.fn().mockResolvedValue([
+      { label: 'One', value: '1' },
+      { label: 'Two', value: '2' },
+    ]);
+    const handleChange = jest.fn();
+    const { getByText, getByDisplayValue, queryByText } = render(
+      <MultiSelect loadOptions={loadOptions} onChange={handleChange} />,
+    );
+
+    userEvent.click(getByDisplayValue(''));
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    userEvent.click(getByText('One'));
+    expect(handleChange).toHaveBeenLastCalledWith([
+      { label: 'One', value: '1' },
+    ]);
   });
 });

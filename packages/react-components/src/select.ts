@@ -62,10 +62,9 @@ const baseSelectStyles: ComponentProps<typeof Select>['styles'] = {
 
     margin: 0,
     paddingTop: `${9 / perRem}em`,
-    paddingBottom: `${18 / perRem}em`,
 
     borderRadius: 0,
-    boxShadow: 'none',
+    boxShadow: `0px 2px 4px ${steel.rgb}`,
   }),
   menuList: (provided) => ({
     ...provided,

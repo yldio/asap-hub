@@ -18,6 +18,7 @@ const {
   AWS_ACM_CERTIFICATE_ARN,
   SLS_STAGE = 'development',
   CI_COMMIT_SHA,
+  ALGOLIA_INDEX,
 } = process.env;
 
 const region = process.env.AWS_REGION as AWS['provider']['region'];
@@ -29,6 +30,9 @@ const envRef =
     ? 'dev'
     : `CI-${SLS_STAGE}`;
 
+const algoliaIndex = ALGOLIA_INDEX
+  ? '${env:ALGOLIA_INDEX}'
+  : `asap-hub_${envRef}`;
 const service = paramCase(pkg.name);
 export const plugins = [
   'serverless-s3-sync',
@@ -315,7 +319,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
       },
     },
     indexUser: {
@@ -338,7 +342,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
       },
     },
     labUpserted: {
@@ -377,7 +381,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
       },
     },
     eventsUpdated: {
@@ -511,7 +515,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
       },
     },
     indexTeamUsers: {
@@ -530,7 +534,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
       },
     },
     ...(NODE_ENV === 'production'

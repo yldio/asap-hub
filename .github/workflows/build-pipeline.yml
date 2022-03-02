@@ -88,8 +88,8 @@ jobs:
       - name: Build
         env:
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
-          REACT_APP_ALGOLIA_INDEX: $ALGOLIA_INDEX
-          REACT_APP_API_BASE_URL: 'http://api-${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
+          REACT_APP_ALGOLIA_INDEX: 'asap-hub_CI-${{ github.event.number }}'
+          REACT_APP_API_BASE_URL: 'http://api-${ needs.setup.outputs.pr-number }-gh.${ASAP_HOSTNAME}'
           REACT_APP_ENVIRONMENT: 'development'
           REACT_APP_RELEASE: '${GITHUB_RUN_ID}-dev'
           REACT_APP_SENTRY_DSN: ''

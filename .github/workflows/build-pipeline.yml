@@ -89,8 +89,8 @@ jobs:
         env:
           NODE_ENV: 'production'
           ASAP_HOSTNAME: 'hub.asap.science'
-          ASAP_API_URL: 'https://api-${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
-          ASAP_APP_URL: 'https://${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
+          ASAP_API_URL: 'https://api-${ needs.setup.outputs.pr-number }-gh.${ASAP_HOSTNAME}'
+          ASAP_APP_URL: 'https://${ needs.setup.outputs.pr-number }-gh.${ASAP_HOSTNAME}'
           ALGOLIA_INDEX: 'asap-hub_CI-${ needs.setup.outputs.pr-number }'
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
           REACT_APP_ALGOLIA_INDEX: $ALGOLIA_INDEX
@@ -426,7 +426,7 @@ jobs:
         verify-schema,
         deploy-sls,
         verify-sls,
-        e2e-test
+        e2e-test,
       ]
     if: failure()
     steps:

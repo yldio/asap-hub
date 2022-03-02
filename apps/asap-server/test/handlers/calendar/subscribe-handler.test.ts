@@ -1,10 +1,10 @@
 import nock from 'nock';
 import { EventBridgeEvent } from 'aws-lambda';
-import { WebhookPayload, Calendar } from '@asap-hub/squidex';
+import { Calendar, WebhookPayload } from '@asap-hub/squidex';
 
 import {
-  SubscribeToEventChanges,
   calendarCreatedHandlerFactory,
+  SubscribeToEventChanges,
   subscribeToEventChangesFactory,
   UnsubscribeFromEventChanges,
   unsubscribeFromEventChangesFactory,
@@ -14,7 +14,7 @@ import {
   getCalendarCreateEvent,
   getCalendarUpdateEvent,
 } from './webhook-sync-calendar.fixtures';
-import { googleApiUrl, asapApiUrl, googleApiToken } from '../../../src/config';
+import { asapApiUrl, googleApiToken, googleApiUrl } from '../../../src/config';
 import { googleApiAuthJWTCredentials } from '../../mocks/google-api.mock';
 import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
 import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
@@ -28,8 +28,8 @@ import {
   inOrderSecondUpdateFromSubscribe,
   outOfOrderFirstSave,
   outOfOrderSecondSave,
-  outOfOrderSecondUpdateFromUnsubscribe,
   outOfOrderSecondUpdateFromSubscribe,
+  outOfOrderSecondUpdateFromUnsubscribe,
 } from './fixtures/payload';
 
 describe('Calendar handler', () => {
@@ -42,11 +42,117 @@ describe('Calendar handler', () => {
   const handler = generateHandler(23, subscribe, unsubscribe, alerts);
 
   afterEach(() => {
-    subscribe.mockClear();
-    unsubscribe.mockClear();
+    subscribe.mockReset();
+    unsubscribe.mockReset();
+    calendarControllerMock.update.mockReset();
   });
 
   describe('Validation', () => {
+    test.each([
+      [
+        'type is undefined',
+        () => {
+          const event = getEvent();
+          // @ts-expect-error testing validation of wrong data
+          event.detail.type = undefined;
+          return event;
+        },
+      ],
+      [
+        'type is not a string',
+        () => {
+          const event = getEvent();
+          // @ts-expect-error testing validation of wrong data
+          event.detail.type = 0;
+          return event;
+        },
+      ],
+      [
+        'payload is undefined',
+        () => {
+          const event = getEvent();
+          // @ts-expect-error testing validation of wrong data
+          event.detail.type = undefined;
+          return event;
+        },
+      ],
+      [
+        'payload id is undefined',
+        () => {
+          const event = getEvent();
+          // @ts-expect-error testing validation of wrong data
+          event.detail.payload.id = undefined;
+          return event;
+        },
+      ],
+      [
+        'payload data is undefined',
+        () => {
+          const event = getEvent();
+          // @ts-expect-error testing validation of wrong data
+          event.detail.payload.data = undefined;
+          return event;
+        },
+      ],
+      [
+        'payload id is not a string',
+        () => {
+          const event = getEvent();
+          // @ts-expect-error testing validation of wrong data
+          event.detail.payload.id = 0;
+          return event;
+        },
+      ],
+      [
+        'payload data is not an object',
+        () => {
+          const event = getEvent();
+          // @ts-expect-error testing validation of wrong data
+          event.detail.payload.data = 'data';
+          return event;
+        },
+      ],
+      [
+        'payload dataOld is not an object',
+        () => {
+          const event = getEvent();
+          // @ts-expect-error testing validation of wrong data
+          event.detail.payload.dataOld = 'data';
+          return event;
+        },
+      ],
+    ])('invalid: %s', async (_, makeEvent) => {
+      const event = makeEvent();
+      await expect(handler(event)).rejects.toThrowError();
+    });
+
+    test.each([
+      [
+        'additional fields in payload are allowed',
+        () => {
+          const event = getEvent();
+          event.detail.payload.additionalField = 'hi';
+          return event;
+        },
+      ],
+      [
+        'additional fields in detail are allowed',
+        () => {
+          const event = getEvent();
+          // @ts-expect-error testing unknown fields
+          event.detail.additionalField = 'hi';
+          return event;
+        },
+      ],
+    ])('valid: %s', async (_, makeEvent) => {
+      const event = makeEvent();
+      const resourceId = 'some-resource-id';
+      const expiration = 123456;
+      subscribe.mockResolvedValueOnce({ resourceId, expiration });
+
+      await expect(handler(event)).resolves.toBe('OK');
+    });
+
     test('Should throw an error and not subscribe when the payload is not valid', async () => {
       await expect(handler(getEvent(undefined, {} as any))).rejects.toThrow(
         /is required/,
@@ -221,7 +327,7 @@ describe('Calendar handler', () => {
     the second event should update to a valid calendar.
     Events are fired when we call the update method on calendar controller.
     (this updates the record in SquidEx firing an event)
-    `, async () => {
+`, async () => {
       const firstEvent = inOrderfirstSave();
       const firstEventUpdate = inOrderfirstSaveUpdateFromUnSubscribe();
       const secondEvent = inOrderSecondSave();
@@ -261,7 +367,7 @@ describe('Calendar handler', () => {
     another save on the UI.
     The second runs and unsubscribes as it still has a reference to the
     rsourceId.
-    `, async () => {
+`, async () => {
       const firstEvent = outOfOrderFirstSave();
       const secondEvent = outOfOrderSecondSave();
       const secondEventUpdate1 = outOfOrderSecondUpdateFromUnsubscribe();
@@ -459,6 +565,7 @@ const getEvent = (
     detail || getCalendarCreateEvent(),
     type || 'CalendarCreated',
   );
+
 function generateHandler(
   currentVersion: number,
   subscribe: jest.MockedFunction<

@@ -1,32 +1,65 @@
-import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
-import { WebhookPayload, User, SquidexGraphql } from '@asap-hub/squidex';
+import { SquidexGraphql } from '@asap-hub/squidex';
 
-import { Handler } from '../../utils/types';
+import { JSONSchemaType } from 'ajv';
+import { Handler, NullableOptionalProperties } from '../../utils/types';
 import Users from '../../controllers/users';
 import validateRequest from '../../utils/validate-squidex-request';
+import { validateInput } from '../../validation';
+
+type RestUser = NullableOptionalProperties<{
+  orcid?: {
+    iv: string;
+  };
+}>;
+
+const userSchema: JSONSchemaType<RestUser> = {
+  type: 'object',
+  properties: {
+    orcid: {
+      type: 'object',
+      nullable: true,
+      properties: { iv: { type: 'string' } },
+      required: ['iv'],
+    },
+  },
+};
+
+type WebhookPayloadUser = NullableOptionalProperties<{
+  type: string;
+  payload: NullableOptionalProperties<{
+    id: string;
+    data: RestUser;
+    dataOld?: RestUser;
+  }>;
+}>;
+
+const bodySchema: JSONSchemaType<WebhookPayloadUser> = {
+  type: 'object',
+  properties: {
+    type: { type: 'string' },
+    payload: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        data: userSchema,
+        dataOld: { ...userSchema, nullable: true },
+      },
+      required: ['data', 'id'],
+    },
+  },
+  required: ['type', 'payload'],
+};
+
+const validateBody = validateInput(bodySchema, {
+  skipNull: false,
+  coerce: true,
+});
 
 export const handler: Handler = lambda.http(async (request) => {
   await validateRequest(request);
 
-  const bodySchema = Joi.object({
-    type: Joi.string().required(),
-    payload: Joi.object({
-      id: Joi.string().required(),
-      data: Joi.object().required(),
-      dataOld: Joi.object(),
-    })
-      .unknown()
-      .required(),
-  })
-    .unknown()
-    .required();
-
-  const { payload, type: event } = lambda.validate(
-    'body',
-    request.payload,
-    bodySchema,
-  ) as WebhookPayload<User>;
+  const { payload, type: event } = validateBody(request.payload as never);
 
   const squidexGraphqlClient = new SquidexGraphql();
   const users = new Users(squidexGraphqlClient);

@@ -11,6 +11,7 @@ const props: ComponentProps<typeof TeamCreateOutputForm> = {
   tagSuggestions: [],
   type: 'Article',
   getLabSuggestions: jest.fn(),
+  getAuthorSuggestions: jest.fn(),
 };
 
 const clickShare = () => {

@@ -20,6 +20,13 @@ export const Normal = () => (
           }, 1000);
         })
       }
+      getAuthorSuggestions={() =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve([{ label: 'author name', id: '1' }]);
+          }, 1000);
+        })
+      }
     />
   </StaticRouter>
 );

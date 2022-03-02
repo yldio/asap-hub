@@ -8,6 +8,9 @@ const props: ComponentProps<typeof TeamCreateOutputContributorsCard> = {
   labSuggestions: jest.fn(),
   onChangeLabs: jest.fn(),
   labs: [],
+  authorSuggestions: jest.fn(),
+  onChangeAuthors: jest.fn(),
+  authors: [],
   isSaving: false,
 };
 

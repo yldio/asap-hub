@@ -39,6 +39,9 @@ type TeamCreateOutputFormProps = Pick<
   getLabSuggestions: ComponentProps<
     typeof TeamCreateOutputContributorsCard
   >['labSuggestions'];
+  getAuthorSuggestions: ComponentProps<
+    typeof TeamCreateOutputContributorsCard
+  >['authorSuggestions'];
   onSave?: (
     output: Partial<ResearchOutputPostRequest>,
   ) => Promise<Pick<ResearchOutputResponse, 'id'>>;
@@ -50,6 +53,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   tagSuggestions,
   type,
   getLabSuggestions,
+  getAuthorSuggestions,
 }) => {
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
   const [subTypes, setSubtypes] = useState<
@@ -58,6 +62,11 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>('');
   const [labs, setLabs] = useState<
     NonNullable<ComponentProps<typeof TeamCreateOutputContributorsCard>['labs']>
+  >([]);
+  const [authors, setAuthors] = useState<
+    NonNullable<
+      ComponentProps<typeof TeamCreateOutputContributorsCard>['authors']
+    >
   >([]);
   const [description, setDescription] =
     useState<ResearchOutputPostRequest['description']>('');
@@ -70,7 +79,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         description !== '' ||
         link !== '' ||
         subTypes.length !== 0 ||
-        labs.length !== 0
+        labs.length !== 0 ||
+        authors.length !== 0
       }
       onSave={() =>
         onSave({
@@ -80,6 +90,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           title,
           subTypes,
           labs: labs ? labs.map(({ value }) => value) : [],
+          authors: authors ? authors.map(({ value }) => value) : [],
         })
       }
     >
@@ -109,6 +120,9 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             labSuggestions={getLabSuggestions}
             labs={labs}
             onChangeLabs={setLabs}
+            authorSuggestions={getAuthorSuggestions}
+            authors={authors}
+            onChangeAuthors={setAuthors}
           />
           <div css={formControlsContainerStyles}>
             <div style={{ display: 'block' }}>

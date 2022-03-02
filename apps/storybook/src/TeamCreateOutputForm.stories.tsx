@@ -1,3 +1,4 @@
+import { createTeamResponse } from '@asap-hub/fixtures';
 import { researchOutputTypes } from '@asap-hub/model';
 import { TeamCreateOutputForm } from '@asap-hub/react-components';
 import { select } from '@storybook/addon-knobs';
@@ -13,6 +14,14 @@ export const Normal = () => (
     <TeamCreateOutputForm
       tagSuggestions={['A53T', 'Activity assay']}
       type={select('type', researchOutputTypes, 'Article')}
+      team={createTeamResponse()}
+      getTeamSuggestions={() =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve([{ label: 'team name', value: '1' }]);
+          }, 1000);
+        })
+      }
       getLabSuggestions={() =>
         new Promise((resolve) => {
           setTimeout(() => {

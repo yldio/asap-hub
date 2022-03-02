@@ -178,14 +178,14 @@ export const getResearchOutputEvent = (
   );
 
 export const getResearchOutputRequest = (): ResearchOutputPostRequest => ({
-  type: 'Bioinformatics' as const,
+  type: 'Bioinformatics',
   link: 'https://hub.asap.science/',
   title: 'Output created through the ROMS form',
   asapFunded: undefined,
   sharingStatus: 'Network Only',
   usedInPublication: undefined,
   addedDate: new Date().toISOString(),
-  teamId: 'team-id-1',
+  teams: ['team-id-1'],
   description: 'An example description',
   tags: ['tag1'],
   subTypes: ['3D Printing'],

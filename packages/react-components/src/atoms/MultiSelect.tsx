@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { ComponentProps, FC, ReactElement, useState } from 'react';
-import Select, { components, OptionsType, OptionTypeBase } from 'react-select';
+import Select, { ActionMeta, components, OptionsType } from 'react-select';
 import AsyncSelect from 'react-select/async';
 
 import { validationMessageStyles } from '../form';
@@ -20,9 +20,15 @@ const containerStyles = css({
   flexBasis: '100%',
 });
 
+export type MultiSelectOptionsType = {
+  isFixed?: boolean;
+  label: string;
+  value: string;
+};
+
 type RefType =
-  | Select<OptionTypeBase, true>
-  | AsyncSelect<OptionTypeBase, true>
+  | Select<MultiSelectOptionsType, true>
+  | AsyncSelect<MultiSelectOptionsType, true>
   | null;
 
 type MultiSelectProps = {
@@ -30,17 +36,20 @@ type MultiSelectProps = {
   readonly id?: string;
   readonly enabled?: boolean;
   readonly placeholder?: string;
-  readonly onChange?: (newValues: OptionsType<OptionTypeBase>) => void;
-  readonly values?: OptionsType<OptionTypeBase>;
+  readonly onChange?: (newValues: OptionsType<MultiSelectOptionsType>) => void;
+  readonly values?: OptionsType<MultiSelectOptionsType>;
 } & (
   | (Pick<ComponentProps<typeof Select>, 'noOptionsMessage'> & {
       readonly suggestions: ReadonlyArray<string>;
       readonly loadOptions?: undefined;
     })
-  | (Pick<
-      ComponentProps<typeof AsyncSelect>,
-      'loadOptions' | 'noOptionsMessage'
-    > & { suggestions?: undefined })
+  | (Pick<ComponentProps<typeof AsyncSelect>, 'noOptionsMessage'> & {
+      readonly loadOptions: (
+        inputValue: string,
+        callback: (options: ReadonlyArray<MultiSelectOptionsType>) => void,
+      ) => Promise<ReadonlyArray<MultiSelectOptionsType>> | void;
+      readonly suggestions?: undefined;
+    })
 );
 
 const MultiSelect: FC<MultiSelectProps> = ({
@@ -54,7 +63,6 @@ const MultiSelect: FC<MultiSelectProps> = ({
   values = [],
   onChange = noop,
 }) => {
-  const [inputValues, setInputValues] = useState(values);
   const [validationMsg, setValidationMsg] = useState('');
 
   // This is to handle a bug with Select where the right click would make it impossible to write
@@ -68,7 +76,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
     isDisabled: !enabled,
     isMulti: true as const,
     placeholder,
-    value: inputValues,
+    value: values,
     components: { MultiValueRemove },
     noOptionsMessage,
     styles: reactMultiSelectStyles(!!validationMsg),
@@ -78,8 +86,18 @@ const MultiSelect: FC<MultiSelectProps> = ({
     },
     onFocus: () => setValidationMsg(''),
     onBlur: () => setValidationMsg(customValidationMessage),
-    onChange: (options: OptionsType<OptionTypeBase>) => {
-      setInputValues(options);
+    onChange: (
+      options: OptionsType<MultiSelectOptionsType>,
+      actionMeta: ActionMeta<MultiSelectOptionsType>,
+    ) => {
+      switch (actionMeta.action) {
+        case 'remove-value':
+        case 'pop-value':
+          if (actionMeta.removedValue.isFixed) {
+            return;
+          }
+          break;
+      }
       onChange(options);
     },
   };
@@ -87,7 +105,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
   return (
     <div css={containerStyles} onContextMenu={handleOnContextMenu}>
       {suggestions ? (
-        <Select<OptionTypeBase, true>
+        <Select<MultiSelectOptionsType, true>
           {...commonProps}
           options={suggestions.map((suggestion) => ({
             value: suggestion,
@@ -95,7 +113,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
           }))}
         />
       ) : (
-        <AsyncSelect<OptionTypeBase, true>
+        <AsyncSelect<MultiSelectOptionsType, true>
           {...commonProps}
           loadOptions={loadOptions}
           cacheOptions

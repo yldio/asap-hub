@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { StaticRouter } from 'react-router-dom';
 import { ComponentProps } from 'react';
 import { fireEvent, waitFor } from '@testing-library/dom';
+import { createTeamResponse } from '@asap-hub/fixtures';
 
 import TeamCreateOutputForm from '../TeamCreateOutputForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
@@ -10,6 +11,7 @@ import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 const props: ComponentProps<typeof TeamCreateOutputForm> = {
   tagSuggestions: [],
   type: 'Article',
+  team: createTeamResponse(),
 };
 
 const clickShare = () => {
@@ -24,6 +26,18 @@ it('renders the form', async () => {
     </StaticRouter>,
   );
   expect(getByText(/What are you sharing/i)).toBeVisible();
+});
+
+it('displays current team within the form', async () => {
+  const { getByText } = render(
+    <StaticRouter>
+      <TeamCreateOutputForm
+        {...props}
+        team={{ ...createTeamResponse(), displayName: 'example team' }}
+      />
+    </StaticRouter>,
+  );
+  expect(getByText('example team')).toBeVisible();
 });
 
 it('does not save when the form is missing data', async () => {
@@ -53,6 +67,7 @@ it('can submit a form when form data is valid', async () => {
     <StaticRouter>
       <TeamCreateOutputForm
         {...props}
+        team={{ ...createTeamResponse(), id: 'TEAMID' }}
         type="Lab Resource"
         onSave={saveFn}
         getLabSuggestions={getLabSuggestions}
@@ -98,6 +113,7 @@ it('can submit a form when form data is valid', async () => {
       subTypes: ['Animal Model'],
       labs: ['1'],
       authors: ['2'],
+      teams: ['TEAMID'],
     });
     expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
   });

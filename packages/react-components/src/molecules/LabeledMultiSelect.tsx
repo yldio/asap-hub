@@ -16,11 +16,9 @@ type LabeledMultiSelectProps = {
   readonly title: ReactNode;
   readonly subtitle?: React.ReactNode;
   readonly description?: ReactNode;
-};
-export type SyncLabeledMultiSelectProps = LabeledMultiSelectProps &
-  Exclude<ComponentProps<typeof MultiSelect>, 'id'>;
+} & Exclude<ComponentProps<typeof MultiSelect>, 'id'>;
 
-const LabeledMultiSelect: React.FC<SyncLabeledMultiSelectProps> = ({
+const LabeledMultiSelect: React.FC<LabeledMultiSelectProps> = ({
   title,
   subtitle,
   description,

@@ -627,11 +627,11 @@ describe('ResearchOutputs controller', () => {
     });
     test('creating the research output should return the id from squidex rest', async () => {
       const researchOutputRequest = getResearchOutputRequest();
-      const teamId = researchOutputRequest.teamId;
+      const teamId = researchOutputRequest.teams[0];
       const researchOutputId = 'created-output-id';
       const {
         usedInPublication: _,
-        teamId: __,
+        teams: __,
         subTypes: ___,
         ...squidexResearchOutput
       } = parseToSquidex(researchOutputRequest);
@@ -687,7 +687,7 @@ describe('ResearchOutputs controller', () => {
         .post(`/api/content/${config.appName}/research-outputs?publish=false`)
         .reply(201)
         .get(
-          `/api/content/${config.appName}/teams/${researchOutputRequest.teamId}`,
+          `/api/content/${config.appName}/teams/${researchOutputRequest.teams[0]}`,
         )
         .reply(404);
 
@@ -697,7 +697,7 @@ describe('ResearchOutputs controller', () => {
     });
     test('should throw when research output association cannot be made', async () => {
       const researchOutputRequest = getResearchOutputRequest();
-      const teamId = researchOutputRequest.teamId;
+      const teamId = researchOutputRequest.teams[0];
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/research-outputs?publish=false`)

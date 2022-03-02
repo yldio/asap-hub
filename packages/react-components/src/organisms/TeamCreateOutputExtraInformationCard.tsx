@@ -1,16 +1,18 @@
 import { ResearchOutputPostRequest } from '@asap-hub/model';
+import { ComponentProps } from 'react';
 import { Link } from '../atoms';
 
 import { mailToSupport } from '../mail';
 import { FormCard, LabeledMultiSelect } from '../molecules';
-import { SyncLabeledMultiSelectProps } from '../molecules/LabeledMultiSelect';
 import { noop } from '../utils';
 
 type TeamCreateOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
   'tags'
 > & {
-  tagSuggestions: SyncLabeledMultiSelectProps['suggestions'];
+  tagSuggestions: NonNullable<
+    ComponentProps<typeof LabeledMultiSelect>['suggestions']
+  >;
   onChange?: (values: string[]) => void;
   isSaving: boolean;
 };

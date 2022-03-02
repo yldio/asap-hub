@@ -1,5 +1,7 @@
 import { ComponentProps } from 'react';
-import Select from 'react-select';
+import Select, { StylesConfig } from 'react-select';
+import { CSSObject } from '@emotion/serialize';
+
 import { ellipsisStyles } from './atoms/Ellipsis';
 import {
   ember,
@@ -20,6 +22,7 @@ import {
   paddingLeftRight,
 } from './form';
 import { perRem, lineHeight } from './pixels';
+import { MultiSelectOptionsType } from './atoms/MultiSelect';
 
 export interface Option<V extends string> {
   value: V;
@@ -36,7 +39,7 @@ const disabledStyles = {
   backgroundColor: silver.rgb,
 };
 
-const baseSelectStyles: ComponentProps<typeof Select>['styles'] = {
+const baseSelectStyles = {
   input: () => ({
     width: '100%',
     input: {
@@ -46,7 +49,7 @@ const baseSelectStyles: ComponentProps<typeof Select>['styles'] = {
   indicatorSeparator: () => ({
     padding: `0 ${3 / perRem}em`,
   }),
-  indicatorsContainer: (provided) => ({
+  indicatorsContainer: (provided: CSSObject) => ({
     ...provided,
 
     minWidth: `${lineHeight / perRem}em`,
@@ -57,7 +60,7 @@ const baseSelectStyles: ComponentProps<typeof Select>['styles'] = {
     alignItems: 'center',
   }),
 
-  menu: (provided) => ({
+  menu: (provided: CSSObject) => ({
     ...provided,
 
     margin: 0,
@@ -66,21 +69,12 @@ const baseSelectStyles: ComponentProps<typeof Select>['styles'] = {
     borderRadius: 0,
     boxShadow: `0px 2px 4px ${steel.rgb}`,
   }),
-  menuList: (provided) => ({
+  menuList: (provided: CSSObject) => ({
     ...provided,
 
     borderStyle: 'solid',
     borderWidth: `${borderWidth / perRem}em`,
     borderColor: steel.rgb,
-  }),
-  option: (provided, { isFocused }) => ({
-    ...provided,
-
-    padding: `${12 / perRem}em ${paddingLeftRight / perRem}em`,
-
-    backgroundColor: isFocused ? mint.rgb : 'unset',
-    color: isFocused ? pine.rgb : 'unset',
-    ':active': undefined,
   }),
 
   noOptionsMessage: () => ({
@@ -93,6 +87,15 @@ export const reactSelectStyles = (
   isInvalid: boolean,
 ): ComponentProps<typeof Select>['styles'] => ({
   ...baseSelectStyles,
+  option: (provided, { isFocused }) => ({
+    ...provided,
+
+    padding: `${12 / perRem}em ${paddingLeftRight / perRem}em`,
+
+    backgroundColor: isFocused ? mint.rgb : 'unset',
+    color: isFocused ? pine.rgb : 'unset',
+    ':active': undefined,
+  }),
   control: (_provided, { isFocused, isDisabled }) => ({
     ...baseStyles,
 
@@ -130,8 +133,17 @@ export const reactSelectStyles = (
 
 export const reactMultiSelectStyles = (
   isInvalid: boolean,
-): ComponentProps<typeof Select>['styles'] => ({
+): StylesConfig<MultiSelectOptionsType, true> => ({
   ...baseSelectStyles,
+  option: (provided, { isFocused }) => ({
+    ...provided,
+
+    padding: `${12 / perRem}em ${paddingLeftRight / perRem}em`,
+
+    backgroundColor: isFocused ? mint.rgb : 'unset',
+    color: isFocused ? pine.rgb : 'unset',
+    ':active': undefined,
+  }),
   control: (_provided, { isFocused, isDisabled }) => ({
     ...baseStyles,
     padding: `${3 / perRem}em ${9 / perRem}em`,
@@ -170,15 +182,18 @@ export const reactMultiSelectStyles = (
     color: charcoal.rgb,
     fontSize: 'unset',
   }),
-  multiValueRemove: (provided) => ({
-    ...provided,
-    padding: 0,
-    marginLeft: `${9 / perRem}em`,
-    display: 'flex',
-    cursor: 'pointer',
-    svg: { width: '12px', height: '12px', strokeWidth: '2.5' },
-    ':hover': {},
-  }),
+  multiValueRemove: (provided, state) =>
+    state.data.isFixed
+      ? { ...provided, display: 'none' }
+      : {
+          ...provided,
+          padding: 0,
+          marginLeft: `${9 / perRem}em`,
+          display: 'flex',
+          cursor: 'pointer',
+          svg: { width: '12px', height: '12px', strokeWidth: '2.5' },
+          ':hover': {},
+        },
   indicatorsContainer: () => ({ display: 'none' }),
   valueContainer: (provided) => ({
     ...provided,

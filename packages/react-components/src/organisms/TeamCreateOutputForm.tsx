@@ -4,6 +4,7 @@ import {
   ResearchOutputPostRequest,
   ResearchOutputResponse,
   ResearchOutputType,
+  TeamResponse,
 } from '@asap-hub/model';
 
 import {
@@ -38,22 +39,28 @@ type TeamCreateOutputFormProps = Pick<
 > & {
   getLabSuggestions?: ComponentProps<
     typeof TeamCreateOutputContributorsCard
-  >['labSuggestions'];
+  >['getLabSuggestions'];
   getAuthorSuggestions?: ComponentProps<
     typeof TeamCreateOutputContributorsCard
-  >['authorSuggestions'];
+  >['getAuthorSuggestions'];
+  getTeamSuggestions?: ComponentProps<
+    typeof TeamCreateOutputContributorsCard
+  >['getTeamSuggestions'];
   onSave?: (
     output: Partial<ResearchOutputPostRequest>,
   ) => Promise<Pick<ResearchOutputResponse, 'id'>>;
   type: ResearchOutputType;
+  team: TeamResponse;
 };
 
 const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   onSave = noop,
   tagSuggestions,
   type,
-  getLabSuggestions,
-  getAuthorSuggestions,
+  getLabSuggestions = noop,
+  getTeamSuggestions = noop,
+  getAuthorSuggestions = noop,
+  team,
 }) => {
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
   const [subTypes, setSubtypes] = useState<
@@ -68,9 +75,16 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
       ComponentProps<typeof TeamCreateOutputContributorsCard>['authors']
     >
   >([]);
+
+  const [teams, setTeams] = useState<
+    NonNullable<
+      ComponentProps<typeof TeamCreateOutputContributorsCard>['teams']
+    >
+  >([{ label: team.displayName, value: team.id, isFixed: true }]);
   const [description, setDescription] =
     useState<ResearchOutputPostRequest['description']>('');
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>('');
+
   return (
     <Form
       dirty={
@@ -80,7 +94,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         link !== '' ||
         subTypes.length !== 0 ||
         labs.length !== 0 ||
-        authors.length !== 0
+        authors.length !== 0 ||
+        teams.length !== 1 // Original team
       }
       onSave={() =>
         onSave({
@@ -89,8 +104,9 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           description,
           title,
           subTypes,
-          labs: labs ? labs.map(({ value }) => value) : [],
-          authors: authors ? authors.map(({ value }) => value) : [],
+          authors: authors.map(({ value }) => value),
+          labs: labs.map(({ value }) => value),
+          teams: teams.map(({ value }) => value),
         })
       }
     >
@@ -117,12 +133,15 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
 
           <TeamCreateOutputContributorsCard
             isSaving={isSaving}
-            labSuggestions={getLabSuggestions}
             labs={labs}
+            getLabSuggestions={getLabSuggestions}
             onChangeLabs={setLabs}
-            authorSuggestions={getAuthorSuggestions}
             authors={authors}
+            getAuthorSuggestions={getAuthorSuggestions}
             onChangeAuthors={setAuthors}
+            teams={teams}
+            onChangeTeams={setTeams}
+            getTeamSuggestions={getTeamSuggestions}
           />
           <div css={formControlsContainerStyles}>
             <div style={{ display: 'block' }}>

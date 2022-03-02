@@ -741,6 +741,7 @@ __metadata:
     "@emotion/babel-plugin": ^11.3.0
     "@emotion/jest": ^11.3.0
     "@emotion/react": ^11
+    "@emotion/serialize": ^1.0.2
     "@testing-library/dom": ^7.31.0
     "@testing-library/jest-dom": ^5.12.0
     "@testing-library/react": ^11.2.6

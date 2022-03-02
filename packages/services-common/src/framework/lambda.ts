@@ -2,7 +2,6 @@ import Intercept from 'apr-intercept';
 import Boom from '@hapi/boom';
 import Bourne from '@hapi/bourne';
 import Debug from 'debug';
-import Joi from '@hapi/joi';
 import {
   APIGatewayProxyResultV2,
   APIGatewayProxyEventV2,
@@ -51,21 +50,6 @@ export const response = (
     ...res.headers,
   },
 });
-
-export const validate = <T>(
-  prop: string,
-  value: T,
-  schema: Joi.AnySchema,
-  options?: Joi.ValidationOptions,
-): T => {
-  const { error, value: res } = schema.validate(value, options);
-  if (error) {
-    throw Boom.badRequest(`Error "${prop}": ${error.message}`, {
-      details: error.details,
-    });
-  }
-  return res;
-};
 
 const handlerError = (error: Error): APIGatewayProxyResultV2 => {
   debug('Error caught on request', error);

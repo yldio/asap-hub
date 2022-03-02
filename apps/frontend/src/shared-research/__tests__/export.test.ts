@@ -92,10 +92,12 @@ describe('researchOutputToCSV', () => {
           orcid: undefined,
         },
         {
+          id: 'external-author-1',
           displayName: 'b Internal 1',
           orcid: 'Orcid 2',
         },
         {
+          id: 'external-author-2',
           displayName: 'b Internal 2',
           orcid: undefined,
         },

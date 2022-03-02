@@ -967,6 +967,7 @@ __metadata:
   resolution: "@asap-hub/validation@workspace:packages/validation"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": ^7.14.0
   languageName: unknown

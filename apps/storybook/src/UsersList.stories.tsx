@@ -20,6 +20,7 @@ export const External = () => (
       .fill(null)
       .map(
         (_, i): ExternalAuthorResponse => ({
+          id: `external-author-${i + 1}`,
           displayName: `John Number ${i + 1}`,
         }),
       )}

@@ -1,6 +1,5 @@
-import { UserResponse, ExternalAuthor } from '@asap-hub/model';
+import { UserResponse, ExternalAuthorResponse } from '@asap-hub/model';
 import {
-  isInternalAuthor,
   isResearchOutputType,
   isResearchOutputSubtype,
   researchOutputMapSubtype,
@@ -32,18 +31,6 @@ describe('Research Output Model', () => {
 
     it('should return null on not known subtype', () => {
       expect(researchOutputMapSubtype('NotACloningSubtype')).toBeNull();
-    });
-  });
-
-  describe('isInternalAuthor', () => {
-    it('should return true when author is internal', () => {
-      expect(isInternalAuthor({ id: 'user-1' } as UserResponse)).toEqual(true);
-    });
-
-    it('should return false when author is external', () => {
-      expect(
-        isInternalAuthor({ displayName: 'user name' } as ExternalAuthor),
-      ).toEqual(false);
     });
   });
 });

@@ -387,8 +387,7 @@ jobs:
           path: '.serverless'
       - name: deploy
         run: |
-          ls -la .serverless
-          echo "yarn sls deploy --package .serverless --verbose"
+          yarn sls deploy --package .serverless --verbose
 
   verify-sls:
     needs: [setup, deploy-sls]
@@ -401,7 +400,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
+      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -414,7 +413,7 @@ jobs:
     container:
       image: mcr.microsoft.com/playwright:focal
     env:
-      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
+      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
     steps:
       - name: Checkout
         uses: actions/checkout@v2

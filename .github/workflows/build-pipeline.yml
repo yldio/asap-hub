@@ -381,6 +381,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Cache Build Output
+        uses: actions/cache@v2
+        id: restore-rebuild
+        with:
+          path: |
+            .yarn/unplugged/
+          key: rebuild-output-${{ github.sha }}
       - uses: actions/download-artifact@v2
         with:
           name: sls-package

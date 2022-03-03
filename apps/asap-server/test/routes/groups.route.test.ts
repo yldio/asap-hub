@@ -1,11 +1,11 @@
 import supertest from 'supertest';
 import Boom from '@hapi/boom';
+import { ListEventResponse } from '@asap-hub/model';
 import { appFactory } from '../../src/app';
 import { FetchOptions } from '../../src/utils/types';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { eventControllerMock } from '../mocks/event-controller.mock';
-import { ListEventResponse } from '@asap-hub/model';
 import { FetchEventsOptions } from '../../src/controllers/events';
 import {
   getGroupResponse,
@@ -69,6 +69,13 @@ describe('/groups/ route', () => {
     });
 
     describe('Parameter validation', () => {
+      test('Should return a validation error when additional arguments exist', async () => {
+        const response = await supertest(app).get('/groups/').query({
+          additionalField: 'some-data',
+        });
+
+        expect(response.status).toBe(400);
+      });
       test('Should return a validation error when the arguments are not valid', async () => {
         const response = await supertest(app).get('/groups/').query({
           take: 'invalid param',
@@ -191,6 +198,15 @@ describe('/groups/ route', () => {
     });
 
     describe('Parameter validation', () => {
+      test('Should return a validation error when additional fields exist', async () => {
+        const response = await supertest(app)
+          .get(`/groups/${groupId}/events`)
+          .query({
+            additionalField: 'some-data',
+          });
+        expect(response.status).toBe(400);
+      });
+
       test('Should return a validation error when both before and after are missing', async () => {
         const response = await supertest(app)
           .get(`/groups/${groupId}/events`)
@@ -256,7 +272,7 @@ describe('/groups/ route', () => {
         expect(response.status).toBe(400);
       });
 
-      test('Should return a validation error when the sort column is not supported ', async () => {
+      test('Should return a validation error when the sort column is not supported', async () => {
         const response = await supertest(app)
           .get(`/groups/${groupId}/events`)
           .query({
@@ -266,7 +282,7 @@ describe('/groups/ route', () => {
         expect(response.status).toBe(400);
       });
 
-      test('Should return a validation error when the sort order is not supported ', async () => {
+      test('Should return a validation error when the sort order is not supported', async () => {
         const response = await supertest(app)
           .get(`/groups/${groupId}/events`)
           .query({
@@ -276,7 +292,7 @@ describe('/groups/ route', () => {
         expect(response.status).toBe(400);
       });
 
-      test('Should default to ascending order by startDate when the sort params are not given ', async () => {
+      test('Should default to ascending order by startDate when the sort params are not given', async () => {
         eventControllerMock.fetch.mockResolvedValueOnce({
           items: [],
           total: 0,
@@ -297,7 +313,7 @@ describe('/groups/ route', () => {
         });
       });
 
-      test('Should default to ascending order when the sort-order param is not given ', async () => {
+      test('Should default to ascending order when the sort-order param is not given', async () => {
         eventControllerMock.fetch.mockResolvedValueOnce({
           items: [],
           total: 0,
@@ -319,7 +335,7 @@ describe('/groups/ route', () => {
         });
       });
 
-      test('Should default to order by startDate when the sort-by param is not given ', async () => {
+      test('Should default to order by startDate when the sort-by param is not given', async () => {
         eventControllerMock.fetch.mockResolvedValueOnce({
           items: [],
           total: 0,

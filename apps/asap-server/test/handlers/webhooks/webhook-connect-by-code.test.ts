@@ -1,12 +1,11 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config } from '@asap-hub/squidex';
+import { config, RestUser } from '@asap-hub/squidex';
 
 import { handler } from '../../../src/handlers/webhooks/webhook-connect-by-code';
 import { getApiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import { auth0SharedSecret as secret } from '../../../src/config';
-import { RestUser } from '@asap-hub/squidex';
 
 const user: RestUser = {
   id: 'userId',
@@ -42,6 +41,38 @@ describe('POST /webhook/users/connections - validations', () => {
       getApiGatewayEvent({
         body: JSON.stringify({
           userId: 'userId',
+        }),
+        headers: {
+          Authorization: `Basic ${secret}`,
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(res.statusCode).toStrictEqual(400);
+  });
+
+  test('returns 400 when userId is not defined', async () => {
+    const res = (await handler(
+      getApiGatewayEvent({
+        body: JSON.stringify({
+          code: 'asap|token',
+        }),
+        headers: {
+          Authorization: `Basic ${secret}`,
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(res.statusCode).toStrictEqual(400);
+  });
+
+  test('returns 400 when additional fields exist', async () => {
+    const res = (await handler(
+      getApiGatewayEvent({
+        body: JSON.stringify({
+          code: 'asap|token',
+          userId: 'userId',
+          additionalField: 'some-field',
         }),
         headers: {
           Authorization: `Basic ${secret}`,

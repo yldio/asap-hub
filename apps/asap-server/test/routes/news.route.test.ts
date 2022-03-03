@@ -1,10 +1,10 @@
 import Boom from '@hapi/boom';
+import supertest from 'supertest';
+import { NewsResponse } from '@asap-hub/model';
 import { appFactory } from '../../src/app';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { newsControllerMock } from '../mocks/news-controller.mock';
-import supertest from 'supertest';
 import { listNewsResponse } from '../fixtures/news.fixtures';
-import { NewsResponse } from '@asap-hub/model';
 
 describe('/news/ route', () => {
   const app = appFactory({
@@ -53,6 +53,13 @@ describe('/news/ route', () => {
     });
 
     describe('Parameter validation', () => {
+      test('Should return a validation error when additional fields exist', async () => {
+        const response = await supertest(app).get(`/news`).query({
+          additionalField: 'some-data',
+        });
+        expect(response.status).toBe(400);
+      });
+
       test('Should return a validation error when the arguments are not valid', async () => {
         const response = await supertest(app).get(`/news`).query({
           take: 'invalid param',

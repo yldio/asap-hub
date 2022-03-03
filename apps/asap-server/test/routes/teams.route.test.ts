@@ -1,5 +1,6 @@
 import supertest from 'supertest';
 import Boom from '@hapi/boom';
+import { User } from '@asap-hub/auth';
 import { appFactory } from '../../src/app';
 import { FetchOptions } from '../../src/utils/types';
 import * as fixtures from '../fixtures/groups.fixtures';
@@ -11,7 +12,6 @@ import {
 } from '../fixtures/teams.fixtures';
 import { AuthHandler } from '../../src/middleware/auth-handler';
 import { userMock } from '../../src/utils/__mocks__/validate-token';
-import { User } from '@asap-hub/auth';
 import { FetchTeamsOptions } from '../../src/controllers/teams';
 
 describe('/teams/ route', () => {
@@ -92,6 +92,14 @@ describe('/teams/ route', () => {
     });
 
     describe('Parameter validation', () => {
+      test('Should return a 400 error when additional properties exist', async () => {
+        const response = await supertest(app).get('/teams/123/groups').query({
+          additionalField: 'some-data',
+        });
+
+        expect(response.status).toBe(400);
+      });
+
       test('Should return a validation error when the arguments are not valid', async () => {
         const response = await supertest(app).get(`/teams/123/groups`).query({
           take: 'invalid param',
@@ -185,6 +193,14 @@ describe('/teams/ route', () => {
     });
 
     describe('Parameter validation', () => {
+      test('Should return a 400 error when additional properties exist', async () => {
+        const response = await supertest(app).get('/teams').query({
+          additionalField: 'some-data',
+        });
+
+        expect(response.status).toBe(400);
+      });
+
       test('Should return a validation error when the arguments are not valid', async () => {
         const response = await supertest(app).get(`/teams`).query({
           take: 'invalid param',
@@ -257,6 +273,15 @@ describe('/teams/ route', () => {
     test('Should return a 400 error when the payload is invalid', async () => {
       const response = await supertest(app).patch('/teams/123').send({
         tools: 'something',
+      });
+
+      expect(response.status).toBe(400);
+    });
+
+    test('Should return a 400 error when additional properties exist', async () => {
+      const response = await supertest(app).patch('/teams/123').send({
+        tools: [],
+        additionalField: 'some-data',
       });
 
       expect(response.status).toBe(400);

@@ -72,6 +72,13 @@ describe('/events/ routes', () => {
     });
 
     describe('Parameter validation', () => {
+      test('Should return a validation error when additional fields exist', async () => {
+        const response = await supertest(app).get('/events').query({
+          additionalField: 'some-data',
+        });
+        expect(response.status).toBe(400);
+      });
+
       test('Should return a validation error when both before and after are missing', async () => {
         const response = await supertest(app).get('/events').query({
           take: '10',
@@ -123,7 +130,7 @@ describe('/events/ routes', () => {
         expect(response.status).toBe(400);
       });
 
-      test('Should return a validation error when the sort column is not supported ', async () => {
+      test('Should return a validation error when the sort column is not supported', async () => {
         const response = await supertest(app).get('/events').query({
           before: '2021-02-08T14:13:37.138Z',
           sortBy: 'lastModifiedDate',
@@ -131,7 +138,7 @@ describe('/events/ routes', () => {
         expect(response.status).toBe(400);
       });
 
-      test('Should return a validation error when the sort order is not supported ', async () => {
+      test('Should return a validation error when the sort order is not supported', async () => {
         const response = await supertest(app).get('/events').query({
           before: '2021-02-08T14:13:37.138Z',
           sortOrder: 'up',
@@ -139,7 +146,7 @@ describe('/events/ routes', () => {
         expect(response.status).toBe(400);
       });
 
-      test('Should default to ascending order by startDate when the sort params are not given ', async () => {
+      test('Should default to ascending order by startDate when the sort params are not given', async () => {
         eventControllerMock.fetch.mockResolvedValueOnce({
           items: [],
           total: 0,
@@ -157,7 +164,7 @@ describe('/events/ routes', () => {
         });
       });
 
-      test('Should default to ascending order when the sort-order param is not given ', async () => {
+      test('Should default to ascending order when the sort-order param is not given', async () => {
         eventControllerMock.fetch.mockResolvedValueOnce({
           items: [],
           total: 0,
@@ -176,7 +183,7 @@ describe('/events/ routes', () => {
         });
       });
 
-      test('Should default to order by startDate when the sort-by param is not given ', async () => {
+      test('Should default to order by startDate when the sort-by param is not given', async () => {
         eventControllerMock.fetch.mockResolvedValueOnce({
           items: [],
           total: 0,

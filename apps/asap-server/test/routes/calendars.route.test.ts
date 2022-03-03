@@ -1,8 +1,8 @@
 import supertest from 'supertest';
+import { ListCalendarResponse } from '@asap-hub/model';
 import { appFactory } from '../../src/app';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { calendarControllerMock } from '../mocks/calendar-controller.mock';
-import { ListCalendarResponse } from '@asap-hub/model';
 
 describe('/calendars/ route', () => {
   const app = appFactory({
@@ -50,6 +50,23 @@ describe('/calendars/ route', () => {
     });
 
     describe('Parameter validation', () => {
+      test('needs take and skip', async () => {
+        const response = await supertest(app).get('/calendars/').query({
+          take: 0,
+          skip: 0,
+        });
+
+        expect(response.status).toBe(200);
+      });
+      test('should not include additional parameters', async () => {
+        const response = await supertest(app).get('/calendars/').query({
+          take: 0,
+          skip: 0,
+          additionalParameter: 'some-data',
+        });
+
+        expect(response.status).toBe(400);
+      });
       test('Should return a validation error when the arguments are not valid', async () => {
         const response = await supertest(app).get('/calendars/').query({
           take: 'invalid param',

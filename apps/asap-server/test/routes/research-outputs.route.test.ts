@@ -68,6 +68,13 @@ describe('/research-outputs/ route', () => {
     });
 
     describe('Parameter validation', () => {
+      test('Should return a validation error when additional fields exist', async () => {
+        const response = await supertest(app).get(`/research-outputs`).query({
+          additionalField: 'some-data',
+        });
+        expect(response.status).toBe(400);
+      });
+
       test('Should return a validation error when the arguments are not valid', async () => {
         const response = await supertest(app).get(`/research-outputs`).query({
           take: 'invalid param',
@@ -186,7 +193,19 @@ describe('/research-outputs/ route', () => {
 
         expect(response.status).toBe(400);
       });
-      test.each(['type', 'link', 'title', 'sharingStatus', 'addedDate'])(
+
+      test.each([
+        'type',
+        'link',
+        'description',
+        'tags',
+        'link',
+        'title',
+        'sharingStatus',
+        'addedDate',
+        'teamId',
+        'labs',
+      ])(
         'Should return a validation error when %s is missing',
         async (field) => {
           const researchOutput = getCreateResearchOutput();

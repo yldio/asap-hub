@@ -1,6 +1,7 @@
 import supertest from 'supertest';
 import Boom from '@hapi/boom';
 import Crypto from 'crypto';
+import { UserResponse } from '@asap-hub/model';
 import { appFactory } from '../../src/app';
 import { FetchOptions } from '../../src/utils/types';
 import {
@@ -14,7 +15,6 @@ import { userControllerMock } from '../mocks/user-controller.mock';
 import { AuthHandler } from '../../src/middleware/auth-handler';
 import { userMock } from '../../src/utils/__mocks__/validate-token';
 import { listGroupsResponse } from '../fixtures/groups.fixtures';
-import { UserResponse } from '@asap-hub/model';
 
 describe('/users/ route', () => {
   const authHandlerMock: AuthHandler = (req, _res, next) => {
@@ -95,6 +95,16 @@ describe('/users/ route', () => {
     });
 
     describe('Parameter validation', () => {
+      test('Should return a 400 error when additional properties exist', async () => {
+        const response = await supertest(appWithMockedAuth)
+          .get('/users')
+          .query({
+            additionalField: 'some-data',
+          });
+
+        expect(response.status).toBe(400);
+      });
+
       test('Should return a validation error when the arguments are not valid', async () => {
         const response = await supertest(appWithMockedAuth)
           .get('/users')
@@ -280,6 +290,16 @@ describe('/users/ route', () => {
     });
 
     describe('Parameter validation', () => {
+      test('Should return a 400 error when additional properties exist', async () => {
+        const response = await supertest(appWithMockedAuth)
+          .get('/users/123/groups')
+          .query({
+            additionalField: 'some-data',
+          });
+
+        expect(response.status).toBe(400);
+      });
+
       test('Should return a validation error when the arguments are not valid', async () => {
         const response = await supertest(appWithMockedAuth)
           .get('/users/123/groups')

@@ -21,6 +21,34 @@ const createSignedPayload = (payload: WebhookPayload<User>) =>
 const orcid = '0000-0002-9079-593X';
 
 describe('POST /webhook/users/orcid - validation', () => {
+  test('requires type to be set', async () => {
+    const res = (await handler(
+      createSignedPayload({
+        ...fixtures.createUserEvent,
+        type: undefined as any,
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(res.statusCode).toStrictEqual(400);
+  });
+
+  test('allows additional fields', async () => {
+    const res = (await handler(
+      createSignedPayload({
+        ...fixtures.createUserEvent,
+        type: 'notImplemented',
+        payload: {
+          ...fixtures.createUserEvent.payload,
+          additionalField: 'some-more-data',
+        },
+        // @ts-expect-error testing untyped data
+        additionalField2: 'some-data',
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(res.statusCode).toStrictEqual(204);
+  });
+
   test('returns 204 when event type is not implemented', async () => {
     const res = (await handler(
       createSignedPayload({

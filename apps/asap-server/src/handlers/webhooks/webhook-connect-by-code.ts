@@ -18,7 +18,7 @@ const bodySchema: JSONSchemaType<Body> = {
     code: { type: 'string' },
     userId: { type: 'string' },
   },
-  required: ['code'],
+  required: ['code', 'userId'],
   additionalProperties: false,
 };
 

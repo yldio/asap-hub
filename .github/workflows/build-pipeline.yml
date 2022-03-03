@@ -400,12 +400,14 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: echo
         run: |
-          echo "yarn test:e2e"
+          yarn test:e2e
   e2e-test:
     needs: [setup, deploy-sls]
     permissions:

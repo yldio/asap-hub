@@ -36,10 +36,10 @@ type TeamCreateOutputFormProps = Pick<
   ComponentProps<typeof TeamCreateOutputExtraInformationCard>,
   'tagSuggestions'
 > & {
-  getLabSuggestions: ComponentProps<
+  getLabSuggestions?: ComponentProps<
     typeof TeamCreateOutputContributorsCard
   >['labSuggestions'];
-  getAuthorSuggestions: ComponentProps<
+  getAuthorSuggestions?: ComponentProps<
     typeof TeamCreateOutputContributorsCard
   >['authorSuggestions'];
   onSave?: (

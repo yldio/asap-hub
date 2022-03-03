@@ -8,14 +8,14 @@ type TeamCreateOutputContributorsProps = {
     typeof LabeledMultiSelect
   >['loadOptions'];
   readonly labs: ComponentPropsWithRef<typeof LabeledMultiSelect>['values'];
-  readonly onChangeLabs: ComponentPropsWithRef<
+  readonly onChangeLabs?: ComponentPropsWithRef<
     typeof LabeledMultiSelect
   >['onChange'];
   authorSuggestions: ComponentPropsWithRef<
     typeof LabeledMultiSelect
   >['loadOptions'];
   readonly authors: ComponentPropsWithRef<typeof LabeledMultiSelect>['values'];
-  readonly onChangeAuthors: ComponentPropsWithRef<
+  readonly onChangeAuthors?: ComponentPropsWithRef<
     typeof LabeledMultiSelect
   >['onChange'];
   readonly isSaving: boolean;
@@ -42,7 +42,7 @@ const TeamCreateOutputContributorsCard: React.FC<TeamCreateOutputContributorsPro
         onChange={onChangeAuthors}
         values={authors}
         noOptionsMessage={({ inputValue }) =>
-          `Sorry, no users match ${inputValue}`
+          `Sorry, no authors match ${inputValue}`
         }
       />
       <LabeledMultiSelect

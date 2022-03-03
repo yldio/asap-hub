@@ -10,8 +10,6 @@ import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 const props: ComponentProps<typeof TeamCreateOutputForm> = {
   tagSuggestions: [],
   type: 'Article',
-  getLabSuggestions: jest.fn(),
-  getAuthorSuggestions: jest.fn(),
 };
 
 const clickShare = () => {
@@ -42,14 +40,15 @@ it('does not save when the form is missing data', async () => {
 it('can submit a form when form data is valid', async () => {
   const saveFn = jest.fn();
   const getLabSuggestions = jest.fn();
-  getLabSuggestions.mockReturnValue(
-    new Promise((resolve) =>
-      resolve([
-        { label: 'One Lab', value: '1' },
-        { label: 'Two Lab', value: '2' },
-      ]),
-    ),
-  );
+  const getAuthorSuggestions = jest.fn();
+  getLabSuggestions.mockResolvedValue([
+    { label: 'One Lab', value: '1' },
+    { label: 'Two Lab', value: '2' },
+  ]);
+  getAuthorSuggestions.mockResolvedValue([
+    { label: 'Author Two', value: '2' },
+    { label: 'Author One', value: '1' },
+  ]);
   render(
     <StaticRouter>
       <TeamCreateOutputForm
@@ -57,6 +56,7 @@ it('can submit a form when form data is valid', async () => {
         type="Lab Resource"
         onSave={saveFn}
         getLabSuggestions={getLabSuggestions}
+        getAuthorSuggestions={getAuthorSuggestions}
       />
     </StaticRouter>,
   );
@@ -74,11 +74,19 @@ it('can submit a form when form data is valid', async () => {
   fireEvent.keyDown(screen.getByLabelText(/type/i), {
     keyCode: ENTER_KEYCODE,
   });
+
   userEvent.click(screen.getByLabelText(/Labs/i));
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
   userEvent.click(screen.getByText('One Lab'));
+
+  userEvent.click(screen.getByLabelText(/Authors/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
+  userEvent.click(screen.getByText('Author Two'));
+
   clickShare();
 
   await waitFor(() => {
@@ -89,7 +97,41 @@ it('can submit a form when form data is valid', async () => {
       description: 'example description',
       subTypes: ['Animal Model'],
       labs: ['1'],
+      authors: ['2'],
     });
     expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
   });
+});
+
+it('displays proper message when no author is found', async () => {
+  const getAuthorSuggestions = jest.fn();
+  getAuthorSuggestions.mockResolvedValue([]);
+  const { getByText } = render(
+    <StaticRouter>
+      <TeamCreateOutputForm
+        {...props}
+        getAuthorSuggestions={getAuthorSuggestions}
+      />
+    </StaticRouter>,
+  );
+  userEvent.click(screen.getByLabelText(/Authors/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
+  expect(getByText(/Sorry, no authors match/i)).toBeVisible();
+});
+
+it('displays proper message when no lab is found', async () => {
+  const getLabSuggestions = jest.fn();
+  getLabSuggestions.mockResolvedValue([]);
+  const { getByText } = render(
+    <StaticRouter>
+      <TeamCreateOutputForm {...props} getLabSuggestions={getLabSuggestions} />
+    </StaticRouter>,
+  );
+  userEvent.click(screen.getByLabelText(/Labs/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
+  expect(getByText(/Sorry, no labs match/i)).toBeVisible();
 });

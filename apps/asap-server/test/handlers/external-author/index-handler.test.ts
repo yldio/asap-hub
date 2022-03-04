@@ -1,48 +1,55 @@
 import Boom from '@hapi/boom';
-import { indexUserHandler } from '../../../src/handlers/user/index-handler';
-import { getUserEvent, getUserResponse } from '../../fixtures/users.fixtures';
+import { indexExternalAuthorHandler } from '../../../src/handlers/external-author/index-handler';
+import {
+  getExternalAuthorEvent,
+  getExternalAuthorResponse,
+} from '../../fixtures/external-authors.fixtures';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
-import { userControllerMock } from '../../mocks/user-controller.mock';
+import { externalAuthorControllerMock } from '../../mocks/external-author-controller.mock';
 
-describe('User index handler', () => {
-  const indexHandler = indexUserHandler(
-    userControllerMock,
+describe('External Author index handler', () => {
+  const indexHandler = indexExternalAuthorHandler(
+    externalAuthorControllerMock,
     algoliaSearchClientMock,
   );
 
   afterEach(() => jest.clearAllMocks());
 
-  test('Should fetch the user and create a record in Algolia when the user is created', async () => {
+  test('Should fetch the external author and create a record in Algolia when the external author is created', async () => {
     const event = createEvent();
-    const userResponse = getUserResponse();
-    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+    const externalauthorResponse = getExternalAuthorResponse();
+    externalAuthorControllerMock.fetchById.mockResolvedValueOnce(
+      externalauthorResponse,
+    );
 
     await indexHandler(event);
-    expect(userControllerMock.fetchById).toHaveBeenCalledWith(
+    expect(externalAuthorControllerMock.fetchById).toHaveBeenCalledWith(
       event.detail.payload.id,
     );
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: userResponse,
-      type: 'user',
+      data: externalauthorResponse,
+      type: 'external-author',
     });
   });
 
-  test('Should fetch the user and create a record in Algolia when user is updated', async () => {
-    const userResponse = getUserResponse();
-    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+  test('Should fetch the external author and create a record in Algolia when external author is updated', async () => {
+    const externalauthorResponse = getExternalAuthorResponse();
+    externalAuthorControllerMock.fetchById.mockResolvedValueOnce(
+      externalauthorResponse,
+    );
 
     await indexHandler(updateEvent());
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: userResponse,
-      type: 'user',
+      data: externalauthorResponse,
+      type: 'external-author',
     });
   });
 
-  test('Should fetch the user and remove the record in Algolia when user is unpublished', async () => {
+  test('Should fetch the external author and remove the record in Algolia when external author is unpublished', async () => {
     const event = unpublishedEvent();
 
-    userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
 
     await indexHandler(event);
 
@@ -51,10 +58,10 @@ describe('User index handler', () => {
     );
   });
 
-  test('Should fetch the user and remove the record in Algolia when user is deleted', async () => {
+  test('Should fetch the external author and remove the record in Algolia when external author is deleted', async () => {
     const event = deleteEvent();
 
-    userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
 
     await indexHandler(event);
 
@@ -63,8 +70,8 @@ describe('User index handler', () => {
     );
   });
 
-  test('Should throw an error and do not trigger algolia when the user request fails with another error code', async () => {
-    userControllerMock.fetchById.mockRejectedValue(Boom.badData());
+  test('Should throw an error and do not trigger algolia when the external author request fails with another error code', async () => {
+    externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.badData());
 
     await expect(indexHandler(createEvent())).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
@@ -73,7 +80,9 @@ describe('User index handler', () => {
   test('Should throw the algolia error when saving the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
+    externalAuthorControllerMock.fetchById.mockResolvedValueOnce(
+      getExternalAuthorResponse(),
+    );
     algoliaSearchClientMock.save.mockRejectedValueOnce(algoliaError);
 
     await expect(indexHandler(updateEvent())).rejects.toThrow(algoliaError);
@@ -82,7 +91,7 @@ describe('User index handler', () => {
   test('Should throw the algolia error when deleting the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
 
     algoliaSearchClientMock.remove.mockRejectedValueOnce(algoliaError);
 
@@ -91,54 +100,54 @@ describe('User index handler', () => {
 
   describe('Should process the events, handle race conditions and not rely on the order of the events', () => {
     test('receives the events created and updated in correct order', async () => {
-      const userId = 'user-1234';
-      const userResponse = {
-        ...getUserResponse(),
-        id: userId,
+      const externalauthorId = 'external-author-1234';
+      const externalauthorResponse = {
+        data: { ...getExternalAuthorResponse(), id: externalauthorId },
+        type: 'external-author',
       };
 
-      userControllerMock.fetchById.mockResolvedValue({
-        ...userResponse,
+      externalAuthorControllerMock.fetchById.mockResolvedValue({
+        ...externalauthorResponse.data,
       });
 
-      await indexHandler(createEvent(userId));
-      await indexHandler(updateEvent(userId));
+      await indexHandler(createEvent(externalauthorId));
+      await indexHandler(updateEvent(externalauthorId));
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: userResponse,
-        type: 'user',
-      });
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(
+        externalauthorResponse,
+      );
     });
 
     test('receives the events created and updated in reverse order', async () => {
-      const userId = 'user-1234';
-      const userResponse = {
-        ...getUserResponse(),
-        id: userId,
+      const externalauthorId = 'external-author-1234';
+      const externalauthorResponse = {
+        data: { ...getExternalAuthorResponse(), id: 'external-author-1234' },
+        type: 'external-author',
       };
 
-      userControllerMock.fetchById.mockResolvedValue(userResponse);
+      externalAuthorControllerMock.fetchById.mockResolvedValue(
+        externalauthorResponse.data,
+      );
 
-      await indexHandler(updateEvent(userId));
-      await indexHandler(createEvent(userId));
+      await indexHandler(updateEvent(externalauthorId));
+      await indexHandler(createEvent(externalauthorId));
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: userResponse,
-        type: 'user',
-      });
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(
+        externalauthorResponse,
+      );
     });
 
     test('receives the events created and unpublished in correct order', async () => {
-      const userId = 'user-1234';
-      const createEv = createEvent(userId);
-      const unpublishedEv = unpublishedEvent(userId);
+      const externalauthorId = 'external-author-1234';
+      const createEv = createEvent(externalauthorId);
+      const unpublishedEv = unpublishedEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -153,12 +162,12 @@ describe('User index handler', () => {
     });
 
     test('receives the events created and unpublished in reverse order', async () => {
-      const userId = 'user-1234';
-      const createEv = createEvent(userId);
-      const unpublishedEv = unpublishedEvent(userId);
+      const externalauthorId = 'external-author-1234';
+      const createEv = createEvent(externalauthorId);
+      const unpublishedEv = unpublishedEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -173,12 +182,12 @@ describe('User index handler', () => {
     });
 
     test('receives the events created and deleted in correct order', async () => {
-      const userId = 'user-1234';
-      const createEv = createEvent(userId);
-      const deleteEv = deleteEvent(userId);
+      const externalauthorId = 'external-author-1234';
+      const createEv = createEvent(externalauthorId);
+      const deleteEv = deleteEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -193,12 +202,12 @@ describe('User index handler', () => {
     });
 
     test('receives the events created and deleted in reverse order', async () => {
-      const userId = 'user-1234';
-      const createEv = createEvent(userId);
-      const deleteEv = deleteEvent(userId);
+      const externalauthorId = 'external-author-1234';
+      const createEv = createEvent(externalauthorId);
+      const deleteEv = deleteEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -213,12 +222,12 @@ describe('User index handler', () => {
     });
 
     test('receives the events updated and deleted in correct order', async () => {
-      const userId = 'user-1234';
-      const updateEv = updateEvent(userId);
-      const deleteEv = deleteEvent(userId);
+      const externalauthorId = 'external-author-1234';
+      const updateEv = updateEvent(externalauthorId);
+      const deleteEv = deleteEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -233,12 +242,12 @@ describe('User index handler', () => {
     });
 
     test('receives the events updated and deleted in reverse order', async () => {
-      const userId = 'user-1234';
-      const updateEv = updateEvent(userId);
-      const deleteEv = deleteEvent(userId);
+      const externalauthorId = 'external-author-1234';
+      const updateEv = updateEvent(externalauthorId);
+      const deleteEv = deleteEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -252,12 +261,12 @@ describe('User index handler', () => {
       );
     });
     test('receives the events updated and unpublished in correct order', async () => {
-      const userId = 'user-1234';
-      const updateEv = updateEvent(userId);
-      const unpublishedEv = unpublishedEvent(userId);
+      const externalauthorId = 'external-author-1234';
+      const updateEv = updateEvent(externalauthorId);
+      const unpublishedEv = unpublishedEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -272,12 +281,12 @@ describe('User index handler', () => {
     });
 
     test('receives the events updated and unpublished in reverse order', async () => {
-      const userId = 'user-1234';
-      const updateEv = updateEvent(userId);
-      const unpublishedEv = unpublishedEvent(userId);
+      const externalauthorId = 'external-author-1234';
+      const updateEv = updateEvent(externalauthorId);
+      const unpublishedEv = unpublishedEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -293,14 +302,22 @@ describe('User index handler', () => {
   });
 });
 
-const unpublishedEvent = (id: string = 'user-1234') =>
-  getUserEvent(id, 'UsersUnpublished', 'UserDeleted');
+const unpublishedEvent = (id: string = 'external-author-1234') =>
+  getExternalAuthorEvent(
+    id,
+    'ExternalAuthorsUnpublished',
+    'ExternalAuthorDeleted',
+  );
 
-const deleteEvent = (id: string = 'user-1234') =>
-  getUserEvent(id, 'UsersDeleted', 'UserDeleted');
+const deleteEvent = (id: string = 'external-author-1234') =>
+  getExternalAuthorEvent(id, 'ExternalAuthorsDeleted', 'ExternalAuthorDeleted');
 
-const createEvent = (id: string = 'user-1234') =>
-  getUserEvent(id, 'UsersPublished', 'UserPublished');
+const createEvent = (id: string = 'external-author-1234') =>
+  getExternalAuthorEvent(
+    id,
+    'ExternalAuthorsPublished',
+    'ExternalAuthorPublished',
+  );
 
-const updateEvent = (id: string = 'user-1234') =>
-  getUserEvent(id, 'UsersUpdated', 'UserUpdated');
+const updateEvent = (id: string = 'external-author-1234') =>
+  getExternalAuthorEvent(id, 'ExternalAuthorsUpdated', 'ExternalAuthorUpdated');

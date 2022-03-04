@@ -16,6 +16,7 @@
     "authors.firstName",
     "firstName",
     "lastName",
+    "displayName",
     "teams.role",
     "degree",
     "jobTitle",

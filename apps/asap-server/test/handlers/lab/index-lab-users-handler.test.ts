@@ -1,5 +1,5 @@
 import Boom from '@hapi/boom';
-
+import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { indexLabUsersHandler } from '../../../src/handlers/lab/index-lab-users-handler';
 import {
   createEvent,
@@ -11,6 +11,8 @@ import {
 import { getListUserResponse } from '../../fixtures/users.fixtures';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user-controller.mock';
+
+const mapPayload = AlgoliaSearchClient.toPayload('user');
 
 const possibleEvents: [string, LabEventGenerator][] = [
   ['created', createEvent],
@@ -78,7 +80,7 @@ describe('Index Users on Lab event handler', () => {
       await indexHandler(event);
 
       expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith(
-        usersResponse.items,
+        usersResponse.items.map(mapPayload),
       );
     },
   );
@@ -100,11 +102,11 @@ describe('Index Users on Lab event handler', () => {
         expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledTimes(2);
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           1,
-          usersResponse.items,
+          usersResponse.items.map(mapPayload),
         );
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           2,
-          usersResponse.items,
+          usersResponse.items.map(mapPayload),
         );
       },
     );

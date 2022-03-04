@@ -1,0 +1,22 @@
+{
+  "$schema": "./../__json/rule.json",
+  "isEnabled": true,
+  "name": "External Authors updated",
+  "trigger": {
+    "triggerType": "ContentChanged",
+    "schemas": [
+      {
+        "schemaId": "external-authors",
+        "condition": "event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
+      }
+    ],
+    "handleAll": false
+  },
+  "action": {
+    "url": "ASAP_API_URL/webhook/external-authors",
+    "method": "POST",
+    "sharedSecret": "SQUIDEX_SHARED_SECRET",
+    "isFrozen": true,
+    "actionType": "Webhook"
+  }
+}

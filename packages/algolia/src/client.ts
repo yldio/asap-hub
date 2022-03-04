@@ -1,13 +1,40 @@
 import { SearchIndex } from 'algoliasearch';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
-import { ResearchOutputResponse, UserResponse } from '@asap-hub/model';
+import {
+  ExternalAuthorResponse,
+  LabResponse,
+  ResearchOutputResponse,
+  UserResponse,
+} from '@asap-hub/model';
 
 export const RESEARCH_OUTPUT_ENTITY_TYPE = 'research-output';
 export const USER_ENTITY_TYPE = 'user';
+export const EXTERNAL_AUTHOR_ENTITY_TYPE = 'external-author';
+export const LAB_ENTITY_TYPE = 'lab';
+
+export type Payload =
+  | {
+      data: ResearchOutputResponse;
+      type: 'research-output';
+    }
+  | {
+      data: UserResponse;
+      type: 'user';
+    }
+  | {
+      data: ExternalAuthorResponse;
+      type: 'external-author';
+    }
+  | {
+      data: LabResponse;
+      type: 'lab';
+    };
 
 export type EntityResponses = {
   [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse;
   [USER_ENTITY_TYPE]: UserResponse;
+  [EXTERNAL_AUTHOR_ENTITY_TYPE]: ExternalAuthorResponse;
+  [LAB_ENTITY_TYPE]: LabResponse;
 };
 
 export type EntityRecord<T extends keyof EntityResponses> =
@@ -21,29 +48,22 @@ export type EntityRecord<T extends keyof EntityResponses> =
 export type SearchEntityResponse<TEntityType extends keyof EntityResponses> =
   SearchResponse<EntityRecord<TEntityType>>;
 
-export const getEntityType = (
-  entity: EntityResponses[keyof EntityResponses],
-): keyof EntityResponses => {
-  if ('title' in entity && 'sharingStatus' in entity) {
-    return 'research-output';
-  }
-
-  return 'user';
-};
 export class AlgoliaSearchClient {
   public constructor(private index: SearchIndex) {
     // do nothing
   }
 
-  async save(payload: EntityResponses[keyof EntityResponses]): Promise<void> {
-    await this.index.saveObject(AlgoliaSearchClient.getAlgoliaObject(payload));
+  async save({ data, type }: Payload): Promise<void> {
+    await this.index.saveObject(
+      AlgoliaSearchClient.getAlgoliaObject(data, type),
+    );
   }
 
-  async saveMany(
-    payloads: readonly EntityResponses[keyof EntityResponses][],
-  ): Promise<void> {
+  async saveMany(payloads: Payload[]): Promise<void> {
     await this.index.saveObjects(
-      payloads.map(AlgoliaSearchClient.getAlgoliaObject),
+      payloads.map(({ data, type }) =>
+        AlgoliaSearchClient.getAlgoliaObject(data, type),
+      ),
     );
   }
 
@@ -66,13 +86,20 @@ export class AlgoliaSearchClient {
     return this.index.search<EntityRecord<T>>(query, options);
   }
 
+  public static toPayload(
+    type: keyof EntityResponses,
+  ): (data: Payload['data']) => Payload {
+    return (data: Payload['data']): Payload => ({ data, type } as Payload);
+  }
+
   private static getAlgoliaObject(
-    body: EntityResponses[keyof EntityResponses],
+    body: Payload['data'],
+    type: Payload['type'],
   ): Record<string, unknown> {
     return {
       ...body,
       objectID: body.id,
-      __meta: { type: getEntityType(body) },
+      __meta: { type },
     };
   }
 }

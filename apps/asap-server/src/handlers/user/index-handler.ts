@@ -6,7 +6,10 @@ import {
 } from '@asap-hub/algolia';
 import logger from '../../utils/logger';
 import Users, { UserController } from '../../controllers/users';
-import { UserEventType } from '../webhooks/webhook-user';
+import {
+  UserEventType,
+  SquidexWebhookUserPayload,
+} from '../webhooks/webhook-user';
 import { EventBridgeHandler } from '../../utils/types';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 
@@ -23,7 +26,10 @@ export const indexUserHandler =
 
       logger.debug(`Fetched user ${user.id}`);
 
-      await algoliaClient.save(user);
+      await algoliaClient.save({
+        data: user,
+        type: 'user',
+      });
 
       logger.debug(`Saved user ${user.id}`);
     } catch (e) {
@@ -36,25 +42,6 @@ export const indexUserHandler =
       throw e;
     }
   };
-
-export type SquidexWebhookUserPayload = {
-  type:
-    | 'UsersPublished'
-    | 'UsersCreated'
-    | 'UsersUpdated'
-    | 'UsersUnpublished'
-    | 'UsersDeleted';
-  timestamp: string;
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: 'Published' | 'Updated' | 'Unpublished' | 'Deleted' | 'Created';
-    id: string;
-    created: string;
-    lastModified: string;
-    version: number;
-    data: { [x: string]: { iv: unknown } | null };
-  };
-};
 
 export const handler = indexUserHandler(
   new Users(new SquidexGraphql()),

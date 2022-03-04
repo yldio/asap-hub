@@ -47,7 +47,12 @@ export const indexLabUsersHandler =
         `Found ${foundUsers.total} users. Processing ${foundUsers.items.length} users.`,
       );
 
-      await algoliaClient.saveMany(foundUsers.items);
+      await algoliaClient.saveMany(
+        foundUsers.items.map((data) => ({
+          data,
+          type: 'user',
+        })),
+      );
 
       logger.info(`Updated ${foundUsers.total} users.`);
     };

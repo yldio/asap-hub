@@ -94,6 +94,22 @@ describe('Fetch-user-by-code handler', () => {
       expect(result.statusCode).toStrictEqual(401);
     });
 
+    test('returns 401 when additional fields exist', async () => {
+      const result = (await handler(
+        getApiGatewayEvent({
+          pathParameters: {
+            code: 'welcomeCode',
+            additionalField: 'some-value',
+          },
+          headers: {
+            Authorization: `Basic ${secret}`,
+          },
+        }),
+      )) as APIGatewayProxyResult;
+
+      expect(result.statusCode).toStrictEqual(400);
+    });
+
     test('returns 403 when secret doesnt match', async () => {
       const result = (await handler(
         getApiGatewayEvent({

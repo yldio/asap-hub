@@ -58,7 +58,7 @@
     "exact",
     "custom"
   ],
-  "customRanking": ["desc(addedDate)"],
+  "customRanking": ["desc(addedDate)", "desc(createdDate)"],
   "separatorsToIndex": "",
   "removeWordsIfNoResults": "none",
   "queryType": "prefixLast",

@@ -5,19 +5,25 @@
   "maxValuesPerFacet": 100,
   "version": 2,
   "attributesToIndex": [
+    "firstName",
+    "lastName",
     "title",
     "subTypes",
     "tags",
     "authors.lastName",
     "labs.name",
+    "teams.role",
     "teams.displayName",
     "authors.displayName",
     "type",
     "authors.firstName",
+<<<<<<< HEAD
     "firstName",
     "lastName",
     "displayName",
     "teams.role",
+=======
+>>>>>>> 135e9742 (CRN-599 search users for more fields and improve ranking)
     "degree",
     "jobTitle",
     "institution",
@@ -25,9 +31,9 @@
     "country",
     "orcid",
     "expertiseAndResourceTags",
+    "id",
     "email",
     "contactEmail",
-    "id"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,
@@ -46,7 +52,7 @@
   "attributesToHighlight": null,
   "paginationLimitedTo": 1000,
   "attributeForDistinct": null,
-  "exactOnSingleWordQuery": "attribute",
+  "exactOnSingleWordQuery": "word",
   "disablePrefixOnAttributes": [],
   "disableTypoToleranceOnAttributes": [],
   "ranking": [

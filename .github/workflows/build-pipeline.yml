@@ -170,7 +170,7 @@ jobs:
 
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
+      AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN_GITLAB }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
       SQUIDEX_APP_NAME: '${{ needs.setup.outputs.pr-number }}-github'
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
@@ -380,7 +380,7 @@ jobs:
       ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
+      AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN_GITLAB }}
       ASAP_HOSTNAME: 'hub.asap.science'
       ALGOLIA_INDEX: 'asap-hub_CI-${ needs.setup.outputs.pr-number }'
       AWS_REGION: ${{ secrets.AWS_REGION }}

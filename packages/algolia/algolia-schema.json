@@ -26,7 +26,7 @@
     "expertiseAndResourceTags",
     "id",
     "email",
-    "contactEmail",
+    "contactEmail"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,

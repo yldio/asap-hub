@@ -3,6 +3,8 @@ name: Build Pipeline
 on:
   pull_request:
     types: [opened, synchronize]
+    branches:
+      - master
 
 env:
   NODE_OPTIONS: '--max_old_space_size=4096'
@@ -373,11 +375,21 @@ jobs:
       SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}-github
       SQUIDEX_CLIENT_ID: $SQUIDEX_TEST_CLIENT_ID
       SQUIDEX_CLIENT_SECRET: $SQUIDEX_TEST_CLIENT_SECRET
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
       ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
       ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
+      ASAP_HOSTNAME: 'hub.asap.science'
+      ALGOLIA_INDEX: 'asap-hub_CI-${ needs.setup.outputs.pr-number }'
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
+      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
+      CURRENT_REVISION: ${{ github.sha }}
+      SENTRY_DSN_API: ${{ secrets.SENTRY_DSN_API }}
+      SENTRY_DSN_CALENDAR: ${{ secrets.SENTRY_DSN_CALENDAR }}
+      SENTRY_DSN_USER_INVITE: ${{ secrets.SENTRY_DSN_USER_INVITE }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -394,8 +406,7 @@ jobs:
           path: 'sls-package'
       - name: deploy
         run: |
-          ls sls-package
-          echo "yarn sls deploy --package sls-package --verbose"
+          yarn sls deploy --package sls-package --verbose
 
   verify-sls:
     needs: [setup, deploy-sls]

@@ -86,12 +86,6 @@ export class AlgoliaSearchClient {
     return this.index.search<EntityRecord<T>>(query, options);
   }
 
-  public static toPayload(
-    type: keyof EntityResponses,
-  ): (data: Payload['data']) => Payload {
-    return (data: Payload['data']): Payload => ({ data, type } as Payload);
-  }
-
   private static getAlgoliaObject(
     body: Payload['data'],
     type: Payload['type'],

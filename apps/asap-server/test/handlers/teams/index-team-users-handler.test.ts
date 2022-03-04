@@ -1,5 +1,5 @@
 import Boom from '@hapi/boom';
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
+import { toPayload } from '../../helpers/algolia';
 import { indexTeamUsersHandler } from '../../../src/handlers/teams/index-team-users-handler';
 import { getListUserResponse } from '../../fixtures/users.fixtures';
 
@@ -14,7 +14,7 @@ import {
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user-controller.mock';
 
-const mapPayload = AlgoliaSearchClient.toPayload('user');
+const mapPayload = toPayload('user');
 
 const possibleEvents: [string, TeamEventGenerator][] = [
   ['created', createEvent],

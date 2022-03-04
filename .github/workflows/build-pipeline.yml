@@ -8,6 +8,7 @@ on:
 
 env:
   NODE_OPTIONS: '--max_old_space_size=4096'
+  ASAP_HOSTNAME: 'hub.asap.science'
 jobs:
   setup:
     uses: ./.github/workflows/setup.yml
@@ -55,11 +56,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup
+      - name: Setup app
         run: python ci/integration/scripts/create-app.py
       - name: Test
         run: yarn test:integration
-      - name: Delete App
+      - name: Delete app
         if: always()
         run: python ci/integration/scripts/delete-app.py
   build:
@@ -82,7 +83,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - name: Get Algolia App id
+      - name: Get Algolia app Id
         id: get-algolia-app-id
         run: |
           REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)
@@ -91,14 +92,14 @@ jobs:
         env:
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
           REACT_APP_ALGOLIA_INDEX: 'asap-hub_CI-${{ github.event.number }}'
-          REACT_APP_API_BASE_URL: 'http://api-${ needs.setup.outputs.pr-number }-github.${ASAP_HOSTNAME}'
+          REACT_APP_API_BASE_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.${{ env.ASAP_HOSTNAME }}'
           REACT_APP_ENVIRONMENT: 'development'
-          REACT_APP_RELEASE: '${GITHUB_RUN_ID}-dev'
+          REACT_APP_RELEASE: '${{ github.run_id }}-dev'
           REACT_APP_SENTRY_DSN: ''
           REACT_APP_GTM_CONTAINER_ID: ${{ secrets.REACT_APP_GTM_CONTAINER_ID}}
         run: |
           yarn build
-      - name: Cache Build Output
+      - name: Cache build output
         uses: actions/cache@v2
         id: restore-build
         with:
@@ -123,7 +124,7 @@ jobs:
       - name: Re-Build
         run: |
           yarn rebuild
-      - name: Cache Build Output
+      - name: Cache build output
         uses: actions/cache@v2
         id: restore-rebuild
         with:
@@ -163,10 +164,9 @@ jobs:
     env:
       SLS_STAGE: '${{ needs.setup.outputs.pr-number }}-github'
       NODE_ENV: 'production'
-      ASAP_HOSTNAME: 'hub.asap.science'
       ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
       ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
-      ALGOLIA_INDEX: 'asap-hub_CI-${ needs.setup.outputs.pr-number }'
+      ALGOLIA_INDEX: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
 
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -185,7 +185,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Cache Build Output
+      - name: Cache build output
         uses: actions/cache@v2
         id: restore-build
         with:
@@ -193,14 +193,14 @@ jobs:
             apps/**/build*
             packages/**/build*
           key: build-output-${{ github.sha }}
-      - name: Cache Build Output
+      - name: Cache build output
         uses: actions/cache@v2
         id: restore-rebuild
         with:
           path: |
             .yarn/unplugged/
           key: rebuild-output-${{ github.sha }}
-      - name: Generate Package
+      - name: Generate package
         run: |
           yarn sls package --package sls-package
       - uses: actions/upload-artifact@v2
@@ -227,7 +227,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Cache Build Output
+      - name: Cache build output
         uses: actions/cache@v2
         id: restore-build
         with:
@@ -252,7 +252,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Cache Build Output
+      - name: Cache build output
         uses: actions/cache@v2
         id: restore-build
         with:
@@ -271,7 +271,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Cache Build Output
+      - name: Cache build output
         uses: actions/cache@v2
         id: restore-rebuild
         with:
@@ -303,7 +303,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup App
+      - name: Setup app
         if: ${{ github.event.action == 'opened' }}
         run: python ci/integration/scripts/create-app.py
       - name: Configure AWS credentials
@@ -321,7 +321,7 @@ jobs:
           tar -xf $MOST_RECENT_BACKUP
           ./ci/config-squidex-rules.sh
           FIRST_RUN="true" ./ci/import-squidex-data.sh
-      - name: update schema
+      - name: Update schema
         uses: ./.github/actions/squidex-sync
         with:
           squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
@@ -347,7 +347,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Cache Build Output
+      - name: Cache build output
         uses: actions/cache@v2
         id: restore-rebuild
         with:
@@ -373,16 +373,15 @@ jobs:
       NODE_OPTIONS: '--max_old_space_size=4096'
       SLS_STAGE: ${{ needs.setup.outputs.pr-number }}-github
       SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}-github
-      SQUIDEX_CLIENT_ID: $SQUIDEX_TEST_CLIENT_ID
-      SQUIDEX_CLIENT_SECRET: $SQUIDEX_TEST_CLIENT_SECRET
+      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_TEST_CLIENT_ID }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_TEST_CLIENT_SECRET }}
       SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
       ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
       ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN_GITLAB }}
-      ASAP_HOSTNAME: 'hub.asap.science'
-      ALGOLIA_INDEX: 'asap-hub_CI-${ needs.setup.outputs.pr-number }'
+      ALGOLIA_INDEX: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
       AWS_REGION: ${{ secrets.AWS_REGION }}
       LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
       SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
@@ -393,7 +392,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Cache Build Output
+      - name: Cache build output
         uses: actions/cache@v2
         id: restore-build
         with:
@@ -401,7 +400,7 @@ jobs:
             apps/**/build*
             packages/**/build*
           key: build-output-${{ github.sha }}
-      - name: Cache Build Output
+      - name: Cache build output
         uses: actions/cache@v2
         id: restore-rebuild
         with:
@@ -412,7 +411,7 @@ jobs:
         with:
           name: sls-package
           path: 'sls-package'
-      - name: deploy
+      - name: Deploy
         run: |
           yarn sls deploy --package sls-package --verbose
 
@@ -431,7 +430,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: test
+      - name: Test
         run: |
           yarn test:e2e
   e2e-test:
@@ -444,7 +443,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Cache Build Output
+      - name: Cache build output
         uses: actions/cache@v2
         id: restore-rebuild
         with:
@@ -454,7 +453,7 @@ jobs:
       - name: Install Playwright
         run: |
           yarn workspace @asap-hub/e2e-tests run playwright install
-      - name: test
+      - name: Test
         run: |
           yarn workspace @asap-hub/e2e-tests run playwright test
   notify_failure:
@@ -508,6 +507,6 @@ jobs:
       ]
     if: ${{ success() }}
     steps:
-      - name: Print Success
+      - name: Print success
         run: |
           echo "Build Successful."

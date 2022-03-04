@@ -2,7 +2,6 @@
 /.serverless*
 /.pnp.js
 /.yarn
-.terraform/
 
 # testing
 /coverage

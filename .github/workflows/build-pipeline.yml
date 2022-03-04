@@ -27,13 +27,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Cache Jest cache
-        uses: actions/cache@v2
-        id: jest-cache
-        with:
-          path: |
-            .jest-cache/
-          key: jest-cache
       - name: Test
         run: |
           yarn test --coverage --maxWorkers=2
@@ -77,6 +70,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Cache build output
+        uses: actions/cache@v2
+        id: restore-build
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-output-${{ github.sha }}
+          restore-keys: |
+            build-output-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -98,15 +103,10 @@ jobs:
           REACT_APP_SENTRY_DSN: ''
           REACT_APP_GTM_CONTAINER_ID: ${{ secrets.REACT_APP_GTM_CONTAINER_ID}}
         run: |
+          ls apps/asap-server/build
+          ls -la packages/model/build/
+          ls -la packages/model/src/
           yarn build
-      - name: Cache build output
-        uses: actions/cache@v2
-        id: restore-build
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-output-${{ github.sha }}
   rebuild:
     permissions:
       packages: read

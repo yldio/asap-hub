@@ -399,6 +399,7 @@ jobs:
         with:
           path: |
             apps/**/build*
+            packages/**/build*
           key: build-output-${{ github.sha }}
       - name: Cache Build Output
         uses: actions/cache@v2
@@ -413,6 +414,8 @@ jobs:
           path: 'sls-package'
       - name: deploy
         run: |
+          ls apps/frontend
+          ls apps/frontend/build
           yarn sls deploy --package sls-package --verbose
 
   verify-sls:

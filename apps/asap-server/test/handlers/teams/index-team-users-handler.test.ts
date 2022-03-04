@@ -1,4 +1,5 @@
 import Boom from '@hapi/boom';
+import { toPayload } from '../../helpers/algolia';
 import { indexTeamUsersHandler } from '../../../src/handlers/teams/index-team-users-handler';
 import { getListUserResponse } from '../../fixtures/users.fixtures';
 
@@ -12,6 +13,8 @@ import {
 
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user-controller.mock';
+
+const mapPayload = toPayload('user');
 
 const possibleEvents: [string, TeamEventGenerator][] = [
   ['created', createEvent],
@@ -79,7 +82,7 @@ describe('Index Users on Team event handler', () => {
       await indexHandler(event);
 
       expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith(
-        usersResponse.items,
+        usersResponse.items.map(mapPayload),
       );
     },
   );
@@ -101,11 +104,11 @@ describe('Index Users on Team event handler', () => {
         expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledTimes(2);
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           1,
-          usersResponse.items,
+          usersResponse.items.map(mapPayload),
         );
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           2,
-          usersResponse.items,
+          usersResponse.items.map(mapPayload),
         );
       },
     );

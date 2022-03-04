@@ -341,6 +341,30 @@ const serverlessConfig: AWS = {
         ALGOLIA_INDEX: `asap-hub_${envRef}`,
       },
     },
+    indexExternalAuthor: {
+      handler:
+        'apps/asap-server/src/handlers/external-author/index-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: ['asap.external-author'],
+              'detail-type': [
+                'ExternalAuthorPublished',
+                'ExternalAuthorUpdated',
+                'ExternalAuthorCreated',
+                'ExternalAuthorDeleted',
+              ],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+      },
+    },
     labUpserted: {
       handler: 'apps/asap-server/src/handlers/webhooks/webhook-lab.handler',
       events: [
@@ -436,6 +460,22 @@ const serverlessConfig: AWS = {
       environment: {
         EVENT_BUS: 'asap-events-${self:provider.stage}',
         EVENT_SOURCE: 'asap.user',
+      },
+    },
+    externalAuthorUpserted: {
+      handler:
+        'apps/asap-server/src/handlers/webhooks/webhook-external-author.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/external-authors',
+          },
+        },
+      ],
+      environment: {
+        EVENT_BUS: 'asap-events-${self:provider.stage}',
+        EVENT_SOURCE: 'asap.external-author',
       },
     },
     researchOutputUpserted: {

@@ -48,26 +48,21 @@ describe('Calendar handler', () => {
   });
 
   describe('Validation', () => {
-    test.each([
-      [
-        'additional fields in payload are allowed',
-        () => {
-          const event = getEvent();
-          event.detail.payload.additionalField = 'hi';
-          return event;
-        },
-      ],
-      [
-        'additional fields in detail are allowed',
-        () => {
-          const event = getEvent();
-          // @ts-expect-error testing unknown fields
-          event.detail.additionalField = 'hi';
-          return event;
-        },
-      ],
-    ])('valid: %s', async (_, makeEvent) => {
-      const event = makeEvent();
+    test('valid: additional fields in payload are allowed', async () => {
+      const event = getEvent();
+      event.detail.payload.additionalField = 'hi';
+      const resourceId = 'some-resource-id';
+      const expiration = 123456;
+      subscribe.mockResolvedValueOnce({ resourceId, expiration });
+
+      await expect(handler(event)).resolves.toBe('OK');
+    });
+
+    test('valid: additional fields in detail are allowed', async () => {
+      const event = getEvent();
+      // @ts-expect-error testing unknown fields
+      event.detail.additionalField = 'hi';
+
       const resourceId = 'some-resource-id';
       const expiration = 123456;
       subscribe.mockResolvedValueOnce({ resourceId, expiration });

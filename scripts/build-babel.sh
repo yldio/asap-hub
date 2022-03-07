@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 set -eu
 
-BUILD_CMD='babel src -Dd build -x .js,.jsx,.ts,.tsx --ignore="src/**/*.test.ts","src/**/*.test.tsx" --no-copy-ignored --source-maps inline --root-mode upward'
-BUILD_CJS_CMD='babel src -Dd build-cjs -x .js,.jsx,.ts,.tsx --ignore="src/**/*.test.ts","src/**/*.test.tsx" --no-copy-ignored --source-maps inline --config-file=$(yarn workspace asap-hub node -p "process.cwd()")/babel-cjs.config.js'
+BUILD_CMD='babel src -Dd build -x .js,.jsx,.ts,.tsx --source-maps inline --root-mode upward'
+BUILD_CJS_CMD='babel src -Dd build-cjs -x .js,.jsx,.ts,.tsx --source-maps inline --config-file=$(yarn workspace asap-hub node -p "process.cwd()")/babel-cjs.config.js'
 
 case $1 in
   build)

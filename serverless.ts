@@ -179,6 +179,8 @@ const serverlessConfig: AWS = {
     ],
     webpack: {
       config: 'serverless/webpack.config.js',
+      concurrency: 4,
+      noBuild: true,
     },
   },
   functions: {

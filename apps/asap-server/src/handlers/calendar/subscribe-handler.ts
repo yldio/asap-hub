@@ -3,8 +3,6 @@ import { EventBridgeEvent } from 'aws-lambda';
 import { Auth } from 'googleapis';
 import * as Sentry from '@sentry/serverless';
 import { Calendar, SquidexGraphql, WebhookPayload } from '@asap-hub/squidex';
-
-import { JSONSchemaType } from 'ajv';
 import {
   asapApiUrl,
   currentRevision,
@@ -20,68 +18,7 @@ import getJWTCredentialsAWS, {
 import logger from '../../utils/logger';
 import { Alerts, AlertsSentry } from '../../utils/alerts';
 import { CalendarEventType } from '../webhooks/webhook-calendar';
-import { NullableOptionalProperties } from '../../utils/types';
-import { validateInput } from '../../validation';
-
-type RestCalendar = NullableOptionalProperties<{
-  googleCalendarId: {
-    iv: string;
-  };
-  resourceId?: {
-    iv: string;
-  };
-}>;
-
-const calendarSchema: JSONSchemaType<RestCalendar> = {
-  type: 'object',
-  properties: {
-    googleCalendarId: {
-      type: 'object',
-      properties: { iv: { type: 'string' } },
-      required: ['iv'],
-    },
-    resourceId: {
-      type: 'object',
-      properties: { iv: { type: 'string' } },
-      required: ['iv'],
-      nullable: true,
-    },
-  },
-  required: ['googleCalendarId'],
-};
-
-type WebhookPayloadCalendar = NullableOptionalProperties<{
-  type: string;
-  payload: NullableOptionalProperties<{
-    id: string;
-    data: RestCalendar;
-    dataOld?: RestCalendar;
-    version: number;
-  }>;
-}>;
-
-const bodySchema: JSONSchemaType<WebhookPayloadCalendar> = {
-  type: 'object',
-  properties: {
-    type: { type: 'string' },
-    payload: {
-      type: 'object',
-      properties: {
-        id: { type: 'string' },
-        data: calendarSchema,
-        dataOld: { ...calendarSchema, nullable: true },
-        version: { type: 'number' },
-      },
-      required: ['data', 'id', 'version'],
-    },
-  },
-  required: ['type', 'payload'],
-};
-
-const validateBody = validateInput(bodySchema, {
-  skipNull: false,
-  coerce: true,
-});
+import { validateBody } from '../../validation/subscribe-handler.validation';
 
 export const calendarCreatedHandlerFactory =
   (

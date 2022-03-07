@@ -1,61 +1,12 @@
 import { Event, RestEvent } from '@asap-hub/squidex';
 import { EventStatus } from '@asap-hub/model';
 import { calendar_v3 as calendarV3 } from 'googleapis';
-import { JSONSchemaType } from 'ajv';
 import { EventController } from '../controllers/events';
 import logger from './logger';
-import { validateInput } from '../validation';
-import { NullableOptionalProperties } from './types';
-
-type GoogleEvent = NullableOptionalProperties<{
-  id: string;
-  summary: string;
-  description: string;
-  organizer: {
-    email?: string;
-  };
-  status: string;
-  start: Date;
-  end: Date;
-}>;
-
-type Date = NullableOptionalProperties<{
-  date?: string;
-  dateTime?: string;
-  timeZone?: string;
-}>;
-
-const dateSchema: JSONSchemaType<Date> = {
-  type: 'object',
-  properties: {
-    date: { type: 'string', nullable: true },
-    dateTime: { type: 'string', nullable: true },
-    timeZone: { type: 'string', nullable: true },
-  },
-  anyOf: [{ required: ['date'] }, { required: ['dateTime'] }],
-};
-
-const googleEventValidationSchema: JSONSchemaType<GoogleEvent> = {
-  type: 'object',
-  properties: {
-    id: { type: 'string' },
-    summary: { type: 'string' },
-    description: { type: 'string' },
-    organizer: {
-      type: 'object',
-      properties: { email: { type: 'string', nullable: true } },
-    },
-    start: dateSchema,
-    end: dateSchema,
-    status: { type: 'string' },
-  },
-  required: ['id', 'summary', 'status'],
-};
-
-export const validateGoogleEvent = validateInput(googleEventValidationSchema, {
-  skipNull: false,
-  coerce: true,
-});
+import {
+  GoogleEvent,
+  validateGoogleEvent,
+} from '../validation/sync-google-event.validation';
 
 export type SyncEvent = (
   eventPayload: calendarV3.Schema$Event,

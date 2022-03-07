@@ -1,29 +1,10 @@
 import { SearchClient } from 'algoliasearch';
 import { framework as lambda } from '@asap-hub/services-common';
-import { JSONSchemaType } from 'ajv';
 import { UserController } from '../../../controllers/users';
 import validateRequest from '../../../utils/validate-auth0-request';
 import { Handler } from '../../../utils/types';
-import { algoliaApiKeyTtl, algoliaApiKey } from '../../../config';
-import { validateInput } from '../../../validation';
-
-type Params = {
-  code: string;
-};
-
-const paramsSchema: JSONSchemaType<Params> = {
-  type: 'object',
-  properties: {
-    code: { type: 'string' },
-  },
-  required: ['code'],
-  additionalProperties: false,
-};
-
-const validateParams = validateInput(paramsSchema, {
-  skipNull: false,
-  coerce: true,
-});
+import { algoliaApiKey, algoliaApiKeyTtl } from '../../../config';
+import { validateParams } from '../../../validation/fetch-by-code.validation';
 
 export const fetchUserByCodeHandlerFactory = (
   userController: UserController,

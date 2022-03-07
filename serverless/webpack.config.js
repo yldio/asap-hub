@@ -9,8 +9,8 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx|ts|tsx)$/,
-        exclude: /node_modules/,
+        test: /\.(ts)$/,
+        exclude: /node_modules|build|build-cjs|test/,
         use: {
           loader: require.resolve('babel-loader'),
         },

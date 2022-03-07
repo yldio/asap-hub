@@ -7,6 +7,7 @@
   "attributesToIndex": [
     "firstName",
     "lastName",
+    "displayName",
     "title",
     "subTypes",
     "tags",
@@ -17,13 +18,6 @@
     "authors.displayName",
     "type",
     "authors.firstName",
-<<<<<<< HEAD
-    "firstName",
-    "lastName",
-    "displayName",
-    "teams.role",
-=======
->>>>>>> 135e9742 (CRN-599 search users for more fields and improve ranking)
     "degree",
     "jobTitle",
     "institution",

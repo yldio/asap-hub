@@ -179,6 +179,7 @@ const serverlessConfig: AWS = {
     ],
     webpack: {
       config: 'serverless/webpack.config.js',
+      concurrency: 10,
     },
   },
   functions: {

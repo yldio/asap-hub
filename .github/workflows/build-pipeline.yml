@@ -88,6 +88,39 @@ jobs:
         run: |
           REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)
           echo "::set-output name=id::$REACT_APP_ALGOLIA_APP_ID"
+      - name: Build TypeCheck
+        env:
+          REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
+          REACT_APP_ALGOLIA_INDEX: 'asap-hub_CI-${{ github.event.number }}'
+          REACT_APP_API_BASE_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.${{ env.ASAP_HOSTNAME }}'
+          REACT_APP_ENVIRONMENT: 'development'
+          REACT_APP_RELEASE: '${{ github.run_id }}-dev'
+          REACT_APP_SENTRY_DSN: ''
+          REACT_APP_GTM_CONTAINER_ID: ${{ secrets.REACT_APP_GTM_CONTAINER_ID}}
+        run: |
+          yarn build:typecheck
+      - name: Build Babel
+        env:
+          REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
+          REACT_APP_ALGOLIA_INDEX: 'asap-hub_CI-${{ github.event.number }}'
+          REACT_APP_API_BASE_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.${{ env.ASAP_HOSTNAME }}'
+          REACT_APP_ENVIRONMENT: 'development'
+          REACT_APP_RELEASE: '${{ github.run_id }}-dev'
+          REACT_APP_SENTRY_DSN: ''
+          REACT_APP_GTM_CONTAINER_ID: ${{ secrets.REACT_APP_GTM_CONTAINER_ID}}
+        run: |
+          yarn build:babel
+      - name: TypeCheck
+        env:
+          REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
+          REACT_APP_ALGOLIA_INDEX: 'asap-hub_CI-${{ github.event.number }}'
+          REACT_APP_API_BASE_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.${{ env.ASAP_HOSTNAME }}'
+          REACT_APP_ENVIRONMENT: 'development'
+          REACT_APP_RELEASE: '${{ github.run_id }}-dev'
+          REACT_APP_SENTRY_DSN: ''
+          REACT_APP_GTM_CONTAINER_ID: ${{ secrets.REACT_APP_GTM_CONTAINER_ID}}
+        run: |
+          yarn workspaces foreach -j 2 -vpt run typecheck
       - name: Build
         env:
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
@@ -98,7 +131,7 @@ jobs:
           REACT_APP_SENTRY_DSN: ''
           REACT_APP_GTM_CONTAINER_ID: ${{ secrets.REACT_APP_GTM_CONTAINER_ID}}
         run: |
-          yarn build
+          yarn workspaces foreach -j 2 --exclude asap-hub -vpt run build
       - name: Cache build output
         uses: actions/cache@v2
         id: restore-build

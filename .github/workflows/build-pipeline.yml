@@ -63,6 +63,29 @@ jobs:
       - name: Delete app
         if: always()
         run: python ci/integration/scripts/delete-app.py
+  typecheck:
+    permissions:
+      packages: read
+    needs: setup
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: TypeCheck
+        run: |
+          yarn typecheck
   build:
     permissions:
       packages: read
@@ -110,17 +133,6 @@ jobs:
           REACT_APP_GTM_CONTAINER_ID: ${{ secrets.REACT_APP_GTM_CONTAINER_ID}}
         run: |
           yarn build:babel
-      - name: TypeCheck
-        env:
-          REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
-          REACT_APP_ALGOLIA_INDEX: 'asap-hub_CI-${{ github.event.number }}'
-          REACT_APP_API_BASE_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.${{ env.ASAP_HOSTNAME }}'
-          REACT_APP_ENVIRONMENT: 'development'
-          REACT_APP_RELEASE: '${{ github.run_id }}-dev'
-          REACT_APP_SENTRY_DSN: ''
-          REACT_APP_GTM_CONTAINER_ID: ${{ secrets.REACT_APP_GTM_CONTAINER_ID}}
-        run: |
-          yarn workspaces foreach -j 2 -vpt run typecheck
       - name: Build
         env:
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}

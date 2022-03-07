@@ -1,17 +1,13 @@
-import { ContentPage, NotFoundPage, Loading } from '@asap-hub/react-components';
+import { ContentPage, NotFoundPage } from '@asap-hub/react-components';
 
-import { usePageByPath } from '../api';
+import { usePageByPath } from './state';
 import Frame from '../structure/Frame';
 
 interface ContentProps {
   pageId: string;
 }
 const Content: React.FC<ContentProps> = ({ pageId }) => {
-  const { loading, data: page } = usePageByPath(pageId);
-
-  if (loading) {
-    return <Loading />;
-  }
+  const page = usePageByPath(pageId);
 
   if (page) {
     return (

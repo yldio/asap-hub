@@ -1,6 +1,6 @@
 import { FC, lazy, useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { RecoilRoot, useResetRecoilState, useRecoilState } from 'recoil';
+import { useResetRecoilState, useRecoilState } from 'recoil';
 import { NotFoundPage, Layout, Loading } from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 import {
@@ -122,10 +122,4 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
   );
 };
 
-const AuthenticatedAppWithRecoil: FC<Record<string, never>> = () => (
-  <RecoilRoot>
-    <AuthenticatedApp />
-  </RecoilRoot>
-);
-
-export default AuthenticatedAppWithRecoil;
+export default AuthenticatedApp;

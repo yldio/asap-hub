@@ -40,7 +40,6 @@
     "streamsaver": "^2.0.5",
     "use-debounce": "^5.2.1",
     "use-deep-compare-effect": "^1.6.1",
-    "use-http": "^1.0.20",
     "uuid": "^8.3.2",
     "web-streams-polyfill": "^3.1.1"
   },

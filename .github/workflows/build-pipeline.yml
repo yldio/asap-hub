@@ -12,7 +12,7 @@ env:
 jobs:
   setup:
     uses: ./.github/workflows/setup.yml
-  test-packages:
+  test-unit:
     permissions:
       packages: read
     needs: setup
@@ -22,6 +22,8 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -32,32 +34,10 @@ jobs:
           path: |
             .jest-cache/
           key: jest-cache
-      - name: Test packages
+      - name: Test
         run: |
-          yarn test:packages --maxWorkers=2
-  test-apps:
-    permissions:
-      packages: read
-    needs: setup
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Cache Jest cache
-        uses: actions/cache@v2
-        id: jest-cache
-        with:
-          path: |
-            .jest-cache/
-          key: jest-cache
-      - name: Test apps
-        run: |
-          yarn test:apps --maxWorkers=2
+          yarn test --coverage --maxWorkers=2
+          yarn codecov
   test-integration:
     permissions:
       packages: read
@@ -132,32 +112,6 @@ jobs:
             apps/**/build*
             packages/**/build*
           key: transpile-output-${{ github.sha }}
-  test-coverage:
-    permissions:
-      packages: read
-    needs: setup
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    env:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Cache Jest cache
-        uses: actions/cache@v2
-        id: jest-cache
-        with:
-          path: |
-            .jest-cache/
-          key: jest-cache
-      - name: Generate coverage report
-        run: |
-          yarn test --coverage --maxWorkers=2 --silent
-          yarn codecov
   build-frontend:
     permissions:
       packages: read
@@ -500,9 +454,14 @@ jobs:
         setup,
         build-frontend,
         build-sls-package,
-        test-apps,
-        test-packages,
+        test-unit,
         test-integration,
+
+        typecheck,
+        check,
+        bundlewatch,
+        test-build-output,
+        test-browser,
       ]
     permissions:
       packages: read
@@ -604,9 +563,7 @@ jobs:
     needs:
       [
         setup,
-        test-coverage,
-        test-apps,
-        test-packages,
+        test-unit,
         test-integration,
         build-frontend,
         build-typecheck,
@@ -637,9 +594,7 @@ jobs:
     needs:
       [
         setup,
-        test-coverage,
-        test-apps,
-        test-packages,
+        test-unit,
         test-integration,
         build-frontend,
         build-typecheck,

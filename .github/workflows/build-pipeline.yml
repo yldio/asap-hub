@@ -12,41 +12,6 @@ env:
 jobs:
   setup:
     uses: ./.github/workflows/setup.yml
-  test-unit:
-    permissions:
-      packages: read
-    needs: setup
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    env:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Generate coverage report
-        run: |
-          yarn test --coverage --maxWorkers=2 --silent
-          yarn codecov
-  test-apps:
-    permissions:
-      packages: read
-    needs: setup
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Test apps
-        run: |
-          yarn test:apps --maxWorkers=2
   test-packages:
     permissions:
       packages: read
@@ -60,9 +25,39 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Cache Jest cache
+        uses: actions/cache@v2
+        id: jest-cache
+        with:
+          path: |
+            .jest-cache/
+          key: jest-cache
       - name: Test packages
         run: |
           yarn test:packages --maxWorkers=2
+  test-apps:
+    permissions:
+      packages: read
+    needs: setup
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache Jest cache
+        uses: actions/cache@v2
+        id: jest-cache
+        with:
+          path: |
+            .jest-cache/
+          key: jest-cache
+      - name: Test apps
+        run: |
+          yarn test:apps --maxWorkers=2
   test-integration:
     permissions:
       packages: read
@@ -137,6 +132,32 @@ jobs:
             apps/**/build*
             packages/**/build*
           key: transpile-output-${{ github.sha }}
+  test-coverage:
+    permissions:
+      packages: read
+    needs: setup
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache Jest cache
+        uses: actions/cache@v2
+        id: jest-cache
+        with:
+          path: |
+            .jest-cache/
+          key: jest-cache
+      - name: Generate coverage report
+        run: |
+          yarn test --coverage --maxWorkers=2 --silent
+          yarn codecov
   build-frontend:
     permissions:
       packages: read
@@ -583,7 +604,7 @@ jobs:
     needs:
       [
         setup,
-        test-unit,
+        test-coverage,
         test-apps,
         test-packages,
         test-integration,
@@ -616,7 +637,7 @@ jobs:
     needs:
       [
         setup,
-        test-unit,
+        test-coverage,
         test-apps,
         test-packages,
         test-integration,

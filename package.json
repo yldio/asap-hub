@@ -21,7 +21,7 @@
     "algolia:remove-records": "yarn node apps/asap-cli/build-cjs/cli.js algolia:remove-records",
     "algolia:upload": "yarn workspace @asap-hub/algolia run algolia setsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -s ./algolia-schema.json",
     "build": "yarn build:typecheck && yarn build:babel && yarn typecheck && yarn build:frontend",
-    "build:frontend": "yarn workspaces foreach -j 2 --exclude asap-hub -vpt run build",
+    "build:frontend": "yarn workspaces foreach -j 2 --exclude asap-hub -vp run build",
     "typecheck": "yarn workspaces foreach --exclude asap-hub -vpt run typecheck",
     "build:babel": "yarn workspaces foreach -vp -j 2 run build:babel",
     "build:typecheck": "tsc -b -v $(node scripts/get-composite-ts-projects.js)",

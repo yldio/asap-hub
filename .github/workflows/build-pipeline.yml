@@ -24,7 +24,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache Jest cache
         uses: actions/cache@v2
         id: jest-cache
@@ -47,7 +47,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache Jest cache
         uses: actions/cache@v2
         id: jest-cache
@@ -75,7 +75,7 @@ jobs:
       SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup app
         run: python ci/integration/scripts/create-app.py
       - name: Test
@@ -96,7 +96,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Typecheck
         run: |
           yarn build:typecheck
@@ -120,7 +120,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Build
         run: |
           yarn build:babel
@@ -146,7 +146,7 @@ jobs:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache Jest cache
         uses: actions/cache@v2
         id: jest-cache
@@ -171,7 +171,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -231,7 +231,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache build typecheck output
         uses: actions/cache@v2
         with:
@@ -255,7 +255,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Re-Build
         run: |
           yarn rebuild
@@ -282,7 +282,7 @@ jobs:
         script: [constraints, 'lint:format', 'check:packages']
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Check
         run: |
           yarn ${{ matrix.script }}
@@ -319,7 +319,7 @@ jobs:
       SENTRY_DSN_USER_INVITE: ${{ secrets.SENTRY_DSN_USER_INVITE }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache build output
         uses: actions/cache@v2
         id: restore-rebuild
@@ -369,7 +369,7 @@ jobs:
       BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache -frontendbuild output
         uses: actions/cache@v2
         id: restore-build-frontend
@@ -394,7 +394,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache build output
         uses: actions/cache@v2
         id: restore-build-frontend
@@ -413,7 +413,7 @@ jobs:
       image: mcr.microsoft.com/playwright:focal
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache build output
         uses: actions/cache@v2
         id: restore-rebuild
@@ -445,7 +445,7 @@ jobs:
       SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup app
         if: ${{ github.event.action == 'opened' }}
         run: python ci/integration/scripts/create-app.py
@@ -489,7 +489,7 @@ jobs:
       SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Verify
         run: |
           yarn schema:update
@@ -535,7 +535,7 @@ jobs:
       SENTRY_DSN_USER_INVITE: ${{ secrets.SENTRY_DSN_USER_INVITE }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache build output
         uses: actions/cache@v2
         id: restore-build
@@ -572,7 +572,7 @@ jobs:
       ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Test
         run: |
           yarn test:e2e
@@ -585,7 +585,7 @@ jobs:
       ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache build output
         uses: actions/cache@v2
         id: restore-rebuild
@@ -626,7 +626,7 @@ jobs:
     if: ${{ failure() }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       # - uses: ./.github/actions/slack/
       #   with:
       #     message: 'Build Failed on GitHub: ${{ needs.setup.outputs.pr-number || github.head_ref }}'

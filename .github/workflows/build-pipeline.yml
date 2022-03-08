@@ -63,10 +63,59 @@ jobs:
       - name: Delete app
         if: always()
         run: python ci/integration/scripts/delete-app.py
-  build:
+  build-typecheck:
     permissions:
       packages: read
     needs: setup
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Typecheck
+        run: |
+          yarn build:typecheck
+      - name: Cache build typecheck output
+        uses: actions/cache@v2
+        id: restore-build-typecheck
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-typecheck-output-${{ github.sha }}
+  transpile:
+    permissions:
+      packages: read
+    needs: setup
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: |
+          yarn build:babel
+      - name: Cache transpile output
+        uses: actions/cache@v2
+        id: restore-transpile
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: transpile-output-${{ github.sha }}
+  build-frontend:
+    permissions:
+      packages: read
+    needs: [setup, build-typecheck, transpile]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
@@ -88,6 +137,22 @@ jobs:
         run: |
           REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)
           echo "::set-output name=id::$REACT_APP_ALGOLIA_APP_ID"
+      - name: Cache transpile output
+        uses: actions/cache@v2
+        id: restore-transpile
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: transpile-output-${{ github.sha }}
+      - name: Cache build typecheck output
+        uses: actions/cache@v2
+        id: restore-build-typecheck
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-typecheck-output-${{ github.sha }}
       - name: Build
         env:
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
@@ -98,7 +163,7 @@ jobs:
           REACT_APP_SENTRY_DSN: ''
           REACT_APP_GTM_CONTAINER_ID: ${{ secrets.REACT_APP_GTM_CONTAINER_ID}}
         run: |
-          yarn build
+          yarn build:frontend
       - name: Cache build output
         uses: actions/cache@v2
         id: restore-build
@@ -106,7 +171,31 @@ jobs:
           path: |
             apps/**/build*
             packages/**/build*
-          key: build-output-${{ github.sha }}
+          key: build-frontend-output-${{ github.sha }}
+  typecheck:
+    permissions:
+      packages: read
+    needs: [setup, build-typecheck]
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache build typecheck output
+        uses: actions/cache@v2
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-typecheck-output-${{ github.sha }}
+      - name: TypeCheck
+        run: |
+          yarn typecheck
   rebuild:
     permissions:
       packages: read
@@ -154,7 +243,7 @@ jobs:
   build-sls-package:
     permissions:
       packages: read
-    needs: [setup, build, rebuild]
+    needs: [setup, build-typecheck, transpile, rebuild]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
@@ -187,19 +276,27 @@ jobs:
         uses: actions/checkout@v2
       - name: Cache build output
         uses: actions/cache@v2
-        id: restore-build
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-output-${{ github.sha }}
-      - name: Cache build output
-        uses: actions/cache@v2
         id: restore-rebuild
         with:
           path: |
             .yarn/unplugged/
           key: rebuild-output-${{ github.sha }}
+      - name: Cache build typecheck output
+        uses: actions/cache@v2
+        id: restore-build-typecheck
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-typecheck-output-${{ github.sha }}
+      - name: Cache transpile output
+        uses: actions/cache@v2
+        id: restore-transpile
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: transpile-output-${{ github.sha }}
       - name: Generate package
         run: |
           yarn sls package --package sls-package
@@ -211,7 +308,7 @@ jobs:
   bundlewatch:
     permissions:
       packages: read
-    needs: [setup, build]
+    needs: [setup, build-frontend]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
@@ -227,14 +324,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Cache build output
+      - name: Cache -frontendbuild output
         uses: actions/cache@v2
-        id: restore-build
+        id: restore-build-frontend
         with:
           path: |
             apps/**/build*
             packages/**/build*
-          key: build-output-${{ github.sha }}
+          key: build-frontend-output-${{ github.sha }}
       - name: Bundle watch
         run: |
           CI_REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F / '{print $2}')
@@ -242,7 +339,7 @@ jobs:
   test-build-output:
     permissions:
       packages: read
-    needs: [setup, build]
+    needs: [setup, build-frontend]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
@@ -254,12 +351,12 @@ jobs:
         uses: actions/checkout@v2
       - name: Cache build output
         uses: actions/cache@v2
-        id: restore-build
+        id: restore-build-frontend
         with:
           path: |
             apps/**/build*
             packages/**/build*
-          key: build-output-${{ github.sha }}
+          key: build-frontend-output-${{ github.sha }}
       - name: Test output
         run: |
           yarn run test:build-output
@@ -332,7 +429,7 @@ jobs:
   verify-schema:
     permissions:
       packages: read
-    needs: [setup, prepare-squidex, rebuild]
+    needs: [setup, prepare-squidex]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
@@ -347,19 +444,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Cache build output
-        uses: actions/cache@v2
-        id: restore-rebuild
-        with:
-          path: |
-            .yarn/unplugged/
-          key: rebuild-output-${{ github.sha }}
       - name: Verify
         run: |
           yarn schema:update
           git diff --exit-code ./apps/asap-server/src/autogenerated-gql/
   deploy-sls:
-    needs: [setup, build-sls-package, test-unit, test-integration]
+    needs:
+      [setup, build-frontend, build-sls-package, test-unit, test-integration]
     permissions:
       packages: read
     runs-on: ubuntu-latest
@@ -399,10 +490,9 @@ jobs:
           path: |
             apps/**/build*
             packages/**/build*
-          key: build-output-${{ github.sha }}
-      - name: Cache build output
+          key: build-frontend-output-${{ github.sha }}
+      - name: Cache rebuild output
         uses: actions/cache@v2
-        id: restore-rebuild
         with:
           path: |
             .yarn/unplugged/
@@ -463,8 +553,10 @@ jobs:
         setup,
         test-unit,
         test-integration,
-        build,
-        rebuild,
+        build-frontend,
+        build-typecheck,
+        transpile,
+        typecheck,
         check,
         build-sls-package,
         bundlewatch,
@@ -492,8 +584,10 @@ jobs:
         setup,
         test-unit,
         test-integration,
-        build,
-        rebuild,
+        build-frontend,
+        build-typecheck,
+        transpile,
+        typecheck,
         check,
         build-sls-package,
         bundlewatch,

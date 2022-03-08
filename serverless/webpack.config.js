@@ -11,7 +11,7 @@ module.exports = {
     rules: [
       {
         test: /\.(ts)$/,
-        exclude: [/node_modules/, /serverless/, /test/, /__tests__/, /yarn/],
+        exclude: [/node_modules/],
         loader: 'babel-loader',
         options: {
           cacheDirectory: true,

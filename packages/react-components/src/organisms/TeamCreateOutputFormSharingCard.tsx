@@ -37,62 +37,66 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
     onChangeLink = noop,
     onChangeTitle = noop,
     onChangeSubtypes = noop,
-  }) => (
-    <FormCard title="What are you sharing?">
-      <LabeledTextField
-        title="URL"
-        subtitle="(required)"
-        pattern={USER_SOCIAL_WEBSITE.source}
-        onChange={onChangeLink}
-        getValidationMessage={() =>
-          'Please enter a valid URL, starting with http://'
-        }
-        value={link ?? ''}
-        enabled={!isSaving}
-        required
-        labelIndicator={globeIcon}
-        placeholder="https://example.com"
-      />
-      <LabeledDropdown<ResearchOutputSubtype>
-        title="Type"
-        subtitle="(required)"
-        description={`Select the option that applies to this ${type.toLowerCase()}.`}
-        options={[...researchOutputTypeToSubtype[type].values()].map(
-          (option) => ({
-            value: option,
-            label: option,
-          }),
-        )}
-        onChange={(subType) => onChangeSubtypes([subType])}
-        getValidationMessage={() => 'Please choose a type'}
-        value={subTypes[0] ?? ''}
-        enabled={!isSaving}
-        required
-        noOptionsMessage={(option) =>
-          `Sorry, no types match ${option.inputValue}`
-        }
-        placeholder="Choose a type"
-      />
-      <LabeledTextField
-        title="Title"
-        maxLength={350}
-        subtitle="(required)"
-        onChange={onChangeTitle}
-        getValidationMessage={() => 'Please enter a title'}
-        value={title}
-        required
-        enabled={!isSaving}
-      />
-      <LabeledTextArea
-        title="Description"
-        subtitle="(required)"
-        onChange={onChangeDescription}
-        getValidationMessage={() => 'Please enter a description'}
-        required
-        enabled={!isSaving}
-        value={description}
-      />
-    </FormCard>
-  );
+  }) => {
+    const urlRequired = type !== 'Lab Resource';
+    const urlSubtitle = urlRequired ? '(required)' : '(optional)';
+    return (
+      <FormCard title="What are you sharing?">
+        <LabeledTextField
+          title="URL"
+          subtitle={urlSubtitle}
+          pattern={USER_SOCIAL_WEBSITE.source}
+          onChange={onChangeLink}
+          getValidationMessage={() =>
+            'Please enter a valid URL, starting with http://'
+          }
+          value={link ?? ''}
+          enabled={!isSaving}
+          required={urlRequired}
+          labelIndicator={globeIcon}
+          placeholder="https://example.com"
+        />
+        <LabeledDropdown<ResearchOutputSubtype>
+          title="Type"
+          subtitle="(required)"
+          description={`Select the option that applies to this ${type.toLowerCase()}.`}
+          options={[...researchOutputTypeToSubtype[type].values()].map(
+            (option) => ({
+              value: option,
+              label: option,
+            }),
+          )}
+          onChange={(subType) => onChangeSubtypes([subType])}
+          getValidationMessage={() => 'Please choose a type'}
+          value={subTypes[0] ?? ''}
+          enabled={!isSaving}
+          required
+          noOptionsMessage={(option) =>
+            `Sorry, no types match ${option.inputValue}`
+          }
+          placeholder="Choose a type"
+        />
+        <LabeledTextField
+          title="Title"
+          maxLength={350}
+          subtitle="(required)"
+          onChange={onChangeTitle}
+          getValidationMessage={() => 'Please enter a title'}
+          value={title}
+          required
+          enabled={!isSaving}
+        />
+        <LabeledTextArea
+          title="Description"
+          subtitle="(required)"
+          onChange={onChangeDescription}
+          getValidationMessage={() => 'Please enter a description'}
+          required
+          enabled={!isSaving}
+          value={description}
+        />
+      </FormCard>
+    );
+  };
 
 export default TeamCreateOutputFormSharingCard;

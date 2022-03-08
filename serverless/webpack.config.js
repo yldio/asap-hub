@@ -12,8 +12,10 @@ module.exports = {
       {
         test: /\.(ts)$/,
         exclude: [/node_modules/, /serverless/, /test/, /__tests__/, /yarn/],
-        use: {
-          loader: require.resolve('babel-loader'),
+        loader: 'babel-loader',
+        options: {
+          cacheDirectory: true,
+          cacheCompression: false,
         },
       },
     ],

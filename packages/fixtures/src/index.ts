@@ -8,3 +8,4 @@ export * from './research-outputs';
 export * from './teams';
 export * from './users';
 export * from './dashboard';
+export * from './discover';

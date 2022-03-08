@@ -1,57 +1,67 @@
-import {
-  render,
-  waitForElementToBeRemoved,
-  waitFor,
-} from '@testing-library/react';
-import nock from 'nock';
+import { Suspense } from 'react';
+import { RecoilRoot } from 'recoil';
+import { render, waitFor, screen } from '@testing-library/react';
 import { PageResponse } from '@asap-hub/model';
 import { createPageResponse } from '@asap-hub/fixtures';
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
 import Content from '../Content';
-import { API_BASE_URL } from '../../config';
+import { getPageByPath } from '../api';
+import { refreshPageState } from '../state';
+
+jest.mock('../api');
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+const mockGetPageByPath = getPageByPath as jest.MockedFunction<
+  typeof getPageByPath
+>;
 
 const page: PageResponse = createPageResponse('1');
 
+const renderPage = async (pageId: string = 'privacy-policy') => {
+  const result = render(
+    <RecoilRoot
+      initializeState={({ set }) =>
+        set(refreshPageState(page.id), Math.random())
+      }
+    >
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <Content pageId={pageId} />
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </RecoilRoot>,
+  );
+
+  await waitFor(() =>
+    expect(result.queryByText(/auth0/i)).not.toBeInTheDocument(),
+  );
+  await waitFor(() =>
+    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
+  return result;
+};
+
 describe('content page', () => {
-  // fetch user by code request
-  beforeEach(() => {
-    nock.cleanAll();
-    nock(API_BASE_URL).get('/pages/privacy-policy').reply(200, page);
-  });
+  it('renders a page title', async () => {
+    mockGetPageByPath.mockResolvedValue(page);
+    await renderPage();
 
-  const renderPage = async () => {
-    const result = render(<Content pageId="privacy-policy" />);
-
-    await waitFor(() =>
-      expect(result.queryByText(/auth0/i)).not.toBeInTheDocument(),
-    );
-
-    return result;
-  };
-
-  it('renders a loading indicator', async () => {
-    const { getByText } = await renderPage();
-
-    const loadingIndicator = getByText(/loading/i);
-    expect(loadingIndicator).toBeVisible();
-
-    await waitForElementToBeRemoved(loadingIndicator);
-  });
-
-  it('renders a page information', async () => {
-    const { findByText } = await renderPage();
+    expect(screen.getByRole('heading', { name: /Page 1 text/i })).toBeVisible();
     expect(
-      await findByText(/text/i, {
-        selector: 'h4',
-      }),
+      screen.getByRole('heading', { name: /Page 1 title/i }),
     ).toBeVisible();
   });
 
   it('renders the 404 page for missing content', async () => {
-    nock.cleanAll();
-    nock(API_BASE_URL).get('/pages/privacy-policy').reply(404);
+    mockGetPageByPath.mockResolvedValue(undefined);
 
-    const { findByText } = await renderPage();
-    expect(await findByText(/sorry.+page/i)).toBeVisible();
+    await renderPage();
+    expect(await screen.findByText(/sorry.+page/i)).toBeVisible();
   });
 });

@@ -1,5 +1,5 @@
 import { FC, Suspense } from 'react';
-import { useRecoilValue } from 'recoil';
+import { RecoilRoot, useRecoilValue } from 'recoil';
 import { StaticRouter } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import { authTestUtils } from '@asap-hub/react-components';
@@ -18,13 +18,15 @@ beforeEach(() => {
 });
 
 const wrapper: FC<Record<string, never>> = ({ children }) => (
-  <authTestUtils.Auth0Provider>
-    <authTestUtils.LoggedIn user={{}}>
-      <StaticRouter>
-        <Suspense fallback="loading">{children}</Suspense>
-      </StaticRouter>
-    </authTestUtils.LoggedIn>
-  </authTestUtils.Auth0Provider>
+  <RecoilRoot>
+    <authTestUtils.Auth0Provider>
+      <authTestUtils.LoggedIn user={{}}>
+        <StaticRouter>
+          <Suspense fallback="loading">{children}</Suspense>
+        </StaticRouter>
+      </authTestUtils.LoggedIn>
+    </authTestUtils.Auth0Provider>
+  </RecoilRoot>
 );
 
 it('syncs the auth state to recoil', async () => {

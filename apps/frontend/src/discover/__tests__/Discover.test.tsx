@@ -1,27 +1,42 @@
-import nock from 'nock';
-import { render, waitFor } from '@testing-library/react';
-import { authTestUtils } from '@asap-hub/react-components';
-import { DiscoverResponse } from '@asap-hub/model';
-import { createPageResponse, createUserResponse } from '@asap-hub/fixtures';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { Suspense } from 'react';
+import { User } from '@asap-hub/auth';
+import { render, waitFor, screen } from '@testing-library/react';
+import { RecoilRoot } from 'recoil';
+import {
+  createDiscoverResponse,
+  createNewsResponse,
+  createPageResponse,
+  createUserResponse,
+} from '@asap-hub/fixtures';
+
 import Discover from '../Discover';
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { refreshDiscoverState } from '../state';
+import { getDiscover } from '../api';
 
-import { API_BASE_URL } from '../../config';
+jest.mock('../api');
 
-const renderDiscover = async () => {
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+const mockGetDiscover = getDiscover as jest.MockedFunction<typeof getDiscover>;
+
+const renderDiscover = async (user: Partial<User>) => {
   const result = render(
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.WhenReady>
-        <authTestUtils.LoggedIn user={{}}>
-          <MemoryRouter initialEntries={['/']}>
-            <Route exact path="/" component={Discover} />
-          </MemoryRouter>
-        </authTestUtils.LoggedIn>
-      </authTestUtils.WhenReady>
-    </authTestUtils.Auth0Provider>,
-  );
-  await waitFor(() =>
-    expect(result.queryByText(/auth0/i)).not.toBeInTheDocument(),
+    <Suspense fallback="loading">
+      <RecoilRoot
+        initializeState={({ set }) => {
+          set(refreshDiscoverState, Math.random());
+        }}
+      >
+        <Auth0Provider user={user}>
+          <WhenReady>
+            <Discover />
+          </WhenReady>
+        </Auth0Provider>
+      </RecoilRoot>
+    </Suspense>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -30,115 +45,83 @@ const renderDiscover = async () => {
 };
 
 it('renders discover header', async () => {
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/discover')
-    .once()
-    .reply(200, {
-      aboutUs: '',
-      members: [],
-      pages: [],
-      training: [],
-      scientificAdvisoryBoard: [],
-    });
+  mockGetDiscover.mockResolvedValue({
+    aboutUs: '',
+    members: [],
+    pages: [],
+    training: [],
+    scientificAdvisoryBoard: [],
+  });
 
-  const { getByText } = await renderDiscover();
-  expect(getByText(/discover/i, { selector: 'h1' })).toBeVisible();
+  await renderDiscover({});
+  expect(screen.getByText(/discover/i, { selector: 'h1' })).toBeVisible();
 });
 
-it('renders discover with guidance, about and members', async () => {
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/discover')
-    .once()
-    .reply(200, {
-      training: [],
-      aboutUs: '<h1>About us</h1>',
-      pages: [createPageResponse('1'), createPageResponse('2')],
-      members: [createUserResponse()],
-      scientificAdvisoryBoard: [createUserResponse()],
-    } as DiscoverResponse);
+it('renders discover with guidance, about and pages', async () => {
+  mockGetDiscover.mockResolvedValue({
+    ...createDiscoverResponse(),
+    aboutUs: '<h1>About us</h1>',
+    pages: [createPageResponse('1'), createPageResponse('2')],
+    training: [],
+    members: [],
+    scientificAdvisoryBoard: [],
+  });
 
-  const { queryAllByText, getByText } = await renderDiscover();
-  expect(getByText(/about/i, { selector: 'h1' })).toBeVisible();
-  expect(queryAllByText(/title/i, { selector: 'h2' }).length).toBe(2);
+  await renderDiscover({});
+  expect(screen.getByText(/about/i, { selector: 'h1' })).toBeVisible();
+  expect(screen.queryAllByText(/title/i, { selector: 'h2' }).length).toBe(2);
 });
 
 it('renders discover with training', async () => {
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/discover')
-    .once()
-    .reply(200, {
-      training: [
-        {
-          id: 't1',
-          title: 'My Training',
-          text: 'This is my training',
-          type: 'Training',
-          created: '2021-01-01',
-        },
-      ],
-      aboutUs: '<h1>About us</h1>',
-      pages: [createPageResponse('1'), createPageResponse('2')],
-      members: [],
-      scientificAdvisoryBoard: [],
-    } as DiscoverResponse);
+  mockGetDiscover.mockResolvedValue({
+    ...createDiscoverResponse(),
+    training: [
+      {
+        ...createNewsResponse('Demo', 'Training'),
+        id: 't1',
+      },
+    ],
+  });
 
-  const { getByText } = await renderDiscover();
-  expect(getByText('My Training').closest('a')!.href).toContain('t1');
+  await renderDiscover({});
+
+  expect(
+    screen.getByRole('link', { name: 'Training Demo title' }),
+  ).toHaveAttribute('href', '/news/t1');
 });
 
 it('renders discover with members', async () => {
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/discover')
-    .once()
-    .reply(200, {
-      training: [],
-      aboutUs: '',
-      pages: [],
-      members: [
-        {
-          ...createUserResponse(),
-          id: 'uuid',
-          displayName: 'John Doe',
-          jobTitle: 'CEO',
-          institution: 'ASAP',
-        },
-      ],
-      scientificAdvisoryBoard: [],
-    } as DiscoverResponse);
+  mockGetDiscover.mockResolvedValue({
+    ...createDiscoverResponse(),
+    members: [
+      {
+        ...createUserResponse(),
+        id: 'uuid',
+        displayName: 'John Doe',
+        jobTitle: 'CEO',
+        institution: 'ASAP',
+      },
+    ],
+    scientificAdvisoryBoard: [],
+  });
 
-  const { getByText } = await renderDiscover();
-  expect(getByText('John Doe').closest('a')!.href).toContain('uuid');
-  expect(getByText('CEO')).toBeInTheDocument();
-  expect(getByText('ASAP')).toBeInTheDocument();
+  await renderDiscover({});
+  expect(screen.getByText('John Doe').closest('a')!.href).toContain('uuid');
+  expect(screen.getByText('CEO')).toBeInTheDocument();
+  expect(screen.getByText('ASAP')).toBeInTheDocument();
 });
 it('renders discover with scientific advisory board', async () => {
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/discover')
-    .once()
-    .reply(200, {
-      training: [],
-      aboutUs: '',
-      pages: [],
-      members: [],
-      scientificAdvisoryBoard: [
-        {
-          ...createUserResponse(),
-          id: 'uuid',
-          displayName: 'John Doe',
-        },
-      ],
-    } as DiscoverResponse);
+  mockGetDiscover.mockResolvedValue({
+    ...createDiscoverResponse(),
+    scientificAdvisoryBoard: [
+      {
+        ...createUserResponse(),
+        id: 'uuid',
+        displayName: 'John Doe',
+      },
+    ],
+  });
 
-  const { getByText } = await renderDiscover();
-  expect(getByText('John Doe').closest('a')!.href).toContain('uuid');
+  await renderDiscover({});
+  expect(screen.getByText('John Doe').closest('a')!.href).toContain('uuid');
 });

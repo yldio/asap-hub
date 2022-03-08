@@ -12,9 +12,8 @@ module.exports = {
       {
         test: /\.(ts)$/,
         exclude: [/node_modules/, /serverless/, /test/, /__tests__/, /yarn/],
-        loader: 'ts-loader',
-        options: {
-          transpileOnly: true,
+        use: {
+          loader: require.resolve('babel-loader'),
         },
       },
     ],

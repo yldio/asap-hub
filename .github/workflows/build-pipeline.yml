@@ -397,6 +397,8 @@ jobs:
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
       SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
+      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -416,8 +418,10 @@ jobs:
           MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket "asap-hub-dev-data-backup" --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
           aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
           tar -xf $MOST_RECENT_BACKUP
-          ./ci/config-squidex-rules.sh
           FIRST_RUN="true" ./ci/import-squidex-data.sh
+      - name: test
+        run: |
+
       - name: Update schema
         uses: ./.github/actions/squidex-sync
         with:
@@ -425,6 +429,8 @@ jobs:
           squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
           squidex-client-secret: ${{ env.SQUIDEX_CLIENT_SECRET }}
           squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
+          squidex-shared-secret: ${{ env.SQUIDEX_SHARED_SECRET }}
+          asap-api-url: ${{ env.ASAP_API_URL }}
 
   verify-schema:
     permissions:

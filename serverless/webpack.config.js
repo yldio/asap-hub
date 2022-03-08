@@ -1,7 +1,7 @@
 const serverlessWebpack = require('serverless-webpack');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
-const PnpWebpackPlugin = require(`pnp-webpack-plugin`);
+// const PnpWebpackPlugin = require(`pnp-webpack-plugin`);
 
 module.exports = {
   entry: serverlessWebpack.lib.entries,
@@ -31,11 +31,11 @@ module.exports = {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.cjs'],
     symlinks: false,
     cacheWithContext: false,
-    plugins: [PnpWebpackPlugin],
+    // plugins: [PnpWebpackPlugin],
   },
-  resolveLoader: {
-    plugins: [PnpWebpackPlugin.moduleLoader(module)],
-  },
+  // resolveLoader: {
+  //   plugins: [PnpWebpackPlugin.moduleLoader(module)],
+  // },
   output: {
     libraryTarget: 'commonjs2',
     path: path.join(__dirname, '.webpack'),

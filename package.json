@@ -35,7 +35,7 @@
     "start:backend": "yarn workspace @asap-hub/asap-server start",
     "start:frontend": "yarn workspace @asap-hub/frontend start",
     "start:sb": "yarn workspace @asap-hub/storybook start",
-    "test": "yarn test:packages && yarn test:apps",
+    "test": "LANG=en_US TZ=UTC jest",
     "test:apps": "LANG=en_US TZ=UTC jest apps/",
     "test:packages": "LANG=en_US TZ=UTC jest packages/",
     "test:browser": "yarn test --config=packages/react-components/jest-browser.config.js",

@@ -45,6 +45,26 @@ it.each`
   expect(await findByText(error)).toBeVisible();
 });
 
+it('lab resource does not require an url', async () => {
+  const { getByLabelText, findByText } = render(
+    <TeamCreateOutputFormSharingCard {...props} type="Lab Resource" />,
+  );
+  expect(
+    await findByText(
+      (content, node) =>
+        (content === 'URL' &&
+          node?.nextSibling?.textContent?.includes('(optional)')) ??
+        false,
+    ),
+  ).toBeVisible();
+
+  const input = getByLabelText(/URL/i);
+  fireEvent.focusOut(input);
+  await expect(
+    findByText('Please enter a valid URL, starting with http://'),
+  ).rejects.toThrowError();
+});
+
 it.each`
   field            | label             | prop
   ${'Description'} | ${/description/i} | ${'onChangeDescription'}

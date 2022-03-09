@@ -26,7 +26,7 @@
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@babel/core": "^7.14.2",
     "@babel/preset-react": "^7.13.13",
-    "@testing-library/react": "^11.2.6",
+    "@testing-library/react": "^12.1.3",
     "@testing-library/react-hooks": "^4.0.1",
     "@types/jest": "^26.0.23",
     "@types/react": "^17.0.5",

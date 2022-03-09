@@ -13,7 +13,7 @@ include:
   rules:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
   variables: &tmpl_branch_variables
-    SLS_STAGE: $CI_EXTERNAL_PULL_REQUEST_IID
+    SLS_STAGE: $CI_EXTERNAL_PULL_REQUEST_IID-gitlab
 
 .tmpl:deploy:
   variables: &tmpl_deploy_variables
@@ -96,7 +96,7 @@ prepare:squidex:branch:
     paths:
       - first_run/
   script:
-    - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}
+    - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}-gitlab
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
     - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
     - python ci/integration/scripts/create-app.py
@@ -139,7 +139,7 @@ build:sls:package:branch:
   rules:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
   before_script:
-    - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}
+    - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}-gitlab
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
     - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
 
@@ -254,7 +254,7 @@ deploy:sls:branch:
     <<: *tmpl_branch_variables
     <<: *tmpl_deploy_variables
   before_script:
-    - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}
+    - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}-gitlab
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
     - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
   dependencies:
@@ -286,7 +286,7 @@ verify:branch:
   <<: *tmpl_branch
   stage: verify-dev
   variables:
-    API_URL: https://api-$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
+    API_URL: https://api-$CI_EXTERNAL_PULL_REQUEST_IID-gitlab.$ASAP_HOSTNAME
   script:
     - ASAP_API_URL=$API_URL yarn test:e2e
 
@@ -295,7 +295,7 @@ e2e:branch:
   stage: verify-dev
   image: mcr.microsoft.com/playwright:focal
   variables:
-    APP_URL: https://$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
+    APP_URL: https://$CI_EXTERNAL_PULL_REQUEST_IID-gitlab.$ASAP_HOSTNAME
   script:
     - yarn workspace @asap-hub/e2e-tests run playwright install
     - ASAP_APP_URL=$APP_URL yarn workspace @asap-hub/e2e-tests run playwright test
@@ -310,7 +310,7 @@ verify:schema:branch:
     - build:native
     - prepare:squidex:branch
   script:
-    - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}
+    - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}-gitlab
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
     - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
     - export SQUIDEX_BASE_URL=https://cloud.squidex.io

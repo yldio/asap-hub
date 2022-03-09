@@ -18,6 +18,8 @@ import { refreshTeamState } from '../state';
 import TeamOutput, { paramOutputTypeToResearchOutputType } from '../TeamOutput';
 
 jest.mock('../api');
+jest.mock('../../users/api');
+
 const ENTER_KEYCODE = 13;
 
 const mockCreateTeamResearchOutput =
@@ -74,11 +76,19 @@ it('can submit a form when form data is valid', async () => {
   fireEvent.keyDown(screen.getByLabelText(/type/i), {
     keyCode: ENTER_KEYCODE,
   });
+
   userEvent.click(screen.getByLabelText(/Labs/i));
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
   userEvent.click(screen.getByText('Example 1 Lab'));
+
+  userEvent.click(screen.getByLabelText(/Authors/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
+  userEvent.click(screen.getByText('Person A 3'));
+
   const button = screen.getByRole('button', { name: /Share/i });
 
   userEvent.click(button);
@@ -98,6 +108,7 @@ it('can submit a form when form data is valid', async () => {
         description: 'example description',
         subTypes: ['Animal Model'],
         labs: ['l0'],
+        authors: ['u2'],
       },
       expect.anything(),
     );

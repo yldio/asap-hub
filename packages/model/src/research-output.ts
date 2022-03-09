@@ -172,6 +172,7 @@ export type ResearchOutputPostRequest = {
   link: string;
 
   labs?: string[];
+  authors?: string[];
 
   addedDate: string;
   asapFunded?: boolean;

@@ -16,7 +16,14 @@ export const Normal = () => (
       getLabSuggestions={() =>
         new Promise((resolve) => {
           setTimeout(() => {
-            resolve([{ label: 'lab name', id: '1' }]);
+            resolve([{ label: 'lab name', value: '1' }]);
+          }, 1000);
+        })
+      }
+      getAuthorSuggestions={() =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve([{ label: 'author name', value: '1' }]);
           }, 1000);
         })
       }

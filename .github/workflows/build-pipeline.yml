@@ -3,9 +3,12 @@ name: Build Pipeline
 on:
   pull_request:
     types: [opened, synchronize]
+    branches:
+      - master
 
 env:
   NODE_OPTIONS: '--max_old_space_size=4096'
+  ASAP_HOSTNAME: 'hub.asap.science'
 jobs:
   setup:
     uses: ./.github/workflows/setup.yml
@@ -23,7 +26,7 @@ jobs:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache Jest cache
         uses: actions/cache@v2
         id: jest-cache
@@ -52,15 +55,15 @@ jobs:
       SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup
+        uses: actions/checkout@v3
+      - name: Setup app
         run: python ci/integration/scripts/create-app.py
       - name: Test
         run: yarn test:integration
-      - name: Delete App
+      - name: Delete app
         if: always()
         run: python ci/integration/scripts/delete-app.py
-  build:
+  build-typecheck:
     permissions:
       packages: read
     needs: setup
@@ -73,41 +76,126 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+      - name: Typecheck
+        run: |
+          yarn build:typecheck
+      - name: Cache build typecheck output
+        uses: actions/cache@v2
+        id: restore-build-typecheck
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-typecheck-output-${{ github.sha }}
+  transpile:
+    permissions:
+      packages: read
+    needs: setup
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build
+        run: |
+          yarn build:babel
+      - name: Cache transpile output
+        uses: actions/cache@v2
+        id: restore-transpile
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: transpile-output-${{ github.sha }}
+  build-frontend:
+    permissions:
+      packages: read
+    needs: [setup, build-typecheck, transpile]
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - name: Get Algolia App id
+      - name: Get Algolia app Id
         id: get-algolia-app-id
         run: |
           REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)
           echo "::set-output name=id::$REACT_APP_ALGOLIA_APP_ID"
+      - name: Cache transpile output
+        uses: actions/cache@v2
+        id: restore-transpile
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: transpile-output-${{ github.sha }}
+      - name: Cache build typecheck output
+        uses: actions/cache@v2
+        id: restore-build-typecheck
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-typecheck-output-${{ github.sha }}
       - name: Build
         env:
-          NODE_ENV: 'production'
-          ASAP_HOSTNAME: 'hub.asap.science'
-          ASAP_API_URL: 'https://api-${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
-          ASAP_APP_URL: 'https://${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
-          ALGOLIA_INDEX: 'asap-hub_CI-${ needs.setup.outputs.pr-number }'
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
-          REACT_APP_ALGOLIA_INDEX: $ALGOLIA_INDEX
-          REACT_APP_API_BASE_URL: 'http://api-${ needs.setup.outputs.pr-number }.${ASAP_HOSTNAME}'
+          REACT_APP_ALGOLIA_INDEX: 'asap-hub_CI-${{ github.event.number }}'
+          REACT_APP_API_BASE_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.${{ env.ASAP_HOSTNAME }}'
           REACT_APP_ENVIRONMENT: 'development'
-          REACT_APP_RELEASE: '${GITHUB_RUN_ID}-dev'
+          REACT_APP_RELEASE: '${{ github.run_id }}-dev'
           REACT_APP_SENTRY_DSN: ''
+          REACT_APP_GTM_CONTAINER_ID: ${{ secrets.REACT_APP_GTM_CONTAINER_ID}}
         run: |
-          yarn build
-      - name: Cache Build Output
+          yarn build:frontend
+      - name: Cache build output
         uses: actions/cache@v2
         id: restore-build
         with:
           path: |
             apps/**/build*
             packages/**/build*
-          key: build-output-${{ github.sha }}
+          key: build-frontend-output-${{ github.sha }}
+  typecheck:
+    permissions:
+      packages: read
+    needs: [setup, build-typecheck]
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache build typecheck output
+        uses: actions/cache@v2
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-typecheck-output-${{ github.sha }}
+      - name: TypeCheck
+        run: |
+          yarn typecheck
   rebuild:
     permissions:
       packages: read
@@ -121,11 +209,11 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Re-Build
         run: |
           yarn rebuild
-      - name: Cache Build Output
+      - name: Cache build output
         uses: actions/cache@v2
         id: restore-rebuild
         with:
@@ -148,14 +236,14 @@ jobs:
         script: [constraints, 'lint:format', 'check:packages']
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Check
         run: |
           yarn ${{ matrix.script }}
   build-sls-package:
     permissions:
       packages: read
-    needs: [setup, build, rebuild]
+    needs: [setup, build-typecheck, transpile, rebuild]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
@@ -163,56 +251,64 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      SLS_STAGE: ${{ needs.setup.outputs.pr-number }}
+      SLS_STAGE: '${{ needs.setup.outputs.pr-number }}-github'
       NODE_ENV: 'production'
-      ASAP_HOSTNAME: 'hub.asap.science'
-      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
-      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
-      ALGOLIA_INDEX: 'asap-hub_CI-${ needs.setup.outputs.pr-number }'
+      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
+      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
+      ALGOLIA_INDEX: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
+
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
-      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}
+      SQUIDEX_APP_NAME: '${{ needs.setup.outputs.pr-number }}-github'
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
       LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
       SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
-      SQUIDEX_SHARED_SECRET_TEST: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
       CURRENT_REVISION: ${{ github.sha }}
       SENTRY_DSN_API: ${{ secrets.SENTRY_DSN_API }}
       SENTRY_DSN_CALENDAR: ${{ secrets.SENTRY_DSN_CALENDAR }}
       SENTRY_DSN_USER_INVITE: ${{ secrets.SENTRY_DSN_USER_INVITE }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Cache Build Output
-        uses: actions/cache@v2
-        id: restore-build
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-output-${{ github.sha }}
-      - name: Cache Build Output
+        uses: actions/checkout@v3
+      - name: Cache build output
         uses: actions/cache@v2
         id: restore-rebuild
         with:
           path: |
             .yarn/unplugged/
           key: rebuild-output-${{ github.sha }}
-      - name: Generate Package
+      - name: Cache build typecheck output
+        uses: actions/cache@v2
+        id: restore-build-typecheck
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-typecheck-output-${{ github.sha }}
+      - name: Cache transpile output
+        uses: actions/cache@v2
+        id: restore-transpile
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: transpile-output-${{ github.sha }}
+      - name: Generate package
         run: |
-          yarn sls package
+          yarn sls package --package sls-package
       - uses: actions/upload-artifact@v2
         with:
           name: sls-package
-          path: '.serverless'
-          retention-days: 14
+          path: 'sls-package'
+          retention-days: 1
   bundlewatch:
     permissions:
       packages: read
-    needs: [setup, build]
+    needs: [setup, build-frontend]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
@@ -227,15 +323,15 @@ jobs:
       BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Cache Build Output
+        uses: actions/checkout@v3
+      - name: Cache -frontendbuild output
         uses: actions/cache@v2
-        id: restore-build
+        id: restore-build-frontend
         with:
           path: |
             apps/**/build*
             packages/**/build*
-          key: build-output-${{ github.sha }}
+          key: build-frontend-output-${{ github.sha }}
       - name: Bundle watch
         run: |
           CI_REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F / '{print $2}')
@@ -243,7 +339,7 @@ jobs:
   test-build-output:
     permissions:
       packages: read
-    needs: [setup, build]
+    needs: [setup, build-frontend]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
@@ -252,15 +348,15 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Cache Build Output
+        uses: actions/checkout@v3
+      - name: Cache build output
         uses: actions/cache@v2
-        id: restore-build
+        id: restore-build-frontend
         with:
           path: |
             apps/**/build*
             packages/**/build*
-          key: build-output-${{ github.sha }}
+          key: build-frontend-output-${{ github.sha }}
       - name: Test output
         run: |
           yarn run test:build-output
@@ -271,8 +367,8 @@ jobs:
       image: mcr.microsoft.com/playwright:focal
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Cache Build Output
+        uses: actions/checkout@v3
+      - name: Cache build output
         uses: actions/cache@v2
         id: restore-rebuild
         with:
@@ -281,7 +377,7 @@ jobs:
           key: rebuild-output-${{ github.sha }}
       - name: Install Playwright
         run: |
-          yarn workspace @asap-hub/react-components run playwright install --with-deps
+          yarn workspace @asap-hub/react-components run playwright install
       - name: Test browser
         run: |
           yarn run test:browser
@@ -301,10 +397,12 @@ jobs:
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
       SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
+      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup App
+        uses: actions/checkout@v3
+      - name: Setup app
         if: ${{ github.event.action == 'opened' }}
         run: python ci/integration/scripts/create-app.py
       - name: Configure AWS credentials
@@ -320,20 +418,24 @@ jobs:
           MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket "asap-hub-dev-data-backup" --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
           aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
           tar -xf $MOST_RECENT_BACKUP
-          ./ci/config-squidex-rules.sh
           FIRST_RUN="true" ./ci/import-squidex-data.sh
-      - name: update schema
+      - name: test
+        run: |
+
+      - name: Update schema
         uses: ./.github/actions/squidex-sync
         with:
           squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
           squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
           squidex-client-secret: ${{ env.SQUIDEX_CLIENT_SECRET }}
           squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
+          squidex-shared-secret: ${{ env.SQUIDEX_SHARED_SECRET }}
+          asap-api-url: ${{ env.ASAP_API_URL }}
 
   verify-schema:
     permissions:
       packages: read
-    needs: [setup, prepare-squidex, rebuild]
+    needs: [setup, prepare-squidex]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
@@ -347,27 +449,163 @@ jobs:
       SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Cache Build Output
+        uses: actions/checkout@v3
+      - name: Verify
+        run: |
+          yarn schema:update
+          git diff --exit-code ./apps/asap-server/src/autogenerated-gql/
+  deploy-sls:
+    needs:
+      [
+        setup,
+        build-frontend,
+        build-sls-package,
+        test-unit,
+        test-integration,
+
+        typecheck,
+        check,
+        bundlewatch,
+        test-build-output,
+        test-browser,
+      ]
+    permissions:
+      packages: read
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      NODE_ENV: production
+      NODE_OPTIONS: '--max_old_space_size=4096'
+      SLS_STAGE: ${{ needs.setup.outputs.pr-number }}-github
+      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}-github
+      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_TEST_CLIENT_ID }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_TEST_CLIENT_SECRET }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
+      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
+      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
+      ALGOLIA_INDEX: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
+      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
+      CURRENT_REVISION: ${{ github.sha }}
+      SENTRY_DSN_API: ${{ secrets.SENTRY_DSN_API }}
+      SENTRY_DSN_CALENDAR: ${{ secrets.SENTRY_DSN_CALENDAR }}
+      SENTRY_DSN_USER_INVITE: ${{ secrets.SENTRY_DSN_USER_INVITE }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache build output
+        uses: actions/cache@v2
+        id: restore-build
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-frontend-output-${{ github.sha }}
+      - name: Cache rebuild output
+        uses: actions/cache@v2
+        with:
+          path: |
+            .yarn/unplugged/
+          key: rebuild-output-${{ github.sha }}
+      - uses: actions/download-artifact@v2
+        with:
+          name: sls-package
+          path: 'sls-package'
+      - name: Deploy
+        run: |
+          yarn sls deploy --package sls-package --verbose
+
+  verify-sls:
+    needs: [setup, deploy-sls]
+    permissions:
+      packages: read
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup.outputs.integration-image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Test
+        run: |
+          yarn test:e2e
+  e2e-test:
+    needs: [setup, deploy-sls]
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:focal
+    env:
+      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache build output
         uses: actions/cache@v2
         id: restore-rebuild
         with:
           path: |
             .yarn/unplugged/
           key: rebuild-output-${{ github.sha }}
-      - name: Verify
+      - name: Install Playwright
         run: |
-          yarn schema:update
-          git diff --exit-code ./apps/asap-server/src/autogenerated-gql/
-  notify_failure:
+          yarn workspace @asap-hub/e2e-tests run playwright install
+      - name: Test
+        run: |
+          yarn workspace @asap-hub/e2e-tests run playwright test
+  # notify_failure:
+  #   runs-on: ubuntu-latest
+  #   needs:
+  #     [
+  #       setup,
+  #       test-unit,
+  #       test-integration,
+  #       build-frontend,
+  #       build-typecheck,
+  #       transpile,
+  #       typecheck,
+  #       check,
+  #       build-sls-package,
+  #       bundlewatch,
+  #       test-build-output,
+  #       test-browser,
+  #       prepare-squidex,
+  #       verify-schema,
+  #       deploy-sls,
+  #       verify-sls,
+  #       e2e-test,
+  #     ]
+  #   if: ${{ failure() }}
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #     - uses: ./.github/actions/slack/
+  #       with:
+  #         message: 'Build Failed on GitHub: ${{ needs.setup.outputs.pr-number || github.head_ref }}'
+  #         webhook: ${{ secrets.SLACK_WEBHOOK }}
+  #         status: failure
+  build-pipeline-success:
     runs-on: ubuntu-latest
     needs:
       [
         setup,
         test-unit,
         test-integration,
-        build,
-        rebuild,
+        build-frontend,
+        build-typecheck,
+        transpile,
+        typecheck,
         check,
         build-sls-package,
         bundlewatch,
@@ -375,13 +613,12 @@ jobs:
         test-browser,
         prepare-squidex,
         verify-schema,
+        deploy-sls,
+        verify-sls,
+        e2e-test,
       ]
-    if: failure()
+    if: ${{ success() }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - uses: ./.github/actions/slack/
-        with:
-          message: 'Build Failed on GitHub: ${{ needs.setup.outputs.pr-number || github.head_ref }}'
-          webhook: ${{ secrets.SLACK_WEBHOOK }}
-          status: failure
+      - name: Print success
+        run: |
+          echo "Build Successful."

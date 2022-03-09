@@ -177,8 +177,7 @@ test:unit:
     paths:
       - coverage
   script:
-    - yarn run test --coverage
-    - yarn codecov
+    - yarn run test
   needs: []
   stage: test
 

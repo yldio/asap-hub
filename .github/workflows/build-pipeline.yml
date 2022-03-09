@@ -49,7 +49,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number || github.head_ref }}-${{ github.run_id }}-github
+      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number || github.head_ref }}-${{ github.run_id }}
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
       SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
@@ -157,7 +157,7 @@ jobs:
         env:
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
           REACT_APP_ALGOLIA_INDEX: 'asap-hub_CI-${{ github.event.number }}'
-          REACT_APP_API_BASE_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.${{ env.ASAP_HOSTNAME }}'
+          REACT_APP_API_BASE_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.${{ env.ASAP_HOSTNAME }}'
           REACT_APP_ENVIRONMENT: 'development'
           REACT_APP_RELEASE: '${{ github.run_id }}-dev'
           REACT_APP_SENTRY_DSN: ''
@@ -251,17 +251,17 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      SLS_STAGE: '${{ needs.setup.outputs.pr-number }}-github'
+      SLS_STAGE: '${{ needs.setup.outputs.pr-number }}'
       NODE_ENV: 'production'
-      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
-      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
+      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
+      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
       ALGOLIA_INDEX: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
 
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
-      SQUIDEX_APP_NAME: '${{ needs.setup.outputs.pr-number }}-github'
+      SQUIDEX_APP_NAME: '${{ needs.setup.outputs.pr-number }}'
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
       SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
@@ -393,12 +393,12 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}-github
+      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
       SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
       SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
-      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
+      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -443,7 +443,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}-github
+      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
       SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
@@ -480,13 +480,13 @@ jobs:
     env:
       NODE_ENV: production
       NODE_OPTIONS: '--max_old_space_size=4096'
-      SLS_STAGE: ${{ needs.setup.outputs.pr-number }}-github
-      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}-github
+      SLS_STAGE: ${{ needs.setup.outputs.pr-number }}
+      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_TEST_CLIENT_ID }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_TEST_CLIENT_SECRET }}
       SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
-      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
-      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
+      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
+      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
@@ -534,7 +534,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
+      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -547,7 +547,7 @@ jobs:
     container:
       image: mcr.microsoft.com/playwright:focal
     env:
-      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}-github.hub.asap.science'
+      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
     steps:
       - name: Checkout
         uses: actions/checkout@v3

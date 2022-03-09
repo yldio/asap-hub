@@ -41,17 +41,17 @@ jobs:
         if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
         run: yarn sls remove --verbose
         continue-on-error: true
-      - name: Remove GitHub CF Stack
+      - name: Remove GitLab CF Stack
         env:
-          SLS_STAGE: ${{ env.SLS_STAGE }}-github
+          SLS_STAGE: ${{ env.SLS_STAGE }}-gitlab
         if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
         run: yarn sls remove --verbose
         continue-on-error: true
       - name: Delete PR Squidex App
         run: python ci/integration/scripts/delete-app.py
-      - name: Delete PR Squidex App created by github
+      - name: Delete PR Squidex App created by gitlab
         env:
-          SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}-github
+          SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}-gitlab
         run: python ci/integration/scripts/delete-app.py
 
   delete_algolia_indice:

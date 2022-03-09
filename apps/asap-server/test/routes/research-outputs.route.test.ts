@@ -133,6 +133,7 @@ describe('/research-outputs/ route', () => {
         subTypes,
         labs,
         authors,
+        teams,
       } = getResearchOutputResponse();
       return {
         type,
@@ -142,18 +143,17 @@ describe('/research-outputs/ route', () => {
         sharingStatus,
         usedInPublication,
         addedDate,
-        teamId: '123',
         description,
         tags,
         subTypes,
         labs: labs.map(({ id }) => id),
         authors: authors.map(({ id }) => id),
+        teams: teams.map(({ id }) => id),
       };
     };
     test('Should return a 201 when is hit', async () => {
       const createResearchOutputRequest = {
         ...getCreateResearchOutput(),
-        teamId: 'team-id-1',
       };
 
       researchOutputControllerMock.create.mockResolvedValueOnce({
@@ -182,7 +182,7 @@ describe('/research-outputs/ route', () => {
 
       await supertest(app)
         .post('/research-outputs')
-        .send({ ...researchOutput, teamId: 'team-id-1' })
+        .send({ ...researchOutput })
         .set('Accept', 'application/json')
         .expect(500);
     });
@@ -205,7 +205,7 @@ describe('/research-outputs/ route', () => {
         'title',
         'sharingStatus',
         'addedDate',
-        'teamId',
+        'teams',
         'labs',
       ])(
         'Should return a validation error when %s is missing',
@@ -215,7 +215,6 @@ describe('/research-outputs/ route', () => {
             .post('/research-outputs/')
             .send({
               ...researchOutput,
-              teamId: 'team-id-1',
               [field]: undefined,
             });
 

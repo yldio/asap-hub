@@ -1,3 +1,4 @@
+import { ComponentProps } from 'react';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
@@ -142,8 +143,11 @@ describe('invalidity', () => {
   });
 });
 
-/// New ones
 describe('Async', () => {
+  const asyncProps: ComponentProps<typeof MultiSelect> = {
+    loadOptions: jest.fn(),
+    onChange: jest.fn(),
+  };
   it('shows the no option message when there are no options', async () => {
     const loadOptionsEmpty = jest.fn().mockResolvedValue([]);
     const { getByDisplayValue, getByText, queryByText } = render(
@@ -176,5 +180,55 @@ describe('Async', () => {
     expect(handleChange).toHaveBeenLastCalledWith([
       { label: 'One', value: '1' },
     ]);
+  });
+
+  it('Will not remove a fixed item with backspace', async () => {
+    const mockOnChange = jest.fn();
+    const { getByDisplayValue, rerender } = render(
+      <MultiSelect
+        {...asyncProps}
+        onChange={mockOnChange}
+        values={[{ label: 'Example', value: '123', isFixed: true }]}
+      />,
+    );
+    fireEvent.keyDown(getByDisplayValue(''), { key: 'Delete' });
+
+    expect(mockOnChange).not.toHaveBeenCalled();
+
+    rerender(
+      <MultiSelect
+        {...asyncProps}
+        onChange={mockOnChange}
+        values={[{ label: 'Example', value: '123' }]}
+      />,
+    );
+    fireEvent.keyDown(getByDisplayValue(''), { key: 'Delete' });
+
+    await waitFor(() => expect(mockOnChange).toHaveBeenCalledWith([]));
+  });
+
+  it('Will not remove a fixed item using remove button', async () => {
+    const mockOnChange = jest.fn();
+    const { getByTitle, rerender } = render(
+      <MultiSelect
+        {...asyncProps}
+        onChange={mockOnChange}
+        values={[{ label: 'Example', value: '123', isFixed: true }]}
+      />,
+    );
+    fireEvent.click(getByTitle('Close').closest('svg')!);
+
+    expect(mockOnChange).not.toHaveBeenCalled();
+
+    rerender(
+      <MultiSelect
+        {...asyncProps}
+        onChange={mockOnChange}
+        values={[{ label: 'Example', value: '123' }]}
+      />,
+    );
+    fireEvent.click(getByTitle('Close').closest('svg')!);
+
+    await waitFor(() => expect(mockOnChange).toHaveBeenCalledWith([]));
   });
 });

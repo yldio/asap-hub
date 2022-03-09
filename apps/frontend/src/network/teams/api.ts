@@ -84,9 +84,11 @@ export const createTeamResearchOutput = async (
   });
   if (!resp.ok) {
     throw new Error(
-      `Failed to create research output for teamId: ${
-        researchOutput.teamId
-      } Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      `Failed to create research output for teams ${researchOutput.teams
+        .map((teamId) => teamId)
+        .join(
+          ', ',
+        )} Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
   return resp.json();

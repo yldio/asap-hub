@@ -4,31 +4,44 @@ import { FormCard, LabeledMultiSelect } from '../molecules';
 import { noop } from '../utils';
 
 type TeamCreateOutputContributorsProps = {
-  labSuggestions: ComponentPropsWithRef<
+  readonly labs: ComponentPropsWithRef<typeof LabeledMultiSelect>['values'];
+  readonly getLabSuggestions?: ComponentPropsWithRef<
     typeof LabeledMultiSelect
   >['loadOptions'];
-  readonly labs: ComponentPropsWithRef<typeof LabeledMultiSelect>['values'];
   readonly onChangeLabs?: ComponentPropsWithRef<
     typeof LabeledMultiSelect
   >['onChange'];
-  authorSuggestions: ComponentPropsWithRef<
+
+  readonly authors: ComponentPropsWithRef<typeof LabeledMultiSelect>['values'];
+  readonly getAuthorSuggestions?: ComponentPropsWithRef<
     typeof LabeledMultiSelect
   >['loadOptions'];
-  readonly authors: ComponentPropsWithRef<typeof LabeledMultiSelect>['values'];
   readonly onChangeAuthors?: ComponentPropsWithRef<
     typeof LabeledMultiSelect
   >['onChange'];
+
+  readonly teams: ComponentPropsWithRef<typeof LabeledMultiSelect>['values'];
+  readonly getTeamSuggestions?: ComponentPropsWithRef<
+    typeof LabeledMultiSelect
+  >['loadOptions'];
+  readonly onChangeTeams?: ComponentPropsWithRef<
+    typeof LabeledMultiSelect
+  >['onChange'];
+
   readonly isSaving: boolean;
 };
 
 const TeamCreateOutputContributorsCard: React.FC<TeamCreateOutputContributorsProps> =
   ({
-    onChangeLabs = noop,
-    onChangeAuthors = noop,
-    labs,
-    labSuggestions,
     authors,
-    authorSuggestions,
+    onChangeAuthors = noop,
+    getAuthorSuggestions = noop,
+    labs,
+    onChangeLabs = noop,
+    getLabSuggestions = noop,
+    teams,
+    getTeamSuggestions = noop,
+    onChangeTeams = noop,
     isSaving,
   }) => (
     <FormCard title="Who were the contributors?">
@@ -38,11 +51,24 @@ const TeamCreateOutputContributorsCard: React.FC<TeamCreateOutputContributorsPro
         subtitle="(optional)"
         enabled={!isSaving}
         placeholder="Start typing..."
-        loadOptions={authorSuggestions}
+        loadOptions={getAuthorSuggestions}
         onChange={onChangeAuthors}
         values={authors}
         noOptionsMessage={({ inputValue }) =>
           `Sorry, no authors match ${inputValue}`
+        }
+      />
+      <LabeledMultiSelect
+        title="Teams"
+        description="Add other teams that contributed to this output. Those teams will also then be able to edit."
+        subtitle="(required)"
+        enabled={!isSaving}
+        placeholder="Start typing..."
+        loadOptions={getTeamSuggestions}
+        onChange={onChangeTeams}
+        values={teams}
+        noOptionsMessage={({ inputValue }) =>
+          `Sorry, no teams match ${inputValue}`
         }
       />
       <LabeledMultiSelect
@@ -51,7 +77,7 @@ const TeamCreateOutputContributorsCard: React.FC<TeamCreateOutputContributorsPro
         subtitle="(optional)"
         enabled={!isSaving}
         placeholder="Start typing..."
-        loadOptions={labSuggestions}
+        loadOptions={getLabSuggestions}
         onChange={onChangeLabs}
         values={labs}
         noOptionsMessage={({ inputValue }) =>

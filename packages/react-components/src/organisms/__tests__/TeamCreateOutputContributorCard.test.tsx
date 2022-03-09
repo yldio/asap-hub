@@ -5,12 +5,9 @@ import { ComponentProps } from 'react';
 import TeamCreateOutputContributorsCard from '../TeamCreateOutputContributorsCard';
 
 const props: ComponentProps<typeof TeamCreateOutputContributorsCard> = {
-  labSuggestions: jest.fn(),
-  onChangeLabs: jest.fn(),
   labs: [],
-  authorSuggestions: jest.fn(),
-  onChangeAuthors: jest.fn(),
   authors: [],
+  teams: [],
   isSaving: false,
 };
 
@@ -39,20 +36,18 @@ describe('Labs', () => {
     expect(getByText(/two lab/i)).toBeVisible();
   });
   it('should be able to select lab from the list of options', async () => {
-    const loadOptions = jest.fn();
-    loadOptions.mockReturnValue(
-      new Promise((resolve) =>
-        resolve([
-          { label: 'One Lab', value: '1' },
-          { label: 'Two Lab', value: '2' },
-        ]),
-      ),
-    );
+    const mockGetLabSuggestions = jest.fn();
+    const mockOnChange = jest.fn();
+    mockGetLabSuggestions.mockResolvedValue([
+      { label: 'One Lab', value: '1' },
+      { label: 'Two Lab', value: '2' },
+    ]);
 
     const { getByText, getByLabelText, queryByText } = render(
       <TeamCreateOutputContributorsCard
         {...props}
-        labSuggestions={loadOptions}
+        onChangeLabs={mockOnChange}
+        getLabSuggestions={mockGetLabSuggestions}
       />,
     );
     userEvent.click(getByLabelText(/Labs/i));
@@ -60,12 +55,13 @@ describe('Labs', () => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
     userEvent.click(getByText('One Lab'));
-    expect(props.onChangeLabs).toHaveBeenCalledWith([
+    expect(mockOnChange).toHaveBeenCalledWith([
       { label: 'One Lab', value: '1' },
     ]);
   });
   it('should be able to select author from the list of options', async () => {
     const loadOptions = jest.fn();
+    const mockOnChange = jest.fn();
     loadOptions.mockResolvedValue([
       { label: 'Author One', value: '1' },
       { label: 'Author Two', value: '2' },
@@ -74,7 +70,8 @@ describe('Labs', () => {
     const { getByText, getByLabelText, queryByText } = render(
       <TeamCreateOutputContributorsCard
         {...props}
-        authorSuggestions={loadOptions}
+        onChangeAuthors={mockOnChange}
+        getAuthorSuggestions={loadOptions}
       />,
     );
     userEvent.click(getByLabelText(/Authors/i));
@@ -82,17 +79,17 @@ describe('Labs', () => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
     userEvent.click(getByText('Author One'));
-    expect(props.onChangeAuthors).toHaveBeenCalledWith([
+    expect(mockOnChange).toHaveBeenCalledWith([
       { label: 'Author One', value: '1' },
     ]);
   });
   it('should render message when there is no match', async () => {
     const loadOptions = jest.fn();
-    loadOptions.mockReturnValue(new Promise((resolve) => resolve([])));
+    loadOptions.mockRejectedValue([]);
     const { getByLabelText, queryByText } = render(
       <TeamCreateOutputContributorsCard
         {...props}
-        labSuggestions={loadOptions}
+        getLabSuggestions={loadOptions}
       />,
     );
     userEvent.click(getByLabelText(/Labs/i));

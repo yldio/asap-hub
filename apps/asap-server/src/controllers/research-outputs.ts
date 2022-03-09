@@ -136,20 +136,24 @@ export default class ResearchOutputs implements ResearchOutputController {
     };
   }
   async create({
-    teamId,
+    teams,
     ...researchOutputData
   }: ResearchOutputInputData): Promise<Partial<ResearchOutputResponse>> {
     const { id: researchOutputId } = await this.createResearchOutput(
       researchOutputData,
     );
-    await this.associateResearchOutputToTeam(teamId, researchOutputId);
+    await Promise.all(
+      teams.map((teamId) =>
+        this.associateResearchOutputToTeam(teamId, researchOutputId),
+      ),
+    );
 
     return { id: researchOutputId };
   }
   private async createResearchOutput({
     subTypes,
     ...researchOutputData
-  }: Omit<ResearchOutputPostRequest, 'teamId'>) {
+  }: Omit<ResearchOutputPostRequest, 'teams'>) {
     const { usedInPublication, ...researchOutput } = parseToSquidex({
       ...researchOutputData,
       ...(subTypes[0] && { subtype: subTypes[0] }),

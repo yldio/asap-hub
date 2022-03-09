@@ -138,7 +138,7 @@ describe('patchTeam', () => {
 });
 describe('createTeamResearchOutput', () => {
   const payload: ResearchOutputPostRequest = {
-    teamId: '90210',
+    teams: ['90210'],
     type: 'Bioinformatics',
     link: 'http://a-link',
     title: 'A title',
@@ -166,7 +166,7 @@ describe('createTeamResearchOutput', () => {
     await expect(
       createTeamResearchOutput(payload, 'Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to create research output for teamId: 90210 Expected status 201. Received status 500."`,
+      `"Failed to create research output for teams 90210 Expected status 201. Received status 500."`,
     );
   });
 });

@@ -102,7 +102,7 @@ it('can submit a form when form data is valid', async () => {
         asapFunded: undefined,
         usedInPublication: undefined,
         sharingStatus: 'Network Only',
-        teamId: 'team-id',
+        teams: ['team-id'],
         link: 'http://example.com',
         title: 'example title',
         description: 'example description',

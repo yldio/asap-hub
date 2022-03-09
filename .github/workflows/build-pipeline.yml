@@ -1,17 +1,28 @@
 name: Build Pipeline
+env:
+  NODE_OPTIONS: '--max_old_space_size=4096'
+  ASAP_HOSTNAME: 'hub.asap.science'
+  SQUIDEX_APP_NAME: ${{ github.event.number || github.event.inputs.prNumber || github.head_ref }}-${{ github.run_id }}
+  SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
+  SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
+  SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
 
 on:
   pull_request:
     types: [opened, synchronize]
     branches:
       - master
-
-env:
-  NODE_OPTIONS: '--max_old_space_size=4096'
-  ASAP_HOSTNAME: 'hub.asap.science'
+  workflow_dispatch:
+    inputs:
+      prNumber:
+        required: true
+        type: string
+        description: Choose which PR number to destroy
 jobs:
   setup:
     uses: ./.github/workflows/setup.yml
+    with:
+      asap-hostname: $ASAP_HOSTNAME
   test-unit:
     permissions:
       packages: read
@@ -48,11 +59,6 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    env:
-      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number || github.head_ref }}-${{ github.run_id }}
-      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
-      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

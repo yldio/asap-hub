@@ -8,6 +8,10 @@ on:
         required: false
         default: 1de8c60b2214fbca2e0959aa7f473c55bbc2e014
         type: string
+      asap-hostname:
+        description: 'ASAP Hostname'
+        required: false
+        type: string
     outputs:
       pr-number:
         description: 'The current PR number'
@@ -37,3 +41,6 @@ jobs:
           SQUIDEX_IMAGE_NAME="$REPOSITORY/squidex-utils:$IMAGE_TAG"
           echo "::set-output name=integration-image-name::$INTEGRATION_IMAGE_NAME"
           echo "::set-output name=squidex-image-name::$SQUIDEX_IMAGE_NAME"
+          echo ${{ inputs.asap-hostname }}
+          echo "ASAP_HOSTNAME"
+          echo $ASAP_HOSTNAME

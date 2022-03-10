@@ -12,7 +12,6 @@ runs:
       shell: bash
       run: |
         PR_NUMBER=${{ github.event.number || github.event.inputs.prNumber || github.head_ref }}
-        echo "::set-env name=PR_NUMBER::$PR_NUMBER"
         REPOSITORY="ghcr.io/yldio/asap-hub"
         INTEGRATION_IMAGE_NAME="$REPOSITORY/node-python-sq:$IMAGE_TAG"
         SQUIDEX_IMAGE_NAME="$REPOSITORY/squidex-utils:$IMAGE_TAG"

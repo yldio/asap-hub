@@ -62,7 +62,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         items: { type: 'string' },
         nullable: true,
       },
-      teams: { type: 'array', items: { type: 'string' }, minItems: 1 }
+      teams: { type: 'array', items: { type: 'string' }, minItems: 1 },
     },
     required: [
       'type',
@@ -72,7 +72,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       'title',
       'sharingStatus',
       'addedDate',
-      'teams'
+      'teams',
     ],
     additionalProperties: false,
   };

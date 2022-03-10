@@ -1,9 +1,9 @@
 name: Build Pipeline
 env:
   PR_NUMBER: ${{ github.event.number || github.event.inputs.prNumber || github.head_ref }}
-  ALGOLIA_INDEX: 'asap-hub_CI-${{ env.PR_NUMBER }}'
-  ASAP_API_URL: 'https://api-${{ env.PR_NUMBER }}.hub.asap.science'
-  ASAP_APP_URL: 'https://${{ env.PR_NUMBER }}.hub.asap.science'
+  ALGOLIA_INDEX: 'asap-hub_CI-$PR_NUMBER'
+  ASAP_API_URL: 'https://api-$PR_NUMBER.hub.asap.science'
+  ASAP_APP_URL: 'https://$PR_NUMBER.hub.asap.science'
   ASAP_HOSTNAME: 'hub.asap.science'
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
@@ -16,8 +16,8 @@ env:
   SENTRY_DSN_API: ${{ secrets.SENTRY_DSN_API }}
   SENTRY_DSN_CALENDAR: ${{ secrets.SENTRY_DSN_CALENDAR }}
   SENTRY_DSN_USER_INVITE: ${{ secrets.SENTRY_DSN_USER_INVITE }}
-  SLS_STAGE: '${{ env.PR_NUMBER }}'
-  SQUIDEX_APP_NAME: ${{ env.PR_NUMBER }}-${{ github.run_id }}
+  SLS_STAGE: $PR_NUMBER
+  SQUIDEX_APP_NAME: $PR_NUMBER-${{ github.run_id }}
   SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
   SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
   SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}

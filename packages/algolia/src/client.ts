@@ -1,5 +1,8 @@
 import { SearchIndex } from 'algoliasearch';
-import { SearchOptions, SearchResponse } from '@algolia/client-search';
+import {
+  SearchOptions,
+  SearchResponse as AlgoliaSearchResponse,
+} from '@algolia/client-search';
 import {
   ExternalAuthorResponse,
   LabResponse,
@@ -45,8 +48,14 @@ export type EntityRecord<T extends keyof EntityResponses> =
     };
   };
 
-export type SearchEntityResponse<TEntityType extends keyof EntityResponses> =
-  SearchResponse<EntityRecord<TEntityType>>;
+export type DistributeToEntityRecords<U extends keyof EntityResponses> =
+  U extends keyof EntityResponses ? EntityRecord<U> : never;
+
+export type EntityHit<T extends keyof EntityResponses> =
+  DistributeToEntityRecords<T>;
+
+export type SearchByEntityResponse<T extends keyof EntityResponses> =
+  AlgoliaSearchResponse<DistributeToEntityRecords<T>>;
 
 export class AlgoliaSearchClient {
   public constructor(private index: SearchIndex) {
@@ -71,11 +80,11 @@ export class AlgoliaSearchClient {
     await this.index.deleteObject(objectID);
   }
 
-  async searchEntity<T extends keyof EntityResponses>(
+  async search<T extends keyof EntityResponses>(
     entityTypes: T[],
     query: string,
     requestOptions?: SearchOptions,
-  ): Promise<SearchEntityResponse<T>> {
+  ): Promise<SearchByEntityResponse<T>> {
     const entityTypesFilter = entityTypes
       .map((entityType) => `__meta.type:"${entityType}"`)
       .join(' OR ');
@@ -83,11 +92,11 @@ export class AlgoliaSearchClient {
     const options: SearchOptions = {
       ...requestOptions,
       filters: requestOptions?.filters
-        ? `${requestOptions.filters} AND (${entityTypesFilter})`
+        ? `(${requestOptions.filters}) AND (${entityTypesFilter})`
         : entityTypesFilter,
     };
 
-    return this.index.search<EntityRecord<T>>(query, options);
+    return this.index.search<DistributeToEntityRecords<T>>(query, options);
   }
 
   private static getAlgoliaObject(

@@ -124,7 +124,7 @@ describe('Algolia Search Client', () => {
       searchResearchOutputResponse,
     );
 
-    const response = await algoliaSearchClient.searchEntity(
+    const response = await algoliaSearchClient.search(
       ['research-output'],
       'query',
       {
@@ -138,14 +138,14 @@ describe('Algolia Search Client', () => {
     expect(algoliaSearchIndex.search).toBeCalledWith('query', {
       hitsPerPage: 10,
       page: 0,
-      filters: 'some-filters AND (__meta.type:"research-output")',
+      filters: '(some-filters) AND (__meta.type:"research-output")',
     });
   });
 
   test('Should search user entity', async () => {
     algoliaSearchIndex.search.mockResolvedValueOnce(searchUserResponse);
 
-    const response = await algoliaSearchClient.searchEntity(['user'], 'query');
+    const response = await algoliaSearchClient.search(['user'], 'query');
 
     expect(response).toEqual(searchUserResponse);
     expect(algoliaSearchIndex.search).toBeCalledWith('query', {
@@ -156,7 +156,7 @@ describe('Algolia Search Client', () => {
   test('Should search multiple entities', async () => {
     algoliaSearchIndex.search.mockResolvedValueOnce(searchUserResponse);
 
-    const response = await algoliaSearchClient.searchEntity(
+    const response = await algoliaSearchClient.search(
       ['user', 'external-author', 'lab'],
       'query',
       {
@@ -167,7 +167,7 @@ describe('Algolia Search Client', () => {
     expect(response).toEqual(searchUserResponse);
     expect(algoliaSearchIndex.search).toBeCalledWith('query', {
       filters:
-        'some-filters AND (__meta.type:"user" OR __meta.type:"external-author" OR __meta.type:"lab")',
+        '(some-filters) AND (__meta.type:"user" OR __meta.type:"external-author" OR __meta.type:"lab")',
     });
   });
 });

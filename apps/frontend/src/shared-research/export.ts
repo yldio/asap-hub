@@ -1,4 +1,4 @@
-import { EntityResponses, SearchEntityResponse } from '@asap-hub/algolia';
+import { EntityResponses, SearchByEntityResponse } from '@asap-hub/algolia';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
 import { CsvFormatterStream, Row, format } from '@fast-csv/format';
@@ -100,7 +100,7 @@ export const algoliaResultsToStream = async <T extends keyof EntityResponses>(
     currentPage,
     pageSize,
   }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
-    Promise<SearchEntityResponse<T>>
+    Promise<SearchByEntityResponse<T>>
   >,
   transform: (result: EntityResponses[T]) => Row,
 ) => {

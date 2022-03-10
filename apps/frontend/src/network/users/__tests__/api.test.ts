@@ -69,11 +69,10 @@ describe('getUsersLegacy', () => {
 });
 
 describe('getUsers', () => {
-  const searchEntity: jest.MockedFunction<AlgoliaSearchClient['searchEntity']> =
-    jest.fn();
+  const search: jest.MockedFunction<AlgoliaSearchClient['search']> = jest.fn();
 
   const algoliaSearchClient = {
-    searchEntity,
+    search,
   } as unknown as AlgoliaSearchClient;
 
   const defaultOptions: GetListOptions = {
@@ -84,15 +83,15 @@ describe('getUsers', () => {
   };
 
   beforeEach(() => {
-    searchEntity.mockReset();
-    searchEntity.mockResolvedValue(createAlgoliaResponse('user', []));
+    search.mockReset();
+    search.mockResolvedValue(createAlgoliaResponse('user', []));
   });
 
   it('will not filter users by default', async () => {
     await getUsers(algoliaSearchClient, {
       ...defaultOptions,
     });
-    expect(searchEntity).toHaveBeenCalledWith(
+    expect(search).toHaveBeenCalledWith(
       ['user'],
       '',
       expect.objectContaining({
@@ -105,7 +104,7 @@ describe('getUsers', () => {
     await getUsers(algoliaSearchClient, {
       ...defaultOptions,
     });
-    expect(searchEntity).toHaveBeenCalledWith(
+    expect(search).toHaveBeenCalledWith(
       ['user'],
       '',
       expect.objectContaining({
@@ -120,7 +119,7 @@ describe('getUsers', () => {
       ...defaultOptions,
       searchQuery: 'Hello World!',
     });
-    expect(searchEntity).toHaveBeenCalledWith(
+    expect(search).toHaveBeenCalledWith(
       ['user'],
       'Hello World!',
       expect.objectContaining({}),
@@ -132,7 +131,7 @@ describe('getUsers', () => {
       ...defaultOptions,
       filters: new Set(['Collaborating PI']),
     });
-    expect(searchEntity).toHaveBeenCalledWith(['user'], '', {
+    expect(search).toHaveBeenCalledWith(['user'], '', {
       filters: 'teams.role:"Collaborating PI"',
     });
   });
@@ -142,7 +141,7 @@ describe('getUsers', () => {
       ...defaultOptions,
       filters: new Set(['Collaborating PI', 'Project Manager']),
     });
-    expect(searchEntity).toHaveBeenCalledWith(['user'], '', {
+    expect(search).toHaveBeenCalledWith(['user'], '', {
       filters: 'teams.role:"Collaborating PI" OR teams.role:"Project Manager"',
     });
   });
@@ -159,7 +158,7 @@ describe('getUsers', () => {
         },
       })),
     };
-    searchEntity.mockResolvedValueOnce({
+    search.mockResolvedValueOnce({
       hits: transformedUsers.items,
       nbHits: transformedUsers.total,
       page: 0,
@@ -177,11 +176,10 @@ describe('getUsers', () => {
 });
 
 describe('getUsersOrExternalAuthors', () => {
-  const searchEntity: jest.MockedFunction<AlgoliaSearchClient['searchEntity']> =
-    jest.fn();
+  const search: jest.MockedFunction<AlgoliaSearchClient['search']> = jest.fn();
 
   const algoliaSearchClient = {
-    searchEntity,
+    search,
   } as unknown as AlgoliaSearchClient;
 
   const defaultOptions: GetListOptions = {
@@ -198,8 +196,8 @@ describe('getUsersOrExternalAuthors', () => {
       [],
     );
 
-    searchEntity.mockReset();
-    searchEntity.mockResolvedValue({
+    search.mockReset();
+    search.mockResolvedValue({
       ...algoliaUsersResponse,
       hits: [
         ...algoliaUsersResponse.hits,
@@ -212,7 +210,7 @@ describe('getUsersOrExternalAuthors', () => {
     await getUsersOrExternalAuthors(algoliaSearchClient, {
       ...defaultOptions,
     });
-    expect(searchEntity).toHaveBeenCalledWith(
+    expect(search).toHaveBeenCalledWith(
       ['user', 'external-author'],
       '',
       expect.objectContaining({
@@ -225,7 +223,7 @@ describe('getUsersOrExternalAuthors', () => {
     await getUsersOrExternalAuthors(algoliaSearchClient, {
       ...defaultOptions,
     });
-    expect(searchEntity).toHaveBeenCalledWith(
+    expect(search).toHaveBeenCalledWith(
       ['user', 'external-author'],
       '',
       expect.objectContaining({
@@ -240,7 +238,7 @@ describe('getUsersOrExternalAuthors', () => {
       ...defaultOptions,
       searchQuery: 'Hello World!',
     });
-    expect(searchEntity).toHaveBeenCalledWith(
+    expect(search).toHaveBeenCalledWith(
       ['user', 'external-author'],
       'Hello World!',
       expect.objectContaining({}),

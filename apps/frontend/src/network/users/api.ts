@@ -41,7 +41,7 @@ export const getUsers = async (
     .map((filter) => `teams.role:"${filter}"`)
     .join(' OR ');
 
-  const result = await algoliaClient.searchEntity(['user'], searchQuery, {
+  const result = await algoliaClient.search(['user'], searchQuery, {
     filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,
@@ -54,13 +54,14 @@ export const getUsersOrExternalAuthors = async (
   algoliaClient: AlgoliaSearchClient,
   { searchQuery, currentPage, pageSize }: GetListOptions,
 ): Promise<ListResponse<UserResponse | ExternalAuthorResponse>> => {
-  const result = await algoliaClient.searchEntity(
+  const result = await algoliaClient.search(
     ['user', 'external-author'],
     searchQuery,
     {
       filters: undefined,
       page: currentPage ?? undefined,
       hitsPerPage: pageSize ?? undefined,
+      restrictSearchableAttributes: ['displayName'],
     },
   );
 

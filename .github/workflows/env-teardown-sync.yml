@@ -1,0 +1,62 @@
+name: Remove environment scheduled
+on:
+  schedule:
+    - cron: '0 7 * * MON-FRI' # At 07:00 UTC on every day-of-week from Monday through Friday.
+  workflow_dispatch:
+jobs:
+  setup:
+    runs-on: ubuntu-18.04
+    container:
+      image: registry.gitlab.com/yldio/asap-hub/node-python-sq:latest
+    env:
+      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
+    outputs:
+      badPrs: ${{ steps.bad_prs.outputs.badPrs }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Gets Squidex Environments
+        id: get_envs
+        run: |
+          cd ci/integration/actions/find-envs
+          npm ci
+          cd -
+          node ci/integration/actions/find-envs
+      - name: The Outputs
+        run: |
+          echo "The outputs were ${{ steps.get_envs.outputs.availableApps }}"
+      - uses: actions/github-script@v5
+        id: bad_prs
+        name: Find PRs with bad Squidex Environments
+        with:
+          script: |
+            const availableApps = ${{ steps.get_envs.outputs.availableApps}} ;
+            const openPrsRequest = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+            });
+            const openPrs = openPrsRequest.data.map(({ number }) => number.toString());
+            const badPrs = availableApps.filter((prNumber) => !openPrs.includes(prNumber));
+            badPrs
+              .forEach((id) => {
+                console.log(id);
+              });
+            const workflow = await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'env-teardown.yml',
+              ref: 'master',
+              inputs: {
+                prNumber: badPrs[0],
+              },
+            });
+            console.log(workflow);
+
+            core.setOutput('badPrs', [badPrs[0]]);
+  destroy:
+    needs: [ setup ]
+    uses: ./.github/workflows/env-teardown.yml
+    with:
+      prNubmer: ${{ needs.setup.outputs.badPrs }}

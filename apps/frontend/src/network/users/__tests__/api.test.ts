@@ -13,6 +13,7 @@ import {
   getUser,
   getUsersLegacy,
   getUsers,
+  getUsersOrExternalAuthors,
   InstitutionsResponse,
   patchUser,
   postUserAvatar,
@@ -92,7 +93,7 @@ describe('getUsers', () => {
       ...defaultOptions,
     });
     expect(searchEntity).toHaveBeenCalledWith(
-      'user',
+      ['user'],
       '',
       expect.objectContaining({
         filters: undefined,
@@ -105,7 +106,7 @@ describe('getUsers', () => {
       ...defaultOptions,
     });
     expect(searchEntity).toHaveBeenCalledWith(
-      'user',
+      ['user'],
       '',
       expect.objectContaining({
         hitsPerPage: undefined,
@@ -120,7 +121,7 @@ describe('getUsers', () => {
       searchQuery: 'Hello World!',
     });
     expect(searchEntity).toHaveBeenCalledWith(
-      'user',
+      ['user'],
       'Hello World!',
       expect.objectContaining({}),
     );
@@ -131,7 +132,7 @@ describe('getUsers', () => {
       ...defaultOptions,
       filters: new Set(['Collaborating PI']),
     });
-    expect(searchEntity).toHaveBeenCalledWith('user', '', {
+    expect(searchEntity).toHaveBeenCalledWith(['user'], '', {
       filters: 'teams.role:"Collaborating PI"',
     });
   });
@@ -141,7 +142,7 @@ describe('getUsers', () => {
       ...defaultOptions,
       filters: new Set(['Collaborating PI', 'Project Manager']),
     });
-    expect(searchEntity).toHaveBeenCalledWith('user', '', {
+    expect(searchEntity).toHaveBeenCalledWith(['user'], '', {
       filters: 'teams.role:"Collaborating PI" OR teams.role:"Project Manager"',
     });
   });
@@ -171,6 +172,78 @@ describe('getUsers', () => {
     });
     expect(await getUsers(algoliaSearchClient, defaultOptions)).toEqual(
       transformedUsers,
+    );
+  });
+});
+
+describe('getUsersOrExternalAuthors', () => {
+  const searchEntity: jest.MockedFunction<AlgoliaSearchClient['searchEntity']> =
+    jest.fn();
+
+  const algoliaSearchClient = {
+    searchEntity,
+  } as unknown as AlgoliaSearchClient;
+
+  const defaultOptions: GetListOptions = {
+    searchQuery: '',
+    pageSize: null,
+    currentPage: null,
+    filters: new Set(),
+  };
+
+  beforeEach(() => {
+    const algoliaUsersResponse = createAlgoliaResponse('user', []);
+    const alogliaExternalAuthorsResponse = createAlgoliaResponse(
+      'external-author',
+      [],
+    );
+
+    searchEntity.mockReset();
+    searchEntity.mockResolvedValue({
+      ...algoliaUsersResponse,
+      hits: [
+        ...algoliaUsersResponse.hits,
+        ...alogliaExternalAuthorsResponse.hits,
+      ],
+    });
+  });
+
+  it('will not filter users nor external-authors by default', async () => {
+    await getUsersOrExternalAuthors(algoliaSearchClient, {
+      ...defaultOptions,
+    });
+    expect(searchEntity).toHaveBeenCalledWith(
+      ['user', 'external-author'],
+      '',
+      expect.objectContaining({
+        filters: undefined,
+      }),
+    );
+  });
+
+  it('will not default to not specifying page and limits hits per page by default', async () => {
+    await getUsersOrExternalAuthors(algoliaSearchClient, {
+      ...defaultOptions,
+    });
+    expect(searchEntity).toHaveBeenCalledWith(
+      ['user', 'external-author'],
+      '',
+      expect.objectContaining({
+        hitsPerPage: undefined,
+        page: undefined,
+      }),
+    );
+  });
+
+  it('will pass the search query to algolia', async () => {
+    await getUsersOrExternalAuthors(algoliaSearchClient, {
+      ...defaultOptions,
+      searchQuery: 'Hello World!',
+    });
+    expect(searchEntity).toHaveBeenCalledWith(
+      ['user', 'external-author'],
+      'Hello World!',
+      expect.objectContaining({}),
     );
   });
 });

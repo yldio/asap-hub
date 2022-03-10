@@ -14,7 +14,7 @@ import { fireEvent } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
 import { createTeamResearchOutput } from '../api';
-import { refreshTeamState } from '../state';
+import { refreshTeamState, getAuthorLabel } from '../state';
 import TeamOutput, { paramOutputTypeToResearchOutputType } from '../TeamOutput';
 
 jest.mock('../api');
@@ -187,3 +187,20 @@ const renderPage = async ({
   );
   return result;
 };
+
+describe('getAuthorLabel', () => {
+  it('should display (Non CRN) for external-author', () => {
+    expect(
+      getAuthorLabel({ id: '1234', displayName: 'external author' }),
+    ).toEqual('external author (Non CRN)');
+  });
+  it('should not add suffix for internal user', () => {
+    expect(
+      getAuthorLabel({
+        id: '1234',
+        displayName: 'internal user',
+        email: 'example@domain.com',
+      }),
+    ).toEqual('internal user');
+  });
+});

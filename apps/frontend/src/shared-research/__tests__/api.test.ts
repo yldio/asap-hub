@@ -42,7 +42,7 @@ describe('getResearchOutputs', () => {
     });
 
     expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+      ['research-output'],
       'test',
       expect.objectContaining({ hitsPerPage: 10, page: 0 }),
     );
@@ -55,7 +55,7 @@ describe('getResearchOutputs', () => {
     });
 
     expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+      ['research-output'],
       '',
       expect.objectContaining({ hitsPerPage: 20, page: 1 }),
     );
@@ -67,7 +67,7 @@ describe('getResearchOutputs', () => {
     });
 
     expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+      ['research-output'],
       '',
       expect.objectContaining({
         filters: '(type:Article)',
@@ -82,7 +82,7 @@ describe('getResearchOutputs', () => {
     });
 
     expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+      ['research-output'],
       '',
       expect.objectContaining({
         filters: '(type:Article OR type:"Grant Document")',
@@ -97,7 +97,7 @@ describe('getResearchOutputs', () => {
     });
 
     expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+      ['research-output'],
       '',
       expect.objectContaining({
         filters: '(type:Article)',
@@ -112,7 +112,7 @@ describe('getResearchOutputs', () => {
     });
 
     expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+      ['research-output'],
       '',
       expect.objectContaining({
         filters: 'teams.id:"12345"',
@@ -128,7 +128,7 @@ describe('getResearchOutputs', () => {
     });
 
     expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+      ['research-output'],
       '',
       expect.objectContaining({
         filters: '(type:Article) AND teams.id:"12345"',
@@ -144,7 +144,7 @@ describe('getResearchOutputs', () => {
     });
 
     expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+      ['research-output'],
       '',
       expect.objectContaining({
         filters: '(type:Article OR type:"Grant Document") AND teams.id:"12345"',
@@ -158,7 +158,7 @@ describe('getResearchOutputs', () => {
     });
 
     expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+      ['research-output'],
       '',
       expect.objectContaining({
         filters: 'authors.id:"12345"',
@@ -174,7 +174,7 @@ describe('getResearchOutputs', () => {
     });
 
     expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+      ['research-output'],
       '',
       expect.objectContaining({
         filters: '(type:Article) AND authors.id:"12345"',
@@ -190,7 +190,7 @@ describe('getResearchOutputs', () => {
     });
 
     expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+      ['research-output'],
       '',
       expect.objectContaining({
         filters:

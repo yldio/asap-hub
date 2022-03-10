@@ -72,15 +72,19 @@ export class AlgoliaSearchClient {
   }
 
   async searchEntity<T extends keyof EntityResponses>(
-    entityType: T,
+    entityTypes: T[],
     query: string,
     requestOptions?: SearchOptions,
   ): Promise<SearchEntityResponse<T>> {
+    const entityTypesFilter = entityTypes
+      .map((entityType) => `__meta.type:"${entityType}"`)
+      .join(' OR ');
+
     const options: SearchOptions = {
       ...requestOptions,
       filters: requestOptions?.filters
-        ? `${requestOptions.filters} AND __meta.type:"${entityType}"`
-        : `__meta.type:"${entityType}"`,
+        ? `${requestOptions.filters} AND (${entityTypesFilter})`
+        : entityTypesFilter,
     };
 
     return this.index.search<EntityRecord<T>>(query, options);

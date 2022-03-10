@@ -42,6 +42,9 @@ export const getUsersLegacy = jest.fn(
 export const getUsers = jest.fn(
   async (): Promise<ListUserResponse> => createListUserResponse(10),
 );
+export const getUsersOrExternalAuthors = jest.fn(
+  async (): Promise<ListUserResponse> => createListUserResponse(10),
+);
 
 export const getInstitutions = jest.fn(
   async (): Promise<InstitutionsResponse> => ({

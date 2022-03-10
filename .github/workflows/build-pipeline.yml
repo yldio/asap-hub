@@ -24,31 +24,11 @@ jobs:
     with:
       asap-hostname: $ASAP_HOSTNAME
   test-unit:
-    permissions:
-      packages: read
     needs: setup
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    env:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Cache Jest cache
-        uses: actions/cache@v2
-        id: jest-cache
-        with:
-          path: |
-            .jest-cache/
-          key: jest-cache
-      - name: Test
-        run: |
-          yarn test --coverage --maxWorkers=2
-          yarn codecov
+    uses: ./.github/workflows/build-pipeline/test-unit.yml
+    with:
+        image-name: ${{ needs.setup.outputs.integration-image-name }}
+        codecov-token: ${{ secrets.CODECOV_TOKEN
   test-integration:
     permissions:
       packages: read

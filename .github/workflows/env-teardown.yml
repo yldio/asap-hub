@@ -14,7 +14,8 @@ jobs:
     uses: ./.github/workflows/setup.yml
   sls_teardown:
     strategy:
-      matrix: ${{ fromJson(needs.setup.outputs.pr-number) }}
+      matrix:
+        pr: ${{ fromJson(needs.setup.outputs.pr-number) }}
     needs: setup
     runs-on: ubuntu-18.04
 #    container:

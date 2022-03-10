@@ -58,3 +58,24 @@ it('clears the stack when passing null', () => {
   );
   expect(getByRole('list').children).toHaveLength(0);
 });
+
+it('renders an unique list of messages', () => {
+  const ResetStack: React.FC<Record<string, never>> = () => {
+    const toast = useContext(ToastContext);
+    useEffect(() => {
+      toast('t1');
+      toast('t2');
+      toast('t1');
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    return null;
+  };
+  const { getByRole } = render(
+    <ToastStack>
+      <ResetStack />
+    </ToastStack>,
+  );
+  expect(getByRole('list').children).toHaveLength(2);
+  expect(getByRole('list')).toHaveTextContent('t1');
+  expect(getByRole('list')).toHaveTextContent('t2');
+});

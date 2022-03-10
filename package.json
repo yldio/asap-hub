@@ -93,7 +93,7 @@
   "bundlewatch": {
     "files": [
       {
-        "path": "apps/frontend/build/**/*.js",
+        "path": "apps/crn-frontend/build/**/*.js",
         "maxSize": "160 kB"
       }
     ]

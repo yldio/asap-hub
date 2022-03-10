@@ -43,11 +43,13 @@ it('initially does not prompt when trying to leave', () => {
 });
 it('prompts when trying to leave after making edits', () => {
   const { getByText } = render(
-    <Router history={history}>
-      <Form {...props} dirty>
-        {() => <Link to={'/another-url'}>Navigate away</Link>}
-      </Form>
-    </Router>,
+    <ToastContext.Provider value={jest.fn()}>
+      <Router history={history}>
+        <Form {...props} dirty>
+          {() => <Link to={'/another-url'}>Navigate away</Link>}
+        </Form>
+      </Router>
+    </ToastContext.Provider>,
   );
 
   userEvent.click(getByText(/navigate/i));
@@ -241,6 +243,15 @@ describe('when saving', () => {
         await waitFor(() =>
           expect(getByText(/^save/i).closest('button')).toBeEnabled(),
         );
+      });
+
+      it('clears the error when trying to leave', async () => {
+        const { getByText } = result;
+
+        userEvent.click(getByText(/^save/i));
+        userEvent.click(getByText(/navigate/i));
+
+        await waitFor(() => expect(mockToast).toHaveBeenCalledWith(null));
       });
     });
   });

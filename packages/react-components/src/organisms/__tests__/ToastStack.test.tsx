@@ -39,3 +39,22 @@ it('can close toast messages', () => {
   expect(getByRole('list')).toHaveTextContent('t2');
   expect(getByRole('list')).not.toHaveTextContent('t1');
 });
+
+it('clears the stack when passing null', () => {
+  const ResetStack: React.FC<Record<string, never>> = () => {
+    const toast = useContext(ToastContext);
+    useEffect(() => {
+      toast('t1');
+      toast('t2');
+      toast(null);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    return null;
+  };
+  const { getByRole } = render(
+    <ToastStack>
+      <ResetStack />
+    </ToastStack>,
+  );
+  expect(getByRole('list').children).toHaveLength(0);
+});

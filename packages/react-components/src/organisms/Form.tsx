@@ -69,7 +69,10 @@ const Form = <T extends void | Record<string, unknown>>({
           status === 'hasError' ||
           (status === 'initial' && dirty)
         }
-        message="Are you sure you want to leave? Unsaved changes will be lost."
+        message={() => {
+          toast(null);
+          return 'Are you sure you want to leave? Unsaved changes will be lost.';
+        }}
       />
       <form ref={formRef} css={styles}>
         {children({ isSaving: status === 'isSaving', onSave: wrappedOnSave })}

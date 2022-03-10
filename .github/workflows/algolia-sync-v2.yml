@@ -49,7 +49,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       - name: Build
-        run: yarn exec "yarn workspaces foreach -vptR --from '{@asap-hub/asap-cli,@asap-hub/asap-server}' run build:babel"
+        run: yarn exec "yarn workspaces foreach -vptR --from '{@asap-hub/asap-cli,@asap-hub/crn-server}' run build:babel"
       - name: Setup Environment Variables
         run: |
           echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name '${{ inputs.SSM_ALGOLIA_APP_ID_NAME }}' --query Parameter.Value --output text)" >> $GITHUB_ENV

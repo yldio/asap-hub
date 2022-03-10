@@ -1,5 +1,5 @@
 {
-  "name": "@asap-hub/asap-server",
+  "name": "@asap-hub/crn-server",
   "private": true,
   "version": "0.1.0",
   "engines": {

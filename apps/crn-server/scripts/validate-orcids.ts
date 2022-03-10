@@ -1,6 +1,6 @@
 // This is a one-off script. It validates that orcids are valid
 // It was run on prod on 19/08/2021 and the results (invalid ORCIDs) were passed on to product
-// TS_NODE_COMPILER_OPTIONS='{"module": "commonjs"}' yarn ts-node apps/asap-server/validate-orcids-script/validate-orcids.ts
+// TS_NODE_COMPILER_OPTIONS='{"module": "commonjs"}' yarn ts-node apps/crn-server/validate-orcids-script/validate-orcids.ts
 
 import { applyToAllItemsInCollection } from '../src/utils/migrations';
 

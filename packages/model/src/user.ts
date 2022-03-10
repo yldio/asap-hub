@@ -139,15 +139,13 @@ export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
 };
 
 export interface UserPatchRequest {
-  displayName?: string;
   contactEmail?: string;
   firstName?: string;
   lastName?: string;
   biography?: string;
   jobTitle?: string;
-  orcid?: string;
   institution?: string;
-  degree?: UserDegree;
+  degree?: UserDegree | '';
   country?: string;
   city?: string;
   expertiseAndResourceTags?: string[];

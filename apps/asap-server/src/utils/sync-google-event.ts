@@ -1,10 +1,12 @@
-import Joi from '@hapi/joi';
-import { RestEvent, Event } from '@asap-hub/squidex';
+import { Event, RestEvent } from '@asap-hub/squidex';
 import { EventStatus } from '@asap-hub/model';
 import { calendar_v3 as calendarV3 } from 'googleapis';
 import { EventController } from '../controllers/events';
 import logger from './logger';
-import { RequiredAndNonNullable } from './squidex';
+import {
+  GoogleEvent,
+  validateGoogleEvent,
+} from '../validation/sync-google-event.validation';
 
 export type SyncEvent = (
   eventPayload: calendarV3.Schema$Event,
@@ -21,31 +23,14 @@ export const syncEventFactory =
     squidexCalendarId: string,
     defaultTimezone: string,
   ): Promise<RestEvent> => {
-    const schema = Joi.object({
-      id: Joi.string().required(),
-      summary: Joi.string().required(),
-      description: Joi.string(),
-      status: Joi.string().required(),
-      start: Joi.object({
-        date: Joi.string(),
-        dateTime: Joi.string(),
-        timeZone: Joi.string(),
-      }).or('date', 'dateTime'),
-      end: Joi.object({
-        date: Joi.string(),
-        dateTime: Joi.string(),
-        timeZone: Joi.string(),
-      }).or('date', 'dateTime'),
-    }).unknown();
-
-    const { error, value } = schema.validate(eventPayload);
-
-    if (error) {
+    let googleEvent: GoogleEvent;
+    try {
+      googleEvent = validateGoogleEvent(eventPayload as GoogleEvent);
+    } catch (error) {
       logger.error(error, 'Ignored event update, validation error');
       throw error;
     }
 
-    const googleEvent = value as GoogleEvent;
     logger.debug({ googleEvent }, 'google event');
 
     if (googleEvent.organizer?.email !== googleCalendarId) {
@@ -110,5 +95,3 @@ const getEventDate = (eventDate: calendarV3.Schema$EventDateTime): string => {
 
   return new Date(eventDate.date || 0).toISOString();
 };
-
-type GoogleEvent = RequiredAndNonNullable<calendarV3.Schema$Event>;

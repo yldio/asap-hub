@@ -1,10 +1,10 @@
 import { SearchClient } from 'algoliasearch';
-import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
 import { UserController } from '../../../controllers/users';
 import validateRequest from '../../../utils/validate-auth0-request';
 import { Handler } from '../../../utils/types';
-import { algoliaApiKeyTtl, algoliaApiKey } from '../../../config';
+import { algoliaApiKey, algoliaApiKeyTtl } from '../../../config';
+import { validateParams } from '../../../validation/fetch-by-code.validation';
 
 export const fetchUserByCodeHandlerFactory = (
   userController: UserController,
@@ -15,17 +15,7 @@ export const fetchUserByCodeHandlerFactory = (
   lambda.http(async (request) => {
     await validateRequest(request);
 
-    const paramsSchema = Joi.object({
-      code: Joi.string().required(),
-    }).required();
-
-    const { code } = lambda.validate(
-      'params',
-      request.params,
-      paramsSchema,
-    ) as {
-      code: string;
-    };
+    const { code } = validateParams(request.params as never);
 
     const user = await userController.fetchByCode(code);
     const apiKey = algoliaClient.generateSecuredApiKey(algoliaApiKey, {

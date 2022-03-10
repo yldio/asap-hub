@@ -1,10 +1,9 @@
-import { framework } from '@asap-hub/services-common';
-import Joi from '@hapi/joi';
 import { Router } from 'express';
-import { EventController, FetchEventsOptions } from '../controllers/events';
+import { EventController } from '../controllers/events';
 import { GroupController } from '../controllers/groups';
-import { FetchOptions } from '../utils/types';
-import { eventQuerySchema } from './events.route';
+import { validateFetchOptions } from '../validation';
+import { validateEventFetchParameters } from '../validation/event.validation';
+import { validateGroupParameters } from '../validation/group.validation';
 
 export const groupRouteFactory = (
   groupsController: GroupController,
@@ -15,11 +14,7 @@ export const groupRouteFactory = (
   groupRoutes.get('/groups', async (req, res) => {
     const parameters = req.query;
 
-    const query = framework.validate(
-      'query',
-      parameters,
-      querySchema,
-    ) as unknown as FetchOptions;
+    const query = validateFetchOptions(parameters);
 
     const result = await groupsController.fetch(query);
 
@@ -28,20 +23,16 @@ export const groupRouteFactory = (
 
   groupRoutes.get<{ groupId: string }>('/groups/:groupId', async (req, res) => {
     const { params } = req;
-    const { groupId } = framework.validate('parameters', params, paramSchema);
+    const { groupId } = validateGroupParameters(params);
     const result = await groupsController.fetchById(groupId);
 
     res.json(result);
   });
 
   groupRoutes.get('/groups/:groupId/events', async (req, res) => {
-    const query = framework.validate(
-      'query',
-      req.query,
-      eventQuerySchema,
-    ) as unknown as FetchEventsOptions;
+    const query = validateEventFetchParameters(req.query);
     const { params } = req;
-    const { groupId } = framework.validate('parameters', params, paramSchema);
+    const { groupId } = validateGroupParameters(params);
 
     const result = await eventsController.fetch({ groupId, ...query });
 
@@ -50,13 +41,3 @@ export const groupRouteFactory = (
 
   return groupRoutes;
 };
-
-const paramSchema = Joi.object({
-  groupId: Joi.string().required(),
-});
-
-const querySchema = Joi.object({
-  take: Joi.number(),
-  skip: Joi.number(),
-  search: Joi.string(),
-}).required();

@@ -1,32 +1,14 @@
-import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
-import { WebhookPayload, User, SquidexGraphql } from '@asap-hub/squidex';
-
+import { SquidexGraphql } from '@asap-hub/squidex';
 import { Handler } from '../../utils/types';
 import Users from '../../controllers/users';
 import validateRequest from '../../utils/validate-squidex-request';
+import { validateBody } from '../../validation/webhook-sync-orcid.validation';
 
 export const handler: Handler = lambda.http(async (request) => {
   await validateRequest(request);
 
-  const bodySchema = Joi.object({
-    type: Joi.string().required(),
-    payload: Joi.object({
-      id: Joi.string().required(),
-      data: Joi.object().required(),
-      dataOld: Joi.object(),
-    })
-      .unknown()
-      .required(),
-  })
-    .unknown()
-    .required();
-
-  const { payload, type: event } = lambda.validate(
-    'body',
-    request.payload,
-    bodySchema,
-  ) as WebhookPayload<User>;
+  const { payload, type: event } = validateBody(request.payload as never);
 
   const squidexGraphqlClient = new SquidexGraphql();
   const users = new Users(squidexGraphqlClient);

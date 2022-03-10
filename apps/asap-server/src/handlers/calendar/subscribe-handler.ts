@@ -1,18 +1,15 @@
 import 'source-map-support/register';
 import { EventBridgeEvent } from 'aws-lambda';
-import Joi from '@hapi/joi';
 import { Auth } from 'googleapis';
 import * as Sentry from '@sentry/serverless';
-import { framework as lambda } from '@asap-hub/services-common';
-import { WebhookPayload, Calendar, SquidexGraphql } from '@asap-hub/squidex';
-
+import { Calendar, SquidexGraphql, WebhookPayload } from '@asap-hub/squidex';
 import {
-  googleApiUrl,
   asapApiUrl,
-  googleApiToken,
-  sentryDsn,
   currentRevision,
   environment,
+  googleApiToken,
+  googleApiUrl,
+  sentryDsn,
 } from '../../config';
 import Calendars, { CalendarController } from '../../controllers/calendars';
 import getJWTCredentialsAWS, {
@@ -21,6 +18,7 @@ import getJWTCredentialsAWS, {
 import logger from '../../utils/logger';
 import { Alerts, AlertsSentry } from '../../utils/alerts';
 import { CalendarEventType } from '../webhooks/webhook-calendar';
+import { validateBody } from '../../validation/subscribe-handler.validation';
 
 export const calendarCreatedHandlerFactory =
   (
@@ -34,24 +32,7 @@ export const calendarCreatedHandlerFactory =
   ): Promise<'OK'> => {
     logger.debug(JSON.stringify(event, null, 2), 'Event input');
 
-    const bodySchema = Joi.object({
-      type: Joi.string().required(),
-      payload: Joi.object({
-        id: Joi.string().required(),
-        data: Joi.object().required(),
-        dataOld: Joi.object(),
-      })
-        .unknown()
-        .required(),
-    })
-      .unknown()
-      .required();
-
-    const { type: eventType, payload } = lambda.validate(
-      'body',
-      event.detail,
-      bodySchema,
-    );
+    const { type: eventType, payload } = validateBody(event.detail as never);
 
     logger.info(
       `Received a '${eventType}' event for the calendar ${payload.id}`,

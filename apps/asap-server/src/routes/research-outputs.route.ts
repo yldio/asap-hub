@@ -1,14 +1,14 @@
 import {
   ListResearchOutputResponse,
-  ResearchOutputPostRequest,
   ResearchOutputResponse,
-  researchOutputSubtypes,
-  researchOutputTypes,
 } from '@asap-hub/model';
-import { framework } from '@asap-hub/services-common';
-import Joi from '@hapi/joi';
 import { Response, Router } from 'express';
 import { ResearchOutputController } from '../controllers/research-outputs';
+import { validateFetchOptions } from '../validation';
+import {
+  validateResearchOutputParameters,
+  validateResearchOutputPostRequestParameters,
+} from '../validation/research-output.validation';
 
 export const researchOutputRouteFactory = (
   researchOutputController: ResearchOutputController,
@@ -20,16 +20,7 @@ export const researchOutputRouteFactory = (
     async (req, res: Response<ListResearchOutputResponse>) => {
       const { query } = req;
 
-      const options = framework.validate(
-        'query',
-        query,
-        querySchema,
-      ) as unknown as {
-        take: number;
-        skip: number;
-        search?: string;
-        filter?: string[];
-      };
+      const options = validateFetchOptions(query);
 
       const result = await researchOutputController.fetch(options);
 
@@ -41,11 +32,8 @@ export const researchOutputRouteFactory = (
     '/research-outputs/:researchOutputId',
     async (req, res: Response<ResearchOutputResponse>) => {
       const { params } = req;
-      const { researchOutputId } = framework.validate(
-        'parameters',
-        params,
-        paramsSchema,
-      );
+      const { researchOutputId } = validateResearchOutputParameters(params);
+
       const result = await researchOutputController.fetchById(researchOutputId);
 
       res.json(result);
@@ -55,7 +43,7 @@ export const researchOutputRouteFactory = (
   researchOutputRoutes.post('/research-outputs', async (req, res) => {
     const { body } = req;
 
-    const createRequest = framework.validate('body', body, createSchema);
+    const createRequest = validateResearchOutputPostRequestParameters(body);
     const researchOutput = await researchOutputController.create(createRequest);
 
     res.status(201).json(researchOutput);
@@ -63,33 +51,3 @@ export const researchOutputRouteFactory = (
 
   return researchOutputRoutes;
 };
-const createSchema = Joi.object<ResearchOutputPostRequest>({
-  type: Joi.string()
-    .required()
-    .valid(...researchOutputTypes),
-  subTypes: Joi.array()
-    .single()
-    .items(Joi.string().valid(...researchOutputSubtypes)),
-  description: Joi.string().required(),
-  tags: Joi.array().required(),
-  link: Joi.string().required(),
-  title: Joi.string().required(),
-  asapFunded: Joi.boolean(),
-  sharingStatus: Joi.string().required(),
-  usedInPublication: Joi.boolean(),
-  addedDate: Joi.string().required(),
-  labs: Joi.array().required(),
-  authors: Joi.array().required(),
-  teams: Joi.array().required().min(1),
-}).required();
-
-const querySchema = Joi.object({
-  take: Joi.number(),
-  skip: Joi.number(),
-  search: Joi.string(),
-  filter: Joi.array().items(Joi.string()).single(),
-}).required();
-
-const paramsSchema = Joi.object({
-  researchOutputId: Joi.string().required(),
-}).required();

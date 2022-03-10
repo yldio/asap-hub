@@ -1,4 +1,3 @@
-import Joi from '@hapi/joi';
 import {
   OrcidWork,
   UserResponse,
@@ -22,44 +21,6 @@ import { isTeamRole } from './team';
 import logger from '../utils/logger';
 
 export type CMSOrcidWork = OrcidWork;
-
-export const userUpdateSchema = Joi.object({
-  onboarded: Joi.boolean(),
-  contactEmail: Joi.string().allow(''),
-  firstName: Joi.string().allow(''),
-  lastName: Joi.string().allow(''),
-  jobTitle: Joi.string().allow(''),
-  degree: Joi.string()
-    .allow('BA', 'BSc', 'MSc', 'PhD', 'MD', 'PhD, MD')
-    .allow(''),
-  institution: Joi.string().allow(''),
-  biography: Joi.string().allow(''),
-  country: Joi.string().allow(''),
-  city: Joi.string().allow(''),
-  expertiseAndResourceTags: Joi.array().items(Joi.string()),
-  expertiseAndResourceDescription: Joi.string().allow(''),
-  researchInterests: Joi.string().allow(''),
-  responsibilities: Joi.string().allow(''),
-  reachOut: Joi.string().allow('').max(250),
-  questions: Joi.array().items(Joi.string()),
-  teams: Joi.array().items(
-    Joi.object({
-      id: Joi.string().required(),
-    }).required(),
-  ),
-  social: Joi.object({
-    website1: Joi.string(),
-    website2: Joi.string(),
-    linkedIn: Joi.string(),
-    researcherId: Joi.string(),
-    twitter: Joi.string(),
-    github: Joi.string(),
-    googleScholar: Joi.string(),
-    researchGate: Joi.string(),
-  }),
-})
-  .min(1)
-  .required();
 
 export type GraphqlUserTeam = NonNullable<
   NonNullable<FetchUserQuery['findUsersContent']>['flatData']['teams']

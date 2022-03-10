@@ -1,19 +1,16 @@
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
-import { framework } from '@asap-hub/services-common';
-import Joi from '@hapi/joi';
 import { Response, Router } from 'express';
-import { EventController, FetchEventsOptions } from '../controllers/events';
+import { EventController } from '../controllers/events';
+import {
+  validateEventFetchParameters,
+  validateEventParameters,
+} from '../validation/event.validation';
 
 export const eventRouteFactory = (eventController: EventController): Router => {
   const eventRoutes = Router();
 
   eventRoutes.get('/events', async (req, res: Response<ListEventResponse>) => {
-    const query = framework.validate(
-      'query',
-      req.query,
-      eventQuerySchema,
-    ) as unknown as FetchEventsOptions;
-
+    const query = validateEventFetchParameters(req.query);
     const result = await eventController.fetch(query);
 
     res.json(result);
@@ -23,7 +20,7 @@ export const eventRouteFactory = (eventController: EventController): Router => {
     '/events/:eventId',
     async (req, res: Response<EventResponse>) => {
       const { params } = req;
-      const { eventId } = framework.validate('parameters', params, paramSchema);
+      const { eventId } = validateEventParameters(params);
       const result = await eventController.fetchById(eventId);
 
       res.json(result);
@@ -32,22 +29,3 @@ export const eventRouteFactory = (eventController: EventController): Router => {
 
   return eventRoutes;
 };
-
-const paramSchema = Joi.object({
-  eventId: Joi.string().required(),
-});
-
-const querySchemaBase = {
-  take: Joi.number(),
-  skip: Joi.number(),
-  search: Joi.string(),
-};
-
-export const eventQuerySchema = Joi.object({
-  before: Joi.date().iso().raw(),
-  after: Joi.date().iso().raw(),
-  sortBy: Joi.string().valid('startDate', 'endDate').default('startDate'),
-  sortOrder: Joi.string().valid('asc', 'desc').default('asc'),
-})
-  .or('before', 'after')
-  .append(querySchemaBase);

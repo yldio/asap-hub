@@ -56,7 +56,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
 
   const defaultOutput: ResearchOutputPostRequest = {
     type,
-    link: 'https://hub.asap.science/',
     title: 'Output created through the ROMS form',
     asapFunded: undefined,
     sharingStatus: 'Network Only',

@@ -100,7 +100,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
       onSave={() =>
         onSave({
           tags,
-          link,
+          link: link === '' ? undefined : link,
           description,
           title,
           subTypes,

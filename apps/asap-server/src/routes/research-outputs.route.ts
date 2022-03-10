@@ -72,7 +72,7 @@ const createSchema = Joi.object<ResearchOutputPostRequest>({
     .items(Joi.string().valid(...researchOutputSubtypes)),
   description: Joi.string().required(),
   tags: Joi.array().required(),
-  link: Joi.string().required(),
+  link: Joi.string(),
   title: Joi.string().required(),
   asapFunded: Joi.boolean(),
   sharingStatus: Joi.string().required(),

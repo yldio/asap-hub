@@ -130,11 +130,11 @@ jobs:
       asap-api-url: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
       asap-app-url: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
       image-name: ${{ needs.setup.outputs.integration-image-name }}
+      squidex-app-name: '${{ needs.setup.outputs.pr-number }}'
     secrets:
       squidex-base-url: ${{ secrets.SQUIDEX_BASE_URL }}
       squidex-client-id: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
       squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
-      squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
 
   # notify_failure:
   #   runs-on: ubuntu-latest

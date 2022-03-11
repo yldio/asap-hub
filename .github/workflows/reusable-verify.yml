@@ -15,6 +15,10 @@ on:
         description: 'Image name'
         required: true
         type: string
+      squidex-app-name:
+        description: 'Squidex App Name'
+        required: true
+        type: string
     secrets:
       squidex-base-url:
         description: 'Squidex Base Url'
@@ -24,9 +28,6 @@ on:
         required: true
       squidex-client-secret:
         description: 'Squidex Client Secret'
-        required: true
-      squidex-shared-secret:
-        description: 'Squidex Shared Secret'
         required: true
 
 jobs:

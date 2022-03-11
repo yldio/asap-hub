@@ -120,3 +120,12 @@ jobs:
       - name: Deploy
         run: |
           yarn sls deploy --package sls-package --verbose
+      - name: Update Squidex schema
+        uses: ./.github/actions/squidex-sync
+        with:
+          squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
+          squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
+          squidex-client-secret: ${{ env.SQUIDEX_CLIENT_SECRET }}
+          squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
+          squidex-shared-secret: ${{ env.SQUIDEX_SHARED_SECRET }}
+          asap-api-url: ${{ env.ASAP_API_URL }}

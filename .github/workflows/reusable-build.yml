@@ -1,4 +1,4 @@
-name: Setup
+name: Reusable build
 
 on:
   workflow_call:
@@ -39,6 +39,49 @@ on:
         description: 'Squidex App Name'
         required: true
         type: string
+    secrets:
+      aws-access-key-id:
+        description: 'AWS Access Key ID'
+        required: true
+      aws-secret-access-key:
+        description: 'AWS Secret Access Key'
+        required: true
+      aws-acm-certificate-arn:
+        description: 'AWS ACM Certificate ARN'
+        required: true
+      aws-default-region:
+        description: 'AWS Default Region'
+        required: true
+      aws-region:
+        description: 'AWS Region'
+        required: true
+      squidex-client-id:
+        description: 'Squidex Client ID'
+        required: true
+      squidex-client-secret:
+        description: 'Squidex Client Secret'
+        required: true
+      squidex-shared-secret:
+        description: 'Squidex Shared Secret'
+        required: true
+      lightstep-token:
+        description: 'Lightstep Token'
+        required: true
+      react-app-gtm-container-id:
+        description: 'React App GTM Container ID'
+        required: true
+      squidex-base-url:
+        description: 'Squidex Base Url'
+        required: true
+      sentry-dsn-api:
+        description: 'Sentry DSN API'
+        required: true
+      sentry-dsn-calendar:
+        description: 'Sentry DSN Calendar'
+        required: true
+      sentry-dsn-user-invite:
+        description: 'Sentry DSN User Invite'
+        required: true
 
 jobs:
   build-typecheck:
@@ -125,13 +168,15 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+          aws-access-key-id: ${{ secrets.aws-access-key-id }}
+          aws-secret-access-key: ${{ secrets.aws-secret-access-key }}
+          aws-region: ${{ secrets.aws-default-region }}
       - name: Get Algolia app Id
+        env:
+          ALGOLIA_APP_NAME: ${{ inputs.algolia-app-name }}
         id: get-algolia-app-id
         run: |
-          REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "${{ inputs.aloglia-app-name }}" --query Parameter.Value --output text)
+          REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name $ALGOLIA_APP_NAME --query Parameter.Value --output text)
           echo "::set-output name=id::$REACT_APP_ALGOLIA_APP_ID"
       - name: Cache transpile output
         uses: actions/cache@v2
@@ -157,7 +202,7 @@ jobs:
           REACT_APP_ENVIRONMENT: 'development'
           REACT_APP_RELEASE: ${{ inputs.app-release }}
           REACT_APP_SENTRY_DSN: ${{ inputs.sentry-dsn }}
-          REACT_APP_GTM_CONTAINER_ID: ${{ secrets.REACT_APP_GTM_CONTAINER_ID}}
+          REACT_APP_GTM_CONTAINER_ID: ${{ secrets.react-app-gtm-container-id }}
         run: |
           yarn build:frontend
       - name: Cache build output
@@ -204,25 +249,25 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      SLS_STAGE: ${{ inputs.sls-stage}}
-      NODE_ENV: 'production'
+      ALGOLIA_INDEX: ${{ inputs.algolia-index }}
       ASAP_API_URL: ${{ inputs.asap-api-url }}
       ASAP_APP_URL: ${{ inputs.asap-app-url }}
-      ALGOLIA_INDEX: ${{ inputs.algolia-index }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      SQUIDEX_APP_NAME: '${{ inputs.squidex-app-name }}'
-      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
-      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
-      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
-      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.aws-access-key-id }}
+      AWS_ACM_CERTIFICATE_ARN: ${{ secrets.aws-acm-certificate-arn }}
+      AWS_REGION: ${{ secrets.aws-region }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.aws-secret-access-key }}
       CURRENT_REVISION: ${{ github.sha }}
-      SENTRY_DSN_API: ${{ secrets.SENTRY_DSN_API }}
-      SENTRY_DSN_CALENDAR: ${{ secrets.SENTRY_DSN_CALENDAR }}
-      SENTRY_DSN_USER_INVITE: ${{ secrets.SENTRY_DSN_USER_INVITE }}
+      LIGHTSTEP_TOKEN: ${{ secrets.lightstep-token }}
+      NODE_ENV: 'production'
+      SENTRY_DSN_API: ${{ secrets.sentry-dsn-api }}
+      SENTRY_DSN_CALENDAR: ${{ secrets.sentry-dsn-calendar }}
+      SENTRY_DSN_USER_INVITE: ${{ secrets.sentry-dsn-user-invite }}
+      SLS_STAGE: ${{ inputs.sls-stage}}
+      SQUIDEX_APP_NAME: '${{ inputs.squidex-app-name }}'
+      SQUIDEX_BASE_URL: ${{ secrets.squidex-base-url }}
+      SQUIDEX_CLIENT_ID: ${{ secrets.squidex-client-id }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.squidex-client-secret }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.squidex-shared-secret }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

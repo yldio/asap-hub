@@ -82,7 +82,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      SQUIDEX_APP_NAME: ${{ secrets.squidex-app-name }}
+      SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
       SQUIDEX_CLIENT_ID: ${{ secrets.squidex-client-id }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.squidex-client-secret }}
       SQUIDEX_BASE_URL: ${{ secrets.squidex-base-url }}

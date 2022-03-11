@@ -27,6 +27,7 @@ jobs:
     needs: [setup]
     uses: ./.github/workflows/reusable-build.yml
     with:
+      environment: Branch
       algolia-app-name: 'algolia-app-id-dev'
       algolia-index: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
       app-release: '${{ github.run_id }}-dev'
@@ -48,9 +49,9 @@ jobs:
       sentry-dsn-user-invite: ${{ secrets.SENTRY_DSN_USER_INVITE }}
       react-app-gtm-container-id: ${{ secrets.REACT_APP_GTM_CONTAINER_ID }}
       squidex-base-url: ${{ secrets.SQUIDEX_BASE_URL }}
-      squidex-client-id: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
-      squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
-      squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
+      squidex-client-id: ${{ secrets.SQUIDEX_CLIENT_ID }}
+      squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   build-analysis:
     needs: [setup, build]
@@ -103,6 +104,7 @@ jobs:
     needs: [setup, test, build-analysis, prepare-squidex]
     uses: ./.github/workflows/reusable-deploy.yml
     with:
+      environment: Branch
       algolia-index: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
       asap-api-url: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
       asap-app-url: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
@@ -119,9 +121,9 @@ jobs:
       sentry-dsn-calendar: ${{ secrets.SENTRY_DSN_CALENDAR }}
       sentry-dsn-user-invite: ${{ secrets.SENTRY_DSN_USER_INVITE }}
       squidex-base-url: ${{ secrets.SQUIDEX_BASE_URL }}
-      squidex-client-id: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
-      squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
-      squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
+      squidex-client-id: ${{ secrets.SQUIDEX_CLIENT_ID }}
+      squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   verify:
     needs: [setup, deploy, prepare-squidex]

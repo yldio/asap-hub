@@ -3,6 +3,9 @@ name: Reusable build
 on:
   workflow_call:
     inputs:
+      environment:
+        required: true
+        type: string
       algolia-app-name:
         description: 'Algolia App Name'
         required: true
@@ -248,6 +251,7 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    environment: ${{ inputs.environment }}
     env:
       ALGOLIA_INDEX: ${{ inputs.algolia-index }}
       ASAP_API_URL: ${{ inputs.asap-api-url }}

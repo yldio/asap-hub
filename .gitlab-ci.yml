@@ -304,7 +304,7 @@ verify:schema:branch:
   image: $INTEGRATION_DOCKER_IMAGE
   stage: verify-dev
   variables:
-    API_URL: https://api-$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
+    API_URL: https://api-$CI_EXTERNAL_PULL_REQUEST_IID-gitlab.$ASAP_HOSTNAME
   needs:
     - build:native
     - prepare:squidex:branch

@@ -13,7 +13,7 @@ import {
   Form,
 } from './index';
 import { Button } from '../atoms';
-import { perRem } from '../pixels';
+import { perRem, mobileScreen } from '../pixels';
 import { noop } from '../utils';
 
 import TeamCreateOutputContributorsCard from './TeamCreateOutputContributorsCard';
@@ -31,6 +31,25 @@ const formControlsContainerStyles = css({
   display: 'flex',
   justifyContent: 'end',
   paddingBottom: `${200 / perRem}em`, // Hack for labs selector
+});
+
+const formControlsStyles = css({
+  display: 'grid',
+  alignItems: 'end',
+  gridGap: `${24 / perRem}em`,
+  gridTemplateColumns: '1fr 1fr',
+  [`@media (max-width: ${mobileScreen.width}px)`]: {
+    gridTemplateColumns: '1fr',
+    width: '100%',
+    'button:nth-of-type(1)': {
+      order: 2,
+      margin: '0',
+    },
+    'button:nth-of-type(2)': {
+      order: 1,
+      margin: '0',
+    },
+  },
 });
 
 type TeamCreateOutputFormProps = Pick<
@@ -144,7 +163,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             getTeamSuggestions={getTeamSuggestions}
           />
           <div css={formControlsContainerStyles}>
-            <div style={{ display: 'block' }}>
+            <div css={formControlsStyles}>
+              <Button enabled={!isSaving}>Cancel</Button>
               <Button enabled={!isSaving} primary onClick={onClick}>
                 Share
               </Button>

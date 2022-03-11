@@ -9,7 +9,6 @@ on:
 env:
   NODE_OPTIONS: '--max_old_space_size=4096'
 jobs:
-
   setup:
     uses: ./.github/workflows/setup.yml
   test-unit:
@@ -75,30 +74,6 @@ jobs:
       asap-api-url: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
       app-release: '${{ github.run_id }}-dev'
       sentry-dsn: ''
-
-  typecheck:
-    permissions:
-      packages: read
-    needs: [setup, build]
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Cache build typecheck output
-        uses: actions/cache@v2
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-typecheck-output-${{ github.sha }}
-      - name: TypeCheck
-        run: |
-          yarn typecheck
 
   check:
     permissions:

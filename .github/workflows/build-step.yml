@@ -156,3 +156,27 @@ jobs:
             apps/**/build*
             packages/**/build*
           key: build-frontend-output-${{ github.sha }}
+
+  typecheck:
+    permissions:
+      packages: read
+    needs: [build-typecheck]
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ inputs.image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache build typecheck output
+        uses: actions/cache@v2
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-typecheck-output-${{ github.sha }}
+      - name: TypeCheck
+        run: |
+          yarn typecheck

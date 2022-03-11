@@ -6,8 +6,6 @@ on:
     branches:
       - master
 
-env:
-  NODE_OPTIONS: '--max_old_space_size=4096'
 jobs:
   setup:
     uses: ./.github/workflows/setup.yml
@@ -110,64 +108,32 @@ jobs:
           squidex-shared-secret: ${{ env.SQUIDEX_SHARED_SECRET }}
           asap-api-url: ${{ env.ASAP_API_URL }}
 
-  deploy-sls:
-    needs: [setup, build, test, build-analysis]
-    permissions:
-      packages: read
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    env:
-      NODE_ENV: production
-      NODE_OPTIONS: '--max_old_space_size=4096'
-      SLS_STAGE: ${{ needs.setup.outputs.pr-number }}
-      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}
-      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_TEST_CLIENT_ID }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_TEST_CLIENT_SECRET }}
-      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
-      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
-      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
-      ALGOLIA_INDEX: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
-      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
-      CURRENT_REVISION: ${{ github.sha }}
-      SENTRY_DSN_API: ${{ secrets.SENTRY_DSN_API }}
-      SENTRY_DSN_CALENDAR: ${{ secrets.SENTRY_DSN_CALENDAR }}
-      SENTRY_DSN_USER_INVITE: ${{ secrets.SENTRY_DSN_USER_INVITE }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Cache build output
-        uses: actions/cache@v2
-        id: restore-build
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-frontend-output-${{ github.sha }}
-      - name: Cache rebuild output
-        uses: actions/cache@v2
-        with:
-          path: |
-            .yarn/unplugged/
-          key: rebuild-output-${{ github.sha }}
-      - uses: actions/download-artifact@v2
-        with:
-          name: sls-package
-          path: 'sls-package'
-      - name: Deploy
-        run: |
-          yarn sls deploy --package sls-package --verbose
+  deploy:
+    needs: [setup, test, build-analysis, prepare-squidex]
+    uses: ./.github/workflows/reusable-deploy.yml
+    with:
+      algolia-index: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
+      asap-api-url: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
+      asap-app-url: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
+      image-name: ${{ needs.setup.outputs.integration-image-name }}
+      sls-stage: '${{ needs.setup.outputs.pr-number }}'
+      squidex-app-name: '${{ needs.setup.outputs.pr-number }}'
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-acm-certificate-arn: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
+      aws-region: ${{ secrets.AWS_REGION }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
+      sentry-dsn-api: ${{ secrets.SENTRY_DSN_API }}
+      sentry-dsn-calendar: ${{ secrets.SENTRY_DSN_CALENDAR }}
+      sentry-dsn-user-invite: ${{ secrets.SENTRY_DSN_USER_INVITE }}
+      squidex-base-url: ${{ secrets.SQUIDEX_BASE_URL }}
+      squidex-client-id: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
+      squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
+      squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
 
   verify:
-    needs: [setup, deploy-sls, prepare-squidex]
+    needs: [setup, deploy, prepare-squidex]
     uses: ./.github/workflows/reusable-verify.yml
     with:
       asap-api-url: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
@@ -201,10 +167,7 @@ jobs:
 
   build-pipeline-success:
     runs-on: ubuntu-latest
-    needs:
-      [
-        verify,
-      ]
+    needs: [verify]
     if: ${{ success() }}
     steps:
       - name: Print success

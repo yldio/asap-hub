@@ -30,7 +30,6 @@ on:
         required: true
 
 jobs:
-
   verify-sls:
     permissions:
       packages: read

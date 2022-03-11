@@ -10,6 +10,7 @@ env:
   NODE_OPTIONS: '--max_old_space_size=4096'
   ASAP_HOSTNAME: 'hub.asap.science'
 jobs:
+
   setup:
     uses: ./.github/workflows/setup.yml
   test-unit:
@@ -38,6 +39,7 @@ jobs:
         run: |
           yarn test --coverage --maxWorkers=2
           yarn codecov
+
   test-integration:
     permissions:
       packages: read
@@ -63,6 +65,7 @@ jobs:
       - name: Delete app
         if: always()
         run: python ci/integration/scripts/delete-app.py
+
   build-typecheck:
     permissions:
       packages: read
@@ -73,7 +76,6 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -88,6 +90,7 @@ jobs:
             apps/**/build*
             packages/**/build*
           key: build-typecheck-output-${{ github.sha }}
+
   transpile:
     permissions:
       packages: read
@@ -112,6 +115,7 @@ jobs:
             apps/**/build*
             packages/**/build*
           key: transpile-output-${{ github.sha }}
+
   build-frontend:
     permissions:
       packages: read
@@ -122,7 +126,6 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -156,7 +159,7 @@ jobs:
       - name: Build
         env:
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
-          REACT_APP_ALGOLIA_INDEX: 'asap-hub_CI-${{ github.event.number }}'
+          REACT_APP_ALGOLIA_INDEX: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
           REACT_APP_API_BASE_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.${{ env.ASAP_HOSTNAME }}'
           REACT_APP_ENVIRONMENT: 'development'
           REACT_APP_RELEASE: '${{ github.run_id }}-dev'
@@ -172,6 +175,7 @@ jobs:
             apps/**/build*
             packages/**/build*
           key: build-frontend-output-${{ github.sha }}
+
   typecheck:
     permissions:
       packages: read
@@ -182,7 +186,6 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -196,6 +199,7 @@ jobs:
       - name: TypeCheck
         run: |
           yarn typecheck
+
   rebuild:
     permissions:
       packages: read
@@ -206,7 +210,6 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -220,6 +223,7 @@ jobs:
           path: |
             .yarn/unplugged/
           key: rebuild-output-${{ github.sha }}
+
   check:
     permissions:
       packages: read
@@ -240,6 +244,7 @@ jobs:
       - name: Check
         run: |
           yarn ${{ matrix.script }}
+
   build-sls-package:
     permissions:
       packages: read
@@ -256,7 +261,6 @@ jobs:
       ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
       ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
       ALGOLIA_INDEX: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
-
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
@@ -305,6 +309,7 @@ jobs:
           name: sls-package
           path: 'sls-package'
           retention-days: 1
+
   bundlewatch:
     permissions:
       packages: read
@@ -336,6 +341,7 @@ jobs:
         run: |
           CI_REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F / '{print $2}')
           yarn bundlewatch
+
   test-build-output:
     permissions:
       packages: read
@@ -360,6 +366,7 @@ jobs:
       - name: Test output
         run: |
           yarn run test:build-output
+
   test-browser:
     needs: [setup, rebuild]
     runs-on: ubuntu-latest
@@ -381,6 +388,7 @@ jobs:
       - name: Test browser
         run: |
           yarn run test:browser
+
   prepare-squidex:
     permissions:
       packages: read
@@ -419,9 +427,6 @@ jobs:
           aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
           tar -xf $MOST_RECENT_BACKUP
           FIRST_RUN="true" ./ci/import-squidex-data.sh
-      - name: test
-        run: |
-
       - name: Update schema
         uses: ./.github/actions/squidex-sync
         with:
@@ -541,6 +546,7 @@ jobs:
       - name: Test
         run: |
           yarn test:e2e
+
   e2e-test:
     needs: [setup, deploy-sls]
     runs-on: ubuntu-latest
@@ -564,6 +570,7 @@ jobs:
       - name: Test
         run: |
           yarn workspace @asap-hub/e2e-tests run playwright test
+
   # notify_failure:
   #   runs-on: ubuntu-latest
   #   needs:
@@ -595,6 +602,7 @@ jobs:
   #         message: 'Build Failed on GitHub: ${{ needs.setup.outputs.pr-number || github.head_ref }}'
   #         webhook: ${{ secrets.SLACK_WEBHOOK }}
   #         status: failure
+
   build-pipeline-success:
     runs-on: ubuntu-latest
     needs:

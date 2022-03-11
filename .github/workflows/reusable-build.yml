@@ -55,7 +55,6 @@ on:
       aws-region:
         description: 'AWS Region'
         required: true
-
       lightstep-token:
         description: 'Lightstep Token'
         required: true

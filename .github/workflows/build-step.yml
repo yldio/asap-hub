@@ -7,6 +7,27 @@ on:
         description: 'Image name'
         required: true
         type: string
+      algolia-app-name:
+        description: 'Algolia App Name'
+        required: true
+        type: string
+      algolia-index:
+        description: 'Algolia Index'
+        required: true
+        type: string
+      asap-api-url:
+        description: 'ASAP API Url'
+        required: true
+        type: string
+      app-release:
+        description: 'App Release'
+        required: true
+        type: string
+      sentry-dsn:
+        description: 'Sentry DSN'
+        required: true
+        type: string
+
 jobs:
   build-typecheck:
     permissions:
@@ -31,7 +52,7 @@ jobs:
             packages/**/build*
           key: build-typecheck-output-${{ github.sha }}
 
-  build-transpile:
+  transpile:
     permissions:
       packages: read
     runs-on: ubuntu-latest
@@ -54,7 +75,7 @@ jobs:
             packages/**/build*
           key: transpile-output-${{ github.sha }}
 
-  build-rebuild:
+  rebuild:
     permissions:
       packages: read
     runs-on: ubuntu-latest
@@ -75,3 +96,63 @@ jobs:
           path: |
             .yarn/unplugged/
           key: rebuild-output-${{ github.sha }}
+
+  build-frontend:
+    permissions:
+      packages: read
+    needs: [build-typecheck, transpile]
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ inputs.image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: Get Algolia app Id
+        id: get-algolia-app-id
+        run: |
+          REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "${{ inputs.aloglia-app-name }}" --query Parameter.Value --output text)
+          echo "::set-output name=id::$REACT_APP_ALGOLIA_APP_ID"
+      - name: Cache transpile output
+        uses: actions/cache@v2
+        id: restore-transpile
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: transpile-output-${{ github.sha }}
+      - name: Cache build typecheck output
+        uses: actions/cache@v2
+        id: restore-build-typecheck
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-typecheck-output-${{ github.sha }}
+      - name: Build
+        env:
+          REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
+          REACT_APP_ALGOLIA_INDEX: ${{ inputs.algolia-index }}
+          REACT_APP_API_BASE_URL: ${{ inputs.asap-api-url }}
+          REACT_APP_ENVIRONMENT: 'development'
+          REACT_APP_RELEASE: ${{ inputs.app-release }}
+          REACT_APP_SENTRY_DSN: ${{ inputs.sentry-dsn }}
+          REACT_APP_GTM_CONTAINER_ID: ${{ secrets.REACT_APP_GTM_CONTAINER_ID}}
+        run: |
+          yarn build:frontend
+      - name: Cache build output
+        uses: actions/cache@v2
+        id: restore-build
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-frontend-output-${{ github.sha }}

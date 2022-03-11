@@ -10,7 +10,7 @@ export default class MapResearchOutputDeprecatedSubtype extends Migration {
       async (researchOutput, squidexClient) => {
         if (researchOutput?.data?.link?.iv === '') {
           await squidexClient.patch(researchOutput.id, {
-            link: undefined
+            link: undefined,
           });
         }
       },

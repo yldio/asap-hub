@@ -12,6 +12,9 @@ on:
         required: true
         type: string
     secrets:
+      codecov-token:
+        description: 'Codecov Token'
+        required: true
       squidex-base-url:
         description: 'Squidex Base Url'
         required: true
@@ -25,7 +28,6 @@ on:
         description: 'Squidex Shared Secret'
         required: true
 jobs:
-
   check:
     permissions:
       packages: read

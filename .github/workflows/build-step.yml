@@ -1,0 +1,77 @@
+name: Setup
+
+on:
+  workflow_call:
+    inputs:
+      image-name:
+        description: 'Image name'
+        required: true
+        type: string
+jobs:
+  build-typecheck:
+    permissions:
+      packages: read
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ inputs.image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Typecheck
+        run: |
+          yarn build:typecheck
+      - name: Cache build typecheck output
+        uses: actions/cache@v2
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-typecheck-output-${{ github.sha }}
+
+  build-transpile:
+    permissions:
+      packages: read
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ inputs.image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build
+        run: |
+          yarn build:babel
+      - name: Cache transpile output
+        uses: actions/cache@v2
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: transpile-output-${{ github.sha }}
+
+  build-rebuild:
+    permissions:
+      packages: read
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ inputs.image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Re-Build
+        run: |
+          yarn rebuild
+      - name: Cache build output
+        uses: actions/cache@v2
+        with:
+          path: |
+            .yarn/unplugged/
+          key: rebuild-output-${{ github.sha }}

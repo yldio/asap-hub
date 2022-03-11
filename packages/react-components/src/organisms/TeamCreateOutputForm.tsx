@@ -129,7 +129,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         })
       }
     >
-      {({ isSaving, onSave: onClick }) => (
+      {({ isSaving, onSave: handleSave, onCancel: handleCancel }) => (
         <div css={contentStyles}>
           <TeamCreateOutputFormSharingCard
             type={type}
@@ -164,8 +164,10 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           />
           <div css={formControlsContainerStyles}>
             <div css={formControlsStyles}>
-              <Button enabled={!isSaving}>Cancel</Button>
-              <Button enabled={!isSaving} primary onClick={onClick}>
+              <Button enabled={!isSaving} onClick={handleCancel}>
+                Cancel
+              </Button>
+              <Button enabled={!isSaving} primary onClick={handleSave}>
                 Share
               </Button>
             </div>

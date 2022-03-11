@@ -66,60 +66,16 @@ jobs:
         if: always()
         run: python ci/integration/scripts/delete-app.py
 
-  build-typecheck:
-    permissions:
-      packages: read
-    needs: setup
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Typecheck
-        run: |
-          yarn build:typecheck
-      - name: Cache build typecheck output
-        uses: actions/cache@v2
-        id: restore-build-typecheck
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-typecheck-output-${{ github.sha }}
-
-  transpile:
-    permissions:
-      packages: read
-    needs: setup
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Build
-        run: |
-          yarn build:babel
-      - name: Cache transpile output
-        uses: actions/cache@v2
-        id: restore-transpile
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: transpile-output-${{ github.sha }}
+  build:
+    needs: [setup]
+    uses: ./.github/workflows/build-step.yml
+    with:
+      image-name: ${{ needs.setup.outputs.integration-image-name }}
 
   build-frontend:
     permissions:
       packages: read
-    needs: [setup, build-typecheck, transpile]
+    needs: [setup, build]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
@@ -179,7 +135,7 @@ jobs:
   typecheck:
     permissions:
       packages: read
-    needs: [setup, build-typecheck]
+    needs: [setup, build]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
@@ -199,30 +155,6 @@ jobs:
       - name: TypeCheck
         run: |
           yarn typecheck
-
-  rebuild:
-    permissions:
-      packages: read
-    needs: setup
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Re-Build
-        run: |
-          yarn rebuild
-      - name: Cache build output
-        uses: actions/cache@v2
-        id: restore-rebuild
-        with:
-          path: |
-            .yarn/unplugged/
-          key: rebuild-output-${{ github.sha }}
 
   check:
     permissions:
@@ -248,7 +180,7 @@ jobs:
   build-sls-package:
     permissions:
       packages: read
-    needs: [setup, build-typecheck, transpile, rebuild]
+    needs: [setup, build]
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.setup.outputs.integration-image-name }}
@@ -368,7 +300,7 @@ jobs:
           yarn run test:build-output
 
   test-browser:
-    needs: [setup, rebuild]
+    needs: [setup, build]
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:focal
@@ -611,8 +543,7 @@ jobs:
         test-unit,
         test-integration,
         build-frontend,
-        build-typecheck,
-        transpile,
+        build,
         typecheck,
         check,
         build-sls-package,

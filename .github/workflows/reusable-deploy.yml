@@ -3,6 +3,9 @@ name: Reusable deploy
 on:
   workflow_call:
     inputs:
+      environment:
+        required: true
+        type: string
       algolia-index:
         description: 'Algolia Index'
         required: true
@@ -75,6 +78,9 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ inputs.asap-app-url }}
     env:
       ALGOLIA_INDEX: ${{ inputs.algolia-index }}
       ASAP_API_URL: ${{ inputs.asap-api-url }}

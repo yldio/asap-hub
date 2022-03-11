@@ -68,12 +68,16 @@ jobs:
     needs: [setup]
     uses: ./.github/workflows/build-step.yml
     with:
-      image-name: ${{ needs.setup.outputs.integration-image-name }}
       algolia-app-name: 'aloglia-app-id-dev'
       algolia-index: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
-      asap-api-url: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
       app-release: '${{ github.run_id }}-dev'
+      asap-api-url: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
+      asap-app-url: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
+      image-name: ${{ needs.setup.outputs.integration-image-name }}
       sentry-dsn: ''
+      sls-stage: '${{ needs.setup.outputs.pr-number }}'
+      squidex-app-name: '${{ needs.setup.outputs.pr-number }}'
+
 
   check:
     permissions:
@@ -95,71 +99,6 @@ jobs:
       - name: Check
         run: |
           yarn ${{ matrix.script }}
-
-  build-sls-package:
-    permissions:
-      packages: read
-    needs: [setup, build]
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    env:
-      SLS_STAGE: '${{ needs.setup.outputs.pr-number }}'
-      NODE_ENV: 'production'
-      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
-      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
-      ALGOLIA_INDEX: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      SQUIDEX_APP_NAME: '${{ needs.setup.outputs.pr-number }}'
-      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
-      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
-      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
-      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
-      CURRENT_REVISION: ${{ github.sha }}
-      SENTRY_DSN_API: ${{ secrets.SENTRY_DSN_API }}
-      SENTRY_DSN_CALENDAR: ${{ secrets.SENTRY_DSN_CALENDAR }}
-      SENTRY_DSN_USER_INVITE: ${{ secrets.SENTRY_DSN_USER_INVITE }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Cache build output
-        uses: actions/cache@v2
-        id: restore-rebuild
-        with:
-          path: |
-            .yarn/unplugged/
-          key: rebuild-output-${{ github.sha }}
-      - name: Cache build typecheck output
-        uses: actions/cache@v2
-        id: restore-build-typecheck
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-typecheck-output-${{ github.sha }}
-      - name: Cache transpile output
-        uses: actions/cache@v2
-        id: restore-transpile
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: transpile-output-${{ github.sha }}
-      - name: Generate package
-        run: |
-          yarn sls package --package sls-package
-      - uses: actions/upload-artifact@v2
-        with:
-          name: sls-package
-          path: 'sls-package'
-          retention-days: 1
 
   bundlewatch:
     permissions:
@@ -315,11 +254,8 @@ jobs:
       [
         setup,
         build,
-        build-sls-package,
         test-unit,
         test-integration,
-
-        typecheck,
         check,
         bundlewatch,
         test-build-output,
@@ -434,7 +370,6 @@ jobs:
   #       transpile,
   #       typecheck,
   #       check,
-  #       build-sls-package,
   #       bundlewatch,
   #       test-build-output,
   #       test-browser,
@@ -462,9 +397,7 @@ jobs:
         test-unit,
         test-integration,
         build,
-        typecheck,
         check,
-        build-sls-package,
         bundlewatch,
         test-build-output,
         test-browser,

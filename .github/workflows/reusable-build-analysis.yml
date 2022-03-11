@@ -1,0 +1,90 @@
+name: Reusable build analysis
+
+on:
+  workflow_call:
+    inputs:
+      image-name:
+        description: 'Image name'
+        required: true
+        type: string
+    secrets:
+      bundlewatch-github-token:
+        description: 'Bundlewatch Github Token'
+        required: true
+
+jobs:
+  bundlewatch:
+    permissions:
+      packages: read
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ inputs.image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      CI_REPO_OWNER: ${{ github.repository_owner }}
+      CI_REPO: ${{ github.repository }}
+      CI_COMMIT_SHA: ${{ github.sha }}
+      CI_BRANCH: ${{ github.head_ref }}
+      BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.bundlewatch-github-token }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache -frontendbuild output
+        uses: actions/cache@v2
+        id: restore-build-frontend
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-frontend-output-${{ github.sha }}
+      - name: Bundle watch
+        run: |
+          CI_REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F / '{print $2}')
+          yarn bundlewatch
+
+  test-build-output:
+    permissions:
+      packages: read
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ inputs.image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache build output
+        uses: actions/cache@v2
+        id: restore-build-frontend
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-frontend-output-${{ github.sha }}
+      - name: Test output
+        run: |
+          yarn run test:build-output
+
+  test-browser:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:focal
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache build output
+        uses: actions/cache@v2
+        id: restore-rebuild
+        with:
+          path: |
+            .yarn/unplugged/
+          key: rebuild-output-${{ github.sha }}
+      - name: Install Playwright
+        run: |
+          yarn workspace @asap-hub/react-components run playwright install
+      - name: Test browser
+        run: |
+          yarn run test:browser

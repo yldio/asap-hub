@@ -66,9 +66,9 @@ jobs:
 
   build:
     needs: [setup]
-    uses: ./.github/workflows/build-step.yml
+    uses: ./.github/workflows/reusable-build.yml
     with:
-      algolia-app-name: 'aloglia-app-id-dev'
+      algolia-app-name: 'algolia-app-id-dev'
       algolia-index: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
       app-release: '${{ github.run_id }}-dev'
       asap-api-url: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
@@ -77,7 +77,21 @@ jobs:
       sentry-dsn: ''
       sls-stage: '${{ needs.setup.outputs.pr-number }}'
       squidex-app-name: '${{ needs.setup.outputs.pr-number }}'
-
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-acm-certificate-arn: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
+      aws-default-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      aws-region: ${{ secrets.AWS_REGION }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
+      sentry-dsn-api: ${{ secrets.SENTRY_DSN_API }}
+      sentry-dsn-calendar: ${{ secrets.SENTRY_DSN_CALENDAR }}
+      sentry-dsn-user-invite: ${{ secrets.SENTRY_DSN_USER_INVITE }}
+      react-app-gtm-container-id: ${{ secrets.REACT_APP_GTM_CONTAINER_ID }}
+      squidex-base-url: ${{ secrets.SQUIDEX_BASE_URL }}
+      squidex-client-id: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
+      squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
+      squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
 
   check:
     permissions:

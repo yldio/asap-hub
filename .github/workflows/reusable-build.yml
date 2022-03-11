@@ -55,23 +55,12 @@ on:
       aws-region:
         description: 'AWS Region'
         required: true
-      squidex-client-id:
-        description: 'Squidex Client ID'
-        required: true
-      squidex-client-secret:
-        description: 'Squidex Client Secret'
-        required: true
-      squidex-shared-secret:
-        description: 'Squidex Shared Secret'
-        required: true
+
       lightstep-token:
         description: 'Lightstep Token'
         required: true
       react-app-gtm-container-id:
         description: 'React App GTM Container ID'
-        required: true
-      squidex-base-url:
-        description: 'Squidex Base Url'
         required: true
       sentry-dsn-api:
         description: 'Sentry DSN API'
@@ -81,6 +70,18 @@ on:
         required: true
       sentry-dsn-user-invite:
         description: 'Sentry DSN User Invite'
+        required: true
+      squidex-base-url:
+        description: 'Squidex Base Url'
+        required: true
+      squidex-client-id:
+        description: 'Squidex Client ID'
+        required: true
+      squidex-client-secret:
+        description: 'Squidex Client Secret'
+        required: true
+      squidex-shared-secret:
+        description: 'Squidex Shared Secret'
         required: true
 
 jobs:

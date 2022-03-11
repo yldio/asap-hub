@@ -1,0 +1,97 @@
+name: Reusable test
+
+on:
+  workflow_call:
+    inputs:
+      image-name:
+        description: 'Image name'
+        required: true
+        type: string
+      squidex-app-name:
+        description: 'Squidex App Name'
+        required: true
+        type: string
+    secrets:
+      squidex-base-url:
+        description: 'Squidex Base Url'
+        required: true
+      squidex-client-id:
+        description: 'Squidex Client ID'
+        required: true
+      squidex-client-secret:
+        description: 'Squidex Client Secret'
+        required: true
+      squidex-shared-secret:
+        description: 'Squidex Shared Secret'
+        required: true
+jobs:
+
+  check:
+    permissions:
+      packages: read
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ inputs.image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    strategy:
+      fail-fast: false
+      matrix:
+        script: [constraints, 'lint:format', 'check:packages']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Check
+        run: |
+          yarn ${{ matrix.script }}
+
+  test-unit:
+    permissions:
+      packages: read
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ inputs.image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      CODECOV_TOKEN: ${{ secrets.codecov_token }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache Jest cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            .jest-cache/
+          key: jest-cache
+      - name: Test
+        run: |
+          yarn test --coverage --maxWorkers=2
+          yarn codecov
+
+  test-integration:
+    permissions:
+      packages: read
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ inputs.image-name }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}-${{ github.run_id }}
+      SQUIDEX_CLIENT_ID: ${{ secrets.squidex-client-id }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.squidex-client-secret }}
+      SQUIDEX_BASE_URL: ${{ secrets.squidex-base-url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup app
+        run: python ci/integration/scripts/create-app.py
+      - name: Test
+        run: yarn test:integration
+      - name: Delete app
+        if: always()
+        run: python ci/integration/scripts/delete-app.py

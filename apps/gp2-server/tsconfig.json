@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": ".",
+    "resolveJsonModule": true,
+    "outDir": "build",
+    "module": "commonjs",
+
+    "noUncheckedIndexedAccess": true
+  },
+  "include": ["src", "scripts", "test", "test/**/*.json", "@types/**/*.d.ts"],
+  "references": []
+}

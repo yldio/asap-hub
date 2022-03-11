@@ -1,0 +1,28 @@
+{
+  "name": "@asap-hub/gp2-server",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "14.15.x"
+  },
+  "scripts": {
+    "build:babel": "../../scripts/build-babel.sh build",
+    "watch:babel": "../../scripts/build-babel.sh watch",
+    "start": "node-dev ./src/server.ts",
+    "migration:create": "./scripts/create-migration.sh",
+    "schema:update": "graphql-codegen --config codegen.yml",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@serverless/typescript": "^3.3.0",
+    "@types/node": "^17.0.21",
+    "@types/serverless": "^3",
+    "babel-loader": "^8.2.3",
+    "serverless": "^3.7.4",
+    "serverless-webpack": "^5.6.1",
+    "ts-node": "^10.7.0"
+  }
+}

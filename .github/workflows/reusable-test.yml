@@ -101,3 +101,19 @@ jobs:
       - name: Delete app
         if: always()
         run: python ci/integration/scripts/delete-app.py
+
+  test-browser:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:focal
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Re-Build
+        uses: ./.github/actions/rebuild
+      - name: Install Playwright
+        run: |
+          yarn workspace @asap-hub/react-components run playwright install
+      - name: Test browser
+        run: |
+          yarn run test:browser

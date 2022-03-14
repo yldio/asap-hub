@@ -14,14 +14,15 @@ jobs:
     needs: [setup]
     uses: ./.github/workflows/reusable-test.yml
     with:
+      environment: Branch
       image-name: ${{ needs.setup.outputs.integration-image-name }}
       squidex-app-name: ${{ needs.setup.outputs.pr-number || github.head_ref }}
     secrets:
       codecov-token: ${{ secrets.CODECOV_TOKEN }}
       squidex-base-url: ${{ secrets.SQUIDEX_BASE_URL }}
-      squidex-client-id: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
-      squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
-      squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
+      squidex-client-id: ${{ secrets.SQUIDEX_CLIENT_ID }}
+      squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   build:
     needs: [setup]
@@ -72,12 +73,13 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    environment: Branch
     env:
       SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}
-      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
+      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
-      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
       ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
     steps:
       - name: Checkout
@@ -129,14 +131,15 @@ jobs:
     needs: [setup, deploy, prepare-squidex]
     uses: ./.github/workflows/reusable-verify.yml
     with:
+      environment: Branch
       asap-api-url: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
       asap-app-url: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
       image-name: ${{ needs.setup.outputs.integration-image-name }}
       squidex-app-name: '${{ needs.setup.outputs.pr-number }}'
     secrets:
       squidex-base-url: ${{ secrets.SQUIDEX_BASE_URL }}
-      squidex-client-id: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
-      squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
+      squidex-client-id: ${{ secrets.SQUIDEX_CLIENT_ID }}
+      squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
   # notify_failure:
   #   runs-on: ubuntu-latest

@@ -55,7 +55,7 @@ jobs:
           IMAGE_NAME: asap-hub/node-python-sq
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $IMAGE_NAME . -f ci/Dockerfile --target integration
+          docker build -t $IMAGE_NAME . -f .github/Dockerfile --target integration
           ECR_IMAGE_NAME=$ECR_REGISTRY/$IMAGE_NAME
           GHCR_IMAGE_NAME=ghcr.io/yldio/$IMAGE_NAME
           docker tag $IMAGE_NAME $ECR_IMAGE_NAME:$IMAGE_TAG

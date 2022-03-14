@@ -13,7 +13,7 @@ inputs:
   AWS_ACM_CETRIFICATE_ARN:
     required: true
     description: The AWS ACM Certificate
-  AWS_DEFAULT_REGION:
+  AWS_REGION:
     required: true
     description: The AWS default region
   SQUIDEX_CLIENT_ID:
@@ -38,7 +38,7 @@ runs:
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
         AWS_ACM_CERTIFICATE_ARN: ${{ inputs.AWS_ACM_CERTIFICATE_ARN }}
-        AWS_REGION: ${{ inputs.AWS_DEFAULT_REGION }}
+        AWS_REGION: ${{ inputs.AWS_REGION }}
     - name: Remove GitLab CF Stack
       env:
         SLS_STAGE: ${{ inputs.prNumber }}-gitlab

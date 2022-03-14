@@ -20,7 +20,7 @@ runs:
     - name: Setup app
       shell: bash
       run: |
-        python ci/integration/scripts/create-app.py
+        python .github/scripts/test-integration/create-app.py
         yarn test:integration
       env:
         SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
@@ -30,7 +30,7 @@ runs:
     - name: Delete app
       shell: bash
       if: always()
-      run: python ci/integration/scripts/delete-app.py
+      run: python .github/scripts/test-integration/delete-app.py
       env:
         SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
         SQUIDEX_CLIENT_ID: ${{ inputs.squidex-client-id }}

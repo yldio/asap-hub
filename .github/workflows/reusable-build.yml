@@ -230,7 +230,7 @@ jobs:
         uses: ./.github/actions/setup
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: build
+      - name: Build
         uses: ./.github/actions/build-sls-package
         with:
           algolia-index: ${{ env.ALGOLIA_INDEX }}}}

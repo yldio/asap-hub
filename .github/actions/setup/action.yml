@@ -16,6 +16,9 @@ runs:
           echo "SQUIDEX_APP_NAME=$PR_NUMBER" >> $GITHUB_ENV
 
           echo "ALGOLIA_INDEX=asap-hub_CI-$PR_NUMBER" >> $GITHUB_ENV
+          echo "ASAP_API_URL=https://api-$PR_NUMBER.asap-hub.com" >> $GITHUB_ENV
+          echo "ASAP_APP_URL=https://$PR_NUMBER.asap-hub.com" >> $GITHUB_ENV
+          echo "SLS_STAGE=$PR_NUMBER" >> $GITHUB_ENV
         elif [ "$ENVIRONMENT_NAME" == 'Development' ]; then
           echo "Setting up development environment"
         elif [ "$ENVIRONMENT_NAME" == 'Production' ]; then

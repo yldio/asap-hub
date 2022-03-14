@@ -1,0 +1,26 @@
+name: 'E2E Test'
+description: 'Runs E2E Test'
+inputs:
+  asap-api-url:
+    description: 'ASAP App Url'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Cache build output
+      uses: actions/cache@v2
+      id: restore-rebuild
+      with:
+        path: |
+          .yarn/unplugged/
+        key: rebuild-output-${{ github.sha }}
+    - name: Install Playwright
+      shell: bash
+      run: |
+        yarn workspace @asap-hub/e2e-tests run playwright install
+    - name: Test
+      shell: bash
+      run: |
+        yarn workspace @asap-hub/e2e-tests run playwright test
+      env:
+        ASAP_API_URL: ${{ inputs.asap-api-url }}

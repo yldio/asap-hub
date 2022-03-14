@@ -1,0 +1,15 @@
+name: 'Verify SLS'
+description: 'Verifies the SLS'
+inputs:
+  asap-api-url:
+    description: 'ASAP API Url'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Test
+      shell: bash
+      run: |
+        yarn test:e2e
+      env:
+        ASAP_API_URL: ${{ inputs.asap-api-url }}

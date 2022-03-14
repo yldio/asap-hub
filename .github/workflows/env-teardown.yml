@@ -52,7 +52,7 @@ jobs:
       - name: Delete PR Squidex App created by gitlab
         env:
           SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}-gitlab
-        run: python ci/integration/scripts/delete-app.py
+        run: python .github/scripts/squidex/delete-app.py
 
   delete_algolia_indice:
     needs: setup

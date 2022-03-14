@@ -84,7 +84,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup app
         if: ${{ github.event.action == 'opened' }}
-        run: python ci/integration/scripts/create-app.py
+        run: python .github/scripts/squidex/create-app.py
       - name: Configure AWS credentials
         if: ${{ github.event.action == 'opened' }}
         uses: aws-actions/configure-aws-credentials@v1
@@ -98,7 +98,7 @@ jobs:
           MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket "asap-hub-dev-data-backup" --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
           aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
           tar -xf $MOST_RECENT_BACKUP
-          FIRST_RUN="true" ./ci/import-squidex-data.sh
+          FIRST_RUN="true" .github/scripts/prepare-squidex/import-data.sh
 
   deploy:
     needs: [setup, test, build-analysis, prepare-squidex]

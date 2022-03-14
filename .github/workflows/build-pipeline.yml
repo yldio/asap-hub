@@ -123,7 +123,7 @@ jobs:
     needs: [setup, deploy, prepare-squidex]
     uses: ./.github/workflows/reusable-verify.yml
     with:
-      environment: Branch
+      environment-name: Branch
       image-name: ${{ needs.setup.outputs.integration-image-name }}
     secrets:
       squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}

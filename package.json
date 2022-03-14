@@ -29,11 +29,11 @@
     "check:packages": "yarn install --immutable --immutable-cache",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
-    "release:frontend": "yarn workspace @asap-hub/frontend release:frontend",
+    "release:frontend": "yarn workspace @asap-hub/crn-frontend release:frontend",
     "sls": "babel-node --extensions=.js,.jsx,.ts,.tsx --config-file=./babel-cjs.config.js serverless/link-plugins.ts && TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn pnpify serverless",
     "start": "yarn workspaces foreach -vpi -j 1000 run start",
-    "start:backend": "yarn workspace @asap-hub/asap-server start",
-    "start:frontend": "yarn workspace @asap-hub/frontend start",
+    "start:backend": "yarn workspace @asap-hub/crn-server start",
+    "start:frontend": "yarn workspace @asap-hub/crn-frontend start",
     "start:sb": "yarn workspace @asap-hub/storybook start",
     "test": "LANG=en_US TZ=UTC jest",
     "test:browser": "yarn test --config=packages/react-components/jest-browser.config.js",
@@ -42,8 +42,8 @@
     "test:integration": "yarn test --config=jest-integration.config.js",
     "watch:babel": "yarn workspaces foreach -vpi -j 1000 run watch:babel",
     "watch:typecheck": "yarn build:typecheck -w",
-    "schema:update": "./apps/asap-server/scripts/schema-update.sh",
-    "export:entity": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/asap-server/tsconfig.json --files=./apps/asap-server/@types ./apps/asap-server/scripts/cli.ts export"
+    "schema:update": "./apps/crn-server/scripts/schema-update.sh",
+    "export:entity": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/crn-server/tsconfig.json --files=./apps/crn-server/@types ./apps/crn-server/scripts/cli.ts export"
   },
   "resolutions": {
     "encoding": "0.1.13"
@@ -93,7 +93,7 @@
   "bundlewatch": {
     "files": [
       {
-        "path": "apps/frontend/build/**/*.js",
+        "path": "apps/crn-frontend/build/**/*.js",
         "maxSize": "160 kB"
       }
     ]

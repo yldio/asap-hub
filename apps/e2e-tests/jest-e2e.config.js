@@ -10,7 +10,7 @@ const { testPathIgnorePatterns, ...base } = makeDefaultConfig(
 module.exports = {
   ...base,
 
-  rootDir: `${__dirname}/tests/asap-server`,
+  rootDir: `${__dirname}/tests/crn-server`,
   displayName: 'test-e2e-tests',
 
   testMatch: ['**/*.e2e-test.{js,jsx,ts,tsx}'],

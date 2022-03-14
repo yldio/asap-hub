@@ -52,7 +52,7 @@ jobs:
         run: |
           export DIR_NAME=$(date +%s| cut -b1-13)
           mkdir $DIR_NAME
-          yarn workspace @asap-hub/asap-server run algolia export -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -o "../../$DIR_NAME"
+          yarn workspace @asap-hub/crn-server run algolia export -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -o "../../$DIR_NAME"
           echo "DIR_NAME=$DIR_NAME" >> $GITHUB_ENV
       - name: Upload to S3
         run: |

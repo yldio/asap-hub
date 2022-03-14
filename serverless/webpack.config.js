@@ -34,7 +34,7 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: './apps/asap-server/src/migrations', to: './migrations' },
+        { from: './apps/crn-server/src/migrations', to: './migrations' },
       ],
     }),
   ],

@@ -80,7 +80,7 @@ const serverlessConfig: AWS = {
     },
     environment: {
       APP_ORIGIN: ASAP_APP_URL,
-      DEBUG: SLS_STAGE === 'production' ? '' : 'asap-server,http',
+      DEBUG: SLS_STAGE === 'production' ? '' : 'crn-server,http',
       NODE_ENV: '${env:NODE_ENV}',
       ENVIRONMENT: '${env:SLS_STAGE}',
       LIGHTSTEP_TOKEN: '${env:LIGHTSTEP_TOKEN}',
@@ -158,7 +158,7 @@ const serverlessConfig: AWS = {
       {
         bucketName: '${self:service}-${self:provider.stage}-frontend',
         deleteRemoved: false,
-        localDir: 'apps/frontend/build',
+        localDir: 'apps/crn-frontend/build',
       },
       {
         bucketName: '${self:service}-${self:provider.stage}-auth-frontend',
@@ -183,7 +183,7 @@ const serverlessConfig: AWS = {
   },
   functions: {
     apiHandler: {
-      handler: 'apps/asap-server/src/handlers/api-handler.apiHandler',
+      handler: 'apps/crn-server/src/handlers/api-handler.apiHandler',
       events: [
         {
           httpApi: {
@@ -198,7 +198,7 @@ const serverlessConfig: AWS = {
     },
     auth0FetchByCode: {
       handler:
-        'apps/asap-server/src/handlers/webhooks/fetch-by-code/handler.handler',
+        'apps/crn-server/src/handlers/webhooks/fetch-by-code/handler.handler',
       events: [
         {
           httpApi: {
@@ -215,7 +215,7 @@ const serverlessConfig: AWS = {
     },
     auth0ConnectByCode: {
       handler:
-        'apps/asap-server/src/handlers/webhooks/webhook-connect-by-code.handler',
+        'apps/crn-server/src/handlers/webhooks/webhook-connect-by-code.handler',
       events: [
         {
           httpApi: {
@@ -231,7 +231,7 @@ const serverlessConfig: AWS = {
     },
     syncUserOrcid: {
       handler:
-        'apps/asap-server/src/handlers/webhooks/webhook-sync-orcid.handler',
+        'apps/crn-server/src/handlers/webhooks/webhook-sync-orcid.handler',
       events: [
         {
           httpApi: {
@@ -243,7 +243,7 @@ const serverlessConfig: AWS = {
     },
     subscribeCalendar: {
       handler:
-        'apps/asap-server/src/handlers/calendar/subscribe-handler.handler',
+        'apps/crn-server/src/handlers/calendar/subscribe-handler.handler',
       events: [
         {
           eventBridge: {
@@ -263,7 +263,7 @@ const serverlessConfig: AWS = {
     },
     resubscribeCalendars: {
       handler:
-        'apps/asap-server/src/handlers/calendar/resubscribe-handler.handler',
+        'apps/crn-server/src/handlers/calendar/resubscribe-handler.handler',
       timeout: 120,
       events: [
         {
@@ -276,7 +276,7 @@ const serverlessConfig: AWS = {
       },
     },
     inviteUser: {
-      handler: 'apps/asap-server/src/handlers/user/invite-handler.handler',
+      handler: 'apps/crn-server/src/handlers/user/invite-handler.handler',
       events: [
         {
           eventBridge: {
@@ -301,7 +301,7 @@ const serverlessConfig: AWS = {
     },
     indexResearchOutput: {
       handler:
-        'apps/asap-server/src/handlers/research-output/index-handler.handler',
+        'apps/crn-server/src/handlers/research-output/index-handler.handler',
       events: [
         {
           eventBridge: {
@@ -323,7 +323,7 @@ const serverlessConfig: AWS = {
       },
     },
     indexUser: {
-      handler: 'apps/asap-server/src/handlers/user/index-handler.handler',
+      handler: 'apps/crn-server/src/handlers/user/index-handler.handler',
       events: [
         {
           eventBridge: {
@@ -347,7 +347,7 @@ const serverlessConfig: AWS = {
     },
     indexExternalAuthor: {
       handler:
-        'apps/asap-server/src/handlers/external-author/index-handler.handler',
+        'apps/crn-server/src/handlers/external-author/index-handler.handler',
       events: [
         {
           eventBridge: {
@@ -370,7 +370,7 @@ const serverlessConfig: AWS = {
       },
     },
     labUpserted: {
-      handler: 'apps/asap-server/src/handlers/webhooks/webhook-lab.handler',
+      handler: 'apps/crn-server/src/handlers/webhooks/webhook-lab.handler',
       events: [
         {
           httpApi: {
@@ -386,7 +386,7 @@ const serverlessConfig: AWS = {
     },
     indexLabUsers: {
       handler:
-        'apps/asap-server/src/handlers/lab/index-lab-users-handler.handler',
+        'apps/crn-server/src/handlers/lab/index-lab-users-handler.handler',
       events: [
         {
           eventBridge: {
@@ -411,7 +411,7 @@ const serverlessConfig: AWS = {
     eventsUpdated: {
       timeout: 300,
       handler:
-        'apps/asap-server/src/handlers/webhooks/webhook-events-updated.handler',
+        'apps/crn-server/src/handlers/webhooks/webhook-events-updated.handler',
       events: [
         {
           httpApi: {
@@ -427,17 +427,16 @@ const serverlessConfig: AWS = {
     },
     runMigrations: {
       handler:
-        'apps/asap-server/src/handlers/webhooks/webhook-run-migrations.run',
+        'apps/crn-server/src/handlers/webhooks/webhook-run-migrations.run',
       timeout: 900,
     },
     rollbackMigrations: {
       handler:
-        'apps/asap-server/src/handlers/webhooks/webhook-run-migrations.rollback',
+        'apps/crn-server/src/handlers/webhooks/webhook-run-migrations.rollback',
       timeout: 900,
     },
     calendarUpserted: {
-      handler:
-        'apps/asap-server/src/handlers/webhooks/webhook-calendar.handler',
+      handler: 'apps/crn-server/src/handlers/webhooks/webhook-calendar.handler',
       events: [
         {
           httpApi: {
@@ -452,7 +451,7 @@ const serverlessConfig: AWS = {
       },
     },
     userUpserted: {
-      handler: 'apps/asap-server/src/handlers/webhooks/webhook-user.handler',
+      handler: 'apps/crn-server/src/handlers/webhooks/webhook-user.handler',
       events: [
         {
           httpApi: {
@@ -468,7 +467,7 @@ const serverlessConfig: AWS = {
     },
     externalAuthorUpserted: {
       handler:
-        'apps/asap-server/src/handlers/webhooks/webhook-external-author.handler',
+        'apps/crn-server/src/handlers/webhooks/webhook-external-author.handler',
       events: [
         {
           httpApi: {
@@ -484,7 +483,7 @@ const serverlessConfig: AWS = {
     },
     researchOutputUpserted: {
       handler:
-        'apps/asap-server/src/handlers/webhooks/webhook-research-output.handler',
+        'apps/crn-server/src/handlers/webhooks/webhook-research-output.handler',
       events: [
         {
           httpApi: {
@@ -499,7 +498,7 @@ const serverlessConfig: AWS = {
       },
     },
     teamUpserted: {
-      handler: 'apps/asap-server/src/handlers/webhooks/webhook-teams.handler',
+      handler: 'apps/crn-server/src/handlers/webhooks/webhook-teams.handler',
       events: [
         {
           httpApi: {
@@ -515,7 +514,7 @@ const serverlessConfig: AWS = {
     },
     invalidateCache: {
       handler:
-        'apps/asap-server/src/handlers/invalidate-cache/invalidate-handler.handler',
+        'apps/crn-server/src/handlers/invalidate-cache/invalidate-handler.handler',
       events: [
         {
           s3: {
@@ -541,7 +540,7 @@ const serverlessConfig: AWS = {
     },
     indexTeamResearchOutputs: {
       handler:
-        'apps/asap-server/src/handlers/teams/index-team-reasearch-outputs-handler.handler',
+        'apps/crn-server/src/handlers/teams/index-team-reasearch-outputs-handler.handler',
       events: [
         {
           eventBridge: {
@@ -560,7 +559,7 @@ const serverlessConfig: AWS = {
     },
     indexTeamUsers: {
       handler:
-        'apps/asap-server/src/handlers/teams/index-team-users-handler.handler',
+        'apps/crn-server/src/handlers/teams/index-team-users-handler.handler',
       events: [
         {
           eventBridge: {
@@ -581,7 +580,7 @@ const serverlessConfig: AWS = {
       ? {
           cronjobSyncOrcid: {
             handler:
-              'apps/asap-server/src/handlers/webhooks/cronjob-sync-orcid.handler',
+              'apps/crn-server/src/handlers/webhooks/cronjob-sync-orcid.handler',
             events: [
               {
                 schedule: 'rate(1 hour)', // run every hour

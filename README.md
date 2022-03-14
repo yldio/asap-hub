@@ -85,11 +85,11 @@ Then commit the changed.
 
 Create a migration script with the following command:
 
-`yarn workspace @asap-hub/asap-server migration:create <give-the-script-a-name>`
+`yarn workspace @asap-hub/crn-server migration:create <give-the-script-a-name>`
 
 This should create a new script in:
 
-src/apps/asap-server/src/migrations
+src/apps/crn-server/src/migrations
 
 ```javascript
 export default class MoveRepurposedFields extends Migration {

@@ -231,7 +231,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: build
-        uses: ./.github/actions/build
+        uses: ./.github/actions/build-sls-package
         with:
           algolia-index: ${{ env.ALGOLIA_INDEX }}}}
           asap-api-url: ${{ env.ASAP_API_URL }}}}

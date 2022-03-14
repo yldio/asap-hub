@@ -18,12 +18,6 @@ on:
       codecov-token:
         description: 'Codecov Token'
         required: true
-      squidex-base-url:
-        description: 'Squidex Base Url'
-        required: true
-      squidex-client-id:
-        description: 'Squidex Client ID'
-        required: true
       squidex-client-secret:
         description: 'Squidex Client Secret'
         required: true
@@ -86,21 +80,20 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    env:
-      SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}-${{ github.run_id }}
-      SQUIDEX_CLIENT_ID: ${{ secrets.squidex-client-id }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.squidex-client-secret }}
-      SQUIDEX_BASE_URL: ${{ secrets.squidex-base-url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup app
-        run: python ci/integration/scripts/create-app.py
-      - name: Test
-        run: yarn test:integration
-      - name: Delete app
-        if: always()
-        run: python ci/integration/scripts/delete-app.py
+      - name: Step
+        run: |
+          cat ".github/environment/All.env" >> $GITHUB_ENV
+          cat ".github/environment/Branch.env" >> $GITHUB_ENV
+      - name: Test Integration
+        uses: ./.github/actions/test-integration
+        with:
+          squidex-app-name: ${{ inputs.squidex-app-name }}-${{ github.run_id }}
+          squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
+          squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
+          squidex-client-secret: ${{ secrets.squidex-client-secret }}
 
   test-browser:
     runs-on: ubuntu-latest

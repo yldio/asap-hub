@@ -14,9 +14,8 @@ jobs:
     needs: [setup]
     uses: ./.github/workflows/reusable-test.yml
     with:
-      environment: Branch
+      environment-name: Branch
       image-name: ${{ needs.setup.outputs.integration-image-name }}
-      squidex-app-name: ${{ needs.setup.outputs.pr-number || github.head_ref }}
     secrets:
       codecov-token: ${{ secrets.CODECOV_TOKEN }}
       squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}

@@ -19,8 +19,6 @@ jobs:
       squidex-app-name: ${{ needs.setup.outputs.pr-number || github.head_ref }}
     secrets:
       codecov-token: ${{ secrets.CODECOV_TOKEN }}
-      squidex-base-url: ${{ secrets.SQUIDEX_BASE_URL }}
-      squidex-client-id: ${{ secrets.SQUIDEX_CLIENT_ID }}
       squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 

@@ -3,6 +3,7 @@ import { Router, MemoryRouter, StaticRouter, Link } from 'react-router-dom';
 import { History, createMemoryHistory } from 'history';
 import { render, act, waitFor, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { ToastContext } from '@asap-hub/react-context';
 
 import Form from '../Form';
 import { Button } from '../../atoms';
@@ -42,11 +43,13 @@ it('initially does not prompt when trying to leave', () => {
 });
 it('prompts when trying to leave after making edits', () => {
   const { getByText } = render(
-    <Router history={history}>
-      <Form {...props} dirty>
-        {() => <Link to={'/another-url'}>Navigate away</Link>}
-      </Form>
-    </Router>,
+    <ToastContext.Provider value={jest.fn()}>
+      <Router history={history}>
+        <Form {...props} dirty>
+          {() => <Link to={'/another-url'}>Navigate away</Link>}
+        </Form>
+      </Router>
+    </ToastContext.Provider>,
   );
 
   userEvent.click(getByText(/navigate/i));
@@ -105,8 +108,10 @@ describe('when saving', () => {
     let handleSave!: jest.MockedFunction<() => Promise<void>>;
     let resolveSave!: () => void;
     let rejectSave!: (error: Error) => void;
+    let mockToast: () => void;
 
     beforeEach(() => {
+      mockToast = jest.fn();
       handleSave = jest.fn().mockReturnValue(
         new Promise<void>((resolve, reject) => {
           resolveSave = resolve;
@@ -115,18 +120,20 @@ describe('when saving', () => {
       );
       history = createMemoryHistory({ getUserConfirmation });
       result = render(
-        <Router history={history}>
-          <Form {...props} onSave={handleSave} dirty>
-            {({ onSave: onSubmit, isSaving }) => (
-              <>
-                <Link to={'/another-url'}>Navigate away</Link>
-                <Button primary enabled={!isSaving} onClick={onSubmit}>
-                  save
-                </Button>
-              </>
-            )}
-          </Form>
-        </Router>,
+        <ToastContext.Provider value={mockToast}>
+          <Router history={history}>
+            <Form {...props} onSave={handleSave} dirty>
+              {({ onSave: onSubmit, isSaving }) => (
+                <>
+                  <Link to={'/another-url'}>Navigate away</Link>
+                  <Button primary enabled={!isSaving} onClick={onSubmit}>
+                    save
+                  </Button>
+                </>
+              )}
+            </Form>
+          </Router>
+        </ToastContext.Provider>,
       );
     });
 
@@ -209,8 +216,11 @@ describe('when saving', () => {
         const { getByText } = result;
 
         userEvent.click(getByText(/^save/i));
-
-        await waitFor(() => expect(getByText(/error/i)).toBeVisible());
+        await waitFor(() =>
+          expect(mockToast).toHaveBeenCalledWith(
+            'There was an error and we were unable to save your changes. Please try again.',
+          ),
+        );
       });
 
       it('re-enables the save button', async () => {
@@ -235,39 +245,13 @@ describe('when saving', () => {
         );
       });
 
-      it('removes the error message when attempting to save again', async () => {
-        const { getByText, queryByText, rerender, unmount } = result;
+      it('clears the error when trying to leave', async () => {
+        const { getByText } = result;
 
         userEvent.click(getByText(/^save/i));
-        await waitFor(() =>
-          expect(getByText(/^save/i).closest('button')).toBeEnabled(),
-        );
+        userEvent.click(getByText(/navigate/i));
 
-        let rejectSaveAgain!: (error: Error) => void;
-        const handleSaveAgain = jest.fn().mockReturnValue(
-          new Promise((_resolve, reject) => {
-            rejectSaveAgain = reject;
-          }),
-        );
-        rerender(
-          <Router history={history}>
-            <Form {...props} onSave={handleSaveAgain} dirty>
-              {({ onSave: onSubmit, isSaving }) => (
-                <>
-                  <Button primary enabled={!isSaving} onClick={onSubmit}>
-                    save
-                  </Button>
-                </>
-              )}
-            </Form>
-          </Router>,
-        );
-
-        userEvent.click(getByText(/^save/i));
-        expect(queryByText(/error/i)).not.toBeInTheDocument();
-
-        unmount();
-        act(() => rejectSaveAgain(new Error()));
+        await waitFor(() => expect(mockToast).toHaveBeenCalledWith(null));
       });
     });
   });

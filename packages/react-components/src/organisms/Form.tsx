@@ -1,9 +1,9 @@
-import { ReactNode, useRef, useState, useEffect } from 'react';
+import { ReactNode, useRef, useState, useEffect, useContext } from 'react';
 import { Prompt } from 'react-router-dom';
 import { css } from '@emotion/react';
+import { ToastContext } from '@asap-hub/react-context';
 
 import { noop } from '../utils';
-import Toast from './Toast';
 
 const styles = css({
   boxSizing: 'border-box',
@@ -28,6 +28,8 @@ const Form = <T extends void | Record<string, unknown>>({
   validate = () => true,
   onSave = noop,
 }: FormProps<T>): React.ReactElement => {
+  const toast = useContext(ToastContext);
+
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] =
     useState<'initial' | 'isSaving' | 'hasError' | 'hasSaved'>('initial');
@@ -50,6 +52,9 @@ const Form = <T extends void | Record<string, unknown>>({
       } catch {
         if (formRef.current) {
           setStatus('hasError');
+          toast(
+            'There was an error and we were unable to save your changes. Please try again.',
+          );
         }
       }
     }
@@ -64,13 +69,11 @@ const Form = <T extends void | Record<string, unknown>>({
           status === 'hasError' ||
           (status === 'initial' && dirty)
         }
-        message="Are you sure you want to leave? Unsaved changes will be lost."
+        message={() => {
+          toast(null);
+          return 'Are you sure you want to leave? Unsaved changes will be lost.';
+        }}
       />
-      {status === 'hasError' && (
-        <Toast>
-          There was an error and we were unable to save your changes
-        </Toast>
-      )}
       <form ref={formRef} css={styles}>
         {children({ isSaving: status === 'isSaving', onSave: wrappedOnSave })}
       </form>

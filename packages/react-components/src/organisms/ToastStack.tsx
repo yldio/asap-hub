@@ -18,7 +18,9 @@ const ToastStack: React.FC<ToastStackProps> = ({ children }) => {
   const [toastNodes, setToastNodes] = useState<ReadonlyArray<ReactNode>>([]);
   const toast = useCallback(
     (node: ReactNode) =>
-      setToastNodes((currToastNodes) => [...currToastNodes, node]),
+      setToastNodes((currToastNodes) =>
+        node ? [...new Set([...currToastNodes, node])] : [],
+      ),
     [],
   );
 

@@ -75,6 +75,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:apps/e2e-tests"
       },
       {
+        "name": "@asap-hub/gp2-frontend",
+        "reference": "workspace:apps/gp2-frontend"
+      },
+      {
         "name": "@asap-hub/messages",
         "reference": "workspace:apps/messages"
       },
@@ -162,6 +166,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/eslint-config-asap-hub", ["workspace:packages/eslint-config-asap-hub"]],
       ["@asap-hub/fixtures", ["workspace:packages/fixtures"]],
       ["@asap-hub/flags", ["workspace:packages/flags"]],
+      ["@asap-hub/gp2-frontend", ["workspace:apps/gp2-frontend"]],
       ["@asap-hub/message-templates", ["workspace:packages/message-templates"]],
       ["@asap-hub/messages", ["workspace:apps/messages"]],
       ["@asap-hub/model", ["workspace:packages/model"]],
@@ -307,6 +312,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@asap-hub/flags",
         "workspace:packages/flags"
+      ],
+      [
+        "@asap-hub/gp2-frontend",
+        "workspace:apps/gp2-frontend"
       ],
       [
         "@asap-hub/message-templates",
@@ -10766,6 +10775,76 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/asap-hub__inline-environment", "workspace:@types/asap-hub__inline-environment"],
             ["@types/jest", "npm:26.0.23"],
             ["core-js", "npm:3.12.1"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@asap-hub/gp2-frontend", [
+        ["workspace:apps/gp2-frontend", {
+          "packageLocation": "./apps/gp2-frontend/",
+          "packageDependencies": [
+            ["@asap-hub/gp2-frontend", "workspace:apps/gp2-frontend"],
+            ["@asap-hub/algolia", "workspace:packages/algolia"],
+            ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/fixtures", "workspace:packages/fixtures"],
+            ["@asap-hub/flags", "workspace:packages/flags"],
+            ["@asap-hub/model", "workspace:packages/model"],
+            ["@asap-hub/react-components", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/react-components"],
+            ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
+            ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
+            ["@asap-hub/unsupported-browser-page", "workspace:packages/unsupported-browser-page"],
+            ["@asap-hub/validation", "workspace:packages/validation"],
+            ["@auth0/auth0-spa-js", "npm:1.15.0"],
+            ["@babel/runtime-corejs3", "npm:7.14.0"],
+            ["@fast-csv/format", "npm:4.3.5"],
+            ["@sentry/cli", "npm:1.68.0"],
+            ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:6.11.0"],
+            ["@sentry/tracing", "npm:6.11.0"],
+            ["@testing-library/dom", "npm:7.31.0"],
+            ["@testing-library/jest-dom", "npm:5.12.0"],
+            ["@testing-library/react", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:11.2.6"],
+            ["@testing-library/react-hooks", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:4.0.1"],
+            ["@testing-library/user-event", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:12.8.3"],
+            ["@types/history", "npm:4.7.8"],
+            ["@types/jest", "npm:26.0.23"],
+            ["@types/nock", "npm:11.1.0"],
+            ["@types/node", "npm:14.14.45"],
+            ["@types/react", "npm:17.0.5"],
+            ["@types/react-dom", "npm:17.0.5"],
+            ["@types/react-router-dom", "npm:5.1.7"],
+            ["@types/react-test-renderer", "npm:17.0.1"],
+            ["@types/streamsaver", "npm:2.0.1"],
+            ["@types/testing-library__jest-dom", "npm:5.9.5"],
+            ["@types/testing-library__react", "npm:10.0.1"],
+            ["@types/testing-library__react-hooks", "npm:3.4.1"],
+            ["@types/uuid", "npm:8.3.0"],
+            ["browser-image-compression", "npm:1.0.14"],
+            ["browserslist-useragent-regexp", "npm:3.0.0"],
+            ["cross-env", "npm:7.0.3"],
+            ["date-fns", "npm:2.21.3"],
+            ["history", "npm:4.10.1"],
+            ["identity-obj-proxy", "npm:3.0.0"],
+            ["jose", "npm:2.0.5"],
+            ["nock", "npm:13.0.11"],
+            ["pirates", "npm:4.0.1"],
+            ["react", "npm:17.0.2"],
+            ["react-app-polyfill", "npm:1.0.6"],
+            ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:17.0.2"],
+            ["react-error-boundary", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:3.1.3"],
+            ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
+            ["react-router-last-location", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:2.0.1"],
+            ["react-scripts", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:4.0.3"],
+            ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.2"],
+            ["react-titled", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:1.0.1"],
+            ["recoil", "virtual:c4ae2f625a4ac5aa649abbf60db7c71aca414aadbf350d87ea37595af32595ce70907b878a98750e798e6867f5b52cf0a985bd4cd784c0ad5a3f626d3cbad95a#patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fgp2-frontend%40workspace%3Aapps%2Fgp2-frontend"],
+            ["streamsaver", "npm:2.0.5"],
+            ["typescript", "patch:typescript@npm%3A4.2.4#~builtin<compat/typescript>::version=4.2.4&hash=ddd1e8"],
+            ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.2.1"],
+            ["use-deep-compare-effect", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:1.6.1"],
+            ["uuid", "npm:8.3.2"],
+            ["web-streams-polyfill", "npm:3.1.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -53229,10 +53308,38 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
+        ["patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fgp2-frontend%40workspace%3Aapps%2Fgp2-frontend", {
+          "packageLocation": "./.yarn/cache/recoil-patch-b106aea338-e9bdb30a43.zip/node_modules/recoil/",
+          "packageDependencies": [
+            ["recoil", "patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fgp2-frontend%40workspace%3Aapps%2Fgp2-frontend"]
+          ],
+          "linkType": "SOFT",
+        }],
         ["virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fcrn-frontend%40workspace%3Aapps%2Fcrn-frontend", {
           "packageLocation": "./.yarn/__virtual__/recoil-virtual-13ae47bc9e/0/cache/recoil-patch-959b9ccc17-e9bdb30a43.zip/node_modules/recoil/",
           "packageDependencies": [
             ["recoil", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fcrn-frontend%40workspace%3Aapps%2Fcrn-frontend"],
+            ["@types/react", "npm:17.0.5"],
+            ["@types/react-dom", "npm:17.0.5"],
+            ["@types/react-native", null],
+            ["react", "npm:17.0.2"],
+            ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:17.0.2"],
+            ["react-native", null]
+          ],
+          "packagePeers": [
+            "@types/react-dom",
+            "@types/react-native",
+            "@types/react",
+            "react-dom",
+            "react-native",
+            "react"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:c4ae2f625a4ac5aa649abbf60db7c71aca414aadbf350d87ea37595af32595ce70907b878a98750e798e6867f5b52cf0a985bd4cd784c0ad5a3f626d3cbad95a#patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fgp2-frontend%40workspace%3Aapps%2Fgp2-frontend", {
+          "packageLocation": "./.yarn/__virtual__/recoil-virtual-1465d16524/0/cache/recoil-patch-b106aea338-e9bdb30a43.zip/node_modules/recoil/",
+          "packageDependencies": [
+            ["recoil", "virtual:c4ae2f625a4ac5aa649abbf60db7c71aca414aadbf350d87ea37595af32595ce70907b878a98750e798e6867f5b52cf0a985bd4cd784c0ad5a3f626d3cbad95a#patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fgp2-frontend%40workspace%3Aapps%2Fgp2-frontend"],
             ["@types/react", "npm:17.0.5"],
             ["@types/react-dom", "npm:17.0.5"],
             ["@types/react-native", null],

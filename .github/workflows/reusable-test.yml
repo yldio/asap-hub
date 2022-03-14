@@ -86,10 +86,7 @@ jobs:
       - name: Step
         uses: ./.github/actions/setup
         with:
-          environment: ${{ inputs.environment }}
-      - name: echo
-        run: |
-          echo "Environment: ${{ jobs.environment }}"
+          environment-name: ${{ inputs.environment }}
       - name: Test Integration
         uses: ./.github/actions/test-integration
         with:

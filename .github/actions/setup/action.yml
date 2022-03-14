@@ -1,7 +1,7 @@
 name: 'Setup'
 description: 'Generates the environment variables for the workflow'
 inputs:
-  environment:
+  environment-name:
     description: 'Current environment'
     required: true
 runs:
@@ -10,7 +10,18 @@ runs:
     - name: Setup
       shell: bash
       run: |
+        if [ "$ENVIRONMENT_NAME" = "Branch" ]; then
+          echo "Setting up branch environment"
+        elif [ "$ENVIRONMENT_NAME" == 'Development' ]; then
+          echo "Setting up development environment"
+        elif [ "$ENVIRONMENT_NAME" == 'Production' ]; then
+          echo "Setting up production environment"
+        else
+          echo "Unknown environment: $ENVIRONMENT_NAME"
+          exit 1
+        fi
+
         cat ".github/environment/All.env" >> $GITHUB_ENV
-        cat ".github/environment/$ENVIRONMENT.env" >> $GITHUB_ENV
+        cat ".github/environment/$ENVIRONMENT_NAME.env" >> $GITHUB_ENV
       env:
-        ENVIRONMENT: ${{ inputs.environment }}
+        ENVIRONMENT_NAME: ${{ inputs.environment-name }}

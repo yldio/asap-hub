@@ -3,6 +3,9 @@ name: Reusable verify
 on:
   workflow_call:
     inputs:
+      environment:
+        required: true
+        type: string
       asap-api-url:
         description: 'ASAP API Url'
         required: true
@@ -76,6 +79,7 @@ jobs:
     permissions:
       packages: read
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     container:
       image: ${{ inputs.image-name }}
       credentials:

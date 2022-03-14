@@ -3,6 +3,9 @@ name: Reusable test
 on:
   workflow_call:
     inputs:
+      environment:
+        required: true
+        type: string
       image-name:
         description: 'Image name'
         required: true
@@ -77,6 +80,7 @@ jobs:
     permissions:
       packages: read
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     container:
       image: ${{ inputs.image-name }}
       credentials:

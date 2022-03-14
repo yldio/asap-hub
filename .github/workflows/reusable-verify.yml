@@ -6,14 +6,6 @@ on:
       environment-name:
         required: true
         type: string
-      asap-api-url:
-        description: 'ASAP API Url'
-        required: true
-        type: string
-      asap-app-url:
-        description: 'ASAP APP Url'
-        required: true
-        type: string
       image-name:
         description: 'Image name'
         required: true
@@ -38,32 +30,30 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          environment-name: ${{ inputs.environment-name }}
       - name: Test
-        run: |
-          yarn test:e2e
+        uses: ./.github/actions/verify-sls
+        with:
+          asap-api-url: ${{ env.ASAP_API_URL }}
 
   e2e-test:
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:focal
-    env:
-      ASAP_APP_URL: ${{ inputs.asap-app-url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Cache build output
-        uses: actions/cache@v2
-        id: restore-rebuild
+      - name: Setup
+        uses: ./.github/actions/setup
         with:
-          path: |
-            .yarn/unplugged/
-          key: rebuild-output-${{ github.sha }}
-      - name: Install Playwright
-        run: |
-          yarn workspace @asap-hub/e2e-tests run playwright install
+          environment-name: ${{ inputs.environment-name }}
       - name: Test
-        run: |
-          yarn workspace @asap-hub/e2e-tests run playwright test
+        uses: ./.github/actions/e2e-test
+        with:
+          asap-app-url: ${{ env.ASAP_APP_URL }}
 
   verify-schema:
     permissions:

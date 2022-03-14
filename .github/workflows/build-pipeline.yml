@@ -124,13 +124,8 @@ jobs:
     uses: ./.github/workflows/reusable-verify.yml
     with:
       environment: Branch
-      asap-api-url: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
-      asap-app-url: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
       image-name: ${{ needs.setup.outputs.integration-image-name }}
-      squidex-app-name: '${{ needs.setup.outputs.pr-number }}'
     secrets:
-      squidex-base-url: ${{ secrets.SQUIDEX_BASE_URL }}
-      squidex-client-id: ${{ secrets.SQUIDEX_CLIENT_ID }}
       squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
   # notify_failure:

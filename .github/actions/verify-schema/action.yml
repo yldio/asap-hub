@@ -1,5 +1,5 @@
-name: 'Sync Squidex'
-description: 'Syncs the Squidex schema'
+name: 'Verify Schema'
+description: 'Verifies the schema'
 inputs:
   squidex-app-name:
     description: 'Squidex App Name'

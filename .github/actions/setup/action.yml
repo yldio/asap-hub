@@ -12,6 +12,8 @@ runs:
       run: |
         if [ "$ENVIRONMENT_NAME" = "Branch" ]; then
           echo "Setting up branch environment"
+          PR_NUMBER=${{ github.event.number || github.event.inputs.prNumber }}
+          echo "SQUIDEX_APP_NAME=$PR_NUMBER" >> $GITHUB_ENV
         elif [ "$ENVIRONMENT_NAME" == 'Development' ]; then
           echo "Setting up development environment"
         elif [ "$ENVIRONMENT_NAME" == 'Production' ]; then
@@ -23,5 +25,7 @@ runs:
 
         cat ".github/environment/All.env" >> $GITHUB_ENV
         cat ".github/environment/$ENVIRONMENT_NAME.env" >> $GITHUB_ENV
+
+        echo $GITHUB_ENV
       env:
         ENVIRONMENT_NAME: ${{ inputs.environment-name }}

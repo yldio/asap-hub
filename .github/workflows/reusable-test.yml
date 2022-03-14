@@ -3,15 +3,12 @@ name: Reusable test
 on:
   workflow_call:
     inputs:
-      environment:
+      environment-name:
+        description: 'The environment name'
         required: true
         type: string
       image-name:
         description: 'Image name'
-        required: true
-        type: string
-      squidex-app-name:
-        description: 'Squidex App Name'
         required: true
         type: string
     secrets:
@@ -74,7 +71,7 @@ jobs:
     permissions:
       packages: read
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
+    environment: ${{ inputs.environment-name }}
     container:
       image: ${{ inputs.image-name }}
       credentials:
@@ -86,11 +83,11 @@ jobs:
       - name: Step
         uses: ./.github/actions/setup
         with:
-          environment-name: ${{ inputs.environment }}
+          environment-name: ${{ inputs.environment-name }}
       - name: Test Integration
         uses: ./.github/actions/test-integration
         with:
-          squidex-app-name: ${{ inputs.squidex-app-name }}-${{ github.run_id }}
+          squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}-${{ github.run_id }}
           squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
           squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
           squidex-client-secret: ${{ secrets.squidex-client-secret }}

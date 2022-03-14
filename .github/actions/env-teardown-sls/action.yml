@@ -27,7 +27,7 @@ runs:
   steps:
     - name: Remove CF Stack
       if: ${{ inputs.prNumber != 'production' && inputs.prNumber != 'dev' }}
-      run: yarn sls remove --verbose
+      run: yarn sls remove --verbose || true
       shell: bash
       env:
         SLS_STAGE: ${{ inputs.prNumber }}
@@ -44,7 +44,7 @@ runs:
         SLS_STAGE: ${{ inputs.prNumber }}-gitlab
       if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
       shell: bash
-      run: yarn sls remove --verbose
+      run: yarn sls remove --verbose || true
     - name: Delete PR Squidex App
       run: python ci/integration/scripts/delete-app.py
       shell: bash

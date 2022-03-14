@@ -4,11 +4,29 @@ inputs:
   prNumber:
     required: true
     description: Choose which PR number to destroy
+  AWS_ACCESS_KEY_ID:
+    required: true
+    description: The AWS access key
+  AWS_SECRET_ACCESS_KEY:
+    required: true
+    description: The AWS secret
+  AWS_ACM_CETRIFICATE_ARN:
+    required: true
+    description: The AWS ACM Certificate
+  AWS_DEFAULT_REGION:
+    required: true
+    description: The AWS default region
+  SQUIDEX_CLIENT_ID:
+    required: true
+    description: The Squidex client id
+  SQUIDEX_CLIENT_SECRET:
+    required: true
+    description: The Squidex client secret
 runs:
   using: composite
   steps:
     - name: Remove CF Stack
-      if: ${{ inputs.prNumber != 'production' && env.prNumber != 'dev' }}
+      if: ${{ inputs.prNumber != 'production' && inputs.prNumber != 'dev' }}
       run: yarn sls remove --verbose
       shell: bash
       env:
@@ -17,10 +35,10 @@ runs:
         ASAP_HOSTNAME: 'hub.asap.science'
         ASAP_API_URL: 'https://api-${{ inputs.prNumber }}.hub.asap.science'
         ASAP_APP_URL: 'https://${{ inputs.prNumber }}.hub.asap.science'
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
-        AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
+        AWS_ACM_CERTIFICATE_ARN: ${{ inputs.AWS_ACM_CERTIFICATE_ARN }}
+        AWS_REGION: ${{ inputs.AWS_DEFAULT_REGION }}
     - name: Remove GitLab CF Stack
       env:
         SLS_STAGE: ${{ inputs.prNumber }}-gitlab
@@ -32,8 +50,8 @@ runs:
       shell: bash
       env:
         SQUIDEX_APP_NAME: ${{ inputs.prNumber }}
-        SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
-        SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
+        SQUIDEX_CLIENT_ID: ${{ inputs.SQUIDEX_CLIENT_ID }}
+        SQUIDEX_CLIENT_SECRET: ${{ inputs.SQUIDEX_CLIENT_SECRET }}
     - name: Delete PR Squidex App created by gitlab
       env:
         SQUIDEX_APP_NAME: ${{ inputs.prNumber }}-gitlab

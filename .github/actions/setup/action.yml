@@ -1,0 +1,16 @@
+name: 'Setup'
+description: 'Generates the environment variables for the workflow'
+inputs:
+  environment:
+    description: 'Current environment'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup
+      shell: bash
+      run: |
+        cat ".github/environment/All.env" >> $GITHUB_ENV
+        cat ".github/environment/$ENVIRONMENT.env" >> $GITHUB_ENV
+      env:
+        ENVIRONMENT: ${{ inputs.environment }}

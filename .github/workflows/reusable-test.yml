@@ -84,9 +84,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Step
-        run: |
-          cat ".github/environment/All.env" >> $GITHUB_ENV
-          cat ".github/environment/Branch.env" >> $GITHUB_ENV
+        uses: ./.github/actions/setup
+        with:
+          environment: ${{ inputs.environment }}
       - name: Test Integration
         uses: ./.github/actions/test-integration
         with:

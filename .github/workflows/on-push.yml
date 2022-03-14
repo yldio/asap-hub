@@ -1,4 +1,4 @@
-name: Build Pipeline
+name: Continuous Integration
 
 on:
   pull_request:

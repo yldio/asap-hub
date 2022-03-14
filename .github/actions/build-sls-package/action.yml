@@ -50,6 +50,9 @@ inputs:
   squidex-client-secret:
     description: 'Squidex Client Secret'
     required: true
+  squidex-shared-secret:
+    description: 'Squidex Shared Secret'
+    required: true
 
 runs:
   using: 'composite'

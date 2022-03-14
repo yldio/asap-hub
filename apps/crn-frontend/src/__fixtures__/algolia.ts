@@ -1,6 +1,7 @@
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
   EntityRecord,
+  EntityHit,
   RESEARCH_OUTPUT_ENTITY_TYPE,
   EntityResponses,
   SearchEntityResponse,
@@ -21,11 +22,14 @@ export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
   renderingContent: {},
   processingTimeMS: 1,
   ...overrides,
-  hits: data.map((item, i) => ({
-    ...item,
-    objectID: `${i}`,
-    __meta: { type },
-  })),
+  hits: data.map(
+    (item, i) =>
+      ({
+        ...item,
+        objectID: `${i}`,
+        __meta: { type },
+      } as EntityHit<EntityType>),
+  ),
 });
 
 export const createResearchOutputAlgoliaRecord = (

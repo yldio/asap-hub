@@ -1,8 +1,10 @@
 import {
+  ExternalAuthorResponse,
+  ListResponse,
+  ListUserResponse,
   UserResponse,
   UserPatchRequest,
   UserAvatarPostRequest,
-  ListUserResponse,
 } from '@asap-hub/model';
 
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';
@@ -39,11 +41,29 @@ export const getUsers = async (
     .map((filter) => `teams.role:"${filter}"`)
     .join(' OR ');
 
-  const result = await algoliaClient.searchEntity('user', searchQuery, {
+  const result = await algoliaClient.search(['user'], searchQuery, {
     filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,
   });
+
+  return { items: result.hits, total: result.nbHits };
+};
+
+export const getUsersAndExternalAuthors = async (
+  algoliaClient: AlgoliaSearchClient,
+  { searchQuery, currentPage, pageSize }: GetListOptions,
+): Promise<ListResponse<UserResponse | ExternalAuthorResponse>> => {
+  const result = await algoliaClient.search(
+    ['user', 'external-author'],
+    searchQuery,
+    {
+      filters: undefined,
+      page: currentPage ?? undefined,
+      hitsPerPage: pageSize ?? undefined,
+      restrictSearchableAttributes: ['displayName'],
+    },
+  );
 
   return { items: result.hits, total: result.nbHits };
 };

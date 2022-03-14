@@ -46,19 +46,6 @@ const TeamCreateOutputContributorsCard: React.FC<TeamCreateOutputContributorsPro
   }) => (
     <FormCard title="Who were the contributors?">
       <LabeledMultiSelect
-        title="Authors"
-        description="Add author that contributed to this output. Only authors whose PI is part of the CRN will appear."
-        subtitle="(optional)"
-        enabled={!isSaving}
-        placeholder="Start typing..."
-        loadOptions={getAuthorSuggestions}
-        onChange={onChangeAuthors}
-        values={authors}
-        noOptionsMessage={({ inputValue }) =>
-          `Sorry, no authors match ${inputValue}`
-        }
-      />
-      <LabeledMultiSelect
         title="Teams"
         description="Add other teams that contributed to this output. Those teams will also then be able to edit."
         subtitle="(required)"
@@ -82,6 +69,19 @@ const TeamCreateOutputContributorsCard: React.FC<TeamCreateOutputContributorsPro
         values={labs}
         noOptionsMessage={({ inputValue }) =>
           `Sorry, no labs match ${inputValue}`
+        }
+      />
+      <LabeledMultiSelect
+        title="Authors"
+        description=""
+        subtitle="(optional)"
+        enabled={!isSaving}
+        placeholder="Start typing..."
+        loadOptions={getAuthorSuggestions}
+        onChange={onChangeAuthors}
+        values={authors}
+        noOptionsMessage={({ inputValue }) =>
+          `Sorry, no authors match ${inputValue}`
         }
       />
     </FormCard>

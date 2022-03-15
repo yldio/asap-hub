@@ -96,25 +96,13 @@ jobs:
     uses: ./.github/workflows/reusable-deploy.yml
     with:
       environment-name: Branch
-      algolia-index: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
-      asap-api-url: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
-      asap-app-url: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
       image-name: ${{ needs.setup.outputs.integration-image-name }}
-      sls-stage: '${{ needs.setup.outputs.pr-number }}'
-      squidex-app-name: '${{ needs.setup.outputs.pr-number }}'
     secrets:
-      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      aws-acm-certificate-arn: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
-      aws-region: ${{ secrets.AWS_REGION }}
-      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-      sentry-dsn-api: ${{ secrets.SENTRY_DSN_API }}
-      sentry-dsn-calendar: ${{ secrets.SENTRY_DSN_CALENDAR }}
-      sentry-dsn-user-invite: ${{ secrets.SENTRY_DSN_USER_INVITE }}
-      squidex-base-url: ${{ secrets.SQUIDEX_BASE_URL }}
-      squidex-client-id: ${{ secrets.SQUIDEX_CLIENT_ID }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   verify:
     needs: [setup, deployment, prepare-squidex]

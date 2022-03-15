@@ -6,70 +6,29 @@ on:
       environment-name:
         required: true
         type: string
-      algolia-index:
-        description: 'Algolia Index'
-        required: true
-        type: string
-      asap-api-url:
-        description: 'ASAP API Url'
-        required: true
-        type: string
-      asap-app-url:
-        description: 'ASAP APP Url'
-        required: true
-        type: string
       image-name:
         description: 'Image name'
         required: true
         type: string
-      sls-stage:
-        description: 'SLS Stage'
-        required: true
-        type: string
-      squidex-app-name:
-        description: 'Squidex App Name'
-        required: true
-        type: string
     secrets:
-      aws-access-key-id:
+      AWS_ACCESS_KEY_ID:
         description: 'AWS Access Key ID'
         required: true
-      aws-secret-access-key:
+      AWS_SECRET_ACCESS_KEY:
         description: 'AWS Secret Access Key'
         required: true
-      aws-acm-certificate-arn:
-        description: 'AWS ACM Certificate ARN'
-        required: true
-      aws-region:
-        description: 'AWS Region'
-        required: true
-      lightstep-token:
+      LIGHTSTEP_TOKEN:
         description: 'Lightstep Token'
-        required: true
-      sentry-dsn-api:
-        description: 'Sentry DSN API'
-        required: true
-      sentry-dsn-calendar:
-        description: 'Sentry DSN Calendar'
-        required: true
-      sentry-dsn-user-invite:
-        description: 'Sentry DSN User Invite'
-        required: true
-      squidex-base-url:
-        description: 'Squidex Base Url'
-        required: true
-      squidex-client-id:
-        description: 'Squidex Client ID'
         required: true
       SQUIDEX_CLIENT_SECRET:
         description: 'Squidex Client Secret'
         required: true
-      squidex-shared-secret:
+      SQUIDEX_SHARED_SECRET:
         description: 'Squidex Shared Secret'
         required: true
 
 jobs:
-  deploy-sls:
+  deploy:
     permissions:
       packages: read
     runs-on: ubuntu-latest
@@ -81,57 +40,30 @@ jobs:
     environment:
       name: ${{ inputs.environment-name }}
       url: ${{ inputs.asap-app-url }}
-    env:
-      ALGOLIA_INDEX: ${{ inputs.algolia-index }}
-      ASAP_API_URL: ${{ inputs.asap-api-url }}
-      ASAP_APP_URL: ${{ inputs.asap-app-url }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.aws-access-key-id }}
-      AWS_ACM_CERTIFICATE_ARN: ${{ secrets.aws-acm-certificate-arn }}
-      AWS_REGION: ${{ secrets.aws-region }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.aws-secret-access-key }}
-      CURRENT_REVISION: ${{ github.sha }}
-      LIGHTSTEP_TOKEN: ${{ secrets.lightstep-token }}
-      NODE_ENV: 'production'
-      NODE_OPTIONS: '--max_old_space_size=4096'
-      SENTRY_DSN_API: ${{ secrets.sentry-dsn-api }}
-      SENTRY_DSN_CALENDAR: ${{ secrets.sentry-dsn-calendar }}
-      SENTRY_DSN_USER_INVITE: ${{ secrets.sentry-dsn-user-invite }}
-      SLS_STAGE: ${{ inputs.sls-stage}}
-      SQUIDEX_APP_NAME: '${{ inputs.squidex-app-name }}'
-      SQUIDEX_BASE_URL: ${{ secrets.squidex-base-url }}
-      SQUIDEX_CLIENT_ID: ${{ secrets.squidex-client-id }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      SQUIDEX_SHARED_SECRET: ${{ secrets.squidex-shared-secret }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Cache build output
-        uses: actions/cache@v2
-        id: restore-build
+      - name: Setup
+        uses: ./.github/actions/setup
         with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-frontend-output-${{ github.sha }}
-      - name: Cache rebuild output
-        uses: actions/cache@v2
-        with:
-          path: |
-            .yarn/unplugged/
-          key: rebuild-output-${{ github.sha }}
-      - uses: actions/download-artifact@v2
-        with:
-          name: sls-package
-          path: 'sls-package'
+          environment-name: ${{ inputs.environment-name }}
       - name: Deploy
-        run: |
-          yarn sls deploy --package sls-package --verbose
-      - name: Update Squidex schema
-        uses: ./.github/actions/squidex-sync
+        uses: ./.github/actions/deploy
         with:
-          squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
-          squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
-          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET}}
-          squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
-          squidex-shared-secret: ${{ secrets.squidex-shared-secret }}
+          algolia-index: ${{ env.ALGOLIA_INDEX }}
           asap-api-url: ${{ env.ASAP_API_URL }}
+          asap-app-url: ${{ env.ASAP_APP_URL }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-acm-certificate-arn: ${{ env.AWS_ACM_CERTIFICATE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
+          sentry-dsn-api: ${{ env.SENTRY_DSN_API }}
+          sentry-dsn-calendar: ${{ env.SENTRY_DSN_CALENDAR }}
+          sentry-dsn-user-invite: ${{ env.SENTRY_DSN_USER_INVITE }}
+          sls-stage: ${{ env.SLS_STAGE }}
+          squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
+          squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
+          squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
+          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+          squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}

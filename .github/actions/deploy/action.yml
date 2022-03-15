@@ -1,5 +1,5 @@
-name: 'E2E Test'
-description: 'Runs E2E Test'
+name: 'Deploy'
+description: 'Deploys the application'
 inputs:
   aws-access-key-id:
     description: 'AWS Access Key ID'

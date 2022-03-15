@@ -20,6 +20,9 @@ runs:
           echo "ASAP_API_URL=https://api-$PR_NUMBER.$ASAP_HOSTNAME" >> $GITHUB_ENV
           echo "ASAP_APP_URL=https://$PR_NUMBER.$ASAP_HOSTNAME" >> $GITHUB_ENV
           echo "SLS_STAGE=$PR_NUMBER" >> $GITHUB_ENV
+
+          APP_RELEASE='${{ github.run_id }}-dev'
+          echo "APP_RELEASE=$APP_RELEASE" >> $GITHUB_ENV
         elif [ "$ENVIRONMENT_NAME" == 'Development' ]; then
           echo "Setting up development environment"
         elif [ "$ENVIRONMENT_NAME" == 'Production' ]; then

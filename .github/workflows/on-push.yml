@@ -35,9 +35,6 @@ jobs:
       aws-default-region: ${{ secrets.AWS_DEFAULT_REGION }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-      sentry-dsn-api: ${{ secrets.SENTRY_DSN_API }}
-      sentry-dsn-calendar: ${{ secrets.SENTRY_DSN_CALENDAR }}
-      sentry-dsn-user-invite: ${{ secrets.SENTRY_DSN_USER_INVITE }}
       react-app-gtm-container-id: ${{ secrets.REACT_APP_GTM_CONTAINER_ID }}
       squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
@@ -116,7 +113,7 @@ jobs:
       sentry-dsn-user-invite: ${{ secrets.SENTRY_DSN_USER_INVITE }}
       squidex-base-url: ${{ secrets.SQUIDEX_BASE_URL }}
       squidex-client-id: ${{ secrets.SQUIDEX_CLIENT_ID }}
-      squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   verify:

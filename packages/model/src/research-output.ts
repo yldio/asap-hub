@@ -177,6 +177,7 @@ export type ResearchOutputPostRequest = {
   asapFunded?: boolean;
   sharingStatus: ResearchOutputSharingStatus;
   usedInPublication?: boolean;
+  accessInstructions?: string;
 };
 
 export const researchOutputLabels: Record<ResearchOutputType, string> = {

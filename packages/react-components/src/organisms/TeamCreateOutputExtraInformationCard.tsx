@@ -3,22 +3,30 @@ import { ComponentProps } from 'react';
 import { Link } from '../atoms';
 
 import { mailToSupport } from '../mail';
-import { FormCard, LabeledMultiSelect } from '../molecules';
+import { FormCard, LabeledMultiSelect, LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
 
 type TeamCreateOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
-  'tags'
+  'tags' | 'accessInstructions'
 > & {
   tagSuggestions: NonNullable<
     ComponentProps<typeof LabeledMultiSelect>['suggestions']
   >;
-  onChange?: (values: string[]) => void;
+  onChangeTags?: (values: string[]) => void;
+  onChangeAccessInstructions?: (values: string) => void;
   isSaving: boolean;
 };
 
 const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInformationProps> =
-  ({ onChange = noop, tags, tagSuggestions, isSaving }) => (
+  ({
+    onChangeTags = noop,
+    tags,
+    tagSuggestions,
+    onChangeAccessInstructions = noop,
+    accessInstructions,
+    isSaving,
+  }) => (
     <FormCard title="What extra information can you provide?">
       <LabeledMultiSelect
         title="Additional Keywords"
@@ -28,12 +36,21 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
         enabled={!isSaving}
         suggestions={tagSuggestions}
         placeholder="Add a keyword (E.g. Cell Biology)"
-        onChange={(options) => onChange(options.map(({ value }) => value))}
+        onChange={(options) => onChangeTags(options.map(({ value }) => value))}
       />
 
       <Link href={mailToSupport({ subject: 'New keyword' }).toString()}>
         Ask ASAP to add a new keyword
       </Link>
+
+      <LabeledTextArea
+        title="Access instructions"
+        subtitle="(optional)"
+        onChange={onChangeAccessInstructions}
+        placeholder="E.g. To access the output, you will first need to create an account on..."
+        enabled={!isSaving}
+        value={accessInstructions || ''}
+      />
     </FormCard>
   );
 

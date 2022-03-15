@@ -84,6 +84,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [description, setDescription] =
     useState<ResearchOutputPostRequest['description']>('');
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>('');
+  const [accessInstructions, setAccessInstructions] =
+    useState<ResearchOutputPostRequest['accessInstructions']>('');
 
   return (
     <Form
@@ -107,6 +109,10 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           authors: authors.map(({ value }) => value),
           labs: labs.map(({ value }) => value),
           teams: teams.map(({ value }) => value),
+          accessInstructions:
+            String(accessInstructions).trim() !== ''
+              ? accessInstructions
+              : undefined,
         })
       }
     >
@@ -128,7 +134,9 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             isSaving={isSaving}
             tagSuggestions={tagSuggestions}
             tags={tags}
-            onChange={setTags}
+            onChangeTags={setTags}
+            accessInstructions={accessInstructions}
+            onChangeAccessInstructions={setAccessInstructions}
           />
 
           <TeamCreateOutputContributorsCard

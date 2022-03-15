@@ -64,23 +64,17 @@ jobs:
         uses: ./.github/actions/setup
         with:
           environment-name: ${{ secrets.ENVIRONMENT_NAME }}
-      - name: Setup app
+      - name: Prepare
+        uses: ./.github/actions/prepare-squidex
         if: ${{ github.event.action == 'opened' }}
-        run: python .github/scripts/squidex/create-app.py
-      - name: Configure AWS credentials
-        if: ${{ github.event.action == 'opened' }}
-        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-region: ${{ env.AWS_REGION }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - name: Import data
-        if: ${{ github.event.action == 'opened' }}
-        run: |
-          MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket "asap-hub-dev-data-backup" --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
-          aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
-          tar -xf $MOST_RECENT_BACKUP
-          FIRST_RUN="true" .github/scripts/prepare-squidex/import-data.sh
+          squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
+          squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
+          squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
+          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
   deployment:
     needs: [setup, test, build-analysis, prepare-squidex]

@@ -5,7 +5,6 @@ on:
     types: [opened, synchronize]
     branches:
       - master
-
 jobs:
   setup:
     uses: ./.github/workflows/setup.yml
@@ -17,9 +16,8 @@ jobs:
       environment-name: Branch
       image-name: ${{ needs.setup.outputs.integration-image-name }}
     secrets:
-      codecov-token: ${{ secrets.CODECOV_TOKEN }}
-      squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
   build:
     needs: [setup]
@@ -27,17 +25,12 @@ jobs:
     with:
       environment-name: Branch
       image-name: ${{ needs.setup.outputs.integration-image-name }}
-      sentry-dsn: ''
-      app-release: '${{ github.run_id }}-dev'
-      algolia-app-name: 'algolia-app-id-dev'
     secrets:
-      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      aws-default-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-      react-app-gtm-container-id: ${{ secrets.REACT_APP_GTM_CONTAINER_ID }}
-      squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   build-analysis:
     needs: [setup, build]
@@ -45,7 +38,7 @@ jobs:
     with:
       image-name: ${{ needs.setup.outputs.integration-image-name }}
     secrets:
-      bundlewatch-github-token: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
+      BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
   prepare-squidex:
     permissions:
@@ -64,8 +57,6 @@ jobs:
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
-      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
-      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -93,7 +84,7 @@ jobs:
 
   deployment:
     needs: [setup, test, build-analysis, prepare-squidex]
-    uses: ./.github/workflows/reusable-deploy.yml
+    uses: ./.github/workflows/reusable-deployment.yml
     with:
       environment-name: Branch
       image-name: ${{ needs.setup.outputs.integration-image-name }}
@@ -111,7 +102,7 @@ jobs:
       environment-name: Branch
       image-name: ${{ needs.setup.outputs.integration-image-name }}
     secrets:
-      squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
   # notify_failure:
   #   runs-on: ubuntu-latest

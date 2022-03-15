@@ -11,7 +11,7 @@ on:
         required: true
         type: string
     secrets:
-      squidex-client-secret:
+      SQUIDEX_CLIENT_SECRET:
         description: 'Squidex Client Secret'
         required: true
 
@@ -76,4 +76,4 @@ jobs:
           squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
           squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
           squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
-          squidex-client-secret: ${{ secrets.squidex-client-secret }}
+          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}

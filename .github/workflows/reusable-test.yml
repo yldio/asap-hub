@@ -12,14 +12,11 @@ on:
         required: true
         type: string
     secrets:
-      codecov-token:
+      CODECOV_TOKEN:
         description: 'Codecov Token'
         required: true
-      squidex-client-secret:
+      SQUIDEX_CLIENT_SECRET:
         description: 'Squidex Client Secret'
-        required: true
-      squidex-shared-secret:
-        description: 'Squidex Shared Secret'
         required: true
 jobs:
   check:
@@ -52,7 +49,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      CODECOV_TOKEN: ${{ secrets.codecov_token }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -90,7 +87,7 @@ jobs:
           squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}-${{ github.run_id }}
           squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
           squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
-          squidex-client-secret: ${{ secrets.squidex-client-secret }}
+          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
   test-browser:
     runs-on: ubuntu-latest

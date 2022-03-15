@@ -1,0 +1,132 @@
+name: 'Build Frontend'
+description: 'Builds frontend'
+inputs:
+  algolia-app-name:
+    description: 'Algolia App Name'
+    required: true
+  algolia-index:
+    description: 'Algolia Index'
+    required: true
+  app-release:
+    description: 'App Release'
+    required: true
+  asap-api-url:
+    description: 'ASAP API Url'
+    required: true
+  asap-app-url:
+    description: 'ASAP APP Url'
+    required: true
+  asap-hostname:
+    description: 'ASAP Hostname'
+    required: true
+  aws-access-key-id:
+    description: 'AWS Access Key ID'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
+    required: true
+  aws-acm-certificate-arn:
+    description: 'AWS ACM Certificate ARN'
+    required: true
+  aws-region:
+    description: 'AWS Region'
+    required: true
+  react-app-gtm-container-id:
+    description: 'GTM Container ID'
+    required: true
+  lightstep-token:
+    description: 'Lightstep Token'
+    required: true
+  react-app-environment:
+    description: 'React App Environment'
+    required: true
+  sls-stage:
+    description: 'SLS Stage'
+    required: true
+  react-app-sentry-dsn:
+    description: 'Sentry DSN'
+    required: true
+  sentry-dsn-api:
+    description: 'Sentry DSN API'
+    required: true
+  sentry-dsn-calendar:
+    description: 'Sentry DSN Calendar'
+    required: true
+  sentry-dsn-user-invite:
+    description: 'Sentry DSN User Invite'
+    required: true
+  squidex-app-name:
+    description: 'Squidex App Name'
+    required: true
+  squidex-base-url:
+    description: 'Squidex Base Url'
+    required: true
+  squidex-client-id:
+    description: 'Squidex Client ID'
+    required: true
+  squidex-client-secret:
+    description: 'Squidex Client Secret'
+    required: true
+  squidex-shared-secret:
+    description: 'Squidex Shared Secret'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        aws-region: ${{ inputs.aws-region }}
+
+    - name: Get Algolia app Id
+      shell: bash
+      env:
+        ALGOLIA_APP_NAME: ${{ inputs.algolia-app-name }}
+      id: get-algolia-app-id
+      run: |
+        REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name $ALGOLIA_APP_NAME --query Parameter.Value --output text)
+        echo "::set-output name=id::$REACT_APP_ALGOLIA_APP_ID"
+
+    - name: Cache transpile output
+      uses: actions/cache@v2
+      id: restore-transpile
+      with:
+        path: |
+          apps/**/build*
+          packages/**/build*
+        key: transpile-output-${{ github.sha }}
+
+    - name: Cache build typecheck output
+      uses: actions/cache@v2
+      id: restore-build-typecheck
+      with:
+        path: |
+          apps/**/build*
+          packages/**/build*
+        key: build-typecheck-output-${{ github.sha }}
+
+    - name: Build
+      shell: bash
+      env:
+        REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
+        REACT_APP_ALGOLIA_INDEX: ${{ inputs.algolia-index }}
+        REACT_APP_API_BASE_URL: ${{ inputs.asap-api-url }}
+        REACT_APP_ENVIRONMENT: ${{ inputs.react-app-environment }}
+        REACT_APP_RELEASE: ${{ inputs.app-release }}
+        REACT_APP_SENTRY_DSN: ${{ inputs.react-app-sentry-dsn }}
+        REACT_APP_GTM_CONTAINER_ID: ${{ inputs.react-app-gtm-container-id }}
+        ASAP_HOSTNAME: ${{ inputs.asap-hostname }}
+      run: |
+        yarn build:frontend
+
+    - name: Cache build output
+      uses: actions/cache@v2
+      id: restore-build
+      with:
+        path: |
+          apps/**/build*
+          packages/**/build*
+        key: build-frontend-output-${{ github.sha }}

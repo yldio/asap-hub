@@ -8,7 +8,7 @@ on:
         required: true
         type: string
     secrets:
-      bundlewatch-github-token:
+      BUNDLEWATCH_GITHUB_TOKEN:
         description: 'Bundlewatch Github Token'
         required: true
 
@@ -27,7 +27,7 @@ jobs:
       CI_REPO: ${{ github.repository }}
       CI_COMMIT_SHA: ${{ github.sha }}
       CI_BRANCH: ${{ github.head_ref }}
-      BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.bundlewatch-github-token }}
+      BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

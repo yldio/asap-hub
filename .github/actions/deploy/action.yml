@@ -1,0 +1,112 @@
+name: 'E2E Test'
+description: 'Runs E2E Test'
+inputs:
+  aws-access-key-id:
+    description: 'AWS Access Key ID'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
+    required: true
+  algolia-index:
+    description: 'Algolia Index'
+    required: true
+  asap-api-url:
+    description: 'ASAP API Url'
+    required: true
+  asap-app-url:
+    description: 'ASAP APP Url'
+    required: true
+  image-name:
+    description: 'Image name'
+    required: true
+  sls-stage:
+    description: 'SLS Stage'
+    required: true
+  squidex-app-name:
+    description: 'Squidex App Name'
+    required: true
+  aws-acm-certificate-arn:
+    description: 'AWS ACM Certificate ARN'
+    required: true
+  aws-region:
+    description: 'AWS Region'
+    required: true
+  lightstep-token:
+    description: 'Lightstep Token'
+    required: true
+  sentry-dsn-api:
+    description: 'Sentry DSN API'
+    required: true
+  sentry-dsn-calendar:
+    description: 'Sentry DSN Calendar'
+    required: true
+  sentry-dsn-user-invite:
+    description: 'Sentry DSN User Invite'
+    required: true
+  squidex-base-url:
+    description: 'Squidex Base Url'
+    required: true
+  squidex-client-id:
+    description: 'Squidex Client ID'
+    required: true
+  squidex-client-secret:
+    description: 'Squidex Client Secret'
+    required: true
+  squidex-shared-secret:
+    description: 'Squidex Shared Secret'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Cache build output
+      uses: actions/cache@v2
+      id: restore-build
+      with:
+        path: |
+          apps/**/build*
+          packages/**/build*
+        key: build-frontend-output-${{ github.sha }}
+    - name: Cache rebuild output
+      uses: actions/cache@v2
+      with:
+        path: |
+          .yarn/unplugged/
+        key: rebuild-output-${{ github.sha }}
+    - uses: actions/download-artifact@v2
+      with:
+        name: sls-package
+        path: 'sls-package'
+    - name: Deploy
+      shell: bash
+      run: |
+        yarn sls deploy --package sls-package --verbose
+      env:
+        ALGOLIA_INDEX: ${{ inputs.algolia-index }}
+        ASAP_API_URL: ${{ inputs.asap-api-url }}
+        ASAP_APP_URL: ${{ inputs.asap-app-url }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_ACM_CERTIFICATE_ARN: ${{ inputs.aws-acm-certificate-arn }}
+        AWS_REGION: ${{ inputs.aws-region }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        CURRENT_REVISION: ${{ github.sha }}
+        LIGHTSTEP_TOKEN: ${{ inputs.lightstep-token }}
+        NODE_ENV: 'production'
+        NODE_OPTIONS: '--max_old_space_size=4096'
+        SENTRY_DSN_API: ${{ inputs.sentry-dsn-api }}
+        SENTRY_DSN_CALENDAR: ${{ inputs.sentry-dsn-calendar }}
+        SENTRY_DSN_USER_INVITE: ${{ inputs.sentry-dsn-user-invite }}
+        SLS_STAGE: ${{ inputs.sls-stage}}
+        SQUIDEX_APP_NAME: '${{ inputs.squidex-app-name }}'
+        SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
+        SQUIDEX_CLIENT_ID: ${{ inputs.squidex-client-id }}
+        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-client-secret }}
+        SQUIDEX_SHARED_SECRET: ${{ inputs.squidex-shared-secret }}
+    - name: Update Squidex schema
+      uses: ./.github/actions/squidex-sync
+      with:
+        squidex-app-name: ${{ inputs.squidex-app-name }}
+        squidex-client-id: ${{ inputs.squidex-client-id }}
+        squidex-client-secret: ${{ inputs.squidex-client-secret }}
+        squidex-base-url: ${{ inputs.squidex-base-url }}
+        squidex-shared-secret: ${{ inputs.squidex-shared-secret }}
+        asap-api-url: ${{ inputs.asap-api-url }}

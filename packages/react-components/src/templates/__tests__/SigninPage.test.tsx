@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 
 import SigninPage from '../SigninPage';
 
-const defaultAppName = 'Asap hub';
+const defaultAppName = 'ASAP Hub';
 
 it('renders the signin form', () => {
   const { getByText } = render(

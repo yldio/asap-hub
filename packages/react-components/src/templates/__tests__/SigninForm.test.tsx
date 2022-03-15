@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 
 import SigninForm from '../SigninForm';
 
-const defaultAppName = 'Asap hub';
+const defaultAppName = 'ASAP Hub';
 
 it('renders different headlines in signin and signup mode', () => {
   const { getByRole, rerender } = render(

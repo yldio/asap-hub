@@ -94,11 +94,11 @@ jobs:
           tar -xf $MOST_RECENT_BACKUP
           FIRST_RUN="true" .github/scripts/prepare-squidex/import-data.sh
 
-  deploy:
+  deployment:
     needs: [setup, test, build-analysis, prepare-squidex]
     uses: ./.github/workflows/reusable-deploy.yml
     with:
-      environment: Branch
+      environment-name: Branch
       algolia-index: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
       asap-api-url: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
       asap-app-url: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'

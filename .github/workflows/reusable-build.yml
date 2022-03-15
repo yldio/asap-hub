@@ -177,6 +177,7 @@ jobs:
           REACT_APP_RELEASE: ${{ inputs.app-release }}
           REACT_APP_SENTRY_DSN: ${{ inputs.sentry-dsn }}
           REACT_APP_GTM_CONTAINER_ID: ${{ secrets.react-app-gtm-container-id }}
+          ASAP_HOSTNAME: 'hub.asap.science'
         run: |
           yarn build:frontend
       - name: Cache build output

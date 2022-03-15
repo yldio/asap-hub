@@ -85,7 +85,7 @@ describe('on cancel', () => {
     userEvent.click(getByText(/^cancel/i));
     expect(getUserConfirmation).toHaveBeenCalled();
   });
-  it('goes back in browser history if previous route is available', () => {
+  it('goes to the root route if previous navigation is not available', () => {
     const { getByText } = render(
       <ToastContext.Provider value={jest.fn()}>
         <Router history={history}>
@@ -108,7 +108,7 @@ describe('on cancel', () => {
     expect(history.location.pathname).toBe('/');
   });
 
-  it('goes back in root page when previous route is not available', () => {
+  it('goes back in browser history if previous navigation is available', () => {
     const { getByText } = render(
       <ToastContext.Provider value={jest.fn()}>
         <Router history={history}>

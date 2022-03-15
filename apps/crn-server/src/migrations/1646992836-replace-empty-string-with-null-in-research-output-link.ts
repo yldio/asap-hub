@@ -8,7 +8,7 @@ export default class MapResearchOutputDeprecatedSubtype extends Migration {
     await applyToAllItemsInCollection<RestResearchOutput>(
       'research-outputs',
       async (researchOutput, squidexClient) => {
-        if (researchOutput?.data?.link?.iv === '') {
+        if (researchOutput?.data?.link?.iv?.trim() === '') {
           await squidexClient.patch(researchOutput.id, {
             link: {
               // @ts-expect-error // The type system does not support null here.

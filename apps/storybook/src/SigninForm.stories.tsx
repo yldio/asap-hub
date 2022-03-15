@@ -15,6 +15,7 @@ export const Normal = () => (
     )}
     email="john.doe@example.com"
     password="_%6.o*fGR75)':7,"
+    appName={text('App Name', 'ASAP Hub')}
   />
 );
 
@@ -27,5 +28,6 @@ export const Signup = () => (
     )}
     email="john.doe@example.com"
     password="_%6.o*fGR75)':7,"
+    appName="ASAP Hub"
   />
 );

@@ -25,8 +25,6 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    env:
-      ASAP_API_URL: ${{ inputs.asap-api-url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -75,7 +73,7 @@ jobs:
       - name: Verify
         uses: ./.github/actions/verify-schema
         with:
+          squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
           squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
           squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-          squidex-app-name: ${{ env.SQUIDEX_SHARED_SECRET }}

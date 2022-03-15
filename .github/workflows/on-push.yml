@@ -120,7 +120,7 @@ jobs:
       squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   verify:
-    needs: [setup, deploy, prepare-squidex]
+    needs: [setup, deployment, prepare-squidex]
     uses: ./.github/workflows/reusable-verify.yml
     with:
       environment-name: Branch

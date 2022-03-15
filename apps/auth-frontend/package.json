@@ -7,7 +7,9 @@
   },
   "scripts": {
     "start": "cross-env PORT=3002 TSC_COMPILE_ON_ERROR=true react-scripts start",
-    "build": "node scripts/build.js",
+    "build": "APP=crn node scripts/build.js",
+    "build:crn": "APP=crn node scripts/build.js",
+    "build:gp2": "APP=gp2 node scripts/build.js",
     "typecheck": "tsc",
     "test": "echo Run the workspace root script instead",
     "eject": "react-scripts eject"

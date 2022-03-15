@@ -61,7 +61,7 @@ on:
       squidex-client-id:
         description: 'Squidex Client ID'
         required: true
-      squidex-client-secret:
+      SQUIDEX_CLIENT_SECRET:
         description: 'Squidex Client Secret'
         required: true
       squidex-shared-secret:
@@ -100,7 +100,7 @@ jobs:
       SQUIDEX_APP_NAME: '${{ inputs.squidex-app-name }}'
       SQUIDEX_BASE_URL: ${{ secrets.squidex-base-url }}
       SQUIDEX_CLIENT_ID: ${{ secrets.squidex-client-id }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.squidex-client-secret }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       SQUIDEX_SHARED_SECRET: ${{ secrets.squidex-shared-secret }}
     steps:
       - name: Checkout
@@ -131,7 +131,7 @@ jobs:
         with:
           squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
           squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
-          squidex-client-secret: ${{ env.SQUIDEX_CLIENT_SECRET }}
+          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET}}
           squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
-          squidex-shared-secret: ${{ env.SQUIDEX_SHARED_SECRET }}
+          squidex-shared-secret: ${{ secrets.squidex-shared-secret }}
           asap-api-url: ${{ env.ASAP_API_URL }}

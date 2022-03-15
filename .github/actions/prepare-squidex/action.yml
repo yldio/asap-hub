@@ -1,0 +1,53 @@
+name: 'Prepare Squidex'
+description: 'Prepares Squidex'
+inputs:
+  aws-access-key-id:
+    description: 'AWS Access Key ID'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
+    required: true
+  aws-region:
+    description: 'AWS Region'
+    required: true
+  squidex-base-url:
+    description: 'Squidex Base Url'
+    required: true
+  squidex-client-id:
+    description: 'Squidex Client ID'
+    required: true
+  squidex-client-secret:
+    description: 'Squidex Client Secret'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup app
+      shell: bash
+      run: python .github/scripts/squidex/create-app.py
+      env:
+        SQUIDEX_APP_NAME: '${{ inputs.squidex-app-name }}'
+        SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
+        SQUIDEX_CLIENT_ID: ${{ inputs.squidex-client-id }}
+        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-client-secret }}
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        aws-region: ${{ inputs.aws-region }}
+    - name: Import data
+      shell: bash
+      run: |
+        MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket "asap-hub-dev-data-backup" --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
+        aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
+        tar -xf $MOST_RECENT_BACKUP
+        FIRST_RUN="true" .github/scripts/prepare-squidex/import-data.sh
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_REGION: ${{ inputs.aws-region }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        SQUIDEX_APP_NAME: '${{ inputs.squidex-app-name }}'
+        SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
+        SQUIDEX_CLIENT_ID: ${{ inputs.squidex-client-id }}
+        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-client-secret }}

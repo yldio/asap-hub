@@ -1,7 +1,7 @@
 name: 'E2E Test'
 description: 'Runs E2E Test'
 inputs:
-  asap-api-url:
+  asap-app-url:
     description: 'ASAP App Url'
     required: true
 runs:
@@ -23,4 +23,4 @@ runs:
       run: |
         yarn workspace @asap-hub/e2e-tests run playwright test
       env:
-        ASAP_API_URL: ${{ inputs.asap-api-url }}
+        ASAP_APP_URL: ${{ inputs.asap-app-url }}

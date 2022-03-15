@@ -8,7 +8,10 @@ import { CsvFormatterStream, Row } from '@fast-csv/format';
 import { waitFor } from '@testing-library/dom';
 import streamSaver from 'streamsaver';
 
-import { createAlgoliaResponse } from '../../__fixtures__/algolia';
+import {
+  createResearchOutputAlgoliaRecord,
+  createAlgoliaResponse,
+} from '../../__fixtures__/algolia';
 import {
   researchOutputToCSV,
   createCsvFileStream,
@@ -223,7 +226,7 @@ describe('algoliaResultsToStream', () => {
         Promise.resolve(
           createAlgoliaResponse(
             'research-output',
-            [createResearchOutputResponse()],
+            [createResearchOutputAlgoliaRecord()],
             {
               nbPages: 1,
             },
@@ -232,7 +235,7 @@ describe('algoliaResultsToStream', () => {
       (a) => a,
     );
     expect(mockCsvStream.write).toHaveBeenCalledWith(
-      expect.objectContaining(createResearchOutputResponse()),
+      expect.objectContaining(createResearchOutputAlgoliaRecord()),
     );
     expect(mockCsvStream.write).toHaveBeenCalledTimes(1);
     expect(mockCsvStream.end).toHaveBeenCalledTimes(1);
@@ -247,7 +250,7 @@ describe('algoliaResultsToStream', () => {
             'research-output',
             [
               {
-                ...createResearchOutputResponse(),
+                ...createResearchOutputAlgoliaRecord(),
                 title: `${parameters.currentPage}`,
               },
             ],
@@ -287,7 +290,7 @@ describe('algoliaResultsToStream', () => {
         Promise.resolve(
           createAlgoliaResponse(
             'research-output',
-            [{ ...createResearchOutputResponse(), title: 'a' }],
+            [{ ...createResearchOutputAlgoliaRecord(), title: 'a' }],
             {
               nbPages: 2,
             },

@@ -31,28 +31,20 @@ export type Payload =
     };
 
 export type EntityResponses = {
-  [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse;
-  [USER_ENTITY_TYPE]: UserResponse;
-  [EXTERNAL_AUTHOR_ENTITY_TYPE]: ExternalAuthorResponse;
-  [LAB_ENTITY_TYPE]: LabResponse;
+  [RESEARCH_OUTPUT_ENTITY_TYPE]: EntityMeta<ResearchOutputResponse>;
+  [USER_ENTITY_TYPE]: EntityMeta<UserResponse>;
+  [EXTERNAL_AUTHOR_ENTITY_TYPE]: EntityMeta<ExternalAuthorResponse>;
+  [LAB_ENTITY_TYPE]: EntityMeta<LabResponse>;
 };
 
-export type EntityRecord<T extends keyof EntityResponses> =
-  EntityResponses[T] & {
-    objectID: string;
-    __meta: {
-      type: T;
-    };
+export type EntityMeta<T> = T & {
+  __meta: {
+    type: keyof EntityResponses;
   };
-
-export type DistributeToEntityRecords<U extends keyof EntityResponses> =
-  U extends keyof EntityResponses ? EntityRecord<U> : never;
-
-export type EntityHit<T extends keyof EntityResponses> =
-  DistributeToEntityRecords<T>;
+};
 
 export type SearchEntityResponse<TEntityType extends keyof EntityResponses> =
-  SearchResponse<DistributeToEntityRecords<TEntityType>>;
+  SearchResponse<EntityResponses[TEntityType]>;
 
 export class AlgoliaSearchClient {
   public constructor(private index: SearchIndex) {
@@ -93,7 +85,7 @@ export class AlgoliaSearchClient {
         : entityTypesFilter,
     };
 
-    return this.index.search<DistributeToEntityRecords<T>>(query, options);
+    return this.index.search<EntityResponses[T]>(query, options);
   }
 
   private static getAlgoliaObject(

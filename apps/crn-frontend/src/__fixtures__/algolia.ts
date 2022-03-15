@@ -1,11 +1,11 @@
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
-  EntityRecord,
-  EntityHit,
   RESEARCH_OUTPUT_ENTITY_TYPE,
   EntityResponses,
   SearchEntityResponse,
+  EntityMeta,
 } from '@asap-hub/algolia';
+import { ResearchOutputResponse } from '@asap-hub/model';
 
 export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
   type: EntityType,
@@ -22,24 +22,20 @@ export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
   renderingContent: {},
   processingTimeMS: 1,
   ...overrides,
-  hits: data.map(
-    (item, i) =>
-      ({
-        ...item,
-        objectID: `${i}`,
-        __meta: { type },
-      } as EntityHit<EntityType>),
-  ),
+  hits: data.map((item, i) => ({
+    ...item,
+    objectID: `${i}`,
+    __meta: { type },
+  })),
 });
 
 export const createResearchOutputAlgoliaRecord = (
   itemIndex = 0,
-): EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE> => {
+): EntityMeta<ResearchOutputResponse> => {
   const response = createResearchOutputResponse(itemIndex);
 
   return {
     ...response,
-    objectID: response.id,
     __meta: { type: 'research-output' },
   };
 };

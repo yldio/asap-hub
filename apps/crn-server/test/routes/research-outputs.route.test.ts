@@ -198,10 +198,8 @@ describe('/research-outputs/ route', () => {
 
       test.each([
         'type',
-        'link',
         'description',
         'tags',
-        'link',
         'title',
         'sharingStatus',
         'addedDate',

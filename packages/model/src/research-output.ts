@@ -167,7 +167,7 @@ export type ResearchOutputPostRequest = {
   subTypes: ResearchOutputSubtype[];
   title: string;
   tags: string[];
-  link: string;
+  link?: string;
 
   labs?: string[];
   authors?: string[];

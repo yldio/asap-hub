@@ -1,0 +1,51 @@
+name: Pipeline branch
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - master
+#   push:
+#     branches:
+#       - CRN-713-build-test-and-check-in-github-for-dev-2
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    env:
+      EVENT_NAME: github.event_name
+    outputs:
+      environment-name: ${{ steps.get-name.outputs.environment-name }}
+    steps:
+    - name: Get Environment name
+      id: get-name
+      run: |
+        echo "{{ github.event_name }}"
+        echo "$EVENT_NAME"
+
+        if [ "$EVENT_NAME" = "pull_request" ]; then
+          ENVIRONMENT_NAME=Branch
+        else
+          ENVIRONMENT_NAME=Development
+        fi
+        echo "::set-output name=environment-name::$ENVIRONMENT_NAME"
+
+  test:
+    needs: [setup]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Test
+      id: test
+      run: |
+        echo "Testing"
+
+  build:
+    needs: [setup]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.setup.outputs.environment-name }}
+    env:
+      ENVIRONMENT_NAME: ${{ needs.setup.outputs.environment-name }}
+    steps:
+    - name: Test
+      id: test
+      run: |
+        echo "Build $ENVIRONMENT_NAME"

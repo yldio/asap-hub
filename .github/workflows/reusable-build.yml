@@ -29,8 +29,6 @@ on:
 
 jobs:
   build-typecheck:
-    permissions:
-      packages: read
     runs-on: ubuntu-latest
     container:
       image: ${{ inputs.image-name }}

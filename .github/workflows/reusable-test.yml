@@ -19,6 +19,25 @@ on:
         description: 'Squidex Client Secret'
         required: true
 jobs:
+
+  image-names:
+    runs-on: ubuntu-latest
+    outputs:
+      integration-image-name: ${{ steps.get-image-names.outputs.integration-image-name }}
+      squidex-image-name: ${{ steps.get-image-names.outputs.squidex-image-name }}
+    steps:
+      - name: Output Image Name
+        id: get-image-names
+        shell: bash
+        env:
+          IMAGE_TAG: ${{ inputs.image-tag }}
+        run: |
+          REPOSITORY="ghcr.io/yldio/asap-hub"
+          INTEGRATION_IMAGE_NAME="$REPOSITORY/node-python-sq:$IMAGE_TAG"
+          SQUIDEX_IMAGE_NAME="$REPOSITORY/squidex-utils:$IMAGE_TAG"
+          echo "::set-output name=integration-image-name::$INTEGRATION_IMAGE_NAME"
+          echo "::set-output name=squidex-image-name::$SQUIDEX_IMAGE_NAME"
+
   check:
     permissions:
       packages: read
@@ -65,13 +84,14 @@ jobs:
           yarn codecov
 
   test-integration:
+    needs: [ image-names ]
     if: ${{ github.event_name == 'pull_request' }}
     permissions:
       packages: read
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ${{ inputs.image-name }}
+      image: ${{ needs.image-names.outputs.integration-image-name }}
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -89,6 +109,9 @@ jobs:
           squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
           squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      - name: Exit
+        run: |
+          exit 1
 
   test-browser:
     runs-on: ubuntu-latest

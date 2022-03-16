@@ -785,6 +785,7 @@ __metadata:
     react-router-dom: ^5.2.0
     react-router-hash-link: ^2.4.3
     react-select: ^4
+    react-sortable-hoc: ^2.0.0
     react-test-renderer: ^17.0.2
     regenerator-runtime: ^0.13.8
     rehype-parse: ^7.0.1
@@ -5805,6 +5806,15 @@ __metadata:
   dependencies:
     regenerator-runtime: ^0.13.4
   checksum: f609df5ca9e26a1f0f71f92754a5f6e1a4a9c22f982627e8c2c2b751ebbf45da10376501024a68c22d7a625331f40a26f9d1830c8c869512bef813f223d18ba1
+  languageName: node
+  linkType: hard
+
+"@babel/runtime@npm:^7.2.0":
+  version: 7.17.7
+  resolution: "@babel/runtime@npm:7.17.7"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: d9ec9e2c5ebbf503ac865ebd70d0216443d0fa8380bab572aa44ccf8fafde8b8b9846badfdbba3572f79075c9a196845aa3f42a435fd34ec832acd2bc1467d37
   languageName: node
   linkType: hard
 
@@ -29742,6 +29752,17 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"prop-types@npm:^15.5.7":
+  version: 15.8.1
+  resolution: "prop-types@npm:15.8.1"
+  dependencies:
+    loose-envify: ^1.4.0
+    object-assign: ^4.1.1
+    react-is: ^16.13.1
+  checksum: c056d3f1c057cb7ff8344c645450e14f088a915d078dcda795041765047fa080d38e5d626560ccaac94a4e16e3aa15f3557c1a9a8d1174530955e992c675e459
+  languageName: node
+  linkType: hard
+
 "propagate@npm:^2.0.0":
   version: 2.0.1
   resolution: "propagate@npm:2.0.1"
@@ -30357,7 +30378,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-is@npm:^16.12.0, react-is@npm:^16.6.0, react-is@npm:^16.7.0, react-is@npm:^16.8.1":
+"react-is@npm:^16.12.0, react-is@npm:^16.13.1, react-is@npm:^16.6.0, react-is@npm:^16.7.0, react-is@npm:^16.8.1":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: f7a19ac3496de32ca9ae12aa030f00f14a3d45374f1ceca0af707c831b2a6098ef0d6bdae51bd437b0a306d7f01d4677fcc8de7c0d331eb47ad0f46130e53c5f
@@ -30612,6 +30633,21 @@ fsevents@~2.1.2:
     react: ^0.14.0 || ^15.0.0-0 || ^16.0.0 || ^17.0.0
     react-dom: ^0.14.0 || ^15.0.0-0 || ^16.0.0 || ^17.0.0
   checksum: 58ec9166dc458a1fd7929df8658d9dae3c1534968efbe66ffd026e3c38672b64374afa9df371d529e13fccab1758328d8fc52454745000d481b076ef457da7d7
+  languageName: node
+  linkType: hard
+
+"react-sortable-hoc@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "react-sortable-hoc@npm:2.0.0"
+  dependencies:
+    "@babel/runtime": ^7.2.0
+    invariant: ^2.2.4
+    prop-types: ^15.5.7
+  peerDependencies:
+    prop-types: ^15.5.7
+    react: ^16.3.0 || ^17.0.0
+    react-dom: ^16.3.0 || ^17.0.0
+  checksum: c4930856eb8e9be638220423d452ddaab834aa43ff76069eeb057c6a5f1d0538f9e43c17bedd34bfd2a66ff4aa1e289557821d792db73a42ebf061bd1c92a423
   languageName: node
   linkType: hard
 

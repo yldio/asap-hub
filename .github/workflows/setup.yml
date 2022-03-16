@@ -11,29 +11,67 @@ on:
     outputs:
       pr-number:
         description: 'The current PR number'
-        value: ${{ github.event.number || github.event.inputs.prNumber }}
+        value: ${{ jobs.names.outputs.pr-number }}
       integration-image-name:
         description: 'Name of integration image'
-        value: ${{ jobs.image-names.outputs.integration-image-name }}
+        value: ${{ jobs.names.outputs.integration-image-name }}
       squidex-image-name:
         description: 'Name of Squidex image'
-        value: ${{ jobs.image-names.outputs.squidex-image-name }}
+        value: ${{ jobs.names.outputs.squidex-image-name }}
+      algolia-index:
+        description: 'Name of Algolia index'
+        value: ${{ jobs.names.outputs.algolia-index }}
+      asap-api-url:
+        description: 'ASAP API URL'
+        value: ${{ jobs.names.outputs.asap-api-url }}
+      asap-app-url:
+        description: 'ASAP APP URL'
+        value: ${{ jobs.names.outputs.asap-app-url }}
+      sls-stage:
+        description: 'Name of SLS stage'
+        value: ${{ jobs.names.outputs.sls-stage }}
+      squidex-app-name:
+        description: 'Name of Squidex app'
+        value: ${{ jobs.names.outputs.squidex-app-name }}
 jobs:
-  image-names:
+  names:
     runs-on: ubuntu-latest
     outputs:
-      integration-image-name: ${{ steps.get-image-names.outputs.integration-image-name }}
-      squidex-image-name: ${{ steps.get-image-names.outputs.squidex-image-name }}
+      pr-number: ${{ steps.get-names.outputs.pr-number }}
+      integration-image-name: ${{ steps.get-names.outputs.integration-image-name }}
+      squidex-image-name: ${{ steps.get-names.outputs.squidex-image-name }}
+      algolia-index: ${{ steps.get-names.outputs.algolia-index }}
+      asap-api-url: ${{ steps.get-names.outputs.asap-api-url }}
+      asap-app-url: ${{ steps.get-names.outputs.asap-app-url }}
+      sls-stage: ${{ steps.get-names.outputs.sls-stage }}
+      squidex-app-name: ${{ steps.get-names.outputs.squidex-app-name }}
     steps:
       - name: Output Image Name
-        id: get-image-names
+        id: get-names
         shell: bash
         env:
           IMAGE_TAG: ${{ inputs.image-tag }}
           NODE_VERSION: ${{ inputs.node-version }}
         run: |
+
+          PR_NUMBER=${{ github.event.number || github.event.inputs.prNumber || github.head_ref }}
+          echo "::set-output name=pr-number::$PR_NUMBER"
           REPOSITORY="ghcr.io/yldio/asap-hub"
           INTEGRATION_IMAGE_NAME="$REPOSITORY/node-python-sq:$IMAGE_TAG"
           SQUIDEX_IMAGE_NAME="$REPOSITORY/squidex-utils:$IMAGE_TAG"
           echo "::set-output name=integration-image-name::$INTEGRATION_IMAGE_NAME"
           echo "::set-output name=squidex-image-name::$SQUIDEX_IMAGE_NAME"
+
+          ALGOLIA_INDEX="asap-hub_CI-$PR_NUMBER"
+          echo "::set-output name=algolia-index::$ALGOLIA_INDEX"
+
+          ASAP_API_URL="https://api-$PR_NUMBER.hub.asap.science"
+          echo "::set-output name=asap-api-url::$ASAP_API_URL"
+          ASAP_APP_URL="https://$PR_NUMBER.hub.asap.science"
+          echo "::set-output name=asap-app-url::$ASAP_APP_URL"
+
+          SLS_STAGE=$PR_NUMBER
+          echo "::set-output name=sls-stage::$SLS_STAGE"
+
+          SQUIDEX_APP_NAME=$PR_NUMBER
+          echo "::set-output name=squidex-app-name::$SQUIDEX_APP_NAME"

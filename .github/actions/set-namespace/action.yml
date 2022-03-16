@@ -1,0 +1,33 @@
+name: 'Sync Squidex'
+description: 'Syncs the Squidex schema'
+inputs:
+  image-tag:
+    description: 'Image Tag'
+    required: false
+    default: 1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+runs:
+  using: 'composite'
+  steps:
+    - name: Sync
+      shell: bash
+      run: |
+        PR_NUMBER=${{ github.event.number || github.event.inputs.prNumber || github.head_ref }}
+        REPOSITORY="ghcr.io/yldio/asap-hub"
+        INTEGRATION_IMAGE_NAME="$REPOSITORY/node-python-sq:$IMAGE_TAG"
+        SQUIDEX_IMAGE_NAME="$REPOSITORY/squidex-utils:$IMAGE_TAG"
+        echo "::set-output name=integration-image-name::$INTEGRATION_IMAGE_NAME"
+        echo "::set-output name=squidex-image-name::$SQUIDEX_IMAGE_NAME"
+
+        ALGOLIA_INDEX="asap-hub_CI-$PR_NUMBER"
+        echo "ALGOLIA_INDEX=$ALGOLIA_INDEX" >> $GITHUB_ENV
+
+        ASAP_API_URL="https://api-$PR_NUMBER.hub.asap.science"
+        echo "ASAP_API_URL=$ASAP_API_URL" >> $GITHUB_ENV
+        ASAP_APP_URL="https://$PR_NUMBER.hub.asap.science"
+        echo "ASAP_APP_URL=$ASAP_APP_URL" >> $GITHUB_ENV
+
+        SLS_STAGE=$PR_NUMBER
+        echo "SLS_STAGE=$SLS_STAGE" >> $GITHUB_ENV
+
+        SQUIDEX_APP_NAME=$PR_NUMBER
+        echo "SQUIDEX_APP_NAME=$SQUIDEX_APP_NAME" >> $GITHUB_ENV

@@ -1,14 +1,31 @@
 name: Build Pipeline
-
+env:
+  ASAP_HOSTNAME: 'hub.asap.science'
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  CURRENT_REVISION: ${{ github.sha }}
+  LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
+  NODE_OPTIONS: '--max_old_space_size=4096'
+  SENTRY_DSN_API: ${{ secrets.SENTRY_DSN_API }}
+  SENTRY_DSN_CALENDAR: ${{ secrets.SENTRY_DSN_CALENDAR }}
+  SENTRY_DSN_USER_INVITE: ${{ secrets.SENTRY_DSN_USER_INVITE }}
+  SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
+  SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
+  SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
+  SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
 on:
   pull_request:
     types: [opened, synchronize]
     branches:
       - master
-
-env:
-  NODE_OPTIONS: '--max_old_space_size=4096'
-  ASAP_HOSTNAME: 'hub.asap.science'
+  workflow_dispatch:
+    inputs:
+      prNumber:
+        required: true
+        type: string
+        description: Choose which PR number to destroy
 jobs:
   setup:
     uses: ./.github/workflows/setup.yml
@@ -49,10 +66,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number || github.head_ref }}-${{ github.run_id }}
-      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
-      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
+      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.squidex-app-name }}-${{ github.run_id }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -73,7 +87,6 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -122,7 +135,6 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -156,7 +168,7 @@ jobs:
       - name: Build
         env:
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
-          REACT_APP_ALGOLIA_INDEX: 'asap-hub_CI-${{ github.event.number }}'
+          REACT_APP_ALGOLIA_INDEX: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
           REACT_APP_API_BASE_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.${{ env.ASAP_HOSTNAME }}'
           REACT_APP_ENVIRONMENT: 'development'
           REACT_APP_RELEASE: '${{ github.run_id }}-dev'
@@ -206,7 +218,6 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -251,29 +262,15 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      SLS_STAGE: '${{ needs.setup.outputs.pr-number }}'
       NODE_ENV: 'production'
-      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
-      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
-      ALGOLIA_INDEX: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
-
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      SQUIDEX_APP_NAME: '${{ needs.setup.outputs.pr-number }}'
-      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
-      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
-      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
-      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
-      CURRENT_REVISION: ${{ github.sha }}
-      SENTRY_DSN_API: ${{ secrets.SENTRY_DSN_API }}
-      SENTRY_DSN_CALENDAR: ${{ secrets.SENTRY_DSN_CALENDAR }}
-      SENTRY_DSN_USER_INVITE: ${{ secrets.SENTRY_DSN_USER_INVITE }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Set namespace
+        uses: ./.github/actions/set-namespace
+      - name: echo
+        run: |
+          echo $ASAP_API_URL
       - name: Cache build output
         uses: actions/cache@v2
         id: restore-rebuild
@@ -393,12 +390,8 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}
-      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
-      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
-      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
-      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
+      ASAP_API_URL: ${{ needs.setup.outputs.asap-api-url }}
+      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.squidex-app-name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -419,9 +412,6 @@ jobs:
           aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
           tar -xf $MOST_RECENT_BACKUP
           FIRST_RUN="true" ./ci/import-squidex-data.sh
-      - name: test
-        run: |
-
       - name: Update schema
         uses: ./.github/actions/squidex-sync
         with:
@@ -443,10 +433,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}
-      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
-      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
+      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.squidex-app-name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -462,7 +449,6 @@ jobs:
         build-sls-package,
         test-unit,
         test-integration,
-
         typecheck,
         check,
         bundlewatch,
@@ -478,26 +464,12 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      NODE_ENV: production
-      NODE_OPTIONS: '--max_old_space_size=4096'
-      SLS_STAGE: ${{ needs.setup.outputs.pr-number }}
-      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}
-      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_TEST_CLIENT_ID }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_TEST_CLIENT_SECRET }}
-      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET_TEST }}
-      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
-      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
-      ALGOLIA_INDEX: 'asap-hub_CI-${{ needs.setup.outputs.pr-number }}'
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
-      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
-      CURRENT_REVISION: ${{ github.sha }}
-      SENTRY_DSN_API: ${{ secrets.SENTRY_DSN_API }}
-      SENTRY_DSN_CALENDAR: ${{ secrets.SENTRY_DSN_CALENDAR }}
-      SENTRY_DSN_USER_INVITE: ${{ secrets.SENTRY_DSN_USER_INVITE }}
+      ALGOLIA_INDEX: ${{ needs.setup.outputs.algolia-index }}
+      ASAP_API_URL: ${{ needs.setup.outputs.asap-api-url }}
+      ASAP_APP_URL: ${{ needs.setup.outputs.asap-app-url }}
+      SLS_STAGE: ${{ needs.setup.outputs.sls-stage }}
+      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.squidex-app-name }}
+      NODE_ENV: 'production'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -534,7 +506,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
+      ASAP_API_URL: ${{ needs.setup.outputs.asap-api-url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -547,7 +519,7 @@ jobs:
     container:
       image: mcr.microsoft.com/playwright:focal
     env:
-      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
+      ASAP_APP_URL: ${{ needs.setup.outputs.asap-app-url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

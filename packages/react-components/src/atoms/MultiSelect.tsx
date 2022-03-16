@@ -1,12 +1,70 @@
 import { css } from '@emotion/react';
-import { ComponentProps, FC, ReactElement, useState } from 'react';
-import Select, { ActionMeta, components, OptionsType } from 'react-select';
+import {
+  ComponentProps,
+  FC,
+  ReactElement,
+  useState,
+  MouseEventHandler,
+} from 'react';
+import Select, {
+  ActionMeta,
+  components,
+  MultiValueProps,
+  OptionsType,
+  Props,
+} from 'react-select';
 import AsyncSelect from 'react-select/async';
 
 import { validationMessageStyles } from '../form';
 import { reactMultiSelectStyles } from '../select';
 import { noop } from '../utils';
 import { crossIcon } from '../icons';
+import {
+  SortableContainer,
+  SortableContainerProps,
+  SortableElement,
+  SortEndHandler,
+  SortableHandle,
+} from 'react-sortable-hoc';
+import { MultiValueGenericProps } from 'react-select/src/components/MultiValue';
+
+function arrayMove<T>(array: readonly T[], from: number, to: number) {
+  const slicedArray = array.slice();
+  const removed = slicedArray.splice(from, 1)[0];
+  slicedArray.splice(to < 0 ? array.length + to : to, 0, removed);
+  return slicedArray;
+}
+
+const SortableMultiValue = SortableElement(
+  (props: MultiValueProps<MultiSelectOptionsType>) => {
+    // this prevents the menu from being opened/closed when the user clicks
+    // on a value to begin dragging it. ideally, detecting a click (instead of
+    // a drag) would still focus the control and toggle the menu, but that
+    // requires some magic with refs that are out of scope for this example
+    const onMouseDown: MouseEventHandler<HTMLDivElement> = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+    const innerProps = { ...props.innerProps, onMouseDown };
+    return <components.MultiValue {...props} innerProps={innerProps} />;
+  },
+);
+
+const SortableMultiValueLabel = SortableHandle(
+  (props: MultiValueGenericProps<MultiSelectOptionsType>) => (
+    <components.MultiValueLabel {...props} />
+  ),
+);
+
+const SortableAsyncSelect = SortableContainer(
+  AsyncSelect,
+) as React.ComponentClass<
+  Props<MultiSelectOptionsType, true> & SortableContainerProps
+>;
+
+const SortableSelect = SortableContainer(Select) as React.ComponentClass<
+  Props<MultiSelectOptionsType, true> & SortableContainerProps
+>;
 
 export const MultiValueRemove = (
   props: ComponentProps<typeof components.MultiValueRemove>,
@@ -71,13 +129,33 @@ const MultiSelect: FC<MultiSelectProps> = ({
     inputRef?.blur();
   };
 
-  const commonProps = {
+  const onSortEnd: SortEndHandler = ({ oldIndex, newIndex }) => {
+    const newValue = arrayMove(values, oldIndex, newIndex);
+    onChange(newValue);
+    console.log(
+      'Values sorted:',
+      newValue.map((i) => i.value),
+    );
+  };
+
+  const commonProps: Props<MultiSelectOptionsType, true> &
+    SortableContainerProps = {
+    useDragHandle: true,
+    axis: 'xy',
+    onSortEnd,
+    // small fix for https://github.com/clauderic/react-sortable-hoc/pull/352:
+    getHelperDimensions: ({ node }) => node.getBoundingClientRect(),
     inputId: id,
     isDisabled: !enabled,
     isMulti: true as const,
     placeholder,
     value: values,
-    components: { MultiValueRemove },
+    components: {
+      MultiValueRemove,
+      // @ts-expect-error // We're failing to provide a required index prop to SortableElement
+      MultiValue: SortableMultiValue,
+      MultiValueLabel: SortableMultiValueLabel,
+    },
     noOptionsMessage,
     styles: reactMultiSelectStyles(!!validationMsg),
 
@@ -105,7 +183,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
   return (
     <div css={containerStyles} onContextMenu={handleOnContextMenu}>
       {suggestions ? (
-        <Select<MultiSelectOptionsType, true>
+        <SortableSelect
           {...commonProps}
           options={suggestions.map((suggestion) => ({
             value: suggestion,
@@ -113,7 +191,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
           }))}
         />
       ) : (
-        <AsyncSelect<MultiSelectOptionsType, true>
+        <SortableAsyncSelect
           {...commonProps}
           loadOptions={loadOptions}
           cacheOptions

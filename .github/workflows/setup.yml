@@ -30,7 +30,6 @@ jobs:
         shell: bash
         env:
           IMAGE_TAG: ${{ inputs.image-tag }}
-          NODE_VERSION: ${{ inputs.node-version }}
         run: |
           REPOSITORY="ghcr.io/yldio/asap-hub"
           INTEGRATION_IMAGE_NAME="$REPOSITORY/node-python-sq:$IMAGE_TAG"

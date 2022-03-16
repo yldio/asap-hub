@@ -177,8 +177,8 @@ jobs:
           asap-app-url: ${{ env.ASAP_APP_URL }}
           aws-acm-certificate-arn: ${{ env.AWS_ACM_CERTIFICATE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
-          sls-stage: '${{ env.SLS_STAGE }}'
-          squidex-app-name: '${{ env.SQUIDEX_APP_NAME }}'
+          sls-stage: ${{ env.SLS_STAGE }}
+          squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}

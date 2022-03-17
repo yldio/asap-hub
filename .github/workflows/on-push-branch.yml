@@ -6,25 +6,19 @@ on:
     branches:
       - master
 jobs:
-  setup:
-    uses: ./.github/workflows/setup.yml
 
   test:
-    needs: [setup]
     uses: ./.github/workflows/reusable-test.yml
     with:
       environment-name: Branch
-      image-name: ${{ needs.setup.outputs.integration-image-name }}
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
   build:
-    needs: [setup]
     uses: ./.github/workflows/reusable-build.yml
     with:
       environment-name: Branch
-      image-name: ${{ needs.setup.outputs.integration-image-name }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -33,27 +27,23 @@ jobs:
       SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   build-analysis:
-    needs: [setup, build]
+    needs: [build]
     uses: ./.github/workflows/reusable-build-analysis.yml
-    with:
-      image-name: ${{ needs.setup.outputs.integration-image-name }}
     secrets:
       BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
   prepare-squidex:
     permissions:
       packages: read
-    needs: [setup]
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
     container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     environment: Branch
     env:
-      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
@@ -77,11 +67,10 @@ jobs:
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
   deployment:
-    needs: [setup, test, build-analysis, prepare-squidex]
+    needs: [test, build-analysis, prepare-squidex]
     uses: ./.github/workflows/reusable-deployment.yml
     with:
       environment-name: Branch
-      image-name: ${{ needs.setup.outputs.integration-image-name }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -90,11 +79,10 @@ jobs:
       SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   verify:
-    needs: [setup, deployment, prepare-squidex]
+    needs: [deployment, prepare-squidex]
     uses: ./.github/workflows/reusable-verify.yml
     with:
       environment-name: Branch
-      image-name: ${{ needs.setup.outputs.integration-image-name }}
     secrets:
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 

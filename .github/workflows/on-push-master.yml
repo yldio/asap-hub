@@ -9,21 +9,17 @@ jobs:
     uses: ./.github/workflows/setup.yml
 
   test:
-    needs: [setup]
     uses: ./.github/workflows/reusable-test.yml
     with:
       environment-name: Development
-      image-name: ${{ needs.setup.outputs.integration-image-name }}
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
   build:
-    needs: [setup]
     uses: ./.github/workflows/reusable-build.yml
     with:
       environment-name: Development
-      image-name: ${{ needs.setup.outputs.integration-image-name }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -32,10 +28,8 @@ jobs:
       SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   build-analysis:
-    needs: [setup, build]
+    needs: [build]
     uses: ./.github/workflows/reusable-build-analysis.yml
-    with:
-      image-name: ${{ needs.setup.outputs.integration-image-name }}
     secrets:
       BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 

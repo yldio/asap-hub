@@ -8,7 +8,10 @@ import {
   unpublishedEvent,
   LabEventGenerator,
 } from '../../fixtures/labs.fixtures';
-import { getListUserResponse } from '../../fixtures/users.fixtures';
+import {
+  getListUserResponse,
+  getUserResponse,
+} from '../../fixtures/users.fixtures';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user-controller.mock';
 
@@ -67,6 +70,23 @@ describe('Index Users on Lab event handler', () => {
     await expect(indexHandler(updateEvent('lab-1234'))).rejects.toThrow(
       algoliaError,
     );
+  });
+
+  test('Should omit non-onboarded and Hidden users', async () => {
+    userControllerMock.fetch.mockResolvedValueOnce({
+      total: 3,
+      items: [
+        getUserResponse(),
+        { ...getUserResponse(), role: 'Hidden' },
+        { ...getUserResponse(), onboarded: false },
+      ],
+    });
+
+    await indexHandler(updateEvent('lab-1234'));
+
+    expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
+      mapPayload(getUserResponse()),
+    ]);
   });
 
   test.each(possibleEvents)(

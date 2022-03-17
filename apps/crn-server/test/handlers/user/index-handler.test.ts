@@ -39,6 +39,34 @@ describe('User index handler', () => {
     });
   });
 
+  test('Should fetch the user and remove a record in Algolia when user is updated but not onboarded', async () => {
+    const userResponse = {
+      ...getUserResponse(),
+      onboarded: false,
+    };
+    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+
+    await indexHandler(updateEvent(userResponse.id));
+
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      userResponse.id,
+    );
+  });
+
+  test('Should fetch the user and remove a record in Algolia when user is updated but Hidden', async () => {
+    const userResponse = getUserResponse();
+    userControllerMock.fetchById.mockResolvedValueOnce({
+      ...userResponse,
+      role: 'Hidden',
+    });
+
+    await indexHandler(updateEvent(userResponse.id));
+
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      userResponse.id,
+    );
+  });
+
   test('Should fetch the user and remove the record in Algolia when user is unpublished', async () => {
     const event = unpublishedEvent();
 

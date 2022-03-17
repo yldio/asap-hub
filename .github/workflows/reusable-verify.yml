@@ -6,10 +6,6 @@ on:
       environment-name:
         required: true
         type: string
-      image-name:
-        description: 'Image name'
-        required: true
-        type: string
     secrets:
       SQUIDEX_CLIENT_SECRET:
         description: 'Squidex Client Secret'
@@ -17,11 +13,9 @@ on:
 
 jobs:
   verify-sls:
-    permissions:
-      packages: read
     runs-on: ubuntu-latest
     container:
-      image: ${{ inputs.image-name }}
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -54,12 +48,10 @@ jobs:
           asap-app-url: ${{ env.ASAP_APP_URL }}
 
   verify-schema:
-    permissions:
-      packages: read
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ${{ inputs.image-name }}
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

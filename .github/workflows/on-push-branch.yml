@@ -5,6 +5,9 @@ on:
     types: [opened, synchronize]
     branches:
       - master
+  push:
+    branches:
+      - CRN-713-build-test-and-check-in-github-for-dev-2
 jobs:
   test:
     uses: ./.github/workflows/reusable-test.yml
@@ -78,7 +81,7 @@ jobs:
       SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   verify:
-    needs: [deployment, prepare-squidex]
+    needs: [deployment]
     uses: ./.github/workflows/reusable-verify.yml
     with:
       environment-name: Branch

@@ -15,7 +15,6 @@ on:
         description: 'Squidex Client Secret'
         required: true
 jobs:
-
   check:
     runs-on: ubuntu-latest
     container:
@@ -82,9 +81,6 @@ jobs:
           squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
           squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      - name: Exit
-        run: |
-          exit 1
 
   test-browser:
     runs-on: ubuntu-latest

@@ -26,15 +26,23 @@ export const indexUserHandler =
 
       logger.debug(`Fetched user ${user.id}`);
 
-      await algoliaClient.save({
-        data: user,
-        type: 'user',
-      });
+      if (user.onboarded && user.role !== 'Hidden') {
+        await algoliaClient.save({
+          data: user,
+          type: 'user',
+        });
 
-      logger.debug(`Saved user ${user.id}`);
+        logger.debug(`User saved ${user.id}`);
+      } else {
+        await algoliaClient.remove(event.detail.payload.id);
+
+        logger.debug(`User removed ${user.id}`);
+      }
     } catch (e) {
       if (e?.output?.statusCode === 404) {
         await algoliaClient.remove(event.detail.payload.id);
+
+        logger.debug(`User removed ${event.detail.payload.id}`);
         return;
       }
 

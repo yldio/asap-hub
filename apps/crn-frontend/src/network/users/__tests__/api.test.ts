@@ -84,7 +84,17 @@ describe('getUsers', () => {
 
   beforeEach(() => {
     search.mockReset();
-    search.mockResolvedValue(createAlgoliaResponse('user', []));
+
+    const userResponse = createUserResponse();
+    search.mockResolvedValue(
+      createAlgoliaResponse([
+        {
+          ...userResponse,
+          objectID: userResponse.id,
+          __meta: { type: 'user' },
+        },
+      ]),
+    );
   });
 
   it('will not filter users by default', async () => {
@@ -190,11 +200,27 @@ describe('getUsersAndExternalAuthors', () => {
   };
 
   beforeEach(() => {
-    const algoliaUsersResponse = createAlgoliaResponse('user', []);
-    const alogliaExternalAuthorsResponse = createAlgoliaResponse(
-      'external-author',
-      [],
-    );
+    const userResponse = createUserResponse();
+    const algoliaUsersResponse = createAlgoliaResponse([
+      {
+        ...userResponse,
+        objectID: userResponse.id,
+        __meta: { type: 'user' },
+      },
+    ]);
+
+    const externalAuthorResponse = {
+      id: '1234-external-author',
+      displayName: '1234 external author',
+    };
+
+    const alogliaExternalAuthorsResponse = createAlgoliaResponse([
+      {
+        ...externalAuthorResponse,
+        objectID: externalAuthorResponse.id,
+        __meta: { type: 'external-author' },
+      },
+    ]);
 
     search.mockReset();
     search.mockResolvedValue({

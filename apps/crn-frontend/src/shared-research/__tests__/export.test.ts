@@ -222,8 +222,13 @@ describe('algoliaResultsToStream', () => {
       () =>
         Promise.resolve(
           createAlgoliaResponse(
-            'research-output',
-            [createResearchOutputResponse()],
+            [
+              {
+                ...createResearchOutputResponse(),
+                objectID: 'ro-1',
+                __meta: { type: 'research-output' },
+              },
+            ],
             {
               nbPages: 1,
             },
@@ -244,11 +249,12 @@ describe('algoliaResultsToStream', () => {
       (parameters) =>
         Promise.resolve(
           createAlgoliaResponse(
-            'research-output',
             [
               {
                 ...createResearchOutputResponse(),
                 title: `${parameters.currentPage}`,
+                objectID: 'ro-1',
+                __meta: { type: 'research-output' },
               },
             ],
             {
@@ -286,8 +292,14 @@ describe('algoliaResultsToStream', () => {
       () =>
         Promise.resolve(
           createAlgoliaResponse(
-            'research-output',
-            [{ ...createResearchOutputResponse(), title: 'a' }],
+            [
+              {
+                ...createResearchOutputResponse(),
+                title: 'a',
+                objectID: 'ro-1',
+                __meta: { type: 'research-output' },
+              },
+            ],
             {
               nbPages: 2,
             },

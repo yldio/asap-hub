@@ -13,10 +13,13 @@ runs:
         if [ "$ENVIRONMENT_NAME" = "Branch" ]; then
           echo "Setting up branch environment"
           PR_NUMBER=${{ github.event.number || github.event.inputs.prNumber }}
+          echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
           echo "SQUIDEX_APP_NAME=$PR_NUMBER" >> $GITHUB_ENV
 
           echo "ALGOLIA_INDEX=asap-hub_CI-$PR_NUMBER" >> $GITHUB_ENV
           ASAP_HOSTNAME="hub.asap.science"
+
+          echo "ASAP_HOSTNAME=$ASAP_HOSTNAME" >> $GITHUB_ENV
           echo "ASAP_API_URL=https://api-$PR_NUMBER.$ASAP_HOSTNAME" >> $GITHUB_ENV
           echo "ASAP_APP_URL=https://$PR_NUMBER.$ASAP_HOSTNAME" >> $GITHUB_ENV
           echo "SLS_STAGE=$PR_NUMBER" >> $GITHUB_ENV
@@ -34,7 +37,5 @@ runs:
 
         cat ".github/environment/All.env" >> $GITHUB_ENV
         cat ".github/environment/$ENVIRONMENT_NAME.env" >> $GITHUB_ENV
-
-        echo cat $GITHUB_ENV
       env:
         ENVIRONMENT_NAME: ${{ inputs.environment-name }}

@@ -5,9 +5,6 @@ on:
     branches:
       - CRN-713-build-test-and-check-in-github-for-dev-2
 jobs:
-  setup:
-    uses: ./.github/workflows/setup.yml
-
   test:
     uses: ./.github/workflows/reusable-test.yml
     with:

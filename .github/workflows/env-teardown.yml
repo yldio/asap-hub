@@ -10,34 +10,26 @@ on:
         type: string
         description: Choose which PR number to destroy
 jobs:
-  setup:
-    if: ${{ github.event.inputs.prNumber || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
-    uses: ./.github/workflows/setup.yml
   sls_teardown:
     if: ${{ github.event.inputs.prNumber || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
-    needs: setup
     runs-on: ubuntu-18.04
     container:
-      image: ${{ needs.setup.outputs.integration-image-name }}
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     env:
-      SLS_STAGE: ${{ needs.setup.outputs.pr-number }}
       NODE_ENV: 'production'
-      ASAP_HOSTNAME: 'hub.asap.science'
-      ASAP_API_URL: 'https://api-${{ needs.setup.outputs.pr-number }}.hub.asap.science'
-      ASAP_APP_URL: 'https://${{ needs.setup.outputs.pr-number }}.hub.asap.science'
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
-      AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-      SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}
-      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          environment-name: Branch
       - name: Rebuild dependencies
         run: yarn rebuild
       - name: Remove CF Stack
@@ -54,7 +46,7 @@ jobs:
         run: python ci/integration/scripts/delete-app.py
       - name: Delete PR Squidex App created by gitlab
         env:
-          SQUIDEX_APP_NAME: ${{ needs.setup.outputs.pr-number }}-gitlab
+          SQUIDEX_APP_NAME: ${{ env.SQUIDEX_APP_NAME }}-gitlab
         run: python .github/scripts/squidex/delete-app.py
 
   delete_algolia_indice:
@@ -68,6 +60,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          environment-name: Branch
       - name: Fetch the Algolia keys
         run: |
           echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
@@ -75,7 +71,7 @@ jobs:
       - name: Delete the index
         run: |
           cd apps/crn-server
-          export ALGOLIA_INDEX=asap-hub_CI-${{ needs.setup.outputs.pr-number }}
+          export ALGOLIA_INDEX=asap-hub_CI-${{ env.PR_NUMBER }}
           yarn workspace @asap-hub/crn-server run algolia deleteindicespattern -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -r "^$ALGOLIA_INDEX$" -x false
   notify_failure:
     runs-on: ubuntu-18.04

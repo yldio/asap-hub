@@ -6,7 +6,6 @@ on:
     branches:
       - master
 jobs:
-
   test:
     uses: ./.github/workflows/reusable-test.yml
     with:

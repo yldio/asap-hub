@@ -4,6 +4,20 @@ import { WelcomePage, UtilityBar } from '@asap-hub/react-components';
 
 import Frame from '../structure/Frame';
 
+const values = {
+  signup: {
+    title: 'Join the GP2 Hub',
+    content: 'Activate your account and start exploring the GP2 Network.',
+    buttonText: 'Activate account',
+  },
+  welcome: {
+    title: 'Welcome to the  GP2 Hub',
+    content:
+      'A private, invite-only network where the GP2 community collaborates.',
+    buttonText: 'Sign in',
+  },
+};
+
 const Signin: React.FC<Record<string, never>> = () => {
   const { loginWithRedirect } = useAuth0();
 
@@ -33,6 +47,7 @@ const Signin: React.FC<Record<string, never>> = () => {
             newSearchParams.delete('error_description');
             history.replace({ search: newSearchParams.toString() });
           }}
+          values={values}
         />
       </UtilityBar>
     </Frame>

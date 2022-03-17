@@ -5,21 +5,15 @@ import { LastLocationProvider } from 'react-router-last-location';
 import { init, reactRouterV5Instrumentation } from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import { useFlags } from '@asap-hub/react-context';
-
-import {
-  BasicLayout,
-  GoogleTagManager,
-  ToastStack,
-  UtilityBar,
-} from '@asap-hub/react-components';
-import { staticPages, welcome, logout } from '@asap-hub/routing';
+import { ToastStack, UtilityBar } from '@asap-hub/react-components';
+import { logout, welcome } from '@asap-hub/routing';
 
 import history from './history';
 import CheckAuth from './auth/CheckAuth';
 import Signin from './auth/Signin';
 import Logout from './auth/Logout';
 import Frame from './structure/Frame';
-import { GTM_CONTAINER_ID, SENTRY_DSN, ENVIRONMENT, RELEASE } from './config';
+import { SENTRY_DSN, ENVIRONMENT, RELEASE } from './config';
 import SentryAuth0 from './auth/SentryAuth0';
 
 init({
@@ -62,26 +56,23 @@ const AuthProvider = lazy(loadAuthProvider);
 
 const loadWelcome = () =>
   import(/* webpackChunkName: "welcome" */ './welcome/Routes');
-const loadContent = () =>
-  import(/* webpackChunkName: "content" */ './content/Content');
 const loadAuthenticatedApp = () =>
   import(/* webpackChunkName: "authenticated-app" */ './AuthenticatedApp');
+
 const Welcome = lazy(loadWelcome);
-const Content = lazy(loadContent);
 const AuthenticatedApp = lazy(loadAuthenticatedApp);
 
 const App: FC<Record<string, never>> = () => {
   const { setCurrentOverrides } = useFlags();
 
   useEffect(() => {
-    loadAuthenticatedApp().then(loadContent).then(loadWelcome);
+    loadAuthenticatedApp().then(loadWelcome);
     setCurrentOverrides();
   }, [setCurrentOverrides]);
 
   return (
     <RecoilRoot>
-      <Frame title="ASAP Hub">
-        <GoogleTagManager containerId={GTM_CONTAINER_ID} />
+      <Frame title="GP2 Hub">
         <AuthProvider>
           <SentryAuth0 />
           <Router history={history}>
@@ -99,20 +90,6 @@ const App: FC<Record<string, never>> = () => {
                     <Frame title="Logout">
                       <Logout />
                     </Frame>
-                  </Route>
-                  <Route exact path={staticPages({}).terms.template}>
-                    <BasicLayout>
-                      <Frame title={null}>
-                        <Content pageId="terms-and-conditions" />
-                      </Frame>
-                    </BasicLayout>
-                  </Route>
-                  <Route exact path={staticPages({}).privacyPolicy.template}>
-                    <BasicLayout>
-                      <Frame title={null}>
-                        <Content pageId="privacy-policy" />
-                      </Frame>
-                    </BasicLayout>
                   </Route>
                   <Route>
                     <CheckAuth>

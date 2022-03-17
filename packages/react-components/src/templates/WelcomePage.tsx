@@ -9,7 +9,7 @@ import { Toast, WelcomeCard } from '../organisms';
 import { noop } from '../utils';
 import { mailToSupport } from '../mail';
 
-const values = {
+const defaultValues = {
   signup: {
     title: 'Join the ASAP Hub',
     content: 'Activate your account and start exploring the ASAP CRN Network.',
@@ -36,7 +36,6 @@ const values = {
     ),
   },
 };
-
 const containerStyles = css({
   height: '100%',
   display: 'flex',
@@ -70,19 +69,29 @@ const placeholderStyles = css({
   order: 4,
 });
 
+type WelcomeCopy = {
+  title: string;
+  content: string;
+  buttonText: string;
+  footer?: () => JSX.Element;
+};
+
 type WelcomePageProps = Pick<ComponentProps<typeof WelcomeCard>, 'onClick'> & {
   readonly allowSignup?: boolean;
 
   readonly authFailed?: boolean;
   readonly onCloseAuthFailedToast?: () => void;
+  readonly values?: { signup: WelcomeCopy; welcome: WelcomeCopy };
 };
 const WelcomePage: React.FC<WelcomePageProps> = ({
   allowSignup = false,
   authFailed = false,
   onCloseAuthFailedToast = noop,
+  values,
   ...props
 }) => {
-  const copy = allowSignup ? values.signup : values.welcome;
+  const copyValues = values || defaultValues;
+  const copy = allowSignup ? copyValues.signup : copyValues.welcome;
 
   return (
     <div css={[themes.dark, containerStyles]}>

@@ -14,7 +14,7 @@ import {
 } from '@asap-hub/model';
 import { useAuth0, useFlags } from '@asap-hub/react-context';
 
-import { authorizationState } from '@asap-hub/gp2-frontend/src/auth/state';
+import { authorizationState } from '../../auth/state';
 import {
   getUser,
   patchUser,

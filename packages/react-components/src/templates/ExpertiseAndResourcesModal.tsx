@@ -68,7 +68,7 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
         <>
           <Paragraph accent="lead">
             Help ASAP researchers find you in search results by describing your
-            unique expertiseAndResourceTags, techniques, resources, and tools.
+            unique expertise, techniques, resources, and tools.
           </Paragraph>
           <div css={fieldsContainerStyles}>
             <div>

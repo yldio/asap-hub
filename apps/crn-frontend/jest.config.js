@@ -35,5 +35,5 @@ module.exports = {
   },
   modulePathIgnorePatterns: ['<rootDir>/.*/__mocks__'],
 
-  displayName: 'test-frontend',
+  displayName: 'test-crn-frontend',
 };

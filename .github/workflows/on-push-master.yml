@@ -3,7 +3,7 @@ name: Pipeline development and production
 on:
   push:
     branches:
-      - CRN-713-build-test-and-check-in-github-for-dev-2
+      - master
 jobs:
   test:
     uses: ./.github/workflows/reusable-test.yml

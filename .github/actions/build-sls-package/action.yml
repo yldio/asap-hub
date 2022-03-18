@@ -19,7 +19,6 @@ inputs:
   aws-acm-certificate-arn:
     description: 'AWS ACM Certificate ARN'
     required: true
-
   aws-region:
     description: 'AWS Region'
     required: true

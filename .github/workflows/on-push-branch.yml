@@ -5,9 +5,6 @@ on:
     types: [opened, synchronize]
     branches:
       - master
-  push:
-    branches:
-      - CRN-713-build-test-and-check-in-github-for-dev-2
 jobs:
   test:
     uses: ./.github/workflows/reusable-test.yml
@@ -35,8 +32,6 @@ jobs:
       BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
   prepare-squidex:
-    permissions:
-      packages: read
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
     container:

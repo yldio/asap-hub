@@ -1,4 +1,3 @@
-
 # GitHub
 
 ## Docker Images
@@ -31,6 +30,30 @@ To build new images:
 
 To change the image tag, run:
 
-``` shell
-gsed -i s/1de8c60b2214fbca2e0959aa7f473c55bbc2e014/some-new-tag/g .github/**/*.yml .github/README.md
+```shell
+  gsed -i s/1de8c60b2214fbca2e0959aa7f473c55bbc2e014/some-new-tag/g .github/**/*.yml .github/README.md
+```
+
+## Manage GitHub workflow runs logs
+
+To remove logs:
+
+- List the workflow runs:
+
+```shell
+sh .github/scripts/manage-workflows/list-workflows.sh
+```
+
+- Find the Id of the workflow to delete.
+
+```text
+"Pipeline Test"
+21969391
+".github/workflows/single-pipeline.yml"
+```
+
+- use the Id to delete the workflow runs:
+
+```shell
+  sh .github/scripts/manage-workflows/delete-workflow-runs.sh 21969391
 ```

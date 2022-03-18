@@ -26,9 +26,9 @@ runs:
 
           APP_RELEASE='${{ github.run_id }}-dev'
           echo "APP_RELEASE=$APP_RELEASE" >> $GITHUB_ENV
-        elif [ "$ENVIRONMENT_NAME" == 'Development' ]; then
+        elif [ "$ENVIRONMENT_NAME" = 'Development' ]; then
           echo "Setting up development environment"
-        elif [ "$ENVIRONMENT_NAME" == 'Production' ]; then
+        elif [ "$ENVIRONMENT_NAME" = 'Production' ]; then
           echo "Setting up production environment"
         else
           echo "Unknown environment: $ENVIRONMENT_NAME"

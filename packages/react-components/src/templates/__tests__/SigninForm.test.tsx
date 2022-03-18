@@ -19,6 +19,17 @@ it('renders different headlines in signin and signup mode', () => {
 
   rerender(
     <SigninForm
+      email=""
+      password=""
+      forgotPasswordHref="#"
+      appName={'GP2 Hub'}
+    />,
+  );
+  expect(getByRole('heading').textContent).toMatchInlineSnapshot(
+    `"Sign in to the GP2 Hub"`,
+  );
+  rerender(
+    <SigninForm
       signup
       email=""
       password=""

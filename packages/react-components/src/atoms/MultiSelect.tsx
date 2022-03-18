@@ -93,7 +93,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
       switch (actionMeta.action) {
         case 'remove-value':
         case 'pop-value':
-          if (actionMeta.removedValue.isFixed) {
+          if (actionMeta.removedValue && actionMeta.removedValue.isFixed) {
             return;
           }
           break;

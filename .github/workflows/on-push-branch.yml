@@ -64,9 +64,12 @@ jobs:
 
   create_algolia_indice:
     runs-on: ubuntu-18.04
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    environment: Branch
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -74,21 +77,14 @@ jobs:
         uses: ./.github/actions/setup
         with:
           environment-name: ${{ secrets.ENVIRONMENT_NAME }}
-      - name: Fetch the Algolia keys
+      - name: Create
+        uses: ./.github/actions/create-algolia-indice
         if: ${{ github.event.action == 'opened' }}
-        run: |
-          echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
-          echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
-      - name: Get the latest backup directory name
-        if: ${{ github.event.action == 'opened' }}
-        run: echo "MOST_RECENT_BACKUP_DIR=$(aws s3api list-objects-v2 --bucket $BUCKET_NAME --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text | cut -d'/' -f 1)" >> $GITHUB_ENV
-      - name: Download the files and restore the index
-        if: ${{ github.event.action == 'opened' }}
-        run: |
-          aws s3 cp s3://$BUCKET_NAME/$MOST_RECENT_BACKUP_DIR $MOST_RECENT_BACKUP_DIR --recursive
-          export ALGOLIA_BACKUP=$(readlink -f $MOST_RECENT_BACKUP_DIR)
-          export ALGOLIA_INDEX=asap-hub_CI-${{ github.event.number }}
-          yarn workspace @asap-hub/crn-server run algolia import -s $ALGOLIA_BACKUP -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-default-region: ${{ env.AWS_DEFAULT_REGION }}
+          bucket-name: ${{ env.BUCKET_NAME }}
 
   deployment:
     needs: [test, build-analysis, prepare-squidex]

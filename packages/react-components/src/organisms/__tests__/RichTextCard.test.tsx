@@ -30,8 +30,8 @@ it('is collapsible when prop set', () => {
   const { getByText, queryByText } = render(
     <RichTextCard {...props} text="example text" collapsible />,
   );
-  expect(queryByText('example text')).not.toBeVisible();
+  expect(queryByText('example text')).toBeVisible();
 
   userEvent.click(getByText(/show/i));
-  expect(getByText('example text')).toBeVisible();
+  expect(getByText(/hide/i)).toBeVisible();
 });

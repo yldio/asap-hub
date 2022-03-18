@@ -31,63 +31,18 @@ jobs:
     secrets:
       BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
-  prepare-squidex:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    environment: Branch
-    env:
-      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID }}
+  prepare:
+    uses: ./.github/workflows/reusable-prepare.yml
+    with:
+      environment-name: Branch
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup
-        uses: ./.github/actions/setup
-        with:
-          environment-name: ${{ secrets.ENVIRONMENT_NAME }}
-      - name: Prepare
-        uses: ./.github/actions/prepare-squidex
-        if: ${{ github.event.action == 'opened' }}
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-region: ${{ env.AWS_REGION }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
-          squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
-          squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
-          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-
-  create-algolia-index:
-    runs-on: ubuntu-18.04
-    environment: Branch
-    container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup
-        uses: ./.github/actions/setup
-        with:
-          environment-name: ${{ secrets.ENVIRONMENT_NAME }}
-      - name: Create
-        uses: ./.github/actions/create-algolia-indice
-        if: ${{ github.event.action == 'opened' }}
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-default-region: ${{ env.AWS_DEFAULT_REGION }}
-          bucket-name: ${{ env.BUCKET_NAME }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   deployment:
-    needs: [test, build-analysis, prepare-squidex, create-algolia-index]
+    needs: [test, build-analysis, prepare]
     uses: ./.github/workflows/reusable-deployment.yml
     with:
       environment-name: Branch
@@ -106,7 +61,7 @@ jobs:
     secrets:
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
-  build-pipeline-success:
+  branch-pipeline-success:
     runs-on: ubuntu-latest
     needs: [verify]
     if: ${{ success() }}

@@ -1,0 +1,35 @@
+name: 'Sync Algolia Settings'
+description: 'Sync Algolia settings'
+inputs:
+  aws-access-key-id:
+    description: 'AWS Access Key ID'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
+    required: true
+  aws-default-region:
+    description: 'AWS Region'
+    required: true
+  algolia-index:
+    description: 'Algolia Index'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Environment Variables
+      shell: bash
+      run: |
+        echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
+        echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
+        echo "::add-mask::$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)"
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        AWS_DEFAULT_REGION: ${{ inputs.aws-default-region }}
+    - name: Synchronize Schema
+      shell: bash
+      run: |
+        yarn run algolia:upload
+      env:
+        ALGOLIA_INDEX: ${{ inputs.algolia-index }}

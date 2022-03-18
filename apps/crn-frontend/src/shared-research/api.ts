@@ -70,7 +70,7 @@ export const getResearchOutputs = (
   options: ResearchOutputListOptions,
 ) =>
   client
-    .searchEntity('research-output', options.searchQuery, {
+    .search(['research-output'], options.searchQuery, {
       page: options.currentPage ?? 0,
       hitsPerPage: options.pageSize ?? 10,
       filters: getAllFilters(options.filters, options.teamId, options.userId),

@@ -45,8 +45,14 @@ export type EntityRecord<T extends keyof EntityResponses> =
     };
   };
 
+export type DistributeToEntityRecords<U extends keyof EntityResponses> =
+  U extends keyof EntityResponses ? EntityRecord<U> : never;
+
+export type EntityHit<T extends keyof EntityResponses> =
+  DistributeToEntityRecords<T>;
+
 export type SearchEntityResponse<TEntityType extends keyof EntityResponses> =
-  SearchResponse<EntityRecord<TEntityType>>;
+  SearchResponse<DistributeToEntityRecords<TEntityType>>;
 
 export class AlgoliaSearchClient {
   public constructor(private index: SearchIndex) {
@@ -71,19 +77,23 @@ export class AlgoliaSearchClient {
     await this.index.deleteObject(objectID);
   }
 
-  async searchEntity<T extends keyof EntityResponses>(
-    entityType: T,
+  async search<T extends keyof EntityResponses>(
+    entityTypes: T[],
     query: string,
     requestOptions?: SearchOptions,
   ): Promise<SearchEntityResponse<T>> {
+    const entityTypesFilter = entityTypes
+      .map((entityType) => `__meta.type:"${entityType}"`)
+      .join(' OR ');
+
     const options: SearchOptions = {
       ...requestOptions,
       filters: requestOptions?.filters
-        ? `${requestOptions.filters} AND __meta.type:"${entityType}"`
-        : `__meta.type:"${entityType}"`,
+        ? `(${requestOptions.filters}) AND (${entityTypesFilter})`
+        : entityTypesFilter,
     };
 
-    return this.index.search<EntityRecord<T>>(query, options);
+    return this.index.search<DistributeToEntityRecords<T>>(query, options);
   }
 
   private static getAlgoliaObject(

@@ -44,6 +44,10 @@ export const getUsers = jest.fn(
   async (): Promise<ListUserResponse> => createListUserResponse(10),
 );
 
+export const getUsersAndExternalAuthors = jest.fn(
+  async (): Promise<ListUserResponse> => createListUserResponse(10),
+);
+
 export const getInstitutions = jest.fn(
   async (): Promise<InstitutionsResponse> => ({
     number_of_results: 20,

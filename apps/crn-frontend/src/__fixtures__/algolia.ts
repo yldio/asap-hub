@@ -1,17 +1,17 @@
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
   EntityRecord,
+  EntityHit,
   RESEARCH_OUTPUT_ENTITY_TYPE,
   EntityResponses,
   SearchEntityResponse,
 } from '@asap-hub/algolia';
 
 export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
-  type: EntityType,
-  data: EntityResponses[EntityType][],
+  hits: EntityHit<EntityType>[],
   overrides: Partial<SearchEntityResponse<EntityType>> = {},
 ): SearchEntityResponse<EntityType> => ({
-  nbHits: data.length,
+  nbHits: hits.length,
   page: 0,
   nbPages: 1,
   hitsPerPage: 10,
@@ -20,12 +20,8 @@ export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
   params: 'page=0&hitsPerPage=10&validUntil=1629454922296',
   renderingContent: {},
   processingTimeMS: 1,
+  hits,
   ...overrides,
-  hits: data.map((item, i) => ({
-    ...item,
-    objectID: `${i}`,
-    __meta: { type },
-  })),
 });
 
 export const createResearchOutputAlgoliaRecord = (
@@ -47,7 +43,6 @@ export const createResearchOutputListAlgoliaResponse = (
   >,
 ): SearchEntityResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE> =>
   createAlgoliaResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
-    RESEARCH_OUTPUT_ENTITY_TYPE,
     Array.from({ length: items }, (_, itemIndex) =>
       createResearchOutputAlgoliaRecord(itemIndex),
     ),

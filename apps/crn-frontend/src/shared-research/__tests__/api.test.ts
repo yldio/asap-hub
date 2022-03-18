@@ -25,7 +25,7 @@ const options: GetListOptions = {
 
 describe('getResearchOutputs', () => {
   const mockAlgoliaSearchClient = {
-    searchEntity: jest
+    search: jest
       .fn()
       .mockResolvedValue(createResearchOutputListAlgoliaResponse(10)),
   } as unknown as jest.Mocked<AlgoliaSearchClient>;
@@ -41,8 +41,8 @@ describe('getResearchOutputs', () => {
       pageSize: null,
     });
 
-    expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['research-output'],
       'test',
       expect.objectContaining({ hitsPerPage: 10, page: 0 }),
     );
@@ -54,8 +54,8 @@ describe('getResearchOutputs', () => {
       pageSize: 20,
     });
 
-    expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['research-output'],
       '',
       expect.objectContaining({ hitsPerPage: 20, page: 1 }),
     );
@@ -66,8 +66,8 @@ describe('getResearchOutputs', () => {
       filters: new Set<ResearchOutputType>(['Article']),
     });
 
-    expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['research-output'],
       '',
       expect.objectContaining({
         filters: '(type:Article)',
@@ -81,8 +81,8 @@ describe('getResearchOutputs', () => {
       filters: new Set<ResearchOutputType>(['Article', 'Grant Document']),
     });
 
-    expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['research-output'],
       '',
       expect.objectContaining({
         filters: '(type:Article OR type:"Grant Document")',
@@ -96,8 +96,8 @@ describe('getResearchOutputs', () => {
       filters: new Set<ResearchOutputType | 'invalid'>(['Article', 'invalid']),
     });
 
-    expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['research-output'],
       '',
       expect.objectContaining({
         filters: '(type:Article)',
@@ -111,8 +111,8 @@ describe('getResearchOutputs', () => {
       teamId: '12345',
     });
 
-    expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['research-output'],
       '',
       expect.objectContaining({
         filters: 'teams.id:"12345"',
@@ -127,8 +127,8 @@ describe('getResearchOutputs', () => {
       teamId: '12345',
     });
 
-    expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['research-output'],
       '',
       expect.objectContaining({
         filters: '(type:Article) AND teams.id:"12345"',
@@ -143,8 +143,8 @@ describe('getResearchOutputs', () => {
       teamId: '12345',
     });
 
-    expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['research-output'],
       '',
       expect.objectContaining({
         filters: '(type:Article OR type:"Grant Document") AND teams.id:"12345"',
@@ -157,8 +157,8 @@ describe('getResearchOutputs', () => {
       userId: '12345',
     });
 
-    expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['research-output'],
       '',
       expect.objectContaining({
         filters: 'authors.id:"12345"',
@@ -173,8 +173,8 @@ describe('getResearchOutputs', () => {
       userId: '12345',
     });
 
-    expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['research-output'],
       '',
       expect.objectContaining({
         filters: '(type:Article) AND authors.id:"12345"',
@@ -189,8 +189,8 @@ describe('getResearchOutputs', () => {
       userId: '12345',
     });
 
-    expect(mockAlgoliaSearchClient.searchEntity).toHaveBeenLastCalledWith(
-      'research-output',
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['research-output'],
       '',
       expect.objectContaining({
         filters:
@@ -200,7 +200,7 @@ describe('getResearchOutputs', () => {
   });
 
   it('throws an error of type error', async () => {
-    mockAlgoliaSearchClient.searchEntity.mockRejectedValue({
+    mockAlgoliaSearchClient.search.mockRejectedValue({
       message: 'Some Error',
     });
     await expect(

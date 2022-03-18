@@ -14,15 +14,35 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "@asap-hub/auth": "workspace:*",
+    "@asap-hub/model": "workspace:*",
+    "@asap-hub/squidex": "workspace:*",
+    "@graphql-typed-document-node/core": "^3.1.0",
+    "@hapi/boom": "^9.1.2",
+    "apr-intercept": "^3.0.4",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "graphql-tag": "^2.12.4",
+    "jsonwebtoken": "^8.5.1",
+    "luxon": "^1.26.0",
+    "pino": "^6.11.3",
+    "pino-http": "^5.5.0",
+    "pino-lambda": "^1.2.4",
+    "pino-noir": "^2.2.1"
   },
   "devDependencies": {
-    "@serverless/typescript": "^3.3.0",
-    "@types/node": "^17.0.21",
+    "@serverless/typescript": "^2.59.0",
+    "@types/apr-intercept": "workspace:*",
+    "@types/express": "^4.17.11",
+    "@types/jsonwebtoken": "^8.5.1",
+    "@types/luxon": "^1",
+    "@types/node": "^14.14.45",
+    "@types/pino": "^6",
+    "@types/pino-http": "^5",
     "@types/serverless": "^3",
-    "babel-loader": "^8.2.3",
-    "serverless": "^3.7.4",
-    "serverless-webpack": "^5.6.1",
-    "ts-node": "^10.7.0"
+    "babel-loader": "^8.2.2",
+    "serverless": "^2.60.0",
+    "serverless-webpack": "^5.5.0",
+    "ts-node": "^9.1.1"
   }
 }

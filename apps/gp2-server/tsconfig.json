@@ -10,5 +10,9 @@
     "noUncheckedIndexedAccess": true
   },
   "include": ["src", "scripts", "test", "test/**/*.json", "@types/**/*.d.ts"],
-  "references": []
+  "references": [
+    { "path": "../../packages/auth" },
+    { "path": "../../packages/model" },
+    { "path": "../../packages/squidex" }
+  ]
 }

@@ -63,3 +63,35 @@ jobs:
           squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+
+  sync_algolia_settings:
+    needs: [deploy]
+    runs-on: ubuntu-18.04
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Environment Variables
+        run: |
+          echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
+          echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
+          echo "::add-mask::$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)"
+      - name: Synchronize Schema
+        run: |
+          ALGOLIA_INDEX=asap-hub_CI-${{github.event.number}} yarn run algolia:upload
+
+  update-squidex-schema:
+    needs: [deploy]
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Update Squidex schema
+      uses: ./.github/actions/squidex-sync
+      with:
+        squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
+        squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
+        squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
+        squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+        squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+        asap-api-url: ${{ env.ASAP_API_URL }}

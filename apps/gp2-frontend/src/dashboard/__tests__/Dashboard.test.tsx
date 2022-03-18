@@ -9,9 +9,6 @@ import { refreshDashboardState } from '../state';
 import { getDashboard } from '../api';
 
 jest.mock('../api');
-jest.mock('../../events/api');
-jest.mock('../../shared-research/api');
-jest.mock('../../network/teams/api');
 
 afterEach(() => {
   jest.clearAllMocks();

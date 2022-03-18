@@ -101,12 +101,3 @@ runs:
         SQUIDEX_CLIENT_ID: ${{ inputs.squidex-client-id }}
         SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-client-secret }}
         SQUIDEX_SHARED_SECRET: ${{ inputs.squidex-shared-secret }}
-    - name: Update Squidex schema
-      uses: ./.github/actions/squidex-sync
-      with:
-        squidex-app-name: ${{ inputs.squidex-app-name }}
-        squidex-client-id: ${{ inputs.squidex-client-id }}
-        squidex-client-secret: ${{ inputs.squidex-client-secret }}
-        squidex-base-url: ${{ inputs.squidex-base-url }}
-        squidex-shared-secret: ${{ inputs.squidex-shared-secret }}
-        asap-api-url: ${{ inputs.asap-api-url }}

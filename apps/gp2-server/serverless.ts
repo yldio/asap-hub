@@ -34,6 +34,12 @@ const serverlessConfig: AWS = {
           '{ "requestId":"$context.requestId", "ip": "$context.identity.sourceIp", "requestTime":"$context.requestTime", "httpMethod":"$context.httpMethod", "path":"$context.path", "routeKey":"$context.routeKey", "status":"$context.status","protocol":"$context.protocol", "responseLength":"$context.responseLength", "integrationRequestId": "$context.integration.requestId", "functionResponseStatus": "$context.integration.status" }',
       },
     },
+    environment: {
+      SQUIDEX_APP_NAME: '${env:SQUIDEX_APP_NAME}',
+      SQUIDEX_BASE_URL: '${env:SQUIDEX_BASE_URL}',
+      SQUIDEX_CLIENT_ID: '${env:SQUIDEX_CLIENT_ID}',
+      SQUIDEX_CLIENT_SECRET: '${env:SQUIDEX_CLIENT_SECRET}',
+    },
   },
   package: {
     individually: true,
@@ -57,52 +63,52 @@ const serverlessConfig: AWS = {
       ],
     },
   },
-  resources: {
-    Resources: {
-      HttpApiDomain: {
-        Type: 'AWS::ApiGatewayV2::DomainName',
-        Properties: {
-          DomainName: apiHostname,
-          DomainNameConfigurations: [
-            {
-              CertificateArn: acmCertificateArn,
-              EndpointType: 'REGIONAL',
-            },
-          ],
-        },
-      },
-      HttpApiApiMapping: {
-        Type: 'AWS::ApiGatewayV2::ApiMapping',
-        DependsOn: ['HttpApiDomain'],
-        Properties: {
-          ApiId: { Ref: 'HttpApi' },
-          ApiMappingKey: '',
-          DomainName: apiHostname,
-          Stage: { Ref: 'HttpApiStage' },
-        },
-      },
-      HttpApiRecordSetGroup: {
-        Type: 'AWS::Route53::RecordSetGroup',
-        Properties: {
-          HostedZoneName: hostedZone,
-          RecordSets: [
-            {
-              Name: apiHostname,
-              Type: 'A',
-              AliasTarget: {
-                DNSName: {
-                  'Fn::GetAtt': ['HttpApiDomain', 'RegionalDomainName'],
-                },
-                HostedZoneId: {
-                  'Fn::GetAtt': ['HttpApiDomain', 'RegionalHostedZoneId'],
-                },
-              },
-            },
-          ],
-        },
-      },
-    },
-  },
+  // resources: {
+  //   Resources: {
+  //     HttpApiDomain: {
+  //       Type: 'AWS::ApiGatewayV2::DomainName',
+  //       Properties: {
+  //         DomainName: apiHostname,
+  //         DomainNameConfigurations: [
+  //           {
+  //             CertificateArn: acmCertificateArn,
+  //             EndpointType: 'REGIONAL',
+  //           },
+  //         ],
+  //       },
+  //     },
+  //     HttpApiApiMapping: {
+  //       Type: 'AWS::ApiGatewayV2::ApiMapping',
+  //       DependsOn: ['HttpApiDomain'],
+  //       Properties: {
+  //         ApiId: { Ref: 'HttpApi' },
+  //         ApiMappingKey: '',
+  //         DomainName: apiHostname,
+  //         Stage: { Ref: 'HttpApiStage' },
+  //       },
+  //     },
+  //     HttpApiRecordSetGroup: {
+  //       Type: 'AWS::Route53::RecordSetGroup',
+  //       Properties: {
+  //         HostedZoneName: hostedZone,
+  //         RecordSets: [
+  //           {
+  //             Name: apiHostname,
+  //             Type: 'A',
+  //             AliasTarget: {
+  //               DNSName: {
+  //                 'Fn::GetAtt': ['HttpApiDomain', 'RegionalDomainName'],
+  //               },
+  //               HostedZoneId: {
+  //                 'Fn::GetAtt': ['HttpApiDomain', 'RegionalHostedZoneId'],
+  //               },
+  //             },
+  //           },
+  //         ],
+  //       },
+  //     },
+  //   },
+  // },
 };
 
 module.exports = serverlessConfig;

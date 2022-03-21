@@ -9,6 +9,10 @@ There are also shared files defining shared styles, values, utils, or other shar
 
 Every component is tested in JSDOM. Some components are additionally tested in a real browser environment (`*.browser-test.tsx`) for when things that JSDOM does not support are needed, e.g. pseudo-elements or actual layouting with bounding boxes.
 
+The browser tests are currently implemented using playwright and jsdom. Using the `react-testing-library` jsdom for components is generated and then the jsdom is
+converted into real dom using `domToPlaywright`. Because the components are rendered into jsdom first, it does not mirror real conditions exactly. For example, the drag and drop
+of the `MultiSelect` component does not work because of this.
+
 `icons` are React `svg` elements.
 `images` are binary and are copied as-is by the build process. It is up to the consumer to handle them. This is because different target environments of `react-components` (e.g. the `frontend`s, `storybook`, `unsupported-browser-page`, `messages`) need to handle them differently.
 

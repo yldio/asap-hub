@@ -1,6 +1,7 @@
 name: Remove environment
+permissions: read-all
 on:
-  pull_request:
+  pull_request_target:
     types: [closed]
   workflow_dispatch:
     inputs:
@@ -10,8 +11,10 @@ on:
         description: Choose which PR number to destroy
 jobs:
   setup:
+    if: ${{ github.event.inputs.prNumber || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     uses: ./.github/workflows/setup.yml
   sls_teardown:
+    if: ${{ github.event.inputs.prNumber || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     needs: setup
     runs-on: ubuntu-18.04
     container:
@@ -55,6 +58,7 @@ jobs:
         run: python ci/integration/scripts/delete-app.py
 
   delete_algolia_indice:
+    if: ${{ github.event.inputs.prNumber || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     needs: setup
     runs-on: ubuntu-18.04
     env:
@@ -76,7 +80,7 @@ jobs:
   notify_failure:
     runs-on: ubuntu-18.04
     needs: [sls_teardown, delete_algolia_indice]
-    if: failure()
+    if: failure() && ${{ github.event.inputs.prNumber || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2

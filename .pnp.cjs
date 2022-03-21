@@ -2756,10 +2756,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.2.1"
       ],
       [
-        "argv",
-        "npm:0.0.2"
-      ],
-      [
         "aria-query",
         "npm:4.2.2"
       ],
@@ -3550,10 +3546,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "code-point-at",
         "npm:1.1.0"
-      ],
-      [
-        "codecov",
-        "npm:3.8.2"
       ],
       [
         "collect-v8-coverage",
@@ -5397,7 +5389,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "http-proxy-agent",
-        "npm:4.0.1"
+        "npm:2.1.0"
       ],
       [
         "http-proxy-middleware",
@@ -5454,10 +5446,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "ignore",
         "npm:4.0.6"
-      ],
-      [
-        "ignore-walk",
-        "npm:3.0.3"
       ],
       [
         "immediate",
@@ -8736,10 +8724,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.2.3"
       ],
       [
-        "stream-events",
-        "npm:1.0.5"
-      ],
-      [
         "stream-http",
         "npm:2.8.3"
       ],
@@ -8872,10 +8856,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:6.2.4"
       ],
       [
-        "stubs",
-        "npm:3.0.0"
-      ],
-      [
         "style-to-object",
         "npm:0.3.0"
       ],
@@ -8962,10 +8942,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "tar-stream",
         "npm:1.6.2"
-      ],
-      [
-        "teeny-request",
-        "npm:7.0.1"
       ],
       [
         "telejson",
@@ -9414,10 +9390,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "urlencode",
         "npm:1.1.0"
-      ],
-      [
-        "urlgrey",
-        "npm:0.4.4"
       ],
       [
         "use",
@@ -9883,7 +9855,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"],
             ["babel-preset-react-app", "npm:10.0.0"],
             ["bundlewatch", "npm:0.3.2"],
-            ["codecov", "npm:3.8.2"],
             ["copy-webpack-plugin", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:9.0.0"],
             ["dotenv", "npm:8.6.0"],
             ["escape-string-regexp", "npm:4.0.0"],
@@ -28974,15 +28945,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["argv", [
-        ["npm:0.0.2", {
-          "packageLocation": "./.yarn/cache/argv-npm-0.0.2-48b22895d8-e703f1af47.zip/node_modules/argv/",
-          "packageDependencies": [
-            ["argv", "npm:0.0.2"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["aria-query", [
         ["npm:4.2.2", {
           "packageLocation": "./.yarn/cache/aria-query-npm-4.2.2-e0c4f1a309-38401a9a40.zip/node_modules/aria-query/",
@@ -29231,7 +29193,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"],
             ["babel-preset-react-app", "npm:10.0.0"],
             ["bundlewatch", "npm:0.3.2"],
-            ["codecov", "npm:3.8.2"],
             ["copy-webpack-plugin", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:9.0.0"],
             ["dotenv", "npm:8.6.0"],
             ["escape-string-regexp", "npm:4.0.0"],
@@ -32374,20 +32335,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/code-point-at-npm-1.1.0-37de5fe566-17d5666611.zip/node_modules/code-point-at/",
           "packageDependencies": [
             ["code-point-at", "npm:1.1.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["codecov", [
-        ["npm:3.8.2", {
-          "packageLocation": "./.yarn/cache/codecov-npm-3.8.2-bf74e2b02f-a70fdf2e83.zip/node_modules/codecov/",
-          "packageDependencies": [
-            ["codecov", "npm:3.8.2"],
-            ["argv", "npm:0.0.2"],
-            ["ignore-walk", "npm:3.0.3"],
-            ["js-yaml", "npm:3.14.1"],
-            ["teeny-request", "npm:7.0.1"],
-            ["urlgrey", "npm:0.4.4"]
           ],
           "linkType": "HARD",
         }]
@@ -40218,16 +40165,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/ignore-npm-5.1.8-aa9a49ada4-967abadb61.zip/node_modules/ignore/",
           "packageDependencies": [
             ["ignore", "npm:5.1.8"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["ignore-walk", [
-        ["npm:3.0.3", {
-          "packageLocation": "./.yarn/cache/ignore-walk-npm-3.0.3-7d7a6bd656-34bc6f0497.zip/node_modules/ignore-walk/",
-          "packageDependencies": [
-            ["ignore-walk", "npm:3.0.3"],
-            ["minimatch", "npm:3.0.4"]
           ],
           "linkType": "HARD",
         }]
@@ -53144,16 +53081,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["stream-events", [
-        ["npm:1.0.5", {
-          "packageLocation": "./.yarn/cache/stream-events-npm-1.0.5-38468a7cf3-969ce82e34.zip/node_modules/stream-events/",
-          "packageDependencies": [
-            ["stream-events", "npm:1.0.5"],
-            ["stubs", "npm:3.0.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["stream-http", [
         ["npm:2.8.3", {
           "packageLocation": "./.yarn/cache/stream-http-npm-2.8.3-7691e2a9d5-f57dfaa21a.zip/node_modules/stream-http/",
@@ -53659,15 +53586,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["stubs", [
-        ["npm:3.0.0", {
-          "packageLocation": "./.yarn/cache/stubs-npm-3.0.0-22bb785265-dec7b82186.zip/node_modules/stubs/",
-          "packageDependencies": [
-            ["stubs", "npm:3.0.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["style-loader", [
         ["npm:1.3.0", {
           "packageLocation": "./.yarn/cache/style-loader-npm-1.3.0-2047b33843-1be9e87053.zip/node_modules/style-loader/",
@@ -54104,20 +54022,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fs-constants", "npm:1.0.0"],
             ["inherits", "npm:2.0.4"],
             ["readable-stream", "npm:3.6.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["teeny-request", [
-        ["npm:7.0.1", {
-          "packageLocation": "./.yarn/cache/teeny-request-npm-7.0.1-7cdc0d7119-8eba49422e.zip/node_modules/teeny-request/",
-          "packageDependencies": [
-            ["teeny-request", "npm:7.0.1"],
-            ["http-proxy-agent", "npm:4.0.1"],
-            ["https-proxy-agent", "npm:5.0.0"],
-            ["node-fetch", "npm:2.6.1"],
-            ["stream-events", "npm:1.0.5"],
-            ["uuid", "npm:8.3.0"]
           ],
           "linkType": "HARD",
         }]
@@ -55843,15 +55747,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["urlencode", "npm:1.1.0"],
             ["iconv-lite", "npm:0.4.24"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["urlgrey", [
-        ["npm:0.4.4", {
-          "packageLocation": "./.yarn/cache/urlgrey-npm-0.4.4-a1b175fb65-db5884ffca.zip/node_modules/urlgrey/",
-          "packageDependencies": [
-            ["urlgrey", "npm:0.4.4"]
           ],
           "linkType": "HARD",
         }]

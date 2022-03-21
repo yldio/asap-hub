@@ -125,7 +125,6 @@
     "babel-plugin-transform-inline-environment-variables": "0.5.0-alpha.42",
     "babel-preset-react-app": "^10",
     "bundlewatch": "^0.3.2",
-    "codecov": "^3.8.2",
     "copy-webpack-plugin": "^9.0.0",
     "dotenv": "^8.6.0",
     "escape-string-regexp": "^4.0.0",

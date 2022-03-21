@@ -104,6 +104,9 @@ it('can submit a form when form data is valid', async () => {
 
   clickShare();
 
+  expect(screen.getByRole('button', { name: /Share/i })).not.toBeEnabled();
+  expect(screen.getByRole('button', { name: /Cancel/i })).not.toBeEnabled();
+
   await waitFor(() => {
     expect(saveFn).toHaveBeenCalledWith({
       tags: [],
@@ -116,6 +119,7 @@ it('can submit a form when form data is valid', async () => {
       teams: ['TEAMID'],
     });
     expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
+    expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
   });
 });
 

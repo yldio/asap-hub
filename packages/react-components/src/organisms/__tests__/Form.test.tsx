@@ -1,5 +1,11 @@
 import { ComponentProps } from 'react';
-import { Router, MemoryRouter, StaticRouter, Link } from 'react-router-dom';
+import {
+  Router,
+  MemoryRouter,
+  StaticRouter,
+  Link,
+  Route,
+} from 'react-router-dom';
 import { History, createMemoryHistory } from 'history';
 import { render, act, waitFor, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -54,6 +60,81 @@ it('prompts when trying to leave after making edits', () => {
 
   userEvent.click(getByText(/navigate/i));
   expect(getUserConfirmation).toHaveBeenCalled();
+});
+
+describe('on cancel', () => {
+  it('prompts after making edits', () => {
+    const { getByText } = render(
+      <ToastContext.Provider value={jest.fn()}>
+        <Router history={history}>
+          <Form {...props} dirty>
+            {({ onCancel }) => (
+              <>
+                <input type="text" required />
+                <Button primary onClick={onCancel}>
+                  cancel
+                </Button>
+              </>
+            )}
+          </Form>
+        </Router>
+      </ToastContext.Provider>,
+      { wrapper: MemoryRouter },
+    );
+
+    userEvent.click(getByText(/^cancel/i));
+    expect(getUserConfirmation).toHaveBeenCalled();
+  });
+  it('goes to the root route if previous navigation is not available', () => {
+    const { getByText } = render(
+      <ToastContext.Provider value={jest.fn()}>
+        <Router history={history}>
+          <Form {...props} dirty>
+            {({ onCancel }) => (
+              <>
+                <input type="text" required />
+                <Button primary onClick={onCancel}>
+                  cancel
+                </Button>
+              </>
+            )}
+          </Form>
+        </Router>
+      </ToastContext.Provider>,
+      { wrapper: MemoryRouter },
+    );
+
+    userEvent.click(getByText(/^cancel/i));
+    expect(history.location.pathname).toBe('/');
+  });
+
+  it('goes back in browser history if previous navigation is available', () => {
+    const { getByText } = render(
+      <ToastContext.Provider value={jest.fn()}>
+        <Router history={history}>
+          <Route path="/form">
+            <Form {...props} dirty>
+              {({ onCancel }) => (
+                <>
+                  <input type="text" required />
+                  <Button primary onClick={onCancel}>
+                    cancel
+                  </Button>
+                </>
+              )}
+            </Form>
+          </Route>
+        </Router>
+      </ToastContext.Provider>,
+      { wrapper: MemoryRouter },
+    );
+
+    history.push('/another-url');
+    history.push('/form');
+
+    userEvent.click(getByText(/^cancel/i));
+    expect(history.location.pathname).toBe('/another-url');
+  });
 });
 
 describe('when saving', () => {

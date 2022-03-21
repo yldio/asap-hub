@@ -1,5 +1,5 @@
 import { ReactNode, useRef, useState, useEffect, useContext } from 'react';
-import { Prompt } from 'react-router-dom';
+import { Prompt, useHistory } from 'react-router-dom';
 import { css } from '@emotion/react';
 import { ToastContext } from '@asap-hub/react-context';
 
@@ -20,6 +20,7 @@ type FormProps<T> = {
   children: (state: {
     isSaving: boolean;
     onSave: () => void | Promise<T | void>;
+    onCancel: () => void;
   }) => ReactNode;
 };
 const Form = <T extends void | Record<string, unknown>>({
@@ -29,7 +30,7 @@ const Form = <T extends void | Record<string, unknown>>({
   onSave = noop,
 }: FormProps<T>): React.ReactElement => {
   const toast = useContext(ToastContext);
-
+  const history = useHistory();
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] =
     useState<'initial' | 'isSaving' | 'hasError' | 'hasSaved'>('initial');
@@ -61,6 +62,11 @@ const Form = <T extends void | Record<string, unknown>>({
     return Promise.resolve();
   };
 
+  const wrappedOnCancel = () => {
+    setStatus('initial');
+    history.location.key ? history.goBack() : history.push('/');
+  };
+
   return (
     <>
       <Prompt
@@ -75,7 +81,11 @@ const Form = <T extends void | Record<string, unknown>>({
         }}
       />
       <form ref={formRef} css={styles}>
-        {children({ isSaving: status === 'isSaving', onSave: wrappedOnSave })}
+        {children({
+          isSaving: status === 'isSaving',
+          onSave: wrappedOnSave,
+          onCancel: wrappedOnCancel,
+        })}
       </form>
     </>
   );

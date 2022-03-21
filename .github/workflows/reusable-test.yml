@@ -71,15 +71,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup
+        id: setup
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Test Integration
         uses: ./.github/actions/test-integration
         with:
-          squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}-${{ github.run_id }}
-          squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
-          squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
+          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}-${{ github.run_id }}
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
+          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
   test-browser:

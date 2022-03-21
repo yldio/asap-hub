@@ -24,7 +24,7 @@ on:
         required: true
 
 jobs:
-  deploy:
+  sls-deploy-package:
     concurrency:
       group: ${{ github.head_ref || inputs.environment-name }}
     runs-on: ubuntu-latest
@@ -35,37 +35,38 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     environment:
       name: ${{ inputs.environment-name }}
-      url: ${{ env.ASAP_APP_URL }}
+      url: ${{ steps.setup.outputs.asap-app-url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup
+        id: setup
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Deploy
-        uses: ./.github/actions/deploy
+        uses: ./.github/actions/sls-deploy-package
         with:
-          algolia-index: ${{ env.ALGOLIA_INDEX }}
-          asap-api-url: ${{ env.ASAP_API_URL }}
-          asap-app-url: ${{ env.ASAP_APP_URL }}
+          algolia-index: ${{ steps.setup.outputs.algolia-index }}
+          asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
+          asap-app-url: ${{ steps.setup.outputs.asap-app-url }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-acm-certificate-arn: ${{ env.AWS_ACM_CERTIFICATE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-acm-certificate-arn: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
+          aws-region: ${{ steps.setup.outputs.aws-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-          sentry-dsn-api: ${{ env.SENTRY_DSN_API }}
-          sentry-dsn-calendar: ${{ env.SENTRY_DSN_CALENDAR }}
-          sentry-dsn-user-invite: ${{ env.SENTRY_DSN_USER_INVITE }}
-          sls-stage: ${{ env.SLS_STAGE }}
-          squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
-          squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
-          squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
+          sentry-dsn-api: ${{ steps.setup.outputs.sentry-dsn-api }}
+          sentry-dsn-calendar: ${{ steps.setup.outputs.sentry-dsn-calendar }}
+          sentry-dsn-user-invite: ${{ steps.setup.outputs.sentry-dsn-user-invite }}
+          sls-stage: ${{ steps.setup.outputs.sls-stage }}
+          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
+          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   sync_algolia_settings:
-    needs: [deploy]
+    needs: [sls-deploy-package]
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
@@ -76,6 +77,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup
+        id: setup
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
@@ -84,11 +86,11 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-default-region: ${{ env.AWS_DEFAULT_REGION }}
-          algolia-index: ${{ env.ALGOLIA_INDEX }}
+          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
+          algolia-index: ${{ steps.setup.outputs.algolia-index }}
 
   update-squidex-schema:
-    needs: [deploy]
+    needs: [sls-deploy-package]
     environment: ${{ inputs.environment-name }}
     runs-on: ubuntu-latest
     container:
@@ -100,15 +102,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup
+        id: setup
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Update Squidex schema
         uses: ./.github/actions/squidex-sync
         with:
-          squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
-          squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
-          squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
+          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
+          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
-          asap-api-url: ${{ env.ASAP_API_URL }}
+          asap-api-url: ${{ steps.setup.outputs.asap-api-url }}

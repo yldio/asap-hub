@@ -97,6 +97,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup
+        id: setup
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
@@ -105,15 +106,15 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          algolia-app-name: ${{ env.ALGOLIA_APP_NAME }}
-          algolia-index: ${{ env.ALGOLIA_INDEX }}
-          app-release: ${{ env.APP_RELEASE }}
-          asap-api-url: ${{ env.ASAP_API_URL }}
-          asap-hostname: ${{ env.ASAP_HOSTNAME }}
-          aws-region: ${{ env.AWS_REGION }}
-          react-app-gtm-container-id: ${{ env.REACT_APP_GTM_CONTAINER_ID }}
-          react-app-sentry-dsn: ${{ env.REACT_APP_SENTRY_DSN }}
-          react-app-environment: ${{ env.REACT_APP_ENVIRONMENT }}
+          algolia-app-name: ${{ steps.setup.outputs.algolia-app-name }}
+          algolia-index: ${{ steps.setup.outputs.algolia-index }}
+          app-release: ${{ steps.setup.outputs.app-release }}
+          asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
+          asap-hostname: ${{ steps.setup.outputs.asap-hostname }}
+          aws-region: ${{ steps.setup.outputs.aws-region }}
+          react-app-gtm-container-id: ${{ steps.setup.outputs.react-app-gtm-container-id }}
+          react-app-sentry-dsn: ${{ steps.setup.outputs.react-app-sentry-dsn }}
+          react-app-environment: ${{ steps.setup.outputs.react-app-environment }}
 
   typecheck:
     needs: [build-typecheck]
@@ -137,7 +138,7 @@ jobs:
         run: |
           yarn typecheck
 
-  build-sls-package:
+  sls-build-package:
     needs: [build-typecheck, transpile, rebuild]
     runs-on: ubuntu-latest
     container:
@@ -150,26 +151,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup
+        id: setup
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Build
-        uses: ./.github/actions/build-sls-package
+        uses: ./.github/actions/sls-build-package
         with:
-          algolia-index: ${{ env.ALGOLIA_INDEX }}
-          asap-api-url: ${{ env.ASAP_API_URL }}
-          asap-app-url: ${{ env.ASAP_APP_URL }}
-          aws-acm-certificate-arn: ${{ env.AWS_ACM_CERTIFICATE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
-          sls-stage: ${{ env.SLS_STAGE }}
-          squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
+          algolia-index: ${{ steps.setup.outputs.algolia-index }}
+          asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
+          asap-app-url: ${{ steps.setup.outputs.asap-app-url }}
+          aws-acm-certificate-arn: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
+          aws-region: ${{ steps.setup.outputs.aws-region }}
+          sls-stage: ${{ steps.setup.outputs.sls-stage }}
+          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-          sentry-dsn-api: ${{ env.SENTRY_DSN_API }}
-          sentry-dsn-calendar: ${{ env.SENTRY_DSN_CALENDAR }}
-          sentry-dsn-user-invite: ${{ env.SENTRY_DSN_USER_INVITE }}
-          squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
-          squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
+          sentry-dsn-api: ${{ steps.setup.outputs.sentry-dsn-api }}
+          sentry-dsn-calendar: ${{ steps.setup.outputs.sentry-dsn-calendar }}
+          sentry-dsn-user-invite: ${{ steps.setup.outputs.sentry-dsn-user-invite }}
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
+          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}

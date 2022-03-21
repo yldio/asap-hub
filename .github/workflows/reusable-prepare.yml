@@ -37,6 +37,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup
+        id: setup
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
@@ -45,11 +46,11 @@ jobs:
         uses: ./.github/actions/prepare-squidex
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ steps.setup.outputs.aws-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
-          squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
-          squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
+          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
+          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
   create-algolia-index:
@@ -64,6 +65,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup
+        id: setup
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
@@ -73,5 +75,5 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-default-region: ${{ env.AWS_DEFAULT_REGION }}
-          bucket-name: ${{ env.BUCKET_NAME }}
+          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
+          bucket-name: ${{ steps.setup.outputs.bucket-name }}

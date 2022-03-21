@@ -23,13 +23,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup
+        id: setup
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Test
         uses: ./.github/actions/verify-sls
         with:
-          asap-api-url: ${{ env.ASAP_API_URL }}
+          asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
 
   e2e-test:
     runs-on: ubuntu-latest
@@ -39,13 +40,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup
+        id: setup
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Test
         uses: ./.github/actions/e2e-test
         with:
-          asap-app-url: ${{ env.ASAP_APP_URL }}
+          asap-app-url: ${{ steps.setup.outputs.asap-app-url }}
 
   verify-schema:
     runs-on: ubuntu-latest
@@ -59,13 +61,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup
+        id: setup
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Verify
         uses: ./.github/actions/verify-schema
         with:
-          squidex-app-name: ${{ env.SQUIDEX_APP_NAME }}
-          squidex-base-url: ${{ env.SQUIDEX_BASE_URL }}
-          squidex-client-id: ${{ env.SQUIDEX_CLIENT_ID }}
+          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
+          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}

@@ -458,7 +458,7 @@ __metadata:
     "@types/testing-library__react-hooks": ^3.4.1
     "@types/uuid": ^8.3.0
     browser-image-compression: ^1.0.14
-    browserslist-useragent-regexp: ^3.0.0
+    browserslist-useragent-regexp: ^3.0.2
     cross-env: ^7.0.3
     date-fns: ^2.21.3
     history: ^4
@@ -10393,10 +10393,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.14.22":
-  version: 14.14.27
-  resolution: "@types/node@npm:14.14.27"
-  checksum: 2233bd0e781aba08e5c10cceb11a0e9ff698a9c4f00997294ffa5a03692ddabb60917010d113e4ebbd5b0028071d526eb79681c5df6297ed25639c7a6414763f
+"@types/node@npm:^16.9.6":
+  version: 16.11.26
+  resolution: "@types/node@npm:16.11.26"
+  checksum: 57757caaba3f0d95de82198cb276a1002c49b710108c932a1d02d7c91ff2fa57cfe2dd19fde60853b6dd90b0964b3cf35557981d2628e20aed6a909057aedfe6
   languageName: node
   linkType: hard
 
@@ -14133,11 +14133,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist-useragent-regexp@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "browserslist-useragent-regexp@npm:3.0.0"
+"browserslist-useragent-regexp@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "browserslist-useragent-regexp@npm:3.0.2"
   dependencies:
-    "@types/node": ^14.14.22
+    "@types/node": ^16.9.6
     argue-cli: ^1.2.0
     browserslist: ^4.16.3
     chalk: ^4.0.0
@@ -14145,7 +14145,7 @@ __metadata:
     useragent: ^2.3.0
   bin:
     browserslist-useragent-regexp: lib/cli.js
-  checksum: c1fe5d07c8ff8f65417c71786ea3291de652694c7243222e4f9f419215eec3e218d74abed44b3b43dc3a9285344ba78f8dcffdf00e67284534905382d3cb6d4c
+  checksum: 63045c29adba85a2dd120ad823609da5a449b0026148824b6b6106bbc2c107560bec271f60b60416d4ea77a4470f0d776b0fdea082f8d472f97e33f417b88071
   languageName: node
   linkType: hard
 
@@ -14625,31 +14625,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30000981, caniuse-lite@npm:^1.0.30001061":
-  version: 1.0.30001062
-  resolution: "caniuse-lite@npm:1.0.30001062"
-  checksum: a1810d8226a73bea14bff66609aa58603975d537f44ad40d0ac72b6b0490d4ed6f2a76a10f39d987a939d4118248801c15262697973e4e7f0c5fca979607e78e
-  languageName: node
-  linkType: hard
-
-"caniuse-lite@npm:^1.0.30001109, caniuse-lite@npm:^1.0.30001219":
-  version: 1.0.30001228
-  resolution: "caniuse-lite@npm:1.0.30001228"
-  checksum: d7ea2234d3ad1841dab6cd0b6ee16e89958f5893ef2e024a7447d6f889f496e40b6dafe000f391b8d4f0c0ef08671dbb5969fd66e6f74d402994865ce5705a53
-  languageName: node
-  linkType: hard
-
-"caniuse-lite@npm:^1.0.30001125, caniuse-lite@npm:^1.0.30001181":
-  version: 1.0.30001185
-  resolution: "caniuse-lite@npm:1.0.30001185"
-  checksum: c34c8eae4830ce0c11daa169b57498d9748a15104ae134067418717a352c8c15d938e801dee48e1bc3cb826f0d93cca8e08017c9803fe1485ab4e611f6574430
-  languageName: node
-  linkType: hard
-
-"caniuse-lite@npm:^1.0.30001280":
-  version: 1.0.30001282
-  resolution: "caniuse-lite@npm:1.0.30001282"
-  checksum: 62797fd756e88bfa01f0f983bea9de7814293b209456e8f0b20596b03d2880246f63dc90f947a1fa63f92806ebefbb86fc7811dbecb7839927886d07996938be
+"caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30000981, caniuse-lite@npm:^1.0.30001061, caniuse-lite@npm:^1.0.30001109, caniuse-lite@npm:^1.0.30001125, caniuse-lite@npm:^1.0.30001181, caniuse-lite@npm:^1.0.30001219, caniuse-lite@npm:^1.0.30001280":
+  version: 1.0.30001319
+  resolution: "caniuse-lite@npm:1.0.30001319"
+  checksum: 1c03cc4ca019c410d197b76604cd8605077ef124906f3debd3f026568e01a1aa3888cdfcb0d23c0786115b0b3f790486f2aa8e0cce361d3dcc5c92ff3611f73e
   languageName: node
   linkType: hard
 

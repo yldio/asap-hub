@@ -21,15 +21,16 @@
     "algolia:remove-records": "yarn node apps/asap-cli/build-cjs/cli.js algolia:remove-records",
     "algolia:upload": "yarn workspace @asap-hub/algolia run algolia setsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -s ./algolia-schema.json",
     "build": "yarn build:typecheck && yarn build:babel && yarn typecheck && yarn build:frontend",
-    "build:frontend": "yarn workspaces foreach -j 2 --exclude asap-hub -vp run build",
-    "typecheck": "yarn workspaces foreach --exclude asap-hub -vpt run typecheck",
     "build:babel": "yarn workspaces foreach -vp -j 2 run build:babel",
+    "build:frontend": "yarn workspaces foreach -j 2 --exclude asap-hub -vp run build",
     "build:typecheck": "tsc -b -v $(node scripts/get-composite-ts-projects.js)",
-    "clean": "rimraf \"{apps,packages}/*/{build*,*.tsbuildinfo}\" \"coverage\" \".serverless*\"",
     "check:packages": "yarn install --immutable --immutable-cache",
+    "clean": "rimraf \"{apps,packages}/*/{build*,*.tsbuildinfo}\" \"coverage\" \".serverless*\"",
+    "export:entity": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/crn-server/tsconfig.json --files=./apps/crn-server/@types ./apps/crn-server/scripts/cli.ts export",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "release:frontend": "yarn workspace @asap-hub/crn-frontend release:frontend",
+    "schema:update": "./apps/crn-server/scripts/schema-update.sh",
     "sls": "babel-node --extensions=.js,.jsx,.ts,.tsx --config-file=./babel-cjs.config.js serverless/link-plugins.ts && TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn pnpify serverless",
     "start": "yarn workspaces foreach -vpi -j 1000 run start",
     "start:backend": "yarn workspace @asap-hub/crn-server start",
@@ -40,10 +41,10 @@
     "test:build-output": "yarn test --config=jest-build-output.config.js",
     "test:e2e": "yarn test --config=apps/e2e-tests/jest-e2e.config.js",
     "test:integration": "yarn test --config=jest-integration.config.js",
+    "typecheck": "yarn workspaces foreach --exclude asap-hub -vpt run typecheck",
+    "update:browser-list": "yarn up -R caniuse-lite",
     "watch:babel": "yarn workspaces foreach -vpi -j 1000 run watch:babel",
-    "watch:typecheck": "yarn build:typecheck -w",
-    "schema:update": "./apps/crn-server/scripts/schema-update.sh",
-    "export:entity": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/crn-server/tsconfig.json --files=./apps/crn-server/@types ./apps/crn-server/scripts/cli.ts export"
+    "watch:typecheck": "yarn build:typecheck -w"
   },
   "resolutions": {
     "encoding": "0.1.13"

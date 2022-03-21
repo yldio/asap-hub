@@ -14,11 +14,6 @@ import Select, {
   Props,
 } from 'react-select';
 import AsyncSelect from 'react-select/async';
-
-import { validationMessageStyles } from '../form';
-import { reactMultiSelectStyles } from '../select';
-import { noop } from '../utils';
-import { crossIcon } from '../icons';
 import {
   SortableContainer,
   SortableContainerProps,
@@ -27,6 +22,11 @@ import {
   SortableHandle,
 } from 'react-sortable-hoc';
 import { MultiValueGenericProps } from 'react-select/src/components/MultiValue';
+
+import { validationMessageStyles } from '../form';
+import { reactMultiSelectStyles } from '../select';
+import { noop } from '../utils';
+import { crossIcon } from '../icons';
 
 function arrayMove<T>(array: readonly T[], from: number, to: number) {
   const slicedArray = array.slice();
@@ -144,7 +144,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
     inputRef?.getWrappedInstance?.().blur?.();
   };
 
-  let sortableProps: SortableContainerProps | undefined = undefined;
+  let sortableProps: SortableContainerProps | undefined;
 
   if (sortable) {
     const onSortEnd: SortEndHandler = ({ oldIndex, newIndex }) => {

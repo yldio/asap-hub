@@ -56,13 +56,15 @@ const SortableMultiValueLabel = SortableHandle(
   ),
 );
 
-const SortableAsyncSelect = SortableContainer(
-  AsyncSelect, { withRef: true }
-) as React.ComponentClass<
+const SortableAsyncSelect = SortableContainer(AsyncSelect, {
+  withRef: true,
+}) as React.ComponentClass<
   Props<MultiSelectOptionsType, true> & SortableContainerProps
 >;
 
-const SortableSelect = SortableContainer(Select, { withRef: true}) as React.ComponentClass<
+const SortableSelect = SortableContainer(Select, {
+  withRef: true,
+}) as React.ComponentClass<
   Props<MultiSelectOptionsType, true> & SortableContainerProps
 >;
 
@@ -85,10 +87,18 @@ export type MultiSelectOptionsType = {
 };
 
 type RefType =
-  | Select<MultiSelectOptionsType, true> & { getWrappedInstance: undefined }
-  | AsyncSelect<MultiSelectOptionsType, true> & { getWrappedInstance: undefined }
-  | { blur: undefined, getWrappedInstance: () => Select<MultiSelectOptionsType, true> }
-  | { blur: undefined, getWrappedInstance: () => AsyncSelect<MultiSelectOptionsType, true> }
+  | (Select<MultiSelectOptionsType, true> & { getWrappedInstance: undefined })
+  | (AsyncSelect<MultiSelectOptionsType, true> & {
+      getWrappedInstance: undefined;
+    })
+  | {
+      blur: undefined;
+      getWrappedInstance: () => Select<MultiSelectOptionsType, true>;
+    }
+  | {
+      blur: undefined;
+      getWrappedInstance: () => AsyncSelect<MultiSelectOptionsType, true>;
+    }
   | null;
 
 type MultiSelectProps = {
@@ -98,7 +108,7 @@ type MultiSelectProps = {
   readonly placeholder?: string;
   readonly onChange?: (newValues: OptionsType<MultiSelectOptionsType>) => void;
   readonly values?: OptionsType<MultiSelectOptionsType>;
-  readonly sortable?: boolean
+  readonly sortable?: boolean;
 } & (
   | (Pick<ComponentProps<typeof Select>, 'noOptionsMessage'> & {
       readonly suggestions: ReadonlyArray<string>;
@@ -130,11 +140,11 @@ const MultiSelect: FC<MultiSelectProps> = ({
   // This is to handle a bug with Select where the right click would make it impossible to write
   let inputRef: RefType = null;
   const handleOnContextMenu = () => {
-    inputRef?.blur?.()
+    inputRef?.blur?.();
     inputRef?.getWrappedInstance?.().blur?.();
   };
 
-  let sortableProps: SortableContainerProps | undefined  = undefined
+  let sortableProps: SortableContainerProps | undefined = undefined;
 
   if (sortable) {
     const onSortEnd: SortEndHandler = ({ oldIndex, newIndex }) => {
@@ -148,11 +158,11 @@ const MultiSelect: FC<MultiSelectProps> = ({
       onSortEnd,
       // small fix for https://github.com/clauderic/react-sortable-hoc/pull/352:
       getHelperDimensions: ({ node }) => node.getBoundingClientRect(),
-    }
+    };
   }
 
-  const commonProps: Props<MultiSelectOptionsType, true> & Partial<SortableContainerProps>
-    = {
+  const commonProps: Props<MultiSelectOptionsType, true> &
+    Partial<SortableContainerProps> = {
     ...sortableProps,
     inputId: id,
     isDisabled: !enabled,
@@ -163,7 +173,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
       MultiValueRemove,
       // @ts-expect-error // We're failing to provide a required index prop to SortableElement
       MultiValue: sortable ? SortableMultiValue : undefined,
-      MultiValueLabel: sortable ? SortableMultiValueLabel: undefined,
+      MultiValueLabel: sortable ? SortableMultiValueLabel : undefined,
     },
     noOptionsMessage,
     styles: reactMultiSelectStyles(!!validationMsg),
@@ -189,8 +199,8 @@ const MultiSelect: FC<MultiSelectProps> = ({
     },
   };
 
-  const SelectComponent = sortable ? SortableSelect : Select
-  const AsyncSelectComponent = sortable ? SortableAsyncSelect : AsyncSelect
+  const SelectComponent = sortable ? SortableSelect : Select;
+  const AsyncSelectComponent = sortable ? SortableAsyncSelect : AsyncSelect;
 
   return (
     <div css={containerStyles} onContextMenu={handleOnContextMenu}>

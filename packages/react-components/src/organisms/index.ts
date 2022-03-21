@@ -58,3 +58,5 @@ export { default as UserProfilePlaceholderCard } from './UserProfilePlaceholderC
 export { default as UserProfileRecentWorks } from './UserProfileRecentWorks';
 export { default as UserProfileRole } from './UserProfileRole';
 export { default as WelcomeCard } from './WelcomeCard';
+
+export type { RadioButtonGroupProps } from './RadioButtonGroup';

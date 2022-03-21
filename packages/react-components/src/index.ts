@@ -54,6 +54,7 @@ export {
   LabeledTextArea,
   LabeledTextField,
   LabeledTypeahead,
+  LabeledRadioButtonGroup,
   Loading,
   MembersList,
   MenuButton,

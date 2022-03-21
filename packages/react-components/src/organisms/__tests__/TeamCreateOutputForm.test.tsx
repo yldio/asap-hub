@@ -90,6 +90,23 @@ it('can submit a form when form data is valid', async () => {
     keyCode: ENTER_KEYCODE,
   });
 
+  fireEvent.click(
+    screen
+      .getByRole('group', { name: /funded by ASAP/i })
+      .querySelectorAll('input')[0]!,
+  );
+
+  fireEvent.click(
+    screen
+      .getByRole('group', { name: /used in a publication/i })
+      .querySelectorAll('input')[0]!,
+  );
+
+  fireEvent.click(
+    screen
+      .getByRole('group', { name: /sharing status/i })
+      .querySelectorAll('input')[1]!,
+  );
   userEvent.click(screen.getByLabelText(/Labs/i));
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -117,6 +134,9 @@ it('can submit a form when form data is valid', async () => {
       labs: ['1'],
       authors: ['2'],
       teams: ['TEAMID'],
+      asapFunded: true,
+      usedInPublication: true,
+      sharingStatus: 'Public',
     });
     expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
     expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();

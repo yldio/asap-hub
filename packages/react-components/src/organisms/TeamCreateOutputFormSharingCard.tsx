@@ -1,6 +1,8 @@
 import { USER_SOCIAL_WEBSITE } from '@asap-hub/validation';
 import {
+  DecisionOption,
   ResearchOutputPostRequest,
+  ResearchOutputSharingStatus,
   ResearchOutputSubtype,
   researchOutputTypeToSubtype,
 } from '@asap-hub/model';
@@ -11,18 +13,24 @@ import {
   LabeledTextField,
   FormCard,
   LabeledDropdown,
+  LabeledRadioButtonGroup,
 } from '../molecules';
 import { noop } from '../utils';
 
 type TeamCreateOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
-  'link' | 'title' | 'description' | 'subTypes' | 'type'
+  'link' | 'title' | 'description' | 'subTypes' | 'type' | 'sharingStatus'
 > & {
   onChangeLink?: (newValue: string) => void;
   onChangeTitle?: (newValue: string) => void;
   onChangeDescription?: (newValue: string) => void;
   onChangeSubtypes?: (newValue: ResearchOutputSubtype[]) => void;
+  onChangeAsapFunded?: (newValue: DecisionOption) => void;
+  onChangeUsedInPublication?: (newValue: DecisionOption) => void;
+  onChangeSharingStatus?: (newValue: ResearchOutputSharingStatus) => void;
   isSaving: boolean;
+  asapFunded: DecisionOption;
+  usedInPublication: DecisionOption;
 };
 
 const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardProps> =
@@ -33,10 +41,16 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
     description,
     type,
     subTypes,
+    asapFunded,
+    usedInPublication,
+    sharingStatus,
     onChangeDescription = noop,
     onChangeLink = noop,
     onChangeTitle = noop,
     onChangeSubtypes = noop,
+    onChangeAsapFunded = noop,
+    onChangeUsedInPublication = noop,
+    onChangeSharingStatus = noop,
   }) => {
     const urlRequired = type !== 'Lab Resource';
     const urlSubtitle = urlRequired ? '(required)' : '(optional)';
@@ -94,6 +108,39 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
           required
           enabled={!isSaving}
           value={description}
+        />
+        <LabeledRadioButtonGroup
+          title="Has this output been funded by ASAP"
+          subtitle="(required)"
+          options={[
+            { value: 'Yes', label: 'Yes' },
+            { value: 'No', label: 'No' },
+            { value: 'Not Sure', label: 'Not Sure' },
+          ]}
+          value={asapFunded}
+          onChange={onChangeAsapFunded}
+        />
+
+        <LabeledRadioButtonGroup
+          title="Has this output been used in a publication"
+          subtitle="(required)"
+          options={[
+            { value: 'Yes', label: 'Yes' },
+            { value: 'No', label: 'No' },
+            { value: 'Not Sure', label: 'Not Sure' },
+          ]}
+          value={usedInPublication}
+          onChange={onChangeUsedInPublication}
+        />
+        <LabeledRadioButtonGroup
+          title="Sharing status"
+          subtitle="(required)"
+          options={[
+            { value: 'Network Only', label: 'CRN Only' },
+            { value: 'Public', label: 'Public' },
+          ]}
+          value={sharingStatus}
+          onChange={onChangeSharingStatus}
         />
       </FormCard>
     );

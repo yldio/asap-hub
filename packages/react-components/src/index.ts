@@ -97,7 +97,6 @@ export {
   ProfileCardList,
   ProfileExpertiseAndResources,
   QuestionsSection,
-  RadioButtonGroup,
   RichText,
   RichTextCard,
   SearchAndFilter,

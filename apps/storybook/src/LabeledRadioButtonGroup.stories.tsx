@@ -9,8 +9,8 @@ export default {
 
 export const Normal = () => (
   <LabeledRadioButtonGroup
-    title={text('Title', 'Section title')}
-    subtitle={text('Subtitle', 'required')}
+    title={text('Title', 'Airports')}
+    subtitle={text('Subtitle', '(required)')}
     options={[
       { value: 'LHR', label: 'Heathrow' },
       { value: 'LGW', label: 'Gatwick' },

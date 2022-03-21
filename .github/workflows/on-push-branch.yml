@@ -63,9 +63,19 @@ jobs:
 
   branch-pipeline-success:
     runs-on: ubuntu-latest
+    environment:
+      name: Branch
+      url: ${{ steps.setup.outputs.asap-app-url }}
     needs: [verify]
     if: ${{ success() }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Branch
       - name: Print success
         run: |
           echo "Pipeline branch successful."

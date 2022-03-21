@@ -1,5 +1,5 @@
-name: 'Prepare Squidex'
-description: 'Prepares Squidex'
+name: 'Squidex Create'
+description: 'Creates a Squidex App'
 inputs:
   aws-access-key-id:
     description: 'AWS Access Key ID'

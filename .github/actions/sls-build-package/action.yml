@@ -1,15 +1,6 @@
-name: 'Deploy'
-description: 'Deploys the application'
+name: 'SLS Build Package'
+description: 'Builds an SLS Package'
 inputs:
-  aws-access-key-id:
-    description: 'AWS Access Key ID'
-    required: true
-  aws-secret-access-key:
-    description: 'AWS Secret Access Key'
-    required: true
-  aws-region:
-    description: 'AWS Region'
-    required: true
   algolia-index:
     description: 'Algolia Index'
     required: true
@@ -19,20 +10,23 @@ inputs:
   asap-app-url:
     description: 'ASAP APP Url'
     required: true
-  image-name:
-    description: 'Image name'
+  aws-access-key-id:
+    description: 'AWS Access Key ID'
     required: true
-  sls-stage:
-    description: 'SLS Stage'
-    required: true
-  squidex-app-name:
-    description: 'Squidex App Name'
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
     required: true
   aws-acm-certificate-arn:
     description: 'AWS ACM Certificate ARN'
     required: true
+  aws-region:
+    description: 'AWS Region'
+    required: true
   lightstep-token:
     description: 'Lightstep Token'
+    required: true
+  sls-stage:
+    description: 'SLS Stage'
     required: true
   sentry-dsn-api:
     description: 'Sentry DSN API'
@@ -42,6 +36,9 @@ inputs:
     required: true
   sentry-dsn-user-invite:
     description: 'Sentry DSN User Invite'
+    required: true
+  squidex-app-name:
+    description: 'Squidex App Name'
     required: true
   squidex-base-url:
     description: 'Squidex Base Url'
@@ -55,31 +52,37 @@ inputs:
   squidex-shared-secret:
     description: 'Squidex Shared Secret'
     required: true
+
 runs:
   using: 'composite'
   steps:
     - name: Cache build output
       uses: actions/cache@v2
-      id: restore-build
-      with:
-        path: |
-          apps/**/build*
-          packages/**/build*
-        key: build-frontend-output-${{ github.sha }}
-    - name: Cache rebuild output
-      uses: actions/cache@v2
+      id: restore-rebuild
       with:
         path: |
           .yarn/unplugged/
         key: rebuild-output-${{ github.sha }}
-    - uses: actions/download-artifact@v2
+    - name: Cache build typecheck output
+      uses: actions/cache@v2
+      id: restore-build-typecheck
       with:
-        name: sls-package
-        path: 'sls-package'
-    - name: Deploy
+        path: |
+          apps/**/build*
+          packages/**/build*
+        key: build-typecheck-output-${{ github.sha }}
+    - name: Cache transpile output
+      uses: actions/cache@v2
+      id: restore-transpile
+      with:
+        path: |
+          apps/**/build*
+          packages/**/build*
+        key: transpile-output-${{ github.sha }}
+    - name: Generate package
       shell: bash
       run: |
-        yarn sls deploy --package sls-package --verbose
+        yarn sls package --package sls-package
       env:
         ALGOLIA_INDEX: ${{ inputs.algolia-index }}
         ASAP_API_URL: ${{ inputs.asap-api-url }}
@@ -91,13 +94,17 @@ runs:
         CURRENT_REVISION: ${{ github.sha }}
         LIGHTSTEP_TOKEN: ${{ inputs.lightstep-token }}
         NODE_ENV: 'production'
-        NODE_OPTIONS: '--max_old_space_size=4096'
         SENTRY_DSN_API: ${{ inputs.sentry-dsn-api }}
         SENTRY_DSN_CALENDAR: ${{ inputs.sentry-dsn-calendar }}
         SENTRY_DSN_USER_INVITE: ${{ inputs.sentry-dsn-user-invite }}
         SLS_STAGE: ${{ inputs.sls-stage}}
-        SQUIDEX_APP_NAME: '${{ inputs.squidex-app-name }}'
+        SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
         SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
         SQUIDEX_CLIENT_ID: ${{ inputs.squidex-client-id }}
         SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-client-secret }}
         SQUIDEX_SHARED_SECRET: ${{ inputs.squidex-shared-secret }}
+    - uses: actions/upload-artifact@v2
+      with:
+        name: sls-package
+        path: 'sls-package'
+        retention-days: 1

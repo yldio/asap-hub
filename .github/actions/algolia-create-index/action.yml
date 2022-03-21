@@ -1,5 +1,5 @@
-name: 'Build Frontend'
-description: 'Builds frontend'
+name: 'Algolia Create Index'
+description: 'Create Algolia Index'
 inputs:
   aws-access-key-id:
     description: 'AWS Access Key ID'

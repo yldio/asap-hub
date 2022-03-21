@@ -1,4 +1,4 @@
-name: 'Sync Algolia Settings'
+name: 'Algolia Sync Settings'
 description: 'Sync Algolia settings'
 inputs:
   aws-access-key-id:

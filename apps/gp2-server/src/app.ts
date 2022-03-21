@@ -23,6 +23,8 @@ export const appFactory = (libs: Libs = {}): Express => {
     logger,
     serializers: redaction,
   });
+  app.use(httpLogger);
+
   const errorHandler = errorHandlerFactory();
 
   // Clients
@@ -40,8 +42,6 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   // Auth
   app.use(authHandler);
-
-  app.use(httpLogger);
 
   /**
    * Routes requiring onboarding below

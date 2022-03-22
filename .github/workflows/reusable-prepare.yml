@@ -77,3 +77,4 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
           bucket-name: ${{ steps.setup.outputs.bucket-name }}
+          algolia-index: ${{ steps.setup.outputs.algolia-index }}

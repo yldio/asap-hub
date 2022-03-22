@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import {
+  DecisionOption,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
   ResearchOutputType,
@@ -105,6 +106,12 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>('');
   const [accessInstructions, setAccessInstructions] =
     useState<ResearchOutputPostRequest['accessInstructions']>('');
+  const [asapFunded, setAsapFunded] = useState<DecisionOption>('Not Sure');
+  const [usedInPublication, setUsedInPublication] =
+    useState<DecisionOption>('Not Sure');
+
+  const [sharingStatus, setSharingStatus] =
+    useState<ResearchOutputPostRequest['sharingStatus']>('Network Only');
 
   return (
     <Form
@@ -118,7 +125,10 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         authors.length !== 0 ||
         teams.length !== 1 // Original team
       }
-      onSave={() =>
+      onSave={() => {
+        const convertDecisionToBoolean = (decision: DecisionOption): boolean =>
+          decision === 'Yes';
+
         onSave({
           tags,
           link: String(link).trim() === '' ? undefined : link,
@@ -132,8 +142,11 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             String(accessInstructions).trim() !== ''
               ? accessInstructions
               : undefined,
-        })
-      }
+          asapFunded: convertDecisionToBoolean(asapFunded),
+          usedInPublication: convertDecisionToBoolean(usedInPublication),
+          sharingStatus,
+        });
+      }}
     >
       {({ isSaving, onSave: handleSave, onCancel: handleCancel }) => (
         <div css={contentStyles}>
@@ -148,6 +161,12 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangeLink={setLink}
             subTypes={subTypes}
             onChangeSubtypes={setSubtypes}
+            asapFunded={asapFunded}
+            onChangeAsapFunded={setAsapFunded}
+            usedInPublication={usedInPublication}
+            onChangeUsedInPublication={setUsedInPublication}
+            sharingStatus={sharingStatus}
+            onChangeSharingStatus={setSharingStatus}
           />
           <TeamCreateOutputExtraInformationCard
             isSaving={isSaving}

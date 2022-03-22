@@ -1,14 +1,16 @@
-import { select } from '@storybook/addon-knobs';
+import { text, select } from '@storybook/addon-knobs';
 
-import { RadioButtonGroup } from '@asap-hub/react-components';
+import { LabeledRadioButtonGroup } from '@asap-hub/react-components';
 
 export default {
-  title: 'Organisms / Radio Button Group',
-  component: RadioButtonGroup,
+  title: 'Molecules / Labeled Radio Button Group',
+  component: LabeledRadioButtonGroup,
 };
 
 export const Normal = () => (
-  <RadioButtonGroup
+  <LabeledRadioButtonGroup
+    title={text('Title', 'Airports')}
+    subtitle={text('Subtitle', '(required)')}
     options={[
       { value: 'LHR', label: 'Heathrow' },
       { value: 'LGW', label: 'Gatwick' },

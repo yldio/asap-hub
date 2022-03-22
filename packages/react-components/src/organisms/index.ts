@@ -30,7 +30,6 @@ export { default as PeopleCard } from './PeopleCard';
 export { default as ProfileCardList } from './ProfileCardList';
 export { default as ProfileExpertiseAndResources } from './ProfileExpertiseAndResources';
 export { default as QuestionsSection } from './QuestionsSection';
-export { default as RadioButtonGroup } from './RadioButtonGroup';
 export { default as ResultList } from './ResultList';
 export { default as RichText } from './RichText';
 export { default as RichTextCard } from './RichTextCard';

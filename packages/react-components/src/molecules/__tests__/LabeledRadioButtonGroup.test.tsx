@@ -1,11 +1,27 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import RadioButtonGroup from '../RadioButtonGroup';
+import LabeledRadioButtonGroup from '../LabeledRadioButtonGroup';
+
+it('renders a section title', () => {
+  render(<LabeledRadioButtonGroup title="Group title" options={[]} value="" />);
+  expect(screen.getByText(/Group title/i)).toBeVisible();
+});
+
+it('renders a section subtitle', () => {
+  render(
+    <LabeledRadioButtonGroup
+      subtitle="Group description"
+      options={[]}
+      value=""
+    />,
+  );
+  expect(screen.getByText(/Group description/i)).toBeVisible();
+});
 
 it('renders a radio button for each option', () => {
   const { getByLabelText } = render(
-    <RadioButtonGroup
+    <LabeledRadioButtonGroup
       options={[
         { value: 'LHR', label: 'Heathrow' },
         { value: 'LGW', label: 'Gatwick' },
@@ -19,7 +35,7 @@ it('renders a radio button for each option', () => {
 
 it('checks the radio button with the current value', () => {
   const { getByLabelText } = render(
-    <RadioButtonGroup
+    <LabeledRadioButtonGroup
       options={[
         { value: 'LHR', label: 'Heathrow' },
         { value: 'LGW', label: 'Gatwick' },
@@ -34,14 +50,14 @@ it('checks the radio button with the current value', () => {
 it('assigns all radio buttons a unique group name', () => {
   const { getByLabelText } = render(
     <>
-      <RadioButtonGroup
+      <LabeledRadioButtonGroup
         options={[
           { value: 'LHR', label: 'Heathrow' },
           { value: 'LGW', label: 'Gatwick' },
         ]}
         value="LHR"
       />
-      <RadioButtonGroup
+      <LabeledRadioButtonGroup
         options={[{ value: 'LCY', label: 'City' }]}
         value="LCY"
       />
@@ -58,7 +74,7 @@ it('assigns all radio buttons a unique group name', () => {
 it('emits value changes', () => {
   const handleChange = jest.fn();
   const { getByLabelText } = render(
-    <RadioButtonGroup
+    <LabeledRadioButtonGroup
       options={[
         { value: 'LHR', label: 'Heathrow' },
         { value: 'LGW', label: 'Gatwick' },

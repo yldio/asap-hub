@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/dom';
-import { render } from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
@@ -12,6 +12,9 @@ const props: ComponentProps<typeof TeamCreateOutputFormSharingCard> = {
   link: '',
   subTypes: [],
   type: 'Article',
+  asapFunded: 'Not Sure',
+  usedInPublication: 'Not Sure',
+  sharingStatus: 'Network Only',
 };
 it('renders the card with provided values', () => {
   const { getByDisplayValue } = render(
@@ -78,6 +81,24 @@ it.each`
   const input = getByLabelText(label);
   fireEvent.change(input, { target: { value: 'test' } });
   expect(onChangeFn).toHaveBeenLastCalledWith('test');
+});
+
+it.each`
+  field                  | group                       | prop
+  ${'asapFunded'}        | ${/funded by ASAP/i}        | ${'onChangeAsapFunded'}
+  ${'usedInPublication'} | ${/used in a publication/i} | ${'onChangeUsedInPublication'}
+  ${'sharingStatus'}     | ${/sharing status/i}        | ${'onChangeSharingStatus'}
+`('triggers an onchange event for group $field', async ({ group, prop }) => {
+  const onChangeFn = jest.fn();
+  render(
+    <TeamCreateOutputFormSharingCard {...{ ...props, [prop]: onChangeFn }} />,
+  );
+
+  fireEvent.click(
+    screen.getByRole('group', { name: group }).querySelectorAll('input')[1]!,
+  );
+
+  expect(onChangeFn).toHaveBeenCalled();
 });
 
 it('triggers an on change for type', async () => {

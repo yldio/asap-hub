@@ -54,7 +54,10 @@ jobs:
       - name: Test
         run: |
           yarn test --coverage --maxWorkers=2
-          yarn codecov
+      - uses: codecov/codecov-action@v2
+        with:
+          fail_ci_if_error: true
+          verbose: true
 
   test-integration:
     if: ${{ github.event_name == 'pull_request' }}

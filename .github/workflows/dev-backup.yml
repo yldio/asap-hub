@@ -4,13 +4,10 @@ on:
     - cron: '0 7 * * MON-FRI' # At 07:00 UTC on every day-of-week from Monday through Friday.
   workflow_dispatch:
 jobs:
-  setup:
-    uses: ./.github/workflows/setup.yml
   make_squidex_backup:
-    needs: setup
     runs-on: ubuntu-18.04
     container:
-      image: ${{ needs.setup.outputs.squidex-image-name }}
+      image: ghcr.io/yldio/asap-hub/squidex-utils:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

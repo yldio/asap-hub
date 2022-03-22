@@ -1,0 +1,74 @@
+name: Reusable verify
+
+on:
+  workflow_call:
+    inputs:
+      environment-name:
+        required: true
+        type: string
+    secrets:
+      SQUIDEX_CLIENT_SECRET:
+        description: 'Squidex Client Secret'
+        required: true
+
+jobs:
+  verify-sls:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Test
+        uses: ./.github/actions/verify-sls
+        with:
+          asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
+
+  e2e-test:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:focal
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Test
+        uses: ./.github/actions/e2e-test
+        with:
+          asap-app-url: ${{ steps.setup.outputs.asap-app-url }}
+
+  verify-schema:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Verify
+        uses: ./.github/actions/verify-schema
+        with:
+          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
+          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
+          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}

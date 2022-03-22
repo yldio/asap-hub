@@ -1,0 +1,79 @@
+name: Reusable prepare
+
+on:
+  workflow_call:
+    inputs:
+      environment-name:
+        required: true
+        type: string
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        description: 'AWS Access Key ID'
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        description: 'AWS Secret Access Key'
+        required: true
+      SQUIDEX_CLIENT_SECRET:
+        description: 'Squidex Client Secret'
+        required: true
+      SQUIDEX_SHARED_SECRET:
+        description: 'Squidex Shared Secret'
+        required: true
+
+jobs:
+  squidex-create:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    environment: Branch
+    env:
+      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Prepare
+        if: ${{ github.event.action == 'opened' }}
+        uses: ./.github/actions/squidex-create
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-region: ${{ steps.setup.outputs.aws-region }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
+          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
+          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+
+  algolia-create-index:
+    runs-on: ubuntu-latest
+    environment: Branch
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Create
+        if: ${{ github.event.action == 'opened' }}
+        uses: ./.github/actions/algolia-create-index
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
+          bucket-name: ${{ steps.setup.outputs.bucket-name }}

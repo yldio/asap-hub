@@ -27,7 +27,7 @@ runs:
       run: |
         sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
         sq config use $SQUIDEX_APP_NAME
-        ./ci/config-squidex-rules.sh
+        .github/scripts/squidex-sync/config-rules.sh
         sq sync in packages/squidex/schema -t schemas -t rules --delete
       env:
         SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}

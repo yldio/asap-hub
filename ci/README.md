@@ -54,8 +54,6 @@ To build new images:
 
   `INTEGRATION_DOCKER_IMAGE: $ECR_REGISTRY/$ECR_PROJECT/node-python-sq:24fd3be959653a9b5ff966e104e74396bcb0e8c1@sha256:5426a5b0f9eceb566f14a1e916979648cf4c80087a77dc34f020d346125bca76`
 
-- Update .github/actions/ecr-registry/action.yml to point to the correct SHA. (image-tag needs to have it's default value updated).
-
 ## To update the node image
 
 - `docker pull node:14.17-alpine`

@@ -1,0 +1,100 @@
+name: Reusable test
+
+on:
+  workflow_call:
+    inputs:
+      environment-name:
+        description: 'The environment name'
+        required: true
+        type: string
+    secrets:
+      CODECOV_TOKEN:
+        description: 'Codecov Token'
+        required: true
+      SQUIDEX_CLIENT_SECRET:
+        description: 'Squidex Client Secret'
+        required: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    strategy:
+      fail-fast: false
+      matrix:
+        script: [constraints, 'lint:format', 'check:packages']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Check
+        run: |
+          yarn ${{ matrix.script }}
+
+  test-unit:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache Jest cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            .jest-cache/
+          key: jest-cache
+      - name: Test
+        run: |
+          yarn test --coverage --maxWorkers=2
+          yarn codecov
+
+  test-integration:
+    if: ${{ github.event_name == 'pull_request' }}
+    permissions:
+      packages: read
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Test Integration
+        uses: ./.github/actions/test-integration
+        with:
+          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}-${{ github.run_id }}
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
+          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
+          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+
+  test-browser:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:focal
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Re-Build
+        uses: ./.github/actions/rebuild
+      - name: Install Playwright
+        run: |
+          yarn workspace @asap-hub/react-components run playwright install
+      - name: Test browser
+        run: |
+          yarn run test:browser

@@ -1,0 +1,81 @@
+name: Pipeline branch
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - master
+jobs:
+  test:
+    uses: ./.github/workflows/reusable-test.yml
+    with:
+      environment-name: Branch
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+
+  build:
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      environment-name: Branch
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+
+  build-analysis:
+    needs: [build]
+    uses: ./.github/workflows/reusable-build-analysis.yml
+    secrets:
+      BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
+
+  prepare:
+    uses: ./.github/workflows/reusable-prepare.yml
+    with:
+      environment-name: Branch
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+
+  deployment:
+    needs: [test, build-analysis, prepare]
+    uses: ./.github/workflows/reusable-deployment.yml
+    with:
+      environment-name: Branch
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+
+  verify:
+    needs: [deployment]
+    uses: ./.github/workflows/reusable-verify.yml
+    with:
+      environment-name: Branch
+    secrets:
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+
+  branch-pipeline-success:
+    runs-on: ubuntu-latest
+    environment:
+      name: Branch
+      url: ${{ steps.setup.outputs.asap-app-url }}
+    needs: [verify]
+    if: ${{ success() }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Branch
+      - name: Print success
+        run: |
+          echo "Pipeline branch successful."

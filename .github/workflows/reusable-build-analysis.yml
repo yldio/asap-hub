@@ -1,0 +1,60 @@
+name: Reusable build analysis
+
+on:
+  workflow_call:
+    secrets:
+      BUNDLEWATCH_GITHUB_TOKEN:
+        description: 'Bundlewatch Github Token'
+        required: true
+
+jobs:
+  bundlewatch:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      CI_REPO_OWNER: ${{ github.repository_owner }}
+      CI_REPO: ${{ github.repository }}
+      CI_COMMIT_SHA: ${{ github.sha }}
+      CI_BRANCH: ${{ github.head_ref }}
+      BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache -frontendbuild output
+        uses: actions/cache@v2
+        id: restore-build-frontend
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-frontend-output-${{ github.sha }}
+      - name: Bundle watch
+        run: |
+          CI_REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F / '{print $2}')
+          yarn bundlewatch
+
+  test-build-output:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache build output
+        uses: actions/cache@v2
+        id: restore-build-frontend
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-frontend-output-${{ github.sha }}
+      - name: Test output
+        run: |
+          yarn run test:build-output

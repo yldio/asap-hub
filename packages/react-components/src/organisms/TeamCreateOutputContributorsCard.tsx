@@ -76,6 +76,7 @@ const TeamCreateOutputContributorsCard: React.FC<TeamCreateOutputContributorsPro
         description=""
         subtitle="(optional)"
         enabled={!isSaving}
+        icons={true}
         placeholder="Start typing..."
         loadOptions={getAuthorSuggestions}
         onChange={onChangeAuthors}

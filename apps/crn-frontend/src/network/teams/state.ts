@@ -1,10 +1,8 @@
 import {
-  ExternalAuthorResponse,
   ListTeamResponse,
   ResearchOutputPostRequest,
   TeamPatchRequest,
   TeamResponse,
-  UserResponse,
 } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
 import {
@@ -183,17 +181,18 @@ export const useAuthorSuggestions = () => {
 
     return getUsersAndExternalAuthors(algoliaClient.client, options).then(
       ({ items }) =>
-        items.map((author) => ({
-          label: getAuthorLabel(author),
-          value: author.id,
-        })),
+        items.map((author) =>
+          isInternalUser(author)
+            ? {
+                label: author.displayName,
+                value: author.id,
+                icon: author.avatarUrl,
+              }
+            : {
+                label: `${author.displayName} (Non CRN)`,
+                value: author.id,
+              },
+        ),
     );
   };
 };
-
-export const getAuthorLabel = (
-  author: UserResponse | ExternalAuthorResponse,
-): string =>
-  isInternalUser(author)
-    ? author.displayName
-    : `${author.displayName} (Non CRN)`;

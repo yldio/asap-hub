@@ -7,6 +7,8 @@ import { validationMessageStyles } from '../form';
 import { reactMultiSelectStyles } from '../select';
 import { noop } from '../utils';
 import { crossIcon } from '../icons';
+import { perRem } from '../pixels';
+import Avatar from './Avatar';
 
 export const MultiValueRemove = (
   props: ComponentProps<typeof components.MultiValueRemove>,
@@ -14,6 +16,45 @@ export const MultiValueRemove = (
   <components.MultiValueRemove {...props}>
     {crossIcon}
   </components.MultiValueRemove>
+);
+
+const optionStyles = css({
+  display: 'grid',
+
+  gridTemplateColumns: `${24 / perRem}em 1fr`,
+  gridColumnGap: `${8 / perRem}em`,
+
+  background: 'red'
+});
+
+export const Option = (
+  props: ComponentProps<typeof components.Option>
+) => (
+  <components.Option {...props}>
+    <div css={optionStyles}>
+      <Avatar
+        firstName={props.label}
+        lastName={props.label.split(' ')[1]}
+        imageUrl={props.data.icon}
+      />
+      {props.children}
+    </div>
+  </components.Option>
+);
+
+export const MultiValueLabel = (
+  props: ComponentProps<typeof components.MultiValueLabel>,
+): ReactElement => (
+  <components.MultiValueLabel {...props}>
+    <div css={optionStyles}>
+      <Avatar
+        firstName={props.data.label.toString()}
+        lastName={props.data.label.toString().split(' ')[1]}
+        imageUrl={props.data.icon}
+      />
+      {props.children}
+    </div>
+  </components.MultiValueLabel>
 );
 
 const containerStyles = css({
@@ -24,6 +65,7 @@ export type MultiSelectOptionsType = {
   isFixed?: boolean;
   label: string;
   value: string;
+  icon?: string;
 };
 
 type RefType =
@@ -36,6 +78,7 @@ type MultiSelectProps = {
   readonly id?: string;
   readonly enabled?: boolean;
   readonly placeholder?: string;
+  icons?: boolean;
   readonly onChange?: (newValues: OptionsType<MultiSelectOptionsType>) => void;
   readonly values?: OptionsType<MultiSelectOptionsType>;
 } & (
@@ -58,6 +101,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
   id,
   suggestions,
   enabled = true,
+  icons = false,
   placeholder = '',
   noOptionsMessage,
   values = [],
@@ -77,7 +121,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
     isMulti: true as const,
     placeholder,
     value: values,
-    components: { MultiValueRemove },
+    components: { MultiValueRemove, ...(icons ? { Option, MultiValueLabel } : {}) },
     noOptionsMessage,
     styles: reactMultiSelectStyles(!!validationMsg),
 

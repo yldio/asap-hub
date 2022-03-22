@@ -8,7 +8,7 @@ import {
 } from '../utils/types';
 
 const ajv = new Ajv({ useDefaults: true });
-const ajvCoerced = new Ajv({ coerceTypes: true, useDefaults: true });
+const ajvCoerced = new Ajv({ coerceTypes: 'array', useDefaults: true });
 addFormats(ajv, ['date-time']);
 addFormats(ajvCoerced, ['date-time']);
 

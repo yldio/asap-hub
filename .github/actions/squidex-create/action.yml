@@ -10,6 +10,9 @@ inputs:
   aws-region:
     description: 'AWS Region'
     required: true
+  squidex-app-name:
+    description: 'Squidex App Name'
+    required: true
   squidex-base-url:
     description: 'Squidex Base Url'
     required: true

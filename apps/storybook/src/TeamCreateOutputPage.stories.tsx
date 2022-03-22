@@ -1,4 +1,4 @@
-import { createTeamResponse } from '@asap-hub/fixtures';
+import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
 import { TeamCreateOutputPage } from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom';
 
@@ -22,7 +22,9 @@ export const Normal = () => (
       getAuthorSuggestions={() =>
         new Promise((resolve) => {
           setTimeout(() => {
-            resolve([{ label: 'user name', value: '1' }]);
+            resolve([
+              { label: 'user name', value: '1', user: createUserResponse() },
+            ]);
           }, 1000);
         })
       }

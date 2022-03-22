@@ -2,6 +2,7 @@ import { ComponentPropsWithRef } from 'react';
 
 import { FormCard, LabeledMultiSelect } from '../molecules';
 import { noop } from '../utils';
+import AuthorSelect from './AuthorSelect';
 
 type TeamCreateOutputContributorsProps = {
   readonly labs: ComponentPropsWithRef<typeof LabeledMultiSelect>['values'];
@@ -12,12 +13,12 @@ type TeamCreateOutputContributorsProps = {
     typeof LabeledMultiSelect
   >['onChange'];
 
-  readonly authors: ComponentPropsWithRef<typeof LabeledMultiSelect>['values'];
+  readonly authors: ComponentPropsWithRef<typeof AuthorSelect>['values'];
   readonly getAuthorSuggestions?: ComponentPropsWithRef<
-    typeof LabeledMultiSelect
+    typeof AuthorSelect
   >['loadOptions'];
   readonly onChangeAuthors?: ComponentPropsWithRef<
-    typeof LabeledMultiSelect
+    typeof AuthorSelect
   >['onChange'];
 
   readonly teams: ComponentPropsWithRef<typeof LabeledMultiSelect>['values'];
@@ -71,12 +72,11 @@ const TeamCreateOutputContributorsCard: React.FC<TeamCreateOutputContributorsPro
           `Sorry, no labs match ${inputValue}`
         }
       />
-      <LabeledMultiSelect
+      <AuthorSelect
         title="Authors"
         description=""
         subtitle="(optional)"
         enabled={!isSaving}
-        icons={true}
         placeholder="Start typing..."
         loadOptions={getAuthorSuggestions}
         onChange={onChangeAuthors}

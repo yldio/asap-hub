@@ -82,7 +82,15 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
           tagSuggestions={researchSuggestions}
           type={type}
           getLabSuggestions={getLabSuggestions}
-          getAuthorSuggestions={getAuthorSuggestions}
+          getAuthorSuggestions={(input) =>
+            getAuthorSuggestions(input).then((users) =>
+              users.map((user) => ({
+                user,
+                label: user.displayName,
+                value: user.id,
+              })),
+            )
+          }
           getTeamSuggestions={getTeamSuggestions}
           onSave={(output) =>
             createResearchOutput({

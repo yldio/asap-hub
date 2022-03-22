@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
-import { ComponentProps, ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import { MultiSelect, Paragraph, Label } from '../atoms';
+import { MultiSelectOptionType, MultiSelectProps } from '../atoms/MultiSelect';
 import { lead } from '../colors';
 import { perRem } from '../pixels';
 
@@ -12,20 +13,22 @@ const descriptionStyles = css({
   color: lead.rgb,
 });
 
-type LabeledMultiSelectProps = {
+export type LabeledMultiSelectProps<T extends MultiSelectOptionType> = {
   readonly title: ReactNode;
   readonly subtitle?: React.ReactNode;
   readonly description?: ReactNode;
-} & Exclude<ComponentProps<typeof MultiSelect>, 'id'>;
+} & Exclude<MultiSelectProps<T>, 'id'>;
 
-const LabeledMultiSelect: React.FC<LabeledMultiSelectProps> = ({
+const LabeledMultiSelect = <T extends MultiSelectOptionType>({
   title,
   subtitle,
   description,
   ...multiSelectProps
-}) => (
+}: LabeledMultiSelectProps<T>): ReactElement => (
   <div css={{ paddingBottom: `${18 / perRem}em` }}>
-    <Label forContent={(id) => <MultiSelect {...multiSelectProps} id={id} />}>
+    <Label
+      forContent={(id) => <MultiSelect<T> {...multiSelectProps} id={id} />}
+    >
       <Paragraph>
         <strong>{title}</strong>
         <span css={subtitleStyles}>{subtitle}</span>

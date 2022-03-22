@@ -4,7 +4,6 @@ import {
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
-import { isInternalUser } from '@asap-hub/validation';
 import {
   atomFamily,
   DefaultValue,
@@ -171,7 +170,7 @@ export const useTeamSuggestions = () => {
 export const useAuthorSuggestions = () => {
   const algoliaClient = useAlgolia();
 
-  return async (searchQuery: string) => {
+  return (searchQuery: string) => {
     const options: GetListOptions = {
       searchQuery,
       currentPage: null,
@@ -180,19 +179,7 @@ export const useAuthorSuggestions = () => {
     };
 
     return getUsersAndExternalAuthors(algoliaClient.client, options).then(
-      ({ items }) =>
-        items.map((author) =>
-          isInternalUser(author)
-            ? {
-                label: author.displayName,
-                value: author.id,
-                icon: author.avatarUrl,
-              }
-            : {
-                label: `${author.displayName} (Non CRN)`,
-                value: author.id,
-              },
-        ),
+      ({ items }) => items,
     );
   };
 };

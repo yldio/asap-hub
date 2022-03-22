@@ -22,7 +22,7 @@ import {
   paddingLeftRight,
 } from './form';
 import { perRem, lineHeight } from './pixels';
-import { MultiSelectOptionsType } from './atoms/MultiSelect';
+import { MultiSelectOptionType } from './atoms/MultiSelect';
 
 export interface Option<V extends string> {
   value: V;
@@ -131,9 +131,9 @@ export const reactSelectStyles = (
   }),
 });
 
-export const reactMultiSelectStyles = (
+export const reactMultiSelectStyles = <T extends MultiSelectOptionType>(
   isInvalid: boolean,
-): StylesConfig<MultiSelectOptionsType, true> => ({
+): StylesConfig<T, true> => ({
   ...baseSelectStyles,
   option: (provided, { isFocused }) => ({
     ...provided,

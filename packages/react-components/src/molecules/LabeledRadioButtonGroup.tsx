@@ -19,7 +19,7 @@ export interface LabeledRadioButtonGroupProps<V extends string> {
 const optionListStyles = css({
   display: 'grid',
   gridTemplateColumns: '1fr 1fr 1fr',
-  [`@media (max-width: ${mobileScreen.min}px)`]: {
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
     gridTemplateColumns: '1fr',
   },
 });

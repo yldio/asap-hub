@@ -126,12 +126,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         teams.length !== 1 // Original team
       }
       onSave={() => {
-        const convertDecisionToBoolean = (
-          decision: string | null,
-        ): boolean | undefined =>
-          decision && ['Yes', 'No'].includes(decision)
-            ? decision === 'Yes'
-            : undefined;
+        const convertDecisionToBoolean = (decision: DecisionOption): boolean =>
+          decision === 'Yes';
 
         onSave({
           tags,

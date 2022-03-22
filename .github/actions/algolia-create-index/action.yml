@@ -48,4 +48,4 @@ runs:
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
         AWS_DEFAULT_REGION: ${{ inputs.aws-default-region }}
         BUCKET_NAME: ${{ inputs.bucket-name }}
-        ALGOLIA_INDEX: ${{ env.ALGOLIA_INDEX }}
+        ALGOLIA_INDEX: ${{ inputs.algolia-index }}

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { ComponentProps } from 'react';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, render } from '@testing-library/react';
@@ -27,16 +26,19 @@ jest.mock('react-sortable-hoc', () => {
     onSortEnd: undefined,
     getHelperDimensions: undefined,
   };
+
   return {
     sortableController,
-    SortableContainer: (Component) =>
-      React.forwardRef((props, ref) => {
+    SortableContainer: (Component: React.ComponentType) =>
+    {
+      return React.forwardRef((props: any, ref: any) => {
         sortableController.onSortEnd = props.onSortEnd;
         sortableController.getHelperDimensions = props.getHelperDimensions;
         return <Component {...props} ref={ref} />;
-      }),
-    SortableHandle: (id) => id,
-    SortableElement: (id) => id,
+      })
+    },
+    SortableHandle: (id: React.ComponentType) => id,
+    SortableElement: (id: React.ComponentType) => id,
   };
 });
 

@@ -114,6 +114,26 @@ describe('/users/ route', () => {
 
         expect(response.status).toBe(400);
       });
+
+      test('Should return the results correctly when a filter is used', async () => {
+        userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);
+
+        const response = await supertest(appWithMockedAuth).get(
+          '/users?filter=Project+Manager',
+        );
+
+        expect(response.status).toBe(200);
+      });
+
+      test('Should return the results correctly when multiple filters are used', async () => {
+        userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);
+
+        const response = await supertest(appWithMockedAuth).get(
+          '/users?filter=Project+Manager&filter=Lead+PI',
+        );
+
+        expect(response.status).toBe(200);
+      });
     });
   });
 

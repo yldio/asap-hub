@@ -15,6 +15,9 @@ jobs:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
+  build-images:
+    uses: ./.github/workflows/reusable-build-images.yml
+
   build:
     uses: ./.github/workflows/reusable-build.yml
     with:
@@ -75,7 +78,7 @@ jobs:
 
   master-pipeline-success:
     runs-on: ubuntu-latest
-    needs: [build-analysis, test]
+    needs: [build-images, build-analysis, test]
     if: ${{ success() }}
     steps:
       - name: Print success

@@ -1,4 +1,3 @@
-import useDeepCompareEffect from 'use-deep-compare-effect';
 import {
   atomFamily,
   selectorFamily,
@@ -12,18 +11,11 @@ import {
   UserPatchRequest,
   ListUserResponse,
 } from '@asap-hub/model';
-import { useAuth0, useFlags } from '@asap-hub/react-context';
+import { useAuth0 } from '@asap-hub/react-context';
 
 import { authorizationState } from '@asap-hub/crn-frontend/src/auth/state';
-import {
-  getUser,
-  patchUser,
-  postUserAvatar,
-  getUsersLegacy,
-  getUsers,
-} from './api';
+import { getUser, patchUser, postUserAvatar, getUsers } from './api';
 import { GetListOptions } from '../../api-util';
-import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';
 
 const userIndexState = atomFamily<
@@ -100,37 +92,13 @@ const userState = selectorFamily<UserResponse | undefined, string>({
       get(patchedUserState(id)) ?? get(initialUserState(id)),
 });
 
-export const usePrefetchUsers = (
-  options: GetListOptions = {
-    filters: new Set(),
-    searchQuery: '',
-    pageSize: CARD_VIEW_PAGE_SIZE,
-    currentPage: 0,
-  },
-) => {
-  const authorization = useRecoilValue(authorizationState);
-  const [users, setUsers] = useRecoilState(usersState(options));
-  useDeepCompareEffect(() => {
-    if (users === undefined) {
-      getUsersLegacy(options, authorization).then(setUsers).catch();
-    }
-  }, [authorization, options, setUsers, users]);
-};
 export const useUsers = (options: GetListOptions) => {
-  const authorization = useRecoilValue(authorizationState);
   const [users, setUsers] = useRecoilState(usersState(options));
   const algoliaClient = useAlgolia();
-  const useAlgoliaSearch = useFlags().isEnabled('ALGOLIA_USER_SEARCH');
   if (users === undefined) {
-    if (useAlgoliaSearch) {
-      throw getUsers(algoliaClient.client, options)
-        .then(setUsers)
-        .catch(setUsers);
-    } else {
-      throw getUsersLegacy(options, authorization)
-        .then(setUsers)
-        .catch(setUsers);
-    }
+    throw getUsers(algoliaClient.client, options)
+      .then(setUsers)
+      .catch(setUsers);
   }
   if (users instanceof Error) {
     throw users;

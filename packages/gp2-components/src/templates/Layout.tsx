@@ -1,4 +1,4 @@
-import React, {
+import {
   Suspense,
   useState,
   useEffect,
@@ -227,7 +227,7 @@ const Layout: FC<LayoutProps> = ({
           </div>
           <div css={[userMenuStyles, menuShown && userMenuShownStyles]}>
             <Suspense fallback={<Loading />}>
-              <UserNavigation {...userNavProps} />
+              <UserNavigation />
             </Suspense>
           </div>
         </div>

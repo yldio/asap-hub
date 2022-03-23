@@ -1,4 +1,4 @@
-import { DashboardPageBody } from '@asap-hub/react-components';
+import { DashboardPageBody } from '@asap-hub/gp2-components';
 
 const Body = DashboardPageBody;
 

@@ -52,6 +52,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       sharingStatus: { type: 'string' },
       usedInPublication: { type: 'boolean', nullable: true },
       addedDate: { type: 'string' },
+      publishDate: { type: 'string', format: 'date-time', nullable: true },
       labs: {
         type: 'array',
         items: { type: 'string' },

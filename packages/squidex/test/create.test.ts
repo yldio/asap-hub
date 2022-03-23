@@ -18,6 +18,9 @@ describe('squidex wrapper', () => {
 
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
+  });
+
+  afterEach(() => {
     nock.cleanAll();
   });
 
@@ -37,6 +40,56 @@ describe('squidex wrapper', () => {
         },
       }),
     ).rejects.toThrow('Bad Request');
+  });
+
+  it('returns 400 along with the response payload formatted to json when squidex returns validation error', async () => {
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/${collection}`)
+      .query(() => true)
+      .reply(400, {
+        message: 'Validation error',
+        traceId: '00-ba8100d975b2cb551a023702a7d0d5b7-891e647127349001-01',
+        type: 'https://tools.ietf.org/html/rfc7231#section-6.5.1',
+        details: ['link.iv: Another content with the same value exists.'],
+        statusCode: 400,
+      });
+
+    await expect(() =>
+      client.create({
+        string: {
+          iv: 'value',
+        },
+      }),
+    ).rejects.toThrowError(
+      expect.objectContaining({
+        data: {
+          message: 'Validation error',
+          traceId: '00-ba8100d975b2cb551a023702a7d0d5b7-891e647127349001-01',
+          type: 'https://tools.ietf.org/html/rfc7231#section-6.5.1',
+          details: ['link.iv: Another content with the same value exists.'],
+          statusCode: 400,
+        },
+      }),
+    );
+  });
+
+  it('returns 400 along with the raw response payload when squidex returns an error response which is not json', async () => {
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/${collection}`)
+      .query(() => true)
+      .reply(400, '<not>json</not>');
+
+    await expect(() =>
+      client.create({
+        string: {
+          iv: 'value',
+        },
+      }),
+    ).rejects.toThrowError(
+      expect.objectContaining({
+        data: '<not>json</not>',
+      }),
+    );
   });
 
   it('returns 403 when squidex returns with credentials error', async () => {

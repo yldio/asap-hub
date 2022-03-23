@@ -1,32 +1,27 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import Collapsible from '../Collapsible';
 
-it('does not show its children by default', () => {
-  const { queryByText } = render(<Collapsible>text</Collapsible>);
-  expect(queryByText('text')).not.toBeVisible();
+it('changes text from show to hide and has max height', () => {
+  const { getByText } = render(<Collapsible>text</Collapsible>);
+  expect(getByText('text')).toBeVisible();
+
+  expect(
+    findParentWithStyle(getByText(/text/i), 'maxHeight')?.maxHeight,
+  ).toMatch(/120/i);
+  userEvent.click(getByText(/show/i));
+  expect(getByText(/hide/i)).toBeVisible();
 });
-it('shows its children by default when initiallyExpanded', () => {
+it('changes text from hide to show and removes maxHeight', () => {
   const { getByText } = render(
     <Collapsible initiallyExpanded>text</Collapsible>,
   );
   expect(getByText('text')).toBeVisible();
-});
-
-it('shows its children when clicking show', () => {
-  const { getByText, queryByText } = render(<Collapsible>text</Collapsible>);
-  expect(queryByText('text')).not.toBeVisible();
-
-  userEvent.click(getByText(/show/i));
-  expect(getByText('text')).toBeVisible();
-});
-it('hides its children when clicking hide', () => {
-  const { getByText, queryByText } = render(
-    <Collapsible initiallyExpanded>text</Collapsible>,
-  );
-  expect(getByText('text')).toBeVisible();
-
+  expect(
+    findParentWithStyle(getByText(/text/i), 'maxHeight')?.maxHeight,
+  ).toBeUndefined();
   userEvent.click(getByText(/hide/i));
-  expect(queryByText('text')).not.toBeVisible();
+  expect(getByText(/show/i)).toBeVisible();
 });

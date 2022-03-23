@@ -5,15 +5,15 @@ import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { waitFor } from '@testing-library/dom';
 
 import Select from 'react-select';
-import { ember, fern, pine } from '../../colors';
-
-import MultiSelect, { arrayMove } from '../MultiSelect';
 import {
   // @ts-expect-error sortableController is used to handle the mock
   sortableController,
   SortableContainerProps,
   SortEndHandler,
 } from 'react-sortable-hoc';
+import { ember, fern, pine } from '../../colors';
+
+import MultiSelect, { arrayMove } from '../MultiSelect';
 
 interface SortableMock {
   onSortEnd?: SortEndHandler;
@@ -21,22 +21,21 @@ interface SortableMock {
 }
 
 jest.mock('react-sortable-hoc', () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const React = require('react');
-  const sortableController: SortableMock = {
+  const controller: SortableMock = {
     onSortEnd: undefined,
     getHelperDimensions: undefined,
   };
 
   return {
-    sortableController,
+    sortableController: controller,
     SortableContainer: (Component: React.ComponentType) =>
-    {
-      return React.forwardRef((props: any, ref: any) => {
+      React.forwardRef((props: any, ref: any) => {
         sortableController.onSortEnd = props.onSortEnd;
         sortableController.getHelperDimensions = props.getHelperDimensions;
         return <Component {...props} ref={ref} />;
-      })
-    },
+      }),
     SortableHandle: (id: React.ComponentType) => id,
     SortableElement: (id: React.ComponentType) => id,
   };

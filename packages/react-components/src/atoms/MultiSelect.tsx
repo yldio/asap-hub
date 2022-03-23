@@ -28,7 +28,11 @@ import { reactMultiSelectStyles } from '../select';
 import { noop } from '../utils';
 import { crossIcon } from '../icons';
 
-export function arrayMove<T>(array: readonly T[], from: number, to: number): T[] {
+export function arrayMove<T>(
+  array: readonly T[],
+  from: number,
+  to: number,
+): T[] {
   const slicedArray = array.slice();
   const removed = slicedArray.splice(from, 1)[0];
   slicedArray.splice(to < 0 ? array.length + to : to, 0, removed);

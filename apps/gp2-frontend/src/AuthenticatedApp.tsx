@@ -1,8 +1,9 @@
 import { FC, lazy, useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { useResetRecoilState, useRecoilState } from 'recoil';
-import { NotFoundPage, Layout, Loading } from '@asap-hub/react-components';
+import { NotFoundPage, Loading } from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
+import { Layout } from '@asap-hub/gp2-components';
 import { network } from '@asap-hub/routing';
 
 import { auth0State } from './auth/state';

@@ -1,6 +1,7 @@
 import { FC, lazy } from 'react';
-import { DashboardPage, NotFoundPage } from '@asap-hub/react-components';
+import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
+import { DashboardPage } from '@asap-hub/gp2-components';
 import Frame from '../structure/Frame';
 import { useDashboardState } from './state';
 

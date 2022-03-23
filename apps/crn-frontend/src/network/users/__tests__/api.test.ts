@@ -11,7 +11,6 @@ import type { AlgoliaSearchClient } from '@asap-hub/algolia';
 import {
   getInstitutions,
   getUser,
-  getUsersLegacy,
   getUsers,
   getUsersAndExternalAuthors,
   InstitutionsResponse,
@@ -20,52 +19,12 @@ import {
 } from '../api';
 import { API_BASE_URL } from '../../../config';
 import { GetListOptions } from '../../../api-util';
-import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 
 jest.mock('../../../config');
 
 afterEach(() => {
   nock.cleanAll();
-});
-
-const options: GetListOptions = {
-  filters: new Set(),
-  pageSize: CARD_VIEW_PAGE_SIZE,
-  currentPage: 0,
-  searchQuery: '',
-};
-
-describe('getUsersLegacy', () => {
-  it('makes an authorized GET request for users', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/users')
-      .query({ take: '10', skip: '0' })
-      .reply(200, {});
-    await getUsersLegacy(options, 'Bearer x');
-    expect(nock.isDone()).toBe(true);
-  });
-
-  it('returns successfully fetched users', async () => {
-    const users = createListUserResponse(1);
-    nock(API_BASE_URL)
-      .get('/users')
-      .query({ take: '10', skip: '0' })
-      .reply(200, users);
-    expect(await getUsersLegacy(options, '')).toEqual(users);
-  });
-
-  it('errors for error status', async () => {
-    nock(API_BASE_URL)
-      .get('/users')
-      .query({ take: '10', skip: '0' })
-      .reply(500);
-    await expect(
-      getUsersLegacy(options, ''),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch user list. Expected status 2xx. Received status 500."`,
-    );
-  });
 });
 
 describe('getUsers', () => {

@@ -98,7 +98,7 @@ jobs:
   notify_failure:
     runs-on: ubuntu-18.04
     needs: [sls-teardown, delete-algolia-indice]
-    if: failure() && ${{ github.event.inputs.prNumber || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
+    if: ${{ failure() && (github.event.inputs.prNumber || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2

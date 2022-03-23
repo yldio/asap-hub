@@ -85,10 +85,12 @@ jobs:
       - name: Setup Environment Variables
         uses: ./.github/actions/algolia-sync-settings
         with:
+          algolia-app-id-name: ${{ steps.setup.outputs.algolia-app-id-name }}
+          algolia-api-key-name: ${{ steps.setup.outputs.algolia-api-key-name }}
+          algolia-index: ${{ steps.setup.outputs.algolia-index }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
-          algolia-index: ${{ steps.setup.outputs.algolia-index }}
 
   squidex-update-schema:
     needs: [sls-deploy-package]

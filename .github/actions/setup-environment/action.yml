@@ -5,6 +5,12 @@ inputs:
     description: 'Current environment'
     required: true
 outputs:
+  algolia-app-id-name:
+    description: 'Algolia App id SSM name'
+    value: ${{ steps.vars.outputs.algolia-app-id-name }}
+  algolia-api-key-name:
+    description: 'Algolia Api key SSM Name'
+    value: ${{ steps.vars.outputs.algolia-api-key-name }}
   algolia-app-name:
     description: 'Algolia App Name'
     value: ${{ steps.vars.outputs.algolia-app-name }}
@@ -109,6 +115,8 @@ runs:
           echo "Setting up branch environment"
           PR_NUMBER=${{ github.event.number || github.event.inputs.prNumber }}
           echo "::set-output name=pr-number::$PR_NUMBER"
+          echo "::set-output name=algolia-app-id-name::algolia-app-id-dev"
+          echo "::set-output name=algolia-api-key-name::algolia-app-key-ci-dev"
           echo "::set-output name=algolia-app-name::algolia-app-id-dev"
           echo "::set-output name=algolia-index::asap-hub_CI-$PR_NUMBER"
           echo "::set-output name=app-release::'${{ github.run_id }}-dev'"
@@ -123,8 +131,10 @@ runs:
           echo "::set-output name=squidex-client-id::6058c1ce6d296b4d1681c3ad"
         elif [ "$ENVIRONMENT_NAME" = 'Development' ]; then
           echo "Setting up development environment"
+          echo "::set-output name=algolia-app-id-name::algolia-app-id-dev"
+          echo "::set-output name=algolia-api-key-name::algolia-app-key-ci-dev"
           echo "::set-output name=algolia-app-name::algolia-app-id-dev"
-          echo "::set-output name=algolia-index::"
+          echo "::set-output name=algolia-index::asap-hub_dev"
           echo "::set-output name=api-hostname::dev-api.$ASAP_HOSTNAME"
           echo "::set-output name=app-hostname::dev.$ASAP_HOSTNAME"
           echo "::set-output name=app-release::'${{ github.run_id }}-dev'"
@@ -140,8 +150,10 @@ runs:
           echo "::set-output name=squidex-app-name::asap-hub-dev:default"
         elif [ "$ENVIRONMENT_NAME" = 'Production' ]; then
           echo "Setting up production environment"
-          echo "::set-output name=algolia-app-name::"
-          echo "::set-output name=algolia-index::"
+          echo "::set-output name=algolia-app-id-name::algolia-app-id-prod"
+          echo "::set-output name=algolia-api-key-name::algolia-app-key-ci-prod"
+          echo "::set-output name=algolia-app-name::algolia-app-id-prod"
+          echo "::set-output name=algolia-index::asap-hub_prod"
           echo "::set-output name=api-hostname::api.$ASAP_HOSTNAME"
           echo "::set-output name=app-hostname::$ASAP_HOSTNAME"
           echo "::set-output name=app-release::'${{ github.run_id }}-prod'"

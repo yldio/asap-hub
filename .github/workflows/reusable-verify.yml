@@ -72,3 +72,28 @@ jobs:
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
           squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+
+  register-release:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Echo
+        run: echo ${{ github.ref }}
+      - name: Register
+        if: github.event_name == 'push' && github.ref == 'ref/heads/master'
+        uses: ./.github/actions/register-release
+        with:
+          frontend-sentry-release-auth-token: ${{ secrets.FRONTEND_SENTRY_RELEASE_AUTH_TOKEN }}
+          app-release: ${{ steps.setup.outputs.app-release }}

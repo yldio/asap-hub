@@ -3,12 +3,14 @@ name: Pipeline development and production
 on:
   push:
     branches:
-      - master
+      - CRN-595-deploy-to-development
+
 jobs:
   test:
     uses: ./.github/workflows/reusable-test.yml
     with:
-      environment-name: Development
+      # environment-name: Development
+      environment-name: Branch
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
@@ -16,7 +18,8 @@ jobs:
   build:
     uses: ./.github/workflows/reusable-build.yml
     with:
-      environment-name: Development
+      # environment-name: Development
+      environment-name: Branch
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -29,6 +32,26 @@ jobs:
     uses: ./.github/workflows/reusable-build-analysis.yml
     secrets:
       BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
+
+  deployment:
+    needs: [test, build-analysis]
+    uses: ./.github/workflows/reusable-deployment.yml
+    with:
+      environment-name: Branch
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+
+  verify:
+    needs: [deployment]
+    uses: ./.github/workflows/reusable-verify.yml
+    with:
+      environment-name: Branch
+    secrets:
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
   # notify_failure:
   #   runs-on: ubuntu-latest

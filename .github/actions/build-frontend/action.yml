@@ -111,14 +111,14 @@ runs:
     - name: Build
       shell: bash
       env:
+        ASAP_HOSTNAME: ${{ inputs.asap-hostname }}
         REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
         REACT_APP_ALGOLIA_INDEX: ${{ inputs.algolia-index }}
         REACT_APP_API_BASE_URL: ${{ inputs.asap-api-url }}
         REACT_APP_ENVIRONMENT: ${{ inputs.react-app-environment }}
+        REACT_APP_GTM_CONTAINER_ID: ${{ inputs.react-app-gtm-container-id }}
         REACT_APP_RELEASE: ${{ inputs.app-release }}
         REACT_APP_SENTRY_DSN: ${{ inputs.react-app-sentry-dsn }}
-        REACT_APP_GTM_CONTAINER_ID: ${{ inputs.react-app-gtm-container-id }}
-        ASAP_HOSTNAME: ${{ inputs.asap-hostname }}
       run: |
         yarn build:frontend
 

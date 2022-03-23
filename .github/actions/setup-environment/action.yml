@@ -82,10 +82,7 @@ outputs:
     value: https://1f86813cefa5461183129f9143b4f78a@o850903.ingest.sentry.io/5997162
   ses-region:
     description: 'SES Region'
-    value: us-east-1
-  ses-sandbox-region:
-    description: 'SES Sandbox Region'
-    value: eu-west-1
+    value: ${{ steps.vars.outputs.ses-region }}
   sls-stage:
     description: 'SLS Stage'
     value: ${{ steps.vars.outputs.sls-stage }}
@@ -137,6 +134,7 @@ runs:
           echo "::set-output name=auth0-domain::dev-asap-hub.us.auth0.com"
           echo "::set-output name=react-app-environment::development"
           echo "::set-output name=react-app-sentry-dsn::https://8cd3c59be8ec4118aa6f6c59487b9e56@o850903.ingest.sentry.io/5893160"
+          echo "::set-output name=ses-region::eu-west-1"
           echo "::set-output name=sls-stage::dev"
           echo "::set-output name=squidex-app-name::asap-hub-dev"
           echo "::set-output name=squidex-app-name::asap-hub-dev:default"
@@ -154,6 +152,7 @@ runs:
           echo "::set-output name=react-app-environment::production"
           echo "::set-output name=react-app-gtm-container-id::GTM-M5HZBRZ"
           echo "::set-output name=react-app-sentry-dsn::https://8cd3c59be8ec4118aa6f6c59487b9e56@o850903.ingest.sentry.io/5893160"
+          echo "::set-output name=ses-region::eu-east-1"
           echo "::set-output name=sls-stage::production"
           echo "::set-output name=squidex-app-name::asap-hub"
           echo "::set-output name=squidex-app-name::asap-hub:default"

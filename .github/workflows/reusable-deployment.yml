@@ -24,6 +24,7 @@ on:
         required: true
 
 jobs:
+
   sls-deploy-package:
     concurrency:
       group: ${{ github.head_ref || inputs.environment-name }}
@@ -115,3 +116,28 @@ jobs:
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
           asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
+
+  deploy-ses:
+    needs: [sls-deploy-package]
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Deploy
+        if: github.event_name == 'push' && github.ref == 'ref/heads/master'
+        uses: ./.github/actions/deploy-ses
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          app-origin: ${{ steps.setup.outputs.asap-app-url }}
+          ses-region: ${{ steps.setup.outputs.ses-region }}

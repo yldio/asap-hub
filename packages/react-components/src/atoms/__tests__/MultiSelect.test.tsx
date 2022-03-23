@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, RefObject } from 'react';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
@@ -30,12 +30,22 @@ jest.mock('react-sortable-hoc', () => {
 
   return {
     sortableController: controller,
-    SortableContainer: (Component: React.ComponentType) =>
-      React.forwardRef((props: any, ref: any) => {
-        controller.onSortEnd = props.onSortEnd;
-        controller.getHelperDimensions = props.getHelperDimensions;
-        return <Component {...props} ref={ref} />;
-      }),
+    SortableContainer: (
+      Component: React.ComponentType<{ ref: RefObject<unknown> }>,
+    ) =>
+      React.forwardRef(
+        (
+          props: {
+            onSortEnd: SortEndHandler;
+            getHelperDimensions: SortableContainerProps['getHelperDimensions'];
+          },
+          ref: RefObject<unknown>,
+        ) => {
+          controller.onSortEnd = props.onSortEnd;
+          controller.getHelperDimensions = props.getHelperDimensions;
+          return <Component {...props} ref={ref} />;
+        },
+      ),
     SortableHandle: (id: React.ComponentType) => id,
     SortableElement: (id: React.ComponentType) => id,
   };

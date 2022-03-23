@@ -32,7 +32,7 @@ jobs:
         with:
           asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
 
-  e2e-test:
+  test-e2e:
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:focal
@@ -45,7 +45,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Test
-        uses: ./.github/actions/e2e-test
+        uses: ./.github/actions/test-e2e
         with:
           asap-app-url: ${{ steps.setup.outputs.asap-app-url }}
 

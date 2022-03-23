@@ -21,7 +21,7 @@ interface SortableMock {
 }
 
 jest.mock('react-sortable-hoc', () => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
   const React = require('react');
   const controller: SortableMock = {
     onSortEnd: undefined,

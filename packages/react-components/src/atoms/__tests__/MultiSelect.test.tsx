@@ -32,8 +32,8 @@ jest.mock('react-sortable-hoc', () => {
     sortableController: controller,
     SortableContainer: (Component: React.ComponentType) =>
       React.forwardRef((props: any, ref: any) => {
-        sortableController.onSortEnd = props.onSortEnd;
-        sortableController.getHelperDimensions = props.getHelperDimensions;
+        controller.onSortEnd = props.onSortEnd;
+        controller.getHelperDimensions = props.getHelperDimensions;
         return <Component {...props} ref={ref} />;
       }),
     SortableHandle: (id: React.ComponentType) => id,

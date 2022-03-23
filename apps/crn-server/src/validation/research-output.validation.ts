@@ -65,6 +65,18 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       },
       teams: { type: 'array', items: { type: 'string' }, minItems: 1 },
       accessInstructions: { type: 'string', nullable: true },
+      doi: {
+        type: 'string',
+        nullable: true,
+        pattern: '^(doi:)?\\d{2}\\.\\d{4}.*$',
+      },
+      accession: {
+        type: 'string',
+        nullable: true,
+        pattern: '^(\\w+\\d+(\\.\\d+)?)|(NP_\\d+)$',
+      },
+      labCatalogNumber: { type: 'string', nullable: true },
+      rrid: { type: 'string', nullable: true, pattern: 'RRID:[a-zA-Z]+.+$' },
     },
     required: [
       'type',

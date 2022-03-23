@@ -18,6 +18,7 @@ import { perRem, mobileScreen } from '../pixels';
 import { noop } from '../utils';
 
 import TeamCreateOutputContributorsCard from './TeamCreateOutputContributorsCard';
+import { ResearchOutputIdentifierType } from '../research-output-identifier-type';
 
 const contentStyles = css({
   display: 'grid',
@@ -73,6 +74,34 @@ type TeamCreateOutputFormProps = Pick<
   team: TeamResponse;
 };
 
+const identifierTypeToFieldName: Record<
+  ResearchOutputIdentifierType,
+  'doi' | 'accession' | 'labCatalogNumber' | 'rrid' | undefined
+> = {
+  [ResearchOutputIdentifierType.None]: undefined,
+  [ResearchOutputIdentifierType.DOI]: 'doi',
+  [ResearchOutputIdentifierType.AcessionNumber]: 'accession',
+  [ResearchOutputIdentifierType.LabCatalogNumber]: 'labCatalogNumber',
+  [ResearchOutputIdentifierType.RRID]: 'rrid',
+};
+
+export function createIdentifierField(
+  identifierType: ResearchOutputIdentifierType,
+  rawIdentifier: string,
+):
+  | { rrid: string }
+  | { doi: string }
+  | { accession: string }
+  | { labCatalogNumber: string }
+  | Record<never, never> {
+  const fieldName = identifierTypeToFieldName[identifierType];
+  if (fieldName) {
+    return { [fieldName]: rawIdentifier };
+  }
+
+  return {};
+}
+
 const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   onSave = noop,
   tagSuggestions,
@@ -114,6 +143,10 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
     useState<ResearchOutputPostRequest['sharingStatus']>('Network Only');
   const [publishDate, setPublishDate] = useState<Date | undefined>(undefined);
 
+  const [identifierType, setIdentifierType] =
+    useState<ResearchOutputIdentifierType>(ResearchOutputIdentifierType.None);
+  const [identifier, setIdentifier] = useState<string>('');
+
   return (
     <Form
       dirty={
@@ -124,11 +157,18 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         subTypes.length !== 0 ||
         labs.length !== 0 ||
         authors.length !== 0 ||
+        identifierType !== ResearchOutputIdentifierType.None ||
+        identifier !== '' ||
         teams.length !== 1 // Original team
       }
       onSave={() => {
         const convertDecisionToBoolean = (decision: DecisionOption): boolean =>
           decision === 'Yes';
+
+        const identifierField = createIdentifierField(
+          identifierType,
+          identifier,
+        );
 
         onSave({
           tags,
@@ -147,6 +187,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           usedInPublication: convertDecisionToBoolean(usedInPublication),
           sharingStatus,
           publishDate: publishDate?.toISOString(),
+          ...identifierField,
         });
       }}
     >
@@ -179,6 +220,10 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangeTags={setTags}
             accessInstructions={accessInstructions}
             onChangeAccessInstructions={setAccessInstructions}
+            identifier={identifier}
+            setIdentifier={setIdentifier}
+            identifierType={identifierType}
+            setIdentifierType={setIdentifierType}
           />
 
           <TeamCreateOutputContributorsCard

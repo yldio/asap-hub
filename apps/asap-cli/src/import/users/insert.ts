@@ -225,8 +225,6 @@ export default ({
     upsert,
   }: {
     upsert: boolean;
-    // complaining about `data` here is a lint rule bug
-    // eslint-disable-next-line no-unused-vars
   }): ((data: Data) => Promise<void>) =>
   async (data: Data): Promise<void> => {
     const promises: Cache = {};

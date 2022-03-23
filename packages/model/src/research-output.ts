@@ -173,6 +173,11 @@ export type ResearchOutputPostRequest = {
   authors?: string[];
   teams: string[];
 
+  doi?: string;
+  accession?: string;
+  labCatalogNumber?: string;
+  rrid?: string;
+
   addedDate: string;
   asapFunded?: boolean;
   sharingStatus: ResearchOutputSharingStatus;

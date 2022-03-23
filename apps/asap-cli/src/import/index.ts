@@ -5,7 +5,6 @@ import { createReadStream } from 'fs';
 import insertUsers from './users/insert';
 import parseUsers from './users/parse';
 
-/* eslint-disable no-unused-vars */
 const parse =
   <T>(parser: (arg: string[]) => T, transformer: (arg: T) => Promise<void>) =>
   (src: string): Promise<void> =>

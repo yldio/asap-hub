@@ -3,11 +3,17 @@ import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import TeamCreateOutputExtraInformationCard from '../TeamCreateOutputExtraInformationCard';
+import { noop } from '../../utils';
+import { ResearchOutputIdentifierType } from '../../research-output-identifier-type';
 
 const props: ComponentProps<typeof TeamCreateOutputExtraInformationCard> = {
   isSaving: false,
   tagSuggestions: [],
   tags: [],
+  identifier: '',
+  setIdentifier: noop,
+  identifierType: ResearchOutputIdentifierType.None,
+  setIdentifierType: noop,
 };
 
 it('should render a tag', () => {

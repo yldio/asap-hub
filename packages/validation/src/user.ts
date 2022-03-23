@@ -7,7 +7,6 @@ export const VALID_ORCID = /^\d{4}-\d{4}-\d{4}-\d{3}(\d|X)$/;
 
 export type UserValidationFields = Partial<
   Pick<
-    // eslint-disable-next-line no-unused-vars
     { [P in keyof UserResponse]: { valid: boolean } },
     | 'questions'
     | 'teams'

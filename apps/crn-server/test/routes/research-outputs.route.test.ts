@@ -232,6 +232,63 @@ describe('/research-outputs/ route', () => {
         expect(response.status).toBe(400);
       });
 
+      test('Should validate doi based on a regex', async () => {
+        const researchOutput = getCreateResearchOutput();
+        const response = await supertest(app)
+          .post('/research-outputs/')
+          .send({
+            ...researchOutput,
+            doi: 'doi:12.2222',
+          });
+        expect(response.status).toBe(201);
+
+        const response2 = await supertest(app)
+          .post('/research-outputs/')
+          .send({
+            ...researchOutput,
+            doi: 'doi:1.222',
+          });
+        expect(response2.status).toBe(400);
+      });
+
+      test('Should validate accession based on a regex', async () => {
+        const researchOutput = getCreateResearchOutput();
+        const response = await supertest(app)
+          .post('/research-outputs/')
+          .send({
+            ...researchOutput,
+            accession: 'NP_1234',
+          });
+        expect(response.status).toBe(201);
+
+        const response2 = await supertest(app)
+          .post('/research-outputs/')
+          .send({
+            ...researchOutput,
+            accession: 'NP_HELLO_WORLD',
+          });
+        expect(response2.status).toBe(400);
+      });
+
+      test('Should validate rrid based on a regex', async () => {
+        const researchOutput = getCreateResearchOutput();
+        const response = await supertest(app)
+          .post('/research-outputs/')
+          .send({
+            ...researchOutput,
+            rrid: 'RRID:Hi',
+          });
+        expect(response.status).toBe(201);
+
+        const response2 = await supertest(app)
+          .post('/research-outputs/')
+          .send({
+            ...researchOutput,
+            rrid: 'HelloWorld',
+          });
+        expect(response2.status).toBe(400);
+      });
+
       test.each([
         'type',
         'description',

@@ -15,7 +15,7 @@ import {
   SquidexResearchOutputsEventType,
 } from '../../src/handlers/webhooks/webhook-research-output';
 import { DeepWriteable } from '../../src/utils/types';
-import { createEventBridgeEventMock } from '../../test/helpers/events';
+import { createEventBridgeEventMock } from '../helpers/events';
 import { getSquidexGraphqlTeam } from './teams.fixtures';
 import {
   fetchExpectation,

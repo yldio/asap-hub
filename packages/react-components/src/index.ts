@@ -176,3 +176,4 @@ export {
   WelcomePage,
 } from './templates';
 export { MessageLayout, WelcomeMessage } from './messages';
+export { ResearchOutputIdentifierType } from './research-output-identifier-type';

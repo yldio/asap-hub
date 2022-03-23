@@ -5,8 +5,11 @@ import { ComponentProps } from 'react';
 import { fireEvent, waitFor } from '@testing-library/dom';
 import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
 
-import TeamCreateOutputForm from '../TeamCreateOutputForm';
+import TeamCreateOutputForm, {
+  createIdentifierField,
+} from '../TeamCreateOutputForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
+import { ResearchOutputIdentifierType } from '../../research-output-identifier-type';
 
 const props: ComponentProps<typeof TeamCreateOutputForm> = {
   tagSuggestions: [],
@@ -18,6 +21,32 @@ const clickShare = () => {
   const button = screen.getByRole('button', { name: /Share/i });
   userEvent.click(button);
 };
+
+describe('createIdentifierField', () => {
+  it('maps the ResearchOutputIdentifierType to fields including the identifier', () => {
+    expect(
+      createIdentifierField(ResearchOutputIdentifierType.None, 'identifier'),
+    ).toEqual({});
+    expect(
+      createIdentifierField(ResearchOutputIdentifierType.RRID, 'identifier'),
+    ).toEqual({ rrid: 'identifier' });
+    expect(
+      createIdentifierField(ResearchOutputIdentifierType.DOI, 'identifier'),
+    ).toEqual({ doi: 'identifier' });
+    expect(
+      createIdentifierField(
+        ResearchOutputIdentifierType.LabCatalogNumber,
+        'identifier',
+      ),
+    ).toEqual({ labCatalogNumber: 'identifier' });
+    expect(
+      createIdentifierField(
+        ResearchOutputIdentifierType.AcessionNumber,
+        'identifier',
+      ),
+    ).toEqual({ accession: 'identifier' });
+  });
+});
 
 it('renders the form', async () => {
   const { getByText } = render(

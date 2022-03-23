@@ -5,6 +5,10 @@ import { Link } from '../atoms';
 import { mailToSupport } from '../mail';
 import { FormCard, LabeledMultiSelect, LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
+import {
+  TeamCreateOutputIdentifier,
+  TeamCreateOutputIdentifierProps,
+} from './TeamCreateOutputIdentifier';
 
 type TeamCreateOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
@@ -16,7 +20,7 @@ type TeamCreateOutputExtraInformationProps = Pick<
   onChangeTags?: (values: string[]) => void;
   onChangeAccessInstructions?: (values: string) => void;
   isSaving: boolean;
-};
+} & TeamCreateOutputIdentifierProps;
 
 const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInformationProps> =
   ({
@@ -26,6 +30,10 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     onChangeAccessInstructions = noop,
     accessInstructions,
     isSaving,
+    identifier,
+    identifierType,
+    setIdentifier,
+    setIdentifierType,
   }) => (
     <FormCard title="What extra information can you provide?">
       <LabeledMultiSelect
@@ -42,6 +50,13 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
       <Link href={mailToSupport({ subject: 'New keyword' }).toString()}>
         Ask ASAP to add a new keyword
       </Link>
+
+      <TeamCreateOutputIdentifier
+        identifier={identifier}
+        setIdentifier={setIdentifier}
+        identifierType={identifierType}
+        setIdentifierType={setIdentifierType}
+      />
 
       <LabeledTextArea
         title="Access instructions"

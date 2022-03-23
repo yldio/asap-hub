@@ -45,6 +45,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Test
+        if: github.event_name == 'pull_request'
         uses: ./.github/actions/test-e2e
         with:
           asap-app-url: ${{ steps.setup.outputs.asap-app-url }}
@@ -66,6 +67,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Verify
+        if: github.event_name == 'pull_request'
         uses: ./.github/actions/verify-schema
         with:
           squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}

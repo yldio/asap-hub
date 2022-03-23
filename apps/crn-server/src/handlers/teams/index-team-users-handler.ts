@@ -51,10 +51,12 @@ export const indexTeamUsersHandler =
       );
 
       await algoliaClient.saveMany(
-        foundUsers.items.map((data) => ({
-          data,
-          type: 'user',
-        })),
+        foundUsers.items
+          .filter((user) => user.onboarded && user.role !== 'Hidden')
+          .map((data) => ({
+            data,
+            type: 'user',
+          })),
       );
 
       logger.info(`Updated ${foundUsers.total} users.`);

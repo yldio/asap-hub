@@ -1,7 +1,10 @@
 import Boom from '@hapi/boom';
 import { toPayload } from '../../helpers/algolia';
 import { indexTeamUsersHandler } from '../../../src/handlers/teams/index-team-users-handler';
-import { getListUserResponse } from '../../fixtures/users.fixtures';
+import {
+  getListUserResponse,
+  getUserResponse,
+} from '../../fixtures/users.fixtures';
 
 import {
   createEvent,
@@ -69,6 +72,23 @@ describe('Index Users on Team event handler', () => {
     await expect(indexHandler(updateEvent('team-1234'))).rejects.toThrow(
       algoliaError,
     );
+  });
+
+  test('Should omit non-onboarded and Hidden users', async () => {
+    userControllerMock.fetch.mockResolvedValueOnce({
+      total: 3,
+      items: [
+        getUserResponse(),
+        { ...getUserResponse(), role: 'Hidden' },
+        { ...getUserResponse(), onboarded: false },
+      ],
+    });
+
+    await indexHandler(updateEvent('lab-1234'));
+
+    expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
+      mapPayload(getUserResponse()),
+    ]);
   });
 
   test.each(possibleEvents)(

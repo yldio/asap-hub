@@ -135,7 +135,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Deploy
-        if: github.event_name == 'push' && github.ref == 'ref/heads/master'
+        # if: github.event_name == 'push' && github.ref == 'ref/heads/master'
         uses: ./.github/actions/deploy-ses
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}

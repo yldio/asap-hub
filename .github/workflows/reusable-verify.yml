@@ -94,7 +94,7 @@ jobs:
       - name: Echo
         run: echo ${{ github.ref }}
       - name: Register
-        if: github.event_name == 'push' && github.ref == 'ref/heads/master'
+        # if: github.event_name == 'push' && github.ref == 'ref/heads/master'
         uses: ./.github/actions/register-release
         with:
           frontend-sentry-release-auth-token: ${{ secrets.FRONTEND_SENTRY_RELEASE_AUTH_TOKEN }}

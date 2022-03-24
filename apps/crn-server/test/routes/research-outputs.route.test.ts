@@ -174,7 +174,41 @@ describe('/research-outputs/ route', () => {
       expect(response.body).toEqual(expect.objectContaining({ id: 'abc123' }));
     });
 
-    test('Should return a 500 error when creating a research output fails', async () => {
+    test('Should return a 400 error when creating a research output fails due to validation error', async () => {
+      const researchOutput = getCreateResearchOutput();
+      researchOutputControllerMock.create.mockRejectedValueOnce(
+        Boom.badRequest('error', {
+          message: 'Validation error',
+          details: ['link.iv: Another content with the same value exists.'],
+          statusCode: 400,
+        }),
+      );
+
+      const response = await supertest(app)
+        .post('/research-outputs')
+        .send({ ...researchOutput })
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        error: 'Bad Request',
+        message: 'Validation error',
+        statusCode: 400,
+        data: [
+          {
+            instancePath: '/link',
+            schemaPath: '#/properties/link/unique',
+            keyword: 'unique',
+            params: {
+              type: 'string',
+            },
+            message: 'must be unique',
+          },
+        ],
+      });
+    });
+
+    test('Should return a 500 error when creating a research output fails due to server error', async () => {
       const researchOutput = getCreateResearchOutput();
       researchOutputControllerMock.create.mockRejectedValueOnce(
         Boom.badImplementation(),
@@ -216,6 +250,22 @@ describe('/research-outputs/ route', () => {
             });
 
           expect(response.status).toBe(400);
+          expect(response.body).toEqual({
+            data: [
+              {
+                instancePath: '',
+                keyword: 'required',
+                message: `must have required property '${field}'`,
+                params: {
+                  missingProperty: field,
+                },
+                schemaPath: '#/required',
+              },
+            ],
+            error: 'Bad Request',
+            message: 'Validation error',
+            statusCode: 400,
+          });
         },
       );
     });

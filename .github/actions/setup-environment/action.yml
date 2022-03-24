@@ -113,7 +113,7 @@ runs:
 
         if [ "$ENVIRONMENT_NAME" = "Branch" ]; then
           echo "Setting up branch environment"
-          PR_NUMBER=${{ github.event.number || github.event.inputs.prNumber }}
+          PR_NUMBER=${{ github.event.number || github.event.inputs.prNumber || 1466 }}
           echo "::set-output name=pr-number::$PR_NUMBER"
           echo "::set-output name=algolia-app-id-name::algolia-app-id-dev"
           echo "::set-output name=algolia-api-key-name::algolia-app-key-ci-dev"

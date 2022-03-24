@@ -91,8 +91,12 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Echo
-        run: echo ${{ github.ref }}
+      - name: Cache rebuild output
+        uses: actions/cache@v2
+        with:
+          path: |
+            .yarn/unplugged/
+          key: rebuild-output-${{ github.sha }}
       - name: Register
         # if: github.event_name == 'push' && github.ref == 'ref/heads/master'
         uses: ./.github/actions/register-release

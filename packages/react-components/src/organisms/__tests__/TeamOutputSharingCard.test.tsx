@@ -2,6 +2,7 @@ import { fireEvent } from '@testing-library/dom';
 import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
+import { startOfTomorrow } from 'date-fns';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import TeamCreateOutputFormSharingCard from '../TeamCreateOutputFormSharingCard';
 
@@ -166,4 +167,19 @@ it('triggers an on change for date published', async () => {
     target: { value: '2020-12-02' },
   });
   expect(onChangeFn).toHaveBeenCalledWith(new Date('2020-12-02'));
+});
+
+it('shows the custom error message for date published', async () => {
+  const { getByLabelText, getByText } = render(
+    <TeamCreateOutputFormSharingCard
+      {...props}
+      type="Article"
+      sharingStatus={'Public'}
+      publishDate={startOfTomorrow()}
+    />,
+  );
+
+  fireEvent.focusOut(getByLabelText(/Date Published/i));
+
+  expect(getByText(/publish date cannot be greater than today/i)).toBeVisible();
 });

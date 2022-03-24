@@ -1,4 +1,5 @@
 import { ExternalAuthorResponse, UserResponse } from '@asap-hub/model';
+import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { components } from 'react-select';
 import { Avatar } from '../atoms';
@@ -7,13 +8,12 @@ import LabeledMultiSelect, {
   LabeledMultiSelectProps,
 } from '../molecules/LabeledMultiSelect';
 import { perRem } from '../pixels';
+
 const optionStyles = css({
   display: 'grid',
 
   gridTemplateColumns: `${24 / perRem}em 1fr`,
   gridColumnGap: `${8 / perRem}em`,
-
-  background: 'red',
 });
 
 type AuthorOption = {
@@ -22,31 +22,43 @@ type AuthorOption = {
 
 type AuthorSelectProps = LabeledMultiSelectProps<AuthorOption>;
 
+const getFirstAndLastName = (user: UserResponse | ExternalAuthorResponse) => {
+  if (isInternalUser(user)) {
+    return {
+      firstName: user.firstName,
+      lastName: user.lastName,
+    };
+  }
+
+  return {
+    firstName: user.displayName,
+    lastName: user.displayName.split(' ')[1],
+  };
+};
+
 const AuthorSelect: React.FC<AuthorSelectProps> = (props) => (
   <LabeledMultiSelect<AuthorOption>
     {...props}
     components={{
-      MultiValueLabel: (props) => (
-        <components.MultiValueLabel {...props}>
+      MultiValueLabel: (multiValueLabelProps) => (
+        <components.MultiValueLabel {...multiValueLabelProps}>
           <div css={optionStyles}>
             <Avatar
-              firstName={props.data.label.toString()}
-              lastName={props.data.label.toString().split(' ')[1]}
-              imageUrl={props.data.icon}
+              {...getFirstAndLastName(multiValueLabelProps.data.user)}
+              imageUrl={multiValueLabelProps.data.user?.avatarUrl}
             />
-            {props.children}
+            <span>{multiValueLabelProps.children}</span>
           </div>
         </components.MultiValueLabel>
       ),
-      Option: (props) => (
-        <components.Option {...props}>
+      Option: (optionProps) => (
+        <components.Option {...optionProps}>
           <div css={optionStyles}>
             <Avatar
-              firstName={props.label}
-              lastName={props.label.split(' ')[1]}
-              imageUrl={props.data.icon}
+              {...getFirstAndLastName(optionProps.data.user)}
+              imageUrl={optionProps.data.user?.avatarUrl}
             />
-            {props.children}
+            <span>{optionProps.children}</span>
           </div>
         </components.Option>
       ),

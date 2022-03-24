@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { ComponentProps, ReactElement, useState } from 'react';
 import Select, {
   ActionMeta,
-  components,
+  components as reactSelectComponent,
   OptionsType,
   Props,
 } from 'react-select';
@@ -14,11 +14,11 @@ import { noop } from '../utils';
 import { crossIcon } from '../icons';
 
 export const MultiValueRemove = (
-  props: ComponentProps<typeof components.MultiValueRemove>,
+  props: ComponentProps<typeof reactSelectComponent.MultiValueRemove>,
 ): ReactElement => (
-  <components.MultiValueRemove {...props}>
+  <reactSelectComponent.MultiValueRemove {...props}>
     {crossIcon}
-  </components.MultiValueRemove>
+  </reactSelectComponent.MultiValueRemove>
 );
 
 const containerStyles = css({
@@ -57,7 +57,7 @@ export type MultiSelectProps<T extends MultiSelectOptionType> = {
     })
 );
 
-const MultiSelect = <T extends MultiSelectOptionType>({
+const MultiSelect = <T extends MultiSelectOptionType = MultiSelectOptionType>({
   customValidationMessage = '',
   loadOptions,
   id,
@@ -113,7 +113,7 @@ const MultiSelect = <T extends MultiSelectOptionType>({
           options={suggestions.map((suggestion) => ({
             value: suggestion,
             label: suggestion,
-            options: [],
+            options: undefined,
           }))}
         />
       ) : (

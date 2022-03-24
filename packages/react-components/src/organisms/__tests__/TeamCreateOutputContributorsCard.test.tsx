@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { StaticRouter } from 'react-router-dom';
 import { ComponentProps } from 'react';
 import { waitFor } from '@testing-library/dom';
+import { createUserResponse } from '@asap-hub/fixtures';
 
 import TeamCreateOutputContributorsCard from '../TeamCreateOutputContributorsCard';
 
@@ -27,8 +28,8 @@ describe('Authors Multiselect', () => {
     const onChangeAuthors = jest.fn();
     const getAuthorSuggestions = jest.fn();
     getAuthorSuggestions.mockResolvedValue([
-      { label: 'Author Two', value: '2' },
-      { label: 'Author One', value: '1' },
+      { user: createUserResponse(), label: 'Author Two', value: '2' },
+      { user: createUserResponse(), label: 'Author One', value: '1' },
     ]);
 
     render(

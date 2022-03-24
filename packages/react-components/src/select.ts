@@ -129,6 +129,10 @@ export const reactSelectStyles = (
     ...provided,
     color: lead.rgb,
   }),
+  multiValue: (provided) => ({
+    ...provided,
+    paddingLeft: 0,
+  }),
 });
 
 export const reactMultiSelectStyles = <T extends MultiSelectOptionType>(

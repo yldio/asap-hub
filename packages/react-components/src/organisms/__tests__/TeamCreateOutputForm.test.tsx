@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { StaticRouter } from 'react-router-dom';
 import { ComponentProps } from 'react';
 import { fireEvent, waitFor } from '@testing-library/dom';
-import { createTeamResponse } from '@asap-hub/fixtures';
+import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
 
 import TeamCreateOutputForm from '../TeamCreateOutputForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
@@ -60,8 +60,8 @@ it('can submit a form when form data is valid', async () => {
     { label: 'Two Lab', value: '2' },
   ]);
   getAuthorSuggestions.mockResolvedValue([
-    { label: 'Author Two', value: '2' },
-    { label: 'Author One', value: '1' },
+    { user: createUserResponse(), label: 'Author Two', value: '2' },
+    { user: createUserResponse(), label: 'Author One', value: '1' },
   ]);
   render(
     <StaticRouter>

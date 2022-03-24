@@ -24,7 +24,6 @@ on:
         required: true
 
 jobs:
-
   sls-deploy-package:
     concurrency:
       group: ${{ github.head_ref || inputs.environment-name }}

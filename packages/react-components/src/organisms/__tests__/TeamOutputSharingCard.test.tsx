@@ -129,3 +129,41 @@ it('shows the custom no options message for type', async () => {
 
   expect(getByText('Sorry, no types match asdflkjasdflkj')).toBeVisible();
 });
+
+it('conditionally shows date published field', async () => {
+  const { queryByLabelText, rerender } = render(
+    <TeamCreateOutputFormSharingCard
+      {...props}
+      type="Article"
+      sharingStatus={'Network Only'}
+    />,
+  );
+  expect(queryByLabelText(/Date Published/i)).toBeNull();
+
+  rerender(
+    <TeamCreateOutputFormSharingCard
+      {...props}
+      type="Article"
+      sharingStatus={'Public'}
+    />,
+  );
+  expect(queryByLabelText(/Date Published/i)).toBeVisible();
+});
+
+it('triggers an on change for date published', async () => {
+  const onChangeFn = jest.fn();
+
+  const { getByLabelText } = render(
+    <TeamCreateOutputFormSharingCard
+      {...props}
+      type="Article"
+      sharingStatus={'Public'}
+      onChangePublishDate={onChangeFn}
+    />,
+  );
+
+  fireEvent.change(getByLabelText(/Date Published/i), {
+    target: { value: '2020-12-02' },
+  });
+  expect(onChangeFn).toHaveBeenCalledWith(new Date('2020-12-02'));
+});

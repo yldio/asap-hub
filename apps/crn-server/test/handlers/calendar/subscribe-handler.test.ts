@@ -72,7 +72,7 @@ describe('Calendar handler', () => {
 
     test('Should throw an error and not subscribe when the payload is not valid', async () => {
       await expect(handler(getEvent(undefined, {} as any))).rejects.toThrow(
-        /must have required/,
+        /Validation error/,
       );
     });
 

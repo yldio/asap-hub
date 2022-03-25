@@ -160,16 +160,16 @@ jobs:
           algolia-index: ${{ steps.setup.outputs.algolia-index }}
           asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
           asap-app-url: ${{ steps.setup.outputs.asap-app-url }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-acm-certificate-arn: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
           aws-region: ${{ steps.setup.outputs.aws-region }}
-          sls-stage: ${{ steps.setup.outputs.sls-stage }}
-          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
           sentry-dsn-api: ${{ steps.setup.outputs.sentry-dsn-api }}
           sentry-dsn-calendar: ${{ steps.setup.outputs.sentry-dsn-calendar }}
           sentry-dsn-user-invite: ${{ steps.setup.outputs.sentry-dsn-user-invite }}
+          sls-stage: ${{ steps.setup.outputs.sls-stage }}
+          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
           squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}

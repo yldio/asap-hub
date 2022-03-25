@@ -1,15 +1,6 @@
 name: 'SLS Deploy Package'
 description: 'Deploys the application'
 inputs:
-  aws-access-key-id:
-    description: 'AWS Access Key ID'
-    required: true
-  aws-secret-access-key:
-    description: 'AWS Secret Access Key'
-    required: true
-  aws-region:
-    description: 'AWS Region'
-    required: true
   algolia-index:
     description: 'Algolia Index'
     required: true
@@ -19,17 +10,17 @@ inputs:
   asap-app-url:
     description: 'ASAP APP Url'
     required: true
-  image-name:
-    description: 'Image name'
-    required: true
-  sls-stage:
-    description: 'SLS Stage'
-    required: true
-  squidex-app-name:
-    description: 'Squidex App Name'
+  aws-access-key-id:
+    description: 'AWS Access Key ID'
     required: true
   aws-acm-certificate-arn:
     description: 'AWS ACM Certificate ARN'
+    required: true
+  aws-region:
+    description: 'AWS Region'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
     required: true
   lightstep-token:
     description: 'Lightstep Token'
@@ -42,6 +33,12 @@ inputs:
     required: true
   sentry-dsn-user-invite:
     description: 'Sentry DSN User Invite'
+    required: true
+  sls-stage:
+    description: 'SLS Stage'
+    required: true
+  squidex-app-name:
+    description: 'Squidex App Name'
     required: true
   squidex-base-url:
     description: 'Squidex Base Url'

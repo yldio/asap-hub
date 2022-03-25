@@ -4,11 +4,11 @@ inputs:
   aws-access-key-id:
     description: 'AWS Access Key ID'
     required: true
-  aws-secret-access-key:
-    description: 'AWS Secret Access Key'
-    required: true
   aws-region:
     description: 'AWS Region'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
     required: true
   squidex-app-name:
     description: 'Squidex App Name'

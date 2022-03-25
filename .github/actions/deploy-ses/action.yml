@@ -1,14 +1,14 @@
 name: 'Deploy SES'
 description: 'Deploys SES'
 inputs:
+  app-origin:
+    description: 'App Origin'
+    required: true
   aws-access-key-id:
     description: 'AWS access key Id'
     required: true
   aws-secret-access-key:
     description: 'AWS secret access key'
-    required: true
-  app-origin:
-    description: 'App Origin'
     required: true
   ses-region:
     description: 'SES Region'
@@ -35,7 +35,7 @@ runs:
       run: |
         yarn workspace @asap-hub/messages deploy $SES_SANDBOX_REGION
       env:
+        APP_ORIGIN: ${{ inputs.asap-app-url }}
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
-        APP_ORIGIN: ${{ inputs.asap-app-url }}
         SES_REGION: ${{ inputs.ses-region }}

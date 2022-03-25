@@ -7,11 +7,11 @@ inputs:
   aws-access-key-id:
     description: 'AWS Access Key ID'
     required: true
-  aws-secret-access-key:
-    description: 'AWS Secret Access Key'
-    required: true
   aws-default-region:
     description: 'AWS Region'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
     required: true
   bucket-name:
     description: 'Bucket name'
@@ -27,15 +27,15 @@ runs:
         echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
-        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
         AWS_DEFAULT_REGION: ${{ inputs.aws-default-region }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
     - name: Get the latest backup directory name
       shell: bash
       run: echo "MOST_RECENT_BACKUP_DIR=$(aws s3api list-objects-v2 --bucket $BUCKET_NAME --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text | cut -d'/' -f 1)" >> $GITHUB_ENV
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
-        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
         AWS_DEFAULT_REGION: ${{ inputs.aws-default-region }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
         BUCKET_NAME: ${{ inputs.bucket-name }}
     - name: Download the files and restore the index
       shell: bash
@@ -44,8 +44,8 @@ runs:
         export ALGOLIA_BACKUP=$(readlink -f $MOST_RECENT_BACKUP_DIR)
         yarn workspace @asap-hub/crn-server run algolia import -s $ALGOLIA_BACKUP -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
       env:
-        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
-        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
-        AWS_DEFAULT_REGION: ${{ inputs.aws-default-region }}
-        BUCKET_NAME: ${{ inputs.bucket-name }}
         ALGOLIA_INDEX: ${{ inputs.algolia-index }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_DEFAULT_REGION: ${{ inputs.aws-default-region }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        BUCKET_NAME: ${{ inputs.bucket-name }}

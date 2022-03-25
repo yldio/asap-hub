@@ -3,7 +3,7 @@ name: Pipeline development and production
 on:
   push:
     branches:
-      - CRN-595-deploy-to-development-skip
+      - CRN-595-deploy-to-development
 
 jobs:
   test:

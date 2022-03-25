@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - CRN-595-deploy-to-development
+  workflow_dispatch:
 
 jobs:
   test:
@@ -41,6 +42,7 @@ jobs:
   deployment:
     needs: [test, build-analysis]
     uses: ./.github/workflows/reusable-deployment.yml
+    if: github.event_name == 'push'
     with:
       environment-name: Development
     secrets:

@@ -45,7 +45,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Test
-        if: github.event_name == 'pull_request'
+        if: ${{ inputs.environment-name=='Branch' }}
         uses: ./.github/actions/test-e2e
         with:
           asap-app-url: ${{ steps.setup.outputs.asap-app-url }}
@@ -67,7 +67,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Verify
-        if: github.event_name == 'pull_request'
+        if: ${{ inputs.environment-name=='Branch' }}
         uses: ./.github/actions/verify-schema
         with:
           squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
@@ -98,7 +98,7 @@ jobs:
             .yarn/unplugged/
           key: rebuild-output-${{ github.sha }}
       - name: Register
-        # if: github.event_name == 'push' && github.ref == 'ref/heads/master'
+        if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
         uses: ./.github/actions/register-release
         with:
           frontend-sentry-release-auth-token: ${{ secrets.FRONTEND_SENTRY_RELEASE_AUTH_TOKEN }}

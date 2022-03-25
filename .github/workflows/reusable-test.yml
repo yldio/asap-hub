@@ -60,7 +60,7 @@ jobs:
           verbose: true
 
   test-integration:
-    if: ${{ github.event_name == 'pull_request' }}
+    if: ${{ inputs.environment-name=='Branch' }}
     permissions:
       packages: read
     runs-on: ubuntu-latest

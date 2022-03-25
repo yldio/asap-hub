@@ -1,5 +1,5 @@
 aws-acm-asap-science-certificate-arn=arn:aws:acm:us-east-1:249832953260:certificate/91e951dd-8819-4459-b69a-b9413760c4d6
-acm-certificate-arn=arn:aws:acm:us-east-1:249832953260:certificate/91e951dd-8819-4459-b69a-b9413760c4d6
+aws-acm-certificate-arn=arn:aws:acm:us-east-1:249832953260:certificate/91e951dd-8819-4459-b69a-b9413760c4d6
 aws-default-region=us-east-1
 aws-region=us-east-1
 print-sync-logs-on-success=TRUE

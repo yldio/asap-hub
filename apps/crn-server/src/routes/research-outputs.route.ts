@@ -54,26 +54,25 @@ export const researchOutputRouteFactory = (
     } catch (error) {
       // TODO: move this logic to the controller and catch in the error-handler
       // https://asaphub.atlassian.net/browse/CRN-777
-      if (Boom.isBoom(error)) {
-        if (
-          error.data?.message === 'Validation error' &&
-          Array.isArray(error.data?.details) &&
-          error.data.details[0].includes(
-            'link.iv: Another content with the same value exists',
-          )
-        ) {
-          throw Boom.badRequest('Validation error', [
-            {
-              instancePath: '/link',
-              keyword: 'unique',
-              message: 'must be unique',
-              params: {
-                type: 'string',
-              },
-              schemaPath: '#/properties/link/unique',
+      if (
+        Boom.isBoom(error) &&
+        error.data?.message === 'Validation error' &&
+        Array.isArray(error.data?.details) &&
+        error.data.details[0].includes(
+          'link.iv: Another content with the same value exists',
+        )
+      ) {
+        throw Boom.badRequest('Validation error', [
+          {
+            instancePath: '/link',
+            keyword: 'unique',
+            message: 'must be unique',
+            params: {
+              type: 'string',
             },
-          ]);
-        }
+            schemaPath: '#/properties/link/unique',
+          },
+        ]);
       }
 
       throw error;

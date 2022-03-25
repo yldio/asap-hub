@@ -52,6 +52,8 @@ export const researchOutputRouteFactory = (
 
       res.status(201).json(researchOutput);
     } catch (error) {
+      // TODO: move this logic to the controller and catch in the error-handler
+      // https://asaphub.atlassian.net/browse/CRN-777
       if (Boom.isBoom(error)) {
         if (
           error.data?.message === 'Validation error' &&

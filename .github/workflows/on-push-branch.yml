@@ -2,8 +2,8 @@ name: Pipeline branch
 
 on:
   pull_request:
-    # types: [opened, synchronize]
-    types: [opened]
+    types: [opened, synchronize]
+    # types: [opened]
     branches:
       - master
 jobs:

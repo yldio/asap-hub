@@ -1,4 +1,4 @@
-import { formatISO } from 'date-fns';
+import { formatISO, startOfTomorrow } from 'date-fns';
 import { render, fireEvent, screen } from '@testing-library/react';
 
 import LabeledDateField from '../LabeledDateField';
@@ -33,8 +33,8 @@ it('supports max date attribute', () => {
   render(
     <LabeledDateField
       title="Date"
-      value={new Date('2034-02-01')}
-      max={new Date()}
+      value={new Date()}
+      max={startOfTomorrow()}
       customValidationMessage="ups"
     />,
   );

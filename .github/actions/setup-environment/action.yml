@@ -97,31 +97,19 @@ runs:
       shell: bash
       run: |
 
-        source .github/environment/All.env
-        source .github/environment/$ENVIRONMENT_NAME.env
+        function set_outputs () {
+          while IFS="=" read name value
+          do
+              echo "::set-output name=$name::$value"
+          done < ./.github/environment/$1
+        }
 
-        echo "::set-output name=algolia-api-key-name::$ALGOLIA_API_KEY_NAME"
-        echo "::set-output name=algolia-app-id-name::$ALGOLIA_APP_ID_NAME"
-        echo "::set-output name=algolia-app-name::$ALGOLIA_APP_NAME"
-        echo "::set-output name=asap-host-name::$ASAP_HOSTNAME"
-        echo "::set-output name=auth0-client-id::$AUTH0_CLIENT_ID"
-        echo "::set-output name=auth0-domain::$AUTH0_DOMAIN"
-        echo "::set-output name=aws-acm-asap-science-certificate-arn::$AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN"
-        echo "::set-output name=aws-acm-certificate-arn::$AWS_ACM_CERTIFICATE_ARN"
-        echo "::set-output name=aws-default-region::$AWS_DEFAULT_REGION"
-        echo "::set-output name=aws-region::$AWS_REGION"
-        echo "::set-output name=print-sync-logs-on-success::$PRINT_SYNC_LOGS_ON_SUCCESS"
-        echo "::set-output name=react-app-environment::$REACT_APP_ENVIRONMENT"
-        echo "::set-output name=sentry-dsn-api::$SENTRY_DSN_API"
-        echo "::set-output name=sentry-dsn-calendar::$SENTRY_DSN_CALENDAR"
-        echo "::set-output name=sentry-dsn-user-invite::$SENTRY_DSN_USER_INVITE"
-        echo "::set-output name=squidex-base-url::$SQUIDEX_BASE_URL"
-        echo "::set-output name=squidex-client-id::$SQUIDEX_CLIENT_ID"
+        set_outputs Base
+        set_outputs $ENVIRONMENT_NAME
 
+        ASAP_HOSTNAME=hub.asap.science
         if [ "$ENVIRONMENT_NAME" = "Branch" ]; then
-
-          PR_NUMBER=${{ github.event.number || github.event.inputs.prNumber || 1466 }}
-
+          PR_NUMBER=${{ github.event.number || github.event.inputs.prNumber }}
           echo "::set-output name=algolia-index::asap-hub_CI-$PR_NUMBER"
           echo "::set-output name=app-release::${{ github.run_id }}-dev"
           echo "::set-output name=asap-api-url::https://api-$PR_NUMBER.$ASAP_HOSTNAME"
@@ -131,22 +119,17 @@ runs:
           echo "::set-output name=sls-stage::$PR_NUMBER"
           echo "::set-output name=squidex-app-name::$PR_NUMBER"
         elif [ "$ENVIRONMENT_NAME" = 'Development' ]; then
+          echo "::set-output name=asap-api-url::https://api-dev.$ASAP_HOSTNAME"
+          echo "::set-output name=asap-app-url::https://dev.$ASAP_HOSTNAME"
           echo "::set-output name=app-release::${{ github.run_id }}-dev"
         elif [ "$ENVIRONMENT_NAME" = 'Production' ]; then
+          echo "::set-output name=asap-api-url::https://api.$ASAP_HOSTNAME"
+          echo "::set-output name=asap-app-url::https://$ASAP_HOSTNAME"
           echo "::set-output name=app-release::${{ github.run_id }}-prod"
-          echo "::set-output name=react-app-gtm-container-id::$REACT_APP_GTM_CONTAINER_ID"
         else
           echo "Unknown environment: $ENVIRONMENT_NAME"
           exit 1
         fi
-        if [ "$ENVIRONMENT_NAME" = 'Development' ] || [ "$ENVIRONMENT_NAME" = 'Production' ]; then
-          echo "::set-output name=algolia-index::$ALGOLIA_INDEX"
-          echo "::set-output name=asap-api-url::$ASAP_API_URL"
-          echo "::set-output name=asap-app-url::$ASAP_APP_URL"
-          echo "::set-output name=react-app-sentry-dsn::REACT_APP_SENTRY_DSN"
-          echo "::set-output name=ses-region::$SES_REGION"
-          echo "::set-output name=sls-stage::$SLS_STAGE"
-          echo "::set-output name=squidex-app-name::$SQUIDEX_APP_NAME"
-        fi
+
       env:
         ENVIRONMENT_NAME: ${{ inputs.environment-name }}

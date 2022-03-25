@@ -1,16 +1,9 @@
 import { ErrorRequestHandler } from 'express';
 import { isBoom } from '@hapi/boom';
-
-export type AsapApiErrorResponse = {
-  error: string;
-  message: string;
-  statusCode: number;
-  data?: Record<string, unknown>;
-};
+import { ErrorResponse } from '@asap-hub/model';
 
 export const errorHandlerFactory =
-  (): ErrorRequestHandler<unknown, AsapApiErrorResponse> =>
-  (err, req, res, next) => {
+  (): ErrorRequestHandler<unknown, ErrorResponse> => (err, req, res, next) => {
     if (res.headersSent) {
       return next(err);
     }

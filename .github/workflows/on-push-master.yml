@@ -3,7 +3,7 @@ name: Pipeline development and production
 on:
   push:
     branches:
-      - master
+      - CRN-595-deploy-to-development
   workflow_dispatch:
 
 jobs:

@@ -40,7 +40,6 @@ jobs:
         env:
           ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
           ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
-          ASAP_HOSTNAME: ${{ steps.setup.outputs.asap-hostname }}
           AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
           AWS_REGION: ${{ steps.setup.outputs.aws-region }}
           SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
@@ -48,7 +47,6 @@ jobs:
         env:
           ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
           ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
-          ASAP_HOSTNAME: ${{ steps.setup.outputs.asap-hostname }}
           AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
           AWS_REGION: ${{ steps.setup.outputs.aws-region }}
           SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}-gitlab

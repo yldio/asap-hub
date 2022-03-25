@@ -26,9 +26,6 @@ outputs:
   asap-app-url:
     description: 'ASAP APP Url'
     value: ${{ steps.vars.outputs.asap-app-url }}
-  asap-hostname:
-    description: 'ASAP Host Name'
-    value: ${{ steps.vars.outputs.asap-hostname }}
   auth0-client-id:
     description: 'Auth0 Client ID'
     value: ${{ steps.vars.outputs.auth0-client-id }}

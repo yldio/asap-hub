@@ -13,62 +13,23 @@ inputs:
   asap-api-url:
     description: 'ASAP API Url'
     required: true
-  asap-app-url:
-    description: 'ASAP APP Url'
-    required: true
-  asap-hostname:
-    description: 'ASAP Hostname'
-    required: true
   aws-access-key-id:
     description: 'AWS Access Key ID'
-    required: true
-  aws-secret-access-key:
-    description: 'AWS Secret Access Key'
-    required: true
-  aws-acm-certificate-arn:
-    description: 'AWS ACM Certificate ARN'
     required: true
   aws-region:
     description: 'AWS Region'
     required: true
-  react-app-gtm-container-id:
-    description: 'GTM Container ID'
-    required: true
-  lightstep-token:
-    description: 'Lightstep Token'
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
     required: true
   react-app-environment:
     description: 'React App Environment'
     required: true
-  sls-stage:
-    description: 'SLS Stage'
+  react-app-gtm-container-id:
+    description: 'GTM Container ID'
     required: true
   react-app-sentry-dsn:
     description: 'Sentry DSN'
-    required: true
-  sentry-dsn-api:
-    description: 'Sentry DSN API'
-    required: true
-  sentry-dsn-calendar:
-    description: 'Sentry DSN Calendar'
-    required: true
-  sentry-dsn-user-invite:
-    description: 'Sentry DSN User Invite'
-    required: true
-  squidex-app-name:
-    description: 'Squidex App Name'
-    required: true
-  squidex-base-url:
-    description: 'Squidex Base Url'
-    required: true
-  squidex-client-id:
-    description: 'Squidex Client ID'
-    required: true
-  squidex-client-secret:
-    description: 'Squidex Client Secret'
-    required: true
-  squidex-shared-secret:
-    description: 'Squidex Shared Secret'
     required: true
 
 runs:
@@ -111,7 +72,6 @@ runs:
     - name: Build
       shell: bash
       env:
-        ASAP_HOSTNAME: ${{ inputs.asap-hostname }}
         REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
         REACT_APP_ALGOLIA_INDEX: ${{ inputs.algolia-index }}
         REACT_APP_API_BASE_URL: ${{ inputs.asap-api-url }}

@@ -104,17 +104,16 @@ jobs:
       - name: Build
         uses: ./.github/actions/build-frontend
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           algolia-app-name: ${{ steps.setup.outputs.algolia-app-name }}
           algolia-index: ${{ steps.setup.outputs.algolia-index }}
           app-release: ${{ steps.setup.outputs.app-release }}
           asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
-          asap-hostname: ${{ steps.setup.outputs.asap-hostname }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-region: ${{ steps.setup.outputs.aws-region }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          react-app-environment: ${{ steps.setup.outputs.react-app-environment }}
           react-app-gtm-container-id: ${{ steps.setup.outputs.react-app-gtm-container-id }}
           react-app-sentry-dsn: ${{ steps.setup.outputs.react-app-sentry-dsn }}
-          react-app-environment: ${{ steps.setup.outputs.react-app-environment }}
 
   typecheck:
     needs: [build-typecheck]

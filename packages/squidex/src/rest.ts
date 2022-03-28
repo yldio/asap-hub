@@ -165,7 +165,7 @@ export class Squidex<
           body = err.response.body;
         }
 
-        throw Boom.badRequest(err, body);
+        throw Boom.badRequest(err.message, body);
       }
 
       throw Boom.badImplementation('squidex', err);

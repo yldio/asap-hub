@@ -7,6 +7,7 @@ import {
   SquidexRest,
   UserTeamConnection,
 } from '@asap-hub/squidex';
+import Boom from '@hapi/boom';
 import { HTTPError } from 'got';
 import { Data } from './parse';
 import log from '../../logger';
@@ -190,7 +191,7 @@ const insertUser = async (
 
   if (!cache[user.email.iv]) {
     cache[user.email.iv] = users.create(user).catch((err) => {
-      if (err.response?.statusCode === 400) {
+      if (Boom.isBoom(err) && err.output.statusCode === 400) {
         log(`fetch ${user.email.iv}`);
         return users
           .fetchOne({

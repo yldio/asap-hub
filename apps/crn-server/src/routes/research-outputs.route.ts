@@ -2,6 +2,7 @@ import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
+import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import { ResearchOutputController } from '../controllers/research-outputs';
 import { validateFetchOptions } from '../validation';
@@ -44,9 +45,38 @@ export const researchOutputRouteFactory = (
     const { body } = req;
 
     const createRequest = validateResearchOutputPostRequestParameters(body);
-    const researchOutput = await researchOutputController.create(createRequest);
+    try {
+      const researchOutput = await researchOutputController.create(
+        createRequest,
+      );
 
-    res.status(201).json(researchOutput);
+      res.status(201).json(researchOutput);
+    } catch (error) {
+      // TODO: move this logic to the controller and catch in the error-handler
+      // https://asaphub.atlassian.net/browse/CRN-777
+      if (
+        Boom.isBoom(error) &&
+        error.data?.message === 'Validation error' &&
+        Array.isArray(error.data?.details) &&
+        error.data.details[0].includes(
+          'link.iv: Another content with the same value exists',
+        )
+      ) {
+        throw Boom.badRequest('Validation error', [
+          {
+            instancePath: '/link',
+            keyword: 'unique',
+            message: 'must be unique',
+            params: {
+              type: 'string',
+            },
+            schemaPath: '#/properties/link/unique',
+          },
+        ]);
+      }
+
+      throw error;
+    }
   });
 
   return researchOutputRoutes;

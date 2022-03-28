@@ -49,14 +49,7 @@ export function validateInput<T>(
 
     const { errors } = ajvValidation;
 
-    throw Boom.badRequest(
-      `Error "${errors?.[0]?.propertyName || errors?.[0]?.instancePath}": ${
-        errors?.[0]?.message
-      }`,
-      {
-        details: errors,
-      },
-    );
+    throw Boom.badRequest(`Validation error`, errors);
   };
 }
 

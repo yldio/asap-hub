@@ -158,7 +158,14 @@ export class Squidex<
       }
 
       if (err.response?.statusCode === 400) {
-        throw Boom.badRequest(err, err.response?.body);
+        let body: unknown;
+        try {
+          body = JSON.parse(err.response.body);
+        } catch {
+          body = err.response.body;
+        }
+
+        throw Boom.badRequest(err.message, body);
       }
 
       throw Boom.badImplementation('squidex', err);
@@ -189,7 +196,14 @@ export class Squidex<
       }
 
       if (err.response?.statusCode === 400) {
-        throw Boom.badRequest(err, err.response?.body);
+        let body: unknown;
+        try {
+          body = JSON.parse(err.response.body);
+        } catch {
+          body = err.response.body;
+        }
+
+        throw Boom.badRequest(err, body);
       }
 
       throw Boom.badImplementation('squidex', err);

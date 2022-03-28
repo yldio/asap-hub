@@ -1,8 +1,9 @@
 import { ErrorRequestHandler } from 'express';
 import { isBoom } from '@hapi/boom';
+import { ErrorResponse } from '@asap-hub/model';
 
 export const errorHandlerFactory =
-  (): ErrorRequestHandler => (err, req, res, next) => {
+  (): ErrorRequestHandler<unknown, ErrorResponse> => (err, req, res, next) => {
     if (res.headersSent) {
       return next(err);
     }
@@ -14,13 +15,17 @@ export const errorHandlerFactory =
     req.span?.log({ 'error.message': err.message });
 
     if (isBoom(err)) {
-      return res.status(err.output.statusCode).json(err.output.payload);
+      return res.status(err.output.statusCode).json({
+        ...err.output.payload,
+        data: err.data,
+      });
     }
 
     res.status(err.status || err.statusCode || 500);
 
     return res.json({
-      status: 'ERROR',
+      error: 'Internal Server Error',
       message: err.message,
+      statusCode: err.status || err.statusCode || 500,
     });
   };

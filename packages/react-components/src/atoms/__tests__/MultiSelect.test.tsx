@@ -14,6 +14,7 @@ import {
 import { ember, fern, pine } from '../../colors';
 
 import MultiSelect, { arrayMove } from '../MultiSelect';
+import { noop } from '../../utils';
 
 interface SortableMock {
   onSortEnd?: SortEndHandler;
@@ -66,6 +67,14 @@ describe('Sorting elements', () => {
 
     sortableController.onSortEnd({ oldIndex: 0, newIndex: 1 });
     expect(onChange).toHaveBeenCalledWith([value2, value1]);
+  });
+
+  it('getHelperDimensions calls getBoundingClientRect', () => {
+    render(<MultiSelect suggestions={[]} values={[]} onChange={noop} />);
+
+    const getBoundingClientRect = jest.fn();
+    sortableController.getHelperDimensions({ node: { getBoundingClientRect } });
+    expect(getBoundingClientRect).toHaveBeenCalled();
   });
 
   describe('arrayMove', () => {

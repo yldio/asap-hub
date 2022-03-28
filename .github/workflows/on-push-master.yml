@@ -90,6 +90,13 @@ jobs:
       name: Branch
       url: ${{ steps.setup.outputs.asap-app-url }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Branch
       - name: Print success
         run: |
           echo "Pipeline development and production successful."

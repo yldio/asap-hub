@@ -44,7 +44,7 @@ jobs:
   deployment:
     needs: [test, build-analysis]
     uses: ./.github/workflows/reusable-deployment.yml
-    if: github.event_name == 'workflow_dispatch'
+    # if: github.event_name == 'workflow_dispatch'
     with:
       environment-name: Development
     secrets:

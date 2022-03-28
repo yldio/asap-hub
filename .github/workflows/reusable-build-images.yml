@@ -52,7 +52,7 @@ jobs:
           echo "ECR_IMAGE_NAME=$ECR_IMAGE_NAME" >> $GITHUB_ENV
           echo "GHCR_IMAGE_NAME=$GHCR_IMAGE_NAME" >> $GITHUB_ENV
       - name: push squidex
-        if: ${{ github.event_name == 'workflow_dispatch-skip' }}
+        if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
           docker push --all-tags ${{ env.GHCR_IMAGE_NAME }}
           docker push --all-tags ${{ env.ECR_IMAGE_NAME }}
@@ -73,7 +73,7 @@ jobs:
           echo "ECR_IMAGE_NAME=$ECR_IMAGE_NAME" >> $GITHUB_ENV
           echo "GHCR_IMAGE_NAME=$GHCR_IMAGE_NAME" >> $GITHUB_ENV
       - name: push integration
-        if: ${{ github.event_name == 'workflow_dispatch-skip' }}
+        if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
           docker push --all-tags ${{ env.ECR_IMAGE_NAME }}
           docker push --all-tags ${{ env.GHCR_IMAGE_NAME }}

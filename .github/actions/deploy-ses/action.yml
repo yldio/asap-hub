@@ -36,7 +36,7 @@ runs:
     - name: Deploy
       shell: bash
       run: |
-        yarn workspace @asap-hub/messages deploy $SES_SANDBOX_REGION
+        yarn workspace @asap-hub/messages deploy $SES_REGION
       env:
         APP_ORIGIN: ${{ inputs.asap-app-url }}
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}

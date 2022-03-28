@@ -3,7 +3,7 @@ name: Pipeline development and production
 on:
   push:
     branches:
-      - CRN-595-deploy-to-development
+      - master
   workflow_dispatch:
 
 jobs:
@@ -44,7 +44,7 @@ jobs:
   deployment:
     needs: [test, build-analysis]
     uses: ./.github/workflows/reusable-deployment.yml
-    # if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch'
     with:
       environment-name: Development
     secrets:
@@ -87,7 +87,7 @@ jobs:
     needs: [verify, build-images]
     if: ${{ success() }}
     environment:
-      name: Branch
+      name: Development
       url: ${{ steps.setup.outputs.asap-app-url }}
     steps:
       - name: Checkout
@@ -96,7 +96,7 @@ jobs:
         id: setup
         uses: ./.github/actions/setup-environment
         with:
-          environment-name: Branch
+          environment-name: Development
       - name: Print success
         run: |
           echo "Pipeline development and production successful."

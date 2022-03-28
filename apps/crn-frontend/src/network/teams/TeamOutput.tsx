@@ -65,6 +65,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
     addedDate: new Date().toISOString(),
     tags: [],
     teams: [teamId],
+    publishDate: undefined,
   };
 
   const getLabSuggestions = useLabSuggestions();

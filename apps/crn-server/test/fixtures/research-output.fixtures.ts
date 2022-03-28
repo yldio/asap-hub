@@ -190,4 +190,5 @@ export const getResearchOutputRequest = (): ResearchOutputPostRequest => ({
   tags: ['tag1'],
   subTypes: ['3D Printing'],
   labs: ['lab1'],
+  publishDate: undefined,
 });

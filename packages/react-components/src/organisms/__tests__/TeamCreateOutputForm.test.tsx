@@ -107,6 +107,9 @@ it('can submit a form when form data is valid', async () => {
       .getByRole('group', { name: /sharing status/i })
       .querySelectorAll('input')[1]!,
   );
+
+  userEvent.type(screen.getByLabelText(/date published/i), '2022-03-24');
+
   userEvent.click(screen.getByLabelText(/Labs/i));
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -137,6 +140,7 @@ it('can submit a form when form data is valid', async () => {
       asapFunded: true,
       usedInPublication: true,
       sharingStatus: 'Public',
+      publishDate: new Date('2022-03-24').toISOString(),
     });
     expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
     expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();

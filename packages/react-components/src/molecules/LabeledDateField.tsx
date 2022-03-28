@@ -1,23 +1,39 @@
 import { ComponentProps } from 'react';
-import { formatISO, parseISO } from 'date-fns';
+import { formatISO, parseISO, format } from 'date-fns';
+import { css } from '@emotion/react';
 
 import { TextField, Label, Paragraph } from '../atoms';
 import { noop } from '../utils';
 import { perRem } from '../pixels';
+import { lead } from '../colors';
 
 type LabeledDateFieldProps = {
   readonly title: React.ReactNode;
+  readonly subtitle?: React.ReactNode;
+  readonly description?: React.ReactNode;
 
   readonly value?: Date;
+  readonly max?: Date;
   readonly onChange?: (newDate: Date) => void;
 } & Pick<
   ComponentProps<typeof TextField>,
-  'required' | 'customValidationMessage'
+  'required' | 'customValidationMessage' | 'getValidationMessage'
 >;
+
+const subtitleStyles = css({
+  paddingLeft: `${6 / perRem}em`,
+});
+
+const descriptionStyles = css({
+  color: lead.rgb,
+});
 
 const LabeledDateField: React.FC<LabeledDateFieldProps> = ({
   title,
+  subtitle,
+  description,
 
+  max,
   value,
   onChange = noop,
   ...dateFieldProps
@@ -31,11 +47,14 @@ const LabeledDateField: React.FC<LabeledDateFieldProps> = ({
           id={id}
           value={value ? formatISO(value, { representation: 'date' }) : ''}
           onChange={(newDate) => onChange(parseISO(newDate))}
+          max={max ? format(max, 'yyyy-MM-dd') : undefined}
         />
       )}
     >
       <Paragraph>
         <strong>{title}</strong>
+        <span css={subtitleStyles}>{subtitle}</span> <br />
+        <span css={descriptionStyles}>{description}</span>
       </Paragraph>
     </Label>
   </div>

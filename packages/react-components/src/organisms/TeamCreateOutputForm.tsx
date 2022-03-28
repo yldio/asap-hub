@@ -112,6 +112,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
 
   const [sharingStatus, setSharingStatus] =
     useState<ResearchOutputPostRequest['sharingStatus']>('Network Only');
+  const [publishDate, setPublishDate] = useState<Date | undefined>(undefined);
 
   return (
     <Form
@@ -145,6 +146,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           asapFunded: convertDecisionToBoolean(asapFunded),
           usedInPublication: convertDecisionToBoolean(usedInPublication),
           sharingStatus,
+          publishDate: publishDate?.toISOString(),
         });
       }}
     >
@@ -167,6 +169,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangeUsedInPublication={setUsedInPublication}
             sharingStatus={sharingStatus}
             onChangeSharingStatus={setSharingStatus}
+            publishDate={publishDate}
+            onChangePublishDate={(date) => setPublishDate(new Date(date))}
           />
           <TeamCreateOutputExtraInformationCard
             isSaving={isSaving}

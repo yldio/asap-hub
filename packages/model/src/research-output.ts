@@ -176,6 +176,7 @@ export type ResearchOutputPostRequest = {
   addedDate: string;
   asapFunded?: boolean;
   sharingStatus: ResearchOutputSharingStatus;
+  publishDate?: string;
   usedInPublication?: boolean;
   accessInstructions?: string;
 };

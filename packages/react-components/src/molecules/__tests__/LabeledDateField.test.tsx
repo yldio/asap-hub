@@ -1,31 +1,57 @@
-import { formatISO } from 'date-fns';
-import { render, fireEvent } from '@testing-library/react';
+import { formatISO, startOfTomorrow } from 'date-fns';
+import { render, fireEvent, screen } from '@testing-library/react';
 
 import LabeledDateField from '../LabeledDateField';
 
 it('renders a labeled date field, with the stringified value', () => {
-  const { getByLabelText } = render(
+  render(
     <LabeledDateField title="Date" value={new Date('2020-01-01T12:34:56')} />,
   );
-  expect(getByLabelText('Date')).toHaveAttribute('type', 'date');
-  expect(getByLabelText('Date')).toHaveValue('2020-01-01');
+  expect(screen.getByLabelText('Date')).toHaveAttribute('type', 'date');
+  expect(screen.getByLabelText('Date')).toHaveValue('2020-01-01');
 });
 
 it('renders an empty date field', () => {
-  const { getByLabelText } = render(<LabeledDateField title="Date" />);
-  expect(getByLabelText('Date')).toHaveValue('');
+  render(<LabeledDateField title="Date" />);
+  expect(screen.getByLabelText('Date')).toHaveValue('');
+});
+
+it('renders a labeled date field, passing through props', () => {
+  render(
+    <LabeledDateField
+      title="Publish Date"
+      subtitle="('required')"
+      description={'Please enter a date before today'}
+    />,
+  );
+  expect(screen.getByText(/publish date/i)).toBeVisible();
+  expect(screen.getByText(/required/i)).toBeVisible();
+  expect(screen.getByText(/please enter a date before today/i)).toBeVisible();
+});
+
+it('supports max date attribute', () => {
+  render(
+    <LabeledDateField
+      title="Date"
+      value={new Date()}
+      max={startOfTomorrow()}
+      customValidationMessage="ups"
+    />,
+  );
+
+  expect(screen.getByText(/ups/i)).toBeVisible();
 });
 
 it('reports changes as date objects', async () => {
   const handleChange = jest.fn<void, [Date]>();
-  const { getByLabelText } = render(
+  render(
     <LabeledDateField
       title="Date"
       value={new Date('2020-01-01')}
       onChange={handleChange}
     />,
   );
-  fireEvent.change(getByLabelText('Date'), {
+  fireEvent.change(screen.getByLabelText('Date'), {
     target: { value: '2019-02-01' },
   });
 

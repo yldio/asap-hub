@@ -14,6 +14,7 @@ import {
   FormCard,
   LabeledDropdown,
   LabeledRadioButtonGroup,
+  LabeledDateField,
 } from '../molecules';
 import { noop } from '../utils';
 
@@ -28,9 +29,11 @@ type TeamCreateOutputFormSharingCardProps = Pick<
   onChangeAsapFunded?: (newValue: DecisionOption) => void;
   onChangeUsedInPublication?: (newValue: DecisionOption) => void;
   onChangeSharingStatus?: (newValue: ResearchOutputSharingStatus) => void;
+  onChangePublishDate?: (newValue: Date) => void;
   isSaving: boolean;
   asapFunded: DecisionOption;
   usedInPublication: DecisionOption;
+  publishDate?: Date;
 };
 
 const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardProps> =
@@ -44,6 +47,7 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
     asapFunded,
     usedInPublication,
     sharingStatus,
+    publishDate,
     onChangeDescription = noop,
     onChangeLink = noop,
     onChangeTitle = noop,
@@ -51,6 +55,7 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
     onChangeAsapFunded = noop,
     onChangeUsedInPublication = noop,
     onChangeSharingStatus = noop,
+    onChangePublishDate = noop,
   }) => {
     const urlRequired = type !== 'Lab Resource';
     const urlSubtitle = urlRequired ? '(required)' : '(optional)';
@@ -142,6 +147,21 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
           value={sharingStatus}
           onChange={onChangeSharingStatus}
         />
+        {sharingStatus === 'Public' ? (
+          <LabeledDateField
+            title={'Date Published'}
+            subtitle={'(optional)'}
+            description={
+              'This should be the date your output was shared publicly on it’s repository.'
+            }
+            onChange={onChangePublishDate}
+            value={publishDate}
+            max={new Date()}
+            getValidationMessage={() =>
+              'Publish date cannot be greater than today'
+            }
+          />
+        ) : null}
       </FormCard>
     );
   };

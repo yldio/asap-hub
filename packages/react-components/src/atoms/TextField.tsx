@@ -134,7 +134,7 @@ type TextFieldProps = {
   readonly onChange?: (newValue: string) => void;
 } & Pick<
   InputHTMLAttributes<HTMLInputElement>,
-  'id' | 'placeholder' | 'required' | 'maxLength' | 'pattern'
+  'id' | 'placeholder' | 'required' | 'maxLength' | 'pattern' | 'max'
 >;
 const TextField: React.FC<TextFieldProps> = ({
   type = 'text',
@@ -142,6 +142,7 @@ const TextField: React.FC<TextFieldProps> = ({
 
   required,
   maxLength,
+  max,
   pattern,
 
   customValidationMessage = '',
@@ -173,6 +174,7 @@ const TextField: React.FC<TextFieldProps> = ({
         disabled={!enabled}
         required={required}
         maxLength={maxLength}
+        max={max}
         pattern={pattern}
         value={value}
         onChange={({ currentTarget: { value: newValue } }) =>

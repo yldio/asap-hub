@@ -36,6 +36,8 @@ jobs:
   build-analysis:
     needs: [build]
     uses: ./.github/workflows/reusable-build-analysis.yml
+    with:
+      environment-name: Development
     secrets:
       BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 

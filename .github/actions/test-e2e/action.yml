@@ -4,6 +4,9 @@ inputs:
   asap-app-url:
     description: 'ASAP App Url'
     required: true
+  environment-name:
+    description: 'Environment name'
+    required: true
 runs:
   using: 'composite'
   steps:
@@ -13,7 +16,7 @@ runs:
       with:
         path: |
           .yarn/unplugged/
-        key: rebuild-output-${{ github.sha }}
+        key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
     - name: Install Playwright
       shell: bash
       run: |

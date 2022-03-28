@@ -4,6 +4,7 @@ on:
   workflow_call:
     inputs:
       environment-name:
+        description: 'The environment name'
         required: true
         type: string
     secrets:
@@ -49,6 +50,7 @@ jobs:
         uses: ./.github/actions/test-e2e
         with:
           asap-app-url: ${{ steps.setup.outputs.asap-app-url }}
+          environment-name: ${{ inputs.environment-name }}
 
   verify-schema:
     runs-on: ubuntu-latest
@@ -96,7 +98,7 @@ jobs:
         with:
           path: |
             .yarn/unplugged/
-          key: rebuild-output-${{ github.sha }}
+          key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
       - name: Register
         if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
         uses: ./.github/actions/register-release

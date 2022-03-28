@@ -4,6 +4,7 @@ on:
   workflow_call:
     inputs:
       environment-name:
+        description: 'The environment name'
         required: true
         type: string
     secrets:

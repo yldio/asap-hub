@@ -4,6 +4,7 @@ on:
   workflow_call:
     inputs:
       environment-name:
+        description: 'The environment name'
         required: true
         type: string
     secrets:
@@ -54,6 +55,7 @@ jobs:
           aws-acm-certificate-arn: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
           aws-region: ${{ steps.setup.outputs.aws-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          environment-name: ${{ inputs.environment-name }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
           sentry-dsn-api: ${{ steps.setup.outputs.sentry-dsn-api }}
           sentry-dsn-calendar: ${{ steps.setup.outputs.sentry-dsn-calendar }}
@@ -141,4 +143,5 @@ jobs:
           app-origin: ${{ steps.setup.outputs.asap-app-url }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          environment-name: ${{ inputs.environment-name }}
           ses-region: ${{ steps.setup.outputs.ses-region }}

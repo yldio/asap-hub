@@ -22,6 +22,9 @@ inputs:
   aws-secret-access-key:
     description: 'AWS Secret Access Key'
     required: true
+  environment-name:
+    description: 'Environment name'
+    required: true
   lightstep-token:
     description: 'Lightstep Token'
     required: true
@@ -62,13 +65,13 @@ runs:
         path: |
           apps/**/build*
           packages/**/build*
-        key: build-frontend-output-${{ github.sha }}
+        key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}
     - name: Cache rebuild output
       uses: actions/cache@v2
       with:
         path: |
           .yarn/unplugged/
-        key: rebuild-output-${{ github.sha }}
+        key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
     - uses: actions/download-artifact@v2
       with:
         name: sls-package

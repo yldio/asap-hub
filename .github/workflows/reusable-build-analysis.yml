@@ -2,6 +2,11 @@ name: Reusable build analysis
 
 on:
   workflow_call:
+    inputs:
+      environment-name:
+        description: 'The environment name'
+        required: true
+        type: string
     secrets:
       BUNDLEWATCH_GITHUB_TOKEN:
         description: 'Bundlewatch Github Token'
@@ -31,7 +36,7 @@ jobs:
           path: |
             apps/**/build*
             packages/**/build*
-          key: build-frontend-output-${{ github.sha }}
+          key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}
       - name: Bundle watch
         run: |
           CI_REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F / '{print $2}')
@@ -54,7 +59,7 @@ jobs:
           path: |
             apps/**/build*
             packages/**/build*
-          key: build-frontend-output-${{ github.sha }}
+          key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}
       - name: Test output
         run: |
           yarn run test:build-output

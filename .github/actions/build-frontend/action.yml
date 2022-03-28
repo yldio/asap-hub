@@ -22,6 +22,9 @@ inputs:
   aws-secret-access-key:
     description: 'AWS Secret Access Key'
     required: true
+  environment-name:
+    description: 'Environment name'
+    required: true
   react-app-environment:
     description: 'React App Environment'
     required: true
@@ -58,7 +61,7 @@ runs:
         path: |
           apps/**/build*
           packages/**/build*
-        key: transpile-output-${{ github.sha }}
+        key: transpile-output-${{ inputs.environment-name }}-${{ github.sha }}
 
     - name: Cache build typecheck output
       uses: actions/cache@v2
@@ -67,7 +70,7 @@ runs:
         path: |
           apps/**/build*
           packages/**/build*
-        key: build-typecheck-output-${{ github.sha }}
+        key: build-typecheck-output-${{ inputs.environment-name }}-${{ github.sha }}
 
     - name: Build
       shell: bash
@@ -89,4 +92,4 @@ runs:
         path: |
           apps/**/build*
           packages/**/build*
-        key: build-frontend-output-${{ github.sha }}
+        key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}

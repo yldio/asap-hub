@@ -10,6 +10,9 @@ inputs:
   aws-secret-access-key:
     description: 'AWS secret access key'
     required: true
+  environment-name:
+    description: 'Environment name'
+    required: true
   ses-region:
     description: 'SES Region'
     required: true
@@ -23,13 +26,13 @@ runs:
         path: |
           apps/**/build*
           packages/**/build*
-        key: build-frontend-output-${{ github.sha }}
+        key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}
     - name: Cache rebuild output
       uses: actions/cache@v2
       with:
         path: |
           .yarn/unplugged/
-        key: rebuild-output-${{ github.sha }}
+        key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
     - name: Deploy
       shell: bash
       run: |

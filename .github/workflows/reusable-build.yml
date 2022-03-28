@@ -4,6 +4,7 @@ on:
   workflow_call:
     inputs:
       environment-name:
+        description: 'The environment name'
         required: true
         type: string
     secrets:
@@ -43,7 +44,7 @@ jobs:
           path: |
             apps/**/build*
             packages/**/build*
-          key: build-typecheck-output-${{ github.sha }}
+          key: build-typecheck-output-${{ inputs.environment-name }}-${{ github.sha }}
 
   transpile:
     runs-on: ubuntu-latest
@@ -64,7 +65,7 @@ jobs:
           path: |
             apps/**/build*
             packages/**/build*
-          key: transpile-output-${{ github.sha }}
+          key: transpile-output-${{ inputs.environment-name }}-${{ github.sha }}
 
   rebuild:
     runs-on: ubuntu-latest
@@ -83,7 +84,7 @@ jobs:
         with:
           path: |
             .yarn/unplugged/
-          key: rebuild-output-${{ github.sha }}
+          key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
 
   build-frontend:
     needs: [build-typecheck, transpile]
@@ -111,6 +112,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-region: ${{ steps.setup.outputs.aws-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          environment-name: ${{ inputs.environment-name }}
           react-app-environment: ${{ steps.setup.outputs.react-app-environment }}
           react-app-gtm-container-id: ${{ steps.setup.outputs.react-app-gtm-container-id }}
           react-app-sentry-dsn: ${{ steps.setup.outputs.react-app-sentry-dsn }}
@@ -132,7 +134,7 @@ jobs:
           path: |
             apps/**/build*
             packages/**/build*
-          key: build-typecheck-output-${{ github.sha }}
+          key: build-typecheck-output-${{ inputs.environment-name }}-${{ github.sha }}
       - name: TypeCheck
         run: |
           yarn typecheck
@@ -164,6 +166,7 @@ jobs:
           aws-acm-certificate-arn: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
           aws-region: ${{ steps.setup.outputs.aws-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          environment-name: ${{ inputs.environment-name }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
           sentry-dsn-api: ${{ steps.setup.outputs.sentry-dsn-api }}
           sentry-dsn-calendar: ${{ steps.setup.outputs.sentry-dsn-calendar }}

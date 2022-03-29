@@ -69,7 +69,7 @@ jobs:
       name: Branch
       url: ${{ steps.setup.outputs.asap-app-url }}
     needs: [verify]
-    if: ${{ success() }}
+    if: success()
     steps:
       - name: Checkout
         uses: actions/checkout@v3

@@ -1,7 +1,5 @@
 name: PROD - Sync Algolia with squidex V2
 on:
-  schedule:
-    - cron: '0 10 * * *' # Once a day: 10am
   workflow_dispatch:
     inputs:
       entity:

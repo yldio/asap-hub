@@ -53,13 +53,13 @@ jobs:
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
-  # build-analysis-production:
-  #   needs: [build-development]
-  #   uses: ./.github/workflows/reusable-build-analysis.yml
-  #   with:
-  #     environment-name: Production
-  #   secrets:
-  #     BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
+  build-analysis-production:
+    needs: [build-production]
+    uses: ./.github/workflows/reusable-build-analysis.yml
+    with:
+      environment-name: Production
+    secrets:
+      BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
   deployment-development:
     needs: [test, build-analysis-development]

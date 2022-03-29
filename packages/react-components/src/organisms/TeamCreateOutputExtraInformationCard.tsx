@@ -21,7 +21,8 @@ type TeamCreateOutputExtraInformationProps = Pick<
   onChangeAccessInstructions?: (values: string) => void;
   isSaving: boolean;
   type: ResearchOutputType;
-} & TeamCreateOutputIdentifierProps;
+  identifierRequired: boolean;
+} & Omit<TeamCreateOutputIdentifierProps, 'required'>;
 
 const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInformationProps> =
   ({
@@ -35,6 +36,7 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     identifierType,
     setIdentifier,
     setIdentifierType,
+    identifierRequired,
     type = 'Article',
   }) => (
     <FormCard title="What extra information can you provide?">
@@ -59,6 +61,7 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
         setIdentifier={setIdentifier}
         identifierType={identifierType}
         setIdentifierType={setIdentifierType}
+        required={identifierRequired}
       />
 
       <LabeledTextArea

@@ -208,3 +208,13 @@ it('displays proper message when no lab is found', async () => {
   );
   expect(getByText(/Sorry, no labs match/i)).toBeVisible();
 });
+
+it('has None as an option for the identifier', async () => {
+  const { getByText } = render(
+    <StaticRouter>
+      <TeamCreateOutputForm {...props} />
+    </StaticRouter>,
+  );
+
+  const extraInformation = getByText();
+});

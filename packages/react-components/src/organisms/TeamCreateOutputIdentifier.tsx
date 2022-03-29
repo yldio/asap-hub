@@ -8,11 +8,18 @@ import { LabeledDropdown, LabeledTextField } from '../molecules';
 
 const getIdentifiers = (
   researchOutputType: ResearchOutputType,
+  required: boolean,
 ): Array<{
   value: ResearchOutputIdentifierType;
   label: ResearchOutputIdentifierType;
 }> => {
-  const identifiers = researchOutputToIdentifierType[researchOutputType] ?? [];
+  let identifiers = researchOutputToIdentifierType[researchOutputType] ?? [];
+
+  if (required) {
+    identifiers = identifiers.filter(
+      (identifier) => identifier !== ResearchOutputIdentifierType.None,
+    );
+  }
 
   return identifiers.map((identifier) => ({
     value: identifier,
@@ -60,12 +67,30 @@ export interface TeamCreateOutputIdentifierProps {
   identifierType: ResearchOutputIdentifierType;
   setIdentifierType: (value: ResearchOutputIdentifierType) => void;
   type: ResearchOutputType;
+  required: boolean;
 }
 
 export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProps> =
-  ({ identifierType, setIdentifierType, identifier, setIdentifier, type }) => {
+  ({
+    identifierType,
+    setIdentifierType,
+    identifier,
+    setIdentifier,
+    type,
+    required,
+  }) => {
     const data = useMemo(() => identifierMap[identifierType], [identifierType]);
-    const identifiers = useMemo(() => getIdentifiers(type), [type]);
+    const identifiers = useMemo(
+      () => getIdentifiers(type, required),
+      [type, required],
+    );
+
+    useEffect(() => {
+      if (required && identifierType === ResearchOutputIdentifierType.None) {
+        setIdentifierType(identifiers[0].value);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [required, setIdentifierType]);
 
     useEffect(() => {
       setIdentifier('');

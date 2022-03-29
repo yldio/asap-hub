@@ -1,14 +1,25 @@
 import { useEffect, useMemo } from 'react';
+import { ResearchOutputType } from '@asap-hub/model';
+import {
+  ResearchOutputIdentifierType,
+  researchOutputToIdentifierType,
+} from '@asap-hub/model/build';
 import { LabeledDropdown, LabeledTextField } from '../molecules';
-import { ResearchOutputIdentifierType } from '../research-output-identifier-type';
 
-const identifiers = [
-  ResearchOutputIdentifierType.None,
-  ResearchOutputIdentifierType.DOI,
-  ResearchOutputIdentifierType.AcessionNumber,
-  ResearchOutputIdentifierType.RRID,
-  ResearchOutputIdentifierType.LabCatalogNumber,
-].map((identifier) => ({ value: identifier, label: identifier }));
+const getIdentifiers = (
+  researchOutputType: ResearchOutputType,
+): Array<{
+  value: ResearchOutputIdentifierType;
+  label: ResearchOutputIdentifierType;
+}> => {
+  const identifiers = researchOutputToIdentifierType[researchOutputType] ?? [];
+
+  return identifiers.map((identifier) => ({
+    value: identifier,
+    label: identifier,
+  }));
+};
+
 const identifierMap = {
   [ResearchOutputIdentifierType.DOI]: {
     helpText: 'Your DOI must start with 1 and it cannot be a URL',
@@ -16,7 +27,7 @@ const identifierMap = {
     regex: '^(doi:)?\\d{2}\\.\\d{4}.*$',
     errorMessage: 'Please enter a valid DOI (e.g. 10.1234/abcde.121212)',
   },
-  [ResearchOutputIdentifierType.AcessionNumber]: {
+  [ResearchOutputIdentifierType.AccessionNumber]: {
     helpText:
       'Your Accession Number must start with a letter. Accession Numbers are attributed by NIH, EMBL-EBI, ProteomeXchange, etc.',
     placeholder: 'Accession number e.g. AF123456',
@@ -48,11 +59,13 @@ export interface TeamCreateOutputIdentifierProps {
   setIdentifier: (value: string) => void;
   identifierType: ResearchOutputIdentifierType;
   setIdentifierType: (value: ResearchOutputIdentifierType) => void;
+  type: ResearchOutputType;
 }
 
 export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProps> =
-  ({ identifierType, setIdentifierType, identifier, setIdentifier }) => {
+  ({ identifierType, setIdentifierType, identifier, setIdentifier, type }) => {
     const data = useMemo(() => identifierMap[identifierType], [identifierType]);
+    const identifiers = useMemo(() => getIdentifiers(type), [type]);
 
     useEffect(() => {
       setIdentifier('');

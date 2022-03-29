@@ -2,9 +2,9 @@ import { ComponentProps } from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { ResearchOutputIdentifierType } from '@asap-hub/model/build';
 import TeamCreateOutputExtraInformationCard from '../TeamCreateOutputExtraInformationCard';
 import { noop } from '../../utils';
-import { ResearchOutputIdentifierType } from '../../research-output-identifier-type';
 
 const props: ComponentProps<typeof TeamCreateOutputExtraInformationCard> = {
   isSaving: false,

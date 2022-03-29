@@ -1,5 +1,6 @@
 import { ResearchOutputPostRequest } from '@asap-hub/model';
 import { ComponentProps } from 'react';
+import { ResearchOutputType } from '@asap-hub/model/build';
 import { Link } from '../atoms';
 
 import { mailToSupport } from '../mail';
@@ -20,6 +21,7 @@ type TeamCreateOutputExtraInformationProps = Pick<
   onChangeTags?: (values: string[]) => void;
   onChangeAccessInstructions?: (values: string) => void;
   isSaving: boolean;
+  type: ResearchOutputType;
 } & TeamCreateOutputIdentifierProps;
 
 const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInformationProps> =
@@ -34,6 +36,7 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     identifierType,
     setIdentifier,
     setIdentifierType,
+    type = 'Article',
   }) => (
     <FormCard title="What extra information can you provide?">
       <LabeledMultiSelect
@@ -52,6 +55,7 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
       </Link>
 
       <TeamCreateOutputIdentifier
+        type={type}
         identifier={identifier}
         setIdentifier={setIdentifier}
         identifierType={identifierType}

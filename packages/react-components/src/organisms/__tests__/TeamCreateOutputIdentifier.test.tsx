@@ -1,9 +1,9 @@
 import { ComponentProps } from 'react';
 import { fireEvent, render } from '@testing-library/react';
 
+import { ResearchOutputIdentifierType } from '@asap-hub/model/build';
 import { TeamCreateOutputIdentifier } from '../TeamCreateOutputIdentifier';
 import { noop } from '../../utils';
-import { ResearchOutputIdentifierType } from '../../research-output-identifier-type';
 
 const props: ComponentProps<typeof TeamCreateOutputIdentifier> = {
   identifierType: ResearchOutputIdentifierType.None,
@@ -71,12 +71,12 @@ describe('DOI', () => {
   });
 });
 
-describe('AcessionNumber', () => {
+describe('AccessionNumber', () => {
   it('should show an error when it does not match regex', async () => {
     const { getByText, getByPlaceholderText } = render(
       <TeamCreateOutputIdentifier
         {...props}
-        identifierType={ResearchOutputIdentifierType.AcessionNumber}
+        identifierType={ResearchOutputIdentifierType.AccessionNumber}
         identifier="NP_wrong"
       />,
     );
@@ -88,7 +88,7 @@ describe('AcessionNumber', () => {
     const { getByText, getByPlaceholderText } = render(
       <TeamCreateOutputIdentifier
         {...props}
-        identifierType={ResearchOutputIdentifierType.AcessionNumber}
+        identifierType={ResearchOutputIdentifierType.AccessionNumber}
         identifier="NP_1234567"
       />,
     );

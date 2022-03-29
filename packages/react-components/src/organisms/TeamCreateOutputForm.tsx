@@ -8,6 +8,7 @@ import {
   TeamResponse,
 } from '@asap-hub/model';
 
+import { ResearchOutputIdentifierType } from '@asap-hub/model/build';
 import {
   TeamCreateOutputFormSharingCard,
   TeamCreateOutputExtraInformationCard,
@@ -18,7 +19,6 @@ import { perRem, mobileScreen } from '../pixels';
 import { noop } from '../utils';
 
 import TeamCreateOutputContributorsCard from './TeamCreateOutputContributorsCard';
-import { ResearchOutputIdentifierType } from '../research-output-identifier-type';
 
 const contentStyles = css({
   display: 'grid',
@@ -80,7 +80,7 @@ const identifierTypeToFieldName: Record<
 > = {
   [ResearchOutputIdentifierType.None]: undefined,
   [ResearchOutputIdentifierType.DOI]: 'doi',
-  [ResearchOutputIdentifierType.AcessionNumber]: 'accession',
+  [ResearchOutputIdentifierType.AccessionNumber]: 'accession',
   [ResearchOutputIdentifierType.LabCatalogNumber]: 'labCatalogNumber',
   [ResearchOutputIdentifierType.RRID]: 'rrid',
 };
@@ -214,6 +214,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangePublishDate={(date) => setPublishDate(new Date(date))}
           />
           <TeamCreateOutputExtraInformationCard
+            type={type}
             isSaving={isSaving}
             tagSuggestions={tagSuggestions}
             tags={tags}

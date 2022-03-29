@@ -4,6 +4,8 @@ import {
   researchOutputTypes,
 } from '@asap-hub/model';
 import { JSONSchemaType } from 'ajv';
+import {ResearchOutputIdentifierType, researchOutputToIdentifierType} from "@asap-hub/model/build";
+import Boom from '@hapi/boom';
 import { validateInput } from '.';
 
 type ResearchOutputParameters = {
@@ -97,3 +99,28 @@ export const validateResearchOutputPostRequestParameters = validateInput(
     coerce: false,
   },
 );
+
+export const validateResearchOutputPostRequestParametersIdentifiers = (data: ResearchOutputPostRequest) => {
+  const types = researchOutputToIdentifierType[data.type]
+
+  if (data.rrid && !types.includes(ResearchOutputIdentifierType.RRID)) {
+    throw Boom.badRequest("Validation error", {
+      details: `RRID identifier is not supported for research output of type ${data.type}`
+    })
+  }
+  if (data.doi && !types.includes(ResearchOutputIdentifierType.DOI)) {
+    throw Boom.badRequest("Validation error", {
+      details: `DOI identifier is not supported for research output of type ${data.type}`
+    })
+  }
+  if (data.labCatalogNumber && !types.includes(ResearchOutputIdentifierType.LabCatalogNumber)) {
+    throw Boom.badRequest("Validation error", {
+      details: `Lab catalog number identifier is not supported for research output of type ${data.type}`
+    })
+  }
+  if (data.accession && !types.includes(ResearchOutputIdentifierType.AccessionNumber)) {
+    throw Boom.badRequest("Validation error", {
+      details: `Accession number identifier is not supported for research output of type ${data.type}`
+    })
+  }
+}

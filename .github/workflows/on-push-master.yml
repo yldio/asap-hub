@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - CRN-643-deploy-to-production
+      - CRN-643-deploy-to-production-2
   workflow_dispatch:
 
 jobs:
@@ -42,16 +42,16 @@ jobs:
     secrets:
       BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
-  # build-production:
-  #   uses: ./.github/workflows/reusable-build.yml
-  #   with:
-  #     environment-name: Production
-  #   secrets:
-  #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #     LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
-  #     SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-  #     SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+  build-production:
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      environment-name: Production
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   # build-analysis-production:
   #   needs: [build-development]

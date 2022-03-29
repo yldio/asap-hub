@@ -96,11 +96,9 @@ const itemStyles = css({
   color: lead.rgb,
 
   ':hover': {
-    color: pine.rgb,
     backgroundColor: mint.rgb,
-    svg: {
-      fill: pine.rgb,
-      stroke: pine.rgb,
+    span: {
+      color: pine.rgb,
     },
   },
 });

@@ -1,8 +1,10 @@
-import {
-  TeamCreateOutputExtraInformationCard,
-  ResearchOutputIdentifierType,
-} from '@asap-hub/react-components';
+import { TeamCreateOutputExtraInformationCard } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
+import {
+  ResearchOutputIdentifierType,
+  researchOutputTypes,
+} from '@asap-hub/model';
+import { select } from '@storybook/addon-knobs';
 
 export default {
   title: 'Organisms / Team Profile / Team Create Output Extra Information Card',
@@ -23,6 +25,7 @@ const commonProps: ComponentProps<typeof TeamCreateOutputExtraInformationCard> =
     setIdentifierType: () => {},
     identifier: '',
     setIdentifier: () => {},
+    type: select('type', researchOutputTypes, 'Article'),
   };
 
 export const Normal = () => (

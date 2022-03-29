@@ -1,8 +1,8 @@
-import {TeamResponse} from './team';
-import {ListResponse} from './common';
-import {UserResponse} from './user';
-import {ExternalAuthorResponse} from './external-author';
-import {LabResponse} from './lab';
+import { TeamResponse } from './team';
+import { ListResponse } from './common';
+import { UserResponse } from './user';
+import { ExternalAuthorResponse } from './external-author';
+import { LabResponse } from './lab';
 
 export const researchOutputTypes = [
   'Grant Document',
@@ -135,15 +135,37 @@ export enum ResearchOutputIdentifierType {
   LabCatalogNumber = 'Lab Catalog Number',
 }
 
-export const researchOutputToIdentifierType: Record<ResearchOutputType, ResearchOutputIdentifierType[]> = {
-  Article: [ResearchOutputIdentifierType.None, ResearchOutputIdentifierType.DOI],
-  Bioinformatics: [ResearchOutputIdentifierType.None, ResearchOutputIdentifierType.DOI, ResearchOutputIdentifierType.RRID],
-  "Lab Resource": [ResearchOutputIdentifierType.None, ResearchOutputIdentifierType.DOI, ResearchOutputIdentifierType.RRID, ResearchOutputIdentifierType.LabCatalogNumber],
-  Dataset: [ResearchOutputIdentifierType.None, ResearchOutputIdentifierType.DOI, ResearchOutputIdentifierType.AccessionNumber],
-  Protocol: [ResearchOutputIdentifierType.None, ResearchOutputIdentifierType.DOI],
-  "Grant Document": [],
-  Presentation: []
-}
+export const researchOutputToIdentifierType: Record<
+  ResearchOutputType,
+  ResearchOutputIdentifierType[]
+> = {
+  Article: [
+    ResearchOutputIdentifierType.None,
+    ResearchOutputIdentifierType.DOI,
+  ],
+  Bioinformatics: [
+    ResearchOutputIdentifierType.None,
+    ResearchOutputIdentifierType.DOI,
+    ResearchOutputIdentifierType.RRID,
+  ],
+  'Lab Resource': [
+    ResearchOutputIdentifierType.None,
+    ResearchOutputIdentifierType.DOI,
+    ResearchOutputIdentifierType.RRID,
+    ResearchOutputIdentifierType.LabCatalogNumber,
+  ],
+  Dataset: [
+    ResearchOutputIdentifierType.None,
+    ResearchOutputIdentifierType.DOI,
+    ResearchOutputIdentifierType.AccessionNumber,
+  ],
+  Protocol: [
+    ResearchOutputIdentifierType.None,
+    ResearchOutputIdentifierType.DOI,
+  ],
+  'Grant Document': [],
+  Presentation: [],
+};
 
 export const sharingStatuses = ['Public', 'Network Only'] as const;
 

@@ -1,8 +1,14 @@
 name: 'Sync Squidex'
 description: 'Syncs the Squidex schema'
 inputs:
+  asap-api-url:
+    description: 'ASAP API Url'
+    required: true
   squidex-app-name:
     description: 'Squidex App Name'
+    required: true
+  squidex-base-url:
+    description: 'Squidex Base Url'
     required: true
   squidex-client-id:
     description: 'Squidex Client ID'
@@ -10,14 +16,8 @@ inputs:
   squidex-client-secret:
     description: 'Squidex Client Secret'
     required: true
-  squidex-base-url:
-    description: 'Squidex Base Url'
-    required: true
   squidex-shared-secret:
     description: 'Squidex Shared Secret'
-    required: true
-  asap-api-url:
-    description: 'ASAP API Url'
     required: true
 runs:
   using: 'composite'
@@ -30,9 +30,9 @@ runs:
         .github/scripts/squidex-sync/config-rules.sh
         sq sync in packages/squidex/schema -t schemas -t rules --delete
       env:
+        ASAP_API_URL: ${{ inputs.asap-api-url }}
         SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
+        SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
         SQUIDEX_CLIENT_ID: ${{ inputs.squidex-client-id }}
         SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-client-secret }}
-        SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
         SQUIDEX_SHARED_SECRET: ${{ inputs.squidex-shared-secret }}
-        ASAP_API_URL: ${{ inputs.asap-api-url }}

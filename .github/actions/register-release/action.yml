@@ -1,0 +1,19 @@
+name: 'Register release'
+description: 'Registers release'
+inputs:
+  frontend-sentry-release-auth-token:
+    description: 'Frontend Sentry auth token'
+    required: true
+  app-release:
+    description: 'App release'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Sentry
+      shell: bash
+      run: |
+        yarn run release:frontend
+      env:
+        FRONTEND_SENTRY_RELEASE_AUTH_TOKEN: ${{ inputs.frontend-sentry-release-auth-token }}
+        REACT_APP_RELEASE: ${{ inputs.app-release }}

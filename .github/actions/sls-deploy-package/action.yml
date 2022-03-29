@@ -1,15 +1,6 @@
 name: 'SLS Deploy Package'
 description: 'Deploys the application'
 inputs:
-  aws-access-key-id:
-    description: 'AWS Access Key ID'
-    required: true
-  aws-secret-access-key:
-    description: 'AWS Secret Access Key'
-    required: true
-  aws-region:
-    description: 'AWS Region'
-    required: true
   algolia-index:
     description: 'Algolia Index'
     required: true
@@ -19,17 +10,20 @@ inputs:
   asap-app-url:
     description: 'ASAP APP Url'
     required: true
-  image-name:
-    description: 'Image name'
-    required: true
-  sls-stage:
-    description: 'SLS Stage'
-    required: true
-  squidex-app-name:
-    description: 'Squidex App Name'
+  aws-access-key-id:
+    description: 'AWS Access Key ID'
     required: true
   aws-acm-certificate-arn:
     description: 'AWS ACM Certificate ARN'
+    required: true
+  aws-region:
+    description: 'AWS Region'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
+    required: true
+  environment-name:
+    description: 'Environment name'
     required: true
   lightstep-token:
     description: 'Lightstep Token'
@@ -42,6 +36,12 @@ inputs:
     required: true
   sentry-dsn-user-invite:
     description: 'Sentry DSN User Invite'
+    required: true
+  sls-stage:
+    description: 'SLS Stage'
+    required: true
+  squidex-app-name:
+    description: 'Squidex App Name'
     required: true
   squidex-base-url:
     description: 'Squidex Base Url'
@@ -65,13 +65,13 @@ runs:
         path: |
           apps/**/build*
           packages/**/build*
-        key: build-frontend-output-${{ github.sha }}
+        key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}
     - name: Cache rebuild output
       uses: actions/cache@v2
       with:
         path: |
           .yarn/unplugged/
-        key: rebuild-output-${{ github.sha }}
+        key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
     - uses: actions/download-artifact@v2
       with:
         name: sls-package

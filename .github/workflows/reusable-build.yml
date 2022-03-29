@@ -4,6 +4,7 @@ on:
   workflow_call:
     inputs:
       environment-name:
+        description: 'The environment name'
         required: true
         type: string
     secrets:
@@ -43,7 +44,7 @@ jobs:
           path: |
             apps/**/build*
             packages/**/build*
-          key: build-typecheck-output-${{ github.sha }}
+          key: build-typecheck-output-${{ inputs.environment-name }}-${{ github.sha }}
 
   transpile:
     runs-on: ubuntu-latest
@@ -64,7 +65,7 @@ jobs:
           path: |
             apps/**/build*
             packages/**/build*
-          key: transpile-output-${{ github.sha }}
+          key: transpile-output-${{ inputs.environment-name }}-${{ github.sha }}
 
   rebuild:
     runs-on: ubuntu-latest
@@ -83,7 +84,7 @@ jobs:
         with:
           path: |
             .yarn/unplugged/
-          key: rebuild-output-${{ github.sha }}
+          key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
 
   build-frontend:
     needs: [build-typecheck, transpile]
@@ -104,17 +105,17 @@ jobs:
       - name: Build
         uses: ./.github/actions/build-frontend
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           algolia-app-name: ${{ steps.setup.outputs.algolia-app-name }}
           algolia-index: ${{ steps.setup.outputs.algolia-index }}
           app-release: ${{ steps.setup.outputs.app-release }}
           asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
-          asap-hostname: ${{ steps.setup.outputs.asap-hostname }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-region: ${{ steps.setup.outputs.aws-region }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          environment-name: ${{ inputs.environment-name }}
+          react-app-environment: ${{ steps.setup.outputs.react-app-environment }}
           react-app-gtm-container-id: ${{ steps.setup.outputs.react-app-gtm-container-id }}
           react-app-sentry-dsn: ${{ steps.setup.outputs.react-app-sentry-dsn }}
-          react-app-environment: ${{ steps.setup.outputs.react-app-environment }}
 
   typecheck:
     needs: [build-typecheck]
@@ -133,7 +134,7 @@ jobs:
           path: |
             apps/**/build*
             packages/**/build*
-          key: build-typecheck-output-${{ github.sha }}
+          key: build-typecheck-output-${{ inputs.environment-name }}-${{ github.sha }}
       - name: TypeCheck
         run: |
           yarn typecheck
@@ -161,16 +162,17 @@ jobs:
           algolia-index: ${{ steps.setup.outputs.algolia-index }}
           asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
           asap-app-url: ${{ steps.setup.outputs.asap-app-url }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-acm-certificate-arn: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
           aws-region: ${{ steps.setup.outputs.aws-region }}
-          sls-stage: ${{ steps.setup.outputs.sls-stage }}
-          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          environment-name: ${{ inputs.environment-name }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
           sentry-dsn-api: ${{ steps.setup.outputs.sentry-dsn-api }}
           sentry-dsn-calendar: ${{ steps.setup.outputs.sentry-dsn-calendar }}
           sentry-dsn-user-invite: ${{ steps.setup.outputs.sentry-dsn-user-invite }}
+          sls-stage: ${{ steps.setup.outputs.sls-stage }}
+          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
           squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}

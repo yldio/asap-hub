@@ -4,6 +4,7 @@ on:
   workflow_call:
     inputs:
       environment-name:
+        description: 'The environment name'
         required: true
         type: string
     secrets:
@@ -54,6 +55,7 @@ jobs:
           aws-acm-certificate-arn: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
           aws-region: ${{ steps.setup.outputs.aws-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          environment-name: ${{ inputs.environment-name }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
           sentry-dsn-api: ${{ steps.setup.outputs.sentry-dsn-api }}
           sentry-dsn-calendar: ${{ steps.setup.outputs.sentry-dsn-calendar }}
@@ -84,10 +86,12 @@ jobs:
       - name: Setup Environment Variables
         uses: ./.github/actions/algolia-sync-settings
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
+          algolia-api-key-name: ${{ steps.setup.outputs.algolia-api-key-name }}
+          algolia-app-id-name: ${{ steps.setup.outputs.algolia-app-id-name }}
           algolia-index: ${{ steps.setup.outputs.algolia-index }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   squidex-update-schema:
     needs: [sls-deploy-package]
@@ -115,3 +119,29 @@ jobs:
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
           asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
+
+  deploy-ses:
+    needs: [sls-deploy-package]
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Deploy
+        if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
+        uses: ./.github/actions/deploy-ses
+        with:
+          app-origin: ${{ steps.setup.outputs.asap-app-url }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          environment-name: ${{ inputs.environment-name }}
+          ses-region: ${{ steps.setup.outputs.ses-region }}

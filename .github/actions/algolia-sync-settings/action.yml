@@ -1,6 +1,12 @@
 name: 'Algolia Sync Settings'
 description: 'Sync Algolia settings'
 inputs:
+  algolia-app-id-name:
+    description: 'SSM Algolia app id name'
+    required: true
+  algolia-api-key-name:
+    description: 'SSM Algolia api key name'
+    required: true
   aws-access-key-id:
     description: 'AWS Access Key ID'
     required: true
@@ -20,9 +26,9 @@ runs:
     - name: Setup Environment Variables
       shell: bash
       run: |
-        echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
-        echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
-        echo "::add-mask::$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)"
+        echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name '${{ inputs.algolia-app-id-name }}' --query Parameter.Value --output text)" >> $GITHUB_ENV
+        echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name '${{ inputs.algolia-api-key-name }}' --query Parameter.Value --output text)" >> $GITHUB_ENV
+        echo "::add-mask::$(aws ssm get-parameter --name '${{ inputs.algolia-api-key-name }}' --query Parameter.Value --output text)"
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}

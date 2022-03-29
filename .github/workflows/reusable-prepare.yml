@@ -4,6 +4,7 @@ on:
   workflow_call:
     inputs:
       environment-name:
+        description: 'The environment name'
         required: true
         type: string
     secrets:
@@ -42,7 +43,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Prepare
-        if: ${{ github.event.action == 'opened' }}
+        if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
         uses: ./.github/actions/squidex-create
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -70,11 +71,11 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Create
-        if: ${{ github.event.action == 'opened' }}
+        if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
         uses: ./.github/actions/algolia-create-index
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
-          bucket-name: ${{ steps.setup.outputs.bucket-name }}
           algolia-index: ${{ steps.setup.outputs.algolia-index }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          bucket-name: ${{ steps.setup.outputs.bucket-name }}

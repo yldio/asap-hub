@@ -1,9 +1,17 @@
 name: Build Docker Images
 
 on:
-  push:
-    branches:
-      - 'master'
+  workflow_call:
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        description: 'AWS Access Key ID'
+        required: true
+      AWS_REGION_ECR:
+        description: 'AWS Region ECR'
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        description: 'AWS Secret Access Key'
+        required: true
   workflow_dispatch:
 
 jobs:

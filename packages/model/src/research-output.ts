@@ -141,6 +141,8 @@ export const researchOutputToIdentifierType: Record<ResearchOutputType, Research
   "Lab Resource": [ResearchOutputIdentifierType.None, ResearchOutputIdentifierType.DOI, ResearchOutputIdentifierType.RRID, ResearchOutputIdentifierType.LabCatalogNumber],
   Dataset: [ResearchOutputIdentifierType.None, ResearchOutputIdentifierType.DOI, ResearchOutputIdentifierType.AccessionNumber],
   Protocol: [ResearchOutputIdentifierType.None, ResearchOutputIdentifierType.DOI],
+  "Grant Document": [],
+  Presentation: []
 }
 
 export const sharingStatuses = ['Public', 'Network Only'] as const;

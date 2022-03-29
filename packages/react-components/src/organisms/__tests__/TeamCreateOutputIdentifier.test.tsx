@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { fireEvent, render } from '@testing-library/react';
 
-import { ResearchOutputIdentifierType } from '@asap-hub/model/build';
+import { ResearchOutputIdentifierType } from '@asap-hub/model';
 import { TeamCreateOutputIdentifier } from '../TeamCreateOutputIdentifier';
 import { noop } from '../../utils';
 
@@ -10,6 +10,7 @@ const props: ComponentProps<typeof TeamCreateOutputIdentifier> = {
   identifier: '',
   setIdentifier: noop,
   setIdentifierType: noop,
+  type: 'Article',
 };
 
 it('should render Identifier', () => {

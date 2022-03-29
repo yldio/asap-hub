@@ -1,9 +1,9 @@
 import { useEffect, useMemo } from 'react';
-import { ResearchOutputType } from '@asap-hub/model';
 import {
+  ResearchOutputType,
   ResearchOutputIdentifierType,
   researchOutputToIdentifierType,
-} from '@asap-hub/model/build';
+} from '@asap-hub/model';
 import { LabeledDropdown, LabeledTextField } from '../molecules';
 
 const getIdentifiers = (

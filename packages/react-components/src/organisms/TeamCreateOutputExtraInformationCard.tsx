@@ -1,6 +1,5 @@
-import { ResearchOutputPostRequest } from '@asap-hub/model';
+import { ResearchOutputPostRequest, ResearchOutputType } from '@asap-hub/model';
 import { ComponentProps } from 'react';
-import { ResearchOutputType } from '@asap-hub/model/build';
 import { Link } from '../atoms';
 
 import { mailToSupport } from '../mail';

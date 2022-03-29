@@ -2,9 +2,10 @@ import {
   ResearchOutputPostRequest,
   researchOutputSubtypes,
   researchOutputTypes,
+  ResearchOutputIdentifierType,
+  researchOutputToIdentifierType,
 } from '@asap-hub/model';
 import { JSONSchemaType } from 'ajv';
-import {ResearchOutputIdentifierType, researchOutputToIdentifierType} from "@asap-hub/model/build";
 import Boom from '@hapi/boom';
 import { validateInput } from '.';
 

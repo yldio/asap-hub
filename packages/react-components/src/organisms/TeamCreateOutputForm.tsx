@@ -6,9 +6,9 @@ import {
   ResearchOutputResponse,
   ResearchOutputType,
   TeamResponse,
+  ResearchOutputIdentifierType,
 } from '@asap-hub/model';
 
-import { ResearchOutputIdentifierType } from '@asap-hub/model/build';
 import {
   TeamCreateOutputFormSharingCard,
   TeamCreateOutputExtraInformationCard,

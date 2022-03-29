@@ -1,12 +1,91 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, RefObject } from 'react';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { waitFor } from '@testing-library/dom';
 
 import Select from 'react-select';
+import {
+  // @ts-expect-error sortableController is used to handle the mock
+  sortableController,
+  SortableContainerProps,
+  SortEndHandler,
+} from 'react-sortable-hoc';
 import { ember, fern, pine } from '../../colors';
-import MultiSelect from '../MultiSelect';
+
+import MultiSelect, { arrayMove } from '../MultiSelect';
+import { noop } from '../../utils';
+
+interface SortableMock {
+  onSortEnd?: SortEndHandler;
+  getHelperDimensions?: SortableContainerProps['getHelperDimensions'];
+}
+
+jest.mock('react-sortable-hoc', () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
+  const React = require('react');
+  const controller: SortableMock = {
+    onSortEnd: undefined,
+    getHelperDimensions: undefined,
+  };
+
+  return {
+    sortableController: controller,
+    SortableContainer: (
+      Component: React.ComponentType<{ ref: RefObject<unknown> }>,
+    ) =>
+      React.forwardRef(
+        (
+          props: {
+            onSortEnd: SortEndHandler;
+            getHelperDimensions: SortableContainerProps['getHelperDimensions'];
+          },
+          ref: RefObject<unknown>,
+        ) => {
+          controller.onSortEnd = props.onSortEnd;
+          controller.getHelperDimensions = props.getHelperDimensions;
+          return <Component {...props} ref={ref} />;
+        },
+      ),
+    SortableHandle: (id: React.ComponentType) => id,
+    SortableElement: (id: React.ComponentType) => id,
+  };
+});
+
+describe('Sorting elements', () => {
+  it('can sort elements', () => {
+    const onChange = jest.fn();
+    const value1 = { label: 'LHR', value: 'LHR' };
+    const value2 = { label: 'RHL', value: 'RHL' };
+    render(
+      <MultiSelect
+        suggestions={[]}
+        values={[value1, value2]}
+        onChange={onChange}
+      />,
+    );
+
+    sortableController.onSortEnd({ oldIndex: 0, newIndex: 1 });
+    expect(onChange).toHaveBeenCalledWith([value2, value1]);
+  });
+
+  it('getHelperDimensions calls getBoundingClientRect', () => {
+    render(<MultiSelect suggestions={[]} values={[]} onChange={noop} />);
+
+    const getBoundingClientRect = jest.fn();
+    sortableController.getHelperDimensions({ node: { getBoundingClientRect } });
+    expect(getBoundingClientRect).toHaveBeenCalled();
+  });
+
+  describe('arrayMove', () => {
+    it('can insert at the start', () => {
+      expect(arrayMove([1, 2, 3], 2, 0)).toEqual([3, 1, 2]);
+    });
+    it('can insert at the end', () => {
+      expect(arrayMove([1, 2, 3], 0, 2)).toEqual([2, 3, 1]);
+    });
+  });
+});
 
 it('shows the selected value', () => {
   const { getByText } = render(
@@ -44,6 +123,20 @@ it('opens a menu to select from on click', () => {
   expect(handleChange).toHaveBeenLastCalledWith([
     { label: 'LGW', value: 'LGW' },
   ]);
+});
+
+it('does not open a menu when clicking a value', () => {
+  const handleChange = jest.fn();
+  const { getByText } = render(
+    <MultiSelect
+      suggestions={['LHR', 'LGW']}
+      values={[{ label: 'LGW', value: 'LGW' }]}
+      onChange={handleChange}
+    />,
+  );
+
+  userEvent.click(getByText('LGW'));
+  expect(() => getByText('LHR')).toThrowError();
 });
 
 it('opens a filtered menu to select from when typing', () => {

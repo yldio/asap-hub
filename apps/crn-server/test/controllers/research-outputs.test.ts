@@ -617,7 +617,7 @@ describe('ResearchOutputs controller', () => {
     });
   });
 
-  describe('create', () => {
+  describe('Create', () => {
     afterEach(() => {
       expect(nock.isDone()).toBe(true);
     });
@@ -625,7 +625,8 @@ describe('ResearchOutputs controller', () => {
     afterEach(() => {
       nock.cleanAll();
     });
-    test('creating the research output should return the id from squidex rest', async () => {
+
+    test('Creating the research output should return the id from squidex rest', async () => {
       const researchOutputRequest = getResearchOutputRequest();
       const teamId = researchOutputRequest.teams[0];
       const researchOutputId = 'created-output-id';
@@ -658,7 +659,8 @@ describe('ResearchOutputs controller', () => {
       const id = await researchOutputs.create(researchOutputRequest);
       expect(id).toEqual({ id: researchOutputId });
     });
-    test('should throw when fails to create the research output - 400', async () => {
+
+    test('Should throw when fails to create the research output - 400', async () => {
       const researchOutputRequest = getResearchOutputRequest();
 
       nock(config.baseUrl)
@@ -670,7 +672,7 @@ describe('ResearchOutputs controller', () => {
       ).rejects.toThrow('Bad Request');
     });
 
-    test('should throw when fails to create the research output - 500', async () => {
+    test('Should throw when fails to create the research output - 500', async () => {
       const researchOutputRequest = getResearchOutputRequest();
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/research-outputs?publish=false`)
@@ -680,7 +682,8 @@ describe('ResearchOutputs controller', () => {
         researchOutputs.create(researchOutputRequest),
       ).rejects.toThrow('Internal Server');
     });
-    test('should throw when research output cannot be found', async () => {
+
+    test('Should throw when research output cannot be found', async () => {
       const researchOutputRequest = getResearchOutputRequest();
 
       nock(config.baseUrl)
@@ -695,7 +698,8 @@ describe('ResearchOutputs controller', () => {
         researchOutputs.create(researchOutputRequest),
       ).rejects.toThrow('Not Found');
     });
-    test('should throw when research output association cannot be made', async () => {
+
+    test('Should throw when research output association cannot be made', async () => {
       const researchOutputRequest = getResearchOutputRequest();
       const teamId = researchOutputRequest.teams[0];
 

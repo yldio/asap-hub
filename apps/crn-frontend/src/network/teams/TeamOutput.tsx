@@ -80,10 +80,21 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
       <Frame title="Share Research Output">
         <TeamCreateOutputPage
           team={team}
-          tagSuggestions={researchSuggestions}
+          tagSuggestions={researchSuggestions.map((suggestion) => ({
+            label: suggestion,
+            value: suggestion,
+          }))}
           type={type}
           getLabSuggestions={getLabSuggestions}
-          getAuthorSuggestions={getAuthorSuggestions}
+          getAuthorSuggestions={(input) =>
+            getAuthorSuggestions(input).then((users) =>
+              users.map((user) => ({
+                user,
+                label: user.displayName,
+                value: user.id,
+              })),
+            )
+          }
           getTeamSuggestions={getTeamSuggestions}
           onSave={(output) =>
             createResearchOutput({

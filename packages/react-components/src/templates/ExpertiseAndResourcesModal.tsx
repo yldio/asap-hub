@@ -94,7 +94,12 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
                         `Please add a minimum of ${MINIMUM_EXPERTISE_AND_RESOURCES} tags`,
                       );
                 }}
-                suggestions={expertiseAndResourceSuggestions}
+                suggestions={expertiseAndResourceSuggestions.map(
+                  (suggestion) => ({
+                    label: suggestion,
+                    value: suggestion,
+                  }),
+                )}
                 noOptionsMessage={({ inputValue }) =>
                   `Sorry, No current tags match "${inputValue}"`
                 }

@@ -1,4 +1,4 @@
-import { createTeamResponse } from '@asap-hub/fixtures';
+import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
 import { TeamCreateOutputPage } from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom';
 
@@ -10,7 +10,10 @@ export default {
 export const Normal = () => (
   <StaticRouter>
     <TeamCreateOutputPage
-      tagSuggestions={['A53T', 'Activity assay']}
+      tagSuggestions={['A53T', 'Activity assay'].map((suggestion) => ({
+        label: suggestion,
+        value: suggestion,
+      }))}
       type="Article"
       getLabSuggestions={() =>
         new Promise((resolve) => {
@@ -22,7 +25,9 @@ export const Normal = () => (
       getAuthorSuggestions={() =>
         new Promise((resolve) => {
           setTimeout(() => {
-            resolve([{ label: 'user name', value: '1' }]);
+            resolve([
+              { label: 'user name', value: '1', user: createUserResponse() },
+            ]);
           }, 1000);
         })
       }

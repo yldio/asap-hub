@@ -25,7 +25,10 @@ export const Normal = () => (
       'Neuroprotection',
       'Movement Disorders',
       'ARJP (Autosomal recessive juvenile parkinsonism)',
-    ]}
+    ].map((suggestion) => ({
+      label: suggestion,
+      value: suggestion,
+    }))}
     values={['Neurological Diseases', 'Cell Biology', 'Clinical Neurology'].map(
       (value) => ({ label: value, value }),
     )}
@@ -38,7 +41,12 @@ export const Invalid = () => (
     title={text('Title', 'Airport')}
     subtitle={text('Subtitle', '(Required)')}
     description={text('Description', 'Pick some airports')}
-    suggestions={['LHR', 'LGW', 'STN', 'LTN', 'LCY', 'SEN']}
+    suggestions={['LHR', 'LGW', 'STN', 'LTN', 'LCY', 'SEN'].map(
+      (suggestion) => ({
+        label: suggestion,
+        value: suggestion,
+      }),
+    )}
     values={[]}
     placeholder={text('Placeholder', 'Please select some airports')}
     customValidationMessage={text(

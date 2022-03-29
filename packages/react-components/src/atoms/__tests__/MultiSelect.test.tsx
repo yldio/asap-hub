@@ -90,7 +90,7 @@ describe('Sorting elements', () => {
 it('shows the selected value', () => {
   const { getByText } = render(
     <MultiSelect
-      suggestions={['LHR']}
+      suggestions={[{ label: 'LHR', value: 'LHR' }]}
       values={[{ label: 'LHR', value: 'LHR' }]}
     />,
   );
@@ -99,7 +99,10 @@ it('shows the selected value', () => {
 
 it('when empty shows a placeholder message', () => {
   const { container } = render(
-    <MultiSelect suggestions={['LHR']} placeholder="Start typing" />,
+    <MultiSelect
+      suggestions={[{ label: 'LHR', value: 'LHR' }]}
+      placeholder="Start typing"
+    />,
   );
   expect(container).toHaveTextContent(/start typing/i);
 });
@@ -115,7 +118,13 @@ it('shows the no option message when there are no options', () => {
 it('opens a menu to select from on click', () => {
   const handleChange = jest.fn();
   const { getByText, getByDisplayValue } = render(
-    <MultiSelect suggestions={['LHR', 'LGW']} onChange={handleChange} />,
+    <MultiSelect
+      suggestions={[
+        { label: 'LHR', value: 'LHR' },
+        { label: 'LGW', value: 'LGW' },
+      ]}
+      onChange={handleChange}
+    />,
   );
 
   userEvent.click(getByDisplayValue(''));
@@ -129,7 +138,10 @@ it('does not open a menu when clicking a value', () => {
   const handleChange = jest.fn();
   const { getByText } = render(
     <MultiSelect
-      suggestions={['LHR', 'LGW']}
+      suggestions={[
+        { label: 'LHR', value: 'LHR' },
+        { label: 'LGW', value: 'LGW' },
+      ]}
       values={[{ label: 'LGW', value: 'LGW' }]}
       onChange={handleChange}
     />,
@@ -142,7 +154,14 @@ it('does not open a menu when clicking a value', () => {
 it('opens a filtered menu to select from when typing', () => {
   const handleChange = jest.fn();
   const { getByText, queryByText, getByDisplayValue } = render(
-    <MultiSelect suggestions={['LHR', 'LGW', 'LTN']} onChange={handleChange} />,
+    <MultiSelect
+      suggestions={[
+        { label: 'LHR', value: 'LHR' },
+        { label: 'LGW', value: 'LGW' },
+        { label: 'LTN', value: 'LTN' },
+      ]}
+      onChange={handleChange}
+    />,
   );
 
   userEvent.type(getByDisplayValue(''), 'LT');
@@ -157,7 +176,13 @@ it('opens a filtered menu to select from when typing', () => {
 it('does not allow non-suggested input', () => {
   const handleChange = jest.fn();
   const { getByDisplayValue } = render(
-    <MultiSelect suggestions={['LHR', 'LGW']} onChange={handleChange} />,
+    <MultiSelect
+      suggestions={[
+        { label: 'LHR', value: 'LHR' },
+        { label: 'LGW', value: 'LGW' },
+      ]}
+      onChange={handleChange}
+    />,
   );
   userEvent.type(getByDisplayValue(''), 'LTN');
   userEvent.tab();
@@ -166,7 +191,12 @@ it('does not allow non-suggested input', () => {
 
 it('shows the focused suggestion in green', () => {
   const { getByText, getByDisplayValue } = render(
-    <MultiSelect suggestions={['LHR', 'LGW']} />,
+    <MultiSelect
+      suggestions={[
+        { label: 'LHR', value: 'LHR' },
+        { label: 'LGW', value: 'LGW' },
+      ]}
+    />,
   );
   userEvent.click(getByDisplayValue(''));
   expect(
@@ -183,7 +213,10 @@ describe('invalidity', () => {
   it('shows the error state when input is not focused', () => {
     const { getByRole, getByText } = render(
       <MultiSelect
-        suggestions={['LHR', 'LGW']}
+        suggestions={[
+          { label: 'LHR', value: 'LHR' },
+          { label: 'LGW', value: 'LGW' },
+        ]}
         customValidationMessage="Nope."
       />,
     );
@@ -201,7 +234,10 @@ describe('invalidity', () => {
   it('shows the default state when input is focused', () => {
     const { getByRole, queryByText } = render(
       <MultiSelect
-        suggestions={['LHR', 'LGW']}
+        suggestions={[
+          { label: 'LHR', value: 'LHR' },
+          { label: 'LGW', value: 'LGW' },
+        ]}
         customValidationMessage="Nope."
       />,
     );
@@ -218,7 +254,10 @@ describe('invalidity', () => {
     const blurSelect = jest.spyOn(Select.prototype, 'blur');
     const { getByRole, queryByText } = render(
       <MultiSelect
-        suggestions={['LHR', 'LGW']}
+        suggestions={[
+          { label: 'LHR', value: 'LHR' },
+          { label: 'LGW', value: 'LGW' },
+        ]}
         customValidationMessage="Nope."
       />,
     );

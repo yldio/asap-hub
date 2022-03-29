@@ -2,6 +2,7 @@ import { waitFor } from '@testing-library/dom';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
+import { createUserResponse } from '@asap-hub/fixtures';
 import TeamCreateOutputContributorsCard from '../TeamCreateOutputContributorsCard';
 
 const props: ComponentProps<typeof TeamCreateOutputContributorsCard> = {
@@ -63,8 +64,8 @@ describe('Labs', () => {
     const loadOptions = jest.fn();
     const mockOnChange = jest.fn();
     loadOptions.mockResolvedValue([
-      { label: 'Author One', value: '1' },
-      { label: 'Author Two', value: '2' },
+      { user: createUserResponse(), label: 'Author One', value: '1' },
+      { user: createUserResponse(), label: 'Author Two', value: '2' },
     ]);
 
     const { getByText, getByLabelText, queryByText } = render(
@@ -80,7 +81,7 @@ describe('Labs', () => {
     );
     userEvent.click(getByText('Author One'));
     expect(mockOnChange).toHaveBeenCalledWith([
-      { label: 'Author One', value: '1' },
+      { user: createUserResponse(), label: 'Author One', value: '1' },
     ]);
   });
   it('should render message when there is no match', async () => {

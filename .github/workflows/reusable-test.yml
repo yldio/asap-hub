@@ -53,7 +53,6 @@ jobs:
           key: jest-cache
       - name: Test
         run: |
-          exit 1
           yarn test --coverage --maxWorkers=2
       - uses: codecov/codecov-action@v2
         with:

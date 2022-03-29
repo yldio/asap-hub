@@ -56,7 +56,6 @@ runs:
 
     - name: Cache transpile output
       uses: actions/cache@v2
-      id: restore-transpile
       with:
         path: |
           apps/**/build*
@@ -65,12 +64,11 @@ runs:
 
     - name: Cache build typecheck output
       uses: actions/cache@v2
-      id: restore-build-typecheck
       with:
         path: |
           apps/**/build*
           packages/**/build*
-        key: build-typecheck-output-${{ inputs.environment-name }}-${{ github.sha }}
+        key: definations-output-${{ inputs.environment-name }}-${{ github.sha }}
 
     - name: Build
       shell: bash
@@ -87,7 +85,6 @@ runs:
 
     - name: Cache build output
       uses: actions/cache@v2
-      id: restore-build
       with:
         path: |
           apps/**/build*

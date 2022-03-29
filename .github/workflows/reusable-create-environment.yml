@@ -22,7 +22,7 @@ on:
         required: true
 
 jobs:
-  squidex-create:
+  squidex:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
@@ -44,7 +44,7 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Prepare
         if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
-        uses: ./.github/actions/squidex-create
+        uses: ./.github/actions/create-squidex
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-region: ${{ steps.setup.outputs.aws-region }}
@@ -54,7 +54,7 @@ jobs:
           squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
-  algolia-create-index:
+  algolia-index:
     runs-on: ubuntu-latest
     environment: Branch
     container:
@@ -72,7 +72,7 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Create
         if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
-        uses: ./.github/actions/algolia-create-index
+        uses: ./.github/actions/create-algolia-index
         with:
           algolia-index: ${{ steps.setup.outputs.algolia-index }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}

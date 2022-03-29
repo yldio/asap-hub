@@ -60,7 +60,6 @@ runs:
   steps:
     - name: Cache build output
       uses: actions/cache@v2
-      id: restore-build
       with:
         path: |
           apps/**/build*

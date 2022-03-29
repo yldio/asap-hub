@@ -61,22 +61,19 @@ runs:
   steps:
     - name: Cache build output
       uses: actions/cache@v2
-      id: restore-rebuild
       with:
         path: |
           .yarn/unplugged/
         key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
     - name: Cache build typecheck output
       uses: actions/cache@v2
-      id: restore-build-typecheck
       with:
         path: |
           apps/**/build*
           packages/**/build*
-        key: build-typecheck-output-${{ inputs.environment-name }}-${{ github.sha }}
+        key: build-definations-${{ inputs.environment-name }}-${{ github.sha }}
     - name: Cache transpile output
       uses: actions/cache@v2
-      id: restore-transpile
       with:
         path: |
           apps/**/build*

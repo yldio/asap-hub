@@ -4022,11 +4022,11 @@ export type TeamsResultDto = {
 
 /** A user that created or modified a content or asset. */
 export type User = {
-  /** The display name of the user. */
+  /** The display name of this user. */
   displayName: Maybe<Scalars['String']>;
-  /** The email address of the current user. */
+  /** The email address ofthis  user. */
   email: Maybe<Scalars['String']>;
-  /** The ID of the user. */
+  /** The ID of this user. */
   id: Scalars['String'];
 };
 

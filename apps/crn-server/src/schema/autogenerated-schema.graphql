@@ -4176,11 +4176,11 @@ type TeamsResultDto {
 
 """A user that created or modified a content or asset."""
 type User {
-  """The display name of the user."""
+  """The display name of this user."""
   displayName: String
-  """The email address of the current user."""
+  """The email address ofthis  user."""
   email: String
-  """The ID of the user."""
+  """The ID of this user."""
   id: String!
 }
 

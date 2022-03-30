@@ -8,7 +8,8 @@ import { ResearchOutputController } from '../controllers/research-outputs';
 import { validateFetchOptions } from '../validation';
 import {
   validateResearchOutputParameters,
-  validateResearchOutputPostRequestParameters, validateResearchOutputPostRequestParametersIdentifiers,
+  validateResearchOutputPostRequestParameters,
+  validateResearchOutputPostRequestParametersIdentifiers,
 } from '../validation/research-output.validation';
 
 export const researchOutputRouteFactory = (

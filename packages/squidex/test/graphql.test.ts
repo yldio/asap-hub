@@ -41,6 +41,25 @@ describe('Squidex Graphql Client', () => {
       expect(res).toEqual({ id: 'id' });
     });
 
+    test('adds the X-Unpublished header when drafts are requested', async () => {
+      nock(config.baseUrl)
+        .post(
+          `/api/content/${config.appName}/graphql`,
+          JSON.stringify({ query: '{ id }' }),
+        )
+        .matchHeader('X-Unpublished', `true`)
+        .reply(200, {
+          data: {
+            id: 'id',
+          },
+        });
+
+      const res = await squidexGraphqlClient.request('{ id }', undefined, {
+        includeDrafts: true,
+      });
+      expect(res).toEqual({ id: 'id' });
+    });
+
     test('Should throw an error which contains the error message and details when a graphql error is returned', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`)

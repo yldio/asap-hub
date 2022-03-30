@@ -4,7 +4,15 @@ import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { Anchor, Avatar, Display, Link, TabLink } from '../atoms';
 import { lead, paper } from '../colors';
-import { labIcon, libraryIcon, plusIcon } from '../icons';
+import {
+  article,
+  bioinformatics,
+  dataset,
+  labIcon,
+  labResource,
+  plusIcon,
+  protocol,
+} from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { DropdownButton, TabNav } from '../molecules';
@@ -198,23 +206,23 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
               )}
             >
               {{
-                item: <>{libraryIcon} Article</>,
+                item: <>{article} Article</>,
                 href: route.createOutput({ outputType: 'article' }).$,
               }}
               {{
-                item: <>{libraryIcon} Bioinformatics</>,
+                item: <>{bioinformatics} Bioinformatics</>,
                 href: route.createOutput({ outputType: 'bioinformatics' }).$,
               }}
               {{
-                item: <>{libraryIcon} Dataset</>,
+                item: <>{dataset} Dataset</>,
                 href: route.createOutput({ outputType: 'dataset' }).$,
               }}
               {{
-                item: <>{libraryIcon} Lab Resource</>,
+                item: <>{labResource} Lab Resource</>,
                 href: route.createOutput({ outputType: 'lab-resource' }).$,
               }}
               {{
-                item: <>{libraryIcon} Protocol</>,
+                item: <>{protocol} Protocol</>,
                 href: route.createOutput({ outputType: 'protocol' }).$,
               }}
             </DropdownButton>

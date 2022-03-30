@@ -128,7 +128,7 @@ it('renders share an output button dropdown', () => {
   const { getByText, queryByText } = render(
     <TeamProfileHeader {...boilerplateProps} />,
   );
-  expect(queryByText(/article/i)).not.toBeVisible();
+  expect(queryByText(/article/i, { selector: 'span' })).not.toBeVisible();
   fireEvent.click(getByText('Share an output'));
-  expect(queryByText(/article/i)).toBeVisible();
+  expect(queryByText(/article/i, { selector: 'span' })).toBeVisible();
 });

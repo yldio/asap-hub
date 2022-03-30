@@ -82,23 +82,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       )
       .join(' or ');
 
-    let filterQ: string;
-
-    if (Array.isArray(filter)) {
-      filterQ = filter
-        .reduce(
-          (acc: string[], word: string) =>
-            acc.concat([`data/type/iv eq '${word}'`]),
-          [],
-        )
-        .join(' or ');
-    } else if (filter) {
-      filterQ = Object.entries(filter)
-        .map(([key, val]) => `data/${key}/iv eq '${val}'`)
-        .join(' and ');
-    } else {
-      filterQ = '';
-    }
+    const filterQ = makeODataFilter(filter);
 
     const filterGraphql = [filterQ && `(${filterQ})`, searchQ && `(${searchQ})`]
       .filter(Boolean)
@@ -149,6 +133,32 @@ export default class ResearchOutputs implements ResearchOutputController {
     teams,
     ...researchOutputData
   }: ResearchOutputInputData): Promise<Partial<ResearchOutputResponse>> {
+    if (
+      researchOutputData.link &&
+      (
+        await this.fetch({
+          filter: {
+            type: researchOutputData.type,
+            title: researchOutputData.title,
+          },
+        })
+      ).total > 0
+    ) {
+      // TODO: Remove Boom from the controller layer
+      // https://asaphub.atlassian.net/browse/CRN-777
+      throw Boom.badRequest('Validation error', [
+        {
+          instancePath: '/title',
+          keyword: 'unique',
+          message: 'must be unique',
+          params: {
+            type: 'string',
+          },
+          schemaPath: '#/properties/title/unique',
+        },
+      ]);
+    }
+
     const { id: researchOutputId } = await this.createResearchOutput(
       researchOutputData,
     );
@@ -217,3 +227,23 @@ export interface ResearchOutputController {
   ) => Promise<Partial<ResearchOutputResponse>>;
 }
 export type ResearchOutputInputData = ResearchOutputPostRequest;
+
+const makeODataFilter = (filter?: ResearchOutputFilter): string => {
+  if (Array.isArray(filter)) {
+    return filter
+      .reduce(
+        (acc: string[], word: string) =>
+          acc.concat([`data/type/iv eq '${word}'`]),
+        [],
+      )
+      .join(' or ');
+  }
+
+  if (filter) {
+    return Object.entries(filter)
+      .map(([key, val]) => `data/${key}/iv eq '${val}'`)
+      .join(' and ');
+  }
+
+  return '';
+};

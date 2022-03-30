@@ -661,6 +661,15 @@ describe('ResearchOutputs controller', () => {
   });
 
   describe('Create', () => {
+    beforeEach(() => {
+      const squidexGraphqlEmptyResponse: FetchResearchOutputsQuery = {
+        queryResearchOutputsContentsWithTotal: null,
+      };
+      squidexGraphqlClientMock.request.mockResolvedValue(
+        squidexGraphqlEmptyResponse,
+      );
+    });
+
     afterEach(() => {
       expect(nock.isDone()).toBe(true);
     });
@@ -701,6 +710,26 @@ describe('ResearchOutputs controller', () => {
 
       const id = await researchOutputs.create(researchOutputRequest);
       expect(id).toEqual({ id: researchOutputId });
+    });
+
+    test('Should throw a validation error when a research output with the same type and link already exists', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputsGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const researchOutputRequest = getResearchOutputRequest();
+
+      await expect(
+        researchOutputs.create(researchOutputRequest),
+      ).rejects.toThrow('Validation error');
+
+      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          filter: `(data/type/iv eq '${researchOutputRequest.type}' and data/title/iv eq '${researchOutputRequest.title}')`,
+        }),
+      );
     });
 
     test('Should throw when fails to create the research output - 400', async () => {

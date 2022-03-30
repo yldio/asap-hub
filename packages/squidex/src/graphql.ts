@@ -35,7 +35,7 @@ export class SquidexGraphql implements SquidexGraphqlClient {
     this.client.setHeaders({ authorization: `Bearer ${tk}` });
 
     if (options?.includeDrafts) {
-      this.client.setHeaders({ 'X-Unpublished': 'true' });
+      this.client.setHeader('X-Unpublished', 'true');
     }
     return this.client.request<T, V>(query, variables);
   }

@@ -525,6 +525,23 @@ describe('ResearchOutputs controller', () => {
             top: 13,
             skip: 7,
           },
+          expect.anything(),
+        );
+      });
+
+      test('Should pass the displayDrafts parameter as expected', async () => {
+        await researchOutputs.fetch({ take: 13, skip: 7, includeDrafts: true });
+
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            ...expectedDefaultParams,
+            top: 13,
+            skip: 7,
+          },
+          {
+            includeDrafts: true,
+          },
         );
       });
 
@@ -538,6 +555,7 @@ describe('ResearchOutputs controller', () => {
             filter:
               "(contains(data/title/iv, 'Title') or contains(data/tags/iv, 'Title'))",
           },
+          expect.anything(),
         );
       });
 
@@ -554,6 +572,7 @@ describe('ResearchOutputs controller', () => {
             filter:
               "(data/type/iv eq 'Grant Document' or data/type/iv eq 'Presentation')",
           },
+          expect.anything(),
         );
       });
 
@@ -573,6 +592,7 @@ describe('ResearchOutputs controller', () => {
             filter:
               "(data/type/iv eq 'some-type' and data/title/iv eq 'some-title')",
           },
+          expect.anything(),
         );
       });
 
@@ -592,6 +612,7 @@ describe('ResearchOutputs controller', () => {
             ...expectedDefaultParams,
             filter: expectedFilter,
           },
+          expect.anything(),
         );
       });
 
@@ -613,6 +634,7 @@ describe('ResearchOutputs controller', () => {
             ...expectedDefaultParams,
             filter: expectedFilter,
           },
+          expect.anything(),
         );
       });
 
@@ -627,6 +649,7 @@ describe('ResearchOutputs controller', () => {
             ...expectedDefaultParams,
             filter: expectedFilter,
           },
+          expect.anything(),
         );
       });
 
@@ -641,6 +664,7 @@ describe('ResearchOutputs controller', () => {
             ...expectedDefaultParams,
             filter: expectedFilter,
           },
+          expect.anything(),
         );
       });
 
@@ -655,6 +679,7 @@ describe('ResearchOutputs controller', () => {
             ...expectedDefaultParams,
             filter: expectedFilter,
           },
+          expect.anything(),
         );
       });
     });
@@ -729,6 +754,9 @@ describe('ResearchOutputs controller', () => {
         expect.objectContaining({
           filter: `(data/type/iv eq '${researchOutputRequest.type}' and data/title/iv eq '${researchOutputRequest.title}')`,
         }),
+        {
+          includeDrafts: true,
+        },
       );
     });
 

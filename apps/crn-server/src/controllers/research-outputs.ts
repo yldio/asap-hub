@@ -66,8 +66,9 @@ export default class ResearchOutputs implements ResearchOutputController {
     skip?: number;
     search?: string;
     filter?: ResearchOutputFilter;
+    includeDrafts?: boolean;
   }): Promise<ListResearchOutputResponse> {
-    const { search, filter, take = 8, skip = 0 } = options;
+    const { search, filter, take = 8, skip = 0, includeDrafts } = options;
 
     const searchQ = (search || '')
       .split(' ')
@@ -92,12 +93,18 @@ export default class ResearchOutputs implements ResearchOutputController {
       await this.squidexGraphqlClient.request<
         FetchResearchOutputsQuery,
         FetchResearchOutputsQueryVariables
-      >(FETCH_RESEARCH_OUTPUTS, {
-        top: take,
-        skip,
-        filter: filterGraphql,
-        withTeams: true,
-      });
+      >(
+        FETCH_RESEARCH_OUTPUTS,
+        {
+          top: take,
+          skip,
+          filter: filterGraphql,
+          withTeams: true,
+        },
+        {
+          includeDrafts,
+        },
+      );
 
     if (queryResearchOutputsContentsWithTotal === null) {
       logger.warn('queryResearchOutputsContentsWithTotal returned null');
@@ -134,13 +141,13 @@ export default class ResearchOutputs implements ResearchOutputController {
     ...researchOutputData
   }: ResearchOutputInputData): Promise<Partial<ResearchOutputResponse>> {
     if (
-      researchOutputData.link &&
       (
         await this.fetch({
           filter: {
             type: researchOutputData.type,
             title: researchOutputData.title,
           },
+          includeDrafts: true,
         })
       ).total > 0
     ) {
@@ -219,6 +226,7 @@ export interface ResearchOutputController {
     skip?: number;
     search?: string;
     filter?: ResearchOutputFilter;
+    includeDrafts?: boolean;
   }) => Promise<ListResearchOutputResponse>;
 
   fetchById: (id: string) => Promise<ResearchOutputResponse>;

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import {useCallback, useEffect, useMemo} from 'react';
 import {
   ResearchOutputType,
   ResearchOutputIdentifierType,
@@ -96,6 +96,15 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
       setIdentifier('');
     }, [identifierType, setIdentifier]);
 
+    const onChangeIdentifierType = useCallback((type: string) => {
+      if (identifiers.find(identifier => identifier.value === type)) {
+        setIdentifierType(type as ResearchOutputIdentifierType)
+      }
+      else {
+        setIdentifierType(identifiers[0].value)
+      }
+    }, [setIdentifierType, identifiers])
+
     return (
       <>
         <LabeledDropdown
@@ -103,7 +112,7 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
           subtitle="(required)"
           options={identifiers}
           value={identifierType}
-          onChange={setIdentifierType}
+          onChange={onChangeIdentifierType}
         />
         {identifierType !== ResearchOutputIdentifierType.None && (
           <LabeledTextField

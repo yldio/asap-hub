@@ -4,12 +4,12 @@ import { StaticRouter } from 'react-router-dom';
 import { ComponentProps } from 'react';
 import { fireEvent, waitFor } from '@testing-library/dom';
 import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
+import { ResearchOutputIdentifierType } from '@asap-hub/model';
 
 import TeamCreateOutputForm, {
   createIdentifierField,
 } from '../TeamCreateOutputForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
-import { ResearchOutputIdentifierType } from '../../research-output-identifier-type';
 
 const props: ComponentProps<typeof TeamCreateOutputForm> = {
   tagSuggestions: [],

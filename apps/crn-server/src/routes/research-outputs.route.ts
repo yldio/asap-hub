@@ -8,7 +8,7 @@ import { ResearchOutputController } from '../controllers/research-outputs';
 import { validateFetchOptions } from '../validation';
 import {
   validateResearchOutputParameters,
-  validateResearchOutputPostRequestParameters,
+  validateResearchOutputPostRequestParameters, validateResearchOutputPostRequestParametersIdentifiers,
 } from '../validation/research-output.validation';
 
 export const researchOutputRouteFactory = (
@@ -45,6 +45,7 @@ export const researchOutputRouteFactory = (
     const { body } = req;
 
     const createRequest = validateResearchOutputPostRequestParameters(body);
+    validateResearchOutputPostRequestParametersIdentifiers(body);
     try {
       const researchOutput = await researchOutputController.create(
         createRequest,

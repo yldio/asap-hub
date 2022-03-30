@@ -232,12 +232,60 @@ describe('/research-outputs/ route', () => {
         expect(response.status).toBe(400);
       });
 
+      const validDOI = { doi: 'doi:12.1234'}
+      const validRRID = {rrid: 'RRID:Hi'}
+      const validAccession = {accession: 'NP_1234'}
+      const validLabCatalogNumber = {labCatalogNumber: 'Any content'}
+      test.each`
+      type    | identifier         | status
+      ${'Article'}   | ${validDOI} | ${201}
+      ${'Article'}   | ${validRRID} | ${400}
+      ${'Article'}   | ${validAccession} | ${400}
+      ${'Article'}   | ${validLabCatalogNumber} | ${400}
+      ${'Bioinformatics'}   | ${validDOI} | ${201}
+      ${'Bioinformatics'}   | ${validRRID} | ${201}
+      ${'Bioinformatics'}   | ${validAccession} | ${400}
+      ${'Bioinformatics'}   | ${validLabCatalogNumber} | ${400}
+      ${'Lab Resource'}   | ${validDOI} | ${201}
+      ${'Lab Resource'}   | ${validRRID} | ${201}
+      ${'Lab Resource'}   | ${validAccession} | ${400}
+      ${'Lab Resource'}   | ${validLabCatalogNumber} | ${201}
+      ${'Dataset'}   | ${validDOI} | ${201}
+      ${'Dataset'}   | ${validRRID} | ${400}
+      ${'Dataset'}   | ${validAccession} | ${201}
+      ${'Dataset'}   | ${validLabCatalogNumber} | ${400}
+      ${'Protocol'}   | ${validDOI} | ${201}
+      ${'Protocol'}   | ${validRRID} | ${400}
+      ${'Protocol'}   | ${validAccession} | ${400}
+      ${'Protocol'}   | ${validLabCatalogNumber} | ${400}
+      ${'Grant Document'}   | ${validDOI} | ${400}
+      ${'Grant Document'}   | ${validRRID} | ${400}
+      ${'Grant Document'}   | ${validAccession} | ${400}
+      ${'Grant Document'}   | ${validLabCatalogNumber} | ${400}
+      ${'Presentation'}   | ${validDOI} | ${400}
+      ${'Presentation'}   | ${validRRID} | ${400}
+      ${'Presentation'}   | ${validAccession} | ${400}
+      ${'Presentation'}   | ${validLabCatalogNumber} | ${400}
+    `('on type $type returns status $status for $identifier', async ({ type, identifier, status }) => {
+        const researchOutput = getCreateResearchOutput();
+        const response = await supertest(app)
+          .post('/research-outputs/')
+          .send({
+            ...researchOutput,
+            type,
+            ...identifier,
+          });
+        expect(response.status).toBe(status);
+
+      })
+
       test('Should validate doi based on a regex', async () => {
         const researchOutput = getCreateResearchOutput();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
             ...researchOutput,
+            type: 'Article',
             doi: 'doi:12.2222',
           });
         expect(response.status).toBe(201);
@@ -246,6 +294,7 @@ describe('/research-outputs/ route', () => {
           .post('/research-outputs/')
           .send({
             ...researchOutput,
+            type: 'Article',
             doi: 'doi:1.222',
           });
         expect(response2.status).toBe(400);
@@ -257,6 +306,7 @@ describe('/research-outputs/ route', () => {
           .post('/research-outputs/')
           .send({
             ...researchOutput,
+            type: 'Dataset',
             accession: 'NP_1234',
           });
         expect(response.status).toBe(201);
@@ -265,10 +315,12 @@ describe('/research-outputs/ route', () => {
           .post('/research-outputs/')
           .send({
             ...researchOutput,
+            type: 'Dataset',
             accession: 'NP_HELLO_WORLD',
           });
         expect(response2.status).toBe(400);
       });
+
 
       test('Should validate rrid based on a regex', async () => {
         const researchOutput = getCreateResearchOutput();
@@ -276,6 +328,7 @@ describe('/research-outputs/ route', () => {
           .post('/research-outputs/')
           .send({
             ...researchOutput,
+            type: 'Bioinformatics',
             rrid: 'RRID:Hi',
           });
         expect(response.status).toBe(201);
@@ -284,6 +337,7 @@ describe('/research-outputs/ route', () => {
           .post('/research-outputs/')
           .send({
             ...researchOutput,
+            type: 'Bioinformatics',
             rrid: 'HelloWorld',
           });
         expect(response2.status).toBe(400);

@@ -11,6 +11,7 @@ const props: ComponentProps<typeof TeamCreateOutputIdentifier> = {
   setIdentifier: noop,
   setIdentifierType: noop,
   type: 'Article',
+  required: false,
 };
 
 it('should render Identifier', () => {

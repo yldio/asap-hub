@@ -15,6 +15,7 @@ const props: ComponentProps<typeof TeamCreateOutputExtraInformationCard> = {
   identifierType: ResearchOutputIdentifierType.None,
   setIdentifierType: noop,
   type: 'Article',
+  identifierRequired: false,
 };
 
 it('should render a tag', () => {

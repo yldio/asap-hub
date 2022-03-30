@@ -41,7 +41,7 @@ describe('createIdentifierField', () => {
     ).toEqual({ labCatalogNumber: 'identifier' });
     expect(
       createIdentifierField(
-        ResearchOutputIdentifierType.AcessionNumber,
+        ResearchOutputIdentifierType.AccessionNumber,
         'identifier',
       ),
     ).toEqual({ accession: 'identifier' });
@@ -207,14 +207,4 @@ it('displays proper message when no lab is found', async () => {
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
   expect(getByText(/Sorry, no labs match/i)).toBeVisible();
-});
-
-it('has None as an option for the identifier', async () => {
-  const { getByText } = render(
-    <StaticRouter>
-      <TeamCreateOutputForm {...props} />
-    </StaticRouter>,
-  );
-
-  const extraInformation = getByText();
 });

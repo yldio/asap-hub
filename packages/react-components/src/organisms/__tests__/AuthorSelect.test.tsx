@@ -63,7 +63,7 @@ it('renders a author multi select, passing through props for user with avatar', 
 });
 
 it('renders a author multi select, passing through props for external author', () => {
-  const { getByText, getByLabelText } = render(
+  const { getByText, getByTitle, getByLabelText } = render(
     <AuthorSelect
       title="Title"
       subtitle="Subtitle"
@@ -86,6 +86,6 @@ it('renders a author multi select, passing through props for external author', (
   expect(getByLabelText(/Title/i)).toBeVisible();
   expect(getByLabelText(/Subtitle/i)).toBeVisible();
   expect(getByLabelText(/Description/i)).toBeVisible();
-  expect(getByText('Andy Smith')).toBeVisible();
-  expect(getByText('AS')).toBeVisible();
+  expect(getByText('Andy Smith (Non CRN)')).toBeVisible();
+  expect(getByTitle('User Placeholder')).toBeInTheDocument();
 });

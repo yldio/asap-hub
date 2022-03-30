@@ -105,6 +105,6 @@ runs:
         SQUIDEX_SHARED_SECRET: ${{ inputs.squidex-shared-secret }}
     - uses: actions/upload-artifact@v2
       with:
-        name: sls-package
+        name: sls-package-${{ inputs.environment-name }}
         path: 'sls-package'
         retention-days: 1

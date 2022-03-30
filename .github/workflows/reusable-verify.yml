@@ -13,7 +13,7 @@ on:
         required: true
 
 jobs:
-  verify-sls:
+  sls:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
@@ -47,12 +47,12 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Test
         if: ${{ inputs.environment-name=='Branch' }}
-        uses: ./.github/actions/test-e2e
+        uses: ./.github/actions/verify-test-e2e
         with:
           asap-app-url: ${{ steps.setup.outputs.asap-app-url }}
           environment-name: ${{ inputs.environment-name }}
 
-  verify-schema:
+  schema:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:

@@ -13,6 +13,12 @@ inputs:
   asap-api-url:
     description: 'ASAP API Url'
     required: true
+  auth0-client-id:
+    description: 'Auth0 Client Id'
+    required: true
+  auth0-domain:
+    description: 'Auth0 Domain'
+    required: true
   aws-access-key-id:
     description: 'AWS Access Key ID'
     required: true
@@ -56,7 +62,6 @@ runs:
 
     - name: Cache transpile output
       uses: actions/cache@v2
-      id: restore-transpile
       with:
         path: |
           apps/**/build*
@@ -65,16 +70,17 @@ runs:
 
     - name: Cache build typecheck output
       uses: actions/cache@v2
-      id: restore-build-typecheck
       with:
         path: |
           apps/**/build*
           packages/**/build*
-        key: build-typecheck-output-${{ inputs.environment-name }}-${{ github.sha }}
+        key: definations-output-${{ inputs.environment-name }}-${{ github.sha }}
 
     - name: Build
       shell: bash
       env:
+        AUTH0_CLIENT_ID: ${{ inputs.auth0-client-id }}
+        AUTH0_DOMAIN: ${{ inputs.auth0-domain }}
         REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
         REACT_APP_ALGOLIA_INDEX: ${{ inputs.algolia-index }}
         REACT_APP_API_BASE_URL: ${{ inputs.asap-api-url }}
@@ -87,7 +93,6 @@ runs:
 
     - name: Cache build output
       uses: actions/cache@v2
-      id: restore-build
       with:
         path: |
           apps/**/build*

@@ -25,7 +25,7 @@ on:
         required: true
 
 jobs:
-  sls-deploy-package:
+  sls-package:
     concurrency:
       group: ${{ github.head_ref || inputs.environment-name }}
     runs-on: ubuntu-latest
@@ -46,7 +46,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Deploy sls package
-        uses: ./.github/actions/sls-deploy-package
+        uses: ./.github/actions/deploy-sls-package
         with:
           algolia-index: ${{ steps.setup.outputs.algolia-index }}
           asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
@@ -67,8 +67,8 @@ jobs:
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
-  algolia-sync-settings:
-    needs: [sls-deploy-package]
+  algolia-settings:
+    needs: [sls-package]
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
@@ -83,8 +83,8 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Setup Environment Variables
-        uses: ./.github/actions/algolia-sync-settings
+      - name: Update index
+        uses: ./.github/actions/deploy-algolia-settings
         with:
           algolia-api-key-name: ${{ steps.setup.outputs.algolia-api-key-name }}
           algolia-app-id-name: ${{ steps.setup.outputs.algolia-app-id-name }}
@@ -93,8 +93,8 @@ jobs:
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-  squidex-update-schema:
-    needs: [sls-deploy-package]
+  squidex-schema:
+    needs: [sls-package]
     environment: ${{ inputs.environment-name }}
     runs-on: ubuntu-latest
     container:
@@ -111,7 +111,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Update Squidex schema
-        uses: ./.github/actions/squidex-update-schema
+        uses: ./.github/actions/deploy-squidex-schema
         with:
           squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
@@ -120,8 +120,8 @@ jobs:
           squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
           asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
 
-  deploy-ses:
-    needs: [sls-deploy-package]
+  ses:
+    needs: [sls-package]
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014

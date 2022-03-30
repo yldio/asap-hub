@@ -25,28 +25,7 @@ on:
         required: true
 
 jobs:
-  build-typecheck:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Typecheck
-        run: |
-          yarn build:typecheck
-      - name: Cache build typecheck output
-        uses: actions/cache@v2
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-typecheck-output-${{ inputs.environment-name }}-${{ github.sha }}
-
-  transpile:
+  definations:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
@@ -58,7 +37,36 @@ jobs:
         uses: actions/checkout@v3
       - name: Build
         run: |
+          yarn build:typecheck
+      - name: Cache build applications
+        uses: actions/cache@v2
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: definations-output-${{ inputs.environment-name }}-${{ github.sha }}
+
+  transpile:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Build
+        run: |
           yarn build:babel
+        env:
+          AUTH0_CLIENT_ID: ${{ steps.setup.outputs.auth0-client-id }}
+          AUTH0_DOMAIN: ${{ steps.setup.outputs.auth0-domain }}
       - name: Cache transpile output
         uses: actions/cache@v2
         with:
@@ -78,7 +86,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Re-Build
-        uses: ./.github/actions/rebuild
+        uses: ./.github/actions/build-rebuild
       - name: Cache build output
         uses: actions/cache@v2
         with:
@@ -86,8 +94,8 @@ jobs:
             .yarn/unplugged/
           key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
 
-  build-frontend:
-    needs: [build-typecheck, transpile]
+  frontend:
+    needs: [definations, transpile]
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
@@ -109,6 +117,8 @@ jobs:
           algolia-index: ${{ steps.setup.outputs.algolia-index }}
           app-release: ${{ steps.setup.outputs.app-release }}
           asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
+          auth0-client-id: ${{ steps.setup.outputs.auth0-client-id }}
+          auth0-domain: ${{ steps.setup.outputs.auth0-domain }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-region: ${{ steps.setup.outputs.aws-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -118,7 +128,7 @@ jobs:
           react-app-sentry-dsn: ${{ steps.setup.outputs.react-app-sentry-dsn }}
 
   typecheck:
-    needs: [build-typecheck]
+    needs: [definations]
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
@@ -134,13 +144,13 @@ jobs:
           path: |
             apps/**/build*
             packages/**/build*
-          key: build-typecheck-output-${{ inputs.environment-name }}-${{ github.sha }}
+          key: definations-output-${{ inputs.environment-name }}-${{ github.sha }}
       - name: TypeCheck
         run: |
           yarn typecheck
 
-  sls-build-package:
-    needs: [build-typecheck, transpile, rebuild]
+  sls-package:
+    needs: [definations, transpile, rebuild]
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
@@ -157,7 +167,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Build
-        uses: ./.github/actions/sls-build-package
+        uses: ./.github/actions/build-sls-package
         with:
           algolia-index: ${{ steps.setup.outputs.algolia-index }}
           asap-api-url: ${{ steps.setup.outputs.asap-api-url }}

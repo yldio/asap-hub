@@ -60,7 +60,6 @@ runs:
   steps:
     - name: Cache build output
       uses: actions/cache@v2
-      id: restore-build
       with:
         path: |
           apps/**/build*
@@ -74,7 +73,7 @@ runs:
         key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
     - uses: actions/download-artifact@v2
       with:
-        name: sls-package
+        name: sls-package-${{ inputs.environment-name }}
         path: 'sls-package'
     - name: Deploy
       shell: bash

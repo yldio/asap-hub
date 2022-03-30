@@ -22,7 +22,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION_ECR: ${{ secrets.AWS_REGION_ECR }}
 
-  build:
+  build-development:
     uses: ./.github/workflows/reusable-build.yml
     with:
       environment-name: Development
@@ -33,16 +33,35 @@ jobs:
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
-  build-analysis:
-    needs: [build]
+  build-analysis-development:
+    needs: [build-development]
     uses: ./.github/workflows/reusable-build-analysis.yml
     with:
       environment-name: Development
     secrets:
       BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
-  deployment:
-    needs: [test, build-analysis]
+  build-production:
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      environment-name: Production
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+
+  build-analysis-production:
+    needs: [build-production]
+    uses: ./.github/workflows/reusable-build-analysis.yml
+    with:
+      environment-name: Production
+    secrets:
+      BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
+
+  deployment-development:
+    needs: [test, build-analysis-development]
     uses: ./.github/workflows/reusable-deployment.yml
     if: github.event_name == 'workflow_dispatch'
     with:
@@ -54,38 +73,63 @@ jobs:
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
-  verify:
-    needs: [deployment]
+  verify-development:
+    needs: [deployment-development]
     uses: ./.github/workflows/reusable-verify.yml
     with:
       environment-name: Development
     secrets:
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
-  # notify_failure:
-  #   runs-on: ubuntu-latest
-  #   needs:
-  #     [
-  #       setup,
-  #       test,
-  #       build,
-  #       deploy-sls,
-  #       verify,
-  #     ]
-  #   if: ${{ failure() }}
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #     - uses: ./.github/actions/slack/
-  #       with:
-  #         message: 'Build Failed on GitHub: ${{ needs.setup.outputs.pr-number || github.head_ref }}'
-  #         webhook: ${{ secrets.SLACK_WEBHOOK }}
-  #         status: failure
+  deployment-production:
+    needs: [build-analysis-production, verify-development]
+    uses: ./.github/workflows/reusable-deployment.yml
+    with:
+      environment-name: Production
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+
+  verify-production:
+    needs: [deployment-production]
+    uses: ./.github/workflows/reusable-verify.yml
+    with:
+      environment-name: Production
+    secrets:
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+
+  notify_failure:
+    runs-on: ubuntu-latest
+    needs:
+      [
+        test,
+        build-images,
+        build-development,
+        build-analysis-development,
+        build-production,
+        build-analysis-production,
+        deployment-development,
+        verify-development,
+        deployment-production,
+        verify-production,
+      ]
+    if: failure()
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: ./.github/actions/slack/
+        with:
+          message: 'Build failed on master branch!'
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
+          status: failure
 
   master-pipeline-success:
     runs-on: ubuntu-latest
-    needs: [verify, build-images]
-    if: ${{ success() }}
+    needs: [verify-production, build-images]
+    if: success()
     environment:
       name: Development
       url: ${{ steps.setup.outputs.asap-app-url }}
@@ -96,7 +140,7 @@ jobs:
         id: setup
         uses: ./.github/actions/setup-environment
         with:
-          environment-name: Development
+          environment-name: Production
       - name: Print success
         run: |
           echo "Pipeline development and production successful."

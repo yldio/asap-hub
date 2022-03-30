@@ -1,5 +1,5 @@
 name: 'Rebuild'
-description: 'Runs Rebuild'
+description: 'Runs yarn rebuild'
 runs:
   using: 'composite'
   steps:

@@ -12,7 +12,6 @@ runs:
   steps:
     - name: Cache build output
       uses: actions/cache@v2
-      id: restore-rebuild
       with:
         path: |
           .yarn/unplugged/

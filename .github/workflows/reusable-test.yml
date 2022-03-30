@@ -33,7 +33,7 @@ jobs:
         run: |
           yarn ${{ matrix.script }}
 
-  test-unit:
+  unit:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
@@ -59,7 +59,7 @@ jobs:
           fail_ci_if_error: true
           verbose: true
 
-  test-integration:
+  integration:
     if: ${{ inputs.environment-name=='Branch' }}
     permissions:
       packages: read
@@ -86,7 +86,7 @@ jobs:
           squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
-  test-browser:
+  browser:
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:focal
@@ -94,7 +94,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Re-Build
-        uses: ./.github/actions/rebuild
+        uses: ./.github/actions/build-rebuild
       - name: Install Playwright
         run: |
           yarn workspace @asap-hub/react-components run playwright install

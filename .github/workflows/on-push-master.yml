@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - CRN-643-deploy-to-production-2
   workflow_dispatch:
 
 jobs:
@@ -64,7 +63,7 @@ jobs:
   deployment-development:
     needs: [test, build-analysis-development]
     uses: ./.github/workflows/reusable-deployment.yml
-    # if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch'
     with:
       environment-name: Development
     secrets:

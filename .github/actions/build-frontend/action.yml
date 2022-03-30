@@ -13,6 +13,12 @@ inputs:
   asap-api-url:
     description: 'ASAP API Url'
     required: true
+  auth0-client-id:
+    description: 'Auth0 Client Id'
+    required: true
+  auth0-domain:
+    description: 'Auth0 Domain'
+    required: true
   aws-access-key-id:
     description: 'AWS Access Key ID'
     required: true
@@ -73,6 +79,8 @@ runs:
     - name: Build
       shell: bash
       env:
+        AUTH0_CLIENT_ID: ${{ inputs.auth0-client-id }}
+        AUTH0_DOMAIN: ${{ inputs.auth0-domain }}
         REACT_APP_ALGOLIA_APP_ID: ${{ steps.get-algolia-app-id.outputs.id }}
         REACT_APP_ALGOLIA_INDEX: ${{ inputs.algolia-index }}
         REACT_APP_API_BASE_URL: ${{ inputs.asap-api-url }}

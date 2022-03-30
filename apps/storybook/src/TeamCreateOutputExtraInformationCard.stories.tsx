@@ -4,7 +4,7 @@ import {
   ResearchOutputIdentifierType,
   researchOutputTypes,
 } from '@asap-hub/model';
-import { select } from '@storybook/addon-knobs';
+import { boolean, select } from '@storybook/addon-knobs';
 
 export default {
   title: 'Organisms / Team Profile / Team Create Output Extra Information Card',
@@ -26,6 +26,7 @@ const commonProps: ComponentProps<typeof TeamCreateOutputExtraInformationCard> =
     identifier: '',
     setIdentifier: () => {},
     type: select('type', researchOutputTypes, 'Article'),
+    identifierRequired: boolean('identifierRequired', false),
   };
 
 export const Normal = () => (

@@ -65,7 +65,7 @@ export default class ResearchOutputs implements ResearchOutputController {
     take?: number;
     skip?: number;
     search?: string;
-    filter?: string[];
+    filter?: ResearchOutputFilter;
   }): Promise<ListResearchOutputResponse> {
     const { search, filter, take = 8, skip = 0 } = options;
 
@@ -82,13 +82,23 @@ export default class ResearchOutputs implements ResearchOutputController {
       )
       .join(' or ');
 
-    const filterQ = (filter || [])
-      .reduce(
-        (acc: string[], word: string) =>
-          acc.concat([`data/type/iv eq '${word}'`]),
-        [],
-      )
-      .join(' or ');
+    let filterQ: string;
+
+    if (Array.isArray(filter)) {
+      filterQ = filter
+        .reduce(
+          (acc: string[], word: string) =>
+            acc.concat([`data/type/iv eq '${word}'`]),
+          [],
+        )
+        .join(' or ');
+    } else if (filter) {
+      filterQ = Object.entries(filter)
+        .map(([key, val]) => `data/${key}/iv eq '${val}'`)
+        .join(' and ');
+    } else {
+      filterQ = '';
+    }
 
     const filterGraphql = [filterQ && `(${filterQ})`, searchQ && `(${searchQ})`]
       .filter(Boolean)
@@ -187,12 +197,18 @@ export default class ResearchOutputs implements ResearchOutputController {
   }
 }
 
+type ResearchOutputFilter =
+  | string[]
+  | {
+      type?: string;
+      title?: string;
+    };
 export interface ResearchOutputController {
   fetch: (options: {
     take?: number;
     skip?: number;
     search?: string;
-    filter?: string[];
+    filter?: ResearchOutputFilter;
   }) => Promise<ListResearchOutputResponse>;
 
   fetchById: (id: string) => Promise<ResearchOutputResponse>;

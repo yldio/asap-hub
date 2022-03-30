@@ -131,9 +131,9 @@ export const reactSelectStyles = (
   }),
 });
 
-export const reactMultiSelectStyles = (
+export const reactMultiSelectStyles = <T extends MultiSelectOptionsType>(
   isInvalid: boolean,
-): StylesConfig<MultiSelectOptionsType, true> => ({
+): StylesConfig<T, true> => ({
   ...baseSelectStyles,
   option: (provided, { isFocused }) => ({
     ...provided,

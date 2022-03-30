@@ -8,7 +8,7 @@ it('renders a labeled multi select, passing through props', () => {
       title="Title"
       subtitle="Subtitle"
       description="Description"
-      suggestions={['Value']}
+      suggestions={[{ label: 'Value', value: 'Value' }]}
       values={[{ label: 'Value', value: 'Value' }]}
     />,
   );

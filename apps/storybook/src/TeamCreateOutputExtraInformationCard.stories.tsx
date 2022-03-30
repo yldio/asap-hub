@@ -11,13 +11,19 @@ export const Normal = () => (
   <TeamCreateOutputExtraInformationCard
     isSaving={false}
     tags={[]}
-    tagSuggestions={tagSuggestions}
+    tagSuggestions={tagSuggestions.map((suggestion) => ({
+      label: suggestion,
+      value: suggestion,
+    }))}
   />
 );
 export const Filled = () => (
   <TeamCreateOutputExtraInformationCard
     isSaving={false}
     tags={tagSuggestions}
-    tagSuggestions={tagSuggestions}
+    tagSuggestions={tagSuggestions.map((suggestion) => ({
+      label: suggestion,
+      value: suggestion,
+    }))}
   />
 );

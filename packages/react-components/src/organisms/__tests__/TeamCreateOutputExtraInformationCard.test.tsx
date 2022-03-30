@@ -22,7 +22,7 @@ it('should trigger an onChange event when a tag is selected', () => {
   const { getByText, getByLabelText } = render(
     <TeamCreateOutputExtraInformationCard
       {...props}
-      tagSuggestions={['Example']}
+      tagSuggestions={[{ label: 'Example', value: 'Example' }]}
       onChangeTags={mockOnChange}
     />,
   );

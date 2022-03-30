@@ -42,7 +42,7 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Prepare
+      - name: Create Squidex Environment
         if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
         uses: ./.github/actions/create-squidex
         with:
@@ -70,7 +70,7 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Create
+      - name: Create Algolia index
         if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
         uses: ./.github/actions/create-algolia-index
         with:

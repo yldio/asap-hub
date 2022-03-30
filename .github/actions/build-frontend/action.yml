@@ -74,7 +74,7 @@ runs:
         path: |
           apps/**/build*
           packages/**/build*
-        key: definations-output-${{ inputs.environment-name }}-${{ github.sha }}
+        key: definitions-output-${{ inputs.environment-name }}-${{ github.sha }}
 
     - name: Build
       shell: bash

@@ -30,10 +30,6 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     environment: Branch
-    env:
-      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

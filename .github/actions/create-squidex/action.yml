@@ -29,7 +29,7 @@ runs:
       shell: bash
       run: python .github/scripts/squidex/create-app.py
       env:
-        SQUIDEX_APP_NAME: '${{ inputs.squidex-app-name }}'
+        SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
         SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
         SQUIDEX_CLIENT_ID: ${{ inputs.squidex-client-id }}
         SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-client-secret }}
@@ -50,7 +50,7 @@ runs:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_REGION: ${{ inputs.aws-region }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
-        SQUIDEX_APP_NAME: '${{ inputs.squidex-app-name }}'
+        SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
         SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
         SQUIDEX_CLIENT_ID: ${{ inputs.squidex-client-id }}
         SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-client-secret }}

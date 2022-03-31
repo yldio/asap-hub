@@ -25,7 +25,7 @@ on:
         required: true
 
 jobs:
-  definations:
+  definitions:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
@@ -44,7 +44,7 @@ jobs:
           path: |
             apps/**/build*
             packages/**/build*
-          key: definations-output-${{ inputs.environment-name }}-${{ github.sha }}
+          key: definitions-output-${{ inputs.environment-name }}-${{ github.sha }}
 
   transpile:
     runs-on: ubuntu-latest
@@ -95,7 +95,7 @@ jobs:
           key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
 
   frontend:
-    needs: [definations, transpile]
+    needs: [definitions, transpile]
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
@@ -128,7 +128,7 @@ jobs:
           react-app-sentry-dsn: ${{ steps.setup.outputs.react-app-sentry-dsn }}
 
   typecheck:
-    needs: [definations]
+    needs: [definitions]
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
@@ -144,13 +144,13 @@ jobs:
           path: |
             apps/**/build*
             packages/**/build*
-          key: definations-output-${{ inputs.environment-name }}-${{ github.sha }}
+          key: definitions-output-${{ inputs.environment-name }}-${{ github.sha }}
       - name: TypeCheck
         run: |
           yarn typecheck
 
   sls-package:
-    needs: [definations, transpile, rebuild]
+    needs: [definitions, transpile, rebuild]
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014

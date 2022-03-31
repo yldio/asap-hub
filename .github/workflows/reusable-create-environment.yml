@@ -30,10 +30,6 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     environment: Branch
-    env:
-      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      SQUIDEX_BASE_URL: ${{ secrets.SQUIDEX_BASE_URL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -42,7 +38,7 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Prepare
+      - name: Create Squidex Environment
         if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
         uses: ./.github/actions/create-squidex
         with:
@@ -70,7 +66,7 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Create
+      - name: Create Algolia index
         if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
         uses: ./.github/actions/create-algolia-index
         with:

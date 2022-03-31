@@ -6,7 +6,7 @@ import {
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import Users, { UserController } from '../../controllers/users';
-import { LabEventType } from '../webhooks/webhook-lab';
+import { LabEvent, LabPayload } from '../event-bus';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import {
   loopOverCustomCollection,
@@ -18,12 +18,8 @@ export const indexLabUsersHandler =
   (
     userController: UserController,
     algoliaClient: AlgoliaSearchClient,
-  ): ((
-    event: EventBridgeEvent<LabEventType, SquidexWebhookLabPayload>,
-  ) => Promise<void>) =>
-  async (
-    event: EventBridgeEvent<LabEventType, SquidexWebhookLabPayload>,
-  ): Promise<void> => {
+  ): ((event: EventBridgeEvent<LabEvent, LabPayload>) => Promise<void>) =>
+  async (event: EventBridgeEvent<LabEvent, LabPayload>): Promise<void> => {
     logger.debug(`Event ${event['detail-type']}`);
 
     const fetchFunction = ({
@@ -61,15 +57,6 @@ export const indexLabUsersHandler =
 
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
-
-export type SquidexWebhookLabPayload = {
-  type: 'LabsPublished' | 'LabsUpdated' | 'LabsUnpublished' | 'LabsDeleted';
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: 'Published' | 'Updated' | 'Unpublished' | 'Deleted';
-    id: string;
-  };
-};
 
 export const handler = indexLabUsersHandler(
   new Users(new SquidexGraphql()),

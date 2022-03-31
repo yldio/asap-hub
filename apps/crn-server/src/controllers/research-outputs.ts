@@ -238,13 +238,7 @@ export type ResearchOutputInputData = ResearchOutputPostRequest;
 
 const makeODataFilter = (filter?: ResearchOutputFilter): string => {
   if (Array.isArray(filter)) {
-    return filter
-      .reduce(
-        (acc: string[], word: string) =>
-          acc.concat([`data/type/iv eq '${word}'`]),
-        [],
-      )
-      .join(' or ');
+    return filter.map((val) => `data/type/iv eq '${val}'`).join(' or ');
   }
 
   if (filter) {

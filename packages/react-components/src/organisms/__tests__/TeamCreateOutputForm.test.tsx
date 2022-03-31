@@ -151,6 +151,10 @@ it('can submit a form when form data is valid', async () => {
   );
   userEvent.click(screen.getByText('Author Two'));
 
+  fireEvent.change(screen.getByLabelText(/doi/i), {
+    target: { value: 'doi:12.1234' },
+  });
+
   clickShare();
 
   expect(screen.getByRole('button', { name: /Share/i })).not.toBeEnabled();
@@ -170,6 +174,7 @@ it('can submit a form when form data is valid', async () => {
       usedInPublication: true,
       sharingStatus: 'Public',
       publishDate: new Date('2022-03-24').toISOString(),
+      doi: 'doi:12.1234',
     });
     expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
     expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();

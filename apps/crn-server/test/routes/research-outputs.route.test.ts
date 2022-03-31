@@ -236,36 +236,44 @@ describe('/research-outputs/ route', () => {
       const validRRID = { rrid: 'RRID:Hi' };
       const validAccession = { accession: 'NP_1234' };
       const validLabCatalogNumber = { labCatalogNumber: 'Any content' };
+      const noIdentifier = {};
       test.each`
         type                | identifier               | status
         ${'Article'}        | ${validDOI}              | ${201}
         ${'Article'}        | ${validRRID}             | ${400}
         ${'Article'}        | ${validAccession}        | ${400}
         ${'Article'}        | ${validLabCatalogNumber} | ${400}
+        ${'Article'}        | ${noIdentifier}          | ${201}
         ${'Bioinformatics'} | ${validDOI}              | ${201}
         ${'Bioinformatics'} | ${validRRID}             | ${201}
         ${'Bioinformatics'} | ${validAccession}        | ${400}
         ${'Bioinformatics'} | ${validLabCatalogNumber} | ${400}
+        ${'Bioinformatics'} | ${noIdentifier}          | ${201}
         ${'Lab Resource'}   | ${validDOI}              | ${201}
         ${'Lab Resource'}   | ${validRRID}             | ${201}
         ${'Lab Resource'}   | ${validAccession}        | ${400}
         ${'Lab Resource'}   | ${validLabCatalogNumber} | ${201}
+        ${'Lab Resource'}   | ${noIdentifier}          | ${201}
         ${'Dataset'}        | ${validDOI}              | ${201}
         ${'Dataset'}        | ${validRRID}             | ${400}
         ${'Dataset'}        | ${validAccession}        | ${201}
         ${'Dataset'}        | ${validLabCatalogNumber} | ${400}
+        ${'Dataset'}        | ${noIdentifier}          | ${201}
         ${'Protocol'}       | ${validDOI}              | ${201}
         ${'Protocol'}       | ${validRRID}             | ${400}
         ${'Protocol'}       | ${validAccession}        | ${400}
         ${'Protocol'}       | ${validLabCatalogNumber} | ${400}
+        ${'Protocol'}       | ${noIdentifier}          | ${201}
         ${'Grant Document'} | ${validDOI}              | ${400}
         ${'Grant Document'} | ${validRRID}             | ${400}
         ${'Grant Document'} | ${validAccession}        | ${400}
         ${'Grant Document'} | ${validLabCatalogNumber} | ${400}
+        ${'Grant Document'} | ${noIdentifier}          | ${201}
         ${'Presentation'}   | ${validDOI}              | ${400}
         ${'Presentation'}   | ${validRRID}             | ${400}
         ${'Presentation'}   | ${validAccession}        | ${400}
         ${'Presentation'}   | ${validLabCatalogNumber} | ${400}
+        ${'Presentation'}   | ${noIdentifier}          | ${201}
       `(
         'on type $type returns status $status for $identifier',
         async ({ type, identifier, status }) => {
@@ -281,67 +289,89 @@ describe('/research-outputs/ route', () => {
         },
       );
 
-      test('Should validate doi based on a regex', async () => {
+      test('Requires an identifier if funded and used in publication', async () => {
         const researchOutput = getCreateResearchOutput();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
             ...researchOutput,
             type: 'Article',
-            doi: 'doi:12.2222',
+            asapFunded: true,
+            usedInPublication: true,
+          });
+        expect(response.status).toBe(400);
+      });
+
+      test('Accepts doi based on the regex', async () => {
+        const researchOutput = getCreateResearchOutput();
+        const response = await supertest(app)
+          .post('/research-outputs/')
+          .send({
+            ...researchOutput,
+            type: 'Article',
+            ...validDOI,
           });
         expect(response.status).toBe(201);
+      });
 
-        const response2 = await supertest(app)
+      test('Rejects doi based on the regex', async () => {
+        const researchOutput = getCreateResearchOutput();
+        const response = await supertest(app)
           .post('/research-outputs/')
           .send({
             ...researchOutput,
             type: 'Article',
             doi: 'doi:1.222',
           });
-        expect(response2.status).toBe(400);
+        expect(response.status).toBe(400);
       });
 
-      test('Should validate accession based on a regex', async () => {
+      test('Accepts accession based on the regex', async () => {
         const researchOutput = getCreateResearchOutput();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
             ...researchOutput,
             type: 'Dataset',
-            accession: 'NP_1234',
+            ...validAccession,
           });
         expect(response.status).toBe(201);
+      });
 
-        const response2 = await supertest(app)
+      test('Rejects accession based on the regex', async () => {
+        const researchOutput = getCreateResearchOutput();
+        const response = await supertest(app)
           .post('/research-outputs/')
           .send({
             ...researchOutput,
             type: 'Dataset',
             accession: 'NP_HELLO_WORLD',
           });
-        expect(response2.status).toBe(400);
+        expect(response.status).toBe(400);
       });
 
-      test('Should validate rrid based on a regex', async () => {
+      test('Accepts rrid based on the regex', async () => {
         const researchOutput = getCreateResearchOutput();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
             ...researchOutput,
             type: 'Bioinformatics',
-            rrid: 'RRID:Hi',
+            ...validRRID,
           });
         expect(response.status).toBe(201);
+      });
 
-        const response2 = await supertest(app)
+      test('Rejects rrid based on the regex', async () => {
+        const researchOutput = getCreateResearchOutput();
+        const response = await supertest(app)
           .post('/research-outputs/')
           .send({
             ...researchOutput,
             type: 'Bioinformatics',
             rrid: 'HelloWorld',
           });
-        expect(response2.status).toBe(400);
+        expect(response.status).toBe(400);
       });
 
       test.each([

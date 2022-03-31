@@ -4,6 +4,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { ResearchOutputIdentifierType } from '@asap-hub/model';
 import { TeamCreateOutputIdentifier } from '../TeamCreateOutputIdentifier';
 import { noop } from '../../utils';
+import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 
 const props: ComponentProps<typeof TeamCreateOutputIdentifier> = {
   identifierType: ResearchOutputIdentifierType.None,
@@ -17,6 +18,27 @@ const props: ComponentProps<typeof TeamCreateOutputIdentifier> = {
 it('should render Identifier', () => {
   const { getByText } = render(<TeamCreateOutputIdentifier {...props} />);
   expect(getByText(/Identifier/i)).toBeVisible();
+});
+
+it('should reset the identifier to a valid value on entering something unknown', () => {
+  const setIdentifierType = jest.fn();
+  const { getByLabelText } = render(
+    <TeamCreateOutputIdentifier
+      {...props}
+      setIdentifierType={setIdentifierType}
+    />,
+  );
+  fireEvent.change(getByLabelText(/identifier/i), {
+    target: {
+      value: 'UNKNOWN',
+    },
+  });
+
+  fireEvent.keyDown(getByLabelText(/identifier/i), { keyCode: ENTER_KEYCODE });
+
+  expect(setIdentifierType).toHaveBeenCalledWith(
+    ResearchOutputIdentifierType.None,
+  );
 });
 
 describe('RRID', () => {

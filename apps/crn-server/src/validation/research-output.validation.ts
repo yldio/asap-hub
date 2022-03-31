@@ -104,6 +104,20 @@ export const validateResearchOutputPostRequestParameters = validateInput(
 export const validateResearchOutputPostRequestParametersIdentifiers = (
   data: ResearchOutputPostRequest,
 ): void => {
+  const identifierRequired = data.asapFunded && data.usedInPublication;
+
+  if (
+    identifierRequired &&
+    !data.rrid &&
+    !data.doi &&
+    !data.accession &&
+    !data.labCatalogNumber
+  ) {
+    throw Boom.badRequest('Validation error', {
+      details: `An identifier is required for research output that is funded and used in a publication`,
+    });
+  }
+
   const types = researchOutputToIdentifierType[data.type];
 
   if (data.rrid && !types.includes(ResearchOutputIdentifierType.RRID)) {

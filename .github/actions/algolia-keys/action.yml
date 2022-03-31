@@ -1,0 +1,40 @@
+name: 'Get Algolia Keys'
+description: 'Sync Algolia settings'
+inputs:
+  algolia-app-id-name:
+    description: 'SSM Algolia app id name'
+    required: true
+  algolia-api-key-name:
+    description: 'SSM Algolia api key name'
+    required: true
+  aws-access-key-id:
+    description: 'AWS Access Key ID'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
+    required: true
+  aws-default-region:
+    description: 'AWS Region'
+    required: true
+outputs:
+  algolia-app-id:
+    description: 'Algolia App ID'
+    value: '${{ steps.keys.outputs.algolia-app-id }}'
+  algolia-api-key:
+    description: 'Algolia API Key'
+    value: '${{ steps.keys.outputs.algolia-api-key }}'
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Environment Variables
+      shell: bash
+      id: keys
+      run: |
+        ALGOLIA_APP_ID=$(aws ssm get-parameter --name '${{ inputs.algolia-app-id-name }}' --query Parameter.Value --output text)
+        ALGOLIA_API_KEY=$(aws ssm get-parameter --name '${{ inputs.algolia-api-key-name }}' --query Parameter.Value --output text)
+        echo "::set-output name=algolia-app-id::$ALGOLIA_APP_ID"
+        echo "::set-output name=algolia-api-key::$ALGOLIA_API_KEY"
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        AWS_DEFAULT_REGION: ${{ inputs.aws-default-region }}

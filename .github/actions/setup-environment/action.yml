@@ -44,9 +44,9 @@ outputs:
   aws-region:
     description: 'AWS Region'
     value: ${{ steps.vars.outputs.aws-region }}
-  bucket-name:
-    description: 'Bucket Name'
-    value: ${{ steps.vars.outputs.bucket-name }}
+  algolia-backup-bucket-name:
+    description: 'Algolia Backup Bucket Name'
+    value: ${{ steps.vars.outputs.algolia-backup-bucket-name }}
   pr-number:
     description: 'PR Number'
     value: ${{ steps.vars.outputs.pr-number }}
@@ -80,6 +80,9 @@ outputs:
   squidex-app-name:
     description: 'Squidex App Name'
     value: ${{ steps.vars.outputs.squidex-app-name }}
+  squidex-backup-bucket-name:
+    description: 'Squidex Backup Bucket Name'
+    value: ${{ steps.vars.outputs.squidex-backup-bucket-name }}
   squidex-base-url:
     description: 'Squidex Base Url'
     value: ${{ steps.vars.outputs.squidex-base-url }}

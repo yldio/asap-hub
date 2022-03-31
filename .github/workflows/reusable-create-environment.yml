@@ -70,8 +70,10 @@ jobs:
         if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
         uses: ./.github/actions/create-algolia-index
         with:
+          algolia-api-key-name: ${{ steps.setup.outputs.algolia-api-key-name }}
+          algolia-app-id-name: ${{ steps.setup.outputs.algolia-app-id-name }}
+          algolia-backup-bucket-name: ${{ steps.setup.outputs.algolia-backup-bucket-name }}
           algolia-index: ${{ steps.setup.outputs.algolia-index }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          bucket-name: ${{ steps.setup.outputs.bucket-name }}

@@ -1,6 +1,12 @@
 name: 'Algolia Create Index'
 description: 'Create Algolia Index'
 inputs:
+  algolia-api-key-name:
+    description: 'SSM Algolia api key name'
+    required: true
+  algolia-app-id-name:
+    description: 'SSM Algolia app id name'
+    required: true
   algolia-index:
     description: 'Algolia Index'
     required: true
@@ -13,8 +19,8 @@ inputs:
   aws-secret-access-key:
     description: 'AWS Secret Access Key'
     required: true
-  bucket-name:
-    description: 'Bucket name'
+  algolia-backup-bucket-name:
+    description: 'Algolia Backup Bucket Name'
     required: true
 
 runs:
@@ -23,8 +29,9 @@ runs:
     - name: Fetch the Algolia keys
       shell: bash
       run: |
-        echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
-        echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
+        echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name '${{ inputs.algolia-app-id-name }}' --query Parameter.Value --output text)" >> $GITHUB_ENV
+        echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name '${{ inputs.algolia-api-key-name }}' --query Parameter.Value --output text)" >> $GITHUB_ENV
+        echo "::add-mask::$(aws ssm get-parameter --name '${{ inputs.algolia-api-key-name }}' --query Parameter.Value --output text)"
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_DEFAULT_REGION: ${{ inputs.aws-default-region }}
@@ -36,7 +43,7 @@ runs:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_DEFAULT_REGION: ${{ inputs.aws-default-region }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
-        BUCKET_NAME: ${{ inputs.bucket-name }}
+        BUCKET_NAME: ${{ inputs.algolia-backup-bucket-name }}
     - name: Download the files and restore the index
       shell: bash
       run: |
@@ -48,4 +55,4 @@ runs:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_DEFAULT_REGION: ${{ inputs.aws-default-region }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
-        BUCKET_NAME: ${{ inputs.bucket-name }}
+        BUCKET_NAME: ${{ inputs.algolia-backup-bucket-name }}

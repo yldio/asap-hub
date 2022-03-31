@@ -4,7 +4,6 @@ import { useResetRecoilState, useRecoilState } from 'recoil';
 import { NotFoundPage, Loading } from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 import { Layout } from '@asap-hub/gp2-components';
-import { network } from '@asap-hub/routing';
 
 import { auth0State } from './auth/state';
 import Frame from './structure/Frame';
@@ -33,15 +32,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     return <Loading />;
   }
   return (
-    <Layout
-      userOnboarded={user.onboarded}
-      userProfileHref={network({}).users({}).user({ userId: user.id }).$}
-      teams={user.teams.map(({ id, displayName = '' }) => ({
-        name: displayName,
-        href: network({}).teams({}).team({ teamId: id }).$,
-      }))}
-      aboutHref="https://www.parkinsonsroadmap.org/"
-    >
+    <Layout userOnboarded={user.onboarded}>
       <Switch>
         <Route exact path="/">
           <Frame title="Dashboard">

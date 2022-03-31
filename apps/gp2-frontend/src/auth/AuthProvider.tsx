@@ -2,6 +2,7 @@ import { RedirectLoginResult } from '@auth0/auth0-spa-js';
 import { config } from '@asap-hub/auth';
 
 import history from '../history';
+
 import { Auth0Provider } from './react-auth0-spa';
 
 // Copied from the Auth0 React quickstart

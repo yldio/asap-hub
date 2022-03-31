@@ -11108,7 +11108,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react-hooks", "npm:3.4.1"],
             ["@types/uuid", "npm:8.3.0"],
             ["browser-image-compression", "npm:1.0.14"],
-            ["browserslist-useragent-regexp", "npm:3.0.0"],
+            ["browserslist-useragent-regexp", "npm:3.0.2"],
             ["cross-env", "npm:7.0.3"],
             ["date-fns", "npm:2.21.3"],
             ["history", "npm:4.10.1"],

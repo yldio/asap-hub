@@ -97,9 +97,13 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
     }, [identifierType, setIdentifier]);
 
     const onChangeIdentifierType = useCallback(
-      (type: string) => {
-        if (identifiers.find((identifier) => identifier.value === type)) {
-          setIdentifierType(type as ResearchOutputIdentifierType);
+      (newType: string) => {
+        if (
+          identifiers.find(
+            (availableIdentifier) => availableIdentifier.value === newType,
+          )
+        ) {
+          setIdentifierType(newType as ResearchOutputIdentifierType);
         } else {
           setIdentifierType(identifiers[0].value);
         }

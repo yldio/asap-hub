@@ -15156,7 +15156,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist-useragent-regexp@npm:^3.0.2":
+"browserslist-useragent-regexp@npm:^3.0.0, browserslist-useragent-regexp@npm:^3.0.2":
   version: 3.0.2
   resolution: "browserslist-useragent-regexp@npm:3.0.2"
   dependencies:

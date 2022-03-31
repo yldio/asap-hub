@@ -1,6 +1,5 @@
 algolia-api-key-name=algolia-api-key-ci-dev
 algolia-app-id-name=algolia-app-id-dev
-algolia-app-name=algolia-app-id-dev
 algolia-backup-bucket-name=asap-hub-dev-algolia-backup
 algolia-index=asap-hub_dev
 asap-api-url=https://api-dev.hub.asap.science

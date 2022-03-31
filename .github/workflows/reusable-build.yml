@@ -113,7 +113,8 @@ jobs:
       - name: Build
         uses: ./.github/actions/build-frontend
         with:
-          algolia-app-name: ${{ steps.setup.outputs.algolia-app-name }}
+          algolia-app-id-name: ${{ steps.setup.outputs.algolia-app-id-name }}
+          algolia-api-key-name: ${{ steps.setup.outputs.algolia-api-key-name }}
           algolia-index: ${{ steps.setup.outputs.algolia-index }}
           app-release: ${{ steps.setup.outputs.app-release }}
           asap-api-url: ${{ steps.setup.outputs.asap-api-url }}

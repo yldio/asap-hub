@@ -26,16 +26,15 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Fetch the Algolia keys
-      shell: bash
-      run: |
-        echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name '${{ inputs.algolia-app-id-name }}' --query Parameter.Value --output text)" >> $GITHUB_ENV
-        echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name '${{ inputs.algolia-api-key-name }}' --query Parameter.Value --output text)" >> $GITHUB_ENV
-        echo "::add-mask::$(aws ssm get-parameter --name '${{ inputs.algolia-api-key-name }}' --query Parameter.Value --output text)"
-      env:
-        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
-        AWS_DEFAULT_REGION: ${{ inputs.aws-default-region }}
-        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+    - name: Get Algolia Keys
+      id: algolia-keys
+      uses: ./.github/actions/algolia-keys
+      with:
+        algolia-app-id-name: ${{ inputs.algolia-app-id-name }}
+        algolia-api-key-name: ${{ inputs.algolia-api-key-name }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        aws-default-region: ${{ inputs.aws-default-region }}
     - name: Get the latest backup directory name
       shell: bash
       run: echo "MOST_RECENT_BACKUP_DIR=$(aws s3api list-objects-v2 --bucket $BUCKET_NAME --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text | cut -d'/' -f 1)" >> $GITHUB_ENV
@@ -51,6 +50,8 @@ runs:
         export ALGOLIA_BACKUP=$(readlink -f $MOST_RECENT_BACKUP_DIR)
         yarn workspace @asap-hub/crn-server run algolia import -s $ALGOLIA_BACKUP -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
       env:
+        ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+        ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
         ALGOLIA_INDEX: ${{ inputs.algolia-index }}
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_DEFAULT_REGION: ${{ inputs.aws-default-region }}

@@ -121,7 +121,7 @@ jobs:
           auth0-client-id: ${{ steps.setup.outputs.auth0-client-id }}
           auth0-domain: ${{ steps.setup.outputs.auth0-domain }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-region: ${{ steps.setup.outputs.aws-region }}
+          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           environment-name: ${{ inputs.environment-name }}
           react-app-environment: ${{ steps.setup.outputs.react-app-environment }}

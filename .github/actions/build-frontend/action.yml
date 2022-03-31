@@ -25,7 +25,7 @@ inputs:
   aws-access-key-id:
     description: 'AWS Access Key ID'
     required: true
-  aws-region:
+  aws-default-region:
     description: 'AWS Region'
     required: true
   aws-secret-access-key:
@@ -53,8 +53,8 @@ runs:
       with:
         algolia-app-id-name: ${{ inputs.algolia-app-id-name }}
         algolia-api-key-name: ${{ inputs.algolia-api-key-name }}
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
         aws-default-region: ${{ inputs.aws-default-region }}
 
     - name: Cache transpile output

@@ -65,9 +65,10 @@ export default class ResearchOutputs implements ResearchOutputController {
     take?: number;
     skip?: number;
     search?: string;
-    filter?: string[];
+    filter?: ResearchOutputFilter;
+    includeDrafts?: boolean;
   }): Promise<ListResearchOutputResponse> {
-    const { search, filter, take = 8, skip = 0 } = options;
+    const { search, filter, take = 8, skip = 0, includeDrafts } = options;
 
     const searchQ = (search || '')
       .split(' ')
@@ -82,13 +83,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       )
       .join(' or ');
 
-    const filterQ = (filter || [])
-      .reduce(
-        (acc: string[], word: string) =>
-          acc.concat([`data/type/iv eq '${word}'`]),
-        [],
-      )
-      .join(' or ');
+    const filterQ = makeODataFilter(filter);
 
     const filterGraphql = [filterQ && `(${filterQ})`, searchQ && `(${searchQ})`]
       .filter(Boolean)
@@ -98,12 +93,18 @@ export default class ResearchOutputs implements ResearchOutputController {
       await this.squidexGraphqlClient.request<
         FetchResearchOutputsQuery,
         FetchResearchOutputsQueryVariables
-      >(FETCH_RESEARCH_OUTPUTS, {
-        top: take,
-        skip,
-        filter: filterGraphql,
-        withTeams: true,
-      });
+      >(
+        FETCH_RESEARCH_OUTPUTS,
+        {
+          top: take,
+          skip,
+          filter: filterGraphql,
+          withTeams: true,
+        },
+        {
+          includeDrafts,
+        },
+      );
 
     if (queryResearchOutputsContentsWithTotal === null) {
       logger.warn('queryResearchOutputsContentsWithTotal returned null');
@@ -139,6 +140,32 @@ export default class ResearchOutputs implements ResearchOutputController {
     teams,
     ...researchOutputData
   }: ResearchOutputInputData): Promise<Partial<ResearchOutputResponse>> {
+    if (
+      (
+        await this.fetch({
+          filter: {
+            type: researchOutputData.type,
+            title: researchOutputData.title,
+          },
+          includeDrafts: true,
+        })
+      ).total > 0
+    ) {
+      // TODO: Remove Boom from the controller layer
+      // https://asaphub.atlassian.net/browse/CRN-777
+      throw Boom.badRequest('Validation error', [
+        {
+          instancePath: '/title',
+          keyword: 'unique',
+          message: 'must be unique',
+          params: {
+            type: 'string',
+          },
+          schemaPath: '#/properties/title/unique',
+        },
+      ]);
+    }
+
     const { id: researchOutputId } = await this.createResearchOutput(
       researchOutputData,
     );
@@ -187,12 +214,19 @@ export default class ResearchOutputs implements ResearchOutputController {
   }
 }
 
+type ResearchOutputFilter =
+  | string[]
+  | {
+      type?: string;
+      title?: string;
+    };
 export interface ResearchOutputController {
   fetch: (options: {
     take?: number;
     skip?: number;
     search?: string;
-    filter?: string[];
+    filter?: ResearchOutputFilter;
+    includeDrafts?: boolean;
   }) => Promise<ListResearchOutputResponse>;
 
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
@@ -201,3 +235,17 @@ export interface ResearchOutputController {
   ) => Promise<Partial<ResearchOutputResponse>>;
 }
 export type ResearchOutputInputData = ResearchOutputPostRequest;
+
+const makeODataFilter = (filter?: ResearchOutputFilter): string => {
+  if (Array.isArray(filter)) {
+    return filter.map((val) => `data/type/iv eq '${val}'`).join(' or ');
+  }
+
+  if (filter) {
+    return Object.entries(filter)
+      .map(([key, val]) => `data/${key}/iv eq '${val}'`)
+      .join(' and ');
+  }
+
+  return '';
+};

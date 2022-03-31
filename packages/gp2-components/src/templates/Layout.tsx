@@ -161,15 +161,9 @@ const userMenuShownStyles = css({
 
 type LayoutProps = {
   readonly children: ReactNode;
-} & Partial<ComponentProps<typeof OnboardingFooter>> &
-  ComponentProps<typeof MainNavigation> &
+} & ComponentProps<typeof MainNavigation> &
   ComponentProps<typeof UserNavigation>;
-const Layout: FC<LayoutProps> = ({
-  children,
-  onboardable,
-  onboardModalHref,
-  ...userNavProps
-}) => {
+const Layout: FC<LayoutProps> = ({ children, ...userNavProps }) => {
   const [menuShown, setMenuShown] = useState(false);
 
   let location: Location | undefined;
@@ -231,14 +225,6 @@ const Layout: FC<LayoutProps> = ({
             </Suspense>
           </div>
         </div>
-        {onboardable && (
-          <div css={{ gridArea: 'footer' }}>
-            <OnboardingFooter
-              onboardModalHref={onboardModalHref}
-              onboardable={onboardable}
-            />
-          </div>
-        )}
       </article>
     </ToastStack>
   );

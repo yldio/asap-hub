@@ -8,9 +8,6 @@ import { network } from '@asap-hub/routing';
 
 import { auth0State } from './auth/state';
 import Frame from './structure/Frame';
-import CheckOnboarded from './auth/CheckOnboarded';
-import Onboardable from './Onboardable';
-import { useCurrentUserProfileTabRoute } from './hooks';
 
 const loadDashboard = () =>
   import(/* webpackChunkName: "dashboard" */ './dashboard/Dashboard');
@@ -32,44 +29,32 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
   }, []);
 
   const user = useCurrentUser();
-  const tabRoute = useCurrentUserProfileTabRoute();
   if (!user || !recoilAuth0) {
     return <Loading />;
   }
-
   return (
-    <Onboardable>
-      {(onboardable) => (
-        <Layout
-          userOnboarded={user.onboarded}
-          onboardable={onboardable}
-          onboardModalHref={
-            tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined
-          }
-          userProfileHref={network({}).users({}).user({ userId: user.id }).$}
-          teams={user.teams.map(({ id, displayName = '' }) => ({
-            name: displayName,
-            href: network({}).teams({}).team({ teamId: id }).$,
-          }))}
-          aboutHref="https://www.parkinsonsroadmap.org/"
-        >
-          <CheckOnboarded>
-            <Switch>
-              <Route exact path="/">
-                <Frame title="Dashboard">
-                  <Dashboard />
-                </Frame>
-              </Route>
-              <Route>
-                <Frame title="Not Found">
-                  <NotFoundPage />
-                </Frame>
-              </Route>
-            </Switch>
-          </CheckOnboarded>
-        </Layout>
-      )}
-    </Onboardable>
+    <Layout
+      userOnboarded={user.onboarded}
+      userProfileHref={network({}).users({}).user({ userId: user.id }).$}
+      teams={user.teams.map(({ id, displayName = '' }) => ({
+        name: displayName,
+        href: network({}).teams({}).team({ teamId: id }).$,
+      }))}
+      aboutHref="https://www.parkinsonsroadmap.org/"
+    >
+      <Switch>
+        <Route exact path="/">
+          <Frame title="Dashboard">
+            <Dashboard />
+          </Frame>
+        </Route>
+        <Route>
+          <Frame title="Not Found">
+            <NotFoundPage />
+          </Frame>
+        </Route>
+      </Switch>
+    </Layout>
   );
 };
 

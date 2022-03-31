@@ -1,30 +1,14 @@
-import useDeepCompareEffect from 'use-deep-compare-effect';
 import {
   atomFamily,
   selectorFamily,
-  useSetRecoilState,
   useRecoilValue,
-  useRecoilState,
   DefaultValue,
 } from 'recoil';
-import {
-  UserResponse,
-  UserPatchRequest,
-  ListUserResponse,
-} from '@asap-hub/model';
-import { useAuth0, useFlags } from '@asap-hub/react-context';
+import { UserResponse, ListUserResponse } from '@asap-hub/model';
 
 import { authorizationState } from '../../auth/state';
-import {
-  getUser,
-  patchUser,
-  postUserAvatar,
-  getUsersLegacy,
-  getUsers,
-} from './api';
+import { getUser } from './api';
 import { GetListOptions } from '../../api-util';
-import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
-import { useAlgolia } from '../../hooks/algolia';
 
 const userIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -100,70 +84,4 @@ const userState = selectorFamily<UserResponse | undefined, string>({
       get(patchedUserState(id)) ?? get(initialUserState(id)),
 });
 
-export const usePrefetchUsers = (
-  options: GetListOptions = {
-    filters: new Set(),
-    searchQuery: '',
-    pageSize: CARD_VIEW_PAGE_SIZE,
-    currentPage: 0,
-  },
-) => {
-  const authorization = useRecoilValue(authorizationState);
-  const [users, setUsers] = useRecoilState(usersState(options));
-  useDeepCompareEffect(() => {
-    if (users === undefined) {
-      getUsersLegacy(options, authorization).then(setUsers).catch();
-    }
-  }, [authorization, options, setUsers, users]);
-};
-export const useUsers = (options: GetListOptions) => {
-  const authorization = useRecoilValue(authorizationState);
-  const [users, setUsers] = useRecoilState(usersState(options));
-  const algoliaClient = useAlgolia();
-  const useAlgoliaSearch = useFlags().isEnabled('ALGOLIA_USER_SEARCH');
-  if (users === undefined) {
-    if (useAlgoliaSearch) {
-      throw getUsers(algoliaClient.client, options)
-        .then(setUsers)
-        .catch(setUsers);
-    } else {
-      throw getUsersLegacy(options, authorization)
-        .then(setUsers)
-        .catch(setUsers);
-    }
-  }
-  if (users instanceof Error) {
-    throw users;
-  }
-  return users;
-};
-
 export const useUserById = (id: string) => useRecoilValue(userState(id));
-
-export const usePatchUserById = (id: string) => {
-  const { getTokenSilently } = useAuth0();
-  const authorization = useRecoilValue(authorizationState);
-  const setPatchedUser = useSetRecoilState(patchedUserState(id));
-  return async (patch: UserPatchRequest) => {
-    setPatchedUser(await patchUser(id, patch, authorization));
-    await getTokenSilently({
-      redirect_uri: window.location.origin,
-      ignoreCache: true,
-    });
-  };
-};
-
-export const usePatchUserAvatarById = (id: string) => {
-  const { getTokenSilently } = useAuth0();
-  const authorization = useRecoilValue(authorizationState);
-  const setSetPatchedUserState = useSetRecoilState(patchedUserState(id));
-  return async (avatar: string) => {
-    const user = await postUserAvatar(id, { avatar }, authorization);
-    await getTokenSilently({
-      redirect_uri: window.location.origin,
-      ignoreCache: true,
-    });
-
-    setSetPatchedUserState(user);
-  };
-};

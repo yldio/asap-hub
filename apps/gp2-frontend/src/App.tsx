@@ -14,7 +14,6 @@ import Signin from './auth/Signin';
 import Logout from './auth/Logout';
 import Frame from './structure/Frame';
 import { SENTRY_DSN, ENVIRONMENT, RELEASE } from './config';
-import SentryAuth0 from './auth/SentryAuth0';
 
 init({
   dsn: SENTRY_DSN,
@@ -74,7 +73,6 @@ const App: FC<Record<string, never>> = () => {
     <RecoilRoot>
       <Frame title="GP2 Hub">
         <AuthProvider>
-          <SentryAuth0 />
           <Router history={history}>
             <LastLocationProvider>
               <Frame title={null}>

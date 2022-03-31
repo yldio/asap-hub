@@ -10620,7 +10620,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/model/",
           "packageDependencies": [
             ["@asap-hub/model", "workspace:packages/model"],
-            ["@babel/runtime-corejs3", "npm:7.14.0"]
+            ["@babel/runtime-corejs3", "npm:7.14.0"],
+            ["ajv", "npm:8.10.0"]
           ],
           "linkType": "SOFT",
         }]

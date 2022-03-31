@@ -705,6 +705,7 @@ __metadata:
   resolution: "@asap-hub/model@workspace:packages/model"
   dependencies:
     "@babel/runtime-corejs3": ^7.14.0
+    ajv: ^8.10.0
   languageName: unknown
   linkType: soft
 

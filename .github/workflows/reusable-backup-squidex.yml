@@ -18,7 +18,7 @@ on:
         description: 'Squidex Client Secret'
         required: true
 jobs:
-  make_squidex_backup:
+  backup:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
@@ -40,7 +40,7 @@ jobs:
           SQUIDEX_APP: ${{ steps.setup.outputs.squidex-app-name }}
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
           SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      - name: Run sync
+      - name: Run sync out
         run: sq sync out ./backup
       - name: Tar the files
         run: |

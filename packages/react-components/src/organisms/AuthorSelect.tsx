@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { ReactElement, ReactNode } from 'react';
 import { components } from 'react-select';
 import { Avatar } from '../atoms';
-import { userPlaceholderIcon } from '../icons';
+import { userPlaceholderIcon, plusIcon } from '../icons';
 import { MultiSelectOptionsType } from '../atoms/MultiSelect';
 import LabeledMultiSelect, {
   LabeledMultiSelectProps,
@@ -21,10 +21,10 @@ const LabelWithAvatar = ({
   author,
   children,
 }: {
-  author: UserResponse | ExternalAuthorResponse;
+  author?: UserResponse | ExternalAuthorResponse;
   children: ReactElement | ReactNode;
 }) =>
-  isInternalUser(author) ? (
+  author && isInternalUser(author) ? (
     <>
       <Avatar
         firstName={author.firstName}
@@ -48,7 +48,7 @@ const optionStyles = css({
 });
 
 type AuthorOption = {
-  user: UserResponse | ExternalAuthorResponse;
+  user?: UserResponse | ExternalAuthorResponse;
 } & MultiSelectOptionsType;
 
 type AuthorSelectProps = LabeledMultiSelectProps<AuthorOption>;
@@ -56,6 +56,7 @@ type AuthorSelectProps = LabeledMultiSelectProps<AuthorOption>;
 const AuthorSelect: React.FC<AuthorSelectProps> = (props) => (
   <LabeledMultiSelect<AuthorOption>
     {...props}
+    creatable={true}
     components={{
       MultiValueContainer: (multiValueContainerProps) => (
         <div
@@ -79,9 +80,18 @@ const AuthorSelect: React.FC<AuthorSelectProps> = (props) => (
       Option: (optionProps) => (
         <components.Option {...optionProps}>
           <div css={optionStyles}>
-            <LabelWithAvatar author={optionProps.data.user}>
-              {optionProps.children}
-            </LabelWithAvatar>
+            {optionProps.data.user ? (
+              <LabelWithAvatar author={optionProps.data.user}>
+                {optionProps.children}
+              </LabelWithAvatar>
+            ) : (
+              <>
+                {plusIcon}
+                <span>
+                  <strong>{optionProps.children} </strong>(Non CRN)
+                </span>
+              </>
+            )}
           </div>
         </components.Option>
       ),

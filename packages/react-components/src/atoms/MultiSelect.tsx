@@ -13,12 +13,16 @@ import Select, {
   Props,
 } from 'react-select';
 import AsyncSelect, { Props as AsyncProps } from 'react-select/async';
+import AsyncCreatableSelect, {
+  Props as AsyncCreatableProps,
+} from 'react-select/async-creatable';
 import {
   SortableContainer,
   SortableContainerProps,
   SortableElement,
   SortEndHandler,
   SortableHandle,
+  WrappedComponent,
 } from 'react-sortable-hoc';
 import { MultiValueGenericProps } from 'react-select/src/components/MultiValue';
 
@@ -39,6 +43,7 @@ export function arrayMove<T>(
 }
 
 export type MultiSelectOptionsType = {
+  isNew?: boolean;
   isFixed?: boolean;
   label: string;
   value: string;
@@ -67,12 +72,16 @@ const SortableMultiValueLabel = SortableHandle(
   ),
 );
 
-const SortableAsyncSelect = SortableContainer(AsyncSelect, {
-  withRef: true,
-}) as React.ComponentClass<
-  Props<MultiSelectOptionsType, true> & SortableContainerProps
->;
-
+const SortableAsyncSelect = (
+  wrapper: WrappedComponent<
+    ComponentProps<typeof AsyncCreatableSelect | typeof AsyncSelect>
+  >,
+) =>
+  SortableContainer(wrapper, {
+    withRef: true,
+  }) as React.ComponentClass<
+    Props<MultiSelectOptionsType, true> & SortableContainerProps
+  >;
 const SortableSelect = SortableContainer(Select, {
   withRef: true,
 }) as React.ComponentClass<
@@ -96,6 +105,9 @@ type RefType<T extends MultiSelectOptionsType> =
   | (AsyncSelect<T, true> & {
       getWrappedInstance: undefined;
     })
+  | (AsyncCreatableSelect<T, true> & {
+      getWrappedInstance: undefined;
+    })
   | {
       blur: undefined;
       getWrappedInstance: () => Select<T, true>;
@@ -103,6 +115,10 @@ type RefType<T extends MultiSelectOptionsType> =
   | {
       blur: undefined;
       getWrappedInstance: () => AsyncSelect<T, true>;
+    }
+  | {
+      blur: undefined;
+      getWrappedInstance: () => AsyncCreatableSelect<T, true>;
     }
   | null;
 
@@ -114,12 +130,20 @@ export type MultiSelectProps<T extends MultiSelectOptionsType> = {
   readonly onChange?: (newValues: OptionsType<T>) => void;
   readonly values?: OptionsType<T>;
   readonly sortable?: boolean;
+  readonly creatable?: boolean;
 } & (
   | (Pick<Props<T, true>, 'noOptionsMessage' | 'components'> & {
       readonly suggestions: ReadonlyArray<T>;
       readonly loadOptions?: undefined;
     })
   | (Pick<AsyncProps<T, true>, 'noOptionsMessage' | 'components'> & {
+      readonly loadOptions: (
+        inputValue: string,
+        callback: (options: ReadonlyArray<T>) => void,
+      ) => Promise<ReadonlyArray<T>> | void;
+      readonly suggestions?: undefined;
+    })
+  | (Pick<AsyncCreatableProps<T, true>, 'noOptionsMessage' | 'components'> & {
       readonly loadOptions: (
         inputValue: string,
         callback: (options: ReadonlyArray<T>) => void,
@@ -140,6 +164,7 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
   values = [],
   onChange = noop,
   sortable = true,
+  creatable = false,
 }: MultiSelectProps<T>): ReactElement => {
   const [validationMsg, setValidationMsg] = useState('');
 
@@ -202,8 +227,25 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
     },
   };
 
+  const creatableProps = creatable
+    ? {
+        createOptionPosition: 'first',
+        formatCreateLabel: (inputValue: string) => inputValue,
+        onCreateOption: (inputValue: string) =>
+          onChange(
+            values.concat([
+              { label: inputValue, value: inputValue, isNew: true } as T,
+            ]),
+          ),
+      }
+    : undefined;
+
   const SelectComponent = sortable ? SortableSelect : Select;
-  const AsyncSelectComponent = sortable ? SortableAsyncSelect : AsyncSelect;
+  const AsyncComponent = creatable ? AsyncCreatableSelect : AsyncSelect;
+
+  const AsyncSelectComponent = sortable
+    ? SortableAsyncSelect(AsyncComponent)
+    : AsyncComponent;
 
   return (
     <div css={containerStyles} onContextMenu={handleOnContextMenu}>
@@ -212,6 +254,7 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
       ) : (
         <AsyncSelectComponent<T, true>
           {...commonProps}
+          {...creatableProps}
           loadOptions={loadOptions}
           cacheOptions
           defaultOptions

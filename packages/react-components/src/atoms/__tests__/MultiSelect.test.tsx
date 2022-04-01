@@ -363,4 +363,90 @@ describe('Async', () => {
 
     await waitFor(() => expect(mockOnChange).toHaveBeenCalledWith([]));
   });
+
+  it('supports adding new options', async () => {
+    const { queryByText, getAllByText, getByDisplayValue, rerender } = render(
+      <MultiSelect
+        {...asyncProps}
+        placeholder={'type something'}
+        loadOptions={() =>
+          Promise.resolve([{ label: 'Example', value: '123' }])
+        }
+        sortable={false}
+      />,
+    );
+
+    userEvent.click(getByDisplayValue(''));
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+
+    userEvent.type(getByDisplayValue(''), 'Test');
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+
+    expect(getAllByText('Test')).toHaveLength(1);
+
+    rerender(
+      <MultiSelect
+        {...asyncProps}
+        placeholder={'type something'}
+        loadOptions={() =>
+          Promise.resolve([{ label: 'Example', value: '123' }])
+        }
+        sortable={false}
+        creatable={true}
+      />,
+    );
+
+    userEvent.click(getByDisplayValue(''));
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+
+    userEvent.type(getByDisplayValue(''), 'Test');
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    expect(getAllByText('Test')).toHaveLength(2);
+  });
+
+  it('handles adding new options', async () => {
+    const mockOnChange = jest.fn();
+    const loadOptions = jest
+      .fn()
+      .mockResolvedValue([{ label: 'Example', value: '123' }]);
+
+    const { queryByText, getAllByText, getByDisplayValue } = render(
+      <MultiSelect
+        {...asyncProps}
+        loadOptions={loadOptions}
+        creatable={true}
+        onChange={mockOnChange}
+      />,
+    );
+
+    userEvent.click(getByDisplayValue(''));
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+
+    userEvent.type(getByDisplayValue(''), 'Test');
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+
+    userEvent.click(getAllByText('Test')[1]);
+
+    await waitFor(() => {
+      expect(mockOnChange).toHaveBeenCalledWith([
+        {
+          value: 'Test',
+          label: 'Test',
+          isNew: true,
+        },
+      ]);
+    });
+  });
 });

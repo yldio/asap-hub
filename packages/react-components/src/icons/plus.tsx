@@ -9,7 +9,7 @@ const plusIcon = (
   >
     <path
       d="M12 6v12M6 12h12"
-      stroke="#34A270"
+      stroke="currentColor"
       strokeWidth={1.3}
       strokeMiterlimit={10}
       strokeLinecap="round"

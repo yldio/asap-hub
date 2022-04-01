@@ -18,7 +18,6 @@ import {
   colorWithTransparency,
   pearl,
   MenuHeader,
-  OnboardingFooter,
   ToastStack,
   Overlay,
   navigationGrey,

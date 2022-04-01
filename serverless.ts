@@ -40,6 +40,8 @@ export const plugins = [
   'serverless-webpack',
 ];
 
+const eventBusSource = 'asap.entity-updated';
+
 const serverlessConfig: AWS = {
   service,
   plugins,
@@ -369,21 +371,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_INDEX: `asap-hub_${envRef}`,
       },
     },
-    labUpserted: {
-      handler: 'apps/crn-server/src/handlers/webhooks/webhook-lab.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/labs',
-          },
-        },
-      ],
-      environment: {
-        EVENT_BUS: 'asap-events-${self:provider.stage}',
-        EVENT_SOURCE: 'asap.lab',
-      },
-    },
     indexLabUsers: {
       handler:
         'apps/crn-server/src/handlers/lab/index-lab-users-handler.handler',
@@ -392,12 +379,12 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: ['asap.lab'],
+              source: [eventBusSource],
               'detail-type': [
-                'LabCreated',
-                'LabPublished',
-                'LabUpdated',
-                'LabDeleted',
+                'LabsPublished',
+                'LabsUpdated',
+                'LabsUnpublished',
+                'LabsDeleted',
               ],
             },
           },
@@ -574,6 +561,21 @@ const serverlessConfig: AWS = {
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
+      },
+    },
+    squidexWebhook: {
+      handler: 'apps/crn-server/src/handlers/webhooks/webhook-squidex.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/squidex',
+          },
+        },
+      ],
+      environment: {
+        EVENT_BUS: 'asap-events-${self:provider.stage}',
+        EVENT_SOURCE: eventBusSource,
       },
     },
     ...(NODE_ENV === 'production'

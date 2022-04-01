@@ -1,0 +1,42 @@
+{
+  "$schema": "./../__json/rule.json",
+  "isEnabled": true,
+  "name": "Entity updated",
+  "trigger": {
+    "triggerType": "ContentChanged",
+    "schemas": [
+      {
+        "schemaId": "calendars",
+        "condition": "event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
+      },
+      {
+        "schemaId": "external-authors",
+        "condition": "event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
+      },
+      {
+        "schemaId": "labs",
+        "condition": "event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
+      },
+      {
+        "schemaId": "research-outputs",
+        "condition": "event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
+      },
+      {
+        "schemaId": "teams",
+        "condition": "event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
+      },
+      {
+        "schemaId": "users",
+        "condition": "event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
+      }
+    ],
+    "handleAll": false
+  },
+  "action": {
+    "url": "ASAP_API_URL/webhook/squidex",
+    "method": "POST",
+    "sharedSecret": "SQUIDEX_SHARED_SECRET",
+    "isFrozen": true,
+    "actionType": "Webhook"
+  }
+}

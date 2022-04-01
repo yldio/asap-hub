@@ -45,12 +45,22 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Test
-        if: ${{ inputs.environment-name=='Branch' }}
-        uses: ./.github/actions/verify-test-e2e
+      - name: Cache build output
+        uses: actions/cache@v2
         with:
-          asap-app-url: ${{ steps.setup.outputs.asap-app-url }}
-          environment-name: ${{ inputs.environment-name }}
+          path: |
+            .yarn/unplugged/
+          key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
+      - name: Install Playwright
+        shell: bash
+        run: |
+          yarn workspace @asap-hub/e2e-tests run playwright install
+      - name: Test
+        shell: bash
+        run: |
+          yarn workspace @asap-hub/e2e-tests run playwright test
+        env:
+          ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
 
   schema:
     runs-on: ubuntu-latest

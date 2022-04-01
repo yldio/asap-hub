@@ -22,18 +22,26 @@ on:
         type: string
         description: The PR number to run for
 jobs:
-
   sync_env_index:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Check PR Number
+        if: ${{ github.event.inputs.environment-name=='Branch' }}
         uses: ./.github/actions/is-number
         with:
-          number: ${{ inputs.pr-number }}
+          number: ${{ github.event.inputs.pr-number }}
       - name: Test
-        run: echo 'Test'
+        run: |
+          echo ${{ github.event.inputs.environment-name }}
+          echo 'Test'
     # uses: ./.github/workflows/algolia-sync-v2.yml
     # with:
     #   entity: ${{ github.event.inputs.entity }}

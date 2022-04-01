@@ -7,13 +7,13 @@ inputs:
 runs:
   using: 'composite'
   steps:
-      - name: Check Number
-        shell: bash
-        run: |
-          re='^[0-9]+$'
-          if ! [[ $NUMBER =~ $re ]]; then
-            echo 'Invalid Number.' $NUMBER
-            exit 1
-          fi
-        env:
-          NUMBER: ${{ inputs.number }}
+    - name: Check Number
+      shell: bash
+      run: |
+        re='^[0-9]+$'
+        if ! [[ $NUMBER =~ $re ]]; then
+          echo 'Invalid Number.' $NUMBER
+          exit 1
+        fi
+      env:
+        NUMBER: ${{ inputs.number }}

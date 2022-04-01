@@ -1,0 +1,19 @@
+name: 'Is Number'
+description: 'Check if a string is a number'
+inputs:
+  number:
+    description: 'The string to check'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+      - name: Check Number
+        shell: bash
+        run: |
+          re='^[0-9]+$'
+          if ! [[ $NUMBER =~ $re ]]; then
+            echo 'Invalid Number.' $NUMBER
+            exit 1
+          fi
+        env:
+          NUMBER: ${{ inputs.number }}

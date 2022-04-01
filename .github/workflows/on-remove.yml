@@ -10,19 +10,15 @@ on:
         type: string
         description: Choose which PR number to destroy
 jobs:
-  sls-teardown:
+  sls:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    env:
-      NODE_ENV: 'production'
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
+    environment: Branch
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -45,15 +41,21 @@ jobs:
         env:
           ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
           ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
           AWS_REGION: ${{ steps.setup.outputs.aws-region }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          NODE_ENV: 'production'
           SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
       - name: Remove GitLab CF Stack
         env:
           ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
           ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
           AWS_REGION: ${{ steps.setup.outputs.aws-region }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          NODE_ENV: 'production'
           SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}-gitlab
         if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
         run: yarn sls remove --verbose
@@ -64,16 +66,23 @@ jobs:
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       - name: Delete PR Squidex App created by gitlab
         env:
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}-gitlab
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
         run: python .github/scripts/squidex/delete-app.py
 
-  delete-algolia-indice:
+  algolia-index:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -107,7 +116,7 @@ jobs:
 
   notify_failure:
     runs-on: ubuntu-18.04
-    needs: [sls-teardown, delete-algolia-indice]
+    needs: [sls-teardown, delete-algolia-index]
     if: ${{ failure() && (github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub') }}
     steps:
       - name: Checkout

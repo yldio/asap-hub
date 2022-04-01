@@ -1,4 +1,4 @@
-name: PR Env - Sync Algolia with squidex V2
+name: Sync Algolia with Squidex
 on:
   workflow_dispatch:
     inputs:
@@ -22,7 +22,7 @@ on:
         type: string
         description: The PR number to run for
 jobs:
-  sync_env_index:
+  sync_index:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment-name }}
     container:

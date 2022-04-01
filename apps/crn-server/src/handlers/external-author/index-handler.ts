@@ -8,10 +8,7 @@ import logger from '../../utils/logger';
 import ExternalAuthors, {
   ExternalAuthorsController,
 } from '../../controllers/external-authors';
-import {
-  ExternalAuthorEventType,
-  SquidexWebhookExternalAuthorPayload,
-} from '../webhooks/webhook-external-author';
+import { ExternalAuthorEvent, ExternalAuthorPayload } from '../event-bus';
 import { EventBridgeHandler } from '../../utils/types';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 
@@ -19,10 +16,7 @@ export const indexExternalAuthorHandler =
   (
     externalAuthorController: ExternalAuthorsController,
     algoliaClient: AlgoliaSearchClient,
-  ): EventBridgeHandler<
-    ExternalAuthorEventType,
-    SquidexWebhookExternalAuthorPayload
-  > =>
+  ): EventBridgeHandler<ExternalAuthorEvent, ExternalAuthorPayload> =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
@@ -56,6 +50,6 @@ export const handler = indexExternalAuthorHandler(
 );
 
 export type ExternalAuthorIndexEventBridgeEvent = EventBridgeEvent<
-  ExternalAuthorEventType,
+  ExternalAuthorEvent,
   ExternalAuthorsController
 >;

@@ -303,21 +303,13 @@ describe('External Author index handler', () => {
 });
 
 const unpublishedEvent = (id: string = 'external-author-1234') =>
-  getExternalAuthorEvent(
-    id,
-    'ExternalAuthorsUnpublished',
-    'ExternalAuthorDeleted',
-  );
+  getExternalAuthorEvent(id, 'ExternalAuthorsUnpublished');
 
 const deleteEvent = (id: string = 'external-author-1234') =>
-  getExternalAuthorEvent(id, 'ExternalAuthorsDeleted', 'ExternalAuthorDeleted');
+  getExternalAuthorEvent(id, 'ExternalAuthorsDeleted');
 
 const createEvent = (id: string = 'external-author-1234') =>
-  getExternalAuthorEvent(
-    id,
-    'ExternalAuthorsPublished',
-    'ExternalAuthorPublished',
-  );
+  getExternalAuthorEvent(id, 'ExternalAuthorsPublished');
 
 const updateEvent = (id: string = 'external-author-1234') =>
-  getExternalAuthorEvent(id, 'ExternalAuthorsUpdated', 'ExternalAuthorUpdated');
+  getExternalAuthorEvent(id, 'ExternalAuthorsUpdated');

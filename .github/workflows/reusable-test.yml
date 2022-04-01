@@ -79,13 +79,25 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Test Integration
-        uses: ./.github/actions/test-integration
-        with:
-          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}-${{ github.run_id }}
-          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
-          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
-          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      - name: Setup app
+        shell: bash
+        run: |
+          python .github/scripts/squidex/create-app.py
+          yarn test:integration
+        env:
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}-${{ github.run_id }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+      - name: Delete app
+        shell: bash
+        if: always()
+        run: python .github/scripts/squidex/delete-app.py
+        env:
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}-${{ github.run_id }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
 
   browser:
     runs-on: ubuntu-latest

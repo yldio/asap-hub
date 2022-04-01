@@ -63,7 +63,6 @@ jobs:
           name: sls-package-${{ inputs.environment-name }}
           path: 'sls-package'
       - name: Deploy
-        shell: bash
         run: |
           yarn sls deploy --package sls-package --verbose
         env:
@@ -71,7 +70,7 @@ jobs:
           ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
           ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_ACM_CERTIFICATE_ARN: ${{ inputs.aws-acm-certificate-arn }}
+          AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
           AWS_REGION: ${{ steps.setup.outputs.aws-region }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           CURRENT_REVISION: ${{ github.sha }}
@@ -139,14 +138,18 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Update Squidex schema
-        uses: ./.github/actions/deploy-squidex-schema
-        with:
-          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
-          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
-          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
-          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-          squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
-          asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
+        run: |
+          sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
+          sq config use $SQUIDEX_APP_NAME
+          .github/scripts/squidex-sync/config-rules.sh
+          sq sync in packages/squidex/schema -t schemas -t rules --delete
+        env:
+          ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
+          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+          SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   ses:
     needs: [sls-package]
@@ -164,12 +167,25 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
+      - name: Cache build output
+        uses: actions/cache@v2
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}
+      - name: Cache rebuild output
+        uses: actions/cache@v2
+        with:
+          path: |
+            .yarn/unplugged/
+          key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
       - name: Deploy
         if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
-        uses: ./.github/actions/deploy-ses
-        with:
-          app-origin: ${{ steps.setup.outputs.asap-app-url }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          environment-name: ${{ inputs.environment-name }}
-          ses-region: ${{ steps.setup.outputs.ses-region }}
+        run: |
+          yarn workspace @asap-hub/messages deploy $SES_REGION
+        env:
+          APP_ORIGIN: ${{ steps.setup.outputs.asap-app-url }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          SES_REGION: ${{ steps.setup.outputs.ses-region }}

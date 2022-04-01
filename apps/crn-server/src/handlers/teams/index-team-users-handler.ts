@@ -6,10 +6,7 @@ import {
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import Users, { UserController } from '../../controllers/users';
-import {
-  TeamsEventType,
-  SquidexWebhookTeamPayload,
-} from '../webhooks/webhook-teams';
+import { TeamEvent, TeamPayload } from '../event-bus';
 import {
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
@@ -21,12 +18,8 @@ export const indexTeamUsersHandler =
   (
     userController: UserController,
     algoliaClient: AlgoliaSearchClient,
-  ): ((
-    event: EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>,
-  ) => Promise<void>) =>
-  async (
-    event: EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>,
-  ): Promise<void> => {
+  ): ((event: EventBridgeEvent<TeamEvent, TeamPayload>) => Promise<void>) =>
+  async (event: EventBridgeEvent<TeamEvent, TeamPayload>): Promise<void> => {
     logger.debug(`Event ${event['detail-type']}`);
 
     const fetchFunction = ({
@@ -71,6 +64,6 @@ export const handler = indexTeamUsersHandler(
 );
 
 export type UserIndexEventBridgeEvent = EventBridgeEvent<
-  TeamsEventType,
-  SquidexWebhookTeamPayload
+  TeamEvent,
+  TeamPayload
 >;

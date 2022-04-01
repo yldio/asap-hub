@@ -468,21 +468,6 @@ const serverlessConfig: AWS = {
         EVENT_SOURCE: 'asap.research-output',
       },
     },
-    teamUpserted: {
-      handler: 'apps/crn-server/src/handlers/webhooks/webhook-teams.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/teams',
-          },
-        },
-      ],
-      environment: {
-        EVENT_BUS: 'asap-events-${self:provider.stage}',
-        EVENT_SOURCE: 'asap.teams',
-      },
-    },
     invalidateCache: {
       handler:
         'apps/crn-server/src/handlers/invalidate-cache/invalidate-handler.handler',
@@ -517,8 +502,8 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: ['asap.teams'],
-              'detail-type': ['TeamsCreated', 'TeamsUpdated', 'TeamsDeleted'],
+              source: [eventBusSource],
+              'detail-type': ['TeamsPublished', 'TeamsUpdated', 'TeamsDeleted'],
             },
           },
         },
@@ -536,8 +521,8 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: ['asap.teams'],
-              'detail-type': ['TeamsCreated', 'TeamsUpdated', 'TeamsDeleted'],
+              source: [eventBusSource],
+              'detail-type': ['TeamsPublished', 'TeamsUpdated', 'TeamsDeleted'],
             },
           },
         },

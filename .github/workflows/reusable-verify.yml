@@ -99,9 +99,10 @@ jobs:
           path: |
             .yarn/unplugged/
           key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
-      - name: Register
+      - name: Register Sentry
         if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
-        uses: ./.github/actions/register-release
-        with:
-          frontend-sentry-release-auth-token: ${{ secrets.FRONTEND_SENTRY_RELEASE_AUTH_TOKEN }}
-          app-release: ${{ steps.setup.outputs.app-release }}
+        run: |
+          yarn run release:frontend
+        env:
+          FRONTEND_SENTRY_RELEASE_AUTH_TOKEN: ${{ secrets.FRONTEND_SENTRY_RELEASE_AUTH_TOKEN }}
+          REACT_APP_RELEASE: ${{ steps.setup.outputs.app-release }}

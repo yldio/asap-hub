@@ -4,6 +4,9 @@ inputs:
   environment-name:
     description: 'Current environment'
     required: true
+  pr-number:
+    description: 'The PR number'
+    required: true
 outputs:
   algolia-app-id-name:
     description: 'Algolia App id SSM name'
@@ -14,6 +17,9 @@ outputs:
   algolia-index:
     description: 'Algolia Index'
     value: ${{ steps.vars.outputs.algolia-index }}
+  algolia-index-temp:
+    description: 'Algolia Index'
+    value: ${{ steps.vars.outputs.algolia-index }}_temp
   app-release:
     description: 'App Release'
     value: ${{ steps.vars.outputs.app-release }}
@@ -105,7 +111,7 @@ runs:
         set_outputs $ENVIRONMENT_NAME
 
         if [ "$ENVIRONMENT_NAME" = "Branch" ]; then
-          PR_NUMBER=${{ github.event.number || github.event.inputs.prNumber }}
+          PR_NUMBER=${{ github.event.number || github.event.inputs.pr-number || inputs.pr-number }}
           echo "::set-output name=algolia-index::asap-hub_CI-$PR_NUMBER"
           echo "::set-output name=app-release::${{ github.run_id }}-dev"
           echo "::set-output name=asap-api-url::https://api-$PR_NUMBER.hub.asap.science"

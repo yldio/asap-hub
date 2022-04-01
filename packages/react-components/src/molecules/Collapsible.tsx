@@ -29,7 +29,9 @@ const Collapsible: React.FC<CollapsibleProps> = ({
   const [expanded, setExpanded] = useState(initiallyExpanded);
   return (
     <div>
-      <div css={[expanded ? {} : previewStyles]}>{children}</div>
+      <div css={[expanded ? { display: 'flex' } : previewStyles]}>
+        {children}
+      </div>
       <div
         css={{
           padding: `${12 / perRem}em 0`,

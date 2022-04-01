@@ -104,15 +104,22 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Update index
-        uses: ./.github/actions/deploy-algolia-settings
+      - name: Get Algolia Keys
+        id: algolia-keys
+        uses: ./.github/actions/algolia-keys
         with:
           algolia-api-key-name: ${{ steps.setup.outputs.algolia-api-key-name }}
           algolia-app-id-name: ${{ steps.setup.outputs.algolia-app-id-name }}
-          algolia-index: ${{ steps.setup.outputs.algolia-index }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Synchronize Schema
+        run: |
+          yarn run algolia:upload
+        env:
+          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
 
   squidex-schema:
     needs: [sls-package]

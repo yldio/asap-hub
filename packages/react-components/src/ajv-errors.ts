@@ -1,7 +1,7 @@
 import { ValidationErrorResponse } from '@asap-hub/model';
 
 export const getAjvErrorForPath = (
-  errors: ValidationErrorResponse['data'] = [],
+  errors: ValidationErrorResponse['data'],
   path: string,
   copy: string,
 ) =>

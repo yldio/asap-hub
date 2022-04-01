@@ -67,3 +67,8 @@ export const getHandledValidationErrors = (
   )
     ? response.data
     : false;
+
+export const clearAjvErrorForPath = (
+  errors: ValidationErrorResponse['data'],
+  path: string,
+) => errors.filter(({ instancePath }) => instancePath !== path);

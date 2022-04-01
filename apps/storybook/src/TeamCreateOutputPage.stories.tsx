@@ -15,6 +15,7 @@ export const Normal = () => (
         value: suggestion,
       }))}
       type="Article"
+      onSave={() => Promise.resolve()}
       getLabSuggestions={() =>
         new Promise((resolve) => {
           setTimeout(() => {

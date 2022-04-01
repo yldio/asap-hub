@@ -5,6 +5,7 @@ import {
   ResearchOutputSharingStatus,
   ResearchOutputSubtype,
   researchOutputTypeToSubtype,
+  ValidationErrorResponse,
 } from '@asap-hub/model';
 
 import { globeIcon } from '../icons';
@@ -17,6 +18,7 @@ import {
   LabeledDateField,
 } from '../molecules';
 import { noop } from '../utils';
+import { getAjvErrorForPath } from '../ajv-errors';
 
 type TeamCreateOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
@@ -34,6 +36,10 @@ type TeamCreateOutputFormSharingCardProps = Pick<
   asapFunded: DecisionOption;
   usedInPublication: DecisionOption;
   publishDate?: Date;
+  serverValidation?: {
+    errors: ValidationErrorResponse['data'];
+    clearError: (instancePath: string) => void;
+  };
 };
 
 const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardProps> =
@@ -48,6 +54,7 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
     usedInPublication,
     sharingStatus,
     publishDate,
+    serverValidation = { clearError: noop, errors: [] },
     onChangeDescription = noop,
     onChangeLink = noop,
     onChangeTitle = noop,
@@ -65,11 +72,21 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
           title="URL"
           subtitle={urlSubtitle}
           pattern={USER_SOCIAL_WEBSITE.source}
-          onChange={onChangeLink}
-          getValidationMessage={() =>
-            'Please enter a valid URL, starting with http://'
+          onChange={(newValue) => {
+            serverValidation.clearError('/link');
+            onChangeLink(newValue);
+          }}
+          getValidationMessage={(validationState) =>
+            validationState.patternMismatch
+              ? 'Please enter a valid URL, starting with http://'
+              : undefined
           }
           value={link ?? ''}
+          customValidationMessage={getAjvErrorForPath(
+            serverValidation.errors,
+            '/link',
+            'A Research Output with this URL already exists. Please enter a different URL.',
+          )}
           enabled={!isSaving}
           required={urlRequired}
           labelIndicator={globeIcon}

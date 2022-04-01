@@ -1,5 +1,9 @@
-import React from 'react';
-import { ResearchOutputPostRequest, ResearchOutputType } from '@asap-hub/model';
+import React, { useState } from 'react';
+import {
+  ValidationErrorResponse,
+  ResearchOutputPostRequest,
+  ResearchOutputType,
+} from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
 import { TeamCreateOutputPage, NotFoundPage } from '@asap-hub/react-components';
 
@@ -17,6 +21,11 @@ import {
 } from './state';
 import Frame from '../../structure/Frame';
 import researchSuggestions from './research-suggestions';
+import {
+  BackendError,
+  getHandledValidationErrors,
+  clearAjvErrorForPath,
+} from '../../api-util';
 
 const useParamOutputType = (teamId: string): OutputTypeParameter => {
   const route = network({}).teams({}).team({ teamId }).createOutput;
@@ -50,6 +59,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   const paramOutputType = useParamOutputType(teamId);
   const type = paramOutputTypeToResearchOutputType(paramOutputType);
   const team = useTeamById(teamId);
+  const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
   const { isEnabled } = useFlags();
 
   const createResearchOutput = usePostTeamResearchOutput();
@@ -96,11 +106,25 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
             )
           }
           getTeamSuggestions={getTeamSuggestions}
+          serverValidation={{
+            errors,
+            clearError: (instancePath: string) =>
+              setErrors(clearAjvErrorForPath(errors, instancePath)),
+          }}
           onSave={(output) =>
             createResearchOutput({
               ...defaultOutput,
               ...output,
               addedDate: new Date().toISOString(),
+            }).catch((error) => {
+              if (error instanceof BackendError) {
+                const ajvErrors = getHandledValidationErrors(error, ['/link']);
+                if (ajvErrors) {
+                  setErrors(ajvErrors);
+                  return;
+                }
+              }
+              throw error;
             })
           }
         />

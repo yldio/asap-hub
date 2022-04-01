@@ -57,22 +57,21 @@ const formControlsStyles = css({
 type TeamCreateOutputFormProps = Pick<
   ComponentProps<typeof TeamCreateOutputExtraInformationCard>,
   'tagSuggestions'
-> & {
-  getLabSuggestions?: ComponentProps<
-    typeof TeamCreateOutputContributorsCard
-  >['getLabSuggestions'];
-  getAuthorSuggestions?: ComponentProps<
-    typeof TeamCreateOutputContributorsCard
-  >['getAuthorSuggestions'];
-  getTeamSuggestions?: ComponentProps<
-    typeof TeamCreateOutputContributorsCard
-  >['getTeamSuggestions'];
-  onSave?: (
-    output: Partial<ResearchOutputPostRequest>,
-  ) => Promise<Pick<ResearchOutputResponse, 'id'>>;
-  type: ResearchOutputType;
-  team: TeamResponse;
-};
+> &
+  Pick<
+    ComponentProps<typeof TeamCreateOutputFormSharingCard>,
+    'serverValidation'
+  > &
+  Pick<
+    ComponentProps<typeof TeamCreateOutputContributorsCard>,
+    'getLabSuggestions' | 'getAuthorSuggestions' | 'getTeamSuggestions'
+  > & {
+    onSave: (
+      output: Partial<ResearchOutputPostRequest>,
+    ) => Promise<Pick<ResearchOutputResponse, 'id'> | void>;
+    type: ResearchOutputType;
+    team: TeamResponse;
+  };
 
 const identifierTypeToFieldName: Record<
   ResearchOutputIdentifierType,
@@ -103,13 +102,14 @@ export function createIdentifierField(
 }
 
 const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
-  onSave = noop,
+  onSave,
   tagSuggestions,
   type,
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
   team,
+  serverValidation,
 }) => {
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
   const [subTypes, setSubtypes] = useState<
@@ -195,6 +195,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         <div css={contentStyles}>
           <TeamCreateOutputFormSharingCard
             type={type}
+            serverValidation={serverValidation}
             isSaving={isSaving}
             description={description}
             onChangeDescription={setDescription}

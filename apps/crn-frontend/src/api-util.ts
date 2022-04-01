@@ -1,3 +1,8 @@
+import {
+  ErrorResponse,
+  ValidationErrorResponse,
+  isValidationErrorResponse,
+} from '@asap-hub/model';
 import { configureScope } from '@sentry/react';
 import { API_BASE_URL } from './config';
 
@@ -34,3 +39,31 @@ export const createSentryHeaders = () => {
     'X-Transaction-Id': transactionId,
   };
 };
+
+export const BACKEND_ERROR_NAME = 'BackendError';
+export class BackendError extends Error {
+  public response;
+  public statusCode;
+  constructor(
+    message: string,
+    response: ErrorResponse | ValidationErrorResponse,
+    statusCode: number,
+  ) {
+    super(message);
+    this.name = BACKEND_ERROR_NAME;
+    this.statusCode = statusCode;
+    this.response = response;
+  }
+}
+
+export const getHandledValidationErrors = (
+  { response }: BackendError,
+  supportedErrorPaths: string[],
+) =>
+  isValidationErrorResponse(response) &&
+  response.data.length &&
+  response.data.every(({ instancePath }) =>
+    supportedErrorPaths.includes(instancePath),
+  )
+    ? response.data
+    : false;

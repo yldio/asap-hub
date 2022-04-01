@@ -18,4 +18,4 @@ export type ErrorResponse =
 
 export const isValidationErrorResponse = (
   error: ErrorResponse,
-): error is ValidationErrorResponse => error.message === 'Validation Error';
+): error is ValidationErrorResponse => error.message === 'Validation error';

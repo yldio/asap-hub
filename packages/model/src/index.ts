@@ -12,3 +12,4 @@ export * from './calendar';
 export * from './group';
 export * from './event';
 export * from './lab';
+export * from './error';

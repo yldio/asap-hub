@@ -29,13 +29,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Cache -frontendbuild output
-        uses: actions/cache@v3
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}
+      - name: Cache build output
+        uses: ./.github/actions/cache-frontend
       - name: Bundle watch
         run: |
           CI_REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F / '{print $2}')
@@ -52,12 +47,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Cache build output
-        uses: actions/cache@v3
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}
+        uses: ./.github/actions/cache-frontend
       - name: Test output
         run: |
           yarn run test:build-output

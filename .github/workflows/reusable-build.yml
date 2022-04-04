@@ -78,11 +78,7 @@ jobs:
       - name: Re-Build
         uses: ./.github/actions/build-rebuild
       - name: Cache build output
-        uses: actions/cache@v3
-        with:
-          path: |
-            .yarn/unplugged/
-          key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
+        uses: ./.github/actions/cache-unplugged
 
   frontend:
     needs: [definitions, transpile]
@@ -127,12 +123,7 @@ jobs:
         run: |
           yarn build:frontend
       - name: Cache build output
-        uses: actions/cache@v3
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}
+        uses: ./.github/actions/cache-frontend
 
   typecheck:
     needs: [definitions]
@@ -152,7 +143,7 @@ jobs:
           yarn typecheck
 
   sls-package:
-    needs: [transpile, rebuild]
+    needs: [definitions, transpile, rebuild]
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
@@ -169,11 +160,9 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Cache build output
-        uses: actions/cache@v3
-        with:
-          path: |
-            .yarn/unplugged/
-          key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
+        uses: ./.github/actions/cache-unplugged
+      - name: Cache build definitions
+        uses: ./.github/actions/cache-definitions
       - name: Cache transpile output
         uses: ./.github/actions/cache-transpile
       - name: Generate package

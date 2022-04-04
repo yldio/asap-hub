@@ -46,18 +46,9 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Cache build output
-        uses: actions/cache@v3
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}
-      - name: Cache rebuild output
-        uses: actions/cache@v3
-        with:
-          path: |
-            .yarn/unplugged/
-          key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
+        uses: ./.github/actions/cache-frontend
+      - name: Cache build typecheck output
+        uses: ./.github/actions/cache-unplugged
       - uses: actions/download-artifact@v3
         with:
           name: sls-package-${{ inputs.environment-name }}
@@ -168,18 +159,9 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Cache build output
-        uses: actions/cache@v3
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}
-      - name: Cache rebuild output
-        uses: actions/cache@v3
-        with:
-          path: |
-            .yarn/unplugged/
-          key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
+        uses: ./.github/actions/cache-frontend
+      - name: Cache build typecheck output
+        uses: ./.github/actions/cache-unplugged
       - name: Deploy
         if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
         run: |

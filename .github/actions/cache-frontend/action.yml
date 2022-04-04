@@ -1,0 +1,11 @@
+name: 'Cache frontend output'
+description: 'Cache frontend output'
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/cache@v3
+      with:
+        path: |
+          apps/**/build*
+          packages/**/build*
+        key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}

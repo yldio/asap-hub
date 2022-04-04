@@ -47,11 +47,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Cache build output
-        uses: actions/cache@v3
-        with:
-          path: |
-            .yarn/unplugged/
-          key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
+        uses: ./.github/actions/cache-transpile
       - name: Install Playwright
         if: ${{ inputs.environment-name=='Branch' }}
         run: |
@@ -107,11 +103,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Cache rebuild output
-        uses: actions/cache@v3
-        with:
-          path: |
-            .yarn/unplugged/
-          key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
+        uses: ./.github/actions/cache-transpile
       - name: Register Sentry
         if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
         run: |

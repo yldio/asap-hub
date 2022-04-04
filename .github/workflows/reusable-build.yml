@@ -110,23 +110,50 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Build
-        uses: ./.github/actions/build-frontend
+      - name: Get Algolia Keys
+        id: algolia-keys
+        uses: ./.github/actions/algolia-keys
         with:
           algolia-app-id-name: ${{ steps.setup.outputs.algolia-app-id-name }}
           algolia-api-key-name: ${{ steps.setup.outputs.algolia-api-key-name }}
-          algolia-index: ${{ steps.setup.outputs.algolia-index }}
-          app-release: ${{ steps.setup.outputs.app-release }}
-          asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
-          auth0-client-id: ${{ steps.setup.outputs.auth0-client-id }}
-          auth0-domain: ${{ steps.setup.outputs.auth0-domain }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          environment-name: ${{ inputs.environment-name }}
-          react-app-environment: ${{ steps.setup.outputs.react-app-environment }}
-          react-app-gtm-container-id: ${{ steps.setup.outputs.react-app-gtm-container-id }}
-          react-app-sentry-dsn: ${{ steps.setup.outputs.react-app-sentry-dsn }}
+          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
+      - name: Cache transpile output
+        uses: actions/cache@v2
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: transpile-output-${{ inputs.environment-name }}-${{ github.sha }}
+      - name: Cache build typecheck output
+        uses: actions/cache@v2
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: definitions-output-${{ inputs.environment-name }}-${{ github.sha }}
+      - name: Build
+        shell: bash
+        env:
+          AUTH0_CLIENT_ID: ${{ steps.setup.outputs.auth0-client-id }}
+          AUTH0_DOMAIN: ${{ steps.setup.outputs.auth0-domain }}
+          REACT_APP_ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          REACT_APP_ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+          REACT_APP_API_BASE_URL: ${{ steps.setup.outputs.asap-api-url }}
+          REACT_APP_ENVIRONMENT: ${{ steps.setup.outputs.react-app-environment }}
+          REACT_APP_GTM_CONTAINER_ID: ${{ steps.setup.outputs.react-app-gtm-container-id }}
+          REACT_APP_RELEASE: ${{ steps.setup.outputs.app-release }}
+          REACT_APP_SENTRY_DSN: ${{ steps.setup.outputs.react-app-sentry-dsn }}
+        run: |
+          yarn build:frontend
+      - name: Cache build output
+        uses: actions/cache@v2
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}
 
   typecheck:
     needs: [definitions]

@@ -1,4 +1,5 @@
 import 'express-async-errors';
+import cors from 'cors';
 import express, { Express } from 'express';
 import { SquidexGraphql } from '@asap-hub/squidex';
 import pinoHttp from 'pino-http';
@@ -24,6 +25,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     serializers: redaction,
   });
   app.use(httpLogger);
+  app.use(cors());
 
   const errorHandler = errorHandlerFactory();
 

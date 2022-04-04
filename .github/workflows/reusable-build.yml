@@ -63,12 +63,7 @@ jobs:
           AUTH0_CLIENT_ID: ${{ steps.setup.outputs.auth0-client-id }}
           AUTH0_DOMAIN: ${{ steps.setup.outputs.auth0-domain }}
       - name: Cache transpile output
-        uses: actions/cache@v3
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: transpile-output-${{ inputs.environment-name }}-${{ github.sha }}
+        uses: ./.github/actions/cache-transpile
 
   rebuild:
     runs-on: ubuntu-latest
@@ -115,16 +110,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
       - name: Cache transpile output
-        uses: actions/cache@v3
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: transpile-output-${{ inputs.environment-name }}-${{ github.sha }}
+        uses: ./.github/actions/cache-transpile
       - name: Cache build typecheck output
         uses: ./.github/actions/cache-definitions
       - name: Build
-        shell: bash
         env:
           AUTH0_CLIENT_ID: ${{ steps.setup.outputs.auth0-client-id }}
           AUTH0_DOMAIN: ${{ steps.setup.outputs.auth0-domain }}
@@ -163,7 +152,7 @@ jobs:
           yarn typecheck
 
   sls-package:
-    needs: [definitions, transpile, rebuild]
+    needs: [transpile, rebuild]
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
@@ -186,12 +175,7 @@ jobs:
             .yarn/unplugged/
           key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
       - name: Cache transpile output
-        uses: actions/cache@v3
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: transpile-output-${{ inputs.environment-name }}-${{ github.sha }}
+        uses: ./.github/actions/cache-transpile
       - name: Generate package
         shell: bash
         run: |

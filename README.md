@@ -120,10 +120,9 @@ If manually trigger, this will build the images defined in the Dockerfile and ar
 - latest
 - SHA of the commit
 
-2 images are available:
+images available:
 
 node-python-sq
-squidex-utils
 
 These are currently set to build only on master, and the images used in the
 GitHub workflows are fixed to the SHA.

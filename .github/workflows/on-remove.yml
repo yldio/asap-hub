@@ -115,7 +115,7 @@ jobs:
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
 
   notify_failure:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     needs: [sls-teardown, delete-algolia-index]
     if: ${{ failure() && (github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub') }}
     steps:

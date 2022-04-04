@@ -1,0 +1,11 @@
+name: 'Cache definitions'
+description: 'Cache definitions'
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/cache@v3
+      with:
+        path: |
+          apps/**/build*
+          packages/**/build*
+        key: transpile-output-${{ inputs.environment-name }}-${{ github.sha }}

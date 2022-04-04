@@ -38,13 +38,8 @@ jobs:
       - name: Build
         run: |
           yarn build:typecheck
-      - name: Cache build applications
-        uses: actions/cache@v3
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: definitions-output-${{ inputs.environment-name }}-${{ github.sha }}
+      - name: Cache build typecheck output
+        uses: ./.github/actions/cache-definitions
 
   transpile:
     runs-on: ubuntu-latest
@@ -127,12 +122,7 @@ jobs:
             packages/**/build*
           key: transpile-output-${{ inputs.environment-name }}-${{ github.sha }}
       - name: Cache build typecheck output
-        uses: actions/cache@v3
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: definitions-output-${{ inputs.environment-name }}-${{ github.sha }}
+        uses: ./.github/actions/cache-definitions
       - name: Build
         shell: bash
         env:
@@ -167,12 +157,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Cache build typecheck output
-        uses: actions/cache@v3
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: definitions-output-${{ inputs.environment-name }}-${{ github.sha }}
+        uses: ./.github/actions/cache-definitions
       - name: TypeCheck
         run: |
           yarn typecheck

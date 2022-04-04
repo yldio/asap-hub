@@ -200,13 +200,6 @@ jobs:
           path: |
             .yarn/unplugged/
           key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
-      - name: Cache build typecheck output
-        uses: actions/cache@v3
-        with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-definitions-${{ inputs.environment-name }}-${{ github.sha }}
       - name: Cache transpile output
         uses: actions/cache@v3
         with:

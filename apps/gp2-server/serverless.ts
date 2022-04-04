@@ -11,6 +11,7 @@ const service = 'gp2-hub';
 const stage = '12345-gp2';
 const apiHostname = 'api-12345.gp2.asap.science';
 const appHostname = '12345.gp2.asap.science';
+const appUrl = `https://${appHostname}`;
 const hostedZone = process.env.ASAP_HOSTNAME;
 const acmCertificateArn = process.env.AWS_ACM_CERTIFICATE_ARN;
 
@@ -31,6 +32,18 @@ const serverlessConfig: AWS = {
     stage,
     httpApi: {
       payload: '2.0',
+      cors: {
+        allowedOrigins: [appUrl],
+        allowCredentials: true,
+        allowedMethods: ['options', 'post', 'get', 'put', 'delete', 'patch'],
+        allowedHeaders: [
+          'authorization',
+          'x-transaction-id',
+          'content-type',
+          'accept',
+          'origin',
+        ],
+      },
     },
     logs: {
       httpApi: {
@@ -73,6 +86,9 @@ const serverlessConfig: AWS = {
           },
         },
       ],
+      environment: {
+        APP_ORIGIN: appUrl,
+      },
     },
   },
   resources: {

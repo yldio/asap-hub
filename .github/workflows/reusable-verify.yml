@@ -47,7 +47,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Cache build output
-        uses: ./.github/actions/cache-transpile
+        uses: ./.github/actions/cache-unplugged
       - name: Install Playwright
         if: ${{ inputs.environment-name=='Branch' }}
         run: |

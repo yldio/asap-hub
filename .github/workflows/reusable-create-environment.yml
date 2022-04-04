@@ -38,17 +38,6 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Create Squidex Environment
-        if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
-        uses: ./.github/actions/create-squidex
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-region: ${{ steps.setup.outputs.aws-region }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
-          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
-          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
-          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       - name: Setup app
         if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
         run: python .github/scripts/squidex/create-app.py

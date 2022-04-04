@@ -81,6 +81,7 @@ jobs:
   algolia-settings:
     needs: [sls-package]
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
       credentials:
@@ -113,8 +114,8 @@ jobs:
 
   squidex-schema:
     needs: [sls-package]
-    environment: ${{ inputs.environment-name }}
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
       credentials:
@@ -145,6 +146,7 @@ jobs:
   ses:
     needs: [sls-package]
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
       credentials:

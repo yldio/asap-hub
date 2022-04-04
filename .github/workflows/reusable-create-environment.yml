@@ -66,14 +66,35 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Create Algolia index
+      - name: Get Algolia Keys
+        id: algolia-keys
         if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
-        uses: ./.github/actions/create-algolia-index
+        uses: ./.github/actions/algolia-keys
         with:
-          algolia-api-key-name: ${{ steps.setup.outputs.algolia-api-key-name }}
           algolia-app-id-name: ${{ steps.setup.outputs.algolia-app-id-name }}
-          algolia-backup-bucket-name: ${{ steps.setup.outputs.algolia-backup-bucket-name }}
-          algolia-index: ${{ steps.setup.outputs.algolia-index }}
+          algolia-api-key-name: ${{ steps.setup.outputs.algolia-api-key-name }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
+      - name: Get the latest backup directory name
+        if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
+        run: echo "MOST_RECENT_BACKUP_DIR=$(aws s3api list-objects-v2 --bucket $BUCKET_NAME --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text | cut -d'/' -f 1)" >> $GITHUB_ENV
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: ${{ steps.setup.outputs.aws-default-region }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          BUCKET_NAME: ${{ steps.setup.outputs.algolia-backup-bucket-name }}
+      - name: Download the files and restore the index
+        if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
+        run: |
+          aws s3 cp s3://$BUCKET_NAME/$MOST_RECENT_BACKUP_DIR $MOST_RECENT_BACKUP_DIR --recursive
+          export ALGOLIA_BACKUP=$(readlink -f $MOST_RECENT_BACKUP_DIR)
+          yarn workspace @asap-hub/crn-server run algolia import -s $ALGOLIA_BACKUP -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
+        env:
+          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: ${{ steps.setup.outputs.aws-default-region }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          BUCKET_NAME: ${{ steps.setup.outputs.algolia-backup-bucket-name }}

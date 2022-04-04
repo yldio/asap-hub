@@ -53,8 +53,8 @@ export class BackendError extends Error {
 export const validationErrorsAreSupported = (
   response: ValidationErrorResponse,
   supportedErrorPaths: string[],
-) =>
-  response.data.length &&
+): boolean =>
+  !!response.data.length &&
   response.data.every(({ instancePath }) =>
     supportedErrorPaths.includes(instancePath),
   );

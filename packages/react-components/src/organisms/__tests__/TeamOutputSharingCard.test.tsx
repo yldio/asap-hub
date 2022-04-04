@@ -183,3 +183,32 @@ it('shows the custom error message for date published', async () => {
 
   expect(getByText(/publish date cannot be greater than today/i)).toBeVisible();
 });
+
+it('displays server side for link and calls clears function when changed', async () => {
+  const mockClearError = jest.fn();
+  const { getByLabelText, getByText } = render(
+    <TeamCreateOutputFormSharingCard
+      {...props}
+      link="http://example.com"
+      serverValidation={{
+        errors: [
+          {
+            instancePath: '/link',
+            keyword: '',
+            params: {},
+            schemaPath: '',
+          },
+        ],
+        clearError: mockClearError,
+      }}
+    />,
+  );
+  expect(
+    getByText(
+      'A Research Output with this URL already exists. Please enter a different URL.',
+    ),
+  ).toBeVisible();
+
+  userEvent.type(getByLabelText(/URL/i), 'a');
+  expect(mockClearError).toHaveBeenCalledWith('/link');
+});

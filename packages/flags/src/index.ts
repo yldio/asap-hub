@@ -3,10 +3,6 @@ export type Flag = 'PERSISTENT_EXAMPLE' | 'ROMS_FORM';
 export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
   ROMS_FORM: undefined,
-<<<<<<< HEAD
-  ALGOLIA_USER_SEARCH: true,
-=======
->>>>>>> Removed feature flag and legacy hooks for user search
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
 };

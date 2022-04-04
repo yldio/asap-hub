@@ -1,8 +1,4 @@
-import {
-  ErrorResponse,
-  ValidationErrorResponse,
-  isValidationErrorResponse,
-} from '@asap-hub/model';
+import { ErrorResponse, ValidationErrorResponse } from '@asap-hub/model';
 import { configureScope } from '@sentry/react';
 import { API_BASE_URL } from './config';
 

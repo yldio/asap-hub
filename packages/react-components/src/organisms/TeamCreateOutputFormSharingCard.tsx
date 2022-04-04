@@ -77,7 +77,7 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
             onChangeLink(newValue);
           }}
           getValidationMessage={(validationState) =>
-            validationState.patternMismatch
+            validationState.patternMismatch || validationState.valueMissing
               ? 'Please enter a valid URL, starting with http://'
               : undefined
           }

@@ -40,7 +40,6 @@ export const createSentryHeaders = () => {
   };
 };
 
-export const BACKEND_ERROR_NAME = 'BackendError';
 export class BackendError extends Error {
   public response;
   public statusCode;
@@ -50,23 +49,19 @@ export class BackendError extends Error {
     statusCode: number,
   ) {
     super(message);
-    this.name = BACKEND_ERROR_NAME;
     this.statusCode = statusCode;
     this.response = response;
   }
 }
 
-export const getHandledValidationErrors = (
-  { response }: BackendError,
+export const validationErrorsAreSupported = (
+  response: ValidationErrorResponse,
   supportedErrorPaths: string[],
 ) =>
-  isValidationErrorResponse(response) &&
   response.data.length &&
   response.data.every(({ instancePath }) =>
     supportedErrorPaths.includes(instancePath),
-  )
-    ? response.data
-    : false;
+  );
 
 export const clearAjvErrorForPath = (
   errors: ValidationErrorResponse['data'],

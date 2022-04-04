@@ -3,6 +3,7 @@ import {
   ValidationErrorResponse,
   ResearchOutputPostRequest,
   ResearchOutputType,
+  isValidationErrorResponse,
 } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
 import { TeamCreateOutputPage, NotFoundPage } from '@asap-hub/react-components';
@@ -23,8 +24,8 @@ import Frame from '../../structure/Frame';
 import researchSuggestions from './research-suggestions';
 import {
   BackendError,
-  getHandledValidationErrors,
   clearAjvErrorForPath,
+  validationErrorsAreSupported,
 } from '../../api-util';
 
 const useParamOutputType = (teamId: string): OutputTypeParameter => {
@@ -118,9 +119,12 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
               addedDate: new Date().toISOString(),
             }).catch((error) => {
               if (error instanceof BackendError) {
-                const ajvErrors = getHandledValidationErrors(error, ['/link']);
-                if (ajvErrors) {
-                  setErrors(ajvErrors);
+                const { response } = error;
+                if (
+                  isValidationErrorResponse(response) &&
+                  validationErrorsAreSupported(response, ['/link'])
+                ) {
+                  setErrors(response.data);
                   return;
                 }
               }

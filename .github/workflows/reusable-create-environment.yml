@@ -80,7 +80,6 @@ jobs:
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
           SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
-
   algolia-index:
     runs-on: ubuntu-latest
     environment: Branch

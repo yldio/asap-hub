@@ -30,7 +30,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Cache -frontendbuild output
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             apps/**/build*
@@ -52,7 +52,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Cache build output
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             apps/**/build*

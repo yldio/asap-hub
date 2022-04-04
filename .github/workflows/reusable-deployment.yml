@@ -46,19 +46,19 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Cache build output
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             apps/**/build*
             packages/**/build*
           key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}
       - name: Cache rebuild output
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             .yarn/unplugged/
           key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: sls-package-${{ inputs.environment-name }}
           path: 'sls-package'
@@ -168,14 +168,14 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Cache build output
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             apps/**/build*
             packages/**/build*
           key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}
       - name: Cache rebuild output
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             .yarn/unplugged/

@@ -47,7 +47,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Cache build output
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             .yarn/unplugged/
@@ -107,7 +107,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Cache rebuild output
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             .yarn/unplugged/

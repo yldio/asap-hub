@@ -41,6 +41,27 @@ it('should reset the identifier to a valid value on entering something unknown',
   );
 });
 
+it('should set the identifier to the selected value', () => {
+  const setIdentifierType = jest.fn();
+  const { getByLabelText } = render(
+    <TeamCreateOutputIdentifier
+      {...props}
+      setIdentifierType={setIdentifierType}
+    />,
+  );
+  fireEvent.change(getByLabelText(/identifier/i), {
+    target: {
+      value: 'DOI',
+    },
+  });
+
+  fireEvent.keyDown(getByLabelText(/identifier/i), { keyCode: ENTER_KEYCODE });
+
+  expect(setIdentifierType).toHaveBeenCalledWith(
+    ResearchOutputIdentifierType.DOI,
+  );
+});
+
 describe('RRID', () => {
   it('should show an error when it does not match regex', async () => {
     const { getByText, getByPlaceholderText } = render(

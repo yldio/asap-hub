@@ -194,24 +194,52 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Build
-        uses: ./.github/actions/build-sls-package
+      - name: Cache build output
+        uses: actions/cache@v2
         with:
-          algolia-index: ${{ steps.setup.outputs.algolia-index }}
-          asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
-          asap-app-url: ${{ steps.setup.outputs.asap-app-url }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-acm-certificate-arn: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
-          aws-region: ${{ steps.setup.outputs.aws-region }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          environment-name: ${{ inputs.environment-name }}
-          lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-          sentry-dsn-api: ${{ steps.setup.outputs.sentry-dsn-api }}
-          sentry-dsn-calendar: ${{ steps.setup.outputs.sentry-dsn-calendar }}
-          sentry-dsn-user-invite: ${{ steps.setup.outputs.sentry-dsn-user-invite }}
-          sls-stage: ${{ steps.setup.outputs.sls-stage }}
-          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
-          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
-          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
-          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-          squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+          path: |
+            .yarn/unplugged/
+          key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
+      - name: Cache build typecheck output
+        uses: actions/cache@v2
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: build-definitions-${{ inputs.environment-name }}-${{ github.sha }}
+      - name: Cache transpile output
+        uses: actions/cache@v2
+        with:
+          path: |
+            apps/**/build*
+            packages/**/build*
+          key: transpile-output-${{ inputs.environment-name }}-${{ github.sha }}
+      - name: Generate package
+        shell: bash
+        run: |
+          yarn sls package --package sls-package
+        env:
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+          ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
+          ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
+          AWS_REGION: ${{ steps.setup.outputs.aws-region }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          CURRENT_REVISION: ${{ github.sha }}
+          LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
+          NODE_ENV: 'production'
+          SENTRY_DSN_API: ${{ steps.setup.outputs.sentry-dsn-api }}
+          SENTRY_DSN_CALENDAR: ${{ steps.setup.outputs.sentry-dsn-calendar }}
+          SENTRY_DSN_USER_INVITE: ${{ steps.setup.outputs.sentry-dsn-user-invite }}
+          SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
+          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+          SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: sls-package-${{ inputs.environment-name }}
+          path: 'sls-package'
+          retention-days: 1

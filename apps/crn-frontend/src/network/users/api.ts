@@ -9,11 +9,7 @@ import {
 
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { API_BASE_URL } from '../../config';
-import {
-  GetListOptions,
-  createListApiUrl,
-  createSentryHeaders,
-} from '../../api-util';
+import { GetListOptions, createSentryHeaders } from '../../api-util';
 
 export const getUser = async (
   id: string,
@@ -66,22 +62,6 @@ export const getUsersAndExternalAuthors = async (
   );
 
   return { items: result.hits, total: result.nbHits };
-};
-
-export const getUsersLegacy = async (
-  options: GetListOptions,
-  authorization: string,
-): Promise<ListUserResponse> => {
-  const resp = await fetch(createListApiUrl('users', options).toString(), {
-    headers: { authorization, ...createSentryHeaders() },
-  });
-
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch user list. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-  return resp.json();
 };
 
 export const patchUser = async (

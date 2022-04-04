@@ -1,9 +1,8 @@
-export type Flag = 'PERSISTENT_EXAMPLE' | 'ROMS_FORM' | 'ALGOLIA_USER_SEARCH';
+export type Flag = 'PERSISTENT_EXAMPLE' | 'ROMS_FORM';
 
 export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
   ROMS_FORM: undefined,
-  ALGOLIA_USER_SEARCH: true,
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
 };

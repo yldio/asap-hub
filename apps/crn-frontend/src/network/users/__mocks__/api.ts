@@ -5,7 +5,6 @@ import {
   UserAvatarPostRequest,
   ListUserResponse,
 } from '@asap-hub/model';
-import { GetListOptions } from '../../../api-util';
 import { InstitutionsResponse } from '../api';
 
 export const getUser = jest.fn(
@@ -36,10 +35,6 @@ export const postUserAvatar = jest.fn(
   },
 );
 
-export const getUsersLegacy = jest.fn(
-  async ({ pageSize }: GetListOptions): Promise<ListUserResponse> =>
-    createListUserResponse(pageSize ?? 10),
-);
 export const getUsers = jest.fn(
   async (): Promise<ListUserResponse> => createListUserResponse(10),
 );

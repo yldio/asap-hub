@@ -59,10 +59,9 @@ const Form = <T extends void | Record<string, unknown>>({
         }
       }
     }
-    return Promise.resolve();
   };
 
-  const wrappedOnCancel = () => {
+  const onCancel = () => {
     setStatus('initial');
     history.location.key ? history.goBack() : history.push('/');
   };
@@ -82,9 +81,9 @@ const Form = <T extends void | Record<string, unknown>>({
       />
       <form ref={formRef} css={styles}>
         {children({
+          onCancel,
           isSaving: status === 'isSaving',
           onSave: wrappedOnSave,
-          onCancel: wrappedOnCancel,
         })}
       </form>
     </>

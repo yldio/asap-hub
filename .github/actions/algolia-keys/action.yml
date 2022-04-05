@@ -34,6 +34,7 @@ runs:
         ALGOLIA_API_KEY=$(aws ssm get-parameter --name '${{ inputs.algolia-api-key-name }}' --query Parameter.Value --output text)
         echo "::set-output name=algolia-app-id::$ALGOLIA_APP_ID"
         echo "::set-output name=algolia-api-key::$ALGOLIA_API_KEY"
+        echo "::add-mask::$ALGOLIA_API_KEY"
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}

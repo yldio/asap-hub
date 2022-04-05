@@ -28,7 +28,7 @@ jobs:
   definitions:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -52,7 +52,7 @@ jobs:
   transpile:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -79,7 +79,7 @@ jobs:
   rebuild:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -97,7 +97,7 @@ jobs:
     needs: [definitions, transpile]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -151,7 +151,7 @@ jobs:
     needs: [definitions]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -176,7 +176,7 @@ jobs:
     needs: [definitions, transpile, rebuild]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

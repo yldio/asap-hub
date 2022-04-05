@@ -43,6 +43,10 @@ import { permissionHandler } from './middleware/permission-handler';
 import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 import Labs, { LabsController } from './controllers/labs';
 import { labsRouteFactory } from './routes/labs.route';
+import ExternalAuthors, {
+  ExternalAuthorsController,
+} from './controllers/external-authors';
+import { externalAuthorsRouteFactory } from './routes/external-authors';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -81,6 +85,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const teamController = libs.teamController || new Teams(squidexGraphqlClient);
   const userController = libs.userController || new Users(squidexGraphqlClient);
   const labsController = libs.labsController || new Labs(squidexGraphqlClient);
+  const externalAuthorsController =
+    libs.externalAuthorsController || new ExternalAuthors(squidexGraphqlClient);
 
   // Handlers
   const authHandler = libs.authHandler || authHandlerFactory(decodeToken);
@@ -103,6 +109,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userRoutes = userRouteFactory(userController, groupController);
   const userPublicRoutes = userPublicRouteFactory(userController);
   const labsRoutes = labsRouteFactory(labsController);
+  const externalAuthorsRoutes = externalAuthorsRouteFactory(
+    externalAuthorsController,
+  );
 
   /**
    * --- end of dependency inection
@@ -162,6 +171,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(researchOutputsRoutes);
   app.use(teamRoutes);
   app.use(labsRoutes);
+  app.use(externalAuthorsRoutes);
 
   app.get('*', async (_req, res) => {
     res.status(404).json({
@@ -199,6 +209,7 @@ export type Libs = {
   teamController?: TeamController;
   userController?: UserController;
   labsController?: LabsController;
+  externalAuthorsController?: ExternalAuthorsController;
   authHandler?: AuthHandler;
   tracer?: Tracer;
   logger?: Logger;

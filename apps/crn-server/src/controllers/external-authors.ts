@@ -3,7 +3,13 @@ import {
   ListExternalAuthorResponse,
   ExternalAuthorResponse,
 } from '@asap-hub/model';
-import { SquidexGraphqlClient } from '@asap-hub/squidex';
+import {
+  SquidexGraphqlClient,
+  SquidexRestClient,
+  SquidexRest,
+  RestExternalAuthor,
+  ExternalAuthor,
+} from '@asap-hub/squidex';
 import { parseGraphQLExternalAuthor } from '../entities';
 import {
   FetchExternalAuthorQuery,
@@ -16,17 +22,23 @@ import {
   FETCH_EXTERNAL_AUTHORS,
 } from '../queries/external-authors.queries';
 import { FetchOptions } from '../utils/types';
+import { parseToSquidex } from '../utils/squidex';
 
 export interface ExternalAuthorsController {
   fetch(options: FetchOptions): Promise<ListExternalAuthorResponse>;
   fetchById(id: string): Promise<ExternalAuthorResponse>;
+  create(
+    externalAuthor: Partial<ExternalAuthor>,
+  ): Promise<Partial<ExternalAuthorResponse>>;
 }
 
 export default class ExternalAuthors implements ExternalAuthorsController {
   squidexGraphlClient: SquidexGraphqlClient;
+  squidexRestClient: SquidexRestClient<RestExternalAuthor>;
 
   constructor(squidexGraphlClient: SquidexGraphqlClient) {
     this.squidexGraphlClient = squidexGraphlClient;
+    this.squidexRestClient = new SquidexRest('external-authors');
   }
 
   async fetch(options: FetchOptions): Promise<ListExternalAuthorResponse> {
@@ -71,5 +83,13 @@ export default class ExternalAuthors implements ExternalAuthorsController {
     }
 
     return parseGraphQLExternalAuthor(findExternalAuthorsContent);
+  }
+
+  async create(
+    externalAuthor: Partial<ExternalAuthor>,
+  ): Promise<Partial<ExternalAuthorResponse>> {
+    return this.squidexRestClient.create(
+      parseToSquidex(externalAuthor) as RestExternalAuthor['data'],
+    );
   }
 }

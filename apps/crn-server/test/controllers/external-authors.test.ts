@@ -1,7 +1,11 @@
+import nock from 'nock';
+import { config } from '@asap-hub/squidex';
 import ExternalAuthors from '../../src/controllers/external-authors';
 import { identity } from '../helpers/squidex';
 import {
+  getExternalAuthor,
   getExternalAuthorResponse,
+  getExternalAuthorRestResponse,
   getSquidexExternalAuthorGraphqlResponse,
   getSquidexExternalAuthorsGraphqlResponse,
 } from '../fixtures/external-authors.fixtures';
@@ -101,6 +105,47 @@ describe('External Authors controller', () => {
 
       const result = await usersMockGraphqlClient.fetchById('user-id');
       expect(result).toEqual(getExternalAuthorResponse());
+    });
+  });
+
+  describe('Create', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
+    test('Should create an external author from squidex rest', async () => {
+      const response = getExternalAuthorRestResponse();
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/external-authors?publish=true`)
+        .reply(201, response);
+
+      const result = await usersMockGraphqlServer.create(getExternalAuthor());
+      expect(result).toEqual(response);
+    });
+
+    test('Should throw an error when data is not valid - 400', async () => {
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/external-authors?publish=true`)
+        .reply(400);
+
+      await expect(usersMockGraphqlServer.create({})).rejects.toThrow(
+        'Bad Request',
+      );
+    });
+
+    test('Should throw an error when fails to create the external author - 500', async () => {
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/external-authors?publish=true`)
+        .reply(500);
+
+      await expect(
+        usersMockGraphqlServer.create(getExternalAuthor()),
+      ).rejects.toThrow('Internal Server');
     });
   });
 });

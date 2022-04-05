@@ -2,7 +2,11 @@ import {
   ExternalAuthorResponse,
   ListExternalAuthorResponse,
 } from '@asap-hub/model';
-import { WebhookPayload, ExternalAuthor } from '@asap-hub/squidex';
+import {
+  WebhookPayload,
+  ExternalAuthor,
+  RestExternalAuthor,
+} from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   FetchExternalAuthorsQuery,
@@ -37,6 +41,11 @@ export const getGraphqlResponseFetchExternalAuthors =
   (): FetchExternalAuthorsQuery =>
     generateGraphqlFetchExternalAuthorsResponse([getGraphQLExternalAuthor()]);
 
+export const getExternalAuthor = () => ({
+  name: 'external author one',
+  orcid: 'orcid-1',
+});
+
 export const getGraphQLExternalAuthor = (
   externalAuthor: Partial<
     NonNullable<FetchExternalAuthorQuery['findExternalAuthorsContent']>
@@ -48,8 +57,7 @@ export const getGraphQLExternalAuthor = (
   created: '2021-11-23T20:45:22Z',
   ...externalAuthor,
   flatData: {
-    name: 'external author one',
-    orcid: 'orcid-1',
+    ...getExternalAuthor(),
   },
 });
 
@@ -57,6 +65,17 @@ export const getExternalAuthorResponse = (): ExternalAuthorResponse => ({
   id: 'external-author-id-1',
   displayName: 'external author one',
   orcid: 'orcid-1',
+});
+
+export const getExternalAuthorRestResponse = (): RestExternalAuthor => ({
+  id: 'external-author-id-1',
+  lastModified: '2020-04-16T15:52:33Z',
+  created: '2020-04-16T15:52:33Z',
+  version: 42,
+  data: {
+    name: { iv: 'External Author' },
+    orcid: { iv: 'orcid-1' },
+  },
 });
 
 export const getListExternalAuthorResponse =

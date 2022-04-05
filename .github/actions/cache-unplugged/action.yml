@@ -1,5 +1,9 @@
 name: 'Cache unplugged'
 description: 'Cache unplugged'
+inputs:
+  environment-name:
+    description: 'The name of the environment to cache'
+    required: true
 runs:
   using: 'composite'
   steps:

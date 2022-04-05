@@ -1,0 +1,18 @@
+name: 'Cache definitions'
+description: 'Cache definitions'
+inputs:
+  cache-prefix:
+    description: 'The name of the cache'
+    required: true
+  environment-name:
+    description: 'The name of the environment to cache'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/cache@v3
+      with:
+        path: |
+          apps/**/build*
+          packages/**/build*
+        key: ${{ inputs.cache-prefix }}-${{ inputs.environment-name }}-${{ github.sha }}

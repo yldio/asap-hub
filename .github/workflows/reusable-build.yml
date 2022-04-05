@@ -35,11 +35,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
       - name: Build
         run: |
           yarn build:typecheck
       - name: Cache build typecheck output
-        uses: ./.github/actions/cache-definitions
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-definitions }}
+          environment-name: ${{ inputs.environment-name }}
 
   transpile:
     runs-on: ubuntu-latest
@@ -63,7 +71,10 @@ jobs:
           AUTH0_CLIENT_ID: ${{ steps.setup.outputs.auth0-client-id }}
           AUTH0_DOMAIN: ${{ steps.setup.outputs.auth0-domain }}
       - name: Cache transpile output
-        uses: ./.github/actions/cache-transpile
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-transpile }}
+          environment-name: ${{ inputs.environment-name }}
 
   rebuild:
     runs-on: ubuntu-latest
@@ -79,6 +90,8 @@ jobs:
         uses: ./.github/actions/build-rebuild
       - name: Cache build output
         uses: ./.github/actions/cache-unplugged
+        with:
+          environment-name: ${{ inputs.environment-name }}
 
   frontend:
     needs: [definitions, transpile]
@@ -106,9 +119,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
       - name: Cache transpile output
-        uses: ./.github/actions/cache-transpile
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-transpile }}
+          environment-name: ${{ inputs.environment-name }}
       - name: Cache build typecheck output
-        uses: ./.github/actions/cache-definitions
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-definitions }}
+          environment-name: ${{ inputs.environment-name }}
       - name: Build
         env:
           AUTH0_CLIENT_ID: ${{ steps.setup.outputs.auth0-client-id }}
@@ -123,7 +142,10 @@ jobs:
         run: |
           yarn build:frontend
       - name: Cache build output
-        uses: ./.github/actions/cache-frontend
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-frontend }}
+          environment-name: ${{ inputs.environment-name }}
 
   typecheck:
     needs: [definitions]
@@ -136,8 +158,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
       - name: Cache build typecheck output
-        uses: ./.github/actions/cache-definitions
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-definitions }}
+          environment-name: ${{ inputs.environment-name }}
       - name: TypeCheck
         run: |
           yarn typecheck
@@ -161,10 +191,18 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Cache build output
         uses: ./.github/actions/cache-unplugged
+        with:
+          environment-name: ${{ inputs.environment-name }}
       - name: Cache build definitions
-        uses: ./.github/actions/cache-definitions
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-definitions }}
+          environment-name: ${{ inputs.environment-name }}
       - name: Cache transpile output
-        uses: ./.github/actions/cache-transpile
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-transpile }}
+          environment-name: ${{ inputs.environment-name }}
       - name: Generate package
         shell: bash
         run: |

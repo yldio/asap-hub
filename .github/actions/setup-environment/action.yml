@@ -50,6 +50,15 @@ outputs:
   algolia-backup-bucket-name:
     description: 'Algolia Backup Bucket Name'
     value: ${{ steps.vars.outputs.algolia-backup-bucket-name }}
+  cache-prefix-definitions:
+    description: 'Cache Prefix Definitions'
+    value: ${{ steps.vars.outputs.cache-prefix-definitions }}
+  cache-prefix-frontend:
+    description: 'Cache Prefix Frontend'
+    value: ${{ steps.vars.outputs.cache-prefix-frontend }}
+  cache-prefix-transpile:
+    description: 'Cache Prefix Transpile'
+    value: ${{ steps.vars.outputs.cache-prefix-transpile }}
   pr-number:
     description: 'PR Number'
     value: ${{ steps.vars.outputs.pr-number }}

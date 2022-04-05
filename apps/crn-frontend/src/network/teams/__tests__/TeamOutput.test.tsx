@@ -2,10 +2,10 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { useFlags } from '@asap-hub/react-context';
+import { useFlags, ToastContext } from '@asap-hub/react-context';
 import { render, screen, waitFor } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
-import { Suspense } from 'react';
+import { ContextType, Suspense } from 'react';
 import { StaticRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { network, OutputTypeParameter } from '@asap-hub/routing';
@@ -23,6 +23,9 @@ jest.mock('../../users/api');
 
 const ENTER_KEYCODE = 13;
 
+const mockToast = jest.fn() as jest.MockedFunction<
+  ContextType<typeof ToastContext>
+>;
 const mockCreateTeamResearchOutput =
   createTeamResearchOutput as jest.MockedFunction<
     typeof createTeamResearchOutput
@@ -64,22 +67,24 @@ const renderPage = async ({
       }
     >
       <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <StaticRouter
-              location={
-                network({})
-                  .teams({})
-                  .team({ teamId })
-                  .createOutput({ outputType }).$
-              }
-            >
-              <Route path={path}>
-                <TeamOutput teamId={teamId} />
-              </Route>
-            </StaticRouter>
-          </WhenReady>
-        </Auth0Provider>
+        <ToastContext.Provider value={mockToast}>
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <StaticRouter
+                location={
+                  network({})
+                    .teams({})
+                    .team({ teamId })
+                    .createOutput({ outputType }).$
+                }
+              >
+                <Route path={path}>
+                  <TeamOutput teamId={teamId} />
+                </Route>
+              </StaticRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </ToastContext.Provider>
       </Suspense>
     </RecoilRoot>,
   );
@@ -178,7 +183,7 @@ it('can submit a form when form data is valid', async () => {
   });
 });
 
-it('will show server side error for link', async () => {
+it('will show server side validation error for link', async () => {
   const teamId = 'team-id';
   const validationResponse: ValidationErrorResponse = {
     message: 'Validation Error',
@@ -225,6 +230,38 @@ it('will show server side error for link', async () => {
       'A Research Output with this URL already exists. Please enter a different URL.',
     ),
   ).toBeNull();
+});
+
+it('will toast server side errors for unknown errors', async () => {
+  const teamId = 'team-id';
+
+  mockCreateTeamResearchOutput.mockRejectedValue(
+    new Error('Something went wrong'),
+  );
+
+  await renderPage({ teamId, outputType: 'article' });
+
+  fireEvent.change(screen.getByLabelText(/url/i), {
+    target: { value: 'http://example.com' },
+  });
+  fireEvent.change(screen.getByLabelText(/title/i), {
+    target: { value: 'example title' },
+  });
+  fireEvent.change(screen.getByLabelText(/description/i), {
+    target: { value: 'example description' },
+  });
+  userEvent.type(screen.getByLabelText(/type/i), 'Preprint');
+
+  const button = screen.getByRole('button', { name: /Share/i });
+  userEvent.click(button);
+
+  await waitFor(() => {
+    expect(mockCreateTeamResearchOutput).toHaveBeenCalled();
+    expect(button).toBeEnabled();
+  });
+  expect(mockToast).toHaveBeenCalledWith(
+    'There was an error and we were unable to save your changes. Please try again.',
+  );
 });
 
 it.each<{ param: OutputTypeParameter; outputType: ResearchOutputType }>([

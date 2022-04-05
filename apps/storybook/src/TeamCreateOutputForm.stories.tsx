@@ -18,7 +18,6 @@ export const Normal = () => (
       }))}
       type={select('type', researchOutputTypes, 'Article')}
       team={createTeamResponse()}
-      onSave={() => Promise.resolve()}
       getTeamSuggestions={() =>
         new Promise((resolve) => {
           setTimeout(() => {

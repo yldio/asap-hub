@@ -13,7 +13,6 @@ const props: ComponentProps<typeof TeamCreateOutputPage> = {
   type: 'Grant Document',
   tagSuggestions: [],
   team: createTeamResponse(),
-  onSave: jest.fn(),
 };
 beforeEach(() => {
   const {

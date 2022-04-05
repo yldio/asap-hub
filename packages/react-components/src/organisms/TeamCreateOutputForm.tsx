@@ -66,7 +66,7 @@ type TeamCreateOutputFormProps = Pick<
     ComponentProps<typeof TeamCreateOutputContributorsCard>,
     'getLabSuggestions' | 'getAuthorSuggestions' | 'getTeamSuggestions'
   > & {
-    onSave: (
+    onSave?: (
       output: Partial<ResearchOutputPostRequest>,
     ) => Promise<Pick<ResearchOutputResponse, 'id'> | void>;
     type: ResearchOutputType;
@@ -102,7 +102,7 @@ export function createIdentifierField(
 }
 
 const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
-  onSave,
+  onSave = noop,
   tagSuggestions,
   type,
   getLabSuggestions = noop,
@@ -170,7 +170,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           identifier,
         );
 
-        onSave({
+        return onSave({
           tags,
           link: String(link).trim() === '' ? undefined : link,
           description,

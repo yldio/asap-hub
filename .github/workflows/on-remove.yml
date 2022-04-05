@@ -57,29 +57,6 @@ jobs:
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
           SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
-      - name: Remove GitLab CF Stack
-        env:
-          ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
-          ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
-          AWS_REGION: ${{ steps.setup.outputs.aws-region }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          CURRENT_REVISION: ${{ github.sha }}
-          LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
-          NODE_ENV: 'production'
-          SENTRY_DSN_API: ${{ steps.setup.outputs.sentry-dsn-api }}
-          SENTRY_DSN_CALENDAR: ${{ steps.setup.outputs.sentry-dsn-calendar }}
-          SENTRY_DSN_USER_INVITE: ${{ steps.setup.outputs.sentry-dsn-user-invite }}
-          SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}-gitlab
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
-          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-          SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
-        if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
-        run: yarn sls remove --verbose
-        continue-on-error: true
       - name: Delete PR Squidex App
         run: python ci/integration/scripts/delete-app.py
         env:
@@ -87,13 +64,6 @@ jobs:
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
           SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      - name: Delete PR Squidex App created by gitlab
-        env:
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}-gitlab
-          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-        run: python .github/scripts/squidex/delete-app.py
 
   algolia-index:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}

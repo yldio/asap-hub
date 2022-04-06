@@ -60,7 +60,13 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       },
       authors: {
         type: 'array',
-        items: { type: 'string' },
+        items: {
+          type: 'object',
+          properties: {
+            name: { type: 'string', nullable: true },
+            id: { type: 'string', nullable: true },
+          },
+        },
         nullable: true,
       },
       teams: { type: 'array', items: { type: 'string' }, minItems: 1 },

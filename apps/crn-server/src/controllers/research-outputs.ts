@@ -1,9 +1,11 @@
 import {
+  ExternalAuthorPostRequest,
   ListResearchOutputResponse,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
 } from '@asap-hub/model';
 import {
+  RestExternalAuthor,
   RestResearchOutput,
   RestTeam,
   SquidexGraphqlClient,
@@ -32,6 +34,7 @@ export default class ResearchOutputs implements ResearchOutputController {
   squidexGraphqlClient: SquidexGraphqlClient;
   researchOutputSquidexRestClient: SquidexRestClient<RestResearchOutput>;
   teamSquidexRestClient: SquidexRestClient<RestTeam>;
+  externalAuthorSquidexRestClient: SquidexRestClient<RestExternalAuthor>;
 
   constructor(squidexGraphqlClient: SquidexGraphqlClient) {
     this.squidexGraphqlClient = squidexGraphqlClient;
@@ -39,6 +42,7 @@ export default class ResearchOutputs implements ResearchOutputController {
     this.teamSquidexRestClient = new SquidexRest('teams', {
       unpublished: true,
     });
+    this.externalAuthorSquidexRestClient = new SquidexRest('external-authors');
   }
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {
@@ -138,6 +142,7 @@ export default class ResearchOutputs implements ResearchOutputController {
   }
   async create({
     teams,
+    authors = [],
     ...researchOutputData
   }: ResearchOutputInputData): Promise<Partial<ResearchOutputResponse>> {
     if (
@@ -166,21 +171,29 @@ export default class ResearchOutputs implements ResearchOutputController {
       ]);
     }
 
-    const { id: researchOutputId } = await this.createResearchOutput(
-      researchOutputData,
+    const researchOutputAuthors = await Promise.all(
+      authors.map((author) => this.associateResearchOutputToAuthors(author)),
     );
+
+    const { id: researchOutputId } = await this.createResearchOutput({
+      authors: researchOutputAuthors,
+      ...researchOutputData,
+    });
+
     await Promise.all(
       teams.map((teamId) =>
         this.associateResearchOutputToTeam(teamId, researchOutputId),
       ),
     );
-
     return { id: researchOutputId };
   }
   private async createResearchOutput({
     subTypes,
+    authors,
     ...researchOutputData
-  }: Omit<ResearchOutputPostRequest, 'teams'>) {
+  }: Omit<ResearchOutputPostRequest, 'teams' | 'authors'> & {
+    authors: string[];
+  }) {
     const { usedInPublication, ...researchOutput } = parseToSquidex({
       ...researchOutputData,
       ...(subTypes[0] && { subtype: subTypes[0] }),
@@ -188,6 +201,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       usedInPublication: convertBooleanToDecision(
         researchOutputData.usedInPublication,
       ),
+      authors,
     });
 
     return this.researchOutputSquidexRestClient.create(
@@ -211,6 +225,23 @@ export default class ResearchOutputs implements ResearchOutputController {
         iv: [...existingOutputs, researchOutputId],
       },
     });
+  }
+
+  private async associateResearchOutputToAuthors({
+    id,
+    name,
+  }: ExternalAuthorPostRequest) {
+    if (id) return id;
+
+    if (name) {
+      const { id: authorId } =
+        await this.externalAuthorSquidexRestClient.create(
+          parseToSquidex({ name }) as RestExternalAuthor['data'],
+        );
+      return authorId;
+    }
+
+    throw Boom.badData('Validation error');
   }
 }
 

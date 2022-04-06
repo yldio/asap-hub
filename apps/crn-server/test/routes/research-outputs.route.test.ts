@@ -149,7 +149,10 @@ describe('/research-outputs/ route', () => {
         tags,
         subTypes,
         labs: labs.map(({ id }) => id),
-        authors: authors.map(({ id }) => id),
+        authors: authors.map(({ id, displayName }) => ({
+          id,
+          name: displayName,
+        })),
         teams: teams.map(({ id }) => id),
       };
     };

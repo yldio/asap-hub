@@ -723,6 +723,7 @@ describe('ResearchOutputs controller', () => {
           asapFunded: { iv: 'Not Sure' },
           usedInAPublication: { iv: 'Not Sure' },
           labs: { iv: ['lab1'] },
+          authors: { iv: [] },
         })
         .reply(201, { id: researchOutputId })
         .get(`/api/content/${config.appName}/teams/${teamId}`)
@@ -809,6 +810,90 @@ describe('ResearchOutputs controller', () => {
         .get(`/api/content/${config.appName}/teams/${teamId}`)
         .reply(200, { data: { id: teamId, outputs: { iv: ['output-1'] } } })
         .patch(`/api/content/${config.appName}/teams/${teamId}`)
+        .reply(500);
+
+      await expect(
+        researchOutputs.create(researchOutputRequest),
+      ).rejects.toThrow('Internal Server');
+    });
+
+    test('Should associate external authors (new and existent)', async () => {
+      const researchOutputRequest = {
+        ...getResearchOutputRequest(),
+        authors: [{ id: 'author-1' }, { name: 'Chris Blue' }],
+      };
+      const teamId = researchOutputRequest.teams[0];
+      const researchOutputId = 'created-output-id';
+      const {
+        usedInPublication: _,
+        teams: __,
+        subTypes: ___,
+        ...squidexResearchOutput
+      } = parseToSquidex(researchOutputRequest);
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/external-authors?publish=true`, {
+          name: { iv: 'Chris Blue' },
+        })
+        .reply(200, { id: 'author-2' })
+        .get(`/api/content/${config.appName}/teams/${teamId}`)
+        .reply(200, { data: { id: teamId } })
+        .patch(`/api/content/${config.appName}/teams/${teamId}`)
+        .reply(200)
+        .post(`/api/content/${config.appName}/research-outputs?publish=false`, {
+          ...squidexResearchOutput,
+          ...(researchOutputRequest.subTypes && {
+            subtype: { iv: researchOutputRequest.subTypes[0] },
+          }),
+          asapFunded: { iv: 'Not Sure' },
+          usedInAPublication: { iv: 'Not Sure' },
+          authors: { iv: ['author-1', 'author-2'] },
+        })
+        .reply(201, { id: researchOutputId });
+
+      const { id } = await researchOutputs.create(researchOutputRequest);
+      expect(id).toEqual(researchOutputId);
+    });
+
+    test('Should throw when cannot create an external author - 400', async () => {
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/external-authors?publish=true`, {
+          name: { iv: 'Chris Blue' },
+        })
+        .reply(400);
+
+      await expect(
+        researchOutputs.create({
+          ...getResearchOutputRequest(),
+          authors: [{ name: 'Chris Blue' }],
+        }),
+      ).rejects.toThrow('Bad Request');
+    });
+
+    test('Should throw a validation error when authors data is an empty object', async () => {
+      nock(config.baseUrl).post(
+        `/api/content/${config.appName}/research-outputs?publish=false`,
+        {
+          authors: { iv: [{}] },
+        },
+      );
+
+      await expect(
+        researchOutputs.create({
+          ...getResearchOutputRequest(),
+          authors: [{}],
+        }),
+      ).rejects.toThrow('Validation error');
+    });
+
+    test('Should throw when authors association fails - 500', async () => {
+      const researchOutputRequest = {
+        ...getResearchOutputRequest(),
+        authors: [{ id: 'author-1' }, { name: 'Chris Blue' }],
+      };
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/external-authors?publish=true`)
         .reply(500);
 
       await expect(

@@ -135,7 +135,7 @@ it('can submit a form when form data is valid', async () => {
       description: 'example description',
       subTypes: ['Animal Model'],
       labs: ['1'],
-      authors: ['2'],
+      authors: [{ id: '2' }],
       teams: ['TEAMID'],
       asapFunded: true,
       usedInPublication: true,

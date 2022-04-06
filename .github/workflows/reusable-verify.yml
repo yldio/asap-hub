@@ -105,9 +105,8 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Cache rebuild output
-        uses: ./.github/actions/cache-build
+        uses: ./.github/actions/cache-unplugged
         with:
-          cache-prefix: ${{ steps.setup.outputs.cache-prefix-transpile }}
           environment-name: ${{ inputs.environment-name }}
       - name: Register Sentry
         if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}

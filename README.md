@@ -109,7 +109,7 @@ The down function is triggered by `asap-hub-{env}-rollbackMigrations`
 
 ### Image name
 
-The current image tag in use is: 1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+The current image tag in use is: 5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
 
 ### Build new image
 
@@ -120,10 +120,9 @@ If manually trigger, this will build the images defined in the Dockerfile and ar
 - latest
 - SHA of the commit
 
-2 images are available:
+images available:
 
 node-python-sq
-squidex-utils
 
 These are currently set to build only on master, and the images used in the
 GitHub workflows are fixed to the SHA.
@@ -136,7 +135,7 @@ To build new images:
 To change the image tag, run:
 
 ```shell
-  gsed -i s/1de8c60b2214fbca2e0959aa7f473c55bbc2e014/some-new-tag/g .github/**/*.yml .github/README.md
+  gsed -i s/5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61/some-new-tag/g .github/**/*.yml README.md
 ```
 
 ## Manage GitHub workflow runs logs

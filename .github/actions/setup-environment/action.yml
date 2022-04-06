@@ -4,6 +4,9 @@ inputs:
   environment-name:
     description: 'Current environment'
     required: true
+  pr-number:
+    description: 'The PR number'
+    required: true
 outputs:
   algolia-app-id-name:
     description: 'Algolia App id SSM name'
@@ -11,12 +14,12 @@ outputs:
   algolia-api-key-name:
     description: 'Algolia Api key SSM Name'
     value: ${{ steps.vars.outputs.algolia-api-key-name }}
-  algolia-app-name:
-    description: 'Algolia App Name'
-    value: ${{ steps.vars.outputs.algolia-app-name }}
   algolia-index:
     description: 'Algolia Index'
     value: ${{ steps.vars.outputs.algolia-index }}
+  algolia-index-temp:
+    description: 'Algolia Index'
+    value: ${{ steps.vars.outputs.algolia-index }}_temp
   app-release:
     description: 'App Release'
     value: ${{ steps.vars.outputs.app-release }}
@@ -44,9 +47,18 @@ outputs:
   aws-region:
     description: 'AWS Region'
     value: ${{ steps.vars.outputs.aws-region }}
-  bucket-name:
-    description: 'Bucket Name'
-    value: ${{ steps.vars.outputs.bucket-name }}
+  algolia-backup-bucket-name:
+    description: 'Algolia Backup Bucket Name'
+    value: ${{ steps.vars.outputs.algolia-backup-bucket-name }}
+  cache-prefix-definitions:
+    description: 'Cache Prefix Definitions'
+    value: ${{ steps.vars.outputs.cache-prefix-definitions }}
+  cache-prefix-frontend:
+    description: 'Cache Prefix Frontend'
+    value: ${{ steps.vars.outputs.cache-prefix-frontend }}
+  cache-prefix-transpile:
+    description: 'Cache Prefix Transpile'
+    value: ${{ steps.vars.outputs.cache-prefix-transpile }}
   pr-number:
     description: 'PR Number'
     value: ${{ steps.vars.outputs.pr-number }}
@@ -80,6 +92,9 @@ outputs:
   squidex-app-name:
     description: 'Squidex App Name'
     value: ${{ steps.vars.outputs.squidex-app-name }}
+  squidex-backup-bucket-name:
+    description: 'Squidex Backup Bucket Name'
+    value: ${{ steps.vars.outputs.squidex-backup-bucket-name }}
   squidex-base-url:
     description: 'Squidex Base Url'
     value: ${{ steps.vars.outputs.squidex-base-url }}
@@ -105,7 +120,7 @@ runs:
         set_outputs $ENVIRONMENT_NAME
 
         if [ "$ENVIRONMENT_NAME" = "Branch" ]; then
-          PR_NUMBER=${{ github.event.number || github.event.inputs.prNumber }}
+          PR_NUMBER=${{ github.event.number || github.event.inputs.pr-number || inputs.pr-number }}
           echo "::set-output name=algolia-index::asap-hub_CI-$PR_NUMBER"
           echo "::set-output name=app-release::${{ github.run_id }}-dev"
           echo "::set-output name=asap-api-url::https://api-$PR_NUMBER.hub.asap.science"

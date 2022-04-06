@@ -1,0 +1,14 @@
+name: 'Cache unplugged'
+description: 'Cache unplugged'
+inputs:
+  environment-name:
+    description: 'The name of the environment to cache'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/cache@v3
+      with:
+        path: |
+          .yarn/unplugged/
+        key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}

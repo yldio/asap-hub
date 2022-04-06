@@ -28,28 +28,31 @@ jobs:
   definitions:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
       - name: Build
         run: |
           yarn build:typecheck
-      - name: Cache build applications
-        uses: actions/cache@v2
+      - name: Cache build typecheck output
+        uses: ./.github/actions/cache-build
         with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: definitions-output-${{ inputs.environment-name }}-${{ github.sha }}
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-definitions }}
+          environment-name: ${{ inputs.environment-name }}
 
   transpile:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -68,17 +71,15 @@ jobs:
           AUTH0_CLIENT_ID: ${{ steps.setup.outputs.auth0-client-id }}
           AUTH0_DOMAIN: ${{ steps.setup.outputs.auth0-domain }}
       - name: Cache transpile output
-        uses: actions/cache@v2
+        uses: ./.github/actions/cache-build
         with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: transpile-output-${{ inputs.environment-name }}-${{ github.sha }}
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-transpile }}
+          environment-name: ${{ inputs.environment-name }}
 
   rebuild:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -88,17 +89,15 @@ jobs:
       - name: Re-Build
         uses: ./.github/actions/build-rebuild
       - name: Cache build output
-        uses: actions/cache@v2
+        uses: ./.github/actions/cache-unplugged
         with:
-          path: |
-            .yarn/unplugged/
-          key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
+          environment-name: ${{ inputs.environment-name }}
 
   frontend:
     needs: [definitions, transpile]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -110,41 +109,65 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Build
-        uses: ./.github/actions/build-frontend
+      - name: Get Algolia Keys
+        id: algolia-keys
+        uses: ./.github/actions/algolia-keys
         with:
-          algolia-app-name: ${{ steps.setup.outputs.algolia-app-name }}
-          algolia-index: ${{ steps.setup.outputs.algolia-index }}
-          app-release: ${{ steps.setup.outputs.app-release }}
-          asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
-          auth0-client-id: ${{ steps.setup.outputs.auth0-client-id }}
-          auth0-domain: ${{ steps.setup.outputs.auth0-domain }}
+          algolia-app-id-name: ${{ steps.setup.outputs.algolia-app-id-name }}
+          algolia-api-key-name: ${{ steps.setup.outputs.algolia-api-key-name }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-region: ${{ steps.setup.outputs.aws-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
+      - name: Cache transpile output
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-transpile }}
           environment-name: ${{ inputs.environment-name }}
-          react-app-environment: ${{ steps.setup.outputs.react-app-environment }}
-          react-app-gtm-container-id: ${{ steps.setup.outputs.react-app-gtm-container-id }}
-          react-app-sentry-dsn: ${{ steps.setup.outputs.react-app-sentry-dsn }}
+      - name: Cache build typecheck output
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-definitions }}
+          environment-name: ${{ inputs.environment-name }}
+      - name: Build
+        env:
+          AUTH0_CLIENT_ID: ${{ steps.setup.outputs.auth0-client-id }}
+          AUTH0_DOMAIN: ${{ steps.setup.outputs.auth0-domain }}
+          REACT_APP_ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          REACT_APP_ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+          REACT_APP_API_BASE_URL: ${{ steps.setup.outputs.asap-api-url }}
+          REACT_APP_ENVIRONMENT: ${{ steps.setup.outputs.react-app-environment }}
+          REACT_APP_GTM_CONTAINER_ID: ${{ steps.setup.outputs.react-app-gtm-container-id }}
+          REACT_APP_RELEASE: ${{ steps.setup.outputs.app-release }}
+          REACT_APP_SENTRY_DSN: ${{ steps.setup.outputs.react-app-sentry-dsn }}
+        run: |
+          yarn build:frontend
+      - name: Cache build output
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-frontend }}
+          environment-name: ${{ inputs.environment-name }}
 
   typecheck:
     needs: [definitions]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Cache build typecheck output
-        uses: actions/cache@v2
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
         with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: definitions-output-${{ inputs.environment-name }}-${{ github.sha }}
+          environment-name: ${{ inputs.environment-name }}
+      - name: Cache build typecheck output
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-definitions }}
+          environment-name: ${{ inputs.environment-name }}
       - name: TypeCheck
         run: |
           yarn typecheck
@@ -153,7 +176,7 @@ jobs:
     needs: [definitions, transpile, rebuild]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -166,24 +189,46 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Build
-        uses: ./.github/actions/build-sls-package
+      - name: Cache build output
+        uses: ./.github/actions/cache-unplugged
         with:
-          algolia-index: ${{ steps.setup.outputs.algolia-index }}
-          asap-api-url: ${{ steps.setup.outputs.asap-api-url }}
-          asap-app-url: ${{ steps.setup.outputs.asap-app-url }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-acm-certificate-arn: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
-          aws-region: ${{ steps.setup.outputs.aws-region }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           environment-name: ${{ inputs.environment-name }}
-          lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-          sentry-dsn-api: ${{ steps.setup.outputs.sentry-dsn-api }}
-          sentry-dsn-calendar: ${{ steps.setup.outputs.sentry-dsn-calendar }}
-          sentry-dsn-user-invite: ${{ steps.setup.outputs.sentry-dsn-user-invite }}
-          sls-stage: ${{ steps.setup.outputs.sls-stage }}
-          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
-          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
-          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
-          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-          squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+      - name: Cache build definitions
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-definitions }}
+          environment-name: ${{ inputs.environment-name }}
+      - name: Cache transpile output
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-transpile }}
+          environment-name: ${{ inputs.environment-name }}
+      - name: Generate package
+        shell: bash
+        run: |
+          yarn sls package --package sls-package
+        env:
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+          ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
+          ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
+          AWS_REGION: ${{ steps.setup.outputs.aws-region }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          CURRENT_REVISION: ${{ github.sha }}
+          LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
+          NODE_ENV: 'production'
+          SENTRY_DSN_API: ${{ steps.setup.outputs.sentry-dsn-api }}
+          SENTRY_DSN_CALENDAR: ${{ steps.setup.outputs.sentry-dsn-calendar }}
+          SENTRY_DSN_USER_INVITE: ${{ steps.setup.outputs.sentry-dsn-user-invite }}
+          SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
+          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+          SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: sls-package-${{ inputs.environment-name }}
+          path: 'sls-package'
+          retention-days: 1

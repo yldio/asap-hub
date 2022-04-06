@@ -1,8 +1,7 @@
 algolia-api-key-name=algolia-api-key-ci-dev
 algolia-app-id-name=algolia-app-id-dev
-algolia-app-name=algolia-app-id-dev
 auth0-client-id=xRDvgZe3Ql3LSZDs2dWQYzcohFnLyeL2
 auth0-domain=dev-asap-hub.us.auth0.com
-bucket-name=asap-hub-dev-algolia-backup
+algolia-backup-bucket-name=asap-hub-dev-algolia-backup
 react-app-environment=development
 squidex-client-id=6058c1ce6d296b4d1681c3ad

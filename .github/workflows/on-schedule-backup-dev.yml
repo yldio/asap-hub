@@ -1,56 +1,57 @@
-name: DEV - Create database backups
+name: DEV - Database backups
 on:
   schedule:
     - cron: '0 7 * * MON-FRI' # At 07:00 UTC on every day-of-week from Monday through Friday.
   workflow_dispatch:
 jobs:
-  make_squidex_backup:
-    runs-on: ubuntu-18.04
+  squidex:
+    uses: ./.github/workflows/reusable-backup-squidex.yml
+    with:
+      environment-name: Development
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+
+  algolia:
+    runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/squidex-utils:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    env:
-      SQUIDEX_APP: 'asap-hub-dev'
-      BUCKET_NAME: 'asap-hub-dev-data-backup'
-      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_DEV }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_DEV }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    steps:
-      - name: Add the configuration
-        run: sq config add $SQUIDEX_APP $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET
-      - name: Run sync
-        run: sq sync out ./backup
-      - name: Tar the files
-        run: |
-          FILE_NAME=$(date +%s| cut -b1-13)-squidex-dev-backup.tar.gz && \
-          tar -czf $FILE_NAME backup/ && \
-          echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
-      - name: upload to S3
-        run: aws s3api put-object --bucket $BUCKET_NAME --key $FILE_NAME --body $FILE_NAME --storage-class STANDARD_IA
-  make_algolia_backup:
-    runs-on: ubuntu-18.04
-    env:
-      BUCKET_NAME: 'asap-hub-dev-algolia-backup'
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_DEFAULT_REGION: 'us-east-1'
-      ALGOLIA_INDEX: 'asap-hub_dev'
+    environment: Development
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Fetch the Algolia keys
-        run: |
-          echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
-          echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Development
+      - name: Get Algolia Keys
+        id: algolia-keys
+        uses: ./.github/actions/algolia-keys
+        with:
+          algolia-app-id-name: ${{ steps.setup.outputs.algolia-app-id-name }}
+          algolia-api-key-name: ${{ steps.setup.outputs.algolia-api-key-name }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
       - name: Run the backup
         run: |
-          export DIR_NAME=$(date +%s| cut -b1-13)
+          DIR_NAME=$(date +%s| cut -b1-13)
           mkdir $DIR_NAME
           yarn workspace @asap-hub/crn-server run algolia export -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -o "../../$DIR_NAME"
           echo "DIR_NAME=$DIR_NAME" >> $GITHUB_ENV
+        env:
+          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
       - name: Upload to S3
         run: |
           aws s3 cp $DIR_NAME s3://$BUCKET_NAME/$DIR_NAME --recursive --storage-class STANDARD_IA
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          BUCKET_NAME: ${{ steps.setup.outputs.algolia-backup-bucket-name }}

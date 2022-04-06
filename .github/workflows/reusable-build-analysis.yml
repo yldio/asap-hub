@@ -16,7 +16,7 @@ jobs:
   bundlewatch:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -29,13 +29,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Cache -frontendbuild output
-        uses: actions/cache@v2
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
         with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}
+          environment-name: ${{ inputs.environment-name }}
+      - name: Cache build output
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-frontend }}
+          environment-name: ${{ inputs.environment-name }}
       - name: Bundle watch
         run: |
           CI_REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F / '{print $2}')
@@ -44,20 +47,23 @@ jobs:
   build-output:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Cache build output
-        uses: actions/cache@v2
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
         with:
-          path: |
-            apps/**/build*
-            packages/**/build*
-          key: build-frontend-output-${{ inputs.environment-name }}-${{ github.sha }}
+          environment-name: ${{ inputs.environment-name }}
+      - name: Cache build output
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-frontend }}
+          environment-name: ${{ inputs.environment-name }}
       - name: Test output
         run: |
           yarn run test:build-output

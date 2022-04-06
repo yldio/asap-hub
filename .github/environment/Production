@@ -1,6 +1,5 @@
 algolia-api-key-name=algolia-api-key-ci-prod
 algolia-app-id-name=algolia-app-id-prod
-algolia-app-name=algolia-app-id-prod
 algolia-index=asap-hub_prod
 asap-api-url=https://api.hub.asap.science
 asap-app-url=https://hub.asap.science
@@ -12,4 +11,5 @@ react-app-sentry-dsn=https://8cd3c59be8ec4118aa6f6c59487b9e56@o850903.ingest.sen
 ses-region=us-east-1
 sls-stage=production
 squidex-app-name=asap-hub
+squidex-backup-bucket-name=asap-hub-production-data-backup
 squidex-client-id=asap-hub:default

@@ -1,0 +1,55 @@
+name: Reusable backup Squidex
+
+on:
+  workflow_call:
+    inputs:
+      environment-name:
+        description: 'The environment name'
+        required: true
+        type: string
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        description: 'AWS Access Key ID'
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        description: 'AWS Secret Access Key'
+        required: true
+      SQUIDEX_CLIENT_SECRET:
+        description: 'Squidex Client Secret'
+        required: true
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    environment: ${{ inputs.environment-name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Add the configuration
+        run: sq config add $SQUIDEX_APP $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET
+        env:
+          SQUIDEX_APP: ${{ steps.setup.outputs.squidex-app-name }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      - name: Run sync out
+        run: sq sync out ./backup
+      - name: Tar the files
+        run: |
+          FILE_NAME=$(date +%s| cut -b1-13)-squidex-backup.tar.gz && \
+          tar -czf $FILE_NAME backup/ && \
+          echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
+      - name: upload to S3
+        run: aws s3api put-object --bucket $BUCKET_NAME --key $FILE_NAME --body $FILE_NAME --storage-class STANDARD_IA
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          BUCKET_NAME: ${{ steps.setup.outputs.squidex-backup-bucket-name }}

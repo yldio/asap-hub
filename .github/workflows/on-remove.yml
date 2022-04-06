@@ -5,24 +5,20 @@ on:
     types: [closed]
   workflow_dispatch:
     inputs:
-      prNumber:
+      pr-number:
         required: true
         type: string
         description: Choose which PR number to destroy
 jobs:
-  sls-teardown:
-    if: ${{ github.event.inputs.prNumber || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
-    runs-on: ubuntu-18.04
+  sls:
+    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
+    runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:1de8c60b2214fbca2e0959aa7f473c55bbc2e014
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    env:
-      NODE_ENV: 'production'
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
+    environment: Branch
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -31,6 +27,11 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
+      - name: Check PR Number
+        if: ${{ github.event.inputs.pr-number }}
+        uses: ./.github/actions/is-number
+        with:
+          number: ${{ github.event.inputs.pr-number }}
       - name: Rebuild dependencies
         run: yarn rebuild
       - name: Remove CF Stack
@@ -40,66 +41,76 @@ jobs:
         env:
           ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
           ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
           AWS_REGION: ${{ steps.setup.outputs.aws-region }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          CURRENT_REVISION: ${{ github.sha }}
+          LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
+          NODE_ENV: 'production'
+          SENTRY_DSN_API: ${{ steps.setup.outputs.sentry-dsn-api }}
+          SENTRY_DSN_CALENDAR: ${{ steps.setup.outputs.sentry-dsn-calendar }}
+          SENTRY_DSN_USER_INVITE: ${{ steps.setup.outputs.sentry-dsn-user-invite }}
           SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
-      - name: Remove GitLab CF Stack
-        env:
-          ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
-          ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
-          AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
-          AWS_REGION: ${{ steps.setup.outputs.aws-region }}
-          SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}-gitlab
-        if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
-        run: yarn sls remove --verbose
-        continue-on-error: true
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
+          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+          SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
       - name: Delete PR Squidex App
         run: python ci/integration/scripts/delete-app.py
         env:
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
-      - name: Delete PR Squidex App created by gitlab
-        env:
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}-gitlab
-          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
-        run: python .github/scripts/squidex/delete-app.py
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
-  delete-algolia-indice:
-    if: ${{ github.event.inputs.prNumber || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
-    runs-on: ubuntu-18.04
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  algolia-index:
+    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Check PR Number
+        if: ${{ github.event.inputs.pr-number }}
+        uses: ./.github/actions/is-number
+        with:
+          number: ${{ github.event.inputs.pr-number }}
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
-      - name: Fetch the Algolia keys
-        run: |
-          echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
-          echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
-        env:
-          AWS_DEFAULT_REGION: ${{ steps.setup.outputs.aws-default-region }}
+      - name: Get Algolia Keys
+        id: algolia-keys
+        uses: ./.github/actions/algolia-keys
+        with:
+          algolia-app-id-name: ${{ steps.setup.outputs.algolia-app-id-name }}
+          algolia-api-key-name: ${{ steps.setup.outputs.algolia-api-key-name }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
       - name: Delete the index
         run: |
           cd apps/crn-server
           yarn workspace @asap-hub/crn-server run algolia deleteindicespattern -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -r "^$ALGOLIA_INDEX$" -x false
         env:
+          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
 
   notify_failure:
-    runs-on: ubuntu-18.04
-    needs: [sls-teardown, delete-algolia-indice]
-    if: ${{ failure() && (github.event.inputs.prNumber || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub') }}
+    runs-on: ubuntu-latest
+    needs: [sls, algolia-index]
+    if: ${{ failure() && (github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub') }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - uses: ./.github/actions/slack/
         with:
           message: Environment teardown

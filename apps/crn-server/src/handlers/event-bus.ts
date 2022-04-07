@@ -27,3 +27,17 @@ export type LabPayload = {
     id: string;
   };
 };
+
+export type ExternalAuthorPayload = {
+  type: ExternalAuthorEvent;
+  timestamp: string;
+  payload: {
+    $type: 'EnrichedContentEvent';
+    type: SquidexEntityEvent;
+    id: string;
+    created: string;
+    lastModified: string;
+    version: number;
+    data: { [x: string]: { iv: unknown } | null };
+  };
+};

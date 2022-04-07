@@ -355,12 +355,12 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: ['asap.external-author'],
+              source: [eventBusSource],
               'detail-type': [
-                'ExternalAuthorPublished',
-                'ExternalAuthorUpdated',
-                'ExternalAuthorCreated',
-                'ExternalAuthorDeleted',
+                'ExternalAuthorsPublished',
+                'ExternalAuthorsUpdated',
+                'ExternalAuthorsUnpublished',
+                'ExternalAuthorsDeleted',
               ],
             },
           },
@@ -450,22 +450,6 @@ const serverlessConfig: AWS = {
       environment: {
         EVENT_BUS: 'asap-events-${self:provider.stage}',
         EVENT_SOURCE: 'asap.user',
-      },
-    },
-    externalAuthorUpserted: {
-      handler:
-        'apps/crn-server/src/handlers/webhooks/webhook-external-author.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/external-authors',
-          },
-        },
-      ],
-      environment: {
-        EVENT_BUS: 'asap-events-${self:provider.stage}',
-        EVENT_SOURCE: 'asap.external-author',
       },
     },
     researchOutputUpserted: {

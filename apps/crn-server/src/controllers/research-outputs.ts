@@ -235,9 +235,9 @@ export default class ResearchOutputs implements ResearchOutputController {
 
     if (name) {
       const { id: authorId } =
-        await this.externalAuthorSquidexRestClient.create(
-          parseToSquidex({ name }) as RestExternalAuthor['data'],
-        );
+        await this.externalAuthorSquidexRestClient.create({
+          name: { iv: name },
+        });
       return authorId;
     }
 

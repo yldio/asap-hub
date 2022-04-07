@@ -264,15 +264,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@arcanis/slice-ansi@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "@arcanis/slice-ansi@npm:1.0.2"
-  dependencies:
-    grapheme-splitter: ^1.0.4
-  checksum: b66e05fa25e42172a4f32aa8a5372203227f1b0e1c5d7879f45217a0fd0a5506a0f53f677ee532b8c92e53ce8404fdd60ba4cd83cfb806a19ad6472e6b75170b
-  languageName: node
-  linkType: hard
-
 "@arcanis/slice-ansi@npm:^1.1.1":
   version: 1.1.1
   resolution: "@arcanis/slice-ansi@npm:1.1.1"
@@ -340,7 +331,7 @@ __metadata:
     "@types/through2-concurrent": ^2
     "@types/uuid": ^8.3.0
     "@types/yargs": ^17.0.5
-    "@yarnpkg/pnpify": ^3.0.1-rc.7
+    "@yarnpkg/pnpify": ^3.1.1
     algoliasearch: ^4.11.0
     apr-intercept: ^3.0.4
     async-sema: ^3.1.0
@@ -722,6 +713,7 @@ __metadata:
     pino-noir: ^2.2.1
     serverless: ^2.60.0
     serverless-http: ^2.7.0
+    serverless-s3-sync: ^1.17.1
     serverless-webpack: ^5.5.0
     source-map-support: ^0.5.19
     ts-node: ^10.7.0
@@ -12650,46 +12642,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/core@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "@yarnpkg/core@npm:3.0.0"
-  dependencies:
-    "@arcanis/slice-ansi": ^1.0.2
-    "@types/semver": ^7.1.0
-    "@types/treeify": ^1.0.0
-    "@yarnpkg/fslib": ^2.5.0
-    "@yarnpkg/json-proxy": ^2.1.1
-    "@yarnpkg/libzip": ^2.2.2
-    "@yarnpkg/parsers": ^2.4.0
-    "@yarnpkg/pnp": ^3.0.0
-    "@yarnpkg/shell": ^3.0.0
-    camelcase: ^5.3.1
-    chalk: ^3.0.0
-    ci-info: ^2.0.0
-    clipanion: ^3.0.1
-    cross-spawn: 7.0.3
-    diff: ^4.0.1
-    globby: ^11.0.1
-    got: ^11.7.0
-    json-file-plus: ^3.3.1
-    lodash: ^4.17.15
-    micromatch: ^4.0.2
-    mkdirp: ^0.5.1
-    p-limit: ^2.2.0
-    p-queue: ^6.0.0
-    pluralize: ^7.0.0
-    pretty-bytes: ^5.1.0
-    semver: ^7.1.2
-    stream-to-promise: ^2.2.0
-    strip-ansi: ^6.0.0
-    tar: ^6.0.5
-    treeify: ^1.1.0
-    tslib: ^1.13.0
-    tunnel: ^0.0.6
-  checksum: 87341e83e648eb121a5436ebd65ad85e44e2ea836646a7a77cc22a1e10a156390020e961701996cf79e477a10ec37ea4059a798447c574c786cf7b38a7a78042
-  languageName: node
-  linkType: hard
-
 "@yarnpkg/core@npm:^3.2.0":
   version: 3.2.0
   resolution: "@yarnpkg/core@npm:3.2.0"
@@ -12730,7 +12682,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/fslib@npm:^2.5.0, @yarnpkg/fslib@npm:^2.5.1, @yarnpkg/fslib@npm:^2.5.2":
+"@yarnpkg/fslib@npm:^2.5.0":
   version: 2.5.2
   resolution: "@yarnpkg/fslib@npm:2.5.2"
   dependencies:
@@ -12780,16 +12732,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/nm@npm:^2.4.1":
-  version: 2.4.1
-  resolution: "@yarnpkg/nm@npm:2.4.1"
-  dependencies:
-    "@yarnpkg/core": ^3.0.0
-    "@yarnpkg/fslib": ^2.5.0
-  checksum: e3b0978f136e4a354ab23a1e9d999158459a2df03149e3c98a1cf8101d931964bafb1a03794db0949899df9262d6b0bba4255b779464b9386d1e09790e1bfe16
-  languageName: node
-  linkType: hard
-
 "@yarnpkg/nm@npm:^3.0.1":
   version: 3.0.1
   resolution: "@yarnpkg/nm@npm:3.0.1"
@@ -12797,16 +12739,6 @@ __metadata:
     "@yarnpkg/core": ^3.2.0
     "@yarnpkg/fslib": ^2.6.1
   checksum: bc39d07b4f2715bb114e3290d11cec71baadce2f2b4d0d0f3058eba154b62bf8a954fa57df4b9018dc5bdc12ab58e90822b6b67f8ed9fd13565b0b8acf56acd8
-  languageName: node
-  linkType: hard
-
-"@yarnpkg/parsers@npm:^2.4.0":
-  version: 2.4.0
-  resolution: "@yarnpkg/parsers@npm:2.4.0"
-  dependencies:
-    js-yaml: ^3.10.0
-    tslib: ^1.13.0
-  checksum: ae077862b829defc95e85a328270dac5f242628656bb938e5da37913b1d0caab545de9ed9d1df3bc17f4e8da842b545df87931d39902aa2132e90699d96ecc33
   languageName: node
   linkType: hard
 
@@ -12820,18 +12752,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/pnp@npm:^3.0.0":
-  version: 3.0.2
-  resolution: "@yarnpkg/pnp@npm:3.0.2"
-  dependencies:
-    "@types/node": ^13.7.0
-    "@yarnpkg/fslib": ^2.5.2
-    resolve.exports: ^1.0.2
-    tslib: ^1.13.0
-  checksum: c9b1aefb4269f29ab7d4476fc4deceb919f7b4a3b58c0c8f6e3bae68db8eaef52253080e365ec1dc30e2fd7744e678c78e58bba710cf5041157f28d16cbdb948
-  languageName: node
-  linkType: hard
-
 "@yarnpkg/pnp@npm:^3.2.0":
   version: 3.2.0
   resolution: "@yarnpkg/pnp@npm:3.2.0"
@@ -12839,22 +12759,6 @@ __metadata:
     "@types/node": ^13.7.0
     "@yarnpkg/fslib": ^2.6.1
   checksum: 5b99f89e774a0e98f6e86b9bdcd36eee4f9dc00b9b5983e8f6df95c3ecc196f5a030616edaaad7648f548d5b06fd7b201226e1205d64e61fe02657fea3860410
-  languageName: node
-  linkType: hard
-
-"@yarnpkg/pnpify@npm:^3.0.1-rc.7":
-  version: 3.0.1
-  resolution: "@yarnpkg/pnpify@npm:3.0.1"
-  dependencies:
-    "@yarnpkg/core": ^3.0.0
-    "@yarnpkg/fslib": ^2.5.1
-    "@yarnpkg/nm": ^2.4.1
-    clipanion: ^3.0.1
-    cross-spawn: 7.0.3
-    tslib: ^1.13.0
-  bin:
-    pnpify: ./lib/cli.js
-  checksum: 96572833604f3016679a56564ace79e877e6d2fe319f59a0987147c849d7c2bc87bc65afb897a9c9c1ee1a181b540dbc1f2968a6caf4776c754cf1005d589167
   languageName: node
   linkType: hard
 
@@ -12871,25 +12775,6 @@ __metadata:
   bin:
     pnpify: ./lib/cli.js
   checksum: 05a96f9299e77954a03ed9f69292d87416dd7a102a58b1ca9d245c6e7665c146e28054f79c8574172f0d94e94ba9295ae9fc15944be3883337e11508c1764eb2
-  languageName: node
-  linkType: hard
-
-"@yarnpkg/shell@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "@yarnpkg/shell@npm:3.0.0"
-  dependencies:
-    "@yarnpkg/fslib": ^2.5.0
-    "@yarnpkg/parsers": ^2.4.0
-    chalk: ^3.0.0
-    clipanion: ^3.0.1
-    cross-spawn: 7.0.3
-    fast-glob: ^3.2.2
-    micromatch: ^4.0.2
-    stream-buffers: ^3.0.2
-    tslib: ^1.13.0
-  bin:
-    shell: ./lib/cli.js
-  checksum: fcddc49af7d3098ff959880e4fe4841d10efcc8424dbc0268daf5735485a6a91d04b3bf85a1e08f8571ddd3ac1437e4f8100cff88dd65c58f8688f9523357069
   languageName: node
   linkType: hard
 
@@ -13826,7 +13711,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.12.0
     "@types/jest": ^26.0.23
     "@types/webpack": ^4
-    "@yarnpkg/pnpify": ^3.0.1-rc.7
+    "@yarnpkg/pnpify": ^3.1.1
     babel-eslint: ^10.1.0
     babel-loader: ^8.2.2
     babel-plugin-lodash: ^3.3.4
@@ -13853,7 +13738,7 @@ __metadata:
     serverless-iam-roles-per-function: ^2.0.2
     serverless-s3-sync: ^1.17.1
     serverless-webpack: ^5.5.0
-    ts-node: ^9.1.1
+    ts-node: ^10.7.0
     typescript: 4.4.4
     webpack: ^5.37.0
   dependenciesMeta:
@@ -16310,17 +16195,6 @@ __metadata:
   version: 3.0.0
   resolution: "cli-width@npm:3.0.0"
   checksum: 4c94af3769367a70e11ed69aa6095f1c600c0ff510f3921ab4045af961820d57c0233acfa8b6396037391f31b4c397e1f614d234294f979ff61430a6c166c3f6
-  languageName: node
-  linkType: hard
-
-"clipanion@npm:^3.0.1":
-  version: 3.1.0
-  resolution: "clipanion@npm:3.1.0"
-  dependencies:
-    typanion: ^3.3.1
-  peerDependencies:
-    typanion: "*"
-  checksum: bf350082e8953c697cfe35262845700012bdeb1cc490f81cd17de2fe985c8861750164509795ad95d3ee6a2b3742a1d5c6394cdf0f3ff4c4d24173a9fec3418e
   languageName: node
   linkType: hard
 
@@ -19989,13 +19863,6 @@ __metadata:
   version: 4.0.0
   resolution: "eventemitter3@npm:4.0.0"
   checksum: 53532ce3012f48339fed187125364593a6a221ae6a1dda0ef23570ee31f471ec2e10105634900f22169895acc0ad2a2e8e8db263784b736effc412dc9ffd86c6
-  languageName: node
-  linkType: hard
-
-"eventemitter3@npm:^4.0.4":
-  version: 4.0.7
-  resolution: "eventemitter3@npm:4.0.7"
-  checksum: 1875311c42fcfe9c707b2712c32664a245629b42bb0a5a84439762dd0fd637fc54d078155ea83c2af9e0323c9ac13687e03cfba79b03af9f40c89b4960099374
   languageName: node
   linkType: hard
 
@@ -29124,16 +28991,6 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"p-queue@npm:^6.0.0":
-  version: 6.6.2
-  resolution: "p-queue@npm:6.6.2"
-  dependencies:
-    eventemitter3: ^4.0.4
-    p-timeout: ^3.2.0
-  checksum: 832642fcc4ab6477b43e6d7c30209ab10952969ed211c6d6f2931be8a4f9935e3578c72e8cce053dc34f2eb6941a408a2c516a54904e989851a1a209cf19761c
-  languageName: node
-  linkType: hard
-
 "p-retry@npm:^3.0.1":
   version: 3.0.1
   resolution: "p-retry@npm:3.0.1"
@@ -29143,7 +29000,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"p-timeout@npm:^3.1.0, p-timeout@npm:^3.2.0":
+"p-timeout@npm:^3.1.0":
   version: 3.2.0
   resolution: "p-timeout@npm:3.2.0"
   dependencies:
@@ -33049,13 +32906,6 @@ recoil@^0.1.2:
   languageName: node
   linkType: hard
 
-"resolve.exports@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "resolve.exports@npm:1.0.2"
-  checksum: 1de1e50dc61dfe0abfdcbe658aaffce108662b007a1879406cbcf32a8199358ed4a2b86ca4606a53d9978f2bc7e5e1321edf6cca36081ae0b845334f28c29cf3
-  languageName: node
-  linkType: hard
-
 resolve@1.18.1:
   version: 1.18.1
   resolution: "resolve@npm:1.18.1"
@@ -36314,7 +36164,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"ts-node@npm:>= 8.3.0, ts-node@npm:^9, ts-node@npm:^9.1.1":
+"ts-node@npm:>= 8.3.0, ts-node@npm:^9":
   version: 9.1.1
   resolution: "ts-node@npm:9.1.1"
   dependencies:

@@ -1,5 +1,5 @@
 # dependencies
-/.serverless*
+**/.serverless*
 /.pnp.js
 /.yarn
 

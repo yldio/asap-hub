@@ -284,8 +284,8 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: ['asap.user'],
-              'detail-type': ['UserPublished'],
+              source: [eventBusSource],
+              'detail-type': ['UsersPublished'],
             },
             retryPolicy: {
               maximumRetryAttempts: 2,

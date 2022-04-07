@@ -1,8 +1,9 @@
 import 'express-async-errors';
 import cors from 'cors';
+import { Logger } from 'pino';
+import pinoHttp from 'pino-http';
 import express, { Express } from 'express';
 import { SquidexGraphql } from '@asap-hub/squidex';
-import pinoHttp from 'pino-http';
 import Dashboard, {
   DashboardController,
 } from './controllers/dashboard.controller';

@@ -13,11 +13,62 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Set short sha
+      shell: bash
+      id: sha
+      run: |
+        echo "::set-output name=short::$(echo ${{ github.sha }} | cut -c 1-7)"
     - name: Slack Notification
-      uses: rtCamp/action-slack-notify@v2
+      uses: slackapi/slack-github-action@v1
+      with:
+        payload: |
+          {
+            "username": "ASAP robot",
+            "icon_url": "https://asap-misc.s3.eu-west-1.amazonaws.com/robot.png",
+            "attachments": [{
+              "color": "${{ (inputs.status == 'success' && '#35a64f') || (inputs.status == 'failure' && '#FF0000') || '#E3256B' }}",
+              "blocks": [{
+                "type": "context",
+                "elements": [
+                  {
+                    "type": "image",
+                    "image_url": "https://github.com/${{ github.actor }}.png?size=32",
+                    "alt_text": "${{ github.actor }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "<https://github.com/${{ github.actor }}|${{ github.actor }}>"
+                  }
+                ]
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Ref:*\n${{ github.ref }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Event:*\n${{ github.event_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Actions URL:*\n<https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|${{ github.workflow }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n<https://github.com/${{ github.repository }}/commit/${{ github.sha }}|${{ steps.sha.outputs.short }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Message:*\n${{ inputs.message }}"
+                    }
+                  ]
+                }
+              ]
+            }]
+          }
       env:
-        SLACK_WEBHOOK: ${{ inputs.webhook }}
-        SLACK_MESSAGE: ${{ inputs.message }}
-        SLACK_ICON: https://asap-misc.s3.eu-west-1.amazonaws.com/robot.png
-        SLACK_USERNAME: ASAP robot
-        SLACK_COLOR: ${{ (inputs.status == 'success' && '#35a64f') || (inputs.status == 'failure' && '#FF0000') || '#E3256B' }}
+        SLACK_WEBHOOK_URL: ${{ inputs.webhook }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

@@ -1,4 +1,4 @@
-name: PROD - Database Backup
+name: PROD - Database backup
 on:
   schedule:
     - cron: '0 7,19 * * *' # Twice a day: 7am and 7pm UTC

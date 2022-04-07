@@ -332,12 +332,12 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: ['asap.user'],
+              source: [eventBusSource],
               'detail-type': [
-                'UserPublished',
-                'UserUpdated',
-                'UserCreated',
-                'UserDeleted',
+                'UsersPublished',
+                'UsersUpdated',
+                'UsersCreated',
+                'UsersDeleted',
               ],
             },
           },
@@ -436,21 +436,6 @@ const serverlessConfig: AWS = {
       environment: {
         EVENT_BUS: 'asap-events-${self:provider.stage}',
         EVENT_SOURCE: 'asap.calendar',
-      },
-    },
-    userUpserted: {
-      handler: 'apps/crn-server/src/handlers/webhooks/webhook-user.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/users',
-          },
-        },
-      ],
-      environment: {
-        EVENT_BUS: 'asap-events-${self:provider.stage}',
-        EVENT_SOURCE: 'asap.user',
       },
     },
     invalidateCache: {

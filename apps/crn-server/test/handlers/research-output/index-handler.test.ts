@@ -1,10 +1,10 @@
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
-import { indexResearchOutputHandler } from '../../../src/handlers/research-output/index-handler';
 import {
   ResearchOutputEvent,
   ResearchOutputPayload,
 } from '../../../src/handlers/event-bus';
+import { indexResearchOutputHandler } from '../../../src/handlers/research-output/index-handler';
 import {
   getResearchOutputEvent,
   getResearchOutputResponse,

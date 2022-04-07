@@ -65,3 +65,16 @@ export type TeamPayload = {
     };
   };
 };
+
+export type UserPayload = {
+  type: UserEvent;
+  payload: {
+    $type: 'EnrichedContentEvent';
+    type: SquidexEntityEvent;
+    id: string;
+    created: string;
+    lastModified: string;
+    version: number;
+    data: { [x: string]: { iv: unknown } | null };
+  };
+};

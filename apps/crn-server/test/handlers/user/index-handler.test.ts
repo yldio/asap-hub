@@ -322,13 +322,13 @@ describe('User index handler', () => {
 });
 
 const unpublishedEvent = (id: string = 'user-1234') =>
-  getUserEvent(id, 'UsersUnpublished', 'UserDeleted');
+  getUserEvent(id, 'UsersUnpublished');
 
 const deleteEvent = (id: string = 'user-1234') =>
-  getUserEvent(id, 'UsersDeleted', 'UserDeleted');
+  getUserEvent(id, 'UsersDeleted');
 
 const createEvent = (id: string = 'user-1234') =>
-  getUserEvent(id, 'UsersPublished', 'UserPublished');
+  getUserEvent(id, 'UsersPublished');
 
 const updateEvent = (id: string = 'user-1234') =>
-  getUserEvent(id, 'UsersUpdated', 'UserUpdated');
+  getUserEvent(id, 'UsersUpdated');

@@ -12,7 +12,6 @@ import { AuthHandler, authHandlerFactory } from './middleware/auth-handler';
 import decodeToken from './utils/validate-token';
 import { errorHandlerFactory } from './middleware/error-handler';
 import pinoLogger, { redaction } from './utils/logger';
-import { Logger } from 'pino';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();

@@ -8,9 +8,6 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "start": "node-dev ./src/server.ts",
-    "migration:create": "./scripts/create-migration.sh",
-    "schema:update": "graphql-codegen --config codegen.yml",
     "typecheck": "tsc"
   },
   "dependencies": {

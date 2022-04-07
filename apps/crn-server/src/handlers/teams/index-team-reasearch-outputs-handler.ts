@@ -3,7 +3,7 @@ import {
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import { SquidexGraphql } from '@asap-hub/squidex';
-import { TeamsEventType } from '../webhooks/webhook-teams';
+import { TeamEvent, TeamPayload } from '../event-bus';
 import ResearchOutputs, {
   ResearchOutputController,
 } from '../../controllers/research-outputs';
@@ -15,7 +15,7 @@ export const indexResearchOutputByTeamHandler =
   (
     researchOutputController: ResearchOutputController,
     algoliaClient: AlgoliaSearchClient,
-  ): EventBridgeHandler<TeamsEventType, SquidexWebhookTeamPayload> =>
+  ): EventBridgeHandler<TeamEvent, TeamPayload> =>
   async (event) => {
     const outputsIds = Array.from(
       new Set(
@@ -47,21 +47,6 @@ export const indexResearchOutputByTeamHandler =
       logger.info(JSON.stringify(teamOutputsResults));
     }
   };
-
-export type SquidexWebhookTeamPayload = {
-  type: 'TeamsCreated' | 'TeamsUpdated';
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: 'Created';
-    id: string;
-    data: {
-      outputs: { iv: string[] };
-    };
-    dataOld?: {
-      outputs: { iv: string[] };
-    };
-  };
-};
 
 export const handler = indexResearchOutputByTeamHandler(
   new ResearchOutputs(new SquidexGraphql()),

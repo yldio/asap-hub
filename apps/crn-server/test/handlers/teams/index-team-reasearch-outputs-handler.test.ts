@@ -1,9 +1,6 @@
 import { EventBridgeEvent } from 'aws-lambda';
-import {
-  indexResearchOutputByTeamHandler,
-  SquidexWebhookTeamPayload,
-} from '../../../src/handlers/teams/index-team-reasearch-outputs-handler';
-import { TeamsEventType } from '../../../src/handlers/webhooks/webhook-teams';
+import { indexResearchOutputByTeamHandler } from '../../../src/handlers/teams/index-team-reasearch-outputs-handler';
+import { TeamEvent, TeamPayload } from '../../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../../helpers/events';
 import { getResearchOutputResponse } from '../../fixtures/research-output.fixtures';
 import { researchOutputControllerMock } from '../../mocks/research-outputs-controller.mock';
@@ -66,17 +63,14 @@ describe('Team Research Outputs Index', () => {
   });
 });
 
-const getEvent = (): EventBridgeEvent<
-  TeamsEventType,
-  SquidexWebhookTeamPayload
-> =>
-  createEventBridgeEventMock(createTeamSquidexWebhookPayload, 'TeamsCreated');
+const getEvent = (): EventBridgeEvent<TeamEvent, TeamPayload> =>
+  createEventBridgeEventMock(createTeamSquidexWebhookPayload, 'TeamsPublished');
 
-const createTeamSquidexWebhookPayload: SquidexWebhookTeamPayload = {
-  type: 'TeamsCreated',
+const createTeamSquidexWebhookPayload: TeamPayload = {
+  type: 'TeamsPublished',
   payload: {
     $type: 'EnrichedContentEvent',
-    type: 'Created',
+    type: 'Published',
     id: '0ecccf93-bd06-9821-90ea-783h7te652d',
     data: {
       outputs: {

@@ -41,3 +41,18 @@ export type ExternalAuthorPayload = {
     data: { [x: string]: { iv: unknown } | null };
   };
 };
+
+export type TeamPayload = {
+  type: TeamEvent;
+  payload: {
+    $type: 'EnrichedContentEvent';
+    type: SquidexEntityEvent;
+    id: string;
+    data: {
+      outputs: { iv: string[] };
+    };
+    dataOld?: {
+      outputs: { iv: string[] };
+    };
+  };
+};

@@ -2,10 +2,7 @@ import { EventBridgeEvent } from 'aws-lambda';
 
 import { ListTeamResponse, TeamResponse } from '@asap-hub/model';
 import { Team, WebhookPayload } from '@asap-hub/squidex';
-import {
-  TeamsEventType,
-  SquidexWebhookTeamPayload,
-} from '../../src/handlers/webhooks/webhook-teams';
+import { TeamEvent, TeamPayload } from '../../src/handlers/event-bus';
 import {
   FetchTeamQuery,
   FetchTeamsQuery,
@@ -156,44 +153,33 @@ export const getPossibleTeamEvents: [string, string, WebhookPayload<Team>][] = [
   ['teams-deleted', 'TeamsDeleted', getTeamsDeleted],
 ];
 
-export const getTeamsEventbridgeEvent = (
-  id: string,
-  squidexEvent:
-    | 'TeamsPublished'
-    | 'TeamsUpdated'
-    | 'TeamsUnpublished'
-    | 'TeamsDeleted',
-  eventType: TeamsEventType,
-) => createEventBridgeEventMock(getTeamsEvent(id, squidexEvent), eventType, id);
+export const getTeamsEventbridgeEvent = (id: string, eventType: TeamEvent) =>
+  createEventBridgeEventMock(getTeamsEvent(id, eventType), eventType, id);
 
 export type TeamEventGenerator = (
   id: string,
-) => EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>;
+) => EventBridgeEvent<TeamEvent, TeamPayload>;
 
 export const unpublishedEvent: TeamEventGenerator = (id: string) =>
-  getTeamsEventbridgeEvent(
-    id,
-    'TeamsUnpublished',
-    'TeamsDeleted',
-  ) as EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>;
+  getTeamsEventbridgeEvent(id, 'TeamsUnpublished') as EventBridgeEvent<
+    TeamEvent,
+    TeamPayload
+  >;
 
 export const deleteEvent: TeamEventGenerator = (id: string) =>
-  getTeamsEventbridgeEvent(
-    id,
-    'TeamsDeleted',
-    'TeamsDeleted',
-  ) as EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>;
+  getTeamsEventbridgeEvent(id, 'TeamsDeleted') as EventBridgeEvent<
+    TeamEvent,
+    TeamPayload
+  >;
 
 export const createEvent: TeamEventGenerator = (id: string) =>
-  getTeamsEventbridgeEvent(
-    id,
-    'TeamsPublished',
-    'TeamsUpdated',
-  ) as EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>;
+  getTeamsEventbridgeEvent(id, 'TeamsPublished') as EventBridgeEvent<
+    TeamEvent,
+    TeamPayload
+  >;
 
 export const updateEvent: TeamEventGenerator = (id: string) =>
-  getTeamsEventbridgeEvent(
-    id,
-    'TeamsUpdated',
-    'TeamsUpdated',
-  ) as EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>;
+  getTeamsEventbridgeEvent(id, 'TeamsUpdated') as EventBridgeEvent<
+    TeamEvent,
+    TeamPayload
+  >;

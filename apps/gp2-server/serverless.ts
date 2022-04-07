@@ -1,19 +1,40 @@
 import assert from 'assert';
 import { AWS } from '@serverless/typescript';
 
-['AWS_ACM_CERTIFICATE_ARN', 'ASAP_HOSTNAME'].forEach((env) => {
+[
+  'AWS_ACM_CERTIFICATE_ARN',
+  'ASAP_HOSTNAME',
+  'SLS_STAGE',
+  'AWS_REGION',
+  'SQUIDEX_APP_NAME',
+  'SQUIDEX_BASE_URL',
+  'SQUIDEX_CLIENT_ID',
+  'SQUIDEX_CLIENT_SECRET',
+].forEach((env) => {
   assert.ok(process.env[env], `${env} not defined`);
 });
 
-const region =
-  (process.env.AWS_REGION as AWS['provider']['region']) || 'us-east-1';
+assert.ok(
+  process.env.SLS_STAGE === 'dev' ||
+    process.env.SLS_STAGE === 'production' ||
+    !isNaN(Number.parseInt(process.env.SLS_STAGE!)),
+  'SLS_STAGE must be either "dev" or "production" or a PR number',
+);
+
+const stage = process.env.SLS_STAGE!;
+const region = process.env.AWS_REGION as AWS['provider']['region'];
+const acmCertificateArn = process.env.AWS_ACM_CERTIFICATE_ARN!;
+const hostname = process.env.ASAP_HOSTNAME!;
+const squidexAppName = process.env.SQUIDEX_APP_NAME!;
+const squidexBaseUrl = process.env.SQUIDEX_BASE_URL!;
+const squidexClientId = process.env.SQUIDEX_CLIENT_ID!;
+const squidexClientSecret = process.env.SQUIDEX_CLIENT_SECRET!;
+
 const service = 'gp2-hub';
-const stage = '12345-gp2';
-const apiHostname = 'api-12345.gp2.asap.science';
-const appHostname = '12345.gp2.asap.science';
+const appHostname = stage === 'production' ? hostname : `${stage}.${hostname}`;
+const apiHostname =
+  stage === 'prod' ? `api.${hostname}` : `api-${stage}.${hostname}`;
 const appUrl = `https://${appHostname}`;
-const hostedZone = process.env.ASAP_HOSTNAME;
-const acmCertificateArn = process.env.AWS_ACM_CERTIFICATE_ARN;
 
 export const plugins = [
   './serverless-plugins/serverless-webpack',
@@ -52,10 +73,10 @@ const serverlessConfig: AWS = {
       },
     },
     environment: {
-      SQUIDEX_APP_NAME: '${env:SQUIDEX_APP_NAME}',
-      SQUIDEX_BASE_URL: '${env:SQUIDEX_BASE_URL}',
-      SQUIDEX_CLIENT_ID: '${env:SQUIDEX_CLIENT_ID}',
-      SQUIDEX_CLIENT_SECRET: '${env:SQUIDEX_CLIENT_SECRET}',
+      SQUIDEX_APP_NAME: squidexAppName,
+      SQUIDEX_BASE_URL: squidexBaseUrl,
+      SQUIDEX_CLIENT_ID: squidexClientId,
+      SQUIDEX_CLIENT_SECRET: squidexClientSecret,
     },
   },
   package: {
@@ -118,7 +139,7 @@ const serverlessConfig: AWS = {
       HttpApiRecordSetGroup: {
         Type: 'AWS::Route53::RecordSetGroup',
         Properties: {
-          HostedZoneName: hostedZone,
+          HostedZoneName: `${hostname}.`,
           RecordSets: [
             {
               Name: apiHostname,
@@ -260,7 +281,7 @@ const serverlessConfig: AWS = {
       CloudFrontRecordSetGroup: {
         Type: 'AWS::Route53::RecordSetGroup',
         Properties: {
-          HostedZoneName: hostedZone,
+          HostedZoneName: `${hostname}.`,
           RecordSets: [
             {
               Name: appHostname,

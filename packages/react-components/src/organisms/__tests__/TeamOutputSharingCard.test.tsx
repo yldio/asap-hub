@@ -190,17 +190,15 @@ it('displays server side validation error for link and calls clears function whe
     <TeamCreateOutputFormSharingCard
       {...props}
       link="http://example.com"
-      serverValidation={{
-        errors: [
-          {
-            instancePath: '/link',
-            keyword: '',
-            params: {},
-            schemaPath: '',
-          },
-        ],
-        clearError: mockClearError,
-      }}
+      serverValidationErrors={[
+        {
+          instancePath: '/link',
+          keyword: '',
+          params: {},
+          schemaPath: '',
+        },
+      ]}
+      clearServerValidationError={mockClearError}
     />,
   );
   expect(

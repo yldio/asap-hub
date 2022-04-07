@@ -2,6 +2,7 @@ import { ReactNode, useRef, useState, useEffect, useContext } from 'react';
 import { Prompt, useHistory } from 'react-router-dom';
 import { css } from '@emotion/react';
 import { ToastContext } from '@asap-hub/react-context';
+import { ValidationErrorResponse } from '@asap-hub/model';
 
 import { noop } from '../utils';
 
@@ -17,6 +18,7 @@ type FormProps<T> = {
   onSave?: () => void | Promise<T | void>;
   validate?: () => boolean;
   dirty: boolean; // mandatory so that it cannot be forgotten
+  serverErrors?: ValidationErrorResponse['data'];
   children: (state: {
     isSaving: boolean;
     onSave: () => void | Promise<T | void>;
@@ -28,6 +30,7 @@ const Form = <T extends void | Record<string, unknown>>({
   children,
   validate = () => true,
   onSave = noop,
+  serverErrors = [],
 }: FormProps<T>): React.ReactElement => {
   const toast = useContext(ToastContext);
   const history = useHistory();
@@ -39,6 +42,12 @@ const Form = <T extends void | Record<string, unknown>>({
       setStatus('initial');
     }
   }, [status, dirty]);
+  useEffect(() => {
+    if (serverErrors.length && formRef.current) {
+      /* istanbul ignore next */
+      formRef.current.reportValidity();
+    }
+  }, [serverErrors]);
   const wrappedOnSave = async () => {
     const parentValidation = validate();
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -59,6 +68,7 @@ const Form = <T extends void | Record<string, unknown>>({
         }
       }
     }
+    return Promise.resolve();
   };
 
   const onCancel = () => {

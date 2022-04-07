@@ -69,17 +69,6 @@ it('displays current team within the form', async () => {
   expect(getByText('example team')).toBeVisible();
 });
 
-it('does not save when the form is missing data', async () => {
-  const saveFn = jest.fn();
-  render(
-    <StaticRouter>
-      <TeamCreateOutputForm {...props} onSave={saveFn} />
-    </StaticRouter>,
-  );
-  clickShare();
-  expect(saveFn).not.toHaveBeenCalled();
-});
-
 it('can submit a form when form data is valid', async () => {
   const saveFn = jest.fn();
   const getLabSuggestions = jest.fn();

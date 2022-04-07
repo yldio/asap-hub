@@ -78,6 +78,7 @@ export function useValidation<T extends ValidationTarget>(
     input.setCustomValidity(customValidationMessage);
 
     if (validationMessage || customValidationMessage) {
+      setValidationMessage(customValidationMessage);
       input.reportValidity();
     }
 

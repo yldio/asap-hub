@@ -60,7 +60,7 @@ type TeamCreateOutputFormProps = Pick<
 > &
   Pick<
     ComponentProps<typeof TeamCreateOutputFormSharingCard>,
-    'serverValidation'
+    'serverValidationErrors' | 'clearServerValidationError'
   > &
   Pick<
     ComponentProps<typeof TeamCreateOutputContributorsCard>,
@@ -109,7 +109,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
   team,
-  serverValidation,
+  serverValidationErrors,
+  clearServerValidationError,
 }) => {
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
   const [subTypes, setSubtypes] = useState<
@@ -149,6 +150,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
 
   return (
     <Form
+      serverErrors={serverValidationErrors}
       dirty={
         tags.length !== 0 ||
         title !== '' ||
@@ -195,7 +197,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         <div css={contentStyles}>
           <TeamCreateOutputFormSharingCard
             type={type}
-            serverValidation={serverValidation}
+            serverValidationErrors={serverValidationErrors}
+            clearServerValidationError={clearServerValidationError}
             isSaving={isSaving}
             description={description}
             onChangeDescription={setDescription}

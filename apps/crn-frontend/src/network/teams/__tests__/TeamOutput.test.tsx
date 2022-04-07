@@ -225,11 +225,14 @@ it('will show server side validation error for link', async () => {
   ).toBeVisible();
 
   userEvent.type(screen.getByLabelText(/url/i), 'a');
+  fireEvent.focusOut(screen.getByLabelText(/url/i));
+
   expect(
     screen.queryByText(
       'A Research Output with this URL already exists. Please enter a different URL.',
     ),
   ).toBeNull();
+  expect(mockToast).not.toHaveBeenCalled();
 });
 
 it('will toast server side errors for unknown errors', async () => {

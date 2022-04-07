@@ -107,11 +107,10 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
             )
           }
           getTeamSuggestions={getTeamSuggestions}
-          serverValidation={{
-            errors,
-            clearError: (instancePath: string) =>
-              setErrors(clearAjvErrorForPath(errors, instancePath)),
-          }}
+          serverValidationErrors={errors}
+          clearServerValidationError={(instancePath: string) =>
+            setErrors(clearAjvErrorForPath(errors, instancePath))
+          }
           onSave={(output) =>
             createResearchOutput({
               ...defaultOutput,

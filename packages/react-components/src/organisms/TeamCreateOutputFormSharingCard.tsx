@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { USER_SOCIAL_WEBSITE } from '@asap-hub/validation';
 import {
   DecisionOption,
@@ -36,10 +37,8 @@ type TeamCreateOutputFormSharingCardProps = Pick<
   asapFunded: DecisionOption;
   usedInPublication: DecisionOption;
   publishDate?: Date;
-  serverValidation?: {
-    errors: ValidationErrorResponse['data'];
-    clearError: (instancePath: string) => void;
-  };
+  serverValidationErrors?: ValidationErrorResponse['data'];
+  clearServerValidationError?: (instancePath: string) => void;
 };
 
 const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardProps> =
@@ -54,7 +53,8 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
     usedInPublication,
     sharingStatus,
     publishDate,
-    serverValidation = { clearError: noop, errors: [] },
+    serverValidationErrors = [],
+    clearServerValidationError = noop,
     onChangeDescription = noop,
     onChangeLink = noop,
     onChangeTitle = noop,
@@ -66,6 +66,16 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
   }) => {
     const urlRequired = type !== 'Lab Resource';
     const urlSubtitle = urlRequired ? '(required)' : '(optional)';
+    const [urlValidationMessage, setUrlValidationMessage] = useState<string>();
+    useEffect(() => {
+      setUrlValidationMessage(
+        getAjvErrorForPath(
+          serverValidationErrors,
+          '/link',
+          'A Research Output with this URL already exists. Please enter a different URL.',
+        ),
+      );
+    }, [serverValidationErrors]);
     return (
       <FormCard title="What are you sharing?">
         <LabeledTextField
@@ -73,7 +83,7 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
           subtitle={urlSubtitle}
           pattern={USER_SOCIAL_WEBSITE.source}
           onChange={(newValue) => {
-            serverValidation.clearError('/link');
+            clearServerValidationError('/link');
             onChangeLink(newValue);
           }}
           getValidationMessage={(validationState) =>
@@ -82,11 +92,7 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
               : undefined
           }
           value={link ?? ''}
-          customValidationMessage={getAjvErrorForPath(
-            serverValidation.errors,
-            '/link',
-            'A Research Output with this URL already exists. Please enter a different URL.',
-          )}
+          customValidationMessage={urlValidationMessage}
           enabled={!isSaving}
           required={urlRequired}
           labelIndicator={globeIcon}

@@ -236,8 +236,11 @@ describe('when saving', () => {
       userEvent.click(getByText(/^save/i));
       expect(getByText(/^save/i).closest('button')).toBeDisabled();
 
-      unmount();
       resolveSave();
+      await waitFor(() =>
+        expect(getByText(/^save/i).closest('button')).toBeEnabled(),
+      );
+      unmount();
     });
 
     it('prompts when trying to leave while saving', async () => {
@@ -247,8 +250,11 @@ describe('when saving', () => {
       userEvent.click(getByText(/navigate/i));
       expect(getUserConfirmation).toHaveBeenCalled();
 
-      unmount();
       resolveSave();
+      await waitFor(() =>
+        expect(getByText(/^save/i).closest('button')).toBeEnabled(),
+      );
+      unmount();
     });
 
     describe('and the save succeeds', () => {

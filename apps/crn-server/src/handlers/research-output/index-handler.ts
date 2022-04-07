@@ -6,7 +6,7 @@ import {
 import ResearchOutputs, {
   ResearchOutputController,
 } from '../../controllers/research-outputs';
-import { ResearchOutputEventType } from '../webhooks/webhook-research-output';
+import { ResearchOutputEvent, ResearchOutputPayload } from '../event-bus';
 import logger from '../../utils/logger';
 import { EventBridgeHandler } from '../../utils/types';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
@@ -15,10 +15,7 @@ export const indexResearchOutputHandler =
   (
     researchOutputController: ResearchOutputController,
     algoliaClient: AlgoliaSearchClient,
-  ): EventBridgeHandler<
-    ResearchOutputEventType,
-    SquidexWebhookResearchOutputPayload
-  > =>
+  ): EventBridgeHandler<ResearchOutputEvent, ResearchOutputPayload> =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
@@ -43,19 +40,6 @@ export const indexResearchOutputHandler =
       throw e;
     }
   };
-
-export type SquidexWebhookResearchOutputPayload = {
-  type:
-    | 'ResearchOutputsPublished'
-    | 'ResearchOutputsUpdated'
-    | 'ResearchOutputsUnpublished'
-    | 'ResearchOutputsDeleted';
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: 'Published' | 'Updated' | 'Unpublished' | 'Deleted';
-    id: string;
-  };
-};
 
 export const handler = indexResearchOutputHandler(
   new ResearchOutputs(new SquidexGraphql()),

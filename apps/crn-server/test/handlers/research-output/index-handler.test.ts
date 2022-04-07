@@ -1,10 +1,10 @@
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
+import { indexResearchOutputHandler } from '../../../src/handlers/research-output/index-handler';
 import {
-  indexResearchOutputHandler,
-  SquidexWebhookResearchOutputPayload,
-} from '../../../src/handlers/research-output/index-handler';
-import { ResearchOutputEventType } from '../../../src/handlers/webhooks/webhook-research-output';
+  ResearchOutputEvent,
+  ResearchOutputPayload,
+} from '../../../src/handlers/event-bus';
 import {
   getResearchOutputEvent,
   getResearchOutputResponse,
@@ -312,41 +312,25 @@ describe('Research Output index handler', () => {
 });
 
 const unpublishedEvent = (id: string) =>
-  getResearchOutputEvent(
-    id,
-    'ResearchOutputsUnpublished',
-    'ResearchOutputDeleted',
-  ) as EventBridgeEvent<
-    ResearchOutputEventType,
-    SquidexWebhookResearchOutputPayload
+  getResearchOutputEvent(id, 'ResearchOutputsUnpublished') as EventBridgeEvent<
+    ResearchOutputEvent,
+    ResearchOutputPayload
   >;
 
 const deleteEvent = (id: string) =>
-  getResearchOutputEvent(
-    id,
-    'ResearchOutputsDeleted',
-    'ResearchOutputDeleted',
-  ) as EventBridgeEvent<
-    ResearchOutputEventType,
-    SquidexWebhookResearchOutputPayload
+  getResearchOutputEvent(id, 'ResearchOutputsDeleted') as EventBridgeEvent<
+    ResearchOutputEvent,
+    ResearchOutputPayload
   >;
 
 const createEvent = (id: string) =>
-  getResearchOutputEvent(
-    id,
-    'ResearchOutputsPublished',
-    'ResearchOutputCreated',
-  ) as EventBridgeEvent<
-    ResearchOutputEventType,
-    SquidexWebhookResearchOutputPayload
+  getResearchOutputEvent(id, 'ResearchOutputsPublished') as EventBridgeEvent<
+    ResearchOutputEvent,
+    ResearchOutputPayload
   >;
 
 const updateEvent = (id: string) =>
-  getResearchOutputEvent(
-    id,
-    'ResearchOutputsUpdated',
-    'ResearchOutputUpdated',
-  ) as EventBridgeEvent<
-    ResearchOutputEventType,
-    SquidexWebhookResearchOutputPayload
+  getResearchOutputEvent(id, 'ResearchOutputsUpdated') as EventBridgeEvent<
+    ResearchOutputEvent,
+    ResearchOutputPayload
   >;

@@ -42,6 +42,15 @@ export type ExternalAuthorPayload = {
   };
 };
 
+export type ResearchOutputPayload = {
+  type: ResearchOutputEvent;
+  payload: {
+    $type: 'EnrichedContentEvent';
+    type: SquidexEntityEvent;
+    id: string;
+  };
+};
+
 export type TeamPayload = {
   type: TeamEvent;
   payload: {

@@ -309,11 +309,12 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: ['asap.research-output'],
+              source: [eventBusSource],
               'detail-type': [
-                'ResearchOutputCreated',
-                'ResearchOutputUpdated',
-                'ResearchOutputDeleted',
+                'ResearchOutputsPublished',
+                'ResearchOutputsUpdated',
+                'ResearchOutputsUnpublished',
+                'ResearchOutputsDeleted',
               ],
             },
           },
@@ -450,22 +451,6 @@ const serverlessConfig: AWS = {
       environment: {
         EVENT_BUS: 'asap-events-${self:provider.stage}',
         EVENT_SOURCE: 'asap.user',
-      },
-    },
-    researchOutputUpserted: {
-      handler:
-        'apps/crn-server/src/handlers/webhooks/webhook-research-output.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/research-outputs',
-          },
-        },
-      ],
-      environment: {
-        EVENT_BUS: 'asap-events-${self:provider.stage}',
-        EVENT_SOURCE: 'asap.research-output',
       },
     },
     invalidateCache: {

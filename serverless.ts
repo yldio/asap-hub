@@ -429,21 +429,6 @@ const serverlessConfig: AWS = {
         'apps/crn-server/src/handlers/webhooks/webhook-run-migrations.rollback',
       timeout: 900,
     },
-    calendarUpserted: {
-      handler: 'apps/crn-server/src/handlers/webhooks/webhook-calendar.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/calendars',
-          },
-        },
-      ],
-      environment: {
-        EVENT_BUS: 'asap-events-${self:provider.stage}',
-        EVENT_SOURCE: 'asap.calendar',
-      },
-    },
     invalidateCache: {
       handler:
         'apps/crn-server/src/handlers/invalidate-cache/invalidate-handler.handler',

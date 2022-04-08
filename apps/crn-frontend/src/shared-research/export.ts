@@ -5,7 +5,7 @@ import { CsvFormatterStream, Row, format } from '@fast-csv/format';
 import { WritableStream } from 'web-streams-polyfill/ponyfill';
 import streamSaver from 'streamsaver';
 
-import { GetListOptions } from '../api-util';
+import { GetListOptions } from '@asap-hub/api-util';
 
 export const MAX_ALGOLIA_RESULTS = 10000;
 export const EXCEL_CELL_CHARACTER_LIMIT = 32767;

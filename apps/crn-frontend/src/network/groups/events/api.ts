@@ -1,9 +1,6 @@
 import { ListEventResponse } from '@asap-hub/model';
 
-import {
-  createListApiUrl,
-  createSentryHeaders,
-} from '@asap-hub/crn-frontend/src/api-util';
+import { createListApiUrl, createSentryHeaders } from '@asap-hub/api-util';
 import { GetEventListOptions } from '@asap-hub/crn-frontend/src/events/options';
 
 export const getGroupEvents = async (

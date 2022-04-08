@@ -97,6 +97,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/algolia"
       },
       {
+        "name": "@asap-hub/api-util",
+        "reference": "workspace:packages/api-util"
+      },
+      {
         "name": "@asap-hub/auth",
         "reference": "workspace:packages/auth"
       },
@@ -169,6 +173,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "ignorePatternData": "(^(?:\\.yarn\\/sdks(?:\\/(?!\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?)|$))$)",
     "fallbackExclusionList": [
       ["@asap-hub/algolia", ["workspace:packages/algolia"]],
+      ["@asap-hub/api-util", ["workspace:packages/api-util"]],
       ["@asap-hub/asap-cli", ["workspace:apps/asap-cli"]],
       ["@asap-hub/auth", ["workspace:packages/auth"]],
       ["@asap-hub/auth-frontend", ["workspace:apps/auth-frontend"]],
@@ -286,6 +291,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@asap-hub/algolia",
         "workspace:packages/algolia"
+      ],
+      [
+        "@asap-hub/api-util",
+        "workspace:packages/api-util"
       ],
       [
         "@asap-hub/asap-cli",
@@ -1635,7 +1644,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@sentry/react",
-        "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:6.11.0"
+        "virtual:6218bb99a24f46b9e478ce7a03c9d42f998cb958ab4d188ff33d40737d00dfc190ebe61deba4cdfa999c9d17c8a50123d10bab664bd7c40bc738eadb0fffdb33#npm:6.11.0"
       ],
       [
         "@sentry/serverless",
@@ -10469,6 +10478,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@asap-hub/api-util", [
+        ["workspace:packages/api-util", {
+          "packageLocation": "./packages/api-util/",
+          "packageDependencies": [
+            ["@asap-hub/api-util", "workspace:packages/api-util"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/model", "workspace:packages/model"],
+            ["@babel/runtime-corejs3", "npm:7.14.0"],
+            ["@sentry/react", "virtual:6218bb99a24f46b9e478ce7a03c9d42f998cb958ab4d188ff33d40737d00dfc190ebe61deba4cdfa999c9d17c8a50123d10bab664bd7c40bc738eadb0fffdb33#npm:6.11.0"],
+            ["@types/jest", "npm:26.0.23"],
+            ["@types/node", "npm:14.14.45"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@asap-hub/asap-cli", [
         ["workspace:apps/asap-cli", {
           "packageLocation": "./apps/asap-cli/",
@@ -10595,6 +10619,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/crn-frontend", "workspace:apps/crn-frontend"],
             ["@asap-hub/algolia", "workspace:packages/algolia"],
+            ["@asap-hub/api-util", "workspace:packages/api-util"],
             ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
@@ -11071,6 +11096,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/gp2-frontend", "workspace:apps/gp2-frontend"],
             ["@asap-hub/algolia", "workspace:packages/algolia"],
+            ["@asap-hub/api-util", "workspace:packages/api-util"],
             ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
@@ -26855,6 +26881,25 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/react", "npm:6.11.0"]
           ],
           "linkType": "SOFT",
+        }],
+        ["virtual:6218bb99a24f46b9e478ce7a03c9d42f998cb958ab4d188ff33d40737d00dfc190ebe61deba4cdfa999c9d17c8a50123d10bab664bd7c40bc738eadb0fffdb33#npm:6.11.0", {
+          "packageLocation": "./.yarn/__virtual__/@sentry-react-virtual-cc9616f482/0/cache/@sentry-react-npm-6.11.0-1cae2711e4-8c297a5084.zip/node_modules/@sentry/react/",
+          "packageDependencies": [
+            ["@sentry/react", "virtual:6218bb99a24f46b9e478ce7a03c9d42f998cb958ab4d188ff33d40737d00dfc190ebe61deba4cdfa999c9d17c8a50123d10bab664bd7c40bc738eadb0fffdb33#npm:6.11.0"],
+            ["@sentry/browser", "npm:6.11.0"],
+            ["@sentry/minimal", "npm:6.11.0"],
+            ["@sentry/types", "npm:6.11.0"],
+            ["@sentry/utils", "npm:6.11.0"],
+            ["@types/react", null],
+            ["hoist-non-react-statics", "npm:3.3.2"],
+            ["react", null],
+            ["tslib", "npm:1.14.1"]
+          ],
+          "packagePeers": [
+            "@types/react",
+            "react"
+          ],
+          "linkType": "HARD",
         }],
         ["virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:6.11.0", {
           "packageLocation": "./.yarn/__virtual__/@sentry-react-virtual-b6d941ca6d/0/cache/@sentry-react-npm-6.11.0-1cae2711e4-8c297a5084.zip/node_modules/@sentry/react/",

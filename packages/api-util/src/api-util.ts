@@ -1,6 +1,8 @@
 import { ErrorResponse, ValidationErrorResponse } from '@asap-hub/model';
 import { configureScope } from '@sentry/react';
-import { API_BASE_URL } from './config';
+
+export const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || 'http://localhost:3333';
 
 export type GetListOptions = {
   searchQuery: string;

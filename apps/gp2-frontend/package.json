@@ -14,6 +14,7 @@
     "release:frontend": "node ./scripts/sentry-release.js"
   },
   "dependencies": {
+    "@asap-hub/api-util": "workspace:*",
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/flags": "workspace:*",
     "@asap-hub/gp2-components": "workspace:*",

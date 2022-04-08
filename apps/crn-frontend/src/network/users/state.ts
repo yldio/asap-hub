@@ -14,8 +14,9 @@ import {
 import { useAuth0 } from '@asap-hub/react-context';
 
 import { authorizationState } from '@asap-hub/crn-frontend/src/auth/state';
+import { GetListOptions } from '@asap-hub/api-util';
 import { getUser, patchUser, postUserAvatar, getUsers } from './api';
-import { GetListOptions } from '../../api-util';
+
 import { useAlgolia } from '../../hooks/algolia';
 
 const userIndexState = atomFamily<

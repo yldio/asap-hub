@@ -1,7 +1,7 @@
 import { subHours } from 'date-fns';
 import { EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT } from '@asap-hub/model';
 
-import { GetListOptions } from '@asap-hub/crn-frontend/src/api-util';
+import { GetListOptions } from '@asap-hub/api-util';
 import { CARD_VIEW_PAGE_SIZE } from '../hooks';
 
 export type GetEventListOptions = GetListOptions &

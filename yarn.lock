@@ -305,6 +305,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/api-util@workspace:*, @asap-hub/api-util@workspace:packages/api-util":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/api-util@workspace:packages/api-util"
+  dependencies:
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/model": "workspace:*"
+    "@babel/runtime-corejs3": ^7.14.0
+    "@sentry/react": ^6.11.0
+    "@types/jest": ^26.0.23
+    "@types/node": ^14.14.45
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/asap-cli@workspace:apps/asap-cli":
   version: 0.0.0-use.local
   resolution: "@asap-hub/asap-cli@workspace:apps/asap-cli"
@@ -424,6 +437,7 @@ __metadata:
   resolution: "@asap-hub/crn-frontend@workspace:apps/crn-frontend"
   dependencies:
     "@asap-hub/algolia": "workspace:*"
+    "@asap-hub/api-util": "workspace:*"
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
@@ -798,6 +812,7 @@ __metadata:
   resolution: "@asap-hub/gp2-frontend@workspace:apps/gp2-frontend"
   dependencies:
     "@asap-hub/algolia": "workspace:*"
+    "@asap-hub/api-util": "workspace:*"
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"

@@ -14,8 +14,9 @@ import {
   createTeamResearchOutput,
   getLabs,
 } from '../api';
-import { GetListOptions } from '../../../api-util';
+
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
+import { GetListOptions } from '@asap-hub/api-util';
 
 jest.mock('../../../config');
 

@@ -1,3 +1,4 @@
+import { GetListOptions } from '@asap-hub/api-util';
 import {
   createListLabsResponse,
   createListTeamResponse,
@@ -9,7 +10,7 @@ import {
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
-import { GetListOptions } from '../../../api-util';
+
 import { createTeamResearchOutput as originalCreateTeamResearchOutput } from '../api';
 
 export const getTeam = jest.fn(

@@ -13,7 +13,8 @@ import {
   useSetRecoilState,
 } from 'recoil';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { GetListOptions } from '../../api-util';
+import { GetListOptions } from '@asap-hub/api-util';
+
 import { authorizationState } from '../../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import {

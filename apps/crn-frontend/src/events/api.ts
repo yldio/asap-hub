@@ -1,7 +1,7 @@
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
+import { createListApiUrl, createSentryHeaders } from '@asap-hub/api-util';
 
 import { API_BASE_URL } from '../config';
-import { createListApiUrl, createSentryHeaders } from '../api-util';
 import { GetEventListOptions } from './options';
 
 export const getEvents = async (

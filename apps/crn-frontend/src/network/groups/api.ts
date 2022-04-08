@@ -3,7 +3,7 @@ import {
   GetListOptions,
   createListApiUrl,
   createSentryHeaders,
-} from '@asap-hub/crn-frontend/src/api-util';
+} from '@asap-hub/api-util';
 import { API_BASE_URL } from '../../config';
 
 export const getGroups = async (

@@ -1,7 +1,8 @@
+import { GetListOptions } from '@asap-hub/api-util';
 import { createNewsResponse } from '@asap-hub/fixtures';
 import { ListNewsResponse } from '@asap-hub/model';
 import nock from 'nock';
-import { GetListOptions } from '../../api-util';
+
 import { API_BASE_URL } from '../../config';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { getNews, getNewsById } from '../api';

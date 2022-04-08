@@ -1,4 +1,9 @@
 import {
+  createSentryHeaders,
+  GetListOptions,
+  createListApiUrl,
+} from '@asap-hub/api-util';
+import {
   ListLabsResponse,
   ListTeamResponse,
   ResearchOutputPostRequest,
@@ -6,12 +11,7 @@ import {
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
-import {
-  createListApiUrl,
-  createSentryHeaders,
-  GetListOptions,
-  BackendError,
-} from '../../api-util';
+import { BackendError } from '../../api-util';
 import { API_BASE_URL } from '../../config';
 
 export const getTeam = async (

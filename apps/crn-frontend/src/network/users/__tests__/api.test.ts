@@ -7,6 +7,7 @@ import {
 import { createListUserResponse, createUserResponse } from '@asap-hub/fixtures';
 
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';
+import { GetListOptions } from '@asap-hub/api-util';
 
 import {
   getInstitutions,
@@ -18,7 +19,7 @@ import {
   postUserAvatar,
 } from '../api';
 import { API_BASE_URL } from '../../../config';
-import { GetListOptions } from '../../../api-util';
+
 import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 
 jest.mock('../../../config');

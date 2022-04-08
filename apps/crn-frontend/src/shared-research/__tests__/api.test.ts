@@ -3,11 +3,12 @@ import nock from 'nock';
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { ResearchOutputDocumentType } from '@asap-hub/model';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import { GetListOptions } from '@asap-hub/api-util';
 
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getResearchOutput, getResearchOutputs } from '../api';
 import { API_BASE_URL } from '../../config';
-import { GetListOptions } from '../../api-util';
+
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 
 jest.mock('../../config');

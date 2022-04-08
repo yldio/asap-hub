@@ -4,7 +4,7 @@ import {
 } from '@asap-hub/model';
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
 
-import { createSentryHeaders, GetListOptions } from '../api-util';
+import { createSentryHeaders, GetListOptions } from '@asap-hub/api-util';
 import { API_BASE_URL } from '../config';
 
 export type ResearchOutputListOptions = GetListOptions & {

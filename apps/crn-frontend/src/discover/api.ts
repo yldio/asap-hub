@@ -1,5 +1,5 @@
 import { DiscoverResponse } from '@asap-hub/model';
-import { createSentryHeaders } from '../api-util';
+import { createSentryHeaders } from '@asap-hub/api-util';
 import { API_BASE_URL } from '../config';
 
 export const getDiscover = async (

@@ -1,7 +1,7 @@
+import { createSentryHeaders } from '@asap-hub/api-util';
 import { UserResponse } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../../config';
-import { createSentryHeaders } from '../../api-util';
 
 export const getUser = async (
   id: string,

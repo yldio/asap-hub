@@ -6,7 +6,7 @@ import {
   useRecoilState,
   useRecoilValue,
 } from 'recoil';
-import { GetListOptions } from '../api-util';
+import { GetListOptions } from '@asap-hub/api-util';
 import { authorizationState } from '../auth/state';
 import { getNews, getNewsById } from './api';
 

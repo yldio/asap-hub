@@ -1,4 +1,5 @@
 export type SquidexEntityEvent =
+  | 'Created'
   | 'Published'
   | 'Updated'
   | 'Unpublished'
@@ -76,5 +77,6 @@ export type UserPayload = {
     lastModified: string;
     version: number;
     data: { [x: string]: { iv: unknown } | null };
+    dataOld?: { [x: string]: { iv: unknown } | null };
   };
 };

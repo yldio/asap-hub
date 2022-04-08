@@ -231,18 +231,6 @@ const serverlessConfig: AWS = {
         AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
       },
     },
-    syncUserOrcid: {
-      handler:
-        'apps/crn-server/src/handlers/webhooks/webhook-sync-orcid.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/users/orcid',
-          },
-        },
-      ],
-    },
     subscribeCalendar: {
       handler:
         'apps/crn-server/src/handlers/calendar/subscribe-handler.handler',
@@ -276,6 +264,23 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
       },
+    },
+    syncUserOrcid: {
+      handler: 'apps/crn-server/src/handlers/user/sync-orcid-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': ['UsersCreated', 'UsersUpdated'],
+            },
+            retryPolicy: {
+              maximumRetryAttempts: 2,
+            },
+          },
+        },
+      ],
     },
     inviteUser: {
       handler: 'apps/crn-server/src/handlers/user/invite-handler.handler',

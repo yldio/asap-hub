@@ -1,4 +1,8 @@
-import { ResearchOutputPostRequest, ResearchOutputType } from '@asap-hub/model';
+import {
+  ResearchOutputIdentifierType,
+  ResearchOutputPostRequest,
+  ResearchOutputType,
+} from '@asap-hub/model';
 import { ComponentProps } from 'react';
 import { Link } from '../atoms';
 
@@ -32,10 +36,10 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     onChangeAccessInstructions = noop,
     accessInstructions,
     isSaving,
-    identifier,
-    identifierType,
-    setIdentifier,
-    setIdentifierType,
+    identifier = '',
+    identifierType = ResearchOutputIdentifierType.None,
+    setIdentifier = noop,
+    setIdentifierType = noop,
     identifierRequired,
     type = 'Article',
   }) => (

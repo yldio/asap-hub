@@ -3,14 +3,9 @@ import { fireEvent, render } from '@testing-library/react';
 
 import { ResearchOutputIdentifierType } from '@asap-hub/model';
 import { TeamCreateOutputIdentifier } from '../TeamCreateOutputIdentifier';
-import { noop } from '../../utils';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 
 const props: ComponentProps<typeof TeamCreateOutputIdentifier> = {
-  identifierType: ResearchOutputIdentifierType.None,
-  identifier: '',
-  setIdentifier: noop,
-  setIdentifierType: noop,
   type: 'Article',
   required: false,
 };

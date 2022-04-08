@@ -5,6 +5,7 @@ import {
   researchOutputToIdentifierType,
 } from '@asap-hub/model';
 import { LabeledDropdown, LabeledTextField } from '../molecules';
+import { noop } from '../utils';
 
 const getIdentifiers = (
   researchOutputType: ResearchOutputType,
@@ -62,20 +63,20 @@ const identifierMap = {
 } as const;
 
 export interface TeamCreateOutputIdentifierProps {
-  identifier: string;
-  setIdentifier: (value: string) => void;
-  identifierType: ResearchOutputIdentifierType;
-  setIdentifierType: (value: ResearchOutputIdentifierType) => void;
+  identifier?: string;
+  setIdentifier?: (value: string) => void;
+  identifierType?: ResearchOutputIdentifierType;
+  setIdentifierType?: (value: ResearchOutputIdentifierType) => void;
   type: ResearchOutputType;
   required: boolean;
 }
 
 export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProps> =
   ({
-    identifierType,
-    setIdentifierType,
-    identifier,
-    setIdentifier,
+    identifierType = ResearchOutputIdentifierType.None,
+    setIdentifierType = noop,
+    identifier = '',
+    setIdentifier = noop,
     type,
     required,
   }) => {

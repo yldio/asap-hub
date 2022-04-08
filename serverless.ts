@@ -239,8 +239,8 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: ['asap.calendar'],
-              'detail-type': ['CalendarCreated', 'CalendarUpdated'],
+              source: [eventBusSource],
+              'detail-type': ['CalendarsCreated', 'CalendarsUpdated'],
             },
           },
         },

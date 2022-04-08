@@ -1,7 +1,7 @@
-import nock from 'nock';
 import { EventBridgeEvent } from 'aws-lambda';
-import { Calendar, WebhookPayload } from '@asap-hub/squidex';
-
+import nock from 'nock';
+import { asapApiUrl, googleApiToken, googleApiUrl } from '../../../src/config';
+import { CalendarRaw } from '../../../src/controllers/calendars';
 import {
   calendarCreatedHandlerFactory,
   SubscribeToEventChanges,
@@ -9,18 +9,15 @@ import {
   UnsubscribeFromEventChanges,
   unsubscribeFromEventChangesFactory,
 } from '../../../src/handlers/calendar/subscribe-handler';
-import { createEventBridgeEventMock } from '../../helpers/events';
 import {
-  getCalendarCreateEvent,
-  getCalendarUpdateEvent,
-} from './webhook-sync-calendar.fixtures';
-import { asapApiUrl, googleApiToken, googleApiUrl } from '../../../src/config';
-import { googleApiAuthJWTCredentials } from '../../mocks/google-api.mock';
-import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
-import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
+  CalendarEvent,
+  CalendarPayload,
+} from '../../../src/handlers/event-bus';
 import { Alerts } from '../../../src/utils/alerts';
-import { CalendarEventType } from '../../../src/handlers/webhooks/webhook-calendar';
-import { CalendarRaw } from '../../../src/controllers/calendars';
+import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
+import { createEventBridgeEventMock } from '../../helpers/events';
+import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
+import { googleApiAuthJWTCredentials } from '../../mocks/google-api.mock';
 import {
   inOrderfirstSave,
   inOrderfirstSaveUpdateFromUnSubscribe,
@@ -31,6 +28,10 @@ import {
   outOfOrderSecondUpdateFromSubscribe,
   outOfOrderSecondUpdateFromUnsubscribe,
 } from './fixtures/payload';
+import {
+  getCalendarCreateEvent,
+  getCalendarUpdateEvent,
+} from './webhook-sync-calendar.fixtures';
 
 describe('Calendar handler', () => {
   const subscribe: jest.MockedFunction<SubscribeToEventChanges> = jest.fn();
@@ -42,20 +43,23 @@ describe('Calendar handler', () => {
   const handler = generateHandler(23, subscribe, unsubscribe, alerts);
 
   afterEach(() => {
-    subscribe.mockReset();
-    unsubscribe.mockReset();
-    calendarControllerMock.update.mockReset();
+    jest.clearAllMocks();
+    // subscribe.mockReset();
+    // unsubscribe.mockReset();
+    // calendarControllerMock.update.mockReset();
   });
 
   describe('Validation', () => {
     test('valid: additional fields in payload are allowed', async () => {
       const event = getEvent();
-      event.detail.payload.additionalField = 'hi';
+      (event.detail.payload as any).additionalField = 'hi';
       const resourceId = 'some-resource-id';
       const expiration = 123456;
       subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
-      await expect(handler(event)).resolves.toBe('OK');
+      await expect(
+        handler(event as EventBridgeEvent<CalendarEvent, CalendarPayload>),
+      ).resolves.toBe('OK');
     });
 
     test('valid: additional fields in detail are allowed', async () => {
@@ -78,9 +82,11 @@ describe('Calendar handler', () => {
 
     test('Should skip any actions and return status OK for an unknown event type', async () => {
       const event = getEvent();
-      event.detail.type = 'some-other-type';
+      (event.detail as any).type = 'some-other-type';
 
-      const res = await handler(event);
+      const res = await handler(
+        event as EventBridgeEvent<CalendarEvent, CalendarPayload>,
+      );
 
       expect(res).toBe('OK');
       expect(subscribe).not.toHaveBeenCalled();
@@ -125,7 +131,7 @@ describe('Calendar handler', () => {
       calendarUpdateEvent.payload.data.googleCalendarId.iv = '';
 
       const res = await handler(
-        getEvent('CalendarUpdated', calendarUpdateEvent),
+        getEvent('CalendarsUpdated', calendarUpdateEvent),
       );
 
       expect(res).toBe('OK');
@@ -142,7 +148,7 @@ describe('Calendar handler', () => {
         calendarUpdateEvent.payload.dataOld!.googleCalendarId.iv;
 
       const res = await handler(
-        getEvent('CalendarUpdated', calendarUpdateEvent),
+        getEvent('CalendarsUpdated', calendarUpdateEvent),
       );
 
       expect(res).toBe('OK');
@@ -158,7 +164,7 @@ describe('Calendar handler', () => {
         subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
         const res = await handler(
-          getEvent('CalendarUpdated', calendarUpdateEvent),
+          getEvent('CalendarsUpdated', calendarUpdateEvent),
         );
 
         expect(res).toBe('OK');
@@ -180,7 +186,7 @@ describe('Calendar handler', () => {
         subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
         const res = await handler(
-          getEvent('CalendarUpdated', calendarUpdateEvent),
+          getEvent('CalendarsUpdated', calendarUpdateEvent),
         );
 
         expect(res).toBe('OK');
@@ -198,7 +204,7 @@ describe('Calendar handler', () => {
         subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
         const res = await handler(
-          getEvent('CalendarUpdated', calendarUpdateEvent),
+          getEvent('CalendarsUpdated', calendarUpdateEvent),
         );
 
         expect(res).toBe('OK');
@@ -211,7 +217,7 @@ describe('Calendar handler', () => {
         subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
         const res = await handler(
-          getEvent('CalendarUpdated', calendarUpdateEvent),
+          getEvent('CalendarsUpdated', calendarUpdateEvent),
         );
 
         expect(res).toBe('OK');
@@ -230,7 +236,7 @@ describe('Calendar handler', () => {
       unsubscribe.mockRejectedValueOnce(error);
 
       const res = await handler(
-        getEvent('CalendarUpdated', calendarUpdateEvent),
+        getEvent('CalendarsUpdated', calendarUpdateEvent),
       );
 
       expect(res).toBe('OK');
@@ -337,7 +343,7 @@ describe('Calendar handler', () => {
       const expiration = 123456;
       subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
-      const res = await handler(getEvent('CalendarUpdated', event));
+      const res = await handler(getEvent('CalendarsUpdated', event));
 
       expect(res).toBe('OK');
       const { dataOld, id, data, version } = event.payload;
@@ -367,7 +373,7 @@ describe('Calendar handler', () => {
         unsubscribe,
         alerts,
       );
-      const res = await handler(getEvent('CalendarUpdated', event));
+      const res = await handler(getEvent('CalendarsUpdated', event));
       expect(res).toBe('OK');
       expect(unsubscribe).not.toHaveBeenCalled();
       expect(subscribe).not.toHaveBeenCalled();
@@ -376,7 +382,7 @@ describe('Calendar handler', () => {
     };
     type EventExpects = (
       currentVersion: number,
-      event: WebhookPayload<Calendar>,
+      event: CalendarPayload,
       subscribe: jest.MockedFunction<
         (
           calendarId: string,
@@ -474,13 +480,10 @@ describe('Unsubscribing', () => {
   });
 });
 
-const getEvent = (
-  type?: CalendarEventType,
-  detail?: WebhookPayload<Calendar>,
-): EventBridgeEvent<CalendarEventType, WebhookPayload<Calendar>> =>
+const getEvent = (type?: CalendarEvent, detail?: CalendarPayload) =>
   createEventBridgeEventMock(
     detail || getCalendarCreateEvent(),
-    type || 'CalendarCreated',
+    type || 'CalendarsPublished',
   );
 
 function generateHandler(

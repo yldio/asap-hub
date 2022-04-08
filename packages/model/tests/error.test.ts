@@ -6,7 +6,7 @@ describe('Error Model', () => {
       expect(
         isValidationErrorResponse({
           error: 'Bad Request',
-          message: 'Validation Error',
+          message: 'Validation error',
           statusCode: 400,
           data: [],
         }),

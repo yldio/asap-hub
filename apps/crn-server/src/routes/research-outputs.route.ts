@@ -1,6 +1,7 @@
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
+  ValidationErrorResponse,
 } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
@@ -64,17 +65,20 @@ export const researchOutputRouteFactory = (
           'link.iv: Another content with the same value exists',
         )
       ) {
-        throw Boom.badRequest('Validation error', [
-          {
-            instancePath: '/link',
-            keyword: 'unique',
-            message: 'must be unique',
-            params: {
-              type: 'string',
+        throw Boom.badRequest<ValidationErrorResponse['data']>(
+          'Validation error',
+          [
+            {
+              instancePath: '/link',
+              keyword: 'unique',
+              message: 'must be unique',
+              params: {
+                type: 'string',
+              },
+              schemaPath: '#/properties/link/unique',
             },
-            schemaPath: '#/properties/link/unique',
-          },
-        ]);
+          ],
+        );
       }
 
       throw error;

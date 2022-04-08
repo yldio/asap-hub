@@ -210,3 +210,30 @@ it('displays server side validation error for link and calls clears function whe
   userEvent.type(getByLabelText(/URL/i), 'a');
   expect(mockClearError).toHaveBeenCalledWith('/link');
 });
+
+it('displays server side validation error for title and calls clears function when changed', async () => {
+  const mockClearError = jest.fn();
+  const { getByLabelText, getByText } = render(
+    <TeamCreateOutputFormSharingCard
+      {...props}
+      title="Example"
+      serverValidationErrors={[
+        {
+          instancePath: '/title',
+          keyword: '',
+          params: {},
+          schemaPath: '',
+        },
+      ]}
+      clearServerValidationError={mockClearError}
+    />,
+  );
+  expect(
+    getByText(
+      'A Research Output with this title already exists. Please check if this is repeated and choose a different title.',
+    ),
+  ).toBeVisible();
+
+  userEvent.type(getByLabelText(/title/i), 'a');
+  expect(mockClearError).toHaveBeenCalledWith('/title');
+});

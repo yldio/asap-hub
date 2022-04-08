@@ -18,6 +18,7 @@ export const Normal = () => (
     appOrigin={window.location.origin}
     email="john.doe@example.com"
     password="_%6.o*fGR75)':7,"
+    appName={text('App Name', 'ASAP Hub')}
   />
 );
 
@@ -31,5 +32,6 @@ export const Signup = () => (
     appOrigin={window.location.origin}
     email="john.doe@example.com"
     password="_%6.o*fGR75)':7,"
+    appName="App Name"
   />
 );

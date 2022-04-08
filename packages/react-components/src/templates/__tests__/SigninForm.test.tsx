@@ -2,15 +2,41 @@ import { render } from '@testing-library/react';
 
 import SigninForm from '../SigninForm';
 
+const defaultAppName = 'ASAP Hub';
+
 it('renders different headlines in signin and signup mode', () => {
   const { getByRole, rerender } = render(
-    <SigninForm email="" password="" forgotPasswordHref="#" />,
+    <SigninForm
+      email=""
+      password=""
+      forgotPasswordHref="#"
+      appName={defaultAppName}
+    />,
   );
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(
     `"Sign in to the ASAP Hub"`,
   );
 
-  rerender(<SigninForm signup email="" password="" forgotPasswordHref="#" />);
+  rerender(
+    <SigninForm
+      email=""
+      password=""
+      forgotPasswordHref="#"
+      appName={'GP2 Hub'}
+    />,
+  );
+  expect(getByRole('heading').textContent).toMatchInlineSnapshot(
+    `"Sign in to the GP2 Hub"`,
+  );
+  rerender(
+    <SigninForm
+      signup
+      email=""
+      password=""
+      forgotPasswordHref="#"
+      appName={defaultAppName}
+    />,
+  );
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(
     `"Choose a login method"`,
   );
@@ -18,7 +44,12 @@ it('renders different headlines in signin and signup mode', () => {
 
 it('renders the SSO buttons', () => {
   const { getByText } = render(
-    <SigninForm email="" password="" forgotPasswordHref="#" />,
+    <SigninForm
+      email=""
+      password=""
+      forgotPasswordHref="#"
+      appName={defaultAppName}
+    />,
   );
   expect(getByText(/Google/i, { selector: 'button > *' })).toBeVisible();
   expect(getByText(/ORCID/i, { selector: 'button > *' })).toBeVisible();
@@ -30,6 +61,7 @@ it('renders username and password fields with the given values', () => {
       email="john.doe@example.com"
       password="PW"
       forgotPasswordHref="#"
+      appName={defaultAppName}
     />,
   );
   expect(getByLabelText(/e-?mail/i)).toHaveValue('john.doe@example.com');

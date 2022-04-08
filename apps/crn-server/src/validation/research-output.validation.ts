@@ -63,6 +63,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         items: {
           type: 'object',
           properties: {
+            userId: { type: 'string', nullable: true },
             externalAuthorId: { type: 'string', nullable: true },
             externalAuthorName: { type: 'string' },
           },

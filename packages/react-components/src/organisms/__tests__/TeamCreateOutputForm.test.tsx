@@ -60,8 +60,20 @@ it('can submit a form when form data is valid', async () => {
     { label: 'Two Lab', value: '2' },
   ]);
   getAuthorSuggestions.mockResolvedValue([
-    { user: createUserResponse(), label: 'Author Two', value: '2' },
-    { user: createUserResponse(), label: 'Author One', value: '1' },
+    {
+      user: { ...createUserResponse(), displayName: 'Author Two' },
+      label: 'Author Two',
+      value: '2',
+    },
+    {
+      user: {
+        ...createUserResponse(),
+        email: undefined,
+        displayName: 'Author One',
+      },
+      label: 'Author One (Non CRN)',
+      value: '1',
+    },
   ]);
   render(
     <StaticRouter>
@@ -120,6 +132,12 @@ it('can submit a form when form data is valid', async () => {
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
+  userEvent.click(screen.getByText(/Author One/i));
+
+  userEvent.click(screen.getByLabelText(/Authors/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
   userEvent.click(screen.getByText('Author Two'));
 
   clickShare();
@@ -137,7 +155,11 @@ it('can submit a form when form data is valid', async () => {
       labs: ['1'],
       authors: [
         {
-          externalAuthorId: '2',
+          externalAuthorId: '1',
+          externalAuthorName: 'Author One',
+        },
+        {
+          userId: '2',
           externalAuthorName: 'Author Two',
         },
       ],

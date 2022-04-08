@@ -228,9 +228,12 @@ export default class ResearchOutputs implements ResearchOutputController {
   }
 
   private async associateResearchOutputToAuthors({
+    userId,
     externalAuthorId,
     externalAuthorName,
   }: ExternalAuthorPostRequest) {
+    if (userId) return userId;
+
     if (externalAuthorId) return externalAuthorId;
 
     const { id } = await this.externalAuthorSquidexRestClient.create({

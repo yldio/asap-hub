@@ -822,10 +822,16 @@ describe('ResearchOutputs controller', () => {
         ...getResearchOutputRequest(),
         authors: [
           {
-            externalAuthorId: 'author-1',
+            userId: 'user-1',
             externalAuthorName: 'Martha Reed',
           },
-          { externalAuthorName: 'Chris Blue' },
+          {
+            externalAuthorId: 'author-1',
+            externalAuthorName: 'Peter Andrews',
+          },
+          {
+            externalAuthorName: 'Chris Blue',
+          },
         ],
       };
       const teamId = researchOutputRequest.teams[0];
@@ -853,7 +859,7 @@ describe('ResearchOutputs controller', () => {
           }),
           asapFunded: { iv: 'Not Sure' },
           usedInAPublication: { iv: 'Not Sure' },
-          authors: { iv: ['author-1', 'author-2'] },
+          authors: { iv: ['user-1', 'author-1', 'author-2'] },
         })
         .reply(201, { id: researchOutputId });
 
@@ -876,15 +882,21 @@ describe('ResearchOutputs controller', () => {
       ).rejects.toThrow('Bad Request');
     });
 
-    test('Should throw when authors association fails - 500', async () => {
+    test('Should throw when cannot create an external author - 500', async () => {
       const researchOutputRequest = {
         ...getResearchOutputRequest(),
         authors: [
           {
-            externalAuthorId: 'author-1',
+            userId: 'user-1',
             externalAuthorName: 'Martha Reed',
           },
-          { externalAuthorName: 'Chris Blue' },
+          {
+            externalAuthorId: 'author-1',
+            externalAuthorName: 'Peter Andrews',
+          },
+          {
+            externalAuthorName: 'Chris Blue',
+          },
         ],
       };
 

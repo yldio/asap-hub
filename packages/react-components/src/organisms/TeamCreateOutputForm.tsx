@@ -136,7 +136,10 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           description,
           title,
           subTypes,
-          authors: authors.map(({ value }) => ({ id: value })),
+          authors: authors.map(({ label, value }) => ({
+            externalAuthorId: value,
+            externalAuthorName: label,
+          })),
           labs: labs.map(({ value }) => value),
           teams: teams.map(({ value }) => value),
           accessInstructions:

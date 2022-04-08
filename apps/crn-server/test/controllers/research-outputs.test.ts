@@ -820,7 +820,13 @@ describe('ResearchOutputs controller', () => {
     test('Should associate external authors (new and existent)', async () => {
       const researchOutputRequest = {
         ...getResearchOutputRequest(),
-        authors: [{ id: 'author-1' }, { name: 'Chris Blue' }],
+        authors: [
+          {
+            externalAuthorId: 'author-1',
+            externalAuthorName: 'Martha Reed',
+          },
+          { externalAuthorName: 'Chris Blue' },
+        ],
       };
       const teamId = researchOutputRequest.teams[0];
       const researchOutputId = 'created-output-id';
@@ -865,31 +871,21 @@ describe('ResearchOutputs controller', () => {
       await expect(
         researchOutputs.create({
           ...getResearchOutputRequest(),
-          authors: [{ name: 'Chris Blue' }],
+          authors: [{ externalAuthorName: 'Chris Blue' }],
         }),
       ).rejects.toThrow('Bad Request');
-    });
-
-    test('Should throw a validation error when authors data is an empty object', async () => {
-      nock(config.baseUrl).post(
-        `/api/content/${config.appName}/research-outputs?publish=false`,
-        {
-          authors: { iv: [{}] },
-        },
-      );
-
-      await expect(
-        researchOutputs.create({
-          ...getResearchOutputRequest(),
-          authors: [{}],
-        }),
-      ).rejects.toThrow('Validation error');
     });
 
     test('Should throw when authors association fails - 500', async () => {
       const researchOutputRequest = {
         ...getResearchOutputRequest(),
-        authors: [{ id: 'author-1' }, { name: 'Chris Blue' }],
+        authors: [
+          {
+            externalAuthorId: 'author-1',
+            externalAuthorName: 'Martha Reed',
+          },
+          { externalAuthorName: 'Chris Blue' },
+        ],
       };
 
       nock(config.baseUrl)

@@ -9,6 +9,6 @@ export type ExternalAuthorResponse = Pick<
 export type ListExternalAuthorResponse = ListResponse<ExternalAuthorResponse>;
 
 export type ExternalAuthorPostRequest = {
-  id?: string;
-  name?: string;
+  externalAuthorId?: string;
+  externalAuthorName: string;
 };

@@ -150,8 +150,8 @@ describe('/research-outputs/ route', () => {
         subTypes,
         labs: labs.map(({ id }) => id),
         authors: authors.map(({ id, displayName }) => ({
-          id,
-          name: displayName,
+          externalAuthorId: id,
+          externalAuthorName: displayName,
         })),
         teams: teams.map(({ id }) => id),
       };

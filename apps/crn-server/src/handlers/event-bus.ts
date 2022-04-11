@@ -1,3 +1,5 @@
+import { RestCalendar } from '@asap-hub/squidex';
+
 export type SquidexEntityEvent =
   | 'Created'
   | 'Published'
@@ -78,5 +80,21 @@ export type UserPayload = {
     version: number;
     data: { [x: string]: { iv: unknown } | null };
     dataOld?: { [x: string]: { iv: unknown } | null };
+  };
+};
+
+type CalendarPayloadData = Pick<
+  RestCalendar['data'],
+  'googleCalendarId' | 'resourceId' | 'name' | 'color'
+>;
+export type CalendarPayload = {
+  type: CalendarEvent;
+  payload: {
+    $type: 'EnrichedContentEvent';
+    type: SquidexEntityEvent;
+    id: string;
+    data: CalendarPayloadData;
+    dataOld?: CalendarPayloadData;
+    version: number;
   };
 };

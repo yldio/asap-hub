@@ -239,8 +239,8 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: ['asap.calendar'],
-              'detail-type': ['CalendarCreated', 'CalendarUpdated'],
+              source: [eventBusSource],
+              'detail-type': ['CalendarsCreated', 'CalendarsUpdated'],
             },
           },
         },
@@ -428,21 +428,6 @@ const serverlessConfig: AWS = {
       handler:
         'apps/crn-server/src/handlers/webhooks/webhook-run-migrations.rollback',
       timeout: 900,
-    },
-    calendarUpserted: {
-      handler: 'apps/crn-server/src/handlers/webhooks/webhook-calendar.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/calendars',
-          },
-        },
-      ],
-      environment: {
-        EVENT_BUS: 'asap-events-${self:provider.stage}',
-        EVENT_SOURCE: 'asap.calendar',
-      },
     },
     invalidateCache: {
       handler:

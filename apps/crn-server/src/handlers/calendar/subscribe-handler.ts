@@ -1,8 +1,8 @@
-import 'source-map-support/register';
+import { SquidexGraphql } from '@asap-hub/squidex';
+import * as Sentry from '@sentry/serverless';
 import { EventBridgeEvent } from 'aws-lambda';
 import { Auth } from 'googleapis';
-import * as Sentry from '@sentry/serverless';
-import { Calendar, SquidexGraphql, WebhookPayload } from '@asap-hub/squidex';
+import 'source-map-support/register';
 import {
   asapApiUrl,
   currentRevision,
@@ -12,13 +12,13 @@ import {
   sentryDsn,
 } from '../../config';
 import Calendars, { CalendarController } from '../../controllers/calendars';
+import { Alerts, AlertsSentry } from '../../utils/alerts';
 import getJWTCredentialsAWS, {
   GetJWTCredentials,
 } from '../../utils/aws-secret-manager';
 import logger from '../../utils/logger';
-import { Alerts, AlertsSentry } from '../../utils/alerts';
-import { CalendarEventType } from '../webhooks/webhook-calendar';
 import { validateBody } from '../../validation/subscribe-handler.validation';
+import { CalendarEvent, CalendarPayload } from '../event-bus';
 
 export const calendarCreatedHandlerFactory =
   (
@@ -28,7 +28,7 @@ export const calendarCreatedHandlerFactory =
     alerts: Alerts,
   ) =>
   async (
-    event: EventBridgeEvent<CalendarEventType, WebhookPayload<Calendar>>,
+    event: EventBridgeEvent<CalendarEvent, CalendarPayload>,
   ): Promise<'OK'> => {
     logger.debug(JSON.stringify(event, null, 2), 'Event input');
 
@@ -192,11 +192,7 @@ export type UnsubscribeFromEventChanges = ReturnType<
   typeof unsubscribeFromEventChangesFactory
 >;
 
-export type SquidexWebhookCalendarPayload = {
-  type: 'CalendarsCreated' | 'CalendarsUpdated';
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: 'Created' | 'Updated';
-    id: string;
-  };
-};
+export type CalendarEventBridgeEvent = EventBridgeEvent<
+  CalendarEvent,
+  CalendarPayload
+>;

@@ -1,6 +1,6 @@
 import { JSONSchemaType } from 'ajv';
-import { validateInput } from './index';
 import { NullableOptionalProperties } from '../utils/types';
+import { validateInput } from './index';
 
 type RestCalendar = NullableOptionalProperties<{
   googleCalendarId: {
@@ -27,7 +27,7 @@ const calendarSchema: JSONSchemaType<RestCalendar> = {
   },
   required: ['googleCalendarId'],
 };
-type WebhookPayloadCalendar = NullableOptionalProperties<{
+type CalendarPayload = NullableOptionalProperties<{
   type: string;
   payload: NullableOptionalProperties<{
     id: string;
@@ -36,7 +36,7 @@ type WebhookPayloadCalendar = NullableOptionalProperties<{
     version: number;
   }>;
 }>;
-const bodySchema: JSONSchemaType<WebhookPayloadCalendar> = {
+const bodySchema: JSONSchemaType<CalendarPayload> = {
   type: 'object',
   properties: {
     type: { type: 'string' },

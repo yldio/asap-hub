@@ -1,9 +1,6 @@
 import { ErrorResponse, ValidationErrorResponse } from '@asap-hub/model';
 import { configureScope } from '@sentry/react';
 
-export const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || 'http://localhost:3333';
-
 export type GetListOptions = {
   searchQuery: string;
   filters: Set<string>;
@@ -12,10 +9,9 @@ export type GetListOptions = {
 };
 
 export const createListApiUrl = (
-  endpoint: string,
+  url: URL,
   { searchQuery, filters, currentPage, pageSize }: GetListOptions,
 ): URL => {
-  const url = new URL(endpoint, `${API_BASE_URL}/`);
   if (searchQuery) url.searchParams.set('search', searchQuery);
   if (pageSize !== null) {
     url.searchParams.set('take', String(pageSize));

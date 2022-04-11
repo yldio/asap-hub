@@ -850,7 +850,7 @@ __metadata:
     "@types/testing-library__react-hooks": ^3.4.1
     "@types/uuid": ^8.3.0
     browser-image-compression: ^1.0.14
-    browserslist-useragent-regexp: ^3.0.0
+    browserslist-useragent-regexp: ^3.0.2
     cross-env: ^7.0.3
     date-fns: ^2.21.3
     history: ^4
@@ -15305,7 +15305,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist-useragent-regexp@npm:^3.0.0, browserslist-useragent-regexp@npm:^3.0.2":
+"browserslist-useragent-regexp@npm:^3.0.2":
   version: 3.0.2
   resolution: "browserslist-useragent-regexp@npm:3.0.2"
   dependencies:

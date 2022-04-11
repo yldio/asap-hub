@@ -10,9 +10,12 @@ export const getGroups = async (
   options: GetListOptions,
   authorization: string,
 ): Promise<ListGroupResponse> => {
-  const resp = await fetch(createListApiUrl('groups', options).toString(), {
-    headers: { authorization, ...createSentryHeaders() },
-  });
+  const resp = await fetch(
+    createListApiUrl(new URL('groups', `${API_BASE_URL}/`), options).toString(),
+    {
+      headers: { authorization, ...createSentryHeaders() },
+    },
+  );
 
   if (!resp.ok) {
     throw new Error(

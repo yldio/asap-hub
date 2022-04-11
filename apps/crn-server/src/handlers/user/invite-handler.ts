@@ -1,26 +1,27 @@
+import { RestUser, SquidexRest, SquidexRestClient } from '@asap-hub/squidex';
+import * as Sentry from '@sentry/serverless';
+import { EventBridgeEvent } from 'aws-lambda';
+import { SES } from 'aws-sdk';
 import path from 'path';
 import url from 'url';
-import { SES } from 'aws-sdk';
-import { EventBridgeEvent } from 'aws-lambda';
 import { v4 as uuidV4 } from 'uuid';
-import * as Sentry from '@sentry/serverless';
-import { RestUser, SquidexRest, SquidexRestClient } from '@asap-hub/squidex';
 import {
+  currentRevision,
+  environment,
   origin,
   sentryDsn,
   sesRegion,
-  environment,
-  currentRevision,
 } from '../../config';
-import { SendEmail, sendEmailFactory } from '../../utils/send-email';
 import logger from '../../utils/logger';
+import { SendEmail, sendEmailFactory } from '../../utils/send-email';
 import { EventBridgeHandler } from '../../utils/types';
+import { UserPayload } from '../event-bus';
 
 export const inviteHandlerFactory =
   (
     sendEmail: SendEmail,
     userClient: SquidexRestClient<RestUser>,
-  ): EventBridgeHandler<'UserPublished', SquidexWebhookUserPayload> =>
+  ): EventBridgeHandler<'UsersPublished', UserPayload> =>
   async (event) => {
     let user: RestUser;
 
@@ -102,16 +103,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
   inviteHandlerFactory(sendEmailFactory(ses), new SquidexRest('users')),
 );
 
-export type SquidexWebhookUserPayload = {
-  type: 'UsersCreated';
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: 'Created';
-    id: string;
-  };
-};
-
 export type UserInviteEventBridgeEvent = EventBridgeEvent<
-  'UserPublished',
-  SquidexWebhookUserPayload
+  'UsersPublished',
+  UserPayload
 >;

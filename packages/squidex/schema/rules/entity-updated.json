@@ -27,7 +27,7 @@
       },
       {
         "schemaId": "users",
-        "condition": "event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
+        "condition": "event.type === 'Created' || event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
       }
     ],
     "handleAll": false

@@ -231,18 +231,6 @@ const serverlessConfig: AWS = {
         AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
       },
     },
-    syncUserOrcid: {
-      handler:
-        'apps/crn-server/src/handlers/webhooks/webhook-sync-orcid.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/users/orcid',
-          },
-        },
-      ],
-    },
     subscribeCalendar: {
       handler:
         'apps/crn-server/src/handlers/calendar/subscribe-handler.handler',
@@ -277,6 +265,23 @@ const serverlessConfig: AWS = {
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
       },
     },
+    syncUserOrcid: {
+      handler: 'apps/crn-server/src/handlers/user/sync-orcid-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': ['UsersCreated', 'UsersUpdated'],
+            },
+            retryPolicy: {
+              maximumRetryAttempts: 2,
+            },
+          },
+        },
+      ],
+    },
     inviteUser: {
       handler: 'apps/crn-server/src/handlers/user/invite-handler.handler',
       events: [
@@ -284,8 +289,8 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: ['asap.user'],
-              'detail-type': ['UserPublished'],
+              source: [eventBusSource],
+              'detail-type': ['UsersPublished'],
             },
             retryPolicy: {
               maximumRetryAttempts: 2,
@@ -332,12 +337,13 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: ['asap.user'],
+              source: [eventBusSource],
               'detail-type': [
-                'UserPublished',
-                'UserUpdated',
-                'UserCreated',
-                'UserDeleted',
+                'UsersPublished',
+                'UsersUpdated',
+                'UsersCreated',
+                'UsersUnpublished',
+                'UsersDeleted',
               ],
             },
           },
@@ -436,21 +442,6 @@ const serverlessConfig: AWS = {
       environment: {
         EVENT_BUS: 'asap-events-${self:provider.stage}',
         EVENT_SOURCE: 'asap.calendar',
-      },
-    },
-    userUpserted: {
-      handler: 'apps/crn-server/src/handlers/webhooks/webhook-user.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/users',
-          },
-        },
-      ],
-      environment: {
-        EVENT_BUS: 'asap-events-${self:provider.stage}',
-        EVENT_SOURCE: 'asap.user',
       },
     },
     invalidateCache: {

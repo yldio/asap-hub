@@ -183,13 +183,17 @@ const getEventBridgeEventMock = (
   region: 'eu-west-1',
   resources: [],
   source: 'asap.user',
-  'detail-type': 'UserPublished',
+  'detail-type': 'UsersPublished',
   detail: {
-    type: 'UsersCreated',
+    type: 'UsersPublished',
     payload: {
       $type: 'EnrichedContentEvent',
-      type: 'Created',
+      type: 'Published',
       id: userId || '0ecccf93-bd06-4307-90ea-c153fe495580',
+      created: '2021-02-15T13:11:25Z',
+      lastModified: '2021-02-15T13:11:25Z',
+      version: 1,
+      data: {},
     },
   },
 });

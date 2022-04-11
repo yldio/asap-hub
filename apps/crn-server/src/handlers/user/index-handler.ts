@@ -1,23 +1,20 @@
-import { EventBridgeEvent } from 'aws-lambda';
-import { SquidexGraphql } from '@asap-hub/squidex';
 import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import logger from '../../utils/logger';
-import Users, { UserController } from '../../controllers/users';
-import {
-  UserEventType,
-  SquidexWebhookUserPayload,
-} from '../webhooks/webhook-user';
-import { EventBridgeHandler } from '../../utils/types';
+import { SquidexGraphql } from '@asap-hub/squidex';
+import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
+import Users, { UserController } from '../../controllers/users';
+import logger from '../../utils/logger';
+import { EventBridgeHandler } from '../../utils/types';
+import { UserEvent, UserPayload } from '../event-bus';
 
 export const indexUserHandler =
   (
     userController: UserController,
     algoliaClient: AlgoliaSearchClient,
-  ): EventBridgeHandler<UserEventType, SquidexWebhookUserPayload> =>
+  ): EventBridgeHandler<UserEvent, UserPayload> =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
@@ -57,6 +54,6 @@ export const handler = indexUserHandler(
 );
 
 export type UserIndexEventBridgeEvent = EventBridgeEvent<
-  'UserPublished' | 'UserCreated' | 'UserUpdated' | 'UserDeleted',
-  SquidexWebhookUserPayload
+  UserEvent,
+  UserPayload
 >;

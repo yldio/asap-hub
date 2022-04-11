@@ -36,9 +36,12 @@ export const getTeams = async (
   options: GetListOptions,
   authorization: string,
 ): Promise<ListTeamResponse> => {
-  const resp = await fetch(createListApiUrl('teams', options).toString(), {
-    headers: { authorization, ...createSentryHeaders() },
-  });
+  const resp = await fetch(
+    createListApiUrl(new URL('teams', `${API_BASE_URL}/`), options).toString(),
+    {
+      headers: { authorization, ...createSentryHeaders() },
+    },
+  );
 
   if (!resp.ok) {
     throw new Error(
@@ -102,14 +105,17 @@ export const getLabs = async (
   options: GetListOptions,
   authorization: string,
 ): Promise<ListLabsResponse> => {
-  const resp = await fetch(createListApiUrl('labs', options).toString(), {
-    method: 'GET',
-    headers: {
-      authorization,
-      'content-type': 'application/json',
-      ...createSentryHeaders(),
+  const resp = await fetch(
+    createListApiUrl(new URL('labs', `${API_BASE_URL}/`), options).toString(),
+    {
+      method: 'GET',
+      headers: {
+        authorization,
+        'content-type': 'application/json',
+        ...createSentryHeaders(),
+      },
     },
-  });
+  );
   if (!resp.ok) {
     throw new Error(
       `Failed to fetch labs. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,

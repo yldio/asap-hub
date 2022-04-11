@@ -6,9 +6,12 @@ export const getNews = async (
   options: GetListOptions,
   authorization: string,
 ): Promise<ListNewsResponse> => {
-  const resp = await fetch(createListApiUrl('news', options).toString(), {
-    headers: { authorization },
-  });
+  const resp = await fetch(
+    createListApiUrl(new URL('news', `${API_BASE_URL}/`), options).toString(),
+    {
+      headers: { authorization },
+    },
+  );
   if (!resp.ok) {
     throw new Error(
       `Failed to fetch the news. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,

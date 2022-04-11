@@ -2,13 +2,17 @@ import { ListEventResponse } from '@asap-hub/model';
 
 import { createListApiUrl, createSentryHeaders } from '@asap-hub/api-util';
 import { GetEventListOptions } from '@asap-hub/crn-frontend/src/events/options';
+import { API_BASE_URL } from '../../../config';
 
 export const getGroupEvents = async (
   id: string,
   options: GetEventListOptions,
   authorization: string,
 ): Promise<ListEventResponse | undefined> => {
-  const url = createListApiUrl(`groups/${id}/events`, options);
+  const url = createListApiUrl(
+    new URL(`groups/${id}/events`, `${API_BASE_URL}/`),
+    options,
+  );
   if (options.before) url.searchParams.append('before', options.before);
   else if (options.after) url.searchParams.append('after', options.after);
 

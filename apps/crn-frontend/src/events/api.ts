@@ -8,7 +8,7 @@ export const getEvents = async (
   options: GetEventListOptions,
   authorization: string,
 ): Promise<ListEventResponse> => {
-  const url = createListApiUrl('events', options);
+  const url = createListApiUrl(new URL('events', `${API_BASE_URL}/`), options);
 
   if (options.before) url.searchParams.append('before', options.before);
   else if (options.after) url.searchParams.append('after', options.after);

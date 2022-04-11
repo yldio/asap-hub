@@ -58,7 +58,7 @@ describe('getTeams', () => {
     await expect(
       getTeams(options, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"request to http://localhost:3333/teams?take=10&skip=0 failed, reason: connect ECONNREFUSED 127.0.0.1:3333"`,
+      `"Failed to fetch team list. Expected status 2xx. Received status 500."`,
     );
   });
 });
@@ -196,7 +196,7 @@ describe('getLabs', () => {
     await expect(
       getLabs(options, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"request to http://localhost:3333/labs?take=10&skip=0 failed, reason: connect ECONNREFUSED 127.0.0.1:3333"`,
+      `"Failed to fetch labs. Expected status 2xx. Received status 500."`,
     );
   });
 });

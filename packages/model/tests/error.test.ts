@@ -1,4 +1,7 @@
-import { isValidationErrorResponse } from '../src/error';
+import {
+  isValidationErrorResponse,
+  VALIDATION_ERROR_MESSAGE,
+} from '../src/error';
 
 describe('Error Model', () => {
   describe('isValidationErrorResponse', () => {
@@ -6,7 +9,7 @@ describe('Error Model', () => {
       expect(
         isValidationErrorResponse({
           error: 'Bad Request',
-          message: 'Validation error',
+          message: VALIDATION_ERROR_MESSAGE,
           statusCode: 400,
           data: [],
         }),

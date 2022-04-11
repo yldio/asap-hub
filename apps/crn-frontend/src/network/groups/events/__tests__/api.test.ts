@@ -78,8 +78,19 @@ describe('getGroupEvents', () => {
         getEventListOptions(new Date('2021-01-01T12:00:00'), false),
         '',
       ),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch events for group with id 42. Expected status 2xx. Received status 500."`,
-    );
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`
+            "request to http://localhost:3333/groups/42/events?take=10&skip=0&after=2021-01-01T11%3A00%3A00.000Z failed, reason: Nock: No match for request {
+              \\"method\\": \\"GET\\",
+              \\"url\\": \\"http://localhost:3333/groups/42/events?take=10&skip=0&after=2021-01-01T11%3A00%3A00.000Z\\",
+              \\"headers\\": {
+                \\"accept\\": \\"*/*\\",
+                \\"accept-encoding\\": \\"gzip,deflate,br\\",
+                \\"authorization\\": \\"\\",
+                \\"connection\\": \\"close\\",
+                \\"user-agent\\": \\"node-fetch\\",
+                \\"x-transaction-id\\": \\"bvkn3bsn3\\"
+              }
+            }"
+          `);
   });
 });

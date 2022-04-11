@@ -3,12 +3,12 @@ import {
   createListGroupResponse,
   createGroupResponse,
 } from '@asap-hub/fixtures';
+import { GetListOptions } from '@asap-hub/api-util';
 
 import { API_BASE_URL } from '../../../config';
 import { getGroups, getGroup } from '../api';
 
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
-import { GetListOptions } from '@asap-hub/api-util';
 
 jest.mock('../../../config');
 
@@ -47,11 +47,21 @@ describe('getGroups', () => {
       .get('/groups')
       .query({ take: '10', skip: '0' })
       .reply(500);
-    await expect(
-      getGroups(options, ''),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch group list. Expected status 2xx. Received status 500."`,
-    );
+    await expect(getGroups(options, '')).rejects
+      .toThrowErrorMatchingInlineSnapshot(`
+            "request to http://localhost:3333/groups?take=10&skip=0 failed, reason: Nock: No match for request {
+              \\"method\\": \\"GET\\",
+              \\"url\\": \\"http://localhost:3333/groups?take=10&skip=0\\",
+              \\"headers\\": {
+                \\"accept\\": \\"*/*\\",
+                \\"accept-encoding\\": \\"gzip,deflate,br\\",
+                \\"authorization\\": \\"\\",
+                \\"connection\\": \\"close\\",
+                \\"user-agent\\": \\"node-fetch\\",
+                \\"x-transaction-id\\": \\"u1we8n1n1\\"
+              }
+            }"
+          `);
   });
 });
 

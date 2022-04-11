@@ -47,21 +47,11 @@ describe('getGroups', () => {
       .get('/groups')
       .query({ take: '10', skip: '0' })
       .reply(500);
-    await expect(getGroups(options, '')).rejects
-      .toThrowErrorMatchingInlineSnapshot(`
-            "request to http://localhost:3333/groups?take=10&skip=0 failed, reason: Nock: No match for request {
-              \\"method\\": \\"GET\\",
-              \\"url\\": \\"http://localhost:3333/groups?take=10&skip=0\\",
-              \\"headers\\": {
-                \\"accept\\": \\"*/*\\",
-                \\"accept-encoding\\": \\"gzip,deflate,br\\",
-                \\"authorization\\": \\"\\",
-                \\"connection\\": \\"close\\",
-                \\"user-agent\\": \\"node-fetch\\",
-                \\"x-transaction-id\\": \\"u1we8n1n1\\"
-              }
-            }"
-          `);
+    await expect(
+      getGroups(options, ''),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch group list. Expected status 2xx. Received status 500."`,
+    );
   });
 });
 

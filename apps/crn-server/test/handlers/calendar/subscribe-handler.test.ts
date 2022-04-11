@@ -44,9 +44,6 @@ describe('Calendar handler', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-    // subscribe.mockReset();
-    // unsubscribe.mockReset();
-    // calendarControllerMock.update.mockReset();
   });
 
   describe('Validation', () => {

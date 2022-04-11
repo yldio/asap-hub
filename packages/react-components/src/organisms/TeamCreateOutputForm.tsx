@@ -141,11 +141,9 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             isInternalUser(user)
               ? {
                   userId: value,
-                  externalAuthorName: user.displayName,
                 }
               : {
                   externalAuthorId: value,
-                  externalAuthorName: user.displayName,
                 },
           ),
           labs: labs.map(({ value }) => value),

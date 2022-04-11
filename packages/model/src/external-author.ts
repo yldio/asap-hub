@@ -11,5 +11,5 @@ export type ListExternalAuthorResponse = ListResponse<ExternalAuthorResponse>;
 export type ExternalAuthorPostRequest = {
   userId?: string;
   externalAuthorId?: string;
-  externalAuthorName: string;
+  externalAuthorName?: string;
 };

@@ -823,11 +823,9 @@ describe('ResearchOutputs controller', () => {
         authors: [
           {
             userId: 'user-1',
-            externalAuthorName: 'Martha Reed',
           },
           {
             externalAuthorId: 'author-1',
-            externalAuthorName: 'Peter Andrews',
           },
           {
             externalAuthorName: 'Chris Blue',
@@ -882,17 +880,31 @@ describe('ResearchOutputs controller', () => {
       ).rejects.toThrow('Bad Request');
     });
 
+    test('Should throw a validation error when authors data is an empty object', async () => {
+      nock(config.baseUrl).post(
+        `/api/content/${config.appName}/research-outputs?publish=false`,
+        {
+          authors: { iv: [{}] },
+        },
+      );
+
+      await expect(
+        researchOutputs.create({
+          ...getResearchOutputRequest(),
+          authors: [{}],
+        }),
+      ).rejects.toThrow('Validation error');
+    });
+
     test('Should throw when cannot create an external author - 500', async () => {
       const researchOutputRequest = {
         ...getResearchOutputRequest(),
         authors: [
           {
             userId: 'user-1',
-            externalAuthorName: 'Martha Reed',
           },
           {
             externalAuthorId: 'author-1',
-            externalAuthorName: 'Peter Andrews',
           },
           {
             externalAuthorName: 'Chris Blue',

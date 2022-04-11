@@ -236,10 +236,14 @@ export default class ResearchOutputs implements ResearchOutputController {
 
     if (externalAuthorId) return externalAuthorId;
 
-    const { id } = await this.externalAuthorSquidexRestClient.create({
-      name: { iv: externalAuthorName },
-    });
-    return id;
+    if (externalAuthorName) {
+      const { id } = await this.externalAuthorSquidexRestClient.create({
+        name: { iv: externalAuthorName },
+      });
+      return id;
+    }
+
+    throw Boom.badData('Validation error');
   }
 }
 

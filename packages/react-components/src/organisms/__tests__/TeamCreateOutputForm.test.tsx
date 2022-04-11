@@ -156,11 +156,9 @@ it('can submit a form when form data is valid', async () => {
       authors: [
         {
           externalAuthorId: '1',
-          externalAuthorName: 'Author One',
         },
         {
           userId: '2',
-          externalAuthorName: 'Author Two',
         },
       ],
       teams: ['TEAMID'],

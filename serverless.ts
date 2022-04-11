@@ -342,6 +342,7 @@ const serverlessConfig: AWS = {
                 'UsersPublished',
                 'UsersUpdated',
                 'UsersCreated',
+                'UsersUnpublished',
                 'UsersDeleted',
               ],
             },

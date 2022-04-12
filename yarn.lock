@@ -579,9 +579,9 @@ __metadata:
     opentracing: ^0.14.5
     p-limit: ^3.1.0
     parse-data-url: ^3.0.0
-    pino: ^6.11.3
-    pino-http: ^5.5.0
-    pino-lambda: ^1.2.4
+    pino: ^7.10.0
+    pino-http: ^6.6.0
+    pino-lambda: ^3.0.1
     pino-noir: ^2.2.1
     pump: ^3.0.0
     serverless-http: ^2.7.0
@@ -17480,6 +17480,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"duplexify@npm:^4.1.2":
+  version: 4.1.2
+  resolution: "duplexify@npm:4.1.2"
+  dependencies:
+    end-of-stream: ^1.4.1
+    inherits: ^2.0.3
+    readable-stream: ^3.1.1
+    stream-shift: ^1.0.0
+  checksum: 964376c61c0e92f6ed0694b3ba97c84f199413dc40ab8dfdaef80b7a7f4982fcabf796214e28ed614a5bc1ec45488a29b81e7d46fa3f5ddf65bcb118c20145ad
+  languageName: node
+  linkType: hard
+
 "duration@npm:^0.2.2":
   version: 0.2.2
   resolution: "duration@npm:0.2.2"
@@ -19774,13 +19786,6 @@ __metadata:
   bin:
     flat: cli.js
   checksum: 12a1536ac746db74881316a181499a78ef953632ddd28050b7a3a43c62ef5462e3357c8c29d76072bb635f147f7a9a1f0c02efef6b4be28f8db62ceb3d5c7f5d
-  languageName: node
-  linkType: hard
-
-"flatstr@npm:^1.0.12":
-  version: 1.0.12
-  resolution: "flatstr@npm:1.0.12"
-  checksum: e1bb562c94b119e958bf37e55738b172b5f8aaae6532b9660ecd877779f8559dbbc89613ba6b29ccc13447e14c59277d41450f785cf75c30df9fce62f459e9a8
   languageName: node
   linkType: hard
 
@@ -27283,6 +27288,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"on-exit-leak-free@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "on-exit-leak-free@npm:0.2.0"
+  checksum: d22b0f0538069110626b578db6e68b6ee0e85b1ee9cc5ef9b4de1bba431431d6a8da91a61e09d2ad46f22a96f968e5237833cb9d0b69bc4d294f7ec82f609b05
+  languageName: node
+  linkType: hard
+
 "on-finished@npm:~2.3.0":
   version: 2.3.0
   resolution: "on-finished@npm:2.3.0"
@@ -28182,23 +28194,34 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"pino-http@npm:^5.5.0":
-  version: 5.5.0
-  resolution: "pino-http@npm:5.5.0"
+"pino-abstract-transport@npm:v0.5.0":
+  version: 0.5.0
+  resolution: "pino-abstract-transport@npm:0.5.0"
   dependencies:
-    fast-url-parser: ^1.1.3
-    pino: ^6.0.0
-    pino-std-serializers: ^2.4.0
-  checksum: ab52b7d53d02ba08af9399a15531ee826b16f5c0b55f6e8c5a2568843b42bca90c807b48870ac9fc98006a86c883c8e7b21331231626e09516cfd9c499970268
+    duplexify: ^4.1.2
+    split2: ^4.0.0
+  checksum: c503f867de3189f8217ab9cf794e8a631dddd0029a829f0f985f5511308152ebd53e363764fbc5570b3d1c715b341e3923456ce16ad84cd41be2b9a074ada234
   languageName: node
   linkType: hard
 
-"pino-lambda@npm:^1.2.4":
-  version: 1.2.4
-  resolution: "pino-lambda@npm:1.2.4"
+"pino-http@npm:^6.6.0":
+  version: 6.6.0
+  resolution: "pino-http@npm:6.6.0"
+  dependencies:
+    fast-url-parser: ^1.1.3
+    get-caller-file: ^2.0.5
+    pino: ^7.5.0
+    pino-std-serializers: ^5.0.0
+  checksum: 241d9174ed9078c36b48323113dc5893f9628a55b72b6458ab2a30eb973d0b2cf567af92418ca15f198293ba1483311568d3adb1368436c2dbf603d7111b8e07
+  languageName: node
+  linkType: hard
+
+"pino-lambda@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "pino-lambda@npm:3.0.1"
   peerDependencies:
-    pino: ^6.0.0
-  checksum: 1decdfca8afa60c932cf06f67c085a970d1f38777dea887375192047f2d0ce928491c30b8635dd4d1ab594b5a15dfeccfd90cee2537fccf5509cb1b82d12f1d2
+    pino: ">=6.0.0 <8.0.0"
+  checksum: e8e607344fdb64b105e62d2d55aaf552c70a29f0026d316465ac13e8e419e13f1fa179ca9153bc7972a7bb222eed5a6e59ce5c1c788b827e58fa230249536984
   languageName: node
   linkType: hard
 
@@ -28209,49 +28232,38 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"pino-std-serializers@npm:^2.4.0":
-  version: 2.5.0
-  resolution: "pino-std-serializers@npm:2.5.0"
-  checksum: 57788a1427ca1de56f01d0382c23b2f7c32438ab391169f074e02bba86ac9ec360a94834bfad2792ec01b6a5af2386ff4541cf393c56c0b1e66f72323a9162ef
+"pino-std-serializers@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "pino-std-serializers@npm:4.0.0"
+  checksum: 89d487729b58c9d3273a0ee851ead068d6d2e2ccc1af8e1c1d28f1b3442423679bec7ec04d9a2aba36f94f335e82be9f4de19dc4fbc161e71c136aaa15b85ad3
   languageName: node
   linkType: hard
 
-"pino-std-serializers@npm:^3.1.0":
-  version: 3.2.0
-  resolution: "pino-std-serializers@npm:3.2.0"
-  checksum: 77e29675b116e42ae9fe6d4ef52ef3a082ffc54922b122d85935f93ddcc20277f0b0c873c5c6c5274a67b0409c672aaae3de6bcea10a2d84699718dda55ba95b
+"pino-std-serializers@npm:^5.0.0":
+  version: 5.2.0
+  resolution: "pino-std-serializers@npm:5.2.0"
+  checksum: 92d6de1b0270037a2cd48290f2adbb2607dbf94eaedf5f15453478603d32e5f8f39d008bce307ff64de6dd7319aecfa0e29cee14ead4be64029a7882845fbab2
   languageName: node
   linkType: hard
 
-"pino@npm:^6.0.0":
-  version: 6.11.2
-  resolution: "pino@npm:6.11.2"
+"pino@npm:^7.10.0, pino@npm:^7.5.0":
+  version: 7.10.0
+  resolution: "pino@npm:7.10.0"
   dependencies:
+    atomic-sleep: ^1.0.0
     fast-redact: ^3.0.0
-    fast-safe-stringify: ^2.0.7
-    flatstr: ^1.0.12
-    pino-std-serializers: ^3.1.0
-    quick-format-unescaped: 4.0.1
-    sonic-boom: ^1.0.2
-  bin:
-    pino: ./bin.js
-  checksum: a6dfa04aa2d6c90a0efc9d1414781a94930a9f00dbfd3eced339804c460a5f8f84087333e55c4522ae61147f3edd139c1a946c1adc5f9695c433e5a84c3f1d13
-  languageName: node
-  linkType: hard
-
-"pino@npm:^6.11.3":
-  version: 6.11.3
-  resolution: "pino@npm:6.11.3"
-  dependencies:
-    fast-redact: ^3.0.0
-    fast-safe-stringify: ^2.0.7
-    flatstr: ^1.0.12
-    pino-std-serializers: ^3.1.0
+    on-exit-leak-free: ^0.2.0
+    pino-abstract-transport: v0.5.0
+    pino-std-serializers: ^4.0.0
+    process-warning: ^1.0.0
     quick-format-unescaped: ^4.0.3
-    sonic-boom: ^1.0.2
+    real-require: ^0.1.0
+    safe-stable-stringify: ^2.1.0
+    sonic-boom: ^2.2.1
+    thread-stream: ^0.15.1
   bin:
     pino: bin.js
-  checksum: 6fb82f11d4ebd7e4314cacb3b2acb8047e00dc0e4e31f08f5ad54f63d2e6f17464ae57bac4624a095f5cd87b8658ef1d810ca7c7026647048b422f63566218b2
+  checksum: 154173fc0cceef04e0252f8cecabea5d85cfaf97271961723b7a78f493a36f08224bdb1eaf57c6acd6ca5c68cbb781ae164d7c7f9a7ec06c3fd44c2a3c087734
   languageName: node
   linkType: hard
 
@@ -29553,6 +29565,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"process-warning@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "process-warning@npm:1.0.0"
+  checksum: c708a03241deec3cabaeee39c4f9ee8c4d71f1c5ef9b746c8252cdb952a6059068cfcdaf348399775244cbc441b6ae5e26a9c87ed371f88335d84f26d19180f9
+  languageName: node
+  linkType: hard
+
 "process@npm:^0.11.10":
   version: 0.11.10
   resolution: "process@npm:0.11.10"
@@ -29984,13 +30003,6 @@ fsevents@~2.1.2:
   version: 1.2.3
   resolution: "queue-microtask@npm:1.2.3"
   checksum: b676f8c040cdc5b12723ad2f91414d267605b26419d5c821ff03befa817ddd10e238d22b25d604920340fd73efd8ba795465a0377c4adf45a4a41e4234e42dc4
-  languageName: node
-  linkType: hard
-
-"quick-format-unescaped@npm:4.0.1":
-  version: 4.0.1
-  resolution: "quick-format-unescaped@npm:4.0.1"
-  checksum: 6b7ef315e817edc0b7ae95ef16a698d9b3a67b4248a49f1b7bd77d227bed1d85f5b430b3d99b944e1dbc567ac88940c0315d5e6f3882548bb7dfd92fe4a64dc9
   languageName: node
   linkType: hard
 
@@ -30793,6 +30805,13 @@ fsevents@~2.1.2:
   dependencies:
     picomatch: ^2.2.1
   checksum: 1ced032e6e45670b6d7352d71d21ce7edf7b9b928494dcaba6f11fba63180d9da6cd7061ebc34175ffda6ff529f481818c962952004d273178acd70f7059b320
+  languageName: node
+  linkType: hard
+
+"real-require@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "real-require@npm:0.1.0"
+  checksum: 96745583ed4f82cd5c6a6af012fd1d3c6fc2f13ae1bcff1a3c4f8094696013a1a07c82c5aa66a403d7d4f84949fc2203bc927c7ad120caad125941ca2d7e5e8e
   languageName: node
   linkType: hard
 
@@ -31755,6 +31774,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"safe-stable-stringify@npm:^2.1.0":
+  version: 2.3.1
+  resolution: "safe-stable-stringify@npm:2.3.1"
+  checksum: a0a0bad0294c3e2a9d1bf3cf2b1096dfb83c162d09a5e4891e488cce082120bd69161d2a92aae7fc48255290f17700decae9c89a07fe139794e61b5c8b411377
+  languageName: node
+  linkType: hard
+
 "safer-buffer@npm:>= 2.1.2 < 3, safer-buffer@npm:^2.0.2, safer-buffer@npm:^2.1.0, safer-buffer@npm:~2.1.0":
   version: 2.1.2
   resolution: "safer-buffer@npm:2.1.2"
@@ -32634,13 +32660,12 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"sonic-boom@npm:^1.0.2":
-  version: 1.3.2
-  resolution: "sonic-boom@npm:1.3.2"
+"sonic-boom@npm:^2.2.1":
+  version: 2.7.0
+  resolution: "sonic-boom@npm:2.7.0"
   dependencies:
     atomic-sleep: ^1.0.0
-    flatstr: ^1.0.12
-  checksum: 2427628535e622e647de060443a9411f5d07f1bac77ceb0c0dde612e53688e3431bbd0798c38f4b67b61b2577003d5dfd4caef7373c8ee10470e7fb8f704bc4e
+  checksum: 00dfa56fe9f3b9989fed08809c48645b1ea33759d81a22319ab87211a64e6834c33909dbfa75aa0ec6f6a7502290342a79ce7ba460d137a58579a2acb8ebe835
   languageName: node
   linkType: hard
 
@@ -32909,6 +32934,13 @@ resolve@^2.0.0-next.3:
   dependencies:
     readable-stream: ^3.0.0
   checksum: 6a7243292bedf89715b24f144b191010b69c4ccb714a7dd1ef894ac04447ff7254514aca80b873cd904a476cfdc3bc7e3cdeb67362310b6538b0ff2d8f06e55d
+  languageName: node
+  linkType: hard
+
+"split2@npm:^4.0.0":
+  version: 4.1.0
+  resolution: "split2@npm:4.1.0"
+  checksum: ec581597cb74c13cdfb5e2047543dd40cb1e8e9803c7b1e0c29ede05f2b4f049b2d6e7f2788a225d544549375719658b8f38e9366364dec35dc7a12edfda5ee5
   languageName: node
   linkType: hard
 
@@ -34160,6 +34192,15 @@ resolve@^2.0.0-next.3:
   version: 0.2.0
   resolution: "text-table@npm:0.2.0"
   checksum: b6937a38c80c7f84d9c11dd75e49d5c44f71d95e810a3250bd1f1797fc7117c57698204adf676b71497acc205d769d65c16ae8fa10afad832ae1322630aef10a
+  languageName: node
+  linkType: hard
+
+"thread-stream@npm:^0.15.1":
+  version: 0.15.2
+  resolution: "thread-stream@npm:0.15.2"
+  dependencies:
+    real-require: ^0.1.0
+  checksum: 0547795a8f357ba1ac0dba29c71f965182e29e21752951a04a7167515ee37524bfba6c410f31e65a01a8d3e5b93400b812889aa09523e38ce4d744c894ffa6c0
   languageName: node
   linkType: hard
 

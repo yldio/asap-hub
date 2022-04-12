@@ -34,7 +34,7 @@ export const researchOutputToCSV = (
   output: ResearchOutputResponse,
 ): ResearchOutputCSV => ({
   title: output.title,
-  type: output.type,
+  documentType: output.documentType,
   subTypes: output.subTypes.join(','),
   addedDate: output.addedDate,
   lastUpdatedPartial: output.lastUpdatedPartial,

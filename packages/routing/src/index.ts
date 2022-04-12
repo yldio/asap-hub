@@ -6,7 +6,7 @@ export { default as events } from './events';
 export { default as discover } from './discover';
 export { default as logout } from './logout';
 export { default as network } from './network';
-export type { OutputTypeParameter } from './network';
+export type { OutputDocumentTypeParameter } from './network';
 export { default as news } from './news';
 export { default as sharedResearch } from './shared-research';
 export { default as staticPages } from './static-pages';

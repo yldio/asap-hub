@@ -6,7 +6,7 @@ import { TeamCreateOutputIdentifier } from '../TeamCreateOutputIdentifier';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 
 const props: ComponentProps<typeof TeamCreateOutputIdentifier> = {
-  type: 'Article',
+  documentType: 'Article',
   required: false,
 };
 

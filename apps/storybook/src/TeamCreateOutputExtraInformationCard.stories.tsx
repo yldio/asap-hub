@@ -1,6 +1,6 @@
 import { TeamCreateOutputExtraInformationCard } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
-import { researchOutputTypes } from '@asap-hub/model';
+import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { boolean, select } from '@storybook/addon-knobs';
 
 export default {
@@ -18,7 +18,7 @@ const commonProps: ComponentProps<typeof TeamCreateOutputExtraInformationCard> =
       label: suggestion,
       value: suggestion,
     })),
-    type: select('type', researchOutputTypes, 'Article'),
+    documentType: select('type', researchOutputDocumentTypes, 'Article'),
     identifierRequired: boolean('identifierRequired', false),
   };
 

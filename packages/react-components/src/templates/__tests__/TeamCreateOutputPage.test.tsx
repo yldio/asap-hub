@@ -10,7 +10,7 @@ import { StaticRouter } from 'react-router-dom';
 import TeamCreateOutputPage from '../TeamCreateOutputPage';
 
 const props: ComponentProps<typeof TeamCreateOutputPage> = {
-  type: 'Grant Document',
+  documentType: 'Grant Document',
   tagSuggestions: [],
   team: createTeamResponse(),
 };

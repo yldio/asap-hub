@@ -39,7 +39,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   ...props
 }) => {
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
-    props.type,
+    props.documentType,
   );
   return (
     <div css={containerStyles}>

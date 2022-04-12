@@ -1,7 +1,7 @@
 import nock from 'nock';
 
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
-import { ResearchOutputType } from '@asap-hub/model';
+import { ResearchOutputDocumentType } from '@asap-hub/model';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
@@ -63,7 +63,7 @@ describe('getResearchOutputs', () => {
   it('builds a single filter query', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
-      filters: new Set<ResearchOutputType>(['Article']),
+      filters: new Set<ResearchOutputDocumentType>(['Article']),
     });
 
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
@@ -78,7 +78,10 @@ describe('getResearchOutputs', () => {
   it('builds a multiple filter query', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
-      filters: new Set<ResearchOutputType>(['Article', 'Grant Document']),
+      filters: new Set<ResearchOutputDocumentType>([
+        'Article',
+        'Grant Document',
+      ]),
     });
 
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
@@ -93,7 +96,10 @@ describe('getResearchOutputs', () => {
   it('ignores unknown filters', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
-      filters: new Set<ResearchOutputType | 'invalid'>(['Article', 'invalid']),
+      filters: new Set<ResearchOutputDocumentType | 'invalid'>([
+        'Article',
+        'invalid',
+      ]),
     });
 
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
@@ -123,7 +129,7 @@ describe('getResearchOutputs', () => {
   it('adds teamId to type filter', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
-      filters: new Set<ResearchOutputType>(['Article']),
+      filters: new Set<ResearchOutputDocumentType>(['Article']),
       teamId: '12345',
     });
 
@@ -139,7 +145,10 @@ describe('getResearchOutputs', () => {
   it('adds teamId to type filters', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
-      filters: new Set<ResearchOutputType>(['Article', 'Grant Document']),
+      filters: new Set<ResearchOutputDocumentType>([
+        'Article',
+        'Grant Document',
+      ]),
       teamId: '12345',
     });
 
@@ -169,7 +178,7 @@ describe('getResearchOutputs', () => {
   it('adds userId to type filter', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
-      filters: new Set<ResearchOutputType>(['Article']),
+      filters: new Set<ResearchOutputDocumentType>(['Article']),
       userId: '12345',
     });
 
@@ -185,7 +194,10 @@ describe('getResearchOutputs', () => {
   it('adds userId to type filters', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
-      filters: new Set<ResearchOutputType>(['Article', 'Grant Document']),
+      filters: new Set<ResearchOutputDocumentType>([
+        'Article',
+        'Grant Document',
+      ]),
       userId: '12345',
     });
 

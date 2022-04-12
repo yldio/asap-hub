@@ -2,18 +2,13 @@ import { ComponentProps } from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { ResearchOutputIdentifierType } from '@asap-hub/model';
 import TeamCreateOutputExtraInformationCard from '../TeamCreateOutputExtraInformationCard';
-import { noop } from '../../utils';
 
 const props: ComponentProps<typeof TeamCreateOutputExtraInformationCard> = {
   isSaving: false,
   tagSuggestions: [],
   tags: [],
-  identifier: '',
-  setIdentifier: noop,
-  identifierType: ResearchOutputIdentifierType.None,
-  setIdentifierType: noop,
+
   type: 'Article',
   identifierRequired: false,
 };

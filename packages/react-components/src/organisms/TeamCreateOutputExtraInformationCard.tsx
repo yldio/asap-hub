@@ -41,7 +41,7 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     setIdentifier = noop,
     setIdentifierType = noop,
     identifierRequired,
-    type = 'Article',
+    type,
   }) => (
     <FormCard title="What extra information can you provide?">
       <LabeledMultiSelect

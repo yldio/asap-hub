@@ -122,7 +122,7 @@ describe('/research-outputs/ route', () => {
   describe('POST /research-outputs/', () => {
     const getCreateResearchOutput = (): ResearchOutputPostRequest => {
       const {
-        type,
+        documentType,
         title,
         asapFunded,
         sharingStatus,
@@ -137,7 +137,7 @@ describe('/research-outputs/ route', () => {
         teams,
       } = getResearchOutputResponse();
       return {
-        type,
+        documentType,
         link: 'http://a.link',
         title,
         asapFunded,
@@ -233,7 +233,7 @@ describe('/research-outputs/ route', () => {
       });
 
       test.each([
-        'type',
+        'documentType',
         'description',
         'tags',
         'title',

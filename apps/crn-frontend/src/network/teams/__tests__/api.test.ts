@@ -139,7 +139,7 @@ describe('patchTeam', () => {
 describe('createTeamResearchOutput', () => {
   const payload: ResearchOutputPostRequest = {
     teams: ['90210'],
-    type: 'Bioinformatics',
+    documentType: 'Bioinformatics',
     link: 'http://a-link',
     title: 'A title',
     asapFunded: false,

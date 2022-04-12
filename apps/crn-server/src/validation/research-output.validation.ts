@@ -1,7 +1,7 @@
 import {
   ResearchOutputPostRequest,
   researchOutputSubtypes,
-  researchOutputTypes,
+  researchOutputDocumentTypes,
 } from '@asap-hub/model';
 import { JSONSchemaType } from 'ajv';
 import { validateInput } from '.';
@@ -32,9 +32,9 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
   {
     type: 'object',
     properties: {
-      type: {
+      documentType: {
         type: 'string',
-        enum: researchOutputTypes,
+        enum: researchOutputDocumentTypes,
       },
       subTypes: {
         type: 'array',
@@ -67,7 +67,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       accessInstructions: { type: 'string', nullable: true },
     },
     required: [
-      'type',
+      'documentType',
       'description',
       'tags',
       'title',

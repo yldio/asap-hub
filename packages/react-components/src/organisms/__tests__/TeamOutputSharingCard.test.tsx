@@ -12,7 +12,7 @@ const props: ComponentProps<typeof TeamCreateOutputFormSharingCard> = {
   title: '',
   link: '',
   subTypes: [],
-  type: 'Article',
+  documentType: 'Article',
   asapFunded: 'Not Sure',
   usedInPublication: 'Not Sure',
   sharingStatus: 'Network Only',
@@ -21,7 +21,7 @@ it('renders the card with provided values', () => {
   const { getByDisplayValue } = render(
     <TeamCreateOutputFormSharingCard
       {...props}
-      type="Article"
+      documentType="Article"
       description="description"
       link="http://example.com"
       title="title"
@@ -51,7 +51,7 @@ it.each`
 
 it('lab resource does not require an url', async () => {
   const { getByLabelText, findByText } = render(
-    <TeamCreateOutputFormSharingCard {...props} type="Lab Resource" />,
+    <TeamCreateOutputFormSharingCard {...props} documentType="Lab Resource" />,
   );
   expect(
     await findByText(
@@ -108,7 +108,7 @@ it('triggers an on change for type', async () => {
   const { getByLabelText } = render(
     <TeamCreateOutputFormSharingCard
       {...props}
-      type="Article"
+      documentType="Article"
       onChangeSubtypes={onChangeFn}
     />,
   );
@@ -123,7 +123,7 @@ it('triggers an on change for type', async () => {
 
 it('shows the custom no options message for type', async () => {
   const { getByLabelText, getByText } = render(
-    <TeamCreateOutputFormSharingCard {...props} type="Article" />,
+    <TeamCreateOutputFormSharingCard {...props} documentType="Article" />,
   );
 
   userEvent.type(getByLabelText(/type/i), 'asdflkjasdflkj');
@@ -135,7 +135,7 @@ it('conditionally shows date published field', async () => {
   const { queryByLabelText, rerender } = render(
     <TeamCreateOutputFormSharingCard
       {...props}
-      type="Article"
+      documentType="Article"
       sharingStatus={'Network Only'}
     />,
   );
@@ -144,7 +144,7 @@ it('conditionally shows date published field', async () => {
   rerender(
     <TeamCreateOutputFormSharingCard
       {...props}
-      type="Article"
+      documentType="Article"
       sharingStatus={'Public'}
     />,
   );
@@ -157,7 +157,7 @@ it('triggers an on change for date published', async () => {
   const { getByLabelText } = render(
     <TeamCreateOutputFormSharingCard
       {...props}
-      type="Article"
+      documentType="Article"
       sharingStatus={'Public'}
       onChangePublishDate={onChangeFn}
     />,
@@ -173,7 +173,7 @@ it('shows the custom error message for date published', async () => {
   const { getByLabelText, getByText } = render(
     <TeamCreateOutputFormSharingCard
       {...props}
-      type="Article"
+      documentType="Article"
       sharingStatus={'Public'}
       publishDate={startOfTomorrow()}
     />,

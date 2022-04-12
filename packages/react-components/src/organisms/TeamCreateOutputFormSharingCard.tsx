@@ -4,7 +4,7 @@ import {
   ResearchOutputPostRequest,
   ResearchOutputSharingStatus,
   ResearchOutputSubtype,
-  researchOutputTypeToSubtype,
+  researchOutputDocumentTypeToSubtype,
 } from '@asap-hub/model';
 
 import { globeIcon } from '../icons';
@@ -20,7 +20,12 @@ import { noop } from '../utils';
 
 type TeamCreateOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
-  'link' | 'title' | 'description' | 'subTypes' | 'type' | 'sharingStatus'
+  | 'link'
+  | 'title'
+  | 'description'
+  | 'subTypes'
+  | 'documentType'
+  | 'sharingStatus'
 > & {
   onChangeLink?: (newValue: string) => void;
   onChangeTitle?: (newValue: string) => void;
@@ -42,7 +47,7 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
     link,
     title,
     description,
-    type,
+    documentType,
     subTypes,
     asapFunded,
     usedInPublication,
@@ -57,7 +62,7 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
     onChangeSharingStatus = noop,
     onChangePublishDate = noop,
   }) => {
-    const urlRequired = type !== 'Lab Resource';
+    const urlRequired = documentType !== 'Lab Resource';
     const urlSubtitle = urlRequired ? '(required)' : '(optional)';
     return (
       <FormCard title="What are you sharing?">
@@ -78,13 +83,13 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
         <LabeledDropdown<ResearchOutputSubtype>
           title="Type"
           subtitle="(required)"
-          description={`Select the option that applies to this ${type.toLowerCase()}.`}
-          options={[...researchOutputTypeToSubtype[type].values()].map(
-            (option) => ({
-              value: option,
-              label: option,
-            }),
-          )}
+          description={`Select the option that applies to this ${documentType.toLowerCase()}.`}
+          options={[
+            ...researchOutputDocumentTypeToSubtype[documentType].values(),
+          ].map((option) => ({
+            value: option,
+            label: option,
+          }))}
           onChange={(subType) => onChangeSubtypes([subType])}
           getValidationMessage={() => 'Please choose a type'}
           value={subTypes[0] ?? ''}

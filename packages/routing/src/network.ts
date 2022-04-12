@@ -58,16 +58,17 @@ const user = (() => {
 })();
 const users = route('/users', {}, { user });
 
-export type OutputTypeParameter =
+export type OutputDocumentTypeParameter =
   | 'article'
   | 'bioinformatics'
   | 'dataset'
   | 'lab-resource'
   | 'protocol';
 
-const outputTypeParser = {
-  parse: (data: string): OutputTypeParameter => data as OutputTypeParameter,
-  serialize: (data: OutputTypeParameter): string => data,
+const outputDocumentTypeParser = {
+  parse: (data: string): OutputDocumentTypeParameter =>
+    data as OutputDocumentTypeParameter,
+  serialize: (data: OutputDocumentTypeParameter): string => data,
 };
 
 const team = (() => {
@@ -78,8 +79,8 @@ const team = (() => {
   const tools = route('/tools', {}, { tool });
   const workspace = route('/workspace', {}, { tools });
   const createOutput = route(
-    '/create-output/:outputType',
-    { outputType: outputTypeParser },
+    '/create-output/:outputDocumentType',
+    { outputDocumentType: outputDocumentTypeParser },
     {},
   );
 

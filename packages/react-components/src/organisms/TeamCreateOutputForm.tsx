@@ -4,7 +4,7 @@ import {
   DecisionOption,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
-  ResearchOutputType,
+  ResearchOutputDocumentType,
   TeamResponse,
 } from '@asap-hub/model';
 
@@ -69,14 +69,14 @@ type TeamCreateOutputFormProps = Pick<
   onSave?: (
     output: Partial<ResearchOutputPostRequest>,
   ) => Promise<Pick<ResearchOutputResponse, 'id'>>;
-  type: ResearchOutputType;
+  documentType: ResearchOutputDocumentType;
   team: TeamResponse;
 };
 
 const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   onSave = noop,
   tagSuggestions,
-  type,
+  documentType,
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
@@ -153,7 +153,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
       {({ isSaving, onSave: handleSave, onCancel: handleCancel }) => (
         <div css={contentStyles}>
           <TeamCreateOutputFormSharingCard
-            type={type}
+            documentType={documentType}
             isSaving={isSaving}
             description={description}
             onChangeDescription={setDescription}

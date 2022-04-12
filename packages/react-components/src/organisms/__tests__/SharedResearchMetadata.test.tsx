@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import SharedResearchMetadata from '../SharedResearchMetadata';
 
 const props: ComponentProps<typeof SharedResearchMetadata> = {
-  type: 'Article',
+  documentType: 'Article',
   subTypes: [],
 };
 
@@ -12,7 +12,7 @@ it('renders all (sub)types', () => {
   const { getAllByRole } = render(
     <SharedResearchMetadata
       {...props}
-      type="Article"
+      documentType="Article"
       subTypes={['Code', 'Assay']}
     />,
   );

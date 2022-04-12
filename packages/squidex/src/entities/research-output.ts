@@ -1,5 +1,5 @@
 import {
-  ResearchOutputType,
+  ResearchOutputDocumentType,
   ResearchOutputSubtype,
   ResearchOutputSharingStatus,
   DecisionOption,
@@ -11,7 +11,7 @@ import { GraphqlTeam } from './team';
 import { GraphqlUserAssoc } from './user';
 
 export interface ResearchOutput<TAuthorConnection = string> {
-  type: ResearchOutputType;
+  type: ResearchOutputDocumentType;
   title: string;
   description: string;
   link?: string;

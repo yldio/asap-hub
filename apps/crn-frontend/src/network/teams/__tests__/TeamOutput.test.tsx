@@ -8,14 +8,16 @@ import { renderHook } from '@testing-library/react-hooks';
 import { Suspense } from 'react';
 import { StaticRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { network, OutputTypeParameter } from '@asap-hub/routing';
-import { ResearchOutputType } from '@asap-hub/model';
+import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
+import { ResearchOutputDocumentType } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
 import { createTeamResearchOutput } from '../api';
 import { refreshTeamState } from '../state';
-import TeamOutput, { paramOutputTypeToResearchOutputType } from '../TeamOutput';
+import TeamOutput, {
+  paramOutputDocumentTypeToResearchOutputDocumentType,
+} from '../TeamOutput';
 
 jest.mock('../api');
 jest.mock('../../users/api');
@@ -29,7 +31,7 @@ const mockCreateTeamResearchOutput =
 
 it('Renders the research output', async () => {
   const teamId = 'team-id';
-  await renderPage({ teamId, outputType: 'bioinformatics' });
+  await renderPage({ teamId, outputDocumentType: 'bioinformatics' });
 
   expect(
     screen.getByRole('heading', { name: /Share bioinformatics/i }),
@@ -38,7 +40,7 @@ it('Renders the research output', async () => {
 
 it('switches research output type based on parameter', async () => {
   const teamId = 'team-id';
-  await renderPage({ teamId, outputType: 'article' });
+  await renderPage({ teamId, outputDocumentType: 'article' });
 
   expect(
     screen.getByRole('heading', { name: /Share an article/i }),
@@ -61,7 +63,7 @@ it('Shows NotFoundPage when feature flag is off', async () => {
 it('can submit a form when form data is valid', async () => {
   const teamId = 'team-id';
 
-  await renderPage({ teamId, outputType: 'lab-resource' });
+  await renderPage({ teamId, outputDocumentType: 'lab-resource' });
 
   fireEvent.change(screen.getByLabelText(/url/i), {
     target: { value: 'http://example.com' },
@@ -96,7 +98,7 @@ it('can submit a form when form data is valid', async () => {
   await waitFor(() => {
     expect(mockCreateTeamResearchOutput).toHaveBeenCalledWith(
       {
-        type: 'Lab Resource',
+        documentType: 'Lab Resource',
         addedDate: expect.anything(),
         tags: [],
         asapFunded: false,
@@ -116,27 +118,32 @@ it('can submit a form when form data is valid', async () => {
   });
 });
 
-it.each<{ param: OutputTypeParameter; outputType: ResearchOutputType }>([
+it.each<{
+  param: OutputDocumentTypeParameter;
+  outputType: ResearchOutputDocumentType;
+}>([
   { param: 'article', outputType: 'Article' },
   { param: 'bioinformatics', outputType: 'Bioinformatics' },
   { param: 'dataset', outputType: 'Dataset' },
   { param: 'lab-resource', outputType: 'Lab Resource' },
   { param: 'protocol', outputType: 'Protocol' },
-  { param: 'unknown' as OutputTypeParameter, outputType: 'Article' },
+  { param: 'unknown' as OutputDocumentTypeParameter, outputType: 'Article' },
 ])('maps from $param to $outputType', ({ param, outputType }) => {
-  expect(paramOutputTypeToResearchOutputType(param)).toEqual(outputType);
+  expect(paramOutputDocumentTypeToResearchOutputDocumentType(param)).toEqual(
+    outputType,
+  );
 });
 
 interface RenderPageOptions {
   teamId: string;
-  outputType?: OutputTypeParameter;
+  outputDocumentType?: OutputDocumentTypeParameter;
   featureFlagEnabled?: boolean;
 }
 
 const renderPage = async ({
   featureFlagEnabled = true,
   teamId,
-  outputType = 'bioinformatics',
+  outputDocumentType = 'bioinformatics',
 }: RenderPageOptions) => {
   const {
     result: {
@@ -170,7 +177,7 @@ const renderPage = async ({
                 network({})
                   .teams({})
                   .team({ teamId })
-                  .createOutput({ outputType }).$
+                  .createOutput({ outputDocumentType }).$
               }
             >
               <Route path={path}>

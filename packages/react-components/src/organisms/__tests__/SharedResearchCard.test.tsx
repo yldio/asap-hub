@@ -83,7 +83,7 @@ it('displays link component when link property present', () => {
   const { getByTitle } = render(
     <SharedResearchCard
       {...sharedResearchCardProps}
-      type={'Presentation'}
+      documentType={'Presentation'}
       link={'https://example.com'}
     />,
   );
@@ -97,7 +97,7 @@ it('displays link component when protocol link property is present', () => {
   const { getByTitle } = render(
     <SharedResearchCard
       {...sharedResearchCardProps}
-      type={'Protocol'}
+      documentType={'Protocol'}
       link={'https://example.com'}
     />,
   );
@@ -111,7 +111,7 @@ it('displays link component when presentation link property is present', () => {
   const { getByTitle } = render(
     <SharedResearchCard
       {...sharedResearchCardProps}
-      type={'Presentation'}
+      documentType={'Presentation'}
       link={'https://example.com'}
     />,
   );

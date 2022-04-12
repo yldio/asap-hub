@@ -27,7 +27,7 @@ export default {
 
 const props = (): ComponentProps<typeof SharedResearchOutput> => ({
   ...createResearchOutputResponse(),
-  type: 'Article',
+  documentType: 'Article',
   title: text(
     'Title',
     'Molecular actions of PD-associated pathological proteins using in vitro human pluripotent stem cell-derived brain',
@@ -94,7 +94,7 @@ export const Normal = () => (
 export const GrantDocument = () => (
   <SharedResearchOutput
     {...props()}
-    type="Grant Document"
+    documentType="Grant Document"
     description={text(
       'Description',
       `<h1>Example</h1>

@@ -271,5 +271,38 @@ describe('/research-outputs/ route', () => {
         },
       );
     });
+
+    test('Should return a validation error when the authors data is not valid', async () => {
+      const researchOutput = getCreateResearchOutput();
+      researchOutputControllerMock.create.mockRejectedValueOnce(
+        Boom.badRequest(),
+      );
+
+      const response = await supertest(app)
+        .post('/research-outputs')
+        .send({
+          ...researchOutput,
+          authors: [{ userId: '222', externalAuthorId: '333' }],
+        })
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        error: 'Bad Request',
+        message: 'Validation error',
+        statusCode: 400,
+        data: [
+          {
+            instancePath: '/authors/0',
+            schemaPath: '#/properties/authors/items/oneOf',
+            keyword: 'oneOf',
+            params: {
+              passingSchemas: [0, 1],
+            },
+            message: 'must match exactly one schema in oneOf',
+          },
+        ],
+      });
+    });
   });
 });

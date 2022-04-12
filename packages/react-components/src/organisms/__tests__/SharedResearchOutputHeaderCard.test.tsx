@@ -82,7 +82,7 @@ it('renders an output with type and subtypes', () => {
       {...createResearchOutputResponse()}
       teams={[]}
       authors={[]}
-      type="Protocol"
+      documentType="Protocol"
       subTypes={[]}
     />,
   );
@@ -95,7 +95,7 @@ it('renders an output with type and subtypes', () => {
       {...createResearchOutputResponse()}
       teams={[]}
       authors={[]}
-      type="Protocol"
+      documentType="Protocol"
       subTypes={['3D Printing', 'ASAP annual meeting']}
     />,
   );

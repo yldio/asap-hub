@@ -1,5 +1,5 @@
 import {
-  isResearchOutputType,
+  isResearchOutputDocumentType,
   isResearchOutputSubtype,
   researchOutputMapSubtype,
 } from '../src/research-output';
@@ -7,11 +7,11 @@ import {
 describe('Research Output Model', () => {
   describe('Type', () => {
     it('should recognize correct type', () => {
-      expect(isResearchOutputType('Dataset')).toEqual(true);
+      expect(isResearchOutputDocumentType('Dataset')).toEqual(true);
     });
 
     it('should not recognize incorrect type', () => {
-      expect(isResearchOutputType('NotADataset')).toEqual(false);
+      expect(isResearchOutputDocumentType('NotADataset')).toEqual(false);
     });
   });
 

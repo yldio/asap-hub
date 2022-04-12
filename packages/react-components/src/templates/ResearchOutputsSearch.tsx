@@ -1,4 +1,4 @@
-import { ResearchOutputType } from '@asap-hub/model';
+import { ResearchOutputDocumentType } from '@asap-hub/model';
 import { SearchAndFilter } from '../organisms';
 import { Option } from '../organisms/CheckboxGroup';
 
@@ -9,7 +9,7 @@ export type ResearchOutputsSearchProps = {
   filters: Set<string>;
 };
 
-export const researchOutputFilters: Option<ResearchOutputType>[] = [
+export const researchOutputFilters: Option<ResearchOutputDocumentType>[] = [
   { label: 'Grant Document', value: 'Grant Document' },
   { label: 'Presentation', value: 'Presentation' },
   { label: 'Protocol', value: 'Protocol' },

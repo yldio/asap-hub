@@ -4,7 +4,7 @@ import {
   DecisionOption,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
-  ResearchOutputType,
+  ResearchOutputDocumentType,
   TeamResponse,
   ResearchOutputIdentifierType,
 } from '@asap-hub/model';
@@ -70,7 +70,7 @@ type TeamCreateOutputFormProps = Pick<
     onSave?: (
       output: Partial<ResearchOutputPostRequest>,
     ) => Promise<Pick<ResearchOutputResponse, 'id'> | void>;
-    type: ResearchOutputType;
+    documentType: ResearchOutputDocumentType;
     team: TeamResponse;
   };
 
@@ -105,7 +105,7 @@ export function createIdentifierField(
 const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   onSave = noop,
   tagSuggestions,
-  type,
+  documentType,
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
@@ -205,7 +205,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
       {({ isSaving, onSave: handleSave, onCancel: handleCancel }) => (
         <div css={contentStyles}>
           <TeamCreateOutputFormSharingCard
-            type={type}
+            documentType={documentType}
             serverValidationErrors={serverValidationErrors}
             clearServerValidationError={clearServerValidationError}
             isSaving={isSaving}
@@ -227,7 +227,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangePublishDate={(date) => setPublishDate(new Date(date))}
           />
           <TeamCreateOutputExtraInformationCard
-            type={type}
+            documentType={documentType}
             isSaving={isSaving}
             tagSuggestions={tagSuggestions}
             tags={tags}

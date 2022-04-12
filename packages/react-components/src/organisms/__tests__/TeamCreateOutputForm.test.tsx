@@ -13,7 +13,7 @@ import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 
 const props: ComponentProps<typeof TeamCreateOutputForm> = {
   tagSuggestions: [],
-  type: 'Article',
+  documentType: 'Article',
   team: createTeamResponse(),
 };
 
@@ -98,7 +98,7 @@ it('can submit a form when form data is valid', async () => {
       <TeamCreateOutputForm
         {...props}
         team={{ ...createTeamResponse(), id: 'TEAMID' }}
-        type="Lab Resource"
+        documentType="Lab Resource"
         onSave={saveFn}
         getLabSuggestions={getLabSuggestions}
         getAuthorSuggestions={getAuthorSuggestions}

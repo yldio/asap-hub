@@ -9,7 +9,7 @@ const props: ComponentProps<typeof TeamCreateOutputExtraInformationCard> = {
   tagSuggestions: [],
   tags: [],
 
-  type: 'Article',
+  documentType: 'Article',
   identifierRequired: false,
 };
 

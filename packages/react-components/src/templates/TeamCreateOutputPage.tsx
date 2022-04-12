@@ -14,13 +14,13 @@ const mainStyles = css({
 });
 
 const TeamCreateOutputPage: React.FC<TeamCreateOutputPageProps> = ({
-  type,
+  documentType,
   ...formProps
 }) => (
   <>
-    <TeamCreateOutputHeader type={type} />
+    <TeamCreateOutputHeader documentType={documentType} />
     <main css={mainStyles}>
-      <TeamCreateOutputForm {...formProps} type={type} />
+      <TeamCreateOutputForm {...formProps} documentType={documentType} />
     </main>
   </>
 );

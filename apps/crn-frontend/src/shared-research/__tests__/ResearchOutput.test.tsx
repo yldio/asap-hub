@@ -25,7 +25,7 @@ beforeEach(() => {
   mockGetResearchOutput.mockClear();
   mockGetResearchOutput.mockResolvedValue({
     ...createResearchOutputResponse(),
-    type: 'Article',
+    documentType: 'Article',
     id,
   });
 });
@@ -73,7 +73,7 @@ describe('a grant document research output', () => {
   it('renders with its teams', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
-      type: 'Grant Document',
+      documentType: 'Grant Document',
       teams: [
         {
           displayName: 'Grant Document Team',
@@ -92,7 +92,7 @@ describe('a grant document research output', () => {
   it('links to a teams', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
-      type: 'Grant Document',
+      documentType: 'Grant Document',
       teams: [
         {
           id: '0d074988-60c3-41e4-9f3a-e40cc65e5f4a',
@@ -113,7 +113,7 @@ describe('a not-grant-document research output', () => {
   it('renders with tags', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
-      type: 'Protocol',
+      documentType: 'Protocol',
       tags: ['Example Tag'],
       title: 'Not-Grant-Document title!',
     });

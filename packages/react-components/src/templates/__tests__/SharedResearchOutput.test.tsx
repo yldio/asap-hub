@@ -13,7 +13,7 @@ describe('Grant Documents', () => {
     const { getByText } = render(
       <SharedResearchOutput
         {...props}
-        type="Grant Document"
+        documentType="Grant Document"
         title="title"
         description="content"
       />,
@@ -27,7 +27,7 @@ describe('Grant Documents', () => {
     const { queryByText, getByText, queryByRole } = render(
       <SharedResearchOutput
         {...props}
-        type="Grant Document"
+        documentType="Grant Document"
         tags={['tag1']}
         description="abc 123"
       />,
@@ -45,7 +45,7 @@ describe('Grant Documents', () => {
     const { queryByText } = render(
       <SharedResearchOutput
         {...props}
-        type="Grant Document"
+        documentType="Grant Document"
         usedInPublication={true}
       />,
     );
@@ -56,13 +56,17 @@ describe('Grant Documents', () => {
 describe('Not Grant Documents', () => {
   it('displays access instructions when data provided', () => {
     const { queryByText, getByText, rerender } = render(
-      <SharedResearchOutput {...props} type="Article" accessInstructions="" />,
+      <SharedResearchOutput
+        {...props}
+        documentType="Article"
+        accessInstructions=""
+      />,
     );
     expect(queryByText(/access instructions/i)).not.toBeInTheDocument();
     rerender(
       <SharedResearchOutput
         {...props}
-        type="Article"
+        documentType="Article"
         accessInstructions="Some Data"
       />,
     );
@@ -74,7 +78,7 @@ describe('Not Grant Documents', () => {
       const { queryByText, queryByRole } = render(
         <SharedResearchOutput
           {...props}
-          type="Article"
+          documentType="Article"
           tags={[]}
           description=""
         />,
@@ -90,7 +94,7 @@ describe('Not Grant Documents', () => {
       const { queryByText, getByText, queryByRole } = render(
         <SharedResearchOutput
           {...props}
-          type="Article"
+          documentType="Article"
           tags={[]}
           description="text"
         />,
@@ -107,7 +111,7 @@ describe('Not Grant Documents', () => {
       const { queryByText, getByText, queryByRole } = render(
         <SharedResearchOutput
           {...props}
-          type="Article"
+          documentType="Article"
           tags={['tag1']}
           description=""
         />,
@@ -123,7 +127,7 @@ describe('Not Grant Documents', () => {
       const { queryByText, getByText, queryByRole } = render(
         <SharedResearchOutput
           {...props}
-          type="Article"
+          documentType="Article"
           tags={['tag1']}
           description="text"
         />,

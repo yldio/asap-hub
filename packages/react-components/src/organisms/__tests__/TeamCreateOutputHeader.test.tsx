@@ -16,34 +16,34 @@ beforeEach(() => {
 
 it.each([
   {
-    type: 'Article',
+    documentType: 'Article',
     headingName: /Share an article/i,
     text: /published article/,
   },
   {
-    type: 'Protocol',
+    documentType: 'Protocol',
     headingName: /Share a protocol/i,
     text: /Add your protocol/,
   },
   {
-    type: 'Dataset',
+    documentType: 'Dataset',
     headingName: /Share a dataset/i,
     text: /Add your dataset/,
   },
   {
-    type: 'Bioinformatics',
+    documentType: 'Bioinformatics',
     headingName: /Share bioinformatics/i,
     text: /Add bioinformatics/,
   },
   {
-    type: 'Lab Resource',
+    documentType: 'Lab Resource',
     headingName: /Share a lab resource/i,
     text: /Add your lab resource/,
   },
 ] as const)(
-  'renders the $type research output',
-  ({ type, headingName, text }) => {
-    render(<TeamCreateOutputHeader type={type} />);
+  'renders the $documentType research output',
+  ({ documentType, headingName, text }) => {
+    render(<TeamCreateOutputHeader documentType={documentType} />);
     expect(
       screen.getByRole('heading', { name: headingName }),
     ).toBeInTheDocument();
@@ -52,7 +52,7 @@ it.each([
 );
 
 it('falls back to a generic description otherwise', () => {
-  render(<TeamCreateOutputHeader type="Presentation" />);
+  render(<TeamCreateOutputHeader documentType="Presentation" />);
   expect(
     screen.getByRole('heading', { name: /Share a resource/i }),
   ).toBeInTheDocument();

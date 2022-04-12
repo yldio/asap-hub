@@ -1,4 +1,7 @@
-import { ResearchOutputResponse, ResearchOutputType } from '@asap-hub/model';
+import {
+  ResearchOutputResponse,
+  ResearchOutputDocumentType,
+} from '@asap-hub/model';
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
 
 import { createSentryHeaders, GetListOptions } from '../api-util';
@@ -27,8 +30,8 @@ export const getResearchOutput = async (
   return resp.json();
 };
 
-export const researchOutputTypeFilters: Record<
-  ResearchOutputType,
+export const researchOutputDocumentTypeFilters: Record<
+  ResearchOutputDocumentType,
   { filter: string }
 > = {
   'Grant Document': { filter: 'type:"Grant Document"' },
@@ -41,7 +44,7 @@ export const researchOutputTypeFilters: Record<
 };
 
 export const getTypeFilters = (filters: Set<string>): string =>
-  Object.entries(researchOutputTypeFilters)
+  Object.entries(researchOutputDocumentTypeFilters)
     .reduce<string[]>(
       (acc, [key, { filter }]) => (filters.has(key) ? [filter, ...acc] : acc),
       [],

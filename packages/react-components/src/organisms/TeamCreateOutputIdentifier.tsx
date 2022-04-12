@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import {
-  ResearchOutputType,
+  ResearchOutputDocumentType,
   ResearchOutputIdentifierType,
   researchOutputToIdentifierType,
 } from '@asap-hub/model';
@@ -8,13 +8,14 @@ import { LabeledDropdown, LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 
 const getIdentifiers = (
-  researchOutputType: ResearchOutputType,
+  researchOutputDocumentType: ResearchOutputDocumentType,
   required: boolean,
 ): Array<{
   value: ResearchOutputIdentifierType;
   label: ResearchOutputIdentifierType;
 }> => {
-  let identifiers = researchOutputToIdentifierType[researchOutputType] ?? [];
+  let identifiers =
+    researchOutputToIdentifierType[researchOutputDocumentType] ?? [];
 
   if (required) {
     identifiers = identifiers.filter(
@@ -67,7 +68,7 @@ export interface TeamCreateOutputIdentifierProps {
   setIdentifier?: (value: string) => void;
   identifierType?: ResearchOutputIdentifierType;
   setIdentifierType?: (value: ResearchOutputIdentifierType) => void;
-  type: ResearchOutputType;
+  documentType: ResearchOutputDocumentType;
   required: boolean;
 }
 
@@ -77,13 +78,13 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
     setIdentifierType = noop,
     identifier = '',
     setIdentifier = noop,
-    type,
+    documentType,
     required,
   }) => {
     const data = useMemo(() => identifierMap[identifierType], [identifierType]);
     const identifiers = useMemo(
-      () => getIdentifiers(type, required),
-      [type, required],
+      () => getIdentifiers(documentType, required),
+      [documentType, required],
     );
 
     useEffect(() => {

@@ -14,7 +14,7 @@ export const Normal = () => (
         label: suggestion,
         value: suggestion,
       }))}
-      type="Article"
+      documentType="Article"
       getLabSuggestions={() =>
         new Promise((resolve) => {
           setTimeout(() => {

@@ -107,7 +107,7 @@ describe('ResearchOutputs controller', () => {
       const result = await researchOutputs.fetchById(researchOutputId);
 
       expect(result.title).toEqual('');
-      expect(result.type).toEqual('Grant Document');
+      expect(result.documentType).toEqual('Grant Document');
     });
 
     test('Should default sharingStatus to Network Only when missing', async () => {
@@ -494,7 +494,7 @@ describe('ResearchOutputs controller', () => {
 
       const result = await researchOutputs.fetch({ take: 10, skip: 0 });
 
-      expect(result.items[0]!.type).toEqual('Grant Document');
+      expect(result.items[0]!.documentType).toEqual('Grant Document');
     });
 
     describe('Parameters', () => {
@@ -712,6 +712,7 @@ describe('ResearchOutputs controller', () => {
         teams: __,
         subTypes: ___,
         identifierType: ____,
+        documentType: _____,
         ...squidexResearchOutput
       } = parseToSquidex(researchOutputRequest);
 
@@ -721,6 +722,7 @@ describe('ResearchOutputs controller', () => {
           ...(researchOutputRequest.subTypes && {
             subtype: { iv: researchOutputRequest.subTypes[0] },
           }),
+          type: { iv: researchOutputRequest.documentType },
           asapFunded: { iv: 'Not Sure' },
           usedInAPublication: { iv: 'Not Sure' },
           labs: { iv: ['lab1'] },
@@ -754,7 +756,7 @@ describe('ResearchOutputs controller', () => {
       expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
-          filter: `(data/type/iv eq '${researchOutputRequest.type}' and data/title/iv eq '${researchOutputRequest.title}')`,
+          filter: `(data/type/iv eq '${researchOutputRequest.documentType}' and data/title/iv eq '${researchOutputRequest.title}')`,
         }),
         {
           includeDrafts: true,
@@ -839,6 +841,7 @@ describe('ResearchOutputs controller', () => {
         usedInPublication: _,
         teams: __,
         subTypes: ___,
+        documentType: ____,
         ...squidexResearchOutput
       } = parseToSquidex(researchOutputRequest);
 
@@ -856,6 +859,7 @@ describe('ResearchOutputs controller', () => {
           ...(researchOutputRequest.subTypes && {
             subtype: { iv: researchOutputRequest.subTypes[0] },
           }),
+          type: { iv: researchOutputRequest.documentType },
           asapFunded: { iv: 'Not Sure' },
           usedInAPublication: { iv: 'Not Sure' },
           authors: { iv: ['user-1', 'author-1', 'author-2'] },

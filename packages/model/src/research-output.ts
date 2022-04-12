@@ -4,7 +4,7 @@ import { UserResponse } from './user';
 import { ExternalAuthorInput, ExternalAuthorResponse } from './external-author';
 import { LabResponse } from './lab';
 
-export const researchOutputTypes = [
+export const researchOutputDocumentTypes = [
   'Grant Document',
   'Presentation',
   'Dataset',
@@ -14,7 +14,8 @@ export const researchOutputTypes = [
   'Article',
 ] as const;
 
-export type ResearchOutputType = typeof researchOutputTypes[number];
+export type ResearchOutputDocumentType =
+  typeof researchOutputDocumentTypes[number];
 
 export const researchOutputSubtypes = [
   '3D Printing',
@@ -56,8 +57,8 @@ export const researchOutputSubtypes = [
 
 export type ResearchOutputSubtype = typeof researchOutputSubtypes[number];
 
-export const researchOutputTypeToSubtype: Record<
-  ResearchOutputType,
+export const researchOutputDocumentTypeToSubtype: Record<
+  ResearchOutputDocumentType,
   Set<ResearchOutputSubtype>
 > = {
   Article: new Set<ResearchOutputSubtype>(['Preprint', 'Published']),
@@ -107,10 +108,10 @@ export const researchOutputTypeToSubtype: Record<
   'Grant Document': new Set<ResearchOutputSubtype>(['Proposal', 'Report']),
 };
 
-export const isResearchOutputType = (
+export const isResearchOutputDocumentType = (
   type: string,
-): type is ResearchOutputType =>
-  (researchOutputTypes as ReadonlyArray<string>).includes(type);
+): type is ResearchOutputDocumentType =>
+  (researchOutputDocumentTypes as ReadonlyArray<string>).includes(type);
 
 export const isResearchOutputSubtype = (
   subtype: string,
@@ -136,7 +137,7 @@ export enum ResearchOutputIdentifierType {
 }
 
 export const researchOutputToIdentifierType: Record<
-  ResearchOutputType,
+  ResearchOutputDocumentType,
   ResearchOutputIdentifierType[]
 > = {
   Article: [
@@ -173,7 +174,7 @@ export type ResearchOutputSharingStatus = typeof sharingStatuses[number];
 
 export type ResearchOutputResponse = {
   readonly id: string;
-  readonly type: ResearchOutputType;
+  readonly documentType: ResearchOutputDocumentType;
   readonly subTypes: ResearchOutputSubtype[];
   readonly title: string;
   readonly description: string;
@@ -203,7 +204,7 @@ export type ResearchOutputResponse = {
 
 export type ResearchOutputPostRequest = {
   description: string;
-  type: ResearchOutputType;
+  documentType: ResearchOutputDocumentType;
   subTypes: ResearchOutputSubtype[];
   title: string;
   tags: string[];

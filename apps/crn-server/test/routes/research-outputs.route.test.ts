@@ -122,7 +122,7 @@ describe('/research-outputs/ route', () => {
   describe('POST /research-outputs/', () => {
     const getCreateResearchOutput = (): ResearchOutputPostRequest => {
       const {
-        type,
+        documentType,
         title,
         asapFunded,
         sharingStatus,
@@ -137,7 +137,7 @@ describe('/research-outputs/ route', () => {
         teams,
       } = getResearchOutputResponse();
       return {
-        type,
+        documentType,
         link: 'http://a.link',
         title,
         asapFunded,
@@ -238,7 +238,7 @@ describe('/research-outputs/ route', () => {
       const validLabCatalogNumber = { labCatalogNumber: 'Any content' };
       const noIdentifier = {};
       test.each`
-        type                | identifier               | status
+        documentType        | identifier               | status
         ${'Article'}        | ${validDOI}              | ${201}
         ${'Article'}        | ${validRRID}             | ${400}
         ${'Article'}        | ${validAccession}        | ${400}
@@ -276,13 +276,13 @@ describe('/research-outputs/ route', () => {
         ${'Presentation'}   | ${noIdentifier}          | ${201}
       `(
         'on type $type returns status $status for $identifier',
-        async ({ type, identifier, status }) => {
+        async ({ documentType, identifier, status }) => {
           const researchOutput = getCreateResearchOutput();
           const response = await supertest(app)
             .post('/research-outputs/')
             .send({
               ...researchOutput,
-              type,
+              documentType,
               ...identifier,
             });
           expect(response.status).toBe(status);
@@ -308,7 +308,7 @@ describe('/research-outputs/ route', () => {
           .post('/research-outputs/')
           .send({
             ...researchOutput,
-            type: 'Article',
+            documentType: 'Article',
             ...validDOI,
           });
         expect(response.status).toBe(201);
@@ -320,7 +320,7 @@ describe('/research-outputs/ route', () => {
           .post('/research-outputs/')
           .send({
             ...researchOutput,
-            type: 'Article',
+            documentType: 'Article',
             doi: 'doi:1.222',
           });
         expect(response.status).toBe(400);
@@ -332,7 +332,7 @@ describe('/research-outputs/ route', () => {
           .post('/research-outputs/')
           .send({
             ...researchOutput,
-            type: 'Dataset',
+            documentType: 'Dataset',
             ...validAccession,
           });
         expect(response.status).toBe(201);
@@ -344,7 +344,7 @@ describe('/research-outputs/ route', () => {
           .post('/research-outputs/')
           .send({
             ...researchOutput,
-            type: 'Dataset',
+            documentType: 'Dataset',
             accession: 'NP_HELLO_WORLD',
           });
         expect(response.status).toBe(400);
@@ -356,7 +356,7 @@ describe('/research-outputs/ route', () => {
           .post('/research-outputs/')
           .send({
             ...researchOutput,
-            type: 'Bioinformatics',
+            documentType: 'Bioinformatics',
             ...validRRID,
           });
         expect(response.status).toBe(201);
@@ -368,14 +368,14 @@ describe('/research-outputs/ route', () => {
           .post('/research-outputs/')
           .send({
             ...researchOutput,
-            type: 'Bioinformatics',
+            documentType: 'Bioinformatics',
             rrid: 'HelloWorld',
           });
         expect(response.status).toBe(400);
       });
 
       test.each([
-        'type',
+        'documentType',
         'description',
         'tags',
         'title',

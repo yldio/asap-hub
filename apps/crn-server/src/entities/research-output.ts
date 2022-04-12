@@ -1,5 +1,5 @@
 import {
-  isResearchOutputType,
+  isResearchOutputDocumentType,
   DecisionOption,
   ResearchOutputResponse,
   ResearchOutputSharingStatus,
@@ -85,8 +85,8 @@ export const parseGraphQLResearchOutput = (
     id: output.id,
     created: parseDate(output.created).toISOString(),
     link: data.link || undefined,
-    type:
-      data.type && isResearchOutputType(data.type)
+    documentType:
+      data.type && isResearchOutputDocumentType(data.type)
         ? data.type
         : 'Grant Document',
     subTypes,

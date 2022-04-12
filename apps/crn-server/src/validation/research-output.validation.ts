@@ -63,10 +63,24 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         items: {
           type: 'object',
           properties: {
-            userId: { type: 'string', nullable: true },
-            externalAuthorId: { type: 'string', nullable: true },
-            externalAuthorName: { type: 'string', nullable: true },
+            userId: { type: 'string' },
+            externalAuthorId: { type: 'string' },
+            externalAuthorName: { type: 'string' },
           },
+          oneOf: [
+            {
+              type: 'object',
+              required: ['userId'],
+            },
+            {
+              type: 'object',
+              required: ['externalAuthorId'],
+            },
+            {
+              type: 'object',
+              required: ['externalAuthorName'],
+            },
+          ],
         },
         nullable: true,
       },
@@ -89,6 +103,6 @@ export const validateResearchOutputPostRequestParameters = validateInput(
   researchOutputPostRequestValidationSchema,
   {
     skipNull: true,
-    coerce: false,
+    coerce: true,
   },
 );

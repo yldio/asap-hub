@@ -1,5 +1,5 @@
 import {
-  ExternalAuthorPostRequest,
+  ExternalAuthorInput,
   ListResearchOutputResponse,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
@@ -227,23 +227,14 @@ export default class ResearchOutputs implements ResearchOutputController {
     });
   }
 
-  private async associateResearchOutputToAuthors({
-    userId,
-    externalAuthorId,
-    externalAuthorName,
-  }: ExternalAuthorPostRequest) {
-    if (userId) return userId;
+  private async associateResearchOutputToAuthors(data: ExternalAuthorInput) {
+    if ('userId' in data) return data.userId;
+    if ('externalAuthorId' in data) return data.externalAuthorId;
 
-    if (externalAuthorId) return externalAuthorId;
-
-    if (externalAuthorName) {
-      const { id } = await this.externalAuthorSquidexRestClient.create({
-        name: { iv: externalAuthorName },
-      });
-      return id;
-    }
-
-    throw Boom.badData('Validation error');
+    const { id } = await this.externalAuthorSquidexRestClient.create({
+      name: { iv: data.externalAuthorName },
+    });
+    return id;
   }
 }
 

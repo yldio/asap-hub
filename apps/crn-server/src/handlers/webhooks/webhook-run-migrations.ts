@@ -44,7 +44,7 @@ export const runFactory =
     const migrations = await getMigrationsFromPaths(unexecutedMigrationPaths);
 
     const executedMigrations: string[] = [];
-    let executionError: Error | null = null;
+    let executionError: unknown | null = null;
     for (const migration of migrations) {
       logger.debug(`Executing migration '${migration.getPath()}`);
       try {

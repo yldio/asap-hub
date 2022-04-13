@@ -3,6 +3,7 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
+import { isBoom } from '@hapi/boom';
 import ResearchOutputs, {
   ResearchOutputController,
 } from '../../controllers/research-outputs';
@@ -33,7 +34,7 @@ export const indexResearchOutputHandler =
 
       logger.debug(`Saved research-output ${researchOutput.id}`);
     } catch (e) {
-      if (e?.output?.statusCode === 404) {
+      if (isBoom(e) && e.output.statusCode === 404) {
         await algoliaClient.remove(event.detail.payload.id);
         return;
       }

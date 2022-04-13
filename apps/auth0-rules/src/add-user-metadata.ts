@@ -65,7 +65,10 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
 
     return callback(null, auth0User, context);
   } catch (err) {
-    return callback(new Error(err));
+    if (err instanceof Error) {
+      return callback(err);
+    }
+    return callback(new Error('Unknown Error'));
   }
 };
 

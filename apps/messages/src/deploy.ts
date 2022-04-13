@@ -1,4 +1,4 @@
-import aws from 'aws-sdk';
+import aws, { AWSError } from 'aws-sdk';
 import { promises as fs } from 'fs';
 import path from 'path';
 
@@ -6,6 +6,9 @@ import config from './webpack.config';
 
 const region = process.argv[2] || 'us-east-1';
 const ses = new aws.SES({ apiVersion: '2010-12-01', region });
+
+const isAwsError = (error: unknown): error is AWSError =>
+  !!(error as AWSError)?.code;
 
 const syncTemplate = async (src: string): Promise<void> => {
   const template = require(src);
@@ -25,7 +28,7 @@ const syncTemplate = async (src: string): Promise<void> => {
       .promise();
     console.log(`Template "${templateName}" updated.`);
   } catch (err) {
-    if (err.code === 'TemplateDoesNotExist') {
+    if (isAwsError(err) && err.code === 'TemplateDoesNotExist') {
       await ses
         .createTemplate({
           Template: template,

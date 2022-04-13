@@ -3,6 +3,7 @@ import { ResearchOutput, SquidexGraphql } from '@asap-hub/squidex';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { createResearchOutput } from '../helpers/research-outputs';
 import ResearchOutputs from '../../src/controllers/research-outputs';
+import { isBoom } from '@hapi/boom';
 
 const chance = new Chance();
 const researchOutputs = new ResearchOutputs(new SquidexGraphql());
@@ -52,9 +53,13 @@ describe('Research Outputs', () => {
     try {
       await createResearchOutput(researchOutput);
     } catch (e) {
-      expect(e.data.message).toBe('Validation error');
-      expect(e.data.statusCode).toBe(400);
-      expect(e.data.details[0]).toBe('doi.iv: Must follow the pattern.');
+      if (isBoom(e)) {
+        expect(e.data.message).toBe('Validation error');
+        expect(e.data.statusCode).toBe(400);
+        expect(e.data.details[0]).toBe('doi.iv: Must follow the pattern.');
+      } else {
+        fail('not boom');
+      }
     }
   });
 });

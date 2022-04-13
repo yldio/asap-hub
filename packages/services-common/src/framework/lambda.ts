@@ -109,10 +109,17 @@ export const http =
     try {
       body = event.body && Bourne.parse(event.body);
     } catch (err) {
-      const boom = Boom.badRequest(err.message);
+      if (err instanceof Error) {
+        const boom = Boom.badRequest(err.message);
+        return response({
+          statusCode: boom.output.statusCode,
+          body: JSON.stringify(boom.output.payload),
+        });
+      }
+      debug('Unexpected error', err);
       return response({
-        statusCode: boom.output.statusCode,
-        body: JSON.stringify(boom.output.payload),
+        statusCode: 500,
+        body: 'Unexpected Error',
       });
     }
 

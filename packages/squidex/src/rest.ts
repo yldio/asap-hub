@@ -1,5 +1,5 @@
 import Boom from '@hapi/boom';
-import Got from 'got';
+import Got, { HTTPError } from 'got';
 import createClient, { GetAccessToken } from './auth';
 
 export interface Results<T> {
@@ -83,18 +83,21 @@ export class Squidex<
         .json();
       return res as Results<T>;
     } catch (err) {
-      if (
-        err.response?.statusCode === 400 &&
-        err.response?.body.includes('invalid_client')
-      ) {
-        throw Boom.unauthorized();
-      }
+      if (err instanceof HTTPError) {
+        if (
+          err.response.statusCode === 400 &&
+          typeof err.response.body === 'string' &&
+          err.response.body.includes('invalid_client')
+        ) {
+          throw Boom.unauthorized();
+        }
 
-      if (err.response?.statusCode === 404) {
-        return {
-          total: 0,
-          items: [],
-        };
+        if (err.response.statusCode === 404) {
+          return {
+            total: 0,
+            items: [],
+          };
+        }
       }
 
       throw Boom.badImplementation('squidex', err);
@@ -106,15 +109,18 @@ export class Squidex<
       const res = await this.client.get(`${this.collection}/${id}`).json();
       return res as T;
     } catch (err) {
-      if (
-        err.response?.statusCode === 400 &&
-        err.response?.body.includes('invalid_client')
-      ) {
-        throw Boom.unauthorized();
-      }
+      if (err instanceof HTTPError) {
+        if (
+          err.response.statusCode === 400 &&
+          typeof err.response.body === 'string' &&
+          err.response.body.includes('invalid_client')
+        ) {
+          throw Boom.unauthorized();
+        }
 
-      if (err.response?.statusCode === 404) {
-        throw Boom.notFound();
+        if (err.response.statusCode === 404) {
+          throw Boom.notFound();
+        }
       }
 
       throw Boom.badImplementation('squidex', err);
@@ -146,28 +152,34 @@ export class Squidex<
         .json();
       return res as T;
     } catch (err) {
-      if (err.response?.statusCode === 409) {
-        throw Boom.conflict();
-      }
-
-      if (
-        err.response?.statusCode === 400 &&
-        err.response?.body.includes('invalid_client')
-      ) {
-        throw Boom.unauthorized();
-      }
-
-      if (err.response?.statusCode === 400) {
-        let body: unknown;
-        try {
-          body = JSON.parse(err.response.body);
-        } catch {
-          body = err.response.body;
+      if (err instanceof HTTPError) {
+        if (err.response.statusCode === 409) {
+          throw Boom.conflict();
         }
 
-        throw Boom.badRequest(err.message, body);
-      }
+        if (
+          err.response.statusCode === 400 &&
+          typeof err.response.body === 'string' &&
+          err.response.body.includes('invalid_client')
+        ) {
+          throw Boom.unauthorized();
+        }
 
+        if (err.response.statusCode === 400) {
+          let body: unknown;
+          try {
+            if (typeof err.response.body === 'string') {
+              body = JSON.parse(err.response.body);
+            } else {
+              body = err.response.body;
+            }
+          } catch {
+            body = err.response.body;
+          }
+
+          throw Boom.badRequest(err.message, body);
+        }
+      }
       throw Boom.badImplementation('squidex', err);
     }
   }
@@ -184,26 +196,28 @@ export class Squidex<
         .json();
       return res as T;
     } catch (err) {
-      if (err.response?.statusCode === 409) {
-        throw Boom.conflict();
-      }
-
-      if (
-        err.response?.statusCode === 400 &&
-        err.response?.body.includes('invalid_client')
-      ) {
-        throw Boom.unauthorized();
-      }
-
-      if (err.response?.statusCode === 400) {
-        let body: unknown;
-        try {
-          body = JSON.parse(err.response.body);
-        } catch {
-          body = err.response.body;
+      if (err instanceof HTTPError) {
+        if (err.response.statusCode === 409) {
+          throw Boom.conflict();
         }
 
-        throw Boom.badRequest(err, body);
+        if (
+          err.response.statusCode === 400 &&
+          typeof err.response.body === 'string' &&
+          err.response.body.includes('invalid_client')
+        ) {
+          throw Boom.unauthorized();
+        }
+
+        if (err.response?.statusCode === 400) {
+          let body: unknown;
+          try {
+            body = JSON.parse(String(err.response.body));
+          } catch {
+            body = err.response.body;
+          }
+          throw Boom.badRequest(err.message, body);
+        }
       }
 
       throw Boom.badImplementation('squidex', err);
@@ -219,18 +233,21 @@ export class Squidex<
         .json();
       return res as T;
     } catch (err) {
-      if (
-        err.response?.statusCode === 400 &&
-        err.response?.body.includes('invalid_client')
-      ) {
-        throw Boom.unauthorized();
-      }
+      if (err instanceof HTTPError) {
+        if (
+          err.response.statusCode === 400 &&
+          typeof err.response.body === 'string' &&
+          err.response.body.includes('invalid_client')
+        ) {
+          throw Boom.unauthorized();
+        }
 
-      if (err.response?.statusCode === 400) {
-        throw Boom.badImplementation('Bad Request', err);
-      }
-      if (err.response?.statusCode === 404) {
-        throw Boom.notFound();
+        if (err.response.statusCode === 400) {
+          throw Boom.badImplementation('Bad Request', err);
+        }
+        if (err.response.statusCode === 404) {
+          throw Boom.notFound();
+        }
       }
 
       throw Boom.badImplementation('squidex', err);
@@ -246,20 +263,22 @@ export class Squidex<
         .json();
       return res as T;
     } catch (err) {
-      if (
-        err.response?.statusCode === 400 &&
-        err.response?.body.includes('invalid_client')
-      ) {
-        throw Boom.unauthorized();
-      }
+      if (err instanceof HTTPError) {
+        if (
+          err.response.statusCode === 400 &&
+          typeof err.response.body === 'string' &&
+          err.response.body.includes('invalid_client')
+        ) {
+          throw Boom.unauthorized();
+        }
 
-      if (err.response?.statusCode === 400) {
-        throw Boom.badImplementation('Bad Request', err);
+        if (err.response?.statusCode === 400) {
+          throw Boom.badImplementation('Bad Request', err);
+        }
+        if (err.response?.statusCode === 404) {
+          throw Boom.notFound();
+        }
       }
-      if (err.response?.statusCode === 404) {
-        throw Boom.notFound();
-      }
-
       throw Boom.badImplementation('squidex', err);
     }
   }
@@ -268,11 +287,14 @@ export class Squidex<
     try {
       await this.client.delete(`${this.collection}/${id}`).json();
     } catch (err) {
-      if (
-        err.response?.statusCode === 400 &&
-        err.response?.body.includes('invalid_client')
-      ) {
-        throw Boom.unauthorized();
+      if (err instanceof HTTPError) {
+        if (
+          err.response.statusCode === 400 &&
+          typeof err.response.body === 'string' &&
+          err.response.body.includes('invalid_client')
+        ) {
+          throw Boom.unauthorized();
+        }
       }
 
       throw Boom.badImplementation('squidex', err);

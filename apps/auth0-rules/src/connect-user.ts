@@ -29,7 +29,10 @@ const connectUser: Rule<{ invitation_code: string }> = async (
       .json();
     return callback(null, user, context);
   } catch (err) {
-    return callback(new Error(err));
+    if (err instanceof Error) {
+      return callback(err);
+    }
+    return callback(new Error('Unexpected Error'));
   }
 };
 

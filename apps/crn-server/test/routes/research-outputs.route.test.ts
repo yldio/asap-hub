@@ -149,7 +149,7 @@ describe('/research-outputs/ route', () => {
         tags,
         subTypes,
         labs: labs.map(({ id }) => id),
-        authors: authors.map(({ id }) => id),
+        authors: authors.map(({ id }) => ({ userId: id })),
         teams: teams.map(({ id }) => id),
       };
     };
@@ -412,6 +412,120 @@ describe('/research-outputs/ route', () => {
           });
         },
       );
+    });
+
+    describe('Authors validation', () => {
+      test('Should return a validation error when required field is missing', async () => {
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send({
+            ...getCreateResearchOutput(),
+            authors: [{ name: 'random-value' }],
+          })
+          .set('Accept', 'application/json');
+
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual({
+          error: 'Bad Request',
+          message: 'Validation error',
+          statusCode: 400,
+          data: [
+            ...['userId', 'externalAuthorId', 'externalAuthorName'].map(
+              (field, idx) => ({
+                instancePath: '/authors/0',
+                schemaPath: `#/properties/authors/items/oneOf/${idx}/required`,
+                keyword: 'required',
+                params: {
+                  missingProperty: field,
+                },
+                message: `must have required property '${field}'`,
+              }),
+            ),
+            {
+              instancePath: '/authors/0',
+              keyword: 'oneOf',
+              message: 'must match exactly one schema in oneOf',
+              params: {
+                passingSchemas: null,
+              },
+              schemaPath: '#/properties/authors/items/oneOf',
+            },
+          ],
+        });
+      });
+      test('Should return a validation error when passing invalid schema (userId, externalAuthorId, externalAuthorName)', async () => {
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send({
+            ...getCreateResearchOutput(),
+            authors: [
+              {
+                userId: 'userId-1',
+                externalAuthorId: 'external-id-1',
+                externalAuthorName: 'author-name-1',
+              },
+            ],
+          })
+          .set('Accept', 'application/json');
+
+        expect(response.status).toBe(400);
+        expect(response.body.message).toEqual('Validation error');
+        expect(response.body.data).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              message: 'must match exactly one schema in oneOf',
+            }),
+          ]),
+        );
+      });
+      test('Should return a validation error when passing invalid schema (userId, externalAuthorId)', async () => {
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send({
+            ...getCreateResearchOutput(),
+            authors: [
+              {
+                userId: 'userId-1',
+                externalAuthorId: 'external-id-1',
+              },
+            ],
+          })
+          .set('Accept', 'application/json');
+
+        expect(response.status).toBe(400);
+        expect(response.body.message).toEqual('Validation error');
+        expect(response.body.data).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              message: 'must match exactly one schema in oneOf',
+            }),
+          ]),
+        );
+      });
+      test('Should return a validation error when passing invalid schema (userId, externalAuthorName)', async () => {
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send({
+            ...getCreateResearchOutput(),
+            authors: [
+              {
+                userId: 'userId-1',
+                externalAuthorName: 'author-name-1',
+              },
+            ],
+          })
+          .set('Accept', 'application/json');
+
+        expect(response.status).toBe(400);
+        expect(response.body.message).toEqual('Validation error');
+        expect(response.body.data).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              message: 'must match exactly one schema in oneOf',
+            }),
+          ]),
+        );
+      });
     });
   });
 });

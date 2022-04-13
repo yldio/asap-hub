@@ -108,7 +108,11 @@ it('can submit a form when form data is valid', async () => {
         description: 'example description',
         subTypes: ['Animal Model'],
         labs: ['l0'],
-        authors: ['u2'],
+        authors: [
+          {
+            userId: 'u2',
+          },
+        ],
       },
       expect.anything(),
     );

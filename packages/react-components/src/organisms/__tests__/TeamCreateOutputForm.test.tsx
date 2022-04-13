@@ -89,8 +89,20 @@ it('can submit a form when form data is valid', async () => {
     { label: 'Two Lab', value: '2' },
   ]);
   getAuthorSuggestions.mockResolvedValue([
-    { user: createUserResponse(), label: 'Author Two', value: '2' },
-    { user: createUserResponse(), label: 'Author One', value: '1' },
+    {
+      user: { ...createUserResponse(), displayName: 'Author Two' },
+      label: 'Author Two',
+      value: '2',
+    },
+    {
+      user: {
+        ...createUserResponse(),
+        email: undefined,
+        displayName: 'Author One',
+      },
+      label: 'Author One (Non CRN)',
+      value: '1',
+    },
   ]);
   render(
     <StaticRouter>
@@ -149,6 +161,12 @@ it('can submit a form when form data is valid', async () => {
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
+  userEvent.click(screen.getByText(/Author One/i));
+
+  userEvent.click(screen.getByLabelText(/Authors/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
   userEvent.click(screen.getByText('Author Two'));
 
   fireEvent.change(screen.getByLabelText(/doi/i), {
@@ -168,7 +186,14 @@ it('can submit a form when form data is valid', async () => {
       description: 'example description',
       subTypes: ['Animal Model'],
       labs: ['1'],
-      authors: ['2'],
+      authors: [
+        {
+          externalAuthorId: '1',
+        },
+        {
+          userId: '2',
+        },
+      ],
       teams: ['TEAMID'],
       asapFunded: true,
       usedInPublication: true,

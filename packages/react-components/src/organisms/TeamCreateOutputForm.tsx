@@ -8,6 +8,7 @@ import {
   TeamResponse,
   ResearchOutputIdentifierType,
 } from '@asap-hub/model';
+import { isInternalUser } from '@asap-hub/validation';
 
 import {
   TeamCreateOutputFormSharingCard,
@@ -176,7 +177,15 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           description,
           title,
           subTypes,
-          authors: authors.map(({ value }) => value),
+          authors: authors.map(({ value, user }) =>
+            isInternalUser(user)
+              ? {
+                  userId: value,
+                }
+              : {
+                  externalAuthorId: value,
+                },
+          ),
           labs: labs.map(({ value }) => value),
           teams: teams.map(({ value }) => value),
           accessInstructions:

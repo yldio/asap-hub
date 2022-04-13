@@ -1,7 +1,7 @@
 import { TeamResponse } from './team';
 import { ListResponse } from './common';
 import { UserResponse } from './user';
-import { ExternalAuthorResponse } from './external-author';
+import { ExternalAuthorInput, ExternalAuthorResponse } from './external-author';
 import { LabResponse } from './lab';
 
 export const researchOutputTypes = [
@@ -210,7 +210,7 @@ export type ResearchOutputPostRequest = {
   link?: string;
 
   labs?: string[];
-  authors?: string[];
+  authors?: ExternalAuthorInput[];
   teams: string[];
 
   doi?: string;

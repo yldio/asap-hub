@@ -272,37 +272,92 @@ describe('/research-outputs/ route', () => {
       );
     });
 
-    test('Should return a validation error when the authors data is not valid', async () => {
+    describe('Authors validation', () => {
       const researchOutput = getCreateResearchOutput();
-      researchOutputControllerMock.create.mockRejectedValueOnce(
-        Boom.badRequest(),
-      );
+      const fields = ['userId', 'externalAuthorId', 'externalAuthorName'];
 
-      const response = await supertest(app)
-        .post('/research-outputs')
-        .send({
-          ...researchOutput,
-          authors: [{ userId: '222', externalAuthorId: '333' }],
-        })
-        .set('Accept', 'application/json');
+      test('Should return a validation error when required field is missing', async () => {
+        researchOutputControllerMock.create.mockRejectedValueOnce(
+          Boom.badRequest(),
+        );
 
-      expect(response.status).toBe(400);
-      expect(response.body).toEqual({
-        error: 'Bad Request',
-        message: 'Validation error',
-        statusCode: 400,
-        data: [
-          {
-            instancePath: '/authors/0',
-            schemaPath: '#/properties/authors/items/oneOf',
-            keyword: 'oneOf',
-            params: {
-              passingSchemas: [0, 1],
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send({
+            ...researchOutput,
+            authors: [{ name: 'random-value' }],
+          })
+          .set('Accept', 'application/json');
+
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual({
+          error: 'Bad Request',
+          message: 'Validation error',
+          statusCode: 400,
+          data: [
+            ...fields.map((field, idx) => ({
+              instancePath: '/authors/0',
+              schemaPath: `#/properties/authors/items/oneOf/${idx}/required`,
+              keyword: 'required',
+              params: {
+                missingProperty: field,
+              },
+              message: `must have required property '${field}'`,
+            })),
+            {
+              instancePath: '/authors/0',
+              keyword: 'oneOf',
+              message: 'must match exactly one schema in oneOf',
+              params: {
+                passingSchemas: null,
+              },
+              schemaPath: '#/properties/authors/items/oneOf',
             },
-            message: 'must match exactly one schema in oneOf',
-          },
-        ],
+          ],
+        });
       });
+
+      test.each(fields)(
+        'Should return a validation error when passing more than one required fields (%s)',
+        async (field) => {
+          researchOutputControllerMock.create.mockRejectedValueOnce(
+            Boom.badRequest(),
+          );
+
+          const response = await supertest(app)
+            .post('/research-outputs')
+            .send({
+              ...researchOutput,
+              authors: [
+                {
+                  userId: 'user-1',
+                  externalAuthorId: 'author-1',
+                  externalAuthorName: 'author-name',
+                  [field]: 'id-1',
+                },
+              ],
+            })
+            .set('Accept', 'application/json');
+
+          expect(response.status).toBe(400);
+          expect(response.body).toEqual({
+            error: 'Bad Request',
+            message: 'Validation error',
+            statusCode: 400,
+            data: [
+              {
+                instancePath: '/authors/0',
+                schemaPath: '#/properties/authors/items/oneOf',
+                keyword: 'oneOf',
+                params: {
+                  passingSchemas: [0, 1],
+                },
+                message: 'must match exactly one schema in oneOf',
+              },
+            ],
+          });
+        },
+      );
     });
   });
 });

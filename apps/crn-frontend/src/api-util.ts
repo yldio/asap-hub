@@ -1,3 +1,4 @@
+import { ErrorResponse, ValidationErrorResponse } from '@asap-hub/model';
 import { configureScope } from '@sentry/react';
 import { API_BASE_URL } from './config';
 
@@ -34,3 +35,31 @@ export const createSentryHeaders = () => {
     'X-Transaction-Id': transactionId,
   };
 };
+
+export class BackendError extends Error {
+  public response;
+  public statusCode;
+  constructor(
+    message: string,
+    response: ErrorResponse | ValidationErrorResponse,
+    statusCode: number,
+  ) {
+    super(message);
+    this.statusCode = statusCode;
+    this.response = response;
+  }
+}
+
+export const validationErrorsAreSupported = (
+  response: ValidationErrorResponse,
+  supportedErrorPaths: string[],
+): boolean =>
+  !!response.data.length &&
+  response.data.every(({ instancePath }) =>
+    supportedErrorPaths.includes(instancePath),
+  );
+
+export const clearAjvErrorForPath = (
+  errors: ValidationErrorResponse['data'],
+  path: string,
+) => errors.filter(({ instancePath }) => instancePath !== path);

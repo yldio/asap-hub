@@ -62,7 +62,7 @@ type ValidationTarget =
   | HTMLSelectElement;
 export function useValidation<T extends ValidationTarget>(
   customValidationMessage: string,
-  getValidationMessage?: (validityState: ValidityState) => string,
+  getValidationMessage?: (validityState: ValidityState) => string | undefined,
 ): {
   validationMessage: string;
   validationTargetProps: {
@@ -78,6 +78,7 @@ export function useValidation<T extends ValidationTarget>(
     input.setCustomValidity(customValidationMessage);
 
     if (validationMessage || customValidationMessage) {
+      setValidationMessage(customValidationMessage);
       input.reportValidity();
     }
 

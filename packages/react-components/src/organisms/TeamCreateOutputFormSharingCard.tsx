@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { USER_SOCIAL_WEBSITE } from '@asap-hub/validation';
 import {
   DecisionOption,
@@ -5,6 +6,7 @@ import {
   ResearchOutputSharingStatus,
   ResearchOutputSubtype,
   researchOutputTypeToSubtype,
+  ValidationErrorResponse,
 } from '@asap-hub/model';
 
 import { globeIcon } from '../icons';
@@ -17,6 +19,7 @@ import {
   LabeledDateField,
 } from '../molecules';
 import { noop } from '../utils';
+import { getAjvErrorForPath } from '../ajv-errors';
 
 type TeamCreateOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
@@ -34,6 +37,8 @@ type TeamCreateOutputFormSharingCardProps = Pick<
   asapFunded: DecisionOption;
   usedInPublication: DecisionOption;
   publishDate?: Date;
+  serverValidationErrors?: ValidationErrorResponse['data'];
+  clearServerValidationError?: (instancePath: string) => void;
 };
 
 const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardProps> =
@@ -48,6 +53,8 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
     usedInPublication,
     sharingStatus,
     publishDate,
+    serverValidationErrors = [],
+    clearServerValidationError = noop,
     onChangeDescription = noop,
     onChangeLink = noop,
     onChangeTitle = noop,
@@ -59,17 +66,33 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
   }) => {
     const urlRequired = type !== 'Lab Resource';
     const urlSubtitle = urlRequired ? '(required)' : '(optional)';
+    const [urlValidationMessage, setUrlValidationMessage] = useState<string>();
+    useEffect(() => {
+      setUrlValidationMessage(
+        getAjvErrorForPath(
+          serverValidationErrors,
+          '/link',
+          'A Research Output with this URL already exists. Please enter a different URL.',
+        ),
+      );
+    }, [serverValidationErrors]);
     return (
       <FormCard title="What are you sharing?">
         <LabeledTextField
           title="URL"
           subtitle={urlSubtitle}
           pattern={USER_SOCIAL_WEBSITE.source}
-          onChange={onChangeLink}
-          getValidationMessage={() =>
-            'Please enter a valid URL, starting with http://'
+          onChange={(newValue) => {
+            clearServerValidationError('/link');
+            onChangeLink(newValue);
+          }}
+          getValidationMessage={(validationState) =>
+            validationState.valueMissing || validationState.patternMismatch
+              ? 'Please enter a valid URL, starting with http://'
+              : undefined
           }
           value={link ?? ''}
+          customValidationMessage={urlValidationMessage}
           enabled={!isSaving}
           required={urlRequired}
           labelIndicator={globeIcon}

@@ -10,6 +10,7 @@ import {
   createListApiUrl,
   createSentryHeaders,
   GetListOptions,
+  BackendError,
 } from '../../api-util';
 import { API_BASE_URL } from '../../config';
 
@@ -82,16 +83,19 @@ export const createTeamResearchOutput = async (
     },
     body: JSON.stringify(researchOutput),
   });
+  const response = await resp.json();
   if (!resp.ok) {
-    throw new Error(
+    throw new BackendError(
       `Failed to create research output for teams ${researchOutput.teams
         .map((teamId) => teamId)
         .join(
           ', ',
         )} Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      response,
+      resp.status,
     );
   }
-  return resp.json();
+  return response;
 };
 
 export const getLabs = async (

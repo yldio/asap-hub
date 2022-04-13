@@ -58,22 +58,21 @@ const formControlsStyles = css({
 type TeamCreateOutputFormProps = Pick<
   ComponentProps<typeof TeamCreateOutputExtraInformationCard>,
   'tagSuggestions'
-> & {
-  getLabSuggestions?: ComponentProps<
-    typeof TeamCreateOutputContributorsCard
-  >['getLabSuggestions'];
-  getAuthorSuggestions?: ComponentProps<
-    typeof TeamCreateOutputContributorsCard
-  >['getAuthorSuggestions'];
-  getTeamSuggestions?: ComponentProps<
-    typeof TeamCreateOutputContributorsCard
-  >['getTeamSuggestions'];
-  onSave?: (
-    output: Partial<ResearchOutputPostRequest>,
-  ) => Promise<Pick<ResearchOutputResponse, 'id'>>;
-  type: ResearchOutputType;
-  team: TeamResponse;
-};
+> &
+  Pick<
+    ComponentProps<typeof TeamCreateOutputFormSharingCard>,
+    'serverValidationErrors' | 'clearServerValidationError'
+  > &
+  Pick<
+    ComponentProps<typeof TeamCreateOutputContributorsCard>,
+    'getLabSuggestions' | 'getAuthorSuggestions' | 'getTeamSuggestions'
+  > & {
+    onSave?: (
+      output: Partial<ResearchOutputPostRequest>,
+    ) => Promise<Pick<ResearchOutputResponse, 'id'> | void>;
+    type: ResearchOutputType;
+    team: TeamResponse;
+  };
 
 const identifierTypeToFieldName: Record<
   ResearchOutputIdentifierType,
@@ -111,6 +110,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
   team,
+  serverValidationErrors,
+  clearServerValidationError,
 }) => {
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
   const [subTypes, setSubtypes] = useState<
@@ -150,6 +151,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
 
   return (
     <Form
+      serverErrors={serverValidationErrors}
       dirty={
         tags.length !== 0 ||
         title !== '' ||
@@ -171,7 +173,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           identifier,
         );
 
-        onSave({
+        return onSave({
           tags,
           link: String(link).trim() === '' ? undefined : link,
           description,
@@ -204,6 +206,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         <div css={contentStyles}>
           <TeamCreateOutputFormSharingCard
             type={type}
+            serverValidationErrors={serverValidationErrors}
+            clearServerValidationError={clearServerValidationError}
             isSaving={isSaving}
             description={description}
             onChangeDescription={setDescription}

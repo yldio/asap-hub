@@ -1,5 +1,10 @@
-import React from 'react';
-import { ResearchOutputPostRequest, ResearchOutputType } from '@asap-hub/model';
+import React, { useState } from 'react';
+import {
+  ValidationErrorResponse,
+  ResearchOutputPostRequest,
+  ResearchOutputType,
+  isValidationErrorResponse,
+} from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
 import { TeamCreateOutputPage, NotFoundPage } from '@asap-hub/react-components';
 
@@ -17,6 +22,11 @@ import {
 } from './state';
 import Frame from '../../structure/Frame';
 import researchSuggestions from './research-suggestions';
+import {
+  BackendError,
+  clearAjvErrorForPath,
+  validationErrorsAreSupported,
+} from '../../api-util';
 
 const useParamOutputType = (teamId: string): OutputTypeParameter => {
   const route = network({}).teams({}).team({ teamId }).createOutput;
@@ -50,6 +60,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   const paramOutputType = useParamOutputType(teamId);
   const type = paramOutputTypeToResearchOutputType(paramOutputType);
   const team = useTeamById(teamId);
+  const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
   const { isEnabled } = useFlags();
 
   const createResearchOutput = usePostTeamResearchOutput();
@@ -96,11 +107,27 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
             )
           }
           getTeamSuggestions={getTeamSuggestions}
+          serverValidationErrors={errors}
+          clearServerValidationError={(instancePath: string) =>
+            setErrors(clearAjvErrorForPath(errors, instancePath))
+          }
           onSave={(output) =>
             createResearchOutput({
               ...defaultOutput,
               ...output,
               addedDate: new Date().toISOString(),
+            }).catch((error) => {
+              if (error instanceof BackendError) {
+                const { response } = error;
+                if (
+                  isValidationErrorResponse(response) &&
+                  validationErrorsAreSupported(response, ['/link'])
+                ) {
+                  setErrors(response.data);
+                  return;
+                }
+              }
+              throw error;
             })
           }
         />

@@ -2,30 +2,97 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { useFlags } from '@asap-hub/react-context';
+import { useFlags, ToastContext } from '@asap-hub/react-context';
 import { render, screen, waitFor } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
-import { Suspense } from 'react';
+import { ContextType, Suspense } from 'react';
 import { StaticRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { network, OutputTypeParameter } from '@asap-hub/routing';
-import { ResearchOutputType } from '@asap-hub/model';
+import { ResearchOutputType, ValidationErrorResponse } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
 import { createTeamResearchOutput } from '../api';
 import { refreshTeamState } from '../state';
 import TeamOutput, { paramOutputTypeToResearchOutputType } from '../TeamOutput';
+import { BackendError } from '../../../api-util';
 
 jest.mock('../api');
 jest.mock('../../users/api');
 
 const ENTER_KEYCODE = 13;
 
+const mockToast = jest.fn() as jest.MockedFunction<
+  ContextType<typeof ToastContext>
+>;
 const mockCreateTeamResearchOutput =
   createTeamResearchOutput as jest.MockedFunction<
     typeof createTeamResearchOutput
   >;
+
+interface RenderPageOptions {
+  teamId: string;
+  outputType?: OutputTypeParameter;
+  featureFlagEnabled?: boolean;
+}
+
+const renderPage = async ({
+  featureFlagEnabled = true,
+  teamId,
+  outputType = 'bioinformatics',
+}: RenderPageOptions) => {
+  const {
+    result: {
+      current: { disable, enable },
+    },
+  } = renderHook(useFlags);
+
+  if (featureFlagEnabled) {
+    enable('ROMS_FORM');
+  } else {
+    disable('ROMS_FORM');
+  }
+
+  const path =
+    network.template +
+    network({}).teams.template +
+    network({}).teams({}).team.template +
+    network({}).teams({}).team({ teamId }).createOutput.template;
+
+  const result = render(
+    <RecoilRoot
+      initializeState={({ set }) =>
+        set(refreshTeamState(teamId), Math.random())
+      }
+    >
+      <Suspense fallback="loading">
+        <ToastContext.Provider value={mockToast}>
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <StaticRouter
+                location={
+                  network({})
+                    .teams({})
+                    .team({ teamId })
+                    .createOutput({ outputType }).$
+                }
+              >
+                <Route path={path}>
+                  <TeamOutput teamId={teamId} />
+                </Route>
+              </StaticRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </ToastContext.Provider>
+      </Suspense>
+    </RecoilRoot>,
+  );
+  await waitFor(() =>
+    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
+  return result;
+};
 
 it('Renders the research output', async () => {
   const teamId = 'team-id';
@@ -120,6 +187,90 @@ it('can submit a form when form data is valid', async () => {
   });
 });
 
+it('will show server side validation error for link', async () => {
+  const teamId = 'team-id';
+  const validationResponse: ValidationErrorResponse = {
+    message: 'Validation Error',
+    error: 'Bad Request',
+    statusCode: 400,
+    data: [
+      { instancePath: '/link', keyword: '', params: {}, schemaPath: 'link' },
+    ],
+  };
+
+  mockCreateTeamResearchOutput.mockRejectedValue(
+    new BackendError('example', validationResponse, 400),
+  );
+
+  await renderPage({ teamId, outputType: 'article' });
+
+  fireEvent.change(screen.getByLabelText(/url/i), {
+    target: { value: 'http://example.com' },
+  });
+  fireEvent.change(screen.getByLabelText(/title/i), {
+    target: { value: 'example title' },
+  });
+  fireEvent.change(screen.getByLabelText(/description/i), {
+    target: { value: 'example description' },
+  });
+  userEvent.type(screen.getByLabelText(/type/i), 'Preprint');
+
+  const button = screen.getByRole('button', { name: /Share/i });
+  userEvent.click(button);
+
+  await waitFor(() => {
+    expect(mockCreateTeamResearchOutput).toHaveBeenCalled();
+    expect(button).toBeEnabled();
+  });
+  expect(
+    screen.getByText(
+      'A Research Output with this URL already exists. Please enter a different URL.',
+    ),
+  ).toBeVisible();
+
+  userEvent.type(screen.getByLabelText(/url/i), 'a');
+  fireEvent.focusOut(screen.getByLabelText(/url/i));
+
+  expect(
+    screen.queryByText(
+      'A Research Output with this URL already exists. Please enter a different URL.',
+    ),
+  ).toBeNull();
+  expect(mockToast).not.toHaveBeenCalled();
+});
+
+it('will toast server side errors for unknown errors', async () => {
+  const teamId = 'team-id';
+
+  mockCreateTeamResearchOutput.mockRejectedValue(
+    new Error('Something went wrong'),
+  );
+
+  await renderPage({ teamId, outputType: 'article' });
+
+  fireEvent.change(screen.getByLabelText(/url/i), {
+    target: { value: 'http://example.com' },
+  });
+  fireEvent.change(screen.getByLabelText(/title/i), {
+    target: { value: 'example title' },
+  });
+  fireEvent.change(screen.getByLabelText(/description/i), {
+    target: { value: 'example description' },
+  });
+  userEvent.type(screen.getByLabelText(/type/i), 'Preprint');
+
+  const button = screen.getByRole('button', { name: /Share/i });
+  userEvent.click(button);
+
+  await waitFor(() => {
+    expect(mockCreateTeamResearchOutput).toHaveBeenCalled();
+    expect(button).toBeEnabled();
+  });
+  expect(mockToast).toHaveBeenCalledWith(
+    'There was an error and we were unable to save your changes. Please try again.',
+  );
+});
+
 it.each<{ param: OutputTypeParameter; outputType: ResearchOutputType }>([
   { param: 'article', outputType: 'Article' },
   { param: 'bioinformatics', outputType: 'Bioinformatics' },
@@ -130,64 +281,3 @@ it.each<{ param: OutputTypeParameter; outputType: ResearchOutputType }>([
 ])('maps from $param to $outputType', ({ param, outputType }) => {
   expect(paramOutputTypeToResearchOutputType(param)).toEqual(outputType);
 });
-
-interface RenderPageOptions {
-  teamId: string;
-  outputType?: OutputTypeParameter;
-  featureFlagEnabled?: boolean;
-}
-
-const renderPage = async ({
-  featureFlagEnabled = true,
-  teamId,
-  outputType = 'bioinformatics',
-}: RenderPageOptions) => {
-  const {
-    result: {
-      current: { disable, enable },
-    },
-  } = renderHook(useFlags);
-
-  if (featureFlagEnabled) {
-    enable('ROMS_FORM');
-  } else {
-    disable('ROMS_FORM');
-  }
-
-  const path =
-    network.template +
-    network({}).teams.template +
-    network({}).teams({}).team.template +
-    network({}).teams({}).team({ teamId }).createOutput.template;
-
-  const result = render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshTeamState(teamId), Math.random())
-      }
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <StaticRouter
-              location={
-                network({})
-                  .teams({})
-                  .team({ teamId })
-                  .createOutput({ outputType }).$
-              }
-            >
-              <Route path={path}>
-                <TeamOutput teamId={teamId} />
-              </Route>
-            </StaticRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
-  );
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  return result;
-};

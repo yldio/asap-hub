@@ -1,4 +1,10 @@
-import { createListApiUrl, createSentryHeaders } from '../api-util';
+import { ValidationErrorResponse } from '@asap-hub/model';
+import {
+  createListApiUrl,
+  createSentryHeaders,
+  validationErrorsAreSupported,
+  clearAjvErrorForPath,
+} from '../api-util';
 import { CARD_VIEW_PAGE_SIZE } from '../hooks';
 
 const mockSetTag = jest.fn();
@@ -59,5 +65,84 @@ describe('createSentryHeaders', () => {
       'transaction_id',
       transactionId,
     );
+  });
+});
+
+const validationError: ValidationErrorResponse['data'][number] = {
+  instancePath: '/example',
+  keyword: '',
+  params: {},
+  schemaPath: '',
+};
+describe('clearAjvErrorForPath', () => {
+  it('removes errors for given path', () => {
+    expect(
+      clearAjvErrorForPath(
+        [
+          { ...validationError, instancePath: '/url' },
+          { ...validationError, instancePath: '/test' },
+          { ...validationError, instancePath: '/test' },
+          { ...validationError, instancePath: '/title' },
+        ],
+        '/test',
+      ).map(({ instancePath }) => instancePath),
+    ).toMatchInlineSnapshot(`
+      Array [
+        "/url",
+        "/title",
+      ]
+    `);
+  });
+});
+
+describe('validationErrorsAreSupported', () => {
+  const validationResponse: ValidationErrorResponse = {
+    error: 'Bad Request',
+    data: [],
+    message: 'Validation Error',
+    statusCode: 400,
+  };
+  it('passes if all path instance are supported', () => {
+    expect(
+      validationErrorsAreSupported(
+        {
+          ...validationResponse,
+          data: [
+            { ...validationError, instancePath: '/3' },
+            { ...validationError, instancePath: '/1' },
+            { ...validationError, instancePath: '/2' },
+          ],
+        },
+        ['/1', '/2', '/3'],
+      ),
+    ).toBe(true);
+  });
+
+  it('fails if not all pathInstances are supported', () => {
+    expect(
+      validationErrorsAreSupported(
+        {
+          ...validationResponse,
+          data: [
+            { ...validationError, instancePath: '/3' },
+            { ...validationError, instancePath: '/1' },
+            { ...validationError, instancePath: '/2' },
+          ],
+        },
+        ['/2', '/3'],
+      ),
+    ).toBe(false);
+  });
+
+  it('fails if there is a validation error but no errors to handle', () => {
+    expect(
+      validationErrorsAreSupported(
+        {
+          ...validationResponse,
+          data: [],
+        },
+        ['/2', '/3'],
+      ),
+    ).toBe(false);
   });
 });

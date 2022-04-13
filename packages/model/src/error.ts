@@ -18,4 +18,5 @@ export type ErrorResponse =
 
 export const isValidationErrorResponse = (
   error: ErrorResponse,
-): error is ValidationErrorResponse => error.message === 'Validation Error';
+): error is ValidationErrorResponse =>
+  /^Validation Error$/i.test(error.message); // Backend inconsistent.

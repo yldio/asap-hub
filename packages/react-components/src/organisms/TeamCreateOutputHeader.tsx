@@ -17,8 +17,8 @@ const visualHeaderStyles = css({
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
 
-const headerCopy = (outputType: ResearchOutputDocumentType) => {
-  switch (outputType) {
+const headerCopy = (outputDocumentType: ResearchOutputDocumentType) => {
+  switch (outputDocumentType) {
     case 'Protocol':
       return 'Share a protocol';
     case 'Dataset':

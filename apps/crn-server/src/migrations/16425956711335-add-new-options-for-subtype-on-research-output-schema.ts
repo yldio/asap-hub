@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import { researchOutputMapSubtype } from '@asap-hub/model';
+import { researchOutputMapType } from '@asap-hub/model';
 import { RestResearchOutput } from '@asap-hub/squidex';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 import { applyToAllItemsInCollection } from '../utils/migrations';
@@ -9,7 +9,7 @@ export default class MapResearchOutputDeprecatedSubtype extends Migration {
     await applyToAllItemsInCollection<RestResearchOutput>(
       'research-outputs',
       async (researchOutput, squidexClient) => {
-        const mappedSubtype = researchOutputMapSubtype(
+        const mappedSubtype = researchOutputMapType(
           researchOutput.data?.subtype?.iv,
         );
 

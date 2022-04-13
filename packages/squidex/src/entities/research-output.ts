@@ -1,6 +1,6 @@
 import {
   ResearchOutputDocumentType,
-  ResearchOutputSubtype,
+  ResearchOutputType,
   ResearchOutputSharingStatus,
   DecisionOption,
 } from '@asap-hub/model';
@@ -23,7 +23,7 @@ export interface ResearchOutput<TAuthorConnection = string> {
   accessInstructions?: string;
   adminNotes?: string;
   lastUpdatedPartial?: string;
-  subtype?: ResearchOutputSubtype;
+  subtype?: ResearchOutputType;
   sharingStatus: ResearchOutputSharingStatus;
   asapFunded: DecisionOption;
   usedInAPublication: DecisionOption;

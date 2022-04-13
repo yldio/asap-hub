@@ -13,6 +13,7 @@ import {
   useRouteParams,
   OutputDocumentTypeParameter,
 } from '@asap-hub/routing';
+import { Frame } from '@asap-hub/structure';
 import {
   BackendError,
   clearAjvErrorForPath,

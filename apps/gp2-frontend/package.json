@@ -21,6 +21,7 @@
     "@asap-hub/react-components": "workspace:*",
     "@asap-hub/react-context": "workspace:*",
     "@asap-hub/routing": "workspace:*",
+    "@asap-hub/structure": "workspace:*",
     "@asap-hub/unsupported-browser-page": "workspace:*",
     "@asap-hub/validation": "workspace:*",
     "@auth0/auth0-spa-js": "^1.15.0",

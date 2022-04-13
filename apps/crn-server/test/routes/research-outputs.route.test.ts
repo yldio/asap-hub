@@ -311,8 +311,8 @@ describe('/research-outputs/ route', () => {
           ],
         });
       });
-      test('Should return a validation error when passing invalid schema', async () => {
-        let response = await supertest(app)
+      test('Should return a validation error when passing invalid schema (userId, externalAuthorId, externalAuthorName)', async () => {
+        const response = await supertest(app)
           .post('/research-outputs')
           .send({
             ...getCreateResearchOutput(),
@@ -335,8 +335,9 @@ describe('/research-outputs/ route', () => {
             }),
           ]),
         );
-
-        response = await supertest(app)
+      });
+      test('Should return a validation error when passing invalid schema (userId, externalAuthorId)', async () => {
+        const response = await supertest(app)
           .post('/research-outputs')
           .send({
             ...getCreateResearchOutput(),
@@ -358,8 +359,9 @@ describe('/research-outputs/ route', () => {
             }),
           ]),
         );
-
-        response = await supertest(app)
+      });
+      test('Should return a validation error when passing invalid schema (userId, externalAuthorName)', async () => {
+        const response = await supertest(app)
           .post('/research-outputs')
           .send({
             ...getCreateResearchOutput(),

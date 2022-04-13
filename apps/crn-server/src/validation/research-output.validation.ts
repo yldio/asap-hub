@@ -1,6 +1,6 @@
 import {
   ResearchOutputPostRequest,
-  researchOutputSubtypes,
+  researchOutputTypes,
   ResearchOutputIdentifierType,
   researchOutputToIdentifierType,
   researchOutputDocumentTypes,
@@ -39,10 +39,9 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         type: 'string',
         enum: researchOutputDocumentTypes,
       },
-      subTypes: {
-        type: 'array',
-        items: { type: 'string', enum: researchOutputSubtypes },
-        nullable: true,
+      type: {
+        type: 'string',
+        enum: researchOutputTypes,
       },
       description: { type: 'string' },
       tags: {
@@ -104,6 +103,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
     },
     required: [
       'documentType',
+      'type',
       'description',
       'tags',
       'title',

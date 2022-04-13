@@ -149,7 +149,7 @@ describe('createTeamResearchOutput', () => {
     publishDate: undefined,
     description: '',
     tags: [],
-    subTypes: [],
+    type: 'Software',
     labs: ['lab1'],
   };
   it('makes an authorized POST request to create a research output', async () => {

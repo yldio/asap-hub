@@ -21,7 +21,11 @@ export const Normal = () => (
                 'Title',
                 'Tracing the Origin and Progression of Parkinson’s Disease through the Neuro-Immune Interactome',
               ),
-              type: select('Type', ['Grant Document'], 'Grant Document'),
+              documentType: select(
+                'Type',
+                ['Grant Document'],
+                'Grant Document',
+              ),
             }
           : output,
       )}

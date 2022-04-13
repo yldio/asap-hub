@@ -11,7 +11,7 @@ const props: ComponentProps<typeof TeamCreateOutputFormSharingCard> = {
   isSaving: false,
   title: '',
   link: '',
-  subTypes: [],
+  type: '',
   documentType: 'Article',
   asapFunded: 'Not Sure',
   usedInPublication: 'Not Sure',
@@ -25,7 +25,7 @@ it('renders the card with provided values', () => {
       description="description"
       link="http://example.com"
       title="title"
-      subTypes={['Preprint']}
+      type={'Preprint'}
     />,
   );
   expect(getByDisplayValue('description')).toBeVisible();
@@ -39,7 +39,7 @@ it.each`
   ${'Description'} | ${/description/i} | ${'Please enter a description'}
   ${'Url'}         | ${/URL/i}         | ${'Please enter a valid URL, starting with http://'}
   ${'Title'}       | ${/title/i}       | ${'Please enter a title'}
-  ${'Subtype'}     | ${/type/i}        | ${'Please choose a type'}
+  ${'Type'}        | ${/type/i}        | ${'Please choose a type'}
 `('shows error message for missing value $title', async ({ label, error }) => {
   const { getByLabelText, findByText } = render(
     <TeamCreateOutputFormSharingCard {...props} />,
@@ -109,7 +109,7 @@ it('triggers an on change for type', async () => {
     <TeamCreateOutputFormSharingCard
       {...props}
       documentType="Article"
-      onChangeSubtypes={onChangeFn}
+      onChangeType={onChangeFn}
     />,
   );
 
@@ -118,7 +118,7 @@ it('triggers an on change for type', async () => {
     keyCode: ENTER_KEYCODE,
   });
 
-  expect(onChangeFn).toHaveBeenCalledWith(['Preprint']);
+  expect(onChangeFn).toHaveBeenCalledWith('Preprint');
 });
 
 it('shows the custom no options message for type', async () => {

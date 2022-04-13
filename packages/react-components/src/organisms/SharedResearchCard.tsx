@@ -25,7 +25,7 @@ type SharedResearchCardProps = Pick<
   | 'labs'
   | 'title'
   | 'authors'
-  | 'subTypes'
+  | 'type'
 > &
   ComponentProps<typeof SharedResearchMetadata>;
 

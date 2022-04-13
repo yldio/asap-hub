@@ -76,7 +76,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
     sharingStatus: 'Network Only',
     usedInPublication: undefined,
     description: 'example',
-    subTypes: [],
+    type: 'Software',
     addedDate: new Date().toISOString(),
     tags: [],
     teams: [teamId],

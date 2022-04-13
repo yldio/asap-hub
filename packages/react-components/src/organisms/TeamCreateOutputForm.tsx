@@ -114,9 +114,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   clearServerValidationError,
 }) => {
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
-  const [subTypes, setSubtypes] = useState<
-    ResearchOutputPostRequest['subTypes']
-  >([]);
+  const [type, setType] = useState<ResearchOutputPostRequest['type'] | ''>('');
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>('');
   const [labs, setLabs] = useState<
     NonNullable<ComponentProps<typeof TeamCreateOutputContributorsCard>['labs']>
@@ -157,7 +155,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         title !== '' ||
         description !== '' ||
         link !== '' ||
-        subTypes.length !== 0 ||
+        type !== '' ||
         labs.length !== 0 ||
         authors.length !== 0 ||
         identifierType !== ResearchOutputIdentifierType.None ||
@@ -173,12 +171,17 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           identifier,
         );
 
+        /* istanbul ignore next */
+        if (!type) {
+          throw new Error('There is no type provided.');
+        }
+
         return onSave({
           tags,
           link: String(link).trim() === '' ? undefined : link,
           description,
           title,
-          subTypes,
+          type,
           authors: authors.map(({ value, user }) =>
             isInternalUser(user)
               ? {
@@ -215,8 +218,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangeTitle={setTitle}
             link={link}
             onChangeLink={setLink}
-            subTypes={subTypes}
-            onChangeSubtypes={setSubtypes}
+            type={type}
+            onChangeType={setType}
             asapFunded={asapFunded}
             onChangeAsapFunded={setAsapFunded}
             usedInPublication={usedInPublication}

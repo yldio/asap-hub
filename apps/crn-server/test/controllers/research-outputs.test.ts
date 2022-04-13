@@ -719,8 +719,8 @@ describe('ResearchOutputs controller', () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/research-outputs?publish=false`, {
           ...squidexResearchOutput,
-          ...(researchOutputRequest.subTypes && {
-            subtype: { iv: researchOutputRequest.subTypes[0] },
+          ...(researchOutputRequest.type && {
+            subtype: { iv: researchOutputRequest.type },
           }),
           type: { iv: researchOutputRequest.documentType },
           asapFunded: { iv: 'Not Sure' },
@@ -840,7 +840,7 @@ describe('ResearchOutputs controller', () => {
       const {
         usedInPublication: _,
         teams: __,
-        subTypes: ___,
+        type: ___,
         documentType: ____,
         ...squidexResearchOutput
       } = parseToSquidex(researchOutputRequest);
@@ -856,8 +856,8 @@ describe('ResearchOutputs controller', () => {
         .reply(200)
         .post(`/api/content/${config.appName}/research-outputs?publish=false`, {
           ...squidexResearchOutput,
-          ...(researchOutputRequest.subTypes && {
-            subtype: { iv: researchOutputRequest.subTypes[0] },
+          ...(researchOutputRequest.type && {
+            subtype: { iv: researchOutputRequest.type },
           }),
           type: { iv: researchOutputRequest.documentType },
           asapFunded: { iv: 'Not Sure' },

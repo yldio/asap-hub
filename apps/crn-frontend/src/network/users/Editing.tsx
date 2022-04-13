@@ -6,9 +6,9 @@ import {
 } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
-
+import { Frame } from '@asap-hub/structure';
 import { usePatchUserById } from './state';
-import Frame from '../../structure/Frame';
+
 import countrySuggestions from './country-suggestions';
 import { getInstitutions } from './api';
 

@@ -8,9 +8,10 @@ import {
 import { UserResponse } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
+import { Frame } from '@asap-hub/structure';
 
 import { usePatchUserById } from './state';
-import Frame from '../../structure/Frame';
+
 import GroupsCard from './groups/GroupsCard';
 import expertiseAndResourceSuggestions from './expertise-and-resource-suggestions';
 

@@ -10,8 +10,7 @@
     "build": "node ./scripts/build-unsupported-browser-page.js && react-scripts build",
     "typecheck": "tsc",
     "test": "echo Run the workspace root script instead",
-    "eject": "react-scripts eject",
-    "release:frontend": "node ./scripts/sentry-release.js"
+    "eject": "react-scripts eject"
   },
   "dependencies": {
     "@asap-hub/api-util": "workspace:*",
@@ -22,6 +21,7 @@
     "@asap-hub/react-components": "workspace:*",
     "@asap-hub/react-context": "workspace:*",
     "@asap-hub/routing": "workspace:*",
+    "@asap-hub/structure": "workspace:*",
     "@asap-hub/unsupported-browser-page": "workspace:*",
     "@asap-hub/validation": "workspace:*",
     "@auth0/auth0-spa-js": "^1.15.0",

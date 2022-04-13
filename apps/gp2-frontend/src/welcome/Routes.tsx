@@ -1,9 +1,8 @@
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { welcome } from '@asap-hub/routing';
-
+import { Frame } from '@asap-hub/structure';
 import Welcome from './Welcome';
-import Frame from '../structure/Frame';
 
 const Routes: React.FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();

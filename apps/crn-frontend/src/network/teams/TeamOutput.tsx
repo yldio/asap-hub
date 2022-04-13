@@ -13,6 +13,7 @@ import {
   useRouteParams,
   OutputDocumentTypeParameter,
 } from '@asap-hub/routing';
+import { Frame } from '@asap-hub/structure';
 import {
   useLabSuggestions,
   usePostTeamResearchOutput,
@@ -20,7 +21,7 @@ import {
   useTeamById,
   useTeamSuggestions,
 } from './state';
-import Frame from '../../structure/Frame';
+
 import researchSuggestions from './research-suggestions';
 import {
   BackendError,

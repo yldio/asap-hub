@@ -4,9 +4,8 @@ import { useResetRecoilState, useRecoilState } from 'recoil';
 import { NotFoundPage, Loading } from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 import { Layout } from '@asap-hub/gp2-components';
-
+import { Frame } from '@asap-hub/structure';
 import { auth0State } from './auth/state';
-import Frame from './structure/Frame';
 
 const loadDashboard = () =>
   import(/* webpackChunkName: "dashboard" */ './dashboard/Dashboard');

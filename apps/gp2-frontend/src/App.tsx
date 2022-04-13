@@ -7,12 +7,13 @@ import { Integrations } from '@sentry/tracing';
 import { useFlags } from '@asap-hub/react-context';
 import { ToastStack, UtilityBar } from '@asap-hub/react-components';
 import { logout, welcome } from '@asap-hub/routing';
+import { Frame } from '@asap-hub/structure';
 
 import history from './history';
 import CheckAuth from './auth/CheckAuth';
 import Signin from './auth/Signin';
 import Logout from './auth/Logout';
-import Frame from './structure/Frame';
+
 import { SENTRY_DSN, ENVIRONMENT, RELEASE } from './config';
 
 init({

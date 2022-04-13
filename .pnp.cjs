@@ -151,6 +151,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/squidex"
       },
       {
+        "name": "@asap-hub/structure",
+        "reference": "workspace:packages/structure"
+      },
+      {
         "name": "@asap-hub/unsupported-browser-page",
         "reference": "workspace:packages/unsupported-browser-page"
       },
@@ -187,6 +191,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/services-common", ["workspace:packages/services-common"]],
       ["@asap-hub/squidex", ["workspace:packages/squidex"]],
       ["@asap-hub/storybook", ["workspace:apps/storybook"]],
+      ["@asap-hub/structure", ["virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/structure", "workspace:packages/structure"]],
       ["@asap-hub/unsupported-browser-page", ["workspace:packages/unsupported-browser-page"]],
       ["@asap-hub/validation", ["workspace:packages/validation"]],
       ["@types/apr-intercept", ["workspace:@types/apr-intercept"]],
@@ -374,6 +379,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@asap-hub/storybook",
         "workspace:apps/storybook"
+      ],
+      [
+        "@asap-hub/structure",
+        "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/structure"
       ],
       [
         "@asap-hub/unsupported-browser-page",
@@ -10569,6 +10578,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/react-components", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/react-components"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
             ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
+            ["@asap-hub/structure", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/structure"],
             ["@asap-hub/unsupported-browser-page", "workspace:packages/unsupported-browser-page"],
             ["@asap-hub/validation", "workspace:packages/validation"],
             ["@auth0/auth0-spa-js", "npm:1.15.0"],
@@ -10997,6 +11007,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/react-components", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/react-components"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
             ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
+            ["@asap-hub/structure", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/structure"],
             ["@asap-hub/unsupported-browser-page", "workspace:packages/unsupported-browser-page"],
             ["@asap-hub/validation", "workspace:packages/validation"],
             ["@auth0/auth0-spa-js", "npm:1.15.0"],
@@ -11660,6 +11671,72 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
             ["storybook-addon-designs", "npm:6.2.1"],
             ["typescript", "patch:typescript@npm%3A4.4.4#~builtin<compat/typescript>::version=4.4.4&hash=ddd1e8"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@asap-hub/structure", [
+        ["virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/structure", {
+          "packageLocation": "./.yarn/__virtual__/@asap-hub-structure-virtual-54b63b2871/1/packages/structure/",
+          "packageDependencies": [
+            ["@asap-hub/structure", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/structure"],
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/react-components", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#workspace:packages/react-components"],
+            ["@babel/core", "npm:7.14.2"],
+            ["@babel/preset-react", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:7.13.13"],
+            ["@babel/runtime-corejs3", "npm:7.14.0"],
+            ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:6.11.0"],
+            ["@testing-library/react", "virtual:29ace9acdaadce7142e9cbe0626982c73f9edb599b8a5b07f8f0dd53c96e05f3e9296e3fe42e557d88318610e043449d3c20483f0baea89da3757c97f3a61367#npm:11.2.6"],
+            ["@types/history", "npm:4.7.8"],
+            ["@types/jest", "npm:26.0.23"],
+            ["@types/react", "npm:17.0.5"],
+            ["@types/react-router-dom", "npm:5.1.7"],
+            ["@types/testing-library__jest-dom", "npm:5.9.5"],
+            ["@types/testing-library__react", "npm:10.0.1"],
+            ["core-js", "npm:3.12.1"],
+            ["history", "npm:4.10.1"],
+            ["react", "npm:17.0.2"],
+            ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:17.0.2"],
+            ["react-error-boundary", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:3.1.3"],
+            ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
+            ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.2"],
+            ["react-titled", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:1.0.1"]
+          ],
+          "packagePeers": [
+            "@types/react-router-dom",
+            "@types/react",
+            "react-router-dom",
+            "react"
+          ],
+          "linkType": "SOFT",
+        }],
+        ["workspace:packages/structure", {
+          "packageLocation": "./packages/structure/",
+          "packageDependencies": [
+            ["@asap-hub/structure", "workspace:packages/structure"],
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/react-components", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#workspace:packages/react-components"],
+            ["@babel/core", "npm:7.14.2"],
+            ["@babel/preset-react", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:7.13.13"],
+            ["@babel/runtime-corejs3", "npm:7.14.0"],
+            ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:6.11.0"],
+            ["@testing-library/react", "virtual:29ace9acdaadce7142e9cbe0626982c73f9edb599b8a5b07f8f0dd53c96e05f3e9296e3fe42e557d88318610e043449d3c20483f0baea89da3757c97f3a61367#npm:11.2.6"],
+            ["@types/history", "npm:4.7.8"],
+            ["@types/jest", "npm:26.0.23"],
+            ["@types/react", "npm:17.0.5"],
+            ["@types/react-router-dom", "npm:5.1.7"],
+            ["@types/testing-library__jest-dom", "npm:5.9.5"],
+            ["@types/testing-library__react", "npm:10.0.1"],
+            ["core-js", "npm:3.12.1"],
+            ["history", "npm:4.10.1"],
+            ["react", "npm:17.0.2"],
+            ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:17.0.2"],
+            ["react-error-boundary", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:3.1.3"],
+            ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
+            ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.2"],
+            ["react-titled", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:1.0.1"]
           ],
           "linkType": "SOFT",
         }]

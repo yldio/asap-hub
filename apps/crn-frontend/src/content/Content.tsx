@@ -1,7 +1,6 @@
 import { ContentPage, NotFoundPage } from '@asap-hub/react-components';
-
+import { Frame } from '@asap-hub/structure';
 import { usePageByPath } from './state';
-import Frame from '../structure/Frame';
 
 interface ContentProps {
   pageId: string;

@@ -15,9 +15,10 @@ import {
 } from '@asap-hub/react-context';
 import imageCompression from 'browser-image-compression';
 import { network, useRouteParams } from '@asap-hub/routing';
+import { Frame } from '@asap-hub/structure';
 
 import { useUserById, usePatchUserAvatarById } from './state';
-import Frame from '../../structure/Frame';
+
 import { useCurrentUserProfileTabRoute } from '../../hooks';
 
 const loadResearch = () =>

@@ -1,10 +1,10 @@
 import { FC, lazy } from 'react';
 import { DashboardPage, NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
+import { Frame } from '@asap-hub/structure';
 import { usePrefetchTeams } from '@asap-hub/crn-frontend/src/network/teams/state';
 import { CARD_VIEW_PAGE_SIZE } from '@asap-hub/crn-frontend/src/hooks';
 import { usePrefetchCalendars } from '@asap-hub/crn-frontend/src/events/calendar/state';
-import Frame from '../structure/Frame';
 import { useDashboardState } from './state';
 
 const loadBody = () =>

@@ -2,7 +2,7 @@ import { FC, lazy } from 'react';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { DashboardPage } from '@asap-hub/gp2-components';
-import Frame from '../structure/Frame';
+import { Frame } from '@asap-hub/structure';
 import { useDashboardState } from './state';
 
 const loadBody = () =>

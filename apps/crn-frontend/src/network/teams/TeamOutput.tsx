@@ -10,14 +10,7 @@ import {
   OutputDocumentTypeParameter,
   useRouteParams,
 } from '@asap-hub/routing';
-import React, { useState } from 'react';
-import {
-  BackendError,
-  clearAjvErrorForPath,
-  validationErrorsAreSupported,
-} from '../../api-util';
-import Frame from '../../structure/Frame';
-import researchSuggestions from './research-suggestions';
+import { Frame } from '@asap-hub/structure';
 import {
   useAuthorSuggestions,
   useLabSuggestions,
@@ -26,8 +19,13 @@ import {
   useTeamSuggestions,
 } from './state';
 
-const useParamOutputDocumentType = (
-  teamId: string,
+import researchSuggestions from './research-suggestions';
+import {
+  BackendError,
+  clearAjvErrorForPath,
+  validationErrorsAreSupported,
+} from '../../api-util';
+
 ): OutputDocumentTypeParameter => {
   const route = network({}).teams({}).team({ teamId }).createOutput;
   const { outputDocumentType } = useRouteParams(route);
@@ -35,7 +33,6 @@ const useParamOutputDocumentType = (
 };
 
 export function paramOutputDocumentTypeToResearchOutputDocumentType(
-  data: OutputDocumentTypeParameter,
 ): ResearchOutputDocumentType {
   switch (data) {
     case 'article':

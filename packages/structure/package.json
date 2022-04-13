@@ -1,0 +1,45 @@
+{
+  "name": "@asap-hub/structure",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "14.15.x"
+  },
+  "module": "build/index.js",
+  "main": "build-cjs/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build:babel": "../../scripts/build-babel.sh build",
+    "watch:babel": "../../scripts/build-babel.sh watch"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-router-dom": "^5.2.0"
+  },
+  "dependencies": {
+    "@asap-hub/react-components": "workspace:*",
+    "@babel/runtime-corejs3": "^7.14.0",
+    "@sentry/react": "^6.11.0",
+    "core-js": "^3.12.1",
+    "react-error-boundary": "^3.1.3",
+    "react-titled": "^1.0.1"
+  },
+  "devDependencies": {
+    "@asap-hub/dom-test-utils": "workspace:*",
+    "@asap-hub/eslint-config-asap-hub": "workspace:*",
+    "@babel/core": "^7.14.2",
+    "@babel/preset-react": "^7.13.13",
+    "@testing-library/react": "^11.2.6",
+    "@types/history": "^4.7.6",
+    "@types/jest": "^26.0.23",
+    "@types/react": "^17.0.5",
+    "@types/react-router-dom": "^5.1.7",
+    "@types/testing-library__jest-dom": "^5.9.5",
+    "@types/testing-library__react": "^10.0.1",
+    "history": "^4",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.0",
+    "react-test-renderer": "^17.0.2"
+  }
+}

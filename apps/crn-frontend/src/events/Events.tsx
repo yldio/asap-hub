@@ -2,8 +2,9 @@ import { EventsPage } from '@asap-hub/react-components';
 import { events } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Frame } from '@asap-hub/structure';
 import { useSearch } from '../hooks';
-import Frame from '../structure/Frame';
+
 import Event from './Event';
 
 const loadCalendars = () =>

@@ -2,9 +2,9 @@ import { FC, lazy, useEffect } from 'react';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 import { NetworkPage } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
-
+import { Frame, SearchFrame } from '@asap-hub/structure';
 import { useSearch } from '../hooks';
-import Frame, { SearchFrame } from '../structure/Frame';
+
 import GroupProfile from './groups/GroupProfile';
 
 const loadUserList = () =>

@@ -1,4 +1,3 @@
-import { UserResponse, ExternalAuthorResponse } from '@asap-hub/model';
 import {
   isResearchOutputType,
   isResearchOutputSubtype,

@@ -2,8 +2,11 @@ import {
   ResearchOutputPostRequest,
   researchOutputSubtypes,
   researchOutputTypes,
+  ResearchOutputIdentifierType,
+  researchOutputToIdentifierType,
 } from '@asap-hub/model';
 import { JSONSchemaType } from 'ajv';
+import Boom from '@hapi/boom';
 import { validateInput } from '.';
 
 type ResearchOutputParameters = {
@@ -65,6 +68,18 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       },
       teams: { type: 'array', items: { type: 'string' }, minItems: 1 },
       accessInstructions: { type: 'string', nullable: true },
+      doi: {
+        type: 'string',
+        nullable: true,
+        pattern: '^(doi:)?\\d{2}\\.\\d{4}.*$',
+      },
+      accession: {
+        type: 'string',
+        nullable: true,
+        pattern: '^(\\w+\\d+(\\.\\d+)?)|(NP_\\d+)$',
+      },
+      labCatalogNumber: { type: 'string', nullable: true },
+      rrid: { type: 'string', nullable: true, pattern: 'RRID:[a-zA-Z]+.+$' },
     },
     required: [
       'type',
@@ -85,3 +100,50 @@ export const validateResearchOutputPostRequestParameters = validateInput(
     coerce: false,
   },
 );
+
+export const validateResearchOutputPostRequestParametersIdentifiers = (
+  data: ResearchOutputPostRequest,
+): void => {
+  const identifierRequired = data.asapFunded && data.usedInPublication;
+
+  if (
+    identifierRequired &&
+    !data.rrid &&
+    !data.doi &&
+    !data.accession &&
+    !data.labCatalogNumber
+  ) {
+    throw Boom.badRequest('Validation error', {
+      details: `An identifier is required for research output that is funded and used in a publication`,
+    });
+  }
+
+  const types = researchOutputToIdentifierType[data.type];
+
+  if (data.rrid && !types.includes(ResearchOutputIdentifierType.RRID)) {
+    throw Boom.badRequest('Validation error', {
+      details: `RRID identifier is not supported for research output of type ${data.type}`,
+    });
+  }
+  if (data.doi && !types.includes(ResearchOutputIdentifierType.DOI)) {
+    throw Boom.badRequest('Validation error', {
+      details: `DOI identifier is not supported for research output of type ${data.type}`,
+    });
+  }
+  if (
+    data.labCatalogNumber &&
+    !types.includes(ResearchOutputIdentifierType.LabCatalogNumber)
+  ) {
+    throw Boom.badRequest('Validation error', {
+      details: `Lab catalog number identifier is not supported for research output of type ${data.type}`,
+    });
+  }
+  if (
+    data.accession &&
+    !types.includes(ResearchOutputIdentifierType.AccessionNumber)
+  ) {
+    throw Boom.badRequest('Validation error', {
+      details: `Accession number identifier is not supported for research output of type ${data.type}`,
+    });
+  }
+};

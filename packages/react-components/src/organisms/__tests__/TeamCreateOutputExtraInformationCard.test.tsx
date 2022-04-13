@@ -8,6 +8,9 @@ const props: ComponentProps<typeof TeamCreateOutputExtraInformationCard> = {
   isSaving: false,
   tagSuggestions: [],
   tags: [],
+
+  type: 'Article',
+  identifierRequired: false,
 };
 
 it('should render a tag', () => {

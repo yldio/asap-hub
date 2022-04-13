@@ -1,10 +1,18 @@
-import { ResearchOutputPostRequest } from '@asap-hub/model';
+import {
+  ResearchOutputIdentifierType,
+  ResearchOutputPostRequest,
+  ResearchOutputType,
+} from '@asap-hub/model';
 import { ComponentProps } from 'react';
 import { Link } from '../atoms';
 
 import { mailToSupport } from '../mail';
 import { FormCard, LabeledMultiSelect, LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
+import {
+  TeamCreateOutputIdentifier,
+  TeamCreateOutputIdentifierProps,
+} from './TeamCreateOutputIdentifier';
 
 type TeamCreateOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
@@ -16,7 +24,9 @@ type TeamCreateOutputExtraInformationProps = Pick<
   onChangeTags?: (values: string[]) => void;
   onChangeAccessInstructions?: (values: string) => void;
   isSaving: boolean;
-};
+  type: ResearchOutputType;
+  identifierRequired: boolean;
+} & Omit<TeamCreateOutputIdentifierProps, 'required'>;
 
 const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInformationProps> =
   ({
@@ -26,6 +36,12 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     onChangeAccessInstructions = noop,
     accessInstructions,
     isSaving,
+    identifier = '',
+    identifierType = ResearchOutputIdentifierType.None,
+    setIdentifier = noop,
+    setIdentifierType = noop,
+    identifierRequired,
+    type,
   }) => (
     <FormCard title="What extra information can you provide?">
       <LabeledMultiSelect
@@ -42,6 +58,15 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
       <Link href={mailToSupport({ subject: 'New keyword' }).toString()}>
         Ask ASAP to add a new keyword
       </Link>
+
+      <TeamCreateOutputIdentifier
+        type={type}
+        identifier={identifier}
+        setIdentifier={setIdentifier}
+        identifierType={identifierType}
+        setIdentifierType={setIdentifierType}
+        required={identifierRequired}
+      />
 
       <LabeledTextArea
         title="Access instructions"

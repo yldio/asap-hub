@@ -1,4 +1,7 @@
 import { TeamCreateOutputExtraInformationCard } from '@asap-hub/react-components';
+import { ComponentProps } from 'react';
+import { researchOutputTypes } from '@asap-hub/model';
+import { boolean, select } from '@storybook/addon-knobs';
 
 export default {
   title: 'Organisms / Team Profile / Team Create Output Extra Information Card',
@@ -7,23 +10,24 @@ export default {
 
 const tagSuggestions = ['A53T', 'Activity assay'];
 
-export const Normal = () => (
-  <TeamCreateOutputExtraInformationCard
-    isSaving={false}
-    tags={[]}
-    tagSuggestions={tagSuggestions.map((suggestion) => ({
+const commonProps: ComponentProps<typeof TeamCreateOutputExtraInformationCard> =
+  {
+    isSaving: false,
+    tags: [],
+    tagSuggestions: tagSuggestions.map((suggestion) => ({
       label: suggestion,
       value: suggestion,
-    }))}
-  />
+    })),
+    type: select('type', researchOutputTypes, 'Article'),
+    identifierRequired: boolean('identifierRequired', false),
+  };
+
+export const Normal = () => (
+  <TeamCreateOutputExtraInformationCard {...commonProps} />
 );
 export const Filled = () => (
   <TeamCreateOutputExtraInformationCard
-    isSaving={false}
+    {...commonProps}
     tags={tagSuggestions}
-    tagSuggestions={tagSuggestions.map((suggestion) => ({
-      label: suggestion,
-      value: suggestion,
-    }))}
   />
 );

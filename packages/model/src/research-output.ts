@@ -127,6 +127,46 @@ export const researchOutputMapSubtype = (
   return null;
 };
 
+export enum ResearchOutputIdentifierType {
+  None = 'None',
+  DOI = 'DOI',
+  AccessionNumber = 'Accession Number',
+  RRID = 'RRID',
+  LabCatalogNumber = 'Lab Catalog Number',
+}
+
+export const researchOutputToIdentifierType: Record<
+  ResearchOutputType,
+  ResearchOutputIdentifierType[]
+> = {
+  Article: [
+    ResearchOutputIdentifierType.None,
+    ResearchOutputIdentifierType.DOI,
+  ],
+  Bioinformatics: [
+    ResearchOutputIdentifierType.None,
+    ResearchOutputIdentifierType.DOI,
+    ResearchOutputIdentifierType.RRID,
+  ],
+  'Lab Resource': [
+    ResearchOutputIdentifierType.None,
+    ResearchOutputIdentifierType.DOI,
+    ResearchOutputIdentifierType.RRID,
+    ResearchOutputIdentifierType.LabCatalogNumber,
+  ],
+  Dataset: [
+    ResearchOutputIdentifierType.None,
+    ResearchOutputIdentifierType.DOI,
+    ResearchOutputIdentifierType.AccessionNumber,
+  ],
+  Protocol: [
+    ResearchOutputIdentifierType.None,
+    ResearchOutputIdentifierType.DOI,
+  ],
+  'Grant Document': [],
+  Presentation: [],
+};
+
 export const sharingStatuses = ['Public', 'Network Only'] as const;
 
 export type ResearchOutputSharingStatus = typeof sharingStatuses[number];
@@ -172,6 +212,11 @@ export type ResearchOutputPostRequest = {
   labs?: string[];
   authors?: string[];
   teams: string[];
+
+  doi?: string;
+  accession?: string;
+  labCatalogNumber?: string;
+  rrid?: string;
 
   addedDate: string;
   asapFunded?: boolean;

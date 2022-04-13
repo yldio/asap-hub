@@ -4,8 +4,11 @@ import { StaticRouter } from 'react-router-dom';
 import { ComponentProps } from 'react';
 import { fireEvent, waitFor } from '@testing-library/dom';
 import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
+import { ResearchOutputIdentifierType } from '@asap-hub/model';
 
-import TeamCreateOutputForm from '../TeamCreateOutputForm';
+import TeamCreateOutputForm, {
+  createIdentifierField,
+} from '../TeamCreateOutputForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 
 const props: ComponentProps<typeof TeamCreateOutputForm> = {
@@ -18,6 +21,32 @@ const clickShare = () => {
   const button = screen.getByRole('button', { name: /Share/i });
   userEvent.click(button);
 };
+
+describe('createIdentifierField', () => {
+  it('maps the ResearchOutputIdentifierType to fields including the identifier', () => {
+    expect(
+      createIdentifierField(ResearchOutputIdentifierType.None, 'identifier'),
+    ).toEqual({});
+    expect(
+      createIdentifierField(ResearchOutputIdentifierType.RRID, 'identifier'),
+    ).toEqual({ rrid: 'identifier' });
+    expect(
+      createIdentifierField(ResearchOutputIdentifierType.DOI, 'identifier'),
+    ).toEqual({ doi: 'identifier' });
+    expect(
+      createIdentifierField(
+        ResearchOutputIdentifierType.LabCatalogNumber,
+        'identifier',
+      ),
+    ).toEqual({ labCatalogNumber: 'identifier' });
+    expect(
+      createIdentifierField(
+        ResearchOutputIdentifierType.AccessionNumber,
+        'identifier',
+      ),
+    ).toEqual({ accession: 'identifier' });
+  });
+});
 
 it('renders the form', async () => {
   const { getByText } = render(
@@ -122,6 +151,10 @@ it('can submit a form when form data is valid', async () => {
   );
   userEvent.click(screen.getByText('Author Two'));
 
+  fireEvent.change(screen.getByLabelText(/doi/i), {
+    target: { value: 'doi:12.1234' },
+  });
+
   clickShare();
 
   expect(screen.getByRole('button', { name: /Share/i })).not.toBeEnabled();
@@ -141,6 +174,7 @@ it('can submit a form when form data is valid', async () => {
       usedInPublication: true,
       sharingStatus: 'Public',
       publishDate: new Date('2022-03-24').toISOString(),
+      doi: 'doi:12.1234',
     });
     expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
     expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();

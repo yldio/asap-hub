@@ -711,6 +711,7 @@ describe('ResearchOutputs controller', () => {
         usedInPublication: _,
         teams: __,
         subTypes: ___,
+        identifierType: ____,
         ...squidexResearchOutput
       } = parseToSquidex(researchOutputRequest);
 

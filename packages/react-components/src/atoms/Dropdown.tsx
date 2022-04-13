@@ -3,7 +3,9 @@ import {
   createContext,
   createRef,
   FC,
+  useCallback,
   useContext,
+  useEffect,
   useState,
 } from 'react';
 import Select, { OptionTypeBase, components } from 'react-select';
@@ -81,9 +83,16 @@ export default function Dropdown<V extends string>({
   onChange = noop,
   noOptionsMessage,
 }: DropdownProps<V>): ReturnType<FC> {
-  const [inputValue, setInputValue] = useState<string>(
-    options.find((opt) => value.length > 0 && opt.value === value)?.label ?? '',
+  const findOption = useCallback(
+    (val) =>
+      options.find((opt) => val.length > 0 && opt.value === val)?.label ?? '',
+    [options],
   );
+
+  const [inputValue, setInputValue] = useState<string>(findOption(value));
+  useEffect(() => {
+    setInputValue(findOption(value));
+  }, [findOption, value]);
 
   const { validationMessage, validationTargetProps } =
     useValidation<HTMLInputElement>(

@@ -1,8 +1,8 @@
 import { UserResponse, ExternalAuthorResponse } from '@asap-hub/model';
 import {
   isResearchOutputDocumentType,
-  isResearchOutputSubtype,
-  researchOutputMapSubtype,
+  isResearchOutputType,
+  researchOutputMapType,
 } from '../src/research-output';
 
 describe('Research Output Model', () => {
@@ -16,21 +16,21 @@ describe('Research Output Model', () => {
     });
   });
 
-  describe('SubType', () => {
-    it('should recognize correct subtype', () => {
-      expect(isResearchOutputSubtype('Report')).toEqual(true);
+  describe('Type', () => {
+    it('should recognize correct type', () => {
+      expect(isResearchOutputType('Report')).toEqual(true);
     });
 
-    it('should not recognize incorrect subtype', () => {
-      expect(isResearchOutputSubtype('NotAReport')).toEqual(false);
+    it('should not recognize incorrect type', () => {
+      expect(isResearchOutputType('NotAReport')).toEqual(false);
     });
 
-    it('should map subtype', () => {
-      expect(researchOutputMapSubtype('Analysis')).toEqual('Analysis');
+    it('should map type', () => {
+      expect(researchOutputMapType('Analysis')).toEqual('Analysis');
     });
 
-    it('should return null on not known subtype', () => {
-      expect(researchOutputMapSubtype('NotACloningSubtype')).toBeNull();
+    it('should return null on not known type', () => {
+      expect(researchOutputMapType('NotACloningSubtype')).toBeNull();
     });
   });
 });

@@ -108,7 +108,7 @@ it('can submit a form when form data is valid', async () => {
         link: 'http://example.com',
         title: 'example title',
         description: 'example description',
-        subTypes: ['Animal Model'],
+        type: 'Animal Model',
         labs: ['l0'],
         authors: ['u2'],
       },

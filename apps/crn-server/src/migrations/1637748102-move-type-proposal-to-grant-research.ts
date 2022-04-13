@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 import { RestResearchOutput } from '@asap-hub/squidex';
 import {
-  ResearchOutputSubtype,
+  ResearchOutputType,
   ResearchOutputDocumentType,
 } from '@asap-hub/model';
 
@@ -33,7 +33,7 @@ export default class MoveResearchOutputTextToDescription extends Migration {
         if (researchOutput.data.type.iv === 'Grant Document') {
           await squidexClient.patch(researchOutput.id, {
             type: { iv: 'Proposal' as unknown as ResearchOutputDocumentType },
-            subtype: null as unknown as { iv: ResearchOutputSubtype },
+            subtype: null as unknown as { iv: ResearchOutputType },
           });
         }
       },

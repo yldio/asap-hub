@@ -17,7 +17,7 @@ export const researchOutputDocumentTypes = [
 export type ResearchOutputDocumentType =
   typeof researchOutputDocumentTypes[number];
 
-export const researchOutputSubtypes = [
+export const researchOutputTypes = [
   '3D Printing',
   'ASAP annual meeting',
   'ASAP subgroup meeting',
@@ -55,14 +55,14 @@ export const researchOutputSubtypes = [
   'Viral Vector',
 ] as const;
 
-export type ResearchOutputSubtype = typeof researchOutputSubtypes[number];
+export type ResearchOutputType = typeof researchOutputTypes[number];
 
 export const researchOutputDocumentTypeToSubtype: Record<
   ResearchOutputDocumentType,
-  Set<ResearchOutputSubtype>
+  Set<ResearchOutputType>
 > = {
-  Article: new Set<ResearchOutputSubtype>(['Preprint', 'Published']),
-  Dataset: new Set<ResearchOutputSubtype>([
+  Article: new Set<ResearchOutputType>(['Preprint', 'Published']),
+  Dataset: new Set<ResearchOutputType>([
     'Behavioral',
     'Electrophysiology',
     'Genetic Data - DNA',
@@ -71,12 +71,12 @@ export const researchOutputDocumentTypeToSubtype: Record<
     'Microscopy & Imaging',
     'Spectroscopy',
   ]),
-  Bioinformatics: new Set<ResearchOutputSubtype>([
+  Bioinformatics: new Set<ResearchOutputType>([
     'Code',
     'Data portal',
     'Software',
   ]),
-  Protocol: new Set<ResearchOutputSubtype>([
+  Protocol: new Set<ResearchOutputType>([
     '3D Printing',
     'Analysis',
     'Assay',
@@ -89,7 +89,7 @@ export const researchOutputDocumentTypeToSubtype: Record<
     'Sample Prep',
     'Shipment Procedure',
   ]),
-  'Lab Resource': new Set<ResearchOutputSubtype>([
+  'Lab Resource': new Set<ResearchOutputType>([
     'Animal Model',
     'Antibody',
     'Assay',
@@ -99,13 +99,13 @@ export const researchOutputDocumentTypeToSubtype: Record<
     'Plasmid',
     'Viral Vector',
   ]),
-  Presentation: new Set<ResearchOutputSubtype>([
+  Presentation: new Set<ResearchOutputType>([
     'ASAP annual meeting',
     'ASAP subgroup meeting',
     'External meeting',
     'Team meeting',
   ]),
-  'Grant Document': new Set<ResearchOutputSubtype>(['Proposal', 'Report']),
+  'Grant Document': new Set<ResearchOutputType>(['Proposal', 'Report']),
 };
 
 export const isResearchOutputDocumentType = (
@@ -113,16 +113,16 @@ export const isResearchOutputDocumentType = (
 ): type is ResearchOutputDocumentType =>
   (researchOutputDocumentTypes as ReadonlyArray<string>).includes(type);
 
-export const isResearchOutputSubtype = (
-  subtype: string,
-): subtype is ResearchOutputSubtype =>
-  (researchOutputSubtypes as ReadonlyArray<string>).includes(subtype);
+export const isResearchOutputType = (
+  type: string,
+): type is ResearchOutputType =>
+  (researchOutputTypes as ReadonlyArray<string>).includes(type);
 
-export const researchOutputMapSubtype = (
-  subtype?: string | null,
-): ResearchOutputSubtype | null => {
-  if (subtype && isResearchOutputSubtype(subtype)) {
-    return subtype;
+export const researchOutputMapType = (
+  type?: string | null,
+): ResearchOutputType | null => {
+  if (type && isResearchOutputType(type)) {
+    return type;
   }
 
   return null;
@@ -135,7 +135,7 @@ export type ResearchOutputSharingStatus = typeof sharingStatuses[number];
 export type ResearchOutputResponse = {
   readonly id: string;
   readonly documentType: ResearchOutputDocumentType;
-  readonly subTypes: ResearchOutputSubtype[];
+  readonly type?: ResearchOutputType;
   readonly title: string;
   readonly description: string;
   readonly tags: ReadonlyArray<string>;
@@ -165,7 +165,7 @@ export type ResearchOutputResponse = {
 export type ResearchOutputPostRequest = {
   description: string;
   documentType: ResearchOutputDocumentType;
-  subTypes: ResearchOutputSubtype[];
+  type: ResearchOutputType;
   title: string;
   tags: string[];
   link?: string;

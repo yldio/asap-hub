@@ -47,7 +47,7 @@ describe('researchOutputToCSV', () => {
       link: 'link',
       publishDate: 'publishDate',
       rrid: 'rrid',
-      subTypes: ['3D Printing', 'ASAP annual meeting'],
+      type: '3D Printing',
       usedInPublication: false,
     };
     expect(researchOutputToCSV(output)).toEqual({
@@ -70,7 +70,7 @@ describe('researchOutputToCSV', () => {
       publishDate: 'publishDate',
       rrid: 'rrid',
       usedInPublication: false,
-      subTypes: '3D Printing,ASAP annual meeting',
+      type: '3D Printing',
       authors: expect.anything(),
       labs: expect.anything(),
       tags: expect.anything(),

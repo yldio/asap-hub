@@ -3,7 +3,7 @@ import {
   DecisionOption,
   ResearchOutputPostRequest,
   ResearchOutputSharingStatus,
-  ResearchOutputSubtype,
+  ResearchOutputType,
   researchOutputDocumentTypeToSubtype,
 } from '@asap-hub/model';
 
@@ -20,17 +20,13 @@ import { noop } from '../utils';
 
 type TeamCreateOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
-  | 'link'
-  | 'title'
-  | 'description'
-  | 'subTypes'
-  | 'documentType'
-  | 'sharingStatus'
+  'link' | 'title' | 'description' | 'documentType' | 'sharingStatus'
 > & {
+  type: ResearchOutputType | '';
   onChangeLink?: (newValue: string) => void;
   onChangeTitle?: (newValue: string) => void;
   onChangeDescription?: (newValue: string) => void;
-  onChangeSubtypes?: (newValue: ResearchOutputSubtype[]) => void;
+  onChangeType?: (newValue: ResearchOutputType | '') => void;
   onChangeAsapFunded?: (newValue: DecisionOption) => void;
   onChangeUsedInPublication?: (newValue: DecisionOption) => void;
   onChangeSharingStatus?: (newValue: ResearchOutputSharingStatus) => void;
@@ -48,7 +44,7 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
     title,
     description,
     documentType,
-    subTypes,
+    type,
     asapFunded,
     usedInPublication,
     sharingStatus,
@@ -56,7 +52,7 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
     onChangeDescription = noop,
     onChangeLink = noop,
     onChangeTitle = noop,
-    onChangeSubtypes = noop,
+    onChangeType = noop,
     onChangeAsapFunded = noop,
     onChangeUsedInPublication = noop,
     onChangeSharingStatus = noop,
@@ -80,7 +76,7 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
           labelIndicator={globeIcon}
           placeholder="https://example.com"
         />
-        <LabeledDropdown<ResearchOutputSubtype>
+        <LabeledDropdown<ResearchOutputType | ''>
           title="Type"
           subtitle="(required)"
           description={`Select the option that applies to this ${documentType.toLowerCase()}.`}
@@ -90,9 +86,9 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
             value: option,
             label: option,
           }))}
-          onChange={(subType) => onChangeSubtypes([subType])}
+          onChange={(selectedType) => onChangeType(selectedType)}
           getValidationMessage={() => 'Please choose a type'}
-          value={subTypes[0] ?? ''}
+          value={type ?? ''}
           enabled={!isSaving}
           required
           noOptionsMessage={(option) =>

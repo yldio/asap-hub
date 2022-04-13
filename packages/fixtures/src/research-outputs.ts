@@ -16,7 +16,7 @@ const researchOutputResponse: Omit<
   title: 'Output',
   description: 'description',
   documentType: 'Grant Document',
-  subTypes: ['3D Printing'],
+  type: '3D Printing',
   tags: ['test', 'tag'],
   authors: [
     {

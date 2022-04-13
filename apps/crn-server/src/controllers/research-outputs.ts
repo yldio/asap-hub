@@ -179,13 +179,13 @@ export default class ResearchOutputs implements ResearchOutputController {
   }
   private async createResearchOutput({
     documentType,
-    subTypes,
+    type,
     ...researchOutputData
   }: Omit<ResearchOutputPostRequest, 'teams'>) {
     const { usedInPublication, ...researchOutput } = parseToSquidex({
       type: documentType,
       ...researchOutputData,
-      ...(subTypes[0] && { subtype: subTypes[0] }),
+      subtype: type,
       asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
       usedInPublication: convertBooleanToDecision(
         researchOutputData.usedInPublication,

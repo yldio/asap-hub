@@ -83,7 +83,7 @@ it('renders an output with type and subtypes', () => {
       teams={[]}
       authors={[]}
       documentType="Protocol"
-      subTypes={[]}
+      type={undefined}
     />,
   );
   expect(
@@ -96,10 +96,10 @@ it('renders an output with type and subtypes', () => {
       teams={[]}
       authors={[]}
       documentType="Protocol"
-      subTypes={['3D Printing', 'ASAP annual meeting']}
+      type={'3D Printing'}
     />,
   );
   expect(
     getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['Protocol', '3D Printing', 'ASAP annual meeting']);
+  ).toEqual(['Protocol', '3D Printing']);
 });

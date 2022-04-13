@@ -83,9 +83,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   team,
 }) => {
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
-  const [subTypes, setSubtypes] = useState<
-    ResearchOutputPostRequest['subTypes']
-  >([]);
+  const [type, setType] = useState<ResearchOutputPostRequest['type'] | ''>('');
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>('');
   const [labs, setLabs] = useState<
     NonNullable<ComponentProps<typeof TeamCreateOutputContributorsCard>['labs']>
@@ -121,7 +119,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         title !== '' ||
         description !== '' ||
         link !== '' ||
-        subTypes.length !== 0 ||
+        type !== '' ||
         labs.length !== 0 ||
         authors.length !== 0 ||
         teams.length !== 1 // Original team
@@ -130,12 +128,16 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         const convertDecisionToBoolean = (decision: DecisionOption): boolean =>
           decision === 'Yes';
 
+        if (!type) {
+          throw new Error('There is no type provided.');
+        }
+
         onSave({
           tags,
           link: String(link).trim() === '' ? undefined : link,
           description,
           title,
-          subTypes,
+          type,
           authors: authors.map(({ value }) => value),
           labs: labs.map(({ value }) => value),
           teams: teams.map(({ value }) => value),
@@ -161,8 +163,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangeTitle={setTitle}
             link={link}
             onChangeLink={setLink}
-            subTypes={subTypes}
-            onChangeSubtypes={setSubtypes}
+            type={type}
+            onChangeType={setType}
             asapFunded={asapFunded}
             onChangeAsapFunded={setAsapFunded}
             usedInPublication={usedInPublication}

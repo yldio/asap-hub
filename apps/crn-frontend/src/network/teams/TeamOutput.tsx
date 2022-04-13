@@ -121,7 +121,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
                 const { response } = error;
                 if (
                   isValidationErrorResponse(response) &&
-                  validationErrorsAreSupported(response, ['/link'])
+                  validationErrorsAreSupported(response, ['/link', '/title'])
                 ) {
                   setErrors(response.data);
                   return;

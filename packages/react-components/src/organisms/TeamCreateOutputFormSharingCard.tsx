@@ -67,12 +67,21 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
     const urlRequired = type !== 'Lab Resource';
     const urlSubtitle = urlRequired ? '(required)' : '(optional)';
     const [urlValidationMessage, setUrlValidationMessage] = useState<string>();
+    const [titleValidationMessage, setTitleValidationMessage] =
+      useState<string>();
     useEffect(() => {
       setUrlValidationMessage(
         getAjvErrorForPath(
           serverValidationErrors,
           '/link',
           'A Research Output with this URL already exists. Please enter a different URL.',
+        ),
+      );
+      setTitleValidationMessage(
+        getAjvErrorForPath(
+          serverValidationErrors,
+          '/title',
+          'A Research Output with this title already exists. Please check if this is repeated and choose a different title.',
         ),
       );
     }, [serverValidationErrors]);
@@ -86,13 +95,13 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
             clearServerValidationError('/link');
             onChangeLink(newValue);
           }}
+          customValidationMessage={urlValidationMessage}
           getValidationMessage={(validationState) =>
             validationState.valueMissing || validationState.patternMismatch
               ? 'Please enter a valid URL, starting with http://'
               : undefined
           }
           value={link ?? ''}
-          customValidationMessage={urlValidationMessage}
           enabled={!isSaving}
           required={urlRequired}
           labelIndicator={globeIcon}
@@ -122,8 +131,16 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
           title="Title"
           maxLength={350}
           subtitle="(required)"
-          onChange={onChangeTitle}
-          getValidationMessage={() => 'Please enter a title'}
+          onChange={(newValue) => {
+            clearServerValidationError('/title');
+            onChangeTitle(newValue);
+          }}
+          customValidationMessage={titleValidationMessage}
+          getValidationMessage={(validationState) =>
+            validationState.valueMissing || validationState.patternMismatch
+              ? 'Please enter a title'
+              : undefined
+          }
           value={title}
           required
           enabled={!isSaving}

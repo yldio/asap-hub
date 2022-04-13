@@ -44,7 +44,6 @@ const Form = <T extends void | Record<string, unknown>>({
   }, [status, dirty]);
   useEffect(() => {
     if (serverErrors.length && formRef.current) {
-      /* istanbul ignore next */
       formRef.current.reportValidity();
     }
   }, [serverErrors]);

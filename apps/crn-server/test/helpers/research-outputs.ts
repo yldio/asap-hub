@@ -10,7 +10,7 @@ export const createResearchOutput = (
   overwrites?: Partial<ResearchOutput>,
 ): Promise<RestResearchOutput> => {
   const researchOutputData: Partial<ResearchOutput> = {
-    type: 'Article',
+    documentType: 'Article',
     title: 'Research Output',
     description: 'Description',
     sharingStatus: 'Network Only',

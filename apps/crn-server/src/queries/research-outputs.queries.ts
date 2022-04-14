@@ -8,7 +8,7 @@ export const researchOutputContentQueryFragment = gql`
     version
     flatData {
       title
-      type
+      documentType
       subtype
       description
       link

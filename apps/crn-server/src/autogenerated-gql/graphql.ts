@@ -46,6 +46,8 @@ export type AppMutations = {
   changePagesContent: Pages;
   /** Change a Research Outputs content. */
   changeResearchOutputsContent: ResearchOutputs;
+  /** Change a Research Tags content. */
+  changeResearchTagsContent: ResearchTags;
   /** Change a Teams content. */
   changeTeamsContent: Teams;
   /** Change a Users content. */
@@ -72,6 +74,8 @@ export type AppMutations = {
   createPagesContent: Pages;
   /** Creates an Research Outputs content. */
   createResearchOutputsContent: ResearchOutputs;
+  /** Creates an Research Tags content. */
+  createResearchTagsContent: ResearchTags;
   /** Creates an Teams content. */
   createTeamsContent: Teams;
   /** Creates an Users content. */
@@ -98,6 +102,8 @@ export type AppMutations = {
   deletePagesContent: EntitySavedResultDto;
   /** Delete an Research Outputs content. */
   deleteResearchOutputsContent: EntitySavedResultDto;
+  /** Delete an Research Tags content. */
+  deleteResearchTagsContent: EntitySavedResultDto;
   /** Delete an Teams content. */
   deleteTeamsContent: EntitySavedResultDto;
   /** Delete an Users content. */
@@ -124,6 +130,8 @@ export type AppMutations = {
   patchPagesContent: Pages;
   /** Patch an Research Outputs content by id. */
   patchResearchOutputsContent: ResearchOutputs;
+  /** Patch an Research Tags content by id. */
+  patchResearchTagsContent: ResearchTags;
   /** Patch an Teams content by id. */
   patchTeamsContent: Teams;
   /** Patch an Users content by id. */
@@ -184,6 +192,11 @@ export type AppMutations = {
    */
   publishResearchOutputsContent: ResearchOutputs;
   /**
+   * Publish a Research Tags content.
+   * @deprecated Use 'changeResearchTagsContent' instead
+   */
+  publishResearchTagsContent: ResearchTags;
+  /**
    * Publish a Teams content.
    * @deprecated Use 'changeTeamsContent' instead
    */
@@ -215,6 +228,8 @@ export type AppMutations = {
   updatePagesContent: Pages;
   /** Update an Research Outputs content by id. */
   updateResearchOutputsContent: ResearchOutputs;
+  /** Update an Research Tags content by id. */
+  updateResearchTagsContent: ResearchTags;
   /** Update an Teams content by id. */
   updateTeamsContent: Teams;
   /** Update an Users content by id. */
@@ -241,6 +256,8 @@ export type AppMutations = {
   upsertPagesContent: Pages;
   /** Upsert an Research Outputs content by id. */
   upsertResearchOutputsContent: ResearchOutputs;
+  /** Upsert an Research Tags content by id. */
+  upsertResearchTagsContent: ResearchTags;
   /** Upsert an Teams content by id. */
   upsertTeamsContent: Teams;
   /** Upsert an Users content by id. */
@@ -329,6 +346,14 @@ export type AppMutationsChangePagesContentArgs = {
 
 /** The app mutations. */
 export type AppMutationsChangeResearchOutputsContentArgs = {
+  dueTime: Maybe<Scalars['Instant']>;
+  expectedVersion?: Maybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
+export type AppMutationsChangeResearchTagsContentArgs = {
   dueTime: Maybe<Scalars['Instant']>;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -440,6 +465,14 @@ export type AppMutationsCreateResearchOutputsContentArgs = {
 };
 
 /** The app mutations. */
+export type AppMutationsCreateResearchTagsContentArgs = {
+  data: ResearchTagsDataInputDto;
+  id: Maybe<Scalars['String']>;
+  publish?: Maybe<Scalars['Boolean']>;
+  status: Maybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type AppMutationsCreateTeamsContentArgs = {
   data: TeamsDataInputDto;
   id: Maybe<Scalars['String']>;
@@ -517,6 +550,12 @@ export type AppMutationsDeletePagesContentArgs = {
 
 /** The app mutations. */
 export type AppMutationsDeleteResearchOutputsContentArgs = {
+  expectedVersion?: Maybe<Scalars['Int']>;
+  id: Scalars['String'];
+};
+
+/** The app mutations. */
+export type AppMutationsDeleteResearchTagsContentArgs = {
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
 };
@@ -606,6 +645,13 @@ export type AppMutationsPatchPagesContentArgs = {
 /** The app mutations. */
 export type AppMutationsPatchResearchOutputsContentArgs = {
   data: ResearchOutputsDataInputDto;
+  expectedVersion?: Maybe<Scalars['Int']>;
+  id: Maybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type AppMutationsPatchResearchTagsContentArgs = {
+  data: ResearchTagsDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Maybe<Scalars['String']>;
 };
@@ -713,6 +759,14 @@ export type AppMutationsPublishResearchOutputsContentArgs = {
 };
 
 /** The app mutations. */
+export type AppMutationsPublishResearchTagsContentArgs = {
+  dueTime: Maybe<Scalars['Instant']>;
+  expectedVersion?: Maybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
 export type AppMutationsPublishTeamsContentArgs = {
   dueTime: Maybe<Scalars['Instant']>;
   expectedVersion?: Maybe<Scalars['Int']>;
@@ -801,6 +855,13 @@ export type AppMutationsUpdatePagesContentArgs = {
 /** The app mutations. */
 export type AppMutationsUpdateResearchOutputsContentArgs = {
   data: ResearchOutputsDataInputDto;
+  expectedVersion?: Maybe<Scalars['Int']>;
+  id: Maybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type AppMutationsUpdateResearchTagsContentArgs = {
+  data: ResearchTagsDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Maybe<Scalars['String']>;
 };
@@ -919,6 +980,15 @@ export type AppMutationsUpsertResearchOutputsContentArgs = {
 };
 
 /** The app mutations. */
+export type AppMutationsUpsertResearchTagsContentArgs = {
+  data: ResearchTagsDataInputDto;
+  expectedVersion?: Maybe<Scalars['Int']>;
+  id: Scalars['String'];
+  publish?: Maybe<Scalars['Boolean']>;
+  status: Maybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type AppMutationsUpsertTeamsContentArgs = {
   data: TeamsDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
@@ -962,6 +1032,8 @@ export type AppQueries = {
   findPagesContent: Maybe<Pages>;
   /** Find an Research Outputs content by id. */
   findResearchOutputsContent: Maybe<ResearchOutputs>;
+  /** Find an Research Tags content by id. */
+  findResearchTagsContent: Maybe<ResearchTags>;
   /** Find an Teams content by id. */
   findTeamsContent: Maybe<Teams>;
   /** Find an Users content by id. */
@@ -1014,6 +1086,10 @@ export type AppQueries = {
   queryResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
   /** Query Research Outputs content items with total count. */
   queryResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
+  /** Query Research Tags content items. */
+  queryResearchTagsContents: Maybe<Array<ResearchTags>>;
+  /** Query Research Tags content items with total count. */
+  queryResearchTagsContentsWithTotal: Maybe<ResearchTagsResultDto>;
   /** Query Teams content items. */
   queryTeamsContents: Maybe<Array<Teams>>;
   /** Query Teams content items with total count. */
@@ -1091,6 +1167,12 @@ export type AppQueriesFindPagesContentArgs = {
 
 /** The app queries. */
 export type AppQueriesFindResearchOutputsContentArgs = {
+  id: Scalars['String'];
+  version: Maybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type AppQueriesFindResearchTagsContentArgs = {
   id: Scalars['String'];
   version: Maybe<Scalars['Int']>;
 };
@@ -1314,6 +1396,24 @@ export type AppQueriesQueryResearchOutputsContentsArgs = {
 
 /** The app queries. */
 export type AppQueriesQueryResearchOutputsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type AppQueriesQueryResearchTagsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type AppQueriesQueryResearchTagsContentsWithTotalArgs = {
   filter: Maybe<Scalars['String']>;
   orderby: Maybe<Scalars['String']>;
   search: Maybe<Scalars['String']>;
@@ -3372,6 +3472,10 @@ export type ResearchOutputs = Content & {
   referencesLabsContents: Maybe<Array<Labs>>;
   /** Query Labs content items with total count. */
   referencesLabsContentsWithTotal: Maybe<LabsResultDto>;
+  /** Query Research Tags content items. */
+  referencesResearchTagsContents: Maybe<Array<ResearchTags>>;
+  /** Query Research Tags content items with total count. */
+  referencesResearchTagsContentsWithTotal: Maybe<ResearchTagsResultDto>;
   /** Query Users content items. */
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -3419,6 +3523,24 @@ export type ResearchOutputsReferencesLabsContentsArgs = {
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesLabsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesResearchTagsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesResearchTagsContentsWithTotalArgs = {
   filter: Maybe<Scalars['String']>;
   orderby: Maybe<Scalars['String']>;
   search: Maybe<Scalars['String']>;
@@ -3583,6 +3705,7 @@ export type ResearchOutputsDataDto = {
   labs: Maybe<ResearchOutputsDataLabsDto>;
   lastUpdatedPartial: Maybe<ResearchOutputsDataLastUpdatedPartialDto>;
   link: Maybe<ResearchOutputsDataLinkDto>;
+  methods: Maybe<ResearchOutputsDataMethodsDto>;
   publishDate: Maybe<ResearchOutputsDataPublishDateDto>;
   rrid: Maybe<ResearchOutputsDataRridDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
@@ -3607,6 +3730,7 @@ export type ResearchOutputsDataInputDto = {
   labs: Maybe<ResearchOutputsDataLabsInputDto>;
   lastUpdatedPartial: Maybe<ResearchOutputsDataLastUpdatedPartialInputDto>;
   link: Maybe<ResearchOutputsDataLinkInputDto>;
+  methods: Maybe<ResearchOutputsDataMethodsInputDto>;
   publishDate: Maybe<ResearchOutputsDataPublishDateInputDto>;
   rrid: Maybe<ResearchOutputsDataRridInputDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusInputDto>;
@@ -3658,6 +3782,16 @@ export type ResearchOutputsDataLinkDto = {
 /** The structure of the External Link field of the Research Outputs content input type. */
 export type ResearchOutputsDataLinkInputDto = {
   iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Methods field of the Research Outputs content type. */
+export type ResearchOutputsDataMethodsDto = {
+  iv: Maybe<Array<ResearchTags>>;
+};
+
+/** The structure of the Methods field of the Research Outputs content input type. */
+export type ResearchOutputsDataMethodsInputDto = {
+  iv: Maybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Publish Date field of the Research Outputs content type. */
@@ -3760,6 +3894,7 @@ export type ResearchOutputsFlatDataDto = {
   /** Does not include changes to Publish Date and Admin notes */
   lastUpdatedPartial: Maybe<Scalars['Instant']>;
   link: Maybe<Scalars['String']>;
+  methods: Maybe<Array<ResearchTags>>;
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   publishDate: Maybe<Scalars['Instant']>;
   /** This must start with "RRID:" */
@@ -3776,6 +3911,139 @@ export type ResearchOutputsFlatDataDto = {
 export type ResearchOutputsResultDto = {
   /** The contents. */
   items: Maybe<Array<ResearchOutputs>>;
+  /** The total count of  contents. */
+  total: Scalars['Int'];
+};
+
+/** The structure of a Research Tags content type. */
+export type ResearchTags = Content & {
+  /** The timestamp when the object was created. */
+  created: Scalars['Instant'];
+  /** The user who created the object. */
+  createdBy: Scalars['String'];
+  /** The user who created the object. */
+  createdByUser: User;
+  /** The data of the content. */
+  data: ResearchTagsDataDto;
+  /** The edit token. */
+  editToken: Maybe<Scalars['String']>;
+  /** The flat data of the content. */
+  flatData: ResearchTagsFlatDataDto;
+  /** The ID of the object (usually GUID). */
+  id: Scalars['String'];
+  /** The timestamp when the object was updated the last time. */
+  lastModified: Scalars['Instant'];
+  /** The user who updated the object the last time. */
+  lastModifiedBy: Scalars['String'];
+  /** The user who updated the object the last time. */
+  lastModifiedByUser: User;
+  /** The new status of the content. */
+  newStatus: Maybe<Scalars['String']>;
+  /** The status color of the content. */
+  newStatusColor: Maybe<Scalars['String']>;
+  /** Query Research Outputs content items. */
+  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
+  /** Query Research Outputs content items with total count. */
+  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
+  /** The status of the content. */
+  status: Scalars['String'];
+  /** The status color of the content. */
+  statusColor: Scalars['String'];
+  /** The URL to the content. */
+  url: Scalars['String'];
+  /** The version of the objec. */
+  version: Scalars['Int'];
+};
+
+/** The structure of a Research Tags content type. */
+export type ResearchTagsReferencingResearchOutputsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Tags content type. */
+export type ResearchTagsReferencingResearchOutputsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of the Category field of the Research Tags content type. */
+export type ResearchTagsDataCategoryDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Category field of the Research Tags content input type. */
+export type ResearchTagsDataCategoryInputDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Research Tags data type. */
+export type ResearchTagsDataDto = {
+  category: Maybe<ResearchTagsDataCategoryDto>;
+  entities: Maybe<ResearchTagsDataEntitiesDto>;
+  name: Maybe<ResearchTagsDataNameDto>;
+  types: Maybe<ResearchTagsDataTypesDto>;
+};
+
+/** The structure of the Entities field of the Research Tags content type. */
+export type ResearchTagsDataEntitiesDto = {
+  /** List of associated entities */
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Entities field of the Research Tags content input type. */
+export type ResearchTagsDataEntitiesInputDto = {
+  /** List of associated entities */
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Research Tags data input type. */
+export type ResearchTagsDataInputDto = {
+  category: Maybe<ResearchTagsDataCategoryInputDto>;
+  entities: Maybe<ResearchTagsDataEntitiesInputDto>;
+  name: Maybe<ResearchTagsDataNameInputDto>;
+  types: Maybe<ResearchTagsDataTypesInputDto>;
+};
+
+/** The structure of the Name field of the Research Tags content type. */
+export type ResearchTagsDataNameDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Name field of the Research Tags content input type. */
+export type ResearchTagsDataNameInputDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Types field of the Research Tags content type. */
+export type ResearchTagsDataTypesDto = {
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Types field of the Research Tags content input type. */
+export type ResearchTagsDataTypesInputDto = {
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the flat Research Tags data type. */
+export type ResearchTagsFlatDataDto = {
+  category: Maybe<Scalars['String']>;
+  /** List of associated entities */
+  entities: Maybe<Array<Scalars['String']>>;
+  name: Maybe<Scalars['String']>;
+  types: Maybe<Array<Scalars['String']>>;
+};
+
+/** List of Research Tags items and total count. */
+export type ResearchTagsResultDto = {
+  /** The contents. */
+  items: Maybe<Array<ResearchTags>>;
   /** The total count of  contents. */
   total: Scalars['Int'];
 };

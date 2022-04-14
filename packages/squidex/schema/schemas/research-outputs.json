@@ -24,6 +24,7 @@
       "lastUpdatedPartial",
       "labs",
       "authors",
+      "methods",
       "tags",
       "adminNotes",
       "usedInAPublication",
@@ -252,6 +253,26 @@
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
+        }
+      },
+      {
+        "name": "methods",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "mustBePublished": true,
+          "editor": "Tags",
+          "schemaIds": ["research-tags"],
+          "label": "Methods",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true,
+          "inlineEditable": true
         }
       },
       {

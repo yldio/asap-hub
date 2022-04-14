@@ -7,4 +7,11 @@ module.exports = {
 
     require.resolve('@storybook/addon-viewport/register'),
   ],
+  babel: async (options) => ({
+    ...options,
+    presets: [
+      ...options.presets,
+      ['babel-preset-react-app', { runtime: 'automatic' }],
+    ],
+  }),
 };

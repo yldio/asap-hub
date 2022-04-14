@@ -1,0 +1,117 @@
+{
+  "$schema": "./../__json/schema.json",
+  "name": "research-tags",
+  "isSingleton": false,
+  "isPublished": false,
+  "schema": {
+    "noFieldDeletion": false,
+    "noFieldRecreation": false,
+    "properties": {
+      "label": "Research Tags",
+      "validateOnPublish": false
+    },
+    "scripts": {},
+    "fieldsInReferences": [],
+    "fieldsInLists": [],
+    "fields": [
+      {
+        "name": "name",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "minCharacters": 3,
+          "isUnique": true,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Name",
+          "isRequired": true,
+          "isRequiredOnPublish": true,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "category",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "allowedValues": ["Method"],
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Dropdown",
+          "label": "Category",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "types",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Tags",
+          "allowedValues": [
+            "Activity Assay",
+            "Behavioral",
+            "Chromatography",
+            "DNA ATAC-seq",
+            "DNA Chip-Seq",
+            "DNA Hi-C Seq",
+            "DNA WGS",
+            "ELISA",
+            "FMRI",
+            "Genotyping",
+            "FACS",
+            "Mass Spectrometry",
+            "Microscopy - scanning probe",
+            "Microscopy - x-ray",
+            "Microscopy - electron",
+            "Microscopy - optical",
+            "MRI",
+            "NMR",
+            "Other",
+            "RNA Bulk",
+            "RNA Single Cell",
+            "RNA Single Nuclear",
+            "Western Blot"
+          ],
+          "editor": "Checkboxes",
+          "label": "Types",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "entities",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Tags",
+          "allowedValues": ["Research Output", "User"],
+          "editor": "Checkboxes",
+          "label": "Entities",
+          "hints": "List of associated entities",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      }
+    ],
+    "previewUrls": {},
+    "category": "Storage",
+    "isPublished": true
+  }
+}

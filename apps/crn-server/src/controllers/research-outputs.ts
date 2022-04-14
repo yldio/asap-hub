@@ -149,7 +149,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       (
         await this.fetch({
           filter: {
-            type: researchOutputData.documentType,
+            documentType: researchOutputData.documentType,
             title: researchOutputData.title,
           },
           includeDrafts: true,
@@ -188,7 +188,6 @@ export default class ResearchOutputs implements ResearchOutputController {
     return { id: researchOutputId };
   }
   private async createResearchOutput({
-    documentType,
     type,
     authors,
     ...researchOutputData
@@ -196,7 +195,6 @@ export default class ResearchOutputs implements ResearchOutputController {
     authors: string[];
   }) {
     const { usedInPublication, ...researchOutput } = parseToSquidex({
-      type: documentType,
       ...researchOutputData,
       subtype: type,
       asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
@@ -243,7 +241,7 @@ export default class ResearchOutputs implements ResearchOutputController {
 type ResearchOutputFilter =
   | string[]
   | {
-      type?: string;
+      documentType?: string;
       title?: string;
     };
 export interface ResearchOutputController {
@@ -264,7 +262,7 @@ export type ResearchOutputInputData = ResearchOutputPostRequest;
 
 const makeODataFilter = (filter?: ResearchOutputFilter): string => {
   if (Array.isArray(filter)) {
-    return filter.map((val) => `data/type/iv eq '${val}'`).join(' or ');
+    return filter.map((val) => `data/documentType/iv eq '${val}'`).join(' or ');
   }
 
   if (filter) {

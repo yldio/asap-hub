@@ -14,10 +14,12 @@ export default class MoveResearchOutputTextToDescription extends Migration {
       'research-outputs',
       async (researchOutput, squidexClient) => {
         if (
+          // @ts-expect-error type definition has changed
           researchOutput.data.type.iv ===
           ('Proposal' as unknown as ResearchOutputDocumentType)
         ) {
           await squidexClient.patch(researchOutput.id, {
+            // @ts-expect-error type definition has changed
             type: { iv: 'Grant Document' },
             subtype: { iv: 'Proposal' },
           });
@@ -30,8 +32,10 @@ export default class MoveResearchOutputTextToDescription extends Migration {
     await applyToAllItemsInCollection<RestResearchOutput>(
       'research-outputs',
       async (researchOutput, squidexClient) => {
+        // @ts-expect-error type definition has changed
         if (researchOutput.data.type.iv === 'Grant Document') {
           await squidexClient.patch(researchOutput.id, {
+            // @ts-expect-error type definition has changed
             type: { iv: 'Proposal' as unknown as ResearchOutputDocumentType },
             subtype: null as unknown as { iv: ResearchOutputType },
           });

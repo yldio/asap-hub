@@ -85,8 +85,8 @@ export const parseGraphQLResearchOutput = (
     created: parseDate(output.created).toISOString(),
     link: data.link || undefined,
     documentType:
-      data.type && isResearchOutputDocumentType(data.type)
-        ? data.type
+      data.documentType && isResearchOutputDocumentType(data.documentType)
+        ? data.documentType
         : 'Grant Document',
     type: type || undefined,
     title: data.title || '',

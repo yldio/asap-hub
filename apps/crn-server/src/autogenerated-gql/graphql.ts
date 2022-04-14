@@ -3546,6 +3546,16 @@ export type ResearchOutputsDataDescriptionInputDto = {
   iv: Maybe<Scalars['String']>;
 };
 
+/** The structure of the Document type field of the Research Outputs content type. */
+export type ResearchOutputsDataDocumentTypeDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Document type field of the Research Outputs content input type. */
+export type ResearchOutputsDataDocumentTypeInputDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
 /** The structure of the Identifier (DOI) field of the Research Outputs content type. */
 export type ResearchOutputsDataDoiDto = {
   /** DOIs must start with a number and cannot be a URL */
@@ -3567,6 +3577,7 @@ export type ResearchOutputsDataDto = {
   asapFunded: Maybe<ResearchOutputsDataAsapFundedDto>;
   authors: Maybe<ResearchOutputsDataAuthorsDto>;
   description: Maybe<ResearchOutputsDataDescriptionDto>;
+  documentType: Maybe<ResearchOutputsDataDocumentTypeDto>;
   doi: Maybe<ResearchOutputsDataDoiDto>;
   labCatalogNumber: Maybe<ResearchOutputsDataLabCatalogNumberDto>;
   labs: Maybe<ResearchOutputsDataLabsDto>;
@@ -3591,6 +3602,7 @@ export type ResearchOutputsDataInputDto = {
   asapFunded: Maybe<ResearchOutputsDataAsapFundedInputDto>;
   authors: Maybe<ResearchOutputsDataAuthorsInputDto>;
   description: Maybe<ResearchOutputsDataDescriptionInputDto>;
+  documentType: Maybe<ResearchOutputsDataDocumentTypeInputDto>;
   doi: Maybe<ResearchOutputsDataDoiInputDto>;
   labCatalogNumber: Maybe<ResearchOutputsDataLabCatalogNumberInputDto>;
   labs: Maybe<ResearchOutputsDataLabsInputDto>;
@@ -3751,6 +3763,7 @@ export type ResearchOutputsFlatDataDto = {
   authors: Maybe<Array<ResearchOutputsDataAuthorsUnionDto>>;
   /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
   description: Maybe<Scalars['String']>;
+  documentType: Maybe<Scalars['String']>;
   /** DOIs must start with a number and cannot be a URL */
   doi: Maybe<Scalars['String']>;
   /** If this is a hyperlink, please start with "http://" or "https://" */

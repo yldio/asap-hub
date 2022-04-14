@@ -3676,6 +3676,16 @@ input ResearchOutputsDataDescriptionInputDto {
   iv: String
 }
 
+"""The structure of the Document type field of the Research Outputs content type."""
+type ResearchOutputsDataDocumentTypeDto {
+  iv: String
+}
+
+"""The structure of the Document type field of the Research Outputs content input type."""
+input ResearchOutputsDataDocumentTypeInputDto {
+  iv: String
+}
+
 """The structure of the Identifier (DOI) field of the Research Outputs content type."""
 type ResearchOutputsDataDoiDto {
   """DOIs must start with a number and cannot be a URL"""
@@ -3697,6 +3707,7 @@ type ResearchOutputsDataDto {
   asapFunded: ResearchOutputsDataAsapFundedDto
   authors: ResearchOutputsDataAuthorsDto
   description: ResearchOutputsDataDescriptionDto
+  documentType: ResearchOutputsDataDocumentTypeDto
   doi: ResearchOutputsDataDoiDto
   labCatalogNumber: ResearchOutputsDataLabCatalogNumberDto
   labs: ResearchOutputsDataLabsDto
@@ -3721,6 +3732,7 @@ input ResearchOutputsDataInputDto {
   asapFunded: ResearchOutputsDataAsapFundedInputDto
   authors: ResearchOutputsDataAuthorsInputDto
   description: ResearchOutputsDataDescriptionInputDto
+  documentType: ResearchOutputsDataDocumentTypeInputDto
   doi: ResearchOutputsDataDoiInputDto
   labCatalogNumber: ResearchOutputsDataLabCatalogNumberInputDto
   labs: ResearchOutputsDataLabsInputDto
@@ -3889,6 +3901,7 @@ type ResearchOutputsFlatDataDto {
   authors: [ResearchOutputsDataAuthorsUnionDto!]
   """The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size)"""
   description: String
+  documentType: String
   """DOIs must start with a number and cannot be a URL"""
   doi: String
   """

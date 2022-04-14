@@ -98,7 +98,8 @@ describe('ResearchOutputs controller', () => {
 
     test('Should default type to Grant Document and title to an empty string when missing', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      squidexGraphqlResponse.findResearchOutputsContent!.flatData.type = null;
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.documentType =
+        null;
       squidexGraphqlResponse.findResearchOutputsContent!.flatData.title = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
@@ -486,7 +487,7 @@ describe('ResearchOutputs controller', () => {
 
     test('Should return Grant Document on ResearchOutputs', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputsGraphqlResponse();
-      squidexGraphqlResponse.queryResearchOutputsContentsWithTotal!.items![0]!.flatData.type =
+      squidexGraphqlResponse.queryResearchOutputsContentsWithTotal!.items![0]!.flatData.documentType =
         'Grant Document';
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
@@ -570,7 +571,7 @@ describe('ResearchOutputs controller', () => {
           {
             ...expectedDefaultParams,
             filter:
-              "(data/type/iv eq 'Grant Document' or data/type/iv eq 'Presentation')",
+              "(data/documentType/iv eq 'Grant Document' or data/documentType/iv eq 'Presentation')",
           },
           expect.anything(),
         );
@@ -580,7 +581,7 @@ describe('ResearchOutputs controller', () => {
         await researchOutputs.fetch({
           ...defaultParams,
           filter: {
-            type: 'some-type',
+            documentType: 'some-type',
             title: 'some-title',
           },
         });
@@ -590,7 +591,7 @@ describe('ResearchOutputs controller', () => {
           {
             ...expectedDefaultParams,
             filter:
-              "(data/type/iv eq 'some-type' and data/title/iv eq 'some-title')",
+              "(data/documentType/iv eq 'some-type' and data/title/iv eq 'some-title')",
           },
           expect.anything(),
         );
@@ -604,7 +605,7 @@ describe('ResearchOutputs controller', () => {
         });
 
         const expectedFilter =
-          "(data/type/iv eq 'Grant Document' or data/type/iv eq 'Presentation') " +
+          "(data/documentType/iv eq 'Grant Document' or data/documentType/iv eq 'Presentation') " +
           "and (contains(data/title/iv, 'Title') or contains(data/tags/iv, 'Title'))";
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
@@ -621,12 +622,12 @@ describe('ResearchOutputs controller', () => {
           ...defaultParams,
           search: 'Title',
           filter: {
-            type: 'some-type',
+            documentType: 'some-type',
           },
         });
 
         const expectedFilter =
-          "(data/type/iv eq 'some-type') " +
+          "(data/documentType/iv eq 'some-type') " +
           "and (contains(data/title/iv, 'Title') or contains(data/tags/iv, 'Title'))";
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
@@ -710,9 +711,8 @@ describe('ResearchOutputs controller', () => {
       const {
         usedInPublication: _,
         teams: __,
-        subTypes: ___,
+        type: ___,
         identifierType: ____,
-        documentType: _____,
         ...squidexResearchOutput
       } = parseToSquidex(researchOutputRequest);
 
@@ -722,7 +722,6 @@ describe('ResearchOutputs controller', () => {
           ...(researchOutputRequest.type && {
             subtype: { iv: researchOutputRequest.type },
           }),
-          type: { iv: researchOutputRequest.documentType },
           asapFunded: { iv: 'Not Sure' },
           usedInAPublication: { iv: 'Not Sure' },
           labs: { iv: ['lab1'] },
@@ -756,7 +755,7 @@ describe('ResearchOutputs controller', () => {
       expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
-          filter: `(data/type/iv eq '${researchOutputRequest.documentType}' and data/title/iv eq '${researchOutputRequest.title}')`,
+          filter: `(data/documentType/iv eq '${researchOutputRequest.documentType}' and data/title/iv eq '${researchOutputRequest.title}')`,
         }),
         {
           includeDrafts: true,
@@ -841,7 +840,6 @@ describe('ResearchOutputs controller', () => {
         usedInPublication: _,
         teams: __,
         type: ___,
-        documentType: ____,
         ...squidexResearchOutput
       } = parseToSquidex(researchOutputRequest);
 
@@ -859,7 +857,6 @@ describe('ResearchOutputs controller', () => {
           ...(researchOutputRequest.type && {
             subtype: { iv: researchOutputRequest.type },
           }),
-          type: { iv: researchOutputRequest.documentType },
           asapFunded: { iv: 'Not Sure' },
           usedInAPublication: { iv: 'Not Sure' },
           authors: { iv: ['user-1', 'author-1', 'author-2'] },

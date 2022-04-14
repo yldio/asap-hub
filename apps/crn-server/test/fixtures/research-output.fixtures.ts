@@ -57,7 +57,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
   version: 42,
   flatData: {
     title: 'Test Proposal 1234',
-    type: 'Grant Document',
+    documentType: 'Grant Document',
     description: 'Text',
     link: null,
     addedDate: '2021-05-21T13:18:31Z',
@@ -141,7 +141,7 @@ export const getResearchOutputWebhookPayload = (
     lastModified: '2020-07-31T15:49:41Z',
     version: 42,
     data: {
-      type: { iv: 'Article' },
+      documentType: { iv: 'Article' },
       title: { iv: 'Research Output' },
       description: { iv: 'Description' },
       sharingStatus: { iv: 'Network Only' },
@@ -149,7 +149,7 @@ export const getResearchOutputWebhookPayload = (
       usedInAPublication: { iv: 'Not Sure' },
     } as Rest<ResearchOutput>['data'],
     dataOld: {
-      type: { iv: 'Article' },
+      documentType: { iv: 'Article' },
       title: { iv: 'Research Output' },
       description: { iv: 'Description' },
       sharingStatus: { iv: 'Network Only' },

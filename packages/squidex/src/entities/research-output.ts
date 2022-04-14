@@ -12,7 +12,6 @@ import { GraphqlUserAssoc } from './user';
 
 export interface ResearchOutput<TAuthorConnection = string> {
   documentType: ResearchOutputDocumentType;
-  type: ResearchOutputDocumentType;
   title: string;
   description: string;
   link?: string;

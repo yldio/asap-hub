@@ -14,11 +14,11 @@
       "create": "if(new Date(ctx.data.publishDate.iv) > new Date()) {\n    reject('Publish date date cannot be greater than today')\n}\n",
       "update": "const modified = Object.keys(ctx.data)\n        .filter(key => JSON.stringify(ctx.data[key]) !== JSON.stringify(ctx.oldData[key]))\n        .filter(key => key !== 'publishDate' && key !== 'adminNotes');\n        \nif (modified.length > 0) {\n    ctx.data.lastUpdatedPartial.iv = new Date().toISOString().split('.')[0]+\"Z\";\n    replace();\n}\n\n"
     },
-    "fieldsInReferences": ["title", "type"],
+    "fieldsInReferences": ["title", "documentType"],
     "fieldsInLists": [
       "meta.status.color",
       "title",
-      "type",
+      "documentType",
       "subtype",
       "addedDate",
       "lastUpdatedPartial",
@@ -100,14 +100,14 @@
           "label": "Document type",
           "hints": "",
           "placeholder": "",
-          "isRequired": false,
+          "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": true
         }
       },
       {
         "name": "type",
-        "isHidden": false,
+        "isHidden": true,
         "isLocked": false,
         "isDisabled": false,
         "partitioning": "invariant",
@@ -126,10 +126,10 @@
           "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Dropdown",
-          "label": "Type",
+          "label": "Type (deprecated)",
           "hints": "",
           "placeholder": "",
-          "isRequired": true,
+          "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": true
         }

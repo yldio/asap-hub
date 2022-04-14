@@ -3589,7 +3589,6 @@ export type ResearchOutputsDataDto = {
   subtype: Maybe<ResearchOutputsDataSubtypeDto>;
   tags: Maybe<ResearchOutputsDataTagsDto>;
   title: Maybe<ResearchOutputsDataTitleDto>;
-  type: Maybe<ResearchOutputsDataTypeDto>;
   usedInAPublication: Maybe<ResearchOutputsDataUsedInAPublicationDto>;
 };
 
@@ -3614,7 +3613,6 @@ export type ResearchOutputsDataInputDto = {
   subtype: Maybe<ResearchOutputsDataSubtypeInputDto>;
   tags: Maybe<ResearchOutputsDataTagsInputDto>;
   title: Maybe<ResearchOutputsDataTitleInputDto>;
-  type: Maybe<ResearchOutputsDataTypeInputDto>;
   usedInAPublication: Maybe<ResearchOutputsDataUsedInAPublicationInputDto>;
 };
 
@@ -3726,16 +3724,6 @@ export type ResearchOutputsDataTitleInputDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Type field of the Research Outputs content type. */
-export type ResearchOutputsDataTypeDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Type field of the Research Outputs content input type. */
-export type ResearchOutputsDataTypeInputDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
 /** The structure of the Used in a Publication field of the Research Outputs content type. */
 export type ResearchOutputsDataUsedInAPublicationDto = {
   /** "Not sure" will not be shown on the Hub */
@@ -3780,7 +3768,6 @@ export type ResearchOutputsFlatDataDto = {
   subtype: Maybe<Scalars['String']>;
   tags: Maybe<Array<Scalars['String']>>;
   title: Maybe<Scalars['String']>;
-  type: Maybe<Scalars['String']>;
   /** "Not sure" will not be shown on the Hub */
   usedInAPublication: Maybe<Scalars['String']>;
 };
@@ -6614,7 +6601,7 @@ export type ResearchOutputContentFragment = Pick<
   flatData: Pick<
     ResearchOutputsFlatDataDto,
     | 'title'
-    | 'type'
+    | 'documentType'
     | 'subtype'
     | 'description'
     | 'link'
@@ -6762,7 +6749,7 @@ export type FetchResearchOutputQuery = {
       flatData: Pick<
         ResearchOutputsFlatDataDto,
         | 'title'
-        | 'type'
+        | 'documentType'
         | 'subtype'
         | 'description'
         | 'link'
@@ -6925,7 +6912,7 @@ export type FetchResearchOutputsQuery = {
             flatData: Pick<
               ResearchOutputsFlatDataDto,
               | 'title'
-              | 'type'
+              | 'documentType'
               | 'subtype'
               | 'description'
               | 'link'
@@ -8899,7 +8886,10 @@ export const ResearchOutputContentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'documentType' },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'subtype' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'description' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'link' } },

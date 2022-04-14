@@ -10,6 +10,7 @@ export default class MoveResearchOutputTypeFieldIntoDocumentType extends Migrati
       async (researchOutput, squidexClient) => {
         await squidexClient.patch(researchOutput.id, {
           documentType: {
+            // @ts-expect-error type definition has changed
             iv: researchOutput.data.type.iv,
           },
         });

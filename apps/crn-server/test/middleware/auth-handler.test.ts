@@ -1,13 +1,14 @@
 import { Router } from 'express';
+import { DecodeToken } from '@asap-hub/server-common';
+import { getAuth0UserMock } from '@asap-hub/auth';
 import { appFactory } from '../../src/app';
 import supertest from 'supertest';
 import { authHandlerFactory } from '../../src/middleware/auth-handler';
-import { auth0UserMock } from '../../src/utils/__mocks__/validate-token';
-import { DecodeToken } from '../../src/utils/validate-token';
 import { origin } from '../../src/config';
 
 describe('Authentication middleware', () => {
   const mockRoutes = Router();
+  const auth0UserMock = getAuth0UserMock({ origin });
   mockRoutes.get('/test-route', async (req, res) => {
     return res.json(req.loggedInUser);
   });

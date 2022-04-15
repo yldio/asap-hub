@@ -1,5 +1,3 @@
-import { origin } from '../../src/config';
-
 export const idToken = {
   [`${origin}/user`]: {
     id: 'userId',

@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
-import { DecodeToken } from '../utils/validate-token';
+import { DecodeToken } from "@asap-hub/server-common"
 import { origin } from '../config';
 import logger from '../utils/logger';
 

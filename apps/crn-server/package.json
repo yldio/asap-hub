@@ -20,6 +20,7 @@
     "@asap-hub/errors": "workspace:*",
     "@asap-hub/message-templates": "workspace:*",
     "@asap-hub/model": "workspace:*",
+    "@asap-hub/server-common": "workspace:*",
     "@asap-hub/services-common": "workspace:*",
     "@asap-hub/squidex": "workspace:*",
     "@asap-hub/validation": "workspace:*",

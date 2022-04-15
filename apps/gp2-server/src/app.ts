@@ -4,12 +4,12 @@ import { Logger } from 'pino';
 import pinoHttp from 'pino-http';
 import express, { Express } from 'express';
 import { SquidexGraphql } from '@asap-hub/squidex';
+import { decodeToken } from '@asap-hub/server-common';
 import Dashboard, {
   DashboardController,
 } from './controllers/dashboard.controller';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { AuthHandler, authHandlerFactory } from './middleware/auth-handler';
-import decodeToken from './utils/validate-token';
 import { errorHandlerFactory } from './middleware/error-handler';
 import pinoLogger, { redaction } from './utils/logger';
 

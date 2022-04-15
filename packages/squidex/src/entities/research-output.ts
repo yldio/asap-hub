@@ -23,6 +23,7 @@ export interface ResearchOutput<TAuthorConnection = string> {
   accessInstructions?: string;
   adminNotes?: string;
   lastUpdatedPartial?: string;
+  type?: ResearchOutputType;
   subtype?: ResearchOutputType;
   sharingStatus: ResearchOutputSharingStatus;
   asapFunded: DecisionOption;

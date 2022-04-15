@@ -3719,6 +3719,7 @@ type ResearchOutputsDataDto {
   subtype: ResearchOutputsDataSubtypeDto
   tags: ResearchOutputsDataTagsDto
   title: ResearchOutputsDataTitleDto
+  type: ResearchOutputsDataTypeDto
   usedInAPublication: ResearchOutputsDataUsedInAPublicationDto
 }
 
@@ -3743,6 +3744,7 @@ input ResearchOutputsDataInputDto {
   subtype: ResearchOutputsDataSubtypeInputDto
   tags: ResearchOutputsDataTagsInputDto
   title: ResearchOutputsDataTitleInputDto
+  type: ResearchOutputsDataTypeInputDto
   usedInAPublication: ResearchOutputsDataUsedInAPublicationInputDto
 }
 
@@ -3862,6 +3864,16 @@ input ResearchOutputsDataTitleInputDto {
   iv: String
 }
 
+"""The structure of the Type field of the Research Outputs content type."""
+type ResearchOutputsDataTypeDto {
+  iv: String
+}
+
+"""The structure of the Type field of the Research Outputs content input type."""
+input ResearchOutputsDataTypeInputDto {
+  iv: String
+}
+
 """The structure of the Used in a Publication field of the Research Outputs content type."""
 type ResearchOutputsDataUsedInAPublicationDto {
   """"Not sure" will not be shown on the Hub"""
@@ -3910,6 +3922,7 @@ type ResearchOutputsFlatDataDto {
   subtype: String
   tags: [String!]
   title: String
+  type: String
   """"Not sure" will not be shown on the Hub"""
   usedInAPublication: String
 }

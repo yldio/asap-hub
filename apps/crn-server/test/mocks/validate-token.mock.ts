@@ -1,5 +1,5 @@
 import { Auth0User, User } from '@asap-hub/auth';
-import { origin } from '../../config';
+import { origin } from '../../src/config';
 
 export const userMock: User = {
   id: 'userMockId',

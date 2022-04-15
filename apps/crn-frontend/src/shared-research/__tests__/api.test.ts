@@ -70,7 +70,7 @@ describe('getResearchOutputs', () => {
       ['research-output'],
       '',
       expect.objectContaining({
-        filters: '(type:Article)',
+        filters: '(documentType:Article)',
       }),
     );
   });
@@ -88,7 +88,7 @@ describe('getResearchOutputs', () => {
       ['research-output'],
       '',
       expect.objectContaining({
-        filters: '(type:Article OR type:"Grant Document")',
+        filters: '(documentType:Article OR documentType:"Grant Document")',
       }),
     );
   });
@@ -106,7 +106,7 @@ describe('getResearchOutputs', () => {
       ['research-output'],
       '',
       expect.objectContaining({
-        filters: '(type:Article)',
+        filters: '(documentType:Article)',
       }),
     );
   });
@@ -126,7 +126,7 @@ describe('getResearchOutputs', () => {
     );
   });
 
-  it('adds teamId to type filter', async () => {
+  it('adds teamId to documentType filter', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
       filters: new Set<ResearchOutputDocumentType>(['Article']),
@@ -137,12 +137,12 @@ describe('getResearchOutputs', () => {
       ['research-output'],
       '',
       expect.objectContaining({
-        filters: '(type:Article) AND teams.id:"12345"',
+        filters: '(documentType:Article) AND teams.id:"12345"',
       }),
     );
   });
 
-  it('adds teamId to type filters', async () => {
+  it('adds teamId to documentType filters', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
       filters: new Set<ResearchOutputDocumentType>([
@@ -156,7 +156,8 @@ describe('getResearchOutputs', () => {
       ['research-output'],
       '',
       expect.objectContaining({
-        filters: '(type:Article OR type:"Grant Document") AND teams.id:"12345"',
+        filters:
+          '(documentType:Article OR documentType:"Grant Document") AND teams.id:"12345"',
       }),
     );
   });
@@ -175,7 +176,7 @@ describe('getResearchOutputs', () => {
     );
   });
 
-  it('adds userId to type filter', async () => {
+  it('adds userId to documentType filter', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
       filters: new Set<ResearchOutputDocumentType>(['Article']),
@@ -186,12 +187,12 @@ describe('getResearchOutputs', () => {
       ['research-output'],
       '',
       expect.objectContaining({
-        filters: '(type:Article) AND authors.id:"12345"',
+        filters: '(documentType:Article) AND authors.id:"12345"',
       }),
     );
   });
 
-  it('adds userId to type filters', async () => {
+  it('adds userId to documentType filters', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
       filters: new Set<ResearchOutputDocumentType>([
@@ -206,7 +207,7 @@ describe('getResearchOutputs', () => {
       '',
       expect.objectContaining({
         filters:
-          '(type:Article OR type:"Grant Document") AND authors.id:"12345"',
+          '(documentType:Article OR documentType:"Grant Document") AND authors.id:"12345"',
       }),
     );
   });

@@ -34,13 +34,13 @@ export const researchOutputDocumentTypeFilters: Record<
   ResearchOutputDocumentType,
   { filter: string }
 > = {
-  'Grant Document': { filter: 'type:"Grant Document"' },
-  Presentation: { filter: 'type:Presentation' },
-  Protocol: { filter: 'type:Protocol' },
-  Dataset: { filter: 'type:Dataset' },
-  Bioinformatics: { filter: 'type:Bioinformatics' },
-  'Lab Resource': { filter: 'type:"Lab Resource"' },
-  Article: { filter: 'type:Article' },
+  'Grant Document': { filter: 'documentType:"Grant Document"' },
+  Presentation: { filter: 'documentType:Presentation' },
+  Protocol: { filter: 'documentType:Protocol' },
+  Dataset: { filter: 'documentType:Dataset' },
+  Bioinformatics: { filter: 'documentType:Bioinformatics' },
+  'Lab Resource': { filter: 'documentType:"Lab Resource"' },
+  Article: { filter: 'documentType:Article' },
 };
 
 export const getTypeFilters = (filters: Set<string>): string =>

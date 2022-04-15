@@ -76,7 +76,7 @@ it('shows labs', () => {
   expect(getByText(/example lab/i)).toBeVisible();
 });
 
-it('renders an output with type and subtypes', () => {
+it('renders an output with document type and type', () => {
   const { getAllByRole, rerender } = render(
     <SharedResearchOutputHeaderCard
       {...createResearchOutputResponse()}

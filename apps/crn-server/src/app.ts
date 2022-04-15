@@ -7,8 +7,7 @@ import pinoHttp from 'pino-http';
 import AWSXray from 'aws-xray-sdk';
 import * as Sentry from '@sentry/serverless';
 import { SquidexGraphql } from '@asap-hub/squidex';
-
-import decodeToken from './utils/validate-token';
+import { decodeToken } from '@asap-hub/server-common';
 
 import { errorHandlerFactory } from './middleware/error-handler';
 import { tracingHandlerFactory } from './middleware/tracing-handler';

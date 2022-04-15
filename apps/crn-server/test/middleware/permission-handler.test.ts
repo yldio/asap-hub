@@ -1,10 +1,9 @@
-import { User } from '@asap-hub/auth';
+import { User, userMock } from '@asap-hub/auth';
 import { Router } from 'express';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { AuthHandler } from '../../src/middleware/auth-handler';
 import { permissionHandler } from '../../src/middleware/permission-handler';
-import { userMock } from '../../src/utils/__mocks__/validate-token';
 import { listGroupsResponse } from '../fixtures/groups.fixtures';
 import { pageResponse } from '../fixtures/page.fixtures';
 import { getUserResponse } from '../fixtures/users.fixtures';

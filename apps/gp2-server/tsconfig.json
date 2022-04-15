@@ -13,6 +13,7 @@
   "references": [
     { "path": "../../packages/auth" },
     { "path": "../../packages/model" },
+    { "path": "../../packages/server-common" },
     { "path": "../../packages/squidex" }
   ]
 }

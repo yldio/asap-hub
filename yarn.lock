@@ -497,6 +497,7 @@ __metadata:
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/model": "workspace:*"
+    "@asap-hub/server-common": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
     "@asap-hub/validation": "workspace:*"
@@ -680,6 +681,7 @@ __metadata:
   dependencies:
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/model": "workspace:*"
+    "@asap-hub/server-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
     "@babel/preset-env": ^7.14.2
     "@babel/preset-typescript": ^7.13.0
@@ -910,6 +912,19 @@ __metadata:
     typescript: 4.4.4
   peerDependencies:
     react-router-dom: ^5.2.0
+  languageName: unknown
+  linkType: soft
+
+"@asap-hub/server-common@workspace:*, @asap-hub/server-common@workspace:packages/server-common":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/server-common@workspace:packages/server-common"
+  dependencies:
+    "@asap-hub/auth": "workspace:*"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@babel/runtime-corejs3": ^7.14.0
+    "@types/jest": ^26.0.23
+    "@types/jsonwebtoken": ^8.5.1
+    jsonwebtoken: ^8.5.1
   languageName: unknown
   linkType: soft
 

@@ -1,9 +1,8 @@
-import { User } from '@asap-hub/auth';
+import { User, userMock } from '@asap-hub/auth';
 import { RequestHandler, Router } from 'express';
 import pino from 'pino';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { userMock } from '../../src/utils/__mocks__/validate-token';
 import { sentryTransactionIdHandlerMock } from '../mocks/sentry-transaction-id-handler.mock';
 
 describe('User info logging handler', () => {

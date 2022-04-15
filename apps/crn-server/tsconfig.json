@@ -15,6 +15,7 @@
     { "path": "../../packages/algolia" },
     { "path": "../../packages/errors" },
     { "path": "../../packages/model" },
+    { "path": "../../packages/server-common" },
     { "path": "../../packages/services-common" },
     { "path": "../../packages/squidex" },
     { "path": "../../packages/validation" },

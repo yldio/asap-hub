@@ -13,8 +13,8 @@ import {
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
 import { AuthHandler } from '../../src/middleware/auth-handler';
-import { userMock } from '../../src/utils/__mocks__/validate-token';
 import { listGroupsResponse } from '../fixtures/groups.fixtures';
+import { userMock } from '@asap-hub/auth';
 
 describe('/users/ route', () => {
   const authHandlerMock: AuthHandler = (req, _res, next) => {

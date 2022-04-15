@@ -139,6 +139,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/routing"
       },
       {
+        "name": "@asap-hub/server-common",
+        "reference": "workspace:packages/server-common"
+      },
+      {
         "name": "@asap-hub/services-common",
         "reference": "workspace:packages/services-common"
       },
@@ -179,6 +183,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/react-components", ["virtual:6b16901317bbf82c02ae3bcae29b5893b6e826cd09655789efdb8fd1062cadce911b7d0ecb8757fa5931069d18153edc842886686fbae7c22495d49c2e0084fa#workspace:packages/react-components", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/react-components", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#workspace:packages/react-components", "workspace:packages/react-components"]],
       ["@asap-hub/react-context", ["virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context", "workspace:packages/react-context"]],
       ["@asap-hub/routing", ["virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing", "workspace:packages/routing"]],
+      ["@asap-hub/server-common", ["workspace:packages/server-common"]],
       ["@asap-hub/services-common", ["workspace:packages/services-common"]],
       ["@asap-hub/squidex", ["workspace:packages/squidex"]],
       ["@asap-hub/storybook", ["workspace:apps/storybook"]],
@@ -353,6 +358,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@asap-hub/routing",
         "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"
+      ],
+      [
+        "@asap-hub/server-common",
+        "workspace:packages/server-common"
       ],
       [
         "@asap-hub/services-common",
@@ -10667,6 +10676,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/errors", "workspace:packages/errors"],
             ["@asap-hub/message-templates", "workspace:packages/message-templates"],
             ["@asap-hub/model", "workspace:packages/model"],
+            ["@asap-hub/server-common", "workspace:packages/server-common"],
             ["@asap-hub/services-common", "workspace:packages/services-common"],
             ["@asap-hub/squidex", "workspace:packages/squidex"],
             ["@asap-hub/validation", "workspace:packages/validation"],
@@ -10864,6 +10874,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/gp2-server", "workspace:apps/gp2-server"],
             ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/model", "workspace:packages/model"],
+            ["@asap-hub/server-common", "workspace:packages/server-common"],
             ["@asap-hub/squidex", "workspace:packages/squidex"],
             ["@babel/preset-env", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:7.14.2"],
             ["@babel/preset-typescript", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:7.13.0"],
@@ -11413,6 +11424,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["qs", "npm:6.10.1"],
             ["typesafe-routes", "virtual:d68e5ca297f0ac6d93babf592d45956725ab3db06dbae0fc674a3d1544ddd9ac11910af84dccf440c26f6926c22813cad9fbc1ba06caf50de441ea5271219a4b#npm:7.0.2"],
             ["typescript", "patch:typescript@npm%3A4.4.4#~builtin<compat/typescript>::version=4.4.4&hash=ddd1e8"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@asap-hub/server-common", [
+        ["workspace:packages/server-common", {
+          "packageLocation": "./packages/server-common/",
+          "packageDependencies": [
+            ["@asap-hub/server-common", "workspace:packages/server-common"],
+            ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@babel/runtime-corejs3", "npm:7.14.0"],
+            ["@types/jest", "npm:26.0.23"],
+            ["@types/jsonwebtoken", "npm:8.5.1"],
+            ["jsonwebtoken", "npm:8.5.1"]
           ],
           "linkType": "SOFT",
         }]

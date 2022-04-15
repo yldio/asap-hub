@@ -17,7 +17,7 @@ const getPublicKey = (header: JwtHeader, cb: SigningKeyCallback): void => {
   return cb(null, certToPEM(key[0]));
 };
 
-const decodeToken = (token: string): Promise<Auth0User> =>
+export const decodeToken = (token: string): Promise<Auth0User> =>
   new Promise((resolve, reject) => {
     jwt.verify(token, getPublicKey, { algorithms: ['RS256'] }, (err, res) => {
       if (err) {
@@ -35,7 +35,5 @@ const decodeToken = (token: string): Promise<Auth0User> =>
       return resolve(payload);
     });
   });
-
-export default decodeToken;
 
 export type DecodeToken = typeof decodeToken;

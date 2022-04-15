@@ -1,5 +1,5 @@
 import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
-import { researchOutputTypes } from '@asap-hub/model';
+import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { TeamCreateOutputForm } from '@asap-hub/react-components';
 import { select } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
@@ -16,7 +16,7 @@ export const Normal = () => (
         label: suggestion,
         value: suggestion,
       }))}
-      type={select('type', researchOutputTypes, 'Article')}
+      documentType={select('type', researchOutputDocumentTypes, 'Article')}
       team={createTeamResponse()}
       getTeamSuggestions={() =>
         new Promise((resolve) => {

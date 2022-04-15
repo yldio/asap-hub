@@ -96,8 +96,8 @@ export const getResearchOutputResponse =
   (): DeepWriteable<ResearchOutputResponse> => ({
     id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
     created: '2020-09-23T16:34:26.842Z',
-    type: 'Grant Document',
-    subTypes: ['3D Printing'],
+    documentType: 'Grant Document',
+    type: '3D Printing',
     addedDate: '2021-05-21T13:18:31Z',
     title: 'Test Proposal 1234',
     description: 'Text',
@@ -170,7 +170,7 @@ export const getResearchOutputEvent = (
   );
 
 export const getResearchOutputRequest = (): ResearchOutputPostRequest => ({
-  type: 'Bioinformatics',
+  documentType: 'Bioinformatics',
   link: 'https://hub.asap.science/',
   title: 'Output created through the ROMS form',
   asapFunded: undefined,
@@ -180,7 +180,7 @@ export const getResearchOutputRequest = (): ResearchOutputPostRequest => ({
   teams: ['team-id-1'],
   description: 'An example description',
   tags: ['tag1'],
-  subTypes: ['3D Printing'],
+  type: '3D Printing',
   labs: ['lab1'],
   publishDate: undefined,
 });

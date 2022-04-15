@@ -4,7 +4,7 @@ import { UserResponse } from './user';
 import { ExternalAuthorInput, ExternalAuthorResponse } from './external-author';
 import { LabResponse } from './lab';
 
-export const researchOutputTypes = [
+export const researchOutputDocumentTypes = [
   'Grant Document',
   'Presentation',
   'Dataset',
@@ -14,9 +14,10 @@ export const researchOutputTypes = [
   'Article',
 ] as const;
 
-export type ResearchOutputType = typeof researchOutputTypes[number];
+export type ResearchOutputDocumentType =
+  typeof researchOutputDocumentTypes[number];
 
-export const researchOutputSubtypes = [
+export const researchOutputTypes = [
   '3D Printing',
   'ASAP annual meeting',
   'ASAP subgroup meeting',
@@ -54,14 +55,14 @@ export const researchOutputSubtypes = [
   'Viral Vector',
 ] as const;
 
-export type ResearchOutputSubtype = typeof researchOutputSubtypes[number];
+export type ResearchOutputType = typeof researchOutputTypes[number];
 
-export const researchOutputTypeToSubtype: Record<
-  ResearchOutputType,
-  Set<ResearchOutputSubtype>
+export const researchOutputDocumentTypeToSubtype: Record<
+  ResearchOutputDocumentType,
+  Set<ResearchOutputType>
 > = {
-  Article: new Set<ResearchOutputSubtype>(['Preprint', 'Published']),
-  Dataset: new Set<ResearchOutputSubtype>([
+  Article: new Set<ResearchOutputType>(['Preprint', 'Published']),
+  Dataset: new Set<ResearchOutputType>([
     'Behavioral',
     'Electrophysiology',
     'Genetic Data - DNA',
@@ -70,12 +71,12 @@ export const researchOutputTypeToSubtype: Record<
     'Microscopy & Imaging',
     'Spectroscopy',
   ]),
-  Bioinformatics: new Set<ResearchOutputSubtype>([
+  Bioinformatics: new Set<ResearchOutputType>([
     'Code',
     'Data portal',
     'Software',
   ]),
-  Protocol: new Set<ResearchOutputSubtype>([
+  Protocol: new Set<ResearchOutputType>([
     '3D Printing',
     'Analysis',
     'Assay',
@@ -88,7 +89,7 @@ export const researchOutputTypeToSubtype: Record<
     'Sample Prep',
     'Shipment Procedure',
   ]),
-  'Lab Resource': new Set<ResearchOutputSubtype>([
+  'Lab Resource': new Set<ResearchOutputType>([
     'Animal Model',
     'Antibody',
     'Assay',
@@ -98,30 +99,30 @@ export const researchOutputTypeToSubtype: Record<
     'Plasmid',
     'Viral Vector',
   ]),
-  Presentation: new Set<ResearchOutputSubtype>([
+  Presentation: new Set<ResearchOutputType>([
     'ASAP annual meeting',
     'ASAP subgroup meeting',
     'External meeting',
     'Team meeting',
   ]),
-  'Grant Document': new Set<ResearchOutputSubtype>(['Proposal', 'Report']),
+  'Grant Document': new Set<ResearchOutputType>(['Proposal', 'Report']),
 };
+
+export const isResearchOutputDocumentType = (
+  type: string,
+): type is ResearchOutputDocumentType =>
+  (researchOutputDocumentTypes as ReadonlyArray<string>).includes(type);
 
 export const isResearchOutputType = (
   type: string,
 ): type is ResearchOutputType =>
   (researchOutputTypes as ReadonlyArray<string>).includes(type);
 
-export const isResearchOutputSubtype = (
-  subtype: string,
-): subtype is ResearchOutputSubtype =>
-  (researchOutputSubtypes as ReadonlyArray<string>).includes(subtype);
-
-export const researchOutputMapSubtype = (
-  subtype?: string | null,
-): ResearchOutputSubtype | null => {
-  if (subtype && isResearchOutputSubtype(subtype)) {
-    return subtype;
+export const researchOutputMapType = (
+  type?: string | null,
+): ResearchOutputType | null => {
+  if (type && isResearchOutputType(type)) {
+    return type;
   }
 
   return null;
@@ -136,7 +137,7 @@ export enum ResearchOutputIdentifierType {
 }
 
 export const researchOutputToIdentifierType: Record<
-  ResearchOutputType,
+  ResearchOutputDocumentType,
   ResearchOutputIdentifierType[]
 > = {
   Article: [
@@ -173,8 +174,8 @@ export type ResearchOutputSharingStatus = typeof sharingStatuses[number];
 
 export type ResearchOutputResponse = {
   readonly id: string;
-  readonly type: ResearchOutputType;
-  readonly subTypes: ResearchOutputSubtype[];
+  readonly documentType: ResearchOutputDocumentType;
+  readonly type?: ResearchOutputType;
   readonly title: string;
   readonly description: string;
   readonly tags: ReadonlyArray<string>;
@@ -203,8 +204,8 @@ export type ResearchOutputResponse = {
 
 export type ResearchOutputPostRequest = {
   description: string;
+  documentType: ResearchOutputDocumentType;
   type: ResearchOutputType;
-  subTypes: ResearchOutputSubtype[];
   title: string;
   tags: string[];
   link?: string;

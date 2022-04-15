@@ -32,7 +32,7 @@ describe('Research Outputs', () => {
     });
 
     const expectedResponse: Partial<ResearchOutputResponse> = {
-      type: 'Grant Document',
+      documentType: 'Grant Document',
       title: randomTitle,
       description: 'Research Output Description',
       sharingStatus: 'Network Only',

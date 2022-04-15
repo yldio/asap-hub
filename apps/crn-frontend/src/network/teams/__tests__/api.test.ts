@@ -139,7 +139,7 @@ describe('patchTeam', () => {
 describe('createTeamResearchOutput', () => {
   const payload: ResearchOutputPostRequest = {
     teams: ['90210'],
-    type: 'Bioinformatics',
+    documentType: 'Bioinformatics',
     link: 'http://a-link',
     title: 'A title',
     asapFunded: false,
@@ -149,7 +149,7 @@ describe('createTeamResearchOutput', () => {
     publishDate: undefined,
     description: '',
     tags: [],
-    subTypes: [],
+    type: 'Software',
     labs: ['lab1'],
   };
   it('makes an authorized POST request to create a research output', async () => {

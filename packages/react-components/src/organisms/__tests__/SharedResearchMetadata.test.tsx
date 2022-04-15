@@ -4,23 +4,18 @@ import { render } from '@testing-library/react';
 import SharedResearchMetadata from '../SharedResearchMetadata';
 
 const props: ComponentProps<typeof SharedResearchMetadata> = {
-  type: 'Article',
-  subTypes: [],
+  documentType: 'Article',
+  type: 'Code',
 };
 
-it('renders all (sub)types', () => {
+it('renders all (document)types', () => {
   const { getAllByRole } = render(
-    <SharedResearchMetadata
-      {...props}
-      type="Article"
-      subTypes={['Code', 'Assay']}
-    />,
+    <SharedResearchMetadata {...props} documentType="Article" type={'Code'} />,
   );
-  expect(getAllByRole('listitem')).toHaveLength(3);
-  const [first, second, third] = getAllByRole('listitem');
+  expect(getAllByRole('listitem')).toHaveLength(2);
+  const [first, second] = getAllByRole('listitem');
   expect(first).toHaveTextContent(/article/i);
   expect(second).toHaveTextContent(/code/i);
-  expect(third).toHaveTextContent(/assay/i);
 });
 
 it('renders a link if available', () => {

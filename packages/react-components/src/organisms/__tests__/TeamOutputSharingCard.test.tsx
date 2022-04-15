@@ -11,8 +11,8 @@ const props: ComponentProps<typeof TeamCreateOutputFormSharingCard> = {
   isSaving: false,
   title: '',
   link: '',
-  subTypes: [],
-  type: 'Article',
+  type: '',
+  documentType: 'Article',
   asapFunded: 'Not Sure',
   usedInPublication: 'Not Sure',
   sharingStatus: 'Network Only',
@@ -21,11 +21,11 @@ it('renders the card with provided values', () => {
   const { getByDisplayValue } = render(
     <TeamCreateOutputFormSharingCard
       {...props}
-      type="Article"
+      documentType="Article"
       description="description"
       link="http://example.com"
       title="title"
-      subTypes={['Preprint']}
+      type={'Preprint'}
     />,
   );
   expect(getByDisplayValue('description')).toBeVisible();
@@ -39,7 +39,7 @@ it.each`
   ${'Description'} | ${/description/i} | ${'Please enter a description'}
   ${'Url'}         | ${/URL/i}         | ${'Please enter a valid URL, starting with http://'}
   ${'Title'}       | ${/title/i}       | ${'Please enter a title'}
-  ${'Subtype'}     | ${/type/i}        | ${'Please choose a type'}
+  ${'Type'}        | ${/type/i}        | ${'Please choose a type'}
 `('shows error message for missing value $title', async ({ label, error }) => {
   const { getByLabelText, findByText } = render(
     <TeamCreateOutputFormSharingCard {...props} />,
@@ -51,7 +51,7 @@ it.each`
 
 it('lab resource does not require an url', async () => {
   const { getByLabelText, findByText } = render(
-    <TeamCreateOutputFormSharingCard {...props} type="Lab Resource" />,
+    <TeamCreateOutputFormSharingCard {...props} documentType="Lab Resource" />,
   );
   expect(
     await findByText(
@@ -108,8 +108,8 @@ it('triggers an on change for type', async () => {
   const { getByLabelText } = render(
     <TeamCreateOutputFormSharingCard
       {...props}
-      type="Article"
-      onChangeSubtypes={onChangeFn}
+      documentType="Article"
+      onChangeType={onChangeFn}
     />,
   );
 
@@ -118,12 +118,12 @@ it('triggers an on change for type', async () => {
     keyCode: ENTER_KEYCODE,
   });
 
-  expect(onChangeFn).toHaveBeenCalledWith(['Preprint']);
+  expect(onChangeFn).toHaveBeenCalledWith('Preprint');
 });
 
 it('shows the custom no options message for type', async () => {
   const { getByLabelText, getByText } = render(
-    <TeamCreateOutputFormSharingCard {...props} type="Article" />,
+    <TeamCreateOutputFormSharingCard {...props} documentType="Article" />,
   );
 
   userEvent.type(getByLabelText(/type/i), 'asdflkjasdflkj');
@@ -135,7 +135,7 @@ it('conditionally shows date published field', async () => {
   const { queryByLabelText, rerender } = render(
     <TeamCreateOutputFormSharingCard
       {...props}
-      type="Article"
+      documentType="Article"
       sharingStatus={'Network Only'}
     />,
   );
@@ -144,7 +144,7 @@ it('conditionally shows date published field', async () => {
   rerender(
     <TeamCreateOutputFormSharingCard
       {...props}
-      type="Article"
+      documentType="Article"
       sharingStatus={'Public'}
     />,
   );
@@ -157,7 +157,7 @@ it('triggers an on change for date published', async () => {
   const { getByLabelText } = render(
     <TeamCreateOutputFormSharingCard
       {...props}
-      type="Article"
+      documentType="Article"
       sharingStatus={'Public'}
       onChangePublishDate={onChangeFn}
     />,
@@ -173,7 +173,7 @@ it('shows the custom error message for date published', async () => {
   const { getByLabelText, getByText } = render(
     <TeamCreateOutputFormSharingCard
       {...props}
-      type="Article"
+      documentType="Article"
       sharingStatus={'Public'}
       publishDate={startOfTomorrow()}
     />,

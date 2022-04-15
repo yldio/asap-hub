@@ -77,6 +77,35 @@
         }
       },
       {
+        "name": "documentType",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "allowedValues": [
+            "Grant Document",
+            "Presentation",
+            "Protocol",
+            "Dataset",
+            "Bioinformatics",
+            "Lab Resource",
+            "Article"
+          ],
+          "isUnique": false,
+          "inlineEditable": true,
+          "contentType": "Unspecified",
+          "editor": "Dropdown",
+          "label": "Document type",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
         "name": "type",
         "isHidden": false,
         "isLocked": false,

@@ -1,6 +1,6 @@
 import {
+  ResearchOutputDocumentType,
   ResearchOutputType,
-  ResearchOutputSubtype,
   ResearchOutputSharingStatus,
   DecisionOption,
 } from '@asap-hub/model';
@@ -11,7 +11,8 @@ import { GraphqlTeam } from './team';
 import { GraphqlUserAssoc } from './user';
 
 export interface ResearchOutput<TAuthorConnection = string> {
-  type: ResearchOutputType;
+  documentType: ResearchOutputDocumentType;
+  type: ResearchOutputDocumentType;
   title: string;
   description: string;
   link?: string;
@@ -23,7 +24,7 @@ export interface ResearchOutput<TAuthorConnection = string> {
   accessInstructions?: string;
   adminNotes?: string;
   lastUpdatedPartial?: string;
-  subtype?: ResearchOutputSubtype;
+  subtype?: ResearchOutputType;
   sharingStatus: ResearchOutputSharingStatus;
   asapFunded: DecisionOption;
   usedInAPublication: DecisionOption;

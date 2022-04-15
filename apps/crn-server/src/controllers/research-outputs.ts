@@ -149,7 +149,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       (
         await this.fetch({
           filter: {
-            type: researchOutputData.type,
+            type: researchOutputData.documentType,
             title: researchOutputData.title,
           },
           includeDrafts: true,
@@ -188,15 +188,17 @@ export default class ResearchOutputs implements ResearchOutputController {
     return { id: researchOutputId };
   }
   private async createResearchOutput({
-    subTypes,
+    documentType,
+    type,
     authors,
     ...researchOutputData
   }: Omit<ResearchOutputPostRequest, 'teams' | 'authors'> & {
     authors: string[];
   }) {
     const { usedInPublication, ...researchOutput } = parseToSquidex({
+      type: documentType,
       ...researchOutputData,
-      ...(subTypes[0] && { subtype: subTypes[0] }),
+      subtype: type,
       asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
       usedInPublication: convertBooleanToDecision(
         researchOutputData.usedInPublication,

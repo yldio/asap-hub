@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { ResearchOutputType } from '@asap-hub/model';
+import { ResearchOutputDocumentType } from '@asap-hub/model';
 
 import { news } from '@asap-hub/routing';
 import { Display, Link, Paragraph } from '../atoms';
@@ -17,8 +17,8 @@ const visualHeaderStyles = css({
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
 
-const headerCopy = (outputType: ResearchOutputType) => {
-  switch (outputType) {
+const headerCopy = (outputDocumentType: ResearchOutputDocumentType) => {
+  switch (outputDocumentType) {
     case 'Protocol':
       return 'Share a protocol';
     case 'Dataset':
@@ -34,16 +34,16 @@ const headerCopy = (outputType: ResearchOutputType) => {
   }
 };
 
-const SubheaderCopy: React.FC<{ outputType: ResearchOutputType }> = ({
-  outputType,
-}) => {
+const SubheaderCopy: React.FC<{
+  outputDocumentType: ResearchOutputDocumentType;
+}> = ({ outputDocumentType }) => {
   const protocolsIoLink = news({}).article({
     articleId: '7d3dd1ec-14ef-441c-8a2c-19a23d6264f3',
   }).$;
   const zenodoLink = news({}).article({
     articleId: '735944ac-5641-431f-8984-bf53972dfd4e',
   }).$;
-  switch (outputType) {
+  switch (outputDocumentType) {
     case 'Protocol':
       return (
         <>
@@ -91,18 +91,18 @@ const SubheaderCopy: React.FC<{ outputType: ResearchOutputType }> = ({
 };
 
 type TeamCreateOutputHeaderProps = {
-  type: ResearchOutputType;
+  documentType: ResearchOutputDocumentType;
 };
 
 const TeamCreateOutputHeader: React.FC<TeamCreateOutputHeaderProps> = ({
-  type,
+  documentType,
 }) => (
   <header>
     <div css={visualHeaderStyles}>
-      <Display styleAsHeading={2}>{headerCopy(type)}</Display>
+      <Display styleAsHeading={2}>{headerCopy(documentType)}</Display>
       <div>
         <Paragraph accent="lead">
-          <SubheaderCopy outputType={type} />
+          <SubheaderCopy outputDocumentType={documentType} />
         </Paragraph>
       </div>
     </div>

@@ -1,9 +1,9 @@
 import {
-  isResearchOutputType,
+  isResearchOutputDocumentType,
   DecisionOption,
   ResearchOutputResponse,
   ResearchOutputSharingStatus,
-  researchOutputMapSubtype,
+  researchOutputMapType,
   sharingStatuses,
   TeamResponse,
 } from '@asap-hub/model';
@@ -78,18 +78,17 @@ export const parseGraphQLResearchOutput = (
   const uniqueContactEmails = [...new Set(filteredContactEmails)];
 
   const data = output.flatData;
-  const subType = researchOutputMapSubtype(data.subtype);
-  const subTypes = subType ? [subType] : [];
+  const type = researchOutputMapType(data.subtype);
 
   return {
     id: output.id,
     created: parseDate(output.created).toISOString(),
     link: data.link || undefined,
-    type:
-      data.type && isResearchOutputType(data.type)
+    documentType:
+      data.type && isResearchOutputDocumentType(data.type)
         ? data.type
         : 'Grant Document',
-    subTypes,
+    type: type || undefined,
     title: data.title || '',
     description: data.description || '',
     tags: data.tags || [],

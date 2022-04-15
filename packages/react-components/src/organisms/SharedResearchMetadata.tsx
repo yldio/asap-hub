@@ -14,18 +14,22 @@ const styles = css({
 
 type SharedResearchMetadataProps = Pick<
   ResearchOutputResponse,
-  'type' | 'subTypes' | 'link'
+  'documentType' | 'type' | 'link'
 >;
 
 const SharedResearchMetadata: React.FC<SharedResearchMetadataProps> = ({
+  documentType,
   type,
-  subTypes,
   link,
-}) => (
-  <div css={styles}>
-    <PillList pills={[type, ...subTypes]} />
-    {link ? <ExternalLink href={link} label="Open External Link" /> : null}
-  </div>
-);
+}) => {
+  const pills: string[] = type ? [documentType, type] : [documentType];
+
+  return (
+    <div css={styles}>
+      <PillList pills={pills} />
+      {link ? <ExternalLink href={link} label="Open External Link" /> : null}
+    </div>
+  );
+};
 
 export default SharedResearchMetadata;

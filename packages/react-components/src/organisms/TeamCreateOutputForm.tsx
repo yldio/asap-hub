@@ -4,7 +4,7 @@ import {
   DecisionOption,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
-  ResearchOutputType,
+  ResearchOutputDocumentType,
   TeamResponse,
   ResearchOutputIdentifierType,
 } from '@asap-hub/model';
@@ -70,7 +70,7 @@ type TeamCreateOutputFormProps = Pick<
     onSave?: (
       output: Partial<ResearchOutputPostRequest>,
     ) => Promise<Pick<ResearchOutputResponse, 'id'> | void>;
-    type: ResearchOutputType;
+    documentType: ResearchOutputDocumentType;
     team: TeamResponse;
   };
 
@@ -105,7 +105,7 @@ export function createIdentifierField(
 const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   onSave = noop,
   tagSuggestions,
-  type,
+  documentType,
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
@@ -114,9 +114,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   clearServerValidationError,
 }) => {
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
-  const [subTypes, setSubtypes] = useState<
-    ResearchOutputPostRequest['subTypes']
-  >([]);
+  const [type, setType] = useState<ResearchOutputPostRequest['type'] | ''>('');
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>('');
   const [labs, setLabs] = useState<
     NonNullable<ComponentProps<typeof TeamCreateOutputContributorsCard>['labs']>
@@ -157,7 +155,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         title !== '' ||
         description !== '' ||
         link !== '' ||
-        subTypes.length !== 0 ||
+        type !== '' ||
         labs.length !== 0 ||
         authors.length !== 0 ||
         identifierType !== ResearchOutputIdentifierType.None ||
@@ -173,12 +171,17 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           identifier,
         );
 
+        /* istanbul ignore next */
+        if (!type) {
+          throw new Error('There is no type provided.');
+        }
+
         return onSave({
           tags,
           link: String(link).trim() === '' ? undefined : link,
           description,
           title,
-          subTypes,
+          type,
           authors: authors.map(({ value, user }) =>
             isInternalUser(user)
               ? {
@@ -205,7 +208,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
       {({ isSaving, onSave: handleSave, onCancel: handleCancel }) => (
         <div css={contentStyles}>
           <TeamCreateOutputFormSharingCard
-            type={type}
+            documentType={documentType}
             serverValidationErrors={serverValidationErrors}
             clearServerValidationError={clearServerValidationError}
             isSaving={isSaving}
@@ -215,8 +218,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangeTitle={setTitle}
             link={link}
             onChangeLink={setLink}
-            subTypes={subTypes}
-            onChangeSubtypes={setSubtypes}
+            type={type}
+            onChangeType={setType}
             asapFunded={asapFunded}
             onChangeAsapFunded={setAsapFunded}
             usedInPublication={usedInPublication}
@@ -227,7 +230,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangePublishDate={(date) => setPublishDate(new Date(date))}
           />
           <TeamCreateOutputExtraInformationCard
-            type={type}
+            documentType={documentType}
             isSaving={isSaving}
             tagSuggestions={tagSuggestions}
             tags={tags}

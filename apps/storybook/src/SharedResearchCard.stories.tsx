@@ -18,8 +18,8 @@ export const Normal = () => (
       'Title',
       'Tracing the Origin and Progression of Parkinson’s Disease through the Neuro-Immune Interactome',
     )}
-    type="Article"
-    subTypes={['Code', 'Plasmid', 'Cloning', 'Microscopy & Imaging']}
+    documentType="Article"
+    type={'Code'}
     created={new Date(
       date('Created Date', new Date(2020, 6, 4, 14, 32)),
     ).toISOString()}

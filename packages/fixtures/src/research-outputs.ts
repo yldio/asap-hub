@@ -15,8 +15,8 @@ const researchOutputResponse: Omit<
   lastModifiedDate: '2020-12-10T20:36:54Z',
   title: 'Output',
   description: 'description',
-  type: 'Grant Document',
-  subTypes: ['3D Printing'],
+  documentType: 'Grant Document',
+  type: '3D Printing',
   tags: ['test', 'tag'],
   authors: [
     {

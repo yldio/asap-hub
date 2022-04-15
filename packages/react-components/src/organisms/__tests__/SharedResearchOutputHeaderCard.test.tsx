@@ -76,14 +76,14 @@ it('shows labs', () => {
   expect(getByText(/example lab/i)).toBeVisible();
 });
 
-it('renders an output with type and subtypes', () => {
+it('renders an output with document type and type', () => {
   const { getAllByRole, rerender } = render(
     <SharedResearchOutputHeaderCard
       {...createResearchOutputResponse()}
       teams={[]}
       authors={[]}
-      type="Protocol"
-      subTypes={[]}
+      documentType="Protocol"
+      type={undefined}
     />,
   );
   expect(
@@ -95,11 +95,11 @@ it('renders an output with type and subtypes', () => {
       {...createResearchOutputResponse()}
       teams={[]}
       authors={[]}
-      type="Protocol"
-      subTypes={['3D Printing', 'ASAP annual meeting']}
+      documentType="Protocol"
+      type={'3D Printing'}
     />,
   );
   expect(
     getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['Protocol', '3D Printing', 'ASAP annual meeting']);
+  ).toEqual(['Protocol', '3D Printing']);
 });

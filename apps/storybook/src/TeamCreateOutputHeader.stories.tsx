@@ -5,4 +5,4 @@ export default {
   component: TeamCreateOutputHeader,
 };
 
-export const Normal = () => <TeamCreateOutputHeader type="Article" />;
+export const Normal = () => <TeamCreateOutputHeader documentType="Article" />;

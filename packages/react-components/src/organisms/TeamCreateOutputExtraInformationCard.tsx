@@ -1,7 +1,7 @@
 import {
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
-  ResearchOutputType,
+  ResearchOutputDocumentType,
 } from '@asap-hub/model';
 import { ComponentProps } from 'react';
 import { Link } from '../atoms';
@@ -24,7 +24,7 @@ type TeamCreateOutputExtraInformationProps = Pick<
   onChangeTags?: (values: string[]) => void;
   onChangeAccessInstructions?: (values: string) => void;
   isSaving: boolean;
-  type: ResearchOutputType;
+  documentType: ResearchOutputDocumentType;
   identifierRequired: boolean;
 } & Omit<TeamCreateOutputIdentifierProps, 'required'>;
 
@@ -41,7 +41,7 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     setIdentifier = noop,
     setIdentifierType = noop,
     identifierRequired,
-    type,
+    documentType,
   }) => (
     <FormCard title="What extra information can you provide?">
       <LabeledMultiSelect
@@ -60,7 +60,7 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
       </Link>
 
       <TeamCreateOutputIdentifier
-        type={type}
+        documentType={documentType}
         identifier={identifier}
         setIdentifier={setIdentifier}
         identifierType={identifierType}

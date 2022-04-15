@@ -1,35 +1,35 @@
 import {
+  isResearchOutputDocumentType,
   isResearchOutputType,
-  isResearchOutputSubtype,
-  researchOutputMapSubtype,
+  researchOutputMapType,
 } from '../src/research-output';
 
 describe('Research Output Model', () => {
   describe('Type', () => {
     it('should recognize correct type', () => {
-      expect(isResearchOutputType('Dataset')).toEqual(true);
+      expect(isResearchOutputDocumentType('Dataset')).toEqual(true);
     });
 
     it('should not recognize incorrect type', () => {
-      expect(isResearchOutputType('NotADataset')).toEqual(false);
+      expect(isResearchOutputDocumentType('NotADataset')).toEqual(false);
     });
   });
 
-  describe('SubType', () => {
-    it('should recognize correct subtype', () => {
-      expect(isResearchOutputSubtype('Report')).toEqual(true);
+  describe('Type', () => {
+    it('should recognize correct type', () => {
+      expect(isResearchOutputType('Report')).toEqual(true);
     });
 
-    it('should not recognize incorrect subtype', () => {
-      expect(isResearchOutputSubtype('NotAReport')).toEqual(false);
+    it('should not recognize incorrect type', () => {
+      expect(isResearchOutputType('NotAReport')).toEqual(false);
     });
 
-    it('should map subtype', () => {
-      expect(researchOutputMapSubtype('Analysis')).toEqual('Analysis');
+    it('should map type', () => {
+      expect(researchOutputMapType('Analysis')).toEqual('Analysis');
     });
 
-    it('should return null on not known subtype', () => {
-      expect(researchOutputMapSubtype('NotACloningSubtype')).toBeNull();
+    it('should return null on not known type', () => {
+      expect(researchOutputMapType('NotACloningSubtype')).toBeNull();
     });
   });
 });

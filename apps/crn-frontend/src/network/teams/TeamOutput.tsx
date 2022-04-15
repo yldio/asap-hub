@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   ValidationErrorResponse,
   ResearchOutputPostRequest,
-  ResearchOutputType,
+  ResearchOutputDocumentType,
   isValidationErrorResponse,
 } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
@@ -11,7 +11,7 @@ import { TeamCreateOutputPage, NotFoundPage } from '@asap-hub/react-components';
 import {
   network,
   useRouteParams,
-  OutputTypeParameter,
+  OutputDocumentTypeParameter,
 } from '@asap-hub/routing';
 import {
   useLabSuggestions,
@@ -28,15 +28,17 @@ import {
   validationErrorsAreSupported,
 } from '../../api-util';
 
-const useParamOutputType = (teamId: string): OutputTypeParameter => {
+const useParamOutputDocumentType = (
+  teamId: string,
+): OutputDocumentTypeParameter => {
   const route = network({}).teams({}).team({ teamId }).createOutput;
-  const { outputType } = useRouteParams(route);
-  return outputType;
+  const { outputDocumentType } = useRouteParams(route);
+  return outputDocumentType;
 };
 
-export function paramOutputTypeToResearchOutputType(
-  data: OutputTypeParameter,
-): ResearchOutputType {
+export function paramOutputDocumentTypeToResearchOutputDocumentType(
+  data: OutputDocumentTypeParameter,
+): ResearchOutputDocumentType {
   switch (data) {
     case 'article':
       return 'Article';
@@ -57,8 +59,10 @@ type TeamOutputProps = {
   teamId: string;
 };
 const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
-  const paramOutputType = useParamOutputType(teamId);
-  const type = paramOutputTypeToResearchOutputType(paramOutputType);
+  const paramOutputDocumentType = useParamOutputDocumentType(teamId);
+  const documentType = paramOutputDocumentTypeToResearchOutputDocumentType(
+    paramOutputDocumentType,
+  );
   const team = useTeamById(teamId);
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
   const { isEnabled } = useFlags();
@@ -66,13 +70,13 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   const createResearchOutput = usePostTeamResearchOutput();
 
   const defaultOutput: ResearchOutputPostRequest = {
-    type,
+    documentType,
     title: 'Output created through the ROMS form',
     asapFunded: undefined,
     sharingStatus: 'Network Only',
     usedInPublication: undefined,
     description: 'example',
-    subTypes: [],
+    type: 'Software',
     addedDate: new Date().toISOString(),
     tags: [],
     teams: [teamId],
@@ -95,7 +99,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
             label: suggestion,
             value: suggestion,
           }))}
-          type={type}
+          documentType={documentType}
           getLabSuggestions={getLabSuggestions}
           getAuthorSuggestions={(input) =>
             getAuthorSuggestions(input).then((users) =>

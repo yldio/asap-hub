@@ -2420,7 +2420,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/supertest",
-        "npm:2.0.11"
+        "npm:2.0.12"
       ],
       [
         "@types/tapable",
@@ -4250,6 +4250,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.1.6"
       ],
       [
+        "dezalgo",
+        "npm:1.0.3"
+      ],
+      [
         "diagnostics",
         "npm:1.1.1"
       ],
@@ -5416,6 +5420,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "hex2dec",
         "npm:1.0.1"
+      ],
+      [
+        "hexoid",
+        "npm:1.0.0"
       ],
       [
         "highlight.js",
@@ -9071,7 +9079,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "supertest",
-        "npm:6.1.3"
+        "npm:6.2.2"
       ],
       [
         "supports-color",
@@ -10707,7 +10715,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/pump", "npm:1.1.1"],
             ["@types/source-map-support", "npm:0.5.3"],
             ["@types/stream-json", "npm:1.7.1"],
-            ["@types/supertest", "npm:2.0.11"],
+            ["@types/supertest", "npm:2.0.12"],
             ["@types/uuid", "npm:8.3.0"],
             ["@types/yargs", "npm:17.0.5"],
             ["ajv", "npm:8.10.0"],
@@ -10751,7 +10759,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless-http", "npm:2.7.0"],
             ["source-map-support", "npm:0.5.19"],
             ["stream-json", "npm:1.7.2"],
-            ["supertest", "npm:6.1.3"],
+            ["supertest", "npm:6.2.2"],
             ["uuid", "npm:8.3.2"],
             ["yargs", "npm:17.3.1"]
           ],
@@ -10859,6 +10867,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/squidex", "workspace:packages/squidex"],
             ["@babel/preset-env", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:7.14.2"],
             ["@babel/preset-typescript", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:7.13.0"],
+            ["@babel/runtime-corejs3", "npm:7.14.0"],
             ["@graphql-typed-document-node/core", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:3.1.0"],
             ["@hapi/boom", "npm:9.1.2"],
             ["@serverless/typescript", "npm:2.59.0"],
@@ -10866,6 +10875,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/aws-lambda", "npm:8.10.76"],
             ["@types/cors", "npm:2.8.10"],
             ["@types/express", "npm:4.17.11"],
+            ["@types/jest", "npm:26.0.23"],
             ["@types/jsonwebtoken", "npm:8.5.1"],
             ["@types/luxon", "npm:1.26.4"],
             ["@types/node", "npm:14.14.45"],
@@ -10873,6 +10883,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/pino-http", "npm:5.4.0"],
             ["@types/serverless", "npm:3.0.1"],
             ["@types/source-map-support", "npm:0.5.3"],
+            ["@types/supertest", "npm:2.0.12"],
             ["@yarnpkg/pnpify", "npm:3.1.1"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
@@ -10892,6 +10903,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless-s3-sync", "npm:1.17.1"],
             ["serverless-webpack", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:5.5.0"],
             ["source-map-support", "npm:0.5.19"],
+            ["supertest", "npm:6.2.2"],
             ["ts-node", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:10.7.0"]
           ],
           "linkType": "SOFT",
@@ -30507,10 +30519,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/supertest", [
-        ["npm:2.0.11", {
-          "packageLocation": "./.yarn/cache/@types-supertest-npm-2.0.11-a547f689c9-291abc0d37.zip/node_modules/@types/supertest/",
+        ["npm:2.0.12", {
+          "packageLocation": "./.yarn/cache/@types-supertest-npm-2.0.12-deccb2551b-f0e2b44f86.zip/node_modules/@types/supertest/",
           "packageDependencies": [
-            ["@types/supertest", "npm:2.0.11"],
+            ["@types/supertest", "npm:2.0.12"],
             ["@types/superagent", "npm:4.1.10"]
           ],
           "linkType": "HARD",
@@ -36642,6 +36654,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cookiejar", "npm:2.1.2"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:2.1.3", {
+          "packageLocation": "./.yarn/cache/cookiejar-npm-2.1.3-ec18b65dd0-88259983eb.zip/node_modules/cookiejar/",
+          "packageDependencies": [
+            ["cookiejar", "npm:2.1.3"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["copy-concurrently", [
@@ -38293,6 +38312,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["detect-port-alt", "npm:1.1.6"],
             ["address", "npm:1.1.2"],
             ["debug", "virtual:fa0173d26738ef894de6f639abae81ef8c1dc3fb742f450a622367c86186d9f4d23dbd3bcc38bbe27382c39f87e11cad6137dd70480a36e752eee25974706e2c#npm:2.6.9"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["dezalgo", [
+        ["npm:1.0.3", {
+          "packageLocation": "./.yarn/cache/dezalgo-npm-1.0.3-e2bc978ebd-8b26238db9.zip/node_modules/dezalgo/",
+          "packageDependencies": [
+            ["dezalgo", "npm:1.0.3"],
+            ["asap", "npm:2.0.6"],
+            ["wrappy", "npm:1.0.2"]
           ],
           "linkType": "HARD",
         }]
@@ -41901,6 +41931,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["formidable", "npm:1.2.2"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:2.0.1", {
+          "packageLocation": "./.yarn/cache/formidable-npm-2.0.1-b18227215c-b35445444e.zip/node_modules/formidable/",
+          "packageDependencies": [
+            ["formidable", "npm:2.0.1"],
+            ["dezalgo", "npm:1.0.3"],
+            ["hexoid", "npm:1.0.0"],
+            ["once", "npm:1.4.0"],
+            ["qs", "npm:6.9.3"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["forwarded", [
@@ -43525,6 +43566,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/hex2dec-npm-1.0.1-2d5881bd54-7e83a37f36.zip/node_modules/hex2dec/",
           "packageDependencies": [
             ["hex2dec", "npm:1.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["hexoid", [
+        ["npm:1.0.0", {
+          "packageLocation": "./.yarn/cache/hexoid-npm-1.0.0-2274609209-27a148ca76.zip/node_modules/hexoid/",
+          "packageDependencies": [
+            ["hexoid", "npm:1.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -49029,6 +49079,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mime", "npm:2.4.6"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:2.6.0", {
+          "packageLocation": "./.yarn/cache/mime-npm-2.6.0-88b89d8de0-1497ba7b9f.zip/node_modules/mime/",
+          "packageDependencies": [
+            ["mime", "npm:2.6.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["mime-db", [
@@ -53381,6 +53438,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/qs-npm-6.7.0-15161a344c-dfd5f6adef.zip/node_modules/qs/",
           "packageDependencies": [
             ["qs", "npm:6.7.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:6.9.3", {
+          "packageLocation": "./.yarn/cache/qs-npm-6.9.3-d8c69297f4-89cd1b5e52.zip/node_modules/qs/",
+          "packageDependencies": [
+            ["qs", "npm:6.9.3"]
           ],
           "linkType": "HARD",
         }],
@@ -58026,32 +58090,32 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:6.1.0", {
-          "packageLocation": "./.yarn/cache/superagent-npm-6.1.0-053b76aea5-32ca1bc980.zip/node_modules/superagent/",
+        ["npm:7.1.1", {
+          "packageLocation": "./.yarn/cache/superagent-npm-7.1.1-44803748c3-8710b84cf5.zip/node_modules/superagent/",
           "packageDependencies": [
-            ["superagent", "npm:6.1.0"],
+            ["superagent", "npm:7.1.1"],
             ["component-emitter", "npm:1.3.0"],
-            ["cookiejar", "npm:2.1.2"],
-            ["debug", "virtual:48933b28331d16c1d73786360e7ba20f54f6df4949c6ab5c13ac4c4353b5c70f2d36a97de9a9c531027ad3588d8fd7f384706f298f0eff0356b58bb9c47f63ec#npm:4.2.0"],
-            ["fast-safe-stringify", "npm:2.0.7"],
-            ["form-data", "npm:3.0.0"],
-            ["formidable", "npm:1.2.2"],
+            ["cookiejar", "npm:2.1.3"],
+            ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.3"],
+            ["fast-safe-stringify", "npm:2.1.1"],
+            ["form-data", "npm:4.0.0"],
+            ["formidable", "npm:2.0.1"],
             ["methods", "npm:1.1.2"],
-            ["mime", "npm:2.4.6"],
-            ["qs", "npm:6.9.6"],
+            ["mime", "npm:2.6.0"],
+            ["qs", "npm:6.10.1"],
             ["readable-stream", "npm:3.6.0"],
-            ["semver", "npm:7.3.2"]
+            ["semver", "npm:7.3.5"]
           ],
           "linkType": "HARD",
         }]
       ]],
       ["supertest", [
-        ["npm:6.1.3", {
-          "packageLocation": "./.yarn/cache/supertest-npm-6.1.3-629fe02e4c-c39eb304f5.zip/node_modules/supertest/",
+        ["npm:6.2.2", {
+          "packageLocation": "./.yarn/cache/supertest-npm-6.2.2-d999ec4e20-3c1956d57e.zip/node_modules/supertest/",
           "packageDependencies": [
-            ["supertest", "npm:6.1.3"],
+            ["supertest", "npm:6.2.2"],
             ["methods", "npm:1.1.2"],
-            ["superagent", "npm:6.1.0"]
+            ["superagent", "npm:7.1.1"]
           ],
           "linkType": "HARD",
         }]

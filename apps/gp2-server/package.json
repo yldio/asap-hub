@@ -34,11 +34,13 @@
   "devDependencies": {
     "@babel/preset-env": "^7.14.2",
     "@babel/preset-typescript": "^7.13.0",
+    "@babel/runtime-corejs3": "^7.14.0",
     "@serverless/typescript": "^2.59.0",
     "@types/apr-intercept": "workspace:*",
     "@types/aws-lambda": "^8.10.76",
     "@types/cors": "^2.8.10",
     "@types/express": "^4.17.11",
+    "@types/jest": "^26.0.23",
     "@types/jsonwebtoken": "^8.5.1",
     "@types/luxon": "^1",
     "@types/node": "^14.14.45",
@@ -46,11 +48,13 @@
     "@types/pino-http": "^5",
     "@types/serverless": "^3",
     "@types/source-map-support": "^0",
+    "@types/supertest": "^2.0.12",
     "@yarnpkg/pnpify": "^3.1.1",
     "babel-loader": "^8.2.2",
     "serverless": "^2.60.0",
     "serverless-s3-sync": "^1.17.1",
     "serverless-webpack": "^5.5.0",
+    "supertest": "^6.2.2",
     "ts-node": "^10.7.0"
   },
   "serverless-webpack": {

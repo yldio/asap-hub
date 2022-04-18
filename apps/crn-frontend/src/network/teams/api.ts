@@ -2,6 +2,7 @@ import {
   createSentryHeaders,
   GetListOptions,
   createListApiUrl,
+  BackendError,
 } from '@asap-hub/api-util';
 import {
   ListLabsResponse,
@@ -11,7 +12,7 @@ import {
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
-import { BackendError } from '../../api-util';
+
 import { API_BASE_URL } from '../../config';
 
 export const getTeam = async (

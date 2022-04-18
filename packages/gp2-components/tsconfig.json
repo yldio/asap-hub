@@ -9,15 +9,5 @@
     "jsxImportSource": "@emotion/react"
   },
   "include": ["src"],
-  "references": [
-    { "path": "../auth" },
-    { "path": "../dom-test-utils" },
-    { "path": "../fixtures" },
-    { "path": "../flags" },
-    { "path": "../model" },
-    { "path": "../react-components" },
-    { "path": "../react-context" },
-    { "path": "../routing" },
-    { "path": "../validation" }
-  ]
+  "references": [{ "path": "../react-components" }, { "path": "../routing" }]
 }

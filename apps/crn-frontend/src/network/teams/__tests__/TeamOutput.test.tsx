@@ -12,10 +12,15 @@ import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
 import userEvent from '@testing-library/user-event';
+<<<<<<< HEAD
 import { ContextType, Suspense } from 'react';
 import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { BackendError } from '../../../api-util';
+=======
+import { BackendError } from '@asap-hub/api-util';
+
+>>>>>>> 44e4ec32 (fixing imports after rebase)
 import { createTeamResearchOutput } from '../api';
 import { refreshTeamState } from '../state';
 import TeamOutput, {

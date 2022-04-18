@@ -1,3 +1,4 @@
+import { ValidationError } from '@asap-hub/errors';
 import {
   ResearchOutputPostRequest,
   researchOutputTypes,
@@ -6,7 +7,6 @@ import {
   researchOutputDocumentTypes,
 } from '@asap-hub/model';
 import { JSONSchemaType } from 'ajv';
-import Boom from '@hapi/boom';
 import { validateInput } from '.';
 
 type ResearchOutputParameters = {
@@ -134,37 +134,27 @@ export const validateResearchOutputPostRequestParametersIdentifiers = (
     !data.accession &&
     !data.labCatalogNumber
   ) {
-    throw Boom.badRequest('Validation error', {
-      details: `An identifier is required for research output that is funded and used in a publication`,
-    });
+    throw new ValidationError('An identifier is required for research output that is funded and used in a publication');
   }
 
   const types = researchOutputToIdentifierType[data.documentType];
 
   if (data.rrid && !types.includes(ResearchOutputIdentifierType.RRID)) {
-    throw Boom.badRequest('Validation error', {
-      details: `RRID identifier is not supported for research output of type ${data.documentType}`,
-    });
+    throw new ValidationError(`RRID identifier is not supported for research output of type ${data.documentType}`);
   }
   if (data.doi && !types.includes(ResearchOutputIdentifierType.DOI)) {
-    throw Boom.badRequest('Validation error', {
-      details: `DOI identifier is not supported for research output of type ${data.documentType}`,
-    });
+    throw new ValidationError(`DOI identifier is not supported for research output of type ${data.documentType}`);
   }
   if (
     data.labCatalogNumber &&
     !types.includes(ResearchOutputIdentifierType.LabCatalogNumber)
   ) {
-    throw Boom.badRequest('Validation error', {
-      details: `Lab catalog number identifier is not supported for research output of type ${data.documentType}`,
-    });
+    throw new ValidationError(`Lab catalog number identifier is not supported for research output of type ${data.documentType}`);
   }
   if (
     data.accession &&
     !types.includes(ResearchOutputIdentifierType.AccessionNumber)
   ) {
-    throw Boom.badRequest('Validation error', {
-      details: `Accession number identifier is not supported for research output of type ${data.documentType}`,
-    });
+    throw new ValidationError(`Accession number identifier is not supported for research output of type ${data.documentType}`);
   }
 };

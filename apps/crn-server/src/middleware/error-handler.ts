@@ -1,5 +1,6 @@
 import { ErrorRequestHandler } from 'express';
 import { isBoom } from '@hapi/boom';
+import { CRNError } from '@asap-hub/errors';
 import { ErrorResponse } from '@asap-hub/model';
 
 export const errorHandlerFactory =
@@ -18,6 +19,15 @@ export const errorHandlerFactory =
       return res.status(err.output.statusCode).json({
         ...err.output.payload,
         data: err.data,
+      });
+    }
+
+    if (CRNError.isCRNError(err)) {
+      return res.status(err.statusCode).json({
+        error: err.error,
+        statusCode: err.statusCode,
+        message: err.message,
+        data: err.data as any
       });
     }
 

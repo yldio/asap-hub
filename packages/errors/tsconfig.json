@@ -4,8 +4,7 @@
     "rootDir": "src",
     "outDir": "build"
   },
-  "include": ["src", "types"],
+  "include": ["src"],
   "references": [
-    { "path": "../errors" }
   ]
 }

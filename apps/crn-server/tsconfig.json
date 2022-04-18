@@ -13,6 +13,7 @@
   "references": [
     { "path": "../../packages/auth" },
     { "path": "../../packages/algolia" },
+    { "path": "../../packages/errors" },
     { "path": "../../packages/model" },
     { "path": "../../packages/services-common" },
     { "path": "../../packages/squidex" },

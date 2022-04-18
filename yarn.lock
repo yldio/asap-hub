@@ -493,6 +493,7 @@ __metadata:
     "@algolia/cli": ^4.0.8
     "@asap-hub/algolia": "workspace:*"
     "@asap-hub/auth": "workspace:*"
+    "@asap-hub/errors": "workspace:*"
     "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
@@ -611,6 +612,15 @@ __metadata:
     "@playwright/test": ^1.16.3
     "@types/node-fetch": ^2.5.10
     node-fetch: ^3.0.0-beta.9
+  languageName: unknown
+  linkType: soft
+
+"@asap-hub/errors@workspace:*, @asap-hub/errors@workspace:packages/errors":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/errors@workspace:packages/errors"
+  dependencies:
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@babel/runtime-corejs3": ^7.14.0
   languageName: unknown
   linkType: soft
 
@@ -856,6 +866,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/services-common@workspace:packages/services-common"
   dependencies:
+    "@asap-hub/errors": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/runtime-corejs3": ^7.14.0
     "@hapi/boom": ^9.1.2

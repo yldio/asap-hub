@@ -13,6 +13,11 @@ import {
   useRouteParams,
   OutputDocumentTypeParameter,
 } from '@asap-hub/routing';
+import {
+  BackendError,
+  clearAjvErrorForPath,
+  validationErrorsAreSupported,
+} from '@asap-hub/api-util';
 import { Frame } from '@asap-hub/structure';
 import {
   useLabSuggestions,
@@ -23,11 +28,6 @@ import {
 } from './state';
 
 import researchSuggestions from './research-suggestions';
-import {
-  BackendError,
-  clearAjvErrorForPath,
-  validationErrorsAreSupported,
-} from '../../api-util';
 
 const useParamOutputDocumentType = (
   teamId: string,

@@ -15,13 +15,13 @@ import {
 } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
+import { BackendError } from '@asap-hub/api-util';
 
 import { createTeamResearchOutput } from '../api';
 import { refreshTeamState } from '../state';
 import TeamOutput, {
   paramOutputDocumentTypeToResearchOutputDocumentType,
 } from '../TeamOutput';
-import { BackendError } from '../../../api-util';
 
 jest.mock('../api');
 jest.mock('../../users/api');

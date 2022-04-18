@@ -14,7 +14,8 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import ErrorBoundary from '@asap-hub/crn-frontend/src/structure/ErrorBoundary';
+import { ErrorBoundary } from '@asap-hub/structure';
+
 import EventList from '../EventList';
 import { getGroupEvents } from '../api';
 import { groupEventsState } from '../state';

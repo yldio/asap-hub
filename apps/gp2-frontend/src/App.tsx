@@ -2,8 +2,7 @@ import { FC, lazy, useEffect } from 'react';
 import { RecoilRoot } from 'recoil';
 import { Router, Switch, Route } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-last-location';
-import { init, reactRouterV5Instrumentation } from '@sentry/react';
-import { Integrations } from '@sentry/tracing';
+
 import { useFlags } from '@asap-hub/react-context';
 import { ToastStack, UtilityBar } from '@asap-hub/react-components';
 import { logout, welcome } from '@asap-hub/routing';
@@ -13,42 +12,6 @@ import history from './history';
 import CheckAuth from './auth/CheckAuth';
 import Signin from './auth/Signin';
 import Logout from './auth/Logout';
-
-import { SENTRY_DSN, ENVIRONMENT, RELEASE } from './config';
-
-init({
-  dsn: SENTRY_DSN,
-  release: RELEASE,
-  integrations: [
-    new Integrations.BrowserTracing({
-      // Can also use reactRouterV3Instrumentation or reactRouterV4Instrumentation
-      routingInstrumentation: reactRouterV5Instrumentation(history),
-    }),
-  ],
-  environment: ENVIRONMENT,
-  // Is recommended adjusting this value in production, or using tracesSampler
-  // for finer control
-  tracesSampleRate: 1.0,
-  attachStacktrace: true,
-  // Turn sampleRate on to reduce the amount of data sent to Sentry
-  // sampleRate: 0.1, // 0.1 = 10% of error events will be sent
-  allowUrls: [
-    'hub.asap.science/static/js/', // your code
-    'asap-hub.us.auth0.com', // code served from Auth0
-    'hub.asap.science/.auth/static/js', // code served from Auth0
-  ],
-  denyUrls: [
-    /fonts\.googleapis\.com/i, // code served from Google Fonts
-    /extensions\//i, // Chrome extensions
-    /^chrome:\/\//i, // Chrome extensions
-    /gtag\/js\//i, // Google Tag Manager
-  ],
-  ignoreErrors: [
-    /Failed to fetch \w+.*? list. Expected status 2xx. Received status 401/g,
-    /Loading chunk [0-9]*? failed/g,
-    /Object Not Found Matching Id:\d/g,
-  ],
-});
 
 const loadAuthProvider = () =>
   import(/* webpackChunkName: "auth-provider" */ './auth/AuthProvider');

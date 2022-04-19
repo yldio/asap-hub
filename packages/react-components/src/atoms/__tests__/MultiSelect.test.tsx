@@ -363,4 +363,40 @@ describe('Async', () => {
 
     await waitFor(() => expect(mockOnChange).toHaveBeenCalledWith([]));
   });
+
+  it('supports adding new options', async () => {
+    const mockOnChange = jest.fn();
+
+    const { queryByText, getAllByText, getByDisplayValue } = render(
+      <MultiSelect
+        {...asyncProps}
+        loadOptions={jest
+          .fn()
+          .mockResolvedValue([{ label: 'Example', value: '123' }])}
+        creatable={true}
+        onChange={mockOnChange}
+      />,
+    );
+
+    userEvent.click(getByDisplayValue(''));
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+
+    userEvent.type(getByDisplayValue(''), 'Test');
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+
+    userEvent.click(getAllByText('Test')[1]);
+
+    await waitFor(() => {
+      expect(mockOnChange).toHaveBeenCalledWith([
+        expect.objectContaining({
+          value: 'Test',
+          label: 'Test',
+        }),
+      ]);
+    });
+  });
 });

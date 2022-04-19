@@ -3834,12 +3834,12 @@ input ResearchOutputsDataSharingStatusInputDto {
   iv: String
 }
 
-"""The structure of the Subtype field of the Research Outputs content type."""
+"""The structure of the Subtype (deprecated) field of the Research Outputs content type."""
 type ResearchOutputsDataSubtypeDto {
   iv: String
 }
 
-"""The structure of the Subtype field of the Research Outputs content input type."""
+"""The structure of the Subtype (deprecated) field of the Research Outputs content input type."""
 input ResearchOutputsDataSubtypeInputDto {
   iv: String
 }

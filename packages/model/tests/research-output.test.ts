@@ -29,7 +29,7 @@ describe('Research Output Model', () => {
     });
 
     it('should return null on not known type', () => {
-      expect(researchOutputMapType('NotACloningSubtype')).toBeNull();
+      expect(researchOutputMapType('NotACloningType')).toBeNull();
     });
   });
 });

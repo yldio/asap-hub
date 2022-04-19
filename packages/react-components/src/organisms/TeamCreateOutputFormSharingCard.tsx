@@ -6,7 +6,7 @@ import {
   ResearchOutputSharingStatus,
   ResearchOutputType,
   ValidationErrorResponse,
-  researchOutputDocumentTypeToSubtype,
+  researchOutputDocumentTypeToType,
 } from '@asap-hub/model';
 
 import { globeIcon } from '../icons';
@@ -113,7 +113,7 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
           subtitle="(required)"
           description={`Select the option that applies to this ${documentType.toLowerCase()}.`}
           options={[
-            ...researchOutputDocumentTypeToSubtype[documentType].values(),
+            ...researchOutputDocumentTypeToType[documentType].values(),
           ].map((option) => ({
             value: option,
             label: option,

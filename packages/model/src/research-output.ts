@@ -57,7 +57,7 @@ export const researchOutputTypes = [
 
 export type ResearchOutputType = typeof researchOutputTypes[number];
 
-export const researchOutputDocumentTypeToSubtype: Record<
+export const researchOutputDocumentTypeToType: Record<
   ResearchOutputDocumentType,
   Set<ResearchOutputType>
 > = {

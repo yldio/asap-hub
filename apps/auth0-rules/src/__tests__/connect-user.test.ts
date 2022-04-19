@@ -1,6 +1,7 @@
 import nock from 'nock';
-import type { User, RuleContext } from '../types';
 import connectUser from '../connect-user';
+import * as handleError from '../handle-error';
+import type { RuleContext, User } from '../types';
 
 declare global {
   namespace NodeJS {
@@ -105,6 +106,7 @@ describe('Auth0 Rule - Connect User', () => {
   });
 
   it('should return an error if fails to connect the user', async () => {
+    const spy = jest.spyOn(handleError, 'handleError');
     nock(apiURL, {
       reqheaders: {
         authorization: `Basic ${apiSharedSecret}`,
@@ -130,6 +132,7 @@ describe('Auth0 Rule - Connect User', () => {
     expect(err).not.toBeNull();
     expect(resUser).toBeUndefined();
     expect(resContext).toBeUndefined();
+    expect(spy).toHaveBeenCalled();
   });
 
   it('should connect user if receives an invitation_code', async () => {

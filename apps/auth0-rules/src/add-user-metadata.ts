@@ -1,7 +1,8 @@
 import type { User } from '@asap-hub/auth';
 import type { UserMetadataResponse } from '@asap-hub/model';
-import { URL, URLSearchParams } from 'url';
 import got from 'got';
+import { URL, URLSearchParams } from 'url';
+import { handleError } from './handle-error';
 import type { Rule } from './types';
 
 const addUserMetadata: Rule<{ invitationCode: string }> = async (
@@ -65,10 +66,8 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
 
     return callback(null, auth0User, context);
   } catch (err) {
-    if (err instanceof Error) {
-      return callback(err);
-    }
-    return callback(new Error('Unknown Error'));
+    const error = handleError(err);
+    return callback(error);
   }
 };
 

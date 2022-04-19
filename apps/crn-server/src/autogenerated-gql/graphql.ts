@@ -3586,7 +3586,6 @@ export type ResearchOutputsDataDto = {
   publishDate: Maybe<ResearchOutputsDataPublishDateDto>;
   rrid: Maybe<ResearchOutputsDataRridDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
-  subtype: Maybe<ResearchOutputsDataSubtypeDto>;
   tags: Maybe<ResearchOutputsDataTagsDto>;
   title: Maybe<ResearchOutputsDataTitleDto>;
   type: Maybe<ResearchOutputsDataTypeDto>;
@@ -3611,7 +3610,6 @@ export type ResearchOutputsDataInputDto = {
   publishDate: Maybe<ResearchOutputsDataPublishDateInputDto>;
   rrid: Maybe<ResearchOutputsDataRridInputDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusInputDto>;
-  subtype: Maybe<ResearchOutputsDataSubtypeInputDto>;
   tags: Maybe<ResearchOutputsDataTagsInputDto>;
   title: Maybe<ResearchOutputsDataTitleInputDto>;
   type: Maybe<ResearchOutputsDataTypeInputDto>;
@@ -3696,16 +3694,6 @@ export type ResearchOutputsDataSharingStatusInputDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Subtype (deprecated) field of the Research Outputs content type. */
-export type ResearchOutputsDataSubtypeDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Subtype (deprecated) field of the Research Outputs content input type. */
-export type ResearchOutputsDataSubtypeInputDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
 /** The structure of the Tags field of the Research Outputs content type. */
 export type ResearchOutputsDataTagsDto = {
   iv: Maybe<Array<Scalars['String']>>;
@@ -3777,7 +3765,6 @@ export type ResearchOutputsFlatDataDto = {
   /** This must start with "RRID:" */
   rrid: Maybe<Scalars['String']>;
   sharingStatus: Maybe<Scalars['String']>;
-  subtype: Maybe<Scalars['String']>;
   tags: Maybe<Array<Scalars['String']>>;
   title: Maybe<Scalars['String']>;
   type: Maybe<Scalars['String']>;

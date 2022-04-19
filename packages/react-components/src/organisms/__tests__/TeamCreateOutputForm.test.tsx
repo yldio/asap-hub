@@ -115,8 +115,8 @@ it('can submit a form when form data is valid', async () => {
   fireEvent.change(screen.getByLabelText(/description/i), {
     target: { value: 'example description' },
   });
-  userEvent.type(screen.getByLabelText(/type/i), 'Animal Model');
-  fireEvent.keyDown(screen.getByLabelText(/type/i), {
+  userEvent.type(screen.getByLabelText(/Select the option/i), 'Animal Model');
+  fireEvent.keyDown(screen.getByLabelText(/Select the option/i), {
     keyCode: ENTER_KEYCODE,
   });
 

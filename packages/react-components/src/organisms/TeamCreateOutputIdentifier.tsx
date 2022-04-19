@@ -116,7 +116,7 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
     return (
       <>
         <LabeledDropdown
-          title="Identifier"
+          title="Identifier Type"
           subtitle="(required)"
           options={identifiers}
           value={identifierType}

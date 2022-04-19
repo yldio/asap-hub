@@ -3589,6 +3589,7 @@ export type ResearchOutputsDataDto = {
   subtype: Maybe<ResearchOutputsDataSubtypeDto>;
   tags: Maybe<ResearchOutputsDataTagsDto>;
   title: Maybe<ResearchOutputsDataTitleDto>;
+  type: Maybe<ResearchOutputsDataTypeDto>;
   usedInAPublication: Maybe<ResearchOutputsDataUsedInAPublicationDto>;
 };
 
@@ -3613,6 +3614,7 @@ export type ResearchOutputsDataInputDto = {
   subtype: Maybe<ResearchOutputsDataSubtypeInputDto>;
   tags: Maybe<ResearchOutputsDataTagsInputDto>;
   title: Maybe<ResearchOutputsDataTitleInputDto>;
+  type: Maybe<ResearchOutputsDataTypeInputDto>;
   usedInAPublication: Maybe<ResearchOutputsDataUsedInAPublicationInputDto>;
 };
 
@@ -3724,6 +3726,16 @@ export type ResearchOutputsDataTitleInputDto = {
   iv: Maybe<Scalars['String']>;
 };
 
+/** The structure of the Type field of the Research Outputs content type. */
+export type ResearchOutputsDataTypeDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Type field of the Research Outputs content input type. */
+export type ResearchOutputsDataTypeInputDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
 /** The structure of the Used in a Publication field of the Research Outputs content type. */
 export type ResearchOutputsDataUsedInAPublicationDto = {
   /** "Not sure" will not be shown on the Hub */
@@ -3768,6 +3780,7 @@ export type ResearchOutputsFlatDataDto = {
   subtype: Maybe<Scalars['String']>;
   tags: Maybe<Array<Scalars['String']>>;
   title: Maybe<Scalars['String']>;
+  type: Maybe<Scalars['String']>;
   /** "Not sure" will not be shown on the Hub */
   usedInAPublication: Maybe<Scalars['String']>;
 };

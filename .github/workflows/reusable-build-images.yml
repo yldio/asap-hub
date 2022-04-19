@@ -19,7 +19,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build integration
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_NAME: asap-hub/node-python-sq
           IMAGE_TAG: ${{ github.sha }}
         run: |

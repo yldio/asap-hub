@@ -6,7 +6,6 @@ import {
   clearAjvErrorForPath,
 } from '../api-util';
 
-export const CARD_VIEW_PAGE_SIZE = 10;
 const testUrl = new URL('test', `https://test.com`);
 
 const mockSetTag = jest.fn();
@@ -17,7 +16,7 @@ jest.mock('@sentry/react', () => ({
 describe('createListApiUrl', () => {
   it('uses defaults for take and skip params', async () => {
     const url = createListApiUrl(testUrl, {
-      pageSize: CARD_VIEW_PAGE_SIZE,
+      pageSize: 10,
       currentPage: 0,
       searchQuery: '',
       filters: new Set(),
@@ -39,7 +38,7 @@ describe('createListApiUrl', () => {
     const url = createListApiUrl(testUrl, {
       searchQuery: 'test123',
       filters: new Set(),
-      pageSize: CARD_VIEW_PAGE_SIZE,
+      pageSize: 10,
       currentPage: 0,
     });
     expect(url.searchParams.get('search')).toEqual('test123');
@@ -48,7 +47,7 @@ describe('createListApiUrl', () => {
     const url = createListApiUrl(testUrl, {
       filters: new Set(['123', '456']),
       currentPage: 0,
-      pageSize: CARD_VIEW_PAGE_SIZE,
+      pageSize: 10,
       searchQuery: '',
     });
     expect(url.searchParams.getAll('filter')).toEqual(['123', '456']);

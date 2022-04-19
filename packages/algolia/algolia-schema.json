@@ -24,6 +24,10 @@
     "orcid",
     "expertiseAndResourceTags",
     "id",
+    "rrid",
+    "accession",
+    "labCatalogNumber",
+    "doi",
     "email",
     "contactEmail"
   ],

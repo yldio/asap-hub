@@ -78,7 +78,7 @@ export const parseGraphQLResearchOutput = (
   const uniqueContactEmails = [...new Set(filteredContactEmails)];
 
   const data = output.flatData;
-  const type = researchOutputMapType(data.subtype);
+  const type = researchOutputMapType(data.type);
 
   return {
     id: output.id,

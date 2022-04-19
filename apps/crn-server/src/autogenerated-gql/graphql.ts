@@ -3696,12 +3696,12 @@ export type ResearchOutputsDataSharingStatusInputDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Subtype field of the Research Outputs content type. */
+/** The structure of the Subtype (deprecated) field of the Research Outputs content type. */
 export type ResearchOutputsDataSubtypeDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Subtype field of the Research Outputs content input type. */
+/** The structure of the Subtype (deprecated) field of the Research Outputs content input type. */
 export type ResearchOutputsDataSubtypeInputDto = {
   iv: Maybe<Scalars['String']>;
 };
@@ -6615,7 +6615,7 @@ export type ResearchOutputContentFragment = Pick<
     ResearchOutputsFlatDataDto,
     | 'title'
     | 'documentType'
-    | 'subtype'
+    | 'type'
     | 'description'
     | 'link'
     | 'addedDate'
@@ -6763,7 +6763,7 @@ export type FetchResearchOutputQuery = {
         ResearchOutputsFlatDataDto,
         | 'title'
         | 'documentType'
-        | 'subtype'
+        | 'type'
         | 'description'
         | 'link'
         | 'addedDate'
@@ -6926,7 +6926,7 @@ export type FetchResearchOutputsQuery = {
               ResearchOutputsFlatDataDto,
               | 'title'
               | 'documentType'
-              | 'subtype'
+              | 'type'
               | 'description'
               | 'link'
               | 'addedDate'
@@ -8903,7 +8903,7 @@ export const ResearchOutputContentFragmentDoc = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'documentType' },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'subtype' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'description' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'link' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'addedDate' } },

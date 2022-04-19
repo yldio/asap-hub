@@ -60,4 +60,5 @@ export const validationErrorsAreSupported = (
 export const clearAjvErrorForPath = (
   errors: ValidationErrorResponse['data'],
   path: string,
-) => errors.filter(({ instancePath }) => instancePath !== path);
+): ValidationErrorResponse['data'] =>
+  errors.filter(({ instancePath }) => instancePath !== path);

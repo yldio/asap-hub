@@ -5,11 +5,11 @@ import {
   SquidexGraphqlClient,
   SquidexRestClient,
   SquidexRest,
+  sanitiseForSquidex,
 } from '@asap-hub/squidex';
 import { ListTeamResponse, TeamResponse, TeamTool } from '@asap-hub/model';
 
 import { parseGraphQLTeam } from '../entities';
-import { sanitiseForSquidex } from '../utils/squidex';
 import { FETCH_TEAM, FETCH_TEAMS } from '../queries/teams.queries';
 import {
   FetchTeamQuery,

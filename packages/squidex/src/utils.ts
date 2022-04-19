@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { URL } from 'url';
-import { config } from '@asap-hub/squidex';
+import config from './config';
 
 export const createURL = (assets: string[]): string[] =>
   assets.map((asset) =>

@@ -1,4 +1,4 @@
-import { parseDate, createURL } from '../../src/utils/squidex';
+import { parseDate, createURL } from '../src/utils';
 import { config } from '@asap-hub/squidex';
 
 describe('generate asset url from cms assets list', () => {

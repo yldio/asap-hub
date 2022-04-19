@@ -1,5 +1,5 @@
 export const idToken = {
-  [`${origin}/user`]: {
+  [`https://dev.hub.asap.science/user`]: {
     id: 'userId',
     displayName: 'JT',
     email: 'joao.tiago@asap.science',

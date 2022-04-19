@@ -7,11 +7,11 @@ import {
   SquidexGraphqlClient,
   SquidexRestClient,
   SquidexRest,
+  sanitiseForSquidex,
 } from '@asap-hub/squidex';
 import { parseGraphQLEvent } from '../entities/event';
 import { AllOrNone, FetchOptions } from '../utils/types';
 
-import { sanitiseForSquidex } from '../utils/squidex';
 import {
   FETCH_EVENT,
   FETCH_EVENTS,

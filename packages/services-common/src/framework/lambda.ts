@@ -1,12 +1,12 @@
-import Intercept from 'apr-intercept';
 import Boom from '@hapi/boom';
 import Bourne from '@hapi/bourne';
-import Debug from 'debug';
+import Intercept from 'apr-intercept';
 import {
-  APIGatewayProxyResultV2,
   APIGatewayProxyEventV2,
+  APIGatewayProxyResultV2,
   APIGatewayProxyStructuredResultV2,
 } from 'aws-lambda';
+import Debug from 'debug';
 import { origin } from '../config';
 
 const debug = Debug('http');

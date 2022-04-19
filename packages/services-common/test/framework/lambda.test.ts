@@ -1,7 +1,7 @@
 import Boom from '@hapi/boom';
+import { origin } from '../../src/config';
 import { http } from '../../src/framework/lambda';
 import { apiGatewayEvent } from '../helpers/events';
-import { origin } from '../../src/config';
 
 test('http returns 400 on invalid body', async () => {
   const handler = http(async (_) => {
@@ -25,6 +25,17 @@ test('http returns statuCode of Boom error', async () => {
   const result = await handler(apiGatewayEvent({}));
   expect(result.statusCode).toStrictEqual(403);
 });
+
+test.each(['What?!', 11])(
+  'throwing literals returns 500 %s',
+  async (literal) => {
+    const handler = http(async (_) => {
+      throw literal;
+    });
+    const result = await handler(apiGatewayEvent({}));
+    expect(result.statusCode).toStrictEqual(500);
+  },
+);
 
 test('http returns data from Boom error in payload', async () => {
   const handler = http(async (_) => {

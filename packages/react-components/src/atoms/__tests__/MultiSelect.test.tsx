@@ -367,7 +367,30 @@ describe('Async', () => {
   it('supports adding new options', async () => {
     const mockOnChange = jest.fn();
 
-    const { queryByText, getAllByText, getByDisplayValue } = render(
+    const { queryByText, getAllByText, getByDisplayValue, rerender } = render(
+      <MultiSelect
+        {...asyncProps}
+        placeholder={'type something'}
+        loadOptions={() =>
+          Promise.resolve([{ label: 'Example', value: '123' }])
+        }
+        sortable={false}
+      />,
+    );
+
+    userEvent.click(getByDisplayValue(''));
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+
+    userEvent.type(getByDisplayValue(''), 'Test');
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+
+    expect(getAllByText('Test')).toHaveLength(1);
+
+    rerender(
       <MultiSelect
         {...asyncProps}
         loadOptions={jest

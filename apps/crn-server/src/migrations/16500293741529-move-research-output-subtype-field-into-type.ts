@@ -12,6 +12,7 @@ export default class MoveResearchOutputSubTypeFieldIntoType extends Migration {
         await squidexClient.patch(researchOutput.id, {
           type: {
             iv:
+              // @ts-expect-error type definition has changed
               researchOutput.data.subtype?.iv ||
               (null as unknown as ResearchOutputType),
           },

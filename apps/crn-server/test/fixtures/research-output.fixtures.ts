@@ -73,7 +73,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
     sharingStatus: 'Network Only',
     asapFunded: 'Yes',
     usedInAPublication: 'No',
-    subtype: '3D Printing',
+    type: '3D Printing',
     labs: [
       {
         id: '99c78dd7-627e-4fbd-aaec-d1977895189e',

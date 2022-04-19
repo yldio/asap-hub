@@ -10,11 +10,13 @@ export default class MapResearchOutputDeprecatedSubtype extends Migration {
       'research-outputs',
       async (researchOutput, squidexClient) => {
         const mappedSubtype = researchOutputMapType(
+          // @ts-expect-error type definition has changed
           researchOutput.data?.subtype?.iv,
         );
 
         if (mappedSubtype) {
           await squidexClient.patch(researchOutput.id, {
+            // @ts-expect-error type definition has changed
             subtype: { iv: mappedSubtype },
           });
         }

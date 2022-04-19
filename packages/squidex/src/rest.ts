@@ -1,6 +1,7 @@
 import Boom from '@hapi/boom';
 import Got, { HTTPError } from 'got';
 import createClient, { GetAccessToken } from './auth';
+import { parseErrorResponseBody } from './helpers';
 
 export interface Results<T> {
   total: number;
@@ -46,6 +47,7 @@ export interface ODataQuery {
   $orderby?: string;
   $search?: string;
 }
+
 export class Squidex<
   T extends { id: string; data: Record<string, unknown> },
   C extends { id: string; data: Record<string, unknown> } = T,
@@ -168,11 +170,7 @@ export class Squidex<
         if (err.response.statusCode === 400) {
           let body: unknown;
           try {
-            if (typeof err.response.body === 'string') {
-              body = JSON.parse(err.response.body);
-            } else {
-              body = err.response.body;
-            }
+            body = parseErrorResponseBody(err);
           } catch {
             body = err.response.body;
           }

@@ -1,6 +1,6 @@
-import { CRNError } from './crn-error';
+import { ASAPError } from './asap-error';
 
-export class BadRequestError extends CRNError {
+export class BadRequestError extends ASAPError {
   public constructor(
     message: string = 'Bad Request',
     public readonly data?: unknown,

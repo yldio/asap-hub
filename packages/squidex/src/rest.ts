@@ -114,7 +114,7 @@ export class Squidex<
       }
 
       if (err.response?.statusCode === 404) {
-        throw Boom.notFound();
+        throw new SquidexErrorNotFound();
       }
 
       throw Boom.badImplementation('squidex', err);

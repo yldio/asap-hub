@@ -1,5 +1,5 @@
-export class CRNError extends Error {
-  public readonly isCRN = true;
+export class ASAPError extends Error {
+  public readonly isASAP = true;
 
   public constructor(
     public readonly error: string,
@@ -10,7 +10,7 @@ export class CRNError extends Error {
     super(message);
   }
 
-  public static isCRNError(error: Error|CRNError): error is CRNError {
-    return (error as CRNError)?.isCRN;
+  public static isASAPError(error: Error|ASAPError): error is ASAPError {
+    return (error as ASAPError)?.isASAP;
   }
 }

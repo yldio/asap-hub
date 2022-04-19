@@ -1,6 +1,6 @@
-import { CRNError } from './crn-error';
+import { ASAPError } from './asap-error';
 
-export class UnsupportedMediaTypeError extends CRNError {
+export class UnsupportedMediaTypeError extends ASAPError {
   public constructor(
     message: string = 'Unsupported Media Type',
     public readonly data?: unknown,

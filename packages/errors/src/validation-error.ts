@@ -1,6 +1,6 @@
-import { CRNError } from './crn-error';
+import { ASAPError } from './asap-error';
 
-export class ValidationError extends CRNError {
+export class ValidationError extends ASAPError {
   public constructor(
     message: string,
     public readonly data?: unknown,

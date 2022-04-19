@@ -1,6 +1,6 @@
-import { CRNError } from './crn-error';
+import { ASAPError } from './asap-error';
 
-export class UnauthorizedError extends CRNError {
+export class UnauthorizedError extends ASAPError {
   public constructor(
     message: string = 'Unauthorized',
     public readonly data?: unknown,

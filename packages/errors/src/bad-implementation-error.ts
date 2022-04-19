@@ -1,6 +1,6 @@
-import { CRNError } from './crn-error';
+import { ASAPError } from './asap-error';
 
-export class BadImplementationError extends CRNError {
+export class BadImplementationError extends ASAPError {
   public constructor(
     message: string = 'Internal Server Error',
     public readonly data?: unknown,

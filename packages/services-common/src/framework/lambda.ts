@@ -1,6 +1,6 @@
 import Intercept from 'apr-intercept';
 import Boom from '@hapi/boom';
-import { CRNError } from '@asap-hub/errors';
+import { ASAPError } from '@asap-hub/errors';
 import Bourne from '@hapi/bourne';
 import Debug from 'debug';
 import {
@@ -81,7 +81,7 @@ const handlerError = (error: Error): APIGatewayProxyResultV2 => {
     }
   }
 
-  if (CRNError.isCRNError(error)) {
+  if (ASAPError.ASAPError(error)) {
     return response({
       statusCode: error.statusCode,
       body: JSON.stringify(error.data ? error.data : {}),

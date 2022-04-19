@@ -1,6 +1,6 @@
-import { CRNError } from './crn-error';
+import { ASAPError } from './asap-error';
 
-export class NotFoundError extends CRNError {
+export class NotFoundError extends ASAPError {
   public constructor(
     message: string = 'Not Found',
     public readonly data?: unknown,

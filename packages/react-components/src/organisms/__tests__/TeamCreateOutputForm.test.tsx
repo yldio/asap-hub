@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { StaticRouter } from 'react-router-dom';
 import { ComponentProps } from 'react';
@@ -79,18 +79,18 @@ it('can submit a form when form data is valid', async () => {
   ]);
   getAuthorSuggestions.mockResolvedValue([
     {
-      user: { ...createUserResponse(), displayName: 'Author Two' },
-      label: 'Author Two',
-      value: '2',
+      user: { ...createUserResponse(), displayName: 'Chris Blue' },
+      label: 'Chris Blue',
+      value: 'u2',
     },
     {
       user: {
         ...createUserResponse(),
         email: undefined,
-        displayName: 'Author One',
+        displayName: 'Chris Reed',
       },
-      label: 'Author One (Non CRN)',
-      value: '1',
+      label: 'Chris Reed (Non CRN)',
+      value: 'u1',
     },
   ]);
   render(
@@ -150,13 +150,25 @@ it('can submit a form when form data is valid', async () => {
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
-  userEvent.click(screen.getByText(/Author One/i));
+  userEvent.click(screen.getByText(/Chris Reed/i));
 
   userEvent.click(screen.getByLabelText(/Authors/i));
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
-  userEvent.click(screen.getByText('Author Two'));
+  userEvent.click(screen.getByText('Chris Blue'));
+
+  userEvent.click(screen.getByLabelText(/Authors/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
+
+  userEvent.type(screen.getByLabelText(/Authors/i), 'Alex White');
+
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
+  userEvent.click(screen.getAllByText('Alex White')[1]);
 
   fireEvent.change(screen.getByLabelText(/doi/i), {
     target: { value: 'doi:12.1234' },
@@ -167,32 +179,31 @@ it('can submit a form when form data is valid', async () => {
   expect(screen.getByRole('button', { name: /Share/i })).not.toBeEnabled();
   expect(screen.getByRole('button', { name: /Cancel/i })).not.toBeEnabled();
 
-  await waitFor(() => {
-    expect(saveFn).toHaveBeenCalledWith({
-      tags: [],
-      link: 'http://example.com',
-      title: 'example title',
-      description: 'example description',
-      type: 'Animal Model',
-      labs: ['1'],
-      authors: [
-        {
-          externalAuthorId: '1',
-        },
-        {
-          userId: '2',
-        },
-      ],
-      teams: ['TEAMID'],
-      asapFunded: true,
-      usedInPublication: true,
-      sharingStatus: 'Public',
-      publishDate: new Date('2022-03-24').toISOString(),
-      doi: 'doi:12.1234',
-    });
-    expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
-    expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
-  });
+  await act(() =>
+    waitFor(() => {
+      expect(saveFn).toHaveBeenCalledWith({
+        tags: [],
+        link: 'http://example.com',
+        title: 'example title',
+        description: 'example description',
+        type: 'Animal Model',
+        labs: ['1'],
+        authors: [
+          { externalAuthorId: 'u1' },
+          { userId: 'u2' },
+          { externalAuthorName: 'Alex White' },
+        ],
+        teams: ['TEAMID'],
+        asapFunded: true,
+        usedInPublication: true,
+        sharingStatus: 'Public',
+        publishDate: new Date('2022-03-24').toISOString(),
+        doi: 'doi:12.1234',
+      });
+      expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
+      expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
+    }),
+  );
 });
 
 it('displays proper message when no author is found', async () => {

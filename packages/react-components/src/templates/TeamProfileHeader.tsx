@@ -3,7 +3,7 @@ import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { Anchor, Avatar, Display, Link, TabLink } from '../atoms';
-import { lead, paper } from '../colors';
+import { lead, paper, pine } from '../colors';
 import {
   article,
   bioinformatics,
@@ -119,6 +119,9 @@ const listItemStyles = css({
 const dropdownButtonStyling = css({
   display: 'flex',
   columnGap: `${9 / perRem}em`,
+  svg: {
+    color: pine.rgb,
+  },
 });
 const iconStyles = css({
   display: 'inline-grid',

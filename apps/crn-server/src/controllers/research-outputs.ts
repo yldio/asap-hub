@@ -10,6 +10,8 @@ import {
   RestExternalAuthor,
   RestResearchOutput,
   RestTeam,
+  sanitiseForSquidex,
+  parseToSquidex,
   SquidexGraphqlClient,
   SquidexRest,
   SquidexRestClient,
@@ -33,7 +35,6 @@ import {
 } from '../queries/research-outputs.queries';
 import { FETCH_RESEARCH_TAGS } from '../queries/research-tags.queries';
 import logger from '../utils/logger';
-import { parseToSquidex, sanitiseForSquidex } from '../utils/squidex';
 
 export default class ResearchOutputs implements ResearchOutputController {
   squidexGraphqlClient: SquidexGraphqlClient;

@@ -10,9 +10,8 @@ import {
   Role,
   userRole,
 } from '@asap-hub/model';
-import { RestUser } from '@asap-hub/squidex';
+import { createURL, parseDate, RestUser } from '@asap-hub/squidex';
 
-import { parseDate, createURL } from '../utils/squidex';
 import {
   FetchUserQuery,
   UsersContentFragment,

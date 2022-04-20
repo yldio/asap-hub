@@ -251,8 +251,8 @@ const isMigration = (instance: any): instance is Migration =>
 
 export abstract class Migration {
   path: string;
-  abstract up: () => Promise<void>;
-  abstract down: () => Promise<void>;
+  static up: () => Promise<void>;
+  static down: () => Promise<void>;
 
   constructor(filePath: string) {
     this.path = filePath;

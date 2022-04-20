@@ -14,7 +14,6 @@ import {
   color,
 } from './colors';
 
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export const activePrimaryBackgroundColor = color(122, 210, 169, 0.18);
 
 const borderWidth = 1;

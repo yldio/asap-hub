@@ -1,10 +1,9 @@
-import { ComponentProps } from 'react';
-import { render, act, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { MemoryRouter, StaticRouter } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { fireEvent } from '@testing-library/dom';
-
+import { act, render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ComponentProps } from 'react';
+import { MemoryRouter, StaticRouter } from 'react-router-dom';
 import PersonalInfoModal from '../PersonalInfoModal';
 
 const props: ComponentProps<typeof PersonalInfoModal> = {
@@ -98,7 +97,7 @@ it('renders a country selector', () => {
 
   userEvent.click(getByText('Start Typing...'));
   userEvent.type(getByText('Start Typing...'), 'xx');
-  expect(queryByText(new RegExp(/no+countries/, 'i'))).toBeDefined();
+  expect(queryByText(/no+countries/i)).toBeDefined();
 });
 
 it.each`

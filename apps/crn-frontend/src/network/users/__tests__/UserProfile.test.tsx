@@ -1,27 +1,26 @@
-import { ContextType, Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
-import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { createUserResponse, createUserTeams } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
-import { UserResponse } from '@asap-hub/model';
-import { ToastContext } from '@asap-hub/react-context';
-import userEvent from '@testing-library/user-event';
-import { readFileSync } from 'fs';
+import { Auth0, Auth0User } from '@asap-hub/auth';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { join } from 'path';
-import imageCompression from 'browser-image-compression';
+import { createUserResponse, createUserTeams } from '@asap-hub/fixtures';
+import { UserResponse } from '@asap-hub/model';
+import { ToastContext } from '@asap-hub/react-context';
+import { network } from '@asap-hub/routing';
 import { Auth0Client } from '@auth0/auth0-spa-js';
-import { Auth0User, Auth0 } from '@asap-hub/auth';
-
+import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import imageCompression from 'browser-image-compression';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { ContextType, Suspense } from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
+import { getResearchOutputs } from '../../../shared-research/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
-import UserProfile from '../UserProfile';
 import { getUser, patchUser, postUserAvatar } from '../api';
 import { refreshUserState } from '../state';
-import { getResearchOutputs } from '../../../shared-research/api';
+import UserProfile from '../UserProfile';
 
 jest.mock('../api');
 jest.mock('../groups/api');
@@ -57,10 +56,12 @@ const mockToast = jest.fn() as jest.MockedFunction<
 const renderUserProfile = async (
   userResponse = createUserResponse(),
   { ownUserId = userResponse.id, routeProfileId = userResponse.id } = {},
-  auth0Overrides?: (
-    auth0Client?: Auth0Client,
-    auth0User?: Auth0User,
-  ) => Partial<Auth0>,
+  auth0Overrides:
+    | undefined
+    | ((
+        auth0Client?: Auth0Client,
+        auth0User?: Auth0User,
+      ) => Partial<Auth0>) = undefined,
 ) => {
   mockGetUser.mockImplementation(async (id) =>
     id === userResponse.id ? userResponse : undefined,

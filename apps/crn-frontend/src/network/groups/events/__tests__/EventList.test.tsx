@@ -1,24 +1,23 @@
-import { ComponentType, FC, Suspense } from 'react';
-import { render, waitFor } from '@testing-library/react';
-import {
-  createListEventResponse,
-  createGroupResponse,
-  createEventResponse,
-} from '@asap-hub/fixtures';
-import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { network } from '@asap-hub/routing';
-import { mockConsoleError } from '@asap-hub/dom-test-utils';
-
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import ErrorBoundary from '@asap-hub/crn-frontend/src/structure/ErrorBoundary';
-import EventList from '../EventList';
-import { getGroupEvents } from '../api';
-import { groupEventsState } from '../state';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import {
+  createEventResponse,
+  createGroupResponse,
+  createListEventResponse,
+} from '@asap-hub/fixtures';
+import { network } from '@asap-hub/routing';
+import { render, waitFor } from '@testing-library/react';
+import { ComponentType, FC, Suspense } from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 import { getEventListOptions } from '../../../../events/options';
+import { getGroupEvents } from '../api';
+import EventList from '../EventList';
+import { groupEventsState } from '../state';
 
 jest.mock('../api');
 const mockGetGroupEvents = getGroupEvents as jest.MockedFunction<
@@ -34,7 +33,7 @@ beforeEach(() => {
 
 const renderGroupEventList = async (
   { searchQuery = '', currentTime = new Date(), past = false } = {},
-  wrapper?: ComponentType,
+  wrapper: ComponentType | undefined = undefined,
 ) => {
   const result = render(
     <RecoilRoot

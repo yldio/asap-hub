@@ -16,12 +16,12 @@
     "react": "^17.0.2"
   },
   "dependencies": {
+    "@asap-hub/auth": "workspace:*",
     "@asap-hub/flags": "workspace:*",
     "@babel/runtime-corejs3": "^7.14.0",
     "core-js": "^3.12.1"
   },
   "devDependencies": {
-    "@asap-hub/auth": "workspace:*",
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@babel/core": "^7.14.2",

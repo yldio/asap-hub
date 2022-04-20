@@ -1,20 +1,19 @@
-import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
-import { render, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { createTeamResponse } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-
+import { createTeamResponse } from '@asap-hub/fixtures';
+import { network } from '@asap-hub/routing';
+import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Suspense } from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
+import { getResearchOutputs } from '../../../shared-research/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
-import TeamProfile from '../TeamProfile';
 import { getTeam } from '../api';
 import { refreshTeamState } from '../state';
-import { getResearchOutputs } from '../../../shared-research/api';
+import TeamProfile from '../TeamProfile';
 
 jest.mock('../api');
 jest.mock('../groups/api');
@@ -92,7 +91,7 @@ it('deep links to the teams list', async () => {
 const renderPage = async (
   teamResponse = createTeamResponse(),
   { teamId = teamResponse.id } = {},
-  initialEntries?: string,
+  initialEntries: string | undefined = undefined,
 ) => {
   const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
   mockGetTeam.mockImplementation(async (id) =>

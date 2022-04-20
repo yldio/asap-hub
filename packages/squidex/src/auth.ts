@@ -3,7 +3,7 @@ import decode from 'jwt-decode';
 import Debug from 'debug';
 import squidex from './config';
 
-/* eslint-disable camelcase */
+ 
 
 interface JwtToken {
   exp: number;

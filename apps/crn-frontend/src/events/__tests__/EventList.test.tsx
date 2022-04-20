@@ -23,7 +23,7 @@ afterEach(() => {
 const renderEventsListPage = async (
   searchQuery = '',
   currentTime = new Date(),
-  past?: boolean,
+  past: boolean | undefined = undefined,
 ) => {
   const result = render(
     <RecoilRoot

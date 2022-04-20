@@ -1,7 +1,7 @@
 module.exports = {
   cliOptions: {
     maxWarnings: 0,
-    reportUnusedDisableDirectives: true,
+    reportUnusedDisableDirectives: 'error',
     resolvePluginsRelativeTo: require.resolve(
       '@asap-hub/eslint-config-asap-hub',
     ),

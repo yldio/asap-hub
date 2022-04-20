@@ -6,9 +6,6 @@ import {
   isAllowedChildren,
 } from '../text';
 
-/* false positive */
-/* eslint-disable jest/no-identical-title */
-
 describe.each([
   [undefined],
   [null],

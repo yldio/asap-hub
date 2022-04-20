@@ -18,7 +18,9 @@ describe('the welcome page', () => {
   afterEach(async () => {
     await waitFor(() => expect(nock.isDone()).toBe(true));
     // allow macro tasks to run, found no other way here
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await new Promise((resolve) => {
+      setTimeout(resolve, 0);
+    });
   });
 
   // redirect

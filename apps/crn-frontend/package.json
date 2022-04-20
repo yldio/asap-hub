@@ -14,7 +14,9 @@
     "release:frontend": "node ./scripts/sentry-release.js"
   },
   "dependencies": {
+    "@asap-hub/algolia": "workspace:*",
     "@asap-hub/auth": "workspace:*",
+    "@asap-hub/fixtures": "workspace:*",
     "@asap-hub/flags": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
@@ -44,10 +46,8 @@
     "web-streams-polyfill": "^3.1.1"
   },
   "devDependencies": {
-    "@asap-hub/algolia": "workspace:*",
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@asap-hub/fixtures": "workspace:*",
     "@babel/runtime-corejs3": "^7.14.0",
     "@sentry/cli": "^1.68.0",
     "@testing-library/dom": "^7.31.0",

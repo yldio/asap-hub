@@ -8,6 +8,7 @@ import {
 } from 'aws-lambda';
 import Debug from 'debug';
 import { origin } from '../config';
+import { errorResponse } from './helpers';
 
 const debug = Debug('http');
 
@@ -109,18 +110,7 @@ export const http =
     try {
       body = event.body && Bourne.parse(event.body);
     } catch (err) {
-      if (err instanceof Error) {
-        const boom = Boom.badRequest(err.message);
-        return response({
-          statusCode: boom.output.statusCode,
-          body: JSON.stringify(boom.output.payload),
-        });
-      }
-
-      return response({
-        statusCode: 500,
-        body: 'Unexpected Error',
-      });
+      return errorResponse(err);
     }
 
     // lowercase headers

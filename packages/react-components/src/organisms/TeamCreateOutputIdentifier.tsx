@@ -9,7 +9,6 @@ import { noop } from '../utils';
 
 const getIdentifiers = (
   researchOutputDocumentType: ResearchOutputDocumentType,
-  required: boolean,
 ): Array<{
   value: ResearchOutputIdentifierType;
   label: ResearchOutputIdentifierType;
@@ -17,11 +16,9 @@ const getIdentifiers = (
   let identifiers =
     researchOutputToIdentifierType[researchOutputDocumentType] ?? [];
 
-  if (required) {
-    identifiers = identifiers.filter(
-      (identifier) => identifier !== ResearchOutputIdentifierType.None,
-    );
-  }
+  identifiers = identifiers.filter(
+    (identifier) => identifier !== ResearchOutputIdentifierType.None,
+  );
 
   return identifiers.map((identifier) => ({
     value: identifier,
@@ -69,7 +66,6 @@ export interface TeamCreateOutputIdentifierProps {
   identifierType?: ResearchOutputIdentifierType;
   setIdentifierType?: (value: ResearchOutputIdentifierType) => void;
   documentType: ResearchOutputDocumentType;
-  required: boolean;
 }
 
 export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProps> =
@@ -79,20 +75,12 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
     identifier = '',
     setIdentifier = noop,
     documentType,
-    required,
   }) => {
     const data = useMemo(() => identifierMap[identifierType], [identifierType]);
     const identifiers = useMemo(
-      () => getIdentifiers(documentType, required),
-      [documentType, required],
+      () => getIdentifiers(documentType),
+      [documentType],
     );
-
-    useEffect(() => {
-      if (required && identifierType === ResearchOutputIdentifierType.None) {
-        setIdentifierType(identifiers[0].value);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [required, setIdentifierType]);
 
     useEffect(() => {
       setIdentifier('');
@@ -106,8 +94,6 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
           )
         ) {
           setIdentifierType(newType as ResearchOutputIdentifierType);
-        } else {
-          setIdentifierType(identifiers[0].value);
         }
       },
       [setIdentifierType, identifiers],
@@ -121,6 +107,9 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
           options={identifiers}
           value={identifierType}
           onChange={onChangeIdentifierType}
+          required
+          placeholder={'Choose an identifier'}
+          getValidationMessage={() => 'Please choose an identifier'}
         />
         {identifierType !== ResearchOutputIdentifierType.None && (
           <LabeledTextField

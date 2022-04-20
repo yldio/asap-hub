@@ -161,6 +161,9 @@ it('can submit a form when form data is valid', async () => {
   );
   userEvent.click(screen.getByText('Person A 3'));
 
+  userEvent.type(screen.getByLabelText(/Identifier/i), 'DO');
+  userEvent.click(screen.getByText('DOI'));
+
   const button = screen.getByRole('button', { name: /Share/i });
 
   userEvent.click(button);
@@ -180,6 +183,7 @@ it('can submit a form when form data is valid', async () => {
         description: 'example description',
         type: 'Animal Model',
         labs: ['l0'],
+        doi: '',
         authors: [
           {
             userId: 'u2',
@@ -220,6 +224,9 @@ it('will show server side validation error for link', async () => {
   });
   userEvent.type(screen.getByLabelText(/type/i), 'Preprint');
 
+  fireEvent.change(screen.getByLabelText(/Identifier/i), {
+    target: { value: 'DOI' },
+  });
   const button = screen.getByRole('button', { name: /Share/i });
   userEvent.click(button);
 
@@ -263,6 +270,10 @@ it('will toast server side errors for unknown errors', async () => {
     target: { value: 'example description' },
   });
   userEvent.type(screen.getByLabelText(/type/i), 'Preprint');
+
+  fireEvent.change(screen.getByLabelText(/Identifier/i), {
+    target: { value: 'DOI' },
+  });
 
   const button = screen.getByRole('button', { name: /Share/i });
   userEvent.click(button);

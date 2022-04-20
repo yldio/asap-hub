@@ -10,7 +10,6 @@ const props: ComponentProps<typeof TeamCreateOutputExtraInformationCard> = {
   tags: [],
 
   documentType: 'Article',
-  identifierRequired: false,
 };
 
 it('should render a tag', () => {

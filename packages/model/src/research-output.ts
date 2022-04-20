@@ -129,7 +129,7 @@ export const researchOutputMapType = (
 };
 
 export enum ResearchOutputIdentifierType {
-  None = 'None',
+  None = '',
   DOI = 'DOI',
   AccessionNumber = 'Accession Number',
   RRID = 'RRID',

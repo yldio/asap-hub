@@ -239,9 +239,6 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             setIdentifier={setIdentifier}
             identifierType={identifierType}
             setIdentifierType={setIdentifierType}
-            identifierRequired={
-              usedInPublication === 'Yes' && asapFunded === 'Yes'
-            }
           />
           <TeamCreateOutputContributorsCard
             isSaving={isSaving}

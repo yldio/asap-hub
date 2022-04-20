@@ -116,7 +116,7 @@ export const http =
           body: JSON.stringify(boom.output.payload),
         });
       }
-      debug('Unexpected error', err);
+
       return response({
         statusCode: 500,
         body: 'Unexpected Error',

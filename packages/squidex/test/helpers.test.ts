@@ -1,4 +1,5 @@
 import { HTTPError } from 'got';
+import { parseErrorResponseBody } from '../src/helpers';
 
 describe('parseErrorResponse', () => {
   const body = {
@@ -24,6 +25,3 @@ describe('parseErrorResponse', () => {
     expect(result).toEqual(body);
   });
 });
-function parseErrorResponseBody(err: any) {
-  throw new Error('Function not implemented.');
-}

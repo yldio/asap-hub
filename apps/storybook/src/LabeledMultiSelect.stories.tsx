@@ -1,5 +1,5 @@
 import { LabeledMultiSelect } from '@asap-hub/react-components';
-import { number, text } from '@storybook/addon-knobs';
+import { number, text, boolean } from '@storybook/addon-knobs';
 import { ComponentPropsWithRef } from 'react';
 
 export default {
@@ -86,6 +86,7 @@ export const Async = () => (
     values={[]}
     placeholder={text('Placeholder', 'Please select some airports')}
     noOptionsMessage={() => text('No Options Message', 'No options!')}
+    creatable={boolean('Creatable', false)}
   />
 );
 

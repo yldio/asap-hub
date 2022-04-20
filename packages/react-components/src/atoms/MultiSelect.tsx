@@ -13,6 +13,7 @@ import Select, {
   Props,
 } from 'react-select';
 import AsyncSelect, { Props as AsyncProps } from 'react-select/async';
+import AsyncCreatableSelect from 'react-select/async-creatable';
 import {
   SortableContainer,
   SortableContainerProps,
@@ -67,6 +68,12 @@ const SortableMultiValueLabel = SortableHandle(
   ),
 );
 
+const SortableAsyncCreatableSelect = SortableContainer(AsyncCreatableSelect, {
+  withRef: true,
+}) as React.ComponentClass<
+  Props<MultiSelectOptionsType, true> & SortableContainerProps
+>;
+
 const SortableAsyncSelect = SortableContainer(AsyncSelect, {
   withRef: true,
 }) as React.ComponentClass<
@@ -114,6 +121,7 @@ export type MultiSelectProps<T extends MultiSelectOptionsType> = {
   readonly onChange?: (newValues: OptionsType<T>) => void;
   readonly values?: OptionsType<T>;
   readonly sortable?: boolean;
+  readonly creatable?: boolean;
 } & (
   | (Pick<Props<T, true>, 'noOptionsMessage' | 'components'> & {
       readonly suggestions: ReadonlyArray<T>;
@@ -140,6 +148,7 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
   values = [],
   onChange = noop,
   sortable = true,
+  creatable = false,
 }: MultiSelectProps<T>): ReactElement => {
   const [validationMsg, setValidationMsg] = useState('');
 
@@ -200,10 +209,18 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
       }
       onChange(options);
     },
+    ...(creatable && {
+      createOptionPosition: 'first',
+      formatCreateLabel: (inputValue: string) => inputValue,
+    }),
   };
 
   const SelectComponent = sortable ? SortableSelect : Select;
-  const AsyncSelectComponent = sortable ? SortableAsyncSelect : AsyncSelect;
+  const AsyncSelectComponent = sortable
+    ? creatable
+      ? SortableAsyncCreatableSelect
+      : SortableAsyncSelect
+    : AsyncSelect;
 
   return (
     <div css={containerStyles} onContextMenu={handleOnContextMenu}>

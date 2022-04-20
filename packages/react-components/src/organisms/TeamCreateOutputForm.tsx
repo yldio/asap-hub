@@ -183,13 +183,11 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           title,
           type,
           authors: authors.map(({ value, user }) =>
-            isInternalUser(user)
-              ? {
-                  userId: value,
-                }
-              : {
-                  externalAuthorId: value,
-                },
+            !user
+              ? { externalAuthorName: value }
+              : isInternalUser(user)
+              ? { userId: value }
+              : { externalAuthorId: value },
           ),
           labs: labs.map(({ value }) => value),
           teams: teams.map(({ value }) => value),
@@ -245,7 +243,6 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
               usedInPublication === 'Yes' && asapFunded === 'Yes'
             }
           />
-
           <TeamCreateOutputContributorsCard
             isSaving={isSaving}
             labs={labs}

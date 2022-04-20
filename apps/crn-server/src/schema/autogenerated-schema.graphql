@@ -3716,7 +3716,6 @@ type ResearchOutputsDataDto {
   publishDate: ResearchOutputsDataPublishDateDto
   rrid: ResearchOutputsDataRridDto
   sharingStatus: ResearchOutputsDataSharingStatusDto
-  subtype: ResearchOutputsDataSubtypeDto
   tags: ResearchOutputsDataTagsDto
   title: ResearchOutputsDataTitleDto
   type: ResearchOutputsDataTypeDto
@@ -3741,7 +3740,6 @@ input ResearchOutputsDataInputDto {
   publishDate: ResearchOutputsDataPublishDateInputDto
   rrid: ResearchOutputsDataRridInputDto
   sharingStatus: ResearchOutputsDataSharingStatusInputDto
-  subtype: ResearchOutputsDataSubtypeInputDto
   tags: ResearchOutputsDataTagsInputDto
   title: ResearchOutputsDataTitleInputDto
   type: ResearchOutputsDataTypeInputDto
@@ -3834,16 +3832,6 @@ input ResearchOutputsDataSharingStatusInputDto {
   iv: String
 }
 
-"""The structure of the Subtype (deprecated) field of the Research Outputs content type."""
-type ResearchOutputsDataSubtypeDto {
-  iv: String
-}
-
-"""The structure of the Subtype (deprecated) field of the Research Outputs content input type."""
-input ResearchOutputsDataSubtypeInputDto {
-  iv: String
-}
-
 """The structure of the Tags field of the Research Outputs content type."""
 type ResearchOutputsDataTagsDto {
   iv: [String!]
@@ -3919,7 +3907,6 @@ type ResearchOutputsFlatDataDto {
   """
   rrid: String
   sharingStatus: String
-  subtype: String
   tags: [String!]
   title: String
   type: String

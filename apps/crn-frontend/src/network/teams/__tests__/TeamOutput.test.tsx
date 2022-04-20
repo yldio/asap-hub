@@ -144,8 +144,8 @@ it('can submit a form when form data is valid', async () => {
   fireEvent.change(screen.getByLabelText(/description/i), {
     target: { value: 'example description' },
   });
-  userEvent.type(screen.getByLabelText(/type/i), 'Animal Model');
-  fireEvent.keyDown(screen.getByLabelText(/type/i), {
+  userEvent.type(screen.getByLabelText(/Select the option/i), 'Animal Model');
+  fireEvent.keyDown(screen.getByLabelText(/Select the option/i), {
     keyCode: ENTER_KEYCODE,
   });
 
@@ -218,7 +218,7 @@ it('will show server side validation error for link', async () => {
   fireEvent.change(screen.getByLabelText(/description/i), {
     target: { value: 'example description' },
   });
-  userEvent.type(screen.getByLabelText(/type/i), 'Preprint');
+  userEvent.type(screen.getByLabelText(/Select the option/i), 'Preprint');
 
   const button = screen.getByRole('button', { name: /Share/i });
   userEvent.click(button);
@@ -262,7 +262,7 @@ it('will toast server side errors for unknown errors', async () => {
   fireEvent.change(screen.getByLabelText(/description/i), {
     target: { value: 'example description' },
   });
-  userEvent.type(screen.getByLabelText(/type/i), 'Preprint');
+  userEvent.type(screen.getByLabelText(/Select the option/i), 'Preprint');
 
   const button = screen.getByRole('button', { name: /Share/i });
   userEvent.click(button);

@@ -1,9 +1,11 @@
 import Boom from '@hapi/boom';
+import { origin } from '../../src/config';
+import * as helpers from '../../src/framework/helpers';
 import { http } from '../../src/framework/lambda';
 import { apiGatewayEvent } from '../helpers/events';
-import { origin } from '../../src/config';
 
 test('http returns 400 on invalid body', async () => {
+  const spy = jest.spyOn(helpers, 'errorResponse');
   const handler = http(async (_) => {
     return {
       statusCode: 200,
@@ -16,6 +18,7 @@ test('http returns 400 on invalid body', async () => {
     }),
   );
   expect(result.statusCode).toStrictEqual(400);
+  expect(spy).toHaveBeenCalled();
 });
 
 test('http returns statuCode of Boom error', async () => {

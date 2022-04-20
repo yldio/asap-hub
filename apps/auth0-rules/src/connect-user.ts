@@ -1,4 +1,5 @@
 import got from 'got';
+import { handleError } from './handle-error';
 import type { Rule } from './types';
 
 const connectUser: Rule<{ invitation_code: string }> = async (
@@ -29,7 +30,8 @@ const connectUser: Rule<{ invitation_code: string }> = async (
       .json();
     return callback(null, user, context);
   } catch (err) {
-    return callback(new Error(err));
+    const error = handleError(err);
+    return callback(error);
   }
 };
 

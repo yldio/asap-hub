@@ -61,7 +61,7 @@ const insertTeam = async (data: Data, cache: Cache): Promise<RestTeam> => {
   };
 
   if (
-    cache[team.applicationNumber.iv] &&
+    Object.prototype.hasOwnProperty.call(cache, team.applicationNumber.iv) &&
     role === 'Lead PI (Core Leadership)'
   ) {
     const t = await cache[team.applicationNumber.iv];

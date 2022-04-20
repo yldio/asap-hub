@@ -1,13 +1,14 @@
-import Intercept from 'apr-intercept';
 import Boom from '@hapi/boom';
 import Bourne from '@hapi/bourne';
-import Debug from 'debug';
+import Intercept from 'apr-intercept';
 import {
-  APIGatewayProxyResultV2,
   APIGatewayProxyEventV2,
+  APIGatewayProxyResultV2,
   APIGatewayProxyStructuredResultV2,
 } from 'aws-lambda';
+import Debug from 'debug';
 import { origin } from '../config';
+import { errorResponse } from './helpers';
 
 const debug = Debug('http');
 
@@ -80,13 +81,16 @@ const handlerError = (error: Error): APIGatewayProxyResultV2 => {
     }
   }
 
+  const isObject = (obj: unknown): obj is Record<string, unknown> =>
+    obj !== null && typeof obj === 'object';
+
   // Boom errors created on controllers handlers and fail-safe
   const internalError = Boom.isBoom(error) ? error : Boom.internal();
   return response({
     statusCode: internalError.output.statusCode,
     body: JSON.stringify({
       ...internalError.output.payload,
-      ...(internalError.data ? internalError.data : {}),
+      ...(isObject(internalError.data) ? internalError.data : {}),
     }),
     headers: {
       'content-type': 'application/json',
@@ -109,11 +113,7 @@ export const http =
     try {
       body = event.body && Bourne.parse(event.body);
     } catch (err) {
-      const boom = Boom.badRequest(err.message);
-      return response({
-        statusCode: boom.output.statusCode,
-        body: JSON.stringify(boom.output.payload),
-      });
+      return errorResponse(err);
     }
 
     // lowercase headers

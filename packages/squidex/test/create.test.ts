@@ -1,5 +1,6 @@
 import nock from 'nock';
 import config from '../src/config';
+import * as helpers from '../src/helpers';
 import { Squidex } from '../src/rest';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
@@ -25,13 +26,21 @@ describe('squidex wrapper', () => {
   });
 
   it('returns 400 when squidex returns bad request', async () => {
+    const spy = jest.spyOn(helpers, 'parseErrorResponseBody');
+
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/${collection}`)
       .query(() => true)
-      .reply(400, {
-        details: ['Request  body has an invalid format'],
-        message: 'The model is not valid',
-      });
+      .reply(
+        400,
+        {
+          details: ['Request  body has an invalid format'],
+          message: 'The model is not valid',
+        },
+        {
+          'Content-Type': 'application/json',
+        },
+      );
 
     await expect(() =>
       client.create({
@@ -40,6 +49,7 @@ describe('squidex wrapper', () => {
         },
       }),
     ).rejects.toThrow('Bad Request');
+    expect(spy).toHaveBeenCalled();
   });
 
   it('returns 400 along with the response payload formatted to json when squidex returns validation error', async () => {
@@ -210,3 +220,6 @@ describe('squidex wrapper', () => {
     });
   });
 });
+function parseErrorResponse(err: { response: { body: string } }) {
+  throw new Error('Function not implemented.');
+}

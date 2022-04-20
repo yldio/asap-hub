@@ -11,10 +11,16 @@ export interface Auth0Rule {
     readonly verified: boolean;
   }>;
 }
+
+type Auth0RuleDescription = { rules: ReadonlyArray<Auth0Rule> };
 // Auth0 errors are actually more complex than the typings claim
 export type WebAuthError = Auth0Error & {
-  readonly description?: null | string | { rules: ReadonlyArray<Auth0Rule> };
+  readonly description?: null | string | Auth0RuleDescription;
 };
+
+const isRulesDescription = (
+  description: string | Auth0RuleDescription,
+): description is Auth0RuleDescription => typeof description !== 'string';
 
 export interface ErrorMessage {
   readonly text: string;
@@ -56,7 +62,7 @@ export const extractErrorMessage = (
     ('errorDescription' in error && error.errorDescription) ||
     ('description' in error &&
       error.description &&
-      (typeof error.description === 'object'
+      (isRulesDescription(error.description)
         ? extractRuleErrorMessage(error.description.rules)
         : error.description)) ||
     ('message' in error &&

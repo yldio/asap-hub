@@ -3,6 +3,7 @@ import {
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import { SquidexGraphql } from '@asap-hub/squidex';
+import { isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import Users, { UserController } from '../../controllers/users';
@@ -36,7 +37,7 @@ export const indexUserHandler =
         logger.debug(`User removed ${user.id}`);
       }
     } catch (e) {
-      if (e?.output?.statusCode === 404) {
+      if (isBoom(e) && e.output.statusCode === 404) {
         await algoliaClient.remove(event.detail.payload.id);
 
         logger.debug(`User removed ${event.detail.payload.id}`);

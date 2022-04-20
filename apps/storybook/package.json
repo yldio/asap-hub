@@ -16,10 +16,10 @@
     "@asap-hub/react-components": "workspace:*",
     "@asap-hub/react-context": "workspace:*",
     "@asap-hub/routing": "workspace:*",
-    "@storybook/addon-actions": "^6.2.9",
+    "@storybook/addon-actions": "^6.5.0-alpha.62",
     "@storybook/addon-knobs": "^6.2.9",
-    "@storybook/addon-viewport": "^6.2.9",
-    "@storybook/react": "patch:@storybook/react@^6.2.9#patches/storybook__react.patch",
+    "@storybook/addon-viewport": "^6.5.0-alpha.62",
+    "@storybook/react": "6.5.0-alpha.62",
     "core-js": "^3.12.1",
     "date-fns": "^2.21.3",
     "emotion": "^10.0.27",
@@ -27,7 +27,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0",
-    "storybook-addon-designs": "^6.0.1"
+    "storybook-addon-designs": "^6.2.1"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
@@ -37,6 +37,6 @@
     "@types/react": "^17.0.5",
     "@types/react-router-dom": "^5.1.7",
     "babel-preset-react-app": "^10",
-    "typescript": "~4.2.4"
+    "typescript": "4.4.4"
   }
 }

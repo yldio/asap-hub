@@ -1,5 +1,6 @@
 import { EventBridgeEvent } from 'aws-lambda';
 import { SquidexGraphql } from '@asap-hub/squidex';
+import { isBoom } from '@hapi/boom';
 import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
@@ -34,7 +35,7 @@ export const indexExternalAuthorHandler =
 
       logger.debug(`Saved external author  ${externalAuthor.displayName}`);
     } catch (e) {
-      if (e?.output?.statusCode === 404) {
+      if (isBoom(e) && e.output.statusCode === 404) {
         await algoliaClient.remove(event.detail.payload.id);
         return;
       }

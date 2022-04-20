@@ -1,7 +1,8 @@
-import nock from 'nock';
 import { UserMetadataResponse } from '@asap-hub/model';
-import type { User, RuleContext } from '../types';
+import nock from 'nock';
 import addUserMetadata from '../add-user-metadata';
+import * as handleError from '../handle-error';
+import type { RuleContext, User } from '../types';
 
 declare global {
   namespace NodeJS {
@@ -123,6 +124,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
   });
 
   it('errors if it fails to fetch the user', async () => {
+    const spy = jest.spyOn(handleError, 'handleError');
     nock(apiURL, {
       reqheaders: {
         authorization: `Basic ${apiSharedSecret}`,
@@ -141,6 +143,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
     expect(String(err)).toMatch(/(^|\D)404(\D|$)/i);
     expect(resUser).toBeUndefined();
     expect(resContext).toBeUndefined();
+    expect(spy).toHaveBeenCalled();
   });
 
   it('adds the user metadata on successful fetch', async () => {

@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/serverless';
 
 export interface Alerts {
-  error: (error: Error) => void | Promise<void>;
+  error: (error: unknown) => void | Promise<void>;
 }
 
 export class AlertsSentry implements Alerts {
@@ -11,7 +11,7 @@ export class AlertsSentry implements Alerts {
     this.captureExceptionSentry = captureException;
   }
 
-  error(error: Error): void {
+  error(error: unknown): void {
     this.captureExceptionSentry(error);
   }
 }

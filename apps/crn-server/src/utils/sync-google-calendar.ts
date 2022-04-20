@@ -4,6 +4,12 @@ import { GetJWTCredentials } from './aws-secret-manager';
 import logger from './logger';
 import { SyncEvent } from './sync-google-event';
 
+type GaxiosError = Error & {
+  code: string;
+};
+const isGaxiosError = (error: unknown): error is GaxiosError =>
+  !!(error as GaxiosError)?.code; // We should upgrade google apis past version 70 so we can import Gaxios Error class and use instanceof instead.
+
 export type SyncCalendar = (
   googleCalendarId: string,
   squidexCalendarId: string,
@@ -55,7 +61,7 @@ export const syncCalendarFactory = (
       const res = await calendar.events.list(params);
       data = res.data;
     } catch (error) {
-      if (error.code === '410') {
+      if (isGaxiosError(error) && error.code === '410') {
         logger.warn(error, 'Token is Gone, doing full sync');
         return fetchEvents(googleCalendarId, squidexCalendarId, undefined); // syncToken "Gone", do full sync
       }

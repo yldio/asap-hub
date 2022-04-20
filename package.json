@@ -146,7 +146,7 @@
     "serverless-iam-roles-per-function": "^2.0.2",
     "serverless-s3-sync": "^1.17.1",
     "serverless-webpack": "^5.5.0",
-    "typescript": "~4.2.4",
+    "typescript": "4.4.4",
     "webpack": "^5.37.0"
   },
   "dependencies": {

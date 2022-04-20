@@ -81,13 +81,16 @@ const handlerError = (error: Error): APIGatewayProxyResultV2 => {
     }
   }
 
+  const isObject = (obj: unknown): obj is Record<string, unknown> =>
+    obj !== null && typeof obj === 'object';
+
   // Boom errors created on controllers handlers and fail-safe
   const internalError = Boom.isBoom(error) ? error : Boom.internal();
   return response({
     statusCode: internalError.output.statusCode,
     body: JSON.stringify({
       ...internalError.output.payload,
-      ...(internalError.data ? internalError.data : {}),
+      ...(isObject(internalError.data) ? internalError.data : {}),
     }),
     headers: {
       'content-type': 'application/json',

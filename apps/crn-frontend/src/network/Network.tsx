@@ -119,7 +119,7 @@ const Network: FC<Record<string, never>> = () => {
           <GroupProfile />
         </Frame>
       </Route>
-      <Redirect to={network({}).teams({}).$} />
+      <Redirect to={network({}).users({}).$} />
     </Switch>
   );
 };

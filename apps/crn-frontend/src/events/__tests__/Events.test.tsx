@@ -69,12 +69,12 @@ it('Renders the events page header', async () => {
 
 it('Defaults to the upcoming events page', async () => {
   mockGetEvents.mockImplementation((params) => {
-    const eventsExpected = 'before' in params ? 'expected' : 'ignore';
+    const eventsExpected = 'before' in params ? 'upcomming' : 'ignore';
     return Promise.resolve({
       ...createListEventResponse(1),
       items: createListEventResponse(1).items.map((item, index) => ({
         ...item,
-        title: `Event title ${eventsExpected}`,
+        title: `${eventsExpected} Event title`,
       })),
     });
   });
@@ -83,7 +83,7 @@ it('Defaults to the upcoming events page', async () => {
     screen
       .getAllByRole('heading', { level: 3 })
       .map((heading) => heading.textContent),
-  ).toEqual(['Event title expected']);
+  ).toEqual(['upcomming Event title']);
 });
 
 describe('the events calendar page', () => {
@@ -109,18 +109,18 @@ describe('the events calendar page', () => {
 });
 
 describe.each`
-  routeName     | eventProperty | route
-  ${'past'}     | ${'after'}    | ${events({}).past({}).$}
-  ${'upcoming'} | ${'before'}   | ${events({}).upcoming({}).$}
-`('the events $routeName page', ({ eventProperty, route }) => {
+  eventProperty | route                        | expected
+  ${'after'}    | ${events({}).past({}).$}     | ${'past'}
+  ${'before'}   | ${events({}).upcoming({}).$} | ${'upcoming'}
+`('the events $expected page', ({ eventProperty, route, expected }) => {
   it('renders a list of event cards', async () => {
     mockGetEvents.mockImplementation((params) => {
-      const eventsExpected = eventProperty in params ? 'expected' : 'ignore';
+      const eventsExpected = eventProperty in params ? expected : 'ignore';
       return Promise.resolve({
         ...createListEventResponse(2),
         items: createListEventResponse(2).items.map((item, index) => ({
           ...item,
-          title: `Event title ${index} ${eventsExpected}`,
+          title: `${eventsExpected} Event title ${index}`,
         })),
       });
     });
@@ -130,7 +130,7 @@ describe.each`
       screen
         .getAllByRole('heading', { level: 3 })
         .map((heading) => heading.textContent),
-    ).toEqual(['Event title 0 expected', 'Event title 1 expected']);
+    ).toEqual([`${expected} Event title 0`, `${expected} Event title 1`]);
   });
 
   it('can search for events', async () => {

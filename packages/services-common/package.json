@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
+    "@asap-hub/squidex": "workspace:*",
     "@types/apr-intercept": "workspace:*",
     "@types/aws-lambda": "^8.10.76",
     "@types/debug": "^4.1.5",

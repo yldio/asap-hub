@@ -2,6 +2,11 @@ import nock from 'nock';
 import config from '../src/config';
 import * as helpers from '../src/helpers';
 import { Squidex } from '../src/rest';
+import {
+  SquidexValidationError,
+  SquidexError,
+  SquidexUnauthorizedError,
+} from '../src/errors';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
 interface Content {
@@ -48,7 +53,7 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow('Bad Request');
+    ).rejects.toThrow(SquidexError);
     expect(spy).toHaveBeenCalled();
   });
 
@@ -72,18 +77,12 @@ describe('squidex wrapper', () => {
       }),
     ).rejects.toThrowError(
       expect.objectContaining({
-        data: {
-          message: 'Validation error',
-          traceId: '00-ba8100d975b2cb551a023702a7d0d5b7-891e647127349001-01',
-          type: 'https://tools.ietf.org/html/rfc7231#section-6.5.1',
-          details: ['link.iv: Another content with the same value exists.'],
-          statusCode: 400,
-        },
+        details: ['link.iv: Another content with the same value exists.'],
       }),
     );
   });
 
-  it('returns 400 along with the raw response payload when squidex returns an error response which is not json', async () => {
+  it('returns SquidexError along with the raw response payload when squidex returns an error response which is not json', async () => {
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/${collection}`)
       .query(() => true)
@@ -95,14 +94,25 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrowError(
-      expect.objectContaining({
-        data: '<not>json</not>',
-      }),
-    );
+    ).rejects.toThrowError(SquidexError);
   });
 
-  it('returns 403 when squidex returns with credentials error', async () => {
+  it('returns SquidexError on unparsable JSON', async () => {
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/${collection}`)
+      .query(() => true)
+      .reply(200, '<not>json</not>');
+
+    await expect(() =>
+      client.create({
+        string: {
+          iv: 'value',
+        },
+      }),
+    ).rejects.toThrowError(SquidexError);
+  });
+
+  it('returns SquidexUnauthorizedError when squidex returns with credentials error', async () => {
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/${collection}`)
       .query(() => true)
@@ -117,10 +127,10 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow('Unauthorized');
+    ).rejects.toThrow(SquidexUnauthorizedError);
   });
 
-  it('returns 409 when squidex returns conflict', async () => {
+  it('returns SquidexValidationError when squidex returns conflict', async () => {
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/${collection}`)
       .query(() => true)
@@ -135,10 +145,10 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow('Conflict');
+    ).rejects.toThrow(SquidexValidationError);
   });
 
-  it('returns 500 when squidex returns error', async () => {
+  it('returns SquidexError when squidex returns error', async () => {
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/${collection}`)
       .query(() => true)
@@ -150,7 +160,7 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow('squidex');
+    ).rejects.toThrow(SquidexError);
   });
 
   it('creates a specific document as published', async () => {
@@ -220,6 +230,7 @@ describe('squidex wrapper', () => {
     });
   });
 });
+
 function parseErrorResponse(err: { response: { body: string } }) {
   throw new Error('Function not implemented.');
 }

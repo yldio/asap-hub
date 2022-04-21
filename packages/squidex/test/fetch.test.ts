@@ -1,6 +1,7 @@
 import nock from 'nock';
 import config from '../src/config';
 import { Squidex } from '../src/rest';
+import { SquidexError, SquidexUnauthorizedError } from '../src/errors';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
 interface Content {
@@ -21,7 +22,7 @@ describe('squidex wrapper', () => {
     nock.cleanAll();
   });
 
-  it('returns 403 when squidex returns with credentials error', async () => {
+  it('returns SquidexUnauthorizedError when squidex returns with credentials error', async () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/${collection}`)
       .query(() => true)
@@ -30,16 +31,30 @@ describe('squidex wrapper', () => {
         statusCode: 400,
       });
 
-    await expect(() => client.fetch()).rejects.toThrow('Unauthorized');
+    await expect(() => client.fetch()).rejects.toThrow(
+      SquidexUnauthorizedError,
+    );
   });
 
-  it('returns 500 when squidex returns error', async () => {
+  it('returns SquidexError when squidex returns error', async () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/${collection}`)
       .query(() => true)
       .reply(500);
 
-    await expect(() => client.fetch()).rejects.toThrow('squidex');
+    await expect(() => client.fetch()).rejects.toThrow(SquidexError);
+  });
+
+  it('returns SquidexError on HTTP error', async () => {
+    nock(config.baseUrl)
+      .get(
+        `/api/content/${config.appName}/${collection}?q=${JSON.stringify({
+          take: 8,
+        })}`,
+      )
+      .reply(401);
+
+    await expect(() => client.fetch()).rejects.toThrow(SquidexError);
   });
 
   it('returns a list of documents', async () => {

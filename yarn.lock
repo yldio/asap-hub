@@ -857,6 +857,7 @@ __metadata:
   resolution: "@asap-hub/services-common@workspace:packages/services-common"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/squidex": "workspace:*"
     "@babel/runtime-corejs3": ^7.14.0
     "@hapi/boom": ^9.1.2
     "@hapi/bourne": ^2.0.0

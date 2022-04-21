@@ -1,5 +1,10 @@
 import nock from 'nock';
 import config from '../src/config';
+import {
+  SquidexError,
+  SquidexNotFoundError,
+  SquidexUnauthorizedError,
+} from '../src/errors';
 import { Squidex } from '../src/rest';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
@@ -21,7 +26,7 @@ describe('squidex wrapper', () => {
     nock.cleanAll();
   });
 
-  it('returns 400 when squidex returns bad request', async () => {
+  it('returns SquidexError when squidex returns bad request', async () => {
     nock(config.baseUrl)
       .put(`/api/content/${config.appName}/${collection}/42`)
       .query(() => true)
@@ -32,10 +37,10 @@ describe('squidex wrapper', () => {
 
     await expect(() =>
       client.put('42', { string: { iv: 'value' } }),
-    ).rejects.toThrow('Bad Request');
+    ).rejects.toThrow(SquidexError);
   });
 
-  it('returns 403 when squidex returns with credentials error', async () => {
+  it('returns SquidexUnauthorizedError when squidex returns with credentials error', async () => {
     nock(config.baseUrl)
       .put(`/api/content/${config.appName}/${collection}/42`)
       .query(() => true)
@@ -50,10 +55,10 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow('Unauthorized');
+    ).rejects.toThrow(SquidexUnauthorizedError);
   });
 
-  it('returns 404 when document doesnt exist', async () => {
+  it('returns SquidexNotFoundError when document doesnt exist', async () => {
     nock(config.baseUrl)
       .put(`/api/content/${config.appName}/${collection}/42`)
       .reply(404);
@@ -64,10 +69,10 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow('Not Found');
+    ).rejects.toThrow(SquidexNotFoundError);
   });
 
-  it('returns 500 when squidex returns error', async () => {
+  it('returns SquidexError when squidex returns error', async () => {
     nock(config.baseUrl)
       .put(`/api/content/${config.appName}/${collection}/42`)
       .query(() => true)
@@ -79,7 +84,7 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow('squidex');
+    ).rejects.toThrow(SquidexError);
   });
 
   it('updates a specific document', async () => {

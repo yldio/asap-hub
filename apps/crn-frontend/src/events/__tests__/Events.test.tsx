@@ -55,6 +55,9 @@ const renderEventsPage = async (pathname = events({}).$) => {
   );
   return result;
 };
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 it('Renders the events page header', async () => {
   mockGetCalendars.mockResolvedValue(createListCalendarResponse(0));
@@ -65,19 +68,22 @@ it('Renders the events page header', async () => {
 });
 
 it('Defaults to the upcoming events page', async () => {
-  mockGetEvents.mockResolvedValue({
-    ...createListEventResponse(1),
-    items: createListEventResponse(1).items.map((item, index) => ({
-      ...item,
-      title: `Event title ${index}`,
-    })),
+  mockGetEvents.mockImplementation((params) => {
+    const eventsExpected = 'before' in params ? 'expected' : 'ignore';
+    return Promise.resolve({
+      ...createListEventResponse(1),
+      items: createListEventResponse(1).items.map((item, index) => ({
+        ...item,
+        title: `Event title ${eventsExpected}`,
+      })),
+    });
   });
   await renderEventsPage();
   expect(
     screen
       .getAllByRole('heading', { level: 3 })
       .map((heading) => heading.textContent),
-  ).toEqual(['Event title 0']);
+  ).toEqual(['Event title expected']);
 });
 
 describe('the events calendar page', () => {
@@ -102,25 +108,33 @@ describe('the events calendar page', () => {
   });
 });
 
-describe('the events upcoming page', () => {
+describe.each`
+  routeName     | eventProperty | route
+  ${'past'}     | ${'after'}    | ${events({}).past({}).$}
+  ${'upcoming'} | ${'before'}   | ${events({}).upcoming({}).$}
+`('the events $routeName page', ({ eventProperty, route }) => {
   it('renders a list of event cards', async () => {
-    mockGetEvents.mockResolvedValue({
-      ...createListEventResponse(2),
-      items: createListEventResponse(2).items.map((item, index) => ({
-        ...item,
-        title: `Event title ${index}`,
-      })),
+    mockGetEvents.mockImplementation((params) => {
+      const eventsExpected = eventProperty in params ? 'expected' : 'ignore';
+      return Promise.resolve({
+        ...createListEventResponse(2),
+        items: createListEventResponse(2).items.map((item, index) => ({
+          ...item,
+          title: `Event title ${index} ${eventsExpected}`,
+        })),
+      });
     });
-    await renderEventsPage(events({}).upcoming({}).$);
+
+    await renderEventsPage(route);
     expect(
       screen
         .getAllByRole('heading', { level: 3 })
         .map((heading) => heading.textContent),
-    ).toEqual(['Event title 0', 'Event title 1']);
+    ).toEqual(['Event title 0 expected', 'Event title 1 expected']);
   });
 
   it('can search for events', async () => {
-    await renderEventsPage(events({}).upcoming({}).$);
+    await renderEventsPage(route);
     userEvent.type(screen.getByRole('searchbox'), 'searchterm');
     await waitFor(() =>
       expect(mockGetEvents).toHaveBeenLastCalledWith(

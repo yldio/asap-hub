@@ -1,8 +1,10 @@
 import { ErrorObject } from 'ajv';
 
+export const VALIDATION_ERROR_MESSAGE = 'Validation error';
+
 export type ValidationErrorResponse = {
   error: 'Bad Request';
-  message: 'Validation Error';
+  message: typeof VALIDATION_ERROR_MESSAGE;
   statusCode: 400;
   data: ErrorObject<string, Record<string, unknown>, unknown>[];
 };
@@ -19,4 +21,4 @@ export type ErrorResponse =
 export const isValidationErrorResponse = (
   error: ErrorResponse,
 ): error is ValidationErrorResponse =>
-  /^Validation Error$/i.test(error.message); // Backend inconsistent.
+  error.message === VALIDATION_ERROR_MESSAGE;

@@ -99,7 +99,7 @@ describe('validationErrorsAreSupported', () => {
   const validationResponse: ValidationErrorResponse = {
     error: 'Bad Request',
     data: [],
-    message: 'Validation Error',
+    message: 'Validation error',
     statusCode: 400,
   };
   it('passes if all path instance are supported', () => {

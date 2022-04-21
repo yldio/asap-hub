@@ -1,6 +1,8 @@
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
+  VALIDATION_ERROR_MESSAGE,
+  ValidationErrorResponse,
 } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
@@ -58,23 +60,26 @@ export const researchOutputRouteFactory = (
       // https://asaphub.atlassian.net/browse/CRN-777
       if (
         Boom.isBoom(error) &&
-        error.data?.message === 'Validation error' &&
+        error.data?.message === VALIDATION_ERROR_MESSAGE &&
         Array.isArray(error.data?.details) &&
         error.data.details[0].includes(
           'link.iv: Another content with the same value exists',
         )
       ) {
-        throw Boom.badRequest('Validation error', [
-          {
-            instancePath: '/link',
-            keyword: 'unique',
-            message: 'must be unique',
-            params: {
-              type: 'string',
+        throw Boom.badRequest<ValidationErrorResponse['data']>(
+          VALIDATION_ERROR_MESSAGE,
+          [
+            {
+              instancePath: '/link',
+              keyword: 'unique',
+              message: 'must be unique',
+              params: {
+                type: 'string',
+              },
+              schemaPath: '#/properties/link/unique',
             },
-            schemaPath: '#/properties/link/unique',
-          },
-        ]);
+          ],
+        );
       }
 
       throw error;

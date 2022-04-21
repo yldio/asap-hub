@@ -195,7 +195,7 @@ it('can submit a form when form data is valid', async () => {
 it('will show server side validation error for link', async () => {
   const teamId = 'team-id';
   const validationResponse: ValidationErrorResponse = {
-    message: 'Validation Error',
+    message: 'Validation error',
     error: 'Bad Request',
     statusCode: 400,
     data: [

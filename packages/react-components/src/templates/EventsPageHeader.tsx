@@ -38,9 +38,6 @@ const EventsPageHeader: React.FC<EventsPageHeaderProps> = ({
           updated.
         </Paragraph>
         <TabNav>
-          <TabLink href={events({}).calendar({}).$}>
-            Subscribe to Calendars
-          </TabLink>
           <TabLink
             href={events({}).upcoming({}).$ + queryParamString(searchQuery)}
           >
@@ -48,6 +45,9 @@ const EventsPageHeader: React.FC<EventsPageHeaderProps> = ({
           </TabLink>
           <TabLink href={events({}).past({}).$ + queryParamString(searchQuery)}>
             Past Events
+          </TabLink>
+          <TabLink href={events({}).calendar({}).$}>
+            Subscribe to Calendars
           </TabLink>
         </TabNav>
       </div>

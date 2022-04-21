@@ -69,7 +69,7 @@ it('Renders the events page header', async () => {
 
 it('Defaults to the upcoming events page', async () => {
   mockGetEvents.mockImplementation((params) => {
-    const eventsExpected = 'before' in params ? 'upcomming' : 'ignore';
+    const eventsExpected = 'before' in params ? 'upcoming' : 'ignore';
     return Promise.resolve({
       ...createListEventResponse(1),
       items: createListEventResponse(1).items.map((item, index) => ({
@@ -83,7 +83,7 @@ it('Defaults to the upcoming events page', async () => {
     screen
       .getAllByRole('heading', { level: 3 })
       .map((heading) => heading.textContent),
-  ).toEqual(['upcomming Event title']);
+  ).toEqual(['upcoming Event title']);
 });
 
 describe('the events calendar page', () => {

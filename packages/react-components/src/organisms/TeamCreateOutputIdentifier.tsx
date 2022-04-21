@@ -4,6 +4,7 @@ import {
   ResearchOutputIdentifierType,
   researchOutputToIdentifierType,
 } from '@asap-hub/model';
+import { ResearchOutputIdentifierValidationExpression } from '@asap-hub/validation';
 import { LabeledDropdown, LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 
@@ -33,33 +34,41 @@ const identifierMap = {
   [ResearchOutputIdentifierType.DOI]: {
     helpText: 'Your DOI must start with 1 and it cannot be a URL',
     placeholder: 'DOI number e.g. 10.5555/YFRU1371',
-    regex: '^(doi:)?\\d{2}\\.\\d{4}.*$',
-    errorMessage: 'Please enter a valid DOI (e.g. 10.1234/abcde.121212)',
+    regex: ResearchOutputIdentifierValidationExpression.DOI,
+    errorMessage:
+      'Please enter a valid DOI. It starts with a 1 and it cannot be a URL. (e.g. 10.1234/abcde.121212)',
+    required: true,
   },
   [ResearchOutputIdentifierType.AccessionNumber]: {
     helpText:
       'Your Accession Number must start with a letter. Accession Numbers are attributed by NIH, EMBL-EBI, ProteomeXchange, etc.',
     placeholder: 'Accession number e.g. AF123456',
-    regex: '^(\\w+\\d+(\\.\\d+)?)|(NP_\\d+)$',
-    errorMessage: 'Please enter a valid Accession Number (e.g. NT_123456).',
+    regex: ResearchOutputIdentifierValidationExpression['Accession Number'],
+    errorMessage:
+      'Please enter a valid Accession Number which must started with a letter (e.g. NT_123456)',
+    required: true,
   },
   [ResearchOutputIdentifierType.RRID]: {
     helpText: 'Your RRID must start with “RRID:”',
     placeholder: 'RRID e.g. RRID:AB_90755',
-    regex: '^RRID:[a-zA-Z]+.+$',
-    errorMessage: 'Please enter a valid RRID (e.g. RRID:SCR_007358).',
+    regex: ResearchOutputIdentifierValidationExpression.RRID,
+    errorMessage:
+      'Please enter a valid RRID which starts with `RRID`. (e.g. RRID:SCR_007358)',
+    required: true,
   },
   [ResearchOutputIdentifierType.LabCatalogNumber]: {
     helpText: 'Number used by your lab to identify this resource internally.',
     placeholder: 'Lab catalog number',
-    regex: undefined,
+    regex: ResearchOutputIdentifierValidationExpression['Lab Catalog Number'],
     errorMessage: undefined,
+    required: false,
   },
   [ResearchOutputIdentifierType.None]: {
     helpText: '',
     placeholder: '',
-    regex: undefined,
+    regex: ResearchOutputIdentifierValidationExpression.None,
     errorMessage: undefined,
+    required: false,
   },
 } as const;
 
@@ -127,12 +136,11 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
             title={identifierType}
             description={data.helpText}
             placeholder={data.placeholder}
-            getValidationMessage={(state) =>
-              (state.patternMismatch && data.errorMessage) || ''
-            }
+            getValidationMessage={() => data.errorMessage}
             value={identifier}
             onChange={setIdentifier}
             pattern={data.regex}
+            required={data.required}
           />
         )}
       </>

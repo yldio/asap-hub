@@ -1,13 +1,12 @@
-import { ComponentProps } from 'react';
-import { css } from '@emotion/react';
 import { events } from '@asap-hub/routing';
-
+import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 import { Display, Paragraph, TabLink } from '../atoms';
-import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { TabNav } from '../molecules';
 import { EventSearch } from '../organisms';
+import { perRem } from '../pixels';
 import { queryParamString } from '../routing';
 
 const visualHeaderStyles = css({
@@ -39,7 +38,9 @@ const EventsPageHeader: React.FC<EventsPageHeaderProps> = ({
           updated.
         </Paragraph>
         <TabNav>
-          <TabLink href={events({}).calendar({}).$}>Calendar</TabLink>
+          <TabLink href={events({}).calendar({}).$}>
+            Subscribe to Calendars
+          </TabLink>
           <TabLink
             href={events({}).upcoming({}).$ + queryParamString(searchQuery)}
           >

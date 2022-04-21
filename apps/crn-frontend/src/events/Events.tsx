@@ -28,7 +28,7 @@ const Events: FC<Record<string, never>> = () => {
     <Switch>
       <Route exact path={path + events({}).calendar.template}>
         <EventsPage>
-          <Frame title="Calendars">
+          <Frame title="Subscribe to Calendars">
             <Calendars currentTime={currentTime} />
           </Frame>
         </EventsPage>

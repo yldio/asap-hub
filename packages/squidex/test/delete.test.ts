@@ -1,5 +1,6 @@
 import nock from 'nock';
 import config from '../src/config';
+import { SquidexError, SquidexUnauthorizedError } from '../src/errors';
 import { Squidex } from '../src/rest';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
@@ -29,7 +30,9 @@ describe('squidex wrapper', () => {
         statusCode: 400,
       });
 
-    await expect(() => client.delete('42')).rejects.toThrow('Unauthorized');
+    await expect(() => client.delete('42')).rejects.toThrow(
+      SquidexUnauthorizedError,
+    );
   });
 
   it('returns 500 when squidex returns error', async () => {
@@ -37,7 +40,7 @@ describe('squidex wrapper', () => {
       .delete(`/api/content/${config.appName}/${collection}/42`)
       .reply(500);
 
-    await expect(() => client.delete('42')).rejects.toThrow('squidex');
+    await expect(() => client.delete('42')).rejects.toThrow(SquidexError);
   });
 
   it('deletes a specific document', async () => {

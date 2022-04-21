@@ -2,7 +2,7 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import { SquidexGraphql } from '@asap-hub/squidex';
+import { SquidexGraphql, SquidexNotFoundError } from '@asap-hub/squidex';
 import { isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
@@ -37,7 +37,10 @@ export const indexUserHandler =
         logger.debug(`User removed ${user.id}`);
       }
     } catch (e) {
-      if (isBoom(e) && e.output.statusCode === 404) {
+      if (
+        (isBoom(e) && e.output.statusCode === 404) ||
+        e instanceof SquidexNotFoundError
+      ) {
         await algoliaClient.remove(event.detail.payload.id);
 
         logger.debug(`User removed ${event.detail.payload.id}`);

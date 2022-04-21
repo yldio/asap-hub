@@ -5,6 +5,7 @@ import { Squidex as SquidexRestNoAuth } from './rest';
 
 export { config };
 export * from './entities';
+export * from './errors';
 export { SquidexGraphqlError } from './graphql';
 export type { SquidexGraphqlClient } from './graphql';
 export type { SquidexRestClient, Query, Results } from './rest';

@@ -1,6 +1,11 @@
 import nock from 'nock';
 import config from '../src/config';
 import { Squidex } from '../src/rest';
+import {
+  SquidexError,
+  SquidexUnauthorizedError,
+  SquidexNotFoundError,
+} from '../src/errors';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
 interface Content {
@@ -26,7 +31,9 @@ describe('squidex wrapper', () => {
       .get(`/api/content/${config.appName}/${collection}/42`)
       .reply(404);
 
-    await expect(() => client.fetchById('42')).rejects.toThrow('Not Found');
+    await expect(() => client.fetchById('42')).rejects.toThrow(
+      SquidexNotFoundError,
+    );
   });
 
   it('returns 403 when squidex returns with credentials error', async () => {
@@ -37,7 +44,9 @@ describe('squidex wrapper', () => {
         statusCode: 400,
       });
 
-    await expect(() => client.fetchById('42')).rejects.toThrow('Unauthorized');
+    await expect(() => client.fetchById('42')).rejects.toThrow(
+      SquidexUnauthorizedError,
+    );
   });
 
   it('returns 500 when squidex returns error', async () => {
@@ -45,7 +54,7 @@ describe('squidex wrapper', () => {
       .get(`/api/content/${config.appName}/${collection}/42`)
       .reply(500);
 
-    await expect(() => client.fetchById('42')).rejects.toThrow('squidex');
+    await expect(() => client.fetchById('42')).rejects.toThrow(SquidexError);
   });
 
   it('returns a single document using id', async () => {
@@ -139,6 +148,6 @@ describe('squidex wrapper', () => {
           value: 'value',
         },
       }),
-    ).rejects.toThrow('Not Found');
+    ).rejects.toThrow(SquidexNotFoundError);
   });
 });

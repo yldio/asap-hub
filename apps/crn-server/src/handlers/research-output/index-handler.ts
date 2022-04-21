@@ -1,4 +1,4 @@
-import { SquidexGraphql } from '@asap-hub/squidex';
+import { SquidexGraphql, SquidexNotFoundError } from '@asap-hub/squidex';
 import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
@@ -34,7 +34,10 @@ export const indexResearchOutputHandler =
 
       logger.debug(`Saved research-output ${researchOutput.id}`);
     } catch (e) {
-      if (isBoom(e) && e.output.statusCode === 404) {
+      if (
+        (isBoom(e) && e.output.statusCode === 404) ||
+        e instanceof SquidexNotFoundError
+      ) {
         await algoliaClient.remove(event.detail.payload.id);
         return;
       }

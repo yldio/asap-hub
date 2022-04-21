@@ -1,5 +1,10 @@
 import nock from 'nock';
 import config from '../src/config';
+import {
+  SquidexError,
+  SquidexNotFoundError,
+  SquidexUnauthorizedError,
+} from '../src/errors';
 import { Squidex } from '../src/rest';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
@@ -36,7 +41,7 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow('Bad Request');
+    ).rejects.toThrow(SquidexError);
   });
 
   it('returns 403 when squidex returns with credentials error', async () => {
@@ -53,7 +58,7 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow('Unauthorized');
+    ).rejects.toThrow(SquidexUnauthorizedError);
   });
 
   it('returns 404 when document doesnt exist', async () => {
@@ -67,7 +72,7 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow('Not Found');
+    ).rejects.toThrow(SquidexNotFoundError);
   });
 
   it('returns 500 when squidex returns error', async () => {
@@ -81,7 +86,7 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow('squidex');
+    ).rejects.toThrow(SquidexError);
   });
 
   it('patch a specific document based on filter', async () => {

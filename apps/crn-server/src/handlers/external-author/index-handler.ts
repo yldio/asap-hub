@@ -1,5 +1,5 @@
 import { EventBridgeEvent } from 'aws-lambda';
-import { SquidexGraphql } from '@asap-hub/squidex';
+import { SquidexGraphql, SquidexNotFoundError } from '@asap-hub/squidex';
 import { isBoom } from '@hapi/boom';
 import {
   AlgoliaSearchClient,
@@ -35,7 +35,10 @@ export const indexExternalAuthorHandler =
 
       logger.debug(`Saved external author  ${externalAuthor.displayName}`);
     } catch (e) {
-      if (isBoom(e) && e.output.statusCode === 404) {
+      if (
+        (isBoom(e) && e.output.statusCode === 404) ||
+        e instanceof SquidexNotFoundError
+      ) {
         await algoliaClient.remove(event.detail.payload.id);
         return;
       }

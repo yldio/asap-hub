@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { config } from '@asap-hub/squidex';
+import { config, SquidexNotFoundError } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import News from '../../src/controllers/news';
 import {
@@ -122,7 +122,7 @@ describe('News controller', () => {
         .get(`/api/content/${config.appName}/news-and-events/${id}`)
         .reply(404);
 
-      await expect(news.fetchById(id)).rejects.toThrow('Not Found');
+      await expect(news.fetchById(id)).rejects.toThrow(SquidexNotFoundError);
     });
 
     test('Should return the result when the news and event exists', async () => {

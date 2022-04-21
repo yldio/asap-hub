@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { config } from '@asap-hub/squidex';
+import { config, SquidexNotFoundError } from '@asap-hub/squidex';
 import { badGateway, notFound } from '@hapi/boom';
 
 import Calendars from '../../src/controllers/calendars';
@@ -415,7 +415,7 @@ describe('Calendars controller', () => {
 
       await expect(
         calendarsController.update('calendar-not-found', {}),
-      ).rejects.toThrow('Not Found');
+      ).rejects.toThrow(SquidexNotFoundError);
     });
 
     test('Should return the calendars', async () => {
@@ -457,7 +457,7 @@ describe('Calendars controller', () => {
 
       await expect(
         calendarsController.getSyncToken('calendar-not-found'),
-      ).rejects.toThrow('Not Found');
+      ).rejects.toThrow(SquidexNotFoundError);
     });
 
     test('Should return the syncToken', async () => {

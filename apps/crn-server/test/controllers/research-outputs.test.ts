@@ -1,5 +1,10 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { config, SquidexGraphqlError } from '@asap-hub/squidex';
+import {
+  config,
+  SquidexGraphqlError,
+  SquidexError,
+  SquidexNotFoundError,
+} from '@asap-hub/squidex';
 import nock from 'nock';
 import {
   FetchResearchOutputQuery,
@@ -768,7 +773,7 @@ describe('ResearchOutputs controller', () => {
 
       await expect(
         researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow('Bad Request');
+      ).rejects.toThrow(SquidexError);
     });
 
     test('Should throw when fails to create the research output - 500', async () => {
@@ -779,7 +784,7 @@ describe('ResearchOutputs controller', () => {
 
       await expect(
         researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow('Internal Server');
+      ).rejects.toThrow(SquidexError);
     });
 
     test('Should throw when research output cannot be found', async () => {
@@ -795,7 +800,7 @@ describe('ResearchOutputs controller', () => {
 
       await expect(
         researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow('Not Found');
+      ).rejects.toThrow(SquidexNotFoundError);
     });
 
     test('Should throw when research output association cannot be made', async () => {
@@ -812,7 +817,7 @@ describe('ResearchOutputs controller', () => {
 
       await expect(
         researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow('Internal Server');
+      ).rejects.toThrow(SquidexError);
     });
 
     test('Should associate external authors (new and existent)', async () => {
@@ -871,7 +876,7 @@ describe('ResearchOutputs controller', () => {
           ...getResearchOutputRequest(),
           authors: [{ externalAuthorName: 'Chris Blue' }],
         }),
-      ).rejects.toThrow('Bad Request');
+      ).rejects.toThrow(SquidexError);
     });
     test('Should throw when cannot create an external author - 500', async () => {
       const researchOutputRequest = {
@@ -895,7 +900,7 @@ describe('ResearchOutputs controller', () => {
 
       await expect(
         researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow('Internal Server');
+      ).rejects.toThrow(SquidexError);
     });
   });
 });

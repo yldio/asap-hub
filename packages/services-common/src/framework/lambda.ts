@@ -1,3 +1,9 @@
+import {
+  SquidexError,
+  SquidexNotFoundError,
+  SquidexUnauthorizedError,
+  SquidexValidationError,
+} from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
 import Bourne from '@hapi/bourne';
 import Intercept from 'apr-intercept';
@@ -83,6 +89,48 @@ const handlerError = (error: Error): APIGatewayProxyResultV2 => {
 
   const isObject = (obj: unknown): obj is Record<string, unknown> =>
     obj !== null && typeof obj === 'object';
+
+  if (err instanceof SquidexError) {
+    // @todo move it somewhere else
+    if (err instanceof SquidexUnauthorizedError) {
+      return response({
+        statusCode: 401,
+        body: JSON.stringify({
+          error: 'Not Authorized',
+          statusCode: 401,
+        }),
+        headers: {
+          'content-type': 'application/json',
+        },
+      });
+    }
+
+    if (err instanceof SquidexNotFoundError) {
+      return response({
+        statusCode: 404,
+        body: JSON.stringify({
+          error: 'Not Found',
+          statusCode: 404,
+        }),
+        headers: {
+          'content-type': 'application/json',
+        },
+      });
+    }
+
+    if (err instanceof SquidexValidationError) {
+      return response({
+        statusCode: 400,
+        body: JSON.stringify({
+          error: 'Bad Request',
+          statusCode: 400,
+        }),
+        headers: {
+          'content-type': 'application/json',
+        },
+      });
+    }
+  }
 
   // Boom errors created on controllers handlers and fail-safe
   const internalError = Boom.isBoom(error) ? error : Boom.internal();

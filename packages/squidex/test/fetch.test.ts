@@ -1,6 +1,7 @@
 import nock from 'nock';
 import config from '../src/config';
 import { Squidex } from '../src/rest';
+import { SquidexError, SquidexUnauthorizedError } from '../src/errors';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
 interface Content {
@@ -30,7 +31,9 @@ describe('squidex wrapper', () => {
         statusCode: 400,
       });
 
-    await expect(() => client.fetch()).rejects.toThrow('Unauthorized');
+    await expect(() => client.fetch()).rejects.toThrow(
+      SquidexUnauthorizedError,
+    );
   });
 
   it('returns 500 when squidex returns error', async () => {
@@ -39,7 +42,7 @@ describe('squidex wrapper', () => {
       .query(() => true)
       .reply(500);
 
-    await expect(() => client.fetch()).rejects.toThrow('squidex');
+    await expect(() => client.fetch()).rejects.toThrow(SquidexError);
   });
 
   it('returns a list of documents', async () => {

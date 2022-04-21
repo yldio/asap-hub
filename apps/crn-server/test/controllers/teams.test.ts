@@ -1,4 +1,4 @@
-import { config } from '@asap-hub/squidex';
+import { config, SquidexNotFoundError } from '@asap-hub/squidex';
 import nock from 'nock';
 import Teams from '../../src/controllers/teams';
 import {
@@ -657,7 +657,7 @@ describe('Team controller', () => {
         .reply(404);
 
       await expect(teamController.update(teamId, [])).rejects.toThrow(
-        'Not Found',
+        SquidexNotFoundError,
       );
     });
 

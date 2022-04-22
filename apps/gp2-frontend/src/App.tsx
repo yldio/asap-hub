@@ -6,7 +6,7 @@ import { LastLocationProvider } from 'react-router-last-location';
 import { useFlags } from '@asap-hub/react-context';
 import { ToastStack, UtilityBar } from '@asap-hub/react-components';
 import { logout, welcome } from '@asap-hub/routing';
-import { Frame } from '@asap-hub/structure';
+import { Frame } from '@asap-hub/frontend-utils';
 
 import history from './history';
 import CheckAuth from './auth/CheckAuth';

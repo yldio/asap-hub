@@ -6,7 +6,7 @@ import {
   clearAjvErrorForPath,
 } from '../api-util';
 
-const testUrl = new URL('test', `https://test.com`);
+const testUrl = new URL('test', `https://example.com`);
 
 const mockSetTag = jest.fn();
 jest.mock('@sentry/react', () => ({

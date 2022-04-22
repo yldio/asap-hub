@@ -12,7 +12,7 @@ import { StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
-import { ErrorBoundary } from '@asap-hub/structure';
+import { ErrorBoundary } from '@asap-hub/frontend-utils';
 import GroupsCard from '../GroupsCard';
 import { getUserGroups } from '../api';
 import { userGroupsState } from '../state';

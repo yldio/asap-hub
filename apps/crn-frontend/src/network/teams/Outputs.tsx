@@ -8,7 +8,7 @@ import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
 import format from 'date-fns/format';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
-import { SearchFrame } from '@asap-hub/structure';
+import { SearchFrame } from '@asap-hub/frontend-utils';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useResearchOutputs } from '../../shared-research/state';

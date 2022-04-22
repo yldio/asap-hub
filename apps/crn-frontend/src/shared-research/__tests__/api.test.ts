@@ -3,7 +3,7 @@ import nock from 'nock';
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { ResearchOutputDocumentType } from '@asap-hub/model';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
-import { GetListOptions } from '@asap-hub/api-util';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getResearchOutput, getResearchOutputs } from '../api';

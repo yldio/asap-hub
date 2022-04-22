@@ -9,7 +9,7 @@ import { ComponentProps, FC } from 'react';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { UserResponse } from '@asap-hub/model';
 import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
-import { SearchFrame } from '@asap-hub/structure';
+import { SearchFrame } from '@asap-hub/frontend-utils';
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';
 import { getResearchOutputs } from '../../shared-research/api';

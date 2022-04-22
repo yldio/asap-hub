@@ -1,7 +1,7 @@
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { welcome } from '@asap-hub/routing';
-import { Frame } from '@asap-hub/structure';
+import { Frame } from '@asap-hub/frontend-utils';
 
 import Welcome from './Welcome';
 

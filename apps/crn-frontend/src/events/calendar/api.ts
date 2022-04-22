@@ -1,7 +1,7 @@
 import { ListCalendarResponse } from '@asap-hub/model';
 
 import { API_BASE_URL } from '@asap-hub/crn-frontend/src/config';
-import { createSentryHeaders } from '@asap-hub/api-util';
+import { createSentryHeaders } from '@asap-hub/frontend-utils';
 
 export const getCalendars = async (
   authorization: string,

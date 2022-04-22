@@ -10,7 +10,7 @@ import {
   news,
   events,
 } from '@asap-hub/routing';
-import { Frame } from '@asap-hub/structure';
+import { Frame } from '@asap-hub/frontend-utils';
 import { auth0State } from './auth/state';
 
 import CheckOnboarded from './auth/CheckOnboarded';

@@ -9,7 +9,7 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { ErrorBoundary } from '@asap-hub/structure';
+import { ErrorBoundary } from '@asap-hub/frontend-utils';
 import { getTeamGroups } from '../api';
 import GroupsCard from '../GroupsCard';
 import { teamGroupsState } from '../state';

@@ -9,7 +9,7 @@ import {
 import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
 
 import { authorizationState } from '@asap-hub/crn-frontend/src/auth/state';
-import { GetListOptions } from '@asap-hub/api-util';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 
 import { getGroups, getGroup } from './api';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';

@@ -48,6 +48,10 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         type: 'array',
         items: { type: 'string' },
       },
+      methods: {
+        type: 'array',
+        items: { type: 'string' },
+      },
       link: { type: 'string', nullable: true },
       title: { type: 'string' },
       asapFunded: { type: 'boolean', nullable: true },

@@ -119,6 +119,7 @@ export const getResearchOutputResponse =
       { id: '99c78dd7-627e-4fbd-aaec-d1977895189e', name: 'Test' },
       { id: 'cd7be402-84d7-4d21-a360-82e2695f2dd9', name: 'mike' },
     ],
+    methods: ['Activity Assay', 'RNA Single Cell'],
   });
 
 export const getListResearchOutputResponse =
@@ -183,4 +184,5 @@ export const getResearchOutputRequest = (): ResearchOutputPostRequest => ({
   type: '3D Printing',
   labs: ['lab1'],
   publishDate: undefined,
+  methods: ['Activity Assay', 'RNA Single Cell'],
 });

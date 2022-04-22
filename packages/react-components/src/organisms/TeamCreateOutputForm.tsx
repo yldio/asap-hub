@@ -101,7 +101,7 @@ export function createIdentifierField(
 }
 
 const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
-  onSave = noop,
+  onSave,
   tagSuggestions,
   documentType,
   getLabSuggestions = noop,

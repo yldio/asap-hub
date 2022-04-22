@@ -1,4 +1,4 @@
-import {
+import React, {
   Suspense,
   useState,
   useEffect,
@@ -17,18 +17,16 @@ import {
   tin,
   colorWithTransparency,
   pearl,
-  MenuHeader,
   ToastStack,
-  Overlay,
   navigationGrey,
   crossQuery,
   drawerQuery,
-  Loading,
   usePrevious,
-  UserMenuButton,
   MainNavigation,
 } from '@asap-hub/react-components';
 import UserNavigation from '../organism/UserNavigation';
+
+import NavigationHeader from '../organism/NavigationHeader';
 
 const styles = css({
   position: 'relative',
@@ -125,13 +123,6 @@ const menuMenuShownStyles = css({
   },
 });
 
-const mainMenuStyles = css({
-  gridArea: 'main-menu',
-
-  [drawerQuery]: {
-    boxShadow: `0 -1px 0 ${steel.rgb}`, // instead of header border bottom
-  },
-});
 const userMenuStyles = css({
   backgroundColor: paper.rgb,
   gridArea: 'user-menu',
@@ -189,41 +180,11 @@ const Layout: FC<LayoutProps> = ({ children, ...userNavProps }) => {
 
   return (
     <ToastStack>
-      <article css={[styles, menuShown || { overflow: 'hidden' }]}>
-        {/* order relevant for overlap */}
-        <div css={[headerStyles, menuShown && headerMenuShownStyles]}>
-          <MenuHeader
-            enabled={userNavProps.userOnboarded}
-            menuOpen={menuShown}
-            onToggleMenu={() => setMenuShown(!menuShown)}
-          />
-        </div>
-        <div css={userButtonStyles}>
-          <Suspense fallback={<Loading />}>
-            <UserMenuButton
-              onClick={() => setMenuShown(!menuShown)}
-              open={menuShown}
-            />
-          </Suspense>
-        </div>
-        <main ref={mainRef} css={contentStyles}>
-          {children}
-        </main>
-        <div css={[overlayStyles, menuShown && overlayMenuShownStyles]}>
-          <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
-        </div>
-        <div css={[menuStyles, menuShown && menuMenuShownStyles]}>
-          <div css={[mainMenuStyles]}>
-            {/* <Suspense fallback={<Loading />}>
-              <MainNavigation userOnboarded={userNavProps.userOnboarded} />
-            </Suspense> */}
-          </div>
-          <div css={[userMenuStyles, menuShown && userMenuShownStyles]}>
-            <Suspense fallback={<Loading />}>
-              <UserNavigation />
-            </Suspense>
-          </div>
-        </div>
+      <article>
+        <NavigationHeader />
+      </article>
+      <article>
+        <main ref={mainRef}>{children}</main>
       </article>
     </ToastStack>
   );

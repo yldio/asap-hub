@@ -30,18 +30,20 @@ export interface OrcidIdToken {
   jti: string;
 }
 
-const fetchOrcidUserProfile: UserProfileFetcher<Record<string, never>, string> =
-  (accessToken, { id_token }, cb) => {
-    const idToken = decode(id_token) as OrcidIdToken;
-    const profile: Auth0User = {
-      user_id: idToken.sub,
-      sub: idToken.sub,
-      given_name: idToken.given_name,
-      family_name: idToken.family_name,
-      name: `${idToken.given_name} ${idToken.family_name}`,
-      orcid: idToken.sub,
-      aud: idToken.aud,
-    };
-    cb(null, profile);
+const fetchOrcidUserProfile: UserProfileFetcher<
+  Record<string, never>,
+  string
+> = (accessToken, { id_token }, cb) => {
+  const idToken = decode(id_token) as OrcidIdToken;
+  const profile: Auth0User = {
+    user_id: idToken.sub,
+    sub: idToken.sub,
+    given_name: idToken.given_name,
+    family_name: idToken.family_name,
+    name: `${idToken.given_name} ${idToken.family_name}`,
+    orcid: idToken.sub,
+    aud: idToken.aud,
   };
+  cb(null, profile);
+};
 export default fetchOrcidUserProfile;

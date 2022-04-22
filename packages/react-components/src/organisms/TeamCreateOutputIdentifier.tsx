@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useMemo } from 'react';
 import {
   ResearchOutputDocumentType,
   ResearchOutputIdentifierType,
   researchOutputToIdentifierType,
 } from '@asap-hub/model';
 import { ResearchOutputIdentifierValidationExpression } from '@asap-hub/validation';
+import { useCallback, useEffect, useMemo } from 'react';
 import { LabeledDropdown, LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 
@@ -81,68 +81,69 @@ export interface TeamCreateOutputIdentifierProps {
   required: boolean;
 }
 
-export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProps> =
-  ({
-    identifierType = ResearchOutputIdentifierType.None,
-    setIdentifierType = noop,
-    identifier = '',
-    setIdentifier = noop,
-    documentType,
-    required,
-  }) => {
-    const data = useMemo(() => identifierMap[identifierType], [identifierType]);
-    const identifiers = useMemo(
-      () => getIdentifiers(documentType, required),
-      [documentType, required],
-    );
+export const TeamCreateOutputIdentifier: React.FC<
+  TeamCreateOutputIdentifierProps
+> = ({
+  identifierType = ResearchOutputIdentifierType.None,
+  setIdentifierType = noop,
+  identifier = '',
+  setIdentifier = noop,
+  documentType,
+  required,
+}) => {
+  const data = useMemo(() => identifierMap[identifierType], [identifierType]);
+  const identifiers = useMemo(
+    () => getIdentifiers(documentType, required),
+    [documentType, required],
+  );
 
-    useEffect(() => {
-      if (required && identifierType === ResearchOutputIdentifierType.None) {
+  useEffect(() => {
+    if (required && identifierType === ResearchOutputIdentifierType.None) {
+      setIdentifierType(identifiers[0].value);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [required, setIdentifierType]);
+
+  useEffect(() => {
+    setIdentifier('');
+  }, [identifierType, setIdentifier]);
+
+  const onChangeIdentifierType = useCallback(
+    (newType: string) => {
+      if (
+        identifiers.find(
+          (availableIdentifier) => availableIdentifier.value === newType,
+        )
+      ) {
+        setIdentifierType(newType as ResearchOutputIdentifierType);
+      } else {
         setIdentifierType(identifiers[0].value);
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [required, setIdentifierType]);
+    },
+    [setIdentifierType, identifiers],
+  );
 
-    useEffect(() => {
-      setIdentifier('');
-    }, [identifierType, setIdentifier]);
-
-    const onChangeIdentifierType = useCallback(
-      (newType: string) => {
-        if (
-          identifiers.find(
-            (availableIdentifier) => availableIdentifier.value === newType,
-          )
-        ) {
-          setIdentifierType(newType as ResearchOutputIdentifierType);
-        } else {
-          setIdentifierType(identifiers[0].value);
-        }
-      },
-      [setIdentifierType, identifiers],
-    );
-
-    return (
-      <>
-        <LabeledDropdown
-          title="Identifier Type"
-          subtitle="(required)"
-          options={identifiers}
-          value={identifierType}
-          onChange={onChangeIdentifierType}
+  return (
+    <>
+      <LabeledDropdown
+        title="Identifier Type"
+        subtitle="(required)"
+        options={identifiers}
+        value={identifierType}
+        onChange={onChangeIdentifierType}
+      />
+      {identifierType !== ResearchOutputIdentifierType.None && (
+        <LabeledTextField
+          title={identifierType}
+          description={data.helpText}
+          placeholder={data.placeholder}
+          getValidationMessage={() => data.errorMessage}
+          value={identifier}
+          onChange={setIdentifier}
+          pattern={data.regex}
+          required={data.required}
         />
-        {identifierType !== ResearchOutputIdentifierType.None && (
-          <LabeledTextField
-            title={identifierType}
-            description={data.helpText}
-            placeholder={data.placeholder}
-            getValidationMessage={() => data.errorMessage}
-            value={identifier}
-            onChange={setIdentifier}
-            pattern={data.regex}
-            required={data.required}
-          />
-        )}
-      </>
-    );
-  };
+      )}
+    </>
+  );
+};

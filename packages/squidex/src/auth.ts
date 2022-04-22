@@ -3,8 +3,6 @@ import decode from 'jwt-decode';
 import Debug from 'debug';
 import squidex from './config';
 
- 
-
 interface JwtToken {
   exp: number;
 }

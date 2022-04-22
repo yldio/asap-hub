@@ -654,7 +654,7 @@ __metadata:
     eslint-plugin-react: ^7.29.4
     eslint-plugin-react-hooks: ^4.4.0
     jest-config: ^26.6.3
-    prettier: ^2.3.0
+    prettier: ^2.6.2
   languageName: unknown
   linkType: soft
 
@@ -14764,7 +14764,7 @@ __metadata:
     nock: ^13.0.11
     node-fetch: ^3.0.0-beta.9
     param-case: ^3.0.4
-    prettier: ^2.3.0
+    prettier: ^2.6.2
     rimraf: ^3.0.2
     serverless: ^2.60.0
     serverless-iam-roles-per-function: ^2.0.2
@@ -32334,12 +32334,21 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"prettier@npm:>=2.2.1 <=2.3.0, prettier@npm:^2.3.0":
+"prettier@npm:>=2.2.1 <=2.3.0":
   version: 2.3.0
   resolution: "prettier@npm:2.3.0"
   bin:
     prettier: bin-prettier.js
   checksum: e8851a45f60f2994775f96e07964646c299b8a8f9c64da4fbd8efafc20db3458bdcedac79aed34e1d5477540b3aa04f6499adc4979cb7937f8ebd058a767d8ff
+  languageName: node
+  linkType: hard
+
+"prettier@npm:^2.6.2":
+  version: 2.6.2
+  resolution: "prettier@npm:2.6.2"
+  bin:
+    prettier: bin-prettier.js
+  checksum: 48d08dde8e9fb1f5bccdd205baa7f192e9fc8bc98f86e1b97d919de804e28c806b0e6cc685e4a88211aa7987fa9668f30baae19580d87ced3ed0f2ec6572106f
   languageName: node
   linkType: hard
 

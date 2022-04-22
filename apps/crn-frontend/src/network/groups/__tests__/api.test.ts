@@ -3,7 +3,7 @@ import {
   createListGroupResponse,
   createGroupResponse,
 } from '@asap-hub/fixtures';
-import { GetListOptions } from '@asap-hub/api-util';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 
 import { API_BASE_URL } from '../../../config';
 import { getGroups, getGroup } from '../api';

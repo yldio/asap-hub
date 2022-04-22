@@ -3,7 +3,7 @@ import {
   GetListOptions,
   createListApiUrl,
   BackendError,
-} from '@asap-hub/api-util';
+} from '@asap-hub/frontend-utils';
 import {
   ListLabsResponse,
   ListTeamResponse,

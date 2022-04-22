@@ -1,4 +1,4 @@
-import { GetListOptions } from '@asap-hub/api-util';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import { createNewsResponse } from '@asap-hub/fixtures';
 import { ListNewsResponse } from '@asap-hub/model';
 import nock from 'nock';

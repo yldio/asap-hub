@@ -13,7 +13,7 @@ import {
   UtilityBar,
 } from '@asap-hub/react-components';
 import { staticPages, welcome, logout } from '@asap-hub/routing';
-import { Frame } from '@asap-hub/structure';
+import { Frame } from '@asap-hub/frontend-utils';
 import history from './history';
 import CheckAuth from './auth/CheckAuth';
 import Signin from './auth/Signin';

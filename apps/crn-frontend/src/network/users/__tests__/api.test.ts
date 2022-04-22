@@ -7,7 +7,7 @@ import {
 import { createListUserResponse, createUserResponse } from '@asap-hub/fixtures';
 
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';
-import { GetListOptions } from '@asap-hub/api-util';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 
 import {
   getInstitutions,

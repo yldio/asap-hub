@@ -1,4 +1,4 @@
-import { createSentryHeaders } from '@asap-hub/api-util';
+import { createSentryHeaders } from '@asap-hub/frontend-utils';
 import { UserResponse } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../../config';

@@ -15,7 +15,7 @@ import {
 } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
-import { BackendError } from '@asap-hub/api-util';
+import { BackendError } from '@asap-hub/frontend-utils';
 
 import { createTeamResearchOutput } from '../api';
 import { refreshTeamState } from '../state';

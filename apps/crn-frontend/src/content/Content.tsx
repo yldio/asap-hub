@@ -1,5 +1,5 @@
 import { ContentPage, NotFoundPage } from '@asap-hub/react-components';
-import { Frame } from '@asap-hub/structure';
+import { Frame } from '@asap-hub/frontend-utils';
 import { usePageByPath } from './state';
 
 interface ContentProps {

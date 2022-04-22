@@ -2,7 +2,7 @@ import { FC, lazy } from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { NewsPage } from '@asap-hub/react-components';
 import { news } from '@asap-hub/routing';
-import { Frame } from '@asap-hub/structure';
+import { Frame } from '@asap-hub/frontend-utils';
 
 const loadNewsList = () =>
   import(/* webpackChunkName: "news-list" */ './NewsList');

@@ -5,7 +5,7 @@ import {
   createListLabsResponse,
 } from '@asap-hub/fixtures';
 import { ResearchOutputPostRequest, TeamResponse } from '@asap-hub/model';
-import { GetListOptions } from '@asap-hub/api-util';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 
 import { API_BASE_URL } from '../../../config';
 import {

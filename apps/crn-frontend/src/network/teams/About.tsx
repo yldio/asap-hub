@@ -1,6 +1,6 @@
 import { TeamProfileAbout } from '@asap-hub/react-components';
 import { TeamResponse } from '@asap-hub/model';
-import { Frame } from '@asap-hub/structure';
+import { Frame } from '@asap-hub/frontend-utils';
 
 import GroupsCard from './groups/GroupsCard';
 

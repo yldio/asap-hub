@@ -1,6 +1,6 @@
 import { FC, lazy } from 'react';
 import { DiscoverPage, NotFoundPage } from '@asap-hub/react-components';
-import { Frame } from '@asap-hub/structure';
+import { Frame } from '@asap-hub/frontend-utils';
 import { useDiscoverState } from './state';
 
 const loadBody = () => import(/* webpackChunkName: "discover-body" */ './Body');

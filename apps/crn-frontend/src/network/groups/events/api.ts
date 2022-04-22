@@ -1,6 +1,9 @@
 import { ListEventResponse } from '@asap-hub/model';
 
-import { createListApiUrl, createSentryHeaders } from '@asap-hub/api-util';
+import {
+  createListApiUrl,
+  createSentryHeaders,
+} from '@asap-hub/frontend-utils';
 import { GetEventListOptions } from '@asap-hub/crn-frontend/src/events/options';
 import { API_BASE_URL } from '../../../config';
 

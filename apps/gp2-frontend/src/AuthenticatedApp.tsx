@@ -4,7 +4,7 @@ import { useResetRecoilState, useRecoilState } from 'recoil';
 import { NotFoundPage, Loading } from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 import { Layout } from '@asap-hub/gp2-components';
-import { Frame } from '@asap-hub/structure';
+import { Frame } from '@asap-hub/frontend-utils';
 import { auth0State } from './auth/state';
 
 const loadDashboard = () =>

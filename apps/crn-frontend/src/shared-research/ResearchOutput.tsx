@@ -1,6 +1,6 @@
 import { NotFoundPage, SharedResearchOutput } from '@asap-hub/react-components';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
-import { Frame } from '@asap-hub/structure';
+import { Frame } from '@asap-hub/frontend-utils';
 
 import { useBackHref } from '../hooks';
 import { useResearchOutputById } from './state';

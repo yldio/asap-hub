@@ -3,7 +3,7 @@ import { network, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
-import { Frame, SearchFrame } from '@asap-hub/structure';
+import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 
 import { useTeamById } from './state';
 

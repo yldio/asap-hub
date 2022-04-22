@@ -1,7 +1,7 @@
 import { useLocation, useHistory } from 'react-router-dom';
 import { useAuth0 } from '@asap-hub/react-context';
 import { WelcomePage, UtilityBar } from '@asap-hub/react-components';
-import { Frame } from '@asap-hub/structure';
+import { Frame } from '@asap-hub/frontend-utils';
 
 const values = {
   signup: {

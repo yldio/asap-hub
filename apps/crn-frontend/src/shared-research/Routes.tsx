@@ -2,7 +2,7 @@ import { FC, lazy, useEffect } from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { SharedResearchPage } from '@asap-hub/react-components';
 import { sharedResearch } from '@asap-hub/routing';
-import { SearchFrame } from '@asap-hub/structure';
+import { SearchFrame } from '@asap-hub/frontend-utils';
 
 import { useSearch } from '../hooks';
 

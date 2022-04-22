@@ -133,13 +133,7 @@ export const validateResearchOutputPostRequestParametersIdentifiers = (
 ): void => {
   const identifierRequired = data.asapFunded && data.usedInPublication;
 
-  if (
-    identifierRequired &&
-    !data.rrid &&
-    !data.doi &&
-    !data.accession &&
-    !data.labCatalogNumber
-  ) {
+  if (identifierRequired && !data.rrid && !data.doi && !data.accession) {
     throw Boom.badRequest('Validation error', {
       details: `An identifier is required for research output that is funded and used in a publication`,
     });
@@ -155,14 +149,6 @@ export const validateResearchOutputPostRequestParametersIdentifiers = (
   if (data.doi && !types.includes(ResearchOutputIdentifierType.DOI)) {
     throw Boom.badRequest('Validation error', {
       details: `DOI identifier is not supported for research output of type ${data.documentType}`,
-    });
-  }
-  if (
-    data.labCatalogNumber &&
-    !types.includes(ResearchOutputIdentifierType.LabCatalogNumber)
-  ) {
-    throw Boom.badRequest('Validation error', {
-      details: `Lab catalog number identifier is not supported for research output of type ${data.documentType}`,
     });
   }
   if (

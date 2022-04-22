@@ -234,45 +234,37 @@ describe('/research-outputs/ route', () => {
       const validDOI = { doi: 'doi:12.1234' };
       const validRRID = { rrid: 'RRID:Hi' };
       const validAccession = { accession: 'NP_1234' };
-      const validLabCatalogNumber = { labCatalogNumber: 'Any content' };
       const noIdentifier = {};
       test.each`
-        documentType        | identifier               | status
-        ${'Article'}        | ${validDOI}              | ${201}
-        ${'Article'}        | ${validRRID}             | ${400}
-        ${'Article'}        | ${validAccession}        | ${400}
-        ${'Article'}        | ${validLabCatalogNumber} | ${400}
-        ${'Article'}        | ${noIdentifier}          | ${201}
-        ${'Bioinformatics'} | ${validDOI}              | ${201}
-        ${'Bioinformatics'} | ${validRRID}             | ${201}
-        ${'Bioinformatics'} | ${validAccession}        | ${400}
-        ${'Bioinformatics'} | ${validLabCatalogNumber} | ${400}
-        ${'Bioinformatics'} | ${noIdentifier}          | ${201}
-        ${'Lab Resource'}   | ${validDOI}              | ${201}
-        ${'Lab Resource'}   | ${validRRID}             | ${201}
-        ${'Lab Resource'}   | ${validAccession}        | ${400}
-        ${'Lab Resource'}   | ${validLabCatalogNumber} | ${201}
-        ${'Lab Resource'}   | ${noIdentifier}          | ${201}
-        ${'Dataset'}        | ${validDOI}              | ${201}
-        ${'Dataset'}        | ${validRRID}             | ${400}
-        ${'Dataset'}        | ${validAccession}        | ${201}
-        ${'Dataset'}        | ${validLabCatalogNumber} | ${400}
-        ${'Dataset'}        | ${noIdentifier}          | ${201}
-        ${'Protocol'}       | ${validDOI}              | ${201}
-        ${'Protocol'}       | ${validRRID}             | ${400}
-        ${'Protocol'}       | ${validAccession}        | ${400}
-        ${'Protocol'}       | ${validLabCatalogNumber} | ${400}
-        ${'Protocol'}       | ${noIdentifier}          | ${201}
-        ${'Grant Document'} | ${validDOI}              | ${400}
-        ${'Grant Document'} | ${validRRID}             | ${400}
-        ${'Grant Document'} | ${validAccession}        | ${400}
-        ${'Grant Document'} | ${validLabCatalogNumber} | ${400}
-        ${'Grant Document'} | ${noIdentifier}          | ${201}
-        ${'Presentation'}   | ${validDOI}              | ${400}
-        ${'Presentation'}   | ${validRRID}             | ${400}
-        ${'Presentation'}   | ${validAccession}        | ${400}
-        ${'Presentation'}   | ${validLabCatalogNumber} | ${400}
-        ${'Presentation'}   | ${noIdentifier}          | ${201}
+        documentType        | identifier        | status
+        ${'Article'}        | ${validDOI}       | ${201}
+        ${'Article'}        | ${validRRID}      | ${400}
+        ${'Article'}        | ${validAccession} | ${400}
+        ${'Article'}        | ${noIdentifier}   | ${201}
+        ${'Bioinformatics'} | ${validDOI}       | ${201}
+        ${'Bioinformatics'} | ${validRRID}      | ${201}
+        ${'Bioinformatics'} | ${validAccession} | ${400}
+        ${'Bioinformatics'} | ${noIdentifier}   | ${201}
+        ${'Lab Resource'}   | ${validDOI}       | ${201}
+        ${'Lab Resource'}   | ${validRRID}      | ${201}
+        ${'Lab Resource'}   | ${validAccession} | ${400}
+        ${'Lab Resource'}   | ${noIdentifier}   | ${201}
+        ${'Dataset'}        | ${validDOI}       | ${201}
+        ${'Dataset'}        | ${validRRID}      | ${400}
+        ${'Dataset'}        | ${validAccession} | ${201}
+        ${'Dataset'}        | ${noIdentifier}   | ${201}
+        ${'Protocol'}       | ${validDOI}       | ${201}
+        ${'Protocol'}       | ${validRRID}      | ${400}
+        ${'Protocol'}       | ${validAccession} | ${400}
+        ${'Protocol'}       | ${noIdentifier}   | ${201}
+        ${'Grant Document'} | ${validDOI}       | ${400}
+        ${'Grant Document'} | ${validRRID}      | ${400}
+        ${'Grant Document'} | ${validAccession} | ${400}
+        ${'Grant Document'} | ${noIdentifier}   | ${201}
+        ${'Presentation'}   | ${validDOI}       | ${400}
+        ${'Presentation'}   | ${validRRID}      | ${400}
+        ${'Presentation'}   | ${validAccession} | ${400}
+        ${'Presentation'}   | ${noIdentifier}   | ${201}
       `(
         'on type $type returns status $status for $identifier',
         async ({ documentType, identifier, status }) => {

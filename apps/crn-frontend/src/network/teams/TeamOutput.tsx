@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   ValidationErrorResponse,
-  ResearchOutputPostRequest,
   ResearchOutputDocumentType,
   isValidationErrorResponse,
 } from '@asap-hub/model';
@@ -69,23 +68,8 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
 
   const createResearchOutput = usePostTeamResearchOutput();
 
-  const defaultOutput: ResearchOutputPostRequest = {
-    documentType,
-    title: 'Output created through the ROMS form',
-    asapFunded: undefined,
-    sharingStatus: 'Network Only',
-    usedInPublication: undefined,
-    description: 'example',
-    type: 'Software',
-    addedDate: new Date().toISOString(),
-    tags: [],
-    teams: [teamId],
-    publishDate: undefined,
-  };
-
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
-
   const getTeamSuggestions = useTeamSuggestions();
 
   const showCreateOutputPage = isEnabled('ROMS_FORM');
@@ -116,11 +100,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
             setErrors(clearAjvErrorForPath(errors, instancePath))
           }
           onSave={(output) =>
-            createResearchOutput({
-              ...defaultOutput,
-              ...output,
-              addedDate: new Date().toISOString(),
-            }).catch((error) => {
+            createResearchOutput(output).catch((error) => {
               if (error instanceof BackendError) {
                 const { response } = error;
                 if (

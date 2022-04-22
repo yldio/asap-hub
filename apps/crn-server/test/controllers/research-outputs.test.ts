@@ -736,7 +736,7 @@ describe('ResearchOutputs controller', () => {
       expect(id).toEqual({ id: researchOutputId });
     });
 
-    test('Should throw a validation error when a research output with the same type and link already exists', async () => {
+    test('Should throw a validation error when a research output with the same type and title already exists', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputsGraphqlResponse();
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
@@ -746,12 +746,90 @@ describe('ResearchOutputs controller', () => {
 
       await expect(
         researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow('Validation error');
+      ).rejects.toThrow(
+        expect.objectContaining({
+          data: [
+            {
+              instancePath: '/title',
+              keyword: 'unique',
+              message: 'must be unique',
+              params: {
+                type: 'string',
+              },
+              schemaPath: '#/properties/title/unique',
+            },
+          ],
+        }),
+      );
 
       expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
           filter: `(data/documentType/iv eq '${researchOutputRequest.documentType}' and data/title/iv eq '${researchOutputRequest.title}')`,
+        }),
+        {
+          includeDrafts: true,
+        },
+      );
+      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          filter: `(data/link/iv eq '${researchOutputRequest.link}')`,
+        }),
+        {
+          includeDrafts: true,
+        },
+      );
+    });
+
+    test('Should throw a validation error when a research output with the same type and title and link already exists', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputsGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValue(
+        squidexGraphqlResponse,
+      );
+
+      const researchOutputRequest = getResearchOutputRequest();
+
+      await expect(
+        researchOutputs.create(researchOutputRequest),
+      ).rejects.toThrow(
+        expect.objectContaining({
+          data: [
+            {
+              instancePath: '/title',
+              keyword: 'unique',
+              message: 'must be unique',
+              params: {
+                type: 'string',
+              },
+              schemaPath: '#/properties/title/unique',
+            },
+            {
+              instancePath: '/link',
+              keyword: 'unique',
+              message: 'must be unique',
+              params: {
+                type: 'string',
+              },
+              schemaPath: '#/properties/link/unique',
+            },
+          ],
+        }),
+      );
+
+      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          filter: `(data/documentType/iv eq '${researchOutputRequest.documentType}' and data/title/iv eq '${researchOutputRequest.title}')`,
+        }),
+        {
+          includeDrafts: true,
+        },
+      );
+      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          filter: `(data/link/iv eq '${researchOutputRequest.link}')`,
         }),
         {
           includeDrafts: true,

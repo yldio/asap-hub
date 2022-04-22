@@ -3,6 +3,8 @@ import {
   ListResearchOutputResponse,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
+  VALIDATION_ERROR_MESSAGE,
+  ValidationErrorResponse,
 } from '@asap-hub/model';
 import {
   RestExternalAuthor,
@@ -145,31 +147,11 @@ export default class ResearchOutputs implements ResearchOutputController {
     authors = [],
     ...researchOutputData
   }: ResearchOutputInputData): Promise<Partial<ResearchOutputResponse>> {
-    if (
-      (
-        await this.fetch({
-          filter: {
-            documentType: researchOutputData.documentType,
-            title: researchOutputData.title,
-          },
-          includeDrafts: true,
-        })
-      ).total > 0
-    ) {
-      // TODO: Remove Boom from the controller layer
-      // https://asaphub.atlassian.net/browse/CRN-777
-      throw Boom.badRequest('Validation error', [
-        {
-          instancePath: '/title',
-          keyword: 'unique',
-          message: 'must be unique',
-          params: {
-            type: 'string',
-          },
-          schemaPath: '#/properties/title/unique',
-        },
-      ]);
-    }
+    await this.validateResearchOutputUniques({
+      ...researchOutputData,
+      authors,
+      teams,
+    });
 
     const researchOutputAuthors = await Promise.all(
       authors.map((author) => this.associateResearchOutputToAuthors(author)),
@@ -185,8 +167,10 @@ export default class ResearchOutputs implements ResearchOutputController {
         this.associateResearchOutputToTeam(teamId, researchOutputId),
       ),
     );
+
     return { id: researchOutputId };
   }
+
   private async createResearchOutput({
     authors,
     ...researchOutputData
@@ -209,6 +193,85 @@ export default class ResearchOutputs implements ResearchOutputController {
       } as RestResearchOutput['data'],
       false,
     );
+  }
+
+  private async validateResearchOutputUniques(
+    researchOutputData: ResearchOutputInputData,
+  ): Promise<void> {
+    const isError = (
+      error: ValidationErrorResponse['data'][0] | null,
+    ): error is ValidationErrorResponse['data'][0] => !!error;
+
+    const errors = (
+      await Promise.all([
+        this.validateTitleUniqueness(researchOutputData),
+        this.validateLinkUniqueness(researchOutputData),
+      ])
+    ).filter(isError);
+
+    if (errors.length > 0) {
+      // TODO: Remove Boom from the controller layer
+      // https://asaphub.atlassian.net/browse/CRN-777
+      throw Boom.badRequest<ValidationErrorResponse['data']>(
+        VALIDATION_ERROR_MESSAGE,
+        errors,
+      );
+    }
+  }
+
+  private async validateTitleUniqueness(
+    researchOutputData: ResearchOutputInputData,
+  ): Promise<ValidationErrorResponse['data'][0] | null> {
+    if (
+      (
+        await this.fetch({
+          filter: {
+            documentType: researchOutputData.documentType,
+            title: researchOutputData.title,
+          },
+          includeDrafts: true,
+        })
+      ).total > 0
+    ) {
+      return {
+        instancePath: '/title',
+        keyword: 'unique',
+        message: 'must be unique',
+        params: {
+          type: 'string',
+        },
+        schemaPath: '#/properties/title/unique',
+      };
+    }
+
+    return null;
+  }
+
+  private async validateLinkUniqueness(
+    researchOutputData: ResearchOutputInputData,
+  ): Promise<ValidationErrorResponse['data'][0] | null> {
+    if (
+      (
+        await this.fetch({
+          filter: {
+            link: researchOutputData.link,
+          },
+          includeDrafts: true,
+        })
+      ).total > 0
+    ) {
+      return {
+        instancePath: '/link',
+        keyword: 'unique',
+        message: 'must be unique',
+        params: {
+          type: 'string',
+        },
+        schemaPath: '#/properties/link/unique',
+      };
+    }
+
+    return null;
   }
 
   private async associateResearchOutputToTeam(
@@ -241,6 +304,7 @@ type ResearchOutputFilter =
   | {
       documentType?: string;
       title?: string;
+      link?: string;
     };
 export interface ResearchOutputController {
   fetch: (options: {

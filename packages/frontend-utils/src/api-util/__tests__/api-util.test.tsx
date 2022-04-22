@@ -1,4 +1,7 @@
-import { ValidationErrorResponse } from '@asap-hub/model';
+import {
+  ValidationErrorResponse,
+  VALIDATION_ERROR_MESSAGE,
+} from '@asap-hub/model';
 import {
   createListApiUrl,
   createSentryHeaders,
@@ -100,7 +103,7 @@ describe('validationErrorsAreSupported', () => {
   const validationResponse: ValidationErrorResponse = {
     error: 'Bad Request',
     data: [],
-    message: 'Validation Error',
+    message: VALIDATION_ERROR_MESSAGE,
     statusCode: 400,
   };
   it('passes if all path instance are supported', () => {

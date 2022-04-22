@@ -29,6 +29,6 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash \
   git \
   && npm i -g npm@^6 yarn
 
-COPY ci/integration/scripts/requirements.txt /tmp/
+COPY .github/scripts/squidex/requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
 

@@ -10,6 +10,7 @@ export default {
 export const Normal = () => (
   <StaticRouter>
     <TeamCreateOutputPage
+      onSave={() => Promise.resolve()}
       tagSuggestions={['A53T', 'Activity assay'].map((suggestion) => ({
         label: suggestion,
         value: suggestion,

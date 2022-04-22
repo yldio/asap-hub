@@ -67,8 +67,8 @@ type TeamCreateOutputFormProps = Pick<
     ComponentProps<typeof TeamCreateOutputContributorsCard>,
     'getLabSuggestions' | 'getAuthorSuggestions' | 'getTeamSuggestions'
   > & {
-    onSave?: (
-      output: Partial<ResearchOutputPostRequest>,
+    onSave: (
+      output: ResearchOutputPostRequest,
     ) => Promise<Pick<ResearchOutputResponse, 'id'> | void>;
     documentType: ResearchOutputDocumentType;
     team: TeamResponse;
@@ -81,7 +81,6 @@ const identifierTypeToFieldName: Record<
   [ResearchOutputIdentifierType.None]: undefined,
   [ResearchOutputIdentifierType.DOI]: 'doi',
   [ResearchOutputIdentifierType.AccessionNumber]: 'accession',
-  [ResearchOutputIdentifierType.LabCatalogNumber]: 'labCatalogNumber',
   [ResearchOutputIdentifierType.RRID]: 'rrid',
 };
 
@@ -92,7 +91,6 @@ export function createIdentifierField(
   | { rrid: string }
   | { doi: string }
   | { accession: string }
-  | { labCatalogNumber: string }
   | Record<never, never> {
   const fieldName = identifierTypeToFieldName[identifierType];
   if (fieldName) {
@@ -116,6 +114,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
   const [type, setType] = useState<ResearchOutputPostRequest['type'] | ''>('');
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>('');
+  const [labCatalogNumber, setLabCatalogNumber] =
+    useState<ResearchOutputPostRequest['labCatalogNumber']>('');
   const [labs, setLabs] = useState<
     NonNullable<ComponentProps<typeof TeamCreateOutputContributorsCard>['labs']>
   >([]);
@@ -160,6 +160,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         authors.length !== 0 ||
         identifierType !== ResearchOutputIdentifierType.None ||
         identifier !== '' ||
+        labCatalogNumber !== '' ||
         teams.length !== 1 // Original team
       }
       onSave={() => {
@@ -177,6 +178,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         }
 
         return onSave({
+          documentType,
           tags,
           link: String(link).trim() === '' ? undefined : link,
           description,
@@ -199,6 +201,11 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           usedInPublication: convertDecisionToBoolean(usedInPublication),
           sharingStatus,
           publishDate: publishDate?.toISOString(),
+          labCatalogNumber:
+            documentType === 'Lab Resource' && labCatalogNumber !== ''
+              ? labCatalogNumber
+              : undefined,
+          addedDate: new Date().toISOString(),
           ...identifierField,
         });
       }}
@@ -242,6 +249,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             identifierRequired={
               usedInPublication === 'Yes' && asapFunded === 'Yes'
             }
+            labCatalogNumber={labCatalogNumber}
+            onChangeLabCatalogNumber={setLabCatalogNumber}
           />
           <TeamCreateOutputContributorsCard
             isSaving={isSaving}

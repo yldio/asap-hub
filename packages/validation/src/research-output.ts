@@ -9,6 +9,5 @@ export const ResearchOutputIdentifierValidationExpression: Record<
   [ResearchOutputIdentifierType.AccessionNumber]:
     '^(\\w+\\d+(\\.\\d+)?)|(NP_\\d+)$',
   [ResearchOutputIdentifierType.RRID]: '^RRID:[a-zA-Z]+.+$',
-  [ResearchOutputIdentifierType.LabCatalogNumber]: undefined,
   [ResearchOutputIdentifierType.None]: undefined,
 };

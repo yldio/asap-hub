@@ -133,7 +133,6 @@ export enum ResearchOutputIdentifierType {
   DOI = 'DOI',
   AccessionNumber = 'Accession Number',
   RRID = 'RRID',
-  LabCatalogNumber = 'Lab Catalog Number',
 }
 
 export const researchOutputToIdentifierType: Record<
@@ -153,7 +152,6 @@ export const researchOutputToIdentifierType: Record<
     ResearchOutputIdentifierType.None,
     ResearchOutputIdentifierType.DOI,
     ResearchOutputIdentifierType.RRID,
-    ResearchOutputIdentifierType.LabCatalogNumber,
   ],
   Dataset: [
     ResearchOutputIdentifierType.None,

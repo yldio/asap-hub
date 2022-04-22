@@ -58,7 +58,7 @@ jobs:
           SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
       - name: Delete PR Squidex App
-        run: python ci/integration/scripts/delete-app.py
+        run: python .github/scripts/squidex/delete-app.py
         env:
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}

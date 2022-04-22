@@ -1,4 +1,4 @@
 *
 !dev
 !packages/squidex
-!ci/integration/scripts/requirements.txt
+!.github/scripts/squidex/requirements.txt

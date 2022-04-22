@@ -10,6 +10,7 @@
   "include": ["src"],
   "references": [
     { "path": "../react-components" },
+    { "path": "../model" },
     { "path": "../dom-test-utils" }
   ]
 }

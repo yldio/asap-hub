@@ -2,7 +2,7 @@ import { FC, lazy } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
-import Frame from '../../Frame';
+import Frame from '../Frame';
 
 mockConsoleError();
 

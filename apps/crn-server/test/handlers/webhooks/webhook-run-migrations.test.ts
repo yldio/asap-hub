@@ -1,15 +1,16 @@
+import { RestMigration } from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
+import { promises as fsPromise } from 'fs';
 import {
   ImportModuleFromPath,
   Migration,
+  MigrationModule,
   rollbackFactory,
   runFactory,
 } from '../../../src/handlers/webhooks/webhook-run-migrations';
+import { identity } from '../../helpers/squidex';
 import { loggerMock } from '../../mocks/logger.mock';
 import { getSquidexClientMock } from '../../mocks/squidex-client.mock';
-import { promises as fsPromise } from 'fs';
-import { identity } from '../../helpers/squidex';
-import { RestMigration } from '@asap-hub/squidex';
 
 describe('Run-migrations Webhook', () => {
   const squidexClientMock = getSquidexClientMock<RestMigration>();
@@ -18,10 +19,11 @@ describe('Run-migrations Webhook', () => {
   const mockImportModule: jest.MockedFunction<ImportModuleFromPath> = jest.fn();
   const mockUp = jest.fn();
   const mockDown = jest.fn();
-  class MockModule extends Migration {
-    up = mockUp;
-    down = mockDown;
-  }
+  const MockModule: MigrationModule = (filePath: string) => ({
+    up: mockUp,
+    down: mockDown,
+    getPath: () => filePath,
+  });
 
   const run = runFactory(
     loggerMock,
@@ -92,7 +94,7 @@ describe('Run-migrations Webhook', () => {
 
       const executionPaths: string[] = [];
       mockUp.mockImplementation(function (this: Migration) {
-        executionPaths.push(this.path);
+        executionPaths.push(this.getPath());
 
         return Promise.resolve(null);
       });
@@ -119,7 +121,7 @@ describe('Run-migrations Webhook', () => {
 
       const executionOrder: string[] = [];
       mockUp.mockImplementation(function (this: Migration) {
-        executionOrder.push(`execute ${this.path}`);
+        executionOrder.push(`execute ${this.getPath()}`);
 
         return Promise.resolve(null);
       });

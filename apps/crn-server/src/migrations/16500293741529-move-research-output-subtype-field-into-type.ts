@@ -1,11 +1,13 @@
 /* istanbul ignore file */
-import { RestResearchOutput } from '@asap-hub/squidex';
 import { ResearchOutputType } from '@asap-hub/model';
-import { Migration } from '../handlers/webhooks/webhook-run-migrations';
+import { RestResearchOutput } from '@asap-hub/squidex';
+import { MigrationModule } from '../handlers/webhooks/webhook-run-migrations';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
-export default class MoveResearchOutputSubTypeFieldIntoType extends Migration {
-  up = async (): Promise<void> => {
+const MoveResearchOutputSubTypeFieldIntoType: MigrationModule = (
+  filePath: string,
+) => ({
+  up: async () => {
     await applyToAllItemsInCollection<RestResearchOutput>(
       'research-outputs',
       async (researchOutput, squidexClient) => {
@@ -19,8 +21,10 @@ export default class MoveResearchOutputSubTypeFieldIntoType extends Migration {
         });
       },
     );
-  };
-
+  },
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  down = async (): Promise<void> => {};
-}
+  down: async () => {},
+  getPath: () => filePath,
+});
+
+export default MoveResearchOutputSubTypeFieldIntoType;

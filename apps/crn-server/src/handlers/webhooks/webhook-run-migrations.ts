@@ -47,6 +47,7 @@ export const runFactory =
     let executionError: unknown | null = null;
     for (const migration of migrations) {
       logger.debug(`Executing migration '${migration.getPath()}`);
+
       try {
         await migration.up();
         executedMigrations.push(migration.getPath());
@@ -164,7 +165,7 @@ const importModuleFromPath = (filePath: string): Promise<Module> =>
 export type ImportModuleFromPath = typeof importModuleFromPath;
 
 type Module = {
-  default?: { new (filePath: string): Migration | unknown };
+  default?: { (filePath: string): Migration | unknown };
 };
 
 const getMigrationsFromPathsFactory =
@@ -179,7 +180,7 @@ const getMigrationsFromPathsFactory =
           throw new Error(`${file} does not export a valid module`);
         }
 
-        const migration = new ImportedModule(file);
+        const migration = ImportedModule(file);
 
         if (!isMigration(migration)) {
           throw new Error(`${file} does not contain a valid migration`);
@@ -249,17 +250,13 @@ const isMigration = (instance: any): instance is Migration =>
   typeof instance.down === 'function' &&
   typeof instance.getPath === 'function';
 
-export abstract class Migration {
-  path: string;
-  static up: () => Promise<void>;
-  static down: () => Promise<void>;
-
-  constructor(filePath: string) {
-    this.path = filePath;
-  }
-  getPath(): string {
-    return this.path;
-  }
+export interface Migration {
+  up: () => Promise<void>;
+  down: () => Promise<void>;
+  getPath: () => string;
+}
+export interface MigrationModule {
+  (filePath: string): Migration;
 }
 
 export const run = runFactory(

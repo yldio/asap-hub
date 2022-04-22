@@ -12,6 +12,7 @@ import TeamCreateOutputForm, {
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 
 const props: ComponentProps<typeof TeamCreateOutputForm> = {
+  onSave: jest.fn(),
   tagSuggestions: [],
   documentType: 'Article',
   team: createTeamResponse(),
@@ -33,12 +34,6 @@ describe('createIdentifierField', () => {
     expect(
       createIdentifierField(ResearchOutputIdentifierType.DOI, 'identifier'),
     ).toEqual({ doi: 'identifier' });
-    expect(
-      createIdentifierField(
-        ResearchOutputIdentifierType.LabCatalogNumber,
-        'identifier',
-      ),
-    ).toEqual({ labCatalogNumber: 'identifier' });
     expect(
       createIdentifierField(
         ResearchOutputIdentifierType.AccessionNumber,

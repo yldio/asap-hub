@@ -10,6 +10,7 @@ import { StaticRouter } from 'react-router-dom';
 import TeamCreateOutputPage from '../TeamCreateOutputPage';
 
 const props: ComponentProps<typeof TeamCreateOutputPage> = {
+  onSave: jest.fn(),
   documentType: 'Grant Document',
   tagSuggestions: [],
   team: createTeamResponse(),

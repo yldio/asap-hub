@@ -4,7 +4,10 @@ import { StaticRouter } from 'react-router-dom';
 import { ComponentProps } from 'react';
 import { fireEvent, waitFor } from '@testing-library/dom';
 import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
-import { ResearchOutputIdentifierType } from '@asap-hub/model';
+import {
+  ResearchOutputIdentifierType,
+  ResearchOutputPostRequest,
+} from '@asap-hub/model';
 
 import TeamCreateOutputForm, {
   createIdentifierField,
@@ -173,32 +176,34 @@ it('can submit a form when form data is valid', async () => {
 
   expect(screen.getByRole('button', { name: /Share/i })).not.toBeEnabled();
   expect(screen.getByRole('button', { name: /Cancel/i })).not.toBeEnabled();
-
+  const expectedRequest: ResearchOutputPostRequest = {
+    documentType: 'Lab Resource',
+    tags: [],
+    link: 'http://example.com',
+    title: 'example title',
+    description: 'example description',
+    type: 'Animal Model',
+    labs: ['1'],
+    authors: [
+      { externalAuthorId: 'u1' },
+      { userId: 'u2' },
+      { externalAuthorName: 'Alex White' },
+    ],
+    teams: ['TEAMID'],
+    asapFunded: true,
+    usedInPublication: true,
+    sharingStatus: 'Public',
+    publishDate: new Date('2022-03-24').toISOString(),
+    addedDate: expect.anything(),
+    doi: 'doi:12.1234',
+  };
   await act(() =>
     waitFor(() => {
-      expect(saveFn).toHaveBeenCalledWith({
-        tags: [],
-        link: 'http://example.com',
-        title: 'example title',
-        description: 'example description',
-        type: 'Animal Model',
-        labs: ['1'],
-        authors: [
-          { externalAuthorId: 'u1' },
-          { userId: 'u2' },
-          { externalAuthorName: 'Alex White' },
-        ],
-        teams: ['TEAMID'],
-        asapFunded: true,
-        usedInPublication: true,
-        sharingStatus: 'Public',
-        publishDate: new Date('2022-03-24').toISOString(),
-        doi: 'doi:12.1234',
-      });
       expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
       expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
     }),
   );
+  expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
 });
 
 it('displays proper message when no author is found', async () => {

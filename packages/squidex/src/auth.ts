@@ -1,6 +1,6 @@
+import Debug from 'debug';
 import Got, { RequestError } from 'got';
 import decode from 'jwt-decode';
-import Debug from 'debug';
 import squidex from './config';
 
 interface JwtToken {
@@ -64,10 +64,15 @@ export const getAccessTokenFactory = (): (() => Promise<string>) => {
 
 export type GetAccessToken = ReturnType<typeof getAccessTokenFactory>;
 
-const create = (
-  clientOptions: { unpublished: boolean } = { unpublished: false },
-  getAccessToken: GetAccessToken,
-): typeof Got => {
+type ClientOptions = { unpublished: boolean };
+interface Create {
+  (getAccessToken: GetAccessToken, options?: ClientOptions): typeof Got;
+}
+
+const create: Create = (
+  getAccessToken,
+  clientOptions = { unpublished: false },
+) => {
   const headers: Record<string, string> = {
     'content-type': 'application/json',
   };

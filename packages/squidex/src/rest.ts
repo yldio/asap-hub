@@ -68,10 +68,10 @@ export class Squidex<
   constructor(
     collection: string,
     getAccessToken: GetAccessToken,
-    options?: Parameters<typeof createClient>[0],
+    options?: Parameters<typeof createClient>[1],
   ) {
     this.collection = collection;
-    this.client = createClient(options, getAccessToken);
+    this.client = createClient(getAccessToken, options);
   }
 
   async fetch(query: ODataQuery | Query = {}): Promise<Results<T>> {

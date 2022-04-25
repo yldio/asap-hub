@@ -22,7 +22,7 @@ export class SquidexRest<
 > extends SquidexRestNoAuth<T, C> {
   constructor(
     collection: string,
-    options?: Parameters<typeof createClient>[0],
+    options?: Parameters<typeof createClient>[1],
   ) {
     super(collection, getAuthToken, options);
   }

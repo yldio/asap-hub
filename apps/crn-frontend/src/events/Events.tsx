@@ -1,11 +1,10 @@
-import { FC, lazy, useState, useEffect } from 'react';
 import { EventsPage } from '@asap-hub/react-components';
-import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 import { events } from '@asap-hub/routing';
-
+import { FC, lazy, useEffect, useState } from 'react';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { useSearch } from '../hooks';
 import Frame from '../structure/Frame';
 import Event from './Event';
-import { useSearch } from '../hooks';
 
 const loadCalendars = () =>
   import(/* webpackChunkName: "events-calendars" */ './calendar/Calendars');
@@ -29,7 +28,7 @@ const Events: FC<Record<string, never>> = () => {
     <Switch>
       <Route exact path={path + events({}).calendar.template}>
         <EventsPage>
-          <Frame title="Calendars">
+          <Frame title="Subscribe to Calendars">
             <Calendars currentTime={currentTime} />
           </Frame>
         </EventsPage>
@@ -67,7 +66,7 @@ const Events: FC<Record<string, never>> = () => {
           <Event />
         </Frame>
       </Route>
-      <Redirect to={events({}).calendar({}).$} />
+      <Redirect to={events({}).upcoming({}).$} />
     </Switch>
   );
 };

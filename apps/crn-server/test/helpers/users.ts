@@ -1,7 +1,7 @@
 import Chance from 'chance';
 import { SquidexRest, User } from '@asap-hub/squidex';
-import { TeamRole, UserResponse, Invitee } from '@asap-hub/model';
-import { RestTeam, RestUser } from '@asap-hub/squidex';
+import { UserResponse, Invitee } from '@asap-hub/model';
+import { RestUser } from '@asap-hub/squidex';
 import { parseUser } from '../../src/entities';
 
 const users = new SquidexRest<RestUser>('users');
@@ -62,35 +62,4 @@ export const createRandomOrcid = () => {
       chance.string({ length: 3, numeric: true }),
     ].join('-') + chance.string({ length: 1, pool: '0123456789X' })
   );
-};
-
-export const createUserOnTeam = async (
-  team: RestTeam,
-  role: TeamRole | null = null,
-): Promise<TestUserResponse> => {
-  const createdUser = await createUser();
-  const teams = [
-    {
-      role:
-        role ||
-        (chance.pickone([
-          'Lead PI (Core Leadership)',
-          'Co-PI (Core Leadership)',
-          'Collaborating PI',
-          'Project Manager',
-          'Key Personnel',
-          'Guest',
-          'Staff',
-          'Advisor',
-        ]) as TeamRole),
-      id: [team.id],
-    },
-  ];
-
-  const user = await users.patch(createdUser.id, {
-    email: { iv: createdUser.data.email.iv },
-    teams: { iv: teams },
-  });
-
-  return transform(user);
 };

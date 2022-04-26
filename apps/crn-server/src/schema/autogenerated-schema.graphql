@@ -3794,6 +3794,16 @@ input ResearchOutputsDataAuthorsInputDto {
 
 union ResearchOutputsDataAuthorsUnionDto = ExternalAuthors | Users
 
+"""The structure of the Created by field of the Research Outputs content type."""
+type ResearchOutputsDataCreatedByDto {
+  iv: [Users!]
+}
+
+"""The structure of the Created by field of the Research Outputs content input type."""
+input ResearchOutputsDataCreatedByInputDto {
+  iv: [String!]
+}
+
 """The structure of the Description field of the Research Outputs content type."""
 type ResearchOutputsDataDescriptionDto {
   """The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size)"""
@@ -3836,6 +3846,7 @@ type ResearchOutputsDataDto {
   adminNotes: ResearchOutputsDataAdminNotesDto
   asapFunded: ResearchOutputsDataAsapFundedDto
   authors: ResearchOutputsDataAuthorsDto
+  createdBy: ResearchOutputsDataCreatedByDto
   description: ResearchOutputsDataDescriptionDto
   documentType: ResearchOutputsDataDocumentTypeDto
   doi: ResearchOutputsDataDoiDto
@@ -3850,6 +3861,7 @@ type ResearchOutputsDataDto {
   tags: ResearchOutputsDataTagsDto
   title: ResearchOutputsDataTitleDto
   type: ResearchOutputsDataTypeDto
+  updatedBy: ResearchOutputsDataUpdatedByDto
   usedInAPublication: ResearchOutputsDataUsedInAPublicationDto
 }
 
@@ -3861,6 +3873,7 @@ input ResearchOutputsDataInputDto {
   adminNotes: ResearchOutputsDataAdminNotesInputDto
   asapFunded: ResearchOutputsDataAsapFundedInputDto
   authors: ResearchOutputsDataAuthorsInputDto
+  createdBy: ResearchOutputsDataCreatedByInputDto
   description: ResearchOutputsDataDescriptionInputDto
   documentType: ResearchOutputsDataDocumentTypeInputDto
   doi: ResearchOutputsDataDoiInputDto
@@ -3875,6 +3888,7 @@ input ResearchOutputsDataInputDto {
   tags: ResearchOutputsDataTagsInputDto
   title: ResearchOutputsDataTitleInputDto
   type: ResearchOutputsDataTypeInputDto
+  updatedBy: ResearchOutputsDataUpdatedByInputDto
   usedInAPublication: ResearchOutputsDataUsedInAPublicationInputDto
 }
 
@@ -4004,6 +4018,16 @@ input ResearchOutputsDataTypeInputDto {
   iv: String
 }
 
+"""The structure of the Updated by field of the Research Outputs content type."""
+type ResearchOutputsDataUpdatedByDto {
+  iv: [Users!]
+}
+
+"""The structure of the Updated by field of the Research Outputs content input type."""
+input ResearchOutputsDataUpdatedByInputDto {
+  iv: [String!]
+}
+
 """The structure of the Used in a Publication field of the Research Outputs content type."""
 type ResearchOutputsDataUsedInAPublicationDto {
   """"Not sure" will not be shown on the Hub"""
@@ -4029,6 +4053,7 @@ type ResearchOutputsFlatDataDto {
   """"Not sure" will not be shown on the Hub"""
   asapFunded: String
   authors: [ResearchOutputsDataAuthorsUnionDto!]
+  createdBy: [Users!]
   """The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size)"""
   description: String
   documentType: String
@@ -4053,6 +4078,7 @@ type ResearchOutputsFlatDataDto {
   tags: [String!]
   title: String
   type: String
+  updatedBy: [Users!]
   """"Not sure" will not be shown on the Hub"""
   usedInAPublication: String
 }

@@ -173,9 +173,11 @@ export default class ResearchOutputs implements ResearchOutputController {
 
   private async createResearchOutput({
     authors,
+    createdBy,
     ...researchOutputData
   }: Omit<ResearchOutputPostRequest, 'teams' | 'authors'> & {
     authors: string[];
+    createdBy: string;
   }) {
     const { usedInPublication, ...researchOutput } = parseToSquidex({
       ...researchOutputData,
@@ -184,6 +186,8 @@ export default class ResearchOutputs implements ResearchOutputController {
         researchOutputData.usedInPublication,
       ),
       authors,
+      createdBy: [createdBy],
+      updatedBy: [createdBy],
     });
 
     return this.researchOutputSquidexRestClient.create(
@@ -320,7 +324,9 @@ export interface ResearchOutputController {
     researchOutputRequest: ResearchOutputInputData,
   ) => Promise<Partial<ResearchOutputResponse>>;
 }
-export type ResearchOutputInputData = ResearchOutputPostRequest;
+export type ResearchOutputInputData = ResearchOutputPostRequest & {
+  createdBy: string;
+};
 
 const makeODataFilter = (filter?: ResearchOutputFilter): string => {
   if (Array.isArray(filter)) {

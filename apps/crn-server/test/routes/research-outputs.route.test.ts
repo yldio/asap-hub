@@ -168,9 +168,10 @@ describe('/research-outputs/ route', () => {
         .set('Accept', 'application/json');
 
       expect(response.status).toBe(201);
-      expect(researchOutputControllerMock.create).toBeCalledWith(
-        createResearchOutputRequest,
-      );
+      expect(researchOutputControllerMock.create).toBeCalledWith({
+        ...createResearchOutputRequest,
+        createdBy: 'userMockId',
+      });
 
       expect(response.body).toEqual(expect.objectContaining({ id: 'abc123' }));
     });

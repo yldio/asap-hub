@@ -3472,10 +3472,6 @@ export type ResearchOutputs = Content & {
   referencesLabsContents: Maybe<Array<Labs>>;
   /** Query Labs content items with total count. */
   referencesLabsContentsWithTotal: Maybe<LabsResultDto>;
-  /** Query Research Tags content items. */
-  referencesResearchTagsContents: Maybe<Array<ResearchTags>>;
-  /** Query Research Tags content items with total count. */
-  referencesResearchTagsContentsWithTotal: Maybe<ResearchTagsResultDto>;
   /** Query Users content items. */
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -3523,24 +3519,6 @@ export type ResearchOutputsReferencesLabsContentsArgs = {
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesLabsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesResearchTagsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesResearchTagsContentsWithTotalArgs = {
   filter: Maybe<Scalars['String']>;
   orderby: Maybe<Scalars['String']>;
   search: Maybe<Scalars['String']>;
@@ -3705,7 +3683,6 @@ export type ResearchOutputsDataDto = {
   labs: Maybe<ResearchOutputsDataLabsDto>;
   lastUpdatedPartial: Maybe<ResearchOutputsDataLastUpdatedPartialDto>;
   link: Maybe<ResearchOutputsDataLinkDto>;
-  methods: Maybe<ResearchOutputsDataMethodsDto>;
   publishDate: Maybe<ResearchOutputsDataPublishDateDto>;
   rrid: Maybe<ResearchOutputsDataRridDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
@@ -3730,7 +3707,6 @@ export type ResearchOutputsDataInputDto = {
   labs: Maybe<ResearchOutputsDataLabsInputDto>;
   lastUpdatedPartial: Maybe<ResearchOutputsDataLastUpdatedPartialInputDto>;
   link: Maybe<ResearchOutputsDataLinkInputDto>;
-  methods: Maybe<ResearchOutputsDataMethodsInputDto>;
   publishDate: Maybe<ResearchOutputsDataPublishDateInputDto>;
   rrid: Maybe<ResearchOutputsDataRridInputDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusInputDto>;
@@ -3782,16 +3758,6 @@ export type ResearchOutputsDataLinkDto = {
 /** The structure of the External Link field of the Research Outputs content input type. */
 export type ResearchOutputsDataLinkInputDto = {
   iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Methods field of the Research Outputs content type. */
-export type ResearchOutputsDataMethodsDto = {
-  iv: Maybe<Array<ResearchTags>>;
-};
-
-/** The structure of the Methods field of the Research Outputs content input type. */
-export type ResearchOutputsDataMethodsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Publish Date field of the Research Outputs content type. */
@@ -3894,7 +3860,6 @@ export type ResearchOutputsFlatDataDto = {
   /** Does not include changes to Publish Date and Admin notes */
   lastUpdatedPartial: Maybe<Scalars['Instant']>;
   link: Maybe<Scalars['String']>;
-  methods: Maybe<Array<ResearchTags>>;
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   publishDate: Maybe<Scalars['Instant']>;
   /** This must start with "RRID:" */
@@ -3941,10 +3906,6 @@ export type ResearchTags = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
-  /** Query Research Outputs content items. */
-  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
-  /** Query Research Outputs content items with total count. */
-  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -3953,24 +3914,6 @@ export type ResearchTags = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
-};
-
-/** The structure of a Research Tags content type. */
-export type ResearchTagsReferencingResearchOutputsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Tags content type. */
-export type ResearchTagsReferencingResearchOutputsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
 };
 
 /** The structure of the Category field of the Research Tags content type. */
@@ -7332,6 +7275,35 @@ export type FetchResearchOutputsQuery = {
   >;
 };
 
+export type ResearchTagContentFragment = Pick<ResearchTags, 'id'> & {
+  flatData: Pick<
+    ResearchTagsFlatDataDto,
+    'name' | 'category' | 'types' | 'entities'
+  >;
+};
+
+export type FetchResearchTagsQueryVariables = Exact<{
+  top: Maybe<Scalars['Int']>;
+  skip: Maybe<Scalars['Int']>;
+}>;
+
+export type FetchResearchTagsQuery = {
+  queryResearchTagsContentsWithTotal: Maybe<
+    Pick<ResearchTagsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<ResearchTags, 'id'> & {
+            flatData: Pick<
+              ResearchTagsFlatDataDto,
+              'name' | 'category' | 'types' | 'entities'
+            >;
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export type TeamsContentFragment = Pick<
   Teams,
   'id' | 'created' | 'lastModified' | 'version'
@@ -9753,6 +9725,38 @@ export const ResearchOutputContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ResearchOutputContentFragment, unknown>;
+export const ResearchTagContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ResearchTagContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ResearchTags' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'category' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'types' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'entities' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ResearchTagContentFragment, unknown>;
 export const UsersContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -11298,6 +11302,78 @@ export const FetchResearchOutputsDocument = {
 } as unknown as DocumentNode<
   FetchResearchOutputsQuery,
   FetchResearchOutputsQueryVariables
+>;
+export const FetchResearchTagsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchResearchTags' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'top' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryResearchTagsContentsWithTotal' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'top' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ResearchTagContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ResearchTagContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchResearchTagsQuery,
+  FetchResearchTagsQueryVariables
 >;
 export const FetchTeamDocument = {
   kind: 'Document',

@@ -6,6 +6,7 @@ export * from './external-author';
 export * from './news';
 export * from './page';
 export * from './research-output';
+export * from './research-tag';
 export * from './team';
 export * from './user';
 export * from './calendar';

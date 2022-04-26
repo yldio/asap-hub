@@ -13,7 +13,7 @@
     "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "^7.14.0",
+    "@babel/runtime-corejs3": "^7.17.9",
     "core-js": "^3.12.1"
   },
   "devDependencies": {

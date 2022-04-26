@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@babel/core": "^7.14.2",
+    "@babel/core": "^7.17.9",
     "@types/history": "^4.7.6",
     "@types/react": "^17.0.5",
     "@types/react-router-dom": "^5.1.7",

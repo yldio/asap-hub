@@ -48,7 +48,7 @@
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@babel/runtime-corejs3": "^7.14.0",
+    "@babel/runtime-corejs3": "^7.17.9",
     "@sentry/cli": "^1.68.0",
     "@testing-library/dom": "^7.31.0",
     "@testing-library/jest-dom": "^5.12.0",

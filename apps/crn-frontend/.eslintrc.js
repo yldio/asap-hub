@@ -3,5 +3,6 @@ module.exports = {
   rules: {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     'no-console': 'off',
+    camelcase: 'off',
   },
 };

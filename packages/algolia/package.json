@@ -16,7 +16,7 @@
     "@algolia/client-common": "*",
     "@algolia/client-search": "*",
     "@asap-hub/model": "workspace:*",
-    "@babel/runtime-corejs3": "^7.14.0",
+    "@babel/runtime-corejs3": "^7.17.9",
     "algoliasearch": "^4.11.0"
   },
   "devDependencies": {

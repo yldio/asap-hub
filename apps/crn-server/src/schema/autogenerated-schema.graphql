@@ -3634,32 +3634,6 @@ type ResearchOutputs implements Content {
     """Optional number of contents to take."""
     top: Int
   ): LabsResultDto
-  """Query Research Tags content items."""
-  referencesResearchTagsContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): [ResearchTags!]
-  """Query Research Tags content items with total count."""
-  referencesResearchTagsContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): ResearchTagsResultDto
   """Query Users content items."""
   referencesUsersContents(
     """Optional OData filter."""
@@ -3854,7 +3828,6 @@ type ResearchOutputsDataDto {
   labs: ResearchOutputsDataLabsDto
   lastUpdatedPartial: ResearchOutputsDataLastUpdatedPartialDto
   link: ResearchOutputsDataLinkDto
-  methods: ResearchOutputsDataMethodsDto
   publishDate: ResearchOutputsDataPublishDateDto
   rrid: ResearchOutputsDataRridDto
   sharingStatus: ResearchOutputsDataSharingStatusDto
@@ -3881,7 +3854,6 @@ input ResearchOutputsDataInputDto {
   labs: ResearchOutputsDataLabsInputDto
   lastUpdatedPartial: ResearchOutputsDataLastUpdatedPartialInputDto
   link: ResearchOutputsDataLinkInputDto
-  methods: ResearchOutputsDataMethodsInputDto
   publishDate: ResearchOutputsDataPublishDateInputDto
   rrid: ResearchOutputsDataRridInputDto
   sharingStatus: ResearchOutputsDataSharingStatusInputDto
@@ -3938,16 +3910,6 @@ type ResearchOutputsDataLinkDto {
 """The structure of the External Link field of the Research Outputs content input type."""
 input ResearchOutputsDataLinkInputDto {
   iv: String
-}
-
-"""The structure of the Methods field of the Research Outputs content type."""
-type ResearchOutputsDataMethodsDto {
-  iv: [ResearchTags!]
-}
-
-"""The structure of the Methods field of the Research Outputs content input type."""
-input ResearchOutputsDataMethodsInputDto {
-  iv: [String!]
 }
 
 """The structure of the Publish Date field of the Research Outputs content type."""
@@ -4067,7 +4029,6 @@ type ResearchOutputsFlatDataDto {
   """Does not include changes to Publish Date and Admin notes"""
   lastUpdatedPartial: Instant
   link: String
-  methods: [ResearchTags!]
   """Date of publishing (outside the Hub). Only applies to outputs that have been published."""
   publishDate: Instant
   """
@@ -4117,32 +4078,6 @@ type ResearchTags implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
-  """Query Research Outputs content items."""
-  referencingResearchOutputsContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): [ResearchOutputs!]
-  """Query Research Outputs content items with total count."""
-  referencingResearchOutputsContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): ResearchOutputsResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""

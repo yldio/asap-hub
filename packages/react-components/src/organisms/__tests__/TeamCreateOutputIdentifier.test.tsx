@@ -57,6 +57,17 @@ it('should set the identifier to the selected value', () => {
   );
 });
 
+it('should show an error when field is required but no input is provided', async () => {
+  const { getByText, getByPlaceholderText } = render(
+    <TeamCreateOutputIdentifier
+      {...props}
+      identifierType={ResearchOutputIdentifierType.RRID}
+    />,
+  );
+  fireEvent.blur(getByPlaceholderText(/rrid/i));
+  expect(getByText(/Please enter a valid RRID/i)).toBeVisible();
+});
+
 describe('RRID', () => {
   it('should show an error when it does not match regex', async () => {
     const { getByText, getByPlaceholderText } = render(

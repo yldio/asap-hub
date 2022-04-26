@@ -221,7 +221,8 @@
                 "Project Manager",
                 "Collaborating PI",
                 "Key Personnel",
-                "ASAP Staff"
+                "ASAP Staff",
+                "Scientific Advisory Board"
               ],
               "isUnique": false,
               "inlineEditable": true,

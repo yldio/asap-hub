@@ -1,18 +1,22 @@
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom';
-import { ComponentProps } from 'react';
-import { fireEvent, waitFor } from '@testing-library/dom';
 import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
 import {
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
 } from '@asap-hub/model';
-
+import { fireEvent, waitFor } from '@testing-library/dom';
+import {
+  act,
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ComponentProps } from 'react';
+import { StaticRouter } from 'react-router-dom';
+import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import TeamCreateOutputForm, {
   createIdentifierField,
 } from '../TeamCreateOutputForm';
-import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 
 const props: ComponentProps<typeof TeamCreateOutputForm> = {
   onSave: jest.fn(),
@@ -122,7 +126,7 @@ describe('on submit', () => {
     'link' | 'title' | 'description' | 'type'
   >;
 
-  const setupForm = (
+  const setupForm = async (
     data: Data = {
       description: 'example description',
       title: 'example title',
@@ -164,17 +168,15 @@ describe('on submit', () => {
     const button = screen.getByRole('button', { name: /Share/i });
     userEvent.click(button);
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
-      expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
-    });
+    expect(screen.getByRole('button', { name: /Share/i })).not.toBeEnabled();
+    expect(screen.getByRole('button', { name: /Cancel/i })).not.toBeEnabled();
+    return act(async () =>
+      waitFor(() => {
+        expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
+        expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
+      }),
+    );
   };
-
-  it('can submit a form with minimum data', async () => {
-    setupForm();
-    await submitForm();
-    expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
-  });
 
   it('can submit a lab', async () => {
     getLabSuggestions.mockResolvedValue([
@@ -183,9 +185,7 @@ describe('on submit', () => {
     ]);
     setupForm();
     userEvent.click(screen.getByLabelText(/Labs/i));
-    await waitFor(() =>
-      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
+    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
     userEvent.click(screen.getByText('One Lab'));
 
     await submitForm();
@@ -214,26 +214,16 @@ describe('on submit', () => {
     setupForm();
 
     userEvent.click(screen.getByLabelText(/Authors/i));
-    await waitFor(() =>
-      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
+    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
     userEvent.click(screen.getByText(/Chris Reed/i));
 
     userEvent.click(screen.getByLabelText(/Authors/i));
-    await waitFor(() =>
-      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
     userEvent.click(screen.getByText('Chris Blue'));
 
     userEvent.click(screen.getByLabelText(/Authors/i));
-    await waitFor(() =>
-      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
 
     userEvent.type(screen.getByLabelText(/Authors/i), 'Alex White');
-    await waitFor(() =>
-      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
+    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
     userEvent.click(screen.getAllByText('Alex White')[1]);
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
@@ -287,5 +277,11 @@ describe('on submit', () => {
       documentType: 'Lab Resource',
       labCatalogNumber: 'abc123',
     });
+  });
+
+  it('can submit a form with minimum data', async () => {
+    setupForm();
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
   });
 });

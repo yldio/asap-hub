@@ -170,6 +170,8 @@ it('can submit a form when form data is valid', async () => {
   );
   userEvent.click(screen.getAllByText('Alex White')[1]);
 
+  userEvent.type(screen.getByLabelText(/identifier/i), 'DO');
+  userEvent.click(screen.getByText('DOI'));
   fireEvent.change(screen.getByLabelText(/doi/i), {
     target: { value: 'doi:12.1234' },
   });

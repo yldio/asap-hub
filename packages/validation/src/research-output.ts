@@ -11,4 +11,5 @@ export const ResearchOutputIdentifierValidationExpression: Record<
   [ResearchOutputIdentifierType.RRID]: '^RRID:[a-zA-Z]+.+$',
   [ResearchOutputIdentifierType.LabCatalogNumber]: undefined,
   [ResearchOutputIdentifierType.None]: undefined,
+  [ResearchOutputIdentifierType.Empty]: undefined,
 };

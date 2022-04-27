@@ -1,7 +1,11 @@
 import { ComponentProps } from 'react';
 import { fireEvent, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-import { ResearchOutputIdentifierType } from '@asap-hub/model';
+import {
+  ResearchOutputDocumentType,
+  ResearchOutputIdentifierType,
+} from '@asap-hub/model';
 import { TeamCreateOutputIdentifier } from '../TeamCreateOutputIdentifier';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 
@@ -11,13 +15,16 @@ const props: ComponentProps<typeof TeamCreateOutputIdentifier> = {
 };
 
 it('should render Identifier', () => {
-  const { getByText } = render(<TeamCreateOutputIdentifier {...props} />);
-  expect(getByText(/Identifier/i)).toBeVisible();
+  const { getByText, getByLabelText } = render(
+    <TeamCreateOutputIdentifier {...props} />,
+  );
+  expect(getByLabelText(/identifier/i)).toBeVisible();
+  expect(getByText('Choose an identifier')).toBeVisible();
 });
 
-it('should reset the identifier to a valid value on entering something unknown', () => {
+it('should clear the identifier field on entering something unknown', () => {
   const setIdentifierType = jest.fn();
-  const { getByLabelText } = render(
+  const { getByLabelText, getByText } = render(
     <TeamCreateOutputIdentifier
       {...props}
       setIdentifierType={setIdentifierType}
@@ -29,12 +36,46 @@ it('should reset the identifier to a valid value on entering something unknown',
     },
   });
 
-  fireEvent.keyDown(getByLabelText(/identifier/i), { keyCode: ENTER_KEYCODE });
+  fireEvent.keyDown(getByLabelText(/identifier/i), {
+    keyCode: ENTER_KEYCODE,
+  });
 
-  expect(setIdentifierType).toHaveBeenCalledWith(
-    ResearchOutputIdentifierType.None,
-  );
+  expect(getByText('Choose an identifier')).toBeVisible();
+  expect(getByLabelText(/identifier/i)).toHaveValue('');
 });
+
+it('shows error message for missing value', () => {
+  const { getByLabelText, getByText } = render(
+    <TeamCreateOutputIdentifier {...props} />,
+  );
+  fireEvent.focusOut(getByLabelText(/identifier/i));
+  expect(getByText('Please choose an identifier')).toBeVisible();
+});
+
+it.each(['Protocol', 'Dataset', 'Lab Resource', 'Bioinformatics', 'Article'])(
+  'should not allow None option when field is required "%s"',
+  (documentType) => {
+    const { getByText, queryByText, rerender } = render(
+      <TeamCreateOutputIdentifier
+        documentType={documentType as ResearchOutputDocumentType}
+        required={true}
+      />,
+    );
+
+    fireEvent.click(getByText('Choose an identifier'));
+    expect(queryByText(/none/i)).toBeNull();
+
+    rerender(
+      <TeamCreateOutputIdentifier
+        documentType={documentType as ResearchOutputDocumentType}
+        required={false}
+      />,
+    );
+
+    userEvent.type(getByText('Choose an identifier'), '');
+    expect(getByText('None')).toBeVisible();
+  },
+);
 
 it('should set the identifier to the selected value', () => {
   const setIdentifierType = jest.fn();

@@ -70,6 +70,13 @@ const identifierMap = {
     errorMessage: undefined,
     required: false,
   },
+  [ResearchOutputIdentifierType.Empty]: {
+    helpText: '',
+    placeholder: '',
+    regex: ResearchOutputIdentifierValidationExpression.Empty,
+    errorMessage: undefined,
+    required: false,
+  },
 } as const;
 
 export interface TeamCreateOutputIdentifierProps {
@@ -83,25 +90,25 @@ export interface TeamCreateOutputIdentifierProps {
 
 export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProps> =
   ({
-    identifierType = ResearchOutputIdentifierType.None,
+    identifierType = ResearchOutputIdentifierType.Empty,
     setIdentifierType = noop,
     identifier = '',
     setIdentifier = noop,
     documentType,
     required,
   }) => {
-    const data = useMemo(() => identifierMap[identifierType], [identifierType]);
+    const data = useMemo(
+      () =>
+        identifierType === ResearchOutputIdentifierType.Empty ||
+        identifierType === ResearchOutputIdentifierType.None
+          ? null
+          : identifierMap[identifierType],
+      [identifierType],
+    );
     const identifiers = useMemo(
       () => getIdentifiers(documentType, required),
       [documentType, required],
     );
-
-    useEffect(() => {
-      if (required && identifierType === ResearchOutputIdentifierType.None) {
-        setIdentifierType(identifiers[0].value);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [required, setIdentifierType]);
 
     useEffect(() => {
       setIdentifier('');
@@ -115,8 +122,6 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
           )
         ) {
           setIdentifierType(newType as ResearchOutputIdentifierType);
-        } else {
-          setIdentifierType(identifiers[0].value);
         }
       },
       [setIdentifierType, identifiers],
@@ -130,8 +135,11 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
           options={identifiers}
           value={identifierType}
           onChange={onChangeIdentifierType}
+          placeholder={'Choose an identifier'}
+          getValidationMessage={() => `Please choose an identifier`}
+          required
         />
-        {identifierType !== ResearchOutputIdentifierType.None && (
+        {data && (
           <LabeledTextField
             title={identifierType}
             description={data.helpText}

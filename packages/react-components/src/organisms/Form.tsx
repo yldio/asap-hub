@@ -4,8 +4,6 @@ import { css } from '@emotion/react';
 import { ToastContext } from '@asap-hub/react-context';
 import { ValidationErrorResponse } from '@asap-hub/model';
 
-import { noop } from '../utils';
-
 const styles = css({
   boxSizing: 'border-box',
   height: '100%',
@@ -15,7 +13,7 @@ const styles = css({
 });
 
 type FormProps<T> = {
-  onSave?: () => void | Promise<T | void>;
+  onSave: () => Promise<T | void>;
   validate?: () => boolean;
   dirty: boolean; // mandatory so that it cannot be forgotten
   serverErrors?: ValidationErrorResponse['data'];
@@ -29,7 +27,7 @@ const Form = <T extends void | Record<string, unknown>>({
   dirty,
   children,
   validate = () => true,
-  onSave = noop,
+  onSave,
   serverErrors = [],
 }: FormProps<T>): React.ReactElement => {
   const toast = useContext(ToastContext);
@@ -53,11 +51,12 @@ const Form = <T extends void | Record<string, unknown>>({
     if (formRef.current!.reportValidity() && parentValidation) {
       setStatus('isSaving');
       try {
-        const result = await onSave();
-        if (formRef.current) {
-          setStatus('hasSaved');
-        }
-        return result;
+        return await onSave().then((result) => {
+          if (formRef.current) {
+            setStatus('hasSaved');
+          }
+          return result;
+        });
       } catch {
         if (formRef.current) {
           setStatus('hasError');

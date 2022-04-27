@@ -1,24 +1,24 @@
-import { css } from '@emotion/react';
-import { ComponentProps, useState } from 'react';
 import {
   DecisionOption,
+  ResearchOutputDocumentType,
+  ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
-  ResearchOutputDocumentType,
   TeamResponse,
-  ResearchOutputIdentifierType,
 } from '@asap-hub/model';
+import { sharedResearch } from '@asap-hub/routing';
 import { isInternalUser } from '@asap-hub/validation';
-
-import {
-  TeamCreateOutputFormSharingCard,
-  TeamCreateOutputExtraInformationCard,
-  Form,
-} from './index';
+import { css } from '@emotion/react';
+import { ComponentProps, useState } from 'react';
 import { Button } from '../atoms';
-import { perRem, mobileScreen } from '../pixels';
+import { mobileScreen, perRem } from '../pixels';
+import { usePushFromHere } from '../routing';
 import { noop } from '../utils';
-
+import {
+  Form,
+  TeamCreateOutputExtraInformationCard,
+  TeamCreateOutputFormSharingCard,
+} from './index';
 import TeamCreateOutputContributorsCard from './TeamCreateOutputContributorsCard';
 
 const contentStyles = css({
@@ -111,6 +111,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   serverValidationErrors,
   clearServerValidationError,
 }) => {
+  const historyPush = usePushFromHere();
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
   const [type, setType] = useState<ResearchOutputPostRequest['type'] | ''>('');
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>('');
@@ -148,7 +149,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [identifier, setIdentifier] = useState<string>('');
 
   return (
-    <Form
+    <Form<Pick<ResearchOutputResponse, 'id'>>
       serverErrors={serverValidationErrors}
       dirty={
         tags.length !== 0 ||
@@ -163,7 +164,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         labCatalogNumber !== '' ||
         teams.length !== 1 // Original team
       }
-      onSave={() => {
+      onSave={async () => {
         const convertDecisionToBoolean = (decision: DecisionOption): boolean =>
           decision === 'Yes';
 
@@ -269,8 +270,21 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
               <Button enabled={!isSaving} onClick={handleCancel}>
                 Cancel
               </Button>
-              <Button enabled={!isSaving} primary onClick={handleSave}>
-                Share
+              <Button
+                enabled={!isSaving}
+                primary
+                onClick={async () => {
+                  const researchOutput = await handleSave();
+                  if (researchOutput) {
+                    const { id } = researchOutput;
+                    const path = sharedResearch({}).researchOutput({
+                      researchOutputId: id,
+                    }).$;
+                    historyPush(path);
+                  }
+                }}
+              >
+                Publish
               </Button>
             </div>
           </div>

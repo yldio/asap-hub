@@ -6,7 +6,6 @@ import { renderHook } from '@testing-library/react-hooks';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
-
 import TeamCreateOutputPage from '../TeamCreateOutputPage';
 
 const props: ComponentProps<typeof TeamCreateOutputPage> = {
@@ -40,7 +39,7 @@ it('clicking button will trigger the callback', () => {
       <TeamCreateOutputPage {...props} onSave={mockOnCreate} />
     </StaticRouter>,
   );
-  const button = screen.getByRole('button', { name: /Share/i });
+  const button = screen.getByRole('button', { name: /Publish/i });
   userEvent.click(button);
   waitFor(() => expect(mockOnCreate).toHaveBeenCalled());
 });

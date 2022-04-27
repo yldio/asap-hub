@@ -753,7 +753,7 @@ describe('ResearchOutputs controller', () => {
       } = parseToSquidex(researchOutputRequest);
 
       nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/research-outputs?publish=false`, {
+        .post(`/api/content/${config.appName}/research-outputs?publish=true`, {
           ...squidexResearchOutput,
           createdBy: { iv: [researchOutputRequest.createdBy] },
           updatedBy: { iv: [researchOutputRequest.createdBy] },
@@ -895,7 +895,7 @@ describe('ResearchOutputs controller', () => {
       const researchOutputRequest = getResearchOutputInputData();
 
       nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/research-outputs?publish=false`)
+        .post(`/api/content/${config.appName}/research-outputs?publish=true`)
         .reply(400);
 
       await expect(
@@ -906,7 +906,7 @@ describe('ResearchOutputs controller', () => {
     test('Should throw when fails to create the research output - 500', async () => {
       const researchOutputRequest = getResearchOutputInputData();
       nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/research-outputs?publish=false`)
+        .post(`/api/content/${config.appName}/research-outputs?publish=true`)
         .reply(500);
 
       await expect(
@@ -918,7 +918,7 @@ describe('ResearchOutputs controller', () => {
       const researchOutputRequest = getResearchOutputInputData();
 
       nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/research-outputs?publish=false`)
+        .post(`/api/content/${config.appName}/research-outputs?publish=true`)
         .reply(201)
         .get(
           `/api/content/${config.appName}/teams/${researchOutputRequest.teams[0]}`,
@@ -935,7 +935,7 @@ describe('ResearchOutputs controller', () => {
       const teamId = researchOutputRequest.teams[0];
 
       nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/research-outputs?publish=false`)
+        .post(`/api/content/${config.appName}/research-outputs?publish=true`)
         .reply(201)
         .get(`/api/content/${config.appName}/teams/${teamId}`)
         .reply(200, { data: { id: teamId, outputs: { iv: ['output-1'] } } })
@@ -979,7 +979,7 @@ describe('ResearchOutputs controller', () => {
         .reply(200, { data: { id: teamId } })
         .patch(`/api/content/${config.appName}/teams/${teamId}`)
         .reply(200)
-        .post(`/api/content/${config.appName}/research-outputs?publish=false`, {
+        .post(`/api/content/${config.appName}/research-outputs?publish=true`, {
           ...squidexResearchOutput,
           createdBy: { iv: [researchOutputRequest.createdBy] },
           updatedBy: { iv: [researchOutputRequest.createdBy] },

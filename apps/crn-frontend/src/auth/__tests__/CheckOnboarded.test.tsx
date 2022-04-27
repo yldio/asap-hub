@@ -1,12 +1,11 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { createUserResponse } from '@asap-hub/fixtures';
 import { network, sharedResearch, staticPages } from '@asap-hub/routing';
 import { render } from '@testing-library/react';
+import { createBrowserHistory, History } from 'history';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { History, createBrowserHistory } from 'history';
-import { createUserResponse } from '@asap-hub/fixtures';
-
 import CheckOnboarded, { navigationPromptHandler } from '../CheckOnboarded';
 import { Auth0Provider, WhenReady } from '../test-utils';
 

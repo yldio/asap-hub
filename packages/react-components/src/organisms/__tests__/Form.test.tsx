@@ -17,6 +17,7 @@ import { Button } from '../../atoms';
 const props: ComponentProps<typeof Form> = {
   dirty: false,
   children: () => null,
+  onSave: jest.fn(),
 };
 
 let getUserConfirmation!: jest.MockedFunction<

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@asap-hub/algolia": "workspace:*",
+    "@asap-hub/errors": "workspace:*",
     "@asap-hub/message-templates": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/services-common": "workspace:*",

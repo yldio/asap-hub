@@ -1,5 +1,6 @@
 import nock from 'nock';
-import { config, SquidexNotFoundError } from '@asap-hub/squidex';
+import { NotFoundError } from '@asap-hub/errors';
+import { config } from '@asap-hub/squidex';
 import Pages from '../../src/controllers/pages';
 import { identity } from '../helpers/squidex';
 
@@ -32,9 +33,7 @@ describe('Page controller', () => {
         })
         .reply(404);
 
-      await expect(pages.fetchByPath(path)).rejects.toThrow(
-        SquidexNotFoundError,
-      );
+      await expect(pages.fetchByPath(path)).rejects.toThrow(NotFoundError);
     });
 
     test('Should return the result when the page exists', async () => {

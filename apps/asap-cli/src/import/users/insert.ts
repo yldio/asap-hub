@@ -4,10 +4,10 @@ import Intercept from 'apr-intercept';
 import {
   RestTeam,
   RestUser,
-  SquidexError,
   SquidexRest,
   UserTeamConnection,
 } from '@asap-hub/squidex';
+import { GenericError } from '@asap-hub/errors';
 import { HTTPError } from 'got';
 import { Data } from './parse';
 import log from '../../logger';
@@ -191,7 +191,7 @@ const insertUser = async (
 
   if (!cache[user.email.iv]) {
     cache[user.email.iv] = users.create(user).catch((err) => {
-      if (err instanceof SquidexError) {
+      if (err instanceof GenericError) {
         log(`fetch ${user.email.iv}`);
         return users
           .fetchOne({

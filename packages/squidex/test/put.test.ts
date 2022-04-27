@@ -1,10 +1,6 @@
+import { GenericError, NotFoundError } from '@asap-hub/errors';
 import nock from 'nock';
 import config from '../src/config';
-import {
-  SquidexError,
-  SquidexNotFoundError,
-  SquidexUnauthorizedError,
-} from '../src/errors';
 import { Squidex } from '../src/rest';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
@@ -26,7 +22,7 @@ describe('squidex wrapper', () => {
     nock.cleanAll();
   });
 
-  it('returns SquidexError when squidex returns bad request', async () => {
+  it('returns GenericError when squidex returns bad request', async () => {
     nock(config.baseUrl)
       .put(`/api/content/${config.appName}/${collection}/42`)
       .query(() => true)
@@ -37,28 +33,10 @@ describe('squidex wrapper', () => {
 
     await expect(() =>
       client.put('42', { string: { iv: 'value' } }),
-    ).rejects.toThrow(SquidexError);
+    ).rejects.toThrow(GenericError);
   });
 
-  it('returns SquidexUnauthorizedError when squidex returns with credentials error', async () => {
-    nock(config.baseUrl)
-      .put(`/api/content/${config.appName}/${collection}/42`)
-      .query(() => true)
-      .reply(400, {
-        details: 'invalid_client',
-        statusCode: 400,
-      });
-
-    await expect(() =>
-      client.put('42', {
-        string: {
-          iv: 'value',
-        },
-      }),
-    ).rejects.toThrow(SquidexUnauthorizedError);
-  });
-
-  it('returns SquidexNotFoundError when document doesnt exist', async () => {
+  it('returns NotFoundError when document doesnt exist', async () => {
     nock(config.baseUrl)
       .put(`/api/content/${config.appName}/${collection}/42`)
       .reply(404);
@@ -69,10 +47,10 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow(SquidexNotFoundError);
+    ).rejects.toThrow(NotFoundError);
   });
 
-  it('returns SquidexError when squidex returns error', async () => {
+  it('returns GenericError when squidex returns error', async () => {
     nock(config.baseUrl)
       .put(`/api/content/${config.appName}/${collection}/42`)
       .query(() => true)
@@ -84,7 +62,7 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow(SquidexError);
+    ).rejects.toThrow(GenericError);
   });
 
   it('updates a specific document', async () => {

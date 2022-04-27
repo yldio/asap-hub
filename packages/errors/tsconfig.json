@@ -4,6 +4,6 @@
     "rootDir": "src",
     "outDir": "build"
   },
-  "include": ["src", "types"],
-  "references": [{ "path": "../errors" }, { "path": "../model" }]
+  "include": ["src"],
+  "references": []
 }

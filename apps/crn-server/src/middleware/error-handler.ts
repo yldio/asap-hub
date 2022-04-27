@@ -1,12 +1,8 @@
+import { HTTPError } from 'got';
 import { ErrorRequestHandler } from 'express';
 import { isBoom } from '@hapi/boom';
 import { ErrorResponse } from '@asap-hub/model';
-import {
-  SquidexError,
-  SquidexNotFoundError,
-  SquidexUnauthorizedError,
-  SquidexValidationError,
-} from '@asap-hub/squidex';
+import { GenericError, NotFoundError, ValidationError } from '@asap-hub/errors';
 import * as Sentry from '@sentry/serverless';
 
 export const errorHandlerFactory =
@@ -21,31 +17,25 @@ export const errorHandlerFactory =
     req.span?.log({ 'error.error': err });
     req.span?.log({ 'error.message': err.message });
 
-    if (err instanceof SquidexError) {
-      Sentry.setContext('squidexError', {
-        response: JSON.stringify(err.cause),
-      });
+    if (err instanceof GenericError) {
+      if (err.cause instanceof HTTPError) {
+        Sentry.setContext('asapHttpError', {
+          response: JSON.stringify(err.cause.response?.body),
+        });
+      }
 
-      if (err instanceof SquidexNotFoundError) {
+      if (err instanceof NotFoundError) {
         return res.status(404).json({
           error: 'Not Found',
-          message: err.message,
+          message: 'Not Found',
           statusCode: 404,
         });
       }
 
-      if (err instanceof SquidexUnauthorizedError) {
-        return res.status(401).json({
-          error: 'Not Authorized',
-          message: err.message,
-          statusCode: 401,
-        });
-      }
-
-      if (err instanceof SquidexValidationError) {
+      if (err instanceof ValidationError) {
         return res.status(400).json({
           error: 'Bad Request',
-          message: err.message,
+          message: 'Validation Error',
           statusCode: 400,
         });
       }

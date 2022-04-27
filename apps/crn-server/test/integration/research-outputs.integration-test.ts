@@ -1,9 +1,6 @@
 import { Chance } from 'chance';
-import {
-  ResearchOutput,
-  SquidexGraphql,
-  SquidexValidationError,
-} from '@asap-hub/squidex';
+import { ValidationError } from '@asap-hub/errors';
+import { ResearchOutput, SquidexGraphql } from '@asap-hub/squidex';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { createResearchOutput } from '../helpers/research-outputs';
 import ResearchOutputs from '../../src/controllers/research-outputs';
@@ -54,7 +51,7 @@ describe('Research Outputs', () => {
     researchOutput.doi = 'invalid doi';
 
     await expect(createResearchOutput(researchOutput)).rejects.toThrow(
-      new SquidexValidationError(null, ['doi.iv: Must follow the pattern.']),
+      new ValidationError(new Error(), ['doi.iv: Must follow the pattern.']),
     );
   });
 });

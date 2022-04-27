@@ -1,5 +1,5 @@
 import { ResearchOutputPostRequest } from '@asap-hub/model';
-import { SquidexValidationError } from '@asap-hub/squidex';
+import { ValidationError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
@@ -179,7 +179,7 @@ describe('/research-outputs/ route', () => {
     test('Should return a 400 error when creating a research output fails due to validation error', async () => {
       const researchOutput = getCreateResearchOutput();
       researchOutputControllerMock.create.mockRejectedValueOnce(
-        new SquidexValidationError(null, [
+        new ValidationError(new Error(), [
           'link.iv: Another content with the same value exists.',
         ]),
       );

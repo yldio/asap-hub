@@ -4,7 +4,7 @@ import {
   VALIDATION_ERROR_MESSAGE,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { SquidexValidationError } from '@asap-hub/squidex';
+import { ValidationError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import { ResearchOutputController } from '../controllers/research-outputs';
@@ -61,7 +61,7 @@ export const researchOutputRouteFactory = (
       // https://asaphub.atlassian.net/browse/CRN-777
 
       if (
-        error instanceof SquidexValidationError &&
+        error instanceof ValidationError &&
         error.details[0]?.includes(
           'link.iv: Another content with the same value exists',
         )

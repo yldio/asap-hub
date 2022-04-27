@@ -1,4 +1,5 @@
-import { config, RestUser, SquidexNotFoundError } from '@asap-hub/squidex';
+import { NotFoundError } from '@asap-hub/errors';
+import { config, RestUser } from '@asap-hub/squidex';
 import { UserResponse } from '@asap-hub/model';
 import matches from 'lodash.matches';
 import nock, { DataMatcherMap } from 'nock';
@@ -517,7 +518,7 @@ describe('Users controller', () => {
 
       await expect(
         usersMockGraphqlClient.update(userId, { jobTitle: 'CEO' }),
-      ).rejects.toThrow(SquidexNotFoundError);
+      ).rejects.toThrow(NotFoundError);
     });
 
     test('Should update job title through a clean-update', async () => {
@@ -853,7 +854,7 @@ describe('Users controller', () => {
 
       await expect(
         usersMockGraphqlClient.syncOrcidProfile('user-not-found'),
-      ).rejects.toThrow(SquidexNotFoundError);
+      ).rejects.toThrow(NotFoundError);
     });
 
     test('Should update user profile even when ORCID returns 500', async () => {

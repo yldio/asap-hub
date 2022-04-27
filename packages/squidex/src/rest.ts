@@ -1,13 +1,7 @@
+import { GenericError, ValidationError, NotFoundError } from '@asap-hub/errors';
 import Got, { HTTPError } from 'got';
 import createClient, { GetAccessToken } from './auth';
 import { parseErrorResponseBody } from './helpers';
-
-import {
-  SquidexError,
-  SquidexValidationError,
-  SquidexNotFoundError,
-  SquidexUnauthorizedError,
-} from './errors';
 
 export interface Results<T> {
   total: number;
@@ -60,7 +54,7 @@ interface SquidexResponseError {
 }
 
 const isSquidexError = (
-  error: unknown | SquidexError,
+  error: unknown | GenericError,
 ): error is SquidexResponseError =>
   Array.isArray((error as SquidexResponseError)?.details);
 
@@ -102,25 +96,15 @@ export class Squidex<
       return res as Results<T>;
     } catch (err) {
       if (err instanceof HTTPError) {
-        if (
-          err.response.statusCode === 400 &&
-          typeof err.response.body === 'string' &&
-          err.response.body.includes('invalid_client')
-        ) {
-          throw new SquidexUnauthorizedError(err.response.body);
-        }
-
         if (err.response.statusCode === 404) {
           return {
             total: 0,
             items: [],
           };
         }
-
-        throw new SquidexError(err.response.body);
       }
 
-      throw new SquidexError(err);
+      throw new GenericError(err);
     }
   }
 
@@ -130,22 +114,12 @@ export class Squidex<
       return res as T;
     } catch (err) {
       if (err instanceof HTTPError) {
-        if (
-          err.response.statusCode === 400 &&
-          typeof err.response.body === 'string' &&
-          err.response.body.includes('invalid_client')
-        ) {
-          throw new SquidexUnauthorizedError(err.response.body);
-        }
-
         if (err.response.statusCode === 404) {
-          throw new SquidexNotFoundError(err.response.body);
+          throw new NotFoundError(err);
         }
-
-        throw new SquidexError(err.response.body);
       }
 
-      throw new SquidexError(err);
+      throw new GenericError(err);
     }
   }
 
@@ -156,7 +130,7 @@ export class Squidex<
     });
 
     if (items.length === 0) {
-      throw new SquidexNotFoundError();
+      throw new NotFoundError(new Error('Not Found'));
     }
 
     return items[0];
@@ -175,18 +149,6 @@ export class Squidex<
       return res as T;
     } catch (err) {
       if (err instanceof HTTPError) {
-        if (err.response.statusCode === 409) {
-          throw new SquidexValidationError(err.response.body);
-        }
-
-        if (
-          err.response.statusCode === 400 &&
-          typeof err.response.body === 'string' &&
-          err.response.body.includes('invalid_client')
-        ) {
-          throw new SquidexUnauthorizedError(err.response.body);
-        }
-
         if (err.response.statusCode === 400) {
           let body: unknown;
           try {
@@ -196,14 +158,12 @@ export class Squidex<
           }
 
           if (isSquidexError(body) && body?.message === 'Validation error') {
-            throw new SquidexValidationError(err.response.body, body.details);
+            throw new ValidationError(err, body.details);
           }
         }
-
-        throw new SquidexError(err.response.body);
       }
 
-      throw new SquidexError(err);
+      throw new GenericError(err);
     }
   }
 
@@ -220,18 +180,6 @@ export class Squidex<
       return res as T;
     } catch (err) {
       if (err instanceof HTTPError) {
-        if (err.response.statusCode === 409) {
-          throw new SquidexValidationError(err.response.body);
-        }
-
-        if (
-          err.response.statusCode === 400 &&
-          typeof err.response.body === 'string' &&
-          err.response.body.includes('invalid_client')
-        ) {
-          throw new SquidexUnauthorizedError(err.response.body);
-        }
-
         if (err.response?.statusCode === 400) {
           let body: unknown;
           try {
@@ -241,14 +189,12 @@ export class Squidex<
           }
 
           if (isSquidexError(body) && body?.message === 'Validation error') {
-            throw new SquidexValidationError(err.response.body, body.details);
+            throw new ValidationError(err, body.details);
           }
         }
-
-        throw new SquidexError(err.response.body);
       }
 
-      throw new SquidexError(err);
+      throw new GenericError(err);
     }
   }
 
@@ -262,22 +208,12 @@ export class Squidex<
       return res as T;
     } catch (err) {
       if (err instanceof HTTPError) {
-        if (
-          err.response.statusCode === 400 &&
-          typeof err.response.body === 'string' &&
-          err.response.body.includes('invalid_client')
-        ) {
-          throw new SquidexUnauthorizedError(err.response.body);
-        }
-
         if (err.response.statusCode === 404) {
-          throw new SquidexNotFoundError(err.response.body);
+          throw new NotFoundError(err);
         }
-
-        throw new SquidexError(err.response.body);
       }
 
-      throw new SquidexError(err);
+      throw new GenericError(err);
     }
   }
 
@@ -291,22 +227,12 @@ export class Squidex<
       return res as T;
     } catch (err) {
       if (err instanceof HTTPError) {
-        if (
-          err.response.statusCode === 400 &&
-          typeof err.response.body === 'string' &&
-          err.response.body.includes('invalid_client')
-        ) {
-          throw new SquidexUnauthorizedError(err.response.body);
-        }
-
         if (err.response?.statusCode === 404) {
-          throw new SquidexNotFoundError(err.response.body);
+          throw new NotFoundError(err);
         }
-
-        throw new SquidexError(err.response.body);
       }
 
-      throw new SquidexError(err);
+      throw new GenericError(err);
     }
   }
 
@@ -314,19 +240,7 @@ export class Squidex<
     try {
       await this.client.delete(`${this.collection}/${id}`).json();
     } catch (err) {
-      if (err instanceof HTTPError) {
-        if (
-          err.response.statusCode === 400 &&
-          typeof err.response.body === 'string' &&
-          err.response.body.includes('invalid_client')
-        ) {
-          throw new SquidexUnauthorizedError(err.response.body);
-        }
-
-        throw new SquidexError(err.response.body);
-      }
-
-      throw new SquidexError(err);
+      throw new GenericError(err);
     }
   }
 }

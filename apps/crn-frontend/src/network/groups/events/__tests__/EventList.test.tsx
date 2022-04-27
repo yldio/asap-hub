@@ -31,10 +31,17 @@ beforeEach(() => {
   mockGetGroupEvents.mockClear().mockResolvedValue(createListEventResponse(1));
 });
 
-const renderGroupEventList = async (
-  { searchQuery = '', currentTime = new Date(), past = false } = {},
-  wrapper: ComponentType | undefined = undefined,
-) => {
+const renderGroupEventList = async ({
+  searchQuery = '',
+  currentTime = new Date(),
+  past = false,
+  wrapper,
+}: {
+  searchQuery?: string;
+  currentTime?: Date;
+  past?: boolean;
+  wrapper?: ComponentType;
+} = {}) => {
   const result = render(
     <RecoilRoot
       initializeState={({ reset }) => {
@@ -181,6 +188,6 @@ it('throws if the group does not exist', async () => {
   const errorWrapper: FC = ({ children }) => (
     <ErrorBoundary>{children}</ErrorBoundary>
   );
-  const { getByText } = await renderGroupEventList({}, errorWrapper);
+  const { getByText } = await renderGroupEventList({ wrapper: errorWrapper });
   expect(getByText(/failed.+group.+exist/i)).toBeVisible();
 });

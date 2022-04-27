@@ -1,17 +1,22 @@
-import { Suspense } from 'react';
-import { render, waitFor } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 import { createListEventResponse } from '@asap-hub/fixtures';
+import { act, render, screen, waitFor } from '@testing-library/react';
+import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-
-import { refreshCalendarsState } from '../calendar/state';
+import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getEvents } from '../api';
-import { eventsState } from '../state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
+import { getEvents } from '../api';
+import { refreshCalendarsState } from '../calendar/state';
 import EventList from '../EventList';
+import { eventsState } from '../state';
 
-jest.useFakeTimers();
+beforeAll(() => {
+  jest.useFakeTimers();
+});
+
+afterAll(() => {
+  jest.useRealTimers();
+});
 
 jest.mock('../api');
 
@@ -20,47 +25,54 @@ afterEach(() => {
   mockGetEvents.mockClear().mockResolvedValue(createListEventResponse(1));
 });
 
-const renderEventsListPage = async (
+const renderEventsListPage = async ({
   searchQuery = '',
   currentTime = new Date(),
-  past: boolean | undefined = undefined,
-) => {
-  const result = render(
-    <RecoilRoot
-      initializeState={({ set, reset }) => {
-        set(refreshCalendarsState, Math.random());
-        reset(
-          eventsState({
-            searchQuery,
-            currentPage: 0,
-            filters: new Set(),
-            pageSize: CARD_VIEW_PAGE_SIZE,
-            after: new Date().toISOString(),
-          }),
-        );
-      }}
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname: '/' }]}>
-              <Route path="/">
-                <EventList
-                  searchQuery={searchQuery}
-                  currentTime={currentTime}
-                  past={past}
-                />
-              </Route>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
-  );
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  return result;
+  past,
+}: {
+  searchQuery?: string;
+  currentTime?: Date;
+  past?: boolean;
+}) => {
+  await act(async () => {
+    render(
+      <RecoilRoot
+        initializeState={({ set, reset }) => {
+          set(refreshCalendarsState, Math.random());
+          reset(
+            eventsState({
+              searchQuery,
+              currentPage: 0,
+              filters: new Set(),
+              pageSize: CARD_VIEW_PAGE_SIZE,
+              after: new Date().toISOString(),
+            }),
+          );
+        }}
+      >
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[{ pathname: '/' }]}>
+                <Route path="/">
+                  <EventList
+                    searchQuery={searchQuery}
+                    currentTime={currentTime}
+                    past={past}
+                  />
+                </Route>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>,
+    );
+  });
+  await act(async () => {
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+  });
 };
 
 it('renders a list of event cards', async () => {
@@ -72,24 +84,29 @@ it('renders a list of event cards', async () => {
     })),
   });
 
-  const { getAllByRole } = await renderEventsListPage();
+  await renderEventsListPage({});
+
   expect(
-    getAllByRole('heading', { level: 3 }).map((heading) => heading.textContent),
+    screen
+      .getAllByRole('heading', { level: 3 })
+      .map((heading) => heading.textContent),
   ).toEqual(['Event title 0', 'Event title 1']);
 });
 
 it('can search for events', async () => {
-  await renderEventsListPage('searchterm');
+  const searchQuery = 'searchterm';
+  await renderEventsListPage({ searchQuery });
   expect(mockGetEvents).toHaveBeenCalledWith(
     expect.objectContaining({
-      searchQuery: 'searchterm',
+      searchQuery,
     }),
     expect.anything(),
   );
 });
 
 it('sets after to an hour before date provided for upcoming events', async () => {
-  await renderEventsListPage('', new Date('2020-01-01T12:00:00Z'));
+  const currentTime = new Date('2020-01-01T12:00:00Z');
+  await renderEventsListPage({ currentTime });
   expect(mockGetEvents).toHaveBeenCalledWith(
     expect.objectContaining({
       after: new Date('2020-01-01T11:00:00Z').toISOString(),
@@ -99,7 +116,9 @@ it('sets after to an hour before date provided for upcoming events', async () =>
 });
 
 it('sets before to an hour before date provided for past events', async () => {
-  await renderEventsListPage('', new Date('2020-01-01T12:00:00Z'), true);
+  const currentTime = new Date('2020-01-01T12:00:00Z');
+  const past = true;
+  await renderEventsListPage({ currentTime, past });
   expect(mockGetEvents).toHaveBeenCalledWith(
     expect.objectContaining({
       before: new Date('2020-01-01T11:00:00Z').toISOString(),

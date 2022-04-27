@@ -81,6 +81,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
     tags: [],
     teams: [teamId],
     publishDate: undefined,
+    methods: [],
   };
 
   const getLabSuggestions = useLabSuggestions();

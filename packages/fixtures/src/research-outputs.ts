@@ -33,6 +33,7 @@ const researchOutputResponse: Omit<
   sharingStatus: 'Public',
   contactEmails: [],
   labs: [],
+  methods: ['Activity Assay', 'RNA Single Cell'],
 };
 
 export const createResearchOutputResponse = (

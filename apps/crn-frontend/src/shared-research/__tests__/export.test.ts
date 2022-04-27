@@ -49,6 +49,7 @@ describe('researchOutputToCSV', () => {
       rrid: 'rrid',
       type: '3D Printing',
       usedInPublication: false,
+      methods: ['Activity Assay', 'RNA Single Cell'],
     };
     expect(researchOutputToCSV(output)).toEqual({
       created: 'created',
@@ -75,6 +76,7 @@ describe('researchOutputToCSV', () => {
       labs: expect.anything(),
       tags: expect.anything(),
       teams: expect.anything(),
+      methods: 'Activity Assay,RNA Single Cell',
     });
   });
   it('flattens authors, preserves order, displays orcid and external status when available', () => {

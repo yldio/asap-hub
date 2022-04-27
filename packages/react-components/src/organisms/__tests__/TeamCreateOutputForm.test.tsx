@@ -71,7 +71,7 @@ it('displays proper message when no author is found', async () => {
 it('displays proper message when no lab is found', async () => {
   const getLabSuggestions = jest.fn();
   getLabSuggestions.mockResolvedValue([]);
-  const { getByText } = render(
+  render(
     <StaticRouter>
       <TeamCreateOutputForm {...props} getLabSuggestions={getLabSuggestions} />
     </StaticRouter>,
@@ -80,7 +80,7 @@ it('displays proper message when no lab is found', async () => {
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
-  expect(getByText(/Sorry, no labs match/i)).toBeVisible();
+  expect(screen.getByText(/Sorry, no labs match/i)).toBeVisible();
 });
 
 it('displays current team within the form', async () => {

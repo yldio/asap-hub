@@ -88,6 +88,18 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
         },
       },
     ],
+    methods: [
+      {
+        flatData: {
+          name: 'Activity Assay',
+        },
+      },
+      {
+        flatData: {
+          name: 'RNA Single Cell',
+        },
+      },
+    ],
   },
   referencingTeamsContents: [getSquidexGraphqlTeam({})],
 });

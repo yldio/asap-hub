@@ -91,6 +91,9 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
       Users: {
         keyFieldName: false,
       },
+      ResearchTags: {
+        keyFieldName: false,
+      },
     },
   });
   const schemaWithMocks = addMocksToSchema({

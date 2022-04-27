@@ -3472,6 +3472,10 @@ export type ResearchOutputs = Content & {
   referencesLabsContents: Maybe<Array<Labs>>;
   /** Query Labs content items with total count. */
   referencesLabsContentsWithTotal: Maybe<LabsResultDto>;
+  /** Query Research Tags content items. */
+  referencesResearchTagsContents: Maybe<Array<ResearchTags>>;
+  /** Query Research Tags content items with total count. */
+  referencesResearchTagsContentsWithTotal: Maybe<ResearchTagsResultDto>;
   /** Query Users content items. */
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -3519,6 +3523,24 @@ export type ResearchOutputsReferencesLabsContentsArgs = {
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesLabsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesResearchTagsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesResearchTagsContentsWithTotalArgs = {
   filter: Maybe<Scalars['String']>;
   orderby: Maybe<Scalars['String']>;
   search: Maybe<Scalars['String']>;
@@ -3694,6 +3716,7 @@ export type ResearchOutputsDataDto = {
   labs: Maybe<ResearchOutputsDataLabsDto>;
   lastUpdatedPartial: Maybe<ResearchOutputsDataLastUpdatedPartialDto>;
   link: Maybe<ResearchOutputsDataLinkDto>;
+  methods: Maybe<ResearchOutputsDataMethodsDto>;
   publishDate: Maybe<ResearchOutputsDataPublishDateDto>;
   rrid: Maybe<ResearchOutputsDataRridDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
@@ -3720,6 +3743,7 @@ export type ResearchOutputsDataInputDto = {
   labs: Maybe<ResearchOutputsDataLabsInputDto>;
   lastUpdatedPartial: Maybe<ResearchOutputsDataLastUpdatedPartialInputDto>;
   link: Maybe<ResearchOutputsDataLinkInputDto>;
+  methods: Maybe<ResearchOutputsDataMethodsInputDto>;
   publishDate: Maybe<ResearchOutputsDataPublishDateInputDto>;
   rrid: Maybe<ResearchOutputsDataRridInputDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusInputDto>;
@@ -3772,6 +3796,16 @@ export type ResearchOutputsDataLinkDto = {
 /** The structure of the External Link field of the Research Outputs content input type. */
 export type ResearchOutputsDataLinkInputDto = {
   iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Methods field of the Research Outputs content type. */
+export type ResearchOutputsDataMethodsDto = {
+  iv: Maybe<Array<ResearchTags>>;
+};
+
+/** The structure of the Methods field of the Research Outputs content input type. */
+export type ResearchOutputsDataMethodsInputDto = {
+  iv: Maybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Publish Date field of the Research Outputs content type. */
@@ -3885,6 +3919,7 @@ export type ResearchOutputsFlatDataDto = {
   /** Does not include changes to Publish Date and Admin notes */
   lastUpdatedPartial: Maybe<Scalars['Instant']>;
   link: Maybe<Scalars['String']>;
+  methods: Maybe<Array<ResearchTags>>;
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   publishDate: Maybe<Scalars['Instant']>;
   /** This must start with "RRID:" */
@@ -3932,6 +3967,10 @@ export type ResearchTags = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Research Outputs content items. */
+  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
+  /** Query Research Outputs content items with total count. */
+  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -3940,6 +3979,24 @@ export type ResearchTags = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Research Tags content type. */
+export type ResearchTagsReferencingResearchOutputsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Tags content type. */
+export type ResearchTagsReferencingResearchOutputsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
 };
 
 /** The structure of the Category field of the Research Tags content type. */
@@ -6952,6 +7009,7 @@ export type ResearchOutputContentFragment = Pick<
     labs: Maybe<
       Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
     >;
+    methods: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
   };
   referencingTeamsContents?: Maybe<
     Array<
@@ -7104,6 +7162,9 @@ export type FetchResearchOutputQuery = {
         >;
         labs: Maybe<
           Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
+        >;
+        methods: Maybe<
+          Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
         >;
       };
       referencingTeamsContents?: Maybe<
@@ -7272,6 +7333,9 @@ export type FetchResearchOutputsQuery = {
                 Array<
                   Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }
                 >
+              >;
+              methods: Maybe<
+                Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
               >;
             };
             referencingTeamsContents?: Maybe<
@@ -9634,6 +9698,28 @@ export const ResearchOutputContentFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'methods' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'flatData' },

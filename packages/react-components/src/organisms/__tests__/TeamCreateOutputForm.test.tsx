@@ -1,4 +1,4 @@
-import { render, screen, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { StaticRouter } from 'react-router-dom';
 import { ComponentProps } from 'react';
@@ -19,11 +19,6 @@ const props: ComponentProps<typeof TeamCreateOutputForm> = {
   tagSuggestions: [],
   documentType: 'Article',
   team: createTeamResponse(),
-};
-
-const clickShare = () => {
-  const button = screen.getByRole('button', { name: /Share/i });
-  userEvent.click(button);
 };
 
 describe('createIdentifierField', () => {
@@ -53,157 +48,6 @@ it('renders the form', async () => {
     </StaticRouter>,
   );
   expect(getByText(/What are you sharing/i)).toBeVisible();
-});
-
-it('displays current team within the form', async () => {
-  const { getByText } = render(
-    <StaticRouter>
-      <TeamCreateOutputForm
-        {...props}
-        team={{ ...createTeamResponse(), displayName: 'example team' }}
-      />
-    </StaticRouter>,
-  );
-  expect(getByText('example team')).toBeVisible();
-});
-
-it('can submit a form when form data is valid', async () => {
-  const saveFn = jest.fn();
-  const getLabSuggestions = jest.fn();
-  const getAuthorSuggestions = jest.fn();
-  getLabSuggestions.mockResolvedValue([
-    { label: 'One Lab', value: '1' },
-    { label: 'Two Lab', value: '2' },
-  ]);
-  getAuthorSuggestions.mockResolvedValue([
-    {
-      user: { ...createUserResponse(), displayName: 'Chris Blue' },
-      label: 'Chris Blue',
-      value: 'u2',
-    },
-    {
-      user: {
-        ...createUserResponse(),
-        email: undefined,
-        displayName: 'Chris Reed',
-      },
-      label: 'Chris Reed (Non CRN)',
-      value: 'u1',
-    },
-  ]);
-  render(
-    <StaticRouter>
-      <TeamCreateOutputForm
-        {...props}
-        team={{ ...createTeamResponse(), id: 'TEAMID' }}
-        documentType="Lab Resource"
-        onSave={saveFn}
-        getLabSuggestions={getLabSuggestions}
-        getAuthorSuggestions={getAuthorSuggestions}
-      />
-    </StaticRouter>,
-  );
-
-  fireEvent.change(screen.getByLabelText(/url/i), {
-    target: { value: 'http://example.com' },
-  });
-  fireEvent.change(screen.getByLabelText(/title/i), {
-    target: { value: 'example title' },
-  });
-  fireEvent.change(screen.getByLabelText(/description/i), {
-    target: { value: 'example description' },
-  });
-  userEvent.type(screen.getByLabelText(/Select the option/i), 'Animal Model');
-  fireEvent.keyDown(screen.getByLabelText(/Select the option/i), {
-    keyCode: ENTER_KEYCODE,
-  });
-
-  fireEvent.click(
-    screen
-      .getByRole('group', { name: /funded by ASAP/i })
-      .querySelectorAll('input')[0]!,
-  );
-
-  fireEvent.click(
-    screen
-      .getByRole('group', { name: /used in a publication/i })
-      .querySelectorAll('input')[0]!,
-  );
-
-  fireEvent.click(
-    screen
-      .getByRole('group', { name: /sharing status/i })
-      .querySelectorAll('input')[1]!,
-  );
-
-  userEvent.type(screen.getByLabelText(/date published/i), '2022-03-24');
-
-  userEvent.click(screen.getByLabelText(/Labs/i));
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  userEvent.click(screen.getByText('One Lab'));
-
-  userEvent.click(screen.getByLabelText(/Authors/i));
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  userEvent.click(screen.getByText(/Chris Reed/i));
-
-  userEvent.click(screen.getByLabelText(/Authors/i));
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  userEvent.click(screen.getByText('Chris Blue'));
-
-  userEvent.click(screen.getByLabelText(/Authors/i));
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-
-  userEvent.type(screen.getByLabelText(/Authors/i), 'Alex White');
-
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  userEvent.click(screen.getAllByText('Alex White')[1]);
-
-  fireEvent.change(screen.getByLabelText(/doi/i), {
-    target: { value: 'doi:12.1234' },
-  });
-
-  clickShare();
-
-  expect(screen.getByRole('button', { name: /Share/i })).not.toBeEnabled();
-  expect(screen.getByRole('button', { name: /Cancel/i })).not.toBeEnabled();
-  const expectedRequest: ResearchOutputPostRequest = {
-    documentType: 'Lab Resource',
-    tags: [],
-    link: 'http://example.com',
-    title: 'example title',
-    description: 'example description',
-    type: 'Animal Model',
-    labs: ['1'],
-    authors: [
-      { externalAuthorId: 'u1' },
-      { userId: 'u2' },
-      { externalAuthorName: 'Alex White' },
-    ],
-    teams: ['TEAMID'],
-    asapFunded: true,
-    usedInPublication: true,
-    sharingStatus: 'Public',
-    publishDate: new Date('2022-03-24').toISOString(),
-    addedDate: expect.anything(),
-    doi: 'doi:12.1234',
-  };
-  await act(() =>
-    waitFor(() => {
-      expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
-      expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
-    }),
-  );
-  expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
 });
 
 it('displays proper message when no author is found', async () => {
@@ -237,4 +81,211 @@ it('displays proper message when no lab is found', async () => {
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
   expect(getByText(/Sorry, no labs match/i)).toBeVisible();
+});
+
+it('displays current team within the form', async () => {
+  const { getByText } = render(
+    <StaticRouter>
+      <TeamCreateOutputForm
+        {...props}
+        team={{ ...createTeamResponse(), displayName: 'example team' }}
+      />
+    </StaticRouter>,
+  );
+  expect(getByText('example team')).toBeVisible();
+});
+
+describe('on submit', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+  const getLabSuggestions = jest.fn();
+  const getAuthorSuggestions = jest.fn();
+  const saveFn = jest.fn();
+  const expectedRequest: ResearchOutputPostRequest = {
+    documentType: 'Article',
+    tags: [],
+    link: 'http://example.com',
+    title: 'example title',
+    description: 'example description',
+    type: 'Preprint',
+    labs: [],
+    authors: [],
+    teams: ['TEAMID'],
+    asapFunded: false,
+    usedInPublication: false,
+    sharingStatus: 'Network Only',
+    addedDate: expect.anything(),
+  };
+  type Data = Pick<
+    ResearchOutputPostRequest,
+    'link' | 'title' | 'description' | 'type'
+  >;
+
+  const setupForm = (
+    data: Data = {
+      description: 'example description',
+      title: 'example title',
+      type: 'Preprint',
+      link: 'http://example.com',
+    },
+    documentType: ComponentProps<
+      typeof TeamCreateOutputForm
+    >['documentType'] = 'Article',
+  ) => {
+    render(
+      <StaticRouter>
+        <TeamCreateOutputForm
+          {...props}
+          team={{ ...createTeamResponse(), id: 'TEAMID' }}
+          documentType={documentType}
+          onSave={saveFn}
+          getLabSuggestions={getLabSuggestions}
+          getAuthorSuggestions={getAuthorSuggestions}
+        />
+      </StaticRouter>,
+    );
+
+    fireEvent.change(screen.getByLabelText(/url/i), {
+      target: { value: data.link },
+    });
+    fireEvent.change(screen.getByLabelText(/title/i), {
+      target: { value: data.title },
+    });
+    fireEvent.change(screen.getByLabelText(/description/i), {
+      target: { value: data.description },
+    });
+    userEvent.type(screen.getByLabelText(/Select the option/i), data.type);
+    fireEvent.keyDown(screen.getByLabelText(/Select the option/i), {
+      keyCode: ENTER_KEYCODE,
+    });
+  };
+  const submitForm = async () => {
+    const button = screen.getByRole('button', { name: /Share/i });
+    userEvent.click(button);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
+      expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
+    });
+  };
+
+  it('can submit a form with minimum data', async () => {
+    setupForm();
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
+  });
+
+  it('can submit a lab', async () => {
+    getLabSuggestions.mockResolvedValue([
+      { label: 'One Lab', value: '1' },
+      { label: 'Two Lab', value: '2' },
+    ]);
+    setupForm();
+    userEvent.click(screen.getByLabelText(/Labs/i));
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    userEvent.click(screen.getByText('One Lab'));
+
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      labs: ['1'],
+    });
+  });
+  it('can submit existing internal and external and create a new external author', async () => {
+    getAuthorSuggestions.mockResolvedValue([
+      {
+        user: { ...createUserResponse(), displayName: 'Chris Blue' },
+        label: 'Chris Blue',
+        value: 'u2',
+      },
+      {
+        user: {
+          ...createUserResponse(),
+          email: undefined,
+          displayName: 'Chris Reed',
+        },
+        label: 'Chris Reed (Non CRN)',
+        value: 'u1',
+      },
+    ]);
+    setupForm();
+
+    userEvent.click(screen.getByLabelText(/Authors/i));
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    userEvent.click(screen.getByText(/Chris Reed/i));
+
+    userEvent.click(screen.getByLabelText(/Authors/i));
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    userEvent.click(screen.getByText('Chris Blue'));
+
+    userEvent.click(screen.getByLabelText(/Authors/i));
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+
+    userEvent.type(screen.getByLabelText(/Authors/i), 'Alex White');
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    userEvent.click(screen.getAllByText('Alex White')[1]);
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      authors: [
+        {
+          externalAuthorId: 'u1',
+        },
+        { userId: 'u2' },
+        { externalAuthorName: 'Alex White' },
+      ],
+    });
+  });
+
+  it('can submit access instructions', async () => {
+    setupForm();
+    userEvent.type(
+      screen.getByLabelText(/access instructions/i),
+      'Access Instructions',
+    );
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      accessInstructions: 'Access Instructions',
+    });
+  });
+
+  it('can submit published date', async () => {
+    setupForm();
+    userEvent.click(
+      screen
+        .getByRole('group', { name: /sharing status/i })
+        .querySelectorAll('input')[1]!,
+    );
+    userEvent.type(screen.getByLabelText(/date published/i), '2022-03-24');
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      sharingStatus: 'Public',
+      publishDate: new Date('2022-03-24').toISOString(),
+    });
+  });
+
+  it('can submit labCatalogNumber for lab resource', async () => {
+    setupForm({ ...expectedRequest, type: 'Animal Model' }, 'Lab Resource');
+    userEvent.type(screen.getByLabelText(/Catalog Number/i), 'abc123');
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      type: 'Animal Model',
+      documentType: 'Lab Resource',
+      labCatalogNumber: 'abc123',
+    });
+  });
 });

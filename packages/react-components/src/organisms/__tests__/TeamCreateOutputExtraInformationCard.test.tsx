@@ -50,3 +50,20 @@ it('should trigger an onChange event when a text is being typed into access inst
   fireEvent.change(input, { target: { value: 'test' } });
   expect(mockOnChange).toHaveBeenLastCalledWith('test');
 });
+
+it('should show lab catalogue number for lab resources', () => {
+  const { queryByLabelText, rerender } = render(
+    <TeamCreateOutputExtraInformationCard
+      {...props}
+      documentType={'Article'}
+    />,
+  );
+  expect(queryByLabelText(/Catalog Number/i)).toBeNull();
+  rerender(
+    <TeamCreateOutputExtraInformationCard
+      {...props}
+      documentType={'Lab Resource'}
+    />,
+  );
+  expect(queryByLabelText(/Catalog Number/i)).toBeVisible();
+});

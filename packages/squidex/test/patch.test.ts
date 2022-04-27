@@ -1,10 +1,6 @@
+import { AsapError, NotFoundError } from '@asap-hub/errors';
 import nock from 'nock';
 import config from '../src/config';
-import {
-  SquidexError,
-  SquidexNotFoundError,
-  SquidexUnauthorizedError,
-} from '../src/errors';
 import { Squidex } from '../src/rest';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
@@ -26,7 +22,7 @@ describe('squidex wrapper', () => {
     nock.cleanAll();
   });
 
-  it('returns SquidexError when squidex returns bad request', async () => {
+  it('returns AsapError when squidex returns bad request', async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/${collection}/42`)
       .query(() => true)
@@ -41,27 +37,10 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow(SquidexError);
+    ).rejects.toThrow(AsapError);
   });
 
-  it('returns SquidexUnauthorizedError when squidex returns with credentials error', async () => {
-    nock(config.baseUrl)
-      .patch(`/api/content/${config.appName}/${collection}/42`)
-      .reply(400, {
-        details: 'invalid_client',
-        statusCode: 400,
-      });
-
-    await expect(() =>
-      client.patch('42', {
-        string: {
-          iv: 'value',
-        },
-      }),
-    ).rejects.toThrow(SquidexUnauthorizedError);
-  });
-
-  it('returns SquidexUnauthorizedError when squidex returns with unparsable content', async () => {
+  it('returns AsapError when squidex returns with unparsable content', async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/${collection}/42`)
       .reply(200, 'unparsable}json');
@@ -72,10 +51,10 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow(SquidexError);
+    ).rejects.toThrow(AsapError);
   });
 
-  it('returns SquidexNotFoundError when document doesnt exist', async () => {
+  it('returns NotFoundError when document doesnt exist', async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/${collection}/42`)
       .reply(404);
@@ -86,10 +65,10 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow(SquidexNotFoundError);
+    ).rejects.toThrow(NotFoundError);
   });
 
-  it('returns SquidexError when squidex returns error', async () => {
+  it('returns AsapError when squidex returns error', async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/${collection}/42`)
       .reply(500);
@@ -100,7 +79,7 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow(SquidexError);
+    ).rejects.toThrow(AsapError);
   });
 
   it('patch a specific document based on filter', async () => {

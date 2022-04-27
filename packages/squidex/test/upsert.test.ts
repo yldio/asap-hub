@@ -1,10 +1,6 @@
+import { AsapError, ValidationError } from '@asap-hub/errors';
 import nock from 'nock';
 import config from '../src/config';
-import {
-  SquidexError,
-  SquidexUnauthorizedError,
-  SquidexValidationError,
-} from '../src/errors';
 import { Squidex } from '../src/rest';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
@@ -30,7 +26,7 @@ describe('squidex wrapper - upsert', () => {
     nock.cleanAll();
   });
 
-  it('returns SquidexError when squidex returns bad request', async () => {
+  it('returns AsapError when squidex returns bad request', async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/${collection}/${contentId}`)
       .query(() => true)
@@ -51,10 +47,10 @@ describe('squidex wrapper - upsert', () => {
           }),
         ),
       ),
-    ).rejects.toThrow(SquidexError);
+    ).rejects.toThrow(AsapError);
   });
 
-  it('returns SquidexValidationError along with the response payload formatted to json when squidex returns validation error', async () => {
+  it('returns ValidationError along with the response payload formatted to json when squidex returns validation error', async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/${collection}/${contentId}`)
       .query(() => true)
@@ -84,27 +80,7 @@ describe('squidex wrapper - upsert', () => {
     );
   });
 
-  it('returns SquidexUnauthorizedError when squidex returns with unparsable content', async () => {
-    nock(config.baseUrl)
-      .patch(`/api/content/${config.appName}/${collection}/${contentId}`)
-      .query(() => true)
-      .reply(200, '<not>json</not>');
-
-    await expect(() =>
-      client.upsert(
-        contentId,
-        JSON.parse(
-          JSON.stringify({
-            array: {
-              iv: 'value',
-            },
-          }),
-        ),
-      ),
-    ).rejects.toThrowError(SquidexError);
-  });
-
-  it('returns SquidexError along with the raw response payload when squidex returns an error response which is not json', async () => {
+  it('returns AsapError along with the raw response payload when squidex returns an error response which is not json', async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/${collection}/${contentId}`)
       .query(() => true)
@@ -121,46 +97,10 @@ describe('squidex wrapper - upsert', () => {
           }),
         ),
       ),
-    ).rejects.toThrowError(SquidexError);
+    ).rejects.toThrowError(AsapError);
   });
 
-  it('returns SquidexUnauthorizedError when squidex returns with credentials error', async () => {
-    nock(config.baseUrl)
-      .patch(`/api/content/${config.appName}/${collection}/${contentId}`)
-      .query(() => true)
-      .reply(400, {
-        details: 'invalid_client',
-        statusCode: 400,
-      });
-
-    await expect(() =>
-      client.upsert(contentId, {
-        string: {
-          iv: 'value',
-        },
-      }),
-    ).rejects.toThrow(SquidexUnauthorizedError);
-  });
-
-  it('returns SquidexValidationError when squidex returns conflict', async () => {
-    nock(config.baseUrl)
-      .patch(`/api/content/${config.appName}/${collection}/${contentId}`)
-      .query(() => true)
-      .reply(409, {
-        details: 'user with same email already exists',
-        statusCode: 409,
-      });
-
-    await expect(() =>
-      client.upsert(contentId, {
-        string: {
-          iv: 'value',
-        },
-      }),
-    ).rejects.toThrow(SquidexValidationError);
-  });
-
-  it('returns SquidexError when squidex returns error', async () => {
+  it('returns AsapError when squidex returns error', async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/${collection}/${contentId}`)
       .query(() => true)
@@ -172,7 +112,7 @@ describe('squidex wrapper - upsert', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow(SquidexError);
+    ).rejects.toThrow(AsapError);
   });
 
   it('upserts a specific document as published', async () => {

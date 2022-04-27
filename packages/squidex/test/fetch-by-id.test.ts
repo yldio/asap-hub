@@ -1,11 +1,7 @@
+import { AsapError, NotFoundError } from '@asap-hub/errors';
 import nock from 'nock';
 import config from '../src/config';
 import { Squidex } from '../src/rest';
-import {
-  SquidexError,
-  SquidexUnauthorizedError,
-  SquidexNotFoundError,
-} from '../src/errors';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
 interface Content {
@@ -26,43 +22,28 @@ describe('squidex wrapper', () => {
     nock.cleanAll();
   });
 
-  it("return SquidexNotFoundError when document doesn't exist", async () => {
+  it("return NotFoundError when document doesn't exist", async () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/${collection}/42`)
       .reply(404);
 
-    await expect(() => client.fetchById('42')).rejects.toThrow(
-      SquidexNotFoundError,
-    );
+    await expect(() => client.fetchById('42')).rejects.toThrow(NotFoundError);
   });
 
-  it('return SquidexError on HTTP Error', async () => {
+  it('return AsapError on HTTP Error', async () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/${collection}/42`)
       .reply(405);
 
-    await expect(() => client.fetchById('42')).rejects.toThrow(SquidexError);
+    await expect(() => client.fetchById('42')).rejects.toThrow(AsapError);
   });
 
-  it('returns SquidexUnauthorizedError when squidex returns with credentials error', async () => {
-    nock(config.baseUrl)
-      .get(`/api/content/${config.appName}/${collection}/42`)
-      .reply(400, {
-        details: 'invalid_client',
-        statusCode: 400,
-      });
-
-    await expect(() => client.fetchById('42')).rejects.toThrow(
-      SquidexUnauthorizedError,
-    );
-  });
-
-  it('returns SquidexError when squidex returns error', async () => {
+  it('returns AsapError when squidex returns error', async () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/${collection}/42`)
       .reply(500);
 
-    await expect(() => client.fetchById('42')).rejects.toThrow(SquidexError);
+    await expect(() => client.fetchById('42')).rejects.toThrow(AsapError);
   });
 
   it('returns a single document using id', async () => {
@@ -156,6 +137,6 @@ describe('squidex wrapper', () => {
           value: 'value',
         },
       }),
-    ).rejects.toThrow(SquidexNotFoundError);
+    ).rejects.toThrow(NotFoundError);
   });
 });

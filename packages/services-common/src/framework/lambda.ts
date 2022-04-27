@@ -1,9 +1,4 @@
-import {
-  SquidexError,
-  SquidexNotFoundError,
-  SquidexUnauthorizedError,
-  SquidexValidationError,
-} from '@asap-hub/squidex';
+import { AsapError, NotFoundError, ValidationError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 import Bourne from '@hapi/bourne';
 import Intercept from 'apr-intercept';
@@ -87,21 +82,8 @@ const handlerError = (error: Error): APIGatewayProxyResultV2 => {
     }
   }
 
-  if (err instanceof SquidexError) {
-    if (err instanceof SquidexUnauthorizedError) {
-      return response({
-        statusCode: 401,
-        body: JSON.stringify({
-          error: 'Not Authorized',
-          statusCode: 401,
-        }),
-        headers: {
-          'content-type': 'application/json',
-        },
-      });
-    }
-
-    if (err instanceof SquidexNotFoundError) {
+  if (err instanceof AsapError) {
+    if (err instanceof NotFoundError) {
       return response({
         statusCode: 404,
         body: JSON.stringify({
@@ -114,7 +96,7 @@ const handlerError = (error: Error): APIGatewayProxyResultV2 => {
       });
     }
 
-    if (err instanceof SquidexValidationError) {
+    if (err instanceof ValidationError) {
       return response({
         statusCode: 400,
         body: JSON.stringify({

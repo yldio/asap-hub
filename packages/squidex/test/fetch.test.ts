@@ -1,7 +1,7 @@
+import { AsapError } from '@asap-hub/errors';
 import nock from 'nock';
 import config from '../src/config';
 import { Squidex } from '../src/rest';
-import { SquidexError, SquidexUnauthorizedError } from '../src/errors';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
 interface Content {
@@ -22,30 +22,16 @@ describe('squidex wrapper', () => {
     nock.cleanAll();
   });
 
-  it('returns SquidexUnauthorizedError when squidex returns with credentials error', async () => {
-    nock(config.baseUrl)
-      .get(`/api/content/${config.appName}/${collection}`)
-      .query(() => true)
-      .reply(400, {
-        details: 'invalid_client',
-        statusCode: 400,
-      });
-
-    await expect(() => client.fetch()).rejects.toThrow(
-      SquidexUnauthorizedError,
-    );
-  });
-
-  it('returns SquidexError when squidex returns error', async () => {
+  it('returns AsapError when squidex returns error', async () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/${collection}`)
       .query(() => true)
       .reply(500);
 
-    await expect(() => client.fetch()).rejects.toThrow(SquidexError);
+    await expect(() => client.fetch()).rejects.toThrow(AsapError);
   });
 
-  it('returns SquidexError on HTTP error', async () => {
+  it('returns AsapError on HTTP error', async () => {
     nock(config.baseUrl)
       .get(
         `/api/content/${config.appName}/${collection}?q=${JSON.stringify({
@@ -54,7 +40,7 @@ describe('squidex wrapper', () => {
       )
       .reply(401);
 
-    await expect(() => client.fetch()).rejects.toThrow(SquidexError);
+    await expect(() => client.fetch()).rejects.toThrow(AsapError);
   });
 
   it('returns a list of documents', async () => {

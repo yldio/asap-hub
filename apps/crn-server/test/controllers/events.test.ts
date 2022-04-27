@@ -1,5 +1,6 @@
 import nock from 'nock';
-import { config, SquidexError } from '@asap-hub/squidex';
+import { AsapError } from '@asap-hub/errors';
+import { config } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import {
   listEventResponse,
@@ -670,7 +671,7 @@ describe('Event controller', () => {
 
       await expect(
         eventsController.create(getEventRestResponse()),
-      ).rejects.toThrow(SquidexError);
+      ).rejects.toThrow(AsapError);
     });
   });
 
@@ -706,7 +707,7 @@ describe('Event controller', () => {
 
       await expect(
         eventsController.update(eventId, { tags: ['kubernetes'] }),
-      ).rejects.toThrow(SquidexError);
+      ).rejects.toThrow(AsapError);
     });
   });
 

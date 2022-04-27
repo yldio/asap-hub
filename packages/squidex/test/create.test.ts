@@ -1,12 +1,8 @@
+import { AsapError, ValidationError } from '@asap-hub/errors';
 import nock from 'nock';
 import config from '../src/config';
 import * as helpers from '../src/helpers';
 import { Squidex } from '../src/rest';
-import {
-  SquidexValidationError,
-  SquidexError,
-  SquidexUnauthorizedError,
-} from '../src/errors';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
 interface Content {
@@ -53,7 +49,7 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow(SquidexError);
+    ).rejects.toThrow(AsapError);
     expect(spy).toHaveBeenCalled();
   });
 
@@ -82,7 +78,7 @@ describe('squidex wrapper', () => {
     );
   });
 
-  it('returns SquidexError along with the raw response payload when squidex returns an error response which is not json', async () => {
+  it('returns AsapError along with the raw response payload when squidex returns an error response which is not json', async () => {
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/${collection}`)
       .query(() => true)
@@ -94,10 +90,10 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrowError(SquidexError);
+    ).rejects.toThrowError(AsapError);
   });
 
-  it('returns SquidexError on unparsable JSON', async () => {
+  it('returns AsapError on unparsable JSON', async () => {
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/${collection}`)
       .query(() => true)
@@ -109,46 +105,10 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrowError(SquidexError);
+    ).rejects.toThrowError(AsapError);
   });
 
-  it('returns SquidexUnauthorizedError when squidex returns with credentials error', async () => {
-    nock(config.baseUrl)
-      .post(`/api/content/${config.appName}/${collection}`)
-      .query(() => true)
-      .reply(400, {
-        details: 'invalid_client',
-        statusCode: 400,
-      });
-
-    await expect(() =>
-      client.create({
-        string: {
-          iv: 'value',
-        },
-      }),
-    ).rejects.toThrow(SquidexUnauthorizedError);
-  });
-
-  it('returns SquidexValidationError when squidex returns conflict', async () => {
-    nock(config.baseUrl)
-      .post(`/api/content/${config.appName}/${collection}`)
-      .query(() => true)
-      .reply(409, {
-        details: 'user with same email already exists',
-        statusCode: 409,
-      });
-
-    await expect(() =>
-      client.create({
-        string: {
-          iv: 'value',
-        },
-      }),
-    ).rejects.toThrow(SquidexValidationError);
-  });
-
-  it('returns SquidexError when squidex returns error', async () => {
+  it('returns AsapError when squidex returns error', async () => {
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/${collection}`)
       .query(() => true)
@@ -160,7 +120,7 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow(SquidexError);
+    ).rejects.toThrow(AsapError);
   });
 
   it('creates a specific document as published', async () => {

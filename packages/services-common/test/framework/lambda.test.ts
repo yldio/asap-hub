@@ -1,8 +1,4 @@
-import {
-  SquidexNotFoundError,
-  SquidexUnauthorizedError,
-  SquidexValidationError,
-} from '@asap-hub/squidex';
+import { NotFoundError, ValidationError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 import { origin } from '../../src/config';
 import * as helpers from '../../src/framework/helpers';
@@ -178,26 +174,18 @@ test('http returns cors headers', async () => {
   });
 });
 
-describe('SquidexErrors', () => {
-  test('should return 404 on SquidexNotFoundError', async () => {
+describe('AsapErrors', () => {
+  test('should return 404 on NotFoundError', async () => {
     const handler = http(async (_) => {
-      throw new SquidexNotFoundError();
+      throw new NotFoundError();
     });
     const result = await handler(apiGatewayEvent({}));
     expect(result.statusCode).toStrictEqual(404);
   });
 
-  test('should return 401 on SquidexUnauthorizedError', async () => {
+  test('should return 400 on ValidationError', async () => {
     const handler = http(async (_) => {
-      throw new SquidexUnauthorizedError();
-    });
-    const result = await handler(apiGatewayEvent({}));
-    expect(result.statusCode).toStrictEqual(401);
-  });
-
-  test('should return 400 on SquidexValidationError', async () => {
-    const handler = http(async (_) => {
-      throw new SquidexValidationError();
+      throw new ValidationError();
     });
     const result = await handler(apiGatewayEvent({}));
     expect(result.statusCode).toStrictEqual(400);

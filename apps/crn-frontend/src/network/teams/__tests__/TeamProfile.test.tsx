@@ -3,6 +3,7 @@ import {
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { createTeamResponse } from '@asap-hub/fixtures';
+import { TeamResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -23,8 +24,10 @@ afterEach(() => jest.clearAllMocks());
 
 it('renders the header info', async () => {
   const { getByText } = await renderPage({
-    ...createTeamResponse(),
-    displayName: 'Bla',
+    teamResponse: {
+      ...createTeamResponse(),
+      displayName: 'Bla',
+    },
   });
   expect(getByText(/Team.+Bla/i)).toBeVisible();
 });
@@ -49,8 +52,10 @@ it('navigates to the outputs tab', async () => {
 
 it('navigates to the workspace tab', async () => {
   const { getByText, findByText } = await renderPage({
-    ...createTeamResponse(),
-    tools: [],
+    teamResponse: {
+      ...createTeamResponse(),
+      tools: [],
+    },
   });
 
   userEvent.click(getByText(/workspace/i, { selector: 'nav *' }));
@@ -58,8 +63,10 @@ it('navigates to the workspace tab', async () => {
 });
 it('does not allow navigating to the workspace tab when team tools are not available', async () => {
   const { queryByText } = await renderPage({
-    ...createTeamResponse(),
-    tools: undefined,
+    teamResponse: {
+      ...createTeamResponse(),
+      tools: undefined,
+    },
   });
 
   expect(
@@ -68,17 +75,19 @@ it('does not allow navigating to the workspace tab when team tools are not avail
 });
 
 it('renders the 404 page for a missing team', async () => {
-  const { getByText } = await renderPage(
-    { ...createTeamResponse(), id: '42' },
-    { teamId: '1337' },
-  );
+  const { getByText } = await renderPage({
+    teamResponse: { ...createTeamResponse(), id: '42' },
+    teamId: '1337',
+  });
   expect(getByText(/sorry.+page/i)).toBeVisible();
 });
 
 it('deep links to the teams list', async () => {
   const { container, getByLabelText } = await renderPage({
-    ...createTeamResponse({ teamMembers: 10 }),
-    id: '42',
+    teamResponse: {
+      ...createTeamResponse({ teamMembers: 10 }),
+      id: '42',
+    },
   });
 
   const anchor = getByLabelText(/\+\d/i).closest('a');
@@ -88,11 +97,15 @@ it('deep links to the teams list', async () => {
   expect(container.querySelector(hash)).toHaveTextContent(/team members/i);
 });
 
-const renderPage = async (
+const renderPage = async ({
   teamResponse = createTeamResponse(),
-  { teamId = teamResponse.id } = {},
-  initialEntries: string | undefined = undefined,
-) => {
+  teamId = teamResponse.id,
+  initialEntries,
+}: {
+  teamResponse?: TeamResponse;
+  teamId?: string;
+  initialEntries?: string;
+} = {}) => {
   const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
   mockGetTeam.mockImplementation(async (id) =>
     id === teamResponse.id ? teamResponse : undefined,

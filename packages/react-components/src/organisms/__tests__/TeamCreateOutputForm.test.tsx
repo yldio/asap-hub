@@ -105,7 +105,8 @@ describe('on submit', () => {
   });
   const getLabSuggestions = jest.fn();
   const getAuthorSuggestions = jest.fn();
-  const saveFn = jest.fn();
+  const promise = Promise.resolve();
+  const saveFn = jest.fn(() => promise);
   const expectedRequest: ResearchOutputPostRequest = {
     documentType: 'Article',
     tags: [],
@@ -150,12 +151,8 @@ describe('on submit', () => {
       </StaticRouter>,
     );
 
-    fireEvent.change(screen.getByLabelText(/url/i), {
-      target: { value: data.link },
-    });
-    fireEvent.change(screen.getByLabelText(/title/i), {
-      target: { value: data.title },
-    });
+    userEvent.type(screen.getByLabelText(/url/i), data.link!);
+    userEvent.type(screen.getByLabelText(/title/i), data.title);
     fireEvent.change(screen.getByLabelText(/description/i), {
       target: { value: data.description },
     });
@@ -165,11 +162,12 @@ describe('on submit', () => {
     });
   };
   const submitForm = async () => {
-    const button = screen.getByRole('button', { name: /Share/i });
-    userEvent.click(button);
+    userEvent.click(screen.getByRole('button', { name: /Share/i }));
 
-    expect(screen.getByRole('button', { name: /Share/i })).not.toBeEnabled();
-    expect(screen.getByRole('button', { name: /Cancel/i })).not.toBeEnabled();
+    waitFor(() => {
+      expect(screen.getByRole('button', { name: /Share/i })).toBeDisabled();
+      expect(screen.getByRole('button', { name: /Cancel/i })).toBeDisabled();
+    });
     return act(async () =>
       waitFor(() => {
         expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
@@ -177,6 +175,13 @@ describe('on submit', () => {
       }),
     );
   };
+
+  it('can submit a form with minimum data', async () => {
+    setupForm();
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
+    await act(() => promise);
+  });
 
   it('can submit a lab', async () => {
     getLabSuggestions.mockResolvedValue([
@@ -277,11 +282,5 @@ describe('on submit', () => {
       documentType: 'Lab Resource',
       labCatalogNumber: 'abc123',
     });
-  });
-
-  it('can submit a form with minimum data', async () => {
-    setupForm();
-    await submitForm();
-    expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
   });
 });

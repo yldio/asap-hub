@@ -230,6 +230,77 @@
         }
       },
       {
+        "name": "separatorSpeakers",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "UI",
+          "editor": "Separator",
+          "label": "Speakers",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "speakers",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "Array",
+          "maxItems": 20,
+          "label": "Speakers"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "nested": [
+          {
+            "name": "team",
+            "properties": {
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false,
+              "fieldType": "References",
+              "editor": "List",
+              "minItems": 1,
+              "maxItems": 1,
+              "allowDuplicates": false,
+              "resolveReference": false,
+              "mustBePublished": false,
+              "schemaIds": ["teams"],
+              "label": "Team"
+            },
+            "isLocked": false,
+            "isHidden": false,
+            "isDisabled": false
+          },
+          {
+            "name": "user",
+            "properties": {
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false,
+              "fieldType": "References",
+              "editor": "List",
+              "maxItems": 1,
+              "allowDuplicates": false,
+              "resolveReference": false,
+              "mustBePublished": false,
+              "schemaIds": ["users"],
+              "label": "User"
+            },
+            "isLocked": false,
+            "isHidden": false,
+            "isDisabled": false
+          }
+        ]
+      },
+      {
         "name": "separatorMeetingMaterials",
         "isHidden": false,
         "isLocked": false,

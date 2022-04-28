@@ -2188,6 +2188,58 @@ type Events implements Content {
     """Optional number of contents to take."""
     top: Int
   ): CalendarsResultDto
+  """Query Teams content items."""
+  referencesTeamsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Teams!]
+  """Query Teams content items with total count."""
+  referencesTeamsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): TeamsResultDto
+  """Query Users content items."""
+  referencesUsersContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Users!]
+  """Query Users content items with total count."""
+  referencesUsersContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): UsersResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -2235,6 +2287,7 @@ type EventsDataDto {
   notesPermanentlyUnavailable: EventsDataNotesPermanentlyUnavailableDto
   presentation: EventsDataPresentationDto
   presentationPermanentlyUnavailable: EventsDataPresentationPermanentlyUnavailableDto
+  speakers: EventsDataSpeakersDto
   startDate: EventsDataStartDateDto
   startDateTimeZone: EventsDataStartDateTimeZoneDto
   status: EventsDataStatusDto
@@ -2324,6 +2377,7 @@ input EventsDataInputDto {
   notesPermanentlyUnavailable: EventsDataNotesPermanentlyUnavailableInputDto
   presentation: EventsDataPresentationInputDto
   presentationPermanentlyUnavailable: EventsDataPresentationPermanentlyUnavailableInputDto
+  speakers: EventsDataSpeakersInputDto
   startDate: EventsDataStartDateInputDto
   startDateTimeZone: EventsDataStartDateTimeZoneInputDto
   status: EventsDataStatusInputDto
@@ -2426,6 +2480,28 @@ type EventsDataPresentationPermanentlyUnavailableDto {
 input EventsDataPresentationPermanentlyUnavailableInputDto {
   """This box is automatically ticked if no output is added after 14 days from the event's end date."""
   iv: Boolean
+}
+
+"""The structure of the Speakers nested schema."""
+type EventsDataSpeakersChildDto {
+  team: [Teams!]
+  user: [Users!]
+}
+
+"""The structure of the Speakers nested schema."""
+input EventsDataSpeakersChildInputDto {
+  team: [String!]
+  user: [String!]
+}
+
+"""The structure of the Speakers field of the Events content type."""
+type EventsDataSpeakersDto {
+  iv: [EventsDataSpeakersChildDto!]
+}
+
+"""The structure of the Speakers field of the Events content input type."""
+input EventsDataSpeakersInputDto {
+  iv: [EventsDataSpeakersChildInputDto!]
 }
 
 """The structure of the Start Date field of the Events content type."""
@@ -2536,6 +2612,7 @@ type EventsFlatDataDto {
   presentation: String
   """This box is automatically ticked if no output is added after 14 days from the event's end date."""
   presentationPermanentlyUnavailable: Boolean
+  speakers: [EventsDataSpeakersChildDto!]
   startDate: Instant
   startDateTimeZone: String
   status: String
@@ -4254,6 +4331,32 @@ type Teams implements Content {
     """Optional number of contents to take."""
     top: Int
   ): ResearchOutputsResultDto
+  """Query Events content items."""
+  referencingEventsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Events!]
+  """Query Events content items with total count."""
+  referencingEventsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): EventsResultDto
   """Query Groups content items."""
   referencingGroupsContents(
     """Optional OData filter."""
@@ -4568,6 +4671,32 @@ type Users implements Content {
     """Optional number of contents to take."""
     top: Int
   ): DiscoverResultDto
+  """Query Events content items."""
+  referencingEventsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Events!]
+  """Query Events content items with total count."""
+  referencingEventsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): EventsResultDto
   """Query Groups content items."""
   referencingGroupsContents(
     """Optional OData filter."""

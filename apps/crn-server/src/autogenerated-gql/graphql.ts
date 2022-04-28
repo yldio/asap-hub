@@ -2106,6 +2106,14 @@ export type Events = Content & {
   referencesCalendarsContents: Maybe<Array<Calendars>>;
   /** Query Calendars content items with total count. */
   referencesCalendarsContentsWithTotal: Maybe<CalendarsResultDto>;
+  /** Query Teams content items. */
+  referencesTeamsContents: Maybe<Array<Teams>>;
+  /** Query Teams content items with total count. */
+  referencesTeamsContentsWithTotal: Maybe<TeamsResultDto>;
+  /** Query Users content items. */
+  referencesUsersContents: Maybe<Array<Users>>;
+  /** Query Users content items with total count. */
+  referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -2127,6 +2135,42 @@ export type EventsReferencesCalendarsContentsArgs = {
 
 /** The structure of a Events content type. */
 export type EventsReferencesCalendarsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencesTeamsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencesTeamsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencesUsersContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencesUsersContentsWithTotalArgs = {
   filter: Maybe<Scalars['String']>;
   orderby: Maybe<Scalars['String']>;
   search: Maybe<Scalars['String']>;
@@ -2171,6 +2215,7 @@ export type EventsDataDto = {
   notesPermanentlyUnavailable: Maybe<EventsDataNotesPermanentlyUnavailableDto>;
   presentation: Maybe<EventsDataPresentationDto>;
   presentationPermanentlyUnavailable: Maybe<EventsDataPresentationPermanentlyUnavailableDto>;
+  speakers: Maybe<EventsDataSpeakersDto>;
   startDate: Maybe<EventsDataStartDateDto>;
   startDateTimeZone: Maybe<EventsDataStartDateTimeZoneDto>;
   status: Maybe<EventsDataStatusDto>;
@@ -2260,6 +2305,7 @@ export type EventsDataInputDto = {
   notesPermanentlyUnavailable: Maybe<EventsDataNotesPermanentlyUnavailableInputDto>;
   presentation: Maybe<EventsDataPresentationInputDto>;
   presentationPermanentlyUnavailable: Maybe<EventsDataPresentationPermanentlyUnavailableInputDto>;
+  speakers: Maybe<EventsDataSpeakersInputDto>;
   startDate: Maybe<EventsDataStartDateInputDto>;
   startDateTimeZone: Maybe<EventsDataStartDateTimeZoneInputDto>;
   status: Maybe<EventsDataStatusInputDto>;
@@ -2362,6 +2408,28 @@ export type EventsDataPresentationPermanentlyUnavailableDto = {
 export type EventsDataPresentationPermanentlyUnavailableInputDto = {
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
   iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Speakers nested schema. */
+export type EventsDataSpeakersChildDto = {
+  team: Maybe<Array<Teams>>;
+  user: Maybe<Array<Users>>;
+};
+
+/** The structure of the Speakers nested schema. */
+export type EventsDataSpeakersChildInputDto = {
+  team: Maybe<Array<Scalars['String']>>;
+  user: Maybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Speakers field of the Events content type. */
+export type EventsDataSpeakersDto = {
+  iv: Maybe<Array<EventsDataSpeakersChildDto>>;
+};
+
+/** The structure of the Speakers field of the Events content input type. */
+export type EventsDataSpeakersInputDto = {
+  iv: Maybe<Array<EventsDataSpeakersChildInputDto>>;
 };
 
 /** The structure of the Start Date field of the Events content type. */
@@ -2472,6 +2540,7 @@ export type EventsFlatDataDto = {
   presentation: Maybe<Scalars['String']>;
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
   presentationPermanentlyUnavailable: Maybe<Scalars['Boolean']>;
+  speakers: Maybe<Array<EventsDataSpeakersChildDto>>;
   startDate: Maybe<Scalars['Instant']>;
   startDateTimeZone: Maybe<Scalars['String']>;
   status: Maybe<Scalars['String']>;
@@ -4078,6 +4147,10 @@ export type Teams = Content & {
   referencesResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
   /** Query Research Outputs content items with total count. */
   referencesResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
+  /** Query Events content items. */
+  referencingEventsContents: Maybe<Array<Events>>;
+  /** Query Events content items with total count. */
+  referencingEventsContentsWithTotal: Maybe<EventsResultDto>;
   /** Query Groups content items. */
   referencingGroupsContents: Maybe<Array<Groups>>;
   /** Query Groups content items with total count. */
@@ -4107,6 +4180,24 @@ export type TeamsReferencesResearchOutputsContentsArgs = {
 
 /** The structure of a Teams content type. */
 export type TeamsReferencesResearchOutputsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Teams content type. */
+export type TeamsReferencingEventsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Teams content type. */
+export type TeamsReferencingEventsContentsWithTotalArgs = {
   filter: Maybe<Scalars['String']>;
   orderby: Maybe<Scalars['String']>;
   search: Maybe<Scalars['String']>;
@@ -4336,6 +4427,10 @@ export type Users = Content & {
   referencingDiscoverContents: Maybe<Array<Discover>>;
   /** Query Discover ASAP content items with total count. */
   referencingDiscoverContentsWithTotal: Maybe<DiscoverResultDto>;
+  /** Query Events content items. */
+  referencingEventsContents: Maybe<Array<Events>>;
+  /** Query Events content items with total count. */
+  referencingEventsContentsWithTotal: Maybe<EventsResultDto>;
   /** Query Groups content items. */
   referencingGroupsContents: Maybe<Array<Groups>>;
   /** Query Groups content items with total count. */
@@ -4401,6 +4496,24 @@ export type UsersReferencingDiscoverContentsArgs = {
 
 /** The structure of a Users content type. */
 export type UsersReferencingDiscoverContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencingEventsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencingEventsContentsWithTotalArgs = {
   filter: Maybe<Scalars['String']>;
   orderby: Maybe<Scalars['String']>;
   search: Maybe<Scalars['String']>;

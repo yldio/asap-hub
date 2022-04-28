@@ -15,7 +15,7 @@ import TeamCreateOutputForm, {
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 
 const props: ComponentProps<typeof TeamCreateOutputForm> = {
-  onSave: jest.fn(),
+  onSave: jest.fn(() => Promise.resolve()),
   tagSuggestions: [],
   documentType: 'Article',
   team: createTeamResponse(),
@@ -96,12 +96,14 @@ it('displays current team within the form', async () => {
 });
 
 describe('on submit', () => {
+  let saveFn = jest.fn(() => promise);
   afterEach(() => {
     jest.resetAllMocks();
+    saveFn = jest.fn(() => promise);
   });
   const getLabSuggestions = jest.fn();
   const getAuthorSuggestions = jest.fn();
-  const saveFn = jest.fn();
+  const promise = Promise.resolve();
   const expectedRequest: ResearchOutputPostRequest = {
     documentType: 'Article',
     tags: [],

@@ -198,6 +198,46 @@
         }
       },
       {
+        "name": "createdBy",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "References",
+          "editor": "List",
+          "maxItems": 1,
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "mustBePublished": false,
+          "schemaIds": ["users"],
+          "label": "Created by"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": true,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "updatedBy",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "References",
+          "editor": "List",
+          "maxItems": 1,
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "mustBePublished": false,
+          "schemaIds": ["users"],
+          "label": "Updated by"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": true,
+        "partitioning": "invariant"
+      },
+      {
         "name": "link",
         "isHidden": false,
         "isLocked": false,

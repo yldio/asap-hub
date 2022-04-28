@@ -3656,6 +3656,16 @@ export type ResearchOutputsDataAuthorsInputDto = {
 
 export type ResearchOutputsDataAuthorsUnionDto = ExternalAuthors | Users;
 
+/** The structure of the Created by field of the Research Outputs content type. */
+export type ResearchOutputsDataCreatedByDto = {
+  iv: Maybe<Array<Users>>;
+};
+
+/** The structure of the Created by field of the Research Outputs content input type. */
+export type ResearchOutputsDataCreatedByInputDto = {
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
 /** The structure of the Description field of the Research Outputs content type. */
 export type ResearchOutputsDataDescriptionDto = {
   /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
@@ -3698,6 +3708,7 @@ export type ResearchOutputsDataDto = {
   adminNotes: Maybe<ResearchOutputsDataAdminNotesDto>;
   asapFunded: Maybe<ResearchOutputsDataAsapFundedDto>;
   authors: Maybe<ResearchOutputsDataAuthorsDto>;
+  createdBy: Maybe<ResearchOutputsDataCreatedByDto>;
   description: Maybe<ResearchOutputsDataDescriptionDto>;
   documentType: Maybe<ResearchOutputsDataDocumentTypeDto>;
   doi: Maybe<ResearchOutputsDataDoiDto>;
@@ -3712,6 +3723,7 @@ export type ResearchOutputsDataDto = {
   tags: Maybe<ResearchOutputsDataTagsDto>;
   title: Maybe<ResearchOutputsDataTitleDto>;
   type: Maybe<ResearchOutputsDataTypeDto>;
+  updatedBy: Maybe<ResearchOutputsDataUpdatedByDto>;
   usedInAPublication: Maybe<ResearchOutputsDataUsedInAPublicationDto>;
 };
 
@@ -3723,6 +3735,7 @@ export type ResearchOutputsDataInputDto = {
   adminNotes: Maybe<ResearchOutputsDataAdminNotesInputDto>;
   asapFunded: Maybe<ResearchOutputsDataAsapFundedInputDto>;
   authors: Maybe<ResearchOutputsDataAuthorsInputDto>;
+  createdBy: Maybe<ResearchOutputsDataCreatedByInputDto>;
   description: Maybe<ResearchOutputsDataDescriptionInputDto>;
   documentType: Maybe<ResearchOutputsDataDocumentTypeInputDto>;
   doi: Maybe<ResearchOutputsDataDoiInputDto>;
@@ -3737,6 +3750,7 @@ export type ResearchOutputsDataInputDto = {
   tags: Maybe<ResearchOutputsDataTagsInputDto>;
   title: Maybe<ResearchOutputsDataTitleInputDto>;
   type: Maybe<ResearchOutputsDataTypeInputDto>;
+  updatedBy: Maybe<ResearchOutputsDataUpdatedByInputDto>;
   usedInAPublication: Maybe<ResearchOutputsDataUsedInAPublicationInputDto>;
 };
 
@@ -3858,6 +3872,16 @@ export type ResearchOutputsDataTypeInputDto = {
   iv: Maybe<Scalars['String']>;
 };
 
+/** The structure of the Updated by field of the Research Outputs content type. */
+export type ResearchOutputsDataUpdatedByDto = {
+  iv: Maybe<Array<Users>>;
+};
+
+/** The structure of the Updated by field of the Research Outputs content input type. */
+export type ResearchOutputsDataUpdatedByInputDto = {
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
 /** The structure of the Used in a Publication field of the Research Outputs content type. */
 export type ResearchOutputsDataUsedInAPublicationDto = {
   /** "Not sure" will not be shown on the Hub */
@@ -3883,6 +3907,7 @@ export type ResearchOutputsFlatDataDto = {
   /** "Not sure" will not be shown on the Hub */
   asapFunded: Maybe<Scalars['String']>;
   authors: Maybe<Array<ResearchOutputsDataAuthorsUnionDto>>;
+  createdBy: Maybe<Array<Users>>;
   /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
   description: Maybe<Scalars['String']>;
   documentType: Maybe<Scalars['String']>;
@@ -3903,6 +3928,7 @@ export type ResearchOutputsFlatDataDto = {
   tags: Maybe<Array<Scalars['String']>>;
   title: Maybe<Scalars['String']>;
   type: Maybe<Scalars['String']>;
+  updatedBy: Maybe<Array<Users>>;
   /** "Not sure" will not be shown on the Hub */
   usedInAPublication: Maybe<Scalars['String']>;
 };

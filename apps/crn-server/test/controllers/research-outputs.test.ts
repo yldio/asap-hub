@@ -1,3 +1,4 @@
+import { DocumentNode, print } from 'graphql';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { config, SquidexGraphqlError } from '@asap-hub/squidex';
 import nock from 'nock';
@@ -8,6 +9,8 @@ import {
 import ResearchOutputs, {
   ResearchOutputInputData,
 } from '../../src/controllers/research-outputs';
+import { FETCH_RESEARCH_OUTPUTS } from '../../src/queries/research-outputs.queries';
+import { FETCH_RESEARCH_TAGS } from '../../src/queries/research-tags.queries';
 import {
   getListResearchOutputResponse,
   getResearchOutputRequest,
@@ -15,6 +18,7 @@ import {
   getSquidexResearchOutputGraphqlResponse,
   getSquidexResearchOutputsGraphqlResponse,
 } from '../fixtures/research-output.fixtures';
+import { getSquidexResearchTagsGraphqlResponse } from '../fixtures/research-tag.fixtures';
 import { getSquidexGraphqlTeam } from '../fixtures/teams.fixtures';
 import {
   getGraphqlResponseFetchUsers,
@@ -708,12 +712,24 @@ describe('ResearchOutputs controller', () => {
 
   describe('Create', () => {
     beforeEach(() => {
-      const squidexGraphqlEmptyResponse: FetchResearchOutputsQuery = {
-        queryResearchOutputsContentsWithTotal: null,
-      };
-      squidexGraphqlClientMock.request.mockResolvedValue(
-        squidexGraphqlEmptyResponse,
-      );
+      const squidexResearchOutputEmptyGraphqlResponse: FetchResearchOutputsQuery =
+        {
+          queryResearchOutputsContentsWithTotal: null,
+        };
+      const squidexResearchTagsGraphqlResponse =
+        getSquidexResearchTagsGraphqlResponse();
+
+      squidexGraphqlClientMock.request.mockImplementation(async (query) => {
+        if (print(query as DocumentNode) === print(FETCH_RESEARCH_OUTPUTS)) {
+          return squidexResearchOutputEmptyGraphqlResponse;
+        }
+
+        if (print(query as DocumentNode) === print(FETCH_RESEARCH_TAGS)) {
+          return squidexResearchTagsGraphqlResponse;
+        }
+
+        throw new Error('Unexpected query');
+      });
     });
 
     afterEach(() => {
@@ -744,6 +760,9 @@ describe('ResearchOutputs controller', () => {
           usedInAPublication: { iv: 'Not Sure' },
           labs: { iv: ['lab1'] },
           authors: { iv: [] },
+          methods: {
+            iv: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
+          },
         })
         .reply(201, { id: researchOutputId })
         .get(`/api/content/${config.appName}/teams/${teamId}`)
@@ -859,6 +878,18 @@ describe('ResearchOutputs controller', () => {
       );
     });
 
+    test('Should throw a validation error when the selected method does not exist', async () => {
+      const researchOutputInputData = getResearchOutputInputData();
+      researchOutputInputData.methods = [
+        'Activity Assay',
+        'non-existent-method',
+      ];
+
+      await expect(
+        researchOutputs.create(researchOutputInputData),
+      ).rejects.toThrow('Validation error');
+    });
+
     test('Should throw when fails to create the research output - 400', async () => {
       const researchOutputRequest = getResearchOutputInputData();
 
@@ -954,6 +985,9 @@ describe('ResearchOutputs controller', () => {
           asapFunded: { iv: 'Not Sure' },
           usedInAPublication: { iv: 'Not Sure' },
           authors: { iv: ['user-1', 'author-1', 'author-2'] },
+          methods: {
+            iv: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
+          },
         })
         .reply(201, { id: researchOutputId });
 
@@ -975,6 +1009,7 @@ describe('ResearchOutputs controller', () => {
         }),
       ).rejects.toThrow('Bad Request');
     });
+
     test('Should throw when cannot create an external author - 500', async () => {
       const researchOutputRequest = {
         ...getResearchOutputInputData(),

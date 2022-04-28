@@ -196,5 +196,5 @@ export const getResearchOutputRequest = (): ResearchOutputPostRequest => ({
   type: '3D Printing',
   labs: ['lab1'],
   publishDate: undefined,
-  methods: ['Activity Assay', 'RNA Single Cell'],
+  methods: ['Activity Assay'],
 });

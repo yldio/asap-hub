@@ -164,11 +164,9 @@ describe('on submit', () => {
   const submitForm = async () => {
     userEvent.click(screen.getByRole('button', { name: /Share/i }));
 
-    waitFor(() => {
-      expect(screen.getByRole('button', { name: /Share/i })).toBeDisabled();
-      expect(screen.getByRole('button', { name: /Cancel/i })).toBeDisabled();
-    });
-    return act(async () =>
+    expect(screen.getByRole('button', { name: /Share/i })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /Cancel/i })).toBeDisabled();
+    await act(async () =>
       waitFor(() => {
         expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
         expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();

@@ -196,6 +196,19 @@ describe('ResearchOutputs controller', () => {
       expect(result.authors).toEqual([]);
     });
 
+    test('Should default methods to an empty array when missing', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.methods =
+        null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+
+      expect(result.methods).toEqual([]);
+    });
+
     test('Should skip the lab when the name is empty', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       squidexGraphqlResponse.findResearchOutputsContent!.flatData.labs = [

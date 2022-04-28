@@ -53,16 +53,20 @@ const mockToast = jest.fn() as jest.MockedFunction<
   ContextType<typeof ToastContext>
 >;
 
-const renderUserProfile = async (
+const renderUserProfile = async ({
   userResponse = createUserResponse(),
-  { ownUserId = userResponse.id, routeProfileId = userResponse.id } = {},
-  auth0Overrides:
-    | undefined
-    | ((
-        auth0Client?: Auth0Client,
-        auth0User?: Auth0User,
-      ) => Partial<Auth0>) = undefined,
-) => {
+  ownUserId = userResponse.id,
+  routeProfileId = userResponse.id,
+  auth0Overrides,
+}: {
+  userResponse?: UserResponse;
+  ownUserId?: string;
+  routeProfileId?: string;
+  auth0Overrides?: (
+    auth0Client?: Auth0Client,
+    auth0User?: Auth0User,
+  ) => Partial<Auth0>;
+} = {}) => {
   mockGetUser.mockImplementation(async (id) =>
     id === userResponse.id ? userResponse : undefined,
   );
@@ -119,24 +123,30 @@ const renderUserProfile = async (
 jest.retryTimes(3);
 it('renders the personal info', async () => {
   const { findByText } = await renderUserProfile({
-    ...createUserResponse(),
-    displayName: 'Someone',
+    userResponse: {
+      ...createUserResponse(),
+      displayName: 'Someone',
+    },
   });
   expect((await findByText('Someone')).tagName).toBe('H1');
 });
 
 it('by default renders the research tab', async () => {
   const { findByText } = await renderUserProfile({
-    ...createUserResponse(),
-    questions: ['What?'],
+    userResponse: {
+      ...createUserResponse(),
+      questions: ['What?'],
+    },
   });
   expect(await findByText('What?')).toBeVisible();
 });
 
 it('navigates to the background tab', async () => {
   const { findByText } = await renderUserProfile({
-    ...createUserResponse(),
-    biography: 'My Bio',
+    userResponse: {
+      ...createUserResponse(),
+      biography: 'My Bio',
+    },
   });
 
   userEvent.click(await findByText(/background/i, { selector: 'nav *' }));
@@ -151,9 +161,9 @@ it('navigates to the outputs tab', async () => {
       title: `Test Output ${index}`,
     })),
   });
-  const { findByText, findByRole } = await renderUserProfile(
-    createUserResponse(),
-  );
+  const { findByText, findByRole } = await renderUserProfile({
+    userResponse: createUserResponse(),
+  });
 
   userEvent.click(await findByText(/output/i, { selector: 'nav *' }));
   expect(await findByRole('searchbox')).toHaveAttribute(
@@ -165,14 +175,16 @@ it('navigates to the outputs tab', async () => {
 
 it("links to the user's team", async () => {
   const { findByText } = await renderUserProfile({
-    ...createUserResponse(),
-    teams: [
-      {
-        ...createUserTeams({ teams: 1 })[0],
-        id: '42',
-        displayName: 'Kool Krew',
-      },
-    ],
+    userResponse: {
+      ...createUserResponse(),
+      teams: [
+        {
+          ...createUserTeams({ teams: 1 })[0],
+          id: '42',
+          displayName: 'Kool Krew',
+        },
+      ],
+    },
   });
   expect(
     (
@@ -182,22 +194,22 @@ it("links to the user's team", async () => {
 });
 
 it('renders the 404 page for a missing user', async () => {
-  const { findByText } = await renderUserProfile(
-    {
+  const { findByText } = await renderUserProfile({
+    userResponse: {
       ...createUserResponse(),
       id: '42',
     },
-    { routeProfileId: '1337' },
-  );
+    routeProfileId: '1337',
+  });
   expect(await findByText(/sorry.+page/i)).toBeVisible();
 });
 
 describe('a header edit button', () => {
   it("is not rendered on someone else's profile", async () => {
-    const { queryByText, queryByLabelText } = await renderUserProfile(
-      { ...createUserResponse(), id: '42' },
-      { ownUserId: '1337' },
-    );
+    const { queryByText, queryByLabelText } = await renderUserProfile({
+      userResponse: { ...createUserResponse(), id: '42' },
+      ownUserId: '1337',
+    });
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -221,7 +233,7 @@ describe('a header edit button', () => {
   });
 
   it('can change personal info', async () => {
-    const userProfile: UserResponse = {
+    const userResponse: UserResponse = {
       ...createUserResponse(),
       city: 'Lon',
       country: 'United Kingdom of Great Britain and Northern Ireland',
@@ -229,7 +241,7 @@ describe('a header edit button', () => {
     };
 
     const { getByText, findByText, findByLabelText, findByDisplayValue } =
-      await renderUserProfile(userProfile);
+      await renderUserProfile({ userResponse });
 
     userEvent.click(await findByLabelText(/edit.+personal/i));
     userEvent.type(await findByDisplayValue('Lon'), 'don');
@@ -245,13 +257,13 @@ describe('a header edit button', () => {
   });
 
   it('remains on the same tab after closing a modal', async () => {
-    const userProfile: UserResponse = {
+    const userResponse: UserResponse = {
       ...createUserResponse(),
       biography: 'My Bio',
     };
 
     const { getByText, getByTitle, queryByText, findByLabelText, findByText } =
-      await renderUserProfile(userProfile);
+      await renderUserProfile({ userResponse });
 
     // Open and close on research tab
     userEvent.click(await findByText(/research/i, { selector: 'nav *' }));
@@ -276,13 +288,13 @@ describe('a header edit button', () => {
   });
 
   it('can change contact info', async () => {
-    const userProfile: UserResponse = {
+    const userResponse: UserResponse = {
       ...createUserResponse(),
       contactEmail: 'contact@example.com',
       id: '42',
     };
     const { getByText, findByText, findByLabelText, findByDisplayValue } =
-      await renderUserProfile(userProfile);
+      await renderUserProfile({ userResponse });
 
     userEvent.click(await findByLabelText(/edit.+contact/i));
     userEvent.type(await findByDisplayValue('contact@example.com'), 'm');
@@ -302,14 +314,13 @@ describe('a header edit button', () => {
   });
 
   it('refreshes auth0 id token', async () => {
-    const userProfile: UserResponse = {
+    const userResponse: UserResponse = {
       ...createUserResponse(),
     };
     const mockToken = jest.fn().mockResolvedValue('token');
-    const { getByText, findByLabelText } = await renderUserProfile(
-      userProfile,
-      {},
-      (authClient, user) => ({
+    const { getByText, findByLabelText } = await renderUserProfile({
+      userResponse,
+      auth0Overrides: (authClient, user) => ({
         getTokenSilently:
           authClient && user
             ? mockToken
@@ -317,7 +328,7 @@ describe('a header edit button', () => {
                 throw new Error('Not Ready');
               },
       }),
-    );
+    });
     userEvent.click(await findByLabelText(/edit.+contact/i));
 
     userEvent.click(getByText(/save/i));

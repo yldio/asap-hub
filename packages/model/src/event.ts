@@ -1,6 +1,7 @@
 import { CalendarResponse } from './calendar';
 import { GroupResponse } from './group';
 import { ListResponse } from './common';
+import { TeamResponse } from './team';
 
 export const MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT: number = 24;
 export const EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT: number = 1;
@@ -8,6 +9,20 @@ export const EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT: number = 5;
 
 export const eventStatus = ['Confirmed', 'Tentative', 'Cancelled'] as const;
 export type EventStatus = typeof eventStatus[number];
+
+export interface EventSpeakerUser {
+  id: string;
+  firstName?: string;
+  lastName?: string;
+  displayName: string;
+  avatarUrl?: string;
+}
+
+export interface EventSpeaker {
+  team: Pick<TeamResponse, 'displayName' | 'id'>;
+  user?: EventSpeakerUser;
+  role?: string;
+}
 
 export interface EventResponse {
   id: string;
@@ -40,6 +55,8 @@ export interface EventResponse {
 
   calendar: CalendarResponse;
   group?: GroupResponse;
+
+  speakers: EventSpeaker[];
 }
 
 export type ListEventResponse = ListResponse<EventResponse>;

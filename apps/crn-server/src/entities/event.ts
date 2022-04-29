@@ -2,6 +2,7 @@
 import { DateTime } from 'luxon';
 import {
   EventResponse,
+  EventSpeaker,
   MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT,
   isEventStatus,
 } from '@asap-hub/model';
@@ -23,6 +24,52 @@ export const getMeetingMaterial = <T>(
   }
   return isEmpty ? emptyState : material;
 };
+
+export const parseEventSpeaker = (
+  user: NonNullable<
+    NonNullable<
+      NonNullable<EventContentFragment['flatData']['speakers']>[number]['user']
+    >[number]
+  >,
+): EventSpeaker['user'] => {
+  const flatAvatar = user.flatData.avatar || [];
+
+  return {
+    id: user.id,
+    firstName: user.flatData.firstName ?? undefined,
+    lastName: user.flatData.lastName ?? undefined,
+    displayName: `${user.flatData.firstName} ${user.flatData.lastName}`,
+    avatarUrl: flatAvatar.length
+      ? createURL(flatAvatar.map((a) => a.id))[0]
+      : undefined,
+  };
+};
+
+export const parseGraphQLSpeakers = (
+  speakers: NonNullable<EventContentFragment['flatData']['speakers']>,
+): EventSpeaker[] =>
+  speakers.map((speaker) => {
+    const team = speaker?.team?.[0];
+    const user = speaker?.user?.[0];
+
+    if (!team) {
+      throw new Error('Team is required in event speaker');
+    }
+
+    const role =
+      user?.flatData.teams
+        ?.filter((t) => t.id && t.id[0]?.id === team.id)
+        .filter((s) => s.role)[0]?.role || undefined;
+
+    return {
+      team: {
+        id: team.id,
+        displayName: team.flatData.displayName ?? '',
+      },
+      user: (user && parseEventSpeaker(user)) || undefined,
+      role,
+    };
+  });
 
 export const parseGraphQLEvent = (
   item: EventContentFragment,
@@ -48,6 +95,8 @@ export const parseGraphQLEvent = (
   const thumbnail = item.flatData.thumbnail?.length
     ? createURL(item.flatData.thumbnail.map((t) => t.id))[0]
     : group?.thumbnail;
+
+  const speakers = parseGraphQLSpeakers(item.flatData.speakers ?? []);
 
   const endDate = DateTime.fromISO(item.flatData.endDate);
   const isStale = endDate.diffNow('days').get('days') < -14; // 14 days have passed after the event
@@ -112,5 +161,6 @@ export const parseGraphQLEvent = (
     tags: item.flatData.tags ?? [],
     calendar,
     group,
+    speakers,
   };
 };

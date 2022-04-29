@@ -203,7 +203,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       ),
     );
 
-    return { id: researchOutputId };
+    return this.fetchById(researchOutputId);
   }
 
   private async createResearchOutput({

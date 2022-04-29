@@ -1,4 +1,8 @@
-import { ListResearchTagResponse } from '@asap-hub/model';
+import {
+  isResearchTagCategory,
+  isResearchTagEntity,
+  ListResearchTagResponse,
+} from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import {
   FetchResearchTagsQuery,
@@ -56,13 +60,29 @@ export default class ResearchTags implements ResearchTagController {
 
     return {
       total,
-      items: researchTags.map((item) => ({
-        id: item.id,
-        name: item.flatData.name || '',
-        category: item.flatData.category || undefined,
-        types: item.flatData.types || undefined,
-        entities: item.flatData.entities || undefined,
-      })),
+      items: researchTags.map((item) => {
+        if (
+          item.flatData.category !== null &&
+          !isResearchTagCategory(item.flatData.category)
+        ) {
+          throw new TypeError('Invalid category received from Squidex');
+        }
+
+        if (
+          item.flatData.entities &&
+          !item.flatData.entities.every(isResearchTagEntity)
+        ) {
+          throw new TypeError('Invalid entity received from Squidex');
+        }
+
+        return {
+          id: item.id,
+          name: item.flatData.name || '',
+          category: item.flatData.category || undefined,
+          types: item.flatData.types || undefined,
+          entities: item.flatData.entities || undefined,
+        };
+      }),
     };
   }
 }

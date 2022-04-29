@@ -4,7 +4,7 @@ import { getListResearchTagResponse } from '../fixtures/research-tag.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { researchTagControllerMock } from '../mocks/research-tags-controller.mock';
 
-describe('/research-outputs/ route', () => {
+describe('/research-tags/ route', () => {
   const app = appFactory({
     authHandler: authHandlerMock,
     researchTagController: researchTagControllerMock,
@@ -14,8 +14,8 @@ describe('/research-outputs/ route', () => {
     jest.resetAllMocks();
   });
 
-  describe('GET /research-outputs', () => {
-    test('Should return 200 when no research output exists', async () => {
+  describe('GET /research-tags', () => {
+    test('Should return 200 when no research tags exist', async () => {
       researchTagControllerMock.fetch.mockResolvedValueOnce({
         items: [],
         total: 0,

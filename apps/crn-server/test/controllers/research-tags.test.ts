@@ -66,6 +66,34 @@ describe('ResearchTags controller', () => {
       expect(result).toEqual({ total: 0, items: [] });
     });
 
+    test('Should throw an error when squidex returns an invalid category', async () => {
+      const squidexGraphqlResponse = getSquidexResearchTagsGraphqlResponse();
+      squidexGraphqlResponse.queryResearchTagsContentsWithTotal!.items![0]!.flatData.category =
+        'invalid category';
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      await expect(
+        researchTags.fetch({ take: 10, skip: 5 }),
+      ).rejects.toThrowError(
+        TypeError('Invalid category received from Squidex'),
+      );
+    });
+
+    test('Should throw an error when squidex returns an invalid entity', async () => {
+      const squidexGraphqlResponse = getSquidexResearchTagsGraphqlResponse();
+      squidexGraphqlResponse.queryResearchTagsContentsWithTotal!.items![0]!.flatData.entities =
+        ['Research Output', 'invalid entity'];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      await expect(
+        researchTags.fetch({ take: 10, skip: 5 }),
+      ).rejects.toThrowError(TypeError('Invalid entity received from Squidex'));
+    });
+
     describe('Parameters', () => {
       beforeEach(() => {
         squidexGraphqlClientMock.request.mockResolvedValueOnce(

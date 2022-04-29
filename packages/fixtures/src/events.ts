@@ -33,6 +33,39 @@ export const createEventResponse = (
     title: `Material ${i + 1}`,
     url: `https://example.com/materials/${i}`,
   })),
+  speakers: [
+    {
+      team: {
+        id: 'team-id-1',
+        displayName: 'The team one',
+      },
+    },
+    {
+      team: {
+        id: 'team-id-2',
+        displayName: 'The team two',
+      },
+      user: {
+        id: 'user-id-2',
+        firstName: 'Johny',
+        lastName: 'Sims',
+        displayName: 'Johny Sims',
+      },
+    },
+    {
+      team: {
+        id: 'team-id-3',
+        displayName: 'The team three',
+      },
+      user: {
+        id: 'user-id-3',
+        firstName: 'Adam',
+        lastName: 'Brown',
+        displayName: 'Adam Brown',
+      },
+      role: 'Lead PI (Core Leadership)',
+    },
+  ],
 });
 
 export const createListEventResponse = (

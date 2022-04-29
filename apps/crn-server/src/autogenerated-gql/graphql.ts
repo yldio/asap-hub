@@ -5538,6 +5538,33 @@ export type EventContentFragment = Pick<
       }>
     >;
     thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
+    speakers: Maybe<
+      Array<{
+        team: Maybe<
+          Array<
+            Pick<Teams, 'id'> & {
+              flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+            }
+          >
+        >;
+        user: Maybe<
+          Array<
+            Pick<Users, 'id'> & {
+              flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
+                avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                teams: Maybe<
+                  Array<
+                    Pick<UsersDataTeamsChildDto, 'role'> & {
+                      id: Maybe<Array<Pick<Teams, 'id'>>>;
+                    }
+                  >
+                >;
+              };
+            }
+          >
+        >;
+      }>
+    >;
   };
 };
 
@@ -5882,6 +5909,36 @@ export type FetchEventsQuery = {
                 }>
               >;
               thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
+              speakers: Maybe<
+                Array<{
+                  team: Maybe<
+                    Array<
+                      Pick<Teams, 'id'> & {
+                        flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                      }
+                    >
+                  >;
+                  user: Maybe<
+                    Array<
+                      Pick<Users, 'id'> & {
+                        flatData: Pick<
+                          UsersFlatDataDto,
+                          'firstName' | 'lastName'
+                        > & {
+                          avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                          teams: Maybe<
+                            Array<
+                              Pick<UsersDataTeamsChildDto, 'role'> & {
+                                id: Maybe<Array<Pick<Teams, 'id'>>>;
+                              }
+                            >
+                          >;
+                        };
+                      }
+                    >
+                  >;
+                }>
+              >;
             };
           }
         >
@@ -6191,6 +6248,33 @@ export type FetchEventQuery = {
           }>
         >;
         thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
+        speakers: Maybe<
+          Array<{
+            team: Maybe<
+              Array<
+                Pick<Teams, 'id'> & {
+                  flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                }
+              >
+            >;
+            user: Maybe<
+              Array<
+                Pick<Users, 'id'> & {
+                  flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
+                    avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                    teams: Maybe<
+                      Array<
+                        Pick<UsersDataTeamsChildDto, 'role'> & {
+                          id: Maybe<Array<Pick<Teams, 'id'>>>;
+                        }
+                      >
+                    >;
+                  };
+                }
+              >
+            >;
+          }>
+        >;
       };
     }
   >;
@@ -9148,6 +9232,116 @@ export const EventContentFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'speakers' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'team' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'displayName',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'avatar' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'teams' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'role' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },

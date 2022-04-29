@@ -165,7 +165,7 @@ export default class ResearchOutputs implements ResearchOutputController {
         FetchResearchTagsQuery,
         FetchResearchTagsQueryVariables
       >(FETCH_RESEARCH_TAGS, {
-        top: 20,
+        top: 100,
         skip: 0,
       });
 

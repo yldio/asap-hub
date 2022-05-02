@@ -99,6 +99,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/dom-test-utils"
       },
       {
+        "name": "@asap-hub/errors",
+        "reference": "workspace:packages/errors"
+      },
+      {
         "name": "@asap-hub/eslint-config-asap-hub",
         "reference": "workspace:packages/eslint-config-asap-hub"
       },
@@ -159,6 +163,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/crn-server", ["workspace:apps/crn-server"]],
       ["@asap-hub/dom-test-utils", ["workspace:packages/dom-test-utils"]],
       ["@asap-hub/e2e-tests", ["workspace:apps/e2e-tests"]],
+      ["@asap-hub/errors", ["workspace:packages/errors"]],
       ["@asap-hub/eslint-config-asap-hub", ["workspace:packages/eslint-config-asap-hub"]],
       ["@asap-hub/fixtures", ["workspace:packages/fixtures"]],
       ["@asap-hub/flags", ["workspace:packages/flags"]],
@@ -295,6 +300,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@asap-hub/e2e-tests",
         "workspace:apps/e2e-tests"
+      ],
+      [
+        "@asap-hub/errors",
+        "workspace:packages/errors"
       ],
       [
         "@asap-hub/eslint-config-asap-hub",
@@ -10398,6 +10407,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/asap-cli", "workspace:apps/asap-cli"],
             ["@asap-hub/algolia", "workspace:packages/algolia"],
+            ["@asap-hub/errors", "workspace:packages/errors"],
             ["@asap-hub/message-templates", "workspace:packages/message-templates"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/services-common", "workspace:packages/services-common"],
@@ -10589,6 +10599,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@algolia/cli", "npm:4.0.8"],
             ["@asap-hub/algolia", "workspace:packages/algolia"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/errors", "workspace:packages/errors"],
             ["@asap-hub/message-templates", "workspace:packages/message-templates"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/services-common", "workspace:packages/services-common"],
@@ -10711,6 +10722,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@playwright/test", "npm:1.16.3"],
             ["@types/node-fetch", "npm:2.5.10"],
             ["node-fetch", "npm:3.0.0-beta.9"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@asap-hub/errors", [
+        ["workspace:packages/errors", {
+          "packageLocation": "./packages/errors/",
+          "packageDependencies": [
+            ["@asap-hub/errors", "workspace:packages/errors"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@babel/runtime-corejs3", "npm:7.14.0"]
           ],
           "linkType": "SOFT",
         }]
@@ -11283,6 +11305,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/services-common/",
           "packageDependencies": [
             ["@asap-hub/services-common", "workspace:packages/services-common"],
+            ["@asap-hub/errors", "workspace:packages/errors"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],
             ["@hapi/boom", "npm:9.1.2"],
@@ -11318,6 +11341,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/squidex/",
           "packageDependencies": [
             ["@asap-hub/squidex", "workspace:packages/squidex"],
+            ["@asap-hub/errors", "workspace:packages/errors"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],

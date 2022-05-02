@@ -1,4 +1,5 @@
 import nock from 'nock';
+import { GenericError } from '@asap-hub/errors';
 import { config } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import {
@@ -670,7 +671,7 @@ describe('Event controller', () => {
 
       await expect(
         eventsController.create(getEventRestResponse()),
-      ).rejects.toThrow();
+      ).rejects.toThrow(GenericError);
     });
   });
 
@@ -706,7 +707,7 @@ describe('Event controller', () => {
 
       await expect(
         eventsController.update(eventId, { tags: ['kubernetes'] }),
-      ).rejects.toThrow();
+      ).rejects.toThrow(GenericError);
     });
   });
 

@@ -1,5 +1,6 @@
 import nock from 'nock';
 import config from '../src/config';
+import { GenericError } from '@asap-hub/errors';
 import { Squidex } from '../src/rest';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
@@ -21,23 +22,20 @@ describe('squidex wrapper', () => {
     nock.cleanAll();
   });
 
-  it('returns 403 when squidex returns with credentials error', async () => {
+  it('returns GenericError when squidex returns http error', async () => {
     nock(config.baseUrl)
       .delete(`/api/content/${config.appName}/${collection}/42`)
-      .reply(400, {
-        details: 'invalid_client',
-        statusCode: 400,
-      });
+      .reply(401);
 
-    await expect(() => client.delete('42')).rejects.toThrow('Unauthorized');
+    await expect(() => client.delete('42')).rejects.toThrow(GenericError);
   });
 
-  it('returns 500 when squidex returns error', async () => {
+  it('returns GenericError when squidex returns error', async () => {
     nock(config.baseUrl)
       .delete(`/api/content/${config.appName}/${collection}/42`)
       .reply(500);
 
-    await expect(() => client.delete('42')).rejects.toThrow('squidex');
+    await expect(() => client.delete('42')).rejects.toThrow(GenericError);
   });
 
   it('deletes a specific document', async () => {

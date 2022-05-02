@@ -1,4 +1,5 @@
 import { DocumentNode, print } from 'graphql';
+import { NotFoundError, GenericError } from '@asap-hub/errors';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { config, SquidexGraphqlError } from '@asap-hub/squidex';
 import nock from 'nock';
@@ -899,7 +900,7 @@ describe('ResearchOutputs controller', () => {
 
       await expect(
         researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow('Bad Request');
+      ).rejects.toThrow(GenericError);
     });
 
     test('Should throw when fails to create the research output - 500', async () => {
@@ -910,7 +911,7 @@ describe('ResearchOutputs controller', () => {
 
       await expect(
         researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow('Internal Server');
+      ).rejects.toThrow(GenericError);
     });
 
     test('Should throw when research output cannot be found', async () => {
@@ -926,7 +927,7 @@ describe('ResearchOutputs controller', () => {
 
       await expect(
         researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow('Not Found');
+      ).rejects.toThrow(NotFoundError);
     });
 
     test('Should throw when research output association cannot be made', async () => {
@@ -943,7 +944,7 @@ describe('ResearchOutputs controller', () => {
 
       await expect(
         researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow('Internal Server');
+      ).rejects.toThrow(GenericError);
     });
 
     test('Should associate external authors (new and existent)', async () => {
@@ -1007,7 +1008,7 @@ describe('ResearchOutputs controller', () => {
           ...getResearchOutputInputData(),
           authors: [{ externalAuthorName: 'Chris Blue' }],
         }),
-      ).rejects.toThrow('Bad Request');
+      ).rejects.toThrow(GenericError);
     });
 
     test('Should throw when cannot create an external author - 500', async () => {
@@ -1032,7 +1033,7 @@ describe('ResearchOutputs controller', () => {
 
       await expect(
         researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow('Internal Server');
+      ).rejects.toThrow(GenericError);
     });
   });
 });

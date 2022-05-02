@@ -8,6 +8,7 @@
   },
   "include": ["src", "test"],
   "references": [
+    { "path": "../../packages/errors" },
     { "path": "../../packages/message-templates" },
     { "path": "../../packages/model" },
     { "path": "../../packages/services-common" },

@@ -1,3 +1,4 @@
+import { GenericError } from '@asap-hub/errors';
 import nock from 'nock';
 import config from '../src/config';
 import { Squidex } from '../src/rest';
@@ -21,25 +22,25 @@ describe('squidex wrapper', () => {
     nock.cleanAll();
   });
 
-  it('returns 403 when squidex returns with credentials error', async () => {
-    nock(config.baseUrl)
-      .get(`/api/content/${config.appName}/${collection}`)
-      .query(() => true)
-      .reply(400, {
-        details: 'invalid_client',
-        statusCode: 400,
-      });
-
-    await expect(() => client.fetch()).rejects.toThrow('Unauthorized');
-  });
-
-  it('returns 500 when squidex returns error', async () => {
+  it('returns GenericError when squidex returns error', async () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/${collection}`)
       .query(() => true)
       .reply(500);
 
-    await expect(() => client.fetch()).rejects.toThrow('squidex');
+    await expect(() => client.fetch()).rejects.toThrow(GenericError);
+  });
+
+  it('returns GenericError on HTTP error', async () => {
+    nock(config.baseUrl)
+      .get(
+        `/api/content/${config.appName}/${collection}?q=${JSON.stringify({
+          take: 8,
+        })}`,
+      )
+      .reply(401);
+
+    await expect(() => client.fetch()).rejects.toThrow(GenericError);
   });
 
   it('returns a list of documents', async () => {

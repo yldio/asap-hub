@@ -1,4 +1,5 @@
 import nock from 'nock';
+import { NotFoundError } from '@asap-hub/errors';
 import { config } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import News from '../../src/controllers/news';
@@ -122,7 +123,7 @@ describe('News controller', () => {
         .get(`/api/content/${config.appName}/news-and-events/${id}`)
         .reply(404);
 
-      await expect(news.fetchById(id)).rejects.toThrow('Not Found');
+      await expect(news.fetchById(id)).rejects.toThrow(NotFoundError);
     });
 
     test('Should return the result when the news and event exists', async () => {

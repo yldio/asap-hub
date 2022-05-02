@@ -1,8 +1,10 @@
 import supertest from 'supertest';
+import { HTTPError, Response } from 'got';
 import { Router } from 'express';
 import { appFactory } from '../../src/app';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
+import { NotFoundError, ValidationError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 
 class CustomError extends Error {
@@ -77,6 +79,43 @@ describe('Error handling', () => {
       message: 'Validation error',
       statusCode: 400,
       data: validationErrors,
+    });
+  });
+
+  describe('Asap error handling', () => {
+    errorRoutes.get('/asap/validation', async () => {
+      throw new ValidationError(new HTTPError({} as Response));
+    });
+    errorRoutes.get('/asap/notfound', async () => {
+      throw new NotFoundError(new HTTPError({} as Response));
+    });
+
+    test('404 on Not Found Error', async () => {
+      const response = await supertest(app).get('/asap/notfound');
+
+      expect(loggerMock.error).toHaveBeenCalledWith(expect.any(NotFoundError));
+
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual({
+        error: 'Not Found',
+        message: 'Not Found',
+        statusCode: 404,
+      });
+    });
+
+    test('400 on Validation Error', async () => {
+      const response = await supertest(app).get('/asap/validation');
+
+      expect(loggerMock.error).toHaveBeenCalledWith(
+        expect.any(ValidationError),
+      );
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        error: 'Bad Request',
+        message: 'Validation Error',
+        statusCode: 400,
+      });
     });
   });
 });

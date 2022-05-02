@@ -1,3 +1,4 @@
+import { GenericError, NotFoundError, ValidationError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 import Bourne from '@hapi/bourne';
 import Intercept from 'apr-intercept';
@@ -55,7 +56,7 @@ export const response = (
 const handlerError = (error: Error): APIGatewayProxyResultV2 => {
   debug('Error caught on request', error);
 
-  // Squidex errors
+  // Squidex GOT errors
   const err = error as HTTPError;
   if (err.response && err.response.body) {
     try {
@@ -77,6 +78,34 @@ const handlerError = (error: Error): APIGatewayProxyResultV2 => {
         statusCode: err.response.statusCode,
         body: JSON.stringify({ message: 'Unable to parse error message' }),
         headers: { 'content-type': 'application/json' },
+      });
+    }
+  }
+
+  if (err instanceof GenericError) {
+    if (err instanceof NotFoundError) {
+      return response({
+        statusCode: 404,
+        body: JSON.stringify({
+          error: 'Not Found',
+          statusCode: 404,
+        }),
+        headers: {
+          'content-type': 'application/json',
+        },
+      });
+    }
+
+    if (err instanceof ValidationError) {
+      return response({
+        statusCode: 400,
+        body: JSON.stringify({
+          error: 'Bad Request',
+          statusCode: 400,
+        }),
+        headers: {
+          'content-type': 'application/json',
+        },
       });
     }
   }

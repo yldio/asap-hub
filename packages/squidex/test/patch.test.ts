@@ -1,3 +1,4 @@
+import { GenericError, NotFoundError } from '@asap-hub/errors';
 import nock from 'nock';
 import config from '../src/config';
 import { Squidex } from '../src/rest';
@@ -21,7 +22,7 @@ describe('squidex wrapper', () => {
     nock.cleanAll();
   });
 
-  it('returns 400 when squidex returns bad request', async () => {
+  it('returns GenericError when squidex returns bad request', async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/${collection}/42`)
       .query(() => true)
@@ -36,16 +37,13 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow('Bad Request');
+    ).rejects.toThrow(GenericError);
   });
 
-  it('returns 403 when squidex returns with credentials error', async () => {
+  it('returns GenericError when squidex returns with unparsable content', async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/${collection}/42`)
-      .reply(400, {
-        details: 'invalid_client',
-        statusCode: 400,
-      });
+      .reply(200, 'unparsable}json');
 
     await expect(() =>
       client.patch('42', {
@@ -53,10 +51,10 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow('Unauthorized');
+    ).rejects.toThrow(GenericError);
   });
 
-  it('returns 404 when document doesnt exist', async () => {
+  it('returns NotFoundError when document doesnt exist', async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/${collection}/42`)
       .reply(404);
@@ -67,10 +65,10 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow('Not Found');
+    ).rejects.toThrow(NotFoundError);
   });
 
-  it('returns 500 when squidex returns error', async () => {
+  it('returns GenericError when squidex returns error', async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/${collection}/42`)
       .reply(500);
@@ -81,7 +79,7 @@ describe('squidex wrapper', () => {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow('squidex');
+    ).rejects.toThrow(GenericError);
   });
 
   it('patch a specific document based on filter', async () => {

@@ -1,22 +1,25 @@
 import {
-  atomFamily,
-  selectorFamily,
-  useRecoilValue,
-  DefaultValue,
-  useRecoilState,
-} from 'recoil';
-import {
   ListResearchOutputResponse,
+  ResearchOutputPostRequest,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-
+import {
+  atomFamily,
+  DefaultValue,
+  selector,
+  selectorFamily,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+} from 'recoil';
+import { authorizationState } from '../auth/state';
+import { useAlgolia } from '../hooks/algolia';
+import { createTeamResearchOutput } from '../network/teams/api';
 import {
   getResearchOutput,
   getResearchOutputs,
   ResearchOutputListOptions,
 } from './api';
-import { authorizationState } from '../auth/state';
-import { useAlgolia } from '../hooks/algolia';
 
 const researchOutputIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -118,4 +121,31 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
     throw researchOutputs;
   }
   return researchOutputs;
+};
+
+export const setResearchOutput = selector<ResearchOutputResponse | undefined>({
+  key: 'setResearchOutput',
+  get: ({ get }) => get(researchOutputState('te')),
+  set: ({ set }, researchOutput) => {
+    if (
+      researchOutput instanceof DefaultValue ||
+      researchOutput === undefined
+    ) {
+      return;
+    }
+    set(researchOutputState(researchOutput.id), researchOutput);
+  },
+});
+
+export const usePostTeamResearchOutput = () => {
+  const authorization = useRecoilValue(authorizationState);
+  const setResearchOutputItem = useSetRecoilState(setResearchOutput);
+  return async (payload: ResearchOutputPostRequest) => {
+    const researchOutput = await createTeamResearchOutput(
+      payload,
+      authorization,
+    );
+    setResearchOutputItem(researchOutput);
+    return researchOutput;
+  };
 };

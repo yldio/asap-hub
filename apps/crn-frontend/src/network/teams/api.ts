@@ -7,10 +7,10 @@ import {
   TeamResponse,
 } from '@asap-hub/model';
 import {
+  BackendError,
   createListApiUrl,
   createSentryHeaders,
   GetListOptions,
-  BackendError,
 } from '../../api-util';
 import { API_BASE_URL } from '../../config';
 
@@ -73,7 +73,7 @@ export const patchTeam = async (
 export const createTeamResearchOutput = async (
   researchOutput: ResearchOutputPostRequest,
   authorization: string,
-): Promise<Pick<ResearchOutputResponse, 'id'>> => {
+): Promise<ResearchOutputResponse> => {
   const resp = await fetch(`${API_BASE_URL}/research-outputs`, {
     method: 'POST',
     headers: {

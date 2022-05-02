@@ -7122,6 +7122,7 @@ export type ResearchOutputContentFragment = Pick<
     labs: Maybe<
       Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
     >;
+    methods: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
   };
   referencingTeamsContents?: Maybe<
     Array<
@@ -7274,6 +7275,9 @@ export type FetchResearchOutputQuery = {
         >;
         labs: Maybe<
           Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
+        >;
+        methods: Maybe<
+          Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
         >;
       };
       referencingTeamsContents?: Maybe<
@@ -7443,6 +7447,9 @@ export type FetchResearchOutputsQuery = {
                   Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }
                 >
               >;
+              methods: Maybe<
+                Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
+              >;
             };
             referencingTeamsContents?: Maybe<
               Array<
@@ -7463,6 +7470,35 @@ export type FetchResearchOutputsQuery = {
                   >;
                 }
               >
+            >;
+          }
+        >
+      >;
+    }
+  >;
+};
+
+export type ResearchTagContentFragment = Pick<ResearchTags, 'id'> & {
+  flatData: Pick<
+    ResearchTagsFlatDataDto,
+    'name' | 'category' | 'types' | 'entities'
+  >;
+};
+
+export type FetchResearchTagsQueryVariables = Exact<{
+  top: Maybe<Scalars['Int']>;
+  skip: Maybe<Scalars['Int']>;
+}>;
+
+export type FetchResearchTagsQuery = {
+  queryResearchTagsContentsWithTotal: Maybe<
+    Pick<ResearchTagsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<ResearchTags, 'id'> & {
+            flatData: Pick<
+              ResearchTagsFlatDataDto,
+              'name' | 'category' | 'types' | 'entities'
             >;
           }
         >
@@ -9791,6 +9827,28 @@ export const ResearchOutputContentFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'methods' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -9892,6 +9950,38 @@ export const ResearchOutputContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ResearchOutputContentFragment, unknown>;
+export const ResearchTagContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ResearchTagContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ResearchTags' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'category' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'types' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'entities' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ResearchTagContentFragment, unknown>;
 export const UsersContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -11437,6 +11527,78 @@ export const FetchResearchOutputsDocument = {
 } as unknown as DocumentNode<
   FetchResearchOutputsQuery,
   FetchResearchOutputsQueryVariables
+>;
+export const FetchResearchTagsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchResearchTags' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'top' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryResearchTagsContentsWithTotal' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'top' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ResearchTagContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ResearchTagContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchResearchTagsQuery,
+  FetchResearchTagsQueryVariables
 >;
 export const FetchTeamDocument = {
   kind: 'Document',

@@ -76,6 +76,10 @@ export const researchOutputToCSV = (
   id: output.id,
   created: output.created,
   lastModifiedDate: output.lastModifiedDate,
+  methods: output.methods
+    .map((item) => item)
+    .sort(caseInsensitive)
+    .join(','),
 });
 
 export const createCsvFileStream = (

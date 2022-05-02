@@ -19,6 +19,7 @@ import { getSquidexGraphqlResearchOutput } from '../fixtures/research-output.fix
 import { getSquidexGraphqlTeam } from '../fixtures/teams.fixtures';
 import { getGraphQLUser } from '../fixtures/users.fixtures';
 import { getGraphQLExternalAuthor } from '../fixtures/external-authors.fixtures';
+import { getSquidexGraphqlResearchTags } from '../fixtures/research-tag.fixtures';
 
 export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
   const schema = loadSchemaSync(
@@ -42,6 +43,8 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     GroupsResultDto: resultDto,
     ResearchOutputs: () => getSquidexGraphqlResearchOutput(),
     ResearchOutputsResultDto: resultDto,
+    ResearchTags: () => getSquidexGraphqlResearchTags().items![0],
+    ResearchTagsResultDto: resultDto,
     Users: () => getGraphQLUser(),
     UsersResultDto: resultDto,
     Teams: () => getSquidexGraphqlTeam({}),
@@ -86,6 +89,9 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
         keyFieldName: false,
       },
       Users: {
+        keyFieldName: false,
+      },
+      ResearchTags: {
         keyFieldName: false,
       },
     },

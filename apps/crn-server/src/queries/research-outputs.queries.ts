@@ -114,6 +114,11 @@ export const researchOutputContentQueryFragment = gql`
           name
         }
       }
+      methods {
+        flatData {
+          name
+        }
+      }
     }
     referencingTeamsContents @include(if: $withTeams) {
       id

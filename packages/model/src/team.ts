@@ -7,6 +7,7 @@ export const teamRole = [
   'Collaborating PI',
   'Project Manager',
   'Key Personnel',
+  'Scientific Advisory Board',
   'ASAP Staff',
 ] as const;
 

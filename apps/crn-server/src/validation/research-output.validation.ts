@@ -5,8 +5,9 @@ import {
   researchOutputToIdentifierType,
   researchOutputDocumentTypes,
 } from '@asap-hub/model';
-import { JSONSchemaType } from 'ajv';
+import { ResearchOutputIdentifierValidationExpression } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
+import { JSONSchemaType } from 'ajv';
 import { validateInput } from '.';
 
 type ResearchOutputParameters = {
@@ -45,6 +46,10 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       },
       description: { type: 'string' },
       tags: {
+        type: 'array',
+        items: { type: 'string' },
+      },
+      methods: {
         type: 'array',
         items: { type: 'string' },
       },
@@ -91,15 +96,20 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       doi: {
         type: 'string',
         nullable: true,
-        pattern: '^(doi:)?\\d{2}\\.\\d{4}.*$',
+        pattern: ResearchOutputIdentifierValidationExpression.DOI,
       },
       accession: {
         type: 'string',
         nullable: true,
-        pattern: '^(\\w+\\d+(\\.\\d+)?)|(NP_\\d+)$',
+        pattern:
+          ResearchOutputIdentifierValidationExpression['Accession Number'],
       },
       labCatalogNumber: { type: 'string', nullable: true },
-      rrid: { type: 'string', nullable: true, pattern: 'RRID:[a-zA-Z]+.+$' },
+      rrid: {
+        type: 'string',
+        nullable: true,
+        pattern: ResearchOutputIdentifierValidationExpression.RRID,
+      },
     },
     required: [
       'documentType',

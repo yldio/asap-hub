@@ -1,0 +1,129 @@
+{
+  "$schema": "./../__json/schema.json",
+  "name": "research-tags",
+  "isSingleton": false,
+  "isPublished": false,
+  "schema": {
+    "noFieldDeletion": false,
+    "noFieldRecreation": false,
+    "properties": {
+      "label": "Research Tags",
+      "validateOnPublish": false
+    },
+    "scripts": {},
+    "fieldsInReferences": [],
+    "fieldsInLists": [],
+    "fields": [
+      {
+        "name": "name",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "minCharacters": 3,
+          "isUnique": true,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Name",
+          "isRequired": true,
+          "isRequiredOnPublish": true,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "category",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "allowedValues": ["Method"],
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Dropdown",
+          "label": "Category",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "types",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Tags",
+          "allowedValues": [
+            "Preprint",
+            "Published",
+            "Code",
+            "Data portal",
+            "Software",
+            "Behavioral",
+            "Electrophysiology",
+            "Genetic Data - DNA",
+            "Genetic Data - RNA",
+            "Spectroscopy",
+            "Microscopy & Imaging",
+            "Protein Data",
+            "Proposal",
+            "Report",
+            "Assay",
+            "Animal Model",
+            "Antibody",
+            "Biosample",
+            "Cell line",
+            "Compound",
+            "Plasmid",
+            "Viral Vector",
+            "ASAP Annual meeting",
+            "ASAP subgroup meeting",
+            "External meeting",
+            "Team meeting",
+            "3D Printing",
+            "Analysis",
+            "Cell Culture & Differentiation",
+            "Cloning",
+            "Genotyping",
+            "Model System",
+            "Protein Expression",
+            "Sample Prep",
+            "Shipment Procedure"
+          ],
+          "editor": "Checkboxes",
+          "label": "Types",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "entities",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Tags",
+          "allowedValues": ["Research Output", "User"],
+          "editor": "Checkboxes",
+          "label": "Entities",
+          "hints": "List of associated entities",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      }
+    ],
+    "previewUrls": {},
+    "category": "Storage",
+    "isPublished": true
+  }
+}

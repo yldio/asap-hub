@@ -27,6 +27,7 @@ import ResearchOutputs, {
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { calendarRouteFactory } from './routes/calendars.route';
 import { researchOutputRouteFactory } from './routes/research-outputs.route';
+import { researchTagsRouteFactory } from './routes/research-tags.route';
 import { teamRouteFactory } from './routes/teams.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
 import { eventRouteFactory } from './routes/events.route';
@@ -43,6 +44,9 @@ import { permissionHandler } from './middleware/permission-handler';
 import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 import Labs, { LabsController } from './controllers/labs';
 import { labsRouteFactory } from './routes/labs.route';
+import ResearchTags, {
+  ResearchTagController,
+} from './controllers/research-tags';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -78,6 +82,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const pageController = libs.pageController || new Pages();
   const researchOutputController =
     libs.researchOutputController || new ResearchOutputs(squidexGraphqlClient);
+  const researchTagController =
+    libs.researchTagController || new ResearchTags(squidexGraphqlClient);
   const teamController = libs.teamController || new Teams(squidexGraphqlClient);
   const userController = libs.userController || new Users(squidexGraphqlClient);
   const labsController = libs.labsController || new Labs(squidexGraphqlClient);
@@ -99,6 +105,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const researchOutputsRoutes = researchOutputRouteFactory(
     researchOutputController,
   );
+  const researchTagsRoutes = researchTagsRouteFactory(researchTagController);
   const teamRoutes = teamRouteFactory(groupController, teamController);
   const userRoutes = userRouteFactory(userController, groupController);
   const userPublicRoutes = userPublicRouteFactory(userController);
@@ -157,11 +164,12 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(dashboardRoutes);
   app.use(discoverRoutes);
   app.use(eventRoutes);
-  app.use(newsRoutes);
   app.use(groupRoutes);
-  app.use(researchOutputsRoutes);
-  app.use(teamRoutes);
   app.use(labsRoutes);
+  app.use(newsRoutes);
+  app.use(researchOutputsRoutes);
+  app.use(researchTagsRoutes);
+  app.use(teamRoutes);
 
   app.get('*', async (_req, res) => {
     res.status(404).json({
@@ -196,6 +204,7 @@ export type Libs = {
   pageController?: PageController;
   newsController?: NewsController;
   researchOutputController?: ResearchOutputController;
+  researchTagController?: ResearchTagController;
   teamController?: TeamController;
   userController?: UserController;
   labsController?: LabsController;

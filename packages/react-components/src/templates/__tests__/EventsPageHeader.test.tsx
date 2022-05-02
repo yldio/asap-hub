@@ -1,7 +1,6 @@
-import { render } from '@testing-library/react';
 import { events, searchQueryParam } from '@asap-hub/routing';
+import { render } from '@testing-library/react';
 import { StaticRouter } from 'react-router-dom';
-
 import EventsPageHeader from '../EventsPageHeader';
 
 it('renders the heading', () => {
@@ -15,7 +14,7 @@ it('renders the navigation', () => {
   const { getAllByRole } = render(<EventsPageHeader />);
   expect(
     getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['Calendar', 'Upcoming Events', 'Past Events']);
+  ).toEqual(['Upcoming Events', 'Past Events', 'Subscribe to Calendars']);
 });
 
 it('preserves search query when navigating', () => {

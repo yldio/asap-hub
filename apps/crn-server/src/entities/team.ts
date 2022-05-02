@@ -16,6 +16,7 @@ const priorities: Record<TeamRole, number> = {
   'Collaborating PI': 4,
   'Key Personnel': 5,
   'ASAP Staff': 6,
+  'Scientific Advisory Board': 7,
 };
 
 export const parseGraphQLTeamMember = (

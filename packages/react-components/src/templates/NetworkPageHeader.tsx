@@ -56,6 +56,7 @@ const userFilters: Option<TeamRole | Role>[] = [
   { label: 'Collaborating PI', value: 'Collaborating PI' },
   { label: 'Key Personnel', value: 'Key Personnel' },
   { label: 'ASAP Staff', value: 'ASAP Staff' },
+  { label: 'SAB', value: 'Scientific Advisory Board' },
 ];
 
 const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({

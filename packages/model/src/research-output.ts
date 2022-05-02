@@ -174,57 +174,54 @@ export type ResearchOutputSharingStatus = typeof sharingStatuses[number];
 
 export type ResearchOutputResponse = {
   readonly id: string;
-  readonly documentType: ResearchOutputDocumentType;
-  readonly type?: ResearchOutputType;
-  readonly title: string;
-  readonly description: string;
-  readonly tags: ReadonlyArray<string>;
-  readonly link?: string;
 
-  readonly created: string;
-  readonly publishDate?: string;
-  readonly labCatalogNumber?: string;
-  readonly doi?: string;
+  readonly accessInstructions?: string;
   readonly accession?: string;
-  readonly rrid?: string;
   readonly addedDate: string;
+  readonly asapFunded?: boolean;
+  readonly authors: ReadonlyArray<UserResponse | ExternalAuthorResponse>;
+  readonly contactEmails: string[];
+  readonly created: string;
+  readonly description: string;
+  readonly documentType: ResearchOutputDocumentType;
+  readonly doi?: string;
+  readonly labCatalogNumber?: string;
+  readonly labs: LabResponse[];
   readonly lastModifiedDate?: string;
   readonly lastUpdatedPartial: string;
-  readonly accessInstructions?: string;
+  readonly link?: string;
+  readonly methods: string[];
+  readonly publishDate?: string;
+  readonly rrid?: string;
   readonly sharingStatus: ResearchOutputSharingStatus;
-  readonly asapFunded?: boolean;
-  readonly usedInPublication?: boolean;
-
-  readonly authors: ReadonlyArray<UserResponse | ExternalAuthorResponse>;
+  readonly tags: ReadonlyArray<string>;
   readonly teams: ReadonlyArray<Pick<TeamResponse, 'id' | 'displayName'>>;
-  readonly contactEmails: string[];
-
-  readonly labs: LabResponse[];
+  readonly title: string;
+  readonly type?: ResearchOutputType;
+  readonly usedInPublication?: boolean;
 };
 
 export type ResearchOutputPostRequest = {
-  description: string;
-  documentType: ResearchOutputDocumentType;
-  type: ResearchOutputType;
-  title: string;
-  tags: string[];
-  link?: string;
-
-  labs?: string[];
-  authors?: ExternalAuthorInput[];
-  teams: string[];
-
-  doi?: string;
+  accessInstructions?: string;
   accession?: string;
-  labCatalogNumber?: string;
-  rrid?: string;
-
   addedDate: string;
   asapFunded?: boolean;
-  sharingStatus: ResearchOutputSharingStatus;
+  authors?: ExternalAuthorInput[];
+  description: string;
+  documentType: ResearchOutputDocumentType;
+  doi?: string;
+  labCatalogNumber?: string;
+  labs?: string[];
+  link?: string;
+  methods: string[];
   publishDate?: string;
+  rrid?: string;
+  sharingStatus: ResearchOutputSharingStatus;
+  tags: string[];
+  teams: string[];
+  title: string;
+  type: ResearchOutputType;
   usedInPublication?: boolean;
-  accessInstructions?: string;
 };
 
 export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;

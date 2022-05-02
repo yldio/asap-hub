@@ -117,6 +117,10 @@ export const parseGraphQLResearchOutput = (
           id: lab.id,
           name: lab.flatData.name,
         })) || [],
+    methods:
+      data.methods?.flatMap((method) =>
+        method.flatData.name ? [method.flatData.name] : [],
+      ) || [],
   };
 };
 

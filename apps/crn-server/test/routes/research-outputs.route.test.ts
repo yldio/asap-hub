@@ -135,6 +135,7 @@ describe('/research-outputs/ route', () => {
         labs,
         authors,
         teams,
+        methods,
       } = getResearchOutputResponse();
       return {
         documentType,
@@ -147,6 +148,7 @@ describe('/research-outputs/ route', () => {
         publishDate,
         description,
         tags,
+        methods,
         type: 'Software',
         labs: labs.map(({ id }) => id),
         authors: authors.map(({ id }) => ({ userId: id })),
@@ -169,9 +171,10 @@ describe('/research-outputs/ route', () => {
         .set('Accept', 'application/json');
 
       expect(response.status).toBe(201);
-      expect(researchOutputControllerMock.create).toBeCalledWith(
-        createResearchOutputRequest,
-      );
+      expect(researchOutputControllerMock.create).toBeCalledWith({
+        ...createResearchOutputRequest,
+        createdBy: 'userMockId',
+      });
 
       expect(response.body).toEqual(expect.objectContaining({ id: 'abc123' }));
     });

@@ -132,6 +132,17 @@ type AppMutations {
     """The status for the content."""
     status: String!
   ): ResearchOutputs!
+  """Change a Research Tags content."""
+  changeResearchTagsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): ResearchTags!
   """Change a Teams content."""
   changeTeamsContent(
     """The timestamp when the status should be changed."""
@@ -275,6 +286,17 @@ type AppMutations {
     """The initial status."""
     status: String
   ): ResearchOutputs!
+  """Creates an Research Tags content."""
+  createResearchTagsContent(
+    """The data for the content."""
+    data: ResearchTagsDataInputDto!
+    """The optional custom content ID."""
+    id: String
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): ResearchTags!
   """Creates an Teams content."""
   createTeamsContent(
     """The data for the content."""
@@ -369,6 +391,13 @@ type AppMutations {
   ): EntitySavedResultDto!
   """Delete an Research Outputs content."""
   deleteResearchOutputsContent(
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The id of the content (usually GUID)."""
+    id: String!
+  ): EntitySavedResultDto!
+  """Delete an Research Tags content."""
+  deleteResearchTagsContent(
     """The expected version."""
     expectedVersion: Int = -2
     """The id of the content (usually GUID)."""
@@ -487,6 +516,15 @@ type AppMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): ResearchOutputs!
+  """Patch an Research Tags content by id."""
+  patchResearchTagsContent(
+    """The data for the content."""
+    data: ResearchTagsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): ResearchTags!
   """Patch an Teams content by id."""
   patchTeamsContent(
     """The data for the content."""
@@ -626,6 +664,17 @@ type AppMutations {
     """The status for the content."""
     status: String!
   ): ResearchOutputs! @deprecated(reason: "Use 'changeResearchOutputsContent' instead")
+  """Publish a Research Tags content."""
+  publishResearchTagsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): ResearchTags! @deprecated(reason: "Use 'changeResearchTagsContent' instead")
   """Publish a Teams content."""
   publishTeamsContent(
     """The timestamp when the status should be changed."""
@@ -747,6 +796,15 @@ type AppMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): ResearchOutputs!
+  """Update an Research Tags content by id."""
+  updateResearchTagsContent(
+    """The data for the content."""
+    data: ResearchTagsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): ResearchTags!
   """Update an Teams content by id."""
   updateTeamsContent(
     """The data for the content."""
@@ -908,6 +966,19 @@ type AppMutations {
     """The initial status."""
     status: String
   ): ResearchOutputs!
+  """Upsert an Research Tags content by id."""
+  upsertResearchTagsContent(
+    """The data for the content."""
+    data: ResearchTagsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): ResearchTags!
   """Upsert an Teams content by id."""
   upsertTeamsContent(
     """The data for the content."""
@@ -1020,6 +1091,13 @@ type AppQueries {
     """The optional version of the content to retrieve an older instance (not cached)."""
     version: Int
   ): ResearchOutputs
+  """Find an Research Tags content by id."""
+  findResearchTagsContent(
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The optional version of the content to retrieve an older instance (not cached)."""
+    version: Int
+  ): ResearchTags
   """Find an Teams content by id."""
   findTeamsContent(
     """The ID of the object (usually GUID)."""
@@ -1342,6 +1420,32 @@ type AppQueries {
     """Optional number of contents to take."""
     top: Int
   ): ResearchOutputsResultDto
+  """Query Research Tags content items."""
+  queryResearchTagsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [ResearchTags!]
+  """Query Research Tags content items with total count."""
+  queryResearchTagsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): ResearchTagsResultDto
   """Query Teams content items."""
   queryTeamsContents(
     """Optional OData filter."""
@@ -2084,6 +2188,58 @@ type Events implements Content {
     """Optional number of contents to take."""
     top: Int
   ): CalendarsResultDto
+  """Query Teams content items."""
+  referencesTeamsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Teams!]
+  """Query Teams content items with total count."""
+  referencesTeamsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): TeamsResultDto
+  """Query Users content items."""
+  referencesUsersContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Users!]
+  """Query Users content items with total count."""
+  referencesUsersContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): UsersResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -2131,6 +2287,7 @@ type EventsDataDto {
   notesPermanentlyUnavailable: EventsDataNotesPermanentlyUnavailableDto
   presentation: EventsDataPresentationDto
   presentationPermanentlyUnavailable: EventsDataPresentationPermanentlyUnavailableDto
+  speakers: EventsDataSpeakersDto
   startDate: EventsDataStartDateDto
   startDateTimeZone: EventsDataStartDateTimeZoneDto
   status: EventsDataStatusDto
@@ -2220,6 +2377,7 @@ input EventsDataInputDto {
   notesPermanentlyUnavailable: EventsDataNotesPermanentlyUnavailableInputDto
   presentation: EventsDataPresentationInputDto
   presentationPermanentlyUnavailable: EventsDataPresentationPermanentlyUnavailableInputDto
+  speakers: EventsDataSpeakersInputDto
   startDate: EventsDataStartDateInputDto
   startDateTimeZone: EventsDataStartDateTimeZoneInputDto
   status: EventsDataStatusInputDto
@@ -2322,6 +2480,28 @@ type EventsDataPresentationPermanentlyUnavailableDto {
 input EventsDataPresentationPermanentlyUnavailableInputDto {
   """This box is automatically ticked if no output is added after 14 days from the event's end date."""
   iv: Boolean
+}
+
+"""The structure of the Speakers nested schema."""
+type EventsDataSpeakersChildDto {
+  team: [Teams!]
+  user: [Users!]
+}
+
+"""The structure of the Speakers nested schema."""
+input EventsDataSpeakersChildInputDto {
+  team: [String!]
+  user: [String!]
+}
+
+"""The structure of the Speakers field of the Events content type."""
+type EventsDataSpeakersDto {
+  iv: [EventsDataSpeakersChildDto!]
+}
+
+"""The structure of the Speakers field of the Events content input type."""
+input EventsDataSpeakersInputDto {
+  iv: [EventsDataSpeakersChildInputDto!]
 }
 
 """The structure of the Start Date field of the Events content type."""
@@ -2432,6 +2612,7 @@ type EventsFlatDataDto {
   presentation: String
   """This box is automatically ticked if no output is added after 14 days from the event's end date."""
   presentationPermanentlyUnavailable: Boolean
+  speakers: [EventsDataSpeakersChildDto!]
   startDate: Instant
   startDateTimeZone: String
   status: String
@@ -3530,6 +3711,32 @@ type ResearchOutputs implements Content {
     """Optional number of contents to take."""
     top: Int
   ): LabsResultDto
+  """Query Research Tags content items."""
+  referencesResearchTagsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [ResearchTags!]
+  """Query Research Tags content items with total count."""
+  referencesResearchTagsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): ResearchTagsResultDto
   """Query Users content items."""
   referencesUsersContents(
     """Optional OData filter."""
@@ -3664,6 +3871,16 @@ input ResearchOutputsDataAuthorsInputDto {
 
 union ResearchOutputsDataAuthorsUnionDto = ExternalAuthors | Users
 
+"""The structure of the Created by field of the Research Outputs content type."""
+type ResearchOutputsDataCreatedByDto {
+  iv: [Users!]
+}
+
+"""The structure of the Created by field of the Research Outputs content input type."""
+input ResearchOutputsDataCreatedByInputDto {
+  iv: [String!]
+}
+
 """The structure of the Description field of the Research Outputs content type."""
 type ResearchOutputsDataDescriptionDto {
   """The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size)"""
@@ -3706,6 +3923,7 @@ type ResearchOutputsDataDto {
   adminNotes: ResearchOutputsDataAdminNotesDto
   asapFunded: ResearchOutputsDataAsapFundedDto
   authors: ResearchOutputsDataAuthorsDto
+  createdBy: ResearchOutputsDataCreatedByDto
   description: ResearchOutputsDataDescriptionDto
   documentType: ResearchOutputsDataDocumentTypeDto
   doi: ResearchOutputsDataDoiDto
@@ -3713,12 +3931,14 @@ type ResearchOutputsDataDto {
   labs: ResearchOutputsDataLabsDto
   lastUpdatedPartial: ResearchOutputsDataLastUpdatedPartialDto
   link: ResearchOutputsDataLinkDto
+  methods: ResearchOutputsDataMethodsDto
   publishDate: ResearchOutputsDataPublishDateDto
   rrid: ResearchOutputsDataRridDto
   sharingStatus: ResearchOutputsDataSharingStatusDto
   tags: ResearchOutputsDataTagsDto
   title: ResearchOutputsDataTitleDto
   type: ResearchOutputsDataTypeDto
+  updatedBy: ResearchOutputsDataUpdatedByDto
   usedInAPublication: ResearchOutputsDataUsedInAPublicationDto
 }
 
@@ -3730,6 +3950,7 @@ input ResearchOutputsDataInputDto {
   adminNotes: ResearchOutputsDataAdminNotesInputDto
   asapFunded: ResearchOutputsDataAsapFundedInputDto
   authors: ResearchOutputsDataAuthorsInputDto
+  createdBy: ResearchOutputsDataCreatedByInputDto
   description: ResearchOutputsDataDescriptionInputDto
   documentType: ResearchOutputsDataDocumentTypeInputDto
   doi: ResearchOutputsDataDoiInputDto
@@ -3737,12 +3958,14 @@ input ResearchOutputsDataInputDto {
   labs: ResearchOutputsDataLabsInputDto
   lastUpdatedPartial: ResearchOutputsDataLastUpdatedPartialInputDto
   link: ResearchOutputsDataLinkInputDto
+  methods: ResearchOutputsDataMethodsInputDto
   publishDate: ResearchOutputsDataPublishDateInputDto
   rrid: ResearchOutputsDataRridInputDto
   sharingStatus: ResearchOutputsDataSharingStatusInputDto
   tags: ResearchOutputsDataTagsInputDto
   title: ResearchOutputsDataTitleInputDto
   type: ResearchOutputsDataTypeInputDto
+  updatedBy: ResearchOutputsDataUpdatedByInputDto
   usedInAPublication: ResearchOutputsDataUsedInAPublicationInputDto
 }
 
@@ -3792,6 +4015,16 @@ type ResearchOutputsDataLinkDto {
 """The structure of the External Link field of the Research Outputs content input type."""
 input ResearchOutputsDataLinkInputDto {
   iv: String
+}
+
+"""The structure of the Methods field of the Research Outputs content type."""
+type ResearchOutputsDataMethodsDto {
+  iv: [ResearchTags!]
+}
+
+"""The structure of the Methods field of the Research Outputs content input type."""
+input ResearchOutputsDataMethodsInputDto {
+  iv: [String!]
 }
 
 """The structure of the Publish Date field of the Research Outputs content type."""
@@ -3862,6 +4095,16 @@ input ResearchOutputsDataTypeInputDto {
   iv: String
 }
 
+"""The structure of the Updated by field of the Research Outputs content type."""
+type ResearchOutputsDataUpdatedByDto {
+  iv: [Users!]
+}
+
+"""The structure of the Updated by field of the Research Outputs content input type."""
+input ResearchOutputsDataUpdatedByInputDto {
+  iv: [String!]
+}
+
 """The structure of the Used in a Publication field of the Research Outputs content type."""
 type ResearchOutputsDataUsedInAPublicationDto {
   """"Not sure" will not be shown on the Hub"""
@@ -3887,6 +4130,7 @@ type ResearchOutputsFlatDataDto {
   """"Not sure" will not be shown on the Hub"""
   asapFunded: String
   authors: [ResearchOutputsDataAuthorsUnionDto!]
+  createdBy: [Users!]
   """The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size)"""
   description: String
   documentType: String
@@ -3900,6 +4144,7 @@ type ResearchOutputsFlatDataDto {
   """Does not include changes to Publish Date and Admin notes"""
   lastUpdatedPartial: Instant
   link: String
+  methods: [ResearchTags!]
   """Date of publishing (outside the Hub). Only applies to outputs that have been published."""
   publishDate: Instant
   """
@@ -3910,6 +4155,7 @@ type ResearchOutputsFlatDataDto {
   tags: [String!]
   title: String
   type: String
+  updatedBy: [Users!]
   """"Not sure" will not be shown on the Hub"""
   usedInAPublication: String
 }
@@ -3918,6 +4164,143 @@ type ResearchOutputsFlatDataDto {
 type ResearchOutputsResultDto {
   """The contents."""
   items: [ResearchOutputs!]
+  """The total count of  contents."""
+  total: Int!
+}
+
+"""The structure of a Research Tags content type."""
+type ResearchTags implements Content {
+  """The timestamp when the object was created."""
+  created: Instant!
+  """The user who created the object."""
+  createdBy: String!
+  """The user who created the object."""
+  createdByUser: User!
+  """The data of the content."""
+  data: ResearchTagsDataDto!
+  """The edit token."""
+  editToken: String
+  """The flat data of the content."""
+  flatData: ResearchTagsFlatDataDto!
+  """The ID of the object (usually GUID)."""
+  id: String!
+  """The timestamp when the object was updated the last time."""
+  lastModified: Instant!
+  """The user who updated the object the last time."""
+  lastModifiedBy: String!
+  """The user who updated the object the last time."""
+  lastModifiedByUser: User!
+  """The new status of the content."""
+  newStatus: String
+  """The status color of the content."""
+  newStatusColor: String
+  """Query Research Outputs content items."""
+  referencingResearchOutputsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [ResearchOutputs!]
+  """Query Research Outputs content items with total count."""
+  referencingResearchOutputsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): ResearchOutputsResultDto
+  """The status of the content."""
+  status: String!
+  """The status color of the content."""
+  statusColor: String!
+  """The URL to the content."""
+  url: String!
+  """The version of the objec."""
+  version: Int!
+}
+
+"""The structure of the Category field of the Research Tags content type."""
+type ResearchTagsDataCategoryDto {
+  iv: String
+}
+
+"""The structure of the Category field of the Research Tags content input type."""
+input ResearchTagsDataCategoryInputDto {
+  iv: String
+}
+
+"""The structure of the Research Tags data type."""
+type ResearchTagsDataDto {
+  category: ResearchTagsDataCategoryDto
+  entities: ResearchTagsDataEntitiesDto
+  name: ResearchTagsDataNameDto
+  types: ResearchTagsDataTypesDto
+}
+
+"""The structure of the Entities field of the Research Tags content type."""
+type ResearchTagsDataEntitiesDto {
+  """List of associated entities"""
+  iv: [String!]
+}
+
+"""The structure of the Entities field of the Research Tags content input type."""
+input ResearchTagsDataEntitiesInputDto {
+  """List of associated entities"""
+  iv: [String!]
+}
+
+"""The structure of the Research Tags data input type."""
+input ResearchTagsDataInputDto {
+  category: ResearchTagsDataCategoryInputDto
+  entities: ResearchTagsDataEntitiesInputDto
+  name: ResearchTagsDataNameInputDto
+  types: ResearchTagsDataTypesInputDto
+}
+
+"""The structure of the Name field of the Research Tags content type."""
+type ResearchTagsDataNameDto {
+  iv: String
+}
+
+"""The structure of the Name field of the Research Tags content input type."""
+input ResearchTagsDataNameInputDto {
+  iv: String
+}
+
+"""The structure of the Types field of the Research Tags content type."""
+type ResearchTagsDataTypesDto {
+  iv: [String!]
+}
+
+"""The structure of the Types field of the Research Tags content input type."""
+input ResearchTagsDataTypesInputDto {
+  iv: [String!]
+}
+
+"""The structure of the flat Research Tags data type."""
+type ResearchTagsFlatDataDto {
+  category: String
+  """List of associated entities"""
+  entities: [String!]
+  name: String
+  types: [String!]
+}
+
+"""List of Research Tags items and total count."""
+type ResearchTagsResultDto {
+  """The contents."""
+  items: [ResearchTags!]
   """The total count of  contents."""
   total: Int!
 }
@@ -3974,6 +4357,32 @@ type Teams implements Content {
     """Optional number of contents to take."""
     top: Int
   ): ResearchOutputsResultDto
+  """Query Events content items."""
+  referencingEventsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Events!]
+  """Query Events content items with total count."""
+  referencingEventsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): EventsResultDto
   """Query Groups content items."""
   referencingGroupsContents(
     """Optional OData filter."""
@@ -4288,6 +4697,32 @@ type Users implements Content {
     """Optional number of contents to take."""
     top: Int
   ): DiscoverResultDto
+  """Query Events content items."""
+  referencingEventsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Events!]
+  """Query Events content items with total count."""
+  referencingEventsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): EventsResultDto
   """Query Groups content items."""
   referencingGroupsContents(
     """Optional OData filter."""

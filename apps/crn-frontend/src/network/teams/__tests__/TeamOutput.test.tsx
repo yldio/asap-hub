@@ -185,6 +185,7 @@ it('can submit a form when form data is valid', async () => {
             userId: 'u2',
           },
         ],
+        methods: [],
       },
       expect.anything(),
     );

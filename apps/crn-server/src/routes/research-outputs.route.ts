@@ -46,14 +46,17 @@ export const researchOutputRouteFactory = (
   );
 
   researchOutputRoutes.post('/research-outputs', async (req, res) => {
-    const { body } = req;
+    const { body, loggedInUser } = req;
 
     const createRequest = validateResearchOutputPostRequestParameters(body);
     validateResearchOutputPostRequestParametersIdentifiers(body);
+
     try {
-      const researchOutput = await researchOutputController.create(
-        createRequest,
-      );
+      const researchOutput = await researchOutputController.create({
+        ...createRequest,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        createdBy: loggedInUser!.id,
+      });
 
       res.status(201).json(researchOutput);
     } catch (error) {

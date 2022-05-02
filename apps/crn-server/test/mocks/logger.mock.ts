@@ -1,4 +1,4 @@
-import { Logger } from 'pino';
+import { Logger } from '@asap-hub/server-common';
 
 export const loggerMock = {
   error: jest.fn(),

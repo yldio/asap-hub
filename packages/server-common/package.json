@@ -15,7 +15,11 @@
   "dependencies": {
     "@asap-hub/auth": "workspace:*",
     "@babel/runtime-corejs3": "^7.14.0",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "pino": "^7.10.0",
+    "pino-http": "^6.6.0",
+    "pino-lambda": "^3.0.1",
+    "pino-noir": "^2.2.1"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",

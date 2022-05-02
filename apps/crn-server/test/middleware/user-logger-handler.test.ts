@@ -1,6 +1,6 @@
 import { User, userMock } from '@asap-hub/auth';
+import { pino, Logger } from '@asap-hub/server-common';
 import { RequestHandler, Router } from 'express';
-import pino from 'pino';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { sentryTransactionIdHandlerMock } from '../mocks/sentry-transaction-id-handler.mock';
@@ -21,7 +21,7 @@ describe('User info logging handler', () => {
     {
       write: captureLogs,
     },
-  );
+  ) as Logger;
 
   // mock test routes
   const logRoutes = Router();
@@ -36,7 +36,7 @@ describe('User info logging handler', () => {
     mockRequestHandlers: [logRoutes],
     authHandler: authHandlerMock,
     sentryTransactionIdHandler: sentryTransactionIdHandlerMock,
-    logger: logger,
+    logger,
   });
 
   afterEach(() => {

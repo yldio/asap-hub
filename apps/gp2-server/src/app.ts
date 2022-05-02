@@ -1,17 +1,15 @@
 import 'express-async-errors';
 import cors from 'cors';
-import { Logger } from 'pino';
-import pinoHttp from 'pino-http';
 import express, { Express } from 'express';
 import { SquidexGraphql } from '@asap-hub/squidex';
-import { decodeToken } from '@asap-hub/server-common';
+import { decodeToken, getHttpLogger, Logger } from '@asap-hub/server-common';
 import Dashboard, {
   DashboardController,
 } from './controllers/dashboard.controller';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { AuthHandler, authHandlerFactory } from './middleware/auth-handler';
 import { errorHandlerFactory } from './middleware/error-handler';
-import pinoLogger, { redaction } from './utils/logger';
+import pinoLogger from './utils/logger';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -20,11 +18,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const logger = libs.logger || pinoLogger;
 
   // Middleware
-  const httpLogger = pinoHttp({
-    logger,
-    serializers: redaction,
-  });
-  app.use(httpLogger);
+  app.use(getHttpLogger({ logger }));
   app.use(cors());
 
   const errorHandler = errorHandlerFactory();

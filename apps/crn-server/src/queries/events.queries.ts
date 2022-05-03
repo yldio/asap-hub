@@ -44,6 +44,30 @@ export const eventContentFragment = gql`
       thumbnail {
         id
       }
+      speakers {
+        team {
+          id
+          flatData {
+            displayName
+          }
+        }
+        user {
+          id
+          flatData {
+            firstName
+            lastName
+            avatar {
+              id
+            }
+            teams {
+              role
+              id {
+                id
+              }
+            }
+          }
+        }
+      }
     }
   }
   ${groupContentQueryFragment}

@@ -6,10 +6,13 @@ import {
   ResearchOutputResponse,
   TeamResponse,
 } from '@asap-hub/model';
+import { sharedResearch } from '@asap-hub/routing';
 import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
-import { perRem } from '../pixels';
+import { Button } from '../atoms';
+import { mobileScreen, perRem } from '../pixels';
+import { usePushFromHere } from '../routing';
 import { noop } from '../utils';
 import {
   Form,
@@ -25,6 +28,31 @@ const contentStyles = css({
   justifyContent: 'center',
   gridAutoFlow: 'row',
   rowGap: `${36 / perRem}em`,
+});
+
+const formControlsContainerStyles = css({
+  display: 'flex',
+  justifyContent: 'end',
+  paddingBottom: `${200 / perRem}em`, // Hack for labs selector
+});
+
+const formControlsStyles = css({
+  display: 'grid',
+  alignItems: 'end',
+  gridGap: `${24 / perRem}em`,
+  gridTemplateColumns: '1fr 1fr',
+  [`@media (max-width: ${mobileScreen.width}px)`]: {
+    gridTemplateColumns: '1fr',
+    width: '100%',
+    'button:nth-of-type(1)': {
+      order: 2,
+      margin: '0',
+    },
+    'button:nth-of-type(2)': {
+      order: 1,
+      margin: '0',
+    },
+  },
 });
 
 type TeamCreateOutputFormProps = Pick<
@@ -83,6 +111,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   serverValidationErrors,
   clearServerValidationError,
 }) => {
+  const historyPush = usePushFromHere();
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
   const [type, setType] = useState<ResearchOutputPostRequest['type'] | ''>('');
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>('');
@@ -135,7 +164,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         labCatalogNumber !== '' ||
         teams.length !== 1 // Original team
       }
-      onSave={() => {
+      onSave={async () => {
         const convertDecisionToBoolean = (decision: DecisionOption): boolean =>
           decision === 'Yes';
 
@@ -182,7 +211,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         });
       }}
     >
-      {({ isSaving }) => (
+      {({ isSaving, onSave: handleSave, onCancel: handleCancel }) => (
         <div css={contentStyles}>
           <TeamCreateOutputFormSharingCard
             documentType={documentType}
@@ -236,6 +265,29 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangeTeams={setTeams}
             getTeamSuggestions={getTeamSuggestions}
           />
+          <div css={formControlsContainerStyles}>
+            <div css={formControlsStyles}>
+              <Button enabled={!isSaving} onClick={handleCancel}>
+                Cancel
+              </Button>
+              <Button
+                enabled={!isSaving}
+                primary
+                onClick={async () => {
+                  const researchOutput = await handleSave();
+                  if (researchOutput) {
+                    const { id } = researchOutput;
+                    const path = sharedResearch({}).researchOutput({
+                      researchOutputId: id,
+                    }).$;
+                    historyPush(path);
+                  }
+                }}
+              >
+                Publish
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </Form>

@@ -3,8 +3,6 @@ import { ToastContext } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { Prompt, useHistory } from 'react-router-dom';
-import { Button } from '../atoms';
-import { mobileScreen, perRem } from '../pixels';
 
 const styles = css({
   boxSizing: 'border-box',
@@ -14,36 +12,16 @@ const styles = css({
   overflow: 'auto',
 });
 
-const formControlsContainerStyles = css({
-  display: 'flex',
-  justifyContent: 'end',
-  paddingBottom: `${200 / perRem}em`, // Hack for labs selector
-});
-
-const formControlsStyles = css({
-  display: 'grid',
-  alignItems: 'end',
-  gridGap: `${24 / perRem}em`,
-  gridTemplateColumns: '1fr 1fr',
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
-    gridTemplateColumns: '1fr',
-    width: '100%',
-    'button:nth-of-type(1)': {
-      order: 2,
-      margin: '0',
-    },
-    'button:nth-of-type(2)': {
-      order: 1,
-      margin: '0',
-    },
-  },
-});
 type FormProps<T> = {
   onSave: () => Promise<T | void>;
   validate?: () => boolean;
   dirty: boolean; // mandatory so that it cannot be forgotten
   serverErrors?: ValidationErrorResponse['data'];
-  children: (state: { isSaving: boolean }) => ReactNode;
+  children: (state: {
+    isSaving: boolean;
+    onSave: () => void | Promise<T | void>;
+    onCancel: () => void;
+  }) => ReactNode;
 };
 const Form = <T extends void | Record<string, unknown>>({
   dirty,
@@ -96,7 +74,6 @@ const Form = <T extends void | Record<string, unknown>>({
     history.location.key ? history.goBack() : history.push('/');
   };
 
-  const isSaving = status === 'isSaving';
   return (
     <>
       <Prompt
@@ -112,18 +89,10 @@ const Form = <T extends void | Record<string, unknown>>({
       />
       <form ref={formRef} css={styles}>
         {children({
+          onCancel,
           isSaving: status === 'isSaving',
+          onSave: wrappedOnSave,
         })}
-        <div css={formControlsContainerStyles}>
-          <div css={formControlsStyles}>
-            <Button enabled={!isSaving} onClick={onCancel}>
-              Cancel
-            </Button>
-            <Button enabled={!isSaving} primary onClick={wrappedOnSave}>
-              Publish
-            </Button>
-          </div>
-        </div>
       </form>
     </>
   );

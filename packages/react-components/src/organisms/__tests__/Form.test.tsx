@@ -1,16 +1,18 @@
-import { ToastContext } from '@asap-hub/react-context';
-import { act, render, RenderResult, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
 import {
-  Link,
-  MemoryRouter,
-  Route,
   Router,
+  MemoryRouter,
   StaticRouter,
+  Link,
+  Route,
 } from 'react-router-dom';
+import { History, createMemoryHistory } from 'history';
+import { render, act, waitFor, RenderResult } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ToastContext } from '@asap-hub/react-context';
+
 import Form from '../Form';
+import { Button } from '../../atoms';
 
 const props: ComponentProps<typeof Form> = {
   dirty: false,
@@ -66,7 +68,16 @@ describe('on cancel', () => {
     const { getByText } = render(
       <ToastContext.Provider value={jest.fn()}>
         <Router history={history}>
-          <Form {...props} dirty />
+          <Form {...props} dirty>
+            {({ onCancel }) => (
+              <>
+                <input type="text" required />
+                <Button primary onClick={onCancel}>
+                  cancel
+                </Button>
+              </>
+            )}
+          </Form>
         </Router>
       </ToastContext.Provider>,
       { wrapper: MemoryRouter },
@@ -79,7 +90,16 @@ describe('on cancel', () => {
     const { getByText } = render(
       <ToastContext.Provider value={jest.fn()}>
         <Router history={history}>
-          <Form {...props} dirty />
+          <Form {...props} dirty>
+            {({ onCancel }) => (
+              <>
+                <input type="text" required />
+                <Button primary onClick={onCancel}>
+                  cancel
+                </Button>
+              </>
+            )}
+          </Form>
         </Router>
       </ToastContext.Provider>,
       { wrapper: MemoryRouter },
@@ -94,7 +114,16 @@ describe('on cancel', () => {
       <ToastContext.Provider value={jest.fn()}>
         <Router history={history}>
           <Route path="/form">
-            <Form {...props} dirty />
+            <Form {...props} dirty>
+              {({ onCancel }) => (
+                <>
+                  <input type="text" required />
+                  <Button primary onClick={onCancel}>
+                    cancel
+                  </Button>
+                </>
+              )}
+            </Form>
           </Route>
         </Router>
       </ToastContext.Provider>,
@@ -114,7 +143,16 @@ describe('when saving', () => {
     it('does not call onSave', () => {
       const handleSave = jest.fn();
       const { getByText } = render(
-        <Form {...props} onSave={handleSave} dirty />,
+        <Form {...props} onSave={handleSave} dirty>
+          {({ onSave: onSubmit }) => (
+            <>
+              <input type="text" required />
+              <Button primary onClick={onSubmit}>
+                save
+              </Button>
+            </>
+          )}
+        </Form>,
         { wrapper: MemoryRouter },
       );
 
@@ -126,7 +164,16 @@ describe('when saving', () => {
       const handleSave = jest.fn(() => Promise.resolve());
       const handleValidate = jest.fn(() => false);
       const { getByText } = render(
-        <Form {...props} validate={handleValidate} onSave={handleSave} dirty />,
+        <Form {...props} validate={handleValidate} onSave={handleSave} dirty>
+          {({ onSave: onSubmit }) => (
+            <>
+              <input type="text" />
+              <Button primary onClick={onSubmit}>
+                save
+              </Button>
+            </>
+          )}
+        </Form>,
         { wrapper: StaticRouter },
       );
 
@@ -157,7 +204,16 @@ describe('when saving', () => {
       result = render(
         <ToastContext.Provider value={mockToast}>
           <Router history={history}>
-            <Form {...props} onSave={handleSave} dirty />
+            <Form {...props} onSave={handleSave} dirty>
+              {({ onSave: onSubmit, isSaving }) => (
+                <>
+                  <Link to={'/another-url'}>Navigate away</Link>
+                  <Button primary enabled={!isSaving} onClick={onSubmit}>
+                    save
+                  </Button>
+                </>
+              )}
+            </Form>
           </Router>
         </ToastContext.Provider>,
       );
@@ -216,7 +272,16 @@ describe('when saving', () => {
         );
         rerender(
           <Router history={history}>
-            <Form {...props} onSave={handleSave} />
+            <Form {...props} onSave={handleSave}>
+              {({ onSave: onSubmit, isSaving }) => (
+                <>
+                  <Link to={'/another-url'}>Navigate away</Link>
+                  <Button primary enabled={!isSaving} onClick={onSubmit}>
+                    save
+                  </Button>
+                </>
+              )}
+            </Form>
           </Router>,
         );
       });

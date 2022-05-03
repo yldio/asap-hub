@@ -545,26 +545,6 @@
         }
       },
       {
-        "name": "labCatalogNumber",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": true,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Lab Catalog Number",
-          "hints": "If this is a hyperlink, please start with \"http://\" or \"https://\"",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
         "name": "doi",
         "isHidden": false,
         "isLocked": false,
@@ -579,6 +559,26 @@
           "editor": "Input",
           "label": "Identifier (DOI)",
           "hints": "DOIs must start with a number and cannot be a URL",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "labCatalogNumber",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": true,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Lab Catalog Number",
+          "hints": "If this is a hyperlink, please start with \"http://\" or \"https://\"",
           "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,

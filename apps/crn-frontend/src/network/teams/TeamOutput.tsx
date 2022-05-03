@@ -16,6 +16,7 @@ import {
   clearAjvErrorForPath,
   validationErrorsAreSupported,
 } from '../../api-util';
+import { useRefreshResearchOutputListing } from '../../shared-research/state';
 import Frame from '../../structure/Frame';
 import researchSuggestions from './research-suggestions';
 import {
@@ -72,7 +73,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   const getTeamSuggestions = useTeamSuggestions();
 
   const showCreateOutputPage = isEnabled('ROMS_FORM');
-
+  const refreshListing = useRefreshResearchOutputListing();
   if (showCreateOutputPage && team) {
     return (
       <Frame title="Share Research Output">
@@ -98,21 +99,25 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
           clearServerValidationError={(instancePath: string) =>
             setErrors(clearAjvErrorForPath(errors, instancePath))
           }
-          onSave={(output) =>
-            createResearchOutput(output).catch((error) => {
-              if (error instanceof BackendError) {
-                const { response } = error;
-                if (
-                  isValidationErrorResponse(response) &&
-                  validationErrorsAreSupported(response, ['/link', '/title'])
-                ) {
-                  setErrors(response.data);
-                  return;
+          onSave={async (output) => {
+            const researchOutput = await createResearchOutput(output).catch(
+              (error) => {
+                if (error instanceof BackendError) {
+                  const { response } = error;
+                  if (
+                    isValidationErrorResponse(response) &&
+                    validationErrorsAreSupported(response, ['/link', '/title'])
+                  ) {
+                    setErrors(response.data);
+                    return;
+                  }
                 }
-              }
-              throw error;
-            })
-          }
+                throw error;
+              },
+            );
+            refreshListing();
+            return researchOutput;
+          }}
         />
       </Frame>
     );

@@ -1,9 +1,8 @@
-import {
-  ResearchOutputResponse,
-  ResearchOutputDocumentType,
-} from '@asap-hub/model';
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
-
+import {
+  ResearchOutputDocumentType,
+  ResearchOutputResponse,
+} from '@asap-hub/model';
 import { createSentryHeaders, GetListOptions } from '../api-util';
 import { API_BASE_URL } from '../config';
 

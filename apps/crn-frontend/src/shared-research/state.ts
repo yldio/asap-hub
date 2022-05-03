@@ -4,6 +4,7 @@ import {
   ResearchOutputResponse,
 } from '@asap-hub/model';
 import {
+  atom,
   atomFamily,
   DefaultValue,
   selector,
@@ -21,13 +22,23 @@ import {
   ResearchOutputListOptions,
 } from './api';
 
+type RefreshResearchOutputListOptions = ResearchOutputListOptions & {
+  refreshId: number;
+};
+
 const researchOutputIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  ResearchOutputListOptions
+  RefreshResearchOutputListOptions
 >({
   key: 'researchOutputIndex',
   default: undefined,
 });
+
+const refreshToken = atom<number>({
+  key: 'refreshToken',
+  default: 0,
+});
+
 export const researchOutputsState = selectorFamily<
   ListResearchOutputResponse | Error | undefined,
   ResearchOutputListOptions
@@ -36,7 +47,13 @@ export const researchOutputsState = selectorFamily<
   get:
     (options) =>
     ({ get }) => {
-      const index = get(researchOutputIndexState(options));
+      const refreshId = get(refreshToken);
+      const index = get(
+        researchOutputIndexState({
+          ...options,
+          refreshId,
+        }),
+      );
       if (index === undefined || index instanceof Error) return index;
       const researchOutputs: ResearchOutputResponse[] = [];
       for (const id of index.ids) {
@@ -49,22 +66,24 @@ export const researchOutputsState = selectorFamily<
   set:
     (options) =>
     ({ get, set, reset }, researchOutput) => {
+      const refreshId = get(refreshToken);
+      const newOptions = { ...options, refreshId };
       if (
         researchOutput === undefined ||
         researchOutput instanceof DefaultValue
       ) {
-        const oldOutputs = get(researchOutputIndexState(options));
+        const oldOutputs = get(researchOutputIndexState(newOptions));
         if (!(oldOutputs instanceof Error)) {
           oldOutputs?.ids?.forEach((id) => reset(researchOutputState(id)));
         }
-        reset(researchOutputIndexState(options));
+        reset(researchOutputIndexState(newOptions));
       } else if (researchOutput instanceof Error) {
-        set(researchOutputIndexState(options), researchOutput);
+        set(researchOutputIndexState(newOptions), researchOutput);
       } else {
         researchOutput.items.forEach((output) =>
           set(researchOutputState(output.id), output),
         );
-        set(researchOutputIndexState(options), {
+        set(researchOutputIndexState(newOptions), {
           total: researchOutput.total,
           ids: researchOutput.items.map((output) => output.id),
         });
@@ -147,5 +166,12 @@ export const usePostTeamResearchOutput = () => {
     );
     setResearchOutputItem(researchOutput);
     return researchOutput;
+  };
+};
+
+export const useRefreshResearchOutputListing = () => {
+  const [token, setToken] = useRecoilState(refreshToken);
+  return () => {
+    setToken(token + 1);
   };
 };

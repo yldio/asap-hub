@@ -6,15 +6,18 @@ import AWSXray from 'aws-xray-sdk';
 import * as Sentry from '@sentry/serverless';
 import { SquidexGraphql } from '@asap-hub/squidex';
 import {
-  decodeToken,
+  AuthHandler,
+  authHandlerFactory,
   getHttpLogger,
   HttpLogger,
   Logger,
+  decodeToken,
+  errorHandlerFactory,
 } from '@asap-hub/server-common';
 
-import { errorHandlerFactory } from './middleware/error-handler';
+import { origin } from './config';
+
 import { tracingHandlerFactory } from './middleware/tracing-handler';
-import { authHandlerFactory, AuthHandler } from './middleware/auth-handler';
 
 import Groups, { GroupController } from './controllers/groups';
 import Users, { UserController } from './controllers/users';
@@ -87,7 +90,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const labsController = libs.labsController || new Labs(squidexGraphqlClient);
 
   // Handlers
-  const authHandler = libs.authHandler || authHandlerFactory(decodeToken);
+  const authHandler =
+    libs.authHandler || authHandlerFactory(decodeToken, logger, { origin });
   const tracingHandler = tracingHandlerFactory(libs.tracer);
   const sentryTransactionIdHandler =
     libs.sentryTransactionIdHandler || sentryTransactionIdMiddleware;

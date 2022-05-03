@@ -1,11 +1,13 @@
+import 'express-async-errors';
 import supertest from 'supertest';
 import { HTTPError, Response } from 'got';
-import { Router } from 'express';
-import { appFactory } from '../../src/app';
-import { authHandlerMock } from '../mocks/auth-handler.mock';
-import { loggerMock } from '../mocks/logger.mock';
+import express, { Router } from 'express';
 import { NotFoundError, ValidationError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
+import { userMock } from '@asap-hub/auth';
+import { loggerMock } from '../mocks/logger.mock';
+import { getHttpLogger } from '../../src/utils/logger';
+import { errorHandlerFactory } from '../../src/middleware/error-handler';
 
 class CustomError extends Error {
   status?: number;
@@ -40,11 +42,17 @@ describe('Error handling', () => {
     throw Boom.badRequest(`Validation error`, validationErrors);
   });
 
-  const app = appFactory({
-    mockRequestHandlers: [errorRoutes],
-    authHandler: authHandlerMock,
-    logger: loggerMock,
+  const httpLogger = getHttpLogger({ logger: loggerMock });
+  const errorHandler = errorHandlerFactory();
+
+  const app = express();
+  app.use(httpLogger);
+  app.use((req, _res, next) => {
+    req['loggedInUser'] = userMock;
+    return next();
   });
+  app.use(errorRoutes);
+  app.use(errorHandler);
 
   test('Should log the error and return status 500 along with the error message', async () => {
     const response = await supertest(app).get('/events/error-route');

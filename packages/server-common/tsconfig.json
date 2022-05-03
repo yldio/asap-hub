@@ -5,5 +5,9 @@
     "outDir": "build"
   },
   "include": ["src", "types"],
-  "references": [{ "path": "../../packages/auth" }]
+  "references": [
+    { "path": "../../packages/auth" },
+    { "path": "../../packages/model" },
+    { "path": "../../packages/errors" }
+  ]
 }

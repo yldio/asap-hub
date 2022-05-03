@@ -1,23 +1,31 @@
-import { Router } from 'express';
-import { DecodeToken } from '@asap-hub/server-common';
-import { getAuth0UserMock } from '@asap-hub/auth';
-import { appFactory } from '../../src/app';
+import 'express-async-errors';
 import supertest from 'supertest';
+import express, { Router } from 'express';
+import { getAuth0UserMock } from '@asap-hub/auth';
 import { authHandlerFactory } from '../../src/middleware/auth-handler';
-import { origin } from '../../src/config';
+import { errorHandlerFactory } from '../../src/middleware/error-handler';
+import { getHttpLogger, Logger } from '../../src/utils/logger';
+import { DecodeToken } from '../../src/utils/validate-token';
+import { loggerMock } from '../mocks/logger.mock';
 
 describe('Authentication middleware', () => {
   const mockRoutes = Router();
-  const auth0UserMock = getAuth0UserMock({ origin });
-  mockRoutes.get('/test-route', async (req, res) => {
-    return res.json(req.loggedInUser);
+  const auth0UserMock = getAuth0UserMock({ origin: 'test' });
+  mockRoutes.get('/test-route', (req, res) => {
+    return res.json(req['loggedInUser']);
   });
   const decodeToken: jest.MockedFunction<DecodeToken> = jest.fn();
-  const authHandler = authHandlerFactory(decodeToken);
-  const app = appFactory({
-    mockRequestHandlers: [mockRoutes],
-    authHandler,
+
+  const authHandler = authHandlerFactory(decodeToken, loggerMock, {
+    origin: 'test',
   });
+  const errorHandler = errorHandlerFactory();
+  const httpLogger = getHttpLogger({ logger: loggerMock });
+  const app = express();
+  app.use(httpLogger);
+  app.use(authHandler);
+  app.use(mockRoutes);
+  app.use(errorHandler);
 
   afterEach(() => {
     decodeToken.mockReset();
@@ -108,6 +116,6 @@ describe('Authentication middleware', () => {
       .get('/test-route')
       .set('Authorization', 'Bearer something');
 
-    expect(response.body).toEqual(auth0UserMock[`${origin}/user`]);
+    expect(response.body).toEqual(auth0UserMock[`test/user`]);
   });
 });

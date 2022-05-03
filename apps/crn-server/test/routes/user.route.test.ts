@@ -12,9 +12,9 @@ import {
 } from '../fixtures/users.fixtures';
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
-import { AuthHandler } from '../../src/middleware/auth-handler';
 import { listGroupsResponse } from '../fixtures/groups.fixtures';
 import { userMock } from '@asap-hub/auth';
+import { AuthHandler } from '@asap-hub/server-common';
 
 describe('/users/ route', () => {
   const authHandlerMock: AuthHandler = (req, _res, next) => {

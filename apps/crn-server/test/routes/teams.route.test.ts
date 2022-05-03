@@ -10,8 +10,8 @@ import {
   getListTeamResponse,
   getTeamResponse,
 } from '../fixtures/teams.fixtures';
-import { AuthHandler } from '../../src/middleware/auth-handler';
 import { FetchTeamsOptions } from '../../src/controllers/teams';
+import { AuthHandler } from '@asap-hub/server-common';
 
 describe('/teams/ route', () => {
   const loggedUser: User = {
@@ -28,7 +28,6 @@ describe('/teams/ route', () => {
     req.loggedInUser = getLoggedUser();
     next();
   };
-
   const app = appFactory({
     groupController: groupControllerMock,
     teamController: teamControllerMock,

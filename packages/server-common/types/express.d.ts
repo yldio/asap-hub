@@ -1,4 +1,5 @@
 import { APIGatewayProxyEventV2 } from 'aws-lambda';
+import { Span } from 'opentracing';
 import { User } from '@asap-hub/auth';
 import { Logger } from 'pino-http';
 

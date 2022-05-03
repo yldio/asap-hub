@@ -1605,7 +1605,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@sentry/core",
-        "npm:6.11.0"
+        "npm:6.7.1"
       ],
       [
         "@sentry/hub",
@@ -1613,7 +1613,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@sentry/minimal",
-        "npm:6.11.0"
+        "npm:6.7.1"
       ],
       [
         "@sentry/node",
@@ -1633,11 +1633,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@sentry/types",
-        "npm:6.11.0"
+        "npm:6.7.1"
       ],
       [
         "@sentry/utils",
-        "npm:6.11.0"
+        "npm:6.7.1"
       ],
       [
         "@serverless/cli",
@@ -2868,7 +2868,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "array-flatten",
-        "npm:2.1.2"
+        "npm:1.1.1"
       ],
       [
         "array-includes",
@@ -3796,7 +3796,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "cookie",
-        "npm:0.4.0"
+        "npm:0.4.1"
       ],
       [
         "cookie-signature",
@@ -4756,7 +4756,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "express-async-errors",
-        "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.1"
+        "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1"
       ],
       [
         "ext",
@@ -10718,7 +10718,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["csv-parse", "npm:4.15.4"],
             ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.3"],
             ["express", "npm:4.17.1"],
-            ["express-async-errors", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.1"],
+            ["express-async-errors", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1"],
             ["form-data", "npm:3.0.1"],
             ["googleapis", "npm:67.1.1"],
             ["got", "npm:11.8.2"],
@@ -10872,7 +10872,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-loader", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:8.2.2"],
             ["cors", "npm:2.8.5"],
             ["express", "npm:4.17.1"],
-            ["express-async-errors", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.1"],
+            ["express-async-errors", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1"],
             ["graphql-tag", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:2.12.4"],
             ["jsonwebtoken", "npm:8.5.1"],
             ["serverless", "npm:2.60.0"],
@@ -11400,15 +11400,27 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/server-common", "workspace:packages/server-common"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/errors", "workspace:packages/errors"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],
+            ["@hapi/boom", "npm:9.1.2"],
+            ["@sentry/serverless", "npm:6.7.1"],
+            ["@types/apr-intercept", "workspace:@types/apr-intercept"],
+            ["@types/express", "npm:4.17.11"],
             ["@types/jest", "npm:26.0.23"],
             ["@types/jsonwebtoken", "npm:8.5.1"],
+            ["@types/supertest", "npm:2.0.12"],
+            ["apr-intercept", "npm:3.0.4"],
+            ["express", "npm:4.17.1"],
+            ["express-async-errors", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1"],
+            ["got", "npm:11.8.2"],
             ["jsonwebtoken", "npm:8.5.1"],
             ["pino", "npm:7.11.0"],
             ["pino-http", "npm:6.6.0"],
             ["pino-lambda", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.0.1"],
-            ["pino-noir", "npm:2.2.1"]
+            ["pino-noir", "npm:2.2.1"],
+            ["supertest", "npm:6.2.2"]
           ],
           "linkType": "SOFT",
         }]
@@ -40718,10 +40730,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.1", {
-          "packageLocation": "./.yarn/__virtual__/express-async-errors-virtual-70ab727b06/0/cache/express-async-errors-npm-3.1.1-c0a6b1e552-3a2a6df8ea.zip/node_modules/express-async-errors/",
+        ["virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1", {
+          "packageLocation": "./.yarn/__virtual__/express-async-errors-virtual-c5b601ee87/0/cache/express-async-errors-npm-3.1.1-c0a6b1e552-3a2a6df8ea.zip/node_modules/express-async-errors/",
           "packageDependencies": [
-            ["express-async-errors", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.1"],
+            ["express-async-errors", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1"],
             ["@types/express", "npm:4.17.11"],
             ["express", "npm:4.17.1"]
           ],

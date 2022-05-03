@@ -1,8 +1,8 @@
 import { User, userMock } from '@asap-hub/auth';
+import { AuthHandler } from '@asap-hub/server-common';
 import { Router } from 'express';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { AuthHandler } from '../../src/middleware/auth-handler';
 import { permissionHandler } from '../../src/middleware/permission-handler';
 import { listGroupsResponse } from '../fixtures/groups.fixtures';
 import { pageResponse } from '../fixtures/page.fixtures';

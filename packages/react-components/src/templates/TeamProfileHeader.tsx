@@ -1,4 +1,3 @@
-import { isEnabled } from '@asap-hub/flags';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -131,7 +130,9 @@ const iconStyles = css({
 type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly tools?: ReadonlyArray<TeamTool>;
   readonly teamListElementId: string;
+  readonly showCreateResearchOutput: boolean;
 };
+
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   id,
   displayName,
@@ -140,14 +141,17 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   tools,
   teamListElementId,
   labCount,
+  showCreateResearchOutput,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
-  const showCreateButton = isEnabled('ROMS_FORM');
+
   return (
     <header css={containerStyles}>
       <Display styleAsHeading={2}>Team {displayName}</Display>
       <section
-        css={showCreateButton ? createSectionStyles : contactSectionStyles}
+        css={
+          showCreateResearchOutput ? createSectionStyles : contactSectionStyles
+        }
       >
         <div css={membersContainerStyles}>
           <ul css={membersListStyles}>
@@ -180,7 +184,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             </li>
           </ul>
         </div>
-        {pointOfContact && !showCreateButton && (
+        {pointOfContact && !showCreateResearchOutput && (
           <div css={pointOfContactStyles}>
             <Link
               buttonStyle
@@ -198,7 +202,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             <span>{getCounterString(labCount, 'Lab')}</span>
           </div>
         )}
-        {showCreateButton && (
+        {showCreateResearchOutput && (
           <div css={createStyles}>
             <DropdownButton
               buttonChildren={() => (

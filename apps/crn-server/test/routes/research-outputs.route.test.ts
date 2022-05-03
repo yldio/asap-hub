@@ -179,6 +179,17 @@ describe('/research-outputs/ route', () => {
       expect(response.body).toEqual(expect.objectContaining({ id: 'abc123' }));
     });
 
+    test('Should return 403 when user is not permitted to create research output', async () => {
+      const researchOutput = getCreateResearchOutput();
+      const response = await supertest(app)
+        .post('/research-outputs/')
+        .send({
+          ...researchOutput,
+          teams: ['team-id-that-does-not-belong-to-user'],
+        });
+      expect(response.status).toBe(403);
+    });
+
     test('Should return a 400 error when creating a research output fails due to validation error', async () => {
       const researchOutput = getCreateResearchOutput();
       researchOutputControllerMock.create.mockRejectedValueOnce(
@@ -495,6 +506,7 @@ describe('/research-outputs/ route', () => {
           ]),
         );
       });
+
       test('Should return a validation error when passing invalid schema (userId, externalAuthorName)', async () => {
         const response = await supertest(app)
           .post('/research-outputs')

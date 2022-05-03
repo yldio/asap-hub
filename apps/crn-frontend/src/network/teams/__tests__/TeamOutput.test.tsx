@@ -6,11 +6,10 @@ import {
   ResearchOutputDocumentType,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { ToastContext, useFlags } from '@asap-hub/react-context';
+import { ToastContext } from '@asap-hub/react-context';
 import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
 import userEvent from '@testing-library/user-event';
 import { ContextType, Suspense } from 'react';
 import { Route, StaticRouter } from 'react-router-dom';
@@ -38,26 +37,14 @@ const mockCreateTeamResearchOutput =
 interface RenderPageOptions {
   teamId: string;
   outputDocumentType?: OutputDocumentTypeParameter;
-  featureFlagEnabled?: boolean;
+  showCreateResearchOutput?: boolean;
 }
 
 const renderPage = async ({
-  featureFlagEnabled = true,
+  showCreateResearchOutput = true,
   teamId,
   outputDocumentType = 'bioinformatics',
 }: RenderPageOptions) => {
-  const {
-    result: {
-      current: { disable, enable },
-    },
-  } = renderHook(useFlags);
-
-  if (featureFlagEnabled) {
-    enable('ROMS_FORM');
-  } else {
-    disable('ROMS_FORM');
-  }
-
   const path =
     network.template +
     network({}).teams.template +
@@ -83,7 +70,10 @@ const renderPage = async ({
                 }
               >
                 <Route path={path}>
-                  <TeamOutput teamId={teamId} />
+                  <TeamOutput
+                    teamId={teamId}
+                    showCreateResearchOutput={showCreateResearchOutput}
+                  />
                 </Route>
               </StaticRouter>
             </WhenReady>
@@ -116,9 +106,9 @@ it('switches research output type based on parameter', async () => {
   ).toBeInTheDocument();
 });
 
-it('Shows NotFoundPage when feature flag is off', async () => {
+it('Shows NotFoundPage when showCreateResearchOutput is false', async () => {
   const teamId = 'team-id';
-  await renderPage({ teamId, featureFlagEnabled: false });
+  await renderPage({ teamId, showCreateResearchOutput: false });
   expect(
     screen.queryByRole('heading', { name: /Share/i }),
   ).not.toBeInTheDocument();

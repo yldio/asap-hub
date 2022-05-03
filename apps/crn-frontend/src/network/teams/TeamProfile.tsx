@@ -1,5 +1,8 @@
+import { isEnabled } from '@asap-hub/flags';
 import { NotFoundPage, TeamProfilePage } from '@asap-hub/react-components';
+import { useCurrentUser } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
+import { hasCreateResearchOutputPermissions } from '@asap-hub/validation';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
@@ -25,9 +28,16 @@ loadAbout();
 const TeamProfile: FC<Record<string, never>> = () => {
   const route = network({}).teams({}).team;
   const [teamListElementId] = useState(`team-list-${uuid()}`);
+  const user = useCurrentUser();
 
   const { path } = useRouteMatch();
   const { teamId } = useRouteParams(route);
+
+  const showCreateResearchOutput = !!(
+    isEnabled('ROMS_FORM') &&
+    user &&
+    hasCreateResearchOutputPermissions(user, [teamId])
+  );
 
   const team = useTeamById(teamId);
 
@@ -37,16 +47,24 @@ const TeamProfile: FC<Record<string, never>> = () => {
       .then(loadOutputs)
       .then(loadTeamOutput);
   }, [team]);
+
   if (team) {
     return (
       <Frame title={team.displayName}>
         <Switch>
           <Route path={path + route({ teamId }).createOutput.template}>
             <Frame title="Share Output">
-              <TeamOutput teamId={teamId} />
+              <TeamOutput
+                teamId={teamId}
+                showCreateResearchOutput={showCreateResearchOutput}
+              />
             </Frame>
           </Route>
-          <TeamProfilePage teamListElementId={teamListElementId} {...team}>
+          <TeamProfilePage
+            teamListElementId={teamListElementId}
+            {...team}
+            showCreateResearchOutput={showCreateResearchOutput}
+          >
             <Route path={path + route({ teamId }).about.template}>
               <Frame title="About">
                 <About teamListElementId={teamListElementId} team={team} />

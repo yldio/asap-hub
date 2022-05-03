@@ -4,7 +4,6 @@ import {
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { NotFoundPage, TeamCreateOutputPage } from '@asap-hub/react-components';
-import { useFlags } from '@asap-hub/react-context';
 import {
   network,
   OutputDocumentTypeParameter,
@@ -55,15 +54,18 @@ export function paramOutputDocumentTypeToResearchOutputDocumentType(
 
 type TeamOutputProps = {
   teamId: string;
+  showCreateResearchOutput: boolean;
 };
-const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
+const TeamOutput: React.FC<TeamOutputProps> = ({
+  teamId,
+  showCreateResearchOutput,
+}) => {
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
   const documentType = paramOutputDocumentTypeToResearchOutputDocumentType(
     paramOutputDocumentType,
   );
   const team = useTeamById(teamId);
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
-  const { isEnabled } = useFlags();
 
   const createResearchOutput = usePostTeamResearchOutput();
 
@@ -71,8 +73,12 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
 
+<<<<<<< HEAD
   const showCreateOutputPage = isEnabled('ROMS_FORM');
   if (showCreateOutputPage && team) {
+=======
+  if (showCreateResearchOutput && team) {
+>>>>>>> 76d7eacb (CRN-833 Enable PMs and ASAP Staff to create shared output)
     return (
       <Frame title="Share Research Output">
         <TeamCreateOutputPage

@@ -2,9 +2,8 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { useFlags, ToastContext } from '@asap-hub/react-context';
+import { ToastContext } from '@asap-hub/react-context';
 import { render, screen, waitFor } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
 import { ContextType, Suspense } from 'react';
 import { StaticRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -39,26 +38,14 @@ const mockCreateTeamResearchOutput =
 interface RenderPageOptions {
   teamId: string;
   outputDocumentType?: OutputDocumentTypeParameter;
-  featureFlagEnabled?: boolean;
+  showCreateResearchOutput?: boolean;
 }
 
 const renderPage = async ({
-  featureFlagEnabled = true,
+  showCreateResearchOutput = true,
   teamId,
   outputDocumentType = 'bioinformatics',
 }: RenderPageOptions) => {
-  const {
-    result: {
-      current: { disable, enable },
-    },
-  } = renderHook(useFlags);
-
-  if (featureFlagEnabled) {
-    enable('ROMS_FORM');
-  } else {
-    disable('ROMS_FORM');
-  }
-
   const path =
     network.template +
     network({}).teams.template +
@@ -84,7 +71,10 @@ const renderPage = async ({
                 }
               >
                 <Route path={path}>
-                  <TeamOutput teamId={teamId} />
+                  <TeamOutput
+                    teamId={teamId}
+                    showCreateResearchOutput={showCreateResearchOutput}
+                  />
                 </Route>
               </StaticRouter>
             </WhenReady>
@@ -117,9 +107,9 @@ it('switches research output type based on parameter', async () => {
   ).toBeInTheDocument();
 });
 
-it('Shows NotFoundPage when feature flag is off', async () => {
+it('Shows NotFoundPage when showCreateResearchOutput is false', async () => {
   const teamId = 'team-id';
-  await renderPage({ teamId, featureFlagEnabled: false });
+  await renderPage({ teamId, showCreateResearchOutput: false });
   expect(
     screen.queryByRole('heading', { name: /Share/i }),
   ).not.toBeInTheDocument();

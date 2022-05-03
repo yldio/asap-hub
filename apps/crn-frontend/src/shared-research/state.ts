@@ -25,6 +25,7 @@ const researchOutputIndexState = atomFamily<
   key: 'researchOutputIndex',
   default: undefined,
 });
+
 export const researchOutputsState = selectorFamily<
   ListResearchOutputResponse | Error | undefined,
   ResearchOutputListOptions

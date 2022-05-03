@@ -2,7 +2,6 @@ import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { formatISO } from 'date-fns';
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
-import { disable } from '@asap-hub/flags';
 import { fireEvent } from '@testing-library/dom';
 
 import TeamProfileHeader from '../TeamProfileHeader';
@@ -16,6 +15,7 @@ const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   lastModifiedDate: formatISO(new Date()),
   teamListElementId: '',
   labCount: 15,
+  showCreateResearchOutput: false,
 };
 
 it('renders the name as the top-level heading', () => {
@@ -57,7 +57,6 @@ it('renders no more than 5 members', () => {
 });
 
 it('renders a contact button when there is a pointOfContact', () => {
-  disable('ROMS_FORM');
   const { getByText } = render(
     <TeamProfileHeader
       {...boilerplateProps}
@@ -126,7 +125,7 @@ it('renders workspace tabs when tools provided', () => {
 
 it('renders share an output button dropdown', () => {
   const { getByText, queryByText } = render(
-    <TeamProfileHeader {...boilerplateProps} />,
+    <TeamProfileHeader {...boilerplateProps} showCreateResearchOutput={true} />,
   );
   expect(queryByText(/article/i, { selector: 'span' })).not.toBeVisible();
   fireEvent.click(getByText('Share an output'));

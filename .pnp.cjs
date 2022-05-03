@@ -11560,6 +11560,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/validation/",
           "packageDependencies": [
             ["@asap-hub/validation", "workspace:packages/validation"],
+            ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],
             ["@asap-hub/model", "workspace:packages/model"],

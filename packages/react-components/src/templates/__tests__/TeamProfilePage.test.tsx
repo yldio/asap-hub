@@ -15,6 +15,7 @@ const boilerplateProps: Omit<
   expertiseAndResourceTags: [],
   teamListElementId: '',
   labCount: 15,
+  showCreateResearchOutput: false,
 };
 
 it('renders the header', () => {

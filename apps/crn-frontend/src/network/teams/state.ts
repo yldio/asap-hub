@@ -17,10 +17,7 @@ import { GetListOptions } from '../../api-util';
 import { authorizationState } from '../../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';
-import {
-  useRefreshResearchOutputListing,
-  useSetResearchOutputItem,
-} from '../../shared-research/state';
+import { useSetResearchOutputItem } from '../../shared-research/state';
 import { getUsersAndExternalAuthors } from '../users/api';
 import {
   createTeamResearchOutput,
@@ -179,7 +176,6 @@ export const useAuthorSuggestions = () => {
 
 export const usePostTeamResearchOutput = () => {
   const authorization = useRecoilValue(authorizationState);
-  const setRefreshListing = useRefreshResearchOutputListing();
   const setResearchOutputItem = useSetResearchOutputItem();
   return async (payload: ResearchOutputPostRequest) => {
     const researchOutput = await createTeamResearchOutput(
@@ -187,7 +183,6 @@ export const usePostTeamResearchOutput = () => {
       authorization,
     );
     setResearchOutputItem(researchOutput);
-    setRefreshListing();
     return researchOutput;
   };
 };

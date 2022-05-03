@@ -51,12 +51,11 @@ const Form = <T extends void | Record<string, unknown>>({
     if (formRef.current!.reportValidity() && parentValidation) {
       setStatus('isSaving');
       try {
-        return await onSave().then((result) => {
-          if (formRef.current) {
-            setStatus('hasSaved');
-          }
-          return result;
-        });
+        const result = await onSave();
+        if (formRef.current) {
+          setStatus('hasSaved');
+        }
+        return result;
       } catch {
         if (formRef.current) {
           setStatus('hasError');

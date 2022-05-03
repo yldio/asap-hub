@@ -32,8 +32,8 @@ const researchOutputIndexState = atomFamily<
   default: undefined,
 });
 
-const refreshResearchOutputListing = atom<number>({
-  key: 'refreshResearchOutputListing',
+const refreshResearchOutputIndex = atom<number>({
+  key: 'refreshResearchOutputIndex',
   default: 0,
 });
 
@@ -45,7 +45,7 @@ export const researchOutputsState = selectorFamily<
   get:
     (options) =>
     ({ get }) => {
-      const refreshToken = get(refreshResearchOutputListing);
+      const refreshToken = get(refreshResearchOutputIndex);
       const index = get(
         researchOutputIndexState({
           ...options,
@@ -64,7 +64,7 @@ export const researchOutputsState = selectorFamily<
   set:
     (options) =>
     ({ get, set, reset }, researchOutputs) => {
-      const refreshToken = get(refreshResearchOutputListing);
+      const refreshToken = get(refreshResearchOutputIndex);
       const indexStateOptions = { ...options, refreshToken };
       if (
         researchOutputs === undefined ||
@@ -154,13 +154,11 @@ const setResearchOutput = selector<ResearchOutputResponse | undefined>({
   },
 });
 
-export const useRefreshResearchOutputListing = () => {
-  const [refresh, setRefresh] = useRecoilState(refreshResearchOutputListing);
-  return () => setRefresh(refresh + 1);
-};
-
 export const useSetResearchOutputItem = () => {
+  const [refresh, setRefresh] = useRecoilState(refreshResearchOutputIndex);
   const setResearchOutputItem = useSetRecoilState(setResearchOutput);
-  return (researhOutput: ResearchOutputResponse) =>
+  return (researhOutput: ResearchOutputResponse) => {
     setResearchOutputItem(researhOutput);
+    setRefresh(refresh + 1);
+  };
 };

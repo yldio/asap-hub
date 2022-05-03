@@ -164,7 +164,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         labCatalogNumber !== '' ||
         teams.length !== 1 // Original team
       }
-      onSave={async () => {
+      onSave={() => {
         const convertDecisionToBoolean = (decision: DecisionOption): boolean =>
           decision === 'Yes';
 
@@ -282,6 +282,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
                     }).$;
                     historyPush(path);
                   }
+                  return researchOutput;
                 }}
               >
                 Publish

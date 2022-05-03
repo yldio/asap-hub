@@ -117,6 +117,7 @@ describe('on submit', () => {
     usedInPublication: false,
     sharingStatus: 'Network Only',
     addedDate: expect.anything(),
+    methods: [],
   };
   type Data = Pick<
     ResearchOutputPostRequest,

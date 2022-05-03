@@ -179,6 +179,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         }
 
         return onSave({
+          ...identifierField,
           documentType,
           tags,
           link: String(link).trim() === '' ? undefined : link,
@@ -207,7 +208,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
               ? labCatalogNumber
               : undefined,
           addedDate: new Date().toISOString(),
-          ...identifierField,
+          methods: [],
         });
       }}
     >

@@ -3,11 +3,16 @@ import {
   ResearchOutputDocumentType,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { NotFoundPage, TeamCreateOutputPage } from '@asap-hub/react-components';
+import {
+  NotFoundPage,
+  TeamCreateOutputPage,
+  usePushFromHere,
+} from '@asap-hub/react-components';
 import { useFlags } from '@asap-hub/react-context';
 import {
   network,
   OutputDocumentTypeParameter,
+  sharedResearch,
   useRouteParams,
 } from '@asap-hub/routing';
 import React, { useState } from 'react';
@@ -72,6 +77,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   const getTeamSuggestions = useTeamSuggestions();
 
   const showCreateOutputPage = isEnabled('ROMS_FORM');
+  const historyPush = usePushFromHere();
   if (showCreateOutputPage && team) {
     return (
       <Frame title="Share Research Output">
@@ -97,21 +103,30 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
           clearServerValidationError={(instancePath: string) =>
             setErrors(clearAjvErrorForPath(errors, instancePath))
           }
-          onSave={(output) =>
-            createResearchOutput(output).catch((error: unknown) => {
-              if (error instanceof BackendError) {
-                const { response } = error;
-                if (
-                  isValidationErrorResponse(response) &&
-                  validationErrorsAreSupported(response, ['/link', '/title'])
-                ) {
-                  setErrors(response.data);
-                  return;
+          onSave={async (output) => {
+            const researchOutput = await createResearchOutput(output).catch(
+              (error: unknown) => {
+                if (error instanceof BackendError) {
+                  const { response } = error;
+                  if (
+                    isValidationErrorResponse(response) &&
+                    validationErrorsAreSupported(response, ['/link', '/title'])
+                  ) {
+                    setErrors(response.data);
+                    return;
+                  }
                 }
-              }
-              throw error;
-            })
-          }
+                throw error;
+              },
+            );
+            if (researchOutput) {
+              const { id } = researchOutput;
+              const path = sharedResearch({}).researchOutput({
+                researchOutputId: id,
+              }).$;
+              historyPush(path);
+            }
+          }}
         />
       </Frame>
     );

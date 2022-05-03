@@ -1,18 +1,17 @@
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom';
-import { ComponentProps } from 'react';
-import { fireEvent, waitFor } from '@testing-library/dom';
 import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
 import {
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
 } from '@asap-hub/model';
-
+import { fireEvent, waitFor } from '@testing-library/dom';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ComponentProps } from 'react';
+import { StaticRouter } from 'react-router-dom';
+import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import TeamCreateOutputForm, {
   createIdentifierField,
 } from '../TeamCreateOutputForm';
-import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 
 const props: ComponentProps<typeof TeamCreateOutputForm> = {
   onSave: jest.fn(() => Promise.resolve()),
@@ -166,10 +165,18 @@ describe('on submit', () => {
     const button = screen.getByRole('button', { name: /Publish/i });
     userEvent.click(button);
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Publish/i })).toBeEnabled();
-      expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
-    });
+    expect(
+      await screen.findByRole('button', { name: /Publish/i }),
+    ).toBeEnabled();
+    expect(
+      await screen.findByRole('button', { name: /Cancel/i }),
+    ).toBeEnabled();
+    // await waitFor(() => {
+    //   expect(screen.getByRole('button', { name: /Publish/i })).toBeEnabled();
+    //   return expect(
+    //     screen.getByRole('button', { name: /Cancel/i }),
+    //   ).toBeEnabled();
+    // });
   };
 
   it('can submit a form with minimum data', async () => {

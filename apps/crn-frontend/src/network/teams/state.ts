@@ -1,6 +1,5 @@
 import {
   ListTeamResponse,
-  ResearchOutputPostRequest,
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
@@ -17,15 +16,8 @@ import { GetListOptions } from '../../api-util';
 import { authorizationState } from '../../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';
-import { setResearchOutput } from '../../shared-research/state';
 import { getUsersAndExternalAuthors } from '../users/api';
-import {
-  createTeamResearchOutput,
-  getLabs,
-  getTeam,
-  getTeams,
-  patchTeam,
-} from './api';
+import { getLabs, getTeam, getTeams, patchTeam } from './api';
 
 const teamIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -134,18 +126,6 @@ export const usePatchTeamById = (id: string) => {
   const setPatchedTeam = useSetRecoilState(patchedTeamState(id));
   return async (patch: TeamPatchRequest) => {
     setPatchedTeam(await patchTeam(id, patch, authorization));
-  };
-};
-export const usePostTeamResearchOutput = () => {
-  const authorization = useRecoilValue(authorizationState);
-  const setResearchOutputItem = useSetRecoilState(setResearchOutput);
-  return async (payload: ResearchOutputPostRequest) => {
-    const researchOutput = await createTeamResearchOutput(
-      payload,
-      authorization,
-    );
-    setResearchOutputItem(researchOutput);
-    return researchOutput;
   };
 };
 

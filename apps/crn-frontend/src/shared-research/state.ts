@@ -142,7 +142,7 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
   return researchOutputs;
 };
 
-export const setResearchOutput = selector<ResearchOutputResponse | undefined>({
+const setResearchOutput = selector<ResearchOutputResponse | undefined>({
   key: 'setResearchOutput',
   get: () => undefined,
   set: ({ set }, researchOutput) => {
@@ -159,19 +159,14 @@ export const setResearchOutput = selector<ResearchOutputResponse | undefined>({
 export const usePostTeamResearchOutput = () => {
   const authorization = useRecoilValue(authorizationState);
   const setResearchOutputItem = useSetRecoilState(setResearchOutput);
+  const [token, setToken] = useRecoilState(refreshToken);
   return async (payload: ResearchOutputPostRequest) => {
     const researchOutput = await createTeamResearchOutput(
       payload,
       authorization,
     );
     setResearchOutputItem(researchOutput);
-    return researchOutput;
-  };
-};
-
-export const useRefreshResearchOutputListing = () => {
-  const [token, setToken] = useRecoilState(refreshToken);
-  return () => {
     setToken(token + 1);
+    return researchOutput;
   };
 };

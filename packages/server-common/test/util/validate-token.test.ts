@@ -1,7 +1,7 @@
 import { config, auth0PubKeys } from '@asap-hub/auth';
 import jwt from 'jsonwebtoken';
 import { idToken, getToken } from './validate-token.fixtures';
-import { decodeToken } from '../src/';
+import { decodeToken } from '../../src';
 
 jest.mock('@asap-hub/auth');
 const authMock = jest.requireMock('@asap-hub/auth');

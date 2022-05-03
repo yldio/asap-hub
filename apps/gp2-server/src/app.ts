@@ -2,14 +2,20 @@ import 'express-async-errors';
 import cors from 'cors';
 import express, { Express } from 'express';
 import { SquidexGraphql } from '@asap-hub/squidex';
-import { decodeToken, getHttpLogger, Logger } from '@asap-hub/server-common';
+import {
+  AuthHandler,
+  authHandlerFactory,
+  decodeToken,
+  errorHandlerFactory,
+  getHttpLogger,
+  Logger,
+} from '@asap-hub/server-common';
 import Dashboard, {
   DashboardController,
 } from './controllers/dashboard.controller';
 import { dashboardRouteFactory } from './routes/dashboard.route';
-import { AuthHandler, authHandlerFactory } from './middleware/auth-handler';
-import { errorHandlerFactory } from './middleware/error-handler';
 import pinoLogger from './utils/logger';
+import { origin } from './config';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -31,7 +37,8 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.dashboardController || new Dashboard(squidexGraphqlClient);
 
   // Handlers
-  const authHandler = libs.authHandler || authHandlerFactory(decodeToken);
+  const authHandler =
+    libs.authHandler || authHandlerFactory(decodeToken, logger, { origin });
 
   // Routes
   const dashboardRoutes = dashboardRouteFactory(dashboardController);

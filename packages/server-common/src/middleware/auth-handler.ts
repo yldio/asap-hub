@@ -1,12 +1,19 @@
 import { RequestHandler } from 'express';
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
-import { DecodeToken } from '@asap-hub/server-common';
-import { origin } from '../config';
-import logger from '../utils/logger';
+import { Logger } from '../utils/logger';
+import { DecodeToken } from '../utils/validate-token';
+
+type AuthHandlerConfig = {
+  origin: string;
+};
 
 export const authHandlerFactory =
-  (decodeToken: DecodeToken): RequestHandler =>
+  (
+    decodeToken: DecodeToken,
+    logger: Logger,
+    config: AuthHandlerConfig,
+  ): RequestHandler =>
   async (req, _res, next) => {
     const { headers } = req;
 
@@ -27,7 +34,7 @@ export const authHandlerFactory =
       throw Boom.unauthorized();
     }
 
-    const user = payload[`${origin}/user`];
+    const user = payload[`${config.origin}/user`];
 
     if (!user || typeof user === 'string') {
       logger.error('User payload not found');
@@ -35,7 +42,6 @@ export const authHandlerFactory =
     }
 
     req.loggedInUser = user;
-    req.span?.setBaggageItem('user.id', user.id);
 
     next();
   };

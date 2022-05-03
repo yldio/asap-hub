@@ -1,5 +1,6 @@
 import {
   ListTeamResponse,
+  ResearchOutputPostRequest,
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
@@ -16,8 +17,18 @@ import { GetListOptions } from '../../api-util';
 import { authorizationState } from '../../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';
+import {
+  useRefreshResearchOutputListing,
+  useSetResearchOutputItem,
+} from '../../shared-research/state';
 import { getUsersAndExternalAuthors } from '../users/api';
-import { getLabs, getTeam, getTeams, patchTeam } from './api';
+import {
+  createTeamResearchOutput,
+  getLabs,
+  getTeam,
+  getTeams,
+  patchTeam,
+} from './api';
 
 const teamIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -164,4 +175,19 @@ export const useAuthorSuggestions = () => {
       pageSize: 100,
       filters: new Set(),
     }).then(({ items }) => items);
+};
+
+export const usePostTeamResearchOutput = () => {
+  const authorization = useRecoilValue(authorizationState);
+  const setRefreshListing = useRefreshResearchOutputListing();
+  const setResearchOutputItem = useSetResearchOutputItem();
+  return async (payload: ResearchOutputPostRequest) => {
+    const researchOutput = await createTeamResearchOutput(
+      payload,
+      authorization,
+    );
+    setResearchOutputItem(researchOutput);
+    setRefreshListing();
+    return researchOutput;
+  };
 };

@@ -16,12 +16,12 @@ import {
   clearAjvErrorForPath,
   validationErrorsAreSupported,
 } from '../../api-util';
-import { usePostTeamResearchOutput } from '../../shared-research/state';
 import Frame from '../../structure/Frame';
 import researchSuggestions from './research-suggestions';
 import {
   useAuthorSuggestions,
   useLabSuggestions,
+  usePostTeamResearchOutput,
   useTeamById,
   useTeamSuggestions,
 } from './state';

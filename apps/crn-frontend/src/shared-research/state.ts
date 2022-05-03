@@ -1,6 +1,5 @@
 import {
   ListResearchOutputResponse,
-  ResearchOutputPostRequest,
   ResearchOutputResponse,
 } from '@asap-hub/model';
 import {
@@ -15,7 +14,6 @@ import {
 } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
-import { createTeamResearchOutput } from '../network/teams/api';
 import {
   getResearchOutput,
   getResearchOutputs,
@@ -23,7 +21,7 @@ import {
 } from './api';
 
 type RefreshResearchOutputListOptions = ResearchOutputListOptions & {
-  refreshId: number;
+  refreshToken: number;
 };
 
 const researchOutputIndexState = atomFamily<
@@ -34,8 +32,8 @@ const researchOutputIndexState = atomFamily<
   default: undefined,
 });
 
-const refreshToken = atom<number>({
-  key: 'refreshToken',
+const refreshResearchOutputListing = atom<number>({
+  key: 'refreshResearchOutputListing',
   default: 0,
 });
 
@@ -47,11 +45,11 @@ export const researchOutputsState = selectorFamily<
   get:
     (options) =>
     ({ get }) => {
-      const refreshId = get(refreshToken);
+      const refreshToken = get(refreshResearchOutputListing);
       const index = get(
         researchOutputIndexState({
           ...options,
-          refreshId,
+          refreshToken,
         }),
       );
       if (index === undefined || index instanceof Error) return index;
@@ -65,27 +63,27 @@ export const researchOutputsState = selectorFamily<
     },
   set:
     (options) =>
-    ({ get, set, reset }, researchOutput) => {
-      const refreshId = get(refreshToken);
-      const newOptions = { ...options, refreshId };
+    ({ get, set, reset }, researchOutputs) => {
+      const refreshToken = get(refreshResearchOutputListing);
+      const indexStateOptions = { ...options, refreshToken };
       if (
-        researchOutput === undefined ||
-        researchOutput instanceof DefaultValue
+        researchOutputs === undefined ||
+        researchOutputs instanceof DefaultValue
       ) {
-        const oldOutputs = get(researchOutputIndexState(newOptions));
+        const oldOutputs = get(researchOutputIndexState(indexStateOptions));
         if (!(oldOutputs instanceof Error)) {
           oldOutputs?.ids?.forEach((id) => reset(researchOutputState(id)));
         }
-        reset(researchOutputIndexState(newOptions));
-      } else if (researchOutput instanceof Error) {
-        set(researchOutputIndexState(newOptions), researchOutput);
+        reset(researchOutputIndexState(indexStateOptions));
+      } else if (researchOutputs instanceof Error) {
+        set(researchOutputIndexState(indexStateOptions), researchOutputs);
       } else {
-        researchOutput.items.forEach((output) =>
+        researchOutputs.items.forEach((output) =>
           set(researchOutputState(output.id), output),
         );
-        set(researchOutputIndexState(newOptions), {
-          total: researchOutput.total,
-          ids: researchOutput.items.map((output) => output.id),
+        set(researchOutputIndexState(indexStateOptions), {
+          total: researchOutputs.total,
+          ids: researchOutputs.items.map(({ id }) => id),
         });
       }
     },
@@ -156,17 +154,13 @@ const setResearchOutput = selector<ResearchOutputResponse | undefined>({
   },
 });
 
-export const usePostTeamResearchOutput = () => {
-  const authorization = useRecoilValue(authorizationState);
+export const useRefreshResearchOutputListing = () => {
+  const [refresh, setRefresh] = useRecoilState(refreshResearchOutputListing);
+  return () => setRefresh(refresh + 1);
+};
+
+export const useSetResearchOutputItem = () => {
   const setResearchOutputItem = useSetRecoilState(setResearchOutput);
-  const [token, setToken] = useRecoilState(refreshToken);
-  return async (payload: ResearchOutputPostRequest) => {
-    const researchOutput = await createTeamResearchOutput(
-      payload,
-      authorization,
-    );
-    setResearchOutputItem(researchOutput);
-    setToken(token + 1);
-    return researchOutput;
-  };
+  return (researhOutput: ResearchOutputResponse) =>
+    setResearchOutputItem(researhOutput);
 };

@@ -163,11 +163,11 @@ describe('on submit', () => {
     });
   };
   const submitForm = async () => {
-    const button = screen.getByRole('button', { name: /Share/i });
+    const button = screen.getByRole('button', { name: /Publish/i });
     userEvent.click(button);
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
+      expect(screen.getByRole('button', { name: /Publish/i })).toBeEnabled();
       expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
     });
   };

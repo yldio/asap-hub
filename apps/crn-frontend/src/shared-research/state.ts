@@ -125,7 +125,7 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
 
 export const setResearchOutput = selector<ResearchOutputResponse | undefined>({
   key: 'setResearchOutput',
-  get: ({ get }) => get(researchOutputState('te')),
+  get: () => undefined,
   set: ({ set }, researchOutput) => {
     if (
       researchOutput instanceof DefaultValue ||

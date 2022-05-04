@@ -6,8 +6,10 @@ import {
   atom,
   atomFamily,
   DefaultValue,
+  ReadWriteSelectorOptions,
   selector,
   selectorFamily,
+  SetRecoilState,
   useRecoilState,
   useRecoilValue,
   useSetRecoilState,
@@ -140,19 +142,15 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
   return researchOutputs;
 };
 
-const setResearchOutput = selector<ResearchOutputResponse | undefined>({
+const setResearchOutput = selector<ResearchOutputResponse>({
   key: 'setResearchOutput',
-  get: () => undefined,
-  set: ({ set }, researchOutput) => {
-    if (
-      researchOutput instanceof DefaultValue ||
-      researchOutput === undefined
-    ) {
-      return;
-    }
+  set: (
+    { set }: { set: SetRecoilState },
+    researchOutput: ResearchOutputResponse,
+  ) => {
     set(researchOutputState(researchOutput.id), researchOutput);
   },
-});
+} as unknown as ReadWriteSelectorOptions<ResearchOutputResponse>);
 
 export const useSetResearchOutputItem = () => {
   const [refresh, setRefresh] = useRecoilState(refreshResearchOutputIndex);

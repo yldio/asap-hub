@@ -6,7 +6,10 @@ import {
   ResearchOutputDocumentType,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { ToastContext } from '@asap-hub/react-context';
+import {
+  ResearchOutputPermissionsContext,
+  ToastContext,
+} from '@asap-hub/react-context';
 import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -37,11 +40,11 @@ const mockCreateTeamResearchOutput =
 interface RenderPageOptions {
   teamId: string;
   outputDocumentType?: OutputDocumentTypeParameter;
-  showCreateResearchOutput?: boolean;
+  canCreate?: boolean;
 }
 
 const renderPage = async ({
-  showCreateResearchOutput = true,
+  canCreate = true,
   teamId,
   outputDocumentType = 'bioinformatics',
 }: RenderPageOptions) => {
@@ -69,12 +72,13 @@ const renderPage = async ({
                     .createOutput({ outputDocumentType }).$
                 }
               >
-                <Route path={path}>
-                  <TeamOutput
-                    teamId={teamId}
-                    showCreateResearchOutput={showCreateResearchOutput}
-                  />
-                </Route>
+                <ResearchOutputPermissionsContext.Provider
+                  value={{ canCreate }}
+                >
+                  <Route path={path}>
+                    <TeamOutput teamId={teamId} />
+                  </Route>
+                </ResearchOutputPermissionsContext.Provider>
               </StaticRouter>
             </WhenReady>
           </Auth0Provider>
@@ -106,9 +110,9 @@ it('switches research output type based on parameter', async () => {
   ).toBeInTheDocument();
 });
 
-it('Shows NotFoundPage when showCreateResearchOutput is false', async () => {
+it('Shows NotFoundPage when canCreate in ResearchOutputPermissions is false', async () => {
   const teamId = 'team-id';
-  await renderPage({ teamId, showCreateResearchOutput: false });
+  await renderPage({ teamId, canCreate: false });
   expect(
     screen.queryByRole('heading', { name: /Share/i }),
   ).not.toBeInTheDocument();

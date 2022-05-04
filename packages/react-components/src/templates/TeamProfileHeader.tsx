@@ -1,6 +1,8 @@
 import { TeamResponse, TeamTool } from '@asap-hub/model';
+import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
+import { useContext } from 'react';
 import { Anchor, Avatar, Display, Link, TabLink } from '../atoms';
 import { lead, paper, pine } from '../colors';
 import {
@@ -130,7 +132,6 @@ const iconStyles = css({
 type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly tools?: ReadonlyArray<TeamTool>;
   readonly teamListElementId: string;
-  readonly showCreateResearchOutput: boolean;
 };
 
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
@@ -141,18 +142,14 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   tools,
   teamListElementId,
   labCount,
-  showCreateResearchOutput,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
+  const { canCreate } = useContext(ResearchOutputPermissionsContext);
 
   return (
     <header css={containerStyles}>
       <Display styleAsHeading={2}>Team {displayName}</Display>
-      <section
-        css={
-          showCreateResearchOutput ? createSectionStyles : contactSectionStyles
-        }
-      >
+      <section css={canCreate ? createSectionStyles : contactSectionStyles}>
         <div css={membersContainerStyles}>
           <ul css={membersListStyles}>
             {members
@@ -184,7 +181,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             </li>
           </ul>
         </div>
-        {pointOfContact && !showCreateResearchOutput && (
+        {pointOfContact && !canCreate && (
           <div css={pointOfContactStyles}>
             <Link
               buttonStyle
@@ -202,7 +199,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             <span>{getCounterString(labCount, 'Lab')}</span>
           </div>
         )}
-        {showCreateResearchOutput && (
+        {canCreate && (
           <div css={createStyles}>
             <DropdownButton
               buttonChildren={() => (

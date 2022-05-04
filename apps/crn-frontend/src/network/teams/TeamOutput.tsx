@@ -4,12 +4,13 @@ import {
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { NotFoundPage, TeamCreateOutputPage } from '@asap-hub/react-components';
+import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import {
   network,
   OutputDocumentTypeParameter,
   useRouteParams,
 } from '@asap-hub/routing';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   BackendError,
   clearAjvErrorForPath,
@@ -54,12 +55,8 @@ export function paramOutputDocumentTypeToResearchOutputDocumentType(
 
 type TeamOutputProps = {
   teamId: string;
-  showCreateResearchOutput: boolean;
 };
-const TeamOutput: React.FC<TeamOutputProps> = ({
-  teamId,
-  showCreateResearchOutput,
-}) => {
+const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
   const documentType = paramOutputDocumentTypeToResearchOutputDocumentType(
     paramOutputDocumentType,
@@ -67,18 +64,15 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const team = useTeamById(teamId);
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
 
+  const { canCreate } = useContext(ResearchOutputPermissionsContext);
+
   const createResearchOutput = usePostTeamResearchOutput();
 
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
 
-<<<<<<< HEAD
-  const showCreateOutputPage = isEnabled('ROMS_FORM');
-  if (showCreateOutputPage && team) {
-=======
-  if (showCreateResearchOutput && team) {
->>>>>>> 76d7eacb (CRN-833 Enable PMs and ASAP Staff to create shared output)
+  if (canCreate && team) {
     return (
       <Frame title="Share Research Output">
         <TeamCreateOutputPage

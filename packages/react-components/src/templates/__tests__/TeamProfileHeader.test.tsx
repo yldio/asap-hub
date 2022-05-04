@@ -1,3 +1,4 @@
+import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { formatISO } from 'date-fns';
@@ -15,7 +16,6 @@ const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   lastModifiedDate: formatISO(new Date()),
   teamListElementId: '',
   labCount: 15,
-  showCreateResearchOutput: false,
 };
 
 it('renders the name as the top-level heading', () => {
@@ -125,7 +125,9 @@ it('renders workspace tabs when tools provided', () => {
 
 it('renders share an output button dropdown', () => {
   const { getByText, queryByText } = render(
-    <TeamProfileHeader {...boilerplateProps} showCreateResearchOutput={true} />,
+    <ResearchOutputPermissionsContext.Provider value={{ canCreate: true }}>
+      <TeamProfileHeader {...boilerplateProps} />,
+    </ResearchOutputPermissionsContext.Provider>,
   );
   expect(queryByText(/article/i, { selector: 'span' })).not.toBeVisible();
   fireEvent.click(getByText('Share an output'));

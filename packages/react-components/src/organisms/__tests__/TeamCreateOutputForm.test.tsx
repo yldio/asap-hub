@@ -250,7 +250,7 @@ describe('on submit', () => {
         { externalAuthorName: 'Alex White' },
       ],
     });
-  });
+  }, 30000);
 
   it('can submit access instructions', async () => {
     setupForm();

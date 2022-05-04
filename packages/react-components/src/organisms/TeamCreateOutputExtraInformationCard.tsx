@@ -7,7 +7,12 @@ import { ComponentProps } from 'react';
 import { Link } from '../atoms';
 
 import { mailToSupport } from '../mail';
-import { FormCard, LabeledMultiSelect, LabeledTextArea } from '../molecules';
+import {
+  FormCard,
+  LabeledMultiSelect,
+  LabeledTextArea,
+  LabeledTextField,
+} from '../molecules';
 import { noop } from '../utils';
 import {
   TeamCreateOutputIdentifier,
@@ -16,13 +21,14 @@ import {
 
 type TeamCreateOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
-  'tags' | 'accessInstructions'
+  'tags' | 'accessInstructions' | 'labCatalogNumber'
 > & {
   tagSuggestions: NonNullable<
     ComponentProps<typeof LabeledMultiSelect>['suggestions']
   >;
   onChangeTags?: (values: string[]) => void;
-  onChangeAccessInstructions?: (values: string) => void;
+  onChangeAccessInstructions?: (value: string) => void;
+  onChangeLabCatalogNumber?: (value: string) => void;
   isSaving: boolean;
   documentType: ResearchOutputDocumentType;
   identifierRequired: boolean;
@@ -42,6 +48,8 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     setIdentifierType = noop,
     identifierRequired,
     documentType,
+    labCatalogNumber,
+    onChangeLabCatalogNumber,
   }) => (
     <FormCard title="What extra information can you provide?">
       <LabeledMultiSelect
@@ -67,7 +75,17 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
         setIdentifierType={setIdentifierType}
         required={identifierRequired}
       />
-
+      {documentType === 'Lab Resource' && (
+        <LabeledTextField
+          title="Catalog Number (Vendor/Lab)"
+          subtitle="(optional)"
+          description="Catalog number and vendor used to identify resource"
+          onChange={onChangeLabCatalogNumber}
+          placeholder="Catalog number and vendor e.g. AB123 (Abcam)"
+          enabled={!isSaving}
+          value={labCatalogNumber || ''}
+        />
+      )}
       <LabeledTextArea
         title="Access instructions"
         subtitle="(optional)"

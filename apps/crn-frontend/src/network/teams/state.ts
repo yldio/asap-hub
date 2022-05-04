@@ -16,6 +16,9 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import { GetListOptions } from '../../api-util';
 import { authorizationState } from '../../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
+import { useAlgolia } from '../../hooks/algolia';
+import { useSetResearchOutputItem } from '../../shared-research/state';
+import { getUsersAndExternalAuthors } from '../users/api';
 import {
   createTeamResearchOutput,
   getLabs,
@@ -23,8 +26,6 @@ import {
   getTeams,
   patchTeam,
 } from './api';
-import { getUsersAndExternalAuthors } from '../users/api';
-import { useAlgolia } from '../../hooks/algolia';
 
 const teamIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -135,12 +136,6 @@ export const usePatchTeamById = (id: string) => {
     setPatchedTeam(await patchTeam(id, patch, authorization));
   };
 };
-export const usePostTeamResearchOutput = () => {
-  const authorization = useRecoilValue(authorizationState);
-  return (payload: ResearchOutputPostRequest) =>
-    // TODO: Store the response in the state
-    createTeamResearchOutput(payload, authorization);
-};
 
 export const useLabSuggestions = () => {
   const authorization = useRecoilValue(authorizationState);
@@ -177,4 +172,17 @@ export const useAuthorSuggestions = () => {
       pageSize: 100,
       filters: new Set(),
     }).then(({ items }) => items);
+};
+
+export const usePostTeamResearchOutput = () => {
+  const authorization = useRecoilValue(authorizationState);
+  const setResearchOutputItem = useSetResearchOutputItem();
+  return async (payload: ResearchOutputPostRequest) => {
+    const researchOutput = await createTeamResearchOutput(
+      payload,
+      authorization,
+    );
+    setResearchOutputItem(researchOutput);
+    return researchOutput;
+  };
 };

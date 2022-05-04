@@ -3,8 +3,8 @@ import {
   ListResearchOutputResponse,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
-  VALIDATION_ERROR_MESSAGE,
   ValidationErrorResponse,
+  VALIDATION_ERROR_MESSAGE,
 } from '@asap-hub/model';
 import {
   RestExternalAuthor,
@@ -203,7 +203,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       ),
     );
 
-    return { id: researchOutputId };
+    return this.fetchById(researchOutputId);
   }
 
   private async createResearchOutput({
@@ -230,7 +230,7 @@ export default class ResearchOutputs implements ResearchOutputController {
         ...researchOutput,
         usedInAPublication: usedInPublication,
       } as RestResearchOutput['data'],
-      false,
+      true,
     );
   }
 

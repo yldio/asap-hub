@@ -1,30 +1,44 @@
 import {
-  atomFamily,
-  selectorFamily,
-  useRecoilValue,
-  DefaultValue,
-  useRecoilState,
-} from 'recoil';
-import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-
+import {
+  atom,
+  atomFamily,
+  DefaultValue,
+  ReadWriteSelectorOptions,
+  selector,
+  selectorFamily,
+  SetRecoilState,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+} from 'recoil';
+import { authorizationState } from '../auth/state';
+import { useAlgolia } from '../hooks/algolia';
 import {
   getResearchOutput,
   getResearchOutputs,
   ResearchOutputListOptions,
 } from './api';
-import { authorizationState } from '../auth/state';
-import { useAlgolia } from '../hooks/algolia';
+
+type RefreshResearchOutputListOptions = ResearchOutputListOptions & {
+  refreshToken: number;
+};
 
 const researchOutputIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  ResearchOutputListOptions
+  RefreshResearchOutputListOptions
 >({
   key: 'researchOutputIndex',
   default: undefined,
 });
+
+const refreshResearchOutputIndex = atom<number>({
+  key: 'refreshResearchOutputIndex',
+  default: 0,
+});
+
 export const researchOutputsState = selectorFamily<
   ListResearchOutputResponse | Error | undefined,
   ResearchOutputListOptions
@@ -33,7 +47,13 @@ export const researchOutputsState = selectorFamily<
   get:
     (options) =>
     ({ get }) => {
-      const index = get(researchOutputIndexState(options));
+      const refreshToken = get(refreshResearchOutputIndex);
+      const index = get(
+        researchOutputIndexState({
+          ...options,
+          refreshToken,
+        }),
+      );
       if (index === undefined || index instanceof Error) return index;
       const researchOutputs: ResearchOutputResponse[] = [];
       for (const id of index.ids) {
@@ -45,25 +65,27 @@ export const researchOutputsState = selectorFamily<
     },
   set:
     (options) =>
-    ({ get, set, reset }, researchOutput) => {
+    ({ get, set, reset }, researchOutputs) => {
+      const refreshToken = get(refreshResearchOutputIndex);
+      const indexStateOptions = { ...options, refreshToken };
       if (
-        researchOutput === undefined ||
-        researchOutput instanceof DefaultValue
+        researchOutputs === undefined ||
+        researchOutputs instanceof DefaultValue
       ) {
-        const oldOutputs = get(researchOutputIndexState(options));
+        const oldOutputs = get(researchOutputIndexState(indexStateOptions));
         if (!(oldOutputs instanceof Error)) {
           oldOutputs?.ids?.forEach((id) => reset(researchOutputState(id)));
         }
-        reset(researchOutputIndexState(options));
-      } else if (researchOutput instanceof Error) {
-        set(researchOutputIndexState(options), researchOutput);
+        reset(researchOutputIndexState(indexStateOptions));
+      } else if (researchOutputs instanceof Error) {
+        set(researchOutputIndexState(indexStateOptions), researchOutputs);
       } else {
-        researchOutput.items.forEach((output) =>
+        researchOutputs.items.forEach((output) =>
           set(researchOutputState(output.id), output),
         );
-        set(researchOutputIndexState(options), {
-          total: researchOutput.total,
-          ids: researchOutput.items.map((output) => output.id),
+        set(researchOutputIndexState(indexStateOptions), {
+          total: researchOutputs.total,
+          ids: researchOutputs.items.map(({ id }) => id),
         });
       }
     },
@@ -118,4 +140,23 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
     throw researchOutputs;
   }
   return researchOutputs;
+};
+
+const setResearchOutput = selector<ResearchOutputResponse>({
+  key: 'setResearchOutput',
+  set: (
+    { set }: { set: SetRecoilState },
+    researchOutput: ResearchOutputResponse,
+  ) => {
+    set(researchOutputState(researchOutput.id), researchOutput);
+  },
+} as unknown as ReadWriteSelectorOptions<ResearchOutputResponse>);
+
+export const useSetResearchOutputItem = () => {
+  const [refresh, setRefresh] = useRecoilState(refreshResearchOutputIndex);
+  const setResearchOutputItem = useSetRecoilState(setResearchOutput);
+  return (researhOutput: ResearchOutputResponse) => {
+    setResearchOutputItem(researhOutput);
+    setRefresh(refresh + 1);
+  };
 };

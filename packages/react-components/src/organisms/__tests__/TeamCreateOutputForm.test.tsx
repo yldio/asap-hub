@@ -1,27 +1,28 @@
-import { render, screen, act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom';
-import { ComponentProps } from 'react';
-import { fireEvent, waitFor } from '@testing-library/dom';
 import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
-import { ResearchOutputIdentifierType } from '@asap-hub/model';
-
+import {
+  ResearchOutputIdentifierType,
+  ResearchOutputPostRequest,
+  ResearchOutputResponse,
+} from '@asap-hub/model';
+import { fireEvent, waitFor } from '@testing-library/dom';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { createMemoryHistory, History } from 'history';
+import { ComponentProps } from 'react';
+import { Router, StaticRouter } from 'react-router-dom';
+import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import TeamCreateOutputForm, {
   createIdentifierField,
 } from '../TeamCreateOutputForm';
-import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 
 const props: ComponentProps<typeof TeamCreateOutputForm> = {
+  onSave: jest.fn(() => Promise.resolve()),
   tagSuggestions: [],
   documentType: 'Article',
   team: createTeamResponse(),
 };
 
-const clickShare = () => {
-  const button = screen.getByRole('button', { name: /Share/i });
-  userEvent.click(button);
-};
-
+jest.setTimeout(30000);
 describe('createIdentifierField', () => {
   it('maps the ResearchOutputIdentifierType to fields including the identifier', () => {
     expect(
@@ -33,12 +34,6 @@ describe('createIdentifierField', () => {
     expect(
       createIdentifierField(ResearchOutputIdentifierType.DOI, 'identifier'),
     ).toEqual({ doi: 'identifier' });
-    expect(
-      createIdentifierField(
-        ResearchOutputIdentifierType.LabCatalogNumber,
-        'identifier',
-      ),
-    ).toEqual({ labCatalogNumber: 'identifier' });
     expect(
       createIdentifierField(
         ResearchOutputIdentifierType.AccessionNumber,
@@ -57,158 +52,8 @@ it('renders the form', async () => {
   expect(getByText(/What are you sharing/i)).toBeVisible();
 });
 
-it('displays current team within the form', async () => {
-  const { getByText } = render(
-    <StaticRouter>
-      <TeamCreateOutputForm
-        {...props}
-        team={{ ...createTeamResponse(), displayName: 'example team' }}
-      />
-    </StaticRouter>,
-  );
-  expect(getByText('example team')).toBeVisible();
-});
-
-it('can submit a form when form data is valid', async () => {
-  const saveFn = jest.fn();
-  const getLabSuggestions = jest.fn();
-  const getAuthorSuggestions = jest.fn();
-  getLabSuggestions.mockResolvedValue([
-    { label: 'One Lab', value: '1' },
-    { label: 'Two Lab', value: '2' },
-  ]);
-  getAuthorSuggestions.mockResolvedValue([
-    {
-      user: { ...createUserResponse(), displayName: 'Chris Blue' },
-      label: 'Chris Blue',
-      value: 'u2',
-    },
-    {
-      user: {
-        ...createUserResponse(),
-        email: undefined,
-        displayName: 'Chris Reed',
-      },
-      label: 'Chris Reed (Non CRN)',
-      value: 'u1',
-    },
-  ]);
-  render(
-    <StaticRouter>
-      <TeamCreateOutputForm
-        {...props}
-        team={{ ...createTeamResponse(), id: 'TEAMID' }}
-        documentType="Lab Resource"
-        onSave={saveFn}
-        getLabSuggestions={getLabSuggestions}
-        getAuthorSuggestions={getAuthorSuggestions}
-      />
-    </StaticRouter>,
-  );
-
-  fireEvent.change(screen.getByLabelText(/url/i), {
-    target: { value: 'http://example.com' },
-  });
-  fireEvent.change(screen.getByLabelText(/title/i), {
-    target: { value: 'example title' },
-  });
-  fireEvent.change(screen.getByLabelText(/description/i), {
-    target: { value: 'example description' },
-  });
-  userEvent.type(screen.getByLabelText(/Select the option/i), 'Animal Model');
-  fireEvent.keyDown(screen.getByLabelText(/Select the option/i), {
-    keyCode: ENTER_KEYCODE,
-  });
-
-  fireEvent.click(
-    screen
-      .getByRole('group', { name: /funded by ASAP/i })
-      .querySelectorAll('input')[0]!,
-  );
-
-  fireEvent.click(
-    screen
-      .getByRole('group', { name: /used in a publication/i })
-      .querySelectorAll('input')[0]!,
-  );
-
-  fireEvent.click(
-    screen
-      .getByRole('group', { name: /sharing status/i })
-      .querySelectorAll('input')[1]!,
-  );
-
-  userEvent.type(screen.getByLabelText(/date published/i), '2022-03-24');
-
-  userEvent.click(screen.getByLabelText(/Labs/i));
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  userEvent.click(screen.getByText('One Lab'));
-
-  userEvent.click(screen.getByLabelText(/Authors/i));
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  userEvent.click(screen.getByText(/Chris Reed/i));
-
-  userEvent.click(screen.getByLabelText(/Authors/i));
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  userEvent.click(screen.getByText('Chris Blue'));
-
-  userEvent.click(screen.getByLabelText(/Authors/i));
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-
-  userEvent.type(screen.getByLabelText(/Authors/i), 'Alex White');
-
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  userEvent.click(screen.getAllByText('Alex White')[1]);
-
-  fireEvent.change(screen.getByLabelText(/doi/i), {
-    target: { value: 'doi:12.1234' },
-  });
-
-  clickShare();
-
-  expect(screen.getByRole('button', { name: /Share/i })).not.toBeEnabled();
-  expect(screen.getByRole('button', { name: /Cancel/i })).not.toBeEnabled();
-
-  await act(() =>
-    waitFor(() => {
-      expect(saveFn).toHaveBeenCalledWith({
-        tags: [],
-        link: 'http://example.com',
-        title: 'example title',
-        description: 'example description',
-        type: 'Animal Model',
-        labs: ['1'],
-        authors: [
-          { externalAuthorId: 'u1' },
-          { userId: 'u2' },
-          { externalAuthorName: 'Alex White' },
-        ],
-        teams: ['TEAMID'],
-        asapFunded: true,
-        usedInPublication: true,
-        sharingStatus: 'Public',
-        publishDate: new Date('2022-03-24').toISOString(),
-        doi: 'doi:12.1234',
-      });
-      expect(screen.getByRole('button', { name: /Share/i })).toBeEnabled();
-      expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
-    }),
-  );
-});
-
 it('displays proper message when no author is found', async () => {
-  const getAuthorSuggestions = jest.fn();
-  getAuthorSuggestions.mockResolvedValue([]);
+  const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
   const { getByText } = render(
     <StaticRouter>
       <TeamCreateOutputForm
@@ -225,9 +70,8 @@ it('displays proper message when no author is found', async () => {
 });
 
 it('displays proper message when no lab is found', async () => {
-  const getLabSuggestions = jest.fn();
-  getLabSuggestions.mockResolvedValue([]);
-  const { getByText } = render(
+  const getLabSuggestions = jest.fn().mockResolvedValue([]);
+  render(
     <StaticRouter>
       <TeamCreateOutputForm {...props} getLabSuggestions={getLabSuggestions} />
     </StaticRouter>,
@@ -236,5 +80,225 @@ it('displays proper message when no lab is found', async () => {
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
-  expect(getByText(/Sorry, no labs match/i)).toBeVisible();
+  expect(screen.getByText(/Sorry, no labs match/i)).toBeVisible();
+});
+
+it('displays current team within the form', async () => {
+  const { getByText } = render(
+    <StaticRouter>
+      <TeamCreateOutputForm
+        {...props}
+        team={{ ...createTeamResponse(), displayName: 'example team' }}
+      />
+    </StaticRouter>,
+  );
+  expect(getByText('example team')).toBeVisible();
+});
+
+describe('on submit', () => {
+  let history!: History;
+  const id = '42';
+  beforeEach(() => {
+    history = createMemoryHistory();
+  });
+  let saveFn = jest.fn(() => promise);
+  afterEach(() => {
+    jest.resetAllMocks();
+    saveFn = jest.fn(() => promise);
+  });
+  const getLabSuggestions = jest.fn().mockResolvedValue([]);
+  const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
+  const promise = Promise.resolve({ id } as ResearchOutputResponse);
+  const expectedRequest: ResearchOutputPostRequest = {
+    documentType: 'Article',
+    tags: [],
+    link: 'http://example.com',
+    title: 'example title',
+    description: 'example description',
+    type: 'Preprint',
+    labs: [],
+    authors: [],
+    teams: ['TEAMID'],
+    asapFunded: false,
+    usedInPublication: false,
+    sharingStatus: 'Network Only',
+    addedDate: expect.anything(),
+    methods: [],
+  };
+  type Data = Pick<
+    ResearchOutputPostRequest,
+    'link' | 'title' | 'description' | 'type'
+  >;
+
+  const setupForm = (
+    data: Data = {
+      description: 'example description',
+      title: 'example title',
+      type: 'Preprint',
+      link: 'http://example.com',
+    },
+    documentType: ComponentProps<
+      typeof TeamCreateOutputForm
+    >['documentType'] = 'Article',
+  ) => {
+    render(
+      <Router history={history}>
+        <TeamCreateOutputForm
+          {...props}
+          team={{ ...createTeamResponse(), id: 'TEAMID' }}
+          documentType={documentType}
+          onSave={saveFn}
+          getLabSuggestions={getLabSuggestions}
+          getAuthorSuggestions={getAuthorSuggestions}
+        />
+      </Router>,
+    );
+
+    fireEvent.change(screen.getByLabelText(/url/i), {
+      target: { value: data.link },
+    });
+    fireEvent.change(screen.getByLabelText(/title/i), {
+      target: { value: data.title },
+    });
+    fireEvent.change(screen.getByLabelText(/description/i), {
+      target: { value: data.description },
+    });
+    userEvent.type(screen.getByLabelText(/Select the option/i), data.type);
+    fireEvent.keyDown(screen.getByLabelText(/Select the option/i), {
+      keyCode: ENTER_KEYCODE,
+    });
+  };
+  const submitForm = async () => {
+    const button = screen.getByRole('button', { name: /Publish/i });
+    userEvent.click(button);
+
+    expect(
+      await screen.findByRole('button', { name: /Publish/i }),
+    ).toBeEnabled();
+    expect(
+      await screen.findByRole('button', { name: /Cancel/i }),
+    ).toBeEnabled();
+  };
+
+  it('can submit a form with minimum data', async () => {
+    setupForm();
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
+    await waitFor(() => {
+      expect(history.location.pathname).toEqual(`/shared-research/${id}`);
+    });
+  });
+
+  it('can submit a lab', async () => {
+    getLabSuggestions.mockResolvedValue([
+      { label: 'One Lab', value: '1' },
+      { label: 'Two Lab', value: '2' },
+    ]);
+    setupForm();
+    userEvent.click(screen.getByLabelText(/Labs/i));
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    userEvent.click(screen.getByText('One Lab'));
+
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      labs: ['1'],
+    });
+  });
+  it('can submit existing internal and external and create a new external author', async () => {
+    getAuthorSuggestions.mockResolvedValue([
+      {
+        user: { ...createUserResponse(), displayName: 'Chris Blue' },
+        label: 'Chris Blue',
+        value: 'u2',
+      },
+      {
+        user: {
+          ...createUserResponse(),
+          email: undefined,
+          displayName: 'Chris Reed',
+        },
+        label: 'Chris Reed (Non CRN)',
+        value: 'u1',
+      },
+    ]);
+    setupForm();
+
+    userEvent.click(screen.getByLabelText(/Authors/i));
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    userEvent.click(screen.getByText(/Chris Reed/i));
+
+    userEvent.click(screen.getByLabelText(/Authors/i));
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    userEvent.click(screen.getByText('Chris Blue'));
+
+    userEvent.click(screen.getByLabelText(/Authors/i));
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+
+    userEvent.type(screen.getByLabelText(/Authors/i), 'Alex White');
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    userEvent.click(screen.getAllByText('Alex White')[1]);
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      authors: [
+        {
+          externalAuthorId: 'u1',
+        },
+        { userId: 'u2' },
+        { externalAuthorName: 'Alex White' },
+      ],
+    });
+  });
+
+  it('can submit access instructions', async () => {
+    setupForm();
+    userEvent.type(
+      screen.getByLabelText(/access instructions/i),
+      'Access Instructions',
+    );
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      accessInstructions: 'Access Instructions',
+    });
+  });
+
+  it('can submit published date', async () => {
+    setupForm();
+    userEvent.click(
+      screen
+        .getByRole('group', { name: /sharing status/i })
+        .querySelectorAll('input')[1]!,
+    );
+    userEvent.type(screen.getByLabelText(/date published/i), '2022-03-24');
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      sharingStatus: 'Public',
+      publishDate: new Date('2022-03-24').toISOString(),
+    });
+  });
+
+  it('can submit labCatalogNumber for lab resource', async () => {
+    setupForm({ ...expectedRequest, type: 'Animal Model' }, 'Lab Resource');
+    userEvent.type(screen.getByLabelText(/Catalog Number/i), 'abc123');
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      type: 'Animal Model',
+      documentType: 'Lab Resource',
+      labCatalogNumber: 'abc123',
+    });
+  });
 });

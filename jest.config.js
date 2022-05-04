@@ -46,10 +46,10 @@ const lintConfigs = [
 module.exports = {
   ...baseConfig,
   projects: [
-    ...lintConfigs,
     ...packageTestConfigs,
     ...appTestConfigs,
     ...appPaths,
+    ...lintConfigs,
   ],
   testRegex: '^$', // root project does not have tests itself
 };

@@ -1,6 +1,6 @@
+import Debug from 'debug';
 import Got, { RequestError } from 'got';
 import decode from 'jwt-decode';
-import Debug from 'debug';
 import squidex from './config';
 
 /* eslint-disable camelcase */

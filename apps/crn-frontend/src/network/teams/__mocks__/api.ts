@@ -1,6 +1,7 @@
 import {
   createListLabsResponse,
   createListTeamResponse,
+  createResearchOutputResponse,
   createTeamResponse,
 } from '@asap-hub/fixtures';
 import {
@@ -37,6 +38,7 @@ export const getTeams = jest.fn(
 export const createTeamResearchOutput: jest.Mocked<
   typeof originalCreateTeamResearchOutput
 > = jest.fn(async () => ({
+  ...createResearchOutputResponse(),
   id: 'research-output-id',
 }));
 

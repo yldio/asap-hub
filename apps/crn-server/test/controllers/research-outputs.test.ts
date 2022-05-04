@@ -1,7 +1,7 @@
-import { DocumentNode, print } from 'graphql';
-import { NotFoundError, GenericError } from '@asap-hub/errors';
+import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { config, SquidexGraphqlError } from '@asap-hub/squidex';
+import { DocumentNode, print } from 'graphql';
 import nock from 'nock';
 import {
   FetchResearchOutputQuery,
@@ -10,7 +10,10 @@ import {
 import ResearchOutputs, {
   ResearchOutputInputData,
 } from '../../src/controllers/research-outputs';
-import { FETCH_RESEARCH_OUTPUTS } from '../../src/queries/research-outputs.queries';
+import {
+  FETCH_RESEARCH_OUTPUT,
+  FETCH_RESEARCH_OUTPUTS,
+} from '../../src/queries/research-outputs.queries';
 import { FETCH_RESEARCH_TAGS } from '../../src/queries/research-tags.queries';
 import {
   getListResearchOutputResponse,
@@ -59,6 +62,18 @@ describe('ResearchOutputs controller', () => {
       );
 
       expect(result).toMatchObject(getResearchOutputResponse());
+    });
+
+    test('should return the research output', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+      const expectedResult = getResearchOutputResponse();
+
+      expect(result).toEqual(expectedResult);
     });
 
     test('Should throw a Not Found error when the research output is not found', async () => {
@@ -713,327 +728,352 @@ describe('ResearchOutputs controller', () => {
 
   describe('Create', () => {
     beforeEach(() => {
-      const squidexResearchOutputEmptyGraphqlResponse: FetchResearchOutputsQuery =
-        {
-          queryResearchOutputsContentsWithTotal: null,
-        };
-      const squidexResearchTagsGraphqlResponse =
-        getSquidexResearchTagsGraphqlResponse();
-
-      squidexGraphqlClientMock.request.mockImplementation(async (query) => {
-        if (print(query as DocumentNode) === print(FETCH_RESEARCH_OUTPUTS)) {
-          return squidexResearchOutputEmptyGraphqlResponse;
-        }
-
-        if (print(query as DocumentNode) === print(FETCH_RESEARCH_TAGS)) {
-          return squidexResearchTagsGraphqlResponse;
-        }
-
-        throw new Error('Unexpected query');
-      });
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+      squidexGraphqlClientMock.request.mockClear();
     });
 
     afterEach(() => {
       expect(nock.isDone()).toBe(true);
-    });
-
-    afterEach(() => {
       nock.cleanAll();
     });
 
-    test('Creating the research output should return the id from squidex rest', async () => {
-      const researchOutputRequest = getResearchOutputInputData();
-      const teamId = researchOutputRequest.teams[0];
-      const researchOutputId = 'created-output-id';
-      const {
-        usedInPublication: _,
-        teams: __,
-        identifierType: ____,
-        ...squidexResearchOutput
-      } = parseToSquidex(researchOutputRequest);
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/research-outputs?publish=false`, {
-          ...squidexResearchOutput,
-          createdBy: { iv: [researchOutputRequest.createdBy] },
-          updatedBy: { iv: [researchOutputRequest.createdBy] },
-          asapFunded: { iv: 'Not Sure' },
-          usedInAPublication: { iv: 'Not Sure' },
-          labs: { iv: ['lab1'] },
-          authors: { iv: [] },
-          methods: {
-            iv: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
-          },
-        })
-        .reply(201, { id: researchOutputId })
-        .get(`/api/content/${config.appName}/teams/${teamId}`)
-        .matchHeader('X-Unpublished', `true`)
-        .reply(200, { data: { id: teamId, outputs: { iv: ['output-1'] } } })
-        .patch(`/api/content/${config.appName}/teams/${teamId}`, {
-          outputs: { iv: ['output-1', researchOutputId] },
-        })
-        .reply(200);
-
-      const id = await researchOutputs.create(researchOutputRequest);
-      expect(id).toEqual({ id: researchOutputId });
-    });
-
-    test('Should throw a validation error when a research output with the same type and title already exists', async () => {
-      const squidexGraphqlResponse = getSquidexResearchOutputsGraphqlResponse();
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        squidexGraphqlResponse,
-      );
-
-      const researchOutputRequest = getResearchOutputInputData();
-
-      await expect(
-        researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow(
-        expect.objectContaining({
-          data: [
-            {
-              instancePath: '/title',
-              keyword: 'unique',
-              message: 'must be unique',
-              params: {
-                type: 'string',
-              },
-              schemaPath: '#/properties/title/unique',
-            },
-          ],
-        }),
-      );
-
-      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          filter: `(data/documentType/iv eq '${researchOutputRequest.documentType}' and data/title/iv eq '${researchOutputRequest.title}')`,
-        }),
-        {
-          includeDrafts: true,
-        },
-      );
-      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          filter: `(data/link/iv eq '${researchOutputRequest.link}')`,
-        }),
-        {
-          includeDrafts: true,
-        },
-      );
-    });
-
-    test('Should throw a validation error when a research output with the same type and title and link already exists', async () => {
-      const squidexGraphqlResponse = getSquidexResearchOutputsGraphqlResponse();
-      squidexGraphqlClientMock.request.mockResolvedValue(
-        squidexGraphqlResponse,
-      );
-
-      const researchOutputRequest = getResearchOutputInputData();
-
-      await expect(
-        researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow(
-        expect.objectContaining({
-          data: [
-            {
-              instancePath: '/title',
-              keyword: 'unique',
-              message: 'must be unique',
-              params: {
-                type: 'string',
-              },
-              schemaPath: '#/properties/title/unique',
-            },
-            {
-              instancePath: '/link',
-              keyword: 'unique',
-              message: 'must be unique',
-              params: {
-                type: 'string',
-              },
-              schemaPath: '#/properties/link/unique',
-            },
-          ],
-        }),
-      );
-
-      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          filter: `(data/documentType/iv eq '${researchOutputRequest.documentType}' and data/title/iv eq '${researchOutputRequest.title}')`,
-        }),
-        {
-          includeDrafts: true,
-        },
-      );
-      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          filter: `(data/link/iv eq '${researchOutputRequest.link}')`,
-        }),
-        {
-          includeDrafts: true,
-        },
-      );
-    });
-
-    test('Should throw a validation error when the selected method does not exist', async () => {
-      const researchOutputInputData = getResearchOutputInputData();
-      researchOutputInputData.methods = [
-        'Activity Assay',
-        'non-existent-method',
-      ];
-
-      await expect(
-        researchOutputs.create(researchOutputInputData),
-      ).rejects.toThrow('Validation error');
-    });
-
-    test('Should throw when fails to create the research output - 400', async () => {
-      const researchOutputRequest = getResearchOutputInputData();
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/research-outputs?publish=false`)
-        .reply(400);
-
-      await expect(
-        researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow(GenericError);
-    });
-
-    test('Should throw when fails to create the research output - 500', async () => {
-      const researchOutputRequest = getResearchOutputInputData();
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/research-outputs?publish=false`)
-        .reply(500);
-
-      await expect(
-        researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow(GenericError);
-    });
-
-    test('Should throw when research output cannot be found', async () => {
-      const researchOutputRequest = getResearchOutputInputData();
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/research-outputs?publish=false`)
-        .reply(201)
-        .get(
-          `/api/content/${config.appName}/teams/${researchOutputRequest.teams[0]}`,
-        )
-        .reply(404);
-
-      await expect(
-        researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow(NotFoundError);
-    });
-
-    test('Should throw when research output association cannot be made', async () => {
-      const researchOutputRequest = getResearchOutputInputData();
-      const teamId = researchOutputRequest.teams[0];
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/research-outputs?publish=false`)
-        .reply(201)
-        .get(`/api/content/${config.appName}/teams/${teamId}`)
-        .reply(200, { data: { id: teamId, outputs: { iv: ['output-1'] } } })
-        .patch(`/api/content/${config.appName}/teams/${teamId}`)
-        .reply(500);
-
-      await expect(
-        researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow(GenericError);
-    });
-
-    test('Should associate external authors (new and existent)', async () => {
-      const researchOutputRequest = {
-        ...getResearchOutputInputData(),
-        authors: [
+    describe('senarios', () => {
+      beforeEach(() => {
+        const squidexResearchOutputEmptyGraphqlResponse: FetchResearchOutputsQuery =
           {
-            userId: 'user-1',
-          },
+            queryResearchOutputsContentsWithTotal: null,
+          };
+        const squidexResearchTagsGraphqlResponse =
+          getSquidexResearchTagsGraphqlResponse();
+        const mockResponse = async (query: DocumentNode | string) => {
+          if (print(query as DocumentNode) === print(FETCH_RESEARCH_OUTPUTS)) {
+            return squidexResearchOutputEmptyGraphqlResponse;
+          }
+
+          if (print(query as DocumentNode) === print(FETCH_RESEARCH_TAGS)) {
+            return squidexResearchTagsGraphqlResponse;
+          }
+
+          if (print(query as DocumentNode) === print(FETCH_RESEARCH_OUTPUT)) {
+            return getSquidexResearchOutputGraphqlResponse();
+          }
+          throw new Error('Unexpected query');
+        };
+
+        squidexGraphqlClientMock.request.mockImplementation(mockResponse);
+      });
+
+      test('Creating the research output should return the newly created output from squidex', async () => {
+        const researchOutputRequest = getResearchOutputInputData();
+        const teamId = researchOutputRequest.teams[0];
+        const researchOutputId = 'created-output-id';
+        const {
+          usedInPublication: _,
+          teams: __,
+          identifierType: ____,
+          ...squidexResearchOutput
+        } = parseToSquidex(researchOutputRequest);
+
+        nock(config.baseUrl)
+          .post(
+            `/api/content/${config.appName}/research-outputs?publish=true`,
+            {
+              ...squidexResearchOutput,
+              createdBy: { iv: [researchOutputRequest.createdBy] },
+              updatedBy: { iv: [researchOutputRequest.createdBy] },
+              asapFunded: { iv: 'Not Sure' },
+              usedInAPublication: { iv: 'Not Sure' },
+              labs: { iv: ['lab1'] },
+              authors: { iv: [] },
+              methods: {
+                iv: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
+              },
+            },
+          )
+          .reply(201, { id: researchOutputId })
+          .get(`/api/content/${config.appName}/teams/${teamId}`)
+          .matchHeader('X-Unpublished', `true`)
+          .reply(200, { data: { id: teamId, outputs: { iv: ['output-1'] } } })
+          .patch(`/api/content/${config.appName}/teams/${teamId}`, {
+            outputs: { iv: ['output-1', researchOutputId] },
+          })
+          .reply(200);
+
+        const result = await researchOutputs.create(researchOutputRequest);
+        const expectedResult = getResearchOutputResponse();
+        expect(result).toEqual(expectedResult);
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledTimes(4);
+      });
+
+      test('Should throw when cannot create an external author - 400', async () => {
+        nock(config.baseUrl)
+          .post(
+            `/api/content/${config.appName}/external-authors?publish=true`,
+            {
+              name: { iv: 'Chris Blue' },
+            },
+          )
+          .reply(400);
+
+        await expect(
+          researchOutputs.create({
+            ...getResearchOutputInputData(),
+            authors: [{ externalAuthorName: 'Chris Blue' }],
+          }),
+        ).rejects.toThrow(GenericError);
+      });
+      test('Should throw a validation error when a research output with the same type and title and link already exists', async () => {
+        const squidexGraphqlResponse =
+          getSquidexResearchOutputsGraphqlResponse();
+        squidexGraphqlClientMock.request.mockResolvedValue(
+          squidexGraphqlResponse,
+        );
+
+        const researchOutputRequest = getResearchOutputInputData();
+
+        await expect(
+          researchOutputs.create(researchOutputRequest),
+        ).rejects.toThrow(
+          expect.objectContaining({
+            data: [
+              {
+                instancePath: '/title',
+                keyword: 'unique',
+                message: 'must be unique',
+                params: {
+                  type: 'string',
+                },
+                schemaPath: '#/properties/title/unique',
+              },
+              {
+                instancePath: '/link',
+                keyword: 'unique',
+                message: 'must be unique',
+                params: {
+                  type: 'string',
+                },
+                schemaPath: '#/properties/link/unique',
+              },
+            ],
+          }),
+        );
+
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            filter: `(data/documentType/iv eq '${researchOutputRequest.documentType}' and data/title/iv eq '${researchOutputRequest.title}')`,
+          }),
           {
-            externalAuthorId: 'author-1',
+            includeDrafts: true,
           },
+        );
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            filter: `(data/link/iv eq '${researchOutputRequest.link}')`,
+          }),
           {
-            externalAuthorName: 'Chris Blue',
+            includeDrafts: true,
           },
-        ],
-      };
-      const teamId = researchOutputRequest.teams[0];
-      const researchOutputId = 'created-output-id';
-      const {
-        usedInPublication: _,
-        teams: __,
-        ...squidexResearchOutput
-      } = parseToSquidex(researchOutputRequest);
+        );
+      });
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/external-authors?publish=true`, {
-          name: { iv: 'Chris Blue' },
-        })
-        .reply(200, { id: 'author-2' })
-        .get(`/api/content/${config.appName}/teams/${teamId}`)
-        .reply(200, { data: { id: teamId } })
-        .patch(`/api/content/${config.appName}/teams/${teamId}`)
-        .reply(200)
-        .post(`/api/content/${config.appName}/research-outputs?publish=false`, {
-          ...squidexResearchOutput,
-          createdBy: { iv: [researchOutputRequest.createdBy] },
-          updatedBy: { iv: [researchOutputRequest.createdBy] },
-          asapFunded: { iv: 'Not Sure' },
-          usedInAPublication: { iv: 'Not Sure' },
-          authors: { iv: ['user-1', 'author-1', 'author-2'] },
-          methods: {
-            iv: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
-          },
-        })
-        .reply(201, { id: researchOutputId });
+      test('Should throw a validation error when the selected method does not exist', async () => {
+        const researchOutputInputData = getResearchOutputInputData();
+        researchOutputInputData.methods = [
+          'Activity Assay',
+          'non-existent-method',
+        ];
 
-      const { id } = await researchOutputs.create(researchOutputRequest);
-      expect(id).toEqual(researchOutputId);
-    });
+        await expect(
+          researchOutputs.create(researchOutputInputData),
+        ).rejects.toThrow('Validation error');
+      });
 
-    test('Should throw when cannot create an external author - 400', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/external-authors?publish=true`, {
-          name: { iv: 'Chris Blue' },
-        })
-        .reply(400);
+      test('Should throw when fails to create the research output - 400', async () => {
+        const researchOutputRequest = getResearchOutputInputData();
 
-      await expect(
-        researchOutputs.create({
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/research-outputs?publish=true`)
+          .reply(400);
+
+        await expect(
+          researchOutputs.create(researchOutputRequest),
+        ).rejects.toThrow(GenericError);
+      });
+
+      test('Should throw when fails to create the research output - 500', async () => {
+        const researchOutputRequest = getResearchOutputInputData();
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/research-outputs?publish=true`)
+          .reply(500);
+
+        await expect(
+          researchOutputs.create(researchOutputRequest),
+        ).rejects.toThrow(GenericError);
+      });
+
+      test('Should throw when research output cannot be found', async () => {
+        const researchOutputRequest = getResearchOutputInputData();
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/research-outputs?publish=true`)
+          .reply(201)
+          .get(
+            `/api/content/${config.appName}/teams/${researchOutputRequest.teams[0]}`,
+          )
+          .reply(404);
+
+        await expect(
+          researchOutputs.create(researchOutputRequest),
+        ).rejects.toThrow(NotFoundError);
+      });
+
+      test('Should throw when research output association cannot be made', async () => {
+        const researchOutputRequest = getResearchOutputInputData();
+        const teamId = researchOutputRequest.teams[0];
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/research-outputs?publish=true`)
+          .reply(201)
+          .get(`/api/content/${config.appName}/teams/${teamId}`)
+          .reply(200, { data: { id: teamId, outputs: { iv: ['output-1'] } } })
+          .patch(`/api/content/${config.appName}/teams/${teamId}`)
+          .reply(500);
+
+        await expect(
+          researchOutputs.create(researchOutputRequest),
+        ).rejects.toThrow(GenericError);
+      });
+
+      test('Should associate external authors (new and existent)', async () => {
+        const researchOutputRequest = {
           ...getResearchOutputInputData(),
-          authors: [{ externalAuthorName: 'Chris Blue' }],
-        }),
-      ).rejects.toThrow(GenericError);
+          authors: [
+            {
+              userId: 'user-1',
+            },
+            {
+              externalAuthorId: 'author-1',
+            },
+            {
+              externalAuthorName: 'Chris Blue',
+            },
+          ],
+        };
+        const teamId = researchOutputRequest.teams[0];
+        const researchOutputId = 'created-output-id';
+        const {
+          usedInPublication: _,
+          teams: __,
+          ...squidexResearchOutput
+        } = parseToSquidex(researchOutputRequest);
+
+        nock(config.baseUrl)
+          .post(
+            `/api/content/${config.appName}/external-authors?publish=true`,
+            {
+              name: { iv: 'Chris Blue' },
+            },
+          )
+          .reply(200, { id: 'author-2' })
+          .get(`/api/content/${config.appName}/teams/${teamId}`)
+          .reply(200, { data: { id: teamId } })
+          .patch(`/api/content/${config.appName}/teams/${teamId}`)
+          .reply(200)
+          .post(
+            `/api/content/${config.appName}/research-outputs?publish=true`,
+            {
+              ...squidexResearchOutput,
+              createdBy: { iv: [researchOutputRequest.createdBy] },
+              updatedBy: { iv: [researchOutputRequest.createdBy] },
+              asapFunded: { iv: 'Not Sure' },
+              usedInAPublication: { iv: 'Not Sure' },
+              authors: { iv: ['user-1', 'author-1', 'author-2'] },
+              methods: {
+                iv: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
+              },
+            },
+          )
+          .reply(201, { id: researchOutputId });
+
+        const result = await researchOutputs.create(researchOutputRequest);
+        const expectedResult = getResearchOutputResponse();
+        expect(result).toEqual(expectedResult);
+      });
+      test('Should throw when cannot create an external author - 500', async () => {
+        const researchOutputRequest = {
+          ...getResearchOutputInputData(),
+          authors: [
+            {
+              userId: 'user-1',
+            },
+            {
+              externalAuthorId: 'author-1',
+            },
+            {
+              externalAuthorName: 'Chris Blue',
+            },
+          ],
+        };
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/external-authors?publish=true`)
+          .reply(500);
+
+        await expect(
+          researchOutputs.create(researchOutputRequest),
+        ).rejects.toThrow(GenericError);
+
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            filter: `(data/documentType/iv eq '${researchOutputRequest.documentType}' and data/title/iv eq '${researchOutputRequest.title}')`,
+          }),
+          {
+            includeDrafts: true,
+          },
+        );
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            filter: `(data/link/iv eq '${researchOutputRequest.link}')`,
+          }),
+          {
+            includeDrafts: true,
+          },
+        );
+      });
     });
 
-    test('Should throw when cannot create an external author - 500', async () => {
-      const researchOutputRequest = {
-        ...getResearchOutputInputData(),
-        authors: [
-          {
-            userId: 'user-1',
-          },
-          {
-            externalAuthorId: 'author-1',
-          },
-          {
-            externalAuthorName: 'Chris Blue',
-          },
-        ],
+    test('Should throw error when a research output with the same type and title already exists', async () => {
+      const squidexGraphqlEmptyResponse = {
+        queryResearchOutputsContentsWithTotal: null,
       };
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/external-authors?publish=true`)
-        .reply(500);
+      const squidexGraphqlResponse = getSquidexResearchOutputsGraphqlResponse();
+      squidexGraphqlClientMock.request
+        .mockResolvedValueOnce(squidexGraphqlResponse)
+        .mockResolvedValueOnce(squidexGraphqlEmptyResponse);
+      const researchOutputRequest = getResearchOutputInputData();
 
       await expect(
         researchOutputs.create(researchOutputRequest),
-      ).rejects.toThrow(GenericError);
+      ).rejects.toThrow(
+        expect.objectContaining({
+          data: [
+            {
+              instancePath: '/title',
+              keyword: 'unique',
+              message: 'must be unique',
+              params: {
+                type: 'string',
+              },
+              schemaPath: '#/properties/title/unique',
+            },
+          ],
+        }),
+      );
     });
   });
 });

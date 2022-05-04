@@ -1,24 +1,24 @@
-import { css } from '@emotion/react';
-import { ComponentProps, useState } from 'react';
 import {
   DecisionOption,
+  ResearchOutputDocumentType,
+  ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
-  ResearchOutputDocumentType,
   TeamResponse,
-  ResearchOutputIdentifierType,
 } from '@asap-hub/model';
+import { sharedResearch } from '@asap-hub/routing';
 import { isInternalUser } from '@asap-hub/validation';
-
-import {
-  TeamCreateOutputFormSharingCard,
-  TeamCreateOutputExtraInformationCard,
-  Form,
-} from './index';
+import { css } from '@emotion/react';
+import { ComponentProps, useState } from 'react';
 import { Button } from '../atoms';
-import { perRem, mobileScreen } from '../pixels';
+import { mobileScreen, perRem } from '../pixels';
+import { usePushFromHere } from '../routing';
 import { noop } from '../utils';
-
+import {
+  Form,
+  TeamCreateOutputExtraInformationCard,
+  TeamCreateOutputFormSharingCard,
+} from './index';
 import TeamCreateOutputContributorsCard from './TeamCreateOutputContributorsCard';
 
 const contentStyles = css({
@@ -67,9 +67,9 @@ type TeamCreateOutputFormProps = Pick<
     ComponentProps<typeof TeamCreateOutputContributorsCard>,
     'getLabSuggestions' | 'getAuthorSuggestions' | 'getTeamSuggestions'
   > & {
-    onSave?: (
-      output: Partial<ResearchOutputPostRequest>,
-    ) => Promise<Pick<ResearchOutputResponse, 'id'> | void>;
+    onSave: (
+      output: ResearchOutputPostRequest,
+    ) => Promise<ResearchOutputResponse | void>;
     documentType: ResearchOutputDocumentType;
     team: TeamResponse;
   };
@@ -81,7 +81,6 @@ const identifierTypeToFieldName: Record<
   [ResearchOutputIdentifierType.None]: undefined,
   [ResearchOutputIdentifierType.DOI]: 'doi',
   [ResearchOutputIdentifierType.AccessionNumber]: 'accession',
-  [ResearchOutputIdentifierType.LabCatalogNumber]: 'labCatalogNumber',
   [ResearchOutputIdentifierType.RRID]: 'rrid',
 };
 
@@ -92,7 +91,6 @@ export function createIdentifierField(
   | { rrid: string }
   | { doi: string }
   | { accession: string }
-  | { labCatalogNumber: string }
   | Record<never, never> {
   const fieldName = identifierTypeToFieldName[identifierType];
   if (fieldName) {
@@ -103,7 +101,7 @@ export function createIdentifierField(
 }
 
 const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
-  onSave = noop,
+  onSave,
   tagSuggestions,
   documentType,
   getLabSuggestions = noop,
@@ -113,9 +111,12 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   serverValidationErrors,
   clearServerValidationError,
 }) => {
+  const historyPush = usePushFromHere();
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
   const [type, setType] = useState<ResearchOutputPostRequest['type'] | ''>('');
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>('');
+  const [labCatalogNumber, setLabCatalogNumber] =
+    useState<ResearchOutputPostRequest['labCatalogNumber']>('');
   const [labs, setLabs] = useState<
     NonNullable<ComponentProps<typeof TeamCreateOutputContributorsCard>['labs']>
   >([]);
@@ -148,7 +149,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [identifier, setIdentifier] = useState<string>('');
 
   return (
-    <Form
+    <Form<ResearchOutputResponse>
       serverErrors={serverValidationErrors}
       dirty={
         tags.length !== 0 ||
@@ -160,6 +161,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         authors.length !== 0 ||
         identifierType !== ResearchOutputIdentifierType.None ||
         identifier !== '' ||
+        labCatalogNumber !== '' ||
         teams.length !== 1 // Original team
       }
       onSave={() => {
@@ -177,6 +179,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         }
 
         return onSave({
+          ...identifierField,
+          documentType,
           tags,
           link: String(link).trim() === '' ? undefined : link,
           description,
@@ -199,7 +203,12 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           usedInPublication: convertDecisionToBoolean(usedInPublication),
           sharingStatus,
           publishDate: publishDate?.toISOString(),
-          ...identifierField,
+          labCatalogNumber:
+            documentType === 'Lab Resource' && labCatalogNumber !== ''
+              ? labCatalogNumber
+              : undefined,
+          addedDate: new Date().toISOString(),
+          methods: [],
         });
       }}
     >
@@ -242,6 +251,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             identifierRequired={
               usedInPublication === 'Yes' && asapFunded === 'Yes'
             }
+            labCatalogNumber={labCatalogNumber}
+            onChangeLabCatalogNumber={setLabCatalogNumber}
           />
           <TeamCreateOutputContributorsCard
             isSaving={isSaving}
@@ -260,8 +271,22 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
               <Button enabled={!isSaving} onClick={handleCancel}>
                 Cancel
               </Button>
-              <Button enabled={!isSaving} primary onClick={handleSave}>
-                Share
+              <Button
+                enabled={!isSaving}
+                primary
+                onClick={async () => {
+                  const researchOutput = await handleSave();
+                  if (researchOutput) {
+                    const { id } = researchOutput;
+                    const path = sharedResearch({}).researchOutput({
+                      researchOutputId: id,
+                    }).$;
+                    historyPush(path);
+                  }
+                  return researchOutput;
+                }}
+              >
+                Publish
               </Button>
             </div>
           </div>

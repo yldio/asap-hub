@@ -56,13 +56,6 @@ const identifierMap = {
       'Please enter a valid RRID which starts with `RRID`. (e.g. RRID:SCR_007358)',
     required: true,
   },
-  [ResearchOutputIdentifierType.LabCatalogNumber]: {
-    helpText: 'Number used by your lab to identify this resource internally.',
-    placeholder: 'Lab catalog number',
-    regex: ResearchOutputIdentifierValidationExpression['Lab Catalog Number'],
-    errorMessage: undefined,
-    required: false,
-  },
   [ResearchOutputIdentifierType.None]: {
     helpText: '',
     placeholder: '',

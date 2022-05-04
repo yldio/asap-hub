@@ -2,26 +2,25 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { useFlags, ToastContext } from '@asap-hub/react-context';
-import { render, screen, waitFor } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
-import { ContextType, Suspense } from 'react';
-import { StaticRouter, Route } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
-import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
   ResearchOutputDocumentType,
   ValidationErrorResponse,
 } from '@asap-hub/model';
+import { ToastContext, useFlags } from '@asap-hub/react-context';
+import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
 import { fireEvent } from '@testing-library/dom';
+import { render, screen, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import userEvent from '@testing-library/user-event';
-
+import { ContextType, Suspense } from 'react';
+import { Route, StaticRouter } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
+import { BackendError } from '../../../api-util';
 import { createTeamResearchOutput } from '../api';
 import { refreshTeamState } from '../state';
 import TeamOutput, {
   paramOutputDocumentTypeToResearchOutputDocumentType,
 } from '../TeamOutput';
-import { BackendError } from '../../../api-util';
 
 jest.mock('../api');
 jest.mock('../../users/api');
@@ -161,7 +160,7 @@ it('can submit a form when form data is valid', async () => {
   );
   userEvent.click(screen.getByText('Person A 3'));
 
-  const button = screen.getByRole('button', { name: /Share/i });
+  const button = screen.getByRole('button', { name: /Publish/i });
 
   userEvent.click(button);
 
@@ -221,7 +220,7 @@ it('will show server side validation error for link', async () => {
   });
   userEvent.type(screen.getByLabelText(/Select the option/i), 'Preprint');
 
-  const button = screen.getByRole('button', { name: /Share/i });
+  const button = screen.getByRole('button', { name: /Publish/i });
   userEvent.click(button);
 
   await waitFor(() => {
@@ -265,7 +264,7 @@ it('will toast server side errors for unknown errors', async () => {
   });
   userEvent.type(screen.getByLabelText(/Select the option/i), 'Preprint');
 
-  const button = screen.getByRole('button', { name: /Share/i });
+  const button = screen.getByRole('button', { name: /Publish/i });
   userEvent.click(button);
 
   await waitFor(() => {

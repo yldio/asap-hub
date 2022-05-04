@@ -831,6 +831,8 @@ type AppMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
     """Set to true to autopublish content on create."""
     publish: Boolean = false
     """The initial status."""
@@ -844,6 +846,8 @@ type AppMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
     """Set to true to autopublish content on create."""
     publish: Boolean = false
     """The initial status."""
@@ -857,6 +861,8 @@ type AppMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
     """Set to true to autopublish content on create."""
     publish: Boolean = false
     """The initial status."""
@@ -870,6 +876,8 @@ type AppMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
     """Set to true to autopublish content on create."""
     publish: Boolean = false
     """The initial status."""
@@ -883,6 +891,8 @@ type AppMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
     """Set to true to autopublish content on create."""
     publish: Boolean = false
     """The initial status."""
@@ -896,6 +906,8 @@ type AppMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
     """Set to true to autopublish content on create."""
     publish: Boolean = false
     """The initial status."""
@@ -909,6 +921,8 @@ type AppMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
     """Set to true to autopublish content on create."""
     publish: Boolean = false
     """The initial status."""
@@ -922,6 +936,8 @@ type AppMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
     """Set to true to autopublish content on create."""
     publish: Boolean = false
     """The initial status."""
@@ -935,6 +951,8 @@ type AppMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
     """Set to true to autopublish content on create."""
     publish: Boolean = false
     """The initial status."""
@@ -948,6 +966,8 @@ type AppMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
     """Set to true to autopublish content on create."""
     publish: Boolean = false
     """The initial status."""
@@ -961,6 +981,8 @@ type AppMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
     """Set to true to autopublish content on create."""
     publish: Boolean = false
     """The initial status."""
@@ -974,6 +996,8 @@ type AppMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
     """Set to true to autopublish content on create."""
     publish: Boolean = false
     """The initial status."""
@@ -987,6 +1011,8 @@ type AppMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
     """Set to true to autopublish content on create."""
     publish: Boolean = false
     """The initial status."""
@@ -1000,6 +1026,8 @@ type AppMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
     """Set to true to autopublish content on create."""
     publish: Boolean = false
     """The initial status."""

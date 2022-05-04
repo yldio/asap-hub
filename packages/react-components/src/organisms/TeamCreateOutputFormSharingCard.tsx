@@ -1,25 +1,24 @@
-import { useEffect, useState } from 'react';
-import { USER_SOCIAL_WEBSITE } from '@asap-hub/validation';
 import {
   DecisionOption,
+  researchOutputDocumentTypeToType,
   ResearchOutputPostRequest,
   ResearchOutputSharingStatus,
   ResearchOutputType,
   ValidationErrorResponse,
-  researchOutputDocumentTypeToType,
 } from '@asap-hub/model';
-
+import { USER_SOCIAL_WEBSITE } from '@asap-hub/validation';
+import { useEffect, useState } from 'react';
+import { getAjvErrorForPath } from '../ajv-errors';
 import { globeIcon } from '../icons';
 import {
-  LabeledTextArea,
-  LabeledTextField,
   FormCard,
+  LabeledDateField,
   LabeledDropdown,
   LabeledRadioButtonGroup,
-  LabeledDateField,
+  LabeledTextArea,
+  LabeledTextField,
 } from '../molecules';
 import { noop } from '../utils';
-import { getAjvErrorForPath } from '../ajv-errors';
 
 type TeamCreateOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,

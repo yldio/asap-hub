@@ -885,6 +885,7 @@ export type AppMutationsUpsertCalendarsContentArgs = {
   data: CalendarsDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
+  patch?: Maybe<Scalars['Boolean']>;
   publish?: Maybe<Scalars['Boolean']>;
   status: Maybe<Scalars['String']>;
 };
@@ -894,6 +895,7 @@ export type AppMutationsUpsertDashboardContentArgs = {
   data: DashboardDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
+  patch?: Maybe<Scalars['Boolean']>;
   publish?: Maybe<Scalars['Boolean']>;
   status: Maybe<Scalars['String']>;
 };
@@ -903,6 +905,7 @@ export type AppMutationsUpsertDiscoverContentArgs = {
   data: DiscoverDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
+  patch?: Maybe<Scalars['Boolean']>;
   publish?: Maybe<Scalars['Boolean']>;
   status: Maybe<Scalars['String']>;
 };
@@ -912,6 +915,7 @@ export type AppMutationsUpsertEventsContentArgs = {
   data: EventsDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
+  patch?: Maybe<Scalars['Boolean']>;
   publish?: Maybe<Scalars['Boolean']>;
   status: Maybe<Scalars['String']>;
 };
@@ -921,6 +925,7 @@ export type AppMutationsUpsertExternalAuthorsContentArgs = {
   data: ExternalAuthorsDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
+  patch?: Maybe<Scalars['Boolean']>;
   publish?: Maybe<Scalars['Boolean']>;
   status: Maybe<Scalars['String']>;
 };
@@ -930,6 +935,7 @@ export type AppMutationsUpsertGroupsContentArgs = {
   data: GroupsDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
+  patch?: Maybe<Scalars['Boolean']>;
   publish?: Maybe<Scalars['Boolean']>;
   status: Maybe<Scalars['String']>;
 };
@@ -939,6 +945,7 @@ export type AppMutationsUpsertLabsContentArgs = {
   data: LabsDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
+  patch?: Maybe<Scalars['Boolean']>;
   publish?: Maybe<Scalars['Boolean']>;
   status: Maybe<Scalars['String']>;
 };
@@ -948,6 +955,7 @@ export type AppMutationsUpsertMigrationsContentArgs = {
   data: MigrationsDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
+  patch?: Maybe<Scalars['Boolean']>;
   publish?: Maybe<Scalars['Boolean']>;
   status: Maybe<Scalars['String']>;
 };
@@ -957,6 +965,7 @@ export type AppMutationsUpsertNewsAndEventsContentArgs = {
   data: NewsAndEventsDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
+  patch?: Maybe<Scalars['Boolean']>;
   publish?: Maybe<Scalars['Boolean']>;
   status: Maybe<Scalars['String']>;
 };
@@ -966,6 +975,7 @@ export type AppMutationsUpsertPagesContentArgs = {
   data: PagesDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
+  patch?: Maybe<Scalars['Boolean']>;
   publish?: Maybe<Scalars['Boolean']>;
   status: Maybe<Scalars['String']>;
 };
@@ -975,6 +985,7 @@ export type AppMutationsUpsertResearchOutputsContentArgs = {
   data: ResearchOutputsDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
+  patch?: Maybe<Scalars['Boolean']>;
   publish?: Maybe<Scalars['Boolean']>;
   status: Maybe<Scalars['String']>;
 };
@@ -984,6 +995,7 @@ export type AppMutationsUpsertResearchTagsContentArgs = {
   data: ResearchTagsDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
+  patch?: Maybe<Scalars['Boolean']>;
   publish?: Maybe<Scalars['Boolean']>;
   status: Maybe<Scalars['String']>;
 };
@@ -993,6 +1005,7 @@ export type AppMutationsUpsertTeamsContentArgs = {
   data: TeamsDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
+  patch?: Maybe<Scalars['Boolean']>;
   publish?: Maybe<Scalars['Boolean']>;
   status: Maybe<Scalars['String']>;
 };
@@ -1002,6 +1015,7 @@ export type AppMutationsUpsertUsersContentArgs = {
   data: UsersDataInputDto;
   expectedVersion?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
+  patch?: Maybe<Scalars['Boolean']>;
   publish?: Maybe<Scalars['Boolean']>;
   status: Maybe<Scalars['String']>;
 };

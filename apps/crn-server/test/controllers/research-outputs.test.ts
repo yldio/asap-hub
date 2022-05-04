@@ -733,10 +733,8 @@ describe('ResearchOutputs controller', () => {
       squidexGraphqlClientMock.request.mockClear();
     });
 
-    afterEach(() => {});
-    expect(nock.isDone()).toBe(true);
-
     afterEach(() => {
+      expect(nock.isDone()).toBe(true);
       nock.cleanAll();
     });
 

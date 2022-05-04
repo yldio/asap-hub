@@ -49,16 +49,11 @@ export const researchOutputRouteFactory = (
   researchOutputRoutes.post('/research-outputs', async (req, res) => {
     const { body, loggedInUser } = req;
 
-    // Middleware makes sure that the user is logged in at this stage
-    /* istanbul ignore next */
-    if (!loggedInUser) {
-      throw Boom.unauthorized();
-    }
-
     const createRequest = validateResearchOutputPostRequestParameters(body);
-    validateResearchOutputPostRequestParametersIdentifiers(body);
+    validateResearchOutputPostRequestParametersIdentifiers(createRequest);
 
     if (
+      !loggedInUser ||
       !hasCreateResearchOutputPermissions(loggedInUser, createRequest.teams)
     ) {
       throw Boom.forbidden();

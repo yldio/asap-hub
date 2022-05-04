@@ -2,7 +2,7 @@ import { hasCreateResearchOutputPermissions } from '../../src/permissions/has-cr
 import { createUserResponse } from '@asap-hub/fixtures';
 
 describe('hasCreateResearchOutputPermission', () => {
-  test('Should not has permission when there is no teams assigned to user', () => {
+  test('Should not have permissions when there are no teams assigned to the user', () => {
     expect(
       hasCreateResearchOutputPermissions(
         {
@@ -14,7 +14,7 @@ describe('hasCreateResearchOutputPermission', () => {
     ).toEqual(false);
   });
 
-  test('Should not has permission when the user is not Project Manager in particular team', () => {
+  test('Should have the permission when the user has a Project Manager role inside the team that this resource belongs to', () => {
     expect(
       hasCreateResearchOutputPermissions(
         {
@@ -33,7 +33,7 @@ describe('hasCreateResearchOutputPermission', () => {
     ).toEqual(false);
   });
 
-  test('Should has permission when the user is Project Manager in particular team', () => {
+  test('Should have the permission when the user has a Project Manager role inside the team that this resource belongs to', () => {
     expect(
       hasCreateResearchOutputPermissions(
         {
@@ -52,7 +52,7 @@ describe('hasCreateResearchOutputPermission', () => {
     ).toEqual(true);
   });
 
-  test('Should has permission when the user is Staff in any team', () => {
+  test('Should have the permissions when the user has a Staff role in any team', () => {
     expect(
       hasCreateResearchOutputPermissions(
         {

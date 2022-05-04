@@ -7,5 +7,6 @@ type UserProfile = {
 export const UserProfileContext = createContext<UserProfile>({
   isOwnProfile: false,
 });
+
 export const useUserProfileContext = (): UserProfile =>
   useContext(UserProfileContext);

@@ -630,7 +630,7 @@ __metadata:
   resolution: "@asap-hub/errors@workspace:packages/errors"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@babel/runtime-corejs3": ^7.14.0
+    "@babel/runtime-corejs3": ^7.17.9
   languageName: unknown
   linkType: soft
 

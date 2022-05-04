@@ -10851,7 +10851,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/errors", "workspace:packages/errors"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
-            ["@babel/runtime-corejs3", "npm:7.14.0"]
+            ["@babel/runtime-corejs3", "npm:7.17.9"]
           ],
           "linkType": "SOFT",
         }]

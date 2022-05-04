@@ -20,6 +20,7 @@ const props: ComponentProps<typeof TeamCreateOutputForm> = {
   team: createTeamResponse(),
 };
 
+jest.setTimeout(30000);
 describe('createIdentifierField', () => {
   it('maps the ResearchOutputIdentifierType to fields including the identifier', () => {
     expect(
@@ -50,8 +51,7 @@ it('renders the form', async () => {
 });
 
 it('displays proper message when no author is found', async () => {
-  const getAuthorSuggestions = jest.fn();
-  getAuthorSuggestions.mockResolvedValue([]);
+  const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
   const { getByText } = render(
     <StaticRouter>
       <TeamCreateOutputForm
@@ -68,8 +68,7 @@ it('displays proper message when no author is found', async () => {
 });
 
 it('displays proper message when no lab is found', async () => {
-  const getLabSuggestions = jest.fn();
-  getLabSuggestions.mockResolvedValue([]);
+  const getLabSuggestions = jest.fn().mockResolvedValue([]);
   render(
     <StaticRouter>
       <TeamCreateOutputForm {...props} getLabSuggestions={getLabSuggestions} />
@@ -250,7 +249,7 @@ describe('on submit', () => {
         { externalAuthorName: 'Alex White' },
       ],
     });
-  }, 30000);
+  });
 
   it('can submit access instructions', async () => {
     setupForm();

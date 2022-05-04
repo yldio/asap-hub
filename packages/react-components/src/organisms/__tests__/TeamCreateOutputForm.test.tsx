@@ -101,8 +101,8 @@ describe('on submit', () => {
     jest.resetAllMocks();
     saveFn = jest.fn(() => promise);
   });
-  const getLabSuggestions = jest.fn();
-  const getAuthorSuggestions = jest.fn();
+  const getLabSuggestions = jest.fn().mockResolvedValue([]);
+  const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
   const promise = Promise.resolve();
   const expectedRequest: ResearchOutputPostRequest = {
     documentType: 'Article',

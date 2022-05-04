@@ -69,7 +69,7 @@ type TeamCreateOutputFormProps = Pick<
   > & {
     onSave: (
       output: ResearchOutputPostRequest,
-    ) => Promise<Pick<ResearchOutputResponse, 'id'> | void>;
+    ) => Promise<ResearchOutputResponse | void>;
     documentType: ResearchOutputDocumentType;
     team: TeamResponse;
   };
@@ -149,7 +149,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [identifier, setIdentifier] = useState<string>('');
 
   return (
-    <Form<Pick<ResearchOutputResponse, 'id'>>
+    <Form<ResearchOutputResponse>
       serverErrors={serverValidationErrors}
       dirty={
         tags.length !== 0 ||

@@ -2,12 +2,14 @@ import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
 import {
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
+  ResearchOutputResponse,
 } from '@asap-hub/model';
 import { fireEvent, waitFor } from '@testing-library/dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { Router, StaticRouter } from 'react-router-dom';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import TeamCreateOutputForm, {
   createIdentifierField,
@@ -94,6 +96,11 @@ it('displays current team within the form', async () => {
 });
 
 describe('on submit', () => {
+  let history!: History;
+  const id = '42';
+  beforeEach(() => {
+    history = createMemoryHistory();
+  });
   let saveFn = jest.fn(() => promise);
   afterEach(() => {
     jest.resetAllMocks();
@@ -101,7 +108,7 @@ describe('on submit', () => {
   });
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
   const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
-  const promise = Promise.resolve();
+  const promise = Promise.resolve({ id } as ResearchOutputResponse);
   const expectedRequest: ResearchOutputPostRequest = {
     documentType: 'Article',
     tags: [],
@@ -135,7 +142,7 @@ describe('on submit', () => {
     >['documentType'] = 'Article',
   ) => {
     render(
-      <StaticRouter>
+      <Router history={history}>
         <TeamCreateOutputForm
           {...props}
           team={{ ...createTeamResponse(), id: 'TEAMID' }}
@@ -144,7 +151,7 @@ describe('on submit', () => {
           getLabSuggestions={getLabSuggestions}
           getAuthorSuggestions={getAuthorSuggestions}
         />
-      </StaticRouter>,
+      </Router>,
     );
 
     fireEvent.change(screen.getByLabelText(/url/i), {
@@ -177,6 +184,9 @@ describe('on submit', () => {
     setupForm();
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
+    await waitFor(() => {
+      expect(history.location.pathname).toEqual(`/shared-research/${id}`);
+    });
   });
 
   it('can submit a lab', async () => {

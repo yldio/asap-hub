@@ -1,4 +1,5 @@
-import { User, userMock } from '@asap-hub/auth';
+import { User } from '@asap-hub/auth';
+import { userMock } from '@asap-hub/fixtures';
 import { pino, Logger } from '@asap-hub/server-common';
 import { RequestHandler, Router } from 'express';
 import supertest from 'supertest';

@@ -495,6 +495,7 @@ __metadata:
     "@asap-hub/algolia": "workspace:*"
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/errors": "workspace:*"
+    "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/server-common": "workspace:*"
@@ -649,6 +650,7 @@ __metadata:
   resolution: "@asap-hub/fixtures@workspace:packages/fixtures"
   dependencies:
     "@algolia/client-search": "*"
+    "@asap-hub/auth": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": ^7.14.0
     core-js: ^3.12.1
@@ -673,7 +675,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/gp2-server@workspace:apps/gp2-server"
   dependencies:
-    "@asap-hub/auth": "workspace:*"
+    "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/server-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
@@ -908,6 +910,7 @@ __metadata:
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": ^7.14.0
     "@hapi/boom": ^9.1.2

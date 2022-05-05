@@ -11,7 +11,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@asap-hub/auth": "workspace:*",
+    "@asap-hub/fixtures": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/server-common": "workspace:*",
     "@asap-hub/squidex": "workspace:*",

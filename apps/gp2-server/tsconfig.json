@@ -11,7 +11,7 @@
   },
   "include": ["src", "scripts", "test", "test/**/*.json", "@types/**/*.d.ts"],
   "references": [
-    { "path": "../../packages/auth" },
+    { "path": "../../packages/fixtures" },
     { "path": "../../packages/model" },
     { "path": "../../packages/server-common" },
     { "path": "../../packages/squidex" }

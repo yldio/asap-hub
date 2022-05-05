@@ -46,5 +46,3 @@ export type Auth0 = {
   | 'getTokenWithPopup'
   | 'logout'
 >;
-
-export * from './__mocks__';

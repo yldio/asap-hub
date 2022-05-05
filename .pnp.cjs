@@ -10654,6 +10654,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/algolia", "workspace:packages/algolia"],
             ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/errors", "workspace:packages/errors"],
+            ["@asap-hub/fixtures", "workspace:packages/fixtures"],
             ["@asap-hub/message-templates", "workspace:packages/message-templates"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/server-common", "workspace:packages/server-common"],
@@ -10818,6 +10819,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],
             ["@algolia/client-search", "npm:4.10.3"],
+            ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],
             ["core-js", "npm:3.12.1"],
@@ -10846,7 +10848,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./apps/gp2-server/",
           "packageDependencies": [
             ["@asap-hub/gp2-server", "workspace:apps/gp2-server"],
-            ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/fixtures", "workspace:packages/fixtures"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/server-common", "workspace:packages/server-common"],
             ["@asap-hub/squidex", "workspace:packages/squidex"],
@@ -11402,6 +11404,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/errors", "workspace:packages/errors"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/fixtures", "workspace:packages/fixtures"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],
             ["@hapi/boom", "npm:9.1.2"],

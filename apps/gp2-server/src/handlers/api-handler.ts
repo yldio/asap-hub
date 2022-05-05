@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import 'source-map-support/register';
 import { Request as RequestExpress } from 'express';
 import serverlessHttp from 'serverless-http';

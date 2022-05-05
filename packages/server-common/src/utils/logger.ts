@@ -4,6 +4,8 @@ import pinoHttp, { HttpLogger } from 'pino-http';
 
 export const redaction = noir(['req.headers.authorization'], '*');
 
+// we are not testing stdout
+/* istanbul ignore next */
 export const getLogger = ({
   logEnabled,
   logLevel,

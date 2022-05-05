@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
+    "@asap-hub/fixtures": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@types/apr-intercept": "workspace:*",
     "@types/express": "^4.17.11",

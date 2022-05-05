@@ -14,6 +14,7 @@
     { "path": "../../packages/auth" },
     { "path": "../../packages/algolia" },
     { "path": "../../packages/errors" },
+    { "path": "../../packages/fixtures" },
     { "path": "../../packages/model" },
     { "path": "../../packages/server-common" },
     { "path": "../../packages/services-common" },

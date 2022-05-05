@@ -1,7 +1,7 @@
 import 'express-async-errors';
 import supertest from 'supertest';
 import express, { Router } from 'express';
-import { getAuth0UserMock } from '@asap-hub/auth';
+import { getAuth0UserMock } from '@asap-hub/fixtures';
 import { authHandlerFactory } from '../../src/middleware/auth-handler';
 import { errorHandlerFactory } from '../../src/middleware/error-handler';
 import { getHttpLogger, Logger } from '../../src/utils/logger';

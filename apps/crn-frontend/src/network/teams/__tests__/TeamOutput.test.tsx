@@ -11,7 +11,6 @@ import {
   ToastContext,
 } from '@asap-hub/react-context';
 import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
-import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ContextType, Suspense } from 'react';
@@ -26,8 +25,6 @@ import TeamOutput, {
 
 jest.mock('../api');
 jest.mock('../../users/api');
-
-const ENTER_KEYCODE = 13;
 
 const mockToast = jest.fn() as jest.MockedFunction<
   ContextType<typeof ToastContext>
@@ -125,65 +122,72 @@ it('Shows NotFoundPage when canCreate in ResearchOutputPermissions is false', as
 
 it('can submit a form when form data is valid', async () => {
   const teamId = 'team-id';
+  const link = 'https://example.com';
+  const title = 'example title';
+  const description = 'example description';
+  const type = 'Animal Model';
+  const doi = '10.1234';
 
   await renderPage({ teamId, outputDocumentType: 'lab-resource' });
 
-  fireEvent.change(screen.getByLabelText(/url/i), {
-    target: { value: 'http://example.com' },
-  });
-  fireEvent.change(screen.getByLabelText(/title/i), {
-    target: { value: 'example title' },
-  });
-  fireEvent.change(screen.getByLabelText(/description/i), {
-    target: { value: 'example description' },
-  });
-  userEvent.type(screen.getByLabelText(/Select the option/i), 'Animal Model');
-  fireEvent.keyDown(screen.getByLabelText(/Select the option/i), {
-    keyCode: ENTER_KEYCODE,
-  });
-
-  userEvent.click(screen.getByLabelText(/Labs/i));
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  userEvent.type(
+    screen.getByRole('textbox', { name: /url \(optional\)/i }),
+    link,
   );
+  userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
+  userEvent.type(
+    screen.getByRole('textbox', { name: /description/i }),
+    description,
+  );
+
+  userEvent.type(
+    screen.getByRole('textbox', { name: /Select the option/i }),
+    type,
+  );
+
+  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
   userEvent.click(screen.getByText('Example 1 Lab'));
-
-  userEvent.click(screen.getByLabelText(/Authors/i));
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
+  userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
   userEvent.click(screen.getByText('Person A 3'));
+
+  userEvent.type(screen.getByRole('textbox', { name: /identifier/i }), 'DOI');
+  userEvent.tab();
+  const doiTextBox = await screen.findByRole('textbox', {
+    name: /Your DOI must start with/i,
+  });
+  userEvent.type(doiTextBox, doi);
 
   const button = screen.getByRole('button', { name: /Publish/i });
 
   userEvent.click(button);
 
   await waitFor(() => {
-    expect(mockCreateTeamResearchOutput).toHaveBeenCalledWith(
-      {
-        documentType: 'Lab Resource',
-        addedDate: expect.anything(),
-        tags: [],
-        asapFunded: false,
-        usedInPublication: false,
-        sharingStatus: 'Network Only',
-        teams: ['team-id'],
-        link: 'http://example.com',
-        title: 'example title',
-        description: 'example description',
-        type: 'Animal Model',
-        labs: ['l0'],
-        authors: [
-          {
-            userId: 'u2',
-          },
-        ],
-        methods: [],
-      },
-      expect.anything(),
-    );
     expect(button).toBeEnabled();
   });
+  expect(mockCreateTeamResearchOutput).toHaveBeenCalledWith(
+    {
+      doi,
+      documentType: 'Lab Resource',
+      addedDate: expect.anything(),
+      tags: [],
+      asapFunded: false,
+      usedInPublication: false,
+      sharingStatus: 'Network Only',
+      teams: ['team-id'],
+      link,
+      title,
+      description,
+      type,
+      labs: ['l0'],
+      authors: [
+        {
+          userId: 'u2',
+        },
+      ],
+      methods: [],
+    },
+    expect.anything(),
+  );
 });
 
 it('will show server side validation error for link', async () => {
@@ -203,32 +207,49 @@ it('will show server side validation error for link', async () => {
 
   await renderPage({ teamId, outputDocumentType: 'article' });
 
-  fireEvent.change(screen.getByLabelText(/url/i), {
-    target: { value: 'http://example.com' },
+  userEvent.type(
+    screen.getByRole('textbox', { name: /URL \(required\)/i }),
+    'http://example.com',
+  );
+  userEvent.type(
+    screen.getByRole('textbox', { name: /title/i }),
+    'example title',
+  );
+  userEvent.type(
+    screen.getByRole('textbox', { name: /description/i }),
+    'example description',
+  );
+
+  userEvent.type(
+    screen.getByRole('textbox', { name: /Select the option/i }),
+    'Preprint',
+  );
+
+  userEvent.type(screen.getByRole('textbox', { name: /identifier/i }), 'DOI');
+  userEvent.tab();
+  const doiTextBox = await screen.findByRole('textbox', {
+    name: /Your DOI must start with/i,
   });
-  fireEvent.change(screen.getByLabelText(/title/i), {
-    target: { value: 'example title' },
-  });
-  fireEvent.change(screen.getByLabelText(/description/i), {
-    target: { value: 'example description' },
-  });
-  userEvent.type(screen.getByLabelText(/Select the option/i), 'Preprint');
+  userEvent.type(doiTextBox, '10.1234');
 
   const button = screen.getByRole('button', { name: /Publish/i });
   userEvent.click(button);
 
   await waitFor(() => {
-    expect(mockCreateTeamResearchOutput).toHaveBeenCalled();
     expect(button).toBeEnabled();
   });
+  expect(mockCreateTeamResearchOutput).toHaveBeenCalled();
   expect(
     screen.getByText(
       'A Research Output with this URL already exists. Please enter a different URL.',
     ),
   ).toBeVisible();
 
-  userEvent.type(screen.getByLabelText(/url/i), 'a');
-  fireEvent.focusOut(screen.getByLabelText(/url/i));
+  userEvent.type(
+    screen.getByRole('textbox', { name: /URL \(required\)/i }),
+    'a',
+  );
+  userEvent.tab();
 
   expect(
     screen.queryByText(
@@ -247,24 +268,37 @@ it('will toast server side errors for unknown errors', async () => {
 
   await renderPage({ teamId, outputDocumentType: 'article' });
 
-  fireEvent.change(screen.getByLabelText(/url/i), {
-    target: { value: 'http://example.com' },
+  userEvent.type(
+    screen.getByRole('textbox', { name: /URL \(required\)/i }),
+    'http://example.com',
+  );
+  userEvent.type(
+    screen.getByRole('textbox', { name: /title/i }),
+    'example title',
+  );
+  userEvent.type(
+    screen.getByRole('textbox', { name: /description/i }),
+    'example description',
+  );
+  userEvent.type(
+    screen.getByRole('textbox', { name: /Select the option/i }),
+    'Preprint',
+  );
+
+  userEvent.type(screen.getByRole('textbox', { name: /identifier/i }), 'DOI');
+  userEvent.tab();
+  const doiTextBox = await screen.findByRole('textbox', {
+    name: /Your DOI must start with/i,
   });
-  fireEvent.change(screen.getByLabelText(/title/i), {
-    target: { value: 'example title' },
-  });
-  fireEvent.change(screen.getByLabelText(/description/i), {
-    target: { value: 'example description' },
-  });
-  userEvent.type(screen.getByLabelText(/Select the option/i), 'Preprint');
+  userEvent.type(doiTextBox, '10.1234');
 
   const button = screen.getByRole('button', { name: /Publish/i });
   userEvent.click(button);
 
   await waitFor(() => {
-    expect(mockCreateTeamResearchOutput).toHaveBeenCalled();
     expect(button).toBeEnabled();
   });
+  expect(mockCreateTeamResearchOutput).toHaveBeenCalled();
   expect(mockToast).toHaveBeenCalledWith(
     'There was an error and we were unable to save your changes. Please try again.',
   );

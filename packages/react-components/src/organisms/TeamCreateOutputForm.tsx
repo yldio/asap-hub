@@ -160,7 +160,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         type !== '' ||
         labs.length !== 0 ||
         authors.length !== 0 ||
-        identifierType !== ResearchOutputIdentifierType.None ||
+        identifierType !== ResearchOutputIdentifierType.Empty ||
         identifier !== '' ||
         labCatalogNumber !== '' ||
         teams.length !== 1 // Original team

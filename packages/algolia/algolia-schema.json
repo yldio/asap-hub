@@ -46,7 +46,7 @@
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,
-  "paginationLimitedTo": 1000,
+  "paginationLimitedTo": 10000,
   "attributeForDistinct": null,
   "exactOnSingleWordQuery": "word",
   "disablePrefixOnAttributes": [],

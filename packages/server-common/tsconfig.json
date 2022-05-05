@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "build"
+  },
+  "include": ["src", "types"],
+  "references": [
+    { "path": "../../packages/auth" },
+    { "path": "../../packages/fixtures" },
+    { "path": "../../packages/model" },
+    { "path": "../../packages/errors" }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "@asap-hub/server-common",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "14.15.x"
+  },
+  "module": "build/index.js",
+  "main": "build-cjs/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build:babel": "../../scripts/build-babel.sh build",
+    "watch:babel": "../../scripts/build-babel.sh watch"
+  },
+  "dependencies": {
+    "@asap-hub/auth": "workspace:*",
+    "@asap-hub/errors": "workspace:*",
+    "@babel/runtime-corejs3": "^7.14.0",
+    "@hapi/boom": "^9.1.2",
+    "@sentry/serverless": "^6.7.1",
+    "apr-intercept": "^3.0.4",
+    "express": "^4.17.1",
+    "got": "^11.8.2",
+    "jsonwebtoken": "^8.5.1",
+    "pino": "^7.10.0",
+    "pino-http": "^6.6.0",
+    "pino-lambda": "^3.0.1",
+    "pino-noir": "^2.2.1"
+  },
+  "devDependencies": {
+    "@asap-hub/eslint-config-asap-hub": "workspace:*",
+    "@asap-hub/fixtures": "workspace:*",
+    "@asap-hub/model": "workspace:*",
+    "@types/apr-intercept": "workspace:*",
+    "@types/express": "^4.17.11",
+    "@types/jest": "^26.0.23",
+    "@types/jsonwebtoken": "^8.5.1",
+    "@types/supertest": "^2.0.12",
+    "express-async-errors": "^3.1.1",
+    "supertest": "^6.2.2"
+  }
+}

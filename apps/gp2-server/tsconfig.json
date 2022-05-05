@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": ".",
+    "resolveJsonModule": true,
+    "outDir": "build",
+    "module": "commonjs",
+
+    "noUncheckedIndexedAccess": true
+  },
+  "include": ["src", "scripts", "test", "test/**/*.json", "@types/**/*.d.ts"],
+  "references": [
+    { "path": "../../packages/fixtures" },
+    { "path": "../../packages/model" },
+    { "path": "../../packages/server-common" },
+    { "path": "../../packages/squidex" }
+  ]
+}

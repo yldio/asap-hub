@@ -2,6 +2,8 @@ import supertest from 'supertest';
 import Boom from '@hapi/boom';
 import Crypto from 'crypto';
 import { UserResponse } from '@asap-hub/model';
+import { userMock } from '@asap-hub/fixtures';
+import { AuthHandler } from '@asap-hub/server-common';
 import { appFactory } from '../../src/app';
 import { FetchOptions } from '../../src/utils/types';
 import {
@@ -12,8 +14,6 @@ import {
 } from '../fixtures/users.fixtures';
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
-import { AuthHandler } from '../../src/middleware/auth-handler';
-import { userMock } from '../../src/utils/__mocks__/validate-token';
 import { listGroupsResponse } from '../fixtures/groups.fixtures';
 
 describe('/users/ route', () => {

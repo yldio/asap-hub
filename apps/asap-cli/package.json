@@ -48,7 +48,7 @@
     "@types/pump": "^1.1.1",
     "@types/through2-concurrent": "^2",
     "@types/uuid": "^8.3.0",
-    "@yarnpkg/pnpify": "^3.0.1-rc.7",
+    "@yarnpkg/pnpify": "^3.1.1",
     "nock": "^13.0.11"
   }
 }

@@ -4,4 +4,5 @@ const config: typeof import('../config') = {
 };
 
 const auth0PubKeys = jest.requireActual('../pubKeys').default;
+
 export { config, auth0PubKeys };

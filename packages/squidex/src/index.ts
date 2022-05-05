@@ -4,6 +4,7 @@ import { SquidexGraphql as SquidexGraphqlNoAuth } from './graphql';
 import { Squidex as SquidexRestNoAuth } from './rest';
 
 export { config };
+export * from './utils';
 export * from './entities';
 export { SquidexGraphqlError } from './graphql';
 export type { SquidexGraphqlClient } from './graphql';

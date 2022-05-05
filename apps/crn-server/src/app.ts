@@ -2,17 +2,22 @@ import 'express-async-errors';
 import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import { Tracer } from 'opentracing';
-import { Logger } from 'pino';
-import pinoHttp from 'pino-http';
 import AWSXray from 'aws-xray-sdk';
 import * as Sentry from '@sentry/serverless';
 import { SquidexGraphql } from '@asap-hub/squidex';
+import {
+  AuthHandler,
+  authHandlerFactory,
+  getHttpLogger,
+  HttpLogger,
+  Logger,
+  decodeToken,
+  errorHandlerFactory,
+} from '@asap-hub/server-common';
 
-import decodeToken from './utils/validate-token';
+import { origin } from './config';
 
-import { errorHandlerFactory } from './middleware/error-handler';
 import { tracingHandlerFactory } from './middleware/tracing-handler';
-import { authHandlerFactory, AuthHandler } from './middleware/auth-handler';
 
 import Groups, { GroupController } from './controllers/groups';
 import Users, { UserController } from './controllers/users';
@@ -38,7 +43,6 @@ import News, { NewsController } from './controllers/news';
 import { newsRouteFactory } from './routes/news.route';
 import Discover, { DiscoverController } from './controllers/discover';
 import { discoverRouteFactory } from './routes/discover.route';
-import pinoLogger, { redaction } from './utils/logger';
 import { userLoggerHandler } from './middleware/user-logger-handler';
 import { permissionHandler } from './middleware/permission-handler';
 import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
@@ -47,6 +51,7 @@ import { labsRouteFactory } from './routes/labs.route';
 import ResearchTags, {
   ResearchTagController,
 } from './controllers/research-tags';
+import pinoLogger from './utils/logger';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -56,12 +61,8 @@ export const appFactory = (libs: Libs = {}): Express => {
    */
   // Libs
   const logger = libs.logger || pinoLogger;
-
   // Middleware
-  const httpLogger = pinoHttp({
-    logger,
-    serializers: redaction,
-  });
+  const httpLogger = libs.httpLogger || getHttpLogger({ logger });
   const errorHandler = errorHandlerFactory();
 
   // Clients
@@ -89,7 +90,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const labsController = libs.labsController || new Labs(squidexGraphqlClient);
 
   // Handlers
-  const authHandler = libs.authHandler || authHandlerFactory(decodeToken);
+  const authHandler =
+    libs.authHandler || authHandlerFactory(decodeToken, logger, { origin });
   const tracingHandler = tracingHandlerFactory(libs.tracer);
   const sentryTransactionIdHandler =
     libs.sentryTransactionIdHandler || sentryTransactionIdMiddleware;
@@ -210,6 +212,7 @@ export type Libs = {
   labsController?: LabsController;
   authHandler?: AuthHandler;
   tracer?: Tracer;
+  httpLogger?: HttpLogger;
   logger?: Logger;
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];

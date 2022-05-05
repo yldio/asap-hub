@@ -1,6 +1,8 @@
 import supertest from 'supertest';
 import Boom from '@hapi/boom';
 import { User } from '@asap-hub/auth';
+import { AuthHandler } from '@asap-hub/server-common';
+import { userMock } from '@asap-hub/fixtures';
 import { appFactory } from '../../src/app';
 import { FetchOptions } from '../../src/utils/types';
 import * as fixtures from '../fixtures/groups.fixtures';
@@ -10,8 +12,6 @@ import {
   getListTeamResponse,
   getTeamResponse,
 } from '../fixtures/teams.fixtures';
-import { AuthHandler } from '../../src/middleware/auth-handler';
-import { userMock } from '../../src/utils/__mocks__/validate-token';
 import { FetchTeamsOptions } from '../../src/controllers/teams';
 
 describe('/teams/ route', () => {
@@ -29,7 +29,6 @@ describe('/teams/ route', () => {
     req.loggedInUser = getLoggedUser();
     next();
   };
-
   const app = appFactory({
     groupController: groupControllerMock,
     teamController: teamControllerMock,

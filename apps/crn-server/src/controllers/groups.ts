@@ -1,10 +1,9 @@
 import Boom from '@hapi/boom';
-import { SquidexGraphqlClient } from '@asap-hub/squidex';
+import { sanitiseForSquidex, SquidexGraphqlClient } from '@asap-hub/squidex';
 import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
 import uniqBy from 'lodash.uniqby';
 import { FetchOptions, FetchPaginationOptions } from '../utils/types';
 import { parseGraphQLGroup } from '../entities';
-import { sanitiseForSquidex } from '../utils/squidex';
 import { FETCH_GROUP, FETCH_GROUPS } from '../queries/groups.queries';
 import {
   FetchGroupQuery,

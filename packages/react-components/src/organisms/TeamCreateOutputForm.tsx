@@ -79,6 +79,7 @@ const identifierTypeToFieldName: Record<
   'doi' | 'accession' | 'labCatalogNumber' | 'rrid' | undefined
 > = {
   [ResearchOutputIdentifierType.None]: undefined,
+  [ResearchOutputIdentifierType.Empty]: undefined,
   [ResearchOutputIdentifierType.DOI]: 'doi',
   [ResearchOutputIdentifierType.AccessionNumber]: 'accession',
   [ResearchOutputIdentifierType.RRID]: 'rrid',
@@ -145,7 +146,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [publishDate, setPublishDate] = useState<Date | undefined>(undefined);
 
   const [identifierType, setIdentifierType] =
-    useState<ResearchOutputIdentifierType>(ResearchOutputIdentifierType.None);
+    useState<ResearchOutputIdentifierType>(ResearchOutputIdentifierType.Empty);
   const [identifier, setIdentifier] = useState<string>('');
 
   return (

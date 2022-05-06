@@ -28,6 +28,7 @@ import TeamOutput, {
   paramOutputDocumentTypeToResearchOutputDocumentType,
 } from '../TeamOutput';
 
+jest.setTimeout(30000);
 jest.mock('../api');
 jest.mock('../../users/api');
 

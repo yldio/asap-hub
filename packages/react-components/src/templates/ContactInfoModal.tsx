@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { css } from '@emotion/react';
 import { UserPatchRequest, UserResponse } from '@asap-hub/model';
 import {
-  USER_SOCIAL_WEBSITE,
+  UrlExpression,
   USER_SOCIAL_RESEARCHER_ID,
   USER_SOCIAL_NOT_URL,
 } from '@asap-hub/validation';
@@ -113,7 +113,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             <LabeledTextField
               title="Website 1"
               subtitle="(Optional)"
-              pattern={USER_SOCIAL_WEBSITE.source}
+              pattern={UrlExpression}
               getValidationMessage={() =>
                 'Please enter a valid URL, starting with http://'
               }
@@ -126,7 +126,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             <LabeledTextField
               title="Website 2"
               subtitle="(Optional)"
-              pattern={USER_SOCIAL_WEBSITE.source}
+              pattern={UrlExpression}
               getValidationMessage={() =>
                 'Please enter a valid URL, starting with http://'
               }

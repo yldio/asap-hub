@@ -96,3 +96,13 @@ describe.each`
     assertError();
   });
 });
+
+it('If require, None should be unavailable', () => {
+  const { rerender } = render(<TeamCreateOutputIdentifier {...props} />);
+  const textbox = screen.getByRole('textbox', { name: /identifier/i });
+  userEvent.click(textbox);
+  expect(screen.getByText('None')).toBeVisible();
+  rerender(<TeamCreateOutputIdentifier {...props} required={true} />);
+  userEvent.click(textbox);
+  expect(screen.queryByText('None')).toBeNull();
+});

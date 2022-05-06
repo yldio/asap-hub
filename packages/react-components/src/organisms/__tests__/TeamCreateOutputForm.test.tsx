@@ -7,7 +7,9 @@ import {
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
+  within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
@@ -85,7 +87,7 @@ it('displays proper message when no lab is found', async () => {
 });
 
 it('displays current team within the form', async () => {
-  const { getByText } = render(
+  render(
     <StaticRouter>
       <TeamCreateOutputForm
         {...props}
@@ -93,7 +95,33 @@ it('displays current team within the form', async () => {
       />
     </StaticRouter>,
   );
-  expect(getByText('example team')).toBeVisible();
+  expect(screen.getByText('example team')).toBeVisible();
+});
+
+it('if funded and publication are both yes, then the None option is removed.', async () => {
+  render(
+    <StaticRouter>
+      <TeamCreateOutputForm {...props} />
+    </StaticRouter>,
+  );
+  const textbox = screen.getByRole('textbox', { name: /identifier/i });
+  userEvent.click(textbox);
+  expect(screen.getByText('None')).toBeVisible();
+
+  const funded = screen.getByRole('group', {
+    name: /Has this output been funded by ASAP/i,
+  });
+  userEvent.click(within(funded).getByText('Yes'));
+
+  const publication = screen.getByRole('group', {
+    name: /Has this output been used in a publication/i,
+  });
+  userEvent.click(within(publication).getByText('Yes'));
+  userEvent.click(textbox);
+
+  await waitFor(() => {
+    expect(screen.queryByText('None')).toBeNull();
+  });
 });
 
 describe('on submit', () => {
@@ -267,10 +295,11 @@ describe('on submit', () => {
 
   it('can submit published date', async () => {
     await setupForm();
+    const sharingStatus = screen.getByRole('group', {
+      name: /sharing status/i,
+    });
     userEvent.click(
-      screen
-        .getByRole('group', { name: /sharing status/i })
-        .querySelectorAll('input')[1]!,
+      within(sharingStatus).getByRole('radio', { name: 'Public' }),
     );
     userEvent.type(screen.getByLabelText(/date published/i), '2022-03-24');
     await submitForm();

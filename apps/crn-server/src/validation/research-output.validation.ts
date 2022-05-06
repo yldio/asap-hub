@@ -5,7 +5,10 @@ import {
   researchOutputToIdentifierType,
   researchOutputDocumentTypes,
 } from '@asap-hub/model';
-import { ResearchOutputIdentifierValidationExpression } from '@asap-hub/validation';
+import {
+  ResearchOutputIdentifierValidationExpression,
+  UrlExpression,
+} from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { JSONSchemaType } from 'ajv';
 import { validateInput } from '.';
@@ -53,7 +56,11 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         type: 'array',
         items: { type: 'string' },
       },
-      link: { type: 'string', nullable: true },
+      link: {
+        type: 'string',
+        nullable: true,
+        pattern: UrlExpression.source,
+      },
       title: { type: 'string' },
       asapFunded: { type: 'boolean', nullable: true },
       sharingStatus: { type: 'string' },

@@ -15,6 +15,7 @@ import {
   FETCH_RESEARCH_OUTPUTS,
 } from '../../src/queries/research-outputs.queries';
 import { FETCH_RESEARCH_TAGS } from '../../src/queries/research-tags.queries';
+import { sanitiseForSquidex } from '../../src/utils/squidex';
 import {
   getListResearchOutputResponse,
   getResearchOutputRequest,
@@ -871,7 +872,9 @@ describe('ResearchOutputs controller', () => {
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
-            filter: `(data/link/iv eq '${researchOutputRequest.link}')`,
+            filter: `(data/link/iv eq '${sanitiseForSquidex(
+              researchOutputRequest.link || '',
+            )}')`,
           }),
           {
             includeDrafts: true,
@@ -1038,7 +1041,9 @@ describe('ResearchOutputs controller', () => {
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
-            filter: `(data/link/iv eq '${researchOutputRequest.link}')`,
+            filter: `(data/link/iv eq '${sanitiseForSquidex(
+              researchOutputRequest.link || '',
+            )}')`,
           }),
           {
             includeDrafts: true,

@@ -6,7 +6,7 @@ import {
   ResearchOutputType,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { USER_SOCIAL_WEBSITE } from '@asap-hub/validation';
+import { UrlExpression } from '@asap-hub/validation';
 import { useEffect, useState } from 'react';
 import { getAjvErrorForPath } from '../ajv-errors';
 import { globeIcon } from '../icons';
@@ -90,7 +90,7 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
         <LabeledTextField
           title="URL"
           subtitle={urlSubtitle}
-          pattern={USER_SOCIAL_WEBSITE.source}
+          pattern={UrlExpression.source}
           onChange={(newValue) => {
             clearServerValidationError('/link');
             onChangeLink(newValue);

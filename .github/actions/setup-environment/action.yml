@@ -38,9 +38,7 @@ outputs:
   aws-acm-asap-science-certificate-arn:
     description: 'AWS ACM ASAP Science Certificate ARN'
     value: ${{ steps.vars.outputs.aws-acm-asap-science-certificate-arn }}
-  crn-aws-acm-certificate-arn:
-    description: 'CRN AWS ACM Certificate ARN'
-    value: ${{ steps.vars.outputs.crn-aws-acm-certificate-arn }}
+
   aws-default-region:
     description: 'AWS Default Region'
     value: ${{ steps.vars.outputs.aws-default-region }}
@@ -59,6 +57,15 @@ outputs:
   cache-prefix-transpile:
     description: 'Cache Prefix Transpile'
     value: ${{ steps.vars.outputs.cache-prefix-transpile }}
+  crn-aws-acm-certificate-arn:
+    description: 'CRN AWS ACM Certificate ARN'
+    value: ${{ steps.vars.outputs.crn-aws-acm-certificate-arn }}
+  gp2-aws-acm-certificate-arn:
+    description: 'GP2 AWS ACM Certificate ARN'
+    value: ${{ steps.vars.outputs.gp2-aws-acm-certificate-arn }}
+  gp2-hostname:
+    description: 'GP2 Hostname'
+    value: ${{ steps.vars.outputs.gp2-hostname }}
   pr-number:
     description: 'PR Number'
     value: ${{ steps.vars.outputs.pr-number }}

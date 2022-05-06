@@ -1,9 +1,8 @@
-import { ComponentProps } from 'react';
-import { fireEvent, render } from '@testing-library/react';
-
 import { ResearchOutputIdentifierType } from '@asap-hub/model';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ComponentProps } from 'react';
 import { TeamCreateOutputIdentifier } from '../TeamCreateOutputIdentifier';
-import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 
 const props: ComponentProps<typeof TeamCreateOutputIdentifier> = {
   documentType: 'Article',
@@ -11,140 +10,89 @@ const props: ComponentProps<typeof TeamCreateOutputIdentifier> = {
 };
 
 it('should render Identifier', () => {
-  const { getByText } = render(<TeamCreateOutputIdentifier {...props} />);
-  expect(getByText(/Identifier/i)).toBeVisible();
+  render(<TeamCreateOutputIdentifier {...props} />);
+  expect(screen.getByRole('textbox', { name: /Identifier/i })).toBeVisible();
 });
 
 it('should reset the identifier to a valid value on entering something unknown', () => {
   const setIdentifierType = jest.fn();
-  const { getByLabelText } = render(
+  render(
     <TeamCreateOutputIdentifier
       {...props}
       setIdentifierType={setIdentifierType}
     />,
   );
-  fireEvent.change(getByLabelText(/identifier/i), {
-    target: {
-      value: 'UNKNOWN',
-    },
-  });
+  const textbox = screen.getByRole('textbox', { name: /identifier/i });
+  userEvent.type(textbox, 'UNKNOWN');
+  textbox.blur();
 
-  fireEvent.keyDown(getByLabelText(/identifier/i), { keyCode: ENTER_KEYCODE });
-
-  expect(setIdentifierType).toHaveBeenCalledWith(
-    ResearchOutputIdentifierType.None,
-  );
+  expect(screen.getByText('Choose an identifier')).toBeVisible();
+  expect(screen.getByLabelText(/identifier/i)).toHaveValue('');
 });
 
 it('should set the identifier to the selected value', () => {
   const setIdentifierType = jest.fn();
-  const { getByLabelText } = render(
+  render(
     <TeamCreateOutputIdentifier
       {...props}
       setIdentifierType={setIdentifierType}
     />,
   );
-  fireEvent.change(getByLabelText(/identifier/i), {
-    target: {
-      value: 'DOI',
-    },
-  });
-
-  fireEvent.keyDown(getByLabelText(/identifier/i), { keyCode: ENTER_KEYCODE });
+  const textbox = screen.getByRole('textbox', { name: /identifier/i });
+  userEvent.type(textbox, 'DOI');
+  textbox.blur();
 
   expect(setIdentifierType).toHaveBeenCalledWith(
     ResearchOutputIdentifierType.DOI,
   );
 });
 
+it('shows error message for missing value', () => {
+  render(<TeamCreateOutputIdentifier {...props} />);
+  screen.getByRole('textbox', { name: /identifier/i }).focus();
+  screen.getByRole('textbox', { name: /identifier/i }).blur();
+  expect(screen.getByText('Please choose an identifier')).toBeVisible();
+});
+
 it('should show an error when field is required but no input is provided', async () => {
-  const { getByText, getByPlaceholderText } = render(
+  render(
     <TeamCreateOutputIdentifier
       {...props}
       identifierType={ResearchOutputIdentifierType.RRID}
     />,
   );
-  fireEvent.blur(getByPlaceholderText(/rrid/i));
-  expect(getByText(/Please enter a valid RRID/i)).toBeVisible();
+  screen.getByRole('textbox', { name: /rrid/i }).focus();
+  screen.getByRole('textbox', { name: /rrid/i }).blur();
+  expect(screen.getByText(/Please enter a valid RRID/i)).toBeVisible();
 });
 
-describe('RRID', () => {
-  it('should show an error when it does not match regex', async () => {
-    const { getByText, getByPlaceholderText } = render(
+describe.each`
+  description          | type                                            | identifier       | isValid  | name            | error
+  ${'RRID'}            | ${ResearchOutputIdentifierType.RRID}            | ${'RRI:123'}     | ${false} | ${/rrid/i}      | ${/Please enter a valid RRID/i}
+  ${'RRID'}            | ${ResearchOutputIdentifierType.RRID}            | ${'RRID:AB123'}  | ${true}  | ${/rrid/i}      | ${/Please enter a valid RRID/i}
+  ${'DOI'}             | ${ResearchOutputIdentifierType.DOI}             | ${'doidoi'}      | ${false} | ${/doi/i}       | ${/Please enter a valid DOI/i}
+  ${'DOI'}             | ${ResearchOutputIdentifierType.DOI}             | ${'doi:10.1234'} | ${true}  | ${/doi/i}       | ${/Please enter a valid DOI/i}
+  ${'AccessionNumber'} | ${ResearchOutputIdentifierType.AccessionNumber} | ${'NP_wrong'}    | ${false} | ${/accession/i} | ${/Please enter a valid Accession/i}
+  ${'AccessionNumber'} | ${ResearchOutputIdentifierType.AccessionNumber} | ${'NP_1234567'}  | ${true}  | ${/accession/i} | ${/Please enter a valid Accession/i}
+`('$description', ({ type, identifier, isValid, name, error }) => {
+  const assertError = () => {
+    if (isValid) {
+      expect(screen.queryByText(error)).not.toBeInTheDocument();
+    } else {
+      expect(screen.getByText(error)).toBeVisible();
+    }
+  };
+  it(`shows ${isValid ? 'no' : ''} error `, async () => {
+    render(
       <TeamCreateOutputIdentifier
         {...props}
-        identifierType={ResearchOutputIdentifierType.RRID}
-        identifier="RRI:123"
+        identifierType={type}
+        identifier={identifier}
       />,
     );
-    fireEvent.blur(getByPlaceholderText(/rrid/i));
-    expect(getByText(/Please enter a valid RRID/i)).toBeVisible();
-  });
-
-  it('shows no error if regex matches', () => {
-    const { getByText, getByPlaceholderText } = render(
-      <TeamCreateOutputIdentifier
-        {...props}
-        identifierType={ResearchOutputIdentifierType.RRID}
-        identifier="RRID:AB123"
-      />,
-    );
-
-    fireEvent.blur(getByPlaceholderText(/rrid/i));
-    expect(() => getByText(/Please enter a valid RRID/i)).toThrowError();
-  });
-});
-
-describe('DOI', () => {
-  it('should show an error when it does not match regex', async () => {
-    const { getByText, getByPlaceholderText } = render(
-      <TeamCreateOutputIdentifier
-        {...props}
-        identifierType={ResearchOutputIdentifierType.DOI}
-        identifier="doidoi"
-      />,
-    );
-    fireEvent.blur(getByPlaceholderText(/doi/i));
-    expect(getByText(/Please enter a valid DOI/i)).toBeVisible();
-  });
-
-  it('shows no error if regex matches', () => {
-    const { getByText, getByPlaceholderText } = render(
-      <TeamCreateOutputIdentifier
-        {...props}
-        identifierType={ResearchOutputIdentifierType.DOI}
-        identifier="doi:10.1234"
-      />,
-    );
-
-    fireEvent.blur(getByPlaceholderText(/doi/i));
-    expect(() => getByText(/Please enter a valid DOI/i)).toThrowError();
-  });
-});
-
-describe('AccessionNumber', () => {
-  it('should show an error when it does not match regex', async () => {
-    const { getByText, getByPlaceholderText } = render(
-      <TeamCreateOutputIdentifier
-        {...props}
-        identifierType={ResearchOutputIdentifierType.AccessionNumber}
-        identifier="NP_wrong"
-      />,
-    );
-    fireEvent.blur(getByPlaceholderText(/accession/i));
-    expect(getByText(/Please enter a valid Accession/i)).toBeVisible();
-  });
-
-  it('shows no error if regex matches', () => {
-    const { getByText, getByPlaceholderText } = render(
-      <TeamCreateOutputIdentifier
-        {...props}
-        identifierType={ResearchOutputIdentifierType.AccessionNumber}
-        identifier="NP_1234567"
-      />,
-    );
-
-    fireEvent.blur(getByPlaceholderText(/accession/i));
-    expect(() => getByText(/Please enter a valid Accession/i)).toThrowError();
+    screen.getByRole('textbox', { name }).focus();
+    screen.getByRole('textbox', { name }).blur();
+    expect.assertions(1);
+    assertError();
   });
 });

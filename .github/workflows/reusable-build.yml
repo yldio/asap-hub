@@ -172,7 +172,7 @@ jobs:
         run: |
           yarn typecheck
 
-  sls-package:
+  crn-sls-package:
     needs: [definitions, transpile, rebuild]
     runs-on: ubuntu-latest
     container:
@@ -206,7 +206,7 @@ jobs:
       - name: Generate package
         shell: bash
         run: |
-          yarn sls package --package sls-package
+          yarn sls package --package crn-sls-package
         env:
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
           ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
@@ -229,6 +229,6 @@ jobs:
           SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
       - uses: actions/upload-artifact@v3
         with:
-          name: sls-package-${{ inputs.environment-name }}
-          path: 'sls-package'
+          name: crn-sls-package-${{ inputs.environment-name }}
+          path: 'crn-sls-package'
           retention-days: 1

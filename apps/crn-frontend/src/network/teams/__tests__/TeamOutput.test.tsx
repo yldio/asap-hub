@@ -75,28 +75,30 @@ describe('TeamOutput', () => {
   });
 
   it('can submit a form when form data is valid', async () => {
-    const teamId = 'team-id';
-    const link = 'https://example.com';
-    const title = 'example title';
-    const description = 'example description';
+    const teamId = 'team-42';
+    const link = 'https://example42.com';
+    const title = 'example42 title';
+    const description = 'example42 description';
     const type = 'Animal Model';
-    const doi = '10.1234';
+    const doi = '10.0777';
 
     await renderPage({ teamId, outputDocumentType: 'lab-resource' });
 
-    await mandatoryFields({ link, title, description, type, doi });
+    const { publish } = await mandatoryFields({
+      link,
+      title,
+      description,
+      type,
+      doi,
+    });
 
     userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
     userEvent.click(screen.getByText('Example 1 Lab'));
     userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
     userEvent.click(screen.getByText('Person A 3'));
 
-    const button = screen.getByRole('button', { name: /Publish/i });
-    userEvent.click(button);
+    await publish();
 
-    await waitFor(() => {
-      expect(button).toBeEnabled();
-    });
     expect(mockCreateTeamResearchOutput).toHaveBeenCalledWith(
       {
         doi,
@@ -106,7 +108,7 @@ describe('TeamOutput', () => {
         asapFunded: false,
         usedInPublication: false,
         sharingStatus: 'Network Only',
-        teams: ['team-id'],
+        teams: [teamId],
         link,
         title,
         description,
@@ -138,23 +140,10 @@ describe('TeamOutput', () => {
     );
 
     await renderPage({ teamId: '42', outputDocumentType: 'article' });
-    await mandatoryFields(
-      {
-        link: 'http://example.com',
-        title: 'example title',
-        description: 'example description',
-        type: 'Preprint',
-        doi: '10.1234',
-      },
-      true,
-    );
+    const { publish } = await mandatoryFields({}, true);
 
-    const button = screen.getByRole('button', { name: /Publish/i });
-    userEvent.click(button);
+    await publish();
 
-    await waitFor(() => {
-      expect(button).toBeEnabled();
-    });
     expect(mockCreateTeamResearchOutput).toHaveBeenCalled();
     expect(
       screen.getByText(
@@ -181,39 +170,10 @@ describe('TeamOutput', () => {
 
     await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
-    userEvent.type(
-      screen.getByRole('textbox', { name: /URL \(required\)/i }),
-      'http://example.com',
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /title/i }),
-      'example title',
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /description/i }),
-      'example description',
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /Select the option/i }),
-      'Preprint',
-    );
+    const { publish } = await mandatoryFields({}, true);
 
-    const identifier = screen.getByRole('textbox', { name: /identifier/i });
-    userEvent.type(identifier, 'DOI');
-    identifier.blur();
-    userEvent.type(
-      await screen.findByRole('textbox', {
-        name: /Your DOI must start with/i,
-      }),
-      '10.1234',
-    );
+    await publish();
 
-    const button = screen.getByRole('button', { name: /Publish/i });
-    userEvent.click(button);
-
-    await waitFor(() => {
-      expect(button).toBeEnabled();
-    });
     expect(mockCreateTeamResearchOutput).toHaveBeenCalled();
     expect(mockToast).toHaveBeenCalledWith(
       'There was an error and we were unable to save your changes. Please try again.',
@@ -284,17 +244,17 @@ describe('TeamOutput', () => {
 });
 async function mandatoryFields(
   {
-    link,
-    title,
-    description,
-    type,
-    doi,
+    link = 'http://example.com',
+    title = 'example title',
+    description = 'example description',
+    type = 'Preprint',
+    doi = '10.1234',
   }: {
-    link: string;
-    title: string;
-    description: string;
-    type: string;
-    doi: string;
+    link?: string;
+    title?: string;
+    description?: string;
+    type?: string;
+    doi?: string;
   },
   isLinkRequired: boolean = false,
 ) {
@@ -321,4 +281,13 @@ async function mandatoryFields(
     }),
     doi,
   );
+  const button = screen.getByRole('button', { name: /Publish/i });
+  return {
+    publish: async () => {
+      userEvent.click(button);
+      await waitFor(() => {
+        expect(button).toBeEnabled();
+      });
+    },
+  };
 }

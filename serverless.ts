@@ -6,16 +6,18 @@ import pkg from './package.json';
 const { NODE_ENV = 'development' } = process.env;
 
 if (NODE_ENV === 'production') {
-  ['ASAP_API_URL', 'ASAP_APP_URL', 'AWS_ACM_CERTIFICATE_ARN'].forEach((env) => {
-    assert.ok(process.env[env], `${env} not defined`);
-  });
+  ['ASAP_API_URL', 'ASAP_APP_URL', 'CRN_AWS_ACM_CERTIFICATE_ARN'].forEach(
+    (env) => {
+      assert.ok(process.env[env], `${env} not defined`);
+    },
+  );
 }
 
 const {
   ASAP_APP_URL = 'http://localhost:3000',
   ASAP_API_URL = 'http://localhost:3333',
   ASAP_HOSTNAME = 'hub.asap.science',
-  AWS_ACM_CERTIFICATE_ARN,
+  CRN_AWS_ACM_CERTIFICATE_ARN,
   SLS_STAGE = 'development',
   CI_COMMIT_SHA,
   ALGOLIA_INDEX,
@@ -548,7 +550,7 @@ const serverlessConfig: AWS = {
           DomainName: '${self:custom.apiHostname}',
           DomainNameConfigurations: [
             {
-              CertificateArn: AWS_ACM_CERTIFICATE_ARN,
+              CertificateArn: CRN_AWS_ACM_CERTIFICATE_ARN,
               EndpointType: 'REGIONAL',
             },
           ],
@@ -964,7 +966,7 @@ const serverlessConfig: AWS = {
             Enabled: true,
             PriceClass: 'PriceClass_100',
             ViewerCertificate: {
-              AcmCertificateArn: AWS_ACM_CERTIFICATE_ARN,
+              AcmCertificateArn: CRN_AWS_ACM_CERTIFICATE_ARN,
               MinimumProtocolVersion: 'TLSv1.2_2018',
               SslSupportMethod: 'sni-only',
             },

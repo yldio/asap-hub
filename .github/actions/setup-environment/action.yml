@@ -38,9 +38,9 @@ outputs:
   aws-acm-asap-science-certificate-arn:
     description: 'AWS ACM ASAP Science Certificate ARN'
     value: ${{ steps.vars.outputs.aws-acm-asap-science-certificate-arn }}
-  aws-acm-certificate-arn:
-    description: 'AWS ACM Certificate ARN'
-    value: ${{ steps.vars.outputs.aws-acm-certificate-arn }}
+  crn-aws-acm-certificate-arn:
+    description: 'CRN AWS ACM Certificate ARN'
+    value: ${{ steps.vars.outputs.crn-aws-acm-certificate-arn }}
   aws-default-region:
     description: 'AWS Default Region'
     value: ${{ steps.vars.outputs.aws-default-region }}

@@ -25,7 +25,7 @@ on:
         required: true
 
 jobs:
-  sls-package:
+  crn-sls-deploy:
     concurrency:
       group: ${{ github.head_ref || inputs.environment-name }}
     runs-on: ubuntu-latest
@@ -56,17 +56,17 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - uses: actions/download-artifact@v3
         with:
-          name: sls-package-${{ inputs.environment-name }}
-          path: 'sls-package'
+          name: crn-sls-package-${{ inputs.environment-name }}
+          path: 'crn-sls-package'
       - name: Deploy
         run: |
-          yarn sls deploy --package sls-package --verbose
+          yarn sls deploy --package crn-sls-package --verbose
         env:
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
           ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
           ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
+          CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
           AWS_REGION: ${{ steps.setup.outputs.aws-region }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           CURRENT_REVISION: ${{ github.sha }}
@@ -84,7 +84,7 @@ jobs:
           SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   algolia-settings:
-    needs: [sls-package]
+    needs: [crn-sls-deploy]
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -118,7 +118,7 @@ jobs:
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
 
   squidex-schema:
-    needs: [sls-package]
+    needs: [crn-sls-deploy]
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -149,7 +149,7 @@ jobs:
           SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   ses:
-    needs: [sls-package]
+    needs: [crn-sls-deploy]
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:

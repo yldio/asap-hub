@@ -281,3 +281,35 @@ it('clears invalid values, when enter', async () => {
     expect(getByRole('textbox')).toHaveValue('');
   });
 });
+
+it('Shows all options when it focus after selecting particular option', () => {
+  const handleChange = jest.fn();
+  const { getByRole, getByText, queryByText } = render(
+    <Dropdown
+      placeholder="Select"
+      options={[
+        { value: 'LHR', label: 'Heathrow' },
+        { value: 'LGW', label: 'Gatwick' },
+        { value: 'FRA', label: 'Frankfurt' },
+      ]}
+      value=""
+      onChange={handleChange}
+    />,
+  );
+
+  userEvent.click(getByText('Select'));
+  userEvent.type(getByText('Select'), 'Heathrow');
+
+  expect(queryByText('Select')).toBeNull();
+  expect(getByRole('textbox')).toHaveValue('Heathrow');
+
+  fireEvent.keyDown(getByRole('textbox'), {
+    keyCode: ENTER_KEYCODE,
+  });
+
+  expect(handleChange).toHaveBeenCalledWith('LHR');
+
+  userEvent.click(getByText('Heathrow'));
+  expect(getByText('Gatwick')).toBeVisible();
+  expect(getByText('Frankfurt')).toBeVisible();
+});

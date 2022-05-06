@@ -8,7 +8,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import Select, { OptionTypeBase, components } from 'react-select';
+import Select, { OptionTypeBase, components, createFilter } from 'react-select';
 import { css } from '@emotion/react';
 import { v4 as uuidV4 } from 'uuid';
 
@@ -110,6 +110,8 @@ export default function Dropdown<V extends string>({
     setTimeout(validationTargetProps.onBlur, 0);
   };
 
+  const filterOption = createFilter(null);
+
   return (
     <div css={containerStyles}>
       <InputContext.Provider value={{ ...validationTargetProps, required }}>
@@ -119,6 +121,13 @@ export default function Dropdown<V extends string>({
           isDisabled={!enabled}
           inputValue={inputValue}
           options={options.filter((option) => option.value !== '')}
+          filterOption={(opt, rawInput) => {
+            if (rawInput === inputValue) {
+              return true;
+            }
+
+            return filterOption(opt, rawInput);
+          }}
           onBlur={(option: OptionTypeBase) => {
             handleInputValidation(option.target.value);
           }}

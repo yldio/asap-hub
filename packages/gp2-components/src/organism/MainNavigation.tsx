@@ -12,32 +12,41 @@ import React from 'react';
 const { perRem, vminLinearCalc, mobileScreen, largeDesktopScreen } = pixels;
 
 const listStyles = css({
+  margin: '0',
+  padding: '0',
   display: 'flex',
   flexDirection: 'row',
   listStyle: 'none',
-  margin: 0,
-  boxSizing: 'border-box',
-  padding: `${12 / perRem}em`,
-  paddingTop: `max(${12 / perRem}em, ${vminLinearCalc(
-    mobileScreen,
-    18 / perRem,
-    largeDesktopScreen,
-    12 / perRem,
-    'em',
-  )})`,
+  gap: '48px',
 });
 
 const MainNavigation: React.FC = () => (
   <nav>
     <ul css={listStyles}>
       <li>
-        <NavigationLink href={'/'} icon={discoverIcon}>
-          Home
+        <NavigationLink href={'/'}>
+          <div
+            css={css({
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            })}
+          >
+            {discoverIcon}Home
+          </div>
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={network({}).$} icon={networkIcon}>
-          Network
+        <NavigationLink href={network({}).$}>
+          <div
+            css={css({
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            })}
+          >
+            {networkIcon}Network
+          </div>
         </NavigationLink>
       </li>
     </ul>

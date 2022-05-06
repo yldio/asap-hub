@@ -705,6 +705,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
+    "@asap-hub/react-context": "workspace:*"
     "@asap-hub/routing": "workspace:*"
     "@babel/core": ^7.14.2
     "@babel/preset-react": ^7.13.13
@@ -738,6 +739,7 @@ __metadata:
     react-router-dom: ^5.2.0
     react-test-renderer: ^17.0.2
   peerDependencies:
+    "@asap-hub/react-context": "workspace:*"
     "@emotion/react": ^11
     history: ^4
     react: ^17.0.2

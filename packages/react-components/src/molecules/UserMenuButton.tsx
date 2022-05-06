@@ -5,6 +5,7 @@ import { noop } from '../utils';
 import { perRem } from '../pixels';
 import { Paragraph, Avatar } from '../atoms';
 import { chevronDownIcon, chevronUpIcon, verticalDividerIcon } from '../icons';
+import { TextChild } from '../text';
 
 const buttonResetStyles = css({
   padding: 0,
@@ -24,10 +25,13 @@ const styles = css({
 interface UserMenuButtonProps {
   onClick?: () => void;
   open?: boolean;
+  children?: TextChild;
+  hideText?: boolean;
 }
 const UserMenuButton: React.FC<UserMenuButtonProps> = ({
   onClick = noop,
   open = false,
+  children,
 }) => {
   const {
     displayName = 'Unknown User',
@@ -47,7 +51,7 @@ const UserMenuButton: React.FC<UserMenuButtonProps> = ({
     >
       <Paragraph>
         <strong css={{ paddingRight: `${15 / perRem}em` }}>
-          {displayName}
+          {children ? children : displayName}
         </strong>
       </Paragraph>
       <Avatar imageUrl={avatarUrl} firstName={firstName} lastName={lastName} />

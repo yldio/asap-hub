@@ -14,6 +14,7 @@
     "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "peerDependencies": {
+    "@asap-hub/react-context": "workspace:*",
     "@emotion/react": "^11",
     "history": "^4",
     "react": "^17.0.2",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
+    "@asap-hub/react-context": "workspace:*",
     "@babel/core": "^7.14.2",
     "@babel/preset-react": "^7.13.13",
     "@emotion/babel-plugin": "^11.3.0",

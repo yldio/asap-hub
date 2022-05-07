@@ -60,6 +60,9 @@ outputs:
   crn-aws-acm-certificate-arn:
     description: 'CRN AWS ACM Certificate ARN'
     value: ${{ steps.vars.outputs.crn-aws-acm-certificate-arn }}
+  gp2-api-url:
+    description: 'GP2 API Url'
+    value: ${{ steps.vars.outputs.gp2-api-url }}
   gp2-aws-acm-certificate-arn:
     description: 'GP2 AWS ACM Certificate ARN'
     value: ${{ steps.vars.outputs.gp2-aws-acm-certificate-arn }}
@@ -132,6 +135,7 @@ runs:
           echo "::set-output name=app-release::${{ github.run_id }}-dev"
           echo "::set-output name=asap-api-url::https://api-$PR_NUMBER.hub.asap.science"
           echo "::set-output name=asap-app-url::https://$PR_NUMBER.hub.asap.science"
+          echo "::set-output name=gp2-api-url::https://api-$PR_NUMBER.gp2.asap.science"
           echo "::set-output name=gp2-app-url::https://$PR_NUMBER.gp2.asap.science"
           echo "::set-output name=pr-number::$PR_NUMBER"
           echo "::set-output name=sls-stage::$PR_NUMBER"

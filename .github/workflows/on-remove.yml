@@ -10,7 +10,7 @@ on:
         type: string
         description: Choose which PR number to destroy
 jobs:
-  sls:
+  crn-sls-remove:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     runs-on: ubuntu-latest
     container:
@@ -106,7 +106,7 @@ jobs:
 
   notify_failure:
     runs-on: ubuntu-latest
-    needs: [sls, algolia-index]
+    needs: [crn-sls-remove, algolia-index]
     if: ${{ failure() && (github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub') }}
     steps:
       - name: Checkout

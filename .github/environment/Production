@@ -5,6 +5,7 @@ asap-api-url=https://api.hub.asap.science
 asap-app-url=https://hub.asap.science
 auth0-client-id=Av2psgVspAN00Kez9v1vR2c496a9zCW3
 auth0-domain=asap-hub.us.auth0.com
+gp2-api-url=https://api.gp2.asap.science
 gp2-app-url=https://gp2.asap.science
 react-app-environment=production
 react-app-gtm-container-id=GTM-M5HZBRZ

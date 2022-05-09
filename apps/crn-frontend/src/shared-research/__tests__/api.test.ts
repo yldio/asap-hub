@@ -7,7 +7,7 @@ import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getResearchOutput, getResearchOutputs } from '../api';
 import { API_BASE_URL } from '../../config';
-import { GetListOptions } from '../../api-util';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 
 jest.mock('../../config');

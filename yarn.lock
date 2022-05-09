@@ -429,6 +429,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/flags": "workspace:*"
+    "@asap-hub/frontend-utils": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@asap-hub/react-context": "workspace:*"
@@ -476,7 +477,6 @@ __metadata:
     react-router-last-location: ^2.0.1
     react-scripts: ^4.0.3
     react-test-renderer: ^17.0.2
-    react-titled: ^1.0.1
     recoil: "patch:recoil@^0.1.2#../../patches/recoil.patch"
     streamsaver: ^2.0.5
     typescript: 4.4.4
@@ -671,7 +671,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/frontend-utils@workspace:packages/frontend-utils":
+"@asap-hub/frontend-utils@workspace:*, @asap-hub/frontend-utils@workspace:packages/frontend-utils":
   version: 0.0.0-use.local
   resolution: "@asap-hub/frontend-utils@workspace:packages/frontend-utils"
   dependencies:

@@ -16,6 +16,7 @@
   "dependencies": {
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/flags": "workspace:*",
+    "@asap-hub/frontend-utils": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
     "@asap-hub/react-context": "workspace:*",
@@ -35,7 +36,6 @@
     "react-error-boundary": "^3.1.3",
     "react-router-dom": "^5.2.0",
     "react-router-last-location": "^2.0.1",
-    "react-titled": "^1.0.1",
     "recoil": "patch:recoil@^0.1.2#../../patches/recoil.patch",
     "streamsaver": "^2.0.5",
     "use-debounce": "^5.2.1",

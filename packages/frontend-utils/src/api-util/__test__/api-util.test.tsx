@@ -4,7 +4,7 @@ import {
   createSentryHeaders,
   validationErrorsAreSupported,
   clearAjvErrorForPath,
-} from '../api-util';
+} from '@asap-hub/frontend-utils';
 
 const mockSetTag = jest.fn();
 jest.mock('@sentry/react', () => ({

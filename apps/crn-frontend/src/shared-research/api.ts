@@ -3,7 +3,7 @@ import {
   ResearchOutputDocumentType,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import { createSentryHeaders, GetListOptions } from '../api-util';
+import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import { API_BASE_URL } from '../config';
 
 export type ResearchOutputListOptions = GetListOptions & {

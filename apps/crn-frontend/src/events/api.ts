@@ -1,14 +1,17 @@
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
+import {
+  createListApiUrl,
+  createSentryHeaders,
+} from '@asap-hub/frontend-utils';
 
 import { API_BASE_URL } from '../config';
-import { createListApiUrl, createSentryHeaders } from '../api-util';
 import { GetEventListOptions } from './options';
 
 export const getEvents = async (
   options: GetEventListOptions,
   authorization: string,
 ): Promise<ListEventResponse> => {
-  const url = createListApiUrl('events', options);
+  const url = createListApiUrl(new URL('events', `${API_BASE_URL}/`), options);
 
   if (options.before) url.searchParams.append('before', options.before);
   else if (options.after) url.searchParams.append('after', options.after);

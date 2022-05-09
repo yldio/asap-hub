@@ -9,7 +9,7 @@ import {
 
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { API_BASE_URL } from '../../config';
-import { GetListOptions, createSentryHeaders } from '../../api-util';
+import { GetListOptions, createSentryHeaders } from '@asap-hub/frontend-utils';
 
 export const getUser = async (
   id: string,

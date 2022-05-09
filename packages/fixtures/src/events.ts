@@ -65,6 +65,45 @@ export const createEventResponse = (
       },
       role: 'Lead PI (Core Leadership)',
     },
+    {
+      team: {
+        id: 'team-id-4',
+        displayName: 'Team four',
+      },
+      user: {
+        id: 'user-id-4',
+        firstName: 'John',
+        lastName: 'Doe',
+        displayName: 'John Doe',
+      },
+      role: 'Genetics',
+    },
+    {
+      team: {
+        id: 'team-id-5',
+        displayName: 'Team five',
+      },
+      user: {
+        id: 'user-id-5',
+        firstName: 'Jane',
+        lastName: 'Doe',
+        displayName: 'Jane Doe',
+      },
+      role: 'Autophagy',
+    },
+    {
+      team: {
+        id: 'team-id-6',
+        displayName: 'The team six',
+      },
+      user: {
+        id: 'user-id-6',
+        firstName: 'Dave',
+        lastName: 'Chang',
+        displayName: 'Dave Chang',
+      },
+      role: 'Bioinformatics',
+    },
   ],
 });
 

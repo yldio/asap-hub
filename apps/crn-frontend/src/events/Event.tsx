@@ -9,7 +9,6 @@ const Event: React.FC = () => {
   const { eventId } = useRouteParams(events({}).event);
   const event = useEventById(eventId);
   const refreshEvent = useQuietRefreshEventById(eventId);
-
   const backHref = useBackHref() ?? events({}).$;
 
   if (event) {

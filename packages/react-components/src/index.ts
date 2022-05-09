@@ -119,6 +119,7 @@ export {
   TeamCreateOutputHeader,
   TeamCreateOutputForm,
   TeamCreateOutputExtraInformationCard,
+  SpeakersList,
 } from './organisms';
 export {
   BasicLayout,

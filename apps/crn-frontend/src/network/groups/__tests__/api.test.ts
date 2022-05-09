@@ -6,7 +6,7 @@ import {
 
 import { API_BASE_URL } from '../../../config';
 import { getGroups, getGroup } from '../api';
-import { GetListOptions } from '../../../api-util';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../../../config');

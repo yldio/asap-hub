@@ -18,7 +18,7 @@ import {
   postUserAvatar,
 } from '../api';
 import { API_BASE_URL } from '../../../config';
-import { GetListOptions } from '../../../api-util';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 
 jest.mock('../../../config');

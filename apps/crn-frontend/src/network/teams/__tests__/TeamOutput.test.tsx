@@ -17,7 +17,7 @@ import userEvent from '@testing-library/user-event';
 import { ContextType, Suspense } from 'react';
 import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { BackendError } from '../../../api-util';
+import { BackendError } from '@asap-hub/frontend-utils';
 import { createTeamResearchOutput } from '../api';
 import { refreshTeamState } from '../state';
 import TeamOutput, {

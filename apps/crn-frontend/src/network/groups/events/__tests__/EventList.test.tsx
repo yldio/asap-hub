@@ -14,11 +14,12 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import ErrorBoundary from '@asap-hub/crn-frontend/src/structure/ErrorBoundary';
+
 import EventList from '../EventList';
 import { getGroupEvents } from '../api';
 import { groupEventsState } from '../state';
 import { getEventListOptions } from '../../../../events/options';
+import { ErrorBoundary } from '@asap-hub/frontend-utils';
 
 jest.mock('../api');
 const mockGetGroupEvents = getGroupEvents as jest.MockedFunction<

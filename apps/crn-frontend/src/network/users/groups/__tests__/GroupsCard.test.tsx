@@ -12,10 +12,10 @@ import { StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
-import ErrorBoundary from '@asap-hub/crn-frontend/src/structure/ErrorBoundary';
 import GroupsCard from '../GroupsCard';
 import { getUserGroups } from '../api';
 import { userGroupsState } from '../state';
+import { ErrorBoundary } from '@asap-hub/frontend-utils';
 
 jest.mock('../api');
 const mockGetUserGroups = getUserGroups as jest.MockedFunction<

@@ -1,7 +1,8 @@
 import { TeamProfileAbout } from '@asap-hub/react-components';
 import { TeamResponse } from '@asap-hub/model';
 
-import Frame from '../../structure/Frame';
+import { Frame } from '@asap-hub/frontend-utils';
+
 import GroupsCard from './groups/GroupsCard';
 
 interface AboutProps {

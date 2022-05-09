@@ -10,9 +10,9 @@ import {
   news,
   events,
 } from '@asap-hub/routing';
+import { Frame } from '@asap-hub/frontend-utils';
 
 import { auth0State } from './auth/state';
-import Frame from './structure/Frame';
 import CheckOnboarded from './auth/CheckOnboarded';
 import Onboardable from './Onboardable';
 import { useCurrentUserProfileTabRoute } from './hooks';

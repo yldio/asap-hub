@@ -8,8 +8,9 @@ import {
 } from '@asap-hub/model';
 
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';
-import { API_BASE_URL } from '../../config';
 import { GetListOptions, createSentryHeaders } from '@asap-hub/frontend-utils';
+
+import { API_BASE_URL } from '../../config';
 
 export const getUser = async (
   id: string,

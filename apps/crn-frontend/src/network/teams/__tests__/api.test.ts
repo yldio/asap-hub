@@ -5,6 +5,7 @@ import {
   createListLabsResponse,
 } from '@asap-hub/fixtures';
 import { ResearchOutputPostRequest, TeamResponse } from '@asap-hub/model';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 
 import { API_BASE_URL } from '../../../config';
 import {
@@ -14,7 +15,6 @@ import {
   createTeamResearchOutput,
   getLabs,
 } from '../api';
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../../../config');

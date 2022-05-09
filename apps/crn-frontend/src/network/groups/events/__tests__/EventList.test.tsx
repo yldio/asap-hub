@@ -9,6 +9,7 @@ import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { network } from '@asap-hub/routing';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { ErrorBoundary } from '@asap-hub/frontend-utils';
 
 import {
   Auth0Provider,
@@ -19,7 +20,6 @@ import EventList from '../EventList';
 import { getGroupEvents } from '../api';
 import { groupEventsState } from '../state';
 import { getEventListOptions } from '../../../../events/options';
-import { ErrorBoundary } from '@asap-hub/frontend-utils';
 
 jest.mock('../api');
 const mockGetGroupEvents = getGroupEvents as jest.MockedFunction<

@@ -24,7 +24,9 @@ export const createListApiUrl = (
   return url;
 };
 
-export const createSentryHeaders = () => {
+export const createSentryHeaders = (): {
+  'X-Transaction-Id': string;
+} => {
   const transactionId = Math.random().toString(36).substr(2, 9);
   configureScope((scope) => {
     scope.setTag('transaction_id', transactionId);
@@ -60,4 +62,5 @@ export const validationErrorsAreSupported = (
 export const clearAjvErrorForPath = (
   errors: ValidationErrorResponse['data'],
   path: string,
-) => errors.filter(({ instancePath }) => instancePath !== path);
+): ValidationErrorResponse['data'] =>
+  errors.filter(({ instancePath }) => instancePath !== path);

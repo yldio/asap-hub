@@ -109,50 +109,45 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
         <Headline4 styleAsHeading={4}>Role</Headline4>
       </div>
       <div css={gridStyles}>
-        {speakers.map(({ user, team, role }) => {
-          return (
-            <div css={speakerListStyles}>
-              <div css={groupStyle}>
-                <div css={labelStyle}>
-                  <span>Team</span>
-                </div>
-                <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
-                  {team?.displayName}
-                </Link>
+        {speakers.map(({ user, team, role }) => (
+          <div key={team.id + user?.id} css={speakerListStyles}>
+            <div css={groupStyle}>
+              <div css={labelStyle}>
+                <span>Team</span>
               </div>
-              <div css={groupStyle}>
-                <div css={labelStyle}>
-                  <span>Speaker</span>
-                </div>
-                <div css={userStyles}>
-                  <Avatar
-                    firstName={user?.firstName}
-                    lastName={user?.lastName}
-                    imageUrl={
-                      user?.displayName ? '' : getPlaceholderAvatarUrl()
+              <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+                {team?.displayName}
+              </Link>
+            </div>
+            <div css={groupStyle}>
+              <div css={labelStyle}>
+                <span>Speaker</span>
+              </div>
+              <div css={userStyles}>
+                <Avatar
+                  firstName={user?.firstName}
+                  lastName={user?.lastName}
+                  imageUrl={user?.displayName ? '' : getPlaceholderAvatarUrl()}
+                />
+                {(user?.displayName && (
+                  <Link
+                    href={
+                      user && network({}).users({}).user({ userId: user?.id }).$
                     }
-                  />
-                  {(user?.displayName && (
-                    <Link
-                      href={
-                        user &&
-                        network({}).users({}).user({ userId: user?.id }).$
-                      }
-                    >
-                      {user?.displayName}
-                    </Link>
-                  )) || <span>{userToBeAnnounced}</span>}
-                </div>
-              </div>
-              <div css={groupStyle}>
-                <div css={labelStyle}>
-                  <span>Role</span>
-                </div>
-                <span>{role}</span>
+                  >
+                    {user?.displayName}
+                  </Link>
+                )) || <span>{userToBeAnnounced}</span>}
               </div>
             </div>
-          );
-        })}
+            <div css={groupStyle}>
+              <div css={labelStyle}>
+                <span>Role</span>
+              </div>
+              <span>{role}</span>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

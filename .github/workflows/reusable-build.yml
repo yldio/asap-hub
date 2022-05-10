@@ -67,6 +67,9 @@ jobs:
       - name: Build
         run: |
           yarn build:babel
+        env:
+          AUTH0_CLIENT_ID: ${{ steps.setup.outputs.auth0-client-id }}
+          AUTH0_DOMAIN: ${{ steps.setup.outputs.auth0-domain }}
       - name: Cache transpile output
         uses: ./.github/actions/cache-build
         with:

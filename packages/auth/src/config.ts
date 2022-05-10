@@ -1,5 +1,2 @@
-export const { AUTH0_DOMAIN: domain, AUTH0_CLIENT_ID: clientID } =
-  process.env as {
-    AUTH0_DOMAIN: string;
-    AUTH0_CLIENT_ID: string;
-  };
+export const domain: string = process.env.AUTH0_DOMAIN || '';
+export const clientID: string = process.env.AUTH0_CLIENT_ID || '';

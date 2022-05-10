@@ -267,7 +267,7 @@ export default class ResearchOutputs implements ResearchOutputController {
         await this.fetch({
           filter: {
             documentType: researchOutputData.documentType,
-            title: researchOutputData.title,
+            title: sanitiseForSquidex(researchOutputData.title),
           },
           includeDrafts: true,
         })
@@ -294,7 +294,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       (
         await this.fetch({
           filter: {
-            link: researchOutputData.link,
+            link: sanitiseForSquidex(researchOutputData.link || ''),
           },
           includeDrafts: true,
         })

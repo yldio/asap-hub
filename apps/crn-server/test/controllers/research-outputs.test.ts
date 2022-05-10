@@ -871,7 +871,7 @@ describe('ResearchOutputs controller', () => {
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
-            filter: `(data/link/iv eq '${researchOutputRequest.link}')`,
+            filter: `(data/link/iv eq 'https:%2F%2Fhub.asap.science%2F')`,
           }),
           {
             includeDrafts: true,
@@ -1038,7 +1038,7 @@ describe('ResearchOutputs controller', () => {
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
-            filter: `(data/link/iv eq '${researchOutputRequest.link}')`,
+            filter: `(data/link/iv eq 'https:%2F%2Fhub.asap.science%2F')`,
           }),
           {
             includeDrafts: true,

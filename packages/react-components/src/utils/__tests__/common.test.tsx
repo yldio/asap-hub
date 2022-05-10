@@ -62,6 +62,10 @@ describe('isInternalLink', () => {
       expect(strippedUrl).toEqual(stripped);
     });
   });
+
+  it('Returns empty string when the URL is invalid', () => {
+    expect(isInternalLink(`http://`)).toEqual([false, '']);
+  });
 });
 
 describe('getIconFromUrl', () => {

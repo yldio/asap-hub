@@ -1965,7 +1965,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/aws-lambda",
-        "npm:8.10.76"
+        "npm:8.10.97"
       ],
       [
         "@types/babel__core",
@@ -10681,7 +10681,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/joi", "npm:17.1.1"],
             ["@sentry/serverless", "npm:6.7.1"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
-            ["@types/aws-lambda", "npm:8.10.76"],
+            ["@types/aws-lambda", "npm:8.10.97"],
             ["@types/chance", "npm:1.1.1"],
             ["@types/cors", "npm:2.8.10"],
             ["@types/debug", "npm:4.1.5"],
@@ -10859,7 +10859,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/boom", "npm:9.1.2"],
             ["@serverless/typescript", "npm:2.59.0"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
-            ["@types/aws-lambda", "npm:8.10.76"],
+            ["@types/aws-lambda", "npm:8.10.97"],
             ["@types/cors", "npm:2.8.10"],
             ["@types/express", "npm:4.17.11"],
             ["@types/jest", "npm:26.0.23"],
@@ -11440,7 +11440,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/bourne", "npm:2.0.0"],
             ["@hapi/joi", "npm:17.1.1"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
-            ["@types/aws-lambda", "npm:8.10.76"],
+            ["@types/aws-lambda", "npm:8.10.97"],
             ["@types/debug", "npm:4.1.5"],
             ["@types/hapi", "npm:18.0.5"],
             ["@types/hapi__boom", "npm:9.0.1"],
@@ -29183,17 +29183,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:8.10.76", {
-          "packageLocation": "./.yarn/cache/@types-aws-lambda-npm-8.10.76-4ed463c6a0-fe47b9b305.zip/node_modules/@types/aws-lambda/",
-          "packageDependencies": [
-            ["@types/aws-lambda", "npm:8.10.76"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:8.10.77", {
           "packageLocation": "./.yarn/cache/@types-aws-lambda-npm-8.10.77-fd116b2b31-e990eb4a4d.zip/node_modules/@types/aws-lambda/",
           "packageDependencies": [
             ["@types/aws-lambda", "npm:8.10.77"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:8.10.97", {
+          "packageLocation": "./.yarn/cache/@types-aws-lambda-npm-8.10.97-acc2782435-0a79e5d853.zip/node_modules/@types/aws-lambda/",
+          "packageDependencies": [
+            ["@types/aws-lambda", "npm:8.10.97"]
           ],
           "linkType": "HARD",
         }]

@@ -235,3 +235,38 @@ export const getResearchOutputRequest = (): ResearchOutputPostRequest => ({
   environments: ['In Vitro'],
   subtype: 'Metabolite',
 });
+
+export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
+  const {
+    documentType,
+    title,
+    asapFunded,
+    sharingStatus,
+    usedInPublication,
+    addedDate,
+    publishDate,
+    description,
+    tags,
+    labs,
+    authors,
+    teams,
+    methods,
+  } = getResearchOutputResponse();
+  return {
+    documentType,
+    link: 'http://a.link',
+    title,
+    asapFunded,
+    sharingStatus,
+    usedInPublication,
+    addedDate,
+    publishDate,
+    description,
+    tags,
+    methods,
+    type: 'Software',
+    labs: labs.map(({ id }) => id),
+    authors: authors.map(({ id }) => ({ userId: id })),
+    teams: teams.map(({ id }) => id),
+  };
+};

@@ -2,6 +2,7 @@ import {
   ExternalAuthorInput,
   ListResearchOutputResponse,
   ResearchOutputPostRequest,
+  ResearchOutputPatchRequest,
   ResearchOutputResponse,
   ResearchTagCategory,
   ValidationErrorResponse,
@@ -151,7 +152,7 @@ export default class ResearchOutputs implements ResearchOutputController {
     teams,
     authors = [],
     ...researchOutputData
-  }: ResearchOutputInputData): Promise<Partial<ResearchOutputResponse>> {
+  }: ResearchOutputCreateData): Promise<Partial<ResearchOutputResponse>> {
     await this.validateResearchOutputUniques({
       ...researchOutputData,
       authors,
@@ -254,7 +255,7 @@ export default class ResearchOutputs implements ResearchOutputController {
   }
 
   private async validateResearchOutputUniques(
-    researchOutputData: ResearchOutputInputData,
+    researchOutputData: ResearchOutputCreateData,
   ): Promise<void> {
     const isError = (
       error: ValidationErrorResponse['data'][0] | null,
@@ -278,7 +279,7 @@ export default class ResearchOutputs implements ResearchOutputController {
   }
 
   private async validateTitleUniqueness(
-    researchOutputData: ResearchOutputInputData,
+    researchOutputData: ResearchOutputCreateData,
   ): Promise<ValidationErrorResponse['data'][0] | null> {
     if (
       (
@@ -306,7 +307,7 @@ export default class ResearchOutputs implements ResearchOutputController {
   }
 
   private async validateLinkUniqueness(
-    researchOutputData: ResearchOutputInputData,
+    researchOutputData: ResearchOutputCreateData,
   ): Promise<ValidationErrorResponse['data'][0] | null> {
     if (
       (
@@ -375,11 +376,19 @@ export interface ResearchOutputController {
 
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
   create: (
-    researchOutputRequest: ResearchOutputInputData,
+    researchOutputRequest: ResearchOutputCreateData,
+  ) => Promise<Partial<ResearchOutputResponse>>;
+  update: (
+    id: string,
+    researchOutputRequest: ResearchOutputUpdateData,
   ) => Promise<Partial<ResearchOutputResponse>>;
 }
-export type ResearchOutputInputData = ResearchOutputPostRequest & {
+export type ResearchOutputCreateData = ResearchOutputPostRequest & {
   createdBy: string;
+};
+
+export type ResearchOutputUpdateData = ResearchOutputPatchRequest & {
+  updatedBy: string;
 };
 
 const makeODataFilter = (filter?: ResearchOutputFilter): string => {

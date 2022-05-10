@@ -1,9 +1,6 @@
-import { ValidationError } from '@asap-hub/errors';
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
-  VALIDATION_ERROR_MESSAGE,
-  ValidationErrorResponse,
 } from '@asap-hub/model';
 import { hasCreateResearchOutputPermissions } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
@@ -14,6 +11,7 @@ import {
   validateResearchOutputParameters,
   validateResearchOutputPostRequestParameters,
   validateResearchOutputPostRequestParametersIdentifiers,
+  validateResearchOutputPutRequestParameters,
 } from '../validation/research-output.validation';
 
 export const researchOutputRouteFactory = (
@@ -48,7 +46,6 @@ export const researchOutputRouteFactory = (
 
   researchOutputRoutes.post('/research-outputs', async (req, res) => {
     const { body, loggedInUser } = req;
-
     const createRequest = validateResearchOutputPostRequestParameters(body);
     validateResearchOutputPostRequestParametersIdentifiers(createRequest);
 
@@ -59,42 +56,35 @@ export const researchOutputRouteFactory = (
       throw Boom.forbidden();
     }
 
-    try {
-      const researchOutput = await researchOutputController.create({
-        ...createRequest,
-        createdBy: loggedInUser.id,
-      });
+    const researchOutput = await researchOutputController.create({
+      ...createRequest,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      createdBy: loggedInUser!.id,
+    });
 
-      res.status(201).json(researchOutput);
-    } catch (error) {
-      // TODO: move this logic to the controller and catch in the error-handler
-      // https://asaphub.atlassian.net/browse/CRN-777
-
-      if (
-        error instanceof ValidationError &&
-        error.details[0]?.includes(
-          'link.iv: Another content with the same value exists',
-        )
-      ) {
-        throw Boom.badRequest<ValidationErrorResponse['data']>(
-          VALIDATION_ERROR_MESSAGE,
-          [
-            {
-              instancePath: '/link',
-              keyword: 'unique',
-              message: 'must be unique',
-              params: {
-                type: 'string',
-              },
-              schemaPath: '#/properties/link/unique',
-            },
-          ],
-        );
-      }
-
-      throw error;
-    }
+    res.status(201).json(researchOutput);
   });
+
+  researchOutputRoutes.put(
+    '/research-outputs/:researchOutputId',
+    async (req, res) => {
+      const { body, params, loggedInUser } = req;
+      const { researchOutputId } = validateResearchOutputParameters(params);
+      const updateRequest = validateResearchOutputPutRequestParameters(body);
+      validateResearchOutputPostRequestParametersIdentifiers(body);
+
+      const researchOutput = await researchOutputController.update(
+        researchOutputId,
+        {
+          ...updateRequest,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          updatedBy: loggedInUser!.id,
+        },
+      );
+
+      res.status(200).json(researchOutput);
+    },
+  );
 
   return researchOutputRoutes;
 };

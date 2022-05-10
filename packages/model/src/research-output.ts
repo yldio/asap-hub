@@ -222,4 +222,8 @@ export type ResearchOutputPostRequest = {
   usedInPublication?: boolean;
 };
 
+export type ResearchOutputPutRequest = ResearchOutputPostRequest;
+
+export type ResearchOutputPatchRequest = Partial<ResearchOutputPostRequest>;
+
 export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;

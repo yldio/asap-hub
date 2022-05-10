@@ -1,21 +1,23 @@
 import { ValidationErrorResponse } from '@asap-hub/model';
 import {
-  createListApiUrl,
+  createListApiUrlFactory,
   createSentryHeaders,
   validationErrorsAreSupported,
   clearAjvErrorForPath,
-} from '@asap-hub/frontend-utils';
+} from '../api-util';
 
 const mockSetTag = jest.fn();
 jest.mock('@sentry/react', () => ({
   configureScope: jest.fn((callback) => callback({ setTag: mockSetTag })),
 }));
 
-const testUrl = new URL('test', `https://example.com`);
+const baseUrl = `https://example.com`;
+
+const createListApiUrl = createListApiUrlFactory(baseUrl);
 
 describe('createListApiUrl', () => {
   it('uses defaults for take and skip params', async () => {
-    const url = createListApiUrl(testUrl, {
+    const url = createListApiUrl('test', {
       pageSize: 10,
       currentPage: 0,
       searchQuery: '',
@@ -24,7 +26,7 @@ describe('createListApiUrl', () => {
     expect(url.search).toMatchInlineSnapshot(`"?take=10&skip=0"`);
   });
   it('calculates take and skip from params', async () => {
-    const url = createListApiUrl(testUrl, {
+    const url = createListApiUrl('test', {
       currentPage: 2,
       pageSize: 10,
       filters: new Set(),
@@ -35,7 +37,7 @@ describe('createListApiUrl', () => {
   });
 
   it('handles requests with a search query', async () => {
-    const url = createListApiUrl(testUrl, {
+    const url = createListApiUrl('test', {
       searchQuery: 'test123',
       filters: new Set(),
       pageSize: 10,
@@ -44,7 +46,7 @@ describe('createListApiUrl', () => {
     expect(url.searchParams.get('search')).toEqual('test123');
   });
   it('handles requests with filters', async () => {
-    const url = createListApiUrl(testUrl, {
+    const url = createListApiUrl('test', {
       filters: new Set(['123', '456']),
       currentPage: 0,
       pageSize: 10,

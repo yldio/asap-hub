@@ -8,21 +8,24 @@ export type GetListOptions = {
   pageSize: number | null;
 };
 
-export const createListApiUrl = (
-  url: URL,
-  { searchQuery, filters, currentPage, pageSize }: GetListOptions,
-): URL => {
-  if (searchQuery) url.searchParams.set('search', searchQuery);
-  if (pageSize !== null) {
-    url.searchParams.set('take', String(pageSize));
-    if (currentPage !== null) {
-      url.searchParams.set('skip', String(currentPage * pageSize));
+export const createListApiUrlFactory =
+  (API_BASE_URL: string) =>
+  (
+    endpoint: string,
+    { searchQuery, filters, currentPage, pageSize }: GetListOptions,
+  ): URL => {
+    const url = new URL(endpoint, `${API_BASE_URL}/`);
+    if (searchQuery) url.searchParams.set('search', searchQuery);
+    if (pageSize !== null) {
+      url.searchParams.set('take', String(pageSize));
+      if (currentPage !== null) {
+        url.searchParams.set('skip', String(currentPage * pageSize));
+      }
     }
-  }
-  filters.forEach((filter) => url.searchParams.append('filter', filter));
+    filters.forEach((filter) => url.searchParams.append('filter', filter));
 
-  return url;
-};
+    return url;
+  };
 
 export const createSentryHeaders = (): {
   'X-Transaction-Id': string;

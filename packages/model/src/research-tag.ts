@@ -3,7 +3,12 @@ import { ListResponse } from './common';
 export const researchTagEntities = ['Research Output', 'User'] as const;
 export type ResearchTagEntity = typeof researchTagEntities[number];
 
-export const researchTagCategories = ['Method'] as const;
+export const researchTagCategories = [
+  'Method',
+  'Organism',
+  'Environment',
+  'Subtype',
+] as const;
 export type ResearchTagCategory = typeof researchTagCategories[number];
 
 export type ResearchTagResponse = {

@@ -229,6 +229,32 @@ describe('ResearchOutputs controller', () => {
       expect(result.methods).toEqual([]);
     });
 
+    test('Should default organisms to an empty array when missing', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.organisms =
+        null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+
+      expect(result.organisms).toEqual([]);
+    });
+
+    test('Should default environments to an empty array when missing', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.environments =
+        null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+
+      expect(result.environments).toEqual([]);
+    });
+
     test('Should skip the lab when the name is empty', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       squidexGraphqlResponse.findResearchOutputsContent!.flatData.labs = [
@@ -789,6 +815,15 @@ describe('ResearchOutputs controller', () => {
               methods: {
                 iv: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
               },
+              organisms: {
+                iv: ['d77a7607-7b9a-4ef1-99ee-c389b33ea95b'],
+              },
+              environments: {
+                iv: ['8a936e45-6d5e-42a6-8acd-b849ab10f3f8'],
+              },
+              subtype: {
+                iv: ['dd0da578-5573-4758-b1db-43a078f5076e'],
+              },
             },
           )
           .reply(201, { id: researchOutputId })
@@ -803,7 +838,15 @@ describe('ResearchOutputs controller', () => {
         const result = await researchOutputs.create(researchOutputRequest);
         const expectedResult = getResearchOutputResponse();
         expect(result).toEqual(expectedResult);
+
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledTimes(4);
+        expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          3,
+          expect.anything(),
+          expect.objectContaining({
+            filter: `data/entities/iv eq 'Research Output'`,
+          }),
+        );
       });
 
       test('Should throw when cannot create an external author - 400', async () => {
@@ -891,6 +934,81 @@ describe('ResearchOutputs controller', () => {
         ).rejects.toThrow('Validation error');
       });
 
+      test('Should throw a validation error when the selected organism does not exist', async () => {
+        const researchOutputInputData = getResearchOutputInputData();
+        researchOutputInputData.organisms = ['Rat', 'non-existent-organism'];
+
+        await expect(
+          researchOutputs.create(researchOutputInputData),
+        ).rejects.toThrowError(
+          expect.objectContaining({
+            message: 'Validation error',
+            data: [
+              {
+                instancePath: 'organisms',
+                keyword: 'invalid',
+                message: 'non-existent-organism does not exist',
+                params: {
+                  type: 'string',
+                },
+                schemaPath: `#/properties/organism/invalid`,
+              },
+            ],
+          }),
+        );
+      });
+
+      test('Should throw a validation error when the selected environment does not exist', async () => {
+        const researchOutputInputData = getResearchOutputInputData();
+        researchOutputInputData.environments = [
+          'In Vitro',
+          'non-existent-environment',
+        ];
+
+        await expect(
+          researchOutputs.create(researchOutputInputData),
+        ).rejects.toThrowError(
+          expect.objectContaining({
+            message: 'Validation error',
+            data: [
+              {
+                instancePath: 'environments',
+                keyword: 'invalid',
+                message: 'non-existent-environment does not exist',
+                params: {
+                  type: 'string',
+                },
+                schemaPath: `#/properties/environment/invalid`,
+              },
+            ],
+          }),
+        );
+      });
+
+      test('Should throw a validation error when the selected subtype does not exist', async () => {
+        const researchOutputInputData = getResearchOutputInputData();
+        researchOutputInputData.subtype = 'non-existent-subtype';
+
+        await expect(
+          researchOutputs.create(researchOutputInputData),
+        ).rejects.toThrowError(
+          expect.objectContaining({
+            message: 'Validation error',
+            data: [
+              {
+                instancePath: 'subtype',
+                keyword: 'invalid',
+                message: 'non-existent-subtype does not exist',
+                params: {
+                  type: 'string',
+                },
+                schemaPath: `#/properties/subtype/invalid`,
+              },
+            ],
+          }),
+        );
+      });
+
       test('Should throw when fails to create the research output - 400', async () => {
         const researchOutputRequest = getResearchOutputInputData();
 
@@ -961,6 +1079,10 @@ describe('ResearchOutputs controller', () => {
               externalAuthorName: 'Chris Blue',
             },
           ],
+          environments: [],
+          methods: [],
+          organisms: [],
+          subtype: undefined,
         };
         const teamId = researchOutputRequest.teams[0];
         const researchOutputId = 'created-output-id';
@@ -992,7 +1114,16 @@ describe('ResearchOutputs controller', () => {
               usedInAPublication: { iv: 'Not Sure' },
               authors: { iv: ['user-1', 'author-1', 'author-2'] },
               methods: {
-                iv: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
+                iv: [],
+              },
+              organisms: {
+                iv: [],
+              },
+              environments: {
+                iv: [],
+              },
+              subtype: {
+                iv: [],
               },
             },
           )

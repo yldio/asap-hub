@@ -85,7 +85,7 @@ export const validateFetchOptions = validateInput(
   },
 );
 
-const fetchPaginationOptionsValidationSchema: JSONSchemaType<FetchPaginationOptions> =
+export const fetchPaginationOptionsValidationSchema: JSONSchemaType<FetchPaginationOptions> =
   {
     type: 'object',
     properties: {

@@ -119,6 +119,21 @@ export const researchOutputContentQueryFragment = gql`
           name
         }
       }
+      organisms {
+        flatData {
+          name
+        }
+      }
+      environments {
+        flatData {
+          name
+        }
+      }
+      subtype {
+        flatData {
+          name
+        }
+      }
     }
     referencingTeamsContents @include(if: $withTeams) {
       id

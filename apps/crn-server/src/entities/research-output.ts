@@ -121,6 +121,15 @@ export const parseGraphQLResearchOutput = (
       data.methods?.flatMap((method) =>
         method.flatData.name ? [method.flatData.name] : [],
       ) || [],
+    organisms:
+      data.organisms?.flatMap((organism) =>
+        organism.flatData.name ? [organism.flatData.name] : [],
+      ) || [],
+    environments:
+      data.environments?.flatMap((environment) =>
+        environment.flatData.name ? [environment.flatData.name] : [],
+      ) || [],
+    subtype: data.subtype?.[0]?.flatData.name || undefined,
   };
 };
 

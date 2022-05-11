@@ -316,6 +316,67 @@
         }
       },
       {
+        "name": "organisms",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "mustBePublished": true,
+          "editor": "Tags",
+          "schemaIds": ["research-tags"],
+          "label": "Organism",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true,
+          "inlineEditable": true
+        }
+      },
+      {
+        "name": "environments",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "mustBePublished": true,
+          "editor": "Tags",
+          "schemaIds": ["research-tags"],
+          "label": "Environment",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true,
+          "inlineEditable": true
+        }
+      },
+      {
+        "name": "subtype",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "mustBePublished": true,
+          "editor": "Tags",
+          "maxItems": 1,
+          "schemaIds": ["research-tags"],
+          "label": "Subtype",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true,
+          "inlineEditable": true
+        }
+      },
+      {
         "name": "tags",
         "isHidden": false,
         "isLocked": false,

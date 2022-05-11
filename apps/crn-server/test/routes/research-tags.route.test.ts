@@ -43,14 +43,24 @@ describe('/research-tags/ route', () => {
     });
 
     test('Should call the controller with the right parameters', async () => {
-      await supertest(app).get('/research-tags').query({
-        take: 15,
-        skip: 5,
-      });
+      await supertest(app)
+        .get('/research-tags')
+        .query({
+          take: 15,
+          skip: 5,
+          filter: {
+            entity: 'Research Output',
+            type: 'Software',
+          },
+        });
 
       const expectedParams = {
         take: 15,
         skip: 5,
+        filter: {
+          entity: 'Research Output',
+          type: 'Software',
+        },
       };
 
       expect(researchTagControllerMock.fetch).toBeCalledWith(expectedParams);

@@ -3955,19 +3955,32 @@ type ResearchOutputsDataDto {
   description: ResearchOutputsDataDescriptionDto
   documentType: ResearchOutputsDataDocumentTypeDto
   doi: ResearchOutputsDataDoiDto
+  environments: ResearchOutputsDataEnvironmentsDto
   labCatalogNumber: ResearchOutputsDataLabCatalogNumberDto
   labs: ResearchOutputsDataLabsDto
   lastUpdatedPartial: ResearchOutputsDataLastUpdatedPartialDto
   link: ResearchOutputsDataLinkDto
   methods: ResearchOutputsDataMethodsDto
+  organisms: ResearchOutputsDataOrganismsDto
   publishDate: ResearchOutputsDataPublishDateDto
   rrid: ResearchOutputsDataRridDto
   sharingStatus: ResearchOutputsDataSharingStatusDto
+  subtype: ResearchOutputsDataSubtypeDto
   tags: ResearchOutputsDataTagsDto
   title: ResearchOutputsDataTitleDto
   type: ResearchOutputsDataTypeDto
   updatedBy: ResearchOutputsDataUpdatedByDto
   usedInAPublication: ResearchOutputsDataUsedInAPublicationDto
+}
+
+"""The structure of the Environment field of the Research Outputs content type."""
+type ResearchOutputsDataEnvironmentsDto {
+  iv: [ResearchTags!]
+}
+
+"""The structure of the Environment field of the Research Outputs content input type."""
+input ResearchOutputsDataEnvironmentsInputDto {
+  iv: [String!]
 }
 
 """The structure of the Research Outputs data input type."""
@@ -3982,14 +3995,17 @@ input ResearchOutputsDataInputDto {
   description: ResearchOutputsDataDescriptionInputDto
   documentType: ResearchOutputsDataDocumentTypeInputDto
   doi: ResearchOutputsDataDoiInputDto
+  environments: ResearchOutputsDataEnvironmentsInputDto
   labCatalogNumber: ResearchOutputsDataLabCatalogNumberInputDto
   labs: ResearchOutputsDataLabsInputDto
   lastUpdatedPartial: ResearchOutputsDataLastUpdatedPartialInputDto
   link: ResearchOutputsDataLinkInputDto
   methods: ResearchOutputsDataMethodsInputDto
+  organisms: ResearchOutputsDataOrganismsInputDto
   publishDate: ResearchOutputsDataPublishDateInputDto
   rrid: ResearchOutputsDataRridInputDto
   sharingStatus: ResearchOutputsDataSharingStatusInputDto
+  subtype: ResearchOutputsDataSubtypeInputDto
   tags: ResearchOutputsDataTagsInputDto
   title: ResearchOutputsDataTitleInputDto
   type: ResearchOutputsDataTypeInputDto
@@ -4055,6 +4071,16 @@ input ResearchOutputsDataMethodsInputDto {
   iv: [String!]
 }
 
+"""The structure of the Organism field of the Research Outputs content type."""
+type ResearchOutputsDataOrganismsDto {
+  iv: [ResearchTags!]
+}
+
+"""The structure of the Organism field of the Research Outputs content input type."""
+input ResearchOutputsDataOrganismsInputDto {
+  iv: [String!]
+}
+
 """The structure of the Publish Date field of the Research Outputs content type."""
 type ResearchOutputsDataPublishDateDto {
   """Date of publishing (outside the Hub). Only applies to outputs that have been published."""
@@ -4091,6 +4117,16 @@ type ResearchOutputsDataSharingStatusDto {
 """The structure of the Sharing Status field of the Research Outputs content input type."""
 input ResearchOutputsDataSharingStatusInputDto {
   iv: String
+}
+
+"""The structure of the Subtype field of the Research Outputs content type."""
+type ResearchOutputsDataSubtypeDto {
+  iv: [ResearchTags!]
+}
+
+"""The structure of the Subtype field of the Research Outputs content input type."""
+input ResearchOutputsDataSubtypeInputDto {
+  iv: [String!]
 }
 
 """The structure of the Tags field of the Research Outputs content type."""
@@ -4164,6 +4200,7 @@ type ResearchOutputsFlatDataDto {
   documentType: String
   """DOIs must start with a number and cannot be a URL"""
   doi: String
+  environments: [ResearchTags!]
   """
   If this is a hyperlink, please start with "http://" or "https://"
   """
@@ -4173,6 +4210,7 @@ type ResearchOutputsFlatDataDto {
   lastUpdatedPartial: Instant
   link: String
   methods: [ResearchTags!]
+  organisms: [ResearchTags!]
   """Date of publishing (outside the Hub). Only applies to outputs that have been published."""
   publishDate: Instant
   """
@@ -4180,6 +4218,7 @@ type ResearchOutputsFlatDataDto {
   """
   rrid: String
   sharingStatus: String
+  subtype: [ResearchTags!]
   tags: [String!]
   title: String
   type: String

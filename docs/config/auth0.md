@@ -40,7 +40,7 @@ and configured as follows:
   - [build output index.html](../../apps/auth-frontend/build/index.html) of `@asap-hub/auth-frontend`
   - You can find the static page as an artifact of our pipelines
     - For production environemnt the output is on the `deploy:sls:production` job
-    - For other environemnts the output is on the `build:ts` job
+    - For other environments the output is on the `build:ts` job
 
 ## ORCID application
 

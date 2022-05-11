@@ -3795,19 +3795,32 @@ export type ResearchOutputsDataDto = {
   description: Maybe<ResearchOutputsDataDescriptionDto>;
   documentType: Maybe<ResearchOutputsDataDocumentTypeDto>;
   doi: Maybe<ResearchOutputsDataDoiDto>;
+  environments: Maybe<ResearchOutputsDataEnvironmentsDto>;
   labCatalogNumber: Maybe<ResearchOutputsDataLabCatalogNumberDto>;
   labs: Maybe<ResearchOutputsDataLabsDto>;
   lastUpdatedPartial: Maybe<ResearchOutputsDataLastUpdatedPartialDto>;
   link: Maybe<ResearchOutputsDataLinkDto>;
   methods: Maybe<ResearchOutputsDataMethodsDto>;
+  organisms: Maybe<ResearchOutputsDataOrganismsDto>;
   publishDate: Maybe<ResearchOutputsDataPublishDateDto>;
   rrid: Maybe<ResearchOutputsDataRridDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
+  subtype: Maybe<ResearchOutputsDataSubtypeDto>;
   tags: Maybe<ResearchOutputsDataTagsDto>;
   title: Maybe<ResearchOutputsDataTitleDto>;
   type: Maybe<ResearchOutputsDataTypeDto>;
   updatedBy: Maybe<ResearchOutputsDataUpdatedByDto>;
   usedInAPublication: Maybe<ResearchOutputsDataUsedInAPublicationDto>;
+};
+
+/** The structure of the Environment field of the Research Outputs content type. */
+export type ResearchOutputsDataEnvironmentsDto = {
+  iv: Maybe<Array<ResearchTags>>;
+};
+
+/** The structure of the Environment field of the Research Outputs content input type. */
+export type ResearchOutputsDataEnvironmentsInputDto = {
+  iv: Maybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Research Outputs data input type. */
@@ -3822,14 +3835,17 @@ export type ResearchOutputsDataInputDto = {
   description: Maybe<ResearchOutputsDataDescriptionInputDto>;
   documentType: Maybe<ResearchOutputsDataDocumentTypeInputDto>;
   doi: Maybe<ResearchOutputsDataDoiInputDto>;
+  environments: Maybe<ResearchOutputsDataEnvironmentsInputDto>;
   labCatalogNumber: Maybe<ResearchOutputsDataLabCatalogNumberInputDto>;
   labs: Maybe<ResearchOutputsDataLabsInputDto>;
   lastUpdatedPartial: Maybe<ResearchOutputsDataLastUpdatedPartialInputDto>;
   link: Maybe<ResearchOutputsDataLinkInputDto>;
   methods: Maybe<ResearchOutputsDataMethodsInputDto>;
+  organisms: Maybe<ResearchOutputsDataOrganismsInputDto>;
   publishDate: Maybe<ResearchOutputsDataPublishDateInputDto>;
   rrid: Maybe<ResearchOutputsDataRridInputDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusInputDto>;
+  subtype: Maybe<ResearchOutputsDataSubtypeInputDto>;
   tags: Maybe<ResearchOutputsDataTagsInputDto>;
   title: Maybe<ResearchOutputsDataTitleInputDto>;
   type: Maybe<ResearchOutputsDataTypeInputDto>;
@@ -3891,6 +3907,16 @@ export type ResearchOutputsDataMethodsInputDto = {
   iv: Maybe<Array<Scalars['String']>>;
 };
 
+/** The structure of the Organism field of the Research Outputs content type. */
+export type ResearchOutputsDataOrganismsDto = {
+  iv: Maybe<Array<ResearchTags>>;
+};
+
+/** The structure of the Organism field of the Research Outputs content input type. */
+export type ResearchOutputsDataOrganismsInputDto = {
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
 /** The structure of the Publish Date field of the Research Outputs content type. */
 export type ResearchOutputsDataPublishDateDto = {
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
@@ -3923,6 +3949,16 @@ export type ResearchOutputsDataSharingStatusDto = {
 /** The structure of the Sharing Status field of the Research Outputs content input type. */
 export type ResearchOutputsDataSharingStatusInputDto = {
   iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Subtype field of the Research Outputs content type. */
+export type ResearchOutputsDataSubtypeDto = {
+  iv: Maybe<Array<ResearchTags>>;
+};
+
+/** The structure of the Subtype field of the Research Outputs content input type. */
+export type ResearchOutputsDataSubtypeInputDto = {
+  iv: Maybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Tags field of the Research Outputs content type. */
@@ -3996,6 +4032,7 @@ export type ResearchOutputsFlatDataDto = {
   documentType: Maybe<Scalars['String']>;
   /** DOIs must start with a number and cannot be a URL */
   doi: Maybe<Scalars['String']>;
+  environments: Maybe<Array<ResearchTags>>;
   /** If this is a hyperlink, please start with "http://" or "https://" */
   labCatalogNumber: Maybe<Scalars['String']>;
   labs: Maybe<Array<Labs>>;
@@ -4003,11 +4040,13 @@ export type ResearchOutputsFlatDataDto = {
   lastUpdatedPartial: Maybe<Scalars['Instant']>;
   link: Maybe<Scalars['String']>;
   methods: Maybe<Array<ResearchTags>>;
+  organisms: Maybe<Array<ResearchTags>>;
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   publishDate: Maybe<Scalars['Instant']>;
   /** This must start with "RRID:" */
   rrid: Maybe<Scalars['String']>;
   sharingStatus: Maybe<Scalars['String']>;
+  subtype: Maybe<Array<ResearchTags>>;
   tags: Maybe<Array<Scalars['String']>>;
   title: Maybe<Scalars['String']>;
   type: Maybe<Scalars['String']>;
@@ -7221,6 +7260,13 @@ export type ResearchOutputContentFragment = Pick<
       Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
     >;
     methods: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
+    organisms: Maybe<
+      Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
+    >;
+    environments: Maybe<
+      Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
+    >;
+    subtype: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
   };
   referencingTeamsContents?: Maybe<
     Array<
@@ -7375,6 +7421,15 @@ export type FetchResearchOutputQuery = {
           Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
         >;
         methods: Maybe<
+          Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
+        >;
+        organisms: Maybe<
+          Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
+        >;
+        environments: Maybe<
+          Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
+        >;
+        subtype: Maybe<
           Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
         >;
       };
@@ -7548,6 +7603,15 @@ export type FetchResearchOutputsQuery = {
               methods: Maybe<
                 Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
               >;
+              organisms: Maybe<
+                Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
+              >;
+              environments: Maybe<
+                Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
+              >;
+              subtype: Maybe<
+                Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
+              >;
             };
             referencingTeamsContents?: Maybe<
               Array<
@@ -7586,6 +7650,7 @@ export type ResearchTagContentFragment = Pick<ResearchTags, 'id'> & {
 export type FetchResearchTagsQueryVariables = Exact<{
   top: Maybe<Scalars['Int']>;
   skip: Maybe<Scalars['Int']>;
+  filter: Maybe<Scalars['String']>;
 }>;
 
 export type FetchResearchTagsQuery = {
@@ -10057,6 +10122,72 @@ export const ResearchOutputContentFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'organisms' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'environments' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'subtype' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -11754,6 +11885,14 @@ export const FetchResearchTagsDocument = {
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'filter' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -11776,6 +11915,14 @@ export const FetchResearchTagsDocument = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'filter' },
                 },
               },
             ],

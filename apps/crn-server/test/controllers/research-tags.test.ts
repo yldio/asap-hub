@@ -109,6 +109,65 @@ describe('ResearchTags controller', () => {
           {
             top: 13,
             skip: 7,
+            filter: '',
+          },
+        );
+      });
+
+      test('Should pass the entity filter parameters as expected', async () => {
+        await researchTags.fetch({
+          take: 11,
+          skip: 4,
+          filter: {
+            entity: 'Research Output',
+          },
+        });
+
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            top: 11,
+            skip: 4,
+            filter: `(data/entities/iv eq 'Research Output')`,
+          },
+        );
+      });
+
+      test('Should pass the type filter parameters as expected', async () => {
+        await researchTags.fetch({
+          take: 15,
+          skip: 3,
+          filter: {
+            type: 'Software',
+          },
+        });
+
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            top: 15,
+            skip: 3,
+            filter: `(data/types/iv eq 'Software')`,
+          },
+        );
+      });
+
+      test('Should pass the both filters parameters as expected', async () => {
+        await researchTags.fetch({
+          take: 11,
+          skip: 4,
+          filter: {
+            entity: 'Research Output',
+            type: 'Software',
+          },
+        });
+
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            top: 11,
+            skip: 4,
+            filter: `(data/types/iv eq 'Software') and (data/entities/iv eq 'Research Output')`,
           },
         );
       });

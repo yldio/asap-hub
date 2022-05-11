@@ -210,6 +210,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
               : undefined,
           addedDate: new Date().toISOString(),
           methods: [],
+          organisms: [],
+          environments: [],
         });
       }}
     >

@@ -154,6 +154,8 @@ describe('on submit', () => {
     sharingStatus: 'Network Only',
     addedDate: expect.anything(),
     methods: [],
+    organisms: [],
+    environments: [],
   };
   type Data = Pick<
     ResearchOutputPostRequest,

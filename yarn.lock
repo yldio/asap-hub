@@ -565,7 +565,7 @@ __metadata:
     googleapis: ^67.1.1
     got: ^11.8.2
     graphql: ^15.5.0
-    graphql-tag: ^2.12.4
+    graphql-tag: 2.12.4
     graphql-typescript-integration: ^1.2.0
     jsonwebtoken: ^8.5.1
     jwt-decode: ^2.2.0
@@ -736,7 +736,7 @@ __metadata:
     cors: ^2.8.5
     express: ^4.17.1
     express-async-errors: ^3.1.1
-    graphql-tag: ^2.12.4
+    graphql-tag: 2.12.4
     jsonwebtoken: ^8.5.1
     serverless: ^2.60.0
     serverless-http: ^2.7.0
@@ -22079,6 +22079,17 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"graphql-tag@npm:2.12.4":
+  version: 2.12.4
+  resolution: "graphql-tag@npm:2.12.4"
+  dependencies:
+    tslib: ^2.1.0
+  peerDependencies:
+    graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 476783e258e3e05020727f2a2ac6b8dcc1ac1fb4a8ccb9e22532d6eaafad40b3403757b3647ff4ee7e4dce8ba67d62bb4aa455f79bada043eb004ae1c1f5487e
+  languageName: node
+  linkType: hard
+
 "graphql-tag@npm:^2.11.0":
   version: 2.12.5
   resolution: "graphql-tag@npm:2.12.5"
@@ -22087,17 +22098,6 @@ fsevents@~2.1.2:
   peerDependencies:
     graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 7afe8b0a261bc81278e8350cbc48a641986665fa88521ece137feb8d1d62aacbe79afd4e159b618d56af106291ae8369592e46584fd8fbaf4f440201ea884fdd
-  languageName: node
-  linkType: hard
-
-"graphql-tag@npm:^2.12.4":
-  version: 2.12.4
-  resolution: "graphql-tag@npm:2.12.4"
-  dependencies:
-    tslib: ^2.1.0
-  peerDependencies:
-    graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 476783e258e3e05020727f2a2ac6b8dcc1ac1fb4a8ccb9e22532d6eaafad40b3403757b3647ff4ee7e4dce8ba67d62bb4aa455f79bada043eb004ae1c1f5487e
   languageName: node
   linkType: hard
 

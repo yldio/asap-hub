@@ -321,7 +321,7 @@ __metadata:
     "@babel/runtime-corejs3": ^7.14.0
     "@hapi/boom": ^9.1.2
     "@types/apr-intercept": "workspace:*"
-    "@types/babel__core": ^7
+    "@types/babel__core": 7.1.19
     "@types/hapi__boom": ^9.0.1
     "@types/jest": ^26.0.23
     "@types/jwt-decode": ^2.2.1
@@ -769,7 +769,7 @@ __metadata:
     "@emotion/cache": ^11
     "@emotion/react": ^11
     "@emotion/server": ^11
-    "@types/babel__core": ^7
+    "@types/babel__core": 7.1.19
     "@types/react": ^17.0.5
     "@types/react-dom": ^17.0.5
     aws-sdk: ^2.907.0
@@ -10531,7 +10531,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/babel__core@npm:^7, @types/babel__core@npm:^7.0.0, @types/babel__core@npm:^7.1.7":
+"@types/babel__core@npm:7.1.19":
+  version: 7.1.19
+  resolution: "@types/babel__core@npm:7.1.19"
+  dependencies:
+    "@babel/parser": ^7.1.0
+    "@babel/types": ^7.0.0
+    "@types/babel__generator": "*"
+    "@types/babel__template": "*"
+    "@types/babel__traverse": "*"
+  checksum: 8c9fa87a1c2224cbec251683a58bebb0d74c497118034166aaa0491a4e2627998a6621fc71f8a60ffd27d9c0c52097defedf7637adc6618d0331c15adb302338
+  languageName: node
+  linkType: hard
+
+"@types/babel__core@npm:^7.0.0, @types/babel__core@npm:^7.1.7":
   version: 7.1.9
   resolution: "@types/babel__core@npm:7.1.9"
   dependencies:

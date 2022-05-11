@@ -1,15 +1,12 @@
 import { css } from '@emotion/react';
-import {
-  EventSpeaker,
-  EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
-} from '@asap-hub/model';
+import { EventSpeaker } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { parseISO, addHours } from 'date-fns';
 import { Headline3, Headline4, Avatar, Link } from '../atoms';
 import { tabletScreen, perRem, mobileScreen } from '../pixels';
 import { userPlaceholderIcon } from '../icons';
 import { useDateHasPassed } from '../date';
+import { considerEndedAfter } from '../utils';
 
 const getPlaceholderAvatarUrl = () =>
   `data:image/svg+xml;base64,${btoa(
@@ -48,12 +45,6 @@ const speakerListStyles = css({
     gridAutoFlow: 'row',
     alignItems: 'start',
     borderBottom: '1px solid #DFE5EA',
-    [`&:nth-of-type(n+4)`]: {
-      display: 'none',
-    },
-  },
-  [`&:nth-of-type(n+6)`]: {
-    display: 'none',
   },
 });
 
@@ -84,18 +75,17 @@ const groupStyle = css({
   },
 });
 
+const toBeAnnouncedStyle = css({
+  fontStyle: 'italic',
+});
+
 interface SpeakerListProps {
   speakers: EventSpeaker[];
   readonly endDate: string;
 }
 
 const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
-  const considerEndedAfter = addHours(
-    parseISO(endDate),
-    EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
-  );
-
-  const hasEnded = useDateHasPassed(considerEndedAfter);
+  const hasEnded = useDateHasPassed(considerEndedAfter(endDate));
   const userToBeAnnounced = hasEnded
     ? 'User was never announced'
     : 'To be announced';
@@ -109,14 +99,14 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
         <Headline4 styleAsHeading={4}>Role</Headline4>
       </div>
       <div css={gridStyles}>
-        {speakers.map(({ user, team, role }) => (
-          <div key={team.id + user?.id} css={speakerListStyles}>
+        {speakers.map(({ user, team, role }, index) => (
+          <div key={`speaker-id-${index}`} css={speakerListStyles}>
             <div css={groupStyle}>
               <div css={labelStyle}>
                 <span>Team</span>
               </div>
               <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
-                {team?.displayName}
+                {team.displayName}
               </Link>
             </div>
             <div css={groupStyle}>
@@ -125,9 +115,12 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
               </div>
               <div css={userStyles}>
                 <Avatar
-                  firstName={user?.firstName}
-                  lastName={user?.lastName}
-                  imageUrl={user?.displayName ? '' : getPlaceholderAvatarUrl()}
+                  {...user}
+                  imageUrl={
+                    user?.displayName
+                      ? user.avatarUrl || ''
+                      : getPlaceholderAvatarUrl()
+                  }
                 />
                 {(user?.displayName && (
                   <Link
@@ -135,9 +128,9 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
                       user && network({}).users({}).user({ userId: user?.id }).$
                     }
                   >
-                    {user?.displayName}
+                    {user.displayName}
                   </Link>
-                )) || <span>{userToBeAnnounced}</span>}
+                )) || <span css={toBeAnnouncedStyle}>{userToBeAnnounced}</span>}
               </div>
             </div>
             <div css={groupStyle}>

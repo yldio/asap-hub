@@ -3,13 +3,13 @@ import {
   eventMaterialTypes,
   EventResponse,
   EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
-  EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
 } from '@asap-hub/model';
-import { addHours, subMinutes, parseISO } from 'date-fns';
+import { subMinutes, parseISO } from 'date-fns';
 
 import { ToastCard, TagList, EventInfo } from '../molecules';
 import { Link } from '../atoms';
 import { useDateHasPassed } from '../date';
+import { considerEndedAfter } from '../utils';
 
 type EventCardProps = ComponentProps<typeof EventInfo> &
   Pick<
@@ -28,13 +28,9 @@ const EventCard: React.FC<EventCardProps> = ({ status, tags, ...props }) => {
     parseISO(props.startDate),
     EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
   );
-  const considerEndedAfter = addHours(
-    parseISO(props.endDate),
-    EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
-  );
 
   const started = useDateHasPassed(considerStartedAfter);
-  const finished = useDateHasPassed(considerEndedAfter);
+  const finished = useDateHasPassed(considerEndedAfter(props.endDate));
   const toastCardProps = (): Omit<
     ComponentProps<typeof ToastCard>,
     'children'

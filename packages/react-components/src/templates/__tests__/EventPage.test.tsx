@@ -149,3 +149,8 @@ it('renders calendar list for events with missing group', () => {
   );
   expect(queryByText('Event Calendar')).toBeInTheDocument();
 });
+
+it('renders the speakers list component', () => {
+  const { queryByText } = render(<EventPage {...props} />);
+  expect(queryByText('Speakers')).toBeInTheDocument();
+});

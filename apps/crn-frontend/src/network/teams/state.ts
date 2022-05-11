@@ -1,9 +1,13 @@
+import { isEnabled } from '@asap-hub/flags';
 import {
   ListTeamResponse,
   ResearchOutputPostRequest,
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
+import { useCurrentUser } from '@asap-hub/react-context';
+import { hasCreateResearchOutputPermissions } from '@asap-hub/validation';
+
 import {
   atomFamily,
   DefaultValue,
@@ -185,4 +189,14 @@ export const usePostTeamResearchOutput = () => {
     setResearchOutputItem(researchOutput);
     return researchOutput;
   };
+};
+
+export const useCanCreateResearchOutput = (teamId: string): boolean => {
+  const user = useCurrentUser();
+
+  return !!(
+    isEnabled('ROMS_FORM') &&
+    user &&
+    hasCreateResearchOutputPermissions(user, [teamId])
+  );
 };

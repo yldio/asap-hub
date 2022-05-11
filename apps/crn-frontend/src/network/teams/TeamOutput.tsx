@@ -4,13 +4,13 @@ import {
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { NotFoundPage, TeamCreateOutputPage } from '@asap-hub/react-components';
-import { useFlags } from '@asap-hub/react-context';
+import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import {
   network,
   OutputDocumentTypeParameter,
   useRouteParams,
 } from '@asap-hub/routing';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   BackendError,
   clearAjvErrorForPath,
@@ -63,7 +63,8 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   );
   const team = useTeamById(teamId);
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
-  const { isEnabled } = useFlags();
+
+  const { canCreate } = useContext(ResearchOutputPermissionsContext);
 
   const createResearchOutput = usePostTeamResearchOutput();
 
@@ -71,8 +72,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
 
-  const showCreateOutputPage = isEnabled('ROMS_FORM');
-  if (showCreateOutputPage && team) {
+  if (canCreate && team) {
     return (
       <Frame title="Share Research Output">
         <TeamCreateOutputPage

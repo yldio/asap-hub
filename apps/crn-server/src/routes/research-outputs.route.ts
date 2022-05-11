@@ -1,10 +1,11 @@
+import { ValidationError } from '@asap-hub/errors';
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
   VALIDATION_ERROR_MESSAGE,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { ValidationError } from '@asap-hub/errors';
+import { hasCreateResearchOutputPermissions } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import { ResearchOutputController } from '../controllers/research-outputs';
@@ -49,13 +50,19 @@ export const researchOutputRouteFactory = (
     const { body, loggedInUser } = req;
 
     const createRequest = validateResearchOutputPostRequestParameters(body);
-    validateResearchOutputPostRequestParametersIdentifiers(body);
+    validateResearchOutputPostRequestParametersIdentifiers(createRequest);
+
+    if (
+      !loggedInUser ||
+      !hasCreateResearchOutputPermissions(loggedInUser, createRequest.teams)
+    ) {
+      throw Boom.forbidden();
+    }
 
     try {
       const researchOutput = await researchOutputController.create({
         ...createRequest,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        createdBy: loggedInUser!.id,
+        createdBy: loggedInUser.id,
       });
 
       res.status(201).json(researchOutput);

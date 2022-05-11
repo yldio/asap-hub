@@ -361,7 +361,7 @@ __metadata:
     "@babel/runtime-corejs3": ^7.14.0
     "@testing-library/dom": 7.31.2
     "@testing-library/jest-dom": ^5.12.0
-    "@testing-library/react": ^11.2.6
+    "@testing-library/react": 11.2.7
     "@testing-library/user-event": ^12.8.3
     "@types/auth0-js": ^9.14.4
     "@types/history": ^4.7.6
@@ -444,7 +444,7 @@ __metadata:
     "@sentry/tracing": ^6.11.0
     "@testing-library/dom": 7.31.2
     "@testing-library/jest-dom": ^5.12.0
-    "@testing-library/react": ^11.2.6
+    "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": ^4.0.1
     "@testing-library/user-event": ^12.8.3
     "@types/history": ^4.7.6
@@ -683,7 +683,7 @@ __metadata:
     "@babel/preset-react": ^7.13.13
     "@babel/runtime-corejs3": ^7.14.0
     "@sentry/react": ^6.11.0
-    "@testing-library/react": ^11.2.6
+    "@testing-library/react": 11.2.7
     "@types/history": ^4.7.6
     "@types/jest": ^26.0.23
     "@types/node": ^14.14.45
@@ -833,7 +833,7 @@ __metadata:
     "@emotion/serialize": ^1.0.2
     "@testing-library/dom": 7.31.2
     "@testing-library/jest-dom": ^5.12.0
-    "@testing-library/react": ^11.2.6
+    "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": ^4.0.1
     "@testing-library/user-event": ^12.8.3
     "@types/asap-hub__assets": "workspace:*"
@@ -905,7 +905,7 @@ __metadata:
     "@babel/core": ^7.14.2
     "@babel/preset-react": ^7.13.13
     "@babel/runtime-corejs3": ^7.14.0
-    "@testing-library/react": ^11.2.6
+    "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": ^4.0.1
     "@types/jest": ^26.0.23
     "@types/react": ^17.0.5
@@ -10398,16 +10398,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:^11.2.6":
-  version: 11.2.6
-  resolution: "@testing-library/react@npm:11.2.6"
+"@testing-library/react@npm:11.2.7":
+  version: 11.2.7
+  resolution: "@testing-library/react@npm:11.2.7"
   dependencies:
     "@babel/runtime": ^7.12.5
     "@testing-library/dom": ^7.28.1
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: be64e1c365a34e8fdab0f4178b4df7925423e846f86724cc945528cd90bb3d8faa46427a8e72b2015fa64f481d5b762602d2fa0842310df7fa365fc677dcc1ee
+  checksum: 64e07cb96e40dbdbd3c46a09c47bed14446b30efafaa65a5d4fed5a7553878990cda108578f2b114422a775f31c635d51fd50b752f6163ddd6b8474e0e5fc2ce
   languageName: node
   linkType: hard
 

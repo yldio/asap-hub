@@ -11,7 +11,7 @@ import {
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
 import { Router, StaticRouter } from 'react-router-dom';
@@ -190,10 +190,13 @@ describe('on submit', () => {
       screen.getByRole('textbox', { name: /description/i }),
       data.description,
     );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /Select the option/i }),
-      data.type,
-    );
+
+    const typeDropdown = screen.getByRole('textbox', {
+      name: /Select the option/i,
+    });
+    userEvent.type(typeDropdown, data.type);
+    userEvent.type(typeDropdown, specialChars.enter);
+
     const identifier = screen.getByRole('textbox', { name: /identifier/i });
     userEvent.type(identifier, 'DOI');
     identifier.blur();

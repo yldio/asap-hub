@@ -98,7 +98,7 @@ it('displays current team within the form', async () => {
   expect(screen.getByText('example team')).toBeVisible();
 });
 
-it('if funded and publication are both yes, then the None option is removed.', async () => {
+it('is funded and publication are both yes, then the none option is removed', async () => {
   render(
     <StaticRouter>
       <TeamCreateOutputForm {...props} />

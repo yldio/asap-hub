@@ -13,12 +13,12 @@ import {
   UtilityBar,
 } from '@asap-hub/react-components';
 import { staticPages, welcome, logout } from '@asap-hub/routing';
+import { Frame } from '@asap-hub/frontend-utils';
 
 import history from './history';
 import CheckAuth from './auth/CheckAuth';
 import Signin from './auth/Signin';
 import Logout from './auth/Logout';
-import Frame from './structure/Frame';
 import { GTM_CONTAINER_ID, SENTRY_DSN, ENVIRONMENT, RELEASE } from './config';
 import SentryAuth0 from './auth/SentryAuth0';
 

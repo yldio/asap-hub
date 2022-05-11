@@ -3,7 +3,7 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { NewsPage } from '@asap-hub/react-components';
 import { news } from '@asap-hub/routing';
 
-import Frame from '../structure/Frame';
+import { Frame } from '@asap-hub/frontend-utils';
 
 const loadNewsList = () =>
   import(/* webpackChunkName: "news-list" */ './NewsList');

@@ -4,6 +4,7 @@ import {
   createListGroupResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
+import { ErrorBoundary } from '@asap-hub/frontend-utils';
 import {
   Auth0Provider,
   WhenReady,
@@ -12,7 +13,6 @@ import { StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
-import ErrorBoundary from '@asap-hub/crn-frontend/src/structure/ErrorBoundary';
 import GroupsCard from '../GroupsCard';
 import { getUserGroups } from '../api';
 import { userGroupsState } from '../state';

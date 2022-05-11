@@ -15,8 +15,9 @@ import {
   BackendError,
   clearAjvErrorForPath,
   validationErrorsAreSupported,
-} from '../../api-util';
-import Frame from '../../structure/Frame';
+  Frame,
+} from '@asap-hub/frontend-utils';
+
 import researchSuggestions from './research-suggestions';
 import {
   useAuthorSuggestions,

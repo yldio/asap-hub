@@ -1,6 +1,7 @@
 import { ListNewsResponse, NewsResponse } from '@asap-hub/model';
-import { createListApiUrl, GetListOptions } from '../api-util';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import { API_BASE_URL } from '../config';
+import createListApiUrl from '../CreateListApiUrl';
 
 export const getNews = async (
   options: GetListOptions,

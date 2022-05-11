@@ -9,12 +9,13 @@ import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { network } from '@asap-hub/routing';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { ErrorBoundary } from '@asap-hub/frontend-utils';
 
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import ErrorBoundary from '@asap-hub/crn-frontend/src/structure/ErrorBoundary';
+
 import EventList from '../EventList';
 import { getGroupEvents } from '../api';
 import { groupEventsState } from '../state';

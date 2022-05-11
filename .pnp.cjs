@@ -119,6 +119,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/flags"
       },
       {
+        "name": "@asap-hub/frontend-utils",
+        "reference": "workspace:packages/frontend-utils"
+      },
+      {
         "name": "@asap-hub/message-templates",
         "reference": "workspace:packages/message-templates"
       },
@@ -175,6 +179,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/eslint-config-asap-hub", ["workspace:packages/eslint-config-asap-hub"]],
       ["@asap-hub/fixtures", ["workspace:packages/fixtures"]],
       ["@asap-hub/flags", ["workspace:packages/flags"]],
+      ["@asap-hub/frontend-utils", ["virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/frontend-utils", "workspace:packages/frontend-utils"]],
       ["@asap-hub/gp2-server", ["workspace:apps/gp2-server"]],
       ["@asap-hub/message-templates", ["workspace:packages/message-templates"]],
       ["@asap-hub/messages", ["workspace:apps/messages"]],
@@ -326,6 +331,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@asap-hub/flags",
         "workspace:packages/flags"
+      ],
+      [
+        "@asap-hub/frontend-utils",
+        "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/frontend-utils"
       ],
       [
         "@asap-hub/gp2-server",
@@ -1605,7 +1614,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@sentry/core",
-        "npm:6.7.1"
+        "npm:6.11.0"
       ],
       [
         "@sentry/hub",
@@ -1613,7 +1622,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@sentry/minimal",
-        "npm:6.7.1"
+        "npm:6.11.0"
       ],
       [
         "@sentry/node",
@@ -1633,11 +1642,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@sentry/types",
-        "npm:6.7.1"
+        "npm:6.11.0"
       ],
       [
         "@sentry/utils",
-        "npm:6.7.1"
+        "npm:6.11.0"
       ],
       [
         "@serverless/cli",
@@ -8144,7 +8153,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "react-titled",
-        "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:1.0.1"
+        "virtual:2f63a6d2333195503897af3f2f19d47f4fab778ddb146e6a2231a54df7a11e4e8ad1eef336738c8db0d4a827d11c58a2d304489e5d0e3bdc9ab3cd3313e9270f#npm:1.0.1"
       ],
       [
         "react-transition-group",
@@ -10586,6 +10595,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],
             ["@asap-hub/flags", "workspace:packages/flags"],
+            ["@asap-hub/frontend-utils", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/frontend-utils"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-components", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/react-components"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
@@ -10633,7 +10643,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-router-last-location", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:2.0.1"],
             ["react-scripts", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:4.0.3"],
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.2"],
-            ["react-titled", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:1.0.1"],
             ["recoil", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fcrn-frontend%40workspace%3Aapps%2Fcrn-frontend"],
             ["streamsaver", "npm:2.0.5"],
             ["typescript", "patch:typescript@npm%3A4.4.4#~builtin<compat/typescript>::version=4.4.4&hash=ddd1e8"],
@@ -10839,6 +10848,76 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/asap-hub__inline-environment", "workspace:@types/asap-hub__inline-environment"],
             ["@types/jest", "npm:26.0.23"],
             ["core-js", "npm:3.12.1"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@asap-hub/frontend-utils", [
+        ["virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/frontend-utils", {
+          "packageLocation": "./.yarn/__virtual__/@asap-hub-frontend-utils-virtual-2f63a6d233/1/packages/frontend-utils/",
+          "packageDependencies": [
+            ["@asap-hub/frontend-utils", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/frontend-utils"],
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/model", "workspace:packages/model"],
+            ["@asap-hub/react-components", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#workspace:packages/react-components"],
+            ["@babel/core", "npm:7.14.2"],
+            ["@babel/preset-react", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:7.13.13"],
+            ["@babel/runtime-corejs3", "npm:7.14.0"],
+            ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:6.11.0"],
+            ["@testing-library/react", "virtual:29ace9acdaadce7142e9cbe0626982c73f9edb599b8a5b07f8f0dd53c96e05f3e9296e3fe42e557d88318610e043449d3c20483f0baea89da3757c97f3a61367#npm:11.2.6"],
+            ["@types/history", "npm:4.7.8"],
+            ["@types/jest", "npm:26.0.23"],
+            ["@types/node", "npm:14.14.45"],
+            ["@types/react", "npm:17.0.5"],
+            ["@types/react-router-dom", "npm:5.1.7"],
+            ["@types/testing-library__jest-dom", "npm:5.9.5"],
+            ["@types/testing-library__react", "npm:10.0.1"],
+            ["core-js", "npm:3.12.1"],
+            ["history", "npm:4.10.1"],
+            ["react", "npm:17.0.2"],
+            ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:17.0.2"],
+            ["react-error-boundary", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:3.1.3"],
+            ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
+            ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.2"],
+            ["react-titled", "virtual:2f63a6d2333195503897af3f2f19d47f4fab778ddb146e6a2231a54df7a11e4e8ad1eef336738c8db0d4a827d11c58a2d304489e5d0e3bdc9ab3cd3313e9270f#npm:1.0.1"]
+          ],
+          "packagePeers": [
+            "@types/react-router-dom",
+            "@types/react",
+            "react-router-dom",
+            "react"
+          ],
+          "linkType": "SOFT",
+        }],
+        ["workspace:packages/frontend-utils", {
+          "packageLocation": "./packages/frontend-utils/",
+          "packageDependencies": [
+            ["@asap-hub/frontend-utils", "workspace:packages/frontend-utils"],
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/model", "workspace:packages/model"],
+            ["@asap-hub/react-components", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#workspace:packages/react-components"],
+            ["@babel/core", "npm:7.14.2"],
+            ["@babel/preset-react", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:7.13.13"],
+            ["@babel/runtime-corejs3", "npm:7.14.0"],
+            ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:6.11.0"],
+            ["@testing-library/react", "virtual:29ace9acdaadce7142e9cbe0626982c73f9edb599b8a5b07f8f0dd53c96e05f3e9296e3fe42e557d88318610e043449d3c20483f0baea89da3757c97f3a61367#npm:11.2.6"],
+            ["@types/history", "npm:4.7.8"],
+            ["@types/jest", "npm:26.0.23"],
+            ["@types/node", "npm:14.14.45"],
+            ["@types/react", "npm:17.0.5"],
+            ["@types/react-router-dom", "npm:5.1.7"],
+            ["@types/testing-library__jest-dom", "npm:5.9.5"],
+            ["@types/testing-library__react", "npm:10.0.1"],
+            ["core-js", "npm:3.12.1"],
+            ["history", "npm:4.10.1"],
+            ["react", "npm:17.0.2"],
+            ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:17.0.2"],
+            ["react-error-boundary", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:3.1.3"],
+            ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
+            ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.2"],
+            ["react-titled", "virtual:2f63a6d2333195503897af3f2f19d47f4fab778ddb146e6a2231a54df7a11e4e8ad1eef336738c8db0d4a827d11c58a2d304489e5d0e3bdc9ab3cd3313e9270f#npm:1.0.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -54378,10 +54457,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:1.0.1", {
-          "packageLocation": "./.yarn/__virtual__/react-titled-virtual-d32ef8a083/0/cache/react-titled-npm-1.0.1-7dc9e2de84-9f22ce07f7.zip/node_modules/react-titled/",
+        ["virtual:2f63a6d2333195503897af3f2f19d47f4fab778ddb146e6a2231a54df7a11e4e8ad1eef336738c8db0d4a827d11c58a2d304489e5d0e3bdc9ab3cd3313e9270f#npm:1.0.1", {
+          "packageLocation": "./.yarn/__virtual__/react-titled-virtual-bd2de3a0d1/0/cache/react-titled-npm-1.0.1-7dc9e2de84-9f22ce07f7.zip/node_modules/react-titled/",
           "packageDependencies": [
-            ["react-titled", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:1.0.1"],
+            ["react-titled", "virtual:2f63a6d2333195503897af3f2f19d47f4fab778ddb146e6a2231a54df7a11e4e8ad1eef336738c8db0d4a827d11c58a2d304489e5d0e3bdc9ab3cd3313e9270f#npm:1.0.1"],
             ["@types/react", "npm:17.0.5"],
             ["prop-types", "npm:15.7.2"],
             ["react", "npm:17.0.2"]

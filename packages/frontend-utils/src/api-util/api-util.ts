@@ -1,6 +1,5 @@
 import { ErrorResponse, ValidationErrorResponse } from '@asap-hub/model';
 import { configureScope } from '@sentry/react';
-import { API_BASE_URL } from './config';
 
 export type GetListOptions = {
   searchQuery: string;
@@ -9,24 +8,28 @@ export type GetListOptions = {
   pageSize: number | null;
 };
 
-export const createListApiUrl = (
-  endpoint: string,
-  { searchQuery, filters, currentPage, pageSize }: GetListOptions,
-): URL => {
-  const url = new URL(endpoint, `${API_BASE_URL}/`);
-  if (searchQuery) url.searchParams.set('search', searchQuery);
-  if (pageSize !== null) {
-    url.searchParams.set('take', String(pageSize));
-    if (currentPage !== null) {
-      url.searchParams.set('skip', String(currentPage * pageSize));
+export const createListApiUrlFactory =
+  (API_BASE_URL: string) =>
+  (
+    endpoint: string,
+    { searchQuery, filters, currentPage, pageSize }: GetListOptions,
+  ): URL => {
+    const url = new URL(endpoint, `${API_BASE_URL}/`);
+    if (searchQuery) url.searchParams.set('search', searchQuery);
+    if (pageSize !== null) {
+      url.searchParams.set('take', String(pageSize));
+      if (currentPage !== null) {
+        url.searchParams.set('skip', String(currentPage * pageSize));
+      }
     }
-  }
-  filters.forEach((filter) => url.searchParams.append('filter', filter));
+    filters.forEach((filter) => url.searchParams.append('filter', filter));
 
-  return url;
-};
+    return url;
+  };
 
-export const createSentryHeaders = () => {
+export const createSentryHeaders = (): {
+  'X-Transaction-Id': string;
+} => {
   const transactionId = Math.random().toString(36).substr(2, 9);
   configureScope((scope) => {
     scope.setTag('transaction_id', transactionId);
@@ -62,4 +65,5 @@ export const validationErrorsAreSupported = (
 export const clearAjvErrorForPath = (
   errors: ValidationErrorResponse['data'],
   path: string,
-) => errors.filter(({ instancePath }) => instancePath !== path);
+): ValidationErrorResponse['data'] =>
+  errors.filter(({ instancePath }) => instancePath !== path);

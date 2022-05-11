@@ -1,21 +1,24 @@
 import { ValidationErrorResponse } from '@asap-hub/model';
 import {
-  createListApiUrl,
+  createListApiUrlFactory,
   createSentryHeaders,
   validationErrorsAreSupported,
   clearAjvErrorForPath,
 } from '../api-util';
-import { CARD_VIEW_PAGE_SIZE } from '../hooks';
 
 const mockSetTag = jest.fn();
 jest.mock('@sentry/react', () => ({
   configureScope: jest.fn((callback) => callback({ setTag: mockSetTag })),
 }));
 
+const baseUrl = `https://example.com`;
+
+const createListApiUrl = createListApiUrlFactory(baseUrl);
+
 describe('createListApiUrl', () => {
   it('uses defaults for take and skip params', async () => {
     const url = createListApiUrl('test', {
-      pageSize: CARD_VIEW_PAGE_SIZE,
+      pageSize: 10,
       currentPage: 0,
       searchQuery: '',
       filters: new Set(),
@@ -37,7 +40,7 @@ describe('createListApiUrl', () => {
     const url = createListApiUrl('test', {
       searchQuery: 'test123',
       filters: new Set(),
-      pageSize: CARD_VIEW_PAGE_SIZE,
+      pageSize: 10,
       currentPage: 0,
     });
     expect(url.searchParams.get('search')).toEqual('test123');
@@ -46,7 +49,7 @@ describe('createListApiUrl', () => {
     const url = createListApiUrl('test', {
       filters: new Set(['123', '456']),
       currentPage: 0,
-      pageSize: CARD_VIEW_PAGE_SIZE,
+      pageSize: 10,
       searchQuery: '',
     });
     expect(url.searchParams.getAll('filter')).toEqual(['123', '456']);

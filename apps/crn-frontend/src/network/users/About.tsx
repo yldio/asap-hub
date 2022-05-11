@@ -3,9 +3,9 @@ import { UserProfileAbout, BiographyModal } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
+import { Frame } from '@asap-hub/frontend-utils';
 
 import { usePatchUserById } from './state';
-import Frame from '../../structure/Frame';
 
 type AboutProps = {
   user: UserResponse;

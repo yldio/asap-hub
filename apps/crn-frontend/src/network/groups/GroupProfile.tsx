@@ -3,9 +3,9 @@ import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import { GroupProfilePage, NotFoundPage } from '@asap-hub/react-components';
 import { network, useRouteParams } from '@asap-hub/routing';
+import { Frame } from '@asap-hub/frontend-utils';
 
 import { useGroupById } from './state';
-import Frame from '../../structure/Frame';
 import { useSearch } from '../../hooks';
 
 const loadAbout = () =>

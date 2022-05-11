@@ -1,10 +1,7 @@
 import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
-import {
-  GetListOptions,
-  createListApiUrl,
-  createSentryHeaders,
-} from '@asap-hub/crn-frontend/src/api-util';
+import { GetListOptions, createSentryHeaders } from '@asap-hub/frontend-utils';
 import { API_BASE_URL } from '../../config';
+import createListApiUrl from '../../CreateListApiUrl';
 
 export const getGroups = async (
   options: GetListOptions,

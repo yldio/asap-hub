@@ -4,12 +4,13 @@ import { StaticRouter } from 'react-router-dom';
 import { createGroupResponse } from '@asap-hub/fixtures';
 import { render, waitFor } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { ErrorBoundary } from '@asap-hub/frontend-utils';
 
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import ErrorBoundary from '@asap-hub/crn-frontend/src/structure/ErrorBoundary';
+
 import { getTeamGroups } from '../api';
 import GroupsCard from '../GroupsCard';
 import { teamGroupsState } from '../state';

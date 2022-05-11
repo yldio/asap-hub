@@ -8,8 +8,7 @@ import {
   createGroupResponse,
   createListEventResponse,
 } from '@asap-hub/fixtures';
-
-import { GetListOptions } from '../../../api-util';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 
 export const getGroups = jest.fn(
   async ({ pageSize }: GetListOptions): Promise<ListGroupResponse> =>

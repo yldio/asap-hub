@@ -528,7 +528,7 @@ __metadata:
     "@types/debug": ^4.1.5
     "@types/express": ^4.17.11
     "@types/graphql": ^14.5.0
-    "@types/hapi": ^18.0.5
+    "@types/hapi": 18.0.7
     "@types/hapi__boom": ^9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": ^17.1.6
@@ -980,7 +980,7 @@ __metadata:
     "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": 8.10.97
     "@types/debug": ^4.1.5
-    "@types/hapi": ^18.0.5
+    "@types/hapi": 18.0.7
     "@types/hapi__boom": ^9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": ^17.1.6
@@ -1014,7 +1014,7 @@ __metadata:
     "@hapi/joi": ^17.1.1
     "@types/apr-intercept": "workspace:*"
     "@types/debug": ^4.1.5
-    "@types/hapi": ^18.0.5
+    "@types/hapi": 18.0.7
     "@types/hapi__boom": ^9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": ^17.1.6
@@ -10845,9 +10845,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/hapi@npm:^18.0.5":
-  version: 18.0.5
-  resolution: "@types/hapi@npm:18.0.5"
+"@types/hapi@npm:18.0.7":
+  version: 18.0.7
+  resolution: "@types/hapi@npm:18.0.7"
   dependencies:
     "@types/boom": "*"
     "@types/catbox": "*"
@@ -10857,7 +10857,7 @@ __metadata:
     "@types/podium": "*"
     "@types/shot": "*"
     joi: ^17.3.0
-  checksum: 0d85b9bab916a1d313bbe7550b3ea04d550f6f05a79afda13eb15de29fa8bbc24b69249a097c010b41b338f72806177ea4de2976515c610fa01025873024ef7d
+  checksum: a10ed6407ad54382bd9e05a67ce5eff2ec70f74e1f40f0a13bf5687c4458245e96d93b1704d51e870ca2d12f6e4f957281d711c80884f69e8702ff3c08533720
   languageName: node
   linkType: hard
 

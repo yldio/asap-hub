@@ -33,7 +33,7 @@
     "@asap-hub/model": "workspace:*",
     "@types/apr-intercept": "workspace:*",
     "@types/debug": "^4.1.5",
-    "@types/hapi": "^18.0.5",
+    "@types/hapi": "18.0.7",
     "@types/hapi__boom": "^9.0.1",
     "@types/hapi__bourne": "workspace:*",
     "@types/hapi__joi": "^17.1.6",

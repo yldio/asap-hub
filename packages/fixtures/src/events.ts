@@ -36,11 +36,11 @@ const getSpeakers = (
 ): EventSpeaker[] => {
   const speakerList: EventSpeaker[] = [];
 
-  for (let index = 0; index < numberOfSpeakers; index+=1) {
+  for (let index = 0; index < numberOfSpeakers; index += 1) {
     speakerList.push(createSpeakersResponse(index));
   }
 
-  for (let index = 0; index < numberOfUnknownSpeakers; index+=1) {
+  for (let index = 0; index < numberOfUnknownSpeakers; index += 1) {
     speakerList.push({
       team: createSpeakerTeamResponse(index),
     });

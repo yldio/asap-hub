@@ -1,8 +1,8 @@
-import { TeamResponse } from './team';
 import { ListResponse } from './common';
-import { UserResponse } from './user';
 import { ExternalAuthorInput, ExternalAuthorResponse } from './external-author';
 import { LabResponse } from './lab';
+import { TeamResponse } from './team';
+import { UserResponse } from './user';
 
 export const researchOutputDocumentTypes = [
   'Grant Document',
@@ -129,6 +129,7 @@ export const researchOutputMapType = (
 };
 
 export enum ResearchOutputIdentifierType {
+  Empty = 'Empty',
   None = 'None',
   DOI = 'DOI',
   AccessionNumber = 'Accession Number',

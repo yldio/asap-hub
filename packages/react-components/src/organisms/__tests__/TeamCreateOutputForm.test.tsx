@@ -4,13 +4,17 @@ import {
   ResearchOutputPostRequest,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import { fireEvent, waitFor } from '@testing-library/dom';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import {
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+  within,
+} from '@testing-library/react';
+import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
 import { Router, StaticRouter } from 'react-router-dom';
-import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import TeamCreateOutputForm, {
   createIdentifierField,
 } from '../TeamCreateOutputForm';
@@ -44,17 +48,19 @@ describe('createIdentifierField', () => {
 });
 
 it('renders the form', async () => {
-  const { getByText } = render(
+  render(
     <StaticRouter>
       <TeamCreateOutputForm {...props} />
     </StaticRouter>,
   );
-  expect(getByText(/What are you sharing/i)).toBeVisible();
+  expect(
+    screen.getByRole('heading', { name: /What are you sharing/i }),
+  ).toBeVisible();
 });
 
 it('displays proper message when no author is found', async () => {
   const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
-  const { getByText } = render(
+  render(
     <StaticRouter>
       <TeamCreateOutputForm
         {...props}
@@ -62,11 +68,10 @@ it('displays proper message when no author is found', async () => {
       />
     </StaticRouter>,
   );
-  userEvent.click(screen.getByLabelText(/Authors/i));
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  expect(getByText(/Sorry, no authors match/i)).toBeVisible();
+  userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
+  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+
+  expect(screen.getByText(/Sorry, no authors match/i)).toBeVisible();
 });
 
 it('displays proper message when no lab is found', async () => {
@@ -76,15 +81,13 @@ it('displays proper message when no lab is found', async () => {
       <TeamCreateOutputForm {...props} getLabSuggestions={getLabSuggestions} />
     </StaticRouter>,
   );
-  userEvent.click(screen.getByLabelText(/Labs/i));
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
+  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
   expect(screen.getByText(/Sorry, no labs match/i)).toBeVisible();
 });
 
 it('displays current team within the form', async () => {
-  const { getByText } = render(
+  render(
     <StaticRouter>
       <TeamCreateOutputForm
         {...props}
@@ -92,7 +95,33 @@ it('displays current team within the form', async () => {
       />
     </StaticRouter>,
   );
-  expect(getByText('example team')).toBeVisible();
+  expect(screen.getByText('example team')).toBeVisible();
+});
+
+it('is funded and publication are both yes, then the none option is removed', async () => {
+  render(
+    <StaticRouter>
+      <TeamCreateOutputForm {...props} />
+    </StaticRouter>,
+  );
+  const textbox = screen.getByRole('textbox', { name: /identifier/i });
+  userEvent.click(textbox);
+  expect(screen.getByText('None')).toBeVisible();
+
+  const funded = screen.getByRole('group', {
+    name: /Has this output been funded by ASAP/i,
+  });
+  userEvent.click(within(funded).getByText('Yes'));
+
+  const publication = screen.getByRole('group', {
+    name: /Has this output been used in a publication/i,
+  });
+  userEvent.click(within(publication).getByText('Yes'));
+  userEvent.click(textbox);
+
+  await waitFor(() => {
+    expect(screen.queryByText('None')).toBeNull();
+  });
 });
 
 describe('on submit', () => {
@@ -111,6 +140,7 @@ describe('on submit', () => {
   const promise = Promise.resolve({ id } as ResearchOutputResponse);
   const expectedRequest: ResearchOutputPostRequest = {
     documentType: 'Article',
+    doi: '10.1234',
     tags: [],
     link: 'http://example.com',
     title: 'example title',
@@ -130,7 +160,7 @@ describe('on submit', () => {
     'link' | 'title' | 'description' | 'type'
   >;
 
-  const setupForm = (
+  const setupForm = async (
     data: Data = {
       description: 'example description',
       title: 'example title',
@@ -154,19 +184,28 @@ describe('on submit', () => {
       </Router>,
     );
 
-    fireEvent.change(screen.getByLabelText(/url/i), {
-      target: { value: data.link },
+    userEvent.type(screen.getByRole('textbox', { name: /url/i }), data.link!);
+    userEvent.type(screen.getByRole('textbox', { name: /title/i }), data.title);
+    userEvent.type(
+      screen.getByRole('textbox', { name: /description/i }),
+      data.description,
+    );
+
+    const typeDropdown = screen.getByRole('textbox', {
+      name: /Select the option/i,
     });
-    fireEvent.change(screen.getByLabelText(/title/i), {
-      target: { value: data.title },
-    });
-    fireEvent.change(screen.getByLabelText(/description/i), {
-      target: { value: data.description },
-    });
-    userEvent.type(screen.getByLabelText(/Select the option/i), data.type);
-    fireEvent.keyDown(screen.getByLabelText(/Select the option/i), {
-      keyCode: ENTER_KEYCODE,
-    });
+    userEvent.type(typeDropdown, data.type);
+    userEvent.type(typeDropdown, specialChars.enter);
+
+    const identifier = screen.getByRole('textbox', { name: /identifier/i });
+    userEvent.type(identifier, 'DOI');
+    identifier.blur();
+    userEvent.type(
+      await screen.findByRole('textbox', {
+        name: /Your DOI must start with/i,
+      }),
+      '10.1234',
+    );
   };
   const submitForm = async () => {
     const button = screen.getByRole('button', { name: /Publish/i });
@@ -181,12 +220,10 @@ describe('on submit', () => {
   };
 
   it('can submit a form with minimum data', async () => {
-    setupForm();
+    await setupForm();
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
-    await waitFor(() => {
-      expect(history.location.pathname).toEqual(`/shared-research/${id}`);
-    });
+    expect(history.location.pathname).toEqual(`/shared-research/${id}`);
   });
 
   it('can submit a lab', async () => {
@@ -194,13 +231,10 @@ describe('on submit', () => {
       { label: 'One Lab', value: '1' },
       { label: 'Two Lab', value: '2' },
     ]);
-    setupForm();
-    userEvent.click(screen.getByLabelText(/Labs/i));
-    await waitFor(() =>
-      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
-    userEvent.click(screen.getByText('One Lab'));
+    await setupForm();
 
+    userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+    userEvent.click(screen.getByText('One Lab'));
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
@@ -224,30 +258,18 @@ describe('on submit', () => {
         value: 'u1',
       },
     ]);
-    setupForm();
+    await setupForm();
 
-    userEvent.click(screen.getByLabelText(/Authors/i));
-    await waitFor(() =>
-      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
+    const authors = screen.getByRole('textbox', { name: /Authors/i });
+    userEvent.click(authors);
     userEvent.click(screen.getByText(/Chris Reed/i));
-
-    userEvent.click(screen.getByLabelText(/Authors/i));
-    await waitFor(() =>
-      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
+    userEvent.click(authors);
     userEvent.click(screen.getByText('Chris Blue'));
-
-    userEvent.click(screen.getByLabelText(/Authors/i));
-    await waitFor(() =>
-      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
-
-    userEvent.type(screen.getByLabelText(/Authors/i), 'Alex White');
-    await waitFor(() =>
-      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
+    userEvent.click(authors);
+    userEvent.type(authors, 'Alex White');
+    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
     userEvent.click(screen.getAllByText('Alex White')[1]);
+
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
@@ -262,9 +284,9 @@ describe('on submit', () => {
   });
 
   it('can submit access instructions', async () => {
-    setupForm();
+    await setupForm();
     userEvent.type(
-      screen.getByLabelText(/access instructions/i),
+      screen.getByRole('textbox', { name: /access instructions/i }),
       'Access Instructions',
     );
     await submitForm();
@@ -275,11 +297,12 @@ describe('on submit', () => {
   });
 
   it('can submit published date', async () => {
-    setupForm();
+    await setupForm();
+    const sharingStatus = screen.getByRole('group', {
+      name: /sharing status/i,
+    });
     userEvent.click(
-      screen
-        .getByRole('group', { name: /sharing status/i })
-        .querySelectorAll('input')[1]!,
+      within(sharingStatus).getByRole('radio', { name: 'Public' }),
     );
     userEvent.type(screen.getByLabelText(/date published/i), '2022-03-24');
     await submitForm();
@@ -291,8 +314,14 @@ describe('on submit', () => {
   });
 
   it('can submit labCatalogNumber for lab resource', async () => {
-    setupForm({ ...expectedRequest, type: 'Animal Model' }, 'Lab Resource');
-    userEvent.type(screen.getByLabelText(/Catalog Number/i), 'abc123');
+    await setupForm(
+      { ...expectedRequest, type: 'Animal Model' },
+      'Lab Resource',
+    );
+    userEvent.type(
+      screen.getByRole('textbox', { name: /Catalog Number/i }),
+      'abc123',
+    );
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,

@@ -16,6 +16,15 @@ export const getSquidexGraphqlResearchTags = (): NonNullable<
         entities: ['Research Output'],
       },
     },
+    {
+      id: '029c6fa8-d1c5-11ec-9d64-0242ac120002',
+      flatData: {
+        name: 'RNA Single Cell',
+        category: 'Method',
+        types: ['Protein Data', 'Assay'],
+        entities: ['Research Output'],
+      },
+    },
   ],
 });
 

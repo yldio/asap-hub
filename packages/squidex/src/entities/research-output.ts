@@ -5,38 +5,52 @@ import {
   DecisionOption,
 } from '@asap-hub/model';
 
-import { Rest, Entity, Graphql, GraphqlWithTypename } from './common';
+import {
+  Rest,
+  Entity,
+  Graphql,
+  GraphqlWithTypename,
+  RestPayload,
+} from './common';
 import { GraphqlExternalAuthor } from './external-author';
 import { GraphqlTeam } from './team';
 import { GraphqlUserAssoc } from './user';
 
-export interface ResearchOutput<TAuthorConnection = string> {
-  documentType: ResearchOutputDocumentType;
-  title: string;
-  description: string;
-  link?: string;
-  addedDate: string;
-  publishDate?: string;
-  doi?: string;
-  labCatalogNumber?: string;
-  tags?: string[];
+export interface ResearchOutput<
+  TAuthorConnection = string,
+  TLabConnection = string,
+  TUserConnection = string,
+> {
   accessInstructions?: string;
+  accession?: string;
+  addedDate: string;
   adminNotes?: string;
-  lastUpdatedPartial?: string;
-  type?: ResearchOutputType;
-  sharingStatus: ResearchOutputSharingStatus;
   asapFunded: DecisionOption;
-  usedInAPublication: DecisionOption;
   authors?: TAuthorConnection[];
   contactEmails: string[];
+  description: string;
+  documentType: ResearchOutputDocumentType;
+  doi?: string;
+  labCatalogNumber?: string;
+  labs: TLabConnection[];
+  lastUpdatedPartial?: string;
+  link?: string;
+  methods: string[];
+  publishDate?: string;
   rrid?: string;
-  accession?: string;
+  sharingStatus: ResearchOutputSharingStatus;
+  tags?: string[];
+  title: string;
+  type?: ResearchOutputType;
+  usedInAPublication: DecisionOption;
+  createdBy?: TUserConnection[];
+  updatedBy?: TUserConnection[];
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}
-export interface CreateResearchOutput
+export interface InputResearchOutput
   extends Entity,
-    Rest<Omit<ResearchOutput, 'contactEmails'>> {}
+    RestPayload<Omit<ResearchOutput, 'contactEmails'>> {}
 
 export type GraphqlExternalAuthorAssoc = GraphqlWithTypename<
   GraphqlExternalAuthor,
@@ -51,3 +65,7 @@ export interface GraphqlResearchOutput
     Graphql<ResearchOutput<GraphqlResearchOutputAuthors>> {
   referencingTeamsContents?: GraphqlTeam[];
 }
+
+export type ResearchOutputLabConnection = { id: string } & Graphql<{
+  name: string;
+}>;

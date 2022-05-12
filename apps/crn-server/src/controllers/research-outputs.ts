@@ -2,10 +2,10 @@ import {
   ExternalAuthorInput,
   ListResearchOutputResponse,
   ResearchOutputPostRequest,
-  ResearchOutputPatchRequest,
   ResearchOutputResponse,
   ValidationErrorResponse,
   VALIDATION_ERROR_MESSAGE,
+  ResearchOutputPutRequest,
 } from '@asap-hub/model';
 import {
   RestExternalAuthor,
@@ -16,6 +16,7 @@ import {
   SquidexGraphqlClient,
   SquidexRest,
   SquidexRestClient,
+  InputResearchOutput,
 } from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
 import {
@@ -39,7 +40,10 @@ import logger from '../utils/logger';
 
 export default class ResearchOutputs implements ResearchOutputController {
   squidexGraphqlClient: SquidexGraphqlClient;
-  researchOutputSquidexRestClient: SquidexRestClient<RestResearchOutput>;
+  researchOutputSquidexRestClient: SquidexRestClient<
+    RestResearchOutput,
+    InputResearchOutput
+  >;
   teamSquidexRestClient: SquidexRestClient<RestTeam>;
   externalAuthorSquidexRestClient: SquidexRestClient<RestExternalAuthor>;
 
@@ -147,6 +151,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       ),
     };
   }
+
   async create({
     teams,
     authors = [],
@@ -208,6 +213,66 @@ export default class ResearchOutputs implements ResearchOutputController {
     return this.fetchById(researchOutputId);
   }
 
+  async update(
+    researchOutputId: string,
+    { teams, authors = [], ...researchOutputData }: ResearchOutputUpdateData,
+  ): Promise<Partial<ResearchOutputResponse>> {
+    await this.validateResearchOutputUniques({
+      ...researchOutputData,
+      authors,
+      teams,
+    });
+
+    const researchOutputAuthors = await Promise.all(
+      authors.map((author) => this.associateResearchOutputToAuthors(author)),
+    );
+
+    const { queryResearchTagsContentsWithTotal } =
+      await this.squidexGraphqlClient.request<
+        FetchResearchTagsQuery,
+        FetchResearchTagsQueryVariables
+      >(FETCH_RESEARCH_TAGS, {
+        top: 100,
+        skip: 0,
+      });
+
+    const researchOutputMethods = researchOutputData.methods.map((method) => {
+      const methodTags = queryResearchTagsContentsWithTotal?.items?.filter(
+        (tag) => tag.flatData.name === method,
+      );
+
+      if (methodTags && methodTags.length > 0 && methodTags[0]) {
+        return methodTags[0].id;
+      }
+
+      throw Boom.badRequest('Validation error', [
+        {
+          instancePath: '/methods',
+          keyword: 'invalid',
+          message: 'method does not exist',
+          params: {
+            type: 'string',
+          },
+          schemaPath: '#/properties/method/invalid',
+        },
+      ]);
+    });
+
+    await this.updateResearchOutput(researchOutputId, {
+      authors: researchOutputAuthors,
+      ...researchOutputData,
+      methods: researchOutputMethods,
+    });
+
+    await Promise.all(
+      teams.map((teamId) =>
+        this.associateResearchOutputToTeam(teamId, researchOutputId),
+      ),
+    );
+
+    return this.fetchById(researchOutputId);
+  }
+
   private async createResearchOutput({
     authors,
     createdBy,
@@ -231,13 +296,42 @@ export default class ResearchOutputs implements ResearchOutputController {
       {
         ...researchOutput,
         usedInAPublication: usedInPublication,
-      } as RestResearchOutput['data'],
+        labs: researchOutput.labs || { iv: null },
+      },
       true,
     );
   }
 
+  private async updateResearchOutput(
+    researchOutputId: string,
+    {
+      authors,
+      updatedBy,
+      ...researchOutputData
+    }: Omit<ResearchOutputPostRequest, 'teams' | 'authors'> & {
+      authors: string[];
+      updatedBy: string;
+    },
+  ) {
+    const { usedInPublication, ...researchOutput } = parseToSquidex({
+      ...researchOutputData,
+      asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
+      usedInPublication: convertBooleanToDecision(
+        researchOutputData.usedInPublication,
+      ),
+      authors,
+      updatedBy: [updatedBy],
+    });
+
+    return this.researchOutputSquidexRestClient.patch(researchOutputId, {
+      ...researchOutput,
+      usedInAPublication: usedInPublication,
+      labs: researchOutput.labs || { iv: null },
+    });
+  }
+
   private async validateResearchOutputUniques(
-    researchOutputData: ResearchOutputCreateData,
+    researchOutputData: ResearchOutputCreateData | ResearchOutputUpdateData,
   ): Promise<void> {
     const isError = (
       error: ValidationErrorResponse['data'][0] | null,
@@ -261,7 +355,7 @@ export default class ResearchOutputs implements ResearchOutputController {
   }
 
   private async validateTitleUniqueness(
-    researchOutputData: ResearchOutputCreateData,
+    researchOutputData: ResearchOutputCreateData | ResearchOutputUpdateData,
   ): Promise<ValidationErrorResponse['data'][0] | null> {
     if (
       (
@@ -289,7 +383,7 @@ export default class ResearchOutputs implements ResearchOutputController {
   }
 
   private async validateLinkUniqueness(
-    researchOutputData: ResearchOutputCreateData,
+    researchOutputData: ResearchOutputCreateData | ResearchOutputUpdateData,
   ): Promise<ValidationErrorResponse['data'][0] | null> {
     if (
       (
@@ -369,7 +463,7 @@ export type ResearchOutputCreateData = ResearchOutputPostRequest & {
   createdBy: string;
 };
 
-export type ResearchOutputUpdateData = ResearchOutputPatchRequest & {
+export type ResearchOutputUpdateData = ResearchOutputPutRequest & {
   updatedBy: string;
 };
 

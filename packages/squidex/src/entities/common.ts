@@ -17,6 +17,20 @@ export interface Rest<T> {
   };
 }
 
+export interface RestPayload<T> {
+  data: {
+    [K in keyof T]: null extends T[K]
+      ?
+          | {
+              iv: T[K];
+            }
+          | undefined
+      : {
+          iv: T[K] extends Array<unknown> ? T[K] | null : NonNullable<T[K]>;
+        };
+  };
+}
+
 export interface Graphql<T> {
   data?:
     | {

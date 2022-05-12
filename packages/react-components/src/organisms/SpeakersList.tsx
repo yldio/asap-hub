@@ -22,7 +22,7 @@ const userStyles = css({
   overflow: 'hidden',
   display: 'grid',
   gridTemplateColumns: 'min-content 1fr',
-  gridColumnGap: `${6 / perRem}em`,
+  gridColumnGap: `${15 / perRem}em`,
   alignItems: 'center',
 });
 
@@ -132,7 +132,7 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
               <div css={labelStyle}>
                 <span>Role</span>
               </div>
-              <span>{role}</span>
+              <span>{role || `—`}</span>
             </div>
           </div>
         ))}

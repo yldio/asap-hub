@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 import Select, { OptionTypeBase } from 'react-select';
 import { v4 as uuidV4 } from 'uuid';
 import { useValidation, validationMessageStyles } from '../form';
@@ -13,7 +13,17 @@ const containerStyles = css({
   flexBasis: '100%',
 });
 const DropdownIndicator: FC = () => dropdownChevronIcon;
-
+const hiddenInput = css({
+  opacity: 0,
+  width: '100%',
+  height: 0,
+  position: 'absolute',
+});
+// const errorStyling = css({
+//   'rounded-md shadow-md': true,
+//   'border-gray-200 ': '!error',
+//   'border-red-500': 'error',
+// });
 export interface DropdownProps<V extends string> {
   readonly customValidationMessage?: string;
   readonly getValidationMessage?: Parameters<typeof useValidation>[1];
@@ -40,6 +50,14 @@ export default function Dropdown<V extends string>({
   onChange = noop,
   noOptionsMessage,
 }: DropdownProps<V>): ReturnType<FC> {
+  const selectRef = useRef(null);
+
+  const onFocus = () => {
+    if (selectRef.current) {
+      (selectRef.current as HTMLSelectElement).focus();
+    }
+  };
+
   return (
     <div css={containerStyles}>
       <Select<OptionTypeBase>
@@ -56,8 +74,21 @@ export default function Dropdown<V extends string>({
         onChange={(option) => {
           onChange(option?.value);
         }}
-        required={required}
+        // css={[errorStyling]}
+        // required={required}
+        ref={selectRef}
       />
+      {required && (
+        <input
+          tabIndex={-1}
+          autoComplete="off"
+          css={[hiddenInput]}
+          value={value}
+          onChange={() => {}}
+          onFocus={onFocus}
+          required
+        />
+      )}
       <div css={validationMessageStyles}>{customValidationMessage}</div>
     </div>
   );

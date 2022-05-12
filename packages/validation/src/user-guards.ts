@@ -10,7 +10,7 @@ export const isInternalUser = (
 
 export const isInternalEventUser = (
   user: EventSpeakerUser | undefined,
-): boolean => {
+): user is EventSpeakerUser => {
   if (user?.displayName) return true;
   return false;
 };

@@ -1,14 +1,14 @@
 import {
-  useState,
+  FocusEventHandler,
+  FormEvent,
+  FormEventHandler,
+  MutableRefObject,
   useEffect,
   useRef,
-  FormEvent,
-  MutableRefObject,
-  FocusEventHandler,
-  FormEventHandler,
+  useState,
 } from 'react';
-import { fern, steel, ember } from './colors';
-import { perRem, lineHeight } from './pixels';
+import { ember, fern, steel } from './colors';
+import { lineHeight, perRem } from './pixels';
 import { themes } from './theme';
 
 export const borderWidth = 1;

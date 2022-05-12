@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { FC, useRef } from 'react';
+import { FC, useEffect } from 'react';
 import Select, { OptionTypeBase } from 'react-select';
 import { v4 as uuidV4 } from 'uuid';
 import { useValidation, validationMessageStyles } from '../form';
@@ -11,6 +11,7 @@ export const ENTER_KEYCODE = 13;
 
 const containerStyles = css({
   flexBasis: '100%',
+  position: 'relative',
 });
 const DropdownIndicator: FC = () => dropdownChevronIcon;
 const hiddenInput = css({
@@ -19,11 +20,6 @@ const hiddenInput = css({
   height: 0,
   position: 'absolute',
 });
-// const errorStyling = css({
-//   'rounded-md shadow-md': true,
-//   'border-gray-200 ': '!error',
-//   'border-red-500': 'error',
-// });
 export interface DropdownProps<V extends string> {
   readonly customValidationMessage?: string;
   readonly getValidationMessage?: Parameters<typeof useValidation>[1];
@@ -40,6 +36,7 @@ export interface DropdownProps<V extends string> {
 }
 export default function Dropdown<V extends string>({
   customValidationMessage = '',
+  getValidationMessage,
   id,
   options,
   enabled = true,
@@ -50,13 +47,26 @@ export default function Dropdown<V extends string>({
   onChange = noop,
   noOptionsMessage,
 }: DropdownProps<V>): ReturnType<FC> {
-  const selectRef = useRef(null);
+  const { validationMessage, validationTargetProps } =
+    useValidation<HTMLInputElement>(
+      customValidationMessage,
+      getValidationMessage,
+    );
 
-  const onFocus = () => {
-    if (selectRef.current) {
-      (selectRef.current as HTMLSelectElement).focus();
+  const { ref: inputRef } = validationTargetProps;
+  const onBlur = () => {
+    const input = inputRef.current as unknown as HTMLInputElement;
+    if (input) {
+      input.focus();
+      input.blur();
     }
   };
+  const isValid = validationMessage === '';
+  useEffect(() => {
+    if (value !== '') {
+      onBlur();
+    }
+  }, [value]);
 
   return (
     <div css={containerStyles}>
@@ -67,29 +77,28 @@ export default function Dropdown<V extends string>({
         options={options.filter((option) => option.value !== '')}
         value={options.find((option) => option.value === value)}
         components={{ DropdownIndicator }}
-        styles={reactSelectStyles(!!'')}
+        styles={reactSelectStyles(!isValid)}
         noOptionsMessage={noOptionsMessage}
         tabSelectsValue={false}
         autoComplete={uuidV4()}
         onChange={(option) => {
           onChange(option?.value);
         }}
-        // css={[errorStyling]}
-        // required={required}
-        ref={selectRef}
+        onBlur={() => {
+          onBlur();
+        }}
       />
       {required && (
         <input
+          {...validationTargetProps}
           tabIndex={-1}
           autoComplete="off"
           css={[hiddenInput]}
           value={value}
-          onChange={() => {}}
-          onFocus={onFocus}
           required
         />
       )}
-      <div css={validationMessageStyles}>{customValidationMessage}</div>
+      <div css={validationMessageStyles}>{validationMessage}</div>
     </div>
   );
 }

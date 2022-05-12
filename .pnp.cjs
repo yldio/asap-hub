@@ -2038,7 +2038,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/cors",
-        "npm:2.8.10"
+        "npm:2.8.12"
       ],
       [
         "@types/debug",
@@ -10692,7 +10692,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/aws-lambda", "npm:8.10.97"],
             ["@types/chance", "npm:1.1.1"],
-            ["@types/cors", "npm:2.8.10"],
+            ["@types/cors", "npm:2.8.12"],
             ["@types/debug", "npm:4.1.5"],
             ["@types/express", "npm:4.17.11"],
             ["@types/graphql", "npm:14.5.0"],
@@ -10939,7 +10939,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@serverless/typescript", "npm:2.59.0"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/aws-lambda", "npm:8.10.97"],
-            ["@types/cors", "npm:2.8.10"],
+            ["@types/cors", "npm:2.8.12"],
             ["@types/express", "npm:4.17.11"],
             ["@types/jest", "npm:26.0.23"],
             ["@types/jsonwebtoken", "npm:8.5.1"],
@@ -29452,10 +29452,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/cors", [
-        ["npm:2.8.10", {
-          "packageLocation": "./.yarn/cache/@types-cors-npm-2.8.10-53b686e0da-f87e2f7bb6.zip/node_modules/@types/cors/",
+        ["npm:2.8.12", {
+          "packageLocation": "./.yarn/cache/@types-cors-npm-2.8.12-ff52e8e514-8c45f112c7.zip/node_modules/@types/cors/",
           "packageDependencies": [
-            ["@types/cors", "npm:2.8.10"]
+            ["@types/cors", "npm:2.8.12"]
           ],
           "linkType": "HARD",
         }]

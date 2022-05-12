@@ -70,6 +70,7 @@ export function useValidation<T extends ValidationTarget>(
     readonly onBlur: FocusEventHandler;
     readonly ref: MutableRefObject<T | null>;
   };
+  validate: () => void;
 } {
   const inputRef = useRef<T>(null);
   const [validationMessage, setValidationMessage] = useState('');
@@ -85,30 +86,24 @@ export function useValidation<T extends ValidationTarget>(
     return () => input.setCustomValidity('');
   }, [customValidationMessage, validationMessage]);
 
+  const validate = () => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const inputField = inputRef.current!;
+    setValidationMessage(
+      (getValidationMessage &&
+        !inputField.validity.valid &&
+        getValidationMessage(inputField.validity)) ||
+        inputField.validationMessage,
+    );
+  };
   return {
+    validate,
     validationMessage,
     validationTargetProps: {
       ref: inputRef,
-      onBlur: () => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const inputField = inputRef.current!;
-        setValidationMessage(
-          (getValidationMessage &&
-            !inputField.validity.valid &&
-            getValidationMessage(inputField.validity)) ||
-            inputField.validationMessage,
-        );
-      },
-
+      onBlur: validate,
       onInvalid: (event: FormEvent<ValidationTarget>) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const inputField = inputRef.current!;
-        setValidationMessage(
-          (getValidationMessage &&
-            !inputField.validity.valid &&
-            getValidationMessage(inputField.validity)) ||
-            inputField.validationMessage,
-        );
+        validate();
         event.preventDefault();
       },
     },

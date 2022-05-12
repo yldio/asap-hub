@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { FC, useEffect } from 'react';
+import { FC, useCallback, useEffect } from 'react';
 import Select, { OptionTypeBase } from 'react-select';
 import { v4 as uuidV4 } from 'uuid';
 import { useValidation, validationMessageStyles } from '../form';
@@ -47,26 +47,18 @@ export default function Dropdown<V extends string>({
   onChange = noop,
   noOptionsMessage,
 }: DropdownProps<V>): ReturnType<FC> {
-  const { validationMessage, validationTargetProps } =
+  const { validationMessage, validationTargetProps, validate } =
     useValidation<HTMLInputElement>(
       customValidationMessage,
       getValidationMessage,
     );
 
-  const { ref: inputRef } = validationTargetProps;
-  const onBlur = () => {
-    const input = inputRef.current as unknown as HTMLInputElement;
-    if (input) {
-      input.focus();
-      input.blur();
-    }
-  };
-  const isValid = validationMessage === '';
-  useEffect(() => {
+  const useValidate = useCallback(() => {
     if (value !== '') {
-      onBlur();
+      validate();
     }
   }, [value]);
+  useEffect(useValidate, [useValidate]);
 
   return (
     <div css={containerStyles}>
@@ -77,27 +69,24 @@ export default function Dropdown<V extends string>({
         options={options.filter((option) => option.value !== '')}
         value={options.find((option) => option.value === value)}
         components={{ DropdownIndicator }}
-        styles={reactSelectStyles(!isValid)}
+        styles={reactSelectStyles(!!validationMessage)}
         noOptionsMessage={noOptionsMessage}
         tabSelectsValue={false}
         autoComplete={uuidV4()}
         onChange={(option) => {
           onChange(option?.value);
         }}
-        onBlur={() => {
-          onBlur();
-        }}
+        onBlur={validate}
       />
-      {required && (
-        <input
-          {...validationTargetProps}
-          tabIndex={-1}
-          autoComplete="off"
-          css={[hiddenInput]}
-          value={value}
-          required
-        />
-      )}
+      <input
+        {...validationTargetProps}
+        tabIndex={-1}
+        autoComplete="off"
+        css={[hiddenInput]}
+        value={value}
+        required={required}
+      />
+
       <div css={validationMessageStyles}>{validationMessage}</div>
     </div>
   );

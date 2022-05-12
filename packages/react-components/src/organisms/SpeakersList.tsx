@@ -2,11 +2,13 @@ import { css } from '@emotion/react';
 import { EventSpeaker } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { isInternalEventUser } from '@asap-hub/validation';
 import { Headline3, Headline4, Avatar, Link } from '../atoms';
 import { tabletScreen, perRem, mobileScreen } from '../pixels';
 import { userPlaceholderIcon } from '../icons';
 import { useDateHasPassed } from '../date';
 import { considerEndedAfter } from '../utils';
+import { steel } from '../colors';
 
 const getPlaceholderAvatarUrl = () =>
   `data:image/svg+xml;base64,${btoa(
@@ -44,7 +46,7 @@ const speakerListStyles = css({
   [`@media (max-width: ${mobileScreen.width}px)`]: {
     gridAutoFlow: 'row',
     alignItems: 'start',
-    borderBottom: '1px solid #DFE5EA',
+    borderBottom: `1px solid ${steel.rgb}`,
   },
 });
 
@@ -70,8 +72,8 @@ const groupStyle = css({
   display: 'flex',
   flexFlow: 'column',
   [`@media (max-width: ${mobileScreen.width}px)`]: {
-    paddingBottom: `${20 / perRem}em`,
-    paddingTop: `${20 / perRem}em`,
+    paddingBottom: `${15 / perRem}em`,
+    paddingTop: `${15 / perRem}em`,
   },
 });
 
@@ -117,18 +119,18 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
                 <Avatar
                   {...user}
                   imageUrl={
-                    user?.displayName
-                      ? user.avatarUrl || ''
+                    isInternalEventUser(user)
+                      ? user?.avatarUrl || ''
                       : getPlaceholderAvatarUrl()
                   }
                 />
-                {(user?.displayName && (
+                {(isInternalEventUser(user) && (
                   <Link
                     href={
-                      user && network({}).users({}).user({ userId: user?.id }).$
+                      user && network({}).users({}).user({ userId: user.id }).$
                     }
                   >
-                    {user.displayName}
+                    {user?.displayName}
                   </Link>
                 )) || <span css={toBeAnnouncedStyle}>{userToBeAnnounced}</span>}
               </div>

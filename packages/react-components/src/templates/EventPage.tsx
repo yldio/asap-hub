@@ -59,7 +59,7 @@ const EventPage: React.FC<EventPageProps> = ({
             {formatDistance(new Date(), new Date(lastModifiedDate))} ago
           </small>
         </Paragraph>
-        {props.speakers && <SpeakerList {...props} />}
+        {props.speakers.length > 0 && <SpeakerList {...props} />}
         {!hideMeetingLink && <JoinEvent {...props} />}
         <EventAbout {...props} />
       </Card>

@@ -39,7 +39,7 @@ describe('When rendering the speaker list', () => {
     it('Renders an announced user', async () => {
       const event = {
         ...createEventResponse(),
-        speakers: [{ ...announcedSpeaker }],
+        speakers: [announcedSpeaker],
       };
 
       const { getAllByRole } = render(<SpeakersList {...event} />);

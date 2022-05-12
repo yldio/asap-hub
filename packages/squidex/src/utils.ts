@@ -29,12 +29,17 @@ export type RequiredAndNonNullable<T> = Required<
   }
 >;
 
-type SquidexEntity = { [key: string]: { iv: unknown } };
+type SquidexEntityObject<DataObject> = {
+  [Property in keyof DataObject]: DataObject[Property] extends undefined
+    ? undefined
+    : { iv: NonNullable<DataObject[Property]> };
+};
 
-export const parseToSquidex = (object: {
-  [key: string]: unknown;
-}): SquidexEntity =>
-  Object.entries(object).reduce((acc, [key, value]) => {
-    acc[key] = { iv: value };
-    return acc;
-  }, {} as SquidexEntity);
+export const parseToSquidex = <T>(object: T): SquidexEntityObject<T> =>
+  Object.entries(object).reduce(
+    (acc, [key, value]) => ({
+      ...acc,
+      [key]: typeof value === 'undefined' ? undefined : { iv: value },
+    }),
+    {} as SquidexEntityObject<T>,
+  );

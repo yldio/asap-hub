@@ -231,6 +231,4 @@ export type ResearchOutputPostRequest = {
 
 export type ResearchOutputPutRequest = ResearchOutputPostRequest;
 
-export type ResearchOutputPatchRequest = Partial<ResearchOutputPostRequest>;
-
 export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;

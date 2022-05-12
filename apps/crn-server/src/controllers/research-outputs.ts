@@ -2,11 +2,11 @@ import {
   ExternalAuthorInput,
   ListResearchOutputResponse,
   ResearchOutputPostRequest,
-  ResearchOutputPatchRequest,
   ResearchOutputResponse,
   ResearchTagCategory,
   ValidationErrorResponse,
   VALIDATION_ERROR_MESSAGE,
+  ResearchOutputPutRequest,
 } from '@asap-hub/model';
 import {
   RestExternalAuthor,
@@ -17,6 +17,7 @@ import {
   SquidexGraphqlClient,
   SquidexRest,
   SquidexRestClient,
+  InputResearchOutput,
 } from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
 import {
@@ -40,7 +41,10 @@ import logger from '../utils/logger';
 
 export default class ResearchOutputs implements ResearchOutputController {
   squidexGraphqlClient: SquidexGraphqlClient;
-  researchOutputSquidexRestClient: SquidexRestClient<RestResearchOutput>;
+  researchOutputSquidexRestClient: SquidexRestClient<
+    RestResearchOutput,
+    InputResearchOutput
+  >;
   teamSquidexRestClient: SquidexRestClient<RestTeam>;
   externalAuthorSquidexRestClient: SquidexRestClient<RestExternalAuthor>;
 
@@ -148,6 +152,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       ),
     };
   }
+
   async create({
     teams,
     authors = [],
@@ -163,51 +168,45 @@ export default class ResearchOutputs implements ResearchOutputController {
       authors.map((author) => this.associateResearchOutputToAuthors(author)),
     );
 
-    const { queryResearchTagsContentsWithTotal } =
-      await this.squidexGraphqlClient.request<
-        FetchResearchTagsQuery,
-        FetchResearchTagsQueryVariables
-      >(FETCH_RESEARCH_TAGS, {
-        top: 200,
-        skip: 0,
-        filter: `data/entities/iv eq 'Research Output'`,
-      });
-
-    const researchTags = queryResearchTagsContentsWithTotal?.items || [];
-
-    const methods = mapResearchTags(
-      researchTags,
-      'Method',
-      researchOutputData.methods,
-      'methods',
-    );
-
-    const organisms = mapResearchTags(
-      researchTags,
-      'Organism',
-      researchOutputData.organisms,
-      'organisms',
-    );
-
-    const environments = mapResearchTags(
-      researchTags,
-      'Environment',
-      researchOutputData.environments,
-      'environments',
-    );
-
-    const subtype = researchOutputData.subtype
-      ? [
-          mapResearchTag(
-            researchTags,
-            'Subtype',
-            researchOutputData.subtype,
-            'subtype',
-          ),
-        ]
-      : [];
+    const { methods, organisms, environments, subtype } =
+      await this.parseResearchTags({ ...researchOutputData });
 
     const { id: researchOutputId } = await this.createResearchOutput({
+      authors: researchOutputAuthors,
+      ...researchOutputData,
+      methods,
+      organisms,
+      environments,
+      subtype,
+    });
+
+    await Promise.all(
+      teams.map((teamId) =>
+        this.associateResearchOutputToTeam(teamId, researchOutputId),
+      ),
+    );
+
+    return this.fetchById(researchOutputId);
+  }
+
+  async update(
+    researchOutputId: string,
+    { teams, authors = [], ...researchOutputData }: ResearchOutputUpdateData,
+  ): Promise<Partial<ResearchOutputResponse>> {
+    await this.validateResearchOutputUniques({
+      ...researchOutputData,
+      authors,
+      teams,
+    });
+
+    const researchOutputAuthors = await Promise.all(
+      authors.map((author) => this.associateResearchOutputToAuthors(author)),
+    );
+
+    const { methods, organisms, environments, subtype } =
+      await this.parseResearchTags({ ...researchOutputData });
+
+    await this.updateResearchOutput(researchOutputId, {
       authors: researchOutputAuthors,
       ...researchOutputData,
       methods,
@@ -249,13 +248,43 @@ export default class ResearchOutputs implements ResearchOutputController {
       {
         ...researchOutput,
         usedInAPublication: usedInPublication,
-      } as RestResearchOutput['data'],
+        labs: researchOutput.labs || { iv: null },
+      },
       true,
     );
   }
 
+  private async updateResearchOutput(
+    researchOutputId: string,
+    {
+      authors,
+      updatedBy,
+      ...researchOutputData
+    }: Omit<ResearchOutputPostRequest, 'teams' | 'authors' | 'subtype'> & {
+      authors: string[];
+      updatedBy: string;
+      subtype: string[];
+    },
+  ) {
+    const { usedInPublication, ...researchOutput } = parseToSquidex({
+      ...researchOutputData,
+      asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
+      usedInPublication: convertBooleanToDecision(
+        researchOutputData.usedInPublication,
+      ),
+      authors,
+      updatedBy: [updatedBy],
+    });
+
+    return this.researchOutputSquidexRestClient.patch(researchOutputId, {
+      ...researchOutput,
+      usedInAPublication: usedInPublication,
+      labs: researchOutput.labs || { iv: null },
+    });
+  }
+
   private async validateResearchOutputUniques(
-    researchOutputData: ResearchOutputCreateData,
+    researchOutputData: ResearchOutputCreateData | ResearchOutputUpdateData,
   ): Promise<void> {
     const isError = (
       error: ValidationErrorResponse['data'][0] | null,
@@ -279,7 +308,7 @@ export default class ResearchOutputs implements ResearchOutputController {
   }
 
   private async validateTitleUniqueness(
-    researchOutputData: ResearchOutputCreateData,
+    researchOutputData: ResearchOutputCreateData | ResearchOutputUpdateData,
   ): Promise<ValidationErrorResponse['data'][0] | null> {
     if (
       (
@@ -307,7 +336,7 @@ export default class ResearchOutputs implements ResearchOutputController {
   }
 
   private async validateLinkUniqueness(
-    researchOutputData: ResearchOutputCreateData,
+    researchOutputData: ResearchOutputCreateData | ResearchOutputUpdateData,
   ): Promise<ValidationErrorResponse['data'][0] | null> {
     if (
       (
@@ -356,15 +385,63 @@ export default class ResearchOutputs implements ResearchOutputController {
     });
     return id;
   }
+
+  private async parseResearchTags(
+    researchOutputData: ResearchOutputInputTags,
+  ): Promise<ResearchOutputParsedTags> {
+    const { queryResearchTagsContentsWithTotal } =
+      await this.squidexGraphqlClient.request<
+        FetchResearchTagsQuery,
+        FetchResearchTagsQueryVariables
+      >(FETCH_RESEARCH_TAGS, {
+        top: 100,
+        skip: 0,
+        filter: `data/entities/iv eq 'Research Output'`,
+      });
+
+    const researchTags = queryResearchTagsContentsWithTotal?.items || [];
+
+    const methods = mapResearchTags(
+      researchTags,
+      'Method',
+      researchOutputData.methods,
+      'methods',
+    );
+
+    const organisms = mapResearchTags(
+      researchTags,
+      'Organism',
+      researchOutputData.organisms,
+      'organisms',
+    );
+
+    const environments = mapResearchTags(
+      researchTags,
+      'Environment',
+      researchOutputData.environments,
+      'environments',
+    );
+
+    const subtype = researchOutputData.subtype
+      ? [
+          mapResearchTag(
+            researchTags,
+            'Subtype',
+            researchOutputData.subtype,
+            'subtype',
+          ),
+        ]
+      : [];
+
+    return {
+      methods,
+      organisms,
+      environments,
+      subtype,
+    };
+  }
 }
 
-type ResearchOutputFilter =
-  | string[]
-  | {
-      documentType?: string;
-      title?: string;
-      link?: string;
-    };
 export interface ResearchOutputController {
   fetch: (options: {
     take?: number;
@@ -387,7 +464,7 @@ export type ResearchOutputCreateData = ResearchOutputPostRequest & {
   createdBy: string;
 };
 
-export type ResearchOutputUpdateData = ResearchOutputPatchRequest & {
+export type ResearchOutputUpdateData = ResearchOutputPutRequest & {
   updatedBy: string;
 };
 
@@ -404,12 +481,6 @@ const makeODataFilter = (filter?: ResearchOutputFilter): string => {
 
   return '';
 };
-
-type ResearchTagsResponse = NonNullable<
-  NonNullable<
-    FetchResearchTagsQuery['queryResearchTagsContentsWithTotal']
-  >['items']
->;
 
 const mapResearchTags = (
   researchTags: ResearchTagsResponse,
@@ -448,4 +519,31 @@ const mapResearchTag = (
       schemaPath: `#/properties/${categoryLowercase}/invalid`,
     },
   ]);
+};
+
+type ResearchOutputFilter =
+  | string[]
+  | {
+      documentType?: string;
+      title?: string;
+      link?: string;
+    };
+
+type ResearchTagsResponse = NonNullable<
+  NonNullable<
+    FetchResearchTagsQuery['queryResearchTagsContentsWithTotal']
+  >['items']
+>;
+
+type ResearchOutputInputTags = {
+  methods: string[];
+  organisms: string[];
+  environments: string[];
+  subtype?: string;
+};
+type ResearchOutputParsedTags = {
+  methods: string[];
+  organisms: string[];
+  environments: string[];
+  subtype: string[];
 };

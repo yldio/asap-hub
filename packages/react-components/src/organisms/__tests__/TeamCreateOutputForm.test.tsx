@@ -26,7 +26,7 @@ const props: ComponentProps<typeof TeamCreateOutputForm> = {
   team: createTeamResponse(),
 };
 
-jest.setTimeout(30000);
+jest.setTimeout(60000);
 describe('createIdentifierField', () => {
   it('maps the ResearchOutputIdentifierType to fields including the identifier', () => {
     expect(

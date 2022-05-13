@@ -7,7 +7,7 @@ import { tabletScreen, perRem, mobileScreen } from '../pixels';
 import { userPlaceholderIcon } from '../icons';
 import { useDateHasPassed } from '../date';
 import { considerEndedAfter } from '../utils';
-import { steel } from '../colors';
+import { steel, lead } from '../colors';
 
 const gridStyles = css({
   display: 'grid',
@@ -77,6 +77,7 @@ const groupStyle = css({
 
 const toBeAnnouncedStyle = css({
   fontStyle: 'italic',
+  color: `${lead}`,
 });
 
 interface SpeakerListProps {
@@ -87,8 +88,8 @@ interface SpeakerListProps {
 const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
   const hasEnded = useDateHasPassed(considerEndedAfter(endDate));
   const userToBeAnnounced = hasEnded
-    ? 'User was never announced'
-    : 'To be announced';
+    ? 'User was not announced'
+    : 'User to be announced';
 
   return (
     <div>

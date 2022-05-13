@@ -33,7 +33,7 @@ describe('When rendering the speaker list', () => {
 
       const { getByText } = render(<SpeakersList {...event} />);
 
-      expect(getByText('To be announced')).toBeVisible();
+      expect(getByText('User to be announced')).toBeVisible();
     });
 
     it('Renders an announced user', async () => {
@@ -78,7 +78,7 @@ describe('When rendering the speaker list', () => {
 
       const { getByText } = render(<SpeakersList {...eventInThePast} />);
 
-      expect(getByText('User was never announced')).toBeVisible();
+      expect(getByText('User was not announced')).toBeVisible();
     });
   });
 });

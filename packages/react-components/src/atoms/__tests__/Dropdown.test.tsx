@@ -280,3 +280,35 @@ it('clears invalid values, when enter', async () => {
   expect(input).toBeVisible();
   waitFor(() => expect(input).toHaveValue(''));
 });
+
+it('clears the field in red when rerendered correctly', async () => {
+  const { rerender } = render(
+    <Dropdown
+      placeholder="Select"
+      options={[{ value: 'LHR', label: 'Heathrow' }]}
+      required={true}
+      value=""
+      id="test"
+    />,
+  );
+  const input = screen.getByRole('textbox', { hidden: false });
+  expect(findParentWithStyle(input, 'color')?.color).not.toBe(ember.rgb);
+
+  userEvent.click(input);
+  userEvent.tab();
+  expect(findParentWithStyle(input, 'color')?.color).toBe(ember.rgb);
+
+  rerender(
+    <Dropdown
+      placeholder="Select"
+      options={[{ value: 'LHR', label: 'Heathrow' }]}
+      required={true}
+      value=""
+      id="test"
+    />,
+  );
+
+  waitFor(() =>
+    expect(findParentWithStyle(input, 'color')?.color).not.toBe(ember.rgb),
+  );
+});

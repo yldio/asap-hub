@@ -1,10 +1,10 @@
-import { hasCreateResearchOutputPermissions } from '../../src/permissions/has-create-research-output-permission';
+import { hasCreateUpdateResearchOutputPermissions } from '../../src/permissions/research-output';
 import { createUserResponse } from '@asap-hub/fixtures';
 
-describe('hasCreateResearchOutputPermission', () => {
+describe('hasCreateUpdateResearchOutputPermissions', () => {
   test('Should not have permissions when there are no teams assigned to the user', () => {
     expect(
-      hasCreateResearchOutputPermissions(
+      hasCreateUpdateResearchOutputPermissions(
         {
           ...createUserResponse(),
           teams: [],
@@ -16,7 +16,7 @@ describe('hasCreateResearchOutputPermission', () => {
 
   test('Should have the permission when the user has a Project Manager role inside the team that this resource belongs to', () => {
     expect(
-      hasCreateResearchOutputPermissions(
+      hasCreateUpdateResearchOutputPermissions(
         {
           ...createUserResponse(),
           teams: [
@@ -35,7 +35,7 @@ describe('hasCreateResearchOutputPermission', () => {
 
   test('Should have the permission when the user has a Project Manager role inside the team that this resource belongs to', () => {
     expect(
-      hasCreateResearchOutputPermissions(
+      hasCreateUpdateResearchOutputPermissions(
         {
           ...createUserResponse(),
           teams: [
@@ -54,7 +54,7 @@ describe('hasCreateResearchOutputPermission', () => {
 
   test('Should have the permissions when the user has a Staff role in any team', () => {
     expect(
-      hasCreateResearchOutputPermissions(
+      hasCreateUpdateResearchOutputPermissions(
         {
           ...createUserResponse(),
           teams: [

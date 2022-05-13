@@ -1,1 +1,1 @@
-export * from './has-create-research-output-permission';
+export * from './research-output';

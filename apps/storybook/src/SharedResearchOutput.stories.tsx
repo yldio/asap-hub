@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import { SharedResearchOutput } from '@asap-hub/react-components';
+import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 
 import {
   text,
@@ -81,27 +82,35 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
 });
 
 export const Normal = () => (
-  <SharedResearchOutput
-    {...props()}
-    description={text(
-      'Description',
-      `Neural control of muscle function is fundamental to animal behavior. In many cases, specific muscles can generate multiple distinct behaviors. Nonetheless, individual muscle cells are generally regarded as the smallest units of motor control. Here we report that muscle cells can alter their behavioral output by contracting subcellularly.
+  <ResearchOutputPermissionsContext.Provider
+    value={{ canCreateUpdate: boolean('Can Edit', false) }}
+  >
+    <SharedResearchOutput
+      {...props()}
+      description={text(
+        'Description',
+        `Neural control of muscle function is fundamental to animal behavior. In many cases, specific muscles can generate multiple distinct behaviors. Nonetheless, individual muscle cells are generally regarded as the smallest units of motor control. Here we report that muscle cells can alter their behavioral output by contracting subcellularly.
     <b>Bold Text</b> <a href="http://example.com"> link </a>
     `,
-    )}
-  />
+      )}
+    />
+  </ResearchOutputPermissionsContext.Provider>
 );
 export const GrantDocument = () => (
-  <SharedResearchOutput
-    {...props()}
-    documentType="Grant Document"
-    description={text(
-      'Description',
-      `<h1>Example</h1>
+  <ResearchOutputPermissionsContext.Provider
+    value={{ canCreateUpdate: boolean('Can Edit', false) }}
+  >
+    <SharedResearchOutput
+      {...props()}
+      documentType="Grant Document"
+      description={text(
+        'Description',
+        `<h1>Example</h1>
       Neural control of muscle function is fundamental to animal behavior. In many cases, specific muscles can generate multiple distinct behaviors. Nonetheless, individual muscle cells are generally regarded as the smallest units of motor control. Here we report that muscle cells can alter their behavioral output by contracting subcellularly.
       <h2>Example 2</h2>
       <b>Bold Text</b> <a href="http://example.com"> link </a>
     `,
-    )}
-  />
+      )}
+    />
+  </ResearchOutputPermissionsContext.Provider>
 );

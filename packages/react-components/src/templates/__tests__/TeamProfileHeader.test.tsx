@@ -125,7 +125,9 @@ it('renders workspace tabs when tools provided', () => {
 
 it('renders share an output button dropdown', () => {
   const { getByText, queryByText } = render(
-    <ResearchOutputPermissionsContext.Provider value={{ canCreate: true }}>
+    <ResearchOutputPermissionsContext.Provider
+      value={{ canCreateUpdate: true }}
+    >
       <TeamProfileHeader {...boilerplateProps} />,
     </ResearchOutputPermissionsContext.Provider>,
   );

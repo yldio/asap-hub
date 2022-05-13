@@ -44,7 +44,7 @@ describe('TeamOutput', () => {
   interface RenderPageOptions {
     teamId: string;
     outputDocumentType?: OutputDocumentTypeParameter;
-    canCreate?: boolean;
+    canCreateUpdate?: boolean;
   }
 
   it('Renders the research output', async () => {
@@ -64,7 +64,7 @@ describe('TeamOutput', () => {
   });
 
   it('Shows NotFoundPage when canCreate in ResearchOutputPermissions is false', async () => {
-    await renderPage({ teamId: '42', canCreate: false });
+    await renderPage({ teamId: '42', canCreateUpdate: false });
     expect(
       screen.queryByRole('heading', { name: /Share/i }),
     ).not.toBeInTheDocument();
@@ -198,7 +198,7 @@ describe('TeamOutput', () => {
   });
 
   async function renderPage({
-    canCreate = true,
+    canCreateUpdate = true,
     teamId,
     outputDocumentType = 'bioinformatics',
   }: RenderPageOptions) {
@@ -227,7 +227,7 @@ describe('TeamOutput', () => {
                   }
                 >
                   <ResearchOutputPermissionsContext.Provider
-                    value={{ canCreate }}
+                    value={{ canCreateUpdate }}
                   >
                     <Route path={path}>
                       <TeamOutput teamId={teamId} />

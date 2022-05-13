@@ -144,12 +144,14 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   labCount,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
-  const { canCreate } = useContext(ResearchOutputPermissionsContext);
+  const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
 
   return (
     <header css={containerStyles}>
       <Display styleAsHeading={2}>Team {displayName}</Display>
-      <section css={canCreate ? createSectionStyles : contactSectionStyles}>
+      <section
+        css={canCreateUpdate ? createSectionStyles : contactSectionStyles}
+      >
         <div css={membersContainerStyles}>
           <ul css={membersListStyles}>
             {members
@@ -181,7 +183,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             </li>
           </ul>
         </div>
-        {pointOfContact && !canCreate && (
+        {pointOfContact && !canCreateUpdate && (
           <div css={pointOfContactStyles}>
             <Link
               buttonStyle
@@ -199,7 +201,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             <span>{getCounterString(labCount, 'Lab')}</span>
           </div>
         )}
-        {canCreate && (
+        {canCreateUpdate && (
           <div css={createStyles}>
             <DropdownButton
               buttonChildren={() => (

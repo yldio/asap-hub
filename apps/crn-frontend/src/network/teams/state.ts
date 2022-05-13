@@ -6,7 +6,7 @@ import {
   TeamResponse,
 } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
-import { hasCreateResearchOutputPermissions } from '@asap-hub/validation';
+import { hasCreateUpdateResearchOutputPermissions } from '@asap-hub/validation';
 
 import {
   atomFamily,
@@ -191,12 +191,14 @@ export const usePostTeamResearchOutput = () => {
   };
 };
 
-export const useCanCreateResearchOutput = (teamId: string): boolean => {
+export const useCanCreateUpdateResearchOutput = (
+  teamIds: string | string[],
+): boolean => {
   const user = useCurrentUser();
 
   return !!(
     isEnabled('ROMS_FORM') &&
     user &&
-    hasCreateResearchOutputPermissions(user, [teamId])
+    hasCreateUpdateResearchOutputPermissions(user, [...teamIds])
   );
 };

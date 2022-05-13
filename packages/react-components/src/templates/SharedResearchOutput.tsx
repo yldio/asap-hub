@@ -1,8 +1,9 @@
-import React, { ComponentProps } from 'react';
+import React, { ComponentProps, useContext } from 'react';
 import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
+import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 
-import { Card, Headline2, Divider } from '../atoms';
+import { Card, Headline2, Divider, Link } from '../atoms';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { BackLink, CtaCard, TagList } from '../molecules';
@@ -12,10 +13,17 @@ import {
   SharedResearchOutputHeaderCard,
 } from '../organisms';
 import { createMailTo } from '../mail';
+import { editIcon } from '..';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
+
+const buttonsContainer = css({
+  display: 'flex',
+  justifyContent: 'space-between',
+});
+const editButtonContainer = css({ margin: 'auto 0' });
 
 const cardsStyles = css({
   display: 'grid',
@@ -41,9 +49,20 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
     props.documentType,
   );
+
+  const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
   return (
     <div css={containerStyles}>
-      <BackLink href={backHref} />
+      <div css={buttonsContainer}>
+        <BackLink href={backHref} />
+        {canCreateUpdate && (
+          <div css={editButtonContainer}>
+            <Link href={'/'} buttonStyle small primary>
+              {editIcon} Edit
+            </Link>
+          </div>
+        )}
+      </div>
       <div css={cardsStyles}>
         <SharedResearchOutputHeaderCard {...props} />
         {((description && !isGrantDocument) || !!tags.length) && (

@@ -1,6 +1,6 @@
 import { createUserResponse } from '@asap-hub/fixtures';
 import { fireEvent } from '@testing-library/dom';
-import { act, render, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter, StaticRouter } from 'react-router-dom';
@@ -131,6 +131,28 @@ it.each`
     expect(await findByText(new RegExp(message, 'i'))).toBeVisible();
   },
 );
+
+it('shows validation message country when it not selected', async () => {
+  render(
+    <PersonalInfoModal
+      {...props}
+      country=""
+      countrySuggestions={['Spain']}
+      institution="UCM"
+      city="Madrid"
+      jobTitle="Assistant Professor"
+    />,
+    {
+      wrapper: StaticRouter,
+    },
+  );
+  const field = screen.getByRole('textbox', { name: /country/i });
+  userEvent.click(field);
+  userEvent.tab();
+
+  userEvent.click(screen.getByRole('button', { name: /save/i }));
+  expect(await screen.findByText(/Please add your country/i)).toBeVisible();
+});
 
 it('triggers the save function', async () => {
   const jestFn = jest.fn();

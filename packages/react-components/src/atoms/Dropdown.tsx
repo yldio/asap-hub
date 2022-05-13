@@ -1,25 +1,25 @@
 import { css } from '@emotion/react';
-import { FC, useCallback, useEffect } from 'react';
-import Select, { OptionTypeBase } from 'react-select';
+import { FC, useCallback, useEffect, useRef } from 'react';
+import Select, { ControlProps, OptionTypeBase } from 'react-select';
 import { v4 as uuidV4 } from 'uuid';
 import { useValidation, validationMessageStyles } from '../form';
-import { dropdownChevronIcon } from '../icons';
+import { dropdownChevronIcon, dropdownCrossIcon } from '../icons';
 import { Option, reactSelectStyles } from '../select';
 import { noop } from '../utils';
-
-export const ENTER_KEYCODE = 13;
 
 const containerStyles = css({
   flexBasis: '100%',
   position: 'relative',
 });
 const DropdownIndicator: FC = () => dropdownChevronIcon;
-const hiddenInput = css({
-  opacity: 0,
-  width: '100%',
-  height: 0,
-  position: 'absolute',
-});
+const CrossIcon: FC = () => dropdownCrossIcon;
+const ClearIndicator = ({
+  innerProps,
+}: Pick<ControlProps<OptionTypeBase, false>, 'innerProps'>) => (
+  <span {...innerProps}>
+    <CrossIcon />
+  </span>
+);
 export interface DropdownProps<V extends string> {
   readonly customValidationMessage?: string;
   readonly getValidationMessage?: Parameters<typeof useValidation>[1];
@@ -53,38 +53,45 @@ export default function Dropdown<V extends string>({
       getValidationMessage,
     );
 
+  const initialRender = useRef(true);
   const useValidate = useCallback(() => {
-    if (value !== '') {
+    if (initialRender.current) {
+      initialRender.current = false;
+    } else {
       validate();
     }
-  }, [value]);
+  }, [validate]);
   useEffect(useValidate, [useValidate]);
 
+  const validOptions = options.filter((option) => option.value !== '');
   return (
     <div css={containerStyles}>
       <Select<OptionTypeBase>
         placeholder={placeholder}
         inputId={id}
+        isClearable={!required}
         isDisabled={!enabled}
-        options={options.filter((option) => option.value !== '')}
-        value={options.find((option) => option.value === value)}
-        components={{ DropdownIndicator }}
+        options={validOptions}
+        onChange={(option) => {
+          onChange(option?.value);
+        }}
+        value={validOptions.find((option) => option.value === value)}
+        components={{ DropdownIndicator, ClearIndicator }}
         styles={reactSelectStyles(!!validationMessage)}
         noOptionsMessage={noOptionsMessage}
         tabSelectsValue={false}
         autoComplete={uuidV4()}
-        onChange={(option) => {
-          onChange(option?.value);
-        }}
         onBlur={validate}
       />
       <input
         {...validationTargetProps}
         tabIndex={-1}
         autoComplete="off"
-        css={[hiddenInput]}
         value={value}
+        onChange={noop}
         required={required}
+        disabled={!enabled}
+        hidden={true}
       />
 
       <div css={validationMessageStyles}>{validationMessage}</div>

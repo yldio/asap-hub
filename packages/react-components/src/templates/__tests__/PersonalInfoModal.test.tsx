@@ -1,10 +1,9 @@
-import { ComponentProps } from 'react';
-import { render, act, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { MemoryRouter, StaticRouter } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { fireEvent } from '@testing-library/dom';
-
+import { act, render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ComponentProps } from 'react';
+import { MemoryRouter, StaticRouter } from 'react-router-dom';
 import PersonalInfoModal from '../PersonalInfoModal';
 
 const props: ComponentProps<typeof PersonalInfoModal> = {
@@ -74,7 +73,7 @@ it('renders default values into text inputs', () => {
       "",
       "institution",
       "jobTitle",
-      "United States",
+      "",
       "city",
     ]
   `);
@@ -103,7 +102,6 @@ it('renders a country selector', () => {
 
 it.each`
   label             | message
-  ${/country/i}     | ${'Please add your country'}
   ${/city/i}        | ${'Please add your city'}
   ${/institution/i} | ${'Please add your institution'}
   ${/position/i}    | ${'Please add your position'}

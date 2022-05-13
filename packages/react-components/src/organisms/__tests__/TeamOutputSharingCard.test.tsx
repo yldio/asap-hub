@@ -1,9 +1,8 @@
 import { fireEvent } from '@testing-library/dom';
-import { screen, render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { ComponentProps } from 'react';
+import { render, screen, within } from '@testing-library/react';
+import userEvent, { specialChars } from '@testing-library/user-event';
 import { startOfTomorrow } from 'date-fns';
-import { ENTER_KEYCODE } from '../../atoms/Dropdown';
+import { ComponentProps } from 'react';
 import TeamCreateOutputFormSharingCard from '../TeamCreateOutputFormSharingCard';
 
 const props: ComponentProps<typeof TeamCreateOutputFormSharingCard> = {
@@ -18,7 +17,7 @@ const props: ComponentProps<typeof TeamCreateOutputFormSharingCard> = {
   sharingStatus: 'Network Only',
 };
 it('renders the card with provided values', () => {
-  const { getByDisplayValue } = render(
+  render(
     <TeamCreateOutputFormSharingCard
       {...props}
       documentType="Article"
@@ -28,10 +27,10 @@ it('renders the card with provided values', () => {
       type={'Preprint'}
     />,
   );
-  expect(getByDisplayValue('description')).toBeVisible();
-  expect(getByDisplayValue('http://example.com')).toBeVisible();
-  expect(getByDisplayValue('title')).toBeVisible();
-  expect(getByDisplayValue('Preprint')).toBeVisible();
+  expect(screen.getByDisplayValue('description')).toBeVisible();
+  expect(screen.getByDisplayValue('http://example.com')).toBeVisible();
+  expect(screen.getByDisplayValue('title')).toBeVisible();
+  expect(screen.getByText('Preprint')).toBeVisible();
 });
 
 it.each`
@@ -41,20 +40,18 @@ it.each`
   ${'Title'}       | ${/title/i}       | ${'Please enter a title'}
   ${'Type'}        | ${/type/i}        | ${'Please choose a type'}
 `('shows error message for missing value $title', async ({ label, error }) => {
-  const { getByLabelText, findByText } = render(
-    <TeamCreateOutputFormSharingCard {...props} />,
-  );
-  const input = getByLabelText(label);
+  render(<TeamCreateOutputFormSharingCard {...props} />);
+  const input = screen.getByLabelText(label);
   fireEvent.focusOut(input);
-  expect(await findByText(error)).toBeVisible();
+  expect(await screen.findByText(error)).toBeVisible();
 });
 
 it('lab resource does not require an url', async () => {
-  const { getByLabelText, findByText } = render(
+  render(
     <TeamCreateOutputFormSharingCard {...props} documentType="Lab Resource" />,
   );
   expect(
-    await findByText(
+    await screen.findByText(
       (content, node) =>
         (content === 'URL' &&
           node?.nextSibling?.textContent?.includes('(optional)')) ??
@@ -62,10 +59,10 @@ it('lab resource does not require an url', async () => {
     ),
   ).toBeVisible();
 
-  const input = getByLabelText(/URL/i);
+  const input = screen.getByLabelText(/URL/i);
   fireEvent.focusOut(input);
   await expect(
-    findByText('Please enter a valid URL, starting with http://'),
+    screen.findByText('Please enter a valid URL, starting with http://'),
   ).rejects.toThrowError();
 });
 
@@ -76,10 +73,10 @@ it.each`
   ${'Title'}       | ${/title/i}       | ${'onChangeTitle'}
 `('triggers an onchange event for $field', async ({ label, prop }) => {
   const onChangeFn = jest.fn();
-  const { getByLabelText } = render(
+  render(
     <TeamCreateOutputFormSharingCard {...{ ...props, [prop]: onChangeFn }} />,
   );
-  const input = getByLabelText(label);
+  const input = screen.getByLabelText(label);
   fireEvent.change(input, { target: { value: 'test' } });
   expect(onChangeFn).toHaveBeenLastCalledWith('test');
 });
@@ -95,9 +92,11 @@ it.each`
     <TeamCreateOutputFormSharingCard {...{ ...props, [prop]: onChangeFn }} />,
   );
 
-  fireEvent.click(
-    screen.getByRole('group', { name: group }).querySelectorAll('input')[1]!,
-  );
+  const groupInput = within(
+    screen.getByRole('group', { name: group }),
+  ).getAllByRole('radio')[1];
+
+  userEvent.click(groupInput);
 
   expect(onChangeFn).toHaveBeenCalled();
 });
@@ -105,7 +104,7 @@ it.each`
 it('triggers an on change for type', async () => {
   const onChangeFn = jest.fn();
 
-  const { getByLabelText } = render(
+  render(
     <TeamCreateOutputFormSharingCard
       {...props}
       documentType="Article"
@@ -113,33 +112,32 @@ it('triggers an on change for type', async () => {
     />,
   );
 
-  userEvent.type(getByLabelText(/type/i), 'Preprint');
-  fireEvent.keyDown(getByLabelText(/type/i), {
-    keyCode: ENTER_KEYCODE,
-  });
+  const type = screen.getByLabelText(/type/i);
+  userEvent.type(type, 'Preprint');
+  userEvent.type(type, specialChars.enter);
 
   expect(onChangeFn).toHaveBeenCalledWith('Preprint');
 });
 
 it('shows the custom no options message for type', async () => {
-  const { getByLabelText, getByText } = render(
-    <TeamCreateOutputFormSharingCard {...props} documentType="Article" />,
-  );
+  render(<TeamCreateOutputFormSharingCard {...props} documentType="Article" />);
 
-  userEvent.type(getByLabelText(/type/i), 'asdflkjasdflkj');
+  userEvent.type(screen.getByLabelText(/type/i), 'asdflkjasdflkj');
 
-  expect(getByText('Sorry, no types match asdflkjasdflkj')).toBeVisible();
+  expect(
+    screen.getByText('Sorry, no types match asdflkjasdflkj'),
+  ).toBeVisible();
 });
 
 it('conditionally shows date published field', async () => {
-  const { queryByLabelText, rerender } = render(
+  const { rerender } = render(
     <TeamCreateOutputFormSharingCard
       {...props}
       documentType="Article"
       sharingStatus={'Network Only'}
     />,
   );
-  expect(queryByLabelText(/Date Published/i)).toBeNull();
+  expect(screen.queryByLabelText(/Date Published/i)).not.toBeInTheDocument();
 
   rerender(
     <TeamCreateOutputFormSharingCard
@@ -148,13 +146,13 @@ it('conditionally shows date published field', async () => {
       sharingStatus={'Public'}
     />,
   );
-  expect(queryByLabelText(/Date Published/i)).toBeVisible();
+  expect(screen.queryByLabelText(/Date Published/i)).toBeVisible();
 });
 
 it('triggers an on change for date published', async () => {
   const onChangeFn = jest.fn();
 
-  const { getByLabelText } = render(
+  render(
     <TeamCreateOutputFormSharingCard
       {...props}
       documentType="Article"
@@ -163,14 +161,12 @@ it('triggers an on change for date published', async () => {
     />,
   );
 
-  fireEvent.change(getByLabelText(/Date Published/i), {
-    target: { value: '2020-12-02' },
-  });
+  userEvent.type(screen.getByLabelText(/Date Published/i), '2020-12-02');
   expect(onChangeFn).toHaveBeenCalledWith(new Date('2020-12-02'));
 });
 
 it('shows the custom error message for date published', async () => {
-  const { getByLabelText, getByText } = render(
+  render(
     <TeamCreateOutputFormSharingCard
       {...props}
       documentType="Article"
@@ -178,15 +174,17 @@ it('shows the custom error message for date published', async () => {
       publishDate={startOfTomorrow()}
     />,
   );
+  screen.getByLabelText(/Date Published/i).click();
+  userEvent.tab();
 
-  fireEvent.focusOut(getByLabelText(/Date Published/i));
-
-  expect(getByText(/publish date cannot be greater than today/i)).toBeVisible();
+  expect(
+    screen.getByText(/publish date cannot be greater than today/i),
+  ).toBeVisible();
 });
 
 it('displays server side validation error for link and calls clears function when changed', async () => {
   const mockClearError = jest.fn();
-  const { getByLabelText, getByText } = render(
+  render(
     <TeamCreateOutputFormSharingCard
       {...props}
       link="http://example.com"
@@ -202,18 +200,18 @@ it('displays server side validation error for link and calls clears function whe
     />,
   );
   expect(
-    getByText(
+    screen.getByText(
       'A Research Output with this URL already exists. Please enter a different URL.',
     ),
   ).toBeVisible();
 
-  userEvent.type(getByLabelText(/URL/i), 'a');
+  userEvent.type(screen.getByLabelText(/URL/i), 'a');
   expect(mockClearError).toHaveBeenCalledWith('/link');
 });
 
 it('displays server side validation error for title and calls clears function when changed', async () => {
   const mockClearError = jest.fn();
-  const { getByLabelText, getByText } = render(
+  render(
     <TeamCreateOutputFormSharingCard
       {...props}
       title="Example"
@@ -229,11 +227,11 @@ it('displays server side validation error for title and calls clears function wh
     />,
   );
   expect(
-    getByText(
+    screen.getByText(
       'A Research Output with this title already exists. Please check if this is repeated and choose a different title.',
     ),
   ).toBeVisible();
 
-  userEvent.type(getByLabelText(/title/i), 'a');
+  userEvent.type(screen.getByLabelText(/title/i), 'a');
   expect(mockClearError).toHaveBeenCalledWith('/title');
 });

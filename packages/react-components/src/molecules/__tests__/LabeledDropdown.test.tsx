@@ -1,9 +1,8 @@
-import { render } from '@testing-library/react';
-
+import { render, screen } from '@testing-library/react';
 import LabeledDropdown from '../LabeledDropdown';
 
 it('renders a labeled dropdown, passing through props', () => {
-  const { getByLabelText, getByText } = render(
+  render(
     <LabeledDropdown
       title="Title"
       subtitle="Optional"
@@ -13,8 +12,8 @@ it('renders a labeled dropdown, passing through props', () => {
     />,
   );
 
-  expect(getByLabelText(/Title/i)).toBeVisible();
-  expect(getByText(/Description/i)).toBeVisible();
-  expect(getByLabelText(/Optional/i)).toBeVisible();
-  expect(getByLabelText(/Title/i)).toHaveValue('Value');
+  expect(screen.getByRole('textbox', { name: /Title/i })).toBeVisible();
+  expect(screen.getByRole('textbox', { name: /Description/i })).toBeVisible();
+  expect(screen.getByRole('textbox', { name: /Optional/i })).toBeVisible();
+  expect(screen.getByText('Value')).toBeVisible();
 });

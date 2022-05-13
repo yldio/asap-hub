@@ -1,9 +1,8 @@
-import { ComponentProps } from 'react';
-import { StaticRouter, MemoryRouter } from 'react-router-dom';
-import userEvent from '@testing-library/user-event';
-import { render, waitFor, fireEvent } from '@testing-library/react';
 import { createUserResponse } from '@asap-hub/fixtures';
-
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ComponentProps } from 'react';
+import { MemoryRouter, StaticRouter } from 'react-router-dom';
 import RoleModal from '../RoleModal';
 
 const props: ComponentProps<typeof RoleModal> = {
@@ -87,7 +86,7 @@ describe('User Role', () => {
   });
 
   it('disables the form elements while submitting', async () => {
-    const { getByText } = render(
+    render(
       <RoleModal
         {...props}
         researchInterests="researchInterests"
@@ -97,15 +96,14 @@ describe('User Role', () => {
       { wrapper: StaticRouter },
     );
 
-    userEvent.click(getByText(/save/i));
+    const saveButton = screen.getByRole('button', { name: /save/i });
+    userEvent.click(saveButton);
 
-    const form = getByText(/save/i).closest('form')!;
+    const form = saveButton.closest('form')!;
     expect(form.elements.length).toBeGreaterThan(1);
     [...form.elements].forEach((element) => expect(element).toBeDisabled());
 
-    await waitFor(() =>
-      expect(getByText(/save/i).closest('button')).toBeEnabled(),
-    );
+    await waitFor(() => expect(saveButton).toBeEnabled());
   });
 
   it('shows validation message for invalid research interests', async () => {

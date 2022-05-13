@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { Dropdown, Paragraph, Label, DropdownProps } from '../atoms';
+import { Dropdown, DropdownProps, Label, Paragraph } from '../atoms';
 import { lead } from '../colors';
 import { perRem } from '../pixels';
 

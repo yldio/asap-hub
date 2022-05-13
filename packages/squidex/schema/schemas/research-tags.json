@@ -23,7 +23,7 @@
         "properties": {
           "fieldType": "String",
           "minCharacters": 3,
-          "isUnique": true,
+          "isUnique": false,
           "inlineEditable": false,
           "contentType": "Unspecified",
           "editor": "Input",

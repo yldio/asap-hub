@@ -1,22 +1,77 @@
-import { EventResponse, ListEventResponse } from '@asap-hub/model';
-import { addHours } from 'date-fns';
+import {
+  EventResponse,
+  EventSpeakerUser,
+  ListEventResponse,
+  EventSpeaker,
+  TeamResponse,
+} from '@asap-hub/model';
+import { addHours, subHours } from 'date-fns';
 
 import { createCalendarResponse } from './calendars';
 import { createGroupResponse } from './groups';
 
+export const createSpeakerUserResponse = (itemIndex = 0): EventSpeakerUser => ({
+  id: `user-id-${itemIndex}`,
+  firstName: 'John',
+  lastName: 'Doe',
+  displayName: `John Doe ${itemIndex}`,
+});
+
+export const createSpeakerTeamResponse = (
+  itemIndex = 0,
+): Pick<TeamResponse, 'displayName' | 'id'> => ({
+  id: `team-id-${itemIndex}`,
+  displayName: `The team ${itemIndex}`,
+});
+
+export const createSpeakersResponse = (itemIndex = 0): EventSpeaker => ({
+  team: createSpeakerTeamResponse(itemIndex),
+  user: createSpeakerUserResponse(itemIndex),
+  role: `Genetics ${itemIndex}`,
+});
+
+const getSpeakers = (
+  numberOfSpeakers: number,
+  numberOfUnknownSpeakers: number,
+): EventSpeaker[] => {
+  const speakerList: EventSpeaker[] = [];
+
+  for (let index = 0; index < numberOfSpeakers; index += 1) {
+    speakerList.push(createSpeakersResponse(index));
+  }
+
+  for (let index = 0; index < numberOfUnknownSpeakers; index += 1) {
+    speakerList.push({
+      team: createSpeakerTeamResponse(index),
+    });
+  }
+
+  return speakerList;
+};
+
 interface FixtureOptions {
   meetingMaterials?: number;
+  numberOfSpeakers?: number;
+  numberOfUnknownSpeakers?: number;
+  isEventInThePast?: boolean;
 }
 
 export const createEventResponse = (
-  { meetingMaterials = 1 }: FixtureOptions = {},
+  {
+    meetingMaterials = 1,
+    numberOfSpeakers = 4,
+    numberOfUnknownSpeakers = 1,
+    isEventInThePast = false,
+  }: FixtureOptions = {},
   itemIndex = 0,
 ): EventResponse => ({
   id: `event-${itemIndex}`,
   calendar: createCalendarResponse(itemIndex),
   startDate: new Date().toISOString(),
   startDateTimeZone: 'Europe/London',
-  endDate: addHours(new Date(), 1).toISOString(),
+  endDate: isEventInThePast
+    ? subHours(new Date(), 2).toISOString()
+    : addHours(new Date(), 1).toISOString(),
   endDateTimeZone: 'Europe/London',
   group: createGroupResponse(),
   description: `Event ${itemIndex} description`,
@@ -33,39 +88,7 @@ export const createEventResponse = (
     title: `Material ${i + 1}`,
     url: `https://example.com/materials/${i}`,
   })),
-  speakers: [
-    {
-      team: {
-        id: 'team-id-1',
-        displayName: 'The team one',
-      },
-    },
-    {
-      team: {
-        id: 'team-id-2',
-        displayName: 'The team two',
-      },
-      user: {
-        id: 'user-id-2',
-        firstName: 'Johny',
-        lastName: 'Sims',
-        displayName: 'Johny Sims',
-      },
-    },
-    {
-      team: {
-        id: 'team-id-3',
-        displayName: 'The team three',
-      },
-      user: {
-        id: 'user-id-3',
-        firstName: 'Adam',
-        lastName: 'Brown',
-        displayName: 'Adam Brown',
-      },
-      role: 'Lead PI (Core Leadership)',
-    },
-  ],
+  speakers: getSpeakers(numberOfSpeakers, numberOfUnknownSpeakers),
 });
 
 export const createListEventResponse = (

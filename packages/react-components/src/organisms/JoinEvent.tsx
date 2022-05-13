@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
 import {
   MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT,
-  EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
   EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
 } from '@asap-hub/model';
-import { subHours, parseISO, addSeconds, addHours, subMinutes } from 'date-fns';
+import { subHours, parseISO, addSeconds, subMinutes } from 'date-fns';
 
-import { noop } from '../utils';
+import { noop, considerEndedAfter } from '../utils';
 import { Headline2, Paragraph, Anchor, Link } from '../atoms';
 import { alertIcon } from '../icons';
 import { layoutStyles } from '../text';
@@ -36,10 +35,6 @@ const JoinEvent: React.FC<JoinEventProps> = ({
     parseISO(startDate),
     EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
   );
-  const considerEndedAfter = addHours(
-    parseISO(endDate),
-    EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
-  );
 
   const startRefreshing = useDateHasPassed(startRefreshingAfter);
   const linkMissing =
@@ -47,7 +42,7 @@ const JoinEvent: React.FC<JoinEventProps> = ({
       addSeconds(startRefreshingAfter, 2 * REFRESH_INTERVAL_SECONDS),
     ) && !meetingLink;
   const hasStarted = useDateHasPassed(considerStartedAfter);
-  const hasEnded = useDateHasPassed(considerEndedAfter);
+  const hasEnded = useDateHasPassed(considerEndedAfter(endDate));
 
   useEffect(() => {
     const refreshInterval = globalThis.setInterval(() => {

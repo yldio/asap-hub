@@ -14,6 +14,7 @@ import {
   CalendarList,
   EventConversation,
 } from '../organisms';
+import SpeakerList from '../organisms/SpeakersList';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -26,6 +27,7 @@ const cardsStyles = css({
 type EventPageProps = ComponentProps<typeof EventInfo> &
   ComponentProps<typeof JoinEvent> &
   ComponentProps<typeof EventAbout> &
+  ComponentProps<typeof SpeakerList> &
   Pick<
     EventResponse,
     | 'lastModifiedDate'
@@ -57,6 +59,7 @@ const EventPage: React.FC<EventPageProps> = ({
             {formatDistance(new Date(), new Date(lastModifiedDate))} ago
           </small>
         </Paragraph>
+        {!!props.speakers.length && <SpeakerList {...props} />}
         {!hideMeetingLink && <JoinEvent {...props} />}
         <EventAbout {...props} />
       </Card>

@@ -706,6 +706,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+<<<<<<< HEAD
 "@asap-hub/gp2-frontend@workspace:apps/gp2-frontend":
   version: 0.0.0-use.local
   resolution: "@asap-hub/gp2-frontend@workspace:apps/gp2-frontend"
@@ -771,6 +772,54 @@ __metadata:
     use-deep-compare-effect: ^1.6.1
     uuid: ^8.3.2
     web-streams-polyfill: ^3.1.1
+=======
+"@asap-hub/gp2-components@workspace:*, @asap-hub/gp2-components@workspace:packages/gp2-components":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/gp2-components@workspace:packages/gp2-components"
+  dependencies:
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/react-components": "workspace:*"
+    "@asap-hub/react-context": "workspace:*"
+    "@asap-hub/routing": "workspace:*"
+    "@babel/core": ^7.14.2
+    "@babel/preset-react": ^7.13.13
+    "@babel/runtime-corejs3": ^7.14.0
+    "@emotion/babel-plugin": ^11.3.0
+    "@emotion/jest": ^11.3.0
+    "@emotion/react": ^11
+    "@testing-library/dom": ^7.31.0
+    "@testing-library/jest-dom": ^5.12.0
+    "@testing-library/react": ^11.2.6
+    "@testing-library/react-hooks": ^4.0.1
+    "@testing-library/user-event": ^12.8.3
+    "@types/asap-hub__assets": "workspace:*"
+    "@types/hast-util-sanitize": "workspace:*"
+    "@types/history": ^4.7.6
+    "@types/jest": ^26.0.23
+    "@types/react": ^17.0.5
+    "@types/react-dom": ^17.0.5
+    "@types/react-router-dom": ^5.1.7
+    "@types/react-router-hash-link": ^1.2.1
+    "@types/react-test-renderer": ^17.0.1
+    "@types/testing-library__jest-dom": ^5.9.5
+    "@types/testing-library__react": ^10.0.1
+    "@types/testing-library__react-hooks": ^3.4.1
+    "@types/uuid": ^8.3.0
+    core-js: ^3.12.1
+    emotion-normalize: ^11
+    history: ^4
+    react: ^17.0.2
+    react-dom: ^17.0.2
+    react-router-dom: ^5.2.0
+    react-test-renderer: ^17.0.2
+  peerDependencies:
+    "@asap-hub/react-context": "workspace:*"
+    "@emotion/react": ^11
+    history: ^4
+    react: ^17.0.2
+    react-dom: ^17.0.2
+    react-router-dom: ^5.2.0
+>>>>>>> 8e714fdd (navigation header gp2)
   languageName: unknown
   linkType: soft
 
@@ -1120,6 +1169,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/flags": "workspace:*"
+    "@asap-hub/gp2-components": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@asap-hub/react-context": "workspace:*"

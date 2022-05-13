@@ -1,7 +1,6 @@
 import { NavHashLink } from 'react-router-hash-link';
 import { css } from '@emotion/react';
 
-import { TextChildren } from '../text';
 import { useHasRouter } from '../routing';
 import { lead } from '../colors';
 import {
@@ -66,8 +65,7 @@ const disableStyles = css({
 interface NavigationLinkProps {
   readonly href: string;
   readonly enabled?: boolean;
-  readonly icon: JSX.Element;
-  readonly children: TextChildren;
+  readonly icon?: JSX.Element;
 }
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   href,

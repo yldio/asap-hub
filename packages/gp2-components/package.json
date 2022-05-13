@@ -1,0 +1,63 @@
+{
+  "name": "@asap-hub/gp2-components",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "14.15.x"
+  },
+  "module": "build/index.js",
+  "main": "build-cjs/index.js",
+  "types": "build/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build:babel": "../../scripts/build-babel.sh build",
+    "watch:babel": "../../scripts/build-babel.sh watch"
+  },
+  "peerDependencies": {
+    "@asap-hub/react-context": "workspace:*",
+    "@emotion/react": "^11",
+    "history": "^4",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.0"
+  },
+  "dependencies": {
+    "@asap-hub/react-components": "workspace:*",
+    "@asap-hub/routing": "workspace:*",
+    "@babel/runtime-corejs3": "^7.14.0",
+    "core-js": "^3.12.1",
+    "emotion-normalize": "^11"
+  },
+  "devDependencies": {
+    "@asap-hub/eslint-config-asap-hub": "workspace:*",
+    "@asap-hub/react-context": "workspace:*",
+    "@babel/core": "^7.14.2",
+    "@babel/preset-react": "^7.13.13",
+    "@emotion/babel-plugin": "^11.3.0",
+    "@emotion/jest": "^11.3.0",
+    "@emotion/react": "^11",
+    "@testing-library/dom": "^7.31.0",
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.6",
+    "@testing-library/react-hooks": "^4.0.1",
+    "@testing-library/user-event": "^12.8.3",
+    "@types/asap-hub__assets": "workspace:*",
+    "@types/hast-util-sanitize": "workspace:*",
+    "@types/history": "^4.7.6",
+    "@types/jest": "^26.0.23",
+    "@types/react": "^17.0.5",
+    "@types/react-dom": "^17.0.5",
+    "@types/react-router-dom": "^5.1.7",
+    "@types/react-router-hash-link": "^1.2.1",
+    "@types/react-test-renderer": "^17.0.1",
+    "@types/testing-library__jest-dom": "^5.9.5",
+    "@types/testing-library__react": "^10.0.1",
+    "@types/testing-library__react-hooks": "^3.4.1",
+    "@types/uuid": "^8.3.0",
+    "history": "^4",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.0",
+    "react-test-renderer": "^17.0.2"
+  }
+}

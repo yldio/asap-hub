@@ -136,6 +136,8 @@ describe('/research-outputs/ route', () => {
         authors,
         teams,
         methods,
+        organisms,
+        environments,
       } = getResearchOutputResponse();
       return {
         documentType,
@@ -149,6 +151,8 @@ describe('/research-outputs/ route', () => {
         description,
         tags,
         methods,
+        organisms,
+        environments,
         type: 'Software',
         labs: labs.map(({ id }) => id),
         authors: authors.map(({ id }) => ({ userId: id })),

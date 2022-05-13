@@ -100,6 +100,37 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
         },
       },
     ],
+    organisms: [
+      {
+        flatData: {
+          name: 'Drosphila',
+        },
+      },
+      {
+        flatData: {
+          name: 'Mouse',
+        },
+      },
+    ],
+    environments: [
+      {
+        flatData: {
+          name: 'In Vivo',
+        },
+      },
+      {
+        flatData: {
+          name: 'In Cellulo',
+        },
+      },
+    ],
+    subtype: [
+      {
+        flatData: {
+          name: 'Metabolite',
+        },
+      },
+    ],
   },
   referencingTeamsContents: [getSquidexGraphqlTeam({})],
 });
@@ -132,6 +163,9 @@ export const getResearchOutputResponse =
       { id: 'cd7be402-84d7-4d21-a360-82e2695f2dd9', name: 'mike' },
     ],
     methods: ['Activity Assay', 'RNA Single Cell'],
+    organisms: ['Drosphila', 'Mouse'],
+    environments: ['In Vivo', 'In Cellulo'],
+    subtype: 'Metabolite',
   });
 
 export const getListResearchOutputResponse =
@@ -197,4 +231,7 @@ export const getResearchOutputRequest = (): ResearchOutputPostRequest => ({
   labs: ['lab1'],
   publishDate: undefined,
   methods: ['Activity Assay'],
+  organisms: ['Rat'],
+  environments: ['In Vitro'],
+  subtype: 'Metabolite',
 });

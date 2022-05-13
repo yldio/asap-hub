@@ -16,6 +16,33 @@ export const getSquidexGraphqlResearchTags = (): NonNullable<
         entities: ['Research Output'],
       },
     },
+    {
+      id: 'd77a7607-7b9a-4ef1-99ee-c389b33ea95b',
+      flatData: {
+        name: 'Rat',
+        category: 'Organism',
+        types: ['Electrophysiology', 'Microscopy'],
+        entities: ['Research Output'],
+      },
+    },
+    {
+      id: '8a936e45-6d5e-42a6-8acd-b849ab10f3f8',
+      flatData: {
+        name: 'In Vitro',
+        category: 'Environment',
+        types: ['Proposal', 'Report'],
+        entities: ['Research Output'],
+      },
+    },
+    {
+      id: 'dd0da578-5573-4758-b1db-43a078f5076e',
+      flatData: {
+        name: 'Metabolite',
+        category: 'Subtype',
+        types: ['Microscopy', 'Report'],
+        entities: ['Research Output'],
+      },
+    },
   ],
 });
 

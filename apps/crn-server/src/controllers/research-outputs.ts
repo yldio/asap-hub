@@ -3,6 +3,7 @@ import {
   ListResearchOutputResponse,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
+  ResearchTagCategory,
   ValidationErrorResponse,
   VALIDATION_ERROR_MESSAGE,
 } from '@asap-hub/model';
@@ -166,36 +167,52 @@ export default class ResearchOutputs implements ResearchOutputController {
         FetchResearchTagsQuery,
         FetchResearchTagsQueryVariables
       >(FETCH_RESEARCH_TAGS, {
-        top: 100,
+        top: 200,
         skip: 0,
+        filter: `data/entities/iv eq 'Research Output'`,
       });
 
-    const researchOutputMethods = researchOutputData.methods.map((method) => {
-      const methodTags = queryResearchTagsContentsWithTotal?.items?.filter(
-        (tag) => tag.flatData.name === method,
-      );
+    const researchTags = queryResearchTagsContentsWithTotal?.items || [];
 
-      if (methodTags && methodTags.length > 0 && methodTags[0]) {
-        return methodTags[0].id;
-      }
+    const methods = mapResearchTags(
+      researchTags,
+      'Method',
+      researchOutputData.methods,
+      'methods',
+    );
 
-      throw Boom.badRequest('Validation error', [
-        {
-          instancePath: '/methods',
-          keyword: 'invalid',
-          message: 'method does not exist',
-          params: {
-            type: 'string',
-          },
-          schemaPath: '#/properties/method/invalid',
-        },
-      ]);
-    });
+    const organisms = mapResearchTags(
+      researchTags,
+      'Organism',
+      researchOutputData.organisms,
+      'organisms',
+    );
+
+    const environments = mapResearchTags(
+      researchTags,
+      'Environment',
+      researchOutputData.environments,
+      'environments',
+    );
+
+    const subtype = researchOutputData.subtype
+      ? [
+          mapResearchTag(
+            researchTags,
+            'Subtype',
+            researchOutputData.subtype,
+            'subtype',
+          ),
+        ]
+      : [];
 
     const { id: researchOutputId } = await this.createResearchOutput({
       authors: researchOutputAuthors,
       ...researchOutputData,
-      methods: researchOutputMethods,
+      methods,
+      organisms,
+      environments,
+      subtype,
     });
 
     await Promise.all(
@@ -211,9 +228,10 @@ export default class ResearchOutputs implements ResearchOutputController {
     authors,
     createdBy,
     ...researchOutputData
-  }: Omit<ResearchOutputPostRequest, 'teams' | 'authors'> & {
+  }: Omit<ResearchOutputPostRequest, 'teams' | 'authors' | 'subtype'> & {
     authors: string[];
     createdBy: string;
+    subtype: string[];
   }) {
     const { usedInPublication, ...researchOutput } = parseToSquidex({
       ...researchOutputData,
@@ -376,4 +394,49 @@ const makeODataFilter = (filter?: ResearchOutputFilter): string => {
   }
 
   return '';
+};
+
+type ResearchTagsResponse = NonNullable<
+  NonNullable<
+    FetchResearchTagsQuery['queryResearchTagsContentsWithTotal']
+  >['items']
+>;
+
+const mapResearchTags = (
+  researchTags: ResearchTagsResponse,
+  category: ResearchTagCategory,
+  values: string[],
+  instancePath: string,
+): string[] =>
+  values.map((singleValue) =>
+    mapResearchTag(researchTags, category, singleValue, instancePath),
+  );
+
+const mapResearchTag = (
+  researchTags: ResearchTagsResponse,
+  category: ResearchTagCategory,
+  value: string,
+  instancePath: string,
+): string => {
+  const filteredTags = researchTags.filter(
+    (tag) => tag.flatData.name === value && tag.flatData.category === category,
+  );
+
+  if (filteredTags && filteredTags.length > 0 && filteredTags[0]) {
+    return filteredTags[0].id;
+  }
+
+  const categoryLowercase = category.toLocaleLowerCase();
+
+  throw Boom.badRequest('Validation error', [
+    {
+      instancePath,
+      keyword: 'invalid',
+      message: `${value} does not exist`,
+      params: {
+        type: 'string',
+      },
+      schemaPath: `#/properties/${categoryLowercase}/invalid`,
+    },
+  ]);
 };

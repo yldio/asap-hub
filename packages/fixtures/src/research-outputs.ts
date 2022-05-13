@@ -34,6 +34,9 @@ const researchOutputResponse: Omit<
   contactEmails: [],
   labs: [],
   methods: ['Activity Assay', 'RNA Single Cell'],
+  organisms: ['Rat', 'C. Elegans'],
+  environments: ['In Vivo', 'In Cellulo'],
+  subtype: 'Metabolite',
 };
 
 export const createResearchOutputResponse = (

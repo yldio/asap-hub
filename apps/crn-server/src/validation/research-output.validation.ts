@@ -56,6 +56,18 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         type: 'array',
         items: { type: 'string' },
       },
+      organisms: {
+        type: 'array',
+        items: { type: 'string' },
+      },
+      environments: {
+        type: 'array',
+        items: { type: 'string' },
+      },
+      subtype: {
+        type: 'string',
+        nullable: true,
+      },
       link: {
         type: 'string',
         nullable: true,

@@ -13,8 +13,12 @@ export const researchTagContentQueryFragment = gql`
 `;
 
 export const FETCH_RESEARCH_TAGS = gql`
-  query FetchResearchTags($top: Int, $skip: Int) {
-    queryResearchTagsContentsWithTotal(top: $top, skip: $skip) {
+  query FetchResearchTags($top: Int, $skip: Int, $filter: String) {
+    queryResearchTagsContentsWithTotal(
+      top: $top
+      skip: $skip
+      filter: $filter
+    ) {
       total
       items {
         ...ResearchTagContent

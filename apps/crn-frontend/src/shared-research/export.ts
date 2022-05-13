@@ -80,6 +80,15 @@ export const researchOutputToCSV = (
     .map((item) => item)
     .sort(caseInsensitive)
     .join(','),
+  organisms: output.organisms
+    .map((item) => item)
+    .sort(caseInsensitive)
+    .join(','),
+  environments: output.environments
+    .map((item) => item)
+    .sort(caseInsensitive)
+    .join(','),
+  subtype: output.subtype,
 });
 
 export const createCsvFileStream = (

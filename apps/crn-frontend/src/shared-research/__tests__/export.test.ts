@@ -77,6 +77,9 @@ describe('researchOutputToCSV', () => {
       tags: expect.anything(),
       teams: expect.anything(),
       methods: 'Activity Assay,RNA Single Cell',
+      organisms: 'C. Elegans,Rat',
+      environments: 'In Cellulo,In Vivo',
+      subtype: 'Metabolite',
     });
   });
   it('flattens authors, preserves order, displays orcid and external status when available', () => {

@@ -1,7 +1,7 @@
 import { ListResearchTagResponse } from '@asap-hub/model';
 import { Response, Router } from 'express';
 import { ResearchTagController } from '../controllers/research-tags';
-import { validateFetchPaginationOptions } from '../validation';
+import { validateResearchTagFetchPaginationOptions } from '../validation/research-tag.validation';
 
 export const researchTagsRouteFactory = (
   researchTagController: ResearchTagController,
@@ -13,7 +13,7 @@ export const researchTagsRouteFactory = (
     async (req, res: Response<ListResearchTagResponse>) => {
       const { query } = req;
 
-      const options = validateFetchPaginationOptions(query);
+      const options = validateResearchTagFetchPaginationOptions(query);
 
       const result = await researchTagController.fetch(options);
 

@@ -121,6 +121,8 @@ describe('TeamOutput', () => {
           },
         ],
         methods: [],
+        organisms: [],
+        environments: [],
       },
       expect.anything(),
     );

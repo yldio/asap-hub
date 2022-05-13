@@ -1,12 +1,12 @@
 import { createContext, useContext } from 'react';
 
 type ResearchOutputPermissions = {
-  canCreate: boolean;
+  canCreateUpdate: boolean;
 };
 
 export const ResearchOutputPermissionsContext =
   createContext<ResearchOutputPermissions>({
-    canCreate: false,
+    canCreateUpdate: false,
   });
 
 export const useResearchOutputPermissionsContext =

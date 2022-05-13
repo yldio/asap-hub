@@ -1,6 +1,7 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 
 import SharedResearchOutput from '../SharedResearchOutput';
 
@@ -21,6 +22,25 @@ describe('Grant Documents', () => {
     expect(getByText(/grant document/i)).toBeVisible();
     expect(getByText(/title/i, { selector: 'h1' })).toBeVisible();
     expect(getByText(/content/i)).toBeVisible();
+  });
+
+  it('displays edit button when user has permission', () => {
+    const { queryByTitle, rerender } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{ canCreateUpdate: false }}
+      >
+        <SharedResearchOutput {...props} />,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+    expect(queryByTitle('Edit')).toBeNull();
+    rerender(
+      <ResearchOutputPermissionsContext.Provider
+        value={{ canCreateUpdate: true }}
+      >
+        <SharedResearchOutput {...props} />,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+    expect(queryByTitle('Edit')).toBeInTheDocument();
   });
 
   it('handles tags and separate RTF description', () => {

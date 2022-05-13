@@ -5,7 +5,7 @@ import {
   VALIDATION_ERROR_MESSAGE,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { hasCreateResearchOutputPermissions } from '@asap-hub/validation';
+import { hasCreateUpdateResearchOutputPermissions } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import { ResearchOutputController } from '../controllers/research-outputs';
@@ -54,7 +54,10 @@ export const researchOutputRouteFactory = (
 
     if (
       !loggedInUser ||
-      !hasCreateResearchOutputPermissions(loggedInUser, createRequest.teams)
+      !hasCreateUpdateResearchOutputPermissions(
+        loggedInUser,
+        createRequest.teams,
+      )
     ) {
       throw Boom.forbidden();
     }

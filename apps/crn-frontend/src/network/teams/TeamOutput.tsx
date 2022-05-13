@@ -65,7 +65,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   const team = useTeamById(teamId);
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
 
-  const { canCreate } = useContext(ResearchOutputPermissionsContext);
+  const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
 
   const createResearchOutput = usePostTeamResearchOutput();
 
@@ -73,7 +73,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
 
-  if (canCreate && team) {
+  if (canCreateUpdate && team) {
     return (
       <Frame title="Share Research Output">
         <TeamCreateOutputPage

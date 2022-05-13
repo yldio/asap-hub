@@ -6,7 +6,7 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 
-import { useCanCreateResearchOutput, useTeamById } from './state';
+import { useCanCreateUpdateResearchOutput, useTeamById } from './state';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -31,7 +31,7 @@ const TeamProfile: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
   const { teamId } = useRouteParams(route);
 
-  const canCreate = useCanCreateResearchOutput(teamId);
+  const canCreateUpdate = useCanCreateUpdateResearchOutput(teamId);
 
   const team = useTeamById(teamId);
 
@@ -44,7 +44,7 @@ const TeamProfile: FC<Record<string, never>> = () => {
 
   if (team) {
     return (
-      <ResearchOutputPermissionsContext.Provider value={{ canCreate }}>
+      <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
         <Frame title={team.displayName}>
           <Switch>
             <Route path={path + route({ teamId }).createOutput.template}>

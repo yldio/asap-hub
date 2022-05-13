@@ -1,4 +1,10 @@
 import {
+  BackendError,
+  clearAjvErrorForPath,
+  Frame,
+  validationErrorsAreSupported,
+} from '@asap-hub/frontend-utils';
+import {
   isValidationErrorResponse,
   ResearchOutputDocumentType,
   ValidationErrorResponse,
@@ -11,13 +17,6 @@ import {
   useRouteParams,
 } from '@asap-hub/routing';
 import React, { useContext, useState } from 'react';
-import {
-  BackendError,
-  clearAjvErrorForPath,
-  validationErrorsAreSupported,
-  Frame,
-} from '@asap-hub/frontend-utils';
-
 import researchSuggestions from './research-suggestions';
 import {
   useAuthorSuggestions,

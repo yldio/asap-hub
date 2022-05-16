@@ -312,3 +312,47 @@ it('clears the field in red when rerendered correctly', async () => {
     expect(findParentWithStyle(input, 'color')?.color).not.toBe(ember.rgb),
   );
 });
+
+it('can clear the value when required is false', async () => {
+  const handleChange = jest.fn();
+  render(
+    <Dropdown
+      placeholder="Select"
+      options={[{ value: 'LGW', label: 'Gatwick' }]}
+      required={false}
+      value=""
+      id="test"
+      onChange={handleChange}
+    />,
+  );
+
+  const input = screen.getByRole('textbox', { hidden: false });
+  userEvent.click(input);
+  userEvent.click(screen.getByText('Gatwick'));
+  expect(handleChange).toHaveBeenCalledWith('LGW');
+
+  userEvent.clear(input);
+  expect(handleChange).toBeCalledTimes(2);
+  expect(handleChange).toHaveBeenCalledWith(undefined);
+});
+it('cannot clear the value when required is true', async () => {
+  const handleChange = jest.fn();
+  render(
+    <Dropdown
+      placeholder="Select"
+      options={[{ value: 'LGW', label: 'Gatwick' }]}
+      required={true}
+      value=""
+      id="test"
+      onChange={handleChange}
+    />,
+  );
+
+  const input = screen.getByRole('textbox', { hidden: false });
+  userEvent.click(input);
+  userEvent.click(screen.getByText('Gatwick'));
+  expect(handleChange).toHaveBeenCalledWith('LGW');
+
+  userEvent.clear(input);
+  expect(handleChange).toBeCalledTimes(1);
+});

@@ -89,6 +89,7 @@ export default function Dropdown<V extends string>({
         required={required}
         disabled={!enabled}
         hidden={true}
+        onChange={noop}
       />
 
       <div css={validationMessageStyles}>{validationMessage}</div>

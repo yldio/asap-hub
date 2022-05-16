@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { FC, useEffect, useMemo } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef } from 'react';
 import Select, { ControlProps, OptionTypeBase } from 'react-select';
 import { v4 as uuidV4 } from 'uuid';
 import { useValidation, validationMessageStyles } from '../form';
@@ -52,11 +52,18 @@ export default function Dropdown<V extends string>({
       getValidationMessage,
     );
 
-  useEffect(() => {
-    if (value !== '') {
+  const initialRender = useRef(true);
+  const checkValidation = useCallback(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+    } else {
       validate();
     }
-  }, [value, validate]);
+  }, []);
+
+  useEffect(() => {
+    checkValidation();
+  }, [value, checkValidation]);
 
   const validOptions = useMemo(
     () => options.filter((option) => option.value !== ''),
@@ -79,7 +86,7 @@ export default function Dropdown<V extends string>({
         noOptionsMessage={noOptionsMessage}
         tabSelectsValue={false}
         autoComplete={uuidV4()}
-        onBlur={validate}
+        onBlur={checkValidation}
       />
       <input
         {...validationTargetProps}

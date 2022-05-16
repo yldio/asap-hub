@@ -128,19 +128,23 @@ it('is funded and publication are both yes, then the none option is removed', as
 describe('on submit', () => {
   let history!: History;
   const id = '42';
+  const saveFn = jest.fn();
+  const getResearchTags = jest.fn();
+  const getLabSuggestions = jest.fn();
+  const getAuthorSuggestions = jest.fn();
+
   beforeEach(() => {
     history = createMemoryHistory();
+    saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
+    getResearchTags.mockResolvedValue([]);
+    getLabSuggestions.mockResolvedValue([]);
+    getAuthorSuggestions.mockResolvedValue([]);
   });
-  let saveFn = jest.fn(() => promise);
-  let getResearchTags = jest.fn().mockResolvedValue([]);
+
   afterEach(() => {
     jest.resetAllMocks();
-    saveFn = jest.fn(() => promise);
-    getResearchTags = jest.fn().mockResolvedValue([]);
   });
-  const getLabSuggestions = jest.fn().mockResolvedValue([]);
-  const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
-  const promise = Promise.resolve({ id } as ResearchOutputResponse);
+
   const expectedRequest: ResearchOutputPostRequest = {
     documentType: 'Article',
     doi: '10.1234',

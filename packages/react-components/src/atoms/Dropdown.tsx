@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { FC, useCallback, useEffect, useRef } from 'react';
+import { FC, useEffect, useMemo, useRef } from 'react';
 import Select, { ControlProps, OptionTypeBase } from 'react-select';
 import { v4 as uuidV4 } from 'uuid';
 import { useValidation, validationMessageStyles } from '../form';
@@ -9,7 +9,6 @@ import { noop } from '../utils';
 
 const containerStyles = css({
   flexBasis: '100%',
-  position: 'relative',
 });
 const DropdownIndicator: FC = () => dropdownChevronIcon;
 const CrossIcon: FC = () => dropdownCrossIcon;
@@ -54,16 +53,18 @@ export default function Dropdown<V extends string>({
     );
 
   const initialRender = useRef(true);
-  const useValidate = useCallback(() => {
+  useEffect(() => {
     if (initialRender.current) {
       initialRender.current = false;
     } else {
       validate();
     }
-  }, [validate]);
-  useEffect(useValidate, [useValidate]);
+  }, [value]);
 
-  const validOptions = options.filter((option) => option.value !== '');
+  const validOptions = useMemo(
+    () => options.filter((option) => option.value !== ''),
+    [options],
+  );
   return (
     <div css={containerStyles}>
       <Select<OptionTypeBase>
@@ -88,7 +89,6 @@ export default function Dropdown<V extends string>({
         tabIndex={-1}
         autoComplete="off"
         value={value}
-        onChange={noop}
         required={required}
         disabled={!enabled}
         hidden={true}

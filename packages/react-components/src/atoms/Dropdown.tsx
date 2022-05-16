@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { FC, useEffect, useMemo, useRef } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import Select, { ControlProps, OptionTypeBase } from 'react-select';
 import { v4 as uuidV4 } from 'uuid';
 import { useValidation, validationMessageStyles } from '../form';
@@ -52,14 +52,11 @@ export default function Dropdown<V extends string>({
       getValidationMessage,
     );
 
-  const initialRender = useRef(true);
   useEffect(() => {
-    if (initialRender.current) {
-      initialRender.current = false;
-    } else {
+    if (value !== '') {
       validate();
     }
-  }, [value]);
+  }, [value, validate]);
 
   const validOptions = useMemo(
     () => options.filter((option) => option.value !== ''),

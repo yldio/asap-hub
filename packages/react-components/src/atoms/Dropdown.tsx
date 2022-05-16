@@ -59,6 +59,7 @@ export default function Dropdown<V extends string>({
     } else {
       validate();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

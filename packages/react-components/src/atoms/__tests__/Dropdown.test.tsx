@@ -234,7 +234,9 @@ it('shows an error message when required field not filled', () => {
   userEvent.click(input);
   userEvent.tab();
 
-  expect(screen.getByText('Please select something')).toBeVisible();
+  waitFor(() =>
+    expect(screen.getByText('Please select something')).toBeVisible(),
+  );
 });
 
 it('clears invalid values, when it looses focus', async () => {

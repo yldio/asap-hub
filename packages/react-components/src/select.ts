@@ -1,28 +1,27 @@
+import { CSSObject } from '@emotion/serialize';
 import { ComponentProps } from 'react';
 import Select, { StylesConfig } from 'react-select';
-import { CSSObject } from '@emotion/serialize';
-
 import { ellipsisStyles } from './atoms/Ellipsis';
+import { MultiSelectOptionsType } from './atoms/MultiSelect';
 import {
-  ember,
-  rose,
-  lead,
-  silver,
-  tin,
-  steel,
-  mint,
-  pine,
   charcoal,
+  ember,
+  lead,
+  mint,
   paper,
+  pine,
+  rose,
+  silver,
+  steel,
+  tin,
 } from './colors';
 import {
-  styles,
-  indicatorPadding,
   borderWidth,
+  indicatorPadding,
   paddingLeftRight,
+  styles,
 } from './form';
-import { perRem, lineHeight } from './pixels';
-import { MultiSelectOptionsType } from './atoms/MultiSelect';
+import { lineHeight, perRem } from './pixels';
 
 export interface Option<V extends string> {
   value: V;
@@ -47,7 +46,7 @@ const baseSelectStyles = {
     },
   }),
   indicatorSeparator: () => ({
-    padding: `0 ${3 / perRem}em`,
+    padding: `0 ${6 / perRem}em`,
   }),
   indicatorsContainer: (provided: CSSObject) => ({
     ...provided,

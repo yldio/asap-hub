@@ -193,11 +193,14 @@ export default class ResearchOutputs implements ResearchOutputController {
     researchOutputId: string,
     { teams, authors = [], ...researchOutputData }: ResearchOutputUpdateData,
   ): Promise<Partial<ResearchOutputResponse>> {
-    await this.validateResearchOutputUniques({
-      ...researchOutputData,
-      authors,
-      teams,
-    });
+    await this.validateResearchOutputUniques(
+      {
+        ...researchOutputData,
+        authors,
+        teams,
+      },
+      researchOutputId,
+    );
 
     const researchOutputAuthors = await Promise.all(
       authors.map((author) => this.associateResearchOutputToAuthors(author)),
@@ -285,6 +288,7 @@ export default class ResearchOutputs implements ResearchOutputController {
 
   private async validateResearchOutputUniques(
     researchOutputData: ResearchOutputCreateData | ResearchOutputUpdateData,
+    resarchOutputId?: string,
   ): Promise<void> {
     const isError = (
       error: ValidationErrorResponse['data'][0] | null,
@@ -292,8 +296,8 @@ export default class ResearchOutputs implements ResearchOutputController {
 
     const errors = (
       await Promise.all([
-        this.validateTitleUniqueness(researchOutputData),
-        this.validateLinkUniqueness(researchOutputData),
+        this.validateTitleUniqueness(researchOutputData, resarchOutputId),
+        this.validateLinkUniqueness(researchOutputData, resarchOutputId),
       ])
     ).filter(isError);
 
@@ -309,57 +313,63 @@ export default class ResearchOutputs implements ResearchOutputController {
 
   private async validateTitleUniqueness(
     researchOutputData: ResearchOutputCreateData | ResearchOutputUpdateData,
+    researchOutputId?: string,
   ): Promise<ValidationErrorResponse['data'][0] | null> {
-    if (
-      (
-        await this.fetch({
-          filter: {
-            documentType: researchOutputData.documentType,
-            title: sanitiseForSquidex(researchOutputData.title),
-          },
-          includeDrafts: true,
-        })
-      ).total > 0
-    ) {
-      return {
-        instancePath: '/title',
-        keyword: 'unique',
-        message: 'must be unique',
-        params: {
-          type: 'string',
-        },
-        schemaPath: '#/properties/title/unique',
-      };
+    const result = await this.fetch({
+      filter: {
+        documentType: researchOutputData.documentType,
+        title: sanitiseForSquidex(researchOutputData.title),
+      },
+      includeDrafts: true,
+    });
+
+    if (result.total === 0) {
+      return null;
     }
 
-    return null;
+    if (result.total === 1 && result.items[0]?.id === researchOutputId) {
+      return null;
+    }
+
+    return {
+      instancePath: '/title',
+      keyword: 'unique',
+      message: 'must be unique',
+      params: {
+        type: 'string',
+      },
+      schemaPath: '#/properties/title/unique',
+    };
   }
 
   private async validateLinkUniqueness(
     researchOutputData: ResearchOutputCreateData | ResearchOutputUpdateData,
+    researchOutputId?: string,
   ): Promise<ValidationErrorResponse['data'][0] | null> {
-    if (
-      (
-        await this.fetch({
-          filter: {
-            link: sanitiseForSquidex(researchOutputData.link || ''),
-          },
-          includeDrafts: true,
-        })
-      ).total > 0
-    ) {
-      return {
-        instancePath: '/link',
-        keyword: 'unique',
-        message: 'must be unique',
-        params: {
-          type: 'string',
-        },
-        schemaPath: '#/properties/link/unique',
-      };
+    const result = await this.fetch({
+      filter: {
+        link: sanitiseForSquidex(researchOutputData.link || ''),
+      },
+      includeDrafts: true,
+    });
+
+    if (result.total === 0) {
+      return null;
     }
 
-    return null;
+    if (result.total === 1 && result.items[0]?.id === researchOutputId) {
+      return null;
+    }
+
+    return {
+      instancePath: '/link',
+      keyword: 'unique',
+      message: 'must be unique',
+      params: {
+        type: 'string',
+      },
+      schemaPath: '#/properties/link/unique',
+    };
   }
 
   private async associateResearchOutputToTeam(

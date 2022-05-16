@@ -762,13 +762,14 @@ describe('ResearchOutputs controller', () => {
       nock.cleanAll();
     });
 
+    const squidexResearchOutputEmptyGraphqlResponse: FetchResearchOutputsQuery =
+      {
+        queryResearchOutputsContentsWithTotal: null,
+      };
+    const squidexResearchTagsGraphqlResponse =
+      getSquidexResearchTagsGraphqlResponse();
+
     beforeEach(() => {
-      const squidexResearchOutputEmptyGraphqlResponse: FetchResearchOutputsQuery =
-        {
-          queryResearchOutputsContentsWithTotal: null,
-        };
-      const squidexResearchTagsGraphqlResponse =
-        getSquidexResearchTagsGraphqlResponse();
       const mockResponse = async (query: DocumentNode | string) => {
         if (print(query as DocumentNode) === print(FETCH_RESEARCH_OUTPUTS)) {
           return squidexResearchOutputEmptyGraphqlResponse;
@@ -1209,6 +1210,88 @@ describe('ResearchOutputs controller', () => {
         ).rejects.toThrow(GenericError);
       });
 
+      test('Should throw error when a different research output with the same type and title already exists', async () => {
+        const squidexGraphqlEmptyResponse = {
+          queryResearchOutputsContentsWithTotal: null,
+        };
+        const squidexGraphqlResponse =
+          getSquidexResearchOutputsGraphqlResponse();
+        squidexGraphqlClientMock.request
+          .mockResolvedValueOnce(squidexGraphqlResponse)
+          .mockResolvedValueOnce(squidexGraphqlEmptyResponse);
+        const researchOutputRequest = getResearchOutputUpdateData();
+
+        await expect(
+          researchOutputs.update(researchOutputId, researchOutputRequest),
+        ).rejects.toThrow(
+          expect.objectContaining({
+            data: [
+              {
+                instancePath: '/title',
+                keyword: 'unique',
+                message: 'must be unique',
+                params: {
+                  type: 'string',
+                },
+                schemaPath: '#/properties/title/unique',
+              },
+            ],
+          }),
+        );
+      });
+
+      test('Should update the research output when the only other record with the same type and title is the research output that is being updated', async () => {
+        const squidexResearchOutputsGraphqlResponse =
+          getSquidexResearchOutputsGraphqlResponse();
+        const mockResponse = async (query: DocumentNode | string) => {
+          if (print(query as DocumentNode) === print(FETCH_RESEARCH_OUTPUTS)) {
+            return squidexResearchOutputsGraphqlResponse;
+          }
+
+          if (print(query as DocumentNode) === print(FETCH_RESEARCH_TAGS)) {
+            return squidexResearchTagsGraphqlResponse;
+          }
+
+          if (print(query as DocumentNode) === print(FETCH_RESEARCH_OUTPUT)) {
+            return getSquidexResearchOutputGraphqlResponse();
+          }
+          throw new Error('Unexpected query');
+        };
+        squidexGraphqlClientMock.request.mockImplementation(mockResponse);
+
+        const researchOutputUpdateData = getResearchOutputUpdateData();
+        const teamId = researchOutputUpdateData.teams[0];
+
+        const existingResearchOutputId =
+          squidexResearchOutputsGraphqlResponse.queryResearchOutputsContentsWithTotal!
+            .items![0]!.id;
+
+        nock(config.baseUrl)
+          .patch(
+            `/api/content/${config.appName}/research-outputs/${existingResearchOutputId}`,
+            {
+              ...getRestResearchOutputUpdateData(),
+              updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
+            },
+          )
+          .reply(201, { id: existingResearchOutputId })
+          .get(`/api/content/${config.appName}/teams/${teamId}`)
+          .matchHeader('X-Unpublished', `true`)
+          .reply(200, { data: { id: teamId, outputs: { iv: ['output-1'] } } })
+          .patch(`/api/content/${config.appName}/teams/${teamId}`, {
+            outputs: { iv: ['output-1', existingResearchOutputId] },
+          })
+          .reply(200);
+
+        const result = await researchOutputs.update(
+          existingResearchOutputId,
+          researchOutputUpdateData,
+        );
+
+        const expectedResult = getResearchOutputResponse();
+        expect(result).toEqual(expectedResult);
+      });
+
       test('Should throw a validation error when a research output with the same type and title and link already exists', async () => {
         const squidexGraphqlResponse =
           getSquidexResearchOutputsGraphqlResponse();
@@ -1444,36 +1527,6 @@ describe('ResearchOutputs controller', () => {
           {
             includeDrafts: true,
           },
-        );
-      });
-
-      test('Should throw error when a research output with the same type and title already exists', async () => {
-        const squidexGraphqlEmptyResponse = {
-          queryResearchOutputsContentsWithTotal: null,
-        };
-        const squidexGraphqlResponse =
-          getSquidexResearchOutputsGraphqlResponse();
-        squidexGraphqlClientMock.request
-          .mockResolvedValueOnce(squidexGraphqlResponse)
-          .mockResolvedValueOnce(squidexGraphqlEmptyResponse);
-        const researchOutputRequest = getResearchOutputUpdateData();
-
-        await expect(
-          researchOutputs.update(researchOutputId, researchOutputRequest),
-        ).rejects.toThrow(
-          expect.objectContaining({
-            data: [
-              {
-                instancePath: '/title',
-                keyword: 'unique',
-                message: 'must be unique',
-                params: {
-                  type: 'string',
-                },
-                schemaPath: '#/properties/title/unique',
-              },
-            ],
-          }),
         );
       });
     });

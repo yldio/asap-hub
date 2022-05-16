@@ -4,12 +4,13 @@ import {
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
+  ResearchTagResponse,
   TeamResponse,
 } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import { ComponentProps, useState } from 'react';
+import { ComponentProps, useEffect, useState } from 'react';
 import { Button } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 import { usePushFromHere } from '../routing';
@@ -72,6 +73,7 @@ type TeamCreateOutputFormProps = Pick<
     ) => Promise<ResearchOutputResponse | void>;
     documentType: ResearchOutputDocumentType;
     team: TeamResponse;
+    getResearchTags: (type: string) => Promise<ResearchTagResponse[]>;
   };
 
 const identifierTypeToFieldName: Record<
@@ -108,6 +110,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
+  getResearchTags,
   team,
   serverValidationErrors,
   clearServerValidationError,
@@ -149,6 +152,22 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
     useState<ResearchOutputIdentifierType>(ResearchOutputIdentifierType.Empty);
   const [identifier, setIdentifier] = useState<string>('');
 
+  const [researchTags, setResearchTags] = useState<ResearchTagResponse[]>([]);
+  const [methods, setMethods] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (type === '') {
+      setResearchTags([]);
+      return;
+    }
+
+    getResearchTags(type).then(setResearchTags);
+  }, [getResearchTags, type]);
+
+  useEffect(() => {
+    setMethods([]);
+  }, [type, setMethods]);
+
   return (
     <Form<ResearchOutputResponse>
       serverErrors={serverValidationErrors}
@@ -160,6 +179,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         type !== '' ||
         labs.length !== 0 ||
         authors.length !== 0 ||
+        methods.length !== 0 ||
         identifierType !== ResearchOutputIdentifierType.Empty ||
         identifier !== '' ||
         labCatalogNumber !== '' ||
@@ -209,7 +229,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
               ? labCatalogNumber
               : undefined,
           addedDate: new Date().toISOString(),
-          methods: [],
+          methods,
           organisms: [],
           environments: [],
         });
@@ -242,6 +262,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           <TeamCreateOutputExtraInformationCard
             documentType={documentType}
             isSaving={isSaving}
+            researchTags={researchTags}
             tagSuggestions={tagSuggestions}
             tags={tags}
             onChangeTags={setTags}
@@ -256,6 +277,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             }
             labCatalogNumber={labCatalogNumber}
             onChangeLabCatalogNumber={setLabCatalogNumber}
+            methods={methods}
+            onChangeMethods={setMethods}
           />
           <TeamCreateOutputContributorsCard
             isSaving={isSaving}

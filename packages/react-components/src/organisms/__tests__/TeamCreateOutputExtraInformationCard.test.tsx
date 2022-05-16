@@ -8,7 +8,8 @@ const props: ComponentProps<typeof TeamCreateOutputExtraInformationCard> = {
   isSaving: false,
   tagSuggestions: [],
   tags: [],
-
+  methods: [],
+  researchTags: [],
   documentType: 'Article',
   identifierRequired: false,
 };
@@ -66,4 +67,33 @@ it('should show lab catalogue number for lab resources', () => {
     />,
   );
   expect(queryByLabelText(/Catalog Number/i)).toBeVisible();
+});
+
+it('should hide methods when there is no suggestions', () => {
+  const { queryByLabelText } = render(
+    <TeamCreateOutputExtraInformationCard {...props} />,
+  );
+  expect(queryByLabelText(/Methods/i)).toBeNull();
+});
+
+it('should trigger an onChange event when a method is selected', () => {
+  const mockOnChange = jest.fn();
+  const { getByText, getByLabelText } = render(
+    <TeamCreateOutputExtraInformationCard
+      {...props}
+      researchTags={[
+        {
+          id: '1234',
+          name: 'Activity Assay',
+          category: 'Method',
+          types: ['Protein Data', 'Assay'],
+          entities: ['Research Output'],
+        },
+      ]}
+      onChangeMethods={mockOnChange}
+    />,
+  );
+  userEvent.click(getByLabelText(/method/i));
+  userEvent.click(getByText('Activity Assay'));
+  expect(mockOnChange).toHaveBeenCalledWith(['Activity Assay']);
 });

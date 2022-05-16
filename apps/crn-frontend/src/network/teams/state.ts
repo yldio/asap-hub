@@ -30,6 +30,7 @@ import {
   getTeams,
   patchTeam,
 } from './api';
+import { getResearchTags } from '../../shared-research/api';
 
 const teamIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -192,13 +193,19 @@ export const usePostTeamResearchOutput = () => {
 };
 
 export const useCanCreateUpdateResearchOutput = (
-  teamIds: string | string[],
+  teamIds: string[],
 ): boolean => {
   const user = useCurrentUser();
 
   return !!(
     isEnabled('ROMS_FORM') &&
     user &&
-    hasCreateUpdateResearchOutputPermissions(user, [...teamIds])
+    hasCreateUpdateResearchOutputPermissions(user, teamIds)
   );
+};
+
+export const useResearchTagsByType = () => {
+  const authorization = useRecoilValue(authorizationState);
+
+  return (type: string) => getResearchTags(type, authorization);
 };

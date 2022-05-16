@@ -31,7 +31,7 @@ const TeamProfile: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
   const { teamId } = useRouteParams(route);
 
-  const canCreateUpdate = useCanCreateUpdateResearchOutput(teamId);
+  const canCreateUpdate = useCanCreateUpdateResearchOutput([teamId]);
 
   const team = useTeamById(teamId);
 

@@ -22,6 +22,7 @@ import TeamCreateOutputForm, {
 const props: ComponentProps<typeof TeamCreateOutputForm> = {
   onSave: jest.fn(() => Promise.resolve()),
   tagSuggestions: [],
+  getResearchTags: jest.fn().mockResolvedValue([]),
   documentType: 'Article',
   team: createTeamResponse(),
 };
@@ -137,6 +138,7 @@ describe('on submit', () => {
   });
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
   const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
+  const getResearchTags = jest.fn().mockResolvedValue([]);
   const promise = Promise.resolve({ id } as ResearchOutputResponse);
   const expectedRequest: ResearchOutputPostRequest = {
     documentType: 'Article',
@@ -182,6 +184,7 @@ describe('on submit', () => {
           onSave={saveFn}
           getLabSuggestions={getLabSuggestions}
           getAuthorSuggestions={getAuthorSuggestions}
+          getResearchTags={getResearchTags}
         />
       </Router>,
     );
@@ -295,6 +298,26 @@ describe('on submit', () => {
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
       accessInstructions: 'Access Instructions',
+    });
+  });
+  it('can submit a method', async () => {
+    getResearchTags.mockResolvedValue([
+      {
+        id: '1234',
+        name: 'Activity Assay',
+        category: 'Method',
+        types: ['Protein Data', 'Assay'],
+        entities: ['Research Output'],
+      },
+    ]);
+    await setupForm();
+
+    userEvent.click(screen.getByRole('textbox', { name: /Methods/i }));
+    userEvent.click(screen.getByText('Activity Assay'));
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      methods: ['Activity Assay'],
     });
   });
 

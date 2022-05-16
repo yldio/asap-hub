@@ -31,6 +31,7 @@ import TeamOutput, {
 jest.setTimeout(30000);
 jest.mock('../api');
 jest.mock('../../users/api');
+jest.mock('../../../shared-research/api');
 
 describe('TeamOutput', () => {
   const mockToast = jest.fn() as jest.MockedFunction<

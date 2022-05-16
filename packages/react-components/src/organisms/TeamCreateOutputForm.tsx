@@ -155,24 +155,22 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [researchTags, setResearchTags] = useState<ResearchTagResponse[]>([]);
   const [methods, setMethods] = useState<string[]>([]);
 
-  const setupFetchResearchTags = useCallback(
-    () =>
-      async (typeForResearchTags: ResearchOutputPostRequest['type'] | '') => {
-        if (typeForResearchTags === '') {
-          setResearchTags([]);
-          return;
-        }
-        const data = await getResearchTags(typeForResearchTags);
+  const fetchResearchTags = useCallback(
+    async (typeForResearchTags: ResearchOutputPostRequest['type'] | '') => {
+      if (typeForResearchTags === '') {
+        setResearchTags([]);
+        return;
+      }
+      const data = await getResearchTags(typeForResearchTags);
 
-        setResearchTags(data);
-      },
+      setResearchTags(data);
+    },
     [],
   );
 
   useEffect(() => {
-    const fetchResearchTags = setupFetchResearchTags();
     fetchResearchTags(type);
-  }, [type, setupFetchResearchTags]);
+  }, [type, fetchResearchTags]);
 
   useEffect(() => {
     setMethods([]);

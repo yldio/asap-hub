@@ -618,6 +618,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/runtime-corejs3": ^7.14.0
+    got: ^11.8.2
   languageName: unknown
   linkType: soft
 

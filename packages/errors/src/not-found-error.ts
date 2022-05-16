@@ -1,3 +1,3 @@
-import { GenericError } from './asap-error';
+import { GenericError } from './generic-error';
 
 export class NotFoundError extends GenericError {}

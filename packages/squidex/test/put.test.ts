@@ -22,18 +22,26 @@ describe('squidex wrapper', () => {
     nock.cleanAll();
   });
 
-  it('returns GenericError when squidex returns bad request', async () => {
+  it('returns GenericError with request body when squidex returns bad request', async () => {
     nock(config.baseUrl)
       .put(`/api/content/${config.appName}/${collection}/42`)
       .query(() => true)
       .reply(400, {
-        details: ['Request  body has an invalid format'],
+        details: ['Request body has an invalid format'],
         message: 'The model is not valid',
       });
 
-    await expect(() =>
-      client.put('42', { string: { iv: 'value' } }),
-    ).rejects.toThrow(GenericError);
+    const putResult = client.put('42', { string: { iv: 'value' } });
+
+    await expect(putResult).rejects.toThrow(GenericError);
+    await expect(putResult).rejects.toThrow(
+      expect.objectContaining({
+        httpResponseBody: JSON.stringify({
+          details: ['Request body has an invalid format'],
+          message: 'The model is not valid',
+        }),
+      }),
+    );
   });
 
   it('returns NotFoundError when document doesnt exist', async () => {

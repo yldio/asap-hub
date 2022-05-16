@@ -13,7 +13,7 @@ const props: ComponentProps<typeof PersonalInfoModal> = {
   backHref: '/wrong',
 };
 it('renders the title', () => {
-  const { getByText } = render(
+  render(
     <PersonalInfoModal
       {...props}
       loadInstitutionOptions={() => Promise.resolve([])}
@@ -23,11 +23,11 @@ it('renders the title', () => {
       wrapper: StaticRouter,
     },
   );
-  expect(getByText('Your details', { selector: 'h3' })).toBeVisible();
+  expect(screen.getByText('Your details', { selector: 'h3' })).toBeVisible();
 });
 
 it('indicates which fields are required or optional', () => {
-  const { getByText } = render(
+  render(
     <PersonalInfoModal
       countrySuggestions={[]}
       loadInstitutionOptions={() => Promise.resolve([])}
@@ -47,12 +47,14 @@ it('indicates which fields are required or optional', () => {
     { title: 'Country', subtitle: 'Required' },
     { title: 'City', subtitle: 'Required' },
   ].forEach(({ title, subtitle }) =>
-    expect(getByText(title).nextSibling?.textContent).toContain(subtitle),
+    expect(screen.getByText(title).nextSibling?.textContent).toContain(
+      subtitle,
+    ),
   );
 });
 
 it('renders default values into text inputs', () => {
-  const { queryAllByRole } = render(
+  render(
     <PersonalInfoModal
       {...props}
       countrySuggestions={['United States', 'Mexico']}
@@ -65,8 +67,11 @@ it('renders default values into text inputs', () => {
     />,
     { wrapper: StaticRouter },
   );
-  expect(queryAllByRole('textbox').map((input) => input.getAttribute('value')))
-    .toMatchInlineSnapshot(`
+  expect(
+    screen
+      .queryAllByRole('textbox')
+      .map((input) => input.getAttribute('value')),
+  ).toMatchInlineSnapshot(`
     Array [
       "firstName",
       "lastName",
@@ -80,7 +85,7 @@ it('renders default values into text inputs', () => {
 });
 
 it('renders a country selector', () => {
-  const { getByText, queryByText } = render(
+  render(
     <PersonalInfoModal
       {...props}
       countrySuggestions={['United States', 'Mexico']}
@@ -91,53 +96,20 @@ it('renders a country selector', () => {
     },
   );
 
-  userEvent.click(getByText('Start Typing...'));
-  expect(queryByText('United States')).toBeVisible();
-  expect(queryByText('Mexico')).toBeVisible();
+  userEvent.click(screen.getByText('Start Typing...'));
+  expect(screen.queryByText('United States')).toBeVisible();
+  expect(screen.queryByText('Mexico')).toBeVisible();
 
-  userEvent.click(getByText('Start Typing...'));
-  userEvent.type(getByText('Start Typing...'), 'xx');
-  expect(queryByText(new RegExp(/no+countries/, 'i'))).toBeDefined();
+  userEvent.click(screen.getByText('Start Typing...'));
+  userEvent.type(screen.getByText('Start Typing...'), 'xx');
+  expect(screen.queryByText(new RegExp(/no+countries/, 'i'))).toBeDefined();
 });
-
-it.each`
-  label             | message
-  ${/city/i}        | ${'Please add your city'}
-  ${/institution/i} | ${'Please add your institution'}
-  ${/position/i}    | ${'Please add your position'}
-`(
-  'shows validation message $message when value set to $value on $label',
-  async ({ label, message }) => {
-    const { getByLabelText, findByText, getByText } = render(
-      <PersonalInfoModal
-        {...props}
-        country="Spain"
-        countrySuggestions={['Spain']}
-        institution="UCM"
-        city="Madrid"
-        jobTitle="Assistant Professor"
-      />,
-      {
-        wrapper: StaticRouter,
-      },
-    );
-    const field = getByLabelText(label);
-    const input = field.closest('input') || field;
-
-    fireEvent.change(input, { target: { value: '' } });
-    expect(input).toHaveValue('');
-
-    userEvent.click(getByText(/save/i));
-    expect(await findByText(new RegExp(message, 'i'))).toBeVisible();
-  },
-);
-
 it('shows validation message country when it not selected', async () => {
   render(
     <PersonalInfoModal
       {...props}
       country=""
-      countrySuggestions={['Spain']}
+      countrySuggestions={[]}
       institution="UCM"
       city="Madrid"
       jobTitle="Assistant Professor"
@@ -152,11 +124,73 @@ it('shows validation message country when it not selected', async () => {
 
   userEvent.click(screen.getByRole('button', { name: /save/i }));
   expect(await screen.findByText(/Please add your country/i)).toBeVisible();
+  await waitFor(() =>
+    expect(screen.getByText(/save/i).closest('button')).toBeEnabled(),
+  );
 });
 
+it.each`
+  label             | message
+  ${/city/i}        | ${'Please add your city'}
+  ${/institution/i} | ${'Please add your institution'}
+  ${/position/i}    | ${'Please add your position'}
+`(
+  'shows validation message $message when value set to $value on $label',
+  async ({ label, message }) => {
+    render(
+      <PersonalInfoModal
+        {...props}
+        country="Spain"
+        countrySuggestions={['Spain']}
+        institution="UCM"
+        city="Madrid"
+        jobTitle="Assistant Professor"
+      />,
+      {
+        wrapper: StaticRouter,
+      },
+    );
+    const field = screen.getByLabelText(label);
+    const input = field.closest('input') || field;
+
+    fireEvent.change(input, { target: { value: '' } });
+    expect(input).toHaveValue('');
+
+    userEvent.click(screen.getByText(/save/i));
+    expect(await screen.findByText(new RegExp(message, 'i'))).toBeVisible();
+  },
+);
+
+it('disables the form elements while submitting', async () => {
+  let resolveSubmit!: () => void;
+  const handleSave = () =>
+    new Promise<void>((resolve) => {
+      resolveSubmit = resolve;
+    });
+  render(
+    <PersonalInfoModal
+      {...props}
+      onSave={handleSave}
+      countrySuggestions={['United States', 'Mexico']}
+      country="Mexico"
+    />,
+    { wrapper: StaticRouter },
+  );
+
+  userEvent.click(screen.getByText(/save/i));
+
+  const form = screen.getByText(/save/i).closest('form')!;
+  expect(form.elements.length).toBeGreaterThan(1);
+  [...form.elements].forEach((element) => expect(element).toBeDisabled());
+
+  act(resolveSubmit);
+  await waitFor(() =>
+    expect(screen.getByText(/save/i).closest('button')).toBeEnabled(),
+  );
+});
 it('triggers the save function', async () => {
   const jestFn = jest.fn();
-  const { getByText } = render(
+  render(
     <PersonalInfoModal
       {...props}
       countrySuggestions={['United States', 'Mexico']}
@@ -172,7 +206,7 @@ it('triggers the save function', async () => {
     { wrapper: MemoryRouter },
   );
 
-  userEvent.click(getByText('Save'));
+  userEvent.click(screen.getByText('Save'));
   expect(jestFn).toHaveBeenCalledWith({
     firstName: 'firstName',
     lastName: 'lastName',
@@ -184,34 +218,6 @@ it('triggers the save function', async () => {
   });
 
   await waitFor(() =>
-    expect(getByText(/save/i).closest('button')).toBeEnabled(),
-  );
-});
-
-it('disables the form elements while submitting', async () => {
-  let resolveSubmit!: () => void;
-  const handleSave = () =>
-    new Promise<void>((resolve) => {
-      resolveSubmit = resolve;
-    });
-  const { getByText } = render(
-    <PersonalInfoModal
-      {...props}
-      onSave={handleSave}
-      countrySuggestions={['United States', 'Mexico']}
-      country="Mexico"
-    />,
-    { wrapper: StaticRouter },
-  );
-
-  userEvent.click(getByText(/save/i));
-
-  const form = getByText(/save/i).closest('form')!;
-  expect(form.elements.length).toBeGreaterThan(1);
-  [...form.elements].forEach((element) => expect(element).toBeDisabled());
-
-  act(resolveSubmit);
-  await waitFor(() =>
-    expect(getByText(/save/i).closest('button')).toBeEnabled(),
+    expect(screen.getByText(/save/i).closest('button')).toBeEnabled(),
   );
 });

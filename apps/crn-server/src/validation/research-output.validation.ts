@@ -140,6 +140,9 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       'sharingStatus',
       'addedDate',
       'teams',
+      'methods',
+      'organisms',
+      'environments',
     ],
     additionalProperties: false,
   };

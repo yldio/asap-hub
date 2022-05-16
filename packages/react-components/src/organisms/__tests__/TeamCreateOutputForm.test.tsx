@@ -132,13 +132,14 @@ describe('on submit', () => {
     history = createMemoryHistory();
   });
   let saveFn = jest.fn(() => promise);
+  let getResearchTags = jest.fn().mockResolvedValue([]);
   afterEach(() => {
     jest.resetAllMocks();
     saveFn = jest.fn(() => promise);
+    getResearchTags = jest.fn().mockResolvedValue([]);
   });
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
   const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
-  const getResearchTags = jest.fn().mockResolvedValue([]);
   const promise = Promise.resolve({ id } as ResearchOutputResponse);
   const expectedRequest: ResearchOutputPostRequest = {
     documentType: 'Article',

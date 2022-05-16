@@ -10,7 +10,7 @@ import {
 import { sharedResearch } from '@asap-hub/routing';
 import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import { ComponentProps, useEffect, useState } from 'react';
+import { ComponentProps, useCallback, useEffect, useState } from 'react';
 import { Button } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 import { usePushFromHere } from '../routing';
@@ -155,14 +155,20 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [researchTags, setResearchTags] = useState<ResearchTagResponse[]>([]);
   const [methods, setMethods] = useState<string[]>([]);
 
+  const fetchResearchTags = useCallback(async () => {
+    const data = await getResearchTags(type);
+
+    setResearchTags(data);
+  }, [getResearchTags, type]);
+
   useEffect(() => {
     if (type === '') {
       setResearchTags([]);
       return;
     }
 
-    getResearchTags(type).then(setResearchTags);
-  }, [getResearchTags, type]);
+    fetchResearchTags();
+  }, [fetchResearchTags]);
 
   useEffect(() => {
     setMethods([]);

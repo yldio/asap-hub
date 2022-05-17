@@ -8,4 +8,8 @@ export default {
   decorators: [NoPaddingDecorator],
 };
 
-export const Normal = () => <Layout></Layout>;
+export const Normal = () => (
+  <Layout>
+    <div>Content</div>
+  </Layout>
+);

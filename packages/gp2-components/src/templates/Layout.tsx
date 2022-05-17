@@ -14,11 +14,38 @@ import {
   ToastStack,
   usePrevious,
   MainNavigation,
-  ceruleanFernGradientStyles,
-  Overlay,
+  drawerQuery,
 } from '@asap-hub/react-components';
 
 import NavigationHeader from '../organism/NavigationHeader';
+import {
+  mobileScreen,
+  tabletScreen,
+  vminLinearCalcClamped,
+} from '@asap-hub/react-components/src/pixels';
+
+const contentStyles = css({
+  width: '748px',
+  padding: `${vminLinearCalcClamped(
+    mobileScreen,
+    33,
+    tabletScreen,
+    48,
+    'px',
+  )} 0`,
+  margin: `0 auto`,
+  [drawerQuery]: {
+    maxWidth: '748px',
+    width: 'auto',
+    margin: `0 ${vminLinearCalcClamped(
+      mobileScreen,
+      24,
+      tabletScreen,
+      72,
+      'px',
+    )}`,
+  },
+});
 
 type LayoutProps = {
   readonly children: ReactNode;
@@ -58,8 +85,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
           }}
         />
       </article>
-      <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
-      <article>
+      <article css={contentStyles}>
         <main ref={mainRef}>{children}</main>
       </article>
     </ToastStack>

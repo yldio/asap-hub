@@ -63,12 +63,10 @@ const bottomBorderStyles = css({
 });
 
 interface NavigationHeaderProps {
-  enabled?: boolean;
   menuOpen?: boolean;
   onToggleMenu?: () => void;
 }
 const NavigationHeader: React.FC<NavigationHeaderProps> = ({
-  enabled = true,
   menuOpen = false,
   onToggleMenu = (): void => {},
 }) => (

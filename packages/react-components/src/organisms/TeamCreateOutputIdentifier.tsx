@@ -120,6 +120,11 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
       [setIdentifierType, identifiers],
     );
 
+    useEffect(() => {
+      if (!identifiers.map((i) => i.value).includes(identifierType)) {
+        setIdentifierType(ResearchOutputIdentifierType.Empty);
+      }
+    }, [identifierType, identifiers, setIdentifierType]);
     return (
       <>
         <LabeledDropdown

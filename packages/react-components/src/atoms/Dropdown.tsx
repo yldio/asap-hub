@@ -70,6 +70,7 @@ export default function Dropdown<V extends string>({
     () => options.filter((option) => option.value !== ''),
     [options],
   );
+
   return (
     <div css={containerStyles}>
       <Select<OptionTypeBase>
@@ -81,7 +82,7 @@ export default function Dropdown<V extends string>({
         onChange={(option) => {
           onChange(option?.value);
         }}
-        value={validOptions.find((option) => option.value === value)}
+        value={validOptions.find((option) => option.value === value) || null}
         components={{ DropdownIndicator, ClearIndicator }}
         styles={reactSelectStyles(!!validationMessage)}
         noOptionsMessage={noOptionsMessage}

@@ -169,7 +169,7 @@ export default class ResearchOutputs implements ResearchOutputController {
     );
 
     const { methods, organisms, environments, subtype } =
-      await this.parseResearchTags({ ...researchOutputData });
+      await this.parseResearchTags(researchOutputData);
 
     const { id: researchOutputId } = await this.createResearchOutput({
       authors: researchOutputAuthors,

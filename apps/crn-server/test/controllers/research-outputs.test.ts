@@ -1161,7 +1161,7 @@ describe('ResearchOutputs controller', () => {
     describe('Update', () => {
       const researchOutputId = 'created-output-id';
 
-      test('Updating the research output should return the updated output from squidex', async () => {
+      test('Should update the existing research-output and return it', async () => {
         const researchOutputUpdateData = getResearchOutputUpdateData();
 
         nock(config.baseUrl)

@@ -38,10 +38,37 @@ describe('Squidex Utils', () => {
         c: 'c',
       };
 
-      expect(parseToSquidex(object)).toEqual({
+      expect(parseToSquidex(object)).toStrictEqual({
         a: { iv: 'a' },
         b: { iv: 'b' },
         c: { iv: 'c' },
+      });
+    });
+
+    test('removed undefined values', async () => {
+      const object = {
+        a: 'a',
+        b: 'b',
+        c: undefined,
+      };
+
+      expect(parseToSquidex(object)).toStrictEqual({
+        a: { iv: 'a' },
+        b: { iv: 'b' },
+      });
+    });
+
+    test('pass nulls', async () => {
+      const object = {
+        a: 'a',
+        b: 'b',
+        c: null,
+      };
+
+      expect(parseToSquidex(object)).toStrictEqual({
+        a: { iv: 'a' },
+        b: { iv: 'b' },
+        c: { iv: null },
       });
     });
   });

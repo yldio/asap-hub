@@ -6,7 +6,7 @@ import TeamCreateOutputExtraInformationCard from '../TeamCreateOutputExtraInform
 
 const getProps = (): {
   props: ComponentProps<typeof TeamCreateOutputExtraInformationCard>;
-  waitForGetResearhTags: () => Promise<void>;
+  waitForGetResearchTags: () => Promise<void>;
 } => {
   const promise = Promise.resolve([]);
   const getResearchTags = jest.fn(() => promise);
@@ -21,7 +21,7 @@ const getProps = (): {
       type: 'Protein Data',
       getResearchTags,
     },
-    waitForGetResearhTags: async () => {
+    waitForGetResearchTags: async () => {
       await act(async () => {
         await promise;
       });
@@ -30,17 +30,17 @@ const getProps = (): {
 };
 
 it('should render a tag', async () => {
-  const { props, waitForGetResearhTags } = getProps();
+  const { props, waitForGetResearchTags } = getProps();
   render(
     <TeamCreateOutputExtraInformationCard {...props} tags={['example']} />,
   );
   expect(screen.getByText(/example/i)).toBeVisible();
-  await waitForGetResearhTags();
+  await waitForGetResearchTags();
 });
 
 it('should trigger an onChange event when a tag is selected', async () => {
   const mockOnChange = jest.fn();
-  const { props, waitForGetResearhTags } = getProps();
+  const { props, waitForGetResearchTags } = getProps();
   render(
     <TeamCreateOutputExtraInformationCard
       {...props}
@@ -51,12 +51,12 @@ it('should trigger an onChange event when a tag is selected', async () => {
   userEvent.click(screen.getByLabelText(/keyword/i));
   userEvent.click(screen.getByText('Example'));
   expect(mockOnChange).toHaveBeenCalledWith(['Example']);
-  await waitForGetResearhTags();
+  await waitForGetResearchTags();
 });
 
 it('should trigger an onChange event when a text is being typed into access instructions', async () => {
   const mockOnChange = jest.fn();
-  const { props, waitForGetResearhTags } = getProps();
+  const { props, waitForGetResearchTags } = getProps();
   render(
     <TeamCreateOutputExtraInformationCard
       {...props}
@@ -70,11 +70,11 @@ it('should trigger an onChange event when a text is being typed into access inst
   const input = screen.getByRole('textbox', { name: /access instructions/i });
   userEvent.type(input, 't');
   expect(mockOnChange).toHaveBeenLastCalledWith('access-instructions-valuet');
-  await waitForGetResearhTags();
+  await waitForGetResearchTags();
 });
 
 it('should show lab catalogue number for lab resources', async () => {
-  const { props, waitForGetResearhTags } = getProps();
+  const { props, waitForGetResearchTags } = getProps();
   const { rerender } = render(
     <TeamCreateOutputExtraInformationCard
       {...props}
@@ -89,14 +89,14 @@ it('should show lab catalogue number for lab resources', async () => {
     />,
   );
   expect(screen.queryByLabelText(/Catalog Number/i)).toBeVisible();
-  await waitForGetResearhTags();
+  await waitForGetResearchTags();
 });
 
 it('should hide methods when there is no suggestions', async () => {
-  const { props, waitForGetResearhTags } = getProps();
+  const { props, waitForGetResearchTags } = getProps();
   render(<TeamCreateOutputExtraInformationCard {...props} />);
   expect(screen.queryByLabelText(/Methods/i)).toBeNull();
-  await waitForGetResearhTags();
+  await waitForGetResearchTags();
 });
 
 it('should trigger an onChange event when a method is selected', async () => {

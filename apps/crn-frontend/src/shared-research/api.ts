@@ -104,5 +104,5 @@ export const getResearchTags = async (
 
   const response = await resp.json();
 
-  return response.items || [];
+  return response?.items || [];
 };

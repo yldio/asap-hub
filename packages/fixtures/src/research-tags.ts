@@ -1,4 +1,4 @@
-import { ResearchTagResponse } from '@asap-hub/model';
+import { ResearchTagResponse, ListResearchTagResponse } from '@asap-hub/model';
 
 export const researchTagResponse: ResearchTagResponse = {
   id: '1234',
@@ -7,3 +7,8 @@ export const researchTagResponse: ResearchTagResponse = {
   types: ['Protein Data', 'Assay'],
   entities: ['Research Output'],
 };
+
+export const createResearchTagListResponse = (): ListResearchTagResponse => ({
+  items: [researchTagResponse],
+  total: 1,
+});

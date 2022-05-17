@@ -6,6 +6,7 @@ export * from './labs';
 export * from './news';
 export * from './pages';
 export * from './research-outputs';
+export * from './research-tags';
 export * from './teams';
 export * from './users';
 export * from './dashboard';

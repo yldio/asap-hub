@@ -1,7 +1,8 @@
 import { ComponentProps } from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { researchTagResponse } from '@asap-hub/fixtures';
 import TeamCreateOutputExtraInformationCard from '../TeamCreateOutputExtraInformationCard';
 
 const props: ComponentProps<typeof TeamCreateOutputExtraInformationCard> = {
@@ -9,9 +10,9 @@ const props: ComponentProps<typeof TeamCreateOutputExtraInformationCard> = {
   tagSuggestions: [],
   tags: [],
   methods: [],
-  researchTags: [],
   documentType: 'Article',
   identifierRequired: false,
+  type: 'Protein Data',
 };
 
 it('should render a tag', () => {
@@ -76,23 +77,20 @@ it('should hide methods when there is no suggestions', () => {
   expect(queryByLabelText(/Methods/i)).toBeNull();
 });
 
-it('should trigger an onChange event when a method is selected', () => {
+it('should trigger an onChange event when a method is selected', async () => {
   const mockOnChange = jest.fn();
   const { getByText, getByLabelText } = render(
     <TeamCreateOutputExtraInformationCard
       {...props}
-      researchTags={[
-        {
-          id: '1234',
-          name: 'Activity Assay',
-          category: 'Method',
-          types: ['Protein Data', 'Assay'],
-          entities: ['Research Output'],
-        },
-      ]}
+      getResearchTags={() => Promise.resolve([researchTagResponse])}
       onChangeMethods={mockOnChange}
     />,
   );
+
+  await waitFor(() => {
+    expect(getByLabelText(/method/i)).toBeVisible();
+  });
+
   userEvent.click(getByLabelText(/method/i));
   userEvent.click(getByText('Activity Assay'));
   expect(mockOnChange).toHaveBeenCalledWith(['Activity Assay']);

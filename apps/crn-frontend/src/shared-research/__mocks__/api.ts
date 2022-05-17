@@ -3,7 +3,10 @@ import {
   SearchEntityResponse,
 } from '@asap-hub/algolia';
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import {
+  createResearchOutputResponse,
+  researchTagResponse,
+} from '@asap-hub/fixtures';
 
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 
@@ -19,3 +22,5 @@ export const getResearchOutputs = jest.fn(
     Partial<SearchEntityResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE>>
   > => createResearchOutputListAlgoliaResponse(2),
 );
+
+export const getResearchTags = jest.fn(async () => [researchTagResponse]);

@@ -4,13 +4,12 @@ import {
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
-  ResearchTagResponse,
   TeamResponse,
 } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import { ComponentProps, useCallback, useEffect, useState } from 'react';
+import { ComponentProps, useState } from 'react';
 import { Button } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 import { usePushFromHere } from '../routing';
@@ -58,7 +57,7 @@ const formControlsStyles = css({
 
 type TeamCreateOutputFormProps = Pick<
   ComponentProps<typeof TeamCreateOutputExtraInformationCard>,
-  'tagSuggestions'
+  'tagSuggestions' | 'getResearchTags'
 > &
   Pick<
     ComponentProps<typeof TeamCreateOutputFormSharingCard>,
@@ -73,7 +72,6 @@ type TeamCreateOutputFormProps = Pick<
     ) => Promise<ResearchOutputResponse | void>;
     documentType: ResearchOutputDocumentType;
     team: TeamResponse;
-    getResearchTags: (type: string) => Promise<ResearchTagResponse[]>;
   };
 
 const identifierTypeToFieldName: Record<
@@ -152,30 +150,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
     useState<ResearchOutputIdentifierType>(ResearchOutputIdentifierType.Empty);
   const [identifier, setIdentifier] = useState<string>('');
 
-  const [researchTags, setResearchTags] = useState<ResearchTagResponse[]>([]);
   const [methods, setMethods] = useState<string[]>([]);
-
-  const fetchResearchTags = useCallback(
-    async (typeForResearchTags: ResearchOutputPostRequest['type'] | '') => {
-      if (typeForResearchTags === '') {
-        setResearchTags([]);
-        return;
-      }
-      const data = await getResearchTags(typeForResearchTags);
-
-      setResearchTags(data);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
-
-  useEffect(() => {
-    fetchResearchTags(type);
-  }, [type, fetchResearchTags]);
-
-  useEffect(() => {
-    setMethods([]);
-  }, [type, setMethods]);
 
   return (
     <Form<ResearchOutputResponse>
@@ -271,7 +246,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           <TeamCreateOutputExtraInformationCard
             documentType={documentType}
             isSaving={isSaving}
-            researchTags={researchTags}
+            getResearchTags={getResearchTags}
             tagSuggestions={tagSuggestions}
             tags={tags}
             onChangeTags={setTags}
@@ -288,6 +263,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangeLabCatalogNumber={setLabCatalogNumber}
             methods={methods}
             onChangeMethods={setMethods}
+            type={type}
           />
           <TeamCreateOutputContributorsCard
             isSaving={isSaving}

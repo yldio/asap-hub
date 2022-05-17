@@ -14,10 +14,22 @@ const commonProps: ComponentProps<typeof TeamCreateOutputExtraInformationCard> =
   {
     isSaving: false,
     tags: [],
+    methods: [],
     tagSuggestions: tagSuggestions.map((suggestion) => ({
       label: suggestion,
       value: suggestion,
     })),
+    getResearchTags: () =>
+      Promise.resolve([
+        {
+          id: '1234',
+          name: 'Activity Assay',
+          category: 'Method',
+          types: ['Protein Data', 'Assay'],
+          entities: ['Research Output'],
+        },
+      ]),
+    type: 'Protein Data',
     documentType: select('type', researchOutputDocumentTypes, 'Article'),
     identifierRequired: boolean('identifierRequired', false),
   };

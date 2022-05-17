@@ -42,6 +42,21 @@ export const Normal = () => (
           }, 1000);
         })
       }
+      getResearchTags={() =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve([
+              {
+                id: '1234',
+                name: 'Activity Assay',
+                category: 'Method',
+                types: ['Protein Data', 'Assay'],
+                entities: ['Research Output'],
+              },
+            ]);
+          }, 1000);
+        })
+      }
     />
   </StaticRouter>
 );

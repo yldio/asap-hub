@@ -34,7 +34,7 @@ type TeamCreateOutputExtraInformationProps = Pick<
   isSaving: boolean;
   documentType: ResearchOutputDocumentType;
   identifierRequired: boolean;
-  getResearchTags?: (type: string) => Promise<ResearchTagResponse[]>;
+  getResearchTags: (type: string) => Promise<ResearchTagResponse[]>;
   type: ResearchOutputPostRequest['type'] | '';
 } & Omit<TeamCreateOutputIdentifierProps, 'required'>;
 
@@ -56,7 +56,7 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     onChangeLabCatalogNumber,
     methods,
     onChangeMethods = noop,
-    getResearchTags = () => [],
+    getResearchTags,
     type,
   }) => {
     const [researchTags, setResearchTags] = useState<ResearchTagResponse[]>([]);

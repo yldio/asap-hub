@@ -204,7 +204,7 @@ export const useCanCreateUpdateResearchOutput = (
   );
 };
 
-export const useResearchTagsByType = () => {
+export const useResearchTags = () => {
   const authorization = useRecoilValue(authorizationState);
 
   return (type: string) => getResearchTags(type, authorization);

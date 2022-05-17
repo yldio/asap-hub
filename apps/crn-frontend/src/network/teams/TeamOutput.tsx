@@ -23,7 +23,7 @@ import {
   useAuthorSuggestions,
   useLabSuggestions,
   usePostTeamResearchOutput,
-  useResearchTagsByType,
+  useResearchTags,
   useTeamById,
   useTeamSuggestions,
 } from './state';
@@ -73,7 +73,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
-  const getResearchTags = useResearchTagsByType();
+  const getResearchTags = useResearchTags();
 
   if (canCreateUpdate && team) {
     return (

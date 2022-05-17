@@ -1,4 +1,8 @@
-import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
+import {
+  createTeamResponse,
+  createUserResponse,
+  researchTagResponse,
+} from '@asap-hub/fixtures';
 import { TeamCreateOutputPage } from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom';
 
@@ -43,15 +47,7 @@ export const Normal = () => (
       getResearchTags={() =>
         new Promise((resolve) => {
           setTimeout(() => {
-            resolve([
-              {
-                id: '1234',
-                name: 'Activity Assay',
-                category: 'Method',
-                types: ['Protein Data', 'Assay'],
-                entities: ['Research Output'],
-              },
-            ]);
+            resolve([researchTagResponse]);
           }, 1000);
         })
       }

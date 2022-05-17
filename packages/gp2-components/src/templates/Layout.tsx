@@ -15,6 +15,7 @@ import {
   usePrevious,
   MainNavigation,
   ceruleanFernGradientStyles,
+  Overlay,
 } from '@asap-hub/react-components';
 
 import NavigationHeader from '../organism/NavigationHeader';
@@ -56,13 +57,8 @@ const Layout: FC<LayoutProps> = ({ children }) => {
             setMenuShown(!menuShown);
           }}
         />
-        <div
-          css={[
-            ceruleanFernGradientStyles,
-            css({ height: '4px', width: '100%' }),
-          ]}
-        ></div>
       </article>
+      <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
       <article>
         <main ref={mainRef}>{children}</main>
       </article>

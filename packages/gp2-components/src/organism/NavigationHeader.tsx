@@ -1,4 +1,5 @@
 import {
+  ceruleanFernGradientStyles,
   crossQuery,
   drawerQuery,
   MenuButton,
@@ -14,7 +15,7 @@ import UserNavigation from './UserNavigation';
 
 const menuButtonWidth = 72;
 
-const styles = css({
+const navigationHeaderstyles = css({
   padding: 0,
   display: 'flex',
   flexDirection: 'row',
@@ -48,11 +49,17 @@ const menuButtonStyles = css({
   justifyContent: 'stretch',
   alignItems: 'stretch',
 });
-const headerSpaceStyles = css({
-  width: `${menuButtonWidth}px`,
-  [crossQuery]: {
+
+const desktopNavigationStyles = css({
+  [drawerQuery]: {
     display: 'none',
   },
+});
+
+const bottomBorderStyles = css({
+  height: '4px',
+  width: '100%',
+  ...ceruleanFernGradientStyles,
 });
 
 interface NavigationHeaderProps {
@@ -65,31 +72,21 @@ const NavigationHeader: React.FC<NavigationHeaderProps> = ({
   menuOpen = false,
   onToggleMenu = (): void => {},
 }) => (
-  <header css={[styles]}>
-    <div css={[menuButtonStyles]}>
-      <MenuButton open={menuOpen} onClick={() => onToggleMenu()} />
-    </div>
-    <HeaderLogo />
-    <div
-      css={css({
-        [drawerQuery]: {
-          display: 'none',
-        },
-      })}
-    >
-      <MainNavigation />
-    </div>
-    <div
-      css={css({
-        [drawerQuery]: {
-          display: 'none',
-        },
-      })}
-    >
-      <UserNavigation />
-    </div>
+  <header>
+    <div css={[navigationHeaderstyles]}>
+      <div css={[menuButtonStyles]}>
+        <MenuButton open={menuOpen} onClick={() => onToggleMenu()} />
+      </div>
+      <HeaderLogo />
+      <div css={desktopNavigationStyles}>
+        <MainNavigation />
+      </div>
 
-    <div role="presentation" css={[headerSpaceStyles]} />
+      <div css={desktopNavigationStyles}>
+        <UserNavigation />
+      </div>
+    </div>
+    <div css={[bottomBorderStyles, desktopNavigationStyles]} />
   </header>
 );
 export default NavigationHeader;

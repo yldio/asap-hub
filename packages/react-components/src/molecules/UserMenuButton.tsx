@@ -5,7 +5,6 @@ import { noop } from '../utils';
 import { perRem } from '../pixels';
 import { Paragraph, Avatar } from '../atoms';
 import { chevronDownIcon, chevronUpIcon, verticalDividerIcon } from '../icons';
-import { Children } from 'react';
 
 const buttonResetStyles = css({
   padding: 0,

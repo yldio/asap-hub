@@ -89,7 +89,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
         isActive={(match, _) => enabled && !!match}
       >
         <p css={textStyles}>
-          <span css={iconStyles}>{icon}</span>
+          {icon && <span css={iconStyles}>{icon}</span>}
           {children}
         </p>
       </NavHashLink>
@@ -104,7 +104,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
       css={[styles, active && activePrimaryStyles, !enabled && disableStyles]}
     >
       <p css={textStyles}>
-        <span css={iconStyles}>{icon}</span>
+        {icon && <span css={iconStyles}>{icon}</span>}
         {children}
       </p>
     </a>

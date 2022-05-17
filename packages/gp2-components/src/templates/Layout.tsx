@@ -1,11 +1,4 @@
-import {
-  useState,
-  useEffect,
-  ComponentProps,
-  createRef,
-  FC,
-  ReactNode,
-} from 'react';
+import { useState, useEffect, createRef, FC, ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import { css } from '@emotion/react';
@@ -13,16 +6,15 @@ import { css } from '@emotion/react';
 import {
   ToastStack,
   usePrevious,
-  MainNavigation,
   drawerQuery,
 } from '@asap-hub/react-components';
-
-import NavigationHeader from '../organism/NavigationHeader';
 import {
   mobileScreen,
   tabletScreen,
   vminLinearCalcClamped,
 } from '@asap-hub/react-components/src/pixels';
+
+import NavigationHeader from '../organism/NavigationHeader';
 
 const contentStyles = css({
   width: '748px',
@@ -49,7 +41,7 @@ const contentStyles = css({
 
 type LayoutProps = {
   readonly children: ReactNode;
-} & ComponentProps<typeof MainNavigation>;
+};
 const Layout: FC<LayoutProps> = ({ children }) => {
   const [menuShown, setMenuShown] = useState(false);
 

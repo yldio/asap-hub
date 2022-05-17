@@ -48,7 +48,7 @@ const UserMenuButton: React.FC<UserMenuButtonProps> = ({
     >
       <Paragraph>
         <strong css={{ paddingRight: `${15 / perRem}em` }}>
-          {children ? children : displayName}
+          {children || displayName}
         </strong>
       </Paragraph>
       <Avatar imageUrl={avatarUrl} firstName={firstName} lastName={lastName} />

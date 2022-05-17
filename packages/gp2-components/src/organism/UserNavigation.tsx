@@ -37,7 +37,7 @@ const buttonTextStyles = css({
   },
 });
 
-const UserNavigation = () => {
+const UserNavigation: React.FC = () => {
   const [menuShown, setMenuShown] = useState(false);
   return (
     <div>

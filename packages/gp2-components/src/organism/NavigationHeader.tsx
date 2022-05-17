@@ -5,9 +5,9 @@ import {
   MenuButton,
   steel,
 } from '@asap-hub/react-components';
+import { noop } from '@asap-hub/react-components/src/utils';
 
 import { css } from '@emotion/react';
-import React from 'react';
 import { smallDesktopQuery } from '../layout';
 import HeaderLogo from '../molecules/HeaderLogo';
 import MainNavigation from './MainNavigation';
@@ -68,7 +68,7 @@ interface NavigationHeaderProps {
 }
 const NavigationHeader: React.FC<NavigationHeaderProps> = ({
   menuOpen = false,
-  onToggleMenu = (): void => {},
+  onToggleMenu = noop,
 }) => (
   <header>
     <div css={[navigationHeaderstyles]}>

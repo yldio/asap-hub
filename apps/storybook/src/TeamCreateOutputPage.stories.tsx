@@ -1,4 +1,8 @@
-import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
+import {
+  createTeamResponse,
+  createUserResponse,
+  researchTagResponse,
+} from '@asap-hub/fixtures';
 import { TeamCreateOutputPage } from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom';
 
@@ -37,6 +41,13 @@ export const Normal = () => (
         new Promise((resolve) => {
           setTimeout(() => {
             resolve([{ label: 'team name', value: '1' }]);
+          }, 1000);
+        })
+      }
+      getResearchTags={() =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve([researchTagResponse]);
           }, 1000);
         })
       }

@@ -57,7 +57,7 @@ const formControlsStyles = css({
 
 type TeamCreateOutputFormProps = Pick<
   ComponentProps<typeof TeamCreateOutputExtraInformationCard>,
-  'tagSuggestions'
+  'tagSuggestions' | 'getResearchTags'
 > &
   Pick<
     ComponentProps<typeof TeamCreateOutputFormSharingCard>,
@@ -108,6 +108,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
+  getResearchTags,
   team,
   serverValidationErrors,
   clearServerValidationError,
@@ -149,6 +150,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
     useState<ResearchOutputIdentifierType>(ResearchOutputIdentifierType.Empty);
   const [identifier, setIdentifier] = useState<string>('');
 
+  const [methods, setMethods] = useState<string[]>([]);
+
   return (
     <Form<ResearchOutputResponse>
       serverErrors={serverValidationErrors}
@@ -160,6 +163,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         type !== '' ||
         labs.length !== 0 ||
         authors.length !== 0 ||
+        methods.length !== 0 ||
         identifierType !== ResearchOutputIdentifierType.Empty ||
         identifier !== '' ||
         labCatalogNumber !== '' ||
@@ -209,7 +213,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
               ? labCatalogNumber
               : undefined,
           addedDate: new Date().toISOString(),
-          methods: [],
+          methods,
           organisms: [],
           environments: [],
         });
@@ -242,6 +246,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           <TeamCreateOutputExtraInformationCard
             documentType={documentType}
             isSaving={isSaving}
+            getResearchTags={getResearchTags}
             tagSuggestions={tagSuggestions}
             tags={tags}
             onChangeTags={setTags}
@@ -256,6 +261,9 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             }
             labCatalogNumber={labCatalogNumber}
             onChangeLabCatalogNumber={setLabCatalogNumber}
+            methods={methods}
+            onChangeMethods={setMethods}
+            type={type}
           />
           <TeamCreateOutputContributorsCard
             isSaving={isSaving}

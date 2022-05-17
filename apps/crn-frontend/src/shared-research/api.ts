@@ -2,6 +2,7 @@ import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import {
   ResearchOutputDocumentType,
   ResearchOutputResponse,
+  ResearchTagResponse,
 } from '@asap-hub/model';
 import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import { API_BASE_URL } from '../config';
@@ -80,3 +81,28 @@ export const getResearchOutputs = (
     .catch((error: Error) => {
       throw new Error(`Could not search: ${error.message}`);
     });
+
+export const getResearchTags = async (
+  type: string,
+  authorization: string,
+): Promise<ResearchTagResponse[]> => {
+  const query = new URLSearchParams({
+    take: '200',
+    'filter[category]': 'Research Output',
+    'filter[type]': type,
+  });
+
+  const resp = await fetch(`${API_BASE_URL}/research-tags?${query}`, {
+    headers: { authorization, ...createSentryHeaders() },
+  });
+
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch research tags with type ${type}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+
+  const response = await resp.json();
+
+  return response?.items || [];
+};

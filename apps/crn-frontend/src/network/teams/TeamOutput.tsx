@@ -22,6 +22,7 @@ import {
   useAuthorSuggestions,
   useLabSuggestions,
   usePostTeamResearchOutput,
+  useResearchTags,
   useTeamById,
   useTeamSuggestions,
 } from './state';
@@ -71,6 +72,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
+  const getResearchTags = useResearchTags();
 
   if (canCreateUpdate && team) {
     return (
@@ -93,6 +95,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
             )
           }
           getTeamSuggestions={getTeamSuggestions}
+          getResearchTags={getResearchTags}
           serverValidationErrors={errors}
           clearServerValidationError={(instancePath: string) =>
             setErrors(clearAjvErrorForPath(errors, instancePath))

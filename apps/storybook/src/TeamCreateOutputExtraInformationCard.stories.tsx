@@ -2,6 +2,7 @@ import { TeamCreateOutputExtraInformationCard } from '@asap-hub/react-components
 import { ComponentProps } from 'react';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { boolean, select } from '@storybook/addon-knobs';
+import { researchTagResponse } from '@asap-hub/fixtures';
 
 export default {
   title: 'Organisms / Team Profile / Team Create Output Extra Information Card',
@@ -14,10 +15,13 @@ const commonProps: ComponentProps<typeof TeamCreateOutputExtraInformationCard> =
   {
     isSaving: false,
     tags: [],
+    methods: [],
     tagSuggestions: tagSuggestions.map((suggestion) => ({
       label: suggestion,
       value: suggestion,
     })),
+    getResearchTags: () => Promise.resolve([researchTagResponse]),
+    type: 'Protein Data',
     documentType: select('type', researchOutputDocumentTypes, 'Article'),
     identifierRequired: boolean('identifierRequired', false),
   };

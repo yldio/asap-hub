@@ -11925,6 +11925,15 @@ export const FetchResearchTagsDocument = {
                   name: { kind: 'Name', value: 'filter' },
                 },
               },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderby' },
+                value: {
+                  kind: 'StringValue',
+                  value: 'data/name/iv',
+                  block: false,
+                },
+              },
             ],
             selectionSet: {
               kind: 'SelectionSet',

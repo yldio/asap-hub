@@ -1,4 +1,8 @@
-import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
+import {
+  createTeamResponse,
+  createUserResponse,
+  researchTagResponse,
+} from '@asap-hub/fixtures';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { TeamCreateOutputForm } from '@asap-hub/react-components';
 import { select } from '@storybook/addon-knobs';
@@ -39,6 +43,13 @@ export const Normal = () => (
             resolve([
               { label: 'author name', value: '1', user: createUserResponse() },
             ]);
+          }, 1000);
+        })
+      }
+      getResearchTags={() =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve([researchTagResponse]);
           }, 1000);
         })
       }

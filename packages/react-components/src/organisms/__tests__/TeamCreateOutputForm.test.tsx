@@ -22,6 +22,7 @@ import TeamCreateOutputForm, {
 const props: ComponentProps<typeof TeamCreateOutputForm> = {
   onSave: jest.fn(() => Promise.resolve()),
   tagSuggestions: [],
+  getResearchTags: jest.fn().mockResolvedValue([]),
   documentType: 'Article',
   team: createTeamResponse(),
 };
@@ -127,17 +128,23 @@ it('is funded and publication are both yes, then the none option is removed', as
 describe('on submit', () => {
   let history!: History;
   const id = '42';
+  const saveFn = jest.fn();
+  const getResearchTags = jest.fn();
+  const getLabSuggestions = jest.fn();
+  const getAuthorSuggestions = jest.fn();
+
   beforeEach(() => {
     history = createMemoryHistory();
+    saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
+    getResearchTags.mockResolvedValue([]);
+    getLabSuggestions.mockResolvedValue([]);
+    getAuthorSuggestions.mockResolvedValue([]);
   });
-  let saveFn = jest.fn(() => promise);
+
   afterEach(() => {
     jest.resetAllMocks();
-    saveFn = jest.fn(() => promise);
   });
-  const getLabSuggestions = jest.fn().mockResolvedValue([]);
-  const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
-  const promise = Promise.resolve({ id } as ResearchOutputResponse);
+
   const expectedRequest: ResearchOutputPostRequest = {
     documentType: 'Article',
     doi: '10.1234',
@@ -182,6 +189,7 @@ describe('on submit', () => {
           onSave={saveFn}
           getLabSuggestions={getLabSuggestions}
           getAuthorSuggestions={getAuthorSuggestions}
+          getResearchTags={getResearchTags}
         />
       </Router>,
     );
@@ -295,6 +303,26 @@ describe('on submit', () => {
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
       accessInstructions: 'Access Instructions',
+    });
+  });
+  it('can submit a method', async () => {
+    getResearchTags.mockResolvedValue([
+      {
+        id: '1234',
+        name: 'Activity Assay',
+        category: 'Method',
+        types: ['Protein Data', 'Assay'],
+        entities: ['Research Output'],
+      },
+    ]);
+    await setupForm();
+
+    userEvent.click(screen.getByRole('textbox', { name: /Methods/i }));
+    userEvent.click(screen.getByText('Activity Assay'));
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      methods: ['Activity Assay'],
     });
   });
 

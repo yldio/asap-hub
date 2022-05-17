@@ -18,6 +18,7 @@ export const FETCH_RESEARCH_TAGS = gql`
       top: $top
       skip: $skip
       filter: $filter
+      orderby: "data/name/iv"
     ) {
       total
       items {

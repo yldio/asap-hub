@@ -201,7 +201,7 @@ describe('on submit', () => {
 
     const identifier = screen.getByRole('textbox', { name: /identifier/i });
     userEvent.type(identifier, 'DOI');
-    identifier.blur();
+    userEvent.type(identifier, specialChars.enter);
     userEvent.type(
       await screen.findByRole('textbox', {
         name: /Your DOI must start with/i,

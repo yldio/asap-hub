@@ -66,7 +66,7 @@ const identifierMap = {
   [ResearchOutputIdentifierType.Empty]: {
     helpText: '',
     placeholder: '',
-    regex: ResearchOutputIdentifierValidationExpression.Empty,
+    regex: undefined,
     errorMessage: undefined,
     required: false,
   },

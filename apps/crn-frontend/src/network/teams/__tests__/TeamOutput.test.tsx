@@ -18,7 +18,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { specialChars } from '@testing-library/user-event';
 import { ContextType, Suspense } from 'react';
 import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -270,14 +270,13 @@ async function mandatoryFields(
     description,
   );
 
-  userEvent.type(
-    screen.getByRole('textbox', { name: /Select the option/i }),
-    type,
-  );
+  const typeInput = screen.getByRole('textbox', { name: /Select the option/i });
+  userEvent.type(typeInput, type);
+  userEvent.type(typeInput, specialChars.enter);
 
   const identifier = screen.getByRole('textbox', { name: /identifier/i });
   userEvent.type(identifier, 'DOI');
-  identifier.blur();
+  userEvent.type(identifier, specialChars.enter);
   userEvent.type(
     await screen.findByRole('textbox', {
       name: /Your DOI must start with/i,

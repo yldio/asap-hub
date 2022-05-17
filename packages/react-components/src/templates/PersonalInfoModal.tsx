@@ -1,15 +1,14 @@
-import { useState } from 'react';
-import { UserPatchRequest, UserDegree } from '@asap-hub/model';
+import { UserDegree, UserPatchRequest } from '@asap-hub/model';
 import { css } from '@emotion/react';
-
+import { useState } from 'react';
 import {
-  LabeledTextField,
   LabeledDropdown,
+  LabeledTextField,
   LabeledTypeahead,
 } from '../molecules';
-import { noop } from '../utils';
-import { perRem, tabletScreen } from '../pixels';
 import { EditModal } from '../organisms';
+import { perRem, tabletScreen } from '../pixels';
+import { noop } from '../utils';
 
 const fieldsContainerStyles = css({
   display: 'grid',

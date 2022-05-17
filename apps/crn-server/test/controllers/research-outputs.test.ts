@@ -1163,7 +1163,6 @@ describe('ResearchOutputs controller', () => {
 
       test('Updating the research output should return the updated output from squidex', async () => {
         const researchOutputUpdateData = getResearchOutputUpdateData();
-        const teamId = researchOutputUpdateData.teams[0];
 
         nock(config.baseUrl)
           .patch(
@@ -1173,14 +1172,7 @@ describe('ResearchOutputs controller', () => {
               updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
             },
           )
-          .reply(201, { id: researchOutputId })
-          .get(`/api/content/${config.appName}/teams/${teamId}`)
-          .matchHeader('X-Unpublished', `true`)
-          .reply(200, { data: { id: teamId, outputs: { iv: ['output-1'] } } })
-          .patch(`/api/content/${config.appName}/teams/${teamId}`, {
-            outputs: { iv: ['output-1', researchOutputId] },
-          })
-          .reply(200);
+          .reply(201, { id: researchOutputId });
 
         const result = await researchOutputs.update(
           researchOutputId,
@@ -1260,7 +1252,6 @@ describe('ResearchOutputs controller', () => {
         squidexGraphqlClientMock.request.mockImplementation(mockResponse);
 
         const researchOutputUpdateData = getResearchOutputUpdateData();
-        const teamId = researchOutputUpdateData.teams[0];
 
         const existingResearchOutputId =
           squidexResearchOutputsGraphqlResponse.queryResearchOutputsContentsWithTotal!
@@ -1274,14 +1265,7 @@ describe('ResearchOutputs controller', () => {
               updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
             },
           )
-          .reply(201, { id: existingResearchOutputId })
-          .get(`/api/content/${config.appName}/teams/${teamId}`)
-          .matchHeader('X-Unpublished', `true`)
-          .reply(200, { data: { id: teamId, outputs: { iv: ['output-1'] } } })
-          .patch(`/api/content/${config.appName}/teams/${teamId}`, {
-            outputs: { iv: ['output-1', existingResearchOutputId] },
-          })
-          .reply(200);
+          .reply(201, { id: existingResearchOutputId });
 
         const result = await researchOutputs.update(
           existingResearchOutputId,
@@ -1401,43 +1385,6 @@ describe('ResearchOutputs controller', () => {
         ).rejects.toThrow(NotFoundError);
       });
 
-      test('Should throw when a team from the research output cannot be found', async () => {
-        const researchOutputRequest = getResearchOutputUpdateData();
-
-        nock(config.baseUrl)
-          .patch(
-            `/api/content/${config.appName}/research-outputs/${researchOutputId}`,
-          )
-          .reply(201)
-          .get(
-            `/api/content/${config.appName}/teams/${researchOutputRequest.teams[0]}`,
-          )
-          .reply(404);
-
-        await expect(
-          researchOutputs.update(researchOutputId, researchOutputRequest),
-        ).rejects.toThrow(NotFoundError);
-      });
-
-      test('Should throw when research output to team association cannot be made', async () => {
-        const researchOutputRequest = getResearchOutputUpdateData();
-        const teamId = researchOutputRequest.teams[0];
-
-        nock(config.baseUrl)
-          .patch(
-            `/api/content/${config.appName}/research-outputs/${researchOutputId}`,
-          )
-          .reply(201)
-          .get(`/api/content/${config.appName}/teams/${teamId}`)
-          .reply(200, { data: { id: teamId, outputs: { iv: ['output-1'] } } })
-          .patch(`/api/content/${config.appName}/teams/${teamId}`)
-          .reply(500);
-
-        await expect(
-          researchOutputs.update(researchOutputId, researchOutputRequest),
-        ).rejects.toThrow(GenericError);
-      });
-
       test('Should associate external authors (new and existent)', async () => {
         const researchOutputRequest = {
           ...getResearchOutputUpdateData(),
@@ -1453,7 +1400,6 @@ describe('ResearchOutputs controller', () => {
             },
           ],
         };
-        const teamId = researchOutputRequest.teams[0];
         const researchOutputId = 'created-output-id';
 
         nock(config.baseUrl)
@@ -1464,10 +1410,6 @@ describe('ResearchOutputs controller', () => {
             },
           )
           .reply(200, { id: 'author-2' })
-          .get(`/api/content/${config.appName}/teams/${teamId}`)
-          .reply(200, { data: { id: teamId } })
-          .patch(`/api/content/${config.appName}/teams/${teamId}`)
-          .reply(200)
           .patch(
             `/api/content/${config.appName}/research-outputs/${researchOutputId}`,
             {

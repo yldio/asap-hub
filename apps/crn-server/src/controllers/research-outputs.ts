@@ -165,7 +165,7 @@ export default class ResearchOutputs implements ResearchOutputController {
     });
 
     const researchOutputAuthors = await Promise.all(
-      authors.map((author) => this.associateResearchOutputToAuthors(author)),
+      authors.map((author) => this.mapAuthorInputToId(author)),
     );
 
     const { methods, organisms, environments, subtype } =
@@ -203,7 +203,7 @@ export default class ResearchOutputs implements ResearchOutputController {
     );
 
     const researchOutputAuthors = await Promise.all(
-      authors.map((author) => this.associateResearchOutputToAuthors(author)),
+      authors.map((author) => this.mapAuthorInputToId(author)),
     );
 
     const { methods, organisms, environments, subtype } =
@@ -217,12 +217,6 @@ export default class ResearchOutputs implements ResearchOutputController {
       environments,
       subtype,
     });
-
-    await Promise.all(
-      teams.map((teamId) =>
-        this.associateResearchOutputToTeam(teamId, researchOutputId),
-      ),
-    );
 
     return this.fetchById(researchOutputId);
   }
@@ -386,7 +380,7 @@ export default class ResearchOutputs implements ResearchOutputController {
     });
   }
 
-  private async associateResearchOutputToAuthors(data: ExternalAuthorInput) {
+  private async mapAuthorInputToId(data: ExternalAuthorInput) {
     if ('userId' in data) return data.userId;
     if ('externalAuthorId' in data) return data.externalAuthorId;
 

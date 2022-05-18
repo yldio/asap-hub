@@ -153,70 +153,83 @@ export default class ResearchOutputs implements ResearchOutputController {
     };
   }
 
-  async create({
-    teams,
-    authors = [],
-    ...researchOutputData
-  }: ResearchOutputCreateData): Promise<Partial<ResearchOutputResponse>> {
-    await this.validateResearchOutputUniques({
-      ...researchOutputData,
-      authors,
-      teams,
-    });
-
-    const researchOutputAuthors = await Promise.all(
-      authors.map((author) => this.mapAuthorInputToId(author)),
-    );
-
-    const { methods, organisms, environments, subtype } =
-      await this.parseResearchTags(researchOutputData);
-
-    const { id: researchOutputId } = await this.createResearchOutput({
-      authors: researchOutputAuthors,
-      ...researchOutputData,
-      methods,
-      organisms,
-      environments,
-      subtype,
-    });
-
-    await Promise.all(
-      teams.map((teamId) =>
-        this.associateResearchOutputToTeam(teamId, researchOutputId),
-      ),
-    );
-
-    return this.fetchById(researchOutputId);
+  async create(
+    researchOutputData: ResearchOutputCreateData,
+  ): Promise<Partial<ResearchOutputResponse>> {
+    return this.upsertResearchOutput(researchOutputData);
   }
 
   async update(
     researchOutputId: string,
-    { teams, authors = [], ...researchOutputData }: ResearchOutputUpdateData,
+    researchOutputData: ResearchOutputUpdateData,
   ): Promise<Partial<ResearchOutputResponse>> {
-    await this.validateResearchOutputUniques(
-      {
-        ...researchOutputData,
-        authors,
-        teams,
-      },
+    return this.upsertResearchOutput({
       researchOutputId,
+      ...researchOutputData,
+    });
+  }
+
+  private async upsertResearchOutput(
+    researchOutputData:
+      | (ResearchOutputUpdateData & { researchOutputId: string })
+      | ResearchOutputCreateData,
+  ) {
+    await this.validateResearchOutputUniques(
+      researchOutputData,
+      ('researchOutputId' in researchOutputData &&
+        researchOutputData.researchOutputId) ||
+        '',
     );
 
     const researchOutputAuthors = await Promise.all(
-      authors.map((author) => this.mapAuthorInputToId(author)),
+      (researchOutputData.authors || []).map((author) =>
+        this.mapAuthorInputToId(author),
+      ),
     );
 
     const { methods, organisms, environments, subtype } =
       await this.parseResearchTags({ ...researchOutputData });
 
-    await this.updateResearchOutput(researchOutputId, {
-      authors: researchOutputAuthors,
-      ...researchOutputData,
-      methods,
-      organisms,
-      environments,
-      subtype,
-    });
+    let researchOutputId: string;
+
+    if ('researchOutputId' in researchOutputData) {
+      const {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        researchOutputId: _,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        teams: __,
+        ...researchOutputUpdateData
+      } = researchOutputData;
+
+      await this.updateResearchOutput(researchOutputData.researchOutputId, {
+        ...researchOutputUpdateData,
+        authors: researchOutputAuthors,
+        methods,
+        organisms,
+        environments,
+        subtype,
+      });
+
+      researchOutputId = researchOutputData.researchOutputId;
+    } else {
+      const { teams, ...researchOutputCreateData } = researchOutputData;
+      const result = await this.createResearchOutput({
+        ...researchOutputCreateData,
+        authors: researchOutputAuthors,
+        methods,
+        organisms,
+        environments,
+        subtype,
+      });
+
+      researchOutputId = result.id;
+
+      await Promise.all(
+        teams.map((teamId) =>
+          this.associateResearchOutputToTeam(teamId, researchOutputId),
+        ),
+      );
+    }
 
     return this.fetchById(researchOutputId);
   }

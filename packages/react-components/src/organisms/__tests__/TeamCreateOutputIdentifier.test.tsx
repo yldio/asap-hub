@@ -63,6 +63,18 @@ it('if not required then does not show error message for missing value', () => {
     screen.queryByText('Please choose an identifier'),
   ).not.toBeInTheDocument();
 });
+it('should not show a validation message for a required component when re rendered as optional', () => {
+  const { rerender } = render(
+    <TeamCreateOutputIdentifier {...props} required={true} />,
+  );
+  screen.getByRole('textbox', { name: /identifier/i }).focus();
+  screen.getByRole('textbox', { name: /identifier/i }).blur();
+  expect(screen.getByText('Please choose an identifier')).toBeInTheDocument();
+  rerender(<TeamCreateOutputIdentifier {...props} required={false} />);
+  expect(
+    screen.queryByText('Please choose an identifier'),
+  ).not.toBeInTheDocument();
+});
 
 it('should show an error when field is required but no input is provided', async () => {
   render(

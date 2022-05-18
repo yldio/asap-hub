@@ -490,6 +490,16 @@ describe('/research-outputs/ route', () => {
       expect(response.body).toEqual(researchOutputResponse);
     });
 
+    test('Should return 403 when user is not permitted to update research output', async () => {
+      const response = await supertest(app)
+        .put('/research-outputs/abc123')
+        .send({
+          ...researchOutputPutRequest,
+          teams: ['team-id-that-does-not-belong-to-user'],
+        });
+      expect(response.status).toBe(403);
+    });
+
     describe('Parameter validation', () => {
       test('Should return a validation error when the arguments are not valid', async () => {
         const response = await supertest(app)

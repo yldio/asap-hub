@@ -76,6 +76,16 @@ export const researchOutputRouteFactory = (
       const updateRequest = validateResearchOutputPutRequestParameters(body);
       validateResearchOutputPostRequestParametersIdentifiers(body);
 
+      if (
+        !loggedInUser ||
+        !hasCreateUpdateResearchOutputPermissions(
+          loggedInUser,
+          updateRequest.teams,
+        )
+      ) {
+        throw Boom.forbidden();
+      }
+
       const researchOutput = await researchOutputController.update(
         researchOutputId,
         {

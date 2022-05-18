@@ -22,7 +22,7 @@ import {
 
 type TeamCreateOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
-  'tags' | 'accessInstructions' | 'labCatalogNumber' | 'methods'
+  'tags' | 'accessInstructions' | 'labCatalogNumber' | 'methods' | 'organisms'
 > & {
   tagSuggestions: NonNullable<
     ComponentProps<typeof LabeledMultiSelect>['suggestions']
@@ -31,6 +31,7 @@ type TeamCreateOutputExtraInformationProps = Pick<
   onChangeAccessInstructions?: (value: string) => void;
   onChangeLabCatalogNumber?: (value: string) => void;
   onChangeMethods?: (value: string[]) => void;
+  onChangeOrganisms?: (value: string[]) => void;
   isSaving: boolean;
   documentType: ResearchOutputDocumentType;
   identifierRequired: boolean;
@@ -56,6 +57,8 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     onChangeLabCatalogNumber,
     methods,
     onChangeMethods = noop,
+    organisms,
+    onChangeOrganisms = noop,
     getResearchTags,
     type,
   }) => {
@@ -64,6 +67,9 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     const methodSuggestions = researchTags.filter(
       (tag) => tag.category === 'Method',
     );
+    const organismSuggestions = researchTags.filter(
+      (tag) => tag.category === 'Organism',
+    );
 
     const fetchResearchTags = useCallback(
       async (typeForResearchTags: ResearchOutputPostRequest['type'] | '') => {
@@ -71,6 +77,7 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
           setResearchTags([]);
           return;
         }
+
         const data = await getResearchTags(typeForResearchTags);
 
         setResearchTags(data);
@@ -85,7 +92,8 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
 
     useEffect(() => {
       onChangeMethods([]);
-    }, [type, onChangeMethods]);
+      onChangeOrganisms([]);
+    }, [type, onChangeMethods, onChangeOrganisms]);
 
     return (
       <FormCard title="What extra information can you provide?">
@@ -105,6 +113,25 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
             enabled={!isSaving}
             onChange={(options) =>
               onChangeMethods(options.map(({ value }) => value))
+            }
+          />
+        )}
+        {organismSuggestions.length > 0 && (
+          <LabeledMultiSelect
+            title="Organisms"
+            subtitle="(optional)"
+            values={organisms.map((organism) => ({
+              label: organism,
+              value: organism,
+            }))}
+            suggestions={organismSuggestions.map((organism) => ({
+              label: organism.name,
+              value: organism.name,
+            }))}
+            placeholder="Add an organism (E.g. Mouse)"
+            enabled={!isSaving}
+            onChange={(options) =>
+              onChangeOrganisms(options.map(({ value }) => value))
             }
           />
         )}

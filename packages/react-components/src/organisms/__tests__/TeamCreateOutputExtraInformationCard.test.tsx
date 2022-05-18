@@ -1,4 +1,7 @@
-import { researchTagResponse } from '@asap-hub/fixtures';
+import {
+  researchTagMethodResponse,
+  researchTagOrganismResponse,
+} from '@asap-hub/fixtures';
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
@@ -16,6 +19,7 @@ const getProps = (): {
       tagSuggestions: [],
       tags: [],
       methods: [],
+      organisms: [],
       documentType: 'Article',
       identifierRequired: false,
       type: 'Protein Data',
@@ -105,18 +109,7 @@ it('should trigger an onChange event when a method is selected', async () => {
   render(
     <TeamCreateOutputExtraInformationCard
       {...props}
-      getResearchTags={() =>
-        Promise.resolve([
-          researchTagResponse,
-          {
-            id: '4321',
-            name: 'MRI',
-            category: 'Method',
-            types: ['Protein Data', 'Assay'],
-            entities: ['Research Output'],
-          },
-        ])
-      }
+      getResearchTags={() => Promise.resolve([researchTagMethodResponse])}
       onChangeMethods={mockOnChange}
     />,
   );
@@ -126,4 +119,29 @@ it('should trigger an onChange event when a method is selected', async () => {
   userEvent.click(screen.getByLabelText(/method/i));
   userEvent.click(screen.getByText('Activity Assay'));
   expect(mockOnChange).toHaveBeenCalledWith(['Activity Assay']);
+});
+
+it('should hide organisms when there is no suggestions', async () => {
+  const { props, waitForGetResearchTags } = getProps();
+  render(<TeamCreateOutputExtraInformationCard {...props} />);
+  expect(screen.queryByLabelText(/Organisms/i)).toBeNull();
+  await waitForGetResearchTags();
+});
+
+it('should trigger an onChange event when an organism is selected', async () => {
+  const { props } = getProps();
+  const mockOnChange = jest.fn();
+  render(
+    <TeamCreateOutputExtraInformationCard
+      {...props}
+      getResearchTags={() => Promise.resolve([researchTagOrganismResponse])}
+      onChangeOrganisms={mockOnChange}
+    />,
+  );
+
+  expect(await screen.findByLabelText(/organisms/i)).toBeVisible();
+
+  userEvent.click(screen.getByLabelText(/organisms/i));
+  userEvent.click(screen.getByText('Rat'));
+  expect(mockOnChange).toHaveBeenCalledWith(['Rat']);
 });

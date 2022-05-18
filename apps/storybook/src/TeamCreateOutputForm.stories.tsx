@@ -1,7 +1,7 @@
 import {
   createTeamResponse,
   createUserResponse,
-  researchTagResponse,
+  researchTagMethodResponse,
 } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { TeamCreateOutputForm } from '@asap-hub/react-components';
@@ -49,7 +49,7 @@ export const Normal = () => (
       getResearchTags={() =>
         new Promise((resolve) => {
           setTimeout(() => {
-            resolve([researchTagResponse]);
+            resolve([researchTagMethodResponse]);
           }, 1000);
         })
       }

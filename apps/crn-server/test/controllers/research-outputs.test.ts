@@ -822,6 +822,28 @@ describe('ResearchOutputs controller', () => {
         );
       });
 
+      test('Should default the missing subtype to an empty array', async () => {
+        const researchOutputRequest = getResearchOutputCreateData();
+        researchOutputRequest.subtype = undefined;
+        const teamId = researchOutputRequest.teams[0];
+        const researchOutputId = 'created-output-id';
+
+        nock(config.baseUrl)
+          .post(
+            `/api/content/${config.appName}/research-outputs?publish=true`,
+            { ...getRestResearchOutputCreateData(), subtype: { iv: [] } },
+          )
+          .reply(201, { id: researchOutputId })
+          .get(`/api/content/${config.appName}/teams/${teamId}`)
+          .reply(200, { data: { id: teamId, outputs: { iv: ['output-1'] } } })
+          .patch(`/api/content/${config.appName}/teams/${teamId}`, {
+            outputs: { iv: ['output-1', researchOutputId] },
+          })
+          .reply(200);
+
+        await researchOutputs.create(researchOutputRequest);
+      });
+
       test('Should throw when cannot create an external author - 400', async () => {
         nock(config.baseUrl)
           .post(

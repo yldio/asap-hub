@@ -48,7 +48,7 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     accessInstructions,
     isSaving,
     identifier = '',
-    identifierType = ResearchOutputIdentifierType.None,
+    identifierType = ResearchOutputIdentifierType.Empty,
     setIdentifier = noop,
     setIdentifierType = noop,
     identifierRequired,

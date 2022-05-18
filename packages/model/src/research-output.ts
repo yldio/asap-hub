@@ -130,7 +130,6 @@ export const researchOutputMapType = (
 
 export enum ResearchOutputIdentifierType {
   Empty = '',
-  None = 'None',
   DOI = 'DOI',
   AccessionNumber = 'Accession Number',
   RRID = 'RRID',
@@ -140,29 +139,20 @@ export const researchOutputToIdentifierType: Record<
   ResearchOutputDocumentType,
   ResearchOutputIdentifierType[]
 > = {
-  Article: [
-    ResearchOutputIdentifierType.None,
-    ResearchOutputIdentifierType.DOI,
-  ],
+  Article: [ResearchOutputIdentifierType.DOI],
   Bioinformatics: [
-    ResearchOutputIdentifierType.None,
     ResearchOutputIdentifierType.DOI,
     ResearchOutputIdentifierType.RRID,
   ],
   'Lab Resource': [
-    ResearchOutputIdentifierType.None,
     ResearchOutputIdentifierType.DOI,
     ResearchOutputIdentifierType.RRID,
   ],
   Dataset: [
-    ResearchOutputIdentifierType.None,
     ResearchOutputIdentifierType.DOI,
     ResearchOutputIdentifierType.AccessionNumber,
   ],
-  Protocol: [
-    ResearchOutputIdentifierType.None,
-    ResearchOutputIdentifierType.DOI,
-  ],
+  Protocol: [ResearchOutputIdentifierType.DOI],
   'Grant Document': [],
   Presentation: [],
 };

@@ -49,11 +49,19 @@ it('should set the identifier to the selected value', () => {
   );
 });
 
-it('shows error message for missing value', () => {
-  render(<TeamCreateOutputIdentifier {...props} />);
+it('if required shows error message for missing value', () => {
+  render(<TeamCreateOutputIdentifier {...props} required={true} />);
   screen.getByRole('textbox', { name: /identifier/i }).focus();
   screen.getByRole('textbox', { name: /identifier/i }).blur();
-  expect(screen.getByText('Please choose an identifier')).toBeVisible();
+  expect(screen.getByText('Please choose an identifier')).toBeInTheDocument();
+});
+it('if not required then does not show error message for missing value', () => {
+  render(<TeamCreateOutputIdentifier {...props} required={false} />);
+  screen.getByRole('textbox', { name: /identifier/i }).focus();
+  screen.getByRole('textbox', { name: /identifier/i }).blur();
+  expect(
+    screen.queryByText('Please choose an identifier'),
+  ).not.toBeInTheDocument();
 });
 
 it('should show an error when field is required but no input is provided', async () => {
@@ -99,12 +107,25 @@ describe.each`
   });
 });
 
-it('If require, None should be unavailable', () => {
+it('If required, required should be displayed', () => {
   const { rerender } = render(<TeamCreateOutputIdentifier {...props} />);
   const textbox = screen.getByRole('textbox', { name: /identifier/i });
   userEvent.click(textbox);
-  expect(screen.getByText('None')).toBeVisible();
+
+  expect(
+    screen.getByRole('textbox', { name: 'Identifier Type (optional)' }),
+  ).toBeInTheDocument();
+  expect(
+    screen.queryByRole('textbox', { name: 'Identifier Type (required)' }),
+  ).not.toBeInTheDocument();
+
   rerender(<TeamCreateOutputIdentifier {...props} required={true} />);
   userEvent.click(textbox);
-  expect(screen.queryByText('None')).toBeNull();
+
+  expect(
+    screen.queryByRole('textbox', { name: 'Identifier Type (optional)' }),
+  ).not.toBeInTheDocument();
+  expect(
+    screen.getByRole('textbox', { name: 'Identifier Type (required)' }),
+  ).toBeInTheDocument();
 });

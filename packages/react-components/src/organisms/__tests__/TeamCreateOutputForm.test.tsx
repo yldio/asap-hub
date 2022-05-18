@@ -1,4 +1,8 @@
-import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
+import {
+  createTeamResponse,
+  createUserResponse,
+  researchTagOrganismResponse,
+} from '@asap-hub/fixtures';
 import {
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
@@ -323,6 +327,18 @@ describe('on submit', () => {
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
       methods: ['Activity Assay'],
+    });
+  });
+  it('can submit an organism', async () => {
+    getResearchTags.mockResolvedValue([researchTagOrganismResponse]);
+    await setupForm();
+
+    userEvent.click(screen.getByRole('textbox', { name: /organisms/i }));
+    userEvent.click(screen.getByText('Rat'));
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      organisms: ['Rat'],
     });
   });
 

@@ -5,7 +5,7 @@ import {
 import { ResearchOutputResponse } from '@asap-hub/model';
 import {
   createResearchOutputResponse,
-  researchTagResponse,
+  researchTagsResponse,
 } from '@asap-hub/fixtures';
 
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
@@ -23,4 +23,4 @@ export const getResearchOutputs = jest.fn(
   > => createResearchOutputListAlgoliaResponse(2),
 );
 
-export const getResearchTags = jest.fn(async () => [researchTagResponse]);
+export const getResearchTags = jest.fn(async () => researchTagsResponse);

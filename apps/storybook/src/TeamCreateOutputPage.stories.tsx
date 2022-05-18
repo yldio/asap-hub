@@ -1,7 +1,7 @@
 import {
   createTeamResponse,
   createUserResponse,
-  researchTagResponse,
+  researchTagMethodResponse,
 } from '@asap-hub/fixtures';
 import { TeamCreateOutputPage } from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom';
@@ -47,7 +47,7 @@ export const Normal = () => (
       getResearchTags={() =>
         new Promise((resolve) => {
           setTimeout(() => {
-            resolve([researchTagResponse]);
+            resolve([researchTagMethodResponse]);
           }, 1000);
         })
       }

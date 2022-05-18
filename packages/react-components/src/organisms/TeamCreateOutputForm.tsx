@@ -151,6 +151,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [identifier, setIdentifier] = useState<string>('');
 
   const [methods, setMethods] = useState<string[]>([]);
+  const [organisms, setOrganisms] = useState<string[]>([]);
 
   return (
     <Form<ResearchOutputResponse>
@@ -164,6 +165,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         labs.length !== 0 ||
         authors.length !== 0 ||
         methods.length !== 0 ||
+        organisms.length !== 0 ||
         identifierType !== ResearchOutputIdentifierType.Empty ||
         identifier !== '' ||
         labCatalogNumber !== '' ||
@@ -214,7 +216,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
               : undefined,
           addedDate: new Date().toISOString(),
           methods,
-          organisms: [],
+          organisms,
           environments: [],
         });
       }}
@@ -263,6 +265,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangeLabCatalogNumber={setLabCatalogNumber}
             methods={methods}
             onChangeMethods={setMethods}
+            organisms={organisms}
+            onChangeOrganisms={setOrganisms}
             type={type}
           />
           <TeamCreateOutputContributorsCard

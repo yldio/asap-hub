@@ -89,9 +89,10 @@ export function useValidation<T extends ValidationTarget>(
   const validate = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const inputField = inputRef.current!;
+    const inputFieldValidity = inputField.validity.valid;
     setValidationMessage(
       (getValidationMessage &&
-        !inputField.validity.valid &&
+        !inputFieldValidity &&
         getValidationMessage(inputField.validity)) ||
         inputField.validationMessage,
     );

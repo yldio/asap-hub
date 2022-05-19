@@ -15,14 +15,8 @@ const getIdentifiers = (
   value: ResearchOutputIdentifierType;
   label: ResearchOutputIdentifierType;
 }> => {
-  let identifiers =
+  const identifiers =
     researchOutputToIdentifierType[researchOutputDocumentType] ?? [];
-
-  if (required) {
-    identifiers = identifiers.filter(
-      (identifier) => identifier !== ResearchOutputIdentifierType.None,
-    );
-  }
 
   return identifiers.map((identifier) => ({
     value: identifier,
@@ -56,13 +50,6 @@ const identifierMap = {
       'Please enter a valid RRID which starts with `RRID`. (e.g. RRID:SCR_007358)',
     required: true,
   },
-  [ResearchOutputIdentifierType.None]: {
-    helpText: '',
-    placeholder: '',
-    regex: ResearchOutputIdentifierValidationExpression.None,
-    errorMessage: undefined,
-    required: false,
-  },
   [ResearchOutputIdentifierType.Empty]: {
     helpText: '',
     placeholder: '',
@@ -92,8 +79,7 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
   }) => {
     const data = useMemo(
       () =>
-        identifierType === ResearchOutputIdentifierType.Empty ||
-        identifierType === ResearchOutputIdentifierType.None
+        identifierType === ResearchOutputIdentifierType.Empty
           ? null
           : identifierMap[identifierType],
       [identifierType],
@@ -110,6 +96,7 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
     const onChangeIdentifierType = useCallback(
       (newType: string) => {
         if (
+          newType === undefined ||
           identifiers.find(
             (availableIdentifier) => availableIdentifier.value === newType,
           )
@@ -120,17 +107,23 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
       [setIdentifierType, identifiers],
     );
 
+    useEffect(() => {
+      if (!identifiers.map((i) => i.value).includes(identifierType)) {
+        setIdentifierType(ResearchOutputIdentifierType.Empty);
+      }
+    }, [identifierType, identifiers, setIdentifierType]);
+    const subtitle = required ? 'required' : 'optional';
     return (
       <>
         <LabeledDropdown
           title="Identifier Type"
-          subtitle="(required)"
+          subtitle={`(${subtitle})`}
           options={identifiers}
           value={identifierType}
           onChange={onChangeIdentifierType}
           placeholder={'Choose an identifier'}
           getValidationMessage={() => `Please choose an identifier`}
-          required
+          required={required}
         />
         {data && (
           <LabeledTextField

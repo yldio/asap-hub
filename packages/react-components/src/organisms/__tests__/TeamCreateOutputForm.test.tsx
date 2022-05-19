@@ -11,7 +11,6 @@ import {
 import {
   render,
   screen,
-  waitFor,
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
@@ -35,7 +34,7 @@ jest.setTimeout(60000);
 describe('createIdentifierField', () => {
   it('maps the ResearchOutputIdentifierType to fields including the identifier', () => {
     expect(
-      createIdentifierField(ResearchOutputIdentifierType.None, 'identifier'),
+      createIdentifierField(ResearchOutputIdentifierType.Empty, 'identifier'),
     ).toEqual({});
     expect(
       createIdentifierField(ResearchOutputIdentifierType.RRID, 'identifier'),
@@ -103,7 +102,7 @@ it('displays current team within the form', async () => {
   expect(screen.getByText('example team')).toBeVisible();
 });
 
-it('is funded and publication are both yes, then the none option is removed', async () => {
+it('is funded and publication are both yes, then the identifier type is required', async () => {
   render(
     <StaticRouter>
       <TeamCreateOutputForm {...props} />
@@ -111,7 +110,10 @@ it('is funded and publication are both yes, then the none option is removed', as
   );
   const textbox = screen.getByRole('textbox', { name: /identifier/i });
   userEvent.click(textbox);
-  expect(screen.getByText('None')).toBeVisible();
+
+  expect(
+    screen.getByRole('textbox', { name: 'Identifier Type (optional)' }),
+  ).toBeInTheDocument();
 
   const funded = screen.getByRole('group', {
     name: /Has this output been funded by ASAP/i,
@@ -124,9 +126,9 @@ it('is funded and publication are both yes, then the none option is removed', as
   userEvent.click(within(publication).getByText('Yes'));
   userEvent.click(textbox);
 
-  await waitFor(() => {
-    expect(screen.queryByText('None')).toBeNull();
-  });
+  expect(
+    screen.getByRole('textbox', { name: 'Identifier Type (required)' }),
+  ).toBeInTheDocument();
 });
 
 describe('on submit', () => {

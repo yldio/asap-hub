@@ -177,7 +177,7 @@ test('http returns cors headers', async () => {
 describe('GenericErrors', () => {
   test('should return 404 on NotFoundError', async () => {
     const handler = http(async (_) => {
-      throw new NotFoundError();
+      throw new NotFoundError(new Error());
     });
     const result = await handler(apiGatewayEvent({}));
     expect(result.statusCode).toStrictEqual(404);
@@ -185,7 +185,7 @@ describe('GenericErrors', () => {
 
   test('should return 400 on ValidationError', async () => {
     const handler = http(async (_) => {
-      throw new ValidationError();
+      throw new ValidationError(new Error());
     });
     const result = await handler(apiGatewayEvent({}));
     expect(result.statusCode).toStrictEqual(400);

@@ -5,6 +5,16 @@ const researchOutput = route(
   { researchOutputId: stringParser },
   {},
 );
-const sharedResearch = route('/shared-research', {}, { researchOutput });
+const editResearchOutput = route(
+  '/:researchOutputId/edit',
+  { researchOutputId: stringParser },
+  {},
+);
+
+const sharedResearch = route(
+  '/shared-research',
+  {},
+  { researchOutput, editResearchOutput },
+);
 
 export default sharedResearch;

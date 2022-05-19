@@ -2,6 +2,7 @@ import {
   createTeamResponse,
   createUserResponse,
   researchTagOrganismResponse,
+  createResearchOutputResponse,
 } from '@asap-hub/fixtures';
 import {
   ResearchOutputIdentifierType,
@@ -19,11 +20,11 @@ import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
 import { Router, StaticRouter } from 'react-router-dom';
-import TeamCreateOutputForm, {
+import ResearchOutputForm, {
   createIdentifierField,
-} from '../TeamCreateOutputForm';
+} from '../ResearchOutputForm';
 
-const props: ComponentProps<typeof TeamCreateOutputForm> = {
+const props: ComponentProps<typeof ResearchOutputForm> = {
   onSave: jest.fn(() => Promise.resolve()),
   tagSuggestions: [],
   getResearchTags: jest.fn().mockResolvedValue([]),
@@ -55,19 +56,33 @@ describe('createIdentifierField', () => {
 it('renders the form', async () => {
   render(
     <StaticRouter>
-      <TeamCreateOutputForm {...props} />
+      <ResearchOutputForm {...props} />
     </StaticRouter>,
   );
   expect(
     screen.getByRole('heading', { name: /What are you sharing/i }),
   ).toBeVisible();
+  expect(screen.getByRole('button', { name: /Publish/i })).toBeVisible();
+});
+
+it('renders the edit form button when research output data is present', async () => {
+  render(
+    <StaticRouter>
+      <ResearchOutputForm
+        {...props}
+        researchOutputData={createResearchOutputResponse()}
+      />
+    </StaticRouter>,
+  );
+
+  expect(screen.getByRole('button', { name: /Save/i })).toBeVisible();
 });
 
 it('displays proper message when no author is found', async () => {
   const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
   render(
     <StaticRouter>
-      <TeamCreateOutputForm
+      <ResearchOutputForm
         {...props}
         getAuthorSuggestions={getAuthorSuggestions}
       />
@@ -83,7 +98,7 @@ it('displays proper message when no lab is found', async () => {
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
   render(
     <StaticRouter>
-      <TeamCreateOutputForm {...props} getLabSuggestions={getLabSuggestions} />
+      <ResearchOutputForm {...props} getLabSuggestions={getLabSuggestions} />
     </StaticRouter>,
   );
   userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
@@ -94,7 +109,7 @@ it('displays proper message when no lab is found', async () => {
 it('displays current team within the form', async () => {
   render(
     <StaticRouter>
-      <TeamCreateOutputForm
+      <ResearchOutputForm
         {...props}
         team={{ ...createTeamResponse(), displayName: 'example team' }}
       />
@@ -106,7 +121,7 @@ it('displays current team within the form', async () => {
 it('is funded and publication are both yes, then the none option is removed', async () => {
   render(
     <StaticRouter>
-      <TeamCreateOutputForm {...props} />
+      <ResearchOutputForm {...props} />
     </StaticRouter>,
   );
   const textbox = screen.getByRole('textbox', { name: /identifier/i });
@@ -181,12 +196,12 @@ describe('on submit', () => {
       link: 'http://example.com',
     },
     documentType: ComponentProps<
-      typeof TeamCreateOutputForm
+      typeof ResearchOutputForm
     >['documentType'] = 'Article',
   ) => {
     render(
       <Router history={history}>
-        <TeamCreateOutputForm
+        <ResearchOutputForm
           {...props}
           team={{ ...createTeamResponse(), id: 'TEAMID' }}
           documentType={documentType}

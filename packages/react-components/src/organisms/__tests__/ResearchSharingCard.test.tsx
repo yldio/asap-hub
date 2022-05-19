@@ -3,9 +3,9 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { startOfTomorrow } from 'date-fns';
 import { ComponentProps } from 'react';
-import TeamCreateOutputFormSharingCard from '../TeamCreateOutputFormSharingCard';
+import ResearchOutputFormSharingCard from '../ResearchOutputFormSharingCard';
 
-const props: ComponentProps<typeof TeamCreateOutputFormSharingCard> = {
+const props: ComponentProps<typeof ResearchOutputFormSharingCard> = {
   description: '',
   isSaving: false,
   title: '',
@@ -18,7 +18,7 @@ const props: ComponentProps<typeof TeamCreateOutputFormSharingCard> = {
 };
 it('renders the card with provided values', () => {
   render(
-    <TeamCreateOutputFormSharingCard
+    <ResearchOutputFormSharingCard
       {...props}
       documentType="Article"
       description="description"
@@ -40,7 +40,7 @@ it.each`
   ${'Title'}       | ${/title/i}       | ${'Please enter a title'}
   ${'Type'}        | ${/type/i}        | ${'Please choose a type'}
 `('shows error message for missing value $title', async ({ label, error }) => {
-  render(<TeamCreateOutputFormSharingCard {...props} />);
+  render(<ResearchOutputFormSharingCard {...props} />);
   const input = screen.getByLabelText(label);
   fireEvent.focusOut(input);
   expect(await screen.findByText(error)).toBeVisible();
@@ -48,7 +48,7 @@ it.each`
 
 it('lab resource does not require an url', async () => {
   render(
-    <TeamCreateOutputFormSharingCard {...props} documentType="Lab Resource" />,
+    <ResearchOutputFormSharingCard {...props} documentType="Lab Resource" />,
   );
   expect(
     await screen.findByText(
@@ -74,7 +74,7 @@ it.each`
 `('triggers an onchange event for $field', async ({ label, prop }) => {
   const onChangeFn = jest.fn();
   render(
-    <TeamCreateOutputFormSharingCard {...{ ...props, [prop]: onChangeFn }} />,
+    <ResearchOutputFormSharingCard {...{ ...props, [prop]: onChangeFn }} />,
   );
   const input = screen.getByLabelText(label);
   fireEvent.change(input, { target: { value: 'test' } });
@@ -89,7 +89,7 @@ it.each`
 `('triggers an onchange event for group $field', async ({ group, prop }) => {
   const onChangeFn = jest.fn();
   render(
-    <TeamCreateOutputFormSharingCard {...{ ...props, [prop]: onChangeFn }} />,
+    <ResearchOutputFormSharingCard {...{ ...props, [prop]: onChangeFn }} />,
   );
 
   const groupInput = within(
@@ -105,7 +105,7 @@ it('triggers an on change for type', async () => {
   const onChangeFn = jest.fn();
 
   render(
-    <TeamCreateOutputFormSharingCard
+    <ResearchOutputFormSharingCard
       {...props}
       documentType="Article"
       onChangeType={onChangeFn}
@@ -120,7 +120,7 @@ it('triggers an on change for type', async () => {
 });
 
 it('shows the custom no options message for type', async () => {
-  render(<TeamCreateOutputFormSharingCard {...props} documentType="Article" />);
+  render(<ResearchOutputFormSharingCard {...props} documentType="Article" />);
 
   userEvent.type(screen.getByLabelText(/type/i), 'asdflkjasdflkj');
 
@@ -131,7 +131,7 @@ it('shows the custom no options message for type', async () => {
 
 it('conditionally shows date published field', async () => {
   const { rerender } = render(
-    <TeamCreateOutputFormSharingCard
+    <ResearchOutputFormSharingCard
       {...props}
       documentType="Article"
       sharingStatus={'Network Only'}
@@ -140,7 +140,7 @@ it('conditionally shows date published field', async () => {
   expect(screen.queryByLabelText(/Date Published/i)).not.toBeInTheDocument();
 
   rerender(
-    <TeamCreateOutputFormSharingCard
+    <ResearchOutputFormSharingCard
       {...props}
       documentType="Article"
       sharingStatus={'Public'}
@@ -153,7 +153,7 @@ it('triggers an on change for date published', async () => {
   const onChangeFn = jest.fn();
 
   render(
-    <TeamCreateOutputFormSharingCard
+    <ResearchOutputFormSharingCard
       {...props}
       documentType="Article"
       sharingStatus={'Public'}
@@ -167,7 +167,7 @@ it('triggers an on change for date published', async () => {
 
 it('shows the custom error message for date published', async () => {
   render(
-    <TeamCreateOutputFormSharingCard
+    <ResearchOutputFormSharingCard
       {...props}
       documentType="Article"
       sharingStatus={'Public'}
@@ -185,7 +185,7 @@ it('shows the custom error message for date published', async () => {
 it('displays server side validation error for link and calls clears function when changed', async () => {
   const mockClearError = jest.fn();
   render(
-    <TeamCreateOutputFormSharingCard
+    <ResearchOutputFormSharingCard
       {...props}
       link="http://example.com"
       serverValidationErrors={[
@@ -212,7 +212,7 @@ it('displays server side validation error for link and calls clears function whe
 it('displays server side validation error for title and calls clears function when changed', async () => {
   const mockClearError = jest.fn();
   render(
-    <TeamCreateOutputFormSharingCard
+    <ResearchOutputFormSharingCard
       {...props}
       title="Example"
       serverValidationErrors={[

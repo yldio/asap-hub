@@ -5,10 +5,10 @@ import {
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import TeamCreateOutputExtraInformationCard from '../TeamCreateOutputExtraInformationCard';
+import ResearchOutputExtraInformationCard from '../ResearchOutputExtraInformationCard';
 
 const getProps = (): {
-  props: ComponentProps<typeof TeamCreateOutputExtraInformationCard>;
+  props: ComponentProps<typeof ResearchOutputExtraInformationCard>;
   waitForGetResearchTags: () => Promise<void>;
 } => {
   const promise = Promise.resolve([]);
@@ -35,9 +35,7 @@ const getProps = (): {
 
 it('should render a tag', async () => {
   const { props, waitForGetResearchTags } = getProps();
-  render(
-    <TeamCreateOutputExtraInformationCard {...props} tags={['example']} />,
-  );
+  render(<ResearchOutputExtraInformationCard {...props} tags={['example']} />);
   expect(screen.getByText(/example/i)).toBeVisible();
   await waitForGetResearchTags();
 });
@@ -46,7 +44,7 @@ it('should trigger an onChange event when a tag is selected', async () => {
   const mockOnChange = jest.fn();
   const { props, waitForGetResearchTags } = getProps();
   render(
-    <TeamCreateOutputExtraInformationCard
+    <ResearchOutputExtraInformationCard
       {...props}
       tagSuggestions={[{ label: 'Example', value: 'Example' }]}
       onChangeTags={mockOnChange}
@@ -62,7 +60,7 @@ it('should trigger an onChange event when a text is being typed into access inst
   const mockOnChange = jest.fn();
   const { props, waitForGetResearchTags } = getProps();
   render(
-    <TeamCreateOutputExtraInformationCard
+    <ResearchOutputExtraInformationCard
       {...props}
       accessInstructions="access-instructions-value"
       onChangeAccessInstructions={mockOnChange}
@@ -80,14 +78,11 @@ it('should trigger an onChange event when a text is being typed into access inst
 it('should show lab catalogue number for lab resources', async () => {
   const { props, waitForGetResearchTags } = getProps();
   const { rerender } = render(
-    <TeamCreateOutputExtraInformationCard
-      {...props}
-      documentType={'Article'}
-    />,
+    <ResearchOutputExtraInformationCard {...props} documentType={'Article'} />,
   );
   expect(screen.queryByLabelText(/Catalog Number/i)).toBeNull();
   rerender(
-    <TeamCreateOutputExtraInformationCard
+    <ResearchOutputExtraInformationCard
       {...props}
       documentType={'Lab Resource'}
     />,
@@ -98,7 +93,7 @@ it('should show lab catalogue number for lab resources', async () => {
 
 it('should hide methods when there is no suggestions', async () => {
   const { props, waitForGetResearchTags } = getProps();
-  render(<TeamCreateOutputExtraInformationCard {...props} />);
+  render(<ResearchOutputExtraInformationCard {...props} />);
   expect(screen.queryByLabelText(/Methods/i)).toBeNull();
   await waitForGetResearchTags();
 });
@@ -107,7 +102,7 @@ it('should trigger an onChange event when a method is selected', async () => {
   const { props } = getProps();
   const mockOnChange = jest.fn();
   render(
-    <TeamCreateOutputExtraInformationCard
+    <ResearchOutputExtraInformationCard
       {...props}
       getResearchTags={() => Promise.resolve([researchTagMethodResponse])}
       onChangeMethods={mockOnChange}
@@ -123,7 +118,7 @@ it('should trigger an onChange event when a method is selected', async () => {
 
 it('should hide organisms when there is no suggestions', async () => {
   const { props, waitForGetResearchTags } = getProps();
-  render(<TeamCreateOutputExtraInformationCard {...props} />);
+  render(<ResearchOutputExtraInformationCard {...props} />);
   expect(screen.queryByLabelText(/Organisms/i)).toBeNull();
   await waitForGetResearchTags();
 });
@@ -132,7 +127,7 @@ it('should trigger an onChange event when an organism is selected', async () => 
   const { props } = getProps();
   const mockOnChange = jest.fn();
   render(
-    <TeamCreateOutputExtraInformationCard
+    <ResearchOutputExtraInformationCard
       {...props}
       getResearchTags={() => Promise.resolve([researchTagOrganismResponse])}
       onChangeOrganisms={mockOnChange}

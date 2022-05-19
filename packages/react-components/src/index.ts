@@ -116,9 +116,9 @@ export {
   UserProfilePlaceholderCard,
   UserProfileRecentWorks,
   HelpSection,
-  TeamCreateOutputHeader,
-  TeamCreateOutputForm,
-  TeamCreateOutputExtraInformationCard,
+  ResearchOutputHeader,
+  ResearchOutputForm,
+  ResearchOutputExtraInformationCard,
   SpeakersList,
 } from './organisms';
 export {
@@ -164,7 +164,7 @@ export {
   TeamProfileAbout,
   TeamProfileOutputs,
   TeamProfilePage,
-  TeamCreateOutputPage,
+  ResearchOutputPage,
   TeamProfileWorkspace,
   ToolModal,
   UnsupportedBrowserPage,

@@ -2,22 +2,22 @@ import { ResearchOutputIdentifierType } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { TeamCreateOutputIdentifier } from '../TeamCreateOutputIdentifier';
+import { ResearchOutputIdentifier } from '../ResearchOutputIdentifier';
 
-const props: ComponentProps<typeof TeamCreateOutputIdentifier> = {
+const props: ComponentProps<typeof ResearchOutputIdentifier> = {
   documentType: 'Article',
   required: false,
 };
 
 it('should render Identifier', () => {
-  render(<TeamCreateOutputIdentifier {...props} />);
+  render(<ResearchOutputIdentifier {...props} />);
   expect(screen.getByRole('textbox', { name: /Identifier/i })).toBeVisible();
 });
 
 it('should reset the identifier to a valid value on entering something unknown', () => {
   const setIdentifierType = jest.fn();
   render(
-    <TeamCreateOutputIdentifier
+    <ResearchOutputIdentifier
       {...props}
       setIdentifierType={setIdentifierType}
     />,
@@ -34,7 +34,7 @@ it('should reset the identifier to a valid value on entering something unknown',
 it('should set the identifier to the selected value', () => {
   const setIdentifierType = jest.fn();
   render(
-    <TeamCreateOutputIdentifier
+    <ResearchOutputIdentifier
       {...props}
       setIdentifierType={setIdentifierType}
     />,
@@ -50,7 +50,7 @@ it('should set the identifier to the selected value', () => {
 });
 
 it('shows error message for missing value', () => {
-  render(<TeamCreateOutputIdentifier {...props} />);
+  render(<ResearchOutputIdentifier {...props} />);
   screen.getByRole('textbox', { name: /identifier/i }).focus();
   screen.getByRole('textbox', { name: /identifier/i }).blur();
   expect(screen.getByText('Please choose an identifier')).toBeVisible();
@@ -58,7 +58,7 @@ it('shows error message for missing value', () => {
 
 it('should show an error when field is required but no input is provided', async () => {
   render(
-    <TeamCreateOutputIdentifier
+    <ResearchOutputIdentifier
       {...props}
       identifierType={ResearchOutputIdentifierType.RRID}
     />,
@@ -86,7 +86,7 @@ describe.each`
   };
   it(`shows ${isValid ? 'no' : ''} error `, async () => {
     render(
-      <TeamCreateOutputIdentifier
+      <ResearchOutputIdentifier
         {...props}
         identifierType={type}
         identifier={identifier}
@@ -100,11 +100,11 @@ describe.each`
 });
 
 it('If require, None should be unavailable', () => {
-  const { rerender } = render(<TeamCreateOutputIdentifier {...props} />);
+  const { rerender } = render(<ResearchOutputIdentifier {...props} />);
   const textbox = screen.getByRole('textbox', { name: /identifier/i });
   userEvent.click(textbox);
   expect(screen.getByText('None')).toBeVisible();
-  rerender(<TeamCreateOutputIdentifier {...props} required={true} />);
+  rerender(<ResearchOutputIdentifier {...props} required={true} />);
   userEvent.click(textbox);
   expect(screen.queryByText('None')).toBeNull();
 });

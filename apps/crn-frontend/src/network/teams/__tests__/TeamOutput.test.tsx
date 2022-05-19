@@ -56,6 +56,17 @@ describe('TeamOutput', () => {
     ).toBeInTheDocument();
   });
 
+  it('Renders the correct button in create mode', async () => {
+    await renderPage({
+      teamId: '42',
+      outputDocumentType: 'bioinformatics',
+    });
+
+    expect(
+      screen.getByRole('button', { name: /Publish/i }),
+    ).toBeInTheDocument();
+  });
+
   it('switches research output type based on parameter', async () => {
     await renderPage({ teamId: '42', outputDocumentType: 'article' });
 

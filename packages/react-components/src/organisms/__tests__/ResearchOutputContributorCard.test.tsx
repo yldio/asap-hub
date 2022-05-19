@@ -3,9 +3,9 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { createUserResponse } from '@asap-hub/fixtures';
-import TeamCreateOutputContributorsCard from '../TeamCreateOutputContributorsCard';
+import ResearchOutputContributorsCard from '../ResearchOutputContributorsCard';
 
-const props: ComponentProps<typeof TeamCreateOutputContributorsCard> = {
+const props: ComponentProps<typeof ResearchOutputContributorsCard> = {
   labs: [],
   authors: [],
   teams: [],
@@ -15,7 +15,7 @@ const props: ComponentProps<typeof TeamCreateOutputContributorsCard> = {
 describe('Labs', () => {
   it('should render lab placeholder when no value is selected', async () => {
     const { findAllByText } = render(
-      <TeamCreateOutputContributorsCard {...props} />,
+      <ResearchOutputContributorsCard {...props} />,
     );
 
     const elements = await findAllByText(/start typing/i);
@@ -25,7 +25,7 @@ describe('Labs', () => {
   });
   it('should render provided values', () => {
     const { getByText } = render(
-      <TeamCreateOutputContributorsCard
+      <ResearchOutputContributorsCard
         {...props}
         labs={[
           { label: 'One Lab', value: '1' },
@@ -45,7 +45,7 @@ describe('Labs', () => {
     ]);
 
     const { getByText, getByLabelText, queryByText } = render(
-      <TeamCreateOutputContributorsCard
+      <ResearchOutputContributorsCard
         {...props}
         onChangeLabs={mockOnChange}
         getLabSuggestions={mockGetLabSuggestions}
@@ -69,7 +69,7 @@ describe('Labs', () => {
     ]);
 
     const { getByText, getByLabelText, queryByText } = render(
-      <TeamCreateOutputContributorsCard
+      <ResearchOutputContributorsCard
         {...props}
         onChangeAuthors={mockOnChange}
         getAuthorSuggestions={loadOptions}
@@ -88,7 +88,7 @@ describe('Labs', () => {
     const loadOptions = jest.fn();
     loadOptions.mockRejectedValue([]);
     const { getByLabelText, queryByText } = render(
-      <TeamCreateOutputContributorsCard
+      <ResearchOutputContributorsCard
         {...props}
         getLabSuggestions={loadOptions}
       />,

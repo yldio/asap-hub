@@ -8,8 +8,9 @@ import {
   isValidationErrorResponse,
   ResearchOutputDocumentType,
   ValidationErrorResponse,
+  ResearchOutputResponse,
 } from '@asap-hub/model';
-import { NotFoundPage, TeamCreateOutputPage } from '@asap-hub/react-components';
+import { NotFoundPage, ResearchOutputPage } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import {
   network,
@@ -56,12 +57,18 @@ export function paramOutputDocumentTypeToResearchOutputDocumentType(
 
 type TeamOutputProps = {
   teamId: string;
+  researchOutputData?: ResearchOutputResponse;
 };
-const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
+const TeamOutput: React.FC<TeamOutputProps> = ({
+  teamId,
+  researchOutputData,
+}) => {
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
-  const documentType = paramOutputDocumentTypeToResearchOutputDocumentType(
-    paramOutputDocumentType,
-  );
+  const documentType =
+    researchOutputData?.documentType ||
+    paramOutputDocumentTypeToResearchOutputDocumentType(
+      paramOutputDocumentType,
+    );
   const team = useTeamById(teamId);
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
 
@@ -77,7 +84,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   if (canCreateUpdate && team) {
     return (
       <Frame title="Share Research Output">
-        <TeamCreateOutputPage
+        <ResearchOutputPage
           team={team}
           tagSuggestions={researchSuggestions.map((suggestion) => ({
             label: suggestion,
@@ -100,6 +107,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
           clearServerValidationError={(instancePath: string) =>
             setErrors(clearAjvErrorForPath(errors, instancePath))
           }
+          researchOutputData={researchOutputData}
           onSave={(output) =>
             createResearchOutput(output).catch((error: unknown) => {
               if (error instanceof BackendError) {

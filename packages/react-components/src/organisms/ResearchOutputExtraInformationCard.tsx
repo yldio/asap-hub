@@ -16,11 +16,11 @@ import {
 } from '../molecules';
 import { noop } from '../utils';
 import {
-  TeamCreateOutputIdentifier,
-  TeamCreateOutputIdentifierProps,
-} from './TeamCreateOutputIdentifier';
+  ResearchOutputIdentifier,
+  ResearchOutputIdentifierProps,
+} from './ResearchOutputIdentifier';
 
-type TeamCreateOutputExtraInformationProps = Pick<
+type ResearchOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
   'tags' | 'accessInstructions' | 'labCatalogNumber' | 'methods' | 'organisms'
 > & {
@@ -37,9 +37,10 @@ type TeamCreateOutputExtraInformationProps = Pick<
   identifierRequired: boolean;
   getResearchTags: (type: string) => Promise<ResearchTagResponse[]>;
   type: ResearchOutputPostRequest['type'] | '';
-} & Omit<TeamCreateOutputIdentifierProps, 'required'>;
+  isEditMode?: boolean;
+} & Omit<ResearchOutputIdentifierProps, 'required'>;
 
-const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInformationProps> =
+const ResearchOutputExtraInformationCard: React.FC<ResearchOutputExtraInformationProps> =
   ({
     onChangeTags = noop,
     tags,
@@ -61,6 +62,7 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     onChangeOrganisms = noop,
     getResearchTags,
     type,
+    isEditMode = false,
   }) => {
     const [researchTags, setResearchTags] = useState<ResearchTagResponse[]>([]);
 
@@ -91,9 +93,11 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     }, [type, fetchResearchTags]);
 
     useEffect(() => {
-      onChangeMethods([]);
-      onChangeOrganisms([]);
-    }, [type, onChangeMethods, onChangeOrganisms]);
+      if (!isEditMode) {
+        onChangeMethods([]);
+        onChangeOrganisms([]);
+      }
+    }, [isEditMode, type, onChangeMethods, onChangeOrganisms]);
 
     return (
       <FormCard title="What extra information can you provide?">
@@ -153,13 +157,14 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
           Ask ASAP to add a new keyword
         </Link>
 
-        <TeamCreateOutputIdentifier
+        <ResearchOutputIdentifier
           documentType={documentType}
           identifier={identifier}
           setIdentifier={setIdentifier}
           identifierType={identifierType}
           setIdentifierType={setIdentifierType}
           required={identifierRequired}
+          isEditMode={isEditMode}
         />
         {documentType === 'Lab Resource' && (
           <LabeledTextField
@@ -184,4 +189,4 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     );
   };
 
-export default TeamCreateOutputExtraInformationCard;
+export default ResearchOutputExtraInformationCard;

@@ -1,26 +1,30 @@
 import { isEnabled } from '@asap-hub/flags';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ListTeamResponse,
   ResearchOutputPostRequest,
+  ResearchTagResponse,
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { hasCreateUpdateResearchOutputPermissions } from '@asap-hub/validation';
-
 import {
+  atom,
   atomFamily,
   DefaultValue,
+  selector,
   selectorFamily,
+  useRecoilCallback,
   useRecoilState,
   useRecoilValue,
   useSetRecoilState,
 } from 'recoil';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import { authorizationState } from '../../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';
+import { getResearchTags } from '../../shared-research/api';
 import { useSetResearchOutputItem } from '../../shared-research/state';
 import { getUsersAndExternalAuthors } from '../users/api';
 import {
@@ -30,7 +34,6 @@ import {
   getTeams,
   patchTeam,
 } from './api';
-import { getResearchTags } from '../../shared-research/api';
 
 const teamIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -204,8 +207,23 @@ export const useCanCreateUpdateResearchOutput = (
   );
 };
 
-export const useResearchTags = () => {
-  const authorization = useRecoilValue(authorizationState);
+const researchTagsState = atom<ResearchTagResponse[]>({
+  key: 'researchTagsState',
+  default: [],
+});
 
-  return (type: string) => getResearchTags(type, authorization);
-};
+export const researchTagsSelector = selector({
+  key: 'researchTags',
+  get: ({ get }) => {
+    get(researchTagsState);
+    const authorization = get(authorizationState);
+    return getResearchTags(authorization);
+  },
+});
+
+export const useResearchTags = () =>
+  useRecoilCallback(({ snapshot, set }) => async () => {
+    const researchTags = await snapshot.getPromise(researchTagsSelector); // pre-fetch
+    set(researchTagsState, researchTags);
+    return researchTags;
+  });

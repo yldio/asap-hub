@@ -71,7 +71,7 @@ type TeamCreateOutputFormProps = Pick<
     onSave: (
       output: ResearchOutputPostRequest,
     ) => Promise<ResearchOutputResponse | void>;
-    getResearchTags: (type: string) => Promise<ResearchTagResponse[]>;
+    getResearchTags: () => Promise<ResearchTagResponse[]>;
     documentType: ResearchOutputDocumentType;
     team: TeamResponse;
   };
@@ -155,26 +155,30 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [organisms, setOrganisms] = useState<string[]>([]);
   const [subtype, setSubtype] = useState<string>();
 
-  const [researchTags, setResearchTags] = useState<ResearchTagResponse[]>([]);
+  const [researchTags, setResearchTags] = useState<ResearchTagResponse[]>();
 
-  const fetchResearchTags = useCallback(
-    async (typeForResearchTags: ResearchOutputPostRequest['type'] | '') => {
-      if (typeForResearchTags === '') {
-        setResearchTags([]);
-        return;
-      }
-
-      const data = await getResearchTags(typeForResearchTags);
-
-      setResearchTags(data);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  const fetchResearchTags = useCallback(async () => {
+    const tags = await getResearchTags();
+    setResearchTags(tags);
+  }, []);
 
   useEffect(() => {
-    fetchResearchTags(type);
-  }, [type, fetchResearchTags]);
+    fetchResearchTags();
+  }, [fetchResearchTags]);
+  const [filteredResearchTags, setFilteredResearchTags] = useState<
+    ResearchTagResponse[]
+  >([]);
+
+  useEffect(() => {
+    if (type === '' || !researchTags) {
+      setFilteredResearchTags([]);
+      return;
+    }
+
+    const filteredData = researchTags.filter((d) => d.types?.includes(type));
+
+    setFilteredResearchTags(filteredData);
+  }, [type]);
 
   useEffect(() => {
     setMethods([]);
@@ -269,7 +273,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangeType={setType}
             subtype={subtype}
             onChangeSubtype={setSubtype}
-            researchTags={researchTags}
+            researchTags={filteredResearchTags}
             asapFunded={asapFunded}
             onChangeAsapFunded={setAsapFunded}
             usedInPublication={usedInPublication}
@@ -282,7 +286,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           <TeamCreateOutputExtraInformationCard
             documentType={documentType}
             isSaving={isSaving}
-            researchTags={researchTags}
+            researchTags={filteredResearchTags}
             tagSuggestions={tagSuggestions}
             tags={tags}
             onChangeTags={setTags}

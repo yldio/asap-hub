@@ -114,9 +114,6 @@ it('is funded and publication are both yes, then the identifier type is required
   expect(
     screen.getByRole('textbox', { name: 'Identifier Type (optional)' }),
   ).toBeInTheDocument();
-  expect(
-    screen.queryByRole('textbox', { name: 'Identifier Type (required)' }),
-  ).not.toBeInTheDocument();
 
   const funded = screen.getByRole('group', {
     name: /Has this output been funded by ASAP/i,
@@ -129,9 +126,6 @@ it('is funded and publication are both yes, then the identifier type is required
   userEvent.click(within(publication).getByText('Yes'));
   userEvent.click(textbox);
 
-  expect(
-    screen.queryByRole('textbox', { name: 'Identifier Type (optional)' }),
-  ).not.toBeInTheDocument();
   expect(
     screen.getByRole('textbox', { name: 'Identifier Type (required)' }),
   ).toBeInTheDocument();

@@ -33,7 +33,7 @@
     "handleAll": false
   },
   "action": {
-    "url": "ASAP_API_URL/webhook/squidex",
+    "url": "CRN_API_URL/webhook/squidex",
     "method": "POST",
     "sharedSecret": "SQUIDEX_SHARED_SECRET",
     "isFrozen": true,

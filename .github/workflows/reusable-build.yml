@@ -134,7 +134,7 @@ jobs:
           AUTH0_DOMAIN: ${{ steps.setup.outputs.auth0-domain }}
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           REACT_APP_ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
-          REACT_APP_API_BASE_URL: ${{ steps.setup.outputs.asap-api-url }}
+          REACT_APP_API_BASE_URL: ${{ steps.setup.outputs.crn-api-url }}
           REACT_APP_GP2_API_BASE_URL: ${{ steps.setup.outputs.gp2-api-url }}
           REACT_APP_ENVIRONMENT: ${{ steps.setup.outputs.react-app-environment }}
           REACT_APP_GTM_CONTAINER_ID: ${{ steps.setup.outputs.react-app-gtm-container-id }}
@@ -210,8 +210,8 @@ jobs:
           yarn sls package --package crn-sls-package
         env:
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
-          ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
-          ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
+          CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
+          CRN_APP_URL: ${{ steps.setup.outputs.crn-app-url }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
           AWS_REGION: ${{ steps.setup.outputs.aws-region }}

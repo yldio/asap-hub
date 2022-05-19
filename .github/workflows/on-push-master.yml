@@ -127,7 +127,7 @@ jobs:
     if: success()
     environment:
       name: Development
-      url: ${{ steps.setup.outputs.asap-app-url }}
+      url: ${{ steps.setup.outputs.crn-app-url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

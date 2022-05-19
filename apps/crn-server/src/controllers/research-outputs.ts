@@ -6,6 +6,7 @@ import {
   ResearchTagCategory,
   ValidationErrorResponse,
   VALIDATION_ERROR_MESSAGE,
+  ResearchOutputPutRequest,
 } from '@asap-hub/model';
 import {
   RestExternalAuthor,
@@ -16,6 +17,7 @@ import {
   SquidexGraphqlClient,
   SquidexRest,
   SquidexRestClient,
+  InputResearchOutput,
 } from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
 import {
@@ -39,7 +41,10 @@ import logger from '../utils/logger';
 
 export default class ResearchOutputs implements ResearchOutputController {
   squidexGraphqlClient: SquidexGraphqlClient;
-  researchOutputSquidexRestClient: SquidexRestClient<RestResearchOutput>;
+  researchOutputSquidexRestClient: SquidexRestClient<
+    RestResearchOutput,
+    InputResearchOutput
+  >;
   teamSquidexRestClient: SquidexRestClient<RestTeam>;
   externalAuthorSquidexRestClient: SquidexRestClient<RestExternalAuthor>;
 
@@ -147,27 +152,266 @@ export default class ResearchOutputs implements ResearchOutputController {
       ),
     };
   }
-  async create({
-    teams,
-    authors = [],
-    ...researchOutputData
-  }: ResearchOutputInputData): Promise<Partial<ResearchOutputResponse>> {
-    await this.validateResearchOutputUniques({
-      ...researchOutputData,
-      authors,
-      teams,
-    });
 
-    const researchOutputAuthors = await Promise.all(
-      authors.map((author) => this.associateResearchOutputToAuthors(author)),
+  async create(
+    researchOutputData: ResearchOutputCreateData,
+  ): Promise<Partial<ResearchOutputResponse>> {
+    return this.upsertResearchOutput(researchOutputData);
+  }
+
+  async update(
+    researchOutputId: string,
+    researchOutputData: ResearchOutputUpdateData,
+  ): Promise<Partial<ResearchOutputResponse>> {
+    return this.upsertResearchOutput({
+      researchOutputId,
+      ...researchOutputData,
+    });
+  }
+
+  private async upsertResearchOutput(
+    researchOutputData:
+      | (ResearchOutputUpdateData & { researchOutputId: string })
+      | ResearchOutputCreateData,
+  ) {
+    await this.validateResearchOutputUniques(
+      researchOutputData,
+      ('researchOutputId' in researchOutputData &&
+        researchOutputData.researchOutputId) ||
+        '',
     );
 
+    const researchOutputAuthors = await Promise.all(
+      (researchOutputData.authors || []).map((author) =>
+        this.mapAuthorInputToId(author),
+      ),
+    );
+
+    const { methods, organisms, environments, subtype } =
+      await this.parseResearchTags({ ...researchOutputData });
+
+    let researchOutputId: string;
+
+    if ('researchOutputId' in researchOutputData) {
+      const {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        researchOutputId: _,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        teams: __,
+        ...researchOutputUpdateData
+      } = researchOutputData;
+
+      await this.updateResearchOutput(researchOutputData.researchOutputId, {
+        ...researchOutputUpdateData,
+        authors: researchOutputAuthors,
+        methods,
+        organisms,
+        environments,
+        subtype,
+      });
+
+      researchOutputId = researchOutputData.researchOutputId;
+    } else {
+      const { teams, ...researchOutputCreateData } = researchOutputData;
+      const result = await this.createResearchOutput({
+        ...researchOutputCreateData,
+        authors: researchOutputAuthors,
+        methods,
+        organisms,
+        environments,
+        subtype,
+      });
+
+      researchOutputId = result.id;
+
+      await Promise.all(
+        teams.map((teamId) =>
+          this.associateResearchOutputToTeam(teamId, researchOutputId),
+        ),
+      );
+    }
+
+    return this.fetchById(researchOutputId);
+  }
+
+  private async createResearchOutput({
+    authors,
+    createdBy,
+    ...researchOutputData
+  }: Omit<ResearchOutputPostRequest, 'teams' | 'authors' | 'subtype'> & {
+    authors: string[];
+    createdBy: string;
+    subtype: string[];
+  }) {
+    const { usedInPublication, ...researchOutput } = parseToSquidex({
+      ...researchOutputData,
+      asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
+      usedInPublication: convertBooleanToDecision(
+        researchOutputData.usedInPublication,
+      ),
+      authors,
+      createdBy: [createdBy],
+      updatedBy: [createdBy],
+    });
+
+    return this.researchOutputSquidexRestClient.create(
+      {
+        ...researchOutput,
+        usedInAPublication: usedInPublication,
+        labs: researchOutput.labs || { iv: null },
+      },
+      true,
+    );
+  }
+
+  private async updateResearchOutput(
+    researchOutputId: string,
+    {
+      authors,
+      updatedBy,
+      ...researchOutputData
+    }: Omit<ResearchOutputPostRequest, 'teams' | 'authors' | 'subtype'> & {
+      authors: string[];
+      updatedBy: string;
+      subtype: string[];
+    },
+  ) {
+    const { usedInPublication, ...researchOutput } = parseToSquidex({
+      ...researchOutputData,
+      asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
+      usedInPublication: convertBooleanToDecision(
+        researchOutputData.usedInPublication,
+      ),
+      authors,
+      updatedBy: [updatedBy],
+    });
+
+    return this.researchOutputSquidexRestClient.patch(researchOutputId, {
+      ...researchOutput,
+      usedInAPublication: usedInPublication,
+      labs: researchOutput.labs || { iv: null },
+    });
+  }
+
+  private async validateResearchOutputUniques(
+    researchOutputData: ResearchOutputCreateData | ResearchOutputUpdateData,
+    resarchOutputId?: string,
+  ): Promise<void> {
+    const isError = (
+      error: ValidationErrorResponse['data'][0] | null,
+    ): error is ValidationErrorResponse['data'][0] => !!error;
+
+    const errors = (
+      await Promise.all([
+        this.validateTitleUniqueness(researchOutputData, resarchOutputId),
+        this.validateLinkUniqueness(researchOutputData, resarchOutputId),
+      ])
+    ).filter(isError);
+
+    if (errors.length > 0) {
+      // TODO: Remove Boom from the controller layer
+      // https://asaphub.atlassian.net/browse/CRN-777
+      throw Boom.badRequest<ValidationErrorResponse['data']>(
+        VALIDATION_ERROR_MESSAGE,
+        errors,
+      );
+    }
+  }
+
+  private async validateTitleUniqueness(
+    researchOutputData: ResearchOutputCreateData | ResearchOutputUpdateData,
+    researchOutputId?: string,
+  ): Promise<ValidationErrorResponse['data'][0] | null> {
+    const result = await this.fetch({
+      filter: {
+        documentType: researchOutputData.documentType,
+        title: sanitiseForSquidex(researchOutputData.title),
+      },
+      includeDrafts: true,
+    });
+
+    if (result.total === 0) {
+      return null;
+    }
+
+    if (result.total === 1 && result.items[0]?.id === researchOutputId) {
+      return null;
+    }
+
+    return {
+      instancePath: '/title',
+      keyword: 'unique',
+      message: 'must be unique',
+      params: {
+        type: 'string',
+      },
+      schemaPath: '#/properties/title/unique',
+    };
+  }
+
+  private async validateLinkUniqueness(
+    researchOutputData: ResearchOutputCreateData | ResearchOutputUpdateData,
+    researchOutputId?: string,
+  ): Promise<ValidationErrorResponse['data'][0] | null> {
+    const result = await this.fetch({
+      filter: {
+        link: sanitiseForSquidex(researchOutputData.link || ''),
+      },
+      includeDrafts: true,
+    });
+
+    if (result.total === 0) {
+      return null;
+    }
+
+    if (result.total === 1 && result.items[0]?.id === researchOutputId) {
+      return null;
+    }
+
+    return {
+      instancePath: '/link',
+      keyword: 'unique',
+      message: 'must be unique',
+      params: {
+        type: 'string',
+      },
+      schemaPath: '#/properties/link/unique',
+    };
+  }
+
+  private async associateResearchOutputToTeam(
+    teamId: string,
+    researchOutputId: string,
+  ) {
+    const { data } = await this.teamSquidexRestClient.fetchById(teamId);
+
+    const existingOutputs = data.outputs?.iv || [];
+    await this.teamSquidexRestClient.patch(teamId, {
+      outputs: {
+        iv: [...existingOutputs, researchOutputId],
+      },
+    });
+  }
+
+  private async mapAuthorInputToId(data: ExternalAuthorInput) {
+    if ('userId' in data) return data.userId;
+    if ('externalAuthorId' in data) return data.externalAuthorId;
+
+    const { id } = await this.externalAuthorSquidexRestClient.create({
+      name: { iv: data.externalAuthorName },
+    });
+    return id;
+  }
+
+  private async parseResearchTags(
+    researchOutputData: ResearchOutputInputTags,
+  ): Promise<ResearchOutputParsedTags> {
     const { queryResearchTagsContentsWithTotal } =
       await this.squidexGraphqlClient.request<
         FetchResearchTagsQuery,
         FetchResearchTagsQueryVariables
       >(FETCH_RESEARCH_TAGS, {
-        top: 200,
+        top: 100,
         skip: 0,
         filter: `data/entities/iv eq 'Research Output'`,
       });
@@ -206,164 +450,15 @@ export default class ResearchOutputs implements ResearchOutputController {
         ]
       : [];
 
-    const { id: researchOutputId } = await this.createResearchOutput({
-      authors: researchOutputAuthors,
-      ...researchOutputData,
+    return {
       methods,
       organisms,
       environments,
       subtype,
-    });
-
-    await Promise.all(
-      teams.map((teamId) =>
-        this.associateResearchOutputToTeam(teamId, researchOutputId),
-      ),
-    );
-
-    return this.fetchById(researchOutputId);
-  }
-
-  private async createResearchOutput({
-    authors,
-    createdBy,
-    ...researchOutputData
-  }: Omit<ResearchOutputPostRequest, 'teams' | 'authors' | 'subtype'> & {
-    authors: string[];
-    createdBy: string;
-    subtype: string[];
-  }) {
-    const { usedInPublication, ...researchOutput } = parseToSquidex({
-      ...researchOutputData,
-      asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
-      usedInPublication: convertBooleanToDecision(
-        researchOutputData.usedInPublication,
-      ),
-      authors,
-      createdBy: [createdBy],
-      updatedBy: [createdBy],
-    });
-
-    return this.researchOutputSquidexRestClient.create(
-      {
-        ...researchOutput,
-        usedInAPublication: usedInPublication,
-      } as RestResearchOutput['data'],
-      true,
-    );
-  }
-
-  private async validateResearchOutputUniques(
-    researchOutputData: ResearchOutputInputData,
-  ): Promise<void> {
-    const isError = (
-      error: ValidationErrorResponse['data'][0] | null,
-    ): error is ValidationErrorResponse['data'][0] => !!error;
-
-    const errors = (
-      await Promise.all([
-        this.validateTitleUniqueness(researchOutputData),
-        this.validateLinkUniqueness(researchOutputData),
-      ])
-    ).filter(isError);
-
-    if (errors.length > 0) {
-      // TODO: Remove Boom from the controller layer
-      // https://asaphub.atlassian.net/browse/CRN-777
-      throw Boom.badRequest<ValidationErrorResponse['data']>(
-        VALIDATION_ERROR_MESSAGE,
-        errors,
-      );
-    }
-  }
-
-  private async validateTitleUniqueness(
-    researchOutputData: ResearchOutputInputData,
-  ): Promise<ValidationErrorResponse['data'][0] | null> {
-    if (
-      (
-        await this.fetch({
-          filter: {
-            documentType: researchOutputData.documentType,
-            title: sanitiseForSquidex(researchOutputData.title),
-          },
-          includeDrafts: true,
-        })
-      ).total > 0
-    ) {
-      return {
-        instancePath: '/title',
-        keyword: 'unique',
-        message: 'must be unique',
-        params: {
-          type: 'string',
-        },
-        schemaPath: '#/properties/title/unique',
-      };
-    }
-
-    return null;
-  }
-
-  private async validateLinkUniqueness(
-    researchOutputData: ResearchOutputInputData,
-  ): Promise<ValidationErrorResponse['data'][0] | null> {
-    if (
-      (
-        await this.fetch({
-          filter: {
-            link: sanitiseForSquidex(researchOutputData.link || ''),
-          },
-          includeDrafts: true,
-        })
-      ).total > 0
-    ) {
-      return {
-        instancePath: '/link',
-        keyword: 'unique',
-        message: 'must be unique',
-        params: {
-          type: 'string',
-        },
-        schemaPath: '#/properties/link/unique',
-      };
-    }
-
-    return null;
-  }
-
-  private async associateResearchOutputToTeam(
-    teamId: string,
-    researchOutputId: string,
-  ) {
-    const { data } = await this.teamSquidexRestClient.fetchById(teamId);
-
-    const existingOutputs = data.outputs?.iv || [];
-    await this.teamSquidexRestClient.patch(teamId, {
-      outputs: {
-        iv: [...existingOutputs, researchOutputId],
-      },
-    });
-  }
-
-  private async associateResearchOutputToAuthors(data: ExternalAuthorInput) {
-    if ('userId' in data) return data.userId;
-    if ('externalAuthorId' in data) return data.externalAuthorId;
-
-    const { id } = await this.externalAuthorSquidexRestClient.create({
-      name: { iv: data.externalAuthorName },
-    });
-    return id;
+    };
   }
 }
 
-type ResearchOutputFilter =
-  | string[]
-  | {
-      documentType?: string;
-      title?: string;
-      link?: string;
-    };
 export interface ResearchOutputController {
   fetch: (options: {
     take?: number;
@@ -375,11 +470,19 @@ export interface ResearchOutputController {
 
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
   create: (
-    researchOutputRequest: ResearchOutputInputData,
+    researchOutputRequest: ResearchOutputCreateData,
+  ) => Promise<Partial<ResearchOutputResponse>>;
+  update: (
+    id: string,
+    researchOutputRequest: ResearchOutputUpdateData,
   ) => Promise<Partial<ResearchOutputResponse>>;
 }
-export type ResearchOutputInputData = ResearchOutputPostRequest & {
+export type ResearchOutputCreateData = ResearchOutputPostRequest & {
   createdBy: string;
+};
+
+export type ResearchOutputUpdateData = ResearchOutputPutRequest & {
+  updatedBy: string;
 };
 
 const makeODataFilter = (filter?: ResearchOutputFilter): string => {
@@ -395,12 +498,6 @@ const makeODataFilter = (filter?: ResearchOutputFilter): string => {
 
   return '';
 };
-
-type ResearchTagsResponse = NonNullable<
-  NonNullable<
-    FetchResearchTagsQuery['queryResearchTagsContentsWithTotal']
-  >['items']
->;
 
 const mapResearchTags = (
   researchTags: ResearchTagsResponse,
@@ -439,4 +536,31 @@ const mapResearchTag = (
       schemaPath: `#/properties/${categoryLowercase}/invalid`,
     },
   ]);
+};
+
+type ResearchOutputFilter =
+  | string[]
+  | {
+      documentType?: string;
+      title?: string;
+      link?: string;
+    };
+
+type ResearchTagsResponse = NonNullable<
+  NonNullable<
+    FetchResearchTagsQuery['queryResearchTagsContentsWithTotal']
+  >['items']
+>;
+
+type ResearchOutputInputTags = {
+  methods: string[];
+  organisms: string[];
+  environments: string[];
+  subtype?: string;
+};
+type ResearchOutputParsedTags = {
+  methods: string[];
+  organisms: string[];
+  environments: string[];
+  subtype: string[];
 };

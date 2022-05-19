@@ -21,6 +21,7 @@ export default class MoveResearchOutputTextToDescription extends Migration {
           await squidexClient.patch(researchOutput.id, {
             // @ts-expect-error type definition has changed
             type: { iv: 'Grant Document' },
+            // @ts-expect-error type definition has changed
             subtype: { iv: 'Proposal' },
           });
         }
@@ -37,6 +38,7 @@ export default class MoveResearchOutputTextToDescription extends Migration {
           await squidexClient.patch(researchOutput.id, {
             // @ts-expect-error type definition has changed
             type: { iv: 'Proposal' as unknown as ResearchOutputDocumentType },
+            // @ts-expect-error type definition has changed
             subtype: null as unknown as { iv: ResearchOutputType },
           });
         }

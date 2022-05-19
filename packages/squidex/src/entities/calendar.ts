@@ -1,5 +1,5 @@
 import { GoogleLegacyCalendarColor } from '@asap-hub/model';
-import { Rest, Entity, Graphql } from './common';
+import { Rest, Entity, Graphql, RestPayload } from './common';
 import { GraphqlGroup } from './group';
 
 export interface Calendar {
@@ -13,6 +13,7 @@ export interface Calendar {
 
 export interface RestCalendar extends Entity, Rest<Calendar> {}
 
+export interface InputCalendar extends Entity, RestPayload<Calendar> {}
 /**
  * @deprecated while we wait for group work
  */

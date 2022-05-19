@@ -4,6 +4,7 @@ import {
   ResearchOutputIdentifierType,
   researchOutputToIdentifierType,
   researchOutputDocumentTypes,
+  ResearchOutputPutRequest,
 } from '@asap-hub/model';
 import {
   ResearchOutputIdentifierValidationExpression,
@@ -139,6 +140,9 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       'sharingStatus',
       'addedDate',
       'teams',
+      'methods',
+      'organisms',
+      'environments',
     ],
     additionalProperties: false,
   };
@@ -183,3 +187,11 @@ export const validateResearchOutputPostRequestParametersIdentifiers = (
     });
   }
 };
+
+export const validateResearchOutputPutRequestParameters = validateInput<
+  ResearchOutputPutRequest,
+  true
+>(researchOutputPostRequestValidationSchema, {
+  skipNull: true,
+  coerce: true,
+});

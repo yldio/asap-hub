@@ -198,7 +198,7 @@ export class Squidex<
     }
   }
 
-  async patch(id: string, json: Partial<T['data']>): Promise<T> {
+  async patch(id: string, json: Partial<C['data']>): Promise<T> {
     try {
       const res = await this.client
         .patch(`${this.collection}/${id}`, {

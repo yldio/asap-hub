@@ -8,6 +8,7 @@ import {
   SquidexRest,
   SquidexRestClient,
   parseToSquidex,
+  InputCalendar,
 } from '@asap-hub/squidex';
 import {
   ListCalendarResponse,
@@ -26,11 +27,14 @@ import {
 import { FetchPaginationOptions } from '../utils/types';
 
 export default class Calendars implements CalendarController {
-  calendarSquidexRestClient: SquidexRestClient<RestCalendar>;
+  calendarSquidexRestClient: SquidexRestClient<RestCalendar, InputCalendar>;
   squidexGraphqlClient: SquidexGraphqlClient;
 
   constructor(squidexGraphqlClient: SquidexGraphqlClient) {
-    this.calendarSquidexRestClient = new SquidexRest('calendars');
+    this.calendarSquidexRestClient = new SquidexRest<
+      RestCalendar,
+      InputCalendar
+    >('calendars');
     this.squidexGraphqlClient = squidexGraphqlClient;
   }
 

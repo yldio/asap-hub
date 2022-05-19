@@ -1,10 +1,10 @@
-import { ResearchOutputPostRequest } from '@asap-hub/model';
-import { ValidationError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import {
   getListResearchOutputResponse,
+  getResearchOutputPostRequest,
+  getResearchOutputPutRequest,
   getResearchOutputResponse,
 } from '../fixtures/research-output.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
@@ -121,53 +121,16 @@ describe('/research-outputs/ route', () => {
   });
 
   describe('POST /research-outputs/', () => {
-    const getCreateResearchOutput = (): ResearchOutputPostRequest => {
-      const {
-        documentType,
-        title,
-        asapFunded,
-        sharingStatus,
-        usedInPublication,
-        addedDate,
-        publishDate,
-        description,
-        tags,
-        labs,
-        authors,
-        teams,
-        methods,
-        organisms,
-        environments,
-      } = getResearchOutputResponse();
-      return {
-        documentType,
-        link: 'http://a.link',
-        title,
-        asapFunded,
-        sharingStatus,
-        usedInPublication,
-        addedDate,
-        publishDate,
-        description,
-        tags,
-        methods,
-        organisms,
-        environments,
-        type: 'Software',
-        labs: labs.map(({ id }) => id),
-        authors: authors.map(({ id }) => ({ userId: id })),
-        teams: teams.map(({ id }) => id),
-      };
-    };
+    const researchOutputResponse = getResearchOutputResponse();
 
     test('Should return a 201 when is hit', async () => {
       const createResearchOutputRequest = {
-        ...getCreateResearchOutput(),
+        ...getResearchOutputPostRequest(),
       };
 
-      researchOutputControllerMock.create.mockResolvedValueOnce({
-        id: 'abc123',
-      });
+      researchOutputControllerMock.create.mockResolvedValueOnce(
+        researchOutputResponse,
+      );
 
       const response = await supertest(app)
         .post('/research-outputs')
@@ -180,11 +143,11 @@ describe('/research-outputs/ route', () => {
         createdBy: 'userMockId',
       });
 
-      expect(response.body).toEqual(expect.objectContaining({ id: 'abc123' }));
+      expect(response.body).toEqual(researchOutputResponse);
     });
 
     test('Should return 403 when user is not permitted to create research output', async () => {
-      const researchOutput = getCreateResearchOutput();
+      const researchOutput = getResearchOutputPostRequest();
       const response = await supertest(app)
         .post('/research-outputs/')
         .send({
@@ -194,40 +157,8 @@ describe('/research-outputs/ route', () => {
       expect(response.status).toBe(403);
     });
 
-    test('Should return a 400 error when creating a research output fails due to validation error', async () => {
-      const researchOutput = getCreateResearchOutput();
-      researchOutputControllerMock.create.mockRejectedValueOnce(
-        new ValidationError(new Error(), [
-          'link.iv: Another content with the same value exists.',
-        ]),
-      );
-
-      const response = await supertest(app)
-        .post('/research-outputs')
-        .send({ ...researchOutput })
-        .set('Accept', 'application/json');
-
-      expect(response.status).toBe(400);
-      expect(response.body).toEqual({
-        error: 'Bad Request',
-        message: 'Validation error',
-        statusCode: 400,
-        data: [
-          {
-            instancePath: '/link',
-            schemaPath: '#/properties/link/unique',
-            keyword: 'unique',
-            params: {
-              type: 'string',
-            },
-            message: 'must be unique',
-          },
-        ],
-      });
-    });
-
     test('Should return a 500 error when creating a research output fails due to server error', async () => {
-      const researchOutput = getCreateResearchOutput();
+      const researchOutput = getResearchOutputPostRequest();
       researchOutputControllerMock.create.mockRejectedValueOnce(
         Boom.badImplementation(),
       );
@@ -285,7 +216,7 @@ describe('/research-outputs/ route', () => {
       `(
         'on type $type returns status $status for $identifier',
         async ({ documentType, identifier, status }) => {
-          const researchOutput = getCreateResearchOutput();
+          const researchOutput = getResearchOutputPostRequest();
           const response = await supertest(app)
             .post('/research-outputs/')
             .send({
@@ -298,7 +229,7 @@ describe('/research-outputs/ route', () => {
       );
 
       test('Requires an identifier if funded and used in publication', async () => {
-        const researchOutput = getCreateResearchOutput();
+        const researchOutput = getResearchOutputPostRequest();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
@@ -311,7 +242,7 @@ describe('/research-outputs/ route', () => {
       });
 
       test('Accepts doi based on the regex', async () => {
-        const researchOutput = getCreateResearchOutput();
+        const researchOutput = getResearchOutputPostRequest();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
@@ -323,7 +254,7 @@ describe('/research-outputs/ route', () => {
       });
 
       test('Rejects doi based on the regex', async () => {
-        const researchOutput = getCreateResearchOutput();
+        const researchOutput = getResearchOutputPostRequest();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
@@ -335,7 +266,7 @@ describe('/research-outputs/ route', () => {
       });
 
       test('Accepts accession based on the regex', async () => {
-        const researchOutput = getCreateResearchOutput();
+        const researchOutput = getResearchOutputPostRequest();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
@@ -347,7 +278,7 @@ describe('/research-outputs/ route', () => {
       });
 
       test('Rejects accession based on the regex', async () => {
-        const researchOutput = getCreateResearchOutput();
+        const researchOutput = getResearchOutputPostRequest();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
@@ -359,7 +290,7 @@ describe('/research-outputs/ route', () => {
       });
 
       test('Accepts rrid based on the regex', async () => {
-        const researchOutput = getCreateResearchOutput();
+        const researchOutput = getResearchOutputPostRequest();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
@@ -371,7 +302,7 @@ describe('/research-outputs/ route', () => {
       });
 
       test('Rejects rrid based on the regex', async () => {
-        const researchOutput = getCreateResearchOutput();
+        const researchOutput = getResearchOutputPostRequest();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
@@ -393,7 +324,7 @@ describe('/research-outputs/ route', () => {
       ])(
         'Should return a validation error when %s is missing',
         async (field) => {
-          const researchOutput = getCreateResearchOutput();
+          const researchOutput = getResearchOutputPostRequest();
           const response = await supertest(app)
             .post('/research-outputs/')
             .send({
@@ -420,120 +351,449 @@ describe('/research-outputs/ route', () => {
           });
         },
       );
+
+      describe('Authors validation', () => {
+        test('Should return a validation error when required field is missing', async () => {
+          const response = await supertest(app)
+            .post('/research-outputs')
+            .send({
+              ...getResearchOutputPostRequest(),
+              authors: [{ name: 'random-value' }],
+            })
+            .set('Accept', 'application/json');
+
+          expect(response.status).toBe(400);
+          expect(response.body).toEqual({
+            error: 'Bad Request',
+            message: 'Validation error',
+            statusCode: 400,
+            data: [
+              ...['userId', 'externalAuthorId', 'externalAuthorName'].map(
+                (field, idx) => ({
+                  instancePath: '/authors/0',
+                  schemaPath: `#/properties/authors/items/oneOf/${idx}/required`,
+                  keyword: 'required',
+                  params: {
+                    missingProperty: field,
+                  },
+                  message: `must have required property '${field}'`,
+                }),
+              ),
+              {
+                instancePath: '/authors/0',
+                keyword: 'oneOf',
+                message: 'must match exactly one schema in oneOf',
+                params: {
+                  passingSchemas: null,
+                },
+                schemaPath: '#/properties/authors/items/oneOf',
+              },
+            ],
+          });
+        });
+        test('Should return a validation error when passing invalid schema (userId, externalAuthorId, externalAuthorName)', async () => {
+          const response = await supertest(app)
+            .post('/research-outputs')
+            .send({
+              ...getResearchOutputPostRequest(),
+              authors: [
+                {
+                  userId: 'userId-1',
+                  externalAuthorId: 'external-id-1',
+                  externalAuthorName: 'author-name-1',
+                },
+              ],
+            })
+            .set('Accept', 'application/json');
+
+          expect(response.status).toBe(400);
+          expect(response.body.message).toEqual('Validation error');
+          expect(response.body.data).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                message: 'must match exactly one schema in oneOf',
+              }),
+            ]),
+          );
+        });
+        test('Should return a validation error when passing invalid schema (userId, externalAuthorId)', async () => {
+          const response = await supertest(app)
+            .post('/research-outputs')
+            .send({
+              ...getResearchOutputPostRequest(),
+              authors: [
+                {
+                  userId: 'userId-1',
+                  externalAuthorId: 'external-id-1',
+                },
+              ],
+            })
+            .set('Accept', 'application/json');
+
+          expect(response.status).toBe(400);
+          expect(response.body.message).toEqual('Validation error');
+          expect(response.body.data).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                message: 'must match exactly one schema in oneOf',
+              }),
+            ]),
+          );
+        });
+        test('Should return a validation error when passing invalid schema (userId, externalAuthorName)', async () => {
+          const response = await supertest(app)
+            .post('/research-outputs')
+            .send({
+              ...getResearchOutputPostRequest(),
+              authors: [
+                {
+                  userId: 'userId-1',
+                  externalAuthorName: 'author-name-1',
+                },
+              ],
+            })
+            .set('Accept', 'application/json');
+
+          expect(response.status).toBe(400);
+          expect(response.body.message).toEqual('Validation error');
+          expect(response.body.data).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                message: 'must match exactly one schema in oneOf',
+              }),
+            ]),
+          );
+        });
+      });
+    });
+  });
+
+  describe('PUT /research-outputs/', () => {
+    const researchOutputResponse = getResearchOutputResponse();
+    const researchOutputPutRequest = getResearchOutputPutRequest();
+
+    test('Should send the data to the controller and return status 200 along with all the research output data', async () => {
+      researchOutputControllerMock.update.mockResolvedValueOnce(
+        researchOutputResponse,
+      );
+
+      const response = await supertest(app)
+        .put('/research-outputs/abc123')
+        .send(researchOutputPutRequest)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(200);
+      expect(researchOutputControllerMock.update).toBeCalledWith('abc123', {
+        ...researchOutputPutRequest,
+        updatedBy: 'userMockId',
+      });
+      expect(response.body).toEqual(researchOutputResponse);
     });
 
-    describe('Authors validation', () => {
-      test('Should return a validation error when required field is missing', async () => {
+    test('Should return 403 when user is not permitted to update research output', async () => {
+      const response = await supertest(app)
+        .put('/research-outputs/abc123')
+        .send({
+          ...researchOutputPutRequest,
+          teams: ['team-id-that-does-not-belong-to-user'],
+        });
+      expect(response.status).toBe(403);
+    });
+
+    describe('Parameter validation', () => {
+      test('Should return a validation error when the arguments are not valid', async () => {
         const response = await supertest(app)
-          .post('/research-outputs')
+          .put('/research-outputs/abc123')
           .send({
-            ...getCreateResearchOutput(),
-            authors: [{ name: 'random-value' }],
-          })
-          .set('Accept', 'application/json');
+            ...researchOutputPutRequest,
+            unknown_field: 2,
+          });
 
         expect(response.status).toBe(400);
-        expect(response.body).toEqual({
-          error: 'Bad Request',
-          message: 'Validation error',
-          statusCode: 400,
-          data: [
-            ...['userId', 'externalAuthorId', 'externalAuthorName'].map(
-              (field, idx) => ({
-                instancePath: '/authors/0',
-                schemaPath: `#/properties/authors/items/oneOf/${idx}/required`,
+      });
+
+      const validDOI = { doi: 'doi:12.1234' };
+      const validRRID = { rrid: 'RRID:Hi' };
+      const validAccession = { accession: 'NP_1234' };
+      const noIdentifier = {};
+      test.each`
+        documentType        | identifier        | status
+        ${'Article'}        | ${validDOI}       | ${200}
+        ${'Article'}        | ${validRRID}      | ${400}
+        ${'Article'}        | ${validAccession} | ${400}
+        ${'Article'}        | ${noIdentifier}   | ${200}
+        ${'Bioinformatics'} | ${validDOI}       | ${200}
+        ${'Bioinformatics'} | ${validRRID}      | ${200}
+        ${'Bioinformatics'} | ${validAccession} | ${400}
+        ${'Bioinformatics'} | ${noIdentifier}   | ${200}
+        ${'Lab Resource'}   | ${validDOI}       | ${200}
+        ${'Lab Resource'}   | ${validRRID}      | ${200}
+        ${'Lab Resource'}   | ${validAccession} | ${400}
+        ${'Lab Resource'}   | ${noIdentifier}   | ${200}
+        ${'Dataset'}        | ${validDOI}       | ${200}
+        ${'Dataset'}        | ${validRRID}      | ${400}
+        ${'Dataset'}        | ${validAccession} | ${200}
+        ${'Dataset'}        | ${noIdentifier}   | ${200}
+        ${'Protocol'}       | ${validDOI}       | ${200}
+        ${'Protocol'}       | ${validRRID}      | ${400}
+        ${'Protocol'}       | ${validAccession} | ${400}
+        ${'Protocol'}       | ${noIdentifier}   | ${200}
+        ${'Grant Document'} | ${validDOI}       | ${400}
+        ${'Grant Document'} | ${validRRID}      | ${400}
+        ${'Grant Document'} | ${validAccession} | ${400}
+        ${'Grant Document'} | ${noIdentifier}   | ${200}
+        ${'Presentation'}   | ${validDOI}       | ${400}
+        ${'Presentation'}   | ${validRRID}      | ${400}
+        ${'Presentation'}   | ${validAccession} | ${400}
+        ${'Presentation'}   | ${noIdentifier}   | ${200}
+      `(
+        'on type $type returns status $status for $identifier',
+        async ({ documentType, identifier, status }) => {
+          const response = await supertest(app)
+            .put('/research-outputs/abc123')
+            .send({
+              ...researchOutputPutRequest,
+              documentType,
+              ...identifier,
+            });
+          expect(response.status).toBe(status);
+        },
+      );
+
+      test('Requires an identifier if funded and used in publication', async () => {
+        const response = await supertest(app)
+          .put('/research-outputs/abc123')
+          .send({
+            ...researchOutputPutRequest,
+            type: 'Article',
+            asapFunded: true,
+            usedInPublication: true,
+          });
+        expect(response.status).toBe(400);
+      });
+
+      test('Accepts doi based on the regex', async () => {
+        const response = await supertest(app)
+          .put('/research-outputs/abc123')
+          .send({
+            ...researchOutputPutRequest,
+            documentType: 'Article',
+            ...validDOI,
+          });
+        expect(response.status).toBe(200);
+      });
+
+      test('Rejects doi based on the regex', async () => {
+        const response = await supertest(app)
+          .put('/research-outputs/abc123')
+          .send({
+            ...researchOutputPutRequest,
+            documentType: 'Article',
+            doi: 'doi:1.222',
+          });
+        expect(response.status).toBe(400);
+      });
+
+      test('Accepts accession based on the regex', async () => {
+        const response = await supertest(app)
+          .put('/research-outputs/abc123')
+          .send({
+            ...researchOutputPutRequest,
+            documentType: 'Dataset',
+            ...validAccession,
+          });
+        expect(response.status).toBe(200);
+      });
+
+      test('Rejects accession based on the regex', async () => {
+        const response = await supertest(app)
+          .put('/research-outputs/abc123')
+          .send({
+            ...researchOutputPutRequest,
+            documentType: 'Dataset',
+            accession: 'NP_HELLO_WORLD',
+          });
+        expect(response.status).toBe(400);
+      });
+
+      test('Accepts rrid based on the regex', async () => {
+        const response = await supertest(app)
+          .put('/research-outputs/abc123')
+          .send({
+            ...researchOutputPutRequest,
+            documentType: 'Bioinformatics',
+            ...validRRID,
+          });
+        expect(response.status).toBe(200);
+      });
+
+      test('Rejects rrid based on the regex', async () => {
+        const response = await supertest(app)
+          .put('/research-outputs/abc123')
+          .send({
+            ...researchOutputPutRequest,
+            documentType: 'Bioinformatics',
+            rrid: 'HelloWorld',
+          });
+        expect(response.status).toBe(400);
+      });
+
+      test.each([
+        'documentType',
+        'description',
+        'tags',
+        'title',
+        'sharingStatus',
+        'addedDate',
+        'teams',
+        'methods',
+        'organisms',
+        'environments',
+      ])(
+        'Should return a validation error when %s is missing',
+        async (field) => {
+          const response = await supertest(app)
+            .put('/research-outputs/abc123')
+            .send({
+              ...researchOutputPutRequest,
+              [field]: undefined,
+            });
+
+          expect(response.status).toBe(400);
+          expect(response.body).toEqual({
+            data: [
+              {
+                instancePath: '',
                 keyword: 'required',
+                message: `must have required property '${field}'`,
                 params: {
                   missingProperty: field,
                 },
-                message: `must have required property '${field}'`,
-              }),
-            ),
-            {
-              instancePath: '/authors/0',
-              keyword: 'oneOf',
-              message: 'must match exactly one schema in oneOf',
-              params: {
-                passingSchemas: null,
+                schemaPath: '#/required',
               },
-              schemaPath: '#/properties/authors/items/oneOf',
-            },
-          ],
+            ],
+            error: 'Bad Request',
+            message: 'Validation error',
+            statusCode: 400,
+          });
+        },
+      );
+
+      describe('Authors validation', () => {
+        test('Should return a validation error when required field is missing', async () => {
+          const response = await supertest(app)
+            .put('/research-outputs/abc123')
+            .send({
+              ...researchOutputPutRequest,
+              authors: [{ name: 'random-value' }],
+            })
+            .set('Accept', 'application/json');
+
+          expect(response.status).toBe(400);
+          expect(response.body).toEqual({
+            error: 'Bad Request',
+            message: 'Validation error',
+            statusCode: 400,
+            data: [
+              ...['userId', 'externalAuthorId', 'externalAuthorName'].map(
+                (field, idx) => ({
+                  instancePath: '/authors/0',
+                  schemaPath: `#/properties/authors/items/oneOf/${idx}/required`,
+                  keyword: 'required',
+                  params: {
+                    missingProperty: field,
+                  },
+                  message: `must have required property '${field}'`,
+                }),
+              ),
+              {
+                instancePath: '/authors/0',
+                keyword: 'oneOf',
+                message: 'must match exactly one schema in oneOf',
+                params: {
+                  passingSchemas: null,
+                },
+                schemaPath: '#/properties/authors/items/oneOf',
+              },
+            ],
+          });
         });
-      });
-      test('Should return a validation error when passing invalid schema (userId, externalAuthorId, externalAuthorName)', async () => {
-        const response = await supertest(app)
-          .post('/research-outputs')
-          .send({
-            ...getCreateResearchOutput(),
-            authors: [
-              {
-                userId: 'userId-1',
-                externalAuthorId: 'external-id-1',
-                externalAuthorName: 'author-name-1',
-              },
-            ],
-          })
-          .set('Accept', 'application/json');
 
-        expect(response.status).toBe(400);
-        expect(response.body.message).toEqual('Validation error');
-        expect(response.body.data).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              message: 'must match exactly one schema in oneOf',
-            }),
-          ]),
-        );
-      });
-      test('Should return a validation error when passing invalid schema (userId, externalAuthorId)', async () => {
-        const response = await supertest(app)
-          .post('/research-outputs')
-          .send({
-            ...getCreateResearchOutput(),
-            authors: [
-              {
-                userId: 'userId-1',
-                externalAuthorId: 'external-id-1',
-              },
-            ],
-          })
-          .set('Accept', 'application/json');
+        test('Should return a validation error when passing invalid schema (userId, externalAuthorId, externalAuthorName)', async () => {
+          const response = await supertest(app)
+            .put('/research-outputs/abc123')
+            .send({
+              ...researchOutputPutRequest,
+              authors: [
+                {
+                  userId: 'userId-1',
+                  externalAuthorId: 'external-id-1',
+                  externalAuthorName: 'author-name-1',
+                },
+              ],
+            })
+            .set('Accept', 'application/json');
 
-        expect(response.status).toBe(400);
-        expect(response.body.message).toEqual('Validation error');
-        expect(response.body.data).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              message: 'must match exactly one schema in oneOf',
-            }),
-          ]),
-        );
-      });
+          expect(response.status).toBe(400);
+          expect(response.body.message).toEqual('Validation error');
+          expect(response.body.data).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                message: 'must match exactly one schema in oneOf',
+              }),
+            ]),
+          );
+        });
 
-      test('Should return a validation error when passing invalid schema (userId, externalAuthorName)', async () => {
-        const response = await supertest(app)
-          .post('/research-outputs')
-          .send({
-            ...getCreateResearchOutput(),
-            authors: [
-              {
-                userId: 'userId-1',
-                externalAuthorName: 'author-name-1',
-              },
-            ],
-          })
-          .set('Accept', 'application/json');
+        test('Should return a validation error when passing invalid schema (userId, externalAuthorId)', async () => {
+          const response = await supertest(app)
+            .put('/research-outputs/abc123')
+            .send({
+              ...researchOutputPutRequest,
+              authors: [
+                {
+                  userId: 'userId-1',
+                  externalAuthorId: 'external-id-1',
+                },
+              ],
+            })
+            .set('Accept', 'application/json');
 
-        expect(response.status).toBe(400);
-        expect(response.body.message).toEqual('Validation error');
-        expect(response.body.data).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              message: 'must match exactly one schema in oneOf',
-            }),
-          ]),
-        );
+          expect(response.status).toBe(400);
+          expect(response.body.message).toEqual('Validation error');
+          expect(response.body.data).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                message: 'must match exactly one schema in oneOf',
+              }),
+            ]),
+          );
+        });
+
+        test('Should return a validation error when passing invalid schema (userId, externalAuthorName)', async () => {
+          const response = await supertest(app)
+            .put('/research-outputs/abc123')
+            .send({
+              ...researchOutputPutRequest,
+              authors: [
+                {
+                  userId: 'userId-1',
+                  externalAuthorName: 'author-name-1',
+                },
+              ],
+            })
+            .set('Accept', 'application/json');
+
+          expect(response.status).toBe(400);
+          expect(response.body.message).toEqual('Validation error');
+          expect(response.body.data).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                message: 'must match exactly one schema in oneOf',
+              }),
+            ]),
+          );
+        });
       });
     });
   });

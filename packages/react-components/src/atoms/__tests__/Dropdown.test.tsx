@@ -180,6 +180,36 @@ it('gets greyed out when disabled', () => {
   expect(screen.getByRole('textbox')).not.toBeDisabled();
 });
 
+it('when invalidated and then option selected it should not display error message', () => {
+  const { rerender } = render(
+    <Dropdown
+      placeholder="Select"
+      options={[{ value: 'LHR', label: 'Heathrow' }]}
+      value=""
+      required={true}
+    />,
+  );
+  expect(
+    screen.queryByText('Please fill out this field.'),
+  ).not.toBeInTheDocument();
+  const input = screen.getByRole('textbox', { hidden: false });
+  userEvent.click(input);
+  userEvent.tab();
+
+  expect(screen.getByText('Please fill out this field.')).toBeVisible();
+
+  rerender(
+    <Dropdown
+      placeholder="Select"
+      options={[{ value: 'LHR', label: 'Heathrow' }]}
+      value="LHR"
+      required={true}
+    />,
+  );
+  expect(
+    screen.queryByText('Please fill out this field.'),
+  ).not.toBeInTheDocument();
+});
 it('when invalidated and then rendered optional it should not display error message', () => {
   const { rerender } = render(
     <Dropdown

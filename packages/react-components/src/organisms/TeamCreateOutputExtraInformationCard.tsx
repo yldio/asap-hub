@@ -4,7 +4,7 @@ import {
   ResearchOutputDocumentType,
   ResearchTagResponse,
 } from '@asap-hub/model';
-import { ComponentProps, useCallback, useEffect, useState } from 'react';
+import { ComponentProps } from 'react';
 import { Link } from '../atoms';
 
 import { mailToSupport } from '../mail';
@@ -35,7 +35,7 @@ type TeamCreateOutputExtraInformationProps = Pick<
   isSaving: boolean;
   documentType: ResearchOutputDocumentType;
   identifierRequired: boolean;
-  getResearchTags: (type: string) => Promise<ResearchTagResponse[]>;
+  researchTags: ResearchTagResponse[];
   type: ResearchOutputPostRequest['type'] | '';
 } & Omit<TeamCreateOutputIdentifierProps, 'required'>;
 
@@ -59,41 +59,14 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     onChangeMethods = noop,
     organisms,
     onChangeOrganisms = noop,
-    getResearchTags,
-    type,
+    researchTags,
   }) => {
-    const [researchTags, setResearchTags] = useState<ResearchTagResponse[]>([]);
-
     const methodSuggestions = researchTags.filter(
       (tag) => tag.category === 'Method',
     );
     const organismSuggestions = researchTags.filter(
       (tag) => tag.category === 'Organism',
     );
-
-    const fetchResearchTags = useCallback(
-      async (typeForResearchTags: ResearchOutputPostRequest['type'] | '') => {
-        if (typeForResearchTags === '') {
-          setResearchTags([]);
-          return;
-        }
-
-        const data = await getResearchTags(typeForResearchTags);
-
-        setResearchTags(data);
-      },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [],
-    );
-
-    useEffect(() => {
-      fetchResearchTags(type);
-    }, [type, fetchResearchTags]);
-
-    useEffect(() => {
-      onChangeMethods([]);
-      onChangeOrganisms([]);
-    }, [type, onChangeMethods, onChangeOrganisms]);
 
     return (
       <FormCard title="What extra information can you provide?">

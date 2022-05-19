@@ -4,12 +4,13 @@ import {
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
+  ResearchTagResponse,
   TeamResponse,
 } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import { ComponentProps, useState } from 'react';
+import { ComponentProps, useCallback, useEffect, useState } from 'react';
 import { Button } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 import { usePushFromHere } from '../routing';
@@ -57,7 +58,7 @@ const formControlsStyles = css({
 
 type TeamCreateOutputFormProps = Pick<
   ComponentProps<typeof TeamCreateOutputExtraInformationCard>,
-  'tagSuggestions' | 'getResearchTags'
+  'tagSuggestions'
 > &
   Pick<
     ComponentProps<typeof TeamCreateOutputFormSharingCard>,
@@ -70,6 +71,7 @@ type TeamCreateOutputFormProps = Pick<
     onSave: (
       output: ResearchOutputPostRequest,
     ) => Promise<ResearchOutputResponse | void>;
+    getResearchTags: (type: string) => Promise<ResearchTagResponse[]>;
     documentType: ResearchOutputDocumentType;
     team: TeamResponse;
   };
@@ -151,6 +153,34 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
 
   const [methods, setMethods] = useState<string[]>([]);
   const [organisms, setOrganisms] = useState<string[]>([]);
+  const [subtype, setSubtype] = useState<string>();
+
+  const [researchTags, setResearchTags] = useState<ResearchTagResponse[]>([]);
+
+  const fetchResearchTags = useCallback(
+    async (typeForResearchTags: ResearchOutputPostRequest['type'] | '') => {
+      if (typeForResearchTags === '') {
+        setResearchTags([]);
+        return;
+      }
+
+      const data = await getResearchTags(typeForResearchTags);
+
+      setResearchTags(data);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
+  useEffect(() => {
+    fetchResearchTags(type);
+  }, [type, fetchResearchTags]);
+
+  useEffect(() => {
+    setMethods([]);
+    setOrganisms([]);
+    setSubtype(undefined);
+  }, [type, setMethods, setOrganisms, setSubtype]);
 
   return (
     <Form<ResearchOutputResponse>
@@ -168,6 +198,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         identifierType !== ResearchOutputIdentifierType.Empty ||
         identifier !== '' ||
         labCatalogNumber !== '' ||
+        subtype !== undefined ||
         teams.length !== 1 // Original team
       }
       onSave={() => {
@@ -217,6 +248,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           methods,
           organisms,
           environments: [],
+          subtype,
         });
       }}
     >
@@ -235,6 +267,9 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangeLink={setLink}
             type={type}
             onChangeType={setType}
+            subtype={subtype}
+            onChangeSubtype={setSubtype}
+            researchTags={researchTags}
             asapFunded={asapFunded}
             onChangeAsapFunded={setAsapFunded}
             usedInPublication={usedInPublication}
@@ -247,7 +282,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           <TeamCreateOutputExtraInformationCard
             documentType={documentType}
             isSaving={isSaving}
-            getResearchTags={getResearchTags}
+            researchTags={researchTags}
             tagSuggestions={tagSuggestions}
             tags={tags}
             onChangeTags={setTags}

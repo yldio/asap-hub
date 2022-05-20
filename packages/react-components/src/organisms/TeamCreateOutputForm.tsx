@@ -10,7 +10,7 @@ import {
 import { sharedResearch } from '@asap-hub/routing';
 import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import { ComponentProps, useEffect, useState } from 'react';
+import { ComponentProps, useState } from 'react';
 import { Button } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 import { usePushFromHere } from '../routing';
@@ -156,27 +156,9 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [environments, setEnvironments] = useState<string[]>([]);
   const [subtype, setSubtype] = useState<string>();
 
-  const [filteredResearchTags, setFilteredResearchTags] = useState<
-    ResearchTagResponse[]
-  >([]);
-
-  useEffect(() => {
-    if (type === '' || !researchTags) {
-      setFilteredResearchTags([]);
-      return;
-    }
-
-    const filteredData = researchTags.filter((d) => d.types?.includes(type));
-
-    setFilteredResearchTags(filteredData);
-  }, [type, researchTags]);
-
-  useEffect(() => {
-    setMethods([]);
-    setOrganisms([]);
-    setEnvironments([]);
-    setSubtype(undefined);
-  }, [type, setMethods, setOrganisms, setSubtype]);
+  const filteredResearchTags = researchTags.filter((d) =>
+    d.types?.includes(type),
+  );
 
   return (
     <Form<ResearchOutputResponse>
@@ -263,7 +245,13 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             link={link}
             onChangeLink={setLink}
             type={type}
-            onChangeType={setType}
+            onChangeType={(newType) => {
+              setType(newType);
+              setMethods([]);
+              setOrganisms([]);
+              setEnvironments([]);
+              setSubtype(undefined);
+            }}
             subtype={subtype}
             onChangeSubtype={setSubtype}
             researchTags={filteredResearchTags}

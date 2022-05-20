@@ -706,6 +706,74 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/gp2-frontend@workspace:apps/gp2-frontend":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/gp2-frontend@workspace:apps/gp2-frontend"
+  dependencies:
+    "@asap-hub/algolia": "workspace:*"
+    "@asap-hub/auth": "workspace:*"
+    "@asap-hub/dom-test-utils": "workspace:*"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/fixtures": "workspace:*"
+    "@asap-hub/flags": "workspace:*"
+    "@asap-hub/frontend-utils": "workspace:*"
+    "@asap-hub/model": "workspace:*"
+    "@asap-hub/react-components": "workspace:*"
+    "@asap-hub/react-context": "workspace:*"
+    "@asap-hub/routing": "workspace:*"
+    "@asap-hub/unsupported-browser-page": "workspace:*"
+    "@asap-hub/validation": "workspace:*"
+    "@auth0/auth0-spa-js": ^1.15.0
+    "@babel/runtime-corejs3": ^7.14.0
+    "@fast-csv/format": ^4.3.5
+    "@sentry/cli": ^1.68.0
+    "@sentry/react": ^6.11.0
+    "@sentry/tracing": ^6.11.0
+    "@testing-library/dom": 7.31.2
+    "@testing-library/jest-dom": ^5.12.0
+    "@testing-library/react": 11.2.7
+    "@testing-library/react-hooks": ^4.0.1
+    "@testing-library/user-event": ^12.8.3
+    "@types/history": ^4.7.6
+    "@types/jest": ^26.0.23
+    "@types/nock": ^11.1.0
+    "@types/node": ^14.14.45
+    "@types/react": ^17.0.5
+    "@types/react-dom": ^17.0.5
+    "@types/react-router-dom": ^5.1.7
+    "@types/react-test-renderer": ^17.0.1
+    "@types/streamsaver": ^2.0.1
+    "@types/testing-library__jest-dom": ^5.9.5
+    "@types/testing-library__react": ^10.0.1
+    "@types/testing-library__react-hooks": ^3.4.1
+    "@types/uuid": ^8.3.0
+    browser-image-compression: ^1.0.14
+    browserslist-useragent-regexp: ^3.0.2
+    cross-env: ^7.0.3
+    date-fns: ^2.21.3
+    history: ^4
+    identity-obj-proxy: ^3.0.0
+    jose: ^2.0.5
+    nock: ^13.0.11
+    pirates: ^4.0.1
+    react: ^17.0.2
+    react-app-polyfill: ^1.0.6
+    react-dom: ^17.0.2
+    react-error-boundary: ^3.1.3
+    react-router-dom: ^5.2.0
+    react-router-last-location: ^2.0.1
+    react-scripts: ^4.0.3
+    react-test-renderer: ^17.0.2
+    recoil: "patch:recoil@^0.1.2#../../patches/recoil.patch"
+    streamsaver: ^2.0.5
+    typescript: 4.4.4
+    use-debounce: ^5.2.1
+    use-deep-compare-effect: ^1.6.1
+    uuid: ^8.3.2
+    web-streams-polyfill: ^3.1.1
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/gp2-server@workspace:apps/gp2-server":
   version: 0.0.0-use.local
   resolution: "@asap-hub/gp2-server@workspace:apps/gp2-server"
@@ -32319,6 +32387,20 @@ recoil@^0.1.2:
 "recoil@patch:recoil@^0.1.2#../../patches/recoil.patch::locator=%40asap-hub%2Fcrn-frontend%40workspace%3Aapps%2Fcrn-frontend":
   version: 0.1.3
   resolution: "recoil@patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fcrn-frontend%40workspace%3Aapps%2Fcrn-frontend"
+  peerDependencies:
+    react: ">=16.13.1"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: e9bdb30a43e192675fc4dcd32a8457682b66dbd847c7ae088d1ca312a40ca91d1390caced43ff69b5a64907e46857f383d6fd005f8a257cc14f24c5bc2decada
+  languageName: node
+  linkType: hard
+
+"recoil@patch:recoil@^0.1.2#../../patches/recoil.patch::locator=%40asap-hub%2Fgp2-frontend%40workspace%3Aapps%2Fgp2-frontend":
+  version: 0.1.3
+  resolution: "recoil@patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fgp2-frontend%40workspace%3Aapps%2Fgp2-frontend"
   peerDependencies:
     react: ">=16.13.1"
   peerDependenciesMeta:

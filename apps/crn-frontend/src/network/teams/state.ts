@@ -15,7 +15,6 @@ import {
   DefaultValue,
   selector,
   selectorFamily,
-  useRecoilCallback,
   useRecoilState,
   useRecoilValue,
   useSetRecoilState,
@@ -221,9 +220,4 @@ export const researchTagsSelector = selector({
   },
 });
 
-export const useResearchTags = () =>
-  useRecoilCallback(({ snapshot, set }) => async () => {
-    const researchTags = await snapshot.getPromise(researchTagsSelector); // pre-fetch
-    set(researchTagsState, researchTags);
-    return researchTags;
-  });
+export const useResearchTags = () => useRecoilValue(researchTagsSelector);

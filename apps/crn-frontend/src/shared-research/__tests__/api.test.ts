@@ -1,17 +1,15 @@
-import nock from 'nock';
-
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
-import { ResearchOutputDocumentType } from '@asap-hub/model';
 import {
   createResearchOutputResponse,
   createResearchTagListResponse,
 } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
-
-import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
-import { getResearchOutput, getResearchOutputs, getResearchTags } from '../api';
+import { ResearchOutputDocumentType } from '@asap-hub/model';
+import nock from 'nock';
 import { API_BASE_URL } from '../../config';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
+import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
+import { getResearchOutput, getResearchOutputs, getResearchTags } from '../api';
 
 jest.mock('../../config');
 
@@ -262,12 +260,11 @@ describe('getReseachTags', () => {
       .query({
         filter: {
           category: 'Research Output',
-          type: 'Assay',
         },
         take: 200,
       })
       .reply(200, {});
-    await getResearchTags('Assay', 'Bearer x');
+    await getResearchTags('Bearer x');
     expect(nock.isDone()).toBe(true);
   });
 
@@ -277,15 +274,15 @@ describe('getReseachTags', () => {
       .get('/research-tags')
       .query(true)
       .reply(200, researchTags);
-    expect(await getResearchTags('Assay', '')).toEqual(researchTags.items);
+    expect(await getResearchTags('')).toEqual(researchTags.items);
   });
 
   it('errors for invalid status', async () => {
     nock(API_BASE_URL).get('/research-tags').query(true).reply(500);
     await expect(
-      getResearchTags('Assay', ''),
+      getResearchTags(''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch research tags with type Assay. Expected status 2xx. Received status 500."`,
+      `"Failed to fetch research tags with. Expected status 2xx. Received status 500."`,
     );
   });
 });

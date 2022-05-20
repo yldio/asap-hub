@@ -10,7 +10,7 @@ import {
 import { sharedResearch } from '@asap-hub/routing';
 import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import { ComponentProps, useCallback, useEffect, useState } from 'react';
+import { ComponentProps, useEffect, useState } from 'react';
 import { Button } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 import { usePushFromHere } from '../routing';
@@ -71,7 +71,7 @@ type TeamCreateOutputFormProps = Pick<
     onSave: (
       output: ResearchOutputPostRequest,
     ) => Promise<ResearchOutputResponse | void>;
-    getResearchTags: () => Promise<ResearchTagResponse[]>;
+    researchTags: ResearchTagResponse[];
     documentType: ResearchOutputDocumentType;
     team: TeamResponse;
   };
@@ -109,7 +109,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
-  getResearchTags,
+  researchTags,
   team,
   serverValidationErrors,
   clearServerValidationError,
@@ -155,16 +155,6 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   const [organisms, setOrganisms] = useState<string[]>([]);
   const [subtype, setSubtype] = useState<string>();
 
-  const [researchTags, setResearchTags] = useState<ResearchTagResponse[]>();
-
-  const fetchResearchTags = useCallback(async () => {
-    const tags = await getResearchTags();
-    setResearchTags(tags);
-  }, []);
-
-  useEffect(() => {
-    fetchResearchTags();
-  }, [fetchResearchTags]);
   const [filteredResearchTags, setFilteredResearchTags] = useState<
     ResearchTagResponse[]
   >([]);
@@ -178,7 +168,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
     const filteredData = researchTags.filter((d) => d.types?.includes(type));
 
     setFilteredResearchTags(filteredData);
-  }, [type]);
+  }, [type, researchTags]);
 
   useEffect(() => {
     setMethods([]);

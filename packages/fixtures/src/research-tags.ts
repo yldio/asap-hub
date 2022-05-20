@@ -1,10 +1,10 @@
-import { ResearchTagResponse, ListResearchTagResponse } from '@asap-hub/model';
+import { ListResearchTagResponse, ResearchTagResponse } from '@asap-hub/model';
 
 export const researchTagMethodResponse: ResearchTagResponse = {
   id: '1234',
   name: 'Activity Assay',
   category: 'Method',
-  types: ['Protein Data', 'Assay'],
+  types: ['Protein Data', 'Assay', 'Spectroscopy'],
   entities: ['Research Output'],
 };
 
@@ -12,7 +12,7 @@ export const researchTagOrganismResponse: ResearchTagResponse = {
   id: 'd77a7607-7b9a-4ef1-99ee-c389b33ea95b',
   name: 'Rat',
   category: 'Organism',
-  types: ['Electrophysiology', 'Microscopy'],
+  types: ['Electrophysiology', 'Microscopy', 'Model System'],
   entities: ['Research Output'],
 };
 

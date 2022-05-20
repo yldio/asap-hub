@@ -1,12 +1,14 @@
 import {
   createTeamResponse,
   createUserResponse,
+  researchTagMethodResponse,
   researchTagOrganismResponse,
 } from '@asap-hub/fixtures';
 import {
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
+  ResearchTagResponse,
 } from '@asap-hub/model';
 import {
   render,
@@ -25,7 +27,7 @@ import TeamCreateOutputForm, {
 const props: ComponentProps<typeof TeamCreateOutputForm> = {
   onSave: jest.fn(() => Promise.resolve()),
   tagSuggestions: [],
-  getResearchTags: jest.fn().mockResolvedValue([]),
+  researchTags: [],
   documentType: 'Article',
   team: createTeamResponse(),
 };
@@ -135,14 +137,12 @@ describe('on submit', () => {
   let history!: History;
   const id = '42';
   const saveFn = jest.fn();
-  const getResearchTags = jest.fn();
   const getLabSuggestions = jest.fn();
   const getAuthorSuggestions = jest.fn();
 
   beforeEach(() => {
     history = createMemoryHistory();
     saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
-    getResearchTags.mockResolvedValue([]);
     getLabSuggestions.mockResolvedValue([]);
     getAuthorSuggestions.mockResolvedValue([]);
   });
@@ -176,15 +176,31 @@ describe('on submit', () => {
   >;
 
   const setupForm = async (
-    data: Data = {
-      description: 'example description',
-      title: 'example title',
-      type: 'Preprint',
-      link: 'http://example.com',
+    {
+      data = {
+        description: 'example description',
+        title: 'example title',
+        type: 'Preprint',
+        link: 'http://example.com',
+      },
+      documentType = 'Article',
+      researchTags = [],
+    }: {
+      data?: Data;
+      documentType?: ComponentProps<
+        typeof TeamCreateOutputForm
+      >['documentType'];
+      researchTags?: ResearchTagResponse[];
+    } = {
+      data: {
+        description: 'example description',
+        title: 'example title',
+        type: 'Preprint',
+        link: 'http://example.com',
+      },
+      documentType: 'Article',
+      researchTags: [],
     },
-    documentType: ComponentProps<
-      typeof TeamCreateOutputForm
-    >['documentType'] = 'Article',
   ) => {
     render(
       <Router history={history}>
@@ -195,7 +211,7 @@ describe('on submit', () => {
           onSave={saveFn}
           getLabSuggestions={getLabSuggestions}
           getAuthorSuggestions={getAuthorSuggestions}
-          getResearchTags={getResearchTags}
+          researchTags={researchTags}
         />
       </Router>,
     );
@@ -312,34 +328,47 @@ describe('on submit', () => {
     });
   });
   it('can submit a method', async () => {
-    getResearchTags.mockResolvedValue([
-      {
-        id: '1234',
-        name: 'Activity Assay',
-        category: 'Method',
-        types: ['Protein Data', 'Assay'],
-        entities: ['Research Output'],
-      },
-    ]);
-    await setupForm();
+    const researchTags = [researchTagMethodResponse];
+    const documentType = 'Dataset';
+    const type = 'Spectroscopy';
+    await setupForm({ researchTags, documentType });
+    const typeDropdown = screen.getByRole('textbox', {
+      name: /Select the option/i,
+    });
+    userEvent.type(typeDropdown, type);
+    userEvent.type(typeDropdown, specialChars.enter);
 
-    userEvent.click(screen.getByRole('textbox', { name: /Methods/i }));
+    userEvent.click(await screen.findByRole('textbox', { name: /methods/i }));
     userEvent.click(screen.getByText('Activity Assay'));
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
+      documentType,
+      type,
       methods: ['Activity Assay'],
     });
   });
   it('can submit an organism', async () => {
-    getResearchTags.mockResolvedValue([researchTagOrganismResponse]);
-    await setupForm();
+    const documentType = 'Protocol';
+    const type = 'Model System';
+    const researchTags = [researchTagOrganismResponse];
+    await setupForm({
+      researchTags,
+      documentType,
+    });
+    const typeDropdown = screen.getByRole('textbox', {
+      name: /Select the option/i,
+    });
+    userEvent.type(typeDropdown, type);
+    userEvent.type(typeDropdown, specialChars.enter);
 
-    userEvent.click(screen.getByRole('textbox', { name: /organisms/i }));
+    userEvent.click(await screen.findByRole('textbox', { name: /organisms/i }));
     userEvent.click(screen.getByText('Rat'));
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
+      documentType,
+      type,
       organisms: ['Rat'],
     });
   });
@@ -362,10 +391,10 @@ describe('on submit', () => {
   });
 
   it('can submit labCatalogNumber for lab resource', async () => {
-    await setupForm(
-      { ...expectedRequest, type: 'Animal Model' },
-      'Lab Resource',
-    );
+    await setupForm({
+      data: { ...expectedRequest, type: 'Animal Model' },
+      documentType: 'Lab Resource',
+    });
     userEvent.type(
       screen.getByRole('textbox', { name: /Catalog Number/i }),
       'abc123',

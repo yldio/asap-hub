@@ -1,6 +1,7 @@
 import {
   createTeamResponse,
   createUserResponse,
+  researchTagEnvironmentResponse,
   researchTagMethodResponse,
   researchTagOrganismResponse,
 } from '@asap-hub/fixtures';
@@ -370,6 +371,33 @@ describe('on submit', () => {
       documentType,
       type,
       organisms: ['Rat'],
+    });
+  });
+
+  it('can submit an environment', async () => {
+    const documentType = 'Protocol';
+    const type = 'Model System';
+    const researchTags = [researchTagEnvironmentResponse];
+    await setupForm({
+      researchTags,
+      documentType,
+    });
+    const typeDropdown = screen.getByRole('textbox', {
+      name: /Select the option/i,
+    });
+    userEvent.type(typeDropdown, type);
+    userEvent.type(typeDropdown, specialChars.enter);
+
+    userEvent.click(
+      await screen.findByRole('textbox', { name: /environments/i }),
+    );
+    userEvent.click(screen.getByText('In Vitro'));
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      documentType,
+      type,
+      environments: ['In Vitro'],
     });
   });
 

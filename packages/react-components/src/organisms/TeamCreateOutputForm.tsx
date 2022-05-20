@@ -153,6 +153,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
 
   const [methods, setMethods] = useState<string[]>([]);
   const [organisms, setOrganisms] = useState<string[]>([]);
+  const [environments, setEnvironments] = useState<string[]>([]);
   const [subtype, setSubtype] = useState<string>();
 
   const [filteredResearchTags, setFilteredResearchTags] = useState<
@@ -173,6 +174,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   useEffect(() => {
     setMethods([]);
     setOrganisms([]);
+    setEnvironments([]);
     setSubtype(undefined);
   }, [type, setMethods, setOrganisms, setSubtype]);
 
@@ -189,6 +191,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         authors.length !== 0 ||
         methods.length !== 0 ||
         organisms.length !== 0 ||
+        environments.length !== 0 ||
         identifierType !== ResearchOutputIdentifierType.Empty ||
         identifier !== '' ||
         labCatalogNumber !== '' ||
@@ -241,7 +244,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           addedDate: new Date().toISOString(),
           methods,
           organisms,
-          environments: [],
+          environments,
           subtype,
         });
       }}
@@ -295,6 +298,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangeMethods={setMethods}
             organisms={organisms}
             onChangeOrganisms={setOrganisms}
+            environments={environments}
+            onChangeEnvironments={setEnvironments}
             type={type}
           />
           <TeamCreateOutputContributorsCard

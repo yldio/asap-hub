@@ -1,4 +1,5 @@
 import {
+  researchTagEnvironmentResponse,
   researchTagMethodResponse,
   researchTagOrganismResponse,
 } from '@asap-hub/fixtures';
@@ -15,6 +16,7 @@ const getProps = (): ComponentProps<
   tags: [],
   methods: [],
   organisms: [],
+  environments: [],
   documentType: 'Article',
   identifierRequired: false,
   type: 'Protein Data',
@@ -119,4 +121,26 @@ it('should trigger an onChange event when an organism is selected', async () => 
   userEvent.click(screen.getByLabelText(/organisms/i));
   userEvent.click(screen.getByText('Rat'));
   expect(mockOnChange).toHaveBeenCalledWith(['Rat']);
+});
+
+it('should hide environments when there is no suggestions', async () => {
+  render(<TeamCreateOutputExtraInformationCard {...getProps()} />);
+  expect(screen.queryByLabelText(/environments/i)).toBeNull();
+});
+
+it('should trigger an onChange event when an environment is selected', async () => {
+  const mockOnChange = jest.fn();
+  render(
+    <TeamCreateOutputExtraInformationCard
+      {...getProps()}
+      researchTags={[researchTagEnvironmentResponse]}
+      onChangeEnvironments={mockOnChange}
+    />,
+  );
+
+  expect(await screen.findByLabelText(/environments/i)).toBeVisible();
+
+  userEvent.click(screen.getByLabelText(/environments/i));
+  userEvent.click(screen.getByText('In Vitro'));
+  expect(mockOnChange).toHaveBeenCalledWith(['In Vitro']);
 });

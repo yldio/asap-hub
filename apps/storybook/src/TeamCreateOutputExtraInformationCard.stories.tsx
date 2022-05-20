@@ -17,6 +17,7 @@ const commonProps: ComponentProps<typeof TeamCreateOutputExtraInformationCard> =
     tags: [],
     methods: [],
     organisms: [],
+    environments: [],
     tagSuggestions: tagSuggestions.map((suggestion) => ({
       label: suggestion,
       value: suggestion,

@@ -22,7 +22,12 @@ import {
 
 type TeamCreateOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
-  'tags' | 'accessInstructions' | 'labCatalogNumber' | 'methods' | 'organisms'
+  | 'tags'
+  | 'accessInstructions'
+  | 'labCatalogNumber'
+  | 'methods'
+  | 'organisms'
+  | 'environments'
 > & {
   tagSuggestions: NonNullable<
     ComponentProps<typeof LabeledMultiSelect>['suggestions']
@@ -32,6 +37,7 @@ type TeamCreateOutputExtraInformationProps = Pick<
   onChangeLabCatalogNumber?: (value: string) => void;
   onChangeMethods?: (value: string[]) => void;
   onChangeOrganisms?: (value: string[]) => void;
+  onChangeEnvironments?: (value: string[]) => void;
   isSaving: boolean;
   documentType: ResearchOutputDocumentType;
   identifierRequired: boolean;
@@ -59,6 +65,8 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     onChangeMethods = noop,
     organisms,
     onChangeOrganisms = noop,
+    environments,
+    onChangeEnvironments = noop,
     researchTags,
   }) => {
     const methodSuggestions = researchTags.filter(
@@ -66,6 +74,9 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     );
     const organismSuggestions = researchTags.filter(
       (tag) => tag.category === 'Organism',
+    );
+    const environmentSuggestions = researchTags.filter(
+      (tag) => tag.category === 'Environment',
     );
 
     return (
@@ -105,6 +116,25 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
             enabled={!isSaving}
             onChange={(options) =>
               onChangeOrganisms(options.map(({ value }) => value))
+            }
+          />
+        )}
+        {environmentSuggestions.length > 0 && (
+          <LabeledMultiSelect
+            title="Environments"
+            subtitle="(optional)"
+            values={environments.map((environment) => ({
+              label: environment,
+              value: environment,
+            }))}
+            suggestions={environmentSuggestions.map((environment) => ({
+              label: environment.name,
+              value: environment.name,
+            }))}
+            placeholder="Add an environment (E.g. In Vivo)"
+            enabled={!isSaving}
+            onChange={(options) =>
+              onChangeEnvironments(options.map(({ value }) => value))
             }
           />
         )}

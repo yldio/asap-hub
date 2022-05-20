@@ -20,7 +20,7 @@ export const researchTagEnvironmentResponse: ResearchTagResponse = {
   id: '8a936e45-6d5e-42a6-8acd-b849ab10f3f8',
   name: 'In Vitro',
   category: 'Environment',
-  types: ['Proposal', 'Report'],
+  types: ['Proposal', 'Report', 'Model System'],
   entities: ['Research Output'],
 };
 

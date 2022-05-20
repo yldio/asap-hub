@@ -1,12 +1,11 @@
 import {
+  ResearchOutputDocumentType,
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
-  ResearchOutputDocumentType,
   ResearchTagResponse,
 } from '@asap-hub/model';
 import { ComponentProps } from 'react';
 import { Link } from '../atoms';
-
 import { mailToSupport } from '../mail';
 import {
   FormCard,
@@ -69,14 +68,15 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     onChangeEnvironments = noop,
     researchTags,
   }) => {
-    const methodSuggestions = researchTags.filter(
-      (tag) => tag.category === 'Method',
-    );
+    const filterByCategory = (name: string) => (tag: ResearchTagResponse) =>
+      tag.category === name;
+
+    const methodSuggestions = researchTags.filter(filterByCategory('Method'));
     const organismSuggestions = researchTags.filter(
-      (tag) => tag.category === 'Organism',
+      filterByCategory('Organism'),
     );
     const environmentSuggestions = researchTags.filter(
-      (tag) => tag.category === 'Environment',
+      filterByCategory('Environment'),
     );
 
     return (

@@ -97,8 +97,8 @@ it('should trigger an onChange event when a method is selected', async () => {
   expect(await screen.findByLabelText(/method/i)).toBeVisible();
 
   userEvent.click(screen.getByLabelText(/method/i));
-  userEvent.click(screen.getByText('Activity Assay'));
-  expect(mockOnChange).toHaveBeenCalledWith(['Activity Assay']);
+  userEvent.click(screen.getByText('ELISA'));
+  expect(mockOnChange).toHaveBeenCalledWith(['ELISA']);
 });
 
 it('should hide organisms when there is no suggestions', async () => {

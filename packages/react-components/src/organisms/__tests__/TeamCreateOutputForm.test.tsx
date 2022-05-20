@@ -4,6 +4,7 @@ import {
   researchTagEnvironmentResponse,
   researchTagMethodResponse,
   researchTagOrganismResponse,
+  researchTagSubtypeResponse,
 } from '@asap-hub/fixtures';
 import {
   ResearchOutputIdentifierType,
@@ -14,6 +15,7 @@ import {
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
@@ -340,13 +342,13 @@ describe('on submit', () => {
     userEvent.type(typeDropdown, specialChars.enter);
 
     userEvent.click(await screen.findByRole('textbox', { name: /methods/i }));
-    userEvent.click(screen.getByText('Activity Assay'));
+    userEvent.click(screen.getByText('ELISA'));
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
       documentType,
       type,
-      methods: ['Activity Assay'],
+      methods: ['ELISA'],
     });
   });
   it('can submit an organism', async () => {
@@ -401,6 +403,104 @@ describe('on submit', () => {
     });
   });
 
+  it('resetting the type resets methods', async () => {
+    const researchTags = [researchTagMethodResponse];
+    const documentType = 'Dataset';
+    const type = 'Spectroscopy';
+    await setupForm({ researchTags, documentType });
+    const typeDropdown = screen.getByRole('textbox', {
+      name: /Select the option/i,
+    });
+    userEvent.type(typeDropdown, type);
+    userEvent.type(typeDropdown, specialChars.enter);
+
+    const methods = await screen.findByRole('textbox', { name: /methods/i });
+    userEvent.click(methods);
+    userEvent.click(screen.getByText('ELISA'));
+
+    expect(screen.getByText(/ELISA/i)).toBeInTheDocument();
+    userEvent.type(typeDropdown, 'Protein Data');
+    userEvent.type(typeDropdown, specialChars.enter);
+    await waitFor(() =>
+      expect(screen.queryByText(/ELISA/i)).not.toBeInTheDocument(),
+    );
+    expect(methods).toBeInTheDocument();
+  });
+  it('resetting the type resets organisms', async () => {
+    const researchTags = [researchTagOrganismResponse];
+    const documentType = 'Protocol';
+    const type = 'Model System';
+    await setupForm({ researchTags, documentType });
+    const typeDropdown = screen.getByRole('textbox', {
+      name: /Select the option/i,
+    });
+    userEvent.type(typeDropdown, type);
+    userEvent.type(typeDropdown, specialChars.enter);
+
+    const organisms = await screen.findByRole('textbox', {
+      name: /organisms/i,
+    });
+    userEvent.click(organisms);
+    userEvent.click(screen.getByText('Rat'));
+
+    expect(screen.getByText(/rat/i)).toBeInTheDocument();
+    userEvent.type(typeDropdown, 'Microscopy');
+    userEvent.type(typeDropdown, specialChars.enter);
+    await waitFor(() =>
+      expect(screen.queryByText(/rat/i)).not.toBeInTheDocument(),
+    );
+    expect(organisms).toBeInTheDocument();
+  });
+  it('resetting the type resets environment', async () => {
+    const documentType = 'Protocol';
+    const type = 'Model System';
+    const researchTags = [researchTagEnvironmentResponse];
+    await setupForm({ researchTags, documentType });
+    const typeDropdown = screen.getByRole('textbox', {
+      name: /Select the option/i,
+    });
+    userEvent.type(typeDropdown, type);
+    userEvent.type(typeDropdown, specialChars.enter);
+
+    const environments = await screen.findByRole('textbox', {
+      name: /environments/i,
+    });
+    userEvent.click(environments);
+    userEvent.click(screen.getByText('In Vitro'));
+
+    expect(screen.getByText(/In Vitro/i)).toBeInTheDocument();
+    userEvent.type(typeDropdown, 'Microscopy');
+    userEvent.type(typeDropdown, specialChars.enter);
+    await waitFor(() =>
+      expect(screen.queryByText(/In Vitro/i)).not.toBeInTheDocument(),
+    );
+    expect(environments).toBeInTheDocument();
+  });
+  it('resetting the type resets subtype', async () => {
+    const documentType = 'Protocol';
+    const type = 'Model System';
+    const researchTags = [researchTagSubtypeResponse];
+    await setupForm({ researchTags, documentType });
+    const typeDropdown = screen.getByRole('textbox', {
+      name: /Select the option/i,
+    });
+    userEvent.type(typeDropdown, type);
+    userEvent.type(typeDropdown, specialChars.enter);
+
+    const subtype = screen.getByRole('textbox', {
+      name: /subtype/i,
+    });
+    userEvent.click(subtype);
+    userEvent.click(screen.getByText('Metabolite'));
+
+    expect(screen.getByText(/metabolite/i)).toBeInTheDocument();
+    userEvent.type(typeDropdown, 'Microscopy');
+    userEvent.type(typeDropdown, specialChars.enter);
+    await waitFor(() =>
+      expect(screen.queryByText(/metabolite/i)).not.toBeInTheDocument(),
+    );
+    expect(subtype).toBeInTheDocument();
+  });
   it('can submit published date', async () => {
     await setupForm();
     const sharingStatus = screen.getByRole('group', {

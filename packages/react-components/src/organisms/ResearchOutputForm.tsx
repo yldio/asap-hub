@@ -79,7 +79,6 @@ const identifierTypeToFieldName: Record<
   ResearchOutputIdentifierType,
   'doi' | 'accession' | 'labCatalogNumber' | 'rrid' | undefined
 > = {
-  [ResearchOutputIdentifierType.None]: undefined,
   [ResearchOutputIdentifierType.Empty]: undefined,
   [ResearchOutputIdentifierType.DOI]: 'doi',
   [ResearchOutputIdentifierType.AccessionNumber]: 'accession',

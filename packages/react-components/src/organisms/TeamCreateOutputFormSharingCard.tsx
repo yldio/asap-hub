@@ -147,13 +147,15 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
         {subtypeSuggestions.length > 0 && (
           <LabeledDropdown
             title="Subtype"
-            subtitle="(optional)"
+            subtitle="(required)"
             options={subtypeSuggestions.map((sub) => ({
               label: sub.name,
               value: sub.name,
             }))}
             onChange={(selectedSubtype) => onChangeSubtype(selectedSubtype)}
             value={subtype ?? ''}
+            required
+            getValidationMessage={() => 'Please choose a subtype'}
             enabled={!isSaving}
             placeholder="Select subtype"
           />

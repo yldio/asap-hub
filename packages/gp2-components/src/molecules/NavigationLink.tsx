@@ -3,7 +3,6 @@ import { css } from '@emotion/react';
 
 interface NavigationLinkProps {
   readonly href: string;
-  readonly enabled?: boolean;
   readonly icon?: JSX.Element;
 }
 

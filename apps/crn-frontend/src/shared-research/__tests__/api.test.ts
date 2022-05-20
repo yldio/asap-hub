@@ -282,7 +282,7 @@ describe('getReseachTags', () => {
     await expect(
       getResearchTags(''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch research tags with. Expected status 2xx. Received status 500."`,
+      `"Failed to fetch research tags. Expected status 2xx. Received status 500."`,
     );
   });
 });

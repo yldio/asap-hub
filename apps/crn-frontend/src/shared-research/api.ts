@@ -96,7 +96,7 @@ export const getResearchTags = async (
 
   if (!resp.ok) {
     throw new Error(
-      `Failed to fetch research tags with. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      `Failed to fetch research tags. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
 

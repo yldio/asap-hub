@@ -2098,7 +2098,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/hapi__joi",
-        "npm:17.1.6"
+        "npm:17.1.8"
       ],
       [
         "@types/hast",
@@ -10699,7 +10699,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/hapi", "npm:18.0.7"],
             ["@types/hapi__boom", "npm:9.0.1"],
             ["@types/hapi__bourne", "workspace:@types/hapi__bourne"],
-            ["@types/hapi__joi", "npm:17.1.6"],
+            ["@types/hapi__joi", "npm:17.1.8"],
             ["@types/jest", "npm:26.0.24"],
             ["@types/jsonwebtoken", "npm:8.5.8"],
             ["@types/jwt-decode", "npm:2.2.1"],
@@ -11525,7 +11525,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/hapi", "npm:18.0.7"],
             ["@types/hapi__boom", "npm:9.0.1"],
             ["@types/hapi__bourne", "workspace:@types/hapi__bourne"],
-            ["@types/hapi__joi", "npm:17.1.6"],
+            ["@types/hapi__joi", "npm:17.1.8"],
             ["@types/jest", "npm:26.0.24"],
             ["@types/jwt-decode", "npm:2.2.1"],
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],
@@ -11561,7 +11561,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/hapi", "npm:18.0.7"],
             ["@types/hapi__boom", "npm:9.0.1"],
             ["@types/hapi__bourne", "workspace:@types/hapi__bourne"],
-            ["@types/hapi__joi", "npm:17.1.6"],
+            ["@types/hapi__joi", "npm:17.1.8"],
             ["@types/jest", "npm:26.0.24"],
             ["@types/jwt-decode", "npm:2.2.1"],
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],
@@ -29663,10 +29663,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/hapi__joi", [
-        ["npm:17.1.6", {
-          "packageLocation": "./.yarn/cache/@types-hapi__joi-npm-17.1.6-03e451e052-03d062e1f0.zip/node_modules/@types/hapi__joi/",
+        ["npm:17.1.8", {
+          "packageLocation": "./.yarn/cache/@types-hapi__joi-npm-17.1.8-347707794c-b346c23a30.zip/node_modules/@types/hapi__joi/",
           "packageDependencies": [
-            ["@types/hapi__joi", "npm:17.1.6"]
+            ["@types/hapi__joi", "npm:17.1.8"]
           ],
           "linkType": "HARD",
         }]

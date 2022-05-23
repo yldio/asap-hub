@@ -24,11 +24,11 @@ it('renders the children when is provided', async () => {
   const { findByText } = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.LoggedIn user={{ displayName: 'John Doe' }}>
-        <UserMenuButton>Hi, Jimi Hendrix</UserMenuButton>
+        <UserMenuButton>Hi, Jimi</UserMenuButton>
       </authTestUtils.LoggedIn>
     </authTestUtils.Auth0Provider>,
   );
-  expect(await findByText('Hi, Jimi Hendrix')).toBeVisible();
+  expect(await findByText('Hi, Jimi')).toBeVisible();
 });
 
 it('renders a fallback instead of the display name', async () => {

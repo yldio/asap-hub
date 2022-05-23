@@ -32,7 +32,7 @@ const MainNavigation: React.FC = () => (
               alignItems: 'center',
             })}
           >
-            {discoverIcon}Home
+            {discoverIcon} Home
           </div>
         </NavigationLink>
       </li>
@@ -45,7 +45,7 @@ const MainNavigation: React.FC = () => (
               alignItems: 'center',
             })}
           >
-            {networkIcon}Network
+            {networkIcon} Network
           </div>
         </NavigationLink>
       </li>

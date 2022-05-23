@@ -533,7 +533,7 @@ __metadata:
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": ^17.1.6
     "@types/jest": ^26.0.23
-    "@types/jsonwebtoken": ^8.5.1
+    "@types/jsonwebtoken": 8.5.8
     "@types/jwt-decode": ^2.2.1
     "@types/jwt-encode": "workspace:*"
     "@types/lodash.get": 4.4.7
@@ -725,7 +725,7 @@ __metadata:
     "@types/cors": 2.8.12
     "@types/express": ^4.17.11
     "@types/jest": ^26.0.23
-    "@types/jsonwebtoken": ^8.5.1
+    "@types/jsonwebtoken": 8.5.8
     "@types/node": ^14.14.45
     "@types/serverless": ^3
     "@types/source-map-support": ^0
@@ -806,7 +806,7 @@ __metadata:
     "@babel/preset-typescript": ^7.13.0
     "@babel/runtime-corejs3": ^7.14.0
     "@types/jest": ^26.0.23
-    "@types/jsonwebtoken": ^8.5.1
+    "@types/jsonwebtoken": 8.5.8
     jsonwebtoken: ^8.5.1
   languageName: unknown
   linkType: soft
@@ -953,7 +953,7 @@ __metadata:
     "@types/apr-intercept": "workspace:*"
     "@types/express": ^4.17.11
     "@types/jest": ^26.0.23
-    "@types/jsonwebtoken": ^8.5.1
+    "@types/jsonwebtoken": 8.5.8
     "@types/supertest": ^2.0.12
     apr-intercept: ^3.0.4
     express: ^4.17.1
@@ -11046,21 +11046,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/jsonwebtoken@npm:8.5.8":
+  version: 8.5.8
+  resolution: "@types/jsonwebtoken@npm:8.5.8"
+  dependencies:
+    "@types/node": "*"
+  checksum: 56738a918c543dba30786066959f801212e7fb5cd4ec53cf7b8d227711ed358834feb9e5141f7f88ec7c642bb39757330a5a8917e3b22e0ff9084940d35f0d70
+  languageName: node
+  linkType: hard
+
 "@types/jsonwebtoken@npm:^8.5.0":
   version: 8.5.5
   resolution: "@types/jsonwebtoken@npm:8.5.5"
   dependencies:
     "@types/node": "*"
   checksum: 33c30354641bc7849be7507e9f48685b1f487e944321a932650eac6c247c85184667f5e207ccfcab0da8cb24bde93a8372c09cacf1849e976bbf2cb90b26ce90
-  languageName: node
-  linkType: hard
-
-"@types/jsonwebtoken@npm:^8.5.1":
-  version: 8.5.1
-  resolution: "@types/jsonwebtoken@npm:8.5.1"
-  dependencies:
-    "@types/node": "*"
-  checksum: 740581b0d1e18f31ce9332e26702ae2704af86f0cb0bb914ee3554517e514e97392610525f9349ea8fe3742d0f816eb86d7ab864ddbd19cef55b2db4a43883a1
   languageName: node
   linkType: hard
 

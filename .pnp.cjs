@@ -2166,7 +2166,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/jsonwebtoken",
-        "npm:8.5.1"
+        "npm:8.5.8"
       ],
       [
         "@types/jwt-decode",
@@ -10701,7 +10701,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/hapi__bourne", "workspace:@types/hapi__bourne"],
             ["@types/hapi__joi", "npm:17.1.6"],
             ["@types/jest", "npm:26.0.23"],
-            ["@types/jsonwebtoken", "npm:8.5.1"],
+            ["@types/jsonwebtoken", "npm:8.5.8"],
             ["@types/jwt-decode", "npm:2.2.1"],
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],
             ["@types/lodash.get", "npm:4.4.7"],
@@ -10943,7 +10943,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/cors", "npm:2.8.12"],
             ["@types/express", "npm:4.17.11"],
             ["@types/jest", "npm:26.0.23"],
-            ["@types/jsonwebtoken", "npm:8.5.1"],
+            ["@types/jsonwebtoken", "npm:8.5.8"],
             ["@types/node", "npm:14.14.45"],
             ["@types/serverless", "npm:3.0.1"],
             ["@types/source-map-support", "npm:0.5.3"],
@@ -11032,7 +11032,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.13.0"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],
             ["@types/jest", "npm:26.0.23"],
-            ["@types/jsonwebtoken", "npm:8.5.1"],
+            ["@types/jsonwebtoken", "npm:8.5.8"],
             ["jsonwebtoken", "npm:8.5.1"]
           ],
           "linkType": "SOFT",
@@ -11492,7 +11492,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/express", "npm:4.17.11"],
             ["@types/jest", "npm:26.0.23"],
-            ["@types/jsonwebtoken", "npm:8.5.1"],
+            ["@types/jsonwebtoken", "npm:8.5.8"],
             ["@types/supertest", "npm:2.0.12"],
             ["apr-intercept", "npm:3.0.4"],
             ["express", "npm:4.17.1"],
@@ -29861,18 +29861,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/jsonwebtoken", [
-        ["npm:8.5.1", {
-          "packageLocation": "./.yarn/cache/@types-jsonwebtoken-npm-8.5.1-c01e6c9a08-740581b0d1.zip/node_modules/@types/jsonwebtoken/",
-          "packageDependencies": [
-            ["@types/jsonwebtoken", "npm:8.5.1"],
-            ["@types/node", "npm:13.11.1"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:8.5.5", {
           "packageLocation": "./.yarn/cache/@types-jsonwebtoken-npm-8.5.5-29f877de33-33c3035464.zip/node_modules/@types/jsonwebtoken/",
           "packageDependencies": [
             ["@types/jsonwebtoken", "npm:8.5.5"],
+            ["@types/node", "npm:13.11.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:8.5.8", {
+          "packageLocation": "./.yarn/cache/@types-jsonwebtoken-npm-8.5.8-798e14708c-56738a918c.zip/node_modules/@types/jsonwebtoken/",
+          "packageDependencies": [
+            ["@types/jsonwebtoken", "npm:8.5.8"],
             ["@types/node", "npm:13.11.1"]
           ],
           "linkType": "HARD",

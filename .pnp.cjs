@@ -2346,7 +2346,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/react-test-renderer",
-        "npm:17.0.1"
+        "npm:17.0.2"
       ],
       [
         "@types/react-transition-group",
@@ -10620,7 +10620,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react", "npm:17.0.5"],
             ["@types/react-dom", "npm:17.0.17"],
             ["@types/react-router-dom", "npm:5.1.7"],
-            ["@types/react-test-renderer", "npm:17.0.1"],
+            ["@types/react-test-renderer", "npm:17.0.2"],
             ["@types/streamsaver", "npm:2.0.1"],
             ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
@@ -11076,7 +11076,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-router-dom", "npm:5.1.7"],
             ["@types/react-router-hash-link", "npm:1.2.1"],
             ["@types/react-select", "patch:@types/react-select@npm%3A4.0.15#patches/types__react-select.patch::version=4.0.15&hash=2006f3&locator=%40asap-hub%2Freact-components%40workspace%3Apackages%2Freact-components"],
-            ["@types/react-test-renderer", "npm:17.0.1"],
+            ["@types/react-test-renderer", "npm:17.0.2"],
             ["@types/rehype-slug", "workspace:@types/rehype-slug"],
             ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
@@ -11162,7 +11162,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-router-dom", "npm:5.1.7"],
             ["@types/react-router-hash-link", "npm:1.2.1"],
             ["@types/react-select", "patch:@types/react-select@npm%3A4.0.15#patches/types__react-select.patch::version=4.0.15&hash=2006f3&locator=%40asap-hub%2Freact-components%40workspace%3Apackages%2Freact-components"],
-            ["@types/react-test-renderer", "npm:17.0.1"],
+            ["@types/react-test-renderer", "npm:17.0.2"],
             ["@types/rehype-slug", "workspace:@types/rehype-slug"],
             ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
@@ -11253,7 +11253,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-router-dom", "npm:5.1.7"],
             ["@types/react-router-hash-link", "npm:1.2.1"],
             ["@types/react-select", "patch:@types/react-select@npm%3A4.0.15#patches/types__react-select.patch::version=4.0.15&hash=2006f3&locator=%40asap-hub%2Freact-components%40workspace%3Apackages%2Freact-components"],
-            ["@types/react-test-renderer", "npm:17.0.1"],
+            ["@types/react-test-renderer", "npm:17.0.2"],
             ["@types/rehype-slug", "workspace:@types/rehype-slug"],
             ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
@@ -11342,7 +11342,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-router-dom", "npm:5.1.7"],
             ["@types/react-router-hash-link", "npm:1.2.1"],
             ["@types/react-select", "patch:@types/react-select@npm%3A4.0.15#patches/types__react-select.patch::version=4.0.15&hash=2006f3&locator=%40asap-hub%2Freact-components%40workspace%3Apackages%2Freact-components"],
-            ["@types/react-test-renderer", "npm:17.0.1"],
+            ["@types/react-test-renderer", "npm:17.0.2"],
             ["@types/rehype-slug", "workspace:@types/rehype-slug"],
             ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
@@ -29103,7 +29103,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react-hooks", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:4.0.1"],
             ["@babel/runtime", "npm:7.14.0"],
             ["@types/react", "npm:17.0.5"],
-            ["@types/react-test-renderer", "npm:17.0.1"],
+            ["@types/react-test-renderer", "npm:17.0.2"],
             ["react", "npm:17.0.2"],
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.2"]
           ],
@@ -30396,11 +30396,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:17.0.1", {
-          "packageLocation": "./.yarn/cache/@types-react-test-renderer-npm-17.0.1-9a42d8bb68-ecaae8df36.zip/node_modules/@types/react-test-renderer/",
+        ["npm:17.0.2", {
+          "packageLocation": "./.yarn/cache/@types-react-test-renderer-npm-17.0.2-71899ad95b-0be325798b.zip/node_modules/@types/react-test-renderer/",
           "packageDependencies": [
-            ["@types/react-test-renderer", "npm:17.0.1"],
-            ["@types/react", "npm:16.9.34"]
+            ["@types/react-test-renderer", "npm:17.0.2"],
+            ["@types/react", "npm:17.0.45"]
           ],
           "linkType": "HARD",
         }]

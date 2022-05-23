@@ -36,6 +36,7 @@ export const researchOutputToCSV = (
   title: output.title,
   documentType: output.documentType,
   type: output.type,
+  subtype: output.subtype,
   addedDate: output.addedDate,
   lastUpdatedPartial: output.lastUpdatedPartial,
   teams: output.teams
@@ -53,6 +54,18 @@ export const researchOutputToCSV = (
           isInternalUser(user) ? '' : ' [ext]'
         }`,
     )
+    .join(','),
+  methods: output.methods
+    .map((item) => item)
+    .sort(caseInsensitive)
+    .join(','),
+  organisms: output.organisms
+    .map((item) => item)
+    .sort(caseInsensitive)
+    .join(','),
+  environments: output.environments
+    .map((item) => item)
+    .sort(caseInsensitive)
     .join(','),
   tags: output.tags
     .map((item) => item)
@@ -76,19 +89,6 @@ export const researchOutputToCSV = (
   id: output.id,
   created: output.created,
   lastModifiedDate: output.lastModifiedDate,
-  methods: output.methods
-    .map((item) => item)
-    .sort(caseInsensitive)
-    .join(','),
-  organisms: output.organisms
-    .map((item) => item)
-    .sort(caseInsensitive)
-    .join(','),
-  environments: output.environments
-    .map((item) => item)
-    .sort(caseInsensitive)
-    .join(','),
-  subtype: output.subtype,
 });
 
 export const createCsvFileStream = (

@@ -60,7 +60,7 @@
     "@types/nock": "^11.1.0",
     "@types/node": "^14.14.45",
     "@types/react": "^17.0.5",
-    "@types/react-dom": "^17.0.5",
+    "@types/react-dom": "17.0.17",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-test-renderer": "^17.0.1",
     "@types/streamsaver": "^2.0.1",

@@ -1150,7 +1150,7 @@ type AppQueries {
     skip: Int = 0
     """Optional number of assets to take."""
     top: Int
-  ): [Asset!]
+  ): [Asset!]!
   """Get assets and total count."""
   queryAssetsWithTotal(
     """Optional OData filter."""
@@ -1161,7 +1161,7 @@ type AppQueries {
     skip: Int = 0
     """Optional number of assets to take."""
     top: Int
-  ): AssetResultDto
+  ): AssetResultDto!
   """Query Calendars content items."""
   queryCalendarsContents(
     """Optional OData filter."""

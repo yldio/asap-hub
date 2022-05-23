@@ -193,7 +193,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
 
     if (researchOutputData?.rrid) return ResearchOutputIdentifierType.RRID;
 
-    return ResearchOutputIdentifierType.None;
+    return ResearchOutputIdentifierType.Empty;
   };
   const [identifierType, setIdentifierType] =
     useState<ResearchOutputIdentifierType>(

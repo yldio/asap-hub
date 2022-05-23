@@ -28,18 +28,22 @@ const ResearchOutput: React.FC = () => {
             <SharedResearchOutput {...researchOutputData} backHref={backHref} />
           </Frame>
         </Route>
-        <Route // Todo drop this route when no permission.
-          path={
-            path +
-            sharedResearch({}).researchOutput({ researchOutputId })
-              .editResearchOutput.template
-          }
-        >
-          <TeamOutput
-            teamId={researchOutputData.teams[0].id}
-            researchOutputData={researchOutputData}
-          />
-        </Route>
+        {canCreateUpdate ? (
+          <Route
+            path={
+              path +
+              sharedResearch({}).researchOutput({ researchOutputId })
+                .editResearchOutput.template
+            }
+          >
+            <TeamOutput
+              teamId={researchOutputData.teams[0].id}
+              researchOutputData={researchOutputData}
+            />
+          </Route>
+        ) : (
+          <NotFoundPage />
+        )}
       </ResearchOutputPermissionsContext.Provider>
     );
   }

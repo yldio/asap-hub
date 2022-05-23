@@ -328,7 +328,7 @@ __metadata:
     "@types/jwt-encode": "workspace:*"
     "@types/luxon": ^1
     "@types/pump": ^1.1.1
-    "@types/through2-concurrent": ^2
+    "@types/through2-concurrent": 2.0.1
     "@types/uuid": ^8.3.0
     "@types/yargs": ^17.0.5
     "@yarnpkg/pnpify": ^3.1.1
@@ -11773,13 +11773,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/through2-concurrent@npm:^2":
-  version: 2.0.0
-  resolution: "@types/through2-concurrent@npm:2.0.0"
+"@types/through2-concurrent@npm:2.0.1":
+  version: 2.0.1
+  resolution: "@types/through2-concurrent@npm:2.0.1"
   dependencies:
     "@types/node": "*"
     "@types/through2": "*"
-  checksum: ddb9ff481d6c7890aca336e511af2859c95d0757e1f172c37092b5a87b441e87c75ef3db02a07f44231a55dff3e784fb7f71192379d4f8d2024fa37be402a66a
+  checksum: 3fde6fe82b2cac2da4bf70f8ab1643eed197f4f2c6f28d3f6da00c9d1c4b37615d957578fc51603564f5ca50879495a83987dfc381f58d6a80bbc5e96133f188
   languageName: node
   linkType: hard
 

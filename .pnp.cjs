@@ -2450,7 +2450,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/through2-concurrent",
-        "npm:2.0.0"
+        "npm:2.0.1"
       ],
       [
         "@types/tough-cookie",
@@ -10488,7 +10488,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],
             ["@types/luxon", "npm:1.26.4"],
             ["@types/pump", "npm:1.1.1"],
-            ["@types/through2-concurrent", "npm:2.0.0"],
+            ["@types/through2-concurrent", "npm:2.0.1"],
             ["@types/uuid", "npm:8.3.0"],
             ["@types/yargs", "npm:17.0.5"],
             ["@yarnpkg/pnpify", "npm:3.1.1"],
@@ -30671,10 +30671,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/through2-concurrent", [
-        ["npm:2.0.0", {
-          "packageLocation": "./.yarn/cache/@types-through2-concurrent-npm-2.0.0-311a27eb34-ddb9ff481d.zip/node_modules/@types/through2-concurrent/",
+        ["npm:2.0.1", {
+          "packageLocation": "./.yarn/cache/@types-through2-concurrent-npm-2.0.1-cd7c87cafd-3fde6fe82b.zip/node_modules/@types/through2-concurrent/",
           "packageDependencies": [
-            ["@types/through2-concurrent", "npm:2.0.0"],
+            ["@types/through2-concurrent", "npm:2.0.1"],
             ["@types/node", "npm:13.11.1"],
             ["@types/through2", "npm:2.0.36"]
           ],

@@ -536,7 +536,7 @@ __metadata:
     "@types/jsonwebtoken": ^8.5.1
     "@types/jwt-decode": ^2.2.1
     "@types/jwt-encode": "workspace:*"
-    "@types/lodash.get": ^4
+    "@types/lodash.get": 4.4.7
     "@types/lodash.matches": ^4
     "@types/lodash.uniqby": ^4
     "@types/luxon": ^1
@@ -11086,12 +11086,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.get@npm:^4":
-  version: 4.4.6
-  resolution: "@types/lodash.get@npm:4.4.6"
+"@types/lodash.get@npm:4.4.7":
+  version: 4.4.7
+  resolution: "@types/lodash.get@npm:4.4.7"
   dependencies:
     "@types/lodash": "*"
-  checksum: 1f0f11a3fde2b7347482550cff4d1ba4d109c53e3f374dbe8a243f01b50e50446dd6b4d4bc897890caea50eac1157cdd0d627fb7390202b1aa5376cc27c077e6
+  checksum: 0dbf1960606e4707c34e8ffbe97ffaad0e47fc5df7a6e24ea6e4fe5838d2468aa13360f38815c77b06e3c9932631ae15662b4139036a69ee16aeb54827a21405
   languageName: node
   linkType: hard
 

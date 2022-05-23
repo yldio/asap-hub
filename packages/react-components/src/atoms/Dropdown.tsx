@@ -76,7 +76,7 @@ export default function Dropdown<V extends string>({
     () => options.filter((option) => option.value !== ''),
     [options],
   );
-
+  const selectValue = validOptions.find((option) => option.value === value);
   return (
     <div css={containerStyles}>
       <Select<OptionTypeBase>
@@ -85,8 +85,10 @@ export default function Dropdown<V extends string>({
         isClearable={!required}
         isDisabled={!enabled}
         options={validOptions}
-        onChange={(option) => onChange(option?.value)}
-        value={validOptions.find((option) => option.value === value) || null}
+        onChange={(option) => {
+          onChange(option?.value);
+        }}
+        value={selectValue || null}
         components={{ DropdownIndicator, ClearIndicator }}
         styles={reactSelectStyles(!!validationMessage)}
         noOptionsMessage={noOptionsMessage}

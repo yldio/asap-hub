@@ -1,12 +1,11 @@
 import {
+  ResearchOutputDocumentType,
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
-  ResearchOutputDocumentType,
   ResearchTagResponse,
 } from '@asap-hub/model';
-import { ComponentProps, useCallback, useEffect, useState } from 'react';
+import { ComponentProps } from 'react';
 import { Link } from '../atoms';
-
 import { mailToSupport } from '../mail';
 import {
   FormCard,
@@ -22,7 +21,12 @@ import {
 
 type TeamCreateOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
-  'tags' | 'accessInstructions' | 'labCatalogNumber' | 'methods' | 'organisms'
+  | 'tags'
+  | 'accessInstructions'
+  | 'labCatalogNumber'
+  | 'methods'
+  | 'organisms'
+  | 'environments'
 > & {
   tagSuggestions: NonNullable<
     ComponentProps<typeof LabeledMultiSelect>['suggestions']
@@ -32,10 +36,11 @@ type TeamCreateOutputExtraInformationProps = Pick<
   onChangeLabCatalogNumber?: (value: string) => void;
   onChangeMethods?: (value: string[]) => void;
   onChangeOrganisms?: (value: string[]) => void;
+  onChangeEnvironments?: (value: string[]) => void;
   isSaving: boolean;
   documentType: ResearchOutputDocumentType;
   identifierRequired: boolean;
-  getResearchTags: (type: string) => Promise<ResearchTagResponse[]>;
+  researchTags: ResearchTagResponse[];
   type: ResearchOutputPostRequest['type'] | '';
 } & Omit<TeamCreateOutputIdentifierProps, 'required'>;
 
@@ -59,41 +64,20 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     onChangeMethods = noop,
     organisms,
     onChangeOrganisms = noop,
-    getResearchTags,
-    type,
+    environments,
+    onChangeEnvironments = noop,
+    researchTags,
   }) => {
-    const [researchTags, setResearchTags] = useState<ResearchTagResponse[]>([]);
+    const filterByCategory = (name: string) => (tag: ResearchTagResponse) =>
+      tag.category === name;
 
-    const methodSuggestions = researchTags.filter(
-      (tag) => tag.category === 'Method',
-    );
+    const methodSuggestions = researchTags.filter(filterByCategory('Method'));
     const organismSuggestions = researchTags.filter(
-      (tag) => tag.category === 'Organism',
+      filterByCategory('Organism'),
     );
-
-    const fetchResearchTags = useCallback(
-      async (typeForResearchTags: ResearchOutputPostRequest['type'] | '') => {
-        if (typeForResearchTags === '') {
-          setResearchTags([]);
-          return;
-        }
-
-        const data = await getResearchTags(typeForResearchTags);
-
-        setResearchTags(data);
-      },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [],
+    const environmentSuggestions = researchTags.filter(
+      filterByCategory('Environment'),
     );
-
-    useEffect(() => {
-      fetchResearchTags(type);
-    }, [type, fetchResearchTags]);
-
-    useEffect(() => {
-      onChangeMethods([]);
-      onChangeOrganisms([]);
-    }, [type, onChangeMethods, onChangeOrganisms]);
 
     return (
       <FormCard title="What extra information can you provide?">
@@ -132,6 +116,25 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
             enabled={!isSaving}
             onChange={(options) =>
               onChangeOrganisms(options.map(({ value }) => value))
+            }
+          />
+        )}
+        {environmentSuggestions.length > 0 && (
+          <LabeledMultiSelect
+            title="Environments"
+            subtitle="(optional)"
+            values={environments.map((environment) => ({
+              label: environment,
+              value: environment,
+            }))}
+            suggestions={environmentSuggestions.map((environment) => ({
+              label: environment.name,
+              value: environment.name,
+            }))}
+            placeholder="Add an environment (E.g. In Vivo)"
+            enabled={!isSaving}
+            onChange={(options) =>
+              onChangeEnvironments(options.map(({ value }) => value))
             }
           />
         )}

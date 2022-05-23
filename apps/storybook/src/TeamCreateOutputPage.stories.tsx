@@ -44,13 +44,7 @@ export const Normal = () => (
           }, 1000);
         })
       }
-      getResearchTags={() =>
-        new Promise((resolve) => {
-          setTimeout(() => {
-            resolve([researchTagMethodResponse]);
-          }, 1000);
-        })
-      }
+      researchTags={[researchTagMethodResponse]}
     />
   </StaticRouter>
 );

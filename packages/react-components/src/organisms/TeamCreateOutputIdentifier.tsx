@@ -4,13 +4,12 @@ import {
   researchOutputToIdentifierType,
 } from '@asap-hub/model';
 import { ResearchOutputIdentifierValidationExpression } from '@asap-hub/validation';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { LabeledDropdown, LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 
 const getIdentifiers = (
   researchOutputDocumentType: ResearchOutputDocumentType,
-  required: boolean,
 ): Array<{
   value: ResearchOutputIdentifierType;
   label: ResearchOutputIdentifierType;
@@ -85,13 +84,9 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
       [identifierType],
     );
     const identifiers = useMemo(
-      () => getIdentifiers(documentType, required),
-      [documentType, required],
+      () => getIdentifiers(documentType),
+      [documentType],
     );
-
-    useEffect(() => {
-      setIdentifier('');
-    }, [identifierType, setIdentifier]);
 
     const onChangeIdentifierType = useCallback(
       (newType: string) => {
@@ -103,15 +98,11 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
         ) {
           setIdentifierType(newType as ResearchOutputIdentifierType);
         }
+        setIdentifier('');
       },
-      [setIdentifierType, identifiers],
+      [setIdentifierType, identifiers, setIdentifier],
     );
 
-    useEffect(() => {
-      if (!identifiers.map((i) => i.value).includes(identifierType)) {
-        setIdentifierType(ResearchOutputIdentifierType.Empty);
-      }
-    }, [identifierType, identifiers, setIdentifierType]);
     const subtitle = required ? 'required' : 'optional';
     return (
       <>

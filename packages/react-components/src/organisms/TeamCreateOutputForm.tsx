@@ -4,6 +4,7 @@ import {
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
+  ResearchTagResponse,
   TeamResponse,
 } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
@@ -57,7 +58,7 @@ const formControlsStyles = css({
 
 type TeamCreateOutputFormProps = Pick<
   ComponentProps<typeof TeamCreateOutputExtraInformationCard>,
-  'tagSuggestions' | 'getResearchTags'
+  'tagSuggestions'
 > &
   Pick<
     ComponentProps<typeof TeamCreateOutputFormSharingCard>,
@@ -70,6 +71,7 @@ type TeamCreateOutputFormProps = Pick<
     onSave: (
       output: ResearchOutputPostRequest,
     ) => Promise<ResearchOutputResponse | void>;
+    researchTags: ResearchTagResponse[];
     documentType: ResearchOutputDocumentType;
     team: TeamResponse;
   };
@@ -107,7 +109,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
-  getResearchTags,
+  researchTags,
   team,
   serverValidationErrors,
   clearServerValidationError,
@@ -151,6 +153,12 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
 
   const [methods, setMethods] = useState<string[]>([]);
   const [organisms, setOrganisms] = useState<string[]>([]);
+  const [environments, setEnvironments] = useState<string[]>([]);
+  const [subtype, setSubtype] = useState<string>();
+
+  const filteredResearchTags = researchTags.filter((d) =>
+    d.types?.includes(type),
+  );
 
   return (
     <Form<ResearchOutputResponse>
@@ -165,9 +173,11 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         authors.length !== 0 ||
         methods.length !== 0 ||
         organisms.length !== 0 ||
+        environments.length !== 0 ||
         identifierType !== ResearchOutputIdentifierType.Empty ||
         identifier !== '' ||
         labCatalogNumber !== '' ||
+        subtype !== undefined ||
         teams.length !== 1 // Original team
       }
       onSave={() => {
@@ -216,7 +226,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           addedDate: new Date().toISOString(),
           methods,
           organisms,
-          environments: [],
+          environments,
+          subtype,
         });
       }}
     >
@@ -234,7 +245,16 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             link={link}
             onChangeLink={setLink}
             type={type}
-            onChangeType={setType}
+            onChangeType={(newType) => {
+              setType(newType);
+              setMethods([]);
+              setOrganisms([]);
+              setEnvironments([]);
+              setSubtype(undefined);
+            }}
+            subtype={subtype}
+            onChangeSubtype={setSubtype}
+            researchTags={filteredResearchTags}
             asapFunded={asapFunded}
             onChangeAsapFunded={setAsapFunded}
             usedInPublication={usedInPublication}
@@ -247,7 +267,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
           <TeamCreateOutputExtraInformationCard
             documentType={documentType}
             isSaving={isSaving}
-            getResearchTags={getResearchTags}
+            researchTags={filteredResearchTags}
             tagSuggestions={tagSuggestions}
             tags={tags}
             onChangeTags={setTags}
@@ -266,6 +286,8 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             onChangeMethods={setMethods}
             organisms={organisms}
             onChangeOrganisms={setOrganisms}
+            environments={environments}
+            onChangeEnvironments={setEnvironments}
             type={type}
           />
           <TeamCreateOutputContributorsCard

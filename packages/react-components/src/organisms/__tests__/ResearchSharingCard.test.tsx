@@ -125,7 +125,7 @@ it('triggers an on change for subtype', async () => {
   const onChangeFn = jest.fn();
 
   render(
-    <TeamCreateOutputFormSharingCard
+    <ResearchOutputFormSharingCard
       {...props}
       documentType="Article"
       researchTags={[researchTagSubtypeResponse]}

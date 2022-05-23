@@ -217,8 +217,12 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const [organisms, setOrganisms] = useState<string[]>(
     researchOutputData?.organisms.map((organism) => organism) || [],
   );
-  const [environments, setEnvironments] = useState<string[]>([]);
-  const [subtype, setSubtype] = useState<string>();
+  const [environments, setEnvironments] = useState<string[]>(
+    researchOutputData?.organisms.map((environment) => environment) || [],
+  );
+  const [subtype, setSubtype] = useState<string | undefined>(
+    researchOutputData?.subtype || '',
+  );
 
   const filteredResearchTags = researchTags.filter((d) =>
     d.types?.includes(type),

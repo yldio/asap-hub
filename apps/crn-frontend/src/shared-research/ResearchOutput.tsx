@@ -28,7 +28,7 @@ const ResearchOutput: React.FC = () => {
             <SharedResearchOutput {...researchOutputData} backHref={backHref} />
           </Frame>
         </Route>
-        {canCreateUpdate ? (
+        {canCreateUpdate && (
           <Route
             path={
               path +
@@ -41,8 +41,6 @@ const ResearchOutput: React.FC = () => {
               researchOutputData={researchOutputData}
             />
           </Route>
-        ) : (
-          <NotFoundPage />
         )}
       </ResearchOutputPermissionsContext.Provider>
     );

@@ -82,12 +82,10 @@ describe('a grant document research output', () => {
       ],
       title: 'Grant Document title!',
     });
-    const { getByRole, getByText } = await renderComponent();
+    const { getByText } = await renderComponent();
 
     expect(getByText(/grant document team/i)).toBeVisible();
-    expect(getByRole('heading', { level: 1 }).textContent).toEqual(
-      'Grant Document title!',
-    );
+    expect(getByText('Grant Document title!')).toBeVisible();
   });
   it('links to a teams', async () => {
     mockGetResearchOutput.mockResolvedValue({

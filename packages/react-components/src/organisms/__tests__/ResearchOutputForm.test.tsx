@@ -5,6 +5,7 @@ import {
   researchTagMethodResponse,
   researchTagOrganismResponse,
   researchTagSubtypeResponse,
+  createResearchOutputResponse,
 } from '@asap-hub/fixtures';
 import {
   ResearchOutputIdentifierType,
@@ -204,9 +205,7 @@ describe('on submit', () => {
       researchTags = [],
     }: {
       data?: Data;
-      documentType?: ComponentProps<
-        typeof ResearchOutputForm
-      >['documentType'];
+      documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
       researchTags?: ResearchTagResponse[];
     } = {
       data: {

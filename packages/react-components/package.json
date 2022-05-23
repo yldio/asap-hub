@@ -76,7 +76,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/react-router-hash-link": "^1.2.1",
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch",
-    "@types/react-test-renderer": "^17.0.1",
+    "@types/react-test-renderer": "17.0.2",
     "@types/rehype-slug": "workspace:*",
     "@types/testing-library__jest-dom": "^5.9.5",
     "@types/testing-library__react": "^10.0.1",

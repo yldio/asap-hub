@@ -107,8 +107,6 @@ describe('TeamOutput', () => {
         documentType: 'Lab Resource',
         addedDate: expect.anything(),
         tags: [],
-        asapFunded: false,
-        usedInPublication: false,
         sharingStatus: 'Network Only',
         teams: [teamId],
         link,

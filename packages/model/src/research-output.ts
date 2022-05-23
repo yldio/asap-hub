@@ -1,4 +1,4 @@
-import { ListResponse } from './common';
+import { DecisionOption, ListResponse } from './common';
 import { ExternalAuthorInput, ExternalAuthorResponse } from './external-author';
 import { LabResponse } from './lab';
 import { TeamResponse } from './team';
@@ -222,3 +222,15 @@ export type ResearchOutputPostRequest = {
 export type ResearchOutputPutRequest = ResearchOutputPostRequest;
 
 export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;
+
+export const convertDecisionToBoolean = (
+  decision: string | null | DecisionOption,
+): boolean | undefined =>
+  decision && ['Yes', 'No'].includes(decision) ? decision === 'Yes' : undefined;
+
+export const convertBooleanToDecision = (bool?: boolean): DecisionOption => {
+  if (typeof bool === 'undefined') {
+    return 'Not Sure';
+  }
+  return bool ? 'Yes' : 'No';
+};

@@ -1,4 +1,5 @@
 import {
+  convertDecisionToBoolean,
   DecisionOption,
   ResearchOutputDocumentType,
   ResearchOutputIdentifierType,
@@ -181,9 +182,6 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
         teams.length !== 1 // Original team
       }
       onSave={() => {
-        const convertDecisionToBoolean = (decision: DecisionOption): boolean =>
-          decision === 'Yes';
-
         const identifierField = createIdentifierField(
           identifierType,
           identifier,

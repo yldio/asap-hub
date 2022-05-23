@@ -1,4 +1,6 @@
 import {
+  convertBooleanToDecision,
+  convertDecisionToBoolean,
   isResearchOutputDocumentType,
   isResearchOutputType,
   researchOutputMapType,
@@ -31,5 +33,27 @@ describe('Research Output Model', () => {
     it('should return null on not known type', () => {
       expect(researchOutputMapType('NotACloningType')).toBeNull();
     });
+  });
+});
+
+describe('convertBooleanToDecision', () => {
+  test.each`
+    description                          | given        | expected
+    ${'returns Yes when true'}           | ${true}      | ${'Yes'}
+    ${'returns No when false'}           | ${false}     | ${'No'}
+    ${'returns Not Sure when undefined'} | ${undefined} | ${'Not Sure'}
+  `('$description', ({ given, expected }) => {
+    expect(convertBooleanToDecision(given)).toEqual(expected);
+  });
+});
+
+describe('convertDecisionToBoolean', () => {
+  test.each`
+    description                          | given         | expected
+    ${'returns true when Yes'}           | ${'Yes'}      | ${true}
+    ${'returns false when No'}           | ${'No'}       | ${false}
+    ${'returns undefined when Not Sure'} | ${'Not Sure'} | ${undefined}
+  `('$description', ({ given, expected }) => {
+    expect(convertDecisionToBoolean(given)).toEqual(expected);
   });
 });

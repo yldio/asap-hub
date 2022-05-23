@@ -2186,7 +2186,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/lodash.get",
-        "npm:4.4.6"
+        "npm:4.4.7"
       ],
       [
         "@types/lodash.matches",
@@ -10704,7 +10704,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jsonwebtoken", "npm:8.5.1"],
             ["@types/jwt-decode", "npm:2.2.1"],
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],
-            ["@types/lodash.get", "npm:4.4.6"],
+            ["@types/lodash.get", "npm:4.4.7"],
             ["@types/lodash.matches", "npm:4.6.6"],
             ["@types/lodash.uniqby", "npm:4.7.6"],
             ["@types/luxon", "npm:1.26.4"],
@@ -29923,10 +29923,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/lodash.get", [
-        ["npm:4.4.6", {
-          "packageLocation": "./.yarn/cache/@types-lodash.get-npm-4.4.6-16fd48a468-1f0f11a3fd.zip/node_modules/@types/lodash.get/",
+        ["npm:4.4.7", {
+          "packageLocation": "./.yarn/cache/@types-lodash.get-npm-4.4.7-db674b0da6-0dbf196060.zip/node_modules/@types/lodash.get/",
           "packageDependencies": [
-            ["@types/lodash.get", "npm:4.4.6"],
+            ["@types/lodash.get", "npm:4.4.7"],
             ["@types/lodash", "npm:4.14.157"]
           ],
           "linkType": "HARD",

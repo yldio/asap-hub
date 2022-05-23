@@ -12,14 +12,9 @@ const loadResearchOutputList = () =>
   );
 const loadResearchOutput = () =>
   import(/* webpackChunkName: "shared-research-output" */ './ResearchOutput');
-const loadEditResearchOutput = () =>
-  import(
-    /* webpackChunkName: "edit-shared-research-output" */ './EditResearchOutput'
-  );
+
 const ResearchOutputList = lazy(loadResearchOutputList);
 const ResearchOutput = lazy(loadResearchOutput);
-loadResearchOutputList();
-const EditResearchOutput = lazy(loadEditResearchOutput);
 loadResearchOutputList();
 
 const SharedResearch: FC<Record<string, never>> = () => {
@@ -52,9 +47,6 @@ const SharedResearch: FC<Record<string, never>> = () => {
             />
           </SearchFrame>
         </SharedResearchPage>
-      </Route>
-      <Route path={path + sharedResearch({}).editResearchOutput.template}>
-        <EditResearchOutput />
       </Route>
       <Route path={path + sharedResearch({}).researchOutput.template}>
         <ResearchOutput />

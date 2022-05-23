@@ -1,20 +1,17 @@
 import { route, stringParser } from 'typesafe-routes';
 
-const researchOutput = route(
-  '/:researchOutputId',
-  { researchOutputId: stringParser },
-  {},
-);
 const editResearchOutput = route(
-  '/:researchOutputId/edit',
+  '/edit',
   { researchOutputId: stringParser },
   {},
 );
 
-const sharedResearch = route(
-  '/shared-research',
-  {},
-  { researchOutput, editResearchOutput },
+const researchOutput = route(
+  '/:researchOutputId',
+  { researchOutputId: stringParser },
+  { editResearchOutput },
 );
+
+const sharedResearch = route('/shared-research', {}, { researchOutput });
 
 export default sharedResearch;

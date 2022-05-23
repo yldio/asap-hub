@@ -61,8 +61,9 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
           <div css={editButtonContainer}>
             <Link
               href={
-                sharedResearch({}).editResearchOutput({ researchOutputId: id })
-                  .$
+                sharedResearch({})
+                  .researchOutput({ researchOutputId: id })
+                  .editResearchOutput({}).$
               }
               buttonStyle
               small

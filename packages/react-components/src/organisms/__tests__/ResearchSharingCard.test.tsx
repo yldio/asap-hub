@@ -1,3 +1,4 @@
+import { researchTagSubtypeResponse } from '@asap-hub/fixtures';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, within } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
@@ -15,6 +16,7 @@ const props: ComponentProps<typeof ResearchOutputFormSharingCard> = {
   asapFunded: 'Not Sure',
   usedInPublication: 'Not Sure',
   sharingStatus: 'Network Only',
+  researchTags: [],
 };
 it('renders the card with provided values', () => {
   render(
@@ -117,6 +119,25 @@ it('triggers an on change for type', async () => {
   userEvent.type(type, specialChars.enter);
 
   expect(onChangeFn).toHaveBeenCalledWith('Preprint');
+});
+
+it('triggers an on change for subtype', async () => {
+  const onChangeFn = jest.fn();
+
+  render(
+    <TeamCreateOutputFormSharingCard
+      {...props}
+      documentType="Article"
+      researchTags={[researchTagSubtypeResponse]}
+      onChangeSubtype={onChangeFn}
+    />,
+  );
+
+  const type = screen.getByLabelText(/subtype/i);
+  userEvent.type(type, 'Metabolite');
+  userEvent.type(type, specialChars.enter);
+
+  expect(onChangeFn).toHaveBeenCalledWith('Metabolite');
 });
 
 it('shows the custom no options message for type', async () => {

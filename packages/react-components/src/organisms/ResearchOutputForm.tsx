@@ -4,6 +4,7 @@ import {
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
+  ResearchTagResponse,
   TeamResponse,
 } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
@@ -57,7 +58,7 @@ const formControlsStyles = css({
 
 type ResearchOutputFormProps = Pick<
   ComponentProps<typeof ResearchOutputExtraInformationCard>,
-  'tagSuggestions' | 'getResearchTags'
+  'tagSuggestions'
 > &
   Pick<
     ComponentProps<typeof ResearchOutputFormSharingCard>,
@@ -70,6 +71,7 @@ type ResearchOutputFormProps = Pick<
     onSave: (
       output: ResearchOutputPostRequest,
     ) => Promise<ResearchOutputResponse | void>;
+    researchTags: ResearchTagResponse[];
     documentType: ResearchOutputDocumentType;
     team: TeamResponse;
     researchOutputData?: ResearchOutputResponse;
@@ -108,7 +110,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
-  getResearchTags,
+  researchTags,
   team,
   serverValidationErrors,
   clearServerValidationError,
@@ -215,6 +217,12 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const [organisms, setOrganisms] = useState<string[]>(
     researchOutputData?.organisms.map((organism) => organism) || [],
   );
+  const [environments, setEnvironments] = useState<string[]>([]);
+  const [subtype, setSubtype] = useState<string>();
+
+  const filteredResearchTags = researchTags.filter((d) =>
+    d.types?.includes(type),
+  );
 
   return (
     <Form<ResearchOutputResponse>
@@ -229,9 +237,11 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
         authors.length !== 0 ||
         methods.length !== 0 ||
         organisms.length !== 0 ||
+        environments.length !== 0 ||
         identifierType !== ResearchOutputIdentifierType.Empty ||
         identifier !== '' ||
         labCatalogNumber !== '' ||
+        subtype !== undefined ||
         teams.length !== 1 // Original team
       }
       onSave={() => {
@@ -280,7 +290,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
           addedDate: new Date().toISOString(),
           methods,
           organisms,
-          environments: [],
+          environments,
+          subtype,
         });
       }}
     >
@@ -298,7 +309,16 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
             link={link}
             onChangeLink={setLink}
             type={type}
-            onChangeType={setType}
+            onChangeType={(newType) => {
+              setType(newType);
+              setMethods([]);
+              setOrganisms([]);
+              setEnvironments([]);
+              setSubtype(undefined);
+            }}
+            subtype={subtype}
+            onChangeSubtype={setSubtype}
+            researchTags={filteredResearchTags}
             asapFunded={asapFunded}
             onChangeAsapFunded={setAsapFunded}
             usedInPublication={usedInPublication}
@@ -311,7 +331,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
           <ResearchOutputExtraInformationCard
             documentType={documentType}
             isSaving={isSaving}
-            getResearchTags={getResearchTags}
+            researchTags={filteredResearchTags}
             tagSuggestions={tagSuggestions}
             tags={tags}
             onChangeTags={setTags}
@@ -330,6 +350,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
             onChangeMethods={setMethods}
             organisms={organisms}
             onChangeOrganisms={setOrganisms}
+            environments={environments}
+            onChangeEnvironments={setEnvironments}
             type={type}
             isEditMode={researchOutputData !== undefined}
           />

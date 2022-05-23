@@ -4,6 +4,7 @@ import {
   ResearchOutputPostRequest,
   ResearchOutputSharingStatus,
   ResearchOutputType,
+  ResearchTagResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { UrlExpression } from '@asap-hub/validation';
@@ -22,13 +23,19 @@ import { noop } from '../utils';
 
 type ResearchOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
-  'link' | 'title' | 'description' | 'documentType' | 'sharingStatus'
+  | 'link'
+  | 'title'
+  | 'description'
+  | 'documentType'
+  | 'sharingStatus'
+  | 'subtype'
 > & {
   type: ResearchOutputType | '';
   onChangeLink?: (newValue: string) => void;
   onChangeTitle?: (newValue: string) => void;
   onChangeDescription?: (newValue: string) => void;
   onChangeType?: (newValue: ResearchOutputType | '') => void;
+  onChangeSubtype?: (newValue: string | '') => void;
   onChangeAsapFunded?: (newValue: DecisionOption) => void;
   onChangeUsedInPublication?: (newValue: DecisionOption) => void;
   onChangeSharingStatus?: (newValue: ResearchOutputSharingStatus) => void;
@@ -37,6 +44,7 @@ type ResearchOutputFormSharingCardProps = Pick<
   asapFunded: DecisionOption;
   usedInPublication: DecisionOption;
   publishDate?: Date;
+  researchTags: ResearchTagResponse[];
   serverValidationErrors?: ValidationErrorResponse['data'];
   clearServerValidationError?: (instancePath: string) => void;
 };
@@ -49,16 +57,19 @@ const ResearchOutputFormSharingCard: React.FC<ResearchOutputFormSharingCardProps
     description,
     documentType,
     type,
+    subtype,
     asapFunded,
     usedInPublication,
     sharingStatus,
     publishDate,
+    researchTags,
     serverValidationErrors = [],
     clearServerValidationError = noop,
     onChangeDescription = noop,
     onChangeLink = noop,
     onChangeTitle = noop,
     onChangeType = noop,
+    onChangeSubtype = noop,
     onChangeAsapFunded = noop,
     onChangeUsedInPublication = noop,
     onChangeSharingStatus = noop,
@@ -69,6 +80,11 @@ const ResearchOutputFormSharingCard: React.FC<ResearchOutputFormSharingCardProps
     const [urlValidationMessage, setUrlValidationMessage] = useState<string>();
     const [titleValidationMessage, setTitleValidationMessage] =
       useState<string>();
+
+    const subtypeSuggestions = researchTags.filter(
+      (tag) => tag.category === 'Subtype',
+    );
+
     useEffect(() => {
       setUrlValidationMessage(
         getAjvErrorForPath(
@@ -85,6 +101,7 @@ const ResearchOutputFormSharingCard: React.FC<ResearchOutputFormSharingCardProps
         ),
       );
     }, [serverValidationErrors]);
+
     return (
       <FormCard title="What are you sharing?">
         <LabeledTextField
@@ -127,6 +144,22 @@ const ResearchOutputFormSharingCard: React.FC<ResearchOutputFormSharingCardProps
           }
           placeholder="Choose a type"
         />
+        {subtypeSuggestions.length > 0 && (
+          <LabeledDropdown
+            title="Subtype"
+            subtitle="(required)"
+            options={subtypeSuggestions.map((sub) => ({
+              label: sub.name,
+              value: sub.name,
+            }))}
+            onChange={(selectedSubtype) => onChangeSubtype(selectedSubtype)}
+            value={subtype ?? ''}
+            required
+            getValidationMessage={() => 'Please choose a subtype'}
+            enabled={!isSaving}
+            placeholder="Select subtype"
+          />
+        )}
         <LabeledTextField
           title="Title"
           maxLength={350}

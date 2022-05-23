@@ -13,7 +13,7 @@ const props: ComponentProps<typeof ResearchOutputPage> = {
   documentType: 'Grant Document',
   tagSuggestions: [],
   team: createTeamResponse(),
-  getResearchTags: jest.fn(),
+  researchTags: [],
 };
 beforeEach(() => {
   const {

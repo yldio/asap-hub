@@ -1,12 +1,11 @@
 import {
+  ResearchOutputDocumentType,
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
-  ResearchOutputDocumentType,
   ResearchTagResponse,
 } from '@asap-hub/model';
-import { ComponentProps, useCallback, useEffect, useState } from 'react';
+import { ComponentProps } from 'react';
 import { Link } from '../atoms';
-
 import { mailToSupport } from '../mail';
 import {
   FormCard,
@@ -22,7 +21,12 @@ import {
 
 type ResearchOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
-  'tags' | 'accessInstructions' | 'labCatalogNumber' | 'methods' | 'organisms'
+  | 'tags'
+  | 'accessInstructions'
+  | 'labCatalogNumber'
+  | 'methods'
+  | 'organisms'
+  | 'environments'
 > & {
   tagSuggestions: NonNullable<
     ComponentProps<typeof LabeledMultiSelect>['suggestions']
@@ -32,10 +36,11 @@ type ResearchOutputExtraInformationProps = Pick<
   onChangeLabCatalogNumber?: (value: string) => void;
   onChangeMethods?: (value: string[]) => void;
   onChangeOrganisms?: (value: string[]) => void;
+  onChangeEnvironments?: (value: string[]) => void;
   isSaving: boolean;
   documentType: ResearchOutputDocumentType;
   identifierRequired: boolean;
-  getResearchTags: (type: string) => Promise<ResearchTagResponse[]>;
+  researchTags: ResearchTagResponse[];
   type: ResearchOutputPostRequest['type'] | '';
   isEditMode?: boolean;
 } & Omit<ResearchOutputIdentifierProps, 'required'>;
@@ -60,44 +65,20 @@ const ResearchOutputExtraInformationCard: React.FC<ResearchOutputExtraInformatio
     onChangeMethods = noop,
     organisms,
     onChangeOrganisms = noop,
-    getResearchTags,
-    type,
-    isEditMode = false,
+    environments,
+    onChangeEnvironments = noop,
+    researchTags,
   }) => {
-    const [researchTags, setResearchTags] = useState<ResearchTagResponse[]>([]);
+    const filterByCategory = (name: string) => (tag: ResearchTagResponse) =>
+      tag.category === name;
 
-    const methodSuggestions = researchTags.filter(
-      (tag) => tag.category === 'Method',
-    );
+    const methodSuggestions = researchTags.filter(filterByCategory('Method'));
     const organismSuggestions = researchTags.filter(
-      (tag) => tag.category === 'Organism',
+      filterByCategory('Organism'),
     );
-
-    const fetchResearchTags = useCallback(
-      async (typeForResearchTags: ResearchOutputPostRequest['type'] | '') => {
-        if (typeForResearchTags === '') {
-          setResearchTags([]);
-          return;
-        }
-
-        const data = await getResearchTags(typeForResearchTags);
-
-        setResearchTags(data);
-      },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [],
+    const environmentSuggestions = researchTags.filter(
+      filterByCategory('Environment'),
     );
-
-    useEffect(() => {
-      fetchResearchTags(type);
-    }, [type, fetchResearchTags]);
-
-    useEffect(() => {
-      if (!isEditMode) {
-        onChangeMethods([]);
-        onChangeOrganisms([]);
-      }
-    }, [isEditMode, type, onChangeMethods, onChangeOrganisms]);
 
     return (
       <FormCard title="What extra information can you provide?">
@@ -139,6 +120,25 @@ const ResearchOutputExtraInformationCard: React.FC<ResearchOutputExtraInformatio
             }
           />
         )}
+        {environmentSuggestions.length > 0 && (
+          <LabeledMultiSelect
+            title="Environments"
+            subtitle="(optional)"
+            values={environments.map((environment) => ({
+              label: environment,
+              value: environment,
+            }))}
+            suggestions={environmentSuggestions.map((environment) => ({
+              label: environment.name,
+              value: environment.name,
+            }))}
+            placeholder="Add an environment (E.g. In Vivo)"
+            enabled={!isSaving}
+            onChange={(options) =>
+              onChangeEnvironments(options.map(({ value }) => value))
+            }
+          />
+        )}
 
         <LabeledMultiSelect
           title="Additional Keywords"
@@ -164,7 +164,6 @@ const ResearchOutputExtraInformationCard: React.FC<ResearchOutputExtraInformatio
           identifierType={identifierType}
           setIdentifierType={setIdentifierType}
           required={identifierRequired}
-          isEditMode={isEditMode}
         />
         {documentType === 'Lab Resource' && (
           <LabeledTextField

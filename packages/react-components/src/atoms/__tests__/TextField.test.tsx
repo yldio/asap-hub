@@ -1,64 +1,70 @@
-import { render, fireEvent } from '@testing-library/react';
-
-import TextField from '../TextField';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { silver } from '../../colors';
-import { perRem } from '../../pixels';
 import { indicatorPadding } from '../../form';
+import { perRem } from '../../pixels';
+import TextField from '../TextField';
 
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 it('renders an input field, passing through props', () => {
-  const { getByRole } = render(<TextField value="val" />);
-  expect(getByRole('textbox')).toHaveValue('val');
+  render(<TextField value="val" />);
+  expect(screen.getByRole('textbox')).toHaveValue('val');
 });
 
 it('emits value changes', () => {
   const handleChange = jest.fn();
-  const { getByRole } = render(
-    <TextField value="val" onChange={handleChange} />,
-  );
+  render(<TextField value="val" onChange={handleChange} />);
 
-  fireEvent.change(getByRole('textbox'), { target: { value: 'val123' } });
-  expect(handleChange).toHaveBeenLastCalledWith('val123');
+  userEvent.type(screen.getByRole('textbox'), 'u');
+  expect(handleChange).toHaveBeenLastCalledWith('valu');
 });
 
 it('renders a disabled input field', () => {
-  const { getByRole, rerender } = render(<TextField value="" />);
-  expect((getByRole('textbox') as HTMLInputElement).disabled).toBeFalsy();
-  expect(getComputedStyle(getByRole('textbox')).backgroundColor).not.toBe(
-    silver.rgb,
-  );
+  const { rerender } = render(<TextField value="" />);
+  expect(
+    (screen.getByRole('textbox') as HTMLInputElement).disabled,
+  ).toBeFalsy();
+  expect(
+    getComputedStyle(screen.getByRole('textbox')).backgroundColor,
+  ).not.toBe(silver.rgb);
 
   rerender(<TextField value="" enabled={false} />);
-  expect((getByRole('textbox') as HTMLInputElement).disabled).toBe(true);
-  expect(getComputedStyle(getByRole('textbox')).backgroundColor).toBe(
+  expect((screen.getByRole('textbox') as HTMLInputElement).disabled).toBe(true);
+  expect(getComputedStyle(screen.getByRole('textbox')).backgroundColor).toBe(
     silver.rgb,
   );
 });
 
 it('with the label indicator prop prop shows a react node', () => {
-  const { getByText } = render(
-    <TextField value="" labelIndicator={'github.com/'} />,
-  );
-  expect(getByText(/github/)).toBeVisible();
+  render(<TextField value="" labelIndicator={'github.com/'} />);
+  expect(screen.getByText(/github/)).toBeVisible();
 });
 
 describe('with a right indicator', () => {
   it('shows the indicator', () => {
-    const { getByRole } = render(
+    render(
       <TextField
         value=""
         rightIndicator={<svg role="img" viewBox="0 0 2 1" />}
       />,
     );
-    const { width, height } = getComputedStyle(getByRole('img').parentElement!);
+    const { width, height } = getComputedStyle(
+      screen.getByRole('img').parentElement!,
+    );
     expect(
       Number(width.replace(/em$/, '')) / Number(height.replace(/em$/, '')),
     ).toBeCloseTo(2);
   });
 
   it('pads the field to make space for the indicator', () => {
-    const { getByRole, rerender } = render(<TextField value="" />);
+    const { rerender } = render(<TextField value="" />);
     const normalPaddingRight = Number(
-      getComputedStyle(getByRole('textbox')).paddingRight.replace(/em$/, ''),
+      getComputedStyle(screen.getByRole('textbox')).paddingRight.replace(
+        /em$/,
+        '',
+      ),
     );
 
     rerender(
@@ -68,10 +74,13 @@ describe('with a right indicator', () => {
       />,
     );
     const customIndicatorPaddingRight = Number(
-      getComputedStyle(getByRole('textbox')).paddingRight.replace(/em$/, ''),
+      getComputedStyle(screen.getByRole('textbox')).paddingRight.replace(
+        /em$/,
+        '',
+      ),
     );
     const indicatorWidth = Number(
-      getComputedStyle(getByRole('img').parentElement!).width.replace(
+      getComputedStyle(screen.getByRole('img').parentElement!).width.replace(
         /em$/,
         '',
       ),
@@ -85,22 +94,27 @@ describe('with a right indicator', () => {
 
 describe('with a left indicator', () => {
   it('shows the indicator', () => {
-    const { getByRole } = render(
+    render(
       <TextField
         value=""
         leftIndicator={<svg role="img" viewBox="0 0 2 1" />}
       />,
     );
-    const { width, height } = getComputedStyle(getByRole('img').parentElement!);
+    const { width, height } = getComputedStyle(
+      screen.getByRole('img').parentElement!,
+    );
     expect(
       Number(width.replace(/em$/, '')) / Number(height.replace(/em$/, '')),
     ).toBeCloseTo(2);
   });
 
   it('pads the field to make space for the indicator', () => {
-    const { getByRole, rerender } = render(<TextField value="" />);
+    const { rerender } = render(<TextField value="" />);
     const normalPaddingLeft = Number(
-      getComputedStyle(getByRole('textbox')).paddingLeft.replace(/em$/, ''),
+      getComputedStyle(screen.getByRole('textbox')).paddingLeft.replace(
+        /em$/,
+        '',
+      ),
     );
 
     rerender(
@@ -110,10 +124,13 @@ describe('with a left indicator', () => {
       />,
     );
     const customIndicatorPaddingLeft = Number(
-      getComputedStyle(getByRole('textbox')).paddingLeft.replace(/em$/, ''),
+      getComputedStyle(screen.getByRole('textbox')).paddingLeft.replace(
+        /em$/,
+        '',
+      ),
     );
     const indicatorWidth = Number(
-      getComputedStyle(getByRole('img').parentElement!).width.replace(
+      getComputedStyle(screen.getByRole('img').parentElement!).width.replace(
         /em$/,
         '',
       ),
@@ -123,4 +140,36 @@ describe('with a left indicator', () => {
       normalPaddingLeft + indicatorWidth + indicatorPadding / perRem,
     );
   });
+});
+
+it('when invalidated and then rendered optional it should not display error message', async () => {
+  const firstInvalidationMessage = 'first invalid message';
+  const secondInvalidationMessage = 'second invalid message';
+  const { rerender } = render(
+    <TextField
+      value=""
+      required={true}
+      getValidationMessage={() => firstInvalidationMessage}
+      pattern="first"
+    />,
+  );
+  expect(
+    screen.queryByText('Please fill out this field.'),
+  ).not.toBeInTheDocument();
+  const input = screen.getByRole('textbox', { hidden: false });
+  userEvent.click(input);
+  userEvent.tab();
+
+  expect(screen.getByText(firstInvalidationMessage)).toBeVisible();
+
+  rerender(
+    <TextField
+      value=""
+      required={true}
+      getValidationMessage={() => secondInvalidationMessage}
+      pattern="second"
+    />,
+  );
+
+  expect(await screen.findByText(secondInvalidationMessage)).toBeVisible();
 });

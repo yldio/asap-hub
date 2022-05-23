@@ -1,9 +1,8 @@
-import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
-
-import { Label, TextField, Paragraph } from '../atoms';
-import { perRem } from '../pixels';
+import { ComponentProps } from 'react';
+import { Label, Paragraph, TextField } from '../atoms';
 import { lead } from '../colors';
+import { perRem } from '../pixels';
 
 const containerStyles = css({
   paddingBottom: `${18 / perRem}em`,

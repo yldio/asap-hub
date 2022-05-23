@@ -1,18 +1,17 @@
-import { InputHTMLAttributes } from 'react';
 import { css } from '@emotion/react';
-
-import { perRem } from '../pixels';
-import { lead, silver, ember, rose, tin, pine, steel, paper } from '../colors';
-import { noop, getSvgAspectRatio } from '../utils';
+import { InputHTMLAttributes, useCallback, useEffect, useRef } from 'react';
+import { ember, lead, paper, pine, rose, silver, steel, tin } from '../colors';
 import {
-  useValidation,
-  styles,
-  paddingTopBottom,
-  paddingLeftRight,
-  indicatorSize,
   indicatorPadding,
+  indicatorSize,
+  paddingLeftRight,
+  paddingTopBottom,
+  styles,
+  useValidation,
   validationMessageStyles,
 } from '../form';
+import { perRem } from '../pixels';
+import { getSvgAspectRatio, noop } from '../utils';
 
 type Position = 'left' | 'right';
 type FieldType =
@@ -164,6 +163,21 @@ const TextField: React.FC<TextFieldProps> = ({
       customValidationMessage,
       getValidationMessage,
     );
+
+  const initialRender = useRef(true);
+  const checkValidation = useCallback(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+    } else {
+      const field = validationTargetProps.ref.current;
+      field?.checkValidity();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    checkValidation();
+  }, [pattern, checkValidation]);
 
   return (
     <div css={containerStyles}>

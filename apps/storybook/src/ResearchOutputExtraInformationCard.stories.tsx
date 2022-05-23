@@ -16,11 +16,12 @@ const commonProps: ComponentProps<typeof ResearchOutputExtraInformationCard> = {
   tags: [],
   methods: [],
   organisms: [],
+  environments: [],
   tagSuggestions: tagSuggestions.map((suggestion) => ({
     label: suggestion,
     value: suggestion,
   })),
-  getResearchTags: () => Promise.resolve(researchTagsResponse),
+  researchTags: researchTagsResponse,
   type: 'Protein Data',
   documentType: select('type', researchOutputDocumentTypes, 'Article'),
   identifierRequired: boolean('identifierRequired', false),

@@ -84,7 +84,6 @@ describe('a grant document research output', () => {
     });
     const { getByText } = await renderComponent();
 
-    expect(getByText(/grant document team/i)).toBeVisible();
     expect(getByText('Grant Document title!')).toBeVisible();
   });
   it('links to a teams', async () => {

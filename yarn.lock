@@ -323,7 +323,7 @@ __metadata:
     "@types/apr-intercept": "workspace:*"
     "@types/babel__core": 7.1.19
     "@types/hapi__boom": ^9.0.1
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/jwt-decode": ^2.2.1
     "@types/jwt-encode": "workspace:*"
     "@types/luxon": ^1
@@ -365,7 +365,7 @@ __metadata:
     "@testing-library/user-event": ^12.8.3
     "@types/auth0-js": ^9.14.4
     "@types/history": ^4.7.6
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/jsdom": ^16
     "@types/pify": ^3.0.2
     "@types/react": ^17.0.5
@@ -400,7 +400,7 @@ __metadata:
     "@babel/preset-env": ^7.14.2
     "@babel/preset-typescript": ^7.13.0
     "@babel/runtime-corejs3": ^7.14.0
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     got: ^11.8.2
     nock: ^13.0.11
   languageName: unknown
@@ -414,7 +414,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@auth0/auth0-spa-js": ^1.15.0
     "@babel/runtime-corejs3": ^7.14.0
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/node": ^14.14.45
   languageName: unknown
   linkType: soft
@@ -448,7 +448,7 @@ __metadata:
     "@testing-library/react-hooks": ^4.0.1
     "@testing-library/user-event": ^12.8.3
     "@types/history": ^4.7.6
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/nock": ^11.1.0
     "@types/node": ^14.14.45
     "@types/react": ^17.0.5
@@ -532,7 +532,7 @@ __metadata:
     "@types/hapi__boom": ^9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": ^17.1.6
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/jsonwebtoken": 8.5.8
     "@types/jwt-decode": ^2.2.1
     "@types/jwt-encode": "workspace:*"
@@ -597,7 +597,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/runtime-corejs3": ^7.14.0
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
   languageName: unknown
   linkType: soft
 
@@ -667,7 +667,7 @@ __metadata:
   dependencies:
     "@babel/runtime-corejs3": ^7.14.0
     "@types/asap-hub__inline-environment": "workspace:*"
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     core-js: ^3.12.1
   languageName: unknown
   linkType: soft
@@ -686,7 +686,7 @@ __metadata:
     "@sentry/react": ^6.11.0
     "@testing-library/react": 11.2.7
     "@types/history": ^4.7.6
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/node": ^14.14.45
     "@types/react": ^17.0.5
     "@types/react-router-dom": ^5.1.7
@@ -724,7 +724,7 @@ __metadata:
     "@types/aws-lambda": 8.10.97
     "@types/cors": 2.8.12
     "@types/express": ^4.17.11
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/jsonwebtoken": 8.5.8
     "@types/node": ^14.14.45
     "@types/serverless": ^3
@@ -805,7 +805,7 @@ __metadata:
     "@babel/preset-env": ^7.14.2
     "@babel/preset-typescript": ^7.13.0
     "@babel/runtime-corejs3": ^7.14.0
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/jsonwebtoken": 8.5.8
     jsonwebtoken: ^8.5.1
   languageName: unknown
@@ -840,7 +840,7 @@ __metadata:
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
     "@types/history": ^4.7.6
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/ramda": ^0
     "@types/react": ^17.0.5
     "@types/react-dom": ^17.0.5
@@ -908,7 +908,7 @@ __metadata:
     "@babel/runtime-corejs3": ^7.14.0
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": ^4.0.1
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/react": ^17.0.5
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
@@ -952,7 +952,7 @@ __metadata:
     "@sentry/serverless": ^6.7.1
     "@types/apr-intercept": "workspace:*"
     "@types/express": ^4.17.11
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/jsonwebtoken": 8.5.8
     "@types/supertest": ^2.0.12
     apr-intercept: ^3.0.4
@@ -985,7 +985,7 @@ __metadata:
     "@types/hapi__boom": ^9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": ^17.1.6
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/jwt-decode": ^2.2.1
     "@types/jwt-encode": "workspace:*"
     apr-intercept: ^3.0.4
@@ -1019,7 +1019,7 @@ __metadata:
     "@types/hapi__boom": ^9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": ^17.1.6
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/jwt-decode": ^2.2.1
     "@types/jwt-encode": "workspace:*"
     "@types/luxon": ^1
@@ -10983,13 +10983,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:^26.0.23":
-  version: 26.0.23
-  resolution: "@types/jest@npm:26.0.23"
+"@types/jest@npm:26.0.24":
+  version: 26.0.24
+  resolution: "@types/jest@npm:26.0.24"
   dependencies:
     jest-diff: ^26.0.0
     pretty-format: ^26.0.0
-  checksum: 69db26061e6be34de2a440c8a470b651c53ba6ee0057614a278c4f756ff00281f46cc075b24e5bd761f399f175f49d0a5758b50dd921342a8592461548dea29a
+  checksum: ae39675412f08d884926254e9b12bfd2b5a4e4d204c94d3148cb942174a474930d0c60540133c968f22241d4712b7940c96cbc883096eb326a4d5b206fb78bd0
   languageName: node
   linkType: hard
 
@@ -13746,7 +13746,7 @@ __metadata:
     "@peculiar/webcrypto": ^1.1.7
     "@serverless/typescript": ^2.59.0
     "@testing-library/jest-dom": ^5.12.0
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/webpack": ^4
     "@yarnpkg/pnpify": ^3.1.1
     babel-eslint: ^10.1.0

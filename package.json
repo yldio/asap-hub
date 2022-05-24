@@ -118,7 +118,7 @@
     "@serverless/typescript": "^2.59.0",
     "@testing-library/jest-dom": "^5.12.0",
     "@types/jest": "26.0.24",
-    "@types/webpack": "^4",
+    "@types/webpack": "4.41.32",
     "@yarnpkg/pnpify": "^3.1.1",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",

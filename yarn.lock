@@ -11929,17 +11929,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack@npm:^4, @types/webpack@npm:^4.41.8":
-  version: 4.41.17
-  resolution: "@types/webpack@npm:4.41.17"
+"@types/webpack@npm:4.41.32":
+  version: 4.41.32
+  resolution: "@types/webpack@npm:4.41.32"
   dependencies:
-    "@types/anymatch": "*"
     "@types/node": "*"
-    "@types/tapable": "*"
+    "@types/tapable": ^1
     "@types/uglify-js": "*"
     "@types/webpack-sources": "*"
+    anymatch: ^3.0.0
     source-map: ^0.6.0
-  checksum: 8087e71e6eafaabedd2b7f412377be3bb9bc091f8cf887387684606c4071181110309690ff9e9ca49d6db7fc1c5435a0758f2a99d32eacda6a2d38fad2405655
+  checksum: e594a1357cbbc2f7c6ca47785c5a11adb5591a774a69afaeab07cd6f6bff6c6aea2030bd37b32bdd19d0ec2336a346db754e8d8d236ba8effeab542716fb32b7
   languageName: node
   linkType: hard
 
@@ -11954,6 +11954,20 @@ __metadata:
     "@types/webpack-sources": "*"
     source-map: ^0.6.0
   checksum: d9a99bb2a3c958d4a797734cba89ac489256cfb7fede7b8970b55291bca936c448851297ebaddb5b871e48fc028fa83e31856ec5f57695e9cbbd2ceda72fc499
+  languageName: node
+  linkType: hard
+
+"@types/webpack@npm:^4.41.8":
+  version: 4.41.17
+  resolution: "@types/webpack@npm:4.41.17"
+  dependencies:
+    "@types/anymatch": "*"
+    "@types/node": "*"
+    "@types/tapable": "*"
+    "@types/uglify-js": "*"
+    "@types/webpack-sources": "*"
+    source-map: ^0.6.0
+  checksum: 8087e71e6eafaabedd2b7f412377be3bb9bc091f8cf887387684606c4071181110309690ff9e9ca49d6db7fc1c5435a0758f2a99d32eacda6a2d38fad2405655
   languageName: node
   linkType: hard
 
@@ -13463,6 +13477,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"anymatch@npm:^3.0.0, anymatch@npm:~3.1.2":
+  version: 3.1.2
+  resolution: "anymatch@npm:3.1.2"
+  dependencies:
+    normalize-path: ^3.0.0
+    picomatch: ^2.0.4
+  checksum: 985163db2292fac9e5a1e072bf99f1b5baccf196e4de25a0b0b81865ebddeb3b3eb4480734ef0a2ac8c002845396b91aa89121f5b84f93981a4658164a9ec6e9
+  languageName: node
+  linkType: hard
+
 "anymatch@npm:^3.0.3, anymatch@npm:~3.1.1":
   version: 3.1.1
   resolution: "anymatch@npm:3.1.1"
@@ -13470,16 +13494,6 @@ __metadata:
     normalize-path: ^3.0.0
     picomatch: ^2.0.4
   checksum: c951385862bf114807d594bdffccb769bd7219ddc14f24fc135cde075ad2477a97991567b8bb5032d4f279f96897f0c2af6468a350a6c674ac0a5ee3b62a26d6
-  languageName: node
-  linkType: hard
-
-"anymatch@npm:~3.1.2":
-  version: 3.1.2
-  resolution: "anymatch@npm:3.1.2"
-  dependencies:
-    normalize-path: ^3.0.0
-    picomatch: ^2.0.4
-  checksum: 985163db2292fac9e5a1e072bf99f1b5baccf196e4de25a0b0b81865ebddeb3b3eb4480734ef0a2ac8c002845396b91aa89121f5b84f93981a4658164a9ec6e9
   languageName: node
   linkType: hard
 
@@ -13833,7 +13847,7 @@ __metadata:
     "@serverless/typescript": ^2.59.0
     "@testing-library/jest-dom": ^5.12.0
     "@types/jest": 26.0.24
-    "@types/webpack": ^4
+    "@types/webpack": 4.41.32
     "@yarnpkg/pnpify": ^3.1.1
     babel-eslint: ^10.1.0
     babel-loader: ^8.2.2

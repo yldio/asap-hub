@@ -42,7 +42,7 @@ jobs:
           CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
           CRN_APP_URL: ${{ steps.setup.outputs.crn-app-url }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
+          CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
           AWS_REGION: ${{ steps.setup.outputs.aws-region }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           CURRENT_REVISION: ${{ github.sha }}

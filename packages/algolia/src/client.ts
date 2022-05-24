@@ -1,11 +1,11 @@
-import { SearchIndex } from 'algoliasearch';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import {
   ExternalAuthorResponse,
-  LabResponse,
+  Lab,
   ResearchOutputResponse,
   UserResponse,
 } from '@asap-hub/model';
+import { SearchIndex } from 'algoliasearch';
 
 export const RESEARCH_OUTPUT_ENTITY_TYPE = 'research-output';
 export const USER_ENTITY_TYPE = 'user';
@@ -26,7 +26,7 @@ export type Payload =
       type: 'external-author';
     }
   | {
-      data: LabResponse;
+      data: Lab;
       type: 'lab';
     };
 
@@ -34,7 +34,7 @@ export type EntityResponses = {
   [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse;
   [USER_ENTITY_TYPE]: UserResponse;
   [EXTERNAL_AUTHOR_ENTITY_TYPE]: ExternalAuthorResponse;
-  [LAB_ENTITY_TYPE]: LabResponse;
+  [LAB_ENTITY_TYPE]: Lab;
 };
 
 export type EntityRecord<T extends keyof EntityResponses> =

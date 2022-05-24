@@ -1,6 +1,6 @@
 import { ListResponse } from './common';
+import { Lab } from './lab';
 import { TeamRole } from './team';
-import { LabResponse } from './lab';
 
 export const userRole = ['Staff', 'Grantee', 'Guest', 'Hidden'] as const;
 
@@ -110,11 +110,10 @@ export interface UserSocialLinks {
   researchGate?: string;
 }
 
-export interface UserResponse extends Invitee {
+export interface UserDataObject extends Invitee {
   id: string;
   onboarded: boolean;
   contactEmail?: string;
-  displayName: string;
   lastModifiedDate: string;
   createdDate: string;
   teams: UserTeam[];
@@ -131,7 +130,10 @@ export interface UserResponse extends Invitee {
   researchInterests?: string;
   role: Role;
   social?: UserSocialLinks;
-  labs: LabResponse[];
+  labs: Lab[];
+}
+export interface UserResponse extends UserDataObject {
+  displayName: string;
 }
 
 export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {

@@ -28,20 +28,18 @@ const ResearchOutput: React.FC = () => {
             <SharedResearchOutput {...researchOutputData} backHref={backHref} />
           </Frame>
         </Route>
-        {canCreateUpdate && (
-          <Route
-            path={
-              path +
-              sharedResearch({}).researchOutput({ researchOutputId })
-                .editResearchOutput.template
-            }
-          >
-            <TeamOutput
-              teamId={researchOutputData.teams[0].id}
-              researchOutputData={researchOutputData}
-            />
-          </Route>
-        )}
+        <Route
+          path={
+            path +
+            sharedResearch({}).researchOutput({ researchOutputId })
+              .editResearchOutput.template
+          }
+        >
+          <TeamOutput
+            teamId={researchOutputData.teams[0].id}
+            researchOutputData={researchOutputData}
+          />
+        </Route>
       </ResearchOutputPermissionsContext.Provider>
     );
   }

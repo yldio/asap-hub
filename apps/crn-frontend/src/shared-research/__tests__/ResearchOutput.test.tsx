@@ -1,19 +1,26 @@
-import { Suspense } from 'react';
+import { Suspense, ContextType } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Switch } from 'react-router-dom';
 import { sharedResearch } from '@asap-hub/routing';
+import {
+  createUserResponse,
+  createResearchOutputResponse,
+} from '@asap-hub/fixtures';
+import { ToastContext } from '@asap-hub/react-context';
 
 import { RecoilRoot } from 'recoil';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 import ResearchOutput from '../ResearchOutput';
 import { getResearchOutput } from '../api';
 import { refreshResearchOutputState } from '../state';
 
+jest.setTimeout(30000);
+jest.mock('../../network/teams/api');
+jest.mock('../../network/users/api');
 jest.mock('../api');
 
 const id = '42';
@@ -30,9 +37,18 @@ beforeEach(() => {
   });
 });
 
+const user = {
+  ...createUserResponse({}, 1),
+  algoliaApiKey: 'algolia-mock-key',
+};
+
 const researchOutputRoute = sharedResearch({}).researchOutput({
   researchOutputId: id,
 });
+
+const mockToast = jest.fn() as jest.MockedFunction<
+  ContextType<typeof ToastContext>
+>;
 
 const renderComponent = async (path: string) => {
   const result = render(
@@ -41,25 +57,24 @@ const renderComponent = async (path: string) => {
         set(refreshResearchOutputState(id), Math.random())
       }
     >
-      <Auth0Provider user={{ teams: [{}] }}>
+      <Auth0Provider user={{ ...user }}>
         <WhenReady>
           <Suspense fallback="Loading...">
-            <MemoryRouter
-              initialEntries={['/prev', researchOutputRoute.$]}
-              initialIndex={1}
-            >
-              <Switch>
-                <Route path="/prev">Previous Page</Route>
-                <Route
-                  path={
-                    sharedResearch.template +
-                    sharedResearch({}).researchOutput.template
-                  }
-                >
-                  <ResearchOutput />
-                </Route>
-              </Switch>
-            </MemoryRouter>
+            <ToastContext.Provider value={mockToast}>
+              <MemoryRouter initialEntries={[path]} initialIndex={1}>
+                <Switch>
+                  <Route path="/prev">Previous Page</Route>
+                  <Route
+                    path={
+                      sharedResearch.template +
+                      sharedResearch({}).researchOutput.template
+                    }
+                  >
+                    <ResearchOutput />
+                  </Route>
+                </Switch>
+              </MemoryRouter>
+            </ToastContext.Provider>
           </Suspense>
         </WhenReady>
       </Auth0Provider>
@@ -109,17 +124,42 @@ describe('a grant document research output', () => {
     );
   });
 
-  it('renders the edit page', async () => {
+  it('renders the edit page when you have permissions', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
       documentType: 'Bioinformatics',
+      teams: [
+        {
+          id: 't0',
+          displayName: 'Jakobsson, J',
+        },
+      ],
     });
-    const { getByRole } = await renderComponent(
+
+    const { getByRole, getByText } = await renderComponent(
       researchOutputRoute.editResearchOutput({}).$,
     );
     expect(
       getByRole('heading', { name: /Share bioinformatics/i }),
     ).toBeInTheDocument();
+    expect(getByText('Save')).toBeVisible();
+  });
+
+  it('renders sorry page if you cannot edit', async () => {
+    mockGetResearchOutput.mockResolvedValue({
+      ...createResearchOutputResponse(),
+      documentType: 'Bioinformatics',
+      teams: [
+        {
+          id: 't1',
+          displayName: 'Jakobsson, J',
+        },
+      ],
+    });
+    const { getByText } = await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+    );
+    expect(getByText(/sorry.+page/i)).toBeVisible();
   });
 });
 

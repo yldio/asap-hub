@@ -135,7 +135,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     researchOutputData?.labs.map((lab) => ({
       value: lab.id,
       label: lab.name,
-      isFixed: true,
     })) || [],
   );
   const [authors, setAuthors] = useState<
@@ -146,7 +145,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     researchOutputData?.authors.map((author) => ({
       value: author.id,
       label: author.displayName,
-      isFixed: true,
       user: author,
     })) || [],
   );
@@ -229,7 +227,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   );
 
   const isDirty = (): boolean => {
-    const equals = (a: any, b: any) => JSON.stringify(a) === JSON.stringify(b);
+    const equals = (a: Array<string>, b: Array<string>) =>
+      JSON.stringify(a) === JSON.stringify(b);
 
     if (researchOutputData) {
       return (
@@ -237,7 +236,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
         description !== researchOutputData.description ||
         link !== researchOutputData.link ||
         type !== researchOutputData.type ||
-        !equals(tags, researchOutputData.tags) ||
+        !equals(tags, researchOutputData.tags as Array<string>) ||
         !equals(methods, researchOutputData.methods) ||
         !equals(organisms, researchOutputData.organisms) ||
         !equals(environments, researchOutputData.environments) ||

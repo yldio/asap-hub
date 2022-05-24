@@ -2479,7 +2479,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/uuid",
-        "npm:8.3.0"
+        "npm:8.3.4"
       ],
       [
         "@types/wait-on",
@@ -10498,7 +10498,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/luxon", "npm:1.26.4"],
             ["@types/pump", "npm:1.1.1"],
             ["@types/through2-concurrent", "npm:2.0.1"],
-            ["@types/uuid", "npm:8.3.0"],
+            ["@types/uuid", "npm:8.3.4"],
             ["@types/yargs", "npm:17.0.5"],
             ["@yarnpkg/pnpify", "npm:3.1.1"],
             ["algoliasearch", "npm:4.11.0"],
@@ -10634,7 +10634,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.4.1"],
-            ["@types/uuid", "npm:8.3.0"],
+            ["@types/uuid", "npm:8.3.4"],
             ["browser-image-compression", "npm:1.0.14"],
             ["browserslist-useragent-regexp", "npm:3.0.2"],
             ["cross-env", "npm:7.0.3"],
@@ -10723,7 +10723,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/source-map-support", "npm:0.5.3"],
             ["@types/stream-json", "npm:1.7.1"],
             ["@types/supertest", "npm:2.0.12"],
-            ["@types/uuid", "npm:8.3.0"],
+            ["@types/uuid", "npm:8.3.4"],
             ["@types/yargs", "npm:17.0.5"],
             ["ajv", "npm:8.10.0"],
             ["ajv-formats", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:2.1.1"],
@@ -10973,7 +10973,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.4.1"],
-            ["@types/uuid", "npm:8.3.0"],
+            ["@types/uuid", "npm:8.3.4"],
             ["browser-image-compression", "npm:1.0.14"],
             ["browserslist-useragent-regexp", "npm:3.0.2"],
             ["cross-env", "npm:7.0.3"],
@@ -11167,7 +11167,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.4.1"],
-            ["@types/uuid", "npm:8.3.0"],
+            ["@types/uuid", "npm:8.3.4"],
             ["core-js", "npm:3.12.1"],
             ["date-fns", "npm:2.21.3"],
             ["date-fns-tz", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.1.4"],
@@ -11253,7 +11253,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.4.1"],
-            ["@types/uuid", "npm:8.3.0"],
+            ["@types/uuid", "npm:8.3.4"],
             ["core-js", "npm:3.12.1"],
             ["date-fns", "npm:2.21.3"],
             ["date-fns-tz", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.1.4"],
@@ -11344,7 +11344,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.4.1"],
-            ["@types/uuid", "npm:8.3.0"],
+            ["@types/uuid", "npm:8.3.4"],
             ["core-js", "npm:3.12.1"],
             ["date-fns", "npm:2.21.3"],
             ["date-fns-tz", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.1.4"],
@@ -11433,7 +11433,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.4.1"],
-            ["@types/uuid", "npm:8.3.0"],
+            ["@types/uuid", "npm:8.3.4"],
             ["core-js", "npm:3.12.1"],
             ["date-fns", "npm:2.21.3"],
             ["date-fns-tz", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.1.4"],
@@ -31411,10 +31411,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/uuid", [
-        ["npm:8.3.0", {
-          "packageLocation": "./.yarn/cache/@types-uuid-npm-8.3.0-60b441a3d7-0f46b15020.zip/node_modules/@types/uuid/",
+        ["npm:8.3.4", {
+          "packageLocation": "./.yarn/cache/@types-uuid-npm-8.3.4-7547f4402c-6f11f3ff70.zip/node_modules/@types/uuid/",
           "packageDependencies": [
-            ["@types/uuid", "npm:8.3.0"]
+            ["@types/uuid", "npm:8.3.4"]
           ],
           "linkType": "HARD",
         }]

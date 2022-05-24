@@ -246,57 +246,57 @@
       },
       {
         "name": "speakers",
-        "properties": {
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false,
-          "fieldType": "Array",
-          "maxItems": 20,
-          "label": "Speakers"
-        },
-        "isLocked": false,
         "isHidden": false,
+        "isLocked": false,
         "isDisabled": false,
         "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "maxItems": 20,
+          "label": "Speakers",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        },
         "nested": [
           {
             "name": "team",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
             "properties": {
-              "isRequired": true,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": false,
               "fieldType": "References",
-              "editor": "List",
               "minItems": 1,
               "maxItems": 1,
               "allowDuplicates": false,
               "resolveReference": false,
               "mustBePublished": false,
+              "editor": "List",
               "schemaIds": ["teams"],
-              "label": "Team"
-            },
-            "isLocked": false,
-            "isHidden": false,
-            "isDisabled": false
+              "label": "Team",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
+            }
           },
           {
             "name": "user",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
             "properties": {
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": false,
               "fieldType": "References",
-              "editor": "List",
               "maxItems": 1,
               "allowDuplicates": false,
               "resolveReference": false,
               "mustBePublished": false,
-              "schemaIds": ["users"],
-              "label": "User"
-            },
-            "isLocked": false,
-            "isHidden": false,
-            "isDisabled": false
+              "editor": "List",
+              "schemaIds": ["users", "external-authors"],
+              "label": "User",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
+            }
           }
         ]
       },

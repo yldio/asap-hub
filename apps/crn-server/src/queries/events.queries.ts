@@ -52,18 +52,28 @@ export const eventContentFragment = gql`
           }
         }
         user {
-          id
-          flatData {
-            firstName
-            lastName
-            avatar {
-              id
-            }
-            teams {
-              role
-              id {
+          __typename
+          ... on Users {
+            id
+            flatData {
+              firstName
+              lastName
+              avatar {
                 id
               }
+              teams {
+                role
+                id {
+                  id
+                }
+              }
+            }
+          }
+          ... on ExternalAuthors {
+            id
+            flatData {
+              name
+              orcid
             }
           }
         }

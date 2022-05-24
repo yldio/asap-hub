@@ -111,7 +111,9 @@ export const getSquidexGraphqlEvent = () => ({
   flatData: squidexGraphqlEventsFlatData(),
 });
 
-export const getSquidexGraphqlEventSpeaker = () => ({
+export const getSquidexGraphqlEventSpeaker = (): NonNullable<
+  NonNullable<EventContentFragment['flatData']['speakers']>[number]
+> => ({
   team: [
     {
       id: 'team-id-3',
@@ -122,6 +124,7 @@ export const getSquidexGraphqlEventSpeaker = () => ({
   ],
   user: [
     {
+      __typename: 'Users',
       id: 'user-id-3',
       flatData: {
         avatar: [],

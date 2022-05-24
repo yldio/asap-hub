@@ -218,7 +218,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     researchOutputData?.organisms.map((organism) => organism) || [],
   );
   const [environments, setEnvironments] = useState<string[]>(
-    researchOutputData?.organisms.map((environment) => environment) || [],
+    researchOutputData?.environments.map((environment) => environment) || [],
   );
   const [subtype, setSubtype] = useState<string | undefined>(
     researchOutputData?.subtype || '',
@@ -228,26 +228,49 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     d.types?.includes(type),
   );
 
+  const isDirty = (): boolean => {
+    const equals = (a: any, b: any) => JSON.stringify(a) === JSON.stringify(b);
+
+    if (researchOutputData) {
+      return (
+        title !== researchOutputData.title ||
+        description !== researchOutputData.description ||
+        link !== researchOutputData.link ||
+        type !== researchOutputData.type ||
+        !equals(tags, researchOutputData.tags) ||
+        !equals(methods, researchOutputData.methods) ||
+        !equals(organisms, researchOutputData.organisms) ||
+        !equals(environments, researchOutputData.environments) ||
+        identifierType !== getIdentifierType() ||
+        teams.length !== researchOutputData.teams.length ||
+        labs.length !== researchOutputData.labs.length ||
+        authors.length !== researchOutputData.authors.length ||
+        subtype !== researchOutputData.subtype
+      );
+    }
+    return (
+      tags.length !== 0 ||
+      title !== '' ||
+      description !== '' ||
+      link !== '' ||
+      type !== '' ||
+      labs.length !== 0 ||
+      authors.length !== 0 ||
+      methods.length !== 0 ||
+      organisms.length !== 0 ||
+      environments.length !== 0 ||
+      identifierType !== ResearchOutputIdentifierType.Empty ||
+      identifier !== '' ||
+      labCatalogNumber !== '' ||
+      subtype !== undefined ||
+      teams.length !== 1 // Original team
+    );
+  };
+
   return (
     <Form<ResearchOutputResponse>
       serverErrors={serverValidationErrors}
-      dirty={
-        tags.length !== 0 ||
-        title !== '' ||
-        description !== '' ||
-        link !== '' ||
-        type !== '' ||
-        labs.length !== 0 ||
-        authors.length !== 0 ||
-        methods.length !== 0 ||
-        organisms.length !== 0 ||
-        environments.length !== 0 ||
-        identifierType !== ResearchOutputIdentifierType.Empty ||
-        identifier !== '' ||
-        labCatalogNumber !== '' ||
-        subtype !== undefined ||
-        teams.length !== 1 // Original team
-      }
+      dirty={isDirty()}
       onSave={() => {
         const convertDecisionToBoolean = (decision: DecisionOption): boolean =>
           decision === 'Yes';

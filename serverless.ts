@@ -6,16 +6,18 @@ import pkg from './package.json';
 const { NODE_ENV = 'development' } = process.env;
 
 if (NODE_ENV === 'production') {
-  ['ASAP_API_URL', 'ASAP_APP_URL', 'AWS_ACM_CERTIFICATE_ARN'].forEach((env) => {
-    assert.ok(process.env[env], `${env} not defined`);
-  });
+  ['CRN_API_URL', 'CRN_APP_URL', 'CRN_AWS_ACM_CERTIFICATE_ARN'].forEach(
+    (env) => {
+      assert.ok(process.env[env], `${env} not defined`);
+    },
+  );
 }
 
 const {
-  ASAP_APP_URL = 'http://localhost:3000',
-  ASAP_API_URL = 'http://localhost:3333',
+  CRN_APP_URL = 'http://localhost:3000',
+  CRN_API_URL = 'http://localhost:3333',
   ASAP_HOSTNAME = 'hub.asap.science',
-  AWS_ACM_CERTIFICATE_ARN,
+  CRN_AWS_ACM_CERTIFICATE_ARN,
   SLS_STAGE = 'development',
   CI_COMMIT_SHA,
   ALGOLIA_INDEX,
@@ -55,7 +57,7 @@ const serverlessConfig: AWS = {
     httpApi: {
       payload: '2.0',
       cors: {
-        allowedOrigins: [ASAP_APP_URL],
+        allowedOrigins: [CRN_APP_URL],
         allowCredentials: true,
         allowedMethods: ['options', 'post', 'get', 'put', 'delete', 'patch'],
         allowedHeaders: [
@@ -81,7 +83,7 @@ const serverlessConfig: AWS = {
       useCloudFormation: true,
     },
     environment: {
-      APP_ORIGIN: ASAP_APP_URL,
+      APP_ORIGIN: CRN_APP_URL,
       DEBUG: SLS_STAGE === 'production' ? '' : 'crn-server,http',
       NODE_ENV: '${env:NODE_ENV}',
       ENVIRONMENT: '${env:SLS_STAGE}',
@@ -92,7 +94,7 @@ const serverlessConfig: AWS = {
       SQUIDEX_CLIENT_SECRET: '${env:SQUIDEX_CLIENT_SECRET}',
       SQUIDEX_SHARED_SECRET: '${env:SQUIDEX_SHARED_SECRET}',
       REGION: '${env:AWS_REGION}',
-      ASAP_API_URL: '${env:ASAP_API_URL}',
+      CRN_API_URL: '${env:CRN_API_URL}',
       LOG_LEVEL: SLS_STAGE === 'production' ? 'error' : 'info',
       NODE_OPTIONS: '--enable-source-maps',
       ALGOLIA_APP_ID: `\${ssm:algolia-app-id-${envAlias}}`,
@@ -154,8 +156,8 @@ const serverlessConfig: AWS = {
     excludeDevDependencies: false,
   },
   custom: {
-    apiHostname: new URL(ASAP_API_URL).hostname,
-    appHostname: new URL(ASAP_APP_URL).hostname,
+    apiHostname: new URL(CRN_API_URL).hostname,
+    appHostname: new URL(CRN_APP_URL).hostname,
     s3Sync: [
       {
         bucketName: '${self:service}-${self:provider.stage}-frontend',
@@ -548,7 +550,7 @@ const serverlessConfig: AWS = {
           DomainName: '${self:custom.apiHostname}',
           DomainNameConfigurations: [
             {
-              CertificateArn: AWS_ACM_CERTIFICATE_ARN,
+              CertificateArn: CRN_AWS_ACM_CERTIFICATE_ARN,
               EndpointType: 'REGIONAL',
             },
           ],
@@ -964,7 +966,7 @@ const serverlessConfig: AWS = {
             Enabled: true,
             PriceClass: 'PriceClass_100',
             ViewerCertificate: {
-              AcmCertificateArn: AWS_ACM_CERTIFICATE_ARN,
+              AcmCertificateArn: CRN_AWS_ACM_CERTIFICATE_ARN,
               MinimumProtocolVersion: 'TLSv1.2_2018',
               SslSupportMethod: 'sni-only',
             },

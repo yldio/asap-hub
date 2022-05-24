@@ -1053,9 +1053,9 @@ export type AppQueries = {
   /** Find an Users content by id. */
   findUsersContent: Maybe<Users>;
   /** Get assets. */
-  queryAssets: Maybe<Array<Asset>>;
+  queryAssets: Array<Asset>;
   /** Get assets and total count. */
-  queryAssetsWithTotal: Maybe<AssetResultDto>;
+  queryAssetsWithTotal: AssetResultDto;
   /** Query Calendars content items. */
   queryCalendarsContents: Maybe<Array<Calendars>>;
   /** Query Calendars content items with total count. */

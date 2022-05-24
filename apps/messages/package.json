@@ -36,6 +36,6 @@
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@types/babel__core": "7.1.19",
     "@types/react": "^17.0.5",
-    "@types/react-dom": "^17.0.5"
+    "@types/react-dom": "17.0.17"
   }
 }

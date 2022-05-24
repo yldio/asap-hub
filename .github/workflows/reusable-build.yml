@@ -134,7 +134,8 @@ jobs:
           AUTH0_DOMAIN: ${{ steps.setup.outputs.auth0-domain }}
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           REACT_APP_ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
-          REACT_APP_API_BASE_URL: ${{ steps.setup.outputs.asap-api-url }}
+          REACT_APP_API_BASE_URL: ${{ steps.setup.outputs.crn-api-url }}
+          REACT_APP_GP2_API_BASE_URL: ${{ steps.setup.outputs.gp2-api-url }}
           REACT_APP_ENVIRONMENT: ${{ steps.setup.outputs.react-app-environment }}
           REACT_APP_GTM_CONTAINER_ID: ${{ steps.setup.outputs.react-app-gtm-container-id }}
           REACT_APP_RELEASE: ${{ steps.setup.outputs.app-release }}
@@ -172,7 +173,7 @@ jobs:
         run: |
           yarn typecheck
 
-  sls-package:
+  crn-sls-package:
     needs: [definitions, transpile, rebuild]
     runs-on: ubuntu-latest
     container:
@@ -206,13 +207,13 @@ jobs:
       - name: Generate package
         shell: bash
         run: |
-          yarn sls package --package sls-package
+          yarn sls package --package crn-sls-package
         env:
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
-          ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
-          ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
+          CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
+          CRN_APP_URL: ${{ steps.setup.outputs.crn-app-url }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
+          CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
           AWS_REGION: ${{ steps.setup.outputs.aws-region }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           CURRENT_REVISION: ${{ github.sha }}
@@ -229,6 +230,59 @@ jobs:
           SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
       - uses: actions/upload-artifact@v3
         with:
-          name: sls-package-${{ inputs.environment-name }}
-          path: 'sls-package'
+          name: crn-sls-package-${{ inputs.environment-name }}
+          path: 'crn-sls-package'
+          retention-days: 1
+
+  gp2-sls-package:
+    needs: [definitions, transpile, rebuild]
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    environment: ${{ inputs.environment-name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Cache build output
+        uses: ./.github/actions/cache-unplugged
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Cache build definitions
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-definitions }}
+          environment-name: ${{ inputs.environment-name }}
+      - name: Cache transpile output
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-transpile }}
+          environment-name: ${{ inputs.environment-name }}
+      - name: Generate package
+        shell: bash
+        run: |
+          yarn workspace @asap-hub/gp2-server run pnpify serverless package --package $PWD/gp2-sls-package
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
+          GP2_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.gp2-aws-acm-certificate-arn }}
+          AWS_REGION: ${{ steps.setup.outputs.aws-region }}
+          NODE_ENV: 'production'
+          SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
+          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: gp2-sls-package-${{ inputs.environment-name }}
+          path: 'gp2-sls-package'
           retention-days: 1

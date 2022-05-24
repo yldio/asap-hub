@@ -41,13 +41,13 @@
     "@types/apr-intercept": "workspace:*",
     "@types/babel__core": "7.1.19",
     "@types/hapi__boom": "^9.0.1",
-    "@types/jest": "^26.0.23",
+    "@types/jest": "26.0.24",
     "@types/jwt-decode": "^2.2.1",
     "@types/jwt-encode": "workspace:*",
     "@types/luxon": "^1",
     "@types/pump": "^1.1.1",
-    "@types/through2-concurrent": "^2",
-    "@types/uuid": "^8.3.0",
+    "@types/through2-concurrent": "2.0.1",
+    "@types/uuid": "8.3.4",
     "@yarnpkg/pnpify": "^3.1.1",
     "nock": "^13.0.11"
   }

@@ -323,13 +323,13 @@ __metadata:
     "@types/apr-intercept": "workspace:*"
     "@types/babel__core": 7.1.19
     "@types/hapi__boom": ^9.0.1
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/jwt-decode": ^2.2.1
     "@types/jwt-encode": "workspace:*"
     "@types/luxon": ^1
     "@types/pump": ^1.1.1
-    "@types/through2-concurrent": ^2
-    "@types/uuid": ^8.3.0
+    "@types/through2-concurrent": 2.0.1
+    "@types/uuid": 8.3.4
     "@types/yargs": ^17.0.5
     "@yarnpkg/pnpify": ^3.1.1
     algoliasearch: ^4.11.0
@@ -365,11 +365,11 @@ __metadata:
     "@testing-library/user-event": ^12.8.3
     "@types/auth0-js": ^9.14.4
     "@types/history": ^4.7.6
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/jsdom": ^16
     "@types/pify": ^3.0.2
     "@types/react": ^17.0.5
-    "@types/react-dom": ^17.0.5
+    "@types/react-dom": 17.0.17
     "@types/react-router-dom": ^5.1.7
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
@@ -400,7 +400,7 @@ __metadata:
     "@babel/preset-env": ^7.14.2
     "@babel/preset-typescript": ^7.13.0
     "@babel/runtime-corejs3": ^7.14.0
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     got: ^11.8.2
     nock: ^13.0.11
   languageName: unknown
@@ -414,7 +414,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@auth0/auth0-spa-js": ^1.15.0
     "@babel/runtime-corejs3": ^7.14.0
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/node": ^14.14.45
   languageName: unknown
   linkType: soft
@@ -448,18 +448,18 @@ __metadata:
     "@testing-library/react-hooks": ^4.0.1
     "@testing-library/user-event": ^12.8.3
     "@types/history": ^4.7.6
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/nock": ^11.1.0
     "@types/node": ^14.14.45
     "@types/react": ^17.0.5
-    "@types/react-dom": ^17.0.5
+    "@types/react-dom": 17.0.17
     "@types/react-router-dom": ^5.1.7
-    "@types/react-test-renderer": ^17.0.1
+    "@types/react-test-renderer": 17.0.2
     "@types/streamsaver": ^2.0.1
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
     "@types/testing-library__react-hooks": ^3.4.1
-    "@types/uuid": ^8.3.0
+    "@types/uuid": 8.3.4
     browser-image-compression: ^1.0.14
     browserslist-useragent-regexp: ^3.0.2
     cross-env: ^7.0.3
@@ -532,7 +532,7 @@ __metadata:
     "@types/hapi__boom": ^9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": ^17.1.6
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/jsonwebtoken": 8.5.8
     "@types/jwt-decode": ^2.2.1
     "@types/jwt-encode": "workspace:*"
@@ -546,7 +546,7 @@ __metadata:
     "@types/source-map-support": ^0
     "@types/stream-json": ^1
     "@types/supertest": ^2.0.12
-    "@types/uuid": ^8.3.0
+    "@types/uuid": 8.3.4
     "@types/yargs": ^17.0.5
     ajv: ^8.10.0
     ajv-formats: ^2.1.1
@@ -597,7 +597,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/runtime-corejs3": ^7.14.0
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
   languageName: unknown
   linkType: soft
 
@@ -667,7 +667,7 @@ __metadata:
   dependencies:
     "@babel/runtime-corejs3": ^7.14.0
     "@types/asap-hub__inline-environment": "workspace:*"
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     core-js: ^3.12.1
   languageName: unknown
   linkType: soft
@@ -686,7 +686,7 @@ __metadata:
     "@sentry/react": ^6.11.0
     "@testing-library/react": 11.2.7
     "@types/history": ^4.7.6
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/node": ^14.14.45
     "@types/react": ^17.0.5
     "@types/react-router-dom": ^5.1.7
@@ -706,6 +706,74 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/gp2-frontend@workspace:apps/gp2-frontend":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/gp2-frontend@workspace:apps/gp2-frontend"
+  dependencies:
+    "@asap-hub/algolia": "workspace:*"
+    "@asap-hub/auth": "workspace:*"
+    "@asap-hub/dom-test-utils": "workspace:*"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/fixtures": "workspace:*"
+    "@asap-hub/flags": "workspace:*"
+    "@asap-hub/frontend-utils": "workspace:*"
+    "@asap-hub/model": "workspace:*"
+    "@asap-hub/react-components": "workspace:*"
+    "@asap-hub/react-context": "workspace:*"
+    "@asap-hub/routing": "workspace:*"
+    "@asap-hub/unsupported-browser-page": "workspace:*"
+    "@asap-hub/validation": "workspace:*"
+    "@auth0/auth0-spa-js": ^1.15.0
+    "@babel/runtime-corejs3": ^7.14.0
+    "@fast-csv/format": ^4.3.5
+    "@sentry/cli": ^1.68.0
+    "@sentry/react": ^6.11.0
+    "@sentry/tracing": ^6.11.0
+    "@testing-library/dom": 7.31.2
+    "@testing-library/jest-dom": ^5.12.0
+    "@testing-library/react": 11.2.7
+    "@testing-library/react-hooks": ^4.0.1
+    "@testing-library/user-event": ^12.8.3
+    "@types/history": ^4.7.6
+    "@types/jest": 26.0.24
+    "@types/nock": ^11.1.0
+    "@types/node": ^14.14.45
+    "@types/react": ^17.0.5
+    "@types/react-dom": 17.0.17
+    "@types/react-router-dom": ^5.1.7
+    "@types/react-test-renderer": 17.0.2
+    "@types/streamsaver": ^2.0.1
+    "@types/testing-library__jest-dom": ^5.9.5
+    "@types/testing-library__react": ^10.0.1
+    "@types/testing-library__react-hooks": ^3.4.1
+    "@types/uuid": 8.3.4
+    browser-image-compression: ^1.0.14
+    browserslist-useragent-regexp: ^3.0.2
+    cross-env: ^7.0.3
+    date-fns: ^2.21.3
+    history: ^4
+    identity-obj-proxy: ^3.0.0
+    jose: ^2.0.5
+    nock: ^13.0.11
+    pirates: ^4.0.1
+    react: ^17.0.2
+    react-app-polyfill: ^1.0.6
+    react-dom: ^17.0.2
+    react-error-boundary: ^3.1.3
+    react-router-dom: ^5.2.0
+    react-router-last-location: ^2.0.1
+    react-scripts: ^4.0.3
+    react-test-renderer: ^17.0.2
+    recoil: "patch:recoil@^0.1.2#../../patches/recoil.patch"
+    streamsaver: ^2.0.5
+    typescript: 4.4.4
+    use-debounce: ^5.2.1
+    use-deep-compare-effect: ^1.6.1
+    uuid: ^8.3.2
+    web-streams-polyfill: ^3.1.1
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/gp2-server@workspace:apps/gp2-server":
   version: 0.0.0-use.local
   resolution: "@asap-hub/gp2-server@workspace:apps/gp2-server"
@@ -717,6 +785,12 @@ __metadata:
     "@babel/preset-env": ^7.14.2
     "@babel/preset-typescript": ^7.13.0
     "@babel/runtime-corejs3": ^7.14.0
+    "@graphql-codegen/cli": 2.2.0
+    "@graphql-codegen/gql-tag-operations-preset": ^1.1.5
+    "@graphql-codegen/introspection": 2.1.0
+    "@graphql-codegen/schema-ast": ^2.2.0
+    "@graphql-codegen/typescript": 2.2.2
+    "@graphql-codegen/typescript-operations": ^2.1.4
     "@graphql-typed-document-node/core": ^3.1.0
     "@hapi/boom": ^9.1.2
     "@serverless/typescript": ^2.59.0
@@ -724,7 +798,7 @@ __metadata:
     "@types/aws-lambda": 8.10.97
     "@types/cors": 2.8.12
     "@types/express": ^4.17.11
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/jsonwebtoken": 8.5.8
     "@types/node": ^14.14.45
     "@types/serverless": ^3
@@ -738,6 +812,7 @@ __metadata:
     express: ^4.17.1
     express-async-errors: ^3.1.1
     graphql-tag: ^2.12.4
+    graphql-typescript-integration: ^1.2.0
     jsonwebtoken: ^8.5.1
     serverless: ^2.60.0
     serverless-http: ^2.7.0
@@ -772,7 +847,7 @@ __metadata:
     "@emotion/server": ^11
     "@types/babel__core": 7.1.19
     "@types/react": ^17.0.5
-    "@types/react-dom": ^17.0.5
+    "@types/react-dom": 17.0.17
     aws-sdk: ^2.907.0
     babel-loader: ^8.2.2
     babel-preset-react-app: ^10
@@ -805,7 +880,7 @@ __metadata:
     "@babel/preset-env": ^7.14.2
     "@babel/preset-typescript": ^7.13.0
     "@babel/runtime-corejs3": ^7.14.0
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/jsonwebtoken": 8.5.8
     jsonwebtoken: ^8.5.1
   languageName: unknown
@@ -840,19 +915,19 @@ __metadata:
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
     "@types/history": ^4.7.6
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/ramda": ^0
     "@types/react": ^17.0.5
-    "@types/react-dom": ^17.0.5
+    "@types/react-dom": 17.0.17
     "@types/react-router-dom": ^5.1.7
     "@types/react-router-hash-link": ^1.2.1
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
-    "@types/react-test-renderer": ^17.0.1
+    "@types/react-test-renderer": 17.0.2
     "@types/rehype-slug": "workspace:*"
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
     "@types/testing-library__react-hooks": ^3.4.1
-    "@types/uuid": ^8.3.0
+    "@types/uuid": 8.3.4
     core-js: ^3.12.1
     date-fns: ^2.21.3
     date-fns-tz: ^1.1.4
@@ -908,7 +983,7 @@ __metadata:
     "@babel/runtime-corejs3": ^7.14.0
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": ^4.0.1
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/react": ^17.0.5
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
@@ -952,7 +1027,7 @@ __metadata:
     "@sentry/serverless": ^6.7.1
     "@types/apr-intercept": "workspace:*"
     "@types/express": ^4.17.11
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/jsonwebtoken": 8.5.8
     "@types/supertest": ^2.0.12
     apr-intercept: ^3.0.4
@@ -985,7 +1060,7 @@ __metadata:
     "@types/hapi__boom": ^9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": ^17.1.6
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/jwt-decode": ^2.2.1
     "@types/jwt-encode": "workspace:*"
     apr-intercept: ^3.0.4
@@ -1019,7 +1094,7 @@ __metadata:
     "@types/hapi__boom": ^9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": ^17.1.6
-    "@types/jest": ^26.0.23
+    "@types/jest": 26.0.24
     "@types/jwt-decode": ^2.2.1
     "@types/jwt-encode": "workspace:*"
     "@types/luxon": ^1
@@ -1081,7 +1156,7 @@ __metadata:
     "@babel/runtime-corejs3": ^7.14.0
     "@types/node": ^14.14.45
     "@types/react": ^17.0.5
-    "@types/react-dom": ^17.0.5
+    "@types/react-dom": 17.0.17
     react: ^17.0.2
     react-dom: ^17.0.2
   languageName: unknown
@@ -10983,13 +11058,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:^26.0.23":
-  version: 26.0.23
-  resolution: "@types/jest@npm:26.0.23"
+"@types/jest@npm:26.0.24":
+  version: 26.0.24
+  resolution: "@types/jest@npm:26.0.24"
   dependencies:
     jest-diff: ^26.0.0
     pretty-format: ^26.0.0
-  checksum: 69db26061e6be34de2a440c8a470b651c53ba6ee0057614a278c4f756ff00281f46cc075b24e5bd761f399f175f49d0a5758b50dd921342a8592461548dea29a
+  checksum: ae39675412f08d884926254e9b12bfd2b5a4e4d204c94d3148cb942174a474930d0c60540133c968f22241d4712b7940c96cbc883096eb326a4d5b206fb78bd0
   languageName: node
   linkType: hard
 
@@ -11397,12 +11472,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^17.0.5":
-  version: 17.0.5
-  resolution: "@types/react-dom@npm:17.0.5"
+"@types/react-dom@npm:17.0.17":
+  version: 17.0.17
+  resolution: "@types/react-dom@npm:17.0.17"
   dependencies:
-    "@types/react": "*"
-  checksum: ff301198c621864e1ee6c566285dc5cdc9eb5d881ca7fe7fcb8ebf29afe0357ffb7f77e401ab81ff444c64ff1375f653eeb28f04cd088a361915dee31cb3f4a8
+    "@types/react": ^17
+  checksum: 23caf98aa03e968811560f92a2c8f451694253ebe16b670929b24eaf0e7fa62ba549abe9db0ac028a9d8a9086acd6ab9c6c773f163fa21224845edbc00ba6232
   languageName: node
   linkType: hard
 
@@ -11490,21 +11565,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-test-renderer@npm:17.0.2":
+  version: 17.0.2
+  resolution: "@types/react-test-renderer@npm:17.0.2"
+  dependencies:
+    "@types/react": ^17
+  checksum: 0be325798b6b38cc31fbb11f2f1e1a5578cc3b23eddf1ddd1ab58ccf50966e8f779383084d8bc3a7db3108ad815af8fbae5c0f54329a88d52200e01547d85c33
+  languageName: node
+  linkType: hard
+
 "@types/react-test-renderer@npm:>=16.9.0":
   version: 17.0.0
   resolution: "@types/react-test-renderer@npm:17.0.0"
   dependencies:
     "@types/react": "*"
   checksum: 54767cc32d6da64228bd924fff8221e6ad9227505995b458b72990d49e7758694c7dfb2b85842ac304d7c95348737d2f2d19291f8f108de62e58339b14934f89
-  languageName: node
-  linkType: hard
-
-"@types/react-test-renderer@npm:^17.0.1":
-  version: 17.0.1
-  resolution: "@types/react-test-renderer@npm:17.0.1"
-  dependencies:
-    "@types/react": "*"
-  checksum: ecaae8df36cd8cfeb89080d52534856acc3789bad9a6e369ff5119426377c827b4e5b5daa638507f2c1c2fd6c994bf45de288a698143178cd4049c2cd8b77b35
   languageName: node
   linkType: hard
 
@@ -11534,6 +11609,17 @@ __metadata:
     "@types/prop-types": "*"
     csstype: ^3.0.2
   checksum: 0767d1c635613cb08de1ad6b8f73e3ee01ae0069733fa56382c72a8dbed741849e74f62a17756c7b76ccd2b57dd9891d5767c3134f35788720c6bb9c186a933b
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:^17":
+  version: 17.0.45
+  resolution: "@types/react@npm:17.0.45"
+  dependencies:
+    "@types/prop-types": "*"
+    "@types/scheduler": "*"
+    csstype: ^3.0.2
+  checksum: 3cc13a02824c13f6fa4807a83abd065ac1d9943359e76bd995cc7cd2b4148c1176ebd54a30a9f4eb8a0f141ff359d712876f256c4fee707e4290607ef8410b3e
   languageName: node
   linkType: hard
 
@@ -11762,13 +11848,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/through2-concurrent@npm:^2":
-  version: 2.0.0
-  resolution: "@types/through2-concurrent@npm:2.0.0"
+"@types/through2-concurrent@npm:2.0.1":
+  version: 2.0.1
+  resolution: "@types/through2-concurrent@npm:2.0.1"
   dependencies:
     "@types/node": "*"
     "@types/through2": "*"
-  checksum: ddb9ff481d6c7890aca336e511af2859c95d0757e1f172c37092b5a87b441e87c75ef3db02a07f44231a55dff3e784fb7f71192379d4f8d2024fa37be402a66a
+  checksum: 3fde6fe82b2cac2da4bf70f8ab1643eed197f4f2c6f28d3f6da00c9d1c4b37615d957578fc51603564f5ca50879495a83987dfc381f58d6a80bbc5e96133f188
   languageName: node
   linkType: hard
 
@@ -11811,10 +11897,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/uuid@npm:^8.3.0":
-  version: 8.3.0
-  resolution: "@types/uuid@npm:8.3.0"
-  checksum: 0f46b15020b9c252473fb327a6491fd7d238c7b5bbaebd32195a0de178db040f6abb96902507ba25dd4a673cdd9cc28b8880512dba54561e8bc60d8f326c1e30
+"@types/uuid@npm:8.3.4":
+  version: 8.3.4
+  resolution: "@types/uuid@npm:8.3.4"
+  checksum: 6f11f3ff70f30210edaa8071422d405e9c1d4e53abbe50fdce365150d3c698fe7bbff65c1e71ae080cbfb8fded860dbb5e174da96fdbbdfcaa3fb3daa474d20f
   languageName: node
   linkType: hard
 
@@ -11843,17 +11929,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack@npm:^4, @types/webpack@npm:^4.41.8":
-  version: 4.41.17
-  resolution: "@types/webpack@npm:4.41.17"
+"@types/webpack@npm:4.41.32":
+  version: 4.41.32
+  resolution: "@types/webpack@npm:4.41.32"
   dependencies:
-    "@types/anymatch": "*"
     "@types/node": "*"
-    "@types/tapable": "*"
+    "@types/tapable": ^1
     "@types/uglify-js": "*"
     "@types/webpack-sources": "*"
+    anymatch: ^3.0.0
     source-map: ^0.6.0
-  checksum: 8087e71e6eafaabedd2b7f412377be3bb9bc091f8cf887387684606c4071181110309690ff9e9ca49d6db7fc1c5435a0758f2a99d32eacda6a2d38fad2405655
+  checksum: e594a1357cbbc2f7c6ca47785c5a11adb5591a774a69afaeab07cd6f6bff6c6aea2030bd37b32bdd19d0ec2336a346db754e8d8d236ba8effeab542716fb32b7
   languageName: node
   linkType: hard
 
@@ -11868,6 +11954,20 @@ __metadata:
     "@types/webpack-sources": "*"
     source-map: ^0.6.0
   checksum: d9a99bb2a3c958d4a797734cba89ac489256cfb7fede7b8970b55291bca936c448851297ebaddb5b871e48fc028fa83e31856ec5f57695e9cbbd2ceda72fc499
+  languageName: node
+  linkType: hard
+
+"@types/webpack@npm:^4.41.8":
+  version: 4.41.17
+  resolution: "@types/webpack@npm:4.41.17"
+  dependencies:
+    "@types/anymatch": "*"
+    "@types/node": "*"
+    "@types/tapable": "*"
+    "@types/uglify-js": "*"
+    "@types/webpack-sources": "*"
+    source-map: ^0.6.0
+  checksum: 8087e71e6eafaabedd2b7f412377be3bb9bc091f8cf887387684606c4071181110309690ff9e9ca49d6db7fc1c5435a0758f2a99d32eacda6a2d38fad2405655
   languageName: node
   linkType: hard
 
@@ -13377,6 +13477,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"anymatch@npm:^3.0.0, anymatch@npm:~3.1.2":
+  version: 3.1.2
+  resolution: "anymatch@npm:3.1.2"
+  dependencies:
+    normalize-path: ^3.0.0
+    picomatch: ^2.0.4
+  checksum: 985163db2292fac9e5a1e072bf99f1b5baccf196e4de25a0b0b81865ebddeb3b3eb4480734ef0a2ac8c002845396b91aa89121f5b84f93981a4658164a9ec6e9
+  languageName: node
+  linkType: hard
+
 "anymatch@npm:^3.0.3, anymatch@npm:~3.1.1":
   version: 3.1.1
   resolution: "anymatch@npm:3.1.1"
@@ -13384,16 +13494,6 @@ __metadata:
     normalize-path: ^3.0.0
     picomatch: ^2.0.4
   checksum: c951385862bf114807d594bdffccb769bd7219ddc14f24fc135cde075ad2477a97991567b8bb5032d4f279f96897f0c2af6468a350a6c674ac0a5ee3b62a26d6
-  languageName: node
-  linkType: hard
-
-"anymatch@npm:~3.1.2":
-  version: 3.1.2
-  resolution: "anymatch@npm:3.1.2"
-  dependencies:
-    normalize-path: ^3.0.0
-    picomatch: ^2.0.4
-  checksum: 985163db2292fac9e5a1e072bf99f1b5baccf196e4de25a0b0b81865ebddeb3b3eb4480734ef0a2ac8c002845396b91aa89121f5b84f93981a4658164a9ec6e9
   languageName: node
   linkType: hard
 
@@ -13746,8 +13846,8 @@ __metadata:
     "@peculiar/webcrypto": ^1.1.7
     "@serverless/typescript": ^2.59.0
     "@testing-library/jest-dom": ^5.12.0
-    "@types/jest": ^26.0.23
-    "@types/webpack": ^4
+    "@types/jest": 26.0.24
+    "@types/webpack": 4.41.32
     "@yarnpkg/pnpify": ^3.1.1
     babel-eslint: ^10.1.0
     babel-loader: ^8.2.2
@@ -32308,6 +32408,20 @@ recoil@^0.1.2:
 "recoil@patch:recoil@^0.1.2#../../patches/recoil.patch::locator=%40asap-hub%2Fcrn-frontend%40workspace%3Aapps%2Fcrn-frontend":
   version: 0.1.3
   resolution: "recoil@patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fcrn-frontend%40workspace%3Aapps%2Fcrn-frontend"
+  peerDependencies:
+    react: ">=16.13.1"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: e9bdb30a43e192675fc4dcd32a8457682b66dbd847c7ae088d1ca312a40ca91d1390caced43ff69b5a64907e46857f383d6fd005f8a257cc14f24c5bc2decada
+  languageName: node
+  linkType: hard
+
+"recoil@patch:recoil@^0.1.2#../../patches/recoil.patch::locator=%40asap-hub%2Fgp2-frontend%40workspace%3Aapps%2Fgp2-frontend":
+  version: 0.1.3
+  resolution: "recoil@patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fgp2-frontend%40workspace%3Aapps%2Fgp2-frontend"
   peerDependencies:
     react: ">=16.13.1"
   peerDependenciesMeta:

@@ -2,8 +2,8 @@ import assert from 'assert';
 import { AWS } from '@serverless/typescript';
 
 [
-  'AWS_ACM_CERTIFICATE_ARN',
-  'ASAP_HOSTNAME',
+  'GP2_AWS_ACM_CERTIFICATE_ARN',
+  'GP2_HOSTNAME',
   'SLS_STAGE',
   'AWS_REGION',
   'SQUIDEX_APP_NAME',
@@ -23,8 +23,8 @@ assert.ok(
 
 const stage = process.env.SLS_STAGE!;
 const region = process.env.AWS_REGION as AWS['provider']['region'];
-const acmCertificateArn = process.env.AWS_ACM_CERTIFICATE_ARN!;
-const hostname = process.env.ASAP_HOSTNAME!;
+const gp2AwsAcmCertificateArn = process.env.GP2_AWS_ACM_CERTIFICATE_ARN!;
+const hostname = process.env.GP2_HOSTNAME!;
 const squidexAppName = process.env.SQUIDEX_APP_NAME!;
 const squidexBaseUrl = process.env.SQUIDEX_BASE_URL!;
 const squidexClientId = process.env.SQUIDEX_CLIENT_ID!;
@@ -120,7 +120,7 @@ const serverlessConfig: AWS = {
           DomainName: apiHostname,
           DomainNameConfigurations: [
             {
-              CertificateArn: acmCertificateArn,
+              CertificateArn: gp2AwsAcmCertificateArn,
               EndpointType: 'REGIONAL',
             },
           ],
@@ -271,7 +271,7 @@ const serverlessConfig: AWS = {
             Enabled: true,
             PriceClass: 'PriceClass_100',
             ViewerCertificate: {
-              AcmCertificateArn: acmCertificateArn,
+              AcmCertificateArn: gp2AwsAcmCertificateArn,
               MinimumProtocolVersion: 'TLSv1.2_2018',
               SslSupportMethod: 'sni-only',
             },

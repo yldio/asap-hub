@@ -25,9 +25,9 @@ on:
         required: true
 
 jobs:
-  sls-package:
+  crn-sls-deploy:
     concurrency:
-      group: ${{ github.head_ref || inputs.environment-name }}
+      group: crn-${{ github.head_ref || inputs.environment-name }}
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
@@ -36,7 +36,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     environment:
       name: ${{ inputs.environment-name }}
-      url: ${{ steps.setup.outputs.asap-app-url }}
+      url: ${{ steps.setup.outputs.crn-app-url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -56,17 +56,17 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - uses: actions/download-artifact@v3
         with:
-          name: sls-package-${{ inputs.environment-name }}
-          path: 'sls-package'
+          name: crn-sls-package-${{ inputs.environment-name }}
+          path: 'crn-sls-package'
       - name: Deploy
         run: |
-          yarn sls deploy --package sls-package --verbose
+          yarn sls deploy --package crn-sls-package --verbose
         env:
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
-          ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
-          ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
+          CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
+          CRN_APP_URL: ${{ steps.setup.outputs.crn-app-url }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
+          CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
           AWS_REGION: ${{ steps.setup.outputs.aws-region }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           CURRENT_REVISION: ${{ github.sha }}
@@ -83,8 +83,57 @@ jobs:
           SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
+  gp2-sls-deploy:
+    concurrency:
+      group: gp2-${{ github.head_ref || inputs.environment-name }}
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    environment:
+      name: ${{ inputs.environment-name }}
+      url: ${{ steps.setup.outputs.gp2-app-url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Cache build output
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-frontend }}
+          environment-name: ${{ inputs.environment-name }}
+      - name: Cache build typecheck output
+        uses: ./.github/actions/cache-unplugged
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - uses: actions/download-artifact@v3
+        with:
+          name: gp2-sls-package-${{ inputs.environment-name }}
+          path: 'gp2-sls-package'
+      - name: Deploy
+        run: |
+          yarn workspace @asap-hub/gp2-server run pnpify serverless deploy --package $PWD/gp2-sls-package
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_REGION: ${{ steps.setup.outputs.aws-region }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
+          GP2_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.gp2-aws-acm-certificate-arn }}
+          NODE_ENV: 'production'
+          SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
+          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+
   algolia-settings:
-    needs: [sls-package]
+    needs: [crn-sls-deploy]
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -118,7 +167,7 @@ jobs:
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
 
   squidex-schema:
-    needs: [sls-package]
+    needs: [crn-sls-deploy]
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -141,7 +190,7 @@ jobs:
           .github/scripts/squidex-sync/config-rules.sh
           sq sync in packages/squidex/schema -t schemas -t rules --delete
         env:
-          ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
+          CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
@@ -149,7 +198,7 @@ jobs:
           SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   ses:
-    needs: [sls-package]
+    needs: [crn-sls-deploy]
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -179,7 +228,7 @@ jobs:
         run: |
           yarn workspace @asap-hub/messages deploy $SES_REGION
         env:
-          APP_ORIGIN: ${{ steps.setup.outputs.asap-app-url }}
+          APP_ORIGIN: ${{ steps.setup.outputs.crn-app-url }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           SES_REGION: ${{ steps.setup.outputs.ses-region }}

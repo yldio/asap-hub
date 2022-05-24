@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Branch
-      url: ${{ steps.setup.outputs.asap-app-url }}
+      url: ${{ steps.setup.outputs.crn-app-url }}
     needs: [verify]
     if: success()
     steps:

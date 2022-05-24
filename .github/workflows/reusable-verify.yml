@@ -32,7 +32,7 @@ jobs:
         run: |
           yarn test:e2e
         env:
-          ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
+          CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
 
   test-e2e:
     runs-on: ubuntu-latest
@@ -59,7 +59,7 @@ jobs:
         run: |
           yarn workspace @asap-hub/e2e-tests run playwright test
         env:
-          ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
+          CRN_APP_URL: ${{ steps.setup.outputs.crn-app-url }}
 
   schema:
     runs-on: ubuntu-latest

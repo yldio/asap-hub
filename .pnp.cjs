@@ -2487,7 +2487,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/webpack",
-        "npm:4.41.17"
+        "npm:4.41.32"
       ],
       [
         "@types/webpack-env",
@@ -10120,7 +10120,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@serverless/typescript", "npm:2.59.0"],
             ["@testing-library/jest-dom", "npm:5.12.0"],
             ["@types/jest", "npm:26.0.24"],
-            ["@types/webpack", "npm:4.41.17"],
+            ["@types/webpack", "npm:4.41.32"],
             ["@yarnpkg/pnpify", "npm:3.1.1"],
             ["babel-eslint", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:10.1.0"],
             ["babel-loader", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:8.2.2"],
@@ -31454,6 +31454,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["source-map", "npm:0.6.1"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:4.41.32", {
+          "packageLocation": "./.yarn/cache/@types-webpack-npm-4.41.32-34a78d0b36-e594a1357c.zip/node_modules/@types/webpack/",
+          "packageDependencies": [
+            ["@types/webpack", "npm:4.41.32"],
+            ["@types/node", "npm:13.11.1"],
+            ["@types/tapable", "npm:1.0.7"],
+            ["@types/uglify-js", "npm:3.9.2"],
+            ["@types/webpack-sources", "npm:0.1.7"],
+            ["anymatch", "npm:3.1.2"],
+            ["source-map", "npm:0.6.1"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@types/webpack-env", [
@@ -33684,7 +33697,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@serverless/typescript", "npm:2.59.0"],
             ["@testing-library/jest-dom", "npm:5.12.0"],
             ["@types/jest", "npm:26.0.24"],
-            ["@types/webpack", "npm:4.41.17"],
+            ["@types/webpack", "npm:4.41.32"],
             ["@yarnpkg/pnpify", "npm:3.1.1"],
             ["babel-eslint", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:10.1.0"],
             ["babel-loader", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:8.2.2"],
@@ -34479,7 +34492,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-loader", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:8.2.2"],
             ["@babel/core", "npm:7.14.2"],
             ["@types/babel__core", null],
-            ["@types/webpack", "npm:4.41.17"],
+            ["@types/webpack", "npm:4.41.32"],
             ["find-cache-dir", "npm:3.3.1"],
             ["loader-utils", "npm:1.4.0"],
             ["make-dir", "npm:3.1.0"],
@@ -37475,7 +37488,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/copy-webpack-plugin-virtual-e8df9251fc/0/cache/copy-webpack-plugin-npm-9.0.0-6ae03008e1-f3ca9d206b.zip/node_modules/copy-webpack-plugin/",
           "packageDependencies": [
             ["copy-webpack-plugin", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:9.0.0"],
-            ["@types/webpack", "npm:4.41.17"],
+            ["@types/webpack", "npm:4.41.32"],
             ["fast-glob", "npm:3.2.5"],
             ["glob-parent", "npm:6.0.0"],
             ["globby", "npm:11.0.3"],
@@ -57256,7 +57269,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/unplugged/serverless-webpack-virtual-2b64f0ac77/node_modules/serverless-webpack/",
           "packageDependencies": [
             ["serverless-webpack", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:5.5.0"],
-            ["@types/webpack", "npm:4.41.17"],
+            ["@types/webpack", "npm:4.41.32"],
             ["bestzip", "npm:2.2.0"],
             ["bluebird", "npm:3.7.2"],
             ["fs-extra", "npm:9.1.0"],

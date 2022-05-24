@@ -23,12 +23,12 @@ outputs:
   app-release:
     description: 'App Release'
     value: ${{ steps.vars.outputs.app-release }}
-  asap-api-url:
-    description: 'ASAP API Url'
-    value: ${{ steps.vars.outputs.asap-api-url }}
-  asap-app-url:
-    description: 'ASAP APP Url'
-    value: ${{ steps.vars.outputs.asap-app-url }}
+  crn-api-url:
+    description: 'CRN API Url'
+    value: ${{ steps.vars.outputs.crn-api-url }}
+  crn-app-url:
+    description: 'CRN APP Url'
+    value: ${{ steps.vars.outputs.crn-app-url }}
   auth0-client-id:
     description: 'Auth0 Client ID'
     value: ${{ steps.vars.outputs.auth0-client-id }}
@@ -38,9 +38,7 @@ outputs:
   aws-acm-asap-science-certificate-arn:
     description: 'AWS ACM ASAP Science Certificate ARN'
     value: ${{ steps.vars.outputs.aws-acm-asap-science-certificate-arn }}
-  aws-acm-certificate-arn:
-    description: 'AWS ACM Certificate ARN'
-    value: ${{ steps.vars.outputs.aws-acm-certificate-arn }}
+
   aws-default-region:
     description: 'AWS Default Region'
     value: ${{ steps.vars.outputs.aws-default-region }}
@@ -59,6 +57,21 @@ outputs:
   cache-prefix-transpile:
     description: 'Cache Prefix Transpile'
     value: ${{ steps.vars.outputs.cache-prefix-transpile }}
+  crn-aws-acm-certificate-arn:
+    description: 'CRN AWS ACM Certificate ARN'
+    value: ${{ steps.vars.outputs.crn-aws-acm-certificate-arn }}
+  gp2-api-url:
+    description: 'GP2 API Url'
+    value: ${{ steps.vars.outputs.gp2-api-url }}
+  gp2-app-url:
+    description: 'GP2 APP Url'
+    value: ${{ steps.vars.outputs.gp2-app-url }}
+  gp2-aws-acm-certificate-arn:
+    description: 'GP2 AWS ACM Certificate ARN'
+    value: ${{ steps.vars.outputs.gp2-aws-acm-certificate-arn }}
+  gp2-hostname:
+    description: 'GP2 Hostname'
+    value: ${{ steps.vars.outputs.gp2-hostname }}
   pr-number:
     description: 'PR Number'
     value: ${{ steps.vars.outputs.pr-number }}
@@ -123,8 +136,10 @@ runs:
           PR_NUMBER=${{ github.event.number || github.event.inputs.pr-number || inputs.pr-number }}
           echo "::set-output name=algolia-index::asap-hub_CI-$PR_NUMBER"
           echo "::set-output name=app-release::${{ github.run_id }}-dev"
-          echo "::set-output name=asap-api-url::https://api-$PR_NUMBER.hub.asap.science"
-          echo "::set-output name=asap-app-url::https://$PR_NUMBER.hub.asap.science"
+          echo "::set-output name=crn-api-url::https://api-$PR_NUMBER.hub.asap.science"
+          echo "::set-output name=crn-app-url::https://$PR_NUMBER.hub.asap.science"
+          echo "::set-output name=gp2-api-url::https://api-$PR_NUMBER.gp2.asap.science"
+          echo "::set-output name=gp2-app-url::https://$PR_NUMBER.gp2.asap.science"
           echo "::set-output name=pr-number::$PR_NUMBER"
           echo "::set-output name=sls-stage::$PR_NUMBER"
           echo "::set-output name=squidex-app-name::$PR_NUMBER"

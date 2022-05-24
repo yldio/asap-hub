@@ -1,10 +1,12 @@
 algolia-api-key-name=algolia-api-key-ci-prod
 algolia-app-id-name=algolia-app-id-prod
 algolia-index=asap-hub_prod
-asap-api-url=https://api.hub.asap.science
-asap-app-url=https://hub.asap.science
+crn-api-url=https://api.hub.asap.science
+crn-app-url=https://hub.asap.science
 auth0-client-id=Av2psgVspAN00Kez9v1vR2c496a9zCW3
 auth0-domain=asap-hub.us.auth0.com
+gp2-api-url=https://api.gp2.asap.science
+gp2-app-url=https://gp2.asap.science
 react-app-environment=production
 react-app-gtm-container-id=GTM-M5HZBRZ
 react-app-sentry-dsn=https://8cd3c59be8ec4118aa6f6c59487b9e56@o850903.ingest.sentry.io/5893160

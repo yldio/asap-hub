@@ -10,7 +10,7 @@ on:
         type: string
         description: Choose which PR number to destroy
 jobs:
-  sls:
+  crn-sls-remove:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     runs-on: ubuntu-latest
     container:
@@ -39,8 +39,8 @@ jobs:
         run: yarn sls remove --verbose
         continue-on-error: true
         env:
-          ASAP_API_URL: ${{ steps.setup.outputs.asap-api-url }}
-          ASAP_APP_URL: ${{ steps.setup.outputs.asap-app-url }}
+          CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
+          CRN_APP_URL: ${{ steps.setup.outputs.crn-app-url }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.aws-acm-certificate-arn }}
           AWS_REGION: ${{ steps.setup.outputs.aws-region }}
@@ -60,6 +60,46 @@ jobs:
       - name: Delete PR Squidex App
         run: python .github/scripts/squidex/delete-app.py
         env:
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
+          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+  gp2-sls-remove:
+    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    environment: Branch
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Branch
+      - name: Check PR Number
+        if: ${{ github.event.inputs.pr-number }}
+        uses: ./.github/actions/is-number
+        with:
+          number: ${{ github.event.inputs.pr-number }}
+      - name: Rebuild dependencies
+        run: yarn rebuild
+      - name: Remove CF Stack
+        if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
+        run: yarn workspace @asap-hub/gp2-server run pnpify sls remove --verbose
+        continue-on-error: true
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_REGION: ${{ steps.setup.outputs.aws-region }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
+          GP2_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.gp2-aws-acm-certificate-arn }}
+          NODE_ENV: 'production'
+          SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
@@ -106,7 +146,7 @@ jobs:
 
   notify_failure:
     runs-on: ubuntu-latest
-    needs: [sls, algolia-index]
+    needs: [crn-sls-remove, gp2-sls-remove, algolia-index]
     if: ${{ failure() && (github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub') }}
     steps:
       - name: Checkout

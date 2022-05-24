@@ -1,4 +1,5 @@
 import { authTestUtils } from '@asap-hub/react-components';
+import userEvent from '@testing-library/user-event';
 import { render } from '@testing-library/react';
 import UserNavigation from '../UserNavigation';
 
@@ -11,6 +12,19 @@ describe('UserNavigation', () => {
         </authTestUtils.LoggedIn>
       </authTestUtils.Auth0Provider>,
     );
-    expect(await findByText('Hi, John')).toBeVisible();
+    expect(await findByText(/hi, john/i)).toBeVisible();
+  });
+
+  it('renders a fallback instead of the display name', async () => {
+    const { findByText } = render(<UserNavigation />);
+    expect(await findByText(/hi, unknown/i)).toBeVisible();
+  });
+
+  it('opens user menu when clicked', async () => {
+    const { getByLabelText, findByRole } = render(<UserNavigation />);
+
+    userEvent.click(getByLabelText(/toggle.+user menu/i));
+
+    expect(await findByRole('list')).toBeVisible();
   });
 });

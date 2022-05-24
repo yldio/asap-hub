@@ -329,7 +329,7 @@ __metadata:
     "@types/luxon": ^1
     "@types/pump": ^1.1.1
     "@types/through2-concurrent": 2.0.1
-    "@types/uuid": ^8.3.0
+    "@types/uuid": 8.3.4
     "@types/yargs": ^17.0.5
     "@yarnpkg/pnpify": ^3.1.1
     algoliasearch: ^4.11.0
@@ -459,7 +459,7 @@ __metadata:
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
     "@types/testing-library__react-hooks": ^3.4.1
-    "@types/uuid": ^8.3.0
+    "@types/uuid": 8.3.4
     browser-image-compression: ^1.0.14
     browserslist-useragent-regexp: ^3.0.2
     cross-env: ^7.0.3
@@ -546,7 +546,7 @@ __metadata:
     "@types/source-map-support": ^0
     "@types/stream-json": ^1
     "@types/supertest": ^2.0.12
-    "@types/uuid": ^8.3.0
+    "@types/uuid": 8.3.4
     "@types/yargs": ^17.0.5
     ajv: ^8.10.0
     ajv-formats: ^2.1.1
@@ -746,7 +746,7 @@ __metadata:
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
     "@types/testing-library__react-hooks": ^3.4.1
-    "@types/uuid": ^8.3.0
+    "@types/uuid": 8.3.4
     browser-image-compression: ^1.0.14
     browserslist-useragent-regexp: ^3.0.2
     cross-env: ^7.0.3
@@ -927,7 +927,7 @@ __metadata:
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
     "@types/testing-library__react-hooks": ^3.4.1
-    "@types/uuid": ^8.3.0
+    "@types/uuid": 8.3.4
     core-js: ^3.12.1
     date-fns: ^2.21.3
     date-fns-tz: ^1.1.4
@@ -11897,10 +11897,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/uuid@npm:^8.3.0":
-  version: 8.3.0
-  resolution: "@types/uuid@npm:8.3.0"
-  checksum: 0f46b15020b9c252473fb327a6491fd7d238c7b5bbaebd32195a0de178db040f6abb96902507ba25dd4a673cdd9cc28b8880512dba54561e8bc60d8f326c1e30
+"@types/uuid@npm:8.3.4":
+  version: 8.3.4
+  resolution: "@types/uuid@npm:8.3.4"
+  checksum: 6f11f3ff70f30210edaa8071422d405e9c1d4e53abbe50fdce365150d3c698fe7bbff65c1e71ae080cbfb8fded860dbb5e174da96fdbbdfcaa3fb3daa474d20f
   languageName: node
   linkType: hard
 

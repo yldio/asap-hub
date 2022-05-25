@@ -1,6 +1,5 @@
 import {
   colorWithTransparency,
-  crossQuery,
   drawerQuery,
   navigationGrey,
   paper,
@@ -27,9 +26,7 @@ const userMenuShownStyles = css({
   [drawerQuery]: {
     backgroundColor: navigationGrey.rgb,
   },
-  [crossQuery]: {
-    display: 'unset',
-  },
+  display: 'unset',
 });
 const buttonTextStyles = css({
   [smallDesktopQuery]: {

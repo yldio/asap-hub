@@ -21,10 +21,10 @@ describe('UserNavigation', () => {
   });
 
   it('opens user menu when clicked', async () => {
-    const { getByLabelText, findByRole } = render(<UserNavigation />);
+    const { getByLabelText, getByText } = render(<UserNavigation />);
 
     userEvent.click(getByLabelText(/toggle.+user menu/i));
 
-    expect(await findByRole('list')).toBeVisible();
+    expect(getByText(/Log Out/i, { selector: 'p' })).toBeVisible();
   });
 });

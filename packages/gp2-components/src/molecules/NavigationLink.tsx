@@ -10,6 +10,7 @@ const horizontalNavigationStyles = css({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  width: '80px',
 });
 
 const NavigationLink: React.FC<NavigationLinkProps> = ({
@@ -18,10 +19,10 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   ...props
 }) => (
   <Link {...props}>
-    <div css={horizontalNavigationStyles}>
+    <span css={horizontalNavigationStyles}>
       {icon}
       {children}
-    </div>
+    </span>
   </Link>
 );
 

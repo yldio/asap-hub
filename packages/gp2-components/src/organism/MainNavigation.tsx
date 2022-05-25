@@ -1,13 +1,9 @@
-import {
-  discoverIcon,
-  NavigationLink,
-  networkIcon,
-  // pixels,
-} from '@asap-hub/react-components';
+import { discoverIcon, networkIcon } from '@asap-hub/react-components';
 
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React from 'react';
+import NavigationLink from '../molecules/NavigationLink';
 
 // const { perRem, vminLinearCalc, mobileScreen, largeDesktopScreen } = pixels;
 
@@ -24,29 +20,13 @@ const MainNavigation: React.FC = () => (
   <nav>
     <ul css={listStyles}>
       <li>
-        <NavigationLink href={'/'}>
-          <div
-            css={css({
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            })}
-          >
-            {discoverIcon} Home
-          </div>
+        <NavigationLink href={'/'} icon={discoverIcon}>
+          Home
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={network({}).$}>
-          <div
-            css={css({
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            })}
-          >
-            {networkIcon} Network
-          </div>
+        <NavigationLink href={network({}).$} icon={networkIcon}>
+          Network
         </NavigationLink>
       </li>
     </ul>

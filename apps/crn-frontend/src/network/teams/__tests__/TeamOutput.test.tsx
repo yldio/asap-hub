@@ -212,6 +212,43 @@ describe('TeamOutput', () => {
     );
   });
 
+  it('will toast server side errors for unknown errors in edit mode', async () => {
+    const link = 'https://example42.com';
+    const title = 'example42 title';
+    const description = 'example42 description';
+    const type = 'Animal Model';
+    const doi = '10.0777';
+
+    mockCreateTeamResearchOutput.mockRejectedValue(
+      new Error('Something went wrong'),
+    );
+
+    await renderPage({
+      teamId: '42',
+      outputDocumentType: 'article',
+      researchOutputData: { ...createResearchOutputResponse(), doi },
+    });
+
+    const { publish } = await mandatoryFields(
+      {
+        link,
+        title,
+        description,
+        type,
+        doi,
+      },
+      true,
+      true,
+    );
+
+    await publish();
+
+    expect(mockCreateTeamResearchOutput).toHaveBeenCalled();
+    expect(mockToast).toHaveBeenCalledWith(
+      'There was an error and we were unable to save your changes. Please try again.',
+    );
+  });
+
   it.each<{
     param: OutputDocumentTypeParameter;
     outputType: ResearchOutputDocumentType;
@@ -293,6 +330,7 @@ async function mandatoryFields(
     doi?: string;
   },
   isLinkRequired: boolean = false,
+  isEditMode: boolean = false,
 ) {
   const url = isLinkRequired ? /url \(required\)/i : /url \(optional\)/i;
 
@@ -316,7 +354,9 @@ async function mandatoryFields(
     }),
     doi,
   );
-  const button = screen.getByRole('button', { name: /Publish/i });
+  const button = isEditMode
+    ? screen.getByRole('button', { name: /Save/i })
+    : screen.getByRole('button', { name: /Publish/i });
   return {
     publish: async () => {
       userEvent.click(button);

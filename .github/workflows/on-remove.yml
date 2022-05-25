@@ -36,7 +36,7 @@ jobs:
         run: yarn rebuild
       - name: Remove CF Stack
         if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
-        run: yarn sls remove --verbose
+        run: yarn workspace @asap-hub/crn-server run pnpify sls remove --verbose
         continue-on-error: true
         env:
           CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}

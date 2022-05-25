@@ -60,7 +60,7 @@ jobs:
           path: 'crn-sls-package'
       - name: Deploy
         run: |
-          yarn sls deploy --package crn-sls-package --verbose
+          yarn workspace @asap-hub/crn-server run pnpify serverless deploy --package $PWD/crn-sls-package
         env:
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
           CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}

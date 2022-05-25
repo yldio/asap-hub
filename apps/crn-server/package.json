@@ -83,6 +83,7 @@
     "@graphql-tools/mock": "^8.4.0",
     "@graphql-tools/schema": "^8.2.0",
     "@graphql-typed-document-node/core": "^3.1.0",
+    "@serverless/typescript": "^2.59.0",
     "@types/apr-intercept": "workspace:*",
     "@types/aws-lambda": "8.10.97",
     "@types/chance": "^1.1.1",
@@ -111,6 +112,7 @@
     "graphql-typescript-integration": "^1.2.0",
     "jwt-encode": "^1.0.1",
     "node-dev": "^6.7.0",
+    "param-case": "^3.0.4",
     "stream-json": "^1.7.2",
     "supertest": "^6.2.2",
     "yargs": "^17.3.1"

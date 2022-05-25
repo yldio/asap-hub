@@ -207,7 +207,7 @@ jobs:
       - name: Generate package
         shell: bash
         run: |
-          yarn sls package --package crn-sls-package
+          yarn workspace @asap-hub/crn-server run pnpify serverless package --package $PWD/crn-sls-package
         env:
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
           CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}

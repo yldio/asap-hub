@@ -33,9 +33,7 @@ module.exports = {
   externals: ['aws-sdk'],
   plugins: [
     new CopyPlugin({
-      patterns: [
-        { from: './apps/crn-server/src/migrations', to: './migrations' },
-      ],
+      patterns: [{ from: './src/migrations', to: './migrations' }],
     }),
   ],
 };

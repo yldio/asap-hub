@@ -1,7 +1,7 @@
 import { AWS } from '@serverless/typescript';
 import assert from 'assert';
 import { paramCase } from 'param-case';
-import pkg from './package.json';
+import pkg from '../../package.json';
 
 const { NODE_ENV = 'development' } = process.env;
 
@@ -37,9 +37,9 @@ const algoliaIndex = ALGOLIA_INDEX
   : `asap-hub_${envRef}`;
 const service = paramCase(pkg.name);
 export const plugins = [
-  'serverless-s3-sync',
-  'serverless-iam-roles-per-function',
-  'serverless-webpack',
+  './serverless-plugins/serverless-s3-sync',
+  './serverless-plugins/serverless-iam-roles-per-function',
+  './serverless-plugins/serverless-webpack',
 ];
 
 const eventBusSource = 'asap.entity-updated';
@@ -162,32 +162,32 @@ const serverlessConfig: AWS = {
       {
         bucketName: '${self:service}-${self:provider.stage}-frontend',
         deleteRemoved: false,
-        localDir: 'apps/crn-frontend/build',
+        localDir: '../crn-frontend/build',
       },
       {
         bucketName: '${self:service}-${self:provider.stage}-auth-frontend',
         bucketPrefix: '.auth',
-        localDir: 'apps/auth-frontend/build',
+        localDir: '../auth-frontend/build',
       },
       {
         bucketName: '${self:service}-${self:provider.stage}-storybook',
         bucketPrefix: '.storybook',
-        localDir: 'apps/storybook/build',
+        localDir: '../storybook/build',
       },
       {
         bucketName: '${self:service}-${self:provider.stage}-messages-static',
         deleteRemoved: false,
         bucketPrefix: '.messages-static',
-        localDir: 'apps/messages/build-templates/static',
+        localDir: '../messages/build-templates/static',
       },
     ],
     webpack: {
-      config: 'serverless/webpack.config.js',
+      config: './webpack.config.js',
     },
   },
   functions: {
     apiHandler: {
-      handler: 'apps/crn-server/src/handlers/api-handler.apiHandler',
+      handler: './src/handlers/api-handler.apiHandler',
       events: [
         {
           httpApi: {
@@ -201,8 +201,7 @@ const serverlessConfig: AWS = {
       },
     },
     auth0FetchByCode: {
-      handler:
-        'apps/crn-server/src/handlers/webhooks/fetch-by-code/handler.handler',
+      handler: './src/handlers/webhooks/fetch-by-code/handler.handler',
       events: [
         {
           httpApi: {
@@ -218,8 +217,7 @@ const serverlessConfig: AWS = {
       },
     },
     auth0ConnectByCode: {
-      handler:
-        'apps/crn-server/src/handlers/webhooks/webhook-connect-by-code.handler',
+      handler: './src/handlers/webhooks/webhook-connect-by-code.handler',
       events: [
         {
           httpApi: {
@@ -234,8 +232,7 @@ const serverlessConfig: AWS = {
       },
     },
     subscribeCalendar: {
-      handler:
-        'apps/crn-server/src/handlers/calendar/subscribe-handler.handler',
+      handler: './src/handlers/calendar/subscribe-handler.handler',
       events: [
         {
           eventBridge: {
@@ -254,8 +251,7 @@ const serverlessConfig: AWS = {
       },
     },
     resubscribeCalendars: {
-      handler:
-        'apps/crn-server/src/handlers/calendar/resubscribe-handler.handler',
+      handler: './src/handlers/calendar/resubscribe-handler.handler',
       timeout: 120,
       events: [
         {
@@ -268,7 +264,7 @@ const serverlessConfig: AWS = {
       },
     },
     syncUserOrcid: {
-      handler: 'apps/crn-server/src/handlers/user/sync-orcid-handler.handler',
+      handler: './src/handlers/user/sync-orcid-handler.handler',
       events: [
         {
           eventBridge: {
@@ -285,7 +281,7 @@ const serverlessConfig: AWS = {
       ],
     },
     inviteUser: {
-      handler: 'apps/crn-server/src/handlers/user/invite-handler.handler',
+      handler: './src/handlers/user/invite-handler.handler',
       events: [
         {
           eventBridge: {
@@ -309,8 +305,7 @@ const serverlessConfig: AWS = {
       },
     },
     indexResearchOutput: {
-      handler:
-        'apps/crn-server/src/handlers/research-output/index-handler.handler',
+      handler: './src/handlers/research-output/index-handler.handler',
       events: [
         {
           eventBridge: {
@@ -333,7 +328,7 @@ const serverlessConfig: AWS = {
       },
     },
     indexUser: {
-      handler: 'apps/crn-server/src/handlers/user/index-handler.handler',
+      handler: './src/handlers/user/index-handler.handler',
       events: [
         {
           eventBridge: {
@@ -357,8 +352,7 @@ const serverlessConfig: AWS = {
       },
     },
     indexExternalAuthor: {
-      handler:
-        'apps/crn-server/src/handlers/external-author/index-handler.handler',
+      handler: './src/handlers/external-author/index-handler.handler',
       events: [
         {
           eventBridge: {
@@ -381,8 +375,7 @@ const serverlessConfig: AWS = {
       },
     },
     indexLabUsers: {
-      handler:
-        'apps/crn-server/src/handlers/lab/index-lab-users-handler.handler',
+      handler: './src/handlers/lab/index-lab-users-handler.handler',
       events: [
         {
           eventBridge: {
@@ -406,8 +399,7 @@ const serverlessConfig: AWS = {
     },
     eventsUpdated: {
       timeout: 300,
-      handler:
-        'apps/crn-server/src/handlers/webhooks/webhook-events-updated.handler',
+      handler: './src/handlers/webhooks/webhook-events-updated.handler',
       events: [
         {
           httpApi: {
@@ -422,18 +414,15 @@ const serverlessConfig: AWS = {
       },
     },
     runMigrations: {
-      handler:
-        'apps/crn-server/src/handlers/webhooks/webhook-run-migrations.run',
+      handler: './src/handlers/webhooks/webhook-run-migrations.run',
       timeout: 900,
     },
     rollbackMigrations: {
-      handler:
-        'apps/crn-server/src/handlers/webhooks/webhook-run-migrations.rollback',
+      handler: './src/handlers/webhooks/webhook-run-migrations.rollback',
       timeout: 900,
     },
     invalidateCache: {
-      handler:
-        'apps/crn-server/src/handlers/invalidate-cache/invalidate-handler.handler',
+      handler: './src/handlers/invalidate-cache/invalidate-handler.handler',
       events: [
         {
           s3: {
@@ -459,7 +448,7 @@ const serverlessConfig: AWS = {
     },
     indexTeamResearchOutputs: {
       handler:
-        'apps/crn-server/src/handlers/teams/index-team-reasearch-outputs-handler.handler',
+        './src/handlers/teams/index-team-reasearch-outputs-handler.handler',
       events: [
         {
           eventBridge: {
@@ -477,8 +466,7 @@ const serverlessConfig: AWS = {
       },
     },
     indexTeamUsers: {
-      handler:
-        'apps/crn-server/src/handlers/teams/index-team-users-handler.handler',
+      handler: './src/handlers/teams/index-team-users-handler.handler',
       events: [
         {
           eventBridge: {
@@ -496,7 +484,7 @@ const serverlessConfig: AWS = {
       },
     },
     squidexWebhook: {
-      handler: 'apps/crn-server/src/handlers/webhooks/webhook-squidex.handler',
+      handler: './src/handlers/webhooks/webhook-squidex.handler',
       events: [
         {
           httpApi: {
@@ -513,8 +501,7 @@ const serverlessConfig: AWS = {
     ...(NODE_ENV === 'production'
       ? {
           cronjobSyncOrcid: {
-            handler:
-              'apps/crn-server/src/handlers/webhooks/cronjob-sync-orcid.handler',
+            handler: './src/handlers/webhooks/cronjob-sync-orcid.handler',
             events: [
               {
                 schedule: 'rate(1 hour)', // run every hour

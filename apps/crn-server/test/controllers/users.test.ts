@@ -204,22 +204,28 @@ describe('Users controller', () => {
   });
 
   describe('FetchById', () => {
-    test.only('Should throw when user is not found', async () => {
-      // const mockResponse = getSquidexUserGraphqlResponse();
-      // mockResponse.findUsersContent = null;
-      // squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+    test('Should throw when user is not found', async () => {
       mockUserDataProvider.fetchById = jest.fn().mockResolvedValue(null);
       await expect(
         usersMockGraphqlClient.fetchById('not-found'),
       ).rejects.toThrow(NotFoundError);
     });
 
-    test.only('Should return the user when it finds it', async () => {
+    test('Should return the user when it finds it', async () => {
       mockUserDataProvider.fetchById = jest
         .fn()
         .mockResolvedValue(getUserDataObject());
       const result = await usersMockGraphqlClient.fetchById('user-id');
       expect(result).toEqual(getUserResponse());
+    });
+    test('Should default onboarded flag to true when its null', async () => {
+      const userData = getUserDataObject();
+      userData.onboarded = null;
+      mockUserDataProvider.fetchById = jest.fn().mockResolvedValue(userData);
+
+      const result = await usersMockGraphqlClient.fetchById('user-id');
+
+      expect(result?.onboarded).toEqual(true);
     });
   });
 

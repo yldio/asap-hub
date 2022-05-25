@@ -1,5 +1,5 @@
 import {
-  LabResponse,
+  Lab,
   OrcidWork,
   OrcidWorkType,
   orcidWorkType,
@@ -99,7 +99,7 @@ export const parseGraphQLUser = (item: GraphQLUser): UserResponse => {
   const displayName = `${item.flatData.firstName} ${item.flatData.lastName}`;
 
   const flatLabs =
-    item.flatData.labs?.reduce<LabResponse[]>((labs, lab) => {
+    item.flatData.labs?.reduce<Lab[]>((labs, lab) => {
       // skip Labs without names
       if (!lab.flatData.name) {
         return labs;
@@ -276,9 +276,11 @@ const isOrcidWorkType = (data: string): data is OrcidWorkType =>
 
 export const parseUserToResponse = (user: UserDataObject): UserResponse => {
   const displayName = `${user.firstName} ${user.lastName}`;
+  const onboarded = typeof user.onboarded === 'boolean' ? user.onboarded : true;
   return {
     ...user,
     displayName,
+    onboarded,
   };
 };
 
@@ -311,7 +313,7 @@ export const parseGraphQLUserToDataObject = (
   }, {} as { [key: string]: string });
 
   const flatLabs =
-    item.flatData.labs?.reduce<LabResponse[]>((labs, lab) => {
+    item.flatData.labs?.reduce<Lab[]>((labs, lab) => {
       // skip Labs without names
       if (!lab.flatData.name) {
         return labs;
@@ -330,7 +332,7 @@ export const parseGraphQLUserToDataObject = (
     onboarded:
       item.flatData && typeof item.flatData.onboarded === 'boolean'
         ? item.flatData.onboarded
-        : true,
+        : undefined,
     createdDate,
     orcid,
     firstName: item.flatData.firstName || '',

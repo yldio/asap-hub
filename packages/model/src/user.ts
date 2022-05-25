@@ -112,7 +112,7 @@ export interface UserSocialLinks {
 
 export interface UserDataObject extends Invitee {
   id: string;
-  onboarded: boolean;
+  onboarded?: boolean | null;
   contactEmail?: string;
   lastModifiedDate: string;
   createdDate: string;
@@ -132,7 +132,8 @@ export interface UserDataObject extends Invitee {
   social?: UserSocialLinks;
   labs: Lab[];
 }
-export interface UserResponse extends UserDataObject {
+export interface UserResponse extends Omit<UserDataObject, 'onboarded'> {
+  onboarded: boolean;
   displayName: string;
 }
 

@@ -5,6 +5,8 @@ import {
   EventSpeaker,
   MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT,
   isEventStatus,
+  EventSpeakerUserData,
+  EventSpeakerExternalUserData,
 } from '@asap-hub/model';
 import { createURL, parseDate } from '@asap-hub/squidex';
 
@@ -13,6 +15,8 @@ import { parseGraphQLGroup } from './group';
 import {
   Asset,
   EventContentFragment,
+  ExternalAuthors,
+  ExternalAuthorsFlatDataDto,
   Maybe,
   Teams,
   Users,
@@ -33,7 +37,7 @@ export const getMeetingMaterial = <T>(
   return isEmpty ? emptyState : material;
 };
 
-export type EventSpeakerUser = {
+export type GraphqlEventSpeakerUser = {
   __typename: 'Users';
 } & Pick<Users, 'id'> & {
     flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
@@ -46,16 +50,15 @@ export type EventSpeakerUser = {
     };
   };
 
-export const parseEventSpeaker = (
-  user: NonNullable<
-    NonNullable<
-      NonNullable<EventContentFragment['flatData']['speakers']>[number]['user']
-    >[number]
-  >,
-): EventSpeaker['user'] => {
-  if (user.__typename !== 'Users') {
-    throw new Error('Not implemented');
-  }
+export type GraphqlEventSpeakerExternalUser = {
+  __typename: 'ExternalAuthors';
+} & Pick<ExternalAuthors, 'id'> & {
+    flatData: Pick<ExternalAuthorsFlatDataDto, 'name' | 'orcid'>;
+  };
+
+export const parseEventSpeakerUser = (
+  user: GraphqlEventSpeakerUser,
+): EventSpeakerUserData => {
   const flatAvatar = user.flatData.avatar || [];
 
   return {
@@ -69,31 +72,65 @@ export const parseEventSpeaker = (
   };
 };
 
+export const parseEventSpeakerExternalUser = (
+  user: GraphqlEventSpeakerExternalUser,
+): EventSpeakerExternalUserData => ({
+  name: user.flatData.name || '',
+  orcid: user.flatData.orcid || '',
+});
+
 export const parseGraphQLSpeakers = (
   speakers: NonNullable<EventContentFragment['flatData']['speakers']>,
 ): EventSpeaker[] =>
   speakers.map((speaker) => {
     const team = speaker?.team?.[0];
-    const user =
-      (speaker?.user?.[0]?.__typename === 'Users' && speaker?.user?.[0]) ||
-      undefined;
 
     if (!team) {
       throw new Error('Team is required in event speaker');
     }
 
-    const role =
-      user?.flatData.teams
-        ?.filter((t) => t.id && t.id[0]?.id === team.id)
-        .filter((s) => s.role)[0]?.role || undefined;
+    const user = speaker?.user?.[0];
+
+    if (!user) {
+      return {
+        team: {
+          id: team.id,
+          displayName: team.flatData.displayName ?? '',
+        },
+      };
+    }
+
+    if (user.__typename === 'Users') {
+      const role =
+        user?.flatData.teams
+          ?.filter((t) => t.id && t.id[0]?.id === team.id)
+          .filter((s) => s.role)[0]?.role || undefined;
+
+      if (!role) {
+        return {
+          team: {
+            id: team.id,
+            displayName: team.flatData.displayName ?? '',
+          },
+        };
+      }
+
+      return {
+        team: {
+          id: team.id,
+          displayName: team.flatData.displayName ?? '',
+        },
+        user: parseEventSpeakerUser(user),
+        role,
+      };
+    }
 
     return {
       team: {
         id: team.id,
         displayName: team.flatData.displayName ?? '',
       },
-      user: (user && parseEventSpeaker(user)) || undefined,
-      role,
+      externalUser: parseEventSpeakerExternalUser(user),
     };
   });
 

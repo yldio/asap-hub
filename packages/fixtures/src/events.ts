@@ -1,6 +1,6 @@
 import {
   EventResponse,
-  EventSpeakerUser,
+  EventSpeakerUserData,
   ListEventResponse,
   EventSpeaker,
   TeamResponse,
@@ -10,7 +10,9 @@ import { addHours, subHours } from 'date-fns';
 import { createCalendarResponse } from './calendars';
 import { createGroupResponse } from './groups';
 
-export const createSpeakerUserResponse = (itemIndex = 0): EventSpeakerUser => ({
+export const createSpeakerUserResponse = (
+  itemIndex = 0,
+): EventSpeakerUserData => ({
   id: `user-id-${itemIndex}`,
   firstName: 'John',
   lastName: 'Doe',

@@ -100,14 +100,16 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
         <Headline4 styleAsHeading={4}>Role</Headline4>
       </div>
       <div css={gridStyles}>
-        {speakers.map(({ user, team, role }, index) => (
+        {speakers.map((speaker, index) => (
           <div key={`speaker-id-${index}`} css={speakerListStyles}>
             <div css={groupStyle}>
               <div css={labelStyle}>
                 <span>Team</span>
               </div>
-              <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
-                {team.displayName}
+              <Link
+                href={network({}).teams({}).team({ teamId: speaker.team.id }).$}
+              >
+                {speaker.team.displayName}
               </Link>
             </div>
             <div css={groupStyle}>
@@ -115,16 +117,18 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
                 <span>Speaker</span>
               </div>
               <div css={userStyles}>
-                {isInternalEventUser(user) ? (
-                  <Avatar {...user} imageUrl={user.avatarUrl} />
+                {'user' in speaker && isInternalEventUser(speaker.user) ? (
+                  <Avatar {...speaker.user} imageUrl={speaker.user.avatarUrl} />
                 ) : (
                   <div css={placeholderStyle}>{userPlaceholderIcon}</div>
                 )}
-                {(isInternalEventUser(user) && (
+                {('user' in speaker && isInternalEventUser(speaker.user) && (
                   <Link
-                    href={network({}).users({}).user({ userId: user.id }).$}
+                    href={
+                      network({}).users({}).user({ userId: speaker.user.id }).$
+                    }
                   >
-                    {user.displayName}
+                    {speaker.user.displayName}
                   </Link>
                 )) || <span css={toBeAnnouncedStyle}>{userToBeAnnounced}</span>}
               </div>
@@ -133,7 +137,7 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
               <div css={labelStyle}>
                 <span>Role</span>
               </div>
-              <span>{role || `—`}</span>
+              <span>{('role' in speaker && speaker.role) || `—`}</span>
             </div>
           </div>
         ))}

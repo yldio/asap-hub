@@ -1,7 +1,7 @@
 import {
   UserResponse,
   ExternalAuthorResponse,
-  EventSpeakerUser,
+  EventSpeakerUserData,
 } from '@asap-hub/model';
 
 export const isInternalUser = (
@@ -9,8 +9,8 @@ export const isInternalUser = (
 ): author is UserResponse => (author as UserResponse).email !== undefined;
 
 export const isInternalEventUser = (
-  user: EventSpeakerUser | undefined,
-): user is EventSpeakerUser => {
+  user: EventSpeakerUserData | undefined,
+): user is EventSpeakerUserData => {
   if (user?.displayName) return true;
   return false;
 };

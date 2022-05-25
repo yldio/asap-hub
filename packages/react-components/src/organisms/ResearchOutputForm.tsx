@@ -1,4 +1,5 @@
 import {
+  convertDecisionToBoolean,
   DecisionOption,
   ResearchOutputDocumentType,
   ResearchOutputIdentifierType,
@@ -271,9 +272,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
       serverErrors={serverValidationErrors}
       dirty={isDirty()}
       onSave={() => {
-        const convertDecisionToBoolean = (decision: DecisionOption): boolean =>
-          decision === 'Yes';
-
         const identifierField = createIdentifierField(
           identifierType,
           identifier,

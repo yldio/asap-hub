@@ -183,6 +183,16 @@ describe('createTeamResearchOutput', () => {
       `"Failed to create research output for teams 90210 Expected status 201. Received status 500."`,
     );
   });
+
+  it('errors for an error status in edit mode', async () => {
+    nock(API_BASE_URL).put('/research-outputs/123').reply(500, {});
+
+    await expect(
+      updateTeamResearchOutput(payload, 'Bearer x', '123'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to update research output for teams 90210 Expected status 201. Received status 500."`,
+    );
+  });
 });
 describe('getLabs', () => {
   it('makes an authorized GET request for labs', async () => {

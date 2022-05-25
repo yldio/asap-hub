@@ -90,34 +90,24 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const researchTags = useResearchTags();
 
   const handleSave = (output: ResearchOutputPostRequest) =>
-    createResearchOutput(output).catch((error: unknown) => {
-      if (error instanceof BackendError) {
-        const { response } = error;
-        if (
-          isValidationErrorResponse(response) &&
-          validationErrorsAreSupported(response, ['/link', '/title'])
-        ) {
-          setErrors(response.data);
-          return;
-        }
-      }
-      throw error;
-    });
+    createResearchOutput(output).catch(handleError);
 
   const handleUpdate = (output: ResearchOutputPutRequest) =>
-    updateResearchOutput(output).catch((error: unknown) => {
-      if (error instanceof BackendError) {
-        const { response } = error;
-        if (
-          isValidationErrorResponse(response) &&
-          validationErrorsAreSupported(response, ['/link', '/title'])
-        ) {
-          setErrors(response.data);
-          return;
-        }
+    updateResearchOutput(output).catch(handleError);
+
+  const handleError = (error: unknown) => {
+    if (error instanceof BackendError) {
+      const { response } = error;
+      if (
+        isValidationErrorResponse(response) &&
+        validationErrorsAreSupported(response, ['/link', '/title'])
+      ) {
+        setErrors(response.data);
+        return;
       }
-      throw error;
-    });
+    }
+    throw error;
+  };
 
   if (canCreateUpdate && team) {
     return (

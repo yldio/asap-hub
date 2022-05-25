@@ -40,52 +40,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup-environment
+      - name: Deploy sls for crn
+        uses: ./.github/actions/sls-deployment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Cache build output
-        uses: ./.github/actions/cache-build
-        with:
-          cache-prefix: ${{ steps.setup.outputs.cache-prefix-frontend }}
-          environment-name: ${{ inputs.environment-name }}
-      - name: Cache build typecheck output
-        uses: ./.github/actions/cache-unplugged
-        with:
-          environment-name: ${{ inputs.environment-name }}
-      - uses: actions/download-artifact@v3
-        with:
-          name: crn-sls-package-${{ inputs.environment-name }}
-          path: 'crn-sls-package'
-      - name: Deploy
-        run: |
-          yarn workspace @asap-hub/crn-server run pnpify serverless deploy --package $PWD/crn-sls-package
-        env:
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
-          CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
-          CRN_APP_URL: ${{ steps.setup.outputs.crn-app-url }}
+          app: crn-server
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
-          AWS_REGION: ${{ steps.setup.outputs.aws-region }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          CURRENT_REVISION: ${{ github.sha }}
           LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
-          NODE_ENV: 'production'
-          NODE_OPTIONS: '--max_old_space_size=4096'
-          SENTRY_DSN_API: ${{ steps.setup.outputs.sentry-dsn-api }}
-          SENTRY_DSN_CALENDAR: ${{ steps.setup.outputs.sentry-dsn-calendar }}
-          SENTRY_DSN_USER_INVITE: ${{ steps.setup.outputs.sentry-dsn-user-invite }}
-          SLS_STAGE: ${{ steps.setup.outputs.sls-stage}}
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
-          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
           SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   gp2-sls-deploy:
     concurrency:
-      group: gp2-${{ github.head_ref || inputs.environment-name }}
+      group: crn-${{ github.head_ref || inputs.environment-name }}
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
@@ -98,39 +66,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup-environment
+      - name: Deploy sls for gp2
+        uses: ./.github/actions/sls-deployment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Cache build output
-        uses: ./.github/actions/cache-build
-        with:
-          cache-prefix: ${{ steps.setup.outputs.cache-prefix-frontend }}
-          environment-name: ${{ inputs.environment-name }}
-      - name: Cache build typecheck output
-        uses: ./.github/actions/cache-unplugged
-        with:
-          environment-name: ${{ inputs.environment-name }}
-      - uses: actions/download-artifact@v3
-        with:
-          name: gp2-sls-package-${{ inputs.environment-name }}
-          path: 'gp2-sls-package'
-      - name: Deploy
-        run: |
-          yarn workspace @asap-hub/gp2-server run pnpify serverless deploy --package $PWD/gp2-sls-package
-        env:
+          app: gp2-server
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_REGION: ${{ steps.setup.outputs.aws-region }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
-          GP2_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.gp2-aws-acm-certificate-arn }}
-          NODE_ENV: 'production'
-          SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
-          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
           SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+          SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   algolia-settings:
     needs: [crn-sls-deploy]

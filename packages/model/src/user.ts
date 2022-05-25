@@ -141,7 +141,7 @@ export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
   algoliaApiKey: string;
 };
 
-export interface UserPatchRequest {
+export interface UserPatchDataObject {
   contactEmail?: string;
   firstName?: string;
   lastName?: string;
@@ -161,6 +161,8 @@ export interface UserPatchRequest {
   social?: Omit<UserSocialLinks, 'orcid'>;
   onboarded?: boolean;
 }
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface UserPatchRequest extends UserPatchDataObject {}
 
 export interface UserAvatarPostRequest {
   avatar: string;

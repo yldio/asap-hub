@@ -1,20 +1,33 @@
+import { NotFoundError } from '@asap-hub/errors';
 import { UserResponse } from '@asap-hub/model';
+import { config, RestUser } from '@asap-hub/squidex';
+import nock, { DataMatcherMap } from 'nock';
+import { FetchUsersOptions } from '../../src/controllers/users';
 import createUserDataProvider from '../../src/data-providers/users';
 import {
+  fetchUserResponse,
   getSquidexUserGraphqlResponse,
+  getSquidexUsersGraphqlResponse,
   getUserDataObject,
 } from '../fixtures/users.fixtures';
+import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
 describe('User data provider', () => {
+  const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
+  const userDataProvider = createUserDataProvider(squidexGraphqlClientMock);
+  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
+  const usersMockGraphqlServer = createUserDataProvider(
+    squidexGraphqlClientMockServer,
+  );
+  beforeAll(() => {
+    identity();
+  });
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
   describe('FetchById', () => {
-    const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-    const userDataProvider = createUserDataProvider(squidexGraphqlClientMock);
-    const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-    const usersMockGraphqlServer = createUserDataProvider(
-      squidexGraphqlClientMockServer,
-    );
     // const usersMockGraphqlServer = new Users(squidexGraphqlClientMockServer);
     test('Should fetch the users from squidex graphql', async () => {
       const result = await usersMockGraphqlServer.fetchById('user-id');
@@ -242,6 +255,307 @@ describe('User data provider', () => {
 
       expect(result?.orcidWorks![0]!.publicationDate).toEqual(
         expectedOrcidWorksPublicationDate,
+      );
+    });
+  });
+  describe('update', () => {
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
+    const userId = 'user-id';
+    test('Should throw when sync asset fails', async () => {
+      nock(config.baseUrl)
+        .patch(`/api/content/${config.appName}/users/${userId}`, {
+          jobTitle: { iv: 'CEO' },
+        })
+        .reply(404);
+
+      await expect(
+        userDataProvider.update(userId, { jobTitle: 'CEO' }),
+      ).rejects.toThrow(NotFoundError);
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update job title through a clean-update', async () => {
+      nock(config.baseUrl)
+        .patch(`/api/content/${config.appName}/users/${userId}`, {
+          jobTitle: { iv: 'CEO' },
+        })
+        .reply(200, fetchUserResponse);
+
+      expect(
+        await userDataProvider.update(userId, { jobTitle: 'CEO' }),
+      ).not.toBeDefined();
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update the country and city through a clean-update', async () => {
+      nock(config.baseUrl)
+        .patch(`/api/content/${config.appName}/users/${userId}`, {
+          country: { iv: 'United Kingdom' },
+          city: { iv: 'Brighton' },
+        })
+        .reply(200, fetchUserResponse);
+      expect(
+        await userDataProvider.update(userId, {
+          country: 'United Kingdom',
+          city: 'Brighton',
+        }),
+      ).not.toBeDefined();
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should delete user fields', async () => {
+      const mockResponse = getUserDataObject();
+
+      delete mockResponse.contactEmail;
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/users/${userId}`)
+        .reply(200, fetchUserResponse)
+        .put(`/api/content/${config.appName}/users/${userId}`, {
+          ...fetchUserResponse.data,
+          contactEmail: { iv: null },
+        } as { [k: string]: any })
+        .reply(200, fetchUserResponse); // this response is ignored
+
+      userDataProvider.fetchById = jest.fn().mockResolvedValue(mockResponse);
+      const result = await userDataProvider.update(userId, {
+        contactEmail: '',
+      });
+      expect(result).not.toBeDefined();
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update social and questions', async () => {
+      const mockResponse = getUserDataObject();
+      mockResponse.questions = ['To be or not to be?'];
+      mockResponse.social = {
+        github: 'johnytiago',
+      };
+      userDataProvider.fetchById = jest.fn().mockResolvedValue(mockResponse);
+
+      nock(config.baseUrl)
+        .patch(`/api/content/${config.appName}/users/${userId}`, {
+          questions: { iv: [{ question: 'To be or not to be?' }] },
+          social: { iv: [{ github: 'johnytiago' }] },
+        } as { [k: string]: any })
+        .reply(200, fetchUserResponse);
+
+      const result = await userDataProvider.update(userId, {
+        questions: ['To be or not to be?'],
+        social: {
+          github: 'johnytiago',
+        },
+      });
+      expect(nock.isDone()).toBe(true);
+      expect(result).not.toBeDefined();
+    });
+    test('Should update Research Interests and Responsibility', async () => {
+      const mockResponse = getUserDataObject();
+      mockResponse.researchInterests = 'new research interests';
+      mockResponse.responsibilities = 'new responsibilities';
+      userDataProvider.fetchById = jest.fn().mockResolvedValue(mockResponse);
+
+      const expectedPatchRequest: Partial<RestUser['data']> = {
+        researchInterests: {
+          iv: 'new research interests',
+        },
+        responsibilities: {
+          iv: 'new responsibilities',
+        },
+      };
+
+      nock(config.baseUrl)
+        .patch(
+          `/api/content/${config.appName}/users/${userId}`,
+          expectedPatchRequest as DataMatcherMap,
+        )
+        .reply(200, fetchUserResponse);
+
+      const result = await userDataProvider.update(userId, {
+        researchInterests: 'new research interests',
+        responsibilities: 'new responsibilities',
+      });
+      expect(nock.isDone()).toBe(true);
+      expect(result).not.toBeDefined();
+    });
+    test('should call put when teams is populated', async () => {
+      const mockResponse = getUserDataObject();
+      mockResponse.teams = [{ id: 'team-id', role: 'Key Personnel' }];
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/users/${userId}`)
+        .reply(200, fetchUserResponse)
+        .put(`/api/content/${config.appName}/users/${userId}`, {
+          ...fetchUserResponse.data,
+          teams: { iv: [{ id: 'team-id' }] },
+        } as { [k: string]: any })
+        .reply(200, fetchUserResponse); // this response is ignored
+
+      userDataProvider.fetchById = jest.fn().mockResolvedValue(mockResponse);
+      const result = await userDataProvider.update(userId, {
+        teams: [{ id: 'team-id' }],
+      });
+      expect(nock.isDone()).toBe(true);
+      expect(result).not.toBeDefined();
+    });
+  });
+  describe('Fetch', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+    test('Should fetch the users from squidex graphql', async () => {
+      const result = await usersMockGraphqlServer.fetch({});
+
+      expect(result).toMatchObject([getUserDataObject()]);
+    });
+    test('Should return an empty result', async () => {
+      const mockResponse = getSquidexUsersGraphqlResponse();
+      mockResponse.queryUsersContentsWithTotal!.items = [];
+      mockResponse.queryUsersContentsWithTotal!.total = 0;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await userDataProvider.fetch({});
+      expect(result).toEqual([]);
+    });
+    test('Should return an empty result when the client returns a response with query property set to null', async () => {
+      const mockResponse = getSquidexUsersGraphqlResponse();
+      mockResponse.queryUsersContentsWithTotal = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await userDataProvider.fetch({});
+      expect(result).toEqual([]);
+    });
+    test('Should return an empty result when the client returns a response with items property set to null', async () => {
+      const mockResponse = getSquidexUsersGraphqlResponse();
+      mockResponse.queryUsersContentsWithTotal!.items = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await userDataProvider.fetch({});
+      expect(result).toEqual([]);
+    });
+
+    test('Should query with filters and return the users', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexUsersGraphqlResponse(),
+      );
+      const fetchOptions: FetchUsersOptions = {
+        take: 12,
+        skip: 2,
+        search: 'first last',
+        filter: {
+          role: ['role', 'Staff'],
+          labId: ['lab-123', 'lab-456'],
+          teamId: ['team-123', 'team-456'],
+        },
+      };
+      const users = await userDataProvider.fetch(fetchOptions);
+
+      const filterQuery =
+        "(data/teams/iv/id eq 'team-123' or data/teams/iv/id eq 'team-456')" +
+        ' and' +
+        " (data/teams/iv/role eq 'role' or data/teams/iv/role eq 'Staff')" +
+        ' and' +
+        " (data/labs/iv eq 'lab-123' or data/labs/iv eq 'lab-456')" +
+        ' and' +
+        ' data/onboarded/iv eq true' +
+        ' and' +
+        " data/role/iv ne 'Hidden'" +
+        ' and' +
+        " ((contains(data/firstName/iv, 'first')" +
+        " or contains(data/lastName/iv, 'first')" +
+        " or contains(data/institution/iv, 'first')" +
+        " or contains(data/expertiseAndResourceTags/iv, 'first'))" +
+        ' and' +
+        " (contains(data/firstName/iv, 'last')" +
+        " or contains(data/lastName/iv, 'last')" +
+        " or contains(data/institution/iv, 'last')" +
+        " or contains(data/expertiseAndResourceTags/iv, 'last')))";
+      expect(squidexGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 12,
+          skip: 2,
+          filter: filterQuery,
+        },
+      );
+      expect(users).toMatchObject([getUserDataObject()]);
+    });
+    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexUsersGraphqlResponse(),
+      );
+      const fetchOptions: FetchUsersOptions = {
+        take: 12,
+        skip: 2,
+        search: "'",
+      };
+      await userDataProvider.fetch(fetchOptions);
+
+      const expectedFilter =
+        "data/onboarded/iv eq true and data/role/iv ne 'Hidden' and" +
+        " ((contains(data/firstName/iv, '%27%27')" +
+        " or contains(data/lastName/iv, '%27%27')" +
+        " or contains(data/institution/iv, '%27%27')" +
+        " or contains(data/expertiseAndResourceTags/iv, '%27%27')))";
+
+      expect(squidexGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 12,
+          skip: 2,
+          filter: expectedFilter,
+        },
+      );
+    });
+    test('Should sanitise double quotation mark by encoding to hex', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexUsersGraphqlResponse(),
+      );
+      const fetchOptions: FetchUsersOptions = {
+        take: 12,
+        skip: 2,
+        search: '"',
+      };
+      await userDataProvider.fetch(fetchOptions);
+
+      const expectedFilter =
+        "data/onboarded/iv eq true and data/role/iv ne 'Hidden' and" +
+        " ((contains(data/firstName/iv, '%22')" +
+        " or contains(data/lastName/iv, '%22')" +
+        " or contains(data/institution/iv, '%22')" +
+        " or contains(data/expertiseAndResourceTags/iv, '%22')))";
+
+      expect(squidexGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 12,
+          skip: 2,
+          filter: expectedFilter,
+        },
+      );
+    });
+    test('Should search with special characters', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexUsersGraphqlResponse(),
+      );
+      const fetchOptions: FetchUsersOptions = {
+        take: 12,
+        skip: 2,
+        search: 'Solène',
+      };
+      await userDataProvider.fetch(fetchOptions);
+
+      const expectedFilter =
+        "data/onboarded/iv eq true and data/role/iv ne 'Hidden' and" +
+        " ((contains(data/firstName/iv, 'Solène')" +
+        " or contains(data/lastName/iv, 'Solène')" +
+        " or contains(data/institution/iv, 'Solène')" +
+        " or contains(data/expertiseAndResourceTags/iv, 'Solène')))";
+
+      expect(squidexGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 12,
+          skip: 2,
+          filter: expectedFilter,
+        },
       );
     });
   });

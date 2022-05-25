@@ -319,6 +319,7 @@ export const getListUserResponse = (): ListUserResponse => ({
   items: [getUserResponse()],
 });
 
+export const getUserDataObjects = () => [getUserDataObject()];
 export const restUserMock = patchResponse;
 
 export const userPatchRequest: UserPatchRequest = {

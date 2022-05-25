@@ -7,7 +7,6 @@ import {
 import {
   config,
   RestUser,
-  sanitiseForSquidex,
   SquidexGraphqlClient,
   SquidexRest,
   SquidexRestClient,
@@ -87,136 +86,17 @@ export default class Users implements UserController {
   }
 
   async update(id: string, update: UserPatchRequest): Promise<UserResponse> {
-    let isFullUpdate = false;
-
-    if (update.teams?.length) {
-      isFullUpdate = true;
-    }
-
-    const cleanUpdate = Object.entries(update).reduce((acc, [key, value]) => {
-      if (value.trim && value.trim() === '') {
-        isFullUpdate = true;
-        acc[key] = { iv: null }; // deletes attribute on PUT requests
-        return acc;
-      }
-
-      // map flat questions to squidex format
-      if (key === 'questions' && value.length) {
-        acc[key] = { iv: value.map((question: string) => ({ question })) };
-        return acc;
-      }
-
-      // we get an object but squidex expects an array of objects
-      if (key === 'social') {
-        acc[key] = { iv: [value] };
-        return acc;
-      }
-
-      acc[key] = { iv: value };
-      return acc;
-    }, {} as { [key: string]: { iv: unknown } });
-
-    if (!isFullUpdate) {
-      await this.userSquidexRestClient.patch(id, cleanUpdate);
-      return this.fetchById(id);
-    }
-
-    const user = await this.userSquidexRestClient.fetchById(id);
-
-    const updatedData = { ...user.data, ...cleanUpdate };
-    await this.userSquidexRestClient.put(id, updatedData);
-
-    // use fetch for proper user teams hydration
+    await this.userDataProvider.update(id, update);
     return this.fetchById(id);
   }
 
   async fetch(options: FetchUsersOptions): Promise<ListUserResponse> {
-    const { take = 8, skip = 0, search } = options;
+    const users = await this.userDataProvider.fetch(options);
 
-    const searchFilter = [
-      ...(search || '')
-        .split(' ')
-        .filter(Boolean) // removes whitespaces
-        .map(sanitiseForSquidex)
-        .reduce(
-          (acc: string[], word: string) =>
-            acc.concat(
-              `(${[
-                [`contains(data/firstName/iv, '${word}')`],
-                [`contains(data/lastName/iv, '${word}')`],
-                [`contains(data/institution/iv, '${word}')`],
-                [`contains(data/expertiseAndResourceTags/iv, '${word}')`],
-              ].join(' or ')})`,
-            ),
-          [],
-        ),
-    ].join(' and ');
+    const total = users.length;
+    const items = total > 0 ? users.map(parseUserToResponse) : [];
 
-    const filterRoles = (options?.filter?.role || [])
-      .reduce(
-        (acc: string[], word: string) =>
-          acc.concat([`data/teams/iv/role eq '${word}'`]),
-        [],
-      )
-      .join(' or ');
-
-    const filterLabs = (options?.filter?.labId || [])
-      .reduce(
-        (acc: string[], labId: string) =>
-          acc.concat([`data/labs/iv eq '${labId}'`]),
-        [],
-      )
-      .join(' or ');
-
-    const filterTeams = (options?.filter?.teamId || [])
-      .reduce(
-        (acc: string[], teamId: string) =>
-          acc.concat([`data/teams/iv/id eq '${teamId}'`]),
-        [],
-      )
-      .join(' or ');
-
-    const filterHidden = "data/role/iv ne 'Hidden'";
-    const filterNonOnboarded = 'data/onboarded/iv eq true';
-
-    const queryFilter = [
-      filterTeams && `(${filterTeams})`,
-      filterRoles && `(${filterRoles})`,
-      filterLabs && `(${filterLabs})`,
-      filterNonOnboarded,
-      filterHidden,
-      searchFilter && `(${searchFilter})`,
-    ]
-      .filter(Boolean)
-      .join(' and ')
-      .trim();
-
-    const { queryUsersContentsWithTotal } =
-      await this.squidexGraphlClient.request<
-        FetchUsersQuery,
-        FetchUsersQueryVariables
-      >(FETCH_USERS, { filter: queryFilter, top: take, skip });
-
-    if (queryUsersContentsWithTotal === null) {
-      return {
-        total: 0,
-        items: [],
-      };
-    }
-
-    const { total, items } = queryUsersContentsWithTotal;
-
-    if (items === null) {
-      return {
-        total: 0,
-        items: [],
-      };
-    }
-
-    return {
-      total,
-      items: items.map(parseGraphQLUser),
-    };
+    return { total, items };
   }
 
   async fetchById(id: string): Promise<UserResponse> {

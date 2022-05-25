@@ -180,9 +180,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   >(researchOutputData?.sharingStatus || 'Network Only');
 
   const [publishDate, setPublishDate] = useState<Date | undefined>(
-    researchOutputData?.publishDate
-      ? new Date(researchOutputData?.publishDate!)
-      : undefined,
+    (researchOutputData?.publishDate &&
+      new Date(researchOutputData?.publishDate)) ||
+      undefined,
   );
 
   const getIdentifierType = (): ResearchOutputIdentifierType => {

@@ -13,6 +13,7 @@ import {
   patchTeam,
   getTeams,
   createTeamResearchOutput,
+  updateTeamResearchOutput,
   getLabs,
 } from '../api';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
@@ -161,6 +162,15 @@ describe('createTeamResearchOutput', () => {
       .reply(201, { id: 123 });
 
     await createTeamResearchOutput(payload, 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('makes an authorized PUT request to create a research output', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .put('/research-outputs/123', payload)
+      .reply(201, { id: 123 });
+
+    await updateTeamResearchOutput(payload, 'Bearer x', '123');
     expect(nock.isDone()).toBe(true);
   });
 

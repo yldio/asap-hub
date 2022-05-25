@@ -19,7 +19,10 @@ import {
 } from '@asap-hub/routing';
 import React, { useContext, useState } from 'react';
 import researchSuggestions from './research-suggestions';
-import { ResearchOutputPostRequest } from '../../../../../packages/model/src/research-output';
+import {
+  ResearchOutputPostRequest,
+  ResearchOutputPutRequest,
+} from '../../../../../packages/model/src/research-output';
 import {
   useAuthorSuggestions,
   useLabSuggestions,
@@ -77,7 +80,9 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
 
   const createResearchOutput = usePostTeamResearchOutput();
-  const updateResearchOutput = usePutTeamResearchOutput(researchOutputData?.id as string);
+  const updateResearchOutput = usePutTeamResearchOutput(
+    researchOutputData?.id as string,
+  );
 
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
@@ -99,7 +104,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
       throw error;
     });
 
-  const handleUpdate = (output: ResearchOutputPostRequest) =>
+  const handleUpdate = (output: ResearchOutputPutRequest) =>
     updateResearchOutput(output).catch((error: unknown) => {
       if (error instanceof BackendError) {
         const { response } = error;

@@ -1,0 +1,79 @@
+name: sls package action
+description: Reusable sls package
+
+inputs:
+  environment-name:
+    description: 'The environment name'
+    required: true
+  app:
+    description: 'The application - crn-server or gp2-server'
+    required: true
+  aws-access-key-id:
+    description: 'AWS Access Key ID'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
+    required: true
+  lightstep-token:
+    description: 'Lightstep Token'
+    required: true
+  squidex-client-secret:
+    description: 'Squidex Client Secret'
+    required: true
+  squidex-shared-secret:
+    description: 'Squidex Shared Secret'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup
+      id: setup
+      uses: ./.github/actions/setup-environment
+      with:
+        environment-name: ${{ inputs.environment-name }}
+    - name: Cache build output
+      uses: ./.github/actions/cache-unplugged
+      with:
+        environment-name: ${{ inputs.environment-name }}
+    - name: Cache build definitions
+      uses: ./.github/actions/cache-build
+      with:
+        cache-prefix: ${{ steps.setup.outputs.cache-prefix-definitions }}
+        environment-name: ${{ inputs.environment-name }}
+    - name: Cache transpile output
+      uses: ./.github/actions/cache-build
+      with:
+        cache-prefix: ${{ steps.setup.outputs.cache-prefix-transpile }}
+        environment-name: ${{ inputs.environment-name }}
+    - name: Generate package
+      shell: bash
+      run: |
+        yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless package --package $PWD/${{ inputs.app }}-sls-package
+      env:
+        ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+        CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
+        CRN_APP_URL: ${{ steps.setup.outputs.crn-app-url }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
+        GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
+        GP2_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.gp2-aws-acm-certificate-arn }}
+        AWS_REGION: ${{ steps.setup.outputs.aws-region }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        CURRENT_REVISION: ${{ github.sha }}
+        LIGHTSTEP_TOKEN: ${{ inputs.lightstep-token }}
+        NODE_ENV: 'production'
+        SENTRY_DSN_API: ${{ steps.setup.outputs.sentry-dsn-api }}
+        SENTRY_DSN_CALENDAR: ${{ steps.setup.outputs.sentry-dsn-calendar }}
+        SENTRY_DSN_USER_INVITE: ${{ steps.setup.outputs.sentry-dsn-user-invite }}
+        SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
+        SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
+        SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+        SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-client-secret }}
+        SQUIDEX_SHARED_SECRET: ${{ inputs.squidex-shared-secret }}
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ${{ inputs.app }}-sls-package-${{ inputs.environment-name }}
+        path: '${{ inputs.app }}-sls-package'
+        retention-days: 1

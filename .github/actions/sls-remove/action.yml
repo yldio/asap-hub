@@ -1,0 +1,68 @@
+name: sls remove action
+description: Reusable sls remove
+
+inputs:
+  environment-name:
+    description: 'The environment name'
+    required: true
+  app:
+    description: 'The application - crn-server or gp2-server'
+    required: true
+  aws-access-key-id:
+    description: 'AWS Access Key ID'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
+    required: true
+  lightstep-token:
+    description: 'Lightstep Token'
+    required: true
+  squidex-client-secret:
+    description: 'Squidex Client Secret'
+    required: true
+  squidex-shared-secret:
+    description: 'Squidex Shared Secret'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup
+      id: setup
+      uses: ./.github/actions/setup-environment
+      with:
+        environment-name: Branch
+    - name: Check PR Number
+      if: ${{ github.event.inputs.pr-number }}
+      uses: ./.github/actions/is-number
+      with:
+        number: ${{ github.event.inputs.pr-number }}
+    - name: Rebuild dependencies
+      shell: bash
+      run: yarn rebuild
+    - name: Remove CF Stack
+      if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
+      shell: bash
+      run: yarn workspace @asap-hub/${{ inputs.app }} run pnpify sls remove --verbose
+      continue-on-error: true
+      env:
+        CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
+        CRN_APP_URL: ${{ steps.setup.outputs.crn-app-url }}
+        CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
+        GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
+        GP2_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.gp2-aws-acm-certificate-arn }}
+        AWS_REGION: ${{ steps.setup.outputs.aws-region }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        CURRENT_REVISION: ${{ github.sha }}
+        LIGHTSTEP_TOKEN: ${{ inputs.lightstep-token }}
+        NODE_ENV: 'production'
+        SENTRY_DSN_API: ${{ steps.setup.outputs.sentry-dsn-api }}
+        SENTRY_DSN_CALENDAR: ${{ steps.setup.outputs.sentry-dsn-calendar }}
+        SENTRY_DSN_USER_INVITE: ${{ steps.setup.outputs.sentry-dsn-user-invite }}
+        SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
+        SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
+        SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+        SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-client-secret }}
+        SQUIDEX_SHARED_SECRET: ${{ inputs.squidex-shared-secret }}

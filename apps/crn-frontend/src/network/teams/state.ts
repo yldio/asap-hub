@@ -32,6 +32,7 @@ import {
   getTeam,
   getTeams,
   patchTeam,
+  updateTeamResearchOutput,
 } from './api';
 
 const teamIndexState = atomFamily<
@@ -188,6 +189,20 @@ export const usePostTeamResearchOutput = () => {
     const researchOutput = await createTeamResearchOutput(
       payload,
       authorization,
+    );
+    setResearchOutputItem(researchOutput);
+    return researchOutput;
+  };
+};
+
+export const usePutTeamResearchOutput = (id: string) => {
+  const authorization = useRecoilValue(authorizationState);
+  const setResearchOutputItem = useSetResearchOutputItem();
+  return async (payload: ResearchOutputPostRequest) => {
+    const researchOutput = await updateTeamResearchOutput(
+      payload,
+      authorization,
+      id,
     );
     setResearchOutputItem(researchOutput);
     return researchOutput;

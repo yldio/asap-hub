@@ -19,6 +19,7 @@ import {
 } from '@asap-hub/routing';
 import React, { useContext, useState } from 'react';
 import researchSuggestions from './research-suggestions';
+import { ResearchOutputPostRequest } from '../../../../../packages/model/src/research-output';
 import {
   useAuthorSuggestions,
   useLabSuggestions,
@@ -26,6 +27,7 @@ import {
   useResearchTags,
   useTeamById,
   useTeamSuggestions,
+  usePutTeamResearchOutput,
 } from './state';
 
 const useParamOutputDocumentType = (
@@ -75,11 +77,42 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
 
   const createResearchOutput = usePostTeamResearchOutput();
+  const updateResearchOutput = usePutTeamResearchOutput(researchOutputData?.id as string);
 
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
   const researchTags = useResearchTags();
+
+  const handleSave = (output: ResearchOutputPostRequest) =>
+    createResearchOutput(output).catch((error: unknown) => {
+      if (error instanceof BackendError) {
+        const { response } = error;
+        if (
+          isValidationErrorResponse(response) &&
+          validationErrorsAreSupported(response, ['/link', '/title'])
+        ) {
+          setErrors(response.data);
+          return;
+        }
+      }
+      throw error;
+    });
+
+  const handleUpdate = (output: ResearchOutputPostRequest) =>
+    updateResearchOutput(output).catch((error: unknown) => {
+      if (error instanceof BackendError) {
+        const { response } = error;
+        if (
+          isValidationErrorResponse(response) &&
+          validationErrorsAreSupported(response, ['/link', '/title'])
+        ) {
+          setErrors(response.data);
+          return;
+        }
+      }
+      throw error;
+    });
 
   if (canCreateUpdate && team) {
     return (
@@ -109,19 +142,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
           }
           researchOutputData={researchOutputData}
           onSave={(output) =>
-            createResearchOutput(output).catch((error: unknown) => {
-              if (error instanceof BackendError) {
-                const { response } = error;
-                if (
-                  isValidationErrorResponse(response) &&
-                  validationErrorsAreSupported(response, ['/link', '/title'])
-                ) {
-                  setErrors(response.data);
-                  return;
-                }
-              }
-              throw error;
-            })
+            researchOutputData ? handleUpdate(output) : handleSave(output)
           }
         />
       </Frame>

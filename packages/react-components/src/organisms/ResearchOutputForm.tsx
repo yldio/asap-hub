@@ -152,10 +152,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const [teams, setTeams] = useState<
     NonNullable<ComponentProps<typeof ResearchOutputContributorsCard>['teams']>
   >(
-    researchOutputData?.teams.map((element) => ({
+    researchOutputData?.teams.map((element, index) => ({
       label: element.displayName,
       value: element.id,
-      isFixed: true,
+      isFixed: index === 0,
     })) || [{ label: team.displayName, value: team.id, isFixed: true }],
   );
 
@@ -181,7 +181,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
 
   const [publishDate, setPublishDate] = useState<Date | undefined>(
     researchOutputData?.publishDate
-      ? new Date(researchOutputData.publishDate as string)
+      ? new Date(researchOutputData?.publishDate!)
       : undefined,
   );
 

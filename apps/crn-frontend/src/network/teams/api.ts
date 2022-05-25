@@ -99,6 +99,38 @@ export const createTeamResearchOutput = async (
   return response;
 };
 
+export const updateTeamResearchOutput = async (
+  researchOutput: ResearchOutputPostRequest,
+  authorization: string,
+  researchOutputId: string,
+): Promise<ResearchOutputResponse> => {
+  const resp = await fetch(
+    `${API_BASE_URL}/research-outputs/${researchOutputId}`,
+    {
+      method: 'PUT',
+      headers: {
+        authorization,
+        'content-type': 'application/json',
+        ...createSentryHeaders(),
+      },
+      body: JSON.stringify(researchOutput),
+    },
+  );
+  const response = await resp.json();
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to update research output for teams ${researchOutput.teams
+        .map((teamId) => teamId)
+        .join(
+          ', ',
+        )} Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      response,
+      resp.status,
+    );
+  }
+  return response;
+};
+
 export const getLabs = async (
   options: GetListOptions,
   authorization: string,

@@ -38,7 +38,7 @@ const identifierMap = {
     placeholder: 'Accession number e.g. AF123456',
     regex: ResearchOutputIdentifierValidationExpression['Accession Number'],
     errorMessage:
-      'Please enter a valid Accession Number which must started with a letter (e.g. NT_123456)',
+      'Please enter a valid Accession Number which must start with a letter (e.g. NT_123456)',
     required: true,
   },
   [ResearchOutputIdentifierType.RRID]: {
@@ -76,13 +76,6 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
     documentType,
     required,
   }) => {
-    const data = useMemo(
-      () =>
-        identifierType === ResearchOutputIdentifierType.Empty
-          ? null
-          : identifierMap[identifierType],
-      [identifierType],
-    );
     const identifiers = useMemo(
       () => getIdentifiers(documentType),
       [documentType],
@@ -116,16 +109,37 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
           getValidationMessage={() => `Please choose an identifier`}
           required={required}
         />
-        {data && (
+
+        <TeamCreateOutputIdentifierField
+          type={identifierType}
+          identifier={identifier}
+          setIdentifier={setIdentifier}
+        />
+      </>
+    );
+  };
+export interface TeamCreateOutputIdentifierFieldProps {
+  identifier: string;
+  setIdentifier: (value: string) => void;
+  type: ResearchOutputIdentifierType;
+}
+export const TeamCreateOutputIdentifierField: React.FC<TeamCreateOutputIdentifierFieldProps> =
+  ({ type, identifier, setIdentifier }) => {
+    const { helpText, placeholder, errorMessage, regex, required } =
+      identifierMap[type];
+
+    return (
+      <>
+        {type !== ResearchOutputIdentifierType.Empty && (
           <LabeledTextField
-            title={identifierType}
-            description={data.helpText}
-            placeholder={data.placeholder}
-            getValidationMessage={() => data.errorMessage}
+            title={type}
+            description={helpText}
+            placeholder={placeholder}
+            getValidationMessage={() => errorMessage}
             value={identifier}
             onChange={setIdentifier}
-            pattern={data.regex}
-            required={data.required}
+            pattern={regex}
+            required={required}
           />
         )}
       </>

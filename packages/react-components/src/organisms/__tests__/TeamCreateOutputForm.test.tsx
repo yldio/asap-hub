@@ -165,8 +165,6 @@ describe('on submit', () => {
     labs: [],
     authors: [],
     teams: ['TEAMID'],
-    asapFunded: false,
-    usedInPublication: false,
     sharingStatus: 'Network Only',
     addedDate: expect.anything(),
     methods: [],
@@ -533,6 +531,31 @@ describe('on submit', () => {
       type: 'Animal Model',
       documentType: 'Lab Resource',
       labCatalogNumber: 'abc123',
+    });
+  });
+
+  describe.each`
+    fieldName              | selector
+    ${'asapFunded'}        | ${/Has this output been funded by ASAP/i}
+    ${'usedInPublication'} | ${/Has this output been used in a publication/i}
+  `('$fieldName can submit', ({ fieldName, selector }) => {
+    it.each`
+      value         | expected
+      ${'Yes'}      | ${true}
+      ${'No'}       | ${false}
+      ${'Not Sure'} | ${undefined}
+    `('when $value then $expected', async ({ value, expected }) => {
+      await setupForm();
+      const funded = screen.getByRole('group', {
+        name: selector,
+      });
+      userEvent.click(within(funded).getByText(value));
+
+      await submitForm();
+      expect(saveFn).toHaveBeenLastCalledWith({
+        ...expectedRequest,
+        [fieldName]: expected,
+      });
     });
   });
 });

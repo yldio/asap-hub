@@ -2,10 +2,12 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputDocumentType,
   ValidationErrorResponse,
+  ResearchOutputResponse,
 } from '@asap-hub/model';
 import {
   ResearchOutputPermissionsContext,
@@ -46,6 +48,7 @@ describe('TeamOutput', () => {
     teamId: string;
     outputDocumentType?: OutputDocumentTypeParameter;
     canCreateUpdate?: boolean;
+    researchOutputData?: ResearchOutputResponse;
   }
 
   it('Renders the research output', async () => {
@@ -65,6 +68,16 @@ describe('TeamOutput', () => {
     expect(
       screen.getByRole('button', { name: /Publish/i }),
     ).toBeInTheDocument();
+  });
+
+  it('Renders the correct button in edit mode', async () => {
+    await renderPage({
+      teamId: '42',
+      outputDocumentType: 'bioinformatics',
+      researchOutputData: createResearchOutputResponse(),
+    });
+
+    expect(screen.getByRole('button', { name: /Save/i })).toBeInTheDocument();
   });
 
   it('switches research output type based on parameter', async () => {
@@ -133,6 +146,12 @@ describe('TeamOutput', () => {
         methods: [],
         organisms: [],
         environments: [],
+        labCatalogNumber: undefined,
+        publishDate: undefined,
+        subtype: undefined,
+        accessInstructions: undefined,
+        asapFunded: false,
+        usedInPublication: false,
       },
       expect.anything(),
     );
@@ -213,6 +232,7 @@ describe('TeamOutput', () => {
     canCreateUpdate = true,
     teamId,
     outputDocumentType = 'bioinformatics',
+    researchOutputData,
   }: RenderPageOptions) {
     const path =
       network.template +
@@ -242,7 +262,10 @@ describe('TeamOutput', () => {
                     value={{ canCreateUpdate }}
                   >
                     <Route path={path}>
-                      <TeamOutput teamId={teamId} />
+                      <TeamOutput
+                        teamId={teamId}
+                        researchOutputData={researchOutputData}
+                      />
                     </Route>
                   </ResearchOutputPermissionsContext.Provider>
                 </StaticRouter>

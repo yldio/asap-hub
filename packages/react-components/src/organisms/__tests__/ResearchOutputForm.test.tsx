@@ -185,6 +185,12 @@ describe('on submit', () => {
     methods: [],
     organisms: [],
     environments: [],
+    labCatalogNumber: undefined,
+    publishDate: undefined,
+    subtype: undefined,
+    accessInstructions: undefined,
+    asapFunded: false,
+    usedInPublication: false,
   };
   type Data = Pick<
     ResearchOutputPostRequest,

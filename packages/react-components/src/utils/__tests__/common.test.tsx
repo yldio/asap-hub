@@ -101,8 +101,12 @@ describe('isLink', () => {
 
 describe('equals', () => {
   const testArray = ['Team ASAP', 'Team Chen', 'Team Allesi'];
-  it('returns true when both array contain the same elements', () => {
-    expect(equals(testArray, testArray.reverse())).toBeTruthy();
+
+  it('returns true when both array contain the same elements in the same order', () => {
+    expect(equals(testArray, testArray.slice())).toBeTruthy();
+  });
+  it('returns false when both arrays have the same values in diff order', () => {
+    expect(equals(testArray, testArray.slice().reverse())).toBeFalsy();
   });
   it('returns false when arrays differ', () => {
     expect(equals(testArray, testArray.slice(0, 1))).toBeFalsy();

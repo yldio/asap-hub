@@ -625,6 +625,27 @@ describe('isDirty', () => {
     ).toBeTruthy();
   });
 
+  it('returns true for edit mode when teams are in diff order', () => {
+    expect(
+      isDirty(
+        {
+          ...payload,
+          teams: [
+            { value: 't0', label: 'team-0' },
+            { value: 't1', label: 'team-1' },
+          ],
+        },
+        {
+          ...researchOutputResponse,
+          teams: [
+            { id: 't1', displayName: 'team-1' },
+            { id: 't0', displayName: 'team-0' },
+          ],
+        },
+      ),
+    ).toBeTruthy();
+  });
+
   it('returns false for edit mode when values equal the initial ones', () => {
     expect(isDirty(payload, researchOutputResponse)).toBeFalsy();
   });

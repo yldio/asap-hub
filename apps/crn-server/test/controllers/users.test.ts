@@ -1,4 +1,4 @@
-import { NotFoundError } from '@asap-hub/errors';
+import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { config } from '@asap-hub/squidex';
 import matches from 'lodash.matches';
 import nock from 'nock';
@@ -6,19 +6,18 @@ import Users from '../../src/controllers/users';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import {
   fetchUserResponse,
-  getSquidexUsersGraphqlResponse,
   getUserDataObject,
   getUserResponse,
   patchResponse,
 } from '../fixtures/users.fixtures';
 import { identity } from '../helpers/squidex';
-import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
 const mockUserDataProvider = {
   fetchById: jest.fn(),
   update: jest.fn(),
   fetch: jest.fn(),
+  fetchByCode: jest.fn(),
 };
 jest.mock('../../src/data-providers/users', () =>
   jest.fn().mockImplementation(() => mockUserDataProvider),
@@ -27,9 +26,6 @@ jest.mock('../../src/data-providers/users', () =>
 describe('Users controller', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
   const usersMockGraphqlClient = new Users(squidexGraphqlClientMock);
-
-  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-  const usersMockGraphqlServer = new Users(squidexGraphqlClientMockServer);
 
   beforeAll(() => {
     identity();
@@ -80,50 +76,31 @@ describe('Users controller', () => {
   });
 
   describe('fetchByCode', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     const code = 'some-uuid-code';
 
-    test('Should fetch the user by code from squidex graphql', async () => {
-      const result = await usersMockGraphqlServer.fetchByCode(code);
-
-      expect(result).toMatchObject(getUserResponse());
-    });
-
     test('Should throw 403 when no user is found', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      mockResponse.queryUsersContentsWithTotal!.items = [];
-      mockResponse.queryUsersContentsWithTotal!.total = 0;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      mockUserDataProvider.fetchByCode = jest.fn().mockResolvedValue([]);
 
       await expect(usersMockGraphqlClient.fetchByCode(code)).rejects.toThrow(
-        'Forbidden',
-      );
-    });
-
-    test('Should throw 403 when the query returns null', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      mockResponse.queryUsersContentsWithTotal = null;
-
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-      await expect(usersMockGraphqlClient.fetchByCode(code)).rejects.toThrow(
-        'Forbidden',
+        NotFoundError,
       );
     });
 
     test('Should throw when it finds more than one user', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      mockResponse.queryUsersContentsWithTotal!.total = 2;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
+      mockUserDataProvider.fetchByCode = jest
+        .fn()
+        .mockResolvedValue([getUserDataObject(), getUserDataObject()]);
       await expect(usersMockGraphqlClient.fetchByCode(code)).rejects.toThrow(
-        'Forbidden',
+        GenericError,
       );
     });
-
-    test('Should return user when it finds it', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
+    test('Should return the users', async () => {
+      mockUserDataProvider.fetchByCode = jest
+        .fn()
+        .mockResolvedValue([getUserDataObject()]);
       const result = await usersMockGraphqlClient.fetchByCode(code);
       expect(result).toEqual(getUserResponse());
     });

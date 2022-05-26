@@ -18,6 +18,7 @@ export interface UserDataProvider {
   fetchById(id: string): Promise<UserDataObject | null>;
   update(id: string, update: UserPatchDataObject): Promise<void>;
   fetch(options: FetchUsersOptions): Promise<UserDataObject[]>;
+  fetchByCode(code: string): Promise<UserDataObject[]>;
 }
 export default function users(
   squidexGraphlClient: SquidexGraphqlClient,
@@ -49,23 +50,16 @@ export default function users(
     }
   };
   const fetch = async (options: FetchUsersOptions) => {
-    const { take = 8, skip = 0, search } = options;
-
-    const queryFilter = generateFetchQueryFilter(search, options);
-
-    const { queryUsersContentsWithTotal } = await queryFetchData(
-      squidexGraphlClient,
-      queryFilter,
-      take,
-      skip,
-    );
-    if (!(queryUsersContentsWithTotal && queryUsersContentsWithTotal.items)) {
-      return [];
-    }
-    return queryUsersContentsWithTotal.items.map(parseGraphQLUserToDataObject);
+    const queryFilter = generateFetchQueryFilter(options);
+    const { take = 8, skip = 0 } = options;
+    return queryForUsers(squidexGraphlClient, queryFilter, take, skip);
+  };
+  const fetchByCode = async (code: string) => {
+    const filter = `data/connections/iv/code eq '${code}'`;
+    return queryForUsers(squidexGraphlClient, filter, 1, 0);
   };
 
-  return { fetchById, update, fetch };
+  return { fetchById, update, fetch, fetchByCode };
 }
 const shouldDoFullUpdate = (userToUpdate: UserPatchDataObject) =>
   userToUpdate.teams?.length ||
@@ -73,6 +67,23 @@ const shouldDoFullUpdate = (userToUpdate: UserPatchDataObject) =>
     (value) => value.trim && value.trim() === '',
   );
 
+async function queryForUsers(
+  squidexGraphlClient: SquidexGraphqlClient,
+  filter: string,
+  top: number,
+  skip: number,
+) {
+  const { queryUsersContentsWithTotal } = await queryFetchData(
+    squidexGraphlClient,
+    filter,
+    top,
+    skip,
+  );
+  if (!(queryUsersContentsWithTotal && queryUsersContentsWithTotal.items)) {
+    return [];
+  }
+  return queryUsersContentsWithTotal.items.map(parseGraphQLUserToDataObject);
+}
 const cleanUser = (userToUpdate: UserPatchDataObject) =>
   Object.entries(userToUpdate).reduce((acc, [key, value]) => {
     const setValue = (item: unknown) => ({ ...acc, [key]: { iv: item } });
@@ -105,22 +116,19 @@ async function queryFetchByIdData(
 
 async function queryFetchData(
   squidexGraphlClient: SquidexGraphqlClient,
-  queryFilter: string,
-  take: number,
+  filter: string,
+  top: number,
   skip: number,
 ) {
   return squidexGraphlClient.request<FetchUsersQuery, FetchUsersQueryVariables>(
     FETCH_USERS,
-    { filter: queryFilter, top: take, skip },
+    { filter, top, skip },
   );
 }
 
-function generateFetchQueryFilter(
-  search: string | undefined,
-  options: FetchUsersOptions,
-) {
+function generateFetchQueryFilter(options: FetchUsersOptions) {
   const searchFilter = [
-    ...(search || '')
+    ...(options.search || '')
       .split(' ')
       .filter(Boolean) // removes whitespaces
       .map(sanitiseForSquidex)

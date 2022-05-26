@@ -559,4 +559,38 @@ describe('User data provider', () => {
       );
     });
   });
+  describe('fetchByCode', () => {
+    const code = 'some-uuid-code';
+    test('Should return user when it finds it', async () => {
+      const mockResponse = getSquidexUsersGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await userDataProvider.fetchByCode(code);
+      expect(result).toEqual([getUserDataObject()]);
+    });
+
+    test('Should fetch the user by code from squidex graphql', async () => {
+      const result = await usersMockGraphqlServer.fetchByCode(code);
+
+      expect(result).toMatchObject([getUserDataObject()]);
+    });
+    test('Should return empty array when no user is found', async () => {
+      const mockResponse = getSquidexUsersGraphqlResponse();
+      mockResponse.queryUsersContentsWithTotal!.items = [];
+      mockResponse.queryUsersContentsWithTotal!.total = 0;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await userDataProvider.fetchByCode(code);
+      expect(result).toEqual([]);
+    });
+    test('Should throw 403 when the query returns null', async () => {
+      const mockResponse = getSquidexUsersGraphqlResponse();
+      mockResponse.queryUsersContentsWithTotal = null;
+
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await userDataProvider.fetchByCode(code);
+      expect(result).toEqual([]);
+    });
+  });
 });

@@ -1,6 +1,15 @@
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import {
+  ResearchOutputResponse,
+  ResearchOutputIdentifierType,
+} from '@asap-hub/model';
 import { render } from '@testing-library/react';
-import { equals, getIdentifierType, isDirty } from '../common';
+import {
+  equals,
+  getIdentifierType,
+  isDirty,
+  ResearchOutputState,
+} from '../common';
 
 import {
   getSvgAspectRatio,
@@ -101,26 +110,41 @@ describe('isLink', () => {
 });
 
 describe('isDirty', () => {
-  const researchOutputResponse = createResearchOutputResponse();
-  const payload = {
+  const researchOutputResponse: ResearchOutputResponse =
+    createResearchOutputResponse();
+  const payload: ResearchOutputState = {
     title: researchOutputResponse.title,
     description: researchOutputResponse.description,
     link: researchOutputResponse.link,
-    type: researchOutputResponse.type,
+    type: researchOutputResponse.type!,
     tags: researchOutputResponse.tags,
     methods: researchOutputResponse.methods,
     organisms: researchOutputResponse.organisms,
     environments: researchOutputResponse.environments,
-    teams: researchOutputResponse.teams,
-    labs: researchOutputResponse.labs,
-    authors: researchOutputResponse.authors,
+    teams: researchOutputResponse?.teams.map((element, index) => ({
+      label: element.displayName,
+      value: element.id,
+      isFixed: index === 0,
+    })),
+    labs: researchOutputResponse?.labs.map((lab) => ({
+      value: lab.id,
+      label: lab.name,
+    })),
+    authors: researchOutputResponse?.authors.map((author) => ({
+      value: author.id,
+      label: author.displayName,
+      user: author,
+    })),
     subtype: researchOutputResponse.subtype,
     labCatalogNumber: researchOutputResponse.labCatalogNumber,
   };
 
   it('returns true for edit mode when values differ from the initial ones', () => {
     expect(
-      isDirty(payload, { ...researchOutputResponse, title: 'Test title 3' }),
+      isDirty(payload, {
+        ...researchOutputResponse,
+        title: 'Changed title',
+      }),
     ).toBeTruthy();
   });
 
@@ -129,29 +153,27 @@ describe('isDirty', () => {
   });
 
   it('returns true when the initial values are changed', () => {
-    expect(isDirty({ payload })).toBeTruthy();
+    expect(isDirty(payload)).toBeTruthy();
   });
 
-  // type !== '
-  // identifierType !== identifierType.Empty
-  // identifier !== ''
-  // labCatalogNumber !== '
-  it('returns true when the initial values are the ones', () => {
+  it('returns true when the initial values are unchanged', () => {
     expect(
       isDirty({
         title: '',
         description: '',
         link: '',
-        type: undefined,
+        type: '',
         tags: [],
         methods: [],
         organisms: [],
         environments: [],
-        teams: [{ teamId: '12' }],
+        teams: [{ value: '12', label: 'Team ASAP' }],
         labs: [],
         authors: [],
         subtype: undefined,
         labCatalogNumber: '',
+        identifier: '',
+        identifierType: ResearchOutputIdentifierType.Empty,
       }),
     ).toBeFalsy();
   });

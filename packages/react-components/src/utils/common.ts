@@ -75,20 +75,22 @@ export const getIconFromUrl = (url: string): JSX.Element | undefined => {
   return icon?.[1];
 };
 
-type ResearchOutputState = {
+export type ResearchOutputState = {
   title: string;
   description: string;
-  link: string | undefined;
+  link?: string;
   type: string;
-  tags: string[];
+  tags: readonly string[];
   methods: string[];
   organisms: string[];
   environments: string[];
-  subtype: string | undefined;
-  labCatalogNumber: string | undefined;
+  subtype?: string;
+  labCatalogNumber?: string;
   teams: ComponentProps<typeof ResearchOutputContributorsCard>['teams'];
   labs: ComponentProps<typeof ResearchOutputContributorsCard>['labs'];
   authors: ComponentProps<typeof ResearchOutputContributorsCard>['authors'];
+  identifierType?: ResearchOutputIdentifierType;
+  identifier?: string;
 };
 
 export const isDirty = (
@@ -96,8 +98,8 @@ export const isDirty = (
     title,
     description,
     link,
-    type,
     tags,
+    type,
     methods,
     organisms,
     environments,
@@ -106,6 +108,8 @@ export const isDirty = (
     authors,
     subtype,
     labCatalogNumber,
+    identifierType,
+    identifier,
   }: ResearchOutputState,
   researchOutputData?: ResearchOutputResponse,
 ): boolean => {
@@ -121,23 +125,28 @@ export const isDirty = (
       teams?.length !== researchOutputData?.teams.length ||
       labs?.length !== researchOutputData?.labs.length ||
       authors?.length !== researchOutputData.authors.length ||
-      subtype !== researchOutputData.subtype
+      subtype !== researchOutputData.subtype ||
+      (researchOutputData.doi !== identifier &&
+        researchOutputData.accession !== identifier &&
+        researchOutputData.rrid !== identifier)
     );
   }
   return (
     tags?.length !== 0 ||
-    title !== '' ||
-    description !== '' ||
-    link !== '' ||
-    type !== undefined ||
-    labs?.length !== 0 ||
-    authors?.length !== 0 ||
-    methods.length !== 0 ||
-    organisms.length !== 0 ||
-    environments.length !== 0 ||
-    labCatalogNumber !== '' ||
-    subtype !== undefined ||
-    teams?.length !== 1
+      title !== '' ||
+      description !== '' ||
+      link !== '' ||
+      type !== '' ||
+      labs?.length !== 0 ||
+      authors?.length !== 0 ||
+      methods.length !== 0 ||
+      organisms.length !== 0 ||
+      environments.length !== 0 ||
+      labCatalogNumber !== '' ||
+      subtype !== undefined ||
+      teams?.length !== 1 ||
+      identifier !== '',
+    identifierType !== ResearchOutputIdentifierType.Empty
   );
 };
 

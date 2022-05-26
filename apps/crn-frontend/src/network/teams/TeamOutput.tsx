@@ -16,6 +16,7 @@ import {
   network,
   OutputDocumentTypeParameter,
   useRouteParams,
+  sharedResearch,
 } from '@asap-hub/routing';
 import React, { useContext, useState } from 'react';
 import researchSuggestions from './research-suggestions';
@@ -69,6 +70,9 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   researchOutputData,
 }) => {
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
+  const { researchOutputId } = useRouteParams(
+    sharedResearch({}).researchOutput,
+  );
   const documentType =
     researchOutputData?.documentType ||
     paramOutputDocumentTypeToResearchOutputDocumentType(
@@ -80,9 +84,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
 
   const createResearchOutput = usePostTeamResearchOutput();
-  const updateResearchOutput = usePutTeamResearchOutput(
-    researchOutputData?.id as string,
-  );
+  const updateResearchOutput = usePutTeamResearchOutput(researchOutputId);
 
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();

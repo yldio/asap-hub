@@ -15,7 +15,7 @@ import { ComponentProps, useState } from 'react';
 import { Button } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 import { usePushFromHere } from '../routing';
-import { getIdentifierType, noop, isDirty } from '../utils';
+import { getIdentifierType, noop, isDirty, getPublishDate } from '../utils';
 import {
   Form,
   ResearchOutputExtraInformationCard,
@@ -181,9 +181,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   >(researchOutputData?.sharingStatus || 'Network Only');
 
   const [publishDate, setPublishDate] = useState<Date | undefined>(
-    (researchOutputData?.publishDate &&
-      new Date(researchOutputData?.publishDate)) ||
-      undefined,
+    getPublishDate(researchOutputData?.publishDate) || undefined,
   );
 
   const [identifierType, setIdentifierType] =

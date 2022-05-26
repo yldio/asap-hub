@@ -91,12 +91,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const getTeamSuggestions = useTeamSuggestions();
   const researchTags = useResearchTags();
 
-  const handleSave = (output: ResearchOutputPostRequest) =>
-    createResearchOutput(output).catch(handleError);
-
-  const handleUpdate = (output: ResearchOutputPutRequest) =>
-    updateResearchOutput(output).catch(handleError);
-
   const handleError = (error: unknown) => {
     if (error instanceof BackendError) {
       const { response } = error;
@@ -138,8 +132,12 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             setErrors(clearAjvErrorForPath(errors, instancePath))
           }
           researchOutputData={researchOutputData}
-          onSave={(output) =>
-            researchOutputData ? handleUpdate(output) : handleSave(output)
+          onSave={(
+            output: ResearchOutputPostRequest | ResearchOutputPutRequest,
+          ) =>
+            researchOutputData
+              ? updateResearchOutput(output).catch(handleError)
+              : createResearchOutput(output).catch(handleError)
           }
         />
       </Frame>

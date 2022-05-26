@@ -70,115 +70,10 @@ type GraphQLUser = Omit<UsersContentFragment, 'flatData'> & {
   flatData: GraphQLUserRequiredFlatData & GraphQLUserOptionalFlatData;
 };
 
-export const parseGraphQLUser = (item: GraphQLUser): UserResponse => {
-  const flatTeams = item.flatData.teams || [];
-  const flatAvatar = item.flatData.avatar || [];
-  const flatQuestions = item.flatData.questions || [];
-  const flatExpertiseAndResourceTags =
-    item.flatData.expertiseAndResourceTags || [];
-  const createdDate = parseDate(item.created).toISOString();
+export const parseGraphQLUser = (user: GraphQLUser): UserResponse => {
+  const userDataObject = parseGraphQLUserToDataObject(user);
 
-  const role =
-    item.flatData.role && isUserRole(item.flatData.role)
-      ? item.flatData.role
-      : 'Guest';
-  const teams = parseGraphQLUserTeamConnections(flatTeams || []);
-
-  const orcid = item.flatData.orcid || undefined;
-  // merge both and remove null values
-  const social = Object.entries({
-    ...((item.flatData.social && item.flatData.social[0]) || {}),
-    orcid,
-  }).reduce((acc, [k, v]) => {
-    if (!v) {
-      return acc;
-    }
-    return { ...acc, [k]: v };
-  }, {} as { [key: string]: string });
-
-  const displayName = `${item.flatData.firstName} ${item.flatData.lastName}`;
-
-  const flatLabs =
-    item.flatData.labs?.reduce<LabResponse[]>((labs, lab) => {
-      // skip Labs without names
-      if (!lab.flatData.name) {
-        return labs;
-      }
-      return [
-        ...labs,
-        {
-          name: lab.flatData.name || '',
-          id: lab.id,
-        },
-      ];
-    }, []) || [];
-
-  return {
-    id: item.id,
-    onboarded:
-      item.flatData && typeof item.flatData.onboarded === 'boolean'
-        ? item.flatData.onboarded
-        : true,
-    createdDate,
-    displayName,
-    orcid, // TODO: remove once edit social is added
-    firstName: item.flatData.firstName || '',
-    lastName: item.flatData.lastName || '',
-    biography: item.flatData.biography || undefined,
-    degree:
-      item.flatData.degree && isUserDegree(item.flatData.degree)
-        ? item.flatData.degree
-        : undefined,
-    email: item.flatData.email || '',
-    contactEmail: item.flatData.contactEmail || undefined,
-    institution: item.flatData.institution || undefined,
-    jobTitle: item.flatData.jobTitle || undefined,
-    country: item.flatData.country || undefined,
-    city: item.flatData.city || undefined,
-    orcidWorks:
-      item.flatData.orcidWorks
-        ?.reduce<OrcidWork[]>((orcidWorks, orcidWork) => {
-          if (orcidWork.id === null || orcidWork.lastModifiedDate === null) {
-            return orcidWorks;
-          }
-
-          return [
-            ...orcidWorks,
-            {
-              id: orcidWork.id,
-              doi: orcidWork.doi || undefined,
-              title: orcidWork.title || undefined,
-              type:
-                orcidWork.type && isOrcidWorkType(orcidWork.type)
-                  ? orcidWork.type
-                  : 'UNDEFINED',
-              publicationDate: getOrcidWorkPublicationDate(
-                orcidWork.publicationDate,
-              ),
-              lastModifiedDate: orcidWork.lastModifiedDate,
-            },
-          ];
-        }, [])
-        .slice(0, 5) || [],
-    questions:
-      flatQuestions
-        .map((q) => q.question)
-        .filter<string>((q): q is string => typeof q === 'string') || [],
-    expertiseAndResourceTags: flatExpertiseAndResourceTags,
-    expertiseAndResourceDescription:
-      item.flatData.expertiseAndResourceDescription ?? undefined,
-    lastModifiedDate: item.flatData.lastModifiedDate || createdDate,
-    teams,
-    social,
-    avatarUrl: flatAvatar?.length
-      ? createURL(flatAvatar.map((a) => a.id))[0]
-      : undefined,
-    role,
-    responsibilities: item.flatData.responsibilities || undefined,
-    researchInterests: item.flatData.researchInterests ?? undefined,
-    reachOut: item.flatData.reachOut || undefined,
-    labs: flatLabs || [],
-  };
+  return parseUserToResponse(userDataObject);
 };
 
 const getOrcidWorkPublicationDate = (
@@ -204,6 +99,11 @@ const getOrcidWorkPublicationDate = (
 };
 
 export const parseUser = (user: RestUser): UserResponse => {
+  const userDataObject = parseUserToDataObject(user);
+  return parseUserToResponse(userDataObject);
+};
+
+export const parseUserToDataObject = (user: RestUser): UserDataObject => {
   const teams: UserTeam[] =
     user.data.teams?.iv?.reduce((acc: UserTeam[], team) => {
       const { id, ...t } = team;
@@ -227,11 +127,8 @@ export const parseUser = (user: RestUser): UserResponse => {
     orcid,
   };
 
-  const displayName = `${user.data.firstName.iv} ${user.data.lastName.iv}`;
-
   return {
     id: user.id,
-    displayName,
     onboarded: user.data.onboarded.iv,
     createdDate: parseDate(user.created).toISOString(),
     lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
@@ -264,7 +161,6 @@ export const parseUser = (user: RestUser): UserResponse => {
     })),
   };
 };
-
 const isUserRole = (data: string): data is Role =>
   (userRole as ReadonlyArray<string>).includes(data);
 

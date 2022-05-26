@@ -8,7 +8,6 @@ import {
   fetchUserResponse,
   getUserDataObject,
   getUserResponse,
-  patchResponse,
 } from '../fixtures/users.fixtures';
 import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
@@ -19,6 +18,7 @@ const mockUserDataProvider = {
   fetch: jest.fn(),
   fetchByCode: jest.fn(),
   updateAvatar: jest.fn(),
+  connectByCode: jest.fn(),
 };
 jest.mock('../../src/data-providers/users', () =>
   jest.fn().mockImplementation(() => mockUserDataProvider),
@@ -138,132 +138,23 @@ describe('Users controller', () => {
   });
 
   describe('connectByCode', () => {
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
-    });
+    test('should return the user on success', async () => {
+      mockUserDataProvider.connectByCode = jest
+        .fn()
+        .mockResolvedValue(getUserDataObject());
 
-    afterEach(() => {
-      nock.cleanAll();
+      const result = await usersMockGraphqlClient.connectByCode(
+        'some code',
+        'user-id',
+      );
+      expect(result).toEqual(getUserResponse());
     });
-
-    test('Should throw forbidden when doesn find connection code', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $top: 1,
-          $filter: `data/connections/iv/code eq 'invalid-code'`,
-        })
-        .reply(404);
+    test('throws if no user is returned', async () => {
+      mockUserDataProvider.connectByCode = jest.fn().mockResolvedValue(null);
 
       await expect(
-        usersMockGraphqlClient.connectByCode('invalid-code', 'user-id'),
-      ).rejects.toThrow('Forbidden');
-    });
-
-    test('Shouldnt do anything if connecting with existing code', async () => {
-      const userId = 'google-oauth2|token';
-      const connectedUser = JSON.parse(JSON.stringify(patchResponse));
-      connectedUser.data.connections.iv = [{ code: userId }];
-
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $top: 1,
-          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
-        })
-        .reply(200, { total: 1, items: [connectedUser] });
-
-      const result = await usersMockGraphqlClient.connectByCode(
-        'asapWelcomeCode',
-        userId,
-      );
-      expect(result).toBeDefined();
-    });
-
-    test('Shouldnt do anything if connecting with existing code', async () => {
-      const userId = 'google-oauth2|token';
-      const connectedUser = JSON.parse(JSON.stringify(patchResponse));
-      connectedUser.data.connections.iv = [{ code: userId }];
-      connectedUser.data.teams = undefined;
-
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $top: 1,
-          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
-        })
-        .reply(200, { total: 1, items: [connectedUser] });
-
-      const result = await usersMockGraphqlClient.connectByCode(
-        'asapWelcomeCode',
-        userId,
-      );
-      expect(result).toBeDefined();
-    });
-
-    test('Should filter teams where teamId is undefined', async () => {
-      const userId = 'google-oauth2|token';
-      const connectedUser = JSON.parse(JSON.stringify(patchResponse));
-      connectedUser.data.connections.iv = [{ code: userId }];
-      connectedUser.data.teams.iv = [
-        {
-          id: [],
-          role: 'Lead PI (Core Leadership)',
-          approach: 'Exact',
-          responsibilities: 'Make sure coverage is high',
-        },
-        {
-          id: ['team-id-3'],
-          role: 'Collaborating PI',
-        },
-      ];
-
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $top: 1,
-          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
-        })
-        .reply(200, { total: 1, items: [connectedUser] });
-      const result = await usersMockGraphqlClient.connectByCode(
-        'asapWelcomeCode',
-        userId,
-      );
-      expect(result).toBeDefined();
-      expect(result.teams).toEqual([
-        {
-          approach: undefined,
-          displayName: 'Unknown',
-          id: 'team-id-3',
-          responsibilities: undefined,
-          role: 'Collaborating PI',
-        },
-      ]);
-    });
-
-    test('Should connect user', async () => {
-      const userId = 'google-oauth2|token';
-      const patchedUser = JSON.parse(JSON.stringify(patchResponse));
-      patchedUser.data.connections.iv = [{ code: userId }];
-
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $top: 1,
-          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
-        })
-        .reply(200, { total: 1, items: [patchResponse] })
-        .patch(`/api/content/${config.appName}/users/${patchResponse.id}`, {
-          email: { iv: patchResponse.data.email.iv },
-          connections: { iv: [{ code: userId }] },
-        })
-        .reply(200, patchedUser);
-
-      const result = await usersMockGraphqlClient.connectByCode(
-        'asapWelcomeCode',
-        userId,
-      );
-      expect(result).toBeDefined();
+        usersMockGraphqlClient.connectByCode('some code', 'user-id'),
+      ).rejects.toThrow(NotFoundError);
     });
   });
 

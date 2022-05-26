@@ -1,4 +1,4 @@
-import { NotFoundError } from '@asap-hub/errors';
+import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { UserResponse } from '@asap-hub/model';
 import { config, RestUser } from '@asap-hub/squidex';
 import nock, { DataMatcherMap } from 'nock';
@@ -645,6 +645,112 @@ describe('User data provider', () => {
       );
       expect(result).toEqual(undefined);
       expect(nock.isDone()).toBe(true);
+    });
+  });
+  describe('connectByCode', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
+    test('Should throw forbidden when doesn find connection code', async () => {
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $top: 1,
+          $filter: `data/connections/iv/code eq 'invalid-code'`,
+        })
+        .reply(404);
+
+      await expect(
+        userDataProvider.connectByCode('invalid-code', 'user-id'),
+      ).rejects.toThrow(GenericError);
+    });
+    test('Shouldnt do anything if connecting with existing code', async () => {
+      const userId = 'google-oauth2|token';
+      const connectedUser = JSON.parse(JSON.stringify(patchResponse));
+      connectedUser.data.connections.iv = [{ code: userId }];
+
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $top: 1,
+          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
+        })
+        .reply(200, { total: 1, items: [connectedUser] });
+
+      const result = await userDataProvider.connectByCode(
+        'asapWelcomeCode',
+        userId,
+      );
+      expect(result).toBeDefined();
+    });
+    test('Should filter teams where teamId is undefined', async () => {
+      const userId = 'google-oauth2|token';
+      const connectedUser = JSON.parse(JSON.stringify(patchResponse));
+      connectedUser.data.connections.iv = [{ code: userId }];
+      connectedUser.data.teams.iv = [
+        {
+          id: [],
+          role: 'Lead PI (Core Leadership)',
+          approach: 'Exact',
+          responsibilities: 'Make sure coverage is high',
+        },
+        {
+          id: ['team-id-3'],
+          role: 'Collaborating PI',
+        },
+      ];
+
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $top: 1,
+          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
+        })
+        .reply(200, { total: 1, items: [connectedUser] });
+      const result = await userDataProvider.connectByCode(
+        'asapWelcomeCode',
+        userId,
+      );
+      expect(result).toBeDefined();
+      expect(result?.teams).toEqual([
+        {
+          approach: undefined,
+          displayName: 'Unknown',
+          id: 'team-id-3',
+          responsibilities: undefined,
+          role: 'Collaborating PI',
+        },
+      ]);
+    });
+
+    test('Should connect user', async () => {
+      const userId = 'google-oauth2|token';
+      const patchedUser = JSON.parse(JSON.stringify(patchResponse));
+      patchedUser.data.connections.iv = [{ code: userId }];
+
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $top: 1,
+          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
+        })
+        .reply(200, { total: 1, items: [patchResponse] })
+        .patch(`/api/content/${config.appName}/users/${patchResponse.id}`, {
+          email: { iv: patchResponse.data.email.iv },
+          connections: { iv: [{ code: userId }] },
+        })
+        .reply(200, patchedUser);
+
+      const result = await userDataProvider.connectByCode(
+        'asapWelcomeCode',
+        userId,
+      );
+      expect(result).toBeDefined();
     });
   });
 });

@@ -10,9 +10,7 @@ import {
   SquidexRest,
   SquidexRestClient,
 } from '@asap-hub/squidex';
-import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
-import { Got } from 'got';
 import createUserProvider, { UserDataProvider } from '../data-providers/users';
 import { parseUser, parseUserToResponse } from '../entities';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
@@ -43,36 +41,11 @@ export interface UserController {
   ): Promise<UserResponse>;
 }
 
-const fetchByCode = async (code: string, client: Got): Promise<RestUser> => {
-  const [err, res] = await Intercept(
-    client
-      .get('users', {
-        searchParams: {
-          $top: 1,
-          $filter: `data/connections/iv/code eq '${code}'`,
-        },
-      })
-      .json() as Promise<{ items: RestUser[] }>,
-  );
-
-  if (err) {
-    throw Boom.forbidden();
-  }
-
-  if (res.items.length === 0 || !res.items[0]) {
-    throw Boom.forbidden();
-  }
-
-  return res.items[0];
-};
-
 export default class Users implements UserController {
   userDataProvider: UserDataProvider;
   userSquidexRestClient: SquidexRestClient<RestUser>;
-  squidexGraphlClient: SquidexGraphqlClient;
 
   constructor(squidexGraphlClient: SquidexGraphqlClient) {
-    this.squidexGraphlClient = squidexGraphlClient;
     this.userSquidexRestClient = new SquidexRest('users');
     this.userDataProvider = createUserProvider(squidexGraphlClient);
   }
@@ -119,7 +92,6 @@ export default class Users implements UserController {
     contentType: string,
   ): Promise<UserResponse> {
     await this.userDataProvider.updateAvatar(id, avatar, contentType);
-    // use fetch for proper user teams hydration
     return this.fetchById(id);
   }
 
@@ -127,24 +99,13 @@ export default class Users implements UserController {
     welcomeCode: string,
     userId: string,
   ): Promise<UserResponse> {
-    const user = await fetchByCode(
-      welcomeCode,
-      this.userSquidexRestClient.client,
-    );
-    if (user.data.connections.iv?.find(({ code }) => code === userId)) {
-      return Promise.resolve(parseUser(user));
+    const user = await this.userDataProvider.connectByCode(welcomeCode, userId);
+
+    if (!user) {
+      throw new NotFoundError(`user with code ${welcomeCode} not found`);
     }
 
-    const connections = (user.data.connections.iv || []).concat([
-      { code: userId },
-    ]);
-
-    const res = await this.userSquidexRestClient.patch(user.id, {
-      email: { iv: user.data.email.iv },
-      connections: { iv: connections },
-    });
-
-    return parseUser(res);
+    return parseUserToResponse(user);
   }
 
   async syncOrcidProfile(

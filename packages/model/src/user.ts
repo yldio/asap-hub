@@ -1,5 +1,5 @@
 import { ListResponse } from './common';
-import { Lab } from './lab';
+import { LabResponse } from './lab';
 import { TeamRole } from './team';
 
 export const userRole = ['Staff', 'Grantee', 'Guest', 'Hidden'] as const;
@@ -130,7 +130,7 @@ export interface UserDataObject extends Invitee {
   researchInterests?: string;
   role: Role;
   social?: UserSocialLinks;
-  labs: Lab[];
+  labs: LabResponse[];
 }
 export interface UserResponse extends Omit<UserDataObject, 'onboarded'> {
   onboarded: boolean;

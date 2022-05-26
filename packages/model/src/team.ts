@@ -1,5 +1,5 @@
 import { ListResponse } from './common';
-import { Lab } from './lab';
+import { LabResponse } from './lab';
 
 export const teamRole = [
   'Lead PI (Core Leadership)',
@@ -35,7 +35,7 @@ export interface TeamMember {
   email: string;
   role: TeamRole;
   avatarUrl?: string;
-  labs?: Lab[];
+  labs?: LabResponse[];
 }
 
 export interface TeamResponse

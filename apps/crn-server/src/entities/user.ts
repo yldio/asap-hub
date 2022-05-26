@@ -1,5 +1,5 @@
 import {
-  Lab,
+  LabResponse,
   OrcidWork,
   OrcidWorkType,
   orcidWorkType,
@@ -99,7 +99,7 @@ export const parseGraphQLUser = (item: GraphQLUser): UserResponse => {
   const displayName = `${item.flatData.firstName} ${item.flatData.lastName}`;
 
   const flatLabs =
-    item.flatData.labs?.reduce<Lab[]>((labs, lab) => {
+    item.flatData.labs?.reduce<LabResponse[]>((labs, lab) => {
       // skip Labs without names
       if (!lab.flatData.name) {
         return labs;
@@ -313,7 +313,7 @@ export const parseGraphQLUserToDataObject = (
   }, {} as { [key: string]: string });
 
   const flatLabs =
-    item.flatData.labs?.reduce<Lab[]>((labs, lab) => {
+    item.flatData.labs?.reduce<LabResponse[]>((labs, lab) => {
       // skip Labs without names
       if (!lab.flatData.name) {
         return labs;

@@ -1,8 +1,8 @@
 import { ListResponse } from './common';
 
-export interface Lab {
+export interface LabResponse {
   id: string;
   name: string;
 }
 
-export type ListLabsResponse = ListResponse<Lab>;
+export type ListLabsResponse = ListResponse<LabResponse>;

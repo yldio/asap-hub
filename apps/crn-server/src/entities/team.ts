@@ -1,5 +1,5 @@
 import {
-  Lab,
+  LabResponse,
   TeamMember,
   TeamResponse,
   TeamRole,
@@ -27,7 +27,7 @@ export const parseGraphQLTeamMember = (
 ): TeamMember => {
   const flatAvatar = user.flatData.avatar || [];
 
-  const labs = user.flatData.labs?.reduce((acc: Lab[], lab) => {
+  const labs = user.flatData.labs?.reduce((acc: LabResponse[], lab) => {
     const labsData = lab.flatData?.name
       ? [...acc, { id: lab.id, name: lab.flatData.name }]
       : acc;

@@ -1,6 +1,6 @@
 import { DecisionOption, ListResponse } from './common';
 import { ExternalAuthorInput, ExternalAuthorResponse } from './external-author';
-import { Lab } from './lab';
+import { LabResponse } from './lab';
 import { TeamResponse } from './team';
 import { UserResponse } from './user';
 
@@ -186,7 +186,7 @@ export type ResearchOutputResponse = {
   readonly doi?: string;
   readonly environments: string[];
   readonly labCatalogNumber?: string;
-  readonly labs: Lab[];
+  readonly labs: LabResponse[];
   readonly lastModifiedDate?: string;
   readonly lastUpdatedPartial: string;
   readonly link?: string;

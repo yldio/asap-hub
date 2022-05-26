@@ -137,7 +137,7 @@ describe('patchTeam', () => {
     );
   });
 });
-describe('createTeamResearchOutput', () => {
+describe('teamResearchOutput', () => {
   const payload: ResearchOutputPostRequest = {
     teams: ['90210'],
     documentType: 'Bioinformatics',

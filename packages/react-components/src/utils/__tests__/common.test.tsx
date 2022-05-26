@@ -1,4 +1,6 @@
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
+import { equals, getIdentifierType, isDirty } from '../common';
 
 import {
   getSvgAspectRatio,
@@ -95,5 +97,103 @@ describe('isLink', () => {
   });
   it('returns true when the input is a valid link', () => {
     expect(isLink('https://example.com')).toBeTruthy();
+  });
+});
+
+describe('isDirty', () => {
+  const researchOutputResponse = createResearchOutputResponse();
+  const payload = {
+    title: researchOutputResponse.title,
+    description: researchOutputResponse.description,
+    link: researchOutputResponse.link,
+    type: researchOutputResponse.type,
+    tags: researchOutputResponse.tags,
+    methods: researchOutputResponse.methods,
+    organisms: researchOutputResponse.organisms,
+    environments: researchOutputResponse.environments,
+    teams: researchOutputResponse.teams,
+    labs: researchOutputResponse.labs,
+    authors: researchOutputResponse.authors,
+    subtype: researchOutputResponse.subtype,
+    labCatalogNumber: researchOutputResponse.labCatalogNumber,
+  };
+
+  it('returns true for edit mode when values differ from the initial ones', () => {
+    expect(
+      isDirty(payload, { ...researchOutputResponse, title: 'Test title 3' }),
+    ).toBeTruthy();
+  });
+
+  it('returns false for edit mode when values equal the initial ones', () => {
+    expect(isDirty(payload, researchOutputResponse)).toBeFalsy();
+  });
+
+  it('returns true when the initial values are changed', () => {
+    expect(isDirty({ payload })).toBeTruthy();
+  });
+
+  // type !== '
+  // identifierType !== identifierType.Empty
+  // identifier !== ''
+  // labCatalogNumber !== '
+  it('returns true when the initial values are the ones', () => {
+    expect(
+      isDirty({
+        title: '',
+        description: '',
+        link: '',
+        type: undefined,
+        tags: [],
+        methods: [],
+        organisms: [],
+        environments: [],
+        teams: [{ teamId: '12' }],
+        labs: [],
+        authors: [],
+        subtype: undefined,
+        labCatalogNumber: '',
+      }),
+    ).toBeFalsy();
+  });
+});
+
+describe('equals', () => {
+  const testArray = ['Team ASAP', 'Team Chen', 'Team Allesi'];
+  it('returns true when both array contain the same elements', () => {
+    expect(equals(testArray, testArray.reverse())).toBeTruthy();
+  });
+  it('returns false when arrays differ', () => {
+    expect(equals(testArray, testArray.slice(0, 1))).toBeFalsy();
+  });
+});
+
+describe('getIdentifierType', () => {
+  it('returns DOI when doi is present', () => {
+    expect(
+      getIdentifierType({ ...createResearchOutputResponse(), doi: 'abc' }),
+    ).toEqual('DOI');
+  });
+  it('returns RRID when rrid is present', () => {
+    expect(
+      getIdentifierType({ ...createResearchOutputResponse(), rrid: 'abc' }),
+    ).toEqual('RRID');
+  });
+  it('returns Accession Number when accession is present', () => {
+    expect(
+      getIdentifierType({
+        ...createResearchOutputResponse(),
+        accession: 'abc',
+      }),
+    ).toEqual('Accession Number');
+  });
+  it('returns empty when there is no identifier present', () => {
+    expect(
+      getIdentifierType({
+        ...createResearchOutputResponse(),
+        accession: '',
+        rrid: '',
+        doi: '',
+      }),
+    ).toEqual('');
   });
 });

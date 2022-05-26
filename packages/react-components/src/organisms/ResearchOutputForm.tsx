@@ -15,7 +15,7 @@ import { ComponentProps, useState } from 'react';
 import { Button } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 import { usePushFromHere } from '../routing';
-import { noop } from '../utils';
+import { getIdentifierType, noop, isDirty } from '../utils';
 import {
   Form,
   ResearchOutputExtraInformationCard,
@@ -186,21 +186,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
       undefined,
   );
 
-  const getIdentifierType = (): ResearchOutputIdentifierType => {
-    if (researchOutputData?.doi) return ResearchOutputIdentifierType.DOI;
-
-    if (researchOutputData?.accession)
-      return ResearchOutputIdentifierType.AccessionNumber;
-
-    if (researchOutputData?.rrid) return ResearchOutputIdentifierType.RRID;
-
-    return ResearchOutputIdentifierType.Empty;
-  };
   const [identifierType, setIdentifierType] =
     useState<ResearchOutputIdentifierType>(
-      researchOutputData && researchOutputData
-        ? getIdentifierType()
-        : ResearchOutputIdentifierType.Empty,
+      (researchOutputData && getIdentifierType(researchOutputData)) ||
+        ResearchOutputIdentifierType.Empty,
     );
 
   const [identifier, setIdentifier] = useState<string>(
@@ -227,50 +216,26 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     d.types?.includes(type),
   );
 
-  const isDirty = (): boolean => {
-    const equals = (a: Array<string>, b: Array<string>) =>
-      JSON.stringify(a) === JSON.stringify(b);
-
-    if (researchOutputData) {
-      return (
-        title !== researchOutputData.title ||
-        description !== researchOutputData.description ||
-        link !== researchOutputData.link ||
-        type !== researchOutputData.type ||
-        !equals(tags, researchOutputData.tags as Array<string>) ||
-        !equals(methods, researchOutputData.methods) ||
-        !equals(organisms, researchOutputData.organisms) ||
-        !equals(environments, researchOutputData.environments) ||
-        identifierType !== getIdentifierType() ||
-        teams.length !== researchOutputData.teams.length ||
-        labs.length !== researchOutputData.labs.length ||
-        authors.length !== researchOutputData.authors.length ||
-        subtype !== researchOutputData.subtype
-      );
-    }
-    return (
-      tags.length !== 0 ||
-      title !== '' ||
-      description !== '' ||
-      link !== '' ||
-      type !== '' ||
-      labs.length !== 0 ||
-      authors.length !== 0 ||
-      methods.length !== 0 ||
-      organisms.length !== 0 ||
-      environments.length !== 0 ||
-      identifierType !== ResearchOutputIdentifierType.Empty ||
-      identifier !== '' ||
-      labCatalogNumber !== '' ||
-      subtype !== undefined ||
-      teams.length !== 1 // Original team
-    );
-  };
-
   return (
     <Form<ResearchOutputResponse>
       serverErrors={serverValidationErrors}
-      dirty={isDirty()}
+      dirty={isDirty(
+        {
+          title,
+          description,
+          link,
+          tags,
+          methods,
+          organisms,
+          environments,
+          teams,
+          labs: labs.map(({ value, label }) => ({ id: value, name: label })),
+          authors,
+          subtype,
+          labCatalogNumber,
+        },
+        researchOutputData,
+      )}
       onSave={() => {
         const identifierField = createIdentifierField(
           identifierType,

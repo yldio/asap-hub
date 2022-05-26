@@ -1,5 +1,9 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import {
+  ResearchOutputResponse,
+  ResearchOutputIdentifierType,
+} from '@asap-hub/model';
+import {
   googleDriveIcon,
   protocolsIcon,
   slackIcon,
@@ -67,4 +71,70 @@ export const getIconFromUrl = (url: string): JSX.Element | undefined => {
     }
   });
   return icon?.[1];
+};
+
+export const isDirty = (
+  {
+    title,
+    description,
+    link,
+    type,
+    tags,
+    methods,
+    organisms,
+    environments,
+    teams,
+    labs,
+    authors,
+    subtype,
+    labCatalogNumber,
+  }: any,
+  researchOutputData?: ResearchOutputResponse,
+): boolean => {
+  if (researchOutputData) {
+    return (
+      title !== researchOutputData.title ||
+      description !== researchOutputData.description ||
+      link !== researchOutputData.link ||
+      type !== researchOutputData.type ||
+      !equals(methods, researchOutputData.methods) ||
+      !equals(organisms, researchOutputData.organisms) ||
+      !equals(environments, researchOutputData.environments) ||
+      teams.length !== researchOutputData.teams.length ||
+      labs.length !== researchOutputData.labs.length ||
+      authors.length !== researchOutputData.authors.length ||
+      subtype !== researchOutputData.subtype
+    );
+  }
+  return (
+    tags?.length !== 0 ||
+    title !== '' ||
+    description !== '' ||
+    link !== '' ||
+    type !== undefined ||
+    labs.length !== 0 ||
+    authors.length !== 0 ||
+    methods.length !== 0 ||
+    organisms.length !== 0 ||
+    environments.length !== 0 ||
+    labCatalogNumber !== '' ||
+    subtype !== undefined ||
+    teams.length !== 1
+  );
+};
+
+export const equals = (a: Array<string>, b: Array<string>) =>
+  JSON.stringify(a) === JSON.stringify(b);
+
+export const getIdentifierType = (
+  researchOutputData: ResearchOutputResponse,
+): ResearchOutputIdentifierType => {
+  if (researchOutputData?.doi) return ResearchOutputIdentifierType.DOI;
+
+  if (researchOutputData?.accession)
+    return ResearchOutputIdentifierType.AccessionNumber;
+
+  if (researchOutputData?.rrid) return ResearchOutputIdentifierType.RRID;
+
+  return ResearchOutputIdentifierType.Empty;
 };

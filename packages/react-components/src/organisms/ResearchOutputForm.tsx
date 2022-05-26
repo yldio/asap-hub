@@ -287,10 +287,19 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     ResearchOutputPostRequest['accessInstructions']
   >(researchOutputData?.accessInstructions || '');
   const [asapFunded, setAsapFunded] = useState<DecisionOption>(
-    researchOutputData?.asapFunded ? 'Yes' : 'No' || 'Not Sure',
+    researchOutputData?.asapFunded === undefined
+      ? 'Not Sure'
+      : researchOutputData?.asapFunded
+      ? 'Yes'
+      : 'No',
   );
+
   const [usedInPublication, setUsedInPublication] = useState<DecisionOption>(
-    researchOutputData?.usedInPublication ? 'Yes' : 'No' || 'Not Sure',
+    researchOutputData?.usedInPublication === undefined
+      ? 'Not Sure'
+      : researchOutputData?.usedInPublication
+      ? 'Yes'
+      : 'No',
   );
 
   const [sharingStatus, setSharingStatus] = useState<

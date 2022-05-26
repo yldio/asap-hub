@@ -194,8 +194,8 @@ describe('on submit', () => {
     publishDate: undefined,
     subtype: undefined,
     accessInstructions: undefined,
-    asapFunded: false,
-    usedInPublication: false,
+    asapFunded: undefined,
+    usedInPublication: undefined,
   };
   type Data = Pick<
     ResearchOutputPostRequest,

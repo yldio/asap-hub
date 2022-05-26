@@ -150,8 +150,8 @@ describe('TeamOutput', () => {
         publishDate: undefined,
         subtype: undefined,
         accessInstructions: undefined,
-        asapFunded: false,
-        usedInPublication: false,
+        asapFunded: undefined,
+        usedInPublication: undefined,
       },
       expect.anything(),
     );

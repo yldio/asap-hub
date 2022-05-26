@@ -2,6 +2,7 @@ import {
   createTeamResponse,
   createUserResponse,
   researchTagMethodResponse,
+  createResearchOutputResponse,
 } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { ResearchOutputForm } from '@asap-hub/react-components';
@@ -43,6 +44,49 @@ export const Normal = () => (
             resolve([
               { label: 'author name', value: '1', user: createUserResponse() },
             ]);
+          }, 1000);
+        })
+      }
+      researchTags={[researchTagMethodResponse]}
+    />
+  </StaticRouter>
+);
+
+const researchOutputData = {
+  ...createResearchOutputResponse(),
+  link: 'https://google.com',
+};
+export const EditMode = () => (
+  <StaticRouter>
+    <ResearchOutputForm
+      researchOutputData={researchOutputData}
+      onSave={() => Promise.resolve()}
+      tagSuggestions={['A53T', 'Activity assay'].map((suggestion) => ({
+        label: suggestion,
+        value: suggestion,
+      }))}
+      documentType="Dataset"
+      getLabSuggestions={() =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve([{ label: 'lab name', value: '1' }]);
+          }, 1000);
+        })
+      }
+      getAuthorSuggestions={() =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve([
+              { label: 'user name', value: '1', user: createUserResponse() },
+            ]);
+          }, 1000);
+        })
+      }
+      team={createTeamResponse()}
+      getTeamSuggestions={() =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve([{ label: 'team name', value: '1' }]);
           }, 1000);
         })
       }

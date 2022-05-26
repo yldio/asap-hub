@@ -1,13 +1,7 @@
-import { useState, useEffect, createRef, FC, ReactNode } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Location } from 'history';
+import { useState, FC, ReactNode } from 'react';
 import { css } from '@emotion/react';
 
-import {
-  ToastStack,
-  usePrevious,
-  drawerQuery,
-} from '@asap-hub/react-components';
+import { ToastStack, drawerQuery } from '@asap-hub/react-components';
 import {
   mobileScreen,
   tabletScreen,
@@ -45,28 +39,6 @@ type LayoutProps = {
 const Layout: FC<LayoutProps> = ({ children }) => {
   const [menuShown, setMenuShown] = useState(false);
 
-  let location: Location | undefined;
-  let prevLocation: Location | undefined;
-  const mainRef = createRef<HTMLDivElement>();
-  // This hook *is* called unconditionally despite what rules-of-hooks says
-  /* eslint-disable react-hooks/rules-of-hooks */
-  try {
-    location = useLocation();
-    prevLocation = usePrevious(location);
-  } catch {
-    // If there is no router, fine, never auto-close the menu
-  }
-  /* eslint-enable react-hooks/rules-of-hooks */
-
-  useEffect(() => {
-    setMenuShown(false);
-  }, [location]);
-  useEffect(() => {
-    if (location?.pathname !== prevLocation?.pathname && mainRef.current) {
-      mainRef.current.scrollTo(0, 0);
-    }
-  }, [location, prevLocation, mainRef]);
-
   return (
     <ToastStack>
       <article css={css({ width: '100%' })}>
@@ -77,9 +49,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
           }}
         />
       </article>
-      <article css={contentStyles}>
-        <main ref={mainRef}>{children}</main>
-      </article>
+      <article css={contentStyles}>{children}</article>
     </ToastStack>
   );
 };

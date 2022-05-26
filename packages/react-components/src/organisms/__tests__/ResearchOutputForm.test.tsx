@@ -1,18 +1,18 @@
 import {
+  createResearchOutputResponse,
   createTeamResponse,
   createUserResponse,
   researchTagEnvironmentResponse,
   researchTagMethodResponse,
   researchTagOrganismResponse,
   researchTagSubtypeResponse,
-  createResearchOutputResponse,
 } from '@asap-hub/fixtures';
 import {
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
-  ResearchTagResponse,
   ResearchOutputType,
+  ResearchTagResponse,
 } from '@asap-hub/model';
 import {
   render,
@@ -27,12 +27,12 @@ import { ComponentProps } from 'react';
 import { Router, StaticRouter } from 'react-router-dom';
 import ResearchOutputForm, {
   createIdentifierField,
+  getDecision,
   getIdentifierType,
+  getPublishDate,
   isDirty,
   isIdentifierModified,
-  getPublishDate,
   ResearchOutputState,
-  getDecision,
 } from '../ResearchOutputForm';
 
 const props: ComponentProps<typeof ResearchOutputForm> = {
@@ -176,35 +176,6 @@ it('displays current team within the form', async () => {
     </StaticRouter>,
   );
   expect(screen.getByText('example team')).toBeVisible();
-});
-
-it('is funded and publication are both yes, then the identifier type is required', async () => {
-  render(
-    <StaticRouter>
-      <ResearchOutputForm {...props} />
-    </StaticRouter>,
-  );
-  const textbox = screen.getByRole('textbox', { name: /identifier/i });
-  userEvent.click(textbox);
-
-  expect(
-    screen.getByRole('textbox', { name: 'Identifier Type (optional)' }),
-  ).toBeInTheDocument();
-
-  const funded = screen.getByRole('group', {
-    name: /Has this output been funded by ASAP/i,
-  });
-  userEvent.click(within(funded).getByText('Yes'));
-
-  const publication = screen.getByRole('group', {
-    name: /Has this output been used in a publication/i,
-  });
-  userEvent.click(within(publication).getByText('Yes'));
-  userEvent.click(textbox);
-
-  expect(
-    screen.getByRole('textbox', { name: 'Identifier Type (required)' }),
-  ).toBeInTheDocument();
 });
 
 describe('on submit', () => {

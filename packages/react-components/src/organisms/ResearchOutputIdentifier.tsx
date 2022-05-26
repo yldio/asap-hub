@@ -49,6 +49,13 @@ const identifierMap = {
       'Please enter a valid RRID which starts with `RRID`. (e.g. RRID:SCR_007358)',
     required: true,
   },
+  [ResearchOutputIdentifierType.None]: {
+    helpText: '',
+    placeholder: '',
+    regex: ResearchOutputIdentifierValidationExpression.None,
+    errorMessage: undefined,
+    required: false,
+  },
   [ResearchOutputIdentifierType.Empty]: {
     helpText: '',
     placeholder: '',
@@ -64,7 +71,6 @@ export interface ResearchOutputIdentifierProps {
   identifierType?: ResearchOutputIdentifierType;
   setIdentifierType?: (value: ResearchOutputIdentifierType) => void;
   documentType: ResearchOutputDocumentType;
-  required: boolean;
   isEditMode?: boolean;
 }
 
@@ -75,7 +81,6 @@ export const ResearchOutputIdentifier: React.FC<ResearchOutputIdentifierProps> =
     identifier = '',
     setIdentifier = noop,
     documentType,
-    required,
     isEditMode = false,
   }) => {
     const identifiers = useMemo(
@@ -98,18 +103,17 @@ export const ResearchOutputIdentifier: React.FC<ResearchOutputIdentifierProps> =
       [setIdentifierType, identifiers, setIdentifier],
     );
 
-    const subtitle = required ? 'required' : 'optional';
     return (
       <>
         <LabeledDropdown
           title="Identifier Type"
-          subtitle={`(${subtitle})`}
+          subtitle={'(required)'}
           options={identifiers}
           value={identifierType}
           onChange={onChangeIdentifierType}
           placeholder={'Choose an identifier'}
           getValidationMessage={() => `Please choose an identifier`}
-          required={required}
+          required={true}
         />
 
         <TeamCreateOutputIdentifierField
@@ -132,7 +136,31 @@ export const TeamCreateOutputIdentifierField: React.FC<TeamCreateOutputIdentifie
 
     return (
       <>
-        {type !== ResearchOutputIdentifierType.Empty && (
+        {type === ResearchOutputIdentifierType.AccessionNumber && (
+          <LabeledTextField
+            title={type}
+            description={helpText}
+            placeholder={placeholder}
+            getValidationMessage={() => errorMessage}
+            value={identifier}
+            onChange={setIdentifier}
+            pattern={regex}
+            required={required}
+          />
+        )}
+        {type === ResearchOutputIdentifierType.DOI && (
+          <LabeledTextField
+            title={type}
+            description={helpText}
+            placeholder={placeholder}
+            getValidationMessage={() => errorMessage}
+            value={identifier}
+            onChange={setIdentifier}
+            pattern={regex}
+            required={required}
+          />
+        )}
+        {type === ResearchOutputIdentifierType.RRID && (
           <LabeledTextField
             title={type}
             description={helpText}

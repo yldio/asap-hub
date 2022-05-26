@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { InputHTMLAttributes, useCallback, useEffect, useRef } from 'react';
+import { InputHTMLAttributes } from 'react';
 import { ember, lead, paper, pine, rose, silver, steel, tin } from '../colors';
 import {
   indicatorPadding,
@@ -163,21 +163,6 @@ const TextField: React.FC<TextFieldProps> = ({
       customValidationMessage,
       getValidationMessage,
     );
-
-  const initialRender = useRef(true);
-  const checkValidation = useCallback(() => {
-    if (initialRender.current) {
-      initialRender.current = false;
-    } else {
-      const field = validationTargetProps.ref.current;
-      field?.checkValidity();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    checkValidation();
-  }, [pattern, checkValidation]);
 
   return (
     <div css={containerStyles}>

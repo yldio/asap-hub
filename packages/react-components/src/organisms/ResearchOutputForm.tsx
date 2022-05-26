@@ -84,6 +84,7 @@ const identifierTypeToFieldName: Record<
   'doi' | 'accession' | 'labCatalogNumber' | 'rrid' | undefined
 > = {
   [ResearchOutputIdentifierType.Empty]: undefined,
+  [ResearchOutputIdentifierType.None]: undefined,
   [ResearchOutputIdentifierType.DOI]: 'doi',
   [ResearchOutputIdentifierType.AccessionNumber]: 'accession',
   [ResearchOutputIdentifierType.RRID]: 'rrid',
@@ -454,9 +455,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
             setIdentifier={setIdentifier}
             identifierType={identifierType}
             setIdentifierType={setIdentifierType}
-            identifierRequired={
-              usedInPublication === 'Yes' && asapFunded === 'Yes'
-            }
             labCatalogNumber={labCatalogNumber}
             onChangeLabCatalogNumber={setLabCatalogNumber}
             methods={methods}

@@ -33,7 +33,15 @@ const cardsStyles = css({
 
 type SharedResearchOutputProps = Pick<
   ResearchOutputResponse,
-  'description' | 'tags' | 'accessInstructions' | 'contactEmails' | 'id'
+  | 'description'
+  | 'tags'
+  | 'accessInstructions'
+  | 'contactEmails'
+  | 'methods'
+  | 'organisms'
+  | 'environments'
+  | 'subtype'
+  | 'id'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -42,7 +50,6 @@ type SharedResearchOutputProps = Pick<
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   description,
   backHref,
-  tags,
   accessInstructions,
   contactEmails,
   id,
@@ -51,6 +58,14 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
     props.documentType,
   );
+
+  const tags = [
+    ...props.methods,
+    ...props.organisms,
+    ...props.environments,
+    ...(props.subtype ? [props.subtype] : []),
+    ...props.tags,
+  ];
 
   const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
   return (

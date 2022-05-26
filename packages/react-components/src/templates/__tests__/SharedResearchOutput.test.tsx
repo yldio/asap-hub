@@ -7,6 +7,10 @@ import SharedResearchOutput from '../SharedResearchOutput';
 
 const props: ComponentProps<typeof SharedResearchOutput> = {
   ...createResearchOutputResponse(),
+  methods: [],
+  subtype: undefined,
+  environments: [],
+  organisms: [],
   backHref: '#',
 };
 describe('Grant Documents', () => {
@@ -175,4 +179,33 @@ it('displays contact pm card when there are contact emails', () => {
     'href',
     expect.stringMatching(/blah/i),
   );
+});
+
+it('merges different tag types in the correct order', () => {
+  const { getAllByRole } = render(
+    <SharedResearchOutput
+      {...props}
+      methods={['method']}
+      organisms={['organisms']}
+      environments={['environment']}
+      subtype={'subtype'}
+      tags={['tag']}
+      teams={[]}
+      labs={[]}
+      authors={[]}
+    />,
+  );
+  expect(
+    getAllByRole('listitem')
+      .map(({ textContent }) => textContent)
+      .slice(2),
+  ).toMatchInlineSnapshot(`
+    Array [
+      "method",
+      "organisms",
+      "environment",
+      "subtype",
+      "tag",
+    ]
+  `);
 });

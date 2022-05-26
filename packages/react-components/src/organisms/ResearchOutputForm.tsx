@@ -222,6 +222,10 @@ export function getPublishDate(publishDate?: string): Date | undefined {
   return undefined;
 }
 
+export function getDecision(decision?: boolean): DecisionOption {
+  return decision === undefined ? 'Not Sure' : decision ? 'Yes' : 'No';
+}
+
 const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   onSave,
   tagSuggestions,
@@ -289,19 +293,11 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     ResearchOutputPostRequest['accessInstructions']
   >(researchOutputData?.accessInstructions || '');
   const [asapFunded, setAsapFunded] = useState<DecisionOption>(
-    researchOutputData?.asapFunded === undefined
-      ? 'Not Sure'
-      : researchOutputData?.asapFunded
-      ? 'Yes'
-      : 'No',
+    getDecision(researchOutputData?.asapFunded),
   );
 
   const [usedInPublication, setUsedInPublication] = useState<DecisionOption>(
-    researchOutputData?.usedInPublication === undefined
-      ? 'Not Sure'
-      : researchOutputData?.usedInPublication
-      ? 'Yes'
-      : 'No',
+    getDecision(researchOutputData?.usedInPublication),
   );
 
   const [sharingStatus, setSharingStatus] = useState<

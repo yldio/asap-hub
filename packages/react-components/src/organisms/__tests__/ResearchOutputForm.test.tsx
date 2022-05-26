@@ -31,6 +31,7 @@ import ResearchOutputForm, {
   isIdentifierModified,
   getPublishDate,
   ResearchOutputState,
+  getDecision,
 } from '../ResearchOutputForm';
 
 const props: ComponentProps<typeof ResearchOutputForm> = {
@@ -723,6 +724,18 @@ describe('getPublishDate', () => {
   });
   it('returns undefined if no date string is present', () => {
     expect(getPublishDate()).toBeUndefined();
+  });
+});
+
+describe.only('getDecision', () => {
+  it('returns yes for true', () => {
+    expect(getDecision(true)).toEqual('Yes');
+  });
+  it('returns no for false', () => {
+    expect(getDecision(false)).toEqual('No');
+  });
+  it('returns not sure for undefined', () => {
+    expect(getDecision()).toEqual('Not Sure');
   });
 });
 

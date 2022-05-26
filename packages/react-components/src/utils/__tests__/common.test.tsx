@@ -5,6 +5,7 @@ import {
   isInternalLink,
   getIconFromUrl,
   isLink,
+  equals,
 } from '../index';
 
 describe('getSvgAspectRatio', () => {
@@ -95,5 +96,15 @@ describe('isLink', () => {
   });
   it('returns true when the input is a valid link', () => {
     expect(isLink('https://example.com')).toBeTruthy();
+  });
+});
+
+describe('equals', () => {
+  const testArray = ['Team ASAP', 'Team Chen', 'Team Allesi'];
+  it('returns true when both array contain the same elements', () => {
+    expect(equals(testArray, testArray.reverse())).toBeTruthy();
+  });
+  it('returns false when arrays differ', () => {
+    expect(equals(testArray, testArray.slice(0, 1))).toBeFalsy();
   });
 });

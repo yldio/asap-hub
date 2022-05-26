@@ -2,6 +2,7 @@ import { Suspense, ContextType } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Switch } from 'react-router-dom';
 import { sharedResearch } from '@asap-hub/routing';
+import { UserTeam } from '@asap-hub/model';
 import {
   createUserResponse,
   createResearchOutputResponse,
@@ -37,8 +38,17 @@ beforeEach(() => {
   });
 });
 
+const teams: UserTeam[] = [
+  {
+    id: 't0',
+    displayName: 'Jakobsson, J',
+    role: 'Project Manager',
+  },
+];
+
 const user = {
   ...createUserResponse({}, 1),
+  teams,
   algoliaApiKey: 'algolia-mock-key',
 };
 
@@ -57,7 +67,7 @@ const renderComponent = async (path: string) => {
         set(refreshResearchOutputState(id), Math.random())
       }
     >
-      <Auth0Provider user={{ ...user }}>
+      <Auth0Provider user={user}>
         <WhenReady>
           <Suspense fallback="Loading...">
             <ToastContext.Provider value={mockToast}>

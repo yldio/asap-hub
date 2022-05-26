@@ -69,3 +69,7 @@ export const getIconFromUrl = (url: string): JSX.Element | undefined => {
   });
   return icon?.[1];
 };
+
+export function equals(a: Array<string>, b: Array<string>): boolean {
+  return JSON.stringify(a) === JSON.stringify(b);
+}

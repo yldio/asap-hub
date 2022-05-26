@@ -15,7 +15,7 @@ import { ComponentProps, useState } from 'react';
 import { Button } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 import { usePushFromHere } from '../routing';
-import { getIdentifierType, noop, isDirty, getPublishDate } from '../utils';
+import { noop, equals } from '../utils';
 import {
   Form,
   ResearchOutputExtraInformationCard,
@@ -102,6 +102,123 @@ export function createIdentifierField(
   }
 
   return {};
+}
+export type ResearchOutputState = {
+  title: string;
+  description: string;
+  link?: string;
+  type: string;
+  tags: readonly string[];
+  methods: string[];
+  organisms: string[];
+  environments: string[];
+  subtype?: string;
+  labCatalogNumber?: string;
+  teams: NonNullable<
+    ComponentProps<typeof ResearchOutputContributorsCard>['teams']
+  >;
+  labs: ComponentProps<typeof ResearchOutputContributorsCard>['labs'];
+  authors: ComponentProps<typeof ResearchOutputContributorsCard>['authors'];
+  identifierType?: ResearchOutputIdentifierType;
+  identifier?: string;
+};
+
+export function isDirty(
+  {
+    title,
+    description,
+    link,
+    tags,
+    type,
+    methods,
+    organisms,
+    environments,
+    teams,
+    labs,
+    authors,
+    subtype,
+    labCatalogNumber,
+    identifierType,
+    identifier,
+  }: ResearchOutputState,
+  researchOutputData?: ResearchOutputResponse,
+): boolean {
+  if (researchOutputData) {
+    return (
+      title !== researchOutputData.title ||
+      description !== researchOutputData.description ||
+      link !== researchOutputData.link ||
+      type !== researchOutputData.type ||
+      !equals(methods, researchOutputData.methods) ||
+      !equals(organisms, researchOutputData.organisms) ||
+      !equals(environments, researchOutputData.environments) ||
+      !equals(
+        teams.map((team) => team.value),
+        researchOutputData.teams.map((team) => team.id),
+      ) ||
+      (labs &&
+        !equals(
+          labs.map((lab) => lab.value),
+          researchOutputData.labs.map((lab) => lab.id),
+        )) ||
+      (authors &&
+        !equals(
+          authors.map((author) => author.value),
+          researchOutputData.authors.map((author) => author?.id),
+        )) ||
+      subtype !== researchOutputData.subtype ||
+      identifierType !== getIdentifierType(researchOutputData) ||
+      isIdentifierModified(researchOutputData, identifier)
+    );
+  }
+  return (
+    tags?.length !== 0 ||
+    title !== '' ||
+    description !== '' ||
+    link !== '' ||
+    type !== '' ||
+    labs?.length !== 0 ||
+    authors?.length !== 0 ||
+    methods.length !== 0 ||
+    organisms.length !== 0 ||
+    environments.length !== 0 ||
+    labCatalogNumber !== '' ||
+    subtype !== undefined ||
+    teams?.length !== 1 ||
+    identifier !== '' ||
+    identifierType !== ResearchOutputIdentifierType.Empty
+  );
+}
+
+export function getIdentifierType(
+  researchOutputData: ResearchOutputResponse,
+): ResearchOutputIdentifierType {
+  if (researchOutputData?.doi) return ResearchOutputIdentifierType.DOI;
+
+  if (researchOutputData?.accession)
+    return ResearchOutputIdentifierType.AccessionNumber;
+
+  if (researchOutputData?.rrid) return ResearchOutputIdentifierType.RRID;
+
+  return ResearchOutputIdentifierType.Empty;
+}
+
+export function isIdentifierModified(
+  researchOutputData: ResearchOutputResponse,
+  identifier?: string,
+): boolean {
+  return (
+    researchOutputData.doi !== identifier &&
+    researchOutputData.accession !== identifier &&
+    researchOutputData.rrid !== identifier
+  );
+}
+
+export function getPublishDate(publishDate?: string): Date | undefined {
+  if (publishDate) {
+    return new Date(publishDate);
+  }
+  return undefined;
 }
 
 const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({

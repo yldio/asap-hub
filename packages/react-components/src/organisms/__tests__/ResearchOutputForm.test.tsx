@@ -80,6 +80,7 @@ it('renders the edit form button when research output data is present', async ()
       <ResearchOutputForm
         {...props}
         researchOutputData={createResearchOutputResponse()}
+        isEditMode
       />
     </StaticRouter>,
   );
@@ -615,16 +616,6 @@ describe('isDirty', () => {
     identifierType: ResearchOutputIdentifierType.Empty,
   };
 
-  it('returns true for edit mode when values differ from the initial ones', () => {
-    expect(
-      isDirty(payload, {
-        ...researchOutputResponse,
-        title: 'Changed title',
-        doi: '12.1234',
-      }),
-    ).toBeTruthy();
-  });
-
   it('returns true for edit mode when teams are in diff order', () => {
     expect(
       isDirty(
@@ -697,6 +688,32 @@ describe('isDirty', () => {
       ),
     ).toBeTruthy();
   });
+
+  it.each`
+    key                   | value
+    ${'title'}            | ${'Output 1 changed'}
+    ${'description'}      | ${'new changed description'}
+    ${'link'}             | ${'https://changed.com'}
+    ${'type'}             | ${'Data set'}
+    ${'tags'}             | ${['changed tag']}
+    ${'methods'}          | ${['Activity Assay']}
+    ${'organisms'}        | ${['Rat']}
+    ${'teams'}            | ${['In Vivo']}
+    ${'environments'}     | ${[{ label: 'team1', value: 't99' }]}
+    ${'authors'}          | ${[{ label: 'author1', value: 'a111' }]}
+    ${'subtype'}          | ${'Postmortem'}
+    ${'labCatalogNumber'} | ${'1'}
+    ${'labs'}             | ${['Asap Lab']}
+    ${'identifierType'}   | ${'RRID'}
+    ${'rrid'}             | ${'101994'}
+  `(
+    'Return true when $key is changed to $value and differs from the initial one',
+    async ({ key, value }) => {
+      const payloadKey: keyof typeof payload = key;
+      payload[payloadKey] = value;
+      expect(isDirty(payload, researchOutputResponse)).toBeTruthy();
+    },
+  );
 });
 
 describe('getPublishDate', () => {

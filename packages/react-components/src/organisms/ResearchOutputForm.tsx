@@ -76,6 +76,7 @@ type ResearchOutputFormProps = Pick<
     documentType: ResearchOutputDocumentType;
     team: TeamResponse;
     researchOutputData?: ResearchOutputResponse;
+    isEditMode?: boolean;
   };
 
 const identifierTypeToFieldName: Record<
@@ -233,10 +234,11 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   serverValidationErrors,
   clearServerValidationError,
   researchOutputData,
+  isEditMode,
 }) => {
   const historyPush = usePushFromHere();
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>(
-    researchOutputData?.tags.map((tag) => tag) || [],
+    (researchOutputData?.tags as string[]) || [],
   );
   const [type, setType] = useState<ResearchOutputPostRequest['type'] | ''>(
     researchOutputData?.type || '',
@@ -324,13 +326,13 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   );
 
   const [methods, setMethods] = useState<string[]>(
-    researchOutputData?.methods.map((method) => method) || [],
+    researchOutputData?.methods || [],
   );
   const [organisms, setOrganisms] = useState<string[]>(
-    researchOutputData?.organisms.map((organism) => organism) || [],
+    researchOutputData?.organisms || [],
   );
   const [environments, setEnvironments] = useState<string[]>(
-    researchOutputData?.environments.map((environment) => environment) || [],
+    researchOutputData?.environments || [],
   );
   const [subtype, setSubtype] = useState<string | undefined>(
     researchOutputData?.subtype || '',
@@ -503,7 +505,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   return researchOutput;
                 }}
               >
-                {researchOutputData ? 'Save' : 'Publish'}
+                {isEditMode ? 'Save' : 'Publish'}
               </Button>
             </div>
           </div>

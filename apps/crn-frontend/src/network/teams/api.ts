@@ -123,7 +123,7 @@ export const updateTeamResearchOutput = async (
         .map((teamId) => teamId)
         .join(
           ', ',
-        )} Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+        )} Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
       response,
       resp.status,
     );

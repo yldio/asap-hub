@@ -3,6 +3,7 @@ import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ListTeamResponse,
   ResearchOutputPostRequest,
+  ResearchOutputPutRequest,
   ResearchTagResponse,
   TeamPatchRequest,
   TeamResponse,
@@ -198,7 +199,7 @@ export const usePostTeamResearchOutput = () => {
 export const usePutTeamResearchOutput = (id: string) => {
   const authorization = useRecoilValue(authorizationState);
   const setResearchOutputItem = useSetResearchOutputItem();
-  return async (payload: ResearchOutputPostRequest) => {
+  return async (payload: ResearchOutputPutRequest) => {
     const researchOutput = await updateTeamResearchOutput(
       payload,
       authorization,

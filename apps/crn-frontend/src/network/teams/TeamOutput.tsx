@@ -70,6 +70,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   researchOutputData,
 }) => {
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
+  const isEditMode = !!researchOutputData;
   const { researchOutputId } = useRouteParams(
     sharedResearch({}).researchOutput,
   );
@@ -132,10 +133,11 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             setErrors(clearAjvErrorForPath(errors, instancePath))
           }
           researchOutputData={researchOutputData}
+          isEditMode={isEditMode}
           onSave={(
             output: ResearchOutputPostRequest | ResearchOutputPutRequest,
           ) =>
-            researchOutputData
+            isEditMode
               ? updateResearchOutput(output).catch(handleError)
               : createResearchOutput(output).catch(handleError)
           }

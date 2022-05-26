@@ -83,5 +83,3 @@ describe('the shared research listing page', () => {
     );
   });
 });
-
-describe('the shared research edit page', () => {});

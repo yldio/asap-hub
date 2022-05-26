@@ -165,10 +165,10 @@ describe('teamResearchOutput', () => {
     expect(nock.isDone()).toBe(true);
   });
 
-  it('makes an authorized PUT request to create a research output', async () => {
+  it('makes an authorized PUT request to update a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .put('/research-outputs/123', payload)
-      .reply(201, { id: 123 });
+      .reply(200, { id: 123 });
 
     await updateTeamResearchOutput(payload, 'Bearer x', '123');
     expect(nock.isDone()).toBe(true);
@@ -190,7 +190,7 @@ describe('teamResearchOutput', () => {
     await expect(
       updateTeamResearchOutput(payload, 'Bearer x', '123'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to update research output for teams 90210 Expected status 201. Received status 500."`,
+      `"Failed to update research output for teams 90210 Expected status 200. Received status 500."`,
     );
   });
 });

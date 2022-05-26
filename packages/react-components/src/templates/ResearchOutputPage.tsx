@@ -7,6 +7,7 @@ import { perRem } from '../pixels';
 
 type ResearchOutputPageProps = {
   researchOutputData?: ResearchOutputResponse;
+  isEditMode?: boolean;
 } & ComponentProps<typeof ResearchOutputHeader> &
   ComponentProps<typeof ResearchOutputForm>;
 
@@ -19,6 +20,7 @@ const mainStyles = css({
 const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
   documentType,
   researchOutputData,
+  isEditMode,
   ...formProps
 }) => (
   <>
@@ -28,6 +30,7 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
         {...formProps}
         documentType={documentType}
         researchOutputData={researchOutputData}
+        isEditMode={isEditMode}
       />
     </main>
   </>

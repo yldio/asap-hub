@@ -1,5 +1,5 @@
 import { Suspense, ContextType } from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Switch } from 'react-router-dom';
 import { sharedResearch } from '@asap-hub/routing';
 import { UserTeam } from '@asap-hub/model';
@@ -110,9 +110,11 @@ describe('a grant document research output', () => {
       ],
       title: 'Grant Document title!',
     });
-    const { getByText } = await renderComponent(researchOutputRoute.$);
+    await renderComponent(researchOutputRoute.$);
 
-    expect(getByText('Grant Document title!')).toBeVisible();
+    expect(
+      screen.getByRole('heading', { name: 'Grant Document title!' }),
+    ).toBeVisible();
   });
   it('links to a teams', async () => {
     mockGetResearchOutput.mockResolvedValue({
@@ -146,13 +148,12 @@ describe('a grant document research output', () => {
       ],
     });
 
-    const { getByRole, getByText } = await renderComponent(
-      researchOutputRoute.editResearchOutput({}).$,
-    );
+    await renderComponent(researchOutputRoute.editResearchOutput({}).$);
+
     expect(
-      getByRole('heading', { name: /Share bioinformatics/i }),
+      screen.getByRole('heading', { name: /Share bioinformatics/i }),
     ).toBeInTheDocument();
-    expect(getByText('Save')).toBeVisible();
+    expect(screen.getByText('Save')).toBeVisible();
   });
 
   it('renders sorry page if you cannot edit', async () => {

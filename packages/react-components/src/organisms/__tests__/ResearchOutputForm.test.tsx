@@ -727,7 +727,7 @@ describe('getPublishDate', () => {
   });
 });
 
-describe.only('getDecision', () => {
+describe('getDecision', () => {
   it('returns yes for true', () => {
     expect(getDecision(true)).toEqual('Yes');
   });

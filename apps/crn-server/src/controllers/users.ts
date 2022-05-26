@@ -5,7 +5,6 @@ import {
   UserResponse,
 } from '@asap-hub/model';
 import {
-  config,
   RestUser,
   SquidexGraphqlClient,
   SquidexRest,
@@ -13,9 +12,7 @@ import {
 } from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
-import FormData from 'form-data';
 import { Got } from 'got';
-import mime from 'mime-types';
 import createUserProvider, { UserDataProvider } from '../data-providers/users';
 import { parseUser, parseUserToResponse } from '../entities';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
@@ -121,22 +118,7 @@ export default class Users implements UserController {
     avatar: Buffer,
     contentType: string,
   ): Promise<UserResponse> {
-    const form = new FormData();
-    form.append('file', avatar, {
-      filename: `${id}.${mime.extension(contentType)}`,
-      contentType,
-    });
-
-    const { id: assetId } = await this.userSquidexRestClient.client
-      .post('assets', {
-        prefixUrl: `${config.baseUrl}/api/apps/${config.appName}`,
-        headers: form.getHeaders(),
-        body: form,
-      })
-      .json();
-
-    await this.userSquidexRestClient.patch(id, { avatar: { iv: [assetId] } });
-
+    await this.userDataProvider.updateAvatar(id, avatar, contentType);
     // use fetch for proper user teams hydration
     return this.fetchById(id);
   }

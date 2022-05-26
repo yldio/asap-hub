@@ -1,9 +1,14 @@
 import { UserDataObject, UserPatchDataObject } from '@asap-hub/model';
 import {
+  config,
+  RestUser,
   sanitiseForSquidex,
   SquidexGraphqlClient,
   SquidexRest,
+  SquidexRestClient,
 } from '@asap-hub/squidex';
+import FormData from 'form-data';
+import mime from 'mime-types';
 import {
   FetchUserQuery,
   FetchUserQueryVariables,
@@ -19,11 +24,12 @@ export interface UserDataProvider {
   update(id: string, update: UserPatchDataObject): Promise<void>;
   fetch(options: FetchUsersOptions): Promise<UserDataObject[]>;
   fetchByCode(code: string): Promise<UserDataObject[]>;
+  updateAvatar(id: string, avatar: Buffer, contentType: string): Promise<void>;
 }
 export default function users(
   squidexGraphlClient: SquidexGraphqlClient,
 ): UserDataProvider {
-  const userSquidexRestClient = new SquidexRest('users');
+  const userSquidexRestClient = new SquidexRest<RestUser>('users');
   const fetchById = async (id: string) => {
     const { findUsersContent } = await queryFetchByIdData(
       squidexGraphlClient,
@@ -58,8 +64,22 @@ export default function users(
     const filter = `data/connections/iv/code eq '${code}'`;
     return queryForUsers(squidexGraphlClient, filter, 1, 0);
   };
+  const updateAvatar = async (
+    id: string,
+    avatar: Buffer,
+    contentType: string,
+  ) => {
+    const assetId = await uploadAvatar(
+      userSquidexRestClient,
+      id,
+      avatar,
+      contentType,
+    );
 
-  return { fetchById, update, fetch, fetchByCode };
+    await userSquidexRestClient.patch(id, { avatar: { iv: [assetId] } });
+  };
+
+  return { fetchById, update, fetch, fetchByCode, updateAvatar };
 }
 const shouldDoFullUpdate = (userToUpdate: UserPatchDataObject) =>
   userToUpdate.teams?.length ||
@@ -183,4 +203,26 @@ function generateFetchQueryFilter(options: FetchUsersOptions) {
     .join(' and ')
     .trim();
   return queryFilter;
+}
+
+async function uploadAvatar(
+  userSquidexRestClient: SquidexRestClient<RestUser>,
+  id: string,
+  avatar: Buffer,
+  contentType: string,
+): Promise<string> {
+  const form = new FormData();
+  form.append('file', avatar, {
+    filename: `${id}.${mime.extension(contentType)}`,
+    contentType,
+  });
+
+  const { id: assetId } = await userSquidexRestClient.client
+    .post('assets', {
+      prefixUrl: `${config.baseUrl}/api/apps/${config.appName}`,
+      headers: form.getHeaders(),
+      body: form,
+    })
+    .json();
+  return assetId;
 }

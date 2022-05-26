@@ -18,6 +18,7 @@ const mockUserDataProvider = {
   update: jest.fn(),
   fetch: jest.fn(),
   fetchByCode: jest.fn(),
+  updateAvatar: jest.fn(),
 };
 jest.mock('../../src/data-providers/users', () =>
   jest.fn().mockImplementation(() => mockUserDataProvider),
@@ -119,58 +120,13 @@ describe('Users controller', () => {
   });
 
   describe('updateAvatar', () => {
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
-    });
-
-    afterEach(() => {
-      nock.cleanAll();
-    });
-
-    test('Should throw when sync asset fails', async () => {
-      nock(config.baseUrl)
-        .post(`/api/apps/${config.appName}/assets`)
-        .reply(500);
-
-      await expect(
-        usersMockGraphqlClient.updateAvatar(
-          'user-id',
-          Buffer.from('avatar'),
-          'image/jpeg',
-        ),
-      ).rejects.toThrow();
-    });
-
-    test('should throw when fails to update user - squidex error', async () => {
-      nock(config.baseUrl)
-        .post(`/api/apps/${config.appName}/assets`)
-        .reply(200, { id: 'squidex-asset-id' })
-        .patch(`/api/content/${config.appName}/users/user-id`, {
-          avatar: { iv: ['squidex-asset-id'] },
-        })
-        .reply(500);
-
-      await expect(
-        usersMockGraphqlClient.updateAvatar(
-          'user-id',
-          Buffer.from('avatar'),
-          'image/jpeg',
-        ),
-      ).rejects.toThrow();
-    });
-
     test('should return 200 when syncs asset and updates users profile', async () => {
-      const mockResponse = getUserDataObject();
+      mockUserDataProvider.updateAvatar = jest
+        .fn()
+        .mockResolvedValue(undefined);
       mockUserDataProvider.fetchById = jest
         .fn()
-        .mockResolvedValue(mockResponse);
-      nock(config.baseUrl)
-        .post(`/api/apps/${config.appName}/assets`)
-        .reply(200, { id: 'squidex-asset-id' })
-        .patch(`/api/content/${config.appName}/users/user-id`, {
-          avatar: { iv: ['squidex-asset-id'] },
-        })
-        .reply(200, patchResponse);
+        .mockResolvedValue(getUserDataObject());
 
       const result = await usersMockGraphqlClient.updateAvatar(
         'user-id',

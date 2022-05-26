@@ -9,6 +9,7 @@ import {
   getSquidexUserGraphqlResponse,
   getSquidexUsersGraphqlResponse,
   getUserDataObject,
+  patchResponse,
 } from '../fixtures/users.fixtures';
 import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
@@ -591,6 +592,59 @@ describe('User data provider', () => {
 
       const result = await userDataProvider.fetchByCode(code);
       expect(result).toEqual([]);
+    });
+  });
+  describe('updateAvatar', () => {
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
+    test('Should throw when sync asset fails', async () => {
+      nock(config.baseUrl)
+        .post(`/api/apps/${config.appName}/assets`)
+        .reply(500);
+
+      await expect(
+        userDataProvider.updateAvatar(
+          'user-id',
+          Buffer.from('avatar'),
+          'image/jpeg',
+        ),
+      ).rejects.toThrow();
+    });
+    test('should throw when fails to update user - squidex error', async () => {
+      nock(config.baseUrl)
+        .post(`/api/apps/${config.appName}/assets`)
+        .reply(200, { id: 'squidex-asset-id' })
+        .patch(`/api/content/${config.appName}/users/user-id`, {
+          avatar: { iv: ['squidex-asset-id'] },
+        })
+        .reply(500);
+
+      await expect(
+        userDataProvider.updateAvatar(
+          'user-id',
+          Buffer.from('avatar'),
+          'image/jpeg',
+        ),
+      ).rejects.toThrow();
+    });
+    test('should return  when syncs asset and updates users profile', async () => {
+      nock(config.baseUrl)
+        .post(`/api/apps/${config.appName}/assets`)
+        .reply(200, { id: 'squidex-asset-id' })
+        .patch(`/api/content/${config.appName}/users/user-id`, {
+          avatar: { iv: ['squidex-asset-id'] },
+        })
+        .reply(200, patchResponse);
+
+      const result = await userDataProvider.updateAvatar(
+        'user-id',
+        Buffer.from('avatar'),
+        'image/jpeg',
+      );
+      expect(result).toEqual(undefined);
+      expect(nock.isDone()).toBe(true);
     });
   });
 });

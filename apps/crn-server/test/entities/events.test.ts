@@ -47,7 +47,7 @@ describe('events entity', () => {
         },
       };
       expect(() => parseGraphQLEvent(event)).toThrowError(
-        'Team is required in event speaker',
+        'Either team or external author is required',
       );
     });
     test('throws when provided an invalid event status', () => {
@@ -151,7 +151,6 @@ describe('events entity', () => {
 
       const expectedSpeakers: EventSpeakerExternalUser[] = [
         {
-          team: getEventSpeakerUser().team,
           externalUser: {
             name: 'Adam Brown',
             orcid: 'https://orcid.org/0000-0002-1825-0097',

@@ -147,16 +147,9 @@ export const getSquidexGraphqlEventSpeakerWithUser = (): NonNullable<
 });
 
 export const getSquidexGraphqlEventSpeakerWithExternalUser = (): NonNullable<
-  NonNullable<EventContentFragment['flatData']['speakers']>[number]
-> => ({
-  team: [
-    {
-      id: 'team-id-3',
-      flatData: {
-        displayName: 'The team three',
-      },
-    },
-  ],
+  EventContentFragment['flatData']['speakers']
+>[number] => ({
+  team: [],
   user: [
     {
       __typename: 'ExternalAuthors',

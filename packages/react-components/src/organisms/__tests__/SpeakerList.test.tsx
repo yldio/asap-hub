@@ -23,6 +23,13 @@ const unnanouncedSpeaker: EventSpeaker = {
   team: { ...team },
 };
 
+const externalSpeaker: EventSpeaker = {
+  externalUser: {
+    name: 'Jhonny External',
+    orcid: '',
+  },
+};
+
 describe('When rendering the speaker list', () => {
   describe('Event is upcoming', () => {
     it('Renders an unnanounced user', async () => {
@@ -65,6 +72,19 @@ describe('When rendering the speaker list', () => {
         getAllByRole('heading').map(({ textContent }) => textContent),
       ).toEqual([...gridLabels]);
       expect(getByText('Genetics')).toBeVisible();
+    });
+
+    it('Renders external author', async () => {
+      const event = {
+        ...createEventResponse(),
+        speakers: [externalSpeaker],
+      };
+
+      const { getByText } = render(<SpeakersList {...event} />);
+
+      expect(getByText('External Speaker')).toBeVisible();
+      expect(getByText('Jhonny External')).toBeVisible();
+      expect(getByText('Guest')).toBeVisible();
     });
   });
 

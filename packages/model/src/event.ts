@@ -34,7 +34,6 @@ export type EventSpeakerUser = {
 };
 
 export type EventSpeakerExternalUser = {
-  team: Pick<TeamResponse, 'displayName' | 'id'>;
   externalUser: EventSpeakerExternalUserData;
 };
 

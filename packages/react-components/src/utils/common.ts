@@ -1,3 +1,4 @@
+import { ComponentProps } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import {
   ResearchOutputResponse,
@@ -9,6 +10,7 @@ import {
   slackIcon,
   googleCalendarIcon,
 } from '../icons';
+import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
 
 /* istanbul ignore next */
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -73,6 +75,22 @@ export const getIconFromUrl = (url: string): JSX.Element | undefined => {
   return icon?.[1];
 };
 
+type ResearchOutputState = {
+  title: string;
+  description: string;
+  link: string | undefined;
+  type: string;
+  tags: string[];
+  methods: string[];
+  organisms: string[];
+  environments: string[];
+  subtype: string | undefined;
+  labCatalogNumber: string | undefined;
+  teams: ComponentProps<typeof ResearchOutputContributorsCard>['teams'];
+  labs: ComponentProps<typeof ResearchOutputContributorsCard>['labs'];
+  authors: ComponentProps<typeof ResearchOutputContributorsCard>['authors'];
+};
+
 export const isDirty = (
   {
     title,
@@ -88,7 +106,7 @@ export const isDirty = (
     authors,
     subtype,
     labCatalogNumber,
-  }: any,
+  }: ResearchOutputState,
   researchOutputData?: ResearchOutputResponse,
 ): boolean => {
   if (researchOutputData) {
@@ -100,9 +118,9 @@ export const isDirty = (
       !equals(methods, researchOutputData.methods) ||
       !equals(organisms, researchOutputData.organisms) ||
       !equals(environments, researchOutputData.environments) ||
-      teams.length !== researchOutputData.teams.length ||
-      labs.length !== researchOutputData.labs.length ||
-      authors.length !== researchOutputData.authors.length ||
+      teams?.length !== researchOutputData?.teams.length ||
+      labs?.length !== researchOutputData?.labs.length ||
+      authors?.length !== researchOutputData.authors.length ||
       subtype !== researchOutputData.subtype
     );
   }
@@ -112,18 +130,18 @@ export const isDirty = (
     description !== '' ||
     link !== '' ||
     type !== undefined ||
-    labs.length !== 0 ||
-    authors.length !== 0 ||
+    labs?.length !== 0 ||
+    authors?.length !== 0 ||
     methods.length !== 0 ||
     organisms.length !== 0 ||
     environments.length !== 0 ||
     labCatalogNumber !== '' ||
     subtype !== undefined ||
-    teams.length !== 1
+    teams?.length !== 1
   );
 };
 
-export const equals = (a: Array<string>, b: Array<string>) =>
+export const equals = (a: Array<string>, b: Array<string>): boolean =>
   JSON.stringify(a) === JSON.stringify(b);
 
 export const getIdentifierType = (

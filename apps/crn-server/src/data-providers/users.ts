@@ -139,18 +139,21 @@ export default function createUserDataProvider(
       fetchOrcidProfile(user!.data.orcid!.iv),
     );
 
-    const update: Partial<RestUser['data']> = {
+    const updateToUser: Partial<RestUser['data']> = {
       email: { iv: user.data.email.iv },
       orcidLastSyncDate: { iv: new Date().toISOString() },
     };
 
     if (!error) {
       const { lastModifiedDate, works } = transformOrcidWorks(res);
-      update.orcidLastModifiedDate = { iv: lastModifiedDate };
-      update.orcidWorks = { iv: works.slice(0, 10) };
+      updateToUser.orcidLastModifiedDate = { iv: lastModifiedDate };
+      updateToUser.orcidWorks = { iv: works.slice(0, 10) };
     }
 
-    const updatedUser = await userSquidexRestClient.patch(user.id, update);
+    const updatedUser = await userSquidexRestClient.patch(
+      user.id,
+      updateToUser,
+    );
     return parseUserToDataObject(updatedUser);
   };
   return {

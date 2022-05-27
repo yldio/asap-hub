@@ -42,7 +42,7 @@ describe('Migration utils', () => {
 
     test('Should invoke the given processing function for every item in the result', async () => {
       const mockFetchResult: Results<RestUser> = {
-        items: [restUserMock, restUserMock],
+        items: [restUserMock(), restUserMock()],
         total: 2,
       };
 
@@ -54,18 +54,18 @@ describe('Migration utils', () => {
 
       expect(processingFunction).toBeCalledTimes(2);
       expect(processingFunction).toBeCalledWith(
-        restUserMock,
+        restUserMock(),
         expect.any(SquidexRest),
       );
     });
 
     test('Should invoke the given processing function with the results from each iteration', async () => {
       const mockFetchFirstResult: Results<RestUser> = {
-        items: Array(10).fill(restUserMock),
+        items: Array(10).fill(restUserMock()),
         total: 11,
       };
       const mockFetchSecondResult: Results<RestUser> = {
-        items: Array(1).fill(restUserMock),
+        items: Array(1).fill(restUserMock()),
         total: 11,
       };
 
@@ -79,7 +79,7 @@ describe('Migration utils', () => {
 
       expect(processingFunction).toBeCalledTimes(11);
       expect(processingFunction).toBeCalledWith(
-        restUserMock,
+        restUserMock(),
         expect.any(SquidexRest),
       );
     });

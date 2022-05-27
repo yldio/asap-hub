@@ -284,7 +284,7 @@ describe('User data provider', () => {
         .patch(`/api/content/${config.appName}/users/${userId}`, {
           jobTitle: { iv: 'CEO' },
         })
-        .reply(200, fetchUserResponse);
+        .reply(200, fetchUserResponse());
 
       expect(
         await userDataProvider.update(userId, { jobTitle: 'CEO' }),
@@ -297,7 +297,7 @@ describe('User data provider', () => {
           country: { iv: 'United Kingdom' },
           city: { iv: 'Brighton' },
         })
-        .reply(200, fetchUserResponse);
+        .reply(200, fetchUserResponse());
       expect(
         await userDataProvider.update(userId, {
           country: 'United Kingdom',
@@ -312,9 +312,9 @@ describe('User data provider', () => {
       delete mockResponse.contactEmail;
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fetchUserResponse)
+        .reply(200, fetchUserResponse())
         .put(`/api/content/${config.appName}/users/${userId}`, {
-          ...fetchUserResponse.data,
+          ...fetchUserResponse().data,
           contactEmail: { iv: null },
         } as { [k: string]: any })
         .reply(200, fetchUserResponse); // this response is ignored
@@ -339,7 +339,7 @@ describe('User data provider', () => {
           questions: { iv: [{ question: 'To be or not to be?' }] },
           social: { iv: [{ github: 'johnytiago' }] },
         } as { [k: string]: any })
-        .reply(200, fetchUserResponse);
+        .reply(200, fetchUserResponse());
 
       const result = await userDataProvider.update(userId, {
         questions: ['To be or not to be?'],
@@ -370,7 +370,7 @@ describe('User data provider', () => {
           `/api/content/${config.appName}/users/${userId}`,
           expectedPatchRequest as DataMatcherMap,
         )
-        .reply(200, fetchUserResponse);
+        .reply(200, fetchUserResponse());
 
       const result = await userDataProvider.update(userId, {
         researchInterests: 'new research interests',
@@ -384,12 +384,12 @@ describe('User data provider', () => {
       mockResponse.teams = [{ id: 'team-id', role: 'Key Personnel' }];
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fetchUserResponse)
+        .reply(200, fetchUserResponse())
         .put(`/api/content/${config.appName}/users/${userId}`, {
-          ...fetchUserResponse.data,
+          ...fetchUserResponse().data,
           teams: { iv: [{ id: 'team-id' }] },
         } as { [k: string]: any })
-        .reply(200, fetchUserResponse); // this response is ignored
+        .reply(200, fetchUserResponse()); // this response is ignored
 
       userDataProvider.fetchById = jest.fn().mockResolvedValue(mockResponse);
       const result = await userDataProvider.update(userId, {
@@ -638,7 +638,7 @@ describe('User data provider', () => {
         .patch(`/api/content/${config.appName}/users/user-id`, {
           avatar: { iv: ['squidex-asset-id'] },
         })
-        .reply(200, patchResponse);
+        .reply(200, patchResponse());
 
       const result = await userDataProvider.updateAvatar(
         'user-id',
@@ -673,7 +673,7 @@ describe('User data provider', () => {
     });
     test('Shouldnt do anything if connecting with existing code', async () => {
       const userId = 'google-oauth2|token';
-      const connectedUser = JSON.parse(JSON.stringify(patchResponse));
+      const connectedUser = JSON.parse(JSON.stringify(patchResponse()));
       connectedUser.data.connections.iv = [{ code: userId }];
 
       nock(config.baseUrl)
@@ -692,7 +692,7 @@ describe('User data provider', () => {
     });
     test('Should filter teams where teamId is undefined', async () => {
       const userId = 'google-oauth2|token';
-      const connectedUser = JSON.parse(JSON.stringify(patchResponse));
+      const connectedUser = JSON.parse(JSON.stringify(patchResponse()));
       connectedUser.data.connections.iv = [{ code: userId }];
       connectedUser.data.teams.iv = [
         {
@@ -732,7 +732,7 @@ describe('User data provider', () => {
 
     test('Should connect user', async () => {
       const userId = 'google-oauth2|token';
-      const patchedUser = JSON.parse(JSON.stringify(patchResponse));
+      const patchedUser = JSON.parse(JSON.stringify(patchResponse()));
       patchedUser.data.connections.iv = [{ code: userId }];
 
       nock(config.baseUrl)
@@ -741,9 +741,9 @@ describe('User data provider', () => {
           $top: 1,
           $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
         })
-        .reply(200, { total: 1, items: [patchResponse] })
-        .patch(`/api/content/${config.appName}/users/${patchResponse.id}`, {
-          email: { iv: patchResponse.data.email.iv },
+        .reply(200, { total: 1, items: [patchResponse()] })
+        .patch(`/api/content/${config.appName}/users/${patchResponse().id}`, {
+          email: { iv: patchResponse().data.email.iv },
           connections: { iv: [{ code: userId }] },
         })
         .reply(200, patchedUser);
@@ -779,9 +779,9 @@ describe('User data provider', () => {
     test('Should update user profile even when ORCID returns 500', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fetchUserResponse)
+        .reply(200, fetchUserResponse())
         .patch(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fetchUserResponse);
+        .reply(200, fetchUserResponse());
 
       // times 3 because got will retry on 5XXs
       nock('https://pub.orcid.org')
@@ -796,18 +796,18 @@ describe('User data provider', () => {
     test('Should successfully fetch and update user - with id', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fetchUserResponse)
+        .reply(200, fetchUserResponse())
         .patch(
           `/api/content/${config.appName}/users/${userId}`,
           matches({
-            email: { iv: fetchUserResponse.data.email.iv },
+            email: { iv: fetchUserResponse().data.email.iv },
             orcidLastModifiedDate: {
               iv: `${orcidFixtures.orcidWorksResponse['last-modified-date'].value}`,
             },
             orcidWorks: { iv: orcidFixtures.orcidWorksDeserialisedExpectation },
           }),
         )
-        .reply(200, fetchUserResponse);
+        .reply(200, fetchUserResponse());
 
       nock('https://pub.orcid.org')
         .get(`/v2.1/${orcid}/works`)
@@ -822,14 +822,14 @@ describe('User data provider', () => {
         .patch(
           `/api/content/${config.appName}/users/${userId}`,
           matches({
-            email: { iv: fetchUserResponse.data.email.iv },
+            email: { iv: fetchUserResponse().data.email.iv },
             orcidLastModifiedDate: {
               iv: `${orcidFixtures.orcidWorksResponse['last-modified-date'].value}`,
             },
             orcidWorks: { iv: orcidFixtures.orcidWorksDeserialisedExpectation },
           }),
         )
-        .reply(200, fetchUserResponse);
+        .reply(200, fetchUserResponse());
 
       nock('https://pub.orcid.org')
         .get(`/v2.1/${orcid}/works`)
@@ -837,7 +837,7 @@ describe('User data provider', () => {
 
       const result = await userDataProvider.syncOrcidProfile(
         userId,
-        fetchUserResponse,
+        fetchUserResponse(),
       );
       expect(result).toBeDefined(); // we only care that the update is made
     });

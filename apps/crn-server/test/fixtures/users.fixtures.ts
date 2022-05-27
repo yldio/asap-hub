@@ -157,7 +157,7 @@ type GraphQLUserTeamFlatData = NonNullable<
   FetchUserQuery['findUsersContent']
 >['flatData'];
 
-export const patchResponse: RestUser = {
+export const patchResponse = (): RestUser => ({
   id: 'userId',
   data: {
     onboarded: { iv: true },
@@ -196,8 +196,45 @@ export const patchResponse: RestUser = {
   created: '2020-09-25T09:42:51Z',
   lastModified: '2020-09-25T09:42:51Z',
   version: 42,
-};
-export const fetchUserResponse = patchResponse;
+});
+export const fetchUserResponse = () => patchResponse();
+export const fetchUserResponseDataObject = () => ({
+  avatarUrl:
+    'https://cloud.squidex.io/api/assets/asap-hub-dev/squidex-asset-id',
+  createdDate: '2020-09-25T09:42:51.000Z',
+  email: 'cristiano@ronaldo.com',
+  expertiseAndResourceDescription: 'some expertiseAndResourceTags',
+  expertiseAndResourceTags: [],
+  firstName: 'Cristiano',
+  id: 'userId',
+  institution: 'Dollar General Corporation',
+  jobTitle: 'Junior',
+  labs: [],
+  lastModifiedDate: '2020-09-25T09:42:51.132Z',
+  lastName: 'Ronaldo',
+  onboarded: true,
+  orcid: '363-98-9330',
+  orcidWorks: [],
+  questions: [],
+  reachOut: 'some reach out',
+  responsibilities: 'some responsibilities',
+  role: 'Grantee',
+  social: {
+    orcid: '363-98-9330',
+  },
+  teams: [
+    {
+      displayName: 'Unknown',
+      id: 'team-id-1',
+      role: 'Lead PI (Core Leadership)',
+    },
+    {
+      displayName: 'Unknown',
+      id: 'team-id-3',
+      role: 'Collaborating PI',
+    },
+  ],
+});
 
 export const updateAvatarBody: { avatar: string } = {
   avatar:

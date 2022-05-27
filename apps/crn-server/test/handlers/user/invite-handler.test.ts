@@ -23,18 +23,18 @@ describe('Invite Handler', () => {
   test('Should throw when the user is not found', async () => {
     userClient.fetchById.mockRejectedValueOnce(notFound());
 
-    const event = getEventBridgeEventMock(restUserMock.id);
+    const event = getEventBridgeEventMock(restUserMock().id);
 
     await expect(inviteHandler(event)).rejects.toThrow(
-      `Unable to find a user with ID ${restUserMock.id}`,
+      `Unable to find a user with ID ${restUserMock().id}`,
     );
   });
 
   test('Should throw when it fails to save the user code', async () => {
     const userWithoutConnection: RestUser = {
-      ...restUserMock,
+      ...restUserMock(),
       data: {
-        ...restUserMock.data,
+        ...restUserMock().data,
         connections: {
           iv: [],
         },
@@ -43,18 +43,18 @@ describe('Invite Handler', () => {
     userClient.fetchById.mockResolvedValueOnce(userWithoutConnection);
     userClient.patch.mockRejectedValueOnce(new Error('some error'));
 
-    const event = getEventBridgeEventMock(restUserMock.id);
+    const event = getEventBridgeEventMock(restUserMock().id);
 
     await expect(inviteHandler(event)).rejects.toThrow(
-      `Unable to save the code for the user with ID ${restUserMock.id}`,
+      `Unable to save the code for the user with ID ${restUserMock().id}`,
     );
   });
 
   test('Should throw when it fails to send the email but still save the new invitation code', async () => {
     const userWithoutConnection: RestUser = {
-      ...restUserMock,
+      ...restUserMock(),
       data: {
-        ...restUserMock.data,
+        ...restUserMock().data,
         connections: {
           iv: [],
         },
@@ -63,10 +63,10 @@ describe('Invite Handler', () => {
     userClient.fetchById.mockResolvedValueOnce(userWithoutConnection);
     sendEmailMock.mockRejectedValueOnce(new Error('some error'));
 
-    const event = getEventBridgeEventMock(restUserMock.id);
+    const event = getEventBridgeEventMock(restUserMock().id);
 
     await expect(inviteHandler(event)).rejects.toThrow(
-      `Unable to send the email for the user with ID ${restUserMock.id}`,
+      `Unable to send the email for the user with ID ${restUserMock().id}`,
     );
     expect(userClient.patch).toBeCalledWith(userWithoutConnection.id, {
       connections: {
@@ -78,9 +78,9 @@ describe('Invite Handler', () => {
   test('Should not send the invitation email for a user that already has the invitation code', async () => {
     const code = 'c6fdb21b-32f3-4549-ac17-d0c83dc5335b';
     const userWithConnection: RestUser = {
-      ...restUserMock,
+      ...restUserMock(),
       data: {
-        ...restUserMock.data,
+        ...restUserMock().data,
         connections: {
           iv: [
             {
@@ -92,7 +92,7 @@ describe('Invite Handler', () => {
     };
     userClient.fetchById.mockResolvedValueOnce(userWithConnection);
 
-    const event = getEventBridgeEventMock(restUserMock.id);
+    const event = getEventBridgeEventMock(restUserMock().id);
 
     await inviteHandler(event);
 
@@ -102,9 +102,9 @@ describe('Invite Handler', () => {
 
   test('Should find the user with a non-matching invitation code, create an invitation code and send the invitation email', async () => {
     const userWithOtherConnection: RestUser = {
-      ...restUserMock,
+      ...restUserMock(),
       data: {
-        ...restUserMock.data,
+        ...restUserMock().data,
         connections: {
           iv: [
             {
@@ -116,7 +116,7 @@ describe('Invite Handler', () => {
     };
     userClient.fetchById.mockResolvedValueOnce(userWithOtherConnection);
 
-    const event = getEventBridgeEventMock(restUserMock.id);
+    const event = getEventBridgeEventMock(restUserMock().id);
 
     await inviteHandler(event);
 
@@ -140,9 +140,9 @@ describe('Invite Handler', () => {
 
   test('Should find the user without an invitation code, create the invitation code and send the invitation email', async () => {
     const userWithoutConnection: RestUser = {
-      ...restUserMock,
+      ...restUserMock(),
       data: {
-        ...restUserMock.data,
+        ...restUserMock().data,
         connections: {
           iv: [],
         },
@@ -150,7 +150,7 @@ describe('Invite Handler', () => {
     };
     userClient.fetchById.mockResolvedValueOnce(userWithoutConnection);
 
-    const event = getEventBridgeEventMock(restUserMock.id);
+    const event = getEventBridgeEventMock(restUserMock().id);
 
     await inviteHandler(event);
 

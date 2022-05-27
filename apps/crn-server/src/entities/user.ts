@@ -98,11 +98,6 @@ const getOrcidWorkPublicationDate = (
   return date;
 };
 
-export const parseUser = (user: RestUser): UserResponse => {
-  const userDataObject = parseUserToDataObject(user);
-  return parseUserToResponse(userDataObject);
-};
-
 export const parseUserToDataObject = (user: RestUser): UserDataObject => {
   const teams: UserTeam[] =
     user.data.teams?.iv?.reduce((acc: UserTeam[], team) => {

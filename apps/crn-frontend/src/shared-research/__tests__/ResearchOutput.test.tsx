@@ -1,4 +1,4 @@
-import { Suspense, ContextType } from 'react';
+import { Suspense } from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Switch } from 'react-router-dom';
 import { sharedResearch } from '@asap-hub/routing';
@@ -7,7 +7,6 @@ import {
   createUserResponse,
   createResearchOutputResponse,
 } from '@asap-hub/fixtures';
-import { ToastContext } from '@asap-hub/react-context';
 
 import { RecoilRoot } from 'recoil';
 import {
@@ -56,10 +55,6 @@ const researchOutputRoute = sharedResearch({}).researchOutput({
   researchOutputId: id,
 });
 
-const mockToast = jest.fn() as jest.MockedFunction<
-  ContextType<typeof ToastContext>
->;
-
 const renderComponent = async (path: string) => {
   const result = render(
     <RecoilRoot
@@ -70,21 +65,19 @@ const renderComponent = async (path: string) => {
       <Auth0Provider user={user}>
         <WhenReady>
           <Suspense fallback="Loading...">
-            <ToastContext.Provider value={mockToast}>
-              <MemoryRouter initialEntries={[path]} initialIndex={1}>
-                <Switch>
-                  <Route path="/prev">Previous Page</Route>
-                  <Route
-                    path={
-                      sharedResearch.template +
-                      sharedResearch({}).researchOutput.template
-                    }
-                  >
-                    <ResearchOutput />
-                  </Route>
-                </Switch>
-              </MemoryRouter>
-            </ToastContext.Provider>
+            <MemoryRouter initialEntries={[path]} initialIndex={1}>
+              <Switch>
+                <Route path="/prev">Previous Page</Route>
+                <Route
+                  path={
+                    sharedResearch.template +
+                    sharedResearch({}).researchOutput.template
+                  }
+                >
+                  <ResearchOutput />
+                </Route>
+              </Switch>
+            </MemoryRouter>
           </Suspense>
         </WhenReady>
       </Auth0Provider>

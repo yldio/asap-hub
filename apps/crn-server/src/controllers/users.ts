@@ -4,16 +4,9 @@ import {
   UserPatchRequest,
   UserResponse,
 } from '@asap-hub/model';
-import {
-  RestUser,
-  SquidexGraphqlClient,
-  SquidexRest,
-  SquidexRestClient,
-} from '@asap-hub/squidex';
-import Intercept from 'apr-intercept';
-import createUserProvider, { UserDataProvider } from '../data-providers/users';
-import { parseUser, parseUserToResponse } from '../entities';
-import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
+import { RestUser } from '@asap-hub/squidex';
+import { UserDataProvider } from '../data-providers/users';
+import { parseUserToResponse } from '../entities';
 import { FetchOptions } from '../utils/types';
 
 export type FetchUsersFilter = {
@@ -43,11 +36,9 @@ export interface UserController {
 
 export default class Users implements UserController {
   userDataProvider: UserDataProvider;
-  userSquidexRestClient: SquidexRestClient<RestUser>;
 
-  constructor(squidexGraphlClient: SquidexGraphqlClient) {
-    this.userSquidexRestClient = new SquidexRest('users');
-    this.userDataProvider = createUserProvider(squidexGraphlClient);
+  constructor(userDataProvider: UserDataProvider) {
+    this.userDataProvider = userDataProvider;
   }
 
   async update(id: string, update: UserPatchRequest): Promise<UserResponse> {
@@ -112,30 +103,7 @@ export default class Users implements UserController {
     id: string,
     cachedUser: RestUser | undefined = undefined,
   ): Promise<UserResponse> {
-    let fetchedUser;
-    if (!cachedUser) {
-      fetchedUser = await this.userSquidexRestClient.fetchById(id);
-    }
-
-    const user = cachedUser || (fetchedUser as RestUser);
-
-    const [error, res] = await Intercept(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      fetchOrcidProfile(user!.data.orcid!.iv),
-    );
-
-    const update: Partial<RestUser['data']> = {
-      email: { iv: user.data.email.iv },
-      orcidLastSyncDate: { iv: new Date().toISOString() },
-    };
-
-    if (!error) {
-      const { lastModifiedDate, works } = transformOrcidWorks(res);
-      update.orcidLastModifiedDate = { iv: lastModifiedDate };
-      update.orcidWorks = { iv: works.slice(0, 10) };
-    }
-
-    const updatedUser = await this.userSquidexRestClient.patch(user.id, update);
-    return parseUser(updatedUser);
+    const user = await this.userDataProvider.syncOrcidProfile(id, cachedUser);
+    return parseUserToResponse(user);
   }
 }

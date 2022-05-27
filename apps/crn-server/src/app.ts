@@ -1,56 +1,55 @@
-import 'express-async-errors';
-import cors from 'cors';
-import express, { Express, RequestHandler } from 'express';
-import { Tracer } from 'opentracing';
-import AWSXray from 'aws-xray-sdk';
-import * as Sentry from '@sentry/serverless';
-import { SquidexGraphql } from '@asap-hub/squidex';
 import {
   AuthHandler,
   authHandlerFactory,
+  decodeToken,
+  errorHandlerFactory,
   getHttpLogger,
   HttpLogger,
   Logger,
-  decodeToken,
-  errorHandlerFactory,
 } from '@asap-hub/server-common';
-
+import { SquidexGraphql } from '@asap-hub/squidex';
+import * as Sentry from '@sentry/serverless';
+import AWSXray from 'aws-xray-sdk';
+import cors from 'cors';
+import express, { Express, RequestHandler } from 'express';
+import 'express-async-errors';
+import { Tracer } from 'opentracing';
 import { origin } from './config';
-
-import { tracingHandlerFactory } from './middleware/tracing-handler';
-
-import Groups, { GroupController } from './controllers/groups';
-import Users, { UserController } from './controllers/users';
-import Teams, { TeamController } from './controllers/teams';
-import Events, { EventController } from './controllers/events';
-import Dashboard, { DashboardController } from './controllers/dashboard';
 import Calendars, { CalendarController } from './controllers/calendars';
+import Dashboard, { DashboardController } from './controllers/dashboard';
+import Discover, { DiscoverController } from './controllers/discover';
+import Events, { EventController } from './controllers/events';
+import Groups, { GroupController } from './controllers/groups';
+import Labs, { LabsController } from './controllers/labs';
+import News, { NewsController } from './controllers/news';
+import Pages, { PageController } from './controllers/pages';
 import ResearchOutputs, {
   ResearchOutputController,
 } from './controllers/research-outputs';
-
-import { dashboardRouteFactory } from './routes/dashboard.route';
+import ResearchTags, {
+  ResearchTagController,
+} from './controllers/research-tags';
+import Teams, { TeamController } from './controllers/teams';
+import Users, { UserController } from './controllers/users';
+import createUserDataProvider, {
+  UserDataProvider,
+} from './data-providers/users';
+import { permissionHandler } from './middleware/permission-handler';
+import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
+import { tracingHandlerFactory } from './middleware/tracing-handler';
+import { userLoggerHandler } from './middleware/user-logger-handler';
 import { calendarRouteFactory } from './routes/calendars.route';
+import { dashboardRouteFactory } from './routes/dashboard.route';
+import { discoverRouteFactory } from './routes/discover.route';
+import { eventRouteFactory } from './routes/events.route';
+import { groupRouteFactory } from './routes/groups.route';
+import { labsRouteFactory } from './routes/labs.route';
+import { newsRouteFactory } from './routes/news.route';
+import { pageRouteFactory } from './routes/pages.route';
 import { researchOutputRouteFactory } from './routes/research-outputs.route';
 import { researchTagsRouteFactory } from './routes/research-tags.route';
 import { teamRouteFactory } from './routes/teams.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
-import { eventRouteFactory } from './routes/events.route';
-import { groupRouteFactory } from './routes/groups.route';
-import Pages, { PageController } from './controllers/pages';
-import { pageRouteFactory } from './routes/pages.route';
-import News, { NewsController } from './controllers/news';
-import { newsRouteFactory } from './routes/news.route';
-import Discover, { DiscoverController } from './controllers/discover';
-import { discoverRouteFactory } from './routes/discover.route';
-import { userLoggerHandler } from './middleware/user-logger-handler';
-import { permissionHandler } from './middleware/permission-handler';
-import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
-import Labs, { LabsController } from './controllers/labs';
-import { labsRouteFactory } from './routes/labs.route';
-import ResearchTags, {
-  ResearchTagController,
-} from './controllers/research-tags';
 import pinoLogger from './utils/logger';
 
 export const appFactory = (libs: Libs = {}): Express => {
@@ -67,6 +66,9 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   // Clients
   const squidexGraphqlClient = new SquidexGraphql();
+
+  const userDataProvider =
+    libs.userDataProvider || createUserDataProvider(squidexGraphqlClient);
 
   // Controllers
   const calendarController =
@@ -86,7 +88,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const researchTagController =
     libs.researchTagController || new ResearchTags(squidexGraphqlClient);
   const teamController = libs.teamController || new Teams(squidexGraphqlClient);
-  const userController = libs.userController || new Users(squidexGraphqlClient);
+  const userController = libs.userController || new Users(userDataProvider);
   const labsController = libs.labsController || new Labs(squidexGraphqlClient);
 
   // Handlers
@@ -210,6 +212,7 @@ export type Libs = {
   teamController?: TeamController;
   userController?: UserController;
   labsController?: LabsController;
+  userDataProvider?: UserDataProvider;
   authHandler?: AuthHandler;
   tracer?: Tracer;
   httpLogger?: HttpLogger;

@@ -24,6 +24,7 @@ import {
   parseUserToDataObject,
 } from '../entities';
 import { FETCH_USER, FETCH_USERS } from '../queries/users.queries';
+import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 
 export interface UserDataProvider {
   fetchById(id: string): Promise<UserDataObject | null>;
@@ -35,6 +36,10 @@ export interface UserDataProvider {
     welcomeCode: string,
     userId: string,
   ): Promise<UserDataObject | null>;
+  syncOrcidProfile(
+    id: string,
+    cachedUser?: RestUser | undefined,
+  ): Promise<UserDataObject>;
 }
 export default function createUserDataProvider(
   squidexGraphlClient: SquidexGraphqlClient,
@@ -118,7 +123,45 @@ export default function createUserDataProvider(
 
     return parseUserToDataObject(res);
   };
-  return { fetchById, update, fetch, fetchByCode, updateAvatar, connectByCode };
+  const syncOrcidProfile = async (
+    id: string,
+    cachedUser: RestUser | undefined = undefined,
+  ) => {
+    let fetchedUser;
+    if (!cachedUser) {
+      fetchedUser = await userSquidexRestClient.fetchById(id);
+    }
+
+    const user = cachedUser || (fetchedUser as RestUser);
+
+    const [error, res] = await Intercept(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      fetchOrcidProfile(user!.data.orcid!.iv),
+    );
+
+    const update: Partial<RestUser['data']> = {
+      email: { iv: user.data.email.iv },
+      orcidLastSyncDate: { iv: new Date().toISOString() },
+    };
+
+    if (!error) {
+      const { lastModifiedDate, works } = transformOrcidWorks(res);
+      update.orcidLastModifiedDate = { iv: lastModifiedDate };
+      update.orcidWorks = { iv: works.slice(0, 10) };
+    }
+
+    const updatedUser = await userSquidexRestClient.patch(user.id, update);
+    return parseUserToDataObject(updatedUser);
+  };
+  return {
+    fetchById,
+    update,
+    fetch,
+    fetchByCode,
+    updateAvatar,
+    connectByCode,
+    syncOrcidProfile,
+  };
 }
 const shouldDoFullUpdate = (userToUpdate: UserPatchDataObject) =>
   userToUpdate.teams?.length ||

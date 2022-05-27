@@ -1,16 +1,6 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
-import { config } from '@asap-hub/squidex';
-import matches from 'lodash.matches';
-import nock from 'nock';
 import Users from '../../src/controllers/users';
-import * as orcidFixtures from '../fixtures/orcid.fixtures';
-import {
-  fetchUserResponse,
-  getUserDataObject,
-  getUserResponse,
-} from '../fixtures/users.fixtures';
-import { identity } from '../helpers/squidex';
-import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
+import { getUserDataObject, getUserResponse } from '../fixtures/users.fixtures';
 
 const mockUserDataProvider = {
   fetchById: jest.fn(),
@@ -19,18 +9,12 @@ const mockUserDataProvider = {
   fetchByCode: jest.fn(),
   updateAvatar: jest.fn(),
   connectByCode: jest.fn(),
+  syncOrcidProfile: jest.fn(),
 };
-jest.mock('../../src/data-providers/users', () =>
-  jest.fn().mockImplementation(() => mockUserDataProvider),
-);
 
 describe('Users controller', () => {
-  const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const usersMockGraphqlClient = new Users(squidexGraphqlClientMock);
+  const usersMockGraphqlClient = new Users(mockUserDataProvider);
 
-  beforeAll(() => {
-    identity();
-  });
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -159,91 +143,13 @@ describe('Users controller', () => {
   });
 
   describe('syncOrcidProfile', () => {
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
-    });
+    test('should return the user on success', async () => {
+      mockUserDataProvider.syncOrcidProfile = jest
+        .fn()
+        .mockResolvedValue(getUserDataObject());
 
-    afterEach(() => {
-      nock.cleanAll();
-    });
-
-    const userId = 'userId';
-    const orcid = '363-98-9330';
-
-    test('Throws when user does not exist', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users/user-not-found`)
-        .reply(404);
-
-      await expect(
-        usersMockGraphqlClient.syncOrcidProfile('user-not-found'),
-      ).rejects.toThrow(NotFoundError);
-    });
-
-    test('Should update user profile even when ORCID returns 500', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fetchUserResponse)
-        .patch(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fetchUserResponse);
-
-      // times 3 because got will retry on 5XXs
-      nock('https://pub.orcid.org')
-        .get(`/v2.1/${orcid}/works`)
-        .times(3)
-        .reply(502);
-
-      const result = await usersMockGraphqlClient.syncOrcidProfile(userId);
-      expect(result).toBeDefined(); // we only care that the update is made
-    });
-
-    test('Should successfully fetch and update user - with id', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fetchUserResponse)
-        .patch(
-          `/api/content/${config.appName}/users/${userId}`,
-          matches({
-            email: { iv: fetchUserResponse.data.email.iv },
-            orcidLastModifiedDate: {
-              iv: `${orcidFixtures.orcidWorksResponse['last-modified-date'].value}`,
-            },
-            orcidWorks: { iv: orcidFixtures.orcidWorksDeserialisedExpectation },
-          }),
-        )
-        .reply(200, fetchUserResponse);
-
-      nock('https://pub.orcid.org')
-        .get(`/v2.1/${orcid}/works`)
-        .reply(200, orcidFixtures.orcidWorksResponse);
-
-      const result = await usersMockGraphqlClient.syncOrcidProfile(userId);
-      expect(result).toBeDefined(); // we only care that the update is made
-    });
-
-    test('Should successfully fetch and update user - with user', async () => {
-      nock(config.baseUrl)
-        .patch(
-          `/api/content/${config.appName}/users/${userId}`,
-          matches({
-            email: { iv: fetchUserResponse.data.email.iv },
-            orcidLastModifiedDate: {
-              iv: `${orcidFixtures.orcidWorksResponse['last-modified-date'].value}`,
-            },
-            orcidWorks: { iv: orcidFixtures.orcidWorksDeserialisedExpectation },
-          }),
-        )
-        .reply(200, fetchUserResponse);
-
-      nock('https://pub.orcid.org')
-        .get(`/v2.1/${orcid}/works`)
-        .reply(200, orcidFixtures.orcidWorksResponse);
-
-      const result = await usersMockGraphqlClient.syncOrcidProfile(
-        userId,
-        fetchUserResponse,
-      );
-      expect(result).toBeDefined(); // we only care that the update is made
+      const result = await usersMockGraphqlClient.syncOrcidProfile('some code');
+      expect(result).toEqual(getUserResponse());
     });
   });
 });

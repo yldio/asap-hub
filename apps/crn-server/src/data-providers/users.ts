@@ -36,7 +36,7 @@ export interface UserDataProvider {
     userId: string,
   ): Promise<UserDataObject | null>;
 }
-export default function users(
+export default function createUserDataProvider(
   squidexGraphlClient: SquidexGraphqlClient,
 ): UserDataProvider {
   const userSquidexRestClient = new SquidexRest<RestUser>('users');

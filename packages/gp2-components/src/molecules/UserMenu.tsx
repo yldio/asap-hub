@@ -8,10 +8,8 @@ const { perRem, vminLinearCalc, mobileScreen, largeDesktopScreen } = pixels;
 const containerStyles = css({
   minWidth: '312px',
   height: '100%',
-
   display: 'flex',
   flexDirection: 'column',
-
   boxSizing: 'border-box',
   padding: `${12 / perRem}em ${12 / perRem}em ${vminLinearCalc(
     mobileScreen,

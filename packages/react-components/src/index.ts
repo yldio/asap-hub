@@ -9,7 +9,7 @@ export { pixels, text, authTestUtils, utils };
 export * from './icons';
 export * from './images';
 export * from './theme';
-export { ceruleanFernGradientStyles } from './appearance';
+export * from './appearance';
 export * from './colors';
 export * from './layout';
 export * from './hooks';

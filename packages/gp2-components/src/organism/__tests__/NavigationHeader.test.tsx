@@ -4,10 +4,10 @@ import NavigationHeader from '../NavigationHeader';
 
 describe('NavigationHeader', () => {
   it('renders the gp2 logo', () => {
-    const { queryAllByTitle } = render(<NavigationHeader />);
-    queryAllByTitle(/gp2 logo/i).map((element) =>
-      expect(element).toBeInTheDocument(),
-    );
+    const { getAllByRole } = render(<NavigationHeader />);
+    expect(
+      getAllByRole('link')[0].querySelector('svg > title'),
+    ).toHaveTextContent(/GP2 Logo/);
   });
 
   it('renders a menu button if menuOpen prop is false', () => {

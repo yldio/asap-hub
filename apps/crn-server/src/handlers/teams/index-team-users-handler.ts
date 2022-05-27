@@ -1,18 +1,19 @@
-import { EventBridgeEvent } from 'aws-lambda';
-import { ListResponse, UserResponse } from '@asap-hub/model';
-import { SquidexGraphql } from '@asap-hub/squidex';
 import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
+import { ListResponse, UserResponse } from '@asap-hub/model';
+import { SquidexGraphql } from '@asap-hub/squidex';
+import { EventBridgeEvent } from 'aws-lambda';
+import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import Users, { UserController } from '../../controllers/users';
-import { TeamEvent, TeamPayload } from '../event-bus';
+import createUserDataProvider from '../../data-providers/users';
+import logger from '../../utils/logger';
 import {
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
 } from '../../utils/loop-over-custom-colection';
-import logger from '../../utils/logger';
-import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
+import { TeamEvent, TeamPayload } from '../event-bus';
 
 export const indexTeamUsersHandler =
   (
@@ -58,8 +59,10 @@ export const indexTeamUsersHandler =
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
 
+const squidexGraphqlClient = new SquidexGraphql();
+const userDataProvider = createUserDataProvider(squidexGraphqlClient);
 export const handler = indexTeamUsersHandler(
-  new Users(new SquidexGraphql()),
+  new Users(userDataProvider),
   algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
 );
 

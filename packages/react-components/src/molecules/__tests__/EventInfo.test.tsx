@@ -84,6 +84,61 @@ it('shows that the event is run by ASAP when there is no group', () => {
   expect(getByTitle('Calendar')).toBeInTheDocument();
 });
 
+it('shows number of speakers with singular form', () => {
+  const { getByText, queryByText } = render(
+    <EventInfo
+      {...createEventResponse({
+        numberOfSpeakers: 1,
+        numberOfExternalSpeakers: 0,
+        numberOfUnknownSpeakers: 5,
+      })}
+      showNumberOfSpeakers={true}
+    />,
+  );
+  expect(getByText('1 Speaker')).toBeInTheDocument();
+  expect(queryByText('1 Speakers')).not.toBeInTheDocument();
+});
+
+it('shows number of speakers with plural form', () => {
+  const { queryByText } = render(
+    <EventInfo
+      {...createEventResponse({
+        numberOfSpeakers: 3,
+        numberOfExternalSpeakers: 4,
+        numberOfUnknownSpeakers: 5,
+      })}
+      showNumberOfSpeakers={false}
+    />,
+  );
+  expect(queryByText('7 Speakers')).not.toBeInTheDocument();
+});
+it('do not shows number of speakers when showNumberOfSpeakers is false', () => {
+  const { getByText } = render(
+    <EventInfo
+      {...createEventResponse({
+        numberOfSpeakers: 3,
+        numberOfExternalSpeakers: 4,
+        numberOfUnknownSpeakers: 5,
+      })}
+      showNumberOfSpeakers={true}
+    />,
+  );
+  expect(getByText('7 Speakers')).toBeInTheDocument();
+});
+it('do not shows number of speakers when there are no speakers', () => {
+  const { queryByText } = render(
+    <EventInfo
+      {...createEventResponse({
+        numberOfSpeakers: 0,
+        numberOfExternalSpeakers: 0,
+        numberOfUnknownSpeakers: 5,
+      })}
+      showNumberOfSpeakers={true}
+    />,
+  );
+  expect(queryByText(/Speaker/i)).not.toBeInTheDocument();
+});
+
 it('shows the event time', () => {
   const { getByText } = render(
     <EventInfo

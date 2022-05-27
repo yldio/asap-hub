@@ -19,7 +19,7 @@ const EventsListPage: FC<EventsListProps> = ({ events, ...props }) => (
     <ResultList {...props}>
       {events.map((event) => (
         <Fragment key={event.id}>
-          <EventCard {...event} />
+          <EventCard {...event} showNumberOfSpeakers={true} />
         </Fragment>
       ))}
     </ResultList>

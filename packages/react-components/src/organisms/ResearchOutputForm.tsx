@@ -279,7 +279,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     researchOutputData?.teams.map((element, index) => ({
       label: element.displayName,
       value: element.id,
-      isFixed: index === 0,
     })) || [{ label: team.displayName, value: team.id, isFixed: true }],
   );
 

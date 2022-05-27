@@ -119,11 +119,9 @@ export const updateTeamResearchOutput = async (
   const response = await resp.json();
   if (!resp.ok) {
     throw new BackendError(
-      `Failed to update research output for teams ${researchOutput.teams
-        .map((teamId) => teamId)
-        .join(
-          ', ',
-        )} Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      `Failed to update research output for teams ${
+        researchOutput.teams
+      } Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
       response,
       resp.status,
     );

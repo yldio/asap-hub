@@ -12,6 +12,7 @@ import {
   ResearchOutputPostRequest,
   ResearchOutputResponse,
   ResearchTagResponse,
+  ResearchOutputType,
 } from '@asap-hub/model';
 import {
   render,
@@ -85,6 +86,54 @@ it('renders the edit form button when research output data is present', async ()
       />
     </StaticRouter>,
   );
+
+  expect(screen.getByRole('button', { name: /Save/i })).toBeVisible();
+});
+
+it('renders the edit form with fields from researchOutputData prepopulated', async () => {
+  const researchOutputData = {
+    ...createResearchOutputResponse(),
+    title: 'test title',
+    link: 'https://test.com',
+    description: 'test description',
+    type: 'Genetic Data - DNA' as ResearchOutputType,
+    tags: ['testAddedTag'],
+    teams: [
+      {
+        id: 'team1',
+        displayName: 'Team 1',
+      },
+    ],
+    labs: [
+      {
+        id: 'lab1',
+        name: 'Lab 1',
+      },
+    ],
+  };
+  await render(
+    <StaticRouter>
+      <ResearchOutputForm
+        {...props}
+        documentType={'Dataset'}
+        researchOutputData={researchOutputData}
+        isEditMode
+      />
+    </StaticRouter>,
+  );
+
+  expect(screen.getByText(researchOutputData.description)).toBeVisible();
+  expect(screen.getByDisplayValue(researchOutputData.title)).toBeVisible();
+  expect(screen.getByText(researchOutputData.type!)).toBeVisible();
+  expect(screen.getByText(researchOutputData.sharingStatus)).toBeVisible();
+  expect(
+    screen.getByText(researchOutputData.authors[0].displayName),
+  ).toBeVisible();
+  expect(
+    screen.getByText(researchOutputData.teams[0].displayName),
+  ).toBeVisible();
+  expect(screen.getByText(researchOutputData.tags[0])).toBeVisible();
+  expect(screen.getByText(researchOutputData.labs[0].name)).toBeVisible();
 
   expect(screen.getByRole('button', { name: /Save/i })).toBeVisible();
 });
@@ -192,12 +241,6 @@ describe('on submit', () => {
     methods: [],
     organisms: [],
     environments: [],
-    labCatalogNumber: undefined,
-    publishDate: undefined,
-    subtype: undefined,
-    accessInstructions: undefined,
-    asapFunded: undefined,
-    usedInPublication: undefined,
   };
   type Data = Pick<
     ResearchOutputPostRequest,

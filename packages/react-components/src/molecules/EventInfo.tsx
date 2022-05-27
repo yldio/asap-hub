@@ -5,7 +5,12 @@ import { events, network } from '@asap-hub/routing';
 
 import { Headline3, Link, Anchor } from '../atoms';
 import { perRem, largeDesktopScreen } from '../pixels';
-import { groupsIcon, eventPlaceholderIcon, calendarIcon } from '../icons';
+import {
+  groupsIcon,
+  eventPlaceholderIcon,
+  calendarIcon,
+  speakerIcon,
+} from '../icons';
 import { lead } from '../colors';
 import { EventTime } from '.';
 
@@ -30,7 +35,7 @@ const cardStyles = css({
   flexDirection: 'row',
 });
 
-const groupsStyles = css({
+const listItemStyles = css({
   padding: `${12 / perRem}em 0`,
   color: lead.rgb,
   whiteSpace: 'nowrap',
@@ -56,9 +61,32 @@ const iconStyles = css({
 });
 
 type EventInfoProps = ComponentProps<typeof EventTime> &
-  Pick<EventResponse, 'id' | 'title' | 'thumbnail' | 'group' | 'status'> & {
+  Pick<
+    EventResponse,
+    'id' | 'title' | 'thumbnail' | 'group' | 'status' | 'speakers'
+  > & {
     titleLimit?: number | null;
+    showNumberOfSpeakers?: boolean;
   };
+
+const EventSpeakers: React.FC<{ speakers: EventResponse['speakers'] }> = ({
+  speakers,
+}) => {
+  const numberOfSpeakers = speakers.filter(
+    (speaker) => 'user' in speaker || 'externalUser' in speaker,
+  ).length;
+
+  if (numberOfSpeakers === 0) {
+    return null;
+  }
+
+  return (
+    <div css={listItemStyles}>
+      <span css={iconStyles}>{speakerIcon}</span> {numberOfSpeakers} Speaker
+      {numberOfSpeakers === 1 ? '' : 's'}
+    </div>
+  );
+};
 
 const EventInfo: React.FC<EventInfoProps> = ({
   id,
@@ -67,6 +95,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
   group,
   status,
   titleLimit = TITLE_LIMIT,
+  showNumberOfSpeakers = false,
   ...props
 }) => {
   const imageComponent = thumbnail ? (
@@ -93,7 +122,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
         </Anchor>
         <EventTime {...props} />
         <div css={widthStyles}>
-          <div css={groupsStyles}>
+          <div css={listItemStyles}>
             {group ? (
               <Link
                 href={network({}).groups({}).group({ groupId: group.id }).$}
@@ -107,6 +136,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
               </>
             )}
           </div>
+          {showNumberOfSpeakers && <EventSpeakers speakers={props.speakers} />}
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { subHours } from 'date-fns';
 import { EventSpeaker } from '@asap-hub/model';
 import { createEventResponse } from '@asap-hub/fixtures';
@@ -38,9 +38,9 @@ describe('When rendering the speaker list', () => {
         speakers: [unnanouncedSpeaker],
       };
 
-      const { getByText } = render(<SpeakersList {...event} />);
+      render(<SpeakersList {...event} />);
 
-      expect(getByText('User to be announced')).toBeVisible();
+      expect(screen.getByText('User to be announced')).toBeVisible();
     });
 
     it('Renders an announced user', async () => {
@@ -49,13 +49,15 @@ describe('When rendering the speaker list', () => {
         speakers: [announcedSpeaker],
       };
 
-      const { getAllByRole } = render(<SpeakersList {...event} />);
+      render(<SpeakersList {...event} />);
 
       expect(
-        getAllByRole('link').map(({ textContent }) => textContent),
+        screen.getAllByRole('link').map(({ textContent }) => textContent),
       ).toEqual(['The team one', 'Adam Brown']);
 
-      expect(getAllByRole('link').map((e) => e.getAttribute('href'))).toEqual([
+      expect(
+        screen.getAllByRole('link').map((e) => e.getAttribute('href')),
+      ).toEqual([
         expect.stringContaining('team-id-1'),
         expect.stringContaining('user-id-1'),
       ]);
@@ -66,12 +68,12 @@ describe('When rendering the speaker list', () => {
         ...createEventResponse(),
         speakers: [{ ...announcedSpeaker, role: 'Genetics' }],
       };
-      const { getAllByRole, getByText } = render(<SpeakersList {...event} />);
+      render(<SpeakersList {...event} />);
 
       expect(
-        getAllByRole('heading').map(({ textContent }) => textContent),
+        screen.getAllByRole('heading').map(({ textContent }) => textContent),
       ).toEqual([...gridLabels]);
-      expect(getByText('Genetics')).toBeVisible();
+      expect(screen.getByText('Genetics')).toBeVisible();
     });
 
     it('Renders external author', async () => {
@@ -80,11 +82,11 @@ describe('When rendering the speaker list', () => {
         speakers: [externalSpeaker],
       };
 
-      const { getByText } = render(<SpeakersList {...event} />);
+      render(<SpeakersList {...event} />);
 
-      expect(getByText('External Speaker')).toBeVisible();
-      expect(getByText('Jhonny External')).toBeVisible();
-      expect(getByText('Guest')).toBeVisible();
+      expect(screen.getByText('External Speaker')).toBeVisible();
+      expect(screen.getByText('Jhonny External')).toBeVisible();
+      expect(screen.getByText('Guest')).toBeVisible();
     });
   });
 
@@ -96,9 +98,9 @@ describe('When rendering the speaker list', () => {
         speakers: [unnanouncedSpeaker],
       };
 
-      const { getByText } = render(<SpeakersList {...eventInThePast} />);
+      render(<SpeakersList {...eventInThePast} />);
 
-      expect(getByText('User was not announced')).toBeVisible();
+      expect(screen.getByText('User was not announced')).toBeVisible();
     });
   });
 });

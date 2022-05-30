@@ -1,6 +1,6 @@
 import {
   EventResponse,
-  EventSpeaker,
+  EventSpeakerUser,
   EventStatus,
   ListEventResponse,
 } from '@asap-hub/model';
@@ -28,7 +28,7 @@ export const getEventRestResponse = (): Event => ({
   hideMeetingLink: false,
 });
 
-export const getEventSpeaker = (): EventSpeaker => ({
+export const getEventSpeakerUser = (): EventSpeakerUser => ({
   team: {
     id: 'team-id-3',
     displayName: 'The team three',
@@ -38,6 +38,7 @@ export const getEventSpeaker = (): EventSpeaker => ({
     firstName: 'Adam',
     lastName: 'Brown',
     displayName: 'Adam Brown',
+    avatarUrl: undefined,
   },
   role: 'Lead PI (Core Leadership)',
 });
@@ -71,7 +72,7 @@ export const getEventResponse = (): EventResponse => ({
     name: 'Tech 1 - Sequencing/omics',
   },
   group: getGroupResponse(),
-  speakers: [getEventSpeaker()],
+  speakers: [getEventSpeakerUser()],
 });
 
 export const listEventResponse = {
@@ -111,7 +112,9 @@ export const getSquidexGraphqlEvent = () => ({
   flatData: squidexGraphqlEventsFlatData(),
 });
 
-export const getSquidexGraphqlEventSpeaker = () => ({
+export const getSquidexGraphqlEventSpeakerWithUser = (): NonNullable<
+  NonNullable<EventContentFragment['flatData']['speakers']>[number]
+> => ({
   team: [
     {
       id: 'team-id-3',
@@ -122,6 +125,7 @@ export const getSquidexGraphqlEventSpeaker = () => ({
   ],
   user: [
     {
+      __typename: 'Users',
       id: 'user-id-3',
       flatData: {
         avatar: [],
@@ -137,6 +141,22 @@ export const getSquidexGraphqlEventSpeaker = () => ({
             role: 'Lead PI (Core Leadership)',
           },
         ],
+      },
+    },
+  ],
+});
+
+export const getSquidexGraphqlEventSpeakerWithExternalUser = (): NonNullable<
+  EventContentFragment['flatData']['speakers']
+>[number] => ({
+  team: [],
+  user: [
+    {
+      __typename: 'ExternalAuthors',
+      id: 'user-id-3',
+      flatData: {
+        name: 'Adam Brown',
+        orcid: 'https://orcid.org/0000-0002-1825-0097',
       },
     },
   ],
@@ -183,7 +203,7 @@ const squidexGraphqlEventsFlatData = (): EventContentFragment['flatData'] => ({
       referencingGroupsContents: [getSquidexGraphqlGroup()],
     },
   ],
-  speakers: [getSquidexGraphqlEventSpeaker()],
+  speakers: [getSquidexGraphqlEventSpeakerWithUser()],
 });
 
 export const getSquidexGraphqlEvents = (): ListEventResponse => ({

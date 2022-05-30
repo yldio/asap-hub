@@ -2120,6 +2120,10 @@ export type Events = Content & {
   referencesCalendarsContents: Maybe<Array<Calendars>>;
   /** Query Calendars content items with total count. */
   referencesCalendarsContentsWithTotal: Maybe<CalendarsResultDto>;
+  /** Query External authors content items. */
+  referencesExternalAuthorsContents: Maybe<Array<ExternalAuthors>>;
+  /** Query External authors content items with total count. */
+  referencesExternalAuthorsContentsWithTotal: Maybe<ExternalAuthorsResultDto>;
   /** Query Teams content items. */
   referencesTeamsContents: Maybe<Array<Teams>>;
   /** Query Teams content items with total count. */
@@ -2149,6 +2153,24 @@ export type EventsReferencesCalendarsContentsArgs = {
 
 /** The structure of a Events content type. */
 export type EventsReferencesCalendarsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencesExternalAuthorsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencesExternalAuthorsContentsWithTotalArgs = {
   filter: Maybe<Scalars['String']>;
   orderby: Maybe<Scalars['String']>;
   search: Maybe<Scalars['String']>;
@@ -2427,7 +2449,7 @@ export type EventsDataPresentationPermanentlyUnavailableInputDto = {
 /** The structure of the Speakers nested schema. */
 export type EventsDataSpeakersChildDto = {
   team: Maybe<Array<Teams>>;
-  user: Maybe<Array<Users>>;
+  user: Maybe<Array<EventsDataSpeakersUserUnionDto>>;
 };
 
 /** The structure of the Speakers nested schema. */
@@ -2445,6 +2467,8 @@ export type EventsDataSpeakersDto = {
 export type EventsDataSpeakersInputDto = {
   iv: Maybe<Array<EventsDataSpeakersChildInputDto>>;
 };
+
+export type EventsDataSpeakersUserUnionDto = ExternalAuthors | Users;
 
 /** The structure of the Start Date field of the Events content type. */
 export type EventsDataStartDateDto = {
@@ -2601,6 +2625,10 @@ export type ExternalAuthors = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Events content items. */
+  referencingEventsContents: Maybe<Array<Events>>;
+  /** Query Events content items with total count. */
+  referencingEventsContentsWithTotal: Maybe<EventsResultDto>;
   /** Query Research Outputs content items. */
   referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
   /** Query Research Outputs content items with total count. */
@@ -2613,6 +2641,24 @@ export type ExternalAuthors = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a External authors content type. */
+export type ExternalAuthorsReferencingEventsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a External authors content type. */
+export type ExternalAuthorsReferencingEventsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
 };
 
 /** The structure of a External authors content type. */
@@ -5602,18 +5648,24 @@ export type EventContentFragment = Pick<
         >;
         user: Maybe<
           Array<
-            Pick<Users, 'id'> & {
-              flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
-                avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                teams: Maybe<
-                  Array<
-                    Pick<UsersDataTeamsChildDto, 'role'> & {
-                      id: Maybe<Array<Pick<Teams, 'id'>>>;
-                    }
-                  >
-                >;
-              };
-            }
+            | ({ __typename: 'ExternalAuthors' } & Pick<
+                ExternalAuthors,
+                'id'
+              > & {
+                  flatData: Pick<ExternalAuthorsFlatDataDto, 'name' | 'orcid'>;
+                })
+            | ({ __typename: 'Users' } & Pick<Users, 'id'> & {
+                  flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
+                    avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                    teams: Maybe<
+                      Array<
+                        Pick<UsersDataTeamsChildDto, 'role'> & {
+                          id: Maybe<Array<Pick<Teams, 'id'>>>;
+                        }
+                      >
+                    >;
+                  };
+                })
           >
         >;
       }>
@@ -5973,21 +6025,30 @@ export type FetchEventsQuery = {
                   >;
                   user: Maybe<
                     Array<
-                      Pick<Users, 'id'> & {
-                        flatData: Pick<
-                          UsersFlatDataDto,
-                          'firstName' | 'lastName'
+                      | ({ __typename: 'ExternalAuthors' } & Pick<
+                          ExternalAuthors,
+                          'id'
                         > & {
-                          avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                          teams: Maybe<
-                            Array<
-                              Pick<UsersDataTeamsChildDto, 'role'> & {
-                                id: Maybe<Array<Pick<Teams, 'id'>>>;
-                              }
-                            >
-                          >;
-                        };
-                      }
+                            flatData: Pick<
+                              ExternalAuthorsFlatDataDto,
+                              'name' | 'orcid'
+                            >;
+                          })
+                      | ({ __typename: 'Users' } & Pick<Users, 'id'> & {
+                            flatData: Pick<
+                              UsersFlatDataDto,
+                              'firstName' | 'lastName'
+                            > & {
+                              avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                              teams: Maybe<
+                                Array<
+                                  Pick<UsersDataTeamsChildDto, 'role'> & {
+                                    id: Maybe<Array<Pick<Teams, 'id'>>>;
+                                  }
+                                >
+                              >;
+                            };
+                          })
                     >
                   >;
                 }>
@@ -6312,18 +6373,30 @@ export type FetchEventQuery = {
             >;
             user: Maybe<
               Array<
-                Pick<Users, 'id'> & {
-                  flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
-                    avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                    teams: Maybe<
-                      Array<
-                        Pick<UsersDataTeamsChildDto, 'role'> & {
-                          id: Maybe<Array<Pick<Teams, 'id'>>>;
-                        }
-                      >
-                    >;
-                  };
-                }
+                | ({ __typename: 'ExternalAuthors' } & Pick<
+                    ExternalAuthors,
+                    'id'
+                  > & {
+                      flatData: Pick<
+                        ExternalAuthorsFlatDataDto,
+                        'name' | 'orcid'
+                      >;
+                    })
+                | ({ __typename: 'Users' } & Pick<Users, 'id'> & {
+                      flatData: Pick<
+                        UsersFlatDataDto,
+                        'firstName' | 'lastName'
+                      > & {
+                        avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                        teams: Maybe<
+                          Array<
+                            Pick<UsersDataTeamsChildDto, 'role'> & {
+                              id: Maybe<Array<Pick<Teams, 'id'>>>;
+                            }
+                          >
+                        >;
+                      };
+                    })
               >
             >;
           }>
@@ -9393,48 +9466,47 @@ export const EventContentFragmentDoc = {
                           selections: [
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
+                              name: { kind: 'Name', value: '__typename' },
                             },
                             {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'flatData' },
+                              kind: 'InlineFragment',
+                              typeCondition: {
+                                kind: 'NamedType',
+                                name: { kind: 'Name', value: 'Users' },
+                              },
                               selectionSet: {
                                 kind: 'SelectionSet',
                                 selections: [
                                   {
                                     kind: 'Field',
-                                    name: { kind: 'Name', value: 'firstName' },
+                                    name: { kind: 'Name', value: 'id' },
                                   },
                                   {
                                     kind: 'Field',
-                                    name: { kind: 'Name', value: 'lastName' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'avatar' },
+                                    name: { kind: 'Name', value: 'flatData' },
                                     selectionSet: {
                                       kind: 'SelectionSet',
                                       selections: [
                                         {
                                           kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'teams' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'role' },
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'firstName',
+                                          },
                                         },
                                         {
                                           kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'lastName',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'avatar',
+                                          },
                                           selectionSet: {
                                             kind: 'SelectionSet',
                                             selections: [
@@ -9446,6 +9518,83 @@ export const EventContentFragmentDoc = {
                                                 },
                                               },
                                             ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'teams',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'role',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'id',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: {
+                                kind: 'NamedType',
+                                name: {
+                                  kind: 'Name',
+                                  value: 'ExternalAuthors',
+                                },
+                              },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'flatData' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'name' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'orcid',
                                           },
                                         },
                                       ],

@@ -10,7 +10,7 @@ export const EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT: number = 5;
 export const eventStatus = ['Confirmed', 'Tentative', 'Cancelled'] as const;
 export type EventStatus = typeof eventStatus[number];
 
-export interface EventSpeakerUser {
+export interface EventSpeakerUserData {
   id: string;
   firstName?: string;
   lastName?: string;
@@ -18,11 +18,29 @@ export interface EventSpeakerUser {
   avatarUrl?: string;
 }
 
-export interface EventSpeaker {
-  team: Pick<TeamResponse, 'displayName' | 'id'>;
-  user?: EventSpeakerUser;
-  role?: string;
+export interface EventSpeakerExternalUserData {
+  name: string;
+  orcid: string;
 }
+
+export type EventSpeakerTeam = {
+  team: Pick<TeamResponse, 'displayName' | 'id'>;
+};
+
+export type EventSpeakerUser = {
+  team: Pick<TeamResponse, 'displayName' | 'id'>;
+  user: EventSpeakerUserData;
+  role: string;
+};
+
+export type EventSpeakerExternalUser = {
+  externalUser: EventSpeakerExternalUserData;
+};
+
+export type EventSpeaker =
+  | EventSpeakerTeam
+  | EventSpeakerUser
+  | EventSpeakerExternalUser;
 
 export interface EventResponse {
   id: string;

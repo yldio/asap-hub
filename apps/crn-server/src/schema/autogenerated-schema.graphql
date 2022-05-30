@@ -2216,6 +2216,32 @@ type Events implements Content {
     """Optional number of contents to take."""
     top: Int
   ): CalendarsResultDto
+  """Query External authors content items."""
+  referencesExternalAuthorsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [ExternalAuthors!]
+  """Query External authors content items with total count."""
+  referencesExternalAuthorsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): ExternalAuthorsResultDto
   """Query Teams content items."""
   referencesTeamsContents(
     """Optional OData filter."""
@@ -2513,7 +2539,7 @@ input EventsDataPresentationPermanentlyUnavailableInputDto {
 """The structure of the Speakers nested schema."""
 type EventsDataSpeakersChildDto {
   team: [Teams!]
-  user: [Users!]
+  user: [EventsDataSpeakersUserUnionDto!]
 }
 
 """The structure of the Speakers nested schema."""
@@ -2531,6 +2557,8 @@ type EventsDataSpeakersDto {
 input EventsDataSpeakersInputDto {
   iv: [EventsDataSpeakersChildInputDto!]
 }
+
+union EventsDataSpeakersUserUnionDto = ExternalAuthors | Users
 
 """The structure of the Start Date field of the Events content type."""
 type EventsDataStartDateDto {
@@ -2687,6 +2715,32 @@ type ExternalAuthors implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
+  """Query Events content items."""
+  referencingEventsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Events!]
+  """Query Events content items with total count."""
+  referencingEventsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): EventsResultDto
   """Query Research Outputs content items."""
   referencingResearchOutputsContents(
     """Optional OData filter."""

@@ -59,6 +59,7 @@ type TeamOutputProps = {
 };
 const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
+
   const documentType = paramOutputDocumentTypeToResearchOutputDocumentType(
     paramOutputDocumentType,
   );
@@ -100,6 +101,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({ teamId }) => {
           clearServerValidationError={(instancePath: string) =>
             setErrors(clearAjvErrorForPath(errors, instancePath))
           }
+          isEditMode={false}
           onSave={(output) =>
             createResearchOutput(output).catch((error: unknown) => {
               if (error instanceof BackendError) {

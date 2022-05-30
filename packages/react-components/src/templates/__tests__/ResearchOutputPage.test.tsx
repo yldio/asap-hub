@@ -14,6 +14,7 @@ const props: ComponentProps<typeof ResearchOutputPage> = {
   tagSuggestions: [],
   team: createTeamResponse(),
   researchTags: [],
+  isEditMode: false,
 };
 beforeEach(() => {
   const {

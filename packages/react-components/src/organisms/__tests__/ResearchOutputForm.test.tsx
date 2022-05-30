@@ -41,6 +41,7 @@ const props: ComponentProps<typeof ResearchOutputForm> = {
   researchTags: [],
   documentType: 'Article',
   team: createTeamResponse(),
+  isEditMode: false,
 };
 
 jest.setTimeout(60000);
@@ -603,7 +604,7 @@ describe('on submit', () => {
 describe('isDirty', () => {
   const researchOutputResponse: ResearchOutputResponse =
     createResearchOutputResponse();
-  const payload: ResearchOutputState = {
+  const researchOutputState: ResearchOutputState = {
     title: researchOutputResponse.title,
     description: researchOutputResponse.description,
     link: researchOutputResponse.link,
@@ -635,7 +636,7 @@ describe('isDirty', () => {
     expect(
       isDirty(
         {
-          ...payload,
+          ...researchOutputState,
           teams: [
             { value: 't0', label: 'team-0' },
             { value: 't1', label: 'team-1' },
@@ -653,11 +654,19 @@ describe('isDirty', () => {
   });
 
   it('returns false for edit mode when values equal the initial ones', () => {
-    expect(isDirty(payload, researchOutputResponse)).toBeFalsy();
+    expect(
+      isDirty(
+        {
+          ...researchOutputState,
+          identifierType: ResearchOutputIdentifierType.None,
+        },
+        researchOutputResponse,
+      ),
+    ).toBeFalsy();
   });
 
   it('returns true when the initial values are changed', () => {
-    expect(isDirty(payload)).toBeTruthy();
+    expect(isDirty(researchOutputState)).toBeTruthy();
   });
 
   it('returns true when the initial values are unchanged', () => {
@@ -724,9 +733,9 @@ describe('isDirty', () => {
   `(
     'Return true when $key is changed to $value and differs from the initial one',
     async ({ key, value }) => {
-      const payloadKey: keyof typeof payload = key;
-      payload[payloadKey] = value;
-      expect(isDirty(payload, researchOutputResponse)).toBeTruthy();
+      const payloadKey: keyof typeof researchOutputState = key;
+      researchOutputState[payloadKey] = value;
+      expect(isDirty(researchOutputState, researchOutputResponse)).toBeTruthy();
     },
   );
 });
@@ -756,30 +765,43 @@ describe('getDecision', () => {
 describe('getIdentifierType', () => {
   it('returns DOI when doi is present', () => {
     expect(
-      getIdentifierType({ ...createResearchOutputResponse(), doi: 'abc' }),
+      getIdentifierType(true, {
+        ...createResearchOutputResponse(),
+        doi: 'abc',
+      }),
     ).toEqual('DOI');
   });
   it('returns RRID when rrid is present', () => {
     expect(
-      getIdentifierType({ ...createResearchOutputResponse(), rrid: 'abc' }),
+      getIdentifierType(true, {
+        ...createResearchOutputResponse(),
+        rrid: 'abc',
+      }),
     ).toEqual('RRID');
   });
   it('returns Accession Number when accession is present', () => {
     expect(
-      getIdentifierType({
+      getIdentifierType(true, {
         ...createResearchOutputResponse(),
         accession: 'abc',
       }),
     ).toEqual('Accession Number');
   });
-  it('returns empty when there is no identifier present', () => {
-    expect(
-      getIdentifierType({
-        ...createResearchOutputResponse(),
-        accession: '',
-        rrid: '',
-        doi: '',
-      }),
-    ).toEqual('');
-  });
+  it.each`
+    isEditMode | description | expected
+    ${false}   | ${'empty'}  | ${ResearchOutputIdentifierType.Empty}
+    ${true}    | ${'none'}   | ${ResearchOutputIdentifierType.None}
+  `(
+    'returns $description when there is no identifier present',
+    ({ isEditMode, expected }) => {
+      expect(
+        getIdentifierType(isEditMode, {
+          ...createResearchOutputResponse(),
+          accession: '',
+          rrid: '',
+          doi: '',
+        }),
+      ).toEqual(expected);
+    },
+  );
 });

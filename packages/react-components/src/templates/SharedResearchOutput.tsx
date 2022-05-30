@@ -2,6 +2,7 @@ import React, { ComponentProps, useContext } from 'react';
 import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
+import { sharedResearch } from '@asap-hub/routing';
 
 import { Card, Headline2, Divider, Link } from '../atoms';
 import { perRem } from '../pixels';
@@ -40,6 +41,7 @@ type SharedResearchOutputProps = Pick<
   | 'organisms'
   | 'environments'
   | 'subtype'
+  | 'id'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -50,6 +52,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   backHref,
   accessInstructions,
   contactEmails,
+  id,
   ...props
 }) => {
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
@@ -71,7 +74,16 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         <BackLink href={backHref} />
         {canCreateUpdate && (
           <div css={editButtonContainer}>
-            <Link href={'/'} buttonStyle small primary>
+            <Link
+              href={
+                sharedResearch({})
+                  .researchOutput({ researchOutputId: id })
+                  .editResearchOutput({}).$
+              }
+              buttonStyle
+              small
+              primary
+            >
               {editIcon} Edit
             </Link>
           </div>

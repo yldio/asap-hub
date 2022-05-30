@@ -15,11 +15,11 @@ import {
 } from '../molecules';
 import { noop } from '../utils';
 import {
-  TeamCreateOutputIdentifier,
-  TeamCreateOutputIdentifierProps,
-} from './TeamCreateOutputIdentifier';
+  ResearchOutputIdentifier,
+  ResearchOutputIdentifierProps,
+} from './ResearchOutputIdentifier';
 
-type TeamCreateOutputExtraInformationProps = Pick<
+type ResearchOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
   | 'tags'
   | 'accessInstructions'
@@ -42,9 +42,10 @@ type TeamCreateOutputExtraInformationProps = Pick<
   identifierRequired: boolean;
   researchTags: ResearchTagResponse[];
   type: ResearchOutputPostRequest['type'] | '';
-} & Omit<TeamCreateOutputIdentifierProps, 'required'>;
+  isEditMode?: boolean;
+} & Omit<ResearchOutputIdentifierProps, 'required'>;
 
-const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInformationProps> =
+const ResearchOutputExtraInformationCard: React.FC<ResearchOutputExtraInformationProps> =
   ({
     onChangeTags = noop,
     tags,
@@ -156,7 +157,7 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
           Ask ASAP to add a new keyword
         </Link>
 
-        <TeamCreateOutputIdentifier
+        <ResearchOutputIdentifier
           documentType={documentType}
           identifier={identifier}
           setIdentifier={setIdentifier}
@@ -187,4 +188,4 @@ const TeamCreateOutputExtraInformationCard: React.FC<TeamCreateOutputExtraInform
     );
   };
 
-export default TeamCreateOutputExtraInformationCard;
+export default ResearchOutputExtraInformationCard;

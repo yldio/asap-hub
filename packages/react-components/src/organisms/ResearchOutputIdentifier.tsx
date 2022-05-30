@@ -58,16 +58,17 @@ const identifierMap = {
   },
 } as const;
 
-export interface TeamCreateOutputIdentifierProps {
+export interface ResearchOutputIdentifierProps {
   identifier?: string;
   setIdentifier?: (value: string) => void;
   identifierType?: ResearchOutputIdentifierType;
   setIdentifierType?: (value: ResearchOutputIdentifierType) => void;
   documentType: ResearchOutputDocumentType;
   required: boolean;
+  isEditMode?: boolean;
 }
 
-export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProps> =
+export const ResearchOutputIdentifier: React.FC<ResearchOutputIdentifierProps> =
   ({
     identifierType = ResearchOutputIdentifierType.Empty,
     setIdentifierType = noop,
@@ -75,6 +76,7 @@ export const TeamCreateOutputIdentifier: React.FC<TeamCreateOutputIdentifierProp
     setIdentifier = noop,
     documentType,
     required,
+    isEditMode = false,
   }) => {
     const identifiers = useMemo(
       () => getIdentifiers(documentType),

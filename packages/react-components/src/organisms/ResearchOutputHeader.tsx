@@ -90,11 +90,11 @@ const SubheaderCopy: React.FC<{
   }
 };
 
-type TeamCreateOutputHeaderProps = {
+type ResearchOutputHeaderProps = {
   documentType: ResearchOutputDocumentType;
 };
 
-const TeamCreateOutputHeader: React.FC<TeamCreateOutputHeaderProps> = ({
+const ResearchOutputHeader: React.FC<ResearchOutputHeaderProps> = ({
   documentType,
 }) => (
   <header>
@@ -109,4 +109,4 @@ const TeamCreateOutputHeader: React.FC<TeamCreateOutputHeaderProps> = ({
   </header>
 );
 
-export default TeamCreateOutputHeader;
+export default ResearchOutputHeader;

@@ -13,6 +13,7 @@ import {
   patchTeam,
   getTeams,
   createTeamResearchOutput,
+  updateTeamResearchOutput,
   getLabs,
 } from '../api';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
@@ -136,7 +137,7 @@ describe('patchTeam', () => {
     );
   });
 });
-describe('createTeamResearchOutput', () => {
+describe('teamResearchOutput', () => {
   const payload: ResearchOutputPostRequest = {
     teams: ['90210'],
     documentType: 'Bioinformatics',
@@ -164,6 +165,15 @@ describe('createTeamResearchOutput', () => {
     expect(nock.isDone()).toBe(true);
   });
 
+  it('makes an authorized PUT request to update a research output', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .put('/research-outputs/123', payload)
+      .reply(200, { id: 123 });
+
+    await updateTeamResearchOutput(payload, 'Bearer x', '123');
+    expect(nock.isDone()).toBe(true);
+  });
+
   it('errors for an error status', async () => {
     nock(API_BASE_URL).post('/research-outputs').reply(500, {});
 
@@ -171,6 +181,16 @@ describe('createTeamResearchOutput', () => {
       createTeamResearchOutput(payload, 'Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to create research output for teams 90210 Expected status 201. Received status 500."`,
+    );
+  });
+
+  it('errors for an error status in edit mode', async () => {
+    nock(API_BASE_URL).put('/research-outputs/123').reply(500, {});
+
+    await expect(
+      updateTeamResearchOutput(payload, 'Bearer x', '123'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to update research output for teams 90210 Expected status 200. Received status 500."`,
     );
   });
 });

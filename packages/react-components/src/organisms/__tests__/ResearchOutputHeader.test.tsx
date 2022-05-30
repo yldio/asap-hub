@@ -2,7 +2,7 @@ import { useFlags } from '@asap-hub/react-context';
 import { render, screen } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
 
-import TeamCreateOutputHeader from '../TeamCreateOutputHeader';
+import ResearchOutputHeader from '../ResearchOutputHeader';
 
 beforeEach(() => {
   const {
@@ -43,7 +43,7 @@ it.each([
 ] as const)(
   'renders the $documentType research output',
   ({ documentType, headingName, text }) => {
-    render(<TeamCreateOutputHeader documentType={documentType} />);
+    render(<ResearchOutputHeader documentType={documentType} />);
     expect(
       screen.getByRole('heading', { name: headingName }),
     ).toBeInTheDocument();
@@ -52,7 +52,7 @@ it.each([
 );
 
 it('falls back to a generic description otherwise', () => {
-  render(<TeamCreateOutputHeader documentType="Presentation" />);
+  render(<ResearchOutputHeader documentType="Presentation" />);
   expect(
     screen.getByRole('heading', { name: /Share a resource/i }),
   ).toBeInTheDocument();

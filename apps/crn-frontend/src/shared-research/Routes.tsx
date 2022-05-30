@@ -12,6 +12,7 @@ const loadResearchOutputList = () =>
   );
 const loadResearchOutput = () =>
   import(/* webpackChunkName: "shared-research-output" */ './ResearchOutput');
+
 const ResearchOutputList = lazy(loadResearchOutputList);
 const ResearchOutput = lazy(loadResearchOutput);
 loadResearchOutputList();

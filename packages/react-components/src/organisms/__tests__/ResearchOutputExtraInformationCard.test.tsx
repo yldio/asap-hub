@@ -6,10 +6,10 @@ import {
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import TeamCreateOutputExtraInformationCard from '../TeamCreateOutputExtraInformationCard';
+import ResearchOutputExtraInformationCard from '../ResearchOutputExtraInformationCard';
 
 const getProps = (): ComponentProps<
-  typeof TeamCreateOutputExtraInformationCard
+  typeof ResearchOutputExtraInformationCard
 > => ({
   isSaving: false,
   tagSuggestions: [],
@@ -25,7 +25,7 @@ const getProps = (): ComponentProps<
 
 it('should render a tag', async () => {
   render(
-    <TeamCreateOutputExtraInformationCard {...getProps()} tags={['example']} />,
+    <ResearchOutputExtraInformationCard {...getProps()} tags={['example']} />,
   );
   expect(screen.getByText(/example/i)).toBeVisible();
 });
@@ -33,7 +33,7 @@ it('should render a tag', async () => {
 it('should trigger an onChange event when a tag is selected', async () => {
   const mockOnChange = jest.fn();
   render(
-    <TeamCreateOutputExtraInformationCard
+    <ResearchOutputExtraInformationCard
       {...getProps()}
       tagSuggestions={[{ label: 'Example', value: 'Example' }]}
       onChangeTags={mockOnChange}
@@ -47,7 +47,7 @@ it('should trigger an onChange event when a tag is selected', async () => {
 it('should trigger an onChange event when a text is being typed into access instructions', async () => {
   const mockOnChange = jest.fn();
   render(
-    <TeamCreateOutputExtraInformationCard
+    <ResearchOutputExtraInformationCard
       {...getProps()}
       accessInstructions="access-instructions-value"
       onChangeAccessInstructions={mockOnChange}
@@ -63,7 +63,7 @@ it('should trigger an onChange event when a text is being typed into access inst
 
 it('should show lab catalogue number for lab resources', async () => {
   const { rerender } = render(
-    <TeamCreateOutputExtraInformationCard
+    <ResearchOutputExtraInformationCard
       {...getProps()}
       documentType={'Article'}
     />,
@@ -71,7 +71,7 @@ it('should show lab catalogue number for lab resources', async () => {
   expect(screen.queryByLabelText(/Catalog Number/i)).toBeNull();
 
   rerender(
-    <TeamCreateOutputExtraInformationCard
+    <ResearchOutputExtraInformationCard
       {...getProps()}
       documentType={'Lab Resource'}
     />,
@@ -80,14 +80,14 @@ it('should show lab catalogue number for lab resources', async () => {
 });
 
 it('should hide methods when there is no suggestions', async () => {
-  render(<TeamCreateOutputExtraInformationCard {...getProps()} />);
+  render(<ResearchOutputExtraInformationCard {...getProps()} />);
   expect(screen.queryByLabelText(/Methods/i)).toBeNull();
 });
 
 it('should trigger an onChange event when a method is selected', async () => {
   const mockOnChange = jest.fn();
   render(
-    <TeamCreateOutputExtraInformationCard
+    <ResearchOutputExtraInformationCard
       {...getProps()}
       researchTags={[researchTagMethodResponse]}
       onChangeMethods={mockOnChange}
@@ -102,14 +102,14 @@ it('should trigger an onChange event when a method is selected', async () => {
 });
 
 it('should hide organisms when there is no suggestions', async () => {
-  render(<TeamCreateOutputExtraInformationCard {...getProps()} />);
+  render(<ResearchOutputExtraInformationCard {...getProps()} />);
   expect(screen.queryByLabelText(/Organisms/i)).toBeNull();
 });
 
 it('should trigger an onChange event when an organism is selected', async () => {
   const mockOnChange = jest.fn();
   render(
-    <TeamCreateOutputExtraInformationCard
+    <ResearchOutputExtraInformationCard
       {...getProps()}
       researchTags={[researchTagOrganismResponse]}
       onChangeOrganisms={mockOnChange}
@@ -124,14 +124,14 @@ it('should trigger an onChange event when an organism is selected', async () => 
 });
 
 it('should hide environments when there is no suggestions', async () => {
-  render(<TeamCreateOutputExtraInformationCard {...getProps()} />);
+  render(<ResearchOutputExtraInformationCard {...getProps()} />);
   expect(screen.queryByLabelText(/environments/i)).toBeNull();
 });
 
 it('should trigger an onChange event when an environment is selected', async () => {
   const mockOnChange = jest.fn();
   render(
-    <TeamCreateOutputExtraInformationCard
+    <ResearchOutputExtraInformationCard
       {...getProps()}
       researchTags={[researchTagEnvironmentResponse]}
       onChangeEnvironments={mockOnChange}

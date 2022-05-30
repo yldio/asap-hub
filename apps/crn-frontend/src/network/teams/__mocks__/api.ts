@@ -11,7 +11,10 @@ import {
   TeamResponse,
 } from '@asap-hub/model';
 import { GetListOptions } from '@asap-hub/frontend-utils';
-import { createTeamResearchOutput as originalCreateTeamResearchOutput } from '../api';
+import {
+  createTeamResearchOutput as originalCreateTeamResearchOutput,
+  updateTeamResearchOutput as originalUpdateTeamResearchOutput,
+} from '../api';
 
 export const getTeam = jest.fn(
   async (id: string): Promise<TeamResponse> => ({
@@ -37,6 +40,13 @@ export const getTeams = jest.fn(
 
 export const createTeamResearchOutput: jest.Mocked<
   typeof originalCreateTeamResearchOutput
+> = jest.fn(async () => ({
+  ...createResearchOutputResponse(),
+  id: 'research-output-id',
+}));
+
+export const updateTeamResearchOutput: jest.Mocked<
+  typeof originalUpdateTeamResearchOutput
 > = jest.fn(async () => ({
   ...createResearchOutputResponse(),
   id: 'research-output-id',

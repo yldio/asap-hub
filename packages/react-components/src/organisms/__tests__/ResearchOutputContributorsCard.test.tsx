@@ -5,9 +5,9 @@ import { ComponentProps } from 'react';
 import { waitFor } from '@testing-library/dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 
-import TeamCreateOutputContributorsCard from '../TeamCreateOutputContributorsCard';
+import ResearchOutputContributorsCard from '../ResearchOutputContributorsCard';
 
-const props: ComponentProps<typeof TeamCreateOutputContributorsCard> = {
+const props: ComponentProps<typeof ResearchOutputContributorsCard> = {
   authors: [],
   labs: [],
   teams: [],
@@ -17,7 +17,7 @@ const props: ComponentProps<typeof TeamCreateOutputContributorsCard> = {
 it('renders the contributors card form', async () => {
   const { getByText } = render(
     <StaticRouter>
-      <TeamCreateOutputContributorsCard {...props} />
+      <ResearchOutputContributorsCard {...props} />
     </StaticRouter>,
   );
   expect(getByText(/Who were the contributors/i)).toBeVisible();
@@ -34,7 +34,7 @@ describe('Authors Multiselect', () => {
 
     render(
       <StaticRouter>
-        <TeamCreateOutputContributorsCard
+        <ResearchOutputContributorsCard
           {...props}
           onChangeAuthors={onChangeAuthors}
           getAuthorSuggestions={getAuthorSuggestions}
@@ -55,7 +55,7 @@ describe('Authors Multiselect', () => {
 describe('Labs Multiselect', () => {
   it('should render provided values', () => {
     const { getByText } = render(
-      <TeamCreateOutputContributorsCard
+      <ResearchOutputContributorsCard
         {...props}
         labs={[
           { label: 'One Lab', value: '1' },
@@ -74,7 +74,7 @@ describe('Labs Multiselect', () => {
     ]);
     const mockOnChange = jest.fn();
     const { getByText, getByLabelText, queryByText } = render(
-      <TeamCreateOutputContributorsCard
+      <ResearchOutputContributorsCard
         {...props}
         onChangeLabs={mockOnChange}
         getLabSuggestions={loadOptions}
@@ -93,7 +93,7 @@ describe('Labs Multiselect', () => {
     const loadOptions = jest.fn();
     loadOptions.mockResolvedValue([]);
     const { getByLabelText, queryByText } = render(
-      <TeamCreateOutputContributorsCard
+      <ResearchOutputContributorsCard
         {...props}
         getLabSuggestions={loadOptions}
       />,
@@ -115,7 +115,7 @@ describe('Labs Multiselect', () => {
 
     render(
       <StaticRouter>
-        <TeamCreateOutputContributorsCard
+        <ResearchOutputContributorsCard
           {...props}
           onChangeLabs={onChangeLabs}
           getLabSuggestions={getLabSuggestions}
@@ -136,7 +136,7 @@ describe('Labs Multiselect', () => {
 describe('Teams Multiselect', () => {
   it('should render provided values', () => {
     const { getByText } = render(
-      <TeamCreateOutputContributorsCard
+      <ResearchOutputContributorsCard
         {...props}
         teams={[
           { label: 'One Team', value: '1' },
@@ -156,7 +156,7 @@ describe('Teams Multiselect', () => {
     ]);
 
     const { getByText, getByLabelText, queryByText } = render(
-      <TeamCreateOutputContributorsCard
+      <ResearchOutputContributorsCard
         {...props}
         getTeamSuggestions={loadOptions}
         onChangeTeams={mockOnChange}
@@ -175,7 +175,7 @@ describe('Teams Multiselect', () => {
     const loadOptions = jest.fn();
     loadOptions.mockResolvedValue([]);
     const { getByLabelText, queryByText } = render(
-      <TeamCreateOutputContributorsCard
+      <ResearchOutputContributorsCard
         {...props}
         getTeamSuggestions={loadOptions}
       />,

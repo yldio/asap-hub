@@ -21,7 +21,7 @@ import {
 } from '../molecules';
 import { noop } from '../utils';
 
-type TeamCreateOutputFormSharingCardProps = Pick<
+type ResearchOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
   | 'link'
   | 'title'
@@ -49,7 +49,7 @@ type TeamCreateOutputFormSharingCardProps = Pick<
   clearServerValidationError?: (instancePath: string) => void;
 };
 
-const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardProps> =
+const ResearchOutputFormSharingCard: React.FC<ResearchOutputFormSharingCardProps> =
   ({
     isSaving,
     link,
@@ -239,4 +239,4 @@ const TeamCreateOutputFormSharingCard: React.FC<TeamCreateOutputFormSharingCardP
     );
   };
 
-export default TeamCreateOutputFormSharingCard;
+export default ResearchOutputFormSharingCard;

@@ -2,10 +2,12 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputDocumentType,
   ValidationErrorResponse,
+  ResearchOutputResponse,
 } from '@asap-hub/model';
 import {
   ResearchOutputPermissionsContext,
@@ -46,6 +48,7 @@ describe('TeamOutput', () => {
     teamId: string;
     outputDocumentType?: OutputDocumentTypeParameter;
     canCreateUpdate?: boolean;
+    researchOutputData?: ResearchOutputResponse;
   }
 
   it('Renders the research output', async () => {
@@ -54,6 +57,27 @@ describe('TeamOutput', () => {
     expect(
       screen.getByRole('heading', { name: /Share bioinformatics/i }),
     ).toBeInTheDocument();
+  });
+
+  it('Renders the correct button in create mode', async () => {
+    await renderPage({
+      teamId: '42',
+      outputDocumentType: 'bioinformatics',
+    });
+
+    expect(
+      screen.getByRole('button', { name: /Publish/i }),
+    ).toBeInTheDocument();
+  });
+
+  it('Renders the correct button in edit mode', async () => {
+    await renderPage({
+      teamId: '42',
+      outputDocumentType: 'bioinformatics',
+      researchOutputData: createResearchOutputResponse(),
+    });
+
+    expect(screen.getByRole('button', { name: /Save/i })).toBeInTheDocument();
   });
 
   it('switches research output type based on parameter', async () => {
@@ -122,6 +146,12 @@ describe('TeamOutput', () => {
         methods: [],
         organisms: [],
         environments: [],
+        labCatalogNumber: undefined,
+        publishDate: undefined,
+        subtype: undefined,
+        accessInstructions: undefined,
+        asapFunded: undefined,
+        usedInPublication: undefined,
       },
       expect.anything(),
     );
@@ -182,6 +212,43 @@ describe('TeamOutput', () => {
     );
   });
 
+  it('will toast server side errors for unknown errors in edit mode', async () => {
+    const link = 'https://example42.com';
+    const title = 'example42 title';
+    const description = 'example42 description';
+    const type = 'Animal Model';
+    const doi = '10.0777';
+
+    mockCreateTeamResearchOutput.mockRejectedValue(
+      new Error('Something went wrong'),
+    );
+
+    await renderPage({
+      teamId: '42',
+      outputDocumentType: 'article',
+      researchOutputData: { ...createResearchOutputResponse(), doi },
+    });
+
+    const { publish } = await mandatoryFields(
+      {
+        link,
+        title,
+        description,
+        type,
+        doi,
+      },
+      true,
+      true,
+    );
+
+    await publish();
+
+    expect(mockCreateTeamResearchOutput).toHaveBeenCalled();
+    expect(mockToast).toHaveBeenCalledWith(
+      'There was an error and we were unable to save your changes. Please try again.',
+    );
+  });
+
   it.each<{
     param: OutputDocumentTypeParameter;
     outputType: ResearchOutputDocumentType;
@@ -202,6 +269,7 @@ describe('TeamOutput', () => {
     canCreateUpdate = true,
     teamId,
     outputDocumentType = 'bioinformatics',
+    researchOutputData,
   }: RenderPageOptions) {
     const path =
       network.template +
@@ -231,7 +299,10 @@ describe('TeamOutput', () => {
                     value={{ canCreateUpdate }}
                   >
                     <Route path={path}>
-                      <TeamOutput teamId={teamId} />
+                      <TeamOutput
+                        teamId={teamId}
+                        researchOutputData={researchOutputData}
+                      />
                     </Route>
                   </ResearchOutputPermissionsContext.Provider>
                 </StaticRouter>
@@ -259,6 +330,7 @@ async function mandatoryFields(
     doi?: string;
   },
   isLinkRequired: boolean = false,
+  isEditMode: boolean = false,
 ) {
   const url = isLinkRequired ? /url \(required\)/i : /url \(optional\)/i;
 
@@ -282,7 +354,9 @@ async function mandatoryFields(
     }),
     doi,
   );
-  const button = screen.getByRole('button', { name: /Publish/i });
+  const button = isEditMode
+    ? screen.getByRole('button', { name: /Save/i })
+    : screen.getByRole('button', { name: /Publish/i });
   return {
     publish: async () => {
       userEvent.click(button);

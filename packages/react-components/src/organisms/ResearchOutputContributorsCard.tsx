@@ -4,7 +4,7 @@ import { FormCard, LabeledMultiSelect } from '../molecules';
 import { noop } from '../utils';
 import AuthorSelect from './AuthorSelect';
 
-type TeamCreateOutputContributorsProps = {
+type ResearchOutputContributorsProps = {
   readonly labs: ComponentPropsWithRef<typeof LabeledMultiSelect>['values'];
   readonly getLabSuggestions?: ComponentPropsWithRef<
     typeof LabeledMultiSelect
@@ -32,7 +32,7 @@ type TeamCreateOutputContributorsProps = {
   readonly isSaving: boolean;
 };
 
-const TeamCreateOutputContributorsCard: React.FC<TeamCreateOutputContributorsProps> =
+const ResearchOutputContributorsCard: React.FC<ResearchOutputContributorsProps> =
   ({
     authors,
     onChangeAuthors = noop,
@@ -87,4 +87,4 @@ const TeamCreateOutputContributorsCard: React.FC<TeamCreateOutputContributorsPro
       />
     </FormCard>
   );
-export default TeamCreateOutputContributorsCard;
+export default ResearchOutputContributorsCard;

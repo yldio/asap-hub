@@ -3,6 +3,7 @@ import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ListTeamResponse,
   ResearchOutputPostRequest,
+  ResearchOutputPutRequest,
   ResearchTagResponse,
   TeamPatchRequest,
   TeamResponse,
@@ -32,6 +33,7 @@ import {
   getTeam,
   getTeams,
   patchTeam,
+  updateTeamResearchOutput,
 } from './api';
 
 const teamIndexState = atomFamily<
@@ -188,6 +190,20 @@ export const usePostTeamResearchOutput = () => {
     const researchOutput = await createTeamResearchOutput(
       payload,
       authorization,
+    );
+    setResearchOutputItem(researchOutput);
+    return researchOutput;
+  };
+};
+
+export const usePutTeamResearchOutput = (id: string) => {
+  const authorization = useRecoilValue(authorizationState);
+  const setResearchOutputItem = useSetResearchOutputItem();
+  return async (payload: ResearchOutputPutRequest) => {
+    const researchOutput = await updateTeamResearchOutput(
+      payload,
+      authorization,
+      id,
     );
     setResearchOutputItem(researchOutput);
     return researchOutput;

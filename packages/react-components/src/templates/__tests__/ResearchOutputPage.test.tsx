@@ -6,9 +6,9 @@ import { renderHook } from '@testing-library/react-hooks';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
-import TeamCreateOutputPage from '../TeamCreateOutputPage';
+import ResearchOutputPage from '../ResearchOutputPage';
 
-const props: ComponentProps<typeof TeamCreateOutputPage> = {
+const props: ComponentProps<typeof ResearchOutputPage> = {
   onSave: jest.fn(),
   documentType: 'Grant Document',
   tagSuggestions: [],
@@ -27,7 +27,7 @@ beforeEach(() => {
 it('renders the research output type in the header', () => {
   render(
     <StaticRouter>
-      <TeamCreateOutputPage {...props} />
+      <ResearchOutputPage {...props} />
     </StaticRouter>,
   );
   expect(screen.getByRole('heading', { name: /Share/i })).toBeInTheDocument();
@@ -37,7 +37,7 @@ it('clicking button will trigger the callback', () => {
 
   render(
     <StaticRouter>
-      <TeamCreateOutputPage {...props} onSave={mockOnCreate} />
+      <ResearchOutputPage {...props} onSave={mockOnCreate} />
     </StaticRouter>,
   );
   const button = screen.getByRole('button', { name: /Publish/i });

@@ -5,12 +5,14 @@ import {
   researchTagMethodResponse,
   researchTagOrganismResponse,
   researchTagSubtypeResponse,
+  createResearchOutputResponse,
 } from '@asap-hub/fixtures';
 import {
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
   ResearchTagResponse,
+  ResearchOutputType,
 } from '@asap-hub/model';
 import {
   render,
@@ -23,11 +25,17 @@ import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
 import { Router, StaticRouter } from 'react-router-dom';
-import TeamCreateOutputForm, {
+import ResearchOutputForm, {
   createIdentifierField,
-} from '../TeamCreateOutputForm';
+  getIdentifierType,
+  isDirty,
+  isIdentifierModified,
+  getPublishDate,
+  ResearchOutputState,
+  getDecision,
+} from '../ResearchOutputForm';
 
-const props: ComponentProps<typeof TeamCreateOutputForm> = {
+const props: ComponentProps<typeof ResearchOutputForm> = {
   onSave: jest.fn(() => Promise.resolve()),
   tagSuggestions: [],
   researchTags: [],
@@ -59,19 +67,82 @@ describe('createIdentifierField', () => {
 it('renders the form', async () => {
   render(
     <StaticRouter>
-      <TeamCreateOutputForm {...props} />
+      <ResearchOutputForm {...props} />
     </StaticRouter>,
   );
   expect(
     screen.getByRole('heading', { name: /What are you sharing/i }),
   ).toBeVisible();
+  expect(screen.getByRole('button', { name: /Publish/i })).toBeVisible();
+});
+
+it('renders the edit form button when research output data is present', async () => {
+  render(
+    <StaticRouter>
+      <ResearchOutputForm
+        {...props}
+        researchOutputData={createResearchOutputResponse()}
+        isEditMode
+      />
+    </StaticRouter>,
+  );
+
+  expect(screen.getByRole('button', { name: /Save/i })).toBeVisible();
+});
+
+it('renders the edit form with fields from researchOutputData prepopulated', async () => {
+  const researchOutputData = {
+    ...createResearchOutputResponse(),
+    title: 'test title',
+    link: 'https://test.com',
+    description: 'test description',
+    type: 'Genetic Data - DNA' as ResearchOutputType,
+    tags: ['testAddedTag'],
+    teams: [
+      {
+        id: 'team1',
+        displayName: 'Team 1',
+      },
+    ],
+    labs: [
+      {
+        id: 'lab1',
+        name: 'Lab 1',
+      },
+    ],
+  };
+  await render(
+    <StaticRouter>
+      <ResearchOutputForm
+        {...props}
+        documentType={'Dataset'}
+        researchOutputData={researchOutputData}
+        isEditMode
+      />
+    </StaticRouter>,
+  );
+
+  expect(screen.getByText(researchOutputData.description)).toBeVisible();
+  expect(screen.getByDisplayValue(researchOutputData.title)).toBeVisible();
+  expect(screen.getByText(researchOutputData.type!)).toBeVisible();
+  expect(screen.getByText(researchOutputData.sharingStatus)).toBeVisible();
+  expect(
+    screen.getByText(researchOutputData.authors[0].displayName),
+  ).toBeVisible();
+  expect(
+    screen.getByText(researchOutputData.teams[0].displayName),
+  ).toBeVisible();
+  expect(screen.getByText(researchOutputData.tags[0])).toBeVisible();
+  expect(screen.getByText(researchOutputData.labs[0].name)).toBeVisible();
+
+  expect(screen.getByRole('button', { name: /Save/i })).toBeVisible();
 });
 
 it('displays proper message when no author is found', async () => {
   const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
   render(
     <StaticRouter>
-      <TeamCreateOutputForm
+      <ResearchOutputForm
         {...props}
         getAuthorSuggestions={getAuthorSuggestions}
       />
@@ -87,7 +158,7 @@ it('displays proper message when no lab is found', async () => {
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
   render(
     <StaticRouter>
-      <TeamCreateOutputForm {...props} getLabSuggestions={getLabSuggestions} />
+      <ResearchOutputForm {...props} getLabSuggestions={getLabSuggestions} />
     </StaticRouter>,
   );
   userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
@@ -98,7 +169,7 @@ it('displays proper message when no lab is found', async () => {
 it('displays current team within the form', async () => {
   render(
     <StaticRouter>
-      <TeamCreateOutputForm
+      <ResearchOutputForm
         {...props}
         team={{ ...createTeamResponse(), displayName: 'example team' }}
       />
@@ -110,7 +181,7 @@ it('displays current team within the form', async () => {
 it('is funded and publication are both yes, then the identifier type is required', async () => {
   render(
     <StaticRouter>
-      <TeamCreateOutputForm {...props} />
+      <ResearchOutputForm {...props} />
     </StaticRouter>,
   );
   const textbox = screen.getByRole('textbox', { name: /identifier/i });
@@ -188,9 +259,7 @@ describe('on submit', () => {
       researchTags = [],
     }: {
       data?: Data;
-      documentType?: ComponentProps<
-        typeof TeamCreateOutputForm
-      >['documentType'];
+      documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
       researchTags?: ResearchTagResponse[];
     } = {
       data: {
@@ -205,7 +274,7 @@ describe('on submit', () => {
   ) => {
     render(
       <Router history={history}>
-        <TeamCreateOutputForm
+        <ResearchOutputForm
           {...props}
           team={{ ...createTeamResponse(), id: 'TEAMID' }}
           documentType={documentType}
@@ -557,5 +626,189 @@ describe('on submit', () => {
         [fieldName]: expected,
       });
     });
+  });
+});
+
+describe('isDirty', () => {
+  const researchOutputResponse: ResearchOutputResponse =
+    createResearchOutputResponse();
+  const payload: ResearchOutputState = {
+    title: researchOutputResponse.title,
+    description: researchOutputResponse.description,
+    link: researchOutputResponse.link,
+    type: researchOutputResponse.type!,
+    tags: researchOutputResponse.tags,
+    methods: researchOutputResponse.methods,
+    organisms: researchOutputResponse.organisms,
+    environments: researchOutputResponse.environments,
+    teams: researchOutputResponse?.teams.map((element, index) => ({
+      label: element.displayName,
+      value: element.id,
+      isFixed: index === 0,
+    })),
+    labs: researchOutputResponse?.labs.map((lab) => ({
+      value: lab.id,
+      label: lab.name,
+    })),
+    authors: researchOutputResponse?.authors.map((author) => ({
+      value: author.id,
+      label: author.displayName,
+      user: author,
+    })),
+    subtype: researchOutputResponse.subtype,
+    labCatalogNumber: researchOutputResponse.labCatalogNumber,
+    identifierType: ResearchOutputIdentifierType.Empty,
+  };
+
+  it('returns true for edit mode when teams are in diff order', () => {
+    expect(
+      isDirty(
+        {
+          ...payload,
+          teams: [
+            { value: 't0', label: 'team-0' },
+            { value: 't1', label: 'team-1' },
+          ],
+        },
+        {
+          ...researchOutputResponse,
+          teams: [
+            { id: 't1', displayName: 'team-1' },
+            { id: 't0', displayName: 'team-0' },
+          ],
+        },
+      ),
+    ).toBeTruthy();
+  });
+
+  it('returns false for edit mode when values equal the initial ones', () => {
+    expect(isDirty(payload, researchOutputResponse)).toBeFalsy();
+  });
+
+  it('returns true when the initial values are changed', () => {
+    expect(isDirty(payload)).toBeTruthy();
+  });
+
+  it('returns true when the initial values are unchanged', () => {
+    expect(
+      isDirty({
+        title: '',
+        description: '',
+        link: '',
+        type: '',
+        tags: [],
+        methods: [],
+        organisms: [],
+        environments: [],
+        teams: [{ value: '12', label: 'Team ASAP' }],
+        labs: [],
+        authors: [],
+        subtype: undefined,
+        labCatalogNumber: '',
+        identifier: '',
+        identifierType: ResearchOutputIdentifierType.Empty,
+      }),
+    ).toBeFalsy();
+  });
+
+  it('returns false when the identifier is absent', () => {
+    expect(isIdentifierModified(researchOutputResponse)).toBeFalsy();
+  });
+
+  it('returns false when the identifier is equal to initial identifier', () => {
+    expect(
+      isIdentifierModified(
+        { ...researchOutputResponse, doi: '12.1234' },
+        '12.1234',
+      ),
+    ).toBeFalsy();
+  });
+
+  it('returns true when the identifier is not equal to initial identifier', () => {
+    expect(
+      isIdentifierModified(
+        { ...researchOutputResponse, doi: '12.1234' },
+        '12.5555',
+      ),
+    ).toBeTruthy();
+  });
+
+  it.each`
+    key                   | value
+    ${'title'}            | ${'Output 1 changed'}
+    ${'description'}      | ${'new changed description'}
+    ${'link'}             | ${'https://changed.com'}
+    ${'type'}             | ${'Data set'}
+    ${'tags'}             | ${['changed tag']}
+    ${'methods'}          | ${['Activity Assay']}
+    ${'organisms'}        | ${['Rat']}
+    ${'teams'}            | ${['In Vivo']}
+    ${'environments'}     | ${[{ label: 'team1', value: 't99' }]}
+    ${'authors'}          | ${[{ label: 'author1', value: 'a111' }]}
+    ${'subtype'}          | ${'Postmortem'}
+    ${'labCatalogNumber'} | ${'1'}
+    ${'labs'}             | ${['Asap Lab']}
+    ${'identifierType'}   | ${'RRID'}
+    ${'rrid'}             | ${'101994'}
+  `(
+    'Return true when $key is changed to $value and differs from the initial one',
+    async ({ key, value }) => {
+      const payloadKey: keyof typeof payload = key;
+      payload[payloadKey] = value;
+      expect(isDirty(payload, researchOutputResponse)).toBeTruthy();
+    },
+  );
+});
+
+describe('getPublishDate', () => {
+  const dateString = new Date().toString();
+  it('returns a new date if date string exists', () => {
+    expect(getPublishDate(dateString)).toBeInstanceOf(Date);
+  });
+  it('returns undefined if no date string is present', () => {
+    expect(getPublishDate()).toBeUndefined();
+  });
+});
+
+describe('getDecision', () => {
+  it('returns yes for true', () => {
+    expect(getDecision(true)).toEqual('Yes');
+  });
+  it('returns no for false', () => {
+    expect(getDecision(false)).toEqual('No');
+  });
+  it('returns not sure for undefined', () => {
+    expect(getDecision()).toEqual('Not Sure');
+  });
+});
+
+describe('getIdentifierType', () => {
+  it('returns DOI when doi is present', () => {
+    expect(
+      getIdentifierType({ ...createResearchOutputResponse(), doi: 'abc' }),
+    ).toEqual('DOI');
+  });
+  it('returns RRID when rrid is present', () => {
+    expect(
+      getIdentifierType({ ...createResearchOutputResponse(), rrid: 'abc' }),
+    ).toEqual('RRID');
+  });
+  it('returns Accession Number when accession is present', () => {
+    expect(
+      getIdentifierType({
+        ...createResearchOutputResponse(),
+        accession: 'abc',
+      }),
+    ).toEqual('Accession Number');
+  });
+  it('returns empty when there is no identifier present', () => {
+    expect(
+      getIdentifierType({
+        ...createResearchOutputResponse(),
+        accession: '',
+        rrid: '',
+        doi: '',
+      }),
+    ).toEqual('');
   });
 });

@@ -15,13 +15,13 @@ import { ComponentProps, useState } from 'react';
 import { Button } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 import { usePushFromHere } from '../routing';
-import { noop } from '../utils';
+import { noop, equals } from '../utils';
 import {
   Form,
-  TeamCreateOutputExtraInformationCard,
-  TeamCreateOutputFormSharingCard,
+  ResearchOutputExtraInformationCard,
+  ResearchOutputFormSharingCard,
 } from './index';
-import TeamCreateOutputContributorsCard from './TeamCreateOutputContributorsCard';
+import ResearchOutputContributorsCard from './ResearchOutputContributorsCard';
 
 const contentStyles = css({
   display: 'grid',
@@ -57,16 +57,16 @@ const formControlsStyles = css({
   },
 });
 
-type TeamCreateOutputFormProps = Pick<
-  ComponentProps<typeof TeamCreateOutputExtraInformationCard>,
+type ResearchOutputFormProps = Pick<
+  ComponentProps<typeof ResearchOutputExtraInformationCard>,
   'tagSuggestions'
 > &
   Pick<
-    ComponentProps<typeof TeamCreateOutputFormSharingCard>,
+    ComponentProps<typeof ResearchOutputFormSharingCard>,
     'serverValidationErrors' | 'clearServerValidationError'
   > &
   Pick<
-    ComponentProps<typeof TeamCreateOutputContributorsCard>,
+    ComponentProps<typeof ResearchOutputContributorsCard>,
     'getLabSuggestions' | 'getAuthorSuggestions' | 'getTeamSuggestions'
   > & {
     onSave: (
@@ -75,6 +75,8 @@ type TeamCreateOutputFormProps = Pick<
     researchTags: ResearchTagResponse[];
     documentType: ResearchOutputDocumentType;
     team: TeamResponse;
+    researchOutputData?: ResearchOutputResponse;
+    isEditMode?: boolean;
   };
 
 const identifierTypeToFieldName: Record<
@@ -102,8 +104,129 @@ export function createIdentifierField(
 
   return {};
 }
+export type ResearchOutputState = {
+  title: string;
+  description: string;
+  link?: string;
+  type: string;
+  tags: readonly string[];
+  methods: string[];
+  organisms: string[];
+  environments: string[];
+  subtype?: string;
+  labCatalogNumber?: string;
+  teams: NonNullable<
+    ComponentProps<typeof ResearchOutputContributorsCard>['teams']
+  >;
+  labs: ComponentProps<typeof ResearchOutputContributorsCard>['labs'];
+  authors: ComponentProps<typeof ResearchOutputContributorsCard>['authors'];
+  identifierType?: ResearchOutputIdentifierType;
+  identifier?: string;
+};
 
-const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
+export function isDirty(
+  {
+    title,
+    description,
+    link,
+    tags,
+    type,
+    methods,
+    organisms,
+    environments,
+    teams,
+    labs,
+    authors,
+    subtype,
+    labCatalogNumber,
+    identifierType,
+    identifier,
+  }: ResearchOutputState,
+  researchOutputData?: ResearchOutputResponse,
+): boolean {
+  if (researchOutputData) {
+    return (
+      title !== researchOutputData.title ||
+      description !== researchOutputData.description ||
+      link !== researchOutputData.link ||
+      type !== researchOutputData.type ||
+      !equals(methods, researchOutputData.methods) ||
+      !equals(organisms, researchOutputData.organisms) ||
+      !equals(environments, researchOutputData.environments) ||
+      !equals(
+        teams.map((team) => team.value),
+        researchOutputData.teams.map((team) => team.id),
+      ) ||
+      (labs &&
+        !equals(
+          labs.map((lab) => lab.value),
+          researchOutputData.labs.map((lab) => lab.id),
+        )) ||
+      (authors &&
+        !equals(
+          authors.map((author) => author.value),
+          researchOutputData.authors.map((author) => author?.id),
+        )) ||
+      subtype !== researchOutputData.subtype ||
+      identifierType !== getIdentifierType(researchOutputData) ||
+      isIdentifierModified(researchOutputData, identifier)
+    );
+  }
+  return (
+    tags?.length !== 0 ||
+    title !== '' ||
+    description !== '' ||
+    link !== '' ||
+    type !== '' ||
+    labs?.length !== 0 ||
+    authors?.length !== 0 ||
+    methods.length !== 0 ||
+    organisms.length !== 0 ||
+    environments.length !== 0 ||
+    labCatalogNumber !== '' ||
+    subtype !== undefined ||
+    teams?.length !== 1 ||
+    identifier !== '' ||
+    identifierType !== ResearchOutputIdentifierType.Empty
+  );
+}
+
+export function getIdentifierType(
+  researchOutputData: ResearchOutputResponse,
+): ResearchOutputIdentifierType {
+  if (researchOutputData?.doi) return ResearchOutputIdentifierType.DOI;
+
+  if (researchOutputData?.accession)
+    return ResearchOutputIdentifierType.AccessionNumber;
+
+  if (researchOutputData?.rrid) return ResearchOutputIdentifierType.RRID;
+
+  return ResearchOutputIdentifierType.Empty;
+}
+
+export function isIdentifierModified(
+  researchOutputData: ResearchOutputResponse,
+  identifier?: string,
+): boolean {
+  return (
+    researchOutputData.doi !== identifier &&
+    researchOutputData.accession !== identifier &&
+    researchOutputData.rrid !== identifier
+  );
+}
+
+export function getPublishDate(publishDate?: string): Date | undefined {
+  if (publishDate) {
+    return new Date(publishDate);
+  }
+  return undefined;
+}
+
+export function getDecision(decision?: boolean): DecisionOption {
+  return decision === undefined ? 'Not Sure' : decision ? 'Yes' : 'No';
+}
+
+const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   onSave,
   tagSuggestions,
   documentType,
@@ -114,48 +237,101 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   team,
   serverValidationErrors,
   clearServerValidationError,
+  researchOutputData,
+  isEditMode,
 }) => {
   const historyPush = usePushFromHere();
-  const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>([]);
-  const [type, setType] = useState<ResearchOutputPostRequest['type'] | ''>('');
-  const [title, setTitle] = useState<ResearchOutputPostRequest['title']>('');
-  const [labCatalogNumber, setLabCatalogNumber] =
-    useState<ResearchOutputPostRequest['labCatalogNumber']>('');
+  const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>(
+    (researchOutputData?.tags as string[]) || [],
+  );
+  const [type, setType] = useState<ResearchOutputPostRequest['type'] | ''>(
+    researchOutputData?.type || '',
+  );
+  const [title, setTitle] = useState<ResearchOutputPostRequest['title']>(
+    researchOutputData?.title || '',
+  );
+  const [labCatalogNumber, setLabCatalogNumber] = useState<
+    ResearchOutputPostRequest['labCatalogNumber']
+  >(researchOutputData?.labCatalogNumber || '');
   const [labs, setLabs] = useState<
-    NonNullable<ComponentProps<typeof TeamCreateOutputContributorsCard>['labs']>
-  >([]);
+    NonNullable<ComponentProps<typeof ResearchOutputContributorsCard>['labs']>
+  >(
+    researchOutputData?.labs.map((lab) => ({
+      value: lab.id,
+      label: lab.name,
+    })) || [],
+  );
   const [authors, setAuthors] = useState<
     NonNullable<
-      ComponentProps<typeof TeamCreateOutputContributorsCard>['authors']
+      ComponentProps<typeof ResearchOutputContributorsCard>['authors']
     >
-  >([]);
+  >(
+    researchOutputData?.authors.map((author) => ({
+      value: author.id,
+      label: author.displayName,
+      user: author,
+    })) || [],
+  );
 
   const [teams, setTeams] = useState<
-    NonNullable<
-      ComponentProps<typeof TeamCreateOutputContributorsCard>['teams']
-    >
-  >([{ label: team.displayName, value: team.id, isFixed: true }]);
-  const [description, setDescription] =
-    useState<ResearchOutputPostRequest['description']>('');
-  const [link, setLink] = useState<ResearchOutputPostRequest['link']>('');
-  const [accessInstructions, setAccessInstructions] =
-    useState<ResearchOutputPostRequest['accessInstructions']>('');
-  const [asapFunded, setAsapFunded] = useState<DecisionOption>('Not Sure');
-  const [usedInPublication, setUsedInPublication] =
-    useState<DecisionOption>('Not Sure');
+    NonNullable<ComponentProps<typeof ResearchOutputContributorsCard>['teams']>
+  >(
+    researchOutputData?.teams.map((element, index) => ({
+      label: element.displayName,
+      value: element.id,
+    })) || [{ label: team.displayName, value: team.id, isFixed: true }],
+  );
 
-  const [sharingStatus, setSharingStatus] =
-    useState<ResearchOutputPostRequest['sharingStatus']>('Network Only');
-  const [publishDate, setPublishDate] = useState<Date | undefined>(undefined);
+  const [description, setDescription] = useState<
+    ResearchOutputPostRequest['description']
+  >(researchOutputData?.description || '');
+  const [link, setLink] = useState<ResearchOutputPostRequest['link']>(
+    researchOutputData?.link || '',
+  );
+  const [accessInstructions, setAccessInstructions] = useState<
+    ResearchOutputPostRequest['accessInstructions']
+  >(researchOutputData?.accessInstructions || '');
+  const [asapFunded, setAsapFunded] = useState<DecisionOption>(
+    getDecision(researchOutputData?.asapFunded),
+  );
+
+  const [usedInPublication, setUsedInPublication] = useState<DecisionOption>(
+    getDecision(researchOutputData?.usedInPublication),
+  );
+
+  const [sharingStatus, setSharingStatus] = useState<
+    ResearchOutputPostRequest['sharingStatus']
+  >(researchOutputData?.sharingStatus || 'Network Only');
+
+  const [publishDate, setPublishDate] = useState<Date | undefined>(
+    getPublishDate(researchOutputData?.publishDate) || undefined,
+  );
 
   const [identifierType, setIdentifierType] =
-    useState<ResearchOutputIdentifierType>(ResearchOutputIdentifierType.Empty);
-  const [identifier, setIdentifier] = useState<string>('');
+    useState<ResearchOutputIdentifierType>(
+      (researchOutputData && getIdentifierType(researchOutputData)) ||
+        ResearchOutputIdentifierType.Empty,
+    );
 
-  const [methods, setMethods] = useState<string[]>([]);
-  const [organisms, setOrganisms] = useState<string[]>([]);
-  const [environments, setEnvironments] = useState<string[]>([]);
-  const [subtype, setSubtype] = useState<string>();
+  const [identifier, setIdentifier] = useState<string>(
+    researchOutputData?.doi ||
+      researchOutputData?.rrid ||
+      researchOutputData?.accession ||
+      '',
+  );
+
+  const [methods, setMethods] = useState<string[]>(
+    researchOutputData?.methods || [],
+  );
+  const [organisms, setOrganisms] = useState<string[]>(
+    researchOutputData?.organisms || [],
+  );
+  const [environments, setEnvironments] = useState<string[]>(
+    researchOutputData?.environments || [],
+  );
+  const [subtype, setSubtype] = useState<string | undefined>(
+    researchOutputData?.subtype || '',
+  );
 
   const filteredResearchTags = researchTags.filter((d) =>
     d.types?.includes(type),
@@ -164,23 +340,26 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
   return (
     <Form<ResearchOutputResponse>
       serverErrors={serverValidationErrors}
-      dirty={
-        tags.length !== 0 ||
-        title !== '' ||
-        description !== '' ||
-        link !== '' ||
-        type !== '' ||
-        labs.length !== 0 ||
-        authors.length !== 0 ||
-        methods.length !== 0 ||
-        organisms.length !== 0 ||
-        environments.length !== 0 ||
-        identifierType !== ResearchOutputIdentifierType.Empty ||
-        identifier !== '' ||
-        labCatalogNumber !== '' ||
-        subtype !== undefined ||
-        teams.length !== 1 // Original team
-      }
+      dirty={isDirty(
+        {
+          title,
+          description,
+          link,
+          tags,
+          type,
+          methods,
+          organisms,
+          environments,
+          teams,
+          labs,
+          authors,
+          subtype,
+          labCatalogNumber,
+          identifierType,
+          identifier,
+        },
+        researchOutputData,
+      )}
       onSave={() => {
         const identifierField = createIdentifierField(
           identifierType,
@@ -231,7 +410,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
     >
       {({ isSaving, onSave: handleSave, onCancel: handleCancel }) => (
         <div css={contentStyles}>
-          <TeamCreateOutputFormSharingCard
+          <ResearchOutputFormSharingCard
             documentType={documentType}
             serverValidationErrors={serverValidationErrors}
             clearServerValidationError={clearServerValidationError}
@@ -262,7 +441,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             publishDate={publishDate}
             onChangePublishDate={(date) => setPublishDate(new Date(date))}
           />
-          <TeamCreateOutputExtraInformationCard
+          <ResearchOutputExtraInformationCard
             documentType={documentType}
             isSaving={isSaving}
             researchTags={filteredResearchTags}
@@ -287,8 +466,9 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
             environments={environments}
             onChangeEnvironments={setEnvironments}
             type={type}
+            isEditMode={researchOutputData !== undefined}
           />
-          <TeamCreateOutputContributorsCard
+          <ResearchOutputContributorsCard
             isSaving={isSaving}
             labs={labs}
             getLabSuggestions={getLabSuggestions}
@@ -320,7 +500,7 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
                   return researchOutput;
                 }}
               >
-                Publish
+                {isEditMode ? 'Save' : 'Publish'}
               </Button>
             </div>
           </div>
@@ -329,4 +509,4 @@ const TeamCreateOutputForm: React.FC<TeamCreateOutputFormProps> = ({
     </Form>
   );
 };
-export default TeamCreateOutputForm;
+export default ResearchOutputForm;

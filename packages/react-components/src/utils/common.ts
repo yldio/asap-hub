@@ -1,4 +1,5 @@
 import { renderToStaticMarkup } from 'react-dom/server';
+
 import {
   googleDriveIcon,
   protocolsIcon,
@@ -68,3 +69,9 @@ export const getIconFromUrl = (url: string): JSX.Element | undefined => {
   });
   return icon?.[1];
 };
+
+export function equals(a: Array<string>, b: Array<string>): boolean {
+  return (
+    a.length === b.length && a.every((element, index) => element === b[index])
+  );
+}

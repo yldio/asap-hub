@@ -7,7 +7,7 @@ import { isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import Users, { UserController } from '../../controllers/users';
-import createUserDataProvider from '../../data-providers/users';
+import UserDataProvider from '../../data-providers/users';
 import logger from '../../utils/logger';
 import { EventBridgeHandler } from '../../utils/types';
 import { UserEvent, UserPayload } from '../event-bus';
@@ -51,7 +51,7 @@ export const indexUserHandler =
   };
 
 const squidexGraphqlClient = new SquidexGraphql();
-const userDataProvider = createUserDataProvider(squidexGraphqlClient);
+const userDataProvider = new UserDataProvider(squidexGraphqlClient);
 export const handler = indexUserHandler(
   new Users(userDataProvider),
   algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),

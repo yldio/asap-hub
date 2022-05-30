@@ -31,9 +31,7 @@ import ResearchTags, {
 } from './controllers/research-tags';
 import Teams, { TeamController } from './controllers/teams';
 import Users, { UserController } from './controllers/users';
-import createUserDataProvider, {
-  UserDataProvider,
-} from './data-providers/users';
+import UserDataProvider from './data-providers/users';
 import { permissionHandler } from './middleware/permission-handler';
 import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 import { tracingHandlerFactory } from './middleware/tracing-handler';
@@ -68,7 +66,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const squidexGraphqlClient = new SquidexGraphql();
 
   const userDataProvider =
-    libs.userDataProvider || createUserDataProvider(squidexGraphqlClient);
+    libs.userDataProvider || new UserDataProvider(squidexGraphqlClient);
 
   // Controllers
   const calendarController =

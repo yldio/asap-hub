@@ -10,7 +10,6 @@ import {
 } from '@asap-hub/squidex';
 import Intercept from 'apr-intercept';
 import FormData from 'form-data';
-import { Got } from 'got';
 import mime from 'mime-types';
 import {
   FetchUserQuery,
@@ -41,68 +40,55 @@ export interface UserDataProvider {
     cachedUser?: RestUser | undefined,
   ): Promise<UserDataObject>;
 }
-export default function createUserDataProvider(
-  squidexGraphlClient: SquidexGraphqlClient,
-): UserDataProvider {
-  const userSquidexRestClient = new SquidexRest<RestUser>('users');
-  const fetchById = async (id: string) => {
-    const { findUsersContent } = await queryFetchByIdData(
-      squidexGraphlClient,
-      id,
-    );
+export default class Users implements UserDataProvider {
+  squidexGraphlClient: SquidexGraphqlClient;
+  userSquidexRestClient: SquidexRestClient<RestUser>;
+  constructor(squidexGraphlClient: SquidexGraphqlClient) {
+    this.squidexGraphlClient = squidexGraphlClient;
+    this.userSquidexRestClient = new SquidexRest<RestUser>('users');
+  }
+  async fetchById(id: string) {
+    const { findUsersContent } = await this.queryFetchByIdData(id);
     if (!findUsersContent) {
       return null;
     }
     return parseGraphQLUserToDataObject(findUsersContent);
-  };
-  const update = async (id: string, userToUpdate: UserPatchDataObject) => {
-    const isFullUpdate = shouldDoFullUpdate(userToUpdate);
+  }
 
-    const cleanedUser = cleanUser(userToUpdate);
+  async update(id: string, userToUpdate: UserPatchDataObject) {
+    const isFullUpdate = this.shouldDoFullUpdate(userToUpdate);
+
+    const cleanedUser = this.cleanUser(userToUpdate);
 
     if (isFullUpdate) {
-      const existingUser = await userSquidexRestClient.fetchById(id);
-      await userSquidexRestClient.put(id, {
+      const existingUser = await this.userSquidexRestClient.fetchById(id);
+      await this.userSquidexRestClient.put(id, {
         ...existingUser.data,
         ...cleanedUser,
       });
     } else {
-      await userSquidexRestClient.patch(id, cleanedUser);
+      await this.userSquidexRestClient.patch(id, cleanedUser);
     }
-  };
-  const fetch = async (options: FetchUsersOptions) => {
-    const queryFilter = generateFetchQueryFilter(options);
+  }
+  async fetch(options: FetchUsersOptions) {
+    const queryFilter = this.generateFetchQueryFilter(options);
     const { take = 8, skip = 0 } = options;
-    const users = await queryForUsers(
-      squidexGraphlClient,
-      queryFilter,
-      take,
-      skip,
-    );
+    const users = await this.queryForUsers(queryFilter, take, skip);
     return users.map(parseGraphQLUserToDataObject);
-  };
-  const fetchByCode = async (code: string) => {
+  }
+  async fetchByCode(code: string) {
     const filter = `data/connections/iv/code eq '${code}'`;
-    const users = await queryForUsers(squidexGraphlClient, filter, 1, 0);
+    const users = await this.queryForUsers(filter, 1, 0);
     return users.map(parseGraphQLUserToDataObject);
-  };
-  const updateAvatar = async (
-    id: string,
-    avatar: Buffer,
-    contentType: string,
-  ) => {
-    const assetId = await uploadAvatar(
-      userSquidexRestClient,
-      id,
-      avatar,
-      contentType,
-    );
+  }
+  updateAvatar = async (id: string, avatar: Buffer, contentType: string) => {
+    const assetId = await this.uploadAvatar(id, avatar, contentType);
 
-    await userSquidexRestClient.patch(id, { avatar: { iv: [assetId] } });
+    await this.userSquidexRestClient.patch(id, { avatar: { iv: [assetId] } });
   };
 
-  const connectByCode = async (welcomeCode: string, userId: string) => {
-    const user = await queryByCode(welcomeCode, userSquidexRestClient.client);
+  async connectByCode(welcomeCode: string, userId: string) {
+    const user = await this.queryByCode(welcomeCode);
 
     if (!user) {
       return null;
@@ -116,20 +102,21 @@ export default function createUserDataProvider(
       { code: userId },
     ]);
 
-    const res = await userSquidexRestClient.patch(user.id, {
+    const res = await this.userSquidexRestClient.patch(user.id, {
       email: { iv: user.data.email.iv },
       connections: { iv: connections },
     });
 
     return parseUserToDataObject(res);
-  };
-  const syncOrcidProfile = async (
+  }
+
+  async syncOrcidProfile(
     id: string,
     cachedUser: RestUser | undefined = undefined,
-  ) => {
+  ) {
     let fetchedUser;
     if (!cachedUser) {
-      fetchedUser = await userSquidexRestClient.fetchById(id);
+      fetchedUser = await this.userSquidexRestClient.fetchById(id);
     }
 
     const user = cachedUser || (fetchedUser as RestUser);
@@ -150,189 +137,161 @@ export default function createUserDataProvider(
       updateToUser.orcidWorks = { iv: works.slice(0, 10) };
     }
 
-    const updatedUser = await userSquidexRestClient.patch(
+    const updatedUser = await this.userSquidexRestClient.patch(
       user.id,
       updateToUser,
     );
     return parseUserToDataObject(updatedUser);
-  };
-  return {
-    fetchById,
-    update,
-    fetch,
-    fetchByCode,
-    updateAvatar,
-    connectByCode,
-    syncOrcidProfile,
-  };
-}
-const shouldDoFullUpdate = (userToUpdate: UserPatchDataObject) =>
-  userToUpdate.teams?.length ||
-  Object.values(userToUpdate).some(
-    (value) => value.trim && value.trim() === '',
-  );
-
-async function queryForUsers(
-  squidexGraphlClient: SquidexGraphqlClient,
-  filter: string,
-  top: number,
-  skip: number,
-) {
-  const { queryUsersContentsWithTotal } = await queryFetchData(
-    squidexGraphlClient,
-    filter,
-    top,
-    skip,
-  );
-  if (!(queryUsersContentsWithTotal && queryUsersContentsWithTotal.items)) {
-    return [];
   }
-  return queryUsersContentsWithTotal.items;
-}
-const cleanUser = (userToUpdate: UserPatchDataObject) =>
-  Object.entries(userToUpdate).reduce((acc, [key, value]) => {
-    const setValue = (item: unknown) => ({ ...acc, [key]: { iv: item } });
-    if (value.trim && value.trim() === '') {
-      return setValue(null);
+  private shouldDoFullUpdate(userToUpdate: UserPatchDataObject) {
+    return (
+      userToUpdate.teams?.length ||
+      Object.values(userToUpdate).some(
+        (value) => value.trim && value.trim() === '',
+      )
+    );
+  }
+  private async queryForUsers(filter: string, top: number, skip: number) {
+    const { queryUsersContentsWithTotal } = await this.queryFetchData(
+      filter,
+      top,
+      skip,
+    );
+    if (!(queryUsersContentsWithTotal && queryUsersContentsWithTotal.items)) {
+      return [];
+    }
+    return queryUsersContentsWithTotal.items;
+  }
+  private async queryFetchData(filter: string, top: number, skip: number) {
+    return this.squidexGraphlClient.request<
+      FetchUsersQuery,
+      FetchUsersQueryVariables
+    >(FETCH_USERS, { filter, top, skip });
+  }
+  private async queryFetchByIdData(id: string) {
+    return this.squidexGraphlClient.request<
+      FetchUserQuery,
+      FetchUserQueryVariables
+    >(FETCH_USER, { id });
+  }
+  private async uploadAvatar(
+    id: string,
+    avatar: Buffer,
+    contentType: string,
+  ): Promise<string> {
+    const form = new FormData();
+    form.append('file', avatar, {
+      filename: `${id}.${mime.extension(contentType)}`,
+      contentType,
+    });
+
+    const { id: assetId } = await this.userSquidexRestClient.client
+      .post('assets', {
+        prefixUrl: `${config.baseUrl}/api/apps/${config.appName}`,
+        headers: form.getHeaders(),
+        body: form,
+      })
+      .json();
+    return assetId;
+  }
+  private async queryByCode(code: string): Promise<RestUser | undefined> {
+    const [err, res] = await Intercept(
+      this.userSquidexRestClient.client
+        .get('users', {
+          searchParams: {
+            $top: 1,
+            $filter: `data/connections/iv/code eq '${code}'`,
+          },
+        })
+        .json() as Promise<{ items: RestUser[] }>,
+    );
+
+    if (err) {
+      throw new GenericError(err.message);
     }
 
-    // map flat questions to squidex format
-    if (key === 'questions' && value.length) {
-      return setValue(value.map((question: string) => ({ question })));
+    if (res.items.length === 0 || !res.items[0]) {
+      return undefined;
     }
 
-    // we get an object but squidex expects an array of objects
-    if (key === 'social') {
-      return setValue([value]);
-    }
+    return res.items[0];
+  }
+  private cleanUser(userToUpdate: UserPatchDataObject) {
+    return Object.entries(userToUpdate).reduce((acc, [key, value]) => {
+      const setValue = (item: unknown) => ({ ...acc, [key]: { iv: item } });
+      if (value.trim && value.trim() === '') {
+        return setValue(null);
+      }
 
-    return setValue(value);
-  }, {} as { [key: string]: { iv: unknown } });
+      // map flat questions to squidex format
+      if (key === 'questions' && value.length) {
+        return setValue(value.map((question: string) => ({ question })));
+      }
 
-async function queryFetchByIdData(
-  squidexGraphlClient: SquidexGraphqlClient,
-  id: string,
-) {
-  return squidexGraphlClient.request<FetchUserQuery, FetchUserQueryVariables>(
-    FETCH_USER,
-    { id },
-  );
-}
+      // we get an object but squidex expects an array of objects
+      if (key === 'social') {
+        return setValue([value]);
+      }
 
-async function queryFetchData(
-  squidexGraphlClient: SquidexGraphqlClient,
-  filter: string,
-  top: number,
-  skip: number,
-) {
-  return squidexGraphlClient.request<FetchUsersQuery, FetchUsersQueryVariables>(
-    FETCH_USERS,
-    { filter, top, skip },
-  );
-}
-
-function generateFetchQueryFilter(options: FetchUsersOptions) {
-  const searchFilter = [
-    ...(options.search || '')
-      .split(' ')
-      .filter(Boolean) // removes whitespaces
-      .map(sanitiseForSquidex)
+      return setValue(value);
+    }, {} as { [key: string]: { iv: unknown } });
+  }
+  generateFetchQueryFilter(options: FetchUsersOptions) {
+    const searchFilter = [
+      ...(options.search || '')
+        .split(' ')
+        .filter(Boolean) // removes whitespaces
+        .map(sanitiseForSquidex)
+        .reduce(
+          (acc: string[], word: string) =>
+            acc.concat(
+              `(${[
+                [`contains(data/firstName/iv, '${word}')`],
+                [`contains(data/lastName/iv, '${word}')`],
+                [`contains(data/institution/iv, '${word}')`],
+                [`contains(data/expertiseAndResourceTags/iv, '${word}')`],
+              ].join(' or ')})`,
+            ),
+          [],
+        ),
+    ].join(' and ');
+    const filterRoles = (options?.filter?.role || [])
       .reduce(
         (acc: string[], word: string) =>
-          acc.concat(
-            `(${[
-              [`contains(data/firstName/iv, '${word}')`],
-              [`contains(data/lastName/iv, '${word}')`],
-              [`contains(data/institution/iv, '${word}')`],
-              [`contains(data/expertiseAndResourceTags/iv, '${word}')`],
-            ].join(' or ')})`,
-          ),
+          acc.concat([`data/teams/iv/role eq '${word}'`]),
         [],
-      ),
-  ].join(' and ');
-  const filterRoles = (options?.filter?.role || [])
-    .reduce(
-      (acc: string[], word: string) =>
-        acc.concat([`data/teams/iv/role eq '${word}'`]),
-      [],
-    )
-    .join(' or ');
+      )
+      .join(' or ');
 
-  const filterLabs = (options?.filter?.labId || [])
-    .reduce(
-      (acc: string[], labId: string) =>
-        acc.concat([`data/labs/iv eq '${labId}'`]),
-      [],
-    )
-    .join(' or ');
+    const filterLabs = (options?.filter?.labId || [])
+      .reduce(
+        (acc: string[], labId: string) =>
+          acc.concat([`data/labs/iv eq '${labId}'`]),
+        [],
+      )
+      .join(' or ');
 
-  const filterTeams = (options?.filter?.teamId || [])
-    .reduce(
-      (acc: string[], teamId: string) =>
-        acc.concat([`data/teams/iv/id eq '${teamId}'`]),
-      [],
-    )
-    .join(' or ');
-  const filterHidden = "data/role/iv ne 'Hidden'";
-  const filterNonOnboarded = 'data/onboarded/iv eq true';
+    const filterTeams = (options?.filter?.teamId || [])
+      .reduce(
+        (acc: string[], teamId: string) =>
+          acc.concat([`data/teams/iv/id eq '${teamId}'`]),
+        [],
+      )
+      .join(' or ');
+    const filterHidden = "data/role/iv ne 'Hidden'";
+    const filterNonOnboarded = 'data/onboarded/iv eq true';
 
-  const queryFilter = [
-    filterTeams && `(${filterTeams})`,
-    filterRoles && `(${filterRoles})`,
-    filterLabs && `(${filterLabs})`,
-    filterNonOnboarded,
-    filterHidden,
-    searchFilter && `(${searchFilter})`,
-  ]
-    .filter(Boolean)
-    .join(' and ')
-    .trim();
-  return queryFilter;
-}
-
-async function uploadAvatar(
-  userSquidexRestClient: SquidexRestClient<RestUser>,
-  id: string,
-  avatar: Buffer,
-  contentType: string,
-): Promise<string> {
-  const form = new FormData();
-  form.append('file', avatar, {
-    filename: `${id}.${mime.extension(contentType)}`,
-    contentType,
-  });
-
-  const { id: assetId } = await userSquidexRestClient.client
-    .post('assets', {
-      prefixUrl: `${config.baseUrl}/api/apps/${config.appName}`,
-      headers: form.getHeaders(),
-      body: form,
-    })
-    .json();
-  return assetId;
-}
-const queryByCode = async (
-  code: string,
-  client: Got,
-): Promise<RestUser | undefined> => {
-  const [err, res] = await Intercept(
-    client
-      .get('users', {
-        searchParams: {
-          $top: 1,
-          $filter: `data/connections/iv/code eq '${code}'`,
-        },
-      })
-      .json() as Promise<{ items: RestUser[] }>,
-  );
-
-  if (err) {
-    throw new GenericError(err.message);
+    const queryFilter = [
+      filterTeams && `(${filterTeams})`,
+      filterRoles && `(${filterRoles})`,
+      filterLabs && `(${filterLabs})`,
+      filterNonOnboarded,
+      filterHidden,
+      searchFilter && `(${searchFilter})`,
+    ]
+      .filter(Boolean)
+      .join(' and ')
+      .trim();
+    return queryFilter;
   }
-
-  if (res.items.length === 0 || !res.items[0]) {
-    return undefined;
-  }
-
-  return res.items[0];
-};
+}

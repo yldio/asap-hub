@@ -4,7 +4,7 @@ import { config, RestUser } from '@asap-hub/squidex';
 import matches from 'lodash.matches';
 import nock, { DataMatcherMap } from 'nock';
 import { FetchUsersOptions } from '../../src/controllers/users';
-import createUserDataProvider from '../../src/data-providers/users';
+import UserDataProvider from '../../src/data-providers/users';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import {
   fetchUserResponse,
@@ -19,9 +19,9 @@ import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.moc
 
 describe('User data provider', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const userDataProvider = createUserDataProvider(squidexGraphqlClientMock);
+  const userDataProvider = new UserDataProvider(squidexGraphqlClientMock);
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-  const usersMockGraphqlServer = createUserDataProvider(
+  const usersMockGraphqlServer = new UserDataProvider(
     squidexGraphqlClientMockServer,
   );
   beforeAll(() => {

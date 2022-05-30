@@ -4,7 +4,7 @@ import {
   UserPatchRequest,
   UserResponse,
 } from '@asap-hub/model';
-import { RestUser, User, WebhookPayload } from '@asap-hub/squidex';
+import { config, RestUser, User, WebhookPayload } from '@asap-hub/squidex';
 import {
   FetchUserQuery,
   FetchUsersQuery,
@@ -199,8 +199,7 @@ export const patchResponse = (): RestUser => ({
 });
 export const fetchUserResponse = () => patchResponse();
 export const fetchUserResponseDataObject = () => ({
-  avatarUrl:
-    'https://cloud.squidex.io/api/assets/asap-hub-dev/squidex-asset-id',
+  avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/squidex-asset-id`,
   createdDate: '2020-09-25T09:42:51.000Z',
   email: 'cristiano@ronaldo.com',
   expertiseAndResourceDescription: 'some expertiseAndResourceTags',

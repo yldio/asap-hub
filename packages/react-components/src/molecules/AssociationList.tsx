@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { network } from '@asap-hub/routing';
 
-import { Divider, Link } from '../atoms';
+import { Avatar, Divider, Link } from '../atoms';
 import { perRem } from '../pixels';
 import { lead } from '../colors';
 import { labIcon, teamIcon } from '../icons';
@@ -13,7 +13,6 @@ const containerStyles = css({
 });
 const containerInlineStyles = css({
   gridTemplateColumns: 'max-content 1fr',
-  fontSize: `${13.6 / perRem}em`,
 });
 const containerSummarizedStyles = css({
   gridTemplateColumns: 'max-content max-content',
@@ -43,6 +42,7 @@ const itemBlockStyles = css({
   gridGap: `${12 / perRem}em`,
 });
 const itemInlineStyles = css({
+  fontSize: `${13.6 / perRem}em`,
   paddingBottom: `${6 / perRem}em`,
   overflow: 'hidden',
 });
@@ -72,6 +72,23 @@ const bulletStyles = css({
   },
 });
 
+const moreStyles = css({
+  overflow: 'hidden',
+  display: 'grid',
+  gridTemplateColumns: 'min-content 1fr',
+  gridColumnGap: `${6 / perRem}em`,
+  alignItems: 'center',
+});
+const avatarStyles = css({
+  fontSize: `${20 / perRem}em`,
+});
+const nameStyles = css({
+  fontSize: `${17 / perRem}em`,
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+});
+
 interface AssociationListProps {
   readonly associations: ReadonlyArray<{
     displayName: string;
@@ -80,12 +97,14 @@ interface AssociationListProps {
   readonly type: 'Team' | 'Lab';
   readonly inline?: boolean;
   readonly max?: number;
+  readonly more?: number;
 }
 const AssociationList: React.FC<AssociationListProps> = ({
   associations,
   type,
   inline = false,
   max = Number.POSITIVE_INFINITY,
+  more,
 }) => {
   const icon = type === 'Team' ? teamIcon : labIcon;
   const limitExceeded = associations.length > max;
@@ -127,6 +146,19 @@ const AssociationList: React.FC<AssociationListProps> = ({
               <div css={dividerStyles}>{inline || <Divider />}</div>
             </li>
           ))}
+          {more && (
+            <li>
+              <div css={moreStyles}>
+                <div css={avatarStyles}>
+                  <Avatar placeholder={`+${more}`} />
+                </div>
+                <span css={nameStyles}>
+                  {type}
+                  {more === 1 ? '' : 's'}
+                </span>
+              </div>
+            </li>
+          )}
         </ul>
       )}
     </div>

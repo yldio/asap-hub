@@ -1,9 +1,10 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
-import { EventResponse } from '@asap-hub/model';
+import { EventResponse, EventSpeakerTeam } from '@asap-hub/model';
 import { events, network } from '@asap-hub/routing';
 
 import { Headline3, Link, Anchor } from '../atoms';
+import { lead } from '../colors';
 import { perRem, largeDesktopScreen } from '../pixels';
 import {
   groupsIcon,
@@ -11,8 +12,7 @@ import {
   calendarIcon,
   speakerIcon,
 } from '../icons';
-import { lead } from '../colors';
-import { EventTime } from '.';
+import { AssociationList, EventTime } from '.';
 
 const TITLE_LIMIT = 55;
 
@@ -67,7 +67,35 @@ type EventInfoProps = ComponentProps<typeof EventTime> &
   > & {
     titleLimit?: number | null;
     showNumberOfSpeakers?: boolean;
+    showTeams?: boolean;
   };
+
+const EventTeams: React.FC<{ speakers: EventResponse['speakers'] }> = ({
+  speakers,
+}) => {
+  const teams: EventSpeakerTeam['team'][] = speakers.reduce((acc, speaker) => {
+    if ('team' in speaker && !acc.some((team) => team.id === speaker.team.id)) {
+      acc.push(speaker.team);
+    }
+
+    return acc;
+  }, [] as EventSpeakerTeam['team'][]);
+
+  if (teams.length === 0) {
+    return null;
+  }
+
+  return (
+    <div css={listItemStyles}>
+      <AssociationList
+        type="Team"
+        inline
+        associations={teams.slice(0, 7)}
+        more={teams.length > 7 ? teams.length - 7 : undefined}
+      />
+    </div>
+  );
+};
 
 const EventSpeakers: React.FC<{ speakers: EventResponse['speakers'] }> = ({
   speakers,
@@ -96,6 +124,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
   status,
   titleLimit = TITLE_LIMIT,
   showNumberOfSpeakers = false,
+  showTeams = false,
   ...props
 }) => {
   const imageComponent = thumbnail ? (
@@ -136,6 +165,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
               </>
             )}
           </div>
+          {showTeams && <EventTeams speakers={props.speakers} />}
           {showNumberOfSpeakers && <EventSpeakers speakers={props.speakers} />}
         </div>
       </div>

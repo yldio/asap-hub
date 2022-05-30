@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import AssociationList from '../AssociationList';
 
@@ -162,3 +162,18 @@ describe.each`
     );
   },
 );
+
+it('shows number of additional associations when more parameter is provided', () => {
+  render(
+    <AssociationList
+      type="Lab"
+      associations={[
+        { displayName: 'One', id: 't0' },
+        { displayName: 'Two', id: 't1' },
+      ]}
+      more={4}
+    />,
+  );
+
+  expect(screen.getByText('+4')).toBeInTheDocument();
+});

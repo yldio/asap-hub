@@ -275,6 +275,9 @@ export default class ResearchOutputs implements ResearchOutputController {
     },
   ) {
     const { usedInPublication, ...researchOutput } = parseToSquidex({
+      rrid: '',
+      doi: '',
+      accession: '',
       ...researchOutputData,
       asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
       usedInPublication: convertBooleanToDecision(

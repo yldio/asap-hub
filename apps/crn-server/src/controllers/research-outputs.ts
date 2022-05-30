@@ -275,9 +275,6 @@ export default class ResearchOutputs implements ResearchOutputController {
     },
   ) {
     const { usedInPublication, ...researchOutput } = parseToSquidex({
-      rrid: '',
-      doi: '',
-      accession: '',
       ...researchOutputData,
       asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
       usedInPublication: convertBooleanToDecision(
@@ -288,6 +285,9 @@ export default class ResearchOutputs implements ResearchOutputController {
     });
 
     return this.researchOutputSquidexRestClient.patch(researchOutputId, {
+      doi: { iv: null as unknown as string },
+      accession: { iv: null as unknown as string },
+      rrid: { iv: null as unknown as string },
       ...researchOutput,
       usedInAPublication: usedInPublication,
       labs: researchOutput.labs || { iv: null },

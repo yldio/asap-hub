@@ -1,9 +1,9 @@
 import {
   ListResearchOutputResponse,
   ListUserResponse,
-  ResearchOutputResponse,
   ResearchOutputPostRequest,
   ResearchOutputPutRequest,
+  ResearchOutputResponse,
 } from '@asap-hub/model';
 import {
   InputResearchOutput,
@@ -304,5 +304,10 @@ export const getRestResearchOutputUpdateData =
   (): InputResearchOutput['data'] => {
     const { createdBy, ...restResearchOutputData } =
       getRestResearchOutputCreateData();
-    return restResearchOutputData;
+    return {
+      doi: { iv: null as unknown as string },
+      accession: { iv: null as unknown as string },
+      rrid: { iv: null as unknown as string },
+      ...restResearchOutputData,
+    };
   };

@@ -279,6 +279,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     researchOutputData?.teams.map((element, index) => ({
       label: element.displayName,
       value: element.id,
+      isFixed: true,
     })) || [{ label: team.displayName, value: team.id, isFixed: true }],
   );
 
@@ -479,6 +480,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
             teams={teams}
             onChangeTeams={setTeams}
             getTeamSuggestions={getTeamSuggestions}
+            isEditMode={isEditMode}
           />
           <div css={formControlsContainerStyles}>
             <div css={formControlsStyles}>

@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { createEventResponse, createGroupResponse } from '@asap-hub/fixtures';
 
 import EventInfo from '../EventInfo';
@@ -12,28 +12,30 @@ const props: ComponentProps<typeof EventInfo> = {
 };
 
 it('renders an event', () => {
-  const { getByRole } = render(<EventInfo {...props} title="My Event" />);
-  expect(getByRole('heading', { level: 3 })).toHaveTextContent('My Event');
+  render(<EventInfo {...props} title="My Event" />);
+  expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
+    'My Event',
+  );
 });
 
 it('truncates long event titles', () => {
-  const { getByRole } = render(
-    <EventInfo {...props} title={'blablablha'.repeat(100)} />,
-  );
+  render(<EventInfo {...props} title={'blablablha'.repeat(100)} />);
 
-  expect(getByRole('heading', { level: 3 }).textContent).toMatch(/…$/i);
+  expect(screen.getByRole('heading', { level: 3 }).textContent).toMatch(/…$/i);
 });
 
 it('does not truncate long event titles when limit is null', () => {
-  const { getByRole } = render(
+  render(
     <EventInfo {...props} titleLimit={null} title={'blablablha'.repeat(100)} />,
   );
 
-  expect(getByRole('heading', { level: 3 }).textContent).not.toMatch(/…$/i);
+  expect(screen.getByRole('heading', { level: 3 }).textContent).not.toMatch(
+    /…$/i,
+  );
 });
 
 it('renders event thumbnail', () => {
-  const { getByAltText } = render(
+  render(
     <EventInfo
       {...props}
       thumbnail={'https://placeholder/40x40'}
@@ -41,13 +43,13 @@ it('renders event thumbnail', () => {
     />,
   );
 
-  expect(getByAltText(/thumbnail/i).getAttribute('src')).toEqual(
+  expect(screen.getByAltText(/thumbnail/i).getAttribute('src')).toEqual(
     'https://placeholder/40x40',
   );
 });
 
 it('renders placeholder event thumbnail', () => {
-  const { getByText } = render(
+  render(
     <EventInfo
       {...props}
       thumbnail={undefined}
@@ -55,11 +57,11 @@ it('renders placeholder event thumbnail', () => {
     />,
   );
 
-  expect(getByText(/placeholder/i)).toBeInTheDocument();
+  expect(screen.getByText(/placeholder/i)).toBeInTheDocument();
 });
 
 it('renders the group name linking to the group and icon', () => {
-  const { getByText, getByTitle } = render(
+  render(
     <EventInfo
       {...props}
       group={{
@@ -69,23 +71,21 @@ it('renders the group name linking to the group and icon', () => {
       }}
     />,
   );
-  expect(getByText('My Group')).toHaveAttribute(
+  expect(screen.getByText('My Group')).toHaveAttribute(
     'href',
     expect.stringMatching(/grp$/),
   );
-  expect(getByTitle('Group')).toBeInTheDocument();
+  expect(screen.getByTitle('Group')).toBeInTheDocument();
 });
 
 it('shows that the event is run by ASAP when there is no group', () => {
-  const { getByText, getByTitle } = render(
-    <EventInfo {...props} group={undefined} />,
-  );
-  expect(getByText(/asap event/i)).not.toHaveAttribute('href');
-  expect(getByTitle('Calendar')).toBeInTheDocument();
+  render(<EventInfo {...props} group={undefined} />);
+  expect(screen.getByText(/asap event/i)).not.toHaveAttribute('href');
+  expect(screen.getByTitle('Calendar')).toBeInTheDocument();
 });
 
 it('shows number of speakers with singular form', () => {
-  const { getByText, queryByText } = render(
+  render(
     <EventInfo
       {...createEventResponse({
         numberOfSpeakers: 1,
@@ -95,12 +95,12 @@ it('shows number of speakers with singular form', () => {
       showNumberOfSpeakers={true}
     />,
   );
-  expect(getByText('1 Speaker')).toBeInTheDocument();
-  expect(queryByText('1 Speakers')).not.toBeInTheDocument();
+  expect(screen.getByText('1 Speaker')).toBeInTheDocument();
+  expect(screen.queryByText('1 Speakers')).not.toBeInTheDocument();
 });
 
 it('shows number of speakers with plural form', () => {
-  const { queryByText } = render(
+  render(
     <EventInfo
       {...createEventResponse({
         numberOfSpeakers: 3,
@@ -110,10 +110,10 @@ it('shows number of speakers with plural form', () => {
       showNumberOfSpeakers={false}
     />,
   );
-  expect(queryByText('7 Speakers')).not.toBeInTheDocument();
+  expect(screen.queryByText('7 Speakers')).not.toBeInTheDocument();
 });
 it('do not shows number of speakers when showNumberOfSpeakers is false', () => {
-  const { getByText } = render(
+  render(
     <EventInfo
       {...createEventResponse({
         numberOfSpeakers: 3,
@@ -123,10 +123,10 @@ it('do not shows number of speakers when showNumberOfSpeakers is false', () => {
       showNumberOfSpeakers={true}
     />,
   );
-  expect(getByText('7 Speakers')).toBeInTheDocument();
+  expect(screen.getByText('7 Speakers')).toBeInTheDocument();
 });
 it('do not shows number of speakers when there are no speakers', () => {
-  const { queryByText } = render(
+  render(
     <EventInfo
       {...createEventResponse({
         numberOfSpeakers: 0,
@@ -136,30 +136,28 @@ it('do not shows number of speakers when there are no speakers', () => {
       showNumberOfSpeakers={true}
     />,
   );
-  expect(queryByText(/Speaker/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/Speaker/i)).not.toBeInTheDocument();
 });
 
 it('shows the event time', () => {
-  const { getByText } = render(
+  render(
     <EventInfo
       {...props}
       startDate="2021-01-01T08:00:00Z"
       startDateTimeZone="Europe/Tallinn"
     />,
   );
-  expect(getByText(/8:00/)).toBeVisible();
+  expect(screen.getByText(/8:00/)).toBeVisible();
 });
 
 it('only links to events that are not cancelled', () => {
-  const { getByRole, rerender } = render(
-    <EventInfo {...props} status="Tentative" />,
-  );
-  expect(getByRole('heading', { level: 3 }).closest('a')).toHaveAttribute(
-    'href',
-  );
+  const { rerender } = render(<EventInfo {...props} status="Tentative" />);
+  expect(
+    screen.getByRole('heading', { level: 3 }).closest('a'),
+  ).toHaveAttribute('href');
 
   rerender(<EventInfo {...props} status="Cancelled" />);
-  expect(getByRole('heading', { level: 3 }).closest('a')).not.toHaveAttribute(
-    'href',
-  );
+  expect(
+    screen.getByRole('heading', { level: 3 }).closest('a'),
+  ).not.toHaveAttribute('href');
 });

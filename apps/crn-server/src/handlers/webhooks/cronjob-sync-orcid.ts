@@ -7,6 +7,7 @@ import {
 } from '@asap-hub/squidex';
 import pLimit from 'p-limit';
 import Users from '../../controllers/users';
+import AssetDataProvider from '../../data-providers/assets';
 import UserDataProvider from '../../data-providers/users';
 
 export const handler = async (): Promise<lambda.Response> => {
@@ -15,7 +16,8 @@ export const handler = async (): Promise<lambda.Response> => {
   const limit = pLimit(5);
   const squidexGraphqlClient = new SquidexGraphql();
   const userDataProvider = new UserDataProvider(squidexGraphqlClient);
-  const users = new Users(userDataProvider);
+  const assetDataProvider = new AssetDataProvider();
+  const users = new Users(userDataProvider, assetDataProvider);
   const squidexUsers: SquidexRestClient<RestUser> = new SquidexRest('users');
 
   const { items: outdatedUsers } = await squidexUsers.fetch({

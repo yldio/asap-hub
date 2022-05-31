@@ -5,6 +5,7 @@ import {
   UserResponse,
 } from '@asap-hub/model';
 import { RestUser } from '@asap-hub/squidex';
+import { AssetDataProvider } from '../data-providers/assets';
 import { UserDataProvider } from '../data-providers/users';
 import { parseUserToResponse } from '../entities';
 import { FetchOptions } from '../utils/types';
@@ -36,9 +37,14 @@ export interface UserController {
 
 export default class Users implements UserController {
   userDataProvider: UserDataProvider;
+  assetDataProvider: AssetDataProvider;
 
-  constructor(userDataProvider: UserDataProvider) {
+  constructor(
+    userDataProvider: UserDataProvider,
+    assetDateProvider: AssetDataProvider,
+  ) {
     this.userDataProvider = userDataProvider;
+    this.assetDataProvider = assetDateProvider;
   }
 
   async update(id: string, update: UserPatchRequest): Promise<UserResponse> {
@@ -81,7 +87,12 @@ export default class Users implements UserController {
     avatar: Buffer,
     contentType: string,
   ): Promise<UserResponse> {
-    await this.userDataProvider.updateAvatar(id, avatar, contentType);
+    const assetId = await this.assetDataProvider.create(
+      id,
+      avatar,
+      contentType,
+    );
+    await this.userDataProvider.update(id, { avatar: assetId });
     return this.fetchById(id);
   }
 

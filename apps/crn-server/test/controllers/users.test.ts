@@ -1,4 +1,5 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
+import nock from 'nock';
 import Users from '../../src/controllers/users';
 import { getUserDataObject, getUserResponse } from '../fixtures/users.fixtures';
 
@@ -7,13 +8,18 @@ const mockUserDataProvider = {
   update: jest.fn(),
   fetch: jest.fn(),
   fetchByCode: jest.fn(),
-  updateAvatar: jest.fn(),
   connectByCode: jest.fn(),
   syncOrcidProfile: jest.fn(),
 };
+const mockAssetDataProvider = {
+  create: jest.fn(),
+};
 
 describe('Users controller', () => {
-  const usersMockGraphqlClient = new Users(mockUserDataProvider);
+  const usersMockGraphqlClient = new Users(
+    mockUserDataProvider,
+    mockAssetDataProvider,
+  );
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -68,6 +74,13 @@ describe('Users controller', () => {
     });
     const code = 'some-uuid-code';
 
+    test('Should return the users', async () => {
+      mockUserDataProvider.fetchByCode = jest
+        .fn()
+        .mockResolvedValue({ total: 1, items: [getUserDataObject()] });
+      const result = await usersMockGraphqlClient.fetchByCode(code);
+      expect(result).toEqual(getUserResponse());
+    });
     test('Should throw 403 when no user is found', async () => {
       mockUserDataProvider.fetchByCode = jest
         .fn()
@@ -98,6 +111,7 @@ describe('Users controller', () => {
 
   describe('update', () => {
     test('Should return the newly updated user', async () => {
+      mockUserDataProvider.update = jest.fn();
       const mockResponse = getUserDataObject();
       mockUserDataProvider.fetchById = jest
         .fn()
@@ -105,14 +119,15 @@ describe('Users controller', () => {
 
       const result = await usersMockGraphqlClient.update('user-id', {});
       expect(result).toEqual(getUserResponse());
+      expect(mockUserDataProvider.update).toHaveBeenCalledWith('user-id', {});
     });
   });
 
   describe('updateAvatar', () => {
+    afterEach(nock.cleanAll);
     test('should return 200 when syncs asset and updates users profile', async () => {
-      mockUserDataProvider.updateAvatar = jest
-        .fn()
-        .mockResolvedValue(undefined);
+      mockAssetDataProvider.create = jest.fn().mockResolvedValue(42);
+      mockUserDataProvider.update = jest.fn();
       mockUserDataProvider.fetchById = jest
         .fn()
         .mockResolvedValue(getUserDataObject());
@@ -123,6 +138,39 @@ describe('Users controller', () => {
         'image/jpeg',
       );
       expect(result).toEqual(getUserResponse());
+      expect(nock.isDone()).toBe(true);
+      expect(mockUserDataProvider.update).toHaveBeenCalledWith('user-id', {
+        avatar: 42,
+      });
+      expect(mockAssetDataProvider.create).toHaveBeenCalledWith(
+        'user-id',
+        Buffer.from('avatar'),
+        'image/jpeg',
+      );
+      expect(mockUserDataProvider.fetchById).toHaveBeenCalledWith('user-id');
+    });
+    test('should throw when fails to update asset - squidex error', async () => {
+      mockAssetDataProvider.create = jest.fn().mockResolvedValue(42);
+      mockUserDataProvider.update = jest.fn().mockRejectedValue(new Error());
+
+      await expect(
+        usersMockGraphqlClient.updateAvatar(
+          'user-id',
+          Buffer.from('avatar'),
+          'image/jpeg',
+        ),
+      ).rejects.toThrow();
+    });
+    test('should throw when fails to update user - squidex error', async () => {
+      mockAssetDataProvider.create = jest.fn().mockRejectedValue(new Error());
+
+      await expect(
+        usersMockGraphqlClient.updateAvatar(
+          'user-id',
+          Buffer.from('avatar'),
+          'image/jpeg',
+        ),
+      ).rejects.toThrow();
     });
   });
 

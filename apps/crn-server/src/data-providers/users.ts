@@ -5,7 +5,6 @@ import {
   UserPatchDataObject,
 } from '@asap-hub/model';
 import {
-  config,
   RestUser,
   sanitiseForSquidex,
   SquidexGraphqlClient,
@@ -13,8 +12,6 @@ import {
   SquidexRestClient,
 } from '@asap-hub/squidex';
 import Intercept from 'apr-intercept';
-import FormData from 'form-data';
-import mime from 'mime-types';
 import {
   FetchUserQuery,
   FetchUserQueryVariables,
@@ -34,7 +31,6 @@ export interface UserDataProvider {
   update(id: string, update: UserPatchDataObject): Promise<void>;
   fetch(options: FetchUsersOptions): Promise<ListUserDataObject>;
   fetchByCode(code: string): Promise<ListUserDataObject>;
-  updateAvatar(id: string, avatar: Buffer, contentType: string): Promise<void>;
   connectByCode(
     welcomeCode: string,
     userId: string,
@@ -47,6 +43,7 @@ export interface UserDataProvider {
 export default class Users implements UserDataProvider {
   squidexGraphlClient: SquidexGraphqlClient;
   userSquidexRestClient: SquidexRestClient<RestUser>;
+
   constructor(squidexGraphlClient: SquidexGraphqlClient) {
     this.squidexGraphlClient = squidexGraphlClient;
     this.userSquidexRestClient = new SquidexRest<RestUser>('users');
@@ -83,15 +80,6 @@ export default class Users implements UserDataProvider {
     const filter = `data/connections/iv/code eq '${code}'`;
     return this.queryForUsers(filter, 1, 0);
   }
-  updateAvatar = async (
-    id: string,
-    avatar: Buffer,
-    contentType: string,
-  ): Promise<void> => {
-    const assetId = await this.uploadAvatar(id, avatar, contentType);
-
-    await this.userSquidexRestClient.patch(id, { avatar: { iv: [assetId] } });
-  };
 
   async connectByCode(
     welcomeCode: string,
@@ -177,26 +165,7 @@ export default class Users implements UserDataProvider {
       FetchUserQueryVariables
     >(FETCH_USER, { id });
   }
-  private async uploadAvatar(
-    id: string,
-    avatar: Buffer,
-    contentType: string,
-  ): Promise<string> {
-    const form = new FormData();
-    form.append('file', avatar, {
-      filename: `${id}.${mime.extension(contentType)}`,
-      contentType,
-    });
 
-    const { id: assetId } = await this.userSquidexRestClient.client
-      .post('assets', {
-        prefixUrl: `${config.baseUrl}/api/apps/${config.appName}`,
-        headers: form.getHeaders(),
-        body: form,
-      })
-      .json();
-    return assetId;
-  }
   private async queryByCode(code: string): Promise<RestUser | undefined> {
     const [err, res] = await Intercept(
       this.userSquidexRestClient.client

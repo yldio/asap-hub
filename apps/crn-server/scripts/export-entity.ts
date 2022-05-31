@@ -4,6 +4,7 @@ import { promises as fs } from 'fs';
 import ExternalAuthors from '../src/controllers/external-authors';
 import ResearchOutputs from '../src/controllers/research-outputs';
 import Users from '../src/controllers/users';
+import AssetDataProvider from '../src/data-providers/assets';
 import UserDataProvider from '../src/data-providers/users';
 
 type Entity = 'users' | 'research-outputs' | 'external-authors';
@@ -53,7 +54,8 @@ function getController(entity: Entity) {
   const squidexGraphqlClient = new SquidexGraphql();
   if (entity === 'users') {
     const userDataProvider = new UserDataProvider(squidexGraphqlClient);
-    return new controllerMap[entity](userDataProvider);
+    const assetDataProvider = new AssetDataProvider();
+    return new controllerMap[entity](userDataProvider, assetDataProvider);
   }
 
   return new controllerMap[entity](squidexGraphqlClient);

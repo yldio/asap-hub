@@ -161,6 +161,7 @@ export interface UserPatchDataObject {
   teams?: Pick<UserTeam, 'id'>[];
   social?: Omit<UserSocialLinks, 'orcid'>;
   onboarded?: boolean;
+  avatar?: string;
 }
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface UserPatchRequest extends UserPatchDataObject {}

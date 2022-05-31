@@ -596,59 +596,6 @@ describe('User data provider', () => {
       expect(result).toEqual({ total: 0, items: [] });
     });
   });
-  describe('updateAvatar', () => {
-    afterEach(() => {
-      nock.cleanAll();
-    });
-
-    test('Should throw when sync asset fails', async () => {
-      nock(config.baseUrl)
-        .post(`/api/apps/${config.appName}/assets`)
-        .reply(500);
-
-      await expect(
-        userDataProvider.updateAvatar(
-          'user-id',
-          Buffer.from('avatar'),
-          'image/jpeg',
-        ),
-      ).rejects.toThrow();
-    });
-    test('should throw when fails to update user - squidex error', async () => {
-      nock(config.baseUrl)
-        .post(`/api/apps/${config.appName}/assets`)
-        .reply(200, { id: 'squidex-asset-id' })
-        .patch(`/api/content/${config.appName}/users/user-id`, {
-          avatar: { iv: ['squidex-asset-id'] },
-        })
-        .reply(500);
-
-      await expect(
-        userDataProvider.updateAvatar(
-          'user-id',
-          Buffer.from('avatar'),
-          'image/jpeg',
-        ),
-      ).rejects.toThrow();
-    });
-    test('should return  when syncs asset and updates users profile', async () => {
-      nock(config.baseUrl)
-        .post(`/api/apps/${config.appName}/assets`)
-        .reply(200, { id: 'squidex-asset-id' })
-        .patch(`/api/content/${config.appName}/users/user-id`, {
-          avatar: { iv: ['squidex-asset-id'] },
-        })
-        .reply(200, patchResponse());
-
-      const result = await userDataProvider.updateAvatar(
-        'user-id',
-        Buffer.from('avatar'),
-        'image/jpeg',
-      );
-      expect(result).toEqual(undefined);
-      expect(nock.isDone()).toBe(true);
-    });
-  });
   describe('connectByCode', () => {
     afterEach(() => {
       expect(nock.isDone()).toBe(true);

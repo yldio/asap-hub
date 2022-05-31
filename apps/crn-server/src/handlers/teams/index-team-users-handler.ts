@@ -7,6 +7,7 @@ import { SquidexGraphql } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import Users, { UserController } from '../../controllers/users';
+import AssetDataProvider from '../../data-providers/assets';
 import UserDataProvider from '../../data-providers/users';
 import logger from '../../utils/logger';
 import {
@@ -61,8 +62,9 @@ export const indexTeamUsersHandler =
 
 const squidexGraphqlClient = new SquidexGraphql();
 const userDataProvider = new UserDataProvider(squidexGraphqlClient);
+const assetDataProvider = new AssetDataProvider();
 export const handler = indexTeamUsersHandler(
-  new Users(userDataProvider),
+  new Users(userDataProvider, assetDataProvider),
   algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
 );
 

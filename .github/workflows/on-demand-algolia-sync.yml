@@ -22,117 +22,24 @@ on:
         type: string
         description: The PR number to run for
 jobs:
-  sync_index:
+  algolia:
+    uses: ./.github/workflows/reusable-algolia-sync.yml
+    with:
+      environment-name: ${{ github.event.inputs.environment-name }}
+      entity: ${{ github.event.inputs.entity }}
+      pr-number: ${{ github.event.inputs.pr-number }}
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+  notify_failure:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment-name }}
-    container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:5b32d6f578fa819b09d2833c0e9a3bbc8f4eec61
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+    needs: [algolia]
+    if: ${{ failure() && github.event.inputs.environment-name=='Production' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Check PR Number
-        if: ${{ github.event.inputs.environment-name=='Branch' }}
-        uses: ./.github/actions/is-number
-        with:
-          number: ${{ github.event.inputs.pr-number }}
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: ${{ github.event.inputs.environment-name }}
-          pr-number: ${{ github.event.inputs.pr-number }}
-      - name: Get Algolia Keys
-        id: algolia-keys
-        uses: ./.github/actions/algolia-keys
-        with:
-          algolia-api-key-name: ${{ steps.setup.outputs.algolia-api-key-name }}
-          algolia-app-id-name: ${{ steps.setup.outputs.algolia-app-id-name }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: Build
-        run: yarn exec "yarn workspaces foreach -vptR --from '{@asap-hub/asap-cli,@asap-hub/crn-server}' run build:babel"
-      - name: Copy index without data to a temporary index (ALL)
-        if: ${{ github.event.inputs.entity == 'all'}}
-        run: yarn workspace @asap-hub/algolia run algolia transferindexconfig -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_INDEX_TEMP
-        env:
-          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
-          ALGOLIA_INDEX_TEMP: ${{ steps.setup.outputs.algolia-index-temp }}
-      - name: Copy index with data to a temporary index (ENTITY)
-        if: ${{ github.event.inputs.entity != 'all'}}
-        run: yarn workspace @asap-hub/algolia run algolia transferindex -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_INDEX_TEMP
-        env:
-          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
-          ALGOLIA_INDEX_TEMP: ${{ steps.setup.outputs.algolia-index-temp }}
-      - name: Remove the entity data (ENTITY)
-        if: ${{ github.event.inputs.entity != 'all'}}
-        run: yarn algolia:remove-records -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -e $ENTITY_TYPE
-        env:
-          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX_TEMP: ${{ steps.setup.outputs.algolia-index-temp }}
-          ENTITY_TYPE: ${{ (github.event.inputs.entity == 'users' && 'user') || (github.event.inputs.entity == 'research-outputs' && 'research-output') || (github.event.inputs.entity == 'external-authors' && 'external-author') }}
-      - name: Import Research Outputs (ROs | ALL)
-        if: ${{ github.event.inputs.entity == 'research-outputs' || github.event.inputs.entity == 'all'}}
-        run: |
-          yarn export:entity $ENTITY -f $ENTITY.json
-          yarn workspace @asap-hub/algolia run algolia import -s "../../${ENTITY}.json" -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -t ./scripts/algolia-transformation.js
-        env:
-          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX_TEMP: ${{ steps.setup.outputs.algolia-index-temp }}
-          ENTITY: 'research-outputs'
-          ENTITY_TYPE: 'research-output'
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
-          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      - name: Import Users (USERs | ALL)
-        if: ${{ github.event.inputs.entity == 'users' || github.event.inputs.entity == 'all'}}
-        run: |
-          yarn export:entity $ENTITY -f $ENTITY.json
-          yarn workspace @asap-hub/algolia run algolia import -s "../../${ENTITY}.json" -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -t ./scripts/algolia-transformation.js
-        env:
-          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX_TEMP: ${{ steps.setup.outputs.algolia-index-temp }}
-          ENTITY: 'users'
-          ENTITY_TYPE: 'user'
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
-          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      - name: Import External Authors (EXTERNAL_AUTHORS | ALL)
-        if: ${{ github.event.inputs.entity == 'external-authors' || github.event.inputs.entity == 'all'}}
-        run: |
-          yarn export:entity $ENTITY -f $ENTITY.json
-          yarn workspace @asap-hub/algolia run algolia import -s "../../${ENTITY}.json" -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -t ./scripts/algolia-transformation.js
-        env:
-          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX_TEMP: ${{ steps.setup.outputs.algolia-index-temp }}
-          ENTITY: 'external-authors'
-          ENTITY_TYPE: 'external-author'
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
-          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      - name: Override index with the temp one
-        run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -i $ALGOLIA_INDEX
-        env:
-          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
-          ALGOLIA_INDEX_TEMP: ${{ steps.setup.outputs.algolia-index-temp }}
       - uses: ./.github/actions/slack/
-        if: ${{ failure() && github.event.inputs.environment-name=='Production' }}
         with:
           message: Algolia Prod Sync
           webhook: ${{ env.SLACK_WEBHOOK }}

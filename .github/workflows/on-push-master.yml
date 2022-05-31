@@ -68,8 +68,19 @@ jobs:
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
-  verify-development:
+  algolia-sync-development:
     needs: [deployment-development]
+    uses: ./.github/workflows/reusable-algolia-sync.yml
+    with:
+      environment-name: Development
+      entity: all
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+
+  verify-development:
+    needs: [deployment-development, algolia-sync-development]
     uses: ./.github/workflows/reusable-verify.yml
     with:
       environment-name: Development
@@ -88,8 +99,19 @@ jobs:
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
-  verify-production:
+  algolia-sync-production:
     needs: [deployment-production]
+    uses: ./.github/workflows/reusable-algolia-sync.yml
+    with:
+      environment-name: Production
+      entity: all
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+
+  verify-production:
+    needs: [deployment-production, algolia-sync-production]
     uses: ./.github/workflows/reusable-verify.yml
     with:
       environment-name: Production

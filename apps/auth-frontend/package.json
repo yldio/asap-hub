@@ -7,9 +7,7 @@
   },
   "scripts": {
     "start": "cross-env PORT=3002 TSC_COMPILE_ON_ERROR=true react-scripts start",
-    "build": "APP=crn node scripts/build.js",
-    "build:crn": "APP=crn node scripts/build.js",
-    "build:gp2": "APP=gp2 node scripts/build.js",
+    "build": "node scripts/build.js",
     "typecheck": "tsc",
     "test": "echo Run the workspace root script instead",
     "eject": "react-scripts eject"
@@ -45,6 +43,7 @@
     "@types/testing-library__jest-dom": "^5.9.5",
     "@types/testing-library__react": "^10.0.1",
     "cross-env": "^7.0.3",
+    "del": "^6.1.1",
     "identity-obj-proxy": "^3.0.0",
     "jsdom": "^16.5.3",
     "react-scripts": "^4.0.3",

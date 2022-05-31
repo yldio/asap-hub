@@ -4057,7 +4057,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "del",
-        "npm:4.1.1"
+        "npm:6.1.1"
       ],
       [
         "delayed-stream",
@@ -5085,7 +5085,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "globby",
-        "npm:11.0.3"
+        "npm:11.0.1"
       ],
       [
         "good-listener",
@@ -5721,7 +5721,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "is-path-inside",
-        "npm:2.1.0"
+        "npm:3.0.3"
       ],
       [
         "is-plain-obj",
@@ -10282,6 +10282,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["auth0-js", "npm:9.16.0"],
             ["camelcase", "npm:6.2.0"],
             ["cross-env", "npm:7.0.3"],
+            ["del", "npm:6.1.1"],
             ["history", "npm:4.10.1"],
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jsdom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:16.5.3"],
@@ -34264,6 +34265,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rimraf", "npm:2.7.1"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:6.1.1", {
+          "packageLocation": "./.yarn/cache/del-npm-6.1.1-9285f60bfd-563288b73b.zip/node_modules/del/",
+          "packageDependencies": [
+            ["del", "npm:6.1.1"],
+            ["globby", "npm:11.0.1"],
+            ["graceful-fs", "npm:4.2.4"],
+            ["is-glob", "npm:4.0.1"],
+            ["is-path-cwd", "npm:2.2.0"],
+            ["is-path-inside", "npm:3.0.3"],
+            ["p-map", "npm:4.0.0"],
+            ["rimraf", "npm:3.0.2"],
+            ["slash", "npm:3.0.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["delayed-stream", [
@@ -41061,6 +41077,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["is-path-inside", "npm:2.1.0"],
             ["path-is-inside", "npm:1.0.2"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:3.0.3", {
+          "packageLocation": "./.yarn/cache/is-path-inside-npm-3.0.3-2ea0ef44fd-abd50f0618.zip/node_modules/is-path-inside/",
+          "packageDependencies": [
+            ["is-path-inside", "npm:3.0.3"]
           ],
           "linkType": "HARD",
         }]

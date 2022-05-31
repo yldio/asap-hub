@@ -47,7 +47,7 @@ export default class Users implements UserDataProvider {
     this.squidexGraphlClient = squidexGraphlClient;
     this.userSquidexRestClient = new SquidexRest<RestUser>('users');
   }
-  async fetchById(id: string) {
+  async fetchById(id: string): Promise<UserDataObject | null> {
     const { findUsersContent } = await this.queryFetchByIdData(id);
     if (!findUsersContent) {
       return null;
@@ -55,10 +55,10 @@ export default class Users implements UserDataProvider {
     return parseGraphQLUserToDataObject(findUsersContent);
   }
 
-  async update(id: string, userToUpdate: UserPatchDataObject) {
-    const isFullUpdate = this.shouldDoFullUpdate(userToUpdate);
+  async update(id: string, userToUpdate: UserPatchDataObject): Promise<void> {
+    const isFullUpdate = shouldDoFullUpdate(userToUpdate);
 
-    const cleanedUser = this.cleanUser(userToUpdate);
+    const cleanedUser = cleanUser(userToUpdate);
 
     if (isFullUpdate) {
       const existingUser = await this.userSquidexRestClient.fetchById(id);
@@ -70,24 +70,31 @@ export default class Users implements UserDataProvider {
       await this.userSquidexRestClient.patch(id, cleanedUser);
     }
   }
-  async fetch(options: FetchUsersOptions) {
-    const queryFilter = this.generateFetchQueryFilter(options);
+  async fetch(options: FetchUsersOptions): Promise<UserDataObject[]> {
+    const queryFilter = generateFetchQueryFilter(options);
     const { take = 8, skip = 0 } = options;
     const users = await this.queryForUsers(queryFilter, take, skip);
     return users.map(parseGraphQLUserToDataObject);
   }
-  async fetchByCode(code: string) {
+  async fetchByCode(code: string): Promise<UserDataObject[]> {
     const filter = `data/connections/iv/code eq '${code}'`;
     const users = await this.queryForUsers(filter, 1, 0);
     return users.map(parseGraphQLUserToDataObject);
   }
-  updateAvatar = async (id: string, avatar: Buffer, contentType: string) => {
+  updateAvatar = async (
+    id: string,
+    avatar: Buffer,
+    contentType: string,
+  ): Promise<void> => {
     const assetId = await this.uploadAvatar(id, avatar, contentType);
 
     await this.userSquidexRestClient.patch(id, { avatar: { iv: [assetId] } });
   };
 
-  async connectByCode(welcomeCode: string, userId: string) {
+  async connectByCode(
+    welcomeCode: string,
+    userId: string,
+  ): Promise<UserDataObject | null> {
     const user = await this.queryByCode(welcomeCode);
 
     if (!user) {
@@ -113,7 +120,7 @@ export default class Users implements UserDataProvider {
   async syncOrcidProfile(
     id: string,
     cachedUser: RestUser | undefined = undefined,
-  ) {
+  ): Promise<UserDataObject> {
     let fetchedUser;
     if (!cachedUser) {
       fetchedUser = await this.userSquidexRestClient.fetchById(id);
@@ -142,14 +149,6 @@ export default class Users implements UserDataProvider {
       updateToUser,
     );
     return parseUserToDataObject(updatedUser);
-  }
-  private shouldDoFullUpdate(userToUpdate: UserPatchDataObject) {
-    return (
-      userToUpdate.teams?.length ||
-      Object.values(userToUpdate).some(
-        (value) => value.trim && value.trim() === '',
-      )
-    );
   }
   private async queryForUsers(filter: string, top: number, skip: number) {
     const { queryUsersContentsWithTotal } = await this.queryFetchData(
@@ -216,82 +215,88 @@ export default class Users implements UserDataProvider {
 
     return res.items[0];
   }
-  private cleanUser(userToUpdate: UserPatchDataObject) {
-    return Object.entries(userToUpdate).reduce((acc, [key, value]) => {
-      const setValue = (item: unknown) => ({ ...acc, [key]: { iv: item } });
-      if (value.trim && value.trim() === '') {
-        return setValue(null);
-      }
+}
 
-      // map flat questions to squidex format
-      if (key === 'questions' && value.length) {
-        return setValue(value.map((question: string) => ({ question })));
-      }
+const shouldDoFullUpdate = (userToUpdate: UserPatchDataObject) =>
+  userToUpdate.teams?.length ||
+  Object.values(userToUpdate).some(
+    (value) => value.trim && value.trim() === '',
+  );
+const cleanUser = (userToUpdate: UserPatchDataObject) =>
+  Object.entries(userToUpdate).reduce((acc, [key, value]) => {
+    const setValue = (item: unknown) => ({ ...acc, [key]: { iv: item } });
+    if (value.trim && value.trim() === '') {
+      return setValue(null);
+    }
 
-      // we get an object but squidex expects an array of objects
-      if (key === 'social') {
-        return setValue([value]);
-      }
+    // map flat questions to squidex format
+    if (key === 'questions' && value.length) {
+      return setValue(value.map((question: string) => ({ question })));
+    }
 
-      return setValue(value);
-    }, {} as { [key: string]: { iv: unknown } });
-  }
-  generateFetchQueryFilter(options: FetchUsersOptions) {
-    const searchFilter = [
-      ...(options.search || '')
-        .split(' ')
-        .filter(Boolean) // removes whitespaces
-        .map(sanitiseForSquidex)
-        .reduce(
-          (acc: string[], word: string) =>
-            acc.concat(
-              `(${[
-                [`contains(data/firstName/iv, '${word}')`],
-                [`contains(data/lastName/iv, '${word}')`],
-                [`contains(data/institution/iv, '${word}')`],
-                [`contains(data/expertiseAndResourceTags/iv, '${word}')`],
-              ].join(' or ')})`,
-            ),
-          [],
-        ),
-    ].join(' and ');
-    const filterRoles = (options?.filter?.role || [])
+    // we get an object but squidex expects an array of objects
+    if (key === 'social') {
+      return setValue([value]);
+    }
+
+    return setValue(value);
+  }, {} as { [key: string]: { iv: unknown } });
+
+const generateFetchQueryFilter = (options: FetchUsersOptions) => {
+  const searchFilter = [
+    ...(options.search || '')
+      .split(' ')
+      .filter(Boolean) // removes whitespaces
+      .map(sanitiseForSquidex)
       .reduce(
         (acc: string[], word: string) =>
-          acc.concat([`data/teams/iv/role eq '${word}'`]),
+          acc.concat(
+            `(${[
+              [`contains(data/firstName/iv, '${word}')`],
+              [`contains(data/lastName/iv, '${word}')`],
+              [`contains(data/institution/iv, '${word}')`],
+              [`contains(data/expertiseAndResourceTags/iv, '${word}')`],
+            ].join(' or ')})`,
+          ),
         [],
-      )
-      .join(' or ');
+      ),
+  ].join(' and ');
+  const filterRoles = (options?.filter?.role || [])
+    .reduce(
+      (acc: string[], word: string) =>
+        acc.concat([`data/teams/iv/role eq '${word}'`]),
+      [],
+    )
+    .join(' or ');
 
-    const filterLabs = (options?.filter?.labId || [])
-      .reduce(
-        (acc: string[], labId: string) =>
-          acc.concat([`data/labs/iv eq '${labId}'`]),
-        [],
-      )
-      .join(' or ');
+  const filterLabs = (options?.filter?.labId || [])
+    .reduce(
+      (acc: string[], labId: string) =>
+        acc.concat([`data/labs/iv eq '${labId}'`]),
+      [],
+    )
+    .join(' or ');
 
-    const filterTeams = (options?.filter?.teamId || [])
-      .reduce(
-        (acc: string[], teamId: string) =>
-          acc.concat([`data/teams/iv/id eq '${teamId}'`]),
-        [],
-      )
-      .join(' or ');
-    const filterHidden = "data/role/iv ne 'Hidden'";
-    const filterNonOnboarded = 'data/onboarded/iv eq true';
+  const filterTeams = (options?.filter?.teamId || [])
+    .reduce(
+      (acc: string[], teamId: string) =>
+        acc.concat([`data/teams/iv/id eq '${teamId}'`]),
+      [],
+    )
+    .join(' or ');
+  const filterHidden = "data/role/iv ne 'Hidden'";
+  const filterNonOnboarded = 'data/onboarded/iv eq true';
 
-    const queryFilter = [
-      filterTeams && `(${filterTeams})`,
-      filterRoles && `(${filterRoles})`,
-      filterLabs && `(${filterLabs})`,
-      filterNonOnboarded,
-      filterHidden,
-      searchFilter && `(${searchFilter})`,
-    ]
-      .filter(Boolean)
-      .join(' and ')
-      .trim();
-    return queryFilter;
-  }
-}
+  const queryFilter = [
+    filterTeams && `(${filterTeams})`,
+    filterRoles && `(${filterRoles})`,
+    filterLabs && `(${filterLabs})`,
+    filterNonOnboarded,
+    filterHidden,
+    searchFilter && `(${searchFilter})`,
+  ]
+    .filter(Boolean)
+    .join(' and ')
+    .trim();
+  return queryFilter;
+};

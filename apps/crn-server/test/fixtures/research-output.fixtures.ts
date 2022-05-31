@@ -305,9 +305,9 @@ export const getRestResearchOutputUpdateData =
     const { createdBy, ...restResearchOutputData } =
       getRestResearchOutputCreateData();
     return {
-      doi: { iv: null as unknown as string },
-      accession: { iv: null as unknown as string },
-      rrid: { iv: null as unknown as string },
+      doi: { iv: null },
+      accession: { iv: null },
+      rrid: { iv: null },
       ...restResearchOutputData,
     };
   };

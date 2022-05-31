@@ -285,9 +285,9 @@ export default class ResearchOutputs implements ResearchOutputController {
     });
 
     return this.researchOutputSquidexRestClient.patch(researchOutputId, {
-      doi: { iv: null as unknown as string },
-      accession: { iv: null as unknown as string },
-      rrid: { iv: null as unknown as string },
+      doi: { iv: null },
+      accession: { iv: null },
+      rrid: { iv: null },
       ...researchOutput,
       usedInAPublication: usedInPublication,
       labs: researchOutput.labs || { iv: null },

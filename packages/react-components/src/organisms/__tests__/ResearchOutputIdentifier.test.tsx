@@ -6,7 +6,6 @@ import { ResearchOutputIdentifier } from '../ResearchOutputIdentifier';
 
 const props: ComponentProps<typeof ResearchOutputIdentifier> = {
   documentType: 'Article',
-  required: false,
 };
 
 it('should render Identifier', () => {
@@ -49,47 +48,6 @@ it('should set the identifier to the selected value', () => {
   );
 });
 
-it('if required shows error message for missing value', () => {
-  render(<ResearchOutputIdentifier {...props} required={true} />);
-  screen.getByRole('textbox', { name: /identifier/i }).focus();
-  screen.getByRole('textbox', { name: /identifier/i }).blur();
-  expect(screen.getByText('Please choose an identifier')).toBeInTheDocument();
-});
-it('if not required then does not show error message for missing value', () => {
-  render(<ResearchOutputIdentifier {...props} required={false} />);
-  screen.getByRole('textbox', { name: /identifier/i }).focus();
-  screen.getByRole('textbox', { name: /identifier/i }).blur();
-  expect(
-    screen.queryByText('Please choose an identifier'),
-  ).not.toBeInTheDocument();
-});
-it('should not show a validation message for a required component when re rendered as optional', () => {
-  const { rerender } = render(
-    <ResearchOutputIdentifier {...props} required={true} />,
-  );
-  screen.getByRole('textbox', { name: /identifier/i }).focus();
-  screen.getByRole('textbox', { name: /identifier/i }).blur();
-  expect(screen.getByText('Please choose an identifier')).toBeInTheDocument();
-  rerender(<ResearchOutputIdentifier {...props} required={false} />);
-  expect(
-    screen.queryByText('Please choose an identifier'),
-  ).not.toBeInTheDocument();
-});
-
-it('switching to required should not show a validation message', () => {
-  const { rerender } = render(
-    <ResearchOutputIdentifier {...props} required={false} />,
-  );
-  screen.getByRole('textbox', { name: /identifier/i }).focus();
-  screen.getByRole('textbox', { name: /identifier/i }).blur();
-  expect(
-    screen.queryByText('Please choose an identifier'),
-  ).not.toBeInTheDocument();
-  rerender(<ResearchOutputIdentifier {...props} required={true} />);
-  expect(
-    screen.queryByText('Please choose an identifier'),
-  ).not.toBeInTheDocument();
-});
 it('should show an error when field is required but no input is provided', async () => {
   render(
     <ResearchOutputIdentifier
@@ -131,27 +89,4 @@ describe.each`
     expect.assertions(1);
     assertError();
   });
-});
-
-it('If required, required should be displayed', () => {
-  const { rerender } = render(<ResearchOutputIdentifier {...props} />);
-  const textbox = screen.getByRole('textbox', { name: /identifier/i });
-  userEvent.click(textbox);
-
-  expect(
-    screen.getByRole('textbox', { name: 'Identifier Type (optional)' }),
-  ).toBeInTheDocument();
-  expect(
-    screen.queryByRole('textbox', { name: 'Identifier Type (required)' }),
-  ).not.toBeInTheDocument();
-
-  rerender(<ResearchOutputIdentifier {...props} required={true} />);
-  userEvent.click(textbox);
-
-  expect(
-    screen.queryByRole('textbox', { name: 'Identifier Type (optional)' }),
-  ).not.toBeInTheDocument();
-  expect(
-    screen.getByRole('textbox', { name: 'Identifier Type (required)' }),
-  ).toBeInTheDocument();
 });

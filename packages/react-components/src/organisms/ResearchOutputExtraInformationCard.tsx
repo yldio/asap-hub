@@ -39,7 +39,6 @@ type ResearchOutputExtraInformationProps = Pick<
   onChangeEnvironments?: (value: string[]) => void;
   isSaving: boolean;
   documentType: ResearchOutputDocumentType;
-  identifierRequired: boolean;
   researchTags: ResearchTagResponse[];
   type: ResearchOutputPostRequest['type'] | '';
   isEditMode?: boolean;
@@ -54,10 +53,9 @@ const ResearchOutputExtraInformationCard: React.FC<ResearchOutputExtraInformatio
     accessInstructions,
     isSaving,
     identifier = '',
-    identifierType = ResearchOutputIdentifierType.Empty,
+    identifierType = ResearchOutputIdentifierType.None,
     setIdentifier = noop,
     setIdentifierType = noop,
-    identifierRequired,
     documentType,
     labCatalogNumber,
     onChangeLabCatalogNumber,
@@ -163,7 +161,6 @@ const ResearchOutputExtraInformationCard: React.FC<ResearchOutputExtraInformatio
           setIdentifier={setIdentifier}
           identifierType={identifierType}
           setIdentifierType={setIdentifierType}
-          required={identifierRequired}
         />
         {documentType === 'Lab Resource' && (
           <LabeledTextField

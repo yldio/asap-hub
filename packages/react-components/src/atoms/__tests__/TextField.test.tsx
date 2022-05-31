@@ -141,35 +141,3 @@ describe('with a left indicator', () => {
     );
   });
 });
-
-it('when invalidated and then rendered optional it should not display error message', async () => {
-  const firstInvalidationMessage = 'first invalid message';
-  const secondInvalidationMessage = 'second invalid message';
-  const { rerender } = render(
-    <TextField
-      value=""
-      required={true}
-      getValidationMessage={() => firstInvalidationMessage}
-      pattern="first"
-    />,
-  );
-  expect(
-    screen.queryByText('Please fill out this field.'),
-  ).not.toBeInTheDocument();
-  const input = screen.getByRole('textbox', { hidden: false });
-  userEvent.click(input);
-  userEvent.tab();
-
-  expect(screen.getByText(firstInvalidationMessage)).toBeVisible();
-
-  rerender(
-    <TextField
-      value=""
-      required={true}
-      getValidationMessage={() => secondInvalidationMessage}
-      pattern="second"
-    />,
-  );
-
-  expect(await screen.findByText(secondInvalidationMessage)).toBeVisible();
-});

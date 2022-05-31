@@ -1,8 +1,8 @@
 import {
+  createResearchOutputResponse,
   createTeamResponse,
   createUserResponse,
   researchTagMethodResponse,
-  createResearchOutputResponse,
 } from '@asap-hub/fixtures';
 import { ResearchOutputPage } from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom';
@@ -46,6 +46,7 @@ export const Normal = () => (
         })
       }
       researchTags={[researchTagMethodResponse]}
+      isEditMode={false}
     />
   </StaticRouter>
 );
@@ -89,6 +90,7 @@ export const EditMode = () => (
         })
       }
       researchTags={[researchTagMethodResponse]}
+      isEditMode={true}
     />
   </StaticRouter>
 );

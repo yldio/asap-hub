@@ -1,18 +1,18 @@
 import {
+  createResearchOutputResponse,
   createTeamResponse,
   createUserResponse,
   researchTagEnvironmentResponse,
   researchTagMethodResponse,
   researchTagOrganismResponse,
   researchTagSubtypeResponse,
-  createResearchOutputResponse,
 } from '@asap-hub/fixtures';
 import {
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
-  ResearchTagResponse,
   ResearchOutputType,
+  ResearchTagResponse,
 } from '@asap-hub/model';
 import {
   render,
@@ -27,12 +27,12 @@ import { ComponentProps } from 'react';
 import { Router, StaticRouter } from 'react-router-dom';
 import ResearchOutputForm, {
   createIdentifierField,
+  getDecision,
   getIdentifierType,
+  getPublishDate,
   isDirty,
   isIdentifierModified,
-  getPublishDate,
   ResearchOutputState,
-  getDecision,
 } from '../ResearchOutputForm';
 
 const props: ComponentProps<typeof ResearchOutputForm> = {
@@ -41,6 +41,7 @@ const props: ComponentProps<typeof ResearchOutputForm> = {
   researchTags: [],
   documentType: 'Article',
   team: createTeamResponse(),
+  isEditMode: false,
 };
 
 jest.setTimeout(60000);
@@ -176,35 +177,6 @@ it('displays current team within the form', async () => {
     </StaticRouter>,
   );
   expect(screen.getByText('example team')).toBeVisible();
-});
-
-it('is funded and publication are both yes, then the identifier type is required', async () => {
-  render(
-    <StaticRouter>
-      <ResearchOutputForm {...props} />
-    </StaticRouter>,
-  );
-  const textbox = screen.getByRole('textbox', { name: /identifier/i });
-  userEvent.click(textbox);
-
-  expect(
-    screen.getByRole('textbox', { name: 'Identifier Type (optional)' }),
-  ).toBeInTheDocument();
-
-  const funded = screen.getByRole('group', {
-    name: /Has this output been funded by ASAP/i,
-  });
-  userEvent.click(within(funded).getByText('Yes'));
-
-  const publication = screen.getByRole('group', {
-    name: /Has this output been used in a publication/i,
-  });
-  userEvent.click(within(publication).getByText('Yes'));
-  userEvent.click(textbox);
-
-  expect(
-    screen.getByRole('textbox', { name: 'Identifier Type (required)' }),
-  ).toBeInTheDocument();
 });
 
 describe('on submit', () => {
@@ -632,7 +604,7 @@ describe('on submit', () => {
 describe('isDirty', () => {
   const researchOutputResponse: ResearchOutputResponse =
     createResearchOutputResponse();
-  const payload: ResearchOutputState = {
+  const researchOutputState: ResearchOutputState = {
     title: researchOutputResponse.title,
     description: researchOutputResponse.description,
     link: researchOutputResponse.link,
@@ -664,7 +636,7 @@ describe('isDirty', () => {
     expect(
       isDirty(
         {
-          ...payload,
+          ...researchOutputState,
           teams: [
             { value: 't0', label: 'team-0' },
             { value: 't1', label: 'team-1' },
@@ -682,11 +654,19 @@ describe('isDirty', () => {
   });
 
   it('returns false for edit mode when values equal the initial ones', () => {
-    expect(isDirty(payload, researchOutputResponse)).toBeFalsy();
+    expect(
+      isDirty(
+        {
+          ...researchOutputState,
+          identifierType: ResearchOutputIdentifierType.None,
+        },
+        researchOutputResponse,
+      ),
+    ).toBeFalsy();
   });
 
   it('returns true when the initial values are changed', () => {
-    expect(isDirty(payload)).toBeTruthy();
+    expect(isDirty(researchOutputState)).toBeTruthy();
   });
 
   it('returns true when the initial values are unchanged', () => {
@@ -753,9 +733,9 @@ describe('isDirty', () => {
   `(
     'Return true when $key is changed to $value and differs from the initial one',
     async ({ key, value }) => {
-      const payloadKey: keyof typeof payload = key;
-      payload[payloadKey] = value;
-      expect(isDirty(payload, researchOutputResponse)).toBeTruthy();
+      const payloadKey: keyof typeof researchOutputState = key;
+      researchOutputState[payloadKey] = value;
+      expect(isDirty(researchOutputState, researchOutputResponse)).toBeTruthy();
     },
   );
 });
@@ -785,30 +765,43 @@ describe('getDecision', () => {
 describe('getIdentifierType', () => {
   it('returns DOI when doi is present', () => {
     expect(
-      getIdentifierType({ ...createResearchOutputResponse(), doi: 'abc' }),
+      getIdentifierType(true, {
+        ...createResearchOutputResponse(),
+        doi: 'abc',
+      }),
     ).toEqual('DOI');
   });
   it('returns RRID when rrid is present', () => {
     expect(
-      getIdentifierType({ ...createResearchOutputResponse(), rrid: 'abc' }),
+      getIdentifierType(true, {
+        ...createResearchOutputResponse(),
+        rrid: 'abc',
+      }),
     ).toEqual('RRID');
   });
   it('returns Accession Number when accession is present', () => {
     expect(
-      getIdentifierType({
+      getIdentifierType(true, {
         ...createResearchOutputResponse(),
         accession: 'abc',
       }),
     ).toEqual('Accession Number');
   });
-  it('returns empty when there is no identifier present', () => {
-    expect(
-      getIdentifierType({
-        ...createResearchOutputResponse(),
-        accession: '',
-        rrid: '',
-        doi: '',
-      }),
-    ).toEqual('');
-  });
+  it.each`
+    isEditMode | description | expected
+    ${false}   | ${'empty'}  | ${ResearchOutputIdentifierType.Empty}
+    ${true}    | ${'none'}   | ${ResearchOutputIdentifierType.None}
+  `(
+    'returns $description when there is no identifier present',
+    ({ isEditMode, expected }) => {
+      expect(
+        getIdentifierType(isEditMode, {
+          ...createResearchOutputResponse(),
+          accession: '',
+          rrid: '',
+          doi: '',
+        }),
+      ).toEqual(expected);
+    },
+  );
 });

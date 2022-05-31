@@ -19,12 +19,10 @@ export interface Rest<T> {
 
 export interface RestPayload<T> {
   data: {
-    [K in keyof T]: null extends T[K]
-      ?
-          | {
-              iv: T[K];
-            }
-          | undefined
+    [K in keyof T]: undefined extends T[K]
+      ? {
+          iv: NonNullable<T[K]> | null;
+        } | null
       : {
           iv: T[K] extends Array<unknown> ? T[K] | null : NonNullable<T[K]>;
         };

@@ -10,4 +10,5 @@ export const ResearchOutputIdentifierValidationExpression: Record<
     '^(\\w+\\d+(\\.\\d+)?)|(NP_\\d+)$',
   [ResearchOutputIdentifierType.RRID]: '^RRID:[a-zA-Z]+.+$',
   [ResearchOutputIdentifierType.Empty]: undefined,
+  [ResearchOutputIdentifierType.None]: undefined,
 };

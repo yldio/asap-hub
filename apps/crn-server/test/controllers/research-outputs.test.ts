@@ -1493,6 +1493,41 @@ describe('ResearchOutputs controller', () => {
           },
         );
       });
+
+      test.each`
+        name           | value
+        ${'doi'}       | ${'10.1234'}
+        ${'rrid'}      | ${'RRID:S1234'}
+        ${'accession'} | ${'accession-1'}
+        ${'none'}      | ${undefined}
+      `(
+        'Should update the existing research-output with $name',
+        async ({ name, value }) => {
+          const researchOutputUpdateData = getResearchOutputUpdateData();
+          nock(config.baseUrl)
+            .patch(
+              `/api/content/${config.appName}/research-outputs/${researchOutputId}`,
+              {
+                ...getRestResearchOutputUpdateData(),
+                updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
+                doi: { iv: null },
+                rrid: { iv: null },
+                accession: { iv: null },
+                ...(name !== 'none' && { [name]: { iv: value } }),
+              },
+            )
+            .reply(201, { id: researchOutputId });
+
+          const result = await researchOutputs.update(researchOutputId, {
+            ...researchOutputUpdateData,
+            ...(name !== 'none' && { [name]: value }),
+          });
+
+          const expectedResult = getResearchOutputResponse();
+          expect(result).toEqual(expectedResult);
+          expect(squidexGraphqlClientMock.request).toHaveBeenCalledTimes(4);
+        },
+      );
     });
   });
 });

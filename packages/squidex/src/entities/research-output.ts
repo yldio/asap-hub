@@ -1,15 +1,14 @@
 import {
-  ResearchOutputDocumentType,
-  ResearchOutputType,
-  ResearchOutputSharingStatus,
   DecisionOption,
+  ResearchOutputDocumentType,
+  ResearchOutputSharingStatus,
+  ResearchOutputType,
 } from '@asap-hub/model';
-
 import {
-  Rest,
   Entity,
   Graphql,
   GraphqlWithTypename,
+  Rest,
   RestPayload,
 } from './common';
 import { GraphqlExternalAuthor } from './external-author';

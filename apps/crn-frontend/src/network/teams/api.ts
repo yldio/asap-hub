@@ -11,7 +11,6 @@ import {
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
-
 import { API_BASE_URL } from '../../config';
 import createListApiUrl from '../../CreateListApiUrl';
 

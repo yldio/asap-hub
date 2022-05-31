@@ -18,7 +18,6 @@ const getProps = (): ComponentProps<
   organisms: [],
   environments: [],
   documentType: 'Article',
-  identifierRequired: false,
   type: 'Protein Data',
   researchTags: [],
 });

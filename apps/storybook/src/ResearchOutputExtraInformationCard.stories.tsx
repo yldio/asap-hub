@@ -1,8 +1,8 @@
-import { ResearchOutputExtraInformationCard } from '@asap-hub/react-components';
-import { ComponentProps } from 'react';
-import { researchOutputDocumentTypes } from '@asap-hub/model';
-import { boolean, select } from '@storybook/addon-knobs';
 import { researchTagsResponse } from '@asap-hub/fixtures';
+import { researchOutputDocumentTypes } from '@asap-hub/model';
+import { ResearchOutputExtraInformationCard } from '@asap-hub/react-components';
+import { select } from '@storybook/addon-knobs';
+import { ComponentProps } from 'react';
 
 export default {
   title: 'Organisms / Team Profile / Team Create Output Extra Information Card',
@@ -24,7 +24,6 @@ const commonProps: ComponentProps<typeof ResearchOutputExtraInformationCard> = {
   researchTags: researchTagsResponse,
   type: 'Protein Data',
   documentType: select('type', researchOutputDocumentTypes, 'Article'),
-  identifierRequired: boolean('identifierRequired', false),
 };
 
 export const Normal = () => (

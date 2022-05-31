@@ -15,7 +15,7 @@ import { ComponentProps, useState } from 'react';
 import { Button } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 import { usePushFromHere } from '../routing';
-import { noop, equals } from '../utils';
+import { equals, noop } from '../utils';
 import {
   Form,
   ResearchOutputExtraInformationCard,
@@ -76,7 +76,7 @@ type ResearchOutputFormProps = Pick<
     documentType: ResearchOutputDocumentType;
     team: TeamResponse;
     researchOutputData?: ResearchOutputResponse;
-    isEditMode?: boolean;
+    isEditMode: boolean;
   };
 
 const identifierTypeToFieldName: Record<
@@ -84,6 +84,7 @@ const identifierTypeToFieldName: Record<
   'doi' | 'accession' | 'labCatalogNumber' | 'rrid' | undefined
 > = {
   [ResearchOutputIdentifierType.Empty]: undefined,
+  [ResearchOutputIdentifierType.None]: undefined,
   [ResearchOutputIdentifierType.DOI]: 'doi',
   [ResearchOutputIdentifierType.AccessionNumber]: 'accession',
   [ResearchOutputIdentifierType.RRID]: 'rrid',
@@ -120,7 +121,7 @@ export type ResearchOutputState = {
   >;
   labs: ComponentProps<typeof ResearchOutputContributorsCard>['labs'];
   authors: ComponentProps<typeof ResearchOutputContributorsCard>['authors'];
-  identifierType?: ResearchOutputIdentifierType;
+  identifierType: ResearchOutputIdentifierType;
   identifier?: string;
 };
 
@@ -168,7 +169,7 @@ export function isDirty(
           researchOutputData.authors.map((author) => author?.id),
         )) ||
       subtype !== researchOutputData.subtype ||
-      identifierType !== getIdentifierType(researchOutputData) ||
+      identifierType !== getIdentifierType(true, researchOutputData) ||
       isIdentifierModified(researchOutputData, identifier)
     );
   }
@@ -192,7 +193,8 @@ export function isDirty(
 }
 
 export function getIdentifierType(
-  researchOutputData: ResearchOutputResponse,
+  isEditMode: boolean,
+  researchOutputData?: ResearchOutputResponse,
 ): ResearchOutputIdentifierType {
   if (researchOutputData?.doi) return ResearchOutputIdentifierType.DOI;
 
@@ -201,7 +203,9 @@ export function getIdentifierType(
 
   if (researchOutputData?.rrid) return ResearchOutputIdentifierType.RRID;
 
-  return ResearchOutputIdentifierType.Empty;
+  return isEditMode
+    ? ResearchOutputIdentifierType.None
+    : ResearchOutputIdentifierType.Empty;
 }
 
 export function isIdentifierModified(
@@ -310,10 +314,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
 
   const [identifierType, setIdentifierType] =
     useState<ResearchOutputIdentifierType>(
-      (researchOutputData && getIdentifierType(researchOutputData)) ||
-        ResearchOutputIdentifierType.Empty,
+      getIdentifierType(isEditMode, researchOutputData),
     );
-
   const [identifier, setIdentifier] = useState<string>(
     researchOutputData?.doi ||
       researchOutputData?.rrid ||
@@ -455,9 +457,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
             setIdentifier={setIdentifier}
             identifierType={identifierType}
             setIdentifierType={setIdentifierType}
-            identifierRequired={
-              usedInPublication === 'Yes' && asapFunded === 'Yes'
-            }
             labCatalogNumber={labCatalogNumber}
             onChangeLabCatalogNumber={setLabCatalogNumber}
             methods={methods}

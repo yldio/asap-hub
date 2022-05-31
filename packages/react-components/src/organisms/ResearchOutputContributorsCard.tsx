@@ -30,6 +30,7 @@ type ResearchOutputContributorsProps = {
   >['onChange'];
 
   readonly isSaving: boolean;
+  isEditMode?: boolean;
 };
 
 const ResearchOutputContributorsCard: React.FC<ResearchOutputContributorsProps> =
@@ -44,13 +45,14 @@ const ResearchOutputContributorsCard: React.FC<ResearchOutputContributorsProps> 
     getTeamSuggestions = noop,
     onChangeTeams = noop,
     isSaving,
+    isEditMode,
   }) => (
     <FormCard title="Who were the contributors?">
       <LabeledMultiSelect
         title="Teams"
         description="Add other teams that contributed to this output. Those teams will also then be able to edit."
         subtitle="(required)"
-        enabled={!isSaving}
+        enabled={!isSaving && !isEditMode}
         placeholder="Start typing..."
         loadOptions={getTeamSuggestions}
         onChange={onChangeTeams}

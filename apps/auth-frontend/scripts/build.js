@@ -72,4 +72,5 @@ renameBuildFolder('gp2');
 // // //Build crn-app
 runBuild('crn');
 replaceHTML();
-renameBuildFolder('crn');
+//TODO: remove comment to rename the build folder to crn-build
+//renameBuildFolder('crn');

@@ -56,7 +56,7 @@ function replaceHTML() {
 }
 
 function renameBuildFolder(APP) {
-  const targetDir = resolve(__dirname, `../${APP}-build`);
+  const targetDir = resolve(__dirname, `../build-${APP}`);
   try {
     del.sync(targetDir);
     renameSync(buildDir, targetDir);

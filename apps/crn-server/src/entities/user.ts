@@ -154,6 +154,7 @@ export const parseUserToDataObject = (user: RestUser): UserDataObject => {
       id: lab.id,
       name: lab.flatData?.name ?? '',
     })),
+    connections: user.data.connections?.iv ?? undefined,
   };
 };
 const isUserRole = (data: string): data is Role =>

@@ -110,6 +110,10 @@ export interface UserSocialLinks {
   researchGate?: string;
 }
 
+interface Connection {
+  code: string;
+}
+
 export interface UserDataObject extends Invitee {
   id: string;
   onboarded?: boolean | null;
@@ -131,6 +135,7 @@ export interface UserDataObject extends Invitee {
   role: Role;
   social?: UserSocialLinks;
   labs: LabResponse[];
+  connections?: Connection[];
 }
 export type ListUserDataObject = ListResponse<UserDataObject>;
 export interface UserResponse extends Omit<UserDataObject, 'onboarded'> {
@@ -162,6 +167,7 @@ export interface UserPatchDataObject {
   social?: Omit<UserSocialLinks, 'orcid'>;
   onboarded?: boolean;
   avatar?: string;
+  connections?: Connection[];
 }
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface UserPatchRequest extends UserPatchDataObject {}

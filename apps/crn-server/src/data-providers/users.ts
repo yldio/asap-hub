@@ -1,4 +1,3 @@
-import { GenericError } from '@asap-hub/errors';
 import {
   ListUserDataObject,
   UserDataObject,
@@ -30,10 +29,6 @@ export interface UserDataProvider {
   fetchById(id: string): Promise<UserDataObject | null>;
   update(id: string, update: UserPatchDataObject): Promise<void>;
   fetch(options: FetchUsersOptions): Promise<ListUserDataObject>;
-  connectByCode(
-    welcomeCode: string,
-    userId: string,
-  ): Promise<UserDataObject | null>;
   syncOrcidProfile(
     id: string,
     cachedUser?: RestUser | undefined,
@@ -76,32 +71,6 @@ export default class Users implements UserDataProvider {
     return this.queryForUsers(queryFilter, take, skip);
   }
 
-  async connectByCode(
-    welcomeCode: string,
-    userId: string,
-  ): Promise<UserDataObject | null> {
-    const user = await this.queryByCode(welcomeCode);
-
-    if (!user) {
-      return null;
-    }
-
-    if (user.data.connections.iv?.find(({ code }) => code === userId)) {
-      return parseUserToDataObject(user);
-    }
-
-    const connections = (user.data.connections.iv || []).concat([
-      { code: userId },
-    ]);
-
-    const res = await this.userSquidexRestClient.patch(user.id, {
-      email: { iv: user.data.email.iv },
-      connections: { iv: connections },
-    });
-
-    return parseUserToDataObject(res);
-  }
-
   async syncOrcidProfile(
     id: string,
     cachedUser: RestUser | undefined = undefined,
@@ -136,11 +105,8 @@ export default class Users implements UserDataProvider {
     return parseUserToDataObject(updatedUser);
   }
   private async queryForUsers(filter: string, top: number, skip: number) {
-    const { queryUsersContentsWithTotal } = await this.queryFetchData(
-      filter,
-      top,
-      skip,
-    );
+    const { queryUsersContentsWithTotal } =
+      (await this.queryFetchData(filter, top, skip)) || {};
     const { total = 0, items = [] } = queryUsersContentsWithTotal || {};
 
     return {
@@ -159,29 +125,6 @@ export default class Users implements UserDataProvider {
       FetchUserQuery,
       FetchUserQueryVariables
     >(FETCH_USER, { id });
-  }
-
-  private async queryByCode(code: string): Promise<RestUser | undefined> {
-    const [err, res] = await Intercept(
-      this.userSquidexRestClient.client
-        .get('users', {
-          searchParams: {
-            $top: 1,
-            $filter: `data/connections/iv/code eq '${code}'`,
-          },
-        })
-        .json() as Promise<{ items: RestUser[] }>,
-    );
-
-    if (err) {
-      throw new GenericError(err.message);
-    }
-
-    if (res.items.length === 0 || !res.items[0]) {
-      return undefined;
-    }
-
-    return res.items[0];
   }
 }
 

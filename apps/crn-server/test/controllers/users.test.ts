@@ -81,7 +81,7 @@ describe('Users controller', () => {
       const result = await usersMockGraphqlClient.fetchByCode(code);
       expect(result).toEqual(getUserResponse());
     });
-    test.only('Should throw 404 when no user is found', async () => {
+    test('Should throw 404 when no user is found', async () => {
       mockUserDataProvider.fetch = jest
         .fn()
         .mockResolvedValue({ total: 0, items: [] });
@@ -99,13 +99,6 @@ describe('Users controller', () => {
       await expect(usersMockGraphqlClient.fetchByCode(code)).rejects.toThrow(
         GenericError,
       );
-    });
-    test('Should return the users', async () => {
-      mockUserDataProvider.fetchByCode = jest
-        .fn()
-        .mockResolvedValue({ total: 1, items: [getUserDataObject()] });
-      const result = await usersMockGraphqlClient.fetchByCode(code);
-      expect(result).toEqual(getUserResponse());
     });
   });
 
@@ -175,8 +168,17 @@ describe('Users controller', () => {
   });
 
   describe('connectByCode', () => {
-    test('should return the user on success', async () => {
-      mockUserDataProvider.connectByCode = jest
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+    test('should connect and return the user on success', async () => {
+      const userId = 42;
+      mockUserDataProvider.fetch = jest.fn().mockResolvedValue({
+        total: 1,
+        items: [{ ...getUserDataObject(), id: userId }],
+      });
+      mockUserDataProvider.update = jest.fn();
+      mockUserDataProvider.fetchById = jest
         .fn()
         .mockResolvedValue(getUserDataObject());
 
@@ -184,10 +186,41 @@ describe('Users controller', () => {
         'some code',
         'user-id',
       );
+      expect(mockUserDataProvider.update).toHaveBeenCalledWith(userId, {
+        connections: [{ code: 'user-id' }],
+      });
       expect(result).toEqual(getUserResponse());
     });
+    test('Shouldnt do anything if connecting with existing code', async () => {
+      const userId = 42;
+      const userCode = 'google-oauth2|token';
+
+      mockUserDataProvider.fetch = jest.fn().mockResolvedValue({
+        total: 1,
+        items: [
+          {
+            ...getUserDataObject(),
+            id: userId,
+            connections: [{ code: userCode }],
+          },
+        ],
+      });
+      mockUserDataProvider.update = jest.fn();
+      mockUserDataProvider.fetchById = jest
+        .fn()
+        .mockResolvedValue(getUserDataObject());
+
+      const result = await usersMockGraphqlClient.connectByCode(
+        'asapWelcomeCode',
+        userCode,
+      );
+      expect(mockUserDataProvider.update).not.toHaveBeenCalled();
+      expect(result).toBeDefined();
+    });
     test('throws if no user is returned', async () => {
-      mockUserDataProvider.connectByCode = jest.fn().mockResolvedValue(null);
+      mockUserDataProvider.fetch = jest
+        .fn()
+        .mockResolvedValue({ total: 0, items: [] });
 
       await expect(
         usersMockGraphqlClient.connectByCode('some code', 'user-id'),

@@ -1,4 +1,4 @@
-import { GenericError, NotFoundError } from '@asap-hub/errors';
+import { NotFoundError } from '@asap-hub/errors';
 import { UserResponse } from '@asap-hub/model';
 import { config, RestUser } from '@asap-hub/squidex';
 import matches from 'lodash.matches';
@@ -11,7 +11,6 @@ import {
   getSquidexUserGraphqlResponse,
   getSquidexUsersGraphqlResponse,
   getUserDataObject,
-  patchResponse,
 } from '../fixtures/users.fixtures';
 import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
@@ -319,7 +318,6 @@ describe('User data provider', () => {
         } as { [k: string]: any })
         .reply(200, fetchUserResponse); // this response is ignored
 
-      userDataProvider.fetchById = jest.fn().mockResolvedValue(mockResponse);
       const result = await userDataProvider.update(userId, {
         contactEmail: '',
       });
@@ -327,13 +325,6 @@ describe('User data provider', () => {
       expect(nock.isDone()).toBe(true);
     });
     test('Should update social and questions', async () => {
-      const mockResponse = getUserDataObject();
-      mockResponse.questions = ['To be or not to be?'];
-      mockResponse.social = {
-        github: 'johnytiago',
-      };
-      userDataProvider.fetchById = jest.fn().mockResolvedValue(mockResponse);
-
       nock(config.baseUrl)
         .patch(`/api/content/${config.appName}/users/${userId}`, {
           questions: { iv: [{ question: 'To be or not to be?' }] },
@@ -351,11 +342,6 @@ describe('User data provider', () => {
       expect(result).not.toBeDefined();
     });
     test('Should update Research Interests and Responsibility', async () => {
-      const mockResponse = getUserDataObject();
-      mockResponse.researchInterests = 'new research interests';
-      mockResponse.responsibilities = 'new responsibilities';
-      userDataProvider.fetchById = jest.fn().mockResolvedValue(mockResponse);
-
       const expectedPatchRequest: Partial<RestUser['data']> = {
         researchInterests: {
           iv: 'new research interests',
@@ -391,7 +377,6 @@ describe('User data provider', () => {
         } as { [k: string]: any })
         .reply(200, fetchUserResponse()); // this response is ignored
 
-      userDataProvider.fetchById = jest.fn().mockResolvedValue(mockResponse);
       const result = await userDataProvider.update(userId, {
         teams: [{ id: 'team-id' }],
       });
@@ -586,112 +571,6 @@ describe('User data provider', () => {
         },
       );
       expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
-    });
-  });
-  describe('connectByCode', () => {
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
-    });
-
-    afterEach(() => {
-      nock.cleanAll();
-    });
-
-    test('Should throw forbidden when doesn find connection code', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $top: 1,
-          $filter: `data/connections/iv/code eq 'invalid-code'`,
-        })
-        .reply(404);
-
-      await expect(
-        userDataProvider.connectByCode('invalid-code', 'user-id'),
-      ).rejects.toThrow(GenericError);
-    });
-    test('Shouldnt do anything if connecting with existing code', async () => {
-      const userId = 'google-oauth2|token';
-      const connectedUser = JSON.parse(JSON.stringify(patchResponse()));
-      connectedUser.data.connections.iv = [{ code: userId }];
-
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $top: 1,
-          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
-        })
-        .reply(200, { total: 1, items: [connectedUser] });
-
-      const result = await userDataProvider.connectByCode(
-        'asapWelcomeCode',
-        userId,
-      );
-      expect(result).toBeDefined();
-    });
-    test('Should filter teams where teamId is undefined', async () => {
-      const userId = 'google-oauth2|token';
-      const connectedUser = JSON.parse(JSON.stringify(patchResponse()));
-      connectedUser.data.connections.iv = [{ code: userId }];
-      connectedUser.data.teams.iv = [
-        {
-          id: [],
-          role: 'Lead PI (Core Leadership)',
-          approach: 'Exact',
-          responsibilities: 'Make sure coverage is high',
-        },
-        {
-          id: ['team-id-3'],
-          role: 'Collaborating PI',
-        },
-      ];
-
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $top: 1,
-          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
-        })
-        .reply(200, { total: 1, items: [connectedUser] });
-      const result = await userDataProvider.connectByCode(
-        'asapWelcomeCode',
-        userId,
-      );
-      expect(result).toBeDefined();
-      expect(result?.teams).toEqual([
-        {
-          approach: undefined,
-          displayName: 'Unknown',
-          id: 'team-id-3',
-          responsibilities: undefined,
-          role: 'Collaborating PI',
-        },
-      ]);
-    });
-
-    test('Should connect user', async () => {
-      const userId = 'google-oauth2|token';
-      const patchedUser = JSON.parse(JSON.stringify(patchResponse()));
-      patchedUser.data.connections.iv = [{ code: userId }];
-
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $top: 1,
-          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
-        })
-        .reply(200, { total: 1, items: [patchResponse()] })
-        .patch(`/api/content/${config.appName}/users/${patchResponse().id}`, {
-          email: { iv: patchResponse().data.email.iv },
-          connections: { iv: [{ code: userId }] },
-        })
-        .reply(200, patchedUser);
-
-      const result = await userDataProvider.connectByCode(
-        'asapWelcomeCode',
-        userId,
-      );
-      expect(result).toBeDefined();
     });
   });
   describe('syncOrcidProfile', () => {

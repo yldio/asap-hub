@@ -3,7 +3,7 @@ import { JSONSchemaType } from 'ajv';
 import { validateInput } from '.';
 
 const userPatchRequestValidationSchema: JSONSchemaType<
-  Omit<UserPatchRequest, 'avatar'>
+  Omit<UserPatchRequest, 'avatar' | 'connections'>
 > = {
   type: 'object',
   properties: {

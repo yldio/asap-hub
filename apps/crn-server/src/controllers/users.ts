@@ -73,11 +73,7 @@ export default class Users implements UserController {
   }
 
   async fetchByCode(code: string): Promise<UserResponse> {
-    const { items: users } = await this.userDataProvider.fetch({
-      filter: { code, hidden: false, onboarded: false },
-      take: 1,
-      skip: 0,
-    });
+    const { items: users } = await this.queryByCode(code);
     if (users.length === 0) {
       throw new NotFoundError(`user with code ${code} not found`);
     }
@@ -107,13 +103,21 @@ export default class Users implements UserController {
     welcomeCode: string,
     userId: string,
   ): Promise<UserResponse> {
-    const user = await this.userDataProvider.connectByCode(welcomeCode, userId);
+    const { items } = await this.queryByCode(welcomeCode);
+    // const user = await this.userDataProvider.connectByCode(welcomeCode, userId);
 
-    if (!user) {
+    if (!items || items.length > 1 || !items[0]) {
       throw new NotFoundError(`user with code ${welcomeCode} not found`);
     }
 
-    return parseUserToResponse(user);
+    const user = items[0];
+    if (user.connections?.find(({ code }) => code === userId)) {
+      return parseUserToResponse(user);
+    }
+    await this.userDataProvider.update(user.id, {
+      connections: [...(user.connections || []), { code: userId }],
+    });
+    return this.fetchById(user.id);
   }
 
   async syncOrcidProfile(
@@ -122,5 +126,12 @@ export default class Users implements UserController {
   ): Promise<UserResponse> {
     const user = await this.userDataProvider.syncOrcidProfile(id, cachedUser);
     return parseUserToResponse(user);
+  }
+  private async queryByCode(code: string) {
+    return this.userDataProvider.fetch({
+      filter: { code, hidden: false, onboarded: false },
+      take: 1,
+      skip: 0,
+    });
   }
 }

@@ -542,7 +542,7 @@ __metadata:
     "@types/jwt-encode": "workspace:*"
     "@types/lodash.get": 4.4.7
     "@types/lodash.matches": 4.6.7
-    "@types/lodash.uniqby": ^4
+    "@types/lodash.uniqby": 4.7.7
     "@types/luxon": ^1
     "@types/mime-types": ^2
     "@types/parse-data-url": ^3.0.0
@@ -11208,12 +11208,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.uniqby@npm:^4":
-  version: 4.7.6
-  resolution: "@types/lodash.uniqby@npm:4.7.6"
+"@types/lodash.uniqby@npm:4.7.7":
+  version: 4.7.7
+  resolution: "@types/lodash.uniqby@npm:4.7.7"
   dependencies:
     "@types/lodash": "*"
-  checksum: 285eff7e44e9c0c06cc32aaa22d193447436e2a61b08938d73588039cebe00297076b10c6155efee275c3d0a05d448323455959449c93910259dcf712c77aaaf
+  checksum: f496fd390c632f070b2bae7527cecd79c5398c6c2d14157bb85830b78ad72acbea095ddd8573f33ca97a94ac31cdaae83800373bba9f4f4f503a4dce98a87812
   languageName: node
   linkType: hard
 

@@ -1,12 +1,13 @@
-import Chance from 'chance';
 import { SquidexGraphql, User } from '@asap-hub/squidex';
-
+import Chance from 'chance';
 import Users from '../../src/controllers/users';
-import { createUser, createRandomOrcid } from '../helpers/users';
+import UserDataProvider from '../../src/data-providers/users';
+import { createRandomOrcid, createUser } from '../helpers/users';
 
 const chance = new Chance();
 const squidexGraphqlClient = new SquidexGraphql();
-const users = new Users(squidexGraphqlClient);
+const userDataProvider = new UserDataProvider(squidexGraphqlClient);
+const users = new Users(userDataProvider);
 
 describe('Users', () => {
   test('Should create and fetch a user', async () => {

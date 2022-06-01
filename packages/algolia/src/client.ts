@@ -1,4 +1,3 @@
-import { SearchIndex } from 'algoliasearch';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import {
   ExternalAuthorResponse,
@@ -6,6 +5,7 @@ import {
   ResearchOutputResponse,
   UserResponse,
 } from '@asap-hub/model';
+import { SearchIndex } from 'algoliasearch';
 
 export const RESEARCH_OUTPUT_ENTITY_TYPE = 'research-output';
 export const USER_ENTITY_TYPE = 'user';

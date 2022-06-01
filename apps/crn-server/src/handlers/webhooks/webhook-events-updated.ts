@@ -1,18 +1,17 @@
-import Boom from '@hapi/boom';
-import { RestCalendar, SquidexGraphql } from '@asap-hub/squidex';
 import { framework as lambda } from '@asap-hub/services-common';
-
-import { Handler } from '../../utils/types';
+import { RestCalendar, SquidexGraphql } from '@asap-hub/squidex';
+import Boom from '@hapi/boom';
+import { googleApiToken } from '../../config';
 import Calendars, { CalendarController } from '../../controllers/calendars';
+import Events from '../../controllers/events';
+import getJWTCredentials from '../../utils/aws-secret-manager';
+import logger from '../../utils/logger';
 import {
   SyncCalendar,
   syncCalendarFactory,
 } from '../../utils/sync-google-calendar';
-import logger from '../../utils/logger';
-import { googleApiToken } from '../../config';
 import { syncEventFactory } from '../../utils/sync-google-event';
-import Events from '../../controllers/events';
-import getJWTCredentials from '../../utils/aws-secret-manager';
+import { Handler } from '../../utils/types';
 
 export const webhookEventUpdatedHandlerFactory = (
   calendars: CalendarController,

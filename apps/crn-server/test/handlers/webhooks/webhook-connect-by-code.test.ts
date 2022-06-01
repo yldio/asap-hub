@@ -1,11 +1,10 @@
-import nock from 'nock';
-import { APIGatewayProxyResult } from 'aws-lambda';
 import { config, RestUser } from '@asap-hub/squidex';
-
+import { APIGatewayProxyResult } from 'aws-lambda';
+import nock from 'nock';
+import { auth0SharedSecret as secret } from '../../../src/config';
 import { handler } from '../../../src/handlers/webhooks/webhook-connect-by-code';
 import { getApiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
-import { auth0SharedSecret as secret } from '../../../src/config';
 
 const user: RestUser = {
   id: 'userId',
@@ -109,7 +108,7 @@ describe('POST /webhook/users/connections - success', () => {
     expect(nock.isDone()).toBe(true);
   });
 
-  test('returns 403 for invalid code', async () => {
+  test('returns 500 for invalid code', async () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/users`)
       .query({
@@ -130,7 +129,7 @@ describe('POST /webhook/users/connections - success', () => {
       }),
     )) as APIGatewayProxyResult;
 
-    expect(res.statusCode).toStrictEqual(403);
+    expect(res.statusCode).toStrictEqual(500);
   });
 
   test('returns 202 for valid code and updates the user', async () => {

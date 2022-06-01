@@ -1,9 +1,10 @@
 import {
   ListUserResponse,
+  UserDataObject,
   UserPatchRequest,
   UserResponse,
 } from '@asap-hub/model';
-import { RestUser, User, WebhookPayload } from '@asap-hub/squidex';
+import { config, RestUser, User, WebhookPayload } from '@asap-hub/squidex';
 import {
   FetchUserQuery,
   FetchUsersQuery,
@@ -156,7 +157,7 @@ type GraphQLUserTeamFlatData = NonNullable<
   FetchUserQuery['findUsersContent']
 >['flatData'];
 
-export const patchResponse: RestUser = {
+export const patchResponse = (): RestUser => ({
   id: 'userId',
   data: {
     onboarded: { iv: true },
@@ -195,8 +196,44 @@ export const patchResponse: RestUser = {
   created: '2020-09-25T09:42:51Z',
   lastModified: '2020-09-25T09:42:51Z',
   version: 42,
-};
-export const fetchUserResponse = patchResponse;
+});
+export const fetchUserResponse = () => patchResponse();
+export const fetchUserResponseDataObject = () => ({
+  avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/squidex-asset-id`,
+  createdDate: '2020-09-25T09:42:51.000Z',
+  email: 'cristiano@ronaldo.com',
+  expertiseAndResourceDescription: 'some expertiseAndResourceTags',
+  expertiseAndResourceTags: [],
+  firstName: 'Cristiano',
+  id: 'userId',
+  institution: 'Dollar General Corporation',
+  jobTitle: 'Junior',
+  labs: [],
+  lastModifiedDate: '2020-09-25T09:42:51.132Z',
+  lastName: 'Ronaldo',
+  onboarded: true,
+  orcid: '363-98-9330',
+  orcidWorks: [],
+  questions: [],
+  reachOut: 'some reach out',
+  responsibilities: 'some responsibilities',
+  role: 'Grantee',
+  social: {
+    orcid: '363-98-9330',
+  },
+  teams: [
+    {
+      displayName: 'Unknown',
+      id: 'team-id-1',
+      role: 'Lead PI (Core Leadership)',
+    },
+    {
+      displayName: 'Unknown',
+      id: 'team-id-3',
+      role: 'Collaborating PI',
+    },
+  ],
+});
 
 export const updateAvatarBody: { avatar: string } = {
   avatar:
@@ -318,6 +355,7 @@ export const getListUserResponse = (): ListUserResponse => ({
   items: [getUserResponse()],
 });
 
+export const getUserDataObjects = () => [getUserDataObject()];
 export const restUserMock = patchResponse;
 
 export const userPatchRequest: UserPatchRequest = {
@@ -477,3 +515,58 @@ export const getUserEvent = (id: string, eventType: UserEvent) =>
     eventType,
     id,
   );
+
+export const getUserDataObject = (): UserDataObject => ({
+  id: 'user-id-1',
+  biography: 'some bio',
+  onboarded: true,
+  createdDate: '2020-09-23T20:45:22.000Z',
+  questions: ['Question 1', 'Question 2'],
+  expertiseAndResourceTags: [
+    'expertise 1',
+    'expertise 2',
+    'expertise 3',
+    'expertise 4',
+    'expertise 5',
+  ],
+  institution: 'some institution',
+  jobTitle: 'some job title',
+  reachOut: 'some reach out',
+  responsibilities: 'some responsibilities',
+  researchInterests: 'some research interests',
+  email: 'H@rdy.io',
+  contactEmail: 'T@rdy.io',
+  firstName: 'Tom',
+  lastName: 'Hardy',
+  country: 'United Kingdom',
+  city: 'London',
+  lastModifiedDate: '2020-09-23T20:45:22.000Z',
+  orcidWorks: [
+    {
+      doi: 'test-doi',
+      id: '123-456-789',
+      lastModifiedDate: '2020-10-26T15:33:18Z',
+      publicationDate: {},
+      type: 'ANNOTATION',
+      title: 'orcid work title',
+    },
+  ],
+  orcid: '123-456-789',
+  degree: 'MPH',
+  social: {
+    orcid: '123-456-789',
+  },
+  teams: [
+    {
+      id: 'team-id-1',
+      role: 'Lead PI (Core Leadership)',
+      displayName: 'Team A',
+      proposal: 'proposalId1',
+    },
+  ],
+  role: 'Grantee',
+  labs: [
+    { id: 'cd7be4902', name: 'Brighton' },
+    { id: 'cd7be4903', name: 'Liverpool' },
+  ],
+});

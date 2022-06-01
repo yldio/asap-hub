@@ -1,4 +1,4 @@
-import { GenericError, ValidationError, NotFoundError } from '@asap-hub/errors';
+import { GenericError, NotFoundError, ValidationError } from '@asap-hub/errors';
 import Got, { HTTPError } from 'got';
 import createClient, { GetAccessToken } from './auth';
 import { parseErrorResponseBody } from './helpers';

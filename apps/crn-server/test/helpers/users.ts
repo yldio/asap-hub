@@ -1,22 +1,8 @@
+import { RestUser, SquidexRest, User } from '@asap-hub/squidex';
 import Chance from 'chance';
-import { SquidexRest, User } from '@asap-hub/squidex';
-import { UserResponse, Invitee } from '@asap-hub/model';
-import { RestUser } from '@asap-hub/squidex';
-import { parseUser } from '../../src/entities';
 
 const users = new SquidexRest<RestUser>('users');
 const chance = new Chance();
-
-export type TestUserResponse = UserResponse & {
-  connections: ReadonlyArray<{ code: string }>;
-};
-
-function transform(user: RestUser): TestUserResponse {
-  return {
-    ...parseUser(user),
-    connections: user.data.connections.iv || [],
-  };
-}
 
 export const createUser = (overwrites?: Partial<User>): Promise<RestUser> => {
   const userData: User = {
@@ -44,13 +30,6 @@ export const createUser = (overwrites?: Partial<User>): Promise<RestUser> => {
   }, {} as { [key: string]: { iv: unknown } });
 
   return users.create(user as RestUser['data']);
-};
-
-export const createRandomUser = async (
-  overwrites: Invitee | object = {},
-): Promise<TestUserResponse> => {
-  const createdUser = await createUser(overwrites);
-  return transform(createdUser);
 };
 
 export const createRandomOrcid = () => {

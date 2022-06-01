@@ -1,6 +1,6 @@
 import { ListResponse } from './common';
-import { TeamRole } from './team';
 import { LabResponse } from './lab';
+import { TeamRole } from './team';
 
 export const userRole = ['Staff', 'Grantee', 'Guest', 'Hidden'] as const;
 
@@ -110,11 +110,10 @@ export interface UserSocialLinks {
   researchGate?: string;
 }
 
-export interface UserResponse extends Invitee {
+export interface UserDataObject extends Invitee {
   id: string;
-  onboarded: boolean;
+  onboarded?: boolean | null;
   contactEmail?: string;
-  displayName: string;
   lastModifiedDate: string;
   createdDate: string;
   teams: UserTeam[];
@@ -133,12 +132,17 @@ export interface UserResponse extends Invitee {
   social?: UserSocialLinks;
   labs: LabResponse[];
 }
+export type ListUserDataObject = ListResponse<UserDataObject>;
+export interface UserResponse extends Omit<UserDataObject, 'onboarded'> {
+  onboarded: boolean;
+  displayName: string;
+}
 
 export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
   algoliaApiKey: string;
 };
 
-export interface UserPatchRequest {
+export interface UserPatchDataObject {
   contactEmail?: string;
   firstName?: string;
   lastName?: string;
@@ -158,6 +162,8 @@ export interface UserPatchRequest {
   social?: Omit<UserSocialLinks, 'orcid'>;
   onboarded?: boolean;
 }
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface UserPatchRequest extends UserPatchDataObject {}
 
 export interface UserAvatarPostRequest {
   avatar: string;

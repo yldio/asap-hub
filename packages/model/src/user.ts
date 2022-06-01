@@ -132,6 +132,7 @@ export interface UserDataObject extends Invitee {
   social?: UserSocialLinks;
   labs: LabResponse[];
 }
+export type ListUserDataObject = ListResponse<UserDataObject>;
 export interface UserResponse extends Omit<UserDataObject, 'onboarded'> {
   onboarded: boolean;
   displayName: string;

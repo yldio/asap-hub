@@ -406,7 +406,7 @@ describe('User data provider', () => {
     test('Should fetch the users from squidex graphql', async () => {
       const result = await usersMockGraphqlServer.fetch({});
 
-      expect(result).toMatchObject([getUserDataObject()]);
+      expect(result).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
     test('Should return an empty result', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
@@ -415,7 +415,7 @@ describe('User data provider', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       const result = await userDataProvider.fetch({});
-      expect(result).toEqual([]);
+      expect(result).toEqual({ total: 0, items: [] });
     });
     test('Should return an empty result when the client returns a response with query property set to null', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
@@ -423,7 +423,7 @@ describe('User data provider', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       const result = await userDataProvider.fetch({});
-      expect(result).toEqual([]);
+      expect(result).toEqual({ total: 0, items: [] });
     });
     test('Should return an empty result when the client returns a response with items property set to null', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
@@ -431,7 +431,7 @@ describe('User data provider', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       const result = await userDataProvider.fetch({});
-      expect(result).toEqual([]);
+      expect(result).toEqual({ total: 0, items: [] });
     });
 
     test('Should query with filters and return the users', async () => {
@@ -478,7 +478,7 @@ describe('User data provider', () => {
           filter: filterQuery,
         },
       );
-      expect(users).toMatchObject([getUserDataObject()]);
+      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
     test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -569,13 +569,13 @@ describe('User data provider', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       const result = await userDataProvider.fetchByCode(code);
-      expect(result).toEqual([getUserDataObject()]);
+      expect(result).toEqual({ total: 1, items: [getUserDataObject()] });
     });
 
     test('Should fetch the user by code from squidex graphql', async () => {
       const result = await usersMockGraphqlServer.fetchByCode(code);
 
-      expect(result).toMatchObject([getUserDataObject()]);
+      expect(result).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
     test('Should return empty array when no user is found', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
@@ -584,7 +584,7 @@ describe('User data provider', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       const result = await userDataProvider.fetchByCode(code);
-      expect(result).toEqual([]);
+      expect(result).toEqual({ total: 0, items: [] });
     });
     test('Should throw 403 when the query returns null', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
@@ -593,7 +593,7 @@ describe('User data provider', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       const result = await userDataProvider.fetchByCode(code);
-      expect(result).toEqual([]);
+      expect(result).toEqual({ total: 0, items: [] });
     });
   });
   describe('updateAvatar', () => {

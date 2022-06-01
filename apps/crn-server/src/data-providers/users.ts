@@ -1,5 +1,9 @@
 import { GenericError } from '@asap-hub/errors';
-import { UserDataObject, UserPatchDataObject } from '@asap-hub/model';
+import {
+  ListUserDataObject,
+  UserDataObject,
+  UserPatchDataObject,
+} from '@asap-hub/model';
 import {
   config,
   RestUser,
@@ -28,8 +32,8 @@ import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 export interface UserDataProvider {
   fetchById(id: string): Promise<UserDataObject | null>;
   update(id: string, update: UserPatchDataObject): Promise<void>;
-  fetch(options: FetchUsersOptions): Promise<UserDataObject[]>;
-  fetchByCode(code: string): Promise<UserDataObject[]>;
+  fetch(options: FetchUsersOptions): Promise<ListUserDataObject>;
+  fetchByCode(code: string): Promise<ListUserDataObject>;
   updateAvatar(id: string, avatar: Buffer, contentType: string): Promise<void>;
   connectByCode(
     welcomeCode: string,
@@ -70,16 +74,14 @@ export default class Users implements UserDataProvider {
       await this.userSquidexRestClient.patch(id, cleanedUser);
     }
   }
-  async fetch(options: FetchUsersOptions): Promise<UserDataObject[]> {
+  async fetch(options: FetchUsersOptions): Promise<ListUserDataObject> {
     const queryFilter = generateFetchQueryFilter(options);
     const { take = 8, skip = 0 } = options;
-    const users = await this.queryForUsers(queryFilter, take, skip);
-    return users.map(parseGraphQLUserToDataObject);
+    return this.queryForUsers(queryFilter, take, skip);
   }
-  async fetchByCode(code: string): Promise<UserDataObject[]> {
+  async fetchByCode(code: string): Promise<ListUserDataObject> {
     const filter = `data/connections/iv/code eq '${code}'`;
-    const users = await this.queryForUsers(filter, 1, 0);
-    return users.map(parseGraphQLUserToDataObject);
+    return this.queryForUsers(filter, 1, 0);
   }
   updateAvatar = async (
     id: string,
@@ -156,10 +158,12 @@ export default class Users implements UserDataProvider {
       top,
       skip,
     );
-    if (!(queryUsersContentsWithTotal && queryUsersContentsWithTotal.items)) {
-      return [];
-    }
-    return queryUsersContentsWithTotal.items;
+    const { total = 0, items = [] } = queryUsersContentsWithTotal || {};
+
+    return {
+      total: items ? total : 0,
+      items: (items || []).map(parseGraphQLUserToDataObject),
+    };
   }
   private async queryFetchData(filter: string, top: number, skip: number) {
     return this.squidexGraphlClient.request<

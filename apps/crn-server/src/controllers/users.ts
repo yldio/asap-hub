@@ -47,9 +47,8 @@ export default class Users implements UserController {
   }
 
   async fetch(options: FetchUsersOptions): Promise<ListUserResponse> {
-    const users = await this.userDataProvider.fetch(options);
+    const { total, items: users } = await this.userDataProvider.fetch(options);
 
-    const total = users.length;
     const items = total > 0 ? users.map(parseUserToResponse) : [];
 
     return { total, items };
@@ -65,7 +64,7 @@ export default class Users implements UserController {
   }
 
   async fetchByCode(code: string): Promise<UserResponse> {
-    const users = await this.userDataProvider.fetchByCode(code);
+    const { items: users } = await this.userDataProvider.fetchByCode(code);
     if (users.length === 0) {
       throw new NotFoundError(`user with code ${code} not found`);
     }

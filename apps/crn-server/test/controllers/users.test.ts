@@ -23,12 +23,14 @@ describe('Users controller', () => {
     test('Should return the users', async () => {
       mockUserDataProvider.fetch = jest
         .fn()
-        .mockResolvedValue([getUserDataObject()]);
+        .mockResolvedValue({ total: 1, items: [getUserDataObject()] });
       const result = await usersMockGraphqlClient.fetch({});
       expect(result).toEqual({ items: [getUserResponse()], total: 1 });
     });
     test('Should return empty list when there are no users', async () => {
-      mockUserDataProvider.fetch = jest.fn().mockResolvedValue([]);
+      mockUserDataProvider.fetch = jest
+        .fn()
+        .mockResolvedValue({ total: 0, items: [] });
       const result = await usersMockGraphqlClient.fetch({});
       expect(result).toEqual({ items: [], total: 0 });
     });
@@ -67,7 +69,9 @@ describe('Users controller', () => {
     const code = 'some-uuid-code';
 
     test('Should throw 403 when no user is found', async () => {
-      mockUserDataProvider.fetchByCode = jest.fn().mockResolvedValue([]);
+      mockUserDataProvider.fetchByCode = jest
+        .fn()
+        .mockResolvedValue({ total: 0, items: [] });
 
       await expect(usersMockGraphqlClient.fetchByCode(code)).rejects.toThrow(
         NotFoundError,
@@ -75,9 +79,10 @@ describe('Users controller', () => {
     });
 
     test('Should throw when it finds more than one user', async () => {
-      mockUserDataProvider.fetchByCode = jest
-        .fn()
-        .mockResolvedValue([getUserDataObject(), getUserDataObject()]);
+      mockUserDataProvider.fetchByCode = jest.fn().mockResolvedValue({
+        total: 2,
+        items: [getUserDataObject(), getUserDataObject()],
+      });
       await expect(usersMockGraphqlClient.fetchByCode(code)).rejects.toThrow(
         GenericError,
       );
@@ -85,7 +90,7 @@ describe('Users controller', () => {
     test('Should return the users', async () => {
       mockUserDataProvider.fetchByCode = jest
         .fn()
-        .mockResolvedValue([getUserDataObject()]);
+        .mockResolvedValue({ total: 1, items: [getUserDataObject()] });
       const result = await usersMockGraphqlClient.fetchByCode(code);
       expect(result).toEqual(getUserResponse());
     });

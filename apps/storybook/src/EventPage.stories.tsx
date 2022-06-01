@@ -1,6 +1,6 @@
 import { EventPage } from '@asap-hub/react-components';
 import { createEventResponse } from '@asap-hub/fixtures';
-import { boolean } from '@storybook/addon-knobs';
+import { boolean, number } from '@storybook/addon-knobs';
 
 import { LayoutDecorator } from './layout';
 
@@ -12,7 +12,11 @@ export default {
 
 export const Normal = () => (
   <EventPage
-    {...createEventResponse()}
+    {...createEventResponse({
+      numberOfSpeakers: number('Number of speakers', 4),
+      numberOfUnknownSpeakers: number('Number of unknown speakers', 2),
+      isEventInThePast: boolean('Has the event passed', false),
+    })}
     backHref="#"
     hideMeetingLink={boolean('Hide Meeting Link', false)}
   />

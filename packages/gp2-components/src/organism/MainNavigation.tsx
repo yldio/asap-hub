@@ -1,11 +1,9 @@
 import { discoverIcon, networkIcon } from '@asap-hub/react-components';
-
+import { rem } from '@asap-hub/react-components/src/pixels';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React from 'react';
 import NavigationLink from '../molecules/NavigationLink';
-
-// const { perRem, vminLinearCalc, mobileScreen, largeDesktopScreen } = pixels;
 
 const listStyles = css({
   margin: '0',
@@ -13,7 +11,7 @@ const listStyles = css({
   display: 'flex',
   flexDirection: 'row',
   listStyle: 'none',
-  gap: '48px',
+  gap: rem(48),
 });
 
 const MainNavigation: React.FC = () => (

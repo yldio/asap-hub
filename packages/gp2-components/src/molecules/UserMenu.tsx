@@ -3,7 +3,7 @@ import { logout } from '@asap-hub/routing';
 
 import { NavigationLink, pixels, logoutIcon } from '@asap-hub/react-components';
 
-const { perRem, vminLinearCalc, mobileScreen, largeDesktopScreen } = pixels;
+const { vminLinearCalc, mobileScreen, largeDesktopScreen, rem } = pixels;
 
 const containerStyles = css({
   minWidth: '312px',
@@ -11,7 +11,7 @@ const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
   boxSizing: 'border-box',
-  padding: `${12 / perRem}em ${12 / perRem}em ${vminLinearCalc(
+  padding: `${rem(12)} ${rem(12)} ${vminLinearCalc(
     mobileScreen,
     8,
     largeDesktopScreen,

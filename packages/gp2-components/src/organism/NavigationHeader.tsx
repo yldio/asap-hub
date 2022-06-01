@@ -5,6 +5,7 @@ import {
   MenuButton,
   steel,
 } from '@asap-hub/react-components';
+import { rem } from '@asap-hub/react-components/src/pixels';
 import { noop } from '@asap-hub/react-components/src/utils';
 
 import { css } from '@emotion/react';
@@ -25,13 +26,13 @@ const navigationHeaderstyles = css({
   [smallDesktopQuery]: {
     maxWidth: '880px',
   },
-  gap: '72px',
+  gap: rem(72),
   margin: 'auto',
   [drawerQuery]: {
     width: '100%',
     justifyContent: 'flex-start',
     alignItems: 'stretch',
-    gap: '24px',
+    gap: rem(24),
     borderBottom: `1px solid ${steel.rgb}`,
   },
 });
@@ -57,7 +58,7 @@ const desktopNavigationStyles = css({
 });
 
 const bottomBorderStyles = css({
-  height: '4px',
+  height: rem(4),
   width: '100%',
   ...ceruleanFernGradientStyles,
 });

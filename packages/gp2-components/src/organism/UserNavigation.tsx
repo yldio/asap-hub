@@ -16,7 +16,6 @@ import UserMenu from '../molecules/UserMenu';
 
 const userMenuStyles = css({
   backgroundColor: paper.rgb,
-
   display: 'none',
   position: 'absolute',
   border: `1px solid ${steel.rgb}`,

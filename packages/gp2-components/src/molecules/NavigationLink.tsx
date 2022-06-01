@@ -1,4 +1,5 @@
 import { NavigationLink as Link } from '@asap-hub/react-components';
+import { rem } from '@asap-hub/react-components/src/pixels';
 import { css } from '@emotion/react';
 
 interface NavigationLinkProps {
@@ -10,7 +11,7 @@ const horizontalNavigationStyles = css({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  width: '80px',
+  width: rem(80),
 });
 
 const NavigationLink: React.FC<NavigationLinkProps> = ({

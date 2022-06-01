@@ -1,5 +1,7 @@
 import {
   EventResponse,
+  EventSpeakerExternalUser,
+  EventSpeakerUser,
   EventSpeakerUserData,
   ListEventResponse,
   EventSpeaker,
@@ -26,20 +28,34 @@ export const createSpeakerTeamResponse = (
   displayName: `The team ${itemIndex}`,
 });
 
-export const createSpeakersResponse = (itemIndex = 0): EventSpeaker => ({
+export const createSpeakersResponse = (itemIndex = 0): EventSpeakerUser => ({
   team: createSpeakerTeamResponse(itemIndex),
   user: createSpeakerUserResponse(itemIndex),
   role: `Genetics ${itemIndex}`,
 });
 
+export const createExternalSpeakerResponse = (
+  itemIndex = 0,
+): EventSpeakerExternalUser => ({
+  externalUser: {
+    name: `External user ${itemIndex}`,
+    orcid: `orcid-${itemIndex}`,
+  },
+});
+
 const getSpeakers = (
   numberOfSpeakers: number,
+  numberOfExternalSpeakers: number,
   numberOfUnknownSpeakers: number,
 ): EventSpeaker[] => {
   const speakerList: EventSpeaker[] = [];
 
   for (let index = 0; index < numberOfSpeakers; index += 1) {
     speakerList.push(createSpeakersResponse(index));
+  }
+
+  for (let index = 0; index < numberOfExternalSpeakers; index += 1) {
+    speakerList.push(createExternalSpeakerResponse(index));
   }
 
   for (let index = 0; index < numberOfUnknownSpeakers; index += 1) {
@@ -54,6 +70,7 @@ const getSpeakers = (
 interface FixtureOptions {
   meetingMaterials?: number;
   numberOfSpeakers?: number;
+  numberOfExternalSpeakers?: number;
   numberOfUnknownSpeakers?: number;
   isEventInThePast?: boolean;
 }
@@ -63,6 +80,7 @@ export const createEventResponse = (
     meetingMaterials = 1,
     numberOfSpeakers = 4,
     numberOfUnknownSpeakers = 1,
+    numberOfExternalSpeakers = 1,
     isEventInThePast = false,
   }: FixtureOptions = {},
   itemIndex = 0,
@@ -90,7 +108,11 @@ export const createEventResponse = (
     title: `Material ${i + 1}`,
     url: `https://example.com/materials/${i}`,
   })),
-  speakers: getSpeakers(numberOfSpeakers, numberOfUnknownSpeakers),
+  speakers: getSpeakers(
+    numberOfSpeakers,
+    numberOfExternalSpeakers,
+    numberOfUnknownSpeakers,
+  ),
 });
 
 export const createListEventResponse = (

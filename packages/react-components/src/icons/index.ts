@@ -64,6 +64,7 @@ export { default as settingsIcon } from './settings';
 export { default as libraryIcon } from './shared-research';
 export { default as showPasswordIcon } from './show-password';
 export { default as slackIcon } from './slack';
+export { default as speakerIcon } from './speaker';
 export { default as successIcon } from './success';
 export { default as teamIcon } from './team';
 export { default as tickIcon } from './tick';

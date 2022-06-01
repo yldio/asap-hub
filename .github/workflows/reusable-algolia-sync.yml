@@ -61,7 +61,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Build
         run: yarn exec "yarn workspaces foreach -vptR --from '{@asap-hub/asap-cli,@asap-hub/crn-server}' run build:babel"
-      - name: Copy index without data to a temporary index (ALL)
+      - name: Clone index settings to a temporary index (ALL)
         if: ${{ inputs.entity == 'all'}}
         run: yarn workspace @asap-hub/algolia run algolia transferindexconfig -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_INDEX_TEMP
         env:
@@ -69,7 +69,7 @@ jobs:
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
           ALGOLIA_INDEX_TEMP: ${{ steps.setup.outputs.algolia-index-temp }}
-      - name: Copy index with data to a temporary index (ENTITY)
+      - name: Copy index to a temporary index (ENTITY)
         if: ${{ inputs.entity != 'all'}}
         run: yarn workspace @asap-hub/algolia run algolia transferindex -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_INDEX_TEMP
         env:
@@ -84,7 +84,7 @@ jobs:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_INDEX_TEMP: ${{ steps.setup.outputs.algolia-index-temp }}
-          ENTITY_TYPE: ${{ (inputs.entity == 'users' && 'user') || (inputs.entity == 'research-outputs' && 'research-output') || (inputs.entity == 'external-authors' && 'external-author') }}
+          ENTITY_TYPE: ${{ (inputs.entity == 'users' && 'user') || (inputs.entity == 'research-outputs' && 'research-output') || (inputs.entity == 'external-authors' && 'external-author') || (inputs.entity == 'events' && 'event') }}
       - name: Import Research Outputs (ROs | ALL)
         if: ${{ inputs.entity == 'research-outputs' || inputs.entity == 'all'}}
         run: |
@@ -126,6 +126,21 @@ jobs:
           ALGOLIA_INDEX_TEMP: ${{ steps.setup.outputs.algolia-index-temp }}
           ENTITY: 'external-authors'
           ENTITY_TYPE: 'external-author'
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
+          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      - name: Import Events (EVENTS | ALL)
+        if: ${{ inputs.entity == 'events' || inputs.entity == 'all'}}
+        run: |
+          yarn export:entity $ENTITY -f $ENTITY.json
+          yarn workspace @asap-hub/algolia run algolia import -s "../../${ENTITY}.json" -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -t ./scripts/algolia-transformation.js
+        env:
+          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_INDEX_TEMP: ${{ steps.setup.outputs.algolia-index-temp }}
+          ENTITY: 'events'
+          ENTITY_TYPE: 'event'
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}

@@ -11,6 +11,7 @@ on:
           - users
           - research-outputs
           - external-authors
+          - events
           - all
       environment-name:
         required: true

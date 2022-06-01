@@ -1,12 +1,13 @@
 import { ListResponse } from '@asap-hub/model';
 import { SquidexGraphql } from '@asap-hub/squidex';
 import { promises as fs } from 'fs';
+import Events from '../src/controllers/events';
 import ExternalAuthors from '../src/controllers/external-authors';
 import ResearchOutputs from '../src/controllers/research-outputs';
 import Users from '../src/controllers/users';
 import UserDataProvider from '../src/data-providers/users';
 
-type Entity = 'users' | 'research-outputs' | 'external-authors';
+type Entity = 'users' | 'research-outputs' | 'external-authors' | 'events';
 export const exportEntity = async (
   entity: Entity,
   filename?: string,
@@ -49,6 +50,7 @@ function getController(entity: Entity) {
     users: Users,
     'research-outputs': ResearchOutputs,
     'external-authors': ExternalAuthors,
+    events: Events,
   };
   const squidexGraphqlClient = new SquidexGraphql();
   if (entity === 'users') {

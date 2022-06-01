@@ -1,4 +1,4 @@
-name: Reusable backup Squidex
+name: Reusable Algolia data sync
 
 on:
   workflow_call:

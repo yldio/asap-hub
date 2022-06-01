@@ -84,7 +84,12 @@ const EventCard: React.FC<EventCardProps> = ({ status, tags, ...props }) => {
 
   return (
     <ToastCard {...toastCardProps()}>
-      <EventInfo {...props} status={status} showNumberOfSpeakers={true} />
+      <EventInfo
+        {...props}
+        status={status}
+        showNumberOfSpeakers={true}
+        showTeams={true}
+      />
       <TagList tags={tags} max={3} />
     </ToastCard>
   );

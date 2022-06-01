@@ -139,6 +139,54 @@ it('do not shows number of speakers when there are no speakers', () => {
   expect(screen.queryByText(/Speaker/i)).not.toBeInTheDocument();
 });
 
+it('displays the teams with number of additional teams', () => {
+  render(
+    <EventInfo
+      {...createEventResponse({
+        numberOfSpeakers: 10,
+        numberOfExternalSpeakers: 0,
+        numberOfUnknownSpeakers: 0,
+      })}
+      showTeams={true}
+    />,
+  );
+
+  expect(screen.getAllByRole('listitem').length).toEqual(8);
+  expect(screen.queryByText('+3')).toBeInTheDocument();
+});
+
+it('displays the team only once', () => {
+  render(
+    <EventInfo
+      {...createEventResponse()}
+      speakers={Array.from({ length: 10 }, () => ({
+        team: {
+          displayName: 'the team',
+          id: 'team-id',
+        },
+      }))}
+      showTeams={true}
+    />,
+  );
+
+  expect(screen.getAllByRole('listitem').length).toEqual(1);
+});
+
+it('do not display the team when there is none', () => {
+  render(
+    <EventInfo
+      {...createEventResponse({
+        numberOfSpeakers: 0,
+        numberOfExternalSpeakers: 0,
+        numberOfUnknownSpeakers: 0,
+      })}
+      showTeams={true}
+    />,
+  );
+
+  expect(screen.queryByTitle('Team')).not.toBeInTheDocument();
+});
+
 it('shows the event time', () => {
   render(
     <EventInfo

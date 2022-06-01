@@ -561,39 +561,31 @@ describe('User data provider', () => {
         },
       );
     });
-  });
-  describe('fetchByCode', () => {
-    const code = 'some-uuid-code';
-    test('Should return user when it finds it', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+    test('Should query with code filters and return the users', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexUsersGraphqlResponse(),
+      );
+      const fetchOptions: FetchUsersOptions = {
+        take: 1,
+        skip: 0,
+        filter: {
+          onboarded: false,
+          hidden: false,
+          code: 'a-code',
+        },
+      };
+      const users = await userDataProvider.fetch(fetchOptions);
 
-      const result = await userDataProvider.fetchByCode(code);
-      expect(result).toEqual({ total: 1, items: [getUserDataObject()] });
-    });
-
-    test('Should fetch the user by code from squidex graphql', async () => {
-      const result = await usersMockGraphqlServer.fetchByCode(code);
-
-      expect(result).toMatchObject({ total: 1, items: [getUserDataObject()] });
-    });
-    test('Should return empty array when no user is found', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      mockResponse.queryUsersContentsWithTotal!.items = [];
-      mockResponse.queryUsersContentsWithTotal!.total = 0;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-      const result = await userDataProvider.fetchByCode(code);
-      expect(result).toEqual({ total: 0, items: [] });
-    });
-    test('Should throw 403 when the query returns null', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      mockResponse.queryUsersContentsWithTotal = null;
-
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-      const result = await userDataProvider.fetchByCode(code);
-      expect(result).toEqual({ total: 0, items: [] });
+      const filterQuery = "data/connections/iv/code eq 'a-code'";
+      expect(squidexGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 1,
+          skip: 0,
+          filter: filterQuery,
+        },
+      );
+      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
   });
   describe('connectByCode', () => {

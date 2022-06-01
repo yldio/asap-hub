@@ -75,14 +75,14 @@ describe('Users controller', () => {
     const code = 'some-uuid-code';
 
     test('Should return the users', async () => {
-      mockUserDataProvider.fetchByCode = jest
+      mockUserDataProvider.fetch = jest
         .fn()
         .mockResolvedValue({ total: 1, items: [getUserDataObject()] });
       const result = await usersMockGraphqlClient.fetchByCode(code);
       expect(result).toEqual(getUserResponse());
     });
-    test('Should throw 403 when no user is found', async () => {
-      mockUserDataProvider.fetchByCode = jest
+    test.only('Should throw 404 when no user is found', async () => {
+      mockUserDataProvider.fetch = jest
         .fn()
         .mockResolvedValue({ total: 0, items: [] });
 

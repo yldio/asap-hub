@@ -14,6 +14,9 @@ export type FetchUsersFilter = {
   role?: string[];
   labId?: string[];
   teamId?: string[];
+  code?: string;
+  hidden?: boolean;
+  onboarded?: boolean;
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
@@ -70,7 +73,11 @@ export default class Users implements UserController {
   }
 
   async fetchByCode(code: string): Promise<UserResponse> {
-    const { items: users } = await this.userDataProvider.fetchByCode(code);
+    const { items: users } = await this.userDataProvider.fetch({
+      filter: { code, hidden: false, onboarded: false },
+      take: 1,
+      skip: 0,
+    });
     if (users.length === 0) {
       throw new NotFoundError(`user with code ${code} not found`);
     }

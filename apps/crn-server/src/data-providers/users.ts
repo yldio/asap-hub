@@ -30,7 +30,6 @@ export interface UserDataProvider {
   fetchById(id: string): Promise<UserDataObject | null>;
   update(id: string, update: UserPatchDataObject): Promise<void>;
   fetch(options: FetchUsersOptions): Promise<ListUserDataObject>;
-  fetchByCode(code: string): Promise<ListUserDataObject>;
   connectByCode(
     welcomeCode: string,
     userId: string,
@@ -75,10 +74,6 @@ export default class Users implements UserDataProvider {
     const queryFilter = generateFetchQueryFilter(options);
     const { take = 8, skip = 0 } = options;
     return this.queryForUsers(queryFilter, take, skip);
-  }
-  async fetchByCode(code: string): Promise<ListUserDataObject> {
-    const filter = `data/connections/iv/code eq '${code}'`;
-    return this.queryForUsers(filter, 1, 0);
   }
 
   async connectByCode(
@@ -215,9 +210,9 @@ const cleanUser = (userToUpdate: UserPatchDataObject) =>
     return setValue(value);
   }, {} as { [key: string]: { iv: unknown } });
 
-const generateFetchQueryFilter = (options: FetchUsersOptions) => {
+const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
   const searchFilter = [
-    ...(options.search || '')
+    ...(search || '')
       .split(' ')
       .filter(Boolean) // removes whitespaces
       .map(sanitiseForSquidex)
@@ -234,7 +229,15 @@ const generateFetchQueryFilter = (options: FetchUsersOptions) => {
         [],
       ),
   ].join(' and ');
-  const filterRoles = (options?.filter?.role || [])
+  const {
+    role,
+    labId,
+    teamId,
+    code,
+    onboarded = true,
+    hidden = true,
+  } = filter || {};
+  const filterRoles = (role || [])
     .reduce(
       (acc: string[], word: string) =>
         acc.concat([`data/teams/iv/role eq '${word}'`]),
@@ -242,28 +245,30 @@ const generateFetchQueryFilter = (options: FetchUsersOptions) => {
     )
     .join(' or ');
 
-  const filterLabs = (options?.filter?.labId || [])
+  const filterLabs = (labId || [])
     .reduce(
-      (acc: string[], labId: string) =>
-        acc.concat([`data/labs/iv eq '${labId}'`]),
+      (acc: string[], id: string) => acc.concat([`data/labs/iv eq '${id}'`]),
       [],
     )
     .join(' or ');
 
-  const filterTeams = (options?.filter?.teamId || [])
+  const filterTeams = (teamId || [])
     .reduce(
-      (acc: string[], teamId: string) =>
-        acc.concat([`data/teams/iv/id eq '${teamId}'`]),
+      (acc: string[], id: string) =>
+        acc.concat([`data/teams/iv/id eq '${id}'`]),
       [],
     )
     .join(' or ');
-  const filterHidden = "data/role/iv ne 'Hidden'";
-  const filterNonOnboarded = 'data/onboarded/iv eq true';
+  const filterCode = code && `data/connections/iv/code eq '${code}'`;
+
+  const filterHidden = hidden && "data/role/iv ne 'Hidden'";
+  const filterNonOnboarded = onboarded && 'data/onboarded/iv eq true';
 
   const queryFilter = [
     filterTeams && `(${filterTeams})`,
     filterRoles && `(${filterRoles})`,
     filterLabs && `(${filterLabs})`,
+    filterCode,
     filterNonOnboarded,
     filterHidden,
     searchFilter && `(${searchFilter})`,

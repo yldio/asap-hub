@@ -221,12 +221,20 @@ export default class Users implements UserController {
     const { findUsersContent } = await this.squidexGraphlClient.request<
       FetchUserQuery,
       FetchUserQueryVariables
-    >(FETCH_USER, { id });
+    >(FETCH_USER, {
+      id,
+      researchOutputsFilter: `status eq 'Published' and data/authors/iv eq '${id}'`,
+    });
     if (!findUsersContent) {
       throw Boom.notFound();
     }
 
-    return parseGraphQLUser(findUsersContent);
+    return {
+      ...parseGraphQLUser(findUsersContent),
+      researchOutputsCount:
+        findUsersContent.referencingResearchOutputsContentsWithTotal?.total ??
+        0,
+    };
   }
 
   async fetchByCode(code: string): Promise<UserResponse> {

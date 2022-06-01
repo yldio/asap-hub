@@ -129,6 +129,7 @@ export interface UserResponse extends Invitee {
   reachOut?: string;
   responsibilities?: string;
   researchInterests?: string;
+  researchOutputsCount?: number;
   role: Role;
   social?: UserSocialLinks;
   labs: LabResponse[];

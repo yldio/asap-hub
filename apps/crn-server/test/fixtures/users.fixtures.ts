@@ -150,6 +150,9 @@ export const getGraphQLUser = (
       { id: 'cd7be4903', flatData: { name: 'Liverpool' } },
     ],
   },
+  referencingResearchOutputsContentsWithTotal: {
+    total: 5,
+  },
 });
 
 type GraphQLUserTeamFlatData = NonNullable<
@@ -257,12 +260,19 @@ export const getUserResponse = (): UserResponse => ({
     { id: 'cd7be4902', name: 'Brighton' },
     { id: 'cd7be4903', name: 'Liverpool' },
   ],
+  researchOutputsCount: 5,
 });
+
+const getUserWithoutResearchOutputsCountResponse = () => {
+  const { researchOutputsCount: _, ...response } = getUserResponse();
+
+  return response;
+};
 
 export const fetchExpectation: ListUserResponse = {
   total: 2,
   items: [
-    getUserResponse(),
+    getUserWithoutResearchOutputsCountResponse(),
     {
       id: 'user-id-2',
       biography: 'some biography',
@@ -315,7 +325,7 @@ export const fetchExpectation: ListUserResponse = {
 
 export const getListUserResponse = (): ListUserResponse => ({
   total: 1,
-  items: [getUserResponse()],
+  items: [getUserWithoutResearchOutputsCountResponse()],
 });
 
 export const restUserMock = patchResponse;

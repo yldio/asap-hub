@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { UserProfileContext } from '@asap-hub/react-context';
 
@@ -19,22 +19,20 @@ it('renders the name as the top-level heading', () => {
 });
 
 it('generates the mailto link', () => {
-  const { getByText } = render(
-    <UserProfileHeader {...boilerplateProps} email="me@example.com" />,
-  );
-  expect(getByText(/contact/i).closest('a')).toHaveAttribute(
+  render(<UserProfileHeader {...boilerplateProps} email="me@example.com" />);
+  expect(screen.getByText(/contact/i).closest('a')).toHaveAttribute(
     'href',
     'mailto:me@example.com',
   );
 });
 it('prefers an explicit contact email address', () => {
-  const { getByText } = render(
+  render(
     <UserProfileHeader
       {...boilerplateProps}
       contactEmail="contact@example.com"
     />,
   );
-  expect(getByText(/contact/i).closest('a')).toHaveAttribute(
+  expect(screen.getByText(/contact/i).closest('a')).toHaveAttribute(
     'href',
     'mailto:contact@example.com',
   );
@@ -42,33 +40,31 @@ it('prefers an explicit contact email address', () => {
 
 describe('an edit button', () => {
   it('is not rendered by default', () => {
-    const { queryByLabelText } = render(
-      <UserProfileHeader {...boilerplateProps} />,
-    );
-    expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
+    render(<UserProfileHeader {...boilerplateProps} />);
+    expect(screen.queryByLabelText(/edit/i)).not.toBeInTheDocument();
   });
 
   it('is rendered for personal info', () => {
-    const { getByLabelText } = render(
+    render(
       <UserProfileHeader
         {...boilerplateProps}
         editPersonalInfoHref="/edit-personal-info"
       />,
     );
-    expect(getByLabelText(/edit.+personal/i)).toHaveAttribute(
+    expect(screen.getByLabelText(/edit.+personal/i)).toHaveAttribute(
       'href',
       '/edit-personal-info',
     );
   });
 
   it('is rendered for contact info', () => {
-    const { getByLabelText } = render(
+    render(
       <UserProfileHeader
         {...boilerplateProps}
         editContactInfoHref="/edit-contact-info"
       />,
     );
-    expect(getByLabelText(/edit.+contact/i)).toHaveAttribute(
+    expect(screen.getByLabelText(/edit.+contact/i)).toHaveAttribute(
       'href',
       '/edit-contact-info',
     );
@@ -76,35 +72,37 @@ describe('an edit button', () => {
 });
 
 it('is rendered for avatar', () => {
-  const { getByLabelText } = render(
+  render(
     <UserProfileHeader
       {...boilerplateProps}
       onImageSelect={(file: File) => {}}
     />,
   );
-  expect(getByLabelText(/edit.+avatar/i)).toBeVisible();
-  expect(getByLabelText(/upload.+avatar/i)).not.toHaveAttribute('disabled');
+  expect(screen.getByLabelText(/edit.+avatar/i)).toBeVisible();
+  expect(screen.getByLabelText(/upload.+avatar/i)).not.toHaveAttribute(
+    'disabled',
+  );
 });
 
 it('shows placeholder text for degree on own profile when omitted', () => {
-  const { queryByText, rerender } = render(
+  const { rerender } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
       <UserProfileHeader {...boilerplateProps} degree={undefined} />,
     </UserProfileContext.Provider>,
   );
-  expect(queryByText(/degree/i)).toBeNull();
+  expect(screen.queryByText(/degree/i)).toBeNull();
   rerender(
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>
       <UserProfileHeader {...boilerplateProps} degree={undefined} />,
     </UserProfileContext.Provider>,
   );
-  expect(queryByText(/degree/i)).toBeVisible();
+  expect(screen.queryByText(/degree/i)).toBeVisible();
   rerender(
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>
       <UserProfileHeader {...boilerplateProps} degree="BA" />,
     </UserProfileContext.Provider>,
   );
-  expect(queryByText(/, BA/i)).toBeVisible();
+  expect(screen.queryByText(/, BA/i)).toBeVisible();
 });
 
 it('shows lab information if the user is in a lab', async () => {
@@ -128,4 +126,14 @@ it('shows lab information if the user is in a lab', async () => {
     </UserProfileContext.Provider>,
   );
   expect(container).toHaveTextContent('Brighton Lab and Liverpool Lab');
+});
+
+it('shows number of research outputs', () => {
+  render(
+    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
+      <UserProfileHeader {...boilerplateProps} researchOutputsCount={20} />,
+    </UserProfileContext.Provider>,
+  );
+
+  expect(screen.getByText('Shared Outputs (20)')).toBeInTheDocument();
 });

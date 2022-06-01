@@ -16,6 +16,7 @@ import {
 } from '../fixtures/users.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
+import { response } from 'express';
 
 describe('Users controller', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
@@ -446,6 +447,19 @@ describe('Users controller', () => {
 
       expect(result.onboarded).toEqual(true);
     });
+
+    test('Should return 0 when there are no references to Research Outputs', async () => {
+      const graphqlUserResponse = getSquidexUserGraphqlResponse();
+      graphqlUserResponse.findUsersContent!.referencingResearchOutputsContentsWithTotal =
+        null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        graphqlUserResponse,
+      );
+
+      const result = await usersMockGraphqlClient.fetchById('user-id');
+
+      expect(result.researchOutputsCount).toEqual(0);
+    });
   });
 
   describe('fetchByCode', () => {
@@ -454,7 +468,8 @@ describe('Users controller', () => {
     test('Should fetch the user by code from squidex graphql', async () => {
       const result = await usersMockGraphqlServer.fetchByCode(code);
 
-      expect(result).toMatchObject(getUserResponse());
+      const { researchOutputsCount: _, ...response } = getUserResponse();
+      expect(result).toMatchObject(response);
     });
 
     test('Should throw 403 when no user is found', async () => {
@@ -494,7 +509,9 @@ describe('Users controller', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       const result = await usersMockGraphqlClient.fetchByCode(code);
-      expect(result).toEqual(getUserResponse());
+
+      const { researchOutputsCount: _, ...response } = getUserResponse();
+      expect(result).toMatchObject(response);
     });
   });
 

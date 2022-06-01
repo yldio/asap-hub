@@ -75,9 +75,14 @@ export const usersContentQueryFragment = gql`
 `;
 
 export const FETCH_USER = gql`
-  query FetchUser($id: String!) {
+  query FetchUser($id: String!, $researchOutputsFilter: String!) {
     findUsersContent(id: $id) {
       ...UsersContent
+      referencingResearchOutputsContentsWithTotal(
+        filter: $researchOutputsFilter
+      ) {
+        total
+      }
     }
   }
   ${usersContentQueryFragment}

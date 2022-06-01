@@ -143,6 +143,7 @@ type UserProfileHeaderProps = Pick<
   | 'teams'
   | 'degree'
   | 'labs'
+  | 'researchOutputsCount'
 > & {
   readonly onImageSelect?: (file: File) => void;
   readonly avatarSaving?: boolean;
@@ -173,6 +174,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   editContactInfoHref,
   role,
   social,
+  researchOutputsCount,
 }) => {
   const tabRoutes = network({}).users({}).user({ userId: id });
   const { isOwnProfile } = useContext(UserProfileContext);
@@ -283,7 +285,10 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
         <TabNav>
           <TabLink href={tabRoutes.research({}).$}>Research</TabLink>
           <TabLink href={tabRoutes.about({}).$}>Background</TabLink>
-          <TabLink href={tabRoutes.outputs({}).$}>Shared Outputs</TabLink>
+          <TabLink href={tabRoutes.outputs({}).$}>
+            Shared Outputs
+            {researchOutputsCount && ` (${researchOutputsCount})`}
+          </TabLink>
         </TabNav>
       </div>
     </header>

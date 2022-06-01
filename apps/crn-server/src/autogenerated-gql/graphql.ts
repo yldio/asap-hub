@@ -8158,11 +8158,15 @@ export type UsersContentFragment = Pick<
 
 export type FetchUserQueryVariables = Exact<{
   id: Scalars['String'];
+  researchOutputsFilter: Scalars['String'];
 }>;
 
 export type FetchUserQuery = {
   findUsersContent: Maybe<
     Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+      referencingResearchOutputsContentsWithTotal: Maybe<
+        Pick<ResearchOutputsResultDto, 'total'>
+      >;
       flatData: Pick<
         UsersFlatDataDto,
         | 'biography'
@@ -12278,6 +12282,20 @@ export const FetchUserDocument = {
             },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'researchOutputsFilter' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -12301,6 +12319,29 @@ export const FetchUserDocument = {
                 {
                   kind: 'FragmentSpread',
                   name: { kind: 'Name', value: 'UsersContent' },
+                },
+                {
+                  kind: 'Field',
+                  name: {
+                    kind: 'Name',
+                    value: 'referencingResearchOutputsContentsWithTotal',
+                  },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'researchOutputsFilter' },
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                    ],
+                  },
                 },
               ],
             },

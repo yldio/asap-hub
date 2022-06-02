@@ -110,7 +110,7 @@
     "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-transform-inline-environment-variables": "0.5.0-alpha.42",
     "babel-preset-react-app": "^10",
-    "bundlewatch": "^0.3.2",
+    "bundlewatch": "0.3.3",
     "dotenv": "^8.6.0",
     "escape-string-regexp": "^4.0.0",
     "eslint": "^7.26.0",

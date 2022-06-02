@@ -196,6 +196,10 @@ export type FetchEventsOptions = (
       after: string;
       before?: string;
     }
+  | {
+      after?: never;
+      before?: never;
+    }
 ) & { groupId?: string } & SortOptions &
   FetchOptions;
 

@@ -3398,7 +3398,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "bundlewatch",
-        "npm:0.3.2"
+        "npm:0.3.3"
       ],
       [
         "bytes",
@@ -3570,7 +3570,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "ci-env",
-        "npm:1.16.0"
+        "npm:1.17.0"
       ],
       [
         "ci-info",
@@ -4378,7 +4378,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "duplexer",
-        "npm:0.1.1"
+        "npm:0.1.2"
       ],
       [
         "duplexer2",
@@ -5010,7 +5010,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "follow-redirects",
-        "virtual:d192f6b3b31cd5d11a443145a3883a70c04cbd7c813c53085dbaf50263735f1162f10fdbddd53c24e162ec3bc37b90966413084323739b7cf942b8bfb4da8831#npm:1.13.1"
+        "virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.15.1"
       ],
       [
         "for-in",
@@ -5298,7 +5298,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "gzip-size",
-        "npm:5.1.1"
+        "npm:6.0.0"
       ],
       [
         "handle-thing",
@@ -10129,7 +10129,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-plugin-lodash", "npm:3.3.4"],
             ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"],
             ["babel-preset-react-app", "npm:10.0.0"],
-            ["bundlewatch", "npm:0.3.2"],
+            ["bundlewatch", "npm:0.3.3"],
             ["dotenv", "npm:8.6.0"],
             ["escape-string-regexp", "npm:4.0.0"],
             ["eslint", "npm:7.26.0"],
@@ -33720,7 +33720,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-plugin-lodash", "npm:3.3.4"],
             ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"],
             ["babel-preset-react-app", "npm:10.0.0"],
-            ["bundlewatch", "npm:0.3.2"],
+            ["bundlewatch", "npm:0.3.3"],
             ["dotenv", "npm:8.6.0"],
             ["escape-string-regexp", "npm:4.0.0"],
             ["eslint", "npm:7.26.0"],
@@ -34225,6 +34225,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["axios", "npm:0.21.1"],
             ["follow-redirects", "virtual:d192f6b3b31cd5d11a443145a3883a70c04cbd7c813c53085dbaf50263735f1162f10fdbddd53c24e162ec3bc37b90966413084323739b7cf942b8bfb4da8831#npm:1.13.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.24.0", {
+          "packageLocation": "./.yarn/cache/axios-npm-0.24.0-39e5c1e79e-468cf496c0.zip/node_modules/axios/",
+          "packageDependencies": [
+            ["axios", "npm:0.24.0"],
+            ["follow-redirects", "virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.15.1"]
           ],
           "linkType": "HARD",
         }]
@@ -35924,17 +35932,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["bundlewatch", [
-        ["npm:0.3.2", {
-          "packageLocation": "./.yarn/cache/bundlewatch-npm-0.3.2-4b6c78a81a-3752b3e203.zip/node_modules/bundlewatch/",
+        ["npm:0.3.3", {
+          "packageLocation": "./.yarn/cache/bundlewatch-npm-0.3.3-9c22aaf29a-ed47e50816.zip/node_modules/bundlewatch/",
           "packageDependencies": [
-            ["bundlewatch", "npm:0.3.2"],
-            ["axios", "npm:0.21.1"],
-            ["bytes", "npm:3.1.0"],
+            ["bundlewatch", "npm:0.3.3"],
+            ["axios", "npm:0.24.0"],
+            ["bytes", "npm:3.1.2"],
             ["chalk", "npm:4.0.0"],
-            ["ci-env", "npm:1.16.0"],
+            ["ci-env", "npm:1.17.0"],
             ["commander", "npm:5.1.0"],
             ["glob", "npm:7.1.6"],
-            ["gzip-size", "npm:5.1.1"],
+            ["gzip-size", "npm:6.0.0"],
             ["jsonpack", "npm:1.1.5"],
             ["lodash.merge", "npm:4.6.2"],
             ["read-pkg-up", "npm:7.0.1"]
@@ -35954,6 +35962,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/bytes-npm-3.1.0-19c5b15405-7c3b21c5d9.zip/node_modules/bytes/",
           "packageDependencies": [
             ["bytes", "npm:3.1.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:3.1.2", {
+          "packageLocation": "./.yarn/cache/bytes-npm-3.1.2-28b8643004-e4bcd3948d.zip/node_modules/bytes/",
+          "packageDependencies": [
+            ["bytes", "npm:3.1.2"]
           ],
           "linkType": "HARD",
         }]
@@ -36609,10 +36624,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["ci-env", [
-        ["npm:1.16.0", {
-          "packageLocation": "./.yarn/cache/ci-env-npm-1.16.0-5c7e7335b6-7398cd56a1.zip/node_modules/ci-env/",
+        ["npm:1.17.0", {
+          "packageLocation": "./.yarn/cache/ci-env-npm-1.17.0-d1dacafda6-e6a06d9a6c.zip/node_modules/ci-env/",
           "packageDependencies": [
-            ["ci-env", "npm:1.16.0"]
+            ["ci-env", "npm:1.17.0"]
           ],
           "linkType": "HARD",
         }]
@@ -39519,6 +39534,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/duplexer-npm-0.1.1-d906abcf74-fc7937c4a4.zip/node_modules/duplexer/",
           "packageDependencies": [
             ["duplexer", "npm:0.1.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.1.2", {
+          "packageLocation": "./.yarn/cache/duplexer-npm-0.1.2-952c810235-62ba61a830.zip/node_modules/duplexer/",
+          "packageDependencies": [
+            ["duplexer", "npm:0.1.2"]
           ],
           "linkType": "HARD",
         }]
@@ -42472,11 +42494,31 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
+        ["npm:1.15.1", {
+          "packageLocation": "./.yarn/cache/follow-redirects-npm-1.15.1-6b191885cd-6aa4e3e3cd.zip/node_modules/follow-redirects/",
+          "packageDependencies": [
+            ["follow-redirects", "npm:1.15.1"]
+          ],
+          "linkType": "SOFT",
+        }],
         ["npm:1.5.10", {
           "packageLocation": "./.yarn/cache/follow-redirects-npm-1.5.10-bde6f43576-0edc4b74e3.zip/node_modules/follow-redirects/",
           "packageDependencies": [
             ["follow-redirects", "npm:1.5.10"],
             ["debug", "virtual:6618ab6046111bda0b9a733e34fec5329265b155b4408a2345f36333ccbe1a86dfc9efc447e5134e4156dde98ed737f5efbe42b5378f22c09197bf46e2cdab17#npm:3.1.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.15.1", {
+          "packageLocation": "./.yarn/__virtual__/follow-redirects-virtual-acb5554ef1/0/cache/follow-redirects-npm-1.15.1-6b191885cd-6aa4e3e3cd.zip/node_modules/follow-redirects/",
+          "packageDependencies": [
+            ["follow-redirects", "virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.15.1"],
+            ["@types/debug", null],
+            ["debug", null]
+          ],
+          "packagePeers": [
+            "@types/debug",
+            "debug"
           ],
           "linkType": "HARD",
         }],
@@ -43999,6 +44041,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["gzip-size", "npm:5.1.1"],
             ["duplexer", "npm:0.1.1"],
             ["pify", "npm:4.0.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:6.0.0", {
+          "packageLocation": "./.yarn/cache/gzip-size-npm-6.0.0-d5b52fdbf1-2df97f3596.zip/node_modules/gzip-size/",
+          "packageDependencies": [
+            ["gzip-size", "npm:6.0.0"],
+            ["duplexer", "npm:0.1.2"]
           ],
           "linkType": "HARD",
         }]

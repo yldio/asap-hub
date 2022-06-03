@@ -2,10 +2,11 @@ import assert from 'assert';
 import { AWS } from '@serverless/typescript';
 
 [
+  'AWS_REGION',
+  'GP2_AUTH0_CLIENT_ID',
   'GP2_AWS_ACM_CERTIFICATE_ARN',
   'GP2_HOSTNAME',
   'SLS_STAGE',
-  'AWS_REGION',
   'SQUIDEX_APP_NAME',
   'SQUIDEX_BASE_URL',
   'SQUIDEX_CLIENT_ID',
@@ -21,14 +22,15 @@ assert.ok(
   'SLS_STAGE must be either "dev" or "production" or a PR number',
 );
 
-const stage = process.env.SLS_STAGE!;
-const region = process.env.AWS_REGION as AWS['provider']['region'];
+const auth0ClientId = process.env.GP2_AUTH0_CLIENT_ID;
 const gp2AwsAcmCertificateArn = process.env.GP2_AWS_ACM_CERTIFICATE_ARN!;
 const hostname = process.env.GP2_HOSTNAME!;
+const region = process.env.AWS_REGION as AWS['provider']['region'];
 const squidexAppName = process.env.SQUIDEX_APP_NAME!;
 const squidexBaseUrl = process.env.SQUIDEX_BASE_URL!;
 const squidexClientId = process.env.SQUIDEX_CLIENT_ID!;
 const squidexClientSecret = process.env.SQUIDEX_CLIENT_SECRET!;
+const stage = process.env.SLS_STAGE!;
 
 const service = 'gp2-hub';
 const appHostname = stage === 'production' ? hostname : `${stage}.${hostname}`;
@@ -109,6 +111,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         APP_ORIGIN: appUrl,
+        AUTH0_CLIENT_ID: auth0ClientId,
       },
     },
   },

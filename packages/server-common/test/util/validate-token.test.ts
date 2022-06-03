@@ -1,11 +1,13 @@
-import { config, auth0PubKeys } from '@asap-hub/auth';
+import { auth0PubKeys } from '@asap-hub/auth';
 import jwt from 'jsonwebtoken';
 import { idToken, getToken } from './validate-token.fixtures';
-import { decodeToken } from '../../src';
+import { decodeTokenFactory } from '../../src';
 
 jest.mock('@asap-hub/auth');
 const authMock = jest.requireMock('@asap-hub/auth');
 const originalAuth0PubKeys = auth0PubKeys;
+const mockAuth0ClientId = 'mock-auth0-client-id';
+const decodeToken = decodeTokenFactory(mockAuth0ClientId);
 
 describe('Validate token', () => {
   const token = getToken();
@@ -64,7 +66,7 @@ describe('Validate token', () => {
   });
 
   test('Should return when id_token is valid', async () => {
-    const expected = { ...idToken, aud: config.clientID };
+    const expected = { ...idToken, aud: mockAuth0ClientId };
     jest
       .spyOn(jwt, 'verify')
       .mockImplementation((t, f, o, cb) => cb && cb(null, expected));

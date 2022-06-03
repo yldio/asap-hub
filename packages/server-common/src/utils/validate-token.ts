@@ -1,4 +1,4 @@
-import { auth0PubKeys, Auth0User, config } from '@asap-hub/auth';
+import { auth0PubKeys, Auth0User } from '@asap-hub/auth';
 import jwt, { JwtHeader, SigningKeyCallback } from 'jsonwebtoken';
 
 const certToPEM = (cert: string): string =>
@@ -17,23 +17,25 @@ const getPublicKey = (header: JwtHeader, cb: SigningKeyCallback): void => {
   return cb(null, certToPEM(key[0]));
 };
 
-export const decodeToken = (token: string): Promise<Auth0User> =>
-  new Promise((resolve, reject) => {
-    jwt.verify(token, getPublicKey, { algorithms: ['RS256'] }, (err, res) => {
-      if (err) {
-        return reject(err);
-      }
+export const decodeTokenFactory =
+  (clientID: string) =>
+  (token: string): Promise<Auth0User> =>
+    new Promise((resolve, reject) => {
+      jwt.verify(token, getPublicKey, { algorithms: ['RS256'] }, (err, res) => {
+        if (err) {
+          return reject(err);
+        }
 
-      const payload = res as Auth0User;
-      if (payload?.aud !== config.clientID) {
-        return reject(
-          new Error(
-            'Token verification: aud field doesnt match Auth0 ClientID',
-          ),
-        );
-      }
-      return resolve(payload);
+        const payload = res as Auth0User;
+        if (payload?.aud !== clientID) {
+          return reject(
+            new Error(
+              'Token verification: aud field doesnt match Auth0 ClientID',
+            ),
+          );
+        }
+        return resolve(payload);
+      });
     });
-  });
 
-export type DecodeToken = typeof decodeToken;
+export type DecodeToken = ReturnType<typeof decodeTokenFactory>;

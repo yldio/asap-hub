@@ -1,5 +1,5 @@
 import { RedirectLoginResult } from '@auth0/auth0-spa-js';
-import { config } from '@asap-hub/auth';
+import { AUTH0_CLIENT_ID, AUTH0_DOMAIN } from '../config';
 
 import history from '../history';
 import { Auth0Provider } from './react-auth0-spa';
@@ -21,8 +21,8 @@ const AuthProvider: React.FC<{ readonly children: React.ReactNode }> = ({
   children,
 }) => (
   <Auth0Provider
-    domain={config.domain}
-    client_id={config.clientID}
+    domain={AUTH0_DOMAIN}
+    client_id={AUTH0_CLIENT_ID}
     redirect_uri={window.location.origin}
     onRedirectCallback={onRedirectCallback}
     cacheLocation="localstorage"

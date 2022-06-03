@@ -26,16 +26,15 @@ outputs:
   crn-app-url:
     description: 'CRN APP Url'
     value: ${{ steps.vars.outputs.crn-app-url }}
-  auth0-client-id:
-    description: 'Auth0 Client ID'
-    value: ${{ steps.vars.outputs.auth0-client-id }}
-  auth0-domain:
-    description: 'Auth0 Domain'
-    value: ${{ steps.vars.outputs.auth0-domain }}
+  crn-auth0-client-id:
+    description: 'CRN Auth0 Client ID'
+    value: ${{ steps.vars.outputs.crn-auth0-client-id }}
+  crn-auth0-domain:
+    description: 'CRN Auth0 Domain'
+    value: ${{ steps.vars.outputs.crn-auth0-domain }}
   aws-acm-asap-science-certificate-arn:
     description: 'AWS ACM ASAP Science Certificate ARN'
     value: ${{ steps.vars.outputs.aws-acm-asap-science-certificate-arn }}
-
   aws-default-region:
     description: 'AWS Default Region'
     value: ${{ steps.vars.outputs.aws-default-region }}
@@ -69,6 +68,12 @@ outputs:
   gp2-hostname:
     description: 'GP2 Hostname'
     value: ${{ steps.vars.outputs.gp2-hostname }}
+  gp2-auth0-client-id:
+    description: 'GP2 Auth0 Client ID'
+    value: ${{ steps.vars.outputs.gp2-auth0-client-id }}
+  gp2-auth0-domain:
+    description: 'GP2 Auth0 Domain'
+    value: ${{ steps.vars.outputs.gp2-auth0-domain }}
   pr-number:
     description: 'PR Number'
     value: ${{ steps.vars.outputs.pr-number }}

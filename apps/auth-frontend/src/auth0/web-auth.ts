@@ -1,7 +1,7 @@
 import pify from 'pify';
 import { WebAuth } from 'auth0-js';
 import camelCase from 'camelcase';
-import { config } from '@asap-hub/auth';
+import { AUTH0_CLIENT_ID, AUTH0_DOMAIN } from '../config';
 
 const getOptionsFromLocation = (location: Location | URL) =>
   Object.fromEntries(
@@ -11,7 +11,10 @@ const getOptionsFromLocation = (location: Location | URL) =>
     ]),
   );
 
-const webAuth = new WebAuth(config);
+const webAuth = new WebAuth({
+  clientID: AUTH0_CLIENT_ID,
+  domain: AUTH0_DOMAIN,
+});
 
 type SsoConnection = 'google-oauth2' | 'ORCID';
 export const authorizeWithSso = (

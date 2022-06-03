@@ -953,7 +953,7 @@ __metadata:
     core-js: ^3.12.1
     date-fns: ^2.21.3
     date-fns-tz: ^1.1.4
-    dom-to-playwright: ^0.1.2
+    dom-to-playwright: 0.1.3
     emotion-normalize: ^11
     expect-playwright: ^0.8.0
     fast-check: ^2.14.0
@@ -18511,12 +18511,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dom-to-playwright@npm:^0.1.2":
-  version: 0.1.2
-  resolution: "dom-to-playwright@npm:0.1.2"
+"dom-to-playwright@npm:0.1.3":
+  version: 0.1.3
+  resolution: "dom-to-playwright@npm:0.1.3"
   peerDependencies:
     playwright: ">0.11.1 <1 || ^1"
-  checksum: 5ee7755f8e69a601fd4ae0f1b5e0867da8cff45f08492ff88f82b774f705733aeccee11ff61293fec36648cce521df88c9f925a9eb9b229252bb841cb196c137
+  checksum: ae6f9260df11a90f4bd8169b69fb84de4f7f73ca7c8ccfaf3a3ef27765fe5dd073280ebc0463e6d40e4f8c18afa018b60382b1e63b00b6c27d4730730a773aa5
   languageName: node
   linkType: hard
 

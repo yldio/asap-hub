@@ -961,7 +961,7 @@ __metadata:
     hast-util-sanitize: ^3.0.2
     history: ^4
     jest-playwright-jsdom: ^0.0.4
-    jest-playwright-preset: ^1.7.0
+    jest-playwright-preset: 1.7.2
     playwright: ^1.16.1
     playwright-core: ^1.16.1
     ramda: ^0.27.1
@@ -20190,13 +20190,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expect-playwright@npm:^0.7.0":
-  version: 0.7.2
-  resolution: "expect-playwright@npm:0.7.2"
-  checksum: 7503700e2695e07be2118372275b793039bd65320db415bb1c07b5987f960cdbf95e13d243deca70259e221461c5510bed4a8c01f9ca4a26c5f8bdcfdb934eec
-  languageName: node
-  linkType: hard
-
 "expect-playwright@npm:^0.8.0":
   version: 0.8.0
   resolution: "expect-playwright@npm:0.8.0"
@@ -25133,6 +25126,25 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"jest-playwright-preset@npm:1.7.2":
+  version: 1.7.2
+  resolution: "jest-playwright-preset@npm:1.7.2"
+  dependencies:
+    expect-playwright: ^0.8.0
+    jest-process-manager: ^0.3.1
+    nyc: ^15.1.0
+    playwright-core: ">=1.2.0"
+    rimraf: ^3.0.2
+    uuid: ^8.3.2
+  peerDependencies:
+    jest: ^26.6.3 || ^27.0.0
+    jest-circus: ^26.6.3 || ^27.0.0
+    jest-environment-node: ^26.6.2 || ^27.0.0
+    jest-runner: ^26.6.3 || ^27.0.0
+  checksum: 1e9c7d999407d19b3cc1d44afe3860c45e38a8794afd1622ee6daa42ed29620bedf4faeb13ffe2523f1ffb7d6f1e8e96588ced45fc7740c5f0e06c3041472a62
+  languageName: node
+  linkType: hard
+
 "jest-playwright-preset@npm:^1.2.1":
   version: 1.3.1
   resolution: "jest-playwright-preset@npm:1.3.1"
@@ -25146,25 +25158,6 @@ fsevents@~2.1.2:
     rimraf: ^3.0.2
     uuid: ^8.2.0
   checksum: 5244c0a60203ec01c0fa1c8938c7e82330bc534857528aae8999cf43ab685b36c310d7f43eb2e0cfd89588aec8392a50e4aee79043dc0bfb6eef8d017ce71c59
-  languageName: node
-  linkType: hard
-
-"jest-playwright-preset@npm:^1.7.0":
-  version: 1.7.0
-  resolution: "jest-playwright-preset@npm:1.7.0"
-  dependencies:
-    expect-playwright: ^0.7.0
-    jest-process-manager: ^0.3.1
-    nyc: ^15.1.0
-    playwright-core: ">=1.2.0"
-    rimraf: ^3.0.2
-    uuid: ^8.3.2
-  peerDependencies:
-    jest: ">=26.6.3"
-    jest-circus: ">=26.6.3"
-    jest-environment-node: ">=26.6.3"
-    jest-runner: ">=26.6.3"
-  checksum: afb375ca4134c2c9df27339831156883aac4d80adf0494133b6994269289a0760f07d7d7b6c13b787a969e311aebbe0f4af64fe16ecace63cc66fd1c905cad25
   languageName: node
   linkType: hard
 

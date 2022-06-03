@@ -200,7 +200,6 @@ export const useCanCreateUpdateResearchOutput = (
   const user = useCurrentUser();
 
   return !!(
-    isEnabled('ROMS_FORM') &&
     user &&
     hasCreateUpdateResearchOutputPermissions(user, teamIds)
   );

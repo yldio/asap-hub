@@ -1,8 +1,7 @@
-export type Flag = 'PERSISTENT_EXAMPLE' | 'ROMS_FORM';
+export type Flag = 'PERSISTENT_EXAMPLE';
 
 export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
-  ROMS_FORM: undefined,
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
 };

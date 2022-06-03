@@ -63,7 +63,7 @@ const ResearchOutputContributorsCard: React.FC<ResearchOutputContributorsProps> 
       />
       <LabeledMultiSelect
         title="Labs"
-        description="Add labs that contributed to this output. Only labs whose PI is part of the CRN will appear."
+        description="Add ASAP labs that contributed to this output. Only labs whose PI is part of the CRN will appear."
         subtitle="(optional)"
         enabled={!isSaving}
         placeholder="Start typing..."

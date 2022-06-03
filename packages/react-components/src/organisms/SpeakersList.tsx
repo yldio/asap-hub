@@ -39,8 +39,8 @@ const gridMixin = {
   },
 };
 
-const previewStyle = css({
-  maxHeight: '120px',
+const previewStyle = {
+  maxHeight: '90px',
   overflow: 'hidden',
   background: `linear-gradient(180deg, ${lead.rgb} 26.56%, ${
     colorWithTransparency(lead, 0).rgba
@@ -49,7 +49,7 @@ const previewStyle = css({
   WebkitTextFillColor: 'transparent',
   backgroundClip: 'text',
   textFillColor: 'transparent',
-});
+};
 
 const speakerListStyles = css({
   ...gridMixin,
@@ -101,13 +101,13 @@ const hideStyles = css({
     gridAutoFlow: 'row',
     alignItems: 'start',
     borderBottom: `1px solid ${steel.rgb}`,
-    [`:nth-child(4)`]: { ...previewStyle },
-    [`:nth-child(n+5)`]: { display: 'none' },
+    [`:nth-of-type(4)`]: { ...previewStyle, borderBottom: 'transparent' },
+    [`:nth-of-type(n+5)`]: { display: 'none' },
   },
   [`@media (min-width: ${tabletScreen.width}px)`]: {
     ...gridMixin,
-    [`:nth-child(n+6)`]: { ...previewStyle },
-    [`:nth-child(n+7)`]: { display: 'none' },
+    [`:nth-of-type(n+6)`]: { ...previewStyle },
+    [`:nth-of-type(n+7)`]: { display: 'none' },
   },
 });
 
@@ -205,23 +205,23 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
             </div>
           </div>
         ))}
+        {condition && (
+          <div css={{ paddingTop: `${18 / perRem}em`, margin: 'auto' }}>
+            <Button linkStyle onClick={() => setExpanded(!expanded)}>
+              <span
+                css={{
+                  display: 'inline-grid',
+                  verticalAlign: 'middle',
+                  paddingRight: `${12 / perRem}em`,
+                }}
+              >
+                {expanded ? chevronCircleUpIcon : chevronCircleDownIcon}
+              </span>
+              Show {expanded ? 'less' : 'more'}
+            </Button>
+          </div>
+        )}
       </div>
-      {condition && (
-        <div css={{ paddingTop: `${24 / perRem}em`, margin: 'auto' }}>
-          <Button linkStyle onClick={() => setExpanded(!expanded)}>
-            <span
-              css={{
-                display: 'inline-grid',
-                verticalAlign: 'middle',
-                paddingRight: `${12 / perRem}em`,
-              }}
-            >
-              {expanded ? chevronCircleUpIcon : chevronCircleDownIcon}
-            </span>
-            Show {expanded ? 'less' : 'more'}
-          </Button>
-        </div>
-      )}
     </div>
   );
 };

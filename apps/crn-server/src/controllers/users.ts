@@ -104,7 +104,6 @@ export default class Users implements UserController {
     userId: string,
   ): Promise<UserResponse> {
     const { items } = await this.queryByCode(welcomeCode);
-    // const user = await this.userDataProvider.connectByCode(welcomeCode, userId);
 
     if (!items || items.length > 1 || !items[0]) {
       throw new NotFoundError(`user with code ${welcomeCode} not found`);

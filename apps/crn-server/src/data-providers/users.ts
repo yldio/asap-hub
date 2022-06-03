@@ -105,8 +105,9 @@ export default class Users implements UserDataProvider {
     return parseUserToDataObject(updatedUser);
   }
   private async queryForUsers(filter: string, top: number, skip: number) {
-    const { queryUsersContentsWithTotal } =
-      (await this.queryFetchData(filter, top, skip)) || {};
+    const data = await this.queryFetchData(filter, top, skip);
+    const { queryUsersContentsWithTotal } = data;
+
     const { total = 0, items = [] } = queryUsersContentsWithTotal || {};
 
     return {

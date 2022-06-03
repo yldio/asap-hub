@@ -1,8 +1,13 @@
-import { config, RestUser } from '@asap-hub/squidex';
+import { config, RestUser, SquidexGraphql } from '@asap-hub/squidex';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import nock from 'nock';
 import { auth0SharedSecret as secret } from '../../../src/config';
 import { handler } from '../../../src/handlers/webhooks/webhook-connect-by-code';
+import {
+  generateGraphqlFetchUsersResponse,
+  getGraphQLUser,
+  getSquidexUserGraphqlResponse,
+} from '../../fixtures/users.fixtures';
 import { getApiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 
@@ -104,48 +109,26 @@ describe('POST /webhook/users/connections - success', () => {
     identity();
   });
 
-  afterEach(() => {
-    expect(nock.isDone()).toBe(true);
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
-
-  test('returns 500 for invalid code', async () => {
-    nock(config.baseUrl)
-      .get(`/api/content/${config.appName}/users`)
-      .query({
-        $top: 1,
-        $filter: `data/connections/iv/code eq 'invalidConnectCode'`,
-      })
-      .reply(404);
-
-    const res = (await handler(
-      getApiGatewayEvent({
-        body: JSON.stringify({
-          code: 'invalidConnectCode',
-          userId: 'userId',
-        }),
-        headers: {
-          Authorization: `Basic ${secret}`,
-        },
-      }),
-    )) as APIGatewayProxyResult;
-
-    expect(res.statusCode).toStrictEqual(500);
-  });
-
   test('returns 202 for valid code and updates the user', async () => {
     const userId = `google-oauth2|token`;
     const patchedUser = JSON.parse(JSON.stringify(user));
     patchedUser.data.connections.iv = [{ code: userId }];
+    const response = generateGraphqlFetchUsersResponse([
+      getGraphQLUser({ id: user.id }),
+    ]);
+
+    const squidexGraphqlMocks = jest
+      .spyOn(SquidexGraphql.prototype, 'request')
+      .mockImplementationOnce(() => Promise.resolve(response))
+      .mockImplementationOnce(() =>
+        Promise.resolve(getSquidexUserGraphqlResponse()),
+      );
 
     nock(config.baseUrl)
-      .get(`/api/content/${config.appName}/users`)
-      .query({
-        $top: 1,
-        $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
-      })
-      .reply(200, { total: 1, items: [user] })
       .patch(`/api/content/${config.appName}/users/${user.id}`, {
-        email: { iv: user.data.email.iv },
         connections: { iv: [{ code: userId }] },
       })
       .reply(200, patchedUser);
@@ -162,6 +145,32 @@ describe('POST /webhook/users/connections - success', () => {
       }),
     )) as APIGatewayProxyResult;
 
-    expect(res.statusCode).toStrictEqual(202);
+    expect(res.statusCode).toEqual(202);
+    expect(squidexGraphqlMocks).toHaveBeenNthCalledWith(1, expect.anything(), {
+      top: 1,
+      skip: 0,
+      filter: "data/connections/iv/code eq 'asapWelcomeCode'",
+    });
+    expect(nock.isDone()).toBe(true);
+  });
+
+  test('returns 500 for invalid code', async () => {
+    jest
+      .spyOn(SquidexGraphql.prototype, 'request')
+      .mockImplementationOnce(() => Promise.reject('Invalid Code'));
+
+    const res = (await handler(
+      getApiGatewayEvent({
+        body: JSON.stringify({
+          code: 'invalidConnectCode',
+          userId: 'userId',
+        }),
+        headers: {
+          Authorization: `Basic ${secret}`,
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(res.statusCode).toStrictEqual(500);
   });
 });

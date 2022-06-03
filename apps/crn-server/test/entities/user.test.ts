@@ -2,6 +2,7 @@ import {
   GraphqlUserTeam,
   parseGraphQLUserTeamConnections,
   parseUserToDataObject,
+  parseUserToResponse,
 } from '../../src/entities/user';
 import logger from '../../src/utils/logger';
 import {
@@ -107,6 +108,25 @@ describe('User Entity', () => {
         `Invalid team role: invalid role`,
       );
       expect(parsedTeams).toEqual([]);
+    });
+  });
+  describe('parseUserToResponse', () => {
+    test('adds display name', () => {
+      const given = fetchUserResponseDataObject();
+      const result = parseUserToResponse({
+        ...given,
+        lastName: 'last-name',
+        firstName: 'first-name',
+      });
+      expect(result.displayName).toEqual('first-name last-name');
+    });
+    test('removes connection', () => {
+      const given = fetchUserResponseDataObject();
+      const result = parseUserToResponse({
+        ...given,
+        connections: [{ code: 'a connection' }],
+      });
+      expect((result as any).connections).not.toBeDefined();
     });
   });
 });

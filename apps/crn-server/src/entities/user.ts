@@ -169,11 +169,13 @@ const isOrcidWorkType = (data: string): data is OrcidWorkType =>
 export const parseUserToResponse = (user: UserDataObject): UserResponse => {
   const displayName = `${user.firstName} ${user.lastName}`;
   const onboarded = typeof user.onboarded === 'boolean' ? user.onboarded : true;
-  return {
+  const response = {
     ...user,
     displayName,
     onboarded,
   };
+  delete response.connections;
+  return response;
 };
 
 export const parseGraphQLUserToDataObject = (

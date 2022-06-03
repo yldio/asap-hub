@@ -138,7 +138,8 @@ export interface UserDataObject extends Invitee {
   connections?: Connection[];
 }
 export type ListUserDataObject = ListResponse<UserDataObject>;
-export interface UserResponse extends Omit<UserDataObject, 'onboarded'> {
+export interface UserResponse
+  extends Omit<UserDataObject, 'onboarded' | 'connections'> {
   onboarded: boolean;
   displayName: string;
 }

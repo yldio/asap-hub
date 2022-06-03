@@ -1,13 +1,15 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import {
   ListUserResponse,
+  UserPatchDataObject,
   UserPatchRequest,
   UserResponse,
 } from '@asap-hub/model';
-import { RestUser } from '@asap-hub/squidex';
+import Intercept from 'apr-intercept';
 import { AssetDataProvider } from '../data-providers/assets';
 import { UserDataProvider } from '../data-providers/users';
 import { parseUserToResponse } from '../entities';
+import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 import { FetchOptions } from '../utils/types';
 
 export type FetchUsersFilter = {
@@ -34,7 +36,7 @@ export interface UserController {
   ): Promise<UserResponse>;
   syncOrcidProfile(
     id: string,
-    cachedUser: RestUser | undefined,
+    cachedUser: UserResponse | undefined,
   ): Promise<UserResponse>;
 }
 
@@ -114,6 +116,7 @@ export default class Users implements UserController {
       return parseUserToResponse(user);
     }
     await this.userDataProvider.update(user.id, {
+      email: user.email,
       connections: [...(user.connections || []), { code: userId }],
     });
     return this.fetchById(user.id);
@@ -121,10 +124,29 @@ export default class Users implements UserController {
 
   async syncOrcidProfile(
     id: string,
-    cachedUser: RestUser | undefined = undefined,
+    cachedUser: UserResponse | undefined = undefined,
   ): Promise<UserResponse> {
-    const user = await this.userDataProvider.syncOrcidProfile(id, cachedUser);
-    return parseUserToResponse(user);
+    let fetchedUser;
+    if (!cachedUser) {
+      fetchedUser = await this.fetchById(id);
+    }
+
+    const user = cachedUser || (fetchedUser as UserResponse);
+    const [error, res] = await Intercept(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      fetchOrcidProfile(user!.orcid!),
+    );
+    const updateToUser: UserPatchDataObject = {
+      email: user.email,
+      orcidLastSyncDate: new Date().toISOString(),
+    };
+    if (!error) {
+      const { lastModifiedDate, works } = transformOrcidWorks(res);
+      updateToUser.orcidLastModifiedDate = lastModifiedDate;
+      updateToUser.orcidWorks = works.slice(0, 10);
+    }
+    await this.update(user.id, updateToUser);
+    return this.fetchById(user.id);
   }
   private async queryByCode(code: string) {
     return this.userDataProvider.fetch({

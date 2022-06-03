@@ -1,11 +1,9 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { UserResponse } from '@asap-hub/model';
 import { config, RestUser } from '@asap-hub/squidex';
-import matches from 'lodash.matches';
 import nock, { DataMatcherMap } from 'nock';
 import { FetchUsersOptions } from '../../src/controllers/users';
 import UserDataProvider from '../../src/data-providers/users';
-import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import {
   fetchUserResponse,
   getSquidexUserGraphqlResponse,
@@ -571,93 +569,6 @@ describe('User data provider', () => {
         },
       );
       expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
-    });
-  });
-  describe('syncOrcidProfile', () => {
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
-    });
-
-    afterEach(() => {
-      nock.cleanAll();
-    });
-
-    const userId = 'userId';
-    const orcid = '363-98-9330';
-
-    test('Throws when user does not exist', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users/user-not-found`)
-        .reply(404);
-
-      await expect(
-        userDataProvider.syncOrcidProfile('user-not-found'),
-      ).rejects.toThrow(NotFoundError);
-    });
-    test('Should update user profile even when ORCID returns 500', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fetchUserResponse())
-        .patch(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fetchUserResponse());
-
-      // times 3 because got will retry on 5XXs
-      nock('https://pub.orcid.org')
-        .get(`/v2.1/${orcid}/works`)
-        .times(3)
-        .reply(502);
-
-      const result = await userDataProvider.syncOrcidProfile(userId);
-      expect(result).toBeDefined(); // we only care that the update is made
-    });
-
-    test('Should successfully fetch and update user - with id', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fetchUserResponse())
-        .patch(
-          `/api/content/${config.appName}/users/${userId}`,
-          matches({
-            email: { iv: fetchUserResponse().data.email.iv },
-            orcidLastModifiedDate: {
-              iv: `${orcidFixtures.orcidWorksResponse['last-modified-date'].value}`,
-            },
-            orcidWorks: { iv: orcidFixtures.orcidWorksDeserialisedExpectation },
-          }),
-        )
-        .reply(200, fetchUserResponse());
-
-      nock('https://pub.orcid.org')
-        .get(`/v2.1/${orcid}/works`)
-        .reply(200, orcidFixtures.orcidWorksResponse);
-
-      const result = await userDataProvider.syncOrcidProfile(userId);
-      expect(result).toBeDefined(); // we only care that the update is made
-    });
-
-    test('Should successfully fetch and update user - with user', async () => {
-      nock(config.baseUrl)
-        .patch(
-          `/api/content/${config.appName}/users/${userId}`,
-          matches({
-            email: { iv: fetchUserResponse().data.email.iv },
-            orcidLastModifiedDate: {
-              iv: `${orcidFixtures.orcidWorksResponse['last-modified-date'].value}`,
-            },
-            orcidWorks: { iv: orcidFixtures.orcidWorksDeserialisedExpectation },
-          }),
-        )
-        .reply(200, fetchUserResponse());
-
-      nock('https://pub.orcid.org')
-        .get(`/v2.1/${orcid}/works`)
-        .reply(200, orcidFixtures.orcidWorksResponse);
-
-      const result = await userDataProvider.syncOrcidProfile(
-        userId,
-        fetchUserResponse(),
-      );
-      expect(result).toBeDefined(); // we only care that the update is made
     });
   });
 });

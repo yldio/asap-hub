@@ -169,6 +169,11 @@ export interface UserPatchDataObject {
   onboarded?: boolean;
   avatar?: string;
   connections?: Connection[];
+  email?: string;
+  orcid?: string;
+  orcidLastModifiedDate?: string;
+  orcidLastSyncDate?: string;
+  orcidWorks?: OrcidWork[];
 }
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface UserPatchRequest extends UserPatchDataObject {}

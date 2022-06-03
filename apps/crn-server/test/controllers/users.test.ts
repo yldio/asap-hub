@@ -1,6 +1,7 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import nock from 'nock';
 import Users from '../../src/controllers/users';
+import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import { getUserDataObject, getUserResponse } from '../fixtures/users.fixtures';
 
 const mockUserDataProvider = {
@@ -22,10 +23,13 @@ describe('Users controller', () => {
   );
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   describe('Fetch', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
     test('Should return the users', async () => {
       mockUserDataProvider.fetch = jest
         .fn()
@@ -43,6 +47,9 @@ describe('Users controller', () => {
   });
 
   describe('FetchById', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
     test('Should throw when user is not found', async () => {
       mockUserDataProvider.fetchById = jest.fn().mockResolvedValue(null);
       await expect(
@@ -70,7 +77,7 @@ describe('Users controller', () => {
 
   describe('fetchByCode', () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      jest.resetAllMocks();
     });
     const code = 'some-uuid-code';
 
@@ -92,7 +99,7 @@ describe('Users controller', () => {
     });
 
     test('Should throw when it finds more than one user', async () => {
-      mockUserDataProvider.fetchByCode = jest.fn().mockResolvedValue({
+      mockUserDataProvider.fetch = jest.fn().mockResolvedValue({
         total: 2,
         items: [getUserDataObject(), getUserDataObject()],
       });
@@ -103,6 +110,9 @@ describe('Users controller', () => {
   });
 
   describe('update', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
     test('Should return the newly updated user', async () => {
       mockUserDataProvider.update = jest.fn();
       const mockResponse = getUserDataObject();
@@ -117,7 +127,10 @@ describe('Users controller', () => {
   });
 
   describe('updateAvatar', () => {
-    afterEach(nock.cleanAll);
+    beforeEach(nock.cleanAll);
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
     test('should return 200 when syncs asset and updates users profile', async () => {
       mockAssetDataProvider.create = jest.fn().mockResolvedValue(42);
       mockUserDataProvider.update = jest.fn();
@@ -169,24 +182,23 @@ describe('Users controller', () => {
 
   describe('connectByCode', () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      jest.resetAllMocks();
     });
     test('should connect and return the user on success', async () => {
       const userId = 42;
+      const user = getUserDataObject();
       mockUserDataProvider.fetch = jest.fn().mockResolvedValue({
         total: 1,
-        items: [{ ...getUserDataObject(), id: userId }],
+        items: [{ ...user, id: userId }],
       });
       mockUserDataProvider.update = jest.fn();
-      mockUserDataProvider.fetchById = jest
-        .fn()
-        .mockResolvedValue(getUserDataObject());
-
+      mockUserDataProvider.fetchById = jest.fn().mockResolvedValue(user);
       const result = await usersMockGraphqlClient.connectByCode(
         'some code',
         'user-id',
       );
       expect(mockUserDataProvider.update).toHaveBeenCalledWith(userId, {
+        email: user.email,
         connections: [{ code: 'user-id' }],
       });
       expect(result).toEqual(getUserResponse());
@@ -229,13 +241,80 @@ describe('Users controller', () => {
   });
 
   describe('syncOrcidProfile', () => {
-    test('should return the user on success', async () => {
-      mockUserDataProvider.syncOrcidProfile = jest
-        .fn()
-        .mockResolvedValue(getUserDataObject());
+    const userId = 'userId';
+    const orcid = '363-98-9330';
 
-      const result = await usersMockGraphqlClient.syncOrcidProfile('some code');
-      expect(result).toEqual(getUserResponse());
+    beforeEach(() => jest.resetAllMocks());
+    test('should successfully fetch and update user - with id', async () => {
+      const user = { ...getUserDataObject(), orcid };
+      mockUserDataProvider.fetchById = jest.fn().mockResolvedValue(user);
+      nock('https://pub.orcid.org')
+        .get(`/v2.1/${orcid}/works`)
+        .reply(200, orcidFixtures.orcidWorksResponse);
+
+      const result = await usersMockGraphqlClient.syncOrcidProfile(userId);
+      expect(mockUserDataProvider.update).toHaveBeenCalled();
+      expect(result).toEqual({ ...getUserResponse(), orcid });
+      expect(mockUserDataProvider.update).toHaveBeenCalledWith(
+        user.id,
+        expect.objectContaining({
+          email: user.email,
+          orcidLastModifiedDate: `${orcidFixtures.orcidWorksResponse['last-modified-date'].value}`,
+          orcidWorks: orcidFixtures.orcidWorksDeserialisedExpectation,
+        }),
+      );
+    });
+    test('successfully fetch and update user - with user', async () => {
+      const user = { ...getUserDataObject(), orcid };
+      mockUserDataProvider.fetchById = jest.fn().mockResolvedValue(user);
+      nock('https://pub.orcid.org')
+        .get(`/v2.1/${orcid}/works`)
+        .reply(200, orcidFixtures.orcidWorksResponse);
+
+      const result = await usersMockGraphqlClient.syncOrcidProfile(userId, {
+        ...getUserResponse(),
+        email: 'cache-user-email',
+        orcid,
+      });
+      expect(mockUserDataProvider.update).toHaveBeenCalled();
+      expect(mockUserDataProvider.update).toHaveBeenCalledWith(
+        user.id,
+        expect.objectContaining({
+          email: 'cache-user-email',
+          orcidLastModifiedDate: `${orcidFixtures.orcidWorksResponse['last-modified-date'].value}`,
+          orcidWorks: orcidFixtures.orcidWorksDeserialisedExpectation,
+        }),
+      );
+      expect(result).toEqual({ ...getUserResponse(), orcid });
+    });
+    test('Should update user profile even when ORCID returns 500', async () => {
+      const user = { ...getUserDataObject(), orcid };
+      mockUserDataProvider.fetchById = jest.fn().mockResolvedValue(user);
+      nock('https://pub.orcid.org')
+        .get(`/v2.1/${orcid}/works`)
+        .times(3)
+        .reply(502, orcidFixtures.orcidWorksResponse);
+
+      const result = await usersMockGraphqlClient.syncOrcidProfile(userId, {
+        ...getUserResponse(),
+        email: user.email,
+        orcid,
+      });
+      expect(mockUserDataProvider.update).toHaveBeenCalled();
+      expect(mockUserDataProvider.update).toHaveBeenCalledWith(
+        user.id,
+        expect.objectContaining({
+          email: user.email,
+        }),
+      );
+      expect(result).toEqual({ ...getUserResponse(), orcid });
+    });
+    test('Throws when user does not exist', async () => {
+      mockUserDataProvider.fetchById = jest.fn().mockResolvedValue(null);
+
+      await expect(
+        usersMockGraphqlClient.syncOrcidProfile('user-not-found'),
+      ).rejects.toThrow(NotFoundError);
     });
   });
 });

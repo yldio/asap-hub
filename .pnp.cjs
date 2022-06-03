@@ -4326,7 +4326,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "dom-to-playwright",
-        "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.2"
+        "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.3"
       ],
       [
         "dom-walk",
@@ -11180,7 +11180,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["core-js", "npm:3.12.1"],
             ["date-fns", "npm:2.21.3"],
             ["date-fns-tz", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.1.4"],
-            ["dom-to-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.2"],
+            ["dom-to-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.3"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:11.0.1"],
             ["expect-playwright", "npm:0.8.0"],
             ["fast-check", "npm:2.14.0"],
@@ -11266,7 +11266,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["core-js", "npm:3.12.1"],
             ["date-fns", "npm:2.21.3"],
             ["date-fns-tz", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.1.4"],
-            ["dom-to-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.2"],
+            ["dom-to-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.3"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:11.0.1"],
             ["expect-playwright", "npm:0.8.0"],
             ["fast-check", "npm:2.14.0"],
@@ -11357,7 +11357,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["core-js", "npm:3.12.1"],
             ["date-fns", "npm:2.21.3"],
             ["date-fns-tz", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.1.4"],
-            ["dom-to-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.2"],
+            ["dom-to-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.3"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:11.0.1"],
             ["expect-playwright", "npm:0.8.0"],
             ["fast-check", "npm:2.14.0"],
@@ -11446,7 +11446,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["core-js", "npm:3.12.1"],
             ["date-fns", "npm:2.21.3"],
             ["date-fns-tz", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.1.4"],
-            ["dom-to-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.2"],
+            ["dom-to-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.3"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:11.0.1"],
             ["expect-playwright", "npm:0.8.0"],
             ["fast-check", "npm:2.14.0"],
@@ -39336,17 +39336,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["dom-to-playwright", [
-        ["npm:0.1.2", {
-          "packageLocation": "./.yarn/cache/dom-to-playwright-npm-0.1.2-7027e1ab87-5ee7755f8e.zip/node_modules/dom-to-playwright/",
+        ["npm:0.1.3", {
+          "packageLocation": "./.yarn/cache/dom-to-playwright-npm-0.1.3-ea36dd13d4-ae6f9260df.zip/node_modules/dom-to-playwright/",
           "packageDependencies": [
-            ["dom-to-playwright", "npm:0.1.2"]
+            ["dom-to-playwright", "npm:0.1.3"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.2", {
-          "packageLocation": "./.yarn/__virtual__/dom-to-playwright-virtual-235f1c0ee6/0/cache/dom-to-playwright-npm-0.1.2-7027e1ab87-5ee7755f8e.zip/node_modules/dom-to-playwright/",
+        ["virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.3", {
+          "packageLocation": "./.yarn/__virtual__/dom-to-playwright-virtual-5eeac160a5/0/cache/dom-to-playwright-npm-0.1.3-ea36dd13d4-ae6f9260df.zip/node_modules/dom-to-playwright/",
           "packageDependencies": [
-            ["dom-to-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.2"],
+            ["dom-to-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.3"],
             ["@types/playwright", null],
             ["playwright", "npm:1.16.1"]
           ],

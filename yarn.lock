@@ -527,7 +527,7 @@ __metadata:
     "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": 8.10.97
     "@types/babel__preset-env": ^7
-    "@types/chance": ^1.1.1
+    "@types/chance": 1.1.3
     "@types/cors": 2.8.12
     "@types/debug": ^4.1.5
     "@types/express": ^4.17.11
@@ -562,7 +562,7 @@ __metadata:
     aws-sdk: ^2.907.0
     aws-xray-sdk: ^3.3.3
     babel-loader: ^8.2.2
-    chance: ^1.1.7
+    chance: 1.1.8
     copy-webpack-plugin: ^9.0.0
     cors: ^2.8.5
     csv-parse: ^4.15.4
@@ -1087,7 +1087,7 @@ __metadata:
     "@types/jwt-encode": "workspace:*"
     apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
-    chance: ^1.1.7
+    chance: 1.1.8
     cross-fetch: ^3.1.4
     debug: ^4.3.3
     got: ^11.8.2
@@ -1121,7 +1121,7 @@ __metadata:
     "@types/jwt-encode": "workspace:*"
     "@types/luxon": ^1
     apr-intercept: ^3.0.4
-    chance: ^1.1.7
+    chance: 1.1.8
     cross-fetch: ^3.1.4
     debug: ^4.3.3
     got: ^11.8.2
@@ -10742,10 +10742,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/chance@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "@types/chance@npm:1.1.1"
-  checksum: 017398be00ef13b74f0f0fd3bd57f9c48406f278427157d8838e1088dcae025553a74bd44f357a0a1d8b51ec02b678384c1ffcd0f56764e910b8f553d5a1a923
+"@types/chance@npm:1.1.3":
+  version: 1.1.3
+  resolution: "@types/chance@npm:1.1.3"
+  checksum: df2be43fab359e5fa734fb91aa1c4c15108310be0e4990d00203805a63f9b2182da74eaabc8859b742e150d970decf27a773fcc6cbf28fb5b372c9b1bd7e9b89
   languageName: node
   linkType: hard
 
@@ -15973,10 +15973,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chance@npm:^1.1.7":
-  version: 1.1.7
-  resolution: "chance@npm:1.1.7"
-  checksum: 4d9f7f7b3a5a7436ebdc33ae06e5e6e7d40e66f9dbcf0e3ee78cf304d50f2fadd1ab8d9ab1f59f66428b32750c23ec82c832afbca4aa2bdf58f4fc85618cdd8b
+"chance@npm:1.1.8":
+  version: 1.1.8
+  resolution: "chance@npm:1.1.8"
+  checksum: e733f51e1094d7b0343a9e79f38599086442e6284fc2789cf9e072c71a0070874a1b340f9fffe4e66260899733f768cf113434be466ecb0016e3afcb60add3ee
   languageName: node
   linkType: hard
 

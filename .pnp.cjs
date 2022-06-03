@@ -2027,7 +2027,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/chance",
-        "npm:1.1.1"
+        "npm:1.1.3"
       ],
       [
         "@types/cls-hooked",
@@ -3510,7 +3510,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "chance",
-        "npm:1.1.7"
+        "npm:1.1.8"
       ],
       [
         "change-case",
@@ -10700,7 +10700,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/aws-lambda", "npm:8.10.97"],
             ["@types/babel__preset-env", "npm:7.9.2"],
-            ["@types/chance", "npm:1.1.1"],
+            ["@types/chance", "npm:1.1.3"],
             ["@types/cors", "npm:2.8.12"],
             ["@types/debug", "npm:4.1.5"],
             ["@types/express", "npm:4.17.11"],
@@ -10735,7 +10735,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["aws-sdk", "npm:2.907.0"],
             ["aws-xray-sdk", "npm:3.3.3"],
             ["babel-loader", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:8.2.2"],
-            ["chance", "npm:1.1.7"],
+            ["chance", "npm:1.1.8"],
             ["copy-webpack-plugin", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:9.0.0"],
             ["cors", "npm:2.8.5"],
             ["csv-parse", "npm:4.15.4"],
@@ -11626,7 +11626,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
-            ["chance", "npm:1.1.7"],
+            ["chance", "npm:1.1.8"],
             ["cross-fetch", "npm:3.1.4"],
             ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.3"],
             ["got", "npm:11.8.2"],
@@ -11662,7 +11662,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],
             ["@types/luxon", "npm:1.26.4"],
             ["apr-intercept", "npm:3.0.4"],
-            ["chance", "npm:1.1.7"],
+            ["chance", "npm:1.1.8"],
             ["cross-fetch", "npm:3.1.4"],
             ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.3"],
             ["got", "npm:11.8.2"],
@@ -30106,10 +30106,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/chance", [
-        ["npm:1.1.1", {
-          "packageLocation": "./.yarn/cache/@types-chance-npm-1.1.1-5956e93e93-017398be00.zip/node_modules/@types/chance/",
+        ["npm:1.1.3", {
+          "packageLocation": "./.yarn/cache/@types-chance-npm-1.1.3-42a937aa7b-df2be43fab.zip/node_modules/@types/chance/",
           "packageDependencies": [
-            ["@types/chance", "npm:1.1.1"]
+            ["@types/chance", "npm:1.1.3"]
           ],
           "linkType": "HARD",
         }]
@@ -36403,10 +36403,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["chance", [
-        ["npm:1.1.7", {
-          "packageLocation": "./.yarn/cache/chance-npm-1.1.7-7520901cfb-4d9f7f7b3a.zip/node_modules/chance/",
+        ["npm:1.1.8", {
+          "packageLocation": "./.yarn/cache/chance-npm-1.1.8-47e2e1db1e-e733f51e10.zip/node_modules/chance/",
           "packageDependencies": [
-            ["chance", "npm:1.1.7"]
+            ["chance", "npm:1.1.8"]
           ],
           "linkType": "HARD",
         }]

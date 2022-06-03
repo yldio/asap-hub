@@ -39,7 +39,7 @@
     "@types/jest": "26.0.24",
     "@types/jwt-decode": "^2.2.1",
     "@types/jwt-encode": "workspace:*",
-    "chance": "^1.1.7",
+    "chance": "1.1.8",
     "jwt-encode": "^1.0.1",
     "nock": "^13.0.11"
   }

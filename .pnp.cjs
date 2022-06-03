@@ -6114,7 +6114,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "jest-playwright-preset",
-        "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.0"
+        "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.2"
       ],
       [
         "jest-pnp-resolver",
@@ -11188,7 +11188,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["hast-util-sanitize", "npm:3.0.2"],
             ["history", "npm:4.10.1"],
             ["jest-playwright-jsdom", "npm:0.0.4"],
-            ["jest-playwright-preset", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.0"],
+            ["jest-playwright-preset", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.2"],
             ["playwright", "npm:1.16.1"],
             ["playwright-core", "npm:1.16.1"],
             ["ramda", "npm:0.27.1"],
@@ -11274,7 +11274,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["hast-util-sanitize", "npm:3.0.2"],
             ["history", "npm:4.10.1"],
             ["jest-playwright-jsdom", "npm:0.0.4"],
-            ["jest-playwright-preset", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.0"],
+            ["jest-playwright-preset", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.2"],
             ["playwright", "npm:1.16.1"],
             ["playwright-core", "npm:1.16.1"],
             ["ramda", "npm:0.27.1"],
@@ -11365,7 +11365,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["hast-util-sanitize", "npm:3.0.2"],
             ["history", "npm:4.10.1"],
             ["jest-playwright-jsdom", "npm:0.0.4"],
-            ["jest-playwright-preset", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.0"],
+            ["jest-playwright-preset", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.2"],
             ["playwright", "npm:1.16.1"],
             ["playwright-core", "npm:1.16.1"],
             ["ramda", "npm:0.27.1"],
@@ -11454,7 +11454,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["hast-util-sanitize", "npm:3.0.2"],
             ["history", "npm:4.10.1"],
             ["jest-playwright-jsdom", "npm:0.0.4"],
-            ["jest-playwright-preset", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.0"],
+            ["jest-playwright-preset", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.2"],
             ["playwright", "npm:1.16.1"],
             ["playwright-core", "npm:1.16.1"],
             ["ramda", "npm:0.27.1"],
@@ -41518,13 +41518,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:0.7.2", {
-          "packageLocation": "./.yarn/cache/expect-playwright-npm-0.7.2-c7b46c1403-7503700e26.zip/node_modules/expect-playwright/",
-          "packageDependencies": [
-            ["expect-playwright", "npm:0.7.2"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:0.8.0", {
           "packageLocation": "./.yarn/cache/expect-playwright-npm-0.8.0-0fec7940e9-d9e8f05295.zip/node_modules/expect-playwright/",
           "packageDependencies": [
@@ -47179,22 +47172,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:1.7.0", {
-          "packageLocation": "./.yarn/cache/jest-playwright-preset-npm-1.7.0-313c1331ed-afb375ca41.zip/node_modules/jest-playwright-preset/",
+        ["npm:1.7.2", {
+          "packageLocation": "./.yarn/cache/jest-playwright-preset-npm-1.7.2-bc0bea9503-1e9c7d9994.zip/node_modules/jest-playwright-preset/",
           "packageDependencies": [
-            ["jest-playwright-preset", "npm:1.7.0"]
+            ["jest-playwright-preset", "npm:1.7.2"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.0", {
-          "packageLocation": "./.yarn/__virtual__/jest-playwright-preset-virtual-174db383ef/0/cache/jest-playwright-preset-npm-1.7.0-313c1331ed-afb375ca41.zip/node_modules/jest-playwright-preset/",
+        ["virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.2", {
+          "packageLocation": "./.yarn/__virtual__/jest-playwright-preset-virtual-813656ed22/0/cache/jest-playwright-preset-npm-1.7.2-bc0bea9503-1e9c7d9994.zip/node_modules/jest-playwright-preset/",
           "packageDependencies": [
-            ["jest-playwright-preset", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.0"],
+            ["jest-playwright-preset", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.2"],
             ["@types/jest", "npm:26.0.24"],
             ["@types/jest-circus", null],
             ["@types/jest-environment-node", null],
             ["@types/jest-runner", null],
-            ["expect-playwright", "npm:0.7.2"],
+            ["expect-playwright", "npm:0.8.0"],
             ["jest", null],
             ["jest-circus", null],
             ["jest-environment-node", null],

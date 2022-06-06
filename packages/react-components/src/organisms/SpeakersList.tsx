@@ -17,7 +17,7 @@ const gridStyles = css({
   display: 'grid',
   flexFlow: 'column',
   gap: `${15 / perRem}em`,
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
+  [`@media (max-width: ${tabletScreen.width}px)`]: {
     gap: 0,
   },
 });

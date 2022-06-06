@@ -223,7 +223,7 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
           </div>
         ))}
         {shouldRenderButton && (
-          <div css={{ buttonWrapperStyles }}>
+          <div css={buttonWrapperStyles}>
             <Button linkStyle onClick={() => setExpanded(!expanded)}>
               <span
                 css={{

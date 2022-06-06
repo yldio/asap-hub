@@ -5,6 +5,7 @@ import { events, network } from '@asap-hub/routing';
 
 import { Headline3, Link, Anchor } from '../atoms';
 import { lead } from '../colors';
+import { TagList } from '../molecules';
 import { perRem, largeDesktopScreen } from '../pixels';
 import {
   groupsIcon,
@@ -64,7 +65,7 @@ const iconStyles = css({
 type EventInfoProps = ComponentProps<typeof EventTime> &
   Pick<
     EventResponse,
-    'id' | 'title' | 'thumbnail' | 'group' | 'status' | 'speakers'
+    'id' | 'title' | 'thumbnail' | 'group' | 'status' | 'speakers' | 'tags'
   > & {
     titleLimit?: number | null;
     showNumberOfSpeakers?: boolean;
@@ -168,6 +169,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
           </div>
           {showTeams && <EventTeams speakers={props.speakers} />}
           {showNumberOfSpeakers && <EventSpeakers speakers={props.speakers} />}
+          <TagList tags={props.tags} max={3} />
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@ import { Button } from '@asap-hub/react-components';
 
 import { subMinutes, parseISO } from 'date-fns';
 
-import { ToastCard, TagList, EventInfo } from '../molecules';
+import { ToastCard, EventInfo } from '../molecules';
 import { Link } from '../atoms';
 import { useDateHasPassed } from '../date';
 import { considerEndedAfter } from '../utils';
@@ -28,7 +28,6 @@ type EventCardProps = ComponentProps<typeof EventInfo> &
 
 const EventCard: React.FC<EventCardProps> = ({
   status,
-  tags,
   speakers,
   ...props
 }) => {
@@ -121,7 +120,6 @@ const EventCard: React.FC<EventCardProps> = ({
         showNumberOfSpeakers={true}
         showTeams={true}
       />
-      <TagList tags={tags} max={3} />
     </ToastCard>
   );
 };

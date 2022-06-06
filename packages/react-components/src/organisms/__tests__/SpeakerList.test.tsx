@@ -112,15 +112,19 @@ describe('When rendering the speaker list', () => {
       expect(screen.getByRole('button', { name: /Show less/i })).toBeVisible();
     });
 
-    it('Does not render show more button for less than 5 speakers', async () => {
+    it('Does not render show more button for less than 6 speakers', async () => {
       const event = {
-        ...createEventResponse({ numberOfSpeakers: 15 }),
+        ...createEventResponse({
+          numberOfSpeakers: 5,
+          numberOfExternalSpeakers: 0,
+          numberOfUnknownSpeakers: 0,
+        }),
       };
 
       render(<SpeakersList {...event} />);
 
       expect(
-        screen.queryByRole('button', { name: /Show mmore/i }),
+        screen.queryByRole('button', { name: /Show more/i }),
       ).not.toBeInTheDocument();
     });
   });

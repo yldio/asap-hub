@@ -360,7 +360,7 @@ describe('on submit', () => {
   it('can submit access instructions', async () => {
     await setupForm();
     userEvent.type(
-      screen.getByRole('textbox', { name: /access instructions/i }),
+      screen.getByRole('textbox', { name: /usage notes/i }),
       'Access Instructions',
     );
     await submitForm();

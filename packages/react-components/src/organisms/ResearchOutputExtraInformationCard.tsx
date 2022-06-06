@@ -174,7 +174,7 @@ const ResearchOutputExtraInformationCard: React.FC<ResearchOutputExtraInformatio
           />
         )}
         <LabeledTextArea
-          title="Access instructions"
+          title="Usage Notes"
           subtitle="(optional)"
           onChange={onChangeAccessInstructions}
           placeholder="E.g. To access the output, you will first need to create an account on..."

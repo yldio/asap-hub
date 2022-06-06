@@ -1,6 +1,7 @@
 import { NavHashLink } from 'react-router-hash-link';
 import { css } from '@emotion/react';
 
+import { TextChildren } from '../text';
 import { useHasRouter } from '../routing';
 import { lead } from '../colors';
 import {
@@ -65,7 +66,8 @@ const disableStyles = css({
 interface NavigationLinkProps {
   readonly href: string;
   readonly enabled?: boolean;
-  readonly icon?: JSX.Element;
+  readonly icon: JSX.Element;
+  readonly children: TextChildren;
 }
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   href,
@@ -89,7 +91,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
         isActive={(match, _) => enabled && !!match}
       >
         <p css={textStyles}>
-          {icon && <span css={iconStyles}>{icon}</span>}
+          <span css={iconStyles}>{icon}</span>
           {children}
         </p>
       </NavHashLink>
@@ -104,7 +106,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
       css={[styles, active && activePrimaryStyles, !enabled && disableStyles]}
     >
       <p css={textStyles}>
-        {icon && <span css={iconStyles}>{icon}</span>}
+        <span css={iconStyles}>{icon}</span>
         {children}
       </p>
     </a>

@@ -25,5 +25,7 @@
     "forceConsistentCasingInFileNames": true,
 
     "noErrorTruncation": true
-  }
+  },
+  "files": [],
+  "include": []
 }

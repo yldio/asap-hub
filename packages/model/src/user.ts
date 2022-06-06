@@ -177,6 +177,7 @@ export interface UserUpdateDataObject {
   orcidWorks?: OrcidWork[];
 }
 
+export type UserUpdateRequest = UserUpdateDataObject;
 export type UserPatchRequest = Omit<
   UserUpdateDataObject,
   | 'avatar'

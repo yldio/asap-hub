@@ -126,10 +126,9 @@ const cleanUser = (userToUpdate: UserUpdateDataObject) =>
     }
 
     // we get an object but squidex expects an array of objects
-    if (key === 'social') {
+    if (key === 'social' || key === 'avatar') {
       return setValue([value]);
     }
-
     return setValue(value);
   }, {} as { [key: string]: { iv: unknown } });
 

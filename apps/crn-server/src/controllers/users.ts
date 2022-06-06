@@ -1,9 +1,9 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import {
   ListUserResponse,
-  UserPatchRequest,
   UserResponse,
   UserUpdateDataObject,
+  UserUpdateRequest,
 } from '@asap-hub/model';
 import Intercept from 'apr-intercept';
 import { AssetDataProvider } from '../data-providers/assets.data-provider';
@@ -31,7 +31,7 @@ export interface UserController {
   fetchById(id: string): Promise<UserResponse>;
   fetchByCode(code: string): Promise<UserResponse>;
   connectByCode(welcomeCode: string, userId: string): Promise<UserResponse>;
-  update(id: string, update: UserPatchRequest): Promise<UserResponse>;
+  update(id: string, update: UserUpdateRequest): Promise<UserResponse>;
   updateAvatar(
     id: string,
     avatar: Buffer,
@@ -55,7 +55,7 @@ export default class Users implements UserController {
     this.assetDataProvider = assetDateProvider;
   }
 
-  async update(id: string, update: UserPatchRequest): Promise<UserResponse> {
+  async update(id: string, update: UserUpdateRequest): Promise<UserResponse> {
     await this.userDataProvider.update(id, update);
     return this.fetchById(id);
   }
@@ -100,8 +100,7 @@ export default class Users implements UserController {
       avatar,
       contentType,
     );
-    await this.userDataProvider.update(id, { avatar: assetId });
-    return this.fetchById(id);
+    return this.update(id, { avatar: assetId });
   }
 
   async connectByCode(
@@ -118,11 +117,10 @@ export default class Users implements UserController {
     if (user.connections?.find(({ code }) => code === userId)) {
       return parseUserToResponse(user);
     }
-    await this.userDataProvider.update(user.id, {
+    return this.update(user.id, {
       email: user.email,
       connections: [...(user.connections || []), { code: userId }],
     });
-    return this.fetchById(user.id);
   }
 
   async syncOrcidProfile(

@@ -39,30 +39,9 @@ const gridMixin = {
   },
 };
 
-const previewStyle = {
-  maxHeight: '90px',
-  overflow: 'hidden',
-  background: `linear-gradient(180deg, ${lead.rgb} 26.56%, ${
-    colorWithTransparency(lead, 0).rgba
-  } 100%)`,
-  WebkitBackgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
-  backgroundClip: 'text',
-  textFillColor: 'transparent',
-};
-
-const speakerListStyles = css({
-  ...gridMixin,
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
-    gridAutoFlow: 'row',
-    alignItems: 'start',
-    borderBottom: `1px solid ${steel.rgb}`,
-  },
-});
-
 const headerStyle = css({
   ...gridMixin,
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
+  [`@media (max-width: ${tabletScreen.width}px)`]: {
     display: 'none',
   },
 });
@@ -72,7 +51,7 @@ const placeholderStyle = css({
 });
 
 const labelStyle = css({
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
+  [`@media (max-width: ${tabletScreen.width}px)`]: {
     gridTemplateColumns: '1fr 1fr 1fr',
     gridAutoFlow: 'column',
     alignItems: 'start',
@@ -85,9 +64,9 @@ const labelStyle = css({
 const groupStyle = css({
   display: 'flex',
   flexFlow: 'column',
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
-    paddingBottom: `${21 / perRem}em`,
-    paddingTop: `${21 / perRem}em`,
+  [`@media (max-width: ${tabletScreen.width}px)`]: {
+    paddingBottom: `${12 / perRem}em`,
+    paddingTop: `${12 / perRem}em`,
   },
 });
 
@@ -96,18 +75,57 @@ const toBeAnnouncedStyle = css({
   color: `${lead}`,
 });
 
+const previewStyle = {
+  maxHeight: `${69 / perRem}em`,
+  overflow: 'hidden',
+  background: `linear-gradient(180deg, ${lead.rgb} 26.56%, ${
+    colorWithTransparency(lead, 0).rgba
+  } 100%)`,
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text',
+  textFillColor: 'transparent',
+};
+
+const speakerListMobileMixin = {
+  gridAutoFlow: 'row',
+  alignItems: 'start',
+  borderBottom: `1px solid ${steel.rgb}`,
+  paddingBottom: `${12 / perRem}em`,
+  paddingTop: `${12 / perRem}em`,
+};
+
+const speakerListStyles = {
+  ...gridMixin,
+  [`@media (max-width: ${tabletScreen.width}px)`]: {
+    ...speakerListMobileMixin,
+    [`:nth-last-of-type(2)`]: { borderBottom: 'transparent' },
+  },
+};
+
 const hideStyles = css({
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
-    gridAutoFlow: 'row',
-    alignItems: 'start',
-    borderBottom: `1px solid ${steel.rgb}`,
+  [`@media (max-width: ${tabletScreen.width}px)`]: {
+    ...speakerListMobileMixin,
     [`:nth-of-type(4)`]: { ...previewStyle, borderBottom: 'transparent' },
     [`:nth-of-type(n+5)`]: { display: 'none' },
   },
   [`@media (min-width: ${tabletScreen.width}px)`]: {
     ...gridMixin,
+    borderBottom: 'transparent',
     [`:nth-of-type(n+6)`]: { ...previewStyle },
     [`:nth-of-type(n+7)`]: { display: 'none' },
+  },
+});
+
+const buttonWrapperStyles = css({
+  paddingBottom: `${21 / perRem}em`,
+  marginBottom: `${21 / perRem}em`,
+  display: 'flex',
+  justifyContent: 'center',
+  width: '100%',
+  borderBottom: `1px solid ${steel.rgb}`,
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    borderBottom: `transparent`,
   },
 });
 
@@ -117,17 +135,16 @@ interface SpeakerListProps {
 }
 
 const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
+  const [expanded, setExpanded] = useState(false);
+  const isMobile = window.innerWidth < tabletScreen.width;
   const hasEnded = useDateHasPassed(considerEndedAfter(endDate));
+
   const userToBeAnnounced = hasEnded
     ? 'User was not announced'
     : 'User to be announced';
-  const { innerWidth: width } = window;
-  const isMobile = width <= mobileScreen.width;
-
-  const condition =
+  const shouldRenderButton =
     (isMobile && speakers.length > 3) || (!isMobile && speakers.length > 5);
 
-  const [expanded, setExpanded] = useState(false);
   return (
     <div
       css={{
@@ -205,8 +222,8 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
             </div>
           </div>
         ))}
-        {condition && (
-          <div css={{ paddingTop: `${18 / perRem}em`, margin: 'auto' }}>
+        {shouldRenderButton && (
+          <div css={{ buttonWrapperStyles }}>
             <Button linkStyle onClick={() => setExpanded(!expanded)}>
               <span
                 css={{

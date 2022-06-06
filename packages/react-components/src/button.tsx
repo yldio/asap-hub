@@ -66,6 +66,12 @@ const largeStyles = css({
   paddingLeft: `${(20 - borderWidth) / perRem}em`,
   paddingRight: `${(20 - borderWidth) / perRem}em`,
 });
+
+const smallWithSpaceStyles = css({
+  marginTop: `${12 / perRem}em`,
+  marginBottom: `${12 / perRem}em`,
+});
+
 const smallStyles = css({
   '> svg': {
     height: `${18 / perRem}em`,
@@ -79,9 +85,6 @@ const smallStyles = css({
   '> span + svg': {
     marginLeft: `${6 / perRem}em`,
   },
-
-  marginTop: `${12 / perRem}em`,
-  marginBottom: `${12 / perRem}em`,
 
   paddingTop: `${(6 - borderWidth) / perRem}em`,
   paddingBottom: `${(6 - borderWidth) / perRem}em`,
@@ -189,10 +192,12 @@ export const getButtonStyles = ({
   enabled = true,
   active = false,
   children = [] as React.ReactNode,
+  margin = true,
 }) =>
   css([
     styles,
     small ? smallStyles : largeStyles,
+    margin && small && smallWithSpaceStyles,
     enabled
       ? active
         ? primary

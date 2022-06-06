@@ -1,46 +1,61 @@
-import { ReactNode } from 'react';
+import { Component, ReactNode } from 'react';
 import { css } from '@emotion/react';
 
 import { perRem } from '../pixels';
-import { Card, Divider } from '../atoms';
-import { ember, lead } from '../colors';
-import { alertIcon, clockIcon, paperClipIcon } from '../icons';
+import { Card } from '../atoms';
+import { lead, steel, silver, apricot, clay, info, sky } from '../colors';
+import { AlertIcon, clockIcon, paperClipIcon } from '../icons';
 import { paddingStyles } from '../card';
 
 const toastStyles = css({
   display: 'flex',
-  alignItems: 'flex-start',
-  paddingTop: 0,
-  paddingBottom: `${12 / perRem}em`,
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  padding: `${16 / perRem}em ${24 / perRem}em`,
 });
 
 const iconStyles = css({
   display: 'inline-block',
   width: `${24 / perRem}em`,
   height: `${24 / perRem}em`,
-  paddingRight: `${15 / perRem}em`,
+  paddingRight: `${12 / perRem}em`,
 });
 
-const emberStyles = css({
-  color: ember.rgb,
-  fill: ember.rgb,
+const alertStyles = css({
+  backgroundColor: apricot.rgb,
+  color: clay.rgb,
+  fill: clay.rgb,
+});
+
+const infoStyles = css({
+  backgroundColor: sky.rgb,
+  color: info.rgb,
+  fill: info.rgb,
 });
 
 const leadStyles = css({
+  backgroundColor: silver.rgb,
   color: lead.rgb,
   fill: lead.rgb,
 });
 
-type Type = 'alert' | 'attachment' | 'live';
+const toastContentStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+});
 
-const iconMap: Record<Type, ReactNode> = {
-  alert: alertIcon,
+type Type = 'alert' | 'attachment' | 'live' | 'info';
+
+const iconMap: Record<Type, ReactNode | Component> = {
+  alert: <AlertIcon color={clay.rgb} />,
   attachment: paperClipIcon,
   live: clockIcon,
+  info: <AlertIcon color={info.rgb} />,
 };
 
 const accentMap = {
-  alert: emberStyles,
+  alert: alertStyles,
+  info: infoStyles,
   attachment: leadStyles,
   live: leadStyles,
 };
@@ -48,26 +63,30 @@ const accentMap = {
 interface ToastCardProps {
   readonly children: ReactNode;
   readonly toastContent?: ReactNode;
+  readonly toastAction?: ReactNode;
   readonly type?: Type;
 }
 const ToastCard: React.FC<ToastCardProps> = ({
   children,
   toastContent,
+  toastAction,
   type = 'alert',
 }) => (
   <Card padding={false}>
-    <div css={[paddingStyles, toastContent && { paddingBottom: 0 }]}>
-      {children}
-    </div>
     {toastContent && (
       <>
-        <Divider />
-        <span css={[paddingStyles, toastStyles, accentMap[type]]}>
-          <span css={iconStyles}>{iconMap[type]}</span>
-          {toastContent}
+        <span css={[toastStyles, accentMap[type]]}>
+          <span css={toastContentStyles}>
+            <span css={[iconStyles]}>{iconMap[type]}</span>
+            {toastContent}
+          </span>
+          {toastAction}
         </span>
       </>
     )}
+    <div css={[paddingStyles, toastContent && { paddingBottom: 0 }]}>
+      {children}
+    </div>
   </Card>
 );
 

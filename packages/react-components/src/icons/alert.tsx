@@ -1,4 +1,8 @@
-const alert = (
+interface AlertProps {
+  color: string;
+}
+
+const Alert = ({ color }: AlertProps) => (
   <svg
     width="24px"
     height="24px"
@@ -31,8 +35,8 @@ const alert = (
                     <g id="Group-10">
                       <g id="Group-4"></g>
                       <rect
+                        fill={color}
                         id="Rectangle"
-                        fill="#CD1426"
                         x="0"
                         y="0"
                         width="24"
@@ -77,4 +81,4 @@ const alert = (
   </svg>
 );
 
-export default alert;
+export default Alert;

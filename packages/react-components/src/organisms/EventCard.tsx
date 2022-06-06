@@ -4,6 +4,8 @@ import {
   EventResponse,
   EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
 } from '@asap-hub/model';
+import { Button } from '@asap-hub/react-components';
+
 import { subMinutes, parseISO } from 'date-fns';
 
 import { ToastCard, TagList, EventInfo } from '../molecules';
@@ -23,7 +25,13 @@ type EventCardProps = ComponentProps<typeof EventInfo> &
     | 'presentation'
     | 'meetingMaterials'
   >;
-const EventCard: React.FC<EventCardProps> = ({ status, tags, ...props }) => {
+
+const EventCard: React.FC<EventCardProps> = ({
+  status,
+  tags,
+  speakers,
+  ...props
+}) => {
   const considerStartedAfter = subMinutes(
     parseISO(props.startDate),
     EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
@@ -36,21 +44,43 @@ const EventCard: React.FC<EventCardProps> = ({ status, tags, ...props }) => {
     'children'
   > => {
     if (status === 'Cancelled') {
-      return { toastContent: 'This event has been cancelled', type: 'alert' };
+      return {
+        toastContent: 'This event has been cancelled',
+        type: 'alert',
+      };
     }
     if (started && !finished) {
       return {
         type: 'live',
         toastContent: (
-          <span>
-            This event is currently happening.{' '}
-            {props.meetingLink && !props.hideMeetingLink && (
-              <Link href={props.meetingLink}>Join the meeting now</Link>
+          <>
+            {props.hideMeetingLink ? (
+              <span>This in-person event is currently happening.</span>
+            ) : (
+              <span>This event is currently live.</span>
             )}
-          </span>
+          </>
+        ),
+        toastAction: (
+          <>
+            {props.meetingLink && !props.hideMeetingLink && (
+              <Link href={props.meetingLink}>
+                <Button primary={true} small margin={false}>
+                  Join meeting now
+                </Button>
+              </Link>
+            )}
+          </>
         ),
       };
     }
+    if (speakers.length === 0) {
+      return {
+        type: 'info',
+        toastContent: 'More speakers to be announced.',
+      };
+    }
+
     if (finished) {
       const materialCount = eventMaterialTypes.reduce((count, key) => {
         const value = props[key];
@@ -87,6 +117,7 @@ const EventCard: React.FC<EventCardProps> = ({ status, tags, ...props }) => {
       <EventInfo
         {...props}
         status={status}
+        speakers={speakers}
         showNumberOfSpeakers={true}
         showTeams={true}
       />

@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 
 import { layoutStyles } from '../text';
 import { Paragraph } from '../atoms';
-import { crossIcon, alertIcon } from '../icons';
+import { crossIcon, AlertIcon } from '../icons';
 import {
   perRem,
   lineHeight,
@@ -11,7 +11,7 @@ import {
   mobileScreen,
   largeDesktopScreen,
 } from '../pixels';
-import { rose, ember } from '../colors';
+import { rose, ember, clay } from '../colors';
 
 const SIDE_PADDING = 24;
 
@@ -86,7 +86,7 @@ const Toast: React.FC<ToastProps> = ({ children, onClose }) => (
       </button>
     )}
     <div css={wrapStyles}>
-      <div css={alertIconStyles}>{alertIcon}</div>
+      <div css={alertIconStyles}>{<AlertIcon color={clay.rgb} />}</div>
       <div css={[wrapStyles, !onClose && { justifyContent: 'center' }]}>
         <Paragraph>{children}</Paragraph>
         {onClose && <span css={crossPlaceholderStyles}> </span>}

@@ -3,7 +3,7 @@ import { EventSpeaker } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { useState } from 'react';
 import { Headline3, Headline4, Avatar, Link, Button } from '../atoms';
-import { tabletScreen, perRem, mobileScreen } from '../pixels';
+import { tabletScreen, perRem } from '../pixels';
 import {
   userPlaceholderIcon,
   chevronCircleDownIcon,

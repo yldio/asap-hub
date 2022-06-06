@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 
 import { perRem } from '../pixels';
 import { Card } from '../atoms';
-import { lead, steel, silver, apricot, clay, info, sky } from '../colors';
+import { lead, silver, apricot, clay, info, sky } from '../colors';
 import { AlertIcon, clockIcon, paperClipIcon } from '../icons';
 import { paddingStyles } from '../card';
 

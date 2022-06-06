@@ -1,8 +1,10 @@
+import { FC } from 'react';
+
 interface AlertProps {
   color: string;
 }
 
-const Alert = ({ color }: AlertProps) => (
+const Alert: FC<AlertProps> = ({ color }) => (
   <svg
     width="24px"
     height="24px"

@@ -5,7 +5,6 @@ import { events, network } from '@asap-hub/routing';
 
 import { Headline3, Link, Anchor } from '../atoms';
 import { lead } from '../colors';
-import { TagList } from '../molecules';
 import { perRem, largeDesktopScreen } from '../pixels';
 import {
   groupsIcon,
@@ -13,7 +12,7 @@ import {
   calendarIcon,
   speakerIcon,
 } from '../icons';
-import { AssociationList, EventTime } from '.';
+import { AssociationList, EventTime, TagList } from '.';
 
 const TITLE_LIMIT = 55;
 

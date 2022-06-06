@@ -4,7 +4,6 @@ import {
   EventResponse,
   EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
 } from '@asap-hub/model';
-import { Button } from '@asap-hub/react-components';
 
 import { subMinutes, parseISO } from 'date-fns';
 
@@ -63,10 +62,14 @@ const EventCard: React.FC<EventCardProps> = ({
         toastAction: (
           <>
             {props.meetingLink && !props.hideMeetingLink && (
-              <Link href={props.meetingLink}>
-                <Button primary={true} small margin={false}>
-                  Join meeting now
-                </Button>
+              <Link
+                href={props.meetingLink}
+                margin={false}
+                primary
+                buttonStyle
+                small
+              >
+                Join meeting now
               </Link>
             )}
           </>

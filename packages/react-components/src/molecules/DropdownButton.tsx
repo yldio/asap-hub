@@ -38,7 +38,7 @@ const menuContainerStyles = css({
   display: 'none',
   overflow: 'hidden',
   zIndex: 1,
-  minWidth: `${245 / perRem}em`,
+  minWidth: `${300 / perRem}em`,
 
   width: '100%',
   top: 0,

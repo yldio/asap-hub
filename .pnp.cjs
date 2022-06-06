@@ -1983,7 +1983,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/aws-lambda",
-        "npm:8.10.97"
+        "npm:8.10.98"
       ],
       [
         "@types/babel__core",
@@ -10698,7 +10698,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/serverless", "npm:6.7.1"],
             ["@serverless/typescript", "npm:2.59.0"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
-            ["@types/aws-lambda", "npm:8.10.97"],
+            ["@types/aws-lambda", "npm:8.10.98"],
             ["@types/babel__preset-env", "npm:7.9.2"],
             ["@types/chance", "npm:1.1.3"],
             ["@types/cors", "npm:2.8.12"],
@@ -11033,7 +11033,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/boom", "npm:9.1.2"],
             ["@serverless/typescript", "npm:2.59.0"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
-            ["@types/aws-lambda", "npm:8.10.97"],
+            ["@types/aws-lambda", "npm:8.10.98"],
             ["@types/cors", "npm:2.8.12"],
             ["@types/express", "npm:4.17.11"],
             ["@types/jest", "npm:26.0.24"],
@@ -11615,7 +11615,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/bourne", "npm:2.0.0"],
             ["@hapi/joi", "npm:17.1.1"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
-            ["@types/aws-lambda", "npm:8.10.97"],
+            ["@types/aws-lambda", "npm:8.10.98"],
             ["@types/debug", "npm:4.1.5"],
             ["@types/hapi", "npm:18.0.7"],
             ["@types/hapi__boom", "npm:9.0.1"],
@@ -30008,10 +30008,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:8.10.97", {
-          "packageLocation": "./.yarn/cache/@types-aws-lambda-npm-8.10.97-acc2782435-0a79e5d853.zip/node_modules/@types/aws-lambda/",
+        ["npm:8.10.98", {
+          "packageLocation": "./.yarn/cache/@types-aws-lambda-npm-8.10.98-1e5c6f1b85-dad5d2ba33.zip/node_modules/@types/aws-lambda/",
           "packageDependencies": [
-            ["@types/aws-lambda", "npm:8.10.97"]
+            ["@types/aws-lambda", "npm:8.10.98"]
           ],
           "linkType": "HARD",
         }]

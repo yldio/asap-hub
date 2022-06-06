@@ -1,7 +1,8 @@
 import { FC } from 'react';
+import { steel } from '../colors';
 
 interface AlertProps {
-  color: string;
+  readonly color?: string;
 }
 
 const Alert: FC<AlertProps> = ({ color }) => (
@@ -37,7 +38,7 @@ const Alert: FC<AlertProps> = ({ color }) => (
                     <g id="Group-10">
                       <g id="Group-4"></g>
                       <rect
-                        fill={color}
+                        fill={color || steel.rgb}
                         id="Rectangle"
                         x="0"
                         y="0"

@@ -1,22 +1,29 @@
 const { execSync } = require('child_process');
-const { copyFileSync, readFileSync, writeFileSync, renameSync } = require('fs');
+const {
+  copyFileSync,
+  readFileSync,
+  writeFileSync,
+  renameSync,
+  symlinkSync,
+  unlinkSync,
+} = require('fs');
 const { resolve } = require('path');
-const { env } = require('process');
 const { JSDOM } = require('jsdom');
 const del = require('del');
+const getConfig = require('./config');
 
 const buildDir = resolve(__dirname, '../build');
+const publicDir = resolve(__dirname, '../public');
 
 function runBuild(APP) {
   // run CRA build script
+  symlinkSync(resolve(__dirname, `../public-${APP}`), publicDir, 'dir');
+
   try {
     execSync('yarn run react-scripts build', {
       stdio: 'pipe',
       env: {
-        ...env,
-        PUBLIC_URL:
-          env.AUTH_FRONTEND_BASE_URL || 'https://dev.hub.asap.science/.auth/',
-        APP,
+        ...getConfig(APP),
       },
     });
   } catch (err) {
@@ -24,6 +31,7 @@ function runBuild(APP) {
       `react-scripts build failed with status ${err.status}. Output:\n${err.output}`,
     );
   }
+  unlinkSync(publicDir);
 }
 
 function replaceHTML() {
@@ -69,7 +77,7 @@ function renameBuildFolder(APP) {
 runBuild('gp2');
 replaceHTML();
 renameBuildFolder('gp2');
-// // //Build crn-app
+//Build crn-app
 runBuild('crn');
 replaceHTML();
 //TODO: remove comment to rename the build folder to crn-build

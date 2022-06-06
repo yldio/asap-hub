@@ -2,18 +2,7 @@ import { userDegree, UserPatchRequest } from '@asap-hub/model';
 import { JSONSchemaType } from 'ajv';
 import { validateInput } from '.';
 
-const userPatchRequestValidationSchema: JSONSchemaType<
-  Omit<
-    UserPatchRequest,
-    | 'avatar'
-    | 'connections'
-    | 'orcidLastModifiedDate'
-    | 'email'
-    | 'orcid'
-    | 'orcidLastSyncDate'
-    | 'orcidWorks'
-  >
-> = {
+const userPatchRequestValidationSchema: JSONSchemaType<UserPatchRequest> = {
   type: 'object',
   properties: {
     jobTitle: { type: 'string', nullable: true },

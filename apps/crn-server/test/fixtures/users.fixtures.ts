@@ -15,8 +15,10 @@ import { createEventBridgeEventMock } from '../helpers/events';
 export const getSquidexUsersGraphqlResponse = (): FetchUsersQuery =>
   generateGraphqlFetchUsersResponse([getGraphQLUser()]);
 
-export const getSquidexUserGraphqlResponse = (): FetchUserQuery => ({
-  findUsersContent: getGraphQLUser(),
+export const getSquidexUserGraphqlResponse = (
+  findUsersContent = getGraphQLUser(),
+): FetchUserQuery => ({
+  findUsersContent,
 });
 
 export const generateGraphqlFetchUsersResponse = (

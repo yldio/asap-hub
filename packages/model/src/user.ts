@@ -80,8 +80,8 @@ export type OrcidWorkType = typeof orcidWorkType[number];
 
 export interface OrcidWork {
   id: string;
-  doi?: string;
-  title?: string;
+  doi: string;
+  title: string;
   type: OrcidWorkType;
   publicationDate: {
     year?: string;
@@ -149,7 +149,7 @@ export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
   algoliaApiKey: string;
 };
 
-export interface UserPatchDataObject {
+export interface UserUpdateDataObject {
   contactEmail?: string;
   firstName?: string;
   lastName?: string;
@@ -176,8 +176,17 @@ export interface UserPatchDataObject {
   orcidLastSyncDate?: string;
   orcidWorks?: OrcidWork[];
 }
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface UserPatchRequest extends UserPatchDataObject {}
+
+export type UserPatchRequest = Omit<
+  UserUpdateDataObject,
+  | 'avatar'
+  | 'connections'
+  | 'orcidLastModifiedDate'
+  | 'email'
+  | 'orcid'
+  | 'orcidLastSyncDate'
+  | 'orcidWorks'
+>;
 
 export interface UserAvatarPostRequest {
   avatar: string;

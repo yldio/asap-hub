@@ -1,9 +1,9 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import {
   ListUserResponse,
-  UserPatchDataObject,
   UserPatchRequest,
   UserResponse,
+  UserUpdateDataObject,
 } from '@asap-hub/model';
 import Intercept from 'apr-intercept';
 import { AssetDataProvider } from '../data-providers/assets';
@@ -98,7 +98,8 @@ export default class Users implements UserController {
       avatar,
       contentType,
     );
-    return this.update(id, { avatar: assetId });
+    await this.userDataProvider.update(id, { avatar: assetId });
+    return this.fetchById(id);
   }
 
   async connectByCode(
@@ -115,10 +116,11 @@ export default class Users implements UserController {
     if (user.connections?.find(({ code }) => code === userId)) {
       return parseUserToResponse(user);
     }
-    return this.update(user.id, {
+    await this.userDataProvider.update(user.id, {
       email: user.email,
       connections: [...(user.connections || []), { code: userId }],
     });
+    return this.fetchById(user.id);
   }
 
   async syncOrcidProfile(
@@ -135,7 +137,7 @@ export default class Users implements UserController {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       fetchOrcidProfile(user!.orcid!),
     );
-    const updateToUser: UserPatchDataObject = {
+    const updateToUser: UserUpdateDataObject = {
       email: user.email,
       orcidLastSyncDate: new Date().toISOString(),
     };

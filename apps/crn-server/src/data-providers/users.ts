@@ -1,7 +1,7 @@
 import {
   ListUserDataObject,
   UserDataObject,
-  UserPatchDataObject,
+  UserUpdateDataObject,
 } from '@asap-hub/model';
 import {
   RestUser,
@@ -22,7 +22,7 @@ import { FETCH_USER, FETCH_USERS } from '../queries/users.queries';
 
 export interface UserDataProvider {
   fetchById(id: string): Promise<UserDataObject | null>;
-  update(id: string, update: UserPatchDataObject): Promise<void>;
+  update(id: string, update: UserUpdateDataObject): Promise<void>;
   fetch(options: FetchUsersOptions): Promise<ListUserDataObject>;
 }
 export default class Users implements UserDataProvider {
@@ -41,7 +41,7 @@ export default class Users implements UserDataProvider {
     return parseGraphQLUserToDataObject(findUsersContent);
   }
 
-  async update(id: string, userToUpdate: UserPatchDataObject): Promise<void> {
+  async update(id: string, userToUpdate: UserUpdateDataObject): Promise<void> {
     const isFullUpdate = shouldDoFullUpdate(userToUpdate);
 
     const cleanedUser = cleanUser(userToUpdate);
@@ -91,13 +91,13 @@ export default class Users implements UserDataProvider {
   }
 }
 
-const shouldDoFullUpdate = (userToUpdate: UserPatchDataObject) =>
+const shouldDoFullUpdate = (userToUpdate: UserUpdateDataObject) =>
   userToUpdate.teams?.length ||
   Object.values(userToUpdate).some(
     (value) => value.trim && value.trim() === '',
   );
 
-const cleanUser = (userToUpdate: UserPatchDataObject) =>
+const cleanUser = (userToUpdate: UserUpdateDataObject) =>
   Object.entries(userToUpdate).reduce((acc, [key, value]) => {
     const setValue = (item: unknown) => ({ ...acc, [key]: { iv: item } });
     if (value.trim && value.trim() === '') {

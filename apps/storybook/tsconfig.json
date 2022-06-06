@@ -12,6 +12,7 @@
   "include": ["src"],
   "references": [
     { "path": "../../packages/react-components" },
+    { "path": "../../packages/gp2-components" },
     { "path": "../../packages/react-context" }
   ]
 }

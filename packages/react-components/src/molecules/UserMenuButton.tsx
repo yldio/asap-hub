@@ -28,6 +28,7 @@ interface UserMenuButtonProps {
 const UserMenuButton: React.FC<UserMenuButtonProps> = ({
   onClick = noop,
   open = false,
+  children,
 }) => {
   const {
     displayName = 'Unknown User',
@@ -47,7 +48,7 @@ const UserMenuButton: React.FC<UserMenuButtonProps> = ({
     >
       <Paragraph>
         <strong css={{ paddingRight: `${15 / perRem}em` }}>
-          {displayName}
+          {children || displayName}
         </strong>
       </Paragraph>
       <Avatar imageUrl={avatarUrl} firstName={firstName} lastName={lastName} />

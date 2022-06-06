@@ -48,6 +48,7 @@ export default class Users implements UserDataProvider {
 
     if (isFullUpdate) {
       const existingUser = await this.userSquidexRestClient.fetchById(id);
+
       await this.userSquidexRestClient.put(id, {
         ...existingUser.data,
         ...cleanedUser,
@@ -63,8 +64,11 @@ export default class Users implements UserDataProvider {
   }
 
   private async queryForUsers(filter: string, top: number, skip: number) {
-    const data = await this.queryFetchData(filter, top, skip);
-    const { queryUsersContentsWithTotal } = data;
+    const { queryUsersContentsWithTotal } = await this.queryFetchData(
+      filter,
+      top,
+      skip,
+    );
 
     const { total = 0, items = [] } = queryUsersContentsWithTotal || {};
 
@@ -139,6 +143,7 @@ const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
     code,
     onboarded = true,
     hidden = true,
+    orcid,
   } = filter || {};
   const filterRoles = (role || [])
     .reduce(
@@ -166,6 +171,7 @@ const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
 
   const filterHidden = hidden && "data/role/iv ne 'Hidden'";
   const filterNonOnboarded = onboarded && 'data/onboarded/iv eq true';
+  const filterOrcid = orcid && `contains(data/order/iv, '${orcid}')`;
 
   const queryFilter = [
     filterTeams && `(${filterTeams})`,
@@ -174,6 +180,7 @@ const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
     filterCode,
     filterNonOnboarded,
     filterHidden,
+    filterOrcid,
     searchFilter && `(${searchFilter})`,
   ]
     .filter(Boolean)

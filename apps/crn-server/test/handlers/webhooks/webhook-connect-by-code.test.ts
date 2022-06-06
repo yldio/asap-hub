@@ -110,15 +110,17 @@ describe('POST /webhook/users/connections - success', () => {
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
   test('returns 202 for valid code and updates the user', async () => {
     const userId = `google-oauth2|token`;
+    const email = 'a-email';
     const patchedUser = JSON.parse(JSON.stringify(user));
     patchedUser.data.connections.iv = [{ code: userId }];
-    const response = generateGraphqlFetchUsersResponse([
-      getGraphQLUser({ id: user.id }),
-    ]);
+
+    const userResponse = getGraphQLUser({ id: user.id });
+    userResponse.flatData.email = email;
+    const response = generateGraphqlFetchUsersResponse([userResponse]);
 
     const squidexGraphqlMocks = jest
       .spyOn(SquidexGraphql.prototype, 'request')
@@ -129,6 +131,7 @@ describe('POST /webhook/users/connections - success', () => {
 
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/users/${user.id}`, {
+        email: { iv: email },
         connections: { iv: [{ code: userId }] },
       })
       .reply(200, patchedUser);

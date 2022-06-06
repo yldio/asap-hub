@@ -128,6 +128,7 @@ export interface UserDataObject extends Invitee {
   biosketch?: string;
   orcid?: string;
   orcidLastModifiedDate?: string;
+  orcidLastSyncDate?: string;
   orcidWorks?: OrcidWork[];
   reachOut?: string;
   responsibilities?: string;

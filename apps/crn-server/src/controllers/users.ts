@@ -19,6 +19,7 @@ export type FetchUsersFilter = {
   code?: string;
   hidden?: boolean;
   onboarded?: boolean;
+  orcid?: string;
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
@@ -97,8 +98,7 @@ export default class Users implements UserController {
       avatar,
       contentType,
     );
-    await this.userDataProvider.update(id, { avatar: assetId });
-    return this.fetchById(id);
+    return this.update(id, { avatar: assetId });
   }
 
   async connectByCode(
@@ -115,11 +115,10 @@ export default class Users implements UserController {
     if (user.connections?.find(({ code }) => code === userId)) {
       return parseUserToResponse(user);
     }
-    await this.userDataProvider.update(user.id, {
+    return this.update(user.id, {
       email: user.email,
       connections: [...(user.connections || []), { code: userId }],
     });
-    return this.fetchById(user.id);
   }
 
   async syncOrcidProfile(
@@ -145,8 +144,7 @@ export default class Users implements UserController {
       updateToUser.orcidLastModifiedDate = lastModifiedDate;
       updateToUser.orcidWorks = works.slice(0, 10);
     }
-    await this.update(user.id, updateToUser);
-    return this.fetchById(user.id);
+    return this.update(user.id, updateToUser);
   }
   private async queryByCode(code: string) {
     return this.userDataProvider.fetch({

@@ -132,11 +132,11 @@ describe('Users controller', () => {
       jest.resetAllMocks();
     });
     test('should return 200 when syncs asset and updates users profile', async () => {
-      mockAssetDataProvider.create = jest.fn().mockResolvedValue(42);
+      mockAssetDataProvider.create = jest.fn().mockResolvedValueOnce(42);
       mockUserDataProvider.update = jest.fn();
       mockUserDataProvider.fetchById = jest
         .fn()
-        .mockResolvedValue(getUserDataObject());
+        .mockResolvedValueOnce(getUserDataObject());
 
       const result = await usersMockGraphqlClient.updateAvatar(
         'user-id',

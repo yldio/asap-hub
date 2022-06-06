@@ -139,6 +139,7 @@ export const parseUserToDataObject = (user: RestUser): UserDataObject => {
     social,
     orcid: user.data.orcid?.iv,
     orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
+    orcidLastSyncDate: user.data.orcidLastSyncDate?.iv,
     orcidWorks: user.data.orcidWorks?.iv,
     expertiseAndResourceTags: user.data.expertiseAndResourceTags?.iv || [],
     expertiseAndResourceDescription:
@@ -285,5 +286,6 @@ export const parseGraphQLUserToDataObject = (
     researchInterests: item.flatData.researchInterests ?? undefined,
     reachOut: item.flatData.reachOut || undefined,
     labs: flatLabs || [],
+    orcidLastSyncDate: item.flatData.orcidLastSyncDate || undefined,
   };
 };

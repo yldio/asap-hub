@@ -17,7 +17,7 @@ const gridStyles = css({
   display: 'grid',
   flexFlow: 'column',
   gap: `${15 / perRem}em`,
-  [`@media (max-width: ${tabletScreen.width}px)`]: {
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     gap: 0,
   },
 });
@@ -32,7 +32,7 @@ const userStyles = css({
 
 const gridMixin = {
   display: 'grid',
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
+  [`@media (min-width: ${tabletScreen.width - 1}px)`]: {
     gridTemplateColumns: '1fr 1fr 1fr',
     gridAutoFlow: 'column',
     alignItems: 'start',
@@ -41,7 +41,7 @@ const gridMixin = {
 
 const headerStyle = css({
   ...gridMixin,
-  [`@media (max-width: ${tabletScreen.width}px)`]: {
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     display: 'none',
   },
 });
@@ -51,7 +51,7 @@ const placeholderStyle = css({
 });
 
 const labelStyle = css({
-  [`@media (max-width: ${tabletScreen.width}px)`]: {
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     gridTemplateColumns: '1fr 1fr 1fr',
     gridAutoFlow: 'column',
     alignItems: 'start',
@@ -64,7 +64,7 @@ const labelStyle = css({
 const groupStyle = css({
   display: 'flex',
   flexFlow: 'column',
-  [`@media (max-width: ${tabletScreen.width}px)`]: {
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     paddingBottom: `${12 / perRem}em`,
     paddingTop: `${12 / perRem}em`,
   },
@@ -97,19 +97,19 @@ const speakerListMobileMixin = {
 
 const speakerListStyles = {
   ...gridMixin,
-  [`@media (max-width: ${tabletScreen.width}px)`]: {
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     ...speakerListMobileMixin,
     [`:nth-last-of-type(2)`]: { borderBottom: 'transparent' },
   },
 };
 
 const hideStyles = css({
-  [`@media (max-width: ${tabletScreen.width}px)`]: {
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     ...speakerListMobileMixin,
     [`:nth-of-type(4)`]: { ...previewStyle, borderBottom: 'transparent' },
     [`:nth-of-type(n+5)`]: { display: 'none' },
   },
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
+  [`@media (min-width: ${tabletScreen.width - 1}px)`]: {
     ...gridMixin,
     borderBottom: 'transparent',
     [`:nth-of-type(n+6)`]: { ...previewStyle },
@@ -124,7 +124,7 @@ const buttonWrapperStyles = css({
   justifyContent: 'center',
   width: '100%',
   borderBottom: `1px solid ${steel.rgb}`,
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
+  [`@media (min-width: ${tabletScreen.width - 1}px)`]: {
     borderBottom: `transparent`,
   },
 });

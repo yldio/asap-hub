@@ -167,7 +167,10 @@ const isUserDegree = (data: string): data is UserDegree =>
 const isOrcidWorkType = (data: string): data is OrcidWorkType =>
   (orcidWorkType as ReadonlyArray<string>).includes(data);
 
-export const parseUserToResponse = (user: UserDataObject): UserResponse => {
+export const parseUserToResponse = ({
+  connections: _,
+  ...user
+}: UserDataObject): UserResponse => {
   const displayName = `${user.firstName} ${user.lastName}`;
   const onboarded = typeof user.onboarded === 'boolean' ? user.onboarded : true;
   const response = {
@@ -175,7 +178,6 @@ export const parseUserToResponse = (user: UserDataObject): UserResponse => {
     displayName,
     onboarded,
   };
-  delete response.connections;
   return response;
 };
 
@@ -222,6 +224,33 @@ export const parseGraphQLUserToDataObject = (
       ];
     }, []) || [];
 
+  const orcidWorks =
+    (item.flatData.orcidWorks &&
+      item.flatData.orcidWorks
+        .reduce<OrcidWork[]>((orcidWorksAccumulator, orcidWork) => {
+          if (orcidWork.id === null || orcidWork.lastModifiedDate === null) {
+            return orcidWorksAccumulator;
+          }
+
+          return [
+            ...orcidWorksAccumulator,
+            {
+              id: orcidWork.id,
+              doi: orcidWork.doi || undefined,
+              title: orcidWork.title || undefined,
+              type:
+                orcidWork.type && isOrcidWorkType(orcidWork.type)
+                  ? orcidWork.type
+                  : 'UNDEFINED',
+              publicationDate: getOrcidWorkPublicationDate(
+                orcidWork.publicationDate,
+              ),
+              lastModifiedDate: orcidWork.lastModifiedDate,
+            },
+          ];
+        }, [])
+        .slice(0, 5)) ||
+    [];
   return {
     id: item.id,
     onboarded:
@@ -243,31 +272,7 @@ export const parseGraphQLUserToDataObject = (
     jobTitle: item.flatData.jobTitle || undefined,
     country: item.flatData.country || undefined,
     city: item.flatData.city || undefined,
-    orcidWorks:
-      item.flatData.orcidWorks
-        ?.reduce<OrcidWork[]>((orcidWorks, orcidWork) => {
-          if (orcidWork.id === null || orcidWork.lastModifiedDate === null) {
-            return orcidWorks;
-          }
-
-          return [
-            ...orcidWorks,
-            {
-              id: orcidWork.id,
-              doi: orcidWork.doi || undefined,
-              title: orcidWork.title || undefined,
-              type:
-                orcidWork.type && isOrcidWorkType(orcidWork.type)
-                  ? orcidWork.type
-                  : 'UNDEFINED',
-              publicationDate: getOrcidWorkPublicationDate(
-                orcidWork.publicationDate,
-              ),
-              lastModifiedDate: orcidWork.lastModifiedDate,
-            },
-          ];
-        }, [])
-        .slice(0, 5) || [],
+    orcidWorks,
     questions:
       flatQuestions
         .map((q) => q.question)

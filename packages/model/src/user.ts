@@ -80,8 +80,8 @@ export type OrcidWorkType = typeof orcidWorkType[number];
 
 export interface OrcidWork {
   id: string;
-  doi: string;
-  title: string;
+  doi?: string;
+  title?: string;
   type: OrcidWorkType;
   publicationDate: {
     year?: string;

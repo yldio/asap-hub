@@ -192,9 +192,7 @@ export default class ResearchOutputs implements ResearchOutputController {
 
     if ('researchOutputId' in researchOutputData) {
       const {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         researchOutputId: _,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         teams: __,
         ...researchOutputUpdateData
       } = researchOutputData;

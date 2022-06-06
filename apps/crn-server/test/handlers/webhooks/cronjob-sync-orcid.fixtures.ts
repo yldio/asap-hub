@@ -69,7 +69,7 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
   ],
 };
 
-export const ORCIDWorksDeserialisedExpectation: OrcidWork[] = [
+export const ORCIDWorksDeserialisedExpectation: Required<OrcidWork>[] = [
   {
     doi: 'https://doi.org/10.1101/2020.06.24.169219',
     id: '76241838',

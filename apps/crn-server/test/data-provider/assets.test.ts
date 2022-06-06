@@ -1,6 +1,6 @@
 import { config } from '@asap-hub/squidex';
 import nock from 'nock';
-import AssetDataProvider from '../../src/data-providers/assets';
+import AssetDataProvider from '../../src/data-providers/assets.data-provider';
 import { identity } from '../helpers/squidex';
 
 describe('Asset data provider', () => {

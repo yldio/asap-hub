@@ -6,8 +6,8 @@ import {
   UserUpdateDataObject,
 } from '@asap-hub/model';
 import Intercept from 'apr-intercept';
-import { AssetDataProvider } from '../data-providers/assets';
-import { UserDataProvider } from '../data-providers/users';
+import { AssetDataProvider } from '../data-providers/assets.data-provider';
+import { UserDataProvider } from '../data-providers/users.data-provider';
 import { parseUserToResponse } from '../entities';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 import { FetchOptions } from '../utils/types';

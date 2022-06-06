@@ -3,8 +3,8 @@ import { algoliaSearchClientNativeFactory } from '@asap-hub/algolia';
 import { SquidexGraphql } from '@asap-hub/squidex';
 import { algoliaApiKey, algoliaAppId } from '../../../config';
 import Users from '../../../controllers/users';
-import AssetDataProvider from '../../../data-providers/assets';
-import UserDataProvider from '../../../data-providers/users';
+import AssetDataProvider from '../../../data-providers/assets.data-provider';
+import UserDataProvider from '../../../data-providers/users.data-provider';
 import { Handler } from '../../../utils/types';
 import { fetchUserByCodeHandlerFactory } from './fetch-by-code';
 

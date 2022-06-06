@@ -4,8 +4,8 @@ import { promises as fs } from 'fs';
 import ExternalAuthors from '../src/controllers/external-authors';
 import ResearchOutputs from '../src/controllers/research-outputs';
 import Users from '../src/controllers/users';
-import AssetDataProvider from '../src/data-providers/assets';
-import UserDataProvider from '../src/data-providers/users';
+import AssetDataProvider from '../src/data-providers/assets.data-provider';
+import UserDataProvider from '../src/data-providers/users.data-provider';
 
 type Entity = 'users' | 'research-outputs' | 'external-authors';
 export const exportEntity = async (

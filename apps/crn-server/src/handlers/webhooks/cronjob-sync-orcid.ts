@@ -2,8 +2,8 @@ import { framework as lambda } from '@asap-hub/services-common';
 import { SquidexGraphql } from '@asap-hub/squidex';
 import pLimit from 'p-limit';
 import Users from '../../controllers/users';
-import AssetDataProvider from '../../data-providers/assets';
-import UserDataProvider from '../../data-providers/users';
+import AssetDataProvider from '../../data-providers/assets.data-provider';
+import UserDataProvider from '../../data-providers/users.data-provider';
 
 export const handler = async (): Promise<lambda.Response> => {
   const ONE_MONTH = 1000 * 60 * 60 * 24 * 31;

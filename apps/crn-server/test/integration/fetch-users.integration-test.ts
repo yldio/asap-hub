@@ -1,8 +1,8 @@
 import { SquidexGraphql, User } from '@asap-hub/squidex';
 import Chance from 'chance';
 import Users from '../../src/controllers/users';
-import AssetDataProvider from '../../src/data-providers/assets';
-import UserDataProvider from '../../src/data-providers/users';
+import AssetDataProvider from '../../src/data-providers/assets.data-provider';
+import UserDataProvider from '../../src/data-providers/users.data-provider';
 import { createRandomOrcid, createUser } from '../helpers/users';
 
 const chance = new Chance();

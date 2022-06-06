@@ -1,7 +1,7 @@
 import { SquidexGraphql } from '@asap-hub/squidex';
 import Users, { UserController } from '../../controllers/users';
-import AssetDataProvider from '../../data-providers/assets';
-import UserDataProvider from '../../data-providers/users';
+import AssetDataProvider from '../../data-providers/assets.data-provider';
+import UserDataProvider from '../../data-providers/users.data-provider';
 import logger from '../../utils/logger';
 import { EventBridgeHandler } from '../../utils/types';
 import { UserEvent, UserPayload } from '../event-bus';

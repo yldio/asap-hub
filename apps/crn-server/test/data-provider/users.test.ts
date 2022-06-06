@@ -3,7 +3,7 @@ import { UserResponse } from '@asap-hub/model';
 import { config, RestUser } from '@asap-hub/squidex';
 import nock, { DataMatcherMap } from 'nock';
 import { FetchUsersOptions } from '../../src/controllers/users';
-import UserDataProvider from '../../src/data-providers/users';
+import UserDataProvider from '../../src/data-providers/users.data-provider';
 import {
   fetchUserResponse,
   getSquidexUserGraphqlResponse,

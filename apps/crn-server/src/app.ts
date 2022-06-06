@@ -31,8 +31,8 @@ import ResearchTags, {
 } from './controllers/research-tags';
 import Teams, { TeamController } from './controllers/teams';
 import Users, { UserController } from './controllers/users';
-import AssetDataProvider from './data-providers/assets';
-import UserDataProvider from './data-providers/users';
+import AssetDataProvider from './data-providers/assets.data-provider';
+import UserDataProvider from './data-providers/users.data-provider';
 import { permissionHandler } from './middleware/permission-handler';
 import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 import { tracingHandlerFactory } from './middleware/tracing-handler';

@@ -52,7 +52,7 @@ const EventCard: React.FC<EventCardProps> = ({
         type: 'live',
         toastContent: (
           <>
-            {props.hideMeetingLink ? (
+            {props.hideMeetingLink || !props.meetingLink ? (
               <span>This in-person event is currently happening.</span>
             ) : (
               <span>This event is currently live.</span>

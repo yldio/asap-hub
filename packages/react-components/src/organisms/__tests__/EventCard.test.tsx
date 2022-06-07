@@ -78,25 +78,16 @@ describe('current events', () => {
         endDate={addMinutes(new Date(), 1).toISOString()}
       />,
     );
-    expect(getByText(/currently happening/i)).toBeVisible();
+    expect(getByText(/currently live/i)).toBeVisible();
     expect(getByTitle(/clock/i)).toBeInTheDocument();
-    expect(getByText(/join/i)).toHaveAttribute('href', 'http://example.com');
-  });
-
-  it('hides the meeting link when hideMeetingLink is set to true', () => {
-    const { rerender } = render(
-      <EventCard
-        {...props}
-        meetingLink="http://example.com"
-        hideMeetingLink={false}
-      />,
-    );
-    expect(screen.getByText(/join/i)).toHaveAttribute(
+    expect(getByText(/join/i).closest('a')).toHaveAttribute(
       'href',
       'http://example.com',
     );
+  });
 
-    rerender(
+  it('hides the meeting link when hideMeetingLink is set to true', () => {
+    const { queryByText } = render(
       <EventCard
         {...props}
         meetingLink="http://example.com"
@@ -104,7 +95,7 @@ describe('current events', () => {
       />,
     );
 
-    expect(screen.queryByText(/join/i)).toBeNull();
+    expect(queryByText(/join/i)).toBeNull();
   });
 });
 

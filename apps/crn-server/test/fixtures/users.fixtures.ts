@@ -15,11 +15,13 @@ import { createEventBridgeEventMock } from '../helpers/events';
 export const getSquidexUsersGraphqlResponse = (): FetchUsersQuery =>
   generateGraphqlFetchUsersResponse([getGraphQLUser()]);
 
-export const getSquidexUserGraphqlResponse = (): FetchUserQuery => ({
-  findUsersContent: getGraphQLUser(),
+export const getSquidexUserGraphqlResponse = (
+  findUsersContent = getGraphQLUser(),
+): FetchUserQuery => ({
+  findUsersContent,
 });
 
-const generateGraphqlFetchUsersResponse = (
+export const generateGraphqlFetchUsersResponse = (
   items: NonNullable<FetchUserQuery['findUsersContent']>[],
 ): FetchUsersQuery => ({
   queryUsersContentsWithTotal: {
@@ -198,7 +200,7 @@ export const patchResponse = (): RestUser => ({
   version: 42,
 });
 export const fetchUserResponse = () => patchResponse();
-export const fetchUserResponseDataObject = () => ({
+export const fetchUserResponseDataObject = (): UserDataObject => ({
   avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/squidex-asset-id`,
   createdDate: '2020-09-25T09:42:51.000Z',
   email: 'cristiano@ronaldo.com',
@@ -233,6 +235,7 @@ export const fetchUserResponseDataObject = () => ({
       role: 'Collaborating PI',
     },
   ],
+  connections: [],
 });
 
 export const updateAvatarBody: { avatar: string } = {

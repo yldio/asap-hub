@@ -1,18 +1,27 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import {
   ListUserResponse,
-  UserPatchRequest,
   UserResponse,
+  UserUpdateDataObject,
+  UserUpdateRequest,
 } from '@asap-hub/model';
-import { RestUser } from '@asap-hub/squidex';
-import { UserDataProvider } from '../data-providers/users';
-import { parseUserToResponse } from '../entities';
+import Intercept from 'apr-intercept';
+import { AssetDataProvider } from '../data-providers/assets.data-provider';
+import {
+  parseUserToResponse,
+  UserDataProvider,
+} from '../data-providers/users.data-provider';
+import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 import { FetchOptions } from '../utils/types';
 
 export type FetchUsersFilter = {
   role?: string[];
   labId?: string[];
   teamId?: string[];
+  code?: string;
+  hidden?: boolean;
+  onboarded?: boolean;
+  orcid?: string;
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
@@ -22,7 +31,7 @@ export interface UserController {
   fetchById(id: string): Promise<UserResponse>;
   fetchByCode(code: string): Promise<UserResponse>;
   connectByCode(welcomeCode: string, userId: string): Promise<UserResponse>;
-  update(id: string, update: UserPatchRequest): Promise<UserResponse>;
+  update(id: string, update: UserUpdateRequest): Promise<UserResponse>;
   updateAvatar(
     id: string,
     avatar: Buffer,
@@ -30,18 +39,23 @@ export interface UserController {
   ): Promise<UserResponse>;
   syncOrcidProfile(
     id: string,
-    cachedUser: RestUser | undefined,
+    cachedUser: UserResponse | undefined,
   ): Promise<UserResponse>;
 }
 
 export default class Users implements UserController {
   userDataProvider: UserDataProvider;
+  assetDataProvider: AssetDataProvider;
 
-  constructor(userDataProvider: UserDataProvider) {
+  constructor(
+    userDataProvider: UserDataProvider,
+    assetDateProvider: AssetDataProvider,
+  ) {
     this.userDataProvider = userDataProvider;
+    this.assetDataProvider = assetDateProvider;
   }
 
-  async update(id: string, update: UserPatchRequest): Promise<UserResponse> {
+  async update(id: string, update: UserUpdateRequest): Promise<UserResponse> {
     await this.userDataProvider.update(id, update);
     return this.fetchById(id);
   }
@@ -64,7 +78,7 @@ export default class Users implements UserController {
   }
 
   async fetchByCode(code: string): Promise<UserResponse> {
-    const { items: users } = await this.userDataProvider.fetchByCode(code);
+    const { items: users } = await this.queryByCode(code);
     if (users.length === 0) {
       throw new NotFoundError(`user with code ${code} not found`);
     }
@@ -81,28 +95,64 @@ export default class Users implements UserController {
     avatar: Buffer,
     contentType: string,
   ): Promise<UserResponse> {
-    await this.userDataProvider.updateAvatar(id, avatar, contentType);
-    return this.fetchById(id);
+    const assetId = await this.assetDataProvider.create(
+      id,
+      avatar,
+      contentType,
+    );
+    return this.update(id, { avatar: assetId });
   }
 
   async connectByCode(
     welcomeCode: string,
     userId: string,
   ): Promise<UserResponse> {
-    const user = await this.userDataProvider.connectByCode(welcomeCode, userId);
+    const { items } = await this.queryByCode(welcomeCode);
 
-    if (!user) {
+    if (!items || items.length > 1 || !items[0]) {
       throw new NotFoundError(`user with code ${welcomeCode} not found`);
     }
 
-    return parseUserToResponse(user);
+    const user = items[0];
+    if (user.connections?.find(({ code }) => code === userId)) {
+      return parseUserToResponse(user);
+    }
+    return this.update(user.id, {
+      email: user.email,
+      connections: [...(user.connections || []), { code: userId }],
+    });
   }
 
   async syncOrcidProfile(
     id: string,
-    cachedUser: RestUser | undefined = undefined,
+    cachedUser: UserResponse | undefined = undefined,
   ): Promise<UserResponse> {
-    const user = await this.userDataProvider.syncOrcidProfile(id, cachedUser);
-    return parseUserToResponse(user);
+    let fetchedUser;
+    if (!cachedUser) {
+      fetchedUser = await this.fetchById(id);
+    }
+
+    const user = cachedUser || (fetchedUser as UserResponse);
+    const [error, res] = await Intercept(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      fetchOrcidProfile(user!.orcid!),
+    );
+    const updateToUser: UserUpdateDataObject = {
+      email: user.email,
+      orcidLastSyncDate: new Date().toISOString(),
+    };
+    if (!error) {
+      const { lastModifiedDate, works } = transformOrcidWorks(res);
+      updateToUser.orcidLastModifiedDate = lastModifiedDate;
+      updateToUser.orcidWorks = works.slice(0, 10);
+    }
+    return this.update(user.id, updateToUser);
+  }
+  private async queryByCode(code: string) {
+    return this.userDataProvider.fetch({
+      filter: { code, hidden: false, onboarded: false },
+      take: 1,
+      skip: 0,
+    });
   }
 }

@@ -5,7 +5,8 @@ import Events from '../src/controllers/events';
 import ExternalAuthors from '../src/controllers/external-authors';
 import ResearchOutputs from '../src/controllers/research-outputs';
 import Users from '../src/controllers/users';
-import UserDataProvider from '../src/data-providers/users';
+import AssetDataProvider from '../src/data-providers/assets.data-provider';
+import UserDataProvider from '../src/data-providers/users.data-provider';
 
 type Entity = 'users' | 'research-outputs' | 'external-authors' | 'events';
 export const exportEntity = async (
@@ -55,7 +56,8 @@ function getController(entity: Entity) {
   const squidexGraphqlClient = new SquidexGraphql();
   if (entity === 'users') {
     const userDataProvider = new UserDataProvider(squidexGraphqlClient);
-    return new controllerMap[entity](userDataProvider);
+    const assetDataProvider = new AssetDataProvider();
+    return new controllerMap[entity](userDataProvider, assetDataProvider);
   }
 
   return new controllerMap[entity](squidexGraphqlClient);

@@ -110,6 +110,10 @@ export interface UserSocialLinks {
   researchGate?: string;
 }
 
+interface Connection {
+  code: string;
+}
+
 export interface UserDataObject extends Invitee {
   id: string;
   onboarded?: boolean | null;
@@ -124,6 +128,7 @@ export interface UserDataObject extends Invitee {
   biosketch?: string;
   orcid?: string;
   orcidLastModifiedDate?: string;
+  orcidLastSyncDate?: string;
   orcidWorks?: OrcidWork[];
   reachOut?: string;
   responsibilities?: string;
@@ -131,9 +136,11 @@ export interface UserDataObject extends Invitee {
   role: Role;
   social?: UserSocialLinks;
   labs: LabResponse[];
+  connections?: Connection[];
 }
 export type ListUserDataObject = ListResponse<UserDataObject>;
-export interface UserResponse extends Omit<UserDataObject, 'onboarded'> {
+export interface UserResponse
+  extends Omit<UserDataObject, 'onboarded' | 'connections'> {
   onboarded: boolean;
   displayName: string;
 }
@@ -142,7 +149,7 @@ export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
   algoliaApiKey: string;
 };
 
-export interface UserPatchDataObject {
+export interface UserUpdateDataObject {
   contactEmail?: string;
   firstName?: string;
   lastName?: string;
@@ -161,9 +168,26 @@ export interface UserPatchDataObject {
   teams?: Pick<UserTeam, 'id'>[];
   social?: Omit<UserSocialLinks, 'orcid'>;
   onboarded?: boolean;
+  avatar?: string;
+  connections?: Connection[];
+  email?: string;
+  orcid?: string;
+  orcidLastModifiedDate?: string;
+  orcidLastSyncDate?: string;
+  orcidWorks?: OrcidWork[];
 }
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface UserPatchRequest extends UserPatchDataObject {}
+
+export type UserUpdateRequest = UserUpdateDataObject;
+export type UserPatchRequest = Omit<
+  UserUpdateDataObject,
+  | 'avatar'
+  | 'connections'
+  | 'orcidLastModifiedDate'
+  | 'email'
+  | 'orcid'
+  | 'orcidLastSyncDate'
+  | 'orcidWorks'
+>;
 
 export interface UserAvatarPostRequest {
   avatar: string;

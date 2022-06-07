@@ -1,13 +1,9 @@
 import { framework as lambda } from '@asap-hub/services-common';
-import {
-  RestUser,
-  SquidexGraphql,
-  SquidexRest,
-  SquidexRestClient,
-} from '@asap-hub/squidex';
+import { SquidexGraphql } from '@asap-hub/squidex';
 import pLimit from 'p-limit';
 import Users from '../../controllers/users';
-import UserDataProvider from '../../data-providers/users';
+import AssetDataProvider from '../../data-providers/assets.data-provider';
+import UserDataProvider from '../../data-providers/users.data-provider';
 
 export const handler = async (): Promise<lambda.Response> => {
   const ONE_MONTH = 1000 * 60 * 60 * 24 * 31;
@@ -15,30 +11,22 @@ export const handler = async (): Promise<lambda.Response> => {
   const limit = pLimit(5);
   const squidexGraphqlClient = new SquidexGraphql();
   const userDataProvider = new UserDataProvider(squidexGraphqlClient);
-  const users = new Users(userDataProvider);
-  const squidexUsers: SquidexRestClient<RestUser> = new SquidexRest('users');
+  const assetDataProvider = new AssetDataProvider();
+  const users = new Users(userDataProvider, assetDataProvider);
 
-  const { items: outdatedUsers } = await squidexUsers.fetch({
+  const { items: outdatedUsers } = await users.fetch({
     take: 30,
     filter: {
-      path: 'data.orcid.iv',
-      op: 'contains',
-      value: '-',
+      orcid: '-',
     },
-    sort: [
-      {
-        path: 'data.orcidLastSyncDate.iv',
-        order: 'ascending',
-      },
-    ],
   });
 
   await Promise.all(
     outdatedUsers
       .filter(
         (user) =>
-          !user.data.orcidLastSyncDate?.iv ||
-          Date.now() - Date.parse(user.data.orcidLastSyncDate.iv) > ONE_MONTH,
+          !user.orcidLastSyncDate ||
+          Date.now() - Date.parse(user.orcidLastSyncDate) > ONE_MONTH,
       )
       .map((user) => limit(() => users.syncOrcidProfile(user.id, user))),
   );

@@ -1,6 +1,7 @@
 import { SquidexGraphql } from '@asap-hub/squidex';
 import Users, { UserController } from '../../controllers/users';
-import UserDataProvider from '../../data-providers/users';
+import AssetDataProvider from '../../data-providers/assets.data-provider';
+import UserDataProvider from '../../data-providers/users.data-provider';
 import logger from '../../utils/logger';
 import { EventBridgeHandler } from '../../utils/types';
 import { UserEvent, UserPayload } from '../event-bus';
@@ -30,4 +31,7 @@ export const syncOrcidUserHandler =
 
 const squidexGraphqlClient = new SquidexGraphql();
 const userDataProvider = new UserDataProvider(squidexGraphqlClient);
-export const handler = syncOrcidUserHandler(new Users(userDataProvider));
+const assetDataProvider = new AssetDataProvider();
+export const handler = syncOrcidUserHandler(
+  new Users(userDataProvider, assetDataProvider),
+);

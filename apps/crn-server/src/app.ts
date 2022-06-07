@@ -31,7 +31,8 @@ import ResearchTags, {
 } from './controllers/research-tags';
 import Teams, { TeamController } from './controllers/teams';
 import Users, { UserController } from './controllers/users';
-import UserDataProvider from './data-providers/users';
+import AssetDataProvider from './data-providers/assets.data-provider';
+import UserDataProvider from './data-providers/users.data-provider';
 import { permissionHandler } from './middleware/permission-handler';
 import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 import { tracingHandlerFactory } from './middleware/tracing-handler';
@@ -67,6 +68,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   const userDataProvider =
     libs.userDataProvider || new UserDataProvider(squidexGraphqlClient);
+  const assetDataProvider = libs.assetDataProvider || new AssetDataProvider();
 
   // Controllers
   const calendarController =
@@ -86,7 +88,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const researchTagController =
     libs.researchTagController || new ResearchTags(squidexGraphqlClient);
   const teamController = libs.teamController || new Teams(squidexGraphqlClient);
-  const userController = libs.userController || new Users(userDataProvider);
+  const userController =
+    libs.userController || new Users(userDataProvider, assetDataProvider);
   const labsController = libs.labsController || new Labs(squidexGraphqlClient);
 
   // Handlers
@@ -211,6 +214,7 @@ export type Libs = {
   userController?: UserController;
   labsController?: LabsController;
   userDataProvider?: UserDataProvider;
+  assetDataProvider?: AssetDataProvider;
   authHandler?: AuthHandler;
   tracer?: Tracer;
   httpLogger?: HttpLogger;

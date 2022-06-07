@@ -1,17 +1,22 @@
-import { GenericError, NotFoundError } from '@asap-hub/errors';
+import { NotFoundError } from '@asap-hub/errors';
 import { UserResponse } from '@asap-hub/model';
 import { config, RestUser } from '@asap-hub/squidex';
-import matches from 'lodash.matches';
 import nock, { DataMatcherMap } from 'nock';
 import { FetchUsersOptions } from '../../src/controllers/users';
-import UserDataProvider from '../../src/data-providers/users';
-import * as orcidFixtures from '../fixtures/orcid.fixtures';
+import UserDataProvider, {
+  GraphqlUserTeam,
+  parseGraphQLUserTeamConnections,
+  parseUserToDataObject,
+  parseUserToResponse,
+} from '../../src/data-providers/users.data-provider';
+import logger from '../../src/utils/logger';
 import {
   fetchUserResponse,
+  fetchUserResponseDataObject,
+  getGraphQLUser,
   getSquidexUserGraphqlResponse,
   getSquidexUsersGraphqlResponse,
   getUserDataObject,
-  patchResponse,
 } from '../fixtures/users.fixtures';
 import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
@@ -319,7 +324,6 @@ describe('User data provider', () => {
         } as { [k: string]: any })
         .reply(200, fetchUserResponse); // this response is ignored
 
-      userDataProvider.fetchById = jest.fn().mockResolvedValue(mockResponse);
       const result = await userDataProvider.update(userId, {
         contactEmail: '',
       });
@@ -327,13 +331,6 @@ describe('User data provider', () => {
       expect(nock.isDone()).toBe(true);
     });
     test('Should update social and questions', async () => {
-      const mockResponse = getUserDataObject();
-      mockResponse.questions = ['To be or not to be?'];
-      mockResponse.social = {
-        github: 'johnytiago',
-      };
-      userDataProvider.fetchById = jest.fn().mockResolvedValue(mockResponse);
-
       nock(config.baseUrl)
         .patch(`/api/content/${config.appName}/users/${userId}`, {
           questions: { iv: [{ question: 'To be or not to be?' }] },
@@ -351,11 +348,6 @@ describe('User data provider', () => {
       expect(result).not.toBeDefined();
     });
     test('Should update Research Interests and Responsibility', async () => {
-      const mockResponse = getUserDataObject();
-      mockResponse.researchInterests = 'new research interests';
-      mockResponse.responsibilities = 'new responsibilities';
-      userDataProvider.fetchById = jest.fn().mockResolvedValue(mockResponse);
-
       const expectedPatchRequest: Partial<RestUser['data']> = {
         researchInterests: {
           iv: 'new research interests',
@@ -391,7 +383,6 @@ describe('User data provider', () => {
         } as { [k: string]: any })
         .reply(200, fetchUserResponse()); // this response is ignored
 
-      userDataProvider.fetchById = jest.fn().mockResolvedValue(mockResponse);
       const result = await userDataProvider.update(userId, {
         teams: [{ id: 'team-id' }],
       });
@@ -561,285 +552,150 @@ describe('User data provider', () => {
         },
       );
     });
-  });
-  describe('fetchByCode', () => {
-    const code = 'some-uuid-code';
-    test('Should return user when it finds it', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-      const result = await userDataProvider.fetchByCode(code);
-      expect(result).toEqual({ total: 1, items: [getUserDataObject()] });
-    });
-
-    test('Should fetch the user by code from squidex graphql', async () => {
-      const result = await usersMockGraphqlServer.fetchByCode(code);
-
-      expect(result).toMatchObject({ total: 1, items: [getUserDataObject()] });
-    });
-    test('Should return empty array when no user is found', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      mockResponse.queryUsersContentsWithTotal!.items = [];
-      mockResponse.queryUsersContentsWithTotal!.total = 0;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-      const result = await userDataProvider.fetchByCode(code);
-      expect(result).toEqual({ total: 0, items: [] });
-    });
-    test('Should throw 403 when the query returns null', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      mockResponse.queryUsersContentsWithTotal = null;
-
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-      const result = await userDataProvider.fetchByCode(code);
-      expect(result).toEqual({ total: 0, items: [] });
-    });
-  });
-  describe('updateAvatar', () => {
-    afterEach(() => {
-      nock.cleanAll();
-    });
-
-    test('Should throw when sync asset fails', async () => {
-      nock(config.baseUrl)
-        .post(`/api/apps/${config.appName}/assets`)
-        .reply(500);
-
-      await expect(
-        userDataProvider.updateAvatar(
-          'user-id',
-          Buffer.from('avatar'),
-          'image/jpeg',
-        ),
-      ).rejects.toThrow();
-    });
-    test('should throw when fails to update user - squidex error', async () => {
-      nock(config.baseUrl)
-        .post(`/api/apps/${config.appName}/assets`)
-        .reply(200, { id: 'squidex-asset-id' })
-        .patch(`/api/content/${config.appName}/users/user-id`, {
-          avatar: { iv: ['squidex-asset-id'] },
-        })
-        .reply(500);
-
-      await expect(
-        userDataProvider.updateAvatar(
-          'user-id',
-          Buffer.from('avatar'),
-          'image/jpeg',
-        ),
-      ).rejects.toThrow();
-    });
-    test('should return  when syncs asset and updates users profile', async () => {
-      nock(config.baseUrl)
-        .post(`/api/apps/${config.appName}/assets`)
-        .reply(200, { id: 'squidex-asset-id' })
-        .patch(`/api/content/${config.appName}/users/user-id`, {
-          avatar: { iv: ['squidex-asset-id'] },
-        })
-        .reply(200, patchResponse());
-
-      const result = await userDataProvider.updateAvatar(
-        'user-id',
-        Buffer.from('avatar'),
-        'image/jpeg',
+    test('Should query with code filters and return the users', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexUsersGraphqlResponse(),
       );
-      expect(result).toEqual(undefined);
-      expect(nock.isDone()).toBe(true);
-    });
-  });
-  describe('connectByCode', () => {
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
-    });
-
-    afterEach(() => {
-      nock.cleanAll();
-    });
-
-    test('Should throw forbidden when doesn find connection code', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $top: 1,
-          $filter: `data/connections/iv/code eq 'invalid-code'`,
-        })
-        .reply(404);
-
-      await expect(
-        userDataProvider.connectByCode('invalid-code', 'user-id'),
-      ).rejects.toThrow(GenericError);
-    });
-    test('Shouldnt do anything if connecting with existing code', async () => {
-      const userId = 'google-oauth2|token';
-      const connectedUser = JSON.parse(JSON.stringify(patchResponse()));
-      connectedUser.data.connections.iv = [{ code: userId }];
-
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $top: 1,
-          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
-        })
-        .reply(200, { total: 1, items: [connectedUser] });
-
-      const result = await userDataProvider.connectByCode(
-        'asapWelcomeCode',
-        userId,
-      );
-      expect(result).toBeDefined();
-    });
-    test('Should filter teams where teamId is undefined', async () => {
-      const userId = 'google-oauth2|token';
-      const connectedUser = JSON.parse(JSON.stringify(patchResponse()));
-      connectedUser.data.connections.iv = [{ code: userId }];
-      connectedUser.data.teams.iv = [
-        {
-          id: [],
-          role: 'Lead PI (Core Leadership)',
-          approach: 'Exact',
-          responsibilities: 'Make sure coverage is high',
+      const fetchOptions: FetchUsersOptions = {
+        take: 1,
+        skip: 0,
+        filter: {
+          onboarded: false,
+          hidden: false,
+          code: 'a-code',
         },
+      };
+      const users = await userDataProvider.fetch(fetchOptions);
+
+      const filterQuery = "data/connections/iv/code eq 'a-code'";
+      expect(squidexGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
         {
-          id: ['team-id-3'],
-          role: 'Collaborating PI',
+          top: 1,
+          skip: 0,
+          filter: filterQuery,
         },
-      ];
-
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $top: 1,
-          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
-        })
-        .reply(200, { total: 1, items: [connectedUser] });
-      const result = await userDataProvider.connectByCode(
-        'asapWelcomeCode',
-        userId,
       );
-      expect(result).toBeDefined();
-      expect(result?.teams).toEqual([
-        {
-          approach: undefined,
-          displayName: 'Unknown',
-          id: 'team-id-3',
-          responsibilities: undefined,
-          role: 'Collaborating PI',
-        },
-      ]);
-    });
-
-    test('Should connect user', async () => {
-      const userId = 'google-oauth2|token';
-      const patchedUser = JSON.parse(JSON.stringify(patchResponse()));
-      patchedUser.data.connections.iv = [{ code: userId }];
-
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $top: 1,
-          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
-        })
-        .reply(200, { total: 1, items: [patchResponse()] })
-        .patch(`/api/content/${config.appName}/users/${patchResponse().id}`, {
-          email: { iv: patchResponse().data.email.iv },
-          connections: { iv: [{ code: userId }] },
-        })
-        .reply(200, patchedUser);
-
-      const result = await userDataProvider.connectByCode(
-        'asapWelcomeCode',
-        userId,
-      );
-      expect(result).toBeDefined();
+      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
   });
-  describe('syncOrcidProfile', () => {
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
+  describe('parsing', () => {
+    describe('parseUserToDataObject', () => {
+      test('user is parsed', () => {
+        const user = fetchUserResponse();
+        const userDataObject = parseUserToDataObject(user);
+        expect(userDataObject).toEqual(fetchUserResponseDataObject());
+      });
+      test('empty teams is parsed', () => {
+        const user = fetchUserResponse();
+        user.data.teams.iv = null;
+        const userDataObject = parseUserToDataObject(user);
+        const expected = {
+          ...fetchUserResponseDataObject(),
+          teams: [],
+        };
+        expect(userDataObject).toEqual(expected);
+      });
+      test('parsing of labs', () => {
+        const user = fetchUserResponse();
+        user.data.labs.iv = [
+          {
+            id: 'labs/1',
+            flatData: { name: 'lab1' },
+          },
+        ];
+        const userDataObject = parseUserToDataObject(user);
+        const expected = {
+          ...fetchUserResponseDataObject(),
+          labs: [{ id: 'labs/1', name: 'lab1' }],
+        };
+        expect(userDataObject).toEqual(expected);
+      });
+      test('parsing of labs with no name sets blank', () => {
+        const user = fetchUserResponse();
+        user.data.labs.iv = [
+          {
+            id: 'labs/1',
+            flatData: {},
+          },
+        ];
+        const userDataObject = parseUserToDataObject(user);
+        const expected = {
+          ...fetchUserResponseDataObject(),
+          labs: [{ id: 'labs/1', name: '' }],
+        };
+        expect(userDataObject).toEqual(expected);
+      });
     });
+    describe('parseGraphQLUserTeamConnections', () => {
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
 
-    afterEach(() => {
-      nock.cleanAll();
+      test('should return an empty array if there are no teams', () => {
+        const teams: GraphqlUserTeam[] = [];
+        const parsedTeams = parseGraphQLUserTeamConnections(teams);
+        expect(parsedTeams).toEqual([]);
+      });
+      test('should return an empty array if there are  teams are not defined', () => {
+        const teams: GraphqlUserTeam[] = [];
+        const parsedTeams = parseGraphQLUserTeamConnections(teams);
+        expect(parsedTeams).toEqual([]);
+      });
+
+      test('should parse user team connections', () => {
+        const teams: GraphqlUserTeam[] = getGraphQLUser().flatData.teams!;
+        const parsedTeams = parseGraphQLUserTeamConnections(teams);
+        expect(parsedTeams).toEqual([
+          {
+            displayName: 'Team A',
+            id: 'team-id-1',
+            proposal: 'proposalId1',
+            role: 'Lead PI (Core Leadership)',
+          },
+        ]);
+      });
+
+      test('should filter out teams where id is null', () => {
+        const teams: GraphqlUserTeam[] = getGraphQLUser().flatData.teams!;
+        teams[0]!.id = null;
+        const loggerWarnSpy = jest.spyOn(logger, 'warn');
+        const parsedTeams = parseGraphQLUserTeamConnections(teams);
+        expect(loggerWarnSpy).toHaveBeenCalledWith(
+          `Team Connection is undefined`,
+        );
+        expect(parsedTeams).toEqual([]);
+      });
+
+      test('should filter out teams when team role is invalid', () => {
+        const teams: GraphqlUserTeam[] = getGraphQLUser().flatData.teams!;
+        teams[0]!.role = 'invalid role';
+        const loggerWarnSpy = jest.spyOn(logger, 'warn');
+        const parsedTeams = parseGraphQLUserTeamConnections(teams);
+        expect(loggerWarnSpy).toHaveBeenCalledWith(
+          `Invalid team role: invalid role`,
+        );
+        expect(parsedTeams).toEqual([]);
+      });
     });
-
-    const userId = 'userId';
-    const orcid = '363-98-9330';
-
-    test('Throws when user does not exist', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users/user-not-found`)
-        .reply(404);
-
-      await expect(
-        userDataProvider.syncOrcidProfile('user-not-found'),
-      ).rejects.toThrow(NotFoundError);
-    });
-    test('Should update user profile even when ORCID returns 500', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fetchUserResponse())
-        .patch(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fetchUserResponse());
-
-      // times 3 because got will retry on 5XXs
-      nock('https://pub.orcid.org')
-        .get(`/v2.1/${orcid}/works`)
-        .times(3)
-        .reply(502);
-
-      const result = await userDataProvider.syncOrcidProfile(userId);
-      expect(result).toBeDefined(); // we only care that the update is made
-    });
-
-    test('Should successfully fetch and update user - with id', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fetchUserResponse())
-        .patch(
-          `/api/content/${config.appName}/users/${userId}`,
-          matches({
-            email: { iv: fetchUserResponse().data.email.iv },
-            orcidLastModifiedDate: {
-              iv: `${orcidFixtures.orcidWorksResponse['last-modified-date'].value}`,
-            },
-            orcidWorks: { iv: orcidFixtures.orcidWorksDeserialisedExpectation },
-          }),
-        )
-        .reply(200, fetchUserResponse());
-
-      nock('https://pub.orcid.org')
-        .get(`/v2.1/${orcid}/works`)
-        .reply(200, orcidFixtures.orcidWorksResponse);
-
-      const result = await userDataProvider.syncOrcidProfile(userId);
-      expect(result).toBeDefined(); // we only care that the update is made
-    });
-
-    test('Should successfully fetch and update user - with user', async () => {
-      nock(config.baseUrl)
-        .patch(
-          `/api/content/${config.appName}/users/${userId}`,
-          matches({
-            email: { iv: fetchUserResponse().data.email.iv },
-            orcidLastModifiedDate: {
-              iv: `${orcidFixtures.orcidWorksResponse['last-modified-date'].value}`,
-            },
-            orcidWorks: { iv: orcidFixtures.orcidWorksDeserialisedExpectation },
-          }),
-        )
-        .reply(200, fetchUserResponse());
-
-      nock('https://pub.orcid.org')
-        .get(`/v2.1/${orcid}/works`)
-        .reply(200, orcidFixtures.orcidWorksResponse);
-
-      const result = await userDataProvider.syncOrcidProfile(
-        userId,
-        fetchUserResponse(),
-      );
-      expect(result).toBeDefined(); // we only care that the update is made
+    describe('parseUserToResponse', () => {
+      test('adds display name', () => {
+        const given = fetchUserResponseDataObject();
+        const result = parseUserToResponse({
+          ...given,
+          lastName: 'last-name',
+          firstName: 'first-name',
+        });
+        expect(result.displayName).toEqual('first-name last-name');
+      });
+      test('removes connection', () => {
+        const given = fetchUserResponseDataObject();
+        const result = parseUserToResponse({
+          ...given,
+          connections: [{ code: 'a connection' }],
+        });
+        expect((result as any).connections).not.toBeDefined();
+      });
     });
   });
 });

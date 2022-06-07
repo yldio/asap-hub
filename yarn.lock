@@ -604,7 +604,7 @@ __metadata:
     serverless: ^2.60.0
     serverless-http: ^2.7.0
     serverless-iam-roles-per-function: ^2.0.2
-    serverless-s3-sync: ^1.17.1
+    serverless-s3-sync: 1.17.3
     serverless-webpack: ^5.5.0
     source-map-support: ^0.5.19
     stream-json: ^1.7.2
@@ -903,7 +903,7 @@ __metadata:
     jsonwebtoken: ^8.5.1
     serverless: ^2.60.0
     serverless-http: ^2.7.0
-    serverless-s3-sync: ^1.17.1
+    serverless-s3-sync: 1.17.3
     serverless-webpack: ^5.5.0
     source-map-support: ^0.5.19
     supertest: ^6.2.2
@@ -35465,16 +35465,16 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"serverless-s3-sync@npm:^1.17.1":
-  version: 1.17.1
-  resolution: "serverless-s3-sync@npm:1.17.1"
+"serverless-s3-sync@npm:1.17.3":
+  version: 1.17.3
+  resolution: "serverless-s3-sync@npm:1.17.3"
   dependencies:
     "@auth0/s3": ^1.0.0
     bluebird: ^3.5.4
     chalk: ^2.4.2
     mime: ^2.4.4
     minimatch: ^3.0.4
-  checksum: fea6e288c35a847df69771b11208d51f245c48e8821e136a5c8b8bb52242557047c8726924bbf4a6f0546e24ea6e5a23693e858a3fa804107417344df4777560
+  checksum: 88e32f5390cbcf5f71bd14cb92293b73e9582c56a0f402f3e76f17ddcfd6c0340c3547c801542e38193ad99ff08f25aaaf56bc4324786a256fb37224cf225c85
   languageName: node
   linkType: hard
 

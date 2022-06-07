@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { UserProfileContext } from '@asap-hub/react-context';
 
@@ -128,4 +128,13 @@ it('shows lab information if the user is in a lab', async () => {
     </UserProfileContext.Provider>,
   );
   expect(container).toHaveTextContent('Brighton Lab and Liverpool Lab');
+});
+
+it('displays number of shared research', async () => {
+  render(
+    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
+      <UserProfileHeader {...boilerplateProps} sharedOutputsCount={5} />,
+    </UserProfileContext.Provider>,
+  );
+  expect(screen.getByText('Shared Outputs (5)')).toBeInTheDocument();
 });

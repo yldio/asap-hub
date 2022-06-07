@@ -559,7 +559,7 @@ __metadata:
     "@types/pump": ^1.1.1
     "@types/serverless": ^3
     "@types/source-map-support": ^0
-    "@types/stream-json": ^1
+    "@types/stream-json": 1.7.2
     "@types/supertest": ^2.0.12
     "@types/uuid": 8.3.4
     "@types/yargs": ^17.0.5
@@ -607,7 +607,7 @@ __metadata:
     serverless-s3-sync: 1.17.3
     serverless-webpack: ^5.5.0
     source-map-support: ^0.5.19
-    stream-json: ^1.7.2
+    stream-json: 1.7.4
     supertest: 6.2.3
     uuid: ^8.3.2
     yargs: ^17.3.1
@@ -13119,13 +13119,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/stream-json@npm:^1":
-  version: 1.7.1
-  resolution: "@types/stream-json@npm:1.7.1"
+"@types/stream-json@npm:1.7.2":
+  version: 1.7.2
+  resolution: "@types/stream-json@npm:1.7.2"
   dependencies:
     "@types/node": "*"
     "@types/stream-chain": "*"
-  checksum: 68f8eae854d62d6eaa8aa56226b55b0d551de3a0652c93bffc8fe70ab6d081b1981779d23cb9f75d59b99bd0c1c7ca1bffe8a836ef53b12a4f3a583397d06a60
+  checksum: f11e1332f2f0ec38626890d37d3091303067b5f3c5136811821070a1ce40f848a7745f179913ff20516f92c080082c4db6e3ea66d62549222d50965903030f24
   languageName: node
   linkType: hard
 
@@ -36475,10 +36475,10 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"stream-chain@npm:^2.2.4":
-  version: 2.2.4
-  resolution: "stream-chain@npm:2.2.4"
-  checksum: df65c61cc4b133c4297bfa6f5bd3ac2e35110cddc6e2998a72b6157a0741c93916784abc30947ee8f2fd903e0bb999a5046a266ea1f5b4c22368e6269f334fc2
+"stream-chain@npm:^2.2.5":
+  version: 2.2.5
+  resolution: "stream-chain@npm:2.2.5"
+  checksum: c83cbf504bd11e2bcbe761a92801295b3decac7ffa4092ceffca2eb1b5d0763bcc511fa22cd8044e8a18c21ca66794fd10c8d9cd1292a3e6c0d83a4194c6b8ed
   languageName: node
   linkType: hard
 
@@ -36505,12 +36505,12 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"stream-json@npm:^1.7.2":
-  version: 1.7.2
-  resolution: "stream-json@npm:1.7.2"
+"stream-json@npm:1.7.4":
+  version: 1.7.4
+  resolution: "stream-json@npm:1.7.4"
   dependencies:
-    stream-chain: ^2.2.4
-  checksum: 481c66ae18d729f0c760b08d76bba8c7ca03c8a54a5e068417a2cc287593c0a216bb7ae81cf62d91a1f90a06249153f851c539b0ea67534d4e60f5bda4675add
+    stream-chain: ^2.2.5
+  checksum: 50aca250cedde7b35fcc12b3f4936d28431f351392f25f1baa7898b618d363368f8049af07c486ce7c47ee19ea15fd31642df0819e62e514c6193f1e2b05d85e
   languageName: node
   linkType: hard
 

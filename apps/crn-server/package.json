@@ -125,7 +125,7 @@
     "@types/pump": "^1.1.1",
     "@types/serverless": "^3",
     "@types/source-map-support": "^0",
-    "@types/stream-json": "^1",
+    "@types/stream-json": "1.7.2",
     "@types/supertest": "^2.0.12",
     "@types/uuid": "8.3.4",
     "babel-loader": "^8.2.2",
@@ -138,7 +138,7 @@
     "serverless-iam-roles-per-function": "^2.0.2",
     "serverless-s3-sync": "1.17.3",
     "serverless-webpack": "^5.5.0",
-    "stream-json": "^1.7.2",
+    "stream-json": "1.7.4",
     "supertest": "6.2.3",
     "yargs": "^17.3.1"
   },

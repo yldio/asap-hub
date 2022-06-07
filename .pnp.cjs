@@ -2456,7 +2456,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/stream-json",
-        "npm:1.7.1"
+        "npm:1.7.2"
       ],
       [
         "@types/streamsaver",
@@ -8967,7 +8967,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "stream-chain",
-        "npm:2.2.4"
+        "npm:2.2.5"
       ],
       [
         "stream-each",
@@ -8979,7 +8979,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "stream-json",
-        "npm:1.7.2"
+        "npm:1.7.4"
       ],
       [
         "stream-promise",
@@ -10770,7 +10770,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/pump", "npm:1.1.1"],
             ["@types/serverless", "npm:3.0.1"],
             ["@types/source-map-support", "npm:0.5.3"],
-            ["@types/stream-json", "npm:1.7.1"],
+            ["@types/stream-json", "npm:1.7.2"],
             ["@types/supertest", "npm:2.0.12"],
             ["@types/uuid", "npm:8.3.4"],
             ["@types/yargs", "npm:17.0.5"],
@@ -10818,7 +10818,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless-s3-sync", "npm:1.17.3"],
             ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.5.0"],
             ["source-map-support", "npm:0.5.19"],
-            ["stream-json", "npm:1.7.2"],
+            ["stream-json", "npm:1.7.4"],
             ["supertest", "npm:6.2.3"],
             ["uuid", "npm:8.3.2"],
             ["yargs", "npm:17.3.1"]
@@ -33641,10 +33641,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/stream-json", [
-        ["npm:1.7.1", {
-          "packageLocation": "./.yarn/cache/@types-stream-json-npm-1.7.1-eddfb8b51b-68f8eae854.zip/node_modules/@types/stream-json/",
+        ["npm:1.7.2", {
+          "packageLocation": "./.yarn/cache/@types-stream-json-npm-1.7.2-a0c56652f0-f11e1332f2.zip/node_modules/@types/stream-json/",
           "packageDependencies": [
-            ["@types/stream-json", "npm:1.7.1"],
+            ["@types/stream-json", "npm:1.7.2"],
             ["@types/node", "npm:13.11.1"],
             ["@types/stream-chain", "npm:2.0.1"]
           ],
@@ -60955,10 +60955,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["stream-chain", [
-        ["npm:2.2.4", {
-          "packageLocation": "./.yarn/cache/stream-chain-npm-2.2.4-c720761d67-df65c61cc4.zip/node_modules/stream-chain/",
+        ["npm:2.2.5", {
+          "packageLocation": "./.yarn/cache/stream-chain-npm-2.2.5-ad363478fb-c83cbf504b.zip/node_modules/stream-chain/",
           "packageDependencies": [
-            ["stream-chain", "npm:2.2.4"]
+            ["stream-chain", "npm:2.2.5"]
           ],
           "linkType": "HARD",
         }]
@@ -60989,11 +60989,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["stream-json", [
-        ["npm:1.7.2", {
-          "packageLocation": "./.yarn/cache/stream-json-npm-1.7.2-d2a1e96844-481c66ae18.zip/node_modules/stream-json/",
+        ["npm:1.7.4", {
+          "packageLocation": "./.yarn/cache/stream-json-npm-1.7.4-e158c367fa-50aca250ce.zip/node_modules/stream-json/",
           "packageDependencies": [
-            ["stream-json", "npm:1.7.2"],
-            ["stream-chain", "npm:2.2.4"]
+            ["stream-json", "npm:1.7.4"],
+            ["stream-chain", "npm:2.2.5"]
           ],
           "linkType": "HARD",
         }]

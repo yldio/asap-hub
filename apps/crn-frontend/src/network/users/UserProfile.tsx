@@ -51,8 +51,6 @@ const User: FC<Record<string, never>> = () => {
 
   const patchUserAvatar = usePatchUserAvatarById(userId);
   const [avatarSaving, setAvatarSaving] = useState(false);
-  const [sharedOutputsCount, setSharedOutputsCount] =
-    useState<number | undefined>();
 
   const result = useResearchOutputs({
     currentPage: 0,
@@ -62,9 +60,7 @@ const User: FC<Record<string, never>> = () => {
     userId,
   });
 
-  useEffect(() => {
-    setSharedOutputsCount(result.total || undefined);
-  }, [result.total]);
+  const sharedOutputsCount = result.total || undefined;
 
   const toast = useContext(ToastContext);
 

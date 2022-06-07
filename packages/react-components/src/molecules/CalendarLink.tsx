@@ -1,12 +1,10 @@
-import { perRem } from '../pixels';
 import {
   chevronUpIcon,
   chevronDownIcon,
   linkIcon,
-  outlookIcon,
   googleCalendarIcon,
+  systemCalendar,
 } from '../icons';
-import { appleCalendarIconImage } from '../images';
 import { TextChildren } from '../text';
 import DropdownButton from './DropdownButton';
 
@@ -41,23 +39,7 @@ const CalendarLink: React.FC<CalendarLinkProps> = ({
         href: url.toString(),
       }}
       {{
-        item: (
-          <>
-            <img
-              alt="Apple Calendar Icon"
-              css={{
-                width: `${24 / perRem}em`,
-                height: `${24 / perRem}em`,
-              }}
-              src={appleCalendarIconImage}
-            />
-            Add to Apple Calendar
-          </>
-        ),
-        href: webcal.toString(),
-      }}
-      {{
-        item: <>{outlookIcon} Add to Outlook</>,
+        item: <>{systemCalendar} Add to Default System Calendar</>,
         href: webcal.toString(),
       }}
       {{

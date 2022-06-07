@@ -3179,7 +3179,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "babel-plugin-transform-inline-environment-variables",
-        "npm:0.5.0-alpha.42"
+        "npm:0.5.0-alpha.e9f96ffe"
       ],
       [
         "babel-plugin-transform-object-rest-spread",
@@ -10164,7 +10164,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/pnpify", "npm:3.1.3"],
             ["babel-eslint", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:10.1.0"],
             ["babel-plugin-lodash", "npm:3.3.4"],
-            ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"],
+            ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.e9f96ffe"],
             ["babel-preset-react-app", "npm:10.0.1"],
             ["bundlewatch", "npm:0.3.3"],
             ["dotenv", "npm:8.6.0"],
@@ -36087,7 +36087,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/pnpify", "npm:3.1.3"],
             ["babel-eslint", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:10.1.0"],
             ["babel-plugin-lodash", "npm:3.3.4"],
-            ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"],
+            ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.e9f96ffe"],
             ["babel-preset-react-app", "npm:10.0.1"],
             ["bundlewatch", "npm:0.3.3"],
             ["dotenv", "npm:8.6.0"],
@@ -37353,10 +37353,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["babel-plugin-transform-inline-environment-variables", [
-        ["npm:0.5.0-alpha.42", {
-          "packageLocation": "./.yarn/cache/babel-plugin-transform-inline-environment-variables-npm-0.5.0-alpha.42-aa3c61a11b-82ab1525eb.zip/node_modules/babel-plugin-transform-inline-environment-variables/",
+        ["npm:0.5.0-alpha.e9f96ffe", {
+          "packageLocation": "./.yarn/cache/babel-plugin-transform-inline-environment-variables-npm-0.5.0-alpha.e9f96ffe-53eb5d5f52-120e7388a0.zip/node_modules/babel-plugin-transform-inline-environment-variables/",
           "packageDependencies": [
-            ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"]
+            ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.e9f96ffe"]
           ],
           "linkType": "HARD",
         }]

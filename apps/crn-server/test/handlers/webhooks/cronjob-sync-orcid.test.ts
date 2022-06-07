@@ -1,4 +1,3 @@
-import { RestUser, SquidexGraphql, SquidexRestClient } from '@asap-hub/squidex';
 import nock from 'nock';
 import { handler } from '../../../src/handlers/webhooks/cronjob-sync-orcid';
 import {
@@ -7,26 +6,23 @@ import {
   getSquidexUserGraphqlResponse,
   patchResponse,
 } from '../../fixtures/users.fixtures';
+import { getSquidexClientMock } from '../../mocks/squidex-client.mock';
+import { getSquidexGraphqlClientMock } from '../../mocks/squidex-graphql-client.mock';
 import * as fixtures from './cronjob-sync-orcid.fixtures';
 
-const mockRequest: jest.MockedFunction<SquidexGraphql['request']> = jest.fn();
-const mockPatch: jest.MockedFunction<SquidexRestClient<RestUser>['patch']> =
-  jest.fn();
+const mockGraphqlClient = getSquidexGraphqlClientMock();
+const mockRestClient = getSquidexClientMock();
 
 jest.mock('@asap-hub/squidex', () => ({
   ...jest.requireActual('@asap-hub/squidex'),
-  SquidexGraphql: class SquidexGraphql {
-    request = mockRequest;
-  },
-  SquidexRest: class SquidexRest {
-    patch = mockPatch;
-  },
+  SquidexGraphql: jest.fn(() => mockGraphqlClient),
+  SquidexRest: jest.fn(() => mockRestClient),
 }));
 
 describe('Cronjob - Sync Users ORCID', () => {
   const orcid = '0000-0001-9884-1913';
 
-  beforeEach(jest.resetAllMocks);
+  afterEach(jest.resetAllMocks);
 
   test('should fetch ORCID works for users with orcid and lastSyncDate 1 month away', async () => {
     nock('https://pub.orcid.org')
@@ -59,15 +55,15 @@ describe('Cronjob - Sync Users ORCID', () => {
     ]);
     const singleUserResponse = getSquidexUserGraphqlResponse(userToSync);
 
-    mockRequest
+    mockGraphqlClient.request
       .mockResolvedValueOnce(outdatedUsersResponse)
       .mockResolvedValueOnce(singleUserResponse);
 
-    mockPatch.mockResolvedValueOnce(userResponse);
+    mockRestClient.patch.mockResolvedValueOnce(userResponse);
 
     const { statusCode } = await handler();
     expect(statusCode).toBe(200);
-    expect(mockPatch).toHaveBeenCalledWith(
+    expect(mockRestClient.patch).toHaveBeenCalledWith(
       singleUserResponse.findUsersContent?.id,
       expect.objectContaining({
         email: { iv: userToSync.flatData.email },

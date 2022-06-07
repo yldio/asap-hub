@@ -287,7 +287,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
           <TabLink href={tabRoutes.about({}).$}>Background</TabLink>
           <TabLink href={tabRoutes.outputs({}).$}>
             Shared Outputs
-            {sharedOutputsCount && ` (${sharedOutputsCount})`}
+            {` (${sharedOutputsCount})`}
           </TabLink>
         </TabNav>
       </div>

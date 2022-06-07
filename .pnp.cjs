@@ -1728,7 +1728,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@serverless/typescript",
-        "npm:2.59.0"
+        "npm:3.18.0"
       ],
       [
         "@serverless/utils",
@@ -2436,7 +2436,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/serverless",
-        "npm:3.0.1"
+        "npm:3.12.7"
       ],
       [
         "@types/shot",
@@ -10744,7 +10744,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/bourne", "npm:2.0.0"],
             ["@hapi/joi", "npm:17.1.1"],
             ["@sentry/serverless", "npm:6.7.1"],
-            ["@serverless/typescript", "npm:2.59.0"],
+            ["@serverless/typescript", "npm:3.18.0"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/aws-lambda", "npm:8.10.99"],
             ["@types/babel__preset-env", "npm:7.9.2"],
@@ -10768,7 +10768,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/mime-types", "npm:2.1.1"],
             ["@types/parse-data-url", "npm:3.0.0"],
             ["@types/pump", "npm:1.1.1"],
-            ["@types/serverless", "npm:3.0.1"],
+            ["@types/serverless", "npm:3.12.7"],
             ["@types/source-map-support", "npm:0.5.3"],
             ["@types/stream-json", "npm:1.7.2"],
             ["@types/supertest", "npm:2.0.12"],
@@ -11191,7 +11191,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-codegen/typescript-operations", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:2.1.4"],
             ["@graphql-typed-document-node/core", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:3.1.1"],
             ["@hapi/boom", "npm:9.1.2"],
-            ["@serverless/typescript", "npm:2.59.0"],
+            ["@serverless/typescript", "npm:3.18.0"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/aws-lambda", "npm:8.10.99"],
             ["@types/cors", "npm:2.8.12"],
@@ -11199,7 +11199,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:26.0.24"],
             ["@types/jsonwebtoken", "npm:8.5.8"],
             ["@types/node", "npm:14.14.45"],
-            ["@types/serverless", "npm:3.0.1"],
+            ["@types/serverless", "npm:3.12.7"],
             ["@types/source-map-support", "npm:0.5.3"],
             ["@types/supertest", "npm:2.0.12"],
             ["@yarnpkg/pnpify", "npm:3.1.3"],
@@ -30112,10 +30112,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@serverless/typescript", [
-        ["npm:2.59.0", {
-          "packageLocation": "./.yarn/cache/@serverless-typescript-npm-2.59.0-ad493203f6-0f089ceea2.zip/node_modules/@serverless/typescript/",
+        ["npm:3.18.0", {
+          "packageLocation": "./.yarn/cache/@serverless-typescript-npm-3.18.0-652c8f3c6a-a4925ab90b.zip/node_modules/@serverless/typescript/",
           "packageDependencies": [
-            ["@serverless/typescript", "npm:2.59.0"]
+            ["@serverless/typescript", "npm:3.18.0"]
           ],
           "linkType": "HARD",
         }]
@@ -33647,10 +33647,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/serverless", [
-        ["npm:3.0.1", {
-          "packageLocation": "./.yarn/cache/@types-serverless-npm-3.0.1-e22eed7b58-e68b17ebc9.zip/node_modules/@types/serverless/",
+        ["npm:3.12.7", {
+          "packageLocation": "./.yarn/cache/@types-serverless-npm-3.12.7-b51c8e6cd8-8e9b848a2c.zip/node_modules/@types/serverless/",
           "packageDependencies": [
-            ["@types/serverless", "npm:3.0.1"]
+            ["@types/serverless", "npm:3.12.7"]
           ],
           "linkType": "HARD",
         }]

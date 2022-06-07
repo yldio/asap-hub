@@ -49,7 +49,8 @@ const serverlessConfig: AWS = {
   plugins,
   provider: {
     name: 'aws',
-    runtime: 'nodejs14.x',
+    runtime: 'nodejs16.x',
+    architecture: 'x86_64',
     timeout: 16,
     memorySize: 512,
     region,

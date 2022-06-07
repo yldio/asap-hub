@@ -55,7 +55,7 @@ it('should trigger an onChange event when a text is being typed into access inst
 
   expect(screen.getByText('access-instructions-value')).toBeVisible();
 
-  const input = screen.getByRole('textbox', { name: /access instructions/i });
+  const input = screen.getByRole('textbox', { name: /usage notes/i });
   userEvent.type(input, 't');
   expect(mockOnChange).toHaveBeenLastCalledWith('access-instructions-valuet');
 });

@@ -3019,7 +3019,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "async-sema",
-        "npm:3.1.0"
+        "npm:3.1.1"
       ],
       [
         "asynckit",
@@ -10547,7 +10547,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/pnpify", "npm:3.1.3"],
             ["algoliasearch", "npm:4.11.0"],
             ["apr-intercept", "npm:3.0.4"],
-            ["async-sema", "npm:3.1.0"],
+            ["async-sema", "npm:3.1.1"],
             ["aws-sdk", "npm:2.907.0"],
             ["csv-parse", "npm:4.15.4"],
             ["got", "npm:11.8.2"],
@@ -36275,10 +36275,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["async-sema", [
-        ["npm:3.1.0", {
-          "packageLocation": "./.yarn/cache/async-sema-npm-3.1.0-5029c51bfb-eddfa4fa83.zip/node_modules/async-sema/",
+        ["npm:3.1.1", {
+          "packageLocation": "./.yarn/cache/async-sema-npm-3.1.1-a5453a4d6a-07b8c51f6c.zip/node_modules/async-sema/",
           "packageDependencies": [
-            ["async-sema", "npm:3.1.0"]
+            ["async-sema", "npm:3.1.1"]
           ],
           "linkType": "HARD",
         }]

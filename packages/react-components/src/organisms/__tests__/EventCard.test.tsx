@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { createEventResponse } from '@asap-hub/fixtures';
 import { addMinutes, subDays, subMinutes } from 'date-fns';
 

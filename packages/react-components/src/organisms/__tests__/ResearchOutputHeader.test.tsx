@@ -1,18 +1,6 @@
-import { useFlags } from '@asap-hub/react-context';
 import { render, screen } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
 
 import ResearchOutputHeader from '../ResearchOutputHeader';
-
-beforeEach(() => {
-  const {
-    result: {
-      current: { disable },
-    },
-  } = renderHook(useFlags);
-
-  disable('ROMS_FORM');
-});
 
 it.each([
   {

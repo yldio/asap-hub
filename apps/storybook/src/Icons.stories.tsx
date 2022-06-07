@@ -60,6 +60,7 @@ export const Settings = () => components.settingsIcon;
 export const SharedResearch = () => components.libraryIcon;
 export const ShowPassword = () => components.showPasswordIcon;
 export const Slack = () => components.slackIcon;
+export const SystemCalendar = () => components.systemCalendar;
 export const TeamMembers = () => components.teamIcon;
 export const Tick = () => components.tickIcon;
 export const TrainingPlaceholderIcon = () => components.trainingPlaceholderIcon;

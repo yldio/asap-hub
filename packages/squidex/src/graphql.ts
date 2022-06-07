@@ -1,8 +1,7 @@
-import { ClientError, GraphQLClient } from 'graphql-request';
 import { DocumentNode } from 'graphql';
-
-import squidex from './config';
+import { ClientError, GraphQLClient } from 'graphql-request';
 import { GetAccessToken } from './auth';
+import squidex from './config';
 
 type SquidexRequestOptions = {
   includeDrafts?: boolean;

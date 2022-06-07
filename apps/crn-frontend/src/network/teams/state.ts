@@ -1,4 +1,3 @@
-import { isEnabled } from '@asap-hub/flags';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ListTeamResponse,
@@ -215,11 +214,7 @@ export const useCanCreateUpdateResearchOutput = (
 ): boolean => {
   const user = useCurrentUser();
 
-  return !!(
-    isEnabled('ROMS_FORM') &&
-    user &&
-    hasCreateUpdateResearchOutputPermissions(user, teamIds)
-  );
+  return !!(user && hasCreateUpdateResearchOutputPermissions(user, teamIds));
 };
 
 const researchTagsState = atom<ResearchTagResponse[]>({

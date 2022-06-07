@@ -1,6 +1,6 @@
 import { ContextType, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { createUserResponse, createUserTeams } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
@@ -117,29 +117,31 @@ const renderUserProfile = async (
 
 jest.retryTimes(3);
 it('renders the personal info', async () => {
-  const { findByText } = await renderUserProfile({
+  await renderUserProfile({
     ...createUserResponse(),
     displayName: 'Someone',
   });
-  expect((await findByText('Someone')).tagName).toBe('H1');
+  expect((await screen.findByText('Someone')).tagName).toBe('H1');
 });
 
 it('by default renders the research tab', async () => {
-  const { findByText } = await renderUserProfile({
+  await renderUserProfile({
     ...createUserResponse(),
     questions: ['What?'],
   });
-  expect(await findByText('What?')).toBeVisible();
+  expect(await screen.findByText('What?')).toBeVisible();
 });
 
 it('navigates to the background tab', async () => {
-  const { findByText } = await renderUserProfile({
+  await renderUserProfile({
     ...createUserResponse(),
     biography: 'My Bio',
   });
 
-  userEvent.click(await findByText(/background/i, { selector: 'nav *' }));
-  expect(await findByText('My Bio')).toBeVisible();
+  userEvent.click(
+    await screen.findByText(/background/i, { selector: 'nav *' }),
+  );
+  expect(await screen.findByText('My Bio')).toBeVisible();
 });
 
 it('navigates to the outputs tab', async () => {
@@ -150,20 +152,18 @@ it('navigates to the outputs tab', async () => {
       title: `Test Output ${index}`,
     })),
   });
-  const { findByText, findByRole } = await renderUserProfile(
-    createUserResponse(),
-  );
+  await renderUserProfile(createUserResponse());
 
-  userEvent.click(await findByText(/output/i, { selector: 'nav *' }));
-  expect(await findByRole('searchbox')).toHaveAttribute(
+  userEvent.click(await screen.findByText(/output/i, { selector: 'nav *' }));
+  expect(await screen.findByRole('searchbox')).toHaveAttribute(
     'placeholder',
     'Enter a keyword, method, resource…',
   );
-  expect(await findByText(/Test Output 0/i)).toBeVisible();
+  expect(await screen.findByText(/Test Output 0/i)).toBeVisible();
 });
 
 it("links to the user's team", async () => {
-  const { findByText } = await renderUserProfile({
+  await renderUserProfile({
     ...createUserResponse(),
     teams: [
       {
@@ -175,48 +175,51 @@ it("links to the user's team", async () => {
   });
   expect(
     (
-      await findByText('Kool Krew', { exact: false, selector: 'h2 ~ * *' })
+      await screen.findByText('Kool Krew', {
+        exact: false,
+        selector: 'h2 ~ * *',
+      })
     ).closest('a')!.href,
   ).toContain('42');
 });
 
 it('renders the 404 page for a missing user', async () => {
-  const { findByText } = await renderUserProfile(
+  await renderUserProfile(
     {
       ...createUserResponse(),
       id: '42',
     },
     { routeProfileId: '1337' },
   );
-  expect(await findByText(/sorry.+page/i)).toBeVisible();
+  expect(await screen.findByText(/sorry.+page/i)).toBeVisible();
 });
 
 describe('a header edit button', () => {
   it("is not rendered on someone else's profile", async () => {
-    const { queryByText, queryByLabelText } = await renderUserProfile(
+    await renderUserProfile(
       { ...createUserResponse(), id: '42' },
       { ownUserId: '1337' },
     );
     await waitFor(() =>
-      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(/edit/i)).not.toBeInTheDocument();
   });
 
   it('is rendered for personal info on your own profile', async () => {
-    const { findByLabelText } = await renderUserProfile();
-    expect(await findByLabelText(/edit.+personal/i)).toBeVisible();
+    await renderUserProfile();
+    expect(await screen.findByLabelText(/edit.+personal/i)).toBeVisible();
   });
 
   it('is rendered for contact info on your own profile', async () => {
-    const { findByLabelText } = await renderUserProfile();
-    expect(await findByLabelText(/edit.+contact/i)).toBeVisible();
+    await renderUserProfile();
+    expect(await screen.findByLabelText(/edit.+contact/i)).toBeVisible();
   });
 
   it('is rendered for avatar on your own profile', async () => {
-    const { findByLabelText } = await renderUserProfile();
-    expect(await findByLabelText(/edit.+avatar/i)).toBeVisible();
+    await renderUserProfile();
+    expect(await screen.findByLabelText(/edit.+avatar/i)).toBeVisible();
   });
 
   it('can change personal info', async () => {
@@ -227,15 +230,14 @@ describe('a header edit button', () => {
       id: '42',
     };
 
-    const { getByText, findByText, findByLabelText, findByDisplayValue } =
-      await renderUserProfile(userProfile);
+    await renderUserProfile(userProfile);
 
-    userEvent.click(await findByLabelText(/edit.+personal/i));
-    userEvent.type(await findByDisplayValue('Lon'), 'don');
-    expect(await findByDisplayValue('London')).toBeVisible();
+    userEvent.click(await screen.findByLabelText(/edit.+personal/i));
+    userEvent.type(await screen.findByDisplayValue('Lon'), 'don');
+    expect(await screen.findByDisplayValue('London')).toBeVisible();
 
-    userEvent.click(getByText(/save/i));
-    expect(await findByText(/London/i)).toBeVisible();
+    userEvent.click(screen.getByText(/save/i));
+    expect(await screen.findByText(/London/i)).toBeVisible();
     expect(mockPatchUser).toHaveBeenLastCalledWith(
       '42',
       expect.objectContaining({ city: 'London' }),
@@ -249,29 +251,32 @@ describe('a header edit button', () => {
       biography: 'My Bio',
     };
 
-    const { getByText, getByTitle, queryByText, findByLabelText, findByText } =
-      await renderUserProfile(userProfile);
+    await renderUserProfile(userProfile);
 
     // Open and close on research tab
-    userEvent.click(await findByText(/research/i, { selector: 'nav *' }));
-    expect(getByText(/role on asap network/i)).toBeVisible();
-    expect(queryByText(/your details/i)).toBeNull();
-    userEvent.click(await findByLabelText(/edit.+personal/i));
-    expect(getByText(/role on asap network/i)).toBeVisible();
-    expect(getByText(/your details/i)).toBeVisible();
-    userEvent.click(getByTitle(/Close/i));
-    expect(getByText(/role on asap network/i)).toBeVisible();
-    expect(queryByText(/your details/i)).toBeNull();
+    userEvent.click(
+      await screen.findByText(/research/i, { selector: 'nav *' }),
+    );
+    expect(screen.getByText(/role on asap network/i)).toBeVisible();
+    expect(screen.queryByText(/your details/i)).toBeNull();
+    userEvent.click(await screen.findByLabelText(/edit.+personal/i));
+    expect(screen.getByText(/role on asap network/i)).toBeVisible();
+    expect(screen.getByText(/your details/i)).toBeVisible();
+    userEvent.click(screen.getByTitle(/Close/i));
+    expect(screen.getByText(/role on asap network/i)).toBeVisible();
+    expect(screen.queryByText(/your details/i)).toBeNull();
 
     // Open and close on background tab
-    userEvent.click(await findByText(/background/i, { selector: 'nav *' }));
-    expect(await findByText('My Bio')).toBeVisible();
-    userEvent.click(await findByLabelText(/edit.+personal/i));
-    expect(getByText(/my bio/i)).toBeVisible();
-    expect(getByText(/your details/i)).toBeVisible();
-    userEvent.click(getByTitle(/Close/i));
-    expect(getByText(/my bio/i)).toBeVisible();
-    expect(queryByText(/your details/i)).toBeNull();
+    userEvent.click(
+      await screen.findByText(/background/i, { selector: 'nav *' }),
+    );
+    expect(await screen.findByText('My Bio')).toBeVisible();
+    userEvent.click(await screen.findByLabelText(/edit.+personal/i));
+    expect(screen.getByText(/my bio/i)).toBeVisible();
+    expect(screen.getByText(/your details/i)).toBeVisible();
+    userEvent.click(screen.getByTitle(/Close/i));
+    expect(screen.getByText(/my bio/i)).toBeVisible();
+    expect(screen.queryByText(/your details/i)).toBeNull();
   });
 
   it('can change contact info', async () => {
@@ -280,16 +285,20 @@ describe('a header edit button', () => {
       contactEmail: 'contact@example.com',
       id: '42',
     };
-    const { getByText, findByText, findByLabelText, findByDisplayValue } =
-      await renderUserProfile(userProfile);
 
-    userEvent.click(await findByLabelText(/edit.+contact/i));
-    userEvent.type(await findByDisplayValue('contact@example.com'), 'm');
-    expect(await findByDisplayValue('contact@example.comm')).toBeVisible();
+    await renderUserProfile(userProfile);
 
-    userEvent.click(getByText(/save/i));
+    userEvent.click(await screen.findByLabelText(/edit.+contact/i));
+    userEvent.type(await screen.findByDisplayValue('contact@example.com'), 'm');
     expect(
-      (await findByText(/contact/i, { selector: 'header *' })).closest('a'),
+      await screen.findByDisplayValue('contact@example.comm'),
+    ).toBeVisible();
+
+    userEvent.click(screen.getByText(/save/i));
+    expect(
+      (await screen.findByText(/contact/i, { selector: 'header *' })).closest(
+        'a',
+      ),
     ).toHaveAttribute('href', 'mailto:contact@example.comm');
     expect(mockPatchUser).toHaveBeenLastCalledWith(
       '42',
@@ -305,21 +314,17 @@ describe('a header edit button', () => {
       ...createUserResponse(),
     };
     const mockToken = jest.fn().mockResolvedValue('token');
-    const { getByText, findByLabelText } = await renderUserProfile(
-      userProfile,
-      {},
-      (authClient, user) => ({
-        getTokenSilently:
-          authClient && user
-            ? mockToken
-            : () => {
-                throw new Error('Not Ready');
-              },
-      }),
-    );
-    userEvent.click(await findByLabelText(/edit.+contact/i));
+    await renderUserProfile(userProfile, {}, (authClient, user) => ({
+      getTokenSilently:
+        authClient && user
+          ? mockToken
+          : () => {
+              throw new Error('Not Ready');
+            },
+    }));
+    userEvent.click(await screen.findByLabelText(/edit.+contact/i));
 
-    userEvent.click(getByText(/save/i));
+    userEvent.click(screen.getByText(/save/i));
     await waitFor(() => expect(mockToken).toHaveBeenCalled());
   });
 
@@ -340,9 +345,9 @@ describe('a header edit button', () => {
         avatarUrl: 'https://placekitten.com/200/300',
         id: '42',
       };
-      const { findByLabelText } = await renderUserProfile(userProfile);
+      await renderUserProfile(userProfile);
 
-      userEvent.upload(await findByLabelText(/upload.+avatar/i), file);
+      userEvent.upload(await screen.findByLabelText(/upload.+avatar/i), file);
       await waitFor(() =>
         expect(mockPostUserAvatar).toHaveBeenLastCalledWith(
           '42',
@@ -361,20 +366,16 @@ describe('a header edit button', () => {
         id: '42',
       };
       const mockToken = jest.fn().mockResolvedValue('token');
-      const { findByLabelText } = await renderUserProfile(
-        userProfile,
-        {},
-        (authClient, user) => ({
-          getTokenSilently:
-            authClient && user
-              ? mockToken
-              : () => {
-                  throw new Error('Not Ready');
-                },
-        }),
-      );
+      await renderUserProfile(userProfile, {}, (authClient, user) => ({
+        getTokenSilently:
+          authClient && user
+            ? mockToken
+            : () => {
+                throw new Error('Not Ready');
+              },
+      }));
 
-      userEvent.upload(await findByLabelText(/upload.+avatar/i), file);
+      userEvent.upload(await screen.findByLabelText(/upload.+avatar/i), file);
       await waitFor(() => expect(mockToken).toHaveBeenCalled());
     });
 
@@ -384,10 +385,10 @@ describe('a header edit button', () => {
         avatarUrl: 'https://placekitten.com/200/300',
         id: '42',
       };
-      const { findByLabelText } = await renderUserProfile(userProfile);
+      await renderUserProfile(userProfile);
 
       mockPostUserAvatar.mockRejectedValue(new Error('500'));
-      userEvent.upload(await findByLabelText(/upload.+avatar/i), file);
+      userEvent.upload(await screen.findByLabelText(/upload.+avatar/i), file);
       await waitFor(() => {
         expect(mockToast).toHaveBeenCalledWith(
           expect.stringMatching(/error.+picture/i),
@@ -395,4 +396,13 @@ describe('a header edit button', () => {
       });
     });
   });
+});
+
+it('renders number of shared outputs', async () => {
+  mockGetResearchOutputs.mockResolvedValue({
+    ...createResearchOutputListAlgoliaResponse(5),
+  });
+  await renderUserProfile(createUserResponse());
+
+  expect(await screen.findByText(/Shared Outputs \(5\)/i)).toBeVisible();
 });

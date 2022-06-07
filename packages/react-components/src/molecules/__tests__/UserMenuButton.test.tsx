@@ -9,7 +9,7 @@ it('renders a button', () => {
   expect(getByRole('button')).toBeVisible();
 });
 
-it('renders the display name', async () => {
+it('renders the display name when no children is provided', async () => {
   const { findByText } = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.LoggedIn user={{ displayName: 'John Doe' }}>
@@ -19,6 +19,18 @@ it('renders the display name', async () => {
   );
   expect(await findByText('John Doe')).toBeVisible();
 });
+
+it('renders the children when is provided', async () => {
+  const { findByText } = render(
+    <authTestUtils.Auth0Provider>
+      <authTestUtils.LoggedIn user={{ displayName: 'John Doe' }}>
+        <UserMenuButton>Hi, Jimi</UserMenuButton>
+      </authTestUtils.LoggedIn>
+    </authTestUtils.Auth0Provider>,
+  );
+  expect(await findByText('Hi, Jimi')).toBeVisible();
+});
+
 it('renders a fallback instead of the display name', async () => {
   const { findByText } = render(<UserMenuButton />);
   expect(await findByText(/unknown/i)).toBeVisible();

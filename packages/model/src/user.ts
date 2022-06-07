@@ -1,6 +1,6 @@
 import { ListResponse } from './common';
-import { TeamRole } from './team';
 import { LabResponse } from './lab';
+import { TeamRole } from './team';
 
 export const userRole = ['Staff', 'Grantee', 'Guest', 'Hidden'] as const;
 
@@ -110,11 +110,14 @@ export interface UserSocialLinks {
   researchGate?: string;
 }
 
-export interface UserResponse extends Invitee {
+interface Connection {
+  code: string;
+}
+
+export interface UserDataObject extends Invitee {
   id: string;
-  onboarded: boolean;
+  onboarded?: boolean | null;
   contactEmail?: string;
-  displayName: string;
   lastModifiedDate: string;
   createdDate: string;
   teams: UserTeam[];
@@ -125,6 +128,7 @@ export interface UserResponse extends Invitee {
   biosketch?: string;
   orcid?: string;
   orcidLastModifiedDate?: string;
+  orcidLastSyncDate?: string;
   orcidWorks?: OrcidWork[];
   reachOut?: string;
   responsibilities?: string;
@@ -132,13 +136,20 @@ export interface UserResponse extends Invitee {
   role: Role;
   social?: UserSocialLinks;
   labs: LabResponse[];
+  connections?: Connection[];
+}
+export type ListUserDataObject = ListResponse<UserDataObject>;
+export interface UserResponse
+  extends Omit<UserDataObject, 'onboarded' | 'connections'> {
+  onboarded: boolean;
+  displayName: string;
 }
 
 export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
   algoliaApiKey: string;
 };
 
-export interface UserPatchRequest {
+export interface UserUpdateDataObject {
   contactEmail?: string;
   firstName?: string;
   lastName?: string;
@@ -157,7 +168,26 @@ export interface UserPatchRequest {
   teams?: Pick<UserTeam, 'id'>[];
   social?: Omit<UserSocialLinks, 'orcid'>;
   onboarded?: boolean;
+  avatar?: string;
+  connections?: Connection[];
+  email?: string;
+  orcid?: string;
+  orcidLastModifiedDate?: string;
+  orcidLastSyncDate?: string;
+  orcidWorks?: OrcidWork[];
 }
+
+export type UserUpdateRequest = UserUpdateDataObject;
+export type UserPatchRequest = Omit<
+  UserUpdateDataObject,
+  | 'avatar'
+  | 'connections'
+  | 'orcidLastModifiedDate'
+  | 'email'
+  | 'orcid'
+  | 'orcidLastSyncDate'
+  | 'orcidWorks'
+>;
 
 export interface UserAvatarPostRequest {
   avatar: string;

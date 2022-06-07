@@ -1,20 +1,19 @@
-import { promises as fs } from 'fs';
 import { ListResponse } from '@asap-hub/model';
 import { SquidexGraphql } from '@asap-hub/squidex';
+import { promises as fs } from 'fs';
+import Events from '../src/controllers/events';
+import ExternalAuthors from '../src/controllers/external-authors';
 import ResearchOutputs from '../src/controllers/research-outputs';
 import Users from '../src/controllers/users';
-import ExternalAuthors from '../src/controllers/external-authors';
+import AssetDataProvider from '../src/data-providers/assets.data-provider';
+import UserDataProvider from '../src/data-providers/users.data-provider';
 
+type Entity = 'users' | 'research-outputs' | 'external-authors' | 'events';
 export const exportEntity = async (
-  entity: 'users' | 'research-outputs' | 'external-authors',
+  entity: Entity,
   filename?: string,
 ): Promise<void> => {
-  const controllerMap = {
-    users: Users,
-    'research-outputs': ResearchOutputs,
-    'external-authors': ExternalAuthors,
-  };
-  const controller = new controllerMap[entity](new SquidexGraphql());
+  const controller = getController(entity);
   const file = await fs.open(filename || `${entity}.json`, 'w');
 
   let recordCount = 0;
@@ -46,3 +45,20 @@ export const exportEntity = async (
 
   console.log(`Finished exporting ${recordCount} records`);
 };
+
+function getController(entity: Entity) {
+  const controllerMap = {
+    users: Users,
+    'research-outputs': ResearchOutputs,
+    'external-authors': ExternalAuthors,
+    events: Events,
+  };
+  const squidexGraphqlClient = new SquidexGraphql();
+  if (entity === 'users') {
+    const userDataProvider = new UserDataProvider(squidexGraphqlClient);
+    const assetDataProvider = new AssetDataProvider();
+    return new controllerMap[entity](userDataProvider, assetDataProvider);
+  }
+
+  return new controllerMap[entity](squidexGraphqlClient);
+}

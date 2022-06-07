@@ -53,7 +53,6 @@ it('renders the subscribe button', () => {
     Array [
       "https://calendar.google.com/calendar/r?cid=12w3",
       "webcal://calendar.google.com/calendar/ical/12w3/public/basic.ics",
-      "webcal://calendar.google.com/calendar/ical/12w3/public/basic.ics",
     ]
   `);
 });

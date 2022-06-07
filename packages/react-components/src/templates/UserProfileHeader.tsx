@@ -149,6 +149,7 @@ type UserProfileHeaderProps = Pick<
 
   readonly editPersonalInfoHref?: string;
   readonly editContactInfoHref?: string;
+  readonly sharedOutputsCount?: number;
 };
 
 const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
@@ -173,6 +174,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   editContactInfoHref,
   role,
   social,
+  sharedOutputsCount,
 }) => {
   const tabRoutes = network({}).users({}).user({ userId: id });
   const { isOwnProfile } = useContext(UserProfileContext);
@@ -283,7 +285,10 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
         <TabNav>
           <TabLink href={tabRoutes.research({}).$}>Research</TabLink>
           <TabLink href={tabRoutes.about({}).$}>Background</TabLink>
-          <TabLink href={tabRoutes.outputs({}).$}>Shared Outputs</TabLink>
+          <TabLink href={tabRoutes.outputs({}).$}>
+            Shared Outputs
+            {sharedOutputsCount && ` (${sharedOutputsCount})`}
+          </TabLink>
         </TabNav>
       </div>
     </header>

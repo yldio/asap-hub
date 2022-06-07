@@ -1,18 +1,20 @@
-import { EventBridgeEvent } from 'aws-lambda';
-import { ListResponse, UserResponse } from '@asap-hub/model';
-import { SquidexGraphql } from '@asap-hub/squidex';
 import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import Users, { UserController } from '../../controllers/users';
-import { LabEvent, LabPayload } from '../event-bus';
+import { ListResponse, UserResponse } from '@asap-hub/model';
+import { SquidexGraphql } from '@asap-hub/squidex';
+import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
+import Users, { UserController } from '../../controllers/users';
+import AssetDataProvider from '../../data-providers/assets.data-provider';
+import UserDataProvider from '../../data-providers/users.data-provider';
+import logger from '../../utils/logger';
 import {
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
 } from '../../utils/loop-over-custom-colection';
-import logger from '../../utils/logger';
+import { LabEvent, LabPayload } from '../event-bus';
 
 export const indexLabUsersHandler =
   (
@@ -58,8 +60,11 @@ export const indexLabUsersHandler =
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
 
+const squidexGraphqlClient = new SquidexGraphql();
+const userDataProvider = new UserDataProvider(squidexGraphqlClient);
+const assetDataProvider = new AssetDataProvider();
 export const handler = indexLabUsersHandler(
-  new Users(new SquidexGraphql()),
+  new Users(userDataProvider, assetDataProvider),
   algoliaSearchClientFactory({
     algoliaApiKey,
     algoliaAppId,

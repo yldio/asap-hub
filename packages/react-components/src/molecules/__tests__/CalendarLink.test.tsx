@@ -25,7 +25,6 @@ it('renders calendar links on modal', () => {
     Array [
       "https://calendar.google.com/calendar/r?cid=123",
       "webcal://calendar.google.com/calendar/ical/123/public/basic.ics",
-      "webcal://calendar.google.com/calendar/ical/123/public/basic.ics",
     ]
   `);
 });

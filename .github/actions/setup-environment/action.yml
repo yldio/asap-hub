@@ -17,9 +17,6 @@ outputs:
   algolia-index:
     description: 'Algolia Index'
     value: ${{ steps.vars.outputs.algolia-index }}
-  algolia-index-temp:
-    description: 'Algolia Index'
-    value: ${{ steps.vars.outputs.algolia-index }}_temp
   app-release:
     description: 'App Release'
     value: ${{ steps.vars.outputs.app-release }}

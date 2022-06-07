@@ -1,0 +1,52 @@
+name: 'Import entity'
+description: 'Export entity data from Squidex and into Algolia index'
+inputs:
+  algolia-api-key:
+    description: 'Algolia api key name'
+    required: true
+  algolia-app-id:
+    description: 'Algolia app id name'
+    required: true
+  algolia-index:
+    description: 'Algolia index name'
+    required: true
+  entity-type:
+    description: 'Entity type (ie. "user")'
+    required: true
+  squidex-app-name:
+    description: 'Squidex App name'
+    required: true
+  squidex-base-url:
+    description: 'Squidex Base URL'
+    required: true
+  squidex-client-id:
+    description: 'Squidex Client ID'
+    required: true
+  squidex-client-secret:
+    description: 'Squidex Client secret'
+    required: true
+outputs:
+  algolia-app-id:
+    description: 'Algolia App ID'
+    value: '${{ steps.keys.outputs.algolia-app-id }}'
+  algolia-api-key:
+    description: 'Algolia API Key'
+    value: '${{ steps.keys.outputs.algolia-api-key }}'
+runs:
+  using: 'composite'
+  steps:
+    - name: Import Entity
+      shell: bash
+      run: |
+        yarn export:entity $ENTITY -f $ENTITY.json
+        yarn workspace @asap-hub/algolia run algolia import -s "../../${ENTITY}.json" -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -t ./scripts/algolia-transformation.js
+      env:
+        ALGOLIA_API_KEY: ${{ inputs.algolia-api-key }}
+        ALGOLIA_APP_ID: ${{ inputs.algolia-app-id }}
+        ALGOLIA_INDEX: ${{ inputs.algolia-index }}
+        ENTITY: '${{ inputs.entity-type }}s'
+        ENTITY_TYPE: ${{ inputs.entity-type }}
+        SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
+        SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
+        SQUIDEX_CLIENT_ID: ${{ inputs.squidex-client-id }}
+        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-client-secret }}

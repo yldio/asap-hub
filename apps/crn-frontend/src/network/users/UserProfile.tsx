@@ -19,6 +19,7 @@ import { Frame } from '@asap-hub/frontend-utils';
 
 import { useUserById, usePatchUserAvatarById } from './state';
 import { useCurrentUserProfileTabRoute } from '../../hooks';
+import { useResearchOutputs } from '../../shared-research/state';
 
 const loadResearch = () =>
   import(/* webpackChunkName: "network-profile-research" */ './Research');
@@ -50,6 +51,21 @@ const User: FC<Record<string, never>> = () => {
 
   const patchUserAvatar = usePatchUserAvatarById(userId);
   const [avatarSaving, setAvatarSaving] = useState(false);
+  const [sharedOutputsCount, setSharedOutputsCount] =
+    useState<number | undefined>();
+
+  const result = useResearchOutputs({
+    currentPage: 0,
+    filters: new Set(),
+    pageSize: 1,
+    searchQuery: '',
+    userId,
+  });
+
+  useEffect(() => {
+    setSharedOutputsCount(result.total || undefined);
+  }, [result.total]);
+
   const toast = useContext(ToastContext);
 
   const isOwnProfile = currentUser?.id === user?.id;
@@ -87,6 +103,7 @@ const User: FC<Record<string, never>> = () => {
             }
           : undefined,
       avatarSaving,
+      sharedOutputsCount,
     };
 
     return (

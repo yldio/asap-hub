@@ -396,3 +396,12 @@ describe('a header edit button', () => {
     });
   });
 });
+
+it('renders number of shared outputs', async () => {
+  mockGetResearchOutputs.mockResolvedValue({
+    ...createResearchOutputListAlgoliaResponse(5),
+  });
+  const { findByText } = await renderUserProfile(createUserResponse());
+
+  expect(await findByText(/Shared Outputs \(5\)/i)).toBeVisible();
+});

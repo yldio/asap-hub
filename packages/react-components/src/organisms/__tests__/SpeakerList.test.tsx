@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { subHours } from 'date-fns';
+import userEvent from '@testing-library/user-event';
 import { EventSpeaker } from '@asap-hub/model';
 import { createEventResponse } from '@asap-hub/fixtures';
 import SpeakersList from '../SpeakersList';
@@ -87,6 +88,60 @@ describe('When rendering the speaker list', () => {
       expect(screen.getByText('External Speaker')).toBeVisible();
       expect(screen.getByText('Jhonny External')).toBeVisible();
       expect(screen.getByText('Guest')).toBeVisible();
+    });
+    it('Renders show more button for more than 5 speakers', async () => {
+      const event = {
+        ...createEventResponse({ numberOfSpeakers: 6 }),
+      };
+
+      render(<SpeakersList {...event} />);
+
+      expect(screen.getByRole('button', { name: /Show more/i })).toBeVisible();
+    });
+
+    it('Renders show less button when the show more button is clicked', async () => {
+      const event = {
+        ...createEventResponse({ numberOfSpeakers: 10 }),
+      };
+
+      render(<SpeakersList {...event} />);
+
+      const button = screen.getByRole('button', { name: /Show more/i });
+      expect(button).toBeVisible();
+      userEvent.click(button);
+      expect(screen.getByRole('button', { name: /Show less/i })).toBeVisible();
+    });
+
+    it('Does not render show more button for less than 6 speakers', async () => {
+      const event = {
+        ...createEventResponse({
+          numberOfSpeakers: 5,
+          numberOfExternalSpeakers: 0,
+          numberOfUnknownSpeakers: 0,
+        }),
+      };
+
+      render(<SpeakersList {...event} />);
+
+      expect(
+        screen.queryByRole('button', { name: /Show more/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('Hides the 5th speaker if there are more than 5 speakers', async () => {
+      const event = {
+        ...createEventResponse({
+          numberOfSpeakers: 6,
+          numberOfExternalSpeakers: 0,
+          numberOfUnknownSpeakers: 0,
+        }),
+      };
+
+      render(<SpeakersList {...event} />);
+
+      expect(
+        screen.queryByRole('link', { name: 'The team 4' }),
+      ).not.toBeInTheDocument();
     });
   });
 

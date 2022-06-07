@@ -1,18 +1,23 @@
 import { css } from '@emotion/react';
 import { EventSpeaker } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
-import { Headline3, Headline4, Avatar, Link } from '../atoms';
-import { tabletScreen, perRem, mobileScreen } from '../pixels';
-import { userPlaceholderIcon } from '../icons';
+import { useState } from 'react';
+import { Headline3, Headline4, Avatar, Link, Button } from '../atoms';
+import { tabletScreen, perRem } from '../pixels';
+import {
+  userPlaceholderIcon,
+  chevronCircleDownIcon,
+  chevronCircleUpIcon,
+} from '../icons';
 import { useDateHasPassed } from '../date';
 import { considerEndedAfter } from '../utils';
-import { steel, lead } from '../colors';
+import { steel, lead, colorWithTransparency } from '../colors';
 
 const gridStyles = css({
   display: 'grid',
   flexFlow: 'column',
   gap: `${15 / perRem}em`,
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     gap: 0,
   },
 });
@@ -27,25 +32,16 @@ const userStyles = css({
 
 const gridMixin = {
   display: 'grid',
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
+  [`@media (min-width: ${tabletScreen.width - 1}px)`]: {
     gridTemplateColumns: '1fr 1fr 1fr',
     gridAutoFlow: 'column',
     alignItems: 'start',
   },
 };
 
-const speakerListStyles = css({
-  ...gridMixin,
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
-    gridAutoFlow: 'row',
-    alignItems: 'start',
-    borderBottom: `1px solid ${steel.rgb}`,
-  },
-});
-
 const headerStyle = css({
   ...gridMixin,
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     display: 'none',
   },
 });
@@ -55,7 +51,7 @@ const placeholderStyle = css({
 });
 
 const labelStyle = css({
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     gridTemplateColumns: '1fr 1fr 1fr',
     gridAutoFlow: 'column',
     alignItems: 'start',
@@ -68,9 +64,9 @@ const labelStyle = css({
 const groupStyle = css({
   display: 'flex',
   flexFlow: 'column',
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
-    paddingBottom: `${21 / perRem}em`,
-    paddingTop: `${21 / perRem}em`,
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+    paddingBottom: `${12 / perRem}em`,
+    paddingTop: `${12 / perRem}em`,
   },
 });
 
@@ -79,19 +75,89 @@ const toBeAnnouncedStyle = css({
   color: `${lead}`,
 });
 
+const previewStyle = {
+  maxHeight: `${69 / perRem}em`,
+  overflow: 'hidden',
+  background: `linear-gradient(180deg, ${lead.rgb} 26.56%, ${
+    colorWithTransparency(lead, 0).rgba
+  } 100%)`,
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text',
+  textFillColor: 'transparent',
+};
+
+const speakerListMobileMixin = {
+  gridAutoFlow: 'row',
+  alignItems: 'start',
+  borderBottom: `1px solid ${steel.rgb}`,
+  paddingBottom: `${12 / perRem}em`,
+  paddingTop: `${12 / perRem}em`,
+};
+
+const speakerListStyles = {
+  ...gridMixin,
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+    ...speakerListMobileMixin,
+    [`:nth-last-of-type(2)`]: { borderBottom: 'transparent' },
+  },
+};
+
+const hideStyles = css({
+  ...gridMixin,
+  [`:nth-of-type(4)`]: { ...previewStyle, borderBottom: 'transparent' },
+  [`:nth-of-type(n+5)`]: { display: 'none' },
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+    ...speakerListMobileMixin,
+  },
+});
+
+const buttonWrapperStyles = css({
+  paddingBottom: `${21 / perRem}em`,
+  marginBottom: `${21 / perRem}em`,
+  display: 'flex',
+  justifyContent: 'center',
+  width: '100%',
+  borderBottom: `1px solid ${steel.rgb}`,
+  [`@media (min-width: ${tabletScreen.width - 1}px)`]: {
+    borderBottom: `transparent`,
+  },
+});
+
 interface SpeakerListProps {
   speakers: EventSpeaker[];
   readonly endDate: string;
 }
 
 const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
+  const [expanded, setExpanded] = useState(false);
   const hasEnded = useDateHasPassed(considerEndedAfter(endDate));
+
   const userToBeAnnounced = hasEnded
     ? 'User was not announced'
     : 'User to be announced';
 
+  const getSpeakerListStyles = () => {
+    if (speakers.length < 6) {
+      return {
+        ...speakerListStyles,
+        [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+          borderBottom: `1px solid ${steel.rgb}`,
+        },
+      };
+    }
+    if (expanded) return speakerListStyles;
+
+    return { ...speakerListStyles, ...hideStyles };
+  };
+
   return (
-    <div>
+    <div
+      css={{
+        display: 'flex',
+        flexFlow: 'column',
+      }}
+    >
       <Headline3 styleAsHeading={3}>Speakers</Headline3>
       <div css={headerStyle}>
         <Headline4 styleAsHeading={4}>Team</Headline4>
@@ -100,7 +166,7 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
       </div>
       <div css={gridStyles}>
         {speakers.map((speaker, index) => (
-          <div key={`speaker-id-${index}`} css={speakerListStyles}>
+          <div key={`speaker-id-${index}`} css={getSpeakerListStyles()}>
             <div css={groupStyle}>
               <div css={labelStyle}>
                 <span>Team</span>
@@ -155,6 +221,22 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
             </div>
           </div>
         ))}
+        {speakers.length > 5 && (
+          <div css={buttonWrapperStyles}>
+            <Button linkStyle onClick={() => setExpanded(!expanded)}>
+              <span
+                css={{
+                  display: 'inline-grid',
+                  verticalAlign: 'middle',
+                  paddingRight: `${12 / perRem}em`,
+                }}
+              >
+                {expanded ? chevronCircleUpIcon : chevronCircleDownIcon}
+              </span>
+              Show {expanded ? 'less' : 'more'}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

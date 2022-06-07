@@ -378,7 +378,7 @@ __metadata:
     "@types/jest": 26.0.24
     "@types/jsdom": ^16
     "@types/pify": ^3.0.2
-    "@types/react": ^17.0.5
+    "@types/react": 17.0.45
     "@types/react-dom": 17.0.17
     "@types/react-router-dom": ^5.1.7
     "@types/testing-library__jest-dom": ^5.9.5
@@ -461,7 +461,7 @@ __metadata:
     "@types/jest": 26.0.24
     "@types/nock": ^11.1.0
     "@types/node": ^14.14.45
-    "@types/react": ^17.0.5
+    "@types/react": 17.0.45
     "@types/react-dom": 17.0.17
     "@types/react-router-dom": ^5.1.7
     "@types/react-test-renderer": 17.0.2
@@ -720,7 +720,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": 26.0.24
     "@types/node": ^14.14.45
-    "@types/react": ^17.0.5
+    "@types/react": 17.0.45
     "@types/react-router-dom": ^5.1.7
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
@@ -761,7 +761,7 @@ __metadata:
     "@types/hast-util-sanitize": "workspace:*"
     "@types/history": 4.7.11
     "@types/jest": 26.0.24
-    "@types/react": ^17.0.5
+    "@types/react": 17.0.45
     "@types/react-dom": 17.0.17
     "@types/react-router-dom": ^5.1.7
     "@types/react-router-hash-link": ^1.2.1
@@ -825,7 +825,7 @@ __metadata:
     "@types/jest": 26.0.24
     "@types/nock": ^11.1.0
     "@types/node": ^14.14.45
-    "@types/react": ^17.0.5
+    "@types/react": 17.0.45
     "@types/react-dom": 17.0.17
     "@types/react-router-dom": ^5.1.7
     "@types/react-test-renderer": 17.0.2
@@ -933,7 +933,7 @@ __metadata:
     "@emotion/react": ^11
     "@emotion/server": ^11
     "@types/babel__core": 7.1.19
-    "@types/react": ^17.0.5
+    "@types/react": 17.0.45
     "@types/react-dom": 17.0.17
     aws-sdk: ^2.907.0
     babel-loader: ^8.2.2
@@ -1004,7 +1004,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": 26.0.24
     "@types/ramda": ^0
-    "@types/react": ^17.0.5
+    "@types/react": 17.0.45
     "@types/react-dom": 17.0.17
     "@types/react-router-dom": ^5.1.7
     "@types/react-router-hash-link": ^1.2.1
@@ -1071,7 +1071,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": ^4.0.1
     "@types/jest": 26.0.24
-    "@types/react": ^17.0.5
+    "@types/react": 17.0.45
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
     "@types/testing-library__react-hooks": ^3.4.1
@@ -1218,7 +1218,7 @@ __metadata:
     "@storybook/addon-viewport": ^6.5.0-alpha.62
     "@storybook/react": 6.5.0-alpha.62
     "@types/history": 4.7.11
-    "@types/react": ^17.0.5
+    "@types/react": 17.0.45
     "@types/react-router-dom": ^5.1.7
     babel-preset-react-app: 10.0.1
     core-js: ^3.12.1
@@ -1243,7 +1243,7 @@ __metadata:
     "@babel/preset-react": ^7.13.13
     "@babel/runtime-corejs3": ^7.14.0
     "@types/node": ^14.14.45
-    "@types/react": ^17.0.5
+    "@types/react": 17.0.45
     "@types/react-dom": 17.0.17
     react: ^17.0.2
     react-dom: ^17.0.2
@@ -12968,17 +12968,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:>=16.9.0, @types/react@npm:^17.0.0":
-  version: 17.0.0
-  resolution: "@types/react@npm:17.0.0"
-  dependencies:
-    "@types/prop-types": "*"
-    csstype: ^3.0.2
-  checksum: 0767d1c635613cb08de1ad6b8f73e3ee01ae0069733fa56382c72a8dbed741849e74f62a17756c7b76ccd2b57dd9891d5767c3134f35788720c6bb9c186a933b
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:^17":
+"@types/react@npm:17.0.45, @types/react@npm:^17":
   version: 17.0.45
   resolution: "@types/react@npm:17.0.45"
   dependencies:
@@ -12989,14 +12979,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^17.0.5":
-  version: 17.0.5
-  resolution: "@types/react@npm:17.0.5"
+"@types/react@npm:>=16.9.0, @types/react@npm:^17.0.0":
+  version: 17.0.0
+  resolution: "@types/react@npm:17.0.0"
   dependencies:
     "@types/prop-types": "*"
-    "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 86bfb0be783b95771aa61a5e480f3d878a8cb9b9eeea0d02eee7978dc9899a7cba3b346a2c9bd7460d353231fcdee8af7b7e20ad036f706fbe55e1f6519efa3e
+  checksum: 0767d1c635613cb08de1ad6b8f73e3ee01ae0069733fa56382c72a8dbed741849e74f62a17756c7b76ccd2b57dd9891d5767c3134f35788720c6bb9c186a933b
   languageName: node
   linkType: hard
 

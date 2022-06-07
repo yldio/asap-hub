@@ -45,6 +45,20 @@ it('renders a button with an icon only with decreased horizontal padding', () =>
   expect(iconOnlyPaddingLeft).toBeLessThan(normalPaddingLeft);
 });
 
+it('renders a button without margin', () => {
+  const { getByRole, rerender } = render(<Button>{orcidIcon}Text</Button>);
+  const normalPaddingLeft = Number(
+    getComputedStyle(getByRole('button')).paddingLeft.replace(/em$/, ''),
+  );
+
+  rerender(<Button>{orcidIcon}</Button>);
+  const iconOnlyPaddingLeft = Number(
+    getComputedStyle(getByRole('button')).paddingLeft.replace(/em$/, ''),
+  );
+
+  expect(iconOnlyPaddingLeft).toBeLessThan(normalPaddingLeft);
+});
+
 it('renders a primary button', () => {
   const { getByRole, rerender } = render(<Button />);
   expect(getComputedStyle(getByRole('button')).backgroundColor).not.toBe(

@@ -62,6 +62,20 @@ describe('when button-styled', () => {
     ).toBeGreaterThan(0);
   });
 
+  it('renders button without margin', () => {
+    const { getByRole } = render(
+      <Link href="/" buttonStyle margin={false}>
+        text
+      </Link>,
+    );
+
+    const buttonWithoutMargin = Number(
+      getComputedStyle(getByRole('link')).margin.replace(/em$/, ''),
+    );
+
+    expect(buttonWithoutMargin).toBe(0);
+  });
+
   it('supports primary button styles', () => {
     const { getByRole, rerender } = render(
       <Link href="/" buttonStyle>

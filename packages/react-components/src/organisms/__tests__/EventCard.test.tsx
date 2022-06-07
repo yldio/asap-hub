@@ -98,9 +98,15 @@ describe('current events', () => {
     expect(queryByText(/join/i)).toBeNull();
   });
   it('toasts for meetings with speakers to be announced', () => {
-    const { queryByText } = render(<EventCard {...props} speakers={[]} />);
+    const { queryByText } = render(
+      <EventCard
+        {...props}
+        startDate={addMinutes(new Date(), 30).toISOString()}
+        speakers={[]}
+      />,
+    );
 
-    expect(queryByText(/more speakers to be announced/i)).toBeNull();
+    expect(queryByText(/more speakers to be announced/i)).toBeInTheDocument();
   });
 });
 

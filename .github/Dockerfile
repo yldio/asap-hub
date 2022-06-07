@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
   apt-transport-https \
   ca-certificates \
   awscli \
+  libssl-dev \
   && ln -s /usr/bin/python3 /usr/bin/python
 
 RUN wget https://github.com/Squidex/squidex-samples/releases/download/cli-v7.12/linux-x64.zip && \

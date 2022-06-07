@@ -8627,7 +8627,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "serverless-s3-sync",
-        "npm:1.17.1"
+        "npm:1.17.3"
       ],
       [
         "serverless-webpack",
@@ -10776,7 +10776,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless", "npm:2.60.0"],
             ["serverless-http", "npm:2.7.0"],
             ["serverless-iam-roles-per-function", "npm:2.0.2"],
-            ["serverless-s3-sync", "npm:1.17.1"],
+            ["serverless-s3-sync", "npm:1.17.3"],
             ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.5.0"],
             ["source-map-support", "npm:0.5.19"],
             ["stream-json", "npm:1.7.2"],
@@ -11175,7 +11175,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jsonwebtoken", "npm:8.5.1"],
             ["serverless", "npm:2.60.0"],
             ["serverless-http", "npm:2.7.0"],
-            ["serverless-s3-sync", "npm:1.17.1"],
+            ["serverless-s3-sync", "npm:1.17.3"],
             ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.5.0"],
             ["source-map-support", "npm:0.5.19"],
             ["supertest", "npm:6.2.2"],
@@ -57500,10 +57500,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["serverless-s3-sync", [
-        ["npm:1.17.1", {
-          "packageLocation": "./.yarn/cache/serverless-s3-sync-npm-1.17.1-65e827e83a-fea6e288c3.zip/node_modules/serverless-s3-sync/",
+        ["npm:1.17.3", {
+          "packageLocation": "./.yarn/cache/serverless-s3-sync-npm-1.17.3-e19a3f562c-88e32f5390.zip/node_modules/serverless-s3-sync/",
           "packageDependencies": [
-            ["serverless-s3-sync", "npm:1.17.1"],
+            ["serverless-s3-sync", "npm:1.17.3"],
             ["@auth0/s3", "npm:1.0.0"],
             ["bluebird", "npm:3.7.2"],
             ["chalk", "npm:2.4.2"],

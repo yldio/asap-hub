@@ -109,7 +109,7 @@ The down function is triggered by `asap-hub-{env}-rollbackMigrations`
 
 ### Image name
 
-The current image tag in use is: c7abd599602b8abfddcdbda1e4f8a770cc4b2146
+The current image tag in use is: c0f8cc28a23aabc8d108822e2fc821403d2a6aae
 
 ### Build new image
 
@@ -135,7 +135,7 @@ To build new images:
 To change the image tag, run:
 
 ```shell
-  gsed -i s/c7abd599602b8abfddcdbda1e4f8a770cc4b2146/some-new-tag/g .github/**/*.yml README.md
+  gsed -i s/c0f8cc28a23aabc8d108822e2fc821403d2a6aae/some-new-tag/g .github/**/*.yml README.md
 ```
 
 ## Manage GitHub workflow runs logs

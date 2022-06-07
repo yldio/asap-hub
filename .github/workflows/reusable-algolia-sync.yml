@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:c7abd599602b8abfddcdbda1e4f8a770cc4b2146
+      image: ghcr.io/yldio/asap-hub/node-python-sq:c0f8cc28a23aabc8d108822e2fc821403d2a6aae
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

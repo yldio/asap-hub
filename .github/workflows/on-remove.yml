@@ -14,7 +14,7 @@ jobs:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:c7abd599602b8abfddcdbda1e4f8a770cc4b2146
+      image: ghcr.io/yldio/asap-hub/node-python-sq:c0f8cc28a23aabc8d108822e2fc821403d2a6aae
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -37,7 +37,7 @@ jobs:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:c7abd599602b8abfddcdbda1e4f8a770cc4b2146
+      image: ghcr.io/yldio/asap-hub/node-python-sq:c0f8cc28a23aabc8d108822e2fc821403d2a6aae
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -67,7 +67,7 @@ jobs:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:c7abd599602b8abfddcdbda1e4f8a770cc4b2146
+      image: ghcr.io/yldio/asap-hub/node-python-sq:c0f8cc28a23aabc8d108822e2fc821403d2a6aae
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -90,7 +90,7 @@ jobs:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:c7abd599602b8abfddcdbda1e4f8a770cc4b2146
+      image: ghcr.io/yldio/asap-hub/node-python-sq:c0f8cc28a23aabc8d108822e2fc821403d2a6aae
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

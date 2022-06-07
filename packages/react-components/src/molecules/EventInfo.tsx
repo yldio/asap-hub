@@ -33,7 +33,7 @@ const imageContainerStyle = css({
 const cardStyles = css({
   display: 'flex',
   flexDirection: 'row',
-  paddingBottom: `${32 / perRem}em`,
+  paddingBottom: `${33 / perRem}em`,
 });
 
 const listItemStyles = css({

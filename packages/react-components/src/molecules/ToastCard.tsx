@@ -11,7 +11,7 @@ const toastStyles = css({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  padding: `${16 / perRem}em ${24 / perRem}em`,
+  padding: `${15 / perRem}em ${24 / perRem}em`,
 });
 
 const iconStyles = css({

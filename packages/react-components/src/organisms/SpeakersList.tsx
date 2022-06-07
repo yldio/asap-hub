@@ -104,16 +104,11 @@ const speakerListStyles = {
 };
 
 const hideStyles = css({
+  ...gridMixin,
+  [`:nth-of-type(4)`]: { ...previewStyle, borderBottom: 'transparent' },
+  [`:nth-of-type(n+5)`]: { display: 'none' },
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     ...speakerListMobileMixin,
-    [`:nth-of-type(4)`]: { ...previewStyle, borderBottom: 'transparent' },
-    [`:nth-of-type(n+5)`]: { display: 'none' },
-  },
-  [`@media (min-width: ${tabletScreen.width - 1}px)`]: {
-    ...gridMixin,
-    borderBottom: 'transparent',
-    [`:nth-of-type(n+6)`]: { ...previewStyle },
-    [`:nth-of-type(n+7)`]: { display: 'none' },
   },
 });
 
@@ -136,14 +131,25 @@ interface SpeakerListProps {
 
 const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
   const [expanded, setExpanded] = useState(false);
-  const isMobile = window.innerWidth < tabletScreen.width;
   const hasEnded = useDateHasPassed(considerEndedAfter(endDate));
 
   const userToBeAnnounced = hasEnded
     ? 'User was not announced'
     : 'User to be announced';
-  const shouldRenderButton =
-    (isMobile && speakers.length > 3) || (!isMobile && speakers.length > 5);
+
+  const getSpeakerListStyles = () => {
+    if (speakers.length < 6) {
+      return {
+        ...speakerListStyles,
+        [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+          borderBottom: `1px solid ${steel.rgb}`,
+        },
+      };
+    }
+    if (expanded) return speakerListStyles;
+
+    return { ...speakerListStyles, ...hideStyles };
+  };
 
   return (
     <div
@@ -160,14 +166,7 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
       </div>
       <div css={gridStyles}>
         {speakers.map((speaker, index) => (
-          <div
-            key={`speaker-id-${index}`}
-            css={
-              expanded
-                ? speakerListStyles
-                : { ...speakerListStyles, ...hideStyles }
-            }
-          >
+          <div key={`speaker-id-${index}`} css={getSpeakerListStyles()}>
             <div css={groupStyle}>
               <div css={labelStyle}>
                 <span>Team</span>
@@ -222,7 +221,7 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
             </div>
           </div>
         ))}
-        {shouldRenderButton && (
+        {speakers.length > 5 && (
           <div css={buttonWrapperStyles}>
             <Button linkStyle onClick={() => setExpanded(!expanded)}>
               <span

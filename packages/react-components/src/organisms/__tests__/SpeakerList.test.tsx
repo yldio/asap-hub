@@ -127,6 +127,22 @@ describe('When rendering the speaker list', () => {
         screen.queryByRole('button', { name: /Show more/i }),
       ).not.toBeInTheDocument();
     });
+
+    it('Hides the 5th speaker if there are more than 5 speakers', async () => {
+      const event = {
+        ...createEventResponse({
+          numberOfSpeakers: 6,
+          numberOfExternalSpeakers: 0,
+          numberOfUnknownSpeakers: 0,
+        }),
+      };
+
+      render(<SpeakersList {...event} />);
+
+      expect(
+        screen.queryByRole('link', { name: 'The team 4' }),
+      ).not.toBeInTheDocument();
+    });
   });
 
   describe('Event is in the past', () => {

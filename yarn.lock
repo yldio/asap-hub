@@ -374,7 +374,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": ^12.8.3
     "@types/auth0-js": ^9.14.4
-    "@types/history": ^4.7.6
+    "@types/history": 4.7.11
     "@types/jest": 26.0.24
     "@types/jsdom": ^16
     "@types/pify": ^3.0.2
@@ -457,7 +457,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": ^4.0.1
     "@testing-library/user-event": ^12.8.3
-    "@types/history": ^4.7.6
+    "@types/history": 4.7.11
     "@types/jest": 26.0.24
     "@types/nock": ^11.1.0
     "@types/node": ^14.14.45
@@ -717,7 +717,7 @@ __metadata:
     "@babel/runtime-corejs3": ^7.14.0
     "@sentry/react": ^6.11.0
     "@testing-library/react": 11.2.7
-    "@types/history": ^4.7.6
+    "@types/history": 4.7.11
     "@types/jest": 26.0.24
     "@types/node": ^14.14.45
     "@types/react": ^17.0.5
@@ -759,7 +759,7 @@ __metadata:
     "@testing-library/user-event": ^12.8.3
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
-    "@types/history": ^4.7.6
+    "@types/history": 4.7.11
     "@types/jest": 26.0.24
     "@types/react": ^17.0.5
     "@types/react-dom": 17.0.17
@@ -821,7 +821,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": ^4.0.1
     "@testing-library/user-event": ^12.8.3
-    "@types/history": ^4.7.6
+    "@types/history": 4.7.11
     "@types/jest": 26.0.24
     "@types/nock": ^11.1.0
     "@types/node": ^14.14.45
@@ -1001,7 +1001,7 @@ __metadata:
     "@testing-library/user-event": ^12.8.3
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
-    "@types/history": ^4.7.6
+    "@types/history": 4.7.11
     "@types/jest": 26.0.24
     "@types/ramda": ^0
     "@types/react": ^17.0.5
@@ -1217,7 +1217,7 @@ __metadata:
     "@storybook/addon-knobs": ^6.2.9
     "@storybook/addon-viewport": ^6.5.0-alpha.62
     "@storybook/react": 6.5.0-alpha.62
-    "@types/history": ^4.7.6
+    "@types/history": 4.7.11
     "@types/react": ^17.0.5
     "@types/react-router-dom": ^5.1.7
     babel-preset-react-app: 10.0.1
@@ -12335,10 +12335,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/history@npm:*, @types/history@npm:^4.7.6":
+"@types/history@npm:*":
   version: 4.7.8
   resolution: "@types/history@npm:4.7.8"
   checksum: 9c867532afd80f72a7101a5bb3c10c1ad7cc8c2c14e92fdbc54d5fed0ef8cdb6060c0f261a39884e243424636c6ff85d8aaffb984e2edaac348d2f216f9eedeb
+  languageName: node
+  linkType: hard
+
+"@types/history@npm:4.7.11":
+  version: 4.7.11
+  resolution: "@types/history@npm:4.7.11"
+  checksum: c92e2ba407dcab0581a9afdf98f533aa41b61a71133420a6d92b1ca9839f741ab1f9395b17454ba5b88cb86020b70b22d74a1950ccfbdfd9beeaa5459fdc3464
   languageName: node
   linkType: hard
 

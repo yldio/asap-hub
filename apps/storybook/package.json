@@ -34,7 +34,7 @@
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/flags": "workspace:*",
     "@babel/core": "^7.14.2",
-    "@types/history": "^4.7.6",
+    "@types/history": "4.7.11",
     "@types/react": "^17.0.5",
     "@types/react-router-dom": "^5.1.7",
     "babel-preset-react-app": "10.0.1",

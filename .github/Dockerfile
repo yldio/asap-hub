@@ -1,4 +1,4 @@
-FROM ubuntu:20.04 AS base
+FROM ubuntu:22.04 AS base
 
 # prevent awscli TZ prompt
 ENV DEBIAN_FRONTEND=noninteractive
@@ -23,7 +23,7 @@ RUN wget https://github.com/Squidex/squidex-samples/releases/download/cli-v7.12/
 
 FROM base AS integration
 
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash \
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash \
   && apt-get update && apt-get install -yqq \
   nodejs \
   git \

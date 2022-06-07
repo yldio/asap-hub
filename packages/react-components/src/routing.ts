@@ -1,6 +1,6 @@
+import { searchQueryParam } from '@asap-hub/routing';
 import { History } from 'history';
 import { useHistory, useLocation } from 'react-router-dom';
-import { searchQueryParam } from '@asap-hub/routing';
 
 export const queryParamString = (searchQuery: string | undefined): string => {
   let searchQueryParamString = '';
@@ -25,7 +25,7 @@ export const usePushFromPathname = (
   pathname: string,
 ): History<unknown>['push'] => {
   const history = useHistory();
-  return (...args: Parameters<History['push']>) => {
+  return (...args: Parameters<typeof history['push']>) => {
     if (history.location.pathname === pathname) {
       history.push(...args);
     }

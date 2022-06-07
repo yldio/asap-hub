@@ -344,7 +344,7 @@ __metadata:
     "@yarnpkg/pnpify": 3.1.3
     algoliasearch: ^4.11.0
     apr-intercept: ^3.0.4
-    async-sema: ^3.1.0
+    async-sema: 3.1.1
     aws-sdk: ^2.907.0
     csv-parse: ^4.15.4
     got: ^11.8.2
@@ -15371,10 +15371,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"async-sema@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "async-sema@npm:3.1.0"
-  checksum: eddfa4fa8332f73f16b6e1803dd7b01a4f8fb3566c46792545b6e37f48a0b638f00c45962d510217b508c015636197aa3b475fffb91fd0d38f82b5b13067c748
+"async-sema@npm:3.1.1":
+  version: 3.1.1
+  resolution: "async-sema@npm:3.1.1"
+  checksum: 07b8c51f6cab107417ecdd8126b7a9fe5a75151b7f69fdd420dcc8ee08f9e37c473a217247e894b56e999b088b32e902dbe41637e4e9b594d3f8dfcdddfadc5e
   languageName: node
   linkType: hard
 

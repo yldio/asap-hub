@@ -468,7 +468,7 @@ __metadata:
     identity-obj-proxy: ^3.0.0
     jose: ^2.0.5
     nock: ^13.0.11
-    pirates: ^4.0.1
+    pirates: 4.0.5
     react: ^17.0.2
     react-app-polyfill: ^1.0.6
     react-dom: ^17.0.2
@@ -832,7 +832,7 @@ __metadata:
     identity-obj-proxy: ^3.0.0
     jose: ^2.0.5
     nock: ^13.0.11
-    pirates: ^4.0.1
+    pirates: 4.0.5
     react: ^17.0.2
     react-app-polyfill: ^1.0.6
     react-dom: ^17.0.2
@@ -30031,6 +30031,13 @@ fsevents@~2.1.2:
   bin:
     pino: bin.js
   checksum: 154173fc0cceef04e0252f8cecabea5d85cfaf97271961723b7a78f493a36f08224bdb1eaf57c6acd6ca5c68cbb781ae164d7c7f9a7ec06c3fd44c2a3c087734
+  languageName: node
+  linkType: hard
+
+"pirates@npm:4.0.5":
+  version: 4.0.5
+  resolution: "pirates@npm:4.0.5"
+  checksum: c9994e61b85260bec6c4fc0307016340d9b0c4f4b6550a957afaaff0c9b1ad58fbbea5cfcf083860a25cb27a375442e2b0edf52e2e1e40e69934e08dcc52d227
   languageName: node
   linkType: hard
 

@@ -7463,7 +7463,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "pirates",
-        "npm:4.0.1"
+        "npm:4.0.5"
       ],
       [
         "pixelmatch",
@@ -10648,7 +10648,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jose", "npm:2.0.5"],
             ["nock", "npm:13.0.11"],
-            ["pirates", "npm:4.0.1"],
+            ["pirates", "npm:4.0.5"],
             ["react", "npm:17.0.2"],
             ["react-app-polyfill", "npm:1.0.6"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:17.0.2"],
@@ -11112,7 +11112,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jose", "npm:2.0.5"],
             ["nock", "npm:13.0.11"],
-            ["pirates", "npm:4.0.1"],
+            ["pirates", "npm:4.0.5"],
             ["react", "npm:17.0.2"],
             ["react-app-polyfill", "npm:1.0.6"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:17.0.2"],
@@ -52649,6 +52649,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["pirates", "npm:4.0.1"],
             ["node-modules-regexp", "npm:1.0.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:4.0.5", {
+          "packageLocation": "./.yarn/cache/pirates-npm-4.0.5-22f8e827ce-c9994e61b8.zip/node_modules/pirates/",
+          "packageDependencies": [
+            ["pirates", "npm:4.0.5"]
           ],
           "linkType": "HARD",
         }]

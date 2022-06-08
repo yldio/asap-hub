@@ -528,7 +528,7 @@ __metadata:
     "@graphql-tools/load": ^7.3.2
     "@graphql-tools/mock": ^8.4.0
     "@graphql-tools/schema": ^8.2.0
-    "@graphql-typed-document-node/core": ^3.1.0
+    "@graphql-typed-document-node/core": 3.1.1
     "@hapi/boom": ^9.1.2
     "@hapi/bourne": ^2.0.0
     "@hapi/joi": ^17.1.1
@@ -878,7 +878,7 @@ __metadata:
     "@graphql-codegen/schema-ast": ^2.2.0
     "@graphql-codegen/typescript": 2.2.2
     "@graphql-codegen/typescript-operations": ^2.1.4
-    "@graphql-typed-document-node/core": ^3.1.0
+    "@graphql-typed-document-node/core": 3.1.1
     "@hapi/boom": ^9.1.2
     "@serverless/typescript": ^2.59.0
     "@types/apr-intercept": "workspace:*"
@@ -8886,12 +8886,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-typed-document-node/core@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "@graphql-typed-document-node/core@npm:3.1.0"
+"@graphql-typed-document-node/core@npm:3.1.1":
+  version: 3.1.1
+  resolution: "@graphql-typed-document-node/core@npm:3.1.1"
   peerDependencies:
-    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 582eb2006012a29bdcf72d223e3fec1a1ccdac8f4e249bd92cb68412e9881b4f7aa9ed9c74a495a2aa988904aaa4b8aa7b21bf0cb8c7aed700b8150f5818ef3f
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 87ff4cee308f1075f4472b80f9f9409667979940f8f701e87f0aa35ce5cf104d94b41258ea8192d05a0893475cd0f086a3929a07663b4fe8d0e805a277f07ed5
   languageName: node
   linkType: hard
 

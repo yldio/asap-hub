@@ -15,7 +15,7 @@
     "@asap-hub/model": "workspace:*",
     "@asap-hub/server-common": "workspace:*",
     "@asap-hub/squidex": "workspace:*",
-    "@graphql-typed-document-node/core": "^3.1.0",
+    "@graphql-typed-document-node/core": "3.1.1",
     "@hapi/boom": "^9.1.2",
     "apr-intercept": "^3.0.4",
     "aws-lambda": "1.0.7",

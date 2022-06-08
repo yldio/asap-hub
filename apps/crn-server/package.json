@@ -99,7 +99,7 @@
     "@graphql-tools/load": "^7.3.2",
     "@graphql-tools/mock": "^8.4.0",
     "@graphql-tools/schema": "^8.2.0",
-    "@graphql-typed-document-node/core": "^3.1.0",
+    "@graphql-typed-document-node/core": "3.1.1",
     "@serverless/typescript": "^2.59.0",
     "@types/apr-intercept": "workspace:*",
     "@types/aws-lambda": "8.10.98",

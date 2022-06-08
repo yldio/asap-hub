@@ -20,7 +20,7 @@
     "@sentry/serverless": "^6.7.1",
     "apr-intercept": "^3.0.4",
     "express": "^4.17.1",
-    "got": "^11.8.2",
+    "got": "11.8.5",
     "jsonwebtoken": "^8.5.1",
     "pino": "^7.10.0",
     "pino-http": "^6.6.0",

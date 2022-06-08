@@ -3071,23 +3071,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "aws-xray-sdk",
-        "npm:3.3.3"
+        "npm:3.3.6"
       ],
       [
         "aws-xray-sdk-core",
-        "npm:3.3.3"
+        "npm:3.3.6"
       ],
       [
         "aws-xray-sdk-express",
-        "virtual:734dad8fc525cafdfedf39e18bca6d1ffda97e7425f5fb8cd376e24acf11181427b872608d60f6f8b89824d0ce4aaac9858acc649b0f2cba9bb2d5234ba6cec1#npm:3.3.3"
+        "virtual:0eab6f950d134a8a6966aac38d5896877dfc81dc8f71c9de884dc0f755e439945580efcfeb1f6fd6bf521c841391b3c00d8966f14e2af9d1b8e5f376c1dff8c2#npm:3.3.6"
       ],
       [
         "aws-xray-sdk-mysql",
-        "virtual:734dad8fc525cafdfedf39e18bca6d1ffda97e7425f5fb8cd376e24acf11181427b872608d60f6f8b89824d0ce4aaac9858acc649b0f2cba9bb2d5234ba6cec1#npm:3.3.3"
+        "virtual:0eab6f950d134a8a6966aac38d5896877dfc81dc8f71c9de884dc0f755e439945580efcfeb1f6fd6bf521c841391b3c00d8966f14e2af9d1b8e5f376c1dff8c2#npm:3.3.6"
       ],
       [
         "aws-xray-sdk-postgres",
-        "virtual:734dad8fc525cafdfedf39e18bca6d1ffda97e7425f5fb8cd376e24acf11181427b872608d60f6f8b89824d0ce4aaac9858acc649b0f2cba9bb2d5234ba6cec1#npm:3.3.3"
+        "virtual:0eab6f950d134a8a6966aac38d5896877dfc81dc8f71c9de884dc0f755e439945580efcfeb1f6fd6bf521c841391b3c00d8966f14e2af9d1b8e5f376c1dff8c2#npm:3.3.6"
       ],
       [
         "aws4",
@@ -10781,7 +10781,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
             ["aws-sdk", "npm:2.907.0"],
-            ["aws-xray-sdk", "npm:3.3.3"],
+            ["aws-xray-sdk", "npm:3.3.6"],
             ["babel-loader", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:8.2.2"],
             ["chance", "npm:1.1.8"],
             ["copy-webpack-plugin", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:9.0.0"],
@@ -36466,23 +36466,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["aws-xray-sdk", [
-        ["npm:3.3.3", {
-          "packageLocation": "./.yarn/cache/aws-xray-sdk-npm-3.3.3-734dad8fc5-0b9b5b5b3f.zip/node_modules/aws-xray-sdk/",
+        ["npm:3.3.6", {
+          "packageLocation": "./.yarn/cache/aws-xray-sdk-npm-3.3.6-0eab6f950d-82afc1063e.zip/node_modules/aws-xray-sdk/",
           "packageDependencies": [
-            ["aws-xray-sdk", "npm:3.3.3"],
-            ["aws-xray-sdk-core", "npm:3.3.3"],
-            ["aws-xray-sdk-express", "virtual:734dad8fc525cafdfedf39e18bca6d1ffda97e7425f5fb8cd376e24acf11181427b872608d60f6f8b89824d0ce4aaac9858acc649b0f2cba9bb2d5234ba6cec1#npm:3.3.3"],
-            ["aws-xray-sdk-mysql", "virtual:734dad8fc525cafdfedf39e18bca6d1ffda97e7425f5fb8cd376e24acf11181427b872608d60f6f8b89824d0ce4aaac9858acc649b0f2cba9bb2d5234ba6cec1#npm:3.3.3"],
-            ["aws-xray-sdk-postgres", "virtual:734dad8fc525cafdfedf39e18bca6d1ffda97e7425f5fb8cd376e24acf11181427b872608d60f6f8b89824d0ce4aaac9858acc649b0f2cba9bb2d5234ba6cec1#npm:3.3.3"]
+            ["aws-xray-sdk", "npm:3.3.6"],
+            ["aws-xray-sdk-core", "npm:3.3.6"],
+            ["aws-xray-sdk-express", "virtual:0eab6f950d134a8a6966aac38d5896877dfc81dc8f71c9de884dc0f755e439945580efcfeb1f6fd6bf521c841391b3c00d8966f14e2af9d1b8e5f376c1dff8c2#npm:3.3.6"],
+            ["aws-xray-sdk-mysql", "virtual:0eab6f950d134a8a6966aac38d5896877dfc81dc8f71c9de884dc0f755e439945580efcfeb1f6fd6bf521c841391b3c00d8966f14e2af9d1b8e5f376c1dff8c2#npm:3.3.6"],
+            ["aws-xray-sdk-postgres", "virtual:0eab6f950d134a8a6966aac38d5896877dfc81dc8f71c9de884dc0f755e439945580efcfeb1f6fd6bf521c841391b3c00d8966f14e2af9d1b8e5f376c1dff8c2#npm:3.3.6"]
           ],
           "linkType": "HARD",
         }]
       ]],
       ["aws-xray-sdk-core", [
-        ["npm:3.3.3", {
-          "packageLocation": "./.yarn/cache/aws-xray-sdk-core-npm-3.3.3-2b8364696f-793ff44b05.zip/node_modules/aws-xray-sdk-core/",
+        ["npm:3.3.6", {
+          "packageLocation": "./.yarn/cache/aws-xray-sdk-core-npm-3.3.6-0d306feed1-b1a79dc260.zip/node_modules/aws-xray-sdk-core/",
           "packageDependencies": [
-            ["aws-xray-sdk-core", "npm:3.3.3"],
+            ["aws-xray-sdk-core", "npm:3.3.6"],
             ["@aws-sdk/service-error-classification", "npm:3.15.0"],
             ["@aws-sdk/types", "npm:3.15.0"],
             ["@types/cls-hooked", "npm:4.3.3"],
@@ -36494,20 +36494,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["aws-xray-sdk-express", [
-        ["npm:3.3.3", {
-          "packageLocation": "./.yarn/cache/aws-xray-sdk-express-npm-3.3.3-78404fb137-415e8739db.zip/node_modules/aws-xray-sdk-express/",
+        ["npm:3.3.6", {
+          "packageLocation": "./.yarn/cache/aws-xray-sdk-express-npm-3.3.6-3e9280a8b9-d47f69e26a.zip/node_modules/aws-xray-sdk-express/",
           "packageDependencies": [
-            ["aws-xray-sdk-express", "npm:3.3.3"]
+            ["aws-xray-sdk-express", "npm:3.3.6"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:734dad8fc525cafdfedf39e18bca6d1ffda97e7425f5fb8cd376e24acf11181427b872608d60f6f8b89824d0ce4aaac9858acc649b0f2cba9bb2d5234ba6cec1#npm:3.3.3", {
-          "packageLocation": "./.yarn/__virtual__/aws-xray-sdk-express-virtual-e402e96dcb/0/cache/aws-xray-sdk-express-npm-3.3.3-78404fb137-415e8739db.zip/node_modules/aws-xray-sdk-express/",
+        ["virtual:0eab6f950d134a8a6966aac38d5896877dfc81dc8f71c9de884dc0f755e439945580efcfeb1f6fd6bf521c841391b3c00d8966f14e2af9d1b8e5f376c1dff8c2#npm:3.3.6", {
+          "packageLocation": "./.yarn/__virtual__/aws-xray-sdk-express-virtual-6a6ae9ffcb/0/cache/aws-xray-sdk-express-npm-3.3.6-3e9280a8b9-d47f69e26a.zip/node_modules/aws-xray-sdk-express/",
           "packageDependencies": [
-            ["aws-xray-sdk-express", "virtual:734dad8fc525cafdfedf39e18bca6d1ffda97e7425f5fb8cd376e24acf11181427b872608d60f6f8b89824d0ce4aaac9858acc649b0f2cba9bb2d5234ba6cec1#npm:3.3.3"],
+            ["aws-xray-sdk-express", "virtual:0eab6f950d134a8a6966aac38d5896877dfc81dc8f71c9de884dc0f755e439945580efcfeb1f6fd6bf521c841391b3c00d8966f14e2af9d1b8e5f376c1dff8c2#npm:3.3.6"],
             ["@types/aws-xray-sdk-core", null],
             ["@types/express", "npm:4.17.11"],
-            ["aws-xray-sdk-core", "npm:3.3.3"]
+            ["aws-xray-sdk-core", "npm:3.3.6"]
           ],
           "packagePeers": [
             "@types/aws-xray-sdk-core",
@@ -36517,20 +36517,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["aws-xray-sdk-mysql", [
-        ["npm:3.3.3", {
-          "packageLocation": "./.yarn/cache/aws-xray-sdk-mysql-npm-3.3.3-a678b96d40-d82b085c3b.zip/node_modules/aws-xray-sdk-mysql/",
+        ["npm:3.3.6", {
+          "packageLocation": "./.yarn/cache/aws-xray-sdk-mysql-npm-3.3.6-b8159fd7df-cccd5eb133.zip/node_modules/aws-xray-sdk-mysql/",
           "packageDependencies": [
-            ["aws-xray-sdk-mysql", "npm:3.3.3"]
+            ["aws-xray-sdk-mysql", "npm:3.3.6"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:734dad8fc525cafdfedf39e18bca6d1ffda97e7425f5fb8cd376e24acf11181427b872608d60f6f8b89824d0ce4aaac9858acc649b0f2cba9bb2d5234ba6cec1#npm:3.3.3", {
-          "packageLocation": "./.yarn/__virtual__/aws-xray-sdk-mysql-virtual-33deedab24/0/cache/aws-xray-sdk-mysql-npm-3.3.3-a678b96d40-d82b085c3b.zip/node_modules/aws-xray-sdk-mysql/",
+        ["virtual:0eab6f950d134a8a6966aac38d5896877dfc81dc8f71c9de884dc0f755e439945580efcfeb1f6fd6bf521c841391b3c00d8966f14e2af9d1b8e5f376c1dff8c2#npm:3.3.6", {
+          "packageLocation": "./.yarn/__virtual__/aws-xray-sdk-mysql-virtual-c657900c38/0/cache/aws-xray-sdk-mysql-npm-3.3.6-b8159fd7df-cccd5eb133.zip/node_modules/aws-xray-sdk-mysql/",
           "packageDependencies": [
-            ["aws-xray-sdk-mysql", "virtual:734dad8fc525cafdfedf39e18bca6d1ffda97e7425f5fb8cd376e24acf11181427b872608d60f6f8b89824d0ce4aaac9858acc649b0f2cba9bb2d5234ba6cec1#npm:3.3.3"],
+            ["aws-xray-sdk-mysql", "virtual:0eab6f950d134a8a6966aac38d5896877dfc81dc8f71c9de884dc0f755e439945580efcfeb1f6fd6bf521c841391b3c00d8966f14e2af9d1b8e5f376c1dff8c2#npm:3.3.6"],
             ["@types/aws-xray-sdk-core", null],
             ["@types/mysql", "npm:2.15.18"],
-            ["aws-xray-sdk-core", "npm:3.3.3"]
+            ["aws-xray-sdk-core", "npm:3.3.6"]
           ],
           "packagePeers": [
             "@types/aws-xray-sdk-core",
@@ -36540,20 +36540,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["aws-xray-sdk-postgres", [
-        ["npm:3.3.3", {
-          "packageLocation": "./.yarn/cache/aws-xray-sdk-postgres-npm-3.3.3-bdfc598c7e-ca0fac9c74.zip/node_modules/aws-xray-sdk-postgres/",
+        ["npm:3.3.6", {
+          "packageLocation": "./.yarn/cache/aws-xray-sdk-postgres-npm-3.3.6-0b68548aea-c8d0b2d4ac.zip/node_modules/aws-xray-sdk-postgres/",
           "packageDependencies": [
-            ["aws-xray-sdk-postgres", "npm:3.3.3"]
+            ["aws-xray-sdk-postgres", "npm:3.3.6"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:734dad8fc525cafdfedf39e18bca6d1ffda97e7425f5fb8cd376e24acf11181427b872608d60f6f8b89824d0ce4aaac9858acc649b0f2cba9bb2d5234ba6cec1#npm:3.3.3", {
-          "packageLocation": "./.yarn/__virtual__/aws-xray-sdk-postgres-virtual-8197ff8447/0/cache/aws-xray-sdk-postgres-npm-3.3.3-bdfc598c7e-ca0fac9c74.zip/node_modules/aws-xray-sdk-postgres/",
+        ["virtual:0eab6f950d134a8a6966aac38d5896877dfc81dc8f71c9de884dc0f755e439945580efcfeb1f6fd6bf521c841391b3c00d8966f14e2af9d1b8e5f376c1dff8c2#npm:3.3.6", {
+          "packageLocation": "./.yarn/__virtual__/aws-xray-sdk-postgres-virtual-d122b193b1/0/cache/aws-xray-sdk-postgres-npm-3.3.6-0b68548aea-c8d0b2d4ac.zip/node_modules/aws-xray-sdk-postgres/",
           "packageDependencies": [
-            ["aws-xray-sdk-postgres", "virtual:734dad8fc525cafdfedf39e18bca6d1ffda97e7425f5fb8cd376e24acf11181427b872608d60f6f8b89824d0ce4aaac9858acc649b0f2cba9bb2d5234ba6cec1#npm:3.3.3"],
+            ["aws-xray-sdk-postgres", "virtual:0eab6f950d134a8a6966aac38d5896877dfc81dc8f71c9de884dc0f755e439945580efcfeb1f6fd6bf521c841391b3c00d8966f14e2af9d1b8e5f376c1dff8c2#npm:3.3.6"],
             ["@types/aws-xray-sdk-core", null],
             ["@types/pg", "npm:7.14.11"],
-            ["aws-xray-sdk-core", "npm:3.3.3"]
+            ["aws-xray-sdk-core", "npm:3.3.6"]
           ],
           "packagePeers": [
             "@types/aws-xray-sdk-core",

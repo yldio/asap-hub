@@ -2,11 +2,8 @@ import { useState, FC, ReactNode } from 'react';
 import { css } from '@emotion/react';
 
 import { ToastStack, drawerQuery } from '@asap-hub/react-components';
-import {
-  mobileScreen,
-  tabletScreen,
-  vminLinearCalcClamped,
-} from '@asap-hub/react-components/src/pixels';
+import { pixels } from '@asap-hub/react-components';
+const { mobileScreen, tabletScreen, vminLinearCalcClamped } = pixels;
 
 import NavigationHeader from '../organism/NavigationHeader';
 

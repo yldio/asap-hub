@@ -1,9 +1,9 @@
 import { FC, lazy } from 'react';
 import { DashboardPage, NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
-import { usePrefetchTeams } from '@asap-hub/gp2-frontend/src/network/teams/state';
-import { CARD_VIEW_PAGE_SIZE } from '@asap-hub/gp2-frontend/src/hooks';
-import { usePrefetchCalendars } from '@asap-hub/gp2-frontend/src/events/calendar/state';
+import { usePrefetchTeams } from '../network/teams/state';
+import { CARD_VIEW_PAGE_SIZE } from '../hooks';
+import { usePrefetchCalendars } from '../events/calendar/state';
 import { Frame } from '@asap-hub/frontend-utils';
 
 import { useDashboardState } from './state';

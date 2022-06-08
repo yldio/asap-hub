@@ -9,23 +9,9 @@ import { Layout } from '@asap-hub/gp2-components';
 
 // import { auth0State } from './auth/state';
 
-const AuthenticatedApp: FC<Record<string, never>> = () => {
-  // const auth0 = useAuth0();
-  // const [recoilAuth0, setAuth0] = useRecoilState(auth0State);
-  // const resetAuth0 = useResetRecoilState(auth0State);
-  // useEffect(() => {
-  //   setAuth0(auth0);
-  //   return () => resetAuth0();
-  // }, [auth0, setAuth0, resetAuth0]);
-
-  // const user = useCurrentUser();
-  // if (!user || !recoilAuth0) {
-  //   return <Loading />;
-  // }
-
-  return (
-    <Layout>
-      {/* <Switch>
+const AuthenticatedApp: FC<Record<string, never>> = () => (
+  <Layout>
+    {/* <Switch>
         <Route exact path="/">
           <Frame title="Dashboard">
             <Dashboard />
@@ -37,8 +23,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
           </Frame>
         </Route>
       </Switch> */}
-    </Layout>
-  );
-};
+  </Layout>
+);
 
 export default AuthenticatedApp;

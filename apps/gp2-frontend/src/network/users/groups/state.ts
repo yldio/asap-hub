@@ -7,8 +7,8 @@ import {
 } from 'recoil';
 import { GroupResponse, ListGroupResponse } from '@asap-hub/model';
 
-import { groupState } from '@asap-hub/gp2-frontend/src/network/groups/state';
-import { authorizationState } from '@asap-hub/gp2-frontend/src/auth/state';
+import { groupState } from '../../../network/groups/state';
+import { authorizationState } from '../../../auth/state';
 import { getUserGroups } from './api';
 
 const userGroupIndexState = atomFamily<

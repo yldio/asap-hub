@@ -4,9 +4,9 @@ import {
   drawerQuery,
   MenuButton,
   steel,
+  pixels,
+  noop,
 } from '@asap-hub/react-components';
-import { rem } from '@asap-hub/react-components/src/pixels';
-import { noop } from '@asap-hub/react-components/src/utils';
 
 import { css } from '@emotion/react';
 import { smallDesktopQuery } from '../layout';
@@ -14,6 +14,7 @@ import HeaderLogo from '../molecules/HeaderLogo';
 import MainNavigation from './MainNavigation';
 import UserNavigation from './UserNavigation';
 
+const { rem } = pixels;
 const menuButtonWidth = 72;
 
 const navigationHeaderstyles = css({

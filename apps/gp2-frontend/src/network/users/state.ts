@@ -14,7 +14,7 @@ import {
 import { useAuth0 } from '@asap-hub/react-context';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 
-import { authorizationState } from '@asap-hub/gp2-frontend/src/auth/state';
+import { authorizationState } from '../../auth/state';
 import { getUser, patchUser, postUserAvatar, getUsers } from './api';
 import { useAlgolia } from '../../hooks/algolia';
 

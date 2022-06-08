@@ -1,7 +1,7 @@
 import { useRecoilValue, atom, selector, useRecoilValueLoadable } from 'recoil';
 import { ListCalendarResponse } from '@asap-hub/model';
 
-import { authorizationState } from '@asap-hub/gp2-frontend/src/auth/state';
+import { authorizationState } from '../../auth/state';
 import { getCalendars } from './api';
 
 export const refreshCalendarsState = atom({

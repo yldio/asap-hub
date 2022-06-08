@@ -1,5 +1,5 @@
 import { ListGroupResponse } from '@asap-hub/model';
-import { API_BASE_URL } from '@asap-hub/gp2-frontend/src/config';
+import { API_BASE_URL } from '../../../config';
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
 
 export const getUserGroups = async (

@@ -8,9 +8,9 @@ import {
 } from 'recoil';
 import { ListEventResponse, EventResponse } from '@asap-hub/model';
 
-import { GetEventListOptions } from '@asap-hub/gp2-frontend/src/events/options';
-import { eventState } from '@asap-hub/gp2-frontend/src/events/state';
-import { authorizationState } from '@asap-hub/gp2-frontend/src/auth/state';
+import { GetEventListOptions } from '../../../events/options';
+import { eventState } from '../../../events/state';
+import { authorizationState } from '../../../auth/state';
 import { getGroupEvents } from './api';
 
 const groupEventIndexState = atomFamily<

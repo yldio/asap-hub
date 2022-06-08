@@ -1,9 +1,9 @@
-import { Anchor } from '@asap-hub/react-components';
-import { rem } from '@asap-hub/react-components/src/pixels';
+import { Anchor, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import gp2LogoFull from '../icons/gp2-logo-full';
 import gp2LogoSmall from '../icons/gp2-logo-small';
 import { smallDesktopQuery } from '../layout';
+const { rem } = pixels;
 
 const containerStyles = css({
   padding: `${rem(16)} 0`,

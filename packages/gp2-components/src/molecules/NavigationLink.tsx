@@ -1,7 +1,7 @@
-import { NavigationLink as Link } from '@asap-hub/react-components';
-import { rem } from '@asap-hub/react-components/src/pixels';
+import { NavigationLink as Link, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 
+const { rem } = pixels;
 interface NavigationLinkProps {
   readonly href: string;
   readonly icon?: JSX.Element;

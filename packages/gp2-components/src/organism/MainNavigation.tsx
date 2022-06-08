@@ -1,10 +1,9 @@
-import { discoverIcon, networkIcon } from '@asap-hub/react-components';
-import { rem } from '@asap-hub/react-components/src/pixels';
+import { discoverIcon, networkIcon, pixels } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React from 'react';
 import NavigationLink from '../molecules/NavigationLink';
-
+const { rem } = pixels;
 const listStyles = css({
   margin: '0',
   padding: '0',

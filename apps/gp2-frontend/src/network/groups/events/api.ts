@@ -1,7 +1,7 @@
 import { ListEventResponse } from '@asap-hub/model';
 
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
-import { GetEventListOptions } from '@asap-hub/gp2-frontend/src/events/options';
+import { GetEventListOptions } from '../../../events/options';
 import createListApiUrl from '../../../CreateListApiUrl';
 
 export const getGroupEvents = async (

@@ -183,3 +183,4 @@ export {
   WelcomePage,
 } from './templates';
 export { MessageLayout, WelcomeMessage } from './messages';
+export { noop } from './utils';

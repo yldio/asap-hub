@@ -568,7 +568,7 @@ __metadata:
     ajv-formats: ^2.1.1
     algoliasearch: ^4.11.0
     apr-intercept: ^3.0.4
-    aws-lambda: ^1.0.6
+    aws-lambda: 1.0.7
     aws-sdk: ^2.907.0
     aws-xray-sdk: 3.3.6
     babel-loader: ^8.2.2
@@ -893,7 +893,7 @@ __metadata:
     "@types/supertest": ^2.0.12
     "@yarnpkg/pnpify": 3.1.3
     apr-intercept: ^3.0.4
-    aws-lambda: ^1.0.6
+    aws-lambda: 1.0.7
     babel-loader: ^8.2.2
     cors: ^2.8.5
     express: ^4.17.1
@@ -1151,7 +1151,7 @@ __metadata:
     "@types/jwt-decode": ^2.2.1
     "@types/jwt-encode": "workspace:*"
     apr-intercept: ^3.0.4
-    aws-lambda: ^1.0.6
+    aws-lambda: 1.0.7
     chance: 1.1.8
     cross-fetch: ^3.1.4
     debug: ^4.3.3
@@ -15510,21 +15510,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-lambda@npm:^1.0.6":
-  version: 1.0.6
-  resolution: "aws-lambda@npm:1.0.6"
+"aws-lambda@npm:1.0.7":
+  version: 1.0.7
+  resolution: "aws-lambda@npm:1.0.7"
   dependencies:
-    aws-sdk: "*"
+    aws-sdk: ^2.814.0
     commander: ^3.0.2
-    js-yaml: ^3.13.1
+    js-yaml: ^3.14.1
     watchpack: ^2.0.0-beta.10
   bin:
-    lambda: ./bin/lambda
-  checksum: ec9e1cf07269b632e641d83378fa293b78ec066b5cd5d5d60a062e4414aafa868f314b63c4b2a0efa7f85d0b2a555409bf70f2e9b62b63d3ee6ca28051b25138
+    lambda: bin/lambda
+  checksum: 11316e87b5c4fc36e6bd0495742a3c0ed13befc9527a7b251a58180d141d9afd68b684f37aeb3b53d117d3c2f96747eace31826b683543f1edddc03f392865fd
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:*, aws-sdk@npm:^2.346.0":
+"aws-sdk@npm:^2.346.0":
   version: 2.745.0
   resolution: "aws-sdk@npm:2.745.0"
   dependencies:
@@ -15538,6 +15538,23 @@ __metadata:
     uuid: 3.3.2
     xml2js: 0.4.19
   checksum: af5b12bcbab905ee94f232da9f39dac7120453afef704e0d33b19a02de444ce03596470201be72d9d0ae5c30358378c0ced274d89fe607e16337faa7fe2cafd0
+  languageName: node
+  linkType: hard
+
+"aws-sdk@npm:^2.814.0":
+  version: 2.1149.0
+  resolution: "aws-sdk@npm:2.1149.0"
+  dependencies:
+    buffer: 4.9.2
+    events: 1.1.1
+    ieee754: 1.1.13
+    jmespath: 0.16.0
+    querystring: 0.2.0
+    sax: 1.2.1
+    url: 0.10.3
+    uuid: 8.0.0
+    xml2js: 0.4.19
+  checksum: 2c9efa7acbeab10da6c39d3151a6e2885add7266924f6b50e5aa139e87c80ae50fb22e1bfe9c588e7c1fa0f439fdbe354c74e3ed3ce69582ebaad5a948b5881c
   languageName: node
   linkType: hard
 
@@ -27239,6 +27256,13 @@ fsevents@~2.1.2:
   version: 0.15.0
   resolution: "jmespath@npm:0.15.0"
   checksum: 353bb9e69cc4c1560be0a4df43cb4020abc246e1c60cb5b55dcc76d8c858383f1633faf22ccaf6a5e09568a2077d0f4f1e989e6fcfd496b5cef87964cc8cb9e7
+  languageName: node
+  linkType: hard
+
+"jmespath@npm:0.16.0":
+  version: 0.16.0
+  resolution: "jmespath@npm:0.16.0"
+  checksum: 2d602493a1e4addfd1350ac8c9d54b1b03ed09e305fd863bab84a4ee1f52868cf939dd1a08c5cdea29ce9ba8f86875ebb458b6ed45dab3e1c3f2694503fb2fd9
   languageName: node
   linkType: hard
 
@@ -39070,6 +39094,15 @@ typescript@~4.1.0:
   bin:
     uuid: ./bin/uuid
   checksum: 8793629d2799f500aeea9fcd0aec6c4e9fbcc4d62ed42159ad96be345c3fffac1bbf61a23e18e2782600884fee05e6d4012ce4b70d0037c8e987533ae6a77870
+  languageName: node
+  linkType: hard
+
+"uuid@npm:8.0.0":
+  version: 8.0.0
+  resolution: "uuid@npm:8.0.0"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 56d4e23aa7ac26fa2db6bd1778db34cb8c9f5a10df1770a27167874bf6705fc8f14a4ac414af58a0d96c7653b2bd4848510b29d1c2ef8c91ccb17429c1872b5e
   languageName: node
   linkType: hard
 

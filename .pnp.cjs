@@ -3059,7 +3059,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "aws-lambda",
-        "npm:1.0.6"
+        "npm:1.0.7"
       ],
       [
         "aws-sdk",
@@ -8575,7 +8575,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "sax",
-        "npm:1.2.4"
+        "npm:1.2.1"
       ],
       [
         "saxes",
@@ -10779,7 +10779,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ajv-formats", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:2.1.1"],
             ["algoliasearch", "npm:4.11.0"],
             ["apr-intercept", "npm:3.0.4"],
-            ["aws-lambda", "npm:1.0.6"],
+            ["aws-lambda", "npm:1.0.7"],
             ["aws-sdk", "npm:2.907.0"],
             ["aws-xray-sdk", "npm:3.3.6"],
             ["babel-loader", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:8.2.2"],
@@ -11204,7 +11204,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/supertest", "npm:2.0.12"],
             ["@yarnpkg/pnpify", "npm:3.1.3"],
             ["apr-intercept", "npm:3.0.4"],
-            ["aws-lambda", "npm:1.0.6"],
+            ["aws-lambda", "npm:1.0.7"],
             ["babel-loader", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:8.2.2"],
             ["cors", "npm:2.8.5"],
             ["express", "npm:4.17.1"],
@@ -11785,7 +11785,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jwt-decode", "npm:2.2.1"],
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],
             ["apr-intercept", "npm:3.0.4"],
-            ["aws-lambda", "npm:1.0.6"],
+            ["aws-lambda", "npm:1.0.7"],
             ["chance", "npm:1.1.8"],
             ["cross-fetch", "npm:3.1.4"],
             ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.3"],
@@ -36394,19 +36394,35 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["aws-lambda", [
-        ["npm:1.0.6", {
-          "packageLocation": "./.yarn/cache/aws-lambda-npm-1.0.6-0430941d7f-ec9e1cf072.zip/node_modules/aws-lambda/",
+        ["npm:1.0.7", {
+          "packageLocation": "./.yarn/cache/aws-lambda-npm-1.0.7-a18c9e53ac-11316e87b5.zip/node_modules/aws-lambda/",
           "packageDependencies": [
-            ["aws-lambda", "npm:1.0.6"],
-            ["aws-sdk", "npm:2.745.0"],
+            ["aws-lambda", "npm:1.0.7"],
+            ["aws-sdk", "npm:2.1149.0"],
             ["commander", "npm:3.0.2"],
-            ["js-yaml", "npm:3.14.0"],
+            ["js-yaml", "npm:3.14.1"],
             ["watchpack", "npm:2.0.0-beta.15"]
           ],
           "linkType": "HARD",
         }]
       ]],
       ["aws-sdk", [
+        ["npm:2.1149.0", {
+          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.1149.0-e6bea53396-2c9efa7acb.zip/node_modules/aws-sdk/",
+          "packageDependencies": [
+            ["aws-sdk", "npm:2.1149.0"],
+            ["buffer", "npm:4.9.2"],
+            ["events", "npm:1.1.1"],
+            ["ieee754", "npm:1.1.13"],
+            ["jmespath", "npm:0.16.0"],
+            ["querystring", "npm:0.2.0"],
+            ["sax", "npm:1.2.1"],
+            ["url", "npm:0.10.3"],
+            ["uuid", "npm:8.0.0"],
+            ["xml2js", "npm:0.4.19"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:2.745.0", {
           "packageLocation": "./.yarn/cache/aws-sdk-npm-2.745.0-74353fb423-af5b12bcba.zip/node_modules/aws-sdk/",
           "packageDependencies": [
@@ -50417,6 +50433,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jmespath", "npm:0.15.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:0.16.0", {
+          "packageLocation": "./.yarn/cache/jmespath-npm-0.16.0-d47535c65a-2d602493a1.zip/node_modules/jmespath/",
+          "packageDependencies": [
+            ["jmespath", "npm:0.16.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["joi", [
@@ -64159,6 +64182,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/uuid-npm-3.4.0-4fd8ef88ad-58de2feed6.zip/node_modules/uuid/",
           "packageDependencies": [
             ["uuid", "npm:3.4.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:8.0.0", {
+          "packageLocation": "./.yarn/cache/uuid-npm-8.0.0-591e3a2e23-56d4e23aa7.zip/node_modules/uuid/",
+          "packageDependencies": [
+            ["uuid", "npm:8.0.0"]
           ],
           "linkType": "HARD",
         }],

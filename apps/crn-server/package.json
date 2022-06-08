@@ -134,7 +134,7 @@
     "jwt-encode": "^1.0.1",
     "node-dev": "^6.7.0",
     "param-case": "^3.0.4",
-    "serverless": "^2.60.0",
+    "serverless": "^3.19.0",
     "serverless-iam-roles-per-function": "^2.0.2",
     "serverless-s3-sync": "1.17.3",
     "serverless-webpack": "^5.5.0",

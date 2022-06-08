@@ -2264,7 +2264,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/mime-types",
-        "npm:2.1.0"
+        "npm:2.1.1"
       ],
       [
         "@types/mimos",
@@ -6843,7 +6843,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "mime-types",
-        "npm:2.1.30"
+        "npm:2.1.35"
       ],
       [
         "mimic-fn",
@@ -10769,7 +10769,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/lodash.matches", "npm:4.6.7"],
             ["@types/lodash.uniqby", "npm:4.7.7"],
             ["@types/luxon", "npm:1.26.4"],
-            ["@types/mime-types", "npm:2.1.0"],
+            ["@types/mime-types", "npm:2.1.1"],
             ["@types/parse-data-url", "npm:3.0.0"],
             ["@types/pump", "npm:1.1.1"],
             ["@types/serverless", "npm:3.0.1"],
@@ -10808,7 +10808,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lodash.matches", "npm:4.6.0"],
             ["lodash.uniqby", "npm:4.7.0"],
             ["luxon", "npm:1.26.0"],
-            ["mime-types", "npm:2.1.30"],
+            ["mime-types", "npm:2.1.35"],
             ["nock", "npm:13.0.11"],
             ["node-dev", "npm:6.7.0"],
             ["opentracing", "npm:0.14.5"],
@@ -33090,10 +33090,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/mime-types", [
-        ["npm:2.1.0", {
-          "packageLocation": "./.yarn/cache/@types-mime-types-npm-2.1.0-33f410f277-69b593ae33.zip/node_modules/@types/mime-types/",
+        ["npm:2.1.1", {
+          "packageLocation": "./.yarn/cache/@types-mime-types-npm-2.1.1-2f761de0b8-106b5d556a.zip/node_modules/@types/mime-types/",
           "packageDependencies": [
-            ["@types/mime-types", "npm:2.1.0"]
+            ["@types/mime-types", "npm:2.1.1"]
           ],
           "linkType": "HARD",
         }]
@@ -52627,10 +52627,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:1.47.0", {
-          "packageLocation": "./.yarn/cache/mime-db-npm-1.47.0-a85d74ef62-6808235243.zip/node_modules/mime-db/",
+        ["npm:1.52.0", {
+          "packageLocation": "./.yarn/cache/mime-db-npm-1.52.0-b5371d6fd2-0d99a03585.zip/node_modules/mime-db/",
           "packageDependencies": [
-            ["mime-db", "npm:1.47.0"]
+            ["mime-db", "npm:1.52.0"]
           ],
           "linkType": "HARD",
         }]
@@ -52644,11 +52644,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:2.1.30", {
-          "packageLocation": "./.yarn/cache/mime-types-npm-2.1.30-500b101efd-53c36729b1.zip/node_modules/mime-types/",
+        ["npm:2.1.35", {
+          "packageLocation": "./.yarn/cache/mime-types-npm-2.1.35-dd9ea9f3e2-89a5b7f1de.zip/node_modules/mime-types/",
           "packageDependencies": [
-            ["mime-types", "npm:2.1.30"],
-            ["mime-db", "npm:1.47.0"]
+            ["mime-types", "npm:2.1.35"],
+            ["mime-db", "npm:1.52.0"]
           ],
           "linkType": "HARD",
         }]

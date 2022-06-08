@@ -554,7 +554,7 @@ __metadata:
     "@types/lodash.matches": 4.6.7
     "@types/lodash.uniqby": 4.7.7
     "@types/luxon": ^1
-    "@types/mime-types": ^2
+    "@types/mime-types": 2.1.1
     "@types/parse-data-url": ^3.0.0
     "@types/pump": ^1.1.1
     "@types/serverless": ^3
@@ -593,7 +593,7 @@ __metadata:
     lodash.matches: ^4.6.0
     lodash.uniqby: ^4.7.0
     luxon: ^1.26.0
-    mime-types: ^2.1.30
+    mime-types: 2.1.35
     nock: ^13.0.11
     node-dev: ^6.7.0
     opentracing: ^0.14.5
@@ -12600,10 +12600,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mime-types@npm:^2":
-  version: 2.1.0
-  resolution: "@types/mime-types@npm:2.1.0"
-  checksum: 69b593ae3317a119a5698caffad9717735de4852446aa440f9ff9ee1deb7860a5a7e6df7f178064faabf2980a0a09d8d58e5ec00dd2790af4671e1f41fc14297
+"@types/mime-types@npm:2.1.1":
+  version: 2.1.1
+  resolution: "@types/mime-types@npm:2.1.1"
+  checksum: 106b5d556add46446a579ad25ff15d6b421851790d887edcad558c90c1e64b1defc72bfbaf4b08f208916e21d9cc45cdb951d77be51268b18221544cfe054a3c
   languageName: node
   linkType: hard
 
@@ -29227,10 +29227,19 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"mime-db@npm:1.47.0":
-  version: 1.47.0
-  resolution: "mime-db@npm:1.47.0"
-  checksum: 6808235243c39b3142e677af86972cf32de8ebbec81178491475a79aa07caf67646cd9b559972d22c3c372ddca4a093e58bb0ba10376d75a1efbd0e07be82de2
+"mime-db@npm:1.52.0":
+  version: 1.52.0
+  resolution: "mime-db@npm:1.52.0"
+  checksum: 0d99a03585f8b39d68182803b12ac601d9c01abfa28ec56204fa330bc9f3d1c5e14beb049bafadb3dbdf646dfb94b87e24d4ec7b31b7279ef906a8ea9b6a513f
+  languageName: node
+  linkType: hard
+
+"mime-types@npm:2.1.35":
+  version: 2.1.35
+  resolution: "mime-types@npm:2.1.35"
+  dependencies:
+    mime-db: 1.52.0
+  checksum: 89a5b7f1def9f3af5dad6496c5ed50191ae4331cc5389d7c521c8ad28d5fdad2d06fd81baf38fed813dc4e46bb55c8145bb0ff406330818c9cf712fb2e9b3836
   languageName: node
   linkType: hard
 
@@ -29240,15 +29249,6 @@ fsevents@~2.1.2:
   dependencies:
     mime-db: 1.44.0
   checksum: 4c1f596c6ddfc1a9c37356e91f471ae6e72401288197de31ef3604cf02ef14c6ac661adce55cece1f1c626a96d780ffd47435619606c103cb967fb007729eefb
-  languageName: node
-  linkType: hard
-
-"mime-types@npm:^2.1.30":
-  version: 2.1.30
-  resolution: "mime-types@npm:2.1.30"
-  dependencies:
-    mime-db: 1.47.0
-  checksum: 53c36729b1c4f6029fd5957d5859e62eff4b86311a6e1dce87937583dc8971fec9f359ffcff4be93d26bb5ddd03f1b5ffc7626912031ce0a63510d7896521b2e
   languageName: node
   linkType: hard
 

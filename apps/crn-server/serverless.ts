@@ -79,9 +79,6 @@ const serverlessConfig: AWS = {
       apiGateway: true,
       lambda: true,
     },
-    eventBridge: {
-      useCloudFormation: true,
-    },
     environment: {
       APP_ORIGIN: CRN_APP_URL,
       DEBUG: SLS_STAGE === 'production' ? '' : 'crn-server,http',
@@ -102,54 +99,58 @@ const serverlessConfig: AWS = {
         ? '${env:CI_COMMIT_SHA}'
         : '${env:CURRENT_REVISION}',
     },
-    iamRoleStatements: [
-      {
-        Effect: 'Allow',
-        Action: 'secretsmanager:*',
-        Resource: {
-          'Fn::Join': [
-            ':',
-            [
-              'arn:aws:secretsmanager',
-              { Ref: 'AWS::Region' },
-              { Ref: 'AWS::AccountId' },
-              'secret',
-              `google-api-credentials-${envAlias}*`,
-            ],
-          ],
-        },
-      },
-      {
-        Effect: 'Allow',
-        Action: 'ses:SendTemplatedEmail',
-        Resource: ['*'],
-        Condition: {
-          StringLike: {
-            'ses:FromAddress': '*@asap.science',
+    iam: {
+      role: {
+        statements: [
+          {
+            Effect: 'Allow',
+            Action: 'secretsmanager:*',
+            Resource: {
+              'Fn::Join': [
+                ':',
+                [
+                  'arn:aws:secretsmanager',
+                  { Ref: 'AWS::Region' },
+                  { Ref: 'AWS::AccountId' },
+                  'secret',
+                  `google-api-credentials-${envAlias}*`,
+                ],
+              ],
+            },
           },
-        },
+          {
+            Effect: 'Allow',
+            Action: 'ses:SendTemplatedEmail',
+            Resource: ['*'],
+            Condition: {
+              StringLike: {
+                'ses:FromAddress': '*@asap.science',
+              },
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: 'events:*',
+            Resource: {
+              'Fn::Join': [
+                ':',
+                [
+                  'arn:aws:events',
+                  { Ref: 'AWS::Region' },
+                  { Ref: 'AWS::AccountId' },
+                  'event-bus/asap-events-${self:provider.stage}',
+                ],
+              ],
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: ['cloudfront:CreateInvalidation'],
+            Resource: ['*'],
+          },
+        ],
       },
-      {
-        Effect: 'Allow',
-        Action: 'events:*',
-        Resource: {
-          'Fn::Join': [
-            ':',
-            [
-              'arn:aws:events',
-              { Ref: 'AWS::Region' },
-              { Ref: 'AWS::AccountId' },
-              'event-bus/asap-events-${self:provider.stage}',
-            ],
-          ],
-        },
-      },
-      {
-        Effect: 'Allow',
-        Action: ['cloudfront:CreateInvalidation'],
-        Resource: ['*'],
-      },
-    ],
+    },
   },
   package: {
     individually: true,

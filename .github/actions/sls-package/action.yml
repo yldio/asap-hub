@@ -50,6 +50,7 @@ runs:
       shell: bash
       run: |
         yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless package --package $PWD/${{ inputs.app }}-sls-package
+        yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless doctor
       env:
         ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
         CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}

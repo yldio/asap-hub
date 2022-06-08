@@ -347,7 +347,7 @@ __metadata:
     async-sema: 3.1.1
     aws-sdk: ^2.907.0
     csv-parse: ^4.15.4
-    got: ^11.8.2
+    got: 11.8.5
     jwt-encode: ^1.0.1
     luxon: ^1.26.0
     nock: ^13.0.11
@@ -411,7 +411,7 @@ __metadata:
     "@babel/preset-typescript": ^7.13.0
     "@babel/runtime-corejs3": ^7.14.0
     "@types/jest": 26.0.24
-    got: ^11.8.2
+    got: 11.8.5
     nock: ^13.0.11
   languageName: unknown
   linkType: soft
@@ -581,7 +581,7 @@ __metadata:
     express-async-errors: ^3.1.1
     form-data: ^3.0.1
     googleapis: ^67.1.1
-    got: ^11.8.2
+    got: 11.8.5
     graphql: ^15.5.0
     graphql-tag: ^2.12.4
     graphql-typescript-integration: ^1.2.0
@@ -650,7 +650,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/runtime-corejs3": ^7.14.0
-    got: ^11.8.2
+    got: 11.8.5
   languageName: unknown
   linkType: soft
 
@@ -1120,7 +1120,7 @@ __metadata:
     apr-intercept: ^3.0.4
     express: ^4.17.1
     express-async-errors: ^3.1.1
-    got: ^11.8.2
+    got: 11.8.5
     jsonwebtoken: ^8.5.1
     pino: ^7.10.0
     pino-http: ^6.6.0
@@ -1155,7 +1155,7 @@ __metadata:
     chance: 1.1.8
     cross-fetch: ^3.1.4
     debug: 4.3.4
-    got: ^11.8.2
+    got: 11.8.5
     graphql: ^15.5.0
     graphql-request: ^3.4.0
     jwt-decode: ^2.2.0
@@ -1189,7 +1189,7 @@ __metadata:
     chance: 1.1.8
     cross-fetch: ^3.1.4
     debug: 4.3.4
-    got: ^11.8.2
+    got: 11.8.5
     graphql: ^15.5.0
     graphql-request: ^3.4.0
     jwt-decode: ^2.2.0
@@ -17112,6 +17112,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cacheable-request@npm:^7.0.2":
+  version: 7.0.2
+  resolution: "cacheable-request@npm:7.0.2"
+  dependencies:
+    clone-response: ^1.0.2
+    get-stream: ^5.1.0
+    http-cache-semantics: ^4.0.0
+    keyv: ^4.0.0
+    lowercase-keys: ^2.0.0
+    normalize-url: ^6.0.1
+    responselike: ^2.0.0
+  checksum: 6152813982945a5c9989cb457a6c499f12edcc7ade323d2fbfd759abc860bdbd1306e08096916bb413c3c47e812f8e4c0a0cc1e112c8ce94381a960f115bc77f
+  languageName: node
+  linkType: hard
+
 "cachedir@npm:^2.3.0":
   version: 2.3.0
   resolution: "cachedir@npm:2.3.0"
@@ -23560,6 +23575,25 @@ fsevents@~2.1.2:
     google-auth-library: ^7.0.2
     googleapis-common: ^5.0.1
   checksum: 68193ed1c61e9cf9b4eb726736e2d0293c189d36e75ef2d5824b5915063cee77a656bba1ef4050035ccd029fcdf2206bce3724498e91a7d118f94e315d790a57
+  languageName: node
+  linkType: hard
+
+"got@npm:11.8.5":
+  version: 11.8.5
+  resolution: "got@npm:11.8.5"
+  dependencies:
+    "@sindresorhus/is": ^4.0.0
+    "@szmarczak/http-timer": ^4.0.5
+    "@types/cacheable-request": ^6.0.1
+    "@types/responselike": ^1.0.0
+    cacheable-lookup: ^5.0.3
+    cacheable-request: ^7.0.2
+    decompress-response: ^6.0.0
+    http2-wrapper: ^1.0.0-beta.5.2
+    lowercase-keys: ^2.0.0
+    p-cancelable: ^2.0.0
+    responselike: ^2.0.0
+  checksum: 2de8a1bbda4e9b6b2b72b2d2100bc055a59adc1740529e631f61feb44a8b9a1f9f8590941ed9da9df0090b6d6d0ed8ffee94cd9ac086ec3409b392b33440f7d2
   languageName: node
   linkType: hard
 
@@ -30070,6 +30104,13 @@ fsevents@~2.1.2:
   version: 4.5.0
   resolution: "normalize-url@npm:4.5.0"
   checksum: 34e9d01095df5c9348bf75f6cf0552c01438a29119aecdb747eead6ccd36a386209acdc093fc993edd32731b3056ff2977ffab44e4b8eed4d8aafdf0feae90c7
+  languageName: node
+  linkType: hard
+
+"normalize-url@npm:^6.0.1":
+  version: 6.1.0
+  resolution: "normalize-url@npm:6.1.0"
+  checksum: 4a4944631173e7d521d6b80e4c85ccaeceb2870f315584fa30121f505a6dfd86439c5e3fdd8cd9e0e291290c41d0c3599f0cb12ab356722ed242584c30348e50
   languageName: node
   linkType: hard
 

@@ -192,7 +192,7 @@ describe('/groups/ route', () => {
         after: '2021-02-08T14:13:37.138Z',
         sortBy: 'endDate',
         sortOrder: 'desc',
-        groupId,
+        filter: { groupId },
       };
 
       expect(eventControllerMock.fetch).toBeCalledWith(expectedParams);
@@ -308,7 +308,7 @@ describe('/groups/ route', () => {
         expect(response.status).toBe(200);
         expect(eventControllerMock.fetch).toBeCalledWith({
           before: expect.anything(),
-          groupId: expect.anything(),
+          filter: { groupId: expect.anything() },
           sortBy: 'startDate',
           sortOrder: 'asc',
         });
@@ -330,7 +330,7 @@ describe('/groups/ route', () => {
         expect(response.status).toBe(200);
         expect(eventControllerMock.fetch).toBeCalledWith({
           before: expect.anything(),
-          groupId: expect.anything(),
+          filter: { groupId: expect.anything() },
           sortBy: 'endDate',
           sortOrder: 'asc',
         });
@@ -352,7 +352,7 @@ describe('/groups/ route', () => {
         expect(response.status).toBe(200);
         expect(eventControllerMock.fetch).toBeCalledWith({
           before: expect.anything(),
-          groupId: expect.anything(),
+          filter: { groupId: expect.anything() },
           sortBy: 'startDate',
           sortOrder: 'desc',
         });

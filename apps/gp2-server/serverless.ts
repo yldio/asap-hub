@@ -1,5 +1,5 @@
-import assert from 'assert';
 import { AWS } from '@serverless/typescript';
+import assert from 'assert';
 
 [
   'GP2_AWS_ACM_CERTIFICATE_ARN',
@@ -46,7 +46,7 @@ const serverlessConfig: AWS = {
   plugins,
   provider: {
     name: 'aws',
-    runtime: 'nodejs14.x',
+    runtime: 'nodejs16.x',
     timeout: 16,
     memorySize: 512,
     region,

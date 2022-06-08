@@ -137,7 +137,7 @@
     "serverless": "^3.19.0",
     "serverless-iam-roles-per-function": "^2.0.2",
     "serverless-s3-sync": "1.17.3",
-    "serverless-webpack": "^5.5.0",
+    "serverless-webpack": "^5.7.1",
     "stream-json": "1.7.4",
     "supertest": "6.2.3",
     "yargs": "^17.3.1"

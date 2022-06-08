@@ -2779,7 +2779,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "archiver",
-        "npm:5.3.0"
+        "npm:5.3.1"
       ],
       [
         "archiver-utils",
@@ -3140,10 +3140,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "bcrypt-pbkdf",
         "npm:1.0.2"
-      ],
-      [
-        "bestzip",
-        "npm:2.2.0"
       ],
       [
         "better-opn",
@@ -3559,7 +3555,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "cliui",
-        "npm:7.0.3"
+        "npm:6.0.0"
       ],
       [
         "clone",
@@ -8411,7 +8407,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "serverless-webpack",
-        "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.5.0"
+        "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.7.1"
       ],
       [
         "set-blocking",
@@ -9611,7 +9607,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "which",
-        "npm:2.0.2"
+        "npm:1.3.1"
       ],
       [
         "which-boxed-primitive",
@@ -10492,7 +10488,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless-http", "npm:2.7.0"],
             ["serverless-iam-roles-per-function", "npm:2.0.2"],
             ["serverless-s3-sync", "npm:1.17.3"],
-            ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.5.0"],
+            ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.7.1"],
             ["source-map-support", "npm:0.5.19"],
             ["stream-json", "npm:1.7.4"],
             ["supertest", "npm:6.2.3"],
@@ -10891,7 +10887,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless", "npm:3.19.0"],
             ["serverless-http", "npm:2.7.0"],
             ["serverless-s3-sync", "npm:1.17.3"],
-            ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.5.0"],
+            ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.7.1"],
             ["source-map-support", "npm:0.5.19"],
             ["supertest", "npm:6.2.3"],
             ["ts-node", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:10.7.0"]
@@ -37197,20 +37193,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["bestzip", [
-        ["npm:2.2.0", {
-          "packageLocation": "./.yarn/cache/bestzip-npm-2.2.0-4abdcb8ced-b2bdec21b6.zip/node_modules/bestzip/",
-          "packageDependencies": [
-            ["bestzip", "npm:2.2.0"],
-            ["archiver", "npm:5.3.0"],
-            ["async", "npm:3.2.0"],
-            ["glob", "npm:7.1.6"],
-            ["which", "npm:2.0.2"],
-            ["yargs", "npm:16.2.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["better-opn", [
         ["npm:2.1.1", {
           "packageLocation": "./.yarn/cache/better-opn-npm-2.1.1-7f070a64bf-3d1a945d12.zip/node_modules/better-opn/",
@@ -44963,14 +44945,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:7.1.7", {
-          "packageLocation": "./.yarn/cache/glob-npm-7.1.7-5698ad9c48-b61f48973b.zip/node_modules/glob/",
+        ["npm:7.2.3", {
+          "packageLocation": "./.yarn/cache/glob-npm-7.2.3-2d866d17a5-29452e97b3.zip/node_modules/glob/",
           "packageDependencies": [
-            ["glob", "npm:7.1.7"],
+            ["glob", "npm:7.2.3"],
             ["fs.realpath", "npm:1.0.0"],
             ["inflight", "npm:1.0.6"],
             ["inherits", "npm:2.0.4"],
-            ["minimatch", "npm:3.0.4"],
+            ["minimatch", "npm:3.1.2"],
             ["once", "npm:1.4.0"],
             ["path-is-absolute", "npm:1.0.1"]
           ],
@@ -51811,6 +51793,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/minimatch-npm-3.0.4-6e76f51c23-66ac295f8a.zip/node_modules/minimatch/",
           "packageDependencies": [
             ["minimatch", "npm:3.0.4"],
+            ["brace-expansion", "npm:1.1.11"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:3.1.2", {
+          "packageLocation": "./.yarn/cache/minimatch-npm-3.1.2-9405269906-c154e56640.zip/node_modules/minimatch/",
+          "packageDependencies": [
+            ["minimatch", "npm:3.1.2"],
             ["brace-expansion", "npm:1.1.11"]
           ],
           "linkType": "HARD",
@@ -58859,31 +58849,34 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["serverless-webpack", [
-        ["npm:5.5.0", {
-          "packageLocation": "./.yarn/cache/serverless-webpack-npm-5.5.0-12b2ea9c85-a575123a3e.zip/node_modules/serverless-webpack/",
+        ["npm:5.7.1", {
+          "packageLocation": "./.yarn/cache/serverless-webpack-npm-5.7.1-d6b4eebde4-b6287cb36d.zip/node_modules/serverless-webpack/",
           "packageDependencies": [
-            ["serverless-webpack", "npm:5.5.0"]
+            ["serverless-webpack", "npm:5.7.1"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.5.0", {
-          "packageLocation": "./.yarn/__virtual__/serverless-webpack-virtual-d92fd23e22/0/cache/serverless-webpack-npm-5.5.0-12b2ea9c85-a575123a3e.zip/node_modules/serverless-webpack/",
+        ["virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.7.1", {
+          "packageLocation": "./.yarn/__virtual__/serverless-webpack-virtual-3101a988dc/0/cache/serverless-webpack-npm-5.7.1-d6b4eebde4-b6287cb36d.zip/node_modules/serverless-webpack/",
           "packageDependencies": [
-            ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.5.0"],
+            ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.7.1"],
+            ["@types/serverless", "npm:3.12.7"],
             ["@types/webpack", null],
-            ["bestzip", "npm:2.2.0"],
+            ["archiver", "npm:5.3.1"],
             ["bluebird", "npm:3.7.2"],
             ["fs-extra", "npm:9.1.0"],
-            ["glob", "npm:7.1.7"],
+            ["glob", "npm:7.2.3"],
             ["is-builtin-module", "npm:3.1.0"],
             ["lodash", "npm:4.17.21"],
-            ["semver", "npm:7.3.5"],
-            ["ts-node", "virtual:d92fd23e22b7bef9d8495836d00438d87ff07f01c4c77d39c483e4a7ba60d00f255559021840e046ace4a7cd47e72e73d74cd2309c5aed923bdf4bbf3b513a2d#npm:9.1.1"],
-            ["typescript", "patch:typescript@npm%3A4.1.5#~builtin<compat/typescript>::version=4.1.5&hash=ddd1e8"],
+            ["semver", "npm:7.3.7"],
+            ["serverless", "npm:3.19.0"],
+            ["ts-node", "virtual:be888c90cad72dc82548e50bfea689535b33c966ded73ab669b4cdd5652bb77aa6868bd458f9c14aa260acb74a11837e7b1b7942b90bb3a0e1914e047fc693cf#npm:9.1.1"],
             ["webpack", null]
           ],
           "packagePeers": [
+            "@types/serverless",
             "@types/webpack",
+            "serverless",
             "webpack"
           ],
           "linkType": "HARD",
@@ -61586,25 +61579,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "@types/node",
             "@types/swc__core",
             "@types/swc__wasm",
-            "@types/typescript",
-            "typescript"
-          ],
-          "linkType": "HARD",
-        }],
-        ["virtual:d92fd23e22b7bef9d8495836d00438d87ff07f01c4c77d39c483e4a7ba60d00f255559021840e046ace4a7cd47e72e73d74cd2309c5aed923bdf4bbf3b513a2d#npm:9.1.1", {
-          "packageLocation": "./.yarn/__virtual__/ts-node-virtual-fd51e14594/0/cache/ts-node-npm-9.1.1-4ad31da228-356e2647b8.zip/node_modules/ts-node/",
-          "packageDependencies": [
-            ["ts-node", "virtual:d92fd23e22b7bef9d8495836d00438d87ff07f01c4c77d39c483e4a7ba60d00f255559021840e046ace4a7cd47e72e73d74cd2309c5aed923bdf4bbf3b513a2d#npm:9.1.1"],
-            ["@types/typescript", null],
-            ["arg", "npm:4.1.3"],
-            ["create-require", "npm:1.1.1"],
-            ["diff", "npm:4.0.2"],
-            ["make-error", "npm:1.3.6"],
-            ["source-map-support", "npm:0.5.19"],
-            ["typescript", "patch:typescript@npm%3A4.1.5#~builtin<compat/typescript>::version=4.1.5&hash=ddd1e8"],
-            ["yn", "npm:3.1.1"]
-          ],
-          "packagePeers": [
             "@types/typescript",
             "typescript"
           ],
@@ -64683,20 +64657,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["which-module", "npm:2.0.0"],
             ["y18n", "npm:4.0.0"],
             ["yargs-parser", "npm:18.1.3"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:16.2.0", {
-          "packageLocation": "./.yarn/cache/yargs-npm-16.2.0-547873d425-b14afbb51e.zip/node_modules/yargs/",
-          "packageDependencies": [
-            ["yargs", "npm:16.2.0"],
-            ["cliui", "npm:7.0.3"],
-            ["escalade", "npm:3.1.1"],
-            ["get-caller-file", "npm:2.0.5"],
-            ["require-directory", "npm:2.1.1"],
-            ["string-width", "npm:4.2.0"],
-            ["y18n", "npm:5.0.8"],
-            ["yargs-parser", "npm:20.2.3"]
           ],
           "linkType": "HARD",
         }],

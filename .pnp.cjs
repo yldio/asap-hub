@@ -7307,7 +7307,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "param-case",
-        "npm:3.0.4"
+        "npm:3.0.3"
       ],
       [
         "parent-module",
@@ -10809,7 +10809,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["node-dev", "npm:6.7.0"],
             ["opentracing", "npm:0.14.5"],
             ["p-limit", "npm:3.1.0"],
-            ["param-case", "npm:3.0.4"],
             ["parse-data-url", "npm:3.0.0"],
             ["pump", "npm:3.0.0"],
             ["serverless", "npm:2.60.0"],

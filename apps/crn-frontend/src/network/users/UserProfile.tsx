@@ -52,15 +52,13 @@ const User: FC<Record<string, never>> = () => {
   const patchUserAvatar = usePatchUserAvatarById(userId);
   const [avatarSaving, setAvatarSaving] = useState(false);
 
-  const result = useResearchOutputs({
+  const researchOutputsResult = useResearchOutputs({
     currentPage: 0,
     filters: new Set(),
     pageSize: 1,
     searchQuery: '',
     userId,
   });
-
-  const sharedOutputsCount = result.total || undefined;
 
   const toast = useContext(ToastContext);
 
@@ -99,7 +97,7 @@ const User: FC<Record<string, never>> = () => {
             }
           : undefined,
       avatarSaving,
-      sharedOutputsCount,
+      sharedOutputsCount: researchOutputsResult.total,
     };
 
     return (

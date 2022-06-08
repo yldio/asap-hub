@@ -470,7 +470,7 @@ __metadata:
     "@types/testing-library__react": ^10.0.1
     "@types/testing-library__react-hooks": ^3.4.1
     "@types/uuid": 8.3.4
-    browser-image-compression: ^1.0.14
+    browser-image-compression: 1.0.17
     browserslist-useragent-regexp: ^3.0.2
     cross-env: ^7.0.3
     date-fns: ^2.21.3
@@ -834,7 +834,7 @@ __metadata:
     "@types/testing-library__react": ^10.0.1
     "@types/testing-library__react-hooks": ^3.4.1
     "@types/uuid": 8.3.4
-    browser-image-compression: ^1.0.14
+    browser-image-compression: 1.0.17
     browserslist-useragent-regexp: ^3.0.2
     cross-env: ^7.0.3
     date-fns: ^2.21.3
@@ -16630,13 +16630,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browser-image-compression@npm:^1.0.14":
-  version: 1.0.14
-  resolution: "browser-image-compression@npm:1.0.14"
+"browser-image-compression@npm:1.0.17":
+  version: 1.0.17
+  resolution: "browser-image-compression@npm:1.0.17"
   dependencies:
-    upng-js: 2.1.0
+    core-js: ^3.16.1
     uzip: 0.20201231.0
-  checksum: ef6fb366ff02f8a3c24248aaa2ce878d1963b4e99b12de31f7557b8229441028a71a0b9c5a94a4a62fa61ff0c409bf2dfaaf857b27675e5a81f4ed551a2de1aa
+  checksum: 200d6731486d45aebc96f3251aca19d269a9b8d7721e1a1eb31f573c03415a070ac936dd108a6e698ff2252a001ffa3bcf80f3c30b6b9bdde425bd684640bab4
   languageName: node
   linkType: hard
 
@@ -18491,6 +18491,13 @@ __metadata:
   version: 3.12.1
   resolution: "core-js@npm:3.12.1"
   checksum: c112ffaf2f20d9ba849b688c320d1724200d9a7b304125714f25b101a4ae3b55aa07a23f318f1735178077700d42382b71cebd86afa34279f266320db88c9cf6
+  languageName: node
+  linkType: hard
+
+"core-js@npm:^3.16.1":
+  version: 3.22.8
+  resolution: "core-js@npm:3.22.8"
+  checksum: c79bcfea37920a5da880ad1fc8336355e833c83998bb28cd45cc59eef4d9824dd8d59ccd24d6b18ff88f284d53d9eef021ddbd2b5ab1c6305b01e98c1402e510
   languageName: node
   linkType: hard
 
@@ -30825,7 +30832,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"pako@npm:^1.0.5, pako@npm:~1.0.2, pako@npm:~1.0.5":
+"pako@npm:~1.0.2, pako@npm:~1.0.5":
   version: 1.0.11
   resolution: "pako@npm:1.0.11"
   checksum: 1be2bfa1f807608c7538afa15d6f25baa523c30ec870a3228a89579e474a4d992f4293859524e46d5d87fd30fa17c5edf34dbef0671251d9749820b488660b16
@@ -38795,15 +38802,6 @@ typescript@~4.1.0:
   version: 1.2.0
   resolution: "upath@npm:1.2.0"
   checksum: 4c05c094797cb733193a0784774dbea5b1889d502fc9f0572164177e185e4a59ba7099bf0b0adf945b232e2ac60363f9bf18aac9b2206fb99cbef971a8455445
-  languageName: node
-  linkType: hard
-
-"upng-js@npm:2.1.0":
-  version: 2.1.0
-  resolution: "upng-js@npm:2.1.0"
-  dependencies:
-    pako: ^1.0.5
-  checksum: 75939576a6c7ead515a691c7643b3023a14fc040b0880848ab1bea9ebae873184037e65ba4410f1e92fcf8370d41f0702e0f504c3a7e890e14a283fe1ea4a915
   languageName: node
   linkType: hard
 

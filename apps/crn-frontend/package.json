@@ -27,7 +27,7 @@
     "@fast-csv/format": "^4.3.5",
     "@sentry/react": "^6.11.0",
     "@sentry/tracing": "^6.11.0",
-    "browser-image-compression": "^1.0.14",
+    "browser-image-compression": "1.0.17",
     "date-fns": "^2.21.3",
     "history": "^4",
     "react": "^17.0.2",

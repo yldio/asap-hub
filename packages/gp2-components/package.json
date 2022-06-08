@@ -14,8 +14,7 @@
     "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "peerDependencies": {
-    "@asap-hub/react-context": "workspace:*",
-    "@emotion/react": "^11",
+    "@asap-hub/react-context": "*",
     "history": "^4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

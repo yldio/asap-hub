@@ -783,8 +783,7 @@ __metadata:
     react-router-dom: ^5.2.0
     react-test-renderer: ^17.0.2
   peerDependencies:
-    "@asap-hub/react-context": "workspace:*"
-    "@emotion/react": ^11
+    "@asap-hub/react-context": "*"
     history: ^4
     react: ^17.0.2
     react-dom: ^17.0.2
@@ -803,6 +802,7 @@ __metadata:
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/flags": "workspace:*"
     "@asap-hub/frontend-utils": "workspace:*"
+    "@asap-hub/gp2-components": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@asap-hub/react-context": "workspace:*"

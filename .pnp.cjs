@@ -6975,7 +6975,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "opentracing",
-        "npm:0.14.5"
+        "npm:0.14.7"
       ],
       [
         "opn",
@@ -10479,7 +10479,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mime-types", "npm:2.1.35"],
             ["nock", "npm:13.0.11"],
             ["node-dev", "npm:6.7.0"],
-            ["opentracing", "npm:0.14.5"],
+            ["opentracing", "npm:0.14.7"],
             ["p-limit", "npm:3.1.0"],
             ["param-case", "npm:3.0.4"],
             ["parse-data-url", "npm:3.0.0"],
@@ -11504,7 +11504,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jwt-encode", "npm:1.0.1"],
             ["luxon", "npm:1.26.0"],
             ["nock", "npm:13.0.11"],
-            ["opentracing", "npm:0.14.5"]
+            ["opentracing", "npm:0.14.7"]
           ],
           "linkType": "SOFT",
         }]
@@ -53006,6 +53006,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/opentracing-npm-0.14.5-42032bf1f7-cb84f0a5d4.zip/node_modules/opentracing/",
           "packageDependencies": [
             ["opentracing", "npm:0.14.5"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.14.7", {
+          "packageLocation": "./.yarn/cache/opentracing-npm-0.14.7-a8451c5ee8-5f7e444390.zip/node_modules/opentracing/",
+          "packageDependencies": [
+            ["opentracing", "npm:0.14.7"]
           ],
           "linkType": "HARD",
         }]

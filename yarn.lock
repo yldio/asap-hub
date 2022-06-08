@@ -596,7 +596,7 @@ __metadata:
     mime-types: 2.1.35
     nock: ^13.0.11
     node-dev: ^6.7.0
-    opentracing: ^0.14.5
+    opentracing: 0.14.7
     p-limit: ^3.1.0
     param-case: ^3.0.4
     parse-data-url: ^3.0.0
@@ -1196,7 +1196,7 @@ __metadata:
     jwt-encode: ^1.0.1
     luxon: ^1.26.0
     nock: ^13.0.11
-    opentracing: ^0.14.5
+    opentracing: 0.14.7
   languageName: unknown
   linkType: soft
 
@@ -29900,7 +29900,14 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"opentracing@npm:^0.14.4, opentracing@npm:^0.14.5":
+"opentracing@npm:0.14.7":
+  version: 0.14.7
+  resolution: "opentracing@npm:0.14.7"
+  checksum: 5f7e44439062d056a2a72ac89eff463c9cf5659a2aea230ff7f5a226c5e960c195ce04ec2e2cc590140bbb9c5d2be11a5a50a23484cbe2d0e132af4309d4c904
+  languageName: node
+  linkType: hard
+
+"opentracing@npm:^0.14.4":
   version: 0.14.5
   resolution: "opentracing@npm:0.14.5"
   checksum: cb84f0a5d4340dfd1e023525bb743ab6a60587e022e90517b91183e68a09ccffb2cd8379d633f26cba59cbdba0047f3ae227515d45f016bf9686f6e09b2b25f4

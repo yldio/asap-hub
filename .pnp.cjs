@@ -3335,7 +3335,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "browser-image-compression",
-        "npm:1.0.14"
+        "npm:1.0.17"
       ],
       [
         "browser-process-hrtime",
@@ -9642,10 +9642,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.2.0"
       ],
       [
-        "upng-js",
-        "npm:2.1.0"
-      ],
-      [
         "upper-case",
         "npm:2.0.2"
       ],
@@ -10683,7 +10679,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.4.1"],
             ["@types/uuid", "npm:8.3.4"],
-            ["browser-image-compression", "npm:1.0.14"],
+            ["browser-image-compression", "npm:1.0.17"],
             ["browserslist-useragent-regexp", "npm:3.0.2"],
             ["cross-env", "npm:7.0.3"],
             ["date-fns", "npm:2.21.3"],
@@ -11147,7 +11143,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.4.1"],
             ["@types/uuid", "npm:8.3.4"],
-            ["browser-image-compression", "npm:1.0.14"],
+            ["browser-image-compression", "npm:1.0.17"],
             ["browserslist-useragent-regexp", "npm:3.0.2"],
             ["cross-env", "npm:7.0.3"],
             ["date-fns", "npm:2.21.3"],
@@ -38091,11 +38087,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["browser-image-compression", [
-        ["npm:1.0.14", {
-          "packageLocation": "./.yarn/cache/browser-image-compression-npm-1.0.14-928db1c307-ef6fb366ff.zip/node_modules/browser-image-compression/",
+        ["npm:1.0.17", {
+          "packageLocation": "./.yarn/cache/browser-image-compression-npm-1.0.17-4f2b6e002d-200d673148.zip/node_modules/browser-image-compression/",
           "packageDependencies": [
-            ["browser-image-compression", "npm:1.0.14"],
-            ["upng-js", "npm:2.1.0"],
+            ["browser-image-compression", "npm:1.0.17"],
+            ["core-js", "npm:3.22.8"],
             ["uzip", "npm:0.20201231.0"]
           ],
           "linkType": "HARD",
@@ -40086,6 +40082,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/core-js-npm-3.12.1-6d1063bc86-c112ffaf2f.zip/node_modules/core-js/",
           "packageDependencies": [
             ["core-js", "npm:3.12.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:3.22.8", {
+          "packageLocation": "./.yarn/cache/core-js-npm-3.22.8-40b5d0770b-c79bcfea37.zip/node_modules/core-js/",
+          "packageDependencies": [
+            ["core-js", "npm:3.22.8"]
           ],
           "linkType": "HARD",
         }],
@@ -63786,16 +63789,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/upath-npm-1.2.0-ca00ec3398-4c05c09479.zip/node_modules/upath/",
           "packageDependencies": [
             ["upath", "npm:1.2.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["upng-js", [
-        ["npm:2.1.0", {
-          "packageLocation": "./.yarn/cache/upng-js-npm-2.1.0-ef015e0934-75939576a6.zip/node_modules/upng-js/",
-          "packageDependencies": [
-            ["upng-js", "npm:2.1.0"],
-            ["pako", "npm:1.0.11"]
           ],
           "linkType": "HARD",
         }]

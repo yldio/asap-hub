@@ -10,7 +10,14 @@
     "target": "es2021",
     "noUncheckedIndexedAccess": true
   },
-  "include": ["src", "scripts", "test", "test/**/*.json", "@types/**/*.d.ts"],
+  "include": [
+    "src",
+    "scripts",
+    "test",
+    "test/**/*.json",
+    "@types/**/*.d.ts",
+    "serverless.ts"
+  ],
   "references": [
     { "path": "../../packages/auth" },
     { "path": "../../packages/algolia" },

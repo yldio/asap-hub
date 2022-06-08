@@ -22,7 +22,7 @@ assert.ok(
   'SLS_STAGE must be either "dev" or "production" or a PR number',
 );
 
-const auth0ClientId = process.env.GP2_AUTH0_CLIENT_ID;
+const auth0ClientId = process.env.GP2_AUTH0_CLIENT_ID!;
 const gp2AwsAcmCertificateArn = process.env.GP2_AWS_ACM_CERTIFICATE_ARN!;
 const hostname = process.env.GP2_HOSTNAME!;
 const region = process.env.AWS_REGION as AWS['provider']['region'];

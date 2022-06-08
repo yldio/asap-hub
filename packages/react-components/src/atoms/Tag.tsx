@@ -9,9 +9,6 @@ const containerStyles = css({
   cursor: 'default',
   justifyContent: 'center',
   alignItems: 'center',
-
-  marginTop: `${12 / perRem}em`,
-  marginBottom: `${6 / perRem}em`,
 });
 
 const styles = css({

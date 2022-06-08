@@ -42,7 +42,7 @@ const itemBlockStyles = css({
   gridGap: `${12 / perRem}em`,
 });
 const itemInlineStyles = css({
-  fontSize: `${13.6 / perRem}em`,
+  fontSize: `${17 / perRem}em`,
   paddingBottom: `${6 / perRem}em`,
   overflow: 'hidden',
 });
@@ -143,7 +143,11 @@ const AssociationList: React.FC<AssociationListProps> = ({
 
                 {inline && <span css={bulletStyles}>·</span>}
               </div>
-              <div css={dividerStyles}>{inline || <Divider />}</div>
+              {inline || (
+                <div css={dividerStyles}>
+                  <Divider />
+                </div>
+              )}
             </li>
           ))}
           {more && (

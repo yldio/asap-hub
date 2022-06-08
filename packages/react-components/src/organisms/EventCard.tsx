@@ -68,6 +68,7 @@ const EventCard: React.FC<EventCardProps> = ({
                 primary
                 buttonStyle
                 small
+                stretch={false}
               >
                 Join meeting now
               </Link>

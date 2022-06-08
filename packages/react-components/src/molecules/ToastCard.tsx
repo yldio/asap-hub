@@ -1,7 +1,7 @@
 import { Component, ReactNode } from 'react';
 import { css } from '@emotion/react';
 
-import { perRem } from '../pixels';
+import { perRem, mobileScreen } from '../pixels';
 import { Card } from '../atoms';
 import { lead, silver, apricot, clay, info, sky } from '../colors';
 import { AlertIcon, clockIcon, paperClipIcon } from '../icons';
@@ -12,6 +12,11 @@ const toastStyles = css({
   alignItems: 'center',
   justifyContent: 'space-between',
   padding: `${15 / perRem}em ${24 / perRem}em`,
+
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
 });
 
 const iconStyles = css({
@@ -42,6 +47,9 @@ const leadStyles = css({
 const toastContentStyles = css({
   display: 'flex',
   alignItems: 'center',
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    paddingBottom: `${7.5 / perRem}em`,
+  },
 });
 
 type Type = 'alert' | 'attachment' | 'live' | 'info';
@@ -84,7 +92,7 @@ const ToastCard: React.FC<ToastCardProps> = ({
         </span>
       </>
     )}
-    <div css={[paddingStyles, toastContent && { paddingBottom: 0 }]}>
+    <div className="children" css={[paddingStyles]}>
       {children}
     </div>
   </Card>

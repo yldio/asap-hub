@@ -6,12 +6,7 @@ import { events, network } from '@asap-hub/routing';
 import { Headline3, Link, Anchor } from '../atoms';
 import { lead } from '../colors';
 import { perRem, largeDesktopScreen } from '../pixels';
-import {
-  groupsIcon,
-  eventPlaceholderIcon,
-  calendarIcon,
-  speakerIcon,
-} from '../icons';
+import { groupsIcon, eventPlaceholderIcon, speakerIcon } from '../icons';
 import { AssociationList, EventTime, TagList } from '.';
 
 const TITLE_LIMIT = 55;
@@ -33,15 +28,15 @@ const imageContainerStyle = css({
 const cardStyles = css({
   display: 'flex',
   flexDirection: 'row',
-  paddingBottom: `${33 / perRem}em`,
 });
 
 const listItemStyles = css({
-  padding: `${12 / perRem}em 0`,
+  padding: `${7.5 / perRem}em 0`,
   color: lead.rgb,
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
+  fontSize: `${17 / perRem}em`,
 });
 const widthStyles = css({
   display: 'grid',
@@ -58,7 +53,7 @@ const iconStyles = css({
   verticalAlign: 'middle',
   width: `${24 / perRem}em`,
   height: `${24 / perRem}em`,
-  paddingRight: `${15 / perRem}em`,
+  paddingRight: `${9 / perRem}em`,
 });
 
 type EventInfoProps = ComponentProps<typeof EventTime> &
@@ -126,6 +121,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
   titleLimit = TITLE_LIMIT,
   showNumberOfSpeakers = false,
   showTeams = false,
+  tags,
   ...props
 }) => {
   const imageComponent = thumbnail ? (
@@ -162,13 +158,17 @@ const EventInfo: React.FC<EventInfoProps> = ({
               </Link>
             ) : (
               <>
-                <span css={iconStyles}>{calendarIcon}</span>ASAP Event
+                <span css={iconStyles}>{groupsIcon}</span>ASAP Event
               </>
             )}
           </div>
           {showTeams && <EventTeams speakers={props.speakers} />}
           {showNumberOfSpeakers && <EventSpeakers speakers={props.speakers} />}
-          <TagList tags={props.tags} max={3} />
+          {tags && (
+            <div css={listItemStyles}>
+              <TagList tags={tags} max={3} />
+            </div>
+          )}
         </div>
       </div>
     </div>

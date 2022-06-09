@@ -56,7 +56,7 @@ describe('current events', () => {
     expect(getByText(/cancelled/i)).toBeVisible();
   });
   it('toasts for meetings without meeting link', () => {
-    const { getByText, getByTitle } = render(
+    const { getByText } = render(
       <EventCard
         {...props}
         status="Confirmed"
@@ -66,10 +66,9 @@ describe('current events', () => {
       />,
     );
     expect(getByText(/currently happening/i)).toBeVisible();
-    expect(getByTitle(/clock/i)).toBeInTheDocument();
   });
   it('toasts for meetings with meeting link', () => {
-    const { getByText, getByTitle } = render(
+    const { getByText } = render(
       <EventCard
         {...props}
         status="Confirmed"
@@ -79,7 +78,6 @@ describe('current events', () => {
       />,
     );
     expect(getByText(/currently live/i)).toBeVisible();
-    expect(getByTitle(/clock/i)).toBeInTheDocument();
     expect(getByText(/join/i).closest('a')).toHaveAttribute(
       'href',
       'http://example.com',

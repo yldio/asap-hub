@@ -128,6 +128,7 @@ const AssociationList: React.FC<AssociationListProps> = ({
             <li
               css={inline ? itemInlineStyles : itemBlockStyles}
               key={`sep-${i}`}
+              data-testid="associationlist"
             >
               {inline || icon}
               <div css={inline ? associationInlineStyles : undefined}>
@@ -151,7 +152,7 @@ const AssociationList: React.FC<AssociationListProps> = ({
             </li>
           ))}
           {more && (
-            <li>
+            <li data-testid="associationlist-more">
               <div css={moreStyles}>
                 <div css={avatarStyles}>
                   <Avatar placeholder={`+${more}`} />

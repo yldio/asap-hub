@@ -71,7 +71,7 @@ const EventTeams: React.FC<{ speakers: EventResponse['speakers'] }> = ({
 }) => {
   const teams: EventSpeakerTeam['team'][] = speakers.reduce((acc, speaker) => {
     if ('team' in speaker && !acc.some((team) => team.id === speaker.team.id)) {
-      acc.push(speaker.team);
+      return [...acc, speaker.team];
     }
 
     return acc;

@@ -71,7 +71,8 @@ const EventTime: React.FC<EventTimeProps> = ({
       </li>
       <li css={listItemStyles}>
         <div css={iconStyles}>{clockIcon}</div>
-        {formatDateToTimezone(startDate, 'h:mm a')}
+        {formatDateToTimezone(startDate, 'h:mm a')} -{' '}
+        {formatDateToTimezone(endDate, 'h:mm a (z)').toUpperCase()}
         {formattedEndDay !== formattedStartDay && ` - ${formattedEndDay} ∙ `}
         <div css={tzStyles}>
           <Info>

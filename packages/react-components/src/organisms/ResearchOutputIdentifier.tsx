@@ -70,32 +70,31 @@ const identifierMap = {
 const getIdentifierInfoMessage = (
   identifiers: IdentifierType,
 ): Array<ReactElement> =>
-  identifiers.map(({ value }) => {
-    if (value === ResearchOutputIdentifierType.AccessionNumber) {
-      return (
-        <span key={value}>
-          <b>Accesion Number: </b>Your Accession Number must start with a
-          letter. Accession Numbers are attributed by NIH, EMBL-EBI,
-          ProteomeXchange, etc.
-        </span>
-      );
-    }
-    if (value === ResearchOutputIdentifierType.DOI) {
-      return (
-        <span key={value}>
-          <b>DOI: </b>Your DOI must start with 1 and it cannot be a URL
-        </span>
-      );
-    }
-    if (value === ResearchOutputIdentifierType.RRID) {
+  identifiers
+    .filter(({ value }) => value !== ResearchOutputIdentifierType.None)
+    .map(({ value }) => {
+      if (value === ResearchOutputIdentifierType.AccessionNumber) {
+        return (
+          <span key={value}>
+            <b>Accesion Number: </b>Your Accession Number must start with a
+            letter. Accession Numbers are attributed by NIH, EMBL-EBI,
+            ProteomeXchange, etc.
+          </span>
+        );
+      }
+      if (value === ResearchOutputIdentifierType.DOI) {
+        return (
+          <span key={value}>
+            <b>DOI: </b>Your DOI must start with 1 and it cannot be a URL
+          </span>
+        );
+      }
       return (
         <span key={value}>
           <b>RRID: </b>Your RRID must start with "RRID:"
         </span>
       );
-    }
-    return <></>;
-  });
+    });
 
 export interface ResearchOutputIdentifierProps {
   identifier?: string;

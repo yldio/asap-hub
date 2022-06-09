@@ -28,7 +28,7 @@ type LabeledDropdownProps<V extends string> = {
   readonly title: React.ReactNode;
   readonly subtitle?: React.ReactNode;
   readonly description?: React.ReactNode;
-  readonly info?: Array<ReactElement | undefined>;
+  readonly info?: Array<ReactElement>;
 } & Exclude<DropdownProps<V>, 'id'>;
 export default function LabeledDropdown<V extends string>({
   title,

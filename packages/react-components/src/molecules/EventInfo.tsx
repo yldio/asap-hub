@@ -164,7 +164,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
           </div>
           {showTeams && <EventTeams speakers={props.speakers} />}
           {showNumberOfSpeakers && <EventSpeakers speakers={props.speakers} />}
-          {tags && (
+          {tags.length > 0 && (
             <div css={listItemStyles}>
               <TagList tags={tags} max={3} />
             </div>

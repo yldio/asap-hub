@@ -62,9 +62,35 @@ describe('when button-styled', () => {
     ).toBeGreaterThan(0);
   });
 
-  it('renders button without margin', () => {
-    const { getByRole } = render(
+  it('renders button with correct margins', () => {
+    const { getByRole, rerender } = render(
+      <Link href="/" buttonStyle>
+        text
+      </Link>,
+    );
+
+    const buttonWithoutMargin = Number(
+      getComputedStyle(getByRole('link')).marginTop.replace(/em$/, ''),
+    );
+
+    expect(buttonWithoutMargin).toBe(1.0588235294117647);
+
+    rerender(
       <Link href="/" buttonStyle margin={false}>
+        text
+      </Link>,
+    );
+
+    const buttonWithMargin = Number(
+      getComputedStyle(getByRole('link')).margin.replace(/em$/, ''),
+    );
+
+    expect(buttonWithMargin).toBe(0);
+  });
+
+  it('renders button with default margin', () => {
+    const { getByRole } = render(
+      <Link href="/" buttonStyle>
         text
       </Link>,
     );

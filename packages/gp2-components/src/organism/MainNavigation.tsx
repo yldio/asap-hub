@@ -1,4 +1,9 @@
-import { discoverIcon, networkIcon, pixels } from '@asap-hub/react-components';
+import {
+  discoverIcon,
+  networkIcon,
+  pixels,
+  teamIcon,
+} from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React from 'react';
@@ -18,12 +23,17 @@ const MainNavigation: React.FC = () => (
     <ul css={listStyles}>
       <li>
         <NavigationLink href={'/'} icon={discoverIcon}>
-          Home
+          Dashboard
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={network({}).$} icon={networkIcon}>
-          Network
+        <NavigationLink href={network({}).$} icon={networkIcon} enabled={false}>
+          Directory
+        </NavigationLink>
+      </li>
+      <li>
+        <NavigationLink href={network({}).$} icon={teamIcon} enabled={false}>
+          Projects
         </NavigationLink>
       </li>
     </ul>

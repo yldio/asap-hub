@@ -1,6 +1,6 @@
 import {
-  contentSidePaddingWithNavigation,
   Display,
+  lead,
   paper,
   Paragraph,
   pixels,
@@ -20,6 +20,7 @@ const containerStyles = css({
 
 const textStyles = css({
   maxWidth: rem(610),
+  color: lead.rgb,
 });
 
 type DashboardPageHeaderProps = {
@@ -34,11 +35,25 @@ const DashboardPageHeader: React.FC<DashboardPageHeaderProps> = ({
       firstName ? `, ${firstName}` : ''
     }!`}</Display>
     <div css={textStyles}>
-      <Paragraph accent="lead">
-        The ASAP Hub is the private meeting point for grantees to share research
-        ideas, outputs, learn what others are working on, and keep up with
-        ASAP’s news and events. Each team has a private workspace and a listing
-        of their shared research.
+      <Paragraph>
+        The is a network for the Global Parkinson’s Genetics Program.
+      </Paragraph>
+      <Paragraph>
+        As one of the program’s valuable members, you have been invited to this
+        network to:
+      </Paragraph>
+      <ul>
+        <li>
+          <i>Learn and connect</i> with like minded members
+        </li>
+        <li>
+          <i>Track and manage</i> group activities within both your projects and
+          working groups
+        </li>
+      </ul>
+      <Paragraph>
+        <i>Keep informed and updated</i> with what’s happening all around the
+        GP2 program.
       </Paragraph>
     </div>
   </header>

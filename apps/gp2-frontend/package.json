@@ -37,7 +37,7 @@
     "react-router-dom": "^5.2.0",
     "react-router-last-location": "^2.0.1",
     "recoil": "patch:recoil@^0.1.2#../../patches/recoil.patch",
-    "streamsaver": "^2.0.5",
+    "streamsaver": "2.0.6",
     "use-debounce": "^5.2.1",
     "use-deep-compare-effect": "^1.6.1",
     "uuid": "^8.3.2",

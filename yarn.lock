@@ -488,7 +488,7 @@ __metadata:
     react-scripts: ^4.0.3
     react-test-renderer: ^17.0.2
     recoil: "patch:recoil@^0.1.2#../../patches/recoil.patch"
-    streamsaver: ^2.0.5
+    streamsaver: 2.0.6
     typescript: 4.4.4
     use-debounce: ^5.2.1
     use-deep-compare-effect: ^1.6.1
@@ -852,7 +852,7 @@ __metadata:
     react-scripts: ^4.0.3
     react-test-renderer: ^17.0.2
     recoil: "patch:recoil@^0.1.2#../../patches/recoil.patch"
-    streamsaver: ^2.0.5
+    streamsaver: 2.0.6
     typescript: 4.4.4
     use-debounce: ^5.2.1
     use-deep-compare-effect: ^1.6.1
@@ -35800,10 +35800,10 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"streamsaver@npm:^2.0.5":
-  version: 2.0.5
-  resolution: "streamsaver@npm:2.0.5"
-  checksum: 5414511c49328c6dd309a1eea546df2631c07340d0c43407948bf6081a7dafabb2f2989dbb1cae8a07fcdd67760aad4a079526e70ae1ad88bd4a9a551521133b
+"streamsaver@npm:2.0.6":
+  version: 2.0.6
+  resolution: "streamsaver@npm:2.0.6"
+  checksum: 7b4b06d8da3864b74f1887e5e9d142de380abb48864ca1d6ba38ba3b7b9b964213c5976820f5f09b3b7164fe05d824b4d6296e23b142e7d1c42f87f998f63a2a
   languageName: node
   linkType: hard
 

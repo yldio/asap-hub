@@ -8719,7 +8719,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "streamsaver",
-        "npm:2.0.5"
+        "npm:2.0.6"
       ],
       [
         "streamsink",
@@ -10369,7 +10369,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-scripts", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:4.0.3"],
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.2"],
             ["recoil", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fcrn-frontend%40workspace%3Aapps%2Fcrn-frontend"],
-            ["streamsaver", "npm:2.0.5"],
+            ["streamsaver", "npm:2.0.6"],
             ["typescript", "patch:typescript@npm%3A4.4.4#~builtin<compat/typescript>::version=4.4.4&hash=ddd1e8"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.2.1"],
             ["use-deep-compare-effect", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:1.6.1"],
@@ -10833,7 +10833,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-scripts", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:4.0.3"],
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.2"],
             ["recoil", "virtual:c4ae2f625a4ac5aa649abbf60db7c71aca414aadbf350d87ea37595af32595ce70907b878a98750e798e6867f5b52cf0a985bd4cd784c0ad5a3f626d3cbad95a#patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fgp2-frontend%40workspace%3Aapps%2Fgp2-frontend"],
-            ["streamsaver", "npm:2.0.5"],
+            ["streamsaver", "npm:2.0.6"],
             ["typescript", "patch:typescript@npm%3A4.4.4#~builtin<compat/typescript>::version=4.4.4&hash=ddd1e8"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.2.1"],
             ["use-deep-compare-effect", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:1.6.1"],
@@ -59847,10 +59847,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["streamsaver", [
-        ["npm:2.0.5", {
-          "packageLocation": "./.yarn/cache/streamsaver-npm-2.0.5-dadc119841-5414511c49.zip/node_modules/streamsaver/",
+        ["npm:2.0.6", {
+          "packageLocation": "./.yarn/cache/streamsaver-npm-2.0.6-1cf68e5580-7b4b06d8da.zip/node_modules/streamsaver/",
           "packageDependencies": [
-            ["streamsaver", "npm:2.0.5"]
+            ["streamsaver", "npm:2.0.6"]
           ],
           "linkType": "HARD",
         }]

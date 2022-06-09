@@ -2360,7 +2360,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/source-map-support",
-        "npm:0.5.3"
+        "npm:0.5.4"
       ],
       [
         "@types/stack-utils",
@@ -8551,7 +8551,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "source-map-support",
-        "npm:0.5.19"
+        "npm:0.5.21"
       ],
       [
         "source-map-url",
@@ -10441,7 +10441,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/parse-data-url", "npm:3.0.0"],
             ["@types/pump", "npm:1.1.1"],
             ["@types/serverless", "npm:3.12.7"],
-            ["@types/source-map-support", "npm:0.5.3"],
+            ["@types/source-map-support", "npm:0.5.4"],
             ["@types/stream-json", "npm:1.7.2"],
             ["@types/supertest", "npm:2.0.12"],
             ["@types/uuid", "npm:8.3.4"],
@@ -10489,7 +10489,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless-iam-roles-per-function", "npm:2.0.2"],
             ["serverless-s3-sync", "npm:1.17.3"],
             ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.7.1"],
-            ["source-map-support", "npm:0.5.19"],
+            ["source-map-support", "npm:0.5.21"],
             ["stream-json", "npm:1.7.4"],
             ["supertest", "npm:6.2.3"],
             ["uuid", "npm:8.3.2"],
@@ -10872,7 +10872,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jsonwebtoken", "npm:8.5.8"],
             ["@types/node", "npm:14.14.45"],
             ["@types/serverless", "npm:3.12.7"],
-            ["@types/source-map-support", "npm:0.5.3"],
+            ["@types/source-map-support", "npm:0.5.4"],
             ["@types/supertest", "npm:2.0.12"],
             ["@yarnpkg/pnpify", "npm:3.1.3"],
             ["apr-intercept", "npm:3.0.4"],
@@ -10888,7 +10888,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless-http", "npm:2.7.0"],
             ["serverless-s3-sync", "npm:1.17.3"],
             ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.7.1"],
-            ["source-map-support", "npm:0.5.19"],
+            ["source-map-support", "npm:0.5.21"],
             ["supertest", "npm:6.2.3"],
             ["ts-node", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:10.7.0"]
           ],
@@ -33012,10 +33012,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/source-map-support", [
-        ["npm:0.5.3", {
-          "packageLocation": "./.yarn/cache/@types-source-map-support-npm-0.5.3-e889b6a035-96eabd19d1.zip/node_modules/@types/source-map-support/",
+        ["npm:0.5.4", {
+          "packageLocation": "./.yarn/cache/@types-source-map-support-npm-0.5.4-1c4eb2be20-160ff77e8a.zip/node_modules/@types/source-map-support/",
           "packageDependencies": [
-            ["@types/source-map-support", "npm:0.5.3"],
+            ["@types/source-map-support", "npm:0.5.4"],
             ["source-map", "npm:0.6.1"]
           ],
           "linkType": "HARD",

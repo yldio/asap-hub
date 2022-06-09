@@ -33,7 +33,7 @@ const cardStyles = css({
 const listItemStyles = css({
   padding: `${7.5 / perRem}em 0`,
   color: lead.rgb,
-  whiteSpace: 'nowrap',
+  whiteSpace: 'break-spaces',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   fontSize: `${17 / perRem}em`,

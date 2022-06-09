@@ -119,6 +119,12 @@ it('renders a small button', () => {
   expect(smallPaddingTop).toBeLessThan(normalPaddingTop);
 });
 
+it('renders a stretched small button', () => {
+  const { getByRole } = render(<Button />);
+
+  expect(getComputedStyle(getByRole('button')).flexGrow).toBe('1');
+});
+
 describe('the type', () => {
   it('is button by default', () => {
     const { getByRole } = render(<Button />);

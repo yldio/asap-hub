@@ -2352,7 +2352,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/qs",
-        "npm:6.9.6"
+        "npm:6.9.7"
       ],
       [
         "@types/ramda",
@@ -8031,7 +8031,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "qs",
-        "npm:6.10.1"
+        "npm:6.10.5"
       ],
       [
         "query-string",
@@ -11703,9 +11703,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],
-            ["@types/qs", "npm:6.9.6"],
+            ["@types/qs", "npm:6.9.7"],
             ["@types/react-router-dom", "npm:5.1.7"],
-            ["qs", "npm:6.10.1"],
+            ["qs", "npm:6.10.5"],
             ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
             ["typesafe-routes", "virtual:e1cee4276ceadbdccd38e69066355085328b14240ccdb9ef0b6eb3e47aa1355ef92cee33d89abbc2a41f7102f990b83e360440abc8183e8715906b1d4dd42039#npm:7.0.2"],
             ["typescript", "patch:typescript@npm%3A4.4.4#~builtin<compat/typescript>::version=4.4.4&hash=ddd1e8"]
@@ -11722,9 +11722,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/routing", "workspace:packages/routing"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],
-            ["@types/qs", "npm:6.9.6"],
+            ["@types/qs", "npm:6.9.7"],
             ["@types/react-router-dom", "npm:5.1.7"],
-            ["qs", "npm:6.10.1"],
+            ["qs", "npm:6.10.5"],
             ["typesafe-routes", "virtual:d68e5ca297f0ac6d93babf592d45956725ab3db06dbae0fc674a3d1544ddd9ac11910af84dccf440c26f6926c22813cad9fbc1ba06caf50de441ea5271219a4b#npm:7.0.2"],
             ["typescript", "patch:typescript@npm%3A4.4.4#~builtin<compat/typescript>::version=4.4.4&hash=ddd1e8"]
           ],
@@ -33326,6 +33326,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-qs-npm-6.9.6-2fc5ce36d4-01871b1cf7.zip/node_modules/@types/qs/",
           "packageDependencies": [
             ["@types/qs", "npm:6.9.6"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:6.9.7", {
+          "packageLocation": "./.yarn/cache/@types-qs-npm-6.9.7-4a3e6ca0d0-7fd6f9c250.zip/node_modules/@types/qs/",
+          "packageDependencies": [
+            ["@types/qs", "npm:6.9.7"]
           ],
           "linkType": "HARD",
         }]

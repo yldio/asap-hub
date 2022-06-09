@@ -279,9 +279,7 @@ async function mandatoryFields(
   userEvent.type(identifier, 'DOI');
   userEvent.type(identifier, specialChars.enter);
   userEvent.type(
-    await screen.findByRole('textbox', {
-      name: /Your DOI must start with/i,
-    }),
+    screen.getByPlaceholderText('DOI number e.g. 10.5555/YFRU1371'),
     doi,
   );
   const button = screen.getByRole('button', { name: /Publish/i });

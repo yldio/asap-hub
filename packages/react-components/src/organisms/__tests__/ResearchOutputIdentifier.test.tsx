@@ -13,6 +13,20 @@ it('should render Identifier', () => {
   expect(screen.getByRole('textbox', { name: /Identifier/i })).toBeVisible();
 });
 
+it('should render Identifier info', () => {
+  render(<ResearchOutputIdentifier {...props} />);
+  const infoButton = screen.getByRole('button', {
+    name: /info/i,
+  });
+  expect(infoButton).toBeVisible();
+  userEvent.click(infoButton);
+  expect(screen.getByText(/Your DOI must start/i)).toBeVisible();
+  expect(screen.queryByText(/Your RRID must start/i)).not.toBeInTheDocument();
+  expect(
+    screen.queryByText(/Your Accession Number must start/i),
+  ).not.toBeInTheDocument();
+});
+
 it('should reset the identifier to a valid value on entering something unknown', () => {
   const setIdentifierType = jest.fn();
   render(
@@ -27,7 +41,7 @@ it('should reset the identifier to a valid value on entering something unknown',
   textbox.blur();
 
   expect(screen.getByText('Choose an identifier')).toBeVisible();
-  expect(screen.getByLabelText(/identifier/i)).toHaveValue('');
+  expect(screen.getByRole('textbox', { name: /Identifier/i })).toHaveValue('');
 });
 
 it('should set the identifier to the selected value', () => {

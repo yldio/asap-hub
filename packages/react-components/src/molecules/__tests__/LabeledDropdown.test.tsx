@@ -17,3 +17,18 @@ it('renders a labeled dropdown, passing through props', () => {
   expect(screen.getByRole('textbox', { name: /Optional/i })).toBeVisible();
   expect(screen.getByText('Value')).toBeVisible();
 });
+
+it('renders a labeled dropdown with an info', () => {
+  render(
+    <LabeledDropdown
+      title="Title"
+      subtitle="Optional"
+      description="Description"
+      options={[{ value: 'val', label: 'Value' }]}
+      info={[<span key={'info'}>info</span>]}
+      value="val"
+    />,
+  );
+
+  expect(screen.getByRole('textbox', { name: /info/i })).toBeVisible();
+});

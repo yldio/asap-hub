@@ -4,16 +4,18 @@ import {
   researchOutputToIdentifierType,
 } from '@asap-hub/model';
 import { ResearchOutputIdentifierValidationExpression } from '@asap-hub/validation';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, ReactElement } from 'react';
 import { LabeledDropdown, LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 
-const getIdentifiers = (
-  researchOutputDocumentType: ResearchOutputDocumentType,
-): Array<{
+type IdentifierType = Array<{
   value: ResearchOutputIdentifierType;
   label: ResearchOutputIdentifierType;
-}> => {
+}>;
+
+const getIdentifiers = (
+  researchOutputDocumentType: ResearchOutputDocumentType,
+): IdentifierType => {
   const identifiers =
     researchOutputToIdentifierType[researchOutputDocumentType] ?? [];
 
@@ -65,6 +67,36 @@ const identifierMap = {
   },
 } as const;
 
+const getIdentifierInfoMessage = (
+  identifiers: IdentifierType,
+): Array<ReactElement> =>
+  identifiers.map(({ value }) => {
+    if (value === ResearchOutputIdentifierType.AccessionNumber) {
+      return (
+        <span key={value}>
+          <b>Accesion Number: </b>Your Accession Number must start with a
+          letter. Accession Numbers are attributed by NIH, EMBL-EBI,
+          ProteomeXchange, etc.
+        </span>
+      );
+    }
+    if (value === ResearchOutputIdentifierType.DOI) {
+      return (
+        <span key={value}>
+          <b>DOI: </b>Your DOI must start with 1 and it cannot be a URL
+        </span>
+      );
+    }
+    if (value === ResearchOutputIdentifierType.RRID) {
+      return (
+        <span key={value}>
+          <b>RRID: </b>Your RRID must start with "RRID:"
+        </span>
+      );
+    }
+    return <></>;
+  });
+
 export interface ResearchOutputIdentifierProps {
   identifier?: string;
   setIdentifier?: (value: string) => void;
@@ -81,13 +113,13 @@ export const ResearchOutputIdentifier: React.FC<ResearchOutputIdentifierProps> =
     identifier = '',
     setIdentifier = noop,
     documentType,
-    isEditMode = false,
   }) => {
     const identifiers = useMemo(
       () => getIdentifiers(documentType),
       [documentType],
     );
 
+    const infoText = getIdentifierInfoMessage(identifiers);
     const onChangeIdentifierType = useCallback(
       (newType: string) => {
         if (
@@ -114,6 +146,7 @@ export const ResearchOutputIdentifier: React.FC<ResearchOutputIdentifierProps> =
           placeholder={'Choose an identifier'}
           getValidationMessage={() => `Please choose an identifier`}
           required={true}
+          info={infoText}
         />
 
         <TeamCreateOutputIdentifierField

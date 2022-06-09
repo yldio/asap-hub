@@ -1524,7 +1524,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@mapbox/hast-util-table-cell-style",
-        "npm:0.1.3"
+        "npm:0.2.0"
       ],
       [
         "@mdx-js/mdx",
@@ -8323,7 +8323,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "rehype-react",
-        "npm:6.2.0"
+        "npm:6.2.1"
       ],
       [
         "rehype-sanitize",
@@ -11361,7 +11361,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.2"],
             ["regenerator-runtime", "npm:0.13.8"],
             ["rehype-parse", "npm:7.0.1"],
-            ["rehype-react", "npm:6.2.0"],
+            ["rehype-react", "npm:6.2.1"],
             ["rehype-sanitize", "npm:4.0.0"],
             ["rehype-slug", "npm:4.0.1"],
             ["rehype-toc", "npm:3.0.2"],
@@ -11447,7 +11447,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.2"],
             ["regenerator-runtime", "npm:0.13.8"],
             ["rehype-parse", "npm:7.0.1"],
-            ["rehype-react", "npm:6.2.0"],
+            ["rehype-react", "npm:6.2.1"],
             ["rehype-sanitize", "npm:4.0.0"],
             ["rehype-slug", "npm:4.0.1"],
             ["rehype-toc", "npm:3.0.2"],
@@ -11538,7 +11538,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.2"],
             ["regenerator-runtime", "npm:0.13.8"],
             ["rehype-parse", "npm:7.0.1"],
-            ["rehype-react", "npm:6.2.0"],
+            ["rehype-react", "npm:6.2.1"],
             ["rehype-sanitize", "npm:4.0.0"],
             ["rehype-slug", "npm:4.0.1"],
             ["rehype-toc", "npm:3.0.2"],
@@ -11627,7 +11627,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.2"],
             ["regenerator-runtime", "npm:0.13.8"],
             ["rehype-parse", "npm:7.0.1"],
-            ["rehype-react", "npm:6.2.0"],
+            ["rehype-react", "npm:6.2.1"],
             ["rehype-sanitize", "npm:4.0.0"],
             ["rehype-slug", "npm:4.0.1"],
             ["rehype-toc", "npm:3.0.2"],
@@ -29087,10 +29087,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@mapbox/hast-util-table-cell-style", [
-        ["npm:0.1.3", {
-          "packageLocation": "./.yarn/cache/@mapbox-hast-util-table-cell-style-npm-0.1.3-aa75f4530b-4e563a274a.zip/node_modules/@mapbox/hast-util-table-cell-style/",
+        ["npm:0.2.0", {
+          "packageLocation": "./.yarn/cache/@mapbox-hast-util-table-cell-style-npm-0.2.0-92bf5dc7bf-4b05edda2b.zip/node_modules/@mapbox/hast-util-table-cell-style/",
           "packageDependencies": [
-            ["@mapbox/hast-util-table-cell-style", "npm:0.1.3"],
+            ["@mapbox/hast-util-table-cell-style", "npm:0.2.0"],
             ["unist-util-visit", "npm:1.4.1"]
           ],
           "linkType": "HARD",
@@ -58615,11 +58615,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["rehype-react", [
-        ["npm:6.2.0", {
-          "packageLocation": "./.yarn/cache/rehype-react-npm-6.2.0-0dfcb9e949-e07426ba80.zip/node_modules/rehype-react/",
+        ["npm:6.2.1", {
+          "packageLocation": "./.yarn/cache/rehype-react-npm-6.2.1-ad8cf4b651-7f16a2cfc3.zip/node_modules/rehype-react/",
           "packageDependencies": [
-            ["rehype-react", "npm:6.2.0"],
-            ["@mapbox/hast-util-table-cell-style", "npm:0.1.3"],
+            ["rehype-react", "npm:6.2.1"],
+            ["@mapbox/hast-util-table-cell-style", "npm:0.2.0"],
             ["hast-to-hyperscript", "npm:9.0.0"]
           ],
           "linkType": "HARD",

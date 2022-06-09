@@ -1,2 +1,2 @@
 export { NavigationHeader } from './organism';
-export { Layout } from './templates';
+export { Layout, DashboardPage, DashboardPageBody } from './templates';

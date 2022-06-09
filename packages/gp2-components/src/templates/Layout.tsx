@@ -46,7 +46,9 @@ const Layout: FC<LayoutProps> = ({ children }) => {
           }}
         />
       </article>
-      <article css={contentStyles}>{children}</article>
+      <div css={css({ width: '100%', overflowY: 'scroll' })}>
+        <article css={contentStyles}>{children}</article>
+      </div>
     </ToastStack>
   );
 };

@@ -96,6 +96,7 @@ export {
   MainNavigation,
   MenuHeader,
   NewsCard,
+  NewsSection,
   OnboardingFooter,
   PageCard,
   PagesSection,

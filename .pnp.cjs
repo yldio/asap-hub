@@ -9207,7 +9207,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "unified",
-        "npm:9.2.1"
+        "npm:9.2.2"
       ],
       [
         "union-value",
@@ -11001,7 +11001,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rehype-slug", "npm:4.0.1"],
             ["rehype-toc", "npm:3.0.2"],
             ["serialize-error", "npm:7.0.1"],
-            ["unified", "npm:9.2.1"],
+            ["unified", "npm:9.2.2"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.2.1"],
             ["util", "npm:0.12.3"],
             ["uuid", "npm:8.3.2"]
@@ -11087,7 +11087,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rehype-slug", "npm:4.0.1"],
             ["rehype-toc", "npm:3.0.2"],
             ["serialize-error", "npm:7.0.1"],
-            ["unified", "npm:9.2.1"],
+            ["unified", "npm:9.2.2"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.2.1"],
             ["util", "npm:0.12.3"],
             ["uuid", "npm:8.3.2"]
@@ -11178,7 +11178,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rehype-slug", "npm:4.0.1"],
             ["rehype-toc", "npm:3.0.2"],
             ["serialize-error", "npm:7.0.1"],
-            ["unified", "npm:9.2.1"],
+            ["unified", "npm:9.2.2"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.2.1"],
             ["util", "npm:0.12.3"],
             ["uuid", "npm:8.3.2"]
@@ -11267,7 +11267,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rehype-slug", "npm:4.0.1"],
             ["rehype-toc", "npm:3.0.2"],
             ["serialize-error", "npm:7.0.1"],
-            ["unified", "npm:9.2.1"],
+            ["unified", "npm:9.2.2"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.2.1"],
             ["util", "npm:0.12.3"],
             ["uuid", "npm:8.3.2"]
@@ -32882,7 +32882,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./@types/rehype-slug/",
           "packageDependencies": [
             ["@types/rehype-slug", "workspace:@types/rehype-slug"],
-            ["unified", "npm:9.2.1"]
+            ["unified", "npm:9.2.2"]
           ],
           "linkType": "SOFT",
         }]
@@ -62000,10 +62000,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:9.2.1", {
-          "packageLocation": "./.yarn/cache/unified-npm-9.2.1-1e228147c2-786b0e1847.zip/node_modules/unified/",
+        ["npm:9.2.2", {
+          "packageLocation": "./.yarn/cache/unified-npm-9.2.2-65676eec78-7c24461be7.zip/node_modules/unified/",
           "packageDependencies": [
-            ["unified", "npm:9.2.1"],
+            ["unified", "npm:9.2.2"],
             ["bail", "npm:1.0.5"],
             ["extend", "npm:3.0.2"],
             ["is-buffer", "npm:2.0.4"],

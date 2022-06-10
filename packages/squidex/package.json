@@ -26,7 +26,7 @@
     "graphql-request": "^3.4.0",
     "jwt-decode": "^2.2.0",
     "luxon": "^1.26.0",
-    "opentracing": "^0.14.5"
+    "opentracing": "0.14.7"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",

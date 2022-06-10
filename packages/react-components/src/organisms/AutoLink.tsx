@@ -4,16 +4,18 @@ import { UrlMatcher } from 'interweave-autolink';
 
 import { Link } from '../atoms';
 
-interface AutoLink {
+interface AutoLinkProps {
   content: ComponentProps<typeof Interweave>['content'];
 }
-const AutoLink: React.FC<AutoLink> = ({ content }) => (
+const AutoLink: React.FC<AutoLinkProps> = ({ content }) => (
   <Interweave
     escapeHtml
     noWrap
     content={content}
     matchers={[
-      new UrlMatcher('url', {}, ({ url }) => <Link href={url}>{url}</Link>),
+      new UrlMatcher('url', {}, ({ url }: { url: string }) => (
+        <Link href={url}>{url}</Link>
+      )),
     ]}
   />
 );

@@ -46971,7 +46971,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/interweave-virtual-f0df84c7f2/0/cache/interweave-npm-13.0.0-1bec05037d-751e7da047.zip/node_modules/interweave/",
           "packageDependencies": [
             ["interweave", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:13.0.0"],
-            ["@types/react", "npm:17.0.5"],
+            ["@types/react", "npm:17.0.45"],
             ["escape-html", "npm:1.0.3"],
             ["react", "npm:17.0.2"]
           ],
@@ -46995,7 +46995,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["interweave-autolink", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.0.0"],
             ["@types/interweave", null],
-            ["@types/react", "npm:17.0.5"],
+            ["@types/react", "npm:17.0.45"],
             ["interweave", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:13.0.0"],
             ["react", "npm:17.0.2"]
           ],

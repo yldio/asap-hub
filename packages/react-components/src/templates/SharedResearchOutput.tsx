@@ -15,6 +15,7 @@ import {
 } from '../organisms';
 import { createMailTo } from '../mail';
 import { editIcon } from '..';
+import AutoLink from '../organisms/AutoLink';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -96,7 +97,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             {description && !isGrantDocument && (
               <div css={{ paddingBottom: `${12 / perRem}em` }}>
                 <Headline2 styleAsHeading={4}>Description</Headline2>
-                <RichText poorText text={description} />
+                <AutoLink content={description} />
               </div>
             )}
             {description && !isGrantDocument && !!tags.length && <Divider />}

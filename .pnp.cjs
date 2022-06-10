@@ -5510,6 +5510,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:2.2.0"
       ],
       [
+        "interweave",
+        "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:13.0.0"
+      ],
+      [
+        "interweave-autolink",
+        "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.0.0"
+      ],
+      [
         "invariant",
         "npm:2.2.4"
       ],
@@ -10982,6 +10990,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fast-deep-equal", "npm:3.1.3"],
             ["hast-util-sanitize", "npm:3.0.2"],
             ["history", "npm:4.10.1"],
+            ["interweave", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:13.0.0"],
+            ["interweave-autolink", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.0.0"],
             ["jest-playwright-jsdom", "npm:0.0.4"],
             ["jest-playwright-preset", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.2"],
             ["playwright", "npm:1.16.1"],
@@ -11068,6 +11078,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fast-deep-equal", "npm:3.1.3"],
             ["hast-util-sanitize", "npm:3.0.2"],
             ["history", "npm:4.10.1"],
+            ["interweave", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:13.0.0"],
+            ["interweave-autolink", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.0.0"],
             ["jest-playwright-jsdom", "npm:0.0.4"],
             ["jest-playwright-preset", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.2"],
             ["playwright", "npm:1.16.1"],
@@ -11159,6 +11171,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fast-deep-equal", "npm:3.1.3"],
             ["hast-util-sanitize", "npm:3.0.2"],
             ["history", "npm:4.10.1"],
+            ["interweave", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:13.0.0"],
+            ["interweave-autolink", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.0.0"],
             ["jest-playwright-jsdom", "npm:0.0.4"],
             ["jest-playwright-preset", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.2"],
             ["playwright", "npm:1.16.1"],
@@ -11248,6 +11262,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fast-deep-equal", "npm:3.1.3"],
             ["hast-util-sanitize", "npm:3.0.2"],
             ["history", "npm:4.10.1"],
+            ["interweave", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:13.0.0"],
+            ["interweave-autolink", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.0.0"],
             ["jest-playwright-jsdom", "npm:0.0.4"],
             ["jest-playwright-preset", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.7.2"],
             ["playwright", "npm:1.16.1"],
@@ -46939,6 +46955,55 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/interpret-npm-2.2.0-3603a544e1-f51efef7cb.zip/node_modules/interpret/",
           "packageDependencies": [
             ["interpret", "npm:2.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["interweave", [
+        ["npm:13.0.0", {
+          "packageLocation": "./.yarn/cache/interweave-npm-13.0.0-1bec05037d-751e7da047.zip/node_modules/interweave/",
+          "packageDependencies": [
+            ["interweave", "npm:13.0.0"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:13.0.0", {
+          "packageLocation": "./.yarn/__virtual__/interweave-virtual-f0df84c7f2/0/cache/interweave-npm-13.0.0-1bec05037d-751e7da047.zip/node_modules/interweave/",
+          "packageDependencies": [
+            ["interweave", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:13.0.0"],
+            ["@types/react", "npm:17.0.5"],
+            ["escape-html", "npm:1.0.3"],
+            ["react", "npm:17.0.2"]
+          ],
+          "packagePeers": [
+            "@types/react",
+            "react"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["interweave-autolink", [
+        ["npm:5.0.0", {
+          "packageLocation": "./.yarn/cache/interweave-autolink-npm-5.0.0-8f5b0ddf73-bc876b945f.zip/node_modules/interweave-autolink/",
+          "packageDependencies": [
+            ["interweave-autolink", "npm:5.0.0"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.0.0", {
+          "packageLocation": "./.yarn/__virtual__/interweave-autolink-virtual-838728195e/0/cache/interweave-autolink-npm-5.0.0-8f5b0ddf73-bc876b945f.zip/node_modules/interweave-autolink/",
+          "packageDependencies": [
+            ["interweave-autolink", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.0.0"],
+            ["@types/interweave", null],
+            ["@types/react", "npm:17.0.5"],
+            ["interweave", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:13.0.0"],
+            ["react", "npm:17.0.2"]
+          ],
+          "packagePeers": [
+            "@types/interweave",
+            "@types/react",
+            "interweave",
+            "react"
           ],
           "linkType": "HARD",
         }]

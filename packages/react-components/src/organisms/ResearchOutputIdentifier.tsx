@@ -34,6 +34,7 @@ const identifierMap = {
     errorMessage:
       'Please enter a valid DOI. It starts with a 1 and it cannot be a URL. (e.g. 10.1234/abcde.121212)',
     required: true,
+    name: 'DOI',
   },
   [ResearchOutputIdentifierType.AccessionNumber]: {
     helpText:
@@ -43,6 +44,7 @@ const identifierMap = {
     errorMessage:
       'Please enter a valid Accession Number which must start with a letter (e.g. NT_123456)',
     required: true,
+    name: 'Accesion Number',
   },
   [ResearchOutputIdentifierType.RRID]: {
     helpText: 'Your RRID must start with “RRID:”',
@@ -51,6 +53,7 @@ const identifierMap = {
     errorMessage:
       'Please enter a valid RRID which starts with `RRID`. (e.g. RRID:SCR_007358)',
     required: true,
+    name: 'RRID',
   },
   [ResearchOutputIdentifierType.None]: {
     helpText: '',
@@ -58,6 +61,7 @@ const identifierMap = {
     regex: ResearchOutputIdentifierValidationExpression.None,
     errorMessage: undefined,
     required: false,
+    name: '',
   },
   [ResearchOutputIdentifierType.Empty]: {
     helpText: '',
@@ -65,44 +69,20 @@ const identifierMap = {
     regex: undefined,
     errorMessage: undefined,
     required: false,
+    name: '',
   },
 } as const;
 
 const getIdentifierInfoMessage = (
   identifiers: IdentifierType,
 ): Array<ReactElement> =>
-  identifiers
-    .filter(({ value }) => value !== ResearchOutputIdentifierType.None)
-    .map(({ value }) => {
-      if (value === ResearchOutputIdentifierType.AccessionNumber) {
-        return (
-          <InfoParagraph
-            key={value}
-            boldText="Accesion Number: "
-            bodyText={
-              identifierMap[ResearchOutputIdentifierType.AccessionNumber]
-                .helpText
-            }
-          />
-        );
-      }
-      if (value === ResearchOutputIdentifierType.DOI) {
-        return (
-          <InfoParagraph
-            key={value}
-            boldText="DOI: "
-            bodyText={identifierMap[ResearchOutputIdentifierType.DOI].helpText}
-          />
-        );
-      }
-      return (
-        <InfoParagraph
-          key={value}
-          boldText="RRID: "
-          bodyText={identifierMap[ResearchOutputIdentifierType.RRID].helpText}
-        />
-      );
-    });
+  identifiers.map(({ value }) => (
+    <InfoParagraph
+      key={value}
+      boldText={`${identifierMap[value].name}: `}
+      bodyText={identifierMap[value].helpText}
+    />
+  ));
 
 export interface ResearchOutputIdentifierProps {
   identifier?: string;

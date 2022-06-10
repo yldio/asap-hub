@@ -38,7 +38,7 @@
     "react-router-hash-link": "^2.4.3",
     "react-select": "^4",
     "react-sortable-hoc": "^2.0.0",
-    "regenerator-runtime": "^0.13.8",
+    "regenerator-runtime": "0.13.9",
     "rehype-parse": "^7.0.1",
     "rehype-react": "6.2.1",
     "rehype-sanitize": "^4.0.0",

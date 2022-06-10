@@ -1,10 +1,9 @@
 import type { Auth0Client } from '@auth0/auth0-spa-js';
 import type { UserMetadataResponse, UserResponse } from '@asap-hub/model';
 
-import * as config from './config';
 import auth0PubKeys from './pubKeys';
 
-export { config, auth0PubKeys };
+export { auth0PubKeys };
 
 export type User = Pick<
   UserMetadataResponse,

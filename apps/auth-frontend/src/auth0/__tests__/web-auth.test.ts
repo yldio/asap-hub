@@ -31,6 +31,12 @@ jest.mock('auth0-js', () => {
     },
   };
 });
+
+jest.mock('../../config', () => ({
+  AUTH0_CLIENT_ID: 'client-id',
+  AUTH0_DOMAIN: 'auth.example.com',
+}));
+
 afterEach(() => {
   mockLogin.mockReset();
   mockSignup.mockReset();

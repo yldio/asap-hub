@@ -1,7 +1,7 @@
 import {
   AuthHandler,
   authHandlerFactory,
-  decodeToken,
+  decodeTokenFactory,
   errorHandlerFactory,
   getHttpLogger,
   HttpLogger,
@@ -14,7 +14,7 @@ import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import 'express-async-errors';
 import { Tracer } from 'opentracing';
-import { origin } from './config';
+import { origin, auth0ClientId } from './config';
 import Calendars, { CalendarController } from './controllers/calendars';
 import Dashboard, { DashboardController } from './controllers/dashboard';
 import Discover, { DiscoverController } from './controllers/discover';
@@ -65,6 +65,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   // Clients
   const squidexGraphqlClient = new SquidexGraphql();
+  const decodeToken = decodeTokenFactory(auth0ClientId);
 
   const userDataProvider =
     libs.userDataProvider || new UserDataProvider(squidexGraphqlClient);

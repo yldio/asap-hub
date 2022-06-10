@@ -65,15 +65,17 @@ runs:
         yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless deploy --package $PWD/${{ inputs.app }}-sls-package
       env:
         ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_REGION: ${{ steps.setup.outputs.aws-region }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
         CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
         CRN_APP_URL: ${{ steps.setup.outputs.crn-app-url }}
+        CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
         CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
-        GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
-        GP2_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.gp2-aws-acm-certificate-arn }}
-        AWS_REGION: ${{ steps.setup.outputs.aws-region }}
-        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
-        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
         CURRENT_REVISION: ${{ github.sha }}
+        GP2_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.gp2-auth0-client-id }}
+        GP2_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.gp2-aws-acm-certificate-arn }}
+        GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
         LIGHTSTEP_TOKEN: ${{ inputs.lightstep-token }}
         NODE_ENV: 'production'
         NODE_OPTIONS: '--max_old_space_size=4096'

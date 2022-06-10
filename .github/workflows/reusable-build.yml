@@ -67,9 +67,6 @@ jobs:
       - name: Build
         run: |
           yarn build:babel
-        env:
-          AUTH0_CLIENT_ID: ${{ steps.setup.outputs.auth0-client-id }}
-          AUTH0_DOMAIN: ${{ steps.setup.outputs.auth0-domain }}
       - name: Cache transpile output
         uses: ./.github/actions/cache-build
         with:
@@ -130,8 +127,6 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Build
         env:
-          AUTH0_CLIENT_ID: ${{ steps.setup.outputs.auth0-client-id }}
-          AUTH0_DOMAIN: ${{ steps.setup.outputs.auth0-domain }}
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           REACT_APP_ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
           REACT_APP_API_BASE_URL: ${{ steps.setup.outputs.crn-api-url }}
@@ -140,6 +135,10 @@ jobs:
           REACT_APP_GTM_CONTAINER_ID: ${{ steps.setup.outputs.react-app-gtm-container-id }}
           REACT_APP_RELEASE: ${{ steps.setup.outputs.app-release }}
           REACT_APP_SENTRY_DSN: ${{ steps.setup.outputs.react-app-sentry-dsn }}
+          REACT_APP_CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
+          REACT_APP_CRN_AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}
+          REACT_APP_GP2_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.gp2-auth0-client-id }}
+          REACT_APP_GP2_AUTH0_DOMAIN: ${{ steps.setup.outputs.gp2-auth0-domain }}
         run: |
           yarn build:frontend
       - name: Cache build output

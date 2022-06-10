@@ -1,16 +1,18 @@
 import { AWS } from '@serverless/typescript';
 import assert from 'assert';
-import { paramCase } from 'param-case';
-import pkg from '../../package.json';
 
 const { NODE_ENV = 'development' } = process.env;
 
 if (NODE_ENV === 'production') {
-  ['CRN_API_URL', 'CRN_APP_URL', 'CRN_AWS_ACM_CERTIFICATE_ARN'].forEach(
-    (env) => {
-      assert.ok(process.env[env], `${env} not defined`);
-    },
-  );
+  [
+    'CRN_API_URL',
+    'CRN_APP_URL',
+    'CRN_AWS_ACM_CERTIFICATE_ARN',
+    'CRN_AUTH0_CLIENT_ID',
+    'SENTRY_DSN_API',
+  ].forEach((env) => {
+    assert.ok(process.env[env], `${env} not defined`);
+  });
 }
 
 const {
@@ -21,6 +23,8 @@ const {
   SLS_STAGE = 'development',
   CI_COMMIT_SHA,
   ALGOLIA_INDEX,
+  SENTRY_DSN_API,
+  CRN_AUTH0_CLIENT_ID,
 } = process.env;
 
 const region = process.env.AWS_REGION as AWS['provider']['region'];
@@ -31,11 +35,13 @@ const envRef =
     : SLS_STAGE === 'dev'
     ? 'dev'
     : `CI-${SLS_STAGE}`;
+const sentryDsnApi = SENTRY_DSN_API!;
+const auth0ClientId = CRN_AUTH0_CLIENT_ID!;
 
 const algoliaIndex = ALGOLIA_INDEX
   ? '${env:ALGOLIA_INDEX}'
   : `asap-hub_${envRef}`;
-const service = paramCase(pkg.name);
+const service = 'asap-hub';
 export const plugins = [
   './serverless-plugins/serverless-s3-sync',
   './serverless-plugins/serverless-iam-roles-per-function',
@@ -199,7 +205,8 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        SENTRY_DSN: '${env:SENTRY_DSN_API}',
+        SENTRY_DSN: sentryDsnApi,
+        AUTH0_CLIENT_ID: auth0ClientId,
       },
     },
     auth0FetchByCode: {
@@ -213,7 +220,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        AUTH0_CLIENT_ID: `\${ssm:auth0-client-id-${envAlias}}`,
+        AUTH0_CLIENT_ID: auth0ClientId,
         AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
         ALGOLIA_API_KEY: `\${ssm:algolia-search-api-key-${envAlias}}`,
       },
@@ -229,7 +236,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        AUTH0_CLIENT_ID: `\${ssm:auth0-client-id-${envAlias}}`,
+        AUTH0_CLIENT_ID: auth0ClientId,
         AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
       },
     },

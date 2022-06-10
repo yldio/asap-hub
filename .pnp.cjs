@@ -1944,7 +1944,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/aws-lambda",
-        "npm:8.10.99"
+        "npm:8.10.100"
       ],
       [
         "@types/babel__core",
@@ -10382,7 +10382,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/serverless", "npm:6.7.1"],
             ["@serverless/typescript", "npm:3.18.0"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
-            ["@types/aws-lambda", "npm:8.10.99"],
+            ["@types/aws-lambda", "npm:8.10.100"],
             ["@types/babel__preset-env", "npm:7.9.2"],
             ["@types/chance", "npm:1.1.3"],
             ["@types/cors", "npm:2.8.12"],
@@ -10829,7 +10829,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/boom", "npm:9.1.2"],
             ["@serverless/typescript", "npm:3.18.0"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
-            ["@types/aws-lambda", "npm:8.10.99"],
+            ["@types/aws-lambda", "npm:8.10.100"],
             ["@types/cors", "npm:2.8.12"],
             ["@types/express", "npm:4.17.11"],
             ["@types/jest", "npm:26.0.24"],
@@ -11411,7 +11411,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/bourne", "npm:2.0.0"],
             ["@hapi/joi", "npm:17.1.1"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
-            ["@types/aws-lambda", "npm:8.10.99"],
+            ["@types/aws-lambda", "npm:8.10.100"],
             ["@types/debug", "npm:4.1.7"],
             ["@types/hapi", "npm:18.0.7"],
             ["@types/hapi__boom", "npm:9.0.1"],
@@ -31715,6 +31715,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/aws-lambda", [
+        ["npm:8.10.100", {
+          "packageLocation": "./.yarn/cache/@types-aws-lambda-npm-8.10.100-2a9b8d8b4f-458cc9928e.zip/node_modules/@types/aws-lambda/",
+          "packageDependencies": [
+            ["@types/aws-lambda", "npm:8.10.100"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:8.10.71", {
           "packageLocation": "./.yarn/cache/@types-aws-lambda-npm-8.10.71-ef7f208f78-7ee37885d8.zip/node_modules/@types/aws-lambda/",
           "packageDependencies": [
@@ -31726,13 +31733,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-aws-lambda-npm-8.10.77-fd116b2b31-e990eb4a4d.zip/node_modules/@types/aws-lambda/",
           "packageDependencies": [
             ["@types/aws-lambda", "npm:8.10.77"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:8.10.99", {
-          "packageLocation": "./.yarn/cache/@types-aws-lambda-npm-8.10.99-111e7b4e5e-63023588d5.zip/node_modules/@types/aws-lambda/",
-          "packageDependencies": [
-            ["@types/aws-lambda", "npm:8.10.99"]
           ],
           "linkType": "HARD",
         }]

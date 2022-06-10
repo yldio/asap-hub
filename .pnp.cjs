@@ -9371,7 +9371,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "util",
-        "npm:0.12.3"
+        "npm:0.12.4"
       ],
       [
         "util-deprecate",
@@ -11003,7 +11003,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serialize-error", "npm:7.0.1"],
             ["unified", "npm:9.2.2"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.2.1"],
-            ["util", "npm:0.12.3"],
+            ["util", "npm:0.12.4"],
             ["uuid", "npm:8.3.2"]
           ],
           "packagePeers": [
@@ -11089,7 +11089,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serialize-error", "npm:7.0.1"],
             ["unified", "npm:9.2.2"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.2.1"],
-            ["util", "npm:0.12.3"],
+            ["util", "npm:0.12.4"],
             ["uuid", "npm:8.3.2"]
           ],
           "packagePeers": [
@@ -11180,7 +11180,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serialize-error", "npm:7.0.1"],
             ["unified", "npm:9.2.2"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.2.1"],
-            ["util", "npm:0.12.3"],
+            ["util", "npm:0.12.4"],
             ["uuid", "npm:8.3.2"]
           ],
           "packagePeers": [
@@ -11269,7 +11269,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serialize-error", "npm:7.0.1"],
             ["unified", "npm:9.2.2"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.2.1"],
-            ["util", "npm:0.12.3"],
+            ["util", "npm:0.12.4"],
             ["uuid", "npm:8.3.2"]
           ],
           "linkType": "SOFT",
@@ -62614,10 +62614,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:0.12.3", {
-          "packageLocation": "./.yarn/cache/util-npm-0.12.3-d45fb951c3-e64d4a9019.zip/node_modules/util/",
+        ["npm:0.12.4", {
+          "packageLocation": "./.yarn/cache/util-npm-0.12.4-a022701e3b-8eac7a6e6b.zip/node_modules/util/",
           "packageDependencies": [
-            ["util", "npm:0.12.3"],
+            ["util", "npm:0.12.4"],
             ["inherits", "npm:2.0.4"],
             ["is-arguments", "npm:1.0.4"],
             ["is-generator-function", "npm:1.0.7"],

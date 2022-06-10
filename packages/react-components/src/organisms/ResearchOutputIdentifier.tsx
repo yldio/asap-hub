@@ -5,6 +5,7 @@ import {
 } from '@asap-hub/model';
 import { ResearchOutputIdentifierValidationExpression } from '@asap-hub/validation';
 import { useCallback, useMemo, ReactElement } from 'react';
+import { InfoParagraph } from '../atoms';
 import { LabeledDropdown, LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 
@@ -75,24 +76,31 @@ const getIdentifierInfoMessage = (
     .map(({ value }) => {
       if (value === ResearchOutputIdentifierType.AccessionNumber) {
         return (
-          <span key={value}>
-            <b>Accesion Number: </b>Your Accession Number must start with a
-            letter. Accession Numbers are attributed by NIH, EMBL-EBI,
-            ProteomeXchange, etc.
-          </span>
+          <InfoParagraph
+            key={value}
+            boldText="Accesion Number: "
+            bodyText={
+              identifierMap[ResearchOutputIdentifierType.AccessionNumber]
+                .helpText
+            }
+          />
         );
       }
       if (value === ResearchOutputIdentifierType.DOI) {
         return (
-          <span key={value}>
-            <b>DOI: </b>Your DOI must start with 1 and it cannot be a URL
-          </span>
+          <InfoParagraph
+            key={value}
+            boldText="DOI: "
+            bodyText={identifierMap[ResearchOutputIdentifierType.DOI].helpText}
+          />
         );
       }
       return (
-        <span key={value}>
-          <b>RRID: </b>Your RRID must start with "RRID:"
-        </span>
+        <InfoParagraph
+          key={value}
+          boldText="RRID: "
+          bodyText={identifierMap[ResearchOutputIdentifierType.RRID].helpText}
+        />
       );
     });
 

@@ -69,11 +69,11 @@ describe('when button-styled', () => {
       </Link>,
     );
 
-    const buttonWithoutMargin = Number(
+    const buttonWithMargin = Number(
       getComputedStyle(getByRole('link')).marginTop.replace(/em$/, ''),
     );
 
-    expect(buttonWithoutMargin).toBe(1.0588235294117647);
+    expect(buttonWithMargin).toBe(1.0588235294117647);
 
     rerender(
       <Link href="/" buttonStyle margin={false}>
@@ -81,11 +81,11 @@ describe('when button-styled', () => {
       </Link>,
     );
 
-    const buttonWithMargin = Number(
+    const buttonWithoutMargin = Number(
       getComputedStyle(getByRole('link')).margin.replace(/em$/, ''),
     );
 
-    expect(buttonWithMargin).toBe(0);
+    expect(buttonWithoutMargin).toBe(0);
   });
 
   it('renders button with default margin', () => {
@@ -100,6 +100,26 @@ describe('when button-styled', () => {
     );
 
     expect(buttonWithoutMargin).toBe(0);
+  });
+
+  it('renders button streched by default', () => {
+    const { getByRole } = render(
+      <Link href="/" buttonStyle>
+        text
+      </Link>,
+    );
+
+    expect(getComputedStyle(getByRole('link')).flexGrow).toBe('1');
+  });
+
+  it('renders a non-streched button', () => {
+    const { getByRole } = render(
+      <Link href="/" buttonStyle stretch={false}>
+        text
+      </Link>,
+    );
+
+    expect(getComputedStyle(getByRole('link')).flexGrow).toBe('');
   });
 
   it('supports primary button styles', () => {

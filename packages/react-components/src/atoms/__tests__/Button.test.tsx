@@ -120,7 +120,7 @@ it('renders a small button', () => {
 });
 
 it('renders a stretched small button', () => {
-  const { getByRole } = render(<Button />);
+  const { getByRole } = render(<Button small />);
 
   expect(getComputedStyle(getByRole('button')).flexGrow).toBe('1');
 });

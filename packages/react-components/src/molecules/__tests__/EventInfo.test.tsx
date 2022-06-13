@@ -151,7 +151,7 @@ it('displays the teams with number of additional teams', () => {
     />,
   );
 
-  expect(screen.getAllByTestId('associationlist').length).toEqual(7);
+  expect(screen.getAllByRole('listitem').length).toEqual(8);
   expect(screen.queryByText('+3')).toBeInTheDocument();
 });
 

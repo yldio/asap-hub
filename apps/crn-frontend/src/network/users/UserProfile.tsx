@@ -1,25 +1,21 @@
+import { Frame } from '@asap-hub/frontend-utils';
 import {
-  FC,
-  lazy,
-  useEffect,
-  ComponentProps,
-  useState,
-  useContext,
-} from 'react';
-import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
-import { UserProfilePage, NotFoundPage } from '@asap-hub/react-components';
+  EventsSection,
+  NotFoundPage,
+  UserProfilePage,
+} from '@asap-hub/react-components';
 import {
-  useCurrentUser,
   ToastContext,
+  useCurrentUser,
   UserProfileContext,
 } from '@asap-hub/react-context';
-import imageCompression from 'browser-image-compression';
 import { network, useRouteParams } from '@asap-hub/routing';
-import { Frame } from '@asap-hub/frontend-utils';
-
-import { useUserById, usePatchUserAvatarById } from './state';
-import { useCurrentUserProfileTabRoute } from '../../hooks';
+import imageCompression from 'browser-image-compression';
+import { ComponentProps, FC, lazy, useContext, useState } from 'react';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { useCurrentUserProfileTabRoute, useSearch } from '../../hooks';
 import { useResearchOutputs } from '../../shared-research/state';
+import { usePatchUserAvatarById, useUserById } from './state';
 
 const loadResearch = () =>
   import(/* webpackChunkName: "network-profile-research" */ './Research');
@@ -29,16 +25,15 @@ const loadOutputs = () =>
   import(/* webpackChunkName: "network-profile-outputs" */ './Outputs');
 const loadEditing = () =>
   import(/* webpackChunkName: "network-editing" */ './Editing');
+const loadUpcomingEvents = () =>
+  import(/* webpackChunkName: "network-upcoming-events" */ './UpcomingEvents');
 const Research = lazy(loadResearch);
 const About = lazy(loadAbout);
 const Outputs = lazy(loadOutputs);
 const Editing = lazy(loadEditing);
+const UpcomingEvents = lazy(loadUpcomingEvents);
 
 const User: FC<Record<string, never>> = () => {
-  useEffect(() => {
-    loadResearch().then(loadAbout).then(loadOutputs).then(loadEditing);
-  }, []);
-
   const route = network({}).users({}).user;
   const { path } = useRouteMatch();
   const { userId } = useRouteParams(route);
@@ -63,6 +58,8 @@ const User: FC<Record<string, never>> = () => {
   const toast = useContext(ToastContext);
 
   const isOwnProfile = currentUser?.id === user?.id;
+  const [currentTime] = useState(new Date());
+  const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
 
   if (user) {
     const profilePageProps: Omit<
@@ -121,6 +118,19 @@ const User: FC<Record<string, never>> = () => {
                     <Frame title="Outputs">
                       <Outputs userId={user?.id} />
                     </Frame>
+                  </Route>
+                  <Route path={path + tabRoutes.upcomingEvents.template}>
+                    <EventsSection
+                      searchQuery={searchQuery}
+                      onChangeSearchQuery={setSearchQuery}
+                    >
+                      <Frame title="UpcomingEvents">
+                        <UpcomingEvents
+                          currentTime={currentTime}
+                          searchQuery={debouncedSearchQuery}
+                        />
+                      </Frame>
+                    </EventsSection>
                   </Route>
                   <Redirect to={tabRoutes.research({}).$} />
                 </Switch>

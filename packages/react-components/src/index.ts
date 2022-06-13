@@ -1,19 +1,9 @@
+import * as authTestUtils from './auth-test-utils';
 import * as pixels from './pixels';
 import * as text from './text';
 import * as utils from './utils';
 
-import * as authTestUtils from './auth-test-utils';
-
-export { pixels, text, authTestUtils, utils };
-
-export * from './icons';
-export * from './images';
-export * from './theme';
 export * from './appearance';
-export * from './colors';
-export * from './layout';
-export * from './hooks';
-
 export {
   Anchor,
   Avatar,
@@ -27,28 +17,35 @@ export {
   Headline4,
   Headline5,
   Headline6,
+  InfoParagraph,
   Link,
+  NavigationLink,
   Overlay,
   Paragraph,
-  TabLink,
   Pill,
+  TabLink,
   Toggle,
   Tooltip,
-  NavigationLink,
-  InfoParagraph,
 } from './atoms';
+export * from './colors';
+export * from './hooks';
+export * from './icons';
+export * from './images';
+export * from './layout';
+export { MessageLayout, WelcomeMessage } from './messages';
 export {
   AssociationList,
   BackLink,
   BannerCard,
-  DropdownButton,
   CalendarLink,
   Collapsible,
   CtaCard,
+  DropdownButton,
   ErrorCard,
   EventInfo,
   EventTime,
   ExternalLink,
+  FormCard,
   GoogleSigninButton,
   Header,
   Info,
@@ -57,10 +54,10 @@ export {
   LabeledDropdown,
   LabeledMultiSelect,
   LabeledPasswordField,
+  LabeledRadioButtonGroup,
   LabeledTextArea,
   LabeledTextField,
   LabeledTypeahead,
-  LabeledRadioButtonGroup,
   Loading,
   MembersList,
   MenuButton,
@@ -75,7 +72,6 @@ export {
   UserMenuButton,
   UsersList,
   UtilityBar,
-  FormCard,
 } from './molecules';
 export {
   AdditionalMaterials,
@@ -92,6 +88,7 @@ export {
   GroupInformation,
   GroupMembersSection,
   GroupTools,
+  HelpSection,
   JoinEvent,
   MainNavigation,
   MenuHeader,
@@ -104,11 +101,15 @@ export {
   ProfileCardList,
   ProfileExpertiseAndResources,
   QuestionsSection,
+  ResearchOutputExtraInformationCard,
+  ResearchOutputForm,
+  ResearchOutputHeader,
   RichText,
   RichTextCard,
   SearchAndFilter,
   SharedResearchCard,
   SharedResearchListCard,
+  SpeakersList,
   SsoButtons,
   TeamCard,
   TeamGroupsCard,
@@ -117,16 +118,11 @@ export {
   ToastStack,
   ToolCard,
   UserNavigation,
-  UserProfileRole,
   UserProfileBiography,
   UserProfileGroups,
   UserProfilePlaceholderCard,
   UserProfileRecentWorks,
-  HelpSection,
-  ResearchOutputHeader,
-  ResearchOutputForm,
-  ResearchOutputExtraInformationCard,
-  SpeakersList,
+  UserProfileRole,
 } from './organisms';
 export {
   BasicLayout,
@@ -141,6 +137,7 @@ export {
   EventsCalendar,
   EventsList,
   EventsPage,
+  EventsSection,
   ExpertiseAndResourcesModal,
   ForgotPasswordPage,
   GlobalStyles,
@@ -162,7 +159,9 @@ export {
   OpenQuestionsModal,
   PasswordResetEmailSentPage,
   PersonalInfoModal,
+  ResearchOutputPage,
   ResearchOutputsSearch,
+  RoleModal,
   SharedResearchList,
   SharedResearchOutput,
   SharedResearchPage,
@@ -171,7 +170,6 @@ export {
   TeamProfileAbout,
   TeamProfileOutputs,
   TeamProfilePage,
-  ResearchOutputPage,
   TeamProfileWorkspace,
   ToolModal,
   UnsupportedBrowserPage,
@@ -180,8 +178,8 @@ export {
   UserProfileResearch,
   UserProfileResearchOutputs,
   UserProfileSearchAndFilter,
-  RoleModal,
   WelcomePage,
 } from './templates';
-export { MessageLayout, WelcomeMessage } from './messages';
+export * from './theme';
 export { noop } from './utils';
+export { pixels, text, authTestUtils, utils };

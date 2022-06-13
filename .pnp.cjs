@@ -10650,6 +10650,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/user-event", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:12.8.3"],
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],
             ["@types/asap-hub__react-context", null],
+            ["@types/emotion__react", null],
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],
             ["@types/history", "npm:4.7.11"],
             ["@types/jest", "npm:26.0.24"],
@@ -10679,6 +10680,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packagePeers": [
             "@asap-hub/react-context",
             "@types/asap-hub__react-context",
+            "@types/emotion__react",
             "@types/history",
             "@types/react-dom",
             "@types/react-router-dom",

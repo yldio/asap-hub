@@ -9,7 +9,7 @@ import {
 
 /* istanbul ignore next */
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-export const noop = () => {};
+export const noop = (): void => {};
 
 export const getSvgAspectRatio = (element: React.ReactElement): number => {
   const markup = renderToStaticMarkup(element);

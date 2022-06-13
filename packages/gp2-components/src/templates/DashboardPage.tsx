@@ -1,8 +1,8 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
+import { pixels } from '@asap-hub/react-components';
 
 import DashboardPageHeader from './DashboardPageHeader';
-import { pixels } from '@asap-hub/react-components';
 
 const { rem } = pixels;
 

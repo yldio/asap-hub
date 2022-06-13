@@ -1672,7 +1672,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@serverless/typescript",
-        "npm:3.18.0"
+        "npm:3.19.0"
       ],
       [
         "@serverless/utils",
@@ -10384,7 +10384,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/bourne", "npm:2.0.0"],
             ["@hapi/joi", "npm:17.1.1"],
             ["@sentry/serverless", "npm:6.7.1"],
-            ["@serverless/typescript", "npm:3.18.0"],
+            ["@serverless/typescript", "npm:3.19.0"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/aws-lambda", "npm:8.10.100"],
             ["@types/babel__preset-env", "npm:7.9.2"],
@@ -10830,7 +10830,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-codegen/typescript-operations", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:2.1.4"],
             ["@graphql-typed-document-node/core", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:3.1.1"],
             ["@hapi/boom", "npm:9.1.2"],
-            ["@serverless/typescript", "npm:3.18.0"],
+            ["@serverless/typescript", "npm:3.19.0"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/aws-lambda", "npm:8.10.100"],
             ["@types/cors", "npm:2.8.12"],
@@ -29136,10 +29136,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@serverless/typescript", [
-        ["npm:3.18.0", {
-          "packageLocation": "./.yarn/cache/@serverless-typescript-npm-3.18.0-652c8f3c6a-a4925ab90b.zip/node_modules/@serverless/typescript/",
+        ["npm:3.19.0", {
+          "packageLocation": "./.yarn/cache/@serverless-typescript-npm-3.19.0-280d6e70d7-6cb3b29720.zip/node_modules/@serverless/typescript/",
           "packageDependencies": [
-            ["@serverless/typescript", "npm:3.18.0"]
+            ["@serverless/typescript", "npm:3.19.0"]
           ],
           "linkType": "HARD",
         }]

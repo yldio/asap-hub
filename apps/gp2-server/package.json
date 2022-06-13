@@ -37,7 +37,7 @@
     "@graphql-codegen/schema-ast": "^2.2.0",
     "@graphql-codegen/typescript": "2.2.2",
     "@graphql-codegen/typescript-operations": "^2.1.4",
-    "@serverless/typescript": "3.18.0",
+    "@serverless/typescript": "3.19.0",
     "@types/apr-intercept": "workspace:*",
     "@types/aws-lambda": "8.10.100",
     "@types/cors": "2.8.12",

@@ -2,6 +2,7 @@
 
 import Intercept from 'apr-intercept';
 import {
+  getAccessTokenFactory,
   RestTeam,
   RestUser,
   SquidexRest,
@@ -11,9 +12,17 @@ import { GenericError } from '@asap-hub/errors';
 import { HTTPError } from 'got';
 import { Data } from './parse';
 import log from '../../logger';
+import { appName, baseUrl, clientId, clientSecret } from '../../config';
 
-const teams = new SquidexRest<RestTeam>('teams');
-const users = new SquidexRest<RestUser>('users');
+const getAuthToken = getAccessTokenFactory({ baseUrl, clientId, clientSecret });
+const teamRestClient = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
+  appName,
+  baseUrl,
+});
+const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
+  appName,
+  baseUrl,
+});
 
 interface Cache {
   [key: string]: Promise<RestTeam | RestUser>;
@@ -29,7 +38,7 @@ const insertMembership = (
     role: data.role,
   };
 
-  return users.patch(user.id, {
+  return userRestClient.patch(user.id, {
     email: {
       iv: user.data.email.iv,
     },
@@ -65,7 +74,7 @@ const insertTeam = async (data: Data, cache: Cache): Promise<RestTeam> => {
     role === 'Lead PI (Core Leadership)'
   ) {
     const t = await cache[team.applicationNumber.iv];
-    cache[team.applicationNumber.iv] = teams.patch(t.id, {
+    cache[team.applicationNumber.iv] = teamRestClient.patch(t.id, {
       ...t,
       displayName: {
         iv: lastName,
@@ -74,22 +83,24 @@ const insertTeam = async (data: Data, cache: Cache): Promise<RestTeam> => {
   }
 
   if (!cache[team.displayName.iv]) {
-    cache[team.applicationNumber.iv] = teams.create(team).catch((err) => {
-      if (
-        err.response?.statusCode === 400 &&
-        err.response?.body?.includes('applicationNumber')
-      ) {
-        return teams.fetchOne({
-          filter: {
-            op: 'eq',
-            path: 'data.applicationNumber.iv',
-            value: team.applicationNumber.iv,
-          },
-        });
-      }
+    cache[team.applicationNumber.iv] = teamRestClient
+      .create(team)
+      .catch((err) => {
+        if (
+          err.response?.statusCode === 400 &&
+          err.response?.body?.includes('applicationNumber')
+        ) {
+          return teamRestClient.fetchOne({
+            filter: {
+              op: 'eq',
+              path: 'data.applicationNumber.iv',
+              value: team.applicationNumber.iv,
+            },
+          });
+        }
 
-      throw err;
-    });
+        throw err;
+      });
   }
 
   return cache[team.applicationNumber.iv] as Promise<RestTeam>;
@@ -190,10 +201,10 @@ const insertUser = async (
   }
 
   if (!cache[user.email.iv]) {
-    cache[user.email.iv] = users.create(user).catch((err) => {
+    cache[user.email.iv] = userRestClient.create(user).catch((err) => {
       if (err instanceof GenericError) {
         log(`fetch ${user.email.iv}`);
-        return users
+        return userRestClient
           .fetchOne({
             filter: {
               op: 'eq',
@@ -206,7 +217,7 @@ const insertUser = async (
               log(`upsert ${user.email.iv}`);
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
               const { teams: _, connections, avatar, ...props } = user;
-              return users.patch(t.id, {
+              return userRestClient.patch(t.id, {
                 ...props,
               });
             }

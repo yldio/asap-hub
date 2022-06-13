@@ -1,6 +1,6 @@
 import nock from 'nock';
 import Dashboard from '../../src/controllers/dashboard';
-import { config, SquidexGraphql } from '@asap-hub/squidex';
+import { SquidexGraphql } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import {
   squidexGraphqlDashboardFlatData,
@@ -9,9 +9,14 @@ import {
 import { FETCH_DASHBOARD } from '../../src/queries/dashboard.queries';
 import { print } from 'graphql';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
+import { getAuthToken } from '../../src/utils/auth';
+import { appName, baseUrl } from '../../src/config';
 
 describe('Dashboard controller', () => {
-  const squidexGraphqlClientMock = new SquidexGraphql();
+  const squidexGraphqlClientMock = new SquidexGraphql(getAuthToken, {
+    appName,
+    baseUrl,
+  });
   const dashboard = new Dashboard(squidexGraphqlClientMock);
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
@@ -38,8 +43,8 @@ describe('Dashboard controller', () => {
         nock.cleanAll();
       });
       test('Should return an empty result when the client returns an empty array of data', async () => {
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
+        nock(baseUrl)
+          .post(`/api/content/${appName}/graphql`, {
             query: print(FETCH_DASHBOARD),
           })
           .reply(200, {
@@ -57,8 +62,8 @@ describe('Dashboard controller', () => {
       });
 
       test('Should return an empty result when the client returns an empty array of data', async () => {
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
+        nock(baseUrl)
+          .post(`/api/content/${appName}/graphql`, {
             query: print(FETCH_DASHBOARD),
           })
           .reply(200, {
@@ -76,8 +81,8 @@ describe('Dashboard controller', () => {
       });
 
       test('Should return an empty result when the client returns nulls', async () => {
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
+        nock(baseUrl)
+          .post(`/api/content/${appName}/graphql`, {
             query: print(FETCH_DASHBOARD),
           })
           .reply(200, {
@@ -97,8 +102,8 @@ describe('Dashboard controller', () => {
       });
 
       test('Should return the dashboard news', async () => {
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
+        nock(baseUrl)
+          .post(`/api/content/${appName}/graphql`, {
             query: print(FETCH_DASHBOARD),
           })
           .reply(200, {

@@ -1,4 +1,11 @@
-import { SquidexGraphql } from '@asap-hub/squidex';
+import {
+  RestExternalAuthor,
+  RestResearchOutput,
+  RestTeam,
+  SquidexGraphql,
+  SquidexRest,
+  getAccessTokenFactory,
+} from '@asap-hub/squidex';
 import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
@@ -10,7 +17,15 @@ import ResearchOutputs, {
 import { ResearchOutputEvent, ResearchOutputPayload } from '../event-bus';
 import logger from '../../utils/logger';
 import { EventBridgeHandler } from '../../utils/types';
-import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
+import {
+  algoliaApiKey,
+  algoliaAppId,
+  algoliaIndex,
+  appName,
+  baseUrl,
+  clientId,
+  clientSecret,
+} from '../../config';
 
 export const indexResearchOutputHandler =
   (
@@ -41,9 +56,33 @@ export const indexResearchOutputHandler =
       throw e;
     }
   };
+const getAuthToken = getAccessTokenFactory({ clientId, clientSecret, baseUrl });
+const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
+  appName,
+  baseUrl,
+});
+const researchOutputRestClient = new SquidexRest<RestResearchOutput>(
+  getAuthToken,
+  'research-outputs',
+  { appName, baseUrl },
+);
+const teamRestClient = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
+  appName,
+  baseUrl,
+});
+const externalAuthorRestClient = new SquidexRest<RestExternalAuthor>(
+  getAuthToken,
+  'external-authors',
+  { appName, baseUrl },
+);
 
 export const handler = indexResearchOutputHandler(
-  new ResearchOutputs(new SquidexGraphql()),
+  new ResearchOutputs(
+    squidexGraphqlClient,
+    researchOutputRestClient,
+    teamRestClient,
+    externalAuthorRestClient,
+  ),
   algoliaSearchClientFactory({
     algoliaApiKey,
     algoliaAppId,

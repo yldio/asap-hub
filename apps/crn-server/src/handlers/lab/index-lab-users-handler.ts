@@ -3,9 +3,18 @@ import {
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import { ListResponse, UserResponse } from '@asap-hub/model';
-import { SquidexGraphql } from '@asap-hub/squidex';
+import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
+import { getAccessTokenFactory } from '@asap-hub/squidex/src/auth';
 import { EventBridgeEvent } from 'aws-lambda';
-import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
+import {
+  algoliaApiKey,
+  algoliaAppId,
+  algoliaIndex,
+  appName,
+  baseUrl,
+  clientId,
+  clientSecret,
+} from '../../config';
 import Users, { UserController } from '../../controllers/users';
 import AssetDataProvider from '../../data-providers/assets.data-provider';
 import UserDataProvider from '../../data-providers/users.data-provider';
@@ -60,9 +69,20 @@ export const indexLabUsersHandler =
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
 
-const squidexGraphqlClient = new SquidexGraphql();
-const userDataProvider = new UserDataProvider(squidexGraphqlClient);
-const assetDataProvider = new AssetDataProvider();
+const getAuthToken = getAccessTokenFactory({ clientId, clientSecret, baseUrl });
+const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
+  appName,
+  baseUrl,
+});
+const userSquidexRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
+  appName,
+  baseUrl,
+});
+const userDataProvider = new UserDataProvider(
+  squidexGraphqlClient,
+  userSquidexRestClient,
+);
+const assetDataProvider = new AssetDataProvider(userSquidexRestClient);
 export const handler = indexLabUsersHandler(
   new Users(userDataProvider, assetDataProvider),
   algoliaSearchClientFactory({

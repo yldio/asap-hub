@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Logger } from '@asap-hub/server-common';
 import {
+  getAccessTokenFactory,
   Query,
   RestMigration,
   SquidexRest,
@@ -10,9 +11,15 @@ import { isBoom } from '@hapi/boom';
 import { Handler } from 'aws-lambda';
 import { promises as fsPromise } from 'fs';
 import path from 'path';
+import { appName, baseUrl, clientId, clientSecret } from '../../config';
 import pinoLogger from '../../utils/logger';
 
-const squidexClient = new SquidexRest<RestMigration>('migrations');
+const getAuthToken = getAccessTokenFactory({ clientId, clientSecret, baseUrl });
+const squidexClient = new SquidexRest<RestMigration>(
+  getAuthToken,
+  'migrations',
+  { appName, baseUrl },
+);
 
 export const runFactory =
   (

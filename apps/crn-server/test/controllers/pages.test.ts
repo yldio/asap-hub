@@ -1,11 +1,17 @@
 import nock from 'nock';
 import { NotFoundError } from '@asap-hub/errors';
-import { config } from '@asap-hub/squidex';
+import { RestPage, SquidexRest } from '@asap-hub/squidex';
 import Pages from '../../src/controllers/pages';
 import { identity } from '../helpers/squidex';
+import { getAuthToken } from '../../src/utils/auth';
+import { appName, baseUrl } from '../../src/config';
 
 describe('Page controller', () => {
-  const pages = new Pages();
+  const pageRestClient = new SquidexRest<RestPage>(getAuthToken, 'pages', {
+    appName,
+    baseUrl,
+  });
+  const pages = new Pages(pageRestClient);
 
   beforeAll(() => {
     identity();
@@ -19,8 +25,8 @@ describe('Page controller', () => {
     test('Should throw a Not Found error when the page is not found', async () => {
       const path = '/not-found';
 
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/pages`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/pages`)
         .query({
           q: JSON.stringify({
             take: 1,
@@ -39,8 +45,8 @@ describe('Page controller', () => {
     test('Should return the result when the page exists', async () => {
       const path = '/page';
 
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/pages`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/pages`)
         .query({
           q: JSON.stringify({
             take: 1,

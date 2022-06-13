@@ -1,13 +1,13 @@
 import { ListNewsResponse, NewsResponse } from '@asap-hub/model';
-import { RestNews, SquidexRest, SquidexRestClient } from '@asap-hub/squidex';
+import { RestNews, SquidexRestClient } from '@asap-hub/squidex';
 
 import { parseNews } from '../entities';
 
 export default class News implements NewsController {
   newsSquidexRestClient: SquidexRestClient<RestNews>;
 
-  constructor() {
-    this.newsSquidexRestClient = new SquidexRest('news-and-events');
+  constructor(newsSquidexRestClient: SquidexRestClient<RestNews>) {
+    this.newsSquidexRestClient = newsSquidexRestClient;
   }
 
   async fetch(options?: {

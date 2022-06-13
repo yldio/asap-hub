@@ -1,4 +1,4 @@
-import { RestPage, SquidexRest, SquidexRestClient } from '@asap-hub/squidex';
+import { RestPage, SquidexRestClient } from '@asap-hub/squidex';
 import { PageResponse } from '@asap-hub/model';
 
 import { parsePage } from '../entities';
@@ -6,8 +6,8 @@ import { parsePage } from '../entities';
 export default class Pages implements PageController {
   pageSquidexRestClient: SquidexRestClient<RestPage>;
 
-  constructor() {
-    this.pageSquidexRestClient = new SquidexRest('pages');
+  constructor(pageSquidexRestClient: SquidexRestClient<RestPage>) {
+    this.pageSquidexRestClient = pageSquidexRestClient;
   }
 
   async fetchByPath(path: string): Promise<PageResponse> {

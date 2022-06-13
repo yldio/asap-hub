@@ -1,7 +1,5 @@
-import encode from 'jwt-encode';
 import nock from 'nock';
 import { GetAccessToken, getAccessTokenFactory } from '../src/auth';
-import config from '../src/config';
 import { getMockToken } from './mocks/access-token.mock';
 
 describe('Get Access Token', () => {
@@ -9,9 +7,12 @@ describe('Get Access Token', () => {
 
   const oneHourFromNow = new Date(new Date().getTime() + 3600 * 1000);
   const mockToken = getMockToken(oneHourFromNow);
+  const baseUrl = 'http://test-url.com';
+  const clientId = 'test-client-id';
+  const clientSecret = 'test-client-secret';
 
   beforeEach(() => {
-    getAccessToken = getAccessTokenFactory();
+    getAccessToken = getAccessTokenFactory({ baseUrl, clientId, clientSecret });
   });
 
   afterEach(() => {
@@ -19,12 +20,12 @@ describe('Get Access Token', () => {
   });
 
   test('Should fetch the token from squidex and return it', async () => {
-    nock(config.baseUrl)
+    nock(baseUrl)
       .post(
         '/identity-server/connect/token',
         `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
-          config.clientId,
-        )}&client_secret=${config.clientSecret}`,
+          clientId,
+        )}&client_secret=${clientSecret}`,
       )
       .reply(200, {
         access_token: mockToken,
@@ -41,12 +42,12 @@ describe('Get Access Token', () => {
       const oneHourFromNow = new Date(new Date().getTime() + 3600 * 1000);
       const mockTokenFresh = getMockToken(oneHourFromNow);
 
-      const nockScope = nock(config.baseUrl)
+      const nockScope = nock(baseUrl)
         .post(
           '/identity-server/connect/token',
           `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
-            config.clientId,
-          )}&client_secret=${config.clientSecret}`,
+            clientId,
+          )}&client_secret=${clientSecret}`,
         )
         .reply(200, {
           access_token: mockTokenFresh,
@@ -67,12 +68,12 @@ describe('Get Access Token', () => {
       const oneHourAgo = new Date(new Date().getTime() - 3600 * 1000);
       const mockTokenStale = getMockToken(oneHourAgo);
 
-      const nockScope = nock(config.baseUrl)
+      const nockScope = nock(baseUrl)
         .post(
           '/identity-server/connect/token',
           `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
-            config.clientId,
-          )}&client_secret=${config.clientSecret}`,
+            clientId,
+          )}&client_secret=${clientSecret}`,
         )
         .twice()
         .reply(200, {
@@ -92,12 +93,12 @@ describe('Get Access Token', () => {
   });
 
   test('Should throw an exception and attach squidex response to the error message', async () => {
-    nock(config.baseUrl)
+    nock(baseUrl)
       .post(
         '/identity-server/connect/token',
         `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
-          config.clientId,
-        )}&client_secret=${config.clientSecret}`,
+          clientId,
+        )}&client_secret=${clientSecret}`,
       )
       .reply(521, { error: 'some error' });
 
@@ -105,12 +106,12 @@ describe('Get Access Token', () => {
   });
 
   test('Should send out only a single request and await the response when multiple requests are sent at once', async () => {
-    const scope = nock(config.baseUrl)
+    const scope = nock(baseUrl)
       .post(
         '/identity-server/connect/token',
         `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
-          config.clientId,
-        )}&client_secret=${config.clientSecret}`,
+          clientId,
+        )}&client_secret=${clientSecret}`,
       )
       .reply(200, {
         access_token: mockToken,
@@ -127,23 +128,23 @@ describe('Get Access Token', () => {
   });
 
   test('Should retry after a failed attempt', async () => {
-    nock(config.baseUrl)
+    nock(baseUrl)
       .post(
         '/identity-server/connect/token',
         `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
-          config.clientId,
-        )}&client_secret=${config.clientSecret}`,
+          clientId,
+        )}&client_secret=${clientSecret}`,
       )
       .reply(521, { error: 'some error' });
 
     await expect(getAccessToken()).rejects.toThrow();
 
-    nock(config.baseUrl)
+    nock(baseUrl)
       .post(
         '/identity-server/connect/token',
         `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
-          config.clientId,
-        )}&client_secret=${config.clientSecret}`,
+          clientId,
+        )}&client_secret=${clientSecret}`,
       )
       .reply(200, {
         access_token: mockToken,

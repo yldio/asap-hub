@@ -7,14 +7,34 @@ import {
   HttpLogger,
   Logger,
 } from '@asap-hub/server-common';
-import { SquidexGraphql } from '@asap-hub/squidex';
+import {
+  InputCalendar,
+  RestCalendar,
+  RestEvent,
+  RestExternalAuthor,
+  RestNews,
+  RestPage,
+  RestResearchOutput,
+  RestTeam,
+  RestUser,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
+import { getAccessTokenFactory } from '@asap-hub/squidex/src/auth';
 import * as Sentry from '@sentry/serverless';
 import AWSXray from 'aws-xray-sdk';
 import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import 'express-async-errors';
 import { Tracer } from 'opentracing';
-import { origin, auth0ClientId } from './config';
+import {
+  origin,
+  auth0ClientId,
+  clientId,
+  clientSecret,
+  baseUrl,
+  appName,
+} from './config';
 import Calendars, { CalendarController } from './controllers/calendars';
 import Dashboard, { DashboardController } from './controllers/dashboard';
 import Discover, { DiscoverController } from './controllers/discover';
@@ -64,31 +84,87 @@ export const appFactory = (libs: Libs = {}): Express => {
   const errorHandler = errorHandlerFactory();
 
   // Clients
-  const squidexGraphqlClient = new SquidexGraphql();
+  const getAuthToken = getAccessTokenFactory({
+    clientId,
+    clientSecret,
+    baseUrl,
+  });
   const decodeToken = decodeTokenFactory(auth0ClientId);
+  const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
+    appName,
+    baseUrl,
+  });
+  const calendarRestClient = new SquidexRest<RestCalendar, InputCalendar>(
+    getAuthToken,
+    'calendars',
+    { appName, baseUrl },
+  );
+  const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
+    appName,
+    baseUrl,
+  });
+  const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
+    appName,
+    baseUrl,
+  });
+  const newsRestClient = new SquidexRest<RestNews>(
+    getAuthToken,
+    'news-and-events',
+    { appName, baseUrl },
+  );
+  const pageRestClient = new SquidexRest<RestPage>(getAuthToken, 'pages', {
+    appName,
+    baseUrl,
+  });
+  const researchOutputRestClient = new SquidexRest<RestResearchOutput>(
+    getAuthToken,
+    'research-outputs',
+    { appName, baseUrl },
+  );
+  const teamRestClient = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
+    appName,
+    baseUrl,
+  });
+  const externalAuthorRestClient = new SquidexRest<RestExternalAuthor>(
+    getAuthToken,
+    'external-authors',
+    { appName, baseUrl },
+  );
 
+  // Data Providers
   const userDataProvider =
-    libs.userDataProvider || new UserDataProvider(squidexGraphqlClient);
-  const assetDataProvider = libs.assetDataProvider || new AssetDataProvider();
+    libs.userDataProvider ||
+    new UserDataProvider(squidexGraphqlClient, userRestClient);
+  const assetDataProvider =
+    libs.assetDataProvider || new AssetDataProvider(userRestClient);
 
   // Controllers
   const calendarController =
-    libs.calendarController || new Calendars(squidexGraphqlClient);
+    libs.calendarController ||
+    new Calendars(squidexGraphqlClient, calendarRestClient);
   const dashboardController =
     libs.dashboardController || new Dashboard(squidexGraphqlClient);
-  const newsController = libs.newsController || new News();
+  const newsController = libs.newsController || new News(newsRestClient);
   const discoverController =
     libs.discoverController || new Discover(squidexGraphqlClient);
   const eventController =
-    libs.eventController || new Events(squidexGraphqlClient);
+    libs.eventController || new Events(squidexGraphqlClient, eventRestClient);
   const groupController =
     libs.groupController || new Groups(squidexGraphqlClient);
-  const pageController = libs.pageController || new Pages();
+  const pageController = libs.pageController || new Pages(pageRestClient);
   const researchOutputController =
-    libs.researchOutputController || new ResearchOutputs(squidexGraphqlClient);
+    libs.researchOutputController ||
+    new ResearchOutputs(
+      squidexGraphqlClient,
+      researchOutputRestClient,
+      teamRestClient,
+      externalAuthorRestClient,
+    );
   const researchTagController =
     libs.researchTagController || new ResearchTags(squidexGraphqlClient);
-  const teamController = libs.teamController || new Teams(squidexGraphqlClient);
+  const teamController =
+    libs.teamController ||
+    new Teams(squidexGraphqlClient, userRestClient, teamRestClient);
   const userController =
     libs.userController || new Users(userDataProvider, assetDataProvider);
   const labsController = libs.labsController || new Labs(squidexGraphqlClient);

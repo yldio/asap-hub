@@ -17,7 +17,6 @@ import {
   RestTeam,
   sanitiseForSquidex,
   SquidexGraphqlClient,
-  SquidexRest,
   SquidexRestClient,
 } from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
@@ -46,13 +45,19 @@ export default class ResearchOutputs implements ResearchOutputController {
   teamSquidexRestClient: SquidexRestClient<RestTeam>;
   externalAuthorSquidexRestClient: SquidexRestClient<RestExternalAuthor>;
 
-  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
+  constructor(
+    squidexGraphqlClient: SquidexGraphqlClient,
+    researchOutputSquidexRestClient: SquidexRestClient<
+      RestResearchOutput,
+      InputResearchOutput
+    >,
+    teamSquidexRestClient: SquidexRestClient<RestTeam>,
+    externalAuthorSquidexRestClient: SquidexRestClient<RestExternalAuthor>,
+  ) {
     this.squidexGraphqlClient = squidexGraphqlClient;
-    this.researchOutputSquidexRestClient = new SquidexRest('research-outputs');
-    this.teamSquidexRestClient = new SquidexRest('teams', {
-      unpublished: true,
-    });
-    this.externalAuthorSquidexRestClient = new SquidexRest('external-authors');
+    this.researchOutputSquidexRestClient = researchOutputSquidexRestClient;
+    this.teamSquidexRestClient = teamSquidexRestClient;
+    this.externalAuthorSquidexRestClient = externalAuthorSquidexRestClient;
   }
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {
@@ -382,8 +387,7 @@ export default class ResearchOutputs implements ResearchOutputController {
     teamId: string,
     researchOutputId: string,
   ) {
-    const { data } = await this.teamSquidexRestClient.fetchById(teamId);
-
+    const { data } = await this.teamSquidexRestClient.fetchById(teamId, false);
     const existingOutputs = data.outputs?.iv || [];
     await this.teamSquidexRestClient.patch(teamId, {
       outputs: {

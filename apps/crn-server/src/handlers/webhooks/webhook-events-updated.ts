@@ -1,7 +1,20 @@
 import { framework as lambda } from '@asap-hub/services-common';
-import { RestCalendar, SquidexGraphql } from '@asap-hub/squidex';
+import {
+  getAccessTokenFactory,
+  InputCalendar,
+  RestCalendar,
+  RestEvent,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
-import { googleApiToken } from '../../config';
+import {
+  appName,
+  baseUrl,
+  clientId,
+  clientSecret,
+  googleApiToken,
+} from '../../config';
 import Calendars, { CalendarController } from '../../controllers/calendars';
 import Events from '../../controllers/events';
 import getJWTCredentials from '../../utils/aws-secret-manager';
@@ -66,13 +79,30 @@ export const webhookEventUpdatedHandlerFactory = (
     };
   });
 
-const squidexGraphqlClient = new SquidexGraphql();
+const getAuthToken = getAccessTokenFactory({ clientId, clientSecret, baseUrl });
+const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
+  appName,
+  baseUrl,
+});
+const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
+  appName,
+  baseUrl,
+});
+const calendarRestClient = new SquidexRest<RestCalendar, InputCalendar>(
+  getAuthToken,
+  'calendars',
+  { appName, baseUrl },
+);
+const calendarController = new Calendars(
+  squidexGraphqlClient,
+  calendarRestClient,
+);
 const syncCalendar = syncCalendarFactory(
-  syncEventFactory(new Events(squidexGraphqlClient)),
+  syncEventFactory(new Events(squidexGraphqlClient, eventRestClient)),
   getJWTCredentials,
 );
 
 export const handler: Handler = webhookEventUpdatedHandlerFactory(
-  new Calendars(squidexGraphqlClient),
+  calendarController,
   syncCalendar,
 );

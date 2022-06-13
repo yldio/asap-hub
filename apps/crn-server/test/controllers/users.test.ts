@@ -17,10 +17,7 @@ const mockAssetDataProvider = {
 };
 
 describe('Users controller', () => {
-  const usersMockGraphqlClient = new Users(
-    mockUserDataProvider,
-    mockAssetDataProvider,
-  );
+  const userController = new Users(mockUserDataProvider, mockAssetDataProvider);
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -34,14 +31,14 @@ describe('Users controller', () => {
       mockUserDataProvider.fetch = jest
         .fn()
         .mockResolvedValue({ total: 1, items: [getUserDataObject()] });
-      const result = await usersMockGraphqlClient.fetch({});
+      const result = await userController.fetch({});
       expect(result).toEqual({ items: [getUserResponse()], total: 1 });
     });
     test('Should return empty list when there are no users', async () => {
       mockUserDataProvider.fetch = jest
         .fn()
         .mockResolvedValue({ total: 0, items: [] });
-      const result = await usersMockGraphqlClient.fetch({});
+      const result = await userController.fetch({});
       expect(result).toEqual({ items: [], total: 0 });
     });
   });
@@ -52,16 +49,16 @@ describe('Users controller', () => {
     });
     test('Should throw when user is not found', async () => {
       mockUserDataProvider.fetchById = jest.fn().mockResolvedValue(null);
-      await expect(
-        usersMockGraphqlClient.fetchById('not-found'),
-      ).rejects.toThrow(NotFoundError);
+      await expect(userController.fetchById('not-found')).rejects.toThrow(
+        NotFoundError,
+      );
     });
 
     test('Should return the user when it finds it', async () => {
       mockUserDataProvider.fetchById = jest
         .fn()
         .mockResolvedValue(getUserDataObject());
-      const result = await usersMockGraphqlClient.fetchById('user-id');
+      const result = await userController.fetchById('user-id');
       expect(result).toEqual(getUserResponse());
     });
     test('Should default onboarded flag to true when its null', async () => {
@@ -69,7 +66,7 @@ describe('Users controller', () => {
       userData.onboarded = null;
       mockUserDataProvider.fetchById = jest.fn().mockResolvedValue(userData);
 
-      const result = await usersMockGraphqlClient.fetchById('user-id');
+      const result = await userController.fetchById('user-id');
 
       expect(result?.onboarded).toEqual(true);
     });
@@ -85,7 +82,7 @@ describe('Users controller', () => {
       mockUserDataProvider.fetch = jest
         .fn()
         .mockResolvedValue({ total: 1, items: [getUserDataObject()] });
-      const result = await usersMockGraphqlClient.fetchByCode(code);
+      const result = await userController.fetchByCode(code);
       expect(result).toEqual(getUserResponse());
     });
     test('Should throw 404 when no user is found', async () => {
@@ -93,7 +90,7 @@ describe('Users controller', () => {
         .fn()
         .mockResolvedValue({ total: 0, items: [] });
 
-      await expect(usersMockGraphqlClient.fetchByCode(code)).rejects.toThrow(
+      await expect(userController.fetchByCode(code)).rejects.toThrow(
         NotFoundError,
       );
     });
@@ -103,7 +100,7 @@ describe('Users controller', () => {
         total: 2,
         items: [getUserDataObject(), getUserDataObject()],
       });
-      await expect(usersMockGraphqlClient.fetchByCode(code)).rejects.toThrow(
+      await expect(userController.fetchByCode(code)).rejects.toThrow(
         GenericError,
       );
     });
@@ -120,7 +117,7 @@ describe('Users controller', () => {
         .fn()
         .mockResolvedValue(mockResponse);
 
-      const result = await usersMockGraphqlClient.update('user-id', {});
+      const result = await userController.update('user-id', {});
       expect(result).toEqual(getUserResponse());
       expect(mockUserDataProvider.update).toHaveBeenCalledWith('user-id', {});
     });
@@ -138,7 +135,7 @@ describe('Users controller', () => {
         .fn()
         .mockResolvedValueOnce(getUserDataObject());
 
-      const result = await usersMockGraphqlClient.updateAvatar(
+      const result = await userController.updateAvatar(
         'user-id',
         Buffer.from('avatar'),
         'image/jpeg',
@@ -160,7 +157,7 @@ describe('Users controller', () => {
       mockUserDataProvider.update = jest.fn().mockRejectedValue(new Error());
 
       await expect(
-        usersMockGraphqlClient.updateAvatar(
+        userController.updateAvatar(
           'user-id',
           Buffer.from('avatar'),
           'image/jpeg',
@@ -171,7 +168,7 @@ describe('Users controller', () => {
       mockAssetDataProvider.create = jest.fn().mockRejectedValue(new Error());
 
       await expect(
-        usersMockGraphqlClient.updateAvatar(
+        userController.updateAvatar(
           'user-id',
           Buffer.from('avatar'),
           'image/jpeg',
@@ -193,10 +190,7 @@ describe('Users controller', () => {
       });
       mockUserDataProvider.update = jest.fn();
       mockUserDataProvider.fetchById = jest.fn().mockResolvedValue(user);
-      const result = await usersMockGraphqlClient.connectByCode(
-        'some code',
-        'user-id',
-      );
+      const result = await userController.connectByCode('some code', 'user-id');
       expect(mockUserDataProvider.update).toHaveBeenCalledWith(userId, {
         email: user.email,
         connections: [{ code: 'user-id' }],
@@ -222,7 +216,7 @@ describe('Users controller', () => {
         .fn()
         .mockResolvedValue(getUserDataObject());
 
-      const result = await usersMockGraphqlClient.connectByCode(
+      const result = await userController.connectByCode(
         'asapWelcomeCode',
         userCode,
       );
@@ -235,7 +229,7 @@ describe('Users controller', () => {
         .mockResolvedValue({ total: 0, items: [] });
 
       await expect(
-        usersMockGraphqlClient.connectByCode('some code', 'user-id'),
+        userController.connectByCode('some code', 'user-id'),
       ).rejects.toThrow(NotFoundError);
     });
   });
@@ -252,7 +246,7 @@ describe('Users controller', () => {
         .get(`/v2.1/${orcid}/works`)
         .reply(200, orcidFixtures.orcidWorksResponse);
 
-      const result = await usersMockGraphqlClient.syncOrcidProfile(userId);
+      const result = await userController.syncOrcidProfile(userId);
       expect(mockUserDataProvider.update).toHaveBeenCalled();
       expect(result).toEqual({ ...getUserResponse(), orcid });
       expect(mockUserDataProvider.update).toHaveBeenCalledWith(
@@ -271,7 +265,7 @@ describe('Users controller', () => {
         .get(`/v2.1/${orcid}/works`)
         .reply(200, orcidFixtures.orcidWorksResponse);
 
-      const result = await usersMockGraphqlClient.syncOrcidProfile(userId, {
+      const result = await userController.syncOrcidProfile(userId, {
         ...getUserResponse(),
         email: 'cache-user-email',
         orcid,
@@ -295,7 +289,7 @@ describe('Users controller', () => {
         .times(3)
         .reply(502, orcidFixtures.orcidWorksResponse);
 
-      const result = await usersMockGraphqlClient.syncOrcidProfile(userId, {
+      const result = await userController.syncOrcidProfile(userId, {
         ...getUserResponse(),
         email: user.email,
         orcid,
@@ -313,7 +307,7 @@ describe('Users controller', () => {
       mockUserDataProvider.fetchById = jest.fn().mockResolvedValue(null);
 
       await expect(
-        usersMockGraphqlClient.syncOrcidProfile('user-not-found'),
+        userController.syncOrcidProfile('user-not-found'),
       ).rejects.toThrow(NotFoundError);
     });
   });

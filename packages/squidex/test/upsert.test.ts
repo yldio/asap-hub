@@ -1,6 +1,5 @@
 import { GenericError, ValidationError } from '@asap-hub/errors';
 import nock from 'nock';
-import config from '../src/config';
 import { Squidex } from '../src/rest';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
@@ -16,7 +15,12 @@ interface Content {
 const collection = 'contents';
 describe('squidex wrapper - upsert', () => {
   const contentId = 'content-id';
-  const client = new Squidex<Content>(collection, getAccessTokenMock);
+  const appName = 'test-app';
+  const baseUrl = 'http://test-url.com';
+  const client = new Squidex<Content>(getAccessTokenMock, collection, {
+    appName,
+    baseUrl,
+  });
 
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
@@ -27,8 +31,8 @@ describe('squidex wrapper - upsert', () => {
   });
 
   it('returns GenericError when squidex returns bad request', async () => {
-    nock(config.baseUrl)
-      .patch(`/api/content/${config.appName}/${collection}/${contentId}`)
+    nock(baseUrl)
+      .patch(`/api/content/${appName}/${collection}/${contentId}`)
       .query(() => true)
       .reply(400, {
         details: ['Request  body has an invalid format'],
@@ -51,8 +55,8 @@ describe('squidex wrapper - upsert', () => {
   });
 
   it('returns ValidationError along with the response payload formatted to json when squidex returns validation error', async () => {
-    nock(config.baseUrl)
-      .patch(`/api/content/${config.appName}/${collection}/${contentId}`)
+    nock(baseUrl)
+      .patch(`/api/content/${appName}/${collection}/${contentId}`)
       .query(() => true)
       .reply(400, {
         message: 'Validation error',
@@ -81,8 +85,8 @@ describe('squidex wrapper - upsert', () => {
   });
 
   it('returns GenericError along with the raw response payload when squidex returns an error response which is not json', async () => {
-    nock(config.baseUrl)
-      .patch(`/api/content/${config.appName}/${collection}/${contentId}`)
+    nock(baseUrl)
+      .patch(`/api/content/${appName}/${collection}/${contentId}`)
       .query(() => true)
       .reply(400, '<not>json</not>');
 
@@ -101,8 +105,8 @@ describe('squidex wrapper - upsert', () => {
   });
 
   it('returns GenericError when squidex returns error', async () => {
-    nock(config.baseUrl)
-      .patch(`/api/content/${config.appName}/${collection}/${contentId}`)
+    nock(baseUrl)
+      .patch(`/api/content/${appName}/${collection}/${contentId}`)
       .query(() => true)
       .reply(500);
 
@@ -116,9 +120,9 @@ describe('squidex wrapper - upsert', () => {
   });
 
   it('upserts a specific document as published', async () => {
-    nock(config.baseUrl)
+    nock(baseUrl)
       .patch(
-        `/api/content/${config.appName}/${collection}/${contentId}?publish=true`,
+        `/api/content/${appName}/${collection}/${contentId}?publish=true`,
         {
           string: {
             iv: 'value',
@@ -151,9 +155,9 @@ describe('squidex wrapper - upsert', () => {
   });
 
   it('upserts a specific document as draft', async () => {
-    nock(config.baseUrl)
+    nock(baseUrl)
       .patch(
-        `/api/content/${config.appName}/${collection}/${contentId}?publish=false`,
+        `/api/content/${appName}/${collection}/${contentId}?publish=false`,
         {
           string: {
             iv: 'value',

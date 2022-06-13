@@ -1,7 +1,12 @@
 import { RestUser, SquidexRest, User } from '@asap-hub/squidex';
 import Chance from 'chance';
+import { appName, baseUrl } from '../../src/config';
+import { getAuthToken } from '../../src/utils/auth';
 
-const users = new SquidexRest<RestUser>('users');
+const users = new SquidexRest<RestUser>(getAuthToken, 'users', {
+  appName,
+  baseUrl,
+});
 const chance = new Chance();
 
 export const createUser = (overwrites?: Partial<User>): Promise<RestUser> => {

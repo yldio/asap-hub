@@ -1,14 +1,16 @@
 import { DateTime } from 'luxon';
 import { URL } from 'url';
-import config from './config';
+import { SquidexConfig } from './auth';
 
-export const createURL = (assets: string[]): string[] =>
-  assets.map((asset) =>
-    new URL(
-      `/api/assets/${config.appName}/${asset}`,
-      config.baseUrl,
-    ).toString(),
-  );
+export const createUrlFactory =
+  (config: Pick<SquidexConfig, 'appName' | 'baseUrl'>) =>
+  (assets: string[]): string[] =>
+    assets.map((asset) =>
+      new URL(
+        `/api/assets/${config.appName}/${asset}`,
+        config.baseUrl,
+      ).toString(),
+    );
 
 export const parseDate = (date: string): Date =>
   DateTime.fromISO(date).toJSDate();

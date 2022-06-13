@@ -1,7 +1,6 @@
 import { DocumentNode } from 'graphql';
 import { ClientError, GraphQLClient } from 'graphql-request';
-import { GetAccessToken } from './auth';
-import squidex from './config';
+import { GetAccessToken, SquidexConfig } from './auth';
 
 type SquidexRequestOptions = {
   includeDrafts?: boolean;
@@ -18,9 +17,12 @@ export class SquidexGraphql implements SquidexGraphqlClient {
   getAccessToken: GetAccessToken;
   client: GraphQLClient;
 
-  constructor(getAccessToken: GetAccessToken) {
+  constructor(
+    getAccessToken: GetAccessToken,
+    config: Pick<SquidexConfig, 'baseUrl' | 'appName'>,
+  ) {
     this.client = new GraphQLClient(
-      `${squidex.baseUrl}/api/content/${squidex.appName}/graphql`,
+      `${config.baseUrl}/api/content/${config.appName}/graphql`,
     );
     this.getAccessToken = getAccessToken;
   }

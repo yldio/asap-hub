@@ -1,4 +1,5 @@
 import { RestUser, SquidexRest, SquidexRestClient } from '@asap-hub/squidex';
+import { getAccessTokenFactory } from '@asap-hub/squidex/src/auth';
 import * as Sentry from '@sentry/serverless';
 import { EventBridgeEvent } from 'aws-lambda';
 import { SES } from 'aws-sdk';
@@ -6,6 +7,10 @@ import path from 'path';
 import url from 'url';
 import { v4 as uuidV4 } from 'uuid';
 import {
+  appName,
+  baseUrl,
+  clientId,
+  clientSecret,
   currentRevision,
   environment,
   origin,
@@ -99,8 +104,14 @@ Sentry.AWSLambda.init({
   release: currentRevision,
 });
 
+const getAuthToken = getAccessTokenFactory({ clientId, clientSecret, baseUrl });
+const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
+  appName,
+  baseUrl,
+});
+
 export const handler = Sentry.AWSLambda.wrapHandler(
-  inviteHandlerFactory(sendEmailFactory(ses), new SquidexRest('users')),
+  inviteHandlerFactory(sendEmailFactory(ses), userRestClient),
 );
 
 export type UserInviteEventBridgeEvent = EventBridgeEvent<

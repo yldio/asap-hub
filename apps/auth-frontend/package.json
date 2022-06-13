@@ -15,7 +15,7 @@
   "dependencies": {
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
-    "@babel/runtime-corejs3": "^7.14.0",
+    "@babel/runtime-corejs3": "7.18.3",
     "auth0-js": "^9.16.0",
     "camelcase": "^6.2.0",
     "history": "^4",

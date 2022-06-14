@@ -19,13 +19,13 @@ export {
   Headline6,
   InfoParagraph,
   Link,
-  NavigationLink,
   Overlay,
   Paragraph,
   Pill,
   TabLink,
   Toggle,
   Tooltip,
+  NavigationLink,
 } from './atoms';
 export * from './colors';
 export * from './hooks';

@@ -68,11 +68,12 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   ];
 
   const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
+
   return (
     <div css={containerStyles}>
       <div css={buttonsContainer}>
         <BackLink href={backHref} />
-        {canCreateUpdate && (
+        {canCreateUpdate && !isGrantDocument && (
           <div css={editButtonContainer}>
             <Link
               href={

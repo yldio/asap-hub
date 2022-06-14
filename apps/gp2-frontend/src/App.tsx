@@ -81,7 +81,7 @@ const App: FC<Record<string, never>> = () => {
 
   return (
     <RecoilRoot>
-      <Frame title="ASAP Hub">
+      <Frame title="GP2 Hub">
         <GoogleTagManager containerId={GTM_CONTAINER_ID} />
         <AuthProvider>
           <SentryAuth0 />
@@ -89,31 +89,10 @@ const App: FC<Record<string, never>> = () => {
             <LastLocationProvider>
               <Frame title={null}>
                 <Switch>
-                  <Route path={welcome.template}>
-                    <UtilityBar>
-                      <ToastStack>
-                        <Welcome />
-                      </ToastStack>
-                    </UtilityBar>
-                  </Route>
                   <Route path={logout.template}>
                     <Frame title="Logout">
                       <Logout />
                     </Frame>
-                  </Route>
-                  <Route exact path={staticPages({}).terms.template}>
-                    <BasicLayout>
-                      <Frame title={null}>
-                        <Content pageId="terms-and-conditions" />
-                      </Frame>
-                    </BasicLayout>
-                  </Route>
-                  <Route exact path={staticPages({}).privacyPolicy.template}>
-                    <BasicLayout>
-                      <Frame title={null}>
-                        <Content pageId="privacy-policy" />
-                      </Frame>
-                    </BasicLayout>
                   </Route>
                   <Route>
                     <CheckAuth>

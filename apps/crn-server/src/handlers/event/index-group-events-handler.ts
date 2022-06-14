@@ -19,7 +19,7 @@ export const indexGroupEventsHandler =
     eventController: EventController,
     algoliaClient: AlgoliaSearchClient,
   ): ((event: EventBridgeEvent<GroupEvent, GroupPayload>) => Promise<void>) =>
-  async (event: EventBridgeEvent<GroupEvent, GroupPayload>): Promise<void> => {
+  async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
     const fetchFunction = ({

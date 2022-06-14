@@ -21,9 +21,7 @@ export const indexExternalAuthorEventsHandler =
   ): ((
     event: EventBridgeEvent<ExternalAuthorEvent, ExternalAuthorPayload>,
   ) => Promise<void>) =>
-  async (
-    event: EventBridgeEvent<ExternalAuthorEvent, ExternalAuthorPayload>,
-  ): Promise<void> => {
+  async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
     const fetchFunction = ({

@@ -380,7 +380,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
       },
     },
     indexEvents: {
@@ -403,7 +403,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
       },
     },
     indexUserEvents: {
@@ -426,7 +426,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
       },
     },
     indexExternalUserEvents: {
@@ -450,7 +450,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
       },
     },
     indexTeamEvents: {
@@ -473,7 +473,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
       },
     },
     indexGroupEvents: {
@@ -496,7 +496,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
       },
     },
     indexLabUsers: {

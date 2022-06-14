@@ -73,7 +73,7 @@ const renderEventsListPage = async (
   return result;
 };
 
-describe('Legacy', () => {
+describe('Legacy - from Squidex', () => {
   beforeEach(() => {
     setupAlgoliaEventsSearchFlag(false);
   });

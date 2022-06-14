@@ -1,12 +1,14 @@
 import nock from 'nock';
+import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import {
   createEventResponse,
   createListEventResponse,
 } from '@asap-hub/fixtures';
 
 import { API_BASE_URL } from '../../config';
-import { getEvent, getEvents } from '../api';
+import { getEvent, getEvents, getEventsFromAlgolia } from '../api';
 import { getEventListOptions } from '../options';
+import { createAlgoliaResponse } from '../../__fixtures__/algolia';
 
 jest.mock('../../config');
 
@@ -112,5 +114,77 @@ describe('getEvent', () => {
     await expect(getEvent('42', '')).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch event with id 42. Expected status 2xx or 404. Received status 500."`,
     );
+  });
+});
+
+describe('getEventsFromAlgolia', () => {
+  const search: jest.MockedFunction<AlgoliaSearchClient['search']> = jest.fn();
+
+  const algoliaSearchClient = {
+    search,
+  } as unknown as AlgoliaSearchClient;
+
+  beforeEach(() => {
+    search.mockReset();
+  });
+
+  it('makes request for events before a date', async () => {
+    search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
+
+    await getEventsFromAlgolia(
+      algoliaSearchClient,
+      getEventListOptions(new Date('2021-01-01T12:00:00'), true),
+    );
+
+    expect(search).toBeCalledWith(['event'], '', {
+      filters: 'endDateTimestamp < 1609498800',
+      hitsPerPage: 10,
+      page: 0,
+    });
+  });
+  it('makes for events after a date', async () => {
+    search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
+
+    await getEventsFromAlgolia(
+      algoliaSearchClient,
+      getEventListOptions(new Date('2021-01-01T12:00:00'), false),
+    );
+    expect(search).toBeCalledWith(['event'], '', {
+      filters: 'endDateTimestamp > 1609498800',
+      hitsPerPage: 10,
+      page: 0,
+    });
+  });
+
+  it('returns successfully fetched events', async () => {
+    const events = createListEventResponse(1);
+
+    search.mockResolvedValueOnce(
+      createAlgoliaResponse<'event'>(
+        events.items.map((event) => ({
+          ...event,
+          objectID: event.id,
+          __meta: {
+            type: 'event',
+          },
+        })),
+      ),
+    );
+
+    expect(
+      await getEventsFromAlgolia(
+        algoliaSearchClient,
+        getEventListOptions(new Date('2021-01-01T12:00:00'), false),
+      ),
+    ).toEqual({
+      items: events.items.map((event) => ({
+        ...event,
+        objectID: event.id,
+        __meta: {
+          type: 'event',
+        },
+      })),
+      total: 1,
+    });
   });
 });

@@ -21,7 +21,7 @@ export const indexLabUsersHandler =
     userController: UserController,
     algoliaClient: AlgoliaSearchClient,
   ): ((event: EventBridgeEvent<LabEvent, LabPayload>) => Promise<void>) =>
-  async (event: EventBridgeEvent<LabEvent, LabPayload>): Promise<void> => {
+  async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
     const fetchFunction = ({

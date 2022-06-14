@@ -10634,6 +10634,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/gp2-components", "virtual:c4ae2f625a4ac5aa649abbf60db7c71aca414aadbf350d87ea37595af32595ce70907b878a98750e798e6867f5b52cf0a985bd4cd784c0ad5a3f626d3cbad95a#workspace:packages/gp2-components"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/fixtures", "workspace:packages/fixtures"],
             ["@asap-hub/react-components", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/react-components"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
             ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
@@ -10697,6 +10698,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/gp2-components", "workspace:packages/gp2-components"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/fixtures", "workspace:packages/fixtures"],
             ["@asap-hub/react-components", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/react-components"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
             ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],

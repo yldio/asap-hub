@@ -1,4 +1,3 @@
-import { useFlags } from '@asap-hub/react-context';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import {
   atomFamily,
@@ -11,9 +10,8 @@ import {
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
 
 import { authorizationState } from '../auth/state';
-import { getEvent, getEvents, getEventsFromAlgolia } from './api';
+import { getEvent, getEvents } from './api';
 import { GetEventListOptions } from './options';
-import { useAlgolia } from '../hooks/algolia';
 
 const eventIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -90,36 +88,18 @@ export const useQuietRefreshEventById = (id: string) => {
 
 export const usePrefetchEvents = (options: GetEventListOptions) => {
   const authorization = useRecoilValue(authorizationState);
-  const algoliaClient = useAlgolia();
-  const isEventsSearchFromAlgoliaEnabled =
-    useFlags().isEnabled('EVENTS_SEARCH');
   const [events, setEvents] = useRecoilState(eventsState(options));
   useDeepCompareEffect(() => {
     if (events === undefined) {
-      if (isEventsSearchFromAlgoliaEnabled) {
-        getEventsFromAlgolia(algoliaClient.client, options)
-          .then(setEvents)
-          .catch();
-      } else {
-        getEvents(options, authorization).then(setEvents).catch();
-      }
+      getEvents(options, authorization).then(setEvents).catch();
     }
   }, [authorization, events, options, setEvents]);
 };
 export const useEvents = (options: GetEventListOptions) => {
   const authorization = useRecoilValue(authorizationState);
-  const algoliaClient = useAlgolia();
-  const isEventsSearchFromAlgoliaEnabled =
-    useFlags().isEnabled('EVENTS_SEARCH');
   const [events, setEvents] = useRecoilState(eventsState(options));
   if (events === undefined) {
-    if (isEventsSearchFromAlgoliaEnabled) {
-      throw getEventsFromAlgolia(algoliaClient.client, options)
-        .then(setEvents)
-        .catch(setEvents);
-    } else {
-      throw getEvents(options, authorization).then(setEvents).catch(setEvents);
-    }
+    throw getEvents(options, authorization).then(setEvents).catch(setEvents);
   }
   if (events instanceof Error) {
     throw events;

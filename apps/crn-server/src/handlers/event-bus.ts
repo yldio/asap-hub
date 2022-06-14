@@ -8,9 +8,7 @@ export type SquidexEntityEvent =
   | 'Deleted';
 
 export type CalendarEvent = `Calendars${SquidexEntityEvent}`;
-export type EventEvent = `Events${SquidexEntityEvent}`;
 export type ExternalAuthorEvent = `ExternalAuthors${SquidexEntityEvent}`;
-export type GroupEvent = `Groups${SquidexEntityEvent}`;
 export type LabEvent = `Labs${SquidexEntityEvent}`;
 export type TeamEvent = `Teams${SquidexEntityEvent}`;
 export type UserEvent = `Users${SquidexEntityEvent}`;
@@ -18,16 +16,14 @@ export type ResearchOutputEvent = `ResearchOutputs${SquidexEntityEvent}`;
 
 export type EventBusEvent =
   | CalendarEvent
-  | EventEvent
   | ExternalAuthorEvent
-  | GroupEvent
   | LabEvent
   | TeamEvent
   | UserEvent
   | ResearchOutputEvent;
 
-export type EventPayload = {
-  type: EventEvent;
+export type LabPayload = {
+  type: LabEvent;
   payload: {
     $type: 'EnrichedContentEvent';
     type: SquidexEntityEvent;
@@ -46,24 +42,6 @@ export type ExternalAuthorPayload = {
     lastModified: string;
     version: number;
     data: { [x: string]: { iv: unknown } | null };
-  };
-};
-
-export type GroupPayload = {
-  type: GroupEvent;
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: SquidexEntityEvent;
-    id: string;
-  };
-};
-
-export type LabPayload = {
-  type: LabEvent;
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: SquidexEntityEvent;
-    id: string;
   };
 };
 

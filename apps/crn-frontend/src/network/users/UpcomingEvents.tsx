@@ -1,7 +1,7 @@
 import { EventsList } from '@asap-hub/react-components';
+import { getEventListOptions } from '../../events/options';
+import { useEvents } from '../../events/state';
 import { usePagination, usePaginationParams } from '../../hooks';
-import { getEventListOptions } from './options';
-import { useEvents, usePrefetchEvents } from './state';
 
 type EventListProps = {
   readonly currentTime: Date;
@@ -20,14 +20,7 @@ const EventList: React.FC<EventListProps> = ({
       searchQuery,
       currentPage,
       pageSize,
-    }),
-  );
-
-  usePrefetchEvents(
-    getEventListOptions(currentTime, !past, {
-      searchQuery,
-      currentPage,
-      pageSize,
+      userId,
     }),
   );
 

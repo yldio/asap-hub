@@ -37,6 +37,7 @@ const listItemStyles = css({
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   fontSize: `${17 / perRem}em`,
+  display: 'flex',
 });
 const widthStyles = css({
   display: 'grid',

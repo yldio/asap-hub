@@ -20,6 +20,7 @@ const listStyles = css({
 });
 
 const normalListItemStyles = css({
+  marginBottom: `${12 / perRem}em`,
   ':not(:nth-last-of-type(1))': {
     paddingRight: `${12 / perRem}em`,
   },
@@ -51,6 +52,10 @@ const overflowContentStyles = css({
   },
 });
 
+const overflowStyles = css({
+  marginBottom: `${12 / perRem}em`,
+});
+
 const SAFARI_MAX_SAFE_INTEGER = 2 ** 31 - 2;
 interface TagListProps {
   tags: ReadonlyArray<string>;
@@ -75,7 +80,7 @@ const TagList: React.FC<TagListProps> = ({
           <Tag enabled={enabled}>{tag}</Tag>
         </li>
       ))}
-      <li key="overflow" className="overflow">
+      <li key="overflow" className="overflow" css={overflowStyles}>
         <Tag enabled={enabled}>
           <span css={overflowContentStyles}></span>
         </Tag>

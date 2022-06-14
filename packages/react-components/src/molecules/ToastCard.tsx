@@ -47,9 +47,6 @@ const leadStyles = css({
 const toastContentStyles = css({
   display: 'flex',
   alignItems: 'center',
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    paddingBottom: `${7.5 / perRem}em`,
-  },
 });
 
 type Type = 'alert' | 'attachment' | 'live' | 'info';

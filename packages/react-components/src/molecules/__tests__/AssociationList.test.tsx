@@ -177,3 +177,19 @@ it('shows number of additional associations when more parameter is provided', ()
 
   expect(screen.getByText('+4')).toBeInTheDocument();
 });
+
+it('displays the associations', () => {
+  render(
+    <AssociationList
+      type="Lab"
+      associations={[
+        { displayName: 'One', id: 't0' },
+        { displayName: 'Two', id: 't1' },
+      ]}
+      more={4}
+    />,
+  );
+
+  expect(screen.getAllByRole('listitem').length).toEqual(2);
+  expect(screen.queryByText('+4')).toBeInTheDocument();
+});

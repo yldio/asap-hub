@@ -151,7 +151,7 @@ it('displays the teams with number of additional teams', () => {
     />,
   );
 
-  expect(screen.getAllByRole('listitem').length).toEqual(8);
+  expect(screen.getAllByRole('listitem').length).toEqual(9);
   expect(screen.queryByText('+3')).toBeInTheDocument();
 });
 
@@ -169,7 +169,7 @@ it('displays the team only once', () => {
     />,
   );
 
-  expect(screen.getAllByTestId('associationlist').length).toEqual(1);
+  expect(screen.getAllByText(/the team/i).length).toEqual(1);
 });
 
 it('do not display the team when there is none', () => {

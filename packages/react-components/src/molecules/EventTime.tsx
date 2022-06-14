@@ -21,6 +21,7 @@ const listItemStyles = css({
   flexDirection: 'row',
   alignItems: 'center',
   marginTop: `${7.5 / perRem}em`,
+  marginBottom: `${7.5 / perRem}em`,
 });
 
 const iconStyles = css({

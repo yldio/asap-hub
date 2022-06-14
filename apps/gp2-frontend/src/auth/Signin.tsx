@@ -10,6 +10,20 @@ const Signin: React.FC<Record<string, never>> = () => {
   const searchParams = new URLSearchParams(search);
   const history = useHistory();
 
+  const values = {
+    signup: {
+      title: 'Join the GP2 Hub',
+      content: 'Activate your account and start exploring the GP2 Network.',
+      buttonText: 'Activate account',
+    },
+    welcome: {
+      title: 'Welcome to the  GP2 Hub',
+      content:
+        'A private, invite-only network where the GP2 community collaborates.',
+      buttonText: 'Sign in',
+    },
+  };
+
   const signin = () =>
     loginWithRedirect({
       prompt: 'login',
@@ -32,6 +46,7 @@ const Signin: React.FC<Record<string, never>> = () => {
             newSearchParams.delete('error_description');
             history.replace({ search: newSearchParams.toString() });
           }}
+          values={values}
         />
       </UtilityBar>
     </Frame>

@@ -191,5 +191,5 @@ it('displays the associations', () => {
   );
 
   expect(screen.getAllByRole('listitem').length).toEqual(2);
-  expect(screen.queryByText('+4')).toBeInTheDocument();
+  expect(screen.getByText('+4')).toBeInTheDocument();
 });

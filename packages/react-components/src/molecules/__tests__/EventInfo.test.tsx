@@ -152,7 +152,7 @@ it('displays the teams with number of additional teams', () => {
   );
 
   expect(screen.getAllByRole('listitem').length).toEqual(9);
-  expect(screen.queryByText('+3')).toBeInTheDocument();
+  expect(screen.getByText('+3')).toBeInTheDocument();
 });
 
 it('displays the team only once', () => {
@@ -166,6 +166,7 @@ it('displays the team only once', () => {
         },
       }))}
       showTeams={true}
+      tags={[]}
     />,
   );
 

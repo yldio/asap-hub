@@ -20,7 +20,6 @@ const EventList: React.FC<EventListProps> = ({
       searchQuery,
       currentPage,
       pageSize,
-      userId,
     }),
   );
 

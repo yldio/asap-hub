@@ -35,7 +35,7 @@ const bubbleStyles = css({
   ...themes.dark,
   display: 'block',
 
-  padding: `${5 / perRem}em ${10 / perRem}em`,
+  padding: `${9 / perRem}em ${12 / perRem}em`,
   boxSizing: 'border-box',
   maxWidth: `${256 / perRem}em`,
 

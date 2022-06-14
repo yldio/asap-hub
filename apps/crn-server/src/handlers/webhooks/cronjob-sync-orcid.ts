@@ -1,25 +1,16 @@
 import { framework as lambda } from '@asap-hub/services-common';
-import {
-  RestUser,
-  SquidexGraphql,
-  SquidexRest,
-  getAccessTokenFactory,
-} from '@asap-hub/squidex';
+import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import pLimit from 'p-limit';
-import { appName, baseUrl, clientId, clientSecret } from '../../config';
+import { appName, baseUrl } from '../../config';
 import Users from '../../controllers/users';
 import AssetDataProvider from '../../data-providers/assets.data-provider';
 import UserDataProvider from '../../data-providers/users.data-provider';
+import { getAuthToken } from '../../utils/auth';
 
 export const handler = async (): Promise<lambda.Response> => {
   const ONE_MONTH = 1000 * 60 * 60 * 24 * 31;
 
   const limit = pLimit(5);
-  const getAuthToken = getAccessTokenFactory({
-    clientId,
-    clientSecret,
-    baseUrl,
-  });
   const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
     appName,
     baseUrl,

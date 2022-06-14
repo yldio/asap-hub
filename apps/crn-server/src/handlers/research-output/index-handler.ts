@@ -4,7 +4,6 @@ import {
   RestTeam,
   SquidexGraphql,
   SquidexRest,
-  getAccessTokenFactory,
 } from '@asap-hub/squidex';
 import {
   AlgoliaSearchClient,
@@ -23,9 +22,8 @@ import {
   algoliaIndex,
   appName,
   baseUrl,
-  clientId,
-  clientSecret,
 } from '../../config';
+import { getAuthToken } from '../../utils/auth';
 
 export const indexResearchOutputHandler =
   (
@@ -56,7 +54,6 @@ export const indexResearchOutputHandler =
       throw e;
     }
   };
-const getAuthToken = getAccessTokenFactory({ clientId, clientSecret, baseUrl });
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,

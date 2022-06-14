@@ -1,13 +1,9 @@
-import {
-  RestUser,
-  SquidexGraphql,
-  SquidexRest,
-  getAccessTokenFactory,
-} from '@asap-hub/squidex';
-import { appName, baseUrl, clientId, clientSecret } from '../../config';
+import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
+import { appName, baseUrl } from '../../config';
 import Users, { UserController } from '../../controllers/users';
 import AssetDataProvider from '../../data-providers/assets.data-provider';
 import UserDataProvider from '../../data-providers/users.data-provider';
+import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { EventBridgeHandler } from '../../utils/types';
 import { UserEvent, UserPayload } from '../event-bus';
@@ -35,7 +31,6 @@ export const syncOrcidUserHandler =
     }
   };
 
-const getAuthToken = getAccessTokenFactory({ clientId, clientSecret, baseUrl });
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,

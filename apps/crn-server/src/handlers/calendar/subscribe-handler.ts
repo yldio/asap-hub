@@ -1,5 +1,4 @@
 import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
-import { getAccessTokenFactory } from '@asap-hub/squidex/src/auth';
 import * as Sentry from '@sentry/serverless';
 import { EventBridgeEvent } from 'aws-lambda';
 import { Auth } from 'googleapis';
@@ -8,8 +7,6 @@ import {
   appName,
   asapApiUrl,
   baseUrl,
-  clientId,
-  clientSecret,
   currentRevision,
   environment,
   googleApiToken,
@@ -18,6 +15,7 @@ import {
 } from '../../config';
 import Calendars, { CalendarController } from '../../controllers/calendars';
 import { Alerts, AlertsSentry } from '../../utils/alerts';
+import { getAuthToken } from '../../utils/auth';
 import getJWTCredentialsAWS, {
   GetJWTCredentials,
 } from '../../utils/aws-secret-manager';
@@ -183,7 +181,6 @@ Sentry.AWSLambda.init({
   environment,
   release: currentRevision,
 });
-const getAuthToken = getAccessTokenFactory({ clientId, clientSecret, baseUrl });
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,

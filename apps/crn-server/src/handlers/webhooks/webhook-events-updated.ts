@@ -1,6 +1,5 @@
 import { framework as lambda } from '@asap-hub/services-common';
 import {
-  getAccessTokenFactory,
   InputCalendar,
   RestCalendar,
   RestEvent,
@@ -8,15 +7,10 @@ import {
   SquidexRest,
 } from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
-import {
-  appName,
-  baseUrl,
-  clientId,
-  clientSecret,
-  googleApiToken,
-} from '../../config';
+import { appName, baseUrl, googleApiToken } from '../../config';
 import Calendars, { CalendarController } from '../../controllers/calendars';
 import Events from '../../controllers/events';
+import { getAuthToken } from '../../utils/auth';
 import getJWTCredentials from '../../utils/aws-secret-manager';
 import logger from '../../utils/logger';
 import {
@@ -79,7 +73,6 @@ export const webhookEventUpdatedHandlerFactory = (
     };
   });
 
-const getAuthToken = getAccessTokenFactory({ clientId, clientSecret, baseUrl });
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,

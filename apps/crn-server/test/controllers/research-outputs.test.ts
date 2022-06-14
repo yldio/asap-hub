@@ -820,7 +820,7 @@ describe('ResearchOutputs controller', () => {
     });
 
     describe('Create', () => {
-      test.only('Creating the research output should return the newly created output from squidex', async () => {
+      test('Creating the research output should return the newly created output from squidex', async () => {
         const researchOutputRequest = getResearchOutputCreateData();
         const teamId = researchOutputRequest.teams[0];
         const researchOutputId = 'created-output-id';

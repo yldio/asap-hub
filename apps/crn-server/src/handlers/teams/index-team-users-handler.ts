@@ -4,7 +4,6 @@ import {
 } from '@asap-hub/algolia';
 import { ListResponse, UserResponse } from '@asap-hub/model';
 import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
-import { getAccessTokenFactory } from '@asap-hub/squidex/src/auth';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   algoliaApiKey,
@@ -12,12 +11,11 @@ import {
   algoliaIndex,
   appName,
   baseUrl,
-  clientId,
-  clientSecret,
 } from '../../config';
 import Users, { UserController } from '../../controllers/users';
 import AssetDataProvider from '../../data-providers/assets.data-provider';
 import UserDataProvider from '../../data-providers/users.data-provider';
+import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import {
   loopOverCustomCollection,
@@ -69,7 +67,6 @@ export const indexTeamUsersHandler =
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
 
-const getAuthToken = getAccessTokenFactory({ clientId, clientSecret, baseUrl });
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,

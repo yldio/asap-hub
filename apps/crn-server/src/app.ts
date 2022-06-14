@@ -20,21 +20,13 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import { getAccessTokenFactory } from '@asap-hub/squidex/src/auth';
 import * as Sentry from '@sentry/serverless';
 import AWSXray from 'aws-xray-sdk';
 import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import 'express-async-errors';
 import { Tracer } from 'opentracing';
-import {
-  origin,
-  auth0ClientId,
-  clientId,
-  clientSecret,
-  baseUrl,
-  appName,
-} from './config';
+import { origin, auth0ClientId, baseUrl, appName } from './config';
 import Calendars, { CalendarController } from './controllers/calendars';
 import Dashboard, { DashboardController } from './controllers/dashboard';
 import Discover, { DiscoverController } from './controllers/discover';
@@ -69,6 +61,7 @@ import { researchOutputRouteFactory } from './routes/research-outputs.route';
 import { researchTagsRouteFactory } from './routes/research-tags.route';
 import { teamRouteFactory } from './routes/teams.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
+import { getAuthToken } from './utils/auth';
 import pinoLogger from './utils/logger';
 
 export const appFactory = (libs: Libs = {}): Express => {
@@ -84,11 +77,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   const errorHandler = errorHandlerFactory();
 
   // Clients
-  const getAuthToken = getAccessTokenFactory({
-    clientId,
-    clientSecret,
-    baseUrl,
-  });
   const decodeToken = decodeTokenFactory(auth0ClientId);
   const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
     appName,

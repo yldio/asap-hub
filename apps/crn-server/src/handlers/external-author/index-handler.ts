@@ -1,5 +1,5 @@
 import { EventBridgeEvent } from 'aws-lambda';
-import { getAccessTokenFactory, SquidexGraphql } from '@asap-hub/squidex';
+import { SquidexGraphql } from '@asap-hub/squidex';
 import { isBoom } from '@hapi/boom';
 import {
   AlgoliaSearchClient,
@@ -17,9 +17,8 @@ import {
   algoliaIndex,
   appName,
   baseUrl,
-  clientId,
-  clientSecret,
 } from '../../config';
+import { getAuthToken } from '../../utils/auth';
 
 export const indexExternalAuthorHandler =
   (
@@ -52,7 +51,6 @@ export const indexExternalAuthorHandler =
       throw e;
     }
   };
-const getAuthToken = getAccessTokenFactory({ clientId, clientSecret, baseUrl });
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,

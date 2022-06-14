@@ -1,26 +1,14 @@
 /* istanbul ignore file */
 import { algoliaSearchClientNativeFactory } from '@asap-hub/algolia';
-import {
-  getAccessTokenFactory,
-  RestUser,
-  SquidexGraphql,
-  SquidexRest,
-} from '@asap-hub/squidex';
-import {
-  algoliaApiKey,
-  algoliaAppId,
-  appName,
-  baseUrl,
-  clientId,
-  clientSecret,
-} from '../../../config';
+import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
+import { algoliaApiKey, algoliaAppId, appName, baseUrl } from '../../../config';
 import Users from '../../../controllers/users';
 import AssetDataProvider from '../../../data-providers/assets.data-provider';
 import UserDataProvider from '../../../data-providers/users.data-provider';
+import { getAuthToken } from '../../../utils/auth';
 import { Handler } from '../../../utils/types';
 import { fetchUserByCodeHandlerFactory } from './fetch-by-code';
 
-const getAuthToken = getAccessTokenFactory({ clientId, clientSecret, baseUrl });
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,

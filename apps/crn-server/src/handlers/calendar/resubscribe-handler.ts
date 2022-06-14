@@ -1,10 +1,5 @@
 import { DateTime } from 'luxon';
-import {
-  RestCalendar,
-  SquidexGraphql,
-  SquidexRest,
-  getAccessTokenFactory,
-} from '@asap-hub/squidex';
+import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import Calendars, { CalendarController } from '../../controllers/calendars';
 import {
   UnsubscribeFromEventChanges,
@@ -15,7 +10,8 @@ import {
 import getJWTCredentials from '../../utils/aws-secret-manager';
 import logger from '../../utils/logger';
 import { ScheduledHandlerAsync } from '../../utils/types';
-import { appName, baseUrl, clientId, clientSecret } from '../../config';
+import { appName, baseUrl } from '../../config';
+import { getAuthToken } from '../../utils/auth';
 
 export const resubscribeCalendarsHandlerFactory =
   (
@@ -67,7 +63,6 @@ export const resubscribeCalendarsHandlerFactory =
       }),
     );
   };
-const getAuthToken = getAccessTokenFactory({ clientId, clientSecret, baseUrl });
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,

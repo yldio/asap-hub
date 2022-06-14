@@ -2,12 +2,7 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import {
-  RestUser,
-  SquidexGraphql,
-  SquidexRest,
-  getAccessTokenFactory,
-} from '@asap-hub/squidex';
+import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
@@ -16,8 +11,6 @@ import {
   algoliaIndex,
   appName,
   baseUrl,
-  clientId,
-  clientSecret,
 } from '../../config';
 import Users, { UserController } from '../../controllers/users';
 import UserDataProvider from '../../data-providers/users.data-provider';
@@ -25,6 +18,7 @@ import AssetDataProvider from '../../data-providers/assets.data-provider';
 import logger from '../../utils/logger';
 import { EventBridgeHandler } from '../../utils/types';
 import { UserEvent, UserPayload } from '../event-bus';
+import { getAuthToken } from '../../utils/auth';
 
 export const indexUserHandler =
   (
@@ -64,7 +58,6 @@ export const indexUserHandler =
     }
   };
 
-const getAuthToken = getAccessTokenFactory({ clientId, clientSecret, baseUrl });
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,

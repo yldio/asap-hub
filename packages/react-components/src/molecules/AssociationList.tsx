@@ -85,10 +85,6 @@ const AssociationList: FC<AssociationListProps> = ({
   inline = false,
   more,
 }) => {
-  console.log(
-    '🚀 ~ file: AssociationList.tsx ~ line 88 ~ associations',
-    associations,
-  );
   const icon = type === 'Team' ? teamIcon : labIcon;
   const limitExceeded = associations.length > max;
 

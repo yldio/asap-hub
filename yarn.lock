@@ -370,7 +370,7 @@ __metadata:
     "@asap-hub/react-components": "workspace:*"
     "@babel/runtime-corejs3": 7.18.3
     "@testing-library/dom": 7.31.2
-    "@testing-library/jest-dom": ^5.12.0
+    "@testing-library/jest-dom": 5.16.4
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": ^12.8.3
     "@types/auth0-js": ^9.14.4
@@ -453,7 +453,7 @@ __metadata:
     "@sentry/react": ^6.11.0
     "@sentry/tracing": ^6.11.0
     "@testing-library/dom": 7.31.2
-    "@testing-library/jest-dom": ^5.12.0
+    "@testing-library/jest-dom": 5.16.4
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": ^4.0.1
     "@testing-library/user-event": ^12.8.3
@@ -752,7 +752,7 @@ __metadata:
     "@emotion/jest": ^11.3.0
     "@emotion/react": ^11
     "@testing-library/dom": 7.31.2
-    "@testing-library/jest-dom": ^5.12.0
+    "@testing-library/jest-dom": 5.16.4
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": ^4.0.1
     "@testing-library/user-event": ^12.8.3
@@ -816,7 +816,7 @@ __metadata:
     "@sentry/react": ^6.11.0
     "@sentry/tracing": ^6.11.0
     "@testing-library/dom": 7.31.2
-    "@testing-library/jest-dom": ^5.12.0
+    "@testing-library/jest-dom": 5.16.4
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": ^4.0.1
     "@testing-library/user-event": ^12.8.3
@@ -994,7 +994,7 @@ __metadata:
     "@emotion/react": ^11
     "@emotion/serialize": ^1.0.2
     "@testing-library/dom": 7.31.2
-    "@testing-library/jest-dom": ^5.12.0
+    "@testing-library/jest-dom": 5.16.4
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": ^4.0.1
     "@testing-library/user-event": ^12.8.3
@@ -10680,19 +10680,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/jest-dom@npm:^5.12.0":
-  version: 5.12.0
-  resolution: "@testing-library/jest-dom@npm:5.12.0"
+"@testing-library/jest-dom@npm:5.16.4":
+  version: 5.16.4
+  resolution: "@testing-library/jest-dom@npm:5.16.4"
   dependencies:
     "@babel/runtime": ^7.9.2
     "@types/testing-library__jest-dom": ^5.9.1
-    aria-query: ^4.2.2
+    aria-query: ^5.0.0
     chalk: ^3.0.0
     css: ^3.0.0
     css.escape: ^1.5.1
+    dom-accessibility-api: ^0.5.6
     lodash: ^4.17.15
     redent: ^3.0.0
-  checksum: d6af8912a7d121dba15b9defcddb33288a637e433478e8327a9d90b95077e5142eec41b1bbc91e3fd33b0c85478e94936b09021500f2602d9c3202c5d71475f2
+  checksum: 4240501223b72b97a44d4e3c669f39b208c49fb645d11d08d5f178d607265c5dfad07efbe027f41a0e2458178ff1fd5bf437fc05661b9109dcd013b95a37079e
   languageName: node
   linkType: hard
 
@@ -13869,6 +13870,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"aria-query@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "aria-query@npm:5.0.0"
+  checksum: c41f98866c5a304561ee8cae55856711cddad6f3f85d8cb43cc5f79667078d9b8979ce32d244c1ff364e6463a4d0b6865804a33ccc717fed701b281cf7dc6296
+  languageName: node
+  linkType: hard
+
 "arity-n@npm:^1.0.4":
   version: 1.0.4
   resolution: "arity-n@npm:1.0.4"
@@ -14063,7 +14071,7 @@ __metadata:
     "@emotion/jest": ^11.3.0
     "@jeysal/babel-plugin-ramda": ^2.0.1
     "@peculiar/webcrypto": 1.4.0
-    "@testing-library/jest-dom": ^5.12.0
+    "@testing-library/jest-dom": 5.16.4
     "@types/jest": 26.0.24
     "@types/webpack": 4.41.32
     "@yarnpkg/pnpify": 3.1.3

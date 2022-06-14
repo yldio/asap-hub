@@ -22,6 +22,7 @@ const infoStyle = css({
 
 const infoWrapperStyle = css({
   paddingLeft: `${6 / perRem}em`,
+  float: 'right',
 });
 
 type LabeledDropdownProps<V extends string> = {

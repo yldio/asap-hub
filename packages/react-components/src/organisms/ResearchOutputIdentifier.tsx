@@ -76,13 +76,19 @@ const identifierMap = {
 const getIdentifierInfoMessage = (
   identifiers: IdentifierType,
 ): Array<ReactElement> =>
-  identifiers.map(({ value }) => (
-    <InfoParagraph
-      key={value}
-      boldText={`${identifierMap[value].name}: `}
-      bodyText={identifierMap[value].helpText}
-    />
-  ));
+  identifiers
+    .filter(
+      ({ value }) =>
+        value !== ResearchOutputIdentifierType.None &&
+        value !== ResearchOutputIdentifierType.Empty,
+    )
+    .map(({ value }) => (
+      <InfoParagraph
+        key={value}
+        boldText={`${identifierMap[value].name}: `}
+        bodyText={identifierMap[value].helpText}
+      />
+    ));
 
 export interface ResearchOutputIdentifierProps {
   identifier?: string;

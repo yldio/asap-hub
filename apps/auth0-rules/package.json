@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": "14.15.x"
+    "node": "16.x"
   },
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
@@ -11,16 +11,16 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "got": "^11.8.2"
+    "got": "11.8.5"
   },
   "devDependencies": {
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/model": "workspace:*",
-    "@babel/core": "^7.14.2",
-    "@babel/preset-env": "^7.14.2",
-    "@babel/preset-typescript": "^7.13.0",
-    "@babel/runtime-corejs3": "^7.14.0",
+    "@babel/core": "7.18.5",
+    "@babel/preset-env": "7.18.2",
+    "@babel/preset-typescript": "7.17.12",
+    "@babel/runtime-corejs3": "7.18.3",
     "@types/jest": "26.0.24",
     "nock": "^13.0.11"
   }

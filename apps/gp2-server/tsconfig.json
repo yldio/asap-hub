@@ -5,11 +5,19 @@
     "rootDir": ".",
     "resolveJsonModule": true,
     "outDir": "build",
+    "lib": ["es2021"],
     "module": "commonjs",
-
+    "target": "es2021",
     "noUncheckedIndexedAccess": true
   },
-  "include": ["src", "scripts", "test", "test/**/*.json", "@types/**/*.d.ts"],
+  "include": [
+    "src",
+    "scripts",
+    "test",
+    "test/**/*.json",
+    "@types/**/*.d.ts",
+    "serverless.ts"
+  ],
   "references": [
     { "path": "../../packages/fixtures" },
     { "path": "../../packages/model" },

@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "bin": "build-cjs/cli.js",
   "engines": {
-    "node": "14.15.x"
+    "node": "16.x"
   },
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
@@ -25,7 +25,7 @@
     "async-sema": "3.1.1",
     "aws-sdk": "^2.907.0",
     "csv-parse": "^4.15.4",
-    "got": "^11.8.2",
+    "got": "11.8.5",
     "jwt-encode": "^1.0.1",
     "luxon": "^1.26.0",
     "pump": "^3.0.0",
@@ -34,10 +34,10 @@
     "yargs": "^17.3.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.2",
-    "@babel/plugin-transform-modules-commonjs": "^7.14.0",
-    "@babel/plugin-transform-runtime": "^7.14.2",
-    "@babel/runtime-corejs3": "^7.14.0",
+    "@babel/core": "7.18.5",
+    "@babel/plugin-transform-modules-commonjs": "7.18.2",
+    "@babel/plugin-transform-runtime": "7.18.5",
+    "@babel/runtime-corejs3": "7.18.3",
     "@types/apr-intercept": "workspace:*",
     "@types/babel__core": "7.1.19",
     "@types/hapi__boom": "^9.0.1",

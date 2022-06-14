@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": "14.15.x"
+    "node": "16.x"
   },
   "module": "build/index.js",
   "main": "build-cjs/index.js",
@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@asap-hub/errors": "workspace:*",
-    "@babel/runtime-corejs3": "^7.14.0",
+    "@babel/runtime-corejs3": "7.18.3",
     "@hapi/boom": "^9.1.2",
     "@hapi/bourne": "^2.0.0",
     "@hapi/joi": "^17.1.1",
@@ -22,7 +22,7 @@
     "aws-lambda": "1.0.7",
     "cross-fetch": "^3.1.4",
     "debug": "4.3.4",
-    "got": "^11.8.2",
+    "got": "11.8.5",
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
     "jwt-decode": "^2.2.0"
@@ -30,7 +30,7 @@
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@types/apr-intercept": "workspace:*",
-    "@types/aws-lambda": "8.10.98",
+    "@types/aws-lambda": "8.10.100",
     "@types/debug": "4.1.7",
     "@types/hapi": "18.0.7",
     "@types/hapi__boom": "^9.0.1",

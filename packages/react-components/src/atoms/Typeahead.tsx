@@ -8,14 +8,14 @@ import {
   useState,
 } from 'react';
 import { components, InputActionMeta, OptionTypeBase } from 'react-select';
-import Creatable from 'react-select/creatable';
 import AsyncCreatable from 'react-select/async-creatable';
+import Creatable from 'react-select/creatable';
+import { useValidation, validationMessageStyles } from '../form';
 import { dropdownChevronIcon } from '../icons';
 import { loadingImage } from '../images';
-import { useValidation, validationMessageStyles } from '../form';
+import { perRem } from '../pixels';
 import { reactSelectStyles } from '../select';
 import { noop } from '../utils';
-import { perRem } from '../pixels';
 
 const containerStyles = css({
   flexBasis: '100%',
@@ -48,7 +48,7 @@ const Input: React.FC<ComponentProps<typeof components.Input>> = (props) => {
     <components.Input
       {...props}
       {...inputProps}
-      onBlur={(event) => {
+      onBlur={(event: React.FocusEvent<HTMLInputElement>) => {
         props.onBlur?.(event);
         onBlur(event);
       }}

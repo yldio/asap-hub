@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": "14.15.x"
+    "node": "16.x"
   },
   "module": "build/index.js",
   "main": "build-cjs/index.js",
@@ -17,19 +17,19 @@
   },
   "dependencies": {
     "@asap-hub/flags": "workspace:*",
-    "@babel/runtime-corejs3": "^7.14.0",
+    "@babel/runtime-corejs3": "7.18.3",
     "core-js": "^3.12.1"
   },
   "devDependencies": {
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@babel/core": "^7.14.2",
-    "@babel/preset-react": "^7.13.13",
+    "@babel/core": "7.18.5",
+    "@babel/preset-react": "7.17.12",
     "@testing-library/react": "11.2.7",
     "@testing-library/react-hooks": "^4.0.1",
     "@types/jest": "26.0.24",
-    "@types/react": "^17.0.5",
+    "@types/react": "17.0.45",
     "@types/testing-library__jest-dom": "^5.9.5",
     "@types/testing-library__react": "^10.0.1",
     "@types/testing-library__react-hooks": "^3.4.1",

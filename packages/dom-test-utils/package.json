@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": "14.15.x"
+    "node": "16.x"
   },
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@babel/runtime-corejs3": "^7.14.0",
+    "@babel/runtime-corejs3": "7.18.3",
     "@types/jest": "26.0.24"
   }
 }

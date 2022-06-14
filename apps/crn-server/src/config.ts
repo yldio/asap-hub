@@ -2,6 +2,7 @@
 
 const {
   APP_ORIGIN,
+  AUTH0_CLIENT_ID,
   AUTH0_SHARED_SECRET,
   AWS_SES_ENDPOINT,
   SQUIDEX_SHARED_SECRET,
@@ -34,7 +35,8 @@ export const lightstepToken = LIGHTSTEP_TOKEN;
 export const environment = ENVIRONMENT
   ? ENVIRONMENT.toLowerCase()
   : 'development';
-export const auth0SharedSecret = AUTH0_SHARED_SECRET || 'auth0_shared_secret';
+export const auth0SharedSecret = AUTH0_SHARED_SECRET || '';
+export const auth0ClientId = AUTH0_CLIENT_ID || '';
 export const squidexSharedSecret =
   SQUIDEX_SHARED_SECRET || 'squidex_shared_secret';
 export const googleApiUrl = 'https://www.googleapis.com/';

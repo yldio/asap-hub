@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": "14.15.x"
+    "node": "16.x"
   },
   "module": "build/index.js",
   "main": "build-cjs/index.js",
@@ -16,7 +16,7 @@
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
     "@asap-hub/model": "workspace:*",
-    "@babel/runtime-corejs3": "^7.14.0"
+    "@babel/runtime-corejs3": "7.18.3"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*"

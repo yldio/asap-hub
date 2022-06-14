@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": "14.15.x"
+    "node": "16.x"
   },
   "scripts": {
     "start": "start-storybook --quiet -c config -p 3001",
@@ -33,9 +33,9 @@
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/flags": "workspace:*",
-    "@babel/core": "^7.14.2",
+    "@babel/core": "7.18.5",
     "@types/history": "4.7.11",
-    "@types/react": "^17.0.5",
+    "@types/react": "17.0.45",
     "@types/react-router-dom": "^5.1.7",
     "babel-preset-react-app": "10.0.1",
     "typescript": "4.4.4"

@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": "14.15.x"
+    "node": "16.x"
   },
   "module": "build/index.js",
   "main": "build-cjs/index.js",
@@ -13,8 +13,8 @@
     "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "^7.14.0",
-    "qs": "^6.10.1",
+    "@babel/runtime-corejs3": "7.18.3",
+    "qs": "6.10.5",
     "typesafe-routes": "^7.0.2",
     "typescript": "4.4.4"
   },
@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@types/qs": "^6",
+    "@types/qs": "6.9.7",
     "@types/react-router-dom": "^5.1.7"
   }
 }

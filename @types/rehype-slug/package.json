@@ -3,10 +3,10 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": "14.15.x"
+    "node": "16.x"
   },
   "types": "index.d.ts",
   "dependencies": {
-    "unified": "^9.2.1"
+    "unified": "9.2.2"
   }
 }

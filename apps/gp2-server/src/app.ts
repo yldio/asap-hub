@@ -5,7 +5,7 @@ import { SquidexGraphql } from '@asap-hub/squidex';
 import {
   AuthHandler,
   authHandlerFactory,
-  decodeToken,
+  decodeTokenFactory,
   errorHandlerFactory,
   getHttpLogger,
   Logger,
@@ -15,7 +15,7 @@ import Dashboard, {
 } from './controllers/dashboard.controller';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import pinoLogger from './utils/logger';
-import { origin } from './config';
+import { origin, auth0ClientId } from './config';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -31,6 +31,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   // Clients
   const squidexGraphqlClient = new SquidexGraphql();
+  const decodeToken = decodeTokenFactory(auth0ClientId);
 
   // Controllers
   const dashboardController =

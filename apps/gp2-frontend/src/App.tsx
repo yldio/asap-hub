@@ -6,13 +6,8 @@ import { init, reactRouterV5Instrumentation } from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import { useFlags } from '@asap-hub/react-context';
 
-import {
-  BasicLayout,
-  GoogleTagManager,
-  ToastStack,
-  UtilityBar,
-} from '@asap-hub/react-components';
-import { staticPages, welcome, logout } from '@asap-hub/routing';
+import { GoogleTagManager } from '@asap-hub/react-components';
+import { logout } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
 
 import history from './history';

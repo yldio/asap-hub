@@ -56,21 +56,15 @@ const loadAuthProvider = () =>
   import(/* webpackChunkName: "auth-provider" */ './auth/AuthProvider');
 const AuthProvider = lazy(loadAuthProvider);
 
-const loadWelcome = () =>
-  import(/* webpackChunkName: "welcome" */ './welcome/Routes');
-const loadContent = () =>
-  import(/* webpackChunkName: "content" */ './content/Content');
 const loadAuthenticatedApp = () =>
   import(/* webpackChunkName: "authenticated-app" */ './AuthenticatedApp');
-const Welcome = lazy(loadWelcome);
-const Content = lazy(loadContent);
 const AuthenticatedApp = lazy(loadAuthenticatedApp);
 
 const App: FC<Record<string, never>> = () => {
   const { setCurrentOverrides } = useFlags();
 
   useEffect(() => {
-    loadAuthenticatedApp().then(loadContent).then(loadWelcome);
+    loadAuthenticatedApp();
     setCurrentOverrides();
   }, [setCurrentOverrides]);
 

@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import { silver, fern, charcoal } from '../../colors';
 import { orcidIcon } from '../../icons';
@@ -120,9 +120,15 @@ it('renders a small button', () => {
 });
 
 it('renders a stretched small button', () => {
-  const { getByRole } = render(<Button small />);
+  render(<Button small />);
 
-  expect(getComputedStyle(getByRole('button')).flexGrow).toBe('1');
+  expect(getComputedStyle(screen.getByRole('button')).flexGrow).toBe('1');
+});
+
+it('renders a non-stretched small button', () => {
+  render(<Button small stretch={false} />);
+
+  expect(getComputedStyle(screen.getByRole('button')).flexGrow).toBe('');
 });
 
 describe('the type', () => {

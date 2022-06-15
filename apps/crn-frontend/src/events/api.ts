@@ -1,9 +1,35 @@
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
-import { createSentryHeaders } from '@asap-hub/frontend-utils';
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
+import { createSentryHeaders } from '@asap-hub/frontend-utils';
+
 import { API_BASE_URL } from '../config';
-import createListApiUrl from '../CreateListApiUrl';
 import { GetEventListOptions } from './options';
+import createListApiUrl from '../CreateListApiUrl';
+
+export const getEventsFromAlgolia = async (
+  algoliaClient: AlgoliaSearchClient,
+  { searchQuery, currentPage, pageSize, before, after }: GetEventListOptions,
+): Promise<ListEventResponse> => {
+  const algoliaFilters: string[] = [];
+
+  if (before) {
+    const beforeTimestamp = Math.round(new Date(before).getTime() / 1000);
+    algoliaFilters.push(`endDateTimestamp < ${beforeTimestamp}`);
+  } else if (after) {
+    const afterTimestamp = Math.round(new Date(after).getTime() / 1000);
+    algoliaFilters.push(`endDateTimestamp > ${afterTimestamp}`);
+  }
+  // debugger;
+  // speaker id 2a854c5a-184f-40ff-9615-bc6ca72b6470
+  const result = await algoliaClient.search(['event'], searchQuery, {
+    filters:
+      algoliaFilters.length > 0 ? algoliaFilters.join(' OR ') : undefined,
+    page: currentPage ?? undefined,
+    hitsPerPage: pageSize ?? undefined,
+  });
+
+  return { items: result.hits, total: result.nbHits };
+};
 
 export const getEvents = async (
   options: GetEventListOptions,
@@ -47,29 +73,4 @@ export const getEvent = async (
     );
   }
   return resp.json();
-};
-
-export const getEventsFromAlgolia = async (
-  algoliaClient: AlgoliaSearchClient,
-  { searchQuery, currentPage, pageSize, before, after }: GetEventListOptions,
-): Promise<ListEventResponse> => {
-  const algoliaFilters: string[] = [];
-
-  if (before) {
-    const beforeTimestamp = Math.round(new Date(before).getTime() / 1000);
-    algoliaFilters.push(`endDateTimestamp < ${beforeTimestamp}`);
-  } else if (after) {
-    const afterTimestamp = Math.round(new Date(after).getTime() / 1000);
-    algoliaFilters.push(`endDateTimestamp > ${afterTimestamp}`);
-  }
-  // debugger;
-  // speaker id 2a854c5a-184f-40ff-9615-bc6ca72b6470
-  const result = await algoliaClient.search(['event'], searchQuery, {
-    filters:
-      algoliaFilters.length > 0 ? algoliaFilters.join(' OR ') : undefined,
-    page: currentPage ?? undefined,
-    hitsPerPage: pageSize ?? undefined,
-  });
-
-  return { items: result.hits, total: result.nbHits };
 };

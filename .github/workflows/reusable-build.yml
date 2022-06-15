@@ -141,11 +141,17 @@ jobs:
           REACT_APP_GP2_AUTH0_DOMAIN: ${{ steps.setup.outputs.gp2-auth0-domain }}
         run: |
           yarn build:frontend
+          grep -r bob2 apps/crn-frontend/build/static/js > out.js
       - name: Cache build output
         uses: ./.github/actions/cache-build
         with:
           cache-prefix: ${{ steps.setup.outputs.cache-prefix-frontend }}
           environment-name: ${{ inputs.environment-name }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.app }}-output-${{ inputs.environment-name }}
+          path: out.js
+          retention-days: 1
 
   typecheck:
     needs: [definitions]

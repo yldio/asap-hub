@@ -10,7 +10,6 @@ const envDefaults: Record<string, boolean> = {
   test: true,
   development: true,
   production: false,
-  1694: false,
 };
 
 const environment = process.env.REACT_APP_ENVIRONMENT;

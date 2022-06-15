@@ -380,7 +380,123 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `asap-hub_${envRef}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+      },
+    },
+    indexEvents: {
+      handler: './src/handlers/event/index-event-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': [
+                'EventsPublished',
+                'EventsUpdated',
+                'EventsUnpublished',
+                'EventsDeleted',
+              ],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+      },
+    },
+    indexUserEvents: {
+      handler: './src/handlers/event/index-user-events-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': [
+                'UsersPublished',
+                'UsersUpdated',
+                'UsersUnpublished',
+                'UsersDeleted',
+              ],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+      },
+    },
+    indexExternalUserEvents: {
+      handler:
+        './src/handlers/event/index-external-author-events-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': [
+                'ExternalAuthorsPublished',
+                'ExternalAuthorsUpdated',
+                'ExternalAuthorsUnpublished',
+                'ExternalAuthorsDeleted',
+              ],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+      },
+    },
+    indexTeamEvents: {
+      handler: './src/handlers/event/index-team-events-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': [
+                'TeamsPublished',
+                'TeamsUpdated',
+                'TeamsUnpublished',
+                'TeamsDeleted',
+              ],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+      },
+    },
+    indexGroupEvents: {
+      handler: './src/handlers/event/index-group-events-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': [
+                'GroupsPublished',
+                'GroupsUpdated',
+                'GroupsUnpublished',
+                'GroupsDeleted',
+              ],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
       },
     },
     indexLabUsers: {

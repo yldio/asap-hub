@@ -16,3 +16,9 @@ export const getEvents = jest.fn(
     ...createListEventResponse(2),
   }),
 );
+
+export const getEventsFromAlgolia = jest.fn(
+  async (): Promise<ListEventResponse> => ({
+    ...createListEventResponse(2),
+  }),
+);

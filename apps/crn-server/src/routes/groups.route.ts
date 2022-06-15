@@ -34,10 +34,7 @@ export const groupRouteFactory = (
     const { params } = req;
     const { groupId } = validateGroupParameters(params);
 
-    const result = await eventsController.fetch({
-      filter: { groupId },
-      ...query,
-    });
+    const result = await eventsController.fetch({ groupId, ...query });
 
     res.json(result);
   });

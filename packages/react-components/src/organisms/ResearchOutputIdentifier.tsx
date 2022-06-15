@@ -4,16 +4,19 @@ import {
   researchOutputToIdentifierType,
 } from '@asap-hub/model';
 import { ResearchOutputIdentifierValidationExpression } from '@asap-hub/validation';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, ReactElement } from 'react';
+import { InfoParagraph } from '../atoms';
 import { LabeledDropdown, LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 
-const getIdentifiers = (
-  researchOutputDocumentType: ResearchOutputDocumentType,
-): Array<{
+type IdentifierType = Array<{
   value: ResearchOutputIdentifierType;
   label: ResearchOutputIdentifierType;
-}> => {
+}>;
+
+const getIdentifiers = (
+  researchOutputDocumentType: ResearchOutputDocumentType,
+): IdentifierType => {
   const identifiers =
     researchOutputToIdentifierType[researchOutputDocumentType] ?? [];
 
@@ -31,6 +34,7 @@ const identifierMap = {
     errorMessage:
       'Please enter a valid DOI. It starts with a 1 and it cannot be a URL. (e.g. 10.1234/abcde.121212)',
     required: true,
+    name: 'DOI',
   },
   [ResearchOutputIdentifierType.AccessionNumber]: {
     helpText:
@@ -40,6 +44,7 @@ const identifierMap = {
     errorMessage:
       'Please enter a valid Accession Number which must start with a letter (e.g. NT_123456)',
     required: true,
+    name: 'Accesion Number',
   },
   [ResearchOutputIdentifierType.RRID]: {
     helpText: 'Your RRID must start with “RRID:”',
@@ -48,6 +53,7 @@ const identifierMap = {
     errorMessage:
       'Please enter a valid RRID which starts with `RRID`. (e.g. RRID:SCR_007358)',
     required: true,
+    name: 'RRID',
   },
   [ResearchOutputIdentifierType.None]: {
     helpText: '',
@@ -55,6 +61,7 @@ const identifierMap = {
     regex: ResearchOutputIdentifierValidationExpression.None,
     errorMessage: undefined,
     required: false,
+    name: '',
   },
   [ResearchOutputIdentifierType.Empty]: {
     helpText: '',
@@ -62,8 +69,26 @@ const identifierMap = {
     regex: undefined,
     errorMessage: undefined,
     required: false,
+    name: '',
   },
 } as const;
+
+const getIdentifierInfoMessage = (
+  identifiers: IdentifierType,
+): Array<ReactElement> =>
+  identifiers
+    .filter(
+      ({ value }) =>
+        value !== ResearchOutputIdentifierType.None &&
+        value !== ResearchOutputIdentifierType.Empty,
+    )
+    .map(({ value }) => (
+      <InfoParagraph
+        key={value}
+        boldText={`${identifierMap[value].name}: `}
+        bodyText={identifierMap[value].helpText}
+      />
+    ));
 
 export interface ResearchOutputIdentifierProps {
   identifier?: string;
@@ -81,13 +106,13 @@ export const ResearchOutputIdentifier: React.FC<ResearchOutputIdentifierProps> =
     identifier = '',
     setIdentifier = noop,
     documentType,
-    isEditMode = false,
   }) => {
     const identifiers = useMemo(
       () => getIdentifiers(documentType),
       [documentType],
     );
 
+    const infoText = getIdentifierInfoMessage(identifiers);
     const onChangeIdentifierType = useCallback(
       (newType: string) => {
         if (
@@ -114,6 +139,7 @@ export const ResearchOutputIdentifier: React.FC<ResearchOutputIdentifierProps> =
           placeholder={'Choose an identifier'}
           getValidationMessage={() => `Please choose an identifier`}
           required={true}
+          info={infoText}
         />
 
         <TeamCreateOutputIdentifierField

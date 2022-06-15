@@ -50,10 +50,10 @@ export default class Events implements EventController {
       skip = 0,
       before,
       after,
+      groupId,
       search,
       sortBy,
       sortOrder,
-      filter,
     } = options;
 
     const filters = (search || '')
@@ -87,12 +87,12 @@ export default class Events implements EventController {
       orderby = `data/${sortBy}/iv ${sortOrder}`;
     }
 
-    if (filter?.groupId) {
+    if (groupId) {
       const { findGroupsContent } = await this.squidexGraphqlClient.request<
         FetchGroupCalendarQuery,
         FetchGroupCalendarQueryVariables
       >(FETCH_GROUP_CALENDAR, {
-        id: filter.groupId,
+        id: groupId,
       });
 
       if (!findGroupsContent) {
@@ -104,18 +104,6 @@ export default class Events implements EventController {
       );
 
       filters.push(`data/calendar/iv in [${calendarIds.join(', ')}]`);
-    }
-
-    if (filter?.userId) {
-      filters.push(`data/speakers/iv/user eq '${filter.userId}'`);
-    }
-
-    if (filter?.externalAuthorId) {
-      filters.push(`data/speakers/iv/user eq '${filter.externalAuthorId}'`);
-    }
-
-    if (filter?.teamId) {
-      filters.push(`data/speakers/iv/team eq '${filter.teamId}'`);
     }
 
     const { queryEventsContentsWithTotal } =
@@ -212,18 +200,10 @@ export type FetchEventsOptions = (
       after?: never;
       before?: never;
     }
-) &
-  SortOptions &
-  FetchOptions<FilterOptions>;
+) & { groupId?: string } & SortOptions &
+  FetchOptions;
 
 type SortOptions = AllOrNone<{
   sortBy: 'startDate' | 'endDate';
   sortOrder: 'asc' | 'desc';
 }>;
-
-type FilterOptions = {
-  groupId?: string;
-  userId?: string;
-  externalAuthorId?: string;
-  teamId?: string;
-};

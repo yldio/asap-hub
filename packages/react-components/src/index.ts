@@ -25,6 +25,7 @@ export {
   TabLink,
   Toggle,
   Tooltip,
+  InfoParagraph,
 } from './atoms';
 export * from './colors';
 export * from './hooks';

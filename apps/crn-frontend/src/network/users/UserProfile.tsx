@@ -128,6 +128,7 @@ const User: FC<Record<string, never>> = () => {
                         <UpcomingEvents
                           currentTime={currentTime}
                           searchQuery={debouncedSearchQuery}
+                          userId={user?.id}
                         />
                       </Frame>
                     </EventsSection>

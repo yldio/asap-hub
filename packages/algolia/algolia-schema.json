@@ -51,7 +51,8 @@
     "documentType",
     "authors.id",
     "__meta.type",
-    "teams.role"
+    "teams.role",
+    "speakers.user.id"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

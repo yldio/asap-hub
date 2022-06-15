@@ -275,7 +275,9 @@ describe('on submit', () => {
     userEvent.type(identifier, 'DOI');
     userEvent.type(identifier, specialChars.enter);
     userEvent.type(
-      screen.getByPlaceholderText('DOI number e.g. 10.5555/YFRU1371'),
+      await screen.findByRole('textbox', {
+        name: /Your DOI must start with/i,
+      }),
       '10.1234',
     );
   };

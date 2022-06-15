@@ -19,7 +19,8 @@ export const getEventsFromAlgolia = async (
     const afterTimestamp = Math.round(new Date(after).getTime() / 1000);
     algoliaFilters.push(`endDateTimestamp > ${afterTimestamp}`);
   }
-
+  // debugger;
+  // speaker id 2a854c5a-184f-40ff-9615-bc6ca72b6470
   const result = await algoliaClient.search(['event'], searchQuery, {
     filters:
       algoliaFilters.length > 0 ? algoliaFilters.join(' OR ') : undefined,

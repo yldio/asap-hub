@@ -141,7 +141,13 @@ jobs:
           REACT_APP_GP2_AUTH0_DOMAIN: ${{ steps.setup.outputs.gp2-auth0-domain }}
         run: |
           yarn build:frontend
-          grep -r bob2 apps/crn-frontend/build/static/js > out.js
+          ls -la
+          ls -la apps
+          ls -la apps/crn-frontend
+          ls -la apps/crn-frontend/build
+          ls -la apps/crn-frontend/build/static
+          ls -la apps/crn-frontend/build/static/js
+          grep -r development apps/crn-frontend/build/static/js > out.js
       - name: Cache build output
         uses: ./.github/actions/cache-build
         with:

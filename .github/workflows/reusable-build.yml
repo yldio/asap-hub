@@ -67,6 +67,8 @@ jobs:
       - name: Build
         run: |
           yarn build:babel
+        env:
+          REACT_APP_ENVIRONMENT: ${{ steps.setup.outputs.react-app-environment }}
       - name: Cache transpile output
         uses: ./.github/actions/cache-build
         with:

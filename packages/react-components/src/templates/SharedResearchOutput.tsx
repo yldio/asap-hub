@@ -112,7 +112,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         {!isGrantDocument && accessInstructions && (
           <Card>
             <div css={{ paddingBottom: `${12 / perRem}em` }}>
-              <Headline2 styleAsHeading={4}>Access Instructions</Headline2>
+              <Headline2 styleAsHeading={4}>Usage Notes</Headline2>
               <RichText poorText text={accessInstructions} />
             </div>
           </Card>

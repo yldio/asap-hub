@@ -172,10 +172,8 @@ export const parseGraphQLEvent = (
     description: item.flatData.description || '',
     startDate: startDate.toUTC().toString(),
     startDateTimeZone: item.flatData.startDateTimeZone!,
-    startDateTimestamp: startDate.toSeconds(),
     endDate: endDate.toUTC().toString(),
     endDateTimeZone: item.flatData.endDateTimeZone!,
-    endDateTimestamp: endDate.toSeconds(),
     lastModifiedDate: parseDate(item.lastModified).toISOString(),
     title: item.flatData.title!,
     notes: getMeetingMaterial(

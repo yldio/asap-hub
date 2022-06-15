@@ -1,6 +1,5 @@
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import {
-  EventResponse,
   ExternalAuthorResponse,
   LabResponse,
   ResearchOutputResponse,
@@ -12,12 +11,15 @@ export const RESEARCH_OUTPUT_ENTITY_TYPE = 'research-output';
 export const USER_ENTITY_TYPE = 'user';
 export const EXTERNAL_AUTHOR_ENTITY_TYPE = 'external-author';
 export const LAB_ENTITY_TYPE = 'lab';
-export const EVENT_ENTITY_TYPE = 'event';
 
 export type Payload =
   | {
-      data: EventResponse;
-      type: 'event';
+      data: ResearchOutputResponse;
+      type: 'research-output';
+    }
+  | {
+      data: UserResponse;
+      type: 'user';
     }
   | {
       data: ExternalAuthorResponse;
@@ -26,14 +28,6 @@ export type Payload =
   | {
       data: LabResponse;
       type: 'lab';
-    }
-  | {
-      data: ResearchOutputResponse;
-      type: 'research-output';
-    }
-  | {
-      data: UserResponse;
-      type: 'user';
     };
 
 export type EntityResponses = {
@@ -41,7 +35,6 @@ export type EntityResponses = {
   [USER_ENTITY_TYPE]: UserResponse;
   [EXTERNAL_AUTHOR_ENTITY_TYPE]: ExternalAuthorResponse;
   [LAB_ENTITY_TYPE]: LabResponse;
-  [EVENT_ENTITY_TYPE]: EventResponse;
 };
 
 export type EntityRecord<T extends keyof EntityResponses> =

@@ -104,7 +104,7 @@ describe('Not Grant Documents', () => {
         accessInstructions="Some Data"
       />,
     );
-    expect(getByText(/access instructions/i)).toBeVisible();
+    expect(getByText(/usage notes/i)).toBeVisible();
     expect(getByText(/some data/i)).toBeVisible();
   });
   describe('tags and description', () => {

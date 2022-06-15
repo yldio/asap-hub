@@ -35,6 +35,7 @@ export {
   Toggle,
   Tooltip,
   NavigationLink,
+  InfoParagraph,
 } from './atoms';
 export {
   AssociationList,

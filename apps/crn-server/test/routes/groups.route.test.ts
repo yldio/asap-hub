@@ -143,10 +143,8 @@ describe('/groups/ route', () => {
             title: 'example event title',
             startDate: '2020-12-11T14:33:50Z',
             startDateTimeZone: 'Europe/London',
-            startDateTimestamp: 1577808190,
             endDate: '2020-12-11T14:33:50Z',
             endDateTimeZone: 'Europe/London',
-            endDateTimestamp: 1577808190,
             description: 'Description',
             calendar: {
               id: 'calendar-id-1',
@@ -194,7 +192,7 @@ describe('/groups/ route', () => {
         after: '2021-02-08T14:13:37.138Z',
         sortBy: 'endDate',
         sortOrder: 'desc',
-        filter: { groupId },
+        groupId,
       };
 
       expect(eventControllerMock.fetch).toBeCalledWith(expectedParams);
@@ -310,7 +308,7 @@ describe('/groups/ route', () => {
         expect(response.status).toBe(200);
         expect(eventControllerMock.fetch).toBeCalledWith({
           before: expect.anything(),
-          filter: { groupId: expect.anything() },
+          groupId: expect.anything(),
           sortBy: 'startDate',
           sortOrder: 'asc',
         });
@@ -332,7 +330,7 @@ describe('/groups/ route', () => {
         expect(response.status).toBe(200);
         expect(eventControllerMock.fetch).toBeCalledWith({
           before: expect.anything(),
-          filter: { groupId: expect.anything() },
+          groupId: expect.anything(),
           sortBy: 'endDate',
           sortOrder: 'asc',
         });
@@ -354,7 +352,7 @@ describe('/groups/ route', () => {
         expect(response.status).toBe(200);
         expect(eventControllerMock.fetch).toBeCalledWith({
           before: expect.anything(),
-          filter: { groupId: expect.anything() },
+          groupId: expect.anything(),
           sortBy: 'startDate',
           sortOrder: 'desc',
         });

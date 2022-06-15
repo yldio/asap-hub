@@ -33,12 +33,7 @@
     "labCatalogNumber",
     "doi",
     "email",
-    "contactEmail",
-    "speakers.externalUser.name",
-    "speakers.team.displayName",
-    "speakers.user.displayName",
-    "endDateTimestamp",
-    "startDateTimestamp"
+    "contactEmail"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,

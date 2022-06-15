@@ -10,12 +10,12 @@ const envDefaults: Record<string, boolean> = {
   test: true,
   development: true,
   production: false,
+  1694: false,
 };
 
+const environment = process.env.REACT_APP_ENVIRONMENT;
 export const isEnabled = (flag: Flag): boolean =>
-  overrides[flag] ??
-  envDefaults[process.env.REACT_APP_ENVIRONMENT ?? 'development'] ??
-  false;
+  overrides[flag] ?? envDefaults[environment ?? 'development'] ?? false;
 
 export const getOverrides = (): Flags => overrides;
 

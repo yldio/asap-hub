@@ -1,10 +1,9 @@
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
-import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
-
+import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
-import { GetEventListOptions } from './options';
 import createListApiUrl from '../CreateListApiUrl';
+import { GetEventListOptions } from './options';
 
 export const getEvents = async (
   options: GetEventListOptions,

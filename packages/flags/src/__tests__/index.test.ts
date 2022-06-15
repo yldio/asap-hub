@@ -1,10 +1,10 @@
 import {
-  disable,
-  enable,
-  getOverrides,
   isEnabled,
+  disable,
   reset,
+  getOverrides,
   setCurrentOverrides,
+  enable,
 } from '..';
 
 const originalNodeEnv = process.env.REACT_APP_ENVIRONMENT;
@@ -19,7 +19,7 @@ it('disables flags in unknown environments', () => {
   process.env.REACT_APP_ENVIRONMENT = 'unknown';
   expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
 });
-it.each(['test'])('enables flags in %s', (nodeEnv) => {
+it.each(['test', 'development'])('enables flags in %s', (nodeEnv) => {
   process.env.REACT_APP_ENVIRONMENT = nodeEnv;
   expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
 });

@@ -1,24 +1,24 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import DashboardPageHeader from '../DashboardPageHeader';
 
 it('renders the header', () => {
-  const { getByRole } = render(<DashboardPageHeader />);
-  expect(getByRole('heading')).toBeVisible();
+  render(<DashboardPageHeader />);
+  expect(screen.getByRole('heading')).toBeVisible();
 });
 
 it('displays welcome mesage', () => {
-  const { getByRole } = render(<DashboardPageHeader />);
+  render(<DashboardPageHeader />);
 
-  expect(getByRole('heading').textContent).toMatchInlineSnapshot(
+  expect(screen.getByRole('heading').textContent).toMatchInlineSnapshot(
     `"Welcome to the GP2 Hub!"`,
   );
 });
 
 it('displays user first name in welcome mesage', () => {
-  const { getByRole } = render(<DashboardPageHeader firstName={'John'} />);
+  render(<DashboardPageHeader firstName={'John'} />);
 
-  expect(getByRole('heading').textContent).toMatchInlineSnapshot(
+  expect(screen.getByRole('heading').textContent).toMatchInlineSnapshot(
     `"Welcome to the GP2 Hub, John!"`,
   );
 });

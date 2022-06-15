@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { createPageResponse } from '@asap-hub/fixtures';
 
 import DashboardPageBody from '../DashboardPageBody';
@@ -25,36 +25,30 @@ const props: ComponentProps<typeof DashboardPageBody> = {
 };
 
 it('renders multiple news cards', () => {
-  const { queryAllByText } = render(<DashboardPageBody {...props} />);
+  render(<DashboardPageBody {...props} />);
   expect(
-    queryAllByText(/title/i, { selector: 'h2' }).map(
-      ({ textContent }) => textContent,
-    ),
+    screen
+      .queryAllByText(/title/i, { selector: 'h2' })
+      .map(({ textContent }) => textContent),
   ).toEqual(['Page 1 title', 'Page 2 title', 'News Title', 'Event Title']);
 });
 
 it('renders news section when there are no news', () => {
-  const { queryAllByText, queryByText } = render(
-    <DashboardPageBody {...props} news={[]} />,
-  );
+  render(<DashboardPageBody {...props} news={[]} />);
 
-  expect(queryByText('Latest news from ASAP')).not.toBeInTheDocument();
+  expect(screen.queryByText('Latest news from ASAP')).not.toBeInTheDocument();
   expect(
-    queryAllByText(/title/i, { selector: 'h2' }).map(
-      ({ textContent }) => textContent,
-    ),
-  ).toEqual(['Page 1 title', 'Page 2 title']);
+    screen.getAllByRole('heading').map(({ textContent }) => textContent),
+  ).toEqual(expect.arrayContaining(['Page 1 title', 'Page 2 title']));
 });
 
 it('renders news section when there are no pages', () => {
-  const { queryAllByText, queryByText } = render(
-    <DashboardPageBody {...props} pages={[]} />,
-  );
+  render(<DashboardPageBody {...props} pages={[]} />);
 
-  expect(queryByText('Not sure where to start?')).not.toBeInTheDocument();
   expect(
-    queryAllByText(/title/i, { selector: 'h2' }).map(
-      ({ textContent }) => textContent,
-    ),
-  ).toEqual(['News Title', 'Event Title']);
+    screen.queryByText('Not sure where to start?'),
+  ).not.toBeInTheDocument();
+  expect(
+    screen.getAllByRole('heading').map(({ textContent }) => textContent),
+  ).toEqual(expect.arrayContaining(['News Title', 'Event Title']));
 });

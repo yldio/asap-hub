@@ -147,7 +147,7 @@ jobs:
           cache-prefix: ${{ steps.setup.outputs.cache-prefix-frontend }}
           environment-name: ${{ inputs.environment-name }}
 
-  frontend-deveopment:
+  frontenddeveopment:
     needs: [definitions, transpile]
     runs-on: ubuntu-latest
     container:

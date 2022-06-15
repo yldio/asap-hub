@@ -1,7 +1,8 @@
-import { disable, isEnabled } from '@asap-hub/flags';
-import { fireEvent, render } from '@testing-library/react';
-import { act, renderHook } from '@testing-library/react-hooks';
-import { LiveFlagsProvider, useFlags } from '../flags';
+import { renderHook, act } from '@testing-library/react-hooks';
+import { render, fireEvent } from '@testing-library/react';
+import { isEnabled, disable } from '@asap-hub/flags';
+
+import { useFlags, LiveFlagsProvider } from '../flags';
 
 const originalCookie = document.cookie;
 
@@ -27,6 +28,15 @@ describe('useFlags', () => {
       result: { current },
     } = renderHook(useFlags);
     current.enable('PERSISTENT_EXAMPLE');
+    expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
+  });
+
+  it('provides the reset flags method', () => {
+    disable('PERSISTENT_EXAMPLE');
+    const {
+      result: { current },
+    } = renderHook(useFlags);
+    current.reset();
     expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
   });
 
@@ -85,6 +95,16 @@ describe('LiveFlagsProvider', () => {
     );
   };
 
+  it('updates a component on disable', () => {
+    const { getByText } = render(<TestComponent />, {
+      wrapper: LiveFlagsProvider,
+    });
+    expect(getByText('enabled: true')).toBeVisible();
+
+    fireEvent.click(getByText('disable'));
+    expect(getByText('enabled: false')).toBeVisible();
+  });
+
   it('updates a component on enable', () => {
     const { getByText } = render(<TestComponent />, {
       wrapper: LiveFlagsProvider,
@@ -94,6 +114,17 @@ describe('LiveFlagsProvider', () => {
     expect(getByText('enabled: false')).toBeVisible();
 
     fireEvent.click(getByText('enable'));
+    expect(getByText('enabled: true')).toBeVisible();
+  });
+
+  it('updates a component on reset', () => {
+    disable('PERSISTENT_EXAMPLE');
+    const { getByText } = render(<TestComponent />, {
+      wrapper: LiveFlagsProvider,
+    });
+    expect(getByText('enabled: false')).toBeVisible();
+
+    fireEvent.click(getByText('reset'));
     expect(getByText('enabled: true')).toBeVisible();
   });
 

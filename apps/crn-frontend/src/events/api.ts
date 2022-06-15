@@ -7,14 +7,8 @@ import { GetEventListOptions } from './options';
 
 export const getEventsFromAlgolia = async (
   algoliaClient: AlgoliaSearchClient,
-  {
-    searchQuery,
-    currentPage,
-    pageSize,
-    before,
-    after,
-    userId,
-  }: GetEventListOptions,
+  { searchQuery, currentPage, pageSize, before, after }: GetEventListOptions,
+  userId?: string,
 ): Promise<ListEventResponse> => {
   const algoliaFilters: string[] = [];
 
@@ -25,11 +19,17 @@ export const getEventsFromAlgolia = async (
     const afterTimestamp = Math.round(new Date(after).getTime() / 1000);
     algoliaFilters.push(`endDateTimestamp > ${afterTimestamp}`);
   }
-  // algoliaFilters.push(`speakers.user.id: ${userId}`);
-
+  console.log(userId);
+  console.log(algoliaFilters);
+  console.log('before ', before);
+  console.log('after ', after);
+  if (userId) {
+    algoliaFilters.push(`speakers.user.id: ${userId}`);
+  }
+  // debugger;
   const result = await algoliaClient.search(['event'], searchQuery, {
     filters:
-      algoliaFilters.length > 0 ? algoliaFilters.join(' OR ') : undefined,
+      algoliaFilters.length > 0 ? algoliaFilters.join(' AND ') : undefined,
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,
   });

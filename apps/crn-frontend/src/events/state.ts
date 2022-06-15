@@ -106,7 +106,7 @@ export const usePrefetchEvents = (options: GetEventListOptions) => {
     }
   }, [authorization, events, options, setEvents]);
 };
-export const useEvents = (options: GetEventListOptions) => {
+export const useEvents = (options: GetEventListOptions, userId?: string) => {
   const authorization = useRecoilValue(authorizationState);
   const algoliaClient = useAlgolia();
   const isEventsSearchFromAlgoliaEnabled =
@@ -114,7 +114,7 @@ export const useEvents = (options: GetEventListOptions) => {
   const [events, setEvents] = useRecoilState(eventsState(options));
   if (events === undefined) {
     if (isEventsSearchFromAlgoliaEnabled) {
-      throw getEventsFromAlgolia(algoliaClient.client, options)
+      throw getEventsFromAlgolia(algoliaClient.client, options, userId)
         .then(setEvents)
         .catch(setEvents);
     } else {

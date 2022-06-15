@@ -11,19 +11,19 @@ type EventListProps = {
 };
 const EventList: React.FC<EventListProps> = ({
   currentTime,
-  past = false,
+  past = true,
   searchQuery = '',
   userId = '2a854c5a-184f-40ff-9615-bc6ca72b6470',
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
 
-  // speaker id 2a854c5a-184f-40ff-9615-bc6ca72b6470
   const { items, total } = useEvents(
-    getEventListOptions(currentTime, past, userId, {
+    getEventListOptions(currentTime, past, {
       searchQuery,
       currentPage,
       pageSize,
     }),
+    userId,
   );
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);

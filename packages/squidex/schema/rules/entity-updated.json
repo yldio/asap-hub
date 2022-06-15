@@ -10,7 +10,15 @@
         "condition": "event.type === 'Created' || event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
       },
       {
+        "schemaId": "events",
+        "condition": "event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
+      },
+      {
         "schemaId": "external-authors",
+        "condition": "event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
+      },
+      {
+        "schemaId": "groups",
         "condition": "event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
       },
       {

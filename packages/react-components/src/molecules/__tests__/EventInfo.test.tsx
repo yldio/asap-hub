@@ -155,7 +155,33 @@ it('displays the teams with number of additional teams', () => {
   expect(screen.getByText('+3')).toBeInTheDocument();
 });
 
-it('displays the team only once', () => {
+it('displays the teams', () => {
+  render(
+    <EventInfo
+      {...createEventResponse()}
+      speakers={[
+        {
+          team: {
+            displayName: 'one team',
+            id: 'team-id',
+          },
+        },
+        {
+          team: {
+            displayName: 'another team',
+            id: 'team-id-1',
+          },
+        },
+      ]}
+      showTeams={true}
+      tags={[]}
+    />,
+  );
+  expect(screen.getByText(/one team/i)).toBeInTheDocument();
+  expect(screen.getByText(/another team/i)).toBeInTheDocument();
+});
+
+it('displays the team only once if it is duplicated', () => {
   render(
     <EventInfo
       {...createEventResponse()}
@@ -209,4 +235,10 @@ it('only links to events that are not cancelled', () => {
   expect(
     screen.getByRole('heading', { level: 3 }).closest('a'),
   ).not.toHaveAttribute('href');
+});
+
+it('displays the tags', () => {
+  render(<EventInfo {...props} tags={['one tag']} />);
+
+  expect(screen.getByText(/one tag/i)).toBeInTheDocument();
 });

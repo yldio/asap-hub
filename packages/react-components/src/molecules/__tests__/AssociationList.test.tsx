@@ -34,6 +34,20 @@ describe('Teams', () => {
     );
   });
 
+  it('display type in plural if there is more than one', () => {
+    const { getByText } = render(
+      <AssociationList
+        type="Team"
+        associations={[
+          { displayName: 'One', id: 't0' },
+          { displayName: 'One', id: 't0' },
+        ]}
+        max={1}
+      />,
+    );
+    expect(getByText(/2 teams/i)).toBeInTheDocument();
+  });
+
   describe('in inline mode', () => {
     it('renders one team icon as opposed to one each', () => {
       const { getAllByTitle, rerender } = render(

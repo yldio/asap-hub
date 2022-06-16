@@ -130,7 +130,6 @@ interface SpeakerListProps {
 }
 
 const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
-  console.log('🚀 ~ file: SpeakersList.tsx ~ line 133 ~ speakers', speakers);
   const [expanded, setExpanded] = useState(false);
   const hasEnded = useDateHasPassed(considerEndedAfter(endDate));
 

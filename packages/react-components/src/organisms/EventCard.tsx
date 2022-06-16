@@ -81,7 +81,7 @@ const EventCard: React.FC<EventCardProps> = ({
     }
 
     const hasSpeakersToBeAnnounced = speakers.find(
-      (speaker) => speaker.team && !speaker.user,
+      (speaker) => 'team' in speaker && !('user' in speaker),
     );
 
     if (speakers.length === 0 || hasSpeakersToBeAnnounced) {

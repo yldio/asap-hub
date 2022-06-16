@@ -2,7 +2,6 @@ import { ComponentProps } from 'react';
 import {
   eventMaterialTypes,
   EventResponse,
-  EventSpeaker,
   EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
 } from '@asap-hub/model';
 

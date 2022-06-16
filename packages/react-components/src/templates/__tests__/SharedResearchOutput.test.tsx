@@ -33,15 +33,25 @@ describe('Grant Documents', () => {
       <ResearchOutputPermissionsContext.Provider
         value={{ canCreateUpdate: false }}
       >
-        <SharedResearchOutput {...props} />,
+        <SharedResearchOutput {...props} documentType="Article" />,
       </ResearchOutputPermissionsContext.Provider>,
     );
     expect(queryByTitle('Edit')).toBeNull();
+
     rerender(
       <ResearchOutputPermissionsContext.Provider
         value={{ canCreateUpdate: true }}
       >
-        <SharedResearchOutput {...props} />,
+        <SharedResearchOutput {...props} documentType="Grant Document" />,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+    expect(queryByTitle('Edit')).toBeNull();
+
+    rerender(
+      <ResearchOutputPermissionsContext.Provider
+        value={{ canCreateUpdate: true }}
+      >
+        <SharedResearchOutput {...props} documentType="Article" />,
       </ResearchOutputPermissionsContext.Provider>,
     );
     expect(queryByTitle('Edit')).toBeInTheDocument();

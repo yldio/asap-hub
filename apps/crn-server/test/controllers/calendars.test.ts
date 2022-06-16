@@ -1,5 +1,4 @@
 import nock from 'nock';
-import { config } from '@asap-hub/squidex';
 import { NotFoundError } from '@asap-hub/errors';
 import { badGateway, notFound } from '@hapi/boom';
 
@@ -18,14 +17,26 @@ import {
 } from '../fixtures/calendars.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
+import { InputCalendar, RestCalendar, SquidexRest } from '@asap-hub/squidex';
+import { getAuthToken } from '../../src/utils/auth';
+import { appName, baseUrl } from '../../src/config';
 
 describe('Calendars controller', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const calendarsController = new Calendars(squidexGraphqlClientMock);
+  const calendarRestClient = new SquidexRest<RestCalendar, InputCalendar>(
+    getAuthToken,
+    'calendars',
+    { appName, baseUrl },
+  );
+  const calendarsController = new Calendars(
+    squidexGraphqlClientMock,
+    calendarRestClient,
+  );
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
   const calendarsControllerMockGraphql = new Calendars(
     squidexGraphqlClientMockServer,
+    calendarRestClient,
   );
 
   beforeAll(() => {
@@ -220,8 +231,8 @@ describe('Calendars controller', () => {
     });
 
     test('Should return an empty result when the no calendars are found', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/calendars`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/calendars`)
         .query({
           q: JSON.stringify({
             take: 50,
@@ -242,8 +253,8 @@ describe('Calendars controller', () => {
     test('Should query calendars by expiration date and return them', async () => {
       const maxExpiration = 1614697798681;
 
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/calendars`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/calendars`)
         .query({
           q: JSON.stringify({
             take: 50,
@@ -354,8 +365,8 @@ describe('Calendars controller', () => {
     });
     const resourceId = 'resource-id';
     test('Should throw Bad Gateway when squidex throws an error', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/calendars`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/calendars`)
         .query({
           $top: 1,
           $filter: `data/resourceId/iv eq '${resourceId}'`,
@@ -368,8 +379,8 @@ describe('Calendars controller', () => {
     });
 
     test('Should throw Not Found when squidex returns an empty array', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/calendars`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/calendars`)
         .query({
           $top: 1,
           $filter: `data/resourceId/iv eq '${resourceId}'`,
@@ -387,8 +398,8 @@ describe('Calendars controller', () => {
     test('Should return the calendar when finds it', async () => {
       const rawCalendarResponse = getCalendarRaw();
 
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/calendars`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/calendars`)
         .query({
           $top: 1,
           $filter: `data/resourceId/iv eq '${resourceId}'`,
@@ -410,8 +421,8 @@ describe('Calendars controller', () => {
       nock.cleanAll();
     });
     test('Should throw when calendar does not exist', async () => {
-      nock(config.baseUrl)
-        .patch(`/api/content/${config.appName}/calendars/calendar-not-found`)
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/calendars/calendar-not-found`)
         .reply(404);
 
       await expect(
@@ -424,8 +435,8 @@ describe('Calendars controller', () => {
       const calendarId = 'calendar-id';
       const restCalendar = getRestCalendar();
 
-      nock(config.baseUrl)
-        .patch(`/api/content/${config.appName}/calendars/${calendarId}`, {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/calendars/${calendarId}`, {
           syncToken: { iv: syncToken },
         })
         .reply(200, restCalendar);
@@ -452,8 +463,8 @@ describe('Calendars controller', () => {
     });
 
     test('Should throw when calendar does not exist', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/calendars/calendar-not-found`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/calendars/calendar-not-found`)
         .reply(404);
 
       await expect(
@@ -465,8 +476,8 @@ describe('Calendars controller', () => {
       const calendarId = 'calendar-id';
       const restCalendar = getRestCalendar();
 
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/calendars/${calendarId}`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/calendars/${calendarId}`)
         .reply(200, restCalendar);
 
       const result = await calendarsController.getSyncToken(calendarId);

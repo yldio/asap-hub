@@ -1,12 +1,16 @@
 /* istanbul ignore file */
 import { RestResearchOutput, Results, SquidexRest } from '@asap-hub/squidex';
+import { appName, baseUrl } from '../config';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
+import { getAuthToken } from '../utils/auth';
 import logger from '../utils/logger';
 
 export default class MoveResearchOutputTextToDescription extends Migration {
   up = async (): Promise<void> => {
     const squidexClient = new SquidexRest<RestResearchOutput>(
+      getAuthToken,
       'research-outputs',
+      { appName, baseUrl },
       {
         unpublished: true,
       },
@@ -50,7 +54,9 @@ export default class MoveResearchOutputTextToDescription extends Migration {
 
   down = async (): Promise<void> => {
     const squidexClient = new SquidexRest<RestResearchOutput>(
+      getAuthToken,
       'research-outputs',
+      { appName, baseUrl },
       {
         unpublished: true,
       },

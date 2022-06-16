@@ -1,7 +1,11 @@
-import { config, RestUser, SquidexGraphql } from '@asap-hub/squidex';
+import { RestUser, SquidexGraphql } from '@asap-hub/squidex';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import nock from 'nock';
-import { auth0SharedSecret as secret } from '../../../src/config';
+import {
+  appName,
+  auth0SharedSecret as secret,
+  baseUrl,
+} from '../../../src/config';
 import { handler } from '../../../src/handlers/webhooks/webhook-connect-by-code';
 import {
   generateGraphqlFetchUsersResponse,
@@ -129,8 +133,8 @@ describe('POST /webhook/users/connections - success', () => {
         Promise.resolve(getSquidexUserGraphqlResponse()),
       );
 
-    nock(config.baseUrl)
-      .patch(`/api/content/${config.appName}/users/${user.id}`, {
+    nock(baseUrl)
+      .patch(`/api/content/${appName}/users/${user.id}`, {
         email: { iv: email },
         connections: { iv: [{ code: userId }] },
       })

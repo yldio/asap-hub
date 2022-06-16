@@ -1,11 +1,7 @@
-import {
-  config,
-  RestUser,
-  SquidexRest,
-  SquidexRestClient,
-} from '@asap-hub/squidex';
+import { RestUser, SquidexRestClient } from '@asap-hub/squidex';
 import FormData from 'form-data';
 import mime from 'mime-types';
+import { appName, baseUrl } from '../config';
 
 export interface AssetDataProvider {
   create(id: string, avatar: Buffer, contentType: string): Promise<string>;
@@ -13,8 +9,8 @@ export interface AssetDataProvider {
 export default class Assets implements AssetDataProvider {
   userSquidexRestClient: SquidexRestClient<RestUser>;
 
-  constructor() {
-    this.userSquidexRestClient = new SquidexRest<RestUser>('users');
+  constructor(userSquidexRestClient: SquidexRestClient<RestUser>) {
+    this.userSquidexRestClient = userSquidexRestClient;
   }
 
   async create(
@@ -30,7 +26,7 @@ export default class Assets implements AssetDataProvider {
 
     const { id: assetId } = await this.userSquidexRestClient.client
       .post('assets', {
-        prefixUrl: `${config.baseUrl}/api/apps/${config.appName}`,
+        prefixUrl: `${baseUrl}/api/apps/${appName}`,
         headers: form.getHeaders(),
         body: form,
       })

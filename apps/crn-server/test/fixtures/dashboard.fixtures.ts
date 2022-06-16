@@ -1,5 +1,5 @@
 import { DashboardResponse } from '@asap-hub/model';
-import { config } from '@asap-hub/squidex';
+import { appName, baseUrl } from '../../src/config';
 
 export const squidexGraphqlDashboardFlatData = () => ({
   news: [
@@ -16,7 +16,7 @@ export const squidexGraphqlDashboardFlatData = () => ({
         thumbnail: [
           {
             id: 'thumbnail-uuid1',
-            thumbnailUrl: `${config.baseUrl}/api/assets/${config.appName}/thumbnail-uuid1`,
+            thumbnailUrl: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
           },
         ],
       },
@@ -34,7 +34,7 @@ export const squidexGraphqlDashboardFlatData = () => ({
         thumbnail: [
           {
             id: 'thumbnail-uuid2',
-            thumbnailUrl: `${config.baseUrl}/api/assets/${config.appName}/thumbnail-uuid2`,
+            thumbnailUrl: `${baseUrl}/api/assets/${appName}/thumbnail-uuid2`,
           },
         ],
       },
@@ -57,7 +57,7 @@ export const squidexGraphqlDashboardResponse = (): DashboardResponse => ({
       id: 'guid-news-1',
       shortText: 'Short text of news 1',
       text: '<p>text</p>',
-      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/thumbnail-uuid1`,
+      thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
       title: 'News 1',
       type: 'News',
     },
@@ -66,7 +66,7 @@ export const squidexGraphqlDashboardResponse = (): DashboardResponse => ({
       id: 'guid-news-2',
       shortText: 'Short text of event 2',
       text: '<p>text</p>',
-      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/thumbnail-uuid2`,
+      thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid2`,
       title: 'Event 2',
       type: 'Event',
     },

@@ -1,5 +1,7 @@
 import { Results, SquidexRest, SquidexRestClient } from '@asap-hub/squidex';
 import { Entity, Rest } from '@asap-hub/squidex/src/entities/common';
+import { appName, baseUrl } from '../config';
+import { getAuthToken } from './auth';
 
 export const applyToAllItemsInCollection = async <
   T extends Entity & Rest<unknown>,
@@ -10,9 +12,14 @@ export const applyToAllItemsInCollection = async <
     squidexClient: SquidexRestClient<T>,
   ) => Promise<void>,
 ): Promise<void> => {
-  const squidexClient = new SquidexRest<T>(entityName, {
-    unpublished: true,
-  });
+  const squidexClient = new SquidexRest<T>(
+    getAuthToken,
+    entityName,
+    { appName, baseUrl },
+    {
+      unpublished: true,
+    },
+  );
 
   let pointer = 0;
   let result: Results<T>;

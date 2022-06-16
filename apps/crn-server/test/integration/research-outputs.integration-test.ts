@@ -1,12 +1,44 @@
 import { Chance } from 'chance';
 import { ValidationError } from '@asap-hub/errors';
-import { ResearchOutput, SquidexGraphql } from '@asap-hub/squidex';
+import {
+  ResearchOutput,
+  RestExternalAuthor,
+  RestResearchOutput,
+  RestTeam,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { createResearchOutput } from '../helpers/research-outputs';
 import ResearchOutputs from '../../src/controllers/research-outputs';
+import { getAuthToken } from '../../src/utils/auth';
+import { appName, baseUrl } from '../../src/config';
 
 const chance = new Chance();
-const researchOutputs = new ResearchOutputs(new SquidexGraphql());
+const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
+  appName,
+  baseUrl,
+});
+const researchOutputRestClient = new SquidexRest<RestResearchOutput>(
+  getAuthToken,
+  'research-outputs',
+  { appName, baseUrl },
+);
+const teamRestclient = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
+  appName,
+  baseUrl,
+});
+const externalAuthorsRestClient = new SquidexRest<RestExternalAuthor>(
+  getAuthToken,
+  'external-authors',
+  { appName, baseUrl },
+);
+const researchOutputs = new ResearchOutputs(
+  squidexGraphqlClient,
+  researchOutputRestClient,
+  teamRestclient,
+  externalAuthorsRestClient,
+);
 
 describe('Research Outputs', () => {
   const randomTitle = chance.guid();

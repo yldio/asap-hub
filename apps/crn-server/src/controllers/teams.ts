@@ -4,7 +4,6 @@ import {
   RestUser,
   SquidexGraphqlClient,
   SquidexRestClient,
-  SquidexRest,
   sanitiseForSquidex,
 } from '@asap-hub/squidex';
 import { ListTeamResponse, TeamResponse, TeamTool } from '@asap-hub/model';
@@ -39,14 +38,18 @@ export type FetchTeamsOptions = {
   showTeamTools?: string[];
 } & FetchOptions;
 export default class Teams implements TeamController {
-  teamSquidexRestClient: SquidexRestClient<RestTeam>;
-  userSquidexRestClient: SquidexRestClient<RestUser>;
   squidexGraphqlClient: SquidexGraphqlClient;
+  userSquidexRestClient: SquidexRestClient<RestUser>;
+  teamSquidexRestClient: SquidexRestClient<RestTeam>;
 
-  constructor(squidexGraphlClient: SquidexGraphqlClient) {
+  constructor(
+    squidexGraphlClient: SquidexGraphqlClient,
+    userSquidexRestClient: SquidexRestClient<RestUser>,
+    teamSquidexRestClient: SquidexRestClient<RestTeam>,
+  ) {
     this.squidexGraphqlClient = squidexGraphlClient;
-    this.userSquidexRestClient = new SquidexRest('users');
-    this.teamSquidexRestClient = new SquidexRest('teams');
+    this.userSquidexRestClient = userSquidexRestClient;
+    this.teamSquidexRestClient = teamSquidexRestClient;
   }
 
   async update(id: string, tools: TeamTool[]): Promise<TeamResponse> {

@@ -10,9 +10,15 @@ import { isBoom } from '@hapi/boom';
 import { Handler } from 'aws-lambda';
 import { promises as fsPromise } from 'fs';
 import path from 'path';
+import { appName, baseUrl } from '../../config';
+import { getAuthToken } from '../../utils/auth';
 import pinoLogger from '../../utils/logger';
 
-const squidexClient = new SquidexRest<RestMigration>('migrations');
+const squidexClient = new SquidexRest<RestMigration>(
+  getAuthToken,
+  'migrations',
+  { appName, baseUrl },
+);
 
 export const runFactory =
   (

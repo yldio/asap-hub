@@ -1,6 +1,6 @@
 import nock from 'nock';
 import { GenericError } from '@asap-hub/errors';
-import { config } from '@asap-hub/squidex';
+import { RestEvent, SquidexRest } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import {
   listEventResponse,
@@ -20,14 +20,24 @@ import Events from '../../src/controllers/events';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 import Boom from '@hapi/boom';
+import { getAuthToken } from '../../src/utils/auth';
+import { appName, baseUrl } from '../../src/config';
 
 describe('Event controller', () => {
+  const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
+    appName,
+    baseUrl,
+  });
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const eventsController = new Events(squidexGraphqlClientMock);
+  const eventsController = new Events(
+    squidexGraphqlClientMock,
+    eventRestClient,
+  );
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
   const eventsControllerMockGraphql = new Events(
     squidexGraphqlClientMockServer,
+    eventRestClient,
   );
 
   beforeAll(() => identity());
@@ -654,9 +664,9 @@ describe('Event controller', () => {
     });
 
     test('Should create or update the event', async () => {
-      nock(config.baseUrl)
+      nock(baseUrl)
         .post(
-          `/api/content/${config.appName}/events?publish=true`,
+          `/api/content/${appName}/events?publish=true`,
           getRestEvent().data,
         )
         .reply(200, getRestEvent());
@@ -665,8 +675,8 @@ describe('Event controller', () => {
     });
 
     test('Should throw when squidex return an error', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/events?publish=true`)
+      nock(baseUrl)
+        .post(`/api/content/${appName}/events?publish=true`)
         .reply(404);
 
       await expect(
@@ -687,8 +697,8 @@ describe('Event controller', () => {
     const eventId = 'event-id';
 
     test('Should update the event', async () => {
-      nock(config.baseUrl)
-        .patch(`/api/content/${config.appName}/events/${eventId}`, {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/events/${eventId}`, {
           tags: { iv: ['kubernetes'] },
           meetingLink: { iv: 'https://zweem.com' },
         })
@@ -701,8 +711,8 @@ describe('Event controller', () => {
     });
 
     test('Should throw when squidex return an error', async () => {
-      nock(config.baseUrl)
-        .patch(`/api/content/${config.appName}/events/${eventId}`)
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/events/${eventId}`)
         .reply(404);
 
       await expect(
@@ -721,8 +731,8 @@ describe('Event controller', () => {
     const googleId = 'google-event-id';
     const filter = `data/googleId/iv eq '${googleId}'`;
     test('Should throw when gets an error from squidex', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/events`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/events`)
         .query({
           $top: 1,
           $filter: filter,
@@ -733,8 +743,8 @@ describe('Event controller', () => {
       ).rejects.toThrow();
     });
     test('Should return null when squidex returns an empty array', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/events`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/events`)
         .query({
           $top: 1,
           $filter: filter,
@@ -744,8 +754,8 @@ describe('Event controller', () => {
       expect(result).toBeNull;
     });
     test('Should return the event when finds it', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/events`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/events`)
         .query({
           $top: 1,
           $filter: filter,

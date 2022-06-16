@@ -6,7 +6,6 @@ import {
   Event,
   SquidexGraphqlClient,
   SquidexRestClient,
-  SquidexRest,
   sanitiseForSquidex,
 } from '@asap-hub/squidex';
 import { parseGraphQLEvent } from '../entities/event';
@@ -39,9 +38,12 @@ export default class Events implements EventController {
   squidexGraphqlClient: SquidexGraphqlClient;
   eventSquidexRestClient: SquidexRestClient<RestEvent>;
 
-  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
+  constructor(
+    squidexGraphqlClient: SquidexGraphqlClient,
+    eventSquidexRestClient: SquidexRestClient<RestEvent>,
+  ) {
     this.squidexGraphqlClient = squidexGraphqlClient;
-    this.eventSquidexRestClient = new SquidexRest('events');
+    this.eventSquidexRestClient = eventSquidexRestClient;
   }
 
   async fetch(options: FetchEventsOptions): Promise<ListEventResponse> {

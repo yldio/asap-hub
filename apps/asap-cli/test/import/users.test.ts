@@ -1,9 +1,9 @@
 import nock from 'nock';
 import { join } from 'path';
-import { config } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import { users as importUsers } from '../../src/import';
 import { fetchTeamsResponse, fetchUsersResponse } from './users.fixtures';
+import { appName, baseUrl } from '../../src/config';
 
 const body = {
   email: {
@@ -76,8 +76,8 @@ describe('Import user', () => {
   });
 
   test('create user in squidex', async () => {
-    nock(config.baseUrl)
-      .post(`/api/content/${config.appName}/users?publish=true`, {
+    nock(baseUrl)
+      .post(`/api/content/${appName}/users?publish=true`, {
         ...body,
         avatar: {
           iv: [],
@@ -98,8 +98,8 @@ describe('Import user', () => {
   });
 
   test('upsert user in squidex', async () => {
-    nock(config.baseUrl)
-      .post(`/api/content/${config.appName}/users?publish=true`, {
+    nock(baseUrl)
+      .post(`/api/content/${appName}/users?publish=true`, {
         ...body,
         avatar: {
           iv: [],
@@ -115,7 +115,7 @@ describe('Import user', () => {
         },
       })
       .reply(400)
-      .get(`/api/content/${config.appName}/users`)
+      .get(`/api/content/${appName}/users`)
       .query({
         q: JSON.stringify({
           take: 1,
@@ -127,7 +127,7 @@ describe('Import user', () => {
         }),
       })
       .reply(200, { items: [fetchUsersResponse.items[0]] })
-      .patch(`/api/content/${config.appName}/users/userId1`, {
+      .patch(`/api/content/${appName}/users/userId1`, {
         ...body,
         role: {
           iv: 'Staff',
@@ -139,12 +139,12 @@ describe('Import user', () => {
   });
 
   test('create user and team in squidex', async () => {
-    nock(config.baseUrl)
-      .post(`/api/content/${config.appName}/users?publish=true`)
+    nock(baseUrl)
+      .post(`/api/content/${appName}/users?publish=true`)
       .reply(200, fetchUsersResponse.items[0])
-      .post(`/api/content/${config.appName}/teams?publish=true`)
+      .post(`/api/content/${appName}/teams?publish=true`)
       .reply(200, fetchTeamsResponse.items[0])
-      .patch(`/api/content/${config.appName}/users/userId1`, {
+      .patch(`/api/content/${appName}/users/userId1`, {
         email: {
           iv: fetchUsersResponse.items[0].data.email.iv,
         },

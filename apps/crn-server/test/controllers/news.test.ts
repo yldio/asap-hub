@@ -1,6 +1,5 @@
 import nock from 'nock';
 import { NotFoundError } from '@asap-hub/errors';
-import { config } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import News from '../../src/controllers/news';
 import {
@@ -8,9 +7,17 @@ import {
   listNewsResponse,
 } from '../fixtures/news.fixtures';
 import { NewsResponse } from '@asap-hub/model';
+import { RestNews, SquidexRest } from '@asap-hub/squidex';
+import { getAuthToken } from '../../src/utils/auth';
+import { appName, baseUrl } from '../../src/config';
 
 describe('News controller', () => {
-  const news = new News();
+  const newsRestClient = new SquidexRest<RestNews>(
+    getAuthToken,
+    'news-and-events',
+    { appName, baseUrl },
+  );
+  const news = new News(newsRestClient);
 
   beforeAll(() => {
     identity();
@@ -22,8 +29,8 @@ describe('News controller', () => {
 
   describe('Fetch method', () => {
     test('Should return an empty result when no news exist', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/news-and-events`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/news-and-events`)
         .query({
           q: JSON.stringify({
             take: 8,
@@ -43,8 +50,8 @@ describe('News controller', () => {
     });
 
     test('Should return an empty result when resource does not exists', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/news-and-events`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/news-and-events`)
         .query({
           q: JSON.stringify({
             take: 8,
@@ -64,8 +71,8 @@ describe('News controller', () => {
     });
 
     test('Should return news', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/news-and-events`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/news-and-events`)
         .query({
           q: JSON.stringify({
             take: 8,
@@ -97,8 +104,8 @@ describe('News controller', () => {
         ],
       };
 
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/news-and-events`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/news-and-events`)
         .query({
           q: JSON.stringify({
             take: 8,
@@ -119,8 +126,8 @@ describe('News controller', () => {
     test('Should throw a Not Found error when the news and event are not found', async () => {
       const id = 'some-id';
 
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/news-and-events/${id}`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/news-and-events/${id}`)
         .reply(404);
 
       await expect(news.fetchById(id)).rejects.toThrow(NotFoundError);
@@ -129,8 +136,8 @@ describe('News controller', () => {
     test('Should return the result when the news and event exists', async () => {
       const id = 'some-id';
 
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/news-and-events/${id}`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/news-and-events/${id}`)
         .reply(200, {
           id: 'uuid',
           created: '2020-09-23T16:34:26.842Z',

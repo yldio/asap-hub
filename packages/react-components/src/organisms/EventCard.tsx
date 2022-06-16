@@ -83,7 +83,7 @@ const EventCard: React.FC<EventCardProps> = ({
       (speaker) => 'team' in speaker && !('user' in speaker),
     );
 
-    if (speakers.length === 0 || hasSpeakersToBeAnnounced) {
+    if (!hasStarted && (speakers.length === 0 || hasSpeakersToBeAnnounced)) {
       return {
         type: 'info',
         toastContent: 'More speakers to be announced.',

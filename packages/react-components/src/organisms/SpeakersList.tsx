@@ -130,12 +130,13 @@ interface SpeakerListProps {
 }
 
 const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
+  console.log('🚀 ~ file: SpeakersList.tsx ~ line 133 ~ speakers', speakers);
   const [expanded, setExpanded] = useState(false);
   const hasEnded = useDateHasPassed(considerEndedAfter(endDate));
 
   const userToBeAnnounced = hasEnded
-    ? 'User was not announced'
-    : 'User to be announced';
+    ? 'Speaker was not announced'
+    : 'Speaker to be announced';
 
   const getSpeakerListStyles = () => {
     if (speakers.length < 6) {

@@ -2,6 +2,7 @@ import { ComponentProps } from 'react';
 import {
   eventMaterialTypes,
   EventResponse,
+  EventSpeaker,
   EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
 } from '@asap-hub/model';
 
@@ -23,6 +24,7 @@ type EventCardProps = ComponentProps<typeof EventInfo> &
     | 'videoRecording'
     | 'presentation'
     | 'meetingMaterials'
+    | 'speakers'
   >;
 
 const EventCard: React.FC<EventCardProps> = ({
@@ -35,8 +37,8 @@ const EventCard: React.FC<EventCardProps> = ({
     EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
   );
 
-  const started = useDateHasPassed(considerStartedAfter);
-  const finished = useDateHasPassed(considerEndedAfter(props.endDate));
+  const hasStarted = useDateHasPassed(considerStartedAfter);
+  const hasFinished = useDateHasPassed(considerEndedAfter(props.endDate));
   const toastCardProps = (): Omit<
     ComponentProps<typeof ToastCard>,
     'children'
@@ -47,7 +49,7 @@ const EventCard: React.FC<EventCardProps> = ({
         type: 'alert',
       };
     }
-    if (started && !finished) {
+    if (hasStarted && !hasFinished) {
       return {
         type: 'live',
         toastContent: (
@@ -77,14 +79,19 @@ const EventCard: React.FC<EventCardProps> = ({
         ),
       };
     }
-    if (speakers.length === 0) {
+
+    const hasSpeakersToBeAnnounced = speakers.find(
+      (speaker) => speaker.team && !speaker.user,
+    );
+
+    if (speakers.length === 0 || hasSpeakersToBeAnnounced) {
       return {
         type: 'info',
         toastContent: 'More speakers to be announced.',
       };
     }
 
-    if (finished) {
+    if (hasFinished) {
       const materialCount = eventMaterialTypes.reduce((count, key) => {
         const value = props[key];
         if (Array.isArray(value)) {

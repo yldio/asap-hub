@@ -41,7 +41,7 @@ describe('When rendering the speaker list', () => {
 
       render(<SpeakersList {...event} />);
 
-      expect(screen.getByText('User to be announced')).toBeVisible();
+      expect(screen.getByText('Speaker to be announced')).toBeVisible();
     });
 
     it('Renders an announced user', async () => {

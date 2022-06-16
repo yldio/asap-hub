@@ -14,7 +14,7 @@ const mockConstructor = jest.fn();
 jest.mock('@asap-hub/squidex', () => ({
   ...jest.requireActual('@asap-hub/squidex'),
   SquidexRest: class SquidexRest {
-    constructor(collection: string) {
+    constructor(_skip: unknown, collection: string) {
       mockConstructor(collection);
     }
     fetch = mockFetch;

@@ -14,12 +14,10 @@ import {
   UserUpdateDataObject,
 } from '@asap-hub/model';
 import {
-  createURL,
   parseDate,
   RestUser,
   sanitiseForSquidex,
   SquidexGraphqlClient,
-  SquidexRest,
   SquidexRestClient,
 } from '@asap-hub/squidex';
 import {
@@ -33,6 +31,7 @@ import { FetchUsersOptions } from '../controllers/users';
 import { isTeamRole } from '../entities';
 import { FETCH_USER, FETCH_USERS } from '../queries/users.queries';
 import logger from '../utils/logger';
+import { createUrl } from '../utils/urls';
 
 export type CMSOrcidWork = OrcidWork;
 
@@ -45,9 +44,12 @@ export default class Users implements UserDataProvider {
   squidexGraphlClient: SquidexGraphqlClient;
   userSquidexRestClient: SquidexRestClient<RestUser>;
 
-  constructor(squidexGraphlClient: SquidexGraphqlClient) {
+  constructor(
+    squidexGraphlClient: SquidexGraphqlClient,
+    userSquidexRestClient: SquidexRestClient<RestUser>,
+  ) {
     this.squidexGraphlClient = squidexGraphlClient;
-    this.userSquidexRestClient = new SquidexRest<RestUser>('users');
+    this.userSquidexRestClient = userSquidexRestClient;
   }
   async fetchById(id: string): Promise<UserDataObject | null> {
     const { findUsersContent } = await this.queryFetchByIdData(id);
@@ -329,7 +331,7 @@ export const parseUserToDataObject = (user: RestUser): UserDataObject => {
       user.data.expertiseAndResourceDescription?.iv,
     questions: user.data.questions?.iv?.map(({ question }) => question) || [],
     avatarUrl:
-      (user.data.avatar?.iv && createURL(user.data.avatar.iv)[0]) ?? undefined,
+      (user.data.avatar?.iv && createUrl(user.data.avatar.iv)[0]) ?? undefined,
     role: user.data.role.iv === 'Hidden' ? 'Guest' : user.data.role.iv,
     responsibilities: user.data.responsibilities?.iv,
     researchInterests: user.data.researchInterests?.iv ?? undefined,
@@ -467,7 +469,7 @@ export const parseGraphQLUserToDataObject = (
     teams,
     social,
     avatarUrl: flatAvatar?.length
-      ? createURL(flatAvatar.map((a) => a.id))[0]
+      ? createUrl(flatAvatar.map((a) => a.id))[0]
       : undefined,
     role,
     responsibilities: item.flatData.responsibilities || undefined,

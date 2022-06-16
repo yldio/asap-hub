@@ -35,7 +35,7 @@ const stage = process.env.SLS_STAGE!;
 const service = 'gp2-hub';
 const appHostname = stage === 'production' ? hostname : `${stage}.${hostname}`;
 const apiHostname =
-  stage === 'prod' ? `api.${hostname}` : `api-${stage}.${hostname}`;
+  stage === 'production' ? `api.${hostname}` : `api-${stage}.${hostname}`;
 const appUrl = `https://${appHostname}`;
 
 export const plugins = [

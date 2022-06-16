@@ -1,5 +1,4 @@
 import nock from 'nock';
-import config from '../src/config';
 import { GenericError } from '@asap-hub/errors';
 import { Squidex } from '../src/rest';
 import { getAccessTokenMock } from './mocks/access-token.mock';
@@ -15,7 +14,12 @@ interface Content {
 
 const collection = 'contents';
 describe('squidex wrapper', () => {
-  const client = new Squidex<Content>(collection, getAccessTokenMock);
+  const appName = 'test-app';
+  const baseUrl = 'http://test-url.com';
+  const client = new Squidex<Content>(getAccessTokenMock, collection, {
+    appName,
+    baseUrl,
+  });
 
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
@@ -23,25 +27,19 @@ describe('squidex wrapper', () => {
   });
 
   it('returns GenericError when squidex returns http error', async () => {
-    nock(config.baseUrl)
-      .delete(`/api/content/${config.appName}/${collection}/42`)
-      .reply(401);
+    nock(baseUrl).delete(`/api/content/${appName}/${collection}/42`).reply(401);
 
     await expect(() => client.delete('42')).rejects.toThrow(GenericError);
   });
 
   it('returns GenericError when squidex returns error', async () => {
-    nock(config.baseUrl)
-      .delete(`/api/content/${config.appName}/${collection}/42`)
-      .reply(500);
+    nock(baseUrl).delete(`/api/content/${appName}/${collection}/42`).reply(500);
 
     await expect(() => client.delete('42')).rejects.toThrow(GenericError);
   });
 
   it('deletes a specific document', async () => {
-    nock(config.baseUrl)
-      .delete(`/api/content/${config.appName}/${collection}/42`)
-      .reply(204);
+    nock(baseUrl).delete(`/api/content/${appName}/${collection}/42`).reply(204);
 
     await client.delete('42');
   });

@@ -1,6 +1,16 @@
 import { ListResponse } from '@asap-hub/model';
-import { SquidexGraphql } from '@asap-hub/squidex';
+import {
+  RestEvent,
+  RestExternalAuthor,
+  RestResearchOutput,
+  RestTeam,
+  RestUser,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
+import { getAccessTokenFactory } from '@asap-hub/squidex/src/auth';
 import { promises as fs } from 'fs';
+import { appName, baseUrl, clientId, clientSecret } from '../src/config';
 import Events from '../src/controllers/events';
 import ExternalAuthors from '../src/controllers/external-authors';
 import ResearchOutputs from '../src/controllers/research-outputs';
@@ -47,18 +57,54 @@ export const exportEntity = async (
 };
 
 function getController(entity: Entity) {
-  const controllerMap = {
-    users: Users,
-    'research-outputs': ResearchOutputs,
-    'external-authors': ExternalAuthors,
-    events: Events,
-  };
-  const squidexGraphqlClient = new SquidexGraphql();
-  if (entity === 'users') {
-    const userDataProvider = new UserDataProvider(squidexGraphqlClient);
-    const assetDataProvider = new AssetDataProvider();
-    return new controllerMap[entity](userDataProvider, assetDataProvider);
-  }
+  const getAuthToken = getAccessTokenFactory({
+    clientId,
+    clientSecret,
+    baseUrl,
+  });
+  const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
+    appName,
+    baseUrl,
+  });
+  const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
+    appName,
+    baseUrl,
+  });
+  const researchOutputRestClient = new SquidexRest<RestResearchOutput>(
+    getAuthToken,
+    'research-outputs',
+    { appName, baseUrl },
+  );
+  const externalAuthorsRestClient = new SquidexRest<RestExternalAuthor>(
+    getAuthToken,
+    'external-authors',
+    { appName, baseUrl },
+  );
+  const eventsRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
+    appName,
+    baseUrl,
+  });
+  const teamRestClient = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
+    appName,
+    baseUrl,
+  });
+  const userDataProvider = new UserDataProvider(
+    squidexGraphqlClient,
+    userRestClient,
+  );
+  const assetDataProvider = new AssetDataProvider(userRestClient);
 
-  return new controllerMap[entity](squidexGraphqlClient);
+  const controllerMap = {
+    users: new Users(userDataProvider, assetDataProvider),
+    'research-outputs': new ResearchOutputs(
+      squidexGraphqlClient,
+      researchOutputRestClient,
+      teamRestClient,
+      externalAuthorsRestClient,
+    ),
+    'external-authors': new ExternalAuthors(squidexGraphqlClient),
+    events: new Events(squidexGraphqlClient, eventsRestClient),
+  };
+
+  return controllerMap[entity];
 }

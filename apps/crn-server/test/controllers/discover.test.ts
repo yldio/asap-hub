@@ -1,5 +1,5 @@
 import Discover from '../../src/controllers/discover';
-import { config, SquidexGraphql } from '@asap-hub/squidex';
+import { SquidexGraphql } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import { DiscoverResponse } from '@asap-hub/model';
 import nock from 'nock';
@@ -10,10 +10,15 @@ import {
 import { FETCH_DISCOVER } from '../../src/queries/discover.queries';
 import { print } from 'graphql';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
+import { getAuthToken } from '../../src/utils/auth';
+import { appName, baseUrl } from '../../src/config';
 
 describe('Discover controller', () => {
-  const squidexGraphqlClientMock = new SquidexGraphql();
-  const discover = new Discover(squidexGraphqlClientMock);
+  const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
+    appName,
+    baseUrl,
+  });
+  const discover = new Discover(squidexGraphqlClient);
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
   const discoverMockGraphql = new Discover(squidexGraphqlClientMockServer);
@@ -40,8 +45,8 @@ describe('Discover controller', () => {
       });
 
       test('Should return an empty result', async () => {
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
+        nock(baseUrl)
+          .post(`/api/content/${appName}/graphql`, {
             query: print(FETCH_DISCOVER),
           })
           .reply(200, {
@@ -64,8 +69,8 @@ describe('Discover controller', () => {
         expect(result).toEqual(expectedResponse);
       });
       test('Should return an empty result when no resource doesnt exist', async () => {
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
+        nock(baseUrl)
+          .post(`/api/content/${appName}/graphql`, {
             query: print(FETCH_DISCOVER),
           })
           .reply(200, {
@@ -86,8 +91,8 @@ describe('Discover controller', () => {
         expect(result).toEqual(expectedResponse);
       });
       test('Should return the discover information', async () => {
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
+        nock(baseUrl)
+          .post(`/api/content/${appName}/graphql`, {
             query: print(FETCH_DISCOVER),
           })
           .reply(200, {

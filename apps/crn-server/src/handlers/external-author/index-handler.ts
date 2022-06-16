@@ -11,7 +11,14 @@ import ExternalAuthors, {
 } from '../../controllers/external-authors';
 import { ExternalAuthorEvent, ExternalAuthorPayload } from '../event-bus';
 import { EventBridgeHandler } from '../../utils/types';
-import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
+import {
+  algoliaApiKey,
+  algoliaAppId,
+  algoliaIndex,
+  appName,
+  baseUrl,
+} from '../../config';
+import { getAuthToken } from '../../utils/auth';
 
 export const indexExternalAuthorHandler =
   (
@@ -44,9 +51,13 @@ export const indexExternalAuthorHandler =
       throw e;
     }
   };
+const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
+  appName,
+  baseUrl,
+});
 
 export const handler = indexExternalAuthorHandler(
-  new ExternalAuthors(new SquidexGraphql()),
+  new ExternalAuthors(squidexGraphqlClient),
   algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
 );
 

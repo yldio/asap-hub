@@ -5,7 +5,6 @@ import {
   Calendar,
   Query,
   SquidexGraphqlClient,
-  SquidexRest,
   SquidexRestClient,
   parseToSquidex,
   InputCalendar,
@@ -30,11 +29,11 @@ export default class Calendars implements CalendarController {
   calendarSquidexRestClient: SquidexRestClient<RestCalendar, InputCalendar>;
   squidexGraphqlClient: SquidexGraphqlClient;
 
-  constructor(squidexGraphqlClient: SquidexGraphqlClient) {
-    this.calendarSquidexRestClient = new SquidexRest<
-      RestCalendar,
-      InputCalendar
-    >('calendars');
+  constructor(
+    squidexGraphqlClient: SquidexGraphqlClient,
+    squidexRestClient: SquidexRestClient<RestCalendar, InputCalendar>,
+  ) {
+    this.calendarSquidexRestClient = squidexRestClient;
     this.squidexGraphqlClient = squidexGraphqlClient;
   }
 

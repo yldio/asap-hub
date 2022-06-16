@@ -2,6 +2,7 @@
 
 import Intercept from 'apr-intercept';
 import {
+  getAccessTokenFactory,
   RestTeam,
   RestUser,
   SquidexRest,
@@ -11,9 +12,17 @@ import { GenericError } from '@asap-hub/errors';
 import { HTTPError } from 'got';
 import { Data } from './parse';
 import log from '../../logger';
+import { appName, baseUrl, clientId, clientSecret } from '../../config';
 
-const teams = new SquidexRest<RestTeam>('teams');
-const users = new SquidexRest<RestUser>('users');
+const getAuthToken = getAccessTokenFactory({ baseUrl, clientId, clientSecret });
+const teams = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
+  appName,
+  baseUrl,
+});
+const users = new SquidexRest<RestUser>(getAuthToken, 'users', {
+  appName,
+  baseUrl,
+});
 
 interface Cache {
   [key: string]: Promise<RestTeam | RestUser>;

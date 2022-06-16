@@ -1,6 +1,6 @@
 import { GenericError, NotFoundError, ValidationError } from '@asap-hub/errors';
-import Got, { HTTPError } from 'got';
-import createClient, { GetAccessToken } from './auth';
+import Got, { HTTPError, OptionsOfTextResponseBody } from 'got';
+import createClient, { GetAccessToken, SquidexConfig } from './auth';
 import { parseErrorResponseBody } from './helpers';
 
 export interface Results<T> {
@@ -66,12 +66,13 @@ export class Squidex<
   collection: string;
 
   constructor(
-    collection: string,
     getAccessToken: GetAccessToken,
-    options?: Parameters<typeof createClient>[0],
+    collection: string,
+    config: Pick<SquidexConfig, 'appName' | 'baseUrl'>,
+    options?: Parameters<typeof createClient>[2],
   ) {
     this.collection = collection;
-    this.client = createClient(options, getAccessToken);
+    this.client = createClient(getAccessToken, config, options);
   }
 
   async fetch(query: ODataQuery | Query = {}): Promise<Results<T>> {
@@ -108,9 +109,14 @@ export class Squidex<
     }
   }
 
-  async fetchById(id: string): Promise<T> {
+  async fetchById(id: string, published = true): Promise<T> {
     try {
-      const res = await this.client.get(`${this.collection}/${id}`).json();
+      const options: OptionsOfTextResponseBody | undefined = published
+        ? {}
+        : { headers: { 'X-Unpublished': 'true' } };
+      const res = await this.client
+        .get(`${this.collection}/${id}`, options)
+        .json();
       return res as T;
     } catch (err) {
       if (err instanceof HTTPError) {

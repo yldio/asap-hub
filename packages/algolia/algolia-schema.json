@@ -33,7 +33,12 @@
     "labCatalogNumber",
     "doi",
     "email",
-    "contactEmail"
+    "contactEmail",
+    "speakers.externalUser.name",
+    "speakers.team.displayName",
+    "speakers.user.displayName",
+    "endDateTimestamp",
+    "startDateTimestamp"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,
@@ -65,7 +70,11 @@
     "exact",
     "custom"
   ],
-  "customRanking": ["desc(addedDate)", "desc(createdDate)"],
+  "customRanking": [
+    "asc(endDateTimestamp)",
+    "desc(addedDate)",
+    "desc(createdDate)"
+  ],
   "separatorsToIndex": "",
   "removeWordsIfNoResults": "none",
   "queryType": "prefixLast",

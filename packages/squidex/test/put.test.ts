@@ -1,6 +1,5 @@
-import { GenericError, NotFoundError } from '@asap-hub/errors';
 import nock from 'nock';
-import config from '../src/config';
+import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { Squidex } from '../src/rest';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
@@ -15,7 +14,12 @@ interface Content {
 
 const collection = 'contents';
 describe('squidex wrapper', () => {
-  const client = new Squidex<Content>(collection, getAccessTokenMock);
+  const appName = 'test-app';
+  const baseUrl = 'http://test-url.com';
+  const client = new Squidex<Content>(getAccessTokenMock, collection, {
+    appName,
+    baseUrl,
+  });
 
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
@@ -23,8 +27,8 @@ describe('squidex wrapper', () => {
   });
 
   it('returns GenericError with request body when squidex returns bad request', async () => {
-    nock(config.baseUrl)
-      .put(`/api/content/${config.appName}/${collection}/42`)
+    nock(baseUrl)
+      .put(`/api/content/${appName}/${collection}/42`)
       .query(() => true)
       .reply(400, {
         details: ['Request body has an invalid format'],
@@ -45,9 +49,7 @@ describe('squidex wrapper', () => {
   });
 
   it('returns NotFoundError when document doesnt exist', async () => {
-    nock(config.baseUrl)
-      .put(`/api/content/${config.appName}/${collection}/42`)
-      .reply(404);
+    nock(baseUrl).put(`/api/content/${appName}/${collection}/42`).reply(404);
 
     await expect(() =>
       client.put('42', {
@@ -59,8 +61,8 @@ describe('squidex wrapper', () => {
   });
 
   it('returns GenericError when squidex returns error', async () => {
-    nock(config.baseUrl)
-      .put(`/api/content/${config.appName}/${collection}/42`)
+    nock(baseUrl)
+      .put(`/api/content/${appName}/${collection}/42`)
       .query(() => true)
       .reply(500);
 
@@ -74,8 +76,8 @@ describe('squidex wrapper', () => {
   });
 
   it('updates a specific document', async () => {
-    nock(config.baseUrl)
-      .put(`/api/content/${config.appName}/${collection}/42`, {
+    nock(baseUrl)
+      .put(`/api/content/${appName}/${collection}/42`, {
         string: {
           iv: 'value',
         },

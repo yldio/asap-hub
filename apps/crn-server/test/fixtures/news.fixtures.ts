@@ -1,5 +1,6 @@
-import { config, RestNews } from '@asap-hub/squidex';
+import { RestNews } from '@asap-hub/squidex';
 import { ListNewsResponse } from '@asap-hub/model';
+import { appName, baseUrl } from '../../src/config';
 
 export const newsSquidexApiResponse: {
   total: number;
@@ -65,7 +66,7 @@ export const listNewsResponse: ListNewsResponse = {
       type: 'News',
       shortText: 'Short text of news 1',
       text: '<p>text</p>',
-      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/thumbnail-uuid1`,
+      thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
       created: '2020-09-08T16:35:28.000Z',
     },
     {
@@ -74,7 +75,7 @@ export const listNewsResponse: ListNewsResponse = {
       type: 'Event',
       shortText: 'Short text of event 2',
       text: '<p>text</p>',
-      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/thumbnail-uuid2`,
+      thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid2`,
       created: '2020-09-16T14:31:19.000Z',
     },
   ],

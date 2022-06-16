@@ -3,8 +3,14 @@ import {
   RestResearchOutput,
   SquidexRest,
 } from '@asap-hub/squidex';
+import { appName, baseUrl } from '../../src/config';
+import { getAuthToken } from '../../src/utils/auth';
 
-const researchOutputs = new SquidexRest<RestResearchOutput>('research-outputs');
+const researchOutputs = new SquidexRest<RestResearchOutput>(
+  getAuthToken,
+  'research-outputs',
+  { appName, baseUrl },
+);
 
 export const createResearchOutput = (
   overwrites?: Partial<ResearchOutput>,

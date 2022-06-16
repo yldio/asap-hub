@@ -61,6 +61,7 @@ const standardMockPostUserAvatar =
 const mockToast = jest.fn() as jest.MockedFunction<
   ContextType<typeof ToastContext>
 >;
+beforeEach(jest.clearAllMocks);
 
 const renderUserProfile = async (
   userResponse = createUserResponse(),
@@ -169,12 +170,14 @@ it('navigates to the outputs tab', async () => {
   );
   expect(await screen.findByText(/Test Output 0/i)).toBeVisible();
 });
-
 it('navigates to the upcoming events tab', async () => {
+  const date = new Date('2021-12-28T14:00:00.000Z');
+  jest.useFakeTimers('modern').setSystemTime(date);
   const response = createListEventResponse(1);
   mockUserEvents.mockResolvedValue(response);
 
-  await renderUserProfile(createUserResponse());
+  const userResponse = createUserResponse();
+  await renderUserProfile(userResponse);
 
   const tab = screen.getByRole('link', { name: /upcoming/i });
   userEvent.click(tab);
@@ -183,6 +186,19 @@ it('navigates to the upcoming events tab', async () => {
     'Search by topic, presenting team, …',
   );
   expect(await screen.findByText(/Event 0/i)).toBeVisible();
+  expect(mockUserEvents).toBeCalledTimes(1);
+  expect(mockUserEvents).toBeCalledWith(
+    expect.anything(),
+    {
+      after: '2021-12-28T13:00:00.250Z',
+      currentPage: 0,
+      filters: new Set(),
+      pageSize: 10,
+      searchQuery: '',
+    },
+    userResponse.id,
+  );
+  jest.useRealTimers();
 });
 
 it("links to the user's team", async () => {

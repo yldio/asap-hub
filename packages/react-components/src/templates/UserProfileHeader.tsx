@@ -290,7 +290,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             Shared Outputs
             {` (${sharedOutputsCount})`}
           </TabLink>
-          <TabLink href={tabRoutes.upcomingEvents({}).$}>
+          <TabLink href={tabRoutes.upcoming({}).$}>
             Upcoming Events {` (${upcomingEventsCount})`}
           </TabLink>
         </TabNav>

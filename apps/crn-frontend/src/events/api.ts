@@ -7,8 +7,14 @@ import { GetEventListOptions } from './options';
 
 export const getEventsFromAlgolia = async (
   algoliaClient: AlgoliaSearchClient,
-  { searchQuery, currentPage, pageSize, before, after }: GetEventListOptions,
-  userId?: string,
+  {
+    searchQuery,
+    currentPage,
+    pageSize,
+    before,
+    after,
+    userId,
+  }: GetEventListOptions,
 ): Promise<ListEventResponse> => {
   const algoliaFilters: string[] = [];
 
@@ -31,20 +37,22 @@ export const getEventsFromAlgolia = async (
     if (filter.includes('speakers.user.id')) {
       return ` AND ${filter}`;
     }
-    if (index == 0) {
+    if (index === 0) {
       return filter;
     }
     return ` OR ${filter}`;
   });
 
-  // debugger;
-  const result = await algoliaClient.search(['event'], searchQuery, {
-    filters: algoliaFilters.length > 0 ? filters.join('') : undefined,
-    page: currentPage ?? undefined,
-    hitsPerPage: pageSize ?? undefined,
-  });
+  if (1 === 1) {
+    const result = await algoliaClient.search(['event'], searchQuery, {
+      filters: algoliaFilters.length > 0 ? filters.join('') : undefined,
+      page: currentPage ?? undefined,
+      hitsPerPage: pageSize ?? undefined,
+    });
 
-  return { items: result.hits, total: result.nbHits };
+    return { items: result.hits, total: result.nbHits };
+  }
+  return { items: [], total: 0 };
 };
 
 export const getEvents = async (

@@ -31,13 +31,13 @@ const loadOutputs = () =>
   import(/* webpackChunkName: "network-profile-outputs" */ './Outputs');
 const loadEditing = () =>
   import(/* webpackChunkName: "network-editing" */ './Editing');
-const loadUpcomingEvents = () =>
-  import(/* webpackChunkName: "network-upcoming-events" */ './UpcomingEvents');
+const loadEvents = () =>
+  import(/* webpackChunkName: "network-upcoming-events" */ './Events');
 const Research = lazy(loadResearch);
 const About = lazy(loadAbout);
 const Outputs = lazy(loadOutputs);
 const Editing = lazy(loadEditing);
-const UpcomingEvents = lazy(loadUpcomingEvents);
+const Events = lazy(loadEvents);
 
 const User: FC<Record<string, never>> = () => {
   const route = network({}).users({}).user;
@@ -139,17 +139,17 @@ const User: FC<Record<string, never>> = () => {
                       <Outputs userId={user?.id} />
                     </Frame>
                   </Route>
-                  <Route path={path + tabRoutes.upcomingEvents.template}>
+                  <Route path={path + tabRoutes.upcoming.template}>
                     <EventsSection
                       searchQuery={searchQuery}
                       onChangeSearchQuery={setSearchQuery}
                     >
                       <Frame title="UpcomingEvents">
-                        <UpcomingEvents
-                          events={items}
-                          total={total}
-                          currentPage={currentPage}
-                          pageSize={pageSize}
+                        <Events
+                          past={false}
+                          currentTime={currentTime}
+                          searchQuery={debouncedSearchQuery}
+                          userId={user?.id}
                         />
                       </Frame>
                     </EventsSection>

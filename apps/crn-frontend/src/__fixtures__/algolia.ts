@@ -1,11 +1,11 @@
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
-  EntityRecord,
   EntityHit,
-  RESEARCH_OUTPUT_ENTITY_TYPE,
+  EntityRecord,
   EntityResponses,
+  RESEARCH_OUTPUT_ENTITY_TYPE,
   SearchEntityResponse,
 } from '@asap-hub/algolia';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
   hits: EntityHit<EntityType>[],

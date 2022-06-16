@@ -50,7 +50,7 @@ const user = (() => {
     { editPersonalInfo, editContactInfo, editOnboarded },
   );
 
-  const upcomingEvents = route(
+  const upcoming = route(
     '/upcoming-events',
     {},
     { editPersonalInfo, editContactInfo, editOnboarded },
@@ -59,7 +59,7 @@ const user = (() => {
   return route(
     '/:userId',
     { userId: stringParser },
-    { about, research, outputs, upcomingEvents },
+    { about, research, outputs, upcoming },
   );
 })();
 const users = route('/users', {}, { user });

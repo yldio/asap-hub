@@ -1,34 +1,38 @@
-import { ContextType, Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
-import { render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { createUserResponse, createUserTeams } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
-import { UserResponse } from '@asap-hub/model';
-import { ToastContext } from '@asap-hub/react-context';
-import userEvent from '@testing-library/user-event';
-import { readFileSync } from 'fs';
+import { Auth0, Auth0User } from '@asap-hub/auth';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { join } from 'path';
-import imageCompression from 'browser-image-compression';
+import {
+  createListEventResponse,
+  createUserResponse,
+  createUserTeams,
+} from '@asap-hub/fixtures';
+import { UserResponse } from '@asap-hub/model';
+import { ToastContext } from '@asap-hub/react-context';
+import { network } from '@asap-hub/routing';
 import { Auth0Client } from '@auth0/auth0-spa-js';
-import { Auth0User, Auth0 } from '@asap-hub/auth';
-
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import imageCompression from 'browser-image-compression';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { ContextType, Suspense } from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
+import { getEventsFromAlgolia } from '../../../events/api';
+import { getResearchOutputs } from '../../../shared-research/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
-import UserProfile from '../UserProfile';
 import { getUser, patchUser, postUserAvatar } from '../api';
 import { refreshUserState } from '../state';
-import { getResearchOutputs } from '../../../shared-research/api';
+import UserProfile from '../UserProfile';
 
 jest.mock('../api');
 jest.mock('../groups/api');
 jest.mock('browser-image-compression');
 
 jest.mock('../../../shared-research/api');
-
+jest.mock('../../../events/api');
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
 >;
@@ -36,6 +40,10 @@ const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
 const imageCompressionMock = imageCompression as jest.MockedFunction<
   typeof imageCompression
 >;
+const mockUserEvents = getEventsFromAlgolia as jest.MockedFunction<
+  typeof getEventsFromAlgolia
+>;
+
 imageCompressionMock.getDataUrlFromFile = jest.requireActual(
   'browser-image-compression',
 ).getDataUrlFromFile;
@@ -138,9 +146,8 @@ it('navigates to the background tab', async () => {
     biography: 'My Bio',
   });
 
-  userEvent.click(
-    await screen.findByText(/background/i, { selector: 'nav *' }),
-  );
+  const tab = screen.getByRole('link', { name: /background/i });
+  userEvent.click(tab);
   expect(await screen.findByText('My Bio')).toBeVisible();
 });
 
@@ -154,12 +161,28 @@ it('navigates to the outputs tab', async () => {
   });
   await renderUserProfile(createUserResponse());
 
-  userEvent.click(await screen.findByText(/output/i, { selector: 'nav *' }));
+  const tab = screen.getByRole('link', { name: /output/i });
+  userEvent.click(tab);
   expect(await screen.findByRole('searchbox')).toHaveAttribute(
     'placeholder',
     'Enter a keyword, method, resource…',
   );
   expect(await screen.findByText(/Test Output 0/i)).toBeVisible();
+});
+
+it('navigates to the upcoming events tab', async () => {
+  const response = createListEventResponse(1);
+  mockUserEvents.mockResolvedValue(response);
+
+  await renderUserProfile(createUserResponse());
+
+  const tab = screen.getByRole('link', { name: /upcoming/i });
+  userEvent.click(tab);
+  expect(await screen.findByRole('searchbox')).toHaveAttribute(
+    'placeholder',
+    'Search by topic, presenting team, …',
+  );
+  expect(await screen.findByText(/Event 0/i)).toBeVisible();
 });
 
 it("links to the user's team", async () => {
@@ -405,4 +428,13 @@ it('renders number of shared outputs', async () => {
   await renderUserProfile(createUserResponse());
 
   expect(await screen.findByText(/Shared Outputs \(5\)/i)).toBeVisible();
+});
+
+it('renders number of upcoming events', async () => {
+  const response = createListEventResponse(7);
+  mockUserEvents.mockResolvedValue(response);
+  await renderUserProfile(createUserResponse());
+
+  // TODO: update the test expectation when the code is implemented
+  expect(await screen.findByText(/Upcoming Events \(5\)/i)).toBeVisible();
 });

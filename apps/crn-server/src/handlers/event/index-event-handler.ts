@@ -1,5 +1,5 @@
 import { EventBridgeEvent } from 'aws-lambda';
-import { SquidexGraphql } from '@asap-hub/squidex';
+import { RestEvent, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { isBoom } from '@hapi/boom';
 import {
   AlgoliaSearchClient,
@@ -9,7 +9,14 @@ import logger from '../../utils/logger';
 import Event, { EventController } from '../../controllers/events';
 import { EventEvent, EventPayload } from '../event-bus';
 import { EventBridgeHandler } from '../../utils/types';
-import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
+import {
+  algoliaApiKey,
+  algoliaAppId,
+  algoliaIndex,
+  appName,
+  baseUrl,
+} from '../../config';
+import { getAuthToken } from '../../utils/auth';
 
 export const indexEventHandler =
   (
@@ -40,9 +47,16 @@ export const indexEventHandler =
       throw e;
     }
   };
-
+const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
+  appName,
+  baseUrl,
+});
+const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
+  appName,
+  baseUrl,
+});
 export const handler = indexEventHandler(
-  new Event(new SquidexGraphql()),
+  new Event(squidexGraphqlClient, eventRestClient),
   algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
 );
 

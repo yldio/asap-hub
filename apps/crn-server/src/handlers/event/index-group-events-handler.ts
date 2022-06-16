@@ -3,10 +3,17 @@ import {
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import { EventResponse, ListResponse } from '@asap-hub/model';
-import { SquidexGraphql } from '@asap-hub/squidex';
+import { RestEvent, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
-import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
+import {
+  algoliaApiKey,
+  algoliaAppId,
+  algoliaIndex,
+  appName,
+  baseUrl,
+} from '../../config';
 import Events, { EventController } from '../../controllers/events';
+import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import {
   loopOverCustomCollection,
@@ -54,9 +61,16 @@ export const indexGroupEventsHandler =
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
 
-const squidexGraphqlClient = new SquidexGraphql();
+const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
+  appName,
+  baseUrl,
+});
+const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
+  appName,
+  baseUrl,
+});
 export const handler = indexGroupEventsHandler(
-  new Events(squidexGraphqlClient),
+  new Events(squidexGraphqlClient, eventRestClient),
   algoliaSearchClientFactory({
     algoliaApiKey,
     algoliaAppId,

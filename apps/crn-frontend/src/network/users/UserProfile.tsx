@@ -11,7 +11,14 @@ import {
 } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
-import { ComponentProps, FC, lazy, useContext, useState } from 'react';
+import {
+  ComponentProps,
+  FC,
+  lazy,
+  useContext,
+  useState,
+  useEffect,
+} from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { getEventListOptions } from '../../events/options';
 import { useEvents } from '../../events/state';
@@ -34,7 +41,7 @@ const About = lazy(loadAbout);
 const Outputs = lazy(loadOutputs);
 const Editing = lazy(loadEditing);
 const Events = lazy(loadEvents);
-const currentTime = new Date();
+const time = new Date();
 
 const User: FC<Record<string, never>> = () => {
   const route = network({}).users({}).user;
@@ -61,6 +68,12 @@ const User: FC<Record<string, never>> = () => {
   const toast = useContext(ToastContext);
 
   const isOwnProfile = currentUser?.id === user?.id;
+
+  const [currentTime, setCurrentTime] = useState(time);
+
+  useEffect(() => {
+    setCurrentTime(new Date());
+  }, []);
 
   const upcomingEventsResult = useEvents(
     getEventListOptions(
@@ -143,7 +156,7 @@ const User: FC<Record<string, never>> = () => {
                       <Frame title="UpcomingEvents">
                         <Events
                           currentTime={currentTime}
-                          past={false}
+                          past={true}
                           searchQuery={debouncedSearchQuery}
                           userId={user?.id}
                         />

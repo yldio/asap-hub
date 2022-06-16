@@ -28,7 +28,7 @@ export const indexTeamUsersHandler =
     userController: UserController,
     algoliaClient: AlgoliaSearchClient,
   ): ((event: EventBridgeEvent<TeamEvent, TeamPayload>) => Promise<void>) =>
-  async (event: EventBridgeEvent<TeamEvent, TeamPayload>): Promise<void> => {
+  async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
     const fetchFunction = ({

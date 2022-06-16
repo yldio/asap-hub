@@ -26,10 +26,20 @@ export const getEventsFromAlgolia = async (
   if (userId) {
     algoliaFilters.push(`speakers.user.id: ${userId}`);
   }
+  // TODO: cleanup rubbish
+  const filters = algoliaFilters.map((filter, index) => {
+    if (filter.includes('speakers.user.id')) {
+      return ` AND ${filter}`;
+    }
+    if (index == 0) {
+      return filter;
+    }
+    return ` OR ${filter}`;
+  });
+
   // debugger;
   const result = await algoliaClient.search(['event'], searchQuery, {
-    filters:
-      algoliaFilters.length > 0 ? algoliaFilters.join(' AND ') : undefined,
+    filters: algoliaFilters.length > 0 ? filters.join('') : undefined,
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,
   });

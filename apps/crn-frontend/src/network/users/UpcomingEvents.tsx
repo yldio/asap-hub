@@ -1,31 +1,23 @@
+import { EventResponse } from '@asap-hub/model';
 import { EventsList } from '@asap-hub/react-components';
-import { getEventListOptions } from '../../events/options';
-import { useEvents } from '../../events/state';
-import { usePagination, usePaginationParams } from '../../hooks';
+import { usePagination } from '../../hooks';
 
 type EventListProps = {
-  readonly currentTime: Date;
-  readonly past?: boolean;
-  readonly searchQuery: string;
-  readonly userId: string;
+  // readonly currentTime: Date;
+  // readonly past?: boolean;
+  // readonly searchQuery: string;
+  // readonly userId: string;
+  readonly events: EventResponse[];
+  currentPage: number;
+  pageSize: number;
+  total: number;
 };
 const EventList: React.FC<EventListProps> = ({
-  currentTime,
-  past = true,
-  searchQuery = '',
-  userId = '2a854c5a-184f-40ff-9615-bc6ca72b6470',
+  currentPage,
+  pageSize,
+  events,
+  total,
 }) => {
-  const { currentPage, pageSize } = usePaginationParams();
-
-  const { items, total } = useEvents(
-    getEventListOptions(currentTime, past, {
-      searchQuery,
-      currentPage,
-      pageSize,
-    }),
-    userId,
-  );
-
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return (
     <EventsList
@@ -33,7 +25,7 @@ const EventList: React.FC<EventListProps> = ({
       numberOfItems={total}
       renderPageHref={renderPageHref}
       numberOfPages={numberOfPages}
-      events={items}
+      events={events}
     />
   );
 };

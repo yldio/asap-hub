@@ -13,7 +13,13 @@ import { network, useRouteParams } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
 import { ComponentProps, FC, lazy, useContext, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
-import { useCurrentUserProfileTabRoute, useSearch } from '../../hooks';
+import { getEventListOptions } from '../../events/options';
+import { useEvents } from '../../events/state';
+import {
+  useCurrentUserProfileTabRoute,
+  usePaginationParams,
+  useSearch,
+} from '../../hooks';
 import { useResearchOutputs } from '../../shared-research/state';
 import { usePatchUserAvatarById, useUserById } from './state';
 
@@ -61,6 +67,19 @@ const User: FC<Record<string, never>> = () => {
   const [currentTime] = useState(new Date());
   const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
 
+  const { currentPage, pageSize } = usePaginationParams();
+
+  const past = true;
+
+  const { items, total } = useEvents(
+    getEventListOptions(currentTime, past, {
+      searchQuery,
+      currentPage,
+      pageSize,
+    }),
+    userId,
+  );
+
   if (user) {
     const profilePageProps: Omit<
       ComponentProps<typeof UserProfilePage>,
@@ -95,6 +114,7 @@ const User: FC<Record<string, never>> = () => {
           : undefined,
       avatarSaving,
       sharedOutputsCount: researchOutputsResult.total,
+      upcomingEventsTotal: total,
     };
 
     return (
@@ -126,9 +146,10 @@ const User: FC<Record<string, never>> = () => {
                     >
                       <Frame title="UpcomingEvents">
                         <UpcomingEvents
-                          currentTime={currentTime}
-                          searchQuery={debouncedSearchQuery}
-                          userId={user?.id}
+                          events={items}
+                          total={total}
+                          currentPage={currentPage}
+                          pageSize={pageSize}
                         />
                       </Frame>
                     </EventsSection>

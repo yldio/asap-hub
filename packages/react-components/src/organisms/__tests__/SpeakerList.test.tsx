@@ -155,7 +155,7 @@ describe('When rendering the speaker list', () => {
 
       render(<SpeakersList {...eventInThePast} />);
 
-      expect(screen.getByText('User was not announced')).toBeVisible();
+      expect(screen.getByText('Speaker was not announced')).toBeVisible();
     });
   });
 });

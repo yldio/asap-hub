@@ -1,5 +1,5 @@
 import { UserResponse } from '@asap-hub/model';
-import { UserProfileContext } from '@asap-hub/react-context';
+import { UserProfileContext, useFlags } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
@@ -290,9 +290,12 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             Shared Outputs
             {` (${sharedOutputsCount})`}
           </TabLink>
-          <TabLink href={tabRoutes.upcoming({}).$}>
-            Upcoming Events {` (${upcomingEventsCount})`}
-          </TabLink>
+          {
+            useFlags().isEnabled('USER_EVENTS') &&
+            <TabLink href={tabRoutes.upcoming({}).$}>
+              Upcoming Events {` (${upcomingEventsCount})`}
+            </TabLink>
+          }
         </TabNav>
       </div>
     </header>

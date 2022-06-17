@@ -1,8 +1,9 @@
-export type Flag = 'PERSISTENT_EXAMPLE' | 'EVENTS_SEARCH';
+export type Flag = 'PERSISTENT_EXAMPLE' | 'EVENTS_SEARCH' | 'USER_EVENTS';
 
 export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
   EVENTS_SEARCH: undefined,
+  USER_EVENTS: undefined,
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
 };
@@ -17,7 +18,6 @@ export const isEnabled = (flag: Flag): boolean =>
   overrides[flag] ??
   envDefaults[process.env.REACT_APP_ENVIRONMENT ?? 'development'] ??
   false;
-
 export const getOverrides = (): Flags => overrides;
 
 export const setCurrentOverrides = (flags?: Record<string, boolean>): void => {

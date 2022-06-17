@@ -8,6 +8,7 @@ import {
   ToastContext,
   useCurrentUser,
   UserProfileContext,
+  useFlags,
 } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
@@ -78,6 +79,8 @@ const User: FC<Record<string, never>> = () => {
   );
 
   const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
+  const isUserEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
+
   if (user) {
     const profilePageProps: Omit<
       ComponentProps<typeof UserProfilePage>,
@@ -137,21 +140,23 @@ const User: FC<Record<string, never>> = () => {
                       <Outputs userId={user?.id} />
                     </Frame>
                   </Route>
-                  <Route path={path + tabRoutes.upcoming.template}>
-                    <EventsSection
-                      searchQuery={searchQuery}
-                      onChangeSearchQuery={setSearchQuery}
-                    >
-                      <Frame title="UpcomingEvents">
-                        <Events
-                          currentTime={currentTime}
-                          past={true}
-                          searchQuery={debouncedSearchQuery}
-                          userId={user?.id}
-                        />
-                      </Frame>
-                    </EventsSection>
-                  </Route>
+                  {isUserEventsEnabled && (
+                    <Route path={path + tabRoutes.upcoming.template}>
+                      <EventsSection
+                        searchQuery={searchQuery}
+                        onChangeSearchQuery={setSearchQuery}
+                      >
+                        <Frame title="UpcomingEvents">
+                          <Events
+                            currentTime={currentTime}
+                            past={true}
+                            searchQuery={debouncedSearchQuery}
+                            userId={user?.id}
+                          />
+                        </Frame>
+                      </EventsSection>
+                    </Route>
+                  )}
                   <Redirect to={tabRoutes.research({}).$} />
                 </Switch>
                 {isOwnProfile && tabRoute && (

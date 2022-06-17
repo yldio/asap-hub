@@ -360,9 +360,39 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/auth-frontend@workspace:apps/auth-frontend":
+"@asap-hub/auth0-rules@workspace:apps/auth0-rules":
   version: 0.0.0-use.local
-  resolution: "@asap-hub/auth-frontend@workspace:apps/auth-frontend"
+  resolution: "@asap-hub/auth0-rules@workspace:apps/auth0-rules"
+  dependencies:
+    "@asap-hub/auth": "workspace:*"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/model": "workspace:*"
+    "@babel/core": 7.18.5
+    "@babel/preset-env": 7.18.2
+    "@babel/preset-typescript": 7.17.12
+    "@babel/runtime-corejs3": 7.18.3
+    "@types/jest": 26.0.24
+    got: 11.8.5
+    nock: ^13.0.11
+  languageName: unknown
+  linkType: soft
+
+"@asap-hub/auth@workspace:*, @asap-hub/auth@workspace:packages/auth":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/auth@workspace:packages/auth"
+  dependencies:
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/model": "workspace:*"
+    "@auth0/auth0-spa-js": ^1.15.0
+    "@babel/runtime-corejs3": 7.18.3
+    "@types/jest": 26.0.24
+    "@types/node": ^14.14.45
+  languageName: unknown
+  linkType: soft
+
+"@asap-hub/crn-auth-frontend@workspace:apps/crn-auth-frontend":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/crn-auth-frontend@workspace:apps/crn-auth-frontend"
   dependencies:
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/dom-test-utils": "workspace:*"
@@ -396,36 +426,6 @@ __metadata:
     react-router-dom: ^5.2.0
     react-scripts: ^4.0.3
     typescript: 4.4.4
-  languageName: unknown
-  linkType: soft
-
-"@asap-hub/auth0-rules@workspace:apps/auth0-rules":
-  version: 0.0.0-use.local
-  resolution: "@asap-hub/auth0-rules@workspace:apps/auth0-rules"
-  dependencies:
-    "@asap-hub/auth": "workspace:*"
-    "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@asap-hub/model": "workspace:*"
-    "@babel/core": 7.18.5
-    "@babel/preset-env": 7.18.2
-    "@babel/preset-typescript": 7.17.12
-    "@babel/runtime-corejs3": 7.18.3
-    "@types/jest": 26.0.24
-    got: 11.8.5
-    nock: ^13.0.11
-  languageName: unknown
-  linkType: soft
-
-"@asap-hub/auth@workspace:*, @asap-hub/auth@workspace:packages/auth":
-  version: 0.0.0-use.local
-  resolution: "@asap-hub/auth@workspace:packages/auth"
-  dependencies:
-    "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@asap-hub/model": "workspace:*"
-    "@auth0/auth0-spa-js": ^1.15.0
-    "@babel/runtime-corejs3": 7.18.3
-    "@types/jest": 26.0.24
-    "@types/node": ^14.14.45
   languageName: unknown
   linkType: soft
 

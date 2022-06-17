@@ -1,5 +1,5 @@
 import { ComponentProps, FC } from 'react';
-import { EventSearch } from '../organisms';
+import { EventSearch } from './';
 
 type EventSectionProps = ComponentProps<typeof EventSearch>;
 

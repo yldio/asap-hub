@@ -5,6 +5,15 @@ import { API_BASE_URL } from '../config';
 import createListApiUrl from '../CreateListApiUrl';
 import { GetEventListOptions } from './options';
 
+export function getFilters(filters: string[], userId?: string) {
+  if (filters.length === 0) return undefined;
+
+  if (userId) {
+    return `${filters.join(' OR ')} AND speakers.user.id: ${userId}`;
+  }
+  return filters.join(' OR ');
+}
+
 export const getEventsFromAlgolia = async (
   algoliaClient: AlgoliaSearchClient,
   {
@@ -25,21 +34,9 @@ export const getEventsFromAlgolia = async (
     const afterTimestamp = Math.round(new Date(after).getTime() / 1000);
     algoliaFilters.push(`endDateTimestamp > ${afterTimestamp}`);
   }
-  if (userId) {
-    algoliaFilters.push(`speakers.user.id: ${userId}`);
-  }
-  const filters = algoliaFilters.map((filter, index) => {
-    if (filter.includes('speakers.user.id')) {
-      return ` AND ${filter}`;
-    }
-    if (index === 0) {
-      return filter;
-    }
-    return ` OR ${filter}`;
-  });
 
   const result = await algoliaClient.search(['event'], searchQuery, {
-    filters: algoliaFilters.length > 0 ? filters.join('') : undefined,
+    filters: getFilters(algoliaFilters, userId),
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,
   });

@@ -4,11 +4,8 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { getEventsFromAlgolia } from '../../../events/api';
 import { eventsState } from '../../../events/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
-import { createCsvFileStream } from '../../../shared-research/export';
-import { getUser } from '../api';
 import Events from '../Events';
 import { refreshUserState } from '../state';
 
@@ -19,15 +16,6 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
-
-const mockUserEvents = getEventsFromAlgolia as jest.MockedFunction<
-  typeof getEventsFromAlgolia
->;
-
-const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
-  typeof createCsvFileStream
->;
 const date = new Date('2021-12-28T14:00:00.000Z');
 beforeEach(() => {
   jest.useFakeTimers('modern').setSystemTime(date);

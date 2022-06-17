@@ -106,25 +106,15 @@ export const usePrefetchEvents = (options: GetEventListOptions) => {
   }, [authorization, events, options, setEvents]);
 };
 export const useEvents = (options: GetEventListOptions) => {
-  console.log(options);
   const [events, setEvents] = useRecoilState(eventsState(options));
   const { client } = useAlgolia();
   const authorization = useRecoilValue(authorizationState);
   const isEventsSearchFromAlgoliaEnabled =
     useFlags().isEnabled('EVENTS_SEARCH');
   if (events === undefined) {
-    console.log('events undefined');
     if (isEventsSearchFromAlgoliaEnabled) {
       throw getEventsFromAlgolia(client, options)
-        .then((data: ListEventResponse) => {
-          console.log('this is the response', data);
-          return data;
-        })
         .then(setEvents)
-        .catch((error) => {
-          console.log(error);
-          return error;
-        })
         .catch(setEvents);
     } else {
       throw getEvents(options, authorization).then(setEvents).catch(setEvents);

@@ -18,7 +18,7 @@
     "@asap-hub/model": "workspace:*",
     "@babel/runtime-corejs3": "7.18.3",
     "core-js": "^3.12.1",
-    "date-fns": "^2.21.3",
+    "date-fns": "^2.28.0",
     "ramda": "^0.27.1",
     "uuid": "^8.3.2"
   }

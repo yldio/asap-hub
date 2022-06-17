@@ -170,36 +170,6 @@ it('navigates to the outputs tab', async () => {
   );
   expect(await screen.findByText(/Test Output 0/i)).toBeVisible();
 });
-it('navigates to the upcoming events tab', async () => {
-  const date = new Date('2021-12-28T14:00:00.000Z');
-  jest.useFakeTimers('modern').setSystemTime(date);
-  const response = createListEventResponse(1);
-  mockUserEvents.mockResolvedValue(response);
-
-  const userResponse = createUserResponse();
-  await renderUserProfile(userResponse);
-
-  const tab = screen.getByRole('link', { name: /upcoming/i });
-  userEvent.click(tab);
-  expect(await screen.findByRole('searchbox')).toHaveAttribute(
-    'placeholder',
-    'Search by topic, presenting team, …',
-  );
-  expect(await screen.findByText(/Event 0/i)).toBeVisible();
-  expect(mockUserEvents).toBeCalledTimes(1);
-  expect(mockUserEvents).toBeCalledWith(
-    expect.anything(),
-    {
-      after: '2021-12-28T13:00:00.250Z',
-      currentPage: 0,
-      filters: new Set(),
-      pageSize: 10,
-      searchQuery: '',
-    },
-    userResponse.id,
-  );
-  jest.useRealTimers();
-});
 
 it("links to the user's team", async () => {
   await renderUserProfile({
@@ -451,6 +421,50 @@ it('renders number of upcoming events', async () => {
   mockUserEvents.mockResolvedValue(response);
   await renderUserProfile(createUserResponse());
 
-  // TODO: update the test expectation when the code is implemented
-  expect(await screen.findByText(/Upcoming Events \(5\)/i)).toBeVisible();
+  expect(await screen.findByText(/Upcoming Events \(7\)/i)).toBeVisible();
+});
+
+it('navigates to the upcoming events tab', async () => {
+  const date = new Date('2021-12-28T14:00:00.000Z');
+  jest.useFakeTimers('modern').setSystemTime(date);
+  const response = createListEventResponse(1);
+  mockUserEvents.mockResolvedValue(response);
+
+  const userResponse = createUserResponse();
+  await renderUserProfile(userResponse);
+
+  const tab = screen.getByRole('link', { name: /upcoming/i });
+  userEvent.click(tab);
+  expect(await screen.findByRole('searchbox')).toHaveAttribute(
+    'placeholder',
+    'Search by topic, presenting team, …',
+  );
+  expect(await screen.findByText(/Event 0/i)).toBeVisible();
+  expect(mockUserEvents).toBeCalledTimes(2);
+  expect(mockUserEvents).toHaveBeenNthCalledWith(1, expect.anything(), {
+    before: '2021-12-28T13:00:00.000Z',
+    currentPage: 0,
+    filters: new Set(),
+    pageSize: 1,
+    searchQuery: '',
+    userId: userResponse.id,
+    sort: {
+      sortBy: 'endDate',
+      sortOrder: 'desc',
+    },
+  });
+  expect(mockUserEvents).toHaveBeenNthCalledWith(2, expect.anything(), {
+    before: '2021-12-28T13:00:00.000Z',
+    currentPage: 0,
+    filters: new Set(),
+    pageSize: 10,
+    searchQuery: '',
+    userId: userResponse.id,
+    sort: {
+      sortBy: 'endDate',
+      sortOrder: 'desc',
+    },
+  });
+
+  jest.useRealTimers();
 });

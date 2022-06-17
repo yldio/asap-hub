@@ -25,14 +25,9 @@ export const getEventsFromAlgolia = async (
     const afterTimestamp = Math.round(new Date(after).getTime() / 1000);
     algoliaFilters.push(`endDateTimestamp > ${afterTimestamp}`);
   }
-  console.log(userId);
-  console.log(algoliaFilters);
-  console.log('before ', before);
-  console.log('after ', after);
   if (userId) {
     algoliaFilters.push(`speakers.user.id: ${userId}`);
   }
-  // TODO: cleanup rubbish
   const filters = algoliaFilters.map((filter, index) => {
     if (filter.includes('speakers.user.id')) {
       return ` AND ${filter}`;

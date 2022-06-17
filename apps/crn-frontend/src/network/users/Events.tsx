@@ -12,7 +12,7 @@ type EventListProps = {
 const EventList: React.FC<EventListProps> = ({
   currentTime,
   past = false,
-  searchQuery = '',
+  searchQuery,
   userId,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();

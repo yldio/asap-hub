@@ -1,6 +1,10 @@
 import { createListEventResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
-import { render, screen, waitFor } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -77,10 +81,7 @@ const renderEvents = async ({
       </Suspense>
     </RecoilRoot>,
   );
-  // await waitForElementToBeRemoved(() => queryByText(/loading/i))
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
+  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
 it('renders a list of events', async () => {

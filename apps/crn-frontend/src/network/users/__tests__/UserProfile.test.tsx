@@ -442,28 +442,20 @@ it('navigates to the upcoming events tab', async () => {
   expect(await screen.findByText(/Event 0/i)).toBeVisible();
   expect(mockUserEvents).toBeCalledTimes(2);
   expect(mockUserEvents).toHaveBeenNthCalledWith(1, expect.anything(), {
-    before: '2021-12-28T13:00:00.000Z',
+    after: '2021-12-28T13:00:00.000Z',
     currentPage: 0,
     filters: new Set(),
     pageSize: 1,
     searchQuery: '',
     userId: userResponse.id,
-    sort: {
-      sortBy: 'endDate',
-      sortOrder: 'desc',
-    },
   });
   expect(mockUserEvents).toHaveBeenNthCalledWith(2, expect.anything(), {
-    before: '2021-12-28T13:00:00.000Z',
+    after: '2021-12-28T13:00:00.000Z',
     currentPage: 0,
     filters: new Set(),
     pageSize: 10,
     searchQuery: '',
     userId: userResponse.id,
-    sort: {
-      sortBy: 'endDate',
-      sortOrder: 'desc',
-    },
   });
 
   jest.useRealTimers();

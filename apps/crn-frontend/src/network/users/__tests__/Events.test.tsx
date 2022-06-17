@@ -1,9 +1,11 @@
+import { createListEventResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { getEventsFromAlgolia } from '../../../events/api';
 import { eventsState } from '../../../events/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 import Events from '../Events';
@@ -13,9 +15,12 @@ jest.mock('../../../events/api');
 jest.mock('../api');
 
 afterEach(() => {
-  jest.clearAllMocks();
+  jest.resetAllMocks();
 });
 
+const mockGetEvents = getEventsFromAlgolia as jest.MockedFunction<
+  typeof getEventsFromAlgolia
+>;
 const date = new Date('2021-12-28T14:00:00.000Z');
 beforeEach(() => {
   jest.useFakeTimers('modern').setSystemTime(date);
@@ -23,14 +28,14 @@ beforeEach(() => {
 afterEach(() => {
   jest.useRealTimers();
 });
-const renderEvents = async (
+const renderEvents = async ({
   searchQuery = '',
   filters = new Set<string>(),
   currentPage = 0,
   pageSize = CARD_VIEW_PAGE_SIZE,
   userId = '42',
-) => {
-  const result = render(
+} = {}) => {
+  render(
     <RecoilRoot
       initializeState={({ reset, set }) => {
         set(refreshUserState(userId), Math.random());
@@ -39,7 +44,7 @@ const renderEvents = async (
             after: '2021-12-28T14:00:00.000Z',
             searchQuery,
             filters,
-            // userId,
+            userId,
             currentPage,
             pageSize,
           }),
@@ -72,108 +77,26 @@ const renderEvents = async (
       </Suspense>
     </RecoilRoot>,
   );
-
+  // await waitForElementToBeRemoved(() => queryByText(/loading/i))
   await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
-  return result;
 };
 
-it.only('renders search and filter', async () => {
-  const { getByRole } = await renderEvents();
-  expect(getByRole('searchbox')).toHaveAttribute(
-    'placeholder',
-    'Enter a keyword, method, resource…',
-  );
+it('renders a list of events', async () => {
+  const searchQuery = 'searchterm';
+  const userId = '12345';
+  mockGetEvents.mockResolvedValue(createListEventResponse(2));
+  await renderEvents({ searchQuery, userId });
+  expect(screen.getByText(/2 results found/i)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /Event 0/i })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /Event 1/i })).toBeInTheDocument();
+  expect(mockGetEvents).toHaveBeenLastCalledWith(expect.anything(), {
+    searchQuery,
+    after: '2021-12-28T13:00:00.000Z',
+    filters: new Set(),
+    userId,
+    currentPage: 0,
+    pageSize: CARD_VIEW_PAGE_SIZE,
+  });
 });
-
-// it('renders a list of research outputs', async () => {
-//   mockUserEvents.mockResolvedValue({
-//     ...createResearchOutputListAlgoliaResponse(2),
-//     hits: createResearchOutputListAlgoliaResponse(2).hits.map((hit, index) => ({
-//       ...hit,
-//       title: `Test Output ${index}`,
-//     })),
-//   });
-//   const { container } = await renderOutputs();
-//   expect(container.textContent).toContain('Test Output 0');
-//   expect(container.textContent).toContain('Test Output 1');
-// });
-
-// it('calls getResearchOutputs with the right arguments', async () => {
-//   const searchQuery = 'searchterm';
-//   const userId = '12345';
-//   const filters = new Set(['Grant Document']);
-//   mockGetResearchOutputs.mockResolvedValue({
-//     ...createResearchOutputListAlgoliaResponse(2),
-//   });
-//   const { getByRole, getByText, getByLabelText } = await renderOutputs(
-//     searchQuery,
-//     filters,
-//     userId,
-//   );
-//   userEvent.type(getByRole('searchbox'), searchQuery);
-
-//   userEvent.click(getByText('Filters'));
-//   const checkbox = getByLabelText('Grant Document');
-//   expect(checkbox).not.toBeChecked();
-
-//   userEvent.click(checkbox);
-//   expect(checkbox).toBeChecked();
-
-//   await waitFor(() =>
-//     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(expect.anything(), {
-//       searchQuery,
-//       userId,
-//       filters,
-//       currentPage: 0,
-//       pageSize: CARD_VIEW_PAGE_SIZE,
-//     }),
-//   );
-// });
-
-// it('triggers export with the same parameters and custom filename', async () => {
-//   mockGetUser.mockResolvedValue({
-//     ...createUserResponse(),
-//     firstName: 'John',
-//     lastName: 'Smith',
-//   });
-//   const filters = new Set(['Grant Document']);
-//   const searchQuery = 'Some Search';
-//   const userId = '12345';
-//   mockGetResearchOutputs.mockResolvedValue({
-//     ...createResearchOutputListAlgoliaResponse(2),
-//   });
-//   const { getByRole, getByText, getByLabelText } = await renderOutputs(
-//     searchQuery,
-//     filters,
-//     userId,
-//   );
-//   userEvent.type(getByRole('searchbox'), searchQuery);
-//   userEvent.click(getByText('Filters'));
-//   userEvent.click(getByLabelText('Grant Document'));
-//   await waitFor(() =>
-//     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(expect.anything(), {
-//       searchQuery,
-//       filters,
-//       userId,
-//       currentPage: 0,
-//       pageSize: CARD_VIEW_PAGE_SIZE,
-//     }),
-//   );
-
-//   userEvent.click(getByText(/export/i));
-//   expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
-//     expect.anything(),
-//     expect.stringMatching(/SharedOutputs_JohnSmith_\d+\.csv/),
-//   );
-//   await waitFor(() =>
-//     expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
-//       searchQuery,
-//       filters,
-//       userId,
-//       currentPage: 0,
-//       pageSize: MAX_ALGOLIA_RESULTS,
-//     }),
-//   );
-// });

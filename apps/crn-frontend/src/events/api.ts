@@ -38,16 +38,13 @@ export const getEventsFromAlgolia = async (
     return ` OR ${filter}`;
   });
 
-  if (1 === 1) {
-    const result = await algoliaClient.search(['event'], searchQuery, {
-      filters: algoliaFilters.length > 0 ? filters.join('') : undefined,
-      page: currentPage ?? undefined,
-      hitsPerPage: pageSize ?? undefined,
-    });
+  const result = await algoliaClient.search(['event'], searchQuery, {
+    filters: algoliaFilters.length > 0 ? filters.join('') : undefined,
+    page: currentPage ?? undefined,
+    hitsPerPage: pageSize ?? undefined,
+  });
 
-    return { items: result.hits, total: result.nbHits };
-  }
-  return { items: [], total: 0 };
+  return { items: result.hits, total: result.nbHits };
 };
 
 export const getEvents = async (

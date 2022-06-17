@@ -742,6 +742,7 @@ __metadata:
   resolution: "@asap-hub/gp2-components@workspace:packages/gp2-components"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@asap-hub/react-context": "workspace:*"
     "@asap-hub/routing": "workspace:*"
@@ -803,6 +804,7 @@ __metadata:
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/flags": "workspace:*"
     "@asap-hub/frontend-utils": "workspace:*"
+    "@asap-hub/gp2-components": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@asap-hub/react-context": "workspace:*"

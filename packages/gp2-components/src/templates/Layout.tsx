@@ -1,14 +1,11 @@
 import { useState, FC, ReactNode } from 'react';
 import { css } from '@emotion/react';
 
-import { ToastStack, drawerQuery } from '@asap-hub/react-components';
-import {
-  mobileScreen,
-  tabletScreen,
-  vminLinearCalcClamped,
-} from '@asap-hub/react-components/src/pixels';
+import { ToastStack, drawerQuery, pixels } from '@asap-hub/react-components';
 
 import NavigationHeader from '../organism/NavigationHeader';
+
+const { mobileScreen, tabletScreen, vminLinearCalcClamped } = pixels;
 
 const contentStyles = css({
   width: '748px',
@@ -49,7 +46,9 @@ const Layout: FC<LayoutProps> = ({ children }) => {
           }}
         />
       </article>
-      <article css={contentStyles}>{children}</article>
+      <div css={css({ width: '100%', overflowY: 'scroll' })}>
+        <article css={contentStyles}>{children}</article>
+      </div>
     </ToastStack>
   );
 };

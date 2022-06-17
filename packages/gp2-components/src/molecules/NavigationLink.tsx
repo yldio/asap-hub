@@ -1,11 +1,8 @@
-import { NavigationLink as Link } from '@asap-hub/react-components';
-import { rem } from '@asap-hub/react-components/src/pixels';
+import { NavigationLink as Link, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 
-interface NavigationLinkProps {
-  readonly href: string;
-  readonly icon?: JSX.Element;
-}
+const { rem } = pixels;
 
 const horizontalNavigationStyles = css({
   display: 'flex',
@@ -14,7 +11,7 @@ const horizontalNavigationStyles = css({
   width: rem(80),
 });
 
-const NavigationLink: React.FC<NavigationLinkProps> = ({
+const NavigationLink: React.FC<ComponentProps<typeof Link>> = ({
   icon,
   children,
   ...props

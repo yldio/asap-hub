@@ -12,6 +12,7 @@
   "references": [
     { "path": "../react-components" },
     { "path": "../react-context" },
+    { "path": "../fixtures" },
     { "path": "../routing" }
   ]
 }

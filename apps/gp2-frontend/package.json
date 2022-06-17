@@ -17,6 +17,7 @@
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/flags": "workspace:*",
     "@asap-hub/frontend-utils": "workspace:*",
+    "@asap-hub/gp2-components": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
     "@asap-hub/react-context": "workspace:*",

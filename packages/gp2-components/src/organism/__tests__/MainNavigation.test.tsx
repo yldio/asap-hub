@@ -7,8 +7,9 @@ describe('MainNavigation', () => {
     expect(
       screen.getAllByRole('listitem').map(({ textContent }) => textContent),
     ).toEqual([
-      expect.stringMatching(/home/i),
-      expect.stringMatching(/network/i),
+      expect.stringMatching(/dashboard/i),
+      expect.stringMatching(/directory/i),
+      expect.stringMatching(/projects/i),
     ]);
   });
 });

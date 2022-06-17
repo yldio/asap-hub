@@ -188,7 +188,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/fixtures", ["workspace:packages/fixtures"]],
       ["@asap-hub/flags", ["workspace:packages/flags"]],
       ["@asap-hub/frontend-utils", ["virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/frontend-utils", "workspace:packages/frontend-utils"]],
-      ["@asap-hub/gp2-components", ["virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#workspace:packages/gp2-components", "workspace:packages/gp2-components"]],
+      ["@asap-hub/gp2-components", ["virtual:c4ae2f625a4ac5aa649abbf60db7c71aca414aadbf350d87ea37595af32595ce70907b878a98750e798e6867f5b52cf0a985bd4cd784c0ad5a3f626d3cbad95a#workspace:packages/gp2-components", "workspace:packages/gp2-components"]],
       ["@asap-hub/gp2-frontend", ["workspace:apps/gp2-frontend"]],
       ["@asap-hub/gp2-server", ["workspace:apps/gp2-server"]],
       ["@asap-hub/message-templates", ["workspace:packages/message-templates"]],
@@ -352,7 +352,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@asap-hub/gp2-components",
-        "virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#workspace:packages/gp2-components"
+        "virtual:c4ae2f625a4ac5aa649abbf60db7c71aca414aadbf350d87ea37595af32595ce70907b878a98750e798e6867f5b52cf0a985bd4cd784c0ad5a3f626d3cbad95a#workspace:packages/gp2-components"
       ],
       [
         "@asap-hub/gp2-frontend",
@@ -10629,11 +10629,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@asap-hub/gp2-components", [
-        ["virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#workspace:packages/gp2-components", {
-          "packageLocation": "./.yarn/__virtual__/@asap-hub-gp2-components-virtual-0446e4b4f6/1/packages/gp2-components/",
+        ["virtual:c4ae2f625a4ac5aa649abbf60db7c71aca414aadbf350d87ea37595af32595ce70907b878a98750e798e6867f5b52cf0a985bd4cd784c0ad5a3f626d3cbad95a#workspace:packages/gp2-components", {
+          "packageLocation": "./.yarn/__virtual__/@asap-hub-gp2-components-virtual-50aff566aa/1/packages/gp2-components/",
           "packageDependencies": [
-            ["@asap-hub/gp2-components", "virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#workspace:packages/gp2-components"],
+            ["@asap-hub/gp2-components", "virtual:c4ae2f625a4ac5aa649abbf60db7c71aca414aadbf350d87ea37595af32595ce70907b878a98750e798e6867f5b52cf0a985bd4cd784c0ad5a3f626d3cbad95a#workspace:packages/gp2-components"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/fixtures", "workspace:packages/fixtures"],
             ["@asap-hub/react-components", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/react-components"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
             ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
@@ -10682,6 +10683,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "@types/asap-hub__react-context",
             "@types/emotion__react",
             "@types/history",
+            "@types/react-dom",
             "@types/react-router-dom",
             "@types/react",
             "history",
@@ -10696,6 +10698,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/gp2-components", "workspace:packages/gp2-components"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/fixtures", "workspace:packages/fixtures"],
             ["@asap-hub/react-components", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/react-components"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
             ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
@@ -10752,6 +10755,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],
             ["@asap-hub/flags", "workspace:packages/flags"],
             ["@asap-hub/frontend-utils", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/frontend-utils"],
+            ["@asap-hub/gp2-components", "virtual:c4ae2f625a4ac5aa649abbf60db7c71aca414aadbf350d87ea37595af32595ce70907b878a98750e798e6867f5b52cf0a985bd4cd784c0ad5a3f626d3cbad95a#workspace:packages/gp2-components"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-components", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/react-components"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
@@ -11484,7 +11488,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],
             ["@asap-hub/flags", "workspace:packages/flags"],
-            ["@asap-hub/gp2-components", "virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#workspace:packages/gp2-components"],
+            ["@asap-hub/gp2-components", "virtual:c4ae2f625a4ac5aa649abbf60db7c71aca414aadbf350d87ea37595af32595ce70907b878a98750e798e6867f5b52cf0a985bd4cd784c0ad5a3f626d3cbad95a#workspace:packages/gp2-components"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-components", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/react-components"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],

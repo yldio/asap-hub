@@ -68,7 +68,7 @@ const User: FC<Record<string, never>> = () => {
   const upcomingEventsResult = useEvents(
     getEventListOptions(
       currentTime,
-      true,
+      false,
       {
         searchQuery: '',
         currentPage: 0,
@@ -149,7 +149,7 @@ const User: FC<Record<string, never>> = () => {
                         <Frame title="UpcomingEvents">
                           <Events
                             currentTime={currentTime}
-                            past={true}
+                            past={false}
                             searchQuery={debouncedSearchQuery}
                             userId={user?.id}
                           />

@@ -47,8 +47,10 @@ export interface EventResponse {
 
   startDate: string;
   startDateTimeZone: string;
+  startDateTimestamp: number;
   endDate: string;
   endDateTimeZone: string;
+  endDateTimestamp: number;
 
   title: string;
   description?: string;

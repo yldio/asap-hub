@@ -1,7 +1,8 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { UserResponse } from '@asap-hub/model';
-import { config, RestUser } from '@asap-hub/squidex';
+import { RestUser, SquidexRest } from '@asap-hub/squidex';
 import nock, { DataMatcherMap } from 'nock';
+import { appName, baseUrl } from '../../src/config';
 import { FetchUsersOptions } from '../../src/controllers/users';
 import UserDataProvider, {
   GraphqlUserTeam,
@@ -9,6 +10,7 @@ import UserDataProvider, {
   parseUserToDataObject,
   parseUserToResponse,
 } from '../../src/data-providers/users.data-provider';
+import { getAuthToken } from '../../src/utils/auth';
 import logger from '../../src/utils/logger';
 import {
   fetchUserResponse,
@@ -23,11 +25,20 @@ import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-clie
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
 describe('User data provider', () => {
+  const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
+    appName,
+    baseUrl,
+  });
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const userDataProvider = new UserDataProvider(squidexGraphqlClientMock);
+  const userDataProvider = new UserDataProvider(
+    squidexGraphqlClientMock,
+    userRestClient,
+  );
+
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
   const usersMockGraphqlServer = new UserDataProvider(
     squidexGraphqlClientMockServer,
+    userRestClient,
   );
   beforeAll(() => {
     identity();
@@ -273,8 +284,8 @@ describe('User data provider', () => {
 
     const userId = 'user-id';
     test('Should throw when sync asset fails', async () => {
-      nock(config.baseUrl)
-        .patch(`/api/content/${config.appName}/users/${userId}`, {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
           jobTitle: { iv: 'CEO' },
         })
         .reply(404);
@@ -285,8 +296,8 @@ describe('User data provider', () => {
       expect(nock.isDone()).toBe(true);
     });
     test('Should update job title through a clean-update', async () => {
-      nock(config.baseUrl)
-        .patch(`/api/content/${config.appName}/users/${userId}`, {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
           jobTitle: { iv: 'CEO' },
         })
         .reply(200, fetchUserResponse());
@@ -297,8 +308,8 @@ describe('User data provider', () => {
       expect(nock.isDone()).toBe(true);
     });
     test('Should update the country and city through a clean-update', async () => {
-      nock(config.baseUrl)
-        .patch(`/api/content/${config.appName}/users/${userId}`, {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
           country: { iv: 'United Kingdom' },
           city: { iv: 'Brighton' },
         })
@@ -315,10 +326,10 @@ describe('User data provider', () => {
       const mockResponse = getUserDataObject();
 
       delete mockResponse.contactEmail;
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users/${userId}`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/users/${userId}`)
         .reply(200, fetchUserResponse())
-        .put(`/api/content/${config.appName}/users/${userId}`, {
+        .put(`/api/content/${appName}/users/${userId}`, {
           ...fetchUserResponse().data,
           contactEmail: { iv: null },
         } as { [k: string]: any })
@@ -331,8 +342,8 @@ describe('User data provider', () => {
       expect(nock.isDone()).toBe(true);
     });
     test('Should update social and questions', async () => {
-      nock(config.baseUrl)
-        .patch(`/api/content/${config.appName}/users/${userId}`, {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
           questions: { iv: [{ question: 'To be or not to be?' }] },
           social: { iv: [{ github: 'johnytiago' }] },
         } as { [k: string]: any })
@@ -357,9 +368,9 @@ describe('User data provider', () => {
         },
       };
 
-      nock(config.baseUrl)
+      nock(baseUrl)
         .patch(
-          `/api/content/${config.appName}/users/${userId}`,
+          `/api/content/${appName}/users/${userId}`,
           expectedPatchRequest as DataMatcherMap,
         )
         .reply(200, fetchUserResponse());
@@ -374,10 +385,10 @@ describe('User data provider', () => {
     test('should call put when teams is populated', async () => {
       const mockResponse = getUserDataObject();
       mockResponse.teams = [{ id: 'team-id', role: 'Key Personnel' }];
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/users/${userId}`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/users/${userId}`)
         .reply(200, fetchUserResponse())
-        .put(`/api/content/${config.appName}/users/${userId}`, {
+        .put(`/api/content/${appName}/users/${userId}`, {
           ...fetchUserResponse().data,
           teams: { iv: [{ id: 'team-id' }] },
         } as { [k: string]: any })

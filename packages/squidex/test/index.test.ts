@@ -1,6 +1,6 @@
-import encode from 'jwt-encode';
 import nock from 'nock';
-import { config, SquidexGraphql, SquidexRest } from '../src';
+import encode from 'jwt-encode';
+import { getAccessTokenFactory, SquidexGraphql, SquidexRest } from '../src';
 
 describe('Squidex package', () => {
   const mockToken = encode(
@@ -11,17 +11,32 @@ describe('Squidex package', () => {
     'secret',
   );
 
-  const squidexGraphqlClient = new SquidexGraphql();
-  const squidexRestClient = new SquidexRest('user');
+  const appName = 'test-app';
+  const baseUrl = 'http://test-url.com';
+  const clientId = 'test-client-id';
+  const clientSecret = 'test-client-secret';
+  const getAuthToken = getAccessTokenFactory({
+    baseUrl,
+    clientId,
+    clientSecret,
+  });
+  const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
+    baseUrl,
+    appName,
+  });
+  const squidexRestClient = new SquidexRest(getAuthToken, 'user', {
+    appName,
+    baseUrl,
+  });
 
   test('Should fetch the token only once for multiple graphql and REST calls', async () => {
     // get the token once
-    nock(config.baseUrl)
+    nock(baseUrl)
       .post(
         '/identity-server/connect/token',
         `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
-          config.clientId,
-        )}&client_secret=${config.clientSecret}`,
+          clientId,
+        )}&client_secret=${clientSecret}`,
       )
       .reply(200, {
         access_token: mockToken,
@@ -31,9 +46,9 @@ describe('Squidex package', () => {
       });
 
     // make graphql query to Squidex
-    nock(config.baseUrl)
+    nock(baseUrl)
       .post(
-        `/api/content/${config.appName}/graphql`,
+        `/api/content/${appName}/graphql`,
         JSON.stringify({ query: '{ id }' }),
       )
       .reply(200, {
@@ -43,9 +58,9 @@ describe('Squidex package', () => {
       });
 
     // make a REST call to squidex
-    nock(config.baseUrl)
+    nock(baseUrl)
       .get(
-        `/api/content/${config.appName}/user?q=${JSON.stringify({
+        `/api/content/${appName}/user?q=${JSON.stringify({
           take: 8,
         })}`,
       )

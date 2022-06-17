@@ -3,12 +3,19 @@ import {
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import { ListResponse, UserResponse } from '@asap-hub/model';
-import { SquidexGraphql } from '@asap-hub/squidex';
+import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
-import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
+import {
+  algoliaApiKey,
+  algoliaAppId,
+  algoliaIndex,
+  appName,
+  baseUrl,
+} from '../../config';
 import Users, { UserController } from '../../controllers/users';
 import AssetDataProvider from '../../data-providers/assets.data-provider';
 import UserDataProvider from '../../data-providers/users.data-provider';
+import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import {
   loopOverCustomCollection,
@@ -21,7 +28,7 @@ export const indexTeamUsersHandler =
     userController: UserController,
     algoliaClient: AlgoliaSearchClient,
   ): ((event: EventBridgeEvent<TeamEvent, TeamPayload>) => Promise<void>) =>
-  async (event: EventBridgeEvent<TeamEvent, TeamPayload>): Promise<void> => {
+  async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
     const fetchFunction = ({
@@ -60,9 +67,20 @@ export const indexTeamUsersHandler =
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
 
-const squidexGraphqlClient = new SquidexGraphql();
-const userDataProvider = new UserDataProvider(squidexGraphqlClient);
-const assetDataProvider = new AssetDataProvider();
+const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
+  appName,
+  baseUrl,
+});
+const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
+  appName,
+  baseUrl,
+});
+const userDataProvider = new UserDataProvider(
+  squidexGraphqlClient,
+  userRestClient,
+);
+const assetDataProvider = new AssetDataProvider(userRestClient);
+
 export const handler = indexTeamUsersHandler(
   new Users(userDataProvider, assetDataProvider),
   algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),

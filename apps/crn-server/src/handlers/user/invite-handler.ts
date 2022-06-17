@@ -6,12 +6,15 @@ import path from 'path';
 import url from 'url';
 import { v4 as uuidV4 } from 'uuid';
 import {
+  appName,
+  baseUrl,
   currentRevision,
   environment,
   origin,
   sentryDsn,
   sesRegion,
 } from '../../config';
+import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { SendEmail, sendEmailFactory } from '../../utils/send-email';
 import { EventBridgeHandler } from '../../utils/types';
@@ -99,8 +102,13 @@ Sentry.AWSLambda.init({
   release: currentRevision,
 });
 
+const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
+  appName,
+  baseUrl,
+});
+
 export const handler = Sentry.AWSLambda.wrapHandler(
-  inviteHandlerFactory(sendEmailFactory(ses), new SquidexRest('users')),
+  inviteHandlerFactory(sendEmailFactory(ses), userRestClient),
 );
 
 export type UserInviteEventBridgeEvent = EventBridgeEvent<

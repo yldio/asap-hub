@@ -1,10 +1,12 @@
-import { SquidexGraphql } from '@asap-hub/squidex';
+import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import * as Sentry from '@sentry/serverless';
 import { EventBridgeEvent } from 'aws-lambda';
 import { Auth } from 'googleapis';
 import 'source-map-support/register';
 import {
+  appName,
   asapApiUrl,
+  baseUrl,
   currentRevision,
   environment,
   googleApiToken,
@@ -13,6 +15,7 @@ import {
 } from '../../config';
 import Calendars, { CalendarController } from '../../controllers/calendars';
 import { Alerts, AlertsSentry } from '../../utils/alerts';
+import { getAuthToken } from '../../utils/auth';
 import getJWTCredentialsAWS, {
   GetJWTCredentials,
 } from '../../utils/aws-secret-manager';
@@ -178,11 +181,19 @@ Sentry.AWSLambda.init({
   environment,
   release: currentRevision,
 });
-const squidexGraphqlClient = new SquidexGraphql();
+const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
+  appName,
+  baseUrl,
+});
+const calendarRestClient = new SquidexRest<RestCalendar>(
+  getAuthToken,
+  'calendars',
+  { appName, baseUrl },
+);
 const webhookHandler = calendarCreatedHandlerFactory(
   subscribeToEventChangesFactory(getJWTCredentialsAWS),
   unsubscribeFromEventChangesFactory(getJWTCredentialsAWS),
-  new Calendars(squidexGraphqlClient),
+  new Calendars(squidexGraphqlClient, calendarRestClient),
   new AlertsSentry(Sentry.captureException.bind(Sentry)),
 );
 

@@ -1,14 +1,14 @@
 import nock from 'nock';
 import encode from 'jwt-encode';
-import { config } from '@asap-hub/squidex';
+import { baseUrl, clientId, clientSecret } from '../../src/config';
 
 export const identity = () => {
-  return nock(config.baseUrl)
+  return nock(baseUrl)
     .post(
       '/identity-server/connect/token',
       `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
-        config.clientId,
-      )}&client_secret=${config.clientSecret}`,
+        clientId,
+      )}&client_secret=${clientSecret}`,
     )
     .reply(200, {
       access_token: encode(

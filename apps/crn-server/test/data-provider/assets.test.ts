@@ -1,10 +1,16 @@
-import { config } from '@asap-hub/squidex';
+import { RestUser, SquidexRest } from '@asap-hub/squidex';
 import nock from 'nock';
+import { appName, baseUrl } from '../../src/config';
 import AssetDataProvider from '../../src/data-providers/assets.data-provider';
+import { getAuthToken } from '../../src/utils/auth';
 import { identity } from '../helpers/squidex';
 
 describe('Asset data provider', () => {
-  const assetDataProvider = new AssetDataProvider();
+  const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
+    appName,
+    baseUrl,
+  });
+  const assetDataProvider = new AssetDataProvider(userRestClient);
   beforeAll(() => {
     identity();
   });
@@ -12,8 +18,8 @@ describe('Asset data provider', () => {
   describe('create', () => {
     afterEach(nock.cleanAll);
     test('should return asset id when syncs asset', async () => {
-      nock(config.baseUrl)
-        .post(`/api/apps/${config.appName}/assets`)
+      nock(baseUrl)
+        .post(`/api/apps/${appName}/assets`)
         .reply(200, { id: 'squidex-asset-id' });
 
       const result = await assetDataProvider.create(
@@ -25,9 +31,7 @@ describe('Asset data provider', () => {
       expect(nock.isDone()).toBe(true);
     });
     test('Should throw when sync asset fails', async () => {
-      nock(config.baseUrl)
-        .post(`/api/apps/${config.appName}/assets`)
-        .reply(500);
+      nock(baseUrl).post(`/api/apps/${appName}/assets`).reply(500);
 
       await expect(
         assetDataProvider.create(

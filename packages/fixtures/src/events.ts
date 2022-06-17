@@ -89,10 +89,14 @@ export const createEventResponse = (
   calendar: createCalendarResponse(itemIndex),
   startDate: new Date().toISOString(),
   startDateTimeZone: 'Europe/London',
+  startDateTimestamp: new Date().getTime(),
   endDate: isEventInThePast
     ? subHours(new Date(), 2).toISOString()
     : addHours(new Date(), 1).toISOString(),
   endDateTimeZone: 'Europe/London',
+  endDateTimestamp: isEventInThePast
+    ? subHours(new Date(), 2).getTime()
+    : addHours(new Date(), 1).getTime(),
   group: createGroupResponse(),
   description: `Event ${itemIndex} description`,
   status: 'Confirmed',

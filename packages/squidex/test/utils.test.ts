@@ -1,17 +1,20 @@
-import config from '../src/config';
 import {
   parseDate,
-  createURL,
+  createUrlFactory,
   parseToSquidex,
   sanitiseForSquidex,
 } from '../src/utils';
 
 describe('Squidex Utils', () => {
   describe('createUrl - generate asset url from cms assets list', () => {
+    const appName = 'test-app';
+    const baseUrl = 'http://test-url.com';
+    const createUrl = createUrlFactory({ appName, baseUrl });
+
     test('return a url of the assets', async () => {
-      expect(createURL(['1', '2'])).toEqual([
-        `${config.baseUrl}/api/assets/${config.appName}/1`,
-        `${config.baseUrl}/api/assets/${config.appName}/2`,
+      expect(createUrl(['1', '2'])).toEqual([
+        `${baseUrl}/api/assets/${appName}/1`,
+        `${baseUrl}/api/assets/${appName}/2`,
       ]);
     });
   });

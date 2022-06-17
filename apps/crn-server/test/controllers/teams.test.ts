@@ -1,7 +1,9 @@
 import { NotFoundError } from '@asap-hub/errors';
-import { config } from '@asap-hub/squidex';
+import { RestTeam, RestUser, SquidexRest } from '@asap-hub/squidex';
 import nock from 'nock';
+import { appName, baseUrl } from '../../src/config';
 import Teams from '../../src/controllers/teams';
+import { getAuthToken } from '../../src/utils/auth';
 import {
   getListTeamResponse,
   getSquidexGraphqlTeam,
@@ -15,11 +17,27 @@ import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-clie
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
 describe('Team controller', () => {
+  const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
+    appName,
+    baseUrl,
+  });
+  const teamRestclient = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
+    appName,
+    baseUrl,
+  });
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const teamController = new Teams(squidexGraphqlClientMock);
+  const teamController = new Teams(
+    squidexGraphqlClientMock,
+    userRestClient,
+    teamRestclient,
+  );
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-  const teamControllerMockGraphql = new Teams(squidexGraphqlClientMockServer);
+  const teamControllerMockGraphql = new Teams(
+    squidexGraphqlClientMockServer,
+    userRestClient,
+    teamRestclient,
+  );
 
   afterEach(() => {
     jest.resetAllMocks();
@@ -653,9 +671,7 @@ describe('Team controller', () => {
 
     test('Should throw a Not Found error when the team does not exist', async () => {
       const teamId = 'team-id-1';
-      nock(config.baseUrl)
-        .patch(`/api/content/${config.appName}/teams/${teamId}`)
-        .reply(404);
+      nock(baseUrl).patch(`/api/content/${appName}/teams/${teamId}`).reply(404);
 
       await expect(teamController.update(teamId, [])).rejects.toThrow(
         NotFoundError,
@@ -669,8 +685,8 @@ describe('Team controller', () => {
         squidexGraphqlResponse,
       );
 
-      nock(config.baseUrl)
-        .patch(`/api/content/${config.appName}/teams/${teamId}`, {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/teams/${teamId}`, {
           tools: { iv: [] },
         })
         .reply(200, {}); // response is not used
@@ -701,8 +717,8 @@ describe('Team controller', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
       );
-      nock(config.baseUrl)
-        .patch(`/api/content/${config.appName}/teams/${teamId}`, {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/teams/${teamId}`, {
           tools: { iv: toolsUpdate },
         })
         .reply(200, {}); // response is not used

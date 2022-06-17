@@ -1,7 +1,6 @@
 import Debug from 'debug';
 import Got, { RequestError } from 'got';
 import decode from 'jwt-decode';
-import squidex from './config';
 
 /* eslint-disable camelcase */
 
@@ -9,10 +8,19 @@ interface JwtToken {
   exp: number;
 }
 
+export type SquidexConfig = {
+  clientId: string;
+  clientSecret: string;
+  appName: string;
+  baseUrl: string;
+};
+
 const debug = Debug('squidex');
 
-const fetchToken = async () => {
-  const url = `${squidex.baseUrl}/identity-server/connect/token`;
+const fetchToken = async (
+  config: Pick<SquidexConfig, 'clientId' | 'clientSecret' | 'baseUrl'>,
+) => {
+  const url = `${config.baseUrl}/identity-server/connect/token`;
   try {
     debug('Fetching new squidex auth token');
 
@@ -20,8 +28,8 @@ const fetchToken = async () => {
       form: {
         grant_type: 'client_credentials',
         scope: 'squidex-api',
-        client_id: squidex.clientId,
-        client_secret: squidex.clientSecret,
+        client_id: config.clientId,
+        client_secret: config.clientSecret,
       },
     }).json<{ access_token: string }>();
 
@@ -35,7 +43,9 @@ const fetchToken = async () => {
   }
 };
 
-export const getAccessTokenFactory = (): (() => Promise<string>) => {
+export const getAccessTokenFactory = (
+  config: Pick<SquidexConfig, 'clientId' | 'clientSecret' | 'baseUrl'>,
+): (() => Promise<string>) => {
   let tokenP: Promise<string> | undefined;
 
   return async (): Promise<string> => {
@@ -58,7 +68,7 @@ export const getAccessTokenFactory = (): (() => Promise<string>) => {
       }
     }
 
-    tokenP = fetchToken();
+    tokenP = fetchToken(config);
 
     return tokenP;
   };
@@ -67,8 +77,9 @@ export const getAccessTokenFactory = (): (() => Promise<string>) => {
 export type GetAccessToken = ReturnType<typeof getAccessTokenFactory>;
 
 const create = (
-  clientOptions: { unpublished: boolean } = { unpublished: false },
   getAccessToken: GetAccessToken,
+  config: Pick<SquidexConfig, 'appName' | 'baseUrl'>,
+  clientOptions: { unpublished: boolean } = { unpublished: false },
 ): typeof Got => {
   const headers: Record<string, string> = {
     'content-type': 'application/json',
@@ -79,7 +90,7 @@ const create = (
   }
 
   return Got.extend({
-    prefixUrl: `${squidex.baseUrl}/api/content/${squidex.appName}/`,
+    prefixUrl: `${config.baseUrl}/api/content/${config.appName}/`,
     headers,
     hooks: {
       beforeRequest: [

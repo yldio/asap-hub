@@ -1,19 +1,20 @@
-import config from './config';
-import createClient, { getAccessTokenFactory } from './auth';
+import createClient, { GetAccessToken, SquidexConfig } from './auth';
 import { SquidexGraphql as SquidexGraphqlNoAuth } from './graphql';
 import { Squidex as SquidexRestNoAuth } from './rest';
 
-export { config };
+export { getAccessTokenFactory } from './auth';
 export * from './utils';
 export * from './entities';
 export { SquidexGraphqlError } from './graphql';
 export type { SquidexGraphqlClient } from './graphql';
 export type { SquidexRestClient, Query, Results } from './rest';
 
-const getAuthToken = getAccessTokenFactory();
 export class SquidexGraphql extends SquidexGraphqlNoAuth {
-  constructor() {
-    super(getAuthToken);
+  constructor(
+    getAuthToken: GetAccessToken,
+    config: Pick<SquidexConfig, 'baseUrl' | 'appName'>,
+  ) {
+    super(getAuthToken, config);
   }
 }
 
@@ -22,9 +23,11 @@ export class SquidexRest<
   C extends { id: string; data: Record<string, unknown> } = T,
 > extends SquidexRestNoAuth<T, C> {
   constructor(
+    getAuthToken: GetAccessToken,
     collection: string,
-    options?: Parameters<typeof createClient>[0],
+    config: Pick<SquidexConfig, 'baseUrl' | 'appName'>,
+    options?: Parameters<typeof createClient>[2],
   ) {
-    super(collection, getAuthToken, options);
+    super(getAuthToken, collection, config, options);
   }
 }

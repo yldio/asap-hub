@@ -1,6 +1,5 @@
 import { GenericError } from '@asap-hub/errors';
 import nock from 'nock';
-import config from '../src/config';
 import { Squidex } from '../src/rest';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 
@@ -15,7 +14,12 @@ interface Content {
 
 const collection = 'contents';
 describe('squidex wrapper', () => {
-  const client = new Squidex<Content>(collection, getAccessTokenMock);
+  const appName = 'test-app';
+  const baseUrl = 'http://test-url.com';
+  const client = new Squidex<Content>(getAccessTokenMock, collection, {
+    appName,
+    baseUrl,
+  });
 
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
@@ -23,8 +27,8 @@ describe('squidex wrapper', () => {
   });
 
   it('returns GenericError when squidex returns error', async () => {
-    nock(config.baseUrl)
-      .get(`/api/content/${config.appName}/${collection}`)
+    nock(baseUrl)
+      .get(`/api/content/${appName}/${collection}`)
       .query(() => true)
       .reply(500);
 
@@ -32,9 +36,9 @@ describe('squidex wrapper', () => {
   });
 
   it('returns GenericError on HTTP error', async () => {
-    nock(config.baseUrl)
+    nock(baseUrl)
       .get(
-        `/api/content/${config.appName}/${collection}?q=${JSON.stringify({
+        `/api/content/${appName}/${collection}?q=${JSON.stringify({
           take: 8,
         })}`,
       )
@@ -44,9 +48,9 @@ describe('squidex wrapper', () => {
   });
 
   it('returns a list of documents', async () => {
-    nock(config.baseUrl)
+    nock(baseUrl)
       .get(
-        `/api/content/${config.appName}/${collection}?q=${JSON.stringify({
+        `/api/content/${appName}/${collection}?q=${JSON.stringify({
           take: 8,
         })}`,
       )
@@ -78,9 +82,9 @@ describe('squidex wrapper', () => {
   });
 
   it("returns an empty list of documents if collection doesn't exist", async () => {
-    nock(config.baseUrl)
+    nock(baseUrl)
       .get(
-        `/api/content/${config.appName}/${collection}?q=${JSON.stringify({
+        `/api/content/${appName}/${collection}?q=${JSON.stringify({
           take: 8,
         })}`,
       )
@@ -91,13 +95,13 @@ describe('squidex wrapper', () => {
   });
 
   it('returns draft documents', async () => {
-    nock(config.baseUrl, {
+    nock(baseUrl, {
       reqheaders: {
         'X-Unpublished': 'true',
       },
     })
       .get(
-        `/api/content/${config.appName}/${collection}?q=${JSON.stringify({
+        `/api/content/${appName}/${collection}?q=${JSON.stringify({
           take: 8,
         })}`,
       )
@@ -115,9 +119,15 @@ describe('squidex wrapper', () => {
         ],
       });
 
-    const client = new Squidex<Content>(collection, getAccessTokenMock, {
-      unpublished: true,
-    });
+    const client = new Squidex<Content>(
+      getAccessTokenMock,
+      collection,
+      { appName, baseUrl },
+      {
+        unpublished: true,
+      },
+    );
+
     const result = await client.fetch();
     expect(result.items).toEqual([
       {

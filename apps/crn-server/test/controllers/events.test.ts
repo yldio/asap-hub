@@ -1,6 +1,6 @@
 import nock from 'nock';
 import { GenericError } from '@asap-hub/errors';
-import { config } from '@asap-hub/squidex';
+import { RestEvent, SquidexRest } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import {
   listEventResponse,
@@ -20,14 +20,24 @@ import Events from '../../src/controllers/events';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 import Boom from '@hapi/boom';
+import { getAuthToken } from '../../src/utils/auth';
+import { appName, baseUrl } from '../../src/config';
 
 describe('Event controller', () => {
+  const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
+    appName,
+    baseUrl,
+  });
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const eventsController = new Events(squidexGraphqlClientMock);
+  const eventsController = new Events(
+    squidexGraphqlClientMock,
+    eventRestClient,
+  );
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
   const eventsControllerMockGraphql = new Events(
     squidexGraphqlClientMockServer,
+    eventRestClient,
   );
 
   beforeAll(() => identity());
@@ -234,47 +244,113 @@ describe('Event controller', () => {
       });
     });
 
-    describe('Group filter', () => {
-      const groupId = 'some-group-id';
-      test('Should throw a Not Found error when the event is not found', async () => {
-        squidexGraphqlClientMock.request.mockRejectedValue(Boom.notFound());
+    describe('Filters', () => {
+      describe('Group filter', () => {
+        const groupId = 'some-group-id';
+        test('Should throw a Not Found error when the event is not found', async () => {
+          squidexGraphqlClientMock.request.mockRejectedValue(Boom.notFound());
 
-        await expect(
-          eventsController.fetch({
-            after: 'after-date',
-            groupId,
-          }),
-        ).rejects.toThrow('Not Found');
-      });
-
-      test('Should apply the "groupId" filter', async () => {
-        const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
-        const groupGraphqlResponse = getSquidexGroupGraphqlResponse();
-        groupGraphqlResponse.findGroupsContent!.flatData!.calendars![0]!.id =
-          'calendar-1';
-
-        squidexGraphqlClientMock.request.mockResolvedValueOnce(
-          groupGraphqlResponse,
-        );
-
-        squidexGraphqlClientMock.request.mockResolvedValueOnce(
-          eventsGraphqlResponse,
-        );
-        const result = await eventsController.fetch({
-          after: 'after-date',
-          groupId,
+          await expect(
+            eventsController.fetch({
+              after: 'after-date',
+              filter: { groupId },
+            }),
+          ).rejects.toThrow('Not Found');
         });
 
-        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
-          {
-            filter: `data/hidden/iv ne true and data/endDate/iv gt after-date and data/calendar/iv in ['calendar-1']`,
-            order: '',
-            skip: 0,
-            top: 10,
-          },
-        );
-        expect(result).toEqual(listEventResponse);
+        test('Should apply the "groupId" filter', async () => {
+          const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
+          const groupGraphqlResponse = getSquidexGroupGraphqlResponse();
+          groupGraphqlResponse.findGroupsContent!.flatData!.calendars![0]!.id =
+            'calendar-1';
+
+          squidexGraphqlClientMock.request.mockResolvedValueOnce(
+            groupGraphqlResponse,
+          );
+
+          squidexGraphqlClientMock.request.mockResolvedValueOnce(
+            eventsGraphqlResponse,
+          );
+          const result = await eventsController.fetch({
+            after: 'after-date',
+            filter: { groupId },
+          });
+
+          expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            {
+              filter: `data/hidden/iv ne true and data/endDate/iv gt after-date and data/calendar/iv in ['calendar-1']`,
+              order: '',
+              skip: 0,
+              top: 10,
+            },
+          );
+          expect(result).toEqual(listEventResponse);
+        });
+
+        test('Should apply the "teamId" filter', async () => {
+          const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
+          squidexGraphqlClientMock.request.mockResolvedValueOnce(
+            eventsGraphqlResponse,
+          );
+          const result = await eventsController.fetch({
+            after: 'after-date',
+            filter: { teamId: 'team-1' },
+          });
+
+          expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            {
+              filter: `data/hidden/iv ne true and data/endDate/iv gt after-date and data/speakers/iv/team eq 'team-1'`,
+              order: '',
+              skip: 0,
+              top: 10,
+            },
+          );
+          expect(result).toEqual(listEventResponse);
+        });
+        test('Should apply the "userId" filter', async () => {
+          const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
+          squidexGraphqlClientMock.request.mockResolvedValueOnce(
+            eventsGraphqlResponse,
+          );
+          const result = await eventsController.fetch({
+            after: 'after-date',
+            filter: { userId: 'user-1' },
+          });
+
+          expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            {
+              filter: `data/hidden/iv ne true and data/endDate/iv gt after-date and data/speakers/iv/user eq 'user-1'`,
+              order: '',
+              skip: 0,
+              top: 10,
+            },
+          );
+          expect(result).toEqual(listEventResponse);
+        });
+        test('Should apply the "externalUserId" filter', async () => {
+          const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
+          squidexGraphqlClientMock.request.mockResolvedValueOnce(
+            eventsGraphqlResponse,
+          );
+          const result = await eventsController.fetch({
+            after: 'after-date',
+            filter: { externalAuthorId: 'external-user-1' },
+          });
+
+          expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            {
+              filter: `data/hidden/iv ne true and data/endDate/iv gt after-date and data/speakers/iv/user eq 'external-user-1'`,
+              order: '',
+              skip: 0,
+              top: 10,
+            },
+          );
+          expect(result).toEqual(listEventResponse);
+        });
       });
     });
 
@@ -654,9 +730,9 @@ describe('Event controller', () => {
     });
 
     test('Should create or update the event', async () => {
-      nock(config.baseUrl)
+      nock(baseUrl)
         .post(
-          `/api/content/${config.appName}/events?publish=true`,
+          `/api/content/${appName}/events?publish=true`,
           getRestEvent().data,
         )
         .reply(200, getRestEvent());
@@ -665,8 +741,8 @@ describe('Event controller', () => {
     });
 
     test('Should throw when squidex return an error', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/events?publish=true`)
+      nock(baseUrl)
+        .post(`/api/content/${appName}/events?publish=true`)
         .reply(404);
 
       await expect(
@@ -687,8 +763,8 @@ describe('Event controller', () => {
     const eventId = 'event-id';
 
     test('Should update the event', async () => {
-      nock(config.baseUrl)
-        .patch(`/api/content/${config.appName}/events/${eventId}`, {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/events/${eventId}`, {
           tags: { iv: ['kubernetes'] },
           meetingLink: { iv: 'https://zweem.com' },
         })
@@ -701,8 +777,8 @@ describe('Event controller', () => {
     });
 
     test('Should throw when squidex return an error', async () => {
-      nock(config.baseUrl)
-        .patch(`/api/content/${config.appName}/events/${eventId}`)
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/events/${eventId}`)
         .reply(404);
 
       await expect(
@@ -721,8 +797,8 @@ describe('Event controller', () => {
     const googleId = 'google-event-id';
     const filter = `data/googleId/iv eq '${googleId}'`;
     test('Should throw when gets an error from squidex', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/events`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/events`)
         .query({
           $top: 1,
           $filter: filter,
@@ -733,8 +809,8 @@ describe('Event controller', () => {
       ).rejects.toThrow();
     });
     test('Should return null when squidex returns an empty array', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/events`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/events`)
         .query({
           $top: 1,
           $filter: filter,
@@ -744,8 +820,8 @@ describe('Event controller', () => {
       expect(result).toBeNull;
     });
     test('Should return the event when finds it', async () => {
-      nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/events`)
+      nock(baseUrl)
+        .get(`/api/content/${appName}/events`)
         .query({
           $top: 1,
           $filter: filter,

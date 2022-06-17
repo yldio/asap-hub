@@ -1,4 +1,4 @@
-import { config } from '@asap-hub/squidex';
+import { appName, baseUrl } from '../../src/config';
 import { parseNews, parseGraphQLNews } from '../../src/entities';
 
 describe('parse news entities', () => {
@@ -31,7 +31,7 @@ describe('parse news entities', () => {
       title: 'Title',
       shortText: 'shortText',
       text: 'text',
-      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/uuid`,
+      thumbnail: `${baseUrl}/api/assets/${appName}/uuid`,
     });
   });
 });
@@ -40,7 +40,7 @@ describe('parse GraphQL news entities', () => {
   test.each`
     description       | thumbnail           | expected
     ${'no thumbnail'} | ${undefined}        | ${undefined}
-    ${'thumbnail'}    | ${[{ id: 'uuid' }]} | ${`${config.baseUrl}/api/assets/${config.appName}/uuid`}
+    ${'thumbnail'}    | ${[{ id: 'uuid' }]} | ${`${baseUrl}/api/assets/${appName}/uuid`}
   `('parse handles $description', async ({ thumbnail, expected }) => {
     const date = new Date().toISOString();
     const news = {

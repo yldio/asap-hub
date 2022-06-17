@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
 import { createEventResponse } from '@asap-hub/fixtures';
-import { addMinutes, subDays, subMinutes } from 'date-fns';
+import { addMinutes, subDays, subMinutes, addDays } from 'date-fns';
 
 import EventCard from '../EventCard';
 
@@ -178,5 +178,53 @@ describe('past events', () => {
     );
     expect(screen.getByText(/no meeting materials/i)).toBeVisible();
     expect(screen.getByTitle(/paper/i)).toBeInTheDocument();
+  });
+
+  it("doesn't display toast if none of the conditions are match", () => {
+    render(
+      <EventCard
+        {...props}
+        endDate={addDays(new Date(), 1).toISOString()}
+        startDate={addDays(new Date(), 2).toISOString()}
+        speakers={[
+          {
+            team: {
+              displayName: 'Team',
+              id: '123',
+            },
+            user: {
+              displayName: 'User',
+              id: '123',
+            },
+          },
+        ]}
+      />,
+    );
+
+    expect(screen.queryByText(/to be announced/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/cancelled/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/currently live/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/currently happening/)).not.toBeInTheDocument();
+  });
+
+  it('display toast when event has a team with no users', () => {
+    render(
+      <EventCard
+        {...props}
+        status="Confirmed"
+        startDate={addDays(new Date(), 2).toISOString()}
+        endDate={addDays(new Date(), 1).toISOString()}
+        speakers={[
+          {
+            team: {
+              displayName: 'Team',
+              id: '123',
+            },
+          },
+        ]}
+      />,
+    );
+
+    expect(screen.getByText(/to be announced/)).toBeInTheDocument();
   });
 });

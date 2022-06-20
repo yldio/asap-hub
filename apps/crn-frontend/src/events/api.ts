@@ -9,7 +9,7 @@ export function getFilters(filters: string[], userId?: string) {
   if (filters.length === 0) return undefined;
 
   if (userId) {
-    return `${filters.join(' OR ')} AND speakers.user.id: ${userId}`;
+    return `(${filters.join(' OR ')}) AND speakers.user.id: "${userId}"`;
   }
   return filters.join(' OR ');
 }

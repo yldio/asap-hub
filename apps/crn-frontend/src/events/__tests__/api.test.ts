@@ -164,7 +164,7 @@ describe('getEventsFromAlgolia', () => {
       userId: 'user-1',
     });
     expect(search).toBeCalledWith(['event'], '', {
-      filters: 'endDateTimestamp > 1609498800 AND speakers.user.id: user-1',
+      filters: '(endDateTimestamp > 1609498800) AND speakers.user.id: "user-1"',
       hitsPerPage: 10,
       page: 0,
     });
@@ -214,7 +214,7 @@ describe('Tests that getFilters returns', () => {
 
   it('OR between element and "AND" at the end when userId is present', async () => {
     expect(getFilters(['filter1', 'filter2'], 'userId')).toEqual(
-      'filter1 OR filter2 AND speakers.user.id: userId',
+      '(filter1 OR filter2) AND speakers.user.id: "userId"',
     );
   });
 });

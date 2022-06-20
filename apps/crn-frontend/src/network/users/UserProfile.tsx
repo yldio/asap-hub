@@ -8,7 +8,6 @@ import {
 } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
-import { startOfMinute } from 'date-fns';
 import { ComponentProps, FC, lazy, useContext, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { getEventListOptions } from '../../events/options';
@@ -33,7 +32,11 @@ const Outputs = lazy(loadOutputs);
 const Editing = lazy(loadEditing);
 const Events = lazy(loadEvents);
 
-const User: FC<Record<string, never>> = () => {
+type UserProfileProps = {
+  currentTime: Date;
+};
+
+const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
   const route = network({}).users({}).user;
   const { path } = useRouteMatch();
   const { userId } = useRouteParams(route);
@@ -58,8 +61,6 @@ const User: FC<Record<string, never>> = () => {
   const toast = useContext(ToastContext);
 
   const isOwnProfile = currentUser?.id === user?.id;
-
-  const [currentTime] = useState(startOfMinute(new Date()));
 
   const upcomingEventsResult = useEvents(
     getEventListOptions(
@@ -164,4 +165,4 @@ const User: FC<Record<string, never>> = () => {
   return <NotFoundPage />;
 };
 
-export default User;
+export default UserProfile;

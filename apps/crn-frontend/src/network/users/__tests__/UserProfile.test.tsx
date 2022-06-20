@@ -65,7 +65,11 @@ beforeEach(jest.clearAllMocks);
 
 const renderUserProfile = async (
   userResponse = createUserResponse(),
-  { ownUserId = userResponse.id, routeProfileId = userResponse.id } = {},
+  {
+    ownUserId = userResponse.id,
+    routeProfileId = userResponse.id,
+    currentTime = new Date(),
+  } = {},
   auth0Overrides?: (
     auth0Client?: Auth0Client,
     auth0User?: Auth0User,
@@ -109,8 +113,9 @@ const renderUserProfile = async (
                     network({}).users.template +
                     network({}).users({}).user.template
                   }
-                  component={UserProfile}
-                />
+                >
+                  <UserProfile currentTime={currentTime} />
+                </Route>
               </MemoryRouter>
             </WhenReady>
           </Auth0Provider>
@@ -425,13 +430,12 @@ it('renders number of upcoming events', async () => {
 });
 
 it('navigates to the upcoming events tab', async () => {
-  const date = new Date('2021-12-28T14:00:00.000Z');
-  jest.useFakeTimers('modern').setSystemTime(date);
+  const currentTime = new Date('2021-12-28T14:00:00.000Z');
   const response = createListEventResponse(1);
   mockUserEvents.mockResolvedValue(response);
 
   const userResponse = createUserResponse();
-  await renderUserProfile(userResponse);
+  await renderUserProfile(userResponse, { currentTime });
 
   const tab = screen.getByRole('link', { name: /upcoming/i });
   userEvent.click(tab);
@@ -457,6 +461,4 @@ it('navigates to the upcoming events tab', async () => {
     searchQuery: '',
     userId: userResponse.id,
   });
-
-  jest.useRealTimers();
 });

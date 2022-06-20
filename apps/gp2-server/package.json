@@ -11,9 +11,11 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@asap-hub/errors": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/server-common": "workspace:*",
+    "@asap-hub/services-common": "workspace:*",
     "@asap-hub/squidex": "workspace:*",
     "@graphql-typed-document-node/core": "3.1.1",
     "@hapi/boom": "9.1.4",

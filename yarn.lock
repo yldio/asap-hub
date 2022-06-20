@@ -883,9 +883,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/gp2-server@workspace:apps/gp2-server"
   dependencies:
+    "@asap-hub/errors": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/server-common": "workspace:*"
+    "@asap-hub/services-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
     "@babel/preset-env": 7.18.2
     "@babel/preset-typescript": 7.17.12
@@ -1127,6 +1129,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
+    "@asap-hub/services-common": "workspace:*"
     "@babel/runtime-corejs3": 7.18.3
     "@hapi/boom": 9.1.4
     "@sentry/serverless": ^6.7.1

@@ -228,17 +228,17 @@ describe('/research-outputs/ route', () => {
         },
       );
 
-      test('Requires an identifier if funded and used in publication', async () => {
+      test('Do not require an identifier if funded and used in publication', async () => {
         const researchOutput = getResearchOutputPostRequest();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
             ...researchOutput,
-            type: 'Article',
             asapFunded: true,
             usedInPublication: true,
           });
-        expect(response.status).toBe(400);
+
+        expect(response.status).toBe(201);
       });
 
       test('Accepts doi based on the regex', async () => {
@@ -569,7 +569,7 @@ describe('/research-outputs/ route', () => {
             asapFunded: true,
             usedInPublication: true,
           });
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(200);
       });
 
       test('Accepts doi based on the regex', async () => {

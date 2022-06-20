@@ -19,13 +19,13 @@ export {
   Headline6,
   InfoParagraph,
   Link,
+  NavigationLink,
   Overlay,
   Paragraph,
   Pill,
   TabLink,
   Toggle,
   Tooltip,
-  NavigationLink,
 } from './atoms';
 export * from './colors';
 export * from './hooks';
@@ -81,9 +81,9 @@ export {
   EmailPasswordSignin,
   EventAbout,
   EventCard,
-  EventsSection,
   EventConversation,
   EventMaterials,
+  EventSearch,
   GoogleCalendar,
   GroupCard,
   GroupInformation,

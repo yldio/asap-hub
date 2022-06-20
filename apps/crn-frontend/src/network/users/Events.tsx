@@ -1,22 +1,48 @@
-import { EventsList } from '@asap-hub/react-components';
+import { SearchFrame } from '@asap-hub/frontend-utils';
+import { EventSearch, EventsList } from '@asap-hub/react-components';
 import { getEventListOptions } from '../../events/options';
 import { useEvents } from '../../events/state';
-import { usePagination, usePaginationParams } from '../../hooks';
+import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 
-type EventListProps = {
+type EventsProps = {
   readonly currentTime: Date;
-  readonly past?: boolean;
-  readonly searchQuery: string;
+  readonly past: boolean;
   readonly userId: string;
 };
-const EventList: React.FC<EventListProps> = ({
+const Events: React.FC<EventsProps> = ({ currentTime, userId, past }) => {
+  const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
+
+  return (
+    <article>
+      <EventSearch
+        searchQuery={searchQuery}
+        onChangeSearchQuery={setSearchQuery}
+      />
+      <SearchFrame title="">
+        <EventsDisplay
+          searchQuery={debouncedSearchQuery}
+          past={past}
+          userId={userId}
+          currentTime={currentTime}
+        />
+      </SearchFrame>
+    </article>
+  );
+};
+
+type EventsDisplayProps = {
+  readonly currentTime: Date;
+  readonly past: boolean;
+  readonly userId: string;
+  readonly searchQuery: string;
+};
+const EventsDisplay: React.FC<EventsDisplayProps> = ({
   currentTime,
-  past = false,
+  past,
   searchQuery,
   userId,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
-
   const { items, total } = useEvents(
     getEventListOptions(
       currentTime,
@@ -30,6 +56,7 @@ const EventList: React.FC<EventListProps> = ({
     ),
   );
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
+
   return (
     <EventsList
       currentPageIndex={currentPage}
@@ -41,4 +68,4 @@ const EventList: React.FC<EventListProps> = ({
   );
 };
 
-export default EventList;
+export default Events;

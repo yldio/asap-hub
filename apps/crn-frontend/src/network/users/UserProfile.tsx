@@ -1,14 +1,10 @@
 import { Frame } from '@asap-hub/frontend-utils';
-import {
-  EventsSection,
-  NotFoundPage,
-  UserProfilePage,
-} from '@asap-hub/react-components';
+import { NotFoundPage, UserProfilePage } from '@asap-hub/react-components';
 import {
   ToastContext,
   useCurrentUser,
-  UserProfileContext,
   useFlags,
+  UserProfileContext,
 } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
@@ -17,7 +13,7 @@ import { ComponentProps, FC, lazy, useContext, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { getEventListOptions } from '../../events/options';
 import { useEvents } from '../../events/state';
-import { useCurrentUserProfileTabRoute, useSearch } from '../../hooks';
+import { useCurrentUserProfileTabRoute } from '../../hooks';
 import { useResearchOutputs } from '../../shared-research/state';
 import { usePatchUserAvatarById, useUserById } from './state';
 
@@ -78,7 +74,6 @@ const User: FC<Record<string, never>> = () => {
     ),
   );
 
-  const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
   const isUserEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
 
   if (user) {
@@ -142,19 +137,13 @@ const User: FC<Record<string, never>> = () => {
                   </Route>
                   {isUserEventsEnabled && (
                     <Route path={path + tabRoutes.upcoming.template}>
-                      <EventsSection
-                        searchQuery={searchQuery}
-                        onChangeSearchQuery={setSearchQuery}
-                      >
-                        <Frame title="UpcomingEvents">
-                          <Events
-                            currentTime={currentTime}
-                            past={false}
-                            searchQuery={debouncedSearchQuery}
-                            userId={user?.id}
-                          />
-                        </Frame>
-                      </EventsSection>
+                      <Frame title="Upcoming Events">
+                        <Events
+                          userId={user?.id}
+                          currentTime={currentTime}
+                          past={false}
+                        />
+                      </Frame>
                     </Route>
                   )}
                   <Redirect to={tabRoutes.research({}).$} />

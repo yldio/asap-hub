@@ -1,15 +1,19 @@
 import { SearchFrame } from '@asap-hub/frontend-utils';
 import { EventSearch, EventsList } from '@asap-hub/react-components';
-import { getEventListOptions } from '../../events/options';
-import { useEvents } from '../../events/state';
-import { usePagination, usePaginationParams, useSearch } from '../../hooks';
+import { getEventListOptions } from '../events/options';
+import { useEvents } from '../events/state';
+import { usePagination, usePaginationParams, useSearch } from '../hooks';
 
-type EventsProps = {
+type EventsEmbedProps = {
   readonly currentTime: Date;
   readonly past: boolean;
   readonly userId: string;
 };
-const Events: React.FC<EventsProps> = ({ currentTime, userId, past }) => {
+const EventsEmbed: React.FC<EventsEmbedProps> = ({
+  currentTime,
+  userId,
+  past,
+}) => {
   const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
 
   return (
@@ -30,7 +34,7 @@ const Events: React.FC<EventsProps> = ({ currentTime, userId, past }) => {
   );
 };
 
-type EventsDisplayProps = EventsProps & {
+type EventsDisplayProps = EventsEmbedProps & {
   searchQuery: string;
 };
 const EventsDisplay: React.FC<EventsDisplayProps> = ({
@@ -65,4 +69,4 @@ const EventsDisplay: React.FC<EventsDisplayProps> = ({
   );
 };
 
-export default Events;
+export default EventsEmbed;

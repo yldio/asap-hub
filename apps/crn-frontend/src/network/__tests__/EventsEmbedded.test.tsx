@@ -10,12 +10,12 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { getEventsFromAlgolia } from '../../../events/api';
-import { eventsState } from '../../../events/state';
-import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
-import Events from '../Events';
-import { refreshUserState } from '../state';
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { getEventsFromAlgolia } from '../../events/api';
+import { eventsState } from '../../events/state';
+import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
+import Events from '../EventsEmbedded';
+import { refreshUserState } from '../users/state';
 
 jest.mock('../../../events/api');
 jest.mock('../api');

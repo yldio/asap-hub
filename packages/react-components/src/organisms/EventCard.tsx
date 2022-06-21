@@ -1,4 +1,6 @@
 import { ComponentProps } from 'react';
+import { css } from '@emotion/react';
+
 import {
   eventMaterialTypes,
   EventResponse,
@@ -8,6 +10,7 @@ import {
 import { subMinutes, parseISO } from 'date-fns';
 
 import { ToastCard, EventInfo } from '../molecules';
+import { perRem, mobileScreen } from '../pixels';
 import { Link } from '../atoms';
 import { useDateHasPassed } from '../date';
 import { considerEndedAfter } from '../utils';
@@ -25,6 +28,13 @@ type EventCardProps = ComponentProps<typeof EventInfo> &
     | 'meetingMaterials'
     | 'speakers'
   >;
+
+const buttonStyle = css({
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    marginTop: `${15 / perRem}em`,
+    width: '100%',
+  },
+});
 
 const EventCard: React.FC<EventCardProps> = ({
   status,
@@ -63,16 +73,18 @@ const EventCard: React.FC<EventCardProps> = ({
         toastAction: (
           <>
             {props.meetingLink && !props.hideMeetingLink && (
-              <Link
-                href={props.meetingLink}
-                margin={false}
-                primary
-                buttonStyle
-                small
-                stretch={false}
-              >
-                Join meeting now
-              </Link>
+              <div css={buttonStyle}>
+                <Link
+                  href={props.meetingLink}
+                  margin={false}
+                  primary
+                  buttonStyle
+                  small
+                  stretch={false}
+                >
+                  Join meeting now
+                </Link>
+              </div>
             )}
           </>
         ),

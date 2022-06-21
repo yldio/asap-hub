@@ -47,6 +47,10 @@ const leadStyles = css({
 const toastContentStyles = css({
   display: 'flex',
   alignItems: 'center',
+
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    alignItems: 'flex-start',
+  },
 });
 
 type Type = 'alert' | 'attachment' | 'live' | 'info';

@@ -1412,11 +1412,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@hapi/boom",
-        "npm:9.1.2"
+        "npm:9.1.4"
       ],
       [
         "@hapi/bourne",
-        "npm:2.0.0"
+        "npm:2.1.0"
       ],
       [
         "@hapi/formula",
@@ -10172,7 +10172,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/plugin-transform-modules-commonjs", "virtual:17df4a6b7bc90a892848ea4c573b3f4fb009d45ed9e2e79220aa6879fd736424e8c4a39cef6752e4925485f2fc611317f0f97be3d91b72001eff479d14125faa#npm:7.18.2"],
             ["@babel/plugin-transform-runtime", "virtual:17df4a6b7bc90a892848ea4c573b3f4fb009d45ed9e2e79220aa6879fd736424e8c4a39cef6752e4925485f2fc611317f0f97be3d91b72001eff479d14125faa#npm:7.18.5"],
             ["@babel/runtime-corejs3", "npm:7.18.3"],
-            ["@hapi/boom", "npm:9.1.2"],
+            ["@hapi/boom", "npm:9.1.4"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/babel__core", "npm:7.1.19"],
             ["@types/hapi__boom", "npm:9.0.1"],
@@ -10380,8 +10380,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-tools/mock", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:8.6.12"],
             ["@graphql-tools/schema", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:8.3.14"],
             ["@graphql-typed-document-node/core", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.1"],
-            ["@hapi/boom", "npm:9.1.2"],
-            ["@hapi/bourne", "npm:2.0.0"],
+            ["@hapi/boom", "npm:9.1.4"],
+            ["@hapi/bourne", "npm:2.1.0"],
             ["@hapi/joi", "npm:17.1.1"],
             ["@sentry/serverless", "npm:6.7.1"],
             ["@serverless/typescript", "npm:3.19.0"],
@@ -10833,7 +10833,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-codegen/typescript", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:2.2.2"],
             ["@graphql-codegen/typescript-operations", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:2.1.4"],
             ["@graphql-typed-document-node/core", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:3.1.1"],
-            ["@hapi/boom", "npm:9.1.2"],
+            ["@hapi/boom", "npm:9.1.4"],
             ["@serverless/typescript", "npm:3.19.0"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/aws-lambda", "npm:8.10.100"],
@@ -11385,7 +11385,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/runtime-corejs3", "npm:7.18.3"],
-            ["@hapi/boom", "npm:9.1.2"],
+            ["@hapi/boom", "npm:9.1.4"],
             ["@sentry/serverless", "npm:6.7.1"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/express", "npm:4.17.11"],
@@ -11414,8 +11414,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/errors", "workspace:packages/errors"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@babel/runtime-corejs3", "npm:7.18.3"],
-            ["@hapi/boom", "npm:9.1.2"],
-            ["@hapi/bourne", "npm:2.0.0"],
+            ["@hapi/boom", "npm:9.1.4"],
+            ["@hapi/bourne", "npm:2.1.0"],
             ["@hapi/joi", "npm:17.1.1"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/aws-lambda", "npm:8.10.100"],
@@ -11451,8 +11451,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/runtime-corejs3", "npm:7.18.3"],
-            ["@hapi/boom", "npm:9.1.2"],
-            ["@hapi/bourne", "npm:2.0.0"],
+            ["@hapi/boom", "npm:9.1.4"],
+            ["@hapi/bourne", "npm:2.1.0"],
             ["@hapi/joi", "npm:17.1.1"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/debug", "npm:4.1.7"],
@@ -27718,10 +27718,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:9.1.2", {
-          "packageLocation": "./.yarn/cache/@hapi-boom-npm-9.1.2-de293ac5a5-168bb08ab7.zip/node_modules/@hapi/boom/",
+        ["npm:9.1.4", {
+          "packageLocation": "./.yarn/cache/@hapi-boom-npm-9.1.4-1a3569656a-b1cdde1e82.zip/node_modules/@hapi/boom/",
           "packageDependencies": [
-            ["@hapi/boom", "npm:9.1.2"],
+            ["@hapi/boom", "npm:9.1.4"],
             ["@hapi/hoek", "npm:9.0.4"]
           ],
           "linkType": "HARD",
@@ -27735,10 +27735,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:2.0.0", {
-          "packageLocation": "./.yarn/cache/@hapi-bourne-npm-2.0.0-8eeda7e0a2-2ea0922101.zip/node_modules/@hapi/bourne/",
+        ["npm:2.1.0", {
+          "packageLocation": "./.yarn/cache/@hapi-bourne-npm-2.1.0-dbe7c97050-0ce5a38bc4.zip/node_modules/@hapi/bourne/",
           "packageDependencies": [
-            ["@hapi/bourne", "npm:2.0.0"]
+            ["@hapi/bourne", "npm:2.1.0"]
           ],
           "linkType": "HARD",
         }]

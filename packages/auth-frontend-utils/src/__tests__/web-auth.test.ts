@@ -31,6 +31,7 @@ jest.mock('auth0-js', () => {
   };
 });
 
+<<<<<<< HEAD:packages/auth-frontend-utils/src/__tests__/web-auth.test.ts
 const clientID = 'client-id';
 const domain = 'auth.example.com';
 
@@ -40,6 +41,16 @@ const authorizeWithEmailPassword = authorizeWithEmailPasswordFactory(
   domain,
 );
 const sendPasswordResetLink = sendPasswordResetLinkFactory(clientID, domain);
+=======
+const webAuth = new WebAuth({
+  clientID: 'client-id',
+  domain: 'auth.example.com',
+});
+
+const authorizeWithSso = authorizeWithSsoFactory(webAuth);
+const authorizeWithEmailPassword = authorizeWithEmailPasswordFactory(webAuth);
+const sendPasswordResetLink = sendPasswordResetLinkFactory(webAuth);
+>>>>>>> 19c18392 (refactoring logic into separate package):packages/auth/src/__tests__/web-auth.test.ts
 
 afterEach(() => {
   mockLogin.mockReset();

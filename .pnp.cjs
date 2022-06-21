@@ -10248,12 +10248,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/auth/",
           "packageDependencies": [
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@auth0/auth0-spa-js", "npm:1.15.0"],
             ["@babel/runtime-corejs3", "npm:7.18.6"],
             ["@types/jest", "npm:26.0.24"],
-            ["@types/node", "npm:14.14.45"]
+            ["@types/node", "npm:14.14.45"],
+            ["@types/pify", "npm:3.0.2"],
+            ["auth0-js", "npm:9.16.0"],
+            ["camelcase", "npm:6.2.0"],
+            ["pify", "npm:5.0.0"]
           ],
           "linkType": "SOFT",
         }]
@@ -69731,7 +69736,7 @@ module.exports = require("path");;
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -69745,14 +69750,14 @@ module.exports = require("path");;
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
@@ -69765,7 +69770,7 @@ module.exports = require("path");;
 /******/ 			return getter;
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -69777,12 +69782,12 @@ module.exports = require("path");;
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
-/******/ 	
+/******/
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.

@@ -53,7 +53,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
   const researchOutputsResult = useResearchOutputs({
     currentPage: 0,
     filters: new Set(),
-    pageSize: 1,
+    pageSize: 10,
     searchQuery: '',
     userId,
   });
@@ -69,7 +69,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
       {
         searchQuery: '',
         currentPage: 0,
-        pageSize: 1,
+        pageSize: 10,
       },
       userId,
     ),

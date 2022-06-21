@@ -1,18 +1,9 @@
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
+import { AlgoliaSearchClient, getEventFilters } from '@asap-hub/algolia';
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
 import createListApiUrl from '../CreateListApiUrl';
 import { GetEventListOptions } from './options';
-
-export function getFilters(filters: string[], userId?: string) {
-  if (filters.length === 0) return undefined;
-
-  if (userId) {
-    return `(${filters.join(' OR ')}) AND speakers.user.id: "${userId}"`;
-  }
-  return filters.join(' OR ');
-}
 
 export const getEventsFromAlgolia = async (
   algoliaClient: AlgoliaSearchClient,
@@ -25,18 +16,14 @@ export const getEventsFromAlgolia = async (
     userId,
   }: GetEventListOptions,
 ): Promise<ListEventResponse> => {
-  const algoliaFilters: string[] = [];
+  const constaint = {
+    userId,
+  };
 
-  if (before) {
-    const beforeTimestamp = Math.round(new Date(before).getTime() / 1000);
-    algoliaFilters.push(`endDateTimestamp < ${beforeTimestamp}`);
-  } else if (after) {
-    const afterTimestamp = Math.round(new Date(after).getTime() / 1000);
-    algoliaFilters.push(`endDateTimestamp > ${afterTimestamp}`);
-  }
+  const filters = getEventFilters(before, after, constaint);
 
   const result = await algoliaClient.search(['event'], searchQuery, {
-    filters: getFilters(algoliaFilters, userId),
+    filters,
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,
   });

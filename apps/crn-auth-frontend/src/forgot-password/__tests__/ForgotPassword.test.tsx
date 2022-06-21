@@ -6,11 +6,11 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';
+import { WebAuthError } from '@asap-hub/auth';
 
 import ForgotPassword from '../ForgotPassword';
 
 import { sendPasswordResetLink } from '../../auth0/web-auth';
-import { WebAuthError } from '../../auth0/errors';
 
 jest.mock('../../auth0/web-auth');
 const mockSendPasswordResetLink = sendPasswordResetLink as jest.MockedFunction<

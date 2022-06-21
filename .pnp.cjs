@@ -4715,7 +4715,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "fast-safe-stringify",
-        "npm:2.1.1"
+        "npm:2.0.7"
       ],
       [
         "fast-text-encoding",
@@ -8819,7 +8819,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "superagent",
-        "npm:7.1.6"
+        "npm:5.3.1"
       ],
       [
         "supertest",
@@ -10207,12 +10207,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/auth/",
           "packageDependencies": [
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@auth0/auth0-spa-js", "npm:1.15.0"],
             ["@babel/runtime-corejs3", "npm:7.18.3"],
+            ["@types/auth0-js", "npm:9.14.4"],
             ["@types/jest", "npm:26.0.24"],
-            ["@types/node", "npm:14.14.45"]
+            ["@types/node", "npm:14.14.45"],
+            ["@types/pify", "npm:3.0.2"],
+            ["auth0-js", "npm:9.16.0"],
+            ["camelcase", "npm:6.2.0"],
+            ["pify", "npm:5.0.0"]
           ],
           "linkType": "SOFT",
         }]

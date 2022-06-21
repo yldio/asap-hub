@@ -10,9 +10,9 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
+import { extractErrorMessage, WebAuthError } from '@asap-hub/auth';
 
 import { sendPasswordResetLink } from '../auth0/web-auth';
-import { extractErrorMessage, WebAuthError } from '../auth0/errors';
 
 interface ForgotPasswordProps {
   readonly email: string;

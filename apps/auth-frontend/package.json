@@ -1,5 +1,5 @@
 {
-  "name": "@asap-hub/crn-auth-frontend",
+  "name": "@asap-hub/auth-frontend",
   "private": true,
   "version": "0.1.0",
   "engines": {

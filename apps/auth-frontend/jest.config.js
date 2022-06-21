@@ -34,5 +34,5 @@ module.exports = {
     '^.+\\.module\\.(css|sass|scss)$': require.resolve('identity-obj-proxy'),
   },
 
-  displayName: 'test-crn-auth-frontend',
+  displayName: 'test-auth-frontend',
 };

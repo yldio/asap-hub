@@ -118,7 +118,7 @@ const serverlessConfig: AWS = {
       },
     },
     auth0FetchByCode: {
-      handler: './src/handlers/webhooks/fetch-by-code/handler.handler',
+      handler: './src/handlers/webhooks/fetch-by-code-handler.handler',
       events: [
         {
           httpApi: {

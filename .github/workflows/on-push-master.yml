@@ -69,6 +69,7 @@ jobs:
       LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+      GP2_AUTH0_SHARED_SECRET: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
 
   algolia-sync-development:
     needs: [deployment-development]
@@ -100,6 +101,7 @@ jobs:
       LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+      GP2_AUTH0_SHARED_SECRET: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
 
   algolia-sync-production:
     needs: [deployment-production]

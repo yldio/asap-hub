@@ -78,6 +78,7 @@ jobs:
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+          gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
 
   algolia-settings:
     needs: [crn-sls-deploy]
@@ -178,5 +179,4 @@ jobs:
           APP_ORIGIN: ${{ steps.setup.outputs.crn-app-url }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          GP2_AUTH0_SHARED_SECRET: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
           SES_REGION: ${{ steps.setup.outputs.ses-region }}

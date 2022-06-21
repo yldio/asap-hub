@@ -1,28 +1,25 @@
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
-import { EventResponse, ListEventResponse } from '@asap-hub/model';
+import { AlgoliaSearchClient, getEventFilters } from '@asap-hub/algolia';
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
-
+import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
-import { GetEventListOptions } from './options';
 import createListApiUrl from '../CreateListApiUrl';
+import { GetEventListOptions } from './options';
 
 export const getEventsFromAlgolia = async (
   algoliaClient: AlgoliaSearchClient,
-  { searchQuery, currentPage, pageSize, before, after }: GetEventListOptions,
+  {
+    searchQuery,
+    currentPage,
+    pageSize,
+    before,
+    after,
+    userId,
+  }: GetEventListOptions,
 ): Promise<ListEventResponse> => {
-  const algoliaFilters: string[] = [];
-
-  if (before) {
-    const beforeTimestamp = Math.round(new Date(before).getTime() / 1000);
-    algoliaFilters.push(`endDateTimestamp < ${beforeTimestamp}`);
-  } else if (after) {
-    const afterTimestamp = Math.round(new Date(after).getTime() / 1000);
-    algoliaFilters.push(`endDateTimestamp > ${afterTimestamp}`);
-  }
+  const filters = getEventFilters({ before, after }, { userId });
 
   const result = await algoliaClient.search(['event'], searchQuery, {
-    filters:
-      algoliaFilters.length > 0 ? algoliaFilters.join(' OR ') : undefined,
+    filters,
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,
   });

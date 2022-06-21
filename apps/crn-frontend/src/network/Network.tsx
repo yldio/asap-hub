@@ -1,9 +1,8 @@
-import { FC, lazy, useEffect } from 'react';
-import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
+import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 import { NetworkPage } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
-import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
-
+import { FC, lazy, useEffect, useState } from 'react';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useSearch } from '../hooks';
 import GroupProfile from './groups/GroupProfile';
 
@@ -49,6 +48,7 @@ const Network: FC<Record<string, never>> = () => {
     toggleFilter,
   } = useSearch();
 
+  const [currentTime] = useState(new Date());
   return (
     <Switch>
       <Route exact path={path + network({}).users.template}>
@@ -72,7 +72,7 @@ const Network: FC<Record<string, never>> = () => {
         }
       >
         <Frame title="User Profile">
-          <UserProfile />
+          <UserProfile currentTime={currentTime} />
         </Frame>
       </Route>
       <Route exact path={path + network({}).teams.template}>

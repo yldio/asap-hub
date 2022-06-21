@@ -1,6 +1,6 @@
 import { CalendarResponse } from './calendar';
-import { GroupResponse } from './group';
 import { ListResponse } from './common';
+import { GroupResponse } from './group';
 import { TeamResponse } from './team';
 
 export const MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT: number = 24;

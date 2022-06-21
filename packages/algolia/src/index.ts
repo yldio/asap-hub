@@ -3,10 +3,10 @@ import { AlgoliaSearchClient } from './client';
 
 export type { SearchResponse } from '@algolia/client-search';
 export * from './client';
+export * from './filters';
 export * from './scripts/move-index';
 export * from './scripts/remove-index';
 export * from './scripts/remove-records';
-
 type AlgoliaSearchClientNativeFactoryParams = {
   algoliaApiKey: string;
   algoliaAppId: string;

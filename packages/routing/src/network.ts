@@ -50,10 +50,16 @@ const user = (() => {
     { editPersonalInfo, editContactInfo, editOnboarded },
   );
 
+  const upcoming = route(
+    '/upcoming-events',
+    {},
+    { editPersonalInfo, editContactInfo, editOnboarded },
+  );
+
   return route(
     '/:userId',
     { userId: stringParser },
-    { about, research, outputs },
+    { about, research, outputs, upcoming },
   );
 })();
 const users = route('/users', {}, { user });

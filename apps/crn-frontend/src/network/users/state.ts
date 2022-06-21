@@ -1,22 +1,21 @@
+import { authorizationState } from '@asap-hub/crn-frontend/src/auth/state';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
-  atomFamily,
-  selectorFamily,
-  useSetRecoilState,
-  useRecoilValue,
-  useRecoilState,
-  DefaultValue,
-} from 'recoil';
-import {
-  UserResponse,
-  UserPatchRequest,
   ListUserResponse,
+  UserPatchRequest,
+  UserResponse,
 } from '@asap-hub/model';
 import { useAuth0 } from '@asap-hub/react-context';
-import { GetListOptions } from '@asap-hub/frontend-utils';
-
-import { authorizationState } from '@asap-hub/crn-frontend/src/auth/state';
-import { getUser, patchUser, postUserAvatar, getUsers } from './api';
+import {
+  atomFamily,
+  DefaultValue,
+  selectorFamily,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+} from 'recoil';
 import { useAlgolia } from '../../hooks/algolia';
+import { getUser, getUsers, patchUser, postUserAvatar } from './api';
 
 const userIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,

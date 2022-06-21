@@ -1,14 +1,13 @@
+import { css } from '@emotion/react';
 import { ComponentProps, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
-import { css } from '@emotion/react';
-
 import {
   SEARCH_EVENT,
   SEARCH_PLACEHOLDER_KEY,
   SEARCH_QUERY_KEY,
 } from '../analytics';
-import { TextField, Button } from '../atoms';
-import { searchIcon, crossIcon } from '../icons';
+import { Button, TextField } from '../atoms';
+import { crossIcon, searchIcon } from '../icons';
 import { perRem } from '../pixels';
 
 const clearButtonStyles = css({

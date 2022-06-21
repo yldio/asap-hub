@@ -1,19 +1,18 @@
+import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
-import useDeepCompareEffect from 'use-deep-compare-effect';
 import {
   atomFamily,
-  selectorFamily,
-  useRecoilValue,
-  useRecoilState,
   DefaultValue,
+  selectorFamily,
+  useRecoilState,
+  useRecoilValue,
   useSetRecoilState,
 } from 'recoil';
-import { EventResponse, ListEventResponse } from '@asap-hub/model';
-
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../auth/state';
+import { useAlgolia } from '../hooks/algolia';
 import { getEvent, getEvents, getEventsFromAlgolia } from './api';
 import { GetEventListOptions } from './options';
-import { useAlgolia } from '../hooks/algolia';
 
 const eventIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -107,14 +106,14 @@ export const usePrefetchEvents = (options: GetEventListOptions) => {
   }, [authorization, events, options, setEvents]);
 };
 export const useEvents = (options: GetEventListOptions) => {
+  const [events, setEvents] = useRecoilState(eventsState(options));
+  const { client } = useAlgolia();
   const authorization = useRecoilValue(authorizationState);
-  const algoliaClient = useAlgolia();
   const isEventsSearchFromAlgoliaEnabled =
     useFlags().isEnabled('EVENTS_SEARCH');
-  const [events, setEvents] = useRecoilState(eventsState(options));
   if (events === undefined) {
     if (isEventsSearchFromAlgoliaEnabled) {
-      throw getEventsFromAlgolia(algoliaClient.client, options)
+      throw getEventsFromAlgolia(client, options)
         .then(setEvents)
         .catch(setEvents);
     } else {

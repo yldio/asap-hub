@@ -275,7 +275,7 @@ describe('on submit', () => {
     userEvent.type(identifier, 'DOI');
     userEvent.type(identifier, specialChars.enter);
     userEvent.type(
-      screen.getByPlaceholderText('DOI number e.g. 10.5555/YFRU1371'),
+      await screen.getByPlaceholderText('DOI number e.g. 10.5555/YFRU1371'),
       '10.1234',
     );
   };

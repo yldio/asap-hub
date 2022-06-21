@@ -1,7 +1,6 @@
-import { subHours } from 'date-fns';
-import { EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT } from '@asap-hub/model';
 import { GetListOptions } from '@asap-hub/frontend-utils';
-
+import { EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT } from '@asap-hub/model';
+import { subHours } from 'date-fns';
 import { CARD_VIEW_PAGE_SIZE } from '../hooks';
 
 export type GetEventListOptions = GetListOptions &
@@ -16,12 +15,15 @@ export type GetEventListOptions = GetListOptions &
         before?: undefined;
         sort?: undefined;
       }
-  );
+  ) & {
+    userId?: string;
+  };
 
 export const getEventListOptions = (
   currentTime: Date,
   past: boolean,
   { searchQuery = '', currentPage = 0, pageSize = CARD_VIEW_PAGE_SIZE } = {},
+  userId?: string,
 ): GetEventListOptions => {
   const time = subHours(
     currentTime,
@@ -31,6 +33,7 @@ export const getEventListOptions = (
   return {
     searchQuery,
     currentPage,
+    userId,
     pageSize,
     filters: new Set(),
     ...(past

@@ -1,6 +1,5 @@
-export * from './auth';
-
 export { default as AdditionalMaterials } from './AdditionalMaterials';
+export * from './auth';
 export { default as CalendarList } from './CalendarList';
 export { default as CheckboxGroup } from './CheckboxGroup';
 export { default as ComingSoon } from './ComingSoon';
@@ -30,6 +29,10 @@ export { default as PeopleCard } from './PeopleCard';
 export { default as ProfileCardList } from './ProfileCardList';
 export { default as ProfileExpertiseAndResources } from './ProfileExpertiseAndResources';
 export { default as QuestionsSection } from './QuestionsSection';
+export { default as ResearchOutputExtraInformationCard } from './ResearchOutputExtraInformationCard';
+export { default as ResearchOutputForm } from './ResearchOutputForm';
+export { default as ResearchOutputFormSharingCard } from './ResearchOutputFormSharingCard';
+export { default as ResearchOutputHeader } from './ResearchOutputHeader';
 export { default as ResultList } from './ResultList';
 export { default as RichText } from './RichText';
 export { default as RichTextCard } from './RichTextCard';
@@ -39,11 +42,8 @@ export { default as SharedResearchCard } from './SharedResearchCard';
 export { default as SharedResearchListCard } from './SharedResearchListCard';
 export { default as SharedResearchMetadata } from './SharedResearchMetadata';
 export { default as SharedResearchOutputHeaderCard } from './SharedResearchOutputHeaderCard';
+export { default as SpeakersList } from './SpeakersList';
 export { default as TeamCard } from './TeamCard';
-export { default as ResearchOutputExtraInformationCard } from './ResearchOutputExtraInformationCard';
-export { default as ResearchOutputForm } from './ResearchOutputForm';
-export { default as ResearchOutputFormSharingCard } from './ResearchOutputFormSharingCard';
-export { default as ResearchOutputHeader } from './ResearchOutputHeader';
 export { default as TeamGroupsCard } from './TeamGroupsCard';
 export { default as TeamMembersSection } from './TeamMembersSection';
 export { default as TeamProfileOverview } from './TeamProfileOverview';
@@ -57,4 +57,3 @@ export { default as UserProfilePlaceholderCard } from './UserProfilePlaceholderC
 export { default as UserProfileRecentWorks } from './UserProfileRecentWorks';
 export { default as UserProfileRole } from './UserProfileRole';
 export { default as WelcomeCard } from './WelcomeCard';
-export { default as SpeakersList } from './SpeakersList';

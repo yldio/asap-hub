@@ -1,14 +1,13 @@
-import nock from 'nock';
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import {
   createEventResponse,
   createListEventResponse,
 } from '@asap-hub/fixtures';
-
+import nock from 'nock';
 import { API_BASE_URL } from '../../config';
+import { createAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getEvent, getEvents, getEventsFromAlgolia } from '../api';
 import { getEventListOptions } from '../options';
-import { createAlgoliaResponse } from '../../__fixtures__/algolia';
 
 jest.mock('../../config');
 
@@ -151,6 +150,20 @@ describe('getEventsFromAlgolia', () => {
     );
     expect(search).toBeCalledWith(['event'], '', {
       filters: 'endDateTimestamp > 1609498800',
+      hitsPerPage: 10,
+      page: 0,
+    });
+  });
+
+  it('calls for upcoming events with a certain speaker id', async () => {
+    search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
+
+    await getEventsFromAlgolia(algoliaSearchClient, {
+      ...getEventListOptions(new Date('2021-01-01T12:00:00'), false),
+      userId: 'user-1',
+    });
+    expect(search).toBeCalledWith(['event'], '', {
+      filters: '(endDateTimestamp > 1609498800) AND speakers.user.id: "user-1"',
       hitsPerPage: 10,
       page: 0,
     });

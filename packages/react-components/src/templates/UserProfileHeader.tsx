@@ -1,22 +1,21 @@
-import { useContext } from 'react';
-import { css } from '@emotion/react';
 import { UserResponse } from '@asap-hub/model';
+import { useFlags, UserProfileContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
-import { UserProfileContext } from '@asap-hub/react-context';
-
-import {
-  tabletScreen,
-  perRem,
-  vminLinearCalc,
-  mobileScreen,
-  largeDesktopScreen,
-} from '../pixels';
-import { Avatar, TabLink, Display, Link } from '../atoms';
-import { UserProfilePersonalText, TabNav, SocialIcons } from '../molecules';
-import { contentSidePaddingWithNavigation } from '../layout';
-import { createMailTo } from '../mail';
+import { css } from '@emotion/react';
+import { useContext } from 'react';
+import { Avatar, Display, Link, TabLink } from '../atoms';
 import { paper, tin } from '../colors';
 import { editIcon, uploadIcon } from '../icons';
+import { contentSidePaddingWithNavigation } from '../layout';
+import { createMailTo } from '../mail';
+import { SocialIcons, TabNav, UserProfilePersonalText } from '../molecules';
+import {
+  largeDesktopScreen,
+  mobileScreen,
+  perRem,
+  tabletScreen,
+  vminLinearCalc,
+} from '../pixels';
 
 const middleSizeQuery = '@media (min-width: 620px)';
 const bigSizeQuery = `@media (min-width: ${tabletScreen.width}px)`;
@@ -150,6 +149,7 @@ type UserProfileHeaderProps = Pick<
   readonly editPersonalInfoHref?: string;
   readonly editContactInfoHref?: string;
   readonly sharedOutputsCount?: number;
+  readonly upcomingEventsCount?: number;
 };
 
 const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
@@ -175,6 +175,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   role,
   social,
   sharedOutputsCount,
+  upcomingEventsCount,
 }) => {
   const tabRoutes = network({}).users({}).user({ userId: id });
   const { isOwnProfile } = useContext(UserProfileContext);
@@ -289,6 +290,11 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             Shared Outputs
             {` (${sharedOutputsCount})`}
           </TabLink>
+          {useFlags().isEnabled('USER_EVENTS') && (
+            <TabLink href={tabRoutes.upcoming({}).$}>
+              Upcoming Events {` (${upcomingEventsCount})`}
+            </TabLink>
+          )}
         </TabNav>
       </div>
     </header>

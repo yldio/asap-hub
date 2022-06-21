@@ -14,9 +14,10 @@ export const getEventsFromAlgolia = async (
     before,
     after,
     userId,
+    teamId,
   }: GetEventListOptions,
 ): Promise<ListEventResponse> => {
-  const filters = getEventFilters({ before, after }, { userId });
+  const filters = getEventFilters({ before, after }, { userId, teamId });
 
   const result = await algoliaClient.search(['event'], searchQuery, {
     filters,

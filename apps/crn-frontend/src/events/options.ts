@@ -17,6 +17,7 @@ export type GetEventListOptions = GetListOptions &
       }
   ) & {
     userId?: string;
+    teamId?: string;
   };
 
 export const getEventListOptions = (
@@ -24,6 +25,7 @@ export const getEventListOptions = (
   past: boolean,
   { searchQuery = '', currentPage = 0, pageSize = CARD_VIEW_PAGE_SIZE } = {},
   userId?: string,
+  teamId?: string,
 ): GetEventListOptions => {
   const time = subHours(
     currentTime,
@@ -34,6 +36,7 @@ export const getEventListOptions = (
     searchQuery,
     currentPage,
     userId,
+    teamId,
     pageSize,
     filters: new Set(),
     ...(past

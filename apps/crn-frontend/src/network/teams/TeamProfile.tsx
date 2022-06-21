@@ -7,6 +7,9 @@ import { v4 as uuid } from 'uuid';
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 
 import { useCanCreateUpdateResearchOutput, useTeamById } from './state';
+import { useEvents } from '../../events/state';
+import { getEventListOptions } from '../../events/options';
+import { usePaginationParams } from '../../hooks/pagination';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -17,14 +20,21 @@ const loadWorkspace = () =>
 
 const loadTeamOutput = () =>
   import(/* webpackChunkName: "network-team-team-output" */ './TeamOutput');
+const loadEvents = () =>
+  import(/* webpackChunkName: "network-upcoming-events" */ '../EventsEmbed');
 
 const TeamOutput = lazy(loadTeamOutput);
 const About = lazy(loadAbout);
 const Outputs = lazy(loadOutputs);
 const Workspace = lazy(loadWorkspace);
+const Events = lazy(loadEvents);
 loadAbout();
 
-const TeamProfile: FC<Record<string, never>> = () => {
+type TeamProfileProps = {
+  currentTime: Date;
+};
+
+const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   const route = network({}).teams({}).team;
   const [teamListElementId] = useState(`team-list-${uuid()}`);
 
@@ -42,6 +52,21 @@ const TeamProfile: FC<Record<string, never>> = () => {
       .then(loadTeamOutput);
   }, [team]);
 
+  const { pageSize } = usePaginationParams();
+
+  const upcomingEventsResult = useEvents(
+    getEventListOptions(
+      currentTime,
+      false,
+      {
+        currentPage: 0,
+        pageSize,
+        searchQuery: '',
+      },
+      teamId,
+    ),
+  );
+
   if (team) {
     return (
       <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
@@ -52,7 +77,11 @@ const TeamProfile: FC<Record<string, never>> = () => {
                 <TeamOutput teamId={teamId} />
               </Frame>
             </Route>
-            <TeamProfilePage teamListElementId={teamListElementId} {...team}>
+            <TeamProfilePage
+              teamListElementId={teamListElementId}
+              upcomingEventsCount={upcomingEventsResult.total}
+              {...team}
+            >
               <Route path={path + route({ teamId }).about.template}>
                 <Frame title="About">
                   <About teamListElementId={teamListElementId} team={team} />
@@ -70,6 +99,15 @@ const TeamProfile: FC<Record<string, never>> = () => {
                   </Frame>
                 </Route>
               )}
+              <Route path={path + route({ teamId }).upcoming.template}>
+                <Frame title="Upcoming Events">
+                  <Events
+                    teamId={teamId}
+                    currentTime={currentTime}
+                    past={false}
+                  />
+                </Frame>
+              </Route>
               <Redirect to={route({ teamId }).about({}).$} />
             </TeamProfilePage>
           </Switch>

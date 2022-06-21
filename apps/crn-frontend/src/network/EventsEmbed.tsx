@@ -7,11 +7,13 @@ import { usePagination, usePaginationParams, useSearch } from '../hooks';
 type EventsEmbedProps = {
   readonly currentTime: Date;
   readonly past: boolean;
-  readonly userId: string;
+  readonly userId?: string;
+  readonly teamId?: string;
 };
 const EventsEmbed: React.FC<EventsEmbedProps> = ({
   currentTime,
   userId,
+  teamId,
   past,
 }) => {
   const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
@@ -27,6 +29,7 @@ const EventsEmbed: React.FC<EventsEmbedProps> = ({
           searchQuery={debouncedSearchQuery}
           past={past}
           userId={userId}
+          teamId={teamId}
           currentTime={currentTime}
         />
       </SearchFrame>
@@ -42,6 +45,7 @@ const EventsDisplay: React.FC<EventsDisplayProps> = ({
   past,
   searchQuery,
   userId,
+  teamId,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const { items, total } = useEvents(
@@ -54,6 +58,7 @@ const EventsDisplay: React.FC<EventsDisplayProps> = ({
         pageSize,
       },
       userId,
+      teamId,
     ),
   );
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);

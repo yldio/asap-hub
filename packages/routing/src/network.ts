@@ -90,10 +90,16 @@ const team = (() => {
     {},
   );
 
+  const upcoming = route(
+    '/upcoming-events',
+    {},
+    {},
+  );
+
   return route(
     '/:teamId',
     { teamId: stringParser },
-    { about, workspace, outputs, createOutput },
+    { about, workspace, outputs, createOutput, upcoming },
   );
 })();
 const teams = route('/teams', {}, { team });

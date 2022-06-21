@@ -94,7 +94,7 @@ const Network: FC<Record<string, never>> = () => {
         }
       >
         <Frame title="Team Profile">
-          <TeamProfile />
+          <TeamProfile currentTime={currentTime} />
         </Frame>
       </Route>
       <Route exact path={path + network({}).groups.template}>

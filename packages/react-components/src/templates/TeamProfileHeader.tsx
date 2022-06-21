@@ -132,6 +132,7 @@ const iconStyles = css({
 type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly tools?: ReadonlyArray<TeamTool>;
   readonly teamListElementId: string;
+  readonly upcomingEventsCount: number;
 };
 
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
@@ -142,6 +143,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   tools,
   teamListElementId,
   labCount,
+  upcomingEventsCount
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
   const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
@@ -244,6 +246,9 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
           <TabLink href={route.workspace({}).$}>Team Workspace</TabLink>
         )}
         <TabLink href={route.outputs({}).$}>Team Outputs</TabLink>
+        <TabLink href={route.upcoming({}).$}>
+          Upcoming Events {` (${upcomingEventsCount})`}
+        </TabLink>
       </TabNav>
     </header>
   );

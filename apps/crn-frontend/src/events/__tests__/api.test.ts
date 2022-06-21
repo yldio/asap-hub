@@ -1,14 +1,13 @@
-import nock from 'nock';
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import {
   createEventResponse,
   createListEventResponse,
 } from '@asap-hub/fixtures';
-
+import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { getEvent, getEvents, getEventsFromAlgolia, getFilters } from '../api';
-import { getEventListOptions } from '../options';
 import { createAlgoliaResponse } from '../../__fixtures__/algolia';
+import { getEvent, getEvents, getEventsFromAlgolia } from '../api';
+import { getEventListOptions } from '../options';
 
 jest.mock('../../config');
 
@@ -200,21 +199,5 @@ describe('getEventsFromAlgolia', () => {
       })),
       total: 1,
     });
-  });
-});
-
-describe('Tests that getFilters returns', () => {
-  it('undefined for an empty array', async () => {
-    expect(getFilters([])).toEqual(undefined);
-  });
-
-  it('OR between elements represented as a string', async () => {
-    expect(getFilters(['filter1', 'filter2'])).toEqual('filter1 OR filter2');
-  });
-
-  it('OR between element and "AND" at the end when userId is present', async () => {
-    expect(getFilters(['filter1', 'filter2'], 'userId')).toEqual(
-      '(filter1 OR filter2) AND speakers.user.id: "userId"',
-    );
   });
 });

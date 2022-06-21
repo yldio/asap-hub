@@ -30,11 +30,8 @@ const Events: React.FC<EventsProps> = ({ currentTime, userId, past }) => {
   );
 };
 
-type EventsDisplayProps = {
-  readonly currentTime: Date;
-  readonly past: boolean;
-  readonly userId: string;
-  readonly searchQuery: string;
+type EventsDisplayProps = EventsProps & {
+  searchQuery: string;
 };
 const EventsDisplay: React.FC<EventsDisplayProps> = ({
   currentTime,

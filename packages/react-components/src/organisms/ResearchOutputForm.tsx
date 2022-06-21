@@ -391,7 +391,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
           ),
           labs: labs.map(({ value }) => value),
           teams: teams.map(({ value }) => value),
-          accessInstructions: accessInstructions,
+          accessInstructions,
           asapFunded: convertDecisionToBoolean(asapFunded),
           usedInPublication: convertDecisionToBoolean(usedInPublication),
           sharingStatus,

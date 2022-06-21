@@ -213,6 +213,7 @@ describe('on submit', () => {
     methods: [],
     organisms: [],
     environments: [],
+    accessInstructions: '',
   };
   type Data = Pick<
     ResearchOutputPostRequest,

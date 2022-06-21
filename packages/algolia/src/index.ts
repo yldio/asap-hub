@@ -1,5 +1,6 @@
 import algoliasearch, { SearchClient } from 'algoliasearch';
 import { AlgoliaSearchClient } from './client';
+
 export type { SearchResponse } from '@algolia/client-search';
 export * from './client';
 export * from './filters';

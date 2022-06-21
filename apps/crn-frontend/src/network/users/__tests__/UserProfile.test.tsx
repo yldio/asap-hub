@@ -444,16 +444,8 @@ it('navigates to the upcoming events tab', async () => {
     'Search by topic, presenting team, …',
   );
   expect(await screen.findByText(/Event 0/i)).toBeVisible();
-  expect(mockUserEvents).toBeCalledTimes(2);
-  expect(mockUserEvents).toHaveBeenNthCalledWith(1, expect.anything(), {
-    after: '2021-12-28T13:00:00.000Z',
-    currentPage: 0,
-    filters: new Set(),
-    pageSize: 1,
-    searchQuery: '',
-    userId: userResponse.id,
-  });
-  expect(mockUserEvents).toHaveBeenNthCalledWith(2, expect.anything(), {
+  expect(mockUserEvents).toBeCalledTimes(1);
+  expect(mockUserEvents).toHaveBeenCalledWith(expect.anything(), {
     after: '2021-12-28T13:00:00.000Z',
     currentPage: 0,
     filters: new Set(),

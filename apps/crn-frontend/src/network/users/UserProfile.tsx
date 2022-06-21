@@ -12,7 +12,10 @@ import { ComponentProps, FC, lazy, useContext, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { getEventListOptions } from '../../events/options';
 import { useEvents } from '../../events/state';
-import { useCurrentUserProfileTabRoute } from '../../hooks';
+import {
+  useCurrentUserProfileTabRoute,
+  usePaginationParams,
+} from '../../hooks';
 import { useResearchOutputs } from '../../shared-research/state';
 import { usePatchUserAvatarById, useUserById } from './state';
 
@@ -50,10 +53,11 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
   const patchUserAvatar = usePatchUserAvatarById(userId);
   const [avatarSaving, setAvatarSaving] = useState(false);
 
+  const { pageSize } = usePaginationParams();
   const researchOutputsResult = useResearchOutputs({
     currentPage: 0,
     filters: new Set(),
-    pageSize: 10,
+    pageSize,
     searchQuery: '',
     userId,
   });
@@ -67,9 +71,9 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
       currentTime,
       false,
       {
-        searchQuery: '',
         currentPage: 0,
-        pageSize: 10,
+        pageSize,
+        searchQuery: '',
       },
       userId,
     ),

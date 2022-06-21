@@ -560,12 +560,11 @@ describe('/research-outputs/ route', () => {
         },
       );
 
-      test('Requires an identifier if funded and used in publication', async () => {
+      test('Do not require an identifier if funded and used in publication', async () => {
         const response = await supertest(app)
           .put('/research-outputs/abc123')
           .send({
             ...researchOutputPutRequest,
-            type: 'Article',
             asapFunded: true,
             usedInPublication: true,
           });

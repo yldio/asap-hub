@@ -175,7 +175,7 @@ const serverlessConfig: AWS = {
       {
         bucketName: '${self:service}-${self:provider.stage}-auth-frontend',
         bucketPrefix: '.auth',
-        localDir: '../auth-frontend/build',
+        localDir: '../crn-auth-frontend/build',
       },
       {
         bucketName: '${self:service}-${self:provider.stage}-storybook',

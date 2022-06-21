@@ -23,6 +23,9 @@ on:
       SQUIDEX_SHARED_SECRET:
         description: 'Squidex Shared Secret'
         required: true
+      GP2_AUTH0_SHARED_SECRET:
+        description: 'GP2 Auth0 Shared Secret'
+        required: false
 
 jobs:
   definitions:

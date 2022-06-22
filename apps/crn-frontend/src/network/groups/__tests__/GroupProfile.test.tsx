@@ -17,6 +17,7 @@ import { getGroupEvents } from '../events/api';
 
 jest.mock('../api');
 jest.mock('../events/api');
+jest.mock('../../../events/api');
 
 const mockGetGroup = getGroup as jest.MockedFunction<typeof getGroup>;
 const mockGetGroupEvents = getGroupEvents as jest.MockedFunction<
@@ -50,8 +51,9 @@ const renderGroupProfile = async (
                   network({}).groups.template +
                   network({}).groups({}).group.template
                 }
-                component={GroupProfile}
-              />
+              >
+                <GroupProfile currentTime={new Date()} />
+              </Route>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

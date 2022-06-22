@@ -7,6 +7,8 @@ import { Frame } from '@asap-hub/frontend-utils';
 
 import { useGroupById } from './state';
 import { useSearch } from '../../hooks';
+import { useEvents } from '../../events/state';
+import { getEventListOptions } from '../../events/options';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-group-about" */ './About');
@@ -22,13 +24,16 @@ const Calendar = lazy(loadCalendar);
 const EventList = lazy(loadEventList);
 loadAbout();
 
-const GroupProfile: FC = () => {
+type GroupProfileProps = {
+  currentTime: Date;
+};
+
+const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
   useEffect(() => {
     loadAbout().then(loadCalendar).then(loadEventList);
   }, []);
 
   const [groupTeamsElementId] = useState(`group-teams-${uuid()}`);
-  const [currentTime] = useState(new Date());
 
   const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
 
@@ -36,6 +41,33 @@ const GroupProfile: FC = () => {
   const { groupId } = useRouteParams(route);
   const { path } = useRouteMatch();
   const group = useGroupById(groupId);
+
+  const upcomingEvents = useEvents(
+    getEventListOptions(
+      currentTime,
+      false,
+      {
+        currentPage: 0,
+        pageSize: 1,
+        searchQuery: '',
+      },
+      undefined,
+      groupId,
+    ),
+  );
+  const pastEvents = useEvents(
+    getEventListOptions(
+      currentTime,
+      true,
+      {
+        currentPage: 0,
+        pageSize: 1,
+        searchQuery: '',
+      },
+      undefined,
+      groupId,
+    ),
+  );
 
   if (group) {
     const props: ComponentProps<typeof GroupProfilePage> = {
@@ -47,6 +79,8 @@ const GroupProfile: FC = () => {
       groupTeamsHref: `${
         route({ groupId }).about({}).$
       }#${groupTeamsElementId}`,
+      pastEventsCount: pastEvents.total,
+      upcomingEventsCount: upcomingEvents.total,
     };
 
     return (

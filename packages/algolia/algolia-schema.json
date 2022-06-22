@@ -38,7 +38,8 @@
     "speakers.team.displayName",
     "speakers.user.displayName",
     "endDateTimestamp",
-    "startDateTimestamp"
+    "startDateTimestamp",
+    "group.id"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,

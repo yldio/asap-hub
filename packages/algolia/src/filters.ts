@@ -4,6 +4,7 @@ type Filters = {
 };
 type Constraints = {
   userId?: string;
+  groupId?: string;
 };
 
 const timeFilter = (time: string, symbol: string) => {
@@ -12,14 +13,19 @@ const timeFilter = (time: string, symbol: string) => {
 };
 
 const getFilter = (filters: string[], constraint?: Constraints) => {
-  const constaintFilter =
-    constraint?.userId && `speakers.user.id: "${constraint.userId}"`;
+  const constaintFilters = [
+    constraint?.userId && `speakers.user.id: "${constraint.userId}"`,
+    constraint?.groupId && `group.id: "${constraint.groupId}"`,
+  ]
+    .filter(Boolean)
+    .join(' AND ');
+
   if (filters.length === 0) {
-    return constaintFilter;
+    return constaintFilters;
   }
 
   const filter = filters.join(' OR ');
-  return constaintFilter ? `(${filter}) AND ${constaintFilter}` : filter;
+  return constaintFilters ? `(${filter}) AND (${constaintFilters})` : filter;
 };
 
 export const getEventFilters = (

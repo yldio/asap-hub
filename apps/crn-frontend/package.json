@@ -49,7 +49,7 @@
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
     "@babel/runtime-corejs3": "7.18.3",
-    "@sentry/cli": "^1.68.0",
+    "@sentry/cli": "1.74.4",
     "@testing-library/dom": "7.31.2",
     "@testing-library/jest-dom": "5.16.4",
     "@testing-library/react": "11.2.7",

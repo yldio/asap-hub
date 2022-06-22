@@ -122,7 +122,10 @@ it('navigates to the upcoming events tab', async () => {
     filters: new Set(),
     pageSize: 10,
     searchQuery: '',
-    teamId: teamResponse.id,
+    constraint: {
+      id: 't0',
+      type: 'team',
+    },
   });
 });
 

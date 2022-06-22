@@ -143,7 +143,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   tools,
   teamListElementId,
   labCount,
-  upcomingEventsCount
+  upcomingEventsCount,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
   const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);

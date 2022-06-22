@@ -17,7 +17,7 @@ const getFilter = (filters: string[], constraint?: Constraints) => {
     (constraint?.userId && `speakers.user.id: "${constraint.userId}"`) ||
     (constraint?.teamId && `speakers.team.id: "${constraint.teamId}"`);
 
-  console.log('team id', constraint?.teamId)
+  console.log('team id', constraint?.teamId);
   if (filters.length === 0) {
     return constaintFilter;
   }

@@ -1,4 +1,5 @@
 import { SearchFrame } from '@asap-hub/frontend-utils';
+import { Constraint } from '@asap-hub/model';
 import { EventSearch, EventsList } from '@asap-hub/react-components';
 import { getEventListOptions } from '../events/options';
 import { useEvents } from '../events/state';
@@ -7,13 +8,12 @@ import { usePagination, usePaginationParams, useSearch } from '../hooks';
 type EventsEmbedProps = {
   readonly currentTime: Date;
   readonly past: boolean;
-  readonly userId?: string;
+  readonly constraint: Constraint;
   readonly teamId?: string;
 };
 const EventsEmbed: React.FC<EventsEmbedProps> = ({
   currentTime,
-  userId,
-  teamId,
+  constraint,
   past,
 }) => {
   const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
@@ -28,8 +28,7 @@ const EventsEmbed: React.FC<EventsEmbedProps> = ({
         <EventsDisplay
           searchQuery={debouncedSearchQuery}
           past={past}
-          userId={userId}
-          teamId={teamId}
+          constraint={constraint}
           currentTime={currentTime}
         />
       </SearchFrame>
@@ -44,8 +43,7 @@ const EventsDisplay: React.FC<EventsDisplayProps> = ({
   currentTime,
   past,
   searchQuery,
-  userId,
-  teamId,
+  constraint,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const options = getEventListOptions(
@@ -56,7 +54,7 @@ const EventsDisplay: React.FC<EventsDisplayProps> = ({
       currentPage,
       pageSize,
     },
-    { userId, teamId },
+    constraint,
   );
   const { items, total } = useEvents(options);
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);

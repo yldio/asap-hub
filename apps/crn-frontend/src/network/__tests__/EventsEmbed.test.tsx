@@ -1,4 +1,5 @@
 import { createListEventResponse } from '@asap-hub/fixtures';
+import { Constraint } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import {
   render,
@@ -30,15 +31,13 @@ const mockGetEvents = getEventsFromAlgolia as jest.MockedFunction<
 const date = new Date('2021-12-28T14:00:00.000Z');
 const renderEvents = async ({
   searchQuery = '',
-  userId,
-  teamId,
+  constraint,
   pathName,
   state,
   isPast,
 }: {
   searchQuery?: string;
-  userId?: string;
-  teamId?: string;
+  constraint: Constraint;
   pathName: string;
   state: RecoilState<number>;
   isPast: boolean;
@@ -52,7 +51,7 @@ const renderEvents = async ({
             after: '2021-12-28T14:00:00.000Z',
             searchQuery,
             filters: new Set<string>(),
-            userId,
+            constraint,
             currentPage: 0,
             pageSize: CARD_VIEW_PAGE_SIZE,
           }),
@@ -71,8 +70,7 @@ const renderEvents = async ({
             >
               <Route path={pathName}>
                 <Events
-                  userId={userId}
-                  teamId={teamId}
+                  constraint={constraint}
                   currentTime={date}
                   past={isPast}
                 />
@@ -90,17 +88,25 @@ const userPath = (userId: string) =>
 const teamPath = (teamId: string) =>
   network({}).teams({}).team({ teamId }).upcoming({}).$;
 it.each`
-  description                     | isPast   | userId       | teamId       | getPath     | refreshState        | after                         | before
-  ${'upcoming events by userId '} | ${false} | ${'1013'}    | ${undefined} | ${userPath} | ${refreshUserState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
-  ${'upcoming events by teamId '} | ${false} | ${undefined} | ${'1009'}    | ${teamPath} | ${refreshTeamState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
+  description                     | isPast   | constraint                      | getPath     | refreshState        | after                         | before
+  ${'upcoming events by userId '} | ${false} | ${{ type: 'user', id: '1013' }} | ${userPath} | ${refreshUserState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
+  ${'upcoming events by teamId '} | ${false} | ${{ type: 'team', id: '1009' }} | ${teamPath} | ${refreshTeamState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
 `(
   'renders a list of $description',
-  async ({ userId, teamId, getPath, refreshState, isPast, after, before }) => {
+  async ({
+    constraint,
+    teamId,
+    getPath,
+    refreshState,
+    isPast,
+    after,
+    before,
+  }) => {
     const searchQuery = 'a team';
     mockGetEvents.mockResolvedValue(createListEventResponse(2));
-    const pathName = getPath(userId || teamId);
+    const pathName = getPath(constraint.id);
     const state = refreshState(teamId);
-    await renderEvents({ userId, teamId, pathName, state, isPast });
+    await renderEvents({ constraint, pathName, state, isPast });
     userEvent.type(screen.getByRole('searchbox'), searchQuery);
     expect(screen.getByText(/2 results found/i)).toBeInTheDocument();
     expect(
@@ -116,8 +122,7 @@ it.each`
         after,
         before,
         filters: new Set(),
-        teamId,
-        userId,
+        constraint,
         currentPage: 0,
         pageSize: CARD_VIEW_PAGE_SIZE,
       }),

@@ -16,7 +16,7 @@
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/errors": "workspace:*",
     "@babel/runtime-corejs3": "7.18.3",
-    "@hapi/boom": "^9.1.2",
+    "@hapi/boom": "9.1.4",
     "@sentry/serverless": "^6.7.1",
     "apr-intercept": "^3.0.4",
     "express": "^4.17.1",

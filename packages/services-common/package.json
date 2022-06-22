@@ -15,8 +15,8 @@
   "dependencies": {
     "@asap-hub/errors": "workspace:*",
     "@babel/runtime-corejs3": "7.18.3",
-    "@hapi/boom": "^9.1.2",
-    "@hapi/bourne": "^2.0.0",
+    "@hapi/boom": "9.1.4",
+    "@hapi/bourne": "2.1.0",
     "@hapi/joi": "^17.1.1",
     "apr-intercept": "^3.0.4",
     "aws-lambda": "1.0.7",

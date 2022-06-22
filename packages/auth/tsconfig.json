@@ -8,5 +8,5 @@
     "lib": ["esnext", "dom", "dom.iterable"]
   },
   "include": ["src", "src/**/*.json"],
-  "references": [{ "path": "../model" }]
+  "references": [{ "path": "../model" }, { "path": "../dom-test-utils" }]
 }

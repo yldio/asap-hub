@@ -1,12 +1,15 @@
 import { framework as lambda } from '@asap-hub/services-common';
 import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
+import { ValidationError } from '@asap-hub/errors';
 import { appName, baseUrl } from '../../config';
 import validateRequest from '../../utils/validate-auth0-request';
 import UserDataProvider from '../../data-providers/users.data-provider';
 import Users, { UserController } from '../../controllers/user.controller';
 import { getAuthToken } from '../../utils/auth';
 
-const fetchUserByCodeHandlerFactory = (userController: UserController) =>
+export const fetchUserByCodeHandlerFactory = (
+  userController: UserController,
+): lambda.Handler =>
   lambda.http(async (request) => {
     await validateRequest(request);
 
@@ -59,5 +62,5 @@ const validateParams = (
     return { code: params.code };
   }
 
-  throw new Error('Missing params');
+  throw new ValidationError('Missing params');
 };

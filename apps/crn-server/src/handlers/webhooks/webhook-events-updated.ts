@@ -18,12 +18,11 @@ import {
   syncCalendarFactory,
 } from '../../utils/sync-google-calendar';
 import { syncEventFactory } from '../../utils/sync-google-event';
-import { Handler } from '../../utils/types';
 
 export const webhookEventUpdatedHandlerFactory = (
   calendars: CalendarController,
   syncCalendar: SyncCalendar,
-): Handler =>
+): lambda.Handler =>
   lambda.http(async (request) => {
     logger.debug(JSON.stringify(request, null, 2), 'Request');
 
@@ -95,7 +94,7 @@ const syncCalendar = syncCalendarFactory(
   getJWTCredentials,
 );
 
-export const handler: Handler = webhookEventUpdatedHandlerFactory(
+export const handler: lambda.Handler = webhookEventUpdatedHandlerFactory(
   calendarController,
   syncCalendar,
 );

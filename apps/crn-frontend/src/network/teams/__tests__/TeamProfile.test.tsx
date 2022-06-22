@@ -1,24 +1,31 @@
-import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
-import { render, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { createTeamResponse } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-
+import {
+  createListEventResponse,
+  createTeamResponse,
+} from '@asap-hub/fixtures';
+import { network } from '@asap-hub/routing';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Suspense } from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
+import { getEventsFromAlgolia } from '../../../events/api';
+import { getResearchOutputs } from '../../../shared-research/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
-import TeamProfile from '../TeamProfile';
 import { getTeam } from '../api';
 import { refreshTeamState } from '../state';
-import { getResearchOutputs } from '../../../shared-research/api';
+import TeamProfile from '../TeamProfile';
 
 jest.mock('../api');
 jest.mock('../groups/api');
 jest.mock('../../../shared-research/api');
+jest.mock('../../../events/api');
+const mockEvents = getEventsFromAlgolia as jest.MockedFunction<
+  typeof getEventsFromAlgolia
+>;
 
 afterEach(() => jest.clearAllMocks());
 
@@ -42,38 +49,35 @@ it('navigates to the outputs tab', async () => {
   mockGetResearchOutputs.mockResolvedValue({
     ...createResearchOutputListAlgoliaResponse(1),
   });
-  const { getByText, findByText } = await renderPage();
+  await renderPage();
 
-  userEvent.click(getByText(/outputs/i, { selector: 'nav *' }));
-  expect(await findByText(/Output 1/i)).toBeVisible();
+  userEvent.click(screen.getByText(/outputs/i, { selector: 'nav *' }));
+  expect(await screen.findByText(/Output 1/i)).toBeVisible();
 });
 
 it('navigates to the workspace tab', async () => {
-  const { getByText, findByText } = await renderPage({
+  await renderPage({
     ...createTeamResponse(),
     tools: [],
   });
 
-  userEvent.click(getByText(/workspace/i, { selector: 'nav *' }));
-  expect(await findByText(/tools/i)).toBeVisible();
+  userEvent.click(screen.getByText(/workspace/i, { selector: 'nav *' }));
+  expect(await screen.findByText(/tools/i)).toBeVisible();
 });
 it('does not allow navigating to the workspace tab when team tools are not available', async () => {
-  const { queryByText } = await renderPage({
+  await renderPage({
     ...createTeamResponse(),
     tools: undefined,
   });
 
   expect(
-    queryByText(/workspace/i, { selector: 'nav *' }),
+    screen.queryByText(/workspace/i, { selector: 'nav *' }),
   ).not.toBeInTheDocument();
 });
 
 it('renders the 404 page for a missing team', async () => {
-  const { getByText } = await renderPage(
-    { ...createTeamResponse(), id: '42' },
-    { teamId: '1337' },
-  );
-  expect(getByText(/sorry.+page/i)).toBeVisible();
+  await renderPage({ ...createTeamResponse(), id: '42' }, { teamId: '1337' });
+  expect(screen.getByText(/sorry.+page/i)).toBeVisible();
 });
 
 it('deep links to the teams list', async () => {
@@ -88,10 +92,43 @@ it('deep links to the teams list', async () => {
 
   expect(container.querySelector(hash)).toHaveTextContent(/team members/i);
 });
+it('renders number of upcoming events', async () => {
+  const response = createListEventResponse(7);
+  mockEvents.mockResolvedValue(response);
+  await renderPage(createTeamResponse());
+
+  expect(await screen.findByText(/Upcoming Events \(7\)/i)).toBeVisible();
+});
+
+it('navigates to the upcoming events tab', async () => {
+  const currentTime = new Date('2021-12-28T14:00:00.000Z');
+  const response = createListEventResponse(1);
+  mockEvents.mockResolvedValue(response);
+
+  const teamResponse = createTeamResponse();
+  await renderPage(teamResponse, { currentTime });
+
+  const tab = screen.getByRole('link', { name: /upcoming/i });
+  userEvent.click(tab);
+  expect(await screen.findByRole('searchbox')).toHaveAttribute(
+    'placeholder',
+    'Search by topic, presenting team, …',
+  );
+  expect(await screen.findByText(/Event 0/i)).toBeVisible();
+  expect(mockEvents).toBeCalledTimes(1);
+  expect(mockEvents).toHaveBeenCalledWith(expect.anything(), {
+    after: '2021-12-28T13:00:00.000Z',
+    currentPage: 0,
+    filters: new Set(),
+    pageSize: 10,
+    searchQuery: '',
+    teamId: teamResponse.id,
+  });
+});
 
 const renderPage = async (
   teamResponse = createTeamResponse(),
-  { teamId = teamResponse.id } = {},
+  { teamId = teamResponse.id, currentTime = new Date() } = {},
   initialEntries?: string,
 ) => {
   const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
@@ -120,7 +157,7 @@ const renderPage = async (
                   network({}).teams({}).team.template
                 }
               >
-                <TeamProfile />
+                <TeamProfile currentTime={currentTime} />
               </Route>
             </MemoryRouter>
           </WhenReady>

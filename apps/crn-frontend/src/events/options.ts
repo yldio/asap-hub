@@ -24,8 +24,7 @@ export const getEventListOptions = (
   currentTime: Date,
   past: boolean,
   { searchQuery = '', currentPage = 0, pageSize = CARD_VIEW_PAGE_SIZE } = {},
-  userId?: string,
-  teamId?: string,
+  { userId, teamId }: { userId?: string; teamId?: string } = {},
 ): GetEventListOptions => {
   const time = subHours(
     currentTime,

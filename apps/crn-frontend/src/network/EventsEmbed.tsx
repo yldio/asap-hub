@@ -48,19 +48,17 @@ const EventsDisplay: React.FC<EventsDisplayProps> = ({
   teamId,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const { items, total } = useEvents(
-    getEventListOptions(
-      currentTime,
-      past,
-      {
-        searchQuery,
-        currentPage,
-        pageSize,
-      },
-      userId,
-      teamId,
-    ),
+  const options = getEventListOptions(
+    currentTime,
+    past,
+    {
+      searchQuery,
+      currentPage,
+      pageSize,
+    },
+    { userId, teamId },
   );
+  const { items, total } = useEvents(options);
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 
   return (

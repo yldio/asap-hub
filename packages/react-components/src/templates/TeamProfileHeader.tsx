@@ -247,7 +247,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         )}
         <TabLink href={route.outputs({}).$}>Team Outputs</TabLink>
         <TabLink href={route.upcoming({}).$}>
-          Upcoming Events {` (${upcomingEventsCount})`}
+          Upcoming Events {`(${upcomingEventsCount})`}
         </TabLink>
       </TabNav>
     </header>

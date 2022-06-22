@@ -106,6 +106,7 @@ it('renders tabs', () => {
   expect(getAllByRole('link').map(({ textContent }) => textContent)).toEqual([
     'About',
     'Team Outputs',
+    'Upcoming Events (0)',
   ]);
 });
 
@@ -120,6 +121,7 @@ it('renders workspace tabs when tools provided', () => {
     'About',
     'Team Workspace',
     'Team Outputs',
+    'Upcoming Events (0)',
   ]);
 });
 

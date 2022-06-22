@@ -56,18 +56,17 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
 
   const { pageSize } = usePaginationParams();
 
-  const upcomingEventsResult = useEvents(
-    getEventListOptions(
-      currentTime,
-      false,
-      {
-        currentPage: 0,
-        pageSize,
-        searchQuery: '',
-      },
-      teamId,
-    ),
+  const options = getEventListOptions(
+    currentTime,
+    false,
+    {
+      currentPage: 0,
+      pageSize,
+      searchQuery: '',
+    },
+    { teamId },
   );
+  const upcomingEventsResult = useEvents(options);
   const isEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
 
   if (team) {

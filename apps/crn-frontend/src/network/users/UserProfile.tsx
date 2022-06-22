@@ -80,7 +80,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
     currentUser,
   );
 
-  const isUserEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
+  const isEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
 
   if (user) {
     const profilePageProps: Omit<
@@ -141,7 +141,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                       <Outputs userId={user?.id} />
                     </Frame>
                   </Route>
-                  {isUserEventsEnabled && (
+                  {isEventsEnabled && (
                     <Route path={path + tabRoutes.upcoming.template}>
                       <Frame title="Upcoming Events">
                         <Events

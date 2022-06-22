@@ -1,10 +1,9 @@
+import { createTeamResponseMembers } from '@asap-hub/fixtures';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { ComponentProps } from 'react';
+import { fireEvent } from '@testing-library/dom';
 import { render } from '@testing-library/react';
 import { formatISO } from 'date-fns';
-import { createTeamResponseMembers } from '@asap-hub/fixtures';
-import { fireEvent } from '@testing-library/dom';
-
+import { ComponentProps } from 'react';
 import TeamProfileHeader from '../TeamProfileHeader';
 
 const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
@@ -16,6 +15,7 @@ const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   lastModifiedDate: formatISO(new Date()),
   teamListElementId: '',
   labCount: 15,
+  upcomingEventsCount: 0,
 };
 
 it('renders the name as the top-level heading', () => {

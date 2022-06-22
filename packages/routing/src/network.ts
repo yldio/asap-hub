@@ -51,7 +51,7 @@ const user = (() => {
   );
 
   const upcoming = route(
-    '/upcoming-events',
+    '/upcoming',
     {},
     { editPersonalInfo, editContactInfo, editOnboarded },
   );
@@ -90,11 +90,7 @@ const team = (() => {
     {},
   );
 
-  const upcoming = route(
-    '/upcoming-events',
-    {},
-    {},
-  );
+  const upcoming = route('/upcoming', {}, {});
 
   return route(
     '/:teamId',

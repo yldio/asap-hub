@@ -1,15 +1,17 @@
+import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 import { NotFoundPage, TeamProfilePage } from '@asap-hub/react-components';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
+import {
+  ResearchOutputPermissionsContext,
+  useFlags,
+} from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
-import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
-
-import { useCanCreateUpdateResearchOutput, useTeamById } from './state';
-import { useEvents } from '../../events/state';
 import { getEventListOptions } from '../../events/options';
+import { useEvents } from '../../events/state';
 import { usePaginationParams } from '../../hooks/pagination';
+import { useCanCreateUpdateResearchOutput, useTeamById } from './state';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -66,6 +68,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
       teamId,
     ),
   );
+  const isEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
 
   if (team) {
     return (
@@ -99,15 +102,17 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                   </Frame>
                 </Route>
               )}
-              <Route path={path + route({ teamId }).upcoming.template}>
-                <Frame title="Upcoming Events">
-                  <Events
-                    teamId={teamId}
-                    currentTime={currentTime}
-                    past={false}
-                  />
-                </Frame>
-              </Route>
+              {isEventsEnabled && (
+                <Route path={path + route({ teamId }).upcoming.template}>
+                  <Frame title="Upcoming Events">
+                    <Events
+                      teamId={teamId}
+                      currentTime={currentTime}
+                      past={false}
+                    />
+                  </Frame>
+                </Route>
+              )}
               <Redirect to={route({ teamId }).about({}).$} />
             </TeamProfilePage>
           </Switch>

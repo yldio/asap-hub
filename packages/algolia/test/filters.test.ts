@@ -30,4 +30,19 @@ describe('Filters', () => {
       'speakers.user.id: "1103"',
     );
   });
+  test('dates constained by team', () => {
+    expect(
+      getEventFilters(
+        { before: '2007-07-06', after: '2021-12-28' },
+        { teamId: '1103' },
+      ),
+    ).toEqual(
+      '(endDateTimestamp < 1183680000 OR endDateTimestamp > 1640649600) AND speakers.team.id: "1103"',
+    );
+  });
+  test('only teamId is passed', () => {
+    expect(getEventFilters({}, { teamId: '1103' })).toEqual(
+      'speakers.team.id: "1103"',
+    );
+  });
 });

@@ -34,12 +34,14 @@ const renderEvents = async ({
   teamId,
   pathName,
   state,
+  isPast,
 }: {
   searchQuery?: string;
   userId?: string;
   teamId?: string;
   pathName: string;
   state: RecoilState<number>;
+  isPast: boolean;
 }) => {
   render(
     <RecoilRoot
@@ -72,7 +74,7 @@ const renderEvents = async ({
                   userId={userId}
                   teamId={teamId}
                   currentTime={date}
-                  past={false}
+                  past={isPast}
                 />
               </Route>
             </MemoryRouter>
@@ -83,51 +85,42 @@ const renderEvents = async ({
   );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
+const userPath = (userId: string) =>
+  network({}).users({}).user({ userId }).upcoming({}).$;
+const teamPath = (teamId: string) =>
+  network({}).teams({}).team({ teamId }).upcoming({}).$;
+it.each`
+  description                     | isPast   | userId       | teamId       | getPath     | refreshState        | after                         | before
+  ${'upcoming events by userId '} | ${false} | ${'1013'}    | ${undefined} | ${userPath} | ${refreshUserState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
+  ${'upcoming events by teamId '} | ${false} | ${undefined} | ${'1009'}    | ${teamPath} | ${refreshTeamState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
+`(
+  'renders a list of $description',
+  async ({ userId, teamId, getPath, refreshState, isPast, after, before }) => {
+    const searchQuery = 'a team';
+    mockGetEvents.mockResolvedValue(createListEventResponse(2));
+    const pathName = getPath(userId || teamId);
+    const state = refreshState(teamId);
+    await renderEvents({ userId, teamId, pathName, state, isPast });
+    userEvent.type(screen.getByRole('searchbox'), searchQuery);
+    expect(screen.getByText(/2 results found/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /Event 0/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /Event 1/i }),
+    ).toBeInTheDocument();
 
-it('renders a list of events filterd by userId', async () => {
-  const searchQuery = 'a user';
-  const userId = '1009';
-  mockGetEvents.mockResolvedValue(createListEventResponse(2));
-  const pathName = network({}).users({}).user({ userId }).upcoming({}).$;
-  const state = refreshUserState(userId);
-  await renderEvents({ userId, pathName, state });
-  userEvent.type(screen.getByRole('searchbox'), searchQuery);
-  expect(screen.getByText(/2 results found/i)).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: /Event 0/i })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: /Event 1/i })).toBeInTheDocument();
-
-  await waitFor(() =>
-    expect(mockGetEvents).toHaveBeenLastCalledWith(expect.anything(), {
-      searchQuery,
-      after: '2021-12-28T13:00:00.000Z',
-      filters: new Set(),
-      userId,
-      currentPage: 0,
-      pageSize: CARD_VIEW_PAGE_SIZE,
-    }),
-  );
-});
-
-it('renders a list of events filterd by teamId', async () => {
-  const searchQuery = 'a team';
-  const teamId = '1013';
-  mockGetEvents.mockResolvedValue(createListEventResponse(2));
-  const pathName = network({}).teams({}).team({ teamId }).upcoming({}).$;
-  const state = refreshTeamState(teamId);
-  await renderEvents({ teamId, pathName, state });
-  userEvent.type(screen.getByRole('searchbox'), searchQuery);
-  expect(screen.getByText(/2 results found/i)).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: /Event 0/i })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: /Event 1/i })).toBeInTheDocument();
-
-  await waitFor(() =>
-    expect(mockGetEvents).toHaveBeenLastCalledWith(expect.anything(), {
-      searchQuery,
-      after: '2021-12-28T13:00:00.000Z',
-      filters: new Set(),
-      teamId,
-      currentPage: 0,
-      pageSize: CARD_VIEW_PAGE_SIZE,
-    }),
-  );
-});
+    await waitFor(() =>
+      expect(mockGetEvents).toHaveBeenLastCalledWith(expect.anything(), {
+        searchQuery,
+        after,
+        before,
+        filters: new Set(),
+        teamId,
+        userId,
+        currentPage: 0,
+        pageSize: CARD_VIEW_PAGE_SIZE,
+      }),
+    );
+  },
+);

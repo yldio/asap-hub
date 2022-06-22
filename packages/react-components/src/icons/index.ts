@@ -11,6 +11,7 @@ export { default as chevronDownIcon } from './chevron-down';
 export { default as chevronUpIcon } from './chevron-up';
 export { default as clockIcon } from './clock';
 export { default as crossIcon } from './cross';
+export { default as crossInCircleIcon } from './cross-in-circle';
 export { default as dataset } from './dataset';
 export { default as discoverIcon } from './discover';
 export { default as docsIcon } from './docs';

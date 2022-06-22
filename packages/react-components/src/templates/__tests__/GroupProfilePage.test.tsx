@@ -9,6 +9,8 @@ const props: ComponentProps<typeof GroupProfilePage> = {
   groupTeamsHref: '#teams',
   lastModifiedDate: '2021-01-01',
   numberOfTeams: 1,
+  pastEventsCount: 0,
+  upcomingEventsCount: 0,
 };
 
 it('renders the header', () => {

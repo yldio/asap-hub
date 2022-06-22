@@ -94,7 +94,6 @@ export const isEventStatus = (status: string | null): status is EventStatus =>
 const ConstraintTypes = ['user', 'team'] as const;
 
 type ConstraintType = typeof ConstraintTypes[number];
-
 export type Constraint = {
   type: ConstraintType;
   id: string;

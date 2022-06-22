@@ -71,9 +71,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
       currentTime,
       false,
       {
-        currentPage: 0,
         pageSize,
-        searchQuery: '',
       },
       { type: 'user', id: userId },
     ),

@@ -60,9 +60,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     currentTime,
     false,
     {
-      currentPage: 0,
       pageSize,
-      searchQuery: '',
     },
     { type: 'team', id: teamId },
   );

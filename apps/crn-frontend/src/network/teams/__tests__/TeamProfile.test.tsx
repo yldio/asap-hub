@@ -123,8 +123,7 @@ it('navigates to the upcoming events tab', async () => {
     pageSize: 10,
     searchQuery: '',
     constraint: {
-      id: 't0',
-      type: 'team',
+      teamId: 't0',
     },
   });
 });

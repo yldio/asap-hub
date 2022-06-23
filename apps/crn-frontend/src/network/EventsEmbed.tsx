@@ -1,5 +1,5 @@
 import { SearchFrame } from '@asap-hub/frontend-utils';
-import { Constraint } from '@asap-hub/model';
+import { EventConstraint } from '@asap-hub/model';
 import { EventSearch, EventsList } from '@asap-hub/react-components';
 import { getEventListOptions } from '../events/options';
 import { useEvents } from '../events/state';
@@ -8,7 +8,7 @@ import { usePagination, usePaginationParams, useSearch } from '../hooks';
 type EventsEmbedProps = {
   readonly currentTime: Date;
   readonly past: boolean;
-  readonly constraint: Constraint;
+  readonly constraint: EventConstraint;
   readonly teamId?: string;
 };
 const EventsEmbed: React.FC<EventsEmbedProps> = ({

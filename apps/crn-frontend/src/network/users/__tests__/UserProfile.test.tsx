@@ -472,8 +472,7 @@ it('navigates to the upcoming events tab', async () => {
     pageSize: 10,
     searchQuery: '',
     constraint: {
-      id: userResponse.id,
-      type: 'user',
+      userId: userResponse.id,
     },
   });
 });

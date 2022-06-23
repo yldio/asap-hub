@@ -1,6 +1,6 @@
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
-  Constraint,
+  EventConstraint,
   EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
 } from '@asap-hub/model';
 import { subHours } from 'date-fns';
@@ -19,14 +19,14 @@ export type GetEventListOptions = GetListOptions &
         sort?: undefined;
       }
   ) & {
-    constraint?: Constraint;
+    constraint?: EventConstraint;
   };
 
 export const getEventListOptions = (
   currentTime: Date,
   past: boolean,
   { searchQuery = '', currentPage = 0, pageSize = CARD_VIEW_PAGE_SIZE } = {},
-  constraint?: Constraint,
+  constraint?: EventConstraint,
 ): GetEventListOptions => {
   const time = subHours(
     currentTime,

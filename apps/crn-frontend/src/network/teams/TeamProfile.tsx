@@ -62,7 +62,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     {
       pageSize,
     },
-    { type: 'team', id: teamId },
+    { teamId },
   );
   const upcomingEventsResult = useEvents(options);
   const isEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
@@ -103,7 +103,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                 <Route path={path + route({ teamId }).upcoming.template}>
                   <Frame title="Upcoming Events">
                     <Events
-                      constraint={{ type: 'team', id: teamId }}
+                      constraint={{ teamId }}
                       currentTime={currentTime}
                       past={false}
                     />

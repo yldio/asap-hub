@@ -73,7 +73,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
       {
         pageSize,
       },
-      { type: 'user', id: userId },
+      { userId },
     ),
     currentUser,
   );
@@ -143,7 +143,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                     <Route path={path + tabRoutes.upcoming.template}>
                       <Frame title="Upcoming Events">
                         <Events
-                          constraint={{ type: 'user', id: user?.id }}
+                          constraint={{ userId: user?.id }}
                           currentTime={currentTime}
                           past={false}
                         />

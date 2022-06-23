@@ -91,14 +91,7 @@ export const eventMaterialTypes: ReadonlyArray<
 export const isEventStatus = (status: string | null): status is EventStatus =>
   eventStatus.includes(status as EventStatus);
 
-const ConstraintTypes = ['user', 'team'] as const;
-
-type ConstraintType = typeof ConstraintTypes[number];
-export type Constraint = {
-  type: ConstraintType;
-  id: string;
+export type EventConstraint = {
+  userId?: string;
+  teamId?: string;
 };
-
-export const isUserConstraint = (
-  constraint: ConstraintType,
-): constraint is ConstraintType => constraint === 'user';

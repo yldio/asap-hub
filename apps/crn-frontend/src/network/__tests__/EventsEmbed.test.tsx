@@ -1,5 +1,5 @@
 import { createListEventResponse } from '@asap-hub/fixtures';
-import { Constraint } from '@asap-hub/model';
+import { EventConstraint } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import {
   render,
@@ -10,7 +10,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { RecoilRoot, RecoilState } from 'recoil';
+import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEventsFromAlgolia } from '../../events/api';
 import { eventsState } from '../../events/state';
@@ -33,15 +33,16 @@ const renderEvents = async ({
   searchQuery = '',
   constraint,
   pathName,
-  state,
-  isPast,
+  isPast = false,
 }: {
   searchQuery?: string;
-  constraint: Constraint;
+  constraint: EventConstraint;
   pathName: string;
-  state: RecoilState<number>;
-  isPast: boolean;
+  isPast?: boolean;
 }) => {
+  const state = constraint.userId
+    ? refreshUserState(constraint.userId)
+    : refreshTeamState(constraint.teamId || '');
   render(
     <RecoilRoot
       initializeState={({ reset, set }) => {
@@ -88,25 +89,16 @@ const userPath = (userId: string) =>
 const teamPath = (teamId: string) =>
   network({}).teams({}).team({ teamId }).upcoming({}).$;
 it.each`
-  description                     | isPast   | constraint                      | getPath     | refreshState        | after                         | before
-  ${'upcoming events by userId '} | ${false} | ${{ type: 'user', id: '1013' }} | ${userPath} | ${refreshUserState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
-  ${'upcoming events by teamId '} | ${false} | ${{ type: 'team', id: '1009' }} | ${teamPath} | ${refreshTeamState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
+  description                     | constraint            | getPath     | refreshState        | after                         | before
+  ${'upcoming events by userId '} | ${{ userId: '1013' }} | ${userPath} | ${refreshUserState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
+  ${'upcoming events by teamId '} | ${{ teamId: '1009' }} | ${teamPath} | ${refreshTeamState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
 `(
   'renders a list of $description',
-  async ({
-    constraint,
-    teamId,
-    getPath,
-    refreshState,
-    isPast,
-    after,
-    before,
-  }) => {
+  async ({ constraint, getPath, after, before }) => {
     const searchQuery = 'a team';
     mockGetEvents.mockResolvedValue(createListEventResponse(2));
-    const pathName = getPath(constraint.id);
-    const state = refreshState(teamId);
-    await renderEvents({ constraint, pathName, state, isPast });
+    const pathName = getPath(constraint.userId || constraint.teamId);
+    await renderEvents({ constraint, pathName });
     userEvent.type(screen.getByRole('searchbox'), searchQuery);
     expect(screen.getByText(/2 results found/i)).toBeInTheDocument();
     expect(

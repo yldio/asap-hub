@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "incremental": false,
+    "emitDeclarationOnly": false,
+    "noEmit": true,
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "jsx": "react-jsx"
+  },
+  "include": ["src"]
+}

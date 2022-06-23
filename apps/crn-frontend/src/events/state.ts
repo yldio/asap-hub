@@ -1,3 +1,4 @@
+import { User } from '@asap-hub/auth';
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
 import {
@@ -105,7 +106,7 @@ export const usePrefetchEvents = (options: GetEventListOptions) => {
     }
   }, [authorization, events, options, setEvents]);
 };
-export const useEvents = (options: GetEventListOptions) => {
+export const useEvents = (options: GetEventListOptions, user?: User | null) => {
   const [events, setEvents] = useRecoilState(eventsState(options));
   const { client } = useAlgolia();
   const authorization = useRecoilValue(authorizationState);
@@ -117,6 +118,9 @@ export const useEvents = (options: GetEventListOptions) => {
         .then(setEvents)
         .catch(setEvents);
     } else {
+      if (user && !user.onboarded) {
+        return { total: 0, items: [] };
+      }
       throw getEvents(options, authorization).then(setEvents).catch(setEvents);
     }
   }

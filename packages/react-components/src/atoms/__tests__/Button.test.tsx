@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import { silver, fern, charcoal } from '../../colors';
 import { orcidIcon } from '../../icons';
@@ -32,6 +32,20 @@ it('renders a button with text only with increased horizontal padding', () => {
 });
 
 it('renders a button with an icon only with decreased horizontal padding', () => {
+  const { getByRole, rerender } = render(<Button>{orcidIcon}Text</Button>);
+  const normalPaddingLeft = Number(
+    getComputedStyle(getByRole('button')).paddingLeft.replace(/em$/, ''),
+  );
+
+  rerender(<Button>{orcidIcon}</Button>);
+  const iconOnlyPaddingLeft = Number(
+    getComputedStyle(getByRole('button')).paddingLeft.replace(/em$/, ''),
+  );
+
+  expect(iconOnlyPaddingLeft).toBeLessThan(normalPaddingLeft);
+});
+
+it('renders a button without margin', () => {
   const { getByRole, rerender } = render(<Button>{orcidIcon}Text</Button>);
   const normalPaddingLeft = Number(
     getComputedStyle(getByRole('button')).paddingLeft.replace(/em$/, ''),
@@ -103,6 +117,18 @@ it('renders a small button', () => {
   );
 
   expect(smallPaddingTop).toBeLessThan(normalPaddingTop);
+});
+
+it('renders a stretched small button', () => {
+  render(<Button small />);
+
+  expect(getComputedStyle(screen.getByRole('button')).flexGrow).toBe('1');
+});
+
+it('renders a non-stretched small button', () => {
+  render(<Button small stretch={false} />);
+
+  expect(getComputedStyle(screen.getByRole('button')).flexGrow).toBe('');
 });
 
 describe('the type', () => {

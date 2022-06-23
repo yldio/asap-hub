@@ -55,21 +55,24 @@ interface NormalLinkProps {
   readonly primary?: undefined;
   readonly small?: undefined;
   readonly enabled?: undefined;
+  readonly margin?: undefined;
+  readonly stretch?: undefined;
 }
 interface ButtonStyleLinkProps {
   readonly theme?: undefined;
-
   readonly buttonStyle: true;
-
   readonly primary?: boolean;
   readonly small?: boolean;
   readonly enabled?: boolean;
+  readonly margin?: boolean;
+  readonly stretch?: boolean;
 }
 type LinkProps = {
   readonly children: ReactNode;
   readonly href: string | undefined;
   readonly label?: string;
   readonly applyIconTheme?: boolean;
+  readonly stretch?: boolean;
 } & (NormalLinkProps | ButtonStyleLinkProps);
 const Link: React.FC<LinkProps> = ({
   children,
@@ -83,9 +86,11 @@ const Link: React.FC<LinkProps> = ({
   small = false,
   enabled = true,
   applyIconTheme = false,
+  margin = true,
+  stretch = true,
 }) => {
   const linkStyles = buttonStyle
-    ? [getButtonStyles({ primary, small, enabled, children })]
+    ? [getButtonStyles({ primary, small, enabled, children, margin, stretch })]
     : [styles, themeStyles[theme], applyIconTheme && iconThemeStyles[theme]];
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;
   return (

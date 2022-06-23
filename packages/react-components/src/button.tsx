@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-import { formTargetWidth, perRem } from './pixels';
+import { formTargetWidth, perRem, mobileScreen } from './pixels';
 import {
   OpaqueColor,
   paper,
@@ -19,8 +19,6 @@ export const activePrimaryBackgroundColor = color(122, 210, 169, 0.18);
 
 const borderWidth = 1;
 const styles = css({
-  flexGrow: 1,
-
   display: 'inline-flex',
   justifyContent: 'center',
   textAlign: 'center',
@@ -44,6 +42,11 @@ const styles = css({
   },
 
   transition: '200ms',
+
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexGrow: 1,
+    width: '100%',
+  },
 });
 
 const largeStyles = css({
@@ -66,6 +69,12 @@ const largeStyles = css({
   paddingLeft: `${(20 - borderWidth) / perRem}em`,
   paddingRight: `${(20 - borderWidth) / perRem}em`,
 });
+
+const smallWithSpaceStyles = css({
+  marginTop: `${12 / perRem}em`,
+  marginBottom: `${12 / perRem}em`,
+});
+
 const smallStyles = css({
   '> svg': {
     height: `${18 / perRem}em`,
@@ -80,13 +89,10 @@ const smallStyles = css({
     marginLeft: `${6 / perRem}em`,
   },
 
-  marginTop: `${12 / perRem}em`,
-  marginBottom: `${12 / perRem}em`,
-
   paddingTop: `${(6 - borderWidth) / perRem}em`,
   paddingBottom: `${(6 - borderWidth) / perRem}em`,
-  paddingLeft: `${(12 - borderWidth) / perRem}em`,
-  paddingRight: `${(12 - borderWidth) / perRem}em`,
+  paddingLeft: `${(15 - borderWidth) / perRem}em`,
+  paddingRight: `${(15 - borderWidth) / perRem}em`,
 });
 
 const largeTextOnlyStyles = css({
@@ -183,16 +189,25 @@ export const activeSecondaryStyles = css({
   },
 });
 
+const stretchStyles = css({
+  width: '100%',
+  flexGrow: 1,
+});
+
 export const getButtonStyles = ({
   primary = false,
   small = false,
   enabled = true,
   active = false,
   children = [] as React.ReactNode,
+  margin = true,
+  stretch = true,
 }) =>
   css([
     styles,
     small ? smallStyles : largeStyles,
+    margin && small && smallWithSpaceStyles,
+    stretch && stretchStyles,
     enabled
       ? active
         ? primary

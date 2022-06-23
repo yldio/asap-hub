@@ -1,75 +1,52 @@
+import { FC } from 'react';
 import { css } from '@emotion/react';
 import { network } from '@asap-hub/routing';
 
-import { Avatar, Divider, Link } from '../atoms';
-import { perRem } from '../pixels';
-import { lead } from '../colors';
 import { labIcon, teamIcon } from '../icons';
+import { Avatar, Link } from '../atoms';
+import { perRem } from '../pixels';
+import { lead, silver } from '../colors';
 
 const containerStyles = css({
-  display: 'grid',
-  gridColumnGap: `${12 / perRem}em`,
-  color: lead.rgb,
-});
-const containerInlineStyles = css({
-  gridTemplateColumns: 'max-content 1fr',
-});
-const containerSummarizedStyles = css({
-  gridTemplateColumns: 'max-content max-content',
-});
-
-const listStyles = css({
-  listStyle: 'none',
-  margin: 0,
-  padding: 0,
-
-  overflow: 'hidden',
-});
-const listBlockStyles = css({
-  padding: `${12 / perRem}em 0`,
-  display: 'grid',
-  gridRowGap: `${12 / perRem}em`,
-});
-const listInlineStyles = css({
   display: 'flex',
-  flexWrap: 'wrap',
-  alignItems: 'center',
+  flexDirection: 'column',
+  margin: 0,
 });
 
-const itemBlockStyles = css({
-  display: 'grid',
-  gridTemplateColumns: 'max-content 1fr',
-  gridGap: `${12 / perRem}em`,
-});
-const itemInlineStyles = css({
-  fontSize: `${13.6 / perRem}em`,
-  paddingBottom: `${6 / perRem}em`,
-  overflow: 'hidden',
+const inlineContainerStyles = css({
+  display: 'unset',
+  padding: 0,
 });
 
-const inlinePaddingStyles = css({
-  'li:not(:last-of-type) > &': {
-    paddingRight: `${6 / perRem}em`,
+const itemStyles = css({
+  borderBottom: `1px solid ${silver.rgb}`,
+  paddingBottom: `${24 / perRem}em`,
+  paddingTop: `${24 / perRem}em`,
+
+  '&:first-child': {
+    paddingTop: `${18 / perRem}em`,
   },
 });
 
-const associationInlineStyles = css(inlinePaddingStyles, {
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis',
+const inlineItemStyles = css({
+  display: 'inline',
+  borderBottom: 'none',
+  padding: '0',
 });
-const dividerStyles = css({
-  gridColumn: '1 / -1',
+
+const bulletStyles = css({
+  color: lead.rgb,
+  padding: `0 ${6 / perRem}em`,
   'li:last-of-type > &': {
     display: 'none',
   },
 });
-const bulletStyles = css({
-  color: lead.rgb,
-  paddingLeft: `${6 / perRem}em`,
-  'li:last-of-type > * > &': {
-    display: 'none',
-  },
+
+const iconStyles = css({
+  verticalAlign: 'middle',
+  display: 'inline-block',
+  height: `${24 / perRem}em`,
+  marginRight: `${12 / perRem}em`,
 });
 
 const moreStyles = css({
@@ -79,6 +56,7 @@ const moreStyles = css({
   gridColumnGap: `${6 / perRem}em`,
   alignItems: 'center',
 });
+
 const avatarStyles = css({
   fontSize: `${20 / perRem}em`,
 });
@@ -99,70 +77,63 @@ interface AssociationListProps {
   readonly max?: number;
   readonly more?: number;
 }
-const AssociationList: React.FC<AssociationListProps> = ({
+
+const AssociationList: FC<AssociationListProps> = ({
   associations,
   type,
-  inline = false,
   max = Number.POSITIVE_INFINITY,
+  inline = false,
   more,
 }) => {
   const icon = type === 'Team' ? teamIcon : labIcon;
   const limitExceeded = associations.length > max;
-  return associations.length ? (
-    <div
-      css={[
-        containerStyles,
-        inline && containerInlineStyles,
-        limitExceeded && containerSummarizedStyles,
-      ]}
-    >
-      {inline && icon}
-      {limitExceeded ? (
-        <>
-          {associations.length} {type}
-          {associations.length === 1 ? '' : 's'}
-        </>
-      ) : (
-        <ul css={[listStyles, inline ? listInlineStyles : listBlockStyles]}>
-          {associations.map(({ displayName, id }, i) => (
-            <li
-              css={inline ? itemInlineStyles : itemBlockStyles}
-              key={`sep-${i}`}
-            >
-              {inline || icon}
-              <div css={inline ? associationInlineStyles : undefined}>
-                {type === 'Team' ? (
-                  <Link href={network({}).teams({}).team({ teamId: id }).$}>
-                    {type} {displayName}
-                  </Link>
-                ) : (
-                  <>
-                    {displayName} {type}
-                  </>
-                )}
 
-                {inline && <span css={bulletStyles}>·</span>}
-              </div>
-              <div css={dividerStyles}>{inline || <Divider />}</div>
-            </li>
-          ))}
-          {more && (
-            <li>
-              <div css={moreStyles}>
-                <div css={avatarStyles}>
-                  <Avatar placeholder={`+${more}`} />
-                </div>
-                <span css={nameStyles}>
-                  {type}
-                  {more === 1 ? '' : 's'}
-                </span>
-              </div>
-            </li>
-          )}
-        </ul>
-      )}
-    </div>
-  ) : null;
+  if (!associations.length) {
+    return null;
+  }
+
+  if (limitExceeded) {
+    return (
+      <>
+        {associations.length} {type}
+        {associations.length === 1 ? '' : 's'}
+      </>
+    );
+  }
+
+  return (
+    <>
+      {inline && <div css={iconStyles}>{icon}</div>}
+      <ul css={[containerStyles, inline && inlineContainerStyles]}>
+        {associations.map(({ displayName, id }) => (
+          <li css={[itemStyles, inline && inlineItemStyles]}>
+            {inline || <div css={iconStyles}>{icon}</div>}
+            {type === 'Team' ? (
+              <Link href={network({}).teams({}).team({ teamId: id }).$}>
+                {type} {displayName}
+              </Link>
+            ) : (
+              <>
+                {displayName} {type}
+              </>
+            )}
+            {inline && <span css={bulletStyles}>·</span>}
+          </li>
+        ))}
+        {more && (
+          <div css={moreStyles}>
+            <div css={avatarStyles}>
+              <Avatar placeholder={`+${more}`} />
+            </div>
+            <span css={nameStyles}>
+              {type}
+              {more === 1 ? '' : 's'}
+            </span>
+          </div>
+        )}
+      </ul>
+    </>
+  );
 };
 
 export default AssociationList;

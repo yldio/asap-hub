@@ -90,3 +90,5 @@ export const lilac = color(248, 234, 247);
 export const iris = color(140, 78, 159);
 export const mauve = color(105, 59, 119);
 export const lavender = color(242, 237, 245);
+
+export const info = color(12, 141, 195);

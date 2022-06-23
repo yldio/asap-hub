@@ -2,7 +2,7 @@ import * as components from '@asap-hub/react-components';
 
 export default { title: 'Atoms / Icons' };
 
-export const Alert = () => components.alertIcon;
+export const Alert = () => <components.AlertIcon />;
 export const Calendar = () => components.calendarIcon;
 export const ChevronCircleDown = () => components.chevronCircleDownIcon;
 export const ChevronCircleLeft = () => components.chevronCircleLeftIcon;

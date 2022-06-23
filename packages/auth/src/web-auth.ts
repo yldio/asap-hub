@@ -12,17 +12,21 @@ const getOptionsFromLocation = (location: Location | URL) =>
 
 type SsoConnection = 'google-oauth2' | 'ORCID';
 
-export const authorizeWithSsoFactory =
-  (webAuth: WebAuth) =>
-  (location: Location | URL, connection: SsoConnection): void =>
+export const authorizeWithSsoFactory = (clientID: string, domain: string) => {
+  const webAuth = new WebAuth({ clientID, domain });
+  return (location: Location | URL, connection: SsoConnection): void =>
     webAuth.authorize({
       ...getOptionsFromLocation(location),
       connection,
     });
+};
 
-export const authorizeWithEmailPasswordFactory =
-  (webAuth: WebAuth) =>
-  async (
+export const authorizeWithEmailPasswordFactory = (
+  clientID: string,
+  domain: string,
+) => {
+  const webAuth = new WebAuth({ clientID, domain });
+  return async (
     location: Location | URL,
     email: string,
     password: string,
@@ -43,12 +47,17 @@ export const authorizeWithEmailPasswordFactory =
       password,
     });
   };
+};
 
-export const sendPasswordResetLinkFactory =
-  (webAuth: WebAuth) =>
-  async (email: string): Promise<void> => {
+export const sendPasswordResetLinkFactory = (
+  clientID: string,
+  domain: string,
+) => {
+  const webAuth = new WebAuth({ clientID, domain });
+  return async (email: string): Promise<void> => {
     await pify(webAuth.changePassword.bind(webAuth))({
       email,
       connection: 'Username-Password-Authentication',
     });
   };
+};

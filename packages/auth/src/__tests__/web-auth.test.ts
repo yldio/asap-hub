@@ -1,3 +1,5 @@
+/* global globalThis */
+
 import { AuthOptions, WebAuth } from 'auth0-js';
 import { mockLocation } from '@asap-hub/dom-test-utils';
 
@@ -31,14 +33,15 @@ jest.mock('auth0-js', () => {
   };
 });
 
-const webAuth = new WebAuth({
-  clientID: 'client-id',
-  domain: 'auth.example.com',
-});
+const clientID = 'client-id';
+const domain = 'auth.example.com';
 
-const authorizeWithSso = authorizeWithSsoFactory(webAuth);
-const authorizeWithEmailPassword = authorizeWithEmailPasswordFactory(webAuth);
-const sendPasswordResetLink = sendPasswordResetLinkFactory(webAuth);
+const authorizeWithSso = authorizeWithSsoFactory(clientID, domain);
+const authorizeWithEmailPassword = authorizeWithEmailPasswordFactory(
+  clientID,
+  domain,
+);
+const sendPasswordResetLink = sendPasswordResetLinkFactory(clientID, domain);
 
 afterEach(() => {
   mockLogin.mockReset();

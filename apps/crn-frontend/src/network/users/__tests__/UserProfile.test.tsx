@@ -8,6 +8,7 @@ import {
   createUserResponse,
   createUserTeams,
 } from '@asap-hub/fixtures';
+import { disable } from '@asap-hub/flags';
 import { UserResponse } from '@asap-hub/model';
 import { ToastContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
@@ -20,7 +21,7 @@ import { join } from 'path';
 import { ContextType, Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { getEventsFromAlgolia } from '../../../events/api';
+import { getEvents, getEventsFromAlgolia } from '../../../events/api';
 import { getResearchOutputs } from '../../../shared-research/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { getUser, patchUser, postUserAvatar } from '../api';
@@ -40,9 +41,10 @@ const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
 const imageCompressionMock = imageCompression as jest.MockedFunction<
   typeof imageCompression
 >;
-const mockUserEvents = getEventsFromAlgolia as jest.MockedFunction<
+const mockUserEventsFromAlgolia = getEventsFromAlgolia as jest.MockedFunction<
   typeof getEventsFromAlgolia
 >;
+const mockUserEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
 imageCompressionMock.getDataUrlFromFile = jest.requireActual(
   'browser-image-compression',
@@ -67,6 +69,7 @@ const renderUserProfile = async (
   userResponse = createUserResponse(),
   {
     ownUserId = userResponse.id,
+    onboarded = true,
     routeProfileId = userResponse.id,
     currentTime = new Date(),
   } = {},
@@ -98,7 +101,7 @@ const renderUserProfile = async (
       <Suspense fallback="loading">
         <ToastContext.Provider value={mockToast}>
           <Auth0Provider
-            user={{ id: ownUserId }}
+            user={{ id: ownUserId, onboarded }}
             auth0Overrides={auth0Overrides}
           >
             <WhenReady>
@@ -423,16 +426,33 @@ it('renders number of shared outputs', async () => {
 
 it('renders number of upcoming events', async () => {
   const response = createListEventResponse(7);
-  mockUserEvents.mockResolvedValue(response);
+  mockUserEventsFromAlgolia.mockResolvedValue(response);
   await renderUserProfile(createUserResponse());
 
   expect(await screen.findByText(/Upcoming Events \(7\)/i)).toBeVisible();
 });
 
+it('onboarded users do call the events api', async () => {
+  disable('EVENTS_SEARCH');
+  await renderUserProfile(createUserResponse(), { onboarded: true });
+
+  expect(mockUserEventsFromAlgolia).not.toBeCalled();
+  expect(mockUserEvents).toHaveBeenCalled();
+  expect(screen.queryByText(/Upcoming Events/i)).not.toBeInTheDocument();
+});
+it('non onboarded users do not call the events api', async () => {
+  disable('EVENTS_SEARCH');
+  await renderUserProfile(createUserResponse(), { onboarded: false });
+
+  expect(mockUserEventsFromAlgolia).not.toBeCalled();
+  expect(mockUserEvents).not.toHaveBeenCalled();
+  expect(screen.queryByText(/Upcoming Events/i)).not.toBeInTheDocument();
+});
+
 it('navigates to the upcoming events tab', async () => {
   const currentTime = new Date('2021-12-28T14:00:00.000Z');
   const response = createListEventResponse(1);
-  mockUserEvents.mockResolvedValue(response);
+  mockUserEventsFromAlgolia.mockResolvedValue(response);
 
   const userResponse = createUserResponse();
   await renderUserProfile(userResponse, { currentTime });
@@ -444,8 +464,8 @@ it('navigates to the upcoming events tab', async () => {
     'Search by topic, presenting team, …',
   );
   expect(await screen.findByText(/Event 0/i)).toBeVisible();
-  expect(mockUserEvents).toBeCalledTimes(1);
-  expect(mockUserEvents).toHaveBeenCalledWith(expect.anything(), {
+  expect(mockUserEventsFromAlgolia).toBeCalledTimes(1);
+  expect(mockUserEventsFromAlgolia).toHaveBeenCalledWith(expect.anything(), {
     after: '2021-12-28T13:00:00.000Z',
     currentPage: 0,
     filters: new Set(),

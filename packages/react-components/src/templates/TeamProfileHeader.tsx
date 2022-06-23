@@ -1,5 +1,8 @@
 import { TeamResponse, TeamTool } from '@asap-hub/model';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
+import {
+  ResearchOutputPermissionsContext,
+  useFlags,
+} from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
@@ -132,7 +135,7 @@ const iconStyles = css({
 type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly tools?: ReadonlyArray<TeamTool>;
   readonly teamListElementId: string;
-  readonly upcomingEventsCount: number;
+  readonly upcomingEventsCount?: number;
 };
 
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
@@ -246,9 +249,11 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
           <TabLink href={route.workspace({}).$}>Team Workspace</TabLink>
         )}
         <TabLink href={route.outputs({}).$}>Team Outputs</TabLink>
-        <TabLink href={route.upcoming({}).$}>
-          Upcoming Events {`(${upcomingEventsCount})`}
-        </TabLink>
+        {useFlags().isEnabled('EVENTS_SEARCH') && (
+          <TabLink href={route.upcoming({}).$}>
+            Upcoming Events {`(${upcomingEventsCount})`}
+          </TabLink>
+        )}
       </TabNav>
     </header>
   );

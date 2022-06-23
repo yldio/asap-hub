@@ -5,7 +5,6 @@ import {
 } from '@asap-hub/model';
 import { ResearchOutputIdentifierValidationExpression } from '@asap-hub/validation';
 import { useCallback, useMemo, ReactElement } from 'react';
-import { InfoParagraph } from '../atoms';
 import { LabeledDropdown, LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 
@@ -82,12 +81,11 @@ const getIdentifierInfoMessage = (
         value !== ResearchOutputIdentifierType.None &&
         value !== ResearchOutputIdentifierType.Empty,
     )
-    .map(({ value }) => (
-      <InfoParagraph
-        key={value}
-        boldText={`${identifierMap[value].name}: `}
-        bodyText={identifierMap[value].helpText}
-      />
+    .map(({ value }, index) => (
+      <span key={`info-${index}`}>
+        <strong>{identifierMap[value].name}: </strong>
+        {identifierMap[value].helpText}
+      </span>
     ));
 
 export interface ResearchOutputIdentifierProps {

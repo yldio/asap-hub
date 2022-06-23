@@ -23,7 +23,7 @@ const loadWorkspace = () =>
 const loadTeamOutput = () =>
   import(/* webpackChunkName: "network-team-team-output" */ './TeamOutput');
 const loadEvents = () =>
-  import(/* webpackChunkName: "network-upcoming-events" */ '../EventsEmbed');
+  import(/* webpackChunkName: "network-events" */ '../EventsEmbed');
 
 const TeamOutput = lazy(loadTeamOutput);
 const About = lazy(loadAbout);

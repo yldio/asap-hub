@@ -23,7 +23,7 @@ jest.mock('../api');
 jest.mock('../groups/api');
 jest.mock('../../../shared-research/api');
 jest.mock('../../../events/api');
-const mockEvents = getEventsFromAlgolia as jest.MockedFunction<
+const mockGetEventsFromAlgolia = getEventsFromAlgolia as jest.MockedFunction<
   typeof getEventsFromAlgolia
 >;
 
@@ -94,7 +94,7 @@ it('deep links to the teams list', async () => {
 });
 it('renders number of upcoming events', async () => {
   const response = createListEventResponse(7);
-  mockEvents.mockResolvedValue(response);
+  mockGetEventsFromAlgolia.mockResolvedValue(response);
   await renderPage(createTeamResponse());
 
   expect(await screen.findByText(/Upcoming Events \(7\)/i)).toBeVisible();
@@ -103,7 +103,7 @@ it('renders number of upcoming events', async () => {
 it('navigates to the upcoming events tab', async () => {
   const currentTime = new Date('2021-12-28T14:00:00.000Z');
   const response = createListEventResponse(1);
-  mockEvents.mockResolvedValue(response);
+  mockGetEventsFromAlgolia.mockResolvedValue(response);
 
   const teamResponse = createTeamResponse();
   await renderPage(teamResponse, { currentTime });
@@ -115,8 +115,8 @@ it('navigates to the upcoming events tab', async () => {
     'Search by topic, presenting team, …',
   );
   expect(await screen.findByText(/Event 0/i)).toBeVisible();
-  expect(mockEvents).toBeCalledTimes(1);
-  expect(mockEvents).toHaveBeenCalledWith(expect.anything(), {
+  expect(mockGetEventsFromAlgolia).toBeCalledTimes(1);
+  expect(mockGetEventsFromAlgolia).toHaveBeenCalledWith(expect.anything(), {
     after: '2021-12-28T13:00:00.000Z',
     currentPage: 0,
     filters: new Set(),

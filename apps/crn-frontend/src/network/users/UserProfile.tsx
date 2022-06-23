@@ -28,7 +28,7 @@ const loadOutputs = () =>
 const loadEditing = () =>
   import(/* webpackChunkName: "network-editing" */ './Editing');
 const loadEvents = () =>
-  import(/* webpackChunkName: "network-upcoming-events" */ '../EventsEmbed');
+  import(/* webpackChunkName: "network-events" */ '../EventsEmbed');
 const Research = lazy(loadResearch);
 const About = lazy(loadAbout);
 const Outputs = lazy(loadOutputs);

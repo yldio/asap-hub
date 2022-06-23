@@ -17,7 +17,6 @@ export {
   Headline4,
   Headline5,
   Headline6,
-  InfoParagraph,
   Link,
   NavigationLink,
   Overlay,

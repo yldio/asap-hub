@@ -4,7 +4,7 @@ import { text } from '@storybook/addon-knobs';
 import { CenterDecorator } from './layout';
 
 export default {
-  title: 'Molecules / Info',
+  title: 'Molecules / Info Popup',
   component: Info,
   decorators: [CenterDecorator],
 };

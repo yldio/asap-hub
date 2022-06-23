@@ -23,3 +23,10 @@ export const useCurrentUser = (): User | null => {
 
   return user;
 };
+
+export const useCurrentUserTeamRoles = (): Array<
+  User['teams'][number]['role']
+> => {
+  const user = useCurrentUser();
+  return user ? user.teams.map(({ role }) => role) : [];
+};

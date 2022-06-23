@@ -449,7 +449,7 @@ __metadata:
     "@auth0/auth0-spa-js": ^1.15.0
     "@babel/runtime-corejs3": 7.18.3
     "@fast-csv/format": ^4.3.5
-    "@sentry/cli": ^1.68.0
+    "@sentry/cli": 1.74.4
     "@sentry/react": ^6.11.0
     "@sentry/tracing": ^6.11.0
     "@testing-library/dom": 7.31.2
@@ -814,7 +814,7 @@ __metadata:
     "@auth0/auth0-spa-js": ^1.15.0
     "@babel/runtime-corejs3": 7.18.3
     "@fast-csv/format": ^4.3.5
-    "@sentry/cli": ^1.68.0
+    "@sentry/cli": 1.74.4
     "@sentry/react": ^6.11.0
     "@sentry/tracing": ^6.11.0
     "@testing-library/dom": 7.31.2
@@ -9093,19 +9093,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/cli@npm:^1.68.0":
-  version: 1.68.0
-  resolution: "@sentry/cli@npm:1.68.0"
+"@sentry/cli@npm:1.74.4":
+  version: 1.74.4
+  resolution: "@sentry/cli@npm:1.74.4"
   dependencies:
     https-proxy-agent: ^5.0.0
     mkdirp: ^0.5.5
-    node-fetch: ^2.6.0
+    node-fetch: ^2.6.7
     npmlog: ^4.1.2
     progress: ^2.0.3
     proxy-from-env: ^1.1.0
+    which: ^2.0.2
   bin:
     sentry-cli: bin/sentry-cli
-  checksum: 7329a46403c5a78d55cb0b8cc8d72eb972ee0a10f7642caee4e7ecfd8332f67b4db9ee4ce7f00d8bedd3877ca8ca2afda201e0f0f0d708a141e75a32267f742d
+  checksum: 6fe63095edbb0f8c250ad813e24fddd65b3266763fbf628cfd865d2f68f7248ec38e600f220d6530a54ebf1a10cc51e1b5fbf203e28fab223d80a5afd4d5dfb2
   languageName: node
   linkType: hard
 

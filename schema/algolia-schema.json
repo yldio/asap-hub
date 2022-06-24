@@ -45,9 +45,7 @@
   "attributesToRetrieve": null,
   "unretrievableAttributes": null,
   "optionalWords": null,
-  "queryLanguages": [
-    "en"
-  ],
+  "queryLanguages": ["en"],
   "attributesForFaceting": [
     "teams.id",
     "documentType",
@@ -86,11 +84,6 @@
   "highlightPreTag": "<em>",
   "highlightPostTag": "</em>",
   "snippetEllipsisText": "",
-  "alternativesAsExact": [
-    "ignorePlurals",
-    "singleWordSynonym"
-  ],
-  "indexLanguages": [
-    "en"
-  ]
+  "alternativesAsExact": ["ignorePlurals", "singleWordSynonym"],
+  "indexLanguages": ["en"]
 }

@@ -240,9 +240,30 @@ const ResearchOutputFormSharingCard: React.FC<
           max={new Date()}
           getValidationMessage={(e) => getPublishDateValidationMessage(e)}
         />
+<<<<<<< HEAD
       ) : null}
     </FormCard>
   );
 };
+=======
+        {sharingStatus === 'Public' ? (
+          <LabeledDateField
+            title={'Date Published'}
+            subtitle={'(optional)'}
+            description={
+              'This should be the date your output was shared publicly on it’s repository.'
+            }
+            onChange={onChangePublishDate}
+            value={publishDate}
+            max={new Date()}
+            getValidationMessage={() =>
+              'Publish date cannot be greater than today'
+            }
+          />
+        ) : null}
+      </FormCard>
+    );
+  };
+>>>>>>> 4c0c9002 (bumps prettier)
 
 export default ResearchOutputFormSharingCard;

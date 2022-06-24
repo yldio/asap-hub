@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 import algoliasearch from 'algoliasearch';
 import fs from 'fs/promises';
+import { resolve } from 'path';
 
 export type SetSettings = {
   algoliaAppId: string;
@@ -13,7 +14,7 @@ export const setAlgoliaSettings = async ({
   algoliaCiApiKey,
   indexName,
 }: SetSettings): Promise<void> => {
-  const path = 'packages/algolia'; // resolve(__dirname, '../')
+  const path = resolve(__dirname, '../../../../../schema');
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
 
   const index = client.initIndex(indexName);

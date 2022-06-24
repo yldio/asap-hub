@@ -4,7 +4,6 @@ import { AlgoliaSearchClient } from './client';
 export type { SearchResponse } from '@algolia/client-search';
 export * from './client';
 export * from './filters';
-export * from './scripts';
 
 type AlgoliaSearchClientNativeFactoryParams = {
   algoliaApiKey: string;

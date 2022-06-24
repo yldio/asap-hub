@@ -2,33 +2,40 @@
 import algoliasearch from 'algoliasearch';
 import fs from 'fs/promises';
 
-export type GetSettings = {
+export type SetSettings = {
   algoliaAppId: string;
   algoliaCiApiKey: string;
   indexName: string;
 };
 
-export const getAlgoliaSettings = async ({
+export const setAlgoliaSettings = async ({
   algoliaAppId,
   algoliaCiApiKey,
   indexName,
-}: GetSettings): Promise<void> => {
-  const path = 'packages/algolia';
+}: SetSettings): Promise<void> => {
+  const path = 'packages/algolia'; // resolve(__dirname, '../')
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
+
   const index = client.initIndex(indexName);
-  const { replicas: _, ...indexSettings } = await index.getSettings();
-  await fs.writeFile(
+  const indexSchemaRaw = await fs.readFile(
     `${path}/algolia-schema.json`,
-    JSON.stringify(indexSettings, null, 2),
+    'utf8',
   );
+  const indexSchema = JSON.parse(indexSchemaRaw);
 
   const replicaIndexName = `algolia-${indexName}-end-date-timestamp-desc`;
+  await index
+    .setSettings({
+      ...indexSchema,
+      replicas: [replicaIndexName],
+    })
+    .wait();
   const replicaIndex = client.initIndex(replicaIndexName);
-
-  const { customRanking } = await replicaIndex.getSettings();
-
-  await fs.writeFile(
+  const replicaIndexSchemaRaw = await fs.readFile(
     `${path}/algolia-end-date-timestamp-desc-schema.json`,
-    JSON.stringify({ customRanking }, null, 2),
+    'utf8',
   );
+
+  const replicaIndexSchema = JSON.parse(replicaIndexSchemaRaw);
+  await replicaIndex.setSettings(replicaIndexSchema);
 };

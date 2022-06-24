@@ -38,5 +38,6 @@ export const getEventFilters = (
     ...(filters.before ? [timeFilter(filters.before, '<')] : []),
     ...(filters.after ? [timeFilter(filters.after, '>')] : []),
   ];
+
   return getFilter(filterList, constraints);
 };

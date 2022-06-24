@@ -96,6 +96,11 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
+      - name: Cache transpile output
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-transpile }}
+          environment-name: ${{ inputs.environment-name }}
       - name: Get Algolia Keys
         id: algolia-keys
         uses: ./.github/actions/algolia-keys
@@ -107,7 +112,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Synchronize Schema
         run: |
-          yarn run algolia:set-settings
+          yarn algolia:set-settings -a $ALGOLIA_APP_ID -k $ALGOLIA_APP_KEY -n $ALGOLIA_INDEX
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}

@@ -1,0 +1,7 @@
+{
+  "customRanking": [
+    "desc(endDateTimestamp)",
+    "desc(addedDate)",
+    "desc(createdDate)"
+  ]
+}

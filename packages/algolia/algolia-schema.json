@@ -45,14 +45,14 @@
   "unretrievableAttributes": null,
   "optionalWords": null,
   "queryLanguages": ["en"],
-  "replicas": [],
   "attributesForFaceting": [
     "teams.id",
     "documentType",
     "authors.id",
     "__meta.type",
     "teams.role",
-    "speakers.user.id"
+    "speakers.user.id",
+    "speakers.team.id"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

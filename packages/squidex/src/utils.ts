@@ -25,11 +25,9 @@ export const sanitiseForSquidex = (text: string): string =>
     .replace(/#/g, '%23')
     .replace(/&/g, '%26');
 
-export type RequiredAndNonNullable<T> = Required<
-  {
-    [Property in keyof T]: NonNullable<T[Property]>;
-  }
->;
+export type RequiredAndNonNullable<T> = Required<{
+  [Property in keyof T]: NonNullable<T[Property]>;
+}>;
 
 type NoUndefined<T> = T extends undefined ? never : T;
 

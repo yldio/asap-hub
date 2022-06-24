@@ -6,12 +6,13 @@
 'use strict';
 
 import {
-  removeAlgoliaIndex,
+  getAlgoliaSettings,
   moveAlgoliaIndex,
+  removeAlgoliaIndex,
   removeAlgoliaRecords,
 } from '@asap-hub/algolia';
-import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
+import yargs from 'yargs/yargs';
 import * as importers from './import';
 
 // eslint-disable-next-line no-unused-expressions
@@ -163,6 +164,44 @@ yargs(hideBin(process.argv))
         algoliaCiApiKey: apikey,
         indexName: index,
         entityType,
+      }),
+  })
+  .command({
+    command: 'algolia:get-settings',
+    describe: 'gets the settings for an Algolia index',
+    builder: (cli) =>
+      cli
+        .option('appid', {
+          alias: 'a',
+          type: 'string',
+          description: 'The App ID',
+          demandOption: true,
+        })
+        .option('apikey', {
+          alias: 'k',
+          type: 'string',
+          description: 'The API key',
+          demandOption: true,
+        })
+        .option('index', {
+          alias: 'n',
+          type: 'string',
+          description: 'Name of the index',
+          demandOption: true,
+        }),
+    handler: async ({
+      index,
+      appid,
+      apikey,
+    }: {
+      index: string;
+      appid: string;
+      apikey: string;
+    }) =>
+      getAlgoliaSettings({
+        algoliaAppId: appid,
+        algoliaCiApiKey: apikey,
+        indexName: index,
       }),
   })
   .demandCommand(1)

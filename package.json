@@ -19,6 +19,7 @@
     "algolia:move-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:move-index",
     "algolia:remove-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:remove-index",
     "algolia:remove-records": "yarn node apps/asap-cli/build-cjs/cli.js algolia:remove-records",
+    "algolia:get-settings": "yarn node apps/asap-cli/build-cjs/cli.js algolia:get-settings",
     "algolia:upload": "yarn workspace @asap-hub/algolia run algolia setsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -s ./algolia-schema.json",
     "build": "yarn build:typecheck && yarn build:babel && yarn typecheck && yarn build:frontend",
     "build:babel": "yarn workspaces foreach -vp -j 2 run build:babel",

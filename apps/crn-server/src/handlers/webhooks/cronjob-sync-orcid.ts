@@ -3,8 +3,8 @@ import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import pLimit from 'p-limit';
 import { appName, baseUrl } from '../../config';
 import Users from '../../controllers/users';
-import AssetDataProvider from '../../data-providers/assets.data-provider';
-import UserDataProvider from '../../data-providers/users.data-provider';
+import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
+import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
 import { getAuthToken } from '../../utils/auth';
 
 export const handler = async (): Promise<lambda.Response> => {
@@ -19,11 +19,11 @@ export const handler = async (): Promise<lambda.Response> => {
     appName,
     baseUrl,
   });
-  const userDataProvider = new UserDataProvider(
+  const userDataProvider = new UserSquidexDataProvider(
     squidexGraphqlClient,
     userRestClient,
   );
-  const assetDataProvider = new AssetDataProvider(userRestClient);
+  const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
   const users = new Users(userDataProvider, assetDataProvider);
 
   const { items: outdatedUsers } = await users.fetch({

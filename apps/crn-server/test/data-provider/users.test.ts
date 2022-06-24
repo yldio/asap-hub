@@ -4,11 +4,12 @@ import { RestUser, SquidexRest } from '@asap-hub/squidex';
 import nock, { DataMatcherMap } from 'nock';
 import { appName, baseUrl } from '../../src/config';
 import { FetchUsersOptions } from '../../src/controllers/users';
-import UserDataProvider, {
+import {
   GraphqlUserTeam,
   parseGraphQLUserTeamConnections,
   parseUserToDataObject,
   parseUserToResponse,
+  UserSquidexDataProvider,
 } from '../../src/data-providers/users.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
 import logger from '../../src/utils/logger';
@@ -30,13 +31,13 @@ describe('User data provider', () => {
     baseUrl,
   });
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const userDataProvider = new UserDataProvider(
+  const userDataProvider = new UserSquidexDataProvider(
     squidexGraphqlClientMock,
     userRestClient,
   );
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-  const usersMockGraphqlServer = new UserDataProvider(
+  const usersMockGraphqlServer = new UserSquidexDataProvider(
     squidexGraphqlClientMockServer,
     userRestClient,
   );

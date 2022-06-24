@@ -311,7 +311,9 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.18.3
     "@types/node": ^14.14.45
+    "@types/prettier": ^2
     algoliasearch: ^4.11.0
+    prettier: ^2.7.1
   languageName: unknown
   linkType: soft
 
@@ -11626,6 +11628,13 @@ __metadata:
   version: 1.0.0
   resolution: "@types/podium@npm:1.0.0"
   checksum: 6a3ebbefef31205aa6f37aea0bbcda6f549eff94e1ae17a2df3e86d1012c88effc6c9f5a7df2faba4b21b6cf32af8c7f6870238530e4365f9c89930504a4f9d3
+  languageName: node
+  linkType: hard
+
+"@types/prettier@npm:^2":
+  version: 2.6.3
+  resolution: "@types/prettier@npm:2.6.3"
+  checksum: e1836699ca189fff6d2a73dc22e028b6a6f693ed1180d5998ac29fa197caf8f85aa92cb38db642e4a370e616b451cb5722ad2395dab11c78e025a1455f37d1f0
   languageName: node
   linkType: hard
 
@@ -30958,6 +30967,15 @@ fsevents@~2.1.2:
   bin:
     prettier: bin-prettier.js
   checksum: e8851a45f60f2994775f96e07964646c299b8a8f9c64da4fbd8efafc20db3458bdcedac79aed34e1d5477540b3aa04f6499adc4979cb7937f8ebd058a767d8ff
+  languageName: node
+  linkType: hard
+
+"prettier@npm:^2.7.1":
+  version: 2.7.1
+  resolution: "prettier@npm:2.7.1"
+  bin:
+    prettier: bin-prettier.js
+  checksum: 55a4409182260866ab31284d929b3cb961e5fdb91fe0d2e099dac92eaecec890f36e524b4c19e6ceae839c99c6d7195817579cdffc8e2c80da0cb794463a748b
   languageName: node
   linkType: hard
 

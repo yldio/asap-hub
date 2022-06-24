@@ -39,17 +39,18 @@ const DefaultFrame: React.FC<FrameBoundaryProps> = ({
   </ErrorBoundary>
 );
 
-export const SearchFrame: React.FC<Omit<FrameBoundaryProps, 'boundaryProps'>> =
-  ({ children, title, fallback = <Loading /> }) => (
-    <ErrorBoundary
-      title={'Something went wrong'}
-      description={'There was a problem with your search, please try again.'}
-      error={new Error()}
-    >
-      <Frame title={title} fallback={fallback}>
-        {children}
-      </Frame>
-    </ErrorBoundary>
-  );
+export const SearchFrame: React.FC<
+  Omit<FrameBoundaryProps, 'boundaryProps'>
+> = ({ children, title, fallback = <Loading /> }) => (
+  <ErrorBoundary
+    title={'Something went wrong'}
+    description={'There was a problem with your search, please try again.'}
+    error={new Error()}
+  >
+    <Frame title={title} fallback={fallback}>
+      {children}
+    </Frame>
+  </ErrorBoundary>
+);
 
 export default DefaultFrame;

@@ -49,13 +49,6 @@ type ResearchOutputFormSharingCardProps = Pick<
   clearServerValidationError?: (instancePath: string) => void;
 };
 
-export const getPublishDateValidationMessage = (e: ValidityState): string => {
-  if (e.badInput) {
-    return 'Date published should be complete or removed';
-  }
-  return 'Publish date cannot be greater than today';
-};
-
 const ResearchOutputFormSharingCard: React.FC<ResearchOutputFormSharingCardProps> =
   ({
     isSaving,
@@ -237,7 +230,9 @@ const ResearchOutputFormSharingCard: React.FC<ResearchOutputFormSharingCardProps
             onChange={onChangePublishDate}
             value={publishDate}
             max={new Date()}
-            getValidationMessage={(e) => getPublishDateValidationMessage(e)}
+            getValidationMessage={() =>
+              'Publish date cannot be greater than today'
+            }
           />
         ) : null}
       </FormCard>

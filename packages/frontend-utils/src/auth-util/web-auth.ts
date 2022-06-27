@@ -32,7 +32,7 @@ export const authorizeWithEmailPasswordFactory = (
   email: string,
   password: string,
   signup: boolean,
-) => void) => {
+) => Promise<void>) => {
   const webAuth = new WebAuth({ clientID, domain });
   return async (
     location: Location | URL,

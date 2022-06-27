@@ -39,7 +39,7 @@ type ResearchOutputFormSharingCardProps = Pick<
   onChangeAsapFunded?: (newValue: DecisionOption) => void;
   onChangeUsedInPublication?: (newValue: DecisionOption) => void;
   onChangeSharingStatus?: (newValue: ResearchOutputSharingStatus) => void;
-  onChangePublishDate?: (newValue: Date) => void;
+  onChangePublishDate?: (newValue: Date | undefined) => void;
   isSaving: boolean;
   asapFunded: DecisionOption;
   usedInPublication: DecisionOption;
@@ -230,9 +230,12 @@ const ResearchOutputFormSharingCard: React.FC<ResearchOutputFormSharingCardProps
             onChange={onChangePublishDate}
             value={publishDate}
             max={new Date()}
-            getValidationMessage={() =>
-              'Publish date cannot be greater than today'
-            }
+            getValidationMessage={(e) => {
+              if (e.badInput) {
+                return 'Date published should be complete or removed';
+              }
+              return 'Publish date cannot be greater than today';
+            }}
           />
         ) : null}
       </FormCard>

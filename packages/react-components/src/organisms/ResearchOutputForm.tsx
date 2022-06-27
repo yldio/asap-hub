@@ -439,7 +439,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
             sharingStatus={sharingStatus}
             onChangeSharingStatus={setSharingStatus}
             publishDate={publishDate}
-            onChangePublishDate={(date) => setPublishDate(new Date(date))}
+            onChangePublishDate={(date) =>
+              setPublishDate(date ? new Date(date) : undefined)
+            }
           />
           <ResearchOutputExtraInformationCard
             documentType={documentType}

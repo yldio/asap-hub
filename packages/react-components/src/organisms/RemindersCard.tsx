@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-import { Card } from '../';
+import { Card } from '..';
 import { lead } from '../colors';
 import { infoCircleIcon } from '../icons';
 import { perRem } from '../pixels';

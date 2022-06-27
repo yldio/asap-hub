@@ -1,7 +1,7 @@
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { mockLocation } from '@asap-hub/dom-test-utils';
-import { WebAuthError } from '@asap-hub/frontend-utils';
+import { WebAuthError } from '@asap-hub/auth-frontend-utils';
 
 import Login from '../Login';
 import {

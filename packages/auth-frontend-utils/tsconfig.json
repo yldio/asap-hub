@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "build",
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "jsx": "react-jsx"
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../model" },
+    { "path": "../dom-test-utils" },
+    { "path": "../react-components" }
+  ]
+}

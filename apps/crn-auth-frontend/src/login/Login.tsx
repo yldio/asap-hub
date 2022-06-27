@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { SigninPage } from '@asap-hub/react-components';
-import { extractErrorMessage, WebAuthError } from '@asap-hub/frontend-utils';
+import {
+  extractErrorMessage,
+  WebAuthError,
+} from '@asap-hub/auth-frontend-utils';
 
 import {
   authorizeWithSso,

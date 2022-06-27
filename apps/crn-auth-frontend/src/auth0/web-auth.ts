@@ -2,7 +2,7 @@ import {
   authorizeWithSsoFactory,
   authorizeWithEmailPasswordFactory,
   sendPasswordResetLinkFactory,
-} from '@asap-hub/frontend-utils';
+} from '@asap-hub/auth-frontend-utils';
 import { AUTH0_CLIENT_ID, AUTH0_DOMAIN } from '../config';
 
 export const authorizeWithSso = authorizeWithSsoFactory(

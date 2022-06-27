@@ -1,4 +1,4 @@
-export { default as alertIcon } from './alert';
+export { default as AlertIcon } from './alert';
 export { default as article } from './article';
 export { default as asapLogo } from './asap-logo';
 export { default as bioinformatics } from './bioinformatics';

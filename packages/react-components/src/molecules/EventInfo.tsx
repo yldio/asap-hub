@@ -6,13 +6,8 @@ import { events, network } from '@asap-hub/routing';
 import { Headline3, Link, Anchor } from '../atoms';
 import { lead } from '../colors';
 import { perRem, largeDesktopScreen } from '../pixels';
-import {
-  groupsIcon,
-  eventPlaceholderIcon,
-  calendarIcon,
-  speakerIcon,
-} from '../icons';
-import { AssociationList, EventTime } from '.';
+import { groupsIcon, eventPlaceholderIcon, speakerIcon } from '../icons';
+import { AssociationList, EventTime, TagList } from '.';
 
 const TITLE_LIMIT = 55;
 
@@ -36,11 +31,13 @@ const cardStyles = css({
 });
 
 const listItemStyles = css({
-  padding: `${12 / perRem}em 0`,
+  padding: `${7.5 / perRem}em 0`,
   color: lead.rgb,
-  whiteSpace: 'nowrap',
+  whiteSpace: 'break-spaces',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
+  fontSize: `${17 / perRem}em`,
+  display: 'flex',
 });
 const widthStyles = css({
   display: 'grid',
@@ -57,13 +54,13 @@ const iconStyles = css({
   verticalAlign: 'middle',
   width: `${24 / perRem}em`,
   height: `${24 / perRem}em`,
-  paddingRight: `${15 / perRem}em`,
+  paddingRight: `${9 / perRem}em`,
 });
 
 type EventInfoProps = ComponentProps<typeof EventTime> &
   Pick<
     EventResponse,
-    'id' | 'title' | 'thumbnail' | 'group' | 'status' | 'speakers'
+    'id' | 'title' | 'thumbnail' | 'group' | 'status' | 'speakers' | 'tags'
   > & {
     titleLimit?: number | null;
     showNumberOfSpeakers?: boolean;
@@ -75,7 +72,7 @@ const EventTeams: React.FC<{ speakers: EventResponse['speakers'] }> = ({
 }) => {
   const teams: EventSpeakerTeam['team'][] = speakers.reduce((acc, speaker) => {
     if ('team' in speaker && !acc.some((team) => team.id === speaker.team.id)) {
-      acc.push(speaker.team);
+      return [...acc, speaker.team];
     }
 
     return acc;
@@ -125,6 +122,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
   titleLimit = TITLE_LIMIT,
   showNumberOfSpeakers = false,
   showTeams = false,
+  tags,
   ...props
 }) => {
   const imageComponent = thumbnail ? (
@@ -161,12 +159,17 @@ const EventInfo: React.FC<EventInfoProps> = ({
               </Link>
             ) : (
               <>
-                <span css={iconStyles}>{calendarIcon}</span>ASAP Event
+                <span css={iconStyles}>{groupsIcon}</span>ASAP Event
               </>
             )}
           </div>
           {showTeams && <EventTeams speakers={props.speakers} />}
           {showNumberOfSpeakers && <EventSpeakers speakers={props.speakers} />}
+          {tags.length > 0 && (
+            <div css={listItemStyles}>
+              <TagList tags={tags} max={3} />
+            </div>
+          )}
         </div>
       </div>
     </div>

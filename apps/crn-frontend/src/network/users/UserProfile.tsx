@@ -77,6 +77,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
       },
       userId,
     ),
+    currentUser,
   );
 
   const isUserEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');

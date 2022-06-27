@@ -290,7 +290,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             Shared Outputs
             {` (${sharedOutputsCount})`}
           </TabLink>
-          {useFlags().isEnabled('USER_EVENTS') && (
+          {useFlags().isEnabled('EVENTS_SEARCH') && (
             <TabLink href={tabRoutes.upcoming({}).$}>
               Upcoming Events {` (${upcomingEventsCount})`}
             </TabLink>

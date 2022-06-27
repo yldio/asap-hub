@@ -2,9 +2,10 @@ import { css } from '@emotion/react';
 import { serializeError } from 'serialize-error';
 
 import { Card, Anchor, Button } from '../atoms';
-import { alertIcon } from '../icons';
+import { AlertIcon } from '../icons';
 import { perRem } from '../pixels';
 import { mailToSupport } from '../mail';
+import { clay } from '../colors';
 
 const styles = css({
   boxSizing: 'border-box',
@@ -55,7 +56,7 @@ const ErrorCard: React.FC<ErrorCardProps> = ({
 }) => (
   <Card padding={false} accent="red">
     <div css={styles}>
-      {alertIcon}
+      <AlertIcon color={clay.rgb} />
       <span>
         <b>{title ?? 'Something went wrong!'}</b> <br />
         {description ?? error?.message ?? 'We have encountered an error.'}

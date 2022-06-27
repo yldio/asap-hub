@@ -1,4 +1,11 @@
-const alert = (
+import { FC } from 'react';
+import { steel } from '../colors';
+
+interface AlertProps {
+  readonly color?: string;
+}
+
+const Alert: FC<AlertProps> = ({ color }) => (
   <svg
     width="24px"
     height="24px"
@@ -31,8 +38,8 @@ const alert = (
                     <g id="Group-10">
                       <g id="Group-4"></g>
                       <rect
+                        fill={color || steel.rgb}
                         id="Rectangle"
-                        fill="#CD1426"
                         x="0"
                         y="0"
                         width="24"
@@ -77,4 +84,4 @@ const alert = (
   </svg>
 );
 
-export default alert;
+export default Alert;

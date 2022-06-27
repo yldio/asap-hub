@@ -9,7 +9,7 @@ const clock = (
     xmlns="http://www.w3.org/2000/svg"
   >
     <title>Clock</title>
-    <path fill="#fff" d="M0 0h24v24H0z" />
+    <path d="M0 0h24v24H0z" />
     <path
       d="M12 9v4.8l2.2 2.4"
       stroke="#4D646B"

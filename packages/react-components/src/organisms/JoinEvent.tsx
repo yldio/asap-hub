@@ -7,7 +7,8 @@ import { subHours, parseISO, addSeconds, subMinutes } from 'date-fns';
 
 import { noop, considerEndedAfter } from '../utils';
 import { Headline2, Paragraph, Anchor, Link } from '../atoms';
-import { alertIcon } from '../icons';
+import { AlertIcon } from '../icons';
+import { clay } from '../colors';
 import { layoutStyles } from '../text';
 import { perRem, mobileScreen } from '../pixels';
 import { mailToSupport } from '../mail';
@@ -88,7 +89,9 @@ const JoinEvent: React.FC<JoinEventProps> = ({
             columnGap: `${12 / perRem}em`,
           }}
         >
-          <div css={layoutStyles}>{alertIcon}</div>
+          <div css={layoutStyles}>
+            <AlertIcon color={clay.rgb} />
+          </div>
           <Paragraph accent="ember">
             We’re sorry but we couldn’t find the link to this event.{' '}
             <br

@@ -1,12 +1,16 @@
 import { ComponentProps } from 'react';
+import { css } from '@emotion/react';
+
 import {
   eventMaterialTypes,
   EventResponse,
   EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
 } from '@asap-hub/model';
+
 import { subMinutes, parseISO } from 'date-fns';
 
-import { ToastCard, TagList, EventInfo } from '../molecules';
+import { ToastCard, EventInfo } from '../molecules';
+import { perRem, mobileScreen } from '../pixels';
 import { Link } from '../atoms';
 import { useDateHasPassed } from '../date';
 import { considerEndedAfter } from '../utils';
@@ -22,36 +26,83 @@ type EventCardProps = ComponentProps<typeof EventInfo> &
     | 'videoRecording'
     | 'presentation'
     | 'meetingMaterials'
+    | 'speakers'
   >;
-const EventCard: React.FC<EventCardProps> = ({ status, tags, ...props }) => {
+
+const buttonStyle = css({
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    marginTop: `${15 / perRem}em`,
+    width: '100%',
+  },
+});
+
+const EventCard: React.FC<EventCardProps> = ({
+  status,
+  speakers,
+  ...props
+}) => {
   const considerStartedAfter = subMinutes(
     parseISO(props.startDate),
     EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
   );
 
-  const started = useDateHasPassed(considerStartedAfter);
-  const finished = useDateHasPassed(considerEndedAfter(props.endDate));
+  const hasStarted = useDateHasPassed(considerStartedAfter);
+  const hasFinished = useDateHasPassed(considerEndedAfter(props.endDate));
   const toastCardProps = (): Omit<
     ComponentProps<typeof ToastCard>,
     'children'
   > => {
     if (status === 'Cancelled') {
-      return { toastContent: 'This event has been cancelled', type: 'alert' };
+      return {
+        toastContent: 'This event has been cancelled',
+        type: 'alert',
+      };
     }
-    if (started && !finished) {
+    if (hasStarted && !hasFinished) {
       return {
         type: 'live',
         toastContent: (
-          <span>
-            This event is currently happening.{' '}
-            {props.meetingLink && !props.hideMeetingLink && (
-              <Link href={props.meetingLink}>Join the meeting now</Link>
+          <>
+            {props.hideMeetingLink || !props.meetingLink ? (
+              <span>This in-person event is currently happening.</span>
+            ) : (
+              <span>This event is currently live.</span>
             )}
-          </span>
+          </>
+        ),
+        toastAction: (
+          <>
+            {props.meetingLink && !props.hideMeetingLink && (
+              <div css={buttonStyle}>
+                <Link
+                  href={props.meetingLink}
+                  margin={false}
+                  primary
+                  buttonStyle
+                  small
+                  stretch={false}
+                >
+                  Join meeting now
+                </Link>
+              </div>
+            )}
+          </>
         ),
       };
     }
-    if (finished) {
+
+    const hasSpeakersToBeAnnounced = speakers.find(
+      (speaker) => 'team' in speaker && !('user' in speaker),
+    );
+
+    if (!hasStarted && (speakers.length === 0 || hasSpeakersToBeAnnounced)) {
+      return {
+        type: 'info',
+        toastContent: 'More speakers to be announced.',
+      };
+    }
+
+    if (hasFinished) {
       const materialCount = eventMaterialTypes.reduce((count, key) => {
         const value = props[key];
         if (Array.isArray(value)) {
@@ -87,10 +138,10 @@ const EventCard: React.FC<EventCardProps> = ({ status, tags, ...props }) => {
       <EventInfo
         {...props}
         status={status}
+        speakers={speakers}
         showNumberOfSpeakers={true}
         showTeams={true}
       />
-      <TagList tags={tags} max={3} />
     </ToastCard>
   );
 };

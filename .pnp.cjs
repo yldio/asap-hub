@@ -10231,6 +10231,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/auth-frontend-utils/",
           "packageDependencies": [
             ["@asap-hub/auth-frontend-utils", "workspace:packages/auth-frontend-utils"],
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/core", "npm:7.18.5"],

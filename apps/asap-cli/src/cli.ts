@@ -9,9 +9,9 @@ import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';
 import * as importers from './import';
 import {
+  clearAlgoliaIndex,
   getAlgoliaSettings,
   moveAlgoliaIndex,
-  removeAlgoliaIndex,
   removeAlgoliaRecords,
   setAlgoliaSettings,
 } from './scripts/algolia';
@@ -19,8 +19,8 @@ import {
 // eslint-disable-next-line no-unused-expressions
 yargs(hideBin(process.argv))
   .command({
-    command: 'algolia:remove-index',
-    describe: 'remove the index',
+    command: 'algolia:clear-index',
+    describe: 'clears the index',
     builder: (cli) =>
       cli
         .option('appid', {
@@ -50,7 +50,7 @@ yargs(hideBin(process.argv))
       appid: string;
       apikey: string;
     }) =>
-      removeAlgoliaIndex({
+      clearAlgoliaIndex({
         algoliaAppId: appid,
         algoliaCiApiKey: apikey,
         indexName: index,

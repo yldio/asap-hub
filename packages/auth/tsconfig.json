@@ -4,8 +4,7 @@
     "rootDir": "src",
     "outDir": "build",
     "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "lib": ["esnext", "dom", "dom.iterable"]
+    "esModuleInterop": true
   },
   "include": ["src", "src/**/*.json"],
   "references": [{ "path": "../model" }]

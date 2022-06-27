@@ -2,6 +2,7 @@
 import algoliasearch from 'algoliasearch';
 import fs from 'fs/promises';
 import { resolve } from 'path';
+import prettier from 'prettier';
 
 export type GetSettings = {
   algoliaAppId: string;
@@ -18,18 +19,25 @@ export const getAlgoliaSettings = async ({
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
   const index = client.initIndex(indexName);
   const { replicas: _, ...indexSettings } = await index.getSettings();
-  await fs.writeFile(
-    `${path}/algolia-schema.json`,
-    JSON.stringify(indexSettings, null, 2),
+  const formattedIndexSettings = prettier.format(
+    JSON.stringify(indexSettings),
+    { parser: 'json' },
   );
+  await fs.writeFile(`${path}/algolia-schema.json`, formattedIndexSettings);
 
   const replicaIndexName = `algolia-${indexName}-end-date-timestamp-desc`;
   const replicaIndex = client.initIndex(replicaIndexName);
 
   const { customRanking } = await replicaIndex.getSettings();
 
+  const formattedReplicaSettings = prettier.format(
+    JSON.stringify({ customRanking }),
+    {
+      parser: 'json',
+    },
+  );
   await fs.writeFile(
     `${path}/algolia-end-date-timestamp-desc-schema.json`,
-    JSON.stringify({ customRanking }, null, 2),
+    formattedReplicaSettings,
   );
 };

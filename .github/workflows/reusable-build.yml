@@ -92,45 +92,6 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
 
-  algolia-settings:
-    needs: [transpile]
-    runs-on: ubuntu-latest
-    environment: ${{ inputs.environment-name }}
-    container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:0f5eee65db0ad426fd10ff52113aeeb0ab5d1ec1
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: ${{ inputs.environment-name }}
-      - name: Cache transpile output
-        uses: ./.github/actions/cache-build
-        with:
-          cache-prefix: ${{ steps.setup.outputs.cache-prefix-transpile }}
-          environment-name: ${{ inputs.environment-name }}
-      - name: Get Algolia Keys
-        id: algolia-keys
-        uses: ./.github/actions/algolia-keys
-        with:
-          algolia-api-key-name: ${{ steps.setup.outputs.algolia-api-key-name }}
-          algolia-app-id-name: ${{ steps.setup.outputs.algolia-app-id-name }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: Synchronize Schema
-        run: |
-          yarn algolia:set-settings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
-        env:
-          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
-
   frontend:
     needs: [definitions, transpile]
     runs-on: ubuntu-latest

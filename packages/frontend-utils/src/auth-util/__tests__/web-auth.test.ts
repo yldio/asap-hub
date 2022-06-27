@@ -1,5 +1,3 @@
-/* global globalThis */
-
 import { AuthOptions, WebAuth } from 'auth0-js';
 import { mockLocation } from '@asap-hub/dom-test-utils';
 

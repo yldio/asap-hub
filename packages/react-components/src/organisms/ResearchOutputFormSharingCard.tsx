@@ -54,7 +54,7 @@ export const getPublishDateValidationMessage = (e: ValidityState): string => {
     return 'Date published should be complete or removed';
   }
   return 'Publish date cannot be greater than today';
-}
+};
 
 const ResearchOutputFormSharingCard: React.FC<ResearchOutputFormSharingCardProps> =
   ({

@@ -186,7 +186,7 @@ it('triggers an on change for date published', async () => {
   expect(onChangeFn).toHaveBeenCalledWith(new Date('2020-12-02'));
 });
 
-it('shows the custom error message for date published', async () => {
+it('shows the custom error message for a date in the future', async () => {
   render(
     <ResearchOutputFormSharingCard
       {...props}
@@ -198,6 +198,28 @@ it('shows the custom error message for date published', async () => {
   screen.getByLabelText(/Date Published/i).click();
   userEvent.tab();
 
+  expect(
+    screen.getByText(/publish date cannot be greater than today/i),
+  ).toBeVisible();
+});
+
+it('shows the custom error message for an invalid date', async () => {
+  render(
+    <ResearchOutputFormSharingCard
+      {...props}
+      documentType="Article"
+      sharingStatus={'Public'}
+    />,
+  );
+
+  userEvent.type(screen.getByLabelText(/Date Published/i), '12-12-2999');
+  // userEvent.type(screen.getByLabelText(/Date Published/i), '12-12');
+
+  fireEvent.focusOut(screen.getByLabelText(/Date Published/i));
+
+  // expect(
+  //   screen.getByText(/Date published should be complete or removed/i),
+  // ).toBeVisible();
   expect(
     screen.getByText(/publish date cannot be greater than today/i),
   ).toBeVisible();

@@ -32,11 +32,7 @@ export const authorizeWithEmailPasswordFactory = (
   email: string,
   password: string,
   signup: boolean,
-<<<<<<< HEAD:packages/auth-frontend-utils/src/web-auth.ts
 ) => Promise<void>) => {
-=======
-) => void) => {
->>>>>>> 0fb2473a (moving auth funtions to frontend utils):packages/frontend-utils/src/auth-util/web-auth.ts
   const webAuth = new WebAuth({ clientID, domain });
   return async (
     location: Location | URL,

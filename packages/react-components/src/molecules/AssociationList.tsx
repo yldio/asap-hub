@@ -106,7 +106,7 @@ const AssociationList: FC<AssociationListProps> = ({
       {inline && <div css={iconStyles}>{icon}</div>}
       <ul css={[containerStyles, inline && inlineContainerStyles]}>
         {associations.map(({ displayName, id }) => (
-          <li css={[itemStyles, inline && inlineItemStyles]}>
+          <li key={id} css={[itemStyles, inline && inlineItemStyles]}>
             {inline || <div css={iconStyles}>{icon}</div>}
             {type === 'Team' ? (
               <Link href={network({}).teams({}).team({ teamId: id }).$}>

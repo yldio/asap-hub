@@ -6,7 +6,7 @@ import {
   news as newsRoute,
   sharedResearch,
 } from '@asap-hub/routing';
-
+import { TeamRole } from '@asap-hub/model';
 import { isEnabled } from '@asap-hub/flags';
 
 import {
@@ -17,7 +17,6 @@ import {
 } from '../organisms';
 import { perRem } from '../pixels';
 import { Display, Card, Paragraph, Link, Headline3 } from '../atoms';
-import { TeamRole } from '@asap-hub/model';
 import { lead } from '..';
 
 const styles = css({

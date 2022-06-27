@@ -28,10 +28,11 @@ export const getAlgoliaSettings = async ({
   const replicaIndexName = `algolia-${indexName}-end-date-timestamp-desc`;
   const replicaIndex = client.initIndex(replicaIndexName);
 
-  const { customRanking } = await replicaIndex.getSettings();
+  const { customRanking, attributesForFaceting, attributesToIndex } =
+    await replicaIndex.getSettings();
 
   const formattedReplicaSettings = prettier.format(
-    JSON.stringify({ customRanking }),
+    JSON.stringify({ customRanking, attributesForFaceting, attributesToIndex }),
     {
       parser: 'json',
     },

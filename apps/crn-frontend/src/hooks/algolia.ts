@@ -1,17 +1,17 @@
-import { useEffect, useState } from 'react';
-import { useCurrentUser } from '@asap-hub/react-context';
 import {
-  algoliaSearchClientFactory,
   AlgoliaSearchClient,
+  algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import { User } from '@asap-hub/auth';
+import { useCurrentUser } from '@asap-hub/react-context';
+import { useEffect, useState } from 'react';
 import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '../config';
 
 export type AlgoliaHook = {
   client: AlgoliaSearchClient;
 };
 
-export const useAlgolia = () => {
+export const useAlgolia = (algoliaIndex = ALGOLIA_INDEX) => {
   const initAlgolia = (user: User | null): AlgoliaHook => {
     if (!user) {
       throw new Error('Algolia unavailable while not logged in');
@@ -19,7 +19,7 @@ export const useAlgolia = () => {
 
     const client = algoliaSearchClientFactory({
       algoliaAppId: ALGOLIA_APP_ID,
-      algoliaIndex: ALGOLIA_INDEX,
+      algoliaIndex,
       algoliaApiKey: user.algoliaApiKey,
     });
 

@@ -202,6 +202,25 @@ describe('Group Data Provider', () => {
       );
     });
 
+    test('Should filter by user ID', async () => {
+      const userId = 'eb531b6e-195c-46e2-b347-58fb86715033';
+      squidexGraphqlClientMock.request.mockResolvedValue(
+        getSquidexGroupsGraphqlResponse(),
+      );
+
+      await groupDataProvider.fetch({ filter: { userId } });
+
+      const userFilter = `data/leaders/iv/user eq '${userId}'`;
+      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        {
+          filter: userFilter,
+          top: 50,
+          skip: 0,
+        },
+      );
+    });
+
     test('Should apply the team and user filters', async () => {
       const userId = 'eb531b6e-195c-46e2-b347-58fb86715033';
       const teamIds = ['team-id-1', 'team-id-3'];
@@ -214,7 +233,6 @@ describe('Group Data Provider', () => {
 
       const teamFilter = `data/teams/iv in ['${teamIds[0]}', '${teamIds[1]}']`;
       const userFilter = `data/leaders/iv/user eq '${userId}'`;
-
       expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         {

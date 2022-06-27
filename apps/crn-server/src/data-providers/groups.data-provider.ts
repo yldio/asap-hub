@@ -53,14 +53,16 @@ export class GroupSquidexDataProvider implements GroupDataProvider {
         [],
       );
 
-    if (options.filter && options.filter.teamId) {
-      if (options.filter.teamId.length > 1) {
-        const teamIds = options.filter.teamId
-          .map((teamId) => `'${teamId}'`)
-          .join(', ');
-        filterList.push(`data/teams/iv in [${teamIds}]`);
-      } else {
-        filterList.push(`data/teams/iv eq '${options.filter.teamId[0]}'`);
+    if (options.filter) {
+      if (options.filter.teamId) {
+        if (options.filter.teamId.length > 1) {
+          const teamIds = options.filter.teamId
+            .map((teamId) => `'${teamId}'`)
+            .join(', ');
+          filterList.push(`data/teams/iv in [${teamIds}]`);
+        } else {
+          filterList.push(`data/teams/iv eq '${options.filter.teamId[0]}'`);
+        }
       }
 
       if (options.filter.userId) {

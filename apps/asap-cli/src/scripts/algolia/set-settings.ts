@@ -24,7 +24,7 @@ export const setAlgoliaSettings = async ({
   );
   const indexSchema = JSON.parse(indexSchemaRaw);
 
-  const replicaIndexName = `${indexName}-end-date-timestamp-desc`;
+  const replicaIndexName = `${indexName}-reverse-timestamp`;
   await index
     .setSettings({
       ...indexSchema,
@@ -33,7 +33,7 @@ export const setAlgoliaSettings = async ({
     .wait();
   const replicaIndex = client.initIndex(replicaIndexName);
   const replicaIndexSchemaRaw = await fs.readFile(
-    `${path}/algolia-end-date-timestamp-desc-schema.json`,
+    `${path}/algolia-reverse-timestamp-schema.json`,
     'utf8',
   );
 

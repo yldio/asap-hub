@@ -10256,14 +10256,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/auth/",
           "packageDependencies": [
             ["@asap-hub/auth", "workspace:packages/auth"],
-            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@auth0/auth0-spa-js", "npm:1.15.0"],
+<<<<<<< HEAD
             ["@babel/runtime-corejs3", "npm:7.18.6"],
+=======
+            ["@babel/runtime-corejs3", "npm:7.18.3"],
+>>>>>>> 091bfe19 (addressing imports and cleanup auth package changes)
             ["@types/jest", "npm:26.0.24"],
-            ["@types/node", "npm:14.14.45"],
-            ["@types/pify", "npm:3.0.2"]
+            ["@types/node", "npm:14.14.45"]
           ],
           "linkType": "SOFT",
         }]
@@ -10807,19 +10809,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/react-components", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/react-components"],
             ["@asap-hub/react-context", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/react-context"],
             ["@asap-hub/routing", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/routing"],
-<<<<<<< HEAD
             ["@babel/core", "npm:7.18.6"],
             ["@babel/preset-react", "virtual:61a64643837afd5405cc03238cfc085017b2368a7dc8660b30e3544523c3f52527959ac7ec64eb44bcb071ccdae5690543b0a4ef2dd3608212fed3cd93acc0b8#npm:7.18.6"],
             ["@babel/runtime-corejs3", "npm:7.18.6"],
-=======
-            ["@babel/core", "npm:7.18.5"],
-<<<<<<< HEAD
-            ["@babel/preset-react", "virtual:61a64643837afd5405cc03238cfc085017b2368a7dc8660b30e3544523c3f52527959ac7ec64eb44bcb071ccdae5690543b0a4ef2dd3608212fed3cd93acc0b8#npm:7.17.12"],
-=======
-            ["@babel/preset-react", "virtual:341f9f33c7073ed9093966990939324f80ec0163ac2e3bd48c8bdc619f083760f01aff014660a40de53d50e1fddffa381f9117a718c796153c0575a98d77a461#npm:7.17.12"],
->>>>>>> 0fb2473a (moving auth funtions to frontend utils)
-            ["@babel/runtime-corejs3", "npm:7.18.3"],
->>>>>>> 577cfa0b (moving auth funtions to frontend utils)
             ["@emotion/babel-plugin", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.3.0"],
             ["@emotion/jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:11.3.0"],
             ["@emotion/react", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.4.0"],

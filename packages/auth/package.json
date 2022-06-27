@@ -17,12 +17,9 @@
     "@types/jest": "26.0.24"
   },
   "devDependencies": {
-    "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@auth0/auth0-spa-js": "^1.15.0",
-    "@types/auth0-js": "^9.14.4",
-    "@types/node": "^14.14.45",
-    "@types/pify": "^3.0.2"
+    "@types/node": "^14.14.45"
   }
 }

@@ -5,9 +5,6 @@ import auth0PubKeys from './pubKeys';
 
 export { auth0PubKeys };
 
-export * from './errors';
-export * from './web-auth';
-
 export type User = Pick<
   UserMetadataResponse,
   | 'id'

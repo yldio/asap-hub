@@ -54,12 +54,12 @@ describe('User data provider', () => {
 
       expect(result).toMatchObject(getUserDataObject());
     });
-    test('Should throw when user is not found', async () => {
+    test('Should return null when the user is not found', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       mockResponse.findUsersContent = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-      expect(await userDataProvider.fetchById('not-found')).toEqual(null);
+      expect(await userDataProvider.fetchById('not-found')).toBeNull();
     });
     test('Should return the user when they are found, even if they are not onboarded', async () => {
       const nonOnboardedUserResponse = getSquidexUserGraphqlResponse();

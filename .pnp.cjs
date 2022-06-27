@@ -220,15 +220,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@algolia/cache-browser-local-storage",
-        "npm:4.11.0"
+        "npm:4.13.1"
       ],
       [
         "@algolia/cache-common",
-        "npm:4.11.0"
+        "npm:4.13.1"
       ],
       [
         "@algolia/cache-in-memory",
-        "npm:4.11.0"
+        "npm:4.13.1"
       ],
       [
         "@algolia/cli",
@@ -236,11 +236,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@algolia/client-account",
-        "npm:4.11.0"
+        "npm:4.13.1"
       ],
       [
         "@algolia/client-analytics",
-        "npm:4.11.0"
+        "npm:4.13.1"
       ],
       [
         "@algolia/client-common",
@@ -248,7 +248,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@algolia/client-personalization",
-        "npm:4.11.0"
+        "npm:4.13.1"
       ],
       [
         "@algolia/client-search",
@@ -256,27 +256,27 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@algolia/logger-common",
-        "npm:4.11.0"
+        "npm:4.13.1"
       ],
       [
         "@algolia/logger-console",
-        "npm:4.11.0"
+        "npm:4.13.1"
       ],
       [
         "@algolia/requester-browser-xhr",
-        "npm:4.11.0"
+        "npm:4.13.1"
       ],
       [
         "@algolia/requester-common",
-        "npm:4.11.0"
+        "npm:4.13.1"
       ],
       [
         "@algolia/requester-node-http",
-        "npm:4.11.0"
+        "npm:4.13.1"
       ],
       [
         "@algolia/transporter",
-        "npm:4.11.0"
+        "npm:4.13.1"
       ],
       [
         "@ampproject/remapping",
@@ -2707,7 +2707,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "algoliasearch",
-        "npm:4.11.0"
+        "npm:4.13.1"
       ],
       [
         "alphanum-sort",
@@ -9840,11 +9840,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@algolia/cache-browser-local-storage", [
-        ["npm:4.11.0", {
-          "packageLocation": "./.yarn/cache/@algolia-cache-browser-local-storage-npm-4.11.0-f7f59e04cf-bf06711107.zip/node_modules/@algolia/cache-browser-local-storage/",
+        ["npm:4.13.1", {
+          "packageLocation": "./.yarn/cache/@algolia-cache-browser-local-storage-npm-4.13.1-c6b6f3cb62-ee7674971a.zip/node_modules/@algolia/cache-browser-local-storage/",
           "packageDependencies": [
-            ["@algolia/cache-browser-local-storage", "npm:4.11.0"],
-            ["@algolia/cache-common", "npm:4.11.0"]
+            ["@algolia/cache-browser-local-storage", "npm:4.13.1"],
+            ["@algolia/cache-common", "npm:4.13.1"]
           ],
           "linkType": "HARD",
         }]
@@ -9857,27 +9857,27 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:4.11.0", {
-          "packageLocation": "./.yarn/cache/@algolia-cache-common-npm-4.11.0-b71fcfcc9f-d69a0f4e1b.zip/node_modules/@algolia/cache-common/",
-          "packageDependencies": [
-            ["@algolia/cache-common", "npm:4.11.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:4.12.0", {
           "packageLocation": "./.yarn/cache/@algolia-cache-common-npm-4.12.0-f20c56488e-3d52a57ff3.zip/node_modules/@algolia/cache-common/",
           "packageDependencies": [
             ["@algolia/cache-common", "npm:4.12.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:4.13.1", {
+          "packageLocation": "./.yarn/cache/@algolia-cache-common-npm-4.13.1-e65eb6a114-0ec5f13441.zip/node_modules/@algolia/cache-common/",
+          "packageDependencies": [
+            ["@algolia/cache-common", "npm:4.13.1"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@algolia/cache-in-memory", [
-        ["npm:4.11.0", {
-          "packageLocation": "./.yarn/cache/@algolia-cache-in-memory-npm-4.11.0-4aae0a85df-59f788eb55.zip/node_modules/@algolia/cache-in-memory/",
+        ["npm:4.13.1", {
+          "packageLocation": "./.yarn/cache/@algolia-cache-in-memory-npm-4.13.1-3ea72a883f-d1a5935de6.zip/node_modules/@algolia/cache-in-memory/",
           "packageDependencies": [
-            ["@algolia/cache-in-memory", "npm:4.11.0"],
-            ["@algolia/cache-common", "npm:4.11.0"]
+            ["@algolia/cache-in-memory", "npm:4.13.1"],
+            ["@algolia/cache-common", "npm:4.13.1"]
           ],
           "linkType": "HARD",
         }]
@@ -9904,26 +9904,26 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@algolia/client-account", [
-        ["npm:4.11.0", {
-          "packageLocation": "./.yarn/cache/@algolia-client-account-npm-4.11.0-2698296be1-a35833bfed.zip/node_modules/@algolia/client-account/",
+        ["npm:4.13.1", {
+          "packageLocation": "./.yarn/cache/@algolia-client-account-npm-4.13.1-ba9b82e153-3a3fb580c5.zip/node_modules/@algolia/client-account/",
           "packageDependencies": [
-            ["@algolia/client-account", "npm:4.11.0"],
-            ["@algolia/client-common", "npm:4.11.0"],
-            ["@algolia/client-search", "npm:4.11.0"],
-            ["@algolia/transporter", "npm:4.11.0"]
+            ["@algolia/client-account", "npm:4.13.1"],
+            ["@algolia/client-common", "npm:4.13.1"],
+            ["@algolia/client-search", "npm:4.13.1"],
+            ["@algolia/transporter", "npm:4.13.1"]
           ],
           "linkType": "HARD",
         }]
       ]],
       ["@algolia/client-analytics", [
-        ["npm:4.11.0", {
-          "packageLocation": "./.yarn/cache/@algolia-client-analytics-npm-4.11.0-52bbf1c8fa-d85ccf8f51.zip/node_modules/@algolia/client-analytics/",
+        ["npm:4.13.1", {
+          "packageLocation": "./.yarn/cache/@algolia-client-analytics-npm-4.13.1-c1b43b438c-b593011160.zip/node_modules/@algolia/client-analytics/",
           "packageDependencies": [
-            ["@algolia/client-analytics", "npm:4.11.0"],
-            ["@algolia/client-common", "npm:4.11.0"],
-            ["@algolia/client-search", "npm:4.11.0"],
-            ["@algolia/requester-common", "npm:4.11.0"],
-            ["@algolia/transporter", "npm:4.11.0"]
+            ["@algolia/client-analytics", "npm:4.13.1"],
+            ["@algolia/client-common", "npm:4.13.1"],
+            ["@algolia/client-search", "npm:4.13.1"],
+            ["@algolia/requester-common", "npm:4.13.1"],
+            ["@algolia/transporter", "npm:4.13.1"]
           ],
           "linkType": "HARD",
         }]
@@ -9938,15 +9938,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:4.11.0", {
-          "packageLocation": "./.yarn/cache/@algolia-client-common-npm-4.11.0-adc3ae53a9-791fda2cc2.zip/node_modules/@algolia/client-common/",
-          "packageDependencies": [
-            ["@algolia/client-common", "npm:4.11.0"],
-            ["@algolia/requester-common", "npm:4.11.0"],
-            ["@algolia/transporter", "npm:4.11.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:4.12.0", {
           "packageLocation": "./.yarn/cache/@algolia-client-common-npm-4.12.0-7ded53ec4e-dee730abd9.zip/node_modules/@algolia/client-common/",
           "packageDependencies": [
@@ -9955,16 +9946,25 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@algolia/transporter", "npm:4.12.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:4.13.1", {
+          "packageLocation": "./.yarn/cache/@algolia-client-common-npm-4.13.1-b93cdb6d0d-4a3d5a14f4.zip/node_modules/@algolia/client-common/",
+          "packageDependencies": [
+            ["@algolia/client-common", "npm:4.13.1"],
+            ["@algolia/requester-common", "npm:4.13.1"],
+            ["@algolia/transporter", "npm:4.13.1"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@algolia/client-personalization", [
-        ["npm:4.11.0", {
-          "packageLocation": "./.yarn/cache/@algolia-client-personalization-npm-4.11.0-0e8e3247d2-fd9230b375.zip/node_modules/@algolia/client-personalization/",
+        ["npm:4.13.1", {
+          "packageLocation": "./.yarn/cache/@algolia-client-personalization-npm-4.13.1-02aaa55c87-9a318235f5.zip/node_modules/@algolia/client-personalization/",
           "packageDependencies": [
-            ["@algolia/client-personalization", "npm:4.11.0"],
-            ["@algolia/client-common", "npm:4.11.0"],
-            ["@algolia/requester-common", "npm:4.11.0"],
-            ["@algolia/transporter", "npm:4.11.0"]
+            ["@algolia/client-personalization", "npm:4.13.1"],
+            ["@algolia/client-common", "npm:4.13.1"],
+            ["@algolia/requester-common", "npm:4.13.1"],
+            ["@algolia/transporter", "npm:4.13.1"]
           ],
           "linkType": "HARD",
         }]
@@ -9980,13 +9980,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:4.11.0", {
-          "packageLocation": "./.yarn/cache/@algolia-client-search-npm-4.11.0-e5e5f7eb13-3e6c518a43.zip/node_modules/@algolia/client-search/",
+        ["npm:4.13.1", {
+          "packageLocation": "./.yarn/cache/@algolia-client-search-npm-4.13.1-9a4483967a-44e630b866.zip/node_modules/@algolia/client-search/",
           "packageDependencies": [
-            ["@algolia/client-search", "npm:4.11.0"],
-            ["@algolia/client-common", "npm:4.11.0"],
-            ["@algolia/requester-common", "npm:4.11.0"],
-            ["@algolia/transporter", "npm:4.11.0"]
+            ["@algolia/client-search", "npm:4.13.1"],
+            ["@algolia/client-common", "npm:4.13.1"],
+            ["@algolia/requester-common", "npm:4.13.1"],
+            ["@algolia/transporter", "npm:4.13.1"]
           ],
           "linkType": "HARD",
         }]
@@ -9999,37 +9999,37 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:4.11.0", {
-          "packageLocation": "./.yarn/cache/@algolia-logger-common-npm-4.11.0-63a0936896-1b081abbf8.zip/node_modules/@algolia/logger-common/",
-          "packageDependencies": [
-            ["@algolia/logger-common", "npm:4.11.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:4.12.0", {
           "packageLocation": "./.yarn/cache/@algolia-logger-common-npm-4.12.0-276e2e970c-37f969db49.zip/node_modules/@algolia/logger-common/",
           "packageDependencies": [
             ["@algolia/logger-common", "npm:4.12.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:4.13.1", {
+          "packageLocation": "./.yarn/cache/@algolia-logger-common-npm-4.13.1-83d2aed03f-7330b794af.zip/node_modules/@algolia/logger-common/",
+          "packageDependencies": [
+            ["@algolia/logger-common", "npm:4.13.1"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@algolia/logger-console", [
-        ["npm:4.11.0", {
-          "packageLocation": "./.yarn/cache/@algolia-logger-console-npm-4.11.0-d33e863978-974a65e5b9.zip/node_modules/@algolia/logger-console/",
+        ["npm:4.13.1", {
+          "packageLocation": "./.yarn/cache/@algolia-logger-console-npm-4.13.1-934451a7d6-c78f50a784.zip/node_modules/@algolia/logger-console/",
           "packageDependencies": [
-            ["@algolia/logger-console", "npm:4.11.0"],
-            ["@algolia/logger-common", "npm:4.11.0"]
+            ["@algolia/logger-console", "npm:4.13.1"],
+            ["@algolia/logger-common", "npm:4.13.1"]
           ],
           "linkType": "HARD",
         }]
       ]],
       ["@algolia/requester-browser-xhr", [
-        ["npm:4.11.0", {
-          "packageLocation": "./.yarn/cache/@algolia-requester-browser-xhr-npm-4.11.0-f7ebdbb8cb-8e0f0a848a.zip/node_modules/@algolia/requester-browser-xhr/",
+        ["npm:4.13.1", {
+          "packageLocation": "./.yarn/cache/@algolia-requester-browser-xhr-npm-4.13.1-66d7572617-6ae8e3b03b.zip/node_modules/@algolia/requester-browser-xhr/",
           "packageDependencies": [
-            ["@algolia/requester-browser-xhr", "npm:4.11.0"],
-            ["@algolia/requester-common", "npm:4.11.0"]
+            ["@algolia/requester-browser-xhr", "npm:4.13.1"],
+            ["@algolia/requester-common", "npm:4.13.1"]
           ],
           "linkType": "HARD",
         }]
@@ -10042,27 +10042,27 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:4.11.0", {
-          "packageLocation": "./.yarn/cache/@algolia-requester-common-npm-4.11.0-dcc34f6d1d-d503d488c5.zip/node_modules/@algolia/requester-common/",
-          "packageDependencies": [
-            ["@algolia/requester-common", "npm:4.11.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:4.12.0", {
           "packageLocation": "./.yarn/cache/@algolia-requester-common-npm-4.12.0-5600d71606-f1fe357479.zip/node_modules/@algolia/requester-common/",
           "packageDependencies": [
             ["@algolia/requester-common", "npm:4.12.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:4.13.1", {
+          "packageLocation": "./.yarn/cache/@algolia-requester-common-npm-4.13.1-c0685bf000-4e8039f7fd.zip/node_modules/@algolia/requester-common/",
+          "packageDependencies": [
+            ["@algolia/requester-common", "npm:4.13.1"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@algolia/requester-node-http", [
-        ["npm:4.11.0", {
-          "packageLocation": "./.yarn/cache/@algolia-requester-node-http-npm-4.11.0-5c4fa2d971-148a2053aa.zip/node_modules/@algolia/requester-node-http/",
+        ["npm:4.13.1", {
+          "packageLocation": "./.yarn/cache/@algolia-requester-node-http-npm-4.13.1-c7924c91b4-d25fe56c4a.zip/node_modules/@algolia/requester-node-http/",
           "packageDependencies": [
-            ["@algolia/requester-node-http", "npm:4.11.0"],
-            ["@algolia/requester-common", "npm:4.11.0"]
+            ["@algolia/requester-node-http", "npm:4.13.1"],
+            ["@algolia/requester-common", "npm:4.13.1"]
           ],
           "linkType": "HARD",
         }]
@@ -10078,16 +10078,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:4.11.0", {
-          "packageLocation": "./.yarn/cache/@algolia-transporter-npm-4.11.0-0ccfff310b-650eee6c5a.zip/node_modules/@algolia/transporter/",
-          "packageDependencies": [
-            ["@algolia/transporter", "npm:4.11.0"],
-            ["@algolia/cache-common", "npm:4.11.0"],
-            ["@algolia/logger-common", "npm:4.11.0"],
-            ["@algolia/requester-common", "npm:4.11.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:4.12.0", {
           "packageLocation": "./.yarn/cache/@algolia-transporter-npm-4.12.0-3bf77c4c4b-025cef43fb.zip/node_modules/@algolia/transporter/",
           "packageDependencies": [
@@ -10095,6 +10085,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@algolia/cache-common", "npm:4.12.0"],
             ["@algolia/logger-common", "npm:4.12.0"],
             ["@algolia/requester-common", "npm:4.12.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:4.13.1", {
+          "packageLocation": "./.yarn/cache/@algolia-transporter-npm-4.13.1-4c7713984b-c99451f371.zip/node_modules/@algolia/transporter/",
+          "packageDependencies": [
+            ["@algolia/transporter", "npm:4.13.1"],
+            ["@algolia/cache-common", "npm:4.13.1"],
+            ["@algolia/logger-common", "npm:4.13.1"],
+            ["@algolia/requester-common", "npm:4.13.1"]
           ],
           "linkType": "HARD",
         }]
@@ -10153,7 +10153,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.18.3"],
             ["@types/node", "npm:14.14.45"],
             ["@types/prettier", "npm:2.6.3"],
-            ["algoliasearch", "npm:4.11.0"],
+            ["algoliasearch", "npm:4.13.1"],
             ["prettier", "npm:2.7.1"]
           ],
           "linkType": "SOFT",
@@ -10188,7 +10188,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/uuid", "npm:8.3.4"],
             ["@types/yargs", "npm:17.0.5"],
             ["@yarnpkg/pnpify", "npm:3.1.3"],
-            ["algoliasearch", "npm:4.11.0"],
+            ["algoliasearch", "npm:4.13.1"],
             ["apr-intercept", "npm:3.0.4"],
             ["async-sema", "npm:3.1.1"],
             ["aws-sdk", "npm:2.907.0"],
@@ -10421,7 +10421,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/pnpify", "npm:3.1.3"],
             ["ajv", "npm:8.10.0"],
             ["ajv-formats", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:2.1.1"],
-            ["algoliasearch", "npm:4.11.0"],
+            ["algoliasearch", "npm:4.13.1"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.7"],
             ["aws-sdk", "npm:2.907.0"],
@@ -34444,24 +34444,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:4.11.0", {
-          "packageLocation": "./.yarn/cache/algoliasearch-npm-4.11.0-3951584076-016f5812fc.zip/node_modules/algoliasearch/",
+        ["npm:4.13.1", {
+          "packageLocation": "./.yarn/cache/algoliasearch-npm-4.13.1-c21b78d633-c2083e7827.zip/node_modules/algoliasearch/",
           "packageDependencies": [
-            ["algoliasearch", "npm:4.11.0"],
-            ["@algolia/cache-browser-local-storage", "npm:4.11.0"],
-            ["@algolia/cache-common", "npm:4.11.0"],
-            ["@algolia/cache-in-memory", "npm:4.11.0"],
-            ["@algolia/client-account", "npm:4.11.0"],
-            ["@algolia/client-analytics", "npm:4.11.0"],
-            ["@algolia/client-common", "npm:4.11.0"],
-            ["@algolia/client-personalization", "npm:4.11.0"],
-            ["@algolia/client-search", "npm:4.11.0"],
-            ["@algolia/logger-common", "npm:4.11.0"],
-            ["@algolia/logger-console", "npm:4.11.0"],
-            ["@algolia/requester-browser-xhr", "npm:4.11.0"],
-            ["@algolia/requester-common", "npm:4.11.0"],
-            ["@algolia/requester-node-http", "npm:4.11.0"],
-            ["@algolia/transporter", "npm:4.11.0"]
+            ["algoliasearch", "npm:4.13.1"],
+            ["@algolia/cache-browser-local-storage", "npm:4.13.1"],
+            ["@algolia/cache-common", "npm:4.13.1"],
+            ["@algolia/cache-in-memory", "npm:4.13.1"],
+            ["@algolia/client-account", "npm:4.13.1"],
+            ["@algolia/client-analytics", "npm:4.13.1"],
+            ["@algolia/client-common", "npm:4.13.1"],
+            ["@algolia/client-personalization", "npm:4.13.1"],
+            ["@algolia/client-search", "npm:4.13.1"],
+            ["@algolia/logger-common", "npm:4.13.1"],
+            ["@algolia/logger-console", "npm:4.13.1"],
+            ["@algolia/requester-browser-xhr", "npm:4.13.1"],
+            ["@algolia/requester-common", "npm:4.13.1"],
+            ["@algolia/requester-node-http", "npm:4.13.1"],
+            ["@algolia/transporter", "npm:4.13.1"]
           ],
           "linkType": "HARD",
         }]

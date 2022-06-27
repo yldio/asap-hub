@@ -4,7 +4,7 @@ import {
 } from '@asap-hub/algolia';
 import { User } from '@asap-hub/auth';
 import { useCurrentUser } from '@asap-hub/react-context';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '../config';
 
 export type AlgoliaHook = {
@@ -12,27 +12,30 @@ export type AlgoliaHook = {
 };
 
 export const useAlgolia = (algoliaIndex = ALGOLIA_INDEX) => {
-  const initAlgolia = (user: User | null): AlgoliaHook => {
-    if (!user) {
-      throw new Error('Algolia unavailable while not logged in');
-    }
+  const initAlgolia = useCallback(
+    (user: User | null): AlgoliaHook => {
+      if (!user) {
+        throw new Error('Algolia unavailable while not logged in');
+      }
 
-    const client = algoliaSearchClientFactory({
-      algoliaAppId: ALGOLIA_APP_ID,
-      algoliaIndex,
-      algoliaApiKey: user.algoliaApiKey,
-    });
+      const client = algoliaSearchClientFactory({
+        algoliaAppId: ALGOLIA_APP_ID,
+        algoliaIndex,
+        algoliaApiKey: user.algoliaApiKey,
+      });
 
-    return {
-      client,
-    };
-  };
+      return {
+        client,
+      };
+    },
+    [algoliaIndex],
+  );
   const user = useCurrentUser();
   const [algolia, setAlgolia] = useState(initAlgolia(user));
 
   useEffect(() => {
     setAlgolia(initAlgolia(user));
-  }, [user]);
+  }, [user, initAlgolia]);
 
   return algolia;
 };

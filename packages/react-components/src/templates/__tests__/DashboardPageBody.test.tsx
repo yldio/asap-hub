@@ -61,6 +61,13 @@ it('renders news section when there are no pages', () => {
   ).toEqual(['News Title', 'Event Title']);
 });
 
+it('hides add links to your work space section when user is not a member of a team', () => {
+  const { rerender } = render(<DashboardPageBody {...props} teamId="12345" />);
+  expect(screen.queryByText(/Add important links/i)).toBeVisible();
+  rerender(<DashboardPageBody {...props} teamId={undefined} />);
+  expect(screen.queryByText(/Add important links/i)).toBeNull();
+});
+
 describe('the reminders card', () => {
   it('does not show reminders when the feature flag is disabled (REGRESSION)', () => {
     const { rerender } = render(<DashboardPageBody {...props} />);

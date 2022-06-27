@@ -381,15 +381,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/auth@workspace:packages/auth"
   dependencies:
-    "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@auth0/auth0-spa-js": ^1.15.0
     "@babel/runtime-corejs3": 7.18.3
-    "@types/auth0-js": ^9.14.4
     "@types/jest": 26.0.24
     "@types/node": ^14.14.45
-    "@types/pify": ^3.0.2
   languageName: unknown
   linkType: soft
 

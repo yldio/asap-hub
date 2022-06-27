@@ -10207,15 +10207,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/auth/",
           "packageDependencies": [
             ["@asap-hub/auth", "workspace:packages/auth"],
-            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@auth0/auth0-spa-js", "npm:1.15.0"],
             ["@babel/runtime-corejs3", "npm:7.18.3"],
-            ["@types/auth0-js", "npm:9.14.4"],
             ["@types/jest", "npm:26.0.24"],
-            ["@types/node", "npm:14.14.45"],
-            ["@types/pify", "npm:3.0.2"]
+            ["@types/node", "npm:14.14.45"]
           ],
           "linkType": "SOFT",
         }]

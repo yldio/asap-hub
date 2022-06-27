@@ -4,7 +4,9 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { startOfTomorrow } from 'date-fns';
 import { ComponentProps } from 'react';
-import ResearchOutputFormSharingCard from '../ResearchOutputFormSharingCard';
+import ResearchOutputFormSharingCard, {
+  getPublishDateValidationMessage,
+} from '../ResearchOutputFormSharingCard';
 
 const props: ComponentProps<typeof ResearchOutputFormSharingCard> = {
   description: '',
@@ -203,28 +205,6 @@ it('shows the custom error message for a date in the future', async () => {
   ).toBeVisible();
 });
 
-it('shows the custom error message for an invalid date', async () => {
-  render(
-    <ResearchOutputFormSharingCard
-      {...props}
-      documentType="Article"
-      sharingStatus={'Public'}
-    />,
-  );
-
-  userEvent.type(screen.getByLabelText(/Date Published/i), '12-12-2999');
-  // userEvent.type(screen.getByLabelText(/Date Published/i), '12-12');
-
-  fireEvent.focusOut(screen.getByLabelText(/Date Published/i));
-
-  // expect(
-  //   screen.getByText(/Date published should be complete or removed/i),
-  // ).toBeVisible();
-  expect(
-    screen.getByText(/publish date cannot be greater than today/i),
-  ).toBeVisible();
-});
-
 it('displays server side validation error for link and calls clears function when changed', async () => {
   const mockClearError = jest.fn();
   render(
@@ -277,4 +257,32 @@ it('displays server side validation error for title and calls clears function wh
 
   userEvent.type(screen.getByLabelText(/title/i), 'a');
   expect(mockClearError).toHaveBeenCalledWith('/title');
+});
+
+describe('getPublishDateValidationMessage returns', () => {
+  const e: ValidityState = {
+    badInput: false,
+    rangeOverflow: false,
+    rangeUnderflow: false,
+    stepMismatch: false,
+    tooLong: false,
+    tooShort: false,
+    typeMismatch: false,
+    valid: false,
+    valueMissing: false,
+    customError: false,
+    patternMismatch: false,
+  };
+
+  it('a message when the date is in the future', () => {
+    expect(
+      getPublishDateValidationMessage({ ...e, rangeOverflow: true }),
+    ).toEqual('Publish date cannot be greater than today');
+  });
+
+  it('a message when the date is invalid', () => {
+    expect(getPublishDateValidationMessage({ ...e, badInput: true })).toEqual(
+      'Date published should be complete or removed',
+    );
+  });
 });

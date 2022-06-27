@@ -28,14 +28,14 @@ export const getAlgoliaSettings = async ({
   const replicaIndexName = `${indexName}-reverse-timestamp`;
   const replicaIndex = client.initIndex(replicaIndexName);
 
-  const { customRanking, attributesForFaceting, searchableAttributes } =
+  const { customRanking, attributesForFaceting, attributesToIndex } =
     await replicaIndex.getSettings();
 
   const formattedReplicaSettings = prettier.format(
     JSON.stringify({
       customRanking,
       attributesForFaceting,
-      searchableAttributes,
+      attributesToIndex,
     }),
     {
       parser: 'json',

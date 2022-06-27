@@ -25,7 +25,6 @@ export const setAlgoliaSettings = async ({
   const indexSchema = JSON.parse(indexSchemaRaw);
 
   const replicaIndexName = `${indexName}-end-date-timestamp-desc`;
-  console.log(replicaIndexName);
   await index
     .setSettings({
       ...indexSchema,

@@ -25,19 +25,24 @@ export const getAlgoliaSettings = async ({
   );
   await fs.writeFile(`${path}/algolia-schema.json`, formattedIndexSettings);
 
-  const replicaIndexName = `algolia-${indexName}-end-date-timestamp-desc`;
+  const replicaIndexName = `${indexName}-reverse-timestamp`;
   const replicaIndex = client.initIndex(replicaIndexName);
 
-  const { customRanking } = await replicaIndex.getSettings();
+  const { customRanking, attributesForFaceting, searchableAttributes } =
+    await replicaIndex.getSettings();
 
   const formattedReplicaSettings = prettier.format(
-    JSON.stringify({ customRanking }),
+    JSON.stringify({
+      customRanking,
+      attributesForFaceting,
+      searchableAttributes,
+    }),
     {
       parser: 'json',
     },
   );
   await fs.writeFile(
-    `${path}/algolia-end-date-timestamp-desc-schema.json`,
+    `${path}/algolia-reverse-timestamp-schema.json`,
     formattedReplicaSettings,
   );
 };

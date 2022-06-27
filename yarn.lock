@@ -365,12 +365,16 @@ __metadata:
   resolution: "@asap-hub/auth-frontend-utils@workspace:packages/auth-frontend-utils"
   dependencies:
 <<<<<<< HEAD
+<<<<<<< HEAD
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/core": 7.18.5
     "@babel/preset-react": 7.17.12
 =======
+=======
+    "@asap-hub/dom-test-utils": "workspace:*"
+>>>>>>> 70cb2398 (fixing dependencies)
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/core": 7.18.5

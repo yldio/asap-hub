@@ -10240,12 +10240,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/auth-frontend-utils", "workspace:packages/auth-frontend-utils"],
 <<<<<<< HEAD
+<<<<<<< HEAD
             ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/core", "npm:7.18.5"],
             ["@babel/preset-react", "virtual:61a64643837afd5405cc03238cfc085017b2368a7dc8660b30e3544523c3f52527959ac7ec64eb44bcb071ccdae5690543b0a4ef2dd3608212fed3cd93acc0b8#npm:7.17.12"],
 =======
+=======
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
+>>>>>>> 70cb2398 (fixing dependencies)
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/core", "npm:7.18.5"],

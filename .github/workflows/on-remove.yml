@@ -110,8 +110,7 @@ jobs:
         with:
           environment-name: Branch
       - name: Rebuild dependencies
-        shell: bash
-        run: yarn rebuild
+        run: yarn build:babel
       - name: Get Algolia Keys
         id: algolia-keys
         uses: ./.github/actions/algolia-keys

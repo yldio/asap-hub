@@ -29,6 +29,9 @@ export const algoliaSearchClientFactory = ({
   const algoliaSearchClient = algoliasearch(algoliaAppId, algoliaApiKey);
 
   const index = algoliaSearchClient.initIndex(algoliaIndex);
+  const reverseIndex = algoliaSearchClient.initIndex(
+    `${algoliaIndex}-reverse-timestamp`,
+  );
 
-  return new AlgoliaSearchClient(index);
+  return new AlgoliaSearchClient(index, reverseIndex);
 };

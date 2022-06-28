@@ -100,7 +100,7 @@ export const parseGraphQLResearchOutput = (
     addedDate: data.addedDate,
     lastUpdatedPartial:
       data.lastUpdatedPartial || output.lastModified || output.created,
-    accessInstructions: data.accessInstructions || undefined,
+    usageNotes: data.usageNotes || undefined,
     ...optionalAuthors,
     ...optionalTeams,
     sharingStatus:

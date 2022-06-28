@@ -35,7 +35,7 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
   ),
   link: text('Link', 'http://example.com'),
   tags: array('Tags', ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5']),
-  accessInstructions: text(
+  usageNotes: text(
     'Access Instructions',
     'If you need many people to view a file at once, publish it and create a link to share to viewers. You can give edit access to people who need to edit or comment. Up to 100 people with view, edit, or comment permissions can work at the same time. When more than 100 people are accessing a file, only the owner and some users with editing permissions can edit the file.',
   ),

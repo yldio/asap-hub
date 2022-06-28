@@ -293,9 +293,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>(
     researchOutputData?.link || '',
   );
-  const [accessInstructions, setAccessInstructions] = useState<
-    ResearchOutputPostRequest['accessInstructions']
-  >(researchOutputData?.accessInstructions || '');
+  const [usageNotes, setUsageNotes] = useState<
+    ResearchOutputPostRequest['usageNotes']
+  >(researchOutputData?.usageNotes || '');
   const [asapFunded, setAsapFunded] = useState<DecisionOption>(
     getDecision(researchOutputData?.asapFunded),
   );
@@ -391,7 +391,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
           ),
           labs: labs.map(({ value }) => value),
           teams: teams.map(({ value }) => value),
-          accessInstructions,
+          usageNotes,
           asapFunded: convertDecisionToBoolean(asapFunded),
           usedInPublication: convertDecisionToBoolean(usedInPublication),
           sharingStatus,
@@ -450,8 +450,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
             tagSuggestions={tagSuggestions}
             tags={tags}
             onChangeTags={setTags}
-            accessInstructions={accessInstructions}
-            onChangeAccessInstructions={setAccessInstructions}
+            usageNotes={usageNotes}
+            onChangeUsageNotes={setUsageNotes}
             identifier={identifier}
             setIdentifier={setIdentifier}
             identifierType={identifierType}

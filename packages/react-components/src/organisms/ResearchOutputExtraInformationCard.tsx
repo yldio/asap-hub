@@ -22,7 +22,7 @@ import {
 type ResearchOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
   | 'tags'
-  | 'accessInstructions'
+  | 'usageNotes'
   | 'labCatalogNumber'
   | 'methods'
   | 'organisms'
@@ -32,7 +32,7 @@ type ResearchOutputExtraInformationProps = Pick<
     ComponentProps<typeof LabeledMultiSelect>['suggestions']
   >;
   onChangeTags?: (values: string[]) => void;
-  onChangeAccessInstructions?: (value: string) => void;
+  onChangeUsageNotes?: (value: string) => void;
   onChangeLabCatalogNumber?: (value: string) => void;
   onChangeMethods?: (value: string[]) => void;
   onChangeOrganisms?: (value: string[]) => void;
@@ -49,8 +49,8 @@ const ResearchOutputExtraInformationCard: React.FC<ResearchOutputExtraInformatio
     onChangeTags = noop,
     tags,
     tagSuggestions,
-    onChangeAccessInstructions = noop,
-    accessInstructions,
+    onChangeUsageNotes = noop,
+    usageNotes,
     isSaving,
     identifier = '',
     identifierType = ResearchOutputIdentifierType.None,
@@ -176,10 +176,10 @@ const ResearchOutputExtraInformationCard: React.FC<ResearchOutputExtraInformatio
         <LabeledTextArea
           title="Usage Notes"
           subtitle="(optional)"
-          onChange={onChangeAccessInstructions}
+          onChange={onChangeUsageNotes}
           placeholder="E.g. To access the output, you will first need to create an account on..."
           enabled={!isSaving}
-          value={accessInstructions || ''}
+          value={usageNotes || ''}
         />
       </FormCard>
     );

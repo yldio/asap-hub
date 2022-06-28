@@ -174,7 +174,7 @@ export type ResearchOutputSharingStatus = typeof sharingStatuses[number];
 export type ResearchOutputResponse = {
   readonly id: string;
 
-  readonly accessInstructions?: string;
+  readonly usageNotes?: string;
   readonly accession?: string;
   readonly addedDate: string;
   readonly asapFunded?: boolean;
@@ -204,7 +204,7 @@ export type ResearchOutputResponse = {
 };
 
 export type ResearchOutputPostRequest = {
-  accessInstructions?: string;
+  usageNotes?: string;
   accession?: string;
   addedDate: string;
   asapFunded?: boolean;

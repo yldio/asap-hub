@@ -1,10 +1,9 @@
-import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
-import { formatISO, subDays } from 'date-fns';
-import { text, number, select } from '@storybook/addon-knobs';
 import { TeamProfilePage } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
-
+import { number, select, text } from '@storybook/addon-knobs';
+import { formatISO, subDays } from 'date-fns';
+import { ComponentProps } from 'react';
+import { StaticRouter } from 'react-router-dom';
 import { LayoutDecorator } from './layout';
 
 export default {
@@ -23,6 +22,7 @@ const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
   labCount: number('Lab count', 15),
   expertiseAndResourceTags: [],
   teamListElementId: 'uuid',
+  upcomingEventsCount: 7,
   pointOfContact: {
     id: '2',
     displayName: 'Peter Venkman',

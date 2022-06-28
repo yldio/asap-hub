@@ -1,10 +1,9 @@
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
-import { formatISO } from 'date-fns';
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
+import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { fireEvent } from '@testing-library/dom';
-
+import { render, screen } from '@testing-library/react';
+import { formatISO } from 'date-fns';
+import { ComponentProps } from 'react';
 import TeamProfileHeader from '../TeamProfileHeader';
 
 const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
@@ -16,19 +15,18 @@ const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   lastModifiedDate: formatISO(new Date()),
   teamListElementId: '',
   labCount: 15,
+  upcomingEventsCount: 0,
 };
 
 it('renders the name as the top-level heading', () => {
-  const { getByRole } = render(
-    <TeamProfileHeader {...boilerplateProps} displayName="John, D" />,
-  );
+  render(<TeamProfileHeader {...boilerplateProps} displayName="John, D" />);
 
-  expect(getByRole('heading')).toHaveTextContent('John, D');
-  expect(getByRole('heading').tagName).toBe('H1');
+  expect(screen.getByRole('heading')).toHaveTextContent('John, D');
+  expect(screen.getByRole('heading').tagName).toBe('H1');
 });
 
 it('renders a list of members', () => {
-  const { getAllByRole } = render(
+  render(
     <TeamProfileHeader
       {...boilerplateProps}
       members={[
@@ -42,22 +40,22 @@ it('renders a list of members', () => {
       ]}
     />,
   );
-  expect(getAllByRole('img')).toHaveLength(1);
+  expect(screen.getAllByRole('img')).toHaveLength(1);
 });
 
 it('renders no more than 5 members', () => {
-  const { getByLabelText, getAllByLabelText } = render(
+  render(
     <TeamProfileHeader
       {...boilerplateProps}
       members={createTeamResponseMembers({ teamMembers: 6 })}
     />,
   );
-  expect(getAllByLabelText(/pic.+ of .+/)).toHaveLength(5);
-  expect(getByLabelText(/\+1/)).toBeVisible();
+  expect(screen.getAllByLabelText(/pic.+ of .+/)).toHaveLength(5);
+  expect(screen.getByLabelText(/\+1/)).toBeVisible();
 });
 
 it('renders a contact button when there is a pointOfContact', () => {
-  const { getByText } = render(
+  render(
     <TeamProfileHeader
       {...boilerplateProps}
       pointOfContact={{
@@ -71,67 +69,67 @@ it('renders a contact button when there is a pointOfContact', () => {
     />,
   );
 
-  expect(getByText('Contact PM').parentElement).toHaveAttribute(
+  expect(screen.getByText('Contact PM').parentElement).toHaveAttribute(
     'href',
     'mailto:test@test.com',
   );
 });
 
 it('renders a lab count for multiple labs', () => {
-  const { getByText } = render(
-    <TeamProfileHeader {...boilerplateProps} labCount={23} />,
-  );
+  render(<TeamProfileHeader {...boilerplateProps} labCount={23} />);
 
-  expect(getByText(/23 Labs/i)).toBeVisible();
+  expect(screen.getByText(/23 Labs/i)).toBeVisible();
 });
 
 it('renders a lab count for a single lab using singular form', () => {
-  const { getByText } = render(
-    <TeamProfileHeader {...boilerplateProps} labCount={1} />,
-  );
+  render(<TeamProfileHeader {...boilerplateProps} labCount={1} />);
 
-  expect(getByText(/1 Lab(?!s)/i)).toBeVisible();
+  expect(screen.getByText(/1 Lab(?!s)/i)).toBeVisible();
 });
 
 it('does not display labs when 0 labs are available', () => {
-  const { queryByText } = render(
-    <TeamProfileHeader {...boilerplateProps} labCount={0} />,
-  );
+  render(<TeamProfileHeader {...boilerplateProps} labCount={0} />);
 
-  expect(queryByText(/Labs/i)).toBeNull();
+  expect(screen.queryByText(/Labs/i)).toBeNull();
 });
 
 it('renders tabs', () => {
-  const { getAllByRole } = render(<TeamProfileHeader {...boilerplateProps} />);
-  expect(getAllByRole('link').map(({ textContent }) => textContent)).toEqual([
-    'About',
-    'Team Outputs',
-  ]);
+  render(<TeamProfileHeader {...boilerplateProps} />);
+  expect(
+    screen.getAllByRole('link').map(({ textContent }) => textContent),
+  ).toEqual(['About', 'Team Outputs', 'Upcoming Events (0)']);
 });
 
 it('renders workspace tabs when tools provided', () => {
-  const { getAllByRole } = render(
+  render(
     <TeamProfileHeader
       {...boilerplateProps}
       tools={[{ name: '', description: '', url: '' }]}
     />,
   );
-  expect(getAllByRole('link').map(({ textContent }) => textContent)).toEqual([
-    'About',
-    'Team Workspace',
-    'Team Outputs',
-  ]);
+  expect(
+    screen.getAllByRole('link').map(({ textContent }) => textContent),
+  ).toEqual(['About', 'Team Workspace', 'Team Outputs', 'Upcoming Events (0)']);
 });
 
 it('renders share an output button dropdown', () => {
-  const { getByText, queryByText } = render(
+  render(
     <ResearchOutputPermissionsContext.Provider
       value={{ canCreateUpdate: true }}
     >
       <TeamProfileHeader {...boilerplateProps} />,
     </ResearchOutputPermissionsContext.Provider>,
   );
-  expect(queryByText(/article/i, { selector: 'span' })).not.toBeVisible();
-  fireEvent.click(getByText('Share an output'));
-  expect(queryByText(/article/i, { selector: 'span' })).toBeVisible();
+  expect(
+    screen.queryByText(/article/i, { selector: 'span' }),
+  ).not.toBeVisible();
+  fireEvent.click(screen.getByText('Share an output'));
+  expect(screen.getByText(/article/i, { selector: 'span' })).toBeVisible();
+});
+
+it('displays upcoming event count', () => {
+  render(<TeamProfileHeader {...boilerplateProps} upcomingEventsCount={11} />);
+
+  const link = screen.getByRole('link', { name: /upcoming events \(11\)/i });
+  expect(link).toBeVisible();
 });

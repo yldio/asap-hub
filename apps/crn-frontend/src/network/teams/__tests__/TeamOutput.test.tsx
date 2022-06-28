@@ -149,7 +149,7 @@ describe('TeamOutput', () => {
         labCatalogNumber: undefined,
         publishDate: undefined,
         subtype: undefined,
-        accessInstructions: '',
+        usageNotes: '',
         asapFunded: undefined,
         usedInPublication: undefined,
       },

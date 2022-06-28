@@ -37,7 +37,7 @@ describe('researchOutputToCSV', () => {
       sharingStatus: 'Network Only',
       title: 'title,',
       documentType: 'Presentation',
-      accessInstructions: 'accessInstructions',
+      usageNotes: 'usageNotes',
       accession: 'accession',
       addedDate: 'addedDate',
       asapFunded: false,
@@ -59,7 +59,7 @@ describe('researchOutputToCSV', () => {
       sharingStatus: 'Network Only',
       title: 'title,',
       documentType: 'Presentation',
-      accessInstructions: 'accessInstructions',
+      usageNotes: 'usageNotes',
       accession: 'accession',
       addedDate: 'addedDate',
       asapFunded: false,
@@ -159,14 +159,14 @@ describe('researchOutputToCSV', () => {
     const output: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
       description: '<a>example</a> <p>123</p>',
-      accessInstructions: '<a>example</a> <p>123</p>',
+      usageNotes: '<a>example</a> <p>123</p>',
     };
     expect(researchOutputToCSV(output).description).toMatchInlineSnapshot(
       `"example 123"`,
     );
-    expect(
-      researchOutputToCSV(output).accessInstructions,
-    ).toMatchInlineSnapshot(`"example 123"`);
+    expect(researchOutputToCSV(output).usageNotes).toMatchInlineSnapshot(
+      `"example 123"`,
+    );
   });
 });
 
@@ -197,11 +197,11 @@ describe('createCsvFileStream', () => {
     const output: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
       description: '"'.repeat(EXCEL_CELL_CHARACTER_LIMIT * 2),
-      accessInstructions: '"'.repeat(EXCEL_CELL_CHARACTER_LIMIT * 2),
+      usageNotes: '"'.repeat(EXCEL_CELL_CHARACTER_LIMIT * 2),
     };
-    const { accessInstructions, description } = researchOutputToCSV(output);
+    const { usageNotes, description } = researchOutputToCSV(output);
     csvStream.write({
-      a: accessInstructions,
+      a: usageNotes,
     });
     csvStream.write({
       a: description,

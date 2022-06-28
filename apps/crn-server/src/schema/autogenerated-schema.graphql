@@ -4024,6 +4024,7 @@ type ResearchOutputsDataDto {
   title: ResearchOutputsDataTitleDto
   type: ResearchOutputsDataTypeDto
   updatedBy: ResearchOutputsDataUpdatedByDto
+  usageNotes: ResearchOutputsDataUsageNotesDto
   usedInAPublication: ResearchOutputsDataUsedInAPublicationDto
 }
 
@@ -4064,6 +4065,7 @@ input ResearchOutputsDataInputDto {
   title: ResearchOutputsDataTitleInputDto
   type: ResearchOutputsDataTypeInputDto
   updatedBy: ResearchOutputsDataUpdatedByInputDto
+  usageNotes: ResearchOutputsDataUsageNotesInputDto
   usedInAPublication: ResearchOutputsDataUsedInAPublicationInputDto
 }
 
@@ -4223,6 +4225,18 @@ input ResearchOutputsDataUpdatedByInputDto {
   iv: [String!]
 }
 
+"""The structure of the Usage Notes field of the Research Outputs content type."""
+type ResearchOutputsDataUsageNotesDto {
+  """The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size)"""
+  iv: String
+}
+
+"""The structure of the Usage Notes field of the Research Outputs content input type."""
+input ResearchOutputsDataUsageNotesInputDto {
+  """The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size)"""
+  iv: String
+}
+
 """The structure of the Used in a Publication field of the Research Outputs content type."""
 type ResearchOutputsDataUsedInAPublicationDto {
   """"Not sure" will not be shown on the Hub"""
@@ -4277,6 +4291,8 @@ type ResearchOutputsFlatDataDto {
   title: String
   type: String
   updatedBy: [Users!]
+  """The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size)"""
+  usageNotes: String
   """"Not sure" will not be shown on the Hub"""
   usedInAPublication: String
 }

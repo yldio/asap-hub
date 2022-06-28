@@ -413,6 +413,25 @@
         }
       },
       {
+        "name": "usageNotes",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "RichText",
+          "label": "Usage Notes",
+          "hints": "The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size)",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
         "name": "Authorship",
         "isHidden": false,
         "isLocked": false,

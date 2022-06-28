@@ -4,7 +4,9 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { startOfTomorrow } from 'date-fns';
 import { ComponentProps } from 'react';
-import ResearchOutputFormSharingCard from '../ResearchOutputFormSharingCard';
+import ResearchOutputFormSharingCard, {
+  getPublishDateValidationMessage,
+} from '../ResearchOutputFormSharingCard';
 
 const props: ComponentProps<typeof ResearchOutputFormSharingCard> = {
   description: '',
@@ -186,7 +188,7 @@ it('triggers an on change for date published', async () => {
   expect(onChangeFn).toHaveBeenCalledWith(new Date('2020-12-02'));
 });
 
-it('shows the custom error message for date published', async () => {
+it('shows the custom error message for a date in the future', async () => {
   render(
     <ResearchOutputFormSharingCard
       {...props}
@@ -255,4 +257,32 @@ it('displays server side validation error for title and calls clears function wh
 
   userEvent.type(screen.getByLabelText(/title/i), 'a');
   expect(mockClearError).toHaveBeenCalledWith('/title');
+});
+
+describe('getPublishDateValidationMessage returns', () => {
+  const e: ValidityState = {
+    badInput: false,
+    rangeOverflow: false,
+    rangeUnderflow: false,
+    stepMismatch: false,
+    tooLong: false,
+    tooShort: false,
+    typeMismatch: false,
+    valid: false,
+    valueMissing: false,
+    customError: false,
+    patternMismatch: false,
+  };
+
+  it('a message when the date is in the future', () => {
+    expect(
+      getPublishDateValidationMessage({ ...e, rangeOverflow: true }),
+    ).toEqual('Publish date cannot be greater than today');
+  });
+
+  it('a message when the date is invalid', () => {
+    expect(getPublishDateValidationMessage({ ...e, badInput: true })).toEqual(
+      'Date published should be complete or removed',
+    );
+  });
 });

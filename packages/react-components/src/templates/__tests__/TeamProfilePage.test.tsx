@@ -1,6 +1,5 @@
-import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-
+import { ComponentProps } from 'react';
 import TeamProfilePage from '../TeamProfilePage';
 
 const boilerplateProps: Omit<
@@ -15,6 +14,7 @@ const boilerplateProps: Omit<
   expertiseAndResourceTags: [],
   teamListElementId: '',
   labCount: 15,
+  upcomingEventsCount: 0,
 };
 
 it('renders the header', () => {

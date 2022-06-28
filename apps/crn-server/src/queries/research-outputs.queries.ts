@@ -20,7 +20,7 @@ export const researchOutputContentQueryFragment = gql`
       rrid
       tags
       lastUpdatedPartial
-      accessInstructions
+      usageNotes
       sharingStatus
       asapFunded
       usedInAPublication

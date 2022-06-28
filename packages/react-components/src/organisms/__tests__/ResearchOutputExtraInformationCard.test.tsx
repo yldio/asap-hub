@@ -48,8 +48,8 @@ it('should trigger an onChange event when a text is being typed into access inst
   render(
     <ResearchOutputExtraInformationCard
       {...getProps()}
-      accessInstructions="access-instructions-value"
-      onChangeAccessInstructions={mockOnChange}
+      usageNotes="access-instructions-value"
+      onChangeUsageNotes={mockOnChange}
     />,
   );
 

@@ -3,8 +3,8 @@ import { algoliaSearchClientNativeFactory } from '@asap-hub/algolia';
 import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { algoliaApiKey, algoliaAppId, appName, baseUrl } from '../../../config';
 import Users from '../../../controllers/users';
-import AssetDataProvider from '../../../data-providers/assets.data-provider';
-import UserDataProvider from '../../../data-providers/users.data-provider';
+import { AssetSquidexDataProvider } from '../../../data-providers/assets.data-provider';
+import { UserSquidexDataProvider } from '../../../data-providers/users.data-provider';
 import { getAuthToken } from '../../../utils/auth';
 import { Handler } from '../../../utils/types';
 import { fetchUserByCodeHandlerFactory } from './fetch-by-code';
@@ -17,11 +17,11 @@ const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
   appName,
   baseUrl,
 });
-const userDataProvider = new UserDataProvider(
+const userDataProvider = new UserSquidexDataProvider(
   squidexGraphqlClient,
   userRestClient,
 );
-const assetDataProvider = new AssetDataProvider(userRestClient);
+const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 export const handler: Handler = fetchUserByCodeHandlerFactory(
   new Users(userDataProvider, assetDataProvider),
   algoliaSearchClientNativeFactory({ algoliaAppId, algoliaApiKey }),

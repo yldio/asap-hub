@@ -13,12 +13,12 @@ import {
   baseUrl,
 } from '../../config';
 import Users, { UserController } from '../../controllers/users';
-import UserDataProvider from '../../data-providers/users.data-provider';
-import AssetDataProvider from '../../data-providers/assets.data-provider';
 import logger from '../../utils/logger';
 import { EventBridgeHandler } from '../../utils/types';
 import { UserEvent, UserPayload } from '../event-bus';
 import { getAuthToken } from '../../utils/auth';
+import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
+import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
 
 export const indexUserHandler =
   (
@@ -66,11 +66,11 @@ const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
   appName,
   baseUrl,
 });
-const userDataProvider = new UserDataProvider(
+const userDataProvider = new UserSquidexDataProvider(
   squidexGraphqlClient,
   userRestClient,
 );
-const assetDataProvider = new AssetDataProvider(userRestClient);
+const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 
 export const handler = indexUserHandler(
   new Users(userDataProvider, assetDataProvider),

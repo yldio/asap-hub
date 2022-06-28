@@ -87,18 +87,11 @@ export const userRouteFactory = (
   userRoutes.get<{ userId: string }>(
     '/users/:userId/groups',
     async (req, res) => {
-      const { query, params } = req;
+      const { params } = req;
 
       const { userId } = validateUserParameters(params);
-      const options = validateFetchOptions(query);
 
-      const user = await userController.fetchById(userId!);
-      const teams = user.teams.map((t) => t.id);
-      const result = await groupsController.fetchByUserId(
-        userId,
-        teams,
-        options,
-      );
+      const result = await groupsController.fetchByUserId(userId);
 
       res.json(result);
     },

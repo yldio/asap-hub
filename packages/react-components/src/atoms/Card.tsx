@@ -40,7 +40,7 @@ export const accents: Record<AccentVariant, CSSObject> = {
 };
 
 const strokeStyles = css({
-  background: `linear-gradient(${colors.cerulean.rgb}, ${colors.cerulean.rgb}) no-repeat left/7px 100%`,
+  background: `linear-gradient(${colors.cerulean.rgb}, ${colors.cerulean.rgb}) no-repeat left/${borderRadius}px 100%`,
 });
 
 interface CardProps {

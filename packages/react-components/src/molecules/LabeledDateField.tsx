@@ -28,7 +28,7 @@ const descriptionStyles = css({
   color: lead.rgb,
 });
 
-export const parseDateToString = (date?: Date): Date | string => {
+export const parseDateToString = (date?: Date): string => {
   try {
     if (date) {
       return formatISO(date, { representation: 'date' });

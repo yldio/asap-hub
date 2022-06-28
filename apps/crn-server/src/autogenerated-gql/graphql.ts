@@ -3856,6 +3856,7 @@ export type ResearchOutputsDataDto = {
   title: Maybe<ResearchOutputsDataTitleDto>;
   type: Maybe<ResearchOutputsDataTypeDto>;
   updatedBy: Maybe<ResearchOutputsDataUpdatedByDto>;
+  usageNotes: Maybe<ResearchOutputsDataUsageNotesDto>;
   usedInAPublication: Maybe<ResearchOutputsDataUsedInAPublicationDto>;
 };
 
@@ -3896,6 +3897,7 @@ export type ResearchOutputsDataInputDto = {
   title: Maybe<ResearchOutputsDataTitleInputDto>;
   type: Maybe<ResearchOutputsDataTypeInputDto>;
   updatedBy: Maybe<ResearchOutputsDataUpdatedByInputDto>;
+  usageNotes: Maybe<ResearchOutputsDataUsageNotesInputDto>;
   usedInAPublication: Maybe<ResearchOutputsDataUsedInAPublicationInputDto>;
 };
 
@@ -4047,6 +4049,18 @@ export type ResearchOutputsDataUpdatedByInputDto = {
   iv: Maybe<Array<Scalars['String']>>;
 };
 
+/** The structure of the Usage Notes field of the Research Outputs content type. */
+export type ResearchOutputsDataUsageNotesDto = {
+  /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Usage Notes field of the Research Outputs content input type. */
+export type ResearchOutputsDataUsageNotesInputDto = {
+  /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
+  iv: Maybe<Scalars['String']>;
+};
+
 /** The structure of the Used in a Publication field of the Research Outputs content type. */
 export type ResearchOutputsDataUsedInAPublicationDto = {
   /** "Not sure" will not be shown on the Hub */
@@ -4097,6 +4111,8 @@ export type ResearchOutputsFlatDataDto = {
   title: Maybe<Scalars['String']>;
   type: Maybe<Scalars['String']>;
   updatedBy: Maybe<Array<Users>>;
+  /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
+  usageNotes: Maybe<Scalars['String']>;
   /** "Not sure" will not be shown on the Hub */
   usedInAPublication: Maybe<Scalars['String']>;
 };

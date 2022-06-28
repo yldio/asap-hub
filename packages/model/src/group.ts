@@ -22,7 +22,8 @@ export type GroupLeader = {
 
 export const isGroupRole = (data: string | null): data is GroupRole =>
   groupRole.includes(data as GroupRole);
-export interface GroupResponse {
+
+export type GroupDataObject = {
   readonly id: string;
   readonly active: boolean;
   readonly createdDate: string;
@@ -35,6 +36,10 @@ export interface GroupResponse {
   readonly calendars: ReadonlyArray<CalendarResponse>;
   readonly lastModifiedDate: string;
   readonly thumbnail?: string;
-}
+};
+
+export type ListGroupDataObject = ListResponse<GroupDataObject>;
+
+export type GroupResponse = GroupDataObject;
 
 export type ListGroupResponse = ListResponse<GroupResponse>;

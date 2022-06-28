@@ -40,7 +40,7 @@ export interface UserDataProvider {
   update(id: string, update: UserUpdateDataObject): Promise<void>;
   fetch(options: FetchUsersOptions): Promise<ListUserDataObject>;
 }
-export default class Users implements UserDataProvider {
+export class UserSquidexDataProvider implements UserDataProvider {
   squidexGraphlClient: SquidexGraphqlClient;
   userSquidexRestClient: SquidexRestClient<RestUser>;
 

@@ -1,7 +1,7 @@
 import {
   CalendarResponse,
+  GroupDataObject,
   GroupLeader,
-  GroupResponse,
   GroupRole,
   GroupTeam,
   GroupTools,
@@ -17,7 +17,7 @@ import { parseGraphQLTeam } from './team';
 
 export const parseGraphQLGroup = (
   item: NonNullable<FetchGroupQuery['findGroupsContent']>,
-): GroupResponse => {
+): GroupDataObject => {
   const createdDate = parseDate(item.created).toISOString();
   const teams: GroupTeam[] = (item.flatData.teams || []).map((t) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

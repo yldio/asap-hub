@@ -15,6 +15,7 @@ import {
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
 import { listGroupsResponse } from '../fixtures/groups.fixtures';
+import { NotFoundError } from '@asap-hub/errors';
 
 describe('/users/ route', () => {
   const authHandlerMock: AuthHandler = (req, _res, next) => {
@@ -227,7 +228,9 @@ describe('/users/ route', () => {
 
   describe('GET /users/{user_id}/groups', () => {
     test('Should return 404 when user doesnt exist', async () => {
-      userControllerMock.fetchById.mockRejectedValueOnce(Boom.notFound());
+      groupControllerMock.fetchByUserId.mockRejectedValueOnce(
+        new NotFoundError('user not found'),
+      );
 
       const response = await supertest(appWithMockedAuth).get(
         '/users/not-found/groups',
@@ -237,7 +240,6 @@ describe('/users/ route', () => {
     });
 
     test('Should return 200 when no grups exist', async () => {
-      userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
       groupControllerMock.fetchByUserId.mockResolvedValueOnce({
         items: [],
         total: 0,
@@ -255,7 +257,6 @@ describe('/users/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
       groupControllerMock.fetchByUserId.mockResolvedValueOnce(
         listGroupsResponse,
       );
@@ -269,26 +270,11 @@ describe('/users/ route', () => {
     });
 
     test('Should call the controller method with the correct parameters', async () => {
-      const userResponse = getUserResponse();
-      userResponse.teams = [
-        {
-          id: 'team-id-1',
-          role: 'Lead PI (Core Leadership)',
-          displayName: 'Team A',
-        },
-        {
-          id: 'team-id-3',
-          role: 'Lead PI (Core Leadership)',
-          displayName: 'Team B',
-        },
-      ];
-      userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+      const userId = 'user-id';
       groupControllerMock.fetchByUserId.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
-      const teams = [userResponse.teams[0]!.id, userResponse.teams[1]!.id];
-      const userId = userResponse.id;
 
       await supertest(appWithMockedAuth).get(`/users/${userId}/groups`).query({
         take: 15,
@@ -296,39 +282,7 @@ describe('/users/ route', () => {
         search: 'something',
       });
 
-      const expectedParams: FetchOptions = {
-        take: 15,
-        skip: 5,
-        search: 'something',
-      };
-
-      expect(groupControllerMock.fetchByUserId).toBeCalledWith(
-        userId,
-        teams,
-        expectedParams,
-      );
-    });
-
-    describe('Parameter validation', () => {
-      test('Should return a 400 error when additional properties exist', async () => {
-        const response = await supertest(appWithMockedAuth)
-          .get('/users/123/groups')
-          .query({
-            additionalField: 'some-data',
-          });
-
-        expect(response.status).toBe(400);
-      });
-
-      test('Should return a validation error when the arguments are not valid', async () => {
-        const response = await supertest(appWithMockedAuth)
-          .get('/users/123/groups')
-          .query({
-            take: 'invalid param',
-          });
-
-        expect(response.status).toBe(400);
-      });
+      expect(groupControllerMock.fetchByUserId).toBeCalledWith(userId);
     });
   });
 

@@ -43,8 +43,18 @@ import ResearchTags, {
 } from './controllers/research-tags';
 import Teams, { TeamController } from './controllers/teams';
 import Users, { UserController } from './controllers/users';
-import AssetDataProvider from './data-providers/assets.data-provider';
-import UserDataProvider from './data-providers/users.data-provider';
+import {
+  AssetDataProvider,
+  AssetSquidexDataProvider,
+} from './data-providers/assets.data-provider';
+import {
+  GroupDataProvider,
+  GroupSquidexDataProvider,
+} from './data-providers/groups.data-provider';
+import {
+  UserDataProvider,
+  UserSquidexDataProvider,
+} from './data-providers/users.data-provider';
 import { permissionHandler } from './middleware/permission-handler';
 import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 import { tracingHandlerFactory } from './middleware/tracing-handler';
@@ -122,9 +132,12 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Data Providers
   const userDataProvider =
     libs.userDataProvider ||
-    new UserDataProvider(squidexGraphqlClient, userRestClient);
+    new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
   const assetDataProvider =
-    libs.assetDataProvider || new AssetDataProvider(userRestClient);
+    libs.assetDataProvider || new AssetSquidexDataProvider(userRestClient);
+  const groupDataProvider =
+    libs.groupDataProvider ||
+    new GroupSquidexDataProvider(squidexGraphqlClient);
 
   // Controllers
   const calendarController =
@@ -138,7 +151,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const eventController =
     libs.eventController || new Events(squidexGraphqlClient, eventRestClient);
   const groupController =
-    libs.groupController || new Groups(squidexGraphqlClient);
+    libs.groupController || new Groups(groupDataProvider, userDataProvider);
   const pageController = libs.pageController || new Pages(pageRestClient);
   const researchOutputController =
     libs.researchOutputController ||
@@ -278,6 +291,7 @@ export type Libs = {
   teamController?: TeamController;
   userController?: UserController;
   labsController?: LabsController;
+  groupDataProvider?: GroupDataProvider;
   userDataProvider?: UserDataProvider;
   assetDataProvider?: AssetDataProvider;
   authHandler?: AuthHandler;

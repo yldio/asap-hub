@@ -1,4 +1,8 @@
-import { GroupResponse, ListGroupResponse } from '@asap-hub/model';
+import {
+  GroupDataObject,
+  GroupResponse,
+  ListGroupResponse,
+} from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   FetchGroupQuery,
@@ -421,7 +425,32 @@ export const getSquidexGroupGraphqlResponse = (): FetchGroupQuery => ({
   findGroupsContent: getSquidexGraphqlGroup(),
 });
 
-export const getGroupResponse = (): GroupResponse => ({
+export const getGroupResponse = (): GroupResponse => getGroupDataObject();
+
+export const getListGroupResponse = (): ListGroupResponse => ({
+  total: 1,
+  items: [getGroupResponse()],
+});
+
+export const getGroupPayload = (
+  id: string,
+  type: GroupEvent,
+): GroupPayload => ({
+  type,
+  payload: {
+    $type: 'EnrichedContentEvent',
+    type: 'Updated',
+    id,
+  },
+});
+
+export const getGroupEvent = (
+  id: string,
+  eventType: GroupEvent,
+): EventBridgeEvent<GroupEvent, GroupPayload> =>
+  createEventBridgeEventMock(getGroupPayload(id, eventType), eventType, id);
+
+export const getGroupDataObject = (): GroupDataObject => ({
   id: 'group-id-1',
   active: true,
   createdDate: '2020-12-11T14:33:50.000Z',
@@ -460,26 +489,3 @@ export const getGroupResponse = (): GroupResponse => ({
   ],
   calendars: [{ id: 'hub@asap.science', color: '#B1365F', name: 'ASAP Hub' }],
 });
-
-export const getListGroupResponse = (): ListGroupResponse => ({
-  total: 1,
-  items: [getGroupResponse()],
-});
-
-export const getGroupPayload = (
-  id: string,
-  type: GroupEvent,
-): GroupPayload => ({
-  type,
-  payload: {
-    $type: 'EnrichedContentEvent',
-    type: 'Updated',
-    id,
-  },
-});
-
-export const getGroupEvent = (
-  id: string,
-  eventType: GroupEvent,
-): EventBridgeEvent<GroupEvent, GroupPayload> =>
-  createEventBridgeEventMock(getGroupPayload(id, eventType), eventType, id);

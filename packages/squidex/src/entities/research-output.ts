@@ -20,7 +20,6 @@ export interface ResearchOutput<
   TLabConnection = string,
   TUserConnection = string,
 > {
-  accessInstructions?: string;
   accession?: string;
   addedDate: string;
   adminNotes?: string;

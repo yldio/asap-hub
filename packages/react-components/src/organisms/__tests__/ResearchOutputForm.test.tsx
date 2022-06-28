@@ -213,7 +213,7 @@ describe('on submit', () => {
     methods: [],
     organisms: [],
     environments: [],
-    accessInstructions: '',
+    usageNotes: '',
   };
   type Data = Pick<
     ResearchOutputPostRequest,
@@ -365,7 +365,7 @@ describe('on submit', () => {
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
-      accessInstructions: 'Access Instructions',
+      usageNotes: 'Access Instructions',
     });
   });
   it('can submit a method', async () => {

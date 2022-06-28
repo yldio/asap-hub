@@ -3881,18 +3881,6 @@ type ResearchOutputs implements Content {
   version: Int!
 }
 
-"""The structure of the Access Instructions field of the Research Outputs content type."""
-type ResearchOutputsDataAccessInstructionsDto {
-  """The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size)"""
-  iv: String
-}
-
-"""The structure of the Access Instructions field of the Research Outputs content input type."""
-input ResearchOutputsDataAccessInstructionsInputDto {
-  """The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size)"""
-  iv: String
-}
-
 """The structure of the Identifier (Accession #) field of the Research Outputs content type."""
 type ResearchOutputsDataAccessionDto {
   """This must start with a letter"""
@@ -3999,7 +3987,6 @@ input ResearchOutputsDataDoiInputDto {
 
 """The structure of the Research Outputs data type."""
 type ResearchOutputsDataDto {
-  accessInstructions: ResearchOutputsDataAccessInstructionsDto
   accession: ResearchOutputsDataAccessionDto
   addedDate: ResearchOutputsDataAddedDateDto
   adminNotes: ResearchOutputsDataAdminNotesDto
@@ -4040,7 +4027,6 @@ input ResearchOutputsDataEnvironmentsInputDto {
 
 """The structure of the Research Outputs data input type."""
 input ResearchOutputsDataInputDto {
-  accessInstructions: ResearchOutputsDataAccessInstructionsInputDto
   accession: ResearchOutputsDataAccessionInputDto
   addedDate: ResearchOutputsDataAddedDateInputDto
   adminNotes: ResearchOutputsDataAdminNotesInputDto
@@ -4251,8 +4237,6 @@ input ResearchOutputsDataUsedInAPublicationInputDto {
 
 """The structure of the flat Research Outputs data type."""
 type ResearchOutputsFlatDataDto {
-  """The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size)"""
-  accessInstructions: String
   """This must start with a letter"""
   accession: String
   """Date output was shared with ASAP Network (different from publication date)"""

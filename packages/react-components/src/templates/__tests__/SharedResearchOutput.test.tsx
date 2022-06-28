@@ -90,18 +90,14 @@ describe('Grant Documents', () => {
 describe('Not Grant Documents', () => {
   it('displays access instructions when data provided', () => {
     const { queryByText, getByText, rerender } = render(
-      <SharedResearchOutput
-        {...props}
-        documentType="Article"
-        accessInstructions=""
-      />,
+      <SharedResearchOutput {...props} documentType="Article" usageNotes="" />,
     );
     expect(queryByText(/access instructions/i)).not.toBeInTheDocument();
     rerender(
       <SharedResearchOutput
         {...props}
         documentType="Article"
-        accessInstructions="Some Data"
+        usageNotes="Some Data"
       />,
     );
     expect(getByText(/usage notes/i)).toBeVisible();

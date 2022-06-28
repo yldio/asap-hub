@@ -7,9 +7,5 @@
     "jsx": "react-jsx"
   },
   "include": ["src"],
-  "references": [
-    { "path": "../model" },
-    { "path": "../dom-test-utils" },
-    { "path": "../react-components" }
-  ]
+  "references": [{ "path": "../model" }, { "path": "../dom-test-utils" }]
 }

@@ -1,13 +1,13 @@
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { mockLocation } from '@asap-hub/dom-test-utils';
+import { WebAuthError } from '@asap-hub/auth-frontend-utils';
 
 import Login from '../Login';
 import {
   authorizeWithSso,
   authorizeWithEmailPassword,
 } from '../../auth0/web-auth';
-import { WebAuthError } from '../../auth0/errors';
 
 const { mockGetLocation } = mockLocation(
   `http://localhost/login?response_type=code&redirect_uri=${encodeURIComponent(

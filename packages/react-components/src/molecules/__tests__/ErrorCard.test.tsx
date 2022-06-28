@@ -7,7 +7,7 @@ import ErrorCard from '../ErrorCard';
 it('renders a default error', () => {
   const { container } = render(<ErrorCard />);
   expect(container.textContent).toMatchInlineSnapshot(
-    `"Something went wrong! We have encountered an error."`,
+    `"ErrorSomething went wrong! We have encountered an error."`,
   );
 });
 it('renders a plain message', () => {

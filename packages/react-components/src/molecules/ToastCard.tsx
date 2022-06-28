@@ -5,7 +5,7 @@ import { perRem, mobileScreen } from '../pixels';
 import { Card } from '../atoms';
 import { lead, silver, apricot, clay, info, sky } from '../colors';
 import { AlertIcon, clockIcon, paperClipIcon } from '../icons';
-import { paddingStyles } from '../card';
+import { borderRadius, paddingStyles } from '../card';
 
 const toastStyles = css({
   display: 'flex',
@@ -36,6 +36,7 @@ const infoStyles = css({
   backgroundColor: sky.rgb,
   color: info.rgb,
   fill: info.rgb,
+  borderRadius: `${borderRadius - 1}px ${borderRadius - 1}px 0px 0px`,
 });
 
 const leadStyles = css({

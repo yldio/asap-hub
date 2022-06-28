@@ -364,24 +364,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/auth-frontend-utils@workspace:packages/auth-frontend-utils"
   dependencies:
-<<<<<<< HEAD
-<<<<<<< HEAD
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/core": 7.18.5
     "@babel/preset-react": 7.17.12
-<<<<<<< HEAD
-=======
-=======
-    "@asap-hub/dom-test-utils": "workspace:*"
->>>>>>> 70cb2398 (fixing dependencies)
-    "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@asap-hub/model": "workspace:*"
-    "@babel/core": 7.18.5
->>>>>>> 8ccc0eef (moving auth function to separate package)
-=======
->>>>>>> bb7e3403 (fixing dependencies)
     "@babel/runtime-corejs3": 7.18.3
     "@types/auth0-js": ^9.14.4
     "@types/jest": 26.0.24

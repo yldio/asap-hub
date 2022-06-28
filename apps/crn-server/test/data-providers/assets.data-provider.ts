@@ -1,7 +1,7 @@
 import { RestUser, SquidexRest } from '@asap-hub/squidex';
 import nock from 'nock';
 import { appName, baseUrl } from '../../src/config';
-import AssetDataProvider from '../../src/data-providers/assets.data-provider';
+import { AssetSquidexDataProvider } from '../../src/data-providers/assets.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
 import { identity } from '../helpers/squidex';
 
@@ -10,7 +10,7 @@ describe('Asset data provider', () => {
     appName,
     baseUrl,
   });
-  const assetDataProvider = new AssetDataProvider(userRestClient);
+  const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
   beforeAll(() => {
     identity();
   });

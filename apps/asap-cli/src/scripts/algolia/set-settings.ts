@@ -3,7 +3,7 @@ import algoliasearch from 'algoliasearch';
 import fs from 'fs/promises';
 import { resolve } from 'path';
 
-export type SetSettings = {
+export type SetAlgoliaSettings = {
   algoliaAppId: string;
   algoliaCiApiKey: string;
   indexName: string;
@@ -13,7 +13,7 @@ export const setAlgoliaSettings = async ({
   algoliaAppId,
   algoliaCiApiKey,
   indexName,
-}: SetSettings): Promise<void> => {
+}: SetAlgoliaSettings): Promise<void> => {
   const path = resolve(__dirname, '../../../../../schema');
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
 

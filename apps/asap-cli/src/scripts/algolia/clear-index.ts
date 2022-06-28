@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 import algoliasearch from 'algoliasearch';
 
-export type ClearAlgoliaArgs = {
+export type ClearAlgoliaIndex = {
   algoliaAppId: string;
   algoliaCiApiKey: string;
   indexName: string;
@@ -11,7 +11,7 @@ export const clearAlgoliaIndex = async ({
   algoliaAppId,
   algoliaCiApiKey,
   indexName,
-}: ClearAlgoliaArgs): Promise<void> => {
+}: ClearAlgoliaIndex): Promise<void> => {
   const index = algoliasearch(algoliaAppId, algoliaCiApiKey).initIndex(
     indexName,
   );

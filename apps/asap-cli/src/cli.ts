@@ -10,6 +10,7 @@ import yargs from 'yargs/yargs';
 import * as importers from './import';
 import {
   clearAlgoliaIndex,
+  deleteAlgoliaIndex,
   getAlgoliaSettings,
   moveAlgoliaIndex,
   removeAlgoliaRecords,
@@ -18,6 +19,44 @@ import {
 
 // eslint-disable-next-line no-unused-expressions
 yargs(hideBin(process.argv))
+  .command({
+    command: 'algolia:delete-index',
+    describe: 'deletes the index',
+    builder: (cli) =>
+      cli
+        .option('appid', {
+          alias: 'a',
+          type: 'string',
+          description: 'The App ID',
+          demandOption: true,
+        })
+        .option('apikey', {
+          alias: 'k',
+          type: 'string',
+          description: 'The API key',
+          demandOption: true,
+        })
+        .option('index', {
+          alias: 'n',
+          type: 'string',
+          description: 'Name of the index to remove',
+          demandOption: true,
+        }),
+    handler: async ({
+      index,
+      appid,
+      apikey,
+    }: {
+      index: string;
+      appid: string;
+      apikey: string;
+    }) =>
+      deleteAlgoliaIndex({
+        algoliaAppId: appid,
+        algoliaCiApiKey: apikey,
+        indexName: index,
+      }),
+  })
   .command({
     command: 'algolia:clear-index',
     describe: 'clears the index',

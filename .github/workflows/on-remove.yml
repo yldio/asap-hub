@@ -109,6 +109,9 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
+      - name: Rebuild dependencies
+        shell: bash
+        run: yarn rebuild
       - name: Get Algolia Keys
         id: algolia-keys
         uses: ./.github/actions/algolia-keys

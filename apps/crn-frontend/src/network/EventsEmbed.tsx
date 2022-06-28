@@ -1,15 +1,21 @@
 import { SearchFrame } from '@asap-hub/frontend-utils';
+import { EventConstraint } from '@asap-hub/model';
 import { EventSearch, EventsList } from '@asap-hub/react-components';
-import { getEventListOptions } from '../../events/options';
-import { useEvents } from '../../events/state';
-import { usePagination, usePaginationParams, useSearch } from '../../hooks';
+import { getEventListOptions } from '../events/options';
+import { useEvents } from '../events/state';
+import { usePagination, usePaginationParams, useSearch } from '../hooks';
 
-type EventsProps = {
+type EventsEmbedProps = {
   readonly currentTime: Date;
   readonly past: boolean;
-  readonly userId: string;
+  readonly constraint: EventConstraint;
+  readonly teamId?: string;
 };
-const Events: React.FC<EventsProps> = ({ currentTime, userId, past }) => {
+const EventsEmbed: React.FC<EventsEmbedProps> = ({
+  currentTime,
+  constraint,
+  past,
+}) => {
   const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
 
   return (
@@ -22,7 +28,7 @@ const Events: React.FC<EventsProps> = ({ currentTime, userId, past }) => {
         <EventsDisplay
           searchQuery={debouncedSearchQuery}
           past={past}
-          userId={userId}
+          constraint={constraint}
           currentTime={currentTime}
         />
       </SearchFrame>
@@ -30,28 +36,27 @@ const Events: React.FC<EventsProps> = ({ currentTime, userId, past }) => {
   );
 };
 
-type EventsDisplayProps = EventsProps & {
+type EventsDisplayProps = EventsEmbedProps & {
   searchQuery: string;
 };
 const EventsDisplay: React.FC<EventsDisplayProps> = ({
   currentTime,
   past,
   searchQuery,
-  userId,
+  constraint,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const { items, total } = useEvents(
-    getEventListOptions(
-      currentTime,
-      past,
-      {
-        searchQuery,
-        currentPage,
-        pageSize,
-      },
-      userId,
-    ),
+  const options = getEventListOptions(
+    currentTime,
+    past,
+    {
+      searchQuery,
+      currentPage,
+      pageSize,
+    },
+    constraint,
   );
+  const { items, total } = useEvents(options);
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 
   return (
@@ -65,4 +70,4 @@ const EventsDisplay: React.FC<EventsDisplayProps> = ({
   );
 };
 
-export default Events;
+export default EventsEmbed;

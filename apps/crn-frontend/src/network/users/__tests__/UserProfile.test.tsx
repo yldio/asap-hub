@@ -471,6 +471,8 @@ it('navigates to the upcoming events tab', async () => {
     filters: new Set(),
     pageSize: 10,
     searchQuery: '',
-    userId: userResponse.id,
+    constraint: {
+      userId: userResponse.id,
+    },
   });
 });

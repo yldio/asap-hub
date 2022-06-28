@@ -120,8 +120,7 @@ jobs:
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
       - name: Delete the index
         run: |
-          cd apps/crn-server
-          yarn workspace @asap-hub/crn-server run algolia deleteindicespattern -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -r "^ALGOLIA_INDEX(.*)$" -x false
+          yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n ALGOLIA_INDEX
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}

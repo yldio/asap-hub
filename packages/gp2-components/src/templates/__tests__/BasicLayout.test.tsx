@@ -16,6 +16,6 @@ it('renders an GP2 logo with specified href', () => {
 });
 
 it('renders the content', async () => {
-  const { getByText } = render(<BasicLayout>Content</BasicLayout>);
-  expect(getByText('Content')).toBeVisible();
+  render(<BasicLayout>Content</BasicLayout>);
+  expect(screen.getByText('Content')).toBeVisible();
 });

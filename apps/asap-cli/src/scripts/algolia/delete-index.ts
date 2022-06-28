@@ -13,24 +13,19 @@ export const deleteAlgoliaIndex = async ({
   indexName,
 }: DeleteAlgoliaIndex): Promise<void> => {
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
+  const unlinkIndex = async (name: string) => {
+    const index = client.initIndex(name);
+    return index.setSettings({ replicas: [] }).wait();
+  };
   const indices = await client.listIndices();
   indices.items
     .filter(({ name }) => name.startsWith(indexName))
     .forEach(async ({ name }) => {
       const indexToDelete = client.initIndex(name);
       const { primary, replicas } = await indexToDelete.getSettings();
-      try {
-        if (primary || replicas) {
-          await unlinkIndex(primary || name);
-        }
-        await indexToDelete.delete().wait();
-      } catch (err) {
-        console.error(err);
-        throw err;
+      if (primary || replicas) {
+        await unlinkIndex(primary || name);
       }
+      await indexToDelete.delete().wait();
     });
-  const unlinkIndex = async (name: string) => {
-    const index = client.initIndex(name);
-    return index.setSettings({ replicas: [] }).wait();
-  };
 };

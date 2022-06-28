@@ -22,7 +22,7 @@ describe('Auth Frontend App', () => {
 
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: /Sign in to the ASAP Hub/i }),
+      screen.getByRole('heading', { name: /Sign in to the GP2 Hub/i }),
     ).toBeInTheDocument();
   });
 });

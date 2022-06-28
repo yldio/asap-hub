@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { HashRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { BasicLayout } from '@asap-hub/react-components';
+import { getHubUrlFromRedirect } from '@asap-hub/auth-frontend-utils';
 
 import Login from './login/Login';
 import ForgotPassword from './forgot-password/ForgotPassword';
-import { getHubUrlFromRedirect } from './utils';
 
 const App: React.FC<Record<string, never>> = () => {
   const [email, setEmail] = useState('');

@@ -763,6 +763,7 @@ __metadata:
   resolution: "@asap-hub/gp2-auth-frontend@workspace:apps/gp2-auth-frontend"
   dependencies:
     "@asap-hub/auth": "workspace:*"
+    "@asap-hub/auth-frontend-utils": "workspace:*"
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/gp2-components": "workspace:*"
@@ -772,7 +773,6 @@ __metadata:
     "@testing-library/jest-dom": 5.16.4
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": ^12.8.3
-    "@types/auth0-js": ^9.14.4
     "@types/history": 4.7.11
     "@types/jest": 26.0.24
     "@types/jsdom": ^16
@@ -781,7 +781,6 @@ __metadata:
     "@types/react-router-dom": ^5.1.7
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
-    auth0-js: ^9.16.0
     cross-env: ^7.0.3
     history: ^4
     identity-obj-proxy: ^3.0.0

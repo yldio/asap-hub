@@ -2,8 +2,8 @@ import { RestUser, SquidexGraphql, SquidexRest, User } from '@asap-hub/squidex';
 import Chance from 'chance';
 import { appName, baseUrl } from '../../src/config';
 import Users from '../../src/controllers/users';
-import AssetDataProvider from '../../src/data-providers/assets.data-provider';
-import UserDataProvider from '../../src/data-providers/users.data-provider';
+import { AssetSquidexDataProvider } from '../../src/data-providers/assets.data-provider';
+import { UserSquidexDataProvider } from '../../src/data-providers/users.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
 import { createRandomOrcid, createUser } from '../helpers/users';
 
@@ -16,11 +16,11 @@ const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
   appName,
   baseUrl,
 });
-const userDataProvider = new UserDataProvider(
+const userDataProvider = new UserSquidexDataProvider(
   squidexGraphqlClient,
   userRestClient,
 );
-const assetDataProvider = new AssetDataProvider(userRestClient);
+const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 const users = new Users(userDataProvider, assetDataProvider);
 
 describe('Users', () => {

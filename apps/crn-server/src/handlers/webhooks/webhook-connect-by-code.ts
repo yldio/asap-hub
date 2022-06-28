@@ -2,8 +2,8 @@ import { framework as lambda } from '@asap-hub/services-common';
 import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { appName, baseUrl } from '../../config';
 import Users from '../../controllers/users';
-import AssetDataProvider from '../../data-providers/assets.data-provider';
-import UserDataProvider from '../../data-providers/users.data-provider';
+import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
+import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import { Handler } from '../../utils/types';
 import validateRequest from '../../utils/validate-auth0-request';
@@ -22,11 +22,11 @@ export const handler: Handler = lambda.http(async (request) => {
     appName,
     baseUrl,
   });
-  const userDataProvider = new UserDataProvider(
+  const userDataProvider = new UserSquidexDataProvider(
     squidexGraphqlClient,
     userRestClient,
   );
-  const assetDataProvider = new AssetDataProvider(userRestClient);
+  const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
   const users = new Users(userDataProvider, assetDataProvider);
   await users.connectByCode(code, userId);
 

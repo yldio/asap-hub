@@ -32,6 +32,9 @@ describe('Algolia Search Client', () => {
 
     expect(algoliasearchMock).toBeCalledWith('test-app-id', 'test-key');
     expect(algoliaSearchClientMock.initIndex).toBeCalledWith('test-index');
+    expect(algoliaSearchClientMock.initIndex).toBeCalledWith(
+      'test-index-reverse-timestamp',
+    );
   });
 
   test('Should instantiate the native client', () => {

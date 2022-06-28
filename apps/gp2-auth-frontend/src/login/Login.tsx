@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { SigninPage } from '@asap-hub/react-components';
-import { extractErrorMessage, WebAuthError } from '@asap-hub/auth';
+import {
+  extractErrorMessage,
+  getHubUrlFromRedirect,
+  WebAuthError,
+} from '@asap-hub/auth-frontend-utils';
 
 import {
   authorizeWithSso,
@@ -25,8 +29,7 @@ const Login: React.FC<LoginProps> = ({ email, setEmail }) => {
   return (
     <SigninPage
       signup={signup}
-      // appOrigin={getHubUrlFromRedirect()}
-      appOrigin={''}
+      appOrigin={getHubUrlFromRedirect()}
       appName={'GP2 Hub'}
       forgotPasswordHref="/forgot-password"
       onGoogleSignin={() => authorizeWithSso(window.location, 'google-oauth2')}

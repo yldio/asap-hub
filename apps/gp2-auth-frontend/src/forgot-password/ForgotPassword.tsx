@@ -10,7 +10,10 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
-import { extractErrorMessage, WebAuthError } from '@asap-hub/auth';
+import {
+  extractErrorMessage,
+  WebAuthError,
+} from '@asap-hub/auth-frontend-utils';
 
 import { sendPasswordResetLink } from '../auth0/web-auth';
 

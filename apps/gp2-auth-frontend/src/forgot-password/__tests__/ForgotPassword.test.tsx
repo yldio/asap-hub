@@ -6,7 +6,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { WebAuthError } from '@asap-hub/auth';
+import { WebAuthError } from '@asap-hub/auth-frontend-utils';
 
 import ForgotPassword from '../ForgotPassword';
 

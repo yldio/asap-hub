@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 import algoliasearch from 'algoliasearch';
 
-export type RemoveAlgoliaRecordsArgs = {
+export type RemoveAlgoliaRecords = {
   algoliaAppId: string;
   algoliaCiApiKey: string;
   indexName: string;
@@ -13,7 +13,7 @@ export const removeAlgoliaRecords = async ({
   algoliaCiApiKey,
   indexName,
   entityType,
-}: RemoveAlgoliaRecordsArgs): Promise<void> => {
+}: RemoveAlgoliaRecords): Promise<void> => {
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
   const index = client.initIndex(indexName);
 

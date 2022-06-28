@@ -15,9 +15,10 @@
     "url": "https://github.com/yldio/asap-hub.git"
   },
   "scripts": {
+    "algolia:clear-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:clear-index",
+    "algolia:delete-index": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' yarn ts-node --transpile-only apps/asap-cli/src/cli.ts algolia:delete-index",
     "algolia:get-settings": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' yarn ts-node --transpile-only apps/asap-cli/src/cli.ts algolia:get-settings",
     "algolia:move-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:move-index",
-    "algolia:clear-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:clear-index",
     "algolia:remove-records": "yarn node apps/asap-cli/build-cjs/cli.js algolia:remove-records",
     "algolia:set-settings": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' yarn ts-node --transpile-only apps/asap-cli/src/cli.ts algolia:set-settings",
     "build": "yarn build:typecheck && yarn build:babel && yarn typecheck && yarn build:frontend",

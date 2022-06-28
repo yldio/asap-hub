@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 import { resolve } from 'path';
 import prettier from 'prettier';
 
-export type GetSettings = {
+export type GetAlgoliaSettings = {
   algoliaAppId: string;
   algoliaCiApiKey: string;
   indexName: string;
@@ -14,7 +14,7 @@ export const getAlgoliaSettings = async ({
   algoliaAppId,
   algoliaCiApiKey,
   indexName,
-}: GetSettings): Promise<void> => {
+}: GetAlgoliaSettings): Promise<void> => {
   const path = resolve(__dirname, '../../../../../schema');
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
   const index = client.initIndex(indexName);

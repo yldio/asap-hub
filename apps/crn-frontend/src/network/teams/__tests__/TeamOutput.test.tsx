@@ -6,8 +6,8 @@ import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputDocumentType,
-  ValidationErrorResponse,
   ResearchOutputResponse,
+  ValidationErrorResponse,
 } from '@asap-hub/model';
 import {
   ResearchOutputPermissionsContext,

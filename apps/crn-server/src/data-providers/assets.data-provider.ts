@@ -6,7 +6,7 @@ import { appName, baseUrl } from '../config';
 export interface AssetDataProvider {
   create(id: string, avatar: Buffer, contentType: string): Promise<string>;
 }
-export default class Assets implements AssetDataProvider {
+export class AssetSquidexDataProvider implements AssetDataProvider {
   userSquidexRestClient: SquidexRestClient<RestUser>;
 
   constructor(userSquidexRestClient: SquidexRestClient<RestUser>) {

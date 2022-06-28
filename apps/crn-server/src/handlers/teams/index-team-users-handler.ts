@@ -13,8 +13,8 @@ import {
   baseUrl,
 } from '../../config';
 import Users, { UserController } from '../../controllers/users';
-import AssetDataProvider from '../../data-providers/assets.data-provider';
-import UserDataProvider from '../../data-providers/users.data-provider';
+import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
+import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import {
@@ -75,11 +75,11 @@ const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
   appName,
   baseUrl,
 });
-const userDataProvider = new UserDataProvider(
+const userDataProvider = new UserSquidexDataProvider(
   squidexGraphqlClient,
   userRestClient,
 );
-const assetDataProvider = new AssetDataProvider(userRestClient);
+const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 
 export const handler = indexTeamUsersHandler(
   new Users(userDataProvider, assetDataProvider),

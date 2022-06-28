@@ -35,7 +35,7 @@ type SharedResearchOutputProps = Pick<
   ResearchOutputResponse,
   | 'description'
   | 'tags'
-  | 'accessInstructions'
+  | 'usageNotes'
   | 'contactEmails'
   | 'methods'
   | 'organisms'
@@ -50,7 +50,7 @@ type SharedResearchOutputProps = Pick<
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   description,
   backHref,
-  accessInstructions,
+  usageNotes,
   contactEmails,
   id,
   ...props
@@ -109,11 +109,11 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             )}
           </Card>
         )}
-        {!isGrantDocument && accessInstructions && (
+        {!isGrantDocument && usageNotes && (
           <Card>
             <div css={{ paddingBottom: `${12 / perRem}em` }}>
               <Headline2 styleAsHeading={4}>Usage Notes</Headline2>
-              <RichText poorText text={accessInstructions} />
+              <RichText poorText text={usageNotes} />
             </div>
           </Card>
         )}

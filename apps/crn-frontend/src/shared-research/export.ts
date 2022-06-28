@@ -80,7 +80,7 @@ export const researchOutputToCSV = (
   accession: output.accession,
   labCatalogNumber: output.labCatalogNumber,
   description: htmlToCsvText(output.description),
-  accessInstructions: htmlToCsvText(output.accessInstructions),
+  usageNotes: htmlToCsvText(output.usageNotes),
   contactEmails: output.contactEmails
     .map((item) => item)
     .sort(caseInsensitive)

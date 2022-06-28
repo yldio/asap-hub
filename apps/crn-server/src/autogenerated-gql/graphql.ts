@@ -3713,18 +3713,6 @@ export type ResearchOutputsReferencingTeamsContentsWithTotalArgs = {
   top: Maybe<Scalars['Int']>;
 };
 
-/** The structure of the Access Instructions field of the Research Outputs content type. */
-export type ResearchOutputsDataAccessInstructionsDto = {
-  /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Access Instructions field of the Research Outputs content input type. */
-export type ResearchOutputsDataAccessInstructionsInputDto = {
-  /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
-  iv: Maybe<Scalars['String']>;
-};
-
 /** The structure of the Identifier (Accession #) field of the Research Outputs content type. */
 export type ResearchOutputsDataAccessionDto = {
   /** This must start with a letter */
@@ -3831,7 +3819,6 @@ export type ResearchOutputsDataDoiInputDto = {
 
 /** The structure of the Research Outputs data type. */
 export type ResearchOutputsDataDto = {
-  accessInstructions: Maybe<ResearchOutputsDataAccessInstructionsDto>;
   accession: Maybe<ResearchOutputsDataAccessionDto>;
   addedDate: Maybe<ResearchOutputsDataAddedDateDto>;
   adminNotes: Maybe<ResearchOutputsDataAdminNotesDto>;
@@ -3872,7 +3859,6 @@ export type ResearchOutputsDataEnvironmentsInputDto = {
 
 /** The structure of the Research Outputs data input type. */
 export type ResearchOutputsDataInputDto = {
-  accessInstructions: Maybe<ResearchOutputsDataAccessInstructionsInputDto>;
   accession: Maybe<ResearchOutputsDataAccessionInputDto>;
   addedDate: Maybe<ResearchOutputsDataAddedDateInputDto>;
   adminNotes: Maybe<ResearchOutputsDataAdminNotesInputDto>;
@@ -4075,8 +4061,6 @@ export type ResearchOutputsDataUsedInAPublicationInputDto = {
 
 /** The structure of the flat Research Outputs data type. */
 export type ResearchOutputsFlatDataDto = {
-  /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
-  accessInstructions: Maybe<Scalars['String']>;
   /** This must start with a letter */
   accession: Maybe<Scalars['String']>;
   /** Date output was shared with ASAP Network (different from publication date) */
@@ -7246,7 +7230,7 @@ export type ResearchOutputContentFragment = Pick<
     | 'rrid'
     | 'tags'
     | 'lastUpdatedPartial'
-    | 'accessInstructions'
+    | 'usageNotes'
     | 'sharingStatus'
     | 'asapFunded'
     | 'usedInAPublication'
@@ -7402,7 +7386,7 @@ export type FetchResearchOutputQuery = {
         | 'rrid'
         | 'tags'
         | 'lastUpdatedPartial'
-        | 'accessInstructions'
+        | 'usageNotes'
         | 'sharingStatus'
         | 'asapFunded'
         | 'usedInAPublication'
@@ -7577,7 +7561,7 @@ export type FetchResearchOutputsQuery = {
               | 'rrid'
               | 'tags'
               | 'lastUpdatedPartial'
-              | 'accessInstructions'
+              | 'usageNotes'
               | 'sharingStatus'
               | 'asapFunded'
               | 'usedInAPublication'
@@ -9788,10 +9772,7 @@ export const ResearchOutputContentFragmentDoc = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'lastUpdatedPartial' },
                 },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'accessInstructions' },
-                },
+                { kind: 'Field', name: { kind: 'Name', value: 'usageNotes' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'sharingStatus' },

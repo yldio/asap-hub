@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { NotFoundError } from '@asap-hub/errors';
 import { Logger } from '@asap-hub/server-common';
 import {
   Query,
@@ -6,7 +7,6 @@ import {
   SquidexRest,
   SquidexRestClient,
 } from '@asap-hub/squidex';
-import { isBoom } from '@hapi/boom';
 import { Handler } from 'aws-lambda';
 import { promises as fsPromise } from 'fs';
 import path from 'path';
@@ -221,7 +221,7 @@ const filterMigrationsFactory =
 
         return false;
       } catch (error) {
-        if (isBoom(error, 404)) {
+        if (error instanceof NotFoundError) {
           return true;
         }
 

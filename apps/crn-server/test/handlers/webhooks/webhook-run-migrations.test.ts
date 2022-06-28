@@ -1,4 +1,3 @@
-import Boom from '@hapi/boom';
 import {
   ImportModuleFromPath,
   Migration,
@@ -10,6 +9,7 @@ import { getSquidexClientMock } from '../../mocks/squidex-client.mock';
 import { promises as fsPromise } from 'fs';
 import { identity } from '../../helpers/squidex';
 import { RestMigration } from '@asap-hub/squidex';
+import { NotFoundError } from '@asap-hub/errors';
 
 describe('Run-migrations Webhook', () => {
   const squidexClientMock = getSquidexClientMock<RestMigration>();
@@ -63,7 +63,9 @@ describe('Run-migrations Webhook', () => {
 
     test('Should run the outstanding migration if it is not inside the Migrations schema, then save it in the schema', async () => {
       mockReadDir.mockResolvedValueOnce(['test-migration.ts'] as any);
-      squidexClientMock.fetchOne.mockRejectedValueOnce(Boom.notFound());
+      squidexClientMock.fetchOne.mockRejectedValueOnce(
+        new NotFoundError(undefined),
+      );
 
       const mockDefaultModule = { default: MockModule };
       mockImportModule.mockResolvedValueOnce(mockDefaultModule);
@@ -85,7 +87,9 @@ describe('Run-migrations Webhook', () => {
         '3-test-migration.ts',
         '1-test-migration.ts',
       ] as any);
-      squidexClientMock.fetchOne.mockRejectedValue(Boom.notFound());
+      squidexClientMock.fetchOne.mockRejectedValue(
+        new NotFoundError(undefined),
+      );
 
       const mockDefaultModule = { default: MockModule };
       mockImportModule.mockResolvedValue(mockDefaultModule);
@@ -112,7 +116,9 @@ describe('Run-migrations Webhook', () => {
         '1-test-migration.ts',
         '2-test-migration.ts',
       ] as any);
-      squidexClientMock.fetchOne.mockRejectedValue(Boom.notFound());
+      squidexClientMock.fetchOne.mockRejectedValue(
+        new NotFoundError(undefined),
+      );
 
       const mockDefaultModule = { default: MockModule };
       mockImportModule.mockResolvedValue(mockDefaultModule);
@@ -143,7 +149,9 @@ describe('Run-migrations Webhook', () => {
 
     test('Should not insert the migration into Migrations schema if it fails to run and throw after logging execution progress', async () => {
       mockReadDir.mockResolvedValueOnce(['test-migration.ts'] as any);
-      squidexClientMock.fetchOne.mockRejectedValueOnce(Boom.notFound());
+      squidexClientMock.fetchOne.mockRejectedValueOnce(
+        new NotFoundError(undefined),
+      );
 
       const mockDefaultModule = { default: MockModule };
       mockImportModule.mockResolvedValueOnce(mockDefaultModule);
@@ -163,7 +171,9 @@ describe('Run-migrations Webhook', () => {
         '2-test-migration.ts',
         '3-test-migration.ts',
       ] as any);
-      squidexClientMock.fetchOne.mockRejectedValue(Boom.notFound());
+      squidexClientMock.fetchOne.mockRejectedValue(
+        new NotFoundError(undefined),
+      );
 
       const mockDefaultModule = { default: MockModule };
       mockImportModule.mockResolvedValue(mockDefaultModule);

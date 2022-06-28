@@ -46,6 +46,7 @@ export interface ResearchOutput<
   title: string;
   type?: ResearchOutputType;
   updatedBy?: TUserConnection[];
+  usageNotes?: string;
   usedInAPublication: DecisionOption;
 }
 

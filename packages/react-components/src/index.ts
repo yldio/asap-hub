@@ -95,6 +95,7 @@ export {
   MenuHeader,
   NewsCard,
   NewsSection,
+  NoEvents,
   OnboardingFooter,
   PageCard,
   PagesSection,

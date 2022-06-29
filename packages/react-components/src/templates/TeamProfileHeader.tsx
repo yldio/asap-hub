@@ -136,6 +136,7 @@ type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly tools?: ReadonlyArray<TeamTool>;
   readonly teamListElementId: string;
   readonly upcomingEventsCount?: number;
+  readonly pastEventsCount?: number;
 };
 
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
@@ -147,6 +148,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   teamListElementId,
   labCount,
   upcomingEventsCount,
+  pastEventsCount,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
   const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
@@ -251,7 +253,12 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         <TabLink href={route.outputs({}).$}>Team Outputs</TabLink>
         {useFlags().isEnabled('EVENTS_SEARCH') && (
           <TabLink href={route.upcoming({}).$}>
-            Upcoming Events {`(${upcomingEventsCount})`}
+            Upcoming Events{`(${upcomingEventsCount})`}
+          </TabLink>
+        )}
+        {useFlags().isEnabled('EVENTS_SEARCH') && (
+          <TabLink href={route.past({}).$}>
+            Past Events {`(${pastEventsCount})`}
           </TabLink>
         )}
       </TabNav>

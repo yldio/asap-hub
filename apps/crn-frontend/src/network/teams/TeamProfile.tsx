@@ -1,10 +1,14 @@
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
-import { NotFoundPage, TeamProfilePage } from '@asap-hub/react-components';
+import {
+  NotFoundPage,
+  TeamProfilePage,
+  NoEvents,
+} from '@asap-hub/react-components';
 import {
   ResearchOutputPermissionsContext,
   useFlags,
 } from '@asap-hub/react-context';
-import { network, useRouteParams } from '@asap-hub/routing';
+import { events, network, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
@@ -56,7 +60,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
 
   const { pageSize } = usePaginationParams();
 
-  const options = getEventListOptions(
+  const upcomingEventOptions = getEventListOptions(
     currentTime,
     false,
     {
@@ -64,7 +68,20 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     },
     { teamId },
   );
-  const upcomingEventsResult = useEvents(options);
+
+  const pastEventOptions = getEventListOptions(
+    currentTime,
+    true,
+    {
+      pageSize,
+    },
+    { teamId },
+  );
+
+  const upcomingEventsResult = useEvents(upcomingEventOptions);
+
+  const pastEventsResult = useEvents(pastEventOptions);
+
   const isEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
 
   if (team) {
@@ -80,6 +97,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
             <TeamProfilePage
               teamListElementId={teamListElementId}
               upcomingEventsCount={upcomingEventsResult.total}
+              pastEventsCount={pastEventsResult.total}
               {...team}
             >
               <Route path={path + route({ teamId }).about.template}>
@@ -106,10 +124,38 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                       constraint={{ teamId }}
                       currentTime={currentTime}
                       past={false}
+                      events={upcomingEventsResult}
+                      noEventsComponent={
+                        <NoEvents
+                          type="team"
+                          past={false}
+                          link={events({}).upcoming({}).$}
+                        />
+                      }
                     />
                   </Frame>
                 </Route>
               )}
+              {isEventsEnabled && (
+                <Route path={path + route({ teamId }).past.template}>
+                  <Frame title="Past Events">
+                    <Events
+                      events={pastEventsResult}
+                      constraint={{ teamId }}
+                      currentTime={currentTime}
+                      past={true}
+                      noEventsComponent={
+                        <NoEvents
+                          type="team"
+                          past={true}
+                          link={events({}).past({}).$}
+                        />
+                      }
+                    />
+                  </Frame>
+                </Route>
+              )}
+
               <Redirect to={route({ teamId }).about({}).$} />
             </TeamProfilePage>
           </Switch>

@@ -99,12 +99,12 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
             <TabLink
               href={route.upcoming({}).$ + queryParamString(searchQuery)}
             >
-              Upcoming Events{` (${upcomingEventsCount})`}
+              Upcoming Events ({upcomingEventsCount})
             </TabLink>
           )}
 
           <TabLink href={route.past({}).$ + queryParamString(searchQuery)}>
-            Past Events{` (${pastEventsCount})`}
+            Past Events ({pastEventsCount})
           </TabLink>
         </TabNav>
       </div>

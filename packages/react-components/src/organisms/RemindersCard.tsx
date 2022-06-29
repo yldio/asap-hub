@@ -9,6 +9,7 @@ const container = css({
   display: 'flex',
   alignItems: 'center',
   color: lead.rgb,
+  padding: `${21 / perRem}em ${24 / perRem}em`,
 });
 
 const iconStyles = css({
@@ -23,7 +24,7 @@ type ReminderProps = {
 };
 
 const RemindersCard: React.FC<ReminderProps> = ({ canPublish }) => (
-  <Card stroke>
+  <Card stroke padding={false}>
     <div css={container}>
       <span css={[iconStyles]}>{infoCircleIcon}</span>
       {canPublish

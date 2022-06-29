@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { SigninPage } from '@asap-hub/react-components';
+import {
+  extractErrorMessage,
+  WebAuthError,
+} from '@asap-hub/auth-frontend-utils';
 
 import {
   authorizeWithSso,
   authorizeWithEmailPassword,
 } from '../auth0/web-auth';
-import { extractErrorMessage, WebAuthError } from '../auth0/errors';
 import { getHubUrlFromRedirect } from '../utils';
 
 interface LoginProps {

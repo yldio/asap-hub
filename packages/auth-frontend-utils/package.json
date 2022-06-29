@@ -1,0 +1,33 @@
+{
+  "name": "@asap-hub/auth-frontend-utils",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "16.x"
+  },
+  "module": "build/index.js",
+  "main": "build-cjs/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build:babel": "../../scripts/build-babel.sh build",
+    "watch:babel": "../../scripts/build-babel.sh watch"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs3": "7.18.3",
+    "auth0-js": "^9.16.0",
+    "camelcase": "^6.2.0",
+    "core-js": "^3.12.1",
+    "pify": "^5.0.0"
+  },
+  "devDependencies": {
+    "@asap-hub/dom-test-utils": "workspace:*",
+    "@asap-hub/eslint-config-asap-hub": "workspace:*",
+    "@asap-hub/model": "workspace:*",
+    "@babel/core": "7.18.5",
+    "@babel/preset-react": "7.17.12",
+    "@types/auth0-js": "^9.14.4",
+    "@types/jest": "26.0.24",
+    "@types/node": "^14.14.45",
+    "@types/pify": "^3.0.2"
+  }
+}

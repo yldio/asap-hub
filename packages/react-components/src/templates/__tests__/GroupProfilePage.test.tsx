@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { createGroupResponse } from '@asap-hub/fixtures';
 
 import GroupProfilePage from '../GroupProfilePage';
@@ -14,15 +14,13 @@ const props: ComponentProps<typeof GroupProfilePage> = {
 };
 
 it('renders the header', () => {
-  const { getByText, getByRole } = render(
-    <GroupProfilePage {...props} name="My Group" />,
+  render(<GroupProfilePage {...props} name="My Group" />);
+  expect(screen.getByRole('heading')).toContainElement(
+    screen.getByText('My Group'),
   );
-  expect(getByRole('heading')).toContainElement(getByText('My Group'));
 });
 
 it('renders the children', () => {
-  const { getByText } = render(
-    <GroupProfilePage {...props}>Page Content</GroupProfilePage>,
-  );
-  expect(getByText('Page Content')).toBeVisible();
+  render(<GroupProfilePage {...props}>Page Content</GroupProfilePage>);
+  expect(screen.getByText('Page Content')).toBeVisible();
 });

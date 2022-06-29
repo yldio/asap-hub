@@ -53,7 +53,9 @@
     "authors.id",
     "__meta.type",
     "teams.role",
-    "speakers.user.id"
+    "speakers.user.id",
+    "speakers.team.id",
+    "group.id"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

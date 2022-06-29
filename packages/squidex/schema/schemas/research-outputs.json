@@ -36,7 +36,7 @@
       "accession",
       "labCatalogNumber",
       "description",
-      "accessInstructions",
+      "usageNotes",
       "publishDate",
       "meta.id",
       "meta.created",
@@ -388,25 +388,6 @@
           "label": "Tags",
           "hints": "",
           "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "accessInstructions",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "contentType": "Unspecified",
-          "editor": "RichText",
-          "label": "Access Instructions",
-          "hints": "The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size)",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false

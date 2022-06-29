@@ -14,7 +14,7 @@ type LabeledDateFieldProps = {
 
   readonly value?: Date;
   readonly max?: Date;
-  readonly onChange?: (newDate: Date) => void;
+  readonly onChange?: (newDate: Date | undefined) => void;
 } & Pick<
   ComponentProps<typeof TextField>,
   'required' | 'customValidationMessage' | 'getValidationMessage'
@@ -27,6 +27,17 @@ const subtitleStyles = css({
 const descriptionStyles = css({
   color: lead.rgb,
 });
+
+export const parseDateToString = (date?: Date): string => {
+  try {
+    if (date) {
+      return formatISO(date, { representation: 'date' });
+    }
+    throw new Error('Date is undefined');
+  } catch {
+    return '';
+  }
+};
 
 const LabeledDateField: React.FC<LabeledDateFieldProps> = ({
   title,
@@ -45,7 +56,7 @@ const LabeledDateField: React.FC<LabeledDateFieldProps> = ({
           {...dateFieldProps}
           type="date"
           id={id}
-          value={value ? formatISO(value, { representation: 'date' }) : ''}
+          value={parseDateToString(value)}
           onChange={(newDate) => onChange(parseISO(newDate))}
           max={max ? format(max, 'yyyy-MM-dd') : undefined}
         />
@@ -59,5 +70,4 @@ const LabeledDateField: React.FC<LabeledDateFieldProps> = ({
     </Label>
   </div>
 );
-
 export default LabeledDateField;

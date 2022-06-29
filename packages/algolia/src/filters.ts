@@ -1,10 +1,8 @@
+import { EventConstraint } from '@asap-hub/model';
+
 type Filters = {
   before?: string;
   after?: string;
-};
-type Constraints = {
-  userId?: string;
-  groupId?: string;
 };
 
 const timeFilter = (time: string, symbol: string) => {
@@ -12,8 +10,12 @@ const timeFilter = (time: string, symbol: string) => {
   return `endDateTimestamp ${symbol} ${timestamp}`;
 };
 
-const getFilter = (filters: string[], constraint?: Constraints) => {
+const getFilter = (filters: string[], constraint?: EventConstraint) => {
+  if (constraint?.userId && constraint?.teamId) {
+    throw new Error('userId and teamId not supported!');
+  }
   const constaintFilters = [
+    constraint?.teamId && `speakers.team.id: "${constraint.teamId}"`,
     constraint?.userId && `speakers.user.id: "${constraint.userId}"`,
     constraint?.groupId && `group.id: "${constraint.groupId}"`,
   ]
@@ -30,7 +32,7 @@ const getFilter = (filters: string[], constraint?: Constraints) => {
 
 export const getEventFilters = (
   filters: Filters,
-  constraints?: Constraints,
+  constraints?: EventConstraint,
 ): string | undefined => {
   const filterList = [
     ...(filters.before ? [timeFilter(filters.before, '<')] : []),

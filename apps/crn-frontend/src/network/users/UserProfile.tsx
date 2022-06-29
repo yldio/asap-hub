@@ -28,7 +28,7 @@ const loadOutputs = () =>
 const loadEditing = () =>
   import(/* webpackChunkName: "network-editing" */ './Editing');
 const loadEvents = () =>
-  import(/* webpackChunkName: "network-upcoming-events" */ './Events');
+  import(/* webpackChunkName: "network-events" */ '../EventsEmbed');
 const Research = lazy(loadResearch);
 const About = lazy(loadAbout);
 const Outputs = lazy(loadOutputs);
@@ -71,16 +71,14 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
       currentTime,
       false,
       {
-        currentPage: 0,
         pageSize,
-        searchQuery: '',
       },
-      userId,
+      { userId },
     ),
     currentUser,
   );
 
-  const isUserEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
+  const isEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
 
   if (user) {
     const profilePageProps: Omit<
@@ -141,11 +139,11 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                       <Outputs userId={user?.id} />
                     </Frame>
                   </Route>
-                  {isUserEventsEnabled && (
+                  {isEventsEnabled && (
                     <Route path={path + tabRoutes.upcoming.template}>
                       <Frame title="Upcoming Events">
                         <Events
-                          userId={user?.id}
+                          constraint={{ userId: user?.id }}
                           currentTime={currentTime}
                           past={false}
                         />

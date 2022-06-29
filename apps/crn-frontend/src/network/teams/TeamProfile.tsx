@@ -1,11 +1,16 @@
+import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 import { NotFoundPage, TeamProfilePage } from '@asap-hub/react-components';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
+import {
+  ResearchOutputPermissionsContext,
+  useFlags,
+} from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
-import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
-
+import { getEventListOptions } from '../../events/options';
+import { useEvents } from '../../events/state';
+import { usePaginationParams } from '../../hooks/pagination';
 import { useCanCreateUpdateResearchOutput, useTeamById } from './state';
 
 const loadAbout = () =>
@@ -17,14 +22,21 @@ const loadWorkspace = () =>
 
 const loadTeamOutput = () =>
   import(/* webpackChunkName: "network-team-team-output" */ './TeamOutput');
+const loadEvents = () =>
+  import(/* webpackChunkName: "network-events" */ '../EventsEmbed');
 
 const TeamOutput = lazy(loadTeamOutput);
 const About = lazy(loadAbout);
 const Outputs = lazy(loadOutputs);
 const Workspace = lazy(loadWorkspace);
+const Events = lazy(loadEvents);
 loadAbout();
 
-const TeamProfile: FC<Record<string, never>> = () => {
+type TeamProfileProps = {
+  currentTime: Date;
+};
+
+const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   const route = network({}).teams({}).team;
   const [teamListElementId] = useState(`team-list-${uuid()}`);
 
@@ -42,6 +54,19 @@ const TeamProfile: FC<Record<string, never>> = () => {
       .then(loadTeamOutput);
   }, [team]);
 
+  const { pageSize } = usePaginationParams();
+
+  const options = getEventListOptions(
+    currentTime,
+    false,
+    {
+      pageSize,
+    },
+    { teamId },
+  );
+  const upcomingEventsResult = useEvents(options);
+  const isEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
+
   if (team) {
     return (
       <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
@@ -52,7 +77,11 @@ const TeamProfile: FC<Record<string, never>> = () => {
                 <TeamOutput teamId={teamId} />
               </Frame>
             </Route>
-            <TeamProfilePage teamListElementId={teamListElementId} {...team}>
+            <TeamProfilePage
+              teamListElementId={teamListElementId}
+              upcomingEventsCount={upcomingEventsResult.total}
+              {...team}
+            >
               <Route path={path + route({ teamId }).about.template}>
                 <Frame title="About">
                   <About teamListElementId={teamListElementId} team={team} />
@@ -67,6 +96,17 @@ const TeamProfile: FC<Record<string, never>> = () => {
                 <Route path={path + route({ teamId }).workspace.template}>
                   <Frame title="Workspace">
                     <Workspace team={{ ...team, tools: team.tools }} />
+                  </Frame>
+                </Route>
+              )}
+              {isEventsEnabled && (
+                <Route path={path + route({ teamId }).upcoming.template}>
+                  <Frame title="Upcoming Events">
+                    <Events
+                      constraint={{ teamId }}
+                      currentTime={currentTime}
+                      past={false}
+                    />
                   </Frame>
                 </Route>
               )}

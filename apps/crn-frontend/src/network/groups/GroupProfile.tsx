@@ -55,8 +55,7 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
         pageSize: 1,
         searchQuery: '',
       },
-      undefined,
-      groupId,
+      { groupId },
     ),
   );
   const pastEvents = useEvents(
@@ -68,8 +67,7 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
         pageSize: 1,
         searchQuery: '',
       },
-      undefined,
-      groupId,
+      { groupId },
     ),
   );
 

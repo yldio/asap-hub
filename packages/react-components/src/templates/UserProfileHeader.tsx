@@ -294,7 +294,12 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
           </TabLink>
           {useFlags().isEnabled('EVENTS_SEARCH') && (
             <TabLink href={tabRoutes.upcoming({}).$}>
-              Upcoming Events {` (${upcomingEventsCount})`}
+              Upcoming Events {`(${upcomingEventsCount})`}
+            </TabLink>
+          )}
+          {useFlags().isEnabled('EVENTS_SEARCH') && (
+            <TabLink href={tabRoutes.past({}).$}>
+              Past Events {`(${pastEventsCount})`}
             </TabLink>
           )}
           {useFlags().isEnabled('EVENTS_SEARCH') && (

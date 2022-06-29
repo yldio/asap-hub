@@ -65,7 +65,7 @@ const propsViewOnly = (): Omit<
     ],
     sharedOutputsCount: 0,
     pastEventsCount: 2,
-    upcomingEventsCount: 3
+    upcomingEventsCount: 3,
   };
 };
 const propsEditable = (): ReturnType<typeof propsViewOnly> => ({

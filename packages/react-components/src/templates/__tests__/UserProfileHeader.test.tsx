@@ -4,15 +4,15 @@ import { createUserResponse } from '@asap-hub/fixtures';
 import { UserProfileContext } from '@asap-hub/react-context';
 
 import UserProfileHeader from '../UserProfileHeader';
-import {StaticRouter} from "react-router-dom";
-import {network} from "@asap-hub/routing";
+import { StaticRouter } from 'react-router-dom';
+import { network } from '@asap-hub/routing';
 
 const boilerplateProps: ComponentProps<typeof UserProfileHeader> = {
   ...createUserResponse(),
   role: 'Grantee',
   sharedOutputsCount: 0,
   pastEventsCount: 2,
-  upcomingEventsCount: 3
+  upcomingEventsCount: 3,
 };
 
 it('renders the name as the top-level heading', () => {
@@ -146,9 +146,14 @@ it('renders the navigation for active and inactive groups', () => {
   render(<UserProfileHeader {...boilerplateProps} />);
 
   expect(
-    screen.getAllByRole('listitem').map(({textContent}) => textContent),
-  ).toEqual(['Research', 'Background', 'Shared Outputs (0)', 'Upcoming Events (3)', 'Past Events (2)']);
-
+    screen.getAllByRole('listitem').map(({ textContent }) => textContent),
+  ).toEqual([
+    'Research',
+    'Background',
+    'Shared Outputs (0)',
+    'Upcoming Events (3)',
+    'Past Events (2)',
+  ]);
 });
 
 it('displays number of upcoming events', () => {

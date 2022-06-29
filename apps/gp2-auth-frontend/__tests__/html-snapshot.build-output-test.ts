@@ -26,7 +26,7 @@ describe('the built index.html', () => {
             name="theme-color"
           />
           <meta
-            content="Sign in to the Hub application by ASAP: Aligning Science Across Parkinson's"
+            content="Sign in to the Hub application by GP2"
             name="description"
           />
           <link
@@ -50,7 +50,7 @@ describe('the built index.html', () => {
             rel="manifest"
           />
           <title>
-            ASAP Hub Signin
+            GP2 Hub Signin
           </title>
         </head>
         <body>

@@ -35,6 +35,7 @@ const props = (): ComponentProps<typeof DashboardPageBody> => ({
   ],
   userId: 'u42',
   teamId: 't42',
+  roles: [],
 });
 
 export const Normal = () => <DashboardPageBody {...props()} />;

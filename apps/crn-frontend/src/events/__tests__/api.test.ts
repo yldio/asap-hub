@@ -193,7 +193,7 @@ describe('getEventsFromAlgolia', () => {
       constraint: { userId: 'user-1' },
     });
     expect(search).toBeCalledWith(['event'], '', {
-      filters: '(endDateTimestamp < 1609498800) AND speakers.user.id: "user-1"',
+      filters: '(endDateTimestamp < 1609498800) AND (speakers.user.id: "user-1")',
       hitsPerPage: 10,
       page: 0,
     });

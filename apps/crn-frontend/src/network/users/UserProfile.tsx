@@ -1,12 +1,16 @@
 import { Frame } from '@asap-hub/frontend-utils';
-import { NotFoundPage, UserProfilePage } from '@asap-hub/react-components';
+import {
+  NotFoundPage,
+  UserProfilePage,
+  UserNoEvents,
+} from '@asap-hub/react-components';
 import {
   ToastContext,
   useCurrentUser,
   useFlags,
   UserProfileContext,
 } from '@asap-hub/react-context';
-import { network, useRouteParams } from '@asap-hub/routing';
+import { events, network, useRouteParams } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
 import { ComponentProps, FC, lazy, useContext, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
@@ -159,15 +163,38 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                     </Frame>
                   </Route>
                   {isEventsEnabled && (
-                    <Route path={path + tabRoutes.upcoming.template}>
-                      <Frame title="Upcoming Events">
-                        <Events
-                          constraint={{ userId: user?.id }}
-                          currentTime={currentTime}
-                          past={false}
-                        />
-                      </Frame>
-                    </Route>
+                    <>
+                      <Route path={path + tabRoutes.upcoming.template}>
+                        <Frame title="Upcoming Events">
+                          <Events
+                            constraint={{ userId: user?.id }}
+                            currentTime={currentTime}
+                            past={false}
+                            noEventsComponent={
+                              <UserNoEvents
+                                past={false}
+                                link={events({}).upcoming({}).$}
+                              />
+                            }
+                          />
+                        </Frame>
+                      </Route>
+                      <Route path={path + tabRoutes.past.template}>
+                        <Frame title="Past Events">
+                          <Events
+                            constraint={{ userId: user?.id }}
+                            currentTime={currentTime}
+                            past={true}
+                            noEventsComponent={
+                              <UserNoEvents
+                                past={true}
+                                link={events({}).past({}).$}
+                              />
+                            }
+                          />
+                        </Frame>
+                      </Route>
+                    </>
                   )}
                   {isEventsEnabled && (
                     <Route path={path + tabRoutes.past.template}>

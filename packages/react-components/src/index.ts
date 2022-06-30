@@ -102,6 +102,7 @@ export {
   ProfileCardList,
   ProfileExpertiseAndResources,
   QuestionsSection,
+  RemindersCard,
   ResearchOutputExtraInformationCard,
   ResearchOutputForm,
   ResearchOutputHeader,

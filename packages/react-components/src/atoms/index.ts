@@ -17,7 +17,6 @@ export { default as Label } from './Label';
 export { default as Link } from './Link';
 export { default as LinkConditional } from './LinkConditional';
 export { default as MultiSelect } from './MultiSelect';
-export type { MultiSelectOptionsType, MultiSelectProps } from './MultiSelect';
 export { default as NavigationLink } from './NavigationLink';
 export { default as Overlay } from './Overlay';
 export { default as Paragraph } from './Paragraph';
@@ -32,3 +31,4 @@ export { default as Tooltip } from './Tooltip';
 export { default as Typeahead } from './Typeahead';
 
 export type { DropdownProps } from './Dropdown';
+export type { MultiSelectOptionsType, MultiSelectProps } from './MultiSelect';

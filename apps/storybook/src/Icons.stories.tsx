@@ -31,6 +31,7 @@ export const GoogleSigninLightNormal = () =>
   components.googleSigninLightNormalIcon;
 export const Groups = () => components.groupsIcon;
 export const HidePassword = () => components.hidePasswordIcon;
+export const InfoCircle = () => components.infoCircleIcon;
 export const Info = () => components.infoIcon;
 export const Lab = () => components.labIcon;
 export const LastPage = () => components.lastPageIcon;

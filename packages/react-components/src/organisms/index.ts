@@ -30,6 +30,7 @@ export { default as PeopleCard } from './PeopleCard';
 export { default as ProfileCardList } from './ProfileCardList';
 export { default as ProfileExpertiseAndResources } from './ProfileExpertiseAndResources';
 export { default as QuestionsSection } from './QuestionsSection';
+export { default as RemindersCard } from './RemindersCard';
 export { default as ResearchOutputExtraInformationCard } from './ResearchOutputExtraInformationCard';
 export { default as ResearchOutputForm } from './ResearchOutputForm';
 export { default as ResearchOutputFormSharingCard } from './ResearchOutputFormSharingCard';

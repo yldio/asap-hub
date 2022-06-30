@@ -52,6 +52,10 @@ import {
   GroupSquidexDataProvider,
 } from './data-providers/groups.data-provider';
 import {
+  TeamDataProvider,
+  TeamSquidexDataProvider,
+} from './data-providers/teams.data-provider';
+import {
   UserDataProvider,
   UserSquidexDataProvider,
 } from './data-providers/users.data-provider';
@@ -130,14 +134,17 @@ export const appFactory = (libs: Libs = {}): Express => {
   );
 
   // Data Providers
-  const userDataProvider =
-    libs.userDataProvider ||
-    new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
   const assetDataProvider =
     libs.assetDataProvider || new AssetSquidexDataProvider(userRestClient);
   const groupDataProvider =
     libs.groupDataProvider ||
     new GroupSquidexDataProvider(squidexGraphqlClient);
+  const teamDataProvider =
+    libs.teamDataProvider ||
+    new TeamSquidexDataProvider(squidexGraphqlClient, teamRestClient);
+  const userDataProvider =
+    libs.userDataProvider ||
+    new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
 
   // Controllers
   const calendarController =
@@ -163,9 +170,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     );
   const researchTagController =
     libs.researchTagController || new ResearchTags(squidexGraphqlClient);
-  const teamController =
-    libs.teamController ||
-    new Teams(squidexGraphqlClient, userRestClient, teamRestClient);
+  const teamController = libs.teamController || new Teams(teamDataProvider);
   const userController =
     libs.userController || new Users(userDataProvider, assetDataProvider);
   const labsController = libs.labsController || new Labs(squidexGraphqlClient);
@@ -291,9 +296,10 @@ export type Libs = {
   teamController?: TeamController;
   userController?: UserController;
   labsController?: LabsController;
-  groupDataProvider?: GroupDataProvider;
-  userDataProvider?: UserDataProvider;
   assetDataProvider?: AssetDataProvider;
+  groupDataProvider?: GroupDataProvider;
+  teamDataProvider?: TeamDataProvider;
+  userDataProvider?: UserDataProvider;
   authHandler?: AuthHandler;
   tracer?: Tracer;
   httpLogger?: HttpLogger;

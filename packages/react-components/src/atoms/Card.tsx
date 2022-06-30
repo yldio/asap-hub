@@ -11,7 +11,6 @@ const containerStyles = css({
   borderWidth: 1,
   borderStyle: 'solid',
   borderRadius: `${borderRadius / perRem}em`,
-  overflow: 'hidden',
 });
 
 export type AccentVariant = 'default' | 'red' | 'green' | 'placeholder';

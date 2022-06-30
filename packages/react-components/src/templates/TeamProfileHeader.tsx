@@ -253,7 +253,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         <TabLink href={route.outputs({}).$}>Team Outputs</TabLink>
         {useFlags().isEnabled('EVENTS_SEARCH') && (
           <TabLink href={route.upcoming({}).$}>
-            Upcoming Events{`(${upcomingEventsCount})`}
+            Upcoming Events {`(${upcomingEventsCount})`}
           </TabLink>
         )}
         {useFlags().isEnabled('EVENTS_SEARCH') && (

@@ -2,6 +2,8 @@ import { SearchFrame } from '@asap-hub/frontend-utils';
 import { EventConstraint, ListEventResponse } from '@asap-hub/model';
 import { EventSearch, EventsList } from '@asap-hub/react-components';
 import { usePagination, usePaginationParams, useSearch } from '../hooks';
+import { useEvents } from '../events/state';
+import { getEventListOptions } from '../events/options';
 
 type EventsEmbedProps = {
   readonly currentTime: Date;
@@ -16,13 +18,26 @@ const EventsEmbed: React.FC<EventsEmbedProps> = ({
   constraint,
   past,
   noEventsComponent,
-  events,
 }) => {
   const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
+  const { pageSize } = usePaginationParams();
+
+  const eventOptions = getEventListOptions(
+    currentTime,
+    false,
+    {
+      pageSize,
+    },
+    constraint,
+  );
+
+  const events = useEvents(eventOptions);
+
+  const hasEvents = events?.total;
 
   return (
     <article>
-      {noEventsComponent && 1 + 2 === 3 ? (
+      {noEventsComponent && !hasEvents ? (
         noEventsComponent
       ) : (
         <>
@@ -49,15 +64,26 @@ type EventsDisplayProps = EventsEmbedProps & {
   searchQuery: string;
   events?: ListEventResponse;
 };
-const EventsDisplay: React.FC<EventsDisplayProps> = ({ events }) => {
-  const total = events?.total || 0;
+
+const EventsDisplay: React.FC<EventsDisplayProps> = ({
+  currentTime,
+  past,
+  searchQuery,
+  constraint,
+}) => {
   const { currentPage, pageSize } = usePaginationParams();
-
+  const options = getEventListOptions(
+    currentTime,
+    past,
+    {
+      searchQuery,
+      currentPage,
+      pageSize,
+    },
+    constraint,
+  );
+  const { items, total } = useEvents(options);
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
-
-  if (!events) {
-    return <></>;
-  }
 
   return (
     <EventsList
@@ -65,7 +91,7 @@ const EventsDisplay: React.FC<EventsDisplayProps> = ({ events }) => {
       numberOfItems={total}
       renderPageHref={renderPageHref}
       numberOfPages={numberOfPages}
-      events={events?.items}
+      events={items}
     />
   );
 };

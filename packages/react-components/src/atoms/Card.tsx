@@ -39,9 +39,14 @@ export const accents: Record<AccentVariant, CSSObject> = {
   },
 };
 
+const strokeStyles = css({
+  background: `linear-gradient(${colors.cerulean.rgb}, ${colors.cerulean.rgb}) no-repeat left/${borderRadius}px 100%`,
+});
+
 interface CardProps {
   readonly accent?: AccentVariant;
   readonly padding?: boolean;
+  readonly stroke?: boolean;
 
   readonly children: React.ReactNode;
 }
@@ -49,11 +54,13 @@ const Card: React.FC<CardProps> = ({
   children,
   accent = 'default',
   padding = true,
+  stroke = false,
 }) => (
   <section
     css={[
       themes.light,
       containerStyles,
+      stroke && strokeStyles,
       padding && paddingStyles,
       accents[accent],
     ]}

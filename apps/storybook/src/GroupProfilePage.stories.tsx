@@ -43,6 +43,8 @@ export const Normal = () => {
             ? text('Search Query', '')
             : undefined
         }
+        pastEventsCount={2}
+        upcomingEventsCount={3}
       />
     </StaticRouter>
   );

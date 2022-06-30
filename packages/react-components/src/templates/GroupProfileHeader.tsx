@@ -39,6 +39,8 @@ type GroupProfileHeaderProps = {
   readonly lastModifiedDate: string;
   readonly groupTeamsHref: string;
   readonly active: boolean;
+  readonly upcomingEventsCount: number;
+  readonly pastEventsCount: number;
 } & ComponentProps<typeof EventSearch>;
 const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
   id,
@@ -49,6 +51,8 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
   groupTeamsHref,
   searchQuery,
   onChangeSearchQuery,
+  upcomingEventsCount,
+  pastEventsCount,
 }) => {
   const route = network({}).groups({}).group({ groupId: id });
 
@@ -95,12 +99,12 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
             <TabLink
               href={route.upcoming({}).$ + queryParamString(searchQuery)}
             >
-              Upcoming Events
+              Upcoming Events ({upcomingEventsCount})
             </TabLink>
           )}
 
           <TabLink href={route.past({}).$ + queryParamString(searchQuery)}>
-            Past Events
+            Past Events ({pastEventsCount})
           </TabLink>
         </TabNav>
       </div>

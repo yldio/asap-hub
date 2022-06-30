@@ -1,11 +1,12 @@
 import { ComponentProps } from 'react';
+import { StaticRouter } from 'react-router-dom';
+
 import { render, screen } from '@testing-library/react';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { UserProfileContext } from '@asap-hub/react-context';
+import { network } from '@asap-hub/routing';
 
 import UserProfileHeader from '../UserProfileHeader';
-import { StaticRouter } from 'react-router-dom';
-import { network } from '@asap-hub/routing';
 
 const boilerplateProps: ComponentProps<typeof UserProfileHeader> = {
   ...createUserResponse(),

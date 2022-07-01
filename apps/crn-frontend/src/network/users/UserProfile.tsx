@@ -163,38 +163,38 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                     </Frame>
                   </Route>
                   {isEventsEnabled && (
-                    <>
-                      <Route path={path + tabRoutes.upcoming.template}>
-                        <Frame title="Upcoming Events">
-                          <Events
-                            constraint={{ userId: user?.id }}
-                            currentTime={currentTime}
-                            past={false}
-                            noEventsComponent={
-                              <UserNoEvents
-                                past={false}
-                                link={events({}).upcoming({}).$}
-                              />
-                            }
-                          />
-                        </Frame>
-                      </Route>
-                      <Route path={path + tabRoutes.past.template}>
-                        <Frame title="Past Events">
-                          <Events
-                            constraint={{ userId: user?.id }}
-                            currentTime={currentTime}
-                            past={true}
-                            noEventsComponent={
-                              <UserNoEvents
-                                past={true}
-                                link={events({}).past({}).$}
-                              />
-                            }
-                          />
-                        </Frame>
-                      </Route>
-                    </>
+                    <Route path={path + tabRoutes.upcoming.template}>
+                      <Frame title="Upcoming Events">
+                        <Events
+                          constraint={{ userId: user?.id }}
+                          currentTime={currentTime}
+                          past={false}
+                          noEventsComponent={
+                            <UserNoEvents
+                              past={false}
+                              link={events({}).upcoming({}).$}
+                            />
+                          }
+                        />
+                      </Frame>
+                    </Route>
+                  )}
+                  {isEventsEnabled && (
+                    <Route path={path + tabRoutes.past.template}>
+                      <Frame title="Past Events">
+                        <Events
+                          constraint={{ userId: user?.id }}
+                          currentTime={currentTime}
+                          past={true}
+                          noEventsComponent={
+                            <UserNoEvents
+                              past={true}
+                              link={events({}).past({}).$}
+                            />
+                          }
+                        />
+                      </Frame>
+                    </Route>
                   )}
                   {isEventsEnabled && (
                     <Route path={path + tabRoutes.past.template}>

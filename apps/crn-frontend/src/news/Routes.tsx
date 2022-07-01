@@ -2,7 +2,6 @@ import { FC, lazy } from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { NewsPage } from '@asap-hub/react-components';
 import { news } from '@asap-hub/routing';
-
 import { Frame } from '@asap-hub/frontend-utils';
 
 const loadNewsList = () =>
@@ -14,7 +13,6 @@ loadNewsList();
 
 const News: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
-
   return (
     <Switch>
       <Route exact path={path}>
@@ -25,7 +23,9 @@ const News: FC<Record<string, never>> = () => {
         </NewsPage>
       </Route>
       <Route path={path + news({}).article.template}>
-        <NewsDetailsPage />
+        <Frame title={null}>
+          <NewsDetailsPage />
+        </Frame>
       </Route>
     </Switch>
   );

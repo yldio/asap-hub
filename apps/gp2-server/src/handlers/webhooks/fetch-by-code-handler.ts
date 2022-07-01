@@ -29,12 +29,6 @@ export type GetValidUntilTimestampInSecondsArgs = {
   ttl: number;
 };
 
-export const getValidUntilTimestampInSeconds = ({
-  date,
-  ttl,
-}: GetValidUntilTimestampInSecondsArgs): number =>
-  Math.floor(date.getTime() / 1000) + Math.floor(ttl);
-
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,

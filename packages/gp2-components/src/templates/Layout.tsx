@@ -11,11 +11,11 @@ import {
   navigationGrey,
   usePrevious,
 } from '@asap-hub/react-components';
+import { useLocation } from 'react-router-dom';
 
 import NavigationHeader from '../organism/NavigationHeader';
 import UserMenu from '../molecules/UserMenu';
 import MainNavigation from '../organism/MainNavigation';
-import { useLocation } from 'react-router-dom';
 
 const { mobileScreen, tabletScreen, vminLinearCalcClamped } = pixels;
 

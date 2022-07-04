@@ -43,37 +43,38 @@ type SharedResearchOutputHeaderCardProps = ComponentProps<
     | 'lastUpdatedPartial'
   >;
 
-const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardProps> =
-  ({
-    created,
-    addedDate,
-    authors,
-    teams,
-    title,
-    lastUpdatedPartial,
-    labs,
-    ...props
-  }) => (
-    <Card>
-      <SharedResearchMetadata {...props} />
-      <Display styleAsHeading={3}>{title}</Display>
-      <UsersList users={authors} />
-      <div css={associationStyles}>
-        <AssociationList
-          type="Lab"
-          inline
-          associations={labs.map(({ name, id }) => ({
-            displayName: name,
-            id,
-          }))}
-        />
-        <AssociationList type="Team" inline associations={teams} />
-      </div>
-      <div css={[timestampStyles, captionStyles]}>
-        <span>Date added: {formatDate(new Date(addedDate || created))} · </span>
-        <span>Last updated: {formatDate(new Date(lastUpdatedPartial))}</span>
-      </div>
-    </Card>
-  );
+const SharedResearchOutputHeaderCard: React.FC<
+  SharedResearchOutputHeaderCardProps
+> = ({
+  created,
+  addedDate,
+  authors,
+  teams,
+  title,
+  lastUpdatedPartial,
+  labs,
+  ...props
+}) => (
+  <Card>
+    <SharedResearchMetadata {...props} />
+    <Display styleAsHeading={3}>{title}</Display>
+    <UsersList users={authors} />
+    <div css={associationStyles}>
+      <AssociationList
+        type="Lab"
+        inline
+        associations={labs.map(({ name, id }) => ({
+          displayName: name,
+          id,
+        }))}
+      />
+      <AssociationList type="Team" inline associations={teams} />
+    </div>
+    <div css={[timestampStyles, captionStyles]}>
+      <span>Date added: {formatDate(new Date(addedDate || created))} · </span>
+      <span>Last updated: {formatDate(new Date(lastUpdatedPartial))}</span>
+    </div>
+  </Card>
+);
 
 export default SharedResearchOutputHeaderCard;

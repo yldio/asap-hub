@@ -97,105 +97,107 @@ export interface ResearchOutputIdentifierProps {
   isEditMode?: boolean;
 }
 
-export const ResearchOutputIdentifier: React.FC<ResearchOutputIdentifierProps> =
-  ({
-    identifierType = ResearchOutputIdentifierType.Empty,
-    setIdentifierType = noop,
-    identifier = '',
-    setIdentifier = noop,
-    documentType,
-  }) => {
-    const identifiers = useMemo(
-      () => getIdentifiers(documentType),
-      [documentType],
-    );
+export const ResearchOutputIdentifier: React.FC<
+  ResearchOutputIdentifierProps
+> = ({
+  identifierType = ResearchOutputIdentifierType.Empty,
+  setIdentifierType = noop,
+  identifier = '',
+  setIdentifier = noop,
+  documentType,
+}) => {
+  const identifiers = useMemo(
+    () => getIdentifiers(documentType),
+    [documentType],
+  );
 
-    const infoText = getIdentifierInfoMessage(identifiers);
-    const onChangeIdentifierType = useCallback(
-      (newType: string) => {
-        if (
-          newType === undefined ||
-          identifiers.find(
-            (availableIdentifier) => availableIdentifier.value === newType,
-          )
-        ) {
-          setIdentifierType(newType as ResearchOutputIdentifierType);
-        }
-        setIdentifier('');
-      },
-      [setIdentifierType, identifiers, setIdentifier],
-    );
+  const infoText = getIdentifierInfoMessage(identifiers);
+  const onChangeIdentifierType = useCallback(
+    (newType: string) => {
+      if (
+        newType === undefined ||
+        identifiers.find(
+          (availableIdentifier) => availableIdentifier.value === newType,
+        )
+      ) {
+        setIdentifierType(newType as ResearchOutputIdentifierType);
+      }
+      setIdentifier('');
+    },
+    [setIdentifierType, identifiers, setIdentifier],
+  );
 
-    return (
-      <>
-        <LabeledDropdown
-          title="Identifier Type"
-          subtitle={'(required)'}
-          options={identifiers}
-          value={identifierType}
-          onChange={onChangeIdentifierType}
-          placeholder={'Choose an identifier'}
-          getValidationMessage={() => `Please choose an identifier`}
-          required={true}
-          info={infoText}
-        />
+  return (
+    <>
+      <LabeledDropdown
+        title="Identifier Type"
+        subtitle={'(required)'}
+        options={identifiers}
+        value={identifierType}
+        onChange={onChangeIdentifierType}
+        placeholder={'Choose an identifier'}
+        getValidationMessage={() => `Please choose an identifier`}
+        required={true}
+        info={infoText}
+      />
 
-        <TeamCreateOutputIdentifierField
-          type={identifierType}
-          identifier={identifier}
-          setIdentifier={setIdentifier}
-        />
-      </>
-    );
-  };
+      <TeamCreateOutputIdentifierField
+        type={identifierType}
+        identifier={identifier}
+        setIdentifier={setIdentifier}
+      />
+    </>
+  );
+};
 export interface TeamCreateOutputIdentifierFieldProps {
   identifier: string;
   setIdentifier: (value: string) => void;
   type: ResearchOutputIdentifierType;
 }
-export const TeamCreateOutputIdentifierField: React.FC<TeamCreateOutputIdentifierFieldProps> =
-  ({ type, identifier, setIdentifier }) => {
-    const { helpText, placeholder, errorMessage, regex, required } =
-      identifierMap[type];
+export const TeamCreateOutputIdentifierField: React.FC<
+  TeamCreateOutputIdentifierFieldProps
+> = ({ type, identifier, setIdentifier }) => {
+  const { helpText, placeholder, errorMessage, regex, required } =
+    identifierMap[type];
 
-    return (
-      <>
-        {type === ResearchOutputIdentifierType.AccessionNumber && (
-          <LabeledTextField
-            title={type}
-            description={helpText}
-            placeholder={placeholder}
-            getValidationMessage={() => errorMessage}
-            value={identifier}
-            onChange={setIdentifier}
-            pattern={regex}
-            required={required}
-          />
-        )}
-        {type === ResearchOutputIdentifierType.DOI && (
-          <LabeledTextField
-            title={type}
-            description={helpText}
-            placeholder={placeholder}
-            getValidationMessage={() => errorMessage}
-            value={identifier}
-            onChange={setIdentifier}
-            pattern={regex}
-            required={required}
-          />
-        )}
-        {type === ResearchOutputIdentifierType.RRID && (
-          <LabeledTextField
-            title={type}
-            description={helpText}
-            placeholder={placeholder}
-            getValidationMessage={() => errorMessage}
-            value={identifier}
-            onChange={setIdentifier}
-            pattern={regex}
-            required={required}
-          />
-        )}
-      </>
-    );
-  };
+  return (
+    <>
+      {type === ResearchOutputIdentifierType.AccessionNumber && (
+        <LabeledTextField
+          title={type}
+          description={helpText}
+          placeholder={placeholder}
+          getValidationMessage={() => errorMessage}
+          value={identifier}
+          onChange={setIdentifier}
+          pattern={regex}
+          required={required}
+        />
+      )}
+      {type === ResearchOutputIdentifierType.DOI && (
+        <LabeledTextField
+          title={type}
+          description={helpText}
+          placeholder={placeholder}
+          getValidationMessage={() => errorMessage}
+          value={identifier}
+          onChange={setIdentifier}
+          pattern={regex}
+          required={required}
+        />
+      )}
+      {type === ResearchOutputIdentifierType.RRID && (
+        <LabeledTextField
+          title={type}
+          description={helpText}
+          placeholder={placeholder}
+          getValidationMessage={() => errorMessage}
+          value={identifier}
+          onChange={setIdentifier}
+          pattern={regex}
+          required={required}
+        />
+      )}
+    </>
+  );
+};

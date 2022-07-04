@@ -1,9 +1,6 @@
 import { FC, lazy } from 'react';
 import { DashboardPage, NotFoundPage } from '@asap-hub/react-components';
-import {
-  useCurrentUser,
-  useCurrentUserTeamRoles,
-} from '@asap-hub/react-context';
+import { useCurrentUser } from '@asap-hub/react-context';
 import { usePrefetchTeams } from '@asap-hub/crn-frontend/src/network/teams/state';
 import { CARD_VIEW_PAGE_SIZE } from '@asap-hub/crn-frontend/src/hooks';
 import { usePrefetchCalendars } from '@asap-hub/crn-frontend/src/events/calendar/state';
@@ -24,7 +21,7 @@ const Dashboard: FC<Record<string, never>> = () => {
 
   const { firstName, id, teams } = currentUser;
   const dashboard = useDashboardState();
-  const roles = useCurrentUserTeamRoles();
+
   usePrefetchTeams({
     currentPage: 0,
     pageSize: CARD_VIEW_PAGE_SIZE,
@@ -37,12 +34,7 @@ const Dashboard: FC<Record<string, never>> = () => {
     return (
       <DashboardPage firstName={firstName}>
         <Frame title={null}>
-          <Body
-            {...dashboard}
-            roles={roles}
-            userId={id}
-            teamId={teams[0]?.id}
-          />
+          <Body {...dashboard} userId={id} teamId={teams[0]?.id} />
         </Frame>
       </DashboardPage>
     );

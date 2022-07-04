@@ -1,7 +1,7 @@
 import {
   LabResponse,
-  TeamDataObject,
   TeamMember,
+  TeamResponse,
   TeamRole,
   teamRole,
   TeamTool,
@@ -63,7 +63,7 @@ export const parseGraphQLTeamMember = (
 
 export const parseGraphQLTeam = (
   team: NonNullable<FetchTeamQuery['findTeamsContent']>,
-): TeamDataObject => {
+): TeamResponse => {
   const displayName = team.flatData.displayName || '';
 
   const members =

@@ -1,15 +1,11 @@
 import { renderHook } from '@testing-library/react-hooks';
-import { Auth0User, User } from '@asap-hub/auth';
+import { Auth0User } from '@asap-hub/auth';
 
 import { Auth0Context, useAuth0 } from '../auth0';
-import {
-  getUserClaimKey,
-  useCurrentUser,
-  useCurrentUserTeamRoles,
-} from '../auth';
+import { getUserClaimKey, useCurrentUser } from '../auth';
 
 const userProvider =
-  (user: Auth0User | undefined): React.FC =>
+  (user: Auth0User): React.FC =>
   ({ children }) => {
     const ctx = useAuth0();
 
@@ -86,42 +82,5 @@ describe('useCurrentUser', () => {
       }),
     });
     expect(result.current).toHaveProperty('id', 'testuser');
-  });
-});
-
-describe('useCurrentUserTeamRoles', () => {
-  const userTeam: User['teams'][number] = {
-    displayName: 'Jakobsson, J',
-    role: 'Project Manager' as const,
-    id: '1',
-  };
-  it('returns an empty array when there is no current user', async () => {
-    const { result } = renderHook(useCurrentUserTeamRoles, {
-      wrapper: userProvider(undefined),
-    });
-    expect(result.current).toEqual([]);
-  });
-
-  it('returns an array of team user roles when there is a logged in user', async () => {
-    const { result } = renderHook(useCurrentUserTeamRoles, {
-      wrapper: userProvider({
-        sub: '42',
-        aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
-        [`${window.location.origin}/user`]: {
-          id: 'testuser',
-          onboarded: true,
-          email: 'john.doe@example.com',
-          firstName: 'John',
-          lastName: 'Doe',
-          displayName: 'John Doe',
-          teams: [
-            { ...userTeam, role: 'ASAP Staff' },
-            { ...userTeam, role: 'Collaborating PI' },
-          ],
-          algoliaApiKey: 'asdasda',
-        },
-      }),
-    });
-    expect(result.current).toEqual(['ASAP Staff', 'Collaborating PI']);
   });
 });

@@ -7,4 +7,3 @@ export const logEnabled =
   process.env.NODE_ENV === 'production' || process.env.LOG_ENABLED === 'true';
 export const logLevel = process.env.LOG_LEVEL || 'info';
 export const origin = process.env.APP_ORIGIN || 'https://1433.hub.asap.science';
-export const auth0SharedSecret = process.env.AUTH0_SHARED_SECRET || '';

@@ -10,14 +10,11 @@ type EventListProps = {
   readonly past?: boolean;
 
   readonly searchQuery: string;
-  readonly noEventsComponent?: React.ReactNode;
 };
-
 const EventList: React.FC<EventListProps> = ({
   currentTime,
   past = false,
   searchQuery = '',
-  noEventsComponent,
 }) => {
   const groupRoute = network({}).groups({}).group;
   const { groupId } = useRouteParams(groupRoute);
@@ -58,7 +55,6 @@ const EventList: React.FC<EventListProps> = ({
       renderPageHref={renderPageHref}
       numberOfPages={numberOfPages}
       events={events.items}
-      noEventsComponent={noEventsComponent}
     />
   );
 };

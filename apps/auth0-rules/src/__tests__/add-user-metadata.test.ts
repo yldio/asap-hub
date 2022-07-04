@@ -8,7 +8,6 @@ declare global {
   namespace NodeJS {
     interface Global {
       configuration: {
-        APP_DOMAIN: string;
         APP_ORIGIN: string;
         API_SHARED_SECRET: string;
       };
@@ -99,12 +98,10 @@ const apiUser: UserMetadataResponse = {
 
 describe('Auth0 Rule - Add User Metadata', () => {
   const apiURL = 'https://api.hub.asap.science';
-  const appDomain = 'hub.asap.science';
   const apiSharedSecret = 'auth0_shared_secret';
 
   beforeEach(() => {
     global.configuration = {
-      APP_DOMAIN: appDomain,
       APP_ORIGIN: apiURL,
       API_SHARED_SECRET: apiSharedSecret,
     };
@@ -235,103 +232,51 @@ describe('Auth0 Rule - Add User Metadata', () => {
     });
   });
 
-  describe('When a PR redirect uri is given', () => {
-    it('fetches user metadata from the PR API', async () => {
-      const apiPRUrl = 'https://api-1234.hub.asap.science';
-      nock(apiPRUrl, {
-        reqheaders: {
-          authorization: `Basic ${apiSharedSecret}`,
+  it('fetches user metadata from the PR API url when a PR redirect uri is given', async () => {
+    const apiPRUrl = 'https://api-1234.hub.asap.science';
+    nock(apiPRUrl, {
+      reqheaders: {
+        authorization: `Basic ${apiSharedSecret}`,
+      },
+    })
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, apiUser);
+
+    const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
+      jest.fn();
+
+    await addUserMetadata(
+      user,
+      {
+        ...context,
+        request: {
+          query: {},
+          body: { redirect_uri: 'https://1234.hub.asap.science/' },
         },
-      })
-        .get(`/webhook/users/${user.user_id}`)
-        .reply(200, apiUser);
+      },
+      cb,
+    );
 
-      const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
-        jest.fn();
-
-      await addUserMetadata(
-        user,
+    expect(cb).toHaveBeenCalled();
+    const resContext = cb.mock.calls[0][2];
+    expect(
+      resContext.idToken['https://1234.hub.asap.science/user'],
+    ).toStrictEqual({
+      displayName: 'Joao Tiago',
+      email: 'joao.tiago@yld.io',
+      id: 'myRandomId123',
+      onboarded: true,
+      firstName: 'Joao',
+      lastName: 'Tiago',
+      avatarUrl: undefined,
+      teams: [
         {
-          ...context,
-          request: {
-            query: {},
-            body: { redirect_uri: 'https://1234.hub.asap.science/' },
-          },
+          id: 'team-1',
+          displayName: 'Team 1',
+          role: 'Lead PI (Core Leadership)',
         },
-        cb,
-      );
-
-      expect(cb).toHaveBeenCalled();
-      const resContext = cb.mock.calls[0][2];
-      expect(
-        resContext.idToken['https://1234.hub.asap.science/user'],
-      ).toStrictEqual({
-        displayName: 'Joao Tiago',
-        email: 'joao.tiago@yld.io',
-        id: 'myRandomId123',
-        onboarded: true,
-        firstName: 'Joao',
-        lastName: 'Tiago',
-        avatarUrl: undefined,
-        teams: [
-          {
-            id: 'team-1',
-            displayName: 'Team 1',
-            role: 'Lead PI (Core Leadership)',
-          },
-        ],
-        algoliaApiKey: 'test-api-key',
-      });
-    });
-
-    it('fetches user metadata from the PR API url for a different domain', async () => {
-      const appAlternativeDomain = 'gp2.asap.science';
-      global.configuration.APP_DOMAIN = appAlternativeDomain;
-      const apiPRUrl = `https://api-1234.${appAlternativeDomain}`;
-      nock(apiPRUrl, {
-        reqheaders: {
-          authorization: `Basic ${apiSharedSecret}`,
-        },
-      })
-        .get(`/webhook/users/${user.user_id}`)
-        .reply(200, apiUser);
-
-      const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
-        jest.fn();
-
-      await addUserMetadata(
-        user,
-        {
-          ...context,
-          request: {
-            query: {},
-            body: { redirect_uri: 'https://1234.gp2.asap.science/' },
-          },
-        },
-        cb,
-      );
-
-      expect(cb).toHaveBeenCalled();
-      const resContext = cb.mock.calls[0][2];
-      expect(
-        resContext.idToken['https://1234.gp2.asap.science/user'],
-      ).toStrictEqual({
-        displayName: 'Joao Tiago',
-        email: 'joao.tiago@yld.io',
-        id: 'myRandomId123',
-        onboarded: true,
-        firstName: 'Joao',
-        lastName: 'Tiago',
-        avatarUrl: undefined,
-        teams: [
-          {
-            id: 'team-1',
-            displayName: 'Team 1',
-            role: 'Lead PI (Core Leadership)',
-          },
-        ],
-        algoliaApiKey: 'test-api-key',
-      });
+      ],
+      algoliaApiKey: 'test-api-key',
     });
   });
 });

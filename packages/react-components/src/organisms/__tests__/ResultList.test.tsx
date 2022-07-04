@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { ToastContext } from '@asap-hub/react-context';
@@ -17,21 +17,23 @@ it.each([
   [1, /(^|\D)1 result($|\W)/i],
   [5, /(^|\D)5 results($|\W)/i],
 ])('shows the number of items', (numberOfItems, text) => {
-  render(
+  const { getByRole, getByText } = render(
     <ResultList {...props} numberOfItems={numberOfItems}>
       cards
     </ResultList>,
   );
-  expect(screen.getByRole('banner')).toContainElement(screen.getByText(text));
+  expect(getByRole('banner')).toContainElement(getByText(text));
 });
 
 it('renders the children', () => {
-  render(<ResultList {...props}>cards</ResultList>);
-  expect(screen.getByRole('main')).toContainElement(screen.getByText('cards'));
+  const { getByRole, getByText } = render(
+    <ResultList {...props}>cards</ResultList>,
+  );
+  expect(getByRole('main')).toContainElement(getByText('cards'));
 });
 
 it('renders no results found', () => {
-  render(
+  const { getByText, queryByText, queryByRole } = render(
     <ResultList
       {...props}
       numberOfItems={0}
@@ -41,72 +43,53 @@ it('renders no results found', () => {
       cards
     </ResultList>,
   );
-  expect(screen.queryByText(/cards/i)).not.toBeInTheDocument();
-  expect(screen.queryByText(/\d+ result/i)).not.toBeInTheDocument();
-  expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
-  expect(screen.getByText(/no matches/i)).toBeVisible();
+  expect(queryByText(/cards/i)).not.toBeInTheDocument();
+  expect(queryByText(/\d+ result/i)).not.toBeInTheDocument();
+  expect(queryByRole('navigation')).not.toBeInTheDocument();
+  expect(getByText(/no matches/i)).toBeVisible();
 });
 
 it('renders page controls', () => {
-  render(
+  const { getByRole, getByTitle } = render(
     <ResultList {...props} numberOfPages={2}>
       cards
     </ResultList>,
   );
-  expect(screen.getByRole('navigation')).toContainElement(
-    screen.getByTitle(/next page/i),
-  );
+  expect(getByRole('navigation')).toContainElement(getByTitle(/next page/i));
 });
 
 it('renders export link', () => {
-  const { rerender } = render(
+  const { queryByText, getByText, rerender } = render(
     <ResultList {...props} exportResults={undefined}>
       cards
     </ResultList>,
   );
-  expect(screen.queryByText(/export/i)).toBeNull();
+  expect(queryByText(/export/i)).toBeNull();
   const mockExport = jest.fn(() => Promise.resolve());
   rerender(
     <ResultList {...props} exportResults={mockExport}>
       cards
     </ResultList>,
   );
-  userEvent.click(screen.getByText(/export/i));
+  userEvent.click(getByText(/export/i));
   expect(mockExport).toHaveBeenCalled();
 });
 
 it('triggers an error toast when export fails', async () => {
   const mockToast = jest.fn();
   const mockExport = jest.fn(() => Promise.reject());
-  render(
+  const { getByText } = render(
     <ToastContext.Provider value={mockToast}>
       <ResultList {...props} exportResults={mockExport}>
         cards
       </ResultList>
     </ToastContext.Provider>,
   );
-  userEvent.click(screen.getByText(/export/i));
+  userEvent.click(getByText(/export/i));
   expect(mockExport).toHaveBeenCalled();
   await waitFor(() =>
     expect(mockToast).toHaveBeenCalledWith(
       expect.stringMatching(/issue exporting/i),
     ),
   );
-});
-
-it('renders custom component when no results found', () => {
-  const noEventsComponent = <>Custom No Events Component</>;
-
-  render(
-    <ResultList
-      {...props}
-      numberOfItems={0}
-      numberOfPages={1}
-      currentPageIndex={0}
-      noEventsComponent={noEventsComponent}
-    >
-      cards
-    </ResultList>,
-  );
-  expect(screen.queryByText(/Custom No Events Component/i)).toBeInTheDocument();
 });

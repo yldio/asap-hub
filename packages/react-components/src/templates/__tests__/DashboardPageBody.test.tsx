@@ -1,7 +1,6 @@
 import { ComponentProps } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { createPageResponse } from '@asap-hub/fixtures';
-import { disable } from '@asap-hub/flags';
 
 import DashboardPageBody from '../DashboardPageBody';
 
@@ -23,7 +22,6 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   pages: [createPageResponse('1'), createPageResponse('2')],
   userId: '42',
   teamId: '1337',
-  roles: [],
 };
 
 it('renders multiple news cards', () => {
@@ -59,32 +57,4 @@ it('renders news section when there are no pages', () => {
       ({ textContent }) => textContent,
     ),
   ).toEqual(['News Title', 'Event Title']);
-});
-
-it('hides add links to your work space section when user is not a member of a team', () => {
-  const { rerender } = render(<DashboardPageBody {...props} teamId="12345" />);
-  expect(screen.queryByText(/Add important links/i)).toBeVisible();
-  rerender(<DashboardPageBody {...props} teamId={undefined} />);
-  expect(screen.queryByText(/Add important links/i)).toBeNull();
-});
-
-describe('the reminders card', () => {
-  it('does not show reminders when the feature flag is disabled (REGRESSION)', () => {
-    const { rerender } = render(<DashboardPageBody {...props} />);
-    expect(screen.getByText(/remind/i, { selector: 'h3' })).toBeVisible();
-    disable('REMINDERS');
-    rerender(<DashboardPageBody {...props} />);
-    expect(screen.queryByText(/remind/i, { selector: 'h3' })).toBeNull();
-  });
-
-  it.each`
-    description                                                | roles                                   | selector
-    ${'shows messaging for staff'}                             | ${['ASAP Staff']}                       | ${/no reminders/i}
-    ${'shows messaging for PMs'}                               | ${['Project Manager']}                  | ${/no reminders/i}
-    ${'shows staff messaging for users with one staff role'}   | ${['Key Personnel', 'Project Manager']} | ${/no reminders/i}
-    ${'informs other users to contact their project managers'} | ${['Key Personnel']}                    | ${/anything to share /i}
-  `('$description', ({ roles, selector }) => {
-    render(<DashboardPageBody {...props} roles={roles} />);
-    expect(screen.getByText(selector)).toBeVisible();
-  });
 });

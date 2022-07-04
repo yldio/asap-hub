@@ -6,7 +6,7 @@ import {
   largeDesktopScreen,
 } from './pixels';
 
-export const borderRadius = 9;
+export const borderRadius = 6;
 
 export const paddingStyles = css({
   paddingTop: `${vminLinearCalcClamped(

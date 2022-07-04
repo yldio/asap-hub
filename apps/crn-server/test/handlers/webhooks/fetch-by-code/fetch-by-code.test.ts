@@ -6,6 +6,7 @@ import {
   algoliaApiKey,
   auth0SharedSecret as secret,
 } from '../../../../src/config';
+import { identity } from '../../../helpers/squidex';
 import { fetchUserByCodeHandlerFactory } from '../../../../src/handlers/webhooks/fetch-by-code/fetch-by-code';
 import { userControllerMock } from '../../../mocks/user-controller.mock';
 import { getUserResponse } from '../../../fixtures/users.fixtures';
@@ -126,6 +127,10 @@ describe('Fetch-user-by-code handler', () => {
   });
 
   describe('GET /webhook/users/{code}', () => {
+    beforeAll(() => {
+      identity();
+    });
+
     test("returns 403 when code doesn't exist", async () => {
       userControllerMock.fetchByCode.mockRejectedValueOnce(Boom.forbidden());
 

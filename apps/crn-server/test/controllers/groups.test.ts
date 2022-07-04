@@ -19,6 +19,10 @@ describe('Group controller', () => {
   });
 
   describe('Fetch', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
     test('Should return the groups', async () => {
       groupDataProviderMock.fetch.mockResolvedValueOnce({
         total: 1,
@@ -42,6 +46,10 @@ describe('Group controller', () => {
   });
 
   describe('Fetch-by-ID method', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
     test('Should throw when group is not found', async () => {
       groupDataProviderMock.fetchById.mockResolvedValueOnce(null);
 
@@ -63,7 +71,11 @@ describe('Group controller', () => {
   describe('Fetch-by-team-ID method', () => {
     const teamId = 'eb531b6e-195c-46e2-b347-58fb86715033';
 
-    test('Should return the group', async () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
+    test('Should return the groups', async () => {
       groupDataProviderMock.fetch.mockResolvedValueOnce({
         total: 1,
         items: [getGroupDataObject()],
@@ -107,6 +119,10 @@ describe('Group controller', () => {
   describe('Fetch-by-user-ID method', () => {
     const userId = 'eb531b6e-195c-46e2-b347-58fb86715033';
     const teamIds = ['team-id-1', 'team-id-3'];
+
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
 
     test('Should throw an error if the user is not found', async () => {
       userDataProviderMock.fetchById.mockResolvedValueOnce(null);

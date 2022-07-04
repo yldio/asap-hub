@@ -14,20 +14,18 @@ const getFilter = (filters: string[], constraint?: EventConstraint) => {
   if (constraint?.userId && constraint?.teamId) {
     throw new Error('userId and teamId not supported!');
   }
-  const constraintFilters = [
-    constraint?.teamId && `speakers.team.id: "${constraint.teamId}"`,
-    constraint?.userId && `speakers.user.id: "${constraint.userId}"`,
-    constraint?.groupId && `group.id: "${constraint.groupId}"`,
-  ]
-    .filter(Boolean)
-    .join(' AND ');
+  const constaintFilter =
+    constraint &&
+    (constraint?.userId
+      ? `speakers.user.id: "${constraint.userId}"`
+      : `speakers.team.id: "${constraint.teamId}"`);
 
   if (filters.length === 0) {
-    return constraintFilters;
+    return constaintFilter;
   }
 
   const filter = filters.join(' OR ');
-  return constraintFilters ? `(${filter}) AND (${constraintFilters})` : filter;
+  return constaintFilter ? `(${filter}) AND ${constaintFilter}` : filter;
 };
 
 export const getEventFilters = (

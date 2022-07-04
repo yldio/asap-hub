@@ -3,11 +3,10 @@ import { WebhookPayload } from '@asap-hub/squidex';
 import { EventBridge } from 'aws-sdk';
 import { eventBus, eventSource } from '../../config';
 import logger from '../../utils/logger';
+import { Handler } from '../../utils/types';
 import validateRequest from '../../utils/validate-squidex-request';
 
-export const squidexWebhookFactory = (
-  eventBridge: EventBridge,
-): lambda.Handler =>
+export const squidexWebhookFactory = (eventBridge: EventBridge): Handler =>
   lambda.http(async (request: lambda.Request<WebhookPayload<unknown>>) => {
     await validateRequest(request);
 
@@ -39,4 +38,4 @@ export const squidexWebhookFactory = (
   });
 
 const eventBridge = new EventBridge();
-export const handler: lambda.Handler = squidexWebhookFactory(eventBridge);
+export const handler: Handler = squidexWebhookFactory(eventBridge);

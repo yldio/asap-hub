@@ -2,6 +2,7 @@ import { framework as lambda } from '@asap-hub/services-common';
 import { SearchClient } from 'algoliasearch';
 import { algoliaApiKey, algoliaApiKeyTtl } from '../../../config';
 import { UserController } from '../../../controllers/users';
+import { Handler } from '../../../utils/types';
 import validateRequest from '../../../utils/validate-auth0-request';
 import { validateParams } from '../../../validation/fetch-by-code.validation';
 
@@ -10,7 +11,7 @@ export const fetchUserByCodeHandlerFactory = (
   algoliaClient: SearchClient,
   date = new Date(),
   ttl = algoliaApiKeyTtl,
-): lambda.Handler =>
+): Handler =>
   lambda.http(async (request) => {
     await validateRequest(request);
 

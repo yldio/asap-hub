@@ -1,7 +1,6 @@
 declare global {
   const configuration: {
     APP_ORIGIN: string;
-    APP_DOMAIN: string;
     API_SHARED_SECRET: string;
   };
 }

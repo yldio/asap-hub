@@ -23,11 +23,9 @@ export interface TeamCreateRequest {
   proposalURL?: string;
 }
 
-export type TeamUpdateDataObject = {
+export interface TeamPatchRequest {
   tools: TeamTool[];
-};
-
-export type TeamPatchRequest = TeamUpdateDataObject;
+}
 
 export interface TeamMember {
   id: string;
@@ -40,7 +38,8 @@ export interface TeamMember {
   labs?: LabResponse[];
 }
 
-export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
+export interface TeamResponse
+  extends Omit<TeamCreateRequest, 'applicationNumber'> {
   id: string;
   expertiseAndResourceTags: string[];
   members: TeamMember[];
@@ -49,10 +48,6 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   tools?: TeamTool[];
   labCount: number;
   outputs?: string[];
-};
-
-export type ListTeamDataObject = ListResponse<TeamDataObject>;
-
-export type TeamResponse = TeamDataObject;
+}
 
 export type ListTeamResponse = ListResponse<TeamResponse>;

@@ -11,7 +11,6 @@ export { default as chevronDownIcon } from './chevron-down';
 export { default as chevronUpIcon } from './chevron-up';
 export { default as clockIcon } from './clock';
 export { default as crossIcon } from './cross';
-export { default as crossInCircleIcon } from './cross-in-circle';
 export { default as dataset } from './dataset';
 export { default as discoverIcon } from './discover';
 export { default as docsIcon } from './docs';
@@ -33,7 +32,6 @@ export { default as googleSigninLightNormalIcon } from './google-signin-light-no
 export { default as gp2Logo } from './gp2-logo';
 export { default as groupsIcon } from './groups';
 export { default as hidePasswordIcon } from './hide-password';
-export { default as infoCircleIcon } from './info-circle';
 export { default as infoIcon } from './info';
 export { default as labIcon } from './lab';
 export { default as labResource } from './lab-resource';

@@ -116,7 +116,7 @@ const Network: FC<Record<string, never>> = () => {
         }
       >
         <Frame title="Group Profile">
-          <GroupProfile currentTime={currentTime} />
+          <GroupProfile />
         </Frame>
       </Route>
       <Redirect to={network({}).users({}).$} />

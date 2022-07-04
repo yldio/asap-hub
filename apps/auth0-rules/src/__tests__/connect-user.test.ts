@@ -7,7 +7,6 @@ declare global {
   namespace NodeJS {
     interface Global {
       configuration: {
-        APP_DOMAIN: string;
         APP_ORIGIN: string;
         API_SHARED_SECRET: string;
       };
@@ -83,13 +82,11 @@ const context: RuleContext = {
 
 describe('Auth0 Rule - Connect User', () => {
   const apiURL = 'https://api.hub.asap.science';
-  const appDomain = 'hub.asap.science';
   const apiSharedSecret = 'auth0_shared_secret';
   const invitation_code = 'sampleInvitationCode';
 
   beforeEach(() => {
     global.configuration = {
-      APP_DOMAIN: appDomain,
       APP_ORIGIN: apiURL,
       API_SHARED_SECRET: apiSharedSecret,
     };

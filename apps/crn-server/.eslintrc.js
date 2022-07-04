@@ -12,7 +12,6 @@ module.exports = {
     ],
     'no-underscore-dangle': ['error', { allow: ['__typename'] }],
     'no-dupe-class-members': 'off',
-    '@typescript-eslint/no-unused-vars': 2,
     '@typescript-eslint/no-dupe-class-members': ['error'],
   },
 };

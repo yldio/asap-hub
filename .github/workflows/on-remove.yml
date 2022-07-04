@@ -32,6 +32,7 @@ jobs:
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+          gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
 
   crn-squidex-remove:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
@@ -85,6 +86,7 @@ jobs:
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+          gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
 
   algolia-index:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}

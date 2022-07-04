@@ -38,7 +38,8 @@
     "speakers.team.displayName",
     "speakers.user.displayName",
     "endDateTimestamp",
-    "startDateTimestamp"
+    "startDateTimestamp",
+    "group.id"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,
@@ -52,7 +53,8 @@
     "__meta.type",
     "teams.role",
     "speakers.user.id",
-    "speakers.team.id"
+    "speakers.team.id",
+    "group.id"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

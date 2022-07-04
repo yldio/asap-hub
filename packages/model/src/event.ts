@@ -92,6 +92,7 @@ export const isEventStatus = (status: string | null): status is EventStatus =>
   eventStatus.includes(status as EventStatus);
 
 export type EventConstraint = {
+  groupId?: string;
   userId?: string;
   teamId?: string;
 };

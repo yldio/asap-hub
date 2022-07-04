@@ -1,6 +1,10 @@
 import { EventBridgeEvent } from 'aws-lambda';
 
-import { ListTeamResponse, TeamResponse } from '@asap-hub/model';
+import {
+  ListTeamResponse,
+  TeamDataObject,
+  TeamResponse,
+} from '@asap-hub/model';
 import { Team, WebhookPayload } from '@asap-hub/squidex';
 import { TeamEvent, TeamPayload } from '../../src/handlers/event-bus';
 import {
@@ -15,7 +19,7 @@ export const getListTeamResponse = (): ListTeamResponse => ({
   items: [getTeamResponse()],
 });
 
-export const getTeamResponse = (): TeamResponse => ({
+export const getTeamDataObject = (): TeamDataObject => ({
   id: 'team-id-1',
   displayName: 'Team A',
   lastModifiedDate: '2020-11-26T11:56:04.000Z',
@@ -42,6 +46,8 @@ export const getTeamResponse = (): TeamResponse => ({
   tools: [],
   outputs: [],
 });
+
+export const getTeamResponse = (): TeamResponse => getTeamDataObject();
 
 export type GraphTeamTool = NonNullable<
   NonNullable<FetchTeamQuery['findTeamsContent']>['flatData']['tools']

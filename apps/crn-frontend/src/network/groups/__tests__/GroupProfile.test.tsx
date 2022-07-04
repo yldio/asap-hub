@@ -17,6 +17,7 @@ import { getGroupEvents } from '../events/api';
 
 jest.mock('../api');
 jest.mock('../events/api');
+jest.mock('../../../events/api');
 
 const mockGetGroup = getGroup as jest.MockedFunction<typeof getGroup>;
 const mockGetGroupEvents = getGroupEvents as jest.MockedFunction<
@@ -26,11 +27,12 @@ const mockGetGroupEvents = getGroupEvents as jest.MockedFunction<
 const renderGroupProfile = async (
   groupResponse = createGroupResponse(),
   { groupId = groupResponse.id } = {},
+  getEvents = async () => createListEventResponse(5),
 ) => {
   mockGetGroup.mockImplementation(async (id) =>
     id === groupResponse.id ? groupResponse : undefined,
   );
-  mockGetGroupEvents.mockImplementation(async () => createListEventResponse(5));
+  mockGetGroupEvents.mockImplementation(getEvents);
 
   const result = render(
     <RecoilRoot
@@ -50,8 +52,9 @@ const renderGroupProfile = async (
                   network({}).groups.template +
                   network({}).groups({}).group.template
                 }
-                component={GroupProfile}
-              />
+              >
+                <GroupProfile currentTime={new Date()} />
+              </Route>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -146,5 +149,20 @@ describe('the past events tab', () => {
     expect(await findByText(/results/i)).toBeVisible();
 
     expect(await findByRole('searchbox')).toHaveValue('searchterm');
+  });
+
+  it('displays proper information for empty events response', async () => {
+    const { findByText } = await renderGroupProfile(
+      {
+        ...createGroupResponse(),
+        id: '42',
+      },
+      undefined,
+      async () => createListEventResponse(0),
+    );
+    userEvent.click(await findByText(/past/i, { selector: 'nav a *' }));
+    expect(
+      await findByText(/This group doesn’t have any past events!/i),
+    ).toBeVisible();
   });
 });

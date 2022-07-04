@@ -9,6 +9,7 @@
     { "path": "../../packages/auth" },
     { "path": "../../packages/fixtures" },
     { "path": "../../packages/model" },
-    { "path": "../../packages/errors" }
+    { "path": "../../packages/errors" },
+    { "path": "../../packages/services-common" }
   ]
 }

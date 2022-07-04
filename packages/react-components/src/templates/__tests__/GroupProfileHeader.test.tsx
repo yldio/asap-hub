@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { network, searchQueryParam } from '@asap-hub/routing';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import subYears from 'date-fns/subYears';
 
 import GroupProfileHeader from '../GroupProfileHeader';
@@ -13,56 +13,52 @@ const props: ComponentProps<typeof GroupProfileHeader> = {
   numberOfTeams: 2,
   lastModifiedDate: '2021-01-01',
   groupTeamsHref: '#teams',
+  pastEventsCount: 2,
+  upcomingEventsCount: 3,
 };
 
 it('renders the name as a heading', () => {
-  const { getByRole } = render(
-    <GroupProfileHeader {...props} name="My Group" />,
-  );
-  expect(getByRole('heading')).toHaveTextContent('My Group');
+  render(<GroupProfileHeader {...props} name="My Group" />);
+  expect(screen.getByRole('heading')).toHaveTextContent('My Group');
 });
 
 it('shows the number of teams and links to them', () => {
-  const { getByText } = render(
-    <GroupProfileHeader {...props} numberOfTeams={1} />,
+  render(<GroupProfileHeader {...props} numberOfTeams={1} />);
+  expect(screen.getByText(/1 team(\s|$)/i).closest('a')).toHaveAttribute(
+    'href',
   );
-  expect(getByText(/1 team(\s|$)/i).closest('a')).toHaveAttribute('href');
 });
 it('pluralizes the number of teams', () => {
-  const { getByText } = render(
-    <GroupProfileHeader {...props} numberOfTeams={2} />,
-  );
-  expect(getByText(/2 teams(\s|$)/i)).toBeVisible();
+  render(<GroupProfileHeader {...props} numberOfTeams={2} />);
+  expect(screen.getByText(/2 teams(\s|$)/i)).toBeVisible();
 });
 
 it('shows the last updated date', () => {
-  const { getByText } = render(
+  render(
     <GroupProfileHeader
       {...props}
       lastModifiedDate={subYears(new Date(), 1).toISOString()}
     />,
   );
-  expect(getByText(/1 year/).textContent).toMatchInlineSnapshot(
+  expect(screen.getByText(/1 year/).textContent).toMatchInlineSnapshot(
     `"Last updated: about 1 year ago"`,
   );
 });
 
 it('renders the navigation for active and inactive groups', () => {
-  const { getAllByRole, rerender } = render(
-    <GroupProfileHeader {...props} active={true} />,
-  );
+  const { rerender } = render(<GroupProfileHeader {...props} active={true} />);
   expect(
-    getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['About', 'Calendar', 'Upcoming Events', 'Past Events']);
+    screen.getAllByRole('listitem').map(({ textContent }) => textContent),
+  ).toEqual(['About', 'Calendar', 'Upcoming Events (3)', 'Past Events (2)']);
 
   rerender(<GroupProfileHeader {...props} active={false} />);
   expect(
-    getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['About', 'Past Events']);
+    screen.getAllByRole('listitem').map(({ textContent }) => textContent),
+  ).toEqual(['About', 'Past Events (2)']);
 });
 
 it('preserves the search query when navigating', () => {
-  const { getByText } = render(
+  render(
     <StaticRouter
       location={network({}).groups({}).group({ groupId: '42' }).upcoming({}).$}
     >
@@ -70,8 +66,30 @@ it('preserves the search query when navigating', () => {
     </StaticRouter>,
   );
   expect(
-    new URL(getByText(/past/i).closest('a')!.href).searchParams.get(
+    new URL(screen.getByText(/past/i).closest('a')!.href).searchParams.get(
       searchQueryParam,
     ),
   ).toBe('searchterm');
+});
+
+it('displays number of upcoming events', () => {
+  render(
+    <StaticRouter
+      location={network({}).groups({}).group({ groupId: '42' }).upcoming({}).$}
+    >
+      <GroupProfileHeader {...props} upcomingEventsCount={10} />
+    </StaticRouter>,
+  );
+  expect(screen.queryByText('Upcoming Events (10)')).toBeInTheDocument();
+});
+
+it('displays number of past events', () => {
+  render(
+    <StaticRouter
+      location={network({}).groups({}).group({ groupId: '42' }).upcoming({}).$}
+    >
+      <GroupProfileHeader {...props} pastEventsCount={12} />
+    </StaticRouter>,
+  );
+  expect(screen.queryByText('Past Events (12)')).toBeInTheDocument();
 });

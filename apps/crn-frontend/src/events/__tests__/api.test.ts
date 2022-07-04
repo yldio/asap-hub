@@ -236,4 +236,18 @@ describe('getEventsFromAlgolia', () => {
       total: 1,
     });
   });
+
+  it('calls for upcoming events with a certain group id', async () => {
+    search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
+
+    await getEventsFromAlgolia(algoliaSearchClient, {
+      ...getEventListOptions(new Date('2021-01-01T12:00:00'), false),
+      constraint: { groupId: 'group-5' },
+    });
+    expect(search).toBeCalledWith(['event'], '', {
+      filters: '(endDateTimestamp > 1609498800) AND (group.id: "group-5")',
+      hitsPerPage: 10,
+      page: 0,
+    });
+  });
 });

@@ -11,6 +11,7 @@ export const ChevronDown = () => components.chevronDownIcon;
 export const ChevronUp = () => components.chevronUpIcon;
 export const Clock = () => components.clockIcon;
 export const Cross = () => components.crossIcon;
+export const CrossInCircle = () => components.crossInCircleIcon;
 export const Discover = () => components.discoverIcon;
 export const Docs = () => components.docsIcon;
 export const DropdownChevron = () => components.dropdownChevronIcon;
@@ -30,6 +31,7 @@ export const GoogleSigninLightNormal = () =>
   components.googleSigninLightNormalIcon;
 export const Groups = () => components.groupsIcon;
 export const HidePassword = () => components.hidePasswordIcon;
+export const InfoCircle = () => components.infoCircleIcon;
 export const Info = () => components.infoIcon;
 export const Lab = () => components.labIcon;
 export const LastPage = () => components.lastPageIcon;

@@ -57,6 +57,7 @@ type ResultListProps = ComponentProps<typeof PageControls> & {
   readonly exportResults?: () => Promise<void>;
   readonly cardViewHref?: string;
   readonly listViewHref?: string;
+  readonly noEventsComponent?: React.ReactNode;
   readonly children: React.ReactNode;
 };
 const ResultList: React.FC<ResultListProps> = ({
@@ -66,6 +67,7 @@ const ResultList: React.FC<ResultListProps> = ({
   cardViewHref,
   listViewHref,
   children,
+  noEventsComponent,
   ...pageControlsProps
 }) => {
   const toast = useContext(ToastContext);
@@ -113,16 +115,18 @@ const ResultList: React.FC<ResultListProps> = ({
           </section>
         </>
       ) : (
-        <main css={{ textAlign: 'center' }}>
-          <Paragraph primary>
-            <strong>No matches found!</strong>
-            <br />
-            <span css={{ color: lead.rgb }}>
-              We're sorry, we couldn't find results to match your search. Please
-              check your spelling or try using fewer words.
-            </span>
-          </Paragraph>
-        </main>
+        noEventsComponent ?? (
+          <main css={{ textAlign: 'center' }}>
+            <Paragraph primary>
+              <strong>No matches found!</strong>
+              <br />
+              <span css={{ color: lead.rgb }}>
+                We're sorry, we couldn't find results to match your search.
+                Please check your spelling or try using fewer words.
+              </span>
+            </Paragraph>
+          </main>
+        )
       )}
     </article>
   );

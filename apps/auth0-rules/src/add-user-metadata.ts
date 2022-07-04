@@ -19,11 +19,13 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
     return callback(new Error('Missing redirect_uri'));
   }
 
-  const prUrlRegex = /https:\/\/(?<pr_number>[0-9]+)\.hub.asap.science/;
+  const prUrlRegex = new RegExp(
+    `https://(?<pr_number>[0-9]+).${configuration.APP_DOMAIN}/`,
+  );
   const matches = prUrlRegex.exec(redirect_uri);
 
   const apiURL = matches?.groups?.pr_number
-    ? `https://api-${matches.groups.pr_number}.hub.asap.science`
+    ? `https://api-${matches.groups.pr_number}.${configuration.APP_DOMAIN}`
     : configuration?.APP_ORIGIN;
   const apiSharedSecret = configuration?.API_SHARED_SECRET;
 

@@ -8,7 +8,7 @@ describe('Auth Frontend App', () => {
     currentLocation = window.location;
     delete (window as Partial<Window>).location;
     window.location = new URL(
-      'https://www.example.com?redirect_uri=https://hub.asap.science',
+      'https://www.example.com?redirect_uri=https://gp2.asap.science',
     ) as unknown as Location;
     window.location.replace = jest.fn();
   });

@@ -10,7 +10,7 @@ import {
 
 const { mockGetLocation } = mockLocation(
   `http://localhost/login?response_type=code&redirect_uri=${encodeURIComponent(
-    'https://dev.hub.asap.science/',
+    'https://gp2.hub.asap.science/',
   )}`,
 );
 
@@ -35,7 +35,7 @@ it('renders a signin form', () => {
 it('renders the form in signup mode', () => {
   mockGetLocation.mockReturnValue(
     new URL(
-      '?response_type=code&screen_hint=signup&redirect_uri=https%3A%2F%2Fdev.hub.asap.science',
+      '?response_type=code&screen_hint=signup&redirect_uri=https%3A%2F%2Fgp2.hub.asap.science',
       mockGetLocation(),
     ),
   );
@@ -77,7 +77,7 @@ it('initiates a signin with email and password', async () => {
 it('initiates a signup with email and password', async () => {
   mockGetLocation.mockReturnValue(
     new URL(
-      '?response_type=code&screen_hint=signup&redirect_uri=https%3A%2F%2Fdev.hub.asap.science',
+      '?response_type=code&screen_hint=signup&redirect_uri=https%3A%2F%2Fgp2.hub.asap.science',
       mockGetLocation(),
     ),
   );
@@ -90,7 +90,7 @@ it('initiates a signup with email and password', async () => {
   expect(mockAuthorizeWithEmailPassword).toHaveBeenCalledWith(
     expect.objectContaining({
       search: expect.stringContaining(
-        'response_type=code&screen_hint=signup&redirect_uri=https%3A%2F%2Fdev.hub.asap.science',
+        'response_type=code&screen_hint=signup&redirect_uri=https%3A%2F%2Fgp2.hub.asap.science',
       ),
     }),
     'john.doe@example.com',

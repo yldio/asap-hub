@@ -12,7 +12,7 @@ try {
     env: {
       ...env,
       PUBLIC_URL:
-        env.AUTH_FRONTEND_BASE_URL || 'https://dev.hub.asap.science/.auth/',
+        env.AUTH_FRONTEND_BASE_URL || 'https://dev.gp2.asap.science/.auth/',
     },
   });
 } catch (err) {

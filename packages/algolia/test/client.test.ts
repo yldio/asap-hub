@@ -159,7 +159,7 @@ describe('Algolia Search Client', () => {
     });
   });
 
-  test('Should search event entity', async () => {
+  test('Should search event entity in the past', async () => {
     reverseAlgoliaSearchIndex.search.mockResolvedValueOnce(searchEventResponse);
 
     const response = await algoliaSearchClient.search(
@@ -168,7 +168,7 @@ describe('Algolia Search Client', () => {
       {},
       true,
     );
-    console.log(response.hits[0]);
+
     expect(response).toEqual(searchEventResponse);
     expect(reverseAlgoliaSearchIndex.search).toBeCalledWith('query', {
       filters: '__meta.type:"event"',

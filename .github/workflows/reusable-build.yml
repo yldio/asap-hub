@@ -23,6 +23,9 @@ on:
       SQUIDEX_SHARED_SECRET:
         description: 'Squidex Shared Secret'
         required: true
+      GP2_AUTH0_SHARED_SECRET:
+        description: 'GP2 Auth0 Shared Secret'
+        required: false
 
 jobs:
   definitions:
@@ -219,3 +222,4 @@ jobs:
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+          gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}

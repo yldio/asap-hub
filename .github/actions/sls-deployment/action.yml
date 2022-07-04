@@ -23,6 +23,9 @@ inputs:
   squidex-shared-secret:
     description: 'Squidex Shared Secret'
     required: true
+  gp2-auth0-shared-secret:
+    description: 'GP2 Auth0 Shared Secret'
+    required: false
 
 outputs:
   crn-api-url:
@@ -74,6 +77,7 @@ runs:
         CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
         CURRENT_REVISION: ${{ github.sha }}
         GP2_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.gp2-auth0-client-id }}
+        GP2_AUTH0_SHARED_SECRET: ${{ inputs.gp2-auth0-shared-secret }}
         GP2_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.gp2-aws-acm-certificate-arn }}
         GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
         LIGHTSTEP_TOKEN: ${{ inputs.lightstep-token }}

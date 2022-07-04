@@ -4,8 +4,10 @@ import Bourne from '@hapi/bourne';
 import Intercept from 'apr-intercept';
 import {
   APIGatewayProxyEventV2,
+  APIGatewayProxyHandlerV2,
   APIGatewayProxyResultV2,
   APIGatewayProxyStructuredResultV2,
+  Context,
 } from 'aws-lambda';
 import Debug from 'debug';
 import { origin } from '../config';
@@ -41,6 +43,12 @@ interface HTTPError extends Error {
     body: string;
   };
 }
+
+export type Handler = APIGatewayProxyHandlerV2 &
+  ((
+    event: Parameters<APIGatewayProxyHandlerV2>[0],
+    context?: Context,
+  ) => ReturnType<APIGatewayProxyHandlerV2>);
 
 export const response = (
   res: APIGatewayProxyStructuredResultV2,
@@ -133,9 +141,7 @@ const handlerError = (error: Error): APIGatewayProxyResultV2 => {
 // ensure any thrown exception is handled and returned correctly
 // complaining about `request` here is a lint rule bug
 export const http =
-  <T = unknown>(
-    fn: (request: Request<T>) => Promise<Response>, // eslint-disable-line no-unused-vars
-  ) =>
+  <T = unknown>(fn: (request: Request<T>) => Promise<Response>) =>
   async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
     // we assume the body is json
     let body;

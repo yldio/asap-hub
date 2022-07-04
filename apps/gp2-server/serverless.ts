@@ -4,6 +4,7 @@ import assert from 'assert';
 [
   'AWS_REGION',
   'GP2_AUTH0_CLIENT_ID',
+  'GP2_AUTH0_SHARED_SECRET',
   'GP2_AWS_ACM_CERTIFICATE_ARN',
   'GP2_HOSTNAME',
   'SLS_STAGE',
@@ -23,6 +24,7 @@ assert.ok(
 );
 
 const auth0ClientId = process.env.GP2_AUTH0_CLIENT_ID!;
+const auth0SharedSecret = process.env.GP2_AUTH0_SHARED_SECRET!;
 const gp2AwsAcmCertificateArn = process.env.GP2_AWS_ACM_CERTIFICATE_ARN!;
 const hostname = process.env.GP2_HOSTNAME!;
 const region = process.env.AWS_REGION as AWS['provider']['region'];
@@ -113,6 +115,21 @@ const serverlessConfig: AWS = {
       environment: {
         APP_ORIGIN: appUrl,
         AUTH0_CLIENT_ID: auth0ClientId,
+      },
+    },
+    auth0FetchByCode: {
+      handler: './src/handlers/webhooks/fetch-by-code-handler.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'GET',
+            path: '/webhook/users/{code}',
+          },
+        },
+      ],
+      environment: {
+        AUTH0_CLIENT_ID: auth0ClientId,
+        AUTH0_SHARED_SECRET: auth0SharedSecret,
       },
     },
   },

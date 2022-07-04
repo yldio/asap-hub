@@ -41,8 +41,9 @@ const EditModal: React.FC<EditModalProps> = ({
   onSave = noop,
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
-  const [status, setStatus] =
-    useState<'initial' | 'isSaving' | 'hasError' | 'hasSaved'>('initial');
+  const [status, setStatus] = useState<
+    'initial' | 'isSaving' | 'hasError' | 'hasSaved'
+  >('initial');
   useEffect(() => {
     if (status === 'hasSaved' && !dirty) {
       setStatus('initial');

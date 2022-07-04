@@ -62,8 +62,9 @@ const OnboardModal: React.FC<OnboardModalProps> = ({
   backHref,
   onSave = noop,
 }) => {
-  const [status, setStatus] =
-    useState<'initial' | 'isSaving' | 'hasError' | 'hasSaved'>('initial');
+  const [status, setStatus] = useState<
+    'initial' | 'isSaving' | 'hasError' | 'hasSaved'
+  >('initial');
   const historyPush = usePushFromHere();
 
   return (

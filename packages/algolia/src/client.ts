@@ -64,7 +64,7 @@ export type SearchEntityResponse<TEntityType extends keyof EntityResponses> =
 export class AlgoliaSearchClient {
   public constructor(
     private index: SearchIndex,
-    private reverseIndex: SearchIndex,
+    private reverseEventsIndex: SearchIndex,
   ) {
     // do nothing
   }
@@ -91,7 +91,7 @@ export class AlgoliaSearchClient {
     entityTypes: T[],
     query: string,
     requestOptions?: SearchOptions,
-    descending?: boolean,
+    descendingEvents?: boolean,
   ): Promise<SearchEntityResponse<T>> {
     const entityTypesFilter = entityTypes
       .map((entityType) => `__meta.type:"${entityType}"`)
@@ -104,8 +104,11 @@ export class AlgoliaSearchClient {
         : entityTypesFilter,
     };
 
-    return descending
-      ? this.reverseIndex.search<DistributeToEntityRecords<T>>(query, options)
+    return descendingEvents
+      ? this.reverseEventsIndex.search<DistributeToEntityRecords<T>>(
+          query,
+          options,
+        )
       : this.index.search<DistributeToEntityRecords<T>>(query, options);
   }
 

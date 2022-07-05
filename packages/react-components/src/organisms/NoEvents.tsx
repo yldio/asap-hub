@@ -32,16 +32,16 @@ const exploreEventsStyles = css(
 );
 
 const NoEvents: React.FC<{
-  teamName: string;
+  displayName: string;
   past?: boolean;
   link: string;
   type: 'team' | 'group';
-}> = ({ teamName, past, link, type }) => (
+}> = ({ displayName, past, link, type }) => (
   <main css={{ textAlign: 'center' }}>
     <span css={iconStyles}>{calendarIcon}</span>
-    <div css={titleStyles}>
-      {teamName} doesn’t have any {past ? ' past ' : ' upcoming '} events!
-    </div>
+    <h4 css={titleStyles}>
+      {displayName} doesn’t have any {past ? ' past ' : ' upcoming '} events!
+    </h4>
     <span color={lead.rgb}>
       It looks like this {type.toLowerCase()} will not speak at any events. In
       the meantime, try exploring other {past ? ' past ' : ' upcoming '} events

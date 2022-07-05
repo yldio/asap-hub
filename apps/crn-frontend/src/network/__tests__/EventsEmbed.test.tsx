@@ -34,11 +34,13 @@ const renderEvents = async ({
   constraint,
   pathName,
   isPast = false,
+  noEventsComponent,
 }: {
   searchQuery?: string;
   constraint: EventConstraint;
   pathName: string;
   isPast?: boolean;
+  noEventsComponent?: React.ReactNode;
 }) => {
   const state = constraint.userId
     ? refreshUserState(constraint.userId)
@@ -74,6 +76,7 @@ const renderEvents = async ({
                   constraint={constraint}
                   currentTime={date}
                   past={isPast}
+                  noEventsComponent={noEventsComponent}
                 />
               </Route>
             </MemoryRouter>
@@ -121,3 +124,18 @@ it.each`
     );
   },
 );
+
+describe('EventsEmbed with no upcoming events', () => {
+  test('show the component for no upcoming events', async () => {
+    const getPath = (teamId: string) =>
+      network({}).teams({}).team({ teamId }).upcoming({}).$;
+    const constraint = { teamId: '1007' };
+    const noEventsComponent = <>No Upcoming Events</>;
+    const pathName = getPath(constraint.teamId);
+
+    renderEvents({ constraint, noEventsComponent, pathName });
+    await waitFor(() => {
+      expect(screen.getByText(/No Upcoming Events/i)).toBeInTheDocument();
+    });
+  });
+});

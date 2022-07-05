@@ -3,10 +3,17 @@ import NoEvents from '../NoEvents';
 
 describe('For groups', () => {
   it('renders for upcoming events', () => {
-    render(<NoEvents type="group" past={false} link="/upcomingEvents" />);
+    render(
+      <NoEvents
+        displayName="ASAP Group"
+        type="group"
+        past={false}
+        link="/upcomingEvents"
+      />,
+    );
 
     expect(
-      screen.getByText(/This group doesn’t have any upcoming events/i),
+      screen.getByText(/ASAP Group doesn’t have any upcoming events/i),
     ).toBeInTheDocument();
     expect(
       screen.getByText(/try exploring other upcoming events/i),
@@ -16,10 +23,17 @@ describe('For groups', () => {
   });
 
   it('renders for past events', () => {
-    render(<NoEvents type="group" past={true} link="/pastEvents" />);
+    render(
+      <NoEvents
+        displayName="ASAP Group"
+        type="group"
+        past={true}
+        link="/pastEvents"
+      />,
+    );
 
     expect(
-      screen.getByText(/This group doesn’t have any past events/i),
+      screen.getByText(/ASAP Group doesn’t have any past events/i),
     ).toBeInTheDocument();
     expect(
       screen.getByText(/try exploring other past events/i),
@@ -31,10 +45,17 @@ describe('For groups', () => {
 
 describe('For Teams', () => {
   it('renders for upcoming events', () => {
-    render(<NoEvents type="team" past={false} link="/upcomingEvents" />);
+    render(
+      <NoEvents
+        displayName="ASAP Team"
+        type="team"
+        past={false}
+        link="/upcomingEvents"
+      />,
+    );
 
     expect(
-      screen.getByText(/This team doesn’t have any upcoming events/i),
+      screen.getByText(/ASAP Team doesn’t have any upcoming events/i),
     ).toBeInTheDocument();
     expect(
       screen.getByText(/try exploring other upcoming events/i),
@@ -44,10 +65,17 @@ describe('For Teams', () => {
   });
 
   it('renders for past events', () => {
-    render(<NoEvents type="team" past={true} link="/pastEvents" />);
+    render(
+      <NoEvents
+        displayName="ASAP Team"
+        type="team"
+        past={true}
+        link="/pastEvents"
+      />,
+    );
 
     expect(
-      screen.getByText(/This team doesn’t have any past events/i),
+      screen.getByText(/ASAP Team doesn’t have any past events/i),
     ).toBeInTheDocument();
     expect(
       screen.getByText(/try exploring other past events/i),

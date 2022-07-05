@@ -127,7 +127,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                       events={upcomingEventsResult}
                       noEventsComponent={
                         <NoEvents
-                          teamName={team.displayName}
+                          displayName={team.displayName}
                           type="team"
                           past={false}
                           link={events({}).upcoming({}).$}
@@ -147,7 +147,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                       past={true}
                       noEventsComponent={
                         <NoEvents
-                          teamName={team.displayName}
+                          displayName={team.displayName}
                           type="team"
                           past={true}
                           link={events({}).past({}).$}

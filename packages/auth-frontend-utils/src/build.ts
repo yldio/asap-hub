@@ -39,6 +39,7 @@ const replaceScripts = (buildDir: string) => {
   scriptReplacements.forEach(({ regex, replacement }) => {
     [...document.querySelectorAll('script[src]')].forEach((script: Element) => {
       if (script instanceof HTMLScriptElement)
+        // eslint-disable-next-line no-param-reassign
         script.src = script.src.replace(regex, (match: string) => {
           copyFileSync(
             resolve(buildDir, match),

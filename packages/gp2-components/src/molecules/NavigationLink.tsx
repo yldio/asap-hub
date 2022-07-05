@@ -1,4 +1,8 @@
-import { NavigationLink as Link, pixels } from '@asap-hub/react-components';
+import {
+  drawerQuery,
+  NavigationLink as Link,
+  pixels,
+} from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
@@ -16,12 +20,34 @@ const NavigationLink: React.FC<ComponentProps<typeof Link>> = ({
   children,
   ...props
 }) => (
-  <Link {...props}>
-    <span css={horizontalNavigationStyles}>
-      {icon}
-      {children}
+  <>
+    <span
+      css={css({
+        [drawerQuery]: {
+          display: 'none',
+        },
+      })}
+    >
+      <Link {...props}>
+        <span css={horizontalNavigationStyles}>
+          {icon}
+          {children}
+        </span>
+      </Link>
     </span>
-  </Link>
+    <span
+      css={css({
+        display: 'none',
+        [drawerQuery]: {
+          display: 'unset',
+        },
+      })}
+    >
+      <Link {...props} icon={icon}>
+        {children}
+      </Link>
+    </span>
+  </>
 );
 
 export default NavigationLink;

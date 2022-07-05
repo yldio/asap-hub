@@ -7,8 +7,8 @@
   },
   "main": "index.js",
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.23.0",
-    "@typescript-eslint/parser": "^4.23.0",
+    "@typescript-eslint/eslint-plugin": "4.33.0",
+    "@typescript-eslint/parser": "4.33.0",
     "babel-eslint": "^10.1.0",
     "eslint": "7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",

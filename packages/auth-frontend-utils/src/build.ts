@@ -29,6 +29,13 @@ const scriptReplacements = [
   },
 ];
 
+// This allow us to bypass the issue of not having the HTMLScriptElement class on a node enviroment without having to actually import a polyfill for it
+type ScriptElement = Element & {
+  src: string;
+};
+const isScriptElement = (tag: Element | ScriptElement): tag is ScriptElement =>
+  (tag as ScriptElement).src !== undefined;
+
 const replaceScripts = (buildDir: string) => {
   // replace unstable parts of HTML
 
@@ -38,7 +45,7 @@ const replaceScripts = (buildDir: string) => {
 
   scriptReplacements.forEach(({ regex, replacement }) => {
     [...document.querySelectorAll('script[src]')].forEach((script: Element) => {
-      if (script instanceof HTMLScriptElement)
+      if (isScriptElement(script)) {
         // eslint-disable-next-line no-param-reassign
         script.src = script.src.replace(regex, (match: string) => {
           copyFileSync(
@@ -47,6 +54,7 @@ const replaceScripts = (buildDir: string) => {
           );
           return replacement;
         });
+      }
     });
   });
   writeFileSync(

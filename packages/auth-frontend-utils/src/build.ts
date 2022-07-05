@@ -38,21 +38,23 @@ const replaceScripts = (buildDir: string) => {
 
   scriptReplacements.forEach(({ regex, replacement }) => {
     [...document.querySelectorAll('script[src]')].forEach((script: Element) => {
-      (script as HTMLScriptElement).src = (
-        script as HTMLScriptElement
-      ).src.replace(regex, (match: string) => {
-        copyFileSync(resolve(buildDir, match), resolve(buildDir, replacement));
-        return replacement;
-      });
+      if (script instanceof HTMLScriptElement)
+        script.src = script.src.replace(regex, (match: string) => {
+          copyFileSync(
+            resolve(buildDir, match),
+            resolve(buildDir, replacement),
+          );
+          return replacement;
+        });
     });
   });
   writeFileSync(
     indexHtmlPath,
-    '<!doctype html>' + document.documentElement.outerHTML,
+    `<!doctype html>${document.documentElement.outerHTML}`,
   );
 };
 
-export const build = (buildDir: string, envVars: typeof env = env) => {
+export const build = (buildDir: string, envVars: typeof env = env): void => {
   buildScript(envVars);
   replaceScripts(buildDir);
 };

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { getButtonStyles } from '../button';
-import { crossInCircleIcon } from '../icons';
+import { calendarIcon } from '../icons';
 import { perRem } from '../pixels';
 
 const titleStyles = css({
@@ -18,7 +18,7 @@ const UserNoEvents: React.FC<{ past?: boolean; link: string }> = ({
   link,
 }) => (
   <main css={{ textAlign: 'center' }}>
-    {crossInCircleIcon}
+    {calendarIcon}
     <div css={titleStyles}>
       <strong>There aren't any {past ? ' past ' : ' upcoming '} events!</strong>
     </div>

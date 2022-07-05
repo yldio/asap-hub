@@ -1,13 +1,7 @@
 /* istanbul ignore file */
 
 const calendar = (
-  <svg
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <title>Calendar</title>
     <g stroke="#4D646B" strokeMiterlimit={10} strokeLinejoin="round">
       <path

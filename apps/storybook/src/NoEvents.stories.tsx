@@ -7,11 +7,13 @@ export default {
 };
 
 const props = (): ComponentProps<typeof NoEvents> => {
+  const teamName = 'ASAP';
   const past = boolean('Past Event', true);
   const link = '';
   const type = select('Type', ['team', 'group'], 'team');
 
   return {
+    teamName,
     past,
     link,
     type,

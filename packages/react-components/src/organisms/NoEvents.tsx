@@ -1,33 +1,51 @@
 import { css } from '@emotion/react';
 import { getButtonStyles } from '../button';
-import { crossInCircleIcon } from '../icons';
+import { calendarIcon } from '../icons';
 import { perRem } from '../pixels';
+import { lead, charcoal } from '../colors';
 
 const titleStyles = css({
-  padding: `20px`,
-
+  padding: '15px',
+  fontWeight: 'bold',
   fontSize: `${26 / perRem}em`,
 });
 
-const exploreEventsStyles = css(getButtonStyles({ primary: true }), {
-  textDecoration: 'none',
+const iconStyles = css({
+  '> svg': {
+    width: '36px',
+
+    '> g': {
+      stroke: charcoal.rgb,
+    },
+  },
 });
 
-const NoEvents: React.FC<{ past?: boolean; link: string; type: string }> = ({
-  past,
-  link,
-  type,
-}) => (
+const exploreEventsStyles = css(
+  getButtonStyles({ primary: true, stretch: false }),
+  {
+    textDecoration: 'none',
+    paddingLeft: `${33 / perRem}em`,
+    paddingRight: `${33 / perRem}em`,
+    paddingTop: `${15 / perRem}em`,
+    paddingBottom: `${15 / perRem}em`,
+  },
+);
+
+const NoEvents: React.FC<{
+  teamName: string;
+  past?: boolean;
+  link: string;
+  type: 'team' | 'group';
+}> = ({ teamName, past, link, type }) => (
   <main css={{ textAlign: 'center' }}>
-    {crossInCircleIcon}
+    <span css={iconStyles}>{calendarIcon}</span>
     <div css={titleStyles}>
-      <strong>
-        This {type} doesn’t have any {past ? ' past ' : ' upcoming '} events!
-      </strong>
+      {teamName} doesn’t have any {past ? ' past ' : ' upcoming '} events!
     </div>
-    <span>
-      It looks like this {type} will not speak at any events. In the meantime,
-      try exploring other {past ? ' past ' : ' upcoming '} events on the Hub.
+    <span color={lead.rgb}>
+      It looks like this {type.toLowerCase()} will not speak at any events. In
+      the meantime, try exploring other {past ? ' past ' : ' upcoming '} events
+      on the Hub.
     </span>
     <br />
     <a href={link} css={exploreEventsStyles}>

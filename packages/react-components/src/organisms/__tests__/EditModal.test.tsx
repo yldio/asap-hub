@@ -232,11 +232,13 @@ describe('when saving', () => {
       });
 
       it('shows an error message', async () => {
-        const { getByText } = result;
+        const { getByText, getByTitle } = result;
 
         userEvent.click(getByText(/^save/i));
 
-        await waitFor(() => expect(getByText(/error/i)).toBeVisible());
+        await waitFor(() =>
+          expect(getByTitle(/error icon/i)).toBeInTheDocument(),
+        );
       });
 
       it('re-enables the save button', async () => {

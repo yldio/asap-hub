@@ -22,6 +22,16 @@ it('renders a toast card with paper clip icon', () => {
   expect(getByText('explanation text')).toBeVisible();
 });
 
+it('renders a toast card with error icon', () => {
+  const { getByTitle, getByText } = render(
+    <ToastCard type="alert" toastContent="explanation text">
+      content
+    </ToastCard>,
+  );
+  expect(getByTitle(/error/i)).toBeInTheDocument();
+  expect(getByText('explanation text')).toBeVisible();
+});
+
 it('does not renders a toast card when no toast content provided', () => {
   const { queryByTitle } = render(
     <ToastCard type="attachment">content</ToastCard>,

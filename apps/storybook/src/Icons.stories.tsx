@@ -16,6 +16,7 @@ export const Discover = () => components.discoverIcon;
 export const Docs = () => components.docsIcon;
 export const DropdownChevron = () => components.dropdownChevronIcon;
 export const Edit = () => components.editIcon;
+export const Error = () => components.errorIcon;
 export const EventPlaceholder = () => components.eventPlaceholderIcon;
 export const ExternalLink = () => components.externalLinkIcon;
 export const Feedback = () => components.feedbackIcon;

@@ -18,6 +18,7 @@ export { default as docsIcon } from './docs';
 export { default as dropdownChevronIcon } from './dropdown-chevron';
 export { default as dropdownCrossIcon } from './dropdown-cross';
 export { default as editIcon } from './edit';
+export { default as errorIcon } from './error';
 export { default as eventPlaceholderIcon } from './event-placeholder';
 export { default as externalLinkIcon } from './external-link';
 export { default as feedbackIcon } from './feedback';

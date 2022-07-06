@@ -7,7 +7,7 @@ import { lead, charcoal } from '../colors';
 const titleStyles = css({
   padding: '15px',
   fontWeight: 'bold',
-  fontSize: `${26 / perRem}em`,
+  fontSize: `${27 / perRem}em`,
 });
 
 const iconStyles = css({

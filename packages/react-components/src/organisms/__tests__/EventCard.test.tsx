@@ -14,11 +14,11 @@ it('shows that an event has been cancelled', () => {
   const { getByTitle, getByText, queryByTitle, queryByText, rerender } = render(
     <EventCard {...props} status="Confirmed" />,
   );
-  expect(queryByTitle('Alert')).not.toBeInTheDocument();
+  expect(queryByTitle('Error Icon')).not.toBeInTheDocument();
   expect(queryByText(/cancelled/i)).not.toBeInTheDocument();
 
   rerender(<EventCard {...props} status="Cancelled" />);
-  expect(getByTitle('Alert')).toBeInTheDocument();
+  expect(getByTitle('Error Icon')).toBeInTheDocument();
   expect(getByText(/cancelled/i)).toBeVisible();
 });
 
@@ -52,7 +52,7 @@ describe('current events', () => {
         endDate={addMinutes(new Date(), 1).toISOString()}
       />,
     );
-    expect(screen.getByTitle('Alert')).toBeInTheDocument();
+    expect(screen.getByTitle('Error Icon')).toBeInTheDocument();
     expect(screen.getByText(/cancelled/i)).toBeVisible();
   });
   it('toasts for meetings without meeting link', () => {
@@ -121,7 +121,7 @@ describe('past events', () => {
         endDate={subDays(new Date(), 1).toISOString()}
       />,
     );
-    expect(screen.getByTitle(/alert/i)).toBeInTheDocument();
+    expect(screen.getByTitle(/error icon/i)).toBeInTheDocument();
     expect(screen.getByText(/cancelled/i)).toBeVisible();
   });
   it('toasts meeting materials coming soon', () => {

@@ -5,7 +5,7 @@ import { perRem, mobileScreen } from '../pixels';
 import { Card } from '../atoms';
 import { lead, silver, apricot, clay, info, sky } from '../colors';
 import { AlertIcon, clockIcon, paperClipIcon, errorIcon } from '../icons';
-import { paddingStyles } from '../card';
+import { borderRadius, paddingStyles } from '../card';
 
 const toastStyles = css({
   display: 'flex',

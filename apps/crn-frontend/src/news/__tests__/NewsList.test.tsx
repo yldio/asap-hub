@@ -2,37 +2,45 @@ import { RecoilRoot } from 'recoil';
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-
 import { renderHook } from '@testing-library/react-hooks';
 import { createNewsResponse } from '@asap-hub/fixtures';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
+
 import { usePagination, usePaginationParams } from '../../hooks';
-
 import NewsAndEventsPage from '../Routes';
-import { refreshNewsItemState } from '../state';
+import { newsIndexState } from '../state';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-
 import { getNews } from '../api';
 
 jest.mock('../api');
 
 const mockGetNews = getNews as jest.MockedFunction<typeof getNews>;
+const pageSize = 10;
 
-const getMockedResponse = (pageSize = 10, numberOfItems = 10) => ({
-  total: numberOfItems,
-  items: Array.from({ length: pageSize }, (_, idx) => ({
+const getMockedResponse = (items = 10, total = 10) => ({
+  total,
+  items: Array.from({ length: items }, (_, idx) => ({
     ...createNewsResponse(idx + 1),
     title: 'News Item',
   })),
 });
-beforeEach(() => {
+afterEach(() => {
   mockGetNews.mockClear();
 });
+mockConsoleError();
 
-const renderPage = async (newsResponse = createNewsResponse(1)) => {
+const renderPage = async () => {
   const result = render(
     <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshNewsItemState(newsResponse.id), Math.random())
+      initializeState={({ reset }) =>
+        reset(
+          newsIndexState({
+            currentPage: 0,
+            pageSize,
+            filters: new Set(),
+            searchQuery: '',
+          }),
+        )
       }
     >
       <Suspense fallback="loading">
@@ -58,50 +66,50 @@ const renderPage = async (newsResponse = createNewsResponse(1)) => {
   return result;
 };
 
-describe('news page', () => {
-  it('renders the page title', async () => {
-    const { getByRole } = await renderPage();
+it('renders the page title', async () => {
+  mockGetNews.mockResolvedValue(getMockedResponse(pageSize, pageSize));
 
-    expect(getByRole('heading', { level: 1 })).toHaveTextContent(/News/i);
-  });
+  const { getByRole } = await renderPage();
 
-  it('renders a counter with the total number of items', async () => {
-    const pageSize = 10;
-    const numberOfItems = 20;
-    mockGetNews.mockResolvedValue(getMockedResponse(pageSize, numberOfItems));
+  expect(getByRole('heading', { level: 1 })).toHaveTextContent(/News/i);
+});
 
-    const { getByText } = await renderPage();
-    expect(getByText(`${numberOfItems} results found`)).toBeVisible();
-  });
+it('renders a counter with the total number of items', async () => {
+  const numberOfItems = 20;
+  mockGetNews.mockResolvedValue(getMockedResponse(pageSize, numberOfItems));
 
-  it('renders a paginated list of news', async () => {
-    const pageSize = 5;
-    const numberOfItems = 20;
-    mockGetNews.mockResolvedValue(getMockedResponse(pageSize, numberOfItems));
+  const { getByText } = await renderPage();
+  await waitFor(() => expect(mockGetNews).toHaveBeenCalled());
+  expect(getByText(`${numberOfItems} results found`)).toBeVisible();
+});
 
-    const { result } = renderHook(
-      () => ({
-        usePaginationParams: usePaginationParams(),
-        usePagination: usePagination(numberOfItems, pageSize),
-      }),
-      {
-        wrapper: MemoryRouter,
-        initialProps: {
-          initialEntries: [`/news`],
-        },
+it('renders a paginated list of news', async () => {
+  const numberOfItems = 40;
+  mockGetNews.mockResolvedValue(getMockedResponse(pageSize, numberOfItems));
+
+  const { result } = renderHook(
+    () => ({
+      usePaginationParams: usePaginationParams(),
+      usePagination: usePagination(numberOfItems, pageSize),
+    }),
+    {
+      wrapper: MemoryRouter,
+      initialProps: {
+        initialEntries: [`/news`],
       },
-    );
+    },
+  );
 
-    const { getAllByText } = await renderPage();
-    expect(getAllByText('News Item')).toHaveLength(pageSize);
-    expect(result.current.usePagination.numberOfPages).toBe(4);
-    expect(result.current.usePaginationParams.currentPage).toBe(0);
-  });
+  const { getAllByText } = await renderPage();
+  expect(getAllByText('News Item')).toHaveLength(pageSize);
+  expect(result.current.usePagination.numberOfPages).toBe(4);
+  expect(result.current.usePaginationParams.currentPage).toBe(0);
+});
 
-  it('renders error message when when the request it not a 2XX', async () => {
-    mockGetNews.mockRejectedValue(new Error('error'));
+it('renders error message when when the request it not a 2XX', async () => {
+  mockGetNews.mockRejectedValue(new Error('error'));
 
-    const { getByText } = await renderPage();
-    expect(getByText('Something went wrong!')).toBeInTheDocument();
-  });
+  const { getByText } = await renderPage();
+  expect(mockGetNews).toHaveBeenCalled();
+  expect(getByText(/Something went wrong/i)).toBeVisible();
 });

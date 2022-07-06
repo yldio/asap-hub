@@ -8,6 +8,6 @@ describe('NavigationLink', () => {
   });
   it('renders the children', () => {
     render(<NavigationLink href="/">Network</NavigationLink>);
-    expect(screen.getByText('Network')).toBeInTheDocument();
+    expect(screen.getByRole('link')).toHaveTextContent('Network');
   });
 });

@@ -7,6 +7,6 @@
     "node-fetch": "^3.0.0-beta.9"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.18.3"
+    "@babel/runtime-corejs3": "7.18.6"
   }
 }

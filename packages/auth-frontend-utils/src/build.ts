@@ -5,7 +5,7 @@ import { env } from 'process';
 import { JSDOM } from 'jsdom';
 
 // run CRA build script
-const buildScript = (envVars: typeof env) => {
+export const buildScript = (envVars: typeof env) => {
   try {
     execSync('yarn run react-scripts build', {
       stdio: 'pipe',
@@ -36,7 +36,7 @@ type ScriptElement = Element & {
 const isScriptElement = (tag: Element | ScriptElement): tag is ScriptElement =>
   (tag as ScriptElement).src !== undefined;
 
-const replaceScripts = (buildDir: string) => {
+export const replaceScripts = (buildDir: string) => {
   // replace unstable parts of HTML
 
   const indexHtmlPath = resolve(buildDir, 'index.html');

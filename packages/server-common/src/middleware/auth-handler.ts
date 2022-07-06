@@ -1,18 +1,15 @@
 import { RequestHandler } from 'express';
 import Boom from '@hapi/boom';
+import { UserResponse } from '@asap-hub/model';
 import Intercept from 'apr-intercept';
 import { Logger } from '../utils/logger';
 import { DecodeToken } from '../utils/validate-token';
 
-type AuthHandlerConfig = {
-  origin: string;
-};
-
 export const authHandlerFactory =
   (
     decodeToken: DecodeToken,
+    fetchByCode: (code: string) => Promise<UserResponse>,
     logger: Logger,
-    config: AuthHandlerConfig,
   ): RequestHandler =>
   async (req, _res, next) => {
     const { headers } = req;
@@ -34,7 +31,18 @@ export const authHandlerFactory =
       throw Boom.unauthorized();
     }
 
-    const user = payload[`${config.origin}/user`];
+    if (!payload.sub) {
+      logger.error(err, 'Missing sub from JWT token');
+      throw Boom.unauthorized();
+    }
+
+    let user: UserResponse;
+    try {
+      user = await fetchByCode(payload.sub);
+    } catch (error) {
+      logger.error(error, 'Error fetching user details');
+      throw Boom.unauthorized();
+    }
 
     if (!user || typeof user === 'string') {
       logger.error('User payload not found');

@@ -17,6 +17,8 @@ const onRedirectCallback = (appState: RedirectLoginResult['appState']) => {
   );
 };
 
+const audience = 'https://dev.hub.asap.science';
+
 const AuthProvider: React.FC<{ readonly children: React.ReactNode }> = ({
   children,
 }) => (
@@ -26,6 +28,7 @@ const AuthProvider: React.FC<{ readonly children: React.ReactNode }> = ({
     redirect_uri={window.location.origin}
     onRedirectCallback={onRedirectCallback}
     cacheLocation="localstorage"
+    audience={audience}
     useRefreshTokens
   >
     {children}

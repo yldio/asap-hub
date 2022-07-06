@@ -26,7 +26,7 @@ import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import 'express-async-errors';
 import { Tracer } from 'opentracing';
-import { origin, auth0ClientId, baseUrl, appName } from './config';
+import { baseUrl, appName } from './config';
 import Calendars, { CalendarController } from './controllers/calendars';
 import Dashboard, { DashboardController } from './controllers/dashboard';
 import Discover, { DiscoverController } from './controllers/discover';
@@ -91,7 +91,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const errorHandler = errorHandlerFactory();
 
   // Clients
-  const decodeToken = decodeTokenFactory(auth0ClientId);
+  const audience = 'https://dev.hub.asap.science';
+  const decodeToken = decodeTokenFactory(audience);
   const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
     appName,
     baseUrl,
@@ -177,7 +178,12 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   // Handlers
   const authHandler =
-    libs.authHandler || authHandlerFactory(decodeToken, logger, { origin });
+    libs.authHandler ||
+    authHandlerFactory(
+      decodeToken,
+      userController.fetchByCode.bind(userController),
+      logger,
+    );
   const tracingHandler = tracingHandlerFactory(libs.tracer);
   const sentryTransactionIdHandler =
     libs.sentryTransactionIdHandler || sentryTransactionIdMiddleware;

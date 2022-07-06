@@ -1,4 +1,5 @@
-import { User, Auth0User } from '@asap-hub/auth';
+import { User } from '@asap-hub/auth';
+import { JwtPayload } from 'jsonwebtoken';
 
 export const userMock: User = {
   id: 'userMockId',
@@ -22,22 +23,10 @@ export const userMock: User = {
   algoliaApiKey: 'test-mock-key',
 };
 
-export const getAuth0UserMock = ({
-  origin,
-}: {
-  origin: string;
-}): Auth0User => ({
-  [`${origin}/user`]: userMock,
+export const getJwtPayload = (): JwtPayload => ({
   given_name: 'Joao',
   family_name: 'Tiago',
-  nickname: 'joao.tiago',
   name: 'Joao Tiago',
-  picture: 'https://lh3.googleusercontent.com/awesomePic',
-  locale: 'en',
-  updated_at: '2020-10-27T17:55:23.418Z',
-  email: 'joao.tiago@asap.science',
-  iss: 'https://asap-hub.us.auth0.com/',
   sub: 'google-oauth2|awesomeGoogleCode',
-  aud: 'audience',
-  nonce: 'onlyOnce',
+  aud: ['audience'],
 });

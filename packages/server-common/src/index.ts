@@ -4,3 +4,4 @@ export * from './middleware/auth-handler';
 export * from './middleware/error-handler';
 export { default as pino } from 'pino';
 export type { HttpLogger } from 'pino-http';
+export type { JwtPayload } from 'jsonwebtoken';

@@ -1,5 +1,5 @@
-import { auth0PubKeys, Auth0User } from '@asap-hub/auth';
-import jwt, { JwtHeader, SigningKeyCallback } from 'jsonwebtoken';
+import { auth0PubKeys } from '@asap-hub/auth';
+import jwt, { JwtHeader, JwtPayload, SigningKeyCallback } from 'jsonwebtoken';
 
 const certToPEM = (cert: string): string =>
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -18,24 +18,37 @@ const getPublicKey = (header: JwtHeader, cb: SigningKeyCallback): void => {
 };
 
 export const decodeTokenFactory =
-  (clientID: string) =>
-  (token: string): Promise<Auth0User> =>
+  (audience: string) =>
+  (token: string): Promise<JwtPayload> =>
     new Promise((resolve, reject) => {
-      jwt.verify(token, getPublicKey, { algorithms: ['RS256'] }, (err, res) => {
-        if (err) {
-          return reject(err);
-        }
+      jwt.verify(
+        token,
+        getPublicKey,
+        { algorithms: ['RS256'] },
+        (err, decodedToken) => {
+          if (err) {
+            return reject(err);
+          }
 
-        const payload = res as Auth0User;
-        if (payload?.aud !== clientID) {
-          return reject(
-            new Error(
-              'Token verification: aud field doesnt match Auth0 ClientID',
-            ),
-          );
-        }
-        return resolve(payload);
-      });
+          if (
+            typeof decodedToken === 'string' ||
+            typeof decodedToken === 'undefined' ||
+            !decodedToken.aud
+          ) {
+            throw new Error('Invalid JWT token');
+          }
+
+          if (!decodedToken.aud.includes(audience)) {
+            return reject(
+              new Error(
+                'Token verification: aud field doesnt contain the API Audience',
+              ),
+            );
+          }
+
+          return resolve(decodedToken);
+        },
+      );
     });
 
 export type DecodeToken = ReturnType<typeof decodeTokenFactory>;

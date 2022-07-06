@@ -3,9 +3,9 @@ import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { ValidationError } from '@asap-hub/errors';
 import { appName, baseUrl } from '../../config';
 import validateRequest from '../../utils/validate-auth0-request';
-import UserDataProvider from '../../data-providers/users.data-provider';
 import Users, { UserController } from '../../controllers/user.controller';
 import { getAuthToken } from '../../utils/auth';
+import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
 
 export const fetchUserByCodeHandlerFactory = (
   userController: UserController,
@@ -37,7 +37,7 @@ const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
   appName,
   baseUrl,
 });
-const userDataProvider = new UserDataProvider(
+const userDataProvider = new UserSquidexDataProvider(
   squidexGraphqlClient,
   userRestClient,
 );

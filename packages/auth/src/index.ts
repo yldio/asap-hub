@@ -29,6 +29,15 @@ export interface Auth0User {
   readonly [customUserClaim: string]: string | undefined | User;
 }
 
+export interface Auth0IdToken {
+  readonly sub: string;
+  readonly name?: string;
+  readonly given_name?: string;
+  readonly family_name?: string;
+  readonly orcid?: string;
+  readonly aud: string[];
+}
+
 export type Auth0 = {
   readonly isAuthenticated?: boolean;
   readonly user?: Auth0User;

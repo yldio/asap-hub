@@ -10632,8 +10632,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/runtime-corejs3", "npm:7.18.6"],
+            ["@types/jsonwebtoken", "npm:8.5.8"],
             ["core-js", "npm:3.12.1"],
             ["date-fns", "npm:2.28.0"],
+            ["jsonwebtoken", "npm:8.5.1"],
             ["ramda", "npm:0.27.1"],
             ["uuid", "npm:8.3.2"]
           ],

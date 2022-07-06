@@ -10710,7 +10710,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/gp2-components", "virtual:cf2d1d1368b2a34e41fdfdbccc7e758f24c8ace0b6ea4b15f22eba0a7c07dde8d57c3d9100bc914cf890c201e5db942ceb8e085e5972893e60e8732fef3e4632#workspace:packages/gp2-components"],
             ["@asap-hub/react-components", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#workspace:packages/react-components"],
-            ["@babel/runtime-corejs3", "npm:7.18.3"],
+            ["@babel/runtime-corejs3", "npm:7.18.6"],
             ["@testing-library/dom", "npm:7.31.2"],
             ["@testing-library/jest-dom", "npm:5.16.4"],
             ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:11.2.7"],
@@ -10811,9 +10811,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/react-components", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/react-components"],
             ["@asap-hub/react-context", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/react-context"],
             ["@asap-hub/routing", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/routing"],
-            ["@babel/core", "npm:7.18.5"],
-            ["@babel/preset-react", "virtual:61a64643837afd5405cc03238cfc085017b2368a7dc8660b30e3544523c3f52527959ac7ec64eb44bcb071ccdae5690543b0a4ef2dd3608212fed3cd93acc0b8#npm:7.17.12"],
-            ["@babel/runtime-corejs3", "npm:7.18.3"],
+            ["@babel/core", "npm:7.18.6"],
+            ["@babel/preset-react", "virtual:61a64643837afd5405cc03238cfc085017b2368a7dc8660b30e3544523c3f52527959ac7ec64eb44bcb071ccdae5690543b0a4ef2dd3608212fed3cd93acc0b8#npm:7.18.6"],
+            ["@babel/runtime-corejs3", "npm:7.18.6"],
             ["@emotion/babel-plugin", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.3.0"],
             ["@emotion/jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:11.3.0"],
             ["@emotion/react", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.4.0"],
@@ -69843,7 +69843,7 @@ module.exports = require("path");;
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/
+/******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -69857,14 +69857,14 @@ module.exports = require("path");;
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/
+/******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/
+/******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
+/******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
@@ -69877,7 +69877,7 @@ module.exports = require("path");;
 /******/ 			return getter;
 /******/ 		};
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -69889,12 +69889,12 @@ module.exports = require("path");;
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
-/******/
+/******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.

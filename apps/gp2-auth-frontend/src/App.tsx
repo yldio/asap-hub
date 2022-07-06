@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { HashRouter, Switch, Route, Redirect } from 'react-router-dom';
-import { BasicLayout } from '@asap-hub/react-components';
+
+import { BasicLayout } from '@asap-hub/gp2-components';
 import { getHubUrlFromRedirect } from '@asap-hub/auth-frontend-utils';
 
 import Login from './login/Login';

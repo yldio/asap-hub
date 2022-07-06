@@ -30,6 +30,7 @@ const Login: React.FC<LoginProps> = ({ email, setEmail }) => {
     <SigninPage
       signup={signup}
       appOrigin={getHubUrlFromRedirect()}
+      appName={'GP2 Hub'}
       forgotPasswordHref="/forgot-password"
       onGoogleSignin={() => authorizeWithSso(window.location, 'google-oauth2')}
       onOrcidSignin={() => authorizeWithSso(window.location, 'ORCID')}

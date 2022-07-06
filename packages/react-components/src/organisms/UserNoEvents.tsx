@@ -4,9 +4,13 @@ import { calendarIcon } from '../icons';
 import { perRem } from '../pixels';
 
 const titleStyles = css({
-  padding: `20px`,
+  padding: '24px',
+  fontSize: `${27 / perRem}em`,
+});
 
-  fontSize: `${26 / perRem}em`,
+const iconStyles = css({
+  width: `${48 / perRem}em`,
+  height: `${48 / perRem}em`,
 });
 
 const exploreEventsStyles = css(getButtonStyles({ primary: true }), {
@@ -18,7 +22,7 @@ const UserNoEvents: React.FC<{ past?: boolean; link: string }> = ({
   link,
 }) => (
   <main css={{ textAlign: 'center' }}>
-    {calendarIcon}
+    <span css={iconStyles}>{calendarIcon}</span>
     <div css={titleStyles}>
       <strong>There aren't any {past ? ' past ' : ' upcoming '} events!</strong>
     </div>

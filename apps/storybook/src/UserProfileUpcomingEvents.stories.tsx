@@ -9,6 +9,9 @@ export default {
 export const ViewOnly = () => (
   <UserNoEvents
     past={false}
-    link={text('Explore Upcoming Events', 'https://example.com/upcoming-events')}
+    link={text(
+      'Explore Upcoming Events',
+      'https://example.com/upcoming-events',
+    )}
   />
 );

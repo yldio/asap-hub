@@ -10,7 +10,7 @@ import { GetListOptions } from '@asap-hub/frontend-utils';
 import { authorizationState } from '../auth/state';
 import { getNews, getNewsById } from './api';
 
-const newsIndexState = atomFamily<
+export const newsIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
   GetListOptions
 >({
@@ -30,7 +30,7 @@ export const fetchNewsItemState = selectorFamily<
   key: 'fetchNewsItem',
   get:
     (id) =>
-    async ({ get }) => {
+    ({ get }) => {
       get(refreshNewsItemState(id));
       const authorization = get(authorizationState);
       return getNewsById(id, authorization);

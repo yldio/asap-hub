@@ -40,6 +40,7 @@ const renderEvents = async ({
   constraint: EventConstraint;
   pathName: string;
   isPast?: boolean;
+  hasEvents?: boolean;
   noEventsComponent?: React.ReactNode;
 }) => {
   const state = constraint.userId
@@ -87,6 +88,7 @@ const renderEvents = async ({
   );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
+
 const userPath = (userId: string) =>
   network({}).users({}).user({ userId }).upcoming({}).$;
 const teamPath = (teamId: string) =>
@@ -127,13 +129,15 @@ it.each`
 
 describe('EventsEmbed with no upcoming events', () => {
   test('show the component for no upcoming events', async () => {
-    const getPath = (teamId: string) =>
-      network({}).teams({}).team({ teamId }).upcoming({}).$;
-    const constraint = { teamId: '1007' };
-    const noEventsComponent = <>No Upcoming Events</>;
-    const pathName = getPath(constraint.teamId);
+    const constraint = { teamId: '1010' };
+    const pathName = teamPath(constraint.teamId);
 
-    renderEvents({ constraint, noEventsComponent, pathName });
+    mockGetEvents.mockResolvedValue(createListEventResponse(0));
+
+    const noEventsComponent = <>No Upcoming Events</>;
+
+    await renderEvents({ constraint, pathName, noEventsComponent });
+
     await waitFor(() => {
       expect(screen.getByText(/No Upcoming Events/i)).toBeInTheDocument();
     });

@@ -7,7 +7,7 @@ import { getEventListOptions } from '../events/options';
 
 type EventsEmbedProps = {
   readonly currentTime: Date;
-  readonly past: boolean;
+  readonly past?: boolean;
   readonly constraint: EventConstraint;
   readonly teamId?: string;
   readonly noEventsComponent?: React.ReactNode;
@@ -67,7 +67,7 @@ type EventsDisplayProps = EventsEmbedProps & {
 
 const EventsDisplay: React.FC<EventsDisplayProps> = ({
   currentTime,
-  past,
+  past = false,
   searchQuery,
   constraint,
 }) => {

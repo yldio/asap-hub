@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';
 import { copyFileSync, readFileSync, writeFileSync } from 'fs';
-import { buildScript, replaceScripts } from '..';
+import { build } from '..';
 
 jest.mock('child_process');
 jest.mock('fs');
@@ -16,16 +16,16 @@ const mockWriteFileSync = writeFileSync as jest.MockedFunction<
   typeof writeFileSync
 >;
 
-beforeEach(() => {
-  mockExecSync.mockClear();
-  mockCopyFileSync.mockClear();
-  mockReadFileSync.mockClear();
-  mockWriteFileSync.mockClear();
+afterEach(() => {
+  mockExecSync.mockReset();
+  mockCopyFileSync.mockReset();
+  mockReadFileSync.mockReset();
+  mockWriteFileSync.mockReset();
 });
 
-describe('buildScript', () => {
+describe('build', () => {
   it('should call execSync with correct params', () => {
-    buildScript({});
+    build('/', {});
     expect(mockExecSync).toHaveBeenCalledWith('yarn run react-scripts build', {
       env: {},
       stdio: 'pipe',
@@ -35,14 +35,11 @@ describe('buildScript', () => {
     mockExecSync.mockImplementation(() => {
       throw new Error('buildFailed');
     });
-
     expect(() => {
-      buildScript({});
+      build('/', {});
     }).toThrow();
   });
-});
 
-describe('replaceScripts', () => {
   it('should replace the script file names with main.chunk and 2.chunk', () => {
     mockReadFileSync.mockReturnValue(`
       <!doctype html>
@@ -53,7 +50,7 @@ describe('replaceScripts', () => {
           </body>
         </html>
       `);
-    replaceScripts('/');
+    build('/', {});
     expect(mockReadFileSync).toBeCalledWith('/index.html');
 
     expect(mockCopyFileSync.mock.calls).toEqual([

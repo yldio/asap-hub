@@ -4,9 +4,7 @@ import { AlgoliaSearchClient } from './client';
 export type { SearchResponse } from '@algolia/client-search';
 export * from './client';
 export * from './filters';
-export * from './scripts/move-index';
-export * from './scripts/remove-index';
-export * from './scripts/remove-records';
+
 type AlgoliaSearchClientNativeFactoryParams = {
   algoliaApiKey: string;
   algoliaAppId: string;
@@ -31,6 +29,9 @@ export const algoliaSearchClientFactory = ({
   const algoliaSearchClient = algoliasearch(algoliaAppId, algoliaApiKey);
 
   const index = algoliaSearchClient.initIndex(algoliaIndex);
+  const reverseIndex = algoliaSearchClient.initIndex(
+    `${algoliaIndex}-reverse-timestamp`,
+  );
 
-  return new AlgoliaSearchClient(index);
+  return new AlgoliaSearchClient(index, reverseIndex);
 };

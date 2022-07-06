@@ -135,11 +135,16 @@ describe('getEventsFromAlgolia', () => {
       getEventListOptions(new Date('2021-01-01T12:00:00'), true),
     );
 
-    expect(search).toBeCalledWith(['event'], '', {
-      filters: 'endDateTimestamp < 1609498800',
-      hitsPerPage: 10,
-      page: 0,
-    });
+    expect(search).toBeCalledWith(
+      ['event'],
+      '',
+      {
+        filters: 'endDateTimestamp < 1609498800',
+        hitsPerPage: 10,
+        page: 0,
+      },
+      true,
+    );
   });
   it('makes for events after a date', async () => {
     search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
@@ -148,11 +153,16 @@ describe('getEventsFromAlgolia', () => {
       algoliaSearchClient,
       getEventListOptions(new Date('2021-01-01T12:00:00'), false),
     );
-    expect(search).toBeCalledWith(['event'], '', {
-      filters: 'endDateTimestamp > 1609498800',
-      hitsPerPage: 10,
-      page: 0,
-    });
+    expect(search).toBeCalledWith(
+      ['event'],
+      '',
+      {
+        filters: 'endDateTimestamp > 1609498800',
+        hitsPerPage: 10,
+        page: 0,
+      },
+      false,
+    );
   });
 
   it('calls for upcoming events with a certain speaker user id', async () => {
@@ -162,12 +172,17 @@ describe('getEventsFromAlgolia', () => {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), false),
       constraint: { userId: 'user-1' },
     });
-    expect(search).toBeCalledWith(['event'], '', {
-      filters:
-        '(endDateTimestamp > 1609498800) AND (speakers.user.id: "user-1")',
-      hitsPerPage: 10,
-      page: 0,
-    });
+    expect(search).toBeCalledWith(
+      ['event'],
+      '',
+      {
+        filters:
+          '(endDateTimestamp > 1609498800) AND (speakers.user.id: "user-1")',
+        hitsPerPage: 10,
+        page: 0,
+      },
+      false,
+    );
   });
 
   it('calls for upcoming events with a certain speaker team id', async () => {
@@ -177,12 +192,17 @@ describe('getEventsFromAlgolia', () => {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), false),
       constraint: { teamId: 'team-1' },
     });
-    expect(search).toBeCalledWith(['event'], '', {
-      filters:
-        '(endDateTimestamp > 1609498800) AND (speakers.team.id: "team-1")',
-      hitsPerPage: 10,
-      page: 0,
-    });
+    expect(search).toBeCalledWith(
+      ['event'],
+      '',
+      {
+        filters:
+          '(endDateTimestamp > 1609498800) AND (speakers.team.id: "team-1")',
+        hitsPerPage: 10,
+        page: 0,
+      },
+      false,
+    );
   });
 
   it('returns successfully fetched events', async () => {
@@ -224,10 +244,15 @@ describe('getEventsFromAlgolia', () => {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), false),
       constraint: { groupId: 'group-5' },
     });
-    expect(search).toBeCalledWith(['event'], '', {
-      filters: '(endDateTimestamp > 1609498800) AND (group.id: "group-5")',
-      hitsPerPage: 10,
-      page: 0,
-    });
+    expect(search).toBeCalledWith(
+      ['event'],
+      '',
+      {
+        filters: '(endDateTimestamp > 1609498800) AND (group.id: "group-5")',
+        hitsPerPage: 10,
+        page: 0,
+      },
+      false,
+    );
   });
 });

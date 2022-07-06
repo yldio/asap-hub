@@ -1,0 +1,52 @@
+{
+  "customRanking": [
+    "desc(endDateTimestamp)",
+    "asc(addedDate)",
+    "asc(createdDate)"
+  ],
+  "attributesForFaceting": [
+    "teams.id",
+    "documentType",
+    "authors.id",
+    "__meta.type",
+    "teams.role",
+    "speakers.user.id",
+    "speakers.team.id"
+  ],
+  "attributesToIndex": [
+    "displayName",
+    "title",
+    "documentType",
+    "type",
+    "subtype",
+    "environments",
+    "methods",
+    "organisms",
+    "tags",
+    "authors.lastName",
+    "labs.name",
+    "teams.role",
+    "teams.displayName",
+    "authors.displayName",
+    "authors.firstName",
+    "degree",
+    "jobTitle",
+    "institution",
+    "city",
+    "country",
+    "orcid",
+    "expertiseAndResourceTags",
+    "id",
+    "rrid",
+    "accession",
+    "labCatalogNumber",
+    "doi",
+    "email",
+    "contactEmail",
+    "speakers.externalUser.name",
+    "speakers.team.displayName",
+    "speakers.user.displayName",
+    "endDateTimestamp",
+    "startDateTimestamp"
+  ]
+}

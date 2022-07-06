@@ -6,6 +6,7 @@ import {
   UserResponse,
 } from '@asap-hub/model';
 import {
+  createEventResponse,
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
@@ -16,10 +17,15 @@ import {
   USER_ENTITY_TYPE,
 } from '../src/client';
 import { getAlgoliaSearchIndexMock } from './mocks/algolia.mocks';
+import { EVENT_ENTITY_TYPE } from '../src/client';
 
 describe('Algolia Search Client', () => {
   const algoliaSearchIndex = getAlgoliaSearchIndexMock();
-  const algoliaSearchClient = new AlgoliaSearchClient(algoliaSearchIndex);
+  const reverseAlgoliaSearchIndex = getAlgoliaSearchIndexMock();
+  const algoliaSearchClient = new AlgoliaSearchClient(
+    algoliaSearchIndex,
+    reverseAlgoliaSearchIndex,
+  );
 
   test('Should do save many on entities', async () => {
     await algoliaSearchClient.saveMany([
@@ -153,6 +159,22 @@ describe('Algolia Search Client', () => {
     });
   });
 
+  test('Should search event entity in the past', async () => {
+    reverseAlgoliaSearchIndex.search.mockResolvedValueOnce(searchEventResponse);
+
+    const response = await algoliaSearchClient.search(
+      ['event'],
+      'query',
+      {},
+      true,
+    );
+
+    expect(response).toEqual(searchEventResponse);
+    expect(reverseAlgoliaSearchIndex.search).toBeCalledWith('query', {
+      filters: '__meta.type:"event"',
+    });
+  });
+
   test('Should search multiple entities', async () => {
     algoliaSearchIndex.search.mockResolvedValueOnce(searchUserResponse);
 
@@ -200,6 +222,26 @@ const searchUserResponse: SearchResponse<
       ...createUserResponse(),
       objectID: '1',
       __meta: { type: 'user' },
+    },
+  ],
+  page: 0,
+  nbHits: 2,
+  nbPages: 1,
+  hitsPerPage: 10,
+  processingTimeMS: 1000,
+  exhaustiveNbHits: true,
+  query: 'query',
+  params: '',
+};
+
+const searchEventResponse: SearchResponse<
+  EntityRecord<typeof EVENT_ENTITY_TYPE>
+> = {
+  hits: [
+    {
+      ...createEventResponse(),
+      objectID: '1',
+      __meta: { type: 'event' },
     },
   ],
   page: 0,

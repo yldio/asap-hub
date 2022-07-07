@@ -128,7 +128,7 @@ it.each`
 );
 
 describe('EventsEmbed with no upcoming events', () => {
-  test('show the component for no upcoming events', async () => {
+  it('shows the component for no upcoming events', async () => {
     const constraint = { teamId: '1010' };
     const pathName = teamPath(constraint.teamId);
 
@@ -143,7 +143,7 @@ describe('EventsEmbed with no upcoming events', () => {
     });
   });
 
-  test('show the component for no past events', async () => {
+  it('shows the component for no past events', async () => {
     const constraint = { teamId: '1010' };
     const pathName = teamPath(constraint.teamId);
     const isPast = true;
@@ -159,7 +159,7 @@ describe('EventsEmbed with no upcoming events', () => {
     });
   });
 
-  test('show empty state when no noEventsComponent is passed', async () => {
+  it('shows empty state when no noEventsComponent is passed', async () => {
     const constraint = { teamId: '1010' };
     const pathName = teamPath(constraint.teamId);
 

@@ -1,6 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import NoEvents from '../NoEvents';
 
+it('renders the component', () => {
+  const { getByRole } = render(
+    <NoEvents displayName="Group" link="/test" type="group" />,
+  );
+  expect(getByRole('heading').textContent).toContain('doesn’t have any');
+  expect(getByRole('link').textContent).toContain('Explore');
+});
+
 describe('For groups', () => {
   it('renders for upcoming events', () => {
     render(

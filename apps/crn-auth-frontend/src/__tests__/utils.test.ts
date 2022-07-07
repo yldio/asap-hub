@@ -1,5 +1,6 @@
 import { mockLocation } from '@asap-hub/dom-test-utils';
-import { getHubUrlFromRedirect } from '..';
+
+import { getHubUrlFromRedirect } from '../utils';
 
 const { mockGetLocation } = mockLocation();
 

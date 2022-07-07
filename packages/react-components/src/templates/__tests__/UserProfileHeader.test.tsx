@@ -1,6 +1,7 @@
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
 
+import { disable } from '@asap-hub/flags';
 import { render, screen } from '@testing-library/react';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { UserProfileContext } from '@asap-hub/react-context';
@@ -12,8 +13,6 @@ const boilerplateProps: ComponentProps<typeof UserProfileHeader> = {
   ...createUserResponse(),
   role: 'Grantee',
   sharedOutputsCount: 0,
-  pastEventsCount: 2,
-  upcomingEventsCount: 3,
 };
 
 it('renders the name as the top-level heading', () => {
@@ -144,16 +143,22 @@ it('displays number of shared research', async () => {
 });
 
 it('renders the navigation for active and inactive groups', () => {
-  render(<UserProfileHeader {...boilerplateProps} />);
+  render(
+    <UserProfileHeader
+      {...boilerplateProps}
+      pastEventsCount={1}
+      upcomingEventsCount={1}
+    />,
+  );
 
   expect(
     screen.getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual([
+  ).toStrictEqual([
     'Research',
     'Background',
     'Shared Outputs (0)',
-    'Upcoming Events (3)',
-    'Past Events (2)',
+    'Upcoming Events (1)',
+    'Past Events (1)',
   ]);
 });
 
@@ -177,4 +182,28 @@ it('displays number of past events', () => {
     </StaticRouter>,
   );
   expect(screen.queryByText('Past Events (9)')).toBeInTheDocument();
+});
+
+it('(REGRESSION) does not display upcoming events if feature EVENTS_SEARCH is disabled', () => {
+  disable('EVENTS_SEARCH');
+  render(
+    <StaticRouter
+      location={network({}).users({}).user({ userId: '1' }).upcoming({}).$}
+    >
+      <UserProfileHeader {...boilerplateProps} upcomingEventsCount={10} />
+    </StaticRouter>,
+  );
+  expect(screen.queryByText('Upcoming Events (10)')).not.toBeInTheDocument();
+});
+
+it('(REGRESSION) does not display past events if feature EVENTS_SEARCH is disabled', () => {
+  disable('EVENTS_SEARCH');
+  render(
+    <StaticRouter
+      location={network({}).users({}).user({ userId: '1' }).upcoming({}).$}
+    >
+      <UserProfileHeader {...boilerplateProps} pastEventsCount={9} />
+    </StaticRouter>,
+  );
+  expect(screen.queryByText('Past Events (9)')).not.toBeInTheDocument();
 });

@@ -162,7 +162,7 @@ describe('the past events tab', () => {
     );
     userEvent.click(await findByText(/past/i, { selector: 'nav a *' }));
     expect(
-      await findByText(/This group doesn’t have any past events!/i),
+      await findByText(/This group doesn't have any past events!/i),
     ).toBeVisible();
   });
 });

@@ -24,6 +24,7 @@
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
+    "@asap-hub/auth-frontend-scripts": "workspace:*",
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@testing-library/dom": "7.31.2",

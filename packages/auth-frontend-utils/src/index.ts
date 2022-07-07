@@ -1,6 +1,5 @@
 export * from './errors';
 export * from './web-auth';
-export * from './build';
 
 export const getHubUrlFromRedirect = (): string => {
   const redirectUri = new URLSearchParams(window.location.search).get(

@@ -107,6 +107,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/auth"
       },
       {
+        "name": "@asap-hub/auth-frontend-scripts",
+        "reference": "workspace:packages/auth-frontend-scripts"
+      },
+      {
         "name": "@asap-hub/auth-frontend-utils",
         "reference": "workspace:packages/auth-frontend-utils"
       },
@@ -185,6 +189,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/algolia", ["workspace:packages/algolia"]],
       ["@asap-hub/asap-cli", ["workspace:apps/asap-cli"]],
       ["@asap-hub/auth", ["workspace:packages/auth"]],
+      ["@asap-hub/auth-frontend-scripts", ["workspace:packages/auth-frontend-scripts"]],
       ["@asap-hub/auth-frontend-utils", ["workspace:packages/auth-frontend-utils"]],
       ["@asap-hub/auth0-rules", ["workspace:apps/auth0-rules"]],
       ["@asap-hub/crn-auth-frontend", ["workspace:apps/crn-auth-frontend"]],
@@ -315,6 +320,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@asap-hub/auth",
         "workspace:packages/auth"
+      ],
+      [
+        "@asap-hub/auth-frontend-scripts",
+        "workspace:packages/auth-frontend-scripts"
       ],
       [
         "@asap-hub/auth-frontend-utils",
@@ -6105,7 +6114,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "jsdom",
-        "virtual:61a64643837afd5405cc03238cfc085017b2368a7dc8660b30e3544523c3f52527959ac7ec64eb44bcb071ccdae5690543b0a4ef2dd3608212fed3cd93acc0b8#npm:16.5.3"
+        "virtual:9f90488e251543e84fafd44b26f8f879934523520475ac784700420cf3f739ddd0645673a5434152e1d5960ff90ac92b6a3fc33abc4c1af5eba760561c04738f#npm:16.5.3"
       ],
       [
         "jsesc",
@@ -10267,6 +10276,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@asap-hub/auth-frontend-scripts", [
+        ["workspace:packages/auth-frontend-scripts", {
+          "packageLocation": "./packages/auth-frontend-scripts/",
+          "packageDependencies": [
+            ["@asap-hub/auth-frontend-scripts", "workspace:packages/auth-frontend-scripts"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@babel/core", "npm:7.18.6"],
+            ["@babel/runtime-corejs3", "npm:7.18.6"],
+            ["@types/jest", "npm:26.0.24"],
+            ["@types/jsdom", "npm:16.2.3"],
+            ["@types/node", "npm:14.14.45"],
+            ["core-js", "npm:3.12.1"],
+            ["jsdom", "virtual:9f90488e251543e84fafd44b26f8f879934523520475ac784700420cf3f739ddd0645673a5434152e1d5960ff90ac92b6a3fc33abc4c1af5eba760561c04738f#npm:16.5.3"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@asap-hub/auth-frontend-utils", [
         ["workspace:packages/auth-frontend-utils", {
           "packageLocation": "./packages/auth-frontend-utils/",
@@ -10280,13 +10306,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.18.6"],
             ["@types/auth0-js", "npm:9.14.4"],
             ["@types/jest", "npm:26.0.24"],
-            ["@types/jsdom", "npm:16.2.3"],
             ["@types/node", "npm:14.14.45"],
             ["@types/pify", "npm:3.0.2"],
             ["auth0-js", "npm:9.16.0"],
             ["camelcase", "npm:6.2.0"],
-            ["core-js", "npm:3.12.1"],
-            ["jsdom", "virtual:61a64643837afd5405cc03238cfc085017b2368a7dc8660b30e3544523c3f52527959ac7ec64eb44bcb071ccdae5690543b0a4ef2dd3608212fed3cd93acc0b8#npm:16.5.3"],
             ["pify", "npm:5.0.0"]
           ],
           "linkType": "SOFT",
@@ -10317,6 +10340,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/crn-auth-frontend", "workspace:apps/crn-auth-frontend"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/auth-frontend-scripts", "workspace:packages/auth-frontend-scripts"],
             ["@asap-hub/auth-frontend-utils", "workspace:packages/auth-frontend-utils"],
             ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
@@ -10337,7 +10361,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cross-env", "npm:7.0.3"],
             ["history", "npm:4.10.1"],
             ["identity-obj-proxy", "npm:3.0.0"],
-            ["jsdom", "virtual:61a64643837afd5405cc03238cfc085017b2368a7dc8660b30e3544523c3f52527959ac7ec64eb44bcb071ccdae5690543b0a4ef2dd3608212fed3cd93acc0b8#npm:16.5.3"],
+            ["jsdom", "virtual:9f90488e251543e84fafd44b26f8f879934523520475ac784700420cf3f739ddd0645673a5434152e1d5960ff90ac92b6a3fc33abc4c1af5eba760561c04738f#npm:16.5.3"],
             ["react", "npm:17.0.2"],
             ["react-app-polyfill", "npm:1.0.6"],
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:17.0.2"],
@@ -10705,6 +10729,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/gp2-auth-frontend", "workspace:apps/gp2-auth-frontend"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/auth-frontend-scripts", "workspace:packages/auth-frontend-scripts"],
             ["@asap-hub/auth-frontend-utils", "workspace:packages/auth-frontend-utils"],
             ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
@@ -10726,7 +10751,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cross-env", "npm:7.0.3"],
             ["history", "npm:4.10.1"],
             ["identity-obj-proxy", "npm:3.0.0"],
-            ["jsdom", "virtual:61a64643837afd5405cc03238cfc085017b2368a7dc8660b30e3544523c3f52527959ac7ec64eb44bcb071ccdae5690543b0a4ef2dd3608212fed3cd93acc0b8#npm:16.5.3"],
+            ["jsdom", "virtual:9f90488e251543e84fafd44b26f8f879934523520475ac784700420cf3f739ddd0645673a5434152e1d5960ff90ac92b6a3fc33abc4c1af5eba760561c04738f#npm:16.5.3"],
             ["react", "npm:17.0.2"],
             ["react-app-polyfill", "npm:1.0.6"],
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:17.0.2"],
@@ -50376,10 +50401,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:61a64643837afd5405cc03238cfc085017b2368a7dc8660b30e3544523c3f52527959ac7ec64eb44bcb071ccdae5690543b0a4ef2dd3608212fed3cd93acc0b8#npm:16.5.3", {
-          "packageLocation": "./.yarn/__virtual__/jsdom-virtual-5b44661c87/0/cache/jsdom-npm-16.5.3-a7674d3b6b-19d107eeaa.zip/node_modules/jsdom/",
+        ["virtual:9f90488e251543e84fafd44b26f8f879934523520475ac784700420cf3f739ddd0645673a5434152e1d5960ff90ac92b6a3fc33abc4c1af5eba760561c04738f#npm:16.5.3", {
+          "packageLocation": "./.yarn/__virtual__/jsdom-virtual-9afc6fa065/0/cache/jsdom-npm-16.5.3-a7674d3b6b-19d107eeaa.zip/node_modules/jsdom/",
           "packageDependencies": [
-            ["jsdom", "virtual:61a64643837afd5405cc03238cfc085017b2368a7dc8660b30e3544523c3f52527959ac7ec64eb44bcb071ccdae5690543b0a4ef2dd3608212fed3cd93acc0b8#npm:16.5.3"],
+            ["jsdom", "virtual:9f90488e251543e84fafd44b26f8f879934523520475ac784700420cf3f739ddd0645673a5434152e1d5960ff90ac92b6a3fc33abc4c1af5eba760561c04738f#npm:16.5.3"],
             ["@types/canvas", null],
             ["abab", "npm:2.0.5"],
             ["acorn", "npm:8.2.4"],
@@ -50396,7 +50421,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["nwsapi", "npm:2.2.0"],
             ["parse5", "npm:6.0.1"],
             ["request", "npm:2.88.2"],
-            ["request-promise-native", "virtual:5b44661c8763c5341cc20a4cf9e930fa9c5e1913ddfbc4738eb26e949440397bd50e3dbef6161a9ea96bdcb71b8deaa1bd16f3a8058b2f774bac0fb18bed56c7#npm:1.0.9"],
+            ["request-promise-native", "virtual:9afc6fa065e7da599aa60d6111be4bc32980ef96c689b33c545152df29d939d69d564a4f3637d0600a11084d38bfc4b21bd14ea57515a97b9bd1d822d0499801#npm:1.0.9"],
             ["saxes", "npm:5.0.1"],
             ["symbol-tree", "npm:3.2.4"],
             ["tough-cookie", "npm:4.0.0"],
@@ -58498,10 +58523,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:1a70a9c44893ece4b631ebe6c2bc68e92e8bea7222131c2a5194b48560811aaa36bb177ab04a83b795f7b7d58c20e27aef59607d8322a6f088145ea900debc14#npm:1.1.3", {
-          "packageLocation": "./.yarn/__virtual__/request-promise-core-virtual-89c5bbdf12/0/cache/request-promise-core-npm-1.1.3-1b898b5c44-8572b5dd21.zip/node_modules/request-promise-core/",
+        ["virtual:0a147bb27b8bcc789d6a7e2dcf5292d1bd7f8e66356697aec93ad2682c6b092678149c8d6282301884b9585d43bbd7c1da764cfc3f10df048a0bf66d5109986b#npm:1.1.4", {
+          "packageLocation": "./.yarn/__virtual__/request-promise-core-virtual-ff3fc14843/0/cache/request-promise-core-npm-1.1.4-cb9fff6c90-c798bafd55.zip/node_modules/request-promise-core/",
           "packageDependencies": [
-            ["request-promise-core", "virtual:1a70a9c44893ece4b631ebe6c2bc68e92e8bea7222131c2a5194b48560811aaa36bb177ab04a83b795f7b7d58c20e27aef59607d8322a6f088145ea900debc14#npm:1.1.3"],
+            ["request-promise-core", "virtual:0a147bb27b8bcc789d6a7e2dcf5292d1bd7f8e66356697aec93ad2682c6b092678149c8d6282301884b9585d43bbd7c1da764cfc3f10df048a0bf66d5109986b#npm:1.1.4"],
             ["@types/request", null],
             ["lodash", "npm:4.17.20"],
             ["request", "npm:2.88.2"]
@@ -58512,10 +58537,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:acea8d22f30d4b31b65059d117ff6cf918326ef703d8a5a898be7333e153fcbdef7432e8a7f567745bd052fa7d919de69bf909f248dbf9924e3c8d25657835aa#npm:1.1.4", {
-          "packageLocation": "./.yarn/__virtual__/request-promise-core-virtual-6010d7a00b/0/cache/request-promise-core-npm-1.1.4-cb9fff6c90-c798bafd55.zip/node_modules/request-promise-core/",
+        ["virtual:1a70a9c44893ece4b631ebe6c2bc68e92e8bea7222131c2a5194b48560811aaa36bb177ab04a83b795f7b7d58c20e27aef59607d8322a6f088145ea900debc14#npm:1.1.3", {
+          "packageLocation": "./.yarn/__virtual__/request-promise-core-virtual-89c5bbdf12/0/cache/request-promise-core-npm-1.1.3-1b898b5c44-8572b5dd21.zip/node_modules/request-promise-core/",
           "packageDependencies": [
-            ["request-promise-core", "virtual:acea8d22f30d4b31b65059d117ff6cf918326ef703d8a5a898be7333e153fcbdef7432e8a7f567745bd052fa7d919de69bf909f248dbf9924e3c8d25657835aa#npm:1.1.4"],
+            ["request-promise-core", "virtual:1a70a9c44893ece4b631ebe6c2bc68e92e8bea7222131c2a5194b48560811aaa36bb177ab04a83b795f7b7d58c20e27aef59607d8322a6f088145ea900debc14#npm:1.1.3"],
             ["@types/request", null],
             ["lodash", "npm:4.17.20"],
             ["request", "npm:2.88.2"]
@@ -58558,13 +58583,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:5b44661c8763c5341cc20a4cf9e930fa9c5e1913ddfbc4738eb26e949440397bd50e3dbef6161a9ea96bdcb71b8deaa1bd16f3a8058b2f774bac0fb18bed56c7#npm:1.0.9", {
-          "packageLocation": "./.yarn/__virtual__/request-promise-native-virtual-acea8d22f3/0/cache/request-promise-native-npm-1.0.9-6ae8e592e8-3e2c694eef.zip/node_modules/request-promise-native/",
+        ["virtual:9afc6fa065e7da599aa60d6111be4bc32980ef96c689b33c545152df29d939d69d564a4f3637d0600a11084d38bfc4b21bd14ea57515a97b9bd1d822d0499801#npm:1.0.9", {
+          "packageLocation": "./.yarn/__virtual__/request-promise-native-virtual-0a147bb27b/0/cache/request-promise-native-npm-1.0.9-6ae8e592e8-3e2c694eef.zip/node_modules/request-promise-native/",
           "packageDependencies": [
-            ["request-promise-native", "virtual:5b44661c8763c5341cc20a4cf9e930fa9c5e1913ddfbc4738eb26e949440397bd50e3dbef6161a9ea96bdcb71b8deaa1bd16f3a8058b2f774bac0fb18bed56c7#npm:1.0.9"],
+            ["request-promise-native", "virtual:9afc6fa065e7da599aa60d6111be4bc32980ef96c689b33c545152df29d939d69d564a4f3637d0600a11084d38bfc4b21bd14ea57515a97b9bd1d822d0499801#npm:1.0.9"],
             ["@types/request", null],
             ["request", "npm:2.88.2"],
-            ["request-promise-core", "virtual:acea8d22f30d4b31b65059d117ff6cf918326ef703d8a5a898be7333e153fcbdef7432e8a7f567745bd052fa7d919de69bf909f248dbf9924e3c8d25657835aa#npm:1.1.4"],
+            ["request-promise-core", "virtual:0a147bb27b8bcc789d6a7e2dcf5292d1bd7f8e66356697aec93ad2682c6b092678149c8d6282301884b9585d43bbd7c1da764cfc3f10df048a0bf66d5109986b#npm:1.1.4"],
             ["stealthy-require", "npm:1.1.1"],
             ["tough-cookie", "npm:2.5.0"]
           ],

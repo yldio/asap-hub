@@ -1,11 +1,11 @@
-import { execSync } from 'child_process';
 import { copyFileSync, readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
-import { env } from 'process';
 import { JSDOM } from 'jsdom';
+import { env } from 'process';
+import { execSync } from 'child_process';
 
 // run CRA build script
-const buildScript = (envVars: typeof env): void => {
+export const buildScript = (envVars: typeof env): void => {
   try {
     execSync('yarn run react-scripts build', {
       stdio: 'pipe',
@@ -18,7 +18,7 @@ const buildScript = (envVars: typeof env): void => {
   }
 };
 
-const scriptReplacements = [
+export const scriptReplacements = [
   {
     regex: /static\/js\/main\.[0-9a-f]{8}\.chunk\.js$/,
     replacement: 'static/js/main.chunk.js',
@@ -36,13 +36,11 @@ type ScriptElement = Element & {
 const isScriptElement = (tag: Element | ScriptElement): tag is ScriptElement =>
   (tag as ScriptElement).src !== undefined;
 
-const replaceScripts = (buildDir: string): void => {
+export const replaceScripts = (buildDir: string): void => {
   // replace unstable parts of HTML
-
   const indexHtmlPath = resolve(buildDir, 'index.html');
   const { window } = new JSDOM(readFileSync(indexHtmlPath));
   const { document } = window;
-
   scriptReplacements.forEach(({ regex, replacement }) => {
     [...document.querySelectorAll('script[src]')].forEach((script: Element) => {
       if (isScriptElement(script)) {

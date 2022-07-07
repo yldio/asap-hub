@@ -364,6 +364,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/auth-frontend-scripts@workspace:*, @asap-hub/auth-frontend-scripts@workspace:packages/auth-frontend-scripts":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/auth-frontend-scripts@workspace:packages/auth-frontend-scripts"
+  dependencies:
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@babel/core": 7.18.6
+    "@babel/runtime-corejs3": 7.18.6
+    "@types/jest": 26.0.24
+    "@types/jsdom": ^16
+    "@types/node": ^14.14.45
+    core-js: ^3.12.1
+    jsdom: ^16.5.3
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/auth-frontend-utils@workspace:*, @asap-hub/auth-frontend-utils@workspace:packages/auth-frontend-utils":
   version: 0.0.0-use.local
   resolution: "@asap-hub/auth-frontend-utils@workspace:packages/auth-frontend-utils"
@@ -376,13 +391,10 @@ __metadata:
     "@babel/runtime-corejs3": 7.18.6
     "@types/auth0-js": ^9.14.4
     "@types/jest": 26.0.24
-    "@types/jsdom": ^16
     "@types/node": ^14.14.45
     "@types/pify": ^3.0.2
     auth0-js: ^9.16.0
     camelcase: ^6.2.0
-    core-js: ^3.12.1
-    jsdom: ^16.5.3
     pify: ^5.0.0
   languageName: unknown
   linkType: soft
@@ -422,6 +434,7 @@ __metadata:
   resolution: "@asap-hub/crn-auth-frontend@workspace:apps/crn-auth-frontend"
   dependencies:
     "@asap-hub/auth": "workspace:*"
+    "@asap-hub/auth-frontend-scripts": "workspace:*"
     "@asap-hub/auth-frontend-utils": "workspace:*"
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
@@ -765,6 +778,7 @@ __metadata:
   resolution: "@asap-hub/gp2-auth-frontend@workspace:apps/gp2-auth-frontend"
   dependencies:
     "@asap-hub/auth": "workspace:*"
+    "@asap-hub/auth-frontend-scripts": "workspace:*"
     "@asap-hub/auth-frontend-utils": "workspace:*"
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"

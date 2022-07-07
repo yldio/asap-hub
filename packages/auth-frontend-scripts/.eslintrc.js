@@ -1,3 +1,3 @@
 module.exports = {
-  extends: ['@asap-hub/eslint-config-asap-hub'],
+  extends: ['@asap-hub/eslint-config-asap-hub/react'],
 };

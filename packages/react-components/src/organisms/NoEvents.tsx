@@ -8,11 +8,13 @@ const titleStyles = css({
   padding: '15px',
   fontWeight: 'bold',
   fontSize: `${27 / perRem}em`,
+  margin: 0,
 });
 
 const iconStyles = css({
   '> svg': {
     width: '36px',
+    height: '36px',
 
     '> g': {
       stroke: charcoal.rgb,

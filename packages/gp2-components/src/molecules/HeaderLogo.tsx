@@ -24,16 +24,12 @@ const smallLogoStyles = css({
   },
 });
 
-type HeaderLogoProps = {
-  logoHref?: string;
-};
-
-const HeaderLogo: React.FC<HeaderLogoProps> = ({ logoHref = '/' }) => (
+const HeaderLogo: React.FC = () => (
   <div css={containerStyles}>
-    <Anchor css={[logoLinkStyles, fullLogoStyles]} href={logoHref}>
+    <Anchor css={[logoLinkStyles, fullLogoStyles]} href="/">
       {gp2LogoFull}
     </Anchor>
-    <Anchor css={[logoLinkStyles, smallLogoStyles]} href={logoHref}>
+    <Anchor css={[logoLinkStyles, smallLogoStyles]} href="/">
       {gp2LogoSmall}
     </Anchor>
   </div>

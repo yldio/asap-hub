@@ -27,7 +27,6 @@ const ignoreWidthStyles = css({
 
 type SigninProps = {
   signup?: boolean;
-  appName?: string;
 } & ComponentProps<typeof SsoButtons> &
   ComponentProps<typeof EmailPasswordSignin>;
 const Signin: React.FC<SigninProps> = ({
@@ -35,13 +34,13 @@ const Signin: React.FC<SigninProps> = ({
 
   onGoogleSignin,
   onOrcidSignin,
-  appName = 'ASAP Hub',
+
   ...props
 }) => (
   <article css={styles}>
     <header css={[headerStyles, ignoreWidthStyles]}>
       <Display styleAsHeading={2}>
-        {signup ? 'Choose a login method' : `Sign in to the ${appName}`}
+        {signup ? 'Choose a login method' : 'Sign in to the ASAP Hub'}
       </Display>
       {signup ? (
         <Paragraph primary accent="lead">

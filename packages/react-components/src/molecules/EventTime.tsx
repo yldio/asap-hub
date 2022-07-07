@@ -28,7 +28,6 @@ const iconStyles = css({
   paddingRight: `${9 / perRem}em`,
   lineHeight: 0,
   height: 'fit-content',
-  width: '24px',
 });
 
 const tzStyles = css({

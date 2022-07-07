@@ -131,12 +131,13 @@ describe('EventsEmbed with no upcoming events', () => {
   it('shows the component for no upcoming events', async () => {
     const constraint = { teamId: '1010' };
     const pathName = teamPath(constraint.teamId);
+    const isPast = false;
 
     mockGetEvents.mockResolvedValue(createListEventResponse(0));
 
     const noEventsComponent = <>No Upcoming Events</>;
 
-    await renderEvents({ constraint, pathName, noEventsComponent });
+    await renderEvents({ constraint, pathName, noEventsComponent, isPast });
 
     await waitFor(() => {
       expect(screen.getByText(/no upcoming events/i)).toBeInTheDocument();
@@ -162,10 +163,11 @@ describe('EventsEmbed with no upcoming events', () => {
   it('shows empty state when no noEventsComponent is passed', async () => {
     const constraint = { teamId: '1010' };
     const pathName = teamPath(constraint.teamId);
+    const isPast = false;
 
     mockGetEvents.mockResolvedValue(createListEventResponse(0));
 
-    await renderEvents({ constraint, pathName });
+    await renderEvents({ constraint, pathName, isPast });
 
     await waitFor(() => {
       expect(screen.queryByText(/no upcoming events/i)).not.toBeInTheDocument();

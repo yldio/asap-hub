@@ -35,7 +35,7 @@
     "@asap-hub/flags": "workspace:*",
     "@babel/core": "7.18.6",
     "@types/history": "4.7.11",
-    "@types/react": "17.0.45",
+    "@types/react": "17.0.47",
     "@types/react-router-dom": "^5.1.7",
     "babel-preset-react-app": "10.0.1",
     "typescript": "4.4.4"

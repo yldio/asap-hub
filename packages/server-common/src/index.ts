@@ -1,3 +1,4 @@
+export * from './clients/cache.client';
 export * from './utils/validate-token';
 export * from './utils/logger';
 export * from './middleware/auth-handler';

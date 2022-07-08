@@ -432,6 +432,14 @@ it('renders number of upcoming events', async () => {
   expect(await screen.findByText(/Upcoming Events \(7\)/i)).toBeVisible();
 });
 
+it('renders number of past events', async () => {
+  const response = createListEventResponse(7, { isEventInThePast: true });
+  mockUserEventsFromAlgolia.mockResolvedValue(response);
+  await renderUserProfile(createUserResponse());
+
+  expect(await screen.findByText(/Past Events \(7\)/i)).toBeVisible();
+});
+
 it('onboarded users do call the events api', async () => {
   disable('EVENTS_SEARCH');
   await renderUserProfile(createUserResponse(), { onboarded: true });
@@ -464,7 +472,35 @@ it('navigates to the upcoming events tab', async () => {
     'Search by topic, presenting team, …',
   );
   expect(await screen.findByText(/Event 0/i)).toBeVisible();
-  expect(mockUserEventsFromAlgolia).toBeCalledTimes(1);
+  expect(mockUserEventsFromAlgolia).toBeCalledTimes(2);
+  expect(mockUserEventsFromAlgolia).toHaveBeenCalledWith(expect.anything(), {
+    after: '2021-12-28T13:00:00.000Z',
+    currentPage: 0,
+    filters: new Set(),
+    pageSize: 10,
+    searchQuery: '',
+    constraint: {
+      userId: userResponse.id,
+    },
+  });
+});
+
+it('navigates to the past events tab', async () => {
+  const currentTime = new Date('2021-12-28T14:00:00.000Z');
+  const response = createListEventResponse(1, { isEventInThePast: true });
+  mockUserEventsFromAlgolia.mockResolvedValue(response);
+
+  const userResponse = createUserResponse();
+  await renderUserProfile(userResponse, { currentTime });
+
+  const tab = screen.getByRole('link', { name: /past/i });
+  userEvent.click(tab);
+  expect(await screen.findByRole('searchbox')).toHaveAttribute(
+    'placeholder',
+    'Search by topic, presenting team, …',
+  );
+  expect(await screen.findByText(/Event 0/i)).toBeVisible();
+  expect(mockUserEventsFromAlgolia).toBeCalledTimes(2);
   expect(mockUserEventsFromAlgolia).toHaveBeenCalledWith(expect.anything(), {
     after: '2021-12-28T13:00:00.000Z',
     currentPage: 0,

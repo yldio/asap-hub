@@ -56,10 +56,16 @@ const user = (() => {
     { editPersonalInfo, editContactInfo, editOnboarded },
   );
 
+  const past = route(
+    '/past',
+    {},
+    { editPersonalInfo, editContactInfo, editOnboarded },
+  );
+
   return route(
     '/:userId',
     { userId: stringParser },
-    { about, research, outputs, upcoming },
+    { about, research, outputs, upcoming, past },
   );
 })();
 const users = route('/users', {}, { user });

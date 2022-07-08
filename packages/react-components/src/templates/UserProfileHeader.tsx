@@ -150,6 +150,7 @@ type UserProfileHeaderProps = Pick<
   readonly editContactInfoHref?: string;
   readonly sharedOutputsCount?: number;
   readonly upcomingEventsCount?: number;
+  readonly pastEventsCount?: number;
 };
 
 const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
@@ -176,6 +177,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   social,
   sharedOutputsCount,
   upcomingEventsCount,
+  pastEventsCount,
 }) => {
   const tabRoutes = network({}).users({}).user({ userId: id });
   const { isOwnProfile } = useContext(UserProfileContext);
@@ -293,6 +295,11 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
           {useFlags().isEnabled('EVENTS_SEARCH') && (
             <TabLink href={tabRoutes.upcoming({}).$}>
               Upcoming Events {` (${upcomingEventsCount})`}
+            </TabLink>
+          )}
+          {useFlags().isEnabled('EVENTS_SEARCH') && (
+            <TabLink href={tabRoutes.past({}).$}>
+              Past Events {` (${pastEventsCount})`}
             </TabLink>
           )}
         </TabNav>

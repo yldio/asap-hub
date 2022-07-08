@@ -4,12 +4,11 @@ import { render, waitFor, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import {
   createDiscoverResponse,
-  createNewsResponse,
   createPageResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
 
-import Discover from '../Discover';
+import Guides from '../Guides';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { refreshDiscoverState } from '../state';
 import { getDiscover } from '../api';
@@ -32,7 +31,7 @@ const renderDiscover = async (user: Partial<User>) => {
       >
         <Auth0Provider user={user}>
           <WhenReady>
-            <Discover />
+            <Guides />
           </WhenReady>
         </Auth0Provider>
       </RecoilRoot>
@@ -43,19 +42,6 @@ const renderDiscover = async (user: Partial<User>) => {
   );
   return result;
 };
-
-it('renders discover header', async () => {
-  mockGetDiscover.mockResolvedValue({
-    aboutUs: '',
-    members: [],
-    pages: [],
-    training: [],
-    scientificAdvisoryBoard: [],
-  });
-
-  await renderDiscover({});
-  expect(screen.getByText(/discover/i, { selector: 'h1' })).toBeVisible();
-});
 
 it('renders discover with guidance, about and pages', async () => {
   mockGetDiscover.mockResolvedValue({
@@ -68,26 +54,11 @@ it('renders discover with guidance, about and pages', async () => {
   });
 
   await renderDiscover({});
-  expect(screen.getByText(/about/i, { selector: 'h1' })).toBeVisible();
-  expect(screen.queryAllByText(/title/i, { selector: 'h2' }).length).toBe(2);
-});
-
-it('renders discover with training', async () => {
-  mockGetDiscover.mockResolvedValue({
-    ...createDiscoverResponse(),
-    training: [
-      {
-        ...createNewsResponse('Demo', 'Training'),
-        id: 't1',
-      },
-    ],
-  });
-
-  await renderDiscover({});
-
+  expect(screen.getByText(/about/i, { selector: 'h2' })).toBeVisible();
   expect(
-    screen.getByRole('link', { name: 'Training Demo title' }),
-  ).toHaveAttribute('href', '/news/t1');
+    screen.getByText(/Grantee Guidance/i, { selector: 'h2' }),
+  ).toBeVisible();
+  expect(screen.queryAllByText(/title/i, { selector: 'h2' }).length).toBe(2);
 });
 
 it('renders discover with members', async () => {

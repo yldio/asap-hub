@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { NewsResponse, NewsType } from '@asap-hub/model';
 import { news } from '@asap-hub/routing';
 
-import { Card, Paragraph, Headline2, Pill, Caption, Anchor } from '../atoms';
+import { Card, Paragraph, Headline4, Pill, Caption, Anchor } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../date';
 import {
@@ -58,6 +58,7 @@ const placeholders: Record<NewsType, JSX.Element> = {
   News: newsPlaceholder,
   Event: newsEventPlaceholderIcon,
   Training: trainingPlaceholderIcon,
+  Tutorial: trainingPlaceholderIcon,
 };
 
 type NewsCardProps = NewsResponse;
@@ -75,10 +76,10 @@ const NewsCard: React.FC<NewsCardProps> = ({
 }) => {
   const titleComponent = text ? (
     <Anchor href={news({}).article({ articleId: id }).$}>
-      <Headline2 styleAsHeading={4}>{title}</Headline2>
+      <Headline4>{title}</Headline4>
     </Anchor>
   ) : (
-    <Headline2 styleAsHeading={4}>{title}</Headline2>
+    <Headline4>{title}</Headline4>
   );
 
   return (

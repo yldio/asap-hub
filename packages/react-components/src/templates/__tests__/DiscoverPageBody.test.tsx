@@ -1,9 +1,5 @@
 import { ComponentProps } from 'react';
-import {
-  createPageResponse,
-  createNewsResponse,
-  createUserResponse,
-} from '@asap-hub/fixtures';
+import { createPageResponse, createUserResponse } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 
 import DiscoverPageBody from '../DiscoverPageBody';
@@ -48,24 +44,6 @@ it('renders grantee guidance page cards and about us section', () => {
     'About us',
     'About us content',
   ]);
-});
-
-it('renders training information', () => {
-  const { queryAllByRole } = render(
-    <DiscoverPageBody
-      {...props}
-      pages={[]}
-      aboutUs={''}
-      training={[createNewsResponse('1'), createNewsResponse('2')].map((n) => ({
-        ...n,
-        href: `/news-and-events/${n.id}`,
-      }))}
-    />,
-  );
-
-  expect(
-    queryAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(['Training', 'News 1 title', 'News 2 title']);
 });
 
 it('renders members section', () => {

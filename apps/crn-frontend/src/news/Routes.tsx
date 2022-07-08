@@ -1,4 +1,4 @@
-import { FC, lazy } from 'react';
+import { FC, lazy, useEffect } from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { NewsPage } from '@asap-hub/react-components';
 import { news } from '@asap-hub/routing';
@@ -6,13 +6,16 @@ import { Frame } from '@asap-hub/frontend-utils';
 
 const loadNewsList = () =>
   import(/* webpackChunkName: "news-list" */ './NewsList');
-const loadNews = () => import(/* webpackChunkName: "news" */ './News');
+const loadNews = () =>
+  import(/* webpackChunkName: "news-details-page" */ './News');
 const NewsList = lazy(loadNewsList);
 const NewsDetailsPage = lazy(loadNews);
-loadNewsList();
 
 const News: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
+  useEffect(() => {
+    loadNews().then(loadNewsList);
+  });
   return (
     <Switch>
       <Route exact path={path}>

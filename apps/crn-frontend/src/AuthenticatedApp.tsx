@@ -17,8 +17,7 @@ import CheckOnboarded from './auth/CheckOnboarded';
 import Onboardable from './Onboardable';
 import { useCurrentUserProfileTabRoute } from './hooks';
 
-const loadNewsAndEvents = () =>
-  import(/* webpackChunkName: "news-and-events" */ './news/Routes');
+const loadNews = () => import(/* webpackChunkName: "news" */ './news/Routes');
 const loadNetwork = () =>
   import(/* webpackChunkName: "network" */ './network/Network');
 const loadSharedResearch = () =>
@@ -26,10 +25,10 @@ const loadSharedResearch = () =>
 const loadDashboard = () =>
   import(/* webpackChunkName: "dashboard" */ './dashboard/Dashboard');
 const loadDiscover = () =>
-  import(/* webpackChunkName: "discover" */ './discover/Discover');
+  import(/* webpackChunkName: "discover" */ './discover/Routes');
 const loadEvents = () =>
   import(/* webpackChunkName: "events" */ './events/Events');
-const NewsAndEvents = lazy(loadNewsAndEvents);
+const News = lazy(loadNews);
 const Network = lazy(loadNetwork);
 const SharedResearch = lazy(loadSharedResearch);
 const Dashboard = lazy(loadDashboard);
@@ -48,7 +47,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
   useEffect(() => {
     // order by the likelyhood of user navigating there
     loadDashboard()
-      .then(loadNewsAndEvents)
+      .then(loadNews)
       .then(loadNetwork)
       .then(loadSharedResearch)
       .then(loadDiscover)
@@ -91,7 +90,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
               </Route>
               <Route path={news.template}>
                 <Frame title="News">
-                  <NewsAndEvents />
+                  <News />
                 </Frame>
               </Route>
               <Route path={network.template}>

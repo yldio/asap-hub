@@ -4,11 +4,13 @@ import { UserResponse } from '@asap-hub/model';
 import Intercept from 'apr-intercept';
 import { Logger } from '../utils/logger';
 import { DecodeToken } from '../utils/validate-token';
+import { CacheClient } from '../clients/cache.client';
 
 export const authHandlerFactory =
   (
     decodeToken: DecodeToken,
     fetchByCode: (code: string) => Promise<UserResponse>,
+    cacheClient: CacheClient<UserResponse>,
     logger: Logger,
   ): RequestHandler =>
   async (req, _res, next) => {
@@ -36,12 +38,17 @@ export const authHandlerFactory =
       throw Boom.unauthorized();
     }
 
-    let user: UserResponse;
-    try {
-      user = await fetchByCode(payload.sub);
-    } catch (error) {
-      logger.error(error, 'Error fetching user details');
-      throw Boom.unauthorized();
+    let user: UserResponse | null = cacheClient.get(payload.sub);
+
+    if (user === null) {
+      try {
+        user = await fetchByCode(payload.sub);
+      } catch (error) {
+        logger.error(error, 'Error fetching user details');
+        throw Boom.unauthorized();
+      }
+
+      cacheClient.set(payload.sub, user);
     }
 
     if (!user || typeof user === 'string') {

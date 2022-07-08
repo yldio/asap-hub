@@ -1,3 +1,4 @@
+import { UserResponse } from '@asap-hub/model';
 import {
   AuthHandler,
   authHandlerFactory,
@@ -6,6 +7,7 @@ import {
   getHttpLogger,
   HttpLogger,
   Logger,
+  MemoryCacheClient,
 } from '@asap-hub/server-common';
 import {
   InputCalendar,
@@ -133,6 +135,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     'external-authors',
     { appName, baseUrl },
   );
+  const userResponseCacheClient = new MemoryCacheClient<UserResponse>();
 
   // Data Providers
   const assetDataProvider =
@@ -182,6 +185,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     authHandlerFactory(
       decodeToken,
       userController.fetchByCode.bind(userController),
+      userResponseCacheClient,
       logger,
     );
   const tracingHandler = tracingHandlerFactory(libs.tracer);

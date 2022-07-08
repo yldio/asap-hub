@@ -1,6 +1,6 @@
 import 'express-async-errors';
 import supertest from 'supertest';
-import express, { Router } from 'express';
+import express, { Router, Express, RequestHandler } from 'express';
 import { createUserResponse, getJwtPayload } from '@asap-hub/fixtures';
 import { authHandlerFactory } from '../../src/middleware/auth-handler';
 import { errorHandlerFactory } from '../../src/middleware/error-handler';
@@ -8,10 +8,11 @@ import { getHttpLogger, Logger } from '../../src/utils/logger';
 import { DecodeToken } from '../../src/utils/validate-token';
 import { loggerMock } from '../mocks/logger.mock';
 import { UserResponse } from '@asap-hub/model';
+import { MemoryCacheClient } from '../../src/clients/cache.client';
 
 describe('Authentication middleware', () => {
   const mockRoutes = Router();
-  const jwtPayload = getJwtPayload({ origin: 'test' });
+  const jwtPayload = getJwtPayload();
   mockRoutes.get('/test-route', (req, res) => {
     return res.json(req['loggedInUser']);
   });
@@ -20,14 +21,26 @@ describe('Authentication middleware', () => {
     (code: string) => Promise<UserResponse>
   > = jest.fn().mockResolvedValue(createUserResponse());
 
-  const authHandler = authHandlerFactory(decodeToken, fetchByCode, loggerMock);
-  const errorHandler = errorHandlerFactory();
+  let app: Express;
+  let authHandler: RequestHandler;
+
   const httpLogger = getHttpLogger({ logger: loggerMock });
-  const app = express();
-  app.use(httpLogger);
-  app.use(authHandler);
-  app.use(mockRoutes);
-  app.use(errorHandler);
+  const errorHandler = errorHandlerFactory();
+
+  beforeEach(() => {
+    const cacheClient = new MemoryCacheClient<UserResponse>();
+    authHandler = authHandlerFactory(
+      decodeToken,
+      fetchByCode,
+      cacheClient,
+      loggerMock,
+    );
+    app = express();
+    app.use(httpLogger);
+    app.use(authHandler);
+    app.use(mockRoutes);
+    app.use(errorHandler);
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -88,6 +101,21 @@ describe('Authentication middleware', () => {
       .set('Authorization', 'Bearer something');
 
     expect(response.status).toBe(200);
+  });
+
+  test('Should cache user-response and only call the endpoint once', async () => {
+    decodeToken.mockResolvedValue(jwtPayload);
+
+    const response1 = await supertest(app)
+      .get('/test-route')
+      .set('Authorization', 'Bearer something');
+    const response2 = await supertest(app)
+      .get('/test-route')
+      .set('Authorization', 'Bearer something');
+
+    expect(response1.status).toBe(200);
+    expect(response2.status).toBe(200);
+    expect(fetchByCode).toBeCalledTimes(1);
   });
 
   test('Should fetch the logged in user by sub parameter and add them to the req object', async () => {

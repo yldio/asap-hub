@@ -7878,7 +7878,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "react-app-polyfill",
-        "npm:1.0.6"
+        "npm:3.0.0"
       ],
       [
         "react-colorful",
@@ -10363,7 +10363,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jsdom", "virtual:9f90488e251543e84fafd44b26f8f879934523520475ac784700420cf3f739ddd0645673a5434152e1d5960ff90ac92b6a3fc33abc4c1af5eba760561c04738f#npm:16.5.3"],
             ["react", "npm:17.0.2"],
-            ["react-app-polyfill", "npm:1.0.6"],
+            ["react-app-polyfill", "npm:3.0.0"],
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:17.0.2"],
             ["react-router-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:5.2.0"],
             ["react-scripts", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:4.0.3"],
@@ -10424,7 +10424,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["nock", "npm:13.0.11"],
             ["pirates", "npm:4.0.5"],
             ["react", "npm:17.0.2"],
-            ["react-app-polyfill", "npm:1.0.6"],
+            ["react-app-polyfill", "npm:3.0.0"],
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:17.0.2"],
             ["react-error-boundary", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:3.1.4"],
             ["react-router-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:5.2.0"],
@@ -10753,7 +10753,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jsdom", "virtual:9f90488e251543e84fafd44b26f8f879934523520475ac784700420cf3f739ddd0645673a5434152e1d5960ff90ac92b6a3fc33abc4c1af5eba760561c04738f#npm:16.5.3"],
             ["react", "npm:17.0.2"],
-            ["react-app-polyfill", "npm:1.0.6"],
+            ["react-app-polyfill", "npm:3.0.0"],
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:17.0.2"],
             ["react-router-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:5.2.0"],
             ["react-scripts", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:4.0.3"],
@@ -10993,7 +10993,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["nock", "npm:13.0.11"],
             ["pirates", "npm:4.0.5"],
             ["react", "npm:17.0.2"],
-            ["react-app-polyfill", "npm:1.0.6"],
+            ["react-app-polyfill", "npm:3.0.0"],
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:17.0.2"],
             ["react-error-boundary", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:3.1.4"],
             ["react-router-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:5.2.0"],
@@ -39954,6 +39954,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
+        ["npm:3.23.3", {
+          "packageLocation": "./.yarn/cache/core-js-npm-3.23.3-83cb265bcd-f517546388.zip/node_modules/core-js/",
+          "packageDependencies": [
+            ["core-js", "npm:3.23.3"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:3.6.5", {
           "packageLocation": "./.yarn/cache/core-js-npm-3.6.5-5941340066-b7fcf92f88.zip/node_modules/core-js/",
           "packageDependencies": [
@@ -56777,19 +56784,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["react-app-polyfill", [
-        ["npm:1.0.6", {
-          "packageLocation": "./.yarn/cache/react-app-polyfill-npm-1.0.6-5783bc24de-d38fb0e5f7.zip/node_modules/react-app-polyfill/",
-          "packageDependencies": [
-            ["react-app-polyfill", "npm:1.0.6"],
-            ["core-js", "npm:3.6.5"],
-            ["object-assign", "npm:4.1.1"],
-            ["promise", "npm:8.1.0"],
-            ["raf", "npm:3.4.1"],
-            ["regenerator-runtime", "npm:0.13.7"],
-            ["whatwg-fetch", "npm:3.0.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:2.0.0", {
           "packageLocation": "./.yarn/cache/react-app-polyfill-npm-2.0.0-6c706ec28e-99e52a6b22.zip/node_modules/react-app-polyfill/",
           "packageDependencies": [
@@ -56800,6 +56794,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["raf", "npm:3.4.1"],
             ["regenerator-runtime", "npm:0.13.7"],
             ["whatwg-fetch", "npm:3.5.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:3.0.0", {
+          "packageLocation": "./.yarn/cache/react-app-polyfill-npm-3.0.0-e607e071bd-1bb031080a.zip/node_modules/react-app-polyfill/",
+          "packageDependencies": [
+            ["react-app-polyfill", "npm:3.0.0"],
+            ["core-js", "npm:3.23.3"],
+            ["object-assign", "npm:4.1.1"],
+            ["promise", "npm:8.1.0"],
+            ["raf", "npm:3.4.1"],
+            ["regenerator-runtime", "npm:0.13.9"],
+            ["whatwg-fetch", "npm:3.6.2"]
           ],
           "linkType": "HARD",
         }]
@@ -64570,17 +64577,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["whatwg-fetch", [
-        ["npm:3.0.0", {
-          "packageLocation": "./.yarn/cache/whatwg-fetch-npm-3.0.0-89ab4ec112-dcb90ab919.zip/node_modules/whatwg-fetch/",
-          "packageDependencies": [
-            ["whatwg-fetch", "npm:3.0.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:3.5.0", {
           "packageLocation": "./.yarn/cache/whatwg-fetch-npm-3.5.0-503786cc18-8a915e7ec4.zip/node_modules/whatwg-fetch/",
           "packageDependencies": [
             ["whatwg-fetch", "npm:3.5.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:3.6.2", {
+          "packageLocation": "./.yarn/cache/whatwg-fetch-npm-3.6.2-4bdf324792-ee976b7249.zip/node_modules/whatwg-fetch/",
+          "packageDependencies": [
+            ["whatwg-fetch", "npm:3.6.2"]
           ],
           "linkType": "HARD",
         }]

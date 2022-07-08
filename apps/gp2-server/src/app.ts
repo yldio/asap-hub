@@ -14,7 +14,9 @@ import {
   errorHandlerFactory,
   getHttpLogger,
   Logger,
+  MemoryCacheClient,
 } from '@asap-hub/server-common';
+import { UserResponse } from '@asap-hub/model';
 import Dashboard, {
   DashboardController,
 } from './controllers/dashboard.controller';
@@ -60,6 +62,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     baseUrl,
   });
   const decodeToken = decodeTokenFactory(auth0ClientId);
+  const userResponseCacheClient = new MemoryCacheClient<UserResponse>();
 
   // Data Providers
   const userDataProvider =
@@ -77,6 +80,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     authHandlerFactory(
       decodeToken,
       userController.fetchByCode.bind(userController),
+      userResponseCacheClient,
       logger,
     );
 

@@ -16,6 +16,7 @@ jest.mock('@auth0/auth0-spa-js', () => ({
     checkSession: jest.fn(),
     getUser: jest.fn(),
     getIdTokenClaims: jest.fn(),
+    getTokenSilently: jest.fn(),
     loginWithRedirect: jest.fn(),
     getTokenWithPopup: jest.fn(),
     logout: jest.fn(),

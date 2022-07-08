@@ -91,11 +91,12 @@ const team = (() => {
   );
 
   const upcoming = route('/upcoming', {}, {});
+  const past = route('/past', {}, {});
 
   return route(
     '/:teamId',
     { teamId: stringParser },
-    { about, workspace, outputs, createOutput, upcoming },
+    { about, workspace, outputs, createOutput, upcoming, past },
   );
 })();
 const teams = route('/teams', {}, { team });

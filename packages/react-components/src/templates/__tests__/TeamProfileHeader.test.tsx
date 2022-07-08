@@ -16,6 +16,7 @@ const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   teamListElementId: '',
   labCount: 15,
   upcomingEventsCount: 0,
+  pastEventsCount: 0,
 };
 
 it('renders the name as the top-level heading', () => {
@@ -97,7 +98,12 @@ it('renders tabs', () => {
   render(<TeamProfileHeader {...boilerplateProps} />);
   expect(
     screen.getAllByRole('link').map(({ textContent }) => textContent),
-  ).toEqual(['About', 'Team Outputs', 'Upcoming Events (0)']);
+  ).toEqual([
+    'About',
+    'Team Outputs',
+    'Upcoming Events (0)',
+    'Past Events (0)',
+  ]);
 });
 
 it('renders workspace tabs when tools provided', () => {
@@ -109,7 +115,13 @@ it('renders workspace tabs when tools provided', () => {
   );
   expect(
     screen.getAllByRole('link').map(({ textContent }) => textContent),
-  ).toEqual(['About', 'Team Workspace', 'Team Outputs', 'Upcoming Events (0)']);
+  ).toEqual([
+    'About',
+    'Team Workspace',
+    'Team Outputs',
+    'Upcoming Events (0)',
+    'Past Events (0)',
+  ]);
 });
 
 it('renders share an output button dropdown', () => {
@@ -131,5 +143,12 @@ it('displays upcoming event count', () => {
   render(<TeamProfileHeader {...boilerplateProps} upcomingEventsCount={11} />);
 
   const link = screen.getByRole('link', { name: /upcoming events \(11\)/i });
+  expect(link).toBeVisible();
+});
+
+it('displays past event count', () => {
+  render(<TeamProfileHeader {...boilerplateProps} pastEventsCount={11} />);
+
+  const link = screen.getByRole('link', { name: /past events \(11\)/i });
   expect(link).toBeVisible();
 });

@@ -56,15 +56,19 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
 
   const { pageSize } = usePaginationParams();
 
-  const options = getEventListOptions(
-    currentTime,
-    false,
-    {
-      pageSize,
-    },
-    { teamId },
-  );
-  const upcomingEventsResult = useEvents(options);
+  const getOptions = (isPast: boolean) =>
+    getEventListOptions(
+      currentTime,
+      isPast,
+      {
+        pageSize,
+      },
+      { teamId },
+    );
+
+  const upcomingEventsResult = useEvents(getOptions(false));
+  const pastEventsResult = useEvents(getOptions(true));
+
   const isEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
 
   if (team) {
@@ -80,6 +84,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
             <TeamProfilePage
               teamListElementId={teamListElementId}
               upcomingEventsCount={upcomingEventsResult.total}
+              pastEventsCount={pastEventsResult.total}
               {...team}
             >
               <Route path={path + route({ teamId }).about.template}>
@@ -106,6 +111,17 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                       constraint={{ teamId }}
                       currentTime={currentTime}
                       past={false}
+                    />
+                  </Frame>
+                </Route>
+              )}
+              {isEventsEnabled && (
+                <Route path={path + route({ teamId }).past.template}>
+                  <Frame title="Past Events">
+                    <Events
+                      constraint={{ teamId }}
+                      currentTime={currentTime}
+                      past={true}
                     />
                   </Frame>
                 </Route>

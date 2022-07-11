@@ -13,8 +13,8 @@ const titleStyles = css({
 
 const iconStyles = css({
   '> svg': {
-    width: '36px',
-    height: '36px',
+    width: '40px',
+    height: '40px',
 
     '> g': {
       stroke: charcoal.rgb,
@@ -30,6 +30,7 @@ const exploreEventsStyles = css(
     paddingRight: `${33 / perRem}em`,
     paddingTop: `${15 / perRem}em`,
     paddingBottom: `${15 / perRem}em`,
+    marginTop: `${15 / perRem}em`,
   },
 );
 
@@ -44,7 +45,7 @@ const NoEvents: React.FC<{
     <h4 css={titleStyles}>
       {displayName} doesn’t have any {past ? ' past ' : ' upcoming '} events!
     </h4>
-    <span color={lead.rgb}>
+    <span css={{ color: lead.rgb }}>
       It looks like this {type.toLowerCase()} will not speak at any events. In
       the meantime, try exploring other {past ? ' past ' : ' upcoming '} events
       on the Hub.

@@ -89,6 +89,7 @@ jobs:
       environment-name: Development
     secrets:
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      FRONTEND_SENTRY_RELEASE_AUTH_TOKEN: ${{ secrets.FRONTEND_SENTRY_RELEASE_AUTH_TOKEN }}
 
   deployment-production:
     needs: [build-analysis-production, verify-development]
@@ -121,6 +122,7 @@ jobs:
       environment-name: Production
     secrets:
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      FRONTEND_SENTRY_RELEASE_AUTH_TOKEN: ${{ secrets.FRONTEND_SENTRY_RELEASE_AUTH_TOKEN }}
 
   notify_failure:
     runs-on: ubuntu-latest

@@ -92,6 +92,15 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     return result;
   };
 
+  const getTokenSilently: Auth0['getTokenSilently'] = async ({ ...props }) => {
+    if (!auth0Client) {
+      throw new Error('Auth0 client not initialized');
+    }
+    const result = await auth0Client.getTokenSilently(props);
+    setUser(await auth0Client.getUser());
+    return result;
+  };
+
   const getSafeAuth0ClientProperty = <T extends keyof Auth0Client>(
     property: T,
   ) =>
@@ -118,8 +127,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     popupOpen,
     loginWithPopup,
     handleRedirectCallback,
-    getTokenSilently:
-      getSafeAuth0ClientProperty('getTokenSilently').bind(auth0Client),
+    getTokenSilently,
     getIdTokenClaims:
       getSafeAuth0ClientProperty('getIdTokenClaims').bind(auth0Client),
     loginWithRedirect:

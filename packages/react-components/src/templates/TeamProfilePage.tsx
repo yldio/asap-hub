@@ -11,9 +11,7 @@ const contentStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(10)}`,
 });
 
-type TeamProfilePageProps = ComponentProps<typeof TeamProfileHeader> & {
-  children: React.ReactNode;
-};
+type TeamProfilePageProps = ComponentProps<typeof TeamProfileHeader>;
 
 const TeamProfilePage: React.FC<TeamProfilePageProps> = ({
   children,

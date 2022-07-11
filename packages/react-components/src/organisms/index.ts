@@ -23,6 +23,7 @@ export { default as MainNavigation } from './MainNavigation';
 export { default as MenuHeader } from './MenuHeader';
 export { default as NewsCard } from './NewsCard';
 export { default as NewsSection } from './NewsSection';
+export { default as NoEvents } from './NoEvents';
 export { default as OnboardingFooter } from './OnboardingFooter';
 export { default as PageCard } from './PageCard';
 export { default as PagesSection } from './PagesSection';

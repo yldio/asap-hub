@@ -1,7 +1,11 @@
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
+import {
+  ResearchOutputPermissionsContext,
+  useFlags,
+} from '@asap-hub/react-context';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import { formatISO } from 'date-fns';
 import { ComponentProps } from 'react';
 import TeamProfileHeader from '../TeamProfileHeader';
@@ -16,6 +20,20 @@ const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   teamListElementId: '',
   labCount: 15,
   upcomingEventsCount: 0,
+  pastEventsCount: 0,
+};
+
+const setupAlgoliaEventsSearchFlag = (enabled: boolean) => {
+  const {
+    result: {
+      current: { disable, enable },
+    },
+  } = renderHook(useFlags);
+  if (enabled) {
+    enable('EVENTS_SEARCH');
+  } else {
+    disable('EVENTS_SEARCH');
+  }
 };
 
 it('renders the name as the top-level heading', () => {
@@ -97,7 +115,27 @@ it('renders tabs', () => {
   render(<TeamProfileHeader {...boilerplateProps} />);
   expect(
     screen.getAllByRole('link').map(({ textContent }) => textContent),
-  ).toEqual(['About', 'Team Outputs', 'Upcoming Events (0)']);
+  ).toEqual([
+    'About',
+    'Team Outputs',
+    'Upcoming Events (0)',
+    'Past Events (0)',
+  ]);
+});
+
+it("doesn't show updcoming and past events tabs when feature flag is disabled", () => {
+  setupAlgoliaEventsSearchFlag(false);
+
+  render(
+    <TeamProfileHeader
+      {...boilerplateProps}
+      tools={[{ name: '', description: '', url: '' }]}
+    />,
+  );
+
+  expect(
+    screen.getAllByRole('link').map(({ textContent }) => textContent),
+  ).toEqual(['About', 'Team Workspace', 'Team Outputs']);
 });
 
 it('renders workspace tabs when tools provided', () => {
@@ -109,7 +147,13 @@ it('renders workspace tabs when tools provided', () => {
   );
   expect(
     screen.getAllByRole('link').map(({ textContent }) => textContent),
-  ).toEqual(['About', 'Team Workspace', 'Team Outputs', 'Upcoming Events (0)']);
+  ).toEqual([
+    'About',
+    'Team Workspace',
+    'Team Outputs',
+    'Upcoming Events (0)',
+    'Past Events (0)',
+  ]);
 });
 
 it('renders share an output button dropdown', () => {
@@ -131,5 +175,12 @@ it('displays upcoming event count', () => {
   render(<TeamProfileHeader {...boilerplateProps} upcomingEventsCount={11} />);
 
   const link = screen.getByRole('link', { name: /upcoming events \(11\)/i });
+  expect(link).toBeVisible();
+});
+
+it('displays past event count', () => {
+  render(<TeamProfileHeader {...boilerplateProps} pastEventsCount={11} />);
+
+  const link = screen.getByRole('link', { name: /past events \(11\)/i });
   expect(link).toBeVisible();
 });

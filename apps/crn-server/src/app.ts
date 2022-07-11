@@ -28,7 +28,7 @@ import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import 'express-async-errors';
 import { Tracer } from 'opentracing';
-import { baseUrl, appName } from './config';
+import { baseUrl, appName, auth0Audience } from './config';
 import Calendars, { CalendarController } from './controllers/calendars';
 import Dashboard, { DashboardController } from './controllers/dashboard';
 import Discover, { DiscoverController } from './controllers/discover';
@@ -93,8 +93,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const errorHandler = errorHandlerFactory();
 
   // Clients
-  const audience = 'https://dev.hub.asap.science';
-  const decodeToken = decodeTokenFactory(audience);
+  const decodeToken = decodeTokenFactory(auth0Audience);
   const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
     appName,
     baseUrl,

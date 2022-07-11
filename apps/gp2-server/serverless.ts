@@ -3,6 +3,7 @@ import assert from 'assert';
 
 [
   'AWS_REGION',
+  'GP2_AUTH0_AUDIENCE',
   'GP2_AUTH0_CLIENT_ID',
   'GP2_AUTH0_SHARED_SECRET',
   'GP2_AWS_ACM_CERTIFICATE_ARN',
@@ -23,6 +24,7 @@ assert.ok(
   'SLS_STAGE must be either "dev" or "production" or a PR number',
 );
 
+const auth0Audience = process.env.GP2_AUTH0_AUDIENCE!;
 const auth0ClientId = process.env.GP2_AUTH0_CLIENT_ID!;
 const auth0SharedSecret = process.env.GP2_AUTH0_SHARED_SECRET!;
 const gp2AwsAcmCertificateArn = process.env.GP2_AWS_ACM_CERTIFICATE_ARN!;
@@ -114,6 +116,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         APP_ORIGIN: appUrl,
+        AUTH0_AUDIENCE: auth0Audience,
         AUTH0_CLIENT_ID: auth0ClientId,
       },
     },

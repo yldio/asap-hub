@@ -13,7 +13,7 @@ export const authorizationState = selector<string>({
     if (!auth0) {
       throw new Error('Auth0 not available');
     }
-    const { __raw } = await auth0.getIdTokenClaims();
-    return `Bearer ${__raw}`;
+    const accessToken = await auth0.getTokenSilently();
+    return `Bearer ${accessToken}`;
   },
 });

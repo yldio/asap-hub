@@ -28,7 +28,7 @@ it('renders multiple news cards', () => {
   render(<DashboardPageBody {...props} />);
   expect(
     screen
-      .queryAllByText(/title/i, { selector: 'h2' })
+      .queryAllByText(/title/i, { selector: 'h4' })
       .map(({ textContent }) => textContent),
   ).toEqual(['Page 1 title', 'Page 2 title', 'News Title', 'Event Title']);
 });
@@ -44,7 +44,6 @@ it('renders news section when there are no news', () => {
 
 it('renders news section when there are no pages', () => {
   render(<DashboardPageBody {...props} pages={[]} />);
-
   expect(
     screen.queryByText('Not sure where to start?'),
   ).not.toBeInTheDocument();

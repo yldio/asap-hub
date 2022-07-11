@@ -27,38 +27,31 @@ const props: ComponentProps<typeof DashboardPageBody> = {
 };
 
 it('renders multiple news cards', () => {
-  const { queryAllByText } = render(<DashboardPageBody {...props} />);
+  render(<DashboardPageBody {...props} />);
   expect(
-    queryAllByText(/title/i, { selector: 'h2' }).map(
-      ({ textContent }) => textContent,
-    ),
+    screen
+      .queryAllByText(/title/i, { selector: 'h4' })
+      .map(({ textContent }) => textContent),
   ).toEqual(['Page 1 title', 'Page 2 title', 'News Title', 'Event Title']);
 });
 
 it('renders news section when there are no news', () => {
-  const { queryAllByText, queryByText } = render(
-    <DashboardPageBody {...props} news={[]} />,
-  );
+  render(<DashboardPageBody {...props} news={[]} />);
 
-  expect(queryByText('Latest news from ASAP')).not.toBeInTheDocument();
+  expect(screen.queryByText('Latest news from ASAP')).not.toBeInTheDocument();
   expect(
-    queryAllByText(/title/i, { selector: 'h2' }).map(
-      ({ textContent }) => textContent,
-    ),
-  ).toEqual(['Page 1 title', 'Page 2 title']);
+    screen.getAllByRole('heading').map(({ textContent }) => textContent),
+  ).toEqual(expect.arrayContaining(['Page 1 title', 'Page 2 title']));
 });
 
 it('renders news section when there are no pages', () => {
-  const { queryAllByText, queryByText } = render(
-    <DashboardPageBody {...props} pages={[]} />,
-  );
-
-  expect(queryByText('Not sure where to start?')).not.toBeInTheDocument();
+  render(<DashboardPageBody {...props} pages={[]} />);
   expect(
-    queryAllByText(/title/i, { selector: 'h2' }).map(
-      ({ textContent }) => textContent,
-    ),
-  ).toEqual(['News Title', 'Event Title']);
+    screen.queryByText('Not sure where to start?'),
+  ).not.toBeInTheDocument();
+  expect(
+    screen.getAllByRole('heading').map(({ textContent }) => textContent),
+  ).toEqual(expect.arrayContaining(['News Title', 'Event Title']));
 });
 
 it('hides add links to your work space section when user is not a member of a team', () => {
@@ -71,10 +64,10 @@ it('hides add links to your work space section when user is not a member of a te
 describe('the reminders card', () => {
   it('does not show reminders when the feature flag is disabled (REGRESSION)', () => {
     const { rerender } = render(<DashboardPageBody {...props} />);
-    expect(screen.getByText(/remind/i, { selector: 'h3' })).toBeVisible();
+    expect(screen.getByText(/remind/i, { selector: 'h2' })).toBeVisible();
     disable('REMINDERS');
     rerender(<DashboardPageBody {...props} />);
-    expect(screen.queryByText(/remind/i, { selector: 'h3' })).toBeNull();
+    expect(screen.queryByText(/remind/i, { selector: 'h2' })).toBeNull();
   });
 
   it.each`

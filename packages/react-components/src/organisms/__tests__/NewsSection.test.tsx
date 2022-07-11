@@ -10,7 +10,7 @@ const props: ComponentProps<typeof NewsSection> = {
 
 it('renders a title', () => {
   render(<NewsSection {...props} title="Example" />);
-  expect(screen.getByText('Example', { selector: 'h3' })).toBeVisible();
+  expect(screen.getByText('Example', { selector: 'h2' })).toBeVisible();
 });
 
 it('renders a subtitle', () => {

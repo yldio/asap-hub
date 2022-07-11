@@ -10,7 +10,7 @@ const props: ComponentProps<typeof DiscoverTutorials> = {
 
 it('renders the title and subtitle', () => {
   render(<DiscoverTutorials {...props} />);
-  expect(screen.getByText(/tutorials/i, { selector: 'h3' })).toBeVisible();
+  expect(screen.getByText(/tutorials/i, { selector: 'h2' })).toBeVisible();
   expect(screen.getByText(/Explore our tutorials/i)).toBeVisible();
 });
 

@@ -1,6 +1,6 @@
 import { PageResponse } from '@asap-hub/model';
 
-import { Card, Headline2, Paragraph, Link } from '../atoms';
+import { Card, Headline4, Paragraph, Link } from '../atoms';
 
 type PageCardProps = Omit<PageResponse, 'path'>;
 
@@ -11,7 +11,7 @@ const PageCard: React.FC<PageCardProps> = ({
   linkText,
 }) => (
   <Card>
-    <Headline2 styleAsHeading={5}>{title}</Headline2>
+    <Headline4 styleAsHeading={5}>{title}</Headline4>
     <Paragraph accent="lead">{shortText}</Paragraph>
     {link ? (
       <Paragraph>

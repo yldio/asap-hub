@@ -58,7 +58,7 @@ it('renders discover with guidance, about and pages', async () => {
   expect(
     screen.getByText(/Grantee Guidance/i, { selector: 'h2' }),
   ).toBeVisible();
-  expect(screen.queryAllByText(/title/i, { selector: 'h2' }).length).toBe(2);
+  expect(screen.queryAllByText(/title/i, { selector: 'h4' }).length).toBe(2);
 });
 
 it('renders discover with members', async () => {

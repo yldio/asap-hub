@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
-import { text, select, boolean } from '@storybook/addon-knobs';
+import { text, select, boolean, number } from '@storybook/addon-knobs';
 import { UserProfilePage } from '@asap-hub/react-components';
 import { TeamRole } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
@@ -33,6 +33,8 @@ const propsViewOnly = (): Omit<
     contactEmail: text('Contact email', 'contact@example.com'),
     country: text('Country', 'New Haven'),
     city: text('City', 'Connecticut'),
+    upcomingEventsCount: number('Upcoming events count', 1),
+    pastEventsCount: number('Past events count', 1),
     teams: [
       {
         id: 't42',

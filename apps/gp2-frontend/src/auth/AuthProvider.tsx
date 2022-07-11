@@ -1,5 +1,5 @@
 import { RedirectLoginResult } from '@auth0/auth0-spa-js';
-import { AUTH0_CLIENT_ID, AUTH0_DOMAIN } from '../config';
+import { AUTH0_AUDIENCE, AUTH0_CLIENT_ID, AUTH0_DOMAIN } from '../config';
 
 import history from '../history';
 import { Auth0Provider } from './react-auth0-spa';
@@ -26,6 +26,7 @@ const AuthProvider: React.FC<{ readonly children: React.ReactNode }> = ({
     redirect_uri={window.location.origin}
     onRedirectCallback={onRedirectCallback}
     cacheLocation="localstorage"
+    audience={AUTH0_AUDIENCE}
     useRefreshTokens
   >
     {children}

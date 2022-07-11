@@ -8,5 +8,6 @@ export const ALGOLIA_INDEX =
 export const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN;
 export const ENVIRONMENT = process.env.REACT_APP_ENVIRONMENT || 'local';
 export const RELEASE = process.env.REACT_APP_RELEASE;
+export const AUTH0_AUDIENCE = process.env.REACT_APP_CRN_AUTH0_AUDIENCE || '';
 export const AUTH0_CLIENT_ID = process.env.REACT_APP_CRN_AUTH0_CLIENT_ID || '';
 export const AUTH0_DOMAIN = process.env.REACT_APP_CRN_AUTH0_DOMAIN || '';

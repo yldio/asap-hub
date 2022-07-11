@@ -26,6 +26,9 @@ outputs:
   crn-app-url:
     description: 'CRN APP Url'
     value: ${{ steps.vars.outputs.crn-app-url }}
+  crn-auth0-audience:
+    description: 'CRN Auth0 Audience'
+    value: ${{ steps.vars.outputs.crn-auth0-audience }}
   crn-auth0-client-id:
     description: 'CRN Auth0 Client ID'
     value: ${{ steps.vars.outputs.crn-auth0-client-id }}
@@ -68,6 +71,9 @@ outputs:
   gp2-hostname:
     description: 'GP2 Hostname'
     value: ${{ steps.vars.outputs.gp2-hostname }}
+  gp2-auth0-audience:
+    description: 'GP2 Auth0 Audience'
+    value: ${{ steps.vars.outputs.gp2-auth0-audience }}
   gp2-auth0-client-id:
     description: 'GP2 Auth0 Client ID'
     value: ${{ steps.vars.outputs.gp2-auth0-client-id }}

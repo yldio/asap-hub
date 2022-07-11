@@ -8,6 +8,7 @@ if (NODE_ENV === 'production') {
     'CRN_API_URL',
     'CRN_APP_URL',
     'CRN_AWS_ACM_CERTIFICATE_ARN',
+    'CRN_AUTH0_AUDIENCE',
     'CRN_AUTH0_CLIENT_ID',
     'SENTRY_DSN_API',
   ].forEach((env) => {
@@ -24,6 +25,7 @@ const {
   CI_COMMIT_SHA,
   ALGOLIA_INDEX,
   SENTRY_DSN_API,
+  CRN_AUTH0_AUDIENCE,
   CRN_AUTH0_CLIENT_ID,
 } = process.env;
 
@@ -37,6 +39,7 @@ const envRef =
     : `CI-${SLS_STAGE}`;
 const sentryDsnApi = SENTRY_DSN_API!;
 const auth0ClientId = CRN_AUTH0_CLIENT_ID!;
+const auth0Audience = CRN_AUTH0_AUDIENCE!;
 
 const algoliaIndex = ALGOLIA_INDEX
   ? '${env:ALGOLIA_INDEX}'
@@ -206,6 +209,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnApi,
+        AUTH0_AUDIENCE: auth0Audience,
         AUTH0_CLIENT_ID: auth0ClientId,
       },
     },

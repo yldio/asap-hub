@@ -140,8 +140,10 @@ jobs:
           REACT_APP_GTM_CONTAINER_ID: ${{ steps.setup.outputs.react-app-gtm-container-id }}
           REACT_APP_RELEASE: ${{ steps.setup.outputs.app-release }}
           REACT_APP_SENTRY_DSN: ${{ steps.setup.outputs.react-app-sentry-dsn }}
+          REACT_APP_CRN_AUTH0_AUDIENCE: ${{ steps.setup.outputs.crn-auth0-audience }}
           REACT_APP_CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
           REACT_APP_CRN_AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}
+          REACT_APP_GP2_AUTH0_AUDIENCE: ${{ steps.setup.outputs.gp2-auth0-audience }}
           REACT_APP_GP2_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.gp2-auth0-client-id }}
           REACT_APP_GP2_AUTH0_DOMAIN: ${{ steps.setup.outputs.gp2-auth0-domain }}
         run: |

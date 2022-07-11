@@ -23,7 +23,7 @@ import Dashboard, {
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import pinoLogger from './utils/logger';
 import {
-  auth0ClientId,
+  auth0Audience,
   clientId,
   clientSecret,
   baseUrl,
@@ -61,7 +61,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     appName,
     baseUrl,
   });
-  const decodeToken = decodeTokenFactory(auth0ClientId);
+  const decodeToken = decodeTokenFactory(auth0Audience);
   const userResponseCacheClient = new MemoryCacheClient<UserResponse>();
 
   // Data Providers

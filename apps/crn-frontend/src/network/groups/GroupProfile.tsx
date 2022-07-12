@@ -47,28 +47,22 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
   const group = useGroupById(groupId);
 
   const upcomingEvents = useEvents(
-    getEventListOptions(
-      currentTime,
-      false,
-      {
-        currentPage: 0,
-        pageSize: 1,
-        searchQuery: '',
-      },
-      { groupId },
-    ),
+    getEventListOptions(currentTime, {
+      past: false,
+      currentPage: 0,
+      pageSize: 1,
+      searchQuery: '',
+      constraint: { groupId },
+    }),
   );
   const pastEvents = useEvents(
-    getEventListOptions(
-      currentTime,
-      true,
-      {
-        currentPage: 0,
-        pageSize: 1,
-        searchQuery: '',
-      },
-      { groupId },
-    ),
+    getEventListOptions(currentTime, {
+      past: true,
+      currentPage: 0,
+      pageSize: 1,
+      searchQuery: '',
+      constraint: { groupId },
+    }),
   );
 
   if (group) {

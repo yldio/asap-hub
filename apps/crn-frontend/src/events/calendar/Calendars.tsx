@@ -10,8 +10,8 @@ interface CalendarsProps {
 const Calendars: React.FC<CalendarsProps> = ({ currentTime }) => {
   const { items } = useCalendars();
 
-  usePrefetchEvents(getEventListOptions(currentTime, true));
-  usePrefetchEvents(getEventListOptions(currentTime, false));
+  usePrefetchEvents(getEventListOptions(currentTime, { past: true }));
+  usePrefetchEvents(getEventListOptions(currentTime, { past: false }));
 
   return <EventsCalendar calendars={items} />;
 };

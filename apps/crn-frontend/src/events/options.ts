@@ -22,11 +22,23 @@ export type GetEventListOptions = GetListOptions &
     constraint?: EventConstraint;
   };
 
+export type EventListParams = {
+  past: boolean;
+  searchQuery?: string;
+  currentPage?: number;
+  pageSize?: number;
+  constraint?: EventConstraint;
+};
+
 export const getEventListOptions = (
   currentTime: Date,
-  past: boolean,
-  { searchQuery = '', currentPage = 0, pageSize = CARD_VIEW_PAGE_SIZE } = {},
-  constraint?: EventConstraint,
+  {
+    past,
+    searchQuery = '',
+    currentPage = 0,
+    pageSize = CARD_VIEW_PAGE_SIZE,
+    constraint = {},
+  }: EventListParams,
 ): GetEventListOptions => {
   const time = subHours(
     currentTime,

@@ -25,7 +25,8 @@ const EventList: React.FC<EventListProps> = ({
 
   const events = useGroupEvents(
     groupId,
-    getEventListOptions(currentTime, past, {
+    getEventListOptions(currentTime, {
+      past,
       searchQuery,
       pageSize,
       currentPage,
@@ -40,7 +41,8 @@ const EventList: React.FC<EventListProps> = ({
 
   usePrefetchGroupEvents(
     groupId,
-    getEventListOptions(currentTime, !past, {
+    getEventListOptions(currentTime, {
+      past: false,
       searchQuery,
       pageSize,
       currentPage,

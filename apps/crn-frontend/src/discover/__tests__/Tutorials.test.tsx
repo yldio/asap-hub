@@ -39,7 +39,7 @@ const renderDiscoverTutorials = async (user: Partial<User>) => {
   return result;
 };
 
-it('renders discover with guidance, about and pages', async () => {
+it('renders tutorial page with an item', async () => {
   mockGetDiscover.mockResolvedValue({
     ...createDiscoverResponse(),
     training: [{ ...createNewsResponse(1), title: 'Example Title' }],

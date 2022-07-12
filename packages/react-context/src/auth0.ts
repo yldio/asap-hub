@@ -14,5 +14,6 @@ export const Auth0Context = createContext<Auth0>({
   getTokenSilently: auth0ClientNotProvided,
   getTokenWithPopup: auth0ClientNotProvided,
   logout: auth0ClientNotProvided,
+  refreshUser: auth0ClientNotProvided,
 });
 export const useAuth0 = (): Auth0 => useContext(Auth0Context);

@@ -111,11 +111,21 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
       setIsAuthenticated(isAuthenticated);
     }
   };
+
+  const refreshUser = async () => {
+    if (!auth0Client) {
+      throw new Error('Auth0 client not initialized');
+    }
+
+    setUser(await auth0Client.getUser());
+  };
+
   const auth0: Auth0 = {
     isAuthenticated,
     user,
     loading,
     popupOpen,
+    refreshUser,
     loginWithPopup,
     handleRedirectCallback,
     getTokenSilently:

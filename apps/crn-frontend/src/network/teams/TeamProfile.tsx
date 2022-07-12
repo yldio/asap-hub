@@ -147,17 +147,6 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                   </Frame>
                 </Route>
               )}
-              {isEventsEnabled && (
-                <Route path={path + route({ teamId }).past.template}>
-                  <Frame title="Past Events">
-                    <Events
-                      constraint={{ teamId }}
-                      currentTime={currentTime}
-                      past={true}
-                    />
-                  </Frame>
-                </Route>
-              )}
               <Redirect to={route({ teamId }).about({}).$} />
             </TeamProfilePage>
           </Switch>

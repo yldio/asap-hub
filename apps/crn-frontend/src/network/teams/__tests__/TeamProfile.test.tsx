@@ -109,13 +109,11 @@ it('renders number of past events', async () => {
   expect(await screen.findByText(/Past Events \(7\)/i)).toBeVisible();
 });
 
-
 it.each`
   name
-  ${'upcoming'}
-  ${'past'}
+  ${'upcoming events'}
+  ${'past events'}
 `('navigates to the $name events tab', async ({ name }) => {
-
   const currentTime = new Date('2021-12-28T14:00:00.000Z');
   const response = createListEventResponse(1);
   mockGetEventsFromAlgolia.mockResolvedValue(response);

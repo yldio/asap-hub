@@ -43,6 +43,7 @@ export type Auth0 = {
   readonly user?: Auth0User;
   readonly loading: boolean;
   readonly popupOpen: boolean;
+  readonly refreshUser: () => Promise<void>;
   readonly checkSession?: () => Promise<void>;
   readonly getTokenSilently: (
     options: GetTokenSilentlyOptions,

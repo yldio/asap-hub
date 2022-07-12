@@ -99,6 +99,11 @@ const serverlessConfig: AWS = {
         deleteRemoved: false,
         localDir: '../gp2-frontend/build',
       },
+      {
+        bucketName: '${self:service}-${self:provider.stage}-gp2-auth-frontend',
+        bucketPrefix: '.auth',
+        localDir: '../gp2-auth-frontend/build',
+      },
     ],
   },
   functions: {
@@ -195,6 +200,25 @@ const serverlessConfig: AWS = {
           },
         },
       },
+      AuthFrontendBucket: {
+        Type: 'AWS::S3::Bucket',
+        DeletionPolicy: 'Delete',
+        Properties: {
+          BucketName:
+            '${self:service}-${self:provider.stage}-gp2-auth-frontend',
+          AccessControl: 'PublicRead',
+          CorsConfiguration: {
+            CorsRules: [
+              {
+                AllowedMethods: ['GET', 'HEAD'],
+                AllowedHeaders: ['*'],
+                AllowedOrigins: ['*'],
+                MaxAge: 3000,
+              },
+            ],
+          },
+        },
+      },
       BucketPolicyFrontend: {
         Type: 'AWS::S3::BucketPolicy',
         Properties: {
@@ -216,6 +240,27 @@ const serverlessConfig: AWS = {
           },
         },
       },
+      BucketPolicyAuthFrontend: {
+        Type: 'AWS::S3::BucketPolicy',
+        Properties: {
+          Bucket: '${self:service}-${self:provider.stage}-gp2-auth-frontend',
+          PolicyDocument: {
+            Statement: [
+              {
+                Action: ['s3:GetObject'],
+                Effect: 'Allow',
+                Principal: '*',
+                Resource: {
+                  'Fn::Join': [
+                    '',
+                    [{ 'Fn::GetAtt': ['AuthFrontendBucket', 'Arn'] }, '/*'],
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
       CloudFrontOriginAccessIdentityFrontend: {
         Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
         Properties: {
@@ -224,9 +269,17 @@ const serverlessConfig: AWS = {
           },
         },
       },
+      CloudFrontOriginAccessIdentityAuthFrontend: {
+        Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
+        Properties: {
+          CloudFrontOriginAccessIdentityConfig: {
+            Comment: { Ref: 'AuthFrontendBucket' },
+          },
+        },
+      },
       CloudFrontDistribution: {
         Type: 'AWS::CloudFront::Distribution',
-        DependsOn: ['FrontendBucket'],
+        DependsOn: ['FrontendBucket', 'AuthFrontendBucket'],
         Properties: {
           DistributionConfig: {
             Aliases: [appHostname],
@@ -272,6 +325,23 @@ const serverlessConfig: AWS = {
                 },
                 Id: 'apigw',
               },
+              {
+                DomainName: {
+                  'Fn::GetAtt': ['AuthFrontendBucket', 'RegionalDomainName'],
+                },
+                Id: 's3origin-auth-frontend',
+                S3OriginConfig: {
+                  OriginAccessIdentity: {
+                    'Fn::Join': [
+                      '/',
+                      [
+                        'origin-access-identity/cloudfront',
+                        { Ref: 'CloudFrontOriginAccessIdentityAuthFrontend' },
+                      ],
+                    ],
+                  },
+                },
+              },
             ],
             DefaultCacheBehavior: {
               AllowedMethods: ['GET', 'HEAD', 'OPTIONS'],
@@ -287,7 +357,23 @@ const serverlessConfig: AWS = {
               TargetOriginId: 's3origin-frontend',
               ViewerProtocolPolicy: 'redirect-to-https',
             },
-            CacheBehaviors: [],
+            CacheBehaviors: [
+              {
+                AllowedMethods: ['GET', 'HEAD', 'OPTIONS'],
+                CachedMethods: ['GET', 'HEAD', 'OPTIONS'],
+                Compress: true,
+                DefaultTTL: 3600,
+                ForwardedValues: {
+                  Cookies: {
+                    Forward: 'none',
+                  },
+                  QueryString: false,
+                },
+                PathPattern: '.auth/*',
+                TargetOriginId: 's3origin-auth-frontend',
+                ViewerProtocolPolicy: 'redirect-to-https',
+              },
+            ],
             DefaultRootObject: 'index.html',
             Enabled: true,
             PriceClass: 'PriceClass_100',

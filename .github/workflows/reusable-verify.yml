@@ -11,6 +11,9 @@ on:
       SQUIDEX_CLIENT_SECRET:
         description: 'Squidex Client Secret'
         required: true
+      FRONTEND_SENTRY_RELEASE_AUTH_TOKEN:
+        description: 'Sentry Auth token'
+        required: false
 
 jobs:
   sls:

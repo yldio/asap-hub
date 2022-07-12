@@ -1,10 +1,14 @@
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
-import { NotFoundPage, TeamProfilePage } from '@asap-hub/react-components';
+import {
+  NotFoundPage,
+  TeamProfilePage,
+  NoEvents,
+} from '@asap-hub/react-components';
 import {
   ResearchOutputPermissionsContext,
   useFlags,
 } from '@asap-hub/react-context';
-import { network, useRouteParams } from '@asap-hub/routing';
+import { events, network, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
@@ -55,7 +59,6 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   }, [team]);
 
   const { pageSize } = usePaginationParams();
-
   const getOptions = (isPast: boolean) =>
     getEventListOptions(
       currentTime,
@@ -111,6 +114,35 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                       constraint={{ teamId }}
                       currentTime={currentTime}
                       past={false}
+                      events={upcomingEventsResult}
+                      noEventsComponent={
+                        <NoEvents
+                          displayName={team.displayName}
+                          type="team"
+                          past={false}
+                          link={events({}).upcoming({}).$}
+                        />
+                      }
+                    />
+                  </Frame>
+                </Route>
+              )}
+              {isEventsEnabled && (
+                <Route path={path + route({ teamId }).past.template}>
+                  <Frame title="Past Events">
+                    <Events
+                      events={pastEventsResult}
+                      constraint={{ teamId }}
+                      currentTime={currentTime}
+                      past={true}
+                      noEventsComponent={
+                        <NoEvents
+                          displayName={team.displayName}
+                          type="team"
+                          past={true}
+                          link={events({}).past({}).$}
+                        />
+                      }
                     />
                   </Frame>
                 </Route>

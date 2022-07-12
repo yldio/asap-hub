@@ -109,7 +109,13 @@ it('renders number of past events', async () => {
   expect(await screen.findByText(/Past Events \(7\)/i)).toBeVisible();
 });
 
-it('navigates to the upcoming events tab', async () => {
+
+it.each`
+  name
+  ${'upcoming'}
+  ${'past'}
+`('navigates to the $name events tab', async ({ name }) => {
+
   const currentTime = new Date('2021-12-28T14:00:00.000Z');
   const response = createListEventResponse(1);
   mockGetEventsFromAlgolia.mockResolvedValue(response);
@@ -117,7 +123,9 @@ it('navigates to the upcoming events tab', async () => {
   const teamResponse = createTeamResponse();
   await renderPage(teamResponse, { currentTime });
 
-  const tab = screen.getByRole('link', { name: /upcoming/i });
+  const nameRegex = new RegExp(name, 'i');
+
+  const tab = screen.getByRole('link', { name: nameRegex });
   userEvent.click(tab);
   expect(await screen.findByRole('searchbox')).toHaveAttribute(
     'placeholder',
@@ -125,8 +133,9 @@ it('navigates to the upcoming events tab', async () => {
   );
   expect(await screen.findByText(/Event 0/i)).toBeVisible();
   expect(mockGetEventsFromAlgolia).toBeCalledTimes(2);
+
   expect(mockGetEventsFromAlgolia).toHaveBeenCalledWith(expect.anything(), {
-    after: '2021-12-28T13:00:00.000Z',
+    before: '2021-12-28T13:00:00.000Z',
     currentPage: 0,
     filters: new Set(),
     pageSize: 10,
@@ -134,33 +143,9 @@ it('navigates to the upcoming events tab', async () => {
     constraint: {
       teamId: 't0',
     },
-  });
-});
-
-it('navigates to the past events tab', async () => {
-  const currentTime = new Date('2021-12-28T14:00:00.000Z');
-  const response = createListEventResponse(1, { isEventInThePast: true });
-  mockGetEventsFromAlgolia.mockResolvedValue(response);
-
-  const teamResponse = createTeamResponse();
-  await renderPage(teamResponse, { currentTime });
-
-  const tab = screen.getByRole('link', { name: /past/i });
-  userEvent.click(tab);
-  expect(await screen.findByRole('searchbox')).toHaveAttribute(
-    'placeholder',
-    'Search by topic, presenting team, …',
-  );
-  expect(await screen.findByText(/Event 0/i)).toBeVisible();
-  expect(mockGetEventsFromAlgolia).toBeCalledTimes(2);
-  expect(mockGetEventsFromAlgolia).toHaveBeenCalledWith(expect.anything(), {
-    after: '2021-12-28T13:00:00.000Z',
-    currentPage: 0,
-    filters: new Set(),
-    pageSize: 10,
-    searchQuery: '',
-    constraint: {
-      teamId: 't0',
+    sort: {
+      sortBy: 'endDate',
+      sortOrder: 'desc',
     },
   });
 });

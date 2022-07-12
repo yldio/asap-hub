@@ -1,44 +1,70 @@
 import { SearchFrame } from '@asap-hub/frontend-utils';
-import { EventConstraint } from '@asap-hub/model';
+import { EventConstraint, ListEventResponse } from '@asap-hub/model';
 import { EventSearch, EventsList } from '@asap-hub/react-components';
-import { getEventListOptions } from '../events/options';
-import { useEvents } from '../events/state';
 import { usePagination, usePaginationParams, useSearch } from '../hooks';
+import { useEvents } from '../events/state';
+import { getEventListOptions } from '../events/options';
 
 type EventsEmbedProps = {
   readonly currentTime: Date;
   readonly past: boolean;
   readonly constraint: EventConstraint;
   readonly teamId?: string;
+  readonly noEventsComponent?: React.ReactNode;
+  readonly events?: ListEventResponse;
 };
 const EventsEmbed: React.FC<EventsEmbedProps> = ({
   currentTime,
   constraint,
   past,
+  noEventsComponent,
 }) => {
   const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
+  const { pageSize } = usePaginationParams();
+
+  const eventOptions = getEventListOptions(
+    currentTime,
+    false,
+    {
+      pageSize,
+    },
+    constraint,
+  );
+
+  const events = useEvents(eventOptions);
+
+  const hasEvents = events?.total;
 
   return (
     <article>
-      <EventSearch
-        searchQuery={searchQuery}
-        onChangeSearchQuery={setSearchQuery}
-      />
-      <SearchFrame title="">
-        <EventsDisplay
-          searchQuery={debouncedSearchQuery}
-          past={past}
-          constraint={constraint}
-          currentTime={currentTime}
-        />
-      </SearchFrame>
+      {noEventsComponent && !hasEvents ? (
+        noEventsComponent
+      ) : (
+        <>
+          <EventSearch
+            searchQuery={searchQuery}
+            onChangeSearchQuery={setSearchQuery}
+          />
+          <SearchFrame title="">
+            <EventsDisplay
+              searchQuery={debouncedSearchQuery}
+              past={past}
+              constraint={constraint}
+              currentTime={currentTime}
+              events={events}
+            />
+          </SearchFrame>
+        </>
+      )}
     </article>
   );
 };
 
 type EventsDisplayProps = EventsEmbedProps & {
   searchQuery: string;
+  events?: ListEventResponse;
 };
+
 const EventsDisplay: React.FC<EventsDisplayProps> = ({
   currentTime,
   past,

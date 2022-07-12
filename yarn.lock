@@ -457,7 +457,7 @@ __metadata:
     identity-obj-proxy: ^3.0.0
     jsdom: ^16.5.3
     react: ^17.0.2
-    react-app-polyfill: ^1.0.6
+    react-app-polyfill: 3.0.0
     react-dom: ^17.0.2
     react-router-dom: ^5.2.0
     react-scripts: ^4.0.3
@@ -516,7 +516,7 @@ __metadata:
     nock: ^13.0.11
     pirates: 4.0.5
     react: ^17.0.2
-    react-app-polyfill: ^1.0.6
+    react-app-polyfill: 3.0.0
     react-dom: ^17.0.2
     react-error-boundary: 3.1.4
     react-router-dom: ^5.2.0
@@ -802,7 +802,7 @@ __metadata:
     identity-obj-proxy: ^3.0.0
     jsdom: ^16.5.3
     react: ^17.0.2
-    react-app-polyfill: ^1.0.6
+    react-app-polyfill: 3.0.0
     react-dom: ^17.0.2
     react-router-dom: ^5.2.0
     react-scripts: ^4.0.3
@@ -918,7 +918,7 @@ __metadata:
     nock: ^13.0.11
     pirates: 4.0.5
     react: ^17.0.2
-    react-app-polyfill: ^1.0.6
+    react-app-polyfill: 3.0.0
     react-dom: ^17.0.2
     react-error-boundary: 3.1.4
     react-router-dom: ^5.2.0
@@ -18448,7 +18448,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:^3.0.4, core-js@npm:^3.5.0, core-js@npm:^3.6.5":
+"core-js@npm:^3.0.4, core-js@npm:^3.6.5":
   version: 3.6.5
   resolution: "core-js@npm:3.6.5"
   checksum: b7fcf92f888bfe40f3f005e3f729e66aa49a3a9a797e8fb4d09d429c6abcd505781b2c03836858f0dc0159249d4b7a035fc763052c9c34adbc93b6f8a6a86305
@@ -18466,6 +18466,13 @@ __metadata:
   version: 3.22.8
   resolution: "core-js@npm:3.22.8"
   checksum: c79bcfea37920a5da880ad1fc8336355e833c83998bb28cd45cc59eef4d9824dd8d59ccd24d6b18ff88f284d53d9eef021ddbd2b5ab1c6305b01e98c1402e510
+  languageName: node
+  linkType: hard
+
+"core-js@npm:^3.19.2":
+  version: 3.23.3
+  resolution: "core-js@npm:3.23.3"
+  checksum: f517546388e468bd3155afbf06f38f8fe0448134fe086c4ed9c4d371d52db71e80585073b59362948777e01f2377ef7064925e1a3d9312a1c56da47eadfaca9a
   languageName: node
   linkType: hard
 
@@ -32585,7 +32592,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"promise@npm:^8.0.3, promise@npm:^8.1.0":
+"promise@npm:^8.1.0":
   version: 8.1.0
   resolution: "promise@npm:8.1.0"
   dependencies:
@@ -33016,17 +33023,17 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-app-polyfill@npm:^1.0.6":
-  version: 1.0.6
-  resolution: "react-app-polyfill@npm:1.0.6"
+"react-app-polyfill@npm:3.0.0":
+  version: 3.0.0
+  resolution: "react-app-polyfill@npm:3.0.0"
   dependencies:
-    core-js: ^3.5.0
+    core-js: ^3.19.2
     object-assign: ^4.1.1
-    promise: ^8.0.3
+    promise: ^8.1.0
     raf: ^3.4.1
-    regenerator-runtime: ^0.13.3
-    whatwg-fetch: ^3.0.0
-  checksum: d38fb0e5f773eb618e39832e78e34b2382a33a2f633ecbc7aba3af819134938f25f4b6915f40dcbb46efa1096efdfabe44030165142000dcf522f564db7cb3b9
+    regenerator-runtime: ^0.13.9
+    whatwg-fetch: ^3.6.2
+  checksum: 1bb031080af15397d6eb9c69a0c2e93799991f7197a086e4409ba719398f1256b542a3d6c9a34673d516c684eef3e8226c99b335982593851f58f65f6e43571b
   languageName: node
   linkType: hard
 
@@ -33845,7 +33852,7 @@ recoil@^0.1.2:
   languageName: node
   linkType: hard
 
-"regenerator-runtime@npm:0.13.9":
+"regenerator-runtime@npm:0.13.9, regenerator-runtime@npm:^0.13.9":
   version: 0.13.9
   resolution: "regenerator-runtime@npm:0.13.9"
   checksum: 65ed455fe5afd799e2897baf691ca21c2772e1a969d19bb0c4695757c2d96249eb74ee3553ea34a91062b2a676beedf630b4c1551cc6299afb937be1426ec55e
@@ -33859,7 +33866,7 @@ recoil@^0.1.2:
   languageName: node
   linkType: hard
 
-"regenerator-runtime@npm:^0.13.3, regenerator-runtime@npm:^0.13.4, regenerator-runtime@npm:^0.13.7":
+"regenerator-runtime@npm:^0.13.4, regenerator-runtime@npm:^0.13.7":
   version: 0.13.7
   resolution: "regenerator-runtime@npm:0.13.7"
   checksum: 52b66e6669152c0b1bccd95c8e11aabbfe67bb97bdf00e223bdf723b0f0052d4da5c02001d4c4bef576bdc5bcdc38a20496d1b5363b65c950c8434ed5071d9e0
@@ -39473,17 +39480,17 @@ typescript@~4.1.0:
   languageName: node
   linkType: hard
 
-"whatwg-fetch@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "whatwg-fetch@npm:3.0.0"
-  checksum: dcb90ab919e742d275c32d397d7480f6981da4c1b49961f0d0a2fa6825325b553fee2d793bc38ed85b9bcc8c50de39802440e2480fe40243067b3dab228c52c3
-  languageName: node
-  linkType: hard
-
 "whatwg-fetch@npm:^3.4.1":
   version: 3.5.0
   resolution: "whatwg-fetch@npm:3.5.0"
   checksum: 8a915e7ec4ef55d1cfae1d39bd2547893ea2b13b3e8a3a93d355af109f26748c6dc43700a15fe70532f4218eb7076819c0d9f94c16ef4252e94ca85c7863763b
+  languageName: node
+  linkType: hard
+
+"whatwg-fetch@npm:^3.6.2":
+  version: 3.6.2
+  resolution: "whatwg-fetch@npm:3.6.2"
+  checksum: ee976b7249e7791edb0d0a62cd806b29006ad7ec3a3d89145921ad8c00a3a67e4be8f3fb3ec6bc7b58498724fd568d11aeeeea1f7827e7e1e5eae6c8a275afed
   languageName: node
   linkType: hard
 

@@ -34,11 +34,14 @@ const renderEvents = async ({
   constraint,
   pathName,
   isPast = false,
+  noEventsComponent,
 }: {
   searchQuery?: string;
   constraint: EventConstraint;
   pathName: string;
   isPast?: boolean;
+  hasEvents?: boolean;
+  noEventsComponent?: React.ReactNode;
 }) => {
   const state = constraint.userId
     ? refreshUserState(constraint.userId)
@@ -74,6 +77,7 @@ const renderEvents = async ({
                   constraint={constraint}
                   currentTime={date}
                   past={isPast}
+                  noEventsComponent={noEventsComponent}
                 />
               </Route>
             </MemoryRouter>
@@ -84,6 +88,7 @@ const renderEvents = async ({
   );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
+
 const userPath = (userId: string) =>
   network({}).users({}).user({ userId }).upcoming({}).$;
 const teamPath = (teamId: string) =>
@@ -121,3 +126,52 @@ it.each`
     );
   },
 );
+
+describe('EventsEmbed with no upcoming events', () => {
+  it('shows the component for no upcoming events', async () => {
+    const constraint = { teamId: '1010' };
+    const pathName = teamPath(constraint.teamId);
+    const isPast = false;
+
+    mockGetEvents.mockResolvedValue(createListEventResponse(0));
+
+    const noEventsComponent = <>No Upcoming Events</>;
+
+    await renderEvents({ constraint, pathName, noEventsComponent, isPast });
+
+    await waitFor(() => {
+      expect(screen.getByText(/no upcoming events/i)).toBeInTheDocument();
+    });
+  });
+
+  it('shows the component for no past events', async () => {
+    const constraint = { teamId: '1010' };
+    const pathName = teamPath(constraint.teamId);
+    const isPast = true;
+
+    mockGetEvents.mockResolvedValue(createListEventResponse(0));
+
+    const noEventsComponent = <>No Past Events</>;
+
+    await renderEvents({ constraint, pathName, noEventsComponent, isPast });
+
+    await waitFor(() => {
+      expect(screen.getByText(/no past events/i)).toBeInTheDocument();
+    });
+  });
+
+  it('shows empty state when no noEventsComponent is passed', async () => {
+    const constraint = { teamId: '1010' };
+    const pathName = teamPath(constraint.teamId);
+    const isPast = false;
+
+    mockGetEvents.mockResolvedValue(createListEventResponse(0));
+
+    await renderEvents({ constraint, pathName, isPast });
+
+    await waitFor(() => {
+      expect(screen.queryByText(/no upcoming events/i)).not.toBeInTheDocument();
+      expect(screen.getByText(/no matches found/i)).toBeInTheDocument();
+    });
+  });
+});

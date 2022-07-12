@@ -78,6 +78,18 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
     currentUser,
   );
 
+  const pastEventsResult = useEvents(
+    getEventListOptions(
+      currentTime,
+      true,
+      {
+        pageSize,
+      },
+      { userId },
+    ),
+    currentUser,
+  );
+
   const isEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
 
   if (user) {
@@ -115,6 +127,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
       avatarSaving,
       sharedOutputsCount: researchOutputsResult.total,
       upcomingEventsCount: upcomingEventsResult.total,
+      pastEventsCount: pastEventsResult.total,
     };
 
     return (
@@ -146,6 +159,17 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                           constraint={{ userId: user?.id }}
                           currentTime={currentTime}
                           past={false}
+                        />
+                      </Frame>
+                    </Route>
+                  )}
+                  {isEventsEnabled && (
+                    <Route path={path + tabRoutes.past.template}>
+                      <Frame title="Past Events">
+                        <Events
+                          constraint={{ userId: user?.id }}
+                          currentTime={currentTime}
+                          past={true}
                         />
                       </Frame>
                     </Route>

@@ -2736,11 +2736,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "ajv",\
-        "npm:8.11.0"\
+        "npm:8.10.0"\
       ],\
       [\
         "ajv-formats",\
-        "virtual:ec8275d5c71dd111554d7ccab2e07b8dbe847a75926baa9d284ef984e7bebb0d84f69afcb829aabc0d36511900f0c83022815bc24c94c153326e642fe03b58c8#npm:2.1.1"\
+        "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:2.1.1"\
       ],\
       [\
         "algoliasearch",\
@@ -11036,7 +11036,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-codegen/typescript-operations", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:2.1.4"],\
             ["@graphql-typed-document-node/core", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:3.1.1"],\
             ["@hapi/boom", "npm:9.1.4"],\
-            ["@sentry/serverless", "npm:7.6.0"],\
+            ["@sentry/serverless", "npm:6.7.1"],\
             ["@serverless/typescript", "npm:3.19.0"],\
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
             ["@types/aws-lambda", "npm:8.10.101"],\
@@ -11050,11 +11050,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/supertest", "npm:2.0.12"],\
             ["@types/uuid", "npm:8.3.4"],\
             ["@yarnpkg/pnpify", "npm:3.1.3"],\
-            ["ajv", "npm:8.11.0"],\
-            ["ajv-formats", "virtual:ec8275d5c71dd111554d7ccab2e07b8dbe847a75926baa9d284ef984e7bebb0d84f69afcb829aabc0d36511900f0c83022815bc24c94c153326e642fe03b58c8#npm:2.1.1"],\
+            ["ajv", "npm:8.10.0"],\
+            ["ajv-formats", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:2.1.1"],\
             ["apr-intercept", "npm:3.0.4"],\
             ["aws-lambda", "npm:1.0.7"],\
-            ["aws-sdk", "npm:2.1173.0"],\
+            ["aws-sdk", "npm:2.907.0"],\
             ["babel-loader", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:8.2.5"],\
             ["cors", "npm:2.8.5"],\
             ["express", "npm:4.17.1"],\
@@ -29945,17 +29945,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["tslib", "npm:1.14.1"]\
           ],\
           "linkType": "HARD"\
-        }],\
-        ["npm:7.6.0", {\
-          "packageLocation": "./.yarn/cache/@sentry-core-npm-7.6.0-99aa6dbec9-bef8f89599.zip/node_modules/@sentry/core/",\
-          "packageDependencies": [\
-            ["@sentry/core", "npm:7.6.0"],\
-            ["@sentry/hub", "npm:7.6.0"],\
-            ["@sentry/types", "npm:7.6.0"],\
-            ["@sentry/utils", "npm:7.6.0"],\
-            ["tslib", "npm:1.14.1"]\
-          ],\
-          "linkType": "HARD"\
         }]\
       ]],\
       ["@sentry/hub", [\
@@ -29975,16 +29964,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/hub", "npm:6.7.1"],\
             ["@sentry/types", "npm:6.7.1"],\
             ["@sentry/utils", "npm:6.7.1"],\
-            ["tslib", "npm:1.14.1"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:7.6.0", {\
-          "packageLocation": "./.yarn/cache/@sentry-hub-npm-7.6.0-303191868a-436c546ac0.zip/node_modules/@sentry/hub/",\
-          "packageDependencies": [\
-            ["@sentry/hub", "npm:7.6.0"],\
-            ["@sentry/types", "npm:7.6.0"],\
-            ["@sentry/utils", "npm:7.6.0"],\
             ["tslib", "npm:1.14.1"]\
           ],\
           "linkType": "HARD"\
@@ -30022,21 +30001,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/tracing", "npm:6.7.1"],\
             ["@sentry/types", "npm:6.7.1"],\
             ["@sentry/utils", "npm:6.7.1"],\
-            ["cookie", "npm:0.4.1"],\
-            ["https-proxy-agent", "npm:5.0.0"],\
-            ["lru_map", "npm:0.3.3"],\
-            ["tslib", "npm:1.14.1"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:7.6.0", {\
-          "packageLocation": "./.yarn/cache/@sentry-node-npm-7.6.0-6756651444-aa359da32b.zip/node_modules/@sentry/node/",\
-          "packageDependencies": [\
-            ["@sentry/node", "npm:7.6.0"],\
-            ["@sentry/core", "npm:7.6.0"],\
-            ["@sentry/hub", "npm:7.6.0"],\
-            ["@sentry/types", "npm:7.6.0"],\
-            ["@sentry/utils", "npm:7.6.0"],\
             ["cookie", "npm:0.4.1"],\
             ["https-proxy-agent", "npm:5.0.0"],\
             ["lru_map", "npm:0.3.3"],\
@@ -30088,20 +30052,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["tslib", "npm:1.14.1"]\
           ],\
           "linkType": "HARD"\
-        }],\
-        ["npm:7.6.0", {\
-          "packageLocation": "./.yarn/cache/@sentry-serverless-npm-7.6.0-cd9e319123-73d78a166f.zip/node_modules/@sentry/serverless/",\
-          "packageDependencies": [\
-            ["@sentry/serverless", "npm:7.6.0"],\
-            ["@sentry/node", "npm:7.6.0"],\
-            ["@sentry/tracing", "npm:7.6.0"],\
-            ["@sentry/types", "npm:7.6.0"],\
-            ["@sentry/utils", "npm:7.6.0"],\
-            ["@types/aws-lambda", "npm:8.10.77"],\
-            ["@types/express", "npm:4.17.12"],\
-            ["tslib", "npm:1.14.1"]\
-          ],\
-          "linkType": "HARD"\
         }]\
       ]],\
       ["@sentry/tracing", [\
@@ -30128,17 +30078,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["tslib", "npm:1.14.1"]\
           ],\
           "linkType": "HARD"\
-        }],\
-        ["npm:7.6.0", {\
-          "packageLocation": "./.yarn/cache/@sentry-tracing-npm-7.6.0-61a5309860-ceda51b6ac.zip/node_modules/@sentry/tracing/",\
-          "packageDependencies": [\
-            ["@sentry/tracing", "npm:7.6.0"],\
-            ["@sentry/hub", "npm:7.6.0"],\
-            ["@sentry/types", "npm:7.6.0"],\
-            ["@sentry/utils", "npm:7.6.0"],\
-            ["tslib", "npm:1.14.1"]\
-          ],\
-          "linkType": "HARD"\
         }]\
       ]],\
       ["@sentry/types", [\
@@ -30153,13 +30092,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@sentry-types-npm-6.7.1-48b745f9b1-224b4b29d7.zip/node_modules/@sentry/types/",\
           "packageDependencies": [\
             ["@sentry/types", "npm:6.7.1"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:7.6.0", {\
-          "packageLocation": "./.yarn/cache/@sentry-types-npm-7.6.0-505104798a-679f786e34.zip/node_modules/@sentry/types/",\
-          "packageDependencies": [\
-            ["@sentry/types", "npm:7.6.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -30179,15 +30111,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@sentry/utils", "npm:6.7.1"],\
             ["@sentry/types", "npm:6.7.1"],\
-            ["tslib", "npm:1.14.1"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:7.6.0", {\
-          "packageLocation": "./.yarn/cache/@sentry-utils-npm-7.6.0-87c83acd6a-6c5a20ca67.zip/node_modules/@sentry/utils/",\
-          "packageDependencies": [\
-            ["@sentry/utils", "npm:7.6.0"],\
-            ["@sentry/types", "npm:7.6.0"],\
             ["tslib", "npm:1.14.1"]\
           ],\
           "linkType": "HARD"\
@@ -36681,7 +36604,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/aws-lambda-npm-1.0.7-a18c9e53ac-11316e87b5.zip/node_modules/aws-lambda/",\
           "packageDependencies": [\
             ["aws-lambda", "npm:1.0.7"],\
-            ["aws-sdk", "npm:2.1149.0"],\
+            ["aws-sdk", "npm:2.1176.0"],\
             ["commander", "npm:3.0.2"],\
             ["js-yaml", "npm:3.14.1"],\
             ["watchpack", "npm:2.0.0-beta.15"]\
@@ -36690,22 +36613,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["aws-sdk", [\
-        ["npm:2.1149.0", {\
-          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.1149.0-e6bea53396-2c9efa7acb.zip/node_modules/aws-sdk/",\
-          "packageDependencies": [\
-            ["aws-sdk", "npm:2.1149.0"],\
-            ["buffer", "npm:4.9.2"],\
-            ["events", "npm:1.1.1"],\
-            ["ieee754", "npm:1.1.13"],\
-            ["jmespath", "npm:0.16.0"],\
-            ["querystring", "npm:0.2.0"],\
-            ["sax", "npm:1.2.1"],\
-            ["url", "npm:0.10.3"],\
-            ["uuid", "npm:8.0.0"],\
-            ["xml2js", "npm:0.4.19"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:2.1150.0", {\
           "packageLocation": "./.yarn/cache/aws-sdk-npm-2.1150.0-62a1cb044d-49328aa1ca.zip/node_modules/aws-sdk/",\
           "packageDependencies": [\
@@ -36722,10 +36629,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:2.1173.0", {\
-          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.1173.0-fa5459696e-2c5f5baa1f.zip/node_modules/aws-sdk/",\
+        ["npm:2.1176.0", {\
+          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.1176.0-b5784135f9-1f2a89aaff.zip/node_modules/aws-sdk/",\
           "packageDependencies": [\
-            ["aws-sdk", "npm:2.1173.0"],\
+            ["aws-sdk", "npm:2.1176.0"],\
             ["buffer", "npm:4.9.2"],\
             ["events", "npm:1.1.1"],\
             ["ieee754", "npm:1.1.13"],\
@@ -36733,6 +36640,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["querystring", "npm:0.2.0"],\
             ["sax", "npm:1.2.1"],\
             ["url", "npm:0.10.3"],\
+            ["util", "npm:0.12.4"],\
             ["uuid", "npm:8.0.0"],\
             ["xml2js", "npm:0.4.19"]\
           ],\

@@ -348,7 +348,7 @@ __metadata:
     algoliasearch: ^4.13.1
     apr-intercept: ^3.0.4
     async-sema: 3.1.1
-    aws-sdk: ^2.907.0
+    aws-sdk: 2.907.0
     csv-parse: ^4.15.4
     got: 11.8.5
     jwt-encode: ^1.0.1
@@ -570,7 +570,7 @@ __metadata:
     "@hapi/boom": 9.1.4
     "@hapi/bourne": 2.1.0
     "@hapi/joi": ^17.1.1
-    "@sentry/serverless": ^6.7.1
+    "@sentry/serverless": 6.7.1
     "@serverless/typescript": 3.19.0
     "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": 8.10.101
@@ -602,12 +602,12 @@ __metadata:
     "@types/uuid": 8.3.4
     "@types/yargs": ^17.0.5
     "@yarnpkg/pnpify": 3.1.3
-    ajv: ^8.10.0
+    ajv: 8.10.0
     ajv-formats: ^2.1.1
     algoliasearch: ^4.13.1
     apr-intercept: ^3.0.4
     aws-lambda: 1.0.7
-    aws-sdk: ^2.907.0
+    aws-sdk: 2.907.0
     aws-xray-sdk: 3.3.6
     babel-loader: 8.2.5
     chance: 1.1.8
@@ -961,7 +961,7 @@ __metadata:
     "@graphql-codegen/typescript-operations": ^2.1.4
     "@graphql-typed-document-node/core": 3.1.1
     "@hapi/boom": 9.1.4
-    "@sentry/serverless": ^7.6.0
+    "@sentry/serverless": 6.7.1
     "@serverless/typescript": 3.19.0
     "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": 8.10.101
@@ -975,11 +975,11 @@ __metadata:
     "@types/supertest": ^2.0.12
     "@types/uuid": 8.3.4
     "@yarnpkg/pnpify": 3.1.3
-    ajv: ^8.11.0
+    ajv: 8.10.0
     ajv-formats: ^2.1.1
     apr-intercept: ^3.0.4
     aws-lambda: 1.0.7
-    aws-sdk: ^2.1173.0
+    aws-sdk: 2.907.0
     babel-loader: 8.2.5
     cors: ^2.8.5
     express: ^4.17.1
@@ -1023,7 +1023,7 @@ __metadata:
     "@types/babel__core": 7.1.19
     "@types/react": 17.0.47
     "@types/react-dom": 17.0.17
-    aws-sdk: ^2.907.0
+    aws-sdk: 2.907.0
     babel-loader: 8.2.5
     babel-preset-react-app: 10.0.1
     core-js: ^3.12.1
@@ -1041,7 +1041,7 @@ __metadata:
   resolution: "@asap-hub/model@workspace:packages/model"
   dependencies:
     "@babel/runtime-corejs3": 7.18.6
-    ajv: ^8.10.0
+    ajv: 8.10.0
   languageName: unknown
   linkType: soft
 
@@ -1200,7 +1200,7 @@ __metadata:
     "@asap-hub/services-common": "workspace:*"
     "@babel/runtime-corejs3": 7.18.6
     "@hapi/boom": 9.1.4
-    "@sentry/serverless": ^6.7.1
+    "@sentry/serverless": 6.7.1
     "@types/apr-intercept": "workspace:*"
     "@types/express": ^4.17.11
     "@types/jest": 26.0.24
@@ -10359,18 +10359,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/core@npm:7.6.0":
-  version: 7.6.0
-  resolution: "@sentry/core@npm:7.6.0"
-  dependencies:
-    "@sentry/hub": 7.6.0
-    "@sentry/types": 7.6.0
-    "@sentry/utils": 7.6.0
-    tslib: ^1.9.3
-  checksum: bef8f89599c3849e2f24273d2c0045d4095c4297a6b9b2e9d4d6e409f2ad1584b88b1ac0b958339d9bcdbf47bc33a807cfad2442dae4c021e13d90f7a223a66d
-  languageName: node
-  linkType: hard
-
 "@sentry/hub@npm:6.11.0":
   version: 6.11.0
   resolution: "@sentry/hub@npm:6.11.0"
@@ -10390,17 +10378,6 @@ __metadata:
     "@sentry/utils": "npm:6.7.1"
     tslib: "npm:^1.9.3"
   checksum: 767cebf7a598601aa8766b17365b7de24bb93b49039af579d542516022c54959703d4cad93cc6205e3e8d2abf8651aeec2f5a1acf6e333ff9a0f29c594cc8620
-  languageName: node
-  linkType: hard
-
-"@sentry/hub@npm:7.6.0":
-  version: 7.6.0
-  resolution: "@sentry/hub@npm:7.6.0"
-  dependencies:
-    "@sentry/types": 7.6.0
-    "@sentry/utils": 7.6.0
-    tslib: ^1.9.3
-  checksum: 436c546ac0418efdbd8e07e65feac2bb9965fdd4c44dbb7a033eb1211b2a8ccb7c01f5db7e8b80032da81d3af23a807a66a9e1490133dbed3c9b90c0a378ccf3
   languageName: node
   linkType: hard
 
@@ -10443,22 +10420,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/node@npm:7.6.0":
-  version: 7.6.0
-  resolution: "@sentry/node@npm:7.6.0"
-  dependencies:
-    "@sentry/core": 7.6.0
-    "@sentry/hub": 7.6.0
-    "@sentry/types": 7.6.0
-    "@sentry/utils": 7.6.0
-    cookie: ^0.4.1
-    https-proxy-agent: ^5.0.0
-    lru_map: ^0.3.3
-    tslib: ^1.9.3
-  checksum: aa359da32bfeb298dd7b3da8ef66d5adc32b2d229ad834026d9646bbb373282089f4367713efb3ed067c8eed1c7cadc2a28843a59acbcb932e1aac873bed3833
-  languageName: node
-  linkType: hard
-
 "@sentry/react@npm:^6.11.0":
   version: 6.11.0
   resolution: "@sentry/react@npm:6.11.0"
@@ -10475,7 +10436,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/serverless@npm:^6.7.1":
+"@sentry/serverless@npm:6.7.1":
   version: 6.7.1
   resolution: "@sentry/serverless@npm:6.7.1"
   dependencies:
@@ -10491,21 +10452,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/serverless@npm:^7.6.0":
-  version: 7.6.0
-  resolution: "@sentry/serverless@npm:7.6.0"
-  dependencies:
-    "@sentry/node": 7.6.0
-    "@sentry/tracing": 7.6.0
-    "@sentry/types": 7.6.0
-    "@sentry/utils": 7.6.0
-    "@types/aws-lambda": ^8.10.62
-    "@types/express": ^4.17.2
-    tslib: ^1.9.3
-  checksum: 73d78a166fb4af1cab1abc804f7bc6b2c9a329f7c466c735e7a63701a5f264de2f83044ca33be8afee316386129003c0bca59c63a9483cc080db940ecf307dcd
-  languageName: node
-  linkType: hard
-
 "@sentry/tracing@npm:6.7.1":
   version: 6.7.1
   resolution: "@sentry/tracing@npm:6.7.1"
@@ -10516,18 +10462,6 @@ __metadata:
     "@sentry/utils": "npm:6.7.1"
     tslib: "npm:^1.9.3"
   checksum: c255f6ede74332046c365ac0f3864162ffdd660dd4d66de45e14a422a52cac5c976a07ad4b636109fb8af9d688a7fc9f081b7ba6fbde0d634376e621a1ab28a1
-  languageName: node
-  linkType: hard
-
-"@sentry/tracing@npm:7.6.0":
-  version: 7.6.0
-  resolution: "@sentry/tracing@npm:7.6.0"
-  dependencies:
-    "@sentry/hub": 7.6.0
-    "@sentry/types": 7.6.0
-    "@sentry/utils": 7.6.0
-    tslib: ^1.9.3
-  checksum: ceda51b6ac3afd3a5355e45e9c14dcabd78d907e996dc8e9368b5def203f810062ddbc751577423ccc9afdb13f0b7d6e4640021d6bb53c42f259059cf60ca8bc
   languageName: node
   linkType: hard
 
@@ -10558,13 +10492,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/types@npm:7.6.0":
-  version: 7.6.0
-  resolution: "@sentry/types@npm:7.6.0"
-  checksum: 679f786e34af1ef395c0539ed1530b4825931d77e228f30527a82291d4d62bf7d5841660b76a5f0c42531b0d70ed2900ed1b8f64359964c33fa299a44f7af007
-  languageName: node
-  linkType: hard
-
 "@sentry/utils@npm:6.11.0":
   version: 6.11.0
   resolution: "@sentry/utils@npm:6.11.0"
@@ -10582,16 +10509,6 @@ __metadata:
     "@sentry/types": "npm:6.7.1"
     tslib: "npm:^1.9.3"
   checksum: 22ebd231e7e340e7c481225a5d95b56b2dbfe348c99b3fb94b55c642383c0e1e7d7f2079b7c3de4c1c0963f6c8220703e6084ab9df835e8c992f7ae8e26e835e
-  languageName: node
-  linkType: hard
-
-"@sentry/utils@npm:7.6.0":
-  version: 7.6.0
-  resolution: "@sentry/utils@npm:7.6.0"
-  dependencies:
-    "@sentry/types": 7.6.0
-    tslib: ^1.9.3
-  checksum: 6c5a20ca67883b5c5900005d26ad0599ee13ea367fbf9ec9fa9415efaf2df75c578d04f784773943cff03a44dff59c3fcc8cf712690b093707bb8d33aec5543c
   languageName: node
   linkType: hard
 
@@ -14835,6 +14752,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ajv@npm:8.10.0, ajv@npm:^8.0.0":
+  version: 8.10.0
+  resolution: "ajv@npm:8.10.0"
+  dependencies:
+    fast-deep-equal: ^3.1.1
+    json-schema-traverse: ^1.0.0
+    require-from-string: ^2.0.2
+    uri-js: ^4.2.2
+  checksum: 3594728ef1e31219ef97bfacb203d0d72db8ad5c35d6d0578e38ee453e4537c2bf927dad144bb84b0c893f661d71b58337d4643e8ee2f2a6e1d63b041c92fe82
+  languageName: node
+  linkType: hard
+
 "ajv@npm:^6.1.0, ajv@npm:^6.10.0, ajv@npm:^6.10.2, ajv@npm:^6.12.4, ajv@npm:^6.5.5":
   version: 6.12.4
   resolution: "ajv@npm:6.12.4"
@@ -14868,18 +14797,6 @@ __metadata:
     require-from-string: "npm:^2.0.2"
     uri-js: "npm:^4.2.2"
   checksum: ed481c275cea8648ca527526cd26a6546462a1cc3a466ec105de1d4a8c51d9b1108a0e0b26a8fbd8e83afce6a842a043da693c4b749668724eb5f9fd7586f2d6
-  languageName: node
-  linkType: hard
-
-"ajv@npm:^8.0.0, ajv@npm:^8.10.0":
-  version: 8.10.0
-  resolution: "ajv@npm:8.10.0"
-  dependencies:
-    fast-deep-equal: "npm:^3.1.1"
-    json-schema-traverse: "npm:^1.0.0"
-    require-from-string: "npm:^2.0.2"
-    uri-js: "npm:^4.2.2"
-  checksum: 3594728ef1e31219ef97bfacb203d0d72db8ad5c35d6d0578e38ee453e4537c2bf927dad144bb84b0c893f661d71b58337d4643e8ee2f2a6e1d63b041c92fe82
   languageName: node
   linkType: hard
 
@@ -15796,6 +15713,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"aws-sdk@npm:2.907.0":
+  version: 2.907.0
+  resolution: "aws-sdk@npm:2.907.0"
+  dependencies:
+    buffer: "npm:4.9.2"
+    events: "npm:1.1.1"
+    ieee754: "npm:1.1.13"
+    jmespath: "npm:0.15.0"
+    querystring: "npm:0.2.0"
+    sax: "npm:1.2.1"
+    url: "npm:0.10.3"
+    uuid: "npm:3.3.2"
+    xml2js: "npm:0.4.19"
+  checksum: a8be0ab2443c0ed11d0e46ed6bfba7ad36e75017e8a25cb7990986a9ad745b8b6bdeb9bdf6b31c45272646183b372a0a789d00254ec09c57c26606545bb5f4b0
+  languageName: node
+  linkType: hard
+
 "aws-sdk@npm:^2.1147.0":
   version: 2.1150.0
   resolution: "aws-sdk@npm:2.1150.0"
@@ -15810,23 +15744,6 @@ __metadata:
     uuid: "npm:8.0.0"
     xml2js: "npm:0.4.19"
   checksum: 49328aa1ca68183f8e8ab06870439f26b5ffd557c299e1dcf9fe9b1a0149cb8325ecc9fe0e2a42fe5f745246f12116c12e1bf913148177a430aac5cb1e532d37
-  languageName: node
-  linkType: hard
-
-"aws-sdk@npm:^2.1173.0":
-  version: 2.1173.0
-  resolution: "aws-sdk@npm:2.1173.0"
-  dependencies:
-    buffer: 4.9.2
-    events: 1.1.1
-    ieee754: 1.1.13
-    jmespath: 0.16.0
-    querystring: 0.2.0
-    sax: 1.2.1
-    url: 0.10.3
-    uuid: 8.0.0
-    xml2js: 0.4.19
-  checksum: 2c5f5baa1fb478a8cee1d2d3e42d7088908778c8a0744bfcf49984fbef540092d80c2f45c60f942ff4129f6882780a3073880dff020f06bf7f621a9366c1f07d
   languageName: node
   linkType: hard
 
@@ -15848,36 +15765,20 @@ __metadata:
   linkType: hard
 
 "aws-sdk@npm:^2.814.0":
-  version: 2.1149.0
-  resolution: "aws-sdk@npm:2.1149.0"
+  version: 2.1176.0
+  resolution: "aws-sdk@npm:2.1176.0"
   dependencies:
-    buffer: "npm:4.9.2"
-    events: "npm:1.1.1"
-    ieee754: "npm:1.1.13"
-    jmespath: "npm:0.16.0"
-    querystring: "npm:0.2.0"
-    sax: "npm:1.2.1"
-    url: "npm:0.10.3"
-    uuid: "npm:8.0.0"
-    xml2js: "npm:0.4.19"
-  checksum: 2c9efa7acbeab10da6c39d3151a6e2885add7266924f6b50e5aa139e87c80ae50fb22e1bfe9c588e7c1fa0f439fdbe354c74e3ed3ce69582ebaad5a948b5881c
-  languageName: node
-  linkType: hard
-
-"aws-sdk@npm:^2.907.0":
-  version: 2.907.0
-  resolution: "aws-sdk@npm:2.907.0"
-  dependencies:
-    buffer: "npm:4.9.2"
-    events: "npm:1.1.1"
-    ieee754: "npm:1.1.13"
-    jmespath: "npm:0.15.0"
-    querystring: "npm:0.2.0"
-    sax: "npm:1.2.1"
-    url: "npm:0.10.3"
-    uuid: "npm:3.3.2"
-    xml2js: "npm:0.4.19"
-  checksum: a8be0ab2443c0ed11d0e46ed6bfba7ad36e75017e8a25cb7990986a9ad745b8b6bdeb9bdf6b31c45272646183b372a0a789d00254ec09c57c26606545bb5f4b0
+    buffer: 4.9.2
+    events: 1.1.1
+    ieee754: 1.1.13
+    jmespath: 0.16.0
+    querystring: 0.2.0
+    sax: 1.2.1
+    url: 0.10.3
+    util: ^0.12.4
+    uuid: 8.0.0
+    xml2js: 0.4.19
+  checksum: 1f2a89aaff820ba698191a6d2f6f2e8e1680a1d467f1adb35e5b993a19da54441d6807bff2f1deca4b69fb434c70460d14832f6f155adb31214f16ef41c89dae
   languageName: node
   linkType: hard
 
@@ -38824,7 +38725,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"util@npm:0.12.4":
+"util@npm:0.12.4, util@npm:^0.12.4":
   version: 0.12.4
   resolution: "util@npm:0.12.4"
   dependencies:

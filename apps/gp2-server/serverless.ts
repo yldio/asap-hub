@@ -140,6 +140,45 @@ const serverlessConfig: AWS = {
         AUTH0_SHARED_SECRET: auth0SharedSecret,
       },
     },
+    // auth0ConnectByCode: {
+    //   handler: './src/handlers/webhooks/webhook-connect-by-code.handler',
+    //   events: [
+    //     {
+    //       httpApi: {
+    //         method: 'POST',
+    //         path: '/webhook/users/connections',
+    //       },
+    //     },
+    //   ],
+    //   environment: {
+    //     AUTH0_CLIENT_ID: auth0ClientId,
+    //     AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
+    //   },
+    // },
+    // inviteUser: {
+    //   handler: './src/handlers/user/invite-handler.handler',
+    //   events: [
+    //     {
+    //       eventBridge: {
+    //         eventBus: 'asap-events-${self:provider.stage}',
+    //         pattern: {
+    //           source: [eventBusSource],
+    //           'detail-type': ['UsersPublished'],
+    //         },
+    //         retryPolicy: {
+    //           maximumRetryAttempts: 2,
+    //         },
+    //       },
+    //     },
+    //   ],
+    //   environment: {
+    //     SES_REGION: `\${ssm:ses-region-${envAlias}}`,
+    //     EMAIL_SENDER: `\${ssm:email-invite-sender-${envAlias}}`,
+    //     EMAIL_BCC: `\${ssm:email-invite-bcc-${envAlias}}`,
+    //     EMAIL_RETURN: `\${ssm:email-invite-return-${envAlias}}`,
+    //     SENTRY_DSN: '${env:SENTRY_DSN_USER_INVITE}',
+    //   },
+    // },
   },
   resources: {
     Resources: {

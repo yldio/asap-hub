@@ -945,6 +945,7 @@ __metadata:
   dependencies:
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
+    "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/server-common": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
@@ -960,6 +961,7 @@ __metadata:
     "@graphql-codegen/typescript-operations": ^2.1.4
     "@graphql-typed-document-node/core": 3.1.1
     "@hapi/boom": 9.1.4
+    "@sentry/serverless": ^7.6.0
     "@serverless/typescript": 3.19.0
     "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": 8.10.101
@@ -971,9 +973,13 @@ __metadata:
     "@types/serverless": ^3.12.7
     "@types/source-map-support": 0.5.4
     "@types/supertest": ^2.0.12
+    "@types/uuid": 8.3.4
     "@yarnpkg/pnpify": 3.1.3
+    ajv: ^8.11.0
+    ajv-formats: ^2.1.1
     apr-intercept: ^3.0.4
     aws-lambda: 1.0.7
+    aws-sdk: ^2.1173.0
     babel-loader: 8.2.5
     cors: ^2.8.5
     express: ^4.17.1
@@ -989,6 +995,7 @@ __metadata:
     source-map-support: 0.5.21
     supertest: 6.2.3
     ts-node: ^10.7.0
+    uuid: ^8.3.2
   languageName: unknown
   linkType: soft
 
@@ -10352,6 +10359,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/core@npm:7.6.0":
+  version: 7.6.0
+  resolution: "@sentry/core@npm:7.6.0"
+  dependencies:
+    "@sentry/hub": 7.6.0
+    "@sentry/types": 7.6.0
+    "@sentry/utils": 7.6.0
+    tslib: ^1.9.3
+  checksum: bef8f89599c3849e2f24273d2c0045d4095c4297a6b9b2e9d4d6e409f2ad1584b88b1ac0b958339d9bcdbf47bc33a807cfad2442dae4c021e13d90f7a223a66d
+  languageName: node
+  linkType: hard
+
 "@sentry/hub@npm:6.11.0":
   version: 6.11.0
   resolution: "@sentry/hub@npm:6.11.0"
@@ -10371,6 +10390,17 @@ __metadata:
     "@sentry/utils": "npm:6.7.1"
     tslib: "npm:^1.9.3"
   checksum: 767cebf7a598601aa8766b17365b7de24bb93b49039af579d542516022c54959703d4cad93cc6205e3e8d2abf8651aeec2f5a1acf6e333ff9a0f29c594cc8620
+  languageName: node
+  linkType: hard
+
+"@sentry/hub@npm:7.6.0":
+  version: 7.6.0
+  resolution: "@sentry/hub@npm:7.6.0"
+  dependencies:
+    "@sentry/types": 7.6.0
+    "@sentry/utils": 7.6.0
+    tslib: ^1.9.3
+  checksum: 436c546ac0418efdbd8e07e65feac2bb9965fdd4c44dbb7a033eb1211b2a8ccb7c01f5db7e8b80032da81d3af23a807a66a9e1490133dbed3c9b90c0a378ccf3
   languageName: node
   linkType: hard
 
@@ -10413,6 +10443,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/node@npm:7.6.0":
+  version: 7.6.0
+  resolution: "@sentry/node@npm:7.6.0"
+  dependencies:
+    "@sentry/core": 7.6.0
+    "@sentry/hub": 7.6.0
+    "@sentry/types": 7.6.0
+    "@sentry/utils": 7.6.0
+    cookie: ^0.4.1
+    https-proxy-agent: ^5.0.0
+    lru_map: ^0.3.3
+    tslib: ^1.9.3
+  checksum: aa359da32bfeb298dd7b3da8ef66d5adc32b2d229ad834026d9646bbb373282089f4367713efb3ed067c8eed1c7cadc2a28843a59acbcb932e1aac873bed3833
+  languageName: node
+  linkType: hard
+
 "@sentry/react@npm:^6.11.0":
   version: 6.11.0
   resolution: "@sentry/react@npm:6.11.0"
@@ -10445,6 +10491,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/serverless@npm:^7.6.0":
+  version: 7.6.0
+  resolution: "@sentry/serverless@npm:7.6.0"
+  dependencies:
+    "@sentry/node": 7.6.0
+    "@sentry/tracing": 7.6.0
+    "@sentry/types": 7.6.0
+    "@sentry/utils": 7.6.0
+    "@types/aws-lambda": ^8.10.62
+    "@types/express": ^4.17.2
+    tslib: ^1.9.3
+  checksum: 73d78a166fb4af1cab1abc804f7bc6b2c9a329f7c466c735e7a63701a5f264de2f83044ca33be8afee316386129003c0bca59c63a9483cc080db940ecf307dcd
+  languageName: node
+  linkType: hard
+
 "@sentry/tracing@npm:6.7.1":
   version: 6.7.1
   resolution: "@sentry/tracing@npm:6.7.1"
@@ -10455,6 +10516,18 @@ __metadata:
     "@sentry/utils": "npm:6.7.1"
     tslib: "npm:^1.9.3"
   checksum: c255f6ede74332046c365ac0f3864162ffdd660dd4d66de45e14a422a52cac5c976a07ad4b636109fb8af9d688a7fc9f081b7ba6fbde0d634376e621a1ab28a1
+  languageName: node
+  linkType: hard
+
+"@sentry/tracing@npm:7.6.0":
+  version: 7.6.0
+  resolution: "@sentry/tracing@npm:7.6.0"
+  dependencies:
+    "@sentry/hub": 7.6.0
+    "@sentry/types": 7.6.0
+    "@sentry/utils": 7.6.0
+    tslib: ^1.9.3
+  checksum: ceda51b6ac3afd3a5355e45e9c14dcabd78d907e996dc8e9368b5def203f810062ddbc751577423ccc9afdb13f0b7d6e4640021d6bb53c42f259059cf60ca8bc
   languageName: node
   linkType: hard
 
@@ -10485,6 +10558,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/types@npm:7.6.0":
+  version: 7.6.0
+  resolution: "@sentry/types@npm:7.6.0"
+  checksum: 679f786e34af1ef395c0539ed1530b4825931d77e228f30527a82291d4d62bf7d5841660b76a5f0c42531b0d70ed2900ed1b8f64359964c33fa299a44f7af007
+  languageName: node
+  linkType: hard
+
 "@sentry/utils@npm:6.11.0":
   version: 6.11.0
   resolution: "@sentry/utils@npm:6.11.0"
@@ -10502,6 +10582,16 @@ __metadata:
     "@sentry/types": "npm:6.7.1"
     tslib: "npm:^1.9.3"
   checksum: 22ebd231e7e340e7c481225a5d95b56b2dbfe348c99b3fb94b55c642383c0e1e7d7f2079b7c3de4c1c0963f6c8220703e6084ab9df835e8c992f7ae8e26e835e
+  languageName: node
+  linkType: hard
+
+"@sentry/utils@npm:7.6.0":
+  version: 7.6.0
+  resolution: "@sentry/utils@npm:7.6.0"
+  dependencies:
+    "@sentry/types": 7.6.0
+    tslib: ^1.9.3
+  checksum: 6c5a20ca67883b5c5900005d26ad0599ee13ea367fbf9ec9fa9415efaf2df75c578d04f784773943cff03a44dff59c3fcc8cf712690b093707bb8d33aec5543c
   languageName: node
   linkType: hard
 
@@ -15720,6 +15810,23 @@ __metadata:
     uuid: "npm:8.0.0"
     xml2js: "npm:0.4.19"
   checksum: 49328aa1ca68183f8e8ab06870439f26b5ffd557c299e1dcf9fe9b1a0149cb8325ecc9fe0e2a42fe5f745246f12116c12e1bf913148177a430aac5cb1e532d37
+  languageName: node
+  linkType: hard
+
+"aws-sdk@npm:^2.1173.0":
+  version: 2.1173.0
+  resolution: "aws-sdk@npm:2.1173.0"
+  dependencies:
+    buffer: 4.9.2
+    events: 1.1.1
+    ieee754: 1.1.13
+    jmespath: 0.16.0
+    querystring: 0.2.0
+    sax: 1.2.1
+    url: 0.10.3
+    uuid: 8.0.0
+    xml2js: 0.4.19
+  checksum: 2c5f5baa1fb478a8cee1d2d3e42d7088908778c8a0744bfcf49984fbef540092d80c2f45c60f942ff4129f6882780a3073880dff020f06bf7f621a9366c1f07d
   languageName: node
   linkType: hard
 

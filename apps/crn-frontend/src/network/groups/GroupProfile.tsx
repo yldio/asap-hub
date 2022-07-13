@@ -10,7 +10,7 @@ import { events, network, useRouteParams } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
 
 import { useGroupById } from './state';
-import { useSearch } from '../../hooks';
+import { usePaginationParams, useSearch } from '../../hooks';
 import { useEvents } from '../../events/state';
 import { getEventListOptions } from '../../events/options';
 
@@ -45,12 +45,12 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
   const { groupId } = useRouteParams(route);
   const { path } = useRouteMatch();
   const group = useGroupById(groupId);
+  const { pageSize } = usePaginationParams();
 
   const upcomingEvents = useEvents(
     getEventListOptions(currentTime, {
       past: false,
-      currentPage: 0,
-      pageSize: 1,
+      pageSize,
       searchQuery: '',
       constraint: { groupId },
     }),
@@ -58,8 +58,7 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
   const pastEvents = useEvents(
     getEventListOptions(currentTime, {
       past: true,
-      currentPage: 0,
-      pageSize: 1,
+      pageSize,
       searchQuery: '',
       constraint: { groupId },
     }),

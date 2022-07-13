@@ -5,6 +5,8 @@ const {
   AUTH0_CLIENT_ID,
   AUTH0_SHARED_SECRET,
   ENVIRONMENT,
+  EVENT_BUS,
+  EVENT_SOURCE,
   LOG_LEVEL,
   LOG_ENABLED,
   NODE_ENV,
@@ -18,6 +20,7 @@ const {
   SQUIDEX_BASE_URL,
   SQUIDEX_CLIENT_ID,
   SQUIDEX_CLIENT_SECRET,
+  SQUIDEX_SHARED_SECRET,
 } = process.env;
 
 export const appName = SQUIDEX_APP_NAME || 'asap-local';
@@ -30,12 +33,16 @@ export const currentRevision = CURRENT_REVISION || 'default';
 export const environment = ENVIRONMENT
   ? ENVIRONMENT.toLowerCase()
   : 'development';
+export const eventBus = EVENT_BUS || 'asap-events-dev';
+export const eventSource = EVENT_SOURCE || '';
 export const logEnabled = NODE_ENV === 'production' || LOG_ENABLED === 'true';
 export const logLevel = LOG_LEVEL || 'info';
 export const origin = APP_ORIGIN || 'https://1433.hub.asap.science';
 export const auth0SharedSecret = AUTH0_SHARED_SECRET || '';
 export const sentryDsn = SENTRY_DSN;
 export const sesRegion = SES_REGION || 'eu-west-1';
+export const squidexSharedSecret =
+  SQUIDEX_SHARED_SECRET || 'squidex_shared_secret';
 export const userInviteSender = EMAIL_SENDER || `"ASAP Hub" <hub@asap.science>`;
 export const userInviteBcc = EMAIL_BCC || 'hub.invites.dev@asap.science';
 export const userInviteReturn = EMAIL_RETURN || 'hub.invites.dev@asap.science';

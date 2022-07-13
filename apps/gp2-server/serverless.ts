@@ -36,6 +36,10 @@ const squidexClientId = process.env.SQUIDEX_CLIENT_ID!;
 const squidexClientSecret = process.env.SQUIDEX_CLIENT_SECRET!;
 const stage = process.env.SLS_STAGE!;
 
+const envAlias = process.env.SLS_STAGE === 'production' ? 'prod' : 'dev';
+const eventBus = `gp2-events-${stage}`;
+const eventBusSource = 'asap.entity-updated';
+
 const service = 'gp2-hub';
 const appHostname = stage === 'production' ? hostname : `${stage}.${hostname}`;
 const apiHostname =
@@ -84,6 +88,42 @@ const serverlessConfig: AWS = {
       SQUIDEX_BASE_URL: squidexBaseUrl,
       SQUIDEX_CLIENT_ID: squidexClientId,
       SQUIDEX_CLIENT_SECRET: squidexClientSecret,
+    },
+    iam: {
+      role: {
+        statements: [
+          {
+            Effect: 'Allow',
+            Action: 'ses:SendTemplatedEmail',
+            Resource: ['*'],
+            Condition: {
+              StringLike: {
+                'ses:FromAddress': '*@asap.science',
+              },
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: 'events:*',
+            Resource: {
+              'Fn::Join': [
+                ':',
+                [
+                  'arn:aws:events',
+                  { Ref: 'AWS::Region' },
+                  { Ref: 'AWS::AccountId' },
+                  `event-bus/${eventBus}`,
+                ],
+              ],
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: ['cloudfront:CreateInvalidation'],
+            Resource: ['*'],
+          },
+        ],
+      },
     },
   },
   package: {
@@ -140,45 +180,60 @@ const serverlessConfig: AWS = {
         AUTH0_SHARED_SECRET: auth0SharedSecret,
       },
     },
-    // auth0ConnectByCode: {
-    //   handler: './src/handlers/webhooks/webhook-connect-by-code.handler',
-    //   events: [
-    //     {
-    //       httpApi: {
-    //         method: 'POST',
-    //         path: '/webhook/users/connections',
-    //       },
-    //     },
-    //   ],
-    //   environment: {
-    //     AUTH0_CLIENT_ID: auth0ClientId,
-    //     AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
-    //   },
-    // },
-    // inviteUser: {
-    //   handler: './src/handlers/user/invite-handler.handler',
-    //   events: [
-    //     {
-    //       eventBridge: {
-    //         eventBus: 'asap-events-${self:provider.stage}',
-    //         pattern: {
-    //           source: [eventBusSource],
-    //           'detail-type': ['UsersPublished'],
-    //         },
-    //         retryPolicy: {
-    //           maximumRetryAttempts: 2,
-    //         },
-    //       },
-    //     },
-    //   ],
-    //   environment: {
-    //     SES_REGION: `\${ssm:ses-region-${envAlias}}`,
-    //     EMAIL_SENDER: `\${ssm:email-invite-sender-${envAlias}}`,
-    //     EMAIL_BCC: `\${ssm:email-invite-bcc-${envAlias}}`,
-    //     EMAIL_RETURN: `\${ssm:email-invite-return-${envAlias}}`,
-    //     SENTRY_DSN: '${env:SENTRY_DSN_USER_INVITE}',
-    //   },
-    // },
+    auth0ConnectByCode: {
+      handler: './src/handlers/webhooks/webhook-connect-by-code.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/users/connections',
+          },
+        },
+      ],
+      environment: {
+        AUTH0_CLIENT_ID: auth0ClientId,
+        AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
+      },
+    },
+    inviteUser: {
+      handler: './src/handlers/user/invite-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus,
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': ['UsersPublished'],
+            },
+            retryPolicy: {
+              maximumRetryAttempts: 2,
+            },
+          },
+        },
+      ],
+      environment: {
+        SES_REGION: `\${ssm:ses-region-${envAlias}}`,
+        EMAIL_SENDER: `\${ssm:email-invite-sender-${envAlias}}`,
+        EMAIL_BCC: `\${ssm:email-invite-bcc-${envAlias}}`,
+        EMAIL_RETURN: `\${ssm:email-invite-return-${envAlias}}`,
+        SENTRY_DSN: '${env:SENTRY_DSN_USER_INVITE}',
+      },
+    },
+    squidexWebhook: {
+      handler: './src/handlers/webhooks/webhook-squidex.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/squidex',
+          },
+        },
+      ],
+      environment: {
+        EVENT_BUS: eventBus,
+        EVENT_SOURCE: eventBusSource,
+      },
+    },
   },
   resources: {
     Resources: {

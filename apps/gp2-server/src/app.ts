@@ -1,12 +1,4 @@
-import 'express-async-errors';
-import cors from 'cors';
-import express, { Express } from 'express';
-import {
-  SquidexGraphql,
-  getAccessTokenFactory,
-  SquidexRest,
-  RestUser,
-} from '@asap-hub/squidex';
+import { UserResponse } from '@asap-hub/model';
 import {
   AuthHandler,
   authHandlerFactory,
@@ -16,24 +8,33 @@ import {
   Logger,
   MemoryCacheClient,
 } from '@asap-hub/server-common';
-import { UserResponse } from '@asap-hub/model';
+import {
+  getAccessTokenFactory,
+  RestUser,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
+import cors from 'cors';
+import express, { Express } from 'express';
+import 'express-async-errors';
+import {
+  appName,
+  auth0Audience,
+  auth0ClientId,
+  baseUrl,
+  clientId,
+  clientSecret,
+} from './config';
 import Dashboard, {
   DashboardController,
 } from './controllers/dashboard.controller';
-import { dashboardRouteFactory } from './routes/dashboard.route';
-import pinoLogger from './utils/logger';
-import {
-  auth0Audience,
-  clientId,
-  clientSecret,
-  baseUrl,
-  appName,
-} from './config';
 import Users, { UserController } from './controllers/user.controller';
-import {
+import UserSquidexDataProvider, {
   UserDataProvider,
-  UserSquidexDataProvider,
 } from './data-providers/users.data-provider';
+import { dashboardRouteFactory } from './routes/dashboard.route';
+import { userPublicRouteFactory } from './routes/user.route';
+import pinoLogger from './utils/logger';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -57,6 +58,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     appName,
     baseUrl,
   });
+
   const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
     appName,
     baseUrl,
@@ -68,10 +70,17 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userDataProvider =
     libs.userDataProvider ||
     new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
+  const decodeToken = decodeTokenFactory(auth0ClientId);
+
+  const userDataProvider =
+    libs.userDataProvider ||
+    new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
 
   // Controllers
   const dashboardController =
     libs.dashboardController || new Dashboard(squidexGraphqlClient);
+  const userController = libs.userController || new Users(userDataProvider);
+
   const userController = libs.userController || new Users(userDataProvider);
 
   // Handlers
@@ -87,6 +96,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Routes
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
 
+  const userPublicRoutes = userPublicRouteFactory(userController);
   // Auth
   app.use(authHandler);
 
@@ -94,6 +104,7 @@ export const appFactory = (libs: Libs = {}): Express => {
    * Routes requiring onboarding below
    */
   app.use(dashboardRoutes);
+  app.use(userPublicRoutes);
 
   // Catch all
   app.get('*', async (_req, res) => {

@@ -7,6 +7,7 @@ import {
   createTeamResponse,
 } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
+import { disable } from '@asap-hub/flags';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
@@ -100,10 +101,18 @@ it('renders number of upcoming events', async () => {
   expect(await screen.findByText(/Upcoming Events \(7\)/i)).toBeVisible();
 });
 
+it('renders number of past events', async () => {
+  const response = createListEventResponse(7, { isEventInThePast: true });
+  mockGetEventsFromAlgolia.mockResolvedValue(response);
+  await renderPage(createTeamResponse());
+
+  expect(await screen.findByText(/Past Events \(7\)/i)).toBeVisible();
+});
+
 it.each`
   name
-  ${'upcoming'}
-  ${'past'}
+  ${'upcoming events'}
+  ${'past events'}
 `('navigates to the $name events tab', async ({ name }) => {
   const currentTime = new Date('2021-12-28T14:00:00.000Z');
   const response = createListEventResponse(1);
@@ -122,6 +131,7 @@ it.each`
   );
   expect(await screen.findByText(/Event 0/i)).toBeVisible();
   expect(mockGetEventsFromAlgolia).toBeCalledTimes(2);
+
   expect(mockGetEventsFromAlgolia).toHaveBeenCalledWith(expect.anything(), {
     before: '2021-12-28T13:00:00.000Z',
     currentPage: 0,
@@ -182,3 +192,12 @@ const renderPage = async (
   );
   return result;
 };
+
+it('hides the past and upcoming events tabs if the feature flag is disabled ((Regression))', async () => {
+  disable('EVENTS_SEARCH');
+  await renderPage(createTeamResponse());
+
+  expect(mockGetEventsFromAlgolia).not.toBeCalled();
+  expect(screen.queryByText(/Upcoming Events/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/Past Events/i)).not.toBeInTheDocument();
+});

@@ -25,7 +25,7 @@ describe('getGroupEvents', () => {
       .reply(200, {});
     await getGroupEvents(
       '42',
-      getEventListOptions(new Date('2021-01-01T12:00:00'), true),
+      getEventListOptions(new Date('2021-01-01T12:00:00'), { past: true }),
       'Bearer x',
     );
     expect(nock.isDone()).toBe(true);
@@ -42,7 +42,7 @@ describe('getGroupEvents', () => {
       .reply(200, events);
     await getGroupEvents(
       '42',
-      getEventListOptions(new Date('2021-01-01T12:00:00'), false),
+      getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
       'Bearer x',
     );
     expect(nock.isDone()).toBe(true);
@@ -54,7 +54,7 @@ describe('getGroupEvents', () => {
     expect(
       await getGroupEvents(
         '42',
-        getEventListOptions(new Date('2021-01-01T12:00:00'), false),
+        getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
         '',
       ),
     ).toEqual(events);
@@ -65,7 +65,7 @@ describe('getGroupEvents', () => {
     expect(
       await getGroupEvents(
         '42',
-        getEventListOptions(new Date('2021-01-01T12:00:00'), false),
+        getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
         '',
       ),
     ).toBe(undefined);
@@ -75,7 +75,7 @@ describe('getGroupEvents', () => {
     await expect(
       getGroupEvents(
         '42',
-        getEventListOptions(new Date('2021-01-01T12:00:00'), false),
+        getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
         '',
       ),
     ).rejects.toThrowErrorMatchingInlineSnapshot(

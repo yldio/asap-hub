@@ -181,6 +181,5 @@ it('displays upcoming event count', () => {
 it('displays past event count', () => {
   render(<TeamProfileHeader {...boilerplateProps} pastEventsCount={11} />);
 
-  const link = screen.getByRole('link', { name: /past events \(11\)/i });
-  expect(link).toBeVisible();
+  expect(screen.getByText('Past Events (11)')).toBeVisible();
 });

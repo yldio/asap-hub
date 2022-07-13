@@ -42,13 +42,13 @@ const renderGroupEventList = async (
       initializeState={({ reset }) => {
         reset(
           groupEventsState({
-            ...getEventListOptions(currentTime, false),
+            ...getEventListOptions(currentTime, { past: false }),
             groupId,
           }),
         );
         reset(
           groupEventsState({
-            ...getEventListOptions(currentTime, true),
+            ...getEventListOptions(currentTime, { past: true }),
             groupId,
           }),
         );

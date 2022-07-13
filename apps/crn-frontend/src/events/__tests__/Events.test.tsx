@@ -52,7 +52,7 @@ const renderEventsPage = async (pathname = events({}).$) => {
     <RecoilRoot
       initializeState={({ set, reset }) => {
         set(refreshCalendarsState, Math.random());
-        reset(eventsState(getEventListOptions(new Date(), false)));
+        reset(eventsState(getEventListOptions(new Date(), { past: false })));
       }}
     >
       <Suspense fallback="loading">
@@ -93,7 +93,7 @@ describe('Events', () => {
 
   it('Defaults to the upcoming events page', async () => {
     mockGetEvents.mockImplementation((params) => {
-      const eventsExpected = 'before' in params ? 'upcoming' : 'ignore';
+      const eventsExpected = 'before' in params ? 'past' : 'upcoming';
       return Promise.resolve({
         ...createListEventResponse(1),
         items: createListEventResponse(1).items.map((item, index) => ({
@@ -139,41 +139,49 @@ describe('Legacy', () => {
   });
 
   describe.each`
-    eventProperty | route                        | expected
-    ${'after'}    | ${events({}).past({}).$}     | ${'past'}
-    ${'before'}   | ${events({}).upcoming({}).$} | ${'upcoming'}
-  `('the events $expected page', ({ eventProperty, route, expected }) => {
-    it('renders a list of event cards', async () => {
-      mockGetEvents.mockImplementation((params) => {
-        const eventsExpected = eventProperty in params ? expected : 'ignore';
-        return Promise.resolve({
-          ...createListEventResponse(2),
-          items: createListEventResponse(2).items.map((item, index) => ({
-            ...item,
-            title: `${eventsExpected} Event title ${index}`,
-          })),
+    eventProperty | route                        | expected      | nonExpected
+    ${'before'}   | ${events({}).past({}).$}     | ${'past'}     | ${'upcoming'}
+    ${'after'}    | ${events({}).upcoming({}).$} | ${'upcoming'} | ${'past'}
+  `(
+    'the events $expected page',
+    ({ eventProperty, route, expected, nonExpected }) => {
+      it('renders a list of event cards', async () => {
+        let eventsExpected = 'ignore';
+        mockGetEvents.mockImplementation((params) => {
+          eventsExpected = eventProperty in params ? expected : nonExpected;
+
+          return Promise.resolve({
+            ...createListEventResponse(2),
+            items: createListEventResponse(2).items.map((item, index) => ({
+              ...item,
+              title: `${eventsExpected} Event title ${index}`,
+            })),
+          });
         });
+
+        await renderEventsPage(route);
+        expect(
+          screen
+            .getAllByRole('heading', { level: 3 })
+            .map((heading) => heading.textContent),
+        ).toEqual([
+          `${eventsExpected} Event title 0`,
+          `${eventsExpected} Event title 1`,
+        ]);
       });
 
-      await renderEventsPage(route);
-      expect(
-        screen
-          .getAllByRole('heading', { level: 3 })
-          .map((heading) => heading.textContent),
-      ).toEqual([`${expected} Event title 0`, `${expected} Event title 1`]);
-    });
-
-    it('can search for events', async () => {
-      await renderEventsPage(route);
-      userEvent.type(screen.getByRole('searchbox'), 'searchterm');
-      await waitFor(() =>
-        expect(mockGetEvents).toHaveBeenLastCalledWith(
-          expect.objectContaining({ searchQuery: 'searchterm' }),
-          expect.anything(),
-        ),
-      );
-    });
-  });
+      it('can search for events', async () => {
+        await renderEventsPage(route);
+        userEvent.type(screen.getByRole('searchbox'), 'searchterm');
+        await waitFor(() =>
+          expect(mockGetEvents).toHaveBeenLastCalledWith(
+            expect.objectContaining({ searchQuery: 'searchterm' }),
+            expect.anything(),
+          ),
+        );
+      });
+    },
+  );
 });
 
 describe('Algolia', () => {

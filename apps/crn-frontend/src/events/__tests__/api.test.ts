@@ -28,7 +28,7 @@ describe('getEvents', () => {
       })
       .reply(200, {});
     await getEvents(
-      getEventListOptions(new Date('2021-01-01T12:00:00'), true),
+      getEventListOptions(new Date('2021-01-01T12:00:00'), { past: true }),
       'Bearer x',
     );
     expect(nock.isDone()).toBe(true);
@@ -44,7 +44,7 @@ describe('getEvents', () => {
       })
       .reply(200, events);
     await getEvents(
-      getEventListOptions(new Date('2021-01-01T12:00:00'), false),
+      getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
       'Bearer x',
     );
     expect(nock.isDone()).toBe(true);
@@ -62,7 +62,7 @@ describe('getEvents', () => {
       .reply(200, events);
     expect(
       await getEvents(
-        getEventListOptions(new Date('2021-01-01T12:00:00'), false),
+        getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
         '',
       ),
     ).toEqual(events);
@@ -79,7 +79,7 @@ describe('getEvents', () => {
       .reply(500);
     await expect(
       getEvents(
-        getEventListOptions(new Date('2021-01-01T12:00:00'), false),
+        getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
         '',
       ),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
@@ -132,7 +132,7 @@ describe('getEventsFromAlgolia', () => {
 
     await getEventsFromAlgolia(
       algoliaSearchClient,
-      getEventListOptions(new Date('2021-01-01T12:00:00'), true),
+      getEventListOptions(new Date('2021-01-01T12:00:00'), { past: true }),
     );
 
     expect(search).toBeCalledWith(
@@ -151,7 +151,7 @@ describe('getEventsFromAlgolia', () => {
 
     await getEventsFromAlgolia(
       algoliaSearchClient,
-      getEventListOptions(new Date('2021-01-01T12:00:00'), false),
+      getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
     );
     expect(search).toBeCalledWith(
       ['event'],
@@ -169,7 +169,7 @@ describe('getEventsFromAlgolia', () => {
     search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
 
     await getEventsFromAlgolia(algoliaSearchClient, {
-      ...getEventListOptions(new Date('2021-01-01T12:00:00'), false),
+      ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
       constraint: { userId: 'user-1' },
     });
     expect(search).toBeCalledWith(
@@ -189,7 +189,7 @@ describe('getEventsFromAlgolia', () => {
     search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
 
     await getEventsFromAlgolia(algoliaSearchClient, {
-      ...getEventListOptions(new Date('2021-01-01T12:00:00'), false),
+      ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
       constraint: { teamId: 'team-1' },
     });
     expect(search).toBeCalledWith(
@@ -223,7 +223,7 @@ describe('getEventsFromAlgolia', () => {
     expect(
       await getEventsFromAlgolia(
         algoliaSearchClient,
-        getEventListOptions(new Date('2021-01-01T12:00:00'), false),
+        getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
       ),
     ).toEqual({
       items: events.items.map((event) => ({
@@ -241,7 +241,7 @@ describe('getEventsFromAlgolia', () => {
     search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
 
     await getEventsFromAlgolia(algoliaSearchClient, {
-      ...getEventListOptions(new Date('2021-01-01T12:00:00'), false),
+      ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
       constraint: { groupId: 'group-5' },
     });
     expect(search).toBeCalledWith(

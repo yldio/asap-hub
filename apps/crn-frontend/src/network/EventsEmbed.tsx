@@ -22,14 +22,11 @@ const EventsEmbed: React.FC<EventsEmbedProps> = ({
   const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
   const { pageSize } = usePaginationParams();
 
-  const eventOptions = getEventListOptions(
-    currentTime,
-    false,
-    {
-      pageSize,
-    },
+  const eventOptions = getEventListOptions(currentTime, {
+    past,
+    pageSize,
     constraint,
-  );
+  });
 
   const events = useEvents(eventOptions);
 
@@ -72,16 +69,14 @@ const EventsDisplay: React.FC<EventsDisplayProps> = ({
   constraint,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const options = getEventListOptions(
-    currentTime,
+  const options = getEventListOptions(currentTime, {
     past,
-    {
-      searchQuery,
-      currentPage,
-      pageSize,
-    },
+    searchQuery,
+    currentPage,
+    pageSize,
     constraint,
-  );
+  });
+
   const { items, total } = useEvents(options);
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 

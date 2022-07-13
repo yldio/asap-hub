@@ -67,26 +67,20 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
   const isOwnProfile = currentUser?.id === user?.id;
 
   const upcomingEventsResult = useEvents(
-    getEventListOptions(
-      currentTime,
-      false,
-      {
-        pageSize,
-      },
-      { userId },
-    ),
+    getEventListOptions(currentTime, {
+      past: false,
+      pageSize,
+      constraint: { userId },
+    }),
     currentUser,
   );
 
   const pastEventsResult = useEvents(
-    getEventListOptions(
-      currentTime,
-      true,
-      {
-        pageSize,
-      },
-      { userId },
-    ),
+    getEventListOptions(currentTime, {
+      past: true,
+      pageSize,
+      constraint: { userId },
+    }),
     currentUser,
   );
 

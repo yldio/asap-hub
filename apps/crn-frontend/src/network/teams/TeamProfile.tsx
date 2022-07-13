@@ -60,27 +60,21 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
 
   const { pageSize } = usePaginationParams();
 
-  const upcomingEventOptions = getEventListOptions(
-    currentTime,
-    false,
-    {
+  const upcomingEventsResult = useEvents(
+    getEventListOptions(currentTime, {
+      past: false,
       pageSize,
-    },
-    { teamId },
+      constraint: { teamId },
+    }),
   );
 
-  const pastEventOptions = getEventListOptions(
-    currentTime,
-    true,
-    {
+  const pastEventsResult = useEvents(
+    getEventListOptions(currentTime, {
+      past: true,
       pageSize,
-    },
-    { teamId },
+      constraint: { teamId },
+    }),
   );
-
-  const upcomingEventsResult = useEvents(upcomingEventOptions);
-
-  const pastEventsResult = useEvents(pastEventOptions);
 
   const isEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
 
@@ -157,7 +151,6 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                   </Frame>
                 </Route>
               )}
-
               <Redirect to={route({ teamId }).about({}).$} />
             </TeamProfilePage>
           </Switch>

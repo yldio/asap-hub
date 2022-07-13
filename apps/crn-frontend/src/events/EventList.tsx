@@ -19,7 +19,8 @@ const EventList: React.FC<EventListProps> = ({
   const { currentPage, pageSize } = usePaginationParams();
 
   const { items, total } = useEvents(
-    getEventListOptions(currentTime, past, {
+    getEventListOptions(currentTime, {
+      past,
       searchQuery,
       currentPage,
       pageSize,
@@ -27,7 +28,8 @@ const EventList: React.FC<EventListProps> = ({
   );
 
   usePrefetchEvents(
-    getEventListOptions(currentTime, !past, {
+    getEventListOptions(currentTime, {
+      past: false,
       searchQuery,
       currentPage,
       pageSize,

@@ -56,5 +56,5 @@ const validateParams = (
     return { code: params.code };
   }
 
-  throw new ValidationError('Missing params');
+  throw new ValidationError(undefined, [], 'Missing params');
 };

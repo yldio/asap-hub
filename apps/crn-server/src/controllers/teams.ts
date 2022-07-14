@@ -75,7 +75,7 @@ export default class Teams implements TeamController {
     const team = await this.teamDataProvider.fetchById(teamId);
 
     if (!team) {
-      throw new NotFoundError(`team with id ${teamId} not found`);
+      throw new NotFoundError(undefined, `team with id ${teamId} not found`);
     }
 
     if (options?.showTools === false) {

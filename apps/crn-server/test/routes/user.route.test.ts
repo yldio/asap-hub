@@ -229,7 +229,7 @@ describe('/users/ route', () => {
   describe('GET /users/{user_id}/groups', () => {
     test('Should return 404 when user doesnt exist', async () => {
       groupControllerMock.fetchByUserId.mockRejectedValueOnce(
-        new NotFoundError('user not found'),
+        new NotFoundError(undefined, 'user not found'),
       );
 
       const response = await supertest(appWithMockedAuth).get(

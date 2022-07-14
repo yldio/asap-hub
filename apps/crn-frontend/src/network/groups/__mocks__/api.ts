@@ -22,7 +22,7 @@ export const getGroup = jest.fn(
   }),
 );
 
-export const getGroupEvents = jest.fn(
+export const getEvents = jest.fn(
   async (): Promise<ListEventResponse> => ({
     ...createListEventResponse(2),
   }),

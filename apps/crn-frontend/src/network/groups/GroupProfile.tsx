@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 import {
   GroupProfilePage,
   NotFoundPage,
-  NoEvents,
+  GroupNoEvents,
 } from '@asap-hub/react-components';
 import { events, network, useRouteParams } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
@@ -32,7 +32,7 @@ type GroupProfileProps = {
 
 const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
   useEffect(() => {
-    loadAbout().then(loadCalendar).then(loadEventList);
+    loadAbout().then(loadCalendar).then(loadEvents);
   }, []);
 
   const [groupTeamsElementId] = useState(`group-teams-${uuid()}`);
@@ -103,9 +103,7 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
                   past={false}
                   events={upcomingEvents}
                   noEventsComponent={
-                    <NoEvents
-                      displayName={group.name}
-                      type="group"
+                    <GroupNoEvents
                       past={false}
                       link={events({}).upcoming({}).$}
                     />
@@ -123,12 +121,7 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
                   currentTime={currentTime}
                   past={true}
                   noEventsComponent={
-                    <NoEvents
-                      displayName={group.name}
-                      type="group"
-                      past={true}
-                      link={events({}).past({}).$}
-                    />
+                    <GroupNoEvents past={true} link={events({}).past({}).$} />
                   }
                 />
               </Frame>

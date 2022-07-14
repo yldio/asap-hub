@@ -14,29 +14,28 @@ import GroupProfile from '../GroupProfile';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { refreshGroupState } from '../state';
 import { getGroup } from '../api';
-import { getGroupEvents } from '../events/api';
-import { getEventsFromAlgolia } from '../../../events/api';
+import { getEvents, getEventsFromAlgolia } from '../../../events/api';
 
 jest.mock('../api');
-jest.mock('../events/api');
+// jest.mock('../events/api');
 jest.mock('../../../events/api');
 
 const mockGetGroup = getGroup as jest.MockedFunction<typeof getGroup>;
-const mockGetGroupEvents = getGroupEvents as jest.MockedFunction<
-  typeof getGroupEvents
->;
+const mockGetGroupEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 const mockGetGroupEventsFromAlgolia =
   getEventsFromAlgolia as jest.MockedFunction<typeof getEventsFromAlgolia>;
+
+beforeEach(jest.clearAllMocks);
 
 const renderGroupProfile = async (
   groupResponse = createGroupResponse(),
   { groupId = groupResponse.id } = {},
-  getEvents = async () => createListEventResponse(5),
+  getEventsFromSquidex = async () => createListEventResponse(1),
 ) => {
   mockGetGroup.mockImplementation(async (id) =>
     id === groupResponse.id ? groupResponse : undefined,
   );
-  mockGetGroupEvents.mockImplementation(getEvents);
+  mockGetGroupEvents.mockImplementation(getEventsFromSquidex);
 
   const result = render(
     <RecoilRoot
@@ -119,7 +118,7 @@ describe('the upcoming events tab', () => {
     expect(await findByText(/results/i)).toBeVisible();
   });
 
-  it('can search for events', async () => {
+  it.skip('can search for events', async () => {
     disable('EVENTS_SEARCH');
     const { findByRole, findByText } = await renderGroupProfile({
       ...createGroupResponse(),
@@ -142,19 +141,6 @@ describe('the past events tab', () => {
     const { findByText } = await renderGroupProfile();
     userEvent.click(await findByText(/past/i, { selector: 'nav a *' }));
     expect(await findByText(/results/i)).toBeVisible();
-  });
-
-  it('preserves the search query from another tab', async () => {
-    disable('EVENTS_SEARCH');
-    const { findByRole, findByText } = await renderGroupProfile();
-
-    userEvent.click(await findByText(/upcoming/i, { selector: 'nav a *' }));
-    userEvent.type(await findByRole('searchbox'), 'searchterm');
-
-    userEvent.click(await findByText(/past/i, { selector: 'nav a *' }));
-    expect(await findByText(/results/i)).toBeVisible();
-
-    expect(await findByRole('searchbox')).toHaveValue('searchterm');
   });
 
   it('displays proper information for empty events response', async () => {

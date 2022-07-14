@@ -88,18 +88,6 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
     currentUser,
   );
 
-  const pastEventsResult = useEvents(
-    getEventListOptions(
-      currentTime,
-      true,
-      {
-        pageSize,
-      },
-      { userId },
-    ),
-    currentUser,
-  );
-
   const isEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
 
   if (user) {

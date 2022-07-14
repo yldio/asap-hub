@@ -197,11 +197,11 @@ describe('getEventsFromAlgolia', () => {
       '',
       {
         filters:
-          '(endDateTimestamp < 1609498800) AND (speakers.user.id: "user-1")',
+          '(endDateTimestamp > 1609498800) AND (speakers.user.id: "user-1")',
         hitsPerPage: 10,
         page: 0,
       },
-      true,
+      false,
     );
   });
 

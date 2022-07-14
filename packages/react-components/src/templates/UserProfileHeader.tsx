@@ -303,11 +303,6 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
               Past Events {`(${pastEventsCount})`}
             </TabLink>
           )}
-          {useFlags().isEnabled('EVENTS_SEARCH') && (
-            <TabLink href={tabRoutes.past({}).$}>
-              Past Events {` (${pastEventsCount})`}
-            </TabLink>
-          )}
         </TabNav>
       </div>
     </header>

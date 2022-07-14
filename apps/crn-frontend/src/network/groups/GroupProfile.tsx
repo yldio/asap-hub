@@ -131,7 +131,7 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
                   currentTime={currentTime}
                   searchQuery={debouncedSearchQuery}
                   noEventsComponent={
-                    <GroupNoEvents past={true} link={events({}).past({}).$} />
+                    <GroupNoEvents past link={events({}).past({}).$} />
                   }
                 />
               </Frame>

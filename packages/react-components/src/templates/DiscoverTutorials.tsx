@@ -19,7 +19,7 @@ const DiscoverTutorials: React.FC<DiscoverTutorialsProps> = ({ training }) => (
     <NewsSection
       title="Tutorials"
       subtitle="Explore our tutorials to understand how you can use the Hub and work with the tools."
-      news={training.map((item) => ({ ...item, type: 'Tutorial' }))}
+      news={training.map((item) => ({ ...item, noPill: true }))}
     />
     <HelpSection />
   </div>

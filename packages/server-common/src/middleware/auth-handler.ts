@@ -1,3 +1,4 @@
+import { createHash } from 'crypto';
 import { RequestHandler } from 'express';
 import Boom from '@hapi/boom';
 import { UserResponse } from '@asap-hub/model';
@@ -38,7 +39,8 @@ export const authHandlerFactory =
       throw Boom.unauthorized();
     }
 
-    let user: UserResponse | null = cacheClient.get(payload.sub);
+    const tokenHash = createHash('sha256').update(token).digest('hex');
+    let user: UserResponse | null = cacheClient.get(tokenHash);
 
     if (user === null) {
       try {
@@ -48,7 +50,7 @@ export const authHandlerFactory =
         throw Boom.unauthorized();
       }
 
-      cacheClient.set(payload.sub, user);
+      cacheClient.set(tokenHash, user);
     }
 
     if (!user || typeof user === 'string') {

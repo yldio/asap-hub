@@ -118,6 +118,21 @@ describe('Authentication middleware', () => {
     expect(fetchByCode).toBeCalledTimes(1);
   });
 
+  test('Should not cache the user data for the same user if they use a different token', async () => {
+    decodeToken.mockResolvedValue(jwtPayload);
+
+    const response1 = await supertest(app)
+      .get('/test-route')
+      .set('Authorization', 'Bearer something');
+    const response2 = await supertest(app)
+      .get('/test-route')
+      .set('Authorization', 'Bearer something-else');
+
+    expect(response1.status).toBe(200);
+    expect(response2.status).toBe(200);
+    expect(fetchByCode).toBeCalledTimes(2);
+  });
+
   test('Should fetch the logged in user by sub parameter and add them to the req object', async () => {
     decodeToken.mockResolvedValueOnce(jwtPayload);
 

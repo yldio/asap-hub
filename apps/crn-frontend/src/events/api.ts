@@ -36,7 +36,9 @@ export const getEvents = async (
   options: GetEventListOptions,
   authorization: string,
 ): Promise<ListEventResponse> => {
-  const url = createListApiUrl('events', options);
+  const url = options.constraint?.groupId
+    ? createListApiUrl(`groups/${options.constraint?.groupId}/events`, options)
+    : createListApiUrl('events', options);
 
   if (options.before) url.searchParams.append('before', options.before);
   else if (options.after) url.searchParams.append('after', options.after);

@@ -5,7 +5,9 @@ import {
   GroupProfilePage,
   NotFoundPage,
   GroupNoEvents,
+  NoEvents,
 } from '@asap-hub/react-components';
+import { useFlags } from '@asap-hub/react-context';
 import { events, network, useRouteParams } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
 
@@ -22,10 +24,13 @@ const loadEventList = () =>
   import(
     /* webpackChunkName: "network-group-event-list" */ './events/EventList'
   );
+const loadEvents = () =>
+  import(/* webpackChunkName: "network-events" */ '../EventsEmbed');
 
 const About = lazy(loadAbout);
 const Calendar = lazy(loadCalendar);
 const EventList = lazy(loadEventList);
+const Events = lazy(loadEvents);
 loadAbout();
 
 type GroupProfileProps = {
@@ -46,6 +51,7 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
   const group = useGroupById(groupId);
   const { pageSize } = usePaginationParams();
+  const isAlgoliaEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
 
   const upcomingEvents = useEvents(
     getEventListOptions(currentTime, {
@@ -105,16 +111,33 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
               onChangeSearchQuery={setSearchQuery}
             >
               <Frame title="Upcoming Events">
-                <EventList
-                  currentTime={currentTime}
-                  searchQuery={debouncedSearchQuery}
-                  noEventsComponent={
-                    <GroupNoEvents
-                      past={false}
-                      link={events({}).upcoming({}).$}
-                    />
-                  }
-                />
+                {isAlgoliaEventsEnabled ? (
+                  <Events
+                    constraint={{ groupId }}
+                    currentTime={currentTime}
+                    past={false}
+                    events={upcomingEvents}
+                    noEventsComponent={
+                      <NoEvents
+                        displayName={group.name}
+                        type="group"
+                        past={false}
+                        link={events({}).upcoming({}).$}
+                      />
+                    }
+                  />
+                ) : (
+                  <EventList
+                    currentTime={currentTime}
+                    searchQuery={debouncedSearchQuery}
+                    noEventsComponent={
+                      <GroupNoEvents
+                        past={false}
+                        link={events({}).upcoming({}).$}
+                      />
+                    }
+                  />
+                )}
               </Frame>
             </GroupProfilePage>
           </Route>
@@ -125,14 +148,31 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
               onChangeSearchQuery={setSearchQuery}
             >
               <Frame title="Past Events">
-                <EventList
-                  past
-                  currentTime={currentTime}
-                  searchQuery={debouncedSearchQuery}
-                  noEventsComponent={
-                    <GroupNoEvents past={true} link={events({}).past({}).$} />
-                  }
-                />
+                {isAlgoliaEventsEnabled ? (
+                  <Events
+                    events={pastEvents}
+                    constraint={{ groupId }}
+                    currentTime={currentTime}
+                    past={true}
+                    noEventsComponent={
+                      <NoEvents
+                        displayName={group.name}
+                        type="group"
+                        past={true}
+                        link={events({}).past({}).$}
+                      />
+                    }
+                  />
+                ) : (
+                  <EventList
+                    past
+                    currentTime={currentTime}
+                    searchQuery={debouncedSearchQuery}
+                    noEventsComponent={
+                      <GroupNoEvents past={true} link={events({}).past({}).$} />
+                    }
+                  />
+                )}
               </Frame>
             </GroupProfilePage>
           </Route>

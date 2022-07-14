@@ -1100,7 +1100,7 @@ __metadata:
     expect-playwright: ^0.8.0
     fast-check: ^2.14.0
     fast-deep-equal: ^3.1.3
-    hast-util-sanitize: ^3.0.2
+    hast-util-sanitize: 4.0.0
     history: ^4
     jest-playwright-jsdom: ^0.0.4
     jest-playwright-preset: 1.7.2
@@ -14423,7 +14423,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"_original@npm:hast-util-sanitize@^3.0.2, hast-util-sanitize@npm:^3.0.2":
+"_original@npm:hast-util-sanitize@^3.0.2":
   version: 3.0.2
   resolution: "hast-util-sanitize@npm:3.0.2"
   dependencies:
@@ -23960,6 +23960,15 @@ __metadata:
     xtend: "npm:^4.0.0"
     zwitch: "npm:^1.0.0"
   checksum: f6d960644f9fbbe0b92d0227b20a24d659cce021d5f9fd218e077154931b4524ee920217b7fd5a45ec2736ec1dee53de9209fe449f6f89454c01d225ff0e7851
+  languageName: node
+  linkType: hard
+
+"hast-util-sanitize@npm:4.0.0":
+  version: 4.0.0
+  resolution: "hast-util-sanitize@npm:4.0.0"
+  dependencies:
+    "@types/hast": ^2.0.0
+  checksum: 92a2adc3ebf7d00321eac8eb5df5f31f4b4b3fbfef6bf3a91a9319595b61e2309f6e115ca42cba7dbf11ebecd04c012373e001a85dbdc2a5b77a868c12710a8f
   languageName: node
   linkType: hard
 

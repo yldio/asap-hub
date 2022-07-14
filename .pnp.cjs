@@ -5288,7 +5288,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "hast-util-sanitize",\
-        "npm:3.0.2"\
+        "npm:4.0.0"\
       ],\
       [\
         "hast-util-to-parse5",\
@@ -11182,7 +11182,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["expect-playwright", "npm:0.8.0"],\
             ["fast-check", "npm:2.14.0"],\
             ["fast-deep-equal", "npm:3.1.3"],\
-            ["hast-util-sanitize", "npm:3.0.2"],\
+            ["hast-util-sanitize", "npm:4.0.0"],\
             ["history", "npm:4.10.1"],\
             ["jest-playwright-jsdom", "npm:0.0.4"],\
             ["jest-playwright-preset", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:1.7.2"],\
@@ -11268,7 +11268,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["expect-playwright", "npm:0.8.0"],\
             ["fast-check", "npm:2.14.0"],\
             ["fast-deep-equal", "npm:3.1.3"],\
-            ["hast-util-sanitize", "npm:3.0.2"],\
+            ["hast-util-sanitize", "npm:4.0.0"],\
             ["history", "npm:4.10.1"],\
             ["jest-playwright-jsdom", "npm:0.0.4"],\
             ["jest-playwright-preset", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:1.7.2"],\
@@ -11358,7 +11358,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["expect-playwright", "npm:0.8.0"],\
             ["fast-check", "npm:2.14.0"],\
             ["fast-deep-equal", "npm:3.1.3"],\
-            ["hast-util-sanitize", "npm:3.0.2"],\
+            ["hast-util-sanitize", "npm:4.0.0"],\
             ["history", "npm:4.10.1"],\
             ["jest-playwright-jsdom", "npm:0.0.4"],\
             ["jest-playwright-preset", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:1.7.2"],\
@@ -11448,7 +11448,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["expect-playwright", "npm:0.8.0"],\
             ["fast-check", "npm:2.14.0"],\
             ["fast-deep-equal", "npm:3.1.3"],\
-            ["hast-util-sanitize", "npm:3.0.2"],\
+            ["hast-util-sanitize", "npm:4.0.0"],\
             ["history", "npm:4.10.1"],\
             ["jest-playwright-jsdom", "npm:0.0.4"],\
             ["jest-playwright-preset", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:1.7.2"],\
@@ -46876,6 +46876,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["hast-util-sanitize", "npm:3.0.2"],\
             ["xtend", "npm:4.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:4.0.0", {\
+          "packageLocation": "./.yarn/cache/hast-util-sanitize-npm-4.0.0-9aa72ecfb9-92a2adc3eb.zip/node_modules/hast-util-sanitize/",\
+          "packageDependencies": [\
+            ["hast-util-sanitize", "npm:4.0.0"],\
+            ["@types/hast", "npm:2.3.1"]\
           ],\
           "linkType": "HARD"\
         }]\

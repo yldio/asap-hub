@@ -105,7 +105,7 @@ export class Squidex<
         }
       }
 
-      throw new GenericError(err);
+      throw new GenericError(err instanceof Error ? err : undefined);
     }
   }
 
@@ -125,7 +125,7 @@ export class Squidex<
         }
       }
 
-      throw new GenericError(err);
+      throw new GenericError(err instanceof Error ? err : undefined);
     }
   }
 
@@ -169,7 +169,7 @@ export class Squidex<
         }
       }
 
-      throw new GenericError(err);
+      throw new GenericError(err instanceof Error ? err : undefined);
     }
   }
 
@@ -200,7 +200,7 @@ export class Squidex<
         }
       }
 
-      throw new GenericError(err);
+      throw new GenericError(err instanceof Error ? err : undefined);
     }
   }
 
@@ -219,7 +219,7 @@ export class Squidex<
         }
       }
 
-      throw new GenericError(err);
+      throw new GenericError(err instanceof Error ? err : undefined);
     }
   }
 
@@ -238,7 +238,7 @@ export class Squidex<
         }
       }
 
-      throw new GenericError(err);
+      throw new GenericError(err instanceof Error ? err : undefined);
     }
   }
 
@@ -246,7 +246,7 @@ export class Squidex<
     try {
       await this.client.delete(`${this.collection}/${id}`).json();
     } catch (err) {
-      throw new GenericError(err);
+      throw new GenericError(err instanceof Error ? err : undefined);
     }
   }
 }

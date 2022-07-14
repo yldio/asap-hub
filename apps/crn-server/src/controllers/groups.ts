@@ -37,7 +37,7 @@ export default class Groups implements GroupController {
   async fetchById(groupId: string): Promise<GroupResponse> {
     const group = await this.groupDataProvider.fetchById(groupId);
     if (!group) {
-      throw new NotFoundError(`group with id ${groupId} not found`);
+      throw new NotFoundError(undefined, `group with id ${groupId} not found`);
     }
 
     return group;
@@ -62,7 +62,7 @@ export default class Groups implements GroupController {
     const user = await this.userDataProvider.fetchById(userId);
 
     if (!user) {
-      throw new NotFoundError('User not found');
+      throw new NotFoundError(undefined, 'User not found');
     }
 
     const teamIds = user.teams.map((team) => team.id);

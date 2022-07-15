@@ -76,7 +76,7 @@ const createAuth0 = (
     ...(auth0User && {
       isAuthenticated: true,
       user: auth0User,
-      getTokenSilently: async () => 'access_token',
+      getTokenSilently: jest.fn().mockResolvedValue('access_token'),
       getIdTokenClaims: async () => ({ __raw: 'id_token' }),
     }),
     ...(auth0Overrides && auth0Overrides(auth0Client, auth0User)),

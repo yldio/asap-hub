@@ -1,4 +1,4 @@
-import type { Auth0Client } from '@auth0/auth0-spa-js';
+import type { Auth0Client, GetTokenSilentlyOptions } from '@auth0/auth0-spa-js';
 import type { UserMetadataResponse, UserResponse } from '@asap-hub/model';
 
 import auth0PubKeys from './pubKeys';
@@ -35,13 +35,15 @@ export type Auth0 = {
   readonly loading: boolean;
   readonly popupOpen: boolean;
   readonly checkSession?: () => Promise<void>;
+  readonly getTokenSilently: (
+    options: GetTokenSilentlyOptions,
+  ) => Promise<string>;
 } & Pick<
   Auth0Client,
   | 'getIdTokenClaims'
   | 'loginWithRedirect'
   | 'loginWithPopup'
   | 'handleRedirectCallback'
-  | 'getTokenSilently'
   | 'getTokenWithPopup'
   | 'logout'
 >;

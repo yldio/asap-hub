@@ -115,7 +115,7 @@ export const LoggedIn: React.FC<{
         ...ctx,
         isAuthenticated: true,
         user: auth0User,
-        getTokenSilently: async () => 'token',
+        getTokenSilently: jest.fn().mockResolvedValue('token'),
         getIdTokenClaims: async () => ({ __raw: 'token' }),
       }}
     >

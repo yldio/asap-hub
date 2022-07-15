@@ -6,9 +6,6 @@ declare global {
   };
 }
 
-// false positives on type definitions
-/* eslint-disable no-unused-vars */
-
 export type User = {
   created_at: unknown;
   email: string;

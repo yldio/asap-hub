@@ -12,6 +12,7 @@ export const researchTagFetchOptionsValidationSchema: JSONSchemaType<FetchResear
         type: 'object',
         properties: {
           entity: {
+            enum: ['Research Output', 'User'],
             type: 'string',
             nullable: true,
           },
@@ -21,6 +22,7 @@ export const researchTagFetchOptionsValidationSchema: JSONSchemaType<FetchResear
           },
         },
         nullable: true,
+        additionalProperties: false,
       },
     },
     additionalProperties: false,

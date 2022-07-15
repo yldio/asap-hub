@@ -1,5 +1,5 @@
+import { FetchOptions } from '@asap-hub/model';
 import Labs from '../../src/controllers/labs';
-import { FetchOptions } from '../../src/utils/types';
 import {
   getLabsResponse,
   getSquidexLabsGraphqlResponse,

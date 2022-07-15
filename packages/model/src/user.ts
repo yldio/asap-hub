@@ -1,4 +1,4 @@
-import { ListResponse } from './common';
+import { FetchOptions, ListResponse } from './common';
 import { LabResponse } from './lab';
 import { TeamRole } from './team';
 
@@ -194,3 +194,15 @@ export interface UserAvatarPostRequest {
 }
 
 export type ListUserResponse = ListResponse<UserResponse>;
+
+export type FetchUsersFilter = {
+  role?: string[];
+  labId?: string[];
+  teamId?: string[];
+  code?: string;
+  hidden?: boolean;
+  onboarded?: boolean;
+  orcid?: string;
+};
+
+export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;

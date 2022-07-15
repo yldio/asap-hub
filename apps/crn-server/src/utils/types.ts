@@ -1,15 +1,5 @@
 import type { Context, EventBridgeEvent, ScheduledEvent } from 'aws-lambda';
 
-export type FetchPaginationOptions = {
-  take?: number;
-  skip?: number;
-};
-
-export type FetchOptions<TFilter = string[]> = {
-  search?: string;
-  filter?: TFilter;
-} & FetchPaginationOptions;
-
 export type GraphqlFetchOptions = {
   top?: number;
   skip?: number;

@@ -497,6 +497,7 @@ __metadata:
     "@types/jest": 26.0.24
     "@types/nock": ^11.1.0
     "@types/node": ^14.14.45
+    "@types/qs": 6.9.7
     "@types/react": 17.0.47
     "@types/react-dom": 17.0.17
     "@types/react-router-dom": ^5.1.7
@@ -515,6 +516,7 @@ __metadata:
     jose: ^2.0.5
     nock: ^13.0.11
     pirates: 4.0.5
+    qs: 6.11.0
     react: ^17.0.2
     react-app-polyfill: 3.0.0
     react-dom: ^17.0.2
@@ -1169,7 +1171,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.18.6
     "@types/qs": 6.9.7
     "@types/react-router-dom": ^5.1.7
-    qs: 6.10.5
+    qs: 6.11.0
     typesafe-routes: ^7.0.2
     typescript: 4.6.4
   peerDependencies:
@@ -32835,12 +32837,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:6.10.5, qs@npm:^6.10.3":
-  version: 6.10.5
-  resolution: "qs@npm:6.10.5"
+"qs@npm:6.11.0":
+  version: 6.11.0
+  resolution: "qs@npm:6.11.0"
   dependencies:
-    side-channel: "npm:^1.0.4"
-  checksum: b3873189a11bcf48445864b3ba66f7a76db0d9d874955d197779f561addfa604884f7b107971526ce1eca02c99bf7d1e47f28a3e7e6e29204d798fb279164226
+    side-channel: ^1.0.4
+  checksum: 6e1f29dd5385f7488ec74ac7b6c92f4d09a90408882d0c208414a34dd33badc1a621019d4c799a3df15ab9b1d0292f97c1dd71dc7c045e69f81a8064e5af7297
   languageName: node
   linkType: hard
 
@@ -32871,6 +32873,15 @@ __metadata:
   dependencies:
     side-channel: "npm:^1.0.4"
   checksum: 00e390dbf98eff4d8ff121b61ab2fe32106852290de99ecd0e40fc76651c4101f43fc6cc8313cb69423563876fc532951b11dda55d2917def05f292258263480
+  languageName: node
+  linkType: hard
+
+"qs@npm:^6.10.3":
+  version: 6.10.5
+  resolution: "qs@npm:6.10.5"
+  dependencies:
+    side-channel: "npm:^1.0.4"
+  checksum: b3873189a11bcf48445864b3ba66f7a76db0d9d874955d197779f561addfa604884f7b107971526ce1eca02c99bf7d1e47f28a3e7e6e29204d798fb279164226
   languageName: node
   linkType: hard
 

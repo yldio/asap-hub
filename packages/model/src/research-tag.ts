@@ -1,4 +1,4 @@
-import { ListResponse } from './common';
+import { FetchOptions, ListResponse } from './common';
 
 export const researchTagEntities = ['Research Output', 'User'] as const;
 export type ResearchTagEntity = typeof researchTagEntities[number];
@@ -31,3 +31,13 @@ export const isResearchTagCategory = (
   category: string,
 ): category is ResearchTagCategory =>
   (researchTagCategories as ReadonlyArray<string>).includes(category);
+
+export type FetchResearchTagsFilter = {
+  type?: string;
+  entity?: ResearchTagEntity;
+};
+
+export type FetchResearchTagsOptions = Omit<
+  FetchOptions<FetchResearchTagsFilter>,
+  'search'
+>;

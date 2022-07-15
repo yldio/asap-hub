@@ -1,4 +1,5 @@
 import {
+  FetchOptions,
   ListTeamDataObject,
   TeamDataObject,
   TeamTool,
@@ -19,7 +20,6 @@ import {
 import { parseGraphQLTeam } from '../entities';
 import { FETCH_TEAM, FETCH_TEAMS } from '../queries/teams.queries';
 import logger from '../utils/logger';
-import { FetchOptions } from '../utils/types';
 
 export interface TeamDataProvider {
   fetchById(id: string): Promise<TeamDataObject | null>;

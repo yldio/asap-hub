@@ -1,7 +1,11 @@
 import uniqBy from 'lodash.uniqby';
-import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
+import {
+  ListGroupResponse,
+  GroupResponse,
+  FetchOptions,
+  FetchPaginationOptions,
+} from '@asap-hub/model';
 import { NotFoundError } from '@asap-hub/errors';
-import { FetchOptions, FetchPaginationOptions } from '../utils/types';
 import { GroupDataProvider } from '../data-providers/groups.data-provider';
 import { UserDataProvider } from '../data-providers/users.data-provider';
 

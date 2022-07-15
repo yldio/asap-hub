@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { User } from '@asap-hub/auth';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 
 import Dashboard from '../Dashboard';
@@ -39,12 +39,11 @@ const renderDashboard = async (user: Partial<User>) => {
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
-  return result;
 };
 
 it('renders dashboard header', async () => {
-  const { findByText } = await renderDashboard({});
-  expect(await findByText(/welcome/i, { selector: 'h1' })).toBeVisible();
+  await renderDashboard({});
+  expect(await screen.findByText(/welcome/i, { selector: 'h1' })).toBeVisible();
 });
 
 it('renders dashboard with news', async () => {
@@ -66,10 +65,9 @@ it('renders dashboard with news', async () => {
     pages: [],
   });
 
-  const { findByText, queryAllByText } = await renderDashboard({
+  await renderDashboard({
     firstName: 'John',
   });
-
-  expect(await findByText(/john/i, { selector: 'h1' })).toBeVisible();
-  expect(queryAllByText(/title/i, { selector: 'h2' }).length).toBe(2);
+  expect(await screen.findByText(/john/i, { selector: 'h1' })).toBeVisible();
+  expect(screen.queryAllByText(/title/i, { selector: 'h4' }).length).toBe(2);
 });

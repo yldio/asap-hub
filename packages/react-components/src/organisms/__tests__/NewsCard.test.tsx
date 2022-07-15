@@ -14,7 +14,7 @@ describe('News', () => {
   it('renders the title', () => {
     const { getByRole } = render(<NewsCard {...newsCardProps} title="Title" />);
     expect(getByRole('heading').textContent).toEqual('Title');
-    expect(getByRole('heading').tagName).toEqual('H2');
+    expect(getByRole('heading').tagName).toEqual('H4');
   });
 
   it('renders short text when present', () => {

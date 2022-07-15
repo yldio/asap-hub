@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
-import { Display } from '../atoms';
+import { Headline2, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
 
 import NewsCard from './NewsCard';
@@ -12,17 +12,19 @@ const styles = css({
   marginTop: `${24 / perRem}em`,
 });
 
-type LatestNewsProps = {
+type NewsSectionProps = {
   readonly title: string;
+  readonly subtitle?: string;
   readonly news: ReadonlyArray<ComponentProps<typeof NewsCard>>;
 };
 
-const NewsSection: React.FC<LatestNewsProps> = ({ news, title }) => (
+const NewsSection: React.FC<NewsSectionProps> = ({ news, title, subtitle }) => (
   <section>
-    <Display styleAsHeading={3}>{title}</Display>
+    <Headline2 styleAsHeading={3}>{title}</Headline2>
+    {subtitle && <Paragraph accent="lead">{subtitle}</Paragraph>}
     <div css={styles}>
-      {news.map((newsAndEvent) => (
-        <NewsCard key={newsAndEvent.id} {...newsAndEvent} />
+      {news.map((newsItem) => (
+        <NewsCard key={newsItem.id} {...newsItem} />
       ))}
     </div>
   </section>

@@ -16,7 +16,7 @@ import {
   RemindersCard,
 } from '../organisms';
 import { perRem } from '../pixels';
-import { Display, Card, Paragraph, Link, Headline3 } from '../atoms';
+import { Card, Paragraph, Link, Headline2 } from '../atoms';
 import { lead } from '..';
 
 const styles = css({
@@ -65,7 +65,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
     <div css={styles}>
       {isEnabled('REMINDERS') && (
         <div>
-          <Headline3>Reminders</Headline3>
+          <Headline2 styleAsHeading={3}>Reminders</Headline2>
           <div css={infoStyles}>
             We will remind you of the most important tasks you need to do.
           </div>
@@ -73,13 +73,13 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         </div>
       )}
       {pages.length ? (
-        <PagesSection title={'Not sure where to start?'} pages={pages} />
+        <PagesSection title="Not sure where to start?" pages={pages} />
       ) : null}
       {news.length ? (
         <NewsSection title="Latest News from ASAP" news={news} />
       ) : null}
       <section>
-        <Display styleAsHeading={3}>You may want to try</Display>
+        <Headline2 styleAsHeading={3}>You may want to try</Headline2>
         <div css={containerStyles}>
           <Card>
             <ul css={listStyles}>

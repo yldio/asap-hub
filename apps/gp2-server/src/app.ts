@@ -75,6 +75,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const dashboardController =
     libs.dashboardController || new Dashboard(squidexGraphqlClient);
 
+  /**
+   * Public routes --->
+   */
   const userController = libs.userController || new Users(userDataProvider);
 
   // Handlers
@@ -91,6 +94,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
 
   const userPublicRoutes = userPublicRouteFactory(userController);
+
+  app.use(userPublicRoutes);
   // Auth
   app.use(authHandler);
 
@@ -98,7 +103,6 @@ export const appFactory = (libs: Libs = {}): Express => {
    * Routes requiring onboarding below
    */
   app.use(dashboardRoutes);
-  app.use(userPublicRoutes);
 
   // Catch all
   app.get('*', async (_req, res) => {

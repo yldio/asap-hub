@@ -1,6 +1,10 @@
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
-import { EventResponse, ListEventResponse } from '@asap-hub/model';
+import {
+  EventResponse,
+  FetchOptions,
+  ListEventResponse,
+} from '@asap-hub/model';
 import {
   RestEvent,
   Event,
@@ -9,7 +13,7 @@ import {
   sanitiseForSquidex,
 } from '@asap-hub/squidex';
 import { parseGraphQLEvent } from '../entities/event';
-import { AllOrNone, FetchOptions } from '../utils/types';
+import { AllOrNone } from '../utils/types';
 
 import {
   FETCH_EVENT,

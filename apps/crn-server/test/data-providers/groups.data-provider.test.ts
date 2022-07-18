@@ -1,7 +1,5 @@
-import {
-  FetchGroupOptions,
-  GroupSquidexDataProvider,
-} from '../../src/data-providers/groups.data-provider';
+import { FetchGroupOptions } from '@asap-hub/model';
+import { GroupSquidexDataProvider } from '../../src/data-providers/groups.data-provider';
 import {
   getGroupDataObject,
   getListGroupResponse,

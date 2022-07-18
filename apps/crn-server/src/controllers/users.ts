@@ -1,5 +1,6 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import {
+  FetchUsersOptions,
   ListUserResponse,
   UserResponse,
   UserUpdateDataObject,
@@ -12,19 +13,6 @@ import {
   UserDataProvider,
 } from '../data-providers/users.data-provider';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
-import { FetchOptions } from '../utils/types';
-
-export type FetchUsersFilter = {
-  role?: string[];
-  labId?: string[];
-  teamId?: string[];
-  code?: string;
-  hidden?: boolean;
-  onboarded?: boolean;
-  orcid?: string;
-};
-
-export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
 
 export interface UserController {
   fetch(options: FetchUsersOptions): Promise<ListUserResponse>;

@@ -1,4 +1,4 @@
-import { ListResponse } from './common';
+import { FetchOptions, ListResponse } from './common';
 import { LabResponse } from './lab';
 
 export const teamRole = [
@@ -56,3 +56,9 @@ export type ListTeamDataObject = ListResponse<TeamDataObject>;
 export type TeamResponse = TeamDataObject;
 
 export type ListTeamResponse = ListResponse<TeamResponse>;
+
+export type FetchTeamsOptions = {
+  // select team IDs of which tools should be returned
+  // leave undefined to return all teams' tools
+  showTeamTools?: string[];
+} & Omit<FetchOptions, 'filter'>;

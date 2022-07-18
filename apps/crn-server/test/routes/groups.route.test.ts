@@ -1,8 +1,7 @@
 import supertest from 'supertest';
 import Boom from '@hapi/boom';
-import { ListEventResponse } from '@asap-hub/model';
+import { FetchOptions, ListEventResponse } from '@asap-hub/model';
 import { appFactory } from '../../src/app';
-import { FetchOptions } from '../../src/utils/types';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { eventControllerMock } from '../mocks/event-controller.mock';

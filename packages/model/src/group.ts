@@ -1,4 +1,4 @@
-import { ListResponse } from './common';
+import { FetchOptions, ListResponse } from './common';
 import { TeamResponse } from './team';
 import { UserResponse } from './user';
 import { CalendarResponse } from './calendar';
@@ -43,3 +43,10 @@ export type ListGroupDataObject = ListResponse<GroupDataObject>;
 export type GroupResponse = GroupDataObject;
 
 export type ListGroupResponse = ListResponse<GroupResponse>;
+
+type GroupFilter = {
+  teamId?: string[];
+  userId?: string;
+};
+
+export type FetchGroupOptions = FetchOptions<GroupFilter>;

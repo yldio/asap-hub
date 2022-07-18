@@ -1,6 +1,10 @@
 import { NotFoundError } from '@asap-hub/errors';
-import { ListTeamResponse, TeamResponse, TeamTool } from '@asap-hub/model';
-import { FetchOptions } from '../utils/types';
+import {
+  FetchTeamsOptions,
+  ListTeamResponse,
+  TeamResponse,
+  TeamTool,
+} from '@asap-hub/model';
 import { TeamDataProvider } from '../data-providers/teams.data-provider';
 
 export interface TeamController {
@@ -16,11 +20,6 @@ type FetchTeamOptions = {
   showTools: boolean;
 };
 
-export type FetchTeamsOptions = {
-  // select team IDs of which tools should be returned
-  // leave undefined to return all teams' tools
-  showTeamTools?: string[];
-} & Omit<FetchOptions, 'filter'>;
 export default class Teams implements TeamController {
   teamDataProvider: TeamDataProvider;
 

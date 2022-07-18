@@ -1,11 +1,11 @@
 import supertest from 'supertest';
 import Boom from '@hapi/boom';
 import Crypto from 'crypto';
-import { UserResponse } from '@asap-hub/model';
+import { FetchOptions, UserResponse } from '@asap-hub/model';
 import { userMock } from '@asap-hub/fixtures';
 import { AuthHandler } from '@asap-hub/server-common';
+import { NotFoundError } from '@asap-hub/errors';
 import { appFactory } from '../../src/app';
-import { FetchOptions } from '../../src/utils/types';
 import {
   fetchExpectation,
   updateAvatarBody,
@@ -15,7 +15,6 @@ import {
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
 import { listGroupsResponse } from '../fixtures/groups.fixtures';
-import { NotFoundError } from '@asap-hub/errors';
 
 describe('/users/ route', () => {
   const authHandlerMock: AuthHandler = (req, _res, next) => {

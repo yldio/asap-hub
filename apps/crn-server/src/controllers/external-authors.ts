@@ -2,6 +2,7 @@ import Boom from '@hapi/boom';
 import {
   ListExternalAuthorResponse,
   ExternalAuthorResponse,
+  FetchOptions,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { parseGraphQLExternalAuthor } from '../entities';
@@ -15,7 +16,6 @@ import {
   FETCH_EXTERNAL_AUTHOR,
   FETCH_EXTERNAL_AUTHORS,
 } from '../queries/external-authors.queries';
-import { FetchOptions } from '../utils/types';
 
 export interface ExternalAuthorsController {
   fetch(options: FetchOptions): Promise<ListExternalAuthorResponse>;

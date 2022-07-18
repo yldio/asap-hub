@@ -1,5 +1,5 @@
 import { JSONSchemaType } from 'ajv';
-import { validateInput } from '.';
+import { validateInput } from './validation';
 
 type UserInviteParameters = {
   code: string;

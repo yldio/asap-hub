@@ -1,8 +1,8 @@
 import { UserResponse } from '@asap-hub/model';
+import { validateUserInviteParameters } from '@asap-hub/server-common';
 import Boom, { isBoom } from '@hapi/boom';
 import { Response, Router } from 'express';
 import { UserController } from '../controllers/user.controller';
-import { validateUserInviteParameters } from '../validation/user.validation';
 
 export const userPublicRouteFactory = (
   userController: UserController,

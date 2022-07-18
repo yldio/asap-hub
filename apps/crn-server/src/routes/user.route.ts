@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import { UserResponse } from '@asap-hub/model';
-import { validateFetchOptions } from '@asap-hub/server-common';
+import {
+  validateFetchOptions,
+  validateUserInviteParameters,
+} from '@asap-hub/server-common';
 import { isUserOnboardable } from '@asap-hub/validation';
 import Boom, { isBoom } from '@hapi/boom';
 import { Response, Router } from 'express';
@@ -10,7 +13,6 @@ import { GroupController } from '../controllers/groups';
 import { UserController } from '../controllers/users';
 import { permissionHandler } from '../middleware/permission-handler';
 import {
-  validateUserInviteParameters,
   validateUserParameters,
   validateUserPatchRequest,
   validateUserPostRequestInput,

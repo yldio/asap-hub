@@ -172,9 +172,9 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                     <Route path={path + tabRoutes.past.template}>
                       <Frame title="Past Events">
                         <Events
+                          past
                           constraint={{ userId: user?.id }}
                           currentTime={currentTime}
-                          past={true}
                           noEventsComponent={
                             <NoEvents
                               past

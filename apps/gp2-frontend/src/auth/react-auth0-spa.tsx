@@ -11,7 +11,6 @@ import {
   Auth0ClientOptions,
   Auth0Client,
   RedirectLoginResult,
-  GetTokenSilentlyOptions,
 } from '@auth0/auth0-spa-js';
 
 const DEFAULT_REDIRECT_CALLBACK = () =>
@@ -93,18 +92,6 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     return result;
   };
 
-  const getTokenSilently = async ({ ...props }: GetTokenSilentlyOptions) => {
-    if (!auth0Client) {
-      throw new Error('Auth0 client not initialized');
-    }
-    const result = await auth0Client.getTokenSilently({
-      ...props,
-      detailedResponse: false,
-    });
-    setUser(await auth0Client.getUser());
-    return result;
-  };
-
   const getSafeAuth0ClientProperty = <T extends keyof Auth0Client>(
     property: T,
   ) =>
@@ -124,14 +111,25 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
       setIsAuthenticated(isAuthenticated);
     }
   };
+
+  const refreshUser = async () => {
+    if (!auth0Client) {
+      throw new Error('Auth0 client not initialized');
+    }
+
+    setUser(await auth0Client.getUser());
+  };
+
   const auth0: Auth0 = {
     isAuthenticated,
     user,
     loading,
     popupOpen,
+    refreshUser,
     loginWithPopup,
     handleRedirectCallback,
-    getTokenSilently,
+    getTokenSilently:
+      getSafeAuth0ClientProperty('getTokenSilently').bind(auth0Client),
     getIdTokenClaims:
       getSafeAuth0ClientProperty('getIdTokenClaims').bind(auth0Client),
     loginWithRedirect:

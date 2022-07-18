@@ -1,18 +1,18 @@
+import { createHash } from 'crypto';
 import { RequestHandler } from 'express';
 import Boom from '@hapi/boom';
+import { UserResponse } from '@asap-hub/model';
 import Intercept from 'apr-intercept';
 import { Logger } from '../utils/logger';
 import { DecodeToken } from '../utils/validate-token';
-
-type AuthHandlerConfig = {
-  origin: string;
-};
+import { CacheClient } from '../clients/cache.client';
 
 export const authHandlerFactory =
   (
     decodeToken: DecodeToken,
+    fetchByCode: (code: string) => Promise<UserResponse>,
+    cacheClient: CacheClient<UserResponse>,
     logger: Logger,
-    config: AuthHandlerConfig,
   ): RequestHandler =>
   async (req, _res, next) => {
     const { headers } = req;
@@ -34,7 +34,24 @@ export const authHandlerFactory =
       throw Boom.unauthorized();
     }
 
-    const user = payload[`${config.origin}/user`];
+    if (!payload.sub) {
+      logger.error(err, 'Missing sub from JWT token');
+      throw Boom.unauthorized();
+    }
+
+    const tokenHash = createHash('sha256').update(token).digest('hex');
+    let user: UserResponse | null = cacheClient.get(tokenHash);
+
+    if (user === null) {
+      try {
+        user = await fetchByCode(payload.sub);
+      } catch (error) {
+        logger.error(error, 'Error fetching user details');
+        throw Boom.unauthorized();
+      }
+
+      cacheClient.set(tokenHash, user);
+    }
 
     if (!user || typeof user === 'string') {
       logger.error('User payload not found');

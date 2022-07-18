@@ -1,4 +1,5 @@
 export const appName = process.env.SQUIDEX_APP_NAME || 'asap-local';
+export const auth0Audience = process.env.AUTH0_AUDIENCE || '';
 export const auth0ClientId = process.env.AUTH0_CLIENT_ID || '';
 export const baseUrl = process.env.SQUIDEX_BASE_URL || 'http://localhost:4004';
 export const clientId = process.env.SQUIDEX_CLIENT_ID || '';

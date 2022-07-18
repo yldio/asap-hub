@@ -43,6 +43,7 @@ export const Auth0Provider: React.FC<{
         loading: !auth0Client,
         popupOpen: false,
         isAuthenticated: false,
+        refreshUser: async () => {},
         getIdTokenClaims: auth0Client
           ? (...args) => auth0Client.getIdTokenClaims(...args)
           : notReady('getIdTokenClaims'),

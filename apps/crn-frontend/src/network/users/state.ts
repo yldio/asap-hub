@@ -108,7 +108,7 @@ export const useUsers = (options: GetListOptions) => {
 export const useUserById = (id: string) => useRecoilValue(userState(id));
 
 export const usePatchUserById = (id: string) => {
-  const { getTokenSilently } = useAuth0();
+  const { getTokenSilently, refreshUser } = useAuth0();
   const authorization = useRecoilValue(authorizationState);
   const setPatchedUser = useSetRecoilState(patchedUserState(id));
   return async (patch: UserPatchRequest) => {
@@ -117,11 +117,13 @@ export const usePatchUserById = (id: string) => {
       redirect_uri: window.location.origin,
       ignoreCache: true,
     });
+
+    await refreshUser();
   };
 };
 
 export const usePatchUserAvatarById = (id: string) => {
-  const { getTokenSilently } = useAuth0();
+  const { getTokenSilently, refreshUser } = useAuth0();
   const authorization = useRecoilValue(authorizationState);
   const setSetPatchedUserState = useSetRecoilState(patchedUserState(id));
   return async (avatar: string) => {
@@ -130,6 +132,8 @@ export const usePatchUserAvatarById = (id: string) => {
       redirect_uri: window.location.origin,
       ignoreCache: true,
     });
+
+    await refreshUser();
 
     setSetPatchedUserState(user);
   };

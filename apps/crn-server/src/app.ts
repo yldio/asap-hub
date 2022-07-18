@@ -1,3 +1,4 @@
+import { UserResponse } from '@asap-hub/model';
 import {
   AuthHandler,
   authHandlerFactory,
@@ -6,6 +7,7 @@ import {
   getHttpLogger,
   HttpLogger,
   Logger,
+  MemoryCacheClient,
 } from '@asap-hub/server-common';
 import {
   InputCalendar,
@@ -26,7 +28,7 @@ import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import 'express-async-errors';
 import { Tracer } from 'opentracing';
-import { origin, auth0ClientId, baseUrl, appName } from './config';
+import { baseUrl, appName, auth0Audience } from './config';
 import Calendars, { CalendarController } from './controllers/calendars';
 import Dashboard, { DashboardController } from './controllers/dashboard';
 import Discover, { DiscoverController } from './controllers/discover';
@@ -91,7 +93,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const errorHandler = errorHandlerFactory();
 
   // Clients
-  const decodeToken = decodeTokenFactory(auth0ClientId);
+  const decodeToken = decodeTokenFactory(auth0Audience);
   const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
     appName,
     baseUrl,
@@ -132,6 +134,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     'external-authors',
     { appName, baseUrl },
   );
+  const userResponseCacheClient = new MemoryCacheClient<UserResponse>();
 
   // Data Providers
   const assetDataProvider =
@@ -177,7 +180,13 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   // Handlers
   const authHandler =
-    libs.authHandler || authHandlerFactory(decodeToken, logger, { origin });
+    libs.authHandler ||
+    authHandlerFactory(
+      decodeToken,
+      userController.fetchByCode.bind(userController),
+      userResponseCacheClient,
+      logger,
+    );
   const tracingHandler = tracingHandlerFactory(libs.tracer);
   const sentryTransactionIdHandler =
     libs.sentryTransactionIdHandler || sentryTransactionIdMiddleware;

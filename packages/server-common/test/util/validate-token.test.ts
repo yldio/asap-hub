@@ -1,13 +1,13 @@
-import { auth0PubKeys } from '@asap-hub/auth';
 import jwt from 'jsonwebtoken';
+import { auth0PubKeys } from '@asap-hub/auth';
 import { idToken, getToken } from './validate-token.fixtures';
 import { decodeTokenFactory } from '../../src';
 
 jest.mock('@asap-hub/auth');
 const authMock = jest.requireMock('@asap-hub/auth');
 const originalAuth0PubKeys = auth0PubKeys;
-const mockAuth0ClientId = 'mock-auth0-client-id';
-const decodeToken = decodeTokenFactory(mockAuth0ClientId);
+const mockAuthAudience = 'mock-auth0-audience';
+const decodeToken = decodeTokenFactory(mockAuthAudience);
 
 describe('Validate token', () => {
   const token = getToken();
@@ -55,22 +55,50 @@ describe('Validate token', () => {
     await expect(decodeToken(token)).rejects.toThrow('jwt expired');
   });
 
-  test('Should throw when clientID doesnt match', async () => {
+  test('Should throw when audience is missing', async () => {
+    const idTokenMissingAudience = {
+      ...idToken,
+      aud: undefined,
+    };
+
     jest
       .spyOn(jwt, 'verify')
-      .mockImplementation((t, f, o, cb) => cb && cb(null, idToken));
+      .mockImplementation(
+        (t, f, o, cb) => cb && cb(null, idTokenMissingAudience),
+      );
+
+    await expect(decodeToken(token)).rejects.toThrow('Invalid JWT token');
+  });
+
+  test('Should throw when audience does not match', async () => {
+    const idTokenInvalidAudience = {
+      ...idToken,
+      aud: ['some-other-audience'],
+    };
+
+    jest
+      .spyOn(jwt, 'verify')
+      .mockImplementation(
+        (t, f, o, cb) => cb && cb(null, idTokenInvalidAudience),
+      );
 
     await expect(decodeToken(token)).rejects.toThrow(
-      'aud field doesnt match Auth0 ClientID',
+      'Token verification: aud field doesnt contain the API Audience',
     );
   });
 
   test('Should return when id_token is valid', async () => {
-    const expected = { ...idToken, aud: mockAuth0ClientId };
+    const idTokenValidAudience = {
+      ...idToken,
+      aud: [mockAuthAudience],
+    };
+
     jest
       .spyOn(jwt, 'verify')
-      .mockImplementation((t, f, o, cb) => cb && cb(null, expected));
+      .mockImplementation(
+        (t, f, o, cb) => cb && cb(null, idTokenValidAudience),
+      );
 
-    expect(await decodeToken(token)).toBe(expected);
+    expect(await decodeToken(token)).toBe(idTokenValidAudience);
   });
 });

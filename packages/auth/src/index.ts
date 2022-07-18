@@ -46,7 +46,7 @@ export type Auth0 = {
   readonly refreshUser: () => Promise<void>;
   readonly checkSession?: () => Promise<void>;
   readonly getTokenSilently: (
-    options: GetTokenSilentlyOptions,
+    options?: GetTokenSilentlyOptions,
   ) => Promise<string>;
 } & Pick<
   Auth0Client,

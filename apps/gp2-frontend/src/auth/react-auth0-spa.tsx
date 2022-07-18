@@ -11,7 +11,6 @@ import {
   Auth0ClientOptions,
   Auth0Client,
   RedirectLoginResult,
-  GetTokenSilentlyOptions,
 } from '@auth0/auth0-spa-js';
 
 const DEFAULT_REDIRECT_CALLBACK = () =>

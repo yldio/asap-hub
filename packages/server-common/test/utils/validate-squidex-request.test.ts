@@ -1,5 +1,5 @@
-import validateRequest from '../../src/utils/validate-squidex-request';
 import Boom from '@hapi/boom';
+import { validateSquidexRequest } from '../../src/utils/validate-squidex-request';
 
 const webhookPayload = {
   type: 'NewsCreated',
@@ -29,36 +29,46 @@ const webhookPayload = {
 };
 
 describe('Verifies Squidex webhook payload signature', () => {
+  const squidexSharedSecret = 'squidex_shared_secret';
   test('throws 403 when X-Signature header is not defined', async () => {
     expect(() =>
-      validateRequest({
-        method: 'post',
-        headers: {},
-        payload: webhookPayload,
-      }),
+      validateSquidexRequest(
+        {
+          method: 'post',
+          headers: {},
+          payload: webhookPayload,
+        },
+        squidexSharedSecret,
+      ),
     ).toThrow(Boom.unauthorized());
   });
 
   test('throws 401 when X-Signature header does not match', async () => {
     expect(() =>
-      validateRequest({
-        method: 'post',
-        headers: {
-          'x-signature': 'invalidSignature',
+      validateSquidexRequest(
+        {
+          method: 'post',
+          headers: {
+            'x-signature': 'invalidSignature',
+          },
+          payload: webhookPayload,
         },
-        payload: webhookPayload,
-      }),
+        squidexSharedSecret,
+      ),
     ).toThrow(Boom.forbidden());
   });
 
   test('returns true when signature is valid', async () => {
-    const res = validateRequest({
-      method: 'post',
-      headers: {
-        'x-signature': 'JXApQoo8MlxD0FAV6+gZRMulLll9HnjDLgZN41wLEH4=',
+    const res = validateSquidexRequest(
+      {
+        method: 'post',
+        headers: {
+          'x-signature': 'JXApQoo8MlxD0FAV6+gZRMulLll9HnjDLgZN41wLEH4=',
+        },
+        payload: webhookPayload,
       },
-      payload: webhookPayload,
-    });
+      squidexSharedSecret,
+    );
     expect(res).toBe(true);
   });
 });

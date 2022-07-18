@@ -5,6 +5,7 @@ import {
   ResearchOutputPutRequest,
   ResearchOutputResponse,
 } from '@asap-hub/model';
+import { DeepWriteable } from '@asap-hub/server-common';
 import {
   InputResearchOutput,
   ResearchOutput,
@@ -20,7 +21,6 @@ import {
   ResearchOutputUpdateData,
 } from '../../src/controllers/research-outputs';
 import { ResearchOutputEvent } from '../../src/handlers/event-bus';
-import { DeepWriteable } from '../../src/utils/types';
 import { createEventBridgeEventMock } from '../helpers/events';
 import { getSquidexGraphqlTeam } from './teams.fixtures';
 import {

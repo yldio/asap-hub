@@ -1,14 +1,11 @@
-import { EventBridgeEvent } from 'aws-lambda';
-import { RestEvent, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
-import { isBoom } from '@hapi/boom';
 import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import logger from '../../utils/logger';
-import Event, { EventController } from '../../controllers/events';
-import { EventEvent, EventPayload } from '../event-bus';
-import { EventBridgeHandler } from '../../utils/types';
+import { EventBridgeHandler } from '@asap-hub/server-common';
+import { RestEvent, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
+import { isBoom } from '@hapi/boom';
+import { EventBridgeEvent } from 'aws-lambda';
 import {
   algoliaApiKey,
   algoliaAppId,
@@ -16,7 +13,10 @@ import {
   appName,
   baseUrl,
 } from '../../config';
+import Event, { EventController } from '../../controllers/events';
 import { getAuthToken } from '../../utils/auth';
+import logger from '../../utils/logger';
+import { EventEvent, EventPayload } from '../event-bus';
 
 export const indexEventHandler =
   (

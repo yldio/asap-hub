@@ -1,3 +1,4 @@
+import { EventBridgeHandler } from '@asap-hub/server-common';
 import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { appName, baseUrl } from '../../config';
 import Users, { UserController } from '../../controllers/users';
@@ -5,7 +6,6 @@ import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provi
 import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
-import { EventBridgeHandler } from '../../utils/types';
 import { UserEvent, UserPayload } from '../event-bus';
 
 export const syncOrcidUserHandler =

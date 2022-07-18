@@ -1,6 +1,6 @@
 import { userDegree, UserPatchRequest } from '@asap-hub/model';
+import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
-import { validateInput } from '.';
 
 const userPatchRequestValidationSchema: JSONSchemaType<UserPatchRequest> = {
   type: 'object',

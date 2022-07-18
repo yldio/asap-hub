@@ -1,15 +1,15 @@
+import { validateSquidexRequest } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { WebhookPayload } from '@asap-hub/squidex';
 import { EventBridge } from 'aws-sdk';
-import { eventBus, eventSource } from '../../config';
+import { eventBus, eventSource, squidexSharedSecret } from '../../config';
 import logger from '../../utils/logger';
-import validateRequest from '../../utils/validate-squidex-request';
 
 export const squidexWebhookFactory = (
   eventBridge: EventBridge,
 ): lambda.Handler =>
   lambda.http(async (request: lambda.Request<WebhookPayload<unknown>>) => {
-    await validateRequest(request);
+    await validateSquidexRequest(request, squidexSharedSecret);
 
     const { type } = request.payload;
     logger.debug(`Event type ${type}`);

@@ -1,5 +1,5 @@
+import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
-import { validateInput } from '.';
 
 type GroupParameters = {
   groupId: string;

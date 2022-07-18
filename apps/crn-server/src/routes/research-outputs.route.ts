@@ -2,11 +2,11 @@ import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
+import { validateFetchOptions } from '@asap-hub/server-common';
 import { hasCreateUpdateResearchOutputPermissions } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import { ResearchOutputController } from '../controllers/research-outputs';
-import { validateFetchOptions } from '../validation';
 import {
   validateResearchOutputParameters,
   validateResearchOutputPostRequestParameters,

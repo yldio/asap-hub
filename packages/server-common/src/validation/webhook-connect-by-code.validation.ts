@@ -1,5 +1,5 @@
 import { JSONSchemaType } from 'ajv';
-import { validateInput } from './index';
+import { validateInput } from '.';
 
 type Body = {
   code: string;
@@ -14,7 +14,7 @@ const bodySchema: JSONSchemaType<Body> = {
   required: ['code', 'userId'],
   additionalProperties: false,
 };
-export const validateBody = validateInput(bodySchema, {
+export const validateWebhookConnectByCodeBody = validateInput(bodySchema, {
   skipNull: false,
   coerce: true,
 });

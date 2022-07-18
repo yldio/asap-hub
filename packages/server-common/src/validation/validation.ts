@@ -9,6 +9,15 @@ const ajvCoerced = new Ajv({ coerceTypes: 'array', useDefaults: true });
 addFormats(ajv, ['date-time']);
 addFormats(ajvCoerced, ['date-time']);
 
+// AJV requires setting every optional property nullable in the validatio schema
+// however marking it as nullable does not enforce the null types
+// The below wrapper-type will make every optional property nullable too
+// see: https://github.com/ajv-validator/ajv/issues/1664
+const validate = <T>(
+  ajvValidation: ValidateFunction<T>,
+  data: Record<string, unknown>,
+): data is NullableOptionalProperties<T> => ajvValidation(data);
+
 // The below has to be declared as a function due to:
 // https://github.com/ajv-validator/ajv/issues/1814
 export function validateInput<T, B extends boolean>(
@@ -49,15 +58,6 @@ export function validateInput<T>(
     throw Boom.badRequest(`Validation error`, errors);
   };
 }
-
-// AJV requires setting every optional property nullable in the validatio schema
-// however marking it as nullable does not enforce the null types
-// The below wrapper-type will make every optional property nullable too
-// see: https://github.com/ajv-validator/ajv/issues/1664
-const validate = <T>(
-  ajvValidation: ValidateFunction<T>,
-  data: Record<string, unknown>,
-): data is NullableOptionalProperties<T> => ajvValidation(data);
 
 export const fetchOptionsValidationSchema: JSONSchemaType<FetchOptions> = {
   type: 'object',

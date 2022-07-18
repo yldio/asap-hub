@@ -1,6 +1,9 @@
+import {
+  fetchOptionsValidationSchema,
+  validateInput,
+} from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
 import { FetchEventsOptions } from '../controllers/events';
-import { validateInput, fetchOptionsValidationSchema } from '.';
 
 const eventFetchValidationSchema: JSONSchemaType<FetchEventsOptions> = {
   type: 'object',

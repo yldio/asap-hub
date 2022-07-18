@@ -1,6 +1,6 @@
 import { TeamPatchRequest } from '@asap-hub/model';
+import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
-import { validateInput } from '.';
 
 type TeamParameters = {
   teamId: string;

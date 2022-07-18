@@ -2,6 +2,7 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
+import { EventBridgeHandler } from '@asap-hub/server-common';
 import {
   RestExternalAuthor,
   RestResearchOutput,
@@ -9,12 +10,6 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import { TeamEvent, TeamPayload } from '../event-bus';
-import ResearchOutputs, {
-  ResearchOutputController,
-} from '../../controllers/research-outputs';
-import logger from '../../utils/logger';
-import { EventBridgeHandler } from '../../utils/types';
 import {
   algoliaApiKey,
   algoliaAppId,
@@ -22,7 +17,12 @@ import {
   appName,
   baseUrl,
 } from '../../config';
+import ResearchOutputs, {
+  ResearchOutputController,
+} from '../../controllers/research-outputs';
 import { getAuthToken } from '../../utils/auth';
+import logger from '../../utils/logger';
+import { TeamEvent, TeamPayload } from '../event-bus';
 
 export const indexResearchOutputByTeamHandler =
   (

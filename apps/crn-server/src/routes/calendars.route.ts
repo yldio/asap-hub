@@ -1,6 +1,6 @@
+import { validateFetchPaginationOptions } from '@asap-hub/server-common';
 import { Router } from 'express';
 import { CalendarController } from '../controllers/calendars';
-import { validateFetchPaginationOptions } from '../validation';
 
 export const calendarRouteFactory = (
   calendarController: CalendarController,

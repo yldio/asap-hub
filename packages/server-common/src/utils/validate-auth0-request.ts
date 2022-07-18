@@ -1,8 +1,10 @@
-import Boom from '@hapi/boom';
 import { framework as lambda } from '@asap-hub/services-common';
-import { auth0SharedSecret } from '../config';
+import Boom from '@hapi/boom';
 
-export default function validateRequest(request: lambda.Request): boolean {
+export function validateAuth0Request(
+  request: lambda.Request,
+  auth0SharedSecret: string,
+): boolean {
   const headers = request.headers as {
     authorization: string;
   };

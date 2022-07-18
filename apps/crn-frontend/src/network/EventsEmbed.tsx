@@ -13,6 +13,7 @@ type EventsEmbedProps = {
   readonly noEventsComponent?: React.ReactNode;
   readonly events?: ListEventResponse;
 };
+
 const EventsEmbed: React.FC<EventsEmbedProps> = ({
   currentTime,
   constraint,
@@ -67,6 +68,7 @@ const EventsDisplay: React.FC<EventsDisplayProps> = ({
   past,
   searchQuery,
   constraint,
+  noEventsComponent,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const options = getEventListOptions(currentTime, {
@@ -87,6 +89,7 @@ const EventsDisplay: React.FC<EventsDisplayProps> = ({
       renderPageHref={renderPageHref}
       numberOfPages={numberOfPages}
       events={items}
+      noEventsComponent={noEventsComponent}
     />
   );
 };

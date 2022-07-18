@@ -156,13 +156,14 @@ describe('the past events tab', () => {
       {
         ...createGroupResponse(),
         id: '42',
+        name: 'test',
       },
       undefined,
       async () => createListEventResponse(0),
     );
     userEvent.click(await findByText(/past/i, { selector: 'nav a *' }));
     expect(
-      await findByText(/This group doesn’t have any past events!/i),
+      await findByText(/test doesn’t have any past events!/i),
     ).toBeVisible();
   });
 });

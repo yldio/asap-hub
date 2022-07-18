@@ -63,6 +63,7 @@ const propsViewOnly = (): Omit<
       { id: 'cd7be4904', name: 'Manchester' },
       { id: 'cd7be4905', name: 'Glasgow' },
     ],
+    sharedOutputsCount: 0,
   };
 };
 const propsEditable = (): ReturnType<typeof propsViewOnly> => ({

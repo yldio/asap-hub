@@ -87,7 +87,6 @@ export {
   GroupCard,
   GroupInformation,
   GroupMembersSection,
-  GroupNoEvents,
   GroupTools,
   HelpSection,
   JoinEvent,

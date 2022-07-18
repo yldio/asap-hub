@@ -16,7 +16,8 @@
     "test",
     "test/**/*.json",
     "@types/**/*.d.ts",
-    "serverless.ts"
+    "serverless.ts",
+    "../../packages/server-common/src/validation/user.validation.ts"
   ],
   "references": [
     { "path": "../../packages/errors" },

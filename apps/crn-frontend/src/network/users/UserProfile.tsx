@@ -2,7 +2,7 @@ import { Frame } from '@asap-hub/frontend-utils';
 import {
   NotFoundPage,
   UserProfilePage,
-  UserNoEvents,
+  NoEvents,
 } from '@asap-hub/react-components';
 import {
   ToastContext,
@@ -158,9 +158,10 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                           currentTime={currentTime}
                           past={false}
                           noEventsComponent={
-                            <UserNoEvents
-                              past={false}
+                            <NoEvents
+                              displayName={user.firstName}
                               link={events({}).upcoming({}).$}
+                              type="user"
                             />
                           }
                         />
@@ -175,9 +176,11 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                           currentTime={currentTime}
                           past={true}
                           noEventsComponent={
-                            <UserNoEvents
-                              past={true}
+                            <NoEvents
+                              past
+                              displayName={user.firstName}
                               link={events({}).past({}).$}
+                              type="user"
                             />
                           }
                         />

@@ -1,60 +1,40 @@
 import { css } from '@emotion/react';
-import { getButtonStyles } from '../button';
 import { calendarIcon } from '../icons';
 import { perRem } from '../pixels';
-import { lead, charcoal } from '../colors';
-
-const titleStyles = css({
-  padding: '15px',
-  fontWeight: 'bold',
-  fontSize: `${27 / perRem}em`,
-  margin: 0,
-});
+import { charcoal, Headline4, Link, Paragraph } from '..';
 
 const iconStyles = css({
-  '> svg': {
-    width: '40px',
-    height: '40px',
-
-    '> g': {
-      stroke: charcoal.rgb,
-    },
+  svg: {
+    width: `${40 / perRem}em`,
+    height: `${40 / perRem}em`,
+    stroke: charcoal.rgb,
   },
 });
-
-const exploreEventsStyles = css(
-  getButtonStyles({ primary: true, stretch: false }),
-  {
-    textDecoration: 'none',
-    paddingLeft: `${33 / perRem}em`,
-    paddingRight: `${33 / perRem}em`,
-    paddingTop: `${15 / perRem}em`,
-    paddingBottom: `${15 / perRem}em`,
-    marginTop: `${15 / perRem}em`,
-  },
-);
 
 const NoEvents: React.FC<{
   displayName: string;
   past?: boolean;
   link: string;
-  type: 'team' | 'group';
-}> = ({ displayName, past, link, type }) => (
-  <main css={{ textAlign: 'center' }}>
-    <span css={iconStyles}>{calendarIcon}</span>
-    <h4 css={titleStyles}>
-      {displayName} doesn’t have any {past ? ' past ' : ' upcoming '} events!
-    </h4>
-    <span css={{ color: lead.rgb }}>
-      It looks like this {type.toLowerCase()} will not speak at any events. In
-      the meantime, try exploring other {past ? ' past ' : ' upcoming '} events
-      on the Hub.
-    </span>
-    <br />
-    <a href={link} css={exploreEventsStyles}>
-      Explore {past ? ' Past ' : ' Upcoming '} Events
-    </a>
-  </main>
-);
+  type: 'team' | 'group' | 'user';
+}> = ({ displayName, past, link, type }) => {
+  const eventPeriod = past ? 'Past' : 'Upcoming';
+  const lowerEventPeriod = eventPeriod.toLocaleLowerCase();
+
+  return (
+    <main css={{ textAlign: 'center' }}>
+      <span css={iconStyles}>{calendarIcon}</span>
+      <Headline4>
+        {displayName} doesn’t have any {lowerEventPeriod} events!
+      </Headline4>
+      <Paragraph accent="lead">
+        It looks like this {type.toLowerCase()} will not speak at any events. In
+        the meantime, try exploring other {lowerEventPeriod} events on the Hub.
+      </Paragraph>
+      <Link href={link} buttonStyle primary>
+        {`Explore & ${eventPeriod} Events`}
+      </Link>
+    </main>
+  );
+};
 
 export default NoEvents;

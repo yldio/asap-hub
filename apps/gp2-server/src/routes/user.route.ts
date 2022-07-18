@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-
 import { UserResponse } from '@asap-hub/model';
 import Boom, { isBoom } from '@hapi/boom';
 import { Response, Router } from 'express';

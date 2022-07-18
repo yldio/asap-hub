@@ -20,7 +20,6 @@ import 'express-async-errors';
 import {
   appName,
   auth0Audience,
-  auth0ClientId,
   baseUrl,
   clientId,
   clientSecret,
@@ -67,10 +66,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userResponseCacheClient = new MemoryCacheClient<UserResponse>();
 
   // Data Providers
-  const userDataProvider =
-    libs.userDataProvider ||
-    new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
-  const decodeToken = decodeTokenFactory(auth0ClientId);
 
   const userDataProvider =
     libs.userDataProvider ||
@@ -79,7 +74,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Controllers
   const dashboardController =
     libs.dashboardController || new Dashboard(squidexGraphqlClient);
-  const userController = libs.userController || new Users(userDataProvider);
 
   const userController = libs.userController || new Users(userDataProvider);
 

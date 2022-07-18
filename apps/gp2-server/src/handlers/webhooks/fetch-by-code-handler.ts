@@ -1,11 +1,11 @@
+import { ValidationError } from '@asap-hub/errors';
 import { framework as lambda } from '@asap-hub/services-common';
 import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
-import { ValidationError } from '@asap-hub/errors';
 import { appName, baseUrl } from '../../config';
-import validateRequest from '../../utils/validate-auth0-request';
 import Users, { UserController } from '../../controllers/user.controller';
+import UserSquidexDataProvider from '../../data-providers/users.data-provider';
 import { getAuthToken } from '../../utils/auth';
-import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
+import validateRequest from '../../utils/validate-auth0-request';
 
 export const fetchUserByCodeHandlerFactory = (
   userController: UserController,

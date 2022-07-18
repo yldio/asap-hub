@@ -100,7 +100,7 @@ export class AlgoliaSearchClient {
     const options: SearchOptions = {
       ...requestOptions,
       filters: requestOptions?.filters
-        ? `(${requestOptions.filters}) AND (${entityTypesFilter})`
+        ? `${requestOptions.filters} AND (${entityTypesFilter})`
         : entityTypesFilter,
     };
 

@@ -102,7 +102,7 @@
     "@graphql-typed-document-node/core": "3.1.1",
     "@serverless/typescript": "3.19.0",
     "@types/apr-intercept": "workspace:*",
-    "@types/aws-lambda": "8.10.100",
+    "@types/aws-lambda": "8.10.101",
     "@types/babel__preset-env": "^7",
     "@types/chance": "1.1.3",
     "@types/cors": "2.8.12",

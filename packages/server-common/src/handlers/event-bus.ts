@@ -5,6 +5,7 @@ export type SquidexEntityEvent =
   | 'Unpublished'
   | 'Deleted';
 
+export type LabEvent = `Labs${SquidexEntityEvent}`;
 export type UserEvent = `Users${SquidexEntityEvent}`;
 
 export type UserPayload = {

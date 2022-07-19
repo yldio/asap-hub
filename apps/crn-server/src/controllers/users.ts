@@ -6,6 +6,7 @@ import {
   UserUpdateDataObject,
   UserUpdateRequest,
 } from '@asap-hub/model';
+import { UserController as BaseController } from '@asap-hub/server-common';
 import Intercept from 'apr-intercept';
 import { AssetDataProvider } from '../data-providers/assets.data-provider';
 import {
@@ -13,12 +14,10 @@ import {
   UserDataProvider,
 } from '../data-providers/users.data-provider';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
-
-export interface UserController {
+export interface UserController extends BaseController {
   fetch(options: FetchUsersOptions): Promise<ListUserResponse>;
-  fetchById(id: string): Promise<UserResponse>;
   fetchByCode(code: string): Promise<UserResponse>;
-  connectByCode(welcomeCode: string, userId: string): Promise<UserResponse>;
+  fetchById(id: string): Promise<UserResponse>;
   update(id: string, update: UserUpdateRequest): Promise<UserResponse>;
   updateAvatar(
     id: string,

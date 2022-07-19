@@ -1,11 +1,14 @@
-import { SquidexEntityEvent, UserEvent } from '@asap-hub/server-common';
+import {
+  LabEvent,
+  SquidexEntityEvent,
+  UserEvent,
+} from '@asap-hub/server-common';
 import { RestCalendar } from '@asap-hub/squidex';
 
 export type CalendarEvent = `Calendars${SquidexEntityEvent}`;
 export type EventEvent = `Events${SquidexEntityEvent}`;
 export type ExternalAuthorEvent = `ExternalAuthors${SquidexEntityEvent}`;
 export type GroupEvent = `Groups${SquidexEntityEvent}`;
-export type LabEvent = `Labs${SquidexEntityEvent}`;
 export type TeamEvent = `Teams${SquidexEntityEvent}`;
 export type ResearchOutputEvent = `ResearchOutputs${SquidexEntityEvent}`;
 

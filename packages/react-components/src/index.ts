@@ -71,6 +71,7 @@ export {
   UserMenuButton,
   UsersList,
   UtilityBar,
+  UserProfilePersonalText,
 } from './molecules';
 export {
   AdditionalMaterials,

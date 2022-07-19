@@ -1,7 +1,4 @@
-import {
-  ListGroupResponse,
-  GroupResponse,
-} from '@asap-hub/model';
+import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
 import {
   createListGroupResponse,
   createGroupResponse,

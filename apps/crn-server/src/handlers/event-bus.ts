@@ -1,11 +1,5 @@
+import { SquidexEntityEvent, UserEvent } from '@asap-hub/server-common';
 import { RestCalendar } from '@asap-hub/squidex';
-
-export type SquidexEntityEvent =
-  | 'Created'
-  | 'Published'
-  | 'Updated'
-  | 'Unpublished'
-  | 'Deleted';
 
 export type CalendarEvent = `Calendars${SquidexEntityEvent}`;
 export type EventEvent = `Events${SquidexEntityEvent}`;
@@ -13,7 +7,6 @@ export type ExternalAuthorEvent = `ExternalAuthors${SquidexEntityEvent}`;
 export type GroupEvent = `Groups${SquidexEntityEvent}`;
 export type LabEvent = `Labs${SquidexEntityEvent}`;
 export type TeamEvent = `Teams${SquidexEntityEvent}`;
-export type UserEvent = `Users${SquidexEntityEvent}`;
 export type ResearchOutputEvent = `ResearchOutputs${SquidexEntityEvent}`;
 
 export type EventBusEvent =
@@ -88,20 +81,6 @@ export type TeamPayload = {
     dataOld?: {
       outputs: { iv: string[] };
     };
-  };
-};
-
-export type UserPayload = {
-  type: UserEvent;
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: SquidexEntityEvent;
-    id: string;
-    created: string;
-    lastModified: string;
-    version: number;
-    data: { [x: string]: { iv: unknown } | null };
-    dataOld?: { [x: string]: { iv: unknown } | null };
   };
 };
 

@@ -11590,6 +11590,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/errors", "workspace:packages/errors"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],\
+            ["@asap-hub/message-templates", "workspace:packages/message-templates"],\
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@asap-hub/services-common", "workspace:packages/services-common"],\
             ["@babel/runtime-corejs3", "npm:7.18.6"],\
@@ -11605,6 +11606,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ajv-formats", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:2.1.1"],\
             ["apr-intercept", "npm:3.0.4"],\
             ["aws-lambda", "npm:1.0.7"],\
+            ["aws-sdk", "npm:2.1176.0"],\
             ["express", "npm:4.17.1"],\
             ["express-async-errors", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1"],\
             ["got", "npm:11.8.5"],\

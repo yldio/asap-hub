@@ -1,4 +1,4 @@
-import { UserPayload } from '@asap-hub/server-common';
+import { SendEmail, UserPayload } from '@asap-hub/server-common';
 import { RestUser, SquidexRest, SquidexRestClient } from '@asap-hub/squidex';
 import * as Sentry from '@sentry/serverless';
 import { EventBridgeEvent } from 'aws-lambda';
@@ -17,7 +17,7 @@ import {
 } from '../../config';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
-import { SendEmail, sendEmailFactory } from '../../utils/send-email';
+import { sendEmailFactory } from '../../utils/send-email';
 import { EventBridgeHandler } from '../../utils/types';
 
 export const inviteHandlerFactory =

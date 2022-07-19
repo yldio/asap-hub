@@ -1,4 +1,5 @@
 export * from './logger';
+export * from './send-email';
 export * from './types';
 export * from './validate-auth0-request';
 export * from './validate-squidex-request';

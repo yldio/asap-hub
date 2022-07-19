@@ -10,6 +10,7 @@
     { "path": "../../packages/fixtures" },
     { "path": "../../packages/model" },
     { "path": "../../packages/errors" },
+    { "path": "../../packages/message-templates" },
     { "path": "../../packages/services-common" }
   ]
 }

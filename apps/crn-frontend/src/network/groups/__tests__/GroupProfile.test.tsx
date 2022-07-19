@@ -17,7 +17,6 @@ import { getGroup } from '../api';
 import { getEvents, getEventsFromAlgolia } from '../../../events/api';
 
 jest.mock('../api');
-// jest.mock('../events/api');
 jest.mock('../../../events/api');
 
 const mockGetGroup = getGroup as jest.MockedFunction<typeof getGroup>;
@@ -118,7 +117,7 @@ describe('the upcoming events tab', () => {
     expect(await findByText(/results/i)).toBeVisible();
   });
 
-  it.skip('can search for events', async () => {
+  it('can search for events', async () => {
     disable('EVENTS_SEARCH');
     const { findByRole, findByText } = await renderGroupProfile({
       ...createGroupResponse(),
@@ -128,7 +127,6 @@ describe('the upcoming events tab', () => {
     userEvent.type(await findByRole('searchbox'), 'searchterm');
     await waitFor(() =>
       expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
-        '42',
         expect.objectContaining({ searchQuery: 'searchterm' }),
         expect.anything(),
       ),

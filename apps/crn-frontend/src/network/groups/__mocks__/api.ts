@@ -1,12 +1,10 @@
 import {
   ListGroupResponse,
   GroupResponse,
-  ListEventResponse,
 } from '@asap-hub/model';
 import {
   createListGroupResponse,
   createGroupResponse,
-  createListEventResponse,
 } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 
@@ -19,11 +17,5 @@ export const getGroup = jest.fn(
   async (id: string): Promise<GroupResponse> => ({
     ...createGroupResponse(),
     id,
-  }),
-);
-
-export const getEvents = jest.fn(
-  async (): Promise<ListEventResponse> => ({
-    ...createListEventResponse(2),
   }),
 );

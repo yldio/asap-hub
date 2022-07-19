@@ -1,11 +1,8 @@
+import { FetchOptions, FetchPaginationOptions } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import Ajv, { JSONSchemaType, ValidateFunction } from 'ajv';
 import addFormats from 'ajv-formats';
-import {
-  FetchOptions,
-  FetchPaginationOptions,
-  NullableOptionalProperties,
-} from '../utils/types';
+import { NullableOptionalProperties } from '../utils/types';
 
 const ajv = new Ajv({ useDefaults: true });
 const ajvCoerced = new Ajv({ coerceTypes: 'array', useDefaults: true });

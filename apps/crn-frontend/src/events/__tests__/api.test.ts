@@ -185,6 +185,26 @@ describe('getEventsFromAlgolia', () => {
     );
   });
 
+  it('calls for past events with a certain speaker user id', async () => {
+    search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
+
+    await getEventsFromAlgolia(algoliaSearchClient, {
+      ...getEventListOptions(new Date('2021-01-01T12:00:00Z'), { past: true }),
+      constraint: { userId: 'user-1' },
+    });
+    expect(search).toBeCalledWith(
+      ['event'],
+      '',
+      {
+        filters:
+          '(endDateTimestamp < 1609498800) AND (speakers.user.id: "user-1")',
+        hitsPerPage: 10,
+        page: 0,
+      },
+      true,
+    );
+  });
+
   it('calls for upcoming events with a certain speaker team id', async () => {
     search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
 

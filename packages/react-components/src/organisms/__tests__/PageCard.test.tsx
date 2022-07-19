@@ -9,7 +9,7 @@ const props: ComponentProps<typeof PageCard> = createPageResponse('1');
 it('renders the title', () => {
   const { getByRole } = render(<PageCard {...props} />);
   expect(getByRole('heading').textContent).toEqual('Page 1 title');
-  expect(getByRole('heading').tagName).toEqual('H2');
+  expect(getByRole('heading').tagName).toEqual('H4');
 });
 
 it('renders link from properties', () => {

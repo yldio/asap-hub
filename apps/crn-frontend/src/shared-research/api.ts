@@ -1,9 +1,11 @@
+import qs from 'qs';
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputDocumentType,
   ResearchOutputResponse,
   ResearchTagResponse,
+  FetchResearchTagsOptions,
 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
 
@@ -85,10 +87,13 @@ export const getResearchOutputs = (
 export const getResearchTags = async (
   authorization: string,
 ): Promise<ResearchTagResponse[]> => {
-  const query = new URLSearchParams({
-    take: '200',
-    'filter[category]': 'Research Output',
-  });
+  const options: FetchResearchTagsOptions = {
+    take: 200,
+    filter: {
+      entity: 'Research Output',
+    },
+  };
+  const query = qs.stringify(options);
 
   const resp = await fetch(`${API_BASE_URL}/research-tags?${query}`, {
     headers: { authorization, ...createSentryHeaders() },

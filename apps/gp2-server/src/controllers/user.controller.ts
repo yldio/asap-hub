@@ -61,7 +61,7 @@ export default class Users implements UserController {
   async fetchById(id: string): Promise<UserResponse> {
     const user = await this.userDataProvider.fetchById(id);
     if (!user) {
-      throw new NotFoundError(`user with id ${id} not found`);
+      throw new NotFoundError(undefined, `user with id ${id} not found`);
     }
 
     return parseUserToResponse(user);
@@ -70,11 +70,11 @@ export default class Users implements UserController {
   async fetchByCode(code: string): Promise<UserResponse> {
     const { items: users } = await this.queryByCode(code);
     if (users.length === 0) {
-      throw new NotFoundError(`user with code ${code} not found`);
+      throw new NotFoundError(undefined, `user with code ${code} not found`);
     }
 
     if (users.length !== 1 || !users[0]) {
-      throw new GenericError('too many users found');
+      throw new GenericError(undefined, 'too many users found');
     }
 
     return parseUserToResponse(users[0]);
@@ -87,7 +87,10 @@ export default class Users implements UserController {
     const { items } = await this.queryByCode(welcomeCode);
 
     if (!items || items.length > 1 || !items[0]) {
-      throw new NotFoundError(`user with code ${welcomeCode} not found`);
+      throw new NotFoundError(
+        undefined,
+        `user with code ${welcomeCode} not found`,
+      );
     }
 
     const user = items[0];

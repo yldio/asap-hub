@@ -1,3 +1,6 @@
 import { route } from 'typesafe-routes';
 
-export default route('/discover', {}, {});
+const tutorials = route('/tutorials', {}, {});
+const guides = route('/guides', {}, {});
+
+export default route('/discover', {}, { tutorials, guides });

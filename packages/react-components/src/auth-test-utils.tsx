@@ -43,6 +43,7 @@ export const Auth0Provider: React.FC<{
         loading: !auth0Client,
         popupOpen: false,
         isAuthenticated: false,
+        refreshUser: async () => {},
         getIdTokenClaims: auth0Client
           ? (...args) => auth0Client.getIdTokenClaims(...args)
           : notReady('getIdTokenClaims'),
@@ -115,7 +116,7 @@ export const LoggedIn: React.FC<{
         ...ctx,
         isAuthenticated: true,
         user: auth0User,
-        getTokenSilently: async () => 'token',
+        getTokenSilently: jest.fn().mockResolvedValue('token'),
         getIdTokenClaims: async () => ({ __raw: 'token' }),
       }}
     >

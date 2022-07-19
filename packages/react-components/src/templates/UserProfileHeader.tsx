@@ -181,6 +181,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
 }) => {
   const tabRoutes = network({}).users({}).user({ userId: id });
   const { isOwnProfile } = useContext(UserProfileContext);
+  const isEventsSearchEnabled = useFlags().isEnabled('EVENTS_SEARCH');
 
   return (
     <header css={[containerStyles]}>
@@ -292,14 +293,14 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             Shared Outputs
             {` (${sharedOutputsCount})`}
           </TabLink>
-          {useFlags().isEnabled('EVENTS_SEARCH') && (
+          {isEventsSearchEnabled && (
             <TabLink href={tabRoutes.upcoming({}).$}>
-              Upcoming Events {` (${upcomingEventsCount})`}
+              Upcoming Events ({upcomingEventsCount})
             </TabLink>
           )}
-          {useFlags().isEnabled('EVENTS_SEARCH') && (
+          {isEventsSearchEnabled && (
             <TabLink href={tabRoutes.past({}).$}>
-              Past Events {` (${pastEventsCount})`}
+              Past Events ({pastEventsCount})
             </TabLink>
           )}
         </TabNav>

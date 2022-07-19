@@ -80,20 +80,11 @@ const MainNavigation: React.FC<MainNavigationProps> = ({ userOnboarded }) => (
       </li>
       <li>
         <NavigationLink
-          href={news({}).$}
-          icon={newsIcon}
-          enabled={userOnboarded}
-        >
-          News
-        </NavigationLink>
-      </li>
-      <li>
-        <NavigationLink
           href={events({}).$}
           icon={calendarIcon}
           enabled={userOnboarded}
         >
-          Calendar and Events
+          Calendar &amp; Events
         </NavigationLink>
       </li>
       <li>
@@ -103,6 +94,15 @@ const MainNavigation: React.FC<MainNavigationProps> = ({ userOnboarded }) => (
           enabled={userOnboarded}
         >
           Discover ASAP
+        </NavigationLink>
+      </li>
+      <li>
+        <NavigationLink
+          href={news({}).$}
+          icon={newsIcon}
+          enabled={userOnboarded}
+        >
+          News
         </NavigationLink>
       </li>
     </ul>

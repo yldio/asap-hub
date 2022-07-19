@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 import {
   GroupProfilePage,
   NotFoundPage,
-  GroupNoEvents,
+  NoEvents,
 } from '@asap-hub/react-components';
 import { events, network, useRouteParams } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
@@ -103,9 +103,10 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
                   past={false}
                   events={upcomingEvents}
                   noEventsComponent={
-                    <GroupNoEvents
-                      past={false}
+                    <NoEvents
+                      displayName={group.name}
                       link={events({}).upcoming({}).$}
+                      type="group"
                     />
                   }
                 />
@@ -121,7 +122,12 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
                   currentTime={currentTime}
                   past={true}
                   noEventsComponent={
-                    <GroupNoEvents past={true} link={events({}).past({}).$} />
+                    <NoEvents
+                      past
+                      displayName={group.name}
+                      link={events({}).past({}).$}
+                      type="group"
+                    />
                   }
                 />
               </Frame>

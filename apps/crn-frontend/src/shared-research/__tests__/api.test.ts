@@ -259,7 +259,7 @@ describe('getReseachTags', () => {
       .get('/research-tags')
       .query({
         filter: {
-          category: 'Research Output',
+          entity: 'Research Output',
         },
         take: 200,
       })

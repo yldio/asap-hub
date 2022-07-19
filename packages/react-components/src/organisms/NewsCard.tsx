@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { NewsResponse, NewsType } from '@asap-hub/model';
 import { news } from '@asap-hub/routing';
 
-import { Card, Paragraph, Headline2, Pill, Caption, Anchor } from '../atoms';
+import { Card, Paragraph, Headline4, Pill, Anchor } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../date';
 import {
@@ -11,6 +11,8 @@ import {
   trainingPlaceholderIcon,
 } from '../icons';
 import { ExternalLink } from '../molecules';
+import { lead } from '..';
+import { captionStyles } from '../text';
 
 const imageStyle = css({
   objectFit: 'cover',
@@ -22,8 +24,9 @@ const imageContainerStyle = css({
   flexShrink: 0,
   borderRadius: `${6 / perRem}em`,
   height: `${184 / perRem}em`,
-  marginTop: `${12 / perRem}em`,
-  marginBottom: `${12 / perRem}em`,
+  marginTop: `${9 / perRem}em`,
+  marginBottom: `${3 / perRem}em`,
+
   marginRight: `${24 / perRem}em`,
   width: `${184 / perRem}em`,
   overflow: 'hidden',
@@ -35,13 +38,13 @@ const imageContainerStyle = css({
 
 const headerStyles = css({
   display: 'flex',
-  alignItems: 'center',
   justifyContent: 'space-between',
 });
 
 const cardStyle = css({
   display: 'flex',
   flexDirection: 'row',
+  marginBottom: `${6 / perRem}em`,
 });
 
 const containerStyle = css({
@@ -51,6 +54,8 @@ const containerStyle = css({
 });
 
 const footerStyles = css({
+  ...captionStyles,
+  color: lead.rgb,
   justifySelf: 'flex-end',
 });
 
@@ -58,9 +63,12 @@ const placeholders: Record<NewsType, JSX.Element> = {
   News: newsPlaceholder,
   Event: newsEventPlaceholderIcon,
   Training: trainingPlaceholderIcon,
+  Tutorial: trainingPlaceholderIcon,
 };
 
-type NewsCardProps = NewsResponse;
+type NewsCardProps = NewsResponse & {
+  noPill?: boolean;
+};
 
 const NewsCard: React.FC<NewsCardProps> = ({
   id,
@@ -72,13 +80,14 @@ const NewsCard: React.FC<NewsCardProps> = ({
   linkText,
   shortText,
   created,
+  noPill = false,
 }) => {
   const titleComponent = text ? (
     <Anchor href={news({}).article({ articleId: id }).$}>
-      <Headline2 styleAsHeading={4}>{title}</Headline2>
+      <Headline4>{title}</Headline4>
     </Anchor>
   ) : (
-    <Headline2 styleAsHeading={4}>{title}</Headline2>
+    <Headline4>{title}</Headline4>
   );
 
   return (
@@ -97,18 +106,18 @@ const NewsCard: React.FC<NewsCardProps> = ({
         </div>
         <div css={containerStyle}>
           <div css={headerStyles}>
-            <Pill>{type}</Pill>
+            <div css={{ paddingRight: `${15 / perRem}em` }}>
+              {noPill ? null : <Pill>{type}</Pill>}
+              {titleComponent}
+            </div>
             {link ? <ExternalLink label={linkText} href={link} /> : null}
           </div>
-          {titleComponent}
           <div css={{ flex: 1 }}>
             <Paragraph accent="lead">{shortText}</Paragraph>
           </div>
-          <div css={footerStyles}>
-            <Caption accent={'lead'} asParagraph>
-              Posted: {formatDate(new Date(created))} by ASAP
-            </Caption>
-          </div>
+          <span css={footerStyles}>
+            Posted: {formatDate(new Date(created))} by ASAP
+          </span>
         </div>
       </div>
     </Card>

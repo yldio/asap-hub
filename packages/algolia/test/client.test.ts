@@ -144,7 +144,7 @@ describe('Algolia Search Client', () => {
     expect(algoliaSearchIndex.search).toBeCalledWith('query', {
       hitsPerPage: 10,
       page: 0,
-      filters: '(some-filters) AND (__meta.type:"research-output")',
+      filters: 'some-filters AND (__meta.type:"research-output")',
     });
   });
 
@@ -189,7 +189,7 @@ describe('Algolia Search Client', () => {
     expect(response).toEqual(searchUserResponse);
     expect(algoliaSearchIndex.search).toBeCalledWith('query', {
       filters:
-        '(some-filters) AND (__meta.type:"user" OR __meta.type:"external-author" OR __meta.type:"lab")',
+        'some-filters AND (__meta.type:"user" OR __meta.type:"external-author" OR __meta.type:"lab")',
     });
   });
 });

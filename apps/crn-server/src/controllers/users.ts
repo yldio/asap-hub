@@ -1,5 +1,6 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import {
+  FetchUsersOptions,
   ListUserResponse,
   UserResponse,
   UserUpdateDataObject,
@@ -12,19 +13,6 @@ import {
   UserDataProvider,
 } from '../data-providers/users.data-provider';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
-import { FetchOptions } from '../utils/types';
-
-export type FetchUsersFilter = {
-  role?: string[];
-  labId?: string[];
-  teamId?: string[];
-  code?: string;
-  hidden?: boolean;
-  onboarded?: boolean;
-  orcid?: string;
-};
-
-export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
 
 export interface UserController {
   fetch(options: FetchUsersOptions): Promise<ListUserResponse>;
@@ -71,7 +59,7 @@ export default class Users implements UserController {
   async fetchById(id: string): Promise<UserResponse> {
     const user = await this.userDataProvider.fetchById(id);
     if (!user) {
-      throw new NotFoundError(`user with id ${id} not found`);
+      throw new NotFoundError(undefined, `user with id ${id} not found`);
     }
 
     return parseUserToResponse(user);
@@ -80,11 +68,11 @@ export default class Users implements UserController {
   async fetchByCode(code: string): Promise<UserResponse> {
     const { items: users } = await this.queryByCode(code);
     if (users.length === 0) {
-      throw new NotFoundError(`user with code ${code} not found`);
+      throw new NotFoundError(undefined, `user with code ${code} not found`);
     }
 
     if (users.length !== 1 || !users[0]) {
-      throw new GenericError('too many users found');
+      throw new GenericError(undefined, 'too many users found');
     }
 
     return parseUserToResponse(users[0]);
@@ -110,7 +98,10 @@ export default class Users implements UserController {
     const { items } = await this.queryByCode(welcomeCode);
 
     if (!items || items.length > 1 || !items[0]) {
-      throw new NotFoundError(`user with code ${welcomeCode} not found`);
+      throw new NotFoundError(
+        undefined,
+        `user with code ${welcomeCode} not found`,
+      );
     }
 
     const user = items[0];

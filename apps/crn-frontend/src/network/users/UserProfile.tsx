@@ -1,12 +1,16 @@
 import { Frame } from '@asap-hub/frontend-utils';
-import { NotFoundPage, UserProfilePage } from '@asap-hub/react-components';
+import {
+  NotFoundPage,
+  UserProfilePage,
+  NoEvents,
+} from '@asap-hub/react-components';
 import {
   ToastContext,
   useCurrentUser,
   useFlags,
   UserProfileContext,
 } from '@asap-hub/react-context';
-import { network, useRouteParams } from '@asap-hub/routing';
+import { events, network, useRouteParams } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
 import { ComponentProps, FC, lazy, useContext, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
@@ -153,6 +157,32 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                           constraint={{ userId: user?.id }}
                           currentTime={currentTime}
                           past={false}
+                          noEventsComponent={
+                            <NoEvents
+                              displayName={user.firstName}
+                              link={events({}).upcoming({}).$}
+                              type="user"
+                            />
+                          }
+                        />
+                      </Frame>
+                    </Route>
+                  )}
+                  {isEventsEnabled && (
+                    <Route path={path + tabRoutes.past.template}>
+                      <Frame title="Past Events">
+                        <Events
+                          past
+                          constraint={{ userId: user?.id }}
+                          currentTime={currentTime}
+                          noEventsComponent={
+                            <NoEvents
+                              past
+                              displayName={user.firstName}
+                              link={events({}).past({}).$}
+                              type="user"
+                            />
+                          }
                         />
                       </Frame>
                     </Route>

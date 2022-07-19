@@ -1,34 +1,49 @@
 import 'express-async-errors';
 import supertest from 'supertest';
-import express, { Router } from 'express';
-import { getAuth0UserMock } from '@asap-hub/fixtures';
+import express, { Router, Express, RequestHandler } from 'express';
+import { createUserResponse, getJwtPayload } from '@asap-hub/fixtures';
 import { authHandlerFactory } from '../../src/middleware/auth-handler';
 import { errorHandlerFactory } from '../../src/middleware/error-handler';
 import { getHttpLogger, Logger } from '../../src/utils/logger';
 import { DecodeToken } from '../../src/utils/validate-token';
 import { loggerMock } from '../mocks/logger.mock';
+import { UserResponse } from '@asap-hub/model';
+import { MemoryCacheClient } from '../../src/clients/cache.client';
 
 describe('Authentication middleware', () => {
   const mockRoutes = Router();
-  const auth0UserMock = getAuth0UserMock({ origin: 'test' });
+  const jwtPayload = getJwtPayload();
   mockRoutes.get('/test-route', (req, res) => {
     return res.json(req['loggedInUser']);
   });
   const decodeToken: jest.MockedFunction<DecodeToken> = jest.fn();
+  const fetchByCode: jest.MockedFunction<
+    (code: string) => Promise<UserResponse>
+  > = jest.fn().mockResolvedValue(createUserResponse());
 
-  const authHandler = authHandlerFactory(decodeToken, loggerMock, {
-    origin: 'test',
-  });
-  const errorHandler = errorHandlerFactory();
+  let app: Express;
+  let authHandler: RequestHandler;
+
   const httpLogger = getHttpLogger({ logger: loggerMock });
-  const app = express();
-  app.use(httpLogger);
-  app.use(authHandler);
-  app.use(mockRoutes);
-  app.use(errorHandler);
+  const errorHandler = errorHandlerFactory();
+
+  beforeEach(() => {
+    const cacheClient = new MemoryCacheClient<UserResponse>();
+    authHandler = authHandlerFactory(
+      decodeToken,
+      fetchByCode,
+      cacheClient,
+      loggerMock,
+    );
+    app = express();
+    app.use(httpLogger);
+    app.use(authHandler);
+    app.use(mockRoutes);
+    app.use(errorHandler);
+  });
 
   afterEach(() => {
-    decodeToken.mockReset();
+    jest.clearAllMocks();
   });
 
   test('Should return 401 when Authorization header is not set', async () => {
@@ -55,42 +70,21 @@ describe('Authentication middleware', () => {
     expect(response.status).toBe(401);
   });
 
-  test('Should return 401 when user from a different origin is returned', async () => {
-    decodeToken.mockResolvedValueOnce({
-      [`some-other-origin/user`]: {
-        id: 'userId',
-        onboarded: true,
-        displayName: 'JT',
-        email: 'joao.tiago@asap.science',
-        firstName: 'Joao',
-        lastName: 'Tiago',
-        teams: [
-          {
-            id: 'team-id-1',
-            displayName: 'Awesome Team',
-            role: 'Project Manager',
-          },
-          {
-            id: 'team-id-3',
-            displayName: 'Zac Torres',
-            role: 'Collaborating PI',
-          },
-        ],
-        algoliaApiKey: 'test-api-key',
-      },
-      given_name: 'Joao',
-      family_name: 'Tiago',
-      nickname: 'joao.tiago',
-      name: 'Joao Tiago',
-      picture: 'https://lh3.googleusercontent.com/awesomePic',
-      locale: 'en',
-      updated_at: '2020-10-27T17:55:23.418Z',
-      email: 'joao.tiago@asap.science',
-      iss: 'https://asap-hub.us.auth0.com/',
-      sub: 'google-oauth2|awesomeGoogleCode',
-      aud: 'audience',
-      nonce: 'onlyOnce',
-    });
+  test('Should return 401 when token does not have the sub property', async () => {
+    const jwtPayloadNoSub = getJwtPayload();
+    jwtPayloadNoSub.sub = undefined;
+    decodeToken.mockResolvedValueOnce(jwtPayloadNoSub);
+
+    const response = await supertest(app)
+      .get('/test-route')
+      .set('Authorization', 'Bearer something');
+
+    expect(response.status).toBe(401);
+  });
+
+  test('Should return 401 when it is unable to fetch the user', async () => {
+    decodeToken.mockResolvedValueOnce(jwtPayload);
+    fetchByCode.mockRejectedValueOnce(new Error('some error'));
 
     const response = await supertest(app)
       .get('/test-route')
@@ -100,7 +94,7 @@ describe('Authentication middleware', () => {
   });
 
   test('Should return 200 when token is valid', async () => {
-    decodeToken.mockResolvedValueOnce(auth0UserMock);
+    decodeToken.mockResolvedValueOnce(jwtPayload);
 
     const response = await supertest(app)
       .get('/test-route')
@@ -109,13 +103,44 @@ describe('Authentication middleware', () => {
     expect(response.status).toBe(200);
   });
 
-  test('Should attach the logged in user to the req object correctly', async () => {
-    decodeToken.mockResolvedValueOnce(auth0UserMock);
+  test('Should cache user-response and only call the endpoint once', async () => {
+    decodeToken.mockResolvedValue(jwtPayload);
+
+    const response1 = await supertest(app)
+      .get('/test-route')
+      .set('Authorization', 'Bearer something');
+    const response2 = await supertest(app)
+      .get('/test-route')
+      .set('Authorization', 'Bearer something');
+
+    expect(response1.status).toBe(200);
+    expect(response2.status).toBe(200);
+    expect(fetchByCode).toBeCalledTimes(1);
+  });
+
+  test('Should not cache the user data for the same user if they use a different token', async () => {
+    decodeToken.mockResolvedValue(jwtPayload);
+
+    const response1 = await supertest(app)
+      .get('/test-route')
+      .set('Authorization', 'Bearer something');
+    const response2 = await supertest(app)
+      .get('/test-route')
+      .set('Authorization', 'Bearer something-else');
+
+    expect(response1.status).toBe(200);
+    expect(response2.status).toBe(200);
+    expect(fetchByCode).toBeCalledTimes(2);
+  });
+
+  test('Should fetch the logged in user by sub parameter and add them to the req object', async () => {
+    decodeToken.mockResolvedValueOnce(jwtPayload);
 
     const response = await supertest(app)
       .get('/test-route')
       .set('Authorization', 'Bearer something');
 
-    expect(response.body).toEqual(auth0UserMock[`test/user`]);
+    expect(fetchByCode).toBeCalledWith(jwtPayload.sub);
+    expect(response.body).toEqual(createUserResponse());
   });
 });

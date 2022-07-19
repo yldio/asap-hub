@@ -26,7 +26,7 @@ describe('For groups', () => {
     expect(
       screen.getByText(/try exploring other upcoming events/i),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Explore Upcoming Events/i)).toBeInTheDocument();
+    expect(screen.getByText(/Explore & Upcoming Events/i)).toBeInTheDocument();
     expect(screen.getByRole('link')).toHaveAttribute('href', '/upcomingEvents');
   });
 
@@ -46,7 +46,7 @@ describe('For groups', () => {
     expect(
       screen.getByText(/try exploring other past events/i),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Explore Past Events/i)).toBeInTheDocument();
+    expect(screen.getByText(/Explore & Past Events/i)).toBeInTheDocument();
     expect(screen.getByRole('link')).toHaveAttribute('href', '/pastEvents');
   });
 });
@@ -68,7 +68,7 @@ describe('For Teams', () => {
     expect(
       screen.getByText(/try exploring other upcoming events/i),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Explore Upcoming Events/i)).toBeInTheDocument();
+    expect(screen.getByText(/Explore & Upcoming Events/i)).toBeInTheDocument();
     expect(screen.getByRole('link')).toHaveAttribute('href', '/upcomingEvents');
   });
 
@@ -88,7 +88,7 @@ describe('For Teams', () => {
     expect(
       screen.getByText(/try exploring other past events/i),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Explore Past Events/i)).toBeInTheDocument();
+    expect(screen.getByText(/Explore & Past Events/i)).toBeInTheDocument();
     expect(screen.getByRole('link')).toHaveAttribute('href', '/pastEvents');
   });
 });

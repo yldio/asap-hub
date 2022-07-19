@@ -1,12 +1,13 @@
-import { text } from '@storybook/addon-knobs';
+import { boolean, text } from '@storybook/addon-knobs';
 
 import { NewsCard } from '@asap-hub/react-components';
+import { ComponentProps } from 'react';
 
 export default {
   title: 'Organisms / News / Card',
 };
 
-const newsProps = () => ({
+const newsProps = (): ComponentProps<typeof NewsCard> => ({
   id: 'uuid-1',
   created: new Date().toISOString(),
   type: 'News' as const,
@@ -21,9 +22,10 @@ const newsProps = () => ({
     'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',
   ),
   thumbnail: text('Thumbnail', 'https://picsum.photos/200'),
+  noPill: boolean('No Pill', false),
 });
 
-const eventProps = () => ({
+const eventProps = (): ComponentProps<typeof NewsCard> => ({
   id: 'uuid-2',
   created: new Date().toISOString(),
   type: 'Event' as const,

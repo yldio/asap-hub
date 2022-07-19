@@ -6,10 +6,9 @@ import {
   RichText,
   TeamMembersSection,
   HelpSection,
-  NewsSection,
 } from '../organisms';
 import { perRem } from '../pixels';
-import { Display, Card } from '../atoms';
+import { Headline2, Card } from '../atoms';
 
 const styles = css({
   display: 'grid',
@@ -24,7 +23,6 @@ const aboutUsStyles = css({
 const DiscoverPageBody: React.FC<DiscoverResponse> = ({
   pages,
   aboutUs,
-  training,
   members,
   scientificAdvisoryBoard,
 }) => (
@@ -32,12 +30,9 @@ const DiscoverPageBody: React.FC<DiscoverResponse> = ({
     {pages.length ? (
       <PagesSection title={'Grantee Guidance'} pages={pages} />
     ) : null}
-    {training.length ? (
-      <NewsSection title={'Training'} news={training} />
-    ) : null}
     {aboutUs.length ? (
       <section>
-        <Display styleAsHeading={2}>About us</Display>
+        <Headline2>About us</Headline2>
         <div css={aboutUsStyles}>
           <Card>
             <RichText text={aboutUs} />

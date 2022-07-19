@@ -1,9 +1,8 @@
 import { NotFoundError } from '@asap-hub/errors';
-import { UserResponse } from '@asap-hub/model';
+import { FetchUsersOptions, UserResponse } from '@asap-hub/model';
 import { RestUser, SquidexRest } from '@asap-hub/squidex';
 import nock, { DataMatcherMap } from 'nock';
 import { appName, baseUrl } from '../../src/config';
-import { FetchUsersOptions } from '../../src/controllers/users';
 import {
   GraphqlUserTeam,
   parseGraphQLUserTeamConnections,

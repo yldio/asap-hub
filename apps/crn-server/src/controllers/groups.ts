@@ -1,7 +1,11 @@
 import uniqBy from 'lodash.uniqby';
-import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
+import {
+  ListGroupResponse,
+  GroupResponse,
+  FetchOptions,
+  FetchPaginationOptions,
+} from '@asap-hub/model';
 import { NotFoundError } from '@asap-hub/errors';
-import { FetchOptions, FetchPaginationOptions } from '../utils/types';
 import { GroupDataProvider } from '../data-providers/groups.data-provider';
 import { UserDataProvider } from '../data-providers/users.data-provider';
 
@@ -37,7 +41,7 @@ export default class Groups implements GroupController {
   async fetchById(groupId: string): Promise<GroupResponse> {
     const group = await this.groupDataProvider.fetchById(groupId);
     if (!group) {
-      throw new NotFoundError(`group with id ${groupId} not found`);
+      throw new NotFoundError(undefined, `group with id ${groupId} not found`);
     }
 
     return group;
@@ -62,7 +66,7 @@ export default class Groups implements GroupController {
     const user = await this.userDataProvider.fetchById(userId);
 
     if (!user) {
-      throw new NotFoundError('User not found');
+      throw new NotFoundError(undefined, 'User not found');
     }
 
     const teamIds = user.teams.map((team) => team.id);

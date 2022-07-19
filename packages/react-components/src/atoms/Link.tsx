@@ -7,7 +7,9 @@ import { fern, paper, pine } from '../colors';
 import { defaultThemeVariant, ThemeVariant } from '../theme';
 
 export const styles = css({
-  textDecoration: 'underline',
+  textDecoration: 'underline solid transparent',
+  transition: 'text-decoration 100ms ease-in-out',
+
   ':hover': {
     textDecoration: 'underline',
   },
@@ -18,8 +20,6 @@ export const styles = css({
 export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
   light: css({
     color: fern.rgb,
-    ':hover': { color: pine.rgb },
-    ':active': { color: fern.rgb },
   }),
   grey: css({ color: fern.rgb, ':active': { color: pine.rgb } }),
   dark: css({ color: paper.rgb, ':active': { color: paper.rgb } }),

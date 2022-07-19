@@ -18,12 +18,12 @@ const loadAbout = () =>
   import(/* webpackChunkName: "network-group-about" */ './About');
 const loadCalendar = () =>
   import(/* webpackChunkName: "network-group-calendar" */ './Calendar');
-const loadEvents = () =>
-  import(/* webpackChunkName: "network-events" */ '../EventsEmbed');
+const loadEventsList = () =>
+  import(/* webpackChunkName: "network-events" */ '../EventsEmbedList');
 
 const About = lazy(loadAbout);
 const Calendar = lazy(loadCalendar);
-const Events = lazy(loadEvents);
+const EventsList = lazy(loadEventsList);
 loadAbout();
 
 type GroupProfileProps = {
@@ -32,7 +32,7 @@ type GroupProfileProps = {
 
 const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
   useEffect(() => {
-    loadAbout().then(loadCalendar).then(loadEvents);
+    loadAbout().then(loadCalendar).then(loadEventsList);
   }, []);
 
   const [groupTeamsElementId] = useState(`group-teams-${uuid()}`);
@@ -97,11 +97,10 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
           <Route path={path + route({ groupId }).upcoming.template}>
             <GroupProfilePage {...props}>
               <Frame title="Upcoming Events">
-                <Events
+                <EventsList
                   constraint={{ groupId }}
                   currentTime={currentTime}
                   past={false}
-                  events={upcomingEvents}
                   noEventsComponent={
                     <NoEvents
                       displayName={group.name}
@@ -116,8 +115,7 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
           <Route path={path + route({ groupId }).past.template}>
             <GroupProfilePage {...props}>
               <Frame title="Past Events">
-                <Events
-                  events={pastEvents}
+                <EventsList
                   constraint={{ groupId }}
                   currentTime={currentTime}
                   past={true}

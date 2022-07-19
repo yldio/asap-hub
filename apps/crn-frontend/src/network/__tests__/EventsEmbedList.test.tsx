@@ -15,7 +15,7 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEventsFromAlgolia } from '../../events/api';
 import { eventsState } from '../../events/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
-import Events from '../EventsEmbed';
+import Events from '../EventsEmbedList';
 import { refreshTeamState } from '../teams/state';
 import { refreshUserState } from '../users/state';
 

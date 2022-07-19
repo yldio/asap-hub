@@ -50,6 +50,26 @@ describe('getEvents', () => {
     expect(nock.isDone()).toBe(true);
   });
 
+  it('makes an authorized GET request for group events after a date', async () => {
+    const events = createListEventResponse(1);
+    nock(API_BASE_URL)
+      .get(`/groups/42/events`)
+      .query({
+        take: '10',
+        skip: '0',
+        after: new Date('2021-01-01T11:00:00').toISOString(),
+      })
+      .reply(200, events);
+    await getEvents(
+      getEventListOptions(new Date('2021-01-01T12:00:00'), {
+        past: false,
+        constraint: { groupId: '42' },
+      }),
+      'Bearer x',
+    );
+    expect(nock.isDone()).toBe(true);
+  });
+
   it('returns successfully fetched events', async () => {
     const events = createListEventResponse(1);
     nock(API_BASE_URL)

@@ -45,20 +45,22 @@ const iconStyles = css({
 const iconOpenStyles = css({
   svg: {
     transition: '250ms',
-
     transform: 'rotate(180deg)',
   },
 });
+
 const bodyStyles = css({
   padding: `0 ${57 / perRem}em`,
 });
+
 const hiddenStyles = css({
   maxHeight: 0,
   overflow: 'hidden',
   transition: 'max-height 300ms ease-in-out',
 });
+
 const openStyles = css({
-  maxHeight: '500px' /* value larger than probable content */,
+  maxHeight: '500px', // value larger than probable content
   transition: 'max-height 200ms ease-in-out',
 });
 
@@ -85,7 +87,7 @@ const Accordion: FC<AccordionProps> = ({ items }) => {
     <Card accent="neutral200" padding={false}>
       <div css={containerStyles}>
         {items.map(({ icon, title, description, href, hrefText }, index) => (
-          <div css={itemStyles}>
+          <div key={`accordion-${index}`} css={itemStyles}>
             <button
               css={[expandButtonStyles, headerStyles]}
               onClick={() => setOpened(opened === index ? undefined : index)}

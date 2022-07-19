@@ -8,7 +8,7 @@ const confidentialIcon = (
     fill="#00202C"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <title>Confidential Icon</title>
+    <title>Confidential</title>
     <path
       fill-rule="evenodd"
       clip-rule="evenodd"

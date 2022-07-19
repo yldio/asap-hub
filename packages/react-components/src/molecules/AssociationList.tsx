@@ -46,7 +46,7 @@ const iconStyles = css({
   verticalAlign: 'middle',
   display: 'inline-block',
   height: `${24 / perRem}em`,
-  marginRight: `${12 / perRem}em`,
+  marginRight: `${9 / perRem}em`,
 });
 
 const moreStyles = css({

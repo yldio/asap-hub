@@ -1,10 +1,9 @@
 import {
   APIGatewayProxyEventV2,
+  Context,
   EventBridgeEvent,
   ScheduledEvent,
-  Context,
 } from 'aws-lambda';
-import { URLSearchParams } from 'url';
 
 type RecursivePartial<T> = {
   [P in keyof T]?: RecursivePartial<T[P]>;
@@ -39,7 +38,6 @@ export const getApiGatewayEvent = (
     },
     version: '2.0',
     pathParameters: undefined,
-    rawQueryString: new URLSearchParams(event.queryStringParameters).toString(),
     ...event,
     body:
       typeof event.body === 'object'

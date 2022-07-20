@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+// ignore this file for coverage since we don't have the requirements yet to test it
 import { framework as lambda } from '@asap-hub/services-common';
 import Boom from '@hapi/boom';
 

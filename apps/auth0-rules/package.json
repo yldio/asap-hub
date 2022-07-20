@@ -17,7 +17,7 @@
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/model": "workspace:*",
-    "@babel/core": "^7.18.6",
+    "@babel/core": "7.18.6",
     "@babel/preset-env": "7.18.6",
     "@babel/preset-typescript": "7.18.6",
     "@babel/runtime-corejs3": "7.18.6",

@@ -30,7 +30,8 @@
     "pino": "^7.10.0",
     "pino-http": "^6.6.0",
     "pino-lambda": "^3.0.1",
-    "pino-noir": "^2.2.1"
+    "pino-noir": "^2.2.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
@@ -38,7 +39,7 @@
     "@asap-hub/model": "workspace:*",
     "@asap-hub/services-common": "workspace:*",
     "@asap-hub/squidex": "workspace:*",
-    "@babel/core": "^7.18.6",
+    "@babel/core": "7.18.6",
     "@babel/parser": "^7.18.6",
     "@types/apr-intercept": "workspace:*",
     "@types/aws-lambda": "8.10.101",
@@ -46,6 +47,7 @@
     "@types/jest": "26.0.24",
     "@types/jsonwebtoken": "8.5.8",
     "@types/supertest": "^2.0.12",
+    "@types/uuid": "8.3.4",
     "express-async-errors": "^3.1.1",
     "supertest": "6.2.3"
   }

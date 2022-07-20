@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import { css } from '@emotion/react';
 import { Card, Headline5, Paragraph, Link } from '..';
 import { lineHeight, perRem } from '../pixels';
-import { chevronUpIcon, externalLinkIcon } from '../icons';
+import { chevronDownIcon, externalLinkIcon } from '../icons';
 import { isInternalLink } from '../utils';
 import { charcoal, silver, steel } from '../colors';
 
@@ -37,6 +37,7 @@ const iconStyles = css({
   height: `${lineHeight / perRem}em`,
   alignSelf: 'center',
   svg: {
+    transition: '250ms',
     stroke: charcoal.rgb,
     fill: charcoal.rgb,
   },
@@ -44,7 +45,6 @@ const iconStyles = css({
 
 const iconOpenStyles = css({
   svg: {
-    transition: '250ms',
     transform: 'rotate(180deg)',
   },
 });
@@ -96,7 +96,7 @@ const Accordion: FC<AccordionProps> = ({ items }) => {
               <Headline5>{title}</Headline5>
 
               <div css={[iconStyles, index === opened && iconOpenStyles]}>
-                {chevronUpIcon}
+                {chevronDownIcon}
               </div>
             </button>
             <div

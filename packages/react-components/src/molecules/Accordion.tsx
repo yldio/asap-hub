@@ -21,14 +21,14 @@ const itemStyles = css({
 const headerStyles = css({
   display: 'grid',
   width: '100%',
-  gridColumnGap: `${16 / perRem}em`,
+  gridColumnGap: `${15 / perRem}em`,
   gridTemplateColumns: 'min-content 1fr min-content',
   padding: `${9 / perRem}em ${15 / perRem}em`,
   cursor: 'pointer',
 
   ':hover': {
     background: silver.rgb,
-    borderRadius: '4px',
+    borderRadius: `${4 / perRem}em`,
   },
 });
 

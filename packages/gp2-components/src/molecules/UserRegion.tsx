@@ -38,12 +38,14 @@ const getRegionIcon = (region: Region): JSX.Element => {
   }
 };
 
-type UserRegion = {
+type UserRegionProps = {
   region: Region;
 };
 
-const UserRegion: React.FC<UserRegion> = ({ region }) => (
-  <IconWithLabel icon={getRegionIcon(region)}>{region}</IconWithLabel>
+const UserRegion: React.FC<UserRegionProps> = ({ region }) => (
+  <IconWithLabel icon={getRegionIcon(region)}>
+    <span>{region}</span>
+  </IconWithLabel>
 );
 
 export default UserRegion;

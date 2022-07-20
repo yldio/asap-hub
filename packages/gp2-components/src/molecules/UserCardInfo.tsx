@@ -23,6 +23,7 @@ const dotDivider = css({
     display: 'unset',
   },
 });
+
 const rowStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -31,6 +32,22 @@ const rowStyles = css({
     gap: rem(24),
   },
 });
+
+const listLabelStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(8),
+});
+
+const workingGroupsStyles = css({
+  flexWrap: 'wrap',
+  [crossQuery]: {
+    gap: '0.25rem',
+    flexDirection: 'row',
+  },
+});
+
+const subduedText = css({ color: 'rgba(146, 153, 158, 1)' });
 
 const UserCardInfo: React.FC<UserCardInfoProps> = ({
   role,
@@ -46,18 +63,7 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
       </div>
       <div css={rowStyles}>
         <IconWithLabel icon={workingGroupIcon}>
-          <div
-            css={css({
-              display: 'flex',
-              flexWrap: 'wrap',
-              flexDirection: 'column',
-              gap: rem(8),
-              [crossQuery]: {
-                gap: '0.25rem',
-                flexDirection: 'row',
-              },
-            })}
-          >
+          <div css={[listLabelStyles, workingGroupsStyles]}>
             {workingGroups?.length ? (
               workingGroups.map(({ id, name }, idx) => {
                 return (
@@ -79,7 +85,7 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
                 );
               })
             ) : (
-              <span css={css({ color: 'rgba(146, 153, 158, 1)' })}>
+              <span css={subduedText}>
                 This member isn’t part of any working groups
               </span>
             )}
@@ -88,15 +94,13 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
       </div>
       <div css={rowStyles}>
         <IconWithLabel icon={projectIcon}>
-          <div
-            css={css({ display: 'flex', flexDirection: 'column', gap: rem(8) })}
-          >
+          <div css={listLabelStyles}>
             {projects?.length ? (
               projects.map(({ id, name }) => {
                 return <Link href={'/' + id}>{name}</Link>;
               })
             ) : (
-              <span css={css({ color: 'rgba(146, 153, 158, 1)' })}>
+              <span css={subduedText}>
                 This member isn’t part of any projects
               </span>
             )}

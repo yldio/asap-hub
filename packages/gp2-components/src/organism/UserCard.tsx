@@ -50,7 +50,6 @@ type UserCardProps = Pick<
 > & {
   id: string;
   displayName: string;
-  createdDate: string;
   firstName: string;
   lastName: string;
   avatarUrl?: string;

@@ -47,7 +47,8 @@
     "watch:typecheck": "yarn build:typecheck -w"
   },
   "resolutions": {
-    "encoding": "0.1.13"
+    "encoding": "0.1.13",
+    "@babel/core": "^7.18.6"
   },
   "dependenciesMeta": {
     "aws-sdk": {

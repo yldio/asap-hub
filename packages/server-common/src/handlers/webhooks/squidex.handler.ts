@@ -10,8 +10,10 @@ export const createSquidexHandler =
     eventBus: string,
     eventSource: string,
     squidexSharedSecret: string,
-  ) =>
-  async (request: lambda.Request<WebhookPayload<unknown>>) => {
+  ): ((
+    request: lambda.Request<WebhookPayload<unknown>>,
+  ) => Promise<{ statusCode: number }>) =>
+  async (request) => {
     validateSquidexRequest(request, squidexSharedSecret);
 
     const { type } = request.payload;

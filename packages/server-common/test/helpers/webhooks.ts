@@ -1,14 +1,9 @@
 import { signPayload } from '@asap-hub/server-common';
 import { WebhookPayload } from '@asap-hub/squidex';
-import { getApiGatewayEvent } from './events';
 
-export const createSignedPayload = <T>(
+export const createSignedHeader = <T>(
   payload: WebhookPayload<T>,
   squidexSharedSecret: string,
-) =>
-  getApiGatewayEvent({
-    headers: {
-      'x-signature': signPayload(payload, squidexSharedSecret),
-    },
-    body: JSON.stringify(payload),
-  });
+) => ({
+  'x-signature': signPayload(payload, squidexSharedSecret),
+});

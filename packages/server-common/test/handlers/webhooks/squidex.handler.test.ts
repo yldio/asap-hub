@@ -1,9 +1,8 @@
-import { APIGatewayProxyResult } from 'aws-lambda';
 import { EventBridge } from 'aws-sdk';
 import { createSquidexHandler } from '../../../src/handlers/webhooks';
 import { getLabWebhookPayload } from '../../fixtures/labs.fixtures';
 import { getLambdaRequest } from '../../helpers/events';
-import { createSignedPayload } from '../../helpers/webhooks';
+import { createSignedHeader } from '../../helpers/webhooks';
 
 describe('Squidex event webhook', () => {
   const eventBus = 'event-bus';
@@ -27,16 +26,15 @@ describe('Squidex event webhook', () => {
     jest.clearAllMocks();
   });
 
-  test.only('Should return 403 when the request is not signed correctly', async () => {
+  test('Should throw Forbidden when the request is not signed correctly', async () => {
     const payload = {
       ...getLabWebhookPayload('lab-id', 'LabsUpdated'),
       type: 'lab',
     };
     const event = getLambdaRequest(payload, { 'x-signature': 'XYZ' });
 
-    const res = (await handler(event)) as APIGatewayProxyResult;
+    expect(handler(event)).rejects.toThrowError('Forbidden');
 
-    expect(res.statusCode).toStrictEqual(403);
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
   });
 
@@ -45,21 +43,23 @@ describe('Squidex event webhook', () => {
       ...getLabWebhookPayload('lab-id', 'LabsUpdated'),
       type: undefined as unknown as string,
     };
-    const res = (await handler(
-      createSignedPayload(payload, squidexSharedSecret),
-    )) as APIGatewayProxyResult;
+    const headers = createSignedHeader(payload, squidexSharedSecret);
 
-    expect(res.statusCode).toStrictEqual(204);
+    const event = getLambdaRequest(payload, headers);
+    const response = await handler(event);
+    expect(response).toEqual({ statusCode: 204 });
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
   });
 
   test('Should put the squidex event into the event bus and return 200', async () => {
-    const payload = getLabWebhookPayload('lab-id', 'LabsUpdated');
-    const res = (await handler(
-      createSignedPayload(payload, squidexSharedSecret),
-    )) as APIGatewayProxyResult;
+    const payload = {
+      ...getLabWebhookPayload('lab-id', 'LabsUpdated'),
+    };
+    const headers = createSignedHeader(payload, squidexSharedSecret);
+    const event = getLambdaRequest(payload, headers);
+    const response = await handler(event);
 
-    expect(res.statusCode).toStrictEqual(200);
+    expect(response.statusCode).toStrictEqual(200);
     expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
       Entries: [
         {

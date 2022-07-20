@@ -37,7 +37,7 @@ export const eventBus = EVENT_BUS || 'asap-events-dev';
 export const eventSource = EVENT_SOURCE || '';
 export const logEnabled = NODE_ENV === 'production' || LOG_ENABLED === 'true';
 export const logLevel = LOG_LEVEL || 'info';
-export const origin = APP_ORIGIN || 'https://1433.hub.asap.science';
+export const origin = APP_ORIGIN || 'https://dev.gp2.asap.science';
 export const auth0SharedSecret = AUTH0_SHARED_SECRET || '';
 export const sentryDsn = SENTRY_DSN;
 export const sesRegion = SES_REGION || 'eu-west-1';

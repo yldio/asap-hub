@@ -127,7 +127,10 @@ describe('the upcoming events tab', () => {
     userEvent.type(await findByRole('searchbox'), 'searchterm');
     await waitFor(() =>
       expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
-        expect.objectContaining({ searchQuery: 'searchterm' }),
+        expect.objectContaining({
+          searchQuery: 'searchterm',
+          constraint: { groupId: '42' },
+        }),
         expect.anything(),
       ),
     );

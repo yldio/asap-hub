@@ -14,6 +14,7 @@ import {
   UserDataProvider,
 } from '../data-providers/users.data-provider';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
+
 export interface UserController extends BaseController {
   fetch(options: FetchUsersOptions): Promise<ListUserResponse>;
   fetchByCode(code: string): Promise<UserResponse>;

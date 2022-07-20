@@ -1,6 +1,7 @@
+import { User } from '@asap-hub/squidex';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { handler } from '../../../src/handlers/webhooks/webhook-squidex';
-import { getLabWebhookPayload } from '../../fixtures/labs.fixtures';
+import { getUserWebhookPayload } from '../../fixtures/user.fixtures';
 import { getApiGatewayEvent } from '../../helpers/events';
 import { createSignedPayload } from '../../helpers/webhooks';
 jest.mock('aws-sdk', () => ({
@@ -32,17 +33,17 @@ describe('Squidex event webhook', () => {
 
   test('Should return 204 when no event type is provided', async () => {
     const payload = {
-      ...getLabWebhookPayload('lab-id', 'LabsUpdated'),
+      ...getUserWebhookPayload('user-id', 'UsersUpdated'),
       type: undefined as unknown as string,
     };
     const res = (await handler(
-      createSignedPayload(payload),
+      createSignedPayload<User>(payload),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(204);
   });
   test('Should put the squidex event into the event bus and return 200', async () => {
-    const payload = getLabWebhookPayload('lab-id', 'LabsUpdated');
+    const payload = getUserWebhookPayload('user-id', 'UsersUpdated');
     const res = (await handler(
       createSignedPayload(payload),
     )) as APIGatewayProxyResult;

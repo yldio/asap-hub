@@ -4,8 +4,11 @@ import { validateAuth0Request } from '../../utils';
 import { validateWebhookConnectByCodeBody } from '../../validation';
 
 export const createConnectByCodeHandler =
-  (users: UserController, auth0SharedSecret: string) =>
-  async (request: lambda.Request) => {
+  (
+    users: UserController,
+    auth0SharedSecret: string,
+  ): ((request: lambda.Request) => Promise<{ statusCode: number }>) =>
+  async (request) => {
     validateAuth0Request(request, auth0SharedSecret);
 
     const { code, userId } = validateWebhookConnectByCodeBody(

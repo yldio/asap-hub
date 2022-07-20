@@ -327,7 +327,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
-    "@babel/core": 7.18.6
+    "@babel/core": ^7.18.6
     "@babel/plugin-transform-modules-commonjs": 7.18.6
     "@babel/plugin-transform-runtime": 7.18.6
     "@babel/runtime-corejs3": 7.18.6
@@ -369,7 +369,7 @@ __metadata:
   resolution: "@asap-hub/auth-frontend-scripts@workspace:packages/auth-frontend-scripts"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@babel/core": 7.18.6
+    "@babel/core": ^7.18.6
     "@babel/runtime-corejs3": 7.18.6
     "@types/jest": 26.0.24
     "@types/jsdom": ^16
@@ -386,7 +386,7 @@ __metadata:
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
-    "@babel/core": 7.18.6
+    "@babel/core": ^7.18.6
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.18.6
     "@types/auth0-js": ^9.14.4
@@ -406,7 +406,7 @@ __metadata:
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
-    "@babel/core": 7.18.6
+    "@babel/core": ^7.18.6
     "@babel/preset-env": 7.18.6
     "@babel/preset-typescript": 7.18.6
     "@babel/runtime-corejs3": 7.18.6
@@ -551,7 +551,7 @@ __metadata:
     "@asap-hub/squidex": "workspace:*"
     "@asap-hub/validation": "workspace:*"
     "@aws-sdk/client-cloudfront": ^3.43.0
-    "@babel/core": 7.18.6
+    "@babel/core": ^7.18.6
     "@babel/preset-env": 7.18.6
     "@babel/preset-typescript": 7.18.6
     "@babel/register": 7.18.6
@@ -751,7 +751,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
-    "@babel/core": 7.18.6
+    "@babel/core": ^7.18.6
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.18.6
     "@sentry/react": ^6.11.0
@@ -823,7 +823,7 @@ __metadata:
     "@asap-hub/react-components": "workspace:*"
     "@asap-hub/react-context": "workspace:*"
     "@asap-hub/routing": "workspace:*"
-    "@babel/core": 7.18.6
+    "@babel/core": ^7.18.6
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.18.6
     "@emotion/babel-plugin": ^11.3.0
@@ -1012,7 +1012,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
-    "@babel/core": 7.18.6
+    "@babel/core": ^7.18.6
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.18.6
     "@emotion/cache": ^11
@@ -1049,7 +1049,7 @@ __metadata:
   dependencies:
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@babel/core": 7.18.6
+    "@babel/core": ^7.18.6
     "@babel/preset-env": 7.18.6
     "@babel/preset-typescript": 7.18.6
     "@babel/runtime-corejs3": 7.18.6
@@ -1073,7 +1073,7 @@ __metadata:
     "@asap-hub/routing": "workspace:*"
     "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.1
-    "@babel/core": 7.18.6
+    "@babel/core": ^7.18.6
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.18.6
     "@emotion/babel-plugin": ^11.3.0
@@ -1151,7 +1151,7 @@ __metadata:
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/flags": "workspace:*"
-    "@babel/core": 7.18.6
+    "@babel/core": ^7.18.6
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.18.6
     "@testing-library/react": 11.2.7
@@ -1308,7 +1308,7 @@ __metadata:
     "@asap-hub/react-components": "workspace:*"
     "@asap-hub/react-context": "workspace:*"
     "@asap-hub/routing": "workspace:*"
-    "@babel/core": 7.18.6
+    "@babel/core": ^7.18.6
     "@storybook/addon-actions": 6.5.9
     "@storybook/addon-knobs": ^6.2.9
     "@storybook/addon-viewport": 6.5.9
@@ -1335,7 +1335,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
-    "@babel/core": 7.18.6
+    "@babel/core": ^7.18.6
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.18.6
     "@types/node": 14.18.22

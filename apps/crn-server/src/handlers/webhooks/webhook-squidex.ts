@@ -4,12 +4,19 @@ import { EventBridge } from 'aws-sdk';
 import { eventBus, eventSource, squidexSharedSecret } from '../../config';
 import logger from '../../utils/logger';
 
+export const squidexWebhookFactory = (
+  eventBridge: EventBridge,
+): lambda.Handler => {
+  const squidexHandler = createSquidexHandler(
+    eventBridge,
+    logger,
+    eventBus,
+    eventSource,
+    squidexSharedSecret,
+  );
+
+  return lambda.http(squidexHandler);
+};
+
 const eventBridge = new EventBridge();
-const squidexHandler = createSquidexHandler(
-  eventBridge,
-  logger,
-  eventBus,
-  eventSource,
-  squidexSharedSecret,
-);
-export const handler: lambda.Handler = lambda.http(squidexHandler);
+export const handler: lambda.Handler = squidexWebhookFactory(eventBridge);

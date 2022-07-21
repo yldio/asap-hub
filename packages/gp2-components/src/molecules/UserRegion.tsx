@@ -19,23 +19,14 @@ export const regions = [
 
 export type Region = typeof regions[number];
 
-const getRegionIcon = (region: Region): JSX.Element => {
-  switch (region) {
-    case 'Africa':
-      return regionAfricaIcon;
-    case 'Asia':
-      return regionAsia;
-    case 'Australasia':
-      return regionAustralasiaIcon;
-    case 'Europe':
-      return regionEuropeIcon;
-    case 'North America':
-      return regionNorthAmericaIcon;
-    case 'Latin America':
-      return regionLatinAmericaIcon;
-    case 'South America':
-      return regionSouthAmericaIcon;
-  }
+const regionIcons: { [key in Region]: JSX.Element } = {
+  Africa: regionAfricaIcon,
+  Asia: regionAsia,
+  Australasia: regionAustralasiaIcon,
+  Europe: regionEuropeIcon,
+  'North America': regionNorthAmericaIcon,
+  'Latin America': regionLatinAmericaIcon,
+  'South America': regionSouthAmericaIcon,
 };
 
 type UserRegionProps = {
@@ -43,7 +34,7 @@ type UserRegionProps = {
 };
 
 const UserRegion: React.FC<UserRegionProps> = ({ region }) => (
-  <IconWithLabel icon={getRegionIcon(region)}>
+  <IconWithLabel icon={regionIcons[region]}>
     <span>{region}</span>
   </IconWithLabel>
 );

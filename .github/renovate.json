@@ -10,7 +10,9 @@
     }
   ],
   "timezone": "Europe/London",
-  "automergeSchedule": ["after 8am and before 12pm every weekday"],
+  "updateNotScheduled": "false",
+  "schedule": ["after 7am and before 10am every weekday"],
+  "automergeSchedule": ["after 8am and before 11am every weekday"],
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true

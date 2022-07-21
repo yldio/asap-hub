@@ -71,9 +71,18 @@ jobs:
       name: Branch
       url: ${{ steps.setup.outputs.crn-app-url }}
     needs: [test, build, build-analysis, create-environment, deployment, verify]
-    if: always()
+    if: ${{ always() }}
     steps:
+      - name: Fail pipeline
+        if: ${{ failure() }}
+        run: |
+          echo "### Pipeline branch failed. :fire:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "_ test status: ${{ needs.test.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "_ test status: ${{ needs.test.build }}" >> $GITHUB_STEP_SUMMARY
+          exit 1
       - name: Checkout
+        if: ${{ success() }}
         uses: actions/checkout@v3
       - name: Setup
         id: setup
@@ -81,11 +90,8 @@ jobs:
         with:
           environment-name: Branch
       - name: Print success
-        if: success()
         run: |
           echo "### Pipeline branch successful. :rocket:" >> $GITHUB_STEP_SUMMARY
-      - name: Fail pipeline
-        if: failure()
-        run: |
-          echo "### Pipeline branch failed." >> $GITHUB_STEP_SUMMARY
-          exit 1
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "_ test status: ${{ needs.test.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "_ test status: ${{ needs.test.build }}" >> $GITHUB_STEP_SUMMARY

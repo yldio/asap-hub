@@ -46,6 +46,12 @@ const workingGroupsStyles = css({
     flexDirection: 'row',
   },
 });
+const workingGroupsLinkStyles = css({
+  [crossQuery]: {
+    width: 'fit-content',
+    whiteSpace: 'nowrap',
+  },
+});
 
 const subduedText = css({ color: 'rgba(146, 153, 158, 1)' });
 
@@ -65,25 +71,14 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
         <IconWithLabel icon={workingGroupIcon}>
           <div css={[listLabelStyles, workingGroupsStyles]}>
             {workingGroups?.length ? (
-              workingGroups.map(({ id, name }, idx) => {
-                return (
-                  <>
-                    {idx !== 0 ? <span css={dotDivider}>·</span> : null}
-                    <Link href={'/' + id}>
-                      <span
-                        css={css({
-                          [crossQuery]: {
-                            width: 'fit-content',
-                            whiteSpace: 'nowrap',
-                          },
-                        })}
-                      >
-                        {name}
-                      </span>
-                    </Link>
-                  </>
-                );
-              })
+              workingGroups.map(({ id, name }, idx) => (
+                <>
+                  {idx !== 0 ? <span css={dotDivider}>·</span> : null}
+                  <Link href={`/${id}`}>
+                    <span css={workingGroupsLinkStyles}>{name}</span>
+                  </Link>
+                </>
+              ))
             ) : (
               <span css={subduedText}>
                 This member isn’t part of any working groups
@@ -96,9 +91,9 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
         <IconWithLabel icon={projectIcon}>
           <div css={listLabelStyles}>
             {projects?.length ? (
-              projects.map(({ id, name }) => {
-                return <Link href={'/' + id}>{name}</Link>;
-              })
+              projects.map(({ id, name }) => (
+                <Link href={`/${id}`}>{name}</Link>
+              ))
             ) : (
               <span css={subduedText}>
                 This member isn’t part of any projects

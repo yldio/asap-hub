@@ -14,7 +14,9 @@ type DiscoverWorkingGroupsProps = {
   training: ComponentProps<typeof NewsSection>['news'];
 };
 
-const DiscoverWorkingGroups: React.FC<DiscoverWorkingGroupsProps> = ({ training }) => (
+const DiscoverWorkingGroups: React.FC<DiscoverWorkingGroupsProps> = ({
+  training,
+}) => (
   <div css={styles}>
     <NewsSection
       title="Working Groups"

@@ -60,50 +60,46 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
   region,
   workingGroups,
   projects,
-}) => {
-  return (
-    <div css={containerStyles}>
-      <div css={rowStyles}>
-        <IconWithLabel icon={roleIcon}>{role}</IconWithLabel>
-        <UserRegion region={region}></UserRegion>
-      </div>
-      <div css={rowStyles}>
-        <IconWithLabel icon={workingGroupIcon}>
-          <div css={[listLabelStyles, workingGroupsStyles]}>
-            {workingGroups?.length ? (
-              workingGroups.map(({ id, name }, idx) => (
-                <>
-                  {idx !== 0 ? <span css={dotDivider}>·</span> : null}
-                  <Link href={`/${id}`}>
-                    <span css={workingGroupsLinkStyles}>{name}</span>
-                  </Link>
-                </>
-              ))
-            ) : (
-              <span css={subduedText}>
-                This member isn’t part of any working groups
-              </span>
-            )}
-          </div>
-        </IconWithLabel>
-      </div>
-      <div css={rowStyles}>
-        <IconWithLabel icon={projectIcon}>
-          <div css={listLabelStyles}>
-            {projects?.length ? (
-              projects.map(({ id, name }) => (
-                <Link href={`/${id}`}>{name}</Link>
-              ))
-            ) : (
-              <span css={subduedText}>
-                This member isn’t part of any projects
-              </span>
-            )}
-          </div>
-        </IconWithLabel>
-      </div>
+}) => (
+  <div css={containerStyles}>
+    <div css={rowStyles}>
+      <IconWithLabel icon={roleIcon}>{role}</IconWithLabel>
+      <UserRegion region={region}></UserRegion>
     </div>
-  );
-};
+    <div css={rowStyles}>
+      <IconWithLabel icon={workingGroupIcon}>
+        <div css={[listLabelStyles, workingGroupsStyles]}>
+          {workingGroups?.length ? (
+            workingGroups.map(({ id, name }, idx) => (
+              <>
+                {idx !== 0 ? <span css={dotDivider}>·</span> : null}
+                <Link href={`/${id}`}>
+                  <span css={workingGroupsLinkStyles}>{name}</span>
+                </Link>
+              </>
+            ))
+          ) : (
+            <span css={subduedText}>
+              This member isn’t part of any working groups
+            </span>
+          )}
+        </div>
+      </IconWithLabel>
+    </div>
+    <div css={rowStyles}>
+      <IconWithLabel icon={projectIcon}>
+        <div css={listLabelStyles}>
+          {projects?.length ? (
+            projects.map(({ id, name }) => <Link href={`/${id}`}>{name}</Link>)
+          ) : (
+            <span css={subduedText}>
+              This member isn’t part of any projects
+            </span>
+          )}
+        </div>
+      </IconWithLabel>
+    </div>
+  </div>
+);
 
 export default UserCardInfo;

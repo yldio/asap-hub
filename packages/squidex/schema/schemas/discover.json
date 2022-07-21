@@ -53,6 +53,25 @@
         }
       },
       {
+        "name": "workingGroups",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "mustBePublished": false,
+          "editor": "List",
+          "schemaIds": ["news-and-events"],
+          "label": "Working Groups",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
         "name": "aboutUs",
         "isHidden": false,
         "isLocked": false,

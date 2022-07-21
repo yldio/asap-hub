@@ -1,4 +1,4 @@
-import { createSquidexHandler } from '@asap-hub/server-common';
+import { squidexHandlerFactory } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { EventBridge } from 'aws-sdk';
 import { eventBus, eventSource, squidexSharedSecret } from '../../config';
@@ -7,7 +7,7 @@ import logger from '../../utils/logger';
 export const squidexWebhookFactory = (
   eventBridge: EventBridge,
 ): lambda.Handler => {
-  const squidexHandler = createSquidexHandler(
+  const squidexHandler = squidexHandlerFactory(
     eventBridge,
     logger,
     eventBus,

@@ -1,5 +1,5 @@
 import { EventBridge } from 'aws-sdk';
-import { createSquidexHandler } from '../../../src/handlers/webhooks';
+import { squidexHandlerFactory } from '../../../src/handlers/webhooks';
 import { getLabWebhookPayload } from '../../fixtures/labs.fixtures';
 import { getLambdaRequest } from '../../helpers/events';
 import { createSignedHeader } from '../../helpers/webhooks';
@@ -14,7 +14,7 @@ describe('Squidex event webhook', () => {
   const logger = {
     debug: jest.fn(),
   } as any;
-  const handler = createSquidexHandler(
+  const handler = squidexHandlerFactory(
     evenBridgeMock,
     logger,
     eventBus,

@@ -1,4 +1,4 @@
-import { createConnectByCodeHandler } from '@asap-hub/server-common';
+import { connectByCodeHandlerFactory } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { appName, auth0SharedSecret, baseUrl } from '../../config';
@@ -21,7 +21,7 @@ const userDataProvider = new UserSquidexDataProvider(
 );
 const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 const users = new Users(userDataProvider, assetDataProvider);
-const connectByCodeHandler = createConnectByCodeHandler(
+const connectByCodeHandler = connectByCodeHandlerFactory(
   users,
   auth0SharedSecret,
 );

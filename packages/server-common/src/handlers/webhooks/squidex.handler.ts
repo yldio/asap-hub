@@ -3,7 +3,7 @@ import { WebhookPayload } from '@asap-hub/squidex';
 import { EventBridge } from 'aws-sdk';
 import { Logger, validateSquidexRequest } from '../../utils';
 
-export const createSquidexHandler =
+export const squidexHandlerFactory =
   (
     eventBridge: EventBridge,
     logger: Logger,

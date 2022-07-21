@@ -5,7 +5,7 @@ import { UserController } from '../../controllers';
 import { validateAuth0Request } from '../../utils';
 import { validateWebhookConnectByCodeBody } from '../../validation';
 
-export const createConnectByCodeHandler =
+export const connectByCodeHandlerFactory =
   (
     users: UserController,
     auth0SharedSecret: string,

@@ -2253,7 +2253,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/node-fetch",\
-        "npm:2.5.10"\
+        "npm:2.6.2"\
       ],\
       [\
         "@types/normalize-package-data",\
@@ -10583,7 +10583,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/e2e-tests", "workspace:apps/e2e-tests"],\
             ["@babel/runtime-corejs3", "npm:7.18.6"],\
             ["@playwright/test", "npm:1.16.3"],\
-            ["@types/node-fetch", "npm:2.5.10"],\
+            ["@types/node-fetch", "npm:2.6.2"],\
             ["node-fetch", "npm:3.0.0-beta.9"]\
           ],\
           "linkType": "SOFT"\
@@ -32768,6 +32768,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-fetch-npm-2.5.10-86e5199acc-504d383408.zip/node_modules/@types/node-fetch/",\
           "packageDependencies": [\
             ["@types/node-fetch", "npm:2.5.10"],\
+            ["@types/node", "npm:13.11.1"],\
+            ["form-data", "npm:3.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:2.6.2", {\
+          "packageLocation": "./.yarn/cache/@types-node-fetch-npm-2.6.2-f96c00879e-6f73b14700.zip/node_modules/@types/node-fetch/",\
+          "packageDependencies": [\
+            ["@types/node-fetch", "npm:2.6.2"],\
             ["@types/node", "npm:13.11.1"],\
             ["form-data", "npm:3.0.0"]\
           ],\

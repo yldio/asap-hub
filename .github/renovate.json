@@ -1,7 +1,7 @@
 {
   "extends": ["config:base"],
-  "prConcurrentLimit": 20,
-  "prHourlyLimit": 20,
+  "prConcurrentLimit": 10,
+  "prHourlyLimit": 5,
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch"],

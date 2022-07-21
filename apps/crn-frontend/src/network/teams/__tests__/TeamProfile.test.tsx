@@ -7,7 +7,6 @@ import {
   createTeamResponse,
 } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
-import { disable } from '@asap-hub/flags';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
@@ -192,12 +191,3 @@ const renderPage = async (
   );
   return result;
 };
-
-it('hides the past and upcoming events tabs if the feature flag is disabled ((Regression))', async () => {
-  disable('EVENTS_SEARCH');
-  await renderPage(createTeamResponse());
-
-  expect(mockGetEventsFromAlgolia).not.toBeCalled();
-  expect(screen.queryByText(/Upcoming Events/i)).not.toBeInTheDocument();
-  expect(screen.queryByText(/Past Events/i)).not.toBeInTheDocument();
-});

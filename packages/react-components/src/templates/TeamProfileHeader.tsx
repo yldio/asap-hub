@@ -1,8 +1,5 @@
 import { TeamResponse, TeamTool } from '@asap-hub/model';
-import {
-  ResearchOutputPermissionsContext,
-  useFlags,
-} from '@asap-hub/react-context';
+import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
@@ -251,16 +248,12 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
           <TabLink href={route.workspace({}).$}>Team Workspace</TabLink>
         )}
         <TabLink href={route.outputs({}).$}>Team Outputs</TabLink>
-        {useFlags().isEnabled('EVENTS_SEARCH') && (
-          <TabLink href={route.upcoming({}).$}>
-            Upcoming Events {`(${upcomingEventsCount})`}
-          </TabLink>
-        )}
-        {useFlags().isEnabled('EVENTS_SEARCH') && (
-          <TabLink href={route.past({}).$}>
-            Past Events {`(${pastEventsCount})`}
-          </TabLink>
-        )}
+        <TabLink href={route.upcoming({}).$}>
+          Upcoming Events {`(${upcomingEventsCount})`}
+        </TabLink>
+        <TabLink href={route.past({}).$}>
+          Past Events {`(${pastEventsCount})`}
+        </TabLink>
       </TabNav>
     </header>
   );

@@ -7,7 +7,6 @@ import {
 import {
   ToastContext,
   useCurrentUser,
-  useFlags,
   UserProfileContext,
 } from '@asap-hub/react-context';
 import { events, network, useRouteParams } from '@asap-hub/routing';
@@ -88,8 +87,6 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
     currentUser,
   );
 
-  const isEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
-
   if (user) {
     const profilePageProps: Omit<
       ComponentProps<typeof UserProfilePage>,
@@ -150,43 +147,39 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                       <Outputs userId={user?.id} />
                     </Frame>
                   </Route>
-                  {isEventsEnabled && (
-                    <Route path={path + tabRoutes.upcoming.template}>
-                      <Frame title="Upcoming Events">
-                        <EventsList
-                          constraint={{ userId: user?.id }}
-                          currentTime={currentTime}
-                          past={false}
-                          noEventsComponent={
-                            <NoEvents
-                              displayName={user.firstName}
-                              link={events({}).upcoming({}).$}
-                              type="user"
-                            />
-                          }
-                        />
-                      </Frame>
-                    </Route>
-                  )}
-                  {isEventsEnabled && (
-                    <Route path={path + tabRoutes.past.template}>
-                      <Frame title="Past Events">
-                        <EventsList
-                          past
-                          constraint={{ userId: user?.id }}
-                          currentTime={currentTime}
-                          noEventsComponent={
-                            <NoEvents
-                              past
-                              displayName={user.firstName}
-                              link={events({}).past({}).$}
-                              type="user"
-                            />
-                          }
-                        />
-                      </Frame>
-                    </Route>
-                  )}
+                  <Route path={path + tabRoutes.upcoming.template}>
+                    <Frame title="Upcoming Events">
+                      <EventsList
+                        constraint={{ userId: user?.id }}
+                        currentTime={currentTime}
+                        past={false}
+                        noEventsComponent={
+                          <NoEvents
+                            displayName={user.firstName}
+                            link={events({}).upcoming({}).$}
+                            type="user"
+                          />
+                        }
+                      />
+                    </Frame>
+                  </Route>
+                  <Route path={path + tabRoutes.past.template}>
+                    <Frame title="Past Events">
+                      <EventsList
+                        past
+                        constraint={{ userId: user?.id }}
+                        currentTime={currentTime}
+                        noEventsComponent={
+                          <NoEvents
+                            past
+                            displayName={user.firstName}
+                            link={events({}).past({}).$}
+                            type="user"
+                          />
+                        }
+                      />
+                    </Frame>
+                  </Route>
                   <Redirect to={tabRoutes.research({}).$} />
                 </Switch>
                 {isOwnProfile && tabRoute && (

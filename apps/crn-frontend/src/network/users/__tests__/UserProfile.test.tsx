@@ -8,7 +8,6 @@ import {
   createUserResponse,
   createUserTeams,
 } from '@asap-hub/fixtures';
-import { disable } from '@asap-hub/flags';
 import { UserResponse } from '@asap-hub/model';
 import { ToastContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
@@ -21,7 +20,7 @@ import { join } from 'path';
 import { ContextType, Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { getEvents, getEventsFromAlgolia } from '../../../events/api';
+import { getEventsFromAlgolia } from '../../../events/api';
 import { getResearchOutputs } from '../../../shared-research/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { getUser, patchUser, postUserAvatar } from '../api';
@@ -44,7 +43,6 @@ const imageCompressionMock = imageCompression as jest.MockedFunction<
 const mockUserEventsFromAlgolia = getEventsFromAlgolia as jest.MockedFunction<
   typeof getEventsFromAlgolia
 >;
-const mockUserEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
 imageCompressionMock.getDataUrlFromFile = jest.requireActual(
   'browser-image-compression',
@@ -440,23 +438,6 @@ it('renders number of past events', async () => {
   expect(await screen.findByText(/Past Events \(7\)/i)).toBeVisible();
 });
 
-it('onboarded users do call the events api', async () => {
-  disable('EVENTS_SEARCH');
-  await renderUserProfile(createUserResponse(), { onboarded: true });
-
-  expect(mockUserEventsFromAlgolia).not.toBeCalled();
-  expect(mockUserEvents).toHaveBeenCalled();
-  expect(screen.queryByText(/Upcoming Events/i)).not.toBeInTheDocument();
-});
-it('non onboarded users do not call the events api', async () => {
-  disable('EVENTS_SEARCH');
-  await renderUserProfile(createUserResponse(), { onboarded: false });
-
-  expect(mockUserEventsFromAlgolia).not.toBeCalled();
-  expect(mockUserEvents).not.toHaveBeenCalled();
-  expect(screen.queryByText(/Upcoming Events/i)).not.toBeInTheDocument();
-});
-
 it('navigates to the upcoming events tab', async () => {
   const currentTime = new Date('2021-12-28T14:00:00.000Z');
   const response = createListEventResponse(1);
@@ -511,14 +492,4 @@ it('navigates to the past events tab', async () => {
       userId: userResponse.id,
     },
   });
-});
-
-it('hides the past and upcoming events tabs if the feature flag is disabled ((Regression))', async () => {
-  disable('EVENTS_SEARCH');
-  await renderUserProfile(createUserResponse());
-
-  expect(mockUserEventsFromAlgolia).not.toBeCalled();
-  expect(mockUserEvents).toHaveBeenCalled();
-  expect(screen.queryByText(/Upcoming Events/i)).not.toBeInTheDocument();
-  expect(screen.queryByText(/Past Events/i)).not.toBeInTheDocument();
 });

@@ -1,5 +1,5 @@
 import { UserResponse } from '@asap-hub/model';
-import { useFlags, UserProfileContext } from '@asap-hub/react-context';
+import { UserProfileContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
@@ -181,7 +181,6 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
 }) => {
   const tabRoutes = network({}).users({}).user({ userId: id });
   const { isOwnProfile } = useContext(UserProfileContext);
-  const isEventsSearchEnabled = useFlags().isEnabled('EVENTS_SEARCH');
 
   return (
     <header css={[containerStyles]}>
@@ -293,16 +292,12 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             Shared Outputs
             {` (${sharedOutputsCount})`}
           </TabLink>
-          {isEventsSearchEnabled && (
-            <TabLink href={tabRoutes.upcoming({}).$}>
-              Upcoming Events ({upcomingEventsCount})
-            </TabLink>
-          )}
-          {isEventsSearchEnabled && (
-            <TabLink href={tabRoutes.past({}).$}>
-              Past Events ({pastEventsCount})
-            </TabLink>
-          )}
+          <TabLink href={tabRoutes.upcoming({}).$}>
+            Upcoming Events ({upcomingEventsCount})
+          </TabLink>
+          <TabLink href={tabRoutes.past({}).$}>
+            Past Events ({pastEventsCount})
+          </TabLink>
         </TabNav>
       </div>
     </header>

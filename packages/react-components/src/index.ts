@@ -136,6 +136,7 @@ export {
   DiscoverPage,
   DiscoverPageBody,
   DiscoverTutorials,
+  DiscoverWorkingGroups,
   EventPage,
   EventsCalendar,
   EventsList,

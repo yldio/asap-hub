@@ -155,8 +155,8 @@ const setResearchOutput = selector<ResearchOutputResponse>({
 export const useSetResearchOutputItem = () => {
   const [refresh, setRefresh] = useRecoilState(refreshResearchOutputIndex);
   const setResearchOutputItem = useSetRecoilState(setResearchOutput);
-  return (researhOutput: ResearchOutputResponse) => {
-    setResearchOutputItem(researhOutput);
+  return (researchOutput: ResearchOutputResponse) => {
+    setResearchOutputItem(researchOutput);
     setRefresh(refresh + 1);
   };
 };

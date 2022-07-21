@@ -92,3 +92,5 @@ export const mauve = color(105, 59, 119);
 export const lavender = color(242, 237, 245);
 
 export const info = color(12, 141, 195);
+
+export const neutral200 = color(246, 249, 251);

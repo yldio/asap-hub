@@ -449,7 +449,7 @@ __metadata:
     "@types/jsdom": ^16
     "@types/react": 17.0.47
     "@types/react-dom": 17.0.17
-    "@types/react-router-dom": ^5.1.7
+    "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
     cross-env: ^7.0.3
@@ -500,7 +500,7 @@ __metadata:
     "@types/qs": 6.9.7
     "@types/react": 17.0.47
     "@types/react-dom": 17.0.17
-    "@types/react-router-dom": ^5.1.7
+    "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 17.0.2
     "@types/streamsaver": ^2.0.1
     "@types/testing-library__jest-dom": ^5.9.5
@@ -760,7 +760,7 @@ __metadata:
     "@types/jest": 26.0.24
     "@types/node": 14.18.22
     "@types/react": 17.0.47
-    "@types/react-router-dom": ^5.1.7
+    "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
     core-js: ^3.12.1
@@ -798,7 +798,7 @@ __metadata:
     "@types/jsdom": ^16
     "@types/react": 17.0.47
     "@types/react-dom": 17.0.17
-    "@types/react-router-dom": ^5.1.7
+    "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
     cross-env: ^7.0.3
@@ -840,7 +840,7 @@ __metadata:
     "@types/jest": 26.0.24
     "@types/react": 17.0.47
     "@types/react-dom": 17.0.17
-    "@types/react-router-dom": ^5.1.7
+    "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": ^1.2.1
     "@types/react-test-renderer": 17.0.2
     "@types/testing-library__jest-dom": ^5.9.5
@@ -905,7 +905,7 @@ __metadata:
     "@types/node": 14.18.22
     "@types/react": 17.0.47
     "@types/react-dom": 17.0.17
-    "@types/react-router-dom": ^5.1.7
+    "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 17.0.2
     "@types/streamsaver": ^2.0.1
     "@types/testing-library__jest-dom": ^5.9.5
@@ -1092,7 +1092,7 @@ __metadata:
     "@types/ramda": ^0
     "@types/react": 17.0.47
     "@types/react-dom": 17.0.17
-    "@types/react-router-dom": ^5.1.7
+    "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": ^1.2.1
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
     "@types/react-test-renderer": 17.0.2
@@ -1177,7 +1177,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/runtime-corejs3": 7.18.6
     "@types/qs": 6.9.7
-    "@types/react-router-dom": ^5.1.7
+    "@types/react-router-dom": 5.3.3
     qs: 6.11.0
     typesafe-routes: ^7.0.2
     typescript: 4.6.4
@@ -1317,7 +1317,7 @@ __metadata:
     "@storybook/react": 6.5.9
     "@types/history": 4.7.11
     "@types/react": 17.0.47
-    "@types/react-router-dom": ^5.1.7
+    "@types/react-router-dom": 5.3.3
     babel-preset-react-app: 10.0.1
     core-js: ^3.12.1
     date-fns: ^2.28.0
@@ -12312,7 +12312,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/history@npm:4.7.11":
+"@types/history@npm:4.7.11, @types/history@npm:^4.7.11":
   version: 4.7.11
   resolution: "@types/history@npm:4.7.11"
   checksum: c92e2ba407dcab0581a9afdf98f533aa41b61a71133420a6d92b1ca9839f741ab1f9395b17454ba5b88cb86020b70b22d74a1950ccfbdfd9beeaa5459fdc3464
@@ -12842,14 +12842,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-router-dom@npm:^5.1.7":
-  version: 5.1.7
-  resolution: "@types/react-router-dom@npm:5.1.7"
+"@types/react-router-dom@npm:5.3.3":
+  version: 5.3.3
+  resolution: "@types/react-router-dom@npm:5.3.3"
   dependencies:
-    "@types/history": "npm:*"
-    "@types/react": "npm:*"
-    "@types/react-router": "npm:*"
-  checksum: ad40f55557bb7cd8d19d783c1d7dbca85e8874e03cced37e464f74f9f0a588a9a7e411de74da362d1a5c5bf80f7aaca78fe9a66d26741e47c5c06e49a62d1229
+    "@types/history": ^4.7.11
+    "@types/react": "*"
+    "@types/react-router": "*"
+  checksum: 28c4ea48909803c414bf5a08502acbb8ba414669b4b43bb51297c05fe5addc4df0b8fd00e0a9d1e3535ec4073ef38aaafac2c4a2b95b787167d113bc059beff3
   languageName: node
   linkType: hard
 

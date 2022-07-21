@@ -1,5 +1,18 @@
 {
   "extends": ["config:base"],
-  "prConcurrentLimit": 5,
-  "prHourlyLimit": 5
+  "prConcurrentLimit": 20,
+  "prHourlyLimit": 20,
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": true
+    }
+  ],
+  "timezone": "Europe/London",
+  "automergeSchedule": ["after 8am and before 12pm every weekday"],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  }
 }

@@ -53,7 +53,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "allowedValues": ["News", "Event", "Training"],
+          "allowedValues": ["News", "Event", "Training", "Working Groups"],
           "isUnique": false,
           "inlineEditable": true,
           "contentType": "Unspecified",

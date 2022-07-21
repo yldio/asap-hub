@@ -11,14 +11,17 @@ export const researchTagCategories = [
 ] as const;
 export type ResearchTagCategory = typeof researchTagCategories[number];
 
-export type ResearchTagResponse = {
+export type ResearchTagDataObject = {
   readonly id: string;
-
   readonly category?: ResearchTagCategory;
   readonly entities?: ResearchTagEntity[];
   readonly name: string;
   readonly types?: string[];
 };
+
+export type ListResearchTagDataObject = ListResponse<ResearchTagDataObject>;
+
+export type ResearchTagResponse = ResearchTagDataObject;
 
 export type ListResearchTagResponse = ListResponse<ResearchTagResponse>;
 

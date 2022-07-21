@@ -8876,7 +8876,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "supertest",\
-        "npm:6.2.3"\
+        "npm:6.2.4"\
       ],\
       [\
         "supports-color",\
@@ -10557,7 +10557,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.7.1"],\
             ["source-map-support", "npm:0.5.21"],\
             ["stream-json", "npm:1.7.4"],\
-            ["supertest", "npm:6.2.3"],\
+            ["supertest", "npm:6.2.4"],\
             ["uuid", "npm:8.3.2"],\
             ["yargs", "npm:17.3.1"]\
           ],\
@@ -11070,7 +11070,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless-s3-sync", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.0.0"],\
             ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.7.1"],\
             ["source-map-support", "npm:0.5.21"],\
-            ["supertest", "npm:6.2.3"],\
+            ["supertest", "npm:6.2.4"],\
             ["ts-node", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:10.7.0"],\
             ["uuid", "npm:8.3.2"]\
           ],\
@@ -11623,7 +11623,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pino-http", "npm:6.6.0"],\
             ["pino-lambda", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.0.1"],\
             ["pino-noir", "npm:2.2.1"],\
-            ["supertest", "npm:6.2.3"],\
+            ["supertest", "npm:6.2.4"],\
             ["uuid", "npm:8.3.2"]\
           ],\
           "linkType": "SOFT"\
@@ -60880,10 +60880,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:7.1.6", {\
-          "packageLocation": "./.yarn/cache/superagent-npm-7.1.6-8f8391ba79-b733168360.zip/node_modules/superagent/",\
+        ["npm:8.0.0", {\
+          "packageLocation": "./.yarn/cache/superagent-npm-8.0.0-23cfd5d736-14343e5932.zip/node_modules/superagent/",\
           "packageDependencies": [\
-            ["superagent", "npm:7.1.6"],\
+            ["superagent", "npm:8.0.0"],\
             ["component-emitter", "npm:1.3.0"],\
             ["cookiejar", "npm:2.1.3"],\
             ["debug", "virtual:4efd4efcc91d6a84943d5c69282ec5b841bc0a4bf4501bc904312b466c01ef55cfcb96c59c3173e19c9fb2cdfd84604de66717c6416485578546f9d4d26b13a7#npm:4.3.4"],\
@@ -60900,12 +60900,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["supertest", [\
-        ["npm:6.2.3", {\
-          "packageLocation": "./.yarn/cache/supertest-npm-6.2.3-280f27cd97-c1bed86c31.zip/node_modules/supertest/",\
+        ["npm:6.2.4", {\
+          "packageLocation": "./.yarn/cache/supertest-npm-6.2.4-6901daa695-f2ddc4f3ba.zip/node_modules/supertest/",\
           "packageDependencies": [\
-            ["supertest", "npm:6.2.3"],\
+            ["supertest", "npm:6.2.4"],\
             ["methods", "npm:1.1.2"],\
-            ["superagent", "npm:7.1.6"]\
+            ["superagent", "npm:8.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\

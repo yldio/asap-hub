@@ -46,7 +46,7 @@ const iconStyles = css({
   verticalAlign: 'middle',
   display: 'inline-block',
   height: `${24 / perRem}em`,
-  marginRight: `${12 / perRem}em`,
+  marginRight: `${9 / perRem}em`,
 });
 
 const moreStyles = css({
@@ -94,15 +94,16 @@ const AssociationList: FC<AssociationListProps> = ({
 
   if (limitExceeded) {
     return (
-      <>
+      <div>
+        {<div css={iconStyles}>{icon}</div>}
         {associations.length} {type}
         {associations.length === 1 ? '' : 's'}
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div>
       {inline && <div css={iconStyles}>{icon}</div>}
       <ul css={[containerStyles, inline && inlineContainerStyles]}>
         {associations.map(({ displayName, id }) => (
@@ -132,7 +133,7 @@ const AssociationList: FC<AssociationListProps> = ({
           </div>
         )}
       </ul>
-    </>
+    </div>
   );
 };
 

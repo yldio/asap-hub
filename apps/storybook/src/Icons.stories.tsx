@@ -38,6 +38,7 @@ export const Info = () => components.infoIcon;
 export const InfoCircle = () => components.infoCircleIcon;
 export const Lab = () => components.labIcon;
 export const LastPage = () => components.lastPageIcon;
+export const Learn = () => components.learnIcon;
 export const Link = () => components.linkIcon;
 export const LinkedIn = () => components.linkedInIcon;
 export const ListView = () => components.listViewIcon;

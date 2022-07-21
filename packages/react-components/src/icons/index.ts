@@ -82,3 +82,4 @@ export { default as userPlaceholderIcon } from './user-placeholder';
 export { default as validTickIcon } from './valid-tick-icon';
 export { default as verticalDividerIcon } from './vertical-divider';
 export { default as warningIcon } from './warning';
+export { default as learnIcon } from './learn';

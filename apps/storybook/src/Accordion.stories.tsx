@@ -1,6 +1,6 @@
 import {
   Accordion,
-  libraryIcon,
+  learnIcon,
   giftIcon,
   confidentialIcon,
 } from '@asap-hub/react-components';
@@ -13,7 +13,7 @@ export const Normal = () => (
   <Accordion
     items={[
       {
-        icon: libraryIcon,
+        icon: learnIcon,
         title: 'How to use the Hub?',
         description:
           'Explore a series of short videos that highlight the many different aspects of the Hub.',

@@ -70,7 +70,7 @@ jobs:
     environment:
       name: Branch
       url: ${{ steps.setup.outputs.crn-app-url }}
-    needs: [verify]
+    needs: [test, build, build-analysis, create-environment, deployment, verify]
     if: always()
     steps:
       - name: Checkout

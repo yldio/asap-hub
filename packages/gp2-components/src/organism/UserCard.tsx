@@ -88,7 +88,7 @@ const UserCard: React.FC<UserCardProps> = ({
             <Anchor href={userHref}>
               <h2 css={titleStyles}>
                 {displayName}
-                {degree && degree.length && `, ${degree.join(', ')}`}
+                {degree && !!degree.length && `, ${degree.join(', ')}`}
               </h2>
             </Anchor>
           </div>

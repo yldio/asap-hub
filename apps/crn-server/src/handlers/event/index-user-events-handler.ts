@@ -3,6 +3,7 @@ import {
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import { EventResponse, ListResponse } from '@asap-hub/model';
+import { UserEvent, UserPayload } from '@asap-hub/server-common';
 import { RestEvent, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
@@ -19,7 +20,6 @@ import {
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
 } from '../../utils/loop-over-custom-colection';
-import { UserEvent, UserPayload } from '../event-bus';
 
 export const indexUserEventsHandler =
   (

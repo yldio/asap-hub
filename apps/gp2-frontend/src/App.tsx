@@ -1,21 +1,23 @@
-import { FC, lazy, useEffect } from 'react';
-import { RecoilRoot } from 'recoil';
-import { Router, Switch, Route } from 'react-router-dom';
-import { LastLocationProvider } from 'react-router-last-location';
+import { Frame } from '@asap-hub/frontend-utils';
+import {
+  GoogleTagManager,
+  ToastStack,
+  UtilityBar,
+} from '@asap-hub/react-components';
+import { useFlags } from '@asap-hub/react-context';
+import { logout, welcome } from '@asap-hub/routing';
 import { init, reactRouterV5Instrumentation } from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
-import { useFlags } from '@asap-hub/react-context';
-
-import { GoogleTagManager } from '@asap-hub/react-components';
-import { logout } from '@asap-hub/routing';
-import { Frame } from '@asap-hub/frontend-utils';
-
-import history from './history';
+import { FC, lazy, useEffect } from 'react';
+import { Route, Router, Switch } from 'react-router-dom';
+import { LastLocationProvider } from 'react-router-last-location';
+import { RecoilRoot } from 'recoil';
 import CheckAuth from './auth/CheckAuth';
-import Signin from './auth/Signin';
 import Logout from './auth/Logout';
-import { GTM_CONTAINER_ID, SENTRY_DSN, ENVIRONMENT, RELEASE } from './config';
 import SentryAuth0 from './auth/SentryAuth0';
+import Signin from './auth/Signin';
+import { ENVIRONMENT, GTM_CONTAINER_ID, RELEASE, SENTRY_DSN } from './config';
+import history from './history';
 
 init({
   dsn: SENTRY_DSN,
@@ -59,12 +61,15 @@ const AuthProvider = lazy(loadAuthProvider);
 const loadAuthenticatedApp = () =>
   import(/* webpackChunkName: "authenticated-app" */ './AuthenticatedApp');
 const AuthenticatedApp = lazy(loadAuthenticatedApp);
+const loadWelcome = () =>
+  import(/* webpackChunkName: "welcome" */ './welcome/Routes');
+const Welcome = lazy(loadWelcome);
 
 const App: FC<Record<string, never>> = () => {
   const { setCurrentOverrides } = useFlags();
 
   useEffect(() => {
-    loadAuthenticatedApp();
+    loadAuthenticatedApp().then(loadWelcome);
     setCurrentOverrides();
   }, [setCurrentOverrides]);
 
@@ -78,6 +83,13 @@ const App: FC<Record<string, never>> = () => {
             <LastLocationProvider>
               <Frame title={null}>
                 <Switch>
+                  <Route path={welcome.template}>
+                    <UtilityBar>
+                      <ToastStack>
+                        <Welcome />
+                      </ToastStack>
+                    </UtilityBar>
+                  </Route>
                   <Route path={logout.template}>
                     <Frame title="Logout">
                       <Logout />

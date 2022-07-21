@@ -1,8 +1,12 @@
+import { validateAuth0Request } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { SearchClient } from 'algoliasearch';
-import { algoliaApiKey, algoliaApiKeyTtl } from '../../../config';
+import {
+  algoliaApiKey,
+  algoliaApiKeyTtl,
+  auth0SharedSecret,
+} from '../../../config';
 import { UserController } from '../../../controllers/users';
-import validateRequest from '../../../utils/validate-auth0-request';
 import { validateParams } from '../../../validation/fetch-by-code.validation';
 
 export const fetchUserByCodeHandlerFactory = (
@@ -12,7 +16,7 @@ export const fetchUserByCodeHandlerFactory = (
   ttl = algoliaApiKeyTtl,
 ): lambda.Handler =>
   lambda.http(async (request) => {
-    await validateRequest(request);
+    await validateAuth0Request(request, auth0SharedSecret);
 
     const { code } = validateParams(request.params as never);
 

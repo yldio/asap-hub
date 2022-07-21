@@ -1,17 +1,17 @@
+import { ValidationError } from '@asap-hub/errors';
+import { validateAuth0Request } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
-import { ValidationError } from '@asap-hub/errors';
-import { appName, baseUrl } from '../../config';
-import validateRequest from '../../utils/validate-auth0-request';
+import { appName, auth0SharedSecret, baseUrl } from '../../config';
 import Users, { UserController } from '../../controllers/user.controller';
-import { getAuthToken } from '../../utils/auth';
 import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
+import { getAuthToken } from '../../utils/auth';
 
 export const fetchUserByCodeHandlerFactory = (
   userController: UserController,
 ): lambda.Handler =>
   lambda.http(async (request) => {
-    await validateRequest(request);
+    validateAuth0Request(request, auth0SharedSecret);
 
     const { code } = validateParams(request.params);
 

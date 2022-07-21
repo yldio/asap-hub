@@ -2,6 +2,11 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
+import {
+  EventBridgeHandler,
+  UserEvent,
+  UserPayload,
+} from '@asap-hub/server-common';
 import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
@@ -13,12 +18,10 @@ import {
   baseUrl,
 } from '../../config';
 import Users, { UserController } from '../../controllers/users';
-import logger from '../../utils/logger';
-import { EventBridgeHandler } from '../../utils/types';
-import { UserEvent, UserPayload } from '../event-bus';
-import { getAuthToken } from '../../utils/auth';
-import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
 import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
+import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
+import { getAuthToken } from '../../utils/auth';
+import logger from '../../utils/logger';
 
 export const indexUserHandler =
   (

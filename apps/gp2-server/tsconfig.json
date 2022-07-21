@@ -21,6 +21,7 @@
   "references": [
     { "path": "../../packages/errors" },
     { "path": "../../packages/fixtures" },
+    { "path": "../../packages/message-templates" },
     { "path": "../../packages/model" },
     { "path": "../../packages/server-common" },
     { "path": "../../packages/services-common" },

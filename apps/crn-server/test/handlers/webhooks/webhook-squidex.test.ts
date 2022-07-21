@@ -1,10 +1,10 @@
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { EventBridge } from 'aws-sdk';
+import { eventBus, eventSource } from '../../../src/config';
 import { squidexWebhookFactory } from '../../../src/handlers/webhooks/webhook-squidex';
 import { getLabWebhookPayload } from '../../fixtures/labs.fixtures';
-import { createSignedPayload } from '../../helpers/webhooks';
 import { getApiGatewayEvent } from '../../helpers/events';
-import { eventBus, eventSource } from '../../../src/config';
+import { createSignedPayload } from '../../helpers/webhooks';
 
 describe('Squidex event webhook', () => {
   const evenBridgeMock = {

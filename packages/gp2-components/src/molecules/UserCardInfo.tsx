@@ -14,9 +14,11 @@ type UserCardInfoProps = Pick<ComponentProps<typeof UserRegion>, 'region'> & {
   projects: { id: string; name: string }[];
   role: string;
 };
+
 const containerStyles = css({
   marginBottom: rem(12),
 });
+
 const dotDivider = css({
   display: 'none',
   [crossQuery]: {
@@ -46,6 +48,7 @@ const workingGroupsStyles = css({
     flexDirection: 'row',
   },
 });
+
 const workingGroupsLinkStyles = css({
   [crossQuery]: {
     width: 'fit-content',
@@ -64,7 +67,7 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
   <div css={containerStyles}>
     <div css={rowStyles}>
       <IconWithLabel icon={roleIcon}>{role}</IconWithLabel>
-      <UserRegion region={region}></UserRegion>
+      <UserRegion region={region} />
     </div>
     <div css={rowStyles}>
       <IconWithLabel icon={workingGroupIcon}>

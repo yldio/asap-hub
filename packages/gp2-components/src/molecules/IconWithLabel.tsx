@@ -6,11 +6,13 @@ const { rem } = pixels;
 type IconWithLabelProps = {
   readonly icon: JSX.Element;
 };
+
 const styles = css({
   display: 'flex',
   gap: rem(9),
-  margin: `${rem(8)} 0`,
+  margin: `${rem(7.5)} 0`,
 });
+
 const iconStyles = css({
   display: 'inline-flex',
 });

@@ -15,6 +15,19 @@ const { rem, tabletScreen } = pixels;
 
 const avatarSize = 132;
 
+type UserCardProps = Pick<
+  ComponentProps<typeof UserCardInfo>,
+  'region' | 'projects' | 'role' | 'workingGroups'
+> & {
+  id: string;
+  displayName: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl?: string;
+  degree: string[];
+  tags: string[];
+};
+
 const containerStyles = css({
   display: 'grid',
   columnGap: rem(32),
@@ -44,18 +57,6 @@ const avatarStyles = css({
   height: rem(avatarSize),
 });
 
-type UserCardProps = Pick<
-  ComponentProps<typeof UserCardInfo>,
-  'region' | 'projects' | 'role' | 'workingGroups'
-> & {
-  id: string;
-  displayName: string;
-  firstName: string;
-  lastName: string;
-  avatarUrl?: string;
-  degree: string[];
-  tags: string[];
-};
 const UserCard: React.FC<UserCardProps> = ({
   id,
   displayName,
@@ -73,7 +74,7 @@ const UserCard: React.FC<UserCardProps> = ({
 
   return (
     <Card>
-      <div css={[containerStyles]}>
+      <div css={containerStyles}>
         <Anchor href={userHref}>
           <Avatar
             imageUrl={avatarUrl}
@@ -86,10 +87,10 @@ const UserCard: React.FC<UserCardProps> = ({
         <div css={textContainerStyles}>
           <div>
             <Anchor href={userHref}>
-              <h2 css={titleStyles}>
+              <h3 css={titleStyles}>
                 {displayName}
                 {degree && !!degree.length && `, ${degree.join(', ')}`}
-              </h2>
+              </h3>
             </Anchor>
           </div>
           <UserCardInfo

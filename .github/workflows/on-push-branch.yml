@@ -71,7 +71,7 @@ jobs:
       name: Branch
       url: ${{ steps.setup.outputs.crn-app-url }}
     needs: [verify]
-    if: success()
+    if: always()
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -81,5 +81,11 @@ jobs:
         with:
           environment-name: Branch
       - name: Print success
+        if: success()
         run: |
-          echo "Pipeline branch successful."
+          echo "### Pipeline branch successful. :rocket:" >> $GITHUB_STEP_SUMMARY
+      - name: Fail pipeline
+        if: failure()
+        run: |
+          echo "### Pipeline branch failed." >> $GITHUB_STEP_SUMMARY
+          exit 1

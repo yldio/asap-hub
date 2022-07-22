@@ -91,7 +91,7 @@ jobs:
             fi
           }
           echo "# Pipeline branch CI/CD" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Summary" >> $GITHUB_STEP_SUMMARY
           echo "| stage | status |" >> $GITHUB_STEP_SUMMARY
           echo "| ----- | ------ |" >> $GITHUB_STEP_SUMMARY
@@ -101,12 +101,12 @@ jobs:
           echo "| create-environment | $(statusIcon ${{ needs.create-environment.result }}) |" >> $GITHUB_STEP_SUMMARY
           echo "| deployment | $(statusIcon ${{ needs.deployment.result }}) |" >> $GITHUB_STEP_SUMMARY
           echo "| verify | $(statusIcon ${{ needs.verify.result }}) |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "" >> $GITHUB_STEP_SUMMARY
       - name: On failure
         if: ${{ !contains(needs.verify.result, 'success')}}
         run: |
-            echo "Build Failed! :fire:" >> $GITHUB_STEP_SUMMARY
-            exit 1
+          echo "Build Failed! :fire:" >> $GITHUB_STEP_SUMMARY
+          exit 1
       - name: On success
         run: |
           echo "Build Success! :rocket:" >> $GITHUB_STEP_SUMMARY

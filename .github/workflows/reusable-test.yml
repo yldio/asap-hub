@@ -110,7 +110,6 @@ jobs:
         uses: ./.github/actions/build-rebuild
       - name: Install Playwright
         run: |
-          exit 1
           yarn workspace @asap-hub/react-components run playwright install
       - name: Test browser
         run: |

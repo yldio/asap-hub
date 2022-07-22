@@ -73,14 +73,6 @@ jobs:
     needs: [test, build, build-analysis, create-environment, deployment, verify]
     if: ${{ always() }}
     steps:
-      - name: Fail pipeline
-        if: ${{ failure() }}
-        run: |
-          echo "### Pipeline branch failed. :fire:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
-          echo "_ test status: ${{ needs.test.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "_ test status: ${{ needs.test.build }}" >> $GITHUB_STEP_SUMMARY
-          exit 1
       - name: Checkout
         if: ${{ success() }}
         uses: actions/checkout@v3
@@ -89,9 +81,26 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
-      - name: Print success
+      - name: Test failure
+        if: ${{ failure() }}
         run: |
-          echo "### Pipeline branch successful. :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "Test failed"
+      - name: Test succcess
+        if: ${{ success() }}
+        run: |
+          echo "Test success"
+      - name: Determine status
+        run: |
+          echo "# Pipeline branch CI/CD" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
-          echo "_ test status: ${{ needs.test.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "_ test status: ${{ needs.test.build }}" >> $GITHUB_STEP_SUMMARY
+          echo "## Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| stage | status |" >> $GITHUB_STEP_SUMMARY
+          echo "| ----- | ------ |" >> $GITHUB_STEP_SUMMARY
+          echo "| test  | ${{ needs.test.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| build | ${{ needs.build.result }} |" >> $GITHUB_STEP_SUMMARY
+          status="${{ needs.test.result }}${{ needs.build.result }}"
+          if [[ $status =~ "failure" ]]; then
+            echo "Failed! :fire:" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+          echo "Success! :rocket:" >> $GITHUB_STEP_SUMMARY

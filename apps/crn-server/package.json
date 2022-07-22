@@ -138,7 +138,7 @@
     "serverless-s3-sync": "3.0.0",
     "serverless-webpack": "^5.7.1",
     "stream-json": "1.7.4",
-    "supertest": "6.2.3",
+    "supertest": "6.2.4",
     "yargs": "^17.3.1"
   },
   "serverless-webpack": {

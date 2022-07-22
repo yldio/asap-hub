@@ -645,7 +645,7 @@ __metadata:
     serverless-webpack: ^5.7.1
     source-map-support: 0.5.21
     stream-json: 1.7.4
-    supertest: 6.2.3
+    supertest: 6.2.4
     uuid: ^8.3.2
     yargs: ^17.3.1
   dependenciesMeta:
@@ -991,7 +991,7 @@ __metadata:
     serverless-s3-sync: 3.0.0
     serverless-webpack: ^5.7.1
     source-map-support: 0.5.21
-    supertest: 6.2.3
+    supertest: 6.2.4
     ts-node: ^10.7.0
     uuid: ^8.3.2
   languageName: unknown
@@ -1223,7 +1223,7 @@ __metadata:
     pino-http: ^6.6.0
     pino-lambda: ^3.0.1
     pino-noir: ^2.2.1
-    supertest: 6.2.3
+    supertest: 6.2.4
     uuid: ^8.3.2
   languageName: unknown
   linkType: soft
@@ -36673,32 +36673,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"superagent@npm:^7.1.3":
-  version: 7.1.6
-  resolution: "superagent@npm:7.1.6"
+"superagent@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "superagent@npm:8.0.0"
   dependencies:
-    component-emitter: "npm:^1.3.0"
-    cookiejar: "npm:^2.1.3"
-    debug: "npm:^4.3.4"
-    fast-safe-stringify: "npm:^2.1.1"
-    form-data: "npm:^4.0.0"
-    formidable: "npm:^2.0.1"
-    methods: "npm:^1.1.2"
-    mime: "npm:2.6.0"
-    qs: "npm:^6.10.3"
-    readable-stream: "npm:^3.6.0"
-    semver: "npm:^7.3.7"
-  checksum: b73316836003219f1a4886a6d77dd28551a6784c30e871009fb7bad699fae772b20370d39d2ccb5a543c9335ce12b43a76b959a3ca983f1d6365cb4b5682c08f
+    component-emitter: ^1.3.0
+    cookiejar: ^2.1.3
+    debug: ^4.3.4
+    fast-safe-stringify: ^2.1.1
+    form-data: ^4.0.0
+    formidable: ^2.0.1
+    methods: ^1.1.2
+    mime: 2.6.0
+    qs: ^6.10.3
+    readable-stream: ^3.6.0
+    semver: ^7.3.7
+  checksum: 14343e59327eafd85fa230acb876017079d5efcecc72a56566abc0f965220bb460af2e070dddecd9e2856410b2d2b318d81d9cc1d342aa5922da93c29a295dd7
   languageName: node
   linkType: hard
 
-"supertest@npm:6.2.3":
-  version: 6.2.3
-  resolution: "supertest@npm:6.2.3"
+"supertest@npm:6.2.4":
+  version: 6.2.4
+  resolution: "supertest@npm:6.2.4"
   dependencies:
-    methods: "npm:^1.1.2"
-    superagent: "npm:^7.1.3"
-  checksum: c1bed86c31723a4bc461153a58176fd80d675deb7d23ab7bd170213040673b35c38e3cbeab9a4eb8a325cf736176c08c6f6522e42f0293314f183e192a6681fa
+    methods: ^1.1.2
+    superagent: ^8.0.0
+  checksum: f2ddc4f3ba467a5c4036dd4aad41351e4b60eb13c39ecf5233ccd2ebb425504073b2b7036c973a70c7047f5c6bc1b9fef096b7bbff114d357cbe80654441db23
   languageName: node
   linkType: hard
 

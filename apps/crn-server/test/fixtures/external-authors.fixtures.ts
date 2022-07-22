@@ -1,4 +1,5 @@
 import {
+  ExternalAuthorCreateDataObject,
   ExternalAuthorResponse,
   ListExternalAuthorResponse,
 } from '@asap-hub/model';
@@ -131,3 +132,9 @@ export const getExternalAuthorEvent = (
     eventType,
     id,
   );
+
+export const getExternalAuthorCreateDataObject =
+  (): ExternalAuthorCreateDataObject => ({
+    name: 'External Author',
+    orcid: 'orcid-1',
+  });

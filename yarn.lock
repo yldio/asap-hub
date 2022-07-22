@@ -585,6 +585,7 @@ __metadata:
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": 17.1.8
     "@types/jest": 26.0.24
+    "@types/jest-when": ^3
     "@types/jsonwebtoken": 8.5.8
     "@types/jwt-decode": ^2.2.1
     "@types/jwt-encode": "workspace:*"
@@ -623,6 +624,7 @@ __metadata:
     graphql: ^15.5.0
     graphql-tag: ^2.12.4
     graphql-typescript-integration: ^1.2.0
+    jest-when: ^3.5.1
     jsonwebtoken: ^8.5.1
     jwt-decode: ^2.2.0
     jwt-encode: ^1.0.1
@@ -12180,6 +12182,15 @@ __metadata:
   dependencies:
     "@types/istanbul-lib-report": "npm:*"
   checksum: 286a18cff19c4dac4321b9ea406a3560faf577fb2a4df5abf9d577fa81ba831c9baa7d40d03f1daf7fe613d468546b731c00b844b72fad9834c583311a35bb7b
+  languageName: node
+  linkType: hard
+
+"@types/jest-when@npm:^3":
+  version: 3.5.2
+  resolution: "@types/jest-when@npm:3.5.2"
+  dependencies:
+    "@types/jest": "*"
+  checksum: 106230dd71ee266bbd7620ab339a7305054e56ba7638f0eff9f222e67a959df0ad68a7f0108156c50f7005881bae59cd5c38b3760c101d060cdb3dac9cd77ee2
   languageName: node
   linkType: hard
 
@@ -26771,6 +26782,15 @@ __metadata:
     jest-util: "npm:^27.5.1"
     string-length: "npm:^4.0.1"
   checksum: 191c4e9c278c0902ade1a8a80883ac244963ba3e6e78607a3d5f729ccca9c6e71fb3b316f87883658132641c5d818aa84202585c76752e03c539e6cbecb820bd
+  languageName: node
+  linkType: hard
+
+"jest-when@npm:^3.5.1":
+  version: 3.5.1
+  resolution: "jest-when@npm:3.5.1"
+  peerDependencies:
+    jest: ">= 25"
+  checksum: 1efb9f497f7c846fe8b0f4125d5f449c4a4d78d5d0afa910d134b301ae4c119ea52c9465db38d2146269d42808afe8f3a4328d1d656878a9a69458ee653f6499
   languageName: node
   linkType: hard
 

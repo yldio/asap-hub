@@ -72,8 +72,6 @@ jobs:
       url: ${{ steps.setup.outputs.crn-app-url }}
     needs: [test, build, build-analysis, create-environment, deployment, verify]
     if: ${{ always() }}
-    env:
-      IS_FAILURE: ${{ failure() }}
     steps:
       - name: Checkout
         if: ${{ success() }}
@@ -98,13 +96,8 @@ jobs:
           echo "| verify | ${{ needs.verify.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
 
-          echo $IS_FAILURE >> $GITHUB_STEP_SUMMARY
-          if [[ $IS_FAILURE -eq true ]]; then
-            echo "has failed"
-          fi
-
-          status="${{ needs.test.result }}${{ needs.build.result }}"
-          if [[ $status =~ "failure" ]]; then
+          status="${{ needs.verify.result }}"
+          if [[ $status =~ "success" ]]; then
             echo "Failed! :fire:" >> $GITHUB_STEP_SUMMARY
             exit 1
           fi

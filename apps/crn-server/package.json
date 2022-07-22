@@ -45,7 +45,7 @@
     "@hapi/boom": "9.1.4",
     "@hapi/bourne": "2.1.0",
     "@hapi/joi": "^17.1.1",
-    "@sentry/serverless": "^6.7.1",
+    "@sentry/serverless": "7.7.0",
     "@types/hapi__joi": "17.1.8",
     "@types/parse-data-url": "^3.0.0",
     "@types/yargs": "^17.0.5",

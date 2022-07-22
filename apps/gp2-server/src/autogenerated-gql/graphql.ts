@@ -3715,18 +3715,6 @@ export type ResearchOutputsReferencingTeamsContentsWithTotalArgs = {
   top: Maybe<Scalars['Int']>;
 };
 
-/** The structure of the Access Instructions field of the Research Outputs content type. */
-export type ResearchOutputsDataAccessInstructionsDto = {
-  /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Access Instructions field of the Research Outputs content input type. */
-export type ResearchOutputsDataAccessInstructionsInputDto = {
-  /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
-  iv: Maybe<Scalars['String']>;
-};
-
 /** The structure of the Identifier (Accession #) field of the Research Outputs content type. */
 export type ResearchOutputsDataAccessionDto = {
   /** This must start with a letter */
@@ -3833,7 +3821,6 @@ export type ResearchOutputsDataDoiInputDto = {
 
 /** The structure of the Research Outputs data type. */
 export type ResearchOutputsDataDto = {
-  accessInstructions: Maybe<ResearchOutputsDataAccessInstructionsDto>;
   accession: Maybe<ResearchOutputsDataAccessionDto>;
   addedDate: Maybe<ResearchOutputsDataAddedDateDto>;
   adminNotes: Maybe<ResearchOutputsDataAdminNotesDto>;
@@ -3858,6 +3845,7 @@ export type ResearchOutputsDataDto = {
   title: Maybe<ResearchOutputsDataTitleDto>;
   type: Maybe<ResearchOutputsDataTypeDto>;
   updatedBy: Maybe<ResearchOutputsDataUpdatedByDto>;
+  usageNotes: Maybe<ResearchOutputsDataUsageNotesDto>;
   usedInAPublication: Maybe<ResearchOutputsDataUsedInAPublicationDto>;
 };
 
@@ -3873,7 +3861,6 @@ export type ResearchOutputsDataEnvironmentsInputDto = {
 
 /** The structure of the Research Outputs data input type. */
 export type ResearchOutputsDataInputDto = {
-  accessInstructions: Maybe<ResearchOutputsDataAccessInstructionsInputDto>;
   accession: Maybe<ResearchOutputsDataAccessionInputDto>;
   addedDate: Maybe<ResearchOutputsDataAddedDateInputDto>;
   adminNotes: Maybe<ResearchOutputsDataAdminNotesInputDto>;
@@ -3898,6 +3885,7 @@ export type ResearchOutputsDataInputDto = {
   title: Maybe<ResearchOutputsDataTitleInputDto>;
   type: Maybe<ResearchOutputsDataTypeInputDto>;
   updatedBy: Maybe<ResearchOutputsDataUpdatedByInputDto>;
+  usageNotes: Maybe<ResearchOutputsDataUsageNotesInputDto>;
   usedInAPublication: Maybe<ResearchOutputsDataUsedInAPublicationInputDto>;
 };
 
@@ -4049,6 +4037,18 @@ export type ResearchOutputsDataUpdatedByInputDto = {
   iv: Maybe<Array<Scalars['String']>>;
 };
 
+/** The structure of the Usage Notes field of the Research Outputs content type. */
+export type ResearchOutputsDataUsageNotesDto = {
+  /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Usage Notes field of the Research Outputs content input type. */
+export type ResearchOutputsDataUsageNotesInputDto = {
+  /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
+  iv: Maybe<Scalars['String']>;
+};
+
 /** The structure of the Used in a Publication field of the Research Outputs content type. */
 export type ResearchOutputsDataUsedInAPublicationDto = {
   /** "Not sure" will not be shown on the Hub */
@@ -4063,8 +4063,6 @@ export type ResearchOutputsDataUsedInAPublicationInputDto = {
 
 /** The structure of the flat Research Outputs data type. */
 export type ResearchOutputsFlatDataDto = {
-  /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
-  accessInstructions: Maybe<Scalars['String']>;
   /** This must start with a letter */
   accession: Maybe<Scalars['String']>;
   /** Date output was shared with ASAP Network (different from publication date) */
@@ -4099,6 +4097,8 @@ export type ResearchOutputsFlatDataDto = {
   title: Maybe<Scalars['String']>;
   type: Maybe<Scalars['String']>;
   updatedBy: Maybe<Array<Users>>;
+  /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
+  usageNotes: Maybe<Scalars['String']>;
   /** "Not sure" will not be shown on the Hub */
   usedInAPublication: Maybe<Scalars['String']>;
 };

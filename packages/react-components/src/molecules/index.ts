@@ -28,6 +28,7 @@ export { default as LabeledRadioButtonGroup } from './LabeledRadioButtonGroup';
 export { default as LabeledTextArea } from './LabeledTextArea';
 export { default as LabeledTextField } from './LabeledTextField';
 export { default as LabeledTypeahead } from './LabeledTypeahead';
+export { default as LinkHeadline } from './LinkHeadline';
 export { default as ListControls } from './ListControls';
 export { default as Loading } from './Loading';
 export { default as MembersList } from './MembersList';

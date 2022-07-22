@@ -1,7 +1,7 @@
-import { TextChildren, layoutStyles, headlineStyles } from '../text';
+import { layoutStyles, headlineStyles, AllowedChildren } from '../text';
 
 interface DisplayProps {
-  readonly children: TextChildren;
+  readonly children: AllowedChildren;
   readonly id?: string;
   readonly styleAsHeading?: keyof typeof headlineStyles;
 }

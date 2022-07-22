@@ -11080,6 +11080,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/express", "npm:4.17.11"],\
             ["@types/jest", "npm:26.0.24"],\
             ["@types/jsonwebtoken", "npm:8.5.8"],\
+            ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
             ["@types/node", "npm:14.18.22"],\
             ["@types/serverless", "npm:3.12.7"],\
             ["@types/source-map-support", "npm:0.5.4"],\
@@ -11096,6 +11097,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-tag", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:2.12.4"],\
             ["graphql-typescript-integration", "npm:1.2.0"],\
             ["jsonwebtoken", "npm:8.5.1"],\
+            ["jwt-encode", "npm:1.0.1"],\
             ["nock", "npm:13.0.11"],\
             ["serverless", "npm:3.19.0"],\
             ["serverless-http", "npm:2.7.0"],\
@@ -11651,6 +11653,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express-async-errors", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1"],\
             ["got", "npm:11.8.5"],\
             ["jsonwebtoken", "npm:8.5.1"],\
+            ["jwt-encode", "npm:1.0.1"],\
+            ["nock", "npm:13.0.11"],\
             ["pino", "npm:7.11.0"],\
             ["pino-http", "npm:6.6.0"],\
             ["pino-lambda", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.0.1"],\

@@ -1,38 +1,40 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   createGroupResponse,
   createListEventResponse,
 } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
+import { disable } from '@asap-hub/flags';
 
 import GroupProfile from '../GroupProfile';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { refreshGroupState } from '../state';
 import { getGroup } from '../api';
-import { getGroupEvents } from '../events/api';
+import { getEvents, getEventsFromAlgolia } from '../../../events/api';
 
 jest.mock('../api');
-jest.mock('../events/api');
 jest.mock('../../../events/api');
 
 const mockGetGroup = getGroup as jest.MockedFunction<typeof getGroup>;
-const mockGetGroupEvents = getGroupEvents as jest.MockedFunction<
-  typeof getGroupEvents
->;
+const mockGetGroupEvents = getEvents as jest.MockedFunction<typeof getEvents>;
+const mockGetGroupEventsFromAlgolia =
+  getEventsFromAlgolia as jest.MockedFunction<typeof getEventsFromAlgolia>;
+
+beforeEach(jest.clearAllMocks);
 
 const renderGroupProfile = async (
   groupResponse = createGroupResponse(),
   { groupId = groupResponse.id } = {},
-  getEvents = async () => createListEventResponse(5),
+  getEventsFromSquidex = async () => createListEventResponse(1),
 ) => {
   mockGetGroup.mockImplementation(async (id) =>
     id === groupResponse.id ? groupResponse : undefined,
   );
-  mockGetGroupEvents.mockImplementation(getEvents);
+  mockGetGroupEvents.mockImplementation(getEventsFromSquidex);
 
   const result = render(
     <RecoilRoot
@@ -116,6 +118,7 @@ describe('the upcoming events tab', () => {
   });
 
   it('can search for events', async () => {
+    disable('EVENTS_SEARCH');
     const { findByRole, findByText } = await renderGroupProfile({
       ...createGroupResponse(),
       id: '42',
@@ -124,8 +127,10 @@ describe('the upcoming events tab', () => {
     userEvent.type(await findByRole('searchbox'), 'searchterm');
     await waitFor(() =>
       expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
-        '42',
-        expect.objectContaining({ searchQuery: 'searchterm' }),
+        expect.objectContaining({
+          searchQuery: 'searchterm',
+          constraint: { groupId: '42' },
+        }),
         expect.anything(),
       ),
     );
@@ -139,19 +144,8 @@ describe('the past events tab', () => {
     expect(await findByText(/results/i)).toBeVisible();
   });
 
-  it('preserves the search query from another tab', async () => {
-    const { findByRole, findByText } = await renderGroupProfile();
-
-    userEvent.click(await findByText(/upcoming/i, { selector: 'nav a *' }));
-    userEvent.type(await findByRole('searchbox'), 'searchterm');
-
-    userEvent.click(await findByText(/past/i, { selector: 'nav a *' }));
-    expect(await findByText(/results/i)).toBeVisible();
-
-    expect(await findByRole('searchbox')).toHaveValue('searchterm');
-  });
-
   it('displays proper information for empty events response', async () => {
+    disable('EVENTS_SEARCH');
     const { findByText } = await renderGroupProfile(
       {
         ...createGroupResponse(),
@@ -165,5 +159,30 @@ describe('the past events tab', () => {
     expect(
       await findByText(/test doesn’t have any past events!/i),
     ).toBeVisible();
+  });
+});
+
+describe('the event tabs', () => {
+  it('renders number of upcoming events from algolia', async () => {
+    const response = createListEventResponse(7);
+    mockGetGroupEventsFromAlgolia.mockResolvedValue(response);
+    await renderGroupProfile();
+
+    expect(await screen.findByText(/Upcoming Events \(7\)/i)).toBeVisible();
+  });
+
+  it('renders number of past events from algolia', async () => {
+    const response = createListEventResponse(7, { isEventInThePast: true });
+    mockGetGroupEventsFromAlgolia.mockResolvedValue(response);
+    await renderGroupProfile();
+
+    expect(await screen.findByText(/Past Events \(7\)/i)).toBeVisible();
+  });
+
+  it('calls squidex if the EVENTS_SEARCH flag is disabled ((Regression))', async () => {
+    disable('EVENTS_SEARCH');
+    await renderGroupProfile();
+
+    expect(mockGetGroupEvents).toHaveBeenCalled();
   });
 });

@@ -32,11 +32,16 @@ export const getEventsFromAlgolia = async (
   return { items: result.hits, total: result.nbHits };
 };
 
+export const getSquidexUrl = (options: GetEventListOptions): URL =>
+  options.constraint?.groupId
+    ? createListApiUrl(`groups/${options.constraint?.groupId}/events`, options)
+    : createListApiUrl('events', options);
+
 export const getEvents = async (
   options: GetEventListOptions,
   authorization: string,
 ): Promise<ListEventResponse> => {
-  const url = createListApiUrl('events', options);
+  const url = getSquidexUrl(options);
 
   if (options.before) url.searchParams.append('before', options.before);
   else if (options.after) url.searchParams.append('after', options.after);

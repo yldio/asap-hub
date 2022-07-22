@@ -26,14 +26,14 @@ const loadWorkspace = () =>
 
 const loadTeamOutput = () =>
   import(/* webpackChunkName: "network-team-team-output" */ './TeamOutput');
-const loadEvents = () =>
-  import(/* webpackChunkName: "network-events" */ '../EventsEmbed');
+const loadEventsList = () =>
+  import(/* webpackChunkName: "network-events" */ '../EventsEmbedList');
 
 const TeamOutput = lazy(loadTeamOutput);
 const About = lazy(loadAbout);
 const Outputs = lazy(loadOutputs);
 const Workspace = lazy(loadWorkspace);
-const Events = lazy(loadEvents);
+const EventsList = lazy(loadEventsList);
 loadAbout();
 
 type TeamProfileProps = {
@@ -114,11 +114,10 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
               {isEventsEnabled && (
                 <Route path={path + route({ teamId }).upcoming.template}>
                   <Frame title="Upcoming Events">
-                    <Events
+                    <EventsList
                       constraint={{ teamId }}
                       currentTime={currentTime}
                       past={false}
-                      events={upcomingEventsResult}
                       noEventsComponent={
                         <NoEvents
                           displayName={team.displayName}
@@ -134,8 +133,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
               {isEventsEnabled && (
                 <Route path={path + route({ teamId }).past.template}>
                   <Frame title="Past Events">
-                    <Events
-                      events={pastEventsResult}
+                    <EventsList
                       constraint={{ teamId }}
                       currentTime={currentTime}
                       past={true}

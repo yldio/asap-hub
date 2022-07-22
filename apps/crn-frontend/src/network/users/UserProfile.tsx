@@ -31,13 +31,13 @@ const loadOutputs = () =>
   import(/* webpackChunkName: "network-profile-outputs" */ './Outputs');
 const loadEditing = () =>
   import(/* webpackChunkName: "network-editing" */ './Editing');
-const loadEvents = () =>
-  import(/* webpackChunkName: "network-events" */ '../EventsEmbed');
+const loadEventsList = () =>
+  import(/* webpackChunkName: "network-events" */ '../EventsEmbedList');
 const Research = lazy(loadResearch);
 const About = lazy(loadAbout);
 const Outputs = lazy(loadOutputs);
 const Editing = lazy(loadEditing);
-const Events = lazy(loadEvents);
+const EventsList = lazy(loadEventsList);
 
 type UserProfileProps = {
   currentTime: Date;
@@ -153,7 +153,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                   {isEventsEnabled && (
                     <Route path={path + tabRoutes.upcoming.template}>
                       <Frame title="Upcoming Events">
-                        <Events
+                        <EventsList
                           constraint={{ userId: user?.id }}
                           currentTime={currentTime}
                           past={false}
@@ -171,7 +171,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                   {isEventsEnabled && (
                     <Route path={path + tabRoutes.past.template}>
                       <Frame title="Past Events">
-                        <Events
+                        <EventsList
                           past
                           constraint={{ userId: user?.id }}
                           currentTime={currentTime}
@@ -183,17 +183,6 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                               type="user"
                             />
                           }
-                        />
-                      </Frame>
-                    </Route>
-                  )}
-                  {isEventsEnabled && (
-                    <Route path={path + tabRoutes.past.template}>
-                      <Frame title="Past Events">
-                        <Events
-                          constraint={{ userId: user?.id }}
-                          currentTime={currentTime}
-                          past={true}
                         />
                       </Frame>
                     </Route>

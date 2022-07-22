@@ -5,7 +5,7 @@ import { usePagination, usePaginationParams, useSearch } from '../hooks';
 import { useEvents } from '../events/state';
 import { getEventListOptions } from '../events/options';
 
-type EventsEmbedProps = {
+type EventsEmbedListProps = {
   readonly currentTime: Date;
   readonly past: boolean;
   readonly constraint: EventConstraint;
@@ -14,7 +14,7 @@ type EventsEmbedProps = {
   readonly events?: ListEventResponse;
 };
 
-const EventsEmbed: React.FC<EventsEmbedProps> = ({
+const EventsEmbedList: React.FC<EventsEmbedListProps> = ({
   currentTime,
   constraint,
   past,
@@ -58,7 +58,7 @@ const EventsEmbed: React.FC<EventsEmbedProps> = ({
   );
 };
 
-type EventsDisplayProps = EventsEmbedProps & {
+type EventsDisplayProps = EventsEmbedListProps & {
   searchQuery: string;
   events?: ListEventResponse;
 };
@@ -94,4 +94,4 @@ const EventsDisplay: React.FC<EventsDisplayProps> = ({
   );
 };
 
-export default EventsEmbed;
+export default EventsEmbedList;

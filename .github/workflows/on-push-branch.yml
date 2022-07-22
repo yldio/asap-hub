@@ -72,6 +72,8 @@ jobs:
       url: ${{ steps.setup.outputs.crn-app-url }}
     needs: [test, build, build-analysis, create-environment, deployment, verify]
     if: ${{ always() }}
+    env:
+      IS_FAILURE: ${{ failure() }}
     steps:
       - name: Checkout
         if: ${{ success() }}
@@ -81,14 +83,6 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
-      - name: Test failure
-        if: ${{ failure() }}
-        run: |
-          echo "Test failed"
-      - name: Test succcess
-        if: ${{ success() }}
-        run: |
-          echo "Test success"
       - name: Determine status
         run: |
           echo "# Pipeline branch CI/CD" >> $GITHUB_STEP_SUMMARY
@@ -98,6 +92,17 @@ jobs:
           echo "| ----- | ------ |" >> $GITHUB_STEP_SUMMARY
           echo "| test  | ${{ needs.test.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| build | ${{ needs.build.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| build-analysis | ${{ needs.build-analysis.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| create-environment | ${{ needs.create-environment.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| deployment | ${{ needs.deployment.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| verify | ${{ needs.verify.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+
+          echo $IS_FAILURE >> $GITHUB_STEP_SUMMARY
+          if [[ $IS_FAILURE -eq true ]]; then
+            echo "has failed"
+          fi
+
           status="${{ needs.test.result }}${{ needs.build.result }}"
           if [[ $status =~ "failure" ]]; then
             echo "Failed! :fire:" >> $GITHUB_STEP_SUMMARY

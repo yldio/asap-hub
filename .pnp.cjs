@@ -1653,7 +1653,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@sentry/cli",\
-        "npm:1.74.4"\
+        "npm:1.74.5"\
       ],\
       [\
         "@sentry/core",\
@@ -10395,7 +10395,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@auth0/auth0-spa-js", "npm:1.22.2"],\
             ["@babel/runtime-corejs3", "npm:7.18.6"],\
             ["@fast-csv/format", "npm:4.3.5"],\
-            ["@sentry/cli", "npm:1.74.4"],\
+            ["@sentry/cli", "npm:1.74.5"],\
             ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:6.11.0"],\
             ["@sentry/tracing", "npm:6.11.0"],\
             ["@testing-library/dom", "npm:7.31.2"],\
@@ -10968,7 +10968,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@auth0/auth0-spa-js", "npm:1.22.2"],\
             ["@babel/runtime-corejs3", "npm:7.18.6"],\
             ["@fast-csv/format", "npm:4.3.5"],\
-            ["@sentry/cli", "npm:1.74.4"],\
+            ["@sentry/cli", "npm:1.74.5"],\
             ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:6.11.0"],\
             ["@sentry/tracing", "npm:6.11.0"],\
             ["@testing-library/dom", "npm:7.31.2"],\
@@ -29366,13 +29366,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@sentry/cli", [\
-        ["npm:1.74.4", {\
-          "packageLocation": "./.yarn/unplugged/@sentry-cli-npm-1.74.4-2ea938c985/node_modules/@sentry/cli/",\
+        ["npm:1.74.5", {\
+          "packageLocation": "./.yarn/unplugged/@sentry-cli-npm-1.74.5-b26b81913f/node_modules/@sentry/cli/",\
           "packageDependencies": [\
-            ["@sentry/cli", "npm:1.74.4"],\
+            ["@sentry/cli", "npm:1.74.5"],\
             ["https-proxy-agent", "npm:5.0.0"],\
             ["mkdirp", "npm:0.5.5"],\
-            ["node-fetch", "virtual:2ea938c9851aed4911fdf4b9bfc082b0d1843923e5d7326fbf01fffd071ab37e8a4f54a9d96b8fd3b9dd051cec15bf297c7dbb99c77a624c3b960cc6d85d2c07#npm:2.6.7"],\
+            ["node-fetch", "virtual:b26b81913f9ef20c29de5afaf3c0ca24484f392fcba8dbfc3e862e9c14a3125c5becc5916e11f2fa34f75cb763cc7b9c600437cecd04e39e78cd2f82aa6f9a22#npm:2.6.7"],\
             ["npmlog", "npm:4.1.2"],\
             ["progress", "npm:2.0.3"],\
             ["proxy-from-env", "npm:1.1.0"],\
@@ -29593,7 +29593,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["memoizee", "npm:0.4.15"],\
             ["ncjsm", "npm:4.3.0"],\
             ["node-dir", "npm:0.1.17"],\
-            ["node-fetch", "virtual:2ea938c9851aed4911fdf4b9bfc082b0d1843923e5d7326fbf01fffd071ab37e8a4f54a9d96b8fd3b9dd051cec15bf297c7dbb99c77a624c3b960cc6d85d2c07#npm:2.6.7"],\
+            ["node-fetch", "virtual:b26b81913f9ef20c29de5afaf3c0ca24484f392fcba8dbfc3e862e9c14a3125c5becc5916e11f2fa34f75cb763cc7b9c600437cecd04e39e78cd2f82aa6f9a22#npm:2.6.7"],\
             ["open", "npm:7.4.2"],\
             ["semver", "npm:7.3.7"],\
             ["simple-git", "npm:3.7.1"],\
@@ -29676,7 +29676,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["make-dir", "npm:3.1.0"],\
             ["memoizee", "npm:0.4.15"],\
             ["ncjsm", "npm:4.3.0"],\
-            ["node-fetch", "virtual:2ea938c9851aed4911fdf4b9bfc082b0d1843923e5d7326fbf01fffd071ab37e8a4f54a9d96b8fd3b9dd051cec15bf297c7dbb99c77a624c3b960cc6d85d2c07#npm:2.6.7"],\
+            ["node-fetch", "virtual:b26b81913f9ef20c29de5afaf3c0ca24484f392fcba8dbfc3e862e9c14a3125c5becc5916e11f2fa34f75cb763cc7b9c600437cecd04e39e78cd2f82aa6f9a22#npm:2.6.7"],\
             ["open", "npm:7.4.2"],\
             ["p-event", "npm:4.2.0"],\
             ["supports-color", "npm:8.1.1"],\
@@ -30796,7 +30796,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["globby", "npm:11.1.0"],\
             ["ip", "npm:2.0.0"],\
             ["lodash", "npm:4.17.21"],\
-            ["node-fetch", "virtual:2ea938c9851aed4911fdf4b9bfc082b0d1843923e5d7326fbf01fffd071ab37e8a4f54a9d96b8fd3b9dd051cec15bf297c7dbb99c77a624c3b960cc6d85d2c07#npm:2.6.7"],\
+            ["node-fetch", "virtual:b26b81913f9ef20c29de5afaf3c0ca24484f392fcba8dbfc3e862e9c14a3125c5becc5916e11f2fa34f75cb763cc7b9c600437cecd04e39e78cd2f82aa6f9a22#npm:2.6.7"],\
             ["open", "npm:8.4.0"],\
             ["pretty-hrtime", "npm:1.0.3"],\
             ["prompts", "npm:2.4.0"],\
@@ -30935,7 +30935,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["find-up", "npm:5.0.0"],\
             ["fs-extra", "npm:9.0.1"],\
             ["html-webpack-plugin", "virtual:fcc4a9ed399a42863413772ed3d11d77d53ea633fef9970dc766e936a5fb5cd15c3e8bc843b7c34652b8a38f83d3d41e5267716058a7fbb98dfe24655f97d795#npm:4.5.2"],\
-            ["node-fetch", "virtual:2ea938c9851aed4911fdf4b9bfc082b0d1843923e5d7326fbf01fffd071ab37e8a4f54a9d96b8fd3b9dd051cec15bf297c7dbb99c77a624c3b960cc6d85d2c07#npm:2.6.7"],\
+            ["node-fetch", "virtual:b26b81913f9ef20c29de5afaf3c0ca24484f392fcba8dbfc3e862e9c14a3125c5becc5916e11f2fa34f75cb763cc7b9c600437cecd04e39e78cd2f82aa6f9a22#npm:2.6.7"],\
             ["pnp-webpack-plugin", "npm:1.6.4"],\
             ["react", "npm:17.0.2"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:17.0.2"],\
@@ -52651,10 +52651,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["virtual:2ea938c9851aed4911fdf4b9bfc082b0d1843923e5d7326fbf01fffd071ab37e8a4f54a9d96b8fd3b9dd051cec15bf297c7dbb99c77a624c3b960cc6d85d2c07#npm:2.6.7", {\
-          "packageLocation": "./.yarn/__virtual__/node-fetch-virtual-999e2cb80d/0/cache/node-fetch-npm-2.6.7-777aa2a6df-8d816ffd1e.zip/node_modules/node-fetch/",\
+        ["virtual:b26b81913f9ef20c29de5afaf3c0ca24484f392fcba8dbfc3e862e9c14a3125c5becc5916e11f2fa34f75cb763cc7b9c600437cecd04e39e78cd2f82aa6f9a22#npm:2.6.7", {\
+          "packageLocation": "./.yarn/__virtual__/node-fetch-virtual-507810fda2/0/cache/node-fetch-npm-2.6.7-777aa2a6df-8d816ffd1e.zip/node_modules/node-fetch/",\
           "packageDependencies": [\
-            ["node-fetch", "virtual:2ea938c9851aed4911fdf4b9bfc082b0d1843923e5d7326fbf01fffd071ab37e8a4f54a9d96b8fd3b9dd051cec15bf297c7dbb99c77a624c3b960cc6d85d2c07#npm:2.6.7"],\
+            ["node-fetch", "virtual:b26b81913f9ef20c29de5afaf3c0ca24484f392fcba8dbfc3e862e9c14a3125c5becc5916e11f2fa34f75cb763cc7b9c600437cecd04e39e78cd2f82aa6f9a22#npm:2.6.7"],\
             ["@types/encoding", null],\
             ["encoding", null],\
             ["whatwg-url", "npm:5.0.0"]\
@@ -52909,7 +52909,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ext", "npm:1.6.0"],\
             ["fs2", "npm:0.3.9"],\
             ["memoizee", "npm:0.4.15"],\
-            ["node-fetch", "virtual:2ea938c9851aed4911fdf4b9bfc082b0d1843923e5d7326fbf01fffd071ab37e8a4f54a9d96b8fd3b9dd051cec15bf297c7dbb99c77a624c3b960cc6d85d2c07#npm:2.6.7"],\
+            ["node-fetch", "virtual:b26b81913f9ef20c29de5afaf3c0ca24484f392fcba8dbfc3e862e9c14a3125c5becc5916e11f2fa34f75cb763cc7b9c600437cecd04e39e78cd2f82aa6f9a22#npm:2.6.7"],\
             ["semver", "npm:7.3.5"],\
             ["type", "npm:2.6.0"],\
             ["validate-npm-package-name", "npm:3.0.0"]\
@@ -59249,7 +59249,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lodash", "npm:4.17.21"],\
             ["memoizee", "npm:0.4.15"],\
             ["micromatch", "npm:4.0.5"],\
-            ["node-fetch", "virtual:2ea938c9851aed4911fdf4b9bfc082b0d1843923e5d7326fbf01fffd071ab37e8a4f54a9d96b8fd3b9dd051cec15bf297c7dbb99c77a624c3b960cc6d85d2c07#npm:2.6.7"],\
+            ["node-fetch", "virtual:b26b81913f9ef20c29de5afaf3c0ca24484f392fcba8dbfc3e862e9c14a3125c5becc5916e11f2fa34f75cb763cc7b9c600437cecd04e39e78cd2f82aa6f9a22#npm:2.6.7"],\
             ["npm-registry-utilities", "npm:1.0.0"],\
             ["object-hash", "npm:2.2.0"],\
             ["open", "npm:7.4.2"],\

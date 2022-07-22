@@ -3780,7 +3780,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "copy-webpack-plugin",\
-        "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:9.0.0"\
+        "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:9.1.0"\
       ],\
       [\
         "core-js",\
@@ -10523,7 +10523,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["aws-xray-sdk", "npm:3.3.6"],\
             ["babel-loader", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:8.2.5"],\
             ["chance", "npm:1.1.8"],\
-            ["copy-webpack-plugin", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:9.0.0"],\
+            ["copy-webpack-plugin", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:9.1.0"],\
             ["cors", "npm:2.8.5"],\
             ["csv-parse", "npm:4.15.4"],\
             ["debug", "virtual:4efd4efcc91d6a84943d5c69282ec5b841bc0a4bf4501bc904312b466c01ef55cfcb96c59c3173e19c9fb2cdfd84604de66717c6416485578546f9d4d26b13a7#npm:4.3.4"],\
@@ -39482,25 +39482,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["copy-webpack-plugin", [\
-        ["npm:9.0.0", {\
-          "packageLocation": "./.yarn/cache/copy-webpack-plugin-npm-9.0.0-6ae03008e1-f3ca9d206b.zip/node_modules/copy-webpack-plugin/",\
+        ["npm:9.1.0", {\
+          "packageLocation": "./.yarn/cache/copy-webpack-plugin-npm-9.1.0-ea49123db5-06cb4fb6fc.zip/node_modules/copy-webpack-plugin/",\
           "packageDependencies": [\
-            ["copy-webpack-plugin", "npm:9.0.0"]\
+            ["copy-webpack-plugin", "npm:9.1.0"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:9.0.0", {\
-          "packageLocation": "./.yarn/__virtual__/copy-webpack-plugin-virtual-2ec7669ff0/0/cache/copy-webpack-plugin-npm-9.0.0-6ae03008e1-f3ca9d206b.zip/node_modules/copy-webpack-plugin/",\
+        ["virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:9.1.0", {\
+          "packageLocation": "./.yarn/__virtual__/copy-webpack-plugin-virtual-eaa25f964e/0/cache/copy-webpack-plugin-npm-9.1.0-ea49123db5-06cb4fb6fc.zip/node_modules/copy-webpack-plugin/",\
           "packageDependencies": [\
-            ["copy-webpack-plugin", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:9.0.0"],\
+            ["copy-webpack-plugin", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:9.1.0"],\
             ["@types/webpack", null],\
-            ["fast-glob", "npm:3.2.5"],\
-            ["glob-parent", "npm:6.0.0"],\
+            ["fast-glob", "npm:3.2.7"],\
+            ["glob-parent", "npm:6.0.2"],\
             ["globby", "npm:11.0.3"],\
             ["normalize-path", "npm:3.0.0"],\
-            ["p-limit", "npm:3.1.0"],\
-            ["schema-utils", "npm:3.0.0"],\
-            ["serialize-javascript", "npm:5.0.1"],\
+            ["schema-utils", "npm:3.1.1"],\
+            ["serialize-javascript", "npm:6.0.0"],\
             ["webpack", null]\
           ],\
           "packagePeers": [\
@@ -43797,19 +43796,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:3.2.5", {\
-          "packageLocation": "./.yarn/cache/fast-glob-npm-3.2.5-0225b8bd94-5d6772c9b6.zip/node_modules/fast-glob/",\
-          "packageDependencies": [\
-            ["fast-glob", "npm:3.2.5"],\
-            ["@nodelib/fs.stat", "npm:2.0.3"],\
-            ["@nodelib/fs.walk", "npm:1.2.4"],\
-            ["glob-parent", "npm:5.1.1"],\
-            ["merge2", "npm:1.3.0"],\
-            ["micromatch", "npm:4.0.2"],\
-            ["picomatch", "npm:2.2.2"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:3.2.7", {\
           "packageLocation": "./.yarn/cache/fast-glob-npm-3.2.7-a2f0a45f5b-2f4708ff11.zip/node_modules/fast-glob/",\
           "packageDependencies": [\
@@ -45321,11 +45307,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:6.0.0", {\
-          "packageLocation": "./.yarn/cache/glob-parent-npm-6.0.0-eb3c9d1785-48c492051a.zip/node_modules/glob-parent/",\
+        ["npm:6.0.2", {\
+          "packageLocation": "./.yarn/cache/glob-parent-npm-6.0.2-2cbef12738-c13ee97978.zip/node_modules/glob-parent/",\
           "packageDependencies": [\
-            ["glob-parent", "npm:6.0.0"],\
-            ["is-glob", "npm:4.0.1"]\
+            ["glob-parent", "npm:6.0.2"],\
+            ["is-glob", "npm:4.0.3"]\
           ],\
           "linkType": "HARD"\
         }]\

@@ -81,7 +81,7 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
-      - name: Determine status
+      - name: Print status
         run: |
           echo "# Pipeline branch CI/CD" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
@@ -95,10 +95,15 @@ jobs:
           echo "| deployment | ${{ needs.deployment.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| verify | ${{ needs.verify.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
-
-          status="${{ needs.verify.result }}"
-          if [[ $status =~ "success" ]]; then
+      - name: test
+        if: ${{ contains(needs.build.result, 'success')}}
+        run: |
+          echo "build Success!" >> $GITHUB_STEP_SUMMARY
+      - name: On failure
+        if: ${{ !contains(needs.verify.result, 'success')}}
+        run: |
             echo "Failed! :fire:" >> $GITHUB_STEP_SUMMARY
             exit 1
-          fi
+      - name: On success
+        run: |
           echo "Success! :rocket:" >> $GITHUB_STEP_SUMMARY

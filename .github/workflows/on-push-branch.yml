@@ -83,27 +83,30 @@ jobs:
           environment-name: Branch
       - name: Print status
         run: |
+          function statusIcon () {
+            if [ "$1" == "success" ]; then
+              echo ":tada:"
+            else
+              echo ":warning:"
+            fi
+          }
           echo "# Pipeline branch CI/CD" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           echo "## Summary" >> $GITHUB_STEP_SUMMARY
           echo "| stage | status |" >> $GITHUB_STEP_SUMMARY
           echo "| ----- | ------ |" >> $GITHUB_STEP_SUMMARY
-          echo "| test  | ${{ needs.test.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| build | ${{ needs.build.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| build-analysis | ${{ needs.build-analysis.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| create-environment | ${{ needs.create-environment.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| deployment | ${{ needs.deployment.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| verify | ${{ needs.verify.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| test | $(statusIcon ${{  needs.test.result }}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| build |  $(statusIcon ${{ needs.build.result }}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| build-analysis | $(statusIcon ${{ needs.build-analysis.result }}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| create-environment | $(statusIcon ${{ needs.create-environment.result }}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| deployment | $(statusIcon ${{ needs.deployment.result }}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| verify | $(statusIcon ${{ needs.verify.result }}) |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
-      - name: test
-        if: ${{ contains(needs.build.result, 'success')}}
-        run: |
-          echo "build Success!" >> $GITHUB_STEP_SUMMARY
       - name: On failure
         if: ${{ !contains(needs.verify.result, 'success')}}
         run: |
-            echo "Failed! :fire:" >> $GITHUB_STEP_SUMMARY
+            echo "Build Failed! :fire:" >> $GITHUB_STEP_SUMMARY
             exit 1
       - name: On success
         run: |
-          echo "Success! :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "Build Success! :rocket:" >> $GITHUB_STEP_SUMMARY

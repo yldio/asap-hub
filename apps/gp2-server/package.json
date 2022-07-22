@@ -50,7 +50,7 @@
     "@types/express": "^4.17.11",
     "@types/jest": "26.0.24",
     "@types/jsonwebtoken": "8.5.8",
-    "@types/jwt-encode": "workspace:^",
+    "@types/jwt-encode": "workspace:*",
     "@types/node": "14.18.22",
     "@types/serverless": "^3.12.7",
     "@types/source-map-support": "0.5.4",

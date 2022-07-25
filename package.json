@@ -132,5 +132,5 @@
   "dependencies": {
     "ts-node": "^10.7.0"
   },
-  "packageManager": "yarn@3.2.1"
+  "packageManager": "yarn@3.2.2"
 }

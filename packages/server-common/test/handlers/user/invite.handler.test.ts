@@ -3,18 +3,24 @@ import { RestUser } from '@asap-hub/squidex';
 import { notFound } from '@hapi/boom';
 import path from 'path';
 import url from 'url';
-import { origin } from '../../../src/config';
 import {
   inviteHandlerFactory,
   UserInviteEventBridgeEvent,
-} from '../../../src/handlers/user/invite-handler';
+} from '../../../src/handlers/user';
 import { restUserMock } from '../../fixtures/users.fixtures';
+import { loggerMock as logger } from '../../mocks/logger.mock';
 import { getSquidexClientMock } from '../../mocks/squidex-client.mock';
 
 describe('Invite Handler', () => {
   const sendEmailMock: jest.MockedFunction<SendEmail> = jest.fn();
   const userClient = getSquidexClientMock<RestUser>();
-  const inviteHandler = inviteHandlerFactory(sendEmailMock, userClient);
+  const origin = 'https://asap-hub.org';
+  const inviteHandler = inviteHandlerFactory(
+    sendEmailMock,
+    userClient,
+    origin,
+    logger,
+  );
 
   afterEach(() => {
     jest.clearAllMocks();

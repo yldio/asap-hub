@@ -2090,6 +2090,7 @@ type DiscoverDataDto {
   pages: DiscoverDataPagesDto
   scientificAdvisoryBoard: DiscoverDataScientificAdvisoryBoardDto
   training: DiscoverDataTrainingDto
+  workingGroups: DiscoverDataWorkingGroupsDto
 }
 
 """The structure of the Discover ASAP data input type."""
@@ -2099,6 +2100,7 @@ input DiscoverDataInputDto {
   pages: DiscoverDataPagesInputDto
   scientificAdvisoryBoard: DiscoverDataScientificAdvisoryBoardInputDto
   training: DiscoverDataTrainingInputDto
+  workingGroups: DiscoverDataWorkingGroupsInputDto
 }
 
 """The structure of the ASAP Team field of the Discover ASAP content type."""
@@ -2141,6 +2143,16 @@ input DiscoverDataTrainingInputDto {
   iv: [String!]
 }
 
+"""The structure of the Working Groups field of the Discover ASAP content type."""
+type DiscoverDataWorkingGroupsDto {
+  iv: [NewsAndEvents!]
+}
+
+"""The structure of the Working Groups field of the Discover ASAP content input type."""
+input DiscoverDataWorkingGroupsInputDto {
+  iv: [String!]
+}
+
 """The structure of the flat Discover ASAP data type."""
 type DiscoverFlatDataDto {
   aboutUs: String
@@ -2148,6 +2160,7 @@ type DiscoverFlatDataDto {
   pages: [Pages!]
   scientificAdvisoryBoard: [Users!]
   training: [NewsAndEvents!]
+  workingGroups: [NewsAndEvents!]
 }
 
 """List of Discover ASAP items and total count."""

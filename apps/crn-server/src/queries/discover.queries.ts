@@ -9,6 +9,9 @@ export const FETCH_DISCOVER = gql`
         training {
           ...News
         }
+        workingGroups {
+          ...News
+        }
         pages {
           id
           created

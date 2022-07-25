@@ -2018,6 +2018,7 @@ export type DiscoverDataDto = {
   pages: Maybe<DiscoverDataPagesDto>;
   scientificAdvisoryBoard: Maybe<DiscoverDataScientificAdvisoryBoardDto>;
   training: Maybe<DiscoverDataTrainingDto>;
+  workingGroups: Maybe<DiscoverDataWorkingGroupsDto>;
 };
 
 /** The structure of the Discover ASAP data input type. */
@@ -2027,6 +2028,7 @@ export type DiscoverDataInputDto = {
   pages: Maybe<DiscoverDataPagesInputDto>;
   scientificAdvisoryBoard: Maybe<DiscoverDataScientificAdvisoryBoardInputDto>;
   training: Maybe<DiscoverDataTrainingInputDto>;
+  workingGroups: Maybe<DiscoverDataWorkingGroupsInputDto>;
 };
 
 /** The structure of the ASAP Team field of the Discover ASAP content type. */
@@ -2069,6 +2071,16 @@ export type DiscoverDataTrainingInputDto = {
   iv: Maybe<Array<Scalars['String']>>;
 };
 
+/** The structure of the Working Groups field of the Discover ASAP content type. */
+export type DiscoverDataWorkingGroupsDto = {
+  iv: Maybe<Array<NewsAndEvents>>;
+};
+
+/** The structure of the Working Groups field of the Discover ASAP content input type. */
+export type DiscoverDataWorkingGroupsInputDto = {
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
 /** The structure of the flat Discover ASAP data type. */
 export type DiscoverFlatDataDto = {
   aboutUs: Maybe<Scalars['String']>;
@@ -2076,6 +2088,7 @@ export type DiscoverFlatDataDto = {
   pages: Maybe<Array<Pages>>;
   scientificAdvisoryBoard: Maybe<Array<Users>>;
   training: Maybe<Array<NewsAndEvents>>;
+  workingGroups: Maybe<Array<NewsAndEvents>>;
 };
 
 /** List of Discover ASAP items and total count. */
@@ -5296,6 +5309,19 @@ export type FetchDiscoverQuery = {
     Array<{
       flatData: Pick<DiscoverFlatDataDto, 'aboutUs'> & {
         training: Maybe<
+          Array<
+            Pick<
+              NewsAndEvents,
+              'id' | 'created' | 'lastModified' | 'version'
+            > & {
+              flatData: Pick<
+                NewsAndEventsFlatDataDto,
+                'title' | 'shortText' | 'text' | 'type' | 'link' | 'linkText'
+              > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
+            }
+          >
+        >;
+        workingGroups: Maybe<
           Array<
             Pick<
               NewsAndEvents,
@@ -10995,6 +11021,19 @@ export const FetchDiscoverDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'training' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'FragmentSpread',
+                              name: { kind: 'Name', value: 'News' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'workingGroups' },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [

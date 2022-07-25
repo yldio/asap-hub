@@ -65,6 +65,7 @@ describe('Discover controller', () => {
           members: [],
           scientificAdvisoryBoard: [],
           pages: [],
+          workingGroups: [],
         };
         expect(result).toEqual(expectedResponse);
       });
@@ -87,6 +88,7 @@ describe('Discover controller', () => {
           members: [],
           scientificAdvisoryBoard: [],
           pages: [],
+          workingGroups: [],
         };
         expect(result).toEqual(expectedResponse);
       });

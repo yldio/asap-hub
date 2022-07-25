@@ -459,7 +459,7 @@ __metadata:
     react: ^17.0.2
     react-app-polyfill: 3.0.0
     react-dom: ^17.0.2
-    react-router-dom: ^5.2.0
+    react-router-dom: 5.3.3
     react-scripts: ^4.0.3
     typescript: 4.6.4
   languageName: unknown
@@ -521,7 +521,7 @@ __metadata:
     react-app-polyfill: 3.0.0
     react-dom: ^17.0.2
     react-error-boundary: 3.1.4
-    react-router-dom: ^5.2.0
+    react-router-dom: 5.3.3
     react-router-last-location: ^2.0.1
     react-scripts: ^4.0.3
     react-test-renderer: ^17.0.2
@@ -768,7 +768,7 @@ __metadata:
     react: ^17.0.2
     react-dom: ^17.0.2
     react-error-boundary: 3.1.4
-    react-router-dom: ^5.2.0
+    react-router-dom: 5.3.3
     react-test-renderer: ^17.0.2
     react-titled: ^1.0.1
   peerDependencies:
@@ -808,7 +808,7 @@ __metadata:
     react: ^17.0.2
     react-app-polyfill: 3.0.0
     react-dom: ^17.0.2
-    react-router-dom: ^5.2.0
+    react-router-dom: 5.3.3
     react-scripts: ^4.0.3
     typescript: 4.6.4
   languageName: unknown
@@ -858,7 +858,7 @@ __metadata:
     playwright-core: ^1.16.1
     react: ^17.0.2
     react-dom: ^17.0.2
-    react-router-dom: ^5.2.0
+    react-router-dom: 5.3.3
     react-test-renderer: ^17.0.2
   peerDependencies:
     "@asap-hub/react-context": "workspace:*"
@@ -925,7 +925,7 @@ __metadata:
     react-app-polyfill: 3.0.0
     react-dom: ^17.0.2
     react-error-boundary: 3.1.4
-    react-router-dom: ^5.2.0
+    react-router-dom: 5.3.3
     react-router-last-location: ^2.0.1
     react-scripts: ^4.0.3
     react-test-renderer: ^17.0.2
@@ -1118,7 +1118,7 @@ __metadata:
     ramda: ^0.27.1
     react: ^17.0.2
     react-dom: ^17.0.2
-    react-router-dom: ^5.2.0
+    react-router-dom: 5.3.3
     react-router-hash-link: ^2.4.3
     react-select: ^4
     react-sortable-hoc: ^2.0.0
@@ -1325,7 +1325,7 @@ __metadata:
     history: ^4
     react: ^17.0.2
     react-dom: ^17.0.2
-    react-router-dom: ^5.2.0
+    react-router-dom: 5.3.3
     storybook-addon-designs: ^6.2.1
     typescript: 4.6.4
   languageName: unknown
@@ -7508,6 +7508,15 @@ __metadata:
   dependencies:
     regenerator-runtime: "npm:^0.13.4"
   checksum: f609df5ca9e26a1f0f71f92754a5f6e1a4a9c22f982627e8c2c2b751ebbf45da10376501024a68c22d7a625331f40a26f9d1830c8c869512bef813f223d18ba1
+  languageName: node
+  linkType: hard
+
+"@babel/runtime@npm:^7.12.13":
+  version: 7.18.9
+  resolution: "@babel/runtime@npm:7.18.9"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: 36dd736baba7164e82b3cc9d43e081f0cb2d05ff867ad39cac515d99546cee75b7f782018b02a3dcf5f2ef3d27f319faa68965fdfec49d4912c60c6002353a2e
   languageName: node
   linkType: hard
 
@@ -33164,20 +33173,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:^5.2.0":
-  version: 5.2.0
-  resolution: "react-router-dom@npm:5.2.0"
+"react-router-dom@npm:5.3.3":
+  version: 5.3.3
+  resolution: "react-router-dom@npm:5.3.3"
   dependencies:
-    "@babel/runtime": "npm:^7.1.2"
-    history: "npm:^4.9.0"
-    loose-envify: "npm:^1.3.1"
-    prop-types: "npm:^15.6.2"
-    react-router: "npm:5.2.0"
-    tiny-invariant: "npm:^1.0.2"
-    tiny-warning: "npm:^1.0.0"
+    "@babel/runtime": ^7.12.13
+    history: ^4.9.0
+    loose-envify: ^1.3.1
+    prop-types: ^15.6.2
+    react-router: 5.3.3
+    tiny-invariant: ^1.0.2
+    tiny-warning: ^1.0.0
   peerDependencies:
     react: ">=15"
-  checksum: 98d2d35f9540ac4a3c14dc023623fc8411a6a6338e95d726370e07b27c3bc6e854516537c8e3f9ad2483c4bbd579ba28cce9aff843a19fe8ebff663318886335
+  checksum: e1998918e391611f09b967bce0cb88bc9794aa3d8dc5f86453467a1226ae2ace648a1f401f5282f19c84a3a61fa6a3207e2a6fdfe8c8efae0b255244631febeb
   languageName: node
   linkType: hard
 
@@ -33205,23 +33214,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router@npm:5.2.0":
-  version: 5.2.0
-  resolution: "react-router@npm:5.2.0"
+"react-router@npm:5.3.3":
+  version: 5.3.3
+  resolution: "react-router@npm:5.3.3"
   dependencies:
-    "@babel/runtime": "npm:^7.1.2"
-    history: "npm:^4.9.0"
-    hoist-non-react-statics: "npm:^3.1.0"
-    loose-envify: "npm:^1.3.1"
-    mini-create-react-context: "npm:^0.4.0"
-    path-to-regexp: "npm:^1.7.0"
-    prop-types: "npm:^15.6.2"
-    react-is: "npm:^16.6.0"
-    tiny-invariant: "npm:^1.0.2"
-    tiny-warning: "npm:^1.0.0"
+    "@babel/runtime": ^7.12.13
+    history: ^4.9.0
+    hoist-non-react-statics: ^3.1.0
+    loose-envify: ^1.3.1
+    mini-create-react-context: ^0.4.0
+    path-to-regexp: ^1.7.0
+    prop-types: ^15.6.2
+    react-is: ^16.6.0
+    tiny-invariant: ^1.0.2
+    tiny-warning: ^1.0.0
   peerDependencies:
     react: ">=15"
-  checksum: 6fc908729110a65a5676a9e41333e0f511a3c0ff84c93c0dc704330cf3e02124c93aaeab8031b0e2c71712390d9278fff848eeebfbdda36dca3201142f309973
+  checksum: 52a9f28fa97577fda18a8ed2922b658704eafe873e444fe07202640d55d9e81e67c03efd2b2a5b80e3a80e8be8352df826a227ce5f42b33b91bef853c74d4841
   languageName: node
   linkType: hard
 

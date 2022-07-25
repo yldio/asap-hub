@@ -1,10 +1,10 @@
 import { FC } from 'react';
-import { DiscoverWorkingGroups } from '@asap-hub/react-components';
+import { DiscoverTabs } from '@asap-hub/react-components';
 import { useDiscoverState } from './state';
 
 const WorkingGroups: FC<Record<string, never>> = () => {
   const discover = useDiscoverState();
-  return <DiscoverWorkingGroups {...discover} />;
+  return <DiscoverTabs workingGroups={discover.workingGroups} />;
 };
 
 export default WorkingGroups;

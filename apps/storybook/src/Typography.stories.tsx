@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { text, boolean } from '@storybook/addon-knobs';
+import { select, text, boolean } from '@storybook/addon-knobs';
 
 import {
   Caption as CaptionText,
@@ -10,6 +10,7 @@ import {
   Headline5 as Headline5Text,
   Headline6 as Headline6Text,
   Paragraph as ParagraphText,
+  Title as TitleText,
 } from '@asap-hub/react-components';
 import { accentColor } from './text';
 import { ThemeDecorator } from './theme';
@@ -63,3 +64,25 @@ export const CaptionAsParagraph = () => (
     {text('Text', 'Caption')}
   </CaptionText>
 );
+
+export const Title = () => {
+  const accent = accentColor();
+  const type = select<'link' | 'text'>(
+    'Type',
+    { Link: 'link', Text: 'text' },
+    'text',
+  );
+  const props =
+    type === 'link'
+      ? {
+          type,
+          accent,
+          href: text('href', 'https://github.com/yldio/asap-hub'),
+          openInNewTab: boolean('openInNewTab', false),
+        }
+      : { type, accent };
+
+  return (
+    <TitleText {...props}>{text('Title', 'Type Your Text Here')}</TitleText>
+  );
+};

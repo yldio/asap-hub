@@ -26,6 +26,7 @@ export { default as TabLink } from './TabLink';
 export { default as Tag } from './Tag';
 export { default as TextArea } from './TextArea';
 export { default as TextField } from './TextField';
+export { default as Title } from './Title';
 export { default as Toggle } from './Toggle';
 export { default as Tooltip } from './Tooltip';
 export { default as Typeahead } from './Typeahead';

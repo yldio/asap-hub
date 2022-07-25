@@ -24,6 +24,7 @@ export {
   Paragraph,
   Pill,
   TabLink,
+  Title,
   Toggle,
   Tooltip,
 } from './atoms';

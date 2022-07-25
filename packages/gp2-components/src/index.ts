@@ -1,4 +1,4 @@
-export { NavigationHeader } from './organism';
+export { NavigationHeader, UserCard } from './organism';
 export {
   Layout,
   DashboardPage,

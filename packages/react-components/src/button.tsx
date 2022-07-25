@@ -12,10 +12,11 @@ import {
   tin,
   silver,
   color,
+  TransparentColor,
 } from './colors';
 
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-export const activePrimaryBackgroundColor = color(122, 210, 169, 0.18);
+export const activePrimaryBackgroundColorDefault = color(122, 210, 169, 0.18);
 
 const borderWidth = 1;
 const styles = css({
@@ -161,18 +162,27 @@ const disabledStyles = css({
   },
 });
 
-export const activePrimaryStyles = css({
-  backgroundColor: activePrimaryBackgroundColor.rgba,
-  borderColor: 'transparent',
-  color: pine.rgb,
-  svg: {
-    stroke: pine.rgb,
-  },
-  ':hover, :focus': {
+export const activePrimaryStyles = (colors: {
+  activePrimaryBackgroundColor?: TransparentColor;
+  activePrimaryColor?: OpaqueColor;
+}) => {
+  const {
+    activePrimaryBackgroundColor = activePrimaryBackgroundColorDefault,
+    activePrimaryColor = pine,
+  } = colors;
+  return css({
     backgroundColor: activePrimaryBackgroundColor.rgba,
-    color: pine.rgb,
-  },
-});
+    borderColor: 'transparent',
+    color: activePrimaryColor.rgb,
+    svg: {
+      stroke: activePrimaryColor.rgb,
+    },
+    ':hover, :focus': {
+      backgroundColor: activePrimaryBackgroundColor.rgba,
+      color: activePrimaryColor.rgb,
+    },
+  });
+};
 
 export const activeSecondaryStyles = css({
   backgroundColor: paper.rgb,
@@ -202,6 +212,7 @@ export const getButtonStyles = ({
   children = [] as React.ReactNode,
   margin = true,
   stretch = true,
+  colors = {},
 }) =>
   css([
     styles,
@@ -211,7 +222,7 @@ export const getButtonStyles = ({
     enabled
       ? active
         ? primary
-          ? activePrimaryStyles
+          ? activePrimaryStyles(colors)
           : activeSecondaryStyles
         : primary
         ? primaryStyles

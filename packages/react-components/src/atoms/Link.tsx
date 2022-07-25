@@ -1,4 +1,4 @@
-import { css, SerializedStyles } from '@emotion/react';
+import { css, SerializedStyles, useTheme } from '@emotion/react';
 import { ReactNode } from 'react';
 
 import { Anchor } from '.';
@@ -89,9 +89,25 @@ const Link: React.FC<LinkProps> = ({
   margin = true,
   stretch = true,
 }) => {
+  const {
+    colors: { primaryColor },
+  } = useTheme();
   const linkStyles = buttonStyle
-    ? [getButtonStyles({ primary, small, enabled, children, margin, stretch })]
-    : [styles, themeStyles[theme], applyIconTheme && iconThemeStyles[theme]];
+    ? [
+        getButtonStyles({
+          primary,
+          small,
+          enabled,
+          children,
+          margin,
+          stretch,
+        }),
+      ]
+    : [
+        styles,
+        primaryColor ? css({ color: primaryColor.rgb }) : themeStyles[theme],
+        applyIconTheme && iconThemeStyles[theme],
+      ];
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;
   return (
     <Anchor href={href} enabled={enabled} aria-label={label} css={linkStyles}>

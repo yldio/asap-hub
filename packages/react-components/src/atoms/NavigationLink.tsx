@@ -1,5 +1,5 @@
 import { NavHashLink } from 'react-router-hash-link';
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 
 import { useHasRouter } from '../routing';
 import { lead } from '../colors';
@@ -74,6 +74,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   children,
 }) => {
   const [internal, url] = isInternalLink(href);
+  const { colors, navigationLinkStyles } = useTheme();
 
   if (useHasRouter() && internal) {
     return (
@@ -82,7 +83,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
         activeClassName={activeClassName}
         css={[
           styles,
-          { [`&.${activeClassName}`]: activePrimaryStyles },
+          { [`&.${activeClassName}`]: activePrimaryStyles(colors) },
           !enabled && disableStyles,
         ]}
         smooth
@@ -101,7 +102,12 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   return (
     <a
       href={url}
-      css={[styles, active && activePrimaryStyles, !enabled && disableStyles]}
+      css={[
+        styles,
+        navigationLinkStyles,
+        active && activePrimaryStyles(colors),
+        !enabled && disableStyles,
+      ]}
     >
       <p css={textStyles}>
         {icon && <span css={iconStyles}>{icon}</span>}

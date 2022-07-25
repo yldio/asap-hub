@@ -353,7 +353,7 @@ __metadata:
     got: 11.8.5
     jwt-encode: ^1.0.1
     luxon: ^1.26.0
-    nock: ^13.0.11
+    nock: 13.2.9
     prettier: ^2.7.1
     pump: ^3.0.0
     through2-concurrent: ^2.0.0
@@ -412,7 +412,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.18.9
     "@types/jest": 26.0.24
     got: 11.8.5
-    nock: ^13.0.11
+    nock: 13.2.9
   languageName: unknown
   linkType: soft
 
@@ -514,7 +514,7 @@ __metadata:
     history: ^4
     identity-obj-proxy: ^3.0.0
     jose: ^2.0.5
-    nock: ^13.0.11
+    nock: 13.2.9
     pirates: 4.0.5
     qs: 6.11.0
     react: ^17.0.2
@@ -632,7 +632,7 @@ __metadata:
     lodash.uniqby: ^4.7.0
     luxon: ^1.26.0
     mime-types: 2.1.35
-    nock: ^13.0.11
+    nock: 13.2.9
     node-dev: ^6.7.0
     opentracing: 0.14.7
     p-limit: ^3.1.0
@@ -919,7 +919,7 @@ __metadata:
     history: ^4
     identity-obj-proxy: ^3.0.0
     jose: ^2.0.5
-    nock: ^13.0.11
+    nock: 13.2.9
     pirates: 4.0.5
     react: ^17.0.2
     react-app-polyfill: 3.0.0
@@ -985,7 +985,7 @@ __metadata:
     graphql-tag: ^2.12.4
     graphql-typescript-integration: ^1.2.0
     jsonwebtoken: ^8.5.1
-    nock: ^13.0.11
+    nock: 13.2.9
     serverless: ^3.19.0
     serverless-http: ^2.7.0
     serverless-s3-sync: 3.0.0
@@ -1258,7 +1258,7 @@ __metadata:
     graphql-request: ^3.4.0
     jwt-decode: ^2.2.0
     jwt-encode: ^1.0.1
-    nock: ^13.0.11
+    nock: 13.2.9
   languageName: unknown
   linkType: soft
 
@@ -1293,7 +1293,7 @@ __metadata:
     jwt-decode: ^2.2.0
     jwt-encode: ^1.0.1
     luxon: ^1.26.0
-    nock: ^13.0.11
+    nock: 13.2.9
     opentracing: 0.14.7
   languageName: unknown
   linkType: soft
@@ -15251,7 +15251,7 @@ __metadata:
     jest-watch-select-projects: ^2.0.0
     jest-watch-suspend: ^1.1.2
     jest-watch-typeahead: 0.6.5
-    nock: ^13.0.11
+    nock: 13.2.9
     node-fetch: ^3.0.0-beta.9
     prettier: ^2.7.1
     rimraf: ^3.0.2
@@ -29405,15 +29405,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:^13.0.11":
-  version: 13.0.11
-  resolution: "nock@npm:13.0.11"
+"nock@npm:13.2.9":
+  version: 13.2.9
+  resolution: "nock@npm:13.2.9"
   dependencies:
-    debug: "npm:^4.1.0"
-    json-stringify-safe: "npm:^5.0.1"
-    lodash.set: "npm:^4.3.2"
-    propagate: "npm:^2.0.0"
-  checksum: f472f3c57858219977bc17f9fc623aadaecc8c8a0103da7b72072fff15e5d0ed374e6bdedf922daf1e5f21615ad57aaf7c3fb5bf18c69845583137a2e30322fe
+    debug: ^4.1.0
+    json-stringify-safe: ^5.0.1
+    lodash: ^4.17.21
+    propagate: ^2.0.0
+  checksum: 04a2dc60b4b55fd1240f28fe34865bbc744088a4570db3781fcf66021644cc3cc9178fd86a0cb0c1f28ea77b83e8f1c9288535f6b39a6d07100059f156ccc23b
   languageName: node
   linkType: hard
 

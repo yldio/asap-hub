@@ -1,36 +1,7 @@
-import { RestUser } from '@asap-hub/squidex';
 import { UserController } from '../../../src/controllers';
 import { connectByCodeHandlerFactory } from '../../../src/handlers/webhooks/connect-by-code.handler';
 import { getConnectByCodeRequest } from '../../helpers/events';
 const secret = 'secret';
-
-const user: RestUser = {
-  id: 'userId',
-  lastModified: '2020-09-25T11:06:27.164Z',
-  version: 42,
-  created: '2020-09-24T11:06:27.164Z',
-  data: {
-    role: {
-      iv: 'Grantee',
-    },
-    lastModifiedDate: { iv: '2020-09-25T11:06:27.164Z' },
-    email: { iv: 'me@example.com' },
-    firstName: { iv: 'First' },
-    lastName: { iv: 'Last' },
-    jobTitle: { iv: 'Title' },
-    institution: { iv: 'Institution' },
-    connections: { iv: [] },
-    biography: { iv: 'Biography' },
-    avatar: { iv: [] },
-    expertiseAndResourceTags: { iv: [] },
-    questions: { iv: [] },
-    teams: { iv: [] },
-    onboarded: {
-      iv: true,
-    },
-    labs: { iv: [] },
-  },
-};
 
 describe('Connect by code handler', () => {
   const userController = {
@@ -95,12 +66,13 @@ describe('Connect by code handler', () => {
     beforeEach(() => {
       jest.resetAllMocks();
     });
-    test('returns 202 for valid code and updates the user', async () => {
+    test('returns 202 for valid code and calls connectByCode', async () => {
       const userId = `google-oauth2|token`;
+      const code = 'asapWelcomeCode';
 
       const event = getConnectByCodeRequest(
         {
-          code: 'asapWelcomeCode',
+          code,
           userId,
         },
         {
@@ -109,6 +81,7 @@ describe('Connect by code handler', () => {
       );
       const response = await handler(event);
       expect(response.statusCode).toEqual(202);
+      expect(userController.connectByCode).toHaveBeenCalledWith(code, userId);
     });
   });
 });

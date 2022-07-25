@@ -48,7 +48,7 @@
     "@sentry/serverless": "^6.7.1",
     "@types/hapi__joi": "17.1.8",
     "@types/parse-data-url": "^3.0.0",
-    "@types/yargs": "^17.0.5",
+    "@types/yargs": "17.0.10",
     "@yarnpkg/pnpify": "3.1.3",
     "ajv": "^8.10.0",
     "ajv-formats": "^2.1.1",
@@ -139,7 +139,7 @@
     "serverless-webpack": "^5.7.1",
     "stream-json": "1.7.4",
     "supertest": "6.2.4",
-    "yargs": "^17.3.1"
+    "yargs": "17.5.1"
   },
   "serverless-webpack": {
     "unplugged": true

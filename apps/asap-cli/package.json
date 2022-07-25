@@ -19,7 +19,7 @@
     "@asap-hub/services-common": "workspace:*",
     "@asap-hub/squidex": "workspace:*",
     "@hapi/boom": "9.1.4",
-    "@types/yargs": "^17.0.5",
+    "@types/yargs": "17.0.10",
     "algoliasearch": "^4.13.1",
     "apr-intercept": "^3.0.4",
     "async-sema": "3.1.1",
@@ -32,7 +32,7 @@
     "pump": "^3.0.0",
     "through2-concurrent": "^2.0.0",
     "uuid": "^8.3.2",
-    "yargs": "^17.3.1"
+    "yargs": "17.5.1"
   },
   "devDependencies": {
     "@babel/core": "7.18.9",

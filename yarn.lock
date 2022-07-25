@@ -343,7 +343,7 @@ __metadata:
     "@types/pump": ^1.1.1
     "@types/through2-concurrent": 2.0.1
     "@types/uuid": 8.3.4
-    "@types/yargs": ^17.0.5
+    "@types/yargs": 17.0.10
     "@yarnpkg/pnpify": 3.1.3
     algoliasearch: ^4.13.1
     apr-intercept: ^3.0.4
@@ -358,7 +358,7 @@ __metadata:
     pump: ^3.0.0
     through2-concurrent: ^2.0.0
     uuid: ^8.3.2
-    yargs: ^17.3.1
+    yargs: 17.5.1
   bin:
     asap-cli: build-cjs/cli.js
   languageName: unknown
@@ -600,7 +600,7 @@ __metadata:
     "@types/stream-json": 1.7.2
     "@types/supertest": ^2.0.12
     "@types/uuid": 8.3.4
-    "@types/yargs": ^17.0.5
+    "@types/yargs": 17.0.10
     "@yarnpkg/pnpify": 3.1.3
     ajv: ^8.10.0
     ajv-formats: ^2.1.1
@@ -647,7 +647,7 @@ __metadata:
     stream-json: 1.7.4
     supertest: 6.2.4
     uuid: ^8.3.2
-    yargs: ^17.3.1
+    yargs: 17.5.1
   dependenciesMeta:
     serverless:
       built: false
@@ -13310,6 +13310,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/yargs@npm:17.0.10":
+  version: 17.0.10
+  resolution: "@types/yargs@npm:17.0.10"
+  dependencies:
+    "@types/yargs-parser": "*"
+  checksum: f0673cbfc08e17239dc58952a88350d6c4db04a027a28a06fbad27d87b670e909f9cd9e66f9c64cebdd5071d1096261e33454a55868395f125297e5c50992ca8
+  languageName: node
+  linkType: hard
+
 "@types/yargs@npm:^15.0.0":
   version: 15.0.4
   resolution: "@types/yargs@npm:15.0.4"
@@ -13325,15 +13334,6 @@ __metadata:
   dependencies:
     "@types/yargs-parser": "npm:*"
   checksum: caa21d2c957592fe2184a8368c8cbe5a82a6c2e2f2893722e489f842dc5963293d2f3120bc06fe3933d60a3a0d1e2eb269649fd6b1947fe1820f8841ba611dd9
-  languageName: node
-  linkType: hard
-
-"@types/yargs@npm:^17.0.5":
-  version: 17.0.5
-  resolution: "@types/yargs@npm:17.0.5"
-  dependencies:
-    "@types/yargs-parser": "npm:*"
-  checksum: 2be02640c84471c66aec58cfd415432fab0973283909765aa3becbdb76b5874d4770fe7f376e77b98833d5cc9d9bc258a905adce68a0baec13d430c866fce3b5
   languageName: node
   linkType: hard
 
@@ -40130,6 +40130,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"yargs@npm:17.5.1":
+  version: 17.5.1
+  resolution: "yargs@npm:17.5.1"
+  dependencies:
+    cliui: ^7.0.2
+    escalade: ^3.1.1
+    get-caller-file: ^2.0.5
+    require-directory: ^2.1.1
+    string-width: ^4.2.3
+    y18n: ^5.0.5
+    yargs-parser: ^21.0.0
+  checksum: 00d58a2c052937fa044834313f07910fd0a115dec5ee35919e857eeee3736b21a4eafa8264535800ba8bac312991ce785ecb8a51f4d2cc8c4676d865af1cfbde
+  languageName: node
+  linkType: hard
+
 "yargs@npm:^13.3.2":
   version: 13.3.2
   resolution: "yargs@npm:13.3.2"
@@ -40198,21 +40213,6 @@ __metadata:
     y18n: "npm:^5.0.5"
     yargs-parser: "npm:^20.2.2"
   checksum: b05a9467937172e01a4af7a7ad4361a22ee510cd12d1d5a3ad3b4c2e57eb8c35ca94ee22e4bdfbb40fe693fbf8000771e41824f77f6b224f1496c57f20f192b6
-  languageName: node
-  linkType: hard
-
-"yargs@npm:^17.3.1":
-  version: 17.3.1
-  resolution: "yargs@npm:17.3.1"
-  dependencies:
-    cliui: "npm:^7.0.2"
-    escalade: "npm:^3.1.1"
-    get-caller-file: "npm:^2.0.5"
-    require-directory: "npm:^2.1.1"
-    string-width: "npm:^4.2.3"
-    y18n: "npm:^5.0.5"
-    yargs-parser: "npm:^21.0.0"
-  checksum: 64fc2e32c56739f1d14d2d24acd17a6944c3c8e3e3558f09fc1953ac112e868cc16013d282886b9d5be22187f8b9ed4f60741a6b1011f595ce2718805a656852
   languageName: node
   linkType: hard
 

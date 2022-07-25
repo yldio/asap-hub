@@ -2521,7 +2521,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/yargs",\
-        "npm:17.0.5"\
+        "npm:17.0.10"\
       ],\
       [\
         "@types/yargs-parser",\
@@ -9836,7 +9836,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "yargs",\
-        "npm:17.3.1"\
+        "npm:17.5.1"\
       ],\
       [\
         "yargs-parser",\
@@ -10275,7 +10275,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/pump", "npm:1.1.1"],\
             ["@types/through2-concurrent", "npm:2.0.1"],\
             ["@types/uuid", "npm:8.3.4"],\
-            ["@types/yargs", "npm:17.0.5"],\
+            ["@types/yargs", "npm:17.0.10"],\
             ["@yarnpkg/pnpify", "npm:3.1.3"],\
             ["algoliasearch", "npm:4.13.1"],\
             ["apr-intercept", "npm:3.0.4"],\
@@ -10290,7 +10290,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pump", "npm:3.0.0"],\
             ["through2-concurrent", "npm:2.0.0"],\
             ["uuid", "npm:8.3.2"],\
-            ["yargs", "npm:17.3.1"]\
+            ["yargs", "npm:17.5.1"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -10544,7 +10544,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/stream-json", "npm:1.7.2"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["@types/uuid", "npm:8.3.4"],\
-            ["@types/yargs", "npm:17.0.5"],\
+            ["@types/yargs", "npm:17.0.10"],\
             ["@yarnpkg/pnpify", "npm:3.1.3"],\
             ["ajv", "npm:8.11.0"],\
             ["ajv-formats", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:2.1.1"],\
@@ -10591,7 +10591,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["stream-json", "npm:1.7.4"],\
             ["supertest", "npm:6.2.4"],\
             ["uuid", "npm:8.3.2"],\
-            ["yargs", "npm:17.3.1"]\
+            ["yargs", "npm:17.5.1"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -33077,10 +33077,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:17.0.5", {\
-          "packageLocation": "./.yarn/cache/@types-yargs-npm-17.0.5-8ff2c7097e-2be02640c8.zip/node_modules/@types/yargs/",\
+        ["npm:17.0.10", {\
+          "packageLocation": "./.yarn/cache/@types-yargs-npm-17.0.10-04ed5382c7-f0673cbfc0.zip/node_modules/@types/yargs/",\
           "packageDependencies": [\
-            ["@types/yargs", "npm:17.0.5"],\
+            ["@types/yargs", "npm:17.0.10"],\
             ["@types/yargs-parser", "npm:15.0.0"]\
           ],\
           "linkType": "HARD"\
@@ -64677,10 +64677,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:17.3.1", {\
-          "packageLocation": "./.yarn/cache/yargs-npm-17.3.1-26b02c35fd-64fc2e32c5.zip/node_modules/yargs/",\
+        ["npm:17.5.1", {\
+          "packageLocation": "./.yarn/cache/yargs-npm-17.5.1-0902fa46de-00d58a2c05.zip/node_modules/yargs/",\
           "packageDependencies": [\
-            ["yargs", "npm:17.3.1"],\
+            ["yargs", "npm:17.5.1"],\
             ["cliui", "npm:7.0.3"],\
             ["escalade", "npm:3.1.1"],\
             ["get-caller-file", "npm:2.0.5"],\

@@ -1,21 +1,16 @@
 import {
+  AlgoliaSearchClient,
+  algoliaSearchClientFactory,
+} from '@asap-hub/algolia';
+import { EventBridgeHandler } from '@asap-hub/server-common';
+import {
   RestExternalAuthor,
   RestResearchOutput,
   RestTeam,
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import {
-  AlgoliaSearchClient,
-  algoliaSearchClientFactory,
-} from '@asap-hub/algolia';
 import { isBoom } from '@hapi/boom';
-import ResearchOutputs, {
-  ResearchOutputController,
-} from '../../controllers/research-outputs';
-import { ResearchOutputEvent, ResearchOutputPayload } from '../event-bus';
-import logger from '../../utils/logger';
-import { EventBridgeHandler } from '../../utils/types';
 import {
   algoliaApiKey,
   algoliaAppId,
@@ -23,7 +18,12 @@ import {
   appName,
   baseUrl,
 } from '../../config';
+import ResearchOutputs, {
+  ResearchOutputController,
+} from '../../controllers/research-outputs';
 import { getAuthToken } from '../../utils/auth';
+import logger from '../../utils/logger';
+import { ResearchOutputEvent, ResearchOutputPayload } from '../event-bus';
 
 export const indexResearchOutputHandler =
   (

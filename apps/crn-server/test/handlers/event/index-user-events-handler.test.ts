@@ -1,12 +1,12 @@
+import { UserEvent, UserPayload } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
-import { toPayload } from '../../helpers/algolia';
-import { getUserEvent } from '../../fixtures/users.fixtures';
-import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
-import { eventControllerMock } from '../../mocks/event-controller.mock';
-import { UserEvent, UserPayload } from '../../../src/handlers/event-bus';
 import { indexUserEventsHandler } from '../../../src/handlers/event/index-user-events-handler';
 import { listEventResponse } from '../../fixtures/events.fixtures';
+import { getUserEvent } from '../../fixtures/users.fixtures';
+import { toPayload } from '../../helpers/algolia';
+import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
+import { eventControllerMock } from '../../mocks/event-controller.mock';
 
 const mapPayload = toPayload('event');
 

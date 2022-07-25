@@ -1,17 +1,17 @@
-import { DateTime } from 'luxon';
+import { ScheduledHandlerAsync } from '@asap-hub/server-common';
 import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
+import { DateTime } from 'luxon';
+import { appName, baseUrl } from '../../config';
 import Calendars, { CalendarController } from '../../controllers/calendars';
-import {
-  UnsubscribeFromEventChanges,
-  SubscribeToEventChanges,
-  subscribeToEventChangesFactory,
-  unsubscribeFromEventChangesFactory,
-} from './subscribe-handler';
+import { getAuthToken } from '../../utils/auth';
 import getJWTCredentials from '../../utils/aws-secret-manager';
 import logger from '../../utils/logger';
-import { ScheduledHandlerAsync } from '../../utils/types';
-import { appName, baseUrl } from '../../config';
-import { getAuthToken } from '../../utils/auth';
+import {
+  SubscribeToEventChanges,
+  subscribeToEventChangesFactory,
+  UnsubscribeFromEventChanges,
+  unsubscribeFromEventChangesFactory,
+} from './subscribe-handler';
 
 export const resubscribeCalendarsHandlerFactory =
   (

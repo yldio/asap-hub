@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import { UserResponse } from '@asap-hub/model';
+import {
+  validateFetchOptions,
+  validateUserInviteParameters,
+} from '@asap-hub/server-common';
 import { isUserOnboardable } from '@asap-hub/validation';
 import Boom, { isBoom } from '@hapi/boom';
 import { Response, Router } from 'express';
@@ -9,12 +13,10 @@ import { GroupController } from '../controllers/groups';
 import { UserController } from '../controllers/users';
 import { permissionHandler } from '../middleware/permission-handler';
 import {
-  validateUserPatchRequest,
   validateUserParameters,
+  validateUserPatchRequest,
   validateUserPostRequestInput,
-  validateUserInviteParameters,
 } from '../validation/user.validation';
-import { validateFetchOptions } from '../validation';
 
 export const userPublicRouteFactory = (
   userController: UserController,
@@ -147,7 +149,7 @@ export const userRouteFactory = (
     // user trying to change a team he doesn't belong to
     if (
       payload.teams &&
-      !payload.teams.every(({ id }) =>
+      !payload.teams.every(({ id }: { id: string }) =>
         req.loggedInUser!.teams.find((t) => t.id === id),
       )
     ) {

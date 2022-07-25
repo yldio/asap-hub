@@ -11,7 +11,8 @@
     "__meta.type",
     "teams.role",
     "speakers.user.id",
-    "speakers.team.id"
+    "speakers.team.id",
+    "group.id"
   ],
   "attributesToIndex": [
     "displayName",
@@ -47,6 +48,7 @@
     "speakers.team.displayName",
     "speakers.user.displayName",
     "endDateTimestamp",
-    "startDateTimestamp"
+    "startDateTimestamp",
+    "group.id"
   ]
 }

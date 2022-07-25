@@ -16,10 +16,10 @@ describe('the default theme', () => {
     expect(color).toBe(fern.rgb);
   });
 
-  it('applies an underline', () => {
+  it('applies an invisible underline', () => {
     const { getByRole } = render(<Link href="/">text</Link>);
     const { textDecoration } = getComputedStyle(getByRole('link'));
-    expect(textDecoration).toBe('underline');
+    expect(textDecoration).toBe('underline solid transparent');
   });
 });
 
@@ -34,14 +34,14 @@ describe('the dark theme', () => {
     expect(color).toBe(paper.rgb);
   });
 
-  it('applies an underline', () => {
+  it('applies an invisible underline', () => {
     const { getByRole } = render(
       <Link href="/" theme="dark">
         text
       </Link>,
     );
     const { textDecoration } = getComputedStyle(getByRole('link'));
-    expect(textDecoration).toBe('underline');
+    expect(textDecoration).toBe('underline solid transparent');
   });
 });
 

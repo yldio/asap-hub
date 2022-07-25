@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 
 import {
   pine,
@@ -114,6 +114,7 @@ type PlaceholderAvatarProps = {
 };
 type AvatarProps = (RegularAvatarProps | PlaceholderAvatarProps) & {
   readonly border?: boolean;
+  readonly overrideStyles?: SerializedStyles;
 };
 
 const Avatar: React.FC<AvatarProps> = ({
@@ -122,6 +123,7 @@ const Avatar: React.FC<AvatarProps> = ({
   lastName = '',
   placeholder = '',
   border = false,
+  overrideStyles,
 }) => {
   const name = `${firstName}${firstName && lastName ? ' ' : ''}${lastName}`;
   const initials = (firstName?.[0] ?? '') + (lastName?.[0] ?? '');
@@ -132,6 +134,7 @@ const Avatar: React.FC<AvatarProps> = ({
         ringStyle,
         border && ringBorderStyle,
         placeholder && placeholderStyle,
+        overrideStyles,
       ]}
     >
       <p

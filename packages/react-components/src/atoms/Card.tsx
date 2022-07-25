@@ -13,7 +13,12 @@ const containerStyles = css({
   borderRadius: `${borderRadius / perRem}em`,
 });
 
-export type AccentVariant = 'default' | 'red' | 'green' | 'placeholder';
+export type AccentVariant =
+  | 'default'
+  | 'red'
+  | 'green'
+  | 'placeholder'
+  | 'neutral200';
 
 export const accents: Record<AccentVariant, CSSObject> = {
   default: {
@@ -35,6 +40,11 @@ export const accents: Record<AccentVariant, CSSObject> = {
     color: colors.charcoal.rgb,
     border: `2px dotted ${colors.tin.rgb}`,
     borderRadius: 0,
+  },
+  neutral200: {
+    backgroundColor: colors.neutral200.rgb,
+    borderColor: colors.steel.rgb,
+    boxShadow: `0px 2px 4px ${colors.steel.rgb}`,
   },
 };
 

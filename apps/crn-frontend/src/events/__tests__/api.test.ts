@@ -6,8 +6,13 @@ import {
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
 import { createAlgoliaResponse } from '../../__fixtures__/algolia';
-import { getEvent, getEvents, getEventsFromAlgolia } from '../api';
-import { getEventListOptions } from '../options';
+import {
+  getEvent,
+  getEvents,
+  getEventsFromAlgolia,
+  getSquidexUrl,
+} from '../api';
+import { GetEventListOptions, getEventListOptions } from '../options';
 
 jest.mock('../../config');
 
@@ -45,6 +50,26 @@ describe('getEvents', () => {
       .reply(200, events);
     await getEvents(
       getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
+      'Bearer x',
+    );
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('makes an authorized GET request for group events after a date', async () => {
+    const events = createListEventResponse(1);
+    nock(API_BASE_URL)
+      .get(`/groups/42/events`)
+      .query({
+        take: '10',
+        skip: '0',
+        after: new Date('2021-01-01T11:00:00').toISOString(),
+      })
+      .reply(200, events);
+    await getEvents(
+      getEventListOptions(new Date('2021-01-01T12:00:00'), {
+        past: false,
+        constraint: { groupId: '42' },
+      }),
       'Bearer x',
     );
     expect(nock.isDone()).toBe(true);
@@ -273,6 +298,30 @@ describe('getEventsFromAlgolia', () => {
         page: 0,
       },
       false,
+    );
+  });
+});
+
+describe('getSquidexUrl', () => {
+  const options: GetEventListOptions = {
+    searchQuery: '',
+    currentPage: 1,
+    pageSize: 10,
+    filters: new Set(),
+    after: new Date('2021-01-01T12:00:00').toString(),
+  };
+
+  it('returns the user or team url', () => {
+    options.constraint = { teamId: 'team-1' };
+    expect(getSquidexUrl(options).toString()).toEqual(
+      'http://api/events?take=10&skip=10',
+    );
+  });
+
+  it('returns the group url if the constraint contains group id', () => {
+    options.constraint = { groupId: 'group-1' };
+    expect(getSquidexUrl(options).toString()).toEqual(
+      'http://api/groups/group-1/events?take=10&skip=10',
     );
   });
 });

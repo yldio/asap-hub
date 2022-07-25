@@ -1,16 +1,11 @@
-import { EventBridgeEvent } from 'aws-lambda';
-import { SquidexGraphql } from '@asap-hub/squidex';
-import { isBoom } from '@hapi/boom';
 import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import logger from '../../utils/logger';
-import ExternalAuthors, {
-  ExternalAuthorsController,
-} from '../../controllers/external-authors';
-import { ExternalAuthorEvent, ExternalAuthorPayload } from '../event-bus';
-import { EventBridgeHandler } from '../../utils/types';
+import { EventBridgeHandler } from '@asap-hub/server-common';
+import { SquidexGraphql } from '@asap-hub/squidex';
+import { isBoom } from '@hapi/boom';
+import { EventBridgeEvent } from 'aws-lambda';
 import {
   algoliaApiKey,
   algoliaAppId,
@@ -18,7 +13,12 @@ import {
   appName,
   baseUrl,
 } from '../../config';
+import ExternalAuthors, {
+  ExternalAuthorsController,
+} from '../../controllers/external-authors';
 import { getAuthToken } from '../../utils/auth';
+import logger from '../../utils/logger';
+import { ExternalAuthorEvent, ExternalAuthorPayload } from '../event-bus';
 
 export const indexExternalAuthorHandler =
   (

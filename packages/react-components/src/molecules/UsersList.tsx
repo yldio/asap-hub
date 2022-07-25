@@ -38,11 +38,10 @@ const userStyles = css({
   overflow: 'hidden',
   display: 'grid',
   gridTemplateColumns: 'min-content 1fr',
-  gridColumnGap: `${6 / perRem}em`,
+  gridColumnGap: `${9 / perRem}em`,
   alignItems: 'center',
 });
 const nameStyles = css({
-  fontSize: `${13.6 / perRem}em`,
   overflow: 'hidden',
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',

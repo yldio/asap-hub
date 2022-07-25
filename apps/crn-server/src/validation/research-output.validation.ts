@@ -12,7 +12,7 @@ import {
 } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { JSONSchemaType } from 'ajv';
-import { validateInput } from '.';
+import { validateInput } from '@asap-hub/server-common';
 
 type ResearchOutputParameters = {
   researchOutputId: string;

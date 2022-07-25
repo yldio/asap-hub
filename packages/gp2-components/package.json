@@ -24,7 +24,7 @@
   "dependencies": {
     "@asap-hub/react-components": "workspace:*",
     "@asap-hub/routing": "workspace:*",
-    "@babel/runtime-corejs3": "7.18.6",
+    "@babel/runtime-corejs3": "7.18.9",
     "core-js": "^3.12.1",
     "emotion-normalize": "^11"
   },
@@ -32,7 +32,7 @@
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
     "@asap-hub/react-context": "workspace:*",
-    "@babel/core": "7.18.6",
+    "@babel/core": "7.18.9",
     "@babel/preset-react": "7.18.6",
     "@emotion/babel-plugin": "^11.3.0",
     "@emotion/jest": "^11.3.0",
@@ -64,7 +64,7 @@
     "playwright-core": "^1.16.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-router-dom": "^5.2.0",
+    "react-router-dom": "5.3.3",
     "react-test-renderer": "^17.0.2"
   }
 }

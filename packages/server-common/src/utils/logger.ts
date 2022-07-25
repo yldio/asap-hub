@@ -1,9 +1,10 @@
+import pinoHttp, { HttpLogger } from 'pino-http';
 import pino, { PinoLambdaLogger } from 'pino-lambda';
 import noir from 'pino-noir';
-import pinoHttp, { HttpLogger } from 'pino-http';
 
 export const redaction = noir(['req.headers.authorization'], '*');
 
+export type Logger = PinoLambdaLogger;
 // we are not testing stdout
 /* istanbul ignore next */
 export const getLogger = ({
@@ -12,7 +13,7 @@ export const getLogger = ({
 }: {
   logEnabled: boolean;
   logLevel: string;
-}): PinoLambdaLogger =>
+}): Logger =>
   pino({
     enabled: logEnabled,
     level: logLevel,
@@ -21,14 +22,8 @@ export const getLogger = ({
     },
   });
 
-export const getHttpLogger = ({
-  logger,
-}: {
-  logger: PinoLambdaLogger;
-}): HttpLogger =>
+export const getHttpLogger = ({ logger }: { logger: Logger }): HttpLogger =>
   pinoHttp({
     logger,
     serializers: redaction,
   });
-
-export type Logger = PinoLambdaLogger;

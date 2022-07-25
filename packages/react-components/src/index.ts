@@ -33,6 +33,7 @@ export * from './images';
 export * from './layout';
 export { MessageLayout, WelcomeMessage } from './messages';
 export {
+  Accordion,
   AssociationList,
   BackLink,
   BannerCard,
@@ -71,6 +72,7 @@ export {
   UserMenuButton,
   UsersList,
   UtilityBar,
+  UserProfilePersonalText,
 } from './molecules';
 export {
   AdditionalMaterials,

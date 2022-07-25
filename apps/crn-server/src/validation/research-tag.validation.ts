@@ -1,6 +1,6 @@
 import { FetchResearchTagsOptions } from '@asap-hub/model';
 import { JSONSchemaType } from 'ajv';
-import { validateInput } from '.';
+import { validateInput } from '@asap-hub/server-common';
 
 export const researchTagFetchOptionsValidationSchema: JSONSchemaType<FetchResearchTagsOptions> =
   {

@@ -1,7 +1,7 @@
+import { validateFetchOptions } from '@asap-hub/server-common';
 import { Router } from 'express';
 import { EventController } from '../controllers/events';
 import { GroupController } from '../controllers/groups';
-import { validateFetchOptions } from '../validation';
 import { validateEventFetchParameters } from '../validation/event.validation';
 import { validateGroupParameters } from '../validation/group.validation';
 

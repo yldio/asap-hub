@@ -10,7 +10,7 @@ import { events, network, useRouteParams } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
 
 import { useGroupById } from './state';
-import { useSearch } from '../../hooks';
+import { usePaginationParams } from '../../hooks';
 import { useEvents } from '../../events/state';
 import { getEventListOptions } from '../../events/options';
 
@@ -18,14 +18,12 @@ const loadAbout = () =>
   import(/* webpackChunkName: "network-group-about" */ './About');
 const loadCalendar = () =>
   import(/* webpackChunkName: "network-group-calendar" */ './Calendar');
-const loadEventList = () =>
-  import(
-    /* webpackChunkName: "network-group-event-list" */ './events/EventList'
-  );
+const loadEventsList = () =>
+  import(/* webpackChunkName: "network-events" */ '../EventsEmbedList');
 
 const About = lazy(loadAbout);
 const Calendar = lazy(loadCalendar);
-const EventList = lazy(loadEventList);
+const EventsList = lazy(loadEventsList);
 loadAbout();
 
 type GroupProfileProps = {
@@ -34,23 +32,21 @@ type GroupProfileProps = {
 
 const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
   useEffect(() => {
-    loadAbout().then(loadCalendar).then(loadEventList);
+    loadAbout().then(loadCalendar).then(loadEventsList);
   }, []);
 
   const [groupTeamsElementId] = useState(`group-teams-${uuid()}`);
-
-  const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
 
   const route = network({}).groups({}).group;
   const { groupId } = useRouteParams(route);
   const { path } = useRouteMatch();
   const group = useGroupById(groupId);
+  const { pageSize } = usePaginationParams();
 
   const upcomingEvents = useEvents(
     getEventListOptions(currentTime, {
       past: false,
-      currentPage: 0,
-      pageSize: 1,
+      pageSize,
       searchQuery: '',
       constraint: { groupId },
     }),
@@ -58,8 +54,7 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
   const pastEvents = useEvents(
     getEventListOptions(currentTime, {
       past: true,
-      currentPage: 0,
-      pageSize: 1,
+      pageSize,
       searchQuery: '',
       constraint: { groupId },
     }),
@@ -100,15 +95,12 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
             </GroupProfilePage>
           </Route>
           <Route path={path + route({ groupId }).upcoming.template}>
-            <GroupProfilePage
-              {...props}
-              searchQuery={searchQuery}
-              onChangeSearchQuery={setSearchQuery}
-            >
+            <GroupProfilePage {...props}>
               <Frame title="Upcoming Events">
-                <EventList
+                <EventsList
+                  constraint={{ groupId }}
                   currentTime={currentTime}
-                  searchQuery={debouncedSearchQuery}
+                  past={false}
                   noEventsComponent={
                     <NoEvents
                       displayName={group.name}
@@ -121,16 +113,12 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
             </GroupProfilePage>
           </Route>
           <Route path={path + route({ groupId }).past.template}>
-            <GroupProfilePage
-              {...props}
-              searchQuery={searchQuery}
-              onChangeSearchQuery={setSearchQuery}
-            >
+            <GroupProfilePage {...props}>
               <Frame title="Past Events">
-                <EventList
-                  past
+                <EventsList
+                  constraint={{ groupId }}
                   currentTime={currentTime}
-                  searchQuery={debouncedSearchQuery}
+                  past={true}
                   noEventsComponent={
                     <NoEvents
                       past

@@ -1,6 +1,8 @@
+import {
+  NullableOptionalProperties,
+  validateInput,
+} from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
-import { NullableOptionalProperties } from '../utils/types';
-import { validateInput } from './index';
 
 type RestCalendar = NullableOptionalProperties<{
   googleCalendarId: {

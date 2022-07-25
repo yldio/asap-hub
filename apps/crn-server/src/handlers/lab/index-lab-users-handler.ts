@@ -3,6 +3,7 @@ import {
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import { ListResponse, UserResponse } from '@asap-hub/model';
+import { LabEvent } from '@asap-hub/server-common';
 import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
@@ -21,7 +22,7 @@ import {
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
 } from '../../utils/loop-over-custom-colection';
-import { LabEvent, LabPayload } from '../event-bus';
+import { LabPayload } from '../event-bus';
 
 export const indexLabUsersHandler =
   (

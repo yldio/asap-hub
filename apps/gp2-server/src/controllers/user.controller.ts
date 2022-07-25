@@ -6,6 +6,7 @@ import {
   UserResponse,
   UserUpdateRequest,
 } from '@asap-hub/model';
+import { UserController as BaseController } from '@asap-hub/server-common';
 import {
   parseUserToResponse,
   UserDataProvider,
@@ -30,11 +31,10 @@ export type FetchOptions<TFilter = string[]> = {
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
 
-export interface UserController {
+export interface UserController extends BaseController {
   fetch(options: FetchUsersOptions): Promise<ListUserResponse>;
-  fetchById(id: string): Promise<UserResponse>;
   fetchByCode(code: string): Promise<UserResponse>;
-  connectByCode(welcomeCode: string, userId: string): Promise<UserResponse>;
+  fetchById(id: string): Promise<UserResponse>;
   update(id: string, update: UserUpdateRequest): Promise<UserResponse>;
 }
 

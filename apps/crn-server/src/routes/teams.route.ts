@@ -4,11 +4,11 @@ import {
   ListTeamResponse,
   TeamResponse,
 } from '@asap-hub/model';
+import { validateFetchOptions } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import { GroupController } from '../controllers/groups';
 import { TeamController } from '../controllers/teams';
-import { validateFetchOptions } from '../validation';
 import {
   validateTeamParameters,
   validateTeamPatchRequest,

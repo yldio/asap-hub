@@ -1,4 +1,4 @@
-import { UserDataProvider } from '../../src/data-providers/users.data-provider';
+import { UserDataProvider } from '../../src/data-providers/user.data-provider';
 
 export const userDataProviderMock: jest.Mocked<UserDataProvider> = {
   fetchById: jest.fn(),

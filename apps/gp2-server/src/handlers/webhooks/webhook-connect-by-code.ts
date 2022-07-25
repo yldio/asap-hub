@@ -5,7 +5,7 @@ import { framework as lambda } from '@asap-hub/services-common';
 import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { appName, auth0SharedSecret, baseUrl } from '../../config';
 import Users from '../../controllers/user.controller';
-import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
+import { UserSquidexDataProvider } from '../../data-providers/user.data-provider';
 import { getAuthToken } from '../../utils/auth';
 
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {

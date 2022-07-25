@@ -4,7 +4,7 @@ import { UserController as BaseController } from '@asap-hub/server-common';
 import {
   parseUserToResponse,
   UserDataProvider,
-} from '../data-providers/users.data-provider';
+} from '../data-providers/user.data-provider';
 
 export type FetchUsersFilter = {
   role?: string[];

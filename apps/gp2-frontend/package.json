@@ -6,7 +6,7 @@
     "node": "16.x"
   },
   "scripts": {
-    "start": "cross-env TSC_COMPILE_ON_ERROR=true react-scripts start",
+    "start": "cross-env TSC_COMPILE_ON_ERROR=true PORT=4000 react-scripts start",
     "build": "node ./scripts/build-unsupported-browser-page.js && react-scripts build",
     "typecheck": "tsc",
     "test": "echo Run the workspace root script instead",

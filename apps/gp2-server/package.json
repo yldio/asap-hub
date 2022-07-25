@@ -7,6 +7,7 @@
   },
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
+    "start": "node-dev ./src/server.ts",
     "watch:babel": "../../scripts/build-babel.sh watch",
     "typecheck": "tsc"
   },
@@ -59,6 +60,7 @@
     "babel-loader": "8.2.5",
     "graphql-typescript-integration": "^1.2.0",
     "nock": "^13.0.11",
+    "node-dev": "^6.7.0",
     "serverless": "^3.19.0",
     "serverless-s3-sync": "3.0.0",
     "serverless-webpack": "^5.7.1",

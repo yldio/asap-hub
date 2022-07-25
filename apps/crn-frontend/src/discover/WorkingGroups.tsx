@@ -4,7 +4,17 @@ import { useDiscoverState } from './state';
 
 const WorkingGroups: FC<Record<string, never>> = () => {
   const discover = useDiscoverState();
-  return <DiscoverTabs workingGroups={discover.workingGroups} />;
+  const title = 'Working Groups';
+  const subtitle =
+    'Explore our Working Groups to learn more about what they are doing.';
+
+  return (
+    <DiscoverTabs
+      title={title}
+      subtitle={subtitle}
+      news={discover.workingGroups}
+    />
+  );
 };
 
 export default WorkingGroups;

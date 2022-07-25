@@ -10,43 +10,22 @@ const styles = css({
   paddingBottom: `${24 / perRem}em`,
 });
 
-type DiscoverTabsProps =
-  | {
-      training: ComponentProps<typeof NewsSection>['news'];
-      workingGroups?: never;
-    }
-  | {
-      training?: never;
-      workingGroups: ComponentProps<typeof NewsSection>['news'];
-    };
-
-export const getTitle = (props: DiscoverTabsProps): string => {
-  if (props.training) {
-    return 'Tutorials';
-  }
-  return 'Working Groups';
+type DiscoverTabsProps = {
+  title: string;
+  subtitle: string;
+  news: ComponentProps<typeof NewsSection>['news'];
 };
 
-export const getSubtitle = (props: DiscoverTabsProps): string => {
-  if (props.training) {
-    return 'Explore our tutorials to understand how you can use the Hub and work with the tools.';
-  }
-  return 'Explore our Working Groups to learn more about what they are doing.';
-};
-
-const getNews = (props: DiscoverTabsProps) => {
-  if (props.training) {
-    return props.training.map((item) => ({ ...item, noPill: true }));
-  }
-  return props.workingGroups.map((item) => ({ ...item, noPill: true }));
-};
-
-const DiscoverTabs: React.FC<DiscoverTabsProps> = (props) => (
+const DiscoverTabs: React.FC<DiscoverTabsProps> = ({
+  title,
+  subtitle,
+  news,
+}) => (
   <div css={styles}>
     <NewsSection
-      title={getTitle(props)}
-      subtitle={getSubtitle(props)}
-      news={getNews(props)}
+      title={title}
+      subtitle={subtitle}
+      news={news.map((item) => ({ ...item, noPill: true }))}
     />
     <HelpSection />
   </div>

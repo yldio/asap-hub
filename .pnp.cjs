@@ -4752,7 +4752,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "fast-check",\
-        "npm:2.14.0"\
+        "npm:2.25.0"\
       ],\
       [\
         "fast-deep-equal",\
@@ -7824,7 +7824,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "pure-rand",\
-        "npm:4.1.2"\
+        "npm:5.0.1"\
       ],\
       [\
         "pvtsutils",\
@@ -11229,7 +11229,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["dom-to-playwright", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.3"],\
             ["emotion-normalize", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.0.1"],\
             ["expect-playwright", "npm:0.8.0"],\
-            ["fast-check", "npm:2.14.0"],\
+            ["fast-check", "npm:2.25.0"],\
             ["fast-deep-equal", "npm:3.1.3"],\
             ["hast-util-sanitize", "npm:3.0.2"],\
             ["history", "npm:4.10.1"],\
@@ -11315,7 +11315,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["dom-to-playwright", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.3"],\
             ["emotion-normalize", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.0.1"],\
             ["expect-playwright", "npm:0.8.0"],\
-            ["fast-check", "npm:2.14.0"],\
+            ["fast-check", "npm:2.25.0"],\
             ["fast-deep-equal", "npm:3.1.3"],\
             ["hast-util-sanitize", "npm:3.0.2"],\
             ["history", "npm:4.10.1"],\
@@ -11405,7 +11405,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["dom-to-playwright", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.3"],\
             ["emotion-normalize", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.0.1"],\
             ["expect-playwright", "npm:0.8.0"],\
-            ["fast-check", "npm:2.14.0"],\
+            ["fast-check", "npm:2.25.0"],\
             ["fast-deep-equal", "npm:3.1.3"],\
             ["hast-util-sanitize", "npm:3.0.2"],\
             ["history", "npm:4.10.1"],\
@@ -11495,7 +11495,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["dom-to-playwright", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.3"],\
             ["emotion-normalize", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.0.1"],\
             ["expect-playwright", "npm:0.8.0"],\
-            ["fast-check", "npm:2.14.0"],\
+            ["fast-check", "npm:2.25.0"],\
             ["fast-deep-equal", "npm:3.1.3"],\
             ["hast-util-sanitize", "npm:3.0.2"],\
             ["history", "npm:4.10.1"],\
@@ -43250,11 +43250,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["fast-check", [\
-        ["npm:2.14.0", {\
-          "packageLocation": "./.yarn/cache/fast-check-npm-2.14.0-d32e0ed34d-ba0606fa7e.zip/node_modules/fast-check/",\
+        ["npm:2.25.0", {\
+          "packageLocation": "./.yarn/cache/fast-check-npm-2.25.0-10f7660804-77def3e214.zip/node_modules/fast-check/",\
           "packageDependencies": [\
-            ["fast-check", "npm:2.14.0"],\
-            ["pure-rand", "npm:4.1.2"]\
+            ["fast-check", "npm:2.25.0"],\
+            ["pure-rand", "npm:5.0.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -55691,10 +55691,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["pure-rand", [\
-        ["npm:4.1.2", {\
-          "packageLocation": "./.yarn/cache/pure-rand-npm-4.1.2-18308d74a4-059c6d7e60.zip/node_modules/pure-rand/",\
+        ["npm:5.0.1", {\
+          "packageLocation": "./.yarn/cache/pure-rand-npm-5.0.1-ac773e158e-2b05a6d801.zip/node_modules/pure-rand/",\
           "packageDependencies": [\
-            ["pure-rand", "npm:4.1.2"]\
+            ["pure-rand", "npm:5.0.1"]\
           ],\
           "linkType": "HARD"\
         }]\

@@ -33,5 +33,11 @@ const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
 });
 
 export const handler = Sentry.AWSLambda.wrapHandler(
-  inviteHandlerFactory(sendEmailFactory(ses), userRestClient, origin, logger),
+  inviteHandlerFactory(
+    sendEmailFactory(ses),
+    userRestClient,
+    origin,
+    logger,
+    'Welcome-Gp2',
+  ),
 );

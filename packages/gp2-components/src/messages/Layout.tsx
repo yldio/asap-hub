@@ -8,6 +8,7 @@ import {
 import { staticPages } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ReactNode } from 'react';
+
 const { perRem } = pixels;
 
 const containerStyles = css({

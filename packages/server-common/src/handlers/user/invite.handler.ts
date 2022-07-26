@@ -3,7 +3,12 @@ import { EventBridgeEvent } from 'aws-lambda';
 import path from 'path';
 import url from 'url';
 import { v4 as uuidV4 } from 'uuid';
-import { EventBridgeHandler, Logger, SendEmail } from '../../utils';
+import {
+  EventBridgeHandler,
+  Logger,
+  SendEmail,
+  SendEmailTemplate,
+} from '../../utils';
 import { UserPayload } from '../event-bus';
 
 const uuidMatch =
@@ -15,6 +20,7 @@ export const inviteHandlerFactory =
     userClient: SquidexRestClient<RestUser>,
     origin: string,
     logger: Logger,
+    template: SendEmailTemplate = 'Welcome',
   ): EventBridgeHandler<'UsersPublished', UserPayload> =>
   async (event) => {
     let user: RestUser;
@@ -62,7 +68,7 @@ export const inviteHandlerFactory =
     try {
       await sendEmail({
         to: [user.data.email.iv],
-        template: 'Welcome',
+        template,
         values: {
           firstName: user.data.firstName.iv,
           link: link.toString(),

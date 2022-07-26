@@ -1,4 +1,5 @@
 import { Display, Link, mail, Paragraph } from '@asap-hub/react-components';
+
 const { mailToSupport } = mail;
 
 type WelcomeProps = {

@@ -8,7 +8,6 @@ import {
   createListEventResponse,
 } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
-import { disable } from '@asap-hub/flags';
 
 import GroupProfile from '../GroupProfile';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -116,25 +115,6 @@ describe('the upcoming events tab', () => {
     userEvent.click(await findByText(/upcoming/i, { selector: 'nav a *' }));
     expect(await findByText(/results/i)).toBeVisible();
   });
-
-  it('can search for events', async () => {
-    disable('EVENTS_SEARCH');
-    const { findByRole, findByText } = await renderGroupProfile({
-      ...createGroupResponse(),
-      id: '42',
-    });
-    userEvent.click(await findByText(/upcoming/i, { selector: 'nav a *' }));
-    userEvent.type(await findByRole('searchbox'), 'searchterm');
-    await waitFor(() =>
-      expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          searchQuery: 'searchterm',
-          constraint: { groupId: '42' },
-        }),
-        expect.anything(),
-      ),
-    );
-  });
 });
 
 describe('the past events tab', () => {
@@ -142,23 +122,6 @@ describe('the past events tab', () => {
     const { findByText } = await renderGroupProfile();
     userEvent.click(await findByText(/past/i, { selector: 'nav a *' }));
     expect(await findByText(/results/i)).toBeVisible();
-  });
-
-  it('displays proper information for empty events response', async () => {
-    disable('EVENTS_SEARCH');
-    const { findByText } = await renderGroupProfile(
-      {
-        ...createGroupResponse(),
-        id: '42',
-        name: 'test',
-      },
-      undefined,
-      async () => createListEventResponse(0),
-    );
-    userEvent.click(await findByText(/past/i, { selector: 'nav a *' }));
-    expect(
-      await findByText(/test doesn’t have any past events!/i),
-    ).toBeVisible();
   });
 });
 
@@ -177,12 +140,5 @@ describe('the event tabs', () => {
     await renderGroupProfile();
 
     expect(await screen.findByText(/Past Events \(7\)/i)).toBeVisible();
-  });
-
-  it('calls squidex if the EVENTS_SEARCH flag is disabled ((Regression))', async () => {
-    disable('EVENTS_SEARCH');
-    await renderGroupProfile();
-
-    expect(mockGetGroupEvents).toHaveBeenCalled();
   });
 });

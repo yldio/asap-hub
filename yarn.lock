@@ -959,6 +959,9 @@ __metadata:
     "@graphql-codegen/schema-ast": ^2.2.0
     "@graphql-codegen/typescript": 2.2.2
     "@graphql-codegen/typescript-operations": ^2.1.4
+    "@graphql-tools/graphql-file-loader": 7.4.0
+    "@graphql-tools/load": 7.7.0
+    "@graphql-tools/mock": 8.7.0
     "@graphql-typed-document-node/core": 3.1.1
     "@hapi/boom": 9.1.4
     "@sentry/serverless": ^6.7.1
@@ -983,6 +986,7 @@ __metadata:
     cors: ^2.8.5
     express: ^4.17.1
     express-async-errors: ^3.1.1
+    graphql: ^15.5.0
     graphql-tag: ^2.12.4
     graphql-typescript-integration: ^1.2.0
     jsonwebtoken: ^8.5.1

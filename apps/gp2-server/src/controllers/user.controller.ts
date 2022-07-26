@@ -1,16 +1,10 @@
-/* istanbul ignore file */
-// ignore this file for coverage since we don't have the requirements yet to test it
 import { GenericError, NotFoundError } from '@asap-hub/errors';
-import {
-  ListUserResponse,
-  UserResponse,
-  UserUpdateRequest,
-} from '@asap-hub/model';
+import { UserResponse, UserUpdateRequest } from '@asap-hub/model';
 import { UserController as BaseController } from '@asap-hub/server-common';
 import {
   parseUserToResponse,
   UserDataProvider,
-} from '../data-providers/users.data-provider';
+} from '../data-providers/user.data-provider';
 
 export type FetchUsersFilter = {
   role?: string[];
@@ -32,10 +26,9 @@ export type FetchOptions<TFilter = string[]> = {
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
 
 export interface UserController extends BaseController {
-  fetch(options: FetchUsersOptions): Promise<ListUserResponse>;
   fetchByCode(code: string): Promise<UserResponse>;
-  fetchById(id: string): Promise<UserResponse>;
   update(id: string, update: UserUpdateRequest): Promise<UserResponse>;
+  fetchById(id: string): Promise<UserResponse>;
 }
 
 export default class Users implements UserController {
@@ -48,14 +41,6 @@ export default class Users implements UserController {
   async update(id: string, update: UserUpdateRequest): Promise<UserResponse> {
     await this.userDataProvider.update(id, update);
     return this.fetchById(id);
-  }
-
-  async fetch(options: FetchUsersOptions): Promise<ListUserResponse> {
-    const { total, items: users } = await this.userDataProvider.fetch(options);
-
-    const items = total > 0 ? users.map(parseUserToResponse) : [];
-
-    return { total, items };
   }
 
   async fetchById(id: string): Promise<UserResponse> {

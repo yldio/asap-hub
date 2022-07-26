@@ -31,7 +31,7 @@ import Users, { UserController } from './controllers/user.controller';
 import {
   UserDataProvider,
   UserSquidexDataProvider,
-} from './data-providers/users.data-provider';
+} from './data-providers/user.data-provider';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { userPublicRouteFactory } from './routes/user.route';
 import pinoLogger from './utils/logger';

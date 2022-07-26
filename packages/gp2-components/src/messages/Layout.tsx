@@ -1,6 +1,6 @@
 import {
-  asapImage,
   ceruleanFernGradientStyles,
+  gp2Image,
   Link,
   pixels,
   silver,
@@ -59,7 +59,7 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, appOrigin }) => (
         css={[ceruleanFernGradientStyles, coloredLineStyles]}
       />
       <div css={{ paddingLeft: '24px' }}>
-        <img alt="GP2 Hub logo" css={imageContainerStyle} src={asapImage} />
+        <img alt="GP2 Hub logo" css={imageContainerStyle} src={gp2Image} />
       </div>
       <main css={contentContainerStyles}>{children}</main>
     </div>

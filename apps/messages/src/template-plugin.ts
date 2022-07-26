@@ -1,15 +1,14 @@
-import * as React from 'react';
 import createCache from '@emotion/cache';
+import { CacheProvider } from '@emotion/react';
 import createEmotionServer from '@emotion/server/create-instance';
+import { promises as fs } from 'fs';
 import juice from 'juice';
 import path from 'path';
-import { CacheProvider } from '@emotion/react';
-import { promises as fs } from 'fs';
+import * as React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { titleCase } from 'title-case';
-import { Compiler, Stats } from 'webpack';
 import { URL } from 'url';
-
+import { Compiler, Stats } from 'webpack';
 import { APP_ORIGIN } from './config';
 
 const htmlTemplate = (

@@ -986,6 +986,7 @@ __metadata:
     graphql-typescript-integration: ^1.2.0
     jsonwebtoken: ^8.5.1
     nock: ^13.0.11
+    node-dev: ^6.7.0
     serverless: ^3.19.0
     serverless-http: ^2.7.0
     serverless-s3-sync: 3.0.0

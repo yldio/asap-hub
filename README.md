@@ -33,7 +33,8 @@ For a list of individual package and particularly app scripts, look inside the r
 - `yarn build` - This will typecheck and build all packages and apps in the repository. You may want to run this e.g. after checking out a branch.
 - `yarn watch:babel` - This will watch all the packages (but not apps) for changes and whenever changes occur, build them, so that other packages and apps can use the changes.
 - `yarn watch:typecheck` - This will watch all the packages (but not apps) for changes and whenever changes occur, typecheck them and emit new type definitions, so that other packages and apps can see the new module type signature.
-- `yarn start:backend` - Prepares the local dev environment for the backend (e.g. AWS, database) and serves all lambda functions across all backend `apps`.
+- `yarn start:backend:crn` - Prepares the local dev environment for the CRN backend (e.g. AWS, database) and serves all lambda functions across all backend `apps`.
+- `yarn start:backend:gp2` - Prepares the local dev environment for the GP2 backend (e.g. AWS, database) and serves all lambda functions across all backend `apps`.
 - `yarn fix:format` - This will reformat all files in the repository to match our formatting standards using [Prettier](https://prettier.io/).
 - `yarn test` - This will lint and test all packages and apps in the repository. You may want to run this with `--watch` or other [Jest CLI options](https://jestjs.io/docs/en/cli.html).
 - `yarn test:*` - There are further test configurations being run on CI that are usually slower or more specific and thus not suitable to run during day-to-day development. You can execute those scripts manually. Some of them may require installing native modules via `yarn rebuild` first.
@@ -54,13 +55,16 @@ For you, a newcomer, to be running your development setup, you'll need to comple
 - You can run all apps in the project with a simple `yarn start` on the project's root. It will load up everything, but you don't need to run everything. Depending on what you're doing, you only need some apps up
 - `yarn watch:babel`: to have babel watching and compiling for you (you'll need this running most of the time)
 - `yarn watch:typecheck`: well... for types checking (you'll need this running most of the time)
-- `yarn start:backend`: to run the backend
-- `yarn start:frontend`: to run the frontend
+- `yarn start:backend:crn`: to run the CRN backend
+- `yarn start:frontend:crn`: to run the CRN frontend
+- `yarn start:backend:gp2`: to run the GP2 backend
+- `yarn start:frontend:gp2`: to run the GP2 frontend
 - `yarn start:storybook`: to run storybook
 
 ### Now that everything's up
 
-- On localhost:3000 you should have the hub running. You'll need to get your profile created.
+- On localhost:3000 you should have the CRN hub running. You'll need to get your profile created.
+- On localhost:4000 you should have the GP2 hub running. You'll need to get your profile created.
 - Get your UUID from the previous step, and use it on <https://dev.hub.asap.science/welcome/{uuid>}
 - Reload localhost:3000 and you should now have an account and be logged in.
 

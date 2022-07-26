@@ -11097,6 +11097,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-typescript-integration", "npm:1.2.0"],\
             ["jsonwebtoken", "npm:8.5.1"],\
             ["nock", "npm:13.0.11"],\
+            ["node-dev", "npm:6.7.0"],\
             ["serverless", "npm:3.19.0"],\
             ["serverless-http", "npm:2.7.0"],\
             ["serverless-s3-sync", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.0.0"],\

@@ -642,7 +642,7 @@ __metadata:
     serverless-http: ^2.7.0
     serverless-iam-roles-per-function: ^2.0.2
     serverless-s3-sync: 3.0.0
-    serverless-webpack: ^5.7.1
+    serverless-webpack: 5.8.0
     source-map-support: 0.5.21
     stream-json: 1.7.4
     supertest: 6.2.4
@@ -989,7 +989,7 @@ __metadata:
     serverless: ^3.19.0
     serverless-http: ^2.7.0
     serverless-s3-sync: 3.0.0
-    serverless-webpack: ^5.7.1
+    serverless-webpack: 5.8.0
     source-map-support: 0.5.21
     supertest: 6.2.4
     ts-node: ^10.7.0
@@ -23136,7 +23136,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^7.2.0":
+"glob@npm:^7.2.3":
   version: 7.2.3
   resolution: "glob@npm:7.2.3"
   dependencies:
@@ -35284,25 +35284,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"serverless-webpack@npm:^5.7.1":
-  version: 5.7.1
-  resolution: "serverless-webpack@npm:5.7.1"
+"serverless-webpack@npm:5.8.0":
+  version: 5.8.0
+  resolution: "serverless-webpack@npm:5.8.0"
   dependencies:
-    archiver: "npm:^5.3.1"
-    bluebird: "npm:^3.7.2"
-    fs-extra: "npm:^9.1.0"
-    glob: "npm:^7.2.0"
-    is-builtin-module: "npm:^3.1.0"
-    lodash: "npm:^4.17.21"
-    semver: "npm:^7.3.7"
-    ts-node: "npm:>= 8.3.0"
+    archiver: ^5.3.1
+    bluebird: ^3.7.2
+    fs-extra: ^9.1.0
+    glob: ^7.2.3
+    is-builtin-module: ^3.1.0
+    lodash: ^4.17.21
+    semver: ^7.3.7
+    ts-node: ">= 8.3.0"
   peerDependencies:
     serverless: 1 || 2 || 3
     webpack: ">= 3.0.0 < 6"
   dependenciesMeta:
     ts-node:
       optional: true
-  checksum: b6287cb36dcd943ccd80eae61ff50c4ddd263cb3a73c29260a182006c5d33b6212be26abb347c95ee76d63afaa0abc8c2396822edaff66032c0cf73c25d262ae
+  checksum: 6265be2441a6c8005b5304bd82be609391b19ece36fc44f16d3bbe9dd5ea45f7ee67e28fcfc628573ee49299bf1f898e23a3116c88f40d57ec2ec2bcdaa10b29
   languageName: node
   linkType: hard
 

@@ -18,7 +18,7 @@
     "@asap-hub/react-context": "workspace:*",
     "@asap-hub/routing": "workspace:*",
     "@storybook/addon-actions": "6.5.9",
-    "@storybook/addon-knobs": "^6.2.9",
+    "@storybook/addon-knobs": "6.4.0",
     "@storybook/addon-viewport": "6.5.9",
     "@storybook/react": "6.5.9",
     "core-js": "^3.12.1",

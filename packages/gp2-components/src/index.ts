@@ -1,7 +1,8 @@
+export * from './messages';
 export { NavigationHeader, UserCard } from './organism';
 export {
-  Layout,
+  BasicLayout,
   DashboardPage,
   DashboardPageBody,
-  BasicLayout,
+  Layout,
 } from './templates';

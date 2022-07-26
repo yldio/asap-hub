@@ -1019,6 +1019,7 @@ __metadata:
   resolution: "@asap-hub/messages@workspace:apps/messages"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/gp2-components": "workspace:*"
     "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@babel/core": 7.18.9

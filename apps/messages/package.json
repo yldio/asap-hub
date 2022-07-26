@@ -13,6 +13,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@asap-hub/gp2-components": "workspace:*",
     "@asap-hub/message-templates": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
     "@babel/core": "7.18.9",

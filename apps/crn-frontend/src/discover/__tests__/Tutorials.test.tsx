@@ -39,26 +39,24 @@ const renderDiscoverTutorials = async (user: Partial<User>) => {
   return result;
 };
 
-describe('Tutorials page', () => {
-  mockGetDiscover.mockResolvedValue({
-    ...createDiscoverResponse(),
-    training: [
-      createNewsResponse('First One', 'Training'),
-      createNewsResponse('Second One', 'Training'),
-    ],
-  });
+mockGetDiscover.mockResolvedValue({
+  ...createDiscoverResponse(),
+  training: [
+    createNewsResponse('First One', 'Training'),
+    createNewsResponse('Second One', 'Training'),
+  ],
+});
 
-  it('renders tutorial page with two items', async () => {
-    await renderDiscoverTutorials({});
+it('renders tutorial page with two items', async () => {
+  await renderDiscoverTutorials({});
 
-    expect(screen.getByText(/First One/, { selector: 'h4' })).toBeVisible();
-    expect(screen.getByText(/Second One/, { selector: 'h4' })).toBeVisible();
-  });
+  expect(screen.getByText(/First One/, { selector: 'h4' })).toBeVisible();
+  expect(screen.getByText(/Second One/, { selector: 'h4' })).toBeVisible();
+});
 
-  it('renders the correct title and subtitle', async () => {
-    await renderDiscoverTutorials({});
+it('renders the correct title and subtitle', async () => {
+  await renderDiscoverTutorials({});
 
-    expect(screen.getByText(/Tutorials/i, { selector: 'h2' })).toBeVisible();
-    expect(screen.getByText(/Explore our tutorials/i)).toBeVisible();
-  });
+  expect(screen.getByText(/Tutorials/i, { selector: 'h2' })).toBeVisible();
+  expect(screen.getByText(/Explore our tutorials/i)).toBeVisible();
 });

@@ -90,7 +90,7 @@ const serverlessConfig: AWS = {
       SQUIDEX_CLIENT_ID: squidexClientId,
       SQUIDEX_CLIENT_SECRET: squidexClientSecret,
       LOG_LEVEL: stage === 'production' ? 'error' : 'info',
-      APP_ORIGIN: appHostname,
+      APP_ORIGIN: appUrl,
       ENVIRONMENT: '${env:SLS_STAGE}',
       CURRENT_REVISION: currentRevision
         ? '${env:CI_COMMIT_SHA}'

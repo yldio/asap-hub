@@ -8,4 +8,5 @@ export interface DiscoverResponse {
   scientificAdvisoryBoard: ReadonlyArray<UserResponse>;
   pages: ReadonlyArray<PageResponse>;
   training: ReadonlyArray<NewsResponse>;
+  workingGroups: ReadonlyArray<NewsResponse>;
 }

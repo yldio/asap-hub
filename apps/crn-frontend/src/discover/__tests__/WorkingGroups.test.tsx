@@ -4,7 +4,7 @@ import { render, waitFor, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { createDiscoverResponse, createNewsResponse } from '@asap-hub/fixtures';
 
-import Tutorials from '../Tutorials';
+import WorkingGroups from '../WorkingGroups';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { refreshDiscoverState } from '../state';
 import { getDiscover } from '../api';
@@ -17,7 +17,7 @@ afterEach(() => {
 
 const mockGetDiscover = getDiscover as jest.MockedFunction<typeof getDiscover>;
 
-const renderDiscoverTutorials = async (user: Partial<User>) => {
+const renderDiscoverWorkingGroups = async (user: Partial<User>) => {
   const result = render(
     <Suspense fallback="loading">
       <RecoilRoot
@@ -27,7 +27,7 @@ const renderDiscoverTutorials = async (user: Partial<User>) => {
       >
         <Auth0Provider user={user}>
           <WhenReady>
-            <Tutorials />
+            <WorkingGroups />
           </WhenReady>
         </Auth0Provider>
       </RecoilRoot>
@@ -39,24 +39,30 @@ const renderDiscoverTutorials = async (user: Partial<User>) => {
   return result;
 };
 
-mockGetDiscover.mockResolvedValue({
-  ...createDiscoverResponse(),
-  training: [
-    createNewsResponse('First One', 'Training'),
-    createNewsResponse('Second One', 'Training'),
-  ],
-});
+it('renders working group page with two items', async () => {
+  mockGetDiscover.mockResolvedValue({
+    ...createDiscoverResponse(),
+    workingGroups: [
+      createNewsResponse('First One', 'Working Groups'),
+      createNewsResponse('Second One', 'Working Groups'),
+    ],
+  });
 
-it('renders tutorial page with two items', async () => {
-  await renderDiscoverTutorials({});
-
+  await renderDiscoverWorkingGroups({});
   expect(screen.getByText(/First One/, { selector: 'h4' })).toBeVisible();
   expect(screen.getByText(/Second One/, { selector: 'h4' })).toBeVisible();
 });
 
 it('renders the correct title and subtitle', async () => {
-  await renderDiscoverTutorials({});
+  mockGetDiscover.mockResolvedValue({
+    ...createDiscoverResponse(),
+    workingGroups: [
+      createNewsResponse('First One', 'Working Groups'),
+      createNewsResponse('Second One', 'Working Groups'),
+    ],
+  });
 
-  expect(screen.getByText(/Tutorials/i, { selector: 'h2' })).toBeVisible();
-  expect(screen.getByText(/Explore our tutorials/i)).toBeVisible();
+  await renderDiscoverWorkingGroups({});
+  expect(screen.getByText(/Working Groups/i, { selector: 'h2' })).toBeVisible();
+  expect(screen.getByText(/Explore our Working Groups/i)).toBeVisible();
 });

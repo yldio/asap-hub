@@ -29,6 +29,7 @@ export default class Discover implements DiscoverController {
         members: [],
         scientificAdvisoryBoard: [],
         pages: [],
+        workingGroups: [],
       };
     }
 
@@ -40,6 +41,7 @@ export default class Discover implements DiscoverController {
       scientificAdvisoryBoard:
         flatData.scientificAdvisoryBoard?.map(parseGraphQLUser) ?? [],
       pages: flatData.pages?.map(parseGraphQLPage) ?? [],
+      workingGroups: flatData.workingGroups?.map(parseGraphQLNews) ?? [],
     };
   }
 }

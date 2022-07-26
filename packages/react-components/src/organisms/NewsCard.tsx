@@ -64,6 +64,7 @@ const placeholders: Record<NewsType, JSX.Element> = {
   Event: newsEventPlaceholderIcon,
   Training: trainingPlaceholderIcon,
   Tutorial: trainingPlaceholderIcon,
+  'Working Groups': trainingPlaceholderIcon,
 };
 
 type NewsCardProps = NewsResponse & {

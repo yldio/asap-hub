@@ -66,6 +66,28 @@ const squidexGraphqlDiscoverFlatData = () => ({
       },
     },
   ],
+  workingGroups: [
+    {
+      id: 'uuid-working-groups-1',
+      created: '2020-09-24T11:06:27.164Z',
+      lastModified: '2020-10-15T17:55:21Z',
+      version: 42,
+      flatData: {
+        title: 'Title',
+        text: 'Content',
+        link: 'https://hub.asap.science',
+        linkText: 'Working group 1',
+        type: 'Working Groups',
+        shortText: 'Short text',
+        thumbnail: [
+          {
+            id: 'thumbnail-uuid1',
+            thumbnailUrl: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
+          },
+        ],
+      },
+    },
+  ],
   pages: [
     {
       id: 'uuid-pages-1',
@@ -176,6 +198,17 @@ export const squidexGraphqlDiscoverResponse = (): DiscoverResponse => ({
       link: 'https://hub.asap.science',
       linkText: 'ASAP Training',
       type: 'Training',
+    },
+  ],
+  workingGroups: [
+    {
+      id: 'uuid-working-groups-1',
+      created: '2020-09-24T11:06:27.164Z',
+      title: 'Title',
+      text: 'Content',
+      link: 'https://hub.asap.science',
+      linkText: 'Working group 1',
+      type: 'Working Groups',
     },
   ],
   members: getSquidexGraphqlDiscoverMembersResponse(),

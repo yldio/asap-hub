@@ -107,6 +107,17 @@ const props = (): ComponentProps<typeof DiscoverPageBody> => ({
       thumbnail: 'https://picsum.photos/200',
     },
   ],
+  workingGroups: [
+    {
+      id: 'uuid-3',
+      created: new Date().toISOString(),
+      type: 'Working Groups' as const,
+      title: "Working groups on Parkinson's",
+      shortText:
+        'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',
+      thumbnail: 'https://picsum.photos/200',
+    },
+  ],
   members,
   scientificAdvisoryBoard: members,
   aboutUs: text('About Us', ''),

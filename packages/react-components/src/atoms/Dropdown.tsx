@@ -7,6 +7,7 @@ import { dropdownChevronIcon, dropdownCrossIcon } from '../icons';
 import { Option, reactSelectStyles } from '../select';
 import { noop } from '../utils';
 
+export const ENTER_KEYCODE = 13;
 const containerStyles = css({
   flexBasis: '100%',
 });

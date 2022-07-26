@@ -14,6 +14,7 @@ import {
   ResearchOutputType,
   ResearchTagResponse,
 } from '@asap-hub/model';
+import { fireEvent } from '@testing-library/dom';
 import {
   render,
   screen,
@@ -21,10 +22,11 @@ import {
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
 import { Router, StaticRouter } from 'react-router-dom';
+import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import ResearchOutputForm, {
   createIdentifierField,
   getDecision,
@@ -259,25 +261,38 @@ describe('on submit', () => {
       </Router>,
     );
 
-    userEvent.type(screen.getByRole('textbox', { name: /url/i }), data.link!);
-    userEvent.type(screen.getByRole('textbox', { name: /title/i }), data.title);
-    userEvent.type(
-      screen.getByRole('textbox', { name: /description/i }),
-      data.description,
-    );
+    fireEvent.change(screen.getByLabelText(/url/i), {
+      target: { value: data.link },
+    });
+    fireEvent.change(screen.getByLabelText(/title/i), {
+      target: { value: data.title },
+    });
+    fireEvent.change(screen.getByLabelText(/description/i), {
+      target: { value: data.description },
+    });
 
     const typeDropdown = screen.getByRole('textbox', {
       name: /Select the option/i,
     });
-    userEvent.type(typeDropdown, data.type);
-    userEvent.type(typeDropdown, specialChars.enter);
+    fireEvent.change(typeDropdown, {
+      target: { value: data.type },
+    });
+    fireEvent.keyDown(typeDropdown, {
+      keyCode: ENTER_KEYCODE,
+    });
 
     const identifier = screen.getByRole('textbox', { name: /identifier/i });
-    userEvent.type(identifier, 'DOI');
-    userEvent.type(identifier, specialChars.enter);
-    userEvent.type(
-      await screen.getByPlaceholderText('DOI number e.g. 10.5555/YFRU1371'),
-      '10.1234',
+    fireEvent.change(identifier, {
+      target: { value: 'DOI' },
+    });
+    fireEvent.keyDown(identifier, {
+      keyCode: ENTER_KEYCODE,
+    });
+    fireEvent.change(
+      screen.getByPlaceholderText('DOI number e.g. 10.5555/YFRU1371'),
+      {
+        target: { value: '10.1234' },
+      },
     );
   };
   const submitForm = async () => {
@@ -376,8 +391,12 @@ describe('on submit', () => {
     const typeDropdown = screen.getByRole('textbox', {
       name: /Select the option/i,
     });
-    userEvent.type(typeDropdown, type);
-    userEvent.type(typeDropdown, specialChars.enter);
+    fireEvent.change(typeDropdown, {
+      target: { value: type },
+    });
+    fireEvent.keyDown(typeDropdown, {
+      keyCode: ENTER_KEYCODE,
+    });
 
     userEvent.click(await screen.findByRole('textbox', { name: /methods/i }));
     userEvent.click(screen.getByText('ELISA'));
@@ -400,8 +419,12 @@ describe('on submit', () => {
     const typeDropdown = screen.getByRole('textbox', {
       name: /Select the option/i,
     });
-    userEvent.type(typeDropdown, type);
-    userEvent.type(typeDropdown, specialChars.enter);
+    fireEvent.change(typeDropdown, {
+      target: { value: type },
+    });
+    fireEvent.keyDown(typeDropdown, {
+      keyCode: ENTER_KEYCODE,
+    });
 
     userEvent.click(await screen.findByRole('textbox', { name: /organisms/i }));
     userEvent.click(screen.getByText('Rat'));
@@ -425,8 +448,12 @@ describe('on submit', () => {
     const typeDropdown = screen.getByRole('textbox', {
       name: /Select the option/i,
     });
-    userEvent.type(typeDropdown, type);
-    userEvent.type(typeDropdown, specialChars.enter);
+    fireEvent.change(typeDropdown, {
+      target: { value: type },
+    });
+    fireEvent.keyDown(typeDropdown, {
+      keyCode: ENTER_KEYCODE,
+    });
 
     userEvent.click(
       await screen.findByRole('textbox', { name: /environments/i }),
@@ -449,16 +476,25 @@ describe('on submit', () => {
     const typeDropdown = screen.getByRole('textbox', {
       name: /Select the option/i,
     });
-    userEvent.type(typeDropdown, type);
-    userEvent.type(typeDropdown, specialChars.enter);
+    fireEvent.change(typeDropdown, {
+      target: { value: type },
+    });
+    fireEvent.keyDown(typeDropdown, {
+      keyCode: ENTER_KEYCODE,
+    });
 
     const methods = await screen.findByRole('textbox', { name: /methods/i });
     userEvent.click(methods);
     userEvent.click(screen.getByText('ELISA'));
 
     expect(screen.getByText(/ELISA/i)).toBeInTheDocument();
-    userEvent.type(typeDropdown, 'Protein Data');
-    userEvent.type(typeDropdown, specialChars.enter);
+    fireEvent.change(typeDropdown, {
+      target: { value: 'Protein Data' },
+    });
+    fireEvent.keyDown(typeDropdown, {
+      keyCode: ENTER_KEYCODE,
+    });
+
     await waitFor(() =>
       expect(screen.queryByText(/ELISA/i)).not.toBeInTheDocument(),
     );
@@ -472,8 +508,12 @@ describe('on submit', () => {
     const typeDropdown = screen.getByRole('textbox', {
       name: /Select the option/i,
     });
-    userEvent.type(typeDropdown, type);
-    userEvent.type(typeDropdown, specialChars.enter);
+    fireEvent.change(typeDropdown, {
+      target: { value: type },
+    });
+    fireEvent.keyDown(typeDropdown, {
+      keyCode: ENTER_KEYCODE,
+    });
 
     const organisms = await screen.findByRole('textbox', {
       name: /organisms/i,
@@ -482,8 +522,13 @@ describe('on submit', () => {
     userEvent.click(screen.getByText('Rat'));
 
     expect(screen.getByText(/rat/i)).toBeInTheDocument();
-    userEvent.type(typeDropdown, 'Microscopy');
-    userEvent.type(typeDropdown, specialChars.enter);
+    fireEvent.change(typeDropdown, {
+      target: { value: 'Microscopy' },
+    });
+    fireEvent.keyDown(typeDropdown, {
+      keyCode: ENTER_KEYCODE,
+    });
+
     await waitFor(() =>
       expect(screen.queryByText(/rat/i)).not.toBeInTheDocument(),
     );
@@ -497,8 +542,12 @@ describe('on submit', () => {
     const typeDropdown = screen.getByRole('textbox', {
       name: /Select the option/i,
     });
-    userEvent.type(typeDropdown, type);
-    userEvent.type(typeDropdown, specialChars.enter);
+    fireEvent.change(typeDropdown, {
+      target: { value: type },
+    });
+    fireEvent.keyDown(typeDropdown, {
+      keyCode: ENTER_KEYCODE,
+    });
 
     const environments = await screen.findByRole('textbox', {
       name: /environments/i,
@@ -507,8 +556,12 @@ describe('on submit', () => {
     userEvent.click(screen.getByText('In Vitro'));
 
     expect(screen.getByText(/In Vitro/i)).toBeInTheDocument();
-    userEvent.type(typeDropdown, 'Microscopy');
-    userEvent.type(typeDropdown, specialChars.enter);
+    fireEvent.change(typeDropdown, {
+      target: { value: 'Microscopy' },
+    });
+    fireEvent.keyDown(typeDropdown, {
+      keyCode: ENTER_KEYCODE,
+    });
     await waitFor(() =>
       expect(screen.queryByText(/In Vitro/i)).not.toBeInTheDocument(),
     );
@@ -522,9 +575,13 @@ describe('on submit', () => {
     const typeDropdown = screen.getByRole('textbox', {
       name: /Select the option/i,
     });
-    userEvent.type(typeDropdown, type);
-    userEvent.type(typeDropdown, specialChars.enter);
 
+    fireEvent.change(typeDropdown, {
+      target: { value: type },
+    });
+    fireEvent.keyDown(typeDropdown, {
+      keyCode: ENTER_KEYCODE,
+    });
     const subtype = screen.getByRole('textbox', {
       name: /subtype/i,
     });
@@ -532,8 +589,12 @@ describe('on submit', () => {
     userEvent.click(screen.getByText('Metabolite'));
 
     expect(screen.getByText(/metabolite/i)).toBeInTheDocument();
-    userEvent.type(typeDropdown, 'Microscopy');
-    userEvent.type(typeDropdown, specialChars.enter);
+    fireEvent.change(typeDropdown, {
+      target: { value: 'Microscopy' },
+    });
+    fireEvent.keyDown(typeDropdown, {
+      keyCode: ENTER_KEYCODE,
+    });
     await waitFor(() =>
       expect(screen.queryByText(/metabolite/i)).not.toBeInTheDocument(),
     );
@@ -547,7 +608,9 @@ describe('on submit', () => {
     userEvent.click(
       within(sharingStatus).getByRole('radio', { name: 'Public' }),
     );
-    userEvent.type(screen.getByLabelText(/date published/i), '2022-03-24');
+    fireEvent.change(screen.getByLabelText(/date published/i), {
+      target: { value: '2022-03-24' },
+    });
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
@@ -561,10 +624,9 @@ describe('on submit', () => {
       data: { ...expectedRequest, type: 'Animal Model' },
       documentType: 'Lab Resource',
     });
-    userEvent.type(
-      screen.getByRole('textbox', { name: /Catalog Number/i }),
-      'abc123',
-    );
+    fireEvent.change(screen.getByRole('textbox', { name: /Catalog Number/i }), {
+      target: { value: 'abc123' },
+    });
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,

@@ -1,5 +1,5 @@
 import { DecisionOption, ListResponse } from './common';
-import { ExternalAuthorInput, ExternalAuthorResponse } from './external-author';
+import { ExternalAuthorResponse } from './external-author';
 import { LabResponse } from './lab';
 import { TeamResponse } from './team';
 import { UserResponse } from './user';
@@ -171,44 +171,86 @@ export const sharingStatuses = ['Public', 'Network Only'] as const;
 
 export type ResearchOutputSharingStatus = typeof sharingStatuses[number];
 
-export type ResearchOutputResponse = {
-  readonly id: string;
-
-  readonly usageNotes?: string;
-  readonly accession?: string;
-  readonly addedDate: string;
-  readonly asapFunded?: boolean;
-  readonly authors: ReadonlyArray<UserResponse | ExternalAuthorResponse>;
-  readonly contactEmails: string[];
-  readonly created: string;
-  readonly description: string;
-  readonly documentType: ResearchOutputDocumentType;
-  readonly doi?: string;
-  readonly environments: string[];
-  readonly labCatalogNumber?: string;
-  readonly labs: LabResponse[];
-  readonly lastModifiedDate?: string;
-  readonly lastUpdatedPartial: string;
-  readonly link?: string;
-  readonly methods: string[];
-  readonly organisms: string[];
-  readonly publishDate?: string;
-  readonly rrid?: string;
-  readonly sharingStatus: ResearchOutputSharingStatus;
-  readonly subtype?: string;
-  readonly tags: ReadonlyArray<string>;
-  readonly teams: ReadonlyArray<Pick<TeamResponse, 'id' | 'displayName'>>;
-  readonly title: string;
-  readonly type?: ResearchOutputType;
-  readonly usedInPublication?: boolean;
-};
-
-export type ResearchOutputPostRequest = {
-  usageNotes?: string;
+export type ResearchOutputCoreObject = {
   accession?: string;
   addedDate: string;
   asapFunded?: boolean;
-  authors?: ExternalAuthorInput[];
+  description: string;
+  documentType: ResearchOutputDocumentType;
+  doi?: string;
+  labCatalogNumber?: string;
+  lastModifiedDate?: string;
+  link?: string;
+  publishDate?: string;
+  rrid?: string;
+  sharingStatus: ResearchOutputSharingStatus;
+  tags: string[];
+  title: string;
+  type?: ResearchOutputType;
+  usageNotes?: string;
+  usedInPublication?: boolean;
+};
+
+export type ResearchOutputDataObject = ResearchOutputCoreObject & {
+  authors: (UserResponse | ExternalAuthorResponse)[];
+  contactEmails: string[];
+  created: string;
+  environments: string[];
+  id: string;
+  labs: LabResponse[];
+  lastUpdatedPartial: string;
+  methods: string[];
+  organisms: string[];
+  subtype?: string;
+  teams: Pick<TeamResponse, 'id' | 'displayName'>[];
+};
+
+export type ListResearchOutputDataObject =
+  ListResponse<ResearchOutputDataObject>;
+
+export type AuthorUpsertDataObject =
+  | { userId: string }
+  | { externalAuthorId: string };
+
+export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
+  authors: AuthorUpsertDataObject[];
+  createdBy: string;
+  environmentIds: string[];
+  labIds: string[];
+  methodIds: string[];
+  organismIds: string[];
+  subtypeId?: string;
+  teamIds: string[];
+};
+
+export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
+  authors: AuthorUpsertDataObject[];
+  environmentIds: string[];
+  labIds: string[];
+  methodIds: string[];
+  organismIds: string[];
+  subtypeId?: string;
+  teamIds: string[];
+  updatedBy: string;
+};
+
+export type ResearchOutputResponse = Omit<
+  ResearchOutputDataObject,
+  'createdBy'
+>;
+
+export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;
+
+export type AuthorPostRequest =
+  | { userId: string }
+  | { externalAuthorId: string }
+  | { externalAuthorName: string };
+
+export type ResearchOutputPostRequest = {
+  accession?: string;
+  addedDate: string;
+  asapFunded?: boolean;
+  authors?: AuthorPostRequest[];
   description: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;
@@ -226,12 +268,11 @@ export type ResearchOutputPostRequest = {
   teams: string[];
   title: string;
   type: ResearchOutputType;
+  usageNotes?: string;
   usedInPublication?: boolean;
 };
 
 export type ResearchOutputPutRequest = ResearchOutputPostRequest;
-
-export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;
 
 export const convertDecisionToBoolean = (
   decision: string | null | DecisionOption,

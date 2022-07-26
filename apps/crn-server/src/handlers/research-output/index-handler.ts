@@ -21,6 +21,9 @@ import {
 import ResearchOutputs, {
   ResearchOutputController,
 } from '../../controllers/research-outputs';
+import { ExternalAuthorSquidexDataProvider } from '../../data-providers/external-authors.data-provider';
+import { ResearchOutputSquidexDataProvider } from '../../data-providers/research-outputs.data-provider';
+import { ResearchTagSquidexDataProvider } from '../../data-providers/research-tags.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { ResearchOutputEvent, ResearchOutputPayload } from '../event-bus';
@@ -72,13 +75,23 @@ const externalAuthorRestClient = new SquidexRest<RestExternalAuthor>(
   'external-authors',
   { appName, baseUrl },
 );
+const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
+  squidexGraphqlClient,
+  researchOutputRestClient,
+  teamRestClient,
+);
+const researchTagDataProvider = new ResearchTagSquidexDataProvider(
+  squidexGraphqlClient,
+);
+const externalAuthorDataProvider = new ExternalAuthorSquidexDataProvider(
+  externalAuthorRestClient,
+);
 
 export const handler = indexResearchOutputHandler(
   new ResearchOutputs(
-    squidexGraphqlClient,
-    researchOutputRestClient,
-    teamRestClient,
-    externalAuthorRestClient,
+    researchOutputDataProvider,
+    researchTagDataProvider,
+    externalAuthorDataProvider,
   ),
   algoliaSearchClientFactory({
     algoliaApiKey,

@@ -55,23 +55,56 @@ export const getSquidexResearchTagsGraphqlResponse =
     queryResearchTagsContentsWithTotal: getSquidexGraphqlResearchTags(),
   });
 
-export const getResearchTagDataObject =
-  (): DeepWriteable<ResearchTagDataObject> => ({
-    id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
-    name: 'Activity Assay',
-    category: 'Method',
-    entities: ['Research Output'],
-    types: ['Protein Data', 'Assay'],
-  });
+export const getResearchTagDataObject = (): ResearchTagDataObject => ({
+  id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+  name: 'Activity Assay',
+  category: 'Method',
+  entities: ['Research Output'],
+  types: ['Protein Data', 'Assay'],
+});
 
-export const getResearchTagResponse = (): DeepWriteable<ResearchTagResponse> =>
+export const getResearchTagResponse = (): ResearchTagResponse =>
   getResearchTagDataObject();
 
-export const getListResearchTagDataObject =
-  (): DeepWriteable<ListResearchTagDataObject> => ({
-    total: 1,
-    items: [getResearchTagResponse()],
+export const getListResearchTagDataObject = (): ListResearchTagDataObject => ({
+  total: 1,
+  items: [getResearchTagResponse()],
+});
+
+export const getFullListResearchTagDataObject =
+  (): ListResearchTagDataObject => ({
+    total: 4,
+    items: [
+      {
+        id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+        name: 'Activity Assay',
+        category: 'Method',
+        types: ['Protein Data', 'Assay'],
+        entities: ['Research Output'],
+      },
+      {
+        id: 'd77a7607-7b9a-4ef1-99ee-c389b33ea95b',
+        name: 'Rat',
+        category: 'Organism',
+        types: ['Electrophysiology', 'Microscopy'],
+        entities: ['Research Output'],
+      },
+      {
+        id: '8a936e45-6d5e-42a6-8acd-b849ab10f3f8',
+        name: 'In Vitro',
+        category: 'Environment',
+        types: ['Proposal', 'Report'],
+        entities: ['Research Output'],
+      },
+      {
+        id: 'dd0da578-5573-4758-b1db-43a078f5076e',
+        name: 'Metabolite',
+        category: 'Subtype',
+        types: ['Microscopy', 'Report'],
+        entities: ['Research Output'],
+      },
+    ],
   });
 
-export const getListResearchTagResponse =
-  (): DeepWriteable<ListResearchTagResponse> => getListResearchTagDataObject();
+export const getListResearchTagResponse = (): ListResearchTagResponse =>
+  getListResearchTagDataObject();

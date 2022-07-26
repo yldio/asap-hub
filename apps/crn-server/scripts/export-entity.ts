@@ -16,6 +16,9 @@ import ExternalAuthors from '../src/controllers/external-authors';
 import ResearchOutputs from '../src/controllers/research-outputs';
 import Users from '../src/controllers/users';
 import { AssetSquidexDataProvider } from '../src/data-providers/assets.data-provider';
+import { ExternalAuthorSquidexDataProvider } from '../src/data-providers/external-authors.data-provider';
+import { ResearchOutputSquidexDataProvider } from '../src/data-providers/research-outputs.data-provider';
+import { ResearchTagSquidexDataProvider } from '../src/data-providers/research-tags.data-provider';
 import { UserSquidexDataProvider } from '../src/data-providers/users.data-provider';
 
 type Entity = 'users' | 'research-outputs' | 'external-authors' | 'events';
@@ -92,15 +95,25 @@ function getController(entity: Entity) {
     squidexGraphqlClient,
     userRestClient,
   );
+  const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
+    squidexGraphqlClient,
+    researchOutputRestClient,
+    teamRestClient,
+  );
+  const researchTagDataProvider = new ResearchTagSquidexDataProvider(
+    squidexGraphqlClient,
+  );
+  const externalAuthorDataProvider = new ExternalAuthorSquidexDataProvider(
+    externalAuthorsRestClient,
+  );
   const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 
   const controllerMap = {
     users: new Users(userDataProvider, assetDataProvider),
     'research-outputs': new ResearchOutputs(
-      squidexGraphqlClient,
-      researchOutputRestClient,
-      teamRestClient,
-      externalAuthorsRestClient,
+      researchOutputDataProvider,
+      researchTagDataProvider,
+      externalAuthorDataProvider,
     ),
     'external-authors': new ExternalAuthors(squidexGraphqlClient),
     events: new Events(squidexGraphqlClient, eventsRestClient),

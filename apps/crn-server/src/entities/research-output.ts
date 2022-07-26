@@ -1,8 +1,8 @@
 import {
   convertDecisionToBoolean,
   isResearchOutputDocumentType,
+  ResearchOutputDataObject,
   researchOutputMapType,
-  ResearchOutputResponse,
   ResearchOutputSharingStatus,
   sharingStatuses,
   TeamResponse,
@@ -17,45 +17,7 @@ import { parseGraphQLUser } from '../data-providers/users.data-provider';
 
 export const parseGraphQLResearchOutput = (
   output: NonNullable<FetchResearchOutputQuery['findResearchOutputsContent']>,
-  options?: {
-    includeAuthors?: boolean;
-    includeTeams?: boolean;
-  },
-):
-  | Omit<ResearchOutputResponse, 'authors' | 'teams'>
-  | Partial<Pick<ResearchOutputResponse, 'authors' | 'teams'>> => {
-  const optionalAuthors = options?.includeAuthors
-    ? {
-        authors:
-          output.flatData.authors
-            ?.filter(
-              (author) =>
-                author.__typename !== 'Users' ||
-                author.flatData?.onboarded !== false,
-            )
-            .map((author) => {
-              if (author.__typename === 'Users') {
-                return parseGraphQLUser(author);
-              }
-
-              return {
-                id: author.id,
-                displayName: author.flatData?.name,
-                orcid: author.flatData?.orcid,
-              };
-            }) || [],
-      }
-    : {};
-
-  const optionalTeams = options?.includeTeams
-    ? {
-        teams:
-          output.referencingTeamsContents?.map((team) =>
-            parseGraphqlTeamLite(team),
-          ) || [],
-      }
-    : {};
-
+): ResearchOutputDataObject => {
   const contactEmails =
     output.referencingTeamsContents?.flatMap((team) =>
       team.referencingUsersContents
@@ -82,6 +44,28 @@ export const parseGraphQLResearchOutput = (
 
   return {
     id: output.id,
+    authors:
+      output.flatData.authors
+        ?.filter(
+          (author) =>
+            author.__typename !== 'Users' ||
+            author.flatData?.onboarded !== false,
+        )
+        .map((author) => {
+          if (author.__typename === 'Users') {
+            return parseGraphQLUser(author);
+          }
+
+          return {
+            id: author.id,
+            displayName: author.flatData?.name || '',
+            orcid: author.flatData?.orcid || undefined,
+          };
+        }) || [],
+    teams:
+      output.referencingTeamsContents?.map((team) =>
+        parseGraphqlTeamLite(team),
+      ) || [],
     created: parseDate(output.created).toISOString(),
     link: data.link || undefined,
     documentType:
@@ -101,8 +85,6 @@ export const parseGraphQLResearchOutput = (
     lastUpdatedPartial:
       data.lastUpdatedPartial || output.lastModified || output.created,
     usageNotes: data.usageNotes || undefined,
-    ...optionalAuthors,
-    ...optionalTeams,
     sharingStatus:
       data.sharingStatus !== null && isSharingStatus(data.sharingStatus)
         ? data.sharingStatus

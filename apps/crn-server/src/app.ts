@@ -50,9 +50,21 @@ import {
   AssetSquidexDataProvider,
 } from './data-providers/assets.data-provider';
 import {
+  ExternalAuthorDataProvider,
+  ExternalAuthorSquidexDataProvider,
+} from './data-providers/external-authors.data-provider';
+import {
   GroupDataProvider,
   GroupSquidexDataProvider,
 } from './data-providers/groups.data-provider';
+import {
+  ResearchOutputDataProvider,
+  ResearchOutputSquidexDataProvider,
+} from './data-providers/research-outputs.data-provider';
+import {
+  ResearchTagDataProvider,
+  ResearchTagSquidexDataProvider,
+} from './data-providers/research-tags.data-provider';
 import {
   TeamDataProvider,
   TeamSquidexDataProvider,
@@ -148,6 +160,19 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userDataProvider =
     libs.userDataProvider ||
     new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
+  const researchOutputDataProvider =
+    libs.researchOutputDataProvider ||
+    new ResearchOutputSquidexDataProvider(
+      squidexGraphqlClient,
+      researchOutputRestClient,
+      teamRestClient,
+    );
+  const researchTagDataProvider =
+    libs.researchTagDataProvider ||
+    new ResearchTagSquidexDataProvider(squidexGraphqlClient);
+  const externalAuthorDataProvider =
+    libs.externalAuthorDataProvider ||
+    new ExternalAuthorSquidexDataProvider(externalAuthorRestClient);
 
   // Controllers
   const calendarController =
@@ -166,10 +191,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const researchOutputController =
     libs.researchOutputController ||
     new ResearchOutputs(
-      squidexGraphqlClient,
-      researchOutputRestClient,
-      teamRestClient,
-      externalAuthorRestClient,
+      researchOutputDataProvider,
+      researchTagDataProvider,
+      externalAuthorDataProvider,
     );
   const researchTagController =
     libs.researchTagController || new ResearchTags(squidexGraphqlClient);
@@ -309,6 +333,9 @@ export type Libs = {
   groupDataProvider?: GroupDataProvider;
   teamDataProvider?: TeamDataProvider;
   userDataProvider?: UserDataProvider;
+  researchOutputDataProvider?: ResearchOutputDataProvider;
+  researchTagDataProvider?: ResearchTagDataProvider;
+  externalAuthorDataProvider?: ExternalAuthorDataProvider;
   authHandler?: AuthHandler;
   tracer?: Tracer;
   httpLogger?: HttpLogger;

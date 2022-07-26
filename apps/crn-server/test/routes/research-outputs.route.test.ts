@@ -171,6 +171,13 @@ describe('/research-outputs/ route', () => {
     });
 
     describe('Parameter validation', () => {
+      const {
+        rrid: _rrid,
+        doi: _doi,
+        accession: _accession,
+        ...researchOutput
+      } = getResearchOutputPostRequest();
+
       test('Should return a validation error when the arguments are not valid', async () => {
         const response = await supertest(app).post('/research-outputs/').send({
           unknown_field: 2,
@@ -216,7 +223,6 @@ describe('/research-outputs/ route', () => {
       `(
         'on type $type returns status $status for $identifier',
         async ({ documentType, identifier, status }) => {
-          const researchOutput = getResearchOutputPostRequest();
           const response = await supertest(app)
             .post('/research-outputs/')
             .send({
@@ -229,7 +235,6 @@ describe('/research-outputs/ route', () => {
       );
 
       test('Do not require an identifier if funded and used in publication', async () => {
-        const researchOutput = getResearchOutputPostRequest();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
@@ -242,7 +247,6 @@ describe('/research-outputs/ route', () => {
       });
 
       test('Accepts doi based on the regex', async () => {
-        const researchOutput = getResearchOutputPostRequest();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
@@ -254,7 +258,6 @@ describe('/research-outputs/ route', () => {
       });
 
       test('Rejects doi based on the regex', async () => {
-        const researchOutput = getResearchOutputPostRequest();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
@@ -266,7 +269,6 @@ describe('/research-outputs/ route', () => {
       });
 
       test('Accepts accession based on the regex', async () => {
-        const researchOutput = getResearchOutputPostRequest();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
@@ -278,7 +280,6 @@ describe('/research-outputs/ route', () => {
       });
 
       test('Rejects accession based on the regex', async () => {
-        const researchOutput = getResearchOutputPostRequest();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
@@ -290,7 +291,6 @@ describe('/research-outputs/ route', () => {
       });
 
       test('Accepts rrid based on the regex', async () => {
-        const researchOutput = getResearchOutputPostRequest();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
@@ -302,7 +302,6 @@ describe('/research-outputs/ route', () => {
       });
 
       test('Rejects rrid based on the regex', async () => {
-        const researchOutput = getResearchOutputPostRequest();
         const response = await supertest(app)
           .post('/research-outputs/')
           .send({
@@ -324,7 +323,6 @@ describe('/research-outputs/ route', () => {
       ])(
         'Should return a validation error when %s is missing',
         async (field) => {
-          const researchOutput = getResearchOutputPostRequest();
           const response = await supertest(app)
             .post('/research-outputs/')
             .send({
@@ -470,7 +468,12 @@ describe('/research-outputs/ route', () => {
 
   describe('PUT /research-outputs/', () => {
     const researchOutputResponse = getResearchOutputResponse();
-    const researchOutputPutRequest = getResearchOutputPutRequest();
+    const {
+      rrid: _rrid,
+      doi: _doi,
+      accession: _accession,
+      ...researchOutputPutRequest
+    } = getResearchOutputPutRequest();
 
     test('Should send the data to the controller and return status 200 along with all the research output data', async () => {
       researchOutputControllerMock.update.mockResolvedValueOnce(

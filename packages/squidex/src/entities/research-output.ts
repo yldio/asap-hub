@@ -52,7 +52,7 @@ export interface ResearchOutput<
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}
 export interface InputResearchOutput
   extends Entity,
-    RestPayload<Omit<ResearchOutput, 'contactEmails'>> {}
+    RestPayload<Omit<ResearchOutput, 'contactEmails' | 'adminNotes'>> {}
 
 export type GraphqlExternalAuthorAssoc = GraphqlWithTypename<
   GraphqlExternalAuthor,

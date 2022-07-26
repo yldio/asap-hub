@@ -1,4 +1,5 @@
-import { RestUser } from '@asap-hub/squidex';
+import { RestUser, User, WebhookPayload } from '@asap-hub/squidex';
+import { UserEvent } from '../../src/handlers/event-bus';
 
 export const patchResponse = (): RestUser => ({
   id: 'userId',
@@ -41,3 +42,33 @@ export const patchResponse = (): RestUser => ({
   version: 42,
 });
 export const restUserMock = patchResponse;
+
+export const getUserWebhookPayload = (
+  id: string,
+  type: UserEvent,
+): WebhookPayload<User> => ({
+  type,
+  timestamp: '2021-02-15T13:11:25Z',
+  payload: {
+    $type: 'EnrichedContentEvent',
+    type: 'Updated',
+    id,
+    created: '2020-07-31T15:52:33Z',
+    lastModified: '2020-07-31T15:52:33Z',
+    version: 42,
+    data: {
+      firstName: { iv: 'Tony' },
+      lastName: { iv: 'Stark' },
+      onboarded: { iv: true },
+      avatar: { iv: [] },
+      connections: { iv: [] },
+      email: {
+        iv: 'tony@stark.com',
+      },
+      questions: { iv: [] },
+      role: { iv: 'Grantee' },
+      teams: { iv: [] },
+      labs: { iv: [] },
+    },
+  },
+});

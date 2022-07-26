@@ -106,3 +106,17 @@ export const createHandlerContext = () =>
     logGroupName: 'some-log-group',
     logStreamName: 'some-log-stream',
   } as Context);
+
+export const getConnectByCodeRequest = <T>(
+  payload: T,
+  headers: Record<string, string>,
+): lambda.Request<T> => {
+  return {
+    headers: {
+      'Content-Type': 'application/json',
+      ...headers,
+    },
+    method: 'post',
+    payload,
+  };
+};

@@ -31,7 +31,7 @@
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "release:frontend": "yarn workspace @asap-hub/crn-frontend release:frontend",
-    "schema:update": "./apps/crn-server/scripts/schema-update.sh",
+    "schema:update": "./apps/crn-server/scripts/schema-update.sh && ./apps/gp2-server/scripts/schema-update.sh",
     "start": "yarn workspaces foreach -vpi -j 1000 run start",
     "start:backend:crn": "yarn workspace @asap-hub/crn-server start",
     "start:frontend:crn": "yarn workspace @asap-hub/crn-frontend start",

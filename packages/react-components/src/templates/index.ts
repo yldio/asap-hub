@@ -8,7 +8,7 @@ export { default as DashboardPageHeader } from './DashboardPageHeader';
 export { default as DiscoverPage } from './DiscoverPage';
 export { default as DiscoverPageBody } from './DiscoverPageBody';
 export { default as DiscoverPageHeader } from './DiscoverPageHeader';
-export { default as DiscoverTabs } from './DiscoverTabs';
+export { default as DiscoverNewsCardList } from './DiscoverNewsCardList';
 export { default as EventPage } from './EventPage';
 export { default as EventsCalendar } from './EventsCalendar';
 export { default as EventsList } from './EventsList';

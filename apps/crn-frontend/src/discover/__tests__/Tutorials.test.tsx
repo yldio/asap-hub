@@ -39,12 +39,26 @@ const renderDiscoverTutorials = async (user: Partial<User>) => {
   return result;
 };
 
-it('renders tutorial page with an item', async () => {
+describe('Tutorials page', () => {
   mockGetDiscover.mockResolvedValue({
     ...createDiscoverResponse(),
-    training: [{ ...createNewsResponse(1), title: 'Example Title' }],
+    training: [
+      createNewsResponse('First One', 'Training'),
+      createNewsResponse('Second One', 'Training'),
+    ],
   });
 
-  await renderDiscoverTutorials({});
-  expect(screen.getByText(/Example Title/)).toBeVisible();
+  it('renders tutorial page with two items', async () => {
+    await renderDiscoverTutorials({});
+
+    expect(screen.getByText(/First One/, { selector: 'h4' })).toBeVisible();
+    expect(screen.getByText(/Second One/, { selector: 'h4' })).toBeVisible();
+  });
+
+  it('renders the correct title and subtitle', async () => {
+    await renderDiscoverTutorials({});
+
+    expect(screen.getByText(/Tutorials/i, { selector: 'h2' })).toBeVisible();
+    expect(screen.getByText(/Explore our tutorials/i)).toBeVisible();
+  });
 });

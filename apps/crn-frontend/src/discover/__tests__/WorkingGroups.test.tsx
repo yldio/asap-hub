@@ -39,12 +39,34 @@ const renderDiscoverWorkingGroups = async (user: Partial<User>) => {
   return result;
 };
 
-it('renders tutorial page with an item', async () => {
-  mockGetDiscover.mockResolvedValue({
-    ...createDiscoverResponse(),
-    workingGroups: [{ ...createNewsResponse(1), title: 'Example Title' }],
+describe('Working group page', () => {
+  it('renders working group page with two items', async () => {
+    mockGetDiscover.mockResolvedValue({
+      ...createDiscoverResponse(),
+      workingGroups: [
+        createNewsResponse('First One', 'Working Groups'),
+        createNewsResponse('Second One', 'Working Groups'),
+      ],
+    });
+
+    await renderDiscoverWorkingGroups({});
+    expect(screen.getByText(/First One/, { selector: 'h4' })).toBeVisible();
+    expect(screen.getByText(/Second One/, { selector: 'h4' })).toBeVisible();
   });
 
-  await renderDiscoverWorkingGroups({});
-  expect(screen.getByText(/Example Title/)).toBeVisible();
+  it('renders the correct title and subtitle', async () => {
+    mockGetDiscover.mockResolvedValue({
+      ...createDiscoverResponse(),
+      workingGroups: [
+        createNewsResponse('First One', 'Working Groups'),
+        createNewsResponse('Second One', 'Working Groups'),
+      ],
+    });
+
+    await renderDiscoverWorkingGroups({});
+    expect(
+      screen.getByText(/Working Groups/i, { selector: 'h2' }),
+    ).toBeVisible();
+    expect(screen.getByText(/Explore our Working Groups/i)).toBeVisible();
+  });
 });

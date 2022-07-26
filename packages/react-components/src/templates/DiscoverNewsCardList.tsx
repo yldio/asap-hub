@@ -10,13 +10,13 @@ const styles = css({
   paddingBottom: `${24 / perRem}em`,
 });
 
-type DiscoverTabsProps = {
+type DiscoverNewsCardListProps = {
   title: string;
   subtitle: string;
   news: ComponentProps<typeof NewsSection>['news'];
 };
 
-const DiscoverTabs: React.FC<DiscoverTabsProps> = ({
+const DiscoverNewsCardList: React.FC<DiscoverNewsCardListProps> = ({
   title,
   subtitle,
   news,
@@ -31,4 +31,4 @@ const DiscoverTabs: React.FC<DiscoverTabsProps> = ({
   </div>
 );
 
-export default DiscoverTabs;
+export default DiscoverNewsCardList;

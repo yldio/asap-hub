@@ -137,7 +137,7 @@ export {
   DashboardPageBody,
   DiscoverPage,
   DiscoverPageBody,
-  DiscoverTabs,
+  DiscoverNewsCardList,
   EventPage,
   EventsCalendar,
   EventsList,

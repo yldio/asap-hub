@@ -9492,7 +9492,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "web-streams-polyfill",\
-        "npm:3.1.1"\
+        "npm:3.2.1"\
       ],\
       [\
         "webcrypto-core",\
@@ -10353,7 +10353,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:5.2.1"],\
             ["use-deep-compare-effect", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:1.6.1"],\
             ["uuid", "npm:8.3.2"],\
-            ["web-streams-polyfill", "npm:3.1.1"]\
+            ["web-streams-polyfill", "npm:3.2.1"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -10924,7 +10924,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:5.2.1"],\
             ["use-deep-compare-effect", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:1.6.1"],\
             ["uuid", "npm:8.3.2"],\
-            ["web-streams-polyfill", "npm:3.1.1"]\
+            ["web-streams-polyfill", "npm:3.2.1"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -62053,10 +62053,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["web-streams-polyfill", [\
-        ["npm:3.1.1", {\
-          "packageLocation": "./.yarn/cache/web-streams-polyfill-npm-3.1.1-ba7b0e5b2d-dac85f0a99.zip/node_modules/web-streams-polyfill/",\
+        ["npm:3.2.1", {\
+          "packageLocation": "./.yarn/cache/web-streams-polyfill-npm-3.2.1-835bd3857e-b119c78574.zip/node_modules/web-streams-polyfill/",\
           "packageDependencies": [\
-            ["web-streams-polyfill", "npm:3.1.1"]\
+            ["web-streams-polyfill", "npm:3.2.1"]\
           ],\
           "linkType": "HARD"\
         }]\

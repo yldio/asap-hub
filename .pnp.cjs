@@ -4264,7 +4264,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "dotenv",\
-        "npm:8.6.0"\
+        "npm:16.0.1"\
       ],\
       [\
         "dotenv-expand",\
@@ -9776,7 +9776,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["bundlewatch", "npm:0.3.3"],\
-            ["dotenv", "npm:8.6.0"],\
+            ["dotenv", "npm:16.0.1"],\
             ["escape-string-regexp", "npm:4.0.0"],\
             ["eslint", "npm:7.32.0"],\
             ["hyperform", "npm:0.12.1"],\
@@ -34601,7 +34601,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["bundlewatch", "npm:0.3.3"],\
-            ["dotenv", "npm:8.6.0"],\
+            ["dotenv", "npm:16.0.1"],\
             ["escape-string-regexp", "npm:4.0.0"],\
             ["eslint", "npm:7.32.0"],\
             ["hyperform", "npm:0.12.1"],\
@@ -40193,17 +40193,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
+        ["npm:16.0.1", {\
+          "packageLocation": "./.yarn/cache/dotenv-npm-16.0.1-d99e72bb95-f459ffce07.zip/node_modules/dotenv/",\
+          "packageDependencies": [\
+            ["dotenv", "npm:16.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:8.2.0", {\
           "packageLocation": "./.yarn/cache/dotenv-npm-8.2.0-6b21df4d37-ad4c8e0df3.zip/node_modules/dotenv/",\
           "packageDependencies": [\
             ["dotenv", "npm:8.2.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:8.6.0", {\
-          "packageLocation": "./.yarn/cache/dotenv-npm-8.6.0-2ce3e9f7bb-38e902c80b.zip/node_modules/dotenv/",\
-          "packageDependencies": [\
-            ["dotenv", "npm:8.6.0"]\
           ],\
           "linkType": "HARD"\
         }]\

@@ -1,36 +1,60 @@
 import { ListResponse } from './common';
+import { EventResponse } from './event';
 import { ResearchOutputResponse } from './research-output';
 
-type ReminderArea = 'Research Output' | 'Events';
+type ReminderEntity = 'Research Output' | 'Event';
 
-export const reminderTypes = [
-  'ResearchOutputPublished',
-  'ResearchOutputShare',
+const researchOutputReminderTypes = [
+  'Published',
+  'Share',
 ] as const;
-
-export type ReminderType = typeof reminderTypes[number];
-
+const eventReminderTypes = [
+  'New'
+] as const;
+type ResearchOutputReminderType = typeof researchOutputReminderTypes[number];
+type EventReminderType = typeof eventReminderTypes[number];
+type ReminderType = ResearchOutputReminderType | EventReminderType
 interface Reminder {
-  area: ReminderArea;
+  entity: ReminderEntity;
   type: ReminderType;
   data: unknown;
 }
 
-export interface ResearchOutputPublishedReminder extends Reminder {
-  area: 'Research Output';
-  type: 'ResearchOutputPublished';
+interface ResearchOutputReminder extends Reminder {
+  entity: "Research Output"
+  type: ResearchOutputReminderType
+}
+
+interface EventReminder extends Reminder {
+  entity: "Event"
+  type: EventReminderType
+}
+
+export interface ResearchOutputPublishedReminder extends ResearchOutputReminder {
+  entity: 'Research Output';
+  type: 'Published';
   data: {
     researchOutput: ResearchOutputResponse;
   };
 }
 
-export interface ResearchOutputShareReminder extends Reminder {
-  area: 'Research Output';
-  type: 'ResearchOutputShare';
+export interface ResearchOutputShareReminder extends ResearchOutputReminder {
+  entity: 'Research Output';
+  type: 'Share';
+  data: undefined;
+}
+
+export interface EventNewReminder extends EventReminder {
+  entity: 'Event';
+  type: 'New';
+  data: {
+    event: EventResponse;
+  }
 }
 
 export type ReminderResponse =
   | ResearchOutputPublishedReminder
-  | ResearchOutputShareReminder;
+  | ResearchOutputShareReminder
+  | EventNewReminder;
 
 export type ListReminderResponse = ListResponse<ReminderResponse>;

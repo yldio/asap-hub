@@ -86,6 +86,7 @@ import { groupRouteFactory } from './routes/groups.route';
 import { labsRouteFactory } from './routes/labs.route';
 import { newsRouteFactory } from './routes/news.route';
 import { pageRouteFactory } from './routes/pages.route';
+import { reminderRouteFactory } from './routes/reminders.route';
 import { researchOutputRouteFactory } from './routes/research-outputs.route';
 import { researchTagsRouteFactory } from './routes/research-tags.route';
 import { teamRouteFactory } from './routes/teams.route';
@@ -223,19 +224,20 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Routes
   const calendarRoutes = calendarRouteFactory(calendarController);
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
-  const newsRoutes = newsRouteFactory(newsController);
   const discoverRoutes = discoverRouteFactory(discoverController);
   const eventRoutes = eventRouteFactory(eventController);
   const groupRoutes = groupRouteFactory(groupController, eventController);
+  const labsRoutes = labsRouteFactory(labsController);
+  const newsRoutes = newsRouteFactory(newsController);
   const pageRoutes = pageRouteFactory(pageController);
+  const reminderRoutes = reminderRouteFactory();
   const researchOutputsRoutes = researchOutputRouteFactory(
     researchOutputController,
   );
   const researchTagsRoutes = researchTagsRouteFactory(researchTagController);
   const teamRoutes = teamRouteFactory(groupController, teamController);
-  const userRoutes = userRouteFactory(userController, groupController);
   const userPublicRoutes = userPublicRouteFactory(userController);
-  const labsRoutes = labsRouteFactory(labsController);
+  const userRoutes = userRouteFactory(userController, groupController);
 
   /**
    * --- end of dependency inection
@@ -293,6 +295,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(groupRoutes);
   app.use(labsRoutes);
   app.use(newsRoutes);
+  app.use(reminderRoutes);
   app.use(researchOutputsRoutes);
   app.use(researchTagsRoutes);
   app.use(teamRoutes);

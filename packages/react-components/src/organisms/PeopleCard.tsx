@@ -2,8 +2,8 @@ import { css } from '@emotion/react';
 import { UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
-import { Card, Anchor, Headline2, Avatar, Caption } from '../atoms';
-import { UserProfilePersonalText } from '../molecules';
+import { Card, Anchor, Avatar, Caption } from '../atoms';
+import { LinkHeadline, UserProfilePersonalText } from '../molecules';
 import { tabletScreen } from '../pixels';
 import { formatDate } from '../date';
 
@@ -74,12 +74,10 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
         </Anchor>
         <div css={textContainerStyles}>
           <div css={moveStyles}>
-            <Anchor href={userHref}>
-              <Headline2 styleAsHeading={4}>
-                {displayName}
-                {degree && `, ${degree}`}
-              </Headline2>
-            </Anchor>
+            <LinkHeadline href={userHref} level={2} styleAsHeading={4}>
+              {displayName}
+              {degree && `, ${degree}`}
+            </LinkHeadline>
           </div>
           <div css={profileTextStyles}>
             <UserProfilePersonalText {...props} />

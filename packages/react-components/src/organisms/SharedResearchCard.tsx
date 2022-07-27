@@ -3,8 +3,8 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
-import { Card, Anchor, Headline2, Caption } from '../atoms';
-import { AssociationList, UsersList } from '../molecules';
+import { Card, Caption } from '../atoms';
+import { AssociationList, LinkHeadline, UsersList } from '../molecules';
 import { formatDate } from '../date';
 import { SharedResearchMetadata } from '.';
 import { perRem } from '../pixels';
@@ -41,9 +41,13 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
 }) => (
   <Card>
     <SharedResearchMetadata {...props} />
-    <Anchor href={sharedResearch({}).researchOutput({ researchOutputId }).$}>
-      <Headline2 styleAsHeading={4}>{title}</Headline2>
-    </Anchor>
+    <LinkHeadline
+      level={2}
+      styleAsHeading={4}
+      href={sharedResearch({}).researchOutput({ researchOutputId }).$}
+    >
+      {title}
+    </LinkHeadline>
     <UsersList max={3} users={authors} />
     <div css={associationStyles}>
       <AssociationList

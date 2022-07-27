@@ -3,7 +3,8 @@ import { css } from '@emotion/react';
 import { EventResponse, EventSpeakerTeam } from '@asap-hub/model';
 import { events, network } from '@asap-hub/routing';
 
-import { Headline3, Link, Anchor } from '../atoms';
+import { Link } from '../atoms';
+import { LinkHeadline } from '../molecules';
 import { lead } from '../colors';
 import { perRem, largeDesktopScreen } from '../pixels';
 import { groupsIcon, eventPlaceholderIcon, speakerIcon } from '../icons';
@@ -135,18 +136,18 @@ const EventInfo: React.FC<EventInfoProps> = ({
     <div css={cardStyles}>
       <div css={imageContainerStyle}>{imageComponent}</div>
       <div>
-        <Anchor
+        <LinkHeadline
+          level={3}
+          styleAsHeading={4}
           href={
             status === 'Cancelled'
               ? undefined
               : events({}).event({ eventId: id }).$
           }
         >
-          <Headline3 styleAsHeading={4}>
-            {title.substr(0, titleLimit ?? undefined)}
-            {titleLimit && title.length > titleLimit ? '…' : undefined}
-          </Headline3>
-        </Anchor>
+          {title.substr(0, titleLimit ?? undefined)}
+          {titleLimit && title.length > titleLimit ? '…' : undefined}
+        </LinkHeadline>
         <EventTime {...props} />
         <div css={widthStyles}>
           <div css={listItemStyles}>

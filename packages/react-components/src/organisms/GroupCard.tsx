@@ -2,8 +2,8 @@ import { css } from '@emotion/react';
 import { GroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
-import { Card, Headline2, Paragraph, Anchor } from '../atoms';
-import { TagList } from '../molecules';
+import { Card, Paragraph, Anchor } from '../atoms';
+import { LinkHeadline, TagList } from '../molecules';
 import { teamIcon } from '../icons';
 import { perRem } from '../pixels';
 
@@ -27,8 +27,14 @@ const GroupCard: React.FC<GroupCardProps> = ({
   numberOfTeams,
 }) => (
   <Card>
+    <LinkHeadline
+      href={network({}).groups({}).group({ groupId: id }).$}
+      level={2}
+      styleAsHeading={4}
+    >
+      {name}
+    </LinkHeadline>
     <Anchor href={network({}).groups({}).group({ groupId: id }).$}>
-      <Headline2 styleAsHeading={4}>{name}</Headline2>
       <Paragraph accent="lead">{description}</Paragraph>
     </Anchor>
     <TagList min={2} max={3} tags={tags} />

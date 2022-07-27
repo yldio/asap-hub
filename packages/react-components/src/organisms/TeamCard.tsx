@@ -6,7 +6,7 @@ import { Card, Anchor, Paragraph, Headline2 } from '../atoms';
 import { perRem } from '../pixels';
 import { lead } from '../colors';
 import { teamIcon, labIcon } from '../icons';
-import { TagList } from '../molecules';
+import { LinkHeadline, TagList } from '../molecules';
 import { getCounterString } from '../utils';
 
 const teamMemberMetaStyles = css({
@@ -44,8 +44,14 @@ const TeamCard: React.FC<TeamCardProps> = ({
   labCount,
 }) => (
   <Card>
+    <LinkHeadline
+      level={2}
+      styleAsHeading={4}
+      href={network({}).teams({}).team({ teamId: id }).$}
+    >
+      Team {displayName}
+    </LinkHeadline>
     <Anchor href={network({}).teams({}).team({ teamId: id }).$}>
-      <Headline2 styleAsHeading={4}>Team {displayName}</Headline2>
       <Paragraph accent="lead">{projectTitle}</Paragraph>
     </Anchor>
     {!!expertiseAndResourceTags.length && (

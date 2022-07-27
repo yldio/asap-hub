@@ -11,13 +11,13 @@ import {
   Pill,
   Divider,
   Paragraph,
-  Anchor,
   Link,
 } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
 import { externalLinkIcon, orcidIcon } from '../icons';
 import { charcoal, lead } from '../colors';
 import { mailToSupport } from '../mail';
+import { LinkHeadline } from '../molecules';
 
 const typeMap: { [key in OrcidWork['type']]: string } = {
   ANNOTATION: 'Other',
@@ -123,15 +123,22 @@ const UserProfileRecentWork: React.FC<UserProfileRecentWorkProps> = ({
     );
   }
 
-  const elements = (
-    <div>
-      <Pill>{typeMap[type]}</Pill>
-      <Headline3 styleAsHeading={4}>{title}</Headline3>
-      {publishDateComponent}
-    </div>
-  );
+  return (
+    <li>
+      <div>
+        <Pill>{typeMap[type]}</Pill>
+        {doi ? (
+          <LinkHeadline level={3} styleAsHeading={4} href={doi}>
+            {title}
+          </LinkHeadline>
+        ) : (
+          <Headline3 styleAsHeading={4}>{title}</Headline3>
+        )}
 
-  return <li>{doi ? <Anchor href={doi}>{elements}</Anchor> : elements}</li>;
+        {publishDateComponent}
+      </div>
+    </li>
+  );
 };
 
 const UserProfileRecentWorks: React.FC<UserProfileRecentWorksProps> = ({

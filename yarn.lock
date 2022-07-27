@@ -311,7 +311,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.18.9
     "@types/node": 14.18.22
-    "@types/prettier": ^2
+    "@types/prettier": 2.6.4
     algoliasearch: ^4.13.1
     prettier: ^2.7.1
   languageName: unknown
@@ -339,7 +339,7 @@ __metadata:
     "@types/jwt-decode": ^2.2.1
     "@types/jwt-encode": "workspace:*"
     "@types/luxon": ^1
-    "@types/prettier": ^2
+    "@types/prettier": 2.6.4
     "@types/pump": ^1.1.1
     "@types/through2-concurrent": 2.0.1
     "@types/uuid": 8.3.4
@@ -12475,10 +12475,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prettier@npm:^2":
-  version: 2.6.3
-  resolution: "@types/prettier@npm:2.6.3"
-  checksum: e1836699ca189fff6d2a73dc22e028b6a6f693ed1180d5998ac29fa197caf8f85aa92cb38db642e4a370e616b451cb5722ad2395dab11c78e025a1455f37d1f0
+"@types/prettier@npm:2.6.4":
+  version: 2.6.4
+  resolution: "@types/prettier@npm:2.6.4"
+  checksum: a8ec6601cbacf8040782cc883bf1a9393fdcb991ebe88440b0f875bb1556652927ac9fe61a721b6c666ac6252158ba327ce2868559bafa2c86e7dfef4089782a
   languageName: node
   linkType: hard
 

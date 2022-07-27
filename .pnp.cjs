@@ -2285,7 +2285,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/prettier",\
-        "npm:2.6.3"\
+        "npm:2.6.4"\
       ],\
       [\
         "@types/pretty-hrtime",\
@@ -10129,7 +10129,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@babel/runtime-corejs3", "npm:7.18.9"],\
             ["@types/node", "npm:14.18.22"],\
-            ["@types/prettier", "npm:2.6.3"],\
+            ["@types/prettier", "npm:2.6.4"],\
             ["algoliasearch", "npm:4.13.1"],\
             ["prettier", "npm:2.7.1"]\
           ],\
@@ -10159,7 +10159,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jwt-decode", "npm:2.2.1"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
             ["@types/luxon", "npm:1.26.4"],\
-            ["@types/prettier", "npm:2.6.3"],\
+            ["@types/prettier", "npm:2.6.4"],\
             ["@types/pump", "npm:1.1.1"],\
             ["@types/through2-concurrent", "npm:2.0.1"],\
             ["@types/uuid", "npm:8.3.4"],\
@@ -32145,10 +32145,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:2.6.3", {\
-          "packageLocation": "./.yarn/cache/@types-prettier-npm-2.6.3-8d27063d48-e1836699ca.zip/node_modules/@types/prettier/",\
+        ["npm:2.6.4", {\
+          "packageLocation": "./.yarn/cache/@types-prettier-npm-2.6.4-a589b47e05-a8ec6601cb.zip/node_modules/@types/prettier/",\
           "packageDependencies": [\
-            ["@types/prettier", "npm:2.6.3"]\
+            ["@types/prettier", "npm:2.6.4"]\
           ],\
           "linkType": "HARD"\
         }]\

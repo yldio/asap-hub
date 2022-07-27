@@ -25,6 +25,6 @@
     "@asap-hub/fixtures": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@types/node": "14.18.22",
-    "@types/prettier": "^2"
+    "@types/prettier": "2.6.4"
   }
 }

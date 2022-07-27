@@ -44,6 +44,6 @@ export const sentryDsn = SENTRY_DSN;
 export const sesRegion = SES_REGION || 'eu-west-1';
 export const squidexSharedSecret =
   SQUIDEX_SHARED_SECRET || 'squidex_shared_secret';
-export const userInviteSender = EMAIL_SENDER || `"ASAP Hub" <hub@asap.science>`;
-export const userInviteBcc = EMAIL_BCC || 'hub.invites.dev@asap.science';
-export const userInviteReturn = EMAIL_RETURN || 'hub.invites.dev@asap.science';
+export const userInviteSender = EMAIL_SENDER || `"GP2 Hub" <gp2@asap.science>`;
+export const userInviteBcc = EMAIL_BCC || 'gp2.invites.dev@asap.science';
+export const userInviteReturn = EMAIL_RETURN || 'gp2.invites.dev@asap.science';

@@ -117,7 +117,7 @@
     "babel-plugin-transform-inline-environment-variables": "0.5.0-alpha.42",
     "babel-preset-react-app": "10.0.1",
     "bundlewatch": "0.3.3",
-    "dotenv": "^8.6.0",
+    "dotenv": "16.0.1",
     "escape-string-regexp": "^4.0.0",
     "eslint": "7.32.0",
     "hyperform": "0.12.1",

@@ -3408,7 +3408,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "camelcase",\
-        "npm:6.2.0"\
+        "npm:6.3.0"\
       ],\
       [\
         "camelcase-css",\
@@ -10231,7 +10231,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:14.18.22"],\
             ["@types/pify", "npm:3.0.2"],\
             ["auth0-js", "npm:9.16.0"],\
-            ["camelcase", "npm:6.2.0"],\
+            ["camelcase", "npm:6.3.0"],\
             ["pify", "npm:5.0.0"]\
           ],\
           "linkType": "SOFT"\
@@ -37582,6 +37582,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/camelcase-npm-6.2.0-69f8c130ac-8335cfd0ec.zip/node_modules/camelcase/",\
           "packageDependencies": [\
             ["camelcase", "npm:6.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:6.3.0", {\
+          "packageLocation": "./.yarn/cache/camelcase-npm-6.3.0-e5e42a0d15-8c96818a90.zip/node_modules/camelcase/",\
+          "packageDependencies": [\
+            ["camelcase", "npm:6.3.0"]\
           ],\
           "linkType": "HARD"\
         }]\

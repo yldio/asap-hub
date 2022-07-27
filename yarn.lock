@@ -528,7 +528,7 @@ __metadata:
     recoil: "patch:recoil@^0.1.2#../../patches/recoil.patch"
     streamsaver: 2.0.6
     typescript: 4.6.4
-    use-debounce: ^5.2.1
+    use-debounce: 8.0.3
     use-deep-compare-effect: ^1.6.1
     uuid: ^8.3.2
     web-streams-polyfill: ^3.1.1
@@ -932,7 +932,7 @@ __metadata:
     recoil: "patch:recoil@^0.1.2#../../patches/recoil.patch"
     streamsaver: 2.0.6
     typescript: 4.6.4
-    use-debounce: ^5.2.1
+    use-debounce: 8.0.3
     use-deep-compare-effect: ^1.6.1
     uuid: ^8.3.2
     web-streams-polyfill: ^3.1.1
@@ -1138,7 +1138,7 @@ __metadata:
     rehype-toc: ^3.0.2
     serialize-error: ^7.0.1
     unified: 9.2.2
-    use-debounce: ^5.2.1
+    use-debounce: 8.0.3
     util: 0.12.4
     uuid: ^8.3.2
   peerDependencies:
@@ -37543,12 +37543,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-debounce@npm:^5.2.1":
-  version: 5.2.1
-  resolution: "use-debounce@npm:5.2.1"
+"use-debounce@npm:8.0.3":
+  version: 8.0.3
+  resolution: "use-debounce@npm:8.0.3"
   peerDependencies:
     react: ">=16.8.0"
-  checksum: 66d3fcf258aa421fdfe7374deda6e0d93adbabda72423f2fbb65ad1f3f74ad3596c70ab6e8deb009269673755815f35543d18f643619f068ee1aa2d97e8ae98e
+  checksum: 1790e540b53298e9abcf34d4a9bd4fc89a747644dcb65b42b02568a7c28cfa57d7756fae87c0b37b73261d2935b0c46ea5b53dfcbaf22e30f20728e36c703f9c
   languageName: node
   linkType: hard
 

@@ -39,7 +39,7 @@
     "react-router-last-location": "^2.0.1",
     "recoil": "patch:recoil@^0.1.2#../../patches/recoil.patch",
     "streamsaver": "2.0.6",
-    "use-debounce": "^5.2.1",
+    "use-debounce": "8.0.3",
     "use-deep-compare-effect": "^1.6.1",
     "uuid": "^8.3.2",
     "web-streams-polyfill": "^3.1.1"

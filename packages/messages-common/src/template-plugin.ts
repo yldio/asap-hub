@@ -9,7 +9,6 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { titleCase } from 'title-case';
 import { URL } from 'url';
 import { Compiler, Stats } from 'webpack';
-import { APP_ORIGIN } from './config';
 
 const htmlTemplate = (
   title: string,
@@ -35,13 +34,21 @@ const htmlTemplate = (
 </body>
 </html>`;
 
-const apply = async (stats: Stats) => {
+const apply = async (stats: Stats, appOrigin: string) => {
   const outputDir = stats.compilation.outputOptions.path;
   if (!outputDir) {
     throw new Error('Cannot determine output dir');
   }
 
-  const files = await fs.readdir(outputDir);
+  const readOutputDir = async (): Promise<string[]> => {
+    try {
+      return await fs.readdir(outputDir);
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  };
+  const files = await readOutputDir();
   const tasks = files
     .filter((file) => path.extname(file) === '.js')
     .map(async (file) => {
@@ -82,7 +89,7 @@ const apply = async (stats: Stats) => {
           const { base } = path.parse(asset);
           return res.replace(
             asset,
-            new URL(`/.messages-static/${base}`, APP_ORIGIN).toString(),
+            new URL(`/.messages-static/${base}`, appOrigin).toString(),
           );
         },
         html,
@@ -108,12 +115,14 @@ const apply = async (stats: Stats) => {
   return Promise.all(tasks);
 };
 
-const plugin = (compiler: Compiler): void => {
-  compiler.hooks.done.tapAsync('TemplatePlugin', async (stats, callback) =>
-    apply(stats)
-      .then(() => callback(null))
-      .catch((err) => callback(err)),
-  );
-};
+const plugin =
+  (appOrigin: string) =>
+  (compiler: Compiler): void => {
+    compiler.hooks.done.tapAsync('TemplatePlugin', async (stats, callback) =>
+      apply(stats, appOrigin)
+        .then(() => callback(null))
+        .catch((err) => callback(err)),
+    );
+  };
 
-export default plugin;
+export { plugin as TemplatePlugin };

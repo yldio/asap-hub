@@ -9,6 +9,7 @@
   "include": ["src"],
   "references": [
     { "path": "../../packages/message-templates" },
+    { "path": "../../packages/messages-common" },
     { "path": "../../packages/react-components" },
     { "path": "../../packages/gp2-components" }
   ]

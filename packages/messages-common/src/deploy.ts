@@ -1,8 +1,7 @@
 import aws, { AWSError } from 'aws-sdk';
 import { promises as fs } from 'fs';
 import path from 'path';
-
-import config from './webpack.config';
+import { Configuration } from 'webpack';
 
 const region = process.argv[2] || 'us-east-1';
 const ses = new aws.SES({ apiVersion: '2010-12-01', region });
@@ -40,7 +39,7 @@ const syncTemplate = async (src: string): Promise<void> => {
   }
 };
 
-const syncTemplates = async () => {
+export const syncTemplates = async (config: Configuration) => {
   const outputDir = config.output?.path;
   if (!outputDir) {
     throw new Error('Failed to determine output dir');
@@ -58,8 +57,3 @@ const syncTemplates = async () => {
   const tasks = templates.map(syncTemplate);
   return Promise.all(tasks);
 };
-
-syncTemplates().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});

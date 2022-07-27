@@ -1,6 +1,5 @@
-import { MessageLayout, WelcomeMessage } from '@asap-hub/react-components';
 import { welcome } from '@asap-hub/message-templates';
-
+import { MessageLayout, WelcomeMessage } from '@asap-hub/react-components';
 import { APP_ORIGIN } from '../config';
 
 export default (

@@ -1,12 +1,10 @@
-import path from 'path';
 import { Configuration } from 'webpack';
-import TemplatePlugin from './template-plugin';
+import { TemplatePlugin } from './template-plugin';
 
-const outputDir = path.resolve(
-  require.resolve('@asap-hub/messages/package.json'),
-  '../build-templates',
-);
-const config: Configuration = {
+const configFactory = (
+  appOrigin: string,
+  outputDir: string,
+): Configuration => ({
   target: 'node',
   mode: 'production',
   // To prevent duplicating the installed version of React into the output bundle - React does not like that
@@ -37,7 +35,7 @@ const config: Configuration = {
       },
     ],
   },
-  plugins: [TemplatePlugin],
-};
+  plugins: [TemplatePlugin(appOrigin)],
+});
 
-export default config;
+export { configFactory };

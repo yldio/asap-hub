@@ -1,8 +1,6 @@
+import { promises as fs } from 'fs';
 import path from 'path';
 import webpack, { Configuration, Stats } from 'webpack';
-import { promises as fs } from 'fs';
-
-import webpackConfig from './webpack.config';
 
 // required by babel-preset-react-app
 process.env.NODE_ENV = process.env.NODE_ENV || 'production';
@@ -18,8 +16,10 @@ const compile = (config: Configuration): Promise<Stats | undefined> => {
   });
 };
 
-const main = async () => {
-  const templatesDir = path.resolve(__dirname, 'templates');
+export const build = async (
+  webpackConfig: Configuration,
+  templatesDir: string,
+) => {
   const templates = await fs.readdir(templatesDir);
   const res = await compile({
     entry: templates.reduce((entries, template) => {
@@ -42,8 +42,3 @@ const main = async () => {
     throw new Error(res.compilation.errors.join('\n'));
   }
 };
-
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});

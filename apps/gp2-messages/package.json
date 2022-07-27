@@ -1,5 +1,5 @@
 {
-  "name": "@asap-hub/messages",
+  "name": "@asap-hub/gp2-messages",
   "private": true,
   "version": "0.1.0",
   "engines": {
@@ -15,6 +15,7 @@
   "dependencies": {
     "@asap-hub/gp2-components": "workspace:*",
     "@asap-hub/message-templates": "workspace:*",
+    "@asap-hub/messages-common": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
     "@babel/core": "7.18.9",
     "@babel/preset-react": "7.18.6",
@@ -22,6 +23,7 @@
     "@emotion/cache": "11.9.3",
     "@emotion/react": "11.9.3",
     "@emotion/server": "^11",
+    "@types/node": "14.18.22",
     "aws-sdk": "^2.907.0",
     "babel-loader": "8.2.5",
     "babel-preset-react-app": "10.0.1",

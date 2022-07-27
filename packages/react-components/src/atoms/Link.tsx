@@ -89,9 +89,7 @@ const Link: React.FC<LinkProps> = ({
   margin = true,
   stretch = true,
 }) => {
-  const {
-    colors: { primaryColor },
-  } = useTheme();
+  const { colors } = useTheme();
   const linkStyles = buttonStyle
     ? [
         getButtonStyles({
@@ -105,7 +103,9 @@ const Link: React.FC<LinkProps> = ({
       ]
     : [
         styles,
-        primaryColor ? css({ color: primaryColor.rgb }) : themeStyles[theme],
+        colors?.primaryColor
+          ? css({ color: colors.primaryColor.rgba })
+          : themeStyles[theme],
         applyIconTheme && iconThemeStyles[theme],
       ];
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;

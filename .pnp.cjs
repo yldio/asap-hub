@@ -4004,7 +4004,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "date-fns",\
-        "npm:2.28.0"\
+        "npm:2.29.1"\
       ],\
       [\
         "date-fns-tz",\
@@ -10340,7 +10340,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["browser-image-compression", "npm:1.0.17"],\
             ["browserslist-useragent-regexp", "npm:3.0.2"],\
             ["cross-env", "npm:7.0.3"],\
-            ["date-fns", "npm:2.28.0"],\
+            ["date-fns", "npm:2.29.1"],\
             ["history", "npm:4.10.1"],\
             ["identity-obj-proxy", "npm:3.0.0"],\
             ["jose", "npm:2.0.5"],\
@@ -10558,7 +10558,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.18.9"],\
             ["@types/jsonwebtoken", "npm:8.5.8"],\
             ["core-js", "npm:3.12.1"],\
-            ["date-fns", "npm:2.28.0"],\
+            ["date-fns", "npm:2.29.1"],\
             ["jsonwebtoken", "npm:8.5.1"],\
             ["ramda", "npm:0.27.1"],\
             ["uuid", "npm:8.3.2"]\
@@ -10912,7 +10912,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["browser-image-compression", "npm:1.0.17"],\
             ["browserslist-useragent-regexp", "npm:3.0.2"],\
             ["cross-env", "npm:7.0.3"],\
-            ["date-fns", "npm:2.28.0"],\
+            ["date-fns", "npm:2.29.1"],\
             ["history", "npm:4.10.1"],\
             ["identity-obj-proxy", "npm:3.0.0"],\
             ["jose", "npm:2.0.5"],\
@@ -11119,7 +11119,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react-hooks", "npm:3.4.1"],\
             ["@types/uuid", "npm:8.3.4"],\
             ["core-js", "npm:3.12.1"],\
-            ["date-fns", "npm:2.28.0"],\
+            ["date-fns", "npm:2.29.1"],\
             ["date-fns-tz", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:1.3.6"],\
             ["dom-to-playwright", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.3"],\
             ["emotion-normalize", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.0.1"],\
@@ -11205,7 +11205,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react-hooks", "npm:3.4.1"],\
             ["@types/uuid", "npm:8.3.4"],\
             ["core-js", "npm:3.12.1"],\
-            ["date-fns", "npm:2.28.0"],\
+            ["date-fns", "npm:2.29.1"],\
             ["date-fns-tz", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:1.3.6"],\
             ["dom-to-playwright", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.3"],\
             ["emotion-normalize", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.0.1"],\
@@ -11295,7 +11295,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react-hooks", "npm:3.4.1"],\
             ["@types/uuid", "npm:8.3.4"],\
             ["core-js", "npm:3.12.1"],\
-            ["date-fns", "npm:2.28.0"],\
+            ["date-fns", "npm:2.29.1"],\
             ["date-fns-tz", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:1.3.6"],\
             ["dom-to-playwright", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.3"],\
             ["emotion-normalize", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.0.1"],\
@@ -11385,7 +11385,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react-hooks", "npm:3.4.1"],\
             ["@types/uuid", "npm:8.3.4"],\
             ["core-js", "npm:3.12.1"],\
-            ["date-fns", "npm:2.28.0"],\
+            ["date-fns", "npm:2.29.1"],\
             ["date-fns-tz", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:1.3.6"],\
             ["dom-to-playwright", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.3"],\
             ["emotion-normalize", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.0.1"],\
@@ -11655,7 +11655,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-router-dom", "npm:5.1.7"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["core-js", "npm:3.12.1"],\
-            ["date-fns", "npm:2.28.0"],\
+            ["date-fns", "npm:2.29.1"],\
             ["emotion", "npm:10.0.27"],\
             ["history", "npm:4.10.1"],\
             ["react", "npm:17.0.2"],\
@@ -39733,10 +39733,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:2.28.0", {\
-          "packageLocation": "./.yarn/cache/date-fns-npm-2.28.0-c19c5add1b-a0516b2e4f.zip/node_modules/date-fns/",\
+        ["npm:2.29.1", {\
+          "packageLocation": "./.yarn/cache/date-fns-npm-2.29.1-8c07562fd8-9d07f77dff.zip/node_modules/date-fns/",\
           "packageDependencies": [\
-            ["date-fns", "npm:2.28.0"]\
+            ["date-fns", "npm:2.29.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -39754,7 +39754,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["date-fns-tz", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:1.3.6"],\
             ["@types/date-fns", null],\
-            ["date-fns", "npm:2.28.0"]\
+            ["date-fns", "npm:2.29.1"]\
           ],\
           "packagePeers": [\
             "@types/date-fns",\

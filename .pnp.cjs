@@ -5416,7 +5416,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "hyperform",\
-        "npm:0.12.0"\
+        "npm:0.12.1"\
       ],\
       [\
         "iconv-lite",\
@@ -9779,7 +9779,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["dotenv", "npm:8.6.0"],\
             ["escape-string-regexp", "npm:4.0.0"],\
             ["eslint", "npm:7.32.0"],\
-            ["hyperform", "npm:0.12.0"],\
+            ["hyperform", "npm:0.12.1"],\
             ["jest", "npm:26.6.3"],\
             ["jest-circus", "npm:26.6.3"],\
             ["jest-runner-eslint", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.10.0"],\
@@ -34565,7 +34565,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["dotenv", "npm:8.6.0"],\
             ["escape-string-regexp", "npm:4.0.0"],\
             ["eslint", "npm:7.32.0"],\
-            ["hyperform", "npm:0.12.0"],\
+            ["hyperform", "npm:0.12.1"],\
             ["jest", "npm:26.6.3"],\
             ["jest-circus", "npm:26.6.3"],\
             ["jest-runner-eslint", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.10.0"],\
@@ -45597,10 +45597,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["hyperform", [\
-        ["npm:0.12.0", {\
-          "packageLocation": "./.yarn/cache/hyperform-npm-0.12.0-3bb55b48cd-2e49b66565.zip/node_modules/hyperform/",\
+        ["npm:0.12.1", {\
+          "packageLocation": "./.yarn/cache/hyperform-npm-0.12.1-f5e607fc80-7c7cbcd497.zip/node_modules/hyperform/",\
           "packageDependencies": [\
-            ["hyperform", "npm:0.12.0"]\
+            ["hyperform", "npm:0.12.1"]\
           ],\
           "linkType": "HARD"\
         }]\

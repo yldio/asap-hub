@@ -15018,7 +15018,7 @@ __metadata:
     dotenv: ^8.6.0
     escape-string-regexp: ^4.0.0
     eslint: 7.32.0
-    hyperform: ^0.12.0
+    hyperform: 0.12.1
     jest: ^26.6.3
     jest-circus: ^26.6.3
     jest-runner-eslint: ^0.10.0
@@ -24057,10 +24057,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hyperform@npm:^0.12.0":
-  version: 0.12.0
-  resolution: "hyperform@npm:0.12.0"
-  checksum: 2e49b66565a852e2fdcea89cdc07beed909c2c0834838b9f49cb4a19653cacdaa3a405149e603c92824e4e3980b6b183ace41d087e19e347bc048d320f8a371c
+"hyperform@npm:0.12.1":
+  version: 0.12.1
+  resolution: "hyperform@npm:0.12.1"
+  checksum: 7c7cbcd49794085c2fccbc56183333d36de4f4c25e8af2a4f56686bd26df040a94f7ec73120b2cd9baa5c1f53faf30970edd92cb18d04a9ff4821988522fb066
   languageName: node
   linkType: hard
 

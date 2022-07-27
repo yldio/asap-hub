@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, Theme } from '@emotion/react';
 
 import { formTargetWidth, perRem, mobileScreen } from './pixels';
 import {
@@ -12,7 +12,6 @@ import {
   tin,
   silver,
   color,
-  TransparentColor,
 } from './colors';
 
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -162,24 +161,20 @@ const disabledStyles = css({
   },
 });
 
-export const activePrimaryStyles = (colors: {
-  activePrimaryBackgroundColor?: TransparentColor;
-  activePrimaryColor?: OpaqueColor;
-}) => {
-  const {
-    activePrimaryBackgroundColor = activePrimaryBackgroundColorDefault,
-    activePrimaryColor = pine,
-  } = colors;
+export const activePrimaryStyles = ({
+  activePrimaryBackgroundColor = activePrimaryBackgroundColorDefault,
+  activePrimaryColor = pine,
+}: Theme['colors'] = {}) => {
   return css({
     backgroundColor: activePrimaryBackgroundColor.rgba,
     borderColor: 'transparent',
-    color: activePrimaryColor.rgb,
+    color: activePrimaryColor.rgba,
     svg: {
-      stroke: activePrimaryColor.rgb,
+      stroke: activePrimaryColor.rgba,
     },
     ':hover, :focus': {
       backgroundColor: activePrimaryBackgroundColor.rgba,
-      color: activePrimaryColor.rgb,
+      color: activePrimaryColor.rgba,
     },
   });
 };

@@ -28,30 +28,6 @@ on:
         required: false
 
 jobs:
-  definitions:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:0f5eee65db0ad426fd10ff52113aeeb0ab5d1ec1
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: ${{ inputs.environment-name }}
-      - name: Build
-        run: |
-          yarn build:typecheck
-      - name: Cache build typecheck output
-        uses: ./.github/actions/cache-build
-        with:
-          cache-prefix: ${{ steps.setup.outputs.cache-prefix-definitions }}
-          environment-name: ${{ inputs.environment-name }}
-
   transpile:
     runs-on: ubuntu-latest
     container:
@@ -93,6 +69,35 @@ jobs:
       - name: Cache build output
         uses: ./.github/actions/cache-unplugged
         with:
+          environment-name: ${{ inputs.environment-name }}
+
+  definitions:
+    needs: [rebuild]
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:0f5eee65db0ad426fd10ff52113aeeb0ab5d1ec1
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Cache build output
+        uses: ./.github/actions/cache-unplugged
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Build
+        run: |
+          yarn build:typecheck
+      - name: Cache build typecheck output
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-definitions }}
           environment-name: ${{ inputs.environment-name }}
 
   frontend:

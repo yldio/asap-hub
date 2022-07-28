@@ -5,6 +5,9 @@ import { network } from '@asap-hub/routing';
 import { perRem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
 import { Link, Avatar, Anchor, Ellipsis } from '../atoms';
+import { styles } from '../atoms/Link';
+import { hover } from './LinkHeadline';
+import { Fragment } from 'react';
 
 const containerStyles = css({
   margin: 0,
@@ -28,7 +31,6 @@ const avatarStyles = css({
 
 const nameStyles = css({
   fontWeight: 'bold',
-  paddingTop: `${12 / perRem}em`,
 });
 
 const addToColumnStyles = css({
@@ -53,7 +55,7 @@ const labStyles = css({
 interface MembersListProps {
   readonly members: ReadonlyArray<
     {
-      firstLine?: string;
+      firstLine: string;
       secondLine?: string;
       thirdLine?: string | ReadonlyArray<Pick<UserTeam, 'id' | 'displayName'>>;
     } & Pick<UserResponse, 'id'> &
@@ -79,8 +81,8 @@ const MembersList: React.FC<MembersListProps> = ({
               />
             </div>
           </Anchor>
-          <Anchor href={href} css={{ display: 'contents' }}>
-            <div css={nameStyles}>{firstLine}</div>
+          <Anchor href={href} css={[styles, hover, nameStyles]}>
+            {firstLine}
           </Anchor>
           <Anchor href={href} css={{ display: 'contents' }}>
             <div
@@ -93,29 +95,32 @@ const MembersList: React.FC<MembersListProps> = ({
               <Ellipsis>{secondLine}</Ellipsis>
             </div>
           </Anchor>
-          <Anchor href={href} css={{ display: 'contents' }}>
-            <div
-              css={[
-                addToColumnStyles,
-                singleColumn || multiColumnAddToColumnStyles,
-                textStyles,
-                labStyles,
-              ]}
-            >
-              <Ellipsis>
-                {thirdLine instanceof Array
-                  ? thirdLine.map((team) => (
-                      <Link
-                        key={team.id}
-                        href={network({}).teams({}).team({ teamId: team.id }).$}
-                      >
-                        Team {team.displayName}
-                      </Link>
-                    ))
-                  : thirdLine}
-              </Ellipsis>
-            </div>
-          </Anchor>
+          <div
+            css={[
+              addToColumnStyles,
+              singleColumn || multiColumnAddToColumnStyles,
+              textStyles,
+              labStyles,
+            ]}
+          >
+            <Ellipsis>
+              {thirdLine instanceof Array ? (
+                thirdLine.map((team) => (
+                  <Fragment key={team.id}>
+                    <Link
+                      href={network({}).teams({}).team({ teamId: team.id }).$}
+                    >
+                      Team {team.displayName}
+                    </Link>{' '}
+                  </Fragment>
+                ))
+              ) : (
+                <Anchor href={href} css={{ display: 'contents' }}>
+                  {thirdLine}
+                </Anchor>
+              )}
+            </Ellipsis>
+          </div>
         </li>
       );
     })}

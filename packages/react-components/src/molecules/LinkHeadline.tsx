@@ -13,7 +13,7 @@ import { styles } from '../atoms/Link';
 import { fern } from '../colors';
 import { headlineStyles } from '../text';
 
-const hover = css({
+export const hover = css({
   ':hover': {
     color: fern.rgb,
   },

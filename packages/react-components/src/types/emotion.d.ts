@@ -1,5 +1,7 @@
 import '@emotion/react';
+
 import { OpaqueColor, TransparentColor } from '../colors';
+
 declare module '@emotion/react' {
   export interface Theme {
     colors?: {

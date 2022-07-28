@@ -164,8 +164,8 @@ const disabledStyles = css({
 export const activePrimaryStyles = ({
   activePrimaryBackgroundColor = activePrimaryBackgroundColorDefault,
   activePrimaryColor = pine,
-}: Theme['colors'] = {}) => {
-  return css({
+}: Theme['colors'] = {}) =>
+  css({
     backgroundColor: activePrimaryBackgroundColor.rgba,
     borderColor: 'transparent',
     color: activePrimaryColor.rgba,
@@ -177,8 +177,6 @@ export const activePrimaryStyles = ({
       color: activePrimaryColor.rgba,
     },
   });
-};
-
 export const activeSecondaryStyles = css({
   backgroundColor: paper.rgb,
   color: charcoal.rgb,

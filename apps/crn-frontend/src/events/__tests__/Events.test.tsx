@@ -68,6 +68,23 @@ describe('Events', () => {
     );
   });
 
+  describe.each`
+    eventProperty | route                        | expected
+    ${'after'}    | ${events({}).past({}).$}     | ${'past'}
+    ${'before'}   | ${events({}).upcoming({}).$} | ${'upcoming'}
+  `('the events $expected page', ({ eventProperty, route, expected }) => {
+    it('can search for events', async () => {
+      await renderEventsPage(route);
+      userEvent.type(screen.getByRole('searchbox'), 'searchterm');
+      await waitFor(() =>
+        expect(mockGetEventsFromAlgolia).toHaveBeenLastCalledWith(
+          expect.anything(),
+          expect.objectContaining({ searchQuery: 'searchterm' }),
+        ),
+      );
+    });
+  });
+
   describe('the events calendar page', () => {
     it('renders a google calendar iframe', async () => {
       mockGetCalendars.mockResolvedValue(createListCalendarResponse(0));
@@ -87,25 +104,6 @@ describe('Events', () => {
       await renderEventsPage(events({}).calendar({}).$);
       expect(screen.getByText(/calendar title 0/i)).toBeVisible();
       expect(screen.getByText(/calendar title 1/i)).toBeVisible();
-    });
-  });
-});
-
-describe('Algolia', () => {
-  describe.each`
-    eventProperty | route                        | expected
-    ${'after'}    | ${events({}).past({}).$}     | ${'past'}
-    ${'before'}   | ${events({}).upcoming({}).$} | ${'upcoming'}
-  `('the events $expected page', ({ eventProperty, route, expected }) => {
-    it('can search for events', async () => {
-      await renderEventsPage(route);
-      userEvent.type(screen.getByRole('searchbox'), 'searchterm');
-      await waitFor(() =>
-        expect(mockGetEventsFromAlgolia).toHaveBeenLastCalledWith(
-          expect.anything(),
-          expect.objectContaining({ searchQuery: 'searchterm' }),
-        ),
-      );
     });
   });
 });

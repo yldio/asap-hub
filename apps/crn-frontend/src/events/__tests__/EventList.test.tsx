@@ -58,45 +58,43 @@ const renderEventsListPage = async (
   return result;
 };
 
-describe('Algolia', () => {
-  const mockGetEvents = getEventsFromAlgolia as jest.MockedFunction<
-    typeof getEventsFromAlgolia
-  >;
-  afterEach(() => {
-    mockGetEvents.mockClear().mockResolvedValue(createListEventResponse(1));
-  });
+const mockGetEvents = getEventsFromAlgolia as jest.MockedFunction<
+  typeof getEventsFromAlgolia
+>;
+afterEach(() => {
+  mockGetEvents.mockClear().mockResolvedValue(createListEventResponse(1));
+});
 
-  it('can search for events', async () => {
-    await renderEventsListPage('searchterm');
-    expect(mockGetEvents).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        searchQuery: 'searchterm',
-      }),
-    );
-  });
+it('can search for events', async () => {
+  await renderEventsListPage('searchterm');
+  expect(mockGetEvents).toHaveBeenCalledWith(
+    expect.anything(),
+    expect.objectContaining({
+      searchQuery: 'searchterm',
+    }),
+  );
+});
 
-  it('sets after to an hour before date provided for upcoming events', async () => {
-    await renderEventsListPage('', new Date('2020-01-01T12:00:00Z'));
-    expect(mockGetEvents).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        after: new Date('2020-01-01T11:00:00Z').toISOString(),
-      }),
-    );
-  });
+it('sets after to an hour before date provided for upcoming events', async () => {
+  await renderEventsListPage('', new Date('2020-01-01T12:00:00Z'));
+  expect(mockGetEvents).toHaveBeenCalledWith(
+    expect.anything(),
+    expect.objectContaining({
+      after: new Date('2020-01-01T11:00:00Z').toISOString(),
+    }),
+  );
+});
 
-  it('sets before to an hour before date provided for past events', async () => {
-    await renderEventsListPage('', new Date('2020-01-01T12:00:00Z'), true);
-    expect(mockGetEvents).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        before: new Date('2020-01-01T11:00:00Z').toISOString(),
-        sort: {
-          sortBy: 'endDate',
-          sortOrder: 'desc',
-        },
-      }),
-    );
-  });
+it('sets before to an hour before date provided for past events', async () => {
+  await renderEventsListPage('', new Date('2020-01-01T12:00:00Z'), true);
+  expect(mockGetEvents).toHaveBeenCalledWith(
+    expect.anything(),
+    expect.objectContaining({
+      before: new Date('2020-01-01T11:00:00Z').toISOString(),
+      sort: {
+        sortBy: 'endDate',
+        sortOrder: 'desc',
+      },
+    }),
+  );
 });

@@ -826,7 +826,7 @@ __metadata:
     "@babel/core": 7.18.9
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.18.9
-    "@emotion/babel-plugin": 11.9.2
+    "@emotion/babel-plugin": 11.9.5
     "@emotion/jest": 11.9.4
     "@emotion/react": 11.9.3
     "@testing-library/dom": 7.31.2
@@ -1083,7 +1083,7 @@ __metadata:
     "@babel/core": 7.18.9
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.18.9
-    "@emotion/babel-plugin": 11.9.2
+    "@emotion/babel-plugin": 11.9.5
     "@emotion/jest": 11.9.4
     "@emotion/react": 11.9.3
     "@emotion/serialize": 1.0.4
@@ -7520,7 +7520,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.12.13":
+"@babel/runtime@npm:^7.12.13, @babel/runtime@npm:^7.18.3":
   version: 7.18.9
   resolution: "@babel/runtime@npm:7.18.9"
   dependencies:
@@ -7976,7 +7976,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/babel-plugin@npm:11.9.2, @emotion/babel-plugin@npm:^11.7.1":
+"@emotion/babel-plugin@npm:11.9.5":
+  version: 11.9.5
+  resolution: "@emotion/babel-plugin@npm:11.9.5"
+  dependencies:
+    "@babel/helper-module-imports": ^7.16.7
+    "@babel/plugin-syntax-jsx": ^7.17.12
+    "@babel/runtime": ^7.18.3
+    "@emotion/hash": ^0.8.0
+    "@emotion/memoize": ^0.7.5
+    "@emotion/serialize": ^1.0.2
+    babel-plugin-macros: ^3.1.0
+    convert-source-map: ^1.5.0
+    escape-string-regexp: ^4.0.0
+    find-root: ^1.1.0
+    source-map: ^0.5.7
+    stylis: 4.0.13
+  peerDependencies:
+    "@babel/core": ^7.0.0
+  checksum: e9f6752d9ed0464923743fa0b1bf9e29d82f9d4a5e59b9b4b7e38bc06ca2a0df876a38a42bdf7294657522cc46a01f565889249f12d258433ea6495b97a8cc9a
+  languageName: node
+  linkType: hard
+
+"@emotion/babel-plugin@npm:^11.7.1":
   version: 11.9.2
   resolution: "@emotion/babel-plugin@npm:11.9.2"
   dependencies:

@@ -11,7 +11,7 @@ import {
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
-import { getEvent, getEventsFromAlgolia } from './api';
+import { getEvent, getEvents } from './api';
 import { GetEventListOptions } from './options';
 
 const eventIndexState = atomFamily<
@@ -94,9 +94,7 @@ export const usePrefetchEvents = (options: GetEventListOptions) => {
 
   useDeepCompareEffect(() => {
     if (events === undefined) {
-      getEventsFromAlgolia(algoliaClient.client, options)
-        .then(setEvents)
-        .catch();
+      getEvents(algoliaClient.client, options).then(setEvents).catch();
     }
   }, [authorization, events, options, setEvents]);
 };
@@ -106,9 +104,7 @@ export const useEvents = (options: GetEventListOptions, user?: User | null) => {
   const { client } = useAlgolia();
 
   if (events === undefined) {
-    throw getEventsFromAlgolia(client, options)
-      .then(setEvents)
-      .catch(setEvents);
+    throw getEvents(client, options).then(setEvents).catch(setEvents);
   }
 
   if (events instanceof Error) {

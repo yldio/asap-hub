@@ -20,7 +20,7 @@ import { join } from 'path';
 import { ContextType, Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { getEventsFromAlgolia } from '../../../events/api';
+import { getEvents } from '../../../events/api';
 import { getResearchOutputs } from '../../../shared-research/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { getUser, patchUser, postUserAvatar } from '../api';
@@ -40,8 +40,8 @@ const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
 const imageCompressionMock = imageCompression as jest.MockedFunction<
   typeof imageCompression
 >;
-const mockUserEventsFromAlgolia = getEventsFromAlgolia as jest.MockedFunction<
-  typeof getEventsFromAlgolia
+const mockUserEventsFromAlgolia = getEvents as jest.MockedFunction<
+  typeof getEvents
 >;
 
 imageCompressionMock.getDataUrlFromFile = jest.requireActual(

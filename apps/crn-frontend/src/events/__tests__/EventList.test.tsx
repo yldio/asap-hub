@@ -6,7 +6,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 
 import { refreshCalendarsState } from '../calendar/state';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getEventsFromAlgolia } from '../api';
+import { getEvents } from '../api';
 import { eventsState } from '../state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import EventList from '../EventList';
@@ -58,9 +58,7 @@ const renderEventsListPage = async (
   return result;
 };
 
-const mockGetEvents = getEventsFromAlgolia as jest.MockedFunction<
-  typeof getEventsFromAlgolia
->;
+const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 afterEach(() => {
   mockGetEvents.mockClear().mockResolvedValue(createListEventResponse(1));
 });

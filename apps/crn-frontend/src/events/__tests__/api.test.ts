@@ -6,111 +6,13 @@ import {
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
 import { createAlgoliaResponse } from '../../__fixtures__/algolia';
-import {
-  getEvent,
-  getEvents,
-  getEventsFromAlgolia,
-  getSquidexUrl,
-} from '../api';
+import { getEvent, getEvents, getSquidexUrl } from '../api';
 import { GetEventListOptions, getEventListOptions } from '../options';
 
 jest.mock('../../config');
 
 afterEach(() => {
   nock.cleanAll();
-});
-
-describe('getEvents', () => {
-  it('makes an authorized GET request for events before a date', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/events')
-      .query({
-        take: '10',
-        skip: '0',
-        before: new Date('2021-01-01T11:00:00').toISOString(),
-        sortBy: 'endDate',
-        sortOrder: 'desc',
-      })
-      .reply(200, {});
-    await getEvents(
-      getEventListOptions(new Date('2021-01-01T12:00:00'), { past: true }),
-      'Bearer x',
-    );
-    expect(nock.isDone()).toBe(true);
-  });
-  it('makes an authorized GET request for events after a date', async () => {
-    const events = createListEventResponse(1);
-    nock(API_BASE_URL)
-      .get('/events')
-      .query({
-        take: '10',
-        skip: '0',
-        after: new Date('2021-01-01T11:00:00').toISOString(),
-      })
-      .reply(200, events);
-    await getEvents(
-      getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
-      'Bearer x',
-    );
-    expect(nock.isDone()).toBe(true);
-  });
-
-  it('makes an authorized GET request for group events after a date', async () => {
-    const events = createListEventResponse(1);
-    nock(API_BASE_URL)
-      .get(`/groups/42/events`)
-      .query({
-        take: '10',
-        skip: '0',
-        after: new Date('2021-01-01T11:00:00').toISOString(),
-      })
-      .reply(200, events);
-    await getEvents(
-      getEventListOptions(new Date('2021-01-01T12:00:00'), {
-        past: false,
-        constraint: { groupId: '42' },
-      }),
-      'Bearer x',
-    );
-    expect(nock.isDone()).toBe(true);
-  });
-
-  it('returns successfully fetched events', async () => {
-    const events = createListEventResponse(1);
-    nock(API_BASE_URL)
-      .get('/events')
-      .query({
-        take: '10',
-        skip: '0',
-        after: new Date('2021-01-01T11:00:00').toISOString(),
-      })
-      .reply(200, events);
-    expect(
-      await getEvents(
-        getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
-        '',
-      ),
-    ).toEqual(events);
-  });
-
-  it('errors for error status', async () => {
-    nock(API_BASE_URL)
-      .get('/events')
-      .query({
-        take: '10',
-        skip: '0',
-        after: new Date('2021-01-01T11:00:00').toISOString(),
-      })
-      .reply(500);
-    await expect(
-      getEvents(
-        getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
-        '',
-      ),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch event list. Expected status 2xx. Received status 500."`,
-    );
-  });
 });
 
 describe('getEvent', () => {
@@ -141,7 +43,7 @@ describe('getEvent', () => {
   });
 });
 
-describe('getEventsFromAlgolia', () => {
+describe('getEvents', () => {
   const search: jest.MockedFunction<AlgoliaSearchClient['search']> = jest.fn();
 
   const algoliaSearchClient = {
@@ -155,7 +57,7 @@ describe('getEventsFromAlgolia', () => {
   it('makes request for events before a date', async () => {
     search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
 
-    await getEventsFromAlgolia(
+    await getEvents(
       algoliaSearchClient,
       getEventListOptions(new Date('2021-01-01T12:00:00'), { past: true }),
     );
@@ -174,7 +76,7 @@ describe('getEventsFromAlgolia', () => {
   it('makes for events after a date', async () => {
     search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
 
-    await getEventsFromAlgolia(
+    await getEvents(
       algoliaSearchClient,
       getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
     );
@@ -193,7 +95,7 @@ describe('getEventsFromAlgolia', () => {
   it('calls for upcoming events with a certain speaker user id', async () => {
     search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
 
-    await getEventsFromAlgolia(algoliaSearchClient, {
+    await getEvents(algoliaSearchClient, {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
       constraint: { userId: 'user-1' },
     });
@@ -213,7 +115,7 @@ describe('getEventsFromAlgolia', () => {
   it('calls for past events with a certain speaker user id', async () => {
     search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
 
-    await getEventsFromAlgolia(algoliaSearchClient, {
+    await getEvents(algoliaSearchClient, {
       ...getEventListOptions(new Date('2021-01-01T12:00:00Z'), { past: true }),
       constraint: { userId: 'user-1' },
     });
@@ -233,7 +135,7 @@ describe('getEventsFromAlgolia', () => {
   it('calls for upcoming events with a certain speaker team id', async () => {
     search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
 
-    await getEventsFromAlgolia(algoliaSearchClient, {
+    await getEvents(algoliaSearchClient, {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
       constraint: { teamId: 'team-1' },
     });
@@ -266,7 +168,7 @@ describe('getEventsFromAlgolia', () => {
     );
 
     expect(
-      await getEventsFromAlgolia(
+      await getEvents(
         algoliaSearchClient,
         getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
       ),
@@ -285,7 +187,7 @@ describe('getEventsFromAlgolia', () => {
   it('calls for upcoming events with a certain group id', async () => {
     search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
 
-    await getEventsFromAlgolia(algoliaSearchClient, {
+    await getEvents(algoliaSearchClient, {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
       constraint: { groupId: 'group-5' },
     });

@@ -9,7 +9,7 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { getEventsFromAlgolia } from '../api';
+import { getEvents } from '../api';
 import { getCalendars } from '../calendar/api';
 import { refreshCalendarsState } from '../calendar/state';
 import Events from '../Events';
@@ -24,8 +24,8 @@ jest.mock('../api');
 const mockGetCalendars = getCalendars as jest.MockedFunction<
   typeof getCalendars
 >;
-const mockGetEventsFromAlgolia = getEventsFromAlgolia as jest.MockedFunction<
-  typeof getEventsFromAlgolia
+const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<
+  typeof getEvents
 >;
 
 const renderEventsPage = async (pathname = events({}).$) => {

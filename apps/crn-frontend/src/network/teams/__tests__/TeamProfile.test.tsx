@@ -12,7 +12,7 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { getEventsFromAlgolia } from '../../../events/api';
+import { getEvents } from '../../../events/api';
 import { getResearchOutputs } from '../../../shared-research/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { getTeam } from '../api';
@@ -23,8 +23,8 @@ jest.mock('../api');
 jest.mock('../groups/api');
 jest.mock('../../../shared-research/api');
 jest.mock('../../../events/api');
-const mockGetEventsFromAlgolia = getEventsFromAlgolia as jest.MockedFunction<
-  typeof getEventsFromAlgolia
+const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<
+  typeof getEvents
 >;
 
 afterEach(() => jest.clearAllMocks());

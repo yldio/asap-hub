@@ -13,15 +13,15 @@ import GroupProfile from '../GroupProfile';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { refreshGroupState } from '../state';
 import { getGroup } from '../api';
-import { getEvents, getEventsFromAlgolia } from '../../../events/api';
+import { getEvents } from '../../../events/api';
 
 jest.mock('../api');
 jest.mock('../../../events/api');
 
 const mockGetGroup = getGroup as jest.MockedFunction<typeof getGroup>;
-const mockGetGroupEvents = getEvents as jest.MockedFunction<typeof getEvents>;
-const mockGetGroupEventsFromAlgolia =
-  getEventsFromAlgolia as jest.MockedFunction<typeof getEventsFromAlgolia>;
+const mockGetGroupEventsFromAlgolia = getEvents as jest.MockedFunction<
+  typeof getEvents
+>;
 
 beforeEach(jest.clearAllMocks);
 
@@ -33,7 +33,6 @@ const renderGroupProfile = async (
   mockGetGroup.mockImplementation(async (id) =>
     id === groupResponse.id ? groupResponse : undefined,
   );
-  mockGetGroupEvents.mockImplementation(getEventsFromSquidex);
 
   const result = render(
     <RecoilRoot

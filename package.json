@@ -135,7 +135,7 @@
     "webpack": "^5.37.0"
   },
   "dependencies": {
-    "ts-node": "^10.7.0"
+    "ts-node": "10.9.1"
   },
   "packageManager": "yarn@3.2.1"
 }

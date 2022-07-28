@@ -8,7 +8,7 @@ import { defaultThemeVariant, ThemeVariant } from '../theme';
 
 export const styles = css({
   textDecoration: 'underline solid transparent',
-  transition: 'text-decoration 100ms ease-in-out',
+  transition: 'text-decoration 100ms ease-in-out, color 100ms ease-in-out',
 
   ':hover': {
     textDecoration: 'underline',

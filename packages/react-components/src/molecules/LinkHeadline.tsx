@@ -48,13 +48,13 @@ export type LinkHeadlineProps = (
     level: keyof typeof headlineMap;
   };
 
-const LinkHeadline = ({
+const LinkHeadline: React.FC<LinkHeadlineProps> = ({
   level,
   children,
   styleAsHeading,
   id,
   ...anchorProps
-}: LinkHeadlineProps) => {
+}) => {
   const Heading = headlineMap[level];
   return (
     <Heading styleAsHeading={styleAsHeading} id={id}>

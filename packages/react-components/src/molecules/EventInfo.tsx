@@ -4,11 +4,10 @@ import { EventResponse, EventSpeakerTeam } from '@asap-hub/model';
 import { events, network } from '@asap-hub/routing';
 
 import { Link } from '../atoms';
-import { LinkHeadline } from '../molecules';
 import { lead } from '../colors';
 import { perRem, largeDesktopScreen } from '../pixels';
 import { groupsIcon, eventPlaceholderIcon, speakerIcon } from '../icons';
-import { AssociationList, EventTime, TagList } from '.';
+import { AssociationList, EventTime, TagList, LinkHeadline } from '.';
 
 const TITLE_LIMIT = 55;
 

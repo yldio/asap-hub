@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { css } from '@emotion/react';
 import { UserResponse, UserTeam } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
@@ -7,7 +8,6 @@ import { lead } from '../colors';
 import { Link, Avatar, Anchor, Ellipsis } from '../atoms';
 import { styles } from '../atoms/Link';
 import { hover } from './LinkHeadline';
-import { Fragment } from 'react';
 
 const containerStyles = css({
   margin: 0,

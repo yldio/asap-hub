@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { TeamResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
-import { Card, Anchor, Paragraph, Headline2 } from '../atoms';
+import { Card, Anchor, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
 import { lead } from '../colors';
 import { teamIcon, labIcon } from '../icons';

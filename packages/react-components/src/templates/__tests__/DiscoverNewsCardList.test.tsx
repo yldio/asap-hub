@@ -30,6 +30,9 @@ it('renders news items', () => {
       ]}
     />,
   );
-  expect(screen.getByText(/First One/, { selector: 'h4' })).toBeVisible();
-  expect(screen.getByText(/Second One/, { selector: 'h4' })).toBeVisible();
+  expect(
+    screen
+      .getAllByRole('heading', { level: 4 })
+      .map(({ textContent }) => textContent),
+  ).toEqual(['Tutorial First One title', 'Tutorial Second One title']);
 });

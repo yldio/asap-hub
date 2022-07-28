@@ -49,8 +49,14 @@ it('renders working group page with two items', async () => {
   });
 
   await renderDiscoverWorkingGroups({});
-  expect(screen.getByText(/First One/, { selector: 'h4' })).toBeVisible();
-  expect(screen.getByText(/Second One/, { selector: 'h4' })).toBeVisible();
+  expect(
+    screen
+      .getAllByRole('heading', { level: 4 })
+      .map(({ textContent }) => textContent),
+  ).toEqual([
+    'Working Groups First One title',
+    'Working Groups Second One title',
+  ]);
 });
 
 it('renders the correct title and subtitle', async () => {

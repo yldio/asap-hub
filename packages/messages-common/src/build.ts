@@ -19,7 +19,7 @@ const compile = (config: Configuration): Promise<Stats | undefined> => {
 export const build = async (
   webpackConfig: Configuration,
   templatesDir: string,
-) => {
+): Promise<void> => {
   const templates = await fs.readdir(templatesDir);
   const res = await compile({
     entry: templates.reduce((entries, template) => {

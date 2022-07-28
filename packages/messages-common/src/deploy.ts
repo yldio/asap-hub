@@ -39,7 +39,7 @@ const syncTemplate = async (src: string): Promise<void> => {
   }
 };
 
-export const syncTemplates = async (config: Configuration) => {
+export const syncTemplates = async (config: Configuration): Promise<void[]> => {
   const outputDir = config.output?.path;
   if (!outputDir) {
     throw new Error('Failed to determine output dir');

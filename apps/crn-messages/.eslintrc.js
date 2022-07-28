@@ -1,10 +1,6 @@
 module.exports = {
-  extends: ['@asap-hub/eslint-config-asap-hub/react'],
+  extends: ['@asap-hub/eslint-config-asap-hub'],
   rules: {
     'no-console': 'off',
-
-    '@typescript-eslint/no-var-requires': 'off',
-    'global-require': 'off',
-    'import/no-dynamic-require': 'off',
   },
 };

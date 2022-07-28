@@ -1,11 +1,12 @@
 import {
   ListResearchOutputResponse,
-  ListUserResponse,
+  ResearchOutputCreateDataObject,
+  ResearchOutputDataObject,
   ResearchOutputPostRequest,
   ResearchOutputPutRequest,
   ResearchOutputResponse,
+  ResearchOutputUpdateDataObject,
 } from '@asap-hub/model';
-import { DeepWriteable } from '@asap-hub/server-common';
 import {
   InputResearchOutput,
   ResearchOutput,
@@ -66,14 +67,14 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
   version: 42,
   flatData: {
     title: 'Test Proposal 1234',
-    documentType: 'Grant Document',
+    documentType: 'Bioinformatics',
     description: 'Text',
     link: null,
     addedDate: '2021-05-21T13:18:31Z',
     publishDate: '2021-05-21T13:18:31Z',
     labCatalogNumber: 'http://example.com',
-    doi: '10.5555/YFRU1371',
-    accession: 'U12345',
+    doi: null,
+    accession: null,
     rrid: 'RRID:AB_90755',
     tags: ['tag', 'test'],
     lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
@@ -129,41 +130,47 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
   referencingTeamsContents: [getSquidexGraphqlTeam({})],
 });
 
-export const getResearchOutputResponse =
-  (): DeepWriteable<ResearchOutputResponse> => ({
-    id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
-    created: '2020-09-23T16:34:26.842Z',
-    documentType: 'Grant Document',
-    type: '3D Printing',
-    addedDate: '2021-05-21T13:18:31Z',
-    title: 'Test Proposal 1234',
-    description: 'Text',
-    tags: ['tag', 'test'],
-    authors: (fetchExpectation as DeepWriteable<ListUserResponse>).items,
-    teams: [{ id: 'team-id-1', displayName: 'Team A' }],
-    publishDate: '2021-05-21T13:18:31Z',
-    labCatalogNumber: 'http://example.com',
-    doi: '10.5555/YFRU1371',
-    accession: 'U12345',
-    rrid: 'RRID:AB_90755',
-    lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
-    usageNotes: 'some access instructions',
-    sharingStatus: 'Network Only',
-    asapFunded: true,
-    usedInPublication: false,
-    contactEmails: [],
-    labs: [
-      { id: '99c78dd7-627e-4fbd-aaec-d1977895189e', name: 'Test' },
-      { id: 'cd7be402-84d7-4d21-a360-82e2695f2dd9', name: 'mike' },
-    ],
-    methods: ['Activity Assay'],
-    organisms: ['Rat'],
-    environments: ['In Vitro'],
-    subtype: 'Metabolite',
+export const getResearchOutputDataObject = (): ResearchOutputDataObject => ({
+  id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+  created: '2020-09-23T16:34:26.842Z',
+  documentType: 'Bioinformatics',
+  type: '3D Printing',
+  addedDate: '2021-05-21T13:18:31Z',
+  title: 'Test Proposal 1234',
+  description: 'Text',
+  tags: ['tag', 'test'],
+  authors: fetchExpectation.items,
+  teams: [{ id: 'team-id-1', displayName: 'Team A' }],
+  publishDate: '2021-05-21T13:18:31Z',
+  labCatalogNumber: 'http://example.com',
+  rrid: 'RRID:AB_90755',
+  lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
+  usageNotes: 'some access instructions',
+  sharingStatus: 'Network Only',
+  asapFunded: true,
+  usedInPublication: false,
+  contactEmails: [],
+  labs: [
+    { id: '99c78dd7-627e-4fbd-aaec-d1977895189e', name: 'Test' },
+    { id: 'cd7be402-84d7-4d21-a360-82e2695f2dd9', name: 'mike' },
+  ],
+  methods: ['Activity Assay'],
+  organisms: ['Rat'],
+  environments: ['In Vitro'],
+  subtype: 'Metabolite',
+});
+
+export const getListResearchOutputDataObject =
+  (): ListResearchOutputResponse => ({
+    total: 1,
+    items: [getResearchOutputDataObject()],
   });
 
+export const getResearchOutputResponse = (): ResearchOutputResponse =>
+  getResearchOutputDataObject();
+
 export const getListResearchOutputResponse =
-  (): DeepWriteable<ListResearchOutputResponse> => ({
+  (): ListResearchOutputResponse => ({
     total: 1,
     items: [getResearchOutputResponse()],
   });
@@ -212,38 +219,20 @@ export const getResearchOutputEvent = (
 
 export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
   const {
-    documentType,
-    title,
-    asapFunded,
-    sharingStatus,
-    usedInPublication,
-    addedDate,
-    publishDate,
-    description,
-    tags,
+    id: _,
+    created: _created,
+    contactEmails: _contactEmails,
+    lastUpdatedPartial: _lastUpdatedPartial,
+    doi: _doi,
+    accession: _accession,
     labs,
     authors,
     teams,
-    methods,
-    organisms,
-    subtype,
-    environments,
+    ...researchOutputResponse
   } = getResearchOutputResponse();
   return {
-    documentType,
+    ...researchOutputResponse,
     link: 'http://a.link',
-    title,
-    asapFunded,
-    sharingStatus,
-    usedInPublication,
-    addedDate,
-    publishDate,
-    description,
-    tags,
-    methods,
-    organisms,
-    environments,
-    subtype,
     type: 'Software',
     labs: labs.map(({ id }) => id),
     authors: authors.map(({ id }) => ({ userId: id })),
@@ -259,9 +248,52 @@ export const getResearchOutputCreateData = (): ResearchOutputCreateData => ({
   createdBy: 'userId',
 });
 
+export const getResearchOutputCreateDataObject =
+  (): ResearchOutputCreateDataObject => {
+    const {
+      teams,
+      labs,
+      authors,
+      methods: _methods,
+      environments: _environments,
+      organisms: _organisms,
+      subtype: _subtype,
+      id: _id,
+      lastUpdatedPartial: _lastUpdatedPartial,
+      created: _created,
+      contactEmails: _contactEmails,
+      ...researchOutputPostRequest
+    } = getResearchOutputResponse();
+
+    return {
+      ...researchOutputPostRequest,
+      createdBy: 'userId',
+      authors: authors.map(({ id }) => ({ userId: id })),
+      teamIds: teams.map(({ id }) => id),
+      labIds: labs.map(({ id }) => id),
+      methodIds: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
+      organismIds: ['d77a7607-7b9a-4ef1-99ee-c389b33ea95b'],
+      environmentIds: ['8a936e45-6d5e-42a6-8acd-b849ab10f3f8'],
+      subtypeId: 'dd0da578-5573-4758-b1db-43a078f5076e',
+      link: 'http://a.link',
+      type: 'Software',
+    };
+  };
+
+export const getResearchOutputUpdateDataObject =
+  (): ResearchOutputUpdateDataObject => {
+    const { createdBy: _, ...researchOutputCreateDataObject } =
+      getResearchOutputCreateDataObject();
+
+    return {
+      ...researchOutputCreateDataObject,
+      updatedBy: 'userId',
+    };
+  };
+
 export const getRestResearchOutputCreateData =
   (): InputResearchOutput['data'] => ({
-    documentType: { iv: 'Grant Document' },
+    documentType: { iv: 'Bioinformatics' },
     link: { iv: 'http://a.link' },
     title: { iv: 'Test Proposal 1234' },
     asapFunded: { iv: 'Yes' },
@@ -293,6 +325,15 @@ export const getRestResearchOutputCreateData =
     createdBy: { iv: ['userId'] },
     updatedBy: { iv: ['userId'] },
     usedInAPublication: { iv: 'No' },
+    doi: { iv: null },
+    accession: { iv: null },
+    rrid: { iv: 'RRID:AB_90755' },
+    labCatalogNumber: {
+      iv: 'http://example.com',
+    },
+    usageNotes: {
+      iv: 'some access instructions',
+    },
   });
 
 export const getResearchOutputUpdateData = (): ResearchOutputUpdateData => ({

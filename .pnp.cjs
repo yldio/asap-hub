@@ -2148,6 +2148,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:26.0.24"\
       ],\
       [\
+        "@types/jest-when",\
+        "npm:3.5.2"\
+      ],\
+      [\
         "@types/js-yaml",\
         "npm:4.0.3"\
       ],\
@@ -6033,6 +6037,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "jest-watcher",\
         "npm:26.6.2"\
+      ],\
+      [\
+        "jest-when",\
+        "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.5.1"\
       ],\
       [\
         "jest-worker",\
@@ -10413,6 +10421,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/hapi__bourne", "workspace:@types/hapi__bourne"],\
             ["@types/hapi__joi", "npm:17.1.8"],\
             ["@types/jest", "npm:26.0.24"],\
+            ["@types/jest-when", "npm:3.5.2"],\
             ["@types/jsonwebtoken", "npm:8.5.8"],\
             ["@types/jwt-decode", "npm:2.2.1"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
@@ -10451,6 +10460,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql", "npm:15.5.0"],\
             ["graphql-tag", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:2.12.4"],\
             ["graphql-typescript-integration", "npm:1.2.0"],\
+            ["jest-when", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.5.1"],\
             ["jsonwebtoken", "npm:8.5.1"],\
             ["jwt-decode", "npm:2.2.0"],\
             ["jwt-encode", "npm:1.0.1"],\
@@ -31839,6 +31849,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@types/jest-when", [\
+        ["npm:3.5.2", {\
+          "packageLocation": "./.yarn/cache/@types-jest-when-npm-3.5.2-8b6f3f4c13-106230dd71.zip/node_modules/@types/jest-when/",\
+          "packageDependencies": [\
+            ["@types/jest-when", "npm:3.5.2"],\
+            ["@types/jest", "npm:26.0.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@types/js-yaml", [\
         ["npm:4.0.3", {\
           "packageLocation": "./.yarn/cache/@types-js-yaml-npm-4.0.3-ae7bc639a1-4be74c029f.zip/node_modules/@types/js-yaml/",\
@@ -49152,6 +49172,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["chalk", "npm:4.0.0"],\
             ["jest-util", "npm:27.5.1"],\
             ["string-length", "npm:4.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["jest-when", [\
+        ["npm:3.5.1", {\
+          "packageLocation": "./.yarn/cache/jest-when-npm-3.5.1-50bed3876d-1efb9f497f.zip/node_modules/jest-when/",\
+          "packageDependencies": [\
+            ["jest-when", "npm:3.5.1"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.5.1", {\
+          "packageLocation": "./.yarn/__virtual__/jest-when-virtual-bbca986f47/0/cache/jest-when-npm-3.5.1-50bed3876d-1efb9f497f.zip/node_modules/jest-when/",\
+          "packageDependencies": [\
+            ["jest-when", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.5.1"],\
+            ["@types/jest", "npm:26.0.24"],\
+            ["jest", null]\
+          ],\
+          "packagePeers": [\
+            "@types/jest",\
+            "jest"\
           ],\
           "linkType": "HARD"\
         }]\

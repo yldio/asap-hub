@@ -1,6 +1,6 @@
 export interface ListResponse<T> {
   readonly total: number;
-  readonly items: ReadonlyArray<T>;
+  readonly items: T[];
 }
 
 export const decisionOptions = ['Yes', 'No', 'Not Sure'] as const;

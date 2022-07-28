@@ -8,7 +8,7 @@ export type ExternalAuthorResponse = Pick<
 
 export type ListExternalAuthorResponse = ListResponse<ExternalAuthorResponse>;
 
-export type ExternalAuthorInput =
-  | { userId: string }
-  | { externalAuthorId: string }
-  | { externalAuthorName: string };
+export type ExternalAuthorCreateDataObject = {
+  name: string;
+  orcid?: string | undefined;
+};

@@ -13,6 +13,9 @@ import { createResearchOutput } from '../helpers/research-outputs';
 import ResearchOutputs from '../../src/controllers/research-outputs';
 import { getAuthToken } from '../../src/utils/auth';
 import { appName, baseUrl } from '../../src/config';
+import { ResearchOutputSquidexDataProvider } from '../../src/data-providers/research-outputs.data-provider';
+import { ResearchTagSquidexDataProvider } from '../../src/data-providers/research-tags.data-provider';
+import { ExternalAuthorSquidexDataProvider } from '../../src/data-providers/external-authors.data-provider';
 
 const chance = new Chance();
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
@@ -24,7 +27,7 @@ const researchOutputRestClient = new SquidexRest<RestResearchOutput>(
   'research-outputs',
   { appName, baseUrl },
 );
-const teamRestclient = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
+const teamRestClient = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
   appName,
   baseUrl,
 });
@@ -33,11 +36,21 @@ const externalAuthorsRestClient = new SquidexRest<RestExternalAuthor>(
   'external-authors',
   { appName, baseUrl },
 );
-const researchOutputs = new ResearchOutputs(
+const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
   squidexGraphqlClient,
   researchOutputRestClient,
-  teamRestclient,
+  teamRestClient,
+);
+const researchTagDataProvider = new ResearchTagSquidexDataProvider(
+  squidexGraphqlClient,
+);
+const externalAuthorDataProvider = new ExternalAuthorSquidexDataProvider(
   externalAuthorsRestClient,
+);
+const researchOutputs = new ResearchOutputs(
+  researchOutputDataProvider,
+  researchTagDataProvider,
+  externalAuthorDataProvider,
 );
 
 describe('Research Outputs', () => {

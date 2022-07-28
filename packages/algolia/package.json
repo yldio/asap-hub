@@ -16,7 +16,7 @@
     "@algolia/client-common": "*",
     "@algolia/client-search": "*",
     "@babel/runtime-corejs3": "7.18.9",
-    "algoliasearch": "^4.13.1",
+    "algoliasearch": "4.14.2",
     "prettier": "^2.7.1"
   },
   "devDependencies": {

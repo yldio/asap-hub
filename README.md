@@ -20,6 +20,16 @@ IDEs require special configuration for TypeScript to work when using Plug'n'Play
 - [vscode](https://yarnpkg.com/getting-started/editor-sdks#vscode)
 - [vim](https://yarnpkg.com/getting-started/editor-sdks#vim)
 
+#### Emacs
+
+- [instructions (see below)](https://yarnpkg.com/getting-started/editor-sdks#emacs)
+
+The `.dir-locals.el` configuration file has already been created in the repository, so you just need to run the following command in the root directory of the project:
+
+```
+yarn dlx @yarnpkg/sdks base
+```
+
 ## Repo structure
 
 This repository consists of packages and apps along with their tests inside the individual folders inside `/packages` and `/apps`. Packages are meant for consumption by other packages or apps, while apps are not depended on by other packages or apps but instead have build artifacts like a website bundle to be served by a web server, or a JavaScript application to be run by a Node.js process.

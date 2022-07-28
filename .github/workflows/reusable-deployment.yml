@@ -182,7 +182,8 @@ jobs:
       - name: Deploy
         if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
         run: |
-          yarn workspace @asap-hub/messages deploy $SES_REGION
+          yarn workspace @asap-hub/crn-messages deploy $SES_REGION
+          yarn workspace @asap-hub/gp2-messages deploy $SES_REGION
         env:
           APP_ORIGIN: ${{ steps.setup.outputs.crn-app-url }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

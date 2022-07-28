@@ -20,7 +20,7 @@ export const inviteHandlerFactory =
     userClient: SquidexRestClient<RestUser>,
     origin: string,
     logger: Logger,
-    template: SendEmailTemplate = 'Welcome',
+    template: SendEmailTemplate = 'Crn-Welcome',
   ): EventBridgeHandler<'UsersPublished', UserPayload> =>
   async (event) => {
     let user: RestUser;

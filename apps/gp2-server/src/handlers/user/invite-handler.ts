@@ -38,6 +38,6 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     userRestClient,
     origin,
     logger,
-    'Welcome-Gp2',
+    'Gp2-Welcome',
   ),
 );

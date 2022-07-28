@@ -1,6 +1,5 @@
 import {
   ceruleanFernGradientStyles,
-  gp2Image,
   Link,
   pixels,
   silver,
@@ -8,6 +7,7 @@ import {
 import { staticPages } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ReactNode } from 'react';
+import { gp2Image } from '../images';
 
 const { perRem } = pixels;
 

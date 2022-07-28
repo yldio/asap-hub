@@ -4,7 +4,6 @@ export { default as asapPaddedImage } from './asap-padded.png';
 export { default as asapImage } from './asap.png';
 export { default as backgroundBrainsImage } from './background-brains.png';
 export { default as backgroundNeuronsImage } from './background-neurons.png';
-export { default as gp2Image } from './gp2.png';
 export { default as loadingImage } from './loading.gif';
 export { default as validTickGreenImage } from './valid-tick-green.gif';
 export { default as validTickWhiteImage } from './valid-tick-white.gif';

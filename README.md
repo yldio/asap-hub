@@ -20,6 +20,16 @@ IDEs require special configuration for TypeScript to work when using Plug'n'Play
 - [vscode](https://yarnpkg.com/getting-started/editor-sdks#vscode)
 - [vim](https://yarnpkg.com/getting-started/editor-sdks#vim)
 
+#### Emacs
+
+- [instructions (see below)](https://yarnpkg.com/getting-started/editor-sdks#emacs)
+
+The `.dir-locals.el` configuration file has already been created in the repository, so you just need to run the following command in the root directory of the project:
+
+```
+yarn dlx @yarnpkg/sdks base
+```
+
 ## Repo structure
 
 This repository consists of packages and apps along with their tests inside the individual folders inside `/packages` and `/apps`. Packages are meant for consumption by other packages or apps, while apps are not depended on by other packages or apps but instead have build artifacts like a website bundle to be served by a web server, or a JavaScript application to be run by a Node.js process.
@@ -45,11 +55,10 @@ For you, a newcomer, to be running your development setup, you'll need to comple
 
 - Log in to <https://cloud.squidex.io/app/asap-hub-dev>
 - In `Content/Users`, create a new user (or edit if already created)
-- While creating, or editing the user, on `Functional/Connections`, add a new item to store your UUID (you can generate a random one [here](https://www.uuidgenerator.net/version4)) and save that (the save button is the blue one on top!). You'll need that UUID later, so save it.
 
 ### Get everything running
 
-- create a `.env` file and update it with the necessary details (ask someone for this)
+- create a `.env` file and update it with the necessary details (ask one of the engineers for a working config, there is a `.env.example` file to work from, but you'll need the details)
 - You can run all apps in the project with a simple `yarn start` on the project's root. It will load up everything, but you don't need to run everything. Depending on what you're doing, you only need some apps up
 - `yarn watch:babel`: to have babel watching and compiling for you (you'll need this running most of the time)
 - `yarn watch:typecheck`: well... for types checking (you'll need this running most of the time)

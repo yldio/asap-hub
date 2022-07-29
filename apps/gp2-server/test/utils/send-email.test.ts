@@ -1,3 +1,4 @@
+import { gp2WelcomeTemplate } from '@asap-hub/server-common';
 import { SES } from 'aws-sdk';
 import {
   userInviteBcc,
@@ -21,7 +22,7 @@ describe('Send Email helper', () => {
 
     await sendEmail({
       to: recipients,
-      template: 'Gp2-Welcome',
+      template: gp2WelcomeTemplate,
       values: params,
     });
 
@@ -30,7 +31,7 @@ describe('Send Email helper', () => {
         ToAddresses: recipients,
         BccAddresses: [userInviteBcc],
       },
-      Template: 'Gp2-Welcome',
+      Template: gp2WelcomeTemplate,
       TemplateData: JSON.stringify(params),
       Source: userInviteSender,
       ReturnPath: userInviteReturn,

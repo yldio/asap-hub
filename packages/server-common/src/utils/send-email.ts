@@ -8,7 +8,11 @@ export interface Welcome {
   link: string;
 }
 
-export type SendEmailTemplate = 'Crn-Welcome' | 'Gp2-Welcome';
+export const crnWelcomeTemplate = 'Crn-Welcome';
+export const gp2WelcomeTemplate = 'Gp2-Welcome';
+export type SendEmailTemplate =
+  | typeof crnWelcomeTemplate
+  | typeof gp2WelcomeTemplate;
 
 export type SendEmail = (params: {
   to: string[];

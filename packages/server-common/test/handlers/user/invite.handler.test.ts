@@ -7,6 +7,7 @@ import {
   inviteHandlerFactory,
   UserInviteEventBridgeEvent,
 } from '../../../src/handlers/user';
+import { crnWelcomeTemplate } from '../../../src/utils';
 import { restUserMock } from '../../fixtures/users.fixtures';
 import { loggerMock as logger } from '../../mocks/logger.mock';
 import { getSquidexClientMock } from '../../mocks/squidex-client.mock';
@@ -136,7 +137,7 @@ describe('Invite Handler', () => {
     const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
     expect(sendEmailMock).toBeCalledWith({
       to: [userWithOtherConnection.data.email.iv],
-      template: 'Crn-Welcome',
+      template: crnWelcomeTemplate,
       values: {
         firstName: userWithOtherConnection.data.firstName.iv,
         link: expectedLink.toString(),
@@ -170,7 +171,7 @@ describe('Invite Handler', () => {
     const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
     expect(sendEmailMock).toBeCalledWith({
       to: [userWithoutConnection.data.email.iv],
-      template: 'Crn-Welcome',
+      template: crnWelcomeTemplate,
       values: {
         firstName: userWithoutConnection.data.firstName.iv,
         link: expectedLink.toString(),

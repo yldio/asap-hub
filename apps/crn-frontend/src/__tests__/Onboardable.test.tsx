@@ -49,11 +49,7 @@ it('is undefined when there is no logged in user', async () => {
 });
 
 const renderOnboardable = (onboarded: boolean) => (
-  <RecoilRoot
-    initializeState={({ set }) => {
-      set(refreshUserState(onboardableUser.id), Math.random());
-    }}
-  >
+  <RecoilRoot>
     <Suspense fallback="loading">
       <Auth0Provider user={{ id: onboardableUser.id, onboarded }}>
         <WhenReady>

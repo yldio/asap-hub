@@ -1,25 +1,11 @@
-import { useRecoilValue, selectorFamily, atomFamily } from 'recoil';
+import { useRecoilValue, selectorFamily } from 'recoil';
 import { PageResponse } from '@asap-hub/model';
 import { getPageByPath } from './api';
 
-const fetchPageState = selectorFamily<PageResponse | undefined, string>({
-  key: 'fetchPage',
-  get:
-    (path) =>
-    async ({ get }) => {
-      get(refreshPageState(path));
-      return getPageByPath(path);
-    },
-});
-
-export const pageState = atomFamily<PageResponse | undefined, string>({
+export const pageState = selectorFamily<PageResponse | undefined, string>({
   key: 'page',
-  default: fetchPageState,
+  get: (path) => () => getPageByPath(path),
 });
 
-export const refreshPageState = atomFamily<number, string>({
-  key: 'refreshPage',
-  default: 0,
-});
-
-export const usePageByPath = (path: string) => useRecoilValue(pageState(path));
+export const usePageByPageId = (pageId: string) =>
+  useRecoilValue(pageState(pageId));

@@ -83,6 +83,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
         activeClassName={activeClassName}
         css={[
           styles,
+          navigationLinkStyles,
           { [`&.${activeClassName}`]: activePrimaryStyles(colors) },
           !enabled && disableStyles,
         ]}
@@ -96,9 +97,9 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
       </NavHashLink>
     );
   }
-
   const active =
     new URL(href, window.location.href).pathname === window.location.pathname;
+
   return (
     <a
       href={url}

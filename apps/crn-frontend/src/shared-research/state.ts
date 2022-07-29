@@ -6,13 +6,10 @@ import {
   atom,
   atomFamily,
   DefaultValue,
-  ReadWriteSelectorOptions,
-  selector,
   selectorFamily,
-  SetRecoilState,
   useRecoilState,
   useRecoilValue,
-  useSetRecoilState,
+  useRecoilCallback,
 } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
@@ -142,21 +139,13 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
   return researchOutputs;
 };
 
-const setResearchOutput = selector<ResearchOutputResponse>({
-  key: 'setResearchOutput',
-  set: (
-    { set }: { set: SetRecoilState },
-    researchOutput: ResearchOutputResponse,
-  ) => {
-    set(researchOutputState(researchOutput.id), researchOutput);
-  },
-} as unknown as ReadWriteSelectorOptions<ResearchOutputResponse>);
-
 export const useSetResearchOutputItem = () => {
   const [refresh, setRefresh] = useRecoilState(refreshResearchOutputIndex);
-  const setResearchOutputItem = useSetRecoilState(setResearchOutput);
-  return (researchOutput: ResearchOutputResponse) => {
-    setResearchOutputItem(researchOutput);
-    setRefresh(refresh + 1);
-  };
+  return useRecoilCallback(
+    ({ set }) =>
+      (researchOutput: ResearchOutputResponse) => {
+        setRefresh(refresh + 1);
+        set(researchOutputState(researchOutput.id), researchOutput);
+      },
+  );
 };

@@ -21,7 +21,7 @@ describe('Send Email helper', () => {
 
     await sendEmail({
       to: recipients,
-      template: 'Crn-Welcome',
+      template: 'Gp2-Welcome',
       values: params,
     });
 
@@ -30,7 +30,7 @@ describe('Send Email helper', () => {
         ToAddresses: recipients,
         BccAddresses: [userInviteBcc],
       },
-      Template: 'Crn-Welcome',
+      Template: 'Gp2-Welcome',
       TemplateData: JSON.stringify(params),
       Source: userInviteSender,
       ReturnPath: userInviteReturn,

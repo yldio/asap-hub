@@ -1,13 +1,12 @@
 diff --git a/index.d.ts b/index.d.ts
-index 8fb62646440fd73bff9d2709d37c8b18640f43e7..b79cda56389c2e3c4e88fcd582b27cb7980a12be 100644
+index 567431591f995485f37ccd67b2756ec837b45a9b..04699c5c3add9b1a4f706131b898ccd7af6f5f43 100644
 --- a/index.d.ts
 +++ b/index.d.ts
-@@ -258,7 +258,7 @@ export function isRecoilValue(val: unknown): val is RecoilValue<any>; // eslint-
- // bigint not supported yet
- type Primitive = undefined | null | boolean | number | symbol | string;
- 
--export type SerializableParam = Primitive | ReadonlyArray<SerializableParam> | Readonly<{[key: string]: SerializableParam}>;
-+export type SerializableParam = Primitive | ReadonlyArray<SerializableParam> | ReadonlySet<SerializableParam> | Readonly<{[key: string]: SerializableParam}>;
- 
- export interface AtomFamilyOptions<T, P extends SerializableParam> {
-   key: NodeKey;
+@@ -395,6 +395,7 @@
+   | Primitive
+   | {toJSON: () => string}
+   | ReadonlyArray<SerializableParam>
++  | ReadonlySet<SerializableParam>
+   | Readonly<{[key: string]: SerializableParam}>;
+
+ interface AtomFamilyOptionsWithoutDefault<T, P extends SerializableParam> {

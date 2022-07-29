@@ -40,14 +40,15 @@ describe('an unauthenticated user', () => {
 
   it('is not allowed', async () => {
     const { findByText } = render(
-      <ErrorBoundary fallbackRender={({ error }) => <>{error.toString()}</>}>
-        <Auth0Provider user={undefined}>
-          <WhenReady>
-            <CheckOnboarded>text</CheckOnboarded>
-          </WhenReady>
-        </Auth0Provider>
-      </ErrorBoundary>,
-      { wrapper: RecoilRoot },
+      <RecoilRoot>
+        <ErrorBoundary fallbackRender={({ error }) => <>{error.toString()}</>}>
+          <Auth0Provider user={undefined}>
+            <WhenReady>
+              <CheckOnboarded>text</CheckOnboarded>
+            </WhenReady>
+          </Auth0Provider>
+        </ErrorBoundary>
+      </RecoilRoot>,
     );
     expect(await findByText(/authenticate/i)).toBeVisible();
   });
@@ -56,32 +57,34 @@ describe('an unauthenticated user', () => {
 describe('an authenticated and onboarded user', () => {
   it('is let through', async () => {
     const { findByText } = render(
-      <Auth0Provider user={{ ...user, onboarded: true }}>
-        <WhenReady>
-          <Router history={history}>
-            <CheckOnboarded>text</CheckOnboarded>
-          </Router>
-        </WhenReady>
-      </Auth0Provider>,
-      { wrapper: RecoilRoot },
+      <RecoilRoot>
+        <Auth0Provider user={{ ...user, onboarded: true }}>
+          <WhenReady>
+            <Router history={history}>
+              <CheckOnboarded>text</CheckOnboarded>
+            </Router>
+          </WhenReady>
+        </Auth0Provider>
+      </RecoilRoot>,
     );
     expect(await findByText('text')).toBeVisible();
   });
 
   it('can navigate to any page', async () => {
     const { findByText } = render(
-      <Auth0Provider user={{ ...user, onboarded: true }}>
-        <WhenReady>
-          <Router history={history}>
-            <CheckOnboarded>
-              <Route path={ownProfilePath}>profile page</Route>
-              <Route path={teamPage}>team page</Route>
-              <Route path={outputs}>outputs page</Route>
-            </CheckOnboarded>
-          </Router>
-        </WhenReady>
-      </Auth0Provider>,
-      { wrapper: RecoilRoot },
+      <RecoilRoot>
+        <Auth0Provider user={{ ...user, onboarded: true }}>
+          <WhenReady>
+            <Router history={history}>
+              <CheckOnboarded>
+                <Route path={ownProfilePath}>profile page</Route>
+                <Route path={teamPage}>team page</Route>
+                <Route path={outputs}>outputs page</Route>
+              </CheckOnboarded>
+            </Router>
+          </WhenReady>
+        </Auth0Provider>
+      </RecoilRoot>,
     );
 
     history.push(ownProfilePath);
@@ -98,16 +101,17 @@ describe('an authenticated and onboarded user', () => {
 describe('an authenticated user in onboarding', () => {
   it('is let through to their own profile', async () => {
     const { findByText } = render(
-      <Auth0Provider user={{ ...user, onboarded: false }}>
-        <WhenReady>
-          <Router history={history}>
-            <CheckOnboarded>
-              <Route path={ownProfilePath}>profile</Route>
-            </CheckOnboarded>
-          </Router>
-        </WhenReady>
-      </Auth0Provider>,
-      { wrapper: RecoilRoot },
+      <RecoilRoot>
+        <Auth0Provider user={{ ...user, onboarded: false }}>
+          <WhenReady>
+            <Router history={history}>
+              <CheckOnboarded>
+                <Route path={ownProfilePath}>profile</Route>
+              </CheckOnboarded>
+            </Router>
+          </WhenReady>
+        </Auth0Provider>
+      </RecoilRoot>,
     );
 
     history.push(ownProfilePath);
@@ -117,19 +121,20 @@ describe('an authenticated user in onboarding', () => {
   it("is not let through to someone else's profile", async () => {
     const foreignProfilePath = network({}).users({}).user({ userId: '1337' }).$;
     const { findByText } = render(
-      <Auth0Provider user={{ ...user, onboarded: false }}>
-        <WhenReady>
-          <Router history={history}>
-            <CheckOnboarded>
-              <Route path={foreignProfilePath}>foreign profile</Route>
-              <Route path={network({}).users({}).user({ userId: user.id }).$}>
-                own profile
-              </Route>
-            </CheckOnboarded>
-          </Router>
-        </WhenReady>
-      </Auth0Provider>,
-      { wrapper: RecoilRoot },
+      <RecoilRoot>
+        <Auth0Provider user={{ ...user, onboarded: false }}>
+          <WhenReady>
+            <Router history={history}>
+              <CheckOnboarded>
+                <Route path={foreignProfilePath}>foreign profile</Route>
+                <Route path={network({}).users({}).user({ userId: user.id }).$}>
+                  own profile
+                </Route>
+              </CheckOnboarded>
+            </Router>
+          </WhenReady>
+        </Auth0Provider>
+      </RecoilRoot>,
     );
 
     history.push(foreignProfilePath);
@@ -138,19 +143,20 @@ describe('an authenticated user in onboarding', () => {
   it('is not let through to another page', async () => {
     const anotherPagePath = sharedResearch({}).$;
     const { findByText } = render(
-      <Auth0Provider user={{ ...user, onboarded: false }}>
-        <WhenReady>
-          <Router history={history}>
-            <CheckOnboarded>
-              <Route path={anotherPagePath}>another page</Route>
-              <Route path={network({}).users({}).user({ userId: user.id }).$}>
-                own profile
-              </Route>
-            </CheckOnboarded>
-          </Router>
-        </WhenReady>
-      </Auth0Provider>,
-      { wrapper: RecoilRoot },
+      <RecoilRoot>
+        <Auth0Provider user={{ ...user, onboarded: false }}>
+          <WhenReady>
+            <Router history={history}>
+              <CheckOnboarded>
+                <Route path={anotherPagePath}>another page</Route>
+                <Route path={network({}).users({}).user({ userId: user.id }).$}>
+                  own profile
+                </Route>
+              </CheckOnboarded>
+            </Router>
+          </WhenReady>
+        </Auth0Provider>
+      </RecoilRoot>,
     );
 
     history.push(anotherPagePath);
@@ -161,17 +167,18 @@ describe('an authenticated user in onboarding', () => {
     window.alert = jest.fn();
 
     const { findByText } = render(
-      <Auth0Provider user={{ ...user, onboarded: false }}>
-        <WhenReady>
-          <Router history={history}>
-            <CheckOnboarded>
-              <Route path={teamPage}>team page</Route>
-              <Route path={ownProfilePath}>profile page</Route>
-            </CheckOnboarded>
-          </Router>
-        </WhenReady>
-      </Auth0Provider>,
-      { wrapper: RecoilRoot },
+      <RecoilRoot>
+        <Auth0Provider user={{ ...user, onboarded: false }}>
+          <WhenReady>
+            <Router history={history}>
+              <CheckOnboarded>
+                <Route path={teamPage}>team page</Route>
+                <Route path={ownProfilePath}>profile page</Route>
+              </CheckOnboarded>
+            </Router>
+          </WhenReady>
+        </Auth0Provider>
+      </RecoilRoot>,
     );
 
     history.push(ownProfilePath);

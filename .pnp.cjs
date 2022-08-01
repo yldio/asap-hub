@@ -1995,7 +1995,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/auth0-js",\
-        "npm:9.14.4"\
+        "npm:9.14.6"\
       ],\
       [\
         "@types/aws-lambda",\
@@ -2994,7 +2994,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "auth0-js",\
-        "npm:9.16.0"\
+        "npm:9.19.0"\
       ],\
       [\
         "auto-bind",\
@@ -3882,7 +3882,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "crypto-js",\
-        "npm:3.3.0"\
+        "npm:4.1.1"\
       ],\
       [\
         "crypto-random-string",\
@@ -5458,7 +5458,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "idtoken-verifier",\
-        "npm:2.0.3"\
+        "npm:2.2.2"\
       ],\
       [\
         "ieee754",\
@@ -10256,11 +10256,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/core", "npm:7.18.9"],\
             ["@babel/preset-react", "virtual:61a64643837afd5405cc03238cfc085017b2368a7dc8660b30e3544523c3f52527959ac7ec64eb44bcb071ccdae5690543b0a4ef2dd3608212fed3cd93acc0b8#npm:7.18.6"],\
             ["@babel/runtime-corejs3", "npm:7.18.9"],\
-            ["@types/auth0-js", "npm:9.14.4"],\
+            ["@types/auth0-js", "npm:9.14.6"],\
             ["@types/jest", "npm:26.0.24"],\
             ["@types/node", "npm:14.18.22"],\
             ["@types/pify", "npm:3.0.2"],\
-            ["auth0-js", "npm:9.16.0"],\
+            ["auth0-js", "npm:9.19.0"],\
             ["camelcase", "npm:6.3.0"],\
             ["pify", "npm:5.0.0"]\
           ],\
@@ -31452,10 +31452,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/auth0-js", [\
-        ["npm:9.14.4", {\
-          "packageLocation": "./.yarn/cache/@types-auth0-js-npm-9.14.4-21baf4e161-a98b730c9c.zip/node_modules/@types/auth0-js/",\
+        ["npm:9.14.6", {\
+          "packageLocation": "./.yarn/cache/@types-auth0-js-npm-9.14.6-674ac0be75-62fe675fea.zip/node_modules/@types/auth0-js/",\
           "packageDependencies": [\
-            ["@types/auth0-js", "npm:9.14.4"]\
+            ["@types/auth0-js", "npm:9.14.6"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -35549,14 +35549,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["auth0-js", [\
-        ["npm:9.16.0", {\
-          "packageLocation": "./.yarn/cache/auth0-js-npm-9.16.0-a52be8d73c-2889da94bc.zip/node_modules/auth0-js/",\
+        ["npm:9.19.0", {\
+          "packageLocation": "./.yarn/cache/auth0-js-npm-9.19.0-e1624d8ec5-f02f0ed1a1.zip/node_modules/auth0-js/",\
           "packageDependencies": [\
-            ["auth0-js", "npm:9.16.0"],\
-            ["base64-js", "npm:1.3.1"],\
-            ["idtoken-verifier", "npm:2.0.3"],\
+            ["auth0-js", "npm:9.19.0"],\
+            ["base64-js", "npm:1.5.1"],\
+            ["idtoken-verifier", "npm:2.2.2"],\
             ["js-cookie", "npm:2.2.1"],\
-            ["qs", "npm:6.9.4"],\
+            ["qs", "npm:6.11.0"],\
             ["superagent", "npm:5.3.1"],\
             ["url-join", "npm:4.0.1"],\
             ["winchan", "npm:0.2.2"]\
@@ -39434,10 +39434,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["crypto-js", [\
-        ["npm:3.3.0", {\
-          "packageLocation": "./.yarn/cache/crypto-js-npm-3.3.0-5b307000b5-193923143a.zip/node_modules/crypto-js/",\
+        ["npm:4.1.1", {\
+          "packageLocation": "./.yarn/cache/crypto-js-npm-4.1.1-38a3b8c19d-b3747c12ee.zip/node_modules/crypto-js/",\
           "packageDependencies": [\
-            ["crypto-js", "npm:3.3.0"]\
+            ["crypto-js", "npm:4.1.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -46555,15 +46555,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["idtoken-verifier", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/idtoken-verifier-npm-2.0.3-81607c3a5c-82f4055829.zip/node_modules/idtoken-verifier/",\
+        ["npm:2.2.2", {\
+          "packageLocation": "./.yarn/cache/idtoken-verifier-npm-2.2.2-c745072363-7cf461f08e.zip/node_modules/idtoken-verifier/",\
           "packageDependencies": [\
-            ["idtoken-verifier", "npm:2.0.3"],\
-            ["base64-js", "npm:1.3.1"],\
-            ["crypto-js", "npm:3.3.0"],\
+            ["idtoken-verifier", "npm:2.2.2"],\
+            ["base64-js", "npm:1.5.1"],\
+            ["crypto-js", "npm:4.1.1"],\
             ["es6-promise", "npm:4.2.8"],\
             ["jsbn", "npm:1.1.0"],\
-            ["unfetch", "npm:4.1.0"],\
+            ["unfetch", "npm:4.2.0"],\
             ["url-join", "npm:4.0.1"]\
           ],\
           "linkType": "HARD"\
@@ -61940,13 +61940,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["unfetch", [\
-        ["npm:4.1.0", {\
-          "packageLocation": "./.yarn/cache/unfetch-npm-4.1.0-400b98ec2c-8a0fee1e0f.zip/node_modules/unfetch/",\
-          "packageDependencies": [\
-            ["unfetch", "npm:4.1.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:4.2.0", {\
           "packageLocation": "./.yarn/cache/unfetch-npm-4.2.0-7c13351021-6a4b2557e1.zip/node_modules/unfetch/",\
           "packageDependencies": [\

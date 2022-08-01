@@ -389,11 +389,11 @@ __metadata:
     "@babel/core": 7.18.9
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.18.9
-    "@types/auth0-js": ^9.14.4
+    "@types/auth0-js": 9.14.6
     "@types/jest": 26.0.24
     "@types/node": 14.18.22
     "@types/pify": ^3.0.2
-    auth0-js: ^9.16.0
+    auth0-js: 9.19.0
     camelcase: 6.3.0
     pify: ^5.0.0
   languageName: unknown
@@ -11802,10 +11802,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@types/auth0-js@npm:^9.14.4":
-  version: 9.14.4
-  resolution: "@types/auth0-js@npm:9.14.4"
-  checksum: a98b730c9c10674f76cf5df4aa38d32aa7d1c84cb68a68f57a372995116be7531d1b7b89b64be4c77b388f5b7fded987f2ebfaf684bfe0d488d0aafc4cb14569
+"@types/auth0-js@npm:9.14.6":
+  version: 9.14.6
+  resolution: "@types/auth0-js@npm:9.14.6"
+  checksum: 62fe675fea61aaf873f182c5b4e0f9e08c0380a85872fd089dbfa08b2d74446a7b3466931fde6149809ffc72a761ce189a6e429bf1f81ac58a572abe5b07b9a4
   languageName: node
   linkType: hard
 
@@ -15434,18 +15434,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"auth0-js@npm:^9.16.0":
-  version: 9.16.0
-  resolution: "auth0-js@npm:9.16.0"
+"auth0-js@npm:9.19.0":
+  version: 9.19.0
+  resolution: "auth0-js@npm:9.19.0"
   dependencies:
-    base64-js: "npm:^1.3.0"
-    idtoken-verifier: "npm:^2.0.3"
-    js-cookie: "npm:^2.2.0"
-    qs: "npm:^6.7.0"
-    superagent: "npm:^5.3.1"
-    url-join: "npm:^4.0.1"
-    winchan: "npm:^0.2.2"
-  checksum: 2889da94bc4cea917c3206f3ee2cf857c1496e42468766d3b6f35b3b0724230329b76fca6c4d2e80255ef5cd784dcede114c01b672296920606b89757cd3e1ca
+    base64-js: ^1.5.1
+    idtoken-verifier: ^2.2.2
+    js-cookie: ^2.2.0
+    qs: ^6.10.1
+    superagent: ^5.3.1
+    url-join: ^4.0.1
+    winchan: ^0.2.2
+  checksum: f02f0ed1a1c20c29d0da28f35581eb2f9a0832b2f47610c3fd1b73c52f31c8a8fd82aecd42262fdd22c2ad324b4f4d272d2b220c8fec4a427bfde0cdf74bee92
   languageName: node
   linkType: hard
 
@@ -16232,7 +16232,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"base64-js@npm:^1.3.1":
+"base64-js@npm:^1.3.1, base64-js@npm:^1.5.1":
   version: 1.5.1
   resolution: "base64-js@npm:1.5.1"
   checksum: 669632eb3745404c2f822a18fc3a0122d2f9a7a13f7fb8b5823ee19d1d2ff9ee5b52c53367176ea4ad093c332fd5ab4bd0ebae5a8e27917a4105a4cfc86b1005
@@ -18610,10 +18610,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"crypto-js@npm:^3.2.1":
-  version: 3.3.0
-  resolution: "crypto-js@npm:3.3.0"
-  checksum: 193923143a4784b2f974366068d96fe8280168fd3fef2bfea9551a5c3e32096f5a8fa49ff4eeb5bd0b9716d325618d38cfbe6125e359a4ef488fbca93e600824
+"crypto-js@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "crypto-js@npm:4.1.1"
+  checksum: b3747c12ee3a7632fab3b3e171ea50f78b182545f0714f6d3e7e2858385f0f4101a15f2517e033802ce9d12ba50a391575ff4638c9de3dd9b2c4bc47768d5425
   languageName: node
   linkType: hard
 
@@ -24408,17 +24408,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"idtoken-verifier@npm:^2.0.3":
-  version: 2.0.3
-  resolution: "idtoken-verifier@npm:2.0.3"
+"idtoken-verifier@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "idtoken-verifier@npm:2.2.2"
   dependencies:
-    base64-js: "npm:^1.3.0"
-    crypto-js: "npm:^3.2.1"
-    es6-promise: "npm:^4.2.8"
-    jsbn: "npm:^1.1.0"
-    unfetch: "npm:^4.1.0"
-    url-join: "npm:^4.0.1"
-  checksum: 82f405582999efd6c580bf4035a23a1cf98d49cfb5671765d50565001bbbe32fd41030f772222c2104c76b3cf8c8002f5a944062c80bf21f4ba891dfc2fac6c5
+    base64-js: ^1.5.1
+    crypto-js: ^4.1.1
+    es6-promise: ^4.2.8
+    jsbn: ^1.1.0
+    unfetch: ^4.2.0
+    url-join: ^4.0.1
+  checksum: 7cf461f08e93f022d5c36d33fc0b6fe0091d64eaf367733be61ed0d700360c8cef982398b8040c24de011ce29e4a162f995532672e4aa9dac5a827153c6a6268
   languageName: node
   linkType: hard
 
@@ -32718,7 +32718,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:6.11.0":
+"qs@npm:6.11.0, qs@npm:^6.10.1":
   version: 6.11.0
   resolution: "qs@npm:6.11.0"
   dependencies:
@@ -37849,13 +37849,6 @@ __metadata:
   version: 0.1.2
   resolution: "unc-path-regex@npm:0.1.2"
   checksum: a05fa2006bf4606051c10fc7968f08ce7b28fa646befafa282813aeb1ac1a56f65cb1b577ca7851af2726198d59475bb49b11776036257b843eaacee2860a4ec
-  languageName: node
-  linkType: hard
-
-"unfetch@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "unfetch@npm:4.1.0"
-  checksum: 8a0fee1e0f6ad8b3a2966fa199d07716affc3682d8e1c2c0cc138e5e5d2a2e0627d8c3321a4529a79e8a58332955bf80ac6c018f1dcc6de652026a7c3257d726
   languageName: node
   linkType: hard
 

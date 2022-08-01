@@ -10,7 +10,6 @@ import { Suspense } from 'react';
 import { Auth0Provider, WhenReady } from '../auth/test-utils';
 import Onboardable from '../Onboardable';
 import { getUser } from '../network/users/api';
-import { refreshUserState } from '../network/users/state';
 
 jest.mock('../network/users/api');
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;

@@ -110,18 +110,24 @@ outputs:
   sls-stage:
     description: 'SLS Stage'
     value: ${{ steps.vars.outputs.sls-stage }}
-  squidex-app-name:
-    description: 'Squidex App Name'
-    value: ${{ steps.vars.outputs.squidex-app-name }}
+  crn-squidex-app-name:
+    description: 'CRN Squidex App Name'
+    value: ${{ steps.vars.outputs.crn-squidex-app-name }}
   squidex-backup-bucket-name:
     description: 'Squidex Backup Bucket Name'
     value: ${{ steps.vars.outputs.squidex-backup-bucket-name }}
   squidex-base-url:
     description: 'Squidex Base Url'
     value: ${{ steps.vars.outputs.squidex-base-url }}
-  squidex-client-id:
-    description: 'Squidex Client ID'
-    value: ${{ steps.vars.outputs.squidex-client-id }}
+  crn-squidex-client-id:
+    description: 'CRN Squidex Client ID'
+    value: ${{ steps.vars.outputs.crn-squidex-client-id }}
+  gp2-squidex-app-name:
+    description: 'GP2 Squidex App Name'
+    value: ${{ steps.vars.outputs.gp2-squidex-app-name }}
+  gp2-squidex-client-id:
+    description: 'GP2 Squidex Client ID'
+    value: ${{ steps.vars.outputs.gp2-squidex-client-id }}
 runs:
   using: 'composite'
   steps:
@@ -150,7 +156,7 @@ runs:
           echo "::set-output name=gp2-app-url::https://$PR_NUMBER.gp2.asap.science"
           echo "::set-output name=pr-number::$PR_NUMBER"
           echo "::set-output name=sls-stage::$PR_NUMBER"
-          echo "::set-output name=squidex-app-name::$PR_NUMBER"
+          echo "::set-output name=crn-squidex-app-name::$PR_NUMBER"
         elif [ "$ENVIRONMENT_NAME" = 'Development' ]; then
           echo "::set-output name=app-release::${{ github.run_id }}-dev"
         elif [ "$ENVIRONMENT_NAME" = 'Production' ]; then

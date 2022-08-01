@@ -85,8 +85,8 @@ jobs:
           python .github/scripts/squidex/create-app.py
           yarn test:integration
         env:
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}-${{ github.run_id }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}-${{ github.run_id }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-client-id }}
           SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
       - name: Delete app
@@ -94,8 +94,8 @@ jobs:
         if: always()
         run: python .github/scripts/squidex/delete-app.py
         env:
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}-${{ github.run_id }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}-${{ github.run_id }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-client-id }}
           SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
 

@@ -37,8 +37,8 @@ jobs:
       - name: Add the configuration
         run: sq config add $SQUIDEX_APP $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET
         env:
-          SQUIDEX_APP: ${{ steps.setup.outputs.squidex-app-name }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_APP: ${{ steps.setup.outputs.crn-squidex-app-name }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-client-id }}
           SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       - name: Run sync out
         run: sq sync out ./backup

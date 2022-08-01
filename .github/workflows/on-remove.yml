@@ -59,9 +59,9 @@ jobs:
       - name: Delete PR Squidex App
         run: python .github/scripts/squidex/delete-app.py
         env:
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-client-id }}
           SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
 
   gp2-sls-remove:

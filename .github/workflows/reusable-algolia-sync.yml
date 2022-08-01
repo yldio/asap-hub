@@ -93,9 +93,9 @@ jobs:
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.algolia-index }}_temp'
           entity-type: 'research-output'
-          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
+          squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
-          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
+          squidex-client-id: ${{ steps.setup.outputs.crn-squidex-client-id }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       - name: Import Users (USERs | ALL)
         if: ${{ inputs.entity == 'users' || inputs.entity == 'all'}}
@@ -105,9 +105,9 @@ jobs:
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.algolia-index }}_temp'
           entity-type: 'user'
-          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
+          squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
-          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
+          squidex-client-id: ${{ steps.setup.outputs.crn-squidex-client-id }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       - name: Import External Authors (EXTERNAL_AUTHORS | ALL)
         if: ${{ inputs.entity == 'external-authors' || inputs.entity == 'all'}}
@@ -117,9 +117,9 @@ jobs:
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.algolia-index }}_temp'
           entity-type: 'external-author'
-          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
+          squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
-          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
+          squidex-client-id: ${{ steps.setup.outputs.crn-squidex-client-id }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       - name: Import Events (EVENTS | ALL)
         if: ${{ inputs.entity == 'events' || inputs.entity == 'all'}}
@@ -129,9 +129,9 @@ jobs:
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.algolia-index }}_temp'
           entity-type: 'event'
-          squidex-app-name: ${{ steps.setup.outputs.squidex-app-name }}
+          squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
-          squidex-client-id: ${{ steps.setup.outputs.squidex-client-id }}
+          squidex-client-id: ${{ steps.setup.outputs.crn-squidex-client-id }}
           squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
       - name: Override index with the temp one
         run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -i $ALGOLIA_INDEX

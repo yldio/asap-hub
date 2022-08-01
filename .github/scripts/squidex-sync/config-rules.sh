@@ -1,5 +1,5 @@
 # Uses dir passed as argument or default one
-backupPath=${1:-"packages/squidex/schema/rules"}
+backupPath=${1:-"packages/squidex/schema/crn/rules"}
 
 # Replace PLACEHOLDERS with variable available on the CI
 find $backupPath \

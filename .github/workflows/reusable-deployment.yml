@@ -122,7 +122,7 @@ jobs:
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
 
-  squidex-schema:
+  crn-squidex-schema:
     needs: [crn-sls-deploy]
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
@@ -144,7 +144,7 @@ jobs:
           sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
           sq config use $SQUIDEX_APP_NAME
           .github/scripts/squidex-sync/config-rules.sh
-          sq sync in packages/squidex/schema -t schemas -t rules --delete
+          sq sync in packages/squidex/schema/crn -t schemas -t rules --delete
         env:
           CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}

@@ -1,8 +1,9 @@
-import requests
 import os
 import sys
 
+import requests
 from common import getClientHeaders
+
 headers = getClientHeaders()
 
 SQUIDEX_URL = os.getenv('SQUIDEX_BASE_URL')
@@ -32,7 +33,7 @@ def syncApp(appName, clientId, clientSecret):
     ))
     os.system('sq config use {appName}'.format( appName = appName ))
     # ATM we have not contents in the repo, but we can easily use this feature to setup fixture data
-    os.system('sq sync in packages/squidex/schema/ -t app -t schemas -t contents')
+    os.system('sq sync in packages/squidex/schema/crn -t app -t schemas -t contents')
 
 def main():
     appName = os.getenv('SQUIDEX_APP_NAME')

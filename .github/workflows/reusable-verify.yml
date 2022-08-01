@@ -8,8 +8,8 @@ on:
         required: true
         type: string
     secrets:
-      SQUIDEX_CLIENT_SECRET:
-        description: 'Squidex Client Secret'
+      CRN_SQUIDEX_CLIENT_SECRET:
+        description: 'CRN Squidex Client Secret'
         required: true
       FRONTEND_SENTRY_RELEASE_AUTH_TOKEN:
         description: 'Sentry Auth token'
@@ -89,7 +89,7 @@ jobs:
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CLIENT_SECRET }}
 
   register-release:
     runs-on: ubuntu-latest

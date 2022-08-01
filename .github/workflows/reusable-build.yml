@@ -17,11 +17,17 @@ on:
       LIGHTSTEP_TOKEN:
         description: 'Lightstep Token'
         required: true
-      SQUIDEX_CLIENT_SECRET:
-        description: 'Squidex Client Secret'
+      CRN_SQUIDEX_CLIENT_SECRET:
+        description: 'CRN Squidex Client Secret'
         required: true
-      SQUIDEX_SHARED_SECRET:
-        description: 'Squidex Shared Secret'
+      CRN_SQUIDEX_SHARED_SECRET:
+        description: 'CRN Squidex Shared Secret'
+        required: true
+      GP2_SQUIDEX_CLIENT_SECRET:
+        description: 'GP2 Squidex Client Secret'
+        required: true
+      GP2_SQUIDEX_SHARED_SECRET:
+        description: 'GP2 Squidex Shared Secret'
         required: true
       GP2_AUTH0_SHARED_SECRET:
         description: 'GP2 Auth0 Shared Secret'
@@ -204,8 +210,8 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-          squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+          squidex-client-secret: ${{ secrets.CRN_SQUIDEX_CLIENT_SECRET }}
+          squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
 
   gp2-sls-package:
     needs: [definitions, transpile, rebuild]
@@ -227,6 +233,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-          squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+          squidex-client-secret: ${{ secrets.GP2_SQUIDEX_CLIENT_SECRET }}
+          squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
           gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}

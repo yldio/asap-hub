@@ -14,8 +14,8 @@ on:
       AWS_SECRET_ACCESS_KEY:
         description: 'AWS Secret Access Key'
         required: true
-      SQUIDEX_CLIENT_SECRET:
-        description: 'Squidex Client Secret'
+      CRN_SQUIDEX_CLIENT_SECRET:
+        description: 'CRN Squidex Client Secret'
         required: true
 jobs:
   backup:
@@ -39,7 +39,7 @@ jobs:
         env:
           SQUIDEX_APP: ${{ steps.setup.outputs.crn-squidex-app-name }}
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CLIENT_SECRET }}
       - name: Run sync out
         run: sq sync out ./backup
       - name: Tar the files

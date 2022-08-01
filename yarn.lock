@@ -374,7 +374,7 @@ __metadata:
     "@types/jest": 26.0.24
     "@types/jsdom": ^16
     "@types/node": 14.18.22
-    core-js: ^3.12.1
+    core-js: 3.24.1
     jsdom: ^16.5.3
   languageName: unknown
   linkType: soft
@@ -556,7 +556,7 @@ __metadata:
     aws-sdk: ^2.907.0
     babel-loader: 8.2.5
     babel-preset-react-app: 10.0.1
-    core-js: ^3.12.1
+    core-js: 3.24.1
     juice: ^7.0.0
     react: ^17.0.2
     react-dom: ^17.0.2
@@ -757,7 +757,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.18.9
     "@types/jsonwebtoken": 8.5.8
-    core-js: ^3.12.1
+    core-js: 3.24.1
     date-fns: 2.29.1
     jsonwebtoken: ^8.5.1
     ramda: ^0.27.1
@@ -772,7 +772,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.18.9
     "@types/asap-hub__inline-environment": "workspace:*"
     "@types/jest": 26.0.24
-    core-js: ^3.12.1
+    core-js: 3.24.1
   languageName: unknown
   linkType: soft
 
@@ -796,7 +796,7 @@ __metadata:
     "@types/react-router-dom": ^5.1.7
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
-    core-js: ^3.12.1
+    core-js: 3.24.1
     history: ^4
     react: ^17.0.2
     react-dom: ^17.0.2
@@ -880,7 +880,7 @@ __metadata:
     "@types/testing-library__react": ^10.0.1
     "@types/testing-library__react-hooks": ^3.4.1
     "@types/uuid": 8.3.4
-    core-js: ^3.12.1
+    core-js: 3.24.1
     dom-to-playwright: 0.1.3
     emotion-normalize: ^11
     expect-playwright: ^0.8.0
@@ -994,7 +994,7 @@ __metadata:
     aws-sdk: ^2.907.0
     babel-loader: 8.2.5
     babel-preset-react-app: 10.0.1
-    core-js: ^3.12.1
+    core-js: 3.24.1
     juice: ^7.0.0
     react: ^17.0.2
     react-dom: ^17.0.2
@@ -1094,7 +1094,7 @@ __metadata:
     aws-sdk: ^2.907.0
     babel-loader: 8.2.5
     babel-preset-react-app: 10.0.1
-    core-js: ^3.12.1
+    core-js: 3.24.1
     juice: ^7.0.0
     react: ^17.0.2
     react-dom: ^17.0.2
@@ -1171,7 +1171,7 @@ __metadata:
     "@types/testing-library__react": ^10.0.1
     "@types/testing-library__react-hooks": ^3.4.1
     "@types/uuid": 8.3.4
-    core-js: ^3.12.1
+    core-js: 3.24.1
     date-fns: 2.29.1
     date-fns-tz: 1.3.6
     dom-to-playwright: 0.1.3
@@ -1231,7 +1231,7 @@ __metadata:
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
     "@types/testing-library__react-hooks": ^3.4.1
-    core-js: ^3.12.1
+    core-js: 3.24.1
     react: ^17.0.2
     react-dom: ^17.0.2
     react-test-renderer: ^17.0.2
@@ -1391,7 +1391,7 @@ __metadata:
     "@types/react": 17.0.47
     "@types/react-router-dom": ^5.1.7
     babel-preset-react-app: 10.0.1
-    core-js: ^3.12.1
+    core-js: 3.24.1
     date-fns: 2.29.1
     emotion: ^10.0.27
     history: ^4
@@ -18311,6 +18311,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"core-js@npm:3.24.1":
+  version: 3.24.1
+  resolution: "core-js@npm:3.24.1"
+  checksum: 6fb5bf0fd9e9f3e69d95616dd03332fea6758a715d2628c108b5faf17b48b0f580e90c4febb0a523c4665b0991a810de16289f86187fe79d70cc722dbd3edf0e
+  languageName: node
+  linkType: hard
+
 "core-js@npm:^2.4.0":
   version: 2.6.11
   resolution: "core-js@npm:2.6.11"
@@ -18322,13 +18329,6 @@ __metadata:
   version: 3.6.5
   resolution: "core-js@npm:3.6.5"
   checksum: b7fcf92f888bfe40f3f005e3f729e66aa49a3a9a797e8fb4d09d429c6abcd505781b2c03836858f0dc0159249d4b7a035fc763052c9c34adbc93b6f8a6a86305
-  languageName: node
-  linkType: hard
-
-"core-js@npm:^3.12.1, core-js@npm:^3.8.2":
-  version: 3.12.1
-  resolution: "core-js@npm:3.12.1"
-  checksum: c112ffaf2f20d9ba849b688c320d1724200d9a7b304125714f25b101a4ae3b55aa07a23f318f1735178077700d42382b71cebd86afa34279f266320db88c9cf6
   languageName: node
   linkType: hard
 
@@ -18350,6 +18350,13 @@ __metadata:
   version: 3.23.5
   resolution: "core-js@npm:3.23.5"
   checksum: 0277d46b151126c5d90411e8e6b0d338abe2aaa695a132c360203a3772c620f849622c4fab8bfd7a46eec6933d5fe90f32f7167779d419bda699ff7808605757
+  languageName: node
+  linkType: hard
+
+"core-js@npm:^3.8.2":
+  version: 3.12.1
+  resolution: "core-js@npm:3.12.1"
+  checksum: c112ffaf2f20d9ba849b688c320d1724200d9a7b304125714f25b101a4ae3b55aa07a23f318f1735178077700d42382b71cebd86afa34279f266320db88c9cf6
   languageName: node
   linkType: hard
 

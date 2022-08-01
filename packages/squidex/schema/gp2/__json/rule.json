@@ -1,0 +1,173 @@
+{
+  "title": "RuleModel",
+  "type": "object",
+  "required": [
+    "name",
+    "trigger",
+    "action"
+  ],
+  "properties": {
+    "isEnabled": {
+      "type": "boolean"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "trigger": {
+      "$ref": "#/definitions/RuleTriggerDto"
+    },
+    "action": {
+      "$ref": "#/definitions/DynamicRuleAction"
+    }
+  },
+  "definitions": {
+    "RuleTriggerDto": {
+      "type": "object",
+      "x-abstract": true,
+      "required": [
+        "triggerType"
+      ],
+      "properties": {
+        "triggerType": {
+          "type": "string"
+        }
+      }
+    },
+    "AssetChangedRuleTriggerDto": {
+      "type": "object",
+      "required": [
+        "triggerType"
+      ],
+      "properties": {
+        "condition": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "triggerType": {
+          "type": "string"
+        }
+      }
+    },
+    "CommentRuleTriggerDto": {
+      "type": "object",
+      "required": [
+        "triggerType"
+      ],
+      "properties": {
+        "condition": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "triggerType": {
+          "type": "string"
+        }
+      }
+    },
+    "ContentChangedRuleTriggerDto": {
+      "type": "object",
+      "required": [
+        "triggerType"
+      ],
+      "properties": {
+        "schemas": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/ContentChangedRuleTriggerSchemaDto"
+          }
+        },
+        "handleAll": {
+          "type": "boolean"
+        },
+        "triggerType": {
+          "type": "string"
+        }
+      }
+    },
+    "ContentChangedRuleTriggerSchemaDto": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaId": {
+          "type": "string"
+        },
+        "condition": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "ManualRuleTriggerDto": {
+      "type": "object",
+      "required": [
+        "triggerType"
+      ],
+      "properties": {
+        "triggerType": {
+          "type": "string"
+        }
+      }
+    },
+    "SchemaChangedRuleTriggerDto": {
+      "type": "object",
+      "required": [
+        "triggerType"
+      ],
+      "properties": {
+        "condition": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "triggerType": {
+          "type": "string"
+        }
+      }
+    },
+    "UsageRuleTriggerDto": {
+      "type": "object",
+      "required": [
+        "triggerType"
+      ],
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "numDays": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int32",
+          "maximum": 30.0,
+          "minimum": 1.0
+        },
+        "triggerType": {
+          "type": "string"
+        }
+      }
+    },
+    "DynamicRuleAction": {
+      "type": "object",
+      "required": [
+        "actionType"
+      ],
+      "properties": {
+        "actionType": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -74,7 +74,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   children,
 }) => {
   const [internal, url] = isInternalLink(href);
-  const { colors = {}, navigationLinkStyles } = useTheme();
+  const { colors, navigationLinkStyles } = useTheme();
 
   if (useHasRouter() && internal) {
     return (

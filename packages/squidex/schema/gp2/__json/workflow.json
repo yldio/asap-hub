@@ -1,16 +1,10 @@
 {
   "title": "UpdateWorkflowDto",
   "type": "object",
-  "required": [
-    "steps",
-    "initial"
-  ],
+  "required": ["steps", "initial"],
   "properties": {
     "name": {
-      "type": [
-        "null",
-        "string"
-      ]
+      "type": ["null", "string"]
     },
     "steps": {
       "type": "object",
@@ -19,10 +13,7 @@
       }
     },
     "schemaIds": {
-      "type": [
-        "array",
-        "null"
-      ],
+      "type": ["array", "null"],
       "items": {
         "type": "string"
       }
@@ -36,9 +27,7 @@
     "WorkflowStepDto": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "transitions"
-      ],
+      "required": ["transitions"],
       "properties": {
         "transitions": {
           "type": "object",
@@ -47,10 +36,7 @@
           }
         },
         "color": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "validate": {
           "type": "boolean"
@@ -59,16 +45,10 @@
           "type": "boolean"
         },
         "noUpdateExpression": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "noUpdateRoles": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -80,16 +60,10 @@
       "additionalProperties": false,
       "properties": {
         "expression": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "roles": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }

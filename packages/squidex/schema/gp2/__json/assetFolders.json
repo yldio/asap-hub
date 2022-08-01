@@ -1,9 +1,7 @@
 {
   "title": "AssetFoldersModel",
   "type": "object",
-  "required": [
-    "paths"
-  ],
+  "required": ["paths"],
   "properties": {
     "paths": {
       "type": "array",

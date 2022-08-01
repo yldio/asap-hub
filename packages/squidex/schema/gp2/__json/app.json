@@ -1,12 +1,7 @@
 {
   "title": "AppModel",
   "type": "object",
-  "required": [
-    "clients",
-    "roles",
-    "languages",
-    "contributors"
-  ],
+  "required": ["clients", "roles", "languages", "contributors"],
   "properties": {
     "clients": {
       "type": "object",
@@ -47,28 +42,21 @@
     "AppClientModel": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "role"
-      ],
+      "required": ["role"],
       "properties": {
         "role": {
           "type": "string",
           "minLength": 1
         },
         "name": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         }
       }
     },
     "AppRoleModel": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "permissions"
-      ],
+      "required": ["permissions"],
       "properties": {
         "permissions": {
           "type": "array",
@@ -77,10 +65,7 @@
           }
         },
         "properties": {
-          "type": [
-            "null",
-            "object"
-          ],
+          "type": ["null", "object"],
           "additionalProperties": {}
         }
       }
@@ -90,19 +75,13 @@
       "additionalProperties": false,
       "properties": {
         "isMaster": {
-          "type": [
-            "boolean",
-            "null"
-          ]
+          "type": ["boolean", "null"]
         },
         "isOptional": {
           "type": "boolean"
         },
         "fallback": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -112,9 +91,7 @@
     "AppContributorModel": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "role"
-      ],
+      "required": ["role"],
       "properties": {
         "role": {
           "type": "string",
@@ -127,34 +104,19 @@
       "additionalProperties": false,
       "properties": {
         "create": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "update": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "annotate": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "move": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "delete": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         }
       }
     }

@@ -19,16 +19,8 @@
     "SchemaType": {
       "type": "string",
       "description": "",
-      "x-enumNames": [
-        "Default",
-        "Singleton",
-        "Component"
-      ],
-      "enum": [
-        "Default",
-        "Singleton",
-        "Component"
-      ]
+      "x-enumNames": ["Default", "Singleton", "Component"],
+      "enum": ["Default", "Singleton", "Component"]
     },
     "SynchronizeSchemaDto": {
       "type": "object",
@@ -55,55 +47,37 @@
           ]
         },
         "fieldsInReferences": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
         },
         "fieldsInLists": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
         },
         "fields": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "$ref": "#/definitions/UpsertSchemaFieldDto"
           }
         },
         "previewUrls": {
-          "type": [
-            "null",
-            "object"
-          ],
+          "type": ["null", "object"],
           "additionalProperties": {
             "type": "string"
           }
         },
         "fieldRules": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "$ref": "#/definitions/FieldRuleDto"
           }
         },
         "category": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "isPublished": {
           "type": "boolean"
@@ -121,47 +95,29 @@
       "additionalProperties": false,
       "properties": {
         "label": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
         "hints": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 1000,
           "minLength": 0
         },
         "contentsSidebarUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "contentSidebarUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "contentEditorUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "validateOnPublish": {
           "type": "boolean"
         },
         "tags": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -173,50 +129,29 @@
       "additionalProperties": false,
       "properties": {
         "query": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "queryPre": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "create": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "update": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "delete": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "change": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         }
       }
     },
     "UpsertSchemaFieldDto": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "name",
-        "properties"
-      ],
+      "required": ["name", "properties"],
       "properties": {
         "name": {
           "type": "string",
@@ -233,19 +168,13 @@
           "type": "boolean"
         },
         "partitioning": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "properties": {
           "$ref": "#/definitions/FieldPropertiesDto"
         },
         "nested": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "$ref": "#/definitions/UpsertSchemaNestedFieldDto"
           }
@@ -255,31 +184,20 @@
     "FieldPropertiesDto": {
       "type": "object",
       "x-abstract": true,
-      "required": [
-        "fieldType"
-      ],
+      "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
         "hints": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 1000,
           "minLength": 0
         },
         "placeholder": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
@@ -293,16 +211,10 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "tags": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -314,31 +226,20 @@
     },
     "ArrayFieldPropertiesDto": {
       "type": "object",
-      "required": [
-        "fieldType"
-      ],
+      "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
         "hints": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 1000,
           "minLength": 0
         },
         "placeholder": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
@@ -352,39 +253,24 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "tags": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
         },
         "minItems": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "maxItems": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "uniqueFields": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -396,31 +282,20 @@
     },
     "AssetsFieldPropertiesDto": {
       "type": "object",
-      "required": [
-        "fieldType"
-      ],
+      "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
         "hints": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 1000,
           "minLength": 0
         },
         "placeholder": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
@@ -434,16 +309,10 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "tags": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -455,88 +324,52 @@
           "$ref": "#/definitions/LocalizedValueOfReadonlyListOfString"
         },
         "defaultValue": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
         },
         "folderId": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "minItems": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "maxItems": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "minSize": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "maxSize": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "minWidth": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "maxWidth": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "minHeight": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "maxHeight": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "aspectWidth": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "aspectHeight": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "expectedType": {
@@ -563,10 +396,7 @@
           "x-deprecatedMessage": "Use 'resolveFirst' field now"
         },
         "allowedExtensions": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -582,16 +412,8 @@
     "AssetPreviewMode": {
       "type": "string",
       "description": "",
-      "x-enumNames": [
-        "ImageAndFileName",
-        "Image",
-        "FileName"
-      ],
-      "enum": [
-        "ImageAndFileName",
-        "Image",
-        "FileName"
-      ]
+      "x-enumNames": ["ImageAndFileName", "Image", "FileName"],
+      "enum": ["ImageAndFileName", "Image", "FileName"]
     },
     "LocalizedValueOfReadonlyListOfString": {
       "type": "object",
@@ -600,46 +422,25 @@
     "AssetType": {
       "type": "string",
       "description": "",
-      "x-enumNames": [
-        "Unknown",
-        "Image",
-        "Audio",
-        "Video"
-      ],
-      "enum": [
-        "Unknown",
-        "Image",
-        "Audio",
-        "Video"
-      ]
+      "x-enumNames": ["Unknown", "Image", "Audio", "Video"],
+      "enum": ["Unknown", "Image", "Audio", "Video"]
     },
     "BooleanFieldPropertiesDto": {
       "type": "object",
-      "required": [
-        "fieldType"
-      ],
+      "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
         "hints": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 1000,
           "minLength": 0
         },
         "placeholder": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
@@ -653,16 +454,10 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "tags": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -671,10 +466,7 @@
           "$ref": "#/definitions/LocalizedValueOfNullableBoolean"
         },
         "defaultValue": {
-          "type": [
-            "boolean",
-            "null"
-          ]
+          "type": ["boolean", "null"]
         },
         "inlineEditable": {
           "type": "boolean"
@@ -694,42 +486,25 @@
     "BooleanFieldEditor": {
       "type": "string",
       "description": "",
-      "x-enumNames": [
-        "Checkbox",
-        "Toggle"
-      ],
-      "enum": [
-        "Checkbox",
-        "Toggle"
-      ]
+      "x-enumNames": ["Checkbox", "Toggle"],
+      "enum": ["Checkbox", "Toggle"]
     },
     "ComponentFieldPropertiesDto": {
       "type": "object",
-      "required": [
-        "fieldType"
-      ],
+      "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
         "hints": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 1000,
           "minLength": 0
         },
         "placeholder": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
@@ -743,25 +518,16 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "tags": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
         },
         "schemaIds": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -773,31 +539,20 @@
     },
     "ComponentsFieldPropertiesDto": {
       "type": "object",
-      "required": [
-        "fieldType"
-      ],
+      "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
         "hints": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 1000,
           "minLength": 0
         },
         "placeholder": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
@@ -811,48 +566,30 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "tags": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
         },
         "minItems": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "maxItems": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "schemaIds": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
         },
         "uniqueFields": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -864,31 +601,20 @@
     },
     "DateTimeFieldPropertiesDto": {
       "type": "object",
-      "required": [
-        "fieldType"
-      ],
+      "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
         "hints": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 1000,
           "minLength": 0
         },
         "placeholder": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
@@ -902,16 +628,10 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "tags": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -920,31 +640,19 @@
           "$ref": "#/definitions/LocalizedValueOfNullableInstant"
         },
         "defaultValue": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "format": "date-time"
         },
         "maxValue": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "format": "date-time"
         },
         "minValue": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "format": "date-time"
         },
         "format": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "editor": {
           "$ref": "#/definitions/DateTimeFieldEditor"
@@ -971,54 +679,31 @@
     "DateTimeFieldEditor": {
       "type": "string",
       "description": "",
-      "x-enumNames": [
-        "Date",
-        "DateTime"
-      ],
-      "enum": [
-        "Date",
-        "DateTime"
-      ]
+      "x-enumNames": ["Date", "DateTime"],
+      "enum": ["Date", "DateTime"]
     },
     "DateTimeCalculatedDefaultValue": {
       "type": "string",
       "description": "",
-      "x-enumNames": [
-        "Now",
-        "Today"
-      ],
-      "enum": [
-        "Now",
-        "Today"
-      ]
+      "x-enumNames": ["Now", "Today"],
+      "enum": ["Now", "Today"]
     },
     "GeolocationFieldPropertiesDto": {
       "type": "object",
-      "required": [
-        "fieldType"
-      ],
+      "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
         "hints": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 1000,
           "minLength": 0
         },
         "placeholder": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
@@ -1032,16 +717,10 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "tags": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -1057,40 +736,25 @@
     "GeolocationFieldEditor": {
       "type": "string",
       "description": "",
-      "x-enumNames": [
-        "Map"
-      ],
-      "enum": [
-        "Map"
-      ]
+      "x-enumNames": ["Map"],
+      "enum": ["Map"]
     },
     "JsonFieldPropertiesDto": {
       "type": "object",
-      "required": [
-        "fieldType"
-      ],
+      "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
         "hints": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 1000,
           "minLength": 0
         },
         "placeholder": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
@@ -1104,16 +768,10 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "tags": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -1125,31 +783,20 @@
     },
     "NumberFieldPropertiesDto": {
       "type": "object",
-      "required": [
-        "fieldType"
-      ],
+      "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
         "hints": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 1000,
           "minLength": 0
         },
         "placeholder": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
@@ -1163,16 +810,10 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "tags": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -1181,31 +822,19 @@
           "$ref": "#/definitions/LocalizedValueOfNullableDouble"
         },
         "defaultValue": {
-          "type": [
-            "null",
-            "number"
-          ],
+          "type": ["null", "number"],
           "format": "double"
         },
         "maxValue": {
-          "type": [
-            "null",
-            "number"
-          ],
+          "type": ["null", "number"],
           "format": "double"
         },
         "minValue": {
-          "type": [
-            "null",
-            "number"
-          ],
+          "type": ["null", "number"],
           "format": "double"
         },
         "allowedValues": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "number",
             "format": "double"
@@ -1232,46 +861,25 @@
     "NumberFieldEditor": {
       "type": "string",
       "description": "",
-      "x-enumNames": [
-        "Input",
-        "Radio",
-        "Dropdown",
-        "Stars"
-      ],
-      "enum": [
-        "Input",
-        "Radio",
-        "Dropdown",
-        "Stars"
-      ]
+      "x-enumNames": ["Input", "Radio", "Dropdown", "Stars"],
+      "enum": ["Input", "Radio", "Dropdown", "Stars"]
     },
     "ReferencesFieldPropertiesDto": {
       "type": "object",
-      "required": [
-        "fieldType"
-      ],
+      "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
         "hints": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 1000,
           "minLength": 0
         },
         "placeholder": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
@@ -1285,16 +893,10 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "tags": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -1303,26 +905,17 @@
           "$ref": "#/definitions/LocalizedValueOfReadonlyListOfString"
         },
         "defaultValue": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
         },
         "minItems": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "maxItems": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "allowDuplicates": {
@@ -1338,10 +931,7 @@
           "$ref": "#/definitions/ReferencesFieldEditor"
         },
         "schemaIds": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -1354,48 +944,25 @@
     "ReferencesFieldEditor": {
       "type": "string",
       "description": "",
-      "x-enumNames": [
-        "List",
-        "Dropdown",
-        "Tags",
-        "Checkboxes",
-        "Input"
-      ],
-      "enum": [
-        "List",
-        "Dropdown",
-        "Tags",
-        "Checkboxes",
-        "Input"
-      ]
+      "x-enumNames": ["List", "Dropdown", "Tags", "Checkboxes", "Input"],
+      "enum": ["List", "Dropdown", "Tags", "Checkboxes", "Input"]
     },
     "StringFieldPropertiesDto": {
       "type": "object",
-      "required": [
-        "fieldType"
-      ],
+      "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
         "hints": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 1000,
           "minLength": 0
         },
         "placeholder": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
@@ -1409,16 +976,10 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "tags": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -1427,85 +988,49 @@
           "$ref": "#/definitions/LocalizedValueOfString"
         },
         "defaultValue": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "pattern": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "patternMessage": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "folderId": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "minLength": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "maxLength": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "minCharacters": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "maxCharacters": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "minWords": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "maxWords": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "allowedValues": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
         },
         "schemaIds": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -1540,16 +1065,8 @@
     "StringContentType": {
       "type": "string",
       "description": "",
-      "x-enumNames": [
-        "Unspecified",
-        "Html",
-        "Markdown"
-      ],
-      "enum": [
-        "Unspecified",
-        "Html",
-        "Markdown"
-      ]
+      "x-enumNames": ["Unspecified", "Html", "Markdown"],
+      "enum": ["Unspecified", "Html", "Markdown"]
     },
     "StringFieldEditor": {
       "type": "string",
@@ -1581,31 +1098,20 @@
     },
     "TagsFieldPropertiesDto": {
       "type": "object",
-      "required": [
-        "fieldType"
-      ],
+      "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
         "hints": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 1000,
           "minLength": 0
         },
         "placeholder": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
@@ -1619,16 +1125,10 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "tags": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -1637,33 +1137,21 @@
           "$ref": "#/definitions/LocalizedValueOfReadonlyListOfString"
         },
         "defaultValue": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
         },
         "minItems": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "maxItems": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": ["integer", "null"],
           "format": "int32"
         },
         "allowedValues": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -1682,44 +1170,25 @@
     "TagsFieldEditor": {
       "type": "string",
       "description": "",
-      "x-enumNames": [
-        "Tags",
-        "Checkboxes",
-        "Dropdown"
-      ],
-      "enum": [
-        "Tags",
-        "Checkboxes",
-        "Dropdown"
-      ]
+      "x-enumNames": ["Tags", "Checkboxes", "Dropdown"],
+      "enum": ["Tags", "Checkboxes", "Dropdown"]
     },
     "UIFieldPropertiesDto": {
       "type": "object",
-      "required": [
-        "fieldType"
-      ],
+      "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
         "hints": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 1000,
           "minLength": 0
         },
         "placeholder": {
-          "type": [
-            "null",
-            "string"
-          ],
+          "type": ["null", "string"],
           "maxLength": 100,
           "minLength": 0
         },
@@ -1733,16 +1202,10 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "tags": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
@@ -1758,20 +1221,13 @@
     "UIFieldEditor": {
       "type": "string",
       "description": "",
-      "x-enumNames": [
-        "Separator"
-      ],
-      "enum": [
-        "Separator"
-      ]
+      "x-enumNames": ["Separator"],
+      "enum": ["Separator"]
     },
     "UpsertSchemaNestedFieldDto": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "name",
-        "properties"
-      ],
+      "required": ["name", "properties"],
       "properties": {
         "name": {
           "type": "string",
@@ -1795,10 +1251,7 @@
     "FieldRuleDto": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "action",
-        "field"
-      ],
+      "required": ["action", "field"],
       "properties": {
         "action": {
           "$ref": "#/definitions/FieldRuleAction"
@@ -1808,26 +1261,15 @@
           "minLength": 1
         },
         "condition": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         }
       }
     },
     "FieldRuleAction": {
       "type": "string",
       "description": "",
-      "x-enumNames": [
-        "Disable",
-        "Hide",
-        "Require"
-      ],
-      "enum": [
-        "Disable",
-        "Hide",
-        "Require"
-      ]
+      "x-enumNames": ["Disable", "Hide", "Require"],
+      "enum": ["Disable", "Hide", "Require"]
     }
   }
 }

@@ -1,9 +1,7 @@
 {
   "title": "ContentsModel",
   "type": "object",
-  "required": [
-    "contents"
-  ],
+  "required": ["contents"],
   "properties": {
     "contents": {
       "type": "array",
@@ -12,26 +10,17 @@
       }
     },
     "sourceApp": {
-      "type": [
-        "null",
-        "string"
-      ]
+      "type": ["null", "string"]
     },
     "sourceUrl": {
-      "type": [
-        "null",
-        "string"
-      ]
+      "type": ["null", "string"]
     }
   },
   "definitions": {
     "ContentModel": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "schema",
-        "data"
-      ],
+      "required": ["schema", "data"],
       "properties": {
         "schema": {
           "type": "string",
@@ -44,16 +33,10 @@
           }
         },
         "id": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         },
         "status": {
-          "type": [
-            "null",
-            "string"
-          ]
+          "type": ["null", "string"]
         }
       }
     }

@@ -1,5 +1,5 @@
 import { EventStatus } from '@asap-hub/model';
-import { Rest, Entity } from './common';
+import { Rest, Entity } from '../common';
 
 type GoogleEventStatus = EventStatus;
 

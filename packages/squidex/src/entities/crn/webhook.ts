@@ -1,4 +1,4 @@
-import { Entity, Rest } from './common';
+import { Entity, Rest } from '../common';
 
 export interface WebhookPayload<T> {
   type: string;

@@ -10,7 +10,7 @@ import {
   GraphqlWithTypename,
   Rest,
   RestPayload,
-} from './common';
+} from '../common';
 import { GraphqlExternalAuthor } from './external-author';
 import { GraphqlTeam } from './team';
 import { GraphqlUserAssoc } from './user';

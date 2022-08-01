@@ -5,7 +5,7 @@ import {
   UserSocialLinks,
   Role,
 } from '@asap-hub/model';
-import { Rest, Entity, Graphql, GraphqlWithTypename } from './common';
+import { Rest, Entity, Graphql, GraphqlWithTypename } from '../common';
 import { GraphqlTeam } from './team';
 
 export type UserTeamConnection<T = string> = T extends string

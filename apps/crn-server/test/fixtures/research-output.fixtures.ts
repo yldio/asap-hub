@@ -10,9 +10,9 @@ import {
 import {
   InputResearchOutput,
   ResearchOutput,
+  Rest,
   WebhookPayload,
 } from '@asap-hub/squidex';
-import { Rest } from '@asap-hub/squidex/src/entities/common';
 import {
   FetchResearchOutputQuery,
   FetchResearchOutputsQuery,

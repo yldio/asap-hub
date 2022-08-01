@@ -1,4 +1,4 @@
-import { Entity, Graphql, Rest } from './common';
+import { Entity, Graphql, Rest } from '../common';
 
 export interface ExternalAuthor {
   name: string;

@@ -1,4 +1,4 @@
-import { Rest, Entity, Graphql, GraphqlWithTypename } from './common';
+import { Rest, Entity, Graphql, GraphqlWithTypename } from '../common';
 import { GraphqlUser } from './user';
 
 export interface Team<T = string> {

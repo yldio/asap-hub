@@ -1,13 +1,11 @@
-import {
-  discoverIcon,
-  drawerQuery,
-  networkIcon,
-  pixels,
-  teamIcon,
-} from '@asap-hub/react-components';
+import { drawerQuery, pixels } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React from 'react';
+import dashboardIcon from '../icons/dashboard-icon';
+import projectIcon from '../icons/project-icon';
+import usersIcon from '../icons/users-icon';
+import workingGroupIcon from '../icons/working-group-icon';
 import NavigationLink from '../molecules/NavigationLink';
 
 const {
@@ -62,17 +60,26 @@ const MainNavigation: React.FC = () => (
   <nav css={containerStyles}>
     <ul css={listStyles}>
       <li>
-        <NavigationLink href={'/'} icon={discoverIcon}>
+        <NavigationLink href={'/'} icon={dashboardIcon}>
           Dashboard
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={network({}).$} icon={networkIcon} enabled={false}>
-          Directory
+        <NavigationLink href={network({}).$} icon={usersIcon} enabled={false}>
+          Users
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={network({}).$} icon={teamIcon} enabled={false}>
+        <NavigationLink
+          href={network({}).$}
+          icon={workingGroupIcon}
+          enabled={false}
+        >
+          Groups
+        </NavigationLink>
+      </li>
+      <li>
+        <NavigationLink href={network({}).$} icon={projectIcon} enabled={false}>
           Projects
         </NavigationLink>
       </li>

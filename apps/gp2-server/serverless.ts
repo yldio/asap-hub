@@ -90,7 +90,7 @@ const serverlessConfig: AWS = {
       SQUIDEX_CLIENT_ID: squidexClientId,
       SQUIDEX_CLIENT_SECRET: squidexClientSecret,
       LOG_LEVEL: stage === 'production' ? 'error' : 'info',
-      APP_ORIGIN: appHostname,
+      APP_ORIGIN: appUrl,
       ENVIRONMENT: '${env:SLS_STAGE}',
       CURRENT_REVISION: currentRevision
         ? '${env:CI_COMMIT_SHA}'
@@ -152,6 +152,12 @@ const serverlessConfig: AWS = {
         bucketName: '${self:service}-${self:provider.stage}-gp2-auth-frontend',
         bucketPrefix: '.auth',
         localDir: '../gp2-auth-frontend/build',
+      },
+      {
+        bucketName: '${self:service}-${self:provider.stage}-messages-static',
+        deleteRemoved: false,
+        bucketPrefix: '.messages-static',
+        localDir: '../gp2-messages/build-templates/static',
       },
     ],
   },
@@ -220,9 +226,9 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SES_REGION: `\${ssm:ses-region-${envAlias}}`,
-        EMAIL_SENDER: `\${ssm:email-invite-sender-${envAlias}}`,
-        EMAIL_BCC: `\${ssm:email-invite-bcc-${envAlias}}`,
-        EMAIL_RETURN: `\${ssm:email-invite-return-${envAlias}}`,
+        EMAIL_SENDER: `\${ssm:email-invite-sender-gp2-${envAlias}}`,
+        EMAIL_BCC: `\${ssm:email-invite-bcc-gp2-${envAlias}}`,
+        EMAIL_RETURN: `\${ssm:email-invite-return-gp2-${envAlias}}`,
         SENTRY_DSN: '${env:SENTRY_DSN_USER_INVITE}',
       },
     },
@@ -323,6 +329,24 @@ const serverlessConfig: AWS = {
           },
         },
       },
+      MessagesStaticBucket: {
+        Type: 'AWS::S3::Bucket',
+        DeletionPolicy: 'Delete',
+        Properties: {
+          BucketName: '${self:service}-${self:provider.stage}-messages-static',
+          AccessControl: 'PublicRead',
+          CorsConfiguration: {
+            CorsRules: [
+              {
+                AllowedMethods: ['GET', 'HEAD'],
+                AllowedHeaders: ['*'],
+                AllowedOrigins: ['*'],
+                MaxAge: 3000,
+              },
+            ],
+          },
+        },
+      },
       BucketPolicyFrontend: {
         Type: 'AWS::S3::BucketPolicy',
         Properties: {
@@ -365,6 +389,27 @@ const serverlessConfig: AWS = {
           },
         },
       },
+      BucketPolicyMessagesStatic: {
+        Type: 'AWS::S3::BucketPolicy',
+        Properties: {
+          Bucket: '${self:service}-${self:provider.stage}-messages-static',
+          PolicyDocument: {
+            Statement: [
+              {
+                Action: ['s3:GetObject'],
+                Effect: 'Allow',
+                Principal: '*',
+                Resource: {
+                  'Fn::Join': [
+                    '',
+                    [{ 'Fn::GetAtt': ['MessagesStaticBucket', 'Arn'] }, '/*'],
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
       CloudFrontOriginAccessIdentityFrontend: {
         Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
         Properties: {
@@ -381,9 +426,21 @@ const serverlessConfig: AWS = {
           },
         },
       },
+      CloudFrontOriginAccessIdentityMessagesStatic: {
+        Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
+        Properties: {
+          CloudFrontOriginAccessIdentityConfig: {
+            Comment: { Ref: 'MessagesStaticBucket' },
+          },
+        },
+      },
       CloudFrontDistribution: {
         Type: 'AWS::CloudFront::Distribution',
-        DependsOn: ['FrontendBucket', 'AuthFrontendBucket'],
+        DependsOn: [
+          'FrontendBucket',
+          'AuthFrontendBucket',
+          'MessagesStaticBucket',
+        ],
         Properties: {
           DistributionConfig: {
             Aliases: [appHostname],
@@ -446,6 +503,23 @@ const serverlessConfig: AWS = {
                   },
                 },
               },
+              {
+                DomainName: {
+                  'Fn::GetAtt': ['MessagesStaticBucket', 'RegionalDomainName'],
+                },
+                Id: 's3origin-messages-static',
+                S3OriginConfig: {
+                  OriginAccessIdentity: {
+                    'Fn::Join': [
+                      '/',
+                      [
+                        'origin-access-identity/cloudfront',
+                        { Ref: 'CloudFrontOriginAccessIdentityAuthFrontend' },
+                      ],
+                    ],
+                  },
+                },
+              },
             ],
             DefaultCacheBehavior: {
               AllowedMethods: ['GET', 'HEAD', 'OPTIONS'],
@@ -475,6 +549,21 @@ const serverlessConfig: AWS = {
                 },
                 PathPattern: '.auth/*',
                 TargetOriginId: 's3origin-auth-frontend',
+                ViewerProtocolPolicy: 'redirect-to-https',
+              },
+              {
+                AllowedMethods: ['GET', 'HEAD', 'OPTIONS'],
+                CachedMethods: ['GET', 'HEAD', 'OPTIONS'],
+                Compress: true,
+                DefaultTTL: 3600,
+                ForwardedValues: {
+                  Cookies: {
+                    Forward: 'none',
+                  },
+                  QueryString: false,
+                },
+                PathPattern: '.messages-static/*',
+                TargetOriginId: 's3origin-messages-static',
                 ViewerProtocolPolicy: 'redirect-to-https',
               },
             ],

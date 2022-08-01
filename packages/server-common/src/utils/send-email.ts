@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-// ignore this file for coverage since we don't have the requirements yet to test it
 import { welcome } from '@asap-hub/message-templates';
 import { AWSError } from 'aws-sdk';
 import SES, { SendTemplatedEmailResponse } from 'aws-sdk/clients/ses';
@@ -10,9 +8,15 @@ export interface Welcome {
   link: string;
 }
 
+export const crnWelcomeTemplate = 'Crn-Welcome';
+export const gp2WelcomeTemplate = 'Gp2-Welcome';
+export type SendEmailTemplate =
+  | typeof crnWelcomeTemplate
+  | typeof gp2WelcomeTemplate;
+
 export type SendEmail = (params: {
   to: string[];
-  template: 'Welcome';
+  template: SendEmailTemplate;
   values: typeof welcome;
 }) => Promise<PromiseResult<SendTemplatedEmailResponse, AWSError>>;
 

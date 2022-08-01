@@ -1,4 +1,5 @@
 import * as authTestUtils from './auth-test-utils';
+import * as mail from './mail';
 import * as pixels from './pixels';
 import * as text from './text';
 import * as utils from './utils';
@@ -70,9 +71,9 @@ export {
   TagList,
   ToastCard,
   UserMenuButton,
+  UserProfilePersonalText,
   UsersList,
   UtilityBar,
-  UserProfilePersonalText,
 } from './molecules';
 export {
   AdditionalMaterials,
@@ -186,4 +187,4 @@ export {
 } from './templates';
 export * from './theme';
 export { noop } from './utils';
-export { pixels, text, authTestUtils, utils };
+export { pixels, text, authTestUtils, utils, mail };

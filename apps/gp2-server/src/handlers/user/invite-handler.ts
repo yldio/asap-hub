@@ -1,4 +1,7 @@
-import { inviteHandlerFactory } from '@asap-hub/server-common';
+import {
+  gp2WelcomeTemplate,
+  inviteHandlerFactory,
+} from '@asap-hub/server-common';
 import { RestUser, SquidexRest } from '@asap-hub/squidex';
 import * as Sentry from '@sentry/serverless';
 import { SES } from 'aws-sdk';
@@ -33,5 +36,11 @@ const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
 });
 
 export const handler = Sentry.AWSLambda.wrapHandler(
-  inviteHandlerFactory(sendEmailFactory(ses), userRestClient, origin, logger),
+  inviteHandlerFactory(
+    sendEmailFactory(ses),
+    userRestClient,
+    origin,
+    logger,
+    gp2WelcomeTemplate,
+  ),
 );

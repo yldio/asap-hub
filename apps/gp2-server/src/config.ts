@@ -25,7 +25,8 @@ const {
 
 export const appName = SQUIDEX_APP_NAME || 'asap-local';
 export const auth0ClientId = AUTH0_CLIENT_ID || '';
-export const auth0Audience = process.env.GP2_AUTH0_AUDIENCE || '';
+export const auth0Audience =
+  process.env.GP2_AUTH0_AUDIENCE || process.env.AUTH0_AUDIENCE || '';
 export const baseUrl = SQUIDEX_BASE_URL || 'http://localhost:4004';
 export const clientId = SQUIDEX_CLIENT_ID || '';
 export const clientSecret = SQUIDEX_CLIENT_SECRET || '';
@@ -43,6 +44,6 @@ export const sentryDsn = SENTRY_DSN;
 export const sesRegion = SES_REGION || 'eu-west-1';
 export const squidexSharedSecret =
   SQUIDEX_SHARED_SECRET || 'squidex_shared_secret';
-export const userInviteSender = EMAIL_SENDER || `"ASAP Hub" <hub@asap.science>`;
-export const userInviteBcc = EMAIL_BCC || 'hub.invites.dev@asap.science';
-export const userInviteReturn = EMAIL_RETURN || 'hub.invites.dev@asap.science';
+export const userInviteSender = EMAIL_SENDER || `"GP2 Hub" <gp2@asap.science>`;
+export const userInviteBcc = EMAIL_BCC || 'gp2.invites.dev@asap.science';
+export const userInviteReturn = EMAIL_RETURN || 'gp2.invites.dev@asap.science';

@@ -189,7 +189,7 @@ const serverlessConfig: AWS = {
         bucketName: '${self:service}-${self:provider.stage}-messages-static',
         deleteRemoved: false,
         bucketPrefix: '.messages-static',
-        localDir: '../messages/build-templates/static',
+        localDir: '../crn-messages/build-templates/static',
       },
     ],
     webpack: {

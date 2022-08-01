@@ -18,7 +18,7 @@
   "dependencies": {
     "@asap-hub/flags": "workspace:*",
     "@babel/runtime-corejs3": "7.18.9",
-    "core-js": "^3.12.1"
+    "core-js": "3.24.1"
   },
   "devDependencies": {
     "@asap-hub/auth": "workspace:*",

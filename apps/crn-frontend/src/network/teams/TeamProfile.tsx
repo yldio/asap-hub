@@ -4,10 +4,7 @@ import {
   TeamProfilePage,
   NoEvents,
 } from '@asap-hub/react-components';
-import {
-  ResearchOutputPermissionsContext,
-  useFlags,
-} from '@asap-hub/react-context';
+import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { events, network, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
@@ -76,8 +73,6 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     }),
   );
 
-  const isEventsEnabled = useFlags().isEnabled('EVENTS_SEARCH');
-
   if (team) {
     return (
       <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
@@ -111,44 +106,42 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                   </Frame>
                 </Route>
               )}
-              {isEventsEnabled && (
-                <Route path={path + route({ teamId }).upcoming.template}>
-                  <Frame title="Upcoming Events">
-                    <EventsList
-                      constraint={{ teamId }}
-                      currentTime={currentTime}
-                      past={false}
-                      noEventsComponent={
-                        <NoEvents
-                          displayName={team.displayName}
-                          type="team"
-                          past={false}
-                          link={events({}).upcoming({}).$}
-                        />
-                      }
-                    />
-                  </Frame>
-                </Route>
-              )}
-              {isEventsEnabled && (
-                <Route path={path + route({ teamId }).past.template}>
-                  <Frame title="Past Events">
-                    <EventsList
-                      constraint={{ teamId }}
-                      currentTime={currentTime}
-                      past={true}
-                      noEventsComponent={
-                        <NoEvents
-                          displayName={team.displayName}
-                          type="team"
-                          past={true}
-                          link={events({}).past({}).$}
-                        />
-                      }
-                    />
-                  </Frame>
-                </Route>
-              )}
+              <Route path={path + route({ teamId }).upcoming.template}>
+                <Frame title="Upcoming Events">
+                  <EventsList
+                    constraint={{ teamId }}
+                    currentTime={currentTime}
+                    past={false}
+                    events={upcomingEventsResult}
+                    noEventsComponent={
+                      <NoEvents
+                        displayName={team.displayName}
+                        type="team"
+                        past={false}
+                        link={events({}).upcoming({}).$}
+                      />
+                    }
+                  />
+                </Frame>
+              </Route>
+              <Route path={path + route({ teamId }).past.template}>
+                <Frame title="Past Events">
+                  <EventsList
+                    events={pastEventsResult}
+                    constraint={{ teamId }}
+                    currentTime={currentTime}
+                    past={true}
+                    noEventsComponent={
+                      <NoEvents
+                        displayName={team.displayName}
+                        type="team"
+                        past={true}
+                        link={events({}).past({}).$}
+                      />
+                    }
+                  />
+                </Frame>
+              </Route>
               <Redirect to={route({ teamId }).about({}).$} />
             </TeamProfilePage>
           </Switch>

@@ -12,7 +12,7 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getEventsFromAlgolia } from '../../events/api';
+import { getEvents } from '../../events/api';
 import { eventsState } from '../../events/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import Events from '../EventsEmbedList';
@@ -25,9 +25,7 @@ afterEach(() => {
   jest.resetAllMocks();
 });
 
-const mockGetEvents = getEventsFromAlgolia as jest.MockedFunction<
-  typeof getEventsFromAlgolia
->;
+const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 const date = new Date('2021-12-28T14:00:00.000Z');
 const renderEvents = async ({
   searchQuery = '',

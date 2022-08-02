@@ -5,7 +5,7 @@ import { API_BASE_URL } from '../config';
 import createListApiUrl from '../CreateListApiUrl';
 import { GetEventListOptions } from './options';
 
-export const getEventsFromAlgolia = async (
+export const getEvents = async (
   algoliaClient: AlgoliaSearchClient,
   {
     searchQuery,
@@ -36,32 +36,6 @@ export const getSquidexUrl = (options: GetEventListOptions): URL =>
   options.constraint?.groupId
     ? createListApiUrl(`groups/${options.constraint?.groupId}/events`, options)
     : createListApiUrl('events', options);
-
-export const getEvents = async (
-  options: GetEventListOptions,
-  authorization: string,
-): Promise<ListEventResponse> => {
-  const url = getSquidexUrl(options);
-
-  if (options.before) url.searchParams.append('before', options.before);
-  else if (options.after) url.searchParams.append('after', options.after);
-
-  if (options.sort) {
-    url.searchParams.set('sortBy', options.sort.sortBy);
-    url.searchParams.set('sortOrder', options.sort.sortOrder);
-  }
-
-  const resp = await fetch(url.toString(), {
-    headers: { authorization, ...createSentryHeaders() },
-  });
-
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch event list. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-  return resp.json();
-};
 
 export const getEvent = async (
   id: string,

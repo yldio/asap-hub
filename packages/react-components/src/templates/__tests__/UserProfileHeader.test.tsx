@@ -1,7 +1,6 @@
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
 
-import { disable } from '@asap-hub/flags';
 import { render, screen } from '@testing-library/react';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { UserProfileContext } from '@asap-hub/react-context';
@@ -182,28 +181,4 @@ it('displays number of past events', () => {
     </StaticRouter>,
   );
   expect(screen.queryByText('Past Events (9)')).toBeInTheDocument();
-});
-
-it('(REGRESSION) does not display upcoming events if feature EVENTS_SEARCH is disabled', () => {
-  disable('EVENTS_SEARCH');
-  render(
-    <StaticRouter
-      location={network({}).users({}).user({ userId: '1' }).upcoming({}).$}
-    >
-      <UserProfileHeader {...boilerplateProps} upcomingEventsCount={10} />
-    </StaticRouter>,
-  );
-  expect(screen.queryByText('Upcoming Events (10)')).not.toBeInTheDocument();
-});
-
-it('(REGRESSION) does not display past events if feature EVENTS_SEARCH is disabled', () => {
-  disable('EVENTS_SEARCH');
-  render(
-    <StaticRouter
-      location={network({}).users({}).user({ userId: '1' }).upcoming({}).$}
-    >
-      <UserProfileHeader {...boilerplateProps} pastEventsCount={9} />
-    </StaticRouter>,
-  );
-  expect(screen.queryByText('Past Events (9)')).not.toBeInTheDocument();
 });

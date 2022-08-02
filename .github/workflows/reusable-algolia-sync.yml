@@ -120,7 +120,7 @@ jobs:
           squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
           squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
-          squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX__CI_CLIENT_SECRET }}
+          squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
       - name: Import Events (EVENTS | ALL)
         if: ${{ inputs.entity == 'events' || inputs.entity == 'all'}}
         uses: ./.github/actions/algolia-import-entity

@@ -11,8 +11,8 @@ import assert from 'assert';
   'SLS_STAGE',
   'GP2_SQUIDEX_APP_NAME',
   'SQUIDEX_BASE_URL',
-  'GP2_SQUIDEX_CLIENT_ID',
-  'GP2_SQUIDEX_CLIENT_SECRET',
+  'GP2_SQUIDEX_API_CLIENT_ID',
+  'GP2_SQUIDEX_API_CLIENT_SECRET',
   'GP2_SQUIDEX_SHARED_SECRET',
 ].forEach((env) => {
   assert.ok(process.env[env], `${env} not defined`);
@@ -33,8 +33,8 @@ const hostname = process.env.GP2_HOSTNAME!;
 const region = process.env.AWS_REGION as AWS['provider']['region'];
 const squidexAppName = process.env.GP2_SQUIDEX_APP_NAME!;
 const squidexBaseUrl = process.env.SQUIDEX_BASE_URL!;
-const squidexClientId = process.env.GP2_SQUIDEX_CLIENT_ID!;
-const squidexClientSecret = process.env.GP2_SQUIDEX_CLIENT_SECRET!;
+const squidexClientId = process.env.GP2_SQUIDEX_API_CLIENT_ID!;
+const squidexClientSecret = process.env.GP2_SQUIDEX_API_CLIENT_SECRET!;
 const squidexSharedSecret = process.env.GP2_SQUIDEX_SHARED_SECRET!;
 const stage = process.env.SLS_STAGE!;
 

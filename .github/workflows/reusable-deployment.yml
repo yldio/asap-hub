@@ -17,14 +17,20 @@ on:
       LIGHTSTEP_TOKEN:
         description: 'Lightstep Token'
         required: true
-      CRN_SQUIDEX_CLIENT_SECRET:
-        description: 'CRN Squidex Client Secret'
+      CRN_SQUIDEX_API_CLIENT_SECRET:
+        description: 'CRN API Squidex Client Secret'
+        required: true
+      CRN_SQUIDEX_CI_CLIENT_SECRET:
+        description: 'CRN CI Squidex Client Secret'
         required: true
       CRN_SQUIDEX_SHARED_SECRET:
         description: 'CRN Squidex Shared Secret'
         required: true
-      GP2_SQUIDEX_CLIENT_SECRET:
-        description: 'GP2 Squidex Client Secret'
+      GP2_SQUIDEX_API_CLIENT_SECRET:
+        description: 'GP2 API Squidex Client Secret'
+        required: true
+      GP2_SQUIDEX_CI_CLIENT_SECRET:
+        description: 'GP2 CI Squidex Client Secret'
         required: true
       GP2_SQUIDEX_SHARED_SECRET:
         description: 'GP2 Squidex Shared Secret'
@@ -56,7 +62,7 @@ jobs:
           app: crn-server
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          crn-squidex-client-secret: ${{ secrets.CRN_SQUIDEX_CLIENT_SECRET }}
+          crn-squidex-api-client-secret: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
           crn-squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
           environment-name: ${{ inputs.environment-name }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
@@ -85,7 +91,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           environment-name: ${{ inputs.environment-name }}
           gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
-          gp2-squidex-client-secret: ${{ secrets.GP2_SQUIDEX_CLIENT_SECRET }}
+          gp2-squidex-api-client-secret: ${{ secrets.GP2_SQUIDEX_API_CLIENT_SECRET }}
           gp2-squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
 
@@ -156,7 +162,7 @@ jobs:
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CLIENT_SECRET }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
           SQUIDEX_SHARED_SECRET: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
 
   gp2-squidex-schema:
@@ -183,8 +189,8 @@ jobs:
           GP2_API_URL: ${{ steps.setup.outputs.gp2-api-url }}
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.gp2-squidex-app-name }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.gp2-squidex-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_CLIENT_SECRET }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.gp2-squidex-ci-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
           SQUIDEX_SHARED_SECRET: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
 
   ses:

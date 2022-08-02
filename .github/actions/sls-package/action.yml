@@ -11,7 +11,7 @@ inputs:
   aws-secret-access-key:
     description: 'AWS Secret Access Key'
     required: true
-  crn-squidex-client-secret:
+  crn-squidex-api-client-secret:
     description: 'Squidex Client Secret'
     required: false
   crn-squidex-shared-secret:
@@ -20,7 +20,7 @@ inputs:
   environment-name:
     description: 'The environment name'
     required: true
-  gp2-squidex-client-secret:
+  gp2-squidex-api-client-secret:
     description: 'Squidex Client Secret'
     required: false
   gp2-squidex-shared-secret:
@@ -70,8 +70,8 @@ runs:
         CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
         CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
         CRN_SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
-        CRN_SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-client-id }}
-        CRN_SQUIDEX_CLIENT_SECRET: ${{ inputs.crn-squidex-client-secret }}
+        CRN_SQUIDEX_API_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-api-client-id }}
+        CRN_SQUIDEX_API_CLIENT_SECRET: ${{ inputs.crn-squidex-api-client-secret }}
         CRN_SQUIDEX_SHARED_SECRET: ${{ inputs.crn-squidex-shared-secret }}
         CURRENT_REVISION: ${{ github.sha }}
         GP2_AUTH0_AUDIENCE: ${{ steps.setup.outputs.gp2-auth0-audience }}
@@ -80,8 +80,8 @@ runs:
         GP2_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.gp2-aws-acm-certificate-arn }}
         GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
         GP2_SQUIDEX_APP_NAME: ${{ steps.setup.outputs.gp2-squidex-app-name }}
-        GP2_SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.gp2-squidex-client-id }}
-        GP2_SQUIDEX_CLIENT_SECRET: ${{ inputs.gp2-squidex-client-secret }}
+        GP2_SQUIDEX_API_CLIENT_ID: ${{ steps.setup.outputs.gp2-squidex-api-client-id }}
+        GP2_SQUIDEX_API_CLIENT_SECRET: ${{ inputs.gp2-squidex-api-client-secret }}
         GP2_SQUIDEX_SHARED_SECRET: ${{ inputs.gp2-squidex-shared-secret }}
         LIGHTSTEP_TOKEN: ${{ inputs.lightstep-token }}
         NODE_ENV: 'production'

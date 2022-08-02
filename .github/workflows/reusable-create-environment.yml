@@ -14,7 +14,7 @@ on:
       AWS_SECRET_ACCESS_KEY:
         description: 'AWS Secret Access Key'
         required: true
-      CRN_SQUIDEX_CLIENT_SECRET:
+      CRN_SQUIDEX_CI_CLIENT_SECRET:
         description: 'Squidex Client Secret'
         required: true
       CRN_SQUIDEX_SHARED_SECRET:
@@ -44,8 +44,8 @@ jobs:
         env:
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CLIENT_SECRET }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
       - name: Configure AWS credentials
         if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
         uses: aws-actions/configure-aws-credentials@v1
@@ -66,8 +66,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CLIENT_SECRET }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
 
   algolia-index:
     runs-on: ubuntu-latest

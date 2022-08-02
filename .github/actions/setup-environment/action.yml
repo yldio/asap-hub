@@ -119,15 +119,21 @@ outputs:
   squidex-base-url:
     description: 'Squidex Base Url'
     value: ${{ steps.vars.outputs.squidex-base-url }}
-  crn-squidex-client-id:
-    description: 'CRN Squidex Client ID'
-    value: ${{ steps.vars.outputs.crn-squidex-client-id }}
+  crn-squidex-api-client-id:
+    description: 'CRN API Squidex Client ID'
+    value: ${{ steps.vars.outputs.crn-squidex-api-client-id }}
+  crn-squidex-ci-client-id:
+    description: 'CRN CI Squidex Client ID'
+    value: ${{ steps.vars.outputs.crn-squidex-ci-client-id }}
   gp2-squidex-app-name:
     description: 'GP2 Squidex App Name'
     value: ${{ steps.vars.outputs.gp2-squidex-app-name }}
-  gp2-squidex-client-id:
-    description: 'GP2 Squidex Client ID'
-    value: ${{ steps.vars.outputs.gp2-squidex-client-id }}
+  gp2-squidex-api-client-id:
+    description: 'GP2 API Squidex Client ID'
+    value: ${{ steps.vars.outputs.gp2-squidex-api-client-id }}
+  gp2-squidex-ci-client-id:
+    description: 'GP2 CI Squidex Client ID'
+    value: ${{ steps.vars.outputs.gp2-squidex-ci-client-id }}
 runs:
   using: 'composite'
   steps:

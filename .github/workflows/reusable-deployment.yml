@@ -53,13 +53,13 @@ jobs:
         id: deploy
         uses: ./.github/actions/sls-deployment
         with:
-          environment-name: ${{ inputs.environment-name }}
           app: crn-server
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          crn-squidex-client-secret: ${{ secrets.CRN_SQUIDEX_CLIENT_SECRET }}
+          crn-squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
+          environment-name: ${{ inputs.environment-name }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-          squidex-client-secret: ${{ secrets.CRN_SQUIDEX_CLIENT_SECRET }}
-          squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
 
   gp2-sls-deploy:
     concurrency:
@@ -80,14 +80,14 @@ jobs:
         id: deploy
         uses: ./.github/actions/sls-deployment
         with:
-          environment-name: ${{ inputs.environment-name }}
           app: gp2-server
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-          squidex-client-secret: ${{ secrets.GP2_SQUIDEX_CLIENT_SECRET }}
-          squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
+          environment-name: ${{ inputs.environment-name }}
           gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
+          gp2-squidex-client-secret: ${{ secrets.GP2_SQUIDEX_CLIENT_SECRET }}
+          gp2-squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
+          lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
 
   algolia-settings:
     needs: [crn-sls-deploy]

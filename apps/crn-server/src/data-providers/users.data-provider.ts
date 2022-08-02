@@ -6,6 +6,7 @@ import {
   OrcidWorkType,
   orcidWorkType,
   Role,
+  UserCreateDataObject,
   UserDataObject,
   UserDegree,
   userDegree,
@@ -15,6 +16,7 @@ import {
   UserUpdateDataObject,
 } from '@asap-hub/model';
 import {
+  InputUser,
   parseDate,
   RestUser,
   sanitiseForSquidex,
@@ -37,26 +39,70 @@ export type CMSOrcidWork = OrcidWork;
 
 export interface UserDataProvider {
   fetchById(id: string): Promise<UserDataObject | null>;
-  update(id: string, update: UserUpdateDataObject): Promise<void>;
   fetch(options: FetchUsersOptions): Promise<ListUserDataObject>;
+  create(input: UserCreateDataObject): Promise<string>;
+  update(id: string, update: UserUpdateDataObject): Promise<void>;
 }
 export class UserSquidexDataProvider implements UserDataProvider {
-  squidexGraphlClient: SquidexGraphqlClient;
-  userSquidexRestClient: SquidexRestClient<RestUser>;
-
   constructor(
-    squidexGraphlClient: SquidexGraphqlClient,
-    userSquidexRestClient: SquidexRestClient<RestUser>,
-  ) {
-    this.squidexGraphlClient = squidexGraphlClient;
-    this.userSquidexRestClient = userSquidexRestClient;
-  }
+    private squidexGraphlClient: SquidexGraphqlClient,
+    private userSquidexRestClient: SquidexRestClient<RestUser, InputUser>,
+  ) {}
   async fetchById(id: string): Promise<UserDataObject | null> {
     const { findUsersContent } = await this.queryFetchByIdData(id);
     if (!findUsersContent) {
       return null;
     }
     return parseGraphQLUserToDataObject(findUsersContent);
+  }
+
+  async create(userCreateDataObject: UserCreateDataObject): Promise<string> {
+    const { teams, labIds, ...input } = userCreateDataObject;
+
+    const user = cleanUser(input);
+
+    const inputUser: InputUser['data'] = {
+      ...user,
+      email: {
+        iv: input.email,
+      },
+      firstName: {
+        iv: input.firstName,
+      },
+      lastName: {
+        iv: input.lastName,
+      },
+      role: {
+        iv: input.role,
+      },
+      teams: {
+        iv: teams?.map((team) => ({ id: [team.id], role: team.role })) || [],
+      },
+      labs: {
+        iv: labIds,
+      },
+      connections: {
+        iv: [],
+      },
+      onboarded: {
+        iv: input.onboarded || false,
+      },
+      avatar: {
+        iv: (input.avatar && [input.avatar]) || null,
+      },
+      degree: {
+        iv: input.degree || null,
+      },
+      questions: {
+        iv: input.questions?.map((question) => ({ question })) || null,
+      },
+      social: {
+        iv: (input.social && [{ ...input.social }]) || [],
+      },
+    };
+    const { id } = await this.userSquidexRestClient.create(inputUser);
+
+    return id;
   }
 
   async update(id: string, userToUpdate: UserUpdateDataObject): Promise<void> {
@@ -112,19 +158,21 @@ export class UserSquidexDataProvider implements UserDataProvider {
 const shouldDoFullUpdate = (userToUpdate: UserUpdateDataObject) =>
   userToUpdate.teams?.length ||
   Object.values(userToUpdate).some(
-    (value) => value.trim && value.trim() === '',
+    (value) => typeof value === 'string' && value.trim() === '',
   );
 
 const cleanUser = (userToUpdate: UserUpdateDataObject) =>
   Object.entries(userToUpdate).reduce((acc, [key, value]) => {
     const setValue = (item: unknown) => ({ ...acc, [key]: { iv: item } });
-    if (value.trim && value.trim() === '') {
+    if (typeof value === 'string' && value.trim() === '') {
       return setValue(null);
     }
 
     // map flat questions to squidex format
-    if (key === 'questions' && value.length) {
-      return setValue(value.map((question: string) => ({ question })));
+    if (key === 'questions' && Array.isArray(value) && value.length) {
+      return setValue(
+        (value as string[]).map((question: string) => ({ question })),
+      );
     }
 
     // we get an object but squidex expects an array of objects

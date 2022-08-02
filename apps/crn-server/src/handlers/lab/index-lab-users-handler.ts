@@ -4,7 +4,12 @@ import {
 } from '@asap-hub/algolia';
 import { ListResponse, UserResponse } from '@asap-hub/model';
 import { LabEvent } from '@asap-hub/server-common';
-import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
+import {
+  InputUser,
+  RestUser,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   algoliaApiKey,
@@ -72,10 +77,14 @@ const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,
 });
-const userSquidexRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
-  appName,
-  baseUrl,
-});
+const userSquidexRestClient = new SquidexRest<RestUser, InputUser>(
+  getAuthToken,
+  'users',
+  {
+    appName,
+    baseUrl,
+  },
+);
 const userDataProvider = new UserSquidexDataProvider(
   squidexGraphqlClient,
   userSquidexRestClient,

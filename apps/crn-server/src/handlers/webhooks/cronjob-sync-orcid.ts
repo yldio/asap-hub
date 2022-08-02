@@ -1,5 +1,10 @@
 import { framework as lambda } from '@asap-hub/services-common';
-import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
+import {
+  InputUser,
+  RestUser,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
 import pLimit from 'p-limit';
 import { appName, baseUrl } from '../../config';
 import Users from '../../controllers/users';
@@ -15,10 +20,14 @@ export const handler = async (): Promise<lambda.Response> => {
     appName,
     baseUrl,
   });
-  const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
-    appName,
-    baseUrl,
-  });
+  const userRestClient = new SquidexRest<RestUser, InputUser>(
+    getAuthToken,
+    'users',
+    {
+      appName,
+      baseUrl,
+    },
+  );
   const userDataProvider = new UserSquidexDataProvider(
     squidexGraphqlClient,
     userRestClient,

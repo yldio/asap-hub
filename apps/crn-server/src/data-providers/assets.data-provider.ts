@@ -1,4 +1,4 @@
-import { RestUser, SquidexRestClient } from '@asap-hub/squidex';
+import { InputUser, RestUser, SquidexRestClient } from '@asap-hub/squidex';
 import FormData from 'form-data';
 import mime from 'mime-types';
 import { appName, baseUrl } from '../config';
@@ -7,11 +7,9 @@ export interface AssetDataProvider {
   create(id: string, avatar: Buffer, contentType: string): Promise<string>;
 }
 export class AssetSquidexDataProvider implements AssetDataProvider {
-  userSquidexRestClient: SquidexRestClient<RestUser>;
-
-  constructor(userSquidexRestClient: SquidexRestClient<RestUser>) {
-    this.userSquidexRestClient = userSquidexRestClient;
-  }
+  constructor(
+    private userSquidexRestClient: SquidexRestClient<RestUser, InputUser>,
+  ) {}
 
   async create(
     id: string,

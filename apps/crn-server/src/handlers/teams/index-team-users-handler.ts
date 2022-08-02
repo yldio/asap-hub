@@ -3,7 +3,12 @@ import {
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import { ListResponse, UserResponse } from '@asap-hub/model';
-import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
+import {
+  InputUser,
+  RestUser,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   algoliaApiKey,
@@ -71,10 +76,14 @@ const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,
 });
-const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
-  appName,
-  baseUrl,
-});
+const userRestClient = new SquidexRest<RestUser, InputUser>(
+  getAuthToken,
+  'users',
+  {
+    appName,
+    baseUrl,
+  },
+);
 const userDataProvider = new UserSquidexDataProvider(
   squidexGraphqlClient,
   userRestClient,

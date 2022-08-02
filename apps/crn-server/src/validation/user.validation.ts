@@ -1,4 +1,4 @@
-import { userDegree, UserPatchRequest } from '@asap-hub/model';
+import { teamRole, userDegree, UserPatchRequest } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
 
@@ -34,8 +34,11 @@ const userPatchRequestValidationSchema: JSONSchemaType<UserPatchRequest> = {
       items: {
         type: 'object',
         additionalProperties: false,
-        properties: { id: { type: 'string' } },
-        required: ['id'],
+        properties: {
+          id: { type: 'string' },
+          role: { type: 'string', enum: teamRole },
+        },
+        required: ['id', 'role'],
       },
       nullable: true,
     },

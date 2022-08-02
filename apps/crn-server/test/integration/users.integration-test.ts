@@ -1,21 +1,31 @@
-import { RestUser, SquidexGraphql, SquidexRest, User } from '@asap-hub/squidex';
+import {
+  InputUser,
+  RestUser,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
 import Chance from 'chance';
 import { appName, baseUrl } from '../../src/config';
 import Users from '../../src/controllers/users';
 import { AssetSquidexDataProvider } from '../../src/data-providers/assets.data-provider';
 import { UserSquidexDataProvider } from '../../src/data-providers/users.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
-import { createRandomOrcid, createUser } from '../helpers/users';
+import { getUserCreateDataObject } from '../fixtures/users.fixtures';
+import { createRandomOrcid } from '../helpers/users';
 
 const chance = new Chance();
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,
 });
-const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
-  appName,
-  baseUrl,
-});
+const userRestClient = new SquidexRest<RestUser, InputUser>(
+  getAuthToken,
+  'users',
+  {
+    appName,
+    baseUrl,
+  },
+);
 const userDataProvider = new UserSquidexDataProvider(
   squidexGraphqlClient,
   userRestClient,
@@ -28,12 +38,16 @@ describe('Users', () => {
     const firstName = chance.guid();
     const orcid = createRandomOrcid();
 
-    await createUser({ firstName, orcid } as Partial<User>);
-    const result = await users.fetch({ search: firstName });
+    const userCreateDataObject = getUserCreateDataObject();
+    userCreateDataObject.teams = [];
+    userCreateDataObject.labIds = [];
+    userCreateDataObject.email = chance.email();
+    delete userCreateDataObject.avatar;
+    userCreateDataObject.firstName = firstName;
+    userCreateDataObject.orcid = orcid;
+    const userId = await userDataProvider.create(userCreateDataObject);
+    const result = await users.fetchById(userId);
 
-    expect(result).toEqual({
-      total: 1,
-      items: [expect.objectContaining({ firstName, orcid })],
-    });
+    expect(result).toEqual(expect.objectContaining({ firstName, orcid }));
   });
 });

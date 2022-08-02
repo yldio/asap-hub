@@ -149,10 +149,10 @@ export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
   algoliaApiKey: string;
 };
 
-export interface UserUpdateDataObject {
+export type UserCreateDataObject = {
   contactEmail?: string;
-  firstName?: string;
-  lastName?: string;
+  firstName: string;
+  lastName: string;
   biography?: string;
   jobTitle?: string;
   institution?: string;
@@ -165,17 +165,21 @@ export interface UserUpdateDataObject {
   reachOut?: string;
   researchInterests?: string;
   questions?: string[];
-  teams?: Pick<UserTeam, 'id'>[];
+  teams?: Pick<UserTeam, 'id' | 'role'>[];
   social?: Omit<UserSocialLinks, 'orcid'>;
   onboarded?: boolean;
   avatar?: string;
   connections?: Connection[];
-  email?: string;
+  email: string;
   orcid?: string;
   orcidLastModifiedDate?: string;
   orcidLastSyncDate?: string;
   orcidWorks?: OrcidWork[];
-}
+  labIds: string[];
+  role: Role;
+};
+
+export type UserUpdateDataObject = Partial<UserCreateDataObject>;
 
 export type UserUpdateRequest = UserUpdateDataObject;
 export type UserPatchRequest = Omit<
@@ -184,9 +188,11 @@ export type UserPatchRequest = Omit<
   | 'connections'
   | 'orcidLastModifiedDate'
   | 'email'
+  | 'labIds'
   | 'orcid'
   | 'orcidLastSyncDate'
   | 'orcidWorks'
+  | 'role'
 >;
 
 export interface UserAvatarPostRequest {

@@ -112,19 +112,21 @@ export class UserSquidexDataProvider implements UserDataProvider {
 const shouldDoFullUpdate = (userToUpdate: UserUpdateDataObject) =>
   userToUpdate.teams?.length ||
   Object.values(userToUpdate).some(
-    (value) => value.trim && value.trim() === '',
+    (value) => typeof value === 'string' && value.trim() === '',
   );
 
 const cleanUser = (userToUpdate: UserUpdateDataObject) =>
   Object.entries(userToUpdate).reduce((acc, [key, value]) => {
     const setValue = (item: unknown) => ({ ...acc, [key]: { iv: item } });
-    if (value.trim && value.trim() === '') {
+    if (typeof value === 'string' && value.trim() === '') {
       return setValue(null);
     }
 
     // map flat questions to squidex format
-    if (key === 'questions' && value.length) {
-      return setValue(value.map((question: string) => ({ question })));
+    if (key === 'questions' && Array.isArray(value) && value.length) {
+      return setValue(
+        (value as string[]).map((question: string) => ({ question })),
+      );
     }
 
     // we get an object but squidex expects an array of objects

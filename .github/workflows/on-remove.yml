@@ -30,7 +30,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-          squidex-client-secret: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
+          squidex-api-client-secret: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
           gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
 
@@ -84,7 +84,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-          squidex-client-secret: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
+          squidex-api-client-secret: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
           gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
 

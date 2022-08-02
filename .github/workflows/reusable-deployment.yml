@@ -161,7 +161,7 @@ jobs:
           CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-client-id }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
           SQUIDEX_SHARED_SECRET: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
 

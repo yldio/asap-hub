@@ -59,6 +59,7 @@ export {
   LabeledTextArea,
   LabeledTextField,
   LabeledTypeahead,
+  LinkHeadline,
   Loading,
   MembersList,
   MenuButton,

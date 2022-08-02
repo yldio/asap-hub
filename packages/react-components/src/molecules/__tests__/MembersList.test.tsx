@@ -84,12 +84,13 @@ it('renders a team link if a teamList is provided for thirdLine', async () => {
   );
 });
 
-it('accepts undefined value for first, second and third line', async () => {
+it('accepts undefined value for second and third line', async () => {
   const { getAllByRole } = render(
     <MembersList
       members={[
         {
           ...createListUserResponse(1).items[0],
+          firstLine: 'example',
         },
       ]}
     />,

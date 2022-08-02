@@ -39,19 +39,21 @@ const renderDiscoverTutorials = async (user: Partial<User>) => {
   return result;
 };
 
-mockGetDiscover.mockResolvedValue({
-  ...createDiscoverResponse(),
-  training: [
-    createNewsResponse('First One', 'Training'),
-    createNewsResponse('Second One', 'Training'),
-  ],
-});
-
 it('renders tutorial page with two items', async () => {
-  await renderDiscoverTutorials({});
+  mockGetDiscover.mockResolvedValue({
+    ...createDiscoverResponse(),
+    training: [
+      createNewsResponse('First One', 'Training'),
+      createNewsResponse('Second One', 'Training'),
+    ],
+  });
 
-  expect(screen.getByText(/First One/, { selector: 'h4' })).toBeVisible();
-  expect(screen.getByText(/Second One/, { selector: 'h4' })).toBeVisible();
+  await renderDiscoverTutorials({});
+  expect(
+    screen
+      .getAllByRole('heading', { level: 4 })
+      .map(({ textContent }) => textContent),
+  ).toEqual(['Training First One title', 'Training Second One title']);
 });
 
 it('renders the correct title and subtitle', async () => {

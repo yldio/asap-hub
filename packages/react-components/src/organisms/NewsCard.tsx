@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { NewsResponse, NewsType } from '@asap-hub/model';
 import { news } from '@asap-hub/routing';
 
-import { Card, Paragraph, Headline4, Pill, Anchor } from '../atoms';
+import { Card, Paragraph, Headline4, Pill } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../date';
 import {
@@ -10,7 +10,7 @@ import {
   newsEventPlaceholderIcon,
   trainingPlaceholderIcon,
 } from '../icons';
-import { ExternalLink } from '../molecules';
+import { ExternalLink, LinkHeadline } from '../molecules';
 import { lead } from '..';
 import { captionStyles } from '../text';
 
@@ -84,9 +84,9 @@ const NewsCard: React.FC<NewsCardProps> = ({
   noPill = false,
 }) => {
   const titleComponent = text ? (
-    <Anchor href={news({}).article({ articleId: id }).$}>
-      <Headline4>{title}</Headline4>
-    </Anchor>
+    <LinkHeadline href={news({}).article({ articleId: id }).$} level={4}>
+      {title}
+    </LinkHeadline>
   ) : (
     <Headline4>{title}</Headline4>
   );

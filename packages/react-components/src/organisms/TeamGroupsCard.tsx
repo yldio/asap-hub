@@ -3,15 +3,8 @@ import { css } from '@emotion/react';
 import { GroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
-import {
-  Card,
-  Paragraph,
-  Headline3,
-  Button,
-  Divider,
-  Headline4,
-  Anchor,
-} from '../atoms';
+import { Card, Paragraph, Headline3, Button, Divider } from '../atoms';
+import { LinkHeadline } from '../molecules';
 import {
   perRem,
   mobileScreen,
@@ -93,9 +86,12 @@ const TeamGroupsCard: React.FC<TeamGroupsCardProps> = ({ groups }) => {
           .slice(0, showMore ? groups.length : LESS_GROUP_LIMIT)
           .map(({ id, teams, description, name }, index) => (
             <li css={listElementStyles} key={`team-group-${index}`}>
-              <Anchor href={network({}).groups({}).group({ groupId: id }).$}>
-                <Headline4>{name}</Headline4>
-              </Anchor>
+              <LinkHeadline
+                href={network({}).groups({}).group({ groupId: id }).$}
+                level={4}
+              >
+                {name}
+              </LinkHeadline>
               <Paragraph accent="lead">{description}</Paragraph>
               <span css={teamsStyles}>
                 <span css={iconStyles}>{teamIcon} </span>

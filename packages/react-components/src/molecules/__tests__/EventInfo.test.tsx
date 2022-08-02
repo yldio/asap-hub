@@ -226,15 +226,13 @@ it('shows the event time', () => {
 });
 
 it('only links to events that are not cancelled', () => {
-  const { rerender } = render(<EventInfo {...props} status="Tentative" />);
-  expect(
-    screen.getByRole('heading', { level: 3 }).closest('a'),
-  ).toHaveAttribute('href');
+  const { rerender } = render(
+    <EventInfo {...props} title="My Event" status="Tentative" />,
+  );
+  expect(screen.getByText(/My Event/).closest('a')).toHaveAttribute('href');
 
-  rerender(<EventInfo {...props} status="Cancelled" />);
-  expect(
-    screen.getByRole('heading', { level: 3 }).closest('a'),
-  ).not.toHaveAttribute('href');
+  rerender(<EventInfo {...props} title="My Event" status="Cancelled" />);
+  expect(screen.getByText(/My Event/).closest('a')).not.toHaveAttribute('href');
 });
 
 it('displays the tags', () => {

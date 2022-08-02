@@ -17,12 +17,18 @@ inputs:
   lightstep-token:
     description: 'Lightstep Token'
     required: true
-  squidex-client-secret:
+  crn-squidex-client-secret:
     description: 'Squidex Client Secret'
-    required: true
-  squidex-shared-secret:
+    required: false
+  crn-squidex-shared-secret:
     description: 'Squidex Shared Secret'
-    required: true
+    required: false
+  gp2-squidex-client-secret:
+    description: 'Squidex Client Secret'
+    required: false
+  gp2-squidex-shared-secret:
+    description: 'Squidex Shared Secret'
+    required: false
   gp2-auth0-shared-secret:
     description: 'GP2 Auth0 Shared Secret'
     required: false
@@ -75,11 +81,15 @@ runs:
         SENTRY_DSN_CALENDAR: ${{ steps.setup.outputs.sentry-dsn-calendar }}
         SENTRY_DSN_USER_INVITE: ${{ steps.setup.outputs.sentry-dsn-user-invite }}
         SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
-        SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
+        CRN_SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
         SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-        SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
-        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-client-secret }}
-        SQUIDEX_SHARED_SECRET: ${{ inputs.squidex-shared-secret }}
+        CRN_SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-client-id }}
+        CRN_SQUIDEX_CLIENT_SECRET: ${{ inputs.crn-squidex-client-secret }}
+        CRN_SQUIDEX_SHARED_SECRET: ${{ inputs.crn-squidex-shared-secret }}
+        GP2_SQUIDEX_APP_NAME: ${{ steps.setup.outputs.gp2-squidex-app-name }}
+        GP2_SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.gp2-squidex-client-id }}
+        GP2_SQUIDEX_CLIENT_SECRET: ${{ inputs.gp2-squidex-client-secret }}
+        GP2_SQUIDEX_SHARED_SECRET: ${{ inputs.gp2-squidex-shared-secret }}
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ inputs.app }}-sls-package-${{ inputs.environment-name }}

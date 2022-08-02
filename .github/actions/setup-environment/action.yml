@@ -157,6 +157,7 @@ runs:
           echo "::set-output name=pr-number::$PR_NUMBER"
           echo "::set-output name=sls-stage::$PR_NUMBER"
           echo "::set-output name=crn-squidex-app-name::$PR_NUMBER"
+          echo "::set-output name=gp2-squidex-app-name::gp2-$PR_NUMBER"
         elif [ "$ENVIRONMENT_NAME" = 'Development' ]; then
           echo "::set-output name=app-release::${{ github.run_id }}-dev"
         elif [ "$ENVIRONMENT_NAME" = 'Production' ]; then

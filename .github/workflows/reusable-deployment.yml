@@ -159,6 +159,34 @@ jobs:
           SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CLIENT_SECRET }}
           SQUIDEX_SHARED_SECRET: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
 
+  gp2-squidex-schema:
+    needs: [gp2-sls-deploy]
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:0f5eee65db0ad426fd10ff52113aeeb0ab5d1ec1
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Update Squidex schema
+        run: |
+          echo $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_BASE_URL
+        env:
+          GP2_API_URL: ${{ steps.setup.outputs.gp2-api-url }}
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.gp2-squidex-app-name }}
+          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.gp2-squidex-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_CLIENT_SECRET }}
+          SQUIDEX_SHARED_SECRET: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
+
   ses:
     needs: [crn-sls-deploy]
     runs-on: ubuntu-latest

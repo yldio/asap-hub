@@ -9,11 +9,11 @@ import assert from 'assert';
   'GP2_AWS_ACM_CERTIFICATE_ARN',
   'GP2_HOSTNAME',
   'SLS_STAGE',
-  'SQUIDEX_APP_NAME',
+  'GP2_SQUIDEX_APP_NAME',
   'SQUIDEX_BASE_URL',
-  'SQUIDEX_CLIENT_ID',
-  'SQUIDEX_CLIENT_SECRET',
-  'SQUIDEX_SHARED_SECRET',
+  'GP2_SQUIDEX_CLIENT_ID',
+  'GP2_SQUIDEX_CLIENT_SECRET',
+  'GP2_SQUIDEX_SHARED_SECRET',
 ].forEach((env) => {
   assert.ok(process.env[env], `${env} not defined`);
 });
@@ -31,11 +31,11 @@ const auth0SharedSecret = process.env.GP2_AUTH0_SHARED_SECRET!;
 const gp2AwsAcmCertificateArn = process.env.GP2_AWS_ACM_CERTIFICATE_ARN!;
 const hostname = process.env.GP2_HOSTNAME!;
 const region = process.env.AWS_REGION as AWS['provider']['region'];
-const squidexAppName = process.env.SQUIDEX_APP_NAME!;
+const squidexAppName = process.env.GP2_SQUIDEX_APP_NAME!;
 const squidexBaseUrl = process.env.SQUIDEX_BASE_URL!;
-const squidexClientId = process.env.SQUIDEX_CLIENT_ID!;
-const squidexClientSecret = process.env.SQUIDEX_CLIENT_SECRET!;
-const squidexSharedSecret = process.env.SQUIDEX_SHARED_SECRET!;
+const squidexClientId = process.env.GP2_SQUIDEX_CLIENT_ID!;
+const squidexClientSecret = process.env.GP2_SQUIDEX_CLIENT_SECRET!;
+const squidexSharedSecret = process.env.GP2_SQUIDEX_SHARED_SECRET!;
 const stage = process.env.SLS_STAGE!;
 
 const envAlias = process.env.SLS_STAGE === 'production' ? 'prod' : 'dev';

@@ -1,10 +1,10 @@
-import { css, SerializedStyles } from '@emotion/react';
 import { ReactNode } from 'react';
+import { css, SerializedStyles } from '@emotion/react';
 
-import { Anchor } from '.';
 import { getButtonChildren, getButtonStyles } from '../button';
 import { fern, paper, pine } from '../colors';
 import { defaultThemeVariant, ThemeVariant } from '../theme';
+import { Anchor } from '.';
 
 export const styles = css({
   textDecoration: 'underline solid transparent',
@@ -17,6 +17,7 @@ export const styles = css({
     textDecoration: 'none',
   },
 });
+
 export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
   light: css({
     color: fern.rgb,
@@ -47,17 +48,23 @@ const iconThemeStyles: Record<ThemeVariant, SerializedStyles> = {
   }),
 };
 
+const elipsedTextStyle = css({
+  display: 'block',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
+});
+
 interface NormalLinkProps {
   readonly theme?: ThemeVariant;
-
   readonly buttonStyle?: undefined;
-
   readonly primary?: undefined;
   readonly small?: undefined;
   readonly enabled?: undefined;
   readonly margin?: undefined;
   readonly stretch?: undefined;
 }
+
 interface ButtonStyleLinkProps {
   readonly theme?: undefined;
   readonly buttonStyle: true;
@@ -67,20 +74,21 @@ interface ButtonStyleLinkProps {
   readonly margin?: boolean;
   readonly stretch?: boolean;
 }
+
 type LinkProps = {
   readonly children: ReactNode;
   readonly href: string | undefined;
   readonly label?: string;
   readonly applyIconTheme?: boolean;
   readonly stretch?: boolean;
+  readonly elipsedText?: boolean;
 } & (NormalLinkProps | ButtonStyleLinkProps);
+
 const Link: React.FC<LinkProps> = ({
   children,
   href,
   label,
-
   theme = defaultThemeVariant,
-
   buttonStyle = false,
   primary = false,
   small = false,
@@ -88,13 +96,26 @@ const Link: React.FC<LinkProps> = ({
   applyIconTheme = false,
   margin = true,
   stretch = true,
+  elipsedText = false,
 }) => {
+  const linkChildren = buttonStyle ? getButtonChildren(children) : children;
   const linkStyles = buttonStyle
     ? [getButtonStyles({ primary, small, enabled, children, margin, stretch })]
-    : [styles, themeStyles[theme], applyIconTheme && iconThemeStyles[theme]];
-  const linkChildren = buttonStyle ? getButtonChildren(children) : children;
+    : [
+        styles,
+        themeStyles[theme],
+        applyIconTheme && iconThemeStyles[theme],
+        elipsedText && elipsedTextStyle,
+      ];
+
   return (
-    <Anchor href={href} enabled={enabled} aria-label={label} css={linkStyles}>
+    <Anchor
+      href={href}
+      title={elipsedText ? (linkChildren as string) : undefined}
+      enabled={enabled}
+      aria-label={label}
+      css={linkStyles}
+    >
       {linkChildren}
     </Anchor>
   );

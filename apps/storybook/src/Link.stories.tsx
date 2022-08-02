@@ -25,6 +25,21 @@ export const Normal: Story<{ theme: ThemeVariant }> = (_, { theme }) => (
   </Paragraph>
 );
 
+export const ElipsedText: Story<{ theme: ThemeVariant }> = (_, { theme }) => (
+  <Paragraph>
+    <Link
+      elipsedText
+      href={text('Destination', 'https://www.parkinsonsroadmap.org/')}
+      theme={theme}
+    >
+      {text(
+        'Text',
+        'A Super Long Title Here to Test The Text Wrapping For Links, The Text Should be Trucated and The Tooltip Must Appear Showing This Text Completely',
+      )}
+    </Link>
+  </Paragraph>
+);
+
 export const ButtonStyledText = () => (
   <Link
     href={text('Destination', 'https://www.parkinsonsroadmap.org/')}
@@ -35,6 +50,7 @@ export const ButtonStyledText = () => (
     {text('Text', 'Text')}
   </Link>
 );
+
 export const ButtonStyledIcon = () => (
   <Link
     href={text('Destination', 'https://www.parkinsonsroadmap.org/')}
@@ -45,6 +61,7 @@ export const ButtonStyledIcon = () => (
     {orcidIcon}
   </Link>
 );
+
 export const ButtonStyledIconAndText = () => (
   <Link
     href={text('Destination', 'https://www.parkinsonsroadmap.org/')}

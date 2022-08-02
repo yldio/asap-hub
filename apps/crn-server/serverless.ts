@@ -27,6 +27,11 @@ const {
   SENTRY_DSN_API,
   CRN_AUTH0_AUDIENCE,
   CRN_AUTH0_CLIENT_ID,
+  CRN_SQUIDEX_APP_NAME,
+  SQUIDEX_BASE_URL,
+  CRN_SQUIDEX_API_CLIENT_ID,
+  CRN_SQUIDEX_API_CLIENT_SECRET,
+  CRN_SQUIDEX_SHARED_SECRET,
 } = process.env;
 
 const region = process.env.AWS_REGION as AWS['provider']['region'];
@@ -40,11 +45,11 @@ const envRef =
 const sentryDsnApi = SENTRY_DSN_API!;
 const auth0ClientId = CRN_AUTH0_CLIENT_ID!;
 const auth0Audience = CRN_AUTH0_AUDIENCE!;
-const squidexAppName = process.env.CRN_SQUIDEX_APP_NAME!;
-const squidexBaseUrl = process.env.SQUIDEX_BASE_URL!;
-const squidexClientId = process.env.CRN_SQUIDEX_API_CLIENT_ID!;
-const squidexClientSecret = process.env.CRN_SQUIDEX_API_CLIENT_SECRET!;
-const squidexSharedSecret = process.env.CRN_SQUIDEX_SHARED_SECRET!;
+const squidexAppName = CRN_SQUIDEX_APP_NAME!;
+const squidexBaseUrl = SQUIDEX_BASE_URL!;
+const squidexClientId = CRN_SQUIDEX_API_CLIENT_ID!;
+const squidexClientSecret = CRN_SQUIDEX_API_CLIENT_SECRET!;
+const squidexSharedSecret = CRN_SQUIDEX_SHARED_SECRET!;
 
 const algoliaIndex = ALGOLIA_INDEX
   ? '${env:ALGOLIA_INDEX}'

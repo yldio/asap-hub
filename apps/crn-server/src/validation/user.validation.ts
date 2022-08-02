@@ -54,6 +54,14 @@ const userPatchRequestValidationSchema: JSONSchemaType<UserPatchRequest> = {
       },
       nullable: true,
     },
+    preferences: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        dismissedGetStartedDialog: { type: 'boolean', nullable: true },
+      },
+      nullable: true
+    }
   },
   additionalProperties: false,
 };

@@ -98,6 +98,10 @@ export interface UserTeam {
   role: TeamRole;
 }
 
+export interface UserPreferences {
+  dismissedGetStartedDialog?: boolean
+}
+
 export interface UserSocialLinks {
   website1?: string;
   website2?: string;
@@ -130,6 +134,7 @@ export interface UserDataObject extends Invitee {
   orcidLastModifiedDate?: string;
   orcidLastSyncDate?: string;
   orcidWorks?: OrcidWork[];
+  preferences?: UserPreferences;
   reachOut?: string;
   responsibilities?: string;
   researchInterests?: string;

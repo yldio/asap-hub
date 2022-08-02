@@ -192,5 +192,27 @@ describe('isUserOnboardable validation', () => {
         isOnboardable: true,
       });
     });
+    it('Should pass with UserPreferences missing from user profile', async () => {
+      const userWithoutPreferences: UserResponse = {
+        ...getUserResponse(),
+        preferences: null
+      };
+
+      expect(isUserOnboardable(userWithoutPreferences)).toEqual({
+        isOnboardable: true
+      });
+    });
+    it('Should pass with UserPreferences defined on user profile', async () => {
+      const userWithPreferences: UserResponse = {
+        ...getUserResponse(),
+        preferences: {
+          dismissedGetStartedDialog: false
+        }
+      };
+
+      expect(isUserOnboardable(userWithPreferences)).toEqual({
+        isOnboardable: true
+      });
+    });
   });
 });

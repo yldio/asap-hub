@@ -422,6 +422,7 @@ describe('/users/ route', () => {
         'researchInterests',
         'responsibilities',
         'reachOut',
+        'preferences',
       ])(
         'Should be able to provide null for the %s parameter ',
         async (parameter) => {
@@ -518,6 +519,36 @@ describe('/users/ route', () => {
 
         expect(response.status).toBe(200);
       });
+
+      test('Should be able to provide the right object for the preferences parameter (true)', async () => {
+        const response = await supertest(appWithMockedAuth)
+          .patch(`/users/${userId}`)
+          .send({
+            preferences: { dismissedGetStartedDialog: true }
+          });
+
+        expect(response.status).toBe(200);
+      })
+
+      test('Should be able to provide the right object for the preferences parameter (false)', async () => {
+        const response = await supertest(appWithMockedAuth)
+          .patch(`/users/${userId}`)
+          .send({
+            preferences: { dismissedGetStartedDialog: false }
+          });
+
+        expect(response.status).toBe(200);
+      })
+
+      test('Should not be able to provide arbitrary preferences', async () => {
+        const response = await supertest(appWithMockedAuth)
+          .patch(`/users/${userId}`)
+          .send({
+            preferences: { favoriteFood: 'pizza' }
+          });
+
+        expect(response.status).toBe(400);
+      })
 
       test('Should be able to provide a string of 250 characters for the reachOut', async () => {
         const response = await supertest(appWithMockedAuth)

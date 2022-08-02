@@ -2,6 +2,7 @@ import {
   TeamRole,
   OrcidWork,
   UserDegree,
+  UserPreferences,
   UserSocialLinks,
   Role,
 } from '@asap-hub/model';
@@ -57,6 +58,7 @@ export interface User<
   labs: UserLabConnection[];
   expertiseAndResourceTags?: string[];
   expertiseAndResourceDescription?: string;
+  preferences?: UserPreferences;
 }
 
 export interface RestUser extends Entity, Rest<User> {}

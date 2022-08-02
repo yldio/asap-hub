@@ -139,6 +139,7 @@ export default class Users implements UserController {
     }
     return this.update(user.id, updateToUser);
   }
+
   private async queryByCode(code: string) {
     return this.userDataProvider.fetch({
       filter: { code, hidden: false, onboarded: false },

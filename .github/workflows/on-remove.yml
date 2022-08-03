@@ -30,8 +30,8 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-          squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+          squidex-api-client-secret: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
+          squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
           gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
 
   crn-squidex-remove:
@@ -59,10 +59,10 @@ jobs:
       - name: Delete PR Squidex App
         run: python .github/scripts/squidex/delete-app.py
         env:
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
 
   gp2-sls-remove:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
@@ -84,8 +84,8 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-          squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+          squidex-api-client-secret: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
+          squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
           gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
 
   algolia-index:

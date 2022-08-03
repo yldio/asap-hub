@@ -17,7 +17,7 @@ inputs:
   lightstep-token:
     description: 'Lightstep Token'
     required: true
-  squidex-client-secret:
+  squidex-api-client-secret:
     description: 'Squidex Client Secret'
     required: true
   squidex-shared-secret:
@@ -68,8 +68,8 @@ runs:
         SENTRY_DSN_CALENDAR: ${{ steps.setup.outputs.sentry-dsn-calendar }}
         SENTRY_DSN_USER_INVITE: ${{ steps.setup.outputs.sentry-dsn-user-invite }}
         SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
-        SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
+        SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
         SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-        SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
-        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-client-secret }}
+        SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-api-client-id }}
+        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-api-client-secret }}
         SQUIDEX_SHARED_SECRET: ${{ inputs.squidex-shared-secret }}

@@ -1,5 +1,5 @@
 import { GoogleLegacyCalendarColor } from '@asap-hub/model';
-import { Rest, Entity, Graphql, RestPayload } from './common';
+import { Entity, Graphql, Rest, RestPayload } from '../common';
 import { GraphqlGroup } from './group';
 
 export interface Calendar {

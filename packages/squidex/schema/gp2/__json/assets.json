@@ -1,0 +1,56 @@
+{
+  "title": "AssetsModel",
+  "type": "object",
+  "required": ["assets"],
+  "properties": {
+    "assets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AssetModel"
+      }
+    }
+  },
+  "definitions": {
+    "AssetModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "mimeType", "fileName"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mimeType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fileName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fileHash": {
+          "type": ["null", "string"]
+        },
+        "folderPath": {
+          "type": ["null", "string"]
+        },
+        "slug": {
+          "type": ["null", "string"]
+        },
+        "tags": {
+          "type": ["array", "null"],
+          "items": {
+            "type": "string"
+          }
+        },
+        "metadata": {
+          "type": ["null", "object"],
+          "additionalProperties": {}
+        },
+        "isProtected": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

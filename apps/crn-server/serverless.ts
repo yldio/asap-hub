@@ -27,6 +27,11 @@ const {
   SENTRY_DSN_API,
   CRN_AUTH0_AUDIENCE,
   CRN_AUTH0_CLIENT_ID,
+  CRN_SQUIDEX_APP_NAME,
+  SQUIDEX_BASE_URL,
+  CRN_SQUIDEX_API_CLIENT_ID,
+  CRN_SQUIDEX_API_CLIENT_SECRET,
+  CRN_SQUIDEX_SHARED_SECRET,
 } = process.env;
 
 const region = process.env.AWS_REGION as AWS['provider']['region'];
@@ -40,6 +45,11 @@ const envRef =
 const sentryDsnApi = SENTRY_DSN_API!;
 const auth0ClientId = CRN_AUTH0_CLIENT_ID!;
 const auth0Audience = CRN_AUTH0_AUDIENCE!;
+const squidexAppName = CRN_SQUIDEX_APP_NAME!;
+const squidexBaseUrl = SQUIDEX_BASE_URL!;
+const squidexClientId = CRN_SQUIDEX_API_CLIENT_ID!;
+const squidexClientSecret = CRN_SQUIDEX_API_CLIENT_SECRET!;
+const squidexSharedSecret = CRN_SQUIDEX_SHARED_SECRET!;
 
 const algoliaIndex = ALGOLIA_INDEX
   ? '${env:ALGOLIA_INDEX}'
@@ -95,11 +105,11 @@ const serverlessConfig: AWS = {
       NODE_ENV: '${env:NODE_ENV}',
       ENVIRONMENT: '${env:SLS_STAGE}',
       LIGHTSTEP_TOKEN: '${env:LIGHTSTEP_TOKEN}',
-      SQUIDEX_APP_NAME: '${env:SQUIDEX_APP_NAME}',
-      SQUIDEX_BASE_URL: '${env:SQUIDEX_BASE_URL}',
-      SQUIDEX_CLIENT_ID: '${env:SQUIDEX_CLIENT_ID}',
-      SQUIDEX_CLIENT_SECRET: '${env:SQUIDEX_CLIENT_SECRET}',
-      SQUIDEX_SHARED_SECRET: '${env:SQUIDEX_SHARED_SECRET}',
+      SQUIDEX_APP_NAME: squidexAppName,
+      SQUIDEX_BASE_URL: squidexBaseUrl,
+      SQUIDEX_CLIENT_ID: squidexClientId,
+      SQUIDEX_CLIENT_SECRET: squidexClientSecret,
+      SQUIDEX_SHARED_SECRET: squidexSharedSecret,
       REGION: '${env:AWS_REGION}',
       CRN_API_URL: '${env:CRN_API_URL}',
       LOG_LEVEL: SLS_STAGE === 'production' ? 'error' : 'info',

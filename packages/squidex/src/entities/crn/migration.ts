@@ -1,4 +1,4 @@
-import { Rest, Entity } from './common';
+import { Entity, Rest } from '../common';
 
 export interface Migration {
   name: string;

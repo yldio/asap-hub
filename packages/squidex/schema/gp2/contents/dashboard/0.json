@@ -1,0 +1,13 @@
+{
+  "$schema": "./../__json/contents.json",
+  "contents": [
+    {
+      "schema": "dashboard",
+      "data": {},
+      "id": "bcfbf383-55b6-4f49-91c9-fc856715a13f",
+      "status": "Published"
+    }
+  ],
+  "sourceApp": "gp2-hub-dev",
+  "sourceUrl": "https://cloud.squidex.io/"
+}

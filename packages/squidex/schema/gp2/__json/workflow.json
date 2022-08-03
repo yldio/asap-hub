@@ -1,0 +1,74 @@
+{
+  "title": "UpdateWorkflowDto",
+  "type": "object",
+  "required": ["steps", "initial"],
+  "properties": {
+    "name": {
+      "type": ["null", "string"]
+    },
+    "steps": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/WorkflowStepDto"
+      }
+    },
+    "schemaIds": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "string"
+      }
+    },
+    "initial": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "definitions": {
+    "WorkflowStepDto": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["transitions"],
+      "properties": {
+        "transitions": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/WorkflowTransitionDto"
+          }
+        },
+        "color": {
+          "type": ["null", "string"]
+        },
+        "validate": {
+          "type": "boolean"
+        },
+        "noUpdate": {
+          "type": "boolean"
+        },
+        "noUpdateExpression": {
+          "type": ["null", "string"]
+        },
+        "noUpdateRoles": {
+          "type": ["array", "null"],
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "WorkflowTransitionDto": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expression": {
+          "type": ["null", "string"]
+        },
+        "roles": {
+          "type": ["array", "null"],
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

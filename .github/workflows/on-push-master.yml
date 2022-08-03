@@ -13,7 +13,7 @@ jobs:
       environment-name: Development
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
 
   build-images:
     uses: ./.github/workflows/reusable-build-images.yml
@@ -26,8 +26,10 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+      CRN_SQUIDEX_API_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
+      CRN_SQUIDEX_SHARED_SECRET: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
+      GP2_SQUIDEX_API_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_API_CLIENT_SECRET }}
+      GP2_SQUIDEX_SHARED_SECRET: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
       GP2_AUTH0_SHARED_SECRET: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
 
   build-analysis-development:
@@ -46,8 +48,10 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+      CRN_SQUIDEX_API_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
+      CRN_SQUIDEX_SHARED_SECRET: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
+      GP2_SQUIDEX_API_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_API_CLIENT_SECRET }}
+      GP2_SQUIDEX_SHARED_SECRET: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
       GP2_AUTH0_SHARED_SECRET: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
 
   build-analysis-production:
@@ -67,8 +71,12 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+      CRN_SQUIDEX_API_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
+      CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+      CRN_SQUIDEX_SHARED_SECRET: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
+      GP2_SQUIDEX_API_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_API_CLIENT_SECRET }}
+      GP2_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
+      GP2_SQUIDEX_SHARED_SECRET: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
       GP2_AUTH0_SHARED_SECRET: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
 
   algolia-sync-development:
@@ -80,7 +88,7 @@ jobs:
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
 
   verify-development:
     needs: [deployment-development, algolia-sync-development]
@@ -88,7 +96,7 @@ jobs:
     with:
       environment-name: Development
     secrets:
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
       FRONTEND_SENTRY_RELEASE_AUTH_TOKEN: ${{ secrets.FRONTEND_SENTRY_RELEASE_AUTH_TOKEN }}
 
   deployment-production:
@@ -100,9 +108,13 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-      SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+      CRN_SQUIDEX_API_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
+      CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+      CRN_SQUIDEX_SHARED_SECRET: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
       GP2_AUTH0_SHARED_SECRET: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
+      GP2_SQUIDEX_API_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_API_CLIENT_SECRET }}
+      GP2_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
+      GP2_SQUIDEX_SHARED_SECRET: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
 
   algolia-sync-production:
     needs: [deployment-production]
@@ -113,7 +125,7 @@ jobs:
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
 
   verify-production:
     needs: [deployment-production, algolia-sync-production]
@@ -121,7 +133,7 @@ jobs:
     with:
       environment-name: Production
     secrets:
-      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
+      CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
       FRONTEND_SENTRY_RELEASE_AUTH_TOKEN: ${{ secrets.FRONTEND_SENTRY_RELEASE_AUTH_TOKEN }}
 
   notify_failure:

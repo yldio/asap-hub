@@ -1,0 +1,44 @@
+{
+  "title": "ContentsModel",
+  "type": "object",
+  "required": ["contents"],
+  "properties": {
+    "contents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ContentModel"
+      }
+    },
+    "sourceApp": {
+      "type": ["null", "string"]
+    },
+    "sourceUrl": {
+      "type": ["null", "string"]
+    }
+  },
+  "definitions": {
+    "ContentModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "data"],
+      "properties": {
+        "schema": {
+          "type": "string",
+          "minLength": 1
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": {
+            "description": "Any."
+          }
+        },
+        "id": {
+          "type": ["null", "string"]
+        },
+        "status": {
+          "type": ["null", "string"]
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,5 @@
 /* istanbul ignore file */
-import { RestTeam, RestUser, User } from '@asap-hub/squidex';
-import { Rest } from '@asap-hub/squidex/src/entities/common';
+import { Rest, RestTeam, RestUser, User } from '@asap-hub/squidex';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 

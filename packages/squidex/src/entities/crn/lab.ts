@@ -1,4 +1,4 @@
-import { Rest, Entity, Graphql } from './common';
+import { Rest, Entity, Graphql } from '../common';
 
 export interface Lab {
   name: string;

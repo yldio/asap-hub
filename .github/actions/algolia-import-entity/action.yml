@@ -19,10 +19,10 @@ inputs:
   squidex-base-url:
     description: 'Squidex Base URL'
     required: true
-  squidex-client-id:
+  squidex-ci-client-id:
     description: 'Squidex Client ID'
     required: true
-  squidex-client-secret:
+  squidex-ci-client-secret:
     description: 'Squidex Client secret'
     required: true
 outputs:
@@ -48,5 +48,5 @@ runs:
         ENTITY_TYPE: ${{ inputs.entity-type }}
         SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
         SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
-        SQUIDEX_CLIENT_ID: ${{ inputs.squidex-client-id }}
-        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-client-secret }}
+        SQUIDEX_CLIENT_ID: ${{ inputs.squidex-ci-client-id }}
+        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-ci-client-secret }}

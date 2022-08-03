@@ -1,5 +1,6 @@
 import { ListResponse } from '@asap-hub/model';
 import {
+  getAccessTokenFactory,
   RestEvent,
   RestExternalAuthor,
   RestResearchOutput,
@@ -8,7 +9,6 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import { getAccessTokenFactory } from '@asap-hub/squidex/src/auth';
 import { promises as fs } from 'fs';
 import { appName, baseUrl, clientId, clientSecret } from '../src/config';
 import Events from '../src/controllers/events';

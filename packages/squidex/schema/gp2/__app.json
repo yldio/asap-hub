@@ -1,0 +1,25 @@
+{
+  "$schema": "./__json/app.json",
+  "clients": {
+    "test": {
+      "role": "Owner"
+    }
+  },
+  "roles": {
+    "custom": {
+      "permissions": ["schemas.*"]
+    }
+  },
+  "languages": {
+    "en": {
+      "isMaster": true,
+      "isOptional": false
+    }
+  },
+  "contributors": {
+    "sebastian@squidex.io": {
+      "role": "Owner"
+    }
+  },
+  "assetScripts": {}
+}

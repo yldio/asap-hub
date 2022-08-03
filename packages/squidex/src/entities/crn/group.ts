@@ -1,7 +1,7 @@
 import { GroupRole } from '@asap-hub/model';
 import { GraphqlCalendar } from './calendar';
 
-import { Rest, Entity, Graphql } from './common';
+import { Rest, Entity, Graphql } from '../common';
 import { GraphqlTeam } from './team';
 import { GraphqlUser } from './user';
 

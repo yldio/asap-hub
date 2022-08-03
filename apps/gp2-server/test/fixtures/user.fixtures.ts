@@ -174,19 +174,9 @@ export const getUserDataObject = (): UserDataObject => ({
   social: {
     orcid: '123-456-789',
   },
-  teams: [
-    {
-      id: 'team-id-1',
-      role: 'Lead PI (Core Leadership)',
-      displayName: 'Team A',
-      proposal: 'proposalId1',
-    },
-  ],
+  teams: [],
   role: 'Grantee',
-  labs: [
-    { id: 'cd7be4902', name: 'Brighton' },
-    { id: 'cd7be4903', name: 'Liverpool' },
-  ],
+  labs: [],
 });
 
 export const fetchUserResponse = () => patchResponse();
@@ -277,24 +267,6 @@ export const getGraphQLUser = (
         publicationDate: {},
         title: 'orcid work title',
       },
-    ],
-    teams: user?.flatData?.teams || [
-      {
-        role: 'Lead PI (Core Leadership)',
-        id: [
-          {
-            id: 'team-id-1',
-            flatData: {
-              displayName: 'Team A',
-              proposal: [{ id: 'proposalId1' }],
-            },
-          },
-        ],
-      },
-    ],
-    labs: user?.flatData?.labs || [
-      { id: 'cd7be4902', flatData: { name: 'Brighton' } },
-      { id: 'cd7be4903', flatData: { name: 'Liverpool' } },
     ],
   },
 });

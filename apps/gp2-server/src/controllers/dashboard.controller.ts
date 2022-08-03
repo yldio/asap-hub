@@ -14,6 +14,7 @@ export default class Dashboard {
     this.squidexGraphqlClient = squidexGraphqlClient;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async fetch(): Promise<DashboardResponse> {
     return {
       news: [],

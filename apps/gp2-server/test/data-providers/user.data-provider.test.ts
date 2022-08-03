@@ -4,18 +4,14 @@ import { RestUser, SquidexRest } from '@asap-hub/squidex';
 import nock, { DataMatcherMap } from 'nock';
 import { appName, baseUrl } from '../../src/config';
 import {
-  GraphqlUserTeam,
-  parseGraphQLUserTeamConnections,
   parseUserToDataObject,
   parseUserToResponse,
   UserSquidexDataProvider,
 } from '../../src/data-providers/user.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
-import logger from '../../src/utils/logger';
 import {
   fetchUserResponse,
   fetchUserResponseDataObject,
-  getGraphQLUser,
   getSquidexUserGraphqlResponse,
   getSquidexUsersGraphqlResponse,
   getUserDataObject,
@@ -79,53 +75,6 @@ describe('User data provider', () => {
       expect(result).toEqual(getUserDataObject());
     });
 
-    test('Should filter out a team when the team role is invalid', async () => {
-      const mockResponse = getSquidexUserGraphqlResponse();
-      mockResponse.findUsersContent!.flatData.teams![0]!.role = 'invalid role';
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-      const expectedResponse = getUserDataObject();
-      expectedResponse.teams = [];
-
-      const result = await userDataProvider.fetchById('user-id');
-      expect(result).toEqual(expectedResponse);
-    });
-    test('Should skip the user lab if it does not have a name', async () => {
-      const mockResponse = getSquidexUserGraphqlResponse();
-      mockResponse.findUsersContent!.flatData.labs = [
-        {
-          id: 'lab1',
-          flatData: {
-            name: 'lab 1',
-          },
-        },
-        {
-          id: 'lab2',
-          flatData: {
-            name: null,
-          },
-        },
-        {
-          id: 'lab3',
-          flatData: {
-            name: 'lab 3',
-          },
-        },
-      ];
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-      const result = await userDataProvider.fetchById('user-id');
-
-      expect(result?.labs).toEqual([
-        {
-          id: 'lab1',
-          name: 'lab 1',
-        },
-        {
-          id: 'lab3',
-          name: 'lab 3',
-        },
-      ]);
-    });
     test('Should skip the user orcid work if it does not have an ID or a lastModifiedDate', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       mockResponse.findUsersContent!.flatData.orcidWorks = [
@@ -382,25 +331,8 @@ describe('User data provider', () => {
       expect(nock.isDone()).toBe(true);
       expect(result).not.toBeDefined();
     });
-    test('should call put when teams is populated', async () => {
-      const mockResponse = getUserDataObject();
-      mockResponse.teams = [{ id: 'team-id', role: 'Key Personnel' }];
-      nock(baseUrl)
-        .get(`/api/content/${appName}/users/${userId}`)
-        .reply(200, fetchUserResponse())
-        .put(`/api/content/${appName}/users/${userId}`, {
-          ...fetchUserResponse().data,
-          teams: { iv: [{ id: 'team-id', role: 'Project Manager' }] },
-        } as { [k: string]: any })
-        .reply(200, fetchUserResponse()); // this response is ignored
-
-      const result = await userDataProvider.update(userId, {
-        teams: [{ id: 'team-id', role: 'Project Manager' }],
-      });
-      expect(nock.isDone()).toBe(true);
-      expect(result).not.toBeDefined();
-    });
   });
+
   describe('Fetch', () => {
     beforeEach(() => {
       jest.clearAllMocks();
@@ -446,20 +378,12 @@ describe('User data provider', () => {
         search: 'first last',
         filter: {
           role: ['role', 'Staff'],
-          labId: ['lab-123', 'lab-456'],
-          teamId: ['team-123', 'team-456'],
         },
       };
       const users = await userDataProvider.fetch(fetchOptions);
 
       const filterQuery =
-        "(data/teams/iv/id eq 'team-123' or data/teams/iv/id eq 'team-456')" +
-        ' and' +
-        " (data/teams/iv/role eq 'role' or data/teams/iv/role eq 'Staff')" +
-        ' and' +
-        " (data/labs/iv eq 'lab-123' or data/labs/iv eq 'lab-456')" +
-        ' and' +
-        ' data/onboarded/iv eq true' +
+        'data/onboarded/iv eq true' +
         ' and' +
         " data/role/iv ne 'Hidden'" +
         ' and' +
@@ -596,97 +520,6 @@ describe('User data provider', () => {
         const user = fetchUserResponse();
         const userDataObject = parseUserToDataObject(user);
         expect(userDataObject).toEqual(fetchUserResponseDataObject());
-      });
-      test('empty teams is parsed', () => {
-        const user = fetchUserResponse();
-        user.data.teams.iv = null;
-        const userDataObject = parseUserToDataObject(user);
-        const expected = {
-          ...fetchUserResponseDataObject(),
-          teams: [],
-        };
-        expect(userDataObject).toEqual(expected);
-      });
-      test('parsing of labs', () => {
-        const user = fetchUserResponse();
-        user.data.labs.iv = [
-          {
-            id: 'labs/1',
-            flatData: { name: 'lab1' },
-          },
-        ];
-        const userDataObject = parseUserToDataObject(user);
-        const expected = {
-          ...fetchUserResponseDataObject(),
-          labs: [{ id: 'labs/1', name: 'lab1' }],
-        };
-        expect(userDataObject).toEqual(expected);
-      });
-      test('parsing of labs with no name sets blank', () => {
-        const user = fetchUserResponse();
-        user.data.labs.iv = [
-          {
-            id: 'labs/1',
-            flatData: {},
-          },
-        ];
-        const userDataObject = parseUserToDataObject(user);
-        const expected = {
-          ...fetchUserResponseDataObject(),
-          labs: [{ id: 'labs/1', name: '' }],
-        };
-        expect(userDataObject).toEqual(expected);
-      });
-    });
-    describe('parseGraphQLUserTeamConnections', () => {
-      afterEach(() => {
-        jest.clearAllMocks();
-      });
-
-      test('should return an empty array if there are no teams', () => {
-        const teams: GraphqlUserTeam[] = [];
-        const parsedTeams = parseGraphQLUserTeamConnections(teams);
-        expect(parsedTeams).toEqual([]);
-      });
-      test('should return an empty array if there are  teams are not defined', () => {
-        const teams: GraphqlUserTeam[] = [];
-        const parsedTeams = parseGraphQLUserTeamConnections(teams);
-        expect(parsedTeams).toEqual([]);
-      });
-
-      test('should parse user team connections', () => {
-        const teams: GraphqlUserTeam[] = getGraphQLUser().flatData.teams!;
-        const parsedTeams = parseGraphQLUserTeamConnections(teams);
-        expect(parsedTeams).toEqual([
-          {
-            displayName: 'Team A',
-            id: 'team-id-1',
-            proposal: 'proposalId1',
-            role: 'Lead PI (Core Leadership)',
-          },
-        ]);
-      });
-
-      test('should filter out teams where id is null', () => {
-        const teams: GraphqlUserTeam[] = getGraphQLUser().flatData.teams!;
-        teams[0]!.id = null;
-        const loggerWarnSpy = jest.spyOn(logger, 'warn');
-        const parsedTeams = parseGraphQLUserTeamConnections(teams);
-        expect(loggerWarnSpy).toHaveBeenCalledWith(
-          `Team Connection is undefined`,
-        );
-        expect(parsedTeams).toEqual([]);
-      });
-
-      test('should filter out teams when team role is invalid', () => {
-        const teams: GraphqlUserTeam[] = getGraphQLUser().flatData.teams!;
-        teams[0]!.role = 'invalid role';
-        const loggerWarnSpy = jest.spyOn(logger, 'warn');
-        const parsedTeams = parseGraphQLUserTeamConnections(teams);
-        expect(loggerWarnSpy).toHaveBeenCalledWith(
-          `Invalid team role: invalid role`,
-        );
-        expect(parsedTeams).toEqual([]);
       });
     });
     describe('parseUserToResponse', () => {

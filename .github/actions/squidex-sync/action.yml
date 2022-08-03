@@ -27,6 +27,7 @@ runs:
       with:
         environment-name: ${{ inputs.environment-name }}
     - name: Update Squidex schema
+      shell: bash
       run: |
         sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
         sq config use $SQUIDEX_APP_NAME

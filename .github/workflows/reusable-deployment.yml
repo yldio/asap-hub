@@ -148,22 +148,13 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup
         id: setup
-        uses: ./.github/actions/setup-environment
+        uses: ./.github/actions/squidex-sync
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Update Squidex schema
-        run: |
-          sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
-          sq config use $SQUIDEX_APP_NAME
-          .github/scripts/squidex-sync/config-rules.sh
-          sq sync in packages/squidex/schema/crn -t schemas -t rules --delete
-        env:
-          CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
-          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
-          SQUIDEX_SHARED_SECRET: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
+          squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
+          squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
+          squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+          squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
 
   gp2-squidex-schema:
     needs: [gp2-sls-deploy]

@@ -146,6 +146,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
       - name: Synchronize Squidex
         uses: ./.github/actions/squidex-sync
         with:
@@ -167,6 +172,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
       - name: Synchronize Squidex
         if: ${{ inputs.environment-name=='Development' }}
         uses: ./.github/actions/squidex-sync

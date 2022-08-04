@@ -4,16 +4,11 @@ import { ResearchOutputResponse } from './research-output';
 
 type ReminderEntity = 'Research Output' | 'Event';
 
-const researchOutputReminderTypes = [
-  'Published',
-  'Share',
-] as const;
-const eventReminderTypes = [
-  'New'
-] as const;
+const researchOutputReminderTypes = ['Published', 'Share'] as const;
+const eventReminderTypes = ['New'] as const;
 type ResearchOutputReminderType = typeof researchOutputReminderTypes[number];
 type EventReminderType = typeof eventReminderTypes[number];
-type ReminderType = ResearchOutputReminderType | EventReminderType
+type ReminderType = ResearchOutputReminderType | EventReminderType;
 interface Reminder {
   entity: ReminderEntity;
   type: ReminderType;
@@ -21,20 +16,21 @@ interface Reminder {
 }
 
 interface ResearchOutputReminder extends Reminder {
-  entity: "Research Output"
-  type: ResearchOutputReminderType
+  entity: 'Research Output';
+  type: ResearchOutputReminderType;
 }
 
 interface EventReminder extends Reminder {
-  entity: "Event"
-  type: EventReminderType
+  entity: 'Event';
+  type: EventReminderType;
 }
 
-export interface ResearchOutputPublishedReminder extends ResearchOutputReminder {
+export interface ResearchOutputPublishedReminder
+  extends ResearchOutputReminder {
   entity: 'Research Output';
   type: 'Published';
   data: {
-    researchOutput: ResearchOutputResponse;
+    researchOutputId: string;
   };
 }
 
@@ -49,7 +45,7 @@ export interface EventNewReminder extends EventReminder {
   type: 'New';
   data: {
     event: EventResponse;
-  }
+  };
 }
 
 export type ReminderResponse =
@@ -58,3 +54,7 @@ export type ReminderResponse =
   | EventNewReminder;
 
 export type ListReminderResponse = ListResponse<ReminderResponse>;
+
+export type FetchRemindersOptions = {
+  userId: string;
+};

@@ -38,6 +38,7 @@ import Groups, { GroupController } from './controllers/groups';
 import Labs, { LabsController } from './controllers/labs';
 import News, { NewsController } from './controllers/news';
 import Pages, { PageController } from './controllers/pages';
+import Reminders, { ReminderController } from './controllers/reminders';
 import ResearchOutputs, {
   ResearchOutputController,
 } from './controllers/research-outputs';
@@ -194,6 +195,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const groupController =
     libs.groupController || new Groups(groupDataProvider, userDataProvider);
   const pageController = libs.pageController || new Pages(pageRestClient);
+  const reminderController = libs.reminderController || new Reminders();
   const researchOutputController =
     libs.researchOutputController ||
     new ResearchOutputs(
@@ -230,7 +232,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const labsRoutes = labsRouteFactory(labsController);
   const newsRoutes = newsRouteFactory(newsController);
   const pageRoutes = pageRouteFactory(pageController);
-  const reminderRoutes = reminderRouteFactory();
+  const reminderRoutes = reminderRouteFactory(reminderController);
   const researchOutputsRoutes = researchOutputRouteFactory(
     researchOutputController,
   );
@@ -330,13 +332,14 @@ export type Libs = {
   discoverController?: DiscoverController;
   eventController?: EventController;
   groupController?: GroupController;
-  pageController?: PageController;
+  labsController?: LabsController;
   newsController?: NewsController;
+  pageController?: PageController;
+  reminderController?: ReminderController;
   researchOutputController?: ResearchOutputController;
   researchTagController?: ResearchTagController;
   teamController?: TeamController;
   userController?: UserController;
-  labsController?: LabsController;
   assetDataProvider?: AssetDataProvider;
   groupDataProvider?: GroupDataProvider;
   teamDataProvider?: TeamDataProvider;

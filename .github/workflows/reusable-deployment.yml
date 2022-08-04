@@ -155,6 +155,7 @@ jobs:
         uses: ./.github/actions/squidex-sync
         with:
           environment-name: ${{ inputs.environment-name }}
+          app: crn-server
           squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
           squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
@@ -182,6 +183,7 @@ jobs:
         uses: ./.github/actions/squidex-sync
         with:
           environment-name: ${{ inputs.environment-name }}
+          app: gp2-server
           squidex-app-name: ${{ steps.setup.outputs.gp2-squidex-app-name }}
           squidex-ci-client-id: ${{ steps.setup.outputs.gp2-squidex-ci-client-id }}
           squidex-ci-client-secret: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}

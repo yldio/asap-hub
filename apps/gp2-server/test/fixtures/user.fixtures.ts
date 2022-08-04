@@ -48,19 +48,9 @@ export const getUserResponse = (): UserResponse => ({
   social: {
     orcid: '123-456-789',
   },
-  teams: [
-    {
-      id: 'team-id-1',
-      role: 'Lead PI (Core Leadership)',
-      displayName: 'Team A',
-      proposal: 'proposalId1',
-    },
-  ],
+  teams: [],
   role: 'Grantee',
-  labs: [
-    { id: 'cd7be4902', name: 'Brighton' },
-    { id: 'cd7be4903', name: 'Liverpool' },
-  ],
+  labs: [],
 });
 
 export const getUserWebhookPayload = (

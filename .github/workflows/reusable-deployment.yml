@@ -179,7 +179,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Synchronize Squidex
-        if: ${{ inputs.environment-name=='Development' }}
+        if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
         uses: ./.github/actions/squidex-sync
         with:
           environment-name: ${{ inputs.environment-name }}
@@ -189,7 +189,7 @@ jobs:
           squidex-ci-client-secret: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
       - name: Synchronize Squidex
-        if: ${{ inputs.environment-name=='Production'|| inputs.environment-name=='Branch' }}
+        if: ${{  inputs.environment-name=='Branch' }}
         run: |
           echo "App name: " $SQUIDEX_APP_NAME " Client Id: " $SQUIDEX_CI_CLIENT_ID
         env:

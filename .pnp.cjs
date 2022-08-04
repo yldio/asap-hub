@@ -3958,7 +3958,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "csv-parse",\
-        "npm:4.15.4"\
+        "npm:4.16.3"\
       ],\
       [\
         "csvtojson",\
@@ -10171,7 +10171,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["apr-intercept", "npm:3.0.4"],\
             ["async-sema", "npm:3.1.1"],\
             ["aws-sdk", "npm:2.1185.0"],\
-            ["csv-parse", "npm:4.15.4"],\
+            ["csv-parse", "npm:4.16.3"],\
             ["got", "npm:11.8.5"],\
             ["jwt-encode", "npm:1.0.1"],\
             ["luxon", "npm:1.26.0"],\
@@ -10481,7 +10481,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["chance", "npm:1.1.8"],\
             ["copy-webpack-plugin", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:9.1.0"],\
             ["cors", "npm:2.8.5"],\
-            ["csv-parse", "npm:4.15.4"],\
+            ["csv-parse", "npm:4.16.3"],\
             ["debug", "virtual:4efd4efcc91d6a84943d5c69282ec5b841bc0a4bf4501bc904312b466c01ef55cfcb96c59c3173e19c9fb2cdfd84604de66717c6416485578546f9d4d26b13a7#npm:4.3.4"],\
             ["express", "npm:4.17.1"],\
             ["express-async-errors", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1"],\
@@ -40496,10 +40496,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["csv-parse", [\
-        ["npm:4.15.4", {\
-          "packageLocation": "./.yarn/cache/csv-parse-npm-4.15.4-581c1770d1-3d6213e9d0.zip/node_modules/csv-parse/",\
+        ["npm:4.16.3", {\
+          "packageLocation": "./.yarn/cache/csv-parse-npm-4.16.3-792211a891-5ad7790fc3.zip/node_modules/csv-parse/",\
           "packageDependencies": [\
-            ["csv-parse", "npm:4.15.4"]\
+            ["csv-parse", "npm:4.16.3"]\
           ],\
           "linkType": "HARD"\
         }]\

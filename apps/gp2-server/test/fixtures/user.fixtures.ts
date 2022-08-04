@@ -103,16 +103,7 @@ export const patchResponse = (): RestUser => ({
     expertiseAndResourceTags: { iv: [] },
     orcidWorks: { iv: [] },
     teams: {
-      iv: [
-        {
-          id: ['team-id-1'],
-          role: 'Lead PI (Core Leadership)',
-        },
-        {
-          id: ['team-id-3'],
-          role: 'Collaborating PI',
-        },
-      ],
+      iv: [],
     },
     connections: { iv: [] },
     questions: { iv: [] },
@@ -193,18 +184,7 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
   social: {
     orcid: '363-98-9330',
   },
-  teams: [
-    {
-      displayName: 'Unknown',
-      id: 'team-id-1',
-      role: 'Lead PI (Core Leadership)',
-    },
-    {
-      displayName: 'Unknown',
-      id: 'team-id-3',
-      role: 'Collaborating PI',
-    },
-  ],
+  teams: [],
   connections: [],
 });
 

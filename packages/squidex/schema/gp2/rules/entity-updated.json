@@ -13,7 +13,7 @@
     "handleAll": false
   },
   "action": {
-    "url": "CRN_API_URL/webhook/squidex",
+    "url": "GP2_API_URL/webhook/squidex",
     "method": "POST",
     "sharedSecret": "SQUIDEX_SHARED_SECRET",
     "isFrozen": true,

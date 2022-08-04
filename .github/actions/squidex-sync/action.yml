@@ -1,0 +1,43 @@
+name: Squidex Sync
+description: Syncs the Squidex Schema
+
+inputs:
+  environment-name:
+    description: 'The environment name'
+    required: true
+  squidex-app-name:
+    description: 'Squidex App Name'
+    required: true
+  squidex-ci-client-id:
+    description: 'Squidex Client ID'
+    required: true
+  squidex-ci-client-secret:
+    description: 'Squidex Client Secret'
+    required: true
+  squidex-shared-secret:
+    description: 'Squidex Shared Secret'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup
+      id: setup
+      uses: ./.github/actions/setup-environment
+      with:
+        environment-name: ${{ inputs.environment-name }}
+    - name: Update Squidex schema
+      shell: bash
+      run: |
+        sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
+        sq config use $SQUIDEX_APP_NAME
+        .github/scripts/squidex-sync/config-rules.sh
+        sq sync in packages/squidex/schema/crn -t schemas -t rules --delete
+      env:
+        CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
+        GP2_API_URL: ${{ steps.setup.outputs.gp2-api-url }}
+        SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
+        SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+        SQUIDEX_CLIENT_ID: ${{ inputs.squidex-ci-client-id }}
+        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-ci-client-secret }}
+        SQUIDEX_SHARED_SECRET: ${{ inputs.squidex-shared-secret }}

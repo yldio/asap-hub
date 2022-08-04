@@ -1,11 +1,16 @@
 import { connectByCodeHandlerFactory } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
-import { appName, auth0SharedSecret, baseUrl } from '../../config';
+import {
+  appName,
+  auth0SharedSecret,
+  baseUrl,
+} from '../../config';
 import Users from '../../controllers/users';
 import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
 import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
 import { getAuthToken } from '../../utils/auth';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
@@ -26,4 +31,4 @@ const connectByCodeHandler = connectByCodeHandlerFactory(
   auth0SharedSecret,
 );
 
-export const handler: lambda.Handler = lambda.http(connectByCodeHandler);
+export const handler: lambda.Handler = sentryWrapper(connectByCodeHandler);

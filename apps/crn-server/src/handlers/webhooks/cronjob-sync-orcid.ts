@@ -6,8 +6,9 @@ import Users from '../../controllers/users';
 import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
 import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
 import { getAuthToken } from '../../utils/auth';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 
-export const handler = async (): Promise<lambda.Response> => {
+const rawHandler = async (): Promise<lambda.Response> => {
   const ONE_MONTH = 1000 * 60 * 60 * 24 * 31;
 
   const limit = pLimit(5);
@@ -47,3 +48,5 @@ export const handler = async (): Promise<lambda.Response> => {
     statusCode: 200,
   };
 };
+
+export const handler = sentryWrapper(rawHandler);

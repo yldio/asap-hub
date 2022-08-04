@@ -22,6 +22,7 @@ import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provi
 import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 export const indexUserHandler =
   (
@@ -75,9 +76,11 @@ const userDataProvider = new UserSquidexDataProvider(
 );
 const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 
-export const handler = indexUserHandler(
-  new Users(userDataProvider, assetDataProvider),
-  algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
+export const handler = sentryWrapper(
+  indexUserHandler(
+    new Users(userDataProvider, assetDataProvider),
+    algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
+  )
 );
 
 export type UserIndexEventBridgeEvent = EventBridgeEvent<

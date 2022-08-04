@@ -67,3 +67,4 @@ export const clientId = process.env.SQUIDEX_CLIENT_ID || 'squidex-client-id';
 export const clientSecret =
   process.env.SQUIDEX_CLIENT_SECRET || 'squidex-client-secret';
 export const appName = process.env.SQUIDEX_APP_NAME || 'asap-local';
+export const sentryTraceSampleRate = 1.0

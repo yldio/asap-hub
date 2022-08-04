@@ -1,17 +1,22 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import { ComponentProps } from 'react';
 import TeamMembersSection from '../TeamMembersSection';
 
-it('renders an header with number of members', () => {
-  const { getByRole } = render(<TeamMembersSection members={[]} />);
-  expect(getByRole('heading').textContent).toMatchInlineSnapshot(
+const props: ComponentProps<typeof TeamMembersSection> = {
+  members: [],
+};
+
+it('renders the component with the default title and member count', () => {
+  render(<TeamMembersSection {...props} members={[]} />);
+  expect(screen.getByRole('heading').textContent).toMatchInlineSnapshot(
     `"Team Members (0)"`,
   );
 });
 
-it('renders the content', async () => {
-  const { getByText } = render(
+it('renders the supplied title and member list', async () => {
+  render(
     <TeamMembersSection
-      title={'Title'}
+      title="Title"
       members={[
         {
           id: '42',
@@ -25,8 +30,23 @@ it('renders the content', async () => {
     />,
   );
 
-  expect(getByText('Title')).toBeVisible();
-  expect(getByText('Phillip Mars, PhD')).toBeVisible();
-  expect(getByText('Collaborating PI')).toBeVisible();
-  expect(getByText('Mars lab')).toBeVisible();
+  expect(screen.getByText('Title')).toBeVisible();
+  expect(screen.getByText('Phillip Mars, PhD')).toBeVisible();
+  expect(screen.getByText('Collaborating PI')).toBeVisible();
+  expect(screen.getByText('Mars lab')).toBeVisible();
+});
+
+it('renders a link when provided', async () => {
+  render(
+    <TeamMembersSection
+      {...props}
+      href="http://example.com"
+      hrefText="Example"
+    />,
+  );
+
+  expect(screen.getByText('Example').closest('a')).toHaveAttribute(
+    'href',
+    'http://example.com',
+  );
 });

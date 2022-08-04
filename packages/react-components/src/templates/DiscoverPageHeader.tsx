@@ -9,7 +9,6 @@ import { TabNav, TabLink } from '..';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
-  marginBottom: `${12 / perRem}em`,
   background: paper.rgb,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
@@ -25,6 +24,7 @@ const DashboardPageHeader: React.FC = () => (
       <TabLink href={discover({}).guides({}).$}>Guides</TabLink>
       <TabLink href={discover({}).tutorials({}).$}>Tutorials</TabLink>
       <TabLink href={discover({}).workingGroups({}).$}>Working Groups</TabLink>
+      <TabLink href={discover({}).about({}).$}>About ASAP</TabLink>
     </TabNav>
   </header>
 );

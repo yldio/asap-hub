@@ -42,7 +42,7 @@ runs:
         ]]; then
           echo "Updating CRN Squidex schema"
         fi
-        sq sync in packages/squidex/schema/${{ inputs.app } -t schemas -t rules --delete
+        sq sync in packages/squidex/schema/${{ inputs.app }} -t schemas -t rules --delete
     - name: Update Squidex schema development and production
       shell: bash
       if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
@@ -55,7 +55,7 @@ runs:
           ("$APP" == "crn-server" && "$SQUIDEX_APP_NAME" == *"asap"*) ||
           ("$APP" == "gp2-server" && "$SQUIDEX_APP_NAME" == *"gp2"*)
         ]]; then
-          sq sync in packages/squidex/schema/${{ inputs.app } -t schemas -t rules --delete
+          sq sync in packages/squidex/schema/${{ inputs.app }} -t schemas -t rules --delete
         else
           echo "It's the wrong App!"
           exit 1

@@ -5,7 +5,13 @@ import {
   UserSocialLinks,
   Role,
 } from '@asap-hub/model';
-import { Rest, Entity, Graphql, GraphqlWithTypename } from '../common';
+import {
+  Rest,
+  Entity,
+  Graphql,
+  GraphqlWithTypename,
+  RestPayload,
+} from '../common';
 import { GraphqlTeam } from './team';
 
 export type UserTeamConnection<T = string> = T extends string
@@ -28,6 +34,7 @@ export interface User<
   TAvatar = string,
   TConnection = UserTeamConnection,
   TSocial = Omit<UserSocialLinks, 'orcid'>,
+  TLabConnection = UserLabConnection,
 > {
   onboarded: boolean;
   avatar: TAvatar[];
@@ -54,7 +61,7 @@ export interface User<
   reachOut?: string;
   teams: TConnection[];
   social?: TSocial[];
-  labs: UserLabConnection[];
+  labs: TLabConnection[];
   expertiseAndResourceTags?: string[];
   expertiseAndResourceDescription?: string;
 }
@@ -71,3 +78,9 @@ export interface GraphqlUser
     > {}
 
 export type GraphqlUserAssoc = GraphqlWithTypename<GraphqlUser, 'Users'>;
+
+export interface InputUser
+  extends Entity,
+    RestPayload<
+      User<string, UserTeamConnection, Omit<UserSocialLinks, 'orcid'>, string>
+    > {}

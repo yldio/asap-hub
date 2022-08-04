@@ -11,6 +11,7 @@ import {
 } from '@asap-hub/server-common';
 import {
   InputCalendar,
+  InputUser,
   RestCalendar,
   RestEvent,
   RestExternalAuthor,
@@ -119,10 +120,14 @@ export const appFactory = (libs: Libs = {}): Express => {
     appName,
     baseUrl,
   });
-  const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
-    appName,
-    baseUrl,
-  });
+  const userRestClient = new SquidexRest<RestUser, InputUser>(
+    getAuthToken,
+    'users',
+    {
+      appName,
+      baseUrl,
+    },
+  );
   const newsRestClient = new SquidexRest<RestNews>(
     getAuthToken,
     'news-and-events',

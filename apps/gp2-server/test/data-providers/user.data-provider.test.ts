@@ -390,12 +390,12 @@ describe('User data provider', () => {
         .reply(200, fetchUserResponse())
         .put(`/api/content/${appName}/users/${userId}`, {
           ...fetchUserResponse().data,
-          teams: { iv: [{ id: 'team-id' }] },
+          teams: { iv: [{ id: 'team-id', role: 'Project Manager' }] },
         } as { [k: string]: any })
         .reply(200, fetchUserResponse()); // this response is ignored
 
       const result = await userDataProvider.update(userId, {
-        teams: [{ id: 'team-id' }],
+        teams: [{ id: 'team-id', role: 'Project Manager' }],
       });
       expect(nock.isDone()).toBe(true);
       expect(result).not.toBeDefined();

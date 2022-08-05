@@ -3,7 +3,6 @@ import {
   UserEvent,
   UserPayload,
 } from '@asap-hub/server-common';
-import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import {
   InputUser,
   RestUser,

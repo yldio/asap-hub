@@ -38,11 +38,20 @@ runs:
         .github/scripts/squidex-sync/config-rules.sh
 
         if [[
-          "$APP" == "crn-server" && "$CRN_API_URL" == *"asap"*
+          "$APP" == "crn" && "$CRN_API_URL" == *"asap"*
         ]]; then
           echo "Updating CRN Squidex schema"
         fi
         sq sync in packages/squidex/schema/${{ inputs.app }} -t schemas -t rules --delete
+      env:
+        APP: ${{ inputs.app }}
+        CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
+        GP2_API_URL: ${{ steps.setup.outputs.gp2-api-url }}
+        SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
+        SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+        SQUIDEX_CLIENT_ID: ${{ inputs.squidex-ci-client-id }}
+        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-ci-client-secret }}
+        SQUIDEX_SHARED_SECRET: ${{ inputs.squidex-shared-secret }}
     - name: Update Squidex schema development and production
       shell: bash
       if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
@@ -52,8 +61,8 @@ runs:
         .github/scripts/squidex-sync/config-rules.sh
 
         if [[
-          ("$APP" == "crn-server" && "$SQUIDEX_APP_NAME" == *"asap"*) ||
-          ("$APP" == "gp2-server" && "$SQUIDEX_APP_NAME" == *"gp2"*)
+          ("$APP" == "crn" && "$SQUIDEX_APP_NAME" == *"asap"*) ||
+          ("$APP" == "gp2" && "$SQUIDEX_APP_NAME" == *"gp2"*)
         ]]; then
           sq sync in packages/squidex/schema/${{ inputs.app }} -t schemas -t rules --delete
         else

@@ -2,10 +2,11 @@ import { EventBridgeEvent } from 'aws-lambda';
 
 import {
   ListTeamResponse,
+  TeamCreateDataObject,
   TeamDataObject,
   TeamResponse,
 } from '@asap-hub/model';
-import { Team, WebhookPayload } from '@asap-hub/squidex';
+import { InputTeam, Team, WebhookPayload } from '@asap-hub/squidex';
 import { TeamEvent, TeamPayload } from '../../src/handlers/event-bus';
 import {
   FetchTeamQuery,
@@ -189,3 +190,47 @@ export const updateEvent: TeamEventGenerator = (id: string) =>
     TeamEvent,
     TeamPayload
   >;
+
+export const getTeamCreateDataObject = (): TeamCreateDataObject => ({
+  applicationNumber: 'ASAP-000420',
+  displayName: 'Team A',
+  projectSummary: 'project-summary',
+  projectTitle:
+    'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+  expertiseAndResourceTags: ['Animal resources'],
+  tools: [
+    {
+      name: 'Team Scherzer Slack Channel',
+      description: 'Connect with the team on the private slack channel',
+      url: 'https://scherzerlab.slack.com/archives/C019B8W86NQ',
+    },
+  ],
+  researchOutputIds: [],
+});
+
+export const getInputTeam = (): InputTeam['data'] => ({
+  applicationNumber: { iv: 'ASAP-000420' },
+  displayName: {
+    iv: 'Team A',
+  },
+  projectSummary: { iv: 'project-summary' },
+  projectTitle: {
+    iv: 'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+  },
+  expertiseAndResourceTags: { iv: ['Animal resources'] },
+  proposal: {
+    iv: [],
+  },
+  tools: {
+    iv: [
+      {
+        name: 'Team Scherzer Slack Channel',
+        description: 'Connect with the team on the private slack channel',
+        url: 'https://scherzerlab.slack.com/archives/C019B8W86NQ',
+      },
+    ],
+  },
+  outputs: {
+    iv: [],
+  },
+});

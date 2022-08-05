@@ -1,4 +1,10 @@
-import { Rest, Entity, Graphql, GraphqlWithTypename } from '../common';
+import {
+  Rest,
+  Entity,
+  Graphql,
+  GraphqlWithTypename,
+  RestPayload,
+} from '../common';
 import { GraphqlUser } from './user';
 
 export interface Team<T = string> {
@@ -17,7 +23,8 @@ export interface Team<T = string> {
 }
 
 export interface RestTeam extends Entity, Rest<Team> {}
-// TODO: REMOVE old proposal type
+
+export interface InputTeam extends Entity, RestPayload<Team> {}
 
 export interface GraphqlTeamEntity
   extends Entity,

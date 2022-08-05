@@ -4,16 +4,18 @@ import { appName, baseUrl } from '../../src/config';
 import { TeamSquidexDataProvider } from '../../src/data-providers/teams.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
 import {
+  getInputTeam,
   getSquidexGraphqlTeam,
   getSquidexTeamGraphqlResponse,
   getSquidexTeamsGraphqlResponse,
+  getTeamCreateDataObject,
   getTeamDataObject,
 } from '../fixtures/teams.fixtures';
 import { getGraphQLUser } from '../fixtures/users.fixtures';
 import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
-import { NotFoundError } from '@asap-hub/errors';
+import { GenericError, NotFoundError } from '@asap-hub/errors';
 
 describe('Team Data Provider', () => {
   const teamRestclient = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
@@ -600,6 +602,45 @@ describe('Team Data Provider', () => {
           },
         ],
       });
+    });
+  });
+
+  describe('Create method', () => {
+    const teamId = 'some-team-id';
+
+    beforeAll(() => {
+      identity();
+      nock.cleanAll();
+    });
+
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
+    test('Should create a team', async () => {
+      nock(baseUrl)
+        .post(
+          `/api/content/${appName}/teams?publish=true`,
+          getInputTeam() as any,
+        )
+        .reply(201, { id: teamId });
+
+      const result = await teamDataProvider.create(getTeamCreateDataObject());
+      expect(result).toEqual(teamId);
+    });
+
+    test('Should throw when it fails to create the team', async () => {
+      nock(baseUrl)
+        .post(`/api/content/${appName}/teams?publish=true`)
+        .reply(500);
+
+      await expect(
+        teamDataProvider.create(getTeamCreateDataObject()),
+      ).rejects.toThrow(GenericError);
     });
   });
 });

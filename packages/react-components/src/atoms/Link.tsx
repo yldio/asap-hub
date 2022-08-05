@@ -109,14 +109,6 @@ const Link: React.FC<LinkProps> = ({
         applyElipsis && elipsedTextStyle,
       ];
 
-  // console.log({
-  //   buttonStyle,
-  //   applyElipsis,
-  //   typeofLinkChildren: typeof linkChildren,
-  //   children,
-  //   linkChildren
-  // })
-
   return (
     <Anchor
       href={href}

@@ -1,11 +1,12 @@
 import {
   ListUserResponse,
+  UserCreateDataObject,
   UserDataObject,
   UserPatchRequest,
   UserResponse,
 } from '@asap-hub/model';
 import { UserEvent, UserPayload } from '@asap-hub/server-common';
-import { RestUser, User, WebhookPayload } from '@asap-hub/squidex';
+import { InputUser, RestUser, User, WebhookPayload } from '@asap-hub/squidex';
 import {
   FetchUserQuery,
   FetchUsersQuery,
@@ -374,6 +375,7 @@ export const userPatchRequest: UserPatchRequest = {
   teams: [
     {
       id: 'team-id-1',
+      role: 'Lead PI (Core Leadership)',
     },
   ],
 };
@@ -573,4 +575,82 @@ export const getUserDataObject = (): UserDataObject => ({
     { id: 'cd7be4902', name: 'Brighton' },
     { id: 'cd7be4903', name: 'Liverpool' },
   ],
+});
+
+export const getUserCreateDataObject = (): UserCreateDataObject => {
+  const {
+    id: _id,
+    onboarded,
+    labs,
+    lastModifiedDate: _lastModifiedDate,
+    createdDate: _createdDate,
+    social: _social,
+    ...createDataObject
+  } = getUserDataObject();
+
+  return {
+    ...createDataObject,
+    avatar: 'eb87e50d-cf67-49b5-b5e1-ec2c7df20bc5',
+    onboarded: typeof onboarded === 'boolean' ? onboarded : undefined,
+    labIds: labs.map((lab) => lab.id),
+  };
+};
+
+export const getInputUser = (): InputUser['data'] => ({
+  avatar: {
+    iv: ['eb87e50d-cf67-49b5-b5e1-ec2c7df20bc5'],
+  },
+  biography: { iv: 'some bio' },
+  onboarded: { iv: true },
+  questions: { iv: [{ question: 'Question 1' }, { question: 'Question 2' }] },
+  expertiseAndResourceTags: {
+    iv: [
+      'expertise 1',
+      'expertise 2',
+      'expertise 3',
+      'expertise 4',
+      'expertise 5',
+    ],
+  },
+  institution: { iv: 'some institution' },
+  jobTitle: { iv: 'some job title' },
+  reachOut: { iv: 'some reach out' },
+  responsibilities: { iv: 'some responsibilities' },
+  researchInterests: { iv: 'some research interests' },
+  email: { iv: 'H@rdy.io' },
+  contactEmail: { iv: 'T@rdy.io' },
+  firstName: { iv: 'Tom' },
+  lastName: { iv: 'Hardy' },
+  country: { iv: 'United Kingdom' },
+  city: { iv: 'London' },
+  orcidWorks: {
+    iv: [
+      {
+        doi: 'test-doi',
+        id: '123-456-789',
+        lastModifiedDate: '2020-10-26T15:33:18Z',
+        publicationDate: {},
+        type: 'ANNOTATION',
+        title: 'orcid work title',
+      },
+    ],
+  },
+  orcid: { iv: '123-456-789' },
+  degree: { iv: 'MPH' },
+  social: { iv: [] },
+  teams: {
+    iv: [
+      {
+        id: ['team-id-1'],
+        role: 'Lead PI (Core Leadership)',
+      },
+    ],
+  },
+  role: { iv: 'Grantee' },
+  labs: {
+    iv: ['cd7be4902', 'cd7be4903'],
+  },
+  connections: {
+    iv: [],
+  },
 });

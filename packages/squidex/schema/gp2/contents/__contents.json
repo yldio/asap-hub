@@ -1,0 +1,17 @@
+{
+  "$schema": "./../__json/contents.json",
+  "contents": [
+    {
+      "schema": "my-schema",
+      "data": {
+        "id": {
+          "iv": 1
+        },
+        "text": {
+          "iv": "Hello Squidex"
+        }
+      },
+      "status": "Published"
+    }
+  ]
+}

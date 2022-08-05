@@ -5,9 +5,12 @@ import {
 } from '@asap-hub/server-common';
 import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import {
-  appName,
-  baseUrl,
-} from '../../config';
+  InputUser,
+  RestUser,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
+import { appName, baseUrl } from '../../config';
 import Users, { UserController } from '../../controllers/users';
 import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
 import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
@@ -42,10 +45,14 @@ const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,
 });
-const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
-  appName,
-  baseUrl,
-});
+const userRestClient = new SquidexRest<RestUser, InputUser>(
+  getAuthToken,
+  'users',
+  {
+    appName,
+    baseUrl,
+  },
+);
 const userDataProvider = new UserSquidexDataProvider(
   squidexGraphqlClient,
   userRestClient,

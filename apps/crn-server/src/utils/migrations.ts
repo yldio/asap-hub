@@ -1,5 +1,10 @@
-import { Results, SquidexRest, SquidexRestClient } from '@asap-hub/squidex';
-import { Entity, Rest } from '@asap-hub/squidex/src/entities/common';
+import {
+  Entity,
+  Rest,
+  Results,
+  SquidexRest,
+  SquidexRestClient,
+} from '@asap-hub/squidex';
 import { appName, baseUrl } from '../config';
 import { getAuthToken } from './auth';
 

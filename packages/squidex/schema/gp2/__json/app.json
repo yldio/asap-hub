@@ -1,0 +1,124 @@
+{
+  "title": "AppModel",
+  "type": "object",
+  "required": ["clients", "roles", "languages", "contributors"],
+  "properties": {
+    "clients": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/AppClientModel"
+      }
+    },
+    "roles": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/AppRoleModel"
+      }
+    },
+    "languages": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/UpdateLanguageDto"
+      }
+    },
+    "contributors": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/AppContributorModel"
+      }
+    },
+    "assetScripts": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/AssetScriptsModel"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "AppClientModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role"],
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": ["null", "string"]
+        }
+      }
+    },
+    "AppRoleModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["permissions"],
+      "properties": {
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": ["null", "object"],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "UpdateLanguageDto": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "isMaster": {
+          "type": ["boolean", "null"]
+        },
+        "isOptional": {
+          "type": "boolean"
+        },
+        "fallback": {
+          "type": ["array", "null"],
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "AppContributorModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role"],
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "AssetScriptsModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "create": {
+          "type": ["null", "string"]
+        },
+        "update": {
+          "type": ["null", "string"]
+        },
+        "annotate": {
+          "type": ["null", "string"]
+        },
+        "move": {
+          "type": ["null", "string"]
+        },
+        "delete": {
+          "type": ["null", "string"]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "./../__json/rule.json",
+  "isEnabled": true,
+  "name": "My-Rule",
+  "trigger": {
+    "triggerType": "ContentChanged",
+    "handleAll": true
+  },
+  "action": {
+    "actionType": "Webhook",
+    "url": "https://squidex.io",
+    "method": "POST"
+  }
+}

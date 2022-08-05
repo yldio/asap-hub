@@ -7,7 +7,12 @@ import {
   UserEvent,
   UserPayload,
 } from '@asap-hub/server-common';
-import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
+import {
+  InputUser,
+  RestUser,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
 import { isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
@@ -66,10 +71,14 @@ const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,
 });
-const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
-  appName,
-  baseUrl,
-});
+const userRestClient = new SquidexRest<RestUser, InputUser>(
+  getAuthToken,
+  'users',
+  {
+    appName,
+    baseUrl,
+  },
+);
 const userDataProvider = new UserSquidexDataProvider(
   squidexGraphqlClient,
   userRestClient,

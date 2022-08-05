@@ -1,0 +1,12 @@
+{
+  "$schema": "./../__json/assets.json",
+  "assets": [
+    {
+      "id": "fe53b604-5562-48de-a81e-35b0adac2969",
+      "mimeType": "plain/text",
+      "fileName": "my.file.txt",
+      "fileHash": "<Optional Hash>",
+      "isProtected": false
+    }
+  ]
+}

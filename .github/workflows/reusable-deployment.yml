@@ -17,11 +17,23 @@ on:
       LIGHTSTEP_TOKEN:
         description: 'Lightstep Token'
         required: true
-      SQUIDEX_CLIENT_SECRET:
-        description: 'Squidex Client Secret'
+      CRN_SQUIDEX_API_CLIENT_SECRET:
+        description: 'CRN API Squidex Client Secret'
         required: true
-      SQUIDEX_SHARED_SECRET:
-        description: 'Squidex Shared Secret'
+      CRN_SQUIDEX_CI_CLIENT_SECRET:
+        description: 'CRN CI Squidex Client Secret'
+        required: true
+      CRN_SQUIDEX_SHARED_SECRET:
+        description: 'CRN Squidex Shared Secret'
+        required: true
+      GP2_SQUIDEX_API_CLIENT_SECRET:
+        description: 'GP2 API Squidex Client Secret'
+        required: true
+      GP2_SQUIDEX_CI_CLIENT_SECRET:
+        description: 'GP2 CI Squidex Client Secret'
+        required: true
+      GP2_SQUIDEX_SHARED_SECRET:
+        description: 'GP2 Squidex Shared Secret'
         required: true
       GP2_AUTH0_SHARED_SECRET:
         description: 'GP2 Auth0 Shared Secret'
@@ -47,13 +59,13 @@ jobs:
         id: deploy
         uses: ./.github/actions/sls-deployment
         with:
-          environment-name: ${{ inputs.environment-name }}
           app: crn-server
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          crn-squidex-api-client-secret: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
+          crn-squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
+          environment-name: ${{ inputs.environment-name }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-          squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
 
   gp2-sls-deploy:
     concurrency:
@@ -74,14 +86,14 @@ jobs:
         id: deploy
         uses: ./.github/actions/sls-deployment
         with:
-          environment-name: ${{ inputs.environment-name }}
           app: gp2-server
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
-          squidex-client-secret: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-          squidex-shared-secret: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+          environment-name: ${{ inputs.environment-name }}
           gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
+          gp2-squidex-api-client-secret: ${{ secrets.GP2_SQUIDEX_API_CLIENT_SECRET }}
+          gp2-squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
+          lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
 
   algolia-settings:
     needs: [crn-sls-deploy]
@@ -122,7 +134,7 @@ jobs:
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
 
-  squidex-schema:
+  crn-squidex-schema:
     needs: [crn-sls-deploy]
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
@@ -139,19 +151,50 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Update Squidex schema
+      - name: Synchronize Squidex
+        uses: ./.github/actions/squidex-sync
+        with:
+          environment-name: ${{ inputs.environment-name }}
+          app: crn
+          squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
+          squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
+          squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+          squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
+
+  gp2-squidex-schema:
+    needs: [gp2-sls-deploy]
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:0f5eee65db0ad426fd10ff52113aeeb0ab5d1ec1
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Synchronize Squidex
+        if: ${{ inputs.environment-name=='Development' }}
+        uses: ./.github/actions/squidex-sync
+        with:
+          environment-name: ${{ inputs.environment-name }}
+          app: gp2
+          squidex-app-name: ${{ steps.setup.outputs.gp2-squidex-app-name }}
+          squidex-ci-client-id: ${{ steps.setup.outputs.gp2-squidex-ci-client-id }}
+          squidex-ci-client-secret: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
+          squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
+      - name: Synchronize Squidex
+        if: ${{ inputs.environment-name=='Production'|| inputs.environment-name=='Branch' }}
         run: |
-          sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
-          sq config use $SQUIDEX_APP_NAME
-          .github/scripts/squidex-sync/config-rules.sh
-          sq sync in packages/squidex/schema -t schemas -t rules --delete
+          echo "App name: " $SQUIDEX_APP_NAME " Client Id: " $SQUIDEX_CI_CLIENT_ID
         env:
-          CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.squidex-app-name }}
-          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.squidex-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET }}
-          SQUIDEX_SHARED_SECRET: ${{ secrets.SQUIDEX_SHARED_SECRET }}
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.gp2-squidex-app-name }}
+          SQUIDEX_CI_CLIENT_ID: ${{ steps.setup.outputs.gp2-squidex-ci-client-id }}
 
   ses:
     needs: [crn-sls-deploy]

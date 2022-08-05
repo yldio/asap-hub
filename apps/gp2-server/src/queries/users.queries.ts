@@ -38,18 +38,6 @@ export const usersContentQueryFragment = gql`
       }
       expertiseAndResourceTags
       expertiseAndResourceDescription
-      teams {
-        role
-        id {
-          id
-          flatData {
-            displayName
-            proposal {
-              id
-            }
-          }
-        }
-      }
       social {
         github
         googleScholar
@@ -64,12 +52,6 @@ export const usersContentQueryFragment = gql`
       responsibilities
       researchInterests
       reachOut
-      labs {
-        id
-        flatData {
-          name
-        }
-      }
     }
   }
 `;

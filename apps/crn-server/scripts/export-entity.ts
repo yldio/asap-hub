@@ -1,5 +1,7 @@
 import { ListResponse } from '@asap-hub/model';
 import {
+  getAccessTokenFactory,
+  InputUser,
   RestEvent,
   RestExternalAuthor,
   RestResearchOutput,
@@ -8,7 +10,6 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import { getAccessTokenFactory } from '@asap-hub/squidex/src/auth';
 import { promises as fs } from 'fs';
 import { appName, baseUrl, clientId, clientSecret } from '../src/config';
 import Events from '../src/controllers/events';
@@ -69,10 +70,14 @@ function getController(entity: Entity) {
     appName,
     baseUrl,
   });
-  const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
-    appName,
-    baseUrl,
-  });
+  const userRestClient = new SquidexRest<RestUser, InputUser>(
+    getAuthToken,
+    'users',
+    {
+      appName,
+      baseUrl,
+    },
+  );
   const researchOutputRestClient = new SquidexRest<RestResearchOutput>(
     getAuthToken,
     'research-outputs',

@@ -1,0 +1,22 @@
+{
+  "$schema": "./../__json/rule.json",
+  "isEnabled": true,
+  "name": "Entity updated",
+  "trigger": {
+    "triggerType": "ContentChanged",
+    "schemas": [
+      {
+        "schemaId": "users",
+        "condition": "event.type === 'Created' || event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
+      }
+    ],
+    "handleAll": false
+  },
+  "action": {
+    "url": "GP2_API_URL/webhook/squidex",
+    "method": "POST",
+    "sharedSecret": "SQUIDEX_SHARED_SECRET",
+    "isFrozen": true,
+    "actionType": "Webhook"
+  }
+}

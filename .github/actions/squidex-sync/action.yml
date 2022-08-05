@@ -1,0 +1,81 @@
+name: Squidex Sync
+description: Syncs the Squidex Schema
+
+inputs:
+  environment-name:
+    description: 'The environment name'
+    required: true
+  app:
+    description: 'The application - crn-server or gp2-server'
+    required: true
+  squidex-app-name:
+    description: 'Squidex App Name'
+    required: true
+  squidex-ci-client-id:
+    description: 'Squidex Client ID'
+    required: true
+  squidex-ci-client-secret:
+    description: 'Squidex Client Secret'
+    required: true
+  squidex-shared-secret:
+    description: 'Squidex Shared Secret'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup
+      id: setup
+      uses: ./.github/actions/setup-environment
+      with:
+        environment-name: ${{ inputs.environment-name }}
+    - name: Update Squidex schema branch
+      shell: bash
+      if: ${{ inputs.environment-name=='Branch' }}
+      run: |
+        sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
+        sq config use $SQUIDEX_APP_NAME
+        .github/scripts/squidex-sync/config-rules.sh
+
+        if [[
+          "$APP" == "crn" && "$CRN_API_URL" == *"asap"*
+        ]]; then
+          echo "Updating CRN Squidex schema"
+        fi
+        sq sync in packages/squidex/schema/${{ inputs.app }} -t schemas -t rules --delete
+      env:
+        APP: ${{ inputs.app }}
+        CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
+        GP2_API_URL: ${{ steps.setup.outputs.gp2-api-url }}
+        SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
+        SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+        SQUIDEX_CLIENT_ID: ${{ inputs.squidex-ci-client-id }}
+        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-ci-client-secret }}
+        SQUIDEX_SHARED_SECRET: ${{ inputs.squidex-shared-secret }}
+    - name: Update Squidex schema development and production
+      shell: bash
+      if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
+      run: |
+        sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
+        sq config use $SQUIDEX_APP_NAME
+        .github/scripts/squidex-sync/config-rules.sh
+
+        if [[
+          ("$APP" == "crn" && "$SQUIDEX_APP_NAME" == *"asap"*) ||
+          ("$APP" == "gp2" && "$SQUIDEX_APP_NAME" == *"gp2"*)
+        ]]; then
+          sq sync in packages/squidex/schema/${{ inputs.app }} -t schemas -t rules --delete
+        else
+          echo "It's the wrong App!"
+          exit 1
+        fi
+
+      env:
+        APP: ${{ inputs.app }}
+        CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
+        GP2_API_URL: ${{ steps.setup.outputs.gp2-api-url }}
+        SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
+        SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+        SQUIDEX_CLIENT_ID: ${{ inputs.squidex-ci-client-id }}
+        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-ci-client-secret }}
+        SQUIDEX_SHARED_SECRET: ${{ inputs.squidex-shared-secret }}

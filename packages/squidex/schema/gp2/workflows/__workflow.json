@@ -1,0 +1,23 @@
+{
+  "$schema": "./../__json/workflow.json",
+  "name": "my-workflow",
+  "steps": {
+    "Draft": {
+      "transitions": {
+        "Published": {}
+      },
+      "color": "#ff0000",
+      "validate": false,
+      "noUpdate": false
+    },
+    "Published": {
+      "transitions": {
+        "Draft": {}
+      },
+      "color": "#00ff00",
+      "validate": false,
+      "noUpdate": true
+    }
+  },
+  "initial": "Draft"
+}

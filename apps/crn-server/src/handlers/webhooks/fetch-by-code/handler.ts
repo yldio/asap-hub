@@ -1,12 +1,13 @@
 /* istanbul ignore file */
 import { algoliaSearchClientNativeFactory } from '@asap-hub/algolia';
-import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
+import { framework as lambda } from '@asap-hub/services-common';
 import {
-  algoliaApiKey,
-  algoliaAppId,
-  appName,
-  baseUrl,
-} from '../../../config';
+  InputUser,
+  RestUser,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
+import { algoliaApiKey, algoliaAppId, appName, baseUrl } from '../../../config';
 import Users from '../../../controllers/users';
 import { AssetSquidexDataProvider } from '../../../data-providers/assets.data-provider';
 import { UserSquidexDataProvider } from '../../../data-providers/users.data-provider';
@@ -20,10 +21,14 @@ const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   baseUrl,
 });
 
-const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
-  appName,
-  baseUrl,
-});
+const userRestClient = new SquidexRest<RestUser, InputUser>(
+  getAuthToken,
+  'users',
+  {
+    appName,
+    baseUrl,
+  },
+);
 
 const userDataProvider = new UserSquidexDataProvider(
   squidexGraphqlClient,

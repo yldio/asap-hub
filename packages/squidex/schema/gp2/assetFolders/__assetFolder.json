@@ -1,0 +1,4 @@
+{
+  "$schema": "./../__json/assetFolders.json",
+  "paths": ["images", "documents", "videos"]
+}

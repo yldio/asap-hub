@@ -23,6 +23,7 @@ import {
 } from '../../utils/sync-google-calendar';
 import { syncEventFactory } from '../../utils/sync-google-event';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
+import { Handler } from 'aws-lambda';
 
 export const webhookEventUpdatedHandlerFactory = (
   calendars: CalendarController,
@@ -99,7 +100,7 @@ const syncCalendar = syncCalendarFactory(
   getJWTCredentials,
 );
 
-export const handler: lambda.Handler = sentryWrapper(
+export const handler: Handler = sentryWrapper(
   webhookEventUpdatedHandlerFactory(
     calendarController,
     syncCalendar,

@@ -1,6 +1,7 @@
 import { connectByCodeHandlerFactory } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
+import { Handler } from 'aws-lambda';
 import {
   appName,
   auth0SharedSecret,
@@ -31,4 +32,6 @@ const connectByCodeHandler = connectByCodeHandlerFactory(
   auth0SharedSecret,
 );
 
-export const handler: lambda.Handler = sentryWrapper(connectByCodeHandler);
+export const handler: lambda.Handler = lambda.http(connectByCodeHandler);
+
+export const sentryEnabledHandler: Handler = sentryWrapper(connectByCodeHandler);

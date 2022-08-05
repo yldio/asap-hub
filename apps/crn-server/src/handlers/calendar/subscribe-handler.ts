@@ -2,6 +2,7 @@ import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import { Auth } from 'googleapis';
 import 'source-map-support/register';
+import * as Sentry from '@sentry/serverless';
 import {
   appName,
   asapApiUrl,

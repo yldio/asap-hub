@@ -4,8 +4,8 @@ import {
   sentryDsn,
   sentryTraceSampleRate,
 } from '../config';
-import { Handler } from 'aws-lambda';
 import * as Sentry from '@sentry/serverless';
+import { Handler } from "aws-lambda";
 
 export const sentryWrapper = (handler: Handler): Handler => {
   Sentry.AWSLambda.init({

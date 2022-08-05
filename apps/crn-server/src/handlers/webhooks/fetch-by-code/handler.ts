@@ -1,6 +1,5 @@
 /* istanbul ignore file */
 import { algoliaSearchClientNativeFactory } from '@asap-hub/algolia';
-import { framework as lambda } from '@asap-hub/services-common';
 import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import {
   algoliaApiKey,
@@ -14,6 +13,7 @@ import { UserSquidexDataProvider } from '../../../data-providers/users.data-prov
 import { getAuthToken } from '../../../utils/auth';
 import { fetchUserByCodeHandlerFactory } from './fetch-by-code';
 import { sentryWrapper } from '../../../utils/sentry-wrapper';
+import { Handler } from 'aws-lambda/handler';
 
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
@@ -32,7 +32,7 @@ const userDataProvider = new UserSquidexDataProvider(
 
 const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 
-export const handler: lambda.Handler = sentryWrapper(
+export const handler: Handler = sentryWrapper(
   fetchUserByCodeHandlerFactory(
     new Users(userDataProvider, assetDataProvider),
     algoliaSearchClientNativeFactory({ algoliaAppId, algoliaApiKey }),

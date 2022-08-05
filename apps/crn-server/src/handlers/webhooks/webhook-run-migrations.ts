@@ -10,10 +10,7 @@ import {
 import { Handler } from 'aws-lambda';
 import { promises as fsPromise } from 'fs';
 import path from 'path';
-import {
-  appName,
-  baseUrl,
-} from '../../config';
+import { appName, baseUrl } from '../../config';
 import { getAuthToken } from '../../utils/auth';
 import pinoLogger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
@@ -278,13 +275,9 @@ export const run = sentryWrapper(
     squidexClient,
     fsPromise.readdir,
     importModuleFromPath,
-  )
+  ),
 );
 
 export const rollback = sentryWrapper(
-  rollbackFactory(
-    pinoLogger,
-    squidexClient,
-    importModuleFromPath,
-  )
+  rollbackFactory(pinoLogger, squidexClient, importModuleFromPath),
 );

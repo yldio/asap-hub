@@ -7,11 +7,7 @@ import {
   SquidexRest,
 } from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
-import {
-  appName,
-  baseUrl,
-  googleApiToken,
-} from '../../config';
+import { appName, baseUrl, googleApiToken } from '../../config';
 import Calendars, { CalendarController } from '../../controllers/calendars';
 import Events from '../../controllers/events';
 import { getAuthToken } from '../../utils/auth';
@@ -101,8 +97,5 @@ const syncCalendar = syncCalendarFactory(
 );
 
 export const handler: Handler = sentryWrapper(
-  webhookEventUpdatedHandlerFactory(
-    calendarController,
-    syncCalendar,
-  )
+  webhookEventUpdatedHandlerFactory(calendarController, syncCalendar),
 );

@@ -89,7 +89,7 @@ export const handler = sentryWrapper(
   indexUserHandler(
     new Users(userDataProvider, assetDataProvider),
     algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
-  )
+  ),
 );
 
 export type UserIndexEventBridgeEvent = EventBridgeEvent<

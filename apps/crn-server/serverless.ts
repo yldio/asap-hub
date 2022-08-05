@@ -240,7 +240,8 @@ const serverlessConfig: AWS = {
       },
     },
     auth0ConnectByCode: {
-      handler: './src/handlers/webhooks/webhook-connect-by-code.sentryEnabledHandler',
+      handler:
+        './src/handlers/webhooks/webhook-connect-by-code.sentryEnabledHandler',
       events: [
         {
           httpApi: {
@@ -640,7 +641,8 @@ const serverlessConfig: AWS = {
     ...(NODE_ENV === 'production'
       ? {
           cronjobSyncOrcid: {
-            handler: './src/handlers/webhooks/cronjob-sync-orcid.sentryEnabledHandler',
+            handler:
+              './src/handlers/webhooks/cronjob-sync-orcid.sentryEnabledHandler',
             events: [
               {
                 schedule: 'rate(1 hour)', // run every hour

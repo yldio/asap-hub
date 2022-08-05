@@ -38,4 +38,5 @@ const connectByCodeHandler = connectByCodeHandlerFactory(
 
 export const handler: lambda.Handler = lambda.http(connectByCodeHandler);
 
-export const sentryEnabledHandler: Handler = sentryWrapper(connectByCodeHandler);
+export const sentryEnabledHandler: Handler =
+  sentryWrapper(connectByCodeHandler);

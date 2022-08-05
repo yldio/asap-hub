@@ -22,4 +22,6 @@ export const squidexWebhookFactory = (
 
 const eventBridge = new EventBridge();
 
-export const handler: Handler = sentryWrapper(squidexWebhookFactory(eventBridge));
+export const handler: Handler = sentryWrapper(
+  squidexWebhookFactory(eventBridge),
+);

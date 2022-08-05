@@ -60,7 +60,5 @@ const userDataProvider = new UserSquidexDataProvider(
 const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 
 export const handler = sentryWrapper(
-  syncOrcidUserHandler(
-    new Users(userDataProvider, assetDataProvider),
-  )
+  syncOrcidUserHandler(new Users(userDataProvider, assetDataProvider)),
 );

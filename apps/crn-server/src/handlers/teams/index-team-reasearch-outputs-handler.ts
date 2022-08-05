@@ -103,5 +103,5 @@ export const handler = sentryWrapper(
       externalAuthorDataProvider,
     ),
     algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
-  )
+  ),
 );

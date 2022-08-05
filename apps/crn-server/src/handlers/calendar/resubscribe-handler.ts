@@ -1,10 +1,7 @@
 import { ScheduledHandlerAsync } from '@asap-hub/server-common';
 import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { DateTime } from 'luxon';
-import {
-  appName,
-  baseUrl,
-} from '../../config';
+import { appName, baseUrl } from '../../config';
 import Calendars, { CalendarController } from '../../controllers/calendars';
 import { getAuthToken } from '../../utils/auth';
 import getJWTCredentials from '../../utils/aws-secret-manager';
@@ -82,5 +79,5 @@ export const handler = sentryWrapper(
     new Calendars(squidexGraphqlClient, calendarRestClient),
     unsubscribeFromEventChangesFactory(getJWTCredentials),
     subscribeToEventChangesFactory(getJWTCredentials),
-  )
+  ),
 );

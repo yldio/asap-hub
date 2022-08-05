@@ -100,5 +100,5 @@ export const handler = sentryWrapper(
       algoliaAppId,
       algoliaIndex,
     }),
-  )
+  ),
 );

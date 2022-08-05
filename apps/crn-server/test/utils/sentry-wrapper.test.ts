@@ -8,8 +8,8 @@ import {
 } from '../../src/config';
 
 describe('Sentry wrapper correctly calls functions', () => {
-  const initMock = jest.fn((_) => true);
-  const wrapHandlerMock = jest.fn((handler: Handler) => handler);
+  const mockSentryInit = jest.fn((_) => true);
+  const mockSentryWrapHandler = jest.fn((handler: Handler) => handler);
 
   jest.mock('@sentry/serverless', () => {
     const sentryServerless = jest.requireActual('@sentry/serverless');
@@ -17,8 +17,8 @@ describe('Sentry wrapper correctly calls functions', () => {
     return {
       ...sentryServerless,
       AWSLambda: {
-        init: initMock,
-        wrapHandler: wrapHandlerMock,
+        init: mockSentryInit,
+        wrapHandler: mockSentryWrapHandler,
       },
     };
   });
@@ -30,12 +30,12 @@ describe('Sentry wrapper correctly calls functions', () => {
 
     sentryWrapper(handler);
 
-    expect(initMock).toHaveBeenCalledWith({
+    expect(mockSentryInit).toHaveBeenCalledWith({
       dsn: sentryDsn,
       tracesSampleRate: sentryTraceSampleRate,
       environment,
       release: currentRevision,
     });
-    expect(wrapHandlerMock).toHaveBeenCalledWith(handler);
+    expect(mockSentryWrapHandler).toHaveBeenCalledWith(handler);
   });
 });

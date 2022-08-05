@@ -1,14 +1,5 @@
-import {
-  EventBridgeHandler,
-  UserEvent,
-  UserPayload,
-} from '@asap-hub/server-common';
-import {
-  InputUser,
-  RestUser,
-  SquidexGraphql,
-  SquidexRest,
-} from '@asap-hub/squidex';
+import { EventBridgeHandler, UserEvent, UserPayload, } from '@asap-hub/server-common';
+import { InputUser, RestUser, SquidexGraphql, SquidexRest, } from '@asap-hub/squidex';
 import { appName, baseUrl } from '../../config';
 import Users, { UserController } from '../../controllers/users';
 import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';

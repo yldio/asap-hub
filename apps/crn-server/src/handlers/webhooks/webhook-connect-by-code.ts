@@ -12,6 +12,7 @@ import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provi
 import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
+import { Handler } from 'aws-lambda';
 
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,

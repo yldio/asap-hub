@@ -1,6 +1,5 @@
 /* istanbul ignore file */
 import { algoliaSearchClientNativeFactory } from '@asap-hub/algolia';
-import { framework as lambda } from '@asap-hub/services-common';
 import {
   InputUser,
   RestUser,

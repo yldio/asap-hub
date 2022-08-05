@@ -8,7 +8,7 @@ import {
 } from '../../src/config';
 
 describe('Sentry wrapper correctly calls functions', () => {
-  const initMock = jest.fn(_ => true);
+  const initMock = jest.fn((_) => true);
   const wrapHandlerMock = jest.fn((handler: Handler) => handler);
 
   jest.mock('@sentry/serverless', () => {
@@ -20,13 +20,13 @@ describe('Sentry wrapper correctly calls functions', () => {
         init: initMock,
         wrapHandler: wrapHandlerMock,
       },
-    }
+    };
   });
 
   test('should call the init & wrapHandler functions', () => {
     const handler = async (event: unknown, _context: unknown) => {
       return event;
-    }
+    };
 
     sentryWrapper(handler);
 

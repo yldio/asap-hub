@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
 
 import { getButtonChildren, getButtonStyles } from '../button';
@@ -81,7 +81,7 @@ type LinkProps = {
   readonly label?: string;
   readonly applyIconTheme?: boolean;
   readonly stretch?: boolean;
-  readonly elipsedText?: boolean;
+  readonly ellipsed?: boolean;
 } & (NormalLinkProps | ButtonStyleLinkProps);
 
 const Link: React.FC<LinkProps> = ({
@@ -96,22 +96,31 @@ const Link: React.FC<LinkProps> = ({
   applyIconTheme = false,
   margin = true,
   stretch = true,
-  elipsedText = false,
+  ellipsed = false,
 }) => {
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;
+  const applyElipsis = ellipsed && typeof linkChildren === 'string';
   const linkStyles = buttonStyle
     ? [getButtonStyles({ primary, small, enabled, children, margin, stretch })]
     : [
         styles,
         themeStyles[theme],
         applyIconTheme && iconThemeStyles[theme],
-        elipsedText && elipsedTextStyle,
+        applyElipsis && elipsedTextStyle,
       ];
+
+  // console.log({
+  //   buttonStyle,
+  //   applyElipsis,
+  //   typeofLinkChildren: typeof linkChildren,
+  //   children,
+  //   linkChildren
+  // })
 
   return (
     <Anchor
       href={href}
-      title={elipsedText ? (linkChildren as string) : undefined}
+      title={applyElipsis ? linkChildren : undefined}
       enabled={enabled}
       aria-label={label}
       css={linkStyles}

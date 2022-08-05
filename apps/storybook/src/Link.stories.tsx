@@ -28,7 +28,7 @@ export const Normal: Story<{ theme: ThemeVariant }> = (_, { theme }) => (
 export const ElipsedText: Story<{ theme: ThemeVariant }> = (_, { theme }) => (
   <Paragraph>
     <Link
-      elipsedText
+      ellipsed
       href={text('Destination', 'https://www.parkinsonsroadmap.org/')}
       theme={theme}
     >

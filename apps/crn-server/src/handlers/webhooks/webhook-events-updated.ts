@@ -1,5 +1,11 @@
 import { framework as lambda } from '@asap-hub/services-common';
-import { InputCalendar, RestCalendar, RestEvent, SquidexGraphql, SquidexRest, } from '@asap-hub/squidex';
+import {
+  InputCalendar,
+  RestCalendar,
+  RestEvent,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
 import { Handler } from 'aws-lambda';
 import { appName, baseUrl, googleApiToken } from '../../config';
@@ -8,7 +14,10 @@ import Events from '../../controllers/events';
 import { getAuthToken } from '../../utils/auth';
 import getJWTCredentials from '../../utils/aws-secret-manager';
 import logger from '../../utils/logger';
-import { SyncCalendar, syncCalendarFactory, } from '../../utils/sync-google-calendar';
+import {
+  SyncCalendar,
+  syncCalendarFactory,
+} from '../../utils/sync-google-calendar';
 import { syncEventFactory } from '../../utils/sync-google-event';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 

@@ -28,6 +28,10 @@ const {
   EMAIL_BCC,
   EMAIL_RETURN,
   CLOUDFRONT_DISTRIBUTION_ID,
+  SQUIDEX_CLIENT_ID,
+  SQUIDEX_CLIENT_SECRET,
+  SQUIDEX_BASE_URL,
+  SQUIDEX_APP_NAME,
 } = process.env;
 
 export const origin = APP_ORIGIN || 'https://dev.hub.asap.science';
@@ -62,8 +66,7 @@ export const userInviteReturn = EMAIL_RETURN || 'hub.invites.dev@asap.science';
 export const eventBus = EVENT_BUS || 'asap-events-dev';
 export const eventSource = EVENT_SOURCE || '';
 export const cloudfrontDistributionId = CLOUDFRONT_DISTRIBUTION_ID || '';
-export const baseUrl = process.env.SQUIDEX_BASE_URL || 'http://localhost:4004';
-export const clientId = process.env.SQUIDEX_CLIENT_ID || 'squidex-client-id';
-export const clientSecret =
-  process.env.SQUIDEX_CLIENT_SECRET || 'squidex-client-secret';
-export const appName = process.env.SQUIDEX_APP_NAME || 'asap-local';
+export const baseUrl = SQUIDEX_BASE_URL || 'http://localhost:4004';
+export const clientId = SQUIDEX_CLIENT_ID || 'squidex-client-id';
+export const clientSecret = SQUIDEX_CLIENT_SECRET || 'squidex-client-secret';
+export const appName = SQUIDEX_APP_NAME || 'asap-local';

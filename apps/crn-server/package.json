@@ -8,7 +8,7 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "start": "node-dev ./src/server.ts",
+    "start": "SQUIDEX_APP_NAME=$CRN_SQUIDEX_APP_NAME SQUIDEX_CLIENT_ID=$CRN_SQUIDEX_CLIENT_ID SQUIDEX_CLIENT_SECRET=$CRN_SQUIDEX_CLIENT_SECRET node-dev ./src/server.ts",
     "migration:create": "./scripts/create-migration.sh",
     "schema:update": "graphql-codegen --config codegen.yml",
     "typecheck": "tsc"

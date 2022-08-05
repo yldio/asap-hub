@@ -1,6 +1,5 @@
 import { ListResponse } from './common';
 import { EventResponse } from './event';
-import { ResearchOutputResponse } from './research-output';
 
 type ReminderEntity = 'Research Output' | 'Event';
 
@@ -48,13 +47,16 @@ export interface EventNewReminder extends EventReminder {
   };
 }
 
-export type ReminderResponse =
+export type ReminderDataObject =
   | ResearchOutputPublishedReminder
   | ResearchOutputShareReminder
   | EventNewReminder;
 
-export type ListReminderResponse = ListResponse<ReminderResponse>;
+export type ListReminderDataObject = ListResponse<ReminderResponse>;
 
 export type FetchRemindersOptions = {
   userId: string;
 };
+
+export type ReminderResponse = ReminderDataObject;
+export type ListReminderResponse = ListResponse<ReminderResponse>;

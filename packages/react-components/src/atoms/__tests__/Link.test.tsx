@@ -201,11 +201,6 @@ describe('when button-styled', () => {
 });
 
 describe('for elipsed links', () => {
-  // !! Unfortunately jest does not respect ellipsed texts (overflow: hidden)
-  // https://github.com/testing-library/react-testing-library/issues/751#issuecomment-691069646
-  // so we cannot test if the text is shown breaked as it should
-  // but we can test other properties and see it working in the StoryBook
-
   describe('when child is a string', () => {
     it('shows the title with the full text', () => {
       const longText =
@@ -240,15 +235,17 @@ describe('for elipsed links', () => {
     it('does not show the title for divs or any inner components', () => {
       const longText =
         'A very long text showing that the elipsis feature is working well, trying to provide as much text here as I can to validate this feature.';
-      const { queryByTitle } = render(
+      const { getByTestId } = render(
         <div css={{ maxWidth: '10px' }}>
           <Link href="/" ellipsed>
-            <div>{longText}</div>
+            <div data-testid="inner-div">{longText}</div>
           </Link>
         </div>,
       );
 
-      expect(queryByTitle(longText)).not.toBeInTheDocument();
+      expect(getByTestId('inner-div').closest('a')).not.toHaveAttribute(
+        'title',
+      );
     });
   });
 });

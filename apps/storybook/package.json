@@ -6,7 +6,7 @@
     "node": "16.x"
   },
   "scripts": {
-    "start": "start-storybook --quiet --no-open -c config -p 3001",
+    "start": "start-storybook --quiet -c config -p 3001",
     "build": "build-storybook --quiet -c config -o build",
     "typecheck": "tsc"
   },

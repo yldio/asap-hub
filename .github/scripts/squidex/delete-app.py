@@ -29,7 +29,7 @@ def main():
 
     appAvailable = isAppAvailable(appName)
     if appAvailable:
-        deleteApp(appName)
+        deleteApp(appName, headers)
         print("App", appName, "deleted")
     else:
         print("App", appName, "does not exist")

@@ -37,6 +37,8 @@ export const indexUserHandler =
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
+    throw new Error('Testing we can receive on Sentry.');
+
     try {
       const user = await userController.fetchById(event.detail.payload.id);
 

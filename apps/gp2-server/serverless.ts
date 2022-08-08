@@ -252,6 +252,24 @@ const serverlessConfig: AWS = {
     },
   },
   resources: {
+    Conditions: {
+      IsDev: {
+        'Fn::Equals': ['${self:provider.stage}', 'dev'],
+      },
+      IsProd: {
+        'Fn::Equals': ['${self:provider.stage}', 'production'],
+      },
+      IsDevOrProd: {
+        'Fn::Or': [
+          {
+            Condition: 'IsDev',
+          },
+          {
+            Condition: 'IsProd',
+          },
+        ],
+      },
+    },
     Resources: {
       HttpApiDomain: {
         Type: 'AWS::ApiGatewayV2::DomainName',
@@ -408,6 +426,23 @@ const serverlessConfig: AWS = {
                     [{ 'Fn::GetAtt': ['MessagesStaticBucket', 'Arn'] }, '/*'],
                   ],
                 },
+              },
+            ],
+          },
+        },
+      },
+      DataBackupBucket: {
+        Type: 'AWS::S3::Bucket',
+        Condition: 'IsDevOrProd',
+        DeletionPolicy: 'Retain',
+        Properties: {
+          BucketName: '${self:service}-${self:provider.stage}-data-backup',
+          LifecycleConfiguration: {
+            Rules: [
+              {
+                Id: 'delete-after-3-months',
+                Status: 'Enabled',
+                ExpirationInDays: 90,
               },
             ],
           },

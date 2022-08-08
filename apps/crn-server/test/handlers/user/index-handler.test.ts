@@ -1,6 +1,6 @@
 describe('This tests nothing', () => {
   test('This tests nothing', () => {
-    expect(true).toEqual(true)
+    expect(true).toEqual(true);
   });
 });
 

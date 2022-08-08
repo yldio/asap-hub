@@ -13,7 +13,7 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import { isBoom } from '@hapi/boom';
+import { isBoom, Boom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   algoliaApiKey,
@@ -57,7 +57,7 @@ export const indexUserHandler =
         logger.debug(`User removed ${user.id}`);
       }
     } catch (e) {
-      if (isBoom(e) && e.output.statusCode === 404) {
+      if (isBoom(e) && (e as Boom).output.statusCode === 404) {
         await algoliaClient.remove(event.detail.payload.id);
 
         logger.debug(`User removed ${event.detail.payload.id}`);

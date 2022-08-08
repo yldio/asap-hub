@@ -39,7 +39,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Setup app
-        if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
+        if: ${{ inputs.environment-name=='Branch' }}
         run: python .github/scripts/squidex/create-app.py
         env:
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}

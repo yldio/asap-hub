@@ -28,6 +28,10 @@ const {
   EMAIL_BCC,
   EMAIL_RETURN,
   CLOUDFRONT_DISTRIBUTION_ID,
+  SQUIDEX_CLIENT_ID,
+  SQUIDEX_CLIENT_SECRET,
+  SQUIDEX_BASE_URL,
+  SQUIDEX_APP_NAME,
 } = process.env;
 
 export const origin = APP_ORIGIN || 'https://dev.hub.asap.science';

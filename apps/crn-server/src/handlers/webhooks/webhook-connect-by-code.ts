@@ -37,7 +37,7 @@ const connectByCodeHandler = connectByCodeHandlerFactory(
   auth0SharedSecret,
 );
 
-export const handler: lambda.Handler = lambda.http(connectByCodeHandler);
+export const unloggedHandler: lambda.Handler = lambda.http(connectByCodeHandler);
 
-export const sentryEnabledHandler: Handler =
+export const handler: Handler =
   sentryWrapper(connectByCodeHandler);

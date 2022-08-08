@@ -58,6 +58,6 @@ const rawHandler = async (): Promise<lambda.Response> => {
   };
 };
 
-export const handler = rawHandler;
+export const unloggedHandler = rawHandler;
 
-export const sentryEnabledHandler = sentryWrapper(rawHandler);
+export const handler = sentryWrapper(rawHandler);

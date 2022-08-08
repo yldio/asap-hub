@@ -17,6 +17,7 @@ const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
   baseUrl,
 });
 
+/* istanbul ignore next */
 export const handler = sentryWrapper(
   inviteHandlerFactory(sendEmailFactory(ses), userRestClient, origin, logger),
 );

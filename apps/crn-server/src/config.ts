@@ -68,7 +68,6 @@ export const eventSource = EVENT_SOURCE || '';
 export const cloudfrontDistributionId = CLOUDFRONT_DISTRIBUTION_ID || '';
 export const baseUrl = SQUIDEX_BASE_URL || 'http://localhost:4004';
 export const clientId = SQUIDEX_CLIENT_ID || 'squidex-client-id';
-export const clientSecret =
-  SQUIDEX_CLIENT_SECRET || 'squidex-client-secret';
+export const clientSecret = SQUIDEX_CLIENT_SECRET || 'squidex-client-secret';
 export const appName = SQUIDEX_APP_NAME || 'asap-local';
 export const sentryTraceSampleRate = 1.0;

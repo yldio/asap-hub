@@ -6,6 +6,7 @@ import { network } from '@asap-hub/routing';
 import { isInternalUser } from '@asap-hub/validation';
 
 import { Avatar, Link } from '../atoms';
+import { ImageLink } from '.';
 import { perRem } from '../pixels';
 import { userPlaceholderIcon } from '../icons';
 import { lead } from '../colors';
@@ -69,13 +70,19 @@ const UsersList: FC<UsersListProps> = ({
             href={user.id && network({}).users({}).user({ userId: user.id }).$}
           >
             <div css={userStyles}>
-              <Avatar {...user} imageUrl={user.avatarUrl} />
+              <ImageLink
+                placeholder={<Avatar {...user} imageUrl={user.avatarUrl} />}
+              />
               <span css={nameStyles}>{user.displayName}</span>
             </div>
           </Link>
         ) : (
           <div css={userStyles}>
-            <Avatar {...user} imageUrl={getPlaceholderAvatarUrl()} />
+            <ImageLink
+              placeholder={
+                <Avatar {...user} imageUrl={getPlaceholderAvatarUrl()} />
+              }
+            />
             <span css={nameStyles}>{user.displayName}</span>
           </div>
         )}
@@ -84,7 +91,9 @@ const UsersList: FC<UsersListProps> = ({
     {users.length > max && (
       <li>
         <div css={userStyles}>
-          <Avatar placeholder={`+${users.length - max}`} />
+          <ImageLink
+            placeholder={<Avatar placeholder={`+${users.length - max}`} />}
+          />
           <span css={nameStyles}>Authors</span>
         </div>
       </li>

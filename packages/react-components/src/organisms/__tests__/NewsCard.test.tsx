@@ -64,12 +64,12 @@ describe('News', () => {
   });
 
   it('links to detail page when text is present', () => {
-    const { rerender, getByRole, queryByRole } = render(
+    const { rerender, getAllByRole, queryByRole } = render(
       <NewsCard {...newsCardProps} />,
     );
     expect(queryByRole('link')).not.toBeInTheDocument();
 
     rerender(<NewsCard {...newsCardProps} text={'<h1>title</h1>'} />);
-    expect(getByRole('link').textContent).toContain(newsCardProps.title);
+    expect(getAllByRole('link')[1].textContent).toContain(newsCardProps.title);
   });
 });

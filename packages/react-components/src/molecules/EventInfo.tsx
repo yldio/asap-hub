@@ -7,11 +7,17 @@ import { Link } from '../atoms';
 import { lead } from '../colors';
 import { perRem, largeDesktopScreen } from '../pixels';
 import { groupsIcon, eventPlaceholderIcon, speakerIcon } from '../icons';
-import { AssociationList, EventTime, TagList, LinkHeadline } from '.';
+import {
+  AssociationList,
+  EventTime,
+  TagList,
+  LinkHeadline,
+  ImageLink,
+} from '.';
 
 const TITLE_LIMIT = 55;
 
-const imageContainerStyle = css({
+const imageContainerStyle = {
   flexShrink: 0,
   borderRadius: `${6 / perRem}em`,
   height: `${102 / perRem}em`,
@@ -23,7 +29,7 @@ const imageContainerStyle = css({
   [`@media (max-width: ${largeDesktopScreen.min}px)`]: {
     display: 'none',
   },
-});
+};
 
 const cardStyles = css({
   display: 'flex',
@@ -41,12 +47,6 @@ const listItemStyles = css({
 });
 const widthStyles = css({
   display: 'grid',
-});
-
-const imageStyle = css({
-  objectFit: 'cover',
-  width: '100%',
-  height: '100%',
 });
 
 const iconStyles = css({
@@ -125,25 +125,19 @@ const EventInfo: React.FC<EventInfoProps> = ({
   tags,
   ...props
 }) => {
-  const imageComponent = thumbnail ? (
-    <img alt={`Thumbnail for "${title}"`} src={thumbnail} css={imageStyle} />
-  ) : (
-    eventPlaceholderIcon
-  );
-
+  const link =
+    status === 'Cancelled' ? undefined : events({}).event({ eventId: id }).$;
   return (
     <div css={cardStyles}>
-      <div css={imageContainerStyle}>{imageComponent}</div>
+      <ImageLink
+        imgSrc={thumbnail}
+        link={link}
+        alt={`Thumbnail for "${title}"`}
+        placeholder={eventPlaceholderIcon}
+        containerPropStyle={imageContainerStyle}
+      />
       <div>
-        <LinkHeadline
-          level={3}
-          styleAsHeading={4}
-          href={
-            status === 'Cancelled'
-              ? undefined
-              : events({}).event({ eventId: id }).$
-          }
-        >
+        <LinkHeadline level={3} styleAsHeading={4} href={link}>
           {title.substr(0, titleLimit ?? undefined)}
           {titleLimit && title.length > titleLimit ? '…' : undefined}
         </LinkHeadline>

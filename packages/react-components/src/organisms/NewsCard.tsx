@@ -10,17 +10,11 @@ import {
   newsEventPlaceholderIcon,
   trainingPlaceholderIcon,
 } from '../icons';
-import { ExternalLink, LinkHeadline } from '../molecules';
+import { ExternalLink, LinkHeadline, ImageLink } from '../molecules';
 import { lead } from '..';
 import { captionStyles } from '../text';
 
-const imageStyle = css({
-  objectFit: 'cover',
-  width: '100%',
-  height: '100%',
-});
-
-const imageContainerStyle = css({
+const imageContainerStyle = {
   flexShrink: 0,
   borderRadius: `${6 / perRem}em`,
   height: `${184 / perRem}em`,
@@ -34,7 +28,7 @@ const imageContainerStyle = css({
   [`@media (max-width: ${smallDesktopScreen.min}px)`]: {
     display: 'none',
   },
-});
+};
 
 const headerStyles = css({
   display: 'flex',
@@ -90,21 +84,17 @@ const NewsCard: React.FC<NewsCardProps> = ({
   ) : (
     <Headline4>{title}</Headline4>
   );
-
+  const newsLink = text && news({}).article({ articleId: id }).$;
   return (
     <Card>
       <div css={cardStyle}>
-        <div css={imageContainerStyle}>
-          {thumbnail ? (
-            <img
-              alt={`"${title}"'s thumbnail`}
-              src={thumbnail}
-              css={[imageStyle]}
-            />
-          ) : (
-            placeholders[type]
-          )}
-        </div>
+        <ImageLink
+          containerPropStyle={imageContainerStyle}
+          link={newsLink}
+          imgSrc={thumbnail}
+          placeholder={placeholders[type]}
+          alt={`"${title}"'s thumbnail`}
+        />
         <div css={containerStyle}>
           <div css={headerStyles}>
             <div css={{ paddingRight: `${15 / perRem}em` }}>

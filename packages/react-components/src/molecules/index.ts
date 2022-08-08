@@ -18,6 +18,7 @@ export { default as FormCard } from './FormCard';
 export { default as GoogleSigninButton } from './GoogleSigninButton';
 export { default as Header } from './Header';
 export { default as Info } from './Info';
+export { default as ImageLink } from './ImageLink';
 export { default as LabeledCheckbox } from './LabeledCheckbox';
 export { default as LabeledDateField } from './LabeledDateField';
 export { default as LabeledDropdown } from './LabeledDropdown';

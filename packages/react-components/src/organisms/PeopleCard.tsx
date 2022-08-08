@@ -2,8 +2,8 @@ import { css } from '@emotion/react';
 import { UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
-import { Card, Anchor, Avatar, Caption } from '../atoms';
-import { LinkHeadline, UserProfilePersonalText } from '../molecules';
+import { Card, Avatar, Caption } from '../atoms';
+import { LinkHeadline, UserProfilePersonalText, ImageLink } from '../molecules';
 import { tabletScreen } from '../pixels';
 import { formatDate } from '../date';
 
@@ -61,17 +61,13 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
   ...props
 }) => {
   const userHref = network({}).users({}).user({ userId: id }).$;
-
+  const userAvatar = (
+    <Avatar imageUrl={avatarUrl} firstName={firstName} lastName={lastName} />
+  );
   return (
     <Card>
       <div css={[containerStyles]}>
-        <Anchor href={userHref}>
-          <Avatar
-            imageUrl={avatarUrl}
-            firstName={firstName}
-            lastName={lastName}
-          />
-        </Anchor>
+        <ImageLink placeholder={userAvatar} link={userHref} />
         <div css={textContainerStyles}>
           <div css={moveStyles}>
             <LinkHeadline href={userHref} level={2} styleAsHeading={4}>

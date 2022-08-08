@@ -6,6 +6,7 @@ import { network } from '@asap-hub/routing';
 import { perRem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
 import { Link, Avatar, Anchor, Ellipsis } from '../atoms';
+import { ImageLink } from '.';
 import { styles } from '../atoms/Link';
 import { hover } from './LinkHeadline';
 
@@ -70,15 +71,18 @@ const MembersList: React.FC<MembersListProps> = ({
   <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
     {members.map(({ id, firstLine, secondLine, thirdLine, ...member }) => {
       const href = network({}).users({}).user({ userId: id }).$;
+      const userAvatar = (
+        <Avatar
+          firstName={member.firstName}
+          lastName={member.lastName}
+          imageUrl={member.avatarUrl}
+        />
+      );
       return (
         <li key={id} css={{ display: 'contents' }}>
           <Anchor href={href} css={{ display: 'contents' }}>
             <div css={avatarStyles}>
-              <Avatar
-                firstName={member.firstName}
-                lastName={member.lastName}
-                imageUrl={member.avatarUrl}
-              />
+              <ImageLink placeholder={userAvatar} link={href} />
             </div>
           </Anchor>
           <Anchor href={href} css={[styles, hover, nameStyles]}>

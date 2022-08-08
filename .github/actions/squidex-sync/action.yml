@@ -35,7 +35,7 @@ runs:
       run: |
         sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
         sq config use $SQUIDEX_APP_NAME
-        .github/scripts/squidex-sync/config-rules.sh
+        .github/scripts/squidex-sync/config-rules.sh packages/squidex/schema/${{ inputs.app }}/rules
 
         if [[
           "$APP" == "crn" && "$CRN_API_URL" == *"asap"*
@@ -58,7 +58,7 @@ runs:
       run: |
         sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
         sq config use $SQUIDEX_APP_NAME
-        .github/scripts/squidex-sync/config-rules.sh
+        .github/scripts/squidex-sync/config-rules.sh packages/squidex/schema/${{ inputs.app }}/rules
 
         if [[
           ("$APP" == "crn" && "$SQUIDEX_APP_NAME" == *"asap"*) ||

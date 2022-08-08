@@ -1,3 +1,5 @@
+export {};
+
 // import Boom from '@hapi/boom';
 // import { indexUserHandler } from '../../../src/handlers/user/index-handler';
 // import { getUserEvent, getUserResponse } from '../../fixtures/users.fixtures';

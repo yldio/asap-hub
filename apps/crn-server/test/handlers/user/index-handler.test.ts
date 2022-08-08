@@ -1,3 +1,9 @@
+describe('This tests nothing', () => {
+  test('This tests nothing', () => {
+    expect(true).toEqual(true)
+  });
+});
+
 export {};
 
 // import Boom from '@hapi/boom';

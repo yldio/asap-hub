@@ -1,5 +1,6 @@
 import { ListResponse } from './common';
 import { EventResponse } from './event';
+import { ResearchOutputDocumentType } from './research-output';
 
 type ReminderEntity = 'Research Output' | 'Event';
 
@@ -29,7 +30,9 @@ export interface ResearchOutputPublishedReminder
   entity: 'Research Output';
   type: 'Published';
   data: {
-    researchOutputId: string;
+    researchOutputId: ResearchOutputDataObject['id'];
+    documentType: ResearchOutputDataObject['documentType'];
+    title: ResearchOutputDataObject['title'];
   };
 }
 

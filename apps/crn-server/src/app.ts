@@ -60,6 +60,10 @@ import {
   GroupSquidexDataProvider,
 } from './data-providers/groups.data-provider';
 import {
+  ReminderDataProvider,
+  ReminderSquidexDataProvider,
+} from './data-providers/reminders.data-provider';
+import {
   ResearchOutputDataProvider,
   ResearchOutputSquidexDataProvider,
 } from './data-providers/research-outputs.data-provider';
@@ -167,6 +171,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userDataProvider =
     libs.userDataProvider ||
     new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
+  const reminderDataProvider =
+    libs.reminderDataProvider ||
+    new ReminderSquidexDataProvider(squidexGraphqlClient);
   const researchOutputDataProvider =
     libs.researchOutputDataProvider ||
     new ResearchOutputSquidexDataProvider(
@@ -195,7 +202,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const groupController =
     libs.groupController || new Groups(groupDataProvider, userDataProvider);
   const pageController = libs.pageController || new Pages(pageRestClient);
-  const reminderController = libs.reminderController || new Reminders();
+  const reminderController =
+    libs.reminderController || new Reminders(reminderDataProvider);
   const researchOutputController =
     libs.researchOutputController ||
     new ResearchOutputs(
@@ -342,6 +350,7 @@ export type Libs = {
   userController?: UserController;
   assetDataProvider?: AssetDataProvider;
   groupDataProvider?: GroupDataProvider;
+  reminderDataProvider?: ReminderDataProvider;
   teamDataProvider?: TeamDataProvider;
   userDataProvider?: UserDataProvider;
   researchOutputDataProvider?: ResearchOutputDataProvider;

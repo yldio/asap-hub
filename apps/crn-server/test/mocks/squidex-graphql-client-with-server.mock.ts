@@ -59,6 +59,9 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     EventsResultDto: resultDto,
     Labs: () => getSquidexGraphqlLab(),
     LabsResultDto: resultDto,
+    AppQueries: () => ({
+      queryResearchOutputsContents: [...new Array(1)],
+    }),
   };
   const store = createMockStore({
     schema,

@@ -1,7 +1,7 @@
 import { selector, atom, useRecoilValue } from 'recoil';
-import { DashboardResponse } from '@asap-hub/model';
+import { DashboardResponse, ListReminderResponse } from '@asap-hub/model';
 import { authorizationState } from '../auth/state';
-import { getDashboard } from './api';
+import { getDashboard, getReminders } from './api';
 
 export const fetchDashboardState = selector<DashboardResponse>({
   key: 'fetchDashboardState',
@@ -21,4 +21,18 @@ export const refreshDashboardState = atom<number>({
   default: 0,
 });
 
+export const fetchRemindersState = selector<ListReminderResponse>({
+  key: 'fetchRemindersState',
+  get: ({ get }) => {
+    get(refreshDashboardState);
+    return getReminders(get(authorizationState));
+  },
+});
+
+export const reminderState = atom<ListReminderResponse>({
+  key: 'reminderState',
+  default: fetchRemindersState,
+});
+
 export const useDashboardState = () => useRecoilValue(dashboardState);
+export const useReminderState = () => useRecoilValue(reminderState);

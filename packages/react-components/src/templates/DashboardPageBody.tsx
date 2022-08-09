@@ -43,6 +43,7 @@ type DashboardPageBodyProps = Omit<
   ComponentProps<typeof PagesSection>,
   'title'
 > &
+  Pick<ComponentProps<typeof RemindersCard>, 'reminders'> &
   Omit<ComponentProps<typeof NewsSection>, 'title'> & {
     readonly userId: string;
     readonly teamId?: string;
@@ -58,6 +59,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   userId,
   teamId,
   roles,
+  reminders,
 }) => {
   const canPublish = roles.some((role) => publishRoles.includes(role));
 
@@ -69,7 +71,11 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           <div css={infoStyles}>
             We will remind you of the most important tasks you need to do.
           </div>
-          <RemindersCard canPublish={canPublish} />
+          <RemindersCard
+            reminders={reminders}
+            limit={3}
+            canPublish={canPublish}
+          />
         </div>
       )}
       {pages.length ? (

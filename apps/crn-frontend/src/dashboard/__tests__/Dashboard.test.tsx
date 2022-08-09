@@ -2,11 +2,12 @@ import { Suspense } from 'react';
 import { User } from '@asap-hub/auth';
 import { render, waitFor, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
+import { createListReminderResponse } from '@asap-hub/fixtures';
 
 import Dashboard from '../Dashboard';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { refreshDashboardState } from '../state';
-import { getDashboard } from '../api';
+import { getDashboard, getReminders } from '../api';
 
 jest.mock('../api');
 jest.mock('../../events/api');
@@ -18,6 +19,9 @@ afterEach(() => {
 });
 const mockGetDashboard = getDashboard as jest.MockedFunction<
   typeof getDashboard
+>;
+const mockGetReminders = getReminders as jest.MockedFunction<
+  typeof getReminders
 >;
 
 const renderDashboard = async (user: Partial<User>) => {
@@ -70,4 +74,22 @@ it('renders dashboard with news', async () => {
   });
   expect(await screen.findByText(/john/i, { selector: 'h1' })).toBeVisible();
   expect(screen.queryAllByText(/title/i, { selector: 'h4' }).length).toBe(2);
+});
+
+it('renders reminders', async () => {
+  const reminderResponse = createListReminderResponse(1);
+
+  mockGetReminders.mockResolvedValue({
+    ...reminderResponse,
+    items: reminderResponse.items.map((reminder) => ({
+      ...reminder,
+      description: 'Example Reminder',
+      entity: 'Event',
+    })),
+  });
+
+  await renderDashboard({});
+  expect(mockGetReminders).toHaveBeenCalled();
+  expect(await screen.findByText(/Example Reminder/i)).toBeVisible();
+  expect(screen.getByTitle('Event')).toBeInTheDocument();
 });

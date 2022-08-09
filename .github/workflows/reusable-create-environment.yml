@@ -118,17 +118,10 @@ jobs:
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
       - name: Test Index exists
         if: ${{ inputs.environment-name=='Branch' }}
-        continue-on-error: true
-        run: |
-          OUTPUT=$(yarn workspace @asap-hub/crn-server run algolia getsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX)
-        env:
-          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
-      - name: Check outputs
-        if: ${{ always() }}
         id: index-exists
         run: |
+          OUTPUT=$(yarn workspace @asap-hub/crn-server run algolia getsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX) || true
+          echo $OUTPUT
           if [[ "$OUTPUT" == *"Index does not exist"*  ]]; then
             echo "::set-output name=index-exists::false"
             echo "Index does not exist"
@@ -136,6 +129,10 @@ jobs:
             echo "::set-output name=index-exists::true"
             echo "Index exists"
           fi
+        env:
+          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
       - name: Check Exists True
         if: ${{ steps.index-exists.outputs.index-exists == 'true' }}
         run: echo "Index exists"

@@ -50,6 +50,7 @@ def main():
 
     appAvailable = isAppAvailable(appName, headers)
     if appAvailable:
+        print("::set-output name=app-created::false")
         print("App", appName, "already exists")
     else:
         createAPP(appName)
@@ -57,6 +58,7 @@ def main():
         client = getAppClient(appName)
         promoteClient(appName, client)
         syncApp(appName, client['id'], client['secret'])
+        print("::set-output name=app-created::true")
 
 
 main()

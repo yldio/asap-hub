@@ -40,21 +40,23 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Setup app
         if: ${{ inputs.environment-name=='Branch' }}
-        run: python .github/scripts/squidex/create-app.py
+        id: setup-app
+        run: |
+          python .github/scripts/squidex/create-app.py
         env:
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
       - name: Configure AWS credentials
-        if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
+        if: ${{ inputs.environment-name=='Branch' && steps.setup-app.outputs.app-created == 'true' }}
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ steps.setup.outputs.aws-region }}
       - name: Import data
-        if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
+        if: ${{ inputs.environment-name=='Branch' && steps.setup-app.outputs.app-created == 'true' }}
         run: |
           MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket "asap-hub-dev-data-backup" --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
           aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP

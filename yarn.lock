@@ -349,7 +349,7 @@ __metadata:
     apr-intercept: ^3.0.4
     async-sema: 3.1.1
     aws-sdk: 2.1185.0
-    csv-parse: ^4.15.4
+    csv-parse: 4.16.3
     got: 11.8.5
     jwt-encode: ^1.0.1
     luxon: ^1.26.0
@@ -645,7 +645,7 @@ __metadata:
     chance: 1.1.8
     copy-webpack-plugin: 9.1.0
     cors: ^2.8.5
-    csv-parse: ^4.15.4
+    csv-parse: 4.16.3
     debug: 4.3.4
     express: ^4.17.1
     express-async-errors: ^3.1.1
@@ -19233,10 +19233,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csv-parse@npm:^4.15.4":
-  version: 4.15.4
-  resolution: "csv-parse@npm:4.15.4"
-  checksum: 3d6213e9d0d36aca854b41a5740092b6e5dd8985193bc2080f51d78cc5535785aa4b6795992cfd4bd9648b48bee496795f274c7e94cbd2ec8833b929bb5033cb
+"csv-parse@npm:4.16.3":
+  version: 4.16.3
+  resolution: "csv-parse@npm:4.16.3"
+  checksum: 5ad7790fc31c32ca1623bad1a54906134ba44fa109e8dd2dfda440bf7e9fd93610d9076a78f45c872701bfafdf7f93c9b75500c09d7efd6611d863f1d45ec69f
   languageName: node
   linkType: hard
 

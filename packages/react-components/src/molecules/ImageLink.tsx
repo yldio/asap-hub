@@ -1,4 +1,5 @@
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import { css } from '@emotion/react';
 import { fern } from '../colors';
 
 interface ImageLinkProps {
@@ -30,7 +31,7 @@ const ImageLink: React.FC<ImageLinkProps> = ({
     : containerPropStyle;
 
   return (
-    <a css={wrapperStyle} href={link}>
+    <a css={css({ ...wrapperStyle })} href={link}>
       {imgSrc ? <img src={imgSrc} alt={alt} /> : <div>{placeholder}</div>}
     </a>
   );

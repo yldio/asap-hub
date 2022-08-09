@@ -179,7 +179,6 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Synchronize Squidex
-        if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
         uses: ./.github/actions/squidex-sync
         with:
           environment-name: ${{ inputs.environment-name }}
@@ -188,13 +187,6 @@ jobs:
           squidex-ci-client-id: ${{ steps.setup.outputs.gp2-squidex-ci-client-id }}
           squidex-ci-client-secret: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
-      - name: Synchronize Squidex
-        if: ${{  inputs.environment-name=='Branch' }}
-        run: |
-          echo "App name: " $SQUIDEX_APP_NAME " Client Id: " $SQUIDEX_CI_CLIENT_ID
-        env:
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.gp2-squidex-app-name }}
-          SQUIDEX_CI_CLIENT_ID: ${{ steps.setup.outputs.gp2-squidex-ci-client-id }}
 
   ses:
     needs: [crn-sls-deploy]

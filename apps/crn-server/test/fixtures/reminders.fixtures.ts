@@ -30,8 +30,15 @@ export const getListReminderDataObject = (): ListReminderDataObject => ({
   items: [getReminderDataObject()],
 });
 
-export const getReminderResponse = (): ReminderResponse =>
-  getReminderDataObject();
+export const getReminderResponse = (): ReminderResponse => {
+  return {
+    id: 'research-output-published-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+    description:
+      'Test Proposal 1234 Bioinformatics is now published on the Hub.',
+    entity: 'Research Output',
+    href: '/shared-research/ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+  };
+};
 
 export const getListReminderResponse = (): ListReminderResponse => ({
   total: 1,
@@ -39,25 +46,27 @@ export const getListReminderResponse = (): ListReminderResponse => ({
 });
 
 export const getSquidexRemindersGraphqlResponse =
-  (): FetchUserTeamsAndResearchOutputsQuery => {
-    const researchOutput = getSquidexGraphqlResearchOutput();
-    return {
-      findUsersContent: {
-        flatData: {
-          teams: [{ id: [{ id: getSquidexGraphqlTeam({}).id }] }],
-        },
+  (): FetchUserTeamsAndResearchOutputsQuery => ({
+    findUsersContent: {
+      flatData: {
+        teams: [{ id: [{ id: getSquidexGraphqlTeam({}).id }] }],
       },
-      queryResearchOutputsContents: [
-        {
-          id: researchOutput.id,
-          flatData: {
-            publishDate: researchOutput.flatData.publishDate,
-            documentType: researchOutput.flatData.documentType,
-          },
-          referencingTeamsContents: [
-            { id: researchOutput.referencingTeamsContents![0]!.id },
-          ],
-        },
-      ],
-    };
+    },
+    queryResearchOutputsContents: [getSquidexReminderReseachOutputsContents()],
+  });
+
+export const getSquidexReminderReseachOutputsContents = () => {
+  const researchOutput = getSquidexGraphqlResearchOutput();
+
+  return {
+    id: researchOutput.id,
+    flatData: {
+      publishDate: researchOutput.flatData.publishDate,
+      documentType: researchOutput.flatData.documentType,
+      title: researchOutput.flatData.title,
+    },
+    referencingTeamsContents: [
+      { id: researchOutput.referencingTeamsContents![0]!.id },
+    ],
   };
+};

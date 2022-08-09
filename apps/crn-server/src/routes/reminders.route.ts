@@ -11,6 +11,8 @@ export const reminderRouteFactory = (
   reminderRoutes.get(
     '/reminders',
     async (req, res: Response<ListReminderResponse>) => {
+      // we'd not be able to get here without the user logged-in but TS doesn't know that
+      /* istanbul ignore next */
       if (!req.loggedInUser) {
         throw Boom.forbidden();
       }

@@ -37,11 +37,31 @@ describe('Reminder Controller', () => {
     });
 
     test('Should call the data provider with correct parameters', async () => {
+      reminderDataProviderMock.fetch.mockResolvedValueOnce({
+        total: 1,
+        items: [getReminderDataObject()],
+      });
+
       await reminderController.fetch({ userId });
 
       expect(reminderDataProviderMock.fetch).toBeCalledWith({
         userId,
       });
+    });
+
+    test('Should throw an error when the reminder is not supported', async () => {
+      const reminderDataObject = getReminderDataObject();
+      reminderDataObject.entity = 'Research Output';
+      reminderDataObject.type = 'some-type' as any;
+
+      reminderDataProviderMock.fetch.mockResolvedValueOnce({
+        total: 1,
+        items: [reminderDataObject],
+      });
+
+      await expect(reminderController.fetch({ userId })).rejects.toThrow(
+        "Reminder type 'some-type' for entity 'Research Output' is not supported",
+      );
     });
   });
 });

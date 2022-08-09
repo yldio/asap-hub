@@ -1,15 +1,17 @@
 import { ListResponse } from './common';
 import { EventResponse } from './event';
-import { ResearchOutputDocumentType } from './research-output';
+import { ResearchOutputDataObject } from './research-output';
 
 type ReminderEntity = 'Research Output' | 'Event';
 
 const researchOutputReminderTypes = ['Published', 'Share'] as const;
 const eventReminderTypes = ['New'] as const;
+
 type ResearchOutputReminderType = typeof researchOutputReminderTypes[number];
 type EventReminderType = typeof eventReminderTypes[number];
 type ReminderType = ResearchOutputReminderType | EventReminderType;
 interface Reminder {
+  id: string;
   entity: ReminderEntity;
   type: ReminderType;
   data: unknown;
@@ -55,11 +57,16 @@ export type ReminderDataObject =
   | ResearchOutputShareReminder
   | EventNewReminder;
 
-export type ListReminderDataObject = ListResponse<ReminderResponse>;
+export type ListReminderDataObject = ListResponse<ReminderDataObject>;
 
 export type FetchRemindersOptions = {
   userId: string;
 };
 
-export type ReminderResponse = ReminderDataObject;
+export type ReminderResponse = {
+  description: string;
+  entity: ReminderEntity;
+  href?: string;
+  id: string;
+};
 export type ListReminderResponse = ListResponse<ReminderResponse>;

@@ -24,6 +24,7 @@
     { "path": "../../packages/errors" },
     { "path": "../../packages/fixtures" },
     { "path": "../../packages/model" },
+    { "path": "../../packages/routing" },
     { "path": "../../packages/server-common" },
     { "path": "../../packages/services-common" },
     { "path": "../../packages/squidex" },

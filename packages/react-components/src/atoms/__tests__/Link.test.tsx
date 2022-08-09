@@ -235,7 +235,7 @@ describe('for elipsed links', () => {
     it('does not show the title for divs or any inner components', () => {
       const longText =
         'A very long text showing that the elipsis feature is working well, trying to provide as much text here as I can to validate this feature.';
-      const { getByTestId } = render(
+      const { getByText } = render(
         <div css={{ maxWidth: '10px' }}>
           <Link href="/" ellipsed>
             <div data-testid="inner-div">{longText}</div>
@@ -243,9 +243,7 @@ describe('for elipsed links', () => {
         </div>,
       );
 
-      expect(getByTestId('inner-div').closest('a')).not.toHaveAttribute(
-        'title',
-      );
+      expect(getByText(longText).closest('a')).not.toHaveAttribute('title');
     });
   });
 });

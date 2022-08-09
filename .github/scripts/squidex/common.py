@@ -46,3 +46,10 @@ def getClientHeaders():
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + res['access_token']
     }
+
+def isAppAvailable(appName, headers):
+    url = SQUIDEX_URL + "/api/apps/" + appName + "/clients"
+    r = requests.get(url=url, headers=headers)
+    json_data = r.json()
+    return 'items' in json_data
+

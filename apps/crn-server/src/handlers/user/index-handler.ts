@@ -29,6 +29,7 @@ import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
+/* istanbul ignore next */
 export const indexUserHandler =
   (
     userController: UserController,

@@ -3006,7 +3006,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "aws-sdk",\
-        "npm:2.1185.0"\
+        "npm:2.1190.0"\
       ],\
       [\
         "aws-sign2",\
@@ -10150,7 +10150,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["algoliasearch", "npm:4.14.2"],\
             ["apr-intercept", "npm:3.0.4"],\
             ["async-sema", "npm:3.1.1"],\
-            ["aws-sdk", "npm:2.1185.0"],\
+            ["aws-sdk", "npm:2.1190.0"],\
             ["csv-parse", "npm:4.16.3"],\
             ["got", "npm:11.8.5"],\
             ["jwt-encode", "npm:1.0.1"],\
@@ -10367,7 +10367,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:14.18.23"],\
             ["@types/react", "npm:17.0.48"],\
             ["@types/react-dom", "npm:17.0.17"],\
-            ["aws-sdk", "npm:2.1185.0"],\
+            ["aws-sdk", "npm:2.1190.0"],\
             ["babel-loader", "virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:8.2.5"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["core-js", "npm:3.24.1"],\
@@ -10455,7 +10455,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["algoliasearch", "npm:4.14.2"],\
             ["apr-intercept", "npm:3.0.4"],\
             ["aws-lambda", "npm:1.0.7"],\
-            ["aws-sdk", "npm:2.1185.0"],\
+            ["aws-sdk", "npm:2.1190.0"],\
             ["aws-xray-sdk", "npm:3.3.6"],\
             ["babel-loader", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:8.2.5"],\
             ["chance", "npm:1.1.8"],\
@@ -11034,7 +11034,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:14.18.23"],\
             ["@types/react", "npm:17.0.48"],\
             ["@types/react-dom", "npm:17.0.17"],\
-            ["aws-sdk", "npm:2.1185.0"],\
+            ["aws-sdk", "npm:2.1190.0"],\
             ["babel-loader", "virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:8.2.5"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["core-js", "npm:3.24.1"],\
@@ -11091,7 +11091,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/pnpify", "npm:3.1.4"],\
             ["apr-intercept", "npm:3.0.4"],\
             ["aws-lambda", "npm:1.0.7"],\
-            ["aws-sdk", "npm:2.1185.0"],\
+            ["aws-sdk", "npm:2.1190.0"],\
             ["babel-loader", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:8.2.5"],\
             ["cors", "npm:2.8.5"],\
             ["express", "npm:4.17.1"],\
@@ -11140,7 +11140,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/babel__core", "npm:7.1.19"],\
             ["@types/react", "npm:17.0.48"],\
             ["@types/react-dom", "npm:17.0.17"],\
-            ["aws-sdk", "npm:2.1185.0"],\
+            ["aws-sdk", "npm:2.1190.0"],\
             ["babel-loader", "virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:8.2.5"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["core-js", "npm:3.24.1"],\
@@ -11650,7 +11650,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ajv-formats", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:2.1.1"],\
             ["apr-intercept", "npm:3.0.4"],\
             ["aws-lambda", "npm:1.0.7"],\
-            ["aws-sdk", "npm:2.1185.0"],\
+            ["aws-sdk", "npm:2.1190.0"],\
             ["express", "npm:4.17.1"],\
             ["express-async-errors", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1"],\
             ["got", "npm:11.8.5"],\
@@ -36254,10 +36254,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:2.1185.0", {\
-          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.1185.0-151d5ddf43-80b039af2d.zip/node_modules/aws-sdk/",\
+        ["npm:2.1190.0", {\
+          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.1190.0-8309a58ecd-be70dc21b2.zip/node_modules/aws-sdk/",\
           "packageDependencies": [\
-            ["aws-sdk", "npm:2.1185.0"],\
+            ["aws-sdk", "npm:2.1190.0"],\
             ["buffer", "npm:4.9.2"],\
             ["events", "npm:1.1.1"],\
             ["ieee754", "npm:1.1.13"],\

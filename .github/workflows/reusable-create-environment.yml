@@ -38,38 +38,19 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Setup app
+      - name: Create Squidex App
         if: ${{ inputs.environment-name=='Branch' }}
-        id: setup-app
-        run: |
-          python .github/scripts/squidex/create-app.py
-        env:
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
-          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
-      - name: Configure AWS credentials
-        if: ${{ inputs.environment-name=='Branch' && steps.setup-app.outputs.app-created == 'true' }}
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: ./.github/actions/squidex-create
         with:
+          environment-name: ${{ inputs.environment-name }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ steps.setup.outputs.aws-region }}
-      - name: Import data
-        if: ${{ inputs.environment-name=='Branch' && steps.setup-app.outputs.app-created == 'true' }}
-        run: |
-          MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket "asap-hub-dev-data-backup" --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
-          aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
-          tar -xf $MOST_RECENT_BACKUP
-          FIRST_RUN="true" .github/scripts/prepare-squidex/import-data.sh
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_REGION: ${{ steps.setup.outputs.aws-region }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
-          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          bucket-name: ${{ steps.setup.outputs.crn-squidex-backup-bucket-name }}
+          squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
+          squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
+          squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
 
   algolia-index:
     runs-on: ubuntu-latest

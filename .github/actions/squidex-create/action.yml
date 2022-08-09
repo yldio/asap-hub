@@ -1,0 +1,69 @@
+name: Squidex Sync
+description: Syncs the Squidex Schema
+
+inputs:
+  environment-name:
+    description: 'The environment name'
+    required: true
+  aws-access-key-id:
+    description: 'AWS Access Key ID'
+    required: true
+  aws-region:
+    description: 'AWS Region'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
+    required: true
+  bucket-name:
+    description: 's3 bucket name for backup'
+    required: true
+  squidex-app-name:
+    description: 'Squidex App Name'
+    required: true
+  squidex-base-url:
+    description: 'Squidex Base URL'
+    required: true
+  squidex-ci-client-id:
+    description: 'Squidex Client ID'
+    required: true
+  squidex-ci-client-secret:
+    description: 'Squidex Client Secret'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup app
+      shell: bash
+      if: ${{ inputs.environment-name=='Branch' }}
+      id: setup-app
+      run: |
+        python .github/scripts/squidex/create-app.py
+      env:
+        SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
+        SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
+        SQUIDEX_CLIENT_ID: ${{ inputs.squidex-ci-client-id }}
+        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-ci-client-secret }}
+    - name: Configure AWS credentials
+      if: ${{ inputs.environment-name=='Branch' && steps.setup-app.outputs.app-created == 'true' }}
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        aws-region: ${{ inputs.aws-region }}
+    - name: Import data
+      shell: bash
+      if: ${{ inputs.environment-name=='Branch' && steps.setup-app.outputs.app-created == 'true' }}
+      run: |
+        MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket "asap-hub-dev-data-backup" --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
+        aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
+        tar -xf $MOST_RECENT_BACKUP
+        FIRST_RUN="true" .github/scripts/prepare-squidex/import-data.sh
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_REGION: ${{ inputs.aws-region }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
+        SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
+        SQUIDEX_CLIENT_ID: ${{ inputs.squidex-ci-client-id }}
+        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-ci-client-secret }}

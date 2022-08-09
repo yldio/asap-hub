@@ -5,6 +5,9 @@ inputs:
   environment-name:
     description: 'The environment name'
     required: true
+  app:
+    description: 'The application - crn or gp2'
+    required: true
   aws-access-key-id:
     description: 'AWS Access Key ID'
     required: true
@@ -40,6 +43,7 @@ runs:
       run: |
         python .github/scripts/squidex/create-app.py
       env:
+        APP: ${{ inputs.app }}
         SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
         SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
         SQUIDEX_CLIENT_ID: ${{ inputs.squidex-ci-client-id }}
@@ -55,8 +59,8 @@ runs:
       shell: bash
       if: ${{ inputs.environment-name=='Branch' && steps.setup-app.outputs.app-created == 'true' }}
       run: |
-        MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket "asap-hub-dev-data-backup" --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
-        aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
+        MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket $BUCKET_NAME --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
+        aws s3api get-object --bucket $BUCKET_NAME --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
         tar -xf $MOST_RECENT_BACKUP
         FIRST_RUN="true" .github/scripts/prepare-squidex/import-data.sh
       env:
@@ -67,3 +71,4 @@ runs:
         SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
         SQUIDEX_CLIENT_ID: ${{ inputs.squidex-ci-client-id }}
         SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-ci-client-secret }}
+        BUCKET_NAME: ${{ inputs.bucket-name }}

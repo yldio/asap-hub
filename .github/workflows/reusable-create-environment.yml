@@ -20,6 +20,12 @@ on:
       CRN_SQUIDEX_SHARED_SECRET:
         description: 'Squidex Shared Secret'
         required: true
+      GP2_SQUIDEX_CI_CLIENT_SECRET:
+        description: 'Squidex Client Secret'
+        required: true
+      GP2_SQUIDEX_SHARED_SECRET:
+        description: 'Squidex Shared Secret'
+        required: true
 
 jobs:
   crn-squidex:
@@ -43,6 +49,7 @@ jobs:
         uses: ./.github/actions/squidex-create
         with:
           environment-name: ${{ inputs.environment-name }}
+          app: crn
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-region: ${{ steps.setup.outputs.aws-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -50,6 +57,37 @@ jobs:
           squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
           squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
+
+  gp2-squidex:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:0f5eee65db0ad426fd10ff52113aeeb0ab5d1ec1
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    environment: Branch
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Create Squidex App
+        if: ${{ inputs.environment-name=='Branch' }}
+        uses: ./.github/actions/squidex-create
+        with:
+          environment-name: ${{ inputs.environment-name }}
+          app: gp2
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-region: ${{ steps.setup.outputs.aws-region }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          bucket-name: ${{ steps.setup.outputs.gp2-squidex-backup-bucket-name }}
+          squidex-app-name: ${{ steps.setup.outputs.gp2-squidex-app-name }}
+          squidex-ci-client-id: ${{ steps.setup.outputs.gp2-squidex-ci-client-id }}
+          squidex-ci-client-secret: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
 
   algolia-index:

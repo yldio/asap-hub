@@ -1,5 +1,5 @@
-name: Squidex Sync
-description: Syncs the Squidex Schema
+name: Squidex Backup
+description: Creates a Squidex Backup
 
 inputs:
   aws-access-key-id:

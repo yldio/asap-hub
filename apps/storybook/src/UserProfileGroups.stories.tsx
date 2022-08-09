@@ -10,7 +10,17 @@ export default {
 
 export const Normal = () => <UserProfileGroups {...props()} />;
 
-const props = (): ComponentProps<typeof UserProfileGroups> => {
+export const GroupNameElipsed = () => (
+  <UserProfileGroups
+    {...props(
+      'A very long text to show the ellipsis working on the group name of the component',
+    )}
+  />
+);
+
+const props = (
+  groupName: string = 'Sci 1 - GWAS Functional',
+): ComponentProps<typeof UserProfileGroups> => {
   const numberOfGroups = number('Number of groups', 5);
   return {
     firstName: text('First Name', 'Daniel'),
@@ -20,7 +30,7 @@ const props = (): ComponentProps<typeof UserProfileGroups> => {
       if (index === 0) {
         return {
           ...groupResponseItem,
-          name: text('Group 0 Name', 'Sci 1 - GWAS Functional'),
+          name: text('Group 0 Name', groupName),
           leaders: [
             {
               role: text('Group 0 Role', 'Lead PI') as GroupRole,

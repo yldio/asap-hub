@@ -39,7 +39,7 @@ export const indexUserHandler =
 
     throw new Error('Testing we can receive on Sentry.');
 
-    try {
+    /* try {
       const user = await userController.fetchById(event.detail.payload.id);
 
       logger.debug(`Fetched user ${user.id}`);
@@ -66,7 +66,7 @@ export const indexUserHandler =
 
       logger.error(e, 'Error saving user to Algolia');
       throw e;
-    }
+    }*/
   };
 
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {

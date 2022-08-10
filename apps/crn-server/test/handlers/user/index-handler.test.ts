@@ -1,16 +1,20 @@
 import { indexUserHandler } from '../../../src/handlers/user/index-handler';
-import { getUserEvent } from '../../fixtures/users.fixtures';
+import { getUserEvent, getUserResponse } from '../../fixtures/users.fixtures';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user-controller.mock';
 
 describe('User index handler', () => {
   test('Should throw an error', async () => {
+    const event = createEvent();
+    const userResponse = getUserResponse();
+    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+
     const indexHandler = indexUserHandler(
       userControllerMock,
       algoliaSearchClientMock,
     );
 
-    expect(await indexHandler(createEvent())).toThrow(
+    expect(await indexHandler(event)).toThrow(
       'Testing we can receive on Sentry.',
     );
   });

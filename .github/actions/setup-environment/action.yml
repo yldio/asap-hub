@@ -113,9 +113,12 @@ outputs:
   crn-squidex-app-name:
     description: 'CRN Squidex App Name'
     value: ${{ steps.vars.outputs.crn-squidex-app-name }}
-  squidex-backup-bucket-name:
-    description: 'Squidex Backup Bucket Name'
-    value: ${{ steps.vars.outputs.squidex-backup-bucket-name }}
+  crn-squidex-app-name-legacy:
+    description: 'Legacy CRN Squidex App Name'
+    value: ${{ steps.vars.outputs.crn-squidex-app-name-legacy }}
+  crn-squidex-backup-bucket-name:
+    description: 'CRN Squidex Backup Bucket Name'
+    value: ${{ steps.vars.outputs.crn-squidex-backup-bucket-name }}
   squidex-base-url:
     description: 'Squidex Base Url'
     value: ${{ steps.vars.outputs.squidex-base-url }}
@@ -128,6 +131,9 @@ outputs:
   gp2-squidex-app-name:
     description: 'GP2 Squidex App Name'
     value: ${{ steps.vars.outputs.gp2-squidex-app-name }}
+  gp2-squidex-backup-bucket-name:
+    description: 'GP2 Squidex Backup Bucket Name'
+    value: ${{ steps.vars.outputs.gp2-squidex-backup-bucket-name }}
   gp2-squidex-api-client-id:
     description: 'GP2 API Squidex Client ID'
     value: ${{ steps.vars.outputs.gp2-squidex-api-client-id }}
@@ -162,7 +168,8 @@ runs:
           echo "::set-output name=gp2-app-url::https://$PR_NUMBER.gp2.asap.science"
           echo "::set-output name=pr-number::$PR_NUMBER"
           echo "::set-output name=sls-stage::$PR_NUMBER"
-          echo "::set-output name=crn-squidex-app-name::$PR_NUMBER"
+          echo "::set-output name=crn-squidex-app-name::crn-$PR_NUMBER"
+          echo "::set-output name=crn-squidex-app-name-legacy::$PR_NUMBER"
           echo "::set-output name=gp2-squidex-app-name::gp2-$PR_NUMBER"
         elif [ "$ENVIRONMENT_NAME" = 'Development' ]; then
           echo "::set-output name=app-release::${{ github.run_id }}-dev"

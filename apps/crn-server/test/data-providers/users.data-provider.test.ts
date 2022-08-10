@@ -1,6 +1,6 @@
-import { NotFoundError } from '@asap-hub/errors';
+import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { FetchUsersOptions, UserResponse } from '@asap-hub/model';
-import { RestUser, SquidexRest } from '@asap-hub/squidex';
+import { InputUser, RestUser, SquidexRest } from '@asap-hub/squidex';
 import nock, { DataMatcherMap } from 'nock';
 import { appName, baseUrl } from '../../src/config';
 import {
@@ -16,8 +16,10 @@ import {
   fetchUserResponse,
   fetchUserResponseDataObject,
   getGraphQLUser,
+  getInputUser,
   getSquidexUserGraphqlResponse,
   getSquidexUsersGraphqlResponse,
+  getUserCreateDataObject,
   getUserDataObject,
 } from '../fixtures/users.fixtures';
 import { identity } from '../helpers/squidex';
@@ -25,10 +27,14 @@ import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-clie
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
 describe('User data provider', () => {
-  const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
-    appName,
-    baseUrl,
-  });
+  const userRestClient = new SquidexRest<RestUser, InputUser>(
+    getAuthToken,
+    'users',
+    {
+      appName,
+      baseUrl,
+    },
+  );
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
   const userDataProvider = new UserSquidexDataProvider(
     squidexGraphqlClientMock,
@@ -43,9 +49,11 @@ describe('User data provider', () => {
   beforeAll(() => {
     identity();
   });
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
+
   describe('FetchById', () => {
     // const usersMockGraphqlServer = new Users(squidexGraphqlClientMockServer);
     test('Should fetch the users from squidex graphql', async () => {
@@ -277,7 +285,8 @@ describe('User data provider', () => {
       );
     });
   });
-  describe('update', () => {
+
+  describe('Update', () => {
     afterEach(() => {
       nock.cleanAll();
     });
@@ -390,17 +399,54 @@ describe('User data provider', () => {
         .reply(200, fetchUserResponse())
         .put(`/api/content/${appName}/users/${userId}`, {
           ...fetchUserResponse().data,
-          teams: { iv: [{ id: 'team-id' }] },
+          teams: { iv: [{ id: 'team-id', role: 'Key Personnel' }] },
         } as { [k: string]: any })
         .reply(200, fetchUserResponse()); // this response is ignored
 
       const result = await userDataProvider.update(userId, {
-        teams: [{ id: 'team-id' }],
+        teams: [{ id: 'team-id', role: 'Key Personnel' }],
       });
       expect(nock.isDone()).toBe(true);
       expect(result).not.toBeDefined();
     });
   });
+
+  describe('Create', () => {
+    const userId = 'some-user-id';
+
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
+    test('Should create a user', async () => {
+      const userCreateDataObject = getUserCreateDataObject();
+
+      nock(baseUrl)
+        .post(
+          `/api/content/${appName}/users?publish=true`,
+          getInputUser() as any,
+        )
+        .reply(201, { id: userId });
+
+      const result = await userDataProvider.create(userCreateDataObject);
+      expect(result).toEqual(userId);
+    });
+
+    test('Should throw when it fails to create the user', async () => {
+      nock(baseUrl)
+        .post(`/api/content/${appName}/users?publish=true`)
+        .reply(500);
+
+      await expect(
+        userDataProvider.create(getUserCreateDataObject()),
+      ).rejects.toThrow(GenericError);
+    });
+  });
+
   describe('Fetch', () => {
     beforeEach(() => {
       jest.clearAllMocks();

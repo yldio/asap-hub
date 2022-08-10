@@ -2,17 +2,19 @@ import os
 import sys
 
 import requests
-from common import getClientHeaders
+from common import getClientHeaders, isAppAvailable
 
 headers = getClientHeaders()
 
 SQUIDEX_URL = os.getenv('SQUIDEX_BASE_URL')
 
+
 def deleteApp(appName):
     # Delete app using app client
     deleteUrl = SQUIDEX_URL + "/api/apps/" + appName
-    r = requests.delete(url = deleteUrl, headers = headers)
+    r = requests.delete(url=deleteUrl, headers=headers)
     return r
+
 
 def main():
     appName = os.getenv('SQUIDEX_APP_NAME')
@@ -21,7 +23,12 @@ def main():
         print("SQUIDEX_APP_NAME is undefined")
         sys.exit(1)
 
-    deleteApp(appName)
-    print("App", appName, "deleted")
+    appAvailable = isAppAvailable(appName, headers)
+    if appAvailable:
+        deleteApp(appName)
+        print("App", appName, "deleted")
+    else:
+        print("App", appName, "does not exist")
+
 
 main()

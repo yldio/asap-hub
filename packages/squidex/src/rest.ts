@@ -168,7 +168,6 @@ export class Squidex<
           }
         }
       }
-
       throw new GenericError(err instanceof Error ? err : undefined);
     }
   }

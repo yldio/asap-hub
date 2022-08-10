@@ -21,12 +21,13 @@ const {
   SQUIDEX_CLIENT_ID,
   SQUIDEX_CLIENT_SECRET,
   SQUIDEX_SHARED_SECRET,
+  AUTH0_AUDIENCE,
 } = process.env;
 
 export const appName = SQUIDEX_APP_NAME || 'asap-local';
 export const auth0ClientId = AUTH0_CLIENT_ID || '';
 export const auth0Audience =
-  process.env.GP2_AUTH0_AUDIENCE || process.env.AUTH0_AUDIENCE || '';
+  process.env.GP2_AUTH0_AUDIENCE || AUTH0_AUDIENCE || '';
 export const baseUrl = SQUIDEX_BASE_URL || 'http://localhost:4004';
 export const clientId = SQUIDEX_CLIENT_ID || '';
 export const clientSecret = SQUIDEX_CLIENT_SECRET || '';

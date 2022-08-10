@@ -327,6 +327,7 @@ describe('/users/ route', () => {
           teams: [
             {
               id: 'team-id-1000',
+              role: 'Lead PI (Core Leadership)',
             },
           ],
         });
@@ -353,7 +354,6 @@ describe('/users/ route', () => {
       await supertest(appWithMockedAuth)
         .patch(`/users/${userId}`)
         .send(requestParams);
-
       const { onboarded, ...remainingParams } = userPatchRequest;
 
       expect(userControllerMock.update).toBeCalledWith(userId, remainingParams);
@@ -482,7 +482,12 @@ describe('/users/ route', () => {
       test('Should be able to provide a list of objects containing IDs for the teams parameter ', async () => {
         const response = await supertest(appWithMockedAuth)
           .patch(`/users/${userId}`)
-          .send({ teams: [{ id: 'team-id-1' }, { id: 'team-id-2' }] });
+          .send({
+            teams: [
+              { id: 'team-id-1', role: 'Project Manager' },
+              { id: 'team-id-2', role: 'Key Personnel' },
+            ],
+          });
 
         expect(response.status).toBe(200);
       });

@@ -14,7 +14,7 @@ describe('User index handler', () => {
       algoliaSearchClientMock,
     );
 
-    expect(await indexHandler(event)).toThrow(
+    await expect(indexHandler(event)).rejects.toThrow(
       'Testing we can receive on Sentry.',
     );
   });

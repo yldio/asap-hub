@@ -66,8 +66,6 @@ export const indexUserHandler =
       logger.error(e, 'Error saving user to Algolia');
       throw e;
     }
-
-    throw new Error('Testing we can receive on Sentry.');
   };
 
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {

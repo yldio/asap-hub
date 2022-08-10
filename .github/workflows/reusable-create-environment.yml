@@ -121,7 +121,6 @@ jobs:
         id: index-exists
         run: |
           OUTPUT=$(yarn workspace @asap-hub/crn-server run algolia getsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX) || true
-          echo $OUTPUT
           if [[ "$OUTPUT" == *"Index does not exist"*  ]]; then
             echo "::set-output name=index-exists::false"
             echo "Index does not exist"
@@ -133,14 +132,8 @@ jobs:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
-      - name: Check Exists True
-        if: ${{ steps.index-exists.outputs.index-exists == 'true' }}
-        run: echo "Index exists"
-      - name: Check Exists False
-        if: ${{ steps.index-exists.outputs.index-exists == 'false' }}
-        run: echo "Index does not exist"
       - name: Get the latest backup directory name
-        if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
+        if: ${{ inputs.environment-name=='Branch' &&  steps.index-exists.outputs.index-exists == 'false' }}
         run: echo "MOST_RECENT_BACKUP_DIR=$(aws s3api list-objects-v2 --bucket $BUCKET_NAME --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text | cut -d'/' -f 1)" >> $GITHUB_ENV
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -148,7 +141,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           BUCKET_NAME: ${{ steps.setup.outputs.algolia-backup-bucket-name }}
       - name: Download the files and restore the index
-        if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
+        if: ${{ inputs.environment-name=='Branch' &&  steps.index-exists.outputs.index-exists == 'false' }}
         run: |
           aws s3 cp s3://$BUCKET_NAME/$MOST_RECENT_BACKUP_DIR $MOST_RECENT_BACKUP_DIR --recursive
           export ALGOLIA_BACKUP=$(readlink -f $MOST_RECENT_BACKUP_DIR)

@@ -9,10 +9,7 @@ import http from 'http';
 import https from 'https';
 import * as Sentry from '@sentry/serverless';
 import { appFactory } from '../app';
-import {
-  lightstepToken,
-  environment,
-} from '../config';
+import { lightstepToken, environment } from '../config';
 import logger from '../utils/logger';
 import { sentryWrapper } from '../utils/sentry-wrapper';
 

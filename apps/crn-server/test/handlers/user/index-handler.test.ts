@@ -6,10 +6,12 @@ describe('User index handler', () => {
   test('Should throw an error', () => {
     const indexHandler = indexUserHandler(
       userControllerMock,
-      algoliaSearchClientMock
-    )
+      algoliaSearchClientMock,
+    );
 
-    expect(() => indexHandler(createEvent())).toThrow('Testing we can receive on Sentry');
+    expect(() => indexHandler(createEvent())).toThrow(
+      'Testing we can receive on Sentry',
+    );
   });
 });
 

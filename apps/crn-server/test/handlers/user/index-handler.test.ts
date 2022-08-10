@@ -4,14 +4,14 @@ import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user-controller.mock';
 
 describe('User index handler', () => {
-  test('Should throw an error', () => {
+  test('Should throw an error', async () => {
     const indexHandler = indexUserHandler(
       userControllerMock,
       algoliaSearchClientMock,
     );
 
-    expect(() => indexHandler(createEvent())).toThrow(
-      'Testing we can receive on Sentry',
+    expect(await indexHandler(createEvent())).toThrow(
+      'Testing we can receive on Sentry.',
     );
   });
 });

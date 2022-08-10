@@ -1,10 +1,17 @@
-describe('This tests nothing', () => {
-  test('This tests nothing', () => {
-    expect(true).toEqual(true);
+import { indexUserHandler } from '../../../src/handlers/user/index-handler';
+import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
+import { userControllerMock } from '../../mocks/user-controller.mock';
+
+describe('User index handler', () => {
+  test('Should throw an error', () => {
+    const indexHandler = indexUserHandler(
+      userControllerMock,
+      algoliaSearchClientMock
+    )
+
+    expect(() => indexHandler(createEvent())).toThrow('Testing we can receive on Sentry');
   });
 });
-
-export {};
 
 // import Boom from '@hapi/boom';
 // import { indexUserHandler } from '../../../src/handlers/user/index-handler';
@@ -335,8 +342,8 @@ export {};
 // const deleteEvent = (id: string = 'user-1234') =>
 //   getUserEvent(id, 'UsersDeleted');
 //
-// const createEvent = (id: string = 'user-1234') =>
-//   getUserEvent(id, 'UsersPublished');
+const createEvent = (id: string = 'user-1234') =>
+  getUserEvent(id, 'UsersPublished');
 //
 // const updateEvent = (id: string = 'user-1234') =>
 //   getUserEvent(id, 'UsersUpdated');

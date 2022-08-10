@@ -119,6 +119,7 @@ jobs:
       - name: Test Index exists
         if: ${{ inputs.environment-name=='Branch' }}
         id: index-exists
+        shell: bash
         run: |
           OUTPUT=$(yarn workspace @asap-hub/crn-server run algolia getsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX) || true
           if [[ "$OUTPUT" == *"Index does not exist"*  ]]; then

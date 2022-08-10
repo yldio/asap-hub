@@ -25,6 +25,7 @@ runs:
   using: 'composite'
   steps:
     - name: Verify
+      shell: bash
       if: ${{ inputs.environment-name=='Branch' }}
       run: |
         yarn schema:update

@@ -17,7 +17,11 @@ import { TeamSquidexDataProvider } from '../../src/data-providers/teams.data-pro
 import { getResearchOutputCreateDataObject } from '../fixtures/research-output.fixtures';
 import { getTeamCreateDataObject } from '../fixtures/teams.fixtures';
 import { createRandomOrcid } from '../helpers/users';
-import { ResearchOutputPublishedReminder } from '@asap-hub/model';
+import {
+  ResearchOutputCreateDataObject,
+  ResearchOutputPublishedReminder,
+  UserCreateDataObject,
+} from '@asap-hub/model';
 
 jest.setTimeout(30000);
 
@@ -71,20 +75,10 @@ describe('Reminders', () => {
       teamCreateDataObject.applicationNumber = chance.name();
       teamId = await teamDataProvider.create(teamCreateDataObject);
 
-      const userCreateDataObject2 = getUserCreateDataObject();
-      userCreateDataObject2.teams = [{ id: teamId, role: 'Key Personnel' }];
-      userCreateDataObject2.labIds = [];
-      userCreateDataObject2.email = chance.email();
-      userCreateDataObject2.orcid = createRandomOrcid();
-      delete userCreateDataObject2.avatar;
+      const userCreateDataObject2 = getUserInput();
       creatorId = await userDataProvider.create(userCreateDataObject2);
 
-      const userCreateDataObject = getUserCreateDataObject();
-      userCreateDataObject.teams = [{ id: teamId, role: 'Key Personnel' }];
-      userCreateDataObject.labIds = [];
-      userCreateDataObject.email = chance.email();
-      userCreateDataObject.orcid = createRandomOrcid();
-      delete userCreateDataObject.avatar;
+      const userCreateDataObject = getUserInput();
       userId1 = await userDataProvider.create(userCreateDataObject);
     });
 
@@ -184,20 +178,27 @@ describe('Reminders', () => {
       ]);
     });
 
-    const getResearchOutputInput = () => {
-      const researchOutputCreateDataObject =
-        getResearchOutputCreateDataObject();
-      researchOutputCreateDataObject.teamIds = [teamId];
-      researchOutputCreateDataObject.createdBy = creatorId;
-      researchOutputCreateDataObject.subtypeId = undefined;
-      researchOutputCreateDataObject.link = chance.url();
-      researchOutputCreateDataObject.environmentIds = [];
-      researchOutputCreateDataObject.organismIds = [];
-      researchOutputCreateDataObject.methodIds = [];
-      researchOutputCreateDataObject.labIds = [];
-      researchOutputCreateDataObject.authors = [];
-      researchOutputCreateDataObject.publishDate = new Date().toISOString();
-      return researchOutputCreateDataObject;
-    };
+    const getResearchOutputInput = (): ResearchOutputCreateDataObject => ({
+      ...getResearchOutputCreateDataObject(),
+      teamIds: [teamId],
+      createdBy: creatorId,
+      subtypeId: undefined,
+      link: chance.url(),
+      environmentIds: [],
+      organismIds: [],
+      methodIds: [],
+      labIds: [],
+      authors: [],
+      publishDate: new Date().toISOString(),
+    });
+
+    const getUserInput = (): UserCreateDataObject => ({
+      ...getUserCreateDataObject(),
+      teams: [{ id: teamId, role: 'Key Personnel' }],
+      labIds: [],
+      email: chance.email(),
+      orcid: createRandomOrcid(),
+      avatar: undefined,
+    });
   });
 });

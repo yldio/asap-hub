@@ -12,10 +12,9 @@ import { appFactory } from '../app';
 import {
   lightstepToken,
   environment,
-  currentRevision,
-  sentryDsn,
 } from '../config';
 import logger from '../utils/logger';
+import { sentryWrapper } from '../utils/sentry-wrapper';
 
 const lsTracer = new LightStep.Tracer({
   access_token: lightstepToken || '',
@@ -26,13 +25,6 @@ const lsTracer = new LightStep.Tracer({
 AWSXray.captureHTTPsGlobal(http, true);
 AWSXray.captureHTTPsGlobal(https, true);
 AWSXray.capturePromise();
-
-Sentry.AWSLambda.init({
-  dsn: sentryDsn,
-  tracesSampleRate: 1.0,
-  environment,
-  release: currentRevision,
-});
 
 const app = appFactory({
   tracer: lsTracer,
@@ -53,7 +45,9 @@ const httpHandler = serverlessHttp(app, {
   ) {
     request.context = event.requestContext;
     logger.withRequest(event, context);
+
+    throw new Error('Lets see if this shows up.');
   },
 });
 
-export const apiHandler = Sentry.AWSLambda.wrapHandler(httpHandler);
+export const apiHandler = sentryWrapper(httpHandler);

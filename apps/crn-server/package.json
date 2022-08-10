@@ -34,6 +34,7 @@
     "@asap-hub/errors": "workspace:*",
     "@asap-hub/message-templates": "workspace:*",
     "@asap-hub/model": "workspace:*",
+    "@asap-hub/routing": "workspace:*",
     "@asap-hub/server-common": "workspace:*",
     "@asap-hub/services-common": "workspace:*",
     "@asap-hub/squidex": "workspace:*",
@@ -81,6 +82,7 @@
     "p-limit": "^3.1.0",
     "parse-data-url": "^3.0.0",
     "pump": "^3.0.0",
+    "react-router-dom": "5.3.3",
     "serverless-http": "^2.7.0",
     "source-map-support": "0.5.21",
     "uuid": "^8.3.2"

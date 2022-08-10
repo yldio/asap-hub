@@ -4,4 +4,5 @@ export const teamDataProviderMock: jest.Mocked<TeamDataProvider> = {
   fetch: jest.fn(),
   fetchById: jest.fn(),
   update: jest.fn(),
+  create: jest.fn(),
 };

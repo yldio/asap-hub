@@ -51,6 +51,16 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   outputs?: string[];
 };
 
+export type TeamCreateDataObject = {
+  applicationNumber: string;
+  displayName: string;
+  expertiseAndResourceTags: string[];
+  researchOutputIds?: string[];
+  projectSummary?: string;
+  projectTitle: string;
+  tools?: TeamTool[];
+};
+
 export type ListTeamDataObject = ListResponse<TeamDataObject>;
 
 export type TeamResponse = TeamDataObject;

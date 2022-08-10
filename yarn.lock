@@ -577,6 +577,7 @@ __metadata:
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/model": "workspace:*"
+    "@asap-hub/routing": "workspace:*"
     "@asap-hub/server-common": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
@@ -671,6 +672,7 @@ __metadata:
     p-limit: ^3.1.0
     parse-data-url: ^3.0.0
     pump: ^3.0.0
+    react-router-dom: 5.3.3
     serverless: 3.21.0
     serverless-http: ^2.7.0
     serverless-iam-roles-per-function: ^2.0.2

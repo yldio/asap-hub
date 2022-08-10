@@ -1,11 +1,13 @@
 import {
   FetchOptions,
   ListTeamDataObject,
+  TeamCreateDataObject,
   TeamDataObject,
   TeamTool,
   TeamUpdateDataObject,
 } from '@asap-hub/model';
 import {
+  InputTeam,
   RestTeam,
   sanitiseForSquidex,
   SquidexGraphqlClient,
@@ -25,11 +27,12 @@ export interface TeamDataProvider {
   fetchById(id: string): Promise<TeamDataObject | null>;
   fetch(options: FetchTeamsOptions): Promise<ListTeamDataObject>;
   update(id: string, update: TeamUpdateDataObject): Promise<void>;
+  create(input: TeamCreateDataObject): Promise<string>;
 }
 
 export class TeamSquidexDataProvider implements TeamDataProvider {
   squidexGraphqlClient: SquidexGraphqlClient;
-  teamSquidexRestClient: SquidexRestClient<RestTeam>;
+  teamSquidexRestClient: SquidexRestClient<RestTeam, InputTeam>;
 
   constructor(
     squidexGraphqlClient: SquidexGraphqlClient,
@@ -119,6 +122,22 @@ export class TeamSquidexDataProvider implements TeamDataProvider {
     );
 
     await this.teamSquidexRestClient.patch(id, { tools: { iv: cleanTools } });
+  }
+
+  async create(input: TeamCreateDataObject): Promise<string> {
+    const inputTeam: InputTeam['data'] = {
+      applicationNumber: { iv: input.applicationNumber },
+      displayName: { iv: input.displayName },
+      expertiseAndResourceTags: { iv: input.expertiseAndResourceTags },
+      projectTitle: { iv: input.projectTitle },
+      outputs: { iv: input.researchOutputIds || [] },
+      projectSummary: { iv: input.projectSummary || null },
+      proposal: { iv: [] },
+      tools: { iv: input.tools || null },
+    };
+    const { id } = await this.teamSquidexRestClient.create(inputTeam);
+
+    return id;
   }
 }
 

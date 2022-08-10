@@ -2,6 +2,7 @@ import {
   FetchRemindersOptions,
   isResearchOutputDocumentType,
   ListReminderDataObject,
+  ReminderDataObject,
   ResearchOutputPublishedReminder,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
@@ -23,11 +24,7 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
   }
 
   async fetch(options: FetchRemindersOptions): Promise<ListReminderDataObject> {
-    const date = new Date();
-    date.setDate(date.getDate() - 1);
-    const date24hAgo = date.toISOString();
-
-    const filter = `data/publishDate/iv ge ${date24hAgo}`;
+    const filter = getReminderFilter();
 
     const { findUsersContent, queryResearchOutputsContents } =
       await this.squidexGraphqlClient.request<
@@ -47,69 +44,116 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
       return emptyResult;
     }
 
-    const teamWithId = (team: {
-      id: Maybe<Pick<Teams, 'id'>[]>;
-    }): team is { id: [{ id: string }] } => !!team.id && team.id.length > 0;
-
-    const userTeams = findUsersContent.flatData.teams
-      .filter(teamWithId)
-      .map((team) => team.id[0].id);
+    const userTeamIds = getUserTeamIds(findUsersContent.flatData.teams);
 
     if (!queryResearchOutputsContents) {
       return emptyResult;
     }
 
-    const researchOutputs = queryResearchOutputsContents.reduce<
-      (ResearchOutputPublishedReminder['data'] & { publishDate: string })[]
-    >((prev, next) => {
-      if (!next.referencingTeamsContents) {
-        return prev;
-      }
+    const researchOutputReminders = getResearchOutputRemindersFromQuery(
+      queryResearchOutputsContents,
+      userTeamIds,
+    );
 
-      const researchOutputTeams = next.referencingTeamsContents.map(
-        (team) => team.id,
-      );
-      const isInTeam = researchOutputTeams.some((team) =>
-        userTeams.includes(team),
-      );
-
-      if (
-        !next.flatData.documentType ||
-        !isResearchOutputDocumentType(next.flatData.documentType) ||
-        !next.flatData.title
-      ) {
-        return prev;
-      }
-
-      if (isInTeam) {
-        prev.push({
-          researchOutputId: next.id,
-          publishDate: next.flatData.publishDate,
-          documentType: next.flatData.documentType,
-          title: next.flatData.title,
-        });
-      }
-
-      return prev;
-    }, []);
-
-    const researchOutputsSorted = researchOutputs.sort(
+    const researchOutputsSorted = researchOutputReminders.sort(
       (a, b) =>
         new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime(),
     );
 
     return {
       total: researchOutputsSorted.length,
-      items: researchOutputsSorted.map((researchOutput) => ({
-        id: `research-output-published-${researchOutput.researchOutputId}`,
-        entity: 'Research Output',
-        type: 'Published',
-        data: {
-          researchOutputId: researchOutput.researchOutputId,
-          documentType: researchOutput.documentType,
-          title: researchOutput.title,
-        },
-      })),
+      items: researchOutputsSorted.map(
+        mapResearchOutputReminderToReminderDataObject,
+      ),
     };
   }
 }
+
+const getReminderFilter = (): string => {
+  const date = new Date();
+  date.setDate(date.getDate() - 1);
+  const date24hAgo = date.toISOString();
+
+  const filter = `data/publishDate/iv ge ${date24hAgo}`;
+  return filter;
+};
+
+const getUserTeamIds = (
+  teams: { id: Maybe<Pick<Teams, 'id'>[]> }[],
+): string[] => {
+  const teamWithId = (team: {
+    id: Maybe<Pick<Teams, 'id'>[]>;
+  }): team is { id: [{ id: string }] } => !!team.id && team.id.length > 0;
+
+  const userTeams = teams.filter(teamWithId).map((team) => team.id[0].id);
+  return userTeams;
+};
+
+const getResearchOutputRemindersFromQuery = (
+  query: NonNullable<
+    FetchUserTeamsAndResearchOutputsQuery['queryResearchOutputsContents']
+  >,
+  userTeamIds: string[],
+): ResearchOutputReminder[] =>
+  query.reduce<
+    (ResearchOutputPublishedReminder['data'] & { publishDate: string })[]
+  >((researchOutputReminders, researchOutput) => {
+    if (!researchOutput.referencingTeamsContents) {
+      return researchOutputReminders;
+    }
+
+    const researchOutputTeams = researchOutput.referencingTeamsContents.map(
+      (team) => team.id,
+    );
+
+    const isInTeam = researchOutputTeams.some((team) =>
+      userTeamIds.includes(team),
+    );
+
+    if (
+      !researchOutput.flatData.documentType ||
+      !isResearchOutputDocumentType(researchOutput.flatData.documentType) ||
+      !researchOutput.flatData.title
+    ) {
+      return researchOutputReminders;
+    }
+
+    if (isInTeam) {
+      researchOutputReminders.push({
+        researchOutputId: researchOutput.id,
+        publishDate: researchOutput.flatData.publishDate,
+        documentType: researchOutput.flatData.documentType,
+        title: researchOutput.flatData.title,
+      });
+    }
+
+    return researchOutputReminders;
+  }, []);
+
+const mapResearchOutputReminderToReminderDataObject = (
+  researchOutputReminder: ResearchOutputReminder,
+): ReminderDataObject => ({
+  id: `research-output-published-${researchOutputReminder.researchOutputId}`,
+  entity: 'Research Output',
+  type: 'Published',
+  data: {
+    researchOutputId: researchOutputReminder.researchOutputId,
+    documentType: researchOutputReminder.documentType,
+    title: researchOutputReminder.title,
+  },
+});
+
+type ResearchOutputReminder = {
+  researchOutputId: string;
+  documentType:
+    | 'Grant Document'
+    | 'Presentation'
+    | 'Dataset'
+    | 'Bioinformatics'
+    | 'Protocol'
+    | 'Lab Resource'
+    | 'Article';
+  title: string;
+} & {
+  publishDate: string;
+};

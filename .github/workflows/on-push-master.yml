@@ -98,6 +98,7 @@ jobs:
     secrets:
       CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
       FRONTEND_SENTRY_RELEASE_AUTH_TOKEN: ${{ secrets.FRONTEND_SENTRY_RELEASE_AUTH_TOKEN }}
+      GP2_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
 
   deployment-production:
     needs: [build-analysis-production, verify-development]
@@ -135,6 +136,7 @@ jobs:
     secrets:
       CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
       FRONTEND_SENTRY_RELEASE_AUTH_TOKEN: ${{ secrets.FRONTEND_SENTRY_RELEASE_AUTH_TOKEN }}
+      GP2_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
 
   notify_failure:
     runs-on: ubuntu-latest

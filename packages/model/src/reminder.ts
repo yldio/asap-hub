@@ -4,11 +4,8 @@ import { ResearchOutputDataObject } from './research-output';
 
 type ReminderEntity = 'Research Output' | 'Event';
 
-const researchOutputReminderTypes = ['Published', 'Share'] as const;
-const eventReminderTypes = ['New'] as const;
-
-type ResearchOutputReminderType = typeof researchOutputReminderTypes[number];
-type EventReminderType = typeof eventReminderTypes[number];
+type ResearchOutputReminderType = 'Published' | 'Share';
+type EventReminderType = 'New';
 type ReminderType = ResearchOutputReminderType | EventReminderType;
 interface Reminder {
   id: string;

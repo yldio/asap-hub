@@ -1,4 +1,5 @@
 import { indexUserHandler } from '../../../src/handlers/user/index-handler';
+import { getUserEvent } from '../../fixtures/users.fixtures';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user-controller.mock';
 

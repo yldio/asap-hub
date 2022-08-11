@@ -4,6 +4,7 @@ import { css, SerializedStyles } from '@emotion/react';
 import { getButtonChildren, getButtonStyles } from '../button';
 import { fern, paper, pine } from '../colors';
 import { defaultThemeVariant, ThemeVariant } from '../theme';
+import Ellipsis from './Ellipsis';
 import { Anchor } from '.';
 
 export const styles = css({
@@ -47,13 +48,6 @@ const iconThemeStyles: Record<ThemeVariant, SerializedStyles> = {
     ':active': { svg: { stroke: paper.rgb } },
   }),
 };
-
-const elipsedTextStyle = css({
-  display: 'block',
-  whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis',
-  overflow: 'hidden',
-});
 
 interface NormalLinkProps {
   readonly theme?: ThemeVariant;
@@ -102,12 +96,7 @@ const Link: React.FC<LinkProps> = ({
   const applyElipsis = ellipsed && typeof linkChildren === 'string';
   const linkStyles = buttonStyle
     ? [getButtonStyles({ primary, small, enabled, children, margin, stretch })]
-    : [
-        styles,
-        themeStyles[theme],
-        applyIconTheme && iconThemeStyles[theme],
-        applyElipsis && elipsedTextStyle,
-      ];
+    : [styles, themeStyles[theme], applyIconTheme && iconThemeStyles[theme]];
 
   return (
     <Anchor
@@ -117,7 +106,7 @@ const Link: React.FC<LinkProps> = ({
       aria-label={label}
       css={linkStyles}
     >
-      {linkChildren}
+      {applyElipsis ? <Ellipsis>{linkChildren}</Ellipsis> : linkChildren}
     </Anchor>
   );
 };

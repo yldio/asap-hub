@@ -67,7 +67,7 @@ jobs:
         env:
           CRN_APP_URL: ${{ steps.setup.outputs.crn-app-url }}
 
-  schema:
+  crn-schema:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -92,6 +92,23 @@ jobs:
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
           squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+
+  gp2-schema:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:0f5eee65db0ad426fd10ff52113aeeb0ab5d1ec1
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
       - name: Verify GP2
         uses: ./.github/actions/squidex-verify
         with:

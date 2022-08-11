@@ -38,6 +38,7 @@ export default class Discover implements DiscoverController {
       aboutUs: flatData.aboutUs || '',
       training: flatData.training?.map(parseGraphQLNews) ?? [],
       members: flatData.members?.map(parseGraphQLUser) ?? [],
+      membersTeamId: flatData.membersTeam?.[0]?.id,
       scientificAdvisoryBoard:
         flatData.scientificAdvisoryBoard?.map(parseGraphQLUser) ?? [],
       pages: flatData.pages?.map(parseGraphQLPage) ?? [],

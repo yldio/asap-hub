@@ -43,7 +43,9 @@ const getSquidexGraphqlDiscoverMembers = (prefix = '') => [
   },
 ];
 
-const squidexGraphqlDiscoverFlatData = () => ({
+const squidexGraphqlDiscoverFlatData = (): NonNullable<
+  FetchDiscoverQuery['queryDiscoverContents']
+>[number]['flatData'] => ({
   training: [
     {
       id: 'uuid-training-1',
@@ -117,6 +119,11 @@ const squidexGraphqlDiscoverFlatData = () => ({
     },
   ],
   members: getSquidexGraphqlDiscoverMembers(),
+  membersTeam: [
+    {
+      id: 'uuid-team-1',
+    },
+  ],
   scientificAdvisoryBoard: getSquidexGraphqlDiscoverMembers('sab-'),
   aboutUs: '<p>content<p>',
 });
@@ -187,7 +194,7 @@ const getSquidexGraphqlDiscoverMembersResponse = (
   },
 ];
 
-export const squidexGraphqlDiscoverResponse = (): DiscoverResponse => ({
+export const getDiscoverResponse = (): DiscoverResponse => ({
   aboutUs: '<p>content<p>',
   training: [
     {
@@ -212,6 +219,7 @@ export const squidexGraphqlDiscoverResponse = (): DiscoverResponse => ({
     },
   ],
   members: getSquidexGraphqlDiscoverMembersResponse(),
+  membersTeamId: 'uuid-team-1',
   scientificAdvisoryBoard: getSquidexGraphqlDiscoverMembersResponse('sab-'),
   pages: [
     {

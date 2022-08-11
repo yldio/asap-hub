@@ -42,8 +42,6 @@ const httpHandler = serverlessHttp(app, {
   ) {
     request.context = event.requestContext;
     logger.withRequest(event, context);
-
-    throw new Error('Lets see if this shows up.');
   },
 });
 

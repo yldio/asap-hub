@@ -14,7 +14,7 @@ import { ExternalLink, LinkHeadline, ImageLink } from '../molecules';
 import { lead } from '..';
 import { captionStyles } from '../text';
 
-const imageContainerStyle = {
+const imageContainerStyle = css({
   flexShrink: 0,
   borderRadius: `${6 / perRem}em`,
   height: `${184 / perRem}em`,
@@ -28,7 +28,7 @@ const imageContainerStyle = {
   [`@media (max-width: ${smallDesktopScreen.min}px)`]: {
     display: 'none',
   },
-};
+});
 
 const headerStyles = css({
   display: 'flex',

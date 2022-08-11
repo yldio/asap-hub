@@ -17,7 +17,7 @@ import {
 
 const TITLE_LIMIT = 55;
 
-const imageContainerStyle = {
+const imageContainerStyle = css({
   flexShrink: 0,
   borderRadius: `${6 / perRem}em`,
   height: `${102 / perRem}em`,
@@ -29,7 +29,7 @@ const imageContainerStyle = {
   [`@media (max-width: ${largeDesktopScreen.min}px)`]: {
     display: 'none',
   },
-};
+});
 
 const cardStyles = css({
   display: 'flex',

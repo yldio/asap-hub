@@ -29,8 +29,6 @@ export const WithImage = () => (
 
 export const WithoutLink = () => (
   <div style={{ width: '100%', display: 'flex', flexFlow: 'column' }}>
-    <ImageLink
-      imgSrc={asapImage}
-    />
+    <ImageLink imgSrc={asapImage} />
   </div>
 );

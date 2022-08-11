@@ -45,6 +45,8 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
       CRN_SQUIDEX_SHARED_SECRET: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
+      GP2_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
+      GP2_SQUIDEX_SHARED_SECRET: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
 
   deployment:
     needs: [test, build-analysis, create-environment]
@@ -70,6 +72,7 @@ jobs:
       environment-name: Branch
     secrets:
       CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+      GP2_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
 
   branch-pipeline-success:
     runs-on: ubuntu-latest

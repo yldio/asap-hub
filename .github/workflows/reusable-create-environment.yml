@@ -20,6 +20,12 @@ on:
       CRN_SQUIDEX_SHARED_SECRET:
         description: 'Squidex Shared Secret'
         required: true
+      GP2_SQUIDEX_CI_CLIENT_SECRET:
+        description: 'Squidex Client Secret'
+        required: true
+      GP2_SQUIDEX_SHARED_SECRET:
+        description: 'Squidex Shared Secret'
+        required: true
 
 jobs:
   crn-squidex:
@@ -38,38 +44,51 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Setup app
+      - name: Create Squidex App
         if: ${{ inputs.environment-name=='Branch' }}
-        id: setup-app
-        run: |
-          python .github/scripts/squidex/create-app.py
-        env:
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
-          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
-      - name: Configure AWS credentials
-        if: ${{ inputs.environment-name=='Branch' && steps.setup-app.outputs.app-created == 'true' }}
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: ./.github/actions/squidex-create
         with:
+          environment-name: ${{ inputs.environment-name }}
+          app: crn
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ steps.setup.outputs.aws-region }}
-      - name: Import data
-        if: ${{ inputs.environment-name=='Branch' && steps.setup-app.outputs.app-created == 'true' }}
-        run: |
-          MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket "asap-hub-dev-data-backup" --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
-          aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
-          tar -xf $MOST_RECENT_BACKUP
-          FIRST_RUN="true" .github/scripts/prepare-squidex/import-data.sh
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_REGION: ${{ steps.setup.outputs.aws-region }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
-          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
-          SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          bucket-name: ${{ steps.setup.outputs.crn-squidex-backup-bucket-name }}
+          squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
+          squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
+          squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
+
+  gp2-squidex:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:0f5eee65db0ad426fd10ff52113aeeb0ab5d1ec1
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    environment: Branch
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Create Squidex App
+        if: ${{ inputs.environment-name=='Branch' }}
+        uses: ./.github/actions/squidex-create
+        with:
+          environment-name: ${{ inputs.environment-name }}
+          app: gp2
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-region: ${{ steps.setup.outputs.aws-region }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          bucket-name: ${{ steps.setup.outputs.gp2-squidex-backup-bucket-name }}
+          squidex-app-name: ${{ steps.setup.outputs.gp2-squidex-app-name }}
+          squidex-ci-client-id: ${{ steps.setup.outputs.gp2-squidex-ci-client-id }}
+          squidex-ci-client-secret: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
 
   algolia-index:
     runs-on: ubuntu-latest
@@ -89,7 +108,7 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Get Algolia Keys
         id: algolia-keys
-        if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
+        if: ${{ inputs.environment-name=='Branch' }}
         uses: ./.github/actions/algolia-keys
         with:
           algolia-app-id-name: ${{ steps.setup.outputs.algolia-app-id-name }}
@@ -97,8 +116,25 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
+      - name: Test Index exists
+        if: ${{ inputs.environment-name=='Branch' }}
+        id: index-exists
+        shell: bash
+        run: |
+          OUTPUT=$(yarn workspace @asap-hub/crn-server run algolia getsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX) || true
+          if [[ "$OUTPUT" == *"Index does not exist"*  ]]; then
+            echo "::set-output name=index-exists::false"
+            echo "Index does not exist"
+          else
+            echo "::set-output name=index-exists::true"
+            echo "Index exists"
+          fi
+        env:
+          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
       - name: Get the latest backup directory name
-        if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
+        if: ${{ inputs.environment-name=='Branch' &&  steps.index-exists.outputs.index-exists == 'false' }}
         run: echo "MOST_RECENT_BACKUP_DIR=$(aws s3api list-objects-v2 --bucket $BUCKET_NAME --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text | cut -d'/' -f 1)" >> $GITHUB_ENV
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -106,7 +142,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           BUCKET_NAME: ${{ steps.setup.outputs.algolia-backup-bucket-name }}
       - name: Download the files and restore the index
-        if: ${{ inputs.environment-name=='Branch' && github.event.action == 'opened' }}
+        if: ${{ inputs.environment-name=='Branch' &&  steps.index-exists.outputs.index-exists == 'false' }}
         run: |
           aws s3 cp s3://$BUCKET_NAME/$MOST_RECENT_BACKUP_DIR $MOST_RECENT_BACKUP_DIR --recursive
           export ALGOLIA_BACKUP=$(readlink -f $MOST_RECENT_BACKUP_DIR)

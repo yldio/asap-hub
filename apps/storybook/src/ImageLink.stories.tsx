@@ -22,16 +22,15 @@ export const WithPlaceholderAvatar = () => (
 );
 
 export const WithImage = () => (
-  <ImageLink
-    imgSrc={asapImage}
-    containerPropStyle={{ width: '100%', display: 'flex', flexFlow: 'column' }}
-    link={text('Link', 'user-2')}
-  />
+  <div style={{ width: '100%', display: 'flex', flexFlow: 'column' }}>
+    <ImageLink imgSrc={asapImage} link={text('Link', 'user-2')} />
+  </div>
 );
 
 export const WithoutLink = () => (
-  <ImageLink
-    imgSrc={asapImage}
-    containerPropStyle={{ width: '100%', display: 'flex', flexFlow: 'column' }}
-  />
+  <div style={{ width: '100%', display: 'flex', flexFlow: 'column' }}>
+    <ImageLink
+      imgSrc={asapImage}
+    />
+  </div>
 );

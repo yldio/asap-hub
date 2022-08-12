@@ -8,16 +8,15 @@ export interface SentryConfig {
   sentryTraceSampleRate: number | undefined;
 }
 
-export const sentryWrapperImpl = (
-  handler: Handler,
-  config: SentryConfig,
-): Handler => {
-  Sentry.AWSLambda.init({
-    dsn: config.sentryDsn,
-    tracesSampleRate: config.sentryTraceSampleRate,
-    environment: config.environment,
-    release: config.currentRevision,
-  });
+export const sentryWrapperFactory =
+  (config: SentryConfig) =>
+  (handler: Handler): Handler => {
+    Sentry.AWSLambda.init({
+      dsn: config.sentryDsn,
+      tracesSampleRate: config.sentryTraceSampleRate,
+      environment: config.environment,
+      release: config.currentRevision,
+    });
 
-  return Sentry.AWSLambda.wrapHandler(handler);
-};
+    return Sentry.AWSLambda.wrapHandler(handler);
+  };

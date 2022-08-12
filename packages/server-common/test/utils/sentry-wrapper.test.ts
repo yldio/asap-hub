@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/serverless';
 import { Handler } from 'aws-lambda';
-import { SentryConfig, sentryWrapperImpl } from '../../src/utils';
+import { SentryConfig, sentryWrapperFactory } from '../../src/utils';
 
 describe('Sentry wrapper correctly calls functions', () => {
   test('should call the init & wrapHandler functions', () => {
@@ -18,7 +18,8 @@ describe('Sentry wrapper correctly calls functions', () => {
       currentRevision: 'NoIdea',
     };
 
-    sentryWrapperImpl(handler, config);
+    const sentryWrapper = sentryWrapperFactory(config);
+    sentryWrapper(handler);
 
     expect(Sentry.AWSLambda.init).toHaveBeenCalledWith({
       dsn: config.sentryDsn,

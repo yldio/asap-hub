@@ -1,4 +1,4 @@
-import { sentryWrapperImpl } from '@asap-hub/server-common';
+import { sentryWrapperFactory } from '@asap-hub/server-common';
 import { Handler } from 'aws-lambda';
 import {
   currentRevision,
@@ -8,12 +8,12 @@ import {
 } from '../config';
 
 export const sentryWrapper = (handler: Handler): Handler => {
-  const config = {
+  const wrapper = sentryWrapperFactory({
     currentRevision,
     environment,
     sentryDsn,
     sentryTraceSampleRate,
-  };
+  });
 
-  return sentryWrapperImpl(handler, config);
+  return wrapper(handler);
 };

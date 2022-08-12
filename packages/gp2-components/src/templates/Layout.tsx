@@ -16,6 +16,7 @@ import { useLocation } from 'react-router-dom';
 import NavigationHeader from '../organism/NavigationHeader';
 import UserMenu from '../molecules/UserMenu';
 import MainNavigation from '../organism/MainNavigation';
+import Theme from './Theme';
 
 const { mobileScreen, tabletScreen, vminLinearCalcClamped } = pixels;
 
@@ -130,41 +131,43 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   }, [location, prevLocation, mainRef]);
 
   return (
-    <ToastStack>
-      <article css={styles}>
-        <div css={headerStyles}>
-          <NavigationHeader
-            menuOpen={menuShown}
-            onToggleMenu={() => {
-              setMenuShown(!menuShown);
-            }}
-          />
-        </div>
+    <Theme>
+      <ToastStack>
+        <article css={styles}>
+          <div css={headerStyles}>
+            <NavigationHeader
+              menuOpen={menuShown}
+              onToggleMenu={() => {
+                setMenuShown(!menuShown);
+              }}
+            />
+          </div>
 
-        <div
-          css={css({
-            gridRow: 'header-end / -1',
-            gridColumn: '1 / -1',
-            overflowY: 'auto',
-          })}
-        >
-          <main ref={mainRef} css={contentStyles}>
-            {children}
-          </main>
-        </div>
-        <div css={[overlayStyles, menuShown && overlayMenuShownStyles]}>
-          <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
-        </div>
-        <div css={[menuStyles, menuShown && menuMenuShownStyles]}>
-          <div css={[mainMenuStyles]}>
-            <MainNavigation />
+          <div
+            css={css({
+              gridRow: 'header-end / -1',
+              gridColumn: '1 / -1',
+              overflowY: 'auto',
+            })}
+          >
+            <main ref={mainRef} css={contentStyles}>
+              {children}
+            </main>
           </div>
-          <div css={[userMenuStyles]}>
-            <UserMenu />
+          <div css={[overlayStyles, menuShown && overlayMenuShownStyles]}>
+            <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
           </div>
-        </div>
-      </article>
-    </ToastStack>
+          <div css={[menuStyles, menuShown && menuMenuShownStyles]}>
+            <div css={[mainMenuStyles]}>
+              <MainNavigation />
+            </div>
+            <div css={[userMenuStyles]}>
+              <UserMenu />
+            </div>
+          </div>
+        </article>
+      </ToastStack>
+    </Theme>
   );
 };
 

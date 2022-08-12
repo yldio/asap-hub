@@ -2,8 +2,11 @@ import { render, fireEvent } from '@testing-library/react';
 import { StaticRouter, Router } from 'react-router-dom';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { createMemoryHistory } from 'history';
+import { ThemeProvider } from '@emotion/react';
 
 import NavigationLink from '../NavigationLink';
+import { color, pine } from '../../colors';
+import { activePrimaryBackgroundColorDefault } from '../../button';
 
 describe.each`
   description           | wrapper
@@ -94,5 +97,42 @@ describe('with a router', () => {
       </NavigationLink>,
     );
     expect(fireEvent.click(getByRole('link'))).toBe(true);
+  });
+});
+
+describe('with ThemeProvider', () => {
+  it('uses default colors when no theme whas provided', () => {
+    const { getByRole } = render(
+      <NavigationLink href="http://example.com/" icon={<svg />}>
+        Text
+      </NavigationLink>,
+    );
+    const { color: primaryColor, backgroundColor } = getComputedStyle(
+      getByRole('link'),
+    );
+    expect(primaryColor).toBe(pine.rgb);
+    expect(backgroundColor).toBe(activePrimaryBackgroundColorDefault.rgba);
+  });
+  it('uses ThemeProvider theme primaryColor', () => {
+    const activePrimaryBackgroundColor = color(230, 243, 249);
+    const activePrimaryColor = color(0, 106, 146);
+    const theme = {
+      colors: {
+        info100: activePrimaryBackgroundColor,
+        info900: activePrimaryColor,
+      },
+    };
+    const { getByRole } = render(
+      <ThemeProvider theme={theme}>
+        <NavigationLink href="http://example.com/" icon={<svg />}>
+          Text
+        </NavigationLink>
+      </ThemeProvider>,
+    );
+    const { color: primaryColor, backgroundColor } = getComputedStyle(
+      getByRole('link'),
+    );
+    expect(primaryColor).toBe(activePrimaryColor.rgb);
+    expect(backgroundColor).toBe(activePrimaryBackgroundColor.rgb);
   });
 });

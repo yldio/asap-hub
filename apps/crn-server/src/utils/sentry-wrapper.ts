@@ -1,4 +1,4 @@
-import { sentryWrapperFactory } from '@asap-hub/server-common/build';
+import { sentryWrapperFactory } from '@asap-hub/server-common';
 import {
   currentRevision,
   environment,

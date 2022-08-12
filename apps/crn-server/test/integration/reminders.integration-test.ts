@@ -22,6 +22,7 @@ import {
   ResearchOutputPublishedReminder,
   UserCreateDataObject,
 } from '@asap-hub/model';
+import { pause } from '../helpers/integration-tests';
 
 jest.setTimeout(30000);
 
@@ -89,6 +90,8 @@ describe('Reminders', () => {
         researchOutputInput,
       );
 
+      await pause();
+
       const reminders = await reminderDataProvider.fetch({ userId: userId1 });
 
       const expectedReminder: ResearchOutputPublishedReminder = {
@@ -117,6 +120,8 @@ describe('Reminders', () => {
 
       await researchOutputDataProvider.create(researchOutputInput);
 
+      await pause();
+
       const reminders = await reminderDataProvider.fetch({ userId: userId1 });
 
       expect(reminders).toEqual({
@@ -133,6 +138,8 @@ describe('Reminders', () => {
       researchOutputInput.addedDate = timeOver24hago.toISOString();
 
       await researchOutputDataProvider.create(researchOutputInput);
+
+      await pause();
 
       const reminders = await reminderDataProvider.fetch({ userId: userId1 });
 
@@ -164,6 +171,8 @@ describe('Reminders', () => {
       const researchOutputId3 = await researchOutputDataProvider.create(
         researchOutputInput3,
       );
+
+      await pause();
 
       const reminders = await reminderDataProvider.fetch({ userId: userId1 });
       const reminderIds = reminders.items.map(

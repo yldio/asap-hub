@@ -1,12 +1,13 @@
-import { drawerQuery, Paragraph } from '@asap-hub/react-components';
-import { accents } from '@asap-hub/react-components/src/atoms/Card';
 import {
-  mobileScreen,
-  rem,
-  tabletScreen,
-  vminLinearCalcClamped,
-} from '@asap-hub/react-components/src/pixels';
+  drawerQuery,
+  Paragraph,
+  pixels,
+  accents,
+} from '@asap-hub/react-components';
+
 import { css } from '@emotion/react';
+
+const { mobileScreen, rem, tabletScreen, vminLinearCalcClamped } = pixels;
 
 type PageBannerProp = {
   image: string;

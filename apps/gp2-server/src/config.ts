@@ -48,3 +48,4 @@ export const squidexSharedSecret =
 export const userInviteSender = EMAIL_SENDER || `"GP2 Hub" <gp2@asap.science>`;
 export const userInviteBcc = EMAIL_BCC || 'gp2.invites.dev@asap.science';
 export const userInviteReturn = EMAIL_RETURN || 'gp2.invites.dev@asap.science';
+export const sentryTraceSampleRate = 1.0;

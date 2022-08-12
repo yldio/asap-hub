@@ -3,7 +3,14 @@ import { css } from '@emotion/react';
 
 import { perRem, mobileScreen } from '../pixels';
 import { Card } from '../atoms';
-import { lead, silver, apricot, clay, info, sky } from '../colors';
+import {
+  lead,
+  silver,
+  apricot,
+  clay,
+  informationInfo500,
+  semanticInformationInfo100,
+} from '../colors';
 import { AlertIcon, clockIcon, paperClipIcon, errorIcon } from '../icons';
 import { borderRadius, paddingStyles } from '../card';
 
@@ -33,9 +40,9 @@ const alertStyles = css({
 });
 
 const infoStyles = css({
-  backgroundColor: sky.rgb,
-  color: info.rgb,
-  fill: info.rgb,
+  backgroundColor: semanticInformationInfo100.rgb,
+  color: informationInfo500.rgb,
+  fill: informationInfo500.rgb,
   borderRadius: `${borderRadius - 1}px ${borderRadius - 1}px 0px 0px`,
 });
 
@@ -60,7 +67,7 @@ const iconMap: Record<Type, ReactNode | Component> = {
   alert: errorIcon,
   attachment: paperClipIcon,
   live: clockIcon,
-  info: <AlertIcon color={info.rgb} />,
+  info: <AlertIcon color={informationInfo500.rgb} />,
 };
 
 const accentMap = {

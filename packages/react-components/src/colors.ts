@@ -79,7 +79,6 @@ export const mint = color(228, 245, 238);
 
 export const cerulean = color(0, 140, 198);
 export const denim = color(0, 106, 146);
-export const sky = color(230, 243, 249);
 
 export const prussian = color(0, 93, 129);
 export const space = color(0, 69, 97);
@@ -93,6 +92,8 @@ export const iris = color(140, 78, 159);
 export const mauve = color(105, 59, 119);
 export const lavender = color(242, 237, 245);
 
-export const info = color(12, 141, 195);
-
 export const neutral200 = color(246, 249, 251);
+
+export const informationInfo500 = color(12, 141, 195);
+
+export const semanticInformationInfo100 = color(230, 243, 249);

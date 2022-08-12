@@ -5,6 +5,7 @@ import serverlessHttp from 'serverless-http';
 import { APIGatewayProxyEventV2 } from 'aws-lambda';
 import { appFactory } from '../app';
 import logger from '../utils/logger';
+import { sentryWrapper } from '../utils/sentry-wrapper';
 
 const app = appFactory({});
 
@@ -23,4 +24,4 @@ const httpHandler = serverlessHttp(app, {
   },
 });
 
-export const apiHandler = httpHandler;
+export const apiHandler = sentryWrapper(httpHandler);

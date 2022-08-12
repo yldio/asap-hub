@@ -1271,7 +1271,7 @@ __metadata:
     "@asap-hub/services-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
     "@babel/core": 7.18.10
-    "@babel/parser": 7.18.10
+    "@babel/parser": 7.18.11
     "@babel/runtime-corejs3": 7.18.9
     "@hapi/boom": 9.1.4
     "@sentry/serverless": ^6.7.1
@@ -4102,12 +4102,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/parser@npm:7.18.10, @babel/parser@npm:^7.18.10":
-  version: 7.18.10
-  resolution: "@babel/parser@npm:7.18.10"
+"@babel/parser@npm:7.18.11":
+  version: 7.18.11
+  resolution: "@babel/parser@npm:7.18.11"
   bin:
     parser: ./bin/babel-parser.js
-  checksum: adf417daccb5bc5edb53cc86b8e60abd911eaee8212703ea702ec17ff7967a9a17a84f6aa19b1cd0faec58e9beaa31a026c85238fd8ca08f2d66ba1db8180dc6
+  checksum: 5ecc75b83e62ec53a947b1635a6ca75d6210d4a4f962f9f16f4239a6783f98e57f9662b598fa2fb1b8e12c0ad5c2bd86846ed0b97b85eb73dd7498b3a6d71a4b
   languageName: node
   linkType: hard
 
@@ -4117,6 +4117,15 @@ __metadata:
   bin:
     parser: ./bin/babel-parser.js
   checksum: 81a966b334e3ef397e883c64026265a5ae0ad435a86f52a84f60a5ee1efc0738c1f42c55e0dc5f191cc6a83ba0c61350433eee417bf1dff160ca5f3cfde244c6
+  languageName: node
+  linkType: hard
+
+"@babel/parser@npm:^7.18.10":
+  version: 7.18.10
+  resolution: "@babel/parser@npm:7.18.10"
+  bin:
+    parser: ./bin/babel-parser.js
+  checksum: adf417daccb5bc5edb53cc86b8e60abd911eaee8212703ea702ec17ff7967a9a17a84f6aa19b1cd0faec58e9beaa31a026c85238fd8ca08f2d66ba1db8180dc6
   languageName: node
   linkType: hard
 

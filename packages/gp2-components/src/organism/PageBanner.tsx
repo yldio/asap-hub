@@ -72,7 +72,7 @@ const PageBanner: React.FC<PageBannerProp> = ({
 }) => (
   <header css={headerStyles}>
     <div css={imageBannerStyles(image)}></div>
-    <div css={[cardStyles, accents['default']]}>
+    <div css={[cardStyles, accents.default]}>
       <div css={textContainerStyles}>
         <h1
           css={css({

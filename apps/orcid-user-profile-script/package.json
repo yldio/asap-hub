@@ -11,7 +11,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "8.5.1"
   },
   "devDependencies": {
     "@asap-hub/auth": "workspace:*",

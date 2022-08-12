@@ -78,7 +78,9 @@ runs:
         GP2_SQUIDEX_SHARED_SECRET: ${{ inputs.gp2-squidex-shared-secret }}
         LIGHTSTEP_TOKEN: ${{ inputs.lightstep-token }}
         NODE_ENV: 'production'
-        SENTRY_DSN_API: ${{ steps.setup.outputs.sentry-dsn-api }}
-        SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.sentry-dsn-handlers }}
+        CRN_SENTRY_DSN_API: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
+        CRN_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}
+        GP2_SENTRY_DSN_API: ${{ steps.setup.outputs.gp2-sentry-dsn-api }}
+        GP2_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.gp2-sentry-dsn-handlers }}
         SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
         SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}

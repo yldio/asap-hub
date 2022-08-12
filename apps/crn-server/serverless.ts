@@ -10,8 +10,8 @@ if (NODE_ENV === 'production') {
     'CRN_AWS_ACM_CERTIFICATE_ARN',
     'CRN_AUTH0_AUDIENCE',
     'CRN_AUTH0_CLIENT_ID',
-    'SENTRY_DSN_API',
-    'SENTRY_DSN_HANDLERS',
+    'CRN_SENTRY_DSN_API',
+    'CRN_SENTRY_DSN_HANDLERS',
   ].forEach((env) => {
     assert.ok(process.env[env], `${env} not defined`);
   });
@@ -25,8 +25,8 @@ const {
   SLS_STAGE = 'development',
   CI_COMMIT_SHA,
   ALGOLIA_INDEX,
-  SENTRY_DSN_API,
-  SENTRY_DSN_HANDLERS,
+  CRN_SENTRY_DSN_API,
+  CRN_SENTRY_DSN_HANDLERS,
   CRN_AUTH0_AUDIENCE,
   CRN_AUTH0_CLIENT_ID,
   CRN_SQUIDEX_APP_NAME,
@@ -44,8 +44,8 @@ const envRef =
     : SLS_STAGE === 'dev'
     ? 'dev'
     : `CI-${SLS_STAGE}`;
-const sentryDsnApi = SENTRY_DSN_API!;
-const sentryDsnHandlers = SENTRY_DSN_HANDLERS!;
+const sentryDsnApi = CRN_SENTRY_DSN_API!;
+const sentryDsnHandlers = CRN_SENTRY_DSN_HANDLERS!;
 const auth0ClientId = CRN_AUTH0_CLIENT_ID!;
 const auth0Audience = CRN_AUTH0_AUDIENCE!;
 const squidexAppName = CRN_SQUIDEX_APP_NAME!;

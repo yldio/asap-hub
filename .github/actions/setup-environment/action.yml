@@ -95,12 +95,18 @@ outputs:
   react-app-sentry-dsn:
     description: 'React App Sentry DSN'
     value: ${{ steps.vars.outputs.react-app-sentry-dsn }}
-  sentry-dsn-api:
-    description: 'Sentry DSN API'
-    value: ${{ steps.vars.outputs.sentry-dsn-api }}
-  sentry-dsn-handlers:
-    description: 'Sentry DSN Handlers'
-    value: ${{ steps.vars.outputs.sentry-dsn-handlers }}
+  crn-sentry-dsn-api:
+    description: 'CRN Sentry DSN API'
+    value: ${{ steps.vars.outputs.crn-sentry-dsn-api }}
+  crn-sentry-dsn-handlers:
+    description: 'CRN Sentry DSN Handlers'
+    value: ${{ steps.vars.outputs.crn-sentry-dsn-handlers }}
+  gp2-sentry-dsn-api:
+    description: 'GP2 Sentry DSN API'
+    value: ${{ steps.vars.outputs.gp2-sentry-dsn-api }}
+  gp2-sentry-dsn-handlers:
+    description: 'GP2 Sentry DSN Handlers'
+    value: ${{ steps.vars.outputs.gp2-sentry-dsn-handlers }}
   ses-region:
     description: 'SES Region'
     value: ${{ steps.vars.outputs.ses-region }}

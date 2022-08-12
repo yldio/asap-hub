@@ -125,12 +125,6 @@ it('renders a stretched small button', () => {
   expect(getComputedStyle(screen.getByRole('button')).flexGrow).toBe('1');
 });
 
-it('renders a non-stretched small button', () => {
-  render(<Button small stretch={false} />);
-
-  expect(getComputedStyle(screen.getByRole('button')).flexGrow).toBe('');
-});
-
 describe('the type', () => {
   it('is button by default', () => {
     const { getByRole } = render(<Button />);

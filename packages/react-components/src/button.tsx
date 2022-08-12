@@ -19,6 +19,7 @@ export const activePrimaryBackgroundColorDefault = color(122, 210, 169, 0.18);
 
 const borderWidth = 1;
 const styles = css({
+  flexGrow: 1,
   display: 'inline-flex',
   justifyContent: 'center',
   textAlign: 'center',
@@ -192,26 +193,19 @@ export const activeSecondaryStyles = css({
   },
 });
 
-const stretchStyles = css({
-  width: '100%',
-  flexGrow: 1,
-});
-
 export const getButtonStyles = ({
   primary = false,
   small = false,
   enabled = true,
   active = false,
   children = [] as React.ReactNode,
-  margin = true,
-  stretch = true,
+  noMargin = false,
   colors = {},
 }) =>
   css([
     styles,
     small ? smallStyles : largeStyles,
-    margin && small && smallWithSpaceStyles,
-    stretch && stretchStyles,
+    !noMargin && small && smallWithSpaceStyles,
     enabled
       ? active
         ? primary

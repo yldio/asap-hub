@@ -98,12 +98,9 @@ outputs:
   sentry-dsn-api:
     description: 'Sentry DSN API'
     value: ${{ steps.vars.outputs.sentry-dsn-api }}
-  sentry-dsn-calendar:
-    description: 'Sentry DSN Calendar'
-    value: ${{ steps.vars.outputs.sentry-dsn-calendar }}
-  sentry-dsn-user-invite:
-    description: 'Sentry DSN User Invite'
-    value: ${{ steps.vars.outputs.sentry-dsn-user-invite }}
+  sentry-dsn-handlers:
+    description: 'Sentry DSN Handlers'
+    value: ${{ steps.vars.outputs.sentry-dsn-handlers }}
   ses-region:
     description: 'SES Region'
     value: ${{ steps.vars.outputs.ses-region }}

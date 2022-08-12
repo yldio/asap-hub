@@ -86,8 +86,7 @@ runs:
         LIGHTSTEP_TOKEN: ${{ inputs.lightstep-token }}
         NODE_ENV: 'production'
         SENTRY_DSN_API: ${{ steps.setup.outputs.sentry-dsn-api }}
-        SENTRY_DSN_CALENDAR: ${{ steps.setup.outputs.sentry-dsn-calendar }}
-        SENTRY_DSN_USER_INVITE: ${{ steps.setup.outputs.sentry-dsn-user-invite }}
+        SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.sentry-dsn-handlers }}
         SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
         SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
     - uses: actions/upload-artifact@v3

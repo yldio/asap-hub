@@ -1,4 +1,5 @@
-import { UserCard } from '@asap-hub/gp2-components';
+import { UserCard, Theme } from '@asap-hub/gp2-components';
+
 import { text, select, array, number } from '@storybook/addon-knobs';
 
 export default {
@@ -32,24 +33,31 @@ export const Normal = () => {
     'Africa',
   );
   return (
-    <UserCard
-      id="u42"
-      displayName={text('Display Name', 'Phillip Mars')}
-      degree={degree}
-      firstName={text('First Name', 'Phillip')}
-      lastName={text('Last Name', 'Mars')}
-      avatarUrl={text('Avatar URL', '')}
-      role={'GP2 Admin'}
-      region={region}
-      workingGroups={Array(number('Number of Working Groups', 1)).fill({
-        id: 't42',
-        name: text('Working Group Name', 'Underrepresented Populations'),
-      })}
-      projects={Array(number('Number of Projects', 1)).fill({
-        id: 't42',
-        name: text('Project Name', 'Genetic determinants of progression in PD'),
-      })}
-      tags={tags}
-    />
+    <Theme>
+      <UserCard
+        id="u42"
+        displayName={text('Display Name', 'Phillip Mars')}
+        degree={degree}
+        firstName={text('First Name', 'Phillip')}
+        lastName={text('Last Name', 'Mars')}
+        avatarUrl={text('Avatar URL', '')}
+        role={'GP2 Admin'}
+        region={region}
+        workingGroups={Array(number('Number of Working Groups', 1))
+          .fill({
+            name: text('Working Group Name', 'Underrepresented Populations'),
+          })
+          .map(({ name }, index) => ({ id: index.toString(), name }))}
+        projects={Array(number('Number of Projects', 1))
+          .fill({
+            name: text(
+              'Project Name',
+              'Genetic determinants of progression in PD',
+            ),
+          })
+          .map(({ name }, index) => ({ id: index.toString(), name }))}
+        tags={tags}
+      />
+    </Theme>
   );
 };

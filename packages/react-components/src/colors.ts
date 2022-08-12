@@ -3,6 +3,7 @@ export interface OpaqueColor {
   g: number;
   b: number;
   rgb: string;
+  rgba: string;
   hex: string;
 }
 export interface TransparentColor {
@@ -39,6 +40,7 @@ export function color(
         g,
         b,
         rgb: `rgb(${r}, ${g}, ${b})`,
+        rgba: `rgba(${r}, ${g}, ${b}, 1)`,
         hex:
           // eslint-disable-next-line prefer-template
           '#' +

@@ -1,4 +1,4 @@
-import { css, SerializedStyles } from '@emotion/react';
+import { css, SerializedStyles, Theme } from '@emotion/react';
 import { ReactNode } from 'react';
 
 import { Anchor } from '.';
@@ -25,6 +25,11 @@ export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
   dark: css({ color: paper.rgb, ':active': { color: paper.rgb } }),
 };
 
+const getLinkColors = (colors: Theme['colors'], themeVariant: ThemeVariant) =>
+  colors?.primary500
+    ? css({ color: colors.primary500.rgba })
+    : themeStyles[themeVariant];
+
 const iconThemeStyles: Record<ThemeVariant, SerializedStyles> = {
   light: css({
     svg: {
@@ -48,7 +53,7 @@ const iconThemeStyles: Record<ThemeVariant, SerializedStyles> = {
 };
 
 interface NormalLinkProps {
-  readonly theme?: ThemeVariant;
+  readonly themeVariant?: ThemeVariant;
 
   readonly buttonStyle?: undefined;
 
@@ -59,7 +64,7 @@ interface NormalLinkProps {
   readonly stretch?: undefined;
 }
 interface ButtonStyleLinkProps {
-  readonly theme?: undefined;
+  readonly themeVariant?: undefined;
   readonly buttonStyle: true;
   readonly primary?: boolean;
   readonly small?: boolean;
@@ -78,9 +83,7 @@ const Link: React.FC<LinkProps> = ({
   children,
   href,
   label,
-
-  theme = defaultThemeVariant,
-
+  themeVariant = defaultThemeVariant,
   buttonStyle = false,
   primary = false,
   small = false,
@@ -89,12 +92,31 @@ const Link: React.FC<LinkProps> = ({
   margin = true,
   stretch = true,
 }) => {
-  const linkStyles = buttonStyle
-    ? [getButtonStyles({ primary, small, enabled, children, margin, stretch })]
-    : [styles, themeStyles[theme], applyIconTheme && iconThemeStyles[theme]];
+  const linkStyles = ({ colors }: Theme) =>
+    buttonStyle
+      ? [
+          getButtonStyles({
+            primary,
+            small,
+            enabled,
+            children,
+            margin,
+            stretch,
+          }),
+        ]
+      : [
+          styles,
+          getLinkColors(colors, themeVariant),
+          applyIconTheme && iconThemeStyles[themeVariant],
+        ];
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;
   return (
-    <Anchor href={href} enabled={enabled} aria-label={label} css={linkStyles}>
+    <Anchor
+      href={href}
+      enabled={enabled}
+      aria-label={label}
+      css={(theme) => linkStyles(theme)}
+    >
       {linkChildren}
     </Anchor>
   );

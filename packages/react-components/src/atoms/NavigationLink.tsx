@@ -62,15 +62,21 @@ const disableStyles = css({
   pointerEvents: 'none',
 });
 
+const squareBorderStyles = css({
+  borderRadius: 'unset',
+});
+
 interface NavigationLinkProps {
   readonly href: string;
   readonly enabled?: boolean;
   readonly icon?: JSX.Element;
+  readonly squareBorder?: boolean;
 }
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   href,
   enabled = true,
   icon,
+  squareBorder = false,
   children,
 }) => {
   const [internal, url] = isInternalLink(href);
@@ -80,9 +86,10 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
       <NavHashLink
         to={url}
         activeClassName={activeClassName}
-        css={[
+        css={({ colors }) => [
           styles,
-          { [`&.${activeClassName}`]: activePrimaryStyles },
+          squareBorder && squareBorderStyles,
+          { [`&.${activeClassName}`]: activePrimaryStyles(colors) },
           !enabled && disableStyles,
         ]}
         smooth
@@ -95,13 +102,18 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
       </NavHashLink>
     );
   }
-
   const active =
     new URL(href, window.location.href).pathname === window.location.pathname;
+
   return (
     <a
       href={url}
-      css={[styles, active && activePrimaryStyles, !enabled && disableStyles]}
+      css={({ colors }) => [
+        styles,
+        squareBorder && squareBorderStyles,
+        active && activePrimaryStyles(colors),
+        !enabled && disableStyles,
+      ]}
     >
       <p css={textStyles}>
         {icon && <span css={iconStyles}>{icon}</span>}

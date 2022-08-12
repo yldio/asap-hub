@@ -2,10 +2,10 @@ import * as Sentry from '@sentry/serverless';
 import { Handler } from 'aws-lambda';
 
 export interface SentryConfig {
-  currentRevision: string;
-  environment: string;
-  sentryDsn: string;
-  sentryTraceSampleRate: number;
+  currentRevision: string | undefined;
+  environment: string | undefined;
+  sentryDsn: string | undefined;
+  sentryTraceSampleRate: number | undefined;
 }
 
 export const sentryWrapperImpl = (

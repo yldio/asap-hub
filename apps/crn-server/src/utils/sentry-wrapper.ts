@@ -9,10 +9,10 @@ import {
 
 export const sentryWrapper = (handler: Handler): Handler => {
   const config = {
-    currentRevision: currentRevision || '',
-    environment: environment || '',
-    sentryDsn: sentryDsn || '',
-    sentryTraceSampleRate: sentryTraceSampleRate || 1.0,
+    currentRevision: currentRevision,
+    environment: environment,
+    sentryDsn: sentryDsn,
+    sentryTraceSampleRate: sentryTraceSampleRate,
   };
 
   return sentryWrapperImpl(handler, config);

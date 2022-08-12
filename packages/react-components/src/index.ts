@@ -11,6 +11,7 @@ export {
   Button,
   Caption,
   Card,
+  accents,
   Display,
   Divider,
   Headline2,

@@ -1,4 +1,4 @@
-import { css, SerializedStyles, useTheme } from '@emotion/react';
+import { css, SerializedStyles, Theme } from '@emotion/react';
 import { ReactNode } from 'react';
 
 import { Anchor } from '.';
@@ -24,6 +24,11 @@ export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
   grey: css({ color: fern.rgb, ':active': { color: pine.rgb } }),
   dark: css({ color: paper.rgb, ':active': { color: paper.rgb } }),
 };
+
+const getLinkColors = (colors: Theme['colors'], themeVariant: ThemeVariant) =>
+  colors?.primary500
+    ? css({ color: colors.primary500.rgba })
+    : themeStyles[themeVariant];
 
 const iconThemeStyles: Record<ThemeVariant, SerializedStyles> = {
   light: css({
@@ -78,9 +83,7 @@ const Link: React.FC<LinkProps> = ({
   children,
   href,
   label,
-
   theme = defaultThemeVariant,
-
   buttonStyle = false,
   primary = false,
   small = false,
@@ -89,28 +92,31 @@ const Link: React.FC<LinkProps> = ({
   margin = true,
   stretch = true,
 }) => {
-  const { colors } = useTheme();
-  const linkStyles = buttonStyle
-    ? [
-        getButtonStyles({
-          primary,
-          small,
-          enabled,
-          children,
-          margin,
-          stretch,
-        }),
-      ]
-    : [
-        styles,
-        colors?.primaryColor
-          ? css({ color: colors.primaryColor.rgba })
-          : themeStyles[theme],
-        applyIconTheme && iconThemeStyles[theme],
-      ];
+  const linkStyles = ({ colors }: Theme) =>
+    buttonStyle
+      ? [
+          getButtonStyles({
+            primary,
+            small,
+            enabled,
+            children,
+            margin,
+            stretch,
+          }),
+        ]
+      : [
+          styles,
+          getLinkColors(colors, theme),
+          applyIconTheme && iconThemeStyles[theme],
+        ];
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;
   return (
-    <Anchor href={href} enabled={enabled} aria-label={label} css={linkStyles}>
+    <Anchor
+      href={href}
+      enabled={enabled}
+      aria-label={label}
+      css={(theme) => linkStyles(theme)}
+    >
       {linkChildren}
     </Anchor>
   );

@@ -1,5 +1,5 @@
 import { NavHashLink } from 'react-router-hash-link';
-import { css, useTheme } from '@emotion/react';
+import { css } from '@emotion/react';
 
 import { useHasRouter } from '../routing';
 import { lead } from '../colors';
@@ -62,28 +62,33 @@ const disableStyles = css({
   pointerEvents: 'none',
 });
 
+const squareBorderStyles = css({
+  borderRadius: 'unset',
+});
+
 interface NavigationLinkProps {
   readonly href: string;
   readonly enabled?: boolean;
   readonly icon?: JSX.Element;
+  readonly squareBorder?: boolean;
 }
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   href,
   enabled = true,
   icon,
+  squareBorder = false,
   children,
 }) => {
   const [internal, url] = isInternalLink(href);
-  const { colors, navigationLinkStyles } = useTheme();
 
   if (useHasRouter() && internal) {
     return (
       <NavHashLink
         to={url}
         activeClassName={activeClassName}
-        css={[
+        css={({ colors }) => [
           styles,
-          navigationLinkStyles,
+          squareBorder && squareBorderStyles,
           { [`&.${activeClassName}`]: activePrimaryStyles(colors) },
           !enabled && disableStyles,
         ]}
@@ -103,9 +108,9 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   return (
     <a
       href={url}
-      css={[
+      css={({ colors }) => [
         styles,
-        navigationLinkStyles,
+        squareBorder && squareBorderStyles,
         active && activePrimaryStyles(colors),
         !enabled && disableStyles,
       ]}

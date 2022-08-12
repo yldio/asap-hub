@@ -162,19 +162,19 @@ const disabledStyles = css({
 });
 
 export const activePrimaryStyles = ({
-  activePrimaryBackgroundColor = activePrimaryBackgroundColorDefault,
-  activePrimaryColor = pine,
+  info100 = activePrimaryBackgroundColorDefault,
+  info900 = pine,
 }: Theme['colors'] = {}) =>
   css({
-    backgroundColor: activePrimaryBackgroundColor.rgba,
+    backgroundColor: info100.rgba,
     borderColor: 'transparent',
-    color: activePrimaryColor.rgba,
+    color: info900.rgba,
     svg: {
-      stroke: activePrimaryColor.rgba,
+      stroke: info900.rgba,
     },
     ':hover, :focus': {
-      backgroundColor: activePrimaryBackgroundColor.rgba,
-      color: activePrimaryColor.rgba,
+      backgroundColor: info100.rgba,
+      color: info900.rgba,
     },
   });
 export const activeSecondaryStyles = css({

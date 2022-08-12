@@ -28,7 +28,7 @@ const NavigationLink: React.FC<ComponentProps<typeof Link>> = ({
         },
       })}
     >
-      <Link {...props}>
+      <Link {...props} squareBorder>
         <span css={horizontalNavigationStyles}>
           {icon}
           {children}
@@ -43,7 +43,7 @@ const NavigationLink: React.FC<ComponentProps<typeof Link>> = ({
         },
       })}
     >
-      <Link {...props} icon={icon}>
+      <Link {...props} icon={icon} squareBorder>
         {children}
       </Link>
     </span>

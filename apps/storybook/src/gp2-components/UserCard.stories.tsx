@@ -43,17 +43,19 @@ export const Normal = () => {
         avatarUrl={text('Avatar URL', '')}
         role={'GP2 Admin'}
         region={region}
-        workingGroups={Array(number('Number of Working Groups', 1)).fill({
-          id: 't42',
-          name: text('Working Group Name', 'Underrepresented Populations'),
-        })}
-        projects={Array(number('Number of Projects', 1)).fill({
-          id: 't42',
-          name: text(
-            'Project Name',
-            'Genetic determinants of progression in PD',
-          ),
-        })}
+        workingGroups={Array(number('Number of Working Groups', 1))
+          .fill({
+            name: text('Working Group Name', 'Underrepresented Populations'),
+          })
+          .map(({ name }, index) => ({ id: index.toString(), name }))}
+        projects={Array(number('Number of Projects', 1))
+          .fill({
+            name: text(
+              'Project Name',
+              'Genetic determinants of progression in PD',
+            ),
+          })
+          .map(({ name }, index) => ({ id: index.toString(), name }))}
         tags={tags}
       />
     </Theme>

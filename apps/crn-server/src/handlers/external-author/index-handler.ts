@@ -18,6 +18,7 @@ import ExternalAuthors, {
 } from '../../controllers/external-authors';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { ExternalAuthorEvent, ExternalAuthorPayload } from '../event-bus';
 
 export const indexExternalAuthorHandler =
@@ -56,9 +57,11 @@ const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   baseUrl,
 });
 
-export const handler = indexExternalAuthorHandler(
-  new ExternalAuthors(squidexGraphqlClient),
-  algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
+export const handler = sentryWrapper(
+  indexExternalAuthorHandler(
+    new ExternalAuthors(squidexGraphqlClient),
+    algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
+  ),
 );
 
 export type ExternalAuthorIndexEventBridgeEvent = EventBridgeEvent<

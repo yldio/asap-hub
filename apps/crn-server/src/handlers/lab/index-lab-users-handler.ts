@@ -27,6 +27,7 @@ import {
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
 } from '../../utils/loop-over-custom-colection';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { LabPayload } from '../event-bus';
 
 export const indexLabUsersHandler =
@@ -90,11 +91,13 @@ const userDataProvider = new UserSquidexDataProvider(
   userSquidexRestClient,
 );
 const assetDataProvider = new AssetSquidexDataProvider(userSquidexRestClient);
-export const handler = indexLabUsersHandler(
-  new Users(userDataProvider, assetDataProvider),
-  algoliaSearchClientFactory({
-    algoliaApiKey,
-    algoliaAppId,
-    algoliaIndex,
-  }),
+export const handler = sentryWrapper(
+  indexLabUsersHandler(
+    new Users(userDataProvider, assetDataProvider),
+    algoliaSearchClientFactory({
+      algoliaApiKey,
+      algoliaAppId,
+      algoliaIndex,
+    }),
+  ),
 );

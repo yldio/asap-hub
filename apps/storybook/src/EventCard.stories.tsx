@@ -3,7 +3,7 @@ import { EventStatus } from '@asap-hub/model';
 import { array, boolean, date, select, text } from '@storybook/addon-knobs';
 import { EventCard } from '@asap-hub/react-components';
 import { createEventResponse, createGroupResponse } from '@asap-hub/fixtures';
-import { addHours } from 'date-fns';
+import { addHours, subHours } from 'date-fns';
 
 import { CenterDecorator } from './layout';
 
@@ -87,3 +87,11 @@ const props = (): ComponentProps<typeof EventCard> => {
 };
 
 export const Normal = () => <EventCard {...props()} />;
+export const InProgress = () => (
+  <EventCard
+    {...props()}
+    startDate={new Date(
+      date('Start Date', subHours(new Date(), 23)),
+    ).toISOString()}
+  />
+);

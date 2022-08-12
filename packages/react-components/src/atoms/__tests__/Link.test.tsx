@@ -43,7 +43,7 @@ describe('theme with ThemeProvider', () => {
 describe('the dark theme', () => {
   it('applies the white color', () => {
     const { getByRole } = render(
-      <Link href="/" theme="dark">
+      <Link href="/" themeVariant="dark">
         text
       </Link>,
     );
@@ -53,7 +53,7 @@ describe('the dark theme', () => {
 
   it('applies an invisible underline', () => {
     const { getByRole } = render(
-      <Link href="/" theme="dark">
+      <Link href="/" themeVariant="dark">
         text
       </Link>,
     );

@@ -1,5 +1,5 @@
-import { UserCard } from '@asap-hub/gp2-components';
-import Theme from '@asap-hub/gp2-components/src/templates/Theme';
+import { UserCard, Theme } from '@asap-hub/gp2-components';
+
 import { text, select, array, number } from '@storybook/addon-knobs';
 
 export default {

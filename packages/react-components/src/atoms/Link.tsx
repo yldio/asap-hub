@@ -53,7 +53,7 @@ const iconThemeStyles: Record<ThemeVariant, SerializedStyles> = {
 };
 
 interface NormalLinkProps {
-  readonly theme?: ThemeVariant;
+  readonly themeVariant?: ThemeVariant;
 
   readonly buttonStyle?: undefined;
 
@@ -64,7 +64,7 @@ interface NormalLinkProps {
   readonly stretch?: undefined;
 }
 interface ButtonStyleLinkProps {
-  readonly theme?: undefined;
+  readonly themeVariant?: undefined;
   readonly buttonStyle: true;
   readonly primary?: boolean;
   readonly small?: boolean;
@@ -83,7 +83,7 @@ const Link: React.FC<LinkProps> = ({
   children,
   href,
   label,
-  theme = defaultThemeVariant,
+  themeVariant = defaultThemeVariant,
   buttonStyle = false,
   primary = false,
   small = false,
@@ -106,8 +106,8 @@ const Link: React.FC<LinkProps> = ({
         ]
       : [
           styles,
-          getLinkColors(colors, theme),
-          applyIconTheme && iconThemeStyles[theme],
+          getLinkColors(colors, themeVariant),
+          applyIconTheme && iconThemeStyles[themeVariant],
         ];
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;
   return (

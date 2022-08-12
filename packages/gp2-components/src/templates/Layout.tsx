@@ -1,23 +1,36 @@
-import { useState, FC, ReactNode, useEffect, createRef } from 'react';
+import {
+  crossQuery,
+  drawerQuery,
+  Loading,
+  navigationGrey,
+  Overlay,
+  paper,
+  pixels,
+  ToastStack,
+  usePrevious,
+} from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { Location } from 'history';
 import {
-  ToastStack,
-  drawerQuery,
-  pixels,
-  crossQuery,
-  Overlay,
-  paper,
-  navigationGrey,
-  usePrevious,
-} from '@asap-hub/react-components';
+  createRef,
+  FC,
+  lazy,
+  ReactNode,
+  Suspense,
+  useEffect,
+  useState,
+} from 'react';
 import { useLocation } from 'react-router-dom';
-
-import NavigationHeader from '../organism/NavigationHeader';
 import UserMenu from '../molecules/UserMenu';
-import MainNavigation from '../organism/MainNavigation';
+import { NavigationHeader } from '../organisms';
 import Theme from './Theme';
 
+const MainNavigation = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "main-navigation" */ '../organisms/MainNavigation'
+    ),
+);
 const { mobileScreen, tabletScreen, vminLinearCalcClamped } = pixels;
 
 const styles = css({
@@ -159,7 +172,9 @@ const Layout: FC<LayoutProps> = ({ children }) => {
           </div>
           <div css={[menuStyles, menuShown && menuMenuShownStyles]}>
             <div css={[mainMenuStyles]}>
-              <MainNavigation />
+              <Suspense fallback={<Loading />}>
+                <MainNavigation />
+              </Suspense>
             </div>
             <div css={[userMenuStyles]}>
               <UserMenu />

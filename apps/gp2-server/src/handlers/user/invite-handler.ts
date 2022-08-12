@@ -4,12 +4,7 @@ import {
 } from '@asap-hub/server-common';
 import { RestUser, SquidexRest } from '@asap-hub/squidex';
 import { SES } from 'aws-sdk';
-import {
-  appName,
-  baseUrl,
-  origin,
-  sesRegion,
-} from '../../config';
+import { appName, baseUrl, origin, sesRegion } from '../../config';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sendEmailFactory } from '../../utils/send-email';

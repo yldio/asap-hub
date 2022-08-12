@@ -44,9 +44,7 @@ const userDataProvider = new UserSquidexDataProvider(
 );
 
 export const handler = sentryWrapper(
-  fetchUserByCodeHandlerFactory(
-    new Users(userDataProvider),
-  ),
+  fetchUserByCodeHandlerFactory(new Users(userDataProvider)),
 );
 
 const validateParams = (

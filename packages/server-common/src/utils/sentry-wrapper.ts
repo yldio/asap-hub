@@ -8,7 +8,10 @@ export interface SentryConfig {
   sentryTraceSampleRate: number;
 }
 
-export const sentryWrapperImpl = (handler: Handler, config: SentryConfig): Handler => {
+export const sentryWrapperImpl = (
+  handler: Handler,
+  config: SentryConfig,
+): Handler => {
   Sentry.AWSLambda.init({
     dsn: config.sentryDsn,
     tracesSampleRate: config.sentryTraceSampleRate,

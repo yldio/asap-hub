@@ -12,8 +12,8 @@ export const sentryWrapper = (handler: Handler): Handler => {
     currentRevision: currentRevision || '',
     environment: environment || '',
     sentryDsn: sentryDsn || '',
-    sentryTraceSampleRate: sentryTraceSampleRate || 1.0
-  }
+    sentryTraceSampleRate: sentryTraceSampleRate || 1.0,
+  };
 
-  return sentryWrapperImpl(handler, config)
+  return sentryWrapperImpl(handler, config);
 };

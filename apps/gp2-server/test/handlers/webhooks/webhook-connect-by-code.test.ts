@@ -6,7 +6,7 @@ import {
   auth0SharedSecret as secret,
   baseUrl,
 } from '../../../src/config';
-import { handler } from '../../../src/handlers/webhooks/webhook-connect-by-code';
+import { rawHandler } from '../../../src/handlers/webhooks/webhook-connect-by-code';
 import {
   generateGraphqlFetchUsersResponse,
   getGraphQLUser,
@@ -45,7 +45,7 @@ const user: RestUser = {
 
 describe('POST /webhook/users/connections - validations', () => {
   test('returns 400 when code is not defined', async () => {
-    const res = (await handler(
+    const res = (await rawHandler(
       getApiGatewayEvent({
         body: JSON.stringify({
           userId: 'userId',
@@ -60,7 +60,7 @@ describe('POST /webhook/users/connections - validations', () => {
   });
 
   test('returns 400 when userId is not defined', async () => {
-    const res = (await handler(
+    const res = (await rawHandler(
       getApiGatewayEvent({
         body: JSON.stringify({
           code: 'asap|token',
@@ -75,7 +75,7 @@ describe('POST /webhook/users/connections - validations', () => {
   });
 
   test('returns 400 when additional fields exist', async () => {
-    const res = (await handler(
+    const res = (await rawHandler(
       getApiGatewayEvent({
         body: JSON.stringify({
           code: 'asap|token',
@@ -92,7 +92,7 @@ describe('POST /webhook/users/connections - validations', () => {
   });
 
   test('returns 403 when secret doesnt match', async () => {
-    const res = (await handler(
+    const res = (await rawHandler(
       getApiGatewayEvent({
         body: JSON.stringify({
           code: 'asap|token',
@@ -140,7 +140,7 @@ describe('POST /webhook/users/connections - success', () => {
       })
       .reply(200, patchedUser);
 
-    const res = (await handler(
+    const res = (await rawHandler(
       getApiGatewayEvent({
         body: JSON.stringify({
           code: 'asapWelcomeCode',
@@ -166,7 +166,7 @@ describe('POST /webhook/users/connections - success', () => {
       .spyOn(SquidexGraphql.prototype, 'request')
       .mockImplementationOnce(() => Promise.reject('Invalid Code'));
 
-    const res = (await handler(
+    const res = (await rawHandler(
       getApiGatewayEvent({
         body: JSON.stringify({
           code: 'invalidConnectCode',

@@ -67,7 +67,7 @@
     "googleapis": "^67.1.1",
     "got": "11.8.5",
     "graphql": "^15.5.0",
-    "graphql-tag": "^2.12.4",
+    "graphql-tag": "2.12.4",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
     "lightstep-tracer": "0.33.0",

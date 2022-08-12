@@ -118,8 +118,8 @@ describe('with ThemeProvider', () => {
     const activePrimaryColor = color(0, 106, 146);
     const theme = {
       colors: {
-        activePrimaryBackgroundColor,
-        activePrimaryColor,
+        info100: activePrimaryBackgroundColor,
+        info900: activePrimaryColor,
       },
     };
     const { getByRole } = render(

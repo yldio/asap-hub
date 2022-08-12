@@ -28,7 +28,7 @@ describe('theme with ThemeProvider', () => {
     const testColor = colorConstructor(12, 141, 195);
     const theme = {
       colors: {
-        primaryColor: testColor,
+        primary500: testColor,
       },
     };
     const { getByRole } = render(

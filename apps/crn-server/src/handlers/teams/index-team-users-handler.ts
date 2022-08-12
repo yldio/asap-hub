@@ -96,6 +96,7 @@ const rawHandler = indexTeamUsersHandler(
   algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
 );
 
+/* istanbul ignore next */
 export const handler = sentryWrapper(rawHandler);
 
 export type UserIndexEventBridgeEvent = EventBridgeEvent<

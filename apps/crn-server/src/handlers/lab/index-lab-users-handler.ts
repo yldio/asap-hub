@@ -91,6 +91,8 @@ const userDataProvider = new UserSquidexDataProvider(
   userSquidexRestClient,
 );
 const assetDataProvider = new AssetSquidexDataProvider(userSquidexRestClient);
+
+/* istanbul ignore next */
 export const handler = sentryWrapper(
   indexLabUsersHandler(
     new Users(userDataProvider, assetDataProvider),

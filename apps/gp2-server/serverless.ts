@@ -232,7 +232,7 @@ const serverlessConfig: AWS = {
         EMAIL_SENDER: `\${ssm:email-invite-sender-gp2-${envAlias}}`,
         EMAIL_BCC: `\${ssm:email-invite-bcc-gp2-${envAlias}}`,
         EMAIL_RETURN: `\${ssm:email-invite-return-gp2-${envAlias}}`,
-        SENTRY_DSN: '${env:SENTRY_DSN_USER_INVITE}',
+        SENTRY_DSN: '${env:SENTRY_DSN_HANDLERS}',
       },
     },
     squidexWebhook: {

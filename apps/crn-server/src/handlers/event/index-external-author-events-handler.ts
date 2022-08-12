@@ -72,6 +72,8 @@ const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
   appName,
   baseUrl,
 });
+
+/* istanbul ignore next */
 export const handler = sentryWrapper(
   indexExternalAuthorEventsHandler(
     new Events(squidexGraphqlClient, eventRestClient),

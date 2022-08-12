@@ -57,6 +57,7 @@ const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   baseUrl,
 });
 
+/* istanbul ignore next */
 export const handler = sentryWrapper(
   indexExternalAuthorHandler(
     new ExternalAuthors(squidexGraphqlClient),

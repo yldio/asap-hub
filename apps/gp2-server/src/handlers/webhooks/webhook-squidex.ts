@@ -20,4 +20,6 @@ export const squidexWebhookFactory = (
 };
 
 const eventBridge = new EventBridge();
+
+/* istanbul ignore next */
 export const handler = sentryWrapper(squidexWebhookFactory(eventBridge));

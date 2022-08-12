@@ -43,6 +43,7 @@ const userDataProvider = new UserSquidexDataProvider(
   userRestClient,
 );
 
+/* istanbul ignore next */
 export const handler = sentryWrapper(
   fetchUserByCodeHandlerFactory(new Users(userDataProvider)),
 );

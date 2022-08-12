@@ -24,4 +24,5 @@ const httpHandler = serverlessHttp(app, {
   },
 });
 
+/* istanbul ignore next */
 export const apiHandler = sentryWrapper(httpHandler);

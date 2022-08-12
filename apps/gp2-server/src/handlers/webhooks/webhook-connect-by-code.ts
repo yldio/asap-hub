@@ -29,4 +29,5 @@ const connectByCodeHandler = connectByCodeHandlerFactory(
 
 export const rawHandler = lambda.http(connectByCodeHandler);
 
+/* istanbul ignore next */
 export const handler = sentryWrapper(rawHandler);

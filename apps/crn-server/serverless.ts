@@ -11,6 +11,7 @@ if (NODE_ENV === 'production') {
     'CRN_AUTH0_AUDIENCE',
     'CRN_AUTH0_CLIENT_ID',
     'SENTRY_DSN_API',
+    'SENTRY_DSN_HANDLERS',
   ].forEach((env) => {
     assert.ok(process.env[env], `${env} not defined`);
   });

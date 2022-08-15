@@ -15,7 +15,7 @@ export const FETCH_USER_TEAMS_AND_RESEARCH_OUTPUTS = gql`
     queryResearchOutputsContents(filter: $filter) {
       id
       flatData {
-        publishDate
+        addedDate
         documentType
         title
       }

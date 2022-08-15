@@ -7312,7 +7312,7 @@ export type FetchUserTeamsAndResearchOutputsQuery = {
       Pick<ResearchOutputs, 'id'> & {
         flatData: Pick<
           ResearchOutputsFlatDataDto,
-          'publishDate' | 'documentType' | 'title'
+          'addedDate' | 'documentType' | 'title'
         >;
         referencingTeamsContents: Maybe<Array<Pick<Teams, 'id'>>>;
       }
@@ -12080,7 +12080,7 @@ export const FetchUserTeamsAndResearchOutputsDocument = {
                     selections: [
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'publishDate' },
+                        name: { kind: 'Name', value: 'addedDate' },
                       },
                       {
                         kind: 'Field',

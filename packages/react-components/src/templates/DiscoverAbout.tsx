@@ -34,6 +34,7 @@ const DiscoverAbout: React.FC<DiscoverAboutProps> = ({
         hrefText: 'Explore the ASAP team',
       }
     : {};
+
   return (
     <section>
       <div css={aboutUsStyles}>

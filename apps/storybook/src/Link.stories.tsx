@@ -33,7 +33,7 @@ export const ElipsedText: Story<{ theme: ThemeVariant }> = (_, { theme }) => (
     <Link
       ellipsed
       href={text('Destination', 'https://www.parkinsonsroadmap.org/')}
-      theme={theme}
+      themeVariant={theme}
     >
       {text(
         'Text',

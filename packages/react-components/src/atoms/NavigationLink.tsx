@@ -1,17 +1,16 @@
-import { NavHashLink } from 'react-router-hash-link';
 import { css } from '@emotion/react';
-
-import { useHasRouter } from '../routing';
+import { NavHashLink } from 'react-router-hash-link';
+import { activePrimaryStyles } from '../button';
 import { lead } from '../colors';
+import { navigationGrey } from '../layout';
 import {
-  perRem,
+  largeDesktopScreen,
   lineHeight,
   mobileScreen,
-  largeDesktopScreen,
+  perRem,
   vminLinearCalc,
 } from '../pixels';
-import { navigationGrey } from '../layout';
-import { activePrimaryStyles } from '../button';
+import { useHasRouter } from '../routing';
 import { isInternalLink } from '../utils';
 
 const activeClassName = 'active-link';
@@ -93,7 +92,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
           !enabled && disableStyles,
         ]}
         smooth
-        isActive={(match, _) => enabled && !!match}
+        isActive={(match) => enabled && !!match && match.url === url}
       >
         <p css={textStyles}>
           {icon && <span css={iconStyles}>{icon}</span>}

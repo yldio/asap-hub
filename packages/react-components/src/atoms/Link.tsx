@@ -100,20 +100,20 @@ const Link: React.FC<LinkProps> = ({
   const linkStyles = ({ colors }: Theme) =>
     buttonStyle
       ? [
-        getButtonStyles({
-          primary,
-          small,
-          enabled,
-          children,
-          margin,
-          stretch,
-        }),
-      ]
+          getButtonStyles({
+            primary,
+            small,
+            enabled,
+            children,
+            margin,
+            stretch,
+          }),
+        ]
       : [
-        styles,
-        getLinkColors(colors, themeVariant),
-        applyIconTheme && iconThemeStyles[themeVariant],
-      ];
+          styles,
+          getLinkColors(colors, themeVariant),
+          applyIconTheme && iconThemeStyles[themeVariant],
+        ];
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;
   const applyElipsis = ellipsed && typeof linkChildren === 'string';
   return (

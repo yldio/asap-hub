@@ -1,10 +1,11 @@
+import React, { ReactNode } from 'react';
 import { css, SerializedStyles, Theme } from '@emotion/react';
-import { ReactNode } from 'react';
 
-import { Anchor } from '.';
 import { getButtonChildren, getButtonStyles } from '../button';
 import { fern, paper, pine } from '../colors';
 import { defaultThemeVariant, ThemeVariant } from '../theme';
+import Ellipsis from './Ellipsis';
+import { Anchor } from '.';
 
 export const styles = css({
   textDecoration: 'underline solid transparent',
@@ -17,6 +18,7 @@ export const styles = css({
     textDecoration: 'none',
   },
 });
+
 export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
   light: css({
     color: fern.rgb,
@@ -54,15 +56,14 @@ const iconThemeStyles: Record<ThemeVariant, SerializedStyles> = {
 
 interface NormalLinkProps {
   readonly themeVariant?: ThemeVariant;
-
   readonly buttonStyle?: undefined;
-
   readonly primary?: undefined;
   readonly small?: undefined;
   readonly enabled?: undefined;
   readonly margin?: undefined;
   readonly stretch?: undefined;
 }
+
 interface ButtonStyleLinkProps {
   readonly themeVariant?: undefined;
   readonly buttonStyle: true;
@@ -72,13 +73,16 @@ interface ButtonStyleLinkProps {
   readonly margin?: boolean;
   readonly stretch?: boolean;
 }
+
 type LinkProps = {
   readonly children: ReactNode;
   readonly href: string | undefined;
   readonly label?: string;
   readonly applyIconTheme?: boolean;
   readonly stretch?: boolean;
+  readonly ellipsed?: boolean;
 } & (NormalLinkProps | ButtonStyleLinkProps);
+
 const Link: React.FC<LinkProps> = ({
   children,
   href,
@@ -91,6 +95,7 @@ const Link: React.FC<LinkProps> = ({
   applyIconTheme = false,
   margin = true,
   stretch = true,
+  ellipsed = false,
 }) => {
   const linkStyles = ({ colors }: Theme) =>
     buttonStyle
@@ -110,14 +115,16 @@ const Link: React.FC<LinkProps> = ({
           applyIconTheme && iconThemeStyles[themeVariant],
         ];
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;
+  const applyElipsis = ellipsed && typeof linkChildren === 'string';
   return (
     <Anchor
       href={href}
       enabled={enabled}
       aria-label={label}
       css={(theme) => linkStyles(theme)}
+      title={applyElipsis ? linkChildren : undefined}
     >
-      {linkChildren}
+      {applyElipsis ? <Ellipsis>{linkChildren}</Ellipsis> : linkChildren}
     </Anchor>
   );
 };

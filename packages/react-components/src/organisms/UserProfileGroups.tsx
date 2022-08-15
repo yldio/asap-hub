@@ -76,6 +76,7 @@ const UserProfileGroups: FC<UserProfileGroupsProps> = ({
               <li key={idx} css={listItemStyle}>
                 <div css={[titleStyle]}>Group</div>
                 <Link
+                  ellipsed
                   href={network({}).groups({}).group({ groupId: group.id }).$}
                 >
                   {group.name}

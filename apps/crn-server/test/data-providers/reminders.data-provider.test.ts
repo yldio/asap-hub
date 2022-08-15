@@ -177,13 +177,13 @@ describe('Reminder Data Provider', () => {
 
       const researchOutput1 = getSquidexReminderReseachOutputsContents();
       researchOutput1.id = 'research-output-1';
-      researchOutput1.flatData.publishDate = '2022-01-01T10:00:00Z';
+      researchOutput1.flatData.addedDate = '2022-01-01T10:00:00Z';
       const researchOutput2 = getSquidexReminderReseachOutputsContents();
       researchOutput2.id = 'research-output-2';
-      researchOutput2.flatData.publishDate = '2022-01-01T14:00:00Z';
+      researchOutput2.flatData.addedDate = '2022-01-01T14:00:00Z';
       const researchOutput3 = getSquidexReminderReseachOutputsContents();
       researchOutput3.id = 'research-output-3';
-      researchOutput3.flatData.publishDate = '2022-01-01T12:00:00Z';
+      researchOutput3.flatData.addedDate = '2022-01-01T12:00:00Z';
 
       squidexGraphqlResponse.queryResearchOutputsContents = [
         researchOutput1,

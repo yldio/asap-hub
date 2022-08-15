@@ -1933,6 +1933,10 @@ export type Discover = Content & {
   referencesPagesContents: Maybe<Array<Pages>>;
   /** Query Pages content items with total count. */
   referencesPagesContentsWithTotal: Maybe<PagesResultDto>;
+  /** Query Teams content items. */
+  referencesTeamsContents: Maybe<Array<Teams>>;
+  /** Query Teams content items with total count. */
+  referencesTeamsContentsWithTotal: Maybe<TeamsResultDto>;
   /** Query Users content items. */
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -1984,6 +1988,24 @@ export type DiscoverReferencesPagesContentsWithTotalArgs = {
 };
 
 /** The structure of a Discover ASAP content type. */
+export type DiscoverReferencesTeamsContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Discover ASAP content type. */
+export type DiscoverReferencesTeamsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesUsersContentsArgs = {
   filter: Maybe<Scalars['String']>;
   orderby: Maybe<Scalars['String']>;
@@ -2015,6 +2037,7 @@ export type DiscoverDataAboutUsInputDto = {
 export type DiscoverDataDto = {
   aboutUs: Maybe<DiscoverDataAboutUsDto>;
   members: Maybe<DiscoverDataMembersDto>;
+  membersTeam: Maybe<DiscoverDataMembersTeamDto>;
   pages: Maybe<DiscoverDataPagesDto>;
   scientificAdvisoryBoard: Maybe<DiscoverDataScientificAdvisoryBoardDto>;
   training: Maybe<DiscoverDataTrainingDto>;
@@ -2025,19 +2048,30 @@ export type DiscoverDataDto = {
 export type DiscoverDataInputDto = {
   aboutUs: Maybe<DiscoverDataAboutUsInputDto>;
   members: Maybe<DiscoverDataMembersInputDto>;
+  membersTeam: Maybe<DiscoverDataMembersTeamInputDto>;
   pages: Maybe<DiscoverDataPagesInputDto>;
   scientificAdvisoryBoard: Maybe<DiscoverDataScientificAdvisoryBoardInputDto>;
   training: Maybe<DiscoverDataTrainingInputDto>;
   workingGroups: Maybe<DiscoverDataWorkingGroupsInputDto>;
 };
 
-/** The structure of the ASAP Team field of the Discover ASAP content type. */
+/** The structure of the ASAP Team Members field of the Discover ASAP content type. */
 export type DiscoverDataMembersDto = {
   iv: Maybe<Array<Users>>;
 };
 
-/** The structure of the ASAP Team field of the Discover ASAP content input type. */
+/** The structure of the ASAP Team Members field of the Discover ASAP content input type. */
 export type DiscoverDataMembersInputDto = {
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the ASAP Team field of the Discover ASAP content type. */
+export type DiscoverDataMembersTeamDto = {
+  iv: Maybe<Array<Teams>>;
+};
+
+/** The structure of the ASAP Team field of the Discover ASAP content input type. */
+export type DiscoverDataMembersTeamInputDto = {
   iv: Maybe<Array<Scalars['String']>>;
 };
 
@@ -2085,6 +2119,7 @@ export type DiscoverDataWorkingGroupsInputDto = {
 export type DiscoverFlatDataDto = {
   aboutUs: Maybe<Scalars['String']>;
   members: Maybe<Array<Users>>;
+  membersTeam: Maybe<Array<Teams>>;
   pages: Maybe<Array<Pages>>;
   scientificAdvisoryBoard: Maybe<Array<Users>>;
   training: Maybe<Array<NewsAndEvents>>;
@@ -4287,6 +4322,10 @@ export type Teams = Content & {
   referencesResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
   /** Query Research Outputs content items with total count. */
   referencesResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
+  /** Query Discover ASAP content items. */
+  referencingDiscoverContents: Maybe<Array<Discover>>;
+  /** Query Discover ASAP content items with total count. */
+  referencingDiscoverContentsWithTotal: Maybe<DiscoverResultDto>;
   /** Query Events content items. */
   referencingEventsContents: Maybe<Array<Events>>;
   /** Query Events content items with total count. */
@@ -4320,6 +4359,24 @@ export type TeamsReferencesResearchOutputsContentsArgs = {
 
 /** The structure of a Teams content type. */
 export type TeamsReferencesResearchOutputsContentsWithTotalArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Teams content type. */
+export type TeamsReferencingDiscoverContentsArgs = {
+  filter: Maybe<Scalars['String']>;
+  orderby: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  top: Maybe<Scalars['Int']>;
+};
+
+/** The structure of a Teams content type. */
+export type TeamsReferencingDiscoverContentsWithTotalArgs = {
   filter: Maybe<Scalars['String']>;
   orderby: Maybe<Scalars['String']>;
   search: Maybe<Scalars['String']>;
@@ -5359,6 +5416,7 @@ export type FetchDiscoverQuery = {
             }
           >
         >;
+        membersTeam: Maybe<Array<Pick<Teams, 'id'>>>;
         scientificAdvisoryBoard: Maybe<
           Array<
             Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
@@ -11193,6 +11251,19 @@ export const FetchDiscoverDocument = {
                                   },
                                 ],
                               },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'membersTeam' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
                             },
                           ],
                         },

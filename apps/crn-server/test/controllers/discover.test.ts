@@ -5,7 +5,7 @@ import { DiscoverResponse } from '@asap-hub/model';
 import nock from 'nock';
 import {
   squidexDiscoverResponse,
-  squidexGraphqlDiscoverResponse,
+  getDiscoverResponse,
 } from '../fixtures/discover.fixtures';
 import { FETCH_DISCOVER } from '../../src/queries/discover.queries';
 import { print } from 'graphql';
@@ -32,10 +32,11 @@ describe('Discover controller', () => {
       test('Should fetch the discover from squidex graphql', async () => {
         const result = await discoverMockGraphql.fetch();
 
-        const expected = squidexGraphqlDiscoverResponse();
+        const expected = getDiscoverResponse();
         expect(result).toMatchObject(expected);
       });
     });
+
     describe('with intercepted http layer', () => {
       afterEach(() => {
         expect(nock.isDone()).toBe(true);
@@ -52,7 +53,14 @@ describe('Discover controller', () => {
           .reply(200, {
             data: {
               queryDiscoverContents: [
-                { flatData: { aboutUs: null, pages: null, members: null } },
+                {
+                  flatData: {
+                    aboutUs: null,
+                    pages: null,
+                    members: null,
+                    membersTeam: null,
+                  },
+                },
               ],
             },
           });
@@ -69,7 +77,41 @@ describe('Discover controller', () => {
         };
         expect(result).toEqual(expectedResponse);
       });
-      test('Should return an empty result when no resource doesnt exist', async () => {
+
+      test('Should return an empty membersTeamId when the members team ID is an empty array', async () => {
+        nock(baseUrl)
+          .post(`/api/content/${appName}/graphql`, {
+            query: print(FETCH_DISCOVER),
+          })
+          .reply(200, {
+            data: {
+              queryDiscoverContents: [
+                {
+                  flatData: {
+                    aboutUs: null,
+                    pages: null,
+                    members: null,
+                    membersTeam: [],
+                  },
+                },
+              ],
+            },
+          });
+
+        const result = await discover.fetch();
+
+        const expectedResponse: DiscoverResponse = {
+          aboutUs: '',
+          training: [],
+          members: [],
+          scientificAdvisoryBoard: [],
+          pages: [],
+          workingGroups: [],
+        };
+        expect(result).toEqual(expectedResponse);
+      });
+
+      test('Should return an empty result when no resource exists', async () => {
         nock(baseUrl)
           .post(`/api/content/${appName}/graphql`, {
             query: print(FETCH_DISCOVER),
@@ -92,6 +134,7 @@ describe('Discover controller', () => {
         };
         expect(result).toEqual(expectedResponse);
       });
+
       test('Should return the discover information', async () => {
         nock(baseUrl)
           .post(`/api/content/${appName}/graphql`, {
@@ -103,7 +146,7 @@ describe('Discover controller', () => {
 
         const result = await discover.fetch();
 
-        const discoverResponse = squidexGraphqlDiscoverResponse();
+        const discoverResponse = getDiscoverResponse();
         expect(result).toMatchObject(discoverResponse);
       });
     });

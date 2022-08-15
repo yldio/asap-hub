@@ -102,8 +102,29 @@
           "mustBePublished": false,
           "editor": "List",
           "schemaIds": ["users"],
-          "label": "ASAP Team",
+          "label": "ASAP Team Members",
           "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "membersTeam",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "minItems": 1,
+          "maxItems": 1,
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "mustBePublished": false,
+          "editor": "List",
+          "schemaIds": ["teams"],
+          "label": "ASAP Team",
+          "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }

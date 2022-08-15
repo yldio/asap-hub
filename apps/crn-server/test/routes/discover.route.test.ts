@@ -2,7 +2,7 @@ import { appFactory } from '../../src/app';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import supertest from 'supertest';
 import { discoverControllerMock } from '../mocks/discover-controller.mock';
-import { squidexGraphqlDiscoverResponse } from '../fixtures/discover.fixtures';
+import { getDiscoverResponse } from '../fixtures/discover.fixtures';
 
 describe('/discover/ route', () => {
   const app = appFactory({
@@ -35,7 +35,7 @@ describe('/discover/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      const discoverResponse = squidexGraphqlDiscoverResponse();
+      const discoverResponse = getDiscoverResponse();
       discoverControllerMock.fetch.mockResolvedValueOnce(discoverResponse);
 
       const response = await supertest(app).get('/discover');

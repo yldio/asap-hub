@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
 };
@@ -268,112 +269,112 @@ export type AppMutations = {
 
 /** The app mutations. */
 export type AppMutationsChangeCalendarsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsChangeDashboardContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsChangeDiscoverContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsChangeEventsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsChangeExternalAuthorsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsChangeGroupsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsChangeLabsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsChangeMigrationsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsChangeNewsAndEventsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsChangePagesContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsChangeResearchOutputsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsChangeResearchTagsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsChangeTeamsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsChangeUsersContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
@@ -381,405 +382,405 @@ export type AppMutationsChangeUsersContentArgs = {
 /** The app mutations. */
 export type AppMutationsCreateCalendarsContentArgs = {
   data: CalendarsDataInputDto;
-  id: Maybe<Scalars['String']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsCreateDashboardContentArgs = {
   data: DashboardDataInputDto;
-  id: Maybe<Scalars['String']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsCreateDiscoverContentArgs = {
   data: DiscoverDataInputDto;
-  id: Maybe<Scalars['String']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsCreateEventsContentArgs = {
   data: EventsDataInputDto;
-  id: Maybe<Scalars['String']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsCreateExternalAuthorsContentArgs = {
   data: ExternalAuthorsDataInputDto;
-  id: Maybe<Scalars['String']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsCreateGroupsContentArgs = {
   data: GroupsDataInputDto;
-  id: Maybe<Scalars['String']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsCreateLabsContentArgs = {
   data: LabsDataInputDto;
-  id: Maybe<Scalars['String']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsCreateMigrationsContentArgs = {
   data: MigrationsDataInputDto;
-  id: Maybe<Scalars['String']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsCreateNewsAndEventsContentArgs = {
   data: NewsAndEventsDataInputDto;
-  id: Maybe<Scalars['String']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsCreatePagesContentArgs = {
   data: PagesDataInputDto;
-  id: Maybe<Scalars['String']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsCreateResearchOutputsContentArgs = {
   data: ResearchOutputsDataInputDto;
-  id: Maybe<Scalars['String']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsCreateResearchTagsContentArgs = {
   data: ResearchTagsDataInputDto;
-  id: Maybe<Scalars['String']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsCreateTeamsContentArgs = {
   data: TeamsDataInputDto;
-  id: Maybe<Scalars['String']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsCreateUsersContentArgs = {
   data: UsersDataInputDto;
-  id: Maybe<Scalars['String']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsDeleteCalendarsContentArgs = {
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsDeleteDashboardContentArgs = {
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsDeleteDiscoverContentArgs = {
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsDeleteEventsContentArgs = {
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsDeleteExternalAuthorsContentArgs = {
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsDeleteGroupsContentArgs = {
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsDeleteLabsContentArgs = {
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsDeleteMigrationsContentArgs = {
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsDeleteNewsAndEventsContentArgs = {
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsDeletePagesContentArgs = {
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsDeleteResearchOutputsContentArgs = {
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsDeleteResearchTagsContentArgs = {
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsDeleteTeamsContentArgs = {
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsDeleteUsersContentArgs = {
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsPatchCalendarsContentArgs = {
   data: CalendarsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsPatchDashboardContentArgs = {
   data: DashboardDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsPatchDiscoverContentArgs = {
   data: DiscoverDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsPatchEventsContentArgs = {
   data: EventsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsPatchExternalAuthorsContentArgs = {
   data: ExternalAuthorsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsPatchGroupsContentArgs = {
   data: GroupsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsPatchLabsContentArgs = {
   data: LabsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsPatchMigrationsContentArgs = {
   data: MigrationsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsPatchNewsAndEventsContentArgs = {
   data: NewsAndEventsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsPatchPagesContentArgs = {
   data: PagesDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsPatchResearchOutputsContentArgs = {
   data: ResearchOutputsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsPatchResearchTagsContentArgs = {
   data: ResearchTagsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsPatchTeamsContentArgs = {
   data: TeamsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsPatchUsersContentArgs = {
   data: UsersDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsPublishCalendarsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsPublishDashboardContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsPublishDiscoverContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsPublishEventsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsPublishExternalAuthorsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsPublishGroupsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsPublishLabsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsPublishMigrationsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsPublishNewsAndEventsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsPublishPagesContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsPublishResearchOutputsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsPublishResearchTagsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsPublishTeamsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
 
 /** The app mutations. */
 export type AppMutationsPublishUsersContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
@@ -787,239 +788,239 @@ export type AppMutationsPublishUsersContentArgs = {
 /** The app mutations. */
 export type AppMutationsUpdateCalendarsContentArgs = {
   data: CalendarsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpdateDashboardContentArgs = {
   data: DashboardDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpdateDiscoverContentArgs = {
   data: DiscoverDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpdateEventsContentArgs = {
   data: EventsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpdateExternalAuthorsContentArgs = {
   data: ExternalAuthorsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpdateGroupsContentArgs = {
   data: GroupsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpdateLabsContentArgs = {
   data: LabsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpdateMigrationsContentArgs = {
   data: MigrationsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpdateNewsAndEventsContentArgs = {
   data: NewsAndEventsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpdatePagesContentArgs = {
   data: PagesDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpdateResearchOutputsContentArgs = {
   data: ResearchOutputsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpdateResearchTagsContentArgs = {
   data: ResearchTagsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpdateTeamsContentArgs = {
   data: TeamsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpdateUsersContentArgs = {
   data: UsersDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpsertCalendarsContentArgs = {
   data: CalendarsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
-  patch?: Maybe<Scalars['Boolean']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpsertDashboardContentArgs = {
   data: DashboardDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
-  patch?: Maybe<Scalars['Boolean']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpsertDiscoverContentArgs = {
   data: DiscoverDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
-  patch?: Maybe<Scalars['Boolean']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpsertEventsContentArgs = {
   data: EventsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
-  patch?: Maybe<Scalars['Boolean']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpsertExternalAuthorsContentArgs = {
   data: ExternalAuthorsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
-  patch?: Maybe<Scalars['Boolean']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpsertGroupsContentArgs = {
   data: GroupsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
-  patch?: Maybe<Scalars['Boolean']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpsertLabsContentArgs = {
   data: LabsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
-  patch?: Maybe<Scalars['Boolean']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpsertMigrationsContentArgs = {
   data: MigrationsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
-  patch?: Maybe<Scalars['Boolean']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpsertNewsAndEventsContentArgs = {
   data: NewsAndEventsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
-  patch?: Maybe<Scalars['Boolean']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpsertPagesContentArgs = {
   data: PagesDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
-  patch?: Maybe<Scalars['Boolean']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpsertResearchOutputsContentArgs = {
   data: ResearchOutputsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
-  patch?: Maybe<Scalars['Boolean']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpsertResearchTagsContentArgs = {
   data: ResearchTagsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
-  patch?: Maybe<Scalars['Boolean']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpsertTeamsContentArgs = {
   data: TeamsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
-  patch?: Maybe<Scalars['Boolean']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
 export type AppMutationsUpsertUsersContentArgs = {
   data: UsersDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
-  patch?: Maybe<Scalars['Boolean']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app queries. */
@@ -1124,353 +1125,353 @@ export type AppQueriesFindAssetArgs = {
 /** The app queries. */
 export type AppQueriesFindCalendarsContentArgs = {
   id: Scalars['String'];
-  version: Maybe<Scalars['Int']>;
+  version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesFindDashboardContentArgs = {
   id: Scalars['String'];
-  version: Maybe<Scalars['Int']>;
+  version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesFindDiscoverContentArgs = {
   id: Scalars['String'];
-  version: Maybe<Scalars['Int']>;
+  version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesFindEventsContentArgs = {
   id: Scalars['String'];
-  version: Maybe<Scalars['Int']>;
+  version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesFindExternalAuthorsContentArgs = {
   id: Scalars['String'];
-  version: Maybe<Scalars['Int']>;
+  version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesFindGroupsContentArgs = {
   id: Scalars['String'];
-  version: Maybe<Scalars['Int']>;
+  version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesFindLabsContentArgs = {
   id: Scalars['String'];
-  version: Maybe<Scalars['Int']>;
+  version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesFindMigrationsContentArgs = {
   id: Scalars['String'];
-  version: Maybe<Scalars['Int']>;
+  version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesFindNewsAndEventsContentArgs = {
   id: Scalars['String'];
-  version: Maybe<Scalars['Int']>;
+  version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesFindPagesContentArgs = {
   id: Scalars['String'];
-  version: Maybe<Scalars['Int']>;
+  version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesFindResearchOutputsContentArgs = {
   id: Scalars['String'];
-  version: Maybe<Scalars['Int']>;
+  version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesFindResearchTagsContentArgs = {
   id: Scalars['String'];
-  version: Maybe<Scalars['Int']>;
+  version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesFindTeamsContentArgs = {
   id: Scalars['String'];
-  version: Maybe<Scalars['Int']>;
+  version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesFindUsersContentArgs = {
   id: Scalars['String'];
-  version: Maybe<Scalars['Int']>;
+  version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryAssetsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryAssetsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryCalendarsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryCalendarsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryDashboardContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryDashboardContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryDiscoverContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryDiscoverContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryEventsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryEventsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryExternalAuthorsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryExternalAuthorsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryGroupsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryGroupsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryLabsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryLabsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryMigrationsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryMigrationsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryNewsAndEventsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryNewsAndEventsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryPagesContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryPagesContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryResearchOutputsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryResearchOutputsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryResearchTagsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryResearchTagsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryTeamsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryTeamsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryUsersContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryUsersContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** An asset */
@@ -1542,7 +1543,7 @@ export type Asset = {
 
 /** An asset */
 export type AssetMetadataArgs = {
-  path: Maybe<Scalars['String']>;
+  path: InputMaybe<Scalars['String']>;
 };
 
 /** List of assets and total count of assets. */
@@ -1606,38 +1607,38 @@ export type Calendars = Content & {
 
 /** The structure of a Calendars content type. */
 export type CalendarsReferencingEventsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Calendars content type. */
 export type CalendarsReferencingEventsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Calendars content type. */
 export type CalendarsReferencingGroupsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Calendars content type. */
 export type CalendarsReferencingGroupsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of the Color field of the Calendars content type. */
@@ -1647,7 +1648,7 @@ export type CalendarsDataColorDto = {
 
 /** The structure of the Color field of the Calendars content input type. */
 export type CalendarsDataColorInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Calendars data type. */
@@ -1667,7 +1668,7 @@ export type CalendarsDataExpirationDateDto = {
 
 /** The structure of the Google subscription expiration date field of the Calendars content input type. */
 export type CalendarsDataExpirationDateInputDto = {
-  iv: Maybe<Scalars['Float']>;
+  iv: InputMaybe<Scalars['Float']>;
 };
 
 /** The structure of the Google Calendar ID field of the Calendars content type. */
@@ -1679,17 +1680,17 @@ export type CalendarsDataGoogleCalendarIdDto = {
 /** The structure of the Google Calendar ID field of the Calendars content input type. */
 export type CalendarsDataGoogleCalendarIdInputDto = {
   /** Make sure this GCal is Public BEFORE adding it. Syncing will NOT work otherwise. */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Calendars data input type. */
 export type CalendarsDataInputDto = {
-  color: Maybe<CalendarsDataColorInputDto>;
-  expirationDate: Maybe<CalendarsDataExpirationDateInputDto>;
-  googleCalendarId: Maybe<CalendarsDataGoogleCalendarIdInputDto>;
-  name: Maybe<CalendarsDataNameInputDto>;
-  resourceId: Maybe<CalendarsDataResourceIdInputDto>;
-  syncToken: Maybe<CalendarsDataSyncTokenInputDto>;
+  color: InputMaybe<CalendarsDataColorInputDto>;
+  expirationDate: InputMaybe<CalendarsDataExpirationDateInputDto>;
+  googleCalendarId: InputMaybe<CalendarsDataGoogleCalendarIdInputDto>;
+  name: InputMaybe<CalendarsDataNameInputDto>;
+  resourceId: InputMaybe<CalendarsDataResourceIdInputDto>;
+  syncToken: InputMaybe<CalendarsDataSyncTokenInputDto>;
 };
 
 /** The structure of the Name field of the Calendars content type. */
@@ -1699,7 +1700,7 @@ export type CalendarsDataNameDto = {
 
 /** The structure of the Name field of the Calendars content input type. */
 export type CalendarsDataNameInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Google resource ID field of the Calendars content type. */
@@ -1709,7 +1710,7 @@ export type CalendarsDataResourceIdDto = {
 
 /** The structure of the Google resource ID field of the Calendars content input type. */
 export type CalendarsDataResourceIdInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Google Last Sync Token field of the Calendars content type. */
@@ -1719,7 +1720,7 @@ export type CalendarsDataSyncTokenDto = {
 
 /** The structure of the Google Last Sync Token field of the Calendars content input type. */
 export type CalendarsDataSyncTokenInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the flat Calendars data type. */
@@ -1819,38 +1820,38 @@ export type Dashboard = Content & {
 
 /** The structure of a Dashboard content type. */
 export type DashboardReferencesNewsAndEventsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Dashboard content type. */
 export type DashboardReferencesNewsAndEventsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Dashboard content type. */
 export type DashboardReferencesPagesContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Dashboard content type. */
 export type DashboardReferencesPagesContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of the Dashboard data type. */
@@ -1861,8 +1862,8 @@ export type DashboardDataDto = {
 
 /** The structure of the Dashboard data input type. */
 export type DashboardDataInputDto = {
-  news: Maybe<DashboardDataNewsInputDto>;
-  pages: Maybe<DashboardDataPagesInputDto>;
+  news: InputMaybe<DashboardDataNewsInputDto>;
+  pages: InputMaybe<DashboardDataPagesInputDto>;
 };
 
 /** The structure of the Latest News from ASAP field of the Dashboard content type. */
@@ -1872,7 +1873,7 @@ export type DashboardDataNewsDto = {
 
 /** The structure of the Latest News from ASAP field of the Dashboard content input type. */
 export type DashboardDataNewsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Where to Start field of the Dashboard content type. */
@@ -1882,7 +1883,7 @@ export type DashboardDataPagesDto = {
 
 /** The structure of the Where to Start field of the Dashboard content input type. */
 export type DashboardDataPagesInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the flat Dashboard data type. */
@@ -1953,74 +1954,74 @@ export type Discover = Content & {
 
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesNewsAndEventsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesNewsAndEventsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesPagesContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesPagesContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesTeamsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesTeamsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesUsersContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesUsersContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of the About Us field of the Discover ASAP content type. */
@@ -2030,7 +2031,7 @@ export type DiscoverDataAboutUsDto = {
 
 /** The structure of the About Us field of the Discover ASAP content input type. */
 export type DiscoverDataAboutUsInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Discover ASAP data type. */
@@ -2046,13 +2047,13 @@ export type DiscoverDataDto = {
 
 /** The structure of the Discover ASAP data input type. */
 export type DiscoverDataInputDto = {
-  aboutUs: Maybe<DiscoverDataAboutUsInputDto>;
-  members: Maybe<DiscoverDataMembersInputDto>;
-  membersTeam: Maybe<DiscoverDataMembersTeamInputDto>;
-  pages: Maybe<DiscoverDataPagesInputDto>;
-  scientificAdvisoryBoard: Maybe<DiscoverDataScientificAdvisoryBoardInputDto>;
-  training: Maybe<DiscoverDataTrainingInputDto>;
-  workingGroups: Maybe<DiscoverDataWorkingGroupsInputDto>;
+  aboutUs: InputMaybe<DiscoverDataAboutUsInputDto>;
+  members: InputMaybe<DiscoverDataMembersInputDto>;
+  membersTeam: InputMaybe<DiscoverDataMembersTeamInputDto>;
+  pages: InputMaybe<DiscoverDataPagesInputDto>;
+  scientificAdvisoryBoard: InputMaybe<DiscoverDataScientificAdvisoryBoardInputDto>;
+  training: InputMaybe<DiscoverDataTrainingInputDto>;
+  workingGroups: InputMaybe<DiscoverDataWorkingGroupsInputDto>;
 };
 
 /** The structure of the ASAP Team Members field of the Discover ASAP content type. */
@@ -2062,7 +2063,7 @@ export type DiscoverDataMembersDto = {
 
 /** The structure of the ASAP Team Members field of the Discover ASAP content input type. */
 export type DiscoverDataMembersInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the ASAP Team field of the Discover ASAP content type. */
@@ -2072,7 +2073,7 @@ export type DiscoverDataMembersTeamDto = {
 
 /** The structure of the ASAP Team field of the Discover ASAP content input type. */
 export type DiscoverDataMembersTeamInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Grantee Guidance field of the Discover ASAP content type. */
@@ -2082,7 +2083,7 @@ export type DiscoverDataPagesDto = {
 
 /** The structure of the Grantee Guidance field of the Discover ASAP content input type. */
 export type DiscoverDataPagesInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Scientific Advisory Board field of the Discover ASAP content type. */
@@ -2092,7 +2093,7 @@ export type DiscoverDataScientificAdvisoryBoardDto = {
 
 /** The structure of the Scientific Advisory Board field of the Discover ASAP content input type. */
 export type DiscoverDataScientificAdvisoryBoardInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Training field of the Discover ASAP content type. */
@@ -2102,7 +2103,7 @@ export type DiscoverDataTrainingDto = {
 
 /** The structure of the Training field of the Discover ASAP content input type. */
 export type DiscoverDataTrainingInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Working Groups field of the Discover ASAP content type. */
@@ -2112,7 +2113,7 @@ export type DiscoverDataWorkingGroupsDto = {
 
 /** The structure of the Working Groups field of the Discover ASAP content input type. */
 export type DiscoverDataWorkingGroupsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the flat Discover ASAP data type. */
@@ -2194,74 +2195,74 @@ export type Events = Content & {
 
 /** The structure of a Events content type. */
 export type EventsReferencesCalendarsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Events content type. */
 export type EventsReferencesCalendarsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Events content type. */
 export type EventsReferencesExternalAuthorsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Events content type. */
 export type EventsReferencesExternalAuthorsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Events content type. */
 export type EventsReferencesTeamsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Events content type. */
 export type EventsReferencesTeamsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Events content type. */
 export type EventsReferencesUsersContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Events content type. */
 export type EventsReferencesUsersContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of the Calendar field of the Events content type. */
@@ -2271,7 +2272,7 @@ export type EventsDataCalendarDto = {
 
 /** The structure of the Calendar field of the Events content input type. */
 export type EventsDataCalendarInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Description field of the Events content type. */
@@ -2281,7 +2282,7 @@ export type EventsDataDescriptionDto = {
 
 /** The structure of the Description field of the Events content input type. */
 export type EventsDataDescriptionInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Events data type. */
@@ -2319,7 +2320,7 @@ export type EventsDataEndDateDto = {
 
 /** The structure of the End Date field of the Events content input type. */
 export type EventsDataEndDateInputDto = {
-  iv: Maybe<Scalars['Instant']>;
+  iv: InputMaybe<Scalars['Instant']>;
 };
 
 /** The structure of the End Date Time Zone field of the Events content type. */
@@ -2329,7 +2330,7 @@ export type EventsDataEndDateTimeZoneDto = {
 
 /** The structure of the End Date Time Zone field of the Events content input type. */
 export type EventsDataEndDateTimeZoneInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Google Event Link field of the Events content type. */
@@ -2339,7 +2340,7 @@ export type EventsDataEventLinkDto = {
 
 /** The structure of the Google Event Link field of the Events content input type. */
 export type EventsDataEventLinkInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Google Id field of the Events content type. */
@@ -2349,7 +2350,7 @@ export type EventsDataGoogleIdDto = {
 
 /** The structure of the Google Id field of the Events content input type. */
 export type EventsDataGoogleIdInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Hide Event field of the Events content type. */
@@ -2361,7 +2362,7 @@ export type EventsDataHiddenDto = {
 /** The structure of the Hide Event field of the Events content input type. */
 export type EventsDataHiddenInputDto = {
   /** Hidden events will NOT show on the Hub. (Note: any event cancelled on GCal will be hidden by default. To show a cancelled event on the Hub, you have to manually un-hide the event here) */
-  iv: Maybe<Scalars['Boolean']>;
+  iv: InputMaybe<Scalars['Boolean']>;
 };
 
 /** The structure of the Hide Meeting Link field of the Events content type. */
@@ -2371,35 +2372,35 @@ export type EventsDataHideMeetingLinkDto = {
 
 /** The structure of the Hide Meeting Link field of the Events content input type. */
 export type EventsDataHideMeetingLinkInputDto = {
-  iv: Maybe<Scalars['Boolean']>;
+  iv: InputMaybe<Scalars['Boolean']>;
 };
 
 /** The structure of the Events data input type. */
 export type EventsDataInputDto = {
-  calendar: Maybe<EventsDataCalendarInputDto>;
-  description: Maybe<EventsDataDescriptionInputDto>;
-  endDate: Maybe<EventsDataEndDateInputDto>;
-  endDateTimeZone: Maybe<EventsDataEndDateTimeZoneInputDto>;
-  eventLink: Maybe<EventsDataEventLinkInputDto>;
-  googleId: Maybe<EventsDataGoogleIdInputDto>;
-  hidden: Maybe<EventsDataHiddenInputDto>;
-  hideMeetingLink: Maybe<EventsDataHideMeetingLinkInputDto>;
-  meetingLink: Maybe<EventsDataMeetingLinkInputDto>;
-  meetingMaterials: Maybe<EventsDataMeetingMaterialsInputDto>;
-  meetingMaterialsPermanentlyUnavailable: Maybe<EventsDataMeetingMaterialsPermanentlyUnavailableInputDto>;
-  notes: Maybe<EventsDataNotesInputDto>;
-  notesPermanentlyUnavailable: Maybe<EventsDataNotesPermanentlyUnavailableInputDto>;
-  presentation: Maybe<EventsDataPresentationInputDto>;
-  presentationPermanentlyUnavailable: Maybe<EventsDataPresentationPermanentlyUnavailableInputDto>;
-  speakers: Maybe<EventsDataSpeakersInputDto>;
-  startDate: Maybe<EventsDataStartDateInputDto>;
-  startDateTimeZone: Maybe<EventsDataStartDateTimeZoneInputDto>;
-  status: Maybe<EventsDataStatusInputDto>;
-  tags: Maybe<EventsDataTagsInputDto>;
-  thumbnail: Maybe<EventsDataThumbnailInputDto>;
-  title: Maybe<EventsDataTitleInputDto>;
-  videoRecording: Maybe<EventsDataVideoRecordingInputDto>;
-  videoRecordingPermanentlyUnavailable: Maybe<EventsDataVideoRecordingPermanentlyUnavailableInputDto>;
+  calendar: InputMaybe<EventsDataCalendarInputDto>;
+  description: InputMaybe<EventsDataDescriptionInputDto>;
+  endDate: InputMaybe<EventsDataEndDateInputDto>;
+  endDateTimeZone: InputMaybe<EventsDataEndDateTimeZoneInputDto>;
+  eventLink: InputMaybe<EventsDataEventLinkInputDto>;
+  googleId: InputMaybe<EventsDataGoogleIdInputDto>;
+  hidden: InputMaybe<EventsDataHiddenInputDto>;
+  hideMeetingLink: InputMaybe<EventsDataHideMeetingLinkInputDto>;
+  meetingLink: InputMaybe<EventsDataMeetingLinkInputDto>;
+  meetingMaterials: InputMaybe<EventsDataMeetingMaterialsInputDto>;
+  meetingMaterialsPermanentlyUnavailable: InputMaybe<EventsDataMeetingMaterialsPermanentlyUnavailableInputDto>;
+  notes: InputMaybe<EventsDataNotesInputDto>;
+  notesPermanentlyUnavailable: InputMaybe<EventsDataNotesPermanentlyUnavailableInputDto>;
+  presentation: InputMaybe<EventsDataPresentationInputDto>;
+  presentationPermanentlyUnavailable: InputMaybe<EventsDataPresentationPermanentlyUnavailableInputDto>;
+  speakers: InputMaybe<EventsDataSpeakersInputDto>;
+  startDate: InputMaybe<EventsDataStartDateInputDto>;
+  startDateTimeZone: InputMaybe<EventsDataStartDateTimeZoneInputDto>;
+  status: InputMaybe<EventsDataStatusInputDto>;
+  tags: InputMaybe<EventsDataTagsInputDto>;
+  thumbnail: InputMaybe<EventsDataThumbnailInputDto>;
+  title: InputMaybe<EventsDataTitleInputDto>;
+  videoRecording: InputMaybe<EventsDataVideoRecordingInputDto>;
+  videoRecordingPermanentlyUnavailable: InputMaybe<EventsDataVideoRecordingPermanentlyUnavailableInputDto>;
 };
 
 /** The structure of the Meeting Link field of the Events content type. */
@@ -2409,7 +2410,7 @@ export type EventsDataMeetingLinkDto = {
 
 /** The structure of the Meeting Link field of the Events content input type. */
 export type EventsDataMeetingLinkInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Additional Meeting Materials nested schema. */
@@ -2420,8 +2421,8 @@ export type EventsDataMeetingMaterialsChildDto = {
 
 /** The structure of the Additional Meeting Materials nested schema. */
 export type EventsDataMeetingMaterialsChildInputDto = {
-  title: Maybe<Scalars['String']>;
-  url: Maybe<Scalars['String']>;
+  title: InputMaybe<Scalars['String']>;
+  url: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Additional Meeting Materials field of the Events content type. */
@@ -2433,7 +2434,7 @@ export type EventsDataMeetingMaterialsDto = {
 /** The structure of the Additional Meeting Materials field of the Events content input type. */
 export type EventsDataMeetingMaterialsInputDto = {
   /** If permanently unavailable box is ticked, any content you put here will be ignored. */
-  iv: Maybe<Array<EventsDataMeetingMaterialsChildInputDto>>;
+  iv: InputMaybe<Array<EventsDataMeetingMaterialsChildInputDto>>;
 };
 
 /** The structure of the Mark Additional Meeting Materials as permanently unavailable field of the Events content type. */
@@ -2445,7 +2446,7 @@ export type EventsDataMeetingMaterialsPermanentlyUnavailableDto = {
 /** The structure of the Mark Additional Meeting Materials as permanently unavailable field of the Events content input type. */
 export type EventsDataMeetingMaterialsPermanentlyUnavailableInputDto = {
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
-  iv: Maybe<Scalars['Boolean']>;
+  iv: InputMaybe<Scalars['Boolean']>;
 };
 
 /** The structure of the Notes field of the Events content type. */
@@ -2457,7 +2458,7 @@ export type EventsDataNotesDto = {
 /** The structure of the Notes field of the Events content input type. */
 export type EventsDataNotesInputDto = {
   /** If permanently unavailable box is ticked, any content you put here will be ignored. */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Mark Notes as permanently unavailable field of the Events content type. */
@@ -2469,7 +2470,7 @@ export type EventsDataNotesPermanentlyUnavailableDto = {
 /** The structure of the Mark Notes as permanently unavailable field of the Events content input type. */
 export type EventsDataNotesPermanentlyUnavailableInputDto = {
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
-  iv: Maybe<Scalars['Boolean']>;
+  iv: InputMaybe<Scalars['Boolean']>;
 };
 
 /** The structure of the Presentation field of the Events content type. */
@@ -2481,7 +2482,7 @@ export type EventsDataPresentationDto = {
 /** The structure of the Presentation field of the Events content input type. */
 export type EventsDataPresentationInputDto = {
   /** If permanently unavailable box is ticked, any content you put here will be ignored. */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Mark Presentation as permanently unavailable field of the Events content type. */
@@ -2493,7 +2494,7 @@ export type EventsDataPresentationPermanentlyUnavailableDto = {
 /** The structure of the Mark Presentation as permanently unavailable field of the Events content input type. */
 export type EventsDataPresentationPermanentlyUnavailableInputDto = {
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
-  iv: Maybe<Scalars['Boolean']>;
+  iv: InputMaybe<Scalars['Boolean']>;
 };
 
 /** The structure of the Speakers nested schema. */
@@ -2504,8 +2505,8 @@ export type EventsDataSpeakersChildDto = {
 
 /** The structure of the Speakers nested schema. */
 export type EventsDataSpeakersChildInputDto = {
-  team: Maybe<Array<Scalars['String']>>;
-  user: Maybe<Array<Scalars['String']>>;
+  team: InputMaybe<Array<Scalars['String']>>;
+  user: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Speakers field of the Events content type. */
@@ -2515,7 +2516,7 @@ export type EventsDataSpeakersDto = {
 
 /** The structure of the Speakers field of the Events content input type. */
 export type EventsDataSpeakersInputDto = {
-  iv: Maybe<Array<EventsDataSpeakersChildInputDto>>;
+  iv: InputMaybe<Array<EventsDataSpeakersChildInputDto>>;
 };
 
 export type EventsDataSpeakersUserUnionDto = ExternalAuthors | Users;
@@ -2527,7 +2528,7 @@ export type EventsDataStartDateDto = {
 
 /** The structure of the Start Date field of the Events content input type. */
 export type EventsDataStartDateInputDto = {
-  iv: Maybe<Scalars['Instant']>;
+  iv: InputMaybe<Scalars['Instant']>;
 };
 
 /** The structure of the Start Date Time Zone field of the Events content type. */
@@ -2537,7 +2538,7 @@ export type EventsDataStartDateTimeZoneDto = {
 
 /** The structure of the Start Date Time Zone field of the Events content input type. */
 export type EventsDataStartDateTimeZoneInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Status field of the Events content type. */
@@ -2547,7 +2548,7 @@ export type EventsDataStatusDto = {
 
 /** The structure of the Status field of the Events content input type. */
 export type EventsDataStatusInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Tags field of the Events content type. */
@@ -2557,7 +2558,7 @@ export type EventsDataTagsDto = {
 
 /** The structure of the Tags field of the Events content input type. */
 export type EventsDataTagsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Thumbnail field of the Events content type. */
@@ -2567,7 +2568,7 @@ export type EventsDataThumbnailDto = {
 
 /** The structure of the Thumbnail field of the Events content input type. */
 export type EventsDataThumbnailInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Title field of the Events content type. */
@@ -2577,7 +2578,7 @@ export type EventsDataTitleDto = {
 
 /** The structure of the Title field of the Events content input type. */
 export type EventsDataTitleInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Video Recording field of the Events content type. */
@@ -2589,7 +2590,7 @@ export type EventsDataVideoRecordingDto = {
 /** The structure of the Video Recording field of the Events content input type. */
 export type EventsDataVideoRecordingInputDto = {
   /** If permanently unavailable box is ticked, any content you put here will be ignored. */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Mark Video Recording as permanently unavailable field of the Events content type. */
@@ -2601,7 +2602,7 @@ export type EventsDataVideoRecordingPermanentlyUnavailableDto = {
 /** The structure of the Mark Video Recording as permanently unavailable field of the Events content input type. */
 export type EventsDataVideoRecordingPermanentlyUnavailableInputDto = {
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
-  iv: Maybe<Scalars['Boolean']>;
+  iv: InputMaybe<Scalars['Boolean']>;
 };
 
 /** The structure of the flat Events data type. */
@@ -2695,38 +2696,38 @@ export type ExternalAuthors = Content & {
 
 /** The structure of a External authors content type. */
 export type ExternalAuthorsReferencingEventsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a External authors content type. */
 export type ExternalAuthorsReferencingEventsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a External authors content type. */
 export type ExternalAuthorsReferencingResearchOutputsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a External authors content type. */
 export type ExternalAuthorsReferencingResearchOutputsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of the External authors data type. */
@@ -2737,8 +2738,8 @@ export type ExternalAuthorsDataDto = {
 
 /** The structure of the External authors data input type. */
 export type ExternalAuthorsDataInputDto = {
-  name: Maybe<ExternalAuthorsDataNameInputDto>;
-  orcid: Maybe<ExternalAuthorsDataOrcidInputDto>;
+  name: InputMaybe<ExternalAuthorsDataNameInputDto>;
+  orcid: InputMaybe<ExternalAuthorsDataOrcidInputDto>;
 };
 
 /** The structure of the Name field of the External authors content type. */
@@ -2748,7 +2749,7 @@ export type ExternalAuthorsDataNameDto = {
 
 /** The structure of the Name field of the External authors content input type. */
 export type ExternalAuthorsDataNameInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the ORCID field of the External authors content type. */
@@ -2760,7 +2761,7 @@ export type ExternalAuthorsDataOrcidDto = {
 /** The structure of the ORCID field of the External authors content input type. */
 export type ExternalAuthorsDataOrcidInputDto = {
   /** ORCIDs cannot be repeated on the Hub */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the flat External authors data type. */
@@ -2828,56 +2829,56 @@ export type Groups = Content & {
 
 /** The structure of a Groups content type. */
 export type GroupsReferencesCalendarsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Groups content type. */
 export type GroupsReferencesCalendarsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Groups content type. */
 export type GroupsReferencesTeamsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Groups content type. */
 export type GroupsReferencesTeamsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Groups content type. */
 export type GroupsReferencesUsersContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Groups content type. */
 export type GroupsReferencesUsersContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of the This group is active field of the Groups content type. */
@@ -2889,7 +2890,7 @@ export type GroupsDataActiveDto = {
 /** The structure of the This group is active field of the Groups content input type. */
 export type GroupsDataActiveInputDto = {
   /** Active groups have Subscribe buttons and Calendar and Upcoming Events tabs */
-  iv: Maybe<Scalars['Boolean']>;
+  iv: InputMaybe<Scalars['Boolean']>;
 };
 
 /** The structure of the Calendars field of the Groups content type. */
@@ -2899,7 +2900,7 @@ export type GroupsDataCalendarsDto = {
 
 /** The structure of the Calendars field of the Groups content input type. */
 export type GroupsDataCalendarsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Description field of the Groups content type. */
@@ -2909,7 +2910,7 @@ export type GroupsDataDescriptionDto = {
 
 /** The structure of the Description field of the Groups content input type. */
 export type GroupsDataDescriptionInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Groups data type. */
@@ -2927,15 +2928,15 @@ export type GroupsDataDto = {
 
 /** The structure of the Groups data input type. */
 export type GroupsDataInputDto = {
-  active: Maybe<GroupsDataActiveInputDto>;
-  calendars: Maybe<GroupsDataCalendarsInputDto>;
-  description: Maybe<GroupsDataDescriptionInputDto>;
-  leaders: Maybe<GroupsDataLeadersInputDto>;
-  name: Maybe<GroupsDataNameInputDto>;
-  tags: Maybe<GroupsDataTagsInputDto>;
-  teams: Maybe<GroupsDataTeamsInputDto>;
-  thumbnail: Maybe<GroupsDataThumbnailInputDto>;
-  tools: Maybe<GroupsDataToolsInputDto>;
+  active: InputMaybe<GroupsDataActiveInputDto>;
+  calendars: InputMaybe<GroupsDataCalendarsInputDto>;
+  description: InputMaybe<GroupsDataDescriptionInputDto>;
+  leaders: InputMaybe<GroupsDataLeadersInputDto>;
+  name: InputMaybe<GroupsDataNameInputDto>;
+  tags: InputMaybe<GroupsDataTagsInputDto>;
+  teams: InputMaybe<GroupsDataTeamsInputDto>;
+  thumbnail: InputMaybe<GroupsDataThumbnailInputDto>;
+  tools: InputMaybe<GroupsDataToolsInputDto>;
 };
 
 /** The structure of the Leaders nested schema. */
@@ -2946,8 +2947,8 @@ export type GroupsDataLeadersChildDto = {
 
 /** The structure of the Leaders nested schema. */
 export type GroupsDataLeadersChildInputDto = {
-  role: Maybe<Scalars['String']>;
-  user: Maybe<Array<Scalars['String']>>;
+  role: InputMaybe<Scalars['String']>;
+  user: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Leaders field of the Groups content type. */
@@ -2957,7 +2958,7 @@ export type GroupsDataLeadersDto = {
 
 /** The structure of the Leaders field of the Groups content input type. */
 export type GroupsDataLeadersInputDto = {
-  iv: Maybe<Array<GroupsDataLeadersChildInputDto>>;
+  iv: InputMaybe<Array<GroupsDataLeadersChildInputDto>>;
 };
 
 /** The structure of the Name field of the Groups content type. */
@@ -2967,7 +2968,7 @@ export type GroupsDataNameDto = {
 
 /** The structure of the Name field of the Groups content input type. */
 export type GroupsDataNameInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Expertise (Tags) field of the Groups content type. */
@@ -2977,7 +2978,7 @@ export type GroupsDataTagsDto = {
 
 /** The structure of the Expertise (Tags) field of the Groups content input type. */
 export type GroupsDataTagsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Teams field of the Groups content type. */
@@ -2987,7 +2988,7 @@ export type GroupsDataTeamsDto = {
 
 /** The structure of the Teams field of the Groups content input type. */
 export type GroupsDataTeamsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Thumbnail field of the Groups content type. */
@@ -2997,7 +2998,7 @@ export type GroupsDataThumbnailDto = {
 
 /** The structure of the Thumbnail field of the Groups content input type. */
 export type GroupsDataThumbnailInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the External Tools nested schema. */
@@ -3008,8 +3009,8 @@ export type GroupsDataToolsChildDto = {
 
 /** The structure of the External Tools nested schema. */
 export type GroupsDataToolsChildInputDto = {
-  googleDrive: Maybe<Scalars['String']>;
-  slack: Maybe<Scalars['String']>;
+  googleDrive: InputMaybe<Scalars['String']>;
+  slack: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the External Tools field of the Groups content type. */
@@ -3019,7 +3020,7 @@ export type GroupsDataToolsDto = {
 
 /** The structure of the External Tools field of the Groups content input type. */
 export type GroupsDataToolsInputDto = {
-  iv: Maybe<Array<GroupsDataToolsChildInputDto>>;
+  iv: InputMaybe<Array<GroupsDataToolsChildInputDto>>;
 };
 
 /** The structure of the flat Groups data type. */
@@ -3090,38 +3091,38 @@ export type Labs = Content & {
 
 /** The structure of a Labs content type. */
 export type LabsReferencingResearchOutputsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Labs content type. */
 export type LabsReferencingResearchOutputsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Labs content type. */
 export type LabsReferencingUsersContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Labs content type. */
 export type LabsReferencingUsersContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of the Labs data type. */
@@ -3131,7 +3132,7 @@ export type LabsDataDto = {
 
 /** The structure of the Labs data input type. */
 export type LabsDataInputDto = {
-  name: Maybe<LabsDataNameInputDto>;
+  name: InputMaybe<LabsDataNameInputDto>;
 };
 
 /** The structure of the Name field of the Labs content type. */
@@ -3141,7 +3142,7 @@ export type LabsDataNameDto = {
 
 /** The structure of the Name field of the Labs content input type. */
 export type LabsDataNameInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the flat Labs data type. */
@@ -3200,7 +3201,7 @@ export type MigrationsDataDto = {
 
 /** The structure of the Migrations data input type. */
 export type MigrationsDataInputDto = {
-  name: Maybe<MigrationsDataNameInputDto>;
+  name: InputMaybe<MigrationsDataNameInputDto>;
 };
 
 /** The structure of the Name field of the Migrations content type. */
@@ -3210,7 +3211,7 @@ export type MigrationsDataNameDto = {
 
 /** The structure of the Name field of the Migrations content input type. */
 export type MigrationsDataNameInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the flat Migrations data type. */
@@ -3272,38 +3273,38 @@ export type NewsAndEvents = Content & {
 
 /** The structure of a News content type. */
 export type NewsAndEventsReferencingDashboardContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a News content type. */
 export type NewsAndEventsReferencingDashboardContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a News content type. */
 export type NewsAndEventsReferencingDiscoverContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a News content type. */
 export type NewsAndEventsReferencingDiscoverContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of the Event Date field of the News content type. */
@@ -3315,7 +3316,7 @@ export type NewsAndEventsDataDateDto = {
 /** The structure of the Event Date field of the News content input type. */
 export type NewsAndEventsDataDateInputDto = {
   /** Property only used on Event type items */
-  iv: Maybe<Scalars['Instant']>;
+  iv: InputMaybe<Scalars['Instant']>;
 };
 
 /** The structure of the News data type. */
@@ -3332,14 +3333,14 @@ export type NewsAndEventsDataDto = {
 
 /** The structure of the News data input type. */
 export type NewsAndEventsDataInputDto = {
-  date: Maybe<NewsAndEventsDataDateInputDto>;
-  link: Maybe<NewsAndEventsDataLinkInputDto>;
-  linkText: Maybe<NewsAndEventsDataLinkTextInputDto>;
-  shortText: Maybe<NewsAndEventsDataShortTextInputDto>;
-  text: Maybe<NewsAndEventsDataTextInputDto>;
-  thumbnail: Maybe<NewsAndEventsDataThumbnailInputDto>;
-  title: Maybe<NewsAndEventsDataTitleInputDto>;
-  type: Maybe<NewsAndEventsDataTypeInputDto>;
+  date: InputMaybe<NewsAndEventsDataDateInputDto>;
+  link: InputMaybe<NewsAndEventsDataLinkInputDto>;
+  linkText: InputMaybe<NewsAndEventsDataLinkTextInputDto>;
+  shortText: InputMaybe<NewsAndEventsDataShortTextInputDto>;
+  text: InputMaybe<NewsAndEventsDataTextInputDto>;
+  thumbnail: InputMaybe<NewsAndEventsDataThumbnailInputDto>;
+  title: InputMaybe<NewsAndEventsDataTitleInputDto>;
+  type: InputMaybe<NewsAndEventsDataTypeInputDto>;
 };
 
 /** The structure of the External Link field of the News content type. */
@@ -3349,7 +3350,7 @@ export type NewsAndEventsDataLinkDto = {
 
 /** The structure of the External Link field of the News content input type. */
 export type NewsAndEventsDataLinkInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the External Link Text field of the News content type. */
@@ -3361,7 +3362,7 @@ export type NewsAndEventsDataLinkTextDto = {
 /** The structure of the External Link Text field of the News content input type. */
 export type NewsAndEventsDataLinkTextInputDto = {
   /** Leave this empty to show "Open External Link" */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Short Text field of the News content type. */
@@ -3373,7 +3374,7 @@ export type NewsAndEventsDataShortTextDto = {
 /** The structure of the Short Text field of the News content input type. */
 export type NewsAndEventsDataShortTextInputDto = {
   /** The text visible on the card version of News and Events */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Text field of the News content type. */
@@ -3383,7 +3384,7 @@ export type NewsAndEventsDataTextDto = {
 
 /** The structure of the Text field of the News content input type. */
 export type NewsAndEventsDataTextInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Thumbnail field of the News content type. */
@@ -3393,7 +3394,7 @@ export type NewsAndEventsDataThumbnailDto = {
 
 /** The structure of the Thumbnail field of the News content input type. */
 export type NewsAndEventsDataThumbnailInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Title field of the News content type. */
@@ -3403,7 +3404,7 @@ export type NewsAndEventsDataTitleDto = {
 
 /** The structure of the Title field of the News content input type. */
 export type NewsAndEventsDataTitleInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Type field of the News content type. */
@@ -3413,7 +3414,7 @@ export type NewsAndEventsDataTypeDto = {
 
 /** The structure of the Type field of the News content input type. */
 export type NewsAndEventsDataTypeInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the flat News data type. */
@@ -3485,38 +3486,38 @@ export type Pages = Content & {
 
 /** The structure of a Pages content type. */
 export type PagesReferencingDashboardContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Pages content type. */
 export type PagesReferencingDashboardContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Pages content type. */
 export type PagesReferencingDiscoverContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Pages content type. */
 export type PagesReferencingDiscoverContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of the Pages data type. */
@@ -3531,12 +3532,12 @@ export type PagesDataDto = {
 
 /** The structure of the Pages data input type. */
 export type PagesDataInputDto = {
-  link: Maybe<PagesDataLinkInputDto>;
-  linkText: Maybe<PagesDataLinkTextInputDto>;
-  path: Maybe<PagesDataPathInputDto>;
-  shortText: Maybe<PagesDataShortTextInputDto>;
-  text: Maybe<PagesDataTextInputDto>;
-  title: Maybe<PagesDataTitleInputDto>;
+  link: InputMaybe<PagesDataLinkInputDto>;
+  linkText: InputMaybe<PagesDataLinkTextInputDto>;
+  path: InputMaybe<PagesDataPathInputDto>;
+  shortText: InputMaybe<PagesDataShortTextInputDto>;
+  text: InputMaybe<PagesDataTextInputDto>;
+  title: InputMaybe<PagesDataTitleInputDto>;
 };
 
 /** The structure of the External Link field of the Pages content type. */
@@ -3546,7 +3547,7 @@ export type PagesDataLinkDto = {
 
 /** The structure of the External Link field of the Pages content input type. */
 export type PagesDataLinkInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the External Link Text field of the Pages content type. */
@@ -3556,7 +3557,7 @@ export type PagesDataLinkTextDto = {
 
 /** The structure of the External Link Text field of the Pages content input type. */
 export type PagesDataLinkTextInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Path field of the Pages content type. */
@@ -3566,7 +3567,7 @@ export type PagesDataPathDto = {
 
 /** The structure of the Path field of the Pages content input type. */
 export type PagesDataPathInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Short Text field of the Pages content type. */
@@ -3576,7 +3577,7 @@ export type PagesDataShortTextDto = {
 
 /** The structure of the Short Text field of the Pages content input type. */
 export type PagesDataShortTextInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Text field of the Pages content type. */
@@ -3586,7 +3587,7 @@ export type PagesDataTextDto = {
 
 /** The structure of the Text field of the Pages content input type. */
 export type PagesDataTextInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Title field of the Pages content type. */
@@ -3596,7 +3597,7 @@ export type PagesDataTitleDto = {
 
 /** The structure of the Title field of the Pages content input type. */
 export type PagesDataTitleInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the flat Pages data type. */
@@ -3675,92 +3676,92 @@ export type ResearchOutputs = Content & {
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesExternalAuthorsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesExternalAuthorsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesLabsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesLabsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesResearchTagsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesResearchTagsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesUsersContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesUsersContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencingTeamsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencingTeamsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of the Identifier (Accession #) field of the Research Outputs content type. */
@@ -3772,7 +3773,7 @@ export type ResearchOutputsDataAccessionDto = {
 /** The structure of the Identifier (Accession #) field of the Research Outputs content input type. */
 export type ResearchOutputsDataAccessionInputDto = {
   /** This must start with a letter */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Added Date field of the Research Outputs content type. */
@@ -3784,7 +3785,7 @@ export type ResearchOutputsDataAddedDateDto = {
 /** The structure of the Added Date field of the Research Outputs content input type. */
 export type ResearchOutputsDataAddedDateInputDto = {
   /** Date output was shared with ASAP Network (different from publication date) */
-  iv: Maybe<Scalars['Instant']>;
+  iv: InputMaybe<Scalars['Instant']>;
 };
 
 /** The structure of the Admin notes field of the Research Outputs content type. */
@@ -3796,7 +3797,7 @@ export type ResearchOutputsDataAdminNotesDto = {
 /** The structure of the Admin notes field of the Research Outputs content input type. */
 export type ResearchOutputsDataAdminNotesInputDto = {
   /** This is ASAP internal content and it's not being shown on the Hub */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the ASAP Funded field of the Research Outputs content type. */
@@ -3808,7 +3809,7 @@ export type ResearchOutputsDataAsapFundedDto = {
 /** The structure of the ASAP Funded field of the Research Outputs content input type. */
 export type ResearchOutputsDataAsapFundedInputDto = {
   /** "Not sure" will not be shown on the Hub */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Authors field of the Research Outputs content type. */
@@ -3818,7 +3819,7 @@ export type ResearchOutputsDataAuthorsDto = {
 
 /** The structure of the Authors field of the Research Outputs content input type. */
 export type ResearchOutputsDataAuthorsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type ResearchOutputsDataAuthorsUnionDto = ExternalAuthors | Users;
@@ -3830,7 +3831,7 @@ export type ResearchOutputsDataCreatedByDto = {
 
 /** The structure of the Created by field of the Research Outputs content input type. */
 export type ResearchOutputsDataCreatedByInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Description field of the Research Outputs content type. */
@@ -3842,7 +3843,7 @@ export type ResearchOutputsDataDescriptionDto = {
 /** The structure of the Description field of the Research Outputs content input type. */
 export type ResearchOutputsDataDescriptionInputDto = {
   /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Document type field of the Research Outputs content type. */
@@ -3852,7 +3853,7 @@ export type ResearchOutputsDataDocumentTypeDto = {
 
 /** The structure of the Document type field of the Research Outputs content input type. */
 export type ResearchOutputsDataDocumentTypeInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Identifier (DOI) field of the Research Outputs content type. */
@@ -3864,7 +3865,7 @@ export type ResearchOutputsDataDoiDto = {
 /** The structure of the Identifier (DOI) field of the Research Outputs content input type. */
 export type ResearchOutputsDataDoiInputDto = {
   /** DOIs must start with a number and cannot be a URL */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Research Outputs data type. */
@@ -3904,37 +3905,37 @@ export type ResearchOutputsDataEnvironmentsDto = {
 
 /** The structure of the Environment field of the Research Outputs content input type. */
 export type ResearchOutputsDataEnvironmentsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Research Outputs data input type. */
 export type ResearchOutputsDataInputDto = {
-  accession: Maybe<ResearchOutputsDataAccessionInputDto>;
-  addedDate: Maybe<ResearchOutputsDataAddedDateInputDto>;
-  adminNotes: Maybe<ResearchOutputsDataAdminNotesInputDto>;
-  asapFunded: Maybe<ResearchOutputsDataAsapFundedInputDto>;
-  authors: Maybe<ResearchOutputsDataAuthorsInputDto>;
-  createdBy: Maybe<ResearchOutputsDataCreatedByInputDto>;
-  description: Maybe<ResearchOutputsDataDescriptionInputDto>;
-  documentType: Maybe<ResearchOutputsDataDocumentTypeInputDto>;
-  doi: Maybe<ResearchOutputsDataDoiInputDto>;
-  environments: Maybe<ResearchOutputsDataEnvironmentsInputDto>;
-  labCatalogNumber: Maybe<ResearchOutputsDataLabCatalogNumberInputDto>;
-  labs: Maybe<ResearchOutputsDataLabsInputDto>;
-  lastUpdatedPartial: Maybe<ResearchOutputsDataLastUpdatedPartialInputDto>;
-  link: Maybe<ResearchOutputsDataLinkInputDto>;
-  methods: Maybe<ResearchOutputsDataMethodsInputDto>;
-  organisms: Maybe<ResearchOutputsDataOrganismsInputDto>;
-  publishDate: Maybe<ResearchOutputsDataPublishDateInputDto>;
-  rrid: Maybe<ResearchOutputsDataRridInputDto>;
-  sharingStatus: Maybe<ResearchOutputsDataSharingStatusInputDto>;
-  subtype: Maybe<ResearchOutputsDataSubtypeInputDto>;
-  tags: Maybe<ResearchOutputsDataTagsInputDto>;
-  title: Maybe<ResearchOutputsDataTitleInputDto>;
-  type: Maybe<ResearchOutputsDataTypeInputDto>;
-  updatedBy: Maybe<ResearchOutputsDataUpdatedByInputDto>;
-  usageNotes: Maybe<ResearchOutputsDataUsageNotesInputDto>;
-  usedInAPublication: Maybe<ResearchOutputsDataUsedInAPublicationInputDto>;
+  accession: InputMaybe<ResearchOutputsDataAccessionInputDto>;
+  addedDate: InputMaybe<ResearchOutputsDataAddedDateInputDto>;
+  adminNotes: InputMaybe<ResearchOutputsDataAdminNotesInputDto>;
+  asapFunded: InputMaybe<ResearchOutputsDataAsapFundedInputDto>;
+  authors: InputMaybe<ResearchOutputsDataAuthorsInputDto>;
+  createdBy: InputMaybe<ResearchOutputsDataCreatedByInputDto>;
+  description: InputMaybe<ResearchOutputsDataDescriptionInputDto>;
+  documentType: InputMaybe<ResearchOutputsDataDocumentTypeInputDto>;
+  doi: InputMaybe<ResearchOutputsDataDoiInputDto>;
+  environments: InputMaybe<ResearchOutputsDataEnvironmentsInputDto>;
+  labCatalogNumber: InputMaybe<ResearchOutputsDataLabCatalogNumberInputDto>;
+  labs: InputMaybe<ResearchOutputsDataLabsInputDto>;
+  lastUpdatedPartial: InputMaybe<ResearchOutputsDataLastUpdatedPartialInputDto>;
+  link: InputMaybe<ResearchOutputsDataLinkInputDto>;
+  methods: InputMaybe<ResearchOutputsDataMethodsInputDto>;
+  organisms: InputMaybe<ResearchOutputsDataOrganismsInputDto>;
+  publishDate: InputMaybe<ResearchOutputsDataPublishDateInputDto>;
+  rrid: InputMaybe<ResearchOutputsDataRridInputDto>;
+  sharingStatus: InputMaybe<ResearchOutputsDataSharingStatusInputDto>;
+  subtype: InputMaybe<ResearchOutputsDataSubtypeInputDto>;
+  tags: InputMaybe<ResearchOutputsDataTagsInputDto>;
+  title: InputMaybe<ResearchOutputsDataTitleInputDto>;
+  type: InputMaybe<ResearchOutputsDataTypeInputDto>;
+  updatedBy: InputMaybe<ResearchOutputsDataUpdatedByInputDto>;
+  usageNotes: InputMaybe<ResearchOutputsDataUsageNotesInputDto>;
+  usedInAPublication: InputMaybe<ResearchOutputsDataUsedInAPublicationInputDto>;
 };
 
 /** The structure of the Lab Catalog Number field of the Research Outputs content type. */
@@ -3946,7 +3947,7 @@ export type ResearchOutputsDataLabCatalogNumberDto = {
 /** The structure of the Lab Catalog Number field of the Research Outputs content input type. */
 export type ResearchOutputsDataLabCatalogNumberInputDto = {
   /** If this is a hyperlink, please start with "http://" or "https://" */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Labs field of the Research Outputs content type. */
@@ -3956,7 +3957,7 @@ export type ResearchOutputsDataLabsDto = {
 
 /** The structure of the Labs field of the Research Outputs content input type. */
 export type ResearchOutputsDataLabsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Last Updated (partial) field of the Research Outputs content type. */
@@ -3968,7 +3969,7 @@ export type ResearchOutputsDataLastUpdatedPartialDto = {
 /** The structure of the Last Updated (partial) field of the Research Outputs content input type. */
 export type ResearchOutputsDataLastUpdatedPartialInputDto = {
   /** Does not include changes to Publish Date and Admin notes */
-  iv: Maybe<Scalars['Instant']>;
+  iv: InputMaybe<Scalars['Instant']>;
 };
 
 /** The structure of the External Link field of the Research Outputs content type. */
@@ -3978,7 +3979,7 @@ export type ResearchOutputsDataLinkDto = {
 
 /** The structure of the External Link field of the Research Outputs content input type. */
 export type ResearchOutputsDataLinkInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Methods field of the Research Outputs content type. */
@@ -3988,7 +3989,7 @@ export type ResearchOutputsDataMethodsDto = {
 
 /** The structure of the Methods field of the Research Outputs content input type. */
 export type ResearchOutputsDataMethodsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Organism field of the Research Outputs content type. */
@@ -3998,7 +3999,7 @@ export type ResearchOutputsDataOrganismsDto = {
 
 /** The structure of the Organism field of the Research Outputs content input type. */
 export type ResearchOutputsDataOrganismsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Publish Date field of the Research Outputs content type. */
@@ -4010,7 +4011,7 @@ export type ResearchOutputsDataPublishDateDto = {
 /** The structure of the Publish Date field of the Research Outputs content input type. */
 export type ResearchOutputsDataPublishDateInputDto = {
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
-  iv: Maybe<Scalars['Instant']>;
+  iv: InputMaybe<Scalars['Instant']>;
 };
 
 /** The structure of the Identifier (RRID) field of the Research Outputs content type. */
@@ -4022,7 +4023,7 @@ export type ResearchOutputsDataRridDto = {
 /** The structure of the Identifier (RRID) field of the Research Outputs content input type. */
 export type ResearchOutputsDataRridInputDto = {
   /** This must start with "RRID:" */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Sharing Status field of the Research Outputs content type. */
@@ -4032,7 +4033,7 @@ export type ResearchOutputsDataSharingStatusDto = {
 
 /** The structure of the Sharing Status field of the Research Outputs content input type. */
 export type ResearchOutputsDataSharingStatusInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Subtype field of the Research Outputs content type. */
@@ -4042,7 +4043,7 @@ export type ResearchOutputsDataSubtypeDto = {
 
 /** The structure of the Subtype field of the Research Outputs content input type. */
 export type ResearchOutputsDataSubtypeInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Tags field of the Research Outputs content type. */
@@ -4052,7 +4053,7 @@ export type ResearchOutputsDataTagsDto = {
 
 /** The structure of the Tags field of the Research Outputs content input type. */
 export type ResearchOutputsDataTagsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Title field of the Research Outputs content type. */
@@ -4062,7 +4063,7 @@ export type ResearchOutputsDataTitleDto = {
 
 /** The structure of the Title field of the Research Outputs content input type. */
 export type ResearchOutputsDataTitleInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Type field of the Research Outputs content type. */
@@ -4072,7 +4073,7 @@ export type ResearchOutputsDataTypeDto = {
 
 /** The structure of the Type field of the Research Outputs content input type. */
 export type ResearchOutputsDataTypeInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Updated by field of the Research Outputs content type. */
@@ -4082,7 +4083,7 @@ export type ResearchOutputsDataUpdatedByDto = {
 
 /** The structure of the Updated by field of the Research Outputs content input type. */
 export type ResearchOutputsDataUpdatedByInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Usage Notes field of the Research Outputs content type. */
@@ -4094,7 +4095,7 @@ export type ResearchOutputsDataUsageNotesDto = {
 /** The structure of the Usage Notes field of the Research Outputs content input type. */
 export type ResearchOutputsDataUsageNotesInputDto = {
   /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Used in a Publication field of the Research Outputs content type. */
@@ -4106,7 +4107,7 @@ export type ResearchOutputsDataUsedInAPublicationDto = {
 /** The structure of the Used in a Publication field of the Research Outputs content input type. */
 export type ResearchOutputsDataUsedInAPublicationInputDto = {
   /** "Not sure" will not be shown on the Hub */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the flat Research Outputs data type. */
@@ -4201,20 +4202,20 @@ export type ResearchTags = Content & {
 
 /** The structure of a Research Tags content type. */
 export type ResearchTagsReferencingResearchOutputsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Research Tags content type. */
 export type ResearchTagsReferencingResearchOutputsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of the Category field of the Research Tags content type. */
@@ -4224,7 +4225,7 @@ export type ResearchTagsDataCategoryDto = {
 
 /** The structure of the Category field of the Research Tags content input type. */
 export type ResearchTagsDataCategoryInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Research Tags data type. */
@@ -4244,15 +4245,15 @@ export type ResearchTagsDataEntitiesDto = {
 /** The structure of the Entities field of the Research Tags content input type. */
 export type ResearchTagsDataEntitiesInputDto = {
   /** List of associated entities */
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Research Tags data input type. */
 export type ResearchTagsDataInputDto = {
-  category: Maybe<ResearchTagsDataCategoryInputDto>;
-  entities: Maybe<ResearchTagsDataEntitiesInputDto>;
-  name: Maybe<ResearchTagsDataNameInputDto>;
-  types: Maybe<ResearchTagsDataTypesInputDto>;
+  category: InputMaybe<ResearchTagsDataCategoryInputDto>;
+  entities: InputMaybe<ResearchTagsDataEntitiesInputDto>;
+  name: InputMaybe<ResearchTagsDataNameInputDto>;
+  types: InputMaybe<ResearchTagsDataTypesInputDto>;
 };
 
 /** The structure of the Name field of the Research Tags content type. */
@@ -4262,7 +4263,7 @@ export type ResearchTagsDataNameDto = {
 
 /** The structure of the Name field of the Research Tags content input type. */
 export type ResearchTagsDataNameInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Types field of the Research Tags content type. */
@@ -4272,7 +4273,7 @@ export type ResearchTagsDataTypesDto = {
 
 /** The structure of the Types field of the Research Tags content input type. */
 export type ResearchTagsDataTypesInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the flat Research Tags data type. */
@@ -4350,92 +4351,92 @@ export type Teams = Content & {
 
 /** The structure of a Teams content type. */
 export type TeamsReferencesResearchOutputsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Teams content type. */
 export type TeamsReferencesResearchOutputsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Teams content type. */
 export type TeamsReferencingDiscoverContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Teams content type. */
 export type TeamsReferencingDiscoverContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Teams content type. */
 export type TeamsReferencingEventsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Teams content type. */
 export type TeamsReferencingEventsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Teams content type. */
 export type TeamsReferencingGroupsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Teams content type. */
 export type TeamsReferencingGroupsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Teams content type. */
 export type TeamsReferencingUsersContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Teams content type. */
 export type TeamsReferencingUsersContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of the Application Number field of the Teams content type. */
@@ -4445,7 +4446,7 @@ export type TeamsDataApplicationNumberDto = {
 
 /** The structure of the Application Number field of the Teams content input type. */
 export type TeamsDataApplicationNumberInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Display Name field of the Teams content type. */
@@ -4455,7 +4456,7 @@ export type TeamsDataDisplayNameDto = {
 
 /** The structure of the Display Name field of the Teams content input type. */
 export type TeamsDataDisplayNameInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Teams data type. */
@@ -4477,19 +4478,19 @@ export type TeamsDataExpertiseAndResourceTagsDto = {
 
 /** The structure of the Expertise and Resources field of the Teams content input type. */
 export type TeamsDataExpertiseAndResourceTagsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Teams data input type. */
 export type TeamsDataInputDto = {
-  applicationNumber: Maybe<TeamsDataApplicationNumberInputDto>;
-  displayName: Maybe<TeamsDataDisplayNameInputDto>;
-  expertiseAndResourceTags: Maybe<TeamsDataExpertiseAndResourceTagsInputDto>;
-  outputs: Maybe<TeamsDataOutputsInputDto>;
-  projectSummary: Maybe<TeamsDataProjectSummaryInputDto>;
-  projectTitle: Maybe<TeamsDataProjectTitleInputDto>;
-  proposal: Maybe<TeamsDataProposalInputDto>;
-  tools: Maybe<TeamsDataToolsInputDto>;
+  applicationNumber: InputMaybe<TeamsDataApplicationNumberInputDto>;
+  displayName: InputMaybe<TeamsDataDisplayNameInputDto>;
+  expertiseAndResourceTags: InputMaybe<TeamsDataExpertiseAndResourceTagsInputDto>;
+  outputs: InputMaybe<TeamsDataOutputsInputDto>;
+  projectSummary: InputMaybe<TeamsDataProjectSummaryInputDto>;
+  projectTitle: InputMaybe<TeamsDataProjectTitleInputDto>;
+  proposal: InputMaybe<TeamsDataProposalInputDto>;
+  tools: InputMaybe<TeamsDataToolsInputDto>;
 };
 
 /** The structure of the Shared Research field of the Teams content type. */
@@ -4499,7 +4500,7 @@ export type TeamsDataOutputsDto = {
 
 /** The structure of the Shared Research field of the Teams content input type. */
 export type TeamsDataOutputsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Project Summary field of the Teams content type. */
@@ -4509,7 +4510,7 @@ export type TeamsDataProjectSummaryDto = {
 
 /** The structure of the Project Summary field of the Teams content input type. */
 export type TeamsDataProjectSummaryInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Project Title field of the Teams content type. */
@@ -4519,7 +4520,7 @@ export type TeamsDataProjectTitleDto = {
 
 /** The structure of the Project Title field of the Teams content input type. */
 export type TeamsDataProjectTitleInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Proposal field of the Teams content type. */
@@ -4529,7 +4530,7 @@ export type TeamsDataProposalDto = {
 
 /** The structure of the Proposal field of the Teams content input type. */
 export type TeamsDataProposalInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the External Tools nested schema. */
@@ -4541,9 +4542,9 @@ export type TeamsDataToolsChildDto = {
 
 /** The structure of the External Tools nested schema. */
 export type TeamsDataToolsChildInputDto = {
-  description: Maybe<Scalars['String']>;
-  name: Maybe<Scalars['String']>;
-  url: Maybe<Scalars['String']>;
+  description: InputMaybe<Scalars['String']>;
+  name: InputMaybe<Scalars['String']>;
+  url: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the External Tools field of the Teams content type. */
@@ -4553,7 +4554,7 @@ export type TeamsDataToolsDto = {
 
 /** The structure of the External Tools field of the Teams content input type. */
 export type TeamsDataToolsInputDto = {
-  iv: Maybe<Array<TeamsDataToolsChildInputDto>>;
+  iv: InputMaybe<Array<TeamsDataToolsChildInputDto>>;
 };
 
 /** The structure of the flat Teams data type. */
@@ -4648,110 +4649,110 @@ export type Users = Content & {
 
 /** The structure of a Users content type. */
 export type UsersReferencesLabsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */
 export type UsersReferencesLabsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */
 export type UsersReferencesTeamsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */
 export type UsersReferencesTeamsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */
 export type UsersReferencingDiscoverContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */
 export type UsersReferencingDiscoverContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */
 export type UsersReferencingEventsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */
 export type UsersReferencingEventsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */
 export type UsersReferencingGroupsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */
 export type UsersReferencingGroupsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */
 export type UsersReferencingResearchOutputsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */
 export type UsersReferencingResearchOutputsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of the Admin Notes field of the Users content type. */
@@ -4761,7 +4762,7 @@ export type UsersDataAdminNotesDto = {
 
 /** The structure of the Admin Notes field of the Users content input type. */
 export type UsersDataAdminNotesInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Avatar field of the Users content type. */
@@ -4771,7 +4772,7 @@ export type UsersDataAvatarDto = {
 
 /** The structure of the Avatar field of the Users content input type. */
 export type UsersDataAvatarInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Biography field of the Users content type. */
@@ -4781,7 +4782,7 @@ export type UsersDataBiographyDto = {
 
 /** The structure of the Biography field of the Users content input type. */
 export type UsersDataBiographyInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the City field of the Users content type. */
@@ -4791,7 +4792,7 @@ export type UsersDataCityDto = {
 
 /** The structure of the City field of the Users content input type. */
 export type UsersDataCityInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Connections nested schema. */
@@ -4801,7 +4802,7 @@ export type UsersDataConnectionsChildDto = {
 
 /** The structure of the Connections nested schema. */
 export type UsersDataConnectionsChildInputDto = {
-  code: Maybe<Scalars['String']>;
+  code: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Connections field of the Users content type. */
@@ -4811,7 +4812,7 @@ export type UsersDataConnectionsDto = {
 
 /** The structure of the Connections field of the Users content input type. */
 export type UsersDataConnectionsInputDto = {
-  iv: Maybe<Array<UsersDataConnectionsChildInputDto>>;
+  iv: InputMaybe<Array<UsersDataConnectionsChildInputDto>>;
 };
 
 /** The structure of the Correspondence Email field of the Users content type. */
@@ -4821,7 +4822,7 @@ export type UsersDataContactEmailDto = {
 
 /** The structure of the Correspondence Email field of the Users content input type. */
 export type UsersDataContactEmailInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Country field of the Users content type. */
@@ -4831,7 +4832,7 @@ export type UsersDataCountryDto = {
 
 /** The structure of the Country field of the Users content input type. */
 export type UsersDataCountryInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Degree field of the Users content type. */
@@ -4841,7 +4842,7 @@ export type UsersDataDegreeDto = {
 
 /** The structure of the Degree field of the Users content input type. */
 export type UsersDataDegreeInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Users data type. */
@@ -4884,7 +4885,7 @@ export type UsersDataEmailDto = {
 
 /** The structure of the Email field of the Users content input type. */
 export type UsersDataEmailInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Expertise and Resources Description field of the Users content type. */
@@ -4894,7 +4895,7 @@ export type UsersDataExpertiseAndResourceDescriptionDto = {
 
 /** The structure of the Expertise and Resources Description field of the Users content input type. */
 export type UsersDataExpertiseAndResourceDescriptionInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Expertise and Resources field of the Users content type. */
@@ -4904,7 +4905,7 @@ export type UsersDataExpertiseAndResourceTagsDto = {
 
 /** The structure of the Expertise and Resources field of the Users content input type. */
 export type UsersDataExpertiseAndResourceTagsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the First Name field of the Users content type. */
@@ -4914,40 +4915,40 @@ export type UsersDataFirstNameDto = {
 
 /** The structure of the First Name field of the Users content input type. */
 export type UsersDataFirstNameInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Users data input type. */
 export type UsersDataInputDto = {
-  adminNotes: Maybe<UsersDataAdminNotesInputDto>;
-  avatar: Maybe<UsersDataAvatarInputDto>;
-  biography: Maybe<UsersDataBiographyInputDto>;
-  city: Maybe<UsersDataCityInputDto>;
-  connections: Maybe<UsersDataConnectionsInputDto>;
-  contactEmail: Maybe<UsersDataContactEmailInputDto>;
-  country: Maybe<UsersDataCountryInputDto>;
-  degree: Maybe<UsersDataDegreeInputDto>;
-  email: Maybe<UsersDataEmailInputDto>;
-  expertiseAndResourceDescription: Maybe<UsersDataExpertiseAndResourceDescriptionInputDto>;
-  expertiseAndResourceTags: Maybe<UsersDataExpertiseAndResourceTagsInputDto>;
-  firstName: Maybe<UsersDataFirstNameInputDto>;
-  institution: Maybe<UsersDataInstitutionInputDto>;
-  jobTitle: Maybe<UsersDataJobTitleInputDto>;
-  labs: Maybe<UsersDataLabsInputDto>;
-  lastModifiedDate: Maybe<UsersDataLastModifiedDateInputDto>;
-  lastName: Maybe<UsersDataLastNameInputDto>;
-  onboarded: Maybe<UsersDataOnboardedInputDto>;
-  orcid: Maybe<UsersDataOrcidInputDto>;
-  orcidLastModifiedDate: Maybe<UsersDataOrcidLastModifiedDateInputDto>;
-  orcidLastSyncDate: Maybe<UsersDataOrcidLastSyncDateInputDto>;
-  orcidWorks: Maybe<UsersDataOrcidWorksInputDto>;
-  questions: Maybe<UsersDataQuestionsInputDto>;
-  reachOut: Maybe<UsersDataReachOutInputDto>;
-  researchInterests: Maybe<UsersDataResearchInterestsInputDto>;
-  responsibilities: Maybe<UsersDataResponsibilitiesInputDto>;
-  role: Maybe<UsersDataRoleInputDto>;
-  social: Maybe<UsersDataSocialInputDto>;
-  teams: Maybe<UsersDataTeamsInputDto>;
+  adminNotes: InputMaybe<UsersDataAdminNotesInputDto>;
+  avatar: InputMaybe<UsersDataAvatarInputDto>;
+  biography: InputMaybe<UsersDataBiographyInputDto>;
+  city: InputMaybe<UsersDataCityInputDto>;
+  connections: InputMaybe<UsersDataConnectionsInputDto>;
+  contactEmail: InputMaybe<UsersDataContactEmailInputDto>;
+  country: InputMaybe<UsersDataCountryInputDto>;
+  degree: InputMaybe<UsersDataDegreeInputDto>;
+  email: InputMaybe<UsersDataEmailInputDto>;
+  expertiseAndResourceDescription: InputMaybe<UsersDataExpertiseAndResourceDescriptionInputDto>;
+  expertiseAndResourceTags: InputMaybe<UsersDataExpertiseAndResourceTagsInputDto>;
+  firstName: InputMaybe<UsersDataFirstNameInputDto>;
+  institution: InputMaybe<UsersDataInstitutionInputDto>;
+  jobTitle: InputMaybe<UsersDataJobTitleInputDto>;
+  labs: InputMaybe<UsersDataLabsInputDto>;
+  lastModifiedDate: InputMaybe<UsersDataLastModifiedDateInputDto>;
+  lastName: InputMaybe<UsersDataLastNameInputDto>;
+  onboarded: InputMaybe<UsersDataOnboardedInputDto>;
+  orcid: InputMaybe<UsersDataOrcidInputDto>;
+  orcidLastModifiedDate: InputMaybe<UsersDataOrcidLastModifiedDateInputDto>;
+  orcidLastSyncDate: InputMaybe<UsersDataOrcidLastSyncDateInputDto>;
+  orcidWorks: InputMaybe<UsersDataOrcidWorksInputDto>;
+  questions: InputMaybe<UsersDataQuestionsInputDto>;
+  reachOut: InputMaybe<UsersDataReachOutInputDto>;
+  researchInterests: InputMaybe<UsersDataResearchInterestsInputDto>;
+  responsibilities: InputMaybe<UsersDataResponsibilitiesInputDto>;
+  role: InputMaybe<UsersDataRoleInputDto>;
+  social: InputMaybe<UsersDataSocialInputDto>;
+  teams: InputMaybe<UsersDataTeamsInputDto>;
 };
 
 /** The structure of the Institution field of the Users content type. */
@@ -4957,7 +4958,7 @@ export type UsersDataInstitutionDto = {
 
 /** The structure of the Institution field of the Users content input type. */
 export type UsersDataInstitutionInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Job Title field of the Users content type. */
@@ -4967,7 +4968,7 @@ export type UsersDataJobTitleDto = {
 
 /** The structure of the Job Title field of the Users content input type. */
 export type UsersDataJobTitleInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Labs field of the Users content type. */
@@ -4979,7 +4980,7 @@ export type UsersDataLabsDto = {
 /** The structure of the Labs field of the Users content input type. */
 export type UsersDataLabsInputDto = {
   /** Mandatory for grantees. They cannot publish profile without a lab. */
-  iv: Maybe<Array<Scalars['String']>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Last Modified Date field of the Users content type. */
@@ -4989,7 +4990,7 @@ export type UsersDataLastModifiedDateDto = {
 
 /** The structure of the Last Modified Date field of the Users content input type. */
 export type UsersDataLastModifiedDateInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Last Name field of the Users content type. */
@@ -4999,7 +5000,7 @@ export type UsersDataLastNameDto = {
 
 /** The structure of the Last Name field of the Users content input type. */
 export type UsersDataLastNameInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Onboarding complete field of the Users content type. */
@@ -5011,7 +5012,7 @@ export type UsersDataOnboardedDto = {
 /** The structure of the Onboarding complete field of the Users content input type. */
 export type UsersDataOnboardedInputDto = {
   /** Use this to allow the user to see the full Hub and skip profile completion */
-  iv: Maybe<Scalars['Boolean']>;
+  iv: InputMaybe<Scalars['Boolean']>;
 };
 
 /** The structure of the ORCID field of the Users content type. */
@@ -5023,7 +5024,7 @@ export type UsersDataOrcidDto = {
 /** The structure of the ORCID field of the Users content input type. */
 export type UsersDataOrcidInputDto = {
   /** Mandatory for grantees. They cannot publish profile without an ORCID. ORCIDs cannot be repeated on the Hub */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the ORCID Last Modified Date field of the Users content type. */
@@ -5033,7 +5034,7 @@ export type UsersDataOrcidLastModifiedDateDto = {
 
 /** The structure of the ORCID Last Modified Date field of the Users content input type. */
 export type UsersDataOrcidLastModifiedDateInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the ORCID Last Sync Date field of the Users content type. */
@@ -5043,7 +5044,7 @@ export type UsersDataOrcidLastSyncDateDto = {
 
 /** The structure of the ORCID Last Sync Date field of the Users content input type. */
 export type UsersDataOrcidLastSyncDateInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the ORCID Works nested schema. */
@@ -5058,17 +5059,17 @@ export type UsersDataOrcidWorksChildDto = {
 
 /** The structure of the ORCID Works nested schema. */
 export type UsersDataOrcidWorksChildDtoPublicationDateArgs = {
-  path: Maybe<Scalars['String']>;
+  path: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the ORCID Works nested schema. */
 export type UsersDataOrcidWorksChildInputDto = {
-  doi: Maybe<Scalars['String']>;
-  id: Maybe<Scalars['String']>;
-  lastModifiedDate: Maybe<Scalars['String']>;
-  publicationDate: Maybe<Scalars['JsonScalar']>;
-  title: Maybe<Scalars['String']>;
-  type: Maybe<Scalars['String']>;
+  doi: InputMaybe<Scalars['String']>;
+  id: InputMaybe<Scalars['String']>;
+  lastModifiedDate: InputMaybe<Scalars['String']>;
+  publicationDate: InputMaybe<Scalars['JsonScalar']>;
+  title: InputMaybe<Scalars['String']>;
+  type: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the ORCID Works field of the Users content type. */
@@ -5078,7 +5079,7 @@ export type UsersDataOrcidWorksDto = {
 
 /** The structure of the ORCID Works field of the Users content input type. */
 export type UsersDataOrcidWorksInputDto = {
-  iv: Maybe<Array<UsersDataOrcidWorksChildInputDto>>;
+  iv: InputMaybe<Array<UsersDataOrcidWorksChildInputDto>>;
 };
 
 /** The structure of the Open Questions nested schema. */
@@ -5088,7 +5089,7 @@ export type UsersDataQuestionsChildDto = {
 
 /** The structure of the Open Questions nested schema. */
 export type UsersDataQuestionsChildInputDto = {
-  question: Maybe<Scalars['String']>;
+  question: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Open Questions field of the Users content type. */
@@ -5098,7 +5099,7 @@ export type UsersDataQuestionsDto = {
 
 /** The structure of the Open Questions field of the Users content input type. */
 export type UsersDataQuestionsInputDto = {
-  iv: Maybe<Array<UsersDataQuestionsChildInputDto>>;
+  iv: InputMaybe<Array<UsersDataQuestionsChildInputDto>>;
 };
 
 /** The structure of the Reach Out field of the Users content type. */
@@ -5110,7 +5111,7 @@ export type UsersDataReachOutDto = {
 /** The structure of the Reach Out field of the Users content input type. */
 export type UsersDataReachOutInputDto = {
   /** Reach out reasons (only relevant for "Staff" users) */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Research Interests field of the Users content type. */
@@ -5120,7 +5121,7 @@ export type UsersDataResearchInterestsDto = {
 
 /** The structure of the Research Interests field of the Users content input type. */
 export type UsersDataResearchInterestsInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Responsibilities field of the Users content type. */
@@ -5130,7 +5131,7 @@ export type UsersDataResponsibilitiesDto = {
 
 /** The structure of the Responsibilities field of the Users content input type. */
 export type UsersDataResponsibilitiesInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the ASAP Hub Role field of the Users content type. */
@@ -5142,7 +5143,7 @@ export type UsersDataRoleDto = {
 /** The structure of the ASAP Hub Role field of the Users content input type. */
 export type UsersDataRoleInputDto = {
   /** Role on the ASAP Hub */
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Social Links nested schema. */
@@ -5159,14 +5160,14 @@ export type UsersDataSocialChildDto = {
 
 /** The structure of the Social Links nested schema. */
 export type UsersDataSocialChildInputDto = {
-  github: Maybe<Scalars['String']>;
-  googleScholar: Maybe<Scalars['String']>;
-  linkedIn: Maybe<Scalars['String']>;
-  researchGate: Maybe<Scalars['String']>;
-  researcherId: Maybe<Scalars['String']>;
-  twitter: Maybe<Scalars['String']>;
-  website1: Maybe<Scalars['String']>;
-  website2: Maybe<Scalars['String']>;
+  github: InputMaybe<Scalars['String']>;
+  googleScholar: InputMaybe<Scalars['String']>;
+  linkedIn: InputMaybe<Scalars['String']>;
+  researchGate: InputMaybe<Scalars['String']>;
+  researcherId: InputMaybe<Scalars['String']>;
+  twitter: InputMaybe<Scalars['String']>;
+  website1: InputMaybe<Scalars['String']>;
+  website2: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Social Links field of the Users content type. */
@@ -5176,7 +5177,7 @@ export type UsersDataSocialDto = {
 
 /** The structure of the Social Links field of the Users content input type. */
 export type UsersDataSocialInputDto = {
-  iv: Maybe<Array<UsersDataSocialChildInputDto>>;
+  iv: InputMaybe<Array<UsersDataSocialChildInputDto>>;
 };
 
 /** The structure of the Teams nested schema. */
@@ -5188,9 +5189,9 @@ export type UsersDataTeamsChildDto = {
 
 /** The structure of the Teams nested schema. */
 export type UsersDataTeamsChildInputDto = {
-  id: Maybe<Array<Scalars['String']>>;
+  id: InputMaybe<Array<Scalars['String']>>;
   /** Attention: Check if this user needs to be added to Smart Simple */
-  role: Maybe<Scalars['String']>;
+  role: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Teams field of the Users content type. */
@@ -5202,7 +5203,7 @@ export type UsersDataTeamsDto = {
 /** The structure of the Teams field of the Users content input type. */
 export type UsersDataTeamsInputDto = {
   /** Mandatory for grantees. They cannot publish profile without a team. */
-  iv: Maybe<Array<UsersDataTeamsChildInputDto>>;
+  iv: InputMaybe<Array<UsersDataTeamsChildInputDto>>;
 };
 
 /** The structure of the flat Users data type. */
@@ -5294,10 +5295,10 @@ export type FetchCalendarQuery = {
 };
 
 export type FetchCalendarsQueryVariables = Exact<{
-  top: Maybe<Scalars['Int']>;
-  skip: Maybe<Scalars['Int']>;
-  filter: Maybe<Scalars['String']>;
-  order: Maybe<Scalars['String']>;
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  order: InputMaybe<Scalars['String']>;
 }>;
 
 export type FetchCalendarsQuery = {
@@ -5760,10 +5761,10 @@ export type EventContentFragment = Pick<
 };
 
 export type FetchEventsQueryVariables = Exact<{
-  top: Maybe<Scalars['Int']>;
-  skip: Maybe<Scalars['Int']>;
-  filter: Maybe<Scalars['String']>;
-  order: Maybe<Scalars['String']>;
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  order: InputMaybe<Scalars['String']>;
 }>;
 
 export type FetchEventsQuery = {
@@ -6520,8 +6521,8 @@ export type FetchExternalAuthorQuery = {
 };
 
 export type FetchExternalAuthorsQueryVariables = Exact<{
-  top: Maybe<Scalars['Int']>;
-  skip: Maybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
 }>;
 
 export type FetchExternalAuthorsQuery = {
@@ -6771,9 +6772,9 @@ export type GroupsContentFragment = Pick<
 };
 
 export type FetchGroupsQueryVariables = Exact<{
-  top: Maybe<Scalars['Int']>;
-  skip: Maybe<Scalars['Int']>;
-  filter: Maybe<Scalars['String']>;
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
 }>;
 
 export type FetchGroupsQuery = {
@@ -7272,9 +7273,9 @@ export type LabsContentFragment = Pick<Labs, 'id'> & {
 };
 
 export type FetchLabsQueryVariables = Exact<{
-  top: Maybe<Scalars['Int']>;
-  skip: Maybe<Scalars['Int']>;
-  filter: Maybe<Scalars['String']>;
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
 }>;
 
 export type FetchLabsQuery = {
@@ -7639,9 +7640,9 @@ export type FetchResearchOutputQuery = {
 };
 
 export type FetchResearchOutputsQueryVariables = Exact<{
-  top: Maybe<Scalars['Int']>;
-  skip: Maybe<Scalars['Int']>;
-  filter: Maybe<Scalars['String']>;
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
   withTeams: Scalars['Boolean'];
 }>;
 
@@ -7829,9 +7830,9 @@ export type ResearchTagContentFragment = Pick<ResearchTags, 'id'> & {
 };
 
 export type FetchResearchTagsQueryVariables = Exact<{
-  top: Maybe<Scalars['Int']>;
-  skip: Maybe<Scalars['Int']>;
-  filter: Maybe<Scalars['String']>;
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
 }>;
 
 export type FetchResearchTagsQuery = {
@@ -8061,9 +8062,9 @@ export type FetchTeamQuery = {
 };
 
 export type FetchTeamsQueryVariables = Exact<{
-  top: Maybe<Scalars['Int']>;
-  skip: Maybe<Scalars['Int']>;
-  filter: Maybe<Scalars['String']>;
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
 }>;
 
 export type FetchTeamsQuery = {
@@ -8349,9 +8350,9 @@ export type FetchUserQuery = {
 };
 
 export type FetchUsersQueryVariables = Exact<{
-  top: Maybe<Scalars['Int']>;
-  skip: Maybe<Scalars['Int']>;
-  filter: Maybe<Scalars['String']>;
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
 }>;
 
 export type FetchUsersQuery = {

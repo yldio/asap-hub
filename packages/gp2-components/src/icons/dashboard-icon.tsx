@@ -11,8 +11,8 @@ const dashboardIcon = (
     <path
       d="M9 1.7619V16.2381M1 1H17V17H1V1ZM9.32 7.09524H16.36H9.32ZM1.64 10.9048H8.68H1.64Z"
       stroke="#4D646B"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );

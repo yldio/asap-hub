@@ -13,7 +13,7 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import { isBoom } from '@hapi/boom';
+import { isBoom, Boom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   algoliaApiKey,
@@ -27,7 +27,9 @@ import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provi
 import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 
+/* istanbul ignore next */
 export const indexUserHandler =
   (
     userController: UserController,
@@ -54,7 +56,7 @@ export const indexUserHandler =
         logger.debug(`User removed ${user.id}`);
       }
     } catch (e) {
-      if (isBoom(e) && e.output.statusCode === 404) {
+      if (isBoom(e) && (e as Boom).output.statusCode === 404) {
         await algoliaClient.remove(event.detail.payload.id);
 
         logger.debug(`User removed ${event.detail.payload.id}`);
@@ -84,9 +86,12 @@ const userDataProvider = new UserSquidexDataProvider(
 );
 const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 
-export const handler = indexUserHandler(
-  new Users(userDataProvider, assetDataProvider),
-  algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
+/* istanbul ignore next */
+export const handler = sentryWrapper(
+  indexUserHandler(
+    new Users(userDataProvider, assetDataProvider),
+    algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
+  ),
 );
 
 export type UserIndexEventBridgeEvent = EventBridgeEvent<

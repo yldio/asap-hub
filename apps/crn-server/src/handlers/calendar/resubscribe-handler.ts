@@ -6,6 +6,7 @@ import Calendars, { CalendarController } from '../../controllers/calendars';
 import { getAuthToken } from '../../utils/auth';
 import getJWTCredentials from '../../utils/aws-secret-manager';
 import logger from '../../utils/logger';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 import {
   SubscribeToEventChanges,
   subscribeToEventChangesFactory,
@@ -73,8 +74,10 @@ const calendarRestClient = new SquidexRest<RestCalendar>(
   { appName, baseUrl },
 );
 
-export const handler = resubscribeCalendarsHandlerFactory(
-  new Calendars(squidexGraphqlClient, calendarRestClient),
-  unsubscribeFromEventChangesFactory(getJWTCredentials),
-  subscribeToEventChangesFactory(getJWTCredentials),
+export const handler = sentryWrapper(
+  resubscribeCalendarsHandlerFactory(
+    new Calendars(squidexGraphqlClient, calendarRestClient),
+    unsubscribeFromEventChangesFactory(getJWTCredentials),
+    subscribeToEventChangesFactory(getJWTCredentials),
+  ),
 );

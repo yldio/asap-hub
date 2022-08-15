@@ -5,6 +5,7 @@ import { appName, auth0SharedSecret, baseUrl } from '../../config';
 import Users from '../../controllers/user.controller';
 import { UserSquidexDataProvider } from '../../data-providers/user.data-provider';
 import { getAuthToken } from '../../utils/auth';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
@@ -24,4 +25,7 @@ const connectByCodeHandler = connectByCodeHandlerFactory(
   auth0SharedSecret,
 );
 
-export const handler: lambda.Handler = lambda.http(connectByCodeHandler);
+export const rawHandler = lambda.http(connectByCodeHandler);
+
+/* istanbul ignore next */
+export const handler = sentryWrapper(rawHandler);

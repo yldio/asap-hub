@@ -5,6 +5,7 @@ import {
 } from '@aws-sdk/client-cloudfront';
 import { cloudfrontDistributionId } from '../../config';
 import logger from '../../utils/logger';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 export const createHandler =
   (distributionId: string) =>
@@ -21,4 +22,4 @@ export const createHandler =
     await client.send(command);
   };
 
-export const handler = createHandler(cloudfrontDistributionId);
+export const handler = sentryWrapper(createHandler(cloudfrontDistributionId));

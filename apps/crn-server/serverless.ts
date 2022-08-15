@@ -10,7 +10,8 @@ if (NODE_ENV === 'production') {
     'CRN_AWS_ACM_CERTIFICATE_ARN',
     'CRN_AUTH0_AUDIENCE',
     'CRN_AUTH0_CLIENT_ID',
-    'SENTRY_DSN_API',
+    'CRN_SENTRY_DSN_API',
+    'CRN_SENTRY_DSN_HANDLERS',
   ].forEach((env) => {
     assert.ok(process.env[env], `${env} not defined`);
   });
@@ -24,7 +25,8 @@ const {
   SLS_STAGE = 'development',
   CI_COMMIT_SHA,
   ALGOLIA_INDEX,
-  SENTRY_DSN_API,
+  CRN_SENTRY_DSN_API,
+  CRN_SENTRY_DSN_HANDLERS,
   CRN_AUTH0_AUDIENCE,
   CRN_AUTH0_CLIENT_ID,
   CRN_SQUIDEX_APP_NAME,
@@ -42,7 +44,8 @@ const envRef =
     : SLS_STAGE === 'dev'
     ? 'dev'
     : `CI-${SLS_STAGE}`;
-const sentryDsnApi = SENTRY_DSN_API!;
+const sentryDsnApi = CRN_SENTRY_DSN_API!;
+const sentryDsnHandlers = CRN_SENTRY_DSN_HANDLERS!;
 const auth0ClientId = CRN_AUTH0_CLIENT_ID!;
 const auth0Audience = CRN_AUTH0_AUDIENCE!;
 const squidexAppName = CRN_SQUIDEX_APP_NAME!;
@@ -237,6 +240,7 @@ const serverlessConfig: AWS = {
         AUTH0_CLIENT_ID: auth0ClientId,
         AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
         ALGOLIA_API_KEY: `\${ssm:algolia-search-api-key-${envAlias}}`,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     auth0ConnectByCode: {
@@ -252,6 +256,7 @@ const serverlessConfig: AWS = {
       environment: {
         AUTH0_CLIENT_ID: auth0ClientId,
         AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     subscribeCalendar: {
@@ -270,7 +275,7 @@ const serverlessConfig: AWS = {
       environment: {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
-        SENTRY_DSN: '${env:SENTRY_DSN_CALENDAR}',
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     resubscribeCalendars: {
@@ -284,6 +289,7 @@ const serverlessConfig: AWS = {
       environment: {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     syncUserOrcid: {
@@ -302,6 +308,9 @@ const serverlessConfig: AWS = {
           },
         },
       ],
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+      },
     },
     inviteUser: {
       handler: './src/handlers/user/invite-handler.handler',
@@ -324,7 +333,7 @@ const serverlessConfig: AWS = {
         EMAIL_SENDER: `\${ssm:email-invite-sender-${envAlias}}`,
         EMAIL_BCC: `\${ssm:email-invite-bcc-${envAlias}}`,
         EMAIL_RETURN: `\${ssm:email-invite-return-${envAlias}}`,
-        SENTRY_DSN: '${env:SENTRY_DSN_USER_INVITE}',
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     indexResearchOutput: {
@@ -348,6 +357,7 @@ const serverlessConfig: AWS = {
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     indexUser: {
@@ -372,6 +382,7 @@ const serverlessConfig: AWS = {
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     indexExternalAuthor: {
@@ -395,6 +406,7 @@ const serverlessConfig: AWS = {
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     indexEvents: {
@@ -418,6 +430,7 @@ const serverlessConfig: AWS = {
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     indexUserEvents: {
@@ -441,6 +454,7 @@ const serverlessConfig: AWS = {
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     indexExternalUserEvents: {
@@ -465,6 +479,7 @@ const serverlessConfig: AWS = {
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     indexTeamEvents: {
@@ -488,6 +503,7 @@ const serverlessConfig: AWS = {
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     indexGroupEvents: {
@@ -511,6 +527,7 @@ const serverlessConfig: AWS = {
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     indexLabUsers: {
@@ -534,6 +551,7 @@ const serverlessConfig: AWS = {
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     eventsUpdated: {
@@ -550,15 +568,22 @@ const serverlessConfig: AWS = {
       environment: {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     runMigrations: {
       handler: './src/handlers/webhooks/webhook-run-migrations.run',
       timeout: 900,
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+      },
     },
     rollbackMigrations: {
       handler: './src/handlers/webhooks/webhook-run-migrations.rollback',
       timeout: 900,
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+      },
     },
     invalidateCache: {
       handler: './src/handlers/invalidate-cache/invalidate-handler.handler',
@@ -583,6 +608,7 @@ const serverlessConfig: AWS = {
         CLOUDFRONT_DISTRIBUTION_ID: {
           Ref: 'CloudFrontDistribution',
         },
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     indexTeamResearchOutputs: {
@@ -602,6 +628,7 @@ const serverlessConfig: AWS = {
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     indexTeamUsers: {
@@ -620,6 +647,7 @@ const serverlessConfig: AWS = {
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     squidexWebhook: {
@@ -635,6 +663,7 @@ const serverlessConfig: AWS = {
       environment: {
         EVENT_BUS: 'asap-events-${self:provider.stage}',
         EVENT_SOURCE: eventBusSource,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     ...(NODE_ENV === 'production'

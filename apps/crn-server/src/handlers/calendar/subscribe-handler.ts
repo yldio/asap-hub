@@ -1,17 +1,14 @@
 import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
-import * as Sentry from '@sentry/serverless';
 import { EventBridgeEvent } from 'aws-lambda';
 import { Auth } from 'googleapis';
 import 'source-map-support/register';
+import * as Sentry from '@sentry/serverless';
 import {
   appName,
   asapApiUrl,
   baseUrl,
-  currentRevision,
-  environment,
   googleApiToken,
   googleApiUrl,
-  sentryDsn,
 } from '../../config';
 import Calendars, { CalendarController } from '../../controllers/calendars';
 import { Alerts, AlertsSentry } from '../../utils/alerts';
@@ -20,6 +17,7 @@ import getJWTCredentialsAWS, {
   GetJWTCredentials,
 } from '../../utils/aws-secret-manager';
 import logger from '../../utils/logger';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { validateBody } from '../../validation/subscribe-handler.validation';
 import { CalendarEvent, CalendarPayload } from '../event-bus';
 
@@ -175,12 +173,6 @@ export const unsubscribeFromEventChangesFactory =
     logger.debug({ response }, 'Google API unsubscribing response');
   };
 
-Sentry.AWSLambda.init({
-  dsn: sentryDsn,
-  tracesSampleRate: 1.0,
-  environment,
-  release: currentRevision,
-});
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,
@@ -197,7 +189,7 @@ const webhookHandler = calendarCreatedHandlerFactory(
   new AlertsSentry(Sentry.captureException.bind(Sentry)),
 );
 
-export const handler = Sentry.AWSLambda.wrapHandler(webhookHandler);
+export const handler = sentryWrapper(webhookHandler);
 
 export type UnsubscribeFromEventChanges = ReturnType<
   typeof unsubscribeFromEventChangesFactory

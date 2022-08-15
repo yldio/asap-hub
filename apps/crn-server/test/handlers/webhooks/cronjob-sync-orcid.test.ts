@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { handler } from '../../../src/handlers/webhooks/cronjob-sync-orcid';
+import { unloggedHandler } from '../../../src/handlers/webhooks/cronjob-sync-orcid';
 import {
   generateGraphqlFetchUsersResponse,
   getGraphQLUser,
@@ -61,7 +61,7 @@ describe('Cronjob - Sync Users ORCID', () => {
 
     mockRestClient.patch.mockResolvedValueOnce(userResponse);
 
-    const { statusCode } = await handler();
+    const { statusCode } = await unloggedHandler();
     expect(statusCode).toBe(200);
     expect(mockRestClient.patch).toHaveBeenCalledWith(
       singleUserResponse.findUsersContent?.id,

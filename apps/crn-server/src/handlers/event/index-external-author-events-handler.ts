@@ -19,6 +19,7 @@ import {
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
 } from '../../utils/loop-over-custom-colection';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { ExternalAuthorEvent, ExternalAuthorPayload } from '../event-bus';
 
 export const indexExternalAuthorEventsHandler =
@@ -71,11 +72,15 @@ const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
   appName,
   baseUrl,
 });
-export const handler = indexExternalAuthorEventsHandler(
-  new Events(squidexGraphqlClient, eventRestClient),
-  algoliaSearchClientFactory({
-    algoliaApiKey,
-    algoliaAppId,
-    algoliaIndex,
-  }),
+
+/* istanbul ignore next */
+export const handler = sentryWrapper(
+  indexExternalAuthorEventsHandler(
+    new Events(squidexGraphqlClient, eventRestClient),
+    algoliaSearchClientFactory({
+      algoliaApiKey,
+      algoliaAppId,
+      algoliaIndex,
+    }),
+  ),
 );

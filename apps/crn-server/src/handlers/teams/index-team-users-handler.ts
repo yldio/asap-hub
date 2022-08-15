@@ -26,6 +26,7 @@ import {
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
 } from '../../utils/loop-over-custom-colection';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { TeamEvent, TeamPayload } from '../event-bus';
 
 export const indexTeamUsersHandler =
@@ -90,10 +91,13 @@ const userDataProvider = new UserSquidexDataProvider(
 );
 const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 
-export const handler = indexTeamUsersHandler(
+const rawHandler = indexTeamUsersHandler(
   new Users(userDataProvider, assetDataProvider),
   algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
 );
+
+/* istanbul ignore next */
+export const handler = sentryWrapper(rawHandler);
 
 export type UserIndexEventBridgeEvent = EventBridgeEvent<
   TeamEvent,

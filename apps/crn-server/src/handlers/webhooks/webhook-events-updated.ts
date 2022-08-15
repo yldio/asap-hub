@@ -7,6 +7,7 @@ import {
   SquidexRest,
 } from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
+import { Handler } from 'aws-lambda';
 import { appName, baseUrl, googleApiToken } from '../../config';
 import Calendars, { CalendarController } from '../../controllers/calendars';
 import Events from '../../controllers/events';
@@ -18,6 +19,7 @@ import {
   syncCalendarFactory,
 } from '../../utils/sync-google-calendar';
 import { syncEventFactory } from '../../utils/sync-google-event';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 export const webhookEventUpdatedHandlerFactory = (
   calendars: CalendarController,
@@ -94,7 +96,6 @@ const syncCalendar = syncCalendarFactory(
   getJWTCredentials,
 );
 
-export const handler: lambda.Handler = webhookEventUpdatedHandlerFactory(
-  calendarController,
-  syncCalendar,
+export const handler: Handler = sentryWrapper(
+  webhookEventUpdatedHandlerFactory(calendarController, syncCalendar),
 );

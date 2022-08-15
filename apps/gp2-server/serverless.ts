@@ -14,6 +14,8 @@ import assert from 'assert';
   'GP2_SQUIDEX_API_CLIENT_ID',
   'GP2_SQUIDEX_API_CLIENT_SECRET',
   'GP2_SQUIDEX_SHARED_SECRET',
+  'GP2_SENTRY_DSN_API',
+  'GP2_SENTRY_DSN_HANDLERS',
 ].forEach((env) => {
   assert.ok(process.env[env], `${env} not defined`);
 });
@@ -37,6 +39,8 @@ const squidexClientId = process.env.GP2_SQUIDEX_API_CLIENT_ID!;
 const squidexClientSecret = process.env.GP2_SQUIDEX_API_CLIENT_SECRET!;
 const squidexSharedSecret = process.env.GP2_SQUIDEX_SHARED_SECRET!;
 const stage = process.env.SLS_STAGE!;
+const sentryDsnApi = process.env.GP2_SENTRY_DSN_API!;
+const sentryDsnHandlers = process.env.GP2_SENTRY_DSN_HANDLERS!;
 
 const envAlias = process.env.SLS_STAGE === 'production' ? 'prod' : 'dev';
 const eventBus = `gp2-events-${stage}`;
@@ -179,6 +183,7 @@ const serverlessConfig: AWS = {
         APP_ORIGIN: appUrl,
         AUTH0_AUDIENCE: auth0Audience,
         AUTH0_CLIENT_ID: auth0ClientId,
+        SENTRY_DSN: sentryDsnApi,
       },
     },
     auth0FetchByCode: {
@@ -194,6 +199,7 @@ const serverlessConfig: AWS = {
       environment: {
         AUTH0_CLIENT_ID: auth0ClientId,
         AUTH0_SHARED_SECRET: auth0SharedSecret,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     auth0ConnectByCode: {
@@ -209,6 +215,7 @@ const serverlessConfig: AWS = {
       environment: {
         AUTH0_CLIENT_ID: auth0ClientId,
         AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     inviteUser: {
@@ -232,7 +239,7 @@ const serverlessConfig: AWS = {
         EMAIL_SENDER: `\${ssm:email-invite-sender-gp2-${envAlias}}`,
         EMAIL_BCC: `\${ssm:email-invite-bcc-gp2-${envAlias}}`,
         EMAIL_RETURN: `\${ssm:email-invite-return-gp2-${envAlias}}`,
-        SENTRY_DSN: '${env:SENTRY_DSN_USER_INVITE}',
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     squidexWebhook: {
@@ -248,6 +255,7 @@ const serverlessConfig: AWS = {
       environment: {
         EVENT_BUS: eventBus,
         EVENT_SOURCE: eventBusSource,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
   },

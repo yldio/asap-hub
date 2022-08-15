@@ -13,6 +13,7 @@ import path from 'path';
 import { appName, baseUrl } from '../../config';
 import { getAuthToken } from '../../utils/auth';
 import pinoLogger from '../../utils/logger';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 const squidexClient = new SquidexRest<RestMigration>(
   getAuthToken,
@@ -268,15 +269,15 @@ export abstract class Migration {
   }
 }
 
-export const run = runFactory(
-  pinoLogger,
-  squidexClient,
-  fsPromise.readdir,
-  importModuleFromPath,
+export const run = sentryWrapper(
+  runFactory(
+    pinoLogger,
+    squidexClient,
+    fsPromise.readdir,
+    importModuleFromPath,
+  ),
 );
 
-export const rollback = rollbackFactory(
-  pinoLogger,
-  squidexClient,
-  importModuleFromPath,
+export const rollback = sentryWrapper(
+  rollbackFactory(pinoLogger, squidexClient, importModuleFromPath),
 );

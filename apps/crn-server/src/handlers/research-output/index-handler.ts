@@ -27,6 +27,7 @@ import { ResearchTagSquidexDataProvider } from '../../data-providers/research-ta
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { ResearchOutputEvent, ResearchOutputPayload } from '../event-bus';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 export const indexResearchOutputHandler =
   (
@@ -87,15 +88,17 @@ const externalAuthorDataProvider = new ExternalAuthorSquidexDataProvider(
   externalAuthorRestClient,
 );
 
-export const handler = indexResearchOutputHandler(
-  new ResearchOutputs(
-    researchOutputDataProvider,
-    researchTagDataProvider,
-    externalAuthorDataProvider,
+export const handler = sentryWrapper(
+  indexResearchOutputHandler(
+    new ResearchOutputs(
+      researchOutputDataProvider,
+      researchTagDataProvider,
+      externalAuthorDataProvider,
+    ),
+    algoliaSearchClientFactory({
+      algoliaApiKey,
+      algoliaAppId,
+      algoliaIndex,
+    }),
   ),
-  algoliaSearchClientFactory({
-    algoliaApiKey,
-    algoliaAppId,
-    algoliaIndex,
-  }),
 );

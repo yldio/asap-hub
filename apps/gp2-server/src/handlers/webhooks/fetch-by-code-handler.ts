@@ -6,6 +6,7 @@ import { appName, auth0SharedSecret, baseUrl } from '../../config';
 import Users, { UserController } from '../../controllers/user.controller';
 import { UserSquidexDataProvider } from '../../data-providers/user.data-provider';
 import { getAuthToken } from '../../utils/auth';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 export const fetchUserByCodeHandlerFactory = (
   userController: UserController,
@@ -41,8 +42,10 @@ const userDataProvider = new UserSquidexDataProvider(
   squidexGraphqlClient,
   userRestClient,
 );
-export const handler = fetchUserByCodeHandlerFactory(
-  new Users(userDataProvider),
+
+/* istanbul ignore next */
+export const handler = sentryWrapper(
+  fetchUserByCodeHandlerFactory(new Users(userDataProvider)),
 );
 
 const validateParams = (

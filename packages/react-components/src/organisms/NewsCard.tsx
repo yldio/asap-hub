@@ -14,6 +14,12 @@ import { ExternalLink, LinkHeadline, ImageLink } from '../molecules';
 import { lead } from '..';
 import { captionStyles } from '../text';
 
+const imageStyle = css({
+  objectFit: 'cover',
+  width: '100%',
+  height: '100%',
+});
+
 const imageContainerStyle = css({
   flexShrink: 0,
   borderRadius: `${6 / perRem}em`,
@@ -88,13 +94,28 @@ const NewsCard: React.FC<NewsCardProps> = ({
   return (
     <Card>
       <div css={cardStyle}>
-        <ImageLink
-          containerPropStyle={imageContainerStyle}
-          link={newsLink}
-          imgSrc={thumbnail}
-          placeholder={placeholders[type]}
-          alt={`"${title}"'s thumbnail`}
-        />
+        <div css={imageContainerStyle}>
+          {newsLink ? (
+            <ImageLink
+              link={newsLink}
+              imgSrc={thumbnail}
+              placeholder={placeholders[type]}
+              alt={`"${title}"'s thumbnail`}
+            />
+          ) : (
+            <>
+              {thumbnail ? (
+                <img
+                  alt={`"${title}"'s thumbnail`}
+                  src={thumbnail}
+                  css={[imageStyle]}
+                />
+              ) : (
+                placeholders[type]
+              )}
+            </>
+          )}
+        </div>
         <div css={containerStyle}>
           <div css={headerStyles}>
             <div css={{ paddingRight: `${15 / perRem}em` }}>

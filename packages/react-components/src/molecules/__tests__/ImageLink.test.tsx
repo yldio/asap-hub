@@ -13,7 +13,10 @@ it('renders an image with a link', () => {
 
 it('renders a placeholder', () => {
   const { queryByRole, getByText } = render(
-    <ImageLink placeholder={<div>placeholder</div>} />,
+    <ImageLink
+      placeholder={<div>placeholder</div>}
+      link="https://google.com/"
+    />,
   );
 
   expect(queryByRole('img')).not.toBeInTheDocument();

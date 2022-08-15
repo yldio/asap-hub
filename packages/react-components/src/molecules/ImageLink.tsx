@@ -1,5 +1,5 @@
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import { css, SerializedStyles } from '@emotion/react';
+import { css } from '@emotion/react';
 import { Anchor } from '../atoms';
 import { fern } from '../colors';
 
@@ -13,10 +13,9 @@ const hoverStyle = css({
 
 interface ImageLinkProps {
   imgSrc?: string;
-  link?: string;
+  link: string;
   alt?: string;
   placeholder?: EmotionJSX.Element;
-  containerPropStyle?: SerializedStyles;
 }
 
 const ImageLink: React.FC<ImageLinkProps> = ({
@@ -24,10 +23,9 @@ const ImageLink: React.FC<ImageLinkProps> = ({
   link,
   alt,
   placeholder,
-  containerPropStyle,
 }) => (
-  <Anchor css={[containerPropStyle, link && hoverStyle]} href={link}>
-    {imgSrc ? <img src={imgSrc} alt={alt} /> : <>{placeholder}</>}
+  <Anchor css={hoverStyle} href={link}>
+    {imgSrc ? <img src={imgSrc} alt={alt} /> : <div>{placeholder}</div>}
   </Anchor>
 );
 

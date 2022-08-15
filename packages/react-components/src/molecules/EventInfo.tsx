@@ -31,6 +31,12 @@ const imageContainerStyle = css({
   },
 });
 
+const imageStyle = css({
+  objectFit: 'cover',
+  width: '100%',
+  height: '100%',
+});
+
 const cardStyles = css({
   display: 'flex',
   flexDirection: 'row',
@@ -125,17 +131,29 @@ const EventInfo: React.FC<EventInfoProps> = ({
   tags,
   ...props
 }) => {
+  const imageComponent = thumbnail ? (
+    <img alt={`Thumbnail for "${title}"`} src={thumbnail} css={imageStyle} />
+  ) : (
+    eventPlaceholderIcon
+  );
+
   const link =
     status === 'Cancelled' ? undefined : events({}).event({ eventId: id }).$;
+
   return (
     <div css={cardStyles}>
-      <ImageLink
-        imgSrc={thumbnail}
-        link={link}
-        alt={`Thumbnail for "${title}"`}
-        placeholder={eventPlaceholderIcon}
-        containerPropStyle={imageContainerStyle}
-      />
+      <div css={imageContainerStyle}>
+        {link ? (
+          <ImageLink
+            imgSrc={thumbnail}
+            link={link}
+            alt={`Thumbnail for "${title}"`}
+            placeholder={eventPlaceholderIcon}
+          />
+        ) : (
+          <>{imageComponent}</>
+        )}
+      </div>
       <div>
         <LinkHeadline level={3} styleAsHeading={4} href={link}>
           {title.substr(0, titleLimit ?? undefined)}

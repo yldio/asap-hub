@@ -5,5 +5,5 @@ module.exports = {
       { runtime: 'automatic', importSource: '@emotion/react' },
     ],
   ],
-  plugins: [require.resolve('@emotion/babel-plugin')],
+  plugins: [require.resolve('@emotion/babel-plugin'), "ramda"],
 };

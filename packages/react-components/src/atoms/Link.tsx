@@ -1,5 +1,5 @@
 import { css, SerializedStyles, Theme } from '@emotion/react';
-import { ReactNode } from 'react';
+import React, { PropsWithChildren } from 'react';
 
 import { Anchor } from '.';
 import { getButtonChildren, getButtonStyles } from '../button';
@@ -72,14 +72,15 @@ interface ButtonStyleLinkProps {
   readonly margin?: boolean;
   readonly stretch?: boolean;
 }
+
 type LinkProps = {
-  readonly children: ReactNode;
   readonly href: string | undefined;
   readonly label?: string;
   readonly applyIconTheme?: boolean;
   readonly stretch?: boolean;
 } & (NormalLinkProps | ButtonStyleLinkProps);
-const Link: React.FC<LinkProps> = ({
+
+const Link: React.FC<PropsWithChildren<LinkProps>> = ({
   children,
   href,
   label,

@@ -1,4 +1,4 @@
-import { AnchorHTMLAttributes, ComponentProps } from 'react';
+import { AnchorHTMLAttributes, ComponentProps, PropsWithChildren } from 'react';
 import { HashLink } from 'react-router-hash-link';
 import { css } from '@emotion/react';
 
@@ -19,9 +19,9 @@ type AnchorProps = {
   // hrefs may conditionally be undefined, but the prop is mandatory so it cannot be forgotten
   href: string | undefined;
   enabled?: boolean;
-} & Omit<ComponentProps<typeof HashLink>, 'to' | 'smooth'> &
-  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'target' | 'rel'>;
-const Anchor: React.FC<AnchorProps> = ({ href, enabled = true, ...props }) => {
+} & Omit<ComponentProps<typeof HashLink>, 'to' | 'smooth' | 'children'> &
+  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'target' | 'rel' | 'children'>;
+const Anchor: React.FC<PropsWithChildren<AnchorProps>> = ({ href, enabled = true, children, ...props }) => {
   const [internal, url] =
     enabled && href ? isInternalLink(href) : [false, undefined];
   if (useHasRouter() && url && internal) {

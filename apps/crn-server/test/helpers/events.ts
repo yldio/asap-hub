@@ -39,6 +39,7 @@ export const getApiGatewayEvent = (
     },
     version: '2.0',
     pathParameters: undefined,
+    // @ts-ignore
     rawQueryString: new URLSearchParams(event.queryStringParameters).toString(),
     ...event,
     body:

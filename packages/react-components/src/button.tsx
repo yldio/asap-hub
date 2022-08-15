@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, Theme } from '@emotion/react';
 
 import { formTargetWidth, perRem, mobileScreen } from './pixels';
 import {
@@ -15,7 +15,7 @@ import {
 } from './colors';
 
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-export const activePrimaryBackgroundColor = color(122, 210, 169, 0.18);
+export const activePrimaryBackgroundColorDefault = color(122, 210, 169, 0.18);
 
 const borderWidth = 1;
 const styles = css({
@@ -161,19 +161,22 @@ const disabledStyles = css({
   },
 });
 
-export const activePrimaryStyles = css({
-  backgroundColor: activePrimaryBackgroundColor.rgba,
-  borderColor: 'transparent',
-  color: pine.rgb,
-  svg: {
-    stroke: pine.rgb,
-  },
-  ':hover, :focus': {
-    backgroundColor: activePrimaryBackgroundColor.rgba,
-    color: pine.rgb,
-  },
-});
-
+export const activePrimaryStyles = ({
+  info100 = activePrimaryBackgroundColorDefault,
+  info900 = pine,
+}: Theme['colors'] = {}) =>
+  css({
+    backgroundColor: info100.rgba,
+    borderColor: 'transparent',
+    color: info900.rgba,
+    svg: {
+      stroke: info900.rgba,
+    },
+    ':hover, :focus': {
+      backgroundColor: info100.rgba,
+      color: info900.rgba,
+    },
+  });
 export const activeSecondaryStyles = css({
   backgroundColor: paper.rgb,
   color: charcoal.rgb,
@@ -202,6 +205,7 @@ export const getButtonStyles = ({
   children = [] as React.ReactNode,
   margin = true,
   stretch = true,
+  colors = {},
 }) =>
   css([
     styles,
@@ -211,7 +215,7 @@ export const getButtonStyles = ({
     enabled
       ? active
         ? primary
-          ? activePrimaryStyles
+          ? activePrimaryStyles(colors)
           : activeSecondaryStyles
         : primary
         ? primaryStyles

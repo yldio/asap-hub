@@ -14,11 +14,14 @@ export default {
   decorators: [ThemeDecorator],
 };
 
-export const Normal: Story<{ theme: ThemeVariant }> = (_, { theme }) => (
+export const Normal: Story<{ themeVariant: ThemeVariant }> = (
+  _,
+  { themeVariant },
+) => (
   <Paragraph>
     <Link
       href={text('Destination', 'https://www.parkinsonsroadmap.org/')}
-      theme={theme}
+      themeVariant={themeVariant}
     >
       {text('Text', "Aligning Science Across Parkinson's")}
     </Link>

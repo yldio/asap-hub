@@ -1,8 +1,9 @@
 import { render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
+import { ThemeProvider } from '@emotion/react';
 
 import Link from '../Link';
-import { fern, paper, silver } from '../../colors';
+import { color as colorConstructor, fern, paper, silver } from '../../colors';
 
 it('renders the text in an anchor', () => {
   const { getByText } = render(<Link href="/">text</Link>);
@@ -22,11 +23,27 @@ describe('the default theme', () => {
     expect(textDecoration).toBe('underline solid transparent');
   });
 });
-
+describe('theme with ThemeProvider', () => {
+  it('uses ThemeProvider theme primaryColor', () => {
+    const testColor = colorConstructor(12, 141, 195);
+    const theme = {
+      colors: {
+        primary500: testColor,
+      },
+    };
+    const { getByRole } = render(
+      <ThemeProvider theme={theme}>
+        <Link href="/">text</Link>
+      </ThemeProvider>,
+    );
+    const { color } = getComputedStyle(getByRole('link'));
+    expect(color).toBe(testColor.rgb);
+  });
+});
 describe('the dark theme', () => {
   it('applies the white color', () => {
     const { getByRole } = render(
-      <Link href="/" theme="dark">
+      <Link href="/" themeVariant="dark">
         text
       </Link>,
     );
@@ -36,7 +53,7 @@ describe('the dark theme', () => {
 
   it('applies an invisible underline', () => {
     const { getByRole } = render(
-      <Link href="/" theme="dark">
+      <Link href="/" themeVariant="dark">
         text
       </Link>,
     );

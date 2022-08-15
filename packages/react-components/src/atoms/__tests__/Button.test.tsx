@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import { silver, fern, charcoal } from '../../colors';
 import { orcidIcon } from '../../icons';
-import { activePrimaryBackgroundColor } from '../../button';
+import { activePrimaryBackgroundColorDefault } from '../../button';
 
 import Button from '../Button';
 
@@ -82,12 +82,12 @@ it('renders an active secondary button', () => {
 it('renders an active primary button', () => {
   const { getByRole, rerender } = render(<Button primary />);
   expect(getComputedStyle(getByRole('button')).backgroundColor).not.toBe(
-    activePrimaryBackgroundColor.rgba,
+    activePrimaryBackgroundColorDefault.rgba,
   );
 
   rerender(<Button primary active />);
   expect(getComputedStyle(getByRole('button')).backgroundColor).toBe(
-    activePrimaryBackgroundColor.rgba,
+    activePrimaryBackgroundColorDefault.rgba,
   );
 });
 

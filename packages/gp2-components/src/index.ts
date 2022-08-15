@@ -6,4 +6,6 @@ export {
   DashboardPage,
   DashboardPageBody,
   Layout,
+  UsersPage,
+  Theme,
 } from './templates';

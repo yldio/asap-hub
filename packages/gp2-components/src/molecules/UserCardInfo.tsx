@@ -1,6 +1,6 @@
 import { crossQuery, Link, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { ComponentProps } from 'react';
+import { ComponentProps, Fragment } from 'react';
 import projectIcon from '../icons/project-icon';
 import roleIcon from '../icons/role-icon';
 import workingGroupIcon from '../icons/working-group-icon';
@@ -74,12 +74,12 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
         <div css={[listLabelStyles, workingGroupsStyles]}>
           {workingGroups?.length ? (
             workingGroups.map(({ id, name }, idx) => (
-              <>
-                {idx !== 0 ? <span css={dotDivider}>·</span> : null}
+              <Fragment key={id}>
+                {idx === 0 || <span css={dotDivider}>·</span>}
                 <Link href={`/${id}`}>
                   <span css={workingGroupsLinkStyles}>{name}</span>
                 </Link>
-              </>
+              </Fragment>
             ))
           ) : (
             <span css={subduedText}>
@@ -93,7 +93,11 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
       <IconWithLabel icon={projectIcon}>
         <div css={listLabelStyles}>
           {projects?.length ? (
-            projects.map(({ id, name }) => <Link href={`/${id}`}>{name}</Link>)
+            projects.map(({ id, name }) => (
+              <Link key={id} href={`/${id}`}>
+                {name}
+              </Link>
+            ))
           ) : (
             <span css={subduedText}>
               This member isn’t part of any projects

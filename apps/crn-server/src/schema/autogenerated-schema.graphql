@@ -2037,6 +2037,32 @@ type Discover implements Content {
     """Optional number of contents to take."""
     top: Int
   ): PagesResultDto
+  """Query Teams content items."""
+  referencesTeamsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Teams!]
+  """Query Teams content items with total count."""
+  referencesTeamsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): TeamsResultDto
   """Query Users content items."""
   referencesUsersContents(
     """Optional OData filter."""
@@ -2087,6 +2113,7 @@ input DiscoverDataAboutUsInputDto {
 type DiscoverDataDto {
   aboutUs: DiscoverDataAboutUsDto
   members: DiscoverDataMembersDto
+  membersTeam: DiscoverDataMembersTeamDto
   pages: DiscoverDataPagesDto
   scientificAdvisoryBoard: DiscoverDataScientificAdvisoryBoardDto
   training: DiscoverDataTrainingDto
@@ -2097,19 +2124,30 @@ type DiscoverDataDto {
 input DiscoverDataInputDto {
   aboutUs: DiscoverDataAboutUsInputDto
   members: DiscoverDataMembersInputDto
+  membersTeam: DiscoverDataMembersTeamInputDto
   pages: DiscoverDataPagesInputDto
   scientificAdvisoryBoard: DiscoverDataScientificAdvisoryBoardInputDto
   training: DiscoverDataTrainingInputDto
   workingGroups: DiscoverDataWorkingGroupsInputDto
 }
 
-"""The structure of the ASAP Team field of the Discover ASAP content type."""
+"""The structure of the ASAP Team Members field of the Discover ASAP content type."""
 type DiscoverDataMembersDto {
   iv: [Users!]
 }
 
-"""The structure of the ASAP Team field of the Discover ASAP content input type."""
+"""The structure of the ASAP Team Members field of the Discover ASAP content input type."""
 input DiscoverDataMembersInputDto {
+  iv: [String!]
+}
+
+"""The structure of the ASAP Team field of the Discover ASAP content type."""
+type DiscoverDataMembersTeamDto {
+  iv: [Teams!]
+}
+
+"""The structure of the ASAP Team field of the Discover ASAP content input type."""
+input DiscoverDataMembersTeamInputDto {
   iv: [String!]
 }
 
@@ -2157,6 +2195,7 @@ input DiscoverDataWorkingGroupsInputDto {
 type DiscoverFlatDataDto {
   aboutUs: String
   members: [Users!]
+  membersTeam: [Teams!]
   pages: [Pages!]
   scientificAdvisoryBoard: [Users!]
   training: [NewsAndEvents!]
@@ -4491,6 +4530,32 @@ type Teams implements Content {
     """Optional number of contents to take."""
     top: Int
   ): ResearchOutputsResultDto
+  """Query Discover ASAP content items."""
+  referencingDiscoverContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Discover!]
+  """Query Discover ASAP content items with total count."""
+  referencingDiscoverContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): DiscoverResultDto
   """Query Events content items."""
   referencingEventsContents(
     """Optional OData filter."""

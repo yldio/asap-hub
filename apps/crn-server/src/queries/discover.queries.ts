@@ -42,6 +42,9 @@ export const FETCH_DISCOVER = gql`
             lastName
           }
         }
+        membersTeam {
+          id
+        }
         scientificAdvisoryBoard {
           id
           created

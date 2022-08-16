@@ -21,7 +21,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
   const auth0 = useAuth0();
   const [recoilAuth0, setAuth0] = useRecoilState(auth0State);
   const resetAuth0 = useResetRecoilState(auth0State);
-  const dashboardPath = useRouteMatch().path;
+  const { path } = useRouteMatch();
   useEffect(() => {
     setAuth0(auth0);
     return () => resetAuth0();
@@ -40,7 +40,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
   return (
     <Layout>
       <Switch>
-        <Route exact path={dashboardPath}>
+        <Route exact path={path}>
           <Frame title="Dashboard">
             <Dashboard />
           </Frame>

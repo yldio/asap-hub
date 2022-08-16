@@ -3,9 +3,7 @@ import { lazy, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 const loadWorkingGroups = () =>
-  import(
-    /* webpackChunkName: "shared-research-output-list" */ './WorkingGroups'
-  );
+  import(/* webpackChunkName: "working-groups-list" */ './WorkingGroups');
 
 const WorkingGroups = lazy(loadWorkingGroups);
 const Routes: React.FC<Record<string, never>> = () => {

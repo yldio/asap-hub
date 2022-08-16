@@ -9,14 +9,14 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import WorkingGroups from '../WorkingGroups';
 
-const renderResearchOutputList = async () => {
+const renderWorkingGroupsList = async () => {
   render(
     <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/working-groups']}>
-              <Route path="/shared-research">
+              <Route path="/working-groups">
                 <WorkingGroups />
               </Route>
             </MemoryRouter>
@@ -29,7 +29,7 @@ const renderResearchOutputList = async () => {
 };
 
 it('renders the Title', async () => {
-  await renderResearchOutputList();
+  await renderWorkingGroupsList();
   const heading = screen.getByRole('heading', { name: 'Working Groups' });
   expect(heading).toBeInTheDocument();
 });

@@ -1,20 +1,22 @@
-import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { render, waitFor, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { RecoilRoot } from 'recoil';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { network } from '@asap-hub/routing';
 import { createListUserResponse } from '@asap-hub/fixtures';
-
+import { network } from '@asap-hub/routing';
+import { fireEvent, render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Suspense } from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 import Network from '../Network';
-import { useUsers } from '../users/state';
 import { getTeams } from '../teams/api';
+import { useUsers } from '../users/state';
 
-jest.mock('../users/state');
+jest.mock('../users/state', () => ({
+  useUsers: jest.fn().mockReturnValue({ items: [], total: 0 }),
+}));
+
 jest.mock('../teams/api');
 jest.mock('../groups/api');
 

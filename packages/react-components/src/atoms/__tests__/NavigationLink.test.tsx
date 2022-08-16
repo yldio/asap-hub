@@ -1,12 +1,11 @@
-import { render, fireEvent } from '@testing-library/react';
-import { StaticRouter, Router } from 'react-router-dom';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
-import { createMemoryHistory } from 'history';
 import { ThemeProvider } from '@emotion/react';
-
-import NavigationLink from '../NavigationLink';
-import { color, pine } from '../../colors';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
+import { Router, StaticRouter } from 'react-router-dom';
 import { activePrimaryBackgroundColorDefault } from '../../button';
+import { color, pine } from '../../colors';
+import NavigationLink from '../NavigationLink';
 
 describe.each`
   description           | wrapper
@@ -14,37 +13,37 @@ describe.each`
   ${'without a router'} | ${undefined}
 `('$description', ({ wrapper }) => {
   it('renders a link with the given text', () => {
-    const { getByRole } = render(
+    render(
       <NavigationLink href="/" icon={<svg />}>
         Text
       </NavigationLink>,
       { wrapper },
     );
-    expect(getByRole('link')).toHaveTextContent('Text');
+    expect(screen.getByRole('link')).toHaveTextContent('Text');
   });
 
   it('renders a link with the given icon', () => {
-    const { getByRole } = render(
+    render(
       <NavigationLink href="/" icon={<svg />}>
         Text
       </NavigationLink>,
       { wrapper },
     );
-    expect(getByRole('link')).toContainHTML('<svg');
+    expect(screen.getByRole('link')).toContainHTML('<svg');
   });
 
   it('renders a link with the given href', () => {
-    const { getByRole } = render(
+    render(
       <NavigationLink href="/" icon={<svg />}>
         Text
       </NavigationLink>,
       { wrapper },
     );
-    expect(getByRole('link')).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/');
   });
 
   it('renders the current link with green background', () => {
-    const { getByText } = render(
+    render(
       <>
         <NavigationLink href="/" icon={<svg />}>
           Target
@@ -56,59 +55,91 @@ describe.each`
       { wrapper },
     );
     expect(
-      findParentWithStyle(getByText('Target'), 'backgroundColor')
+      findParentWithStyle(screen.getByText('Target'), 'backgroundColor')
         ?.backgroundColor,
     ).toMatch(/^rgba\(122/);
     expect(
-      findParentWithStyle(getByText('Other'), 'backgroundColor')
+      findParentWithStyle(screen.getByText('Other'), 'backgroundColor')
         ?.backgroundColor,
     ).toBeFalsy();
   });
 
   it('disables the current link when not enabled', () => {
-    const { getByText } = render(
+    render(
       <NavigationLink href="/location" icon={<svg />} enabled={false}>
         Target
       </NavigationLink>,
     );
-    expect(getByText('Target')).toHaveStyle('opacity:0,3');
-    expect(getByText('Target').closest('a')).toHaveStyle('pointer-events:none');
+    expect(screen.getByText('Target')).toHaveStyle('opacity:0,3');
+    expect(screen.getByText('Target').closest('a')).toHaveStyle(
+      'pointer-events:none',
+    );
   });
 });
 
 describe('with a router', () => {
   it('does not trigger a full page navigation on click', () => {
     const history = createMemoryHistory({ initialEntries: ['/'] });
-    const { getByRole } = render(
+    render(
       <Router history={history}>
         <NavigationLink href="/location" icon={<svg />}>
           Text
         </NavigationLink>
       </Router>,
     );
-    expect(fireEvent.click(getByRole('link'))).toBe(false);
+    expect(fireEvent.click(screen.getByRole('link'))).toBe(false);
     expect(history.location.pathname).toEqual('/location');
   });
 
   it('triggers a full page navigation on click of an external link', () => {
-    const { getByRole } = render(
+    render(
       <NavigationLink href="http://example.com/" icon={<svg />}>
         Text
       </NavigationLink>,
     );
-    expect(fireEvent.click(getByRole('link'))).toBe(true);
+    expect(fireEvent.click(screen.getByRole('link'))).toBe(true);
+  });
+
+  it('default route is not always highlighted as selected', () => {
+    const history = createMemoryHistory({ initialEntries: ['/location'] });
+    render(
+      <Router history={history}>
+        <NavigationLink href="/" icon={<svg />}>
+          Default
+        </NavigationLink>
+        <NavigationLink href="/other" icon={<svg />}>
+          Other
+        </NavigationLink>
+        <NavigationLink href="/location" icon={<svg />}>
+          Target
+        </NavigationLink>
+      </Router>,
+    );
+    expect(history.location.pathname).toEqual('/location');
+    expect(
+      findParentWithStyle(screen.getByText('Target'), 'backgroundColor')
+        ?.backgroundColor,
+    ).toMatch(/^rgba\(122/);
+    expect(
+      findParentWithStyle(screen.getByText('Other'), 'backgroundColor')
+        ?.backgroundColor,
+    ).toBeFalsy();
+    expect(
+      findParentWithStyle(screen.getByText('Default'), 'backgroundColor')
+        ?.backgroundColor,
+    ).toBeFalsy();
   });
 });
 
 describe('with ThemeProvider', () => {
   it('uses default colors when no theme whas provided', () => {
-    const { getByRole } = render(
+    render(
       <NavigationLink href="http://example.com/" icon={<svg />}>
         Text
       </NavigationLink>,
     );
     const { color: primaryColor, backgroundColor } = getComputedStyle(
-      getByRole('link'),
+      screen.getByRole('link'),
     );
     expect(primaryColor).toBe(pine.rgb);
     expect(backgroundColor).toBe(activePrimaryBackgroundColorDefault.rgba);
@@ -122,7 +153,7 @@ describe('with ThemeProvider', () => {
         info900: activePrimaryColor,
       },
     };
-    const { getByRole } = render(
+    render(
       <ThemeProvider theme={theme}>
         <NavigationLink href="http://example.com/" icon={<svg />}>
           Text
@@ -130,7 +161,7 @@ describe('with ThemeProvider', () => {
       </ThemeProvider>,
     );
     const { color: primaryColor, backgroundColor } = getComputedStyle(
-      getByRole('link'),
+      screen.getByRole('link'),
     );
     expect(primaryColor).toBe(activePrimaryColor.rgb);
     expect(backgroundColor).toBe(activePrimaryBackgroundColor.rgb);

@@ -1,9 +1,10 @@
+import { parse } from 'qs';
 import { useLocation, useParams } from 'react-router-dom';
 import { RouteNode } from 'typesafe-routes';
-import { parse } from 'qs';
+import * as gp2 from './gp2';
 
-export { default as events } from './events';
 export { default as discover } from './discover';
+export { default as events } from './events';
 export { default as logout } from './logout';
 export { default as network } from './network';
 export type { OutputDocumentTypeParameter } from './network';
@@ -11,6 +12,8 @@ export { default as news } from './news';
 export { default as sharedResearch } from './shared-research';
 export { default as staticPages } from './static-pages';
 export { default as welcome } from './welcome';
+export type { RouteNode };
+export { gp2 };
 
 // copied and fixed from typesafe-routes/react-router
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -23,8 +26,6 @@ export const useRouteParams = <R extends RouteNode<string, any, any>>(
     ...parse(search, { ignoreQueryPrefix: true }),
   }) as any;
 };
-
-export type { RouteNode };
 
 // We could refactor this to use typesafe-routes even for the query params
 export const searchQueryParam = 'searchQuery';

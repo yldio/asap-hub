@@ -1,5 +1,5 @@
 import { usersHeaderImage } from '../images';
-import PageBanner from '../organism/PageBanner';
+import PageBanner from '../organisms/PageBanner';
 
 const props = {
   image: usersHeaderImage,

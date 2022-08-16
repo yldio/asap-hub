@@ -1,13 +1,12 @@
-import { render, waitFor, RenderResult } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route } from 'react-router-dom';
-import nock from 'nock';
-import { authTestUtils } from '@asap-hub/react-components';
 import { mockLocation } from '@asap-hub/dom-test-utils';
+import { authTestUtils } from '@asap-hub/react-components';
 import { ToastContext } from '@asap-hub/react-context';
-
-import Welcome from '../Welcome';
+import { render, RenderResult, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import nock from 'nock';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { API_BASE_URL } from '../../config';
+import Welcome from '../Welcome';
 
 describe('the welcome page', () => {
   // fetch user by code request
@@ -43,7 +42,9 @@ describe('the welcome page', () => {
 
   it('renders a headline', async () => {
     const { findByRole } = await renderWelcome();
-    expect((await findByRole('heading')).textContent).toMatch(/asap hub/i);
+    expect((await findByRole('heading')).textContent).toMatch(
+      /Join the GP2 Hub/i,
+    );
   });
 
   it('renders one button', async () => {

@@ -620,7 +620,7 @@ __metadata:
     "@asap-hub/services-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
     "@asap-hub/validation": "workspace:*"
-    "@aws-sdk/client-cloudfront": 3.142.0
+    "@aws-sdk/client-cloudfront": 3.150.0
     "@babel/core": 7.18.10
     "@babel/preset-env": 7.18.10
     "@babel/preset-typescript": 7.18.6
@@ -1570,15 +1570,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-cloudfront@npm:3.142.0":
-  version: 3.142.0
-  resolution: "@aws-sdk/client-cloudfront@npm:3.142.0"
+"@aws-sdk/client-cloudfront@npm:3.150.0":
+  version: 3.150.0
+  resolution: "@aws-sdk/client-cloudfront@npm:3.150.0"
   dependencies:
     "@aws-crypto/sha256-browser": 2.0.0
     "@aws-crypto/sha256-js": 2.0.0
-    "@aws-sdk/client-sts": 3.142.0
+    "@aws-sdk/client-sts": 3.150.0
     "@aws-sdk/config-resolver": 3.130.0
-    "@aws-sdk/credential-provider-node": 3.142.0
+    "@aws-sdk/credential-provider-node": 3.150.0
     "@aws-sdk/fetch-http-handler": 3.131.0
     "@aws-sdk/hash-node": 3.127.0
     "@aws-sdk/invalid-dependency": 3.127.0
@@ -1612,13 +1612,13 @@ __metadata:
     entities: 2.2.0
     fast-xml-parser: 3.19.0
     tslib: ^2.3.1
-  checksum: fd9141a76a59d6039f28277e003a4b1a7562beb2a1d5019cfe6a20150bad0f2b67d19dad01d34955668ce03d7992eeaa1ebd1195c51e1318489e1ce00c265081
+  checksum: 2a927c7716fe3073fc43360f5875a5718f1903f847919f5f6568503bb83f5227ac258b2acb73c911b0cdf5b074ef08edbe7a7049d4466acda3d779732786c4c5
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-sso@npm:3.142.0":
-  version: 3.142.0
-  resolution: "@aws-sdk/client-sso@npm:3.142.0"
+"@aws-sdk/client-sso@npm:3.150.0":
+  version: 3.150.0
+  resolution: "@aws-sdk/client-sso@npm:3.150.0"
   dependencies:
     "@aws-crypto/sha256-browser": 2.0.0
     "@aws-crypto/sha256-js": 2.0.0
@@ -1651,18 +1651,18 @@ __metadata:
     "@aws-sdk/util-utf8-browser": 3.109.0
     "@aws-sdk/util-utf8-node": 3.109.0
     tslib: ^2.3.1
-  checksum: dfe8d0efc12fdd6d7d7a7df9b1247a925def6ea13cb7b85f0d00cdd54e28b93c66f3ba05e7a1ef7acdd8f3865a9e4bf724fd78696731360f77c0a80c5a171660
+  checksum: cd896ba1e091dcd8e6ffded5221820074f59e47d461eb3eb106d988dbb975149dc515063f6dd1065a119fec047d6ae9c9c01f457fd5cab967860e569aa2cd2c4
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-sts@npm:3.142.0":
-  version: 3.142.0
-  resolution: "@aws-sdk/client-sts@npm:3.142.0"
+"@aws-sdk/client-sts@npm:3.150.0":
+  version: 3.150.0
+  resolution: "@aws-sdk/client-sts@npm:3.150.0"
   dependencies:
     "@aws-crypto/sha256-browser": 2.0.0
     "@aws-crypto/sha256-js": 2.0.0
     "@aws-sdk/config-resolver": 3.130.0
-    "@aws-sdk/credential-provider-node": 3.142.0
+    "@aws-sdk/credential-provider-node": 3.150.0
     "@aws-sdk/fetch-http-handler": 3.131.0
     "@aws-sdk/hash-node": 3.127.0
     "@aws-sdk/invalid-dependency": 3.127.0
@@ -1695,7 +1695,7 @@ __metadata:
     entities: 2.2.0
     fast-xml-parser: 3.19.0
     tslib: ^2.3.1
-  checksum: 9d2041b37e132cc4c9379d7aee6afd64e1b36d7183fd71110b2392a07c7d18562788f34383ab5f4d353c140602839066145fc44feaba5e6543c887b62a60d138
+  checksum: 277703e5ea9f5c27b4e93f1e8c172efe1334bc21fec0dde16f831dfb90ac854b7070a489aa31e0ca3ad6bd7e583e1c6f1d20453323553e444ad413fcf5298f39
   languageName: node
   linkType: hard
 
@@ -1736,37 +1736,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/credential-provider-ini@npm:3.142.0":
-  version: 3.142.0
-  resolution: "@aws-sdk/credential-provider-ini@npm:3.142.0"
+"@aws-sdk/credential-provider-ini@npm:3.150.0":
+  version: 3.150.0
+  resolution: "@aws-sdk/credential-provider-ini@npm:3.150.0"
   dependencies:
     "@aws-sdk/credential-provider-env": 3.127.0
     "@aws-sdk/credential-provider-imds": 3.127.0
-    "@aws-sdk/credential-provider-sso": 3.142.0
+    "@aws-sdk/credential-provider-sso": 3.150.0
     "@aws-sdk/credential-provider-web-identity": 3.127.0
     "@aws-sdk/property-provider": 3.127.0
     "@aws-sdk/shared-ini-file-loader": 3.127.0
     "@aws-sdk/types": 3.127.0
     tslib: ^2.3.1
-  checksum: 40f6d9c77cf518a520d87023d218562342d42e6fc59cd891f184aa2a6253dcfbd664eb77341727e74aa8500b9b93f1abefe448dae281d89fe0d943b39e2f2010
+  checksum: 4aad8712bbc4a41aae0d6898cdb750a33dbf4e4f72e37970ca08b6a7134ebd37c619a56fd58505bad3ac183e424aa4b41386c46ac8c5bd34a5798c458b8850ec
   languageName: node
   linkType: hard
 
-"@aws-sdk/credential-provider-node@npm:3.142.0":
-  version: 3.142.0
-  resolution: "@aws-sdk/credential-provider-node@npm:3.142.0"
+"@aws-sdk/credential-provider-node@npm:3.150.0":
+  version: 3.150.0
+  resolution: "@aws-sdk/credential-provider-node@npm:3.150.0"
   dependencies:
     "@aws-sdk/credential-provider-env": 3.127.0
     "@aws-sdk/credential-provider-imds": 3.127.0
-    "@aws-sdk/credential-provider-ini": 3.142.0
+    "@aws-sdk/credential-provider-ini": 3.150.0
     "@aws-sdk/credential-provider-process": 3.127.0
-    "@aws-sdk/credential-provider-sso": 3.142.0
+    "@aws-sdk/credential-provider-sso": 3.150.0
     "@aws-sdk/credential-provider-web-identity": 3.127.0
     "@aws-sdk/property-provider": 3.127.0
     "@aws-sdk/shared-ini-file-loader": 3.127.0
     "@aws-sdk/types": 3.127.0
     tslib: ^2.3.1
-  checksum: 4bc9cee8c2d7be24cf2a8f5e9714dd0d530b5020051a703eae748a9b7385e18beb356f771e59f4f36077404a4def60f064de1766ae6503bbbc5a539b23a55a0c
+  checksum: ee84774e0439550cd07a4415563657123c9a2e2e491df9ab76cb510e6ebc6fba095f9cdb23603bc0813a3fd9ce4f855e75e026feef6fad509706bc780d1aeffa
   languageName: node
   linkType: hard
 
@@ -1782,16 +1782,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/credential-provider-sso@npm:3.142.0":
-  version: 3.142.0
-  resolution: "@aws-sdk/credential-provider-sso@npm:3.142.0"
+"@aws-sdk/credential-provider-sso@npm:3.150.0":
+  version: 3.150.0
+  resolution: "@aws-sdk/credential-provider-sso@npm:3.150.0"
   dependencies:
-    "@aws-sdk/client-sso": 3.142.0
+    "@aws-sdk/client-sso": 3.150.0
     "@aws-sdk/property-provider": 3.127.0
     "@aws-sdk/shared-ini-file-loader": 3.127.0
     "@aws-sdk/types": 3.127.0
     tslib: ^2.3.1
-  checksum: ef83856a8eb46e4633f5b96749b35e8ebd335b7c34df20096152b7eecc12a6f29f6039d039f0115994e4657893273ab7ca41d16d2aa2f176bac29d086f6ec2ea
+  checksum: 7887530dcc7a8b796b1bac6822b44be9490e9e755afa64003be744e16c7806ca3bb31e6729dd0b923d98d9967b89ba98b31a928c07c1f7f362791ae1351fada8
   languageName: node
   linkType: hard
 

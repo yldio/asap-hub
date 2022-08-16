@@ -31,6 +31,7 @@
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
+    "@asap-hub/model": "workspace:*",
     "@asap-hub/react-context": "workspace:*",
     "@babel/core": "7.18.10",
     "@babel/preset-react": "7.18.6",

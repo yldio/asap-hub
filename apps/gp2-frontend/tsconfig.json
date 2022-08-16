@@ -10,5 +10,7 @@
     "lib": ["esnext", "dom", "dom.iterable"],
     "jsx": "react-jsx"
   },
-  "include": ["src"]
+  "include": ["src"],
+
+
 }

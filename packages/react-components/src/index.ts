@@ -1,4 +1,5 @@
 import * as authTestUtils from './auth-test-utils';
+import * as card from './card';
 import * as mail from './mail';
 import * as pixels from './pixels';
 import * as text from './text';
@@ -6,12 +7,12 @@ import * as utils from './utils';
 
 export * from './appearance';
 export {
+  accents,
   Anchor,
   Avatar,
   Button,
   Caption,
   Card,
-  accents,
   Display,
   Divider,
   Headline2,
@@ -191,4 +192,4 @@ export {
 } from './templates';
 export * from './theme';
 export { noop } from './utils';
-export { pixels, text, authTestUtils, utils, mail };
+export { pixels, text, authTestUtils, utils, mail, card };

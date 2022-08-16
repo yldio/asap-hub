@@ -8,4 +8,4 @@ export type WorkingGroupResponse = {
   members: unknown[];
 };
 
-export type ListGroupDataObject = ListResponse<WorkingGroupResponse>;
+export type ListWorkingGroupResponse = ListResponse<WorkingGroupResponse>;

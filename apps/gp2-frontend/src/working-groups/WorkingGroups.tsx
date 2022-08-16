@@ -25,7 +25,7 @@ const WorkingGroups: React.FC<Record<string, never>> = () => {
         leadingMembers: 'This is a list of leading members 44',
       },
     ],
-    total: 1,
+    total: 3,
   };
   return <WorkingGroupsPage workingGroups={workingGroups} />;
 };

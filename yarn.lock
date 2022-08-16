@@ -632,9 +632,9 @@ __metadata:
     "@graphql-codegen/schema-ast": 2.5.1
     "@graphql-codegen/typescript": 2.7.3
     "@graphql-codegen/typescript-operations": 2.5.3
-    "@graphql-tools/graphql-file-loader": 7.5.0
-    "@graphql-tools/load": 7.7.1
-    "@graphql-tools/mock": 8.7.1
+    "@graphql-tools/graphql-file-loader": 7.5.2
+    "@graphql-tools/load": 7.7.4
+    "@graphql-tools/mock": 8.7.3
     "@graphql-tools/schema": 8.5.1
     "@graphql-typed-document-node/core": 3.1.1
     "@hapi/boom": 9.1.4
@@ -1064,9 +1064,9 @@ __metadata:
     "@graphql-codegen/schema-ast": 2.5.1
     "@graphql-codegen/typescript": 2.7.3
     "@graphql-codegen/typescript-operations": 2.5.3
-    "@graphql-tools/graphql-file-loader": 7.5.0
-    "@graphql-tools/load": 7.7.1
-    "@graphql-tools/mock": 8.7.1
+    "@graphql-tools/graphql-file-loader": 7.5.2
+    "@graphql-tools/load": 7.7.4
+    "@graphql-tools/mock": 8.7.3
     "@graphql-typed-document-node/core": 3.1.1
     "@hapi/boom": 9.1.4
     "@sentry/serverless": 6.19.7
@@ -9098,22 +9098,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-tools/graphql-file-loader@npm:7.5.0":
-  version: 7.5.0
-  resolution: "@graphql-tools/graphql-file-loader@npm:7.5.0"
-  dependencies:
-    "@graphql-tools/import": 6.7.1
-    "@graphql-tools/utils": 8.9.0
-    globby: ^11.0.3
-    tslib: ^2.4.0
-    unixify: ^1.0.0
-  peerDependencies:
-    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-  checksum: 57f9f64a26f62d25fcb65282d27a8f6cce8d99fd0ec8f1d5b31ab43fd5698876760e4df42fd96f2b5ea524f2e755768496ee2b3516d559d43270330551371359
-  languageName: node
-  linkType: hard
-
-"@graphql-tools/graphql-file-loader@npm:^7.3.7, @graphql-tools/graphql-file-loader@npm:^7.5.0":
+"@graphql-tools/graphql-file-loader@npm:7.5.2, @graphql-tools/graphql-file-loader@npm:^7.3.7, @graphql-tools/graphql-file-loader@npm:^7.5.0":
   version: 7.5.2
   resolution: "@graphql-tools/graphql-file-loader@npm:7.5.2"
   dependencies:
@@ -9140,19 +9125,6 @@ __metadata:
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
   checksum: 52e925824f38f6398ac5a5cd651eb6b3e76af76020d506a0b584708322fa89f062783efadabaa38155eb3846d4ce73deca5b5445661a5175c5db3152cc2c19dc
-  languageName: node
-  linkType: hard
-
-"@graphql-tools/import@npm:6.7.1":
-  version: 6.7.1
-  resolution: "@graphql-tools/import@npm:6.7.1"
-  dependencies:
-    "@graphql-tools/utils": 8.9.0
-    resolve-from: 5.0.0
-    tslib: ^2.4.0
-  peerDependencies:
-    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-  checksum: 1ba6ff176851eff345ccfd37616bd2d800fba074b88abb9a777b59fe153a1e55f2c24d8c033b141303267212f6a01eb874088e403b7efdf10c01c9ec7833af49
   languageName: node
   linkType: hard
 
@@ -9183,21 +9155,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-tools/load@npm:7.7.1":
-  version: 7.7.1
-  resolution: "@graphql-tools/load@npm:7.7.1"
-  dependencies:
-    "@graphql-tools/schema": 8.5.1
-    "@graphql-tools/utils": 8.9.0
-    p-limit: 3.1.0
-    tslib: ^2.4.0
-  peerDependencies:
-    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-  checksum: 4abaab346dab9547f547fe619476e5de54698121174f579f3473f2d5678891c249482a3e56f9b748400d5062c9bd3b5d5d5e56885555e5a3422cafa2afd6022e
-  languageName: node
-  linkType: hard
-
-"@graphql-tools/load@npm:^7.5.5, @graphql-tools/load@npm:^7.7.1":
+"@graphql-tools/load@npm:7.7.4, @graphql-tools/load@npm:^7.5.5, @graphql-tools/load@npm:^7.7.1":
   version: 7.7.4
   resolution: "@graphql-tools/load@npm:7.7.4"
   dependencies:
@@ -9235,17 +9193,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-tools/mock@npm:8.7.1":
-  version: 8.7.1
-  resolution: "@graphql-tools/mock@npm:8.7.1"
+"@graphql-tools/mock@npm:8.7.3":
+  version: 8.7.3
+  resolution: "@graphql-tools/mock@npm:8.7.3"
   dependencies:
-    "@graphql-tools/schema": 8.5.1
-    "@graphql-tools/utils": 8.9.0
+    "@graphql-tools/schema": 9.0.1
+    "@graphql-tools/utils": 8.10.0
     fast-json-stable-stringify: ^2.1.0
     tslib: ^2.4.0
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-  checksum: aa5f8155bfae0b3970e4da2100b211b82a44cc0ca84448e9aa7ddb767d280873c7af5f39c64b7a14573ffb3e529048d4e734aaa8cb3d0f44f1865265df69d588
+  checksum: 5386ec4c18f46e0fe0c41bf2f2ef721832cf3add8e5894573add7261a3e6683617f061aed1d4535521a713833d9f5c240780d9af8c486f39a78c83ddac6410c7
   languageName: node
   linkType: hard
 

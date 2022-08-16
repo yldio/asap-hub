@@ -2387,7 +2387,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/serverless",\
-        "npm:3.12.7"\
+        "npm:3.12.8"\
       ],\
       [\
         "@types/shot",\
@@ -10471,7 +10471,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/mime-types", "npm:2.1.1"],\
             ["@types/parse-data-url", "npm:3.0.0"],\
             ["@types/pump", "npm:1.1.1"],\
-            ["@types/serverless", "npm:3.12.7"],\
+            ["@types/serverless", "npm:3.12.8"],\
             ["@types/source-map-support", "npm:0.5.4"],\
             ["@types/stream-json", "npm:1.7.2"],\
             ["@types/supertest", "npm:2.0.12"],\
@@ -11113,7 +11113,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jsonwebtoken", "npm:8.5.8"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
             ["@types/node", "npm:14.18.24"],\
-            ["@types/serverless", "npm:3.12.7"],\
+            ["@types/serverless", "npm:3.12.8"],\
             ["@types/source-map-support", "npm:0.5.4"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["@types/uuid", "npm:8.3.4"],\
@@ -33417,10 +33417,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/serverless", [\
-        ["npm:3.12.7", {\
-          "packageLocation": "./.yarn/cache/@types-serverless-npm-3.12.7-b51c8e6cd8-8e9b848a2c.zip/node_modules/@types/serverless/",\
+        ["npm:3.12.8", {\
+          "packageLocation": "./.yarn/cache/@types-serverless-npm-3.12.8-7f6d5c588f-b67b2a7f27.zip/node_modules/@types/serverless/",\
           "packageDependencies": [\
-            ["@types/serverless", "npm:3.12.7"]\
+            ["@types/serverless", "npm:3.12.8"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -59222,7 +59222,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["serverless-s3-sync", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.0.0"],\
             ["@auth0/s3", "npm:1.0.0"],\
-            ["@types/serverless", "npm:3.12.7"],\
+            ["@types/serverless", "npm:3.12.8"],\
             ["bluebird", "npm:3.7.2"],\
             ["mime", "npm:2.4.6"],\
             ["minimatch", "npm:3.0.4"],\
@@ -59247,7 +59247,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/serverless-webpack-virtual-b0ef3041d9/0/cache/serverless-webpack-npm-5.8.0-8563ff4c80-6265be2441.zip/node_modules/serverless-webpack/",\
           "packageDependencies": [\
             ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.8.0"],\
-            ["@types/serverless", "npm:3.12.7"],\
+            ["@types/serverless", "npm:3.12.8"],\
             ["@types/webpack", null],\
             ["archiver", "npm:5.3.1"],\
             ["bluebird", "npm:3.7.2"],\

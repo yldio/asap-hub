@@ -12,6 +12,7 @@ const horizontalNavigationStyles = css({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  gap: rem(4),
   width: rem(80),
 });
 

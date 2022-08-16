@@ -28,6 +28,7 @@ const userMenuShownStyles = css({
   display: 'unset',
 });
 const buttonTextStyles = css({
+  whiteSpace: 'nowrap',
   [smallDesktopQuery]: {
     display: 'none',
   },

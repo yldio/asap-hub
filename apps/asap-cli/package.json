@@ -46,7 +46,7 @@
     "@types/jwt-decode": "2.2.1",
     "@types/jwt-encode": "workspace:*",
     "@types/luxon": "1.26.4",
-    "@types/prettier": "2.6.4",
+    "@types/prettier": "2.7.0",
     "@types/pump": "1.1.1",
     "@types/through2-concurrent": "2.0.1",
     "@types/uuid": "8.3.4",

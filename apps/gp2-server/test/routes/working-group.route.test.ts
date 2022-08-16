@@ -2,7 +2,7 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { getListWorkingGroupResponse } from '../fixtures/working-group.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
-import { workingGroupControllerMock } from '../mocks/working-group.controller.mock';
+import { workingGroupControllerMock } from '../mocks/working-group-controller.mock';
 
 describe('/working-groups/ route', () => {
   const app = appFactory({

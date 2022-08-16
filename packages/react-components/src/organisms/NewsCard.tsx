@@ -10,7 +10,7 @@ import {
   newsEventPlaceholderIcon,
   trainingPlaceholderIcon,
 } from '../icons';
-import { ExternalLink, LinkHeadline } from '../molecules';
+import { ExternalLink, LinkHeadline, ImageLink } from '../molecules';
 import { lead } from '..';
 import { captionStyles } from '../text';
 
@@ -90,19 +90,30 @@ const NewsCard: React.FC<NewsCardProps> = ({
   ) : (
     <Headline4>{title}</Headline4>
   );
-
+  const newsLink = text && news({}).article({ articleId: id }).$;
   return (
     <Card>
       <div css={cardStyle}>
         <div css={imageContainerStyle}>
-          {thumbnail ? (
-            <img
+          {newsLink ? (
+            <ImageLink
+              link={newsLink}
+              imgSrc={thumbnail}
+              placeholder={placeholders[type]}
               alt={`"${title}"'s thumbnail`}
-              src={thumbnail}
-              css={[imageStyle]}
             />
           ) : (
-            placeholders[type]
+            <>
+              {thumbnail ? (
+                <img
+                  alt={`"${title}"'s thumbnail`}
+                  src={thumbnail}
+                  css={[imageStyle]}
+                />
+              ) : (
+                placeholders[type]
+              )}
+            </>
           )}
         </div>
         <div css={containerStyle}>

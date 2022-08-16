@@ -5,7 +5,8 @@ import { ExternalAuthorResponse, UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { isInternalUser } from '@asap-hub/validation';
 
-import { Avatar, Link } from '../atoms';
+import { Avatar } from '../atoms';
+import { ImageLink } from '.';
 import { perRem } from '../pixels';
 import { userPlaceholderIcon } from '../icons';
 import { lead } from '../colors';
@@ -62,25 +63,36 @@ const UsersList: FC<UsersListProps> = ({
   max = Number.POSITIVE_INFINITY,
 }) => (
   <ul css={listStyles}>
-    {users.slice(0, max).map((user, i) => (
-      <li key={`author-${i}`} css={itemStyles}>
-        {isInternalUser(user) ? (
-          <Link
-            href={user.id && network({}).users({}).user({ userId: user.id }).$}
-          >
+    {users.slice(0, max).map((user, i) => {
+      const link = user.id && network({}).users({}).user({ userId: user.id }).$;
+      return (
+        <li key={`author-${i}`} css={itemStyles}>
+          {isInternalUser(user) ? (
             <div css={userStyles}>
-              <Avatar {...user} imageUrl={user.avatarUrl} />
+              <ImageLink
+                link={link}
+                placeholder={<Avatar {...user} imageUrl={user.avatarUrl} />}
+              />
               <span css={nameStyles}>{user.displayName}</span>
             </div>
-          </Link>
-        ) : (
-          <div css={userStyles}>
-            <Avatar {...user} imageUrl={getPlaceholderAvatarUrl()} />
-            <span css={nameStyles}>{user.displayName}</span>
-          </div>
-        )}
-      </li>
-    ))}
+          ) : (
+            <div css={userStyles}>
+              {link ? (
+                <ImageLink
+                  link={link}
+                  placeholder={
+                    <Avatar {...user} imageUrl={getPlaceholderAvatarUrl()} />
+                  }
+                />
+              ) : (
+                <Avatar {...user} imageUrl={getPlaceholderAvatarUrl()} />
+              )}
+              <span css={nameStyles}>{user.displayName}</span>
+            </div>
+          )}
+        </li>
+      );
+    })}
     {users.length > max && (
       <li>
         <div css={userStyles}>

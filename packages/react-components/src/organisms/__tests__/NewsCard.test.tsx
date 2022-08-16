@@ -64,12 +64,19 @@ describe('News', () => {
   });
 
   it('links to detail page when text is present', () => {
-    const { rerender, getByRole, queryByRole } = render(
+    const { rerender, getByText, queryByRole } = render(
       <NewsCard {...newsCardProps} />,
     );
     expect(queryByRole('link')).not.toBeInTheDocument();
 
-    rerender(<NewsCard {...newsCardProps} text={'<h1>title</h1>'} />);
-    expect(getByRole('link').textContent).toContain(newsCardProps.title);
+    rerender(
+      <NewsCard
+        {...newsCardProps}
+        text={'<h1>title</h1>'}
+        title="findThis"
+        id="news-1"
+      />,
+    );
+    expect(getByText('findThis')).toHaveAttribute('href', '/news/news-1');
   });
 });

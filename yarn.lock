@@ -643,7 +643,7 @@ __metadata:
     "@sentry/serverless": 6.19.7
     "@serverless/typescript": 3.19.0
     "@types/apr-intercept": "workspace:*"
-    "@types/aws-lambda": 8.10.101
+    "@types/aws-lambda": 8.10.102
     "@types/babel__preset-env": 7.9.2
     "@types/chance": 1.1.3
     "@types/cors": 2.8.12
@@ -1072,7 +1072,7 @@ __metadata:
     "@sentry/serverless": 6.19.7
     "@serverless/typescript": 3.19.0
     "@types/apr-intercept": "workspace:*"
-    "@types/aws-lambda": 8.10.101
+    "@types/aws-lambda": 8.10.102
     "@types/cors": 2.8.12
     "@types/express": 4.17.11
     "@types/jest": 26.0.24
@@ -1314,7 +1314,7 @@ __metadata:
     "@hapi/boom": 9.1.4
     "@sentry/serverless": 6.19.7
     "@types/apr-intercept": "workspace:*"
-    "@types/aws-lambda": 8.10.101
+    "@types/aws-lambda": 8.10.102
     "@types/express": 4.17.11
     "@types/jest": 26.0.24
     "@types/jsonwebtoken": 8.5.8
@@ -1351,7 +1351,7 @@ __metadata:
     "@hapi/bourne": 2.1.0
     "@hapi/joi": 17.1.1
     "@types/apr-intercept": "workspace:*"
-    "@types/aws-lambda": 8.10.101
+    "@types/aws-lambda": 8.10.102
     "@types/debug": 4.1.7
     "@types/hapi": 18.0.7
     "@types/hapi__boom": 9.0.1
@@ -12038,10 +12038,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/aws-lambda@npm:8.10.101":
-  version: 8.10.101
-  resolution: "@types/aws-lambda@npm:8.10.101"
-  checksum: 7e81bab6b1bfd45404b19ffbfafc70a27f6a5975c20d288be354a83c48a8d31054e8a0986c4b8547df278034832492f86de9cbd74b337158c26d88d7e356c3c6
+"@types/aws-lambda@npm:8.10.102":
+  version: 8.10.102
+  resolution: "@types/aws-lambda@npm:8.10.102"
+  checksum: 71095334a700f24c88918890d2f31782583511d61c0fe4bfe1adcc17b314d4fcbccdb76de47507fd1a6ece1676a3b0ddecb8816808a541a2bca6fface1879b8d
   languageName: node
   linkType: hard
 

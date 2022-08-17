@@ -1,17 +1,13 @@
-import { Suspense } from 'react';
 import { User } from '@asap-hub/auth';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-
-import Dashboard from '../Dashboard';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { refreshDashboardState } from '../state';
 import { getDashboard } from '../api';
+import Dashboard from '../Dashboard';
+import { refreshDashboardState } from '../state';
 
 jest.mock('../api');
-jest.mock('../../events/api');
-jest.mock('../../shared-research/api');
-jest.mock('../../network/teams/api');
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -21,7 +17,7 @@ const mockGetDashboard = getDashboard as jest.MockedFunction<
 >;
 
 const renderDashboard = async (user: Partial<User>) => {
-  const result = render(
+  render(
     <Suspense fallback="loading">
       <RecoilRoot
         initializeState={({ set }) => {
@@ -37,14 +33,13 @@ const renderDashboard = async (user: Partial<User>) => {
     </Suspense>,
   );
   await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
-  return result;
 };
 
 it('renders dashboard header', async () => {
-  const { findByText } = await renderDashboard({});
-  expect(await findByText(/welcome/i, { selector: 'h1' })).toBeVisible();
+  await renderDashboard({});
+  expect(await screen.findByText(/welcome/i, { selector: 'h1' })).toBeVisible();
 });
 
 it('renders dashboard with news', async () => {
@@ -66,10 +61,10 @@ it('renders dashboard with news', async () => {
     pages: [],
   });
 
-  const { findByText, queryAllByText } = await renderDashboard({
+  await renderDashboard({
     firstName: 'John',
   });
 
-  expect(await findByText(/john/i, { selector: 'h1' })).toBeVisible();
-  expect(queryAllByText(/title/i, { selector: 'h2' }).length).toBe(2);
+  expect(await screen.findByText(/john/i, { selector: 'h1' })).toBeVisible();
+  expect(screen.getAllByText(/title/i, { selector: 'h4' }).length).toBe(2);
 });

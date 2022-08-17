@@ -8,7 +8,6 @@ const testPathIgnorePatterns = [
   '\\.e2e-test\\.(js|jsx|ts|tsx)$',
   '\\.integration-test\\.(js|jsx|ts|tsx)$',
   'gql/',
-  'gp2-frontend',
 ];
 
 module.exports = {

@@ -82,7 +82,7 @@ const MembersList: React.FC<MembersListProps> = ({
         <li key={id} css={{ display: 'contents' }}>
           <Anchor href={href} css={{ display: 'contents' }}>
             <div css={avatarStyles}>
-              <ImageLink placeholder={userAvatar} link={href} />
+              <ImageLink link={href}>{userAvatar}</ImageLink>
             </div>
           </Anchor>
           <Anchor href={href} css={[styles, hover, nameStyles]}>

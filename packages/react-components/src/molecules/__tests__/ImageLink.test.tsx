@@ -4,7 +4,9 @@ import ImageLink from '../ImageLink';
 
 it('renders an image with a link', () => {
   const { getByRole } = render(
-    <ImageLink imgSrc="http://image.png/" link="https://google.com/" />,
+    <ImageLink link="https://google.com/">
+      <img src="http://image.png/" alt="alt" />
+    </ImageLink>,
   );
 
   expect(getByRole('img')).toHaveProperty('src', 'http://image.png/');
@@ -13,10 +15,9 @@ it('renders an image with a link', () => {
 
 it('renders a placeholder', () => {
   const { queryByRole, getByText } = render(
-    <ImageLink
-      placeholder={<div>placeholder</div>}
-      link="https://google.com/"
-    />,
+    <ImageLink link="https://google.com/">
+      <div>placeholder</div>
+    </ImageLink>,
   );
 
   expect(queryByRole('img')).not.toBeInTheDocument();

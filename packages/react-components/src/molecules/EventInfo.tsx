@@ -144,12 +144,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
     <div css={cardStyles}>
       <div css={imageContainerStyle}>
         {link ? (
-          <ImageLink
-            imgSrc={thumbnail}
-            link={link}
-            alt={`Thumbnail for "${title}"`}
-            placeholder={eventPlaceholderIcon}
-          />
+          <ImageLink link={link}>{imageComponent}</ImageLink>
         ) : (
           <>{imageComponent}</>
         )}

@@ -67,7 +67,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
   return (
     <Card>
       <div css={[containerStyles]}>
-        <ImageLink placeholder={userAvatar} link={userHref} />
+        <ImageLink link={userHref}>{userAvatar}</ImageLink>
         <div css={textContainerStyles}>
           <div css={moveStyles}>
             <LinkHeadline href={userHref} level={2} styleAsHeading={4}>

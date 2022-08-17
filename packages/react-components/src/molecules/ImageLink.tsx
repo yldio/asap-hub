@@ -12,20 +12,16 @@ const hoverStyle = css({
 });
 
 interface ImageLinkProps {
-  imgSrc?: string;
   link: string;
-  alt?: string;
-  placeholder?: EmotionJSX.Element;
+  children?: EmotionJSX.Element | string;
 }
 
 const ImageLink: React.FC<ImageLinkProps> = ({
-  imgSrc,
   link,
-  alt,
-  placeholder,
+  children,
 }) => (
   <Anchor css={hoverStyle} href={link}>
-    {imgSrc ? <img src={imgSrc} alt={alt} /> : <div>{placeholder}</div>}
+    {children}
   </Anchor>
 );
 

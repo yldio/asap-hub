@@ -69,21 +69,17 @@ const UsersList: FC<UsersListProps> = ({
         <li key={`author-${i}`} css={itemStyles}>
           {isInternalUser(user) ? (
             <div css={userStyles}>
-              <ImageLink
-                link={link}
-                placeholder={<Avatar {...user} imageUrl={user.avatarUrl} />}
-              />
+              <ImageLink link={link}>
+                <Avatar {...user} imageUrl={user.avatarUrl} />
+              </ImageLink>
               <span css={nameStyles}>{user.displayName}</span>
             </div>
           ) : (
             <div css={userStyles}>
               {link ? (
-                <ImageLink
-                  link={link}
-                  placeholder={
-                    <Avatar {...user} imageUrl={getPlaceholderAvatarUrl()} />
-                  }
-                />
+                <ImageLink link={link}>
+                  <Avatar {...user} imageUrl={getPlaceholderAvatarUrl()} />
+                </ImageLink>
               ) : (
                 <Avatar {...user} imageUrl={getPlaceholderAvatarUrl()} />
               )}

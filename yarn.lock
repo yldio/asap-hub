@@ -711,7 +711,7 @@ __metadata:
     parse-data-url: 3.0.0
     pump: 3.0.0
     react-router-dom: 5.3.3
-    serverless: 3.21.0
+    serverless: 3.22.0
     serverless-http: 2.7.0
     serverless-iam-roles-per-function: 2.0.2
     serverless-s3-sync: 3.0.0
@@ -1098,7 +1098,7 @@ __metadata:
     jwt-encode: 1.0.1
     nock: 13.0.11
     node-dev: 6.7.0
-    serverless: 3.21.0
+    serverless: 3.22.0
     serverless-http: 2.7.0
     serverless-s3-sync: 3.0.0
     serverless-webpack: 5.8.0
@@ -15703,9 +15703,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.1174.0":
-  version: 2.1182.0
-  resolution: "aws-sdk@npm:2.1182.0"
+"aws-sdk@npm:^2.1195.0":
+  version: 2.1196.0
+  resolution: "aws-sdk@npm:2.1196.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -15717,7 +15717,7 @@ __metadata:
     util: ^0.12.4
     uuid: 8.0.0
     xml2js: 0.4.19
-  checksum: 4a6099777beeea3fd6a473e011e98b2949b797282aec1a49d81367ece31c4665f158f46f57943d774947d39aede1446f1beb5785cd6db8721425ef44d453f345
+  checksum: aa410f04048d37cbbb65f8ec9bc479db9aa525b18586937065877167bbcb813924efaf62c9b383c2c538876834d2b61b3cbeb6cb0a9533ca5d61471e3cee8c44
   languageName: node
   linkType: hard
 
@@ -19340,10 +19340,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:^1.11.3":
-  version: 1.11.4
-  resolution: "dayjs@npm:1.11.4"
-  checksum: 478c8a2db9e3fc752db9f02ef23f00e12308eebbeb85569913731ea78e8d5616f2335e14f25af48e9f16bbcbd796653092eca4d2f42c0218a948402c31735f59
+"dayjs@npm:^1.11.5":
+  version: 1.11.5
+  resolution: "dayjs@npm:1.11.5"
+  checksum: e3bbaa7b4883b31be4bf75a181f1447fbb19800c29b332852125aab96baeff3ac232dcba8b88c4ea17d3b636c99dac5fb9d1af4bb6ae26615698bbc4a852dffb
   languageName: node
   linkType: hard
 
@@ -22053,10 +22053,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastest-levenshtein@npm:^1.0.12":
-  version: 1.0.12
-  resolution: "fastest-levenshtein@npm:1.0.12"
-  checksum: e1a013698dd1d302c7a78150130c7d50bb678c2c2f8839842a796d66cc7cdf50ea6b3d7ca930b0c8e7e8c2cd84fea8ab831023b382f7aab6922c318c1451beab
+"fastest-levenshtein@npm:^1.0.16":
+  version: 1.0.16
+  resolution: "fastest-levenshtein@npm:1.0.16"
+  checksum: a78d44285c9e2ae2c25f3ef0f8a73f332c1247b7ea7fb4a191e6bb51aa6ee1ef0dfb3ed113616dcdc7023e18e35a8db41f61c8d88988e877cf510df8edafbc71
   languageName: node
   linkType: hard
 
@@ -35039,9 +35039,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"serverless@npm:3.21.0":
-  version: 3.21.0
-  resolution: "serverless@npm:3.21.0"
+"serverless@npm:3.22.0":
+  version: 3.22.0
+  resolution: "serverless@npm:3.22.0"
   dependencies:
     "@serverless/dashboard-plugin": ^6.2.2
     "@serverless/platform-client": ^4.3.2
@@ -35049,7 +35049,7 @@ __metadata:
     ajv: ^8.11.0
     ajv-formats: ^2.1.1
     archiver: ^5.3.1
-    aws-sdk: ^2.1174.0
+    aws-sdk: ^2.1195.0
     bluebird: ^3.7.2
     cachedir: ^2.3.0
     chalk: ^4.1.2
@@ -35057,13 +35057,13 @@ __metadata:
     ci-info: ^3.3.2
     cli-progress-footer: ^2.3.2
     d: ^1.0.1
-    dayjs: ^1.11.3
+    dayjs: ^1.11.5
     decompress: ^4.2.1
     dotenv: ^10.0.0
     dotenv-expand: ^5.1.0
     essentials: ^1.2.0
     ext: ^1.6.0
-    fastest-levenshtein: ^1.0.12
+    fastest-levenshtein: ^1.0.16
     filesize: ^8.0.7
     fs-extra: ^9.1.0
     get-stdin: ^8.0.0
@@ -35092,14 +35092,14 @@ __metadata:
     supports-color: ^8.1.1
     tar: ^6.1.11
     timers-ext: ^0.1.7
-    type: ^2.6.0
+    type: ^2.7.2
     untildify: ^4.0.0
     uuid: ^8.3.2
     yaml-ast-parser: 0.0.43
   bin:
     serverless: bin/serverless.js
     sls: bin/serverless.js
-  checksum: 78c8500c083baafe082bb965bf129b50d11fabc9e8ef6931d3e97c001448293367dead0e72545365b726f93020be1c2a8e771e57574bb97909916ecb8588cc73
+  checksum: 74d7a653dbf730c3a92b1f3dab8456d47b83ebd7132eccd22810df6a92e7db5b8b326b45502c227ef62912b48ba2e3f36bf146c9b8dc77d88f56659ac193a31b
   languageName: node
   linkType: hard
 
@@ -37584,6 +37584,13 @@ __metadata:
   version: 2.6.0
   resolution: "type@npm:2.6.0"
   checksum: 80da01fcc0f6ed5a253dc326530e134000a8f66ea44b6d9687cde2f894f0d0b2486595b0cd040a64f7f79dc3120784236f8c9ef667a8aef03984e049b447cfb4
+  languageName: node
+  linkType: hard
+
+"type@npm:^2.7.2":
+  version: 2.7.2
+  resolution: "type@npm:2.7.2"
+  checksum: 0f42379a8adb67fe529add238a3e3d16699d95b42d01adfe7b9a7c5da297f5c1ba93de39265ba30ffeb37dfd0afb3fb66ae09f58d6515da442219c086219f6f4
   languageName: node
   linkType: hard
 

@@ -21,7 +21,7 @@ export const WithPlaceholderAvatar = () => (
 export const WithImage = () => (
   <div style={{ width: '100%', display: 'flex', flexFlow: 'column' }}>
     <ImageLink link={text('Link', 'user-2')}>
-      <img src={asapImage} alt="asap image" />
+      <img src={asapImage} alt="asap" />
     </ImageLink>
   </div>
 );

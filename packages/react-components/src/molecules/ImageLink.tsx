@@ -16,10 +16,7 @@ interface ImageLinkProps {
   children?: EmotionJSX.Element | string;
 }
 
-const ImageLink: React.FC<ImageLinkProps> = ({
-  link,
-  children,
-}) => (
+const ImageLink: React.FC<ImageLinkProps> = ({ link, children }) => (
   <Anchor css={hoverStyle} href={link}>
     {children}
   </Anchor>

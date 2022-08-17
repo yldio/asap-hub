@@ -1,4 +1,9 @@
-import { aperture, filter, uniqBy, sortWith, pipe, ascend } from 'ramda';
+import aperture from 'ramda/src/aperture.js';
+import filter from 'ramda/src/filter.js';
+import uniqBy from 'ramda/src/uniqBy.js';
+import sortWith from 'ramda/src/sortWith.js';
+import pipe from 'ramda/src/pipe.js';
+import ascend from 'ramda/src/ascend.js';
 import { css } from '@emotion/react';
 
 import {

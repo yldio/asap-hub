@@ -62102,7 +62102,7 @@ function applyPatch(pnpapi, opts) {
       }
     }
     const issuerSpecs = options && options.paths ? getIssuerSpecsFromPaths(options.paths) : getIssuerSpecsFromModule(parent);
-    if (request.match(pathRegExp) === null) {
+    if (typeof request.match === 'function' && request.match(pathRegExp) === null) {
       const parentDirectory = (parent == null ? void 0 : parent.filename) != null ? npath.dirname(parent.filename) : null;
       const absoluteRequest = npath.isAbsolute(request) ? request : parentDirectory !== null ? npath.resolve(parentDirectory, request) : null;
       if (absoluteRequest !== null) {
@@ -62694,7 +62694,7 @@ Required by: ${issuerForDisplay}
       }
     }
     let unqualifiedPath;
-    const dependencyNameMatch = request.match(pathRegExp);
+    const dependencyNameMatch = typeof request.match === 'function' ? request.match(pathRegExp) : false;
     if (!dependencyNameMatch) {
       if (ppath.isAbsolute(request)) {
         unqualifiedPath = ppath.normalize(request);

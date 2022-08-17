@@ -136,7 +136,7 @@
     "jest-when": "3.5.1",
     "jwt-encode": "1.0.1",
     "node-dev": "6.7.0",
-    "serverless": "3.21.0",
+    "serverless": "3.22.0",
     "serverless-iam-roles-per-function": "2.0.2",
     "serverless-s3-sync": "3.0.0",
     "serverless-webpack": "5.8.0",

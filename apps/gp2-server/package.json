@@ -67,7 +67,7 @@
     "jwt-encode": "1.0.1",
     "nock": "13.0.11",
     "node-dev": "6.7.0",
-    "serverless": "3.21.0",
+    "serverless": "3.22.0",
     "serverless-s3-sync": "3.0.0",
     "serverless-webpack": "5.8.0",
     "supertest": "6.2.4",

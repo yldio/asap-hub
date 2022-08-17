@@ -12,7 +12,7 @@ describe('getWorkingGroups', () => {
   });
 
   it('returns a successfully fetched working groups', async () => {
-    const workingGroupResponse: gp2.ListWorkingGroupsResponse = {
+    const workingGroupResponse: gp2.ListWorkingGroupResponse = {
       items: [
         {
           id: '42',

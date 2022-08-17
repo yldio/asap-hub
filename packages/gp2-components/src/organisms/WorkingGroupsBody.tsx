@@ -5,7 +5,7 @@ import WorkingGroupCard from './WorkingGroupCard';
 
 const { perRem, smallDesktopScreen } = pixels;
 type WorkingGroupsBodyProps = {
-  workingGroups: gp2.ListWorkingGroupsResponse;
+  workingGroups: gp2.ListWorkingGroupResponse;
 };
 const gridContainerStyles = css({
   display: 'grid',

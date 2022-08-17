@@ -4,7 +4,7 @@ import { API_BASE_URL } from '../config';
 
 export const getWorkingGroups = async (
   authorization: string,
-): Promise<gp2.ListWorkingGroupsResponse> => {
+): Promise<gp2.ListWorkingGroupResponse> => {
   const resp = await fetch(`${API_BASE_URL}/working-groups`, {
     headers: { authorization, ...createSentryHeaders() },
   });

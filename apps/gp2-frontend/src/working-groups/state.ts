@@ -3,7 +3,7 @@ import { atom, selector, useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { getWorkingGroups } from './api';
 
-export const fetchWorkingGroupsState = selector<gp2.ListWorkingGroupsResponse>({
+export const fetchWorkingGroupsState = selector<gp2.ListWorkingGroupResponse>({
   key: 'fetchWorkingGroupsState',
   get: ({ get }) => {
     get(refreshWorkingGroupsState);
@@ -11,7 +11,7 @@ export const fetchWorkingGroupsState = selector<gp2.ListWorkingGroupsResponse>({
   },
 });
 
-export const workingGroupsState = atom<gp2.ListWorkingGroupsResponse>({
+export const workingGroupsState = atom<gp2.ListWorkingGroupResponse>({
   key: 'workingGroupState',
   default: fetchWorkingGroupsState,
 });

@@ -51,6 +51,9 @@ jobs:
           path: |
             .jest-cache/
           key: jest-cache
+      - name: Build
+        run: |
+          yarn build:typecheck
       - name: Test
         run: |
           yarn test --coverage --maxWorkers=2

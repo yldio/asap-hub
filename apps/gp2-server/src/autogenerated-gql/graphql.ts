@@ -98,8 +98,8 @@ export type AppMutationsChangeUsersContentArgs = {
 
 /** The app mutations. */
 export type AppMutationsChangeWorkingGroupsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
@@ -123,9 +123,9 @@ export type AppMutationsCreateUsersContentArgs = {
 /** The app mutations. */
 export type AppMutationsCreateWorkingGroupsContentArgs = {
   data: WorkingGroupsDataInputDto;
-  id: Maybe<Scalars['String']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
@@ -142,7 +142,7 @@ export type AppMutationsDeleteUsersContentArgs = {
 
 /** The app mutations. */
 export type AppMutationsDeleteWorkingGroupsContentArgs = {
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
@@ -163,8 +163,8 @@ export type AppMutationsPatchUsersContentArgs = {
 /** The app mutations. */
 export type AppMutationsPatchWorkingGroupsContentArgs = {
   data: WorkingGroupsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
@@ -185,8 +185,8 @@ export type AppMutationsPublishUsersContentArgs = {
 
 /** The app mutations. */
 export type AppMutationsPublishWorkingGroupsContentArgs = {
-  dueTime: Maybe<Scalars['Instant']>;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   status: Scalars['String'];
 };
@@ -208,8 +208,8 @@ export type AppMutationsUpdateUsersContentArgs = {
 /** The app mutations. */
 export type AppMutationsUpdateWorkingGroupsContentArgs = {
   data: WorkingGroupsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['String']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
@@ -235,11 +235,11 @@ export type AppMutationsUpsertUsersContentArgs = {
 /** The app mutations. */
 export type AppMutationsUpsertWorkingGroupsContentArgs = {
   data: WorkingGroupsDataInputDto;
-  expectedVersion?: Maybe<Scalars['Int']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
-  patch?: Maybe<Scalars['Boolean']>;
-  publish?: Maybe<Scalars['Boolean']>;
-  status: Maybe<Scalars['String']>;
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app queries. */
@@ -290,7 +290,7 @@ export type AppQueriesFindUsersContentArgs = {
 /** The app queries. */
 export type AppQueriesFindWorkingGroupsContentArgs = {
   id: Scalars['String'];
-  version: Maybe<Scalars['Int']>;
+  version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
@@ -347,20 +347,20 @@ export type AppQueriesQueryUsersContentsWithTotalArgs = {
 
 /** The app queries. */
 export type AppQueriesQueryWorkingGroupsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
 export type AppQueriesQueryWorkingGroupsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** An asset */
@@ -576,20 +576,20 @@ export type DashboardReferencesUsersContentsWithTotalArgs = {
 
 /** The structure of a Dashboard content type. */
 export type DashboardReferencesWorkingGroupsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Dashboard content type. */
 export type DashboardReferencesWorkingGroupsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Dashboard content type. */
@@ -788,20 +788,20 @@ export type UsersReferencesUsersContentsWithTotalArgs = {
 
 /** The structure of a Users content type. */
 export type UsersReferencesWorkingGroupsContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */
 export type UsersReferencesWorkingGroupsContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */
@@ -1356,38 +1356,38 @@ export type WorkingGroups = Content & {
 
 /** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencingDashboardContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencingDashboardContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencingUsersContentsArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencingUsersContentsWithTotalArgs = {
-  filter: Maybe<Scalars['String']>;
-  orderby: Maybe<Scalars['String']>;
-  search: Maybe<Scalars['String']>;
-  skip?: Maybe<Scalars['Int']>;
-  top: Maybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of the Working Groups data type. */
@@ -1399,9 +1399,9 @@ export type WorkingGroupsDataDto = {
 
 /** The structure of the Working Groups data input type. */
 export type WorkingGroupsDataInputDto = {
-  leadingMembers: Maybe<WorkingGroupsDataLeadingMembersInputDto>;
-  shortDescription: Maybe<WorkingGroupsDataShortDescriptionInputDto>;
-  title: Maybe<WorkingGroupsDataTitleInputDto>;
+  leadingMembers: InputMaybe<WorkingGroupsDataLeadingMembersInputDto>;
+  shortDescription: InputMaybe<WorkingGroupsDataShortDescriptionInputDto>;
+  title: InputMaybe<WorkingGroupsDataTitleInputDto>;
 };
 
 /** The structure of the Leading Members field of the Working Groups content type. */
@@ -1411,7 +1411,7 @@ export type WorkingGroupsDataLeadingMembersDto = {
 
 /** The structure of the Leading Members field of the Working Groups content input type. */
 export type WorkingGroupsDataLeadingMembersInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Short Description field of the Working Groups content type. */
@@ -1421,7 +1421,7 @@ export type WorkingGroupsDataShortDescriptionDto = {
 
 /** The structure of the Short Description field of the Working Groups content input type. */
 export type WorkingGroupsDataShortDescriptionInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Title field of the Working Groups content type. */
@@ -1431,7 +1431,7 @@ export type WorkingGroupsDataTitleDto = {
 
 /** The structure of the Title field of the Working Groups content input type. */
 export type WorkingGroupsDataTitleInputDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the flat Working Groups data type. */
@@ -1652,6 +1652,32 @@ export type FetchUsersQuery = {
   >;
 };
 
+export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
+  flatData: Pick<
+    WorkingGroupsFlatDataDto,
+    'title' | 'shortDescription' | 'leadingMembers'
+  >;
+};
+
+export type FetchWorkingGroupsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type FetchWorkingGroupsQuery = {
+  queryWorkingGroupsContentsWithTotal: Maybe<
+    Pick<WorkingGroupsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<WorkingGroups, 'id'> & {
+            flatData: Pick<
+              WorkingGroupsFlatDataDto,
+              'title' | 'shortDescription' | 'leadingMembers'
+            >;
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export const UsersContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -1816,6 +1842,43 @@ export const UsersContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<UsersContentFragment, unknown>;
+export const WorkingGroupContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'WorkingGroupContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'WorkingGroups' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'shortDescription' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'leadingMembers' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<WorkingGroupContentFragment, unknown>;
 export const FetchUserDocument = {
   kind: 'Document',
   definitions: [
@@ -1962,3 +2025,59 @@ export const FetchUsersDocument = {
     ...UsersContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchUsersQuery, FetchUsersQueryVariables>;
+export const FetchWorkingGroupsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchWorkingGroups' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'queryWorkingGroupsContentsWithTotal',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderby' },
+                value: {
+                  kind: 'StringValue',
+                  value: 'created desc',
+                  block: false,
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'WorkingGroupContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...WorkingGroupContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchWorkingGroupsQuery,
+  FetchWorkingGroupsQueryVariables
+>;

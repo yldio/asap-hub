@@ -35,6 +35,10 @@ import {
   UserDataProvider,
   UserSquidexDataProvider,
 } from './data-providers/user.data-provider';
+import {
+  WorkingGroupDataProvider,
+  WorkingGroupSquidexDataProvider,
+} from './data-providers/working-group.data-provider';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { userPublicRouteFactory } from './routes/user.route';
 import { workingGroupRouteFactory } from './routes/working-group.route';
@@ -75,6 +79,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userDataProvider =
     libs.userDataProvider ||
     new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
+  const workingGroupDataProvider =
+    libs.workingGroupDataProvider ||
+    new WorkingGroupSquidexDataProvider(squidexGraphqlClient);
 
   // Controllers
   const dashboardController =
@@ -85,7 +92,7 @@ export const appFactory = (libs: Libs = {}): Express => {
    */
   const userController = libs.userController || new Users(userDataProvider);
   const workingGroupController =
-    libs.workingGroupController || new WorkingGroup();
+    libs.workingGroupController || new WorkingGroup(workingGroupDataProvider);
 
   // Handlers
   const authHandler =
@@ -130,6 +137,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 export type Libs = {
   userDataProvider?: UserDataProvider;
   dashboardController?: DashboardController;
+  workingGroupDataProvider?: WorkingGroupDataProvider;
   userController?: UserController;
   workingGroupController?: WorkingGroupController;
   authHandler?: AuthHandler;

@@ -1,15 +1,22 @@
-import { WorkingGroupResponse } from '@asap-hub/model/build/gp2';
-import { Anchor, Card, crossQuery, pixels } from '@asap-hub/react-components';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import {
+  Anchor,
+  Card,
+  crossQuery,
+  pixels,
+  utils,
+} from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
+import teamIcon from '../icons/team-icon';
 
-const { rem, tabletScreen } = pixels;
+const { rem, tabletScreen, perRem } = pixels;
 const { workingGroups } = gp2;
-
+const { getCounterString } = utils;
 const avatarSize = 132;
 
 type WorkingGroupCardProps = Pick<
-  WorkingGroupResponse,
+  gp2Model.WorkingGroupResponse,
   'id' | 'title' | 'members' | 'shortDescription' | 'leadingMembers'
 >;
 const containerStyles = css({
@@ -46,6 +53,11 @@ const rowStyles = css({
     gap: rem(24),
   },
 });
+const iconStyles = css({
+  display: 'inline-grid',
+  verticalAlign: 'middle',
+  paddingRight: `${15 / perRem}em`,
+});
 
 const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
   id,
@@ -68,7 +80,10 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
           </div>
           <div css={detailContainerStyles}>
             <div css={rowStyles}>
-              <div>{members.length} members</div>
+              <div>
+                <span css={iconStyles}>{teamIcon} </span>
+                <span>{getCounterString(members.length, 'member')}</span>
+              </div>
             </div>
             <div css={rowStyles}>
               <div>{shortDescription}</div>

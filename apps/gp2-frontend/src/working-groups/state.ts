@@ -1,9 +1,9 @@
-import { ListWorkingGroupsResponse } from '@asap-hub/model/build/gp2';
+import { gp2 } from '@asap-hub/model';
 import { atom, selector, useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { getWorkingGroups } from './api';
 
-export const fetchWorkingGroupsState = selector<ListWorkingGroupsResponse>({
+export const fetchWorkingGroupsState = selector<gp2.ListWorkingGroupsResponse>({
   key: 'fetchWorkingGroupsState',
   get: ({ get }) => {
     get(refreshWorkingGroupsState);
@@ -11,7 +11,7 @@ export const fetchWorkingGroupsState = selector<ListWorkingGroupsResponse>({
   },
 });
 
-export const workingGroupsState = atom<ListWorkingGroupsResponse>({
+export const workingGroupsState = atom<gp2.ListWorkingGroupsResponse>({
   key: 'workingGroupState',
   default: fetchWorkingGroupsState,
 });

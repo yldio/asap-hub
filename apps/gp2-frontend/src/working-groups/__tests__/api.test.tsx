@@ -1,4 +1,4 @@
-import { ListWorkingGroupsResponse } from '@asap-hub/model/build/gp2';
+import { gp2 } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
 import { getWorkingGroups } from '../api';
@@ -12,7 +12,7 @@ describe('getWorkingGroups', () => {
   });
 
   it('returns a successfully fetched working groups', async () => {
-    const workingGroupResponse: ListWorkingGroupsResponse = {
+    const workingGroupResponse: gp2.ListWorkingGroupsResponse = {
       items: [
         {
           id: '42',

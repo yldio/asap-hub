@@ -5,6 +5,7 @@ export * from './discover';
 export * from './error';
 export * from './event';
 export * from './external-author';
+export * as gp2 from './gp2';
 export * from './group';
 export * from './lab';
 export * from './news';

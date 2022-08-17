@@ -25,6 +25,14 @@ describe('WorkingGroupCard', () => {
     render(<WorkingGroupCard {...defaultProps} />);
     expect(screen.getByText(/0 members/i)).toBeInTheDocument();
   });
+  it('renders a single count of the members', () => {
+    const props = {
+      ...defaultProps,
+      members: [{}],
+    };
+    render(<WorkingGroupCard {...props} />);
+    expect(screen.getByText(/1 member/i)).toBeInTheDocument();
+  });
   it('renders the short description', () => {
     render(<WorkingGroupCard {...defaultProps} />);
     expect(

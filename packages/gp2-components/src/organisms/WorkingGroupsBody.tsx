@@ -1,11 +1,11 @@
-import { ListWorkingGroupsResponse } from '@asap-hub/model/build/gp2';
+import { gp2 } from '@asap-hub/model';
 import { Card, card, steel } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import WorkingGroupCard from './WorkingGroupCard';
 
 const { paddingStyles } = card;
 type WorkingGroupsBodyProps = {
-  workingGroups: ListWorkingGroupsResponse;
+  workingGroups: gp2.ListWorkingGroupsResponse;
 };
 const containerStyles = css({
   margin: 0,

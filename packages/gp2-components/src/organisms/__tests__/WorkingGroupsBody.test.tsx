@@ -1,9 +1,11 @@
-import { WorkingGroupResponse } from '@asap-hub/model/build/gp2';
+import { gp2 } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import WorkingGroupsBody from '../WorkingGroupsBody';
 
 describe('WorkingGroupsBody', () => {
-  const getWorkingGroup = (overrides: Partial<WorkingGroupResponse> = {}) => ({
+  const getWorkingGroup = (
+    overrides: Partial<gp2.WorkingGroupResponse> = {},
+  ) => ({
     id: '42',
     title: 'Working Group Title',
     members: [],

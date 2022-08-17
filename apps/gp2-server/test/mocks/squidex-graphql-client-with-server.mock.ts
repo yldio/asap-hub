@@ -11,6 +11,7 @@ import {
 } from 'graphql';
 import { getSquidexGraphqlDashboard } from '../fixtures/dashboard.fixtures';
 import { getGraphQLUser } from '../fixtures/user.fixtures';
+import { getGraphQLWorkingGroup } from '../fixtures/working-group.fixtures';
 
 export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
   const schema = loadSchemaSync(
@@ -28,10 +29,12 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     Int: () => 8,
     Instant: () => '2021-10-12T15:42:05Z',
     JsonScalar: () => {},
-    Users: () => getGraphQLUser(),
-    UsersResultDto: resultDto,
     Dashboard: () => getSquidexGraphqlDashboard(),
     DashboardResultDto: resultDto,
+    Users: () => getGraphQLUser(),
+    UsersResultDto: resultDto,
+    WorkingGroups: () => getGraphQLWorkingGroup(),
+    WorkingGroupsResultDto: resultDto,
   };
   const store = createMockStore({
     schema,

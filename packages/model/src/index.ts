@@ -15,3 +15,4 @@ export * from './research-output';
 export * from './research-tag';
 export * from './team';
 export * from './user';
+export * as gp2 from './gp2/index';

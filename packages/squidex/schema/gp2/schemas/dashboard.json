@@ -1,5 +1,8 @@
 {
   "$schema": "./../__json/schema.json",
+  "name": "dashboard",
+  "isSingleton": true,
+  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -51,11 +54,7 @@
       }
     ],
     "previewUrls": {},
-    "fieldRules": [],
     "category": "Content",
     "isPublished": true
-  },
-  "name": "dashboard",
-  "isSingleton": true,
-  "schemaType": "Singleton"
+  }
 }

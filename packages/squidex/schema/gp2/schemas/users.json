@@ -1,5 +1,8 @@
 {
   "$schema": "./../__json/schema.json",
+  "name": "users",
+  "isSingleton": false,
+  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -70,9 +73,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "First Name",
@@ -92,9 +93,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Last Name",
@@ -115,9 +114,7 @@
           "fieldType": "String",
           "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
           "isUnique": true,
-          "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Email",
@@ -137,9 +134,7 @@
           "pattern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}(\\d|X)$",
           "patternMessage": "ORCID must have the following format: 0000-0000-0000-0000",
           "isUnique": true,
-          "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "ORCID",
@@ -208,9 +203,7 @@
             "MBA"
           ],
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Degree",
@@ -230,9 +223,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Country",
@@ -250,9 +241,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "City",
@@ -270,9 +259,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Job Title",
@@ -292,9 +279,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Institution",
@@ -314,9 +299,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Correspondence Email",
@@ -338,9 +321,8 @@
           "previewMode": "Image",
           "minItems": 0,
           "maxItems": 1,
-          "expectedType": "Image",
-          "resolveFirst": true,
           "mustBeImage": true,
+          "resolveFirst": true,
           "resolveImage": true,
           "allowDuplicates": false,
           "label": "Avatar",
@@ -374,9 +356,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "isEmbeddable": false,
               "inlineEditable": true,
-              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Website 1",
@@ -393,9 +373,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "isEmbeddable": false,
               "inlineEditable": true,
-              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Website 2",
@@ -412,9 +390,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "isEmbeddable": false,
               "inlineEditable": true,
-              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "LinkedIn",
@@ -431,9 +407,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "isEmbeddable": false,
               "inlineEditable": true,
-              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Researcher ID",
@@ -450,9 +424,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "isEmbeddable": false,
               "inlineEditable": true,
-              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Twitter",
@@ -469,9 +441,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "isEmbeddable": false,
               "inlineEditable": true,
-              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Github",
@@ -488,9 +458,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "isEmbeddable": false,
               "inlineEditable": true,
-              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Google Scholar",
@@ -507,9 +475,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "isEmbeddable": false,
               "inlineEditable": true,
-              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Research Gate",
@@ -546,9 +512,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": false,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "TextArea",
           "label": "Responsibilities",
@@ -567,9 +531,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": false,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "TextArea",
           "label": "Research Interests",
@@ -589,9 +551,7 @@
           "minLength": 0,
           "maxLength": 250,
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": false,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "TextArea",
           "label": "Reach Out",
@@ -611,9 +571,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Expertise and Resources Description",
@@ -630,7 +588,6 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Tags",
-          "createEnum": false,
           "editor": "Tags",
           "label": "Expertise and Resources",
           "isRequired": false,
@@ -664,9 +621,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "isEmbeddable": false,
               "inlineEditable": true,
-              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Question",
@@ -705,9 +660,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": false,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "TextArea",
           "label": "Biography",
@@ -744,9 +697,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": false,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "TextArea",
           "label": "Admin Notes",
@@ -816,9 +767,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "isEmbeddable": false,
               "inlineEditable": true,
-              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Code",
@@ -842,9 +791,7 @@
           "defaultValue": "Grantee",
           "allowedValues": ["Staff", "Grantee", "Guest", "Hidden"],
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "ASAP Hub Role",
@@ -864,9 +811,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "ORCID Last Sync Date",
@@ -886,9 +831,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "ORCID Last Modified Date",
@@ -908,9 +851,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": false,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Last Modified Date",
@@ -945,9 +886,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "isEmbeddable": false,
               "inlineEditable": false,
-              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "ID",
@@ -966,9 +905,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "isEmbeddable": false,
               "inlineEditable": true,
-              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "DOI",
@@ -987,9 +924,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "isEmbeddable": false,
               "inlineEditable": true,
-              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Title",
@@ -1008,9 +943,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "isEmbeddable": false,
               "inlineEditable": true,
-              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Type",
@@ -1029,9 +962,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "isEmbeddable": false,
               "inlineEditable": true,
-              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Last Modified Date",
@@ -1063,11 +994,7 @@
     "previewUrls": {
       "Web": "https://hub.asap.science/network/users/${id}"
     },
-    "fieldRules": [],
     "category": "Storage",
     "isPublished": true
-  },
-  "name": "users",
-  "isSingleton": false,
-  "schemaType": "Default"
+  }
 }

@@ -1,5 +1,4 @@
 import * as authTestUtils from './auth-test-utils';
-import * as card from './card';
 import * as mail from './mail';
 import * as pixels from './pixels';
 import * as text from './text';
@@ -25,6 +24,7 @@ export {
   Overlay,
   Paragraph,
   Pill,
+  Subtitle,
   TabLink,
   Toggle,
   Tooltip,
@@ -51,8 +51,8 @@ export {
   FormCard,
   GoogleSigninButton,
   Header,
-  Info,
   ImageLink,
+  Info,
   LabeledCheckbox,
   LabeledDateField,
   LabeledDropdown,
@@ -192,4 +192,4 @@ export {
 } from './templates';
 export * from './theme';
 export { noop } from './utils';
-export { pixels, text, authTestUtils, utils, mail, card };
+export { pixels, text, authTestUtils, utils, mail };

@@ -1,10 +1,9 @@
 import {
+  accents,
   drawerQuery,
   Paragraph,
   pixels,
-  accents,
 } from '@asap-hub/react-components';
-
 import { css } from '@emotion/react';
 
 const { mobileScreen, rem, tabletScreen, vminLinearCalcClamped } = pixels;
@@ -83,7 +82,7 @@ const PageBanner: React.FC<PageBannerProp> = ({
         >
           {title}
         </h1>
-        <Paragraph>{description}</Paragraph>
+        <Paragraph accent="lead">{description}</Paragraph>
       </div>
     </div>
   </header>

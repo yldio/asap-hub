@@ -1,31 +1,31 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
-  Anchor,
   Card,
-  crossQuery,
+  ceruleanFernGradientStyles,
+  lead,
+  LinkHeadline,
+  Paragraph,
   pixels,
+  Subtitle,
   utils,
 } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import teamIcon from '../icons/team-icon';
+import usersIcon from '../icons/users-icon';
+import IconWithLabel from '../molecules/IconWithLabel';
 
-const { rem, tabletScreen, perRem } = pixels;
+const { rem } = pixels;
 const { workingGroups } = gp2;
 const { getCounterString } = utils;
-const avatarSize = 132;
 
 type WorkingGroupCardProps = Pick<
   gp2Model.WorkingGroupResponse,
   'id' | 'title' | 'members' | 'shortDescription' | 'leadingMembers'
 >;
 const containerStyles = css({
-  display: 'grid',
-  columnGap: rem(32),
-  rowGap: rem(12),
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    gridTemplateColumns: `${rem(avatarSize)} auto`,
-  },
+  display: 'flex',
+  gap: rem(16),
+  margin: rem(24),
 });
 
 const textContainerStyles = css({
@@ -42,21 +42,15 @@ const titleStyles = css({
   fontSize: '26px',
   lineHeight: '32px',
 });
-const detailContainerStyles = css({
-  marginBottom: rem(12),
+
+const bottomBorderStyles = css({
+  height: rem(4),
+  width: '100%',
+  ...ceruleanFernGradientStyles,
 });
-const rowStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-  [crossQuery]: {
-    flexDirection: 'row',
-    gap: rem(24),
-  },
-});
-const iconStyles = css({
-  display: 'inline-grid',
-  verticalAlign: 'middle',
-  paddingRight: `${15 / perRem}em`,
+const textStyles = css({
+  maxWidth: rem(610),
+  color: lead.rgb,
 });
 
 const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
@@ -70,31 +64,27 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
     workingGroupId: id,
   }).$;
   return (
-    <Card>
-      <div css={containerStyles}>
-        <div css={textContainerStyles}>
-          <div>
-            <Anchor href={workingGroupHref}>
-              <h3 css={titleStyles}>{title}</h3>
-            </Anchor>
-          </div>
-          <div css={detailContainerStyles}>
-            <div css={rowStyles}>
-              <div>
-                <span css={iconStyles}>{teamIcon} </span>
-                <span>{getCounterString(members.length, 'member')}</span>
-              </div>
-            </div>
-            <div css={rowStyles}>
-              <div>{shortDescription}</div>
-            </div>
-            {leadingMembers === undefined || (
-              <div css={rowStyles}>
-                <div>{leadingMembers}</div>
-              </div>
-            )}
-          </div>
+    <Card padding={false}>
+      <div css={[containerStyles, textContainerStyles]}>
+        <div css={{ height: rem(96) }}>
+          <LinkHeadline href={workingGroupHref} level={3} css={[titleStyles]}>
+            {title}
+          </LinkHeadline>
         </div>
+        <div css={bottomBorderStyles} />
+        <span css={textStyles}>
+          <IconWithLabel icon={usersIcon}>
+            {getCounterString(members.length, 'Member')}
+          </IconWithLabel>
+        </span>
+        <Subtitle hasMargin={false} accent="lead">
+          {shortDescription}
+        </Subtitle>
+        {leadingMembers === undefined || (
+          <Paragraph hasMargin={false} accent="lead">
+            {leadingMembers}
+          </Paragraph>
+        )}
       </div>
     </Card>
   );

@@ -9,7 +9,7 @@ import { CARD_VIEW_PAGE_SIZE } from '@asap-hub/crn-frontend/src/hooks';
 import { usePrefetchCalendars } from '@asap-hub/crn-frontend/src/events/calendar/state';
 import { Frame } from '@asap-hub/frontend-utils';
 
-import { useDashboardState } from './state';
+import { useDashboardState, useReminderState } from './state';
 
 const loadBody = () =>
   import(/* webpackChunkName: "dashboard-body" */ './Body');
@@ -24,6 +24,7 @@ const Dashboard: FC<Record<string, never>> = () => {
 
   const { firstName, id, teams } = currentUser;
   const dashboard = useDashboardState();
+  const { items } = useReminderState();
   const roles = useCurrentUserTeamRoles();
   usePrefetchTeams({
     currentPage: 0,
@@ -39,6 +40,7 @@ const Dashboard: FC<Record<string, never>> = () => {
         <Frame title={null}>
           <Body
             {...dashboard}
+            reminders={items}
             roles={roles}
             userId={id}
             teamId={teams[0]?.id}

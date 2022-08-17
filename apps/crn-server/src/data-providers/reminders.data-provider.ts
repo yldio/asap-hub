@@ -57,7 +57,7 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
 
     const researchOutputsSorted = researchOutputReminders.sort(
       (a, b) =>
-        new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime(),
+        new Date(b.addedDate).getTime() - new Date(a.addedDate).getTime(),
     );
 
     return {
@@ -74,7 +74,7 @@ const getReminderFilter = (): string => {
   date.setDate(date.getDate() - 1);
   const date24hAgo = date.toISOString();
 
-  const filter = `data/publishDate/iv ge ${date24hAgo}`;
+  const filter = `data/addedDate/iv ge ${date24hAgo}`;
   return filter;
 };
 
@@ -96,7 +96,7 @@ const getResearchOutputRemindersFromQuery = (
   userTeamIds: string[],
 ): ResearchOutputReminder[] =>
   query.reduce<
-    (ResearchOutputPublishedReminder['data'] & { publishDate: string })[]
+    (ResearchOutputPublishedReminder['data'] & { addedDate: string })[]
   >((researchOutputReminders, researchOutput) => {
     if (!researchOutput.referencingTeamsContents) {
       return researchOutputReminders;
@@ -121,7 +121,7 @@ const getResearchOutputRemindersFromQuery = (
     if (isInTeam) {
       researchOutputReminders.push({
         researchOutputId: researchOutput.id,
-        publishDate: researchOutput.flatData.publishDate,
+        addedDate: researchOutput.flatData.addedDate,
         documentType: researchOutput.flatData.documentType,
         title: researchOutput.flatData.title,
       });
@@ -155,5 +155,5 @@ type ResearchOutputReminder = {
     | 'Article';
   title: string;
 } & {
-  publishDate: string;
+  addedDate: string;
 };

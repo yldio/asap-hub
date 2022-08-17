@@ -55,13 +55,15 @@ export const getSquidexRemindersGraphqlResponse =
     queryResearchOutputsContents: [getSquidexReminderReseachOutputsContents()],
   });
 
-export const getSquidexReminderReseachOutputsContents = () => {
+export const getSquidexReminderReseachOutputsContents = (): NonNullable<
+  FetchUserTeamsAndResearchOutputsQuery['queryResearchOutputsContents']
+>[number] => {
   const researchOutput = getSquidexGraphqlResearchOutput();
 
   return {
     id: researchOutput.id,
     flatData: {
-      publishDate: researchOutput.flatData.publishDate,
+      addedDate: researchOutput.flatData.addedDate,
       documentType: researchOutput.flatData.documentType,
       title: researchOutput.flatData.title,
     },

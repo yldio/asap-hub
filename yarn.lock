@@ -775,7 +775,7 @@ __metadata:
     eslint-config-airbnb-base: 14.2.1
     eslint-config-prettier: 7.2.0
     eslint-config-react-app: 6.0.0
-    eslint-import-resolver-typescript: 2.4.0
+    eslint-import-resolver-typescript: 2.7.1
     eslint-plugin-flowtype: 5.7.2
     eslint-plugin-import: 2.22.1
     eslint-plugin-jest: 26.6.0
@@ -20966,19 +20966,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-import-resolver-typescript@npm:2.4.0":
-  version: 2.4.0
-  resolution: "eslint-import-resolver-typescript@npm:2.4.0"
+"eslint-import-resolver-typescript@npm:2.7.1":
+  version: 2.7.1
+  resolution: "eslint-import-resolver-typescript@npm:2.7.1"
   dependencies:
-    debug: "npm:^4.1.1"
-    glob: "npm:^7.1.6"
-    is-glob: "npm:^4.0.1"
-    resolve: "npm:^1.17.0"
-    tsconfig-paths: "npm:^3.9.0"
+    debug: ^4.3.4
+    glob: ^7.2.0
+    is-glob: ^4.0.3
+    resolve: ^1.22.0
+    tsconfig-paths: ^3.14.1
   peerDependencies:
     eslint: "*"
     eslint-plugin-import: "*"
-  checksum: 2db0de33531f563bbbeecbdb080e3ff7ac0dbdd01f82ed690ccc9b29f746e431bf639322b1f1384f5c67055104c722cf70d9bf837d3ef70d6f3cf4ec2ba6562d
+  checksum: 1d81b657b1f73bf95b8f0b745c0305574b91630c1db340318f3ca8918e206fce20a933b95e7c419338cc4452cb80bb2b2d92acaf01b6aa315c78a332d832545c
   languageName: node
   linkType: hard
 
@@ -29053,7 +29053,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimist@npm:~1.2.5":
+"minimist@npm:^1.2.6, minimist@npm:~1.2.5":
   version: 1.2.6
   resolution: "minimist@npm:1.2.6"
   checksum: d15428cd1e11eb14e1233bcfb88ae07ed7a147de251441d61158619dfb32c4d7e9061d09cab4825fdee18ecd6fce323228c8c47b5ba7cd20af378ca4048fb3fb
@@ -34251,7 +34251,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@npm:^1.3.2":
+"resolve@npm:^1.22.0, resolve@npm:^1.3.2":
   version: 1.22.1
   resolution: "resolve@npm:1.22.1"
   dependencies:
@@ -34284,7 +34284,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@patch:resolve@^1.3.2#~builtin<compat/resolve>":
+"resolve@patch:resolve@^1.22.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.3.2#~builtin<compat/resolve>":
   version: 1.22.1
   resolution: "resolve@patch:resolve@npm%3A1.22.1#~builtin<compat/resolve>::version=1.22.1&hash=07638b"
   dependencies:
@@ -37352,6 +37352,18 @@ __metadata:
   version: 1.0.1
   resolution: "ts.cryptojs256@npm:1.0.1"
   checksum: 94f5a3d7e779e7cb533226731bb0d3cf6ed0a3f8e4032e44e80f9a2de68c57c86db1a39e69c412a4012c769186232b586d554fd863bbebd6d431d606d8980c72
+  languageName: node
+  linkType: hard
+
+"tsconfig-paths@npm:^3.14.1":
+  version: 3.14.1
+  resolution: "tsconfig-paths@npm:3.14.1"
+  dependencies:
+    "@types/json5": ^0.0.29
+    json5: ^1.0.1
+    minimist: ^1.2.6
+    strip-bom: ^3.0.0
+  checksum: 8afa01c673ebb4782ba53d3a12df97fa837ce524f8ad38ee4e2b2fd57f5ac79abc21c574e9e9eb014d93efe7fe8214001b96233b5c6ea75bd1ea82afe17a4c6d
   languageName: node
   linkType: hard
 

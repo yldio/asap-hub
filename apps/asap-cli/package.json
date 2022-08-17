@@ -23,7 +23,7 @@
     "algoliasearch": "4.14.2",
     "apr-intercept": "3.0.4",
     "async-sema": "3.1.1",
-    "aws-sdk": "2.1196.0",
+    "aws-sdk": "2.1190.0",
     "csv-parse": "4.16.3",
     "got": "11.8.5",
     "jwt-encode": "1.0.1",

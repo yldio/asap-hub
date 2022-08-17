@@ -28,7 +28,7 @@ import Dashboard, {
   DashboardController,
 } from './controllers/dashboard.controller';
 import Users, { UserController } from './controllers/user.controller';
-import WorkingGroup, {
+import WorkingGroups, {
   WorkingGroupController,
 } from './controllers/working-group.controller';
 import {
@@ -92,7 +92,7 @@ export const appFactory = (libs: Libs = {}): Express => {
    */
   const userController = libs.userController || new Users(userDataProvider);
   const workingGroupController =
-    libs.workingGroupController || new WorkingGroup(workingGroupDataProvider);
+    libs.workingGroupController || new WorkingGroups(workingGroupDataProvider);
 
   // Handlers
   const authHandler =

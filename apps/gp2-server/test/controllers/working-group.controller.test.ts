@@ -1,4 +1,4 @@
-import WorkingGroup from '../../src/controllers/working-group.controller';
+import WorkingGroups from '../../src/controllers/working-group.controller';
 import {
   getListWorkingGroupDataObject,
   getListWorkingGroupResponse,
@@ -6,17 +6,15 @@ import {
 import { workingGroupDataProviderMock } from '../mocks/working-group-data-provider.mock';
 
 describe('Working Group controller', () => {
-  const workingGroupController = new WorkingGroup(workingGroupDataProviderMock);
+  const workingGroupController = new WorkingGroups(
+    workingGroupDataProviderMock,
+  );
 
   beforeEach(() => {
     jest.resetAllMocks();
   });
 
   describe('Fetch', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
-
     test('Should return the users', async () => {
       workingGroupDataProviderMock.fetch.mockResolvedValue(
         getListWorkingGroupDataObject(),

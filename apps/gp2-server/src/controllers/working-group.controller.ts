@@ -5,11 +5,10 @@ export interface WorkingGroupController {
   fetch(): Promise<gp2.ListWorkingGroupResponse>;
 }
 
-export default class WorkingGroup implements WorkingGroupController {
+export default class WorkingGroups implements WorkingGroupController {
   constructor(private workingGroupDataProvider: WorkingGroupDataProvider) {}
 
   async fetch(): Promise<gp2.ListWorkingGroupResponse> {
-    const result = await this.workingGroupDataProvider.fetch();
-    return result;
+    return this.workingGroupDataProvider.fetch();
   }
 }

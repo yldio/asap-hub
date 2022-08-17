@@ -91,29 +91,28 @@ const NewsCard: React.FC<NewsCardProps> = ({
     <Headline4>{title}</Headline4>
   );
   const newsLink = text && news({}).article({ articleId: id }).$;
+  const newsIamge = (
+    <>
+      {thumbnail ? (
+        <img
+          alt={`"${title}"'s thumbnail`}
+          src={thumbnail}
+          css={[imageStyle]}
+        />
+      ) : (
+        placeholders[type]
+      )}
+    </>
+  );
+
   return (
     <Card>
       <div css={cardStyle}>
         <div css={imageContainerStyle}>
           {newsLink ? (
-            <ImageLink
-              link={newsLink}
-              imgSrc={thumbnail}
-              placeholder={placeholders[type]}
-              alt={`"${title}"'s thumbnail`}
-            />
+            <ImageLink link={newsLink}>{newsIamge}</ImageLink>
           ) : (
-            <>
-              {thumbnail ? (
-                <img
-                  alt={`"${title}"'s thumbnail`}
-                  src={thumbnail}
-                  css={[imageStyle]}
-                />
-              ) : (
-                placeholders[type]
-              )}
-            </>
+            newsIamge
           )}
         </div>
         <div css={containerStyle}>

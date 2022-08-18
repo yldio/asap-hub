@@ -34,7 +34,6 @@ export { default as NewsPageBody } from './NewsPageBody';
 export { default as NewsPageHeader } from './NewsPageHeader';
 export { default as NoOutputsPage } from './NoOutputsPage';
 export { default as NotFoundPage } from './NotFoundPage';
-export { default as OnboardModal } from './OnboardModal';
 export { default as OpenQuestionsModal } from './OpenQuestionsModal';
 export { default as PasswordResetEmailSentPage } from './PasswordResetEmailSentPage';
 export { default as PersonalInfoModal } from './PersonalInfoModal';

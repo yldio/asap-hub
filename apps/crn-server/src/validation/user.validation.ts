@@ -7,6 +7,7 @@ const userPatchRequestValidationSchema: JSONSchemaType<UserPatchRequest> = {
   properties: {
     jobTitle: { type: 'string', nullable: true },
     onboarded: { type: 'boolean', nullable: true },
+    dismissedGettingStarted: { type: 'boolean', nullable: true },
     contactEmail: { type: 'string', nullable: true },
     firstName: { type: 'string', nullable: true },
     lastName: { type: 'string', nullable: true },

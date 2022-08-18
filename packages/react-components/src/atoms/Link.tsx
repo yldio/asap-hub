@@ -61,7 +61,6 @@ interface NormalLinkProps {
   readonly small?: undefined;
   readonly enabled?: undefined;
   readonly noMargin?: undefined;
-  readonly stretch?: undefined;
 }
 
 interface ButtonStyleLinkProps {

@@ -3,15 +3,19 @@ import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, StaticRouter } from 'react-router-dom';
 
-import OnboardModal from '../OnboardModal';
+import ConfirmModal from '../ConfirmModal';
 
-const props: ComponentProps<typeof OnboardModal> = {
+const props: ComponentProps<typeof ConfirmModal> = {
   backHref: '/wrong',
+  title: '',
 };
 it('renders the title', () => {
-  const { getByText } = render(<OnboardModal {...props} />, {
-    wrapper: StaticRouter,
-  });
+  const { getByText } = render(
+    <ConfirmModal {...props} title="Ready to publish your profile?" />,
+    {
+      wrapper: StaticRouter,
+    },
+  );
   expect(
     getByText('Ready to publish your profile?', { selector: 'h3' }),
   ).toBeVisible();
@@ -19,15 +23,20 @@ it('renders the title', () => {
 
 it('triggers the save function', async () => {
   const jestFn = jest.fn();
-  const { getByText } = render(<OnboardModal {...props} onSave={jestFn} />, {
-    wrapper: MemoryRouter,
-  });
+  const { getByText } = render(
+    <ConfirmModal
+      {...props}
+      confirmText="Publish and Explore"
+      onSave={jestFn}
+    />,
+    {
+      wrapper: MemoryRouter,
+    },
+  );
   const publish = getByText(/Publish and Explore/i);
   userEvent.click(publish);
 
-  expect(jestFn).toHaveBeenCalledWith({
-    onboarded: true,
-  });
+  expect(jestFn).toHaveBeenCalled();
 
   await waitFor(() => expect(publish.closest('button')).toBeEnabled());
 });
@@ -39,7 +48,12 @@ it('disables publish & back while submitting', async () => {
       resolveSubmit = resolve;
     });
   const { getByText } = render(
-    <OnboardModal {...props} onSave={handleSave} />,
+    <ConfirmModal
+      {...props}
+      confirmText="Publish and Explore"
+      cancelText="back"
+      onSave={handleSave}
+    />,
     { wrapper: StaticRouter },
   );
   const publish = getByText(/Publish and Explore/i);
@@ -59,7 +73,12 @@ it('displays error message when save fails', async () => {
       rejectSubmit = reject;
     });
   const { getByText } = render(
-    <OnboardModal {...props} onSave={handleSave} />,
+    <ConfirmModal
+      {...props}
+      confirmText="Publish and Explore"
+      error="There has been an error publishing"
+      onSave={handleSave}
+    />,
     { wrapper: StaticRouter },
   );
 

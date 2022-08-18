@@ -3,6 +3,7 @@ import { User } from '@asap-hub/auth';
 import { render, waitFor, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { createListReminderResponse } from '@asap-hub/fixtures';
+import { MemoryRouter } from 'react-router-dom';
 
 import Dashboard from '../Dashboard';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -13,6 +14,7 @@ jest.mock('../api');
 jest.mock('../../events/api');
 jest.mock('../../shared-research/api');
 jest.mock('../../network/teams/api');
+jest.mock('../../network/users/api');
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -26,19 +28,21 @@ const mockGetReminders = getReminders as jest.MockedFunction<
 
 const renderDashboard = async (user: Partial<User>) => {
   const result = render(
-    <Suspense fallback="loading">
-      <RecoilRoot
-        initializeState={({ set }) => {
-          set(refreshDashboardState, Math.random());
-        }}
-      >
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <Dashboard />
-          </WhenReady>
-        </Auth0Provider>
-      </RecoilRoot>
-    </Suspense>,
+    <MemoryRouter>
+      <Suspense fallback="loading">
+        <RecoilRoot
+          initializeState={({ set }) => {
+            set(refreshDashboardState, Math.random());
+          }}
+        >
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <Dashboard />
+            </WhenReady>
+          </Auth0Provider>
+        </RecoilRoot>
+      </Suspense>
+    </MemoryRouter>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),

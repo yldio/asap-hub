@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { UserPatchRequest } from '@asap-hub/model';
 import { useState } from 'react';
 
 import { Modal } from '../molecules';
@@ -8,7 +7,7 @@ import { mobileScreen, perRem } from '../pixels';
 import { crossIcon } from '../icons';
 import { Button, Headline3, Link, Paragraph } from '../atoms';
 import { paddingStyles } from '../card';
-import { Toast } from '../organisms';
+import { Toast } from '.';
 import { usePushFromHere } from '../routing';
 
 const headerStyles = css(paddingStyles, {
@@ -54,12 +53,25 @@ const backStyles = css({
   },
 });
 
-type OnboardModalProps = {
+type ConfirmModalProps = {
+  readonly error?: string;
+  readonly title: string;
+  readonly description?: string;
+  readonly confirmText?: string;
+  readonly cancelText?: string;
+
   readonly backHref: string;
-  readonly onSave?: (data: UserPatchRequest) => void | Promise<void>;
+  readonly successHref?: string;
+  readonly onSave?: () => void | Promise<void>;
 };
-const OnboardModal: React.FC<OnboardModalProps> = ({
+const ConfirmModal: React.FC<ConfirmModalProps> = ({
+  title,
+  description,
+  confirmText = 'Confirm',
+  cancelText = 'Cancel',
+  error = 'There was an error',
   backHref,
+  successHref,
   onSave = noop,
 }) => {
   const [status, setStatus] = useState<
@@ -69,11 +81,7 @@ const OnboardModal: React.FC<OnboardModalProps> = ({
 
   return (
     <Modal padding={false}>
-      {status === 'hasError' && (
-        <Toast>
-          There was an error and we were unable to publish your profile
-        </Toast>
-      )}
+      {status === 'hasError' && <Toast>{error}</Toast>}
       <form>
         <header css={headerStyles}>
           <div css={controlsContainerStyles}>
@@ -81,13 +89,10 @@ const OnboardModal: React.FC<OnboardModalProps> = ({
               {crossIcon}
             </Link>
           </div>
-          <Headline3>Ready to publish your profile?</Headline3>
+          <Headline3>{title}</Headline3>
         </header>
         <div css={[paddingStyles, { paddingTop: 0 }]}>
-          <Paragraph accent="lead">
-            In order to show you the Hub, we will need to make your profile
-            public to the Hub network. Would you like to continue?
-          </Paragraph>
+          <Paragraph accent="lead">{description}</Paragraph>
           <div css={buttonContainerStyles}>
             <div css={backStyles}>
               <Link
@@ -96,7 +101,7 @@ const OnboardModal: React.FC<OnboardModalProps> = ({
                 small
                 href={backHref}
               >
-                Back to Editing
+                {cancelText}
               </Link>
             </div>
             <div css={saveStyles}>
@@ -107,15 +112,15 @@ const OnboardModal: React.FC<OnboardModalProps> = ({
                 onClick={async () => {
                   setStatus('isSaving');
                   try {
-                    await onSave({ onboarded: true });
+                    await onSave();
                     setStatus('hasSaved');
-                    historyPush('/');
+                    historyPush(successHref ?? backHref);
                   } catch (e) {
                     setStatus('hasError');
                   }
                 }}
               >
-                Publish and Explore
+                {confirmText}
               </Button>
             </div>
           </div>
@@ -125,4 +130,4 @@ const OnboardModal: React.FC<OnboardModalProps> = ({
   );
 };
 
-export default OnboardModal;
+export default ConfirmModal;

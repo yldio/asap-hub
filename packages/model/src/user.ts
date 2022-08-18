@@ -117,6 +117,7 @@ interface Connection {
 export interface UserDataObject extends Invitee {
   id: string;
   onboarded?: boolean | null;
+  dismissedGettingStarted?: boolean;
   contactEmail?: string;
   lastModifiedDate: string;
   createdDate: string;
@@ -151,6 +152,7 @@ export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
 
 export type UserCreateDataObject = {
   contactEmail?: string;
+  dismissedGettingStarted?: boolean;
   firstName: string;
   lastName: string;
   biography?: string;

@@ -9,6 +9,7 @@ import {
   sharedResearch,
   news,
   events,
+  dashboard,
 } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
 
@@ -78,7 +79,13 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
         >
           <CheckOnboarded>
             <Switch>
-              <Route exact path="/">
+              <Route
+                exact
+                path={[
+                  dashboard.template,
+                  dashboard({}).dismissGettingStarted({}).$,
+                ]}
+              >
                 <Frame title="Dashboard">
                   <Dashboard />
                 </Frame>

@@ -99,7 +99,11 @@ const menuStyles = css({
   visibility: 'hidden',
   transform: 'translateX(-100%)',
   transition: `transform 250ms ease, visibility 0s 250ms`,
+  [crossQuery]: {
+    display: 'none',
+  },
 });
+
 const menuMenuShownStyles = css({
   visibility: 'visible',
   transform: 'translateX(0)',

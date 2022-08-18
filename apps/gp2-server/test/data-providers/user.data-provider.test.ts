@@ -40,7 +40,7 @@ describe('User data provider', () => {
     identity();
   });
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
   describe('FetchById', () => {
     // const usersMockGraphqlServer = new Users(squidexGraphqlClientMockServer);

@@ -740,6 +740,10 @@ export type Users = Content & {
   referencingUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   referencingUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** Query Working Groups content items. */
+  referencingWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
+  /** Query Working Groups content items with total count. */
+  referencingWorkingGroupsContentsWithTotal: Maybe<WorkingGroupsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -833,6 +837,24 @@ export type UsersReferencingUsersContentsArgs = {
 
 /** The structure of a Users content type. */
 export type UsersReferencingUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencingWorkingGroupsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencingWorkingGroupsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -1336,6 +1358,10 @@ export type WorkingGroups = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Users content items. */
+  referencesUsersContents: Maybe<Array<Users>>;
+  /** Query Users content items with total count. */
+  referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
   /** Query Dashboard content items. */
   referencingDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
@@ -1352,6 +1378,24 @@ export type WorkingGroups = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencesUsersContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencesUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Working Groups content type. */
@@ -1393,6 +1437,7 @@ export type WorkingGroupsReferencingUsersContentsWithTotalArgs = {
 /** The structure of the Working Groups data type. */
 export type WorkingGroupsDataDto = {
   leadingMembers: Maybe<WorkingGroupsDataLeadingMembersDto>;
+  members: Maybe<WorkingGroupsDataMembersDto>;
   shortDescription: Maybe<WorkingGroupsDataShortDescriptionDto>;
   title: Maybe<WorkingGroupsDataTitleDto>;
 };
@@ -1400,6 +1445,7 @@ export type WorkingGroupsDataDto = {
 /** The structure of the Working Groups data input type. */
 export type WorkingGroupsDataInputDto = {
   leadingMembers: InputMaybe<WorkingGroupsDataLeadingMembersInputDto>;
+  members: InputMaybe<WorkingGroupsDataMembersInputDto>;
   shortDescription: InputMaybe<WorkingGroupsDataShortDescriptionInputDto>;
   title: InputMaybe<WorkingGroupsDataTitleInputDto>;
 };
@@ -1412,6 +1458,28 @@ export type WorkingGroupsDataLeadingMembersDto = {
 /** The structure of the Leading Members field of the Working Groups content input type. */
 export type WorkingGroupsDataLeadingMembersInputDto = {
   iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Members nested schema. */
+export type WorkingGroupsDataMembersChildDto = {
+  role: Maybe<Scalars['String']>;
+  user: Maybe<Array<Users>>;
+};
+
+/** The structure of the Members nested schema. */
+export type WorkingGroupsDataMembersChildInputDto = {
+  role: InputMaybe<Scalars['String']>;
+  user: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Members field of the Working Groups content type. */
+export type WorkingGroupsDataMembersDto = {
+  iv: Maybe<Array<WorkingGroupsDataMembersChildDto>>;
+};
+
+/** The structure of the Members field of the Working Groups content input type. */
+export type WorkingGroupsDataMembersInputDto = {
+  iv: InputMaybe<Array<WorkingGroupsDataMembersChildInputDto>>;
 };
 
 /** The structure of the Short Description field of the Working Groups content type. */
@@ -1437,6 +1505,7 @@ export type WorkingGroupsDataTitleInputDto = {
 /** The structure of the flat Working Groups data type. */
 export type WorkingGroupsFlatDataDto = {
   leadingMembers: Maybe<Scalars['String']>;
+  members: Maybe<Array<WorkingGroupsDataMembersChildDto>>;
   shortDescription: Maybe<Scalars['String']>;
   title: Maybe<Scalars['String']>;
 };
@@ -1656,7 +1725,23 @@ export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
   flatData: Pick<
     WorkingGroupsFlatDataDto,
     'title' | 'shortDescription' | 'leadingMembers'
-  >;
+  > & {
+    members: Maybe<
+      Array<
+        Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+          user: Maybe<
+            Array<
+              Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+                flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
+                  avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                };
+              }
+            >
+          >;
+        }
+      >
+    >;
+  };
 };
 
 export type FetchWorkingGroupsQueryVariables = Exact<{ [key: string]: never }>;
@@ -1670,7 +1755,27 @@ export type FetchWorkingGroupsQuery = {
             flatData: Pick<
               WorkingGroupsFlatDataDto,
               'title' | 'shortDescription' | 'leadingMembers'
-            >;
+            > & {
+              members: Maybe<
+                Array<
+                  Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                    user: Maybe<
+                      Array<
+                        Pick<
+                          Users,
+                          'id' | 'created' | 'lastModified' | 'version'
+                        > & {
+                          flatData: Pick<
+                            UsersFlatDataDto,
+                            'firstName' | 'lastName'
+                          > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                        }
+                      >
+                    >;
+                  }
+                >
+              >;
+            };
           }
         >
       >;
@@ -1870,6 +1975,71 @@ export const WorkingGroupContentFragmentDoc = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'leadingMembers' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'members' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'created' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastModified' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'version' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'avatar' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
                 },
               ],
             },

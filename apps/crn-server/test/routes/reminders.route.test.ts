@@ -27,7 +27,9 @@ describe('/reminders/ route', () => {
         total: 0,
       });
 
-      const response = await supertest(app).get('/reminders');
+      const response = await supertest(app).get('/reminders').query({
+        timezone: 'Europe/London',
+      });
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
@@ -36,16 +38,20 @@ describe('/reminders/ route', () => {
       });
     });
 
-    test('Should call the controller with the logged-in user ID', async () => {
+    test('Should call the controller with the logged-in user ID and requested timezone', async () => {
       const userId = 'some-user-id';
       const someUser = {
         ...userMock,
         id: userId,
       };
+      const timezone = 'Europe/London';
       getLoggedUser.mockReturnValueOnce(someUser);
-      await supertest(app).get('/reminders');
 
-      expect(reminderControllerMock.fetch).toBeCalledWith({ userId });
+      await supertest(app).get('/reminders').query({
+        timezone,
+      });
+
+      expect(reminderControllerMock.fetch).toBeCalledWith({ userId, timezone });
     });
 
     test('Should return the results correctly', async () => {
@@ -53,7 +59,9 @@ describe('/reminders/ route', () => {
         getListReminderResponse(),
       );
 
-      const response = await supertest(app).get('/reminders');
+      const response = await supertest(app).get('/reminders').query({
+        timezone: 'Europe/London',
+      });
 
       expect(response.body).toEqual(getListReminderResponse());
     });
@@ -61,9 +69,36 @@ describe('/reminders/ route', () => {
     test('Should return 403 when the user is not logged in', async () => {
       getLoggedUser.mockReturnValueOnce(undefined);
 
-      const response = await supertest(app).get('/reminders');
+      const response = await supertest(app).get('/reminders').query({
+        timezone: 'Europe/London',
+      });
 
       expect(response.status).toBe(403);
+    });
+
+    describe('Parameter validation', () => {
+      test('Should return a validation error when additional arguments exist', async () => {
+        const response = await supertest(app).get('/reminders/').query({
+          timezone: 'Europe/London',
+          additionalField: 'some-data',
+        });
+
+        expect(response.status).toBe(400);
+      });
+
+      test('Should return a validation error when the timezone is missing', async () => {
+        const response = await supertest(app).get('/reminders/');
+
+        expect(response.status).toBe(400);
+      });
+
+      test('Should return a validation error when the timezone is not valid', async () => {
+        const response = await supertest(app).get('/reminders/').query({
+          timezone: 'Europe/Foo',
+        });
+
+        expect(response.status).toBe(400);
+      });
     });
   });
 });

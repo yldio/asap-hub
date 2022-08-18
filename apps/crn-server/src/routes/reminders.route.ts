@@ -1,7 +1,9 @@
+import { DateTime } from 'luxon';
 import Boom from '@hapi/boom';
 import { ListReminderResponse } from '@asap-hub/model';
 import { Response, Router } from 'express';
 import { ReminderController } from '../controllers/reminders';
+import { validateReminderParameters } from '../validation/reminder.validation';
 
 export const reminderRouteFactory = (
   reminderController: ReminderController,
@@ -17,8 +19,18 @@ export const reminderRouteFactory = (
         throw Boom.forbidden();
       }
 
+      const parameters = req.query;
+      const { timezone } = validateReminderParameters(parameters);
+
+      if (!DateTime.local().setZone(timezone).isValid) {
+        throw Boom.badRequest('Validation error', {
+          details: `Invalid timezone specified ${timezone}`,
+        });
+      }
+
       const result = await reminderController.fetch({
         userId: req.loggedInUser.id,
+        timezone,
       });
 
       res.json(result);

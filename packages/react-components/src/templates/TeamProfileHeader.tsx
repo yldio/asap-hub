@@ -133,6 +133,7 @@ type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly tools?: ReadonlyArray<TeamTool>;
   readonly teamListElementId: string;
   readonly upcomingEventsCount?: number;
+  readonly sharedOutputsCount?: number;
   readonly pastEventsCount?: number;
 };
 
@@ -145,6 +146,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   teamListElementId,
   labCount,
   upcomingEventsCount,
+  sharedOutputsCount,
   pastEventsCount,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
@@ -247,7 +249,9 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         {tools && (
           <TabLink href={route.workspace({}).$}>Team Workspace</TabLink>
         )}
-        <TabLink href={route.outputs({}).$}>Team Outputs</TabLink>
+        <TabLink href={route.outputs({}).$}>
+          Shared Outputs ({sharedOutputsCount})
+        </TabLink>
         <TabLink href={route.upcoming({}).$}>
           Upcoming Events {`(${upcomingEventsCount})`}
         </TabLink>

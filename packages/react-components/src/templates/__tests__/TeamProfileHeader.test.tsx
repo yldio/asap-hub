@@ -17,6 +17,7 @@ const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   labCount: 15,
   upcomingEventsCount: 0,
   pastEventsCount: 0,
+  sharedOutputsCount: 0,
 };
 
 it('renders the name as the top-level heading', () => {
@@ -150,4 +151,10 @@ it('displays past event count', () => {
   render(<TeamProfileHeader {...boilerplateProps} pastEventsCount={11} />);
 
   expect(screen.getByText('Past Events (11)')).toBeVisible();
+});
+
+it('displays shared output count', () => {
+  render(<TeamProfileHeader {...boilerplateProps} sharedOutputsCount={11} />);
+
+  expect(screen.getByText('Shared Outputs (11)')).toBeVisible();
 });

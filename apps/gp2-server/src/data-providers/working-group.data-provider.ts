@@ -32,14 +32,36 @@ export class WorkingGroupSquidexDataProvider
     return {
       total: result.queryWorkingGroupsContentsWithTotal.total,
       items: result.queryWorkingGroupsContentsWithTotal.items.map(
-        (workingGroup) => ({
-          ...workingGroup.flatData,
-          id: workingGroup.id,
-          title: workingGroup.flatData.title || '',
-          shortDescription: workingGroup.flatData.shortDescription || '',
-          leadingMembers: workingGroup.flatData.leadingMembers || '',
-          members: [],
-        }),
+        (workingGroup) => {
+          const members =
+            workingGroup.flatData.members?.reduce(
+              (membersList: gp2.WorkingGroupMember[], member) => {
+                const user = member.user && member.user[0];
+                if (!user) {
+                  return membersList;
+                }
+
+                return [
+                  ...membersList,
+                  {
+                    userId: user.id,
+                    role: member.role as gp2.WorkingGroupMemberRole,
+                    firstName: user.flatData.firstName || '',
+                    lastName: user.flatData.lastName || '',
+                  },
+                ];
+              },
+              [],
+            ) || [];
+          return {
+            ...workingGroup.flatData,
+            id: workingGroup.id,
+            title: workingGroup.flatData.title || '',
+            shortDescription: workingGroup.flatData.shortDescription || '',
+            leadingMembers: workingGroup.flatData.leadingMembers || '',
+            members,
+          };
+        },
       ),
     };
   }

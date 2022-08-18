@@ -42,5 +42,6 @@ export const getGraphQLWorkingGroup = (): NonNullable<
     title: 'Working Group',
     shortDescription: 'Short description',
     leadingMembers: 'Leading members',
+    members: [],
   },
 });

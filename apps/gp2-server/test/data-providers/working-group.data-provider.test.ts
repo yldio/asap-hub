@@ -1,10 +1,13 @@
-import { WorkingGroupSquidexDataProvider } from '../../src/data-providers/working-group.data-provider';
+import {
+  parseWorkingGroupToDataObject,
+  WorkingGroupSquidexDataProvider,
+} from '../../src/data-providers/working-group.data-provider';
 import {
   getGraphQLWorkingGroup,
   getListWorkingGroupDataObject,
   getSquidexWorkingGroupGraphqlResponse,
+  getWorkingGroupDataObject,
 } from '../fixtures/working-group.fixtures';
-import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
@@ -18,16 +21,12 @@ describe('Working Group Data Provider', () => {
   const workingGroupDataProviderMockGraphqlServer =
     new WorkingGroupSquidexDataProvider(squidexGraphqlClientMockServer);
 
-  beforeAll(() => {
-    identity();
-  });
-
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   describe('Fetch', () => {
-    test('Should fetch the users from squidex graphql', async () => {
+    test('Should fetch the working group from squidex graphql', async () => {
       const result = await workingGroupDataProviderMockGraphqlServer.fetch();
 
       expect(result).toMatchObject(getListWorkingGroupDataObject());
@@ -75,6 +74,57 @@ describe('Working Group Data Provider', () => {
         title: '',
         shortDescription: '',
         leadingMembers: '',
+      });
+    });
+    describe('Parsing', () => {
+      test('the working group is parsed', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const workingGroupDataObject =
+          parseWorkingGroupToDataObject(workingGroup);
+        const expected = getWorkingGroupDataObject();
+        expect(workingGroupDataObject).toEqual(expected);
+      });
+      test('the members in working group are parsed', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const workingGroupWithMembers = {
+          ...workingGroup,
+          flatData: {
+            ...workingGroup.flatData,
+            members: [
+              {
+                id: 'member-id',
+                role: 'Chair',
+                user: [
+                  {
+                    id: '42',
+                    created: '2021-01-01T00:00:00Z',
+                    lastModified: '2021-01-01T00:00:00Z',
+                    version: 1,
+                    flatData: {
+                      firstName: 'Tony',
+                      lastName: 'Stark',
+                      avatar: null,
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        };
+        const workingGroupDataObject = parseWorkingGroupToDataObject(
+          workingGroupWithMembers,
+        );
+        const expected = getWorkingGroupDataObject({
+          members: [
+            {
+              userId: '42',
+              role: 'Chair',
+              firstName: 'Tony',
+              lastName: 'Stark',
+            },
+          ],
+        });
+        expect(workingGroupDataObject).toEqual(expected);
       });
     });
   });

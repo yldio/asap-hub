@@ -22,8 +22,8 @@ const WorkingGroupsBody: React.FC<WorkingGroupsBodyProps> = ({
   workingGroups,
 }) => (
   <article css={gridContainerStyles}>
-    {workingGroups.items.map(({ id, ...workingGroup }) => (
-      <WorkingGroupCard key={id} {...{ id, ...workingGroup }} />
+    {workingGroups.items.map((workingGroup, idx) => (
+      <WorkingGroupCard key={idx} {...workingGroup} />
     ))}
   </article>
 );

@@ -2,9 +2,9 @@ import { ComponentProps } from 'react';
 import WorkingGroupsBody from '../organisms/WorkingGroupsBody';
 import WorkingGroupsHeader from '../organisms/WorkingGroupsHeader';
 
-type ResearchOutputPageProps = ComponentProps<typeof WorkingGroupsBody>;
+type WorkingGroupsPageProps = ComponentProps<typeof WorkingGroupsBody>;
 
-const WorkingGroupsPage: React.FC<ResearchOutputPageProps> = (props) => (
+const WorkingGroupsPage: React.FC<WorkingGroupsPageProps> = (props) => (
   <article>
     <WorkingGroupsHeader />
     <main>

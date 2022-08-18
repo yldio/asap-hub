@@ -101,7 +101,7 @@ it('renders tabs', () => {
     screen.getAllByRole('link').map(({ textContent }) => textContent),
   ).toEqual([
     'About',
-    'Team Outputs',
+    'Shared Outputs (0)',
     'Upcoming Events (0)',
     'Past Events (0)',
   ]);
@@ -119,7 +119,7 @@ it('renders workspace tabs when tools provided', () => {
   ).toEqual([
     'About',
     'Team Workspace',
-    'Team Outputs',
+    'Shared Outputs (0)',
     'Upcoming Events (0)',
     'Past Events (0)',
   ]);

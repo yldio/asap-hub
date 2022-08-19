@@ -3,7 +3,6 @@ import { DateTime } from 'luxon';
 import {
   EventResponse,
   EventSpeaker,
-  MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT,
   isEventStatus,
   EventSpeakerUserData,
   EventSpeakerExternalUserData,

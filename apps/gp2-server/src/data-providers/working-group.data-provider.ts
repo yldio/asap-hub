@@ -1,4 +1,5 @@
 import { gp2 } from '@asap-hub/model';
+import { isWorkingGroupMemberRole } from '@asap-hub/model/src/gp2';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import {
   FetchWorkingGroupsQuery,
@@ -65,6 +66,9 @@ const parseWorkingGroupMembers = (
   membersList: gp2.WorkingGroupMember[],
   member: Member,
 ) => {
+  if (!isWorkingGroupMemberRole(member.role)) {
+    throw new Error(`Invalid working group role on members : ${member.role}`);
+  }
   const user = member.user && member.user[0];
   if (!user) {
     return membersList;

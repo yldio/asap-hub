@@ -1,8 +1,12 @@
 import { ListResponse } from '../common';
 
-export const workingGroupMemberRole = ['Chair', 'Project Manager'] as const;
-
+const workingGroupMemberRole = ['Chair', 'Project Manager'] as const;
 export type WorkingGroupMemberRole = typeof workingGroupMemberRole[number];
+
+export const isWorkingGroupMemberRole = (
+  data: string | null,
+): data is WorkingGroupMemberRole =>
+  workingGroupMemberRole.includes(data as WorkingGroupMemberRole);
 
 export type WorkingGroupMember = {
   userId: string;

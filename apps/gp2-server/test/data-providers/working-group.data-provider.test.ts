@@ -1,4 +1,5 @@
 import {
+  GraphQLWorkingGroup,
   parseWorkingGroupToDataObject,
   WorkingGroupSquidexDataProvider,
 } from '../../src/data-providers/working-group.data-provider';
@@ -76,6 +77,7 @@ describe('Working Group Data Provider', () => {
         leadingMembers: '',
       });
     });
+
     describe('Parsing', () => {
       test('the working group is parsed', () => {
         const workingGroup = getGraphQLWorkingGroup();
@@ -84,6 +86,7 @@ describe('Working Group Data Provider', () => {
         const expected = getWorkingGroupDataObject();
         expect(workingGroupDataObject).toEqual(expected);
       });
+
       test('the members in working group are parsed', () => {
         const workingGroup = getGraphQLWorkingGroup();
         const workingGroupWithMembers = {
@@ -123,6 +126,64 @@ describe('Working Group Data Provider', () => {
               lastName: 'Stark',
             },
           ],
+        });
+        expect(workingGroupDataObject).toEqual(expected);
+      });
+
+      test('invalid role', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const workingGroupWithMembers = {
+          ...workingGroup,
+          flatData: {
+            ...workingGroup.flatData,
+            members: [
+              {
+                id: 'member-id',
+                role: 'something else',
+                user: [
+                  {
+                    id: '42',
+                    created: '2021-01-01T00:00:00Z',
+                    lastModified: '2021-01-01T00:00:00Z',
+                    version: 1,
+                    flatData: {
+                      firstName: 'Tony',
+                      lastName: 'Stark',
+                      avatar: null,
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        };
+        expect(() =>
+          parseWorkingGroupToDataObject(workingGroupWithMembers),
+        ).toThrowErrorMatchingInlineSnapshot(
+          '"Invalid working group role on members : something else"',
+        );
+      });
+
+      test('user in member is not defined', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const workingGroupWithMembers = {
+          ...workingGroup,
+          flatData: {
+            ...workingGroup.flatData,
+            members: [
+              {
+                id: 'member-id',
+                role: 'Chair',
+                user: undefined,
+              },
+            ],
+          },
+        } as unknown as GraphQLWorkingGroup;
+        const workingGroupDataObject = parseWorkingGroupToDataObject(
+          workingGroupWithMembers,
+        );
+        const expected = getWorkingGroupDataObject({
+          members: [],
         });
         expect(workingGroupDataObject).toEqual(expected);
       });

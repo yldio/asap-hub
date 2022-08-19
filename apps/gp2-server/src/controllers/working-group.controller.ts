@@ -14,11 +14,14 @@ export default class WorkingGroups implements WorkingGroupController {
     return this.workingGroupDataProvider.fetch();
   }
   async fetchById(id: string): Promise<gp2.WorkingGroupResponse> {
-    const user = await this.workingGroupDataProvider.fetchById(id);
-    if (!user) {
-      throw new NotFoundError(undefined, `user with id ${id} not found`);
+    const workingGroup = await this.workingGroupDataProvider.fetchById(id);
+    if (!workingGroup) {
+      throw new NotFoundError(
+        undefined,
+        `working group with id ${id} not found`,
+      );
     }
 
-    return user;
+    return workingGroup;
   }
 }

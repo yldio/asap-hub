@@ -52,7 +52,7 @@ describe('/working-groups/ route', () => {
     });
   });
   describe('GET /working-group/{working_group_id}', () => {
-    test('Should return 404 when user doesnt exist', async () => {
+    test('Should return 404 when working group doesnt exist', async () => {
       workingGroupControllerMock.fetchById.mockRejectedValueOnce(
         Boom.notFound(),
       );

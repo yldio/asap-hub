@@ -79,6 +79,25 @@ describe('Working Group Data Provider', () => {
         leadingMembers: '',
       });
     });
+    describe('FetchById', () => {
+      test('Should fetch the working group from squidex graphql', async () => {
+        const result =
+          await workingGroupDataProviderMockGraphqlServer.fetchById(
+            'working-group-id',
+          );
+
+        expect(result).toMatchObject(getWorkingGroupDataObject());
+      });
+      test('Should return null when the working group is not found', async () => {
+        const mockResponse = getSquidexWorkingGroupGraphqlResponse();
+        mockResponse.findWorkingGroupsContent = null;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        expect(
+          await workingGroupDataProvider.fetchById('not-found'),
+        ).toBeNull();
+      });
+    });
 
     describe('Parsing', () => {
       test('the working group is parsed', () => {
@@ -141,22 +160,6 @@ describe('Working Group Data Provider', () => {
         const { members } = parseWorkingGroupToDataObject(workingGroup);
         expect(members).toEqual([]);
       });
-    });
-  });
-  describe('FetchById', () => {
-    test('Should fetch the users from squidex graphql', async () => {
-      const result = await workingGroupDataProviderMockGraphqlServer.fetchById(
-        'user-id',
-      );
-
-      expect(result).toMatchObject(getWorkingGroupDataObject());
-    });
-    test('Should return null when the user is not found', async () => {
-      const mockResponse = getSquidexWorkingGroupGraphqlResponse();
-      mockResponse.findWorkingGroupsContent = null;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-      expect(await workingGroupDataProvider.fetchById('not-found')).toBeNull();
     });
   });
 });

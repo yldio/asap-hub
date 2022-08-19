@@ -18,7 +18,7 @@ describe('Working Group controller', () => {
   });
 
   describe('Fetch', () => {
-    test('Should return the users', async () => {
+    test('Should return the working group', async () => {
       workingGroupDataProviderMock.fetch.mockResolvedValue(
         getListWorkingGroupDataObject(),
       );
@@ -27,7 +27,7 @@ describe('Working Group controller', () => {
       expect(result).toEqual(getListWorkingGroupsResponse());
     });
 
-    test('Should return empty list when there are no users', async () => {
+    test('Should return empty list when there are no working groups', async () => {
       workingGroupDataProviderMock.fetch.mockResolvedValue({
         total: 0,
         items: [],
@@ -42,7 +42,7 @@ describe('Working Group controller', () => {
       jest.resetAllMocks();
     });
 
-    test('Should throw when user is not found', async () => {
+    test('Should throw when working group is not found', async () => {
       workingGroupDataProviderMock.fetchById.mockResolvedValue(null);
 
       await expect(
@@ -50,11 +50,11 @@ describe('Working Group controller', () => {
       ).rejects.toThrow(NotFoundError);
     });
 
-    test('Should return the user when it finds it', async () => {
+    test('Should return the working group when it finds it', async () => {
       workingGroupDataProviderMock.fetchById.mockResolvedValue(
         getWorkingGroupDataObject(),
       );
-      const result = await workingGroupController.fetchById('user-id');
+      const result = await workingGroupController.fetchById('working-group-id');
 
       expect(result).toEqual(getWorkingGroupResponse());
     });

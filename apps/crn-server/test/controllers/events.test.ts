@@ -462,21 +462,6 @@ describe('Event controller', () => {
 
         expect(result.items[0]?.meetingLink).toEqual('some-link');
       });
-      test('Should remove the event link when the event starts in more than 24h from now', async () => {
-        const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
-        eventsGraphqlResponse.queryEventsContentsWithTotal!.items![0]!.flatData.meetingLink =
-          'some-link';
-        eventsGraphqlResponse.queryEventsContentsWithTotal!.items![0]!.flatData.startDate =
-          '2021-07-06T02:00:00Z';
-
-        squidexGraphqlClientMock.request.mockResolvedValueOnce(
-          eventsGraphqlResponse,
-        );
-
-        const result = await eventsController.fetch({ before: 'before' });
-
-        expect(result.items[0]?.meetingLink).toBeUndefined();
-      });
     });
 
     describe('Past event materials states', () => {
@@ -657,20 +642,6 @@ describe('Event controller', () => {
 
         const result = await eventsController.fetchById(eventId);
         expect(result.meetingLink).toEqual('some-link');
-      });
-      test('Should remove the event link when the event starts in more than 24h from now', async () => {
-        const eventGraphqlResponse = getSquidexEventGraphqlResponse();
-        eventGraphqlResponse.findEventsContent!.flatData.meetingLink =
-          'some-link';
-        eventGraphqlResponse.findEventsContent!.flatData.startDate =
-          '2021-07-06T02:00:00Z';
-
-        squidexGraphqlClientMock.request.mockResolvedValueOnce(
-          eventGraphqlResponse,
-        );
-
-        const result = await eventsController.fetchById(eventId);
-        expect(result.meetingLink).toBeUndefined();
       });
     });
     describe('Event groups', () => {

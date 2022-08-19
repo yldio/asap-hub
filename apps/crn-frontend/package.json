@@ -27,7 +27,7 @@
     "@sentry/react": "6.11.0",
     "@sentry/tracing": "6.11.0",
     "browser-image-compression": "1.0.17",
-    "date-fns": "2.29.1",
+    "date-fns": "2.29.2",
     "history": "4.10.1",
     "qs": "6.11.0",
     "react": "17.0.2",

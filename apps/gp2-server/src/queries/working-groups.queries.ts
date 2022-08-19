@@ -27,6 +27,15 @@ export const workingGroupContentQueryFragment = gql`
   }
 `;
 
+export const FETCH_WORKING_GROUP = gql`
+  query FetchUser($id: String!) {
+    findUsersContent(id: $id) {
+      ...UsersContent
+    }
+  }
+  ${workingGroupContentQueryFragment}
+`;
+
 export const FETCH_WORKING_GROUPS = gql`
   query FetchWorkingGroups {
     queryWorkingGroupsContentsWithTotal(orderby: "created desc") {

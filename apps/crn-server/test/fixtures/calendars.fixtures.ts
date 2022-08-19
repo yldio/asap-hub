@@ -24,7 +24,7 @@ export const getCalendarInput = (): Calendar => {
   const { id: _id, version: _version, ...calendarInput } = getCalendarRaw();
 
   return calendarInput;
-}
+};
 
 export const getCalendarResponse = (): CalendarResponse => ({
   id: '3@group.calendar.google.com',

@@ -5,7 +5,7 @@ import {
 } from '@asap-hub/model';
 import Reminders from '../../src/controllers/reminders';
 import {
-  getReminderDataObject,
+  getResearchOutputPublishedReminder,
   getReminderResponse,
 } from '../fixtures/reminders.fixtures';
 import { reminderDataProviderMock } from '../mocks/reminder-data-provider.mock';
@@ -25,7 +25,7 @@ describe('Reminder Controller', () => {
     test('Should return the reminders', async () => {
       reminderDataProviderMock.fetch.mockResolvedValueOnce({
         total: 1,
-        items: [getReminderDataObject()],
+        items: [getResearchOutputPublishedReminder()],
       });
 
       const result = await reminderController.fetch(options);
@@ -46,7 +46,7 @@ describe('Reminder Controller', () => {
     test('Should call the data provider with correct parameters', async () => {
       reminderDataProviderMock.fetch.mockResolvedValueOnce({
         total: 1,
-        items: [getReminderDataObject()],
+        items: [getResearchOutputPublishedReminder()],
       });
 
       await reminderController.fetch(options);
@@ -55,7 +55,7 @@ describe('Reminder Controller', () => {
     });
 
     test('Should throw an error when the reminder is not supported', async () => {
-      const reminderDataObject = getReminderDataObject();
+      const reminderDataObject = getResearchOutputPublishedReminder();
       reminderDataObject.entity = 'Research Output';
       reminderDataObject.type = 'some-type' as any;
 
@@ -72,13 +72,14 @@ describe('Reminder Controller', () => {
     describe('Description and href', () => {
       test('Should return the correct description and href for the research-output-published reminder', async () => {
         const reminderDataObject: ResearchOutputPublishedReminder = {
-          ...getReminderDataObject(),
+          ...getResearchOutputPublishedReminder(),
           entity: 'Research Output',
           type: 'Published',
           data: {
             documentType: 'Presentation',
             title: 'Some Test title',
             researchOutputId: 'some-research-output-id',
+            addedDate: '2021-01-01',
           },
         };
 
@@ -97,7 +98,7 @@ describe('Reminder Controller', () => {
 
       test('Should return the correct description and href for the event-happening-today reminder', async () => {
         const reminderDataObject: EventHappeningTodayReminder = {
-          ...getReminderDataObject(),
+          ...getResearchOutputPublishedReminder(),
           entity: 'Event',
           type: 'Happening Today',
           data: {
@@ -122,7 +123,7 @@ describe('Reminder Controller', () => {
 
       test('Should return the event-happening-today description with the time formatted for the desired timezone', async () => {
         const reminderDataObject: EventHappeningTodayReminder = {
-          ...getReminderDataObject(),
+          ...getResearchOutputPublishedReminder(),
           entity: 'Event',
           type: 'Happening Today',
           data: {

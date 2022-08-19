@@ -11150,6 +11150,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/supertest", "npm:2.0.12"],\
             ["@types/uuid", "npm:8.3.4"],\
             ["@yarnpkg/pnpify", "npm:3.1.4"],\
+            ["ajv", "npm:8.11.0"],\
             ["apr-intercept", "npm:3.0.4"],\
             ["aws-lambda", "npm:1.0.7"],\
             ["aws-sdk", "npm:2.1197.0"],\

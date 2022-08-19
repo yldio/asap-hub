@@ -2,5 +2,6 @@ import { WorkingGroupDataProvider } from '../../src/data-providers/working-group
 
 export const workingGroupDataProviderMock: jest.Mocked<WorkingGroupDataProvider> =
   {
+    fetchById: jest.fn(),
     fetch: jest.fn(),
   };

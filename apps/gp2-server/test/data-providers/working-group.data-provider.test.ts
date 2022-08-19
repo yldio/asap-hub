@@ -91,7 +91,7 @@ describe('Working Group Data Provider', () => {
         const workingGroup = getGraphQLWorkingGroup();
         workingGroup.flatData.members = [
           {
-            role: 'Chair',
+            role: 'Lead',
             user: [
               {
                 id: '42',
@@ -111,7 +111,7 @@ describe('Working Group Data Provider', () => {
         expect(members).toEqual([
           {
             userId: '42',
-            role: 'Chair',
+            role: 'Lead',
             firstName: 'Tony',
             lastName: 'Stark',
           },
@@ -122,7 +122,7 @@ describe('Working Group Data Provider', () => {
         const workingGroup = getGraphQLWorkingGroup();
         workingGroup.flatData.members = [
           {
-            role: 'Chair',
+            role: 'Lead',
             user: [
               {
                 id: '42',
@@ -175,7 +175,7 @@ describe('Working Group Data Provider', () => {
         const workingGroup = getGraphQLWorkingGroup();
         workingGroup.flatData.members = [
           {
-            role: 'Chair',
+            role: 'Lead',
             user: undefined!,
           },
         ];

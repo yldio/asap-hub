@@ -1,11 +1,11 @@
 import { isWorkingGroupMemberRole } from '../../src/gp2';
-describe('Research Tag Model', () => {
+describe('Working Group Model', () => {
   describe('WorkingGroupMemberRole', () => {
-    it('should recognize correct category', () => {
-      expect(isWorkingGroupMemberRole('Chair')).toEqual(true);
+    it('should recognise correct role', () => {
+      expect(isWorkingGroupMemberRole('Lead')).toEqual(true);
     });
 
-    it('should not recognize incorrect category', () => {
+    it('should not recognise incorrect role', () => {
       expect(isWorkingGroupMemberRole('not-a-role')).toEqual(false);
     });
   });

@@ -32,7 +32,7 @@ describe('WorkingGroupCard', () => {
       members: [
         {
           userId: '11',
-          role: 'Chair',
+          role: 'Lead',
           firstName: 'Tony',
           lastName: 'Stark',
         },

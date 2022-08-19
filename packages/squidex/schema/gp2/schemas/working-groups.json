@@ -109,7 +109,7 @@
             "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "allowedValues": ["Project Manager", "Chair"],
+              "allowedValues": ["Lead", "Co-lead", "Working group member"],
               "isUnique": false,
               "isEmbeddable": false,
               "inlineEditable": true,

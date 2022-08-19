@@ -1,6 +1,10 @@
 import { ListResponse } from '../common';
 
-const workingGroupMemberRole = ['Chair', 'Project Manager'] as const;
+const workingGroupMemberRole = [
+  'Lead',
+  'Co-lead',
+  'Working group member',
+] as const;
 export type WorkingGroupMemberRole = typeof workingGroupMemberRole[number];
 
 export const isWorkingGroupMemberRole = (

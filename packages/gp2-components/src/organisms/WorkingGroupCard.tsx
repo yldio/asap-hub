@@ -26,11 +26,7 @@ const containerStyles = css({
   display: 'flex',
   gap: rem(16),
   margin: rem(24),
-});
-
-const textContainerStyles = css({
   flexGrow: 1,
-  display: 'flex',
   flexWrap: 'wrap',
   justifyContent: 'space-between',
   alignItems: 'start',
@@ -65,7 +61,7 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
   }).$;
   return (
     <Card padding={false}>
-      <div css={[containerStyles, textContainerStyles]}>
+      <div css={[containerStyles]}>
         <div css={{ height: rem(96) }}>
           <LinkHeadline href={workingGroupHref} level={3} css={[titleStyles]}>
             {title}

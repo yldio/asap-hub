@@ -1,9 +1,9 @@
 import { gp2 } from '@asap-hub/model';
-import { pixels } from '@asap-hub/react-components';
+import { pixels, drawerQuery } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import WorkingGroupCard from './WorkingGroupCard';
 
-const { perRem, smallDesktopScreen } = pixels;
+const { perRem } = pixels;
 type WorkingGroupsBodyProps = {
   workingGroups: gp2.ListWorkingGroupResponse;
 };
@@ -13,7 +13,7 @@ const gridContainerStyles = css({
   gridTemplateColumns: '1fr 1fr',
   marginTop: `${48 / perRem}em`,
 
-  [`@media (max-width: ${smallDesktopScreen.min}px)`]: {
+  [drawerQuery]: {
     gridTemplateColumns: '1fr',
   },
 });
@@ -22,8 +22,8 @@ const WorkingGroupsBody: React.FC<WorkingGroupsBodyProps> = ({
   workingGroups,
 }) => (
   <article css={gridContainerStyles}>
-    {workingGroups.items.map((workingGroup, idx) => (
-      <WorkingGroupCard key={idx} {...workingGroup} />
+    {workingGroups.items.map((workingGroup) => (
+      <WorkingGroupCard key={workingGroup.id} {...workingGroup} />
     ))}
   </article>
 );

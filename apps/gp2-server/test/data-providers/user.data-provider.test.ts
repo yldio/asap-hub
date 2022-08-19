@@ -43,7 +43,6 @@ describe('User data provider', () => {
     jest.resetAllMocks();
   });
   describe('FetchById', () => {
-    // const usersMockGraphqlServer = new Users(squidexGraphqlClientMockServer);
     test('Should fetch the users from squidex graphql', async () => {
       const result = await usersMockGraphqlServer.fetchById('user-id');
 

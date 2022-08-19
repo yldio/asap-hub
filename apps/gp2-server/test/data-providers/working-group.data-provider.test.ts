@@ -5,6 +5,7 @@ import {
 } from '../../src/data-providers/working-group.data-provider';
 import {
   getGraphQLWorkingGroup,
+  getGraphQLWorkingGroupMember,
   getListWorkingGroupDataObject,
   getSquidexWorkingGroupGraphqlResponse,
   getWorkingGroupDataObject,
@@ -89,24 +90,7 @@ describe('Working Group Data Provider', () => {
 
       test('the members in working group are parsed', () => {
         const workingGroup = getGraphQLWorkingGroup();
-        workingGroup.flatData.members = [
-          {
-            role: 'Lead',
-            user: [
-              {
-                id: '42',
-                created: '2021-01-01T00:00:00Z',
-                lastModified: '2021-01-01T00:00:00Z',
-                version: 1,
-                flatData: {
-                  firstName: 'Tony',
-                  lastName: 'Stark',
-                  avatar: null,
-                },
-              },
-            ],
-          },
-        ];
+        workingGroup.flatData.members = [getGraphQLWorkingGroupMember()];
         const { members } = parseWorkingGroupToDataObject(workingGroup);
         expect(members).toEqual([
           {
@@ -120,24 +104,9 @@ describe('Working Group Data Provider', () => {
 
       test('avatar urls are added if available', () => {
         const workingGroup = getGraphQLWorkingGroup();
-        workingGroup.flatData.members = [
-          {
-            role: 'Lead',
-            user: [
-              {
-                id: '42',
-                created: '2021-01-01T00:00:00Z',
-                lastModified: '2021-01-01T00:00:00Z',
-                version: 1,
-                flatData: {
-                  firstName: 'Tony',
-                  lastName: 'Stark',
-                  avatar: [{ id: 'avatar-id' }],
-                },
-              },
-            ],
-          },
-        ];
+        const member = getGraphQLWorkingGroupMember();
+        member!.user![0]!.flatData.avatar = [{ id: 'avatar-id' }];
+        workingGroup.flatData.members = [member];
         const { members } = parseWorkingGroupToDataObject(workingGroup);
         expect(members[0]?.avatarUrl).toEqual(
           `${baseUrl}/api/assets/${appName}/avatar-id`,
@@ -146,39 +115,21 @@ describe('Working Group Data Provider', () => {
 
       test('invalid role', () => {
         const workingGroup = getGraphQLWorkingGroup();
-        workingGroup.flatData.members = [
-          {
-            role: 'something else',
-            user: [
-              {
-                id: '42',
-                created: '2021-01-01T00:00:00Z',
-                lastModified: '2021-01-01T00:00:00Z',
-                version: 1,
-                flatData: {
-                  firstName: 'Tony',
-                  lastName: 'Stark',
-                  avatar: null,
-                },
-              },
-            ],
-          },
-        ];
+        const member = getGraphQLWorkingGroupMember();
+        member!.role = 'invalid-role';
+        workingGroup.flatData.members = [member];
         expect(() =>
           parseWorkingGroupToDataObject(workingGroup),
         ).toThrowErrorMatchingInlineSnapshot(
-          '"Invalid working group role on members : something else"',
+          '"Invalid working group role on members : invalid-role"',
         );
       });
 
       test('should skip the user from the result if the user property is undefined', () => {
         const workingGroup = getGraphQLWorkingGroup();
-        workingGroup.flatData.members = [
-          {
-            role: 'Lead',
-            user: undefined!,
-          },
-        ];
+        const member = getGraphQLWorkingGroupMember();
+        member!.user = undefined!;
+        workingGroup.flatData.members = [member];
         const { members } = parseWorkingGroupToDataObject(workingGroup);
         expect(members).toEqual([]);
       });

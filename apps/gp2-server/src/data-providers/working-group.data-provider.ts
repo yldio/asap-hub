@@ -39,20 +39,23 @@ export class WorkingGroupSquidexDataProvider
     };
   }
 }
-type Member = NonNullable<
+
+export type GraphQLWorkingGroup = NonNullable<
   NonNullable<
-    NonNullable<
-      NonNullable<
-        NonNullable<FetchWorkingGroupsQuery>['queryWorkingGroupsContentsWithTotal']
-      >['items']
-    >[number]['flatData']
-  >['members']
+    NonNullable<FetchWorkingGroupsQuery>['queryWorkingGroupsContentsWithTotal']
+  >['items']
 >[number];
 
-type User = NonNullable<NonNullable<Member>['user']>[number];
+export type GraphQLWorkingGroupMember = NonNullable<
+  NonNullable<GraphQLWorkingGroup['flatData']>['members']
+>[number];
+
+type GraphQLWorkingGroupMemberUser = NonNullable<
+  NonNullable<GraphQLWorkingGroupMember>['user']
+>[number];
 
 const parseWorkingGroupMembers = (
-  user: User,
+  user: GraphQLWorkingGroupMemberUser,
   role: gp2.WorkingGroupMemberRole,
 ) => {
   const flatAvatar = user.flatData.avatar || [];
@@ -70,15 +73,14 @@ const parseWorkingGroupMembers = (
 };
 
 export function parseWorkingGroupToDataObject(
-  workingGroup: NonNullable<
-    NonNullable<
-      NonNullable<FetchWorkingGroupsQuery>['queryWorkingGroupsContentsWithTotal']
-    >['items']
-  >[number],
+  workingGroup: GraphQLWorkingGroup,
 ): gp2.WorkingGroupDataObject {
   const members =
     workingGroup.flatData.members?.reduce(
-      (membersList: gp2.WorkingGroupMember[], member: Member) => {
+      (
+        membersList: gp2.WorkingGroupMember[],
+        member: GraphQLWorkingGroupMember,
+      ) => {
         if (!isWorkingGroupMemberRole(member.role)) {
           throw new Error(
             `Invalid working group role on members : ${member.role}`,

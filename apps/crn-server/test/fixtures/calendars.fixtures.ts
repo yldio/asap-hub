@@ -1,5 +1,5 @@
 import { CalendarResponse, ListCalendarResponse } from '@asap-hub/model';
-import { RestCalendar, Results } from '@asap-hub/squidex';
+import { Calendar, RestCalendar, Results } from '@asap-hub/squidex';
 import {
   FetchCalendarQuery,
   FetchCalendarsQuery,
@@ -19,6 +19,12 @@ export const getCalendarRaw = (): CalendarRaw => ({
   googleCalendarId: '3@group.calendar.google.com',
   version: 42,
 });
+
+export const getCalendarInput = (): Calendar => {
+  const { id: _id, version: _version, ...calendarInput } = getCalendarRaw();
+
+  return calendarInput;
+}
 
 export const getCalendarResponse = (): CalendarResponse => ({
   id: '3@group.calendar.google.com',

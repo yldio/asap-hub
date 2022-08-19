@@ -211,6 +211,19 @@ export default class Calendars implements CalendarController {
     const res = await this.calendarSquidexRestClient.patch(calendarId, update);
     return parseRestCalendar(res);
   }
+
+  async create(
+    data: Calendar,
+  ): Promise<CalendarResponse & { googleCalendarId: string }> {
+    const create = parseToSquidex(data);
+    const res = await this.calendarSquidexRestClient.create(create);
+    return {
+      id: res.id,
+      color: res.data.color.iv,
+      name: res.data.name.iv,
+      googleCalendarId: res.data.googleCalendarId.iv,
+    };
+  }
 }
 
 export interface CalendarController {
@@ -224,6 +237,7 @@ export interface CalendarController {
     calendarId: string,
     data: Partial<Calendar>,
   ) => Promise<CalendarResponse>;
+  create: (data: Calendar) => Promise<CalendarResponse>;
   fetchById(id: string, options?: { raw: false }): Promise<CalendarResponse>;
   fetchById(id: string, options?: { raw: true }): Promise<CalendarRaw>;
 }

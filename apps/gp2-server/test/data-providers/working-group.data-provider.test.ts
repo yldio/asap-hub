@@ -1,3 +1,4 @@
+import { appName, baseUrl } from '../../src/config';
 import {
   GraphQLWorkingGroup,
   parseWorkingGroupToDataObject,
@@ -124,6 +125,50 @@ describe('Working Group Data Provider', () => {
               role: 'Chair',
               firstName: 'Tony',
               lastName: 'Stark',
+            },
+          ],
+        });
+        expect(workingGroupDataObject).toEqual(expected);
+      });
+
+      test('avatar urls are added if available', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const workingGroupWithMembers = {
+          ...workingGroup,
+          flatData: {
+            ...workingGroup.flatData,
+            members: [
+              {
+                id: 'member-id',
+                role: 'Chair',
+                user: [
+                  {
+                    id: '42',
+                    created: '2021-01-01T00:00:00Z',
+                    lastModified: '2021-01-01T00:00:00Z',
+                    version: 1,
+                    flatData: {
+                      firstName: 'Tony',
+                      lastName: 'Stark',
+                      avatar: [{ id: 'avatar-id' }],
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        };
+        const workingGroupDataObject = parseWorkingGroupToDataObject(
+          workingGroupWithMembers,
+        );
+        const expected = getWorkingGroupDataObject({
+          members: [
+            {
+              userId: '42',
+              role: 'Chair',
+              firstName: 'Tony',
+              lastName: 'Stark',
+              avatarUrl: `${baseUrl}/api/assets/${appName}/avatar-id`,
             },
           ],
         });

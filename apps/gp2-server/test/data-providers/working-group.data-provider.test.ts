@@ -1,10 +1,15 @@
-import { WorkingGroupSquidexDataProvider } from '../../src/data-providers/working-group.data-provider';
+import { appName, baseUrl } from '../../src/config';
+import {
+  parseWorkingGroupToDataObject,
+  WorkingGroupSquidexDataProvider,
+} from '../../src/data-providers/working-group.data-provider';
 import {
   getGraphQLWorkingGroup,
+  getGraphQLWorkingGroupMember,
   getListWorkingGroupDataObject,
   getSquidexWorkingGroupGraphqlResponse,
+  getWorkingGroupDataObject,
 } from '../fixtures/working-group.fixtures';
-import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
@@ -18,16 +23,12 @@ describe('Working Group Data Provider', () => {
   const workingGroupDataProviderMockGraphqlServer =
     new WorkingGroupSquidexDataProvider(squidexGraphqlClientMockServer);
 
-  beforeAll(() => {
-    identity();
-  });
-
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   describe('Fetch', () => {
-    test('Should fetch the users from squidex graphql', async () => {
+    test('Should fetch the working group from squidex graphql', async () => {
       const result = await workingGroupDataProviderMockGraphqlServer.fetch();
 
       expect(result).toMatchObject(getListWorkingGroupDataObject());
@@ -75,6 +76,69 @@ describe('Working Group Data Provider', () => {
         title: '',
         shortDescription: '',
         leadingMembers: '',
+      });
+    });
+
+    describe('Parsing', () => {
+      test('the working group is parsed', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const workingGroupDataObject =
+          parseWorkingGroupToDataObject(workingGroup);
+        const expected = getWorkingGroupDataObject();
+        expect(workingGroupDataObject).toEqual(expected);
+      });
+
+      test('the members in working group are parsed', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        workingGroup.flatData.members = [getGraphQLWorkingGroupMember()];
+        const { members } = parseWorkingGroupToDataObject(workingGroup);
+        expect(members).toEqual([
+          {
+            userId: '42',
+            role: 'Lead',
+            firstName: 'Tony',
+            lastName: 'Stark',
+          },
+        ]);
+      });
+
+      test('undefined members returns empty array', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        workingGroup.flatData.members = undefined!;
+        const { members } = parseWorkingGroupToDataObject(workingGroup);
+        expect(members).toEqual([]);
+      });
+
+      test('avatar urls are added if available', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const member = getGraphQLWorkingGroupMember();
+        member!.user![0]!.flatData.avatar = [{ id: 'avatar-id' }];
+        workingGroup.flatData.members = [member];
+        const { members } = parseWorkingGroupToDataObject(workingGroup);
+        expect(members[0]?.avatarUrl).toEqual(
+          `${baseUrl}/api/assets/${appName}/avatar-id`,
+        );
+      });
+
+      test('invalid role', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const member = getGraphQLWorkingGroupMember();
+        member!.role = 'invalid-role';
+        workingGroup.flatData.members = [member];
+        expect(() =>
+          parseWorkingGroupToDataObject(workingGroup),
+        ).toThrowErrorMatchingInlineSnapshot(
+          '"Invalid working group role on members : invalid-role"',
+        );
+      });
+
+      test('should skip the user from the result if the user property is undefined', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const member = getGraphQLWorkingGroupMember();
+        member!.user = undefined!;
+        workingGroup.flatData.members = [member];
+        const { members } = parseWorkingGroupToDataObject(workingGroup);
+        expect(members).toEqual([]);
       });
     });
   });

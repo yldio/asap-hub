@@ -7,6 +7,22 @@ export const workingGroupContentQueryFragment = gql`
       title
       shortDescription
       leadingMembers
+      members {
+        role
+        user {
+          id
+          created
+          lastModified
+          version
+          flatData {
+            avatar {
+              id
+            }
+            firstName
+            lastName
+          }
+        }
+      }
     }
   }
 `;

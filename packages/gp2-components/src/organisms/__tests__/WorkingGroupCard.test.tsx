@@ -1,3 +1,4 @@
+import { gp2 } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import { WorkingGroupCard } from '..';
 
@@ -26,9 +27,16 @@ describe('WorkingGroupCard', () => {
     expect(screen.getByText(/0 members/i)).toBeInTheDocument();
   });
   it('renders a single count of the members', () => {
-    const props = {
+    const props: gp2.WorkingGroupResponse = {
       ...defaultProps,
-      members: [{}],
+      members: [
+        {
+          userId: '11',
+          role: 'Lead',
+          firstName: 'Tony',
+          lastName: 'Stark',
+        },
+      ],
     };
     render(<WorkingGroupCard {...props} />);
     expect(screen.getByText(/1 member/i)).toBeInTheDocument();

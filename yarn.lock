@@ -548,7 +548,7 @@ __metadata:
     browser-image-compression: 1.0.17
     browserslist-useragent-regexp: 3.0.2
     cross-env: 7.0.3
-    date-fns: 2.29.1
+    date-fns: 2.29.2
     history: 4.10.1
     identity-obj-proxy: 3.0.0
     jose: 2.0.5
@@ -798,7 +798,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.18.9
     "@types/jsonwebtoken": 8.5.8
     core-js: 3.24.1
-    date-fns: 2.29.1
+    date-fns: 2.29.2
     jsonwebtoken: 8.5.1
     ramda: 0.27.1
     uuid: 8.3.2
@@ -989,7 +989,7 @@ __metadata:
     browser-image-compression: 1.0.17
     browserslist-useragent-regexp: 3.0.2
     cross-env: 7.0.3
-    date-fns: 2.29.1
+    date-fns: 2.29.2
     history: 4.10.1
     identity-obj-proxy: 3.0.0
     jose: 2.0.5
@@ -1213,7 +1213,7 @@ __metadata:
     "@types/testing-library__react-hooks": 3.4.1
     "@types/uuid": 8.3.4
     core-js: 3.24.1
-    date-fns: 2.29.1
+    date-fns: 2.29.2
     date-fns-tz: 1.3.6
     dom-to-playwright: 0.1.3
     emotion-normalize: 11.0.1
@@ -1433,7 +1433,7 @@ __metadata:
     "@types/react-router-dom": 5.1.7
     babel-preset-react-app: 10.0.1
     core-js: 3.24.1
-    date-fns: 2.29.1
+    date-fns: 2.29.2
     emotion: 10.0.27
     history: 4.10.1
     react: 17.0.2
@@ -19346,10 +19346,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:2.29.1":
-  version: 2.29.1
-  resolution: "date-fns@npm:2.29.1"
-  checksum: 9d07f77dffc1eb8c213391bde39f2963ffe7c0019d9edde14487882d627224f3a39b963e6e99d0cc58afff220a6a1a7e8864d2789958f4eaa77714de94d4d076
+"date-fns@npm:2.29.2":
+  version: 2.29.2
+  resolution: "date-fns@npm:2.29.2"
+  checksum: 08bebcceb0a5dbadae4c55e6592b9d5c07dbd7833433c7e9a1d4a424300db32589b8b48e5979b32863c9b00a48d9bab6663e580c2a4f9f203d46cbf9113b5664
   languageName: node
   linkType: hard
 

@@ -13,6 +13,7 @@ export type WorkingGroupMember = {
   role: WorkingGroupMemberRole;
   firstName: string;
   lastName: string;
+  avatarUrl?: string;
 };
 
 export type WorkingGroupDataObject = {

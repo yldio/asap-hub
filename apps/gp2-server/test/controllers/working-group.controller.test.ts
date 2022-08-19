@@ -1,7 +1,10 @@
+import { NotFoundError } from '@asap-hub/errors';
 import WorkingGroups from '../../src/controllers/working-group.controller';
 import {
   getListWorkingGroupDataObject,
-  getListWorkingGroupResponse,
+  getListWorkingGroupsResponse,
+  getWorkingGroupDataObject,
+  getWorkingGroupResponse,
 } from '../fixtures/working-group.fixtures';
 import { workingGroupDataProviderMock } from '../mocks/working-group-data-provider.mock';
 
@@ -21,7 +24,7 @@ describe('Working Group controller', () => {
       );
       const result = await workingGroupController.fetch();
 
-      expect(result).toEqual(getListWorkingGroupResponse());
+      expect(result).toEqual(getListWorkingGroupsResponse());
     });
 
     test('Should return empty list when there are no users', async () => {
@@ -32,6 +35,28 @@ describe('Working Group controller', () => {
       const result = await workingGroupController.fetch();
 
       expect(result).toEqual({ items: [], total: 0 });
+    });
+  });
+  describe('FetchById', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
+    test('Should throw when user is not found', async () => {
+      workingGroupDataProviderMock.fetchById.mockResolvedValue(null);
+
+      await expect(
+        workingGroupController.fetchById('not-found'),
+      ).rejects.toThrow(NotFoundError);
+    });
+
+    test('Should return the user when it finds it', async () => {
+      workingGroupDataProviderMock.fetchById.mockResolvedValue(
+        getWorkingGroupDataObject(),
+      );
+      const result = await workingGroupController.fetchById('user-id');
+
+      expect(result).toEqual(getWorkingGroupResponse());
     });
   });
 });

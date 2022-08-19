@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { getListWorkingGroupResponse } from '../fixtures/working-group.fixtures';
+import { getListWorkingGroupsResponse } from '../fixtures/working-group.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { workingGroupControllerMock } from '../mocks/working-group-controller.mock';
 
@@ -32,13 +32,13 @@ describe('/working-groups/ route', () => {
 
     test('Should return the results correctly', async () => {
       workingGroupControllerMock.fetch.mockResolvedValueOnce(
-        getListWorkingGroupResponse(),
+        getListWorkingGroupsResponse(),
       );
 
       const response = await supertest(app).get('/working-groups');
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(getListWorkingGroupResponse());
+      expect(response.body).toEqual(getListWorkingGroupsResponse());
     });
 
     test('Should call the controller fetch method', async () => {

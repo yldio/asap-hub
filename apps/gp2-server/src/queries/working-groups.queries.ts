@@ -28,9 +28,9 @@ export const workingGroupContentQueryFragment = gql`
 `;
 
 export const FETCH_WORKING_GROUP = gql`
-  query FetchUser($id: String!) {
-    findUsersContent(id: $id) {
-      ...UsersContent
+  query FetchWorkingGroup($id: String!) {
+    findWorkingGroupsContent(id: $id) {
+      ...WorkingGroupContent
     }
   }
   ${workingGroupContentQueryFragment}

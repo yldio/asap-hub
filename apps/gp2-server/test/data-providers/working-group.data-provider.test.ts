@@ -8,6 +8,7 @@ import {
   getGraphQLWorkingGroupMember,
   getListWorkingGroupDataObject,
   getSquidexWorkingGroupGraphqlResponse,
+  getSquidexWorkingGroupsGraphqlResponse,
   getWorkingGroupDataObject,
 } from '../fixtures/working-group.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
@@ -35,7 +36,7 @@ describe('Working Group Data Provider', () => {
     });
 
     test('Should return an empty result', async () => {
-      const mockResponse = getSquidexWorkingGroupGraphqlResponse();
+      const mockResponse = getSquidexWorkingGroupsGraphqlResponse();
       mockResponse.queryWorkingGroupsContentsWithTotal!.items = [];
       mockResponse.queryWorkingGroupsContentsWithTotal!.total = 0;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
@@ -45,7 +46,7 @@ describe('Working Group Data Provider', () => {
     });
 
     test('Should return an empty result if the client returns a response with a null items property', async () => {
-      const mockResponse = getSquidexWorkingGroupGraphqlResponse();
+      const mockResponse = getSquidexWorkingGroupsGraphqlResponse();
       mockResponse.queryWorkingGroupsContentsWithTotal = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
@@ -54,7 +55,7 @@ describe('Working Group Data Provider', () => {
     });
 
     test('Should return an empty result if the client returns a response with a null query property', async () => {
-      const mockResponse = getSquidexWorkingGroupGraphqlResponse();
+      const mockResponse = getSquidexWorkingGroupsGraphqlResponse();
       mockResponse.queryWorkingGroupsContentsWithTotal!.items = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
@@ -63,7 +64,7 @@ describe('Working Group Data Provider', () => {
     });
 
     test('Should default null title, shortDescription and leadingMembers to an empty string', async () => {
-      const mockResponse = getSquidexWorkingGroupGraphqlResponse();
+      const mockResponse = getSquidexWorkingGroupsGraphqlResponse();
       const workingGroup = getGraphQLWorkingGroup();
       workingGroup.flatData.title = null;
       workingGroup.flatData.shortDescription = null;
@@ -140,6 +141,22 @@ describe('Working Group Data Provider', () => {
         const { members } = parseWorkingGroupToDataObject(workingGroup);
         expect(members).toEqual([]);
       });
+    });
+  });
+  describe('FetchById', () => {
+    test('Should fetch the users from squidex graphql', async () => {
+      const result = await workingGroupDataProviderMockGraphqlServer.fetchById(
+        'user-id',
+      );
+
+      expect(result).toMatchObject(getWorkingGroupDataObject());
+    });
+    test('Should return null when the user is not found', async () => {
+      const mockResponse = getSquidexWorkingGroupGraphqlResponse();
+      mockResponse.findWorkingGroupsContent = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      expect(await workingGroupDataProvider.fetchById('not-found')).toBeNull();
     });
   });
 });

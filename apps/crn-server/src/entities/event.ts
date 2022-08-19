@@ -135,7 +135,7 @@ export const parseGraphQLEvent = (
     )[0] || undefined;
   const startDate = DateTime.fromISO(item.flatData.startDate!);
 
-  const meetingLink = item.flatData.meetingLink;
+  const meetingLink = item.flatData.meetingLink || undefined;
 
   // fallback to group thumbnail
   const thumbnail = item.flatData.thumbnail?.length

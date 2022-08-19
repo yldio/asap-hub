@@ -62,6 +62,10 @@ jobs:
 
   integration:
     if: ${{ inputs.environment-name=='Branch' }}
+    # limiting to one instance at a time as running these in parallel can cause
+    # issues with Squidex
+    concurrency:
+      group: crn-test-integration
     permissions:
       packages: read
     runs-on: ubuntu-latest

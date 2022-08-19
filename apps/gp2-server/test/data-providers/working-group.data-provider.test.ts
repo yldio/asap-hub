@@ -102,6 +102,13 @@ describe('Working Group Data Provider', () => {
         ]);
       });
 
+      test('undefined members returns empty array', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        workingGroup.flatData.members = undefined!;
+        const { members } = parseWorkingGroupToDataObject(workingGroup);
+        expect(members).toEqual([]);
+      });
+
       test('avatar urls are added if available', () => {
         const workingGroup = getGraphQLWorkingGroup();
         const member = getGraphQLWorkingGroupMember();

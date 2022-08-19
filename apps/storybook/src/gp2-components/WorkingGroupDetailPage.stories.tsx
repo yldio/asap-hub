@@ -8,7 +8,11 @@ export default {
 };
 
 const props = {
+  id: '',
   title: 'Underrepresented Populations',
+  members: [],
+  shortDescription: '',
+  projects: [],
 };
 
 export const Normal = () => (

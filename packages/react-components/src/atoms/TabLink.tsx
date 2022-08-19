@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
-import { css } from '@emotion/react';
+import { css, Theme } from '@emotion/react';
 
 import { layoutStyles } from '../text';
 import { perRem } from '../pixels';
@@ -17,13 +17,14 @@ const styles = css({
   textDecoration: 'none',
   whiteSpace: 'nowrap',
 });
-const activeStyles = css({
-  paddingBottom: `${(12 - 4) / perRem}em`,
-  borderBottom: `solid ${4 / perRem}em ${fern.rgb}`,
+const activeStyles = ({ colors: { primary500 = fern } = {} }: Theme) =>
+  css({
+    paddingBottom: `${(12 - 4) / perRem}em`,
+    borderBottom: `solid ${4 / perRem}em ${primary500.rgba}`,
 
-  color: charcoal.rgb,
-  fontWeight: 'bold',
-});
+    color: charcoal.rgb,
+    fontWeight: 'bold',
+  });
 
 interface TabLinkProps {
   readonly href: string;
@@ -35,7 +36,10 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children }) => {
       <NavLink
         to={href}
         activeClassName={activeClassName}
-        css={[styles, { [`&.${activeClassName}`]: activeStyles }]}
+        css={(theme) => [
+          styles,
+          { [`&.${activeClassName}`]: activeStyles(theme) },
+        ]}
       >
         <p css={layoutStyles}>{children}</p>
       </NavLink>
@@ -45,7 +49,7 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children }) => {
   const active =
     new URL(href, window.location.href).pathname === window.location.pathname;
   return (
-    <a href={href} css={[styles, active && activeStyles]}>
+    <a href={href} css={(theme) => [styles, active && activeStyles(theme)]}>
       <p css={layoutStyles}>{children}</p>
     </a>
   );

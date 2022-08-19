@@ -14,6 +14,7 @@ export { default as Headline3 } from './Headline3';
 export { default as Headline4 } from './Headline4';
 export { default as Headline5 } from './Headline5';
 export { default as Headline6 } from './Headline6';
+export { default as Subtitle } from './Subtitle';
 export { default as Label } from './Label';
 export { default as Link } from './Link';
 export { default as LinkConditional } from './LinkConditional';

@@ -90,7 +90,7 @@ const Link: React.FC<LinkProps> = ({
   small = false,
   enabled = true,
   applyIconTheme = false,
-  noMargin = true,
+  noMargin,
   ellipsed = false,
 }) => {
   const linkStyles = ({ colors }: Theme) =>

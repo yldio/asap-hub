@@ -41,6 +41,24 @@ it('displays an item', () => {
   expect(screen.getByTitle('Icon')).toBeInTheDocument();
 });
 
+it('Shows an info footer', () => {
+  render(
+    <Accordion
+      items={[]}
+      info={{
+        href: 'http://example.com',
+        hrefText: 'Go Here',
+        text: 'Here is some info about the button',
+      }}
+    />,
+  );
+  expect(screen.getByText('Go Here').closest('a')).toHaveAttribute(
+    'href',
+    'http://example.com',
+  );
+  expect(screen.getByText('Here is some info about the button')).toBeVisible();
+});
+
 it('shows the external link icon when appropriate', () => {
   render(<Accordion items={[{ ...item, href: '/internal' }]} />);
   expect(screen.queryByTitle('External Link')).not.toBeInTheDocument();

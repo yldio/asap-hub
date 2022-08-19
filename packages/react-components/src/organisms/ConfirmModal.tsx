@@ -27,9 +27,11 @@ const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;
 const buttonContainerStyles = css({
   display: 'grid',
   columnGap: `${30 / perRem}em`,
-  gridTemplateRows: 'max-content 12px max-content',
+  gridTemplateRows: 'max-content 18px max-content',
   [buttonMediaQuery]: {
     gridTemplateColumns: 'max-content max-content',
+    gridTemplateRows: 'auto',
+    justifyContent: 'flex-end',
   },
 });
 
@@ -95,19 +97,13 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
           <Paragraph accent="lead">{description}</Paragraph>
           <div css={buttonContainerStyles}>
             <div css={backStyles}>
-              <Link
-                buttonStyle
-                enabled={status !== 'isSaving'}
-                small
-                href={backHref}
-              >
+              <Link buttonStyle enabled={status !== 'isSaving'} href={backHref}>
                 {cancelText}
               </Link>
             </div>
             <div css={saveStyles}>
               <Button
                 primary
-                small
                 enabled={status !== 'isSaving'}
                 onClick={async () => {
                   setStatus('isSaving');

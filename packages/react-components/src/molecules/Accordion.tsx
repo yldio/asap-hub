@@ -12,12 +12,16 @@ import {
   steel,
 } from '../colors';
 
+const containerStyles = css({
+  padding: `0 ${9 / perRem}em`,
+});
+
 const itemStyles = css({
   borderBottom: `${steel.rgb} solid 1px`,
   '~ div:last-of-type': {
     borderBottom: 'none',
   },
-  padding: `${9 / perRem}em 0`,
+  padding: `${12 / perRem}em 0`,
   margin: `0 ${9 / perRem}em`,
 });
 
@@ -26,7 +30,7 @@ const headerStyles = css({
   width: '100%',
   gridColumnGap: `${15 / perRem}em`,
   gridTemplateColumns: 'min-content 1fr min-content',
-  padding: `${9 / perRem}em ${15 / perRem}em`,
+  padding: `0 ${15 / perRem}em`,
 });
 
 const iconStyles = css({
@@ -47,7 +51,7 @@ const iconOpenStyles = css({
 });
 
 const bodyStyles = css({
-  padding: `0 ${57 / perRem}em`,
+  padding: `0 ${54 / perRem}em ${15 / perRem}em`,
 });
 
 const hiddenStyles = css({
@@ -115,7 +119,7 @@ const Accordion: FC<AccordionProps> = ({ items, info }) => {
   const [opened, setOpened] = useState<number | undefined>();
   return (
     <Card accent="neutral200" padding={false}>
-      <div>
+      <div css={containerStyles}>
         {items.map(({ icon, title, description, href, hrefText }, index) => (
           <div key={`accordion-${index}`} css={itemStyles}>
             <button
@@ -124,19 +128,18 @@ const Accordion: FC<AccordionProps> = ({ items, info }) => {
             >
               <div css={iconStyles}>{icon}</div>
               <Headline5>{title}</Headline5>
-
               <div css={[iconStyles, index === opened && iconOpenStyles]}>
                 {chevronDownIcon}
               </div>
             </button>
-            <div
-              css={[bodyStyles, hiddenStyles, index === opened && openStyles]}
-            >
-              <Paragraph accent={'lead'}>{description}</Paragraph>
-              <div css={{ width: 'fit-content' }}>
-                <Link buttonStyle small primary href={href}>
-                  {hrefText} {!isInternalLink(href)[0] && externalLinkIcon}
-                </Link>
+            <div css={[hiddenStyles, index === opened && openStyles]}>
+              <div css={bodyStyles}>
+                <Paragraph accent={'lead'}>{description}</Paragraph>
+                <div css={{ width: 'fit-content' }}>
+                  <Link buttonStyle small primary href={href}>
+                    {hrefText} {!isInternalLink(href)[0] && externalLinkIcon}
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

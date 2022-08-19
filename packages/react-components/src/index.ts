@@ -6,12 +6,12 @@ import * as utils from './utils';
 
 export * from './appearance';
 export {
+  accents,
   Anchor,
   Avatar,
   Button,
   Caption,
   Card,
-  accents,
   Display,
   Divider,
   Headline2,
@@ -24,6 +24,7 @@ export {
   Overlay,
   Paragraph,
   Pill,
+  Subtitle,
   TabLink,
   Toggle,
   Tooltip,
@@ -50,8 +51,8 @@ export {
   FormCard,
   GoogleSigninButton,
   Header,
-  Info,
   ImageLink,
+  Info,
   LabeledCheckbox,
   LabeledDateField,
   LabeledDropdown,

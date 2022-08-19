@@ -1,17 +1,16 @@
-import { workingGroupsImage } from '../images';
-import PageBanner from '../organisms/PageBanner';
+import { ComponentProps } from 'react';
+import WorkingGroupsBody from '../organisms/WorkingGroupsBody';
+import WorkingGroupsHeader from '../organisms/WorkingGroupsHeader';
 
-const props = {
-  image: workingGroupsImage,
-  title: 'Working Groups',
-  description:
-    'Groups of specialist GP2 members from a range of disciplines that are responsible for the operations and implementation of the programme.',
-};
+type WorkingGroupsPageProps = ComponentProps<typeof WorkingGroupsBody>;
 
-const UsersPage: React.FC = () => (
+const WorkingGroupsPage: React.FC<WorkingGroupsPageProps> = (props) => (
   <article>
-    <PageBanner {...props} />
+    <WorkingGroupsHeader />
+    <main>
+      <WorkingGroupsBody {...props} />
+    </main>
   </article>
 );
 
-export default UsersPage;
+export default WorkingGroupsPage;

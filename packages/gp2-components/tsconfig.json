@@ -13,6 +13,7 @@
     { "path": "../react-components" },
     { "path": "../react-context" },
     { "path": "../fixtures" },
+    { "path": "../model" },
     { "path": "../routing" }
   ]
 }

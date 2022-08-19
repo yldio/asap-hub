@@ -1,28 +1,27 @@
-import { Chance } from 'chance';
-import {
-  RestResearchOutput,
-  RestTeam,
-  RestUser,
-  SquidexGraphql,
-  SquidexRest,
-  InputUser,
-} from '@asap-hub/squidex';
-import { appName, baseUrl } from '../../src/config';
-import { getAuthToken } from '../../src/utils/auth';
-import { getUserCreateDataObject } from '../fixtures/users.fixtures';
-import { UserSquidexDataProvider } from '../../src/data-providers/users.data-provider';
-import { ResearchOutputSquidexDataProvider } from '../../src/data-providers/research-outputs.data-provider';
-import { ReminderSquidexDataProvider } from '../../src/data-providers/reminders.data-provider';
-import { TeamSquidexDataProvider } from '../../src/data-providers/teams.data-provider';
-import { getResearchOutputCreateDataObject } from '../fixtures/research-output.fixtures';
-import { getTeamCreateDataObject } from '../fixtures/teams.fixtures';
-import { createRandomOrcid } from '../helpers/users';
 import {
   ResearchOutputCreateDataObject,
   ResearchOutputPublishedReminder,
   UserCreateDataObject,
 } from '@asap-hub/model';
-import { pause } from '../helpers/integration-tests';
+import {
+  InputUser,
+  RestResearchOutput,
+  RestTeam,
+  RestUser,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
+import { Chance } from 'chance';
+import { appName, baseUrl } from '../../src/config';
+import { ReminderSquidexDataProvider } from '../../src/data-providers/reminders.data-provider';
+import { ResearchOutputSquidexDataProvider } from '../../src/data-providers/research-outputs.data-provider';
+import { TeamSquidexDataProvider } from '../../src/data-providers/teams.data-provider';
+import { UserSquidexDataProvider } from '../../src/data-providers/users.data-provider';
+import { getAuthToken } from '../../src/utils/auth';
+import { getResearchOutputCreateDataObject } from '../fixtures/research-output.fixtures';
+import { getTeamCreateDataObject } from '../fixtures/teams.fixtures';
+import { getUserCreateDataObject } from '../fixtures/users.fixtures';
+import { createRandomOrcid } from '../helpers/users';
 
 jest.setTimeout(30000);
 
@@ -90,8 +89,6 @@ describe('Reminders', () => {
         researchOutputInput,
       );
 
-      await pause();
-
       const reminders = await reminderDataProvider.fetch({ userId: userId1 });
 
       const expectedReminder: ResearchOutputPublishedReminder = {
@@ -120,8 +117,6 @@ describe('Reminders', () => {
 
       await researchOutputDataProvider.create(researchOutputInput);
 
-      await pause();
-
       const reminders = await reminderDataProvider.fetch({ userId: userId1 });
 
       expect(reminders).toEqual({
@@ -138,8 +133,6 @@ describe('Reminders', () => {
       researchOutputInput.addedDate = timeOver24hago.toISOString();
 
       await researchOutputDataProvider.create(researchOutputInput);
-
-      await pause();
 
       const reminders = await reminderDataProvider.fetch({ userId: userId1 });
 
@@ -171,8 +164,6 @@ describe('Reminders', () => {
       const researchOutputId3 = await researchOutputDataProvider.create(
         researchOutputInput3,
       );
-
-      await pause();
 
       const reminders = await reminderDataProvider.fetch({ userId: userId1 });
       const reminderIds = reminders.items.map(

@@ -27,7 +27,7 @@ const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;
 const buttonContainerStyles = css({
   display: 'grid',
   columnGap: `${30 / perRem}em`,
-  gridTemplateRows: 'max-content 18px max-content',
+  gridTemplateRows: 'max-content 12px max-content',
   [buttonMediaQuery]: {
     gridTemplateColumns: 'max-content max-content',
     gridTemplateRows: 'auto',

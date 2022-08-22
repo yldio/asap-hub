@@ -1,11 +1,13 @@
+import { gp2 } from '@asap-hub/model';
 import {
   BackLink,
   drawerQuery,
   Subtitle,
   TabLink,
   TabNav,
+  utils,
 } from '@asap-hub/react-components';
-import { getCounterString } from '@asap-hub/react-components/src/utils';
+
 import { css } from '@emotion/react';
 import projectIcon from '../icons/project-icon';
 import usersIcon from '../icons/users-icon';
@@ -13,17 +15,17 @@ import { workingGroupsImage } from '../images';
 import CardWithBackground from '../molecules/CardWithBackground';
 import IconWithLabel from '../molecules/IconWithLabel';
 
-type WorkingGroupResponse = {
-  id: string;
-  title: string;
-  shortDescription: string;
-  leadingMembers?: string;
-  members: unknown[];
-  projects: unknown[];
+type WorkingGroupDetailPageProps = Pick<
+  gp2.WorkingGroupResponse,
+  'title' | 'members'
+> & {
+  projects?: unknown[];
   backHref: string;
 };
 
-const WorkingGroupDetailPage: React.FC<WorkingGroupResponse> = ({
+const { getCounterString } = utils;
+
+const WorkingGroupDetailPage: React.FC<WorkingGroupDetailPageProps> = ({
   title,
   members,
   projects,
@@ -48,7 +50,7 @@ const WorkingGroupDetailPage: React.FC<WorkingGroupResponse> = ({
           {getCounterString(members.length, 'member')}
         </IconWithLabel>
         <IconWithLabel icon={projectIcon}>
-          {getCounterString(projects.length, 'project')}
+          {getCounterString(projects?.length || 0, 'project')}
         </IconWithLabel>
       </div>
     </CardWithBackground>

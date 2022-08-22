@@ -25,6 +25,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   teamId: '1337',
   roles: [],
   reminders: [],
+  dismissedGettingStarted: false,
 };
 
 it('renders multiple news cards', () => {

@@ -76,11 +76,10 @@ const EventCard: React.FC<EventCardProps> = ({
               <div css={buttonStyle}>
                 <Link
                   href={props.meetingLink}
-                  margin={false}
+                  noMargin
                   primary
                   buttonStyle
                   small
-                  stretch={false}
                 >
                   Join meeting now
                 </Link>

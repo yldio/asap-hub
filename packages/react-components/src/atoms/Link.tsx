@@ -60,8 +60,7 @@ interface NormalLinkProps {
   readonly primary?: undefined;
   readonly small?: undefined;
   readonly enabled?: undefined;
-  readonly margin?: undefined;
-  readonly stretch?: undefined;
+  readonly noMargin?: undefined;
 }
 
 interface ButtonStyleLinkProps {
@@ -70,8 +69,7 @@ interface ButtonStyleLinkProps {
   readonly primary?: boolean;
   readonly small?: boolean;
   readonly enabled?: boolean;
-  readonly margin?: boolean;
-  readonly stretch?: boolean;
+  readonly noMargin?: boolean;
 }
 
 type LinkProps = {
@@ -79,7 +77,6 @@ type LinkProps = {
   readonly href: string | undefined;
   readonly label?: string;
   readonly applyIconTheme?: boolean;
-  readonly stretch?: boolean;
   readonly ellipsed?: boolean;
 } & (NormalLinkProps | ButtonStyleLinkProps);
 
@@ -93,8 +90,7 @@ const Link: React.FC<LinkProps> = ({
   small = false,
   enabled = true,
   applyIconTheme = false,
-  margin = true,
-  stretch = true,
+  noMargin,
   ellipsed = false,
 }) => {
   const linkStyles = ({ colors }: Theme) =>
@@ -105,8 +101,7 @@ const Link: React.FC<LinkProps> = ({
             small,
             enabled,
             children,
-            margin,
-            stretch,
+            noMargin,
           }),
         ]
       : [
@@ -115,16 +110,16 @@ const Link: React.FC<LinkProps> = ({
           applyIconTheme && iconThemeStyles[themeVariant],
         ];
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;
-  const applyElipsis = ellipsed && typeof linkChildren === 'string';
+  const applyEllipsis = ellipsed && typeof linkChildren === 'string';
   return (
     <Anchor
       href={href}
       enabled={enabled}
       aria-label={label}
       css={(theme) => linkStyles(theme)}
-      title={applyElipsis ? linkChildren : undefined}
+      title={applyEllipsis ? linkChildren : undefined}
     >
-      {applyElipsis ? <Ellipsis>{linkChildren}</Ellipsis> : linkChildren}
+      {applyEllipsis ? <Ellipsis>{linkChildren}</Ellipsis> : linkChildren}
     </Anchor>
   );
 };

@@ -27,7 +27,7 @@ interface NormalButtonProps {
   readonly small?: boolean;
   readonly linkStyle?: undefined;
   readonly theme?: undefined;
-  readonly stretch?: boolean;
+  readonly noMargin?: boolean;
 }
 interface LinkStyleButtonProps {
   readonly linkStyle: true;
@@ -35,8 +35,8 @@ interface LinkStyleButtonProps {
   readonly primary?: undefined;
   readonly active?: undefined;
   readonly small?: undefined;
-  readonly stretch?: undefined;
   readonly theme?: ThemeVariant | null;
+  readonly noMargin?: undefined;
 }
 type ButtonProps = (NormalButtonProps | LinkStyleButtonProps) & {
   readonly submit?: boolean;
@@ -51,10 +51,10 @@ const Button: React.FC<ButtonProps> = ({
   small = false,
   linkStyle = false,
   active = false,
+  noMargin,
   theme = defaultThemeVariant,
   submit = primary,
   children,
-  stretch = true,
   onClick = noop,
 }) => (
   <button
@@ -73,7 +73,7 @@ const Button: React.FC<ButtonProps> = ({
             enabled,
             active,
             children,
-            stretch,
+            noMargin,
           })
     }
   >

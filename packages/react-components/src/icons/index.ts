@@ -39,6 +39,7 @@ export { default as groupsIcon } from './groups';
 export { default as hidePasswordIcon } from './hide-password';
 export { default as infoCircleIcon } from './info-circle';
 export { default as infoIcon } from './info';
+export { default as infoInfoIcon } from './info-info';
 export { default as labIcon } from './lab';
 export { default as labResource } from './lab-resource';
 export { default as lastPageIcon } from './last-page';

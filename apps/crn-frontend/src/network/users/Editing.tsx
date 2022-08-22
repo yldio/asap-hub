@@ -2,7 +2,7 @@ import { Route, useRouteMatch } from 'react-router-dom';
 import {
   PersonalInfoModal,
   ContactInfoModal,
-  OnboardModal,
+  ConfirmModal,
 } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
@@ -55,7 +55,16 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
       </Route>
       <Route exact path={path + route.editOnboarded.template}>
         <Frame title="Publish your profile">
-          <OnboardModal onSave={patchUser} backHref={backHref} />
+          <ConfirmModal
+            backHref={backHref}
+            successHref="/"
+            title="Ready to publish your profile?"
+            description="In order to show you the Hub, we will need to make your profile public to the Hub network. Would you like to continue?"
+            error="There was an error and we were unable to publish your profile"
+            cancelText="Back to Editing"
+            confirmText="Publish and Explore"
+            onSave={() => patchUser({ onboarded: true })}
+          />
         </Frame>
       </Route>
     </>

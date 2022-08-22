@@ -93,7 +93,7 @@ describe('when button-styled', () => {
     expect(buttonWithMargin).toBe(1.0588235294117647);
 
     rerender(
-      <Link href="/" buttonStyle margin={false}>
+      <Link href="/" buttonStyle noMargin>
         text
       </Link>,
     );
@@ -127,16 +127,6 @@ describe('when button-styled', () => {
     );
 
     expect(getComputedStyle(getByRole('link')).flexGrow).toBe('1');
-  });
-
-  it('renders a non-streched button', () => {
-    const { getByRole } = render(
-      <Link href="/" buttonStyle stretch={false}>
-        text
-      </Link>,
-    );
-
-    expect(getComputedStyle(getByRole('link')).flexGrow).toBe('');
   });
 
   it('supports primary button styles', () => {

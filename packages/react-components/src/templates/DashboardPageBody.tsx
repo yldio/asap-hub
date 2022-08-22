@@ -5,8 +5,9 @@ import {
   network,
   news as newsRoute,
   sharedResearch,
+  dashboard,
 } from '@asap-hub/routing';
-import { TeamRole } from '@asap-hub/model';
+import { TeamRole, UserResponse } from '@asap-hub/model';
 import { isEnabled } from '@asap-hub/flags';
 
 import {
@@ -18,6 +19,8 @@ import {
 import { perRem } from '../pixels';
 import { Card, Paragraph, Link, Headline2 } from '../atoms';
 import { lead } from '..';
+import { Accordion } from '../molecules';
+import { confidentialIcon, giftIcon, learnIcon } from '../icons';
 
 const styles = css({
   display: 'grid',
@@ -47,7 +50,7 @@ type DashboardPageBodyProps = Omit<
   Omit<ComponentProps<typeof NewsSection>, 'title'> & {
     readonly userId: string;
     readonly teamId?: string;
-  } & {
+  } & Pick<UserResponse, 'dismissedGettingStarted'> & {
     roles: TeamRole[];
   };
 
@@ -60,11 +63,53 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   teamId,
   roles,
   reminders,
+  dismissedGettingStarted,
 }) => {
   const canPublish = roles.some((role) => publishRoles.includes(role));
 
   return (
     <div css={styles}>
+      {isEnabled('GETTING_STARTED') && !dismissedGettingStarted && (
+        <div>
+          <Headline2 styleAsHeading={3}>Get Started with ASAP</Headline2>
+          <div css={infoStyles}>
+            Here’s everything you need to know to start using the Hub.
+          </div>
+          <Accordion
+            items={[
+              {
+                icon: learnIcon,
+                title: 'How to use the Hub?',
+                description:
+                  'Explore a series of short videos that highlight the many different aspects of the Hub.',
+                hrefText: 'Explore videos',
+                href: 'https://hub.asap.science/news/f247813e-a64c-4909-8071-11ae9896c52a',
+              },
+              {
+                icon: giftIcon,
+                title: 'Grant Welcome Packet',
+                description:
+                  'All you need to know about the Network, the Hub, sharing, meetings, communications, publishing and more.',
+                hrefText: 'Open the packet',
+                href: 'https://drive.google.com/file/d/1E-wPBbVQnVHpBBP24pgIo87AOVoO15Gr/view',
+              },
+              {
+                icon: confidentialIcon,
+                title: 'Confidentiality Rules',
+                description:
+                  'View all confidentiality rules related to the Hub.',
+                hrefText: 'Read more',
+                href: 'https://hub.asap.science/terms-and-conditions',
+              },
+            ]}
+            info={{
+              href: dashboard({}).dismissGettingStarted({}).$,
+              hrefText: 'Don’t Show Again',
+              text: 'Want to remove this section?',
+            }}
+          />
+        </div>
+      )}
       {isEnabled('REMINDERS') && (
         <div>
           <Headline2 styleAsHeading={3}>Reminders</Headline2>

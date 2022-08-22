@@ -6,7 +6,7 @@ import {
   mint,
   apricot,
   clay,
-  sky,
+  semanticInformationInfo100,
   denim,
   azure,
   space,
@@ -92,7 +92,7 @@ const placeholderColorStyle = css({
 const colorStyles = [
   css({ backgroundColor: mint.rgb, fill: pine.rgb }),
   css({ backgroundColor: apricot.rgb, fill: clay.rgb }),
-  css({ backgroundColor: sky.rgb, fill: denim.rgb }),
+  css({ backgroundColor: semanticInformationInfo100.rgb, fill: denim.rgb }),
   css({ backgroundColor: azure.rgb, fill: space.rgb }),
   css({ backgroundColor: lilac.rgb, fill: berry.rgb }),
   css({ backgroundColor: lavender.rgb, fill: mauve.rgb }),

@@ -1744,6 +1744,38 @@ export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
   };
 };
 
+export type FetchWorkingGroupQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchWorkingGroupQuery = {
+  findWorkingGroupsContent: Maybe<
+    Pick<WorkingGroups, 'id'> & {
+      flatData: Pick<
+        WorkingGroupsFlatDataDto,
+        'title' | 'shortDescription' | 'leadingMembers'
+      > & {
+        members: Maybe<
+          Array<
+            Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+              user: Maybe<
+                Array<
+                  Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+                    flatData: Pick<
+                      UsersFlatDataDto,
+                      'firstName' | 'lastName'
+                    > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                  }
+                >
+              >;
+            }
+          >
+        >;
+      };
+    }
+  >;
+};
+
 export type FetchWorkingGroupsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type FetchWorkingGroupsQuery = {
@@ -2195,6 +2227,61 @@ export const FetchUsersDocument = {
     ...UsersContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchUsersQuery, FetchUsersQueryVariables>;
+export const FetchWorkingGroupDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchWorkingGroup' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findWorkingGroupsContent' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'WorkingGroupContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...WorkingGroupContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchWorkingGroupQuery,
+  FetchWorkingGroupQueryVariables
+>;
 export const FetchWorkingGroupsDocument = {
   kind: 'Document',
   definitions: [

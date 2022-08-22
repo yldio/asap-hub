@@ -73,9 +73,9 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     }),
   );
 
-  const sharedOutputsCount = team.outputs?.length || 0;
-
   if (team) {
+    const sharedOutputsCount = team.outputs?.length || 0;
+
     return (
       <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
         <Frame title={team.displayName}>

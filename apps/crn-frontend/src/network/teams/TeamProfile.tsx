@@ -74,8 +74,6 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   );
 
   if (team) {
-    const sharedOutputsCount = team.outputs?.length || 0;
-
     return (
       <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
         <Frame title={team.displayName}>
@@ -89,7 +87,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
               teamListElementId={teamListElementId}
               upcomingEventsCount={upcomingEventsResult.total}
               pastEventsCount={pastEventsResult.total}
-              sharedOutputsCount={sharedOutputsCount}
+              sharedOutputsCount={team.outputs?.length}
               {...team}
             >
               <Route path={path + route({ teamId }).about.template}>

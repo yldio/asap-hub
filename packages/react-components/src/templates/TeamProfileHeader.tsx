@@ -146,7 +146,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   teamListElementId,
   labCount,
   upcomingEventsCount,
-  sharedOutputsCount,
+  sharedOutputsCount = 0,
   pastEventsCount,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });

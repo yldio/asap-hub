@@ -21,7 +21,7 @@ export const getWorkingGroup = async (
   id: string,
   authorization: string,
 ): Promise<gp2.WorkingGroupResponse | undefined> => {
-  const resp = await fetch(`${API_BASE_URL}/working-groups/${id}`, {
+  const resp = await fetch(`${API_BASE_URL}/working-group/${id}`, {
     headers: { authorization, ...createSentryHeaders() },
   });
   if (!resp.ok) {

@@ -20,10 +20,10 @@ const Routes: React.FC<Record<string, never>> = () => {
       <Route exact path={path}>
         <WorkingGroups />
       </Route>
-      <Route component={NotFoundPage} />
       <Route path={path + workingGroups({}).workingGroup.template}>
         <WorkingGroupDetail />
       </Route>
+      <Route component={NotFoundPage} />
     </Switch>
   );
 };

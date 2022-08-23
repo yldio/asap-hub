@@ -30,6 +30,7 @@ const WorkingGroupDetailPage: React.FC<WorkingGroupDetailPageProps> = ({
   members,
   projects,
   backHref,
+  children,
 }) => (
   <>
     <BackLink href={backHref} />
@@ -57,6 +58,7 @@ const WorkingGroupDetailPage: React.FC<WorkingGroupDetailPageProps> = ({
     <TabNav>
       <TabLink href={''}>Overview</TabLink>
     </TabNav>
+    <main>{children}</main>
   </>
 );
 

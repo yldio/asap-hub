@@ -1,7 +1,7 @@
 import { useRouteParams, gp2 } from '@asap-hub/routing';
 
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { WorkingGroupDetailPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 
@@ -15,16 +15,20 @@ const WorkingGroupDetail = () => {
   if (workingGroupData) {
     return (
       <WorkingGroupDetailPage backHref={backHref} {...workingGroupData}>
-        <Route
-          path={
-            workingGroups({}).workingGroup({ workingGroupId }).overview({}).$
-          }
-        >
-          <Frame title="Overview">Overview</Frame>
-        </Route>
-        <Redirect
-          to={workingGroups({}).workingGroup({ workingGroupId }).overview({}).$}
-        />
+        <Switch>
+          <Route
+            path={
+              workingGroups({}).workingGroup({ workingGroupId }).overview({}).$
+            }
+          >
+            <Frame title="Overview">Overview</Frame>
+          </Route>
+          <Redirect
+            to={
+              workingGroups({}).workingGroup({ workingGroupId }).overview({}).$
+            }
+          />
+        </Switch>
       </WorkingGroupDetailPage>
     );
   }

@@ -87,6 +87,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
               teamListElementId={teamListElementId}
               upcomingEventsCount={upcomingEventsResult.total}
               pastEventsCount={pastEventsResult.total}
+              teamOutputsCount={team.outputs?.length}
               {...team}
             >
               <Route path={path + route({ teamId }).about.template}>

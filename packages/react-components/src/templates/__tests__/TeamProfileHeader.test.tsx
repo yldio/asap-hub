@@ -100,7 +100,7 @@ it('renders tabs', () => {
     screen.getAllByRole('link').map(({ textContent }) => textContent),
   ).toEqual([
     'About',
-    'Team Outputs',
+    'Team Outputs (0)',
     'Upcoming Events (0)',
     'Past Events (0)',
   ]);
@@ -118,7 +118,7 @@ it('renders workspace tabs when tools provided', () => {
   ).toEqual([
     'About',
     'Team Workspace',
-    'Team Outputs',
+    'Team Outputs (0)',
     'Upcoming Events (0)',
     'Past Events (0)',
   ]);
@@ -150,4 +150,10 @@ it('displays past event count', () => {
   render(<TeamProfileHeader {...boilerplateProps} pastEventsCount={11} />);
 
   expect(screen.getByText('Past Events (11)')).toBeVisible();
+});
+
+it('displays shared output count', () => {
+  render(<TeamProfileHeader {...boilerplateProps} teamOutputsCount={11} />);
+
+  expect(screen.getByText('Team Outputs (11)')).toBeVisible();
 });

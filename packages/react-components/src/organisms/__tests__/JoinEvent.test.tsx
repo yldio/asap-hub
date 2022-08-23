@@ -48,6 +48,23 @@ it('renders a disabled link if the meeting link is missing', () => {
       .backgroundColor,
   ).toBe(silver.rgb);
 });
+it('renders a disabled link if the meeting starts more than 24h from current time', () => {
+  const startDate = addDays(new Date(), 2).toISOString();
+  const endDate = addDays(new Date(), 2).toISOString();
+
+  const { getByText } = render(
+    <JoinEvent
+      startDate={startDate}
+      endDate={endDate}
+      meetingLink="https://example.com/meeting"
+    />,
+  );
+
+  expect(
+    findParentWithStyle(getByText(/join.+meeting/i), 'backgroundColor')!
+      .backgroundColor,
+  ).toBe(silver.rgb);
+});
 
 it('informs you when to expect a link way before the event', () => {
   const { getByText } = render(

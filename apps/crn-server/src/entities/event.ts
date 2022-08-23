@@ -3,7 +3,6 @@ import { DateTime } from 'luxon';
 import {
   EventResponse,
   EventSpeaker,
-  MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT,
   isEventStatus,
   EventSpeakerUserData,
   EventSpeakerExternalUserData,
@@ -134,12 +133,8 @@ export const parseGraphQLEvent = (
       parseGraphQLGroup(calGroup),
     )[0] || undefined;
   const startDate = DateTime.fromISO(item.flatData.startDate!);
-  const now = DateTime.utc();
 
-  const meetingLink =
-    now.plus({ hours: MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT }) > startDate
-      ? item.flatData.meetingLink || undefined
-      : undefined;
+  const meetingLink = item.flatData.meetingLink || undefined;
 
   // fallback to group thumbnail
   const thumbnail = item.flatData.thumbnail?.length

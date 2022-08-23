@@ -77,7 +77,12 @@ const JoinEvent: React.FC<JoinEventProps> = ({
           </>
         )}
         <br />
-        <Link buttonStyle primary enabled={!!meetingLink} href={meetingLink}>
+        <Link
+          buttonStyle
+          primary
+          enabled={!!meetingLink && !!startRefreshing}
+          href={meetingLink}
+        >
           Join the meeting now
         </Link>
       </Paragraph>

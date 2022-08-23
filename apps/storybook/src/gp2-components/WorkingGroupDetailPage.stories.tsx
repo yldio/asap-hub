@@ -13,6 +13,7 @@ const props = {
   members: [],
   shortDescription: '',
   projects: [],
+  backHref: '',
 };
 
 export const Normal = () => (

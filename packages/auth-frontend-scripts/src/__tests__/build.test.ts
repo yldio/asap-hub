@@ -26,7 +26,7 @@ afterEach(() => {
 describe('build', () => {
   it('should call execSync with correct params', () => {
     build('/', {});
-    expect(mockExecSync).toHaveBeenCalledWith('yarn run react-scripts build', {
+    expect(mockExecSync).toHaveBeenCalledWith('yarn run react-app-rewired build', {
       env: {},
       stdio: 'pipe',
     });
@@ -64,8 +64,8 @@ describe('build', () => {
         "<!doctype html><html lang=\\"en\\"><head></head><body>
                   <script src=\\"/static/js/2.chunk.js\\">
                   </script><script src=\\"/static/js/main.chunk.js\\"></script>
-                
-              
+
+
             </body></html>",
       ]
     `);

@@ -26,7 +26,7 @@ export default class Reminders implements ReminderController {
             href: sharedResearch({}).researchOutput({
               researchOutputId: reminder.data.researchOutputId,
             }).$,
-            description: `${reminder.data.title} ${reminder.data.documentType} is now published on the Hub.`,
+            description: `${reminder.data.title} ${reminder.data.documentType} from your ASAP Team is now published on the Hub. If there are errors, please let your PM know.`,
           };
         }
 

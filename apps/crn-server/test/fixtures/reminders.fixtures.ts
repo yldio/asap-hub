@@ -53,7 +53,7 @@ export const getReminderResponse = (): ReminderResponse => {
   return {
     id: 'research-output-published-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
     description:
-      'Test Proposal 1234 Bioinformatics is now published on the Hub.',
+      'Test Proposal 1234 Bioinformatics from your ASAP Team is now published on the Hub. If there are errors, please let your PM know.',
     entity: 'Research Output',
     href: '/shared-research/ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   };

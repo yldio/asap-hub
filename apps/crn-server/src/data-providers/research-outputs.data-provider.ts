@@ -253,10 +253,13 @@ const makeODataFilter = (filter?: ResearchOutputFilter): string => {
       .map(([key, val]) => {
         if (Array.isArray(val)) {
           return `(${val
-            .map((valElement) => `data/${key}/iv eq '${valElement}'`)
+            .map(
+              (valElement) =>
+                `data/${key}/iv eq '${sanitiseForSquidex(valElement)}'`,
+            )
             .join(' or ')})`;
         }
-        return `data/${key}/iv eq '${val}'`;
+        return `data/${key}/iv eq '${sanitiseForSquidex(val)}'`;
       })
       .join(' and ');
   }

@@ -23,6 +23,9 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    fallback: {
+      util: false,
+    },
   },
   output: {
     libraryTarget: 'commonjs2',

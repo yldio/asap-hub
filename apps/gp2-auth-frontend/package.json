@@ -19,10 +19,12 @@
     "@asap-hub/react-components": "workspace:*",
     "@babel/runtime-corejs3": "7.18.9",
     "history": "4.10.1",
+    "path-browserify": "^1.0.1",
     "react": "17.0.2",
     "react-app-polyfill": "3.0.0",
     "react-dom": "17.0.2",
-    "react-router-dom": "5.3.3"
+    "react-router-dom": "5.3.3",
+    "util": "0.12.4"
   },
   "devDependencies": {
     "@asap-hub/auth-frontend-scripts": "workspace:*",
@@ -43,7 +45,9 @@
     "cross-env": "7.0.3",
     "identity-obj-proxy": "3.0.0",
     "jsdom": "16.5.3",
-    "react-scripts": "4.0.3",
-    "typescript": "4.6.4"
+    "react-app-rewired": "2.2.1",
+    "react-scripts": "5.0.1",
+    "typescript": "4.7.4",
+    "webpack": "5.74.0"
   }
 }

@@ -1,7 +1,11 @@
 import { gql } from 'graphql-tag';
 
-export const FETCH_USER_TEAMS_AND_RESEARCH_OUTPUTS = gql`
-  query FetchUserTeamsAndResearchOutputs($userId: String!, $filter: String!) {
+export const FETCH_REMINDER_DATA = gql`
+  query FetchReminderData(
+    $userId: String!
+    $researchOutputFilter: String!
+    $eventFilter: String!
+  ) {
     findUsersContent(id: $userId) {
       flatData {
         teams {
@@ -11,8 +15,7 @@ export const FETCH_USER_TEAMS_AND_RESEARCH_OUTPUTS = gql`
         }
       }
     }
-
-    queryResearchOutputsContents(filter: $filter) {
+    queryResearchOutputsContents(filter: $researchOutputFilter) {
       id
       flatData {
         addedDate
@@ -21,6 +24,13 @@ export const FETCH_USER_TEAMS_AND_RESEARCH_OUTPUTS = gql`
       }
       referencingTeamsContents {
         id
+      }
+    }
+    queryEventsContents(filter: $eventFilter) {
+      id
+      flatData {
+        startDate
+        title
       }
     }
   }

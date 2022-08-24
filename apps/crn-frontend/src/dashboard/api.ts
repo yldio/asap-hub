@@ -20,9 +20,14 @@ export const getDashboard = async (
 export const getReminders = async (
   authorization: string,
 ): Promise<ListReminderResponse> => {
-  const resp = await fetch(`${API_BASE_URL}/reminders`, {
-    headers: { authorization, ...createSentryHeaders() },
-  });
+  const resp = await fetch(
+    `${API_BASE_URL}/reminders?${new URLSearchParams({
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    })}`,
+    {
+      headers: { authorization, ...createSentryHeaders() },
+    },
+  );
   if (!resp.ok) {
     throw new Error(
       `Failed to fetch reminders. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,

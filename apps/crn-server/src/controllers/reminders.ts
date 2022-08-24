@@ -1,4 +1,5 @@
-import { sharedResearch } from '@asap-hub/routing';
+import { DateTime } from 'luxon';
+import { sharedResearch, events } from '@asap-hub/routing';
 import { FetchRemindersOptions, ListReminderResponse } from '@asap-hub/model';
 import { ReminderDataProvider } from '../data-providers/reminders.data-provider';
 
@@ -26,6 +27,24 @@ export default class Reminders implements ReminderController {
               researchOutputId: reminder.data.researchOutputId,
             }).$,
             description: `${reminder.data.title} ${reminder.data.documentType} is now published on the Hub.`,
+          };
+        }
+
+        if (
+          reminder.entity === 'Event' &&
+          reminder.type === 'Happening Today'
+        ) {
+          const startTime = DateTime.fromISO(reminder.data.startDate)
+            .setZone(options.timezone)
+            .toFormat('h.mm a');
+
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            href: events({}).event({
+              eventId: reminder.data.eventId,
+            }).$,
+            description: `Today there is the ${reminder.data.title} event happening at ${startTime}.`,
           };
         }
 

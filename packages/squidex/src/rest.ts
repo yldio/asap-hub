@@ -164,11 +164,14 @@ export class Squidex<
           }
 
           if (isSquidexError(body) && body?.message === 'Validation error') {
-            throw new ValidationError(err, body.details);
+            throw new ValidationError(err, body.details, err.message);
           }
         }
       }
-      throw new GenericError(err instanceof Error ? err : undefined);
+      throw new GenericError(
+        err instanceof Error ? err : undefined,
+        err instanceof Error ? err.message : undefined,
+      );
     }
   }
 

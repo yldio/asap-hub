@@ -7298,12 +7298,13 @@ export type NewsFragment = Pick<
   > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
 };
 
-export type FetchUserTeamsAndResearchOutputsQueryVariables = Exact<{
+export type FetchReminderDataQueryVariables = Exact<{
   userId: Scalars['String'];
-  filter: Scalars['String'];
+  researchOutputFilter: Scalars['String'];
+  eventFilter: Scalars['String'];
 }>;
 
-export type FetchUserTeamsAndResearchOutputsQuery = {
+export type FetchReminderDataQuery = {
   findUsersContent: Maybe<{
     flatData: { teams: Maybe<Array<{ id: Maybe<Array<Pick<Teams, 'id'>>> }>> };
   }>;
@@ -7315,6 +7316,13 @@ export type FetchUserTeamsAndResearchOutputsQuery = {
           'addedDate' | 'documentType' | 'title'
         >;
         referencingTeamsContents: Maybe<Array<Pick<Teams, 'id'>>>;
+      }
+    >
+  >;
+  queryEventsContents: Maybe<
+    Array<
+      Pick<Events, 'id'> & {
+        flatData: Pick<EventsFlatDataDto, 'startDate' | 'title'>;
       }
     >
   >;
@@ -11965,13 +11973,13 @@ export const FetchLabsDocument = {
     ...LabsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchLabsQuery, FetchLabsQueryVariables>;
-export const FetchUserTeamsAndResearchOutputsDocument = {
+export const FetchReminderDataDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'FetchUserTeamsAndResearchOutputs' },
+      name: { kind: 'Name', value: 'FetchReminderData' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -11991,7 +11999,21 @@ export const FetchUserTeamsAndResearchOutputsDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'filter' },
+            name: { kind: 'Name', value: 'researchOutputFilter' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'eventFilter' },
           },
           type: {
             kind: 'NonNullType',
@@ -12064,7 +12086,7 @@ export const FetchUserTeamsAndResearchOutputsDocument = {
                 name: { kind: 'Name', value: 'filter' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'filter' },
+                  name: { kind: 'Name', value: 'researchOutputFilter' },
                 },
               },
             ],
@@ -12103,13 +12125,47 @@ export const FetchUserTeamsAndResearchOutputsDocument = {
               ],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryEventsContents' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'eventFilter' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'startDate' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
         ],
       },
     },
   ],
 } as unknown as DocumentNode<
-  FetchUserTeamsAndResearchOutputsQuery,
-  FetchUserTeamsAndResearchOutputsQueryVariables
+  FetchReminderDataQuery,
+  FetchReminderDataQueryVariables
 >;
 export const FetchResearchOutputDocument = {
   kind: 'Document',

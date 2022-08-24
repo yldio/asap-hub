@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { NotFoundError } from '@asap-hub/errors';
+import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { badGateway, notFound } from '@hapi/boom';
 
 import Calendars from '../../src/controllers/calendars';
@@ -14,10 +14,16 @@ import {
   getSquidexCalendarsGraphqlResponse,
   getSquidexGraphqlCalendar,
   calendarsListRestResponse,
+  getCalendarInput,
 } from '../fixtures/calendars.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
-import { InputCalendar, RestCalendar, SquidexRest } from '@asap-hub/squidex';
+import {
+  InputCalendar,
+  parseToSquidex,
+  RestCalendar,
+  SquidexRest,
+} from '@asap-hub/squidex';
 import { getAuthToken } from '../../src/utils/auth';
 import { appName, baseUrl } from '../../src/config';
 
@@ -449,6 +455,47 @@ describe('Calendars controller', () => {
         id: restCalendar.data.googleCalendarId.iv,
         color: restCalendar.data.color.iv,
         name: restCalendar.data.name.iv,
+      });
+    });
+  });
+
+  describe('Create method', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
+    test('Should throw when the POST request to Squidex fails', async () => {
+      nock(baseUrl)
+        .post(`/api/content/${appName}/calendars?publish=true`)
+        .reply(500);
+
+      await expect(
+        calendarsController.create(getCalendarInput()),
+      ).rejects.toThrow(GenericError);
+    });
+
+    test('Should send the POST request to Squidex and return the calendar', async () => {
+      const restCalendar = getRestCalendar();
+      const calendarInput = getCalendarInput();
+
+      nock(baseUrl)
+        .post(
+          `/api/content/${appName}/calendars?publish=true`,
+          parseToSquidex(calendarInput),
+        )
+        .reply(200, restCalendar);
+
+      const result = await calendarsController.create(calendarInput);
+
+      expect(result).toEqual({
+        googleCalendarId: restCalendar.data.googleCalendarId.iv,
+        color: restCalendar.data.color.iv,
+        name: restCalendar.data.name.iv,
+        id: restCalendar.id,
       });
     });
   });

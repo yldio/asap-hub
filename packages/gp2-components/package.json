@@ -29,6 +29,7 @@
     "emotion-normalize": "11.0.1"
   },
   "devDependencies": {
+    "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
     "@asap-hub/model": "workspace:*",

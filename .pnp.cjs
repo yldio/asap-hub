@@ -10772,6 +10772,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/@asap-hub-gp2-components-virtual-bc06cda6da/1/packages/gp2-components/",\
           "packageDependencies": [\
             ["@asap-hub/gp2-components", "virtual:b0e6fce6108185851621633566aa6333c1cf9db3fcb765dd42f49bbb6aabfed2d1edd196d2c0b9231847f9963a948ea8f446430fd02788ec673313c2faecc540#workspace:packages/gp2-components"],\
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],\
             ["@asap-hub/model", "workspace:packages/model"],\
@@ -10833,6 +10834,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/@asap-hub-gp2-components-virtual-50aff566aa/1/packages/gp2-components/",\
           "packageDependencies": [\
             ["@asap-hub/gp2-components", "virtual:c4ae2f625a4ac5aa649abbf60db7c71aca414aadbf350d87ea37595af32595ce70907b878a98750e798e6867f5b52cf0a985bd4cd784c0ad5a3f626d3cbad95a#workspace:packages/gp2-components"],\
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],\
             ["@asap-hub/model", "workspace:packages/model"],\
@@ -10898,6 +10900,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/@asap-hub-gp2-components-virtual-9dc13beec3/1/packages/gp2-components/",\
           "packageDependencies": [\
             ["@asap-hub/gp2-components", "virtual:cf2d1d1368b2a34e41fdfdbccc7e758f24c8ace0b6ea4b15f22eba0a7c07dde8d57c3d9100bc914cf890c201e5db942ceb8e085e5972893e60e8732fef3e4632#workspace:packages/gp2-components"],\
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],\
             ["@asap-hub/model", "workspace:packages/model"],\
@@ -10962,6 +10965,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/gp2-components/",\
           "packageDependencies": [\
             ["@asap-hub/gp2-components", "workspace:packages/gp2-components"],\
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],\
             ["@asap-hub/model", "workspace:packages/model"],\

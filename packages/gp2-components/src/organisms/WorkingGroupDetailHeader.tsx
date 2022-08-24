@@ -17,7 +17,10 @@ import { workingGroupsImage } from '../images';
 import CardWithBackground from '../molecules/CardWithBackground';
 import IconWithLabel from '../molecules/IconWithLabel';
 
-type WorkingGroupDetailHeaderProps = gp2Model.WorkingGroupResponse & {
+type WorkingGroupDetailHeaderProps = Pick<
+  gp2Model.WorkingGroupResponse,
+  'title' | 'members' | 'id'
+> & {
   projects?: unknown[];
   backHref: string;
 };

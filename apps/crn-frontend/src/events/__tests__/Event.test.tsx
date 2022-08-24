@@ -13,7 +13,7 @@ import Event from '../Event';
 import { getEvent } from '../api';
 import { refreshEventState } from '../state';
 
-jest.useFakeTimers('modern');
+jest.useFakeTimers();
 jest.mock('../api');
 
 const id = '42';

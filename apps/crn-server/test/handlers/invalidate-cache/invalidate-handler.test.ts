@@ -20,9 +20,7 @@ describe('invalidate cache', () => {
 
   test('invalidation is called on cloudfront', async () => {
     const dateReference = '2021-07-06T09:21:23.000Z';
-    jest
-      .useFakeTimers('modern')
-      .setSystemTime(new Date(dateReference).getTime());
+    jest.useFakeTimers().setSystemTime(new Date(dateReference).getTime());
 
     const distributionId = 'fake-distribution-id';
     const event = {

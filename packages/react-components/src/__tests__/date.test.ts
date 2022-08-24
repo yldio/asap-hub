@@ -1,9 +1,9 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-hooks/server';
 import { addSeconds, subSeconds } from 'date-fns';
 import { formatDateToTimezone, useDateHasPassed } from '../date';
 import { getLocalTimezone } from '../localization';
 
-jest.useFakeTimers('modern');
+jest.useFakeTimers();
 
 jest.mock('../localization');
 const mockGetLocalTimezone = getLocalTimezone as jest.MockedFunction<

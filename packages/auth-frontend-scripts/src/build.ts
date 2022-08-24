@@ -7,13 +7,13 @@ import { execSync } from 'child_process';
 // run CRA build script
 export const buildScript = (envVars: typeof env): void => {
   try {
-    execSync('yarn run react-scripts build', {
+    execSync('yarn run react-app-rewired build', {
       stdio: 'pipe',
       env: envVars,
     });
   } catch (err: ReturnType<Error>) {
     throw new Error(
-      `react-scripts build failed with status ${err.status}. Output:\n${err.output}`,
+      `react-app-rewired build failed with status ${err.status}. Output:\n${err.output}`,
     );
   }
 };

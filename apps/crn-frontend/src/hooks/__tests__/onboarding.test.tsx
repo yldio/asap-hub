@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react-hooks/server';
 import { waitFor } from '@testing-library/dom';
 import { network } from '@asap-hub/routing';
 import { RecoilRoot } from 'recoil';

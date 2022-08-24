@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-hooks/server';
 import { Auth0User, User } from '@asap-hub/auth';
 
 import { Auth0Context, useAuth0 } from '../auth0';

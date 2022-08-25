@@ -1,4 +1,3 @@
-import { gp2 } from '@asap-hub/model';
 import {
   render,
   screen,
@@ -11,20 +10,11 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getWorkingGroups } from '../api';
 import { refreshWorkingGroupsState } from '../state';
 import WorkingGroups from '../WorkingGroups';
+import { getWorkingGroupFixture } from './util';
 
 jest.mock('../api');
 
-const getWorkingGroup = (
-  overrides: Partial<gp2.WorkingGroupResponse> = {},
-) => ({
-  id: '42',
-  title: 'Working Group Title',
-  members: [],
-  shortDescription: 'This is a short description',
-  leadingMembers: 'This is a list of leading members',
-  ...overrides,
-});
-const getWorkingGroupsFixture = (items = [getWorkingGroup()]) => ({
+const getWorkingGroupsFixture = (items = [getWorkingGroupFixture()]) => ({
   items,
   total: items.length,
 });
@@ -70,8 +60,11 @@ it('renders a list of working groups', async () => {
   const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
     typeof getWorkingGroups
   >;
-  const firstGroup = getWorkingGroup({ id: '42', title: 'Working Group 42' });
-  const secondGroup = getWorkingGroup({
+  const firstGroup = getWorkingGroupFixture({
+    id: '42',
+    title: 'Working Group 42',
+  });
+  const secondGroup = getWorkingGroupFixture({
     id: '11',
     title: 'Working Group 11',
   });

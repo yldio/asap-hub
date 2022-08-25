@@ -5,7 +5,6 @@ import { lineHeight, perRem, tabletScreen } from '../pixels';
 import { chevronDownIcon, externalLinkIcon, infoInfoIcon } from '../icons';
 import { isInternalLink } from '../utils';
 import {
-  // charcoal,
   informationInfo500,
   semanticInformationInfo100,
   silver,
@@ -39,8 +38,6 @@ const iconStyles = css({
   alignSelf: 'center',
   svg: {
     transition: '250ms',
-    // stroke: charcoal.rgb,
-    // fill: charcoal.rgb,
   },
 });
 

@@ -2,7 +2,7 @@ import { RecoilRoot } from 'recoil';
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-hooks/server';
 import { createNewsResponse } from '@asap-hub/fixtures';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 

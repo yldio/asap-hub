@@ -1,6 +1,6 @@
 import { render, waitFor } from '@testing-library/react';
 import { authTestUtils } from '@asap-hub/react-components';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-hooks/server';
 import { useFlags } from '@asap-hub/react-context';
 
 import App from '../App';

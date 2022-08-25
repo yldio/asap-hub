@@ -41,7 +41,7 @@ it('hides the dropdown menu when the title changes', () => {
 
 describe('GTM data', () => {
   beforeAll(() => {
-    jest.useFakeTimers('modern');
+    jest.useFakeTimers();
   });
   afterAll(() => {
     jest.useRealTimers();

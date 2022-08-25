@@ -49,8 +49,6 @@ it('renders guides with pages and support', async () => {
   });
 
   await renderDiscover({});
-  expect(
-    screen.getByText(/Grantee Guidance/i, { selector: 'h2' }),
-  ).toBeVisible();
-  expect(screen.queryAllByText(/title/i, { selector: 'h4' }).length).toBe(2);
+  expect(screen.getByText(/Guides/i, { selector: 'h2' })).toBeVisible();
+  expect(screen.queryAllByRole('heading').length).toBe(9);
 });

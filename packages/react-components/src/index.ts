@@ -142,6 +142,7 @@ export {
   DashboardPage,
   DashboardPageBody,
   DiscoverAbout,
+  DiscoverGuides,
   DiscoverNewsCardList,
   DiscoverPage,
   DiscoverPageBody,

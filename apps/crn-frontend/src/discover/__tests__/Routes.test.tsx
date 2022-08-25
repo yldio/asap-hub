@@ -35,7 +35,7 @@ const renderDiscoverPage = async (pathname: string, query = '') => {
 it('redirects to the guides page when the index page accessed', async () => {
   await renderDiscoverPage(discover({}).$);
   expect(
-    await screen.findByText(/Grantee Guidance/i, {
+    await screen.findByText(/Guides/i, {
       selector: 'h2',
     }),
   ).toBeVisible();

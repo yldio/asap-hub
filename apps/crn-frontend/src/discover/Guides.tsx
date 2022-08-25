@@ -1,10 +1,5 @@
 import { FC } from 'react';
-import { DiscoverPageBody } from '@asap-hub/react-components';
-import { useDiscoverState } from './state';
+import { DiscoverGuides } from '@asap-hub/react-components';
 
-const Guides: FC<Record<string, never>> = () => {
-  const discover = useDiscoverState();
-  return <DiscoverPageBody {...discover} />;
-};
-
+const Guides: FC<Record<string, never>> = () => <DiscoverGuides />;
 export default Guides;

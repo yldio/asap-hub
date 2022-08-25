@@ -6,18 +6,16 @@ import {
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import {
+  createWorkingGroupsResponse,
+  createWorkingGroupResponse,
+} from '@asap-hub/fixtures';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getWorkingGroups } from '../api';
 import { refreshWorkingGroupsState } from '../state';
 import WorkingGroups from '../WorkingGroups';
-import { getWorkingGroupFixture } from './util';
 
 jest.mock('../api');
-
-const getWorkingGroupsFixture = (items = [getWorkingGroupFixture()]) => ({
-  items,
-  total: items.length,
-});
 
 const renderWorkingGroupsList = async () => {
   render(
@@ -49,7 +47,7 @@ it('renders the Title', async () => {
   const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
     typeof getWorkingGroups
   >;
-  mockGetWorkingGroups.mockResolvedValueOnce(getWorkingGroupsFixture());
+  mockGetWorkingGroups.mockResolvedValueOnce(createWorkingGroupsResponse());
   await renderWorkingGroupsList();
   expect(
     screen.getByRole('heading', { name: 'Working Groups' }),
@@ -60,16 +58,16 @@ it('renders a list of working groups', async () => {
   const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
     typeof getWorkingGroups
   >;
-  const firstGroup = getWorkingGroupFixture({
+  const firstGroup = createWorkingGroupResponse({
     id: '42',
     title: 'Working Group 42',
   });
-  const secondGroup = getWorkingGroupFixture({
+  const secondGroup = createWorkingGroupResponse({
     id: '11',
     title: 'Working Group 11',
   });
   mockGetWorkingGroups.mockResolvedValue(
-    getWorkingGroupsFixture([firstGroup, secondGroup]),
+    createWorkingGroupsResponse([firstGroup, secondGroup]),
   );
   await renderWorkingGroupsList();
   expect(

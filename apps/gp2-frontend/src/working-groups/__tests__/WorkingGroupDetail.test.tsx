@@ -8,12 +8,12 @@ import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
 
 import { gp2 as gp2Routing } from '@asap-hub/routing';
+import { createWorkingGroupResponse } from '@asap-hub/fixtures';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { refreshWorkingGroupState } from '../state';
 import WorkingGroupDetail from '../WorkingGroupDetail';
 import { getWorkingGroup } from '../api';
-import { getWorkingGroupFixture } from './util';
 
 jest.mock('../api');
 
@@ -60,7 +60,7 @@ describe('WorkingGroupDetail', () => {
   >;
 
   it('renders header with title', async () => {
-    const workingGroup = getWorkingGroupFixture();
+    const workingGroup = createWorkingGroupResponse();
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
     await renderWorkingGroupDetail(workingGroup.id);
     expect(screen.getByRole('banner')).toBeVisible();

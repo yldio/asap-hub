@@ -847,7 +847,7 @@ __metadata:
     react-titled: 1.0.1
   peerDependencies:
     react: ^17.0.2
-    react-router-dom: ^5.2.0
+    react-router-dom: 5.3.3
     react-router-last-location: 2.0.1
   languageName: unknown
   linkType: soft
@@ -943,7 +943,7 @@ __metadata:
     history: ^4
     react: ^17.0.2
     react-dom: ^17.0.2
-    react-router-dom: ^5.2.0
+    react-router-dom: 5.3.3
   languageName: unknown
   linkType: soft
 
@@ -1254,7 +1254,7 @@ __metadata:
     history: ^4
     react: ^17.0.2
     react-dom: ^17.0.2
-    react-router-dom: ^5.2.0
+    react-router-dom: 5.3.3
   languageName: unknown
   linkType: soft
 
@@ -1297,7 +1297,7 @@ __metadata:
     typesafe-routes: 9.0.1
     typescript: 4.6.4
   peerDependencies:
-    react-router-dom: ^5.2.0
+    react-router-dom: 5.3.3
   languageName: unknown
   linkType: soft
 

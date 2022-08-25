@@ -19,7 +19,7 @@
     "typescript": "4.6.4"
   },
   "peerDependencies": {
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "5.3.3"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",

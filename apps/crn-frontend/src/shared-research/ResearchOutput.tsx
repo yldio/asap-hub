@@ -1,10 +1,9 @@
 import { NotFoundPage, SharedResearchOutput } from '@asap-hub/react-components';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
-import { Frame } from '@asap-hub/frontend-utils';
+import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { useRouteMatch, Route } from 'react-router-dom';
 
-import { useBackHref } from '../hooks';
 import { useResearchOutputById } from './state';
 import { useCanCreateUpdateResearchOutput } from '../network/teams/state';
 import TeamOutput from '../network/teams/TeamOutput';

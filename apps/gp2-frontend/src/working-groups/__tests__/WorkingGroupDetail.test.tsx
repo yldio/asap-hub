@@ -65,4 +65,14 @@ describe('WorkingGroupDetail', () => {
     await renderWorkingGroupDetail(workingGroup.id);
     expect(screen.getByRole('banner')).toBeVisible();
   });
+
+  it('renders not found if no working group is returned', async () => {
+    mockGetWorkingGroup.mockResolvedValueOnce(undefined);
+    await renderWorkingGroupDetail('unknown-id');
+    expect(
+      screen.getByRole('heading', {
+        name: 'Sorry! We can’t seem to find that page.',
+      }),
+    ).toBeVisible();
+  });
 });

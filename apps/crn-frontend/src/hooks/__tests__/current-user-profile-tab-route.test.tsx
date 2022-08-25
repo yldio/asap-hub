@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-hooks/server';
 import { User } from '@asap-hub/auth';
 import { network } from '@asap-hub/routing';
 import { MemoryRouter } from 'react-router-dom';

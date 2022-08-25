@@ -1,5 +1,5 @@
 import { Router, StaticRouter } from 'react-router-dom';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-hooks/server';
 import { createMemoryHistory } from 'history';
 import { searchQueryParam } from '@asap-hub/routing';
 

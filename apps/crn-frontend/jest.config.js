@@ -22,7 +22,7 @@ module.exports = {
     ),
     '^.+\\.css$': require.resolve('react-scripts/config/jest/cssTransform.js'),
     '^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)': require.resolve(
-      'react-scripts/config/jest/fileTransform.js',
+      './scripts/file-transform.js',
     ),
   },
   transformIgnorePatterns: [

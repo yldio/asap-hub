@@ -10,7 +10,7 @@ it('renders a search field, passing through props', () => {
 
 describe('GTM data', () => {
   beforeAll(() => {
-    jest.useFakeTimers('modern');
+    jest.useFakeTimers();
   });
   afterAll(() => {
     jest.useRealTimers();

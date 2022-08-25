@@ -26,10 +26,13 @@ afterEach(() => {
 describe('build', () => {
   it('should call execSync with correct params', () => {
     build('/', {});
-    expect(mockExecSync).toHaveBeenCalledWith('yarn run react-app-rewired build', {
-      env: {},
-      stdio: 'pipe',
-    });
+    expect(mockExecSync).toHaveBeenCalledWith(
+      'yarn run react-app-rewired build',
+      {
+        env: {},
+        stdio: 'pipe',
+      },
+    );
   });
   it('should throw error if execSync fails', () => {
     mockExecSync.mockImplementation(() => {

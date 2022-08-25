@@ -37,7 +37,7 @@
     "@types/hapi__boom": "9.0.1",
     "@types/hapi__bourne": "workspace:*",
     "@types/hapi__joi": "17.1.8",
-    "@types/jest": "26.0.24",
+    "@types/jest": "28.1.8",
     "@types/jwt-decode": "2.2.1",
     "@types/jwt-encode": "workspace:*",
     "@types/luxon": "1.26.4",

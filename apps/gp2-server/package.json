@@ -55,7 +55,7 @@
     "@types/cors": "2.8.12",
     "@types/express": "4.17.13",
     "@types/jest": "26.0.24",
-    "@types/jsonwebtoken": "8.5.8",
+    "@types/jsonwebtoken": "8.5.9",
     "@types/jwt-encode": "workspace:*",
     "@types/node": "14.18.24",
     "@types/serverless": "3.12.8",

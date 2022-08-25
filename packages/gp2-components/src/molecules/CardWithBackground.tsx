@@ -14,8 +14,8 @@ const containerStyles = (image: string) =>
     borderRadius: rem(8),
     backgroundSize: 'cover',
     padding: rem(16),
-    border: `1px solid ${colors.neutral500}`,
-    filter: `drop-shadow(0px 2px 4px ${colors.neutral500}`,
+    border: `1px solid ${colors.neutral500.rgb}`,
+    filter: `drop-shadow(0px 2px 4px ${colors.neutral500.rgb})`,
   });
 
 const CardWithBackground: React.FC<CardWithBackgroundProps> = ({

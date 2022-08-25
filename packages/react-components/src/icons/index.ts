@@ -67,7 +67,7 @@ export { default as paperClipIcon } from './paper-clip';
 export { default as placeholderIcon } from './placeholder';
 export { default as plusIcon } from './plus';
 export { default as previousPageIcon } from './previous-page';
-export { default as policy } from './policy';
+export { default as policyIcon } from './policy';
 export { default as protocol } from './protocol';
 export { default as protocolsIcon } from './protocols';
 export { default as reportIcon } from './report';

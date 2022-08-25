@@ -13,7 +13,6 @@ const containerStyles = (image: string) =>
     backgroundImage: `url(${image})`,
     borderRadius: rem(8),
     backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
     padding: rem(16),
     border: `1px solid ${colors.neutral500}`,
     filter: `drop-shadow(0px 2px 4px ${colors.neutral500}`,

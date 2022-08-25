@@ -48,9 +48,14 @@ export default class Reminders implements ReminderController {
           };
         }
 
-        throw new TypeError(
-          `Reminder type '${reminder.type}' for entity '${reminder.entity}' is not supported`,
-        );
+        return {
+          id: reminder.id,
+          entity: reminder.entity,
+          href: events({}).event({
+            eventId: reminder.data.eventId,
+          }).$,
+          description: `${reminder.data.title} event is happening now! Click here to join the meeting!`,
+        };
       }),
     };
   }

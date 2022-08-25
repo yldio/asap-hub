@@ -1,4 +1,5 @@
 import {
+  EventHappeningNowReminder,
   EventHappeningTodayReminder,
   ListReminderDataObject,
   ListReminderResponse,
@@ -43,6 +44,21 @@ export const getEventHappeningTodayReminder =
       },
     };
   };
+
+export const getEventHappeningNowReminder = (): EventHappeningNowReminder => {
+  const eventResponse = getEventResponse();
+  return {
+    id: `event-happening-today-${eventResponse.id}`,
+    entity: 'Event',
+    type: 'Happening Now',
+    data: {
+      eventId: eventResponse.id,
+      startDate: eventResponse.startDate,
+      endDate: eventResponse.endDate,
+      title: eventResponse.title,
+    },
+  };
+};
 
 export const getListReminderDataObject = (): ListReminderDataObject => ({
   total: 1,

@@ -12,7 +12,6 @@ import {
   parseToSquidex,
   RestResearchOutput,
   RestTeam,
-  sanitiseForSquidex,
   SquidexGraphqlClient,
   SquidexRestClient,
 } from '@asap-hub/squidex';
@@ -29,6 +28,7 @@ import {
 } from '../queries/research-outputs.queries';
 import { parseGraphQLResearchOutput } from '../entities/research-output';
 import logger from '../utils/logger';
+import { buildODataFilter } from '../utils/urls';
 
 export interface ResearchOutputDataProvider {
   fetchById(id: string): Promise<ResearchOutputDataObject | null>;
@@ -76,24 +76,32 @@ export class ResearchOutputSquidexDataProvider
   }): Promise<ListResearchOutputDataObject> {
     const { search, filter, take = 8, skip = 0, includeDrafts } = options;
 
-    const searchQ = (search || '')
+    const containsFilters = (search || '')
       .split(' ')
       .filter(Boolean)
-      .map(sanitiseForSquidex)
-      .reduce(
-        (acc: string[], word: string) =>
-          acc.concat(
-            `contains(data/title/iv, '${word}') or contains(data/tags/iv, '${word}')`,
-          ),
-        [],
-      )
-      .join(' or ');
+      .map((word: string) => ({
+        contains: word,
+      }));
+
+    const searchQ = containsFilters.length
+      ? buildODataFilter({
+          or: ['title', 'tags'].map((prop) => ({
+            [`data/${prop}/iv`]: {
+              any: {
+                or: containsFilters,
+              },
+            },
+          })),
+        })
+      : '';
 
     const filterQ = makeODataFilter(filter);
 
-    const filterGraphql = [filterQ && `(${filterQ})`, searchQ && `(${searchQ})`]
-      .filter(Boolean)
-      .join(' and ');
+    const filterGraphql = buildODataFilter({
+      and: [filterQ && `(${filterQ})`, searchQ && `(${searchQ})`].filter(
+        Boolean,
+      ),
+    });
 
     const { queryResearchOutputsContentsWithTotal } =
       await this.squidexGraphqlClient.request<
@@ -249,19 +257,18 @@ export type FetchResearchOutputOptions = FetchOptions<ResearchOutputFilter> & {
 
 const makeODataFilter = (filter?: ResearchOutputFilter): string => {
   if (filter) {
-    return Object.entries(filter)
-      .map(([key, val]) => {
-        if (Array.isArray(val)) {
-          return `(${val
-            .map(
-              (valElement) =>
-                `data/${key}/iv eq '${sanitiseForSquidex(valElement)}'`,
-            )
-            .join(' or ')})`;
-        }
-        return `data/${key}/iv eq '${sanitiseForSquidex(val)}'`;
-      })
-      .join(' and ');
+    const entries = Object.entries(filter).map(([key, val]) => {
+      if (Array.isArray(val)) {
+        return {
+          or: val.map((valElement) => ({
+            [`data/${key}/iv`]: valElement,
+          })),
+        };
+      }
+      return { [`data/${key}/iv`]: val };
+    });
+
+    return buildODataFilter(entries.length === 1 ? entries : { and: entries });
   }
 
   return '';

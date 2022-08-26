@@ -1,9 +1,8 @@
 import { EventPage, NotFoundPage } from '@asap-hub/react-components';
 import { events, useRouteParams } from '@asap-hub/routing';
-import { Frame } from '@asap-hub/frontend-utils';
+import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 
 import { useEventById, useQuietRefreshEventById } from './state';
-import { useBackHref } from '../hooks';
 
 const Event: React.FC = () => {
   const { eventId } = useRouteParams(events({}).event);

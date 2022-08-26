@@ -12,3 +12,4 @@ export * from './research-outputs';
 export * from './research-tags';
 export * from './teams';
 export * from './users';
+export * from './gp2';

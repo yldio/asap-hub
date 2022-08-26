@@ -1,9 +1,48 @@
 import { gp2 } from '@asap-hub/model';
 import nock from 'nock';
+import { createWorkingGroupResponse } from '@asap-hub/fixtures';
+
 import { API_BASE_URL } from '../../config';
-import { getWorkingGroups } from '../api';
+import { getWorkingGroups, getWorkingGroup } from '../api';
 
 jest.mock('../../config');
+
+describe('getWorkingGroup', () => {
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+    nock.cleanAll();
+  });
+
+  it('returns a successfully fetched working group by id', async () => {
+    const workingGroupResponse = createWorkingGroupResponse();
+    const { id } = workingGroupResponse;
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get(`/working-group/${id}`)
+      .reply(200, workingGroupResponse);
+    const result = await getWorkingGroup(id, 'Bearer x');
+    expect(result).toEqual(workingGroupResponse);
+  });
+
+  it('returns undefined if server returns 404', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get(`/working-group/unknown-id`)
+      .reply(404);
+    const result = await getWorkingGroup('unknown-id', 'Bearer x');
+    expect(result).toBeUndefined();
+  });
+
+  it('errors for error status', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get(`/working-group/unknown-id`)
+      .reply(500);
+
+    await expect(
+      getWorkingGroup('unknown-id', 'Bearer x'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch working group with id unknown-id. Expected status 2xx or 404. Received status 500."`,
+    );
+  });
+});
 
 describe('getWorkingGroups', () => {
   afterEach(() => {

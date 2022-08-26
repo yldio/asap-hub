@@ -6949,6 +6949,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.1.2"\
       ],\
       [\
+        "odata-query",\
+        "npm:7.0.3"\
+      ],\
+      [\
         "on-exit-leak-free",\
         "npm:0.2.0"\
       ],\
@@ -10535,6 +10539,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mime-types", "npm:2.1.35"],\
             ["nock", "npm:13.0.11"],\
             ["node-dev", "npm:6.7.0"],\
+            ["odata-query", "npm:7.0.3"],\
             ["opentracing", "npm:0.14.7"],\
             ["p-limit", "npm:3.1.0"],\
             ["parse-data-url", "npm:3.0.0"],\
@@ -53935,6 +53940,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/obuf-npm-1.1.2-8db5fae8dd-41a2ba310e.zip/node_modules/obuf/",\
           "packageDependencies": [\
             ["obuf", "npm:1.1.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["odata-query", [\
+        ["npm:7.0.3", {\
+          "packageLocation": "./.yarn/cache/odata-query-npm-7.0.3-3ff7d416ee-fda4ae9829.zip/node_modules/odata-query/",\
+          "packageDependencies": [\
+            ["odata-query", "npm:7.0.3"],\
+            ["tslib", "npm:2.4.0"]\
           ],\
           "linkType": "HARD"\
         }]\

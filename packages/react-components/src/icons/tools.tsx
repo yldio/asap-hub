@@ -1,13 +1,8 @@
 /* istanbul ignore file */
 
 const toolsIcon = (
-  <svg
-    width={24}
-    height={24}
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <title>{"Tools Icon"}</title>
+  <svg width={24} height={24} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <title>{'Tools Icon'}</title>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

@@ -16,8 +16,9 @@ import {
 import policyIcon from '../icons/policy';
 
 const styles = css({
-  display: 'grid',
-  gridRowGap: `${36 / perRem}em`,
+  display: 'flex',
+  flexFlow: 'column',
+  gap: `${36 / perRem}em`,
   paddingBottom: `${24 / perRem}em`,
 });
 

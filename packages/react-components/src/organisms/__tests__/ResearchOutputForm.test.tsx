@@ -826,9 +826,12 @@ describe('getDecision', () => {
 
 describe('getAddedTime', () => {
   it('returns a new date if param is undefined', () => {
-    expect(getAddedDate().substring(0, 8)).toEqual(
-      new Date().toISOString().substring(0, 8),
-    );
+    const fakeSystemDate = new Date('2022-01-01T09:00:00.000Z');
+    
+    jest.useFakeTimers('modern');
+    jest.setSystemTime(fakeSystemDate);
+
+    expect(getAddedDate()).toEqual(fakeSystemDate);
   });
   it('returns the initial date', () => {
     const addedDate = new Date().toISOString();

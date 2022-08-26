@@ -2,7 +2,6 @@ import Debug from 'debug';
 import Got, { RequestError } from 'got';
 import decode from 'jwt-decode';
 
-/* eslint-disable camelcase */
 
 interface JwtToken {
   exp: number;

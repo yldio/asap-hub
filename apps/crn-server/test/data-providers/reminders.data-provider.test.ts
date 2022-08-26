@@ -218,7 +218,7 @@ describe('Reminder Data Provider', () => {
 
     describe('Event Happening Today Reminder', () => {
       beforeAll(() => {
-        jest.useFakeTimers('modern');
+        jest.useFakeTimers();
       });
 
       afterAll(() => {
@@ -469,7 +469,7 @@ describe('Reminder Data Provider', () => {
 
       describe('Event Filter', () => {
         beforeAll(async () => {
-          jest.useFakeTimers('modern');
+          jest.useFakeTimers();
         });
 
         afterAll(() => {
@@ -566,7 +566,7 @@ describe('Reminder Data Provider', () => {
 
     describe('All types of reminders', () => {
       beforeAll(() => {
-        jest.useFakeTimers('modern');
+        jest.useFakeTimers();
       });
 
       afterAll(() => {

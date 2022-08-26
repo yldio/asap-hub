@@ -35,6 +35,7 @@ import ResearchOutputForm, {
   isDirty,
   isIdentifierModified,
   ResearchOutputState,
+  getAddedDate,
 } from '../ResearchOutputForm';
 
 const props: ComponentProps<typeof ResearchOutputForm> = {
@@ -820,6 +821,18 @@ describe('getDecision', () => {
   });
   it('returns not sure for undefined', () => {
     expect(getDecision()).toEqual('Not Sure');
+  });
+});
+
+describe('getAddedTime', () => {
+  it('returns a new date if param is undefined', () => {
+    expect(getAddedDate().substring(0, 8)).toEqual(
+      new Date().toISOString().substring(0, 8),
+    );
+  });
+  it('returns the initial date', () => {
+    const addedDate = new Date().toISOString();
+    expect(getAddedDate(addedDate)).toEqual(addedDate);
   });
 });
 

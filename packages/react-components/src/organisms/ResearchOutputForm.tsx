@@ -192,6 +192,10 @@ export function isDirty(
   );
 }
 
+export function getAddedDate(addedDate?: string): string {
+  return addedDate || new Date().toISOString();
+}
+
 export function getIdentifierType(
   isEditMode: boolean,
   researchOutputData?: ResearchOutputResponse,
@@ -400,7 +404,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
             documentType === 'Lab Resource' && labCatalogNumber !== ''
               ? labCatalogNumber
               : undefined,
-          addedDate: researchOutputData?.addedDate || new Date().toISOString(),
+          addedDate: getAddedDate(researchOutputData?.addedDate),
           methods,
           organisms,
           environments,

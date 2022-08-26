@@ -400,7 +400,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
             documentType === 'Lab Resource' && labCatalogNumber !== ''
               ? labCatalogNumber
               : undefined,
-          addedDate: new Date().toISOString(),
+          addedDate: researchOutputData?.addedDate || new Date().toISOString(),
           methods,
           organisms,
           environments,

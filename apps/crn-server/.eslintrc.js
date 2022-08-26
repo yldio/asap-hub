@@ -16,5 +16,6 @@ module.exports = {
     '@typescript-eslint/no-dupe-class-members': ['error'],
     'no-empty-function': 'off',
     '@typescript-eslint/no-empty-function': ['error'],
+    'class-methods-use-this': ['error', { exceptMethods: ['up', 'down'] }],
   },
 };

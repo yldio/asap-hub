@@ -14,7 +14,7 @@ describe('on mobile', () => {
     page.setViewportSize(mobileScreen);
   });
 
-  it('renders edit buttons above their cards', async () => {
+  it.only('renders edit buttons above their cards', async () => {
     const { getByText, getByLabelText } = render(
       <ProfileCardList>
         {[

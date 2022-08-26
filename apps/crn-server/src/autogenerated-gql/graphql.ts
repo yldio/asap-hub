@@ -7322,7 +7322,7 @@ export type FetchReminderDataQuery = {
   queryEventsContents: Maybe<
     Array<
       Pick<Events, 'id'> & {
-        flatData: Pick<EventsFlatDataDto, 'startDate' | 'title'>;
+        flatData: Pick<EventsFlatDataDto, 'startDate' | 'endDate' | 'title'>;
       }
     >
   >;
@@ -12151,6 +12151,10 @@ export const FetchReminderDataDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'startDate' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'endDate' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                     ],

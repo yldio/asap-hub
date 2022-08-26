@@ -30,6 +30,7 @@ export const FETCH_REMINDER_DATA = gql`
       id
       flatData {
         startDate
+        endDate
         title
       }
     }

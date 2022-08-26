@@ -48,7 +48,7 @@ export const getEventHappeningTodayReminder =
 export const getEventHappeningNowReminder = (): EventHappeningNowReminder => {
   const eventResponse = getEventResponse();
   return {
-    id: `event-happening-today-${eventResponse.id}`,
+    id: `event-happening-now-${eventResponse.id}`,
     entity: 'Event',
     type: 'Happening Now',
     data: {
@@ -118,6 +118,7 @@ export const getSquidexReminderEventsContents = (): NonNullable<
     id: event.id,
     flatData: {
       startDate: event.flatData.startDate,
+      endDate: event.flatData.endDate,
       title: event.flatData.title,
     },
   };

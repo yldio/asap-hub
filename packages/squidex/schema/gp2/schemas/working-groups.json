@@ -51,6 +51,64 @@
         }
       },
       {
+        "name": "description",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "minLength": 0,
+          "maxLength": 2500,
+          "contentType": "Unspecified",
+          "editor": "TextArea",
+          "label": "Description",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "wgEmail",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
+          "isUnique": true,
+          "inlineEditable": true,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "WG Email",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "leadEmail",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
+          "isUnique": true,
+          "inlineEditable": true,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Lead Email",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
         "name": "leadingMembers",
         "isHidden": false,
         "isLocked": false,

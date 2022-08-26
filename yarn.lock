@@ -706,6 +706,7 @@ __metadata:
     mime-types: 2.1.35
     nock: 13.0.11
     node-dev: 6.7.0
+    odata-query: ^7.0.3
     opentracing: 0.14.7
     p-limit: 3.1.0
     parse-data-url: 3.0.0
@@ -30437,6 +30438,15 @@ __metadata:
   version: 1.1.2
   resolution: "obuf@npm:1.1.2"
   checksum: 41a2ba310e7b6f6c3b905af82c275bf8854896e2e4c5752966d64cbcd2f599cfffd5932006bcf3b8b419dfdacebb3a3912d5d94e10f1d0acab59876c8757f27f
+  languageName: node
+  linkType: hard
+
+"odata-query@npm:^7.0.3":
+  version: 7.0.3
+  resolution: "odata-query@npm:7.0.3"
+  dependencies:
+    tslib: ^2.4.0
+  checksum: fda4ae98294109eb8fce846b09b4e114a1dc2954f1eda0bffc888a3917988a23c805c9196ec83cede6f5239b7cfe972168324aa7099373735a60ae72ad31e985
   languageName: node
   linkType: hard
 

@@ -16,6 +16,7 @@ import {
   SquidexRestClient,
 } from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
+import { Filter } from 'odata-query';
 import {
   FetchResearchOutputQuery,
   FetchResearchOutputQueryVariables,
@@ -79,29 +80,33 @@ export class ResearchOutputSquidexDataProvider
     const containsFilters = (search || '')
       .split(' ')
       .filter(Boolean)
-      .map((word: string) => ({
-        contains: word,
-      }));
+      .reduce((res, word: string) => {
+        return [
+          ...res,
+          {
+            [`data/title/iv`]: {
+              contains: word,
+            },
+          },
+          {
+            [`data/tags/iv`]: {
+              contains: word,
+            },
+          },
+        ];
+      }, [] as Filter[]);
 
     const searchQ = containsFilters.length
-      ? buildODataFilter({
-          or: ['title', 'tags'].map((prop) => ({
-            [`data/${prop}/iv`]: {
-              any: {
-                or: containsFilters,
-              },
-            },
-          })),
-        })
-      : '';
+      ? containsFilters.length === 1
+        ? containsFilters[0]
+        : { or: containsFilters }
+      : null;
 
     const filterQ = makeODataFilter(filter);
-
-    const filterGraphql = buildODataFilter({
-      and: [filterQ && `(${filterQ})`, searchQ && `(${searchQ})`].filter(
-        Boolean,
-      ),
-    });
+    const filtersAndSearch = [filterQ, searchQ].filter(Boolean);
+    const query =
+      filtersAndSearch.length === 1 ? filtersAndSearch[0] : filtersAndSearch;
+    const filterGraphql = buildODataFilter(query);
 
     const { queryResearchOutputsContentsWithTotal } =
       await this.squidexGraphqlClient.request<
@@ -255,20 +260,23 @@ export type FetchResearchOutputOptions = FetchOptions<ResearchOutputFilter> & {
   includeDrafts?: boolean;
 };
 
-const makeODataFilter = (filter?: ResearchOutputFilter): string => {
+const makeODataFilter = (filter?: ResearchOutputFilter): any => {
   if (filter) {
-    const entries = Object.entries(filter).map(([key, val]) => {
+    const entries = Object.entries(filter).reduce((res, [key, val]) => {
       if (Array.isArray(val)) {
-        return {
-          or: val.map((valElement) => ({
-            [`data/${key}/iv`]: valElement,
-          })),
-        };
+        return [
+          ...res,
+          {
+            or: val.map((valElement) => ({
+              [`data/${key}/iv`]: valElement,
+            })),
+          },
+        ];
       }
-      return { [`data/${key}/iv`]: val };
-    });
+      return [...res, { [`data/${key}/iv`]: val }];
+    }, [] as Filter[]);
 
-    return buildODataFilter(entries.length === 1 ? entries : { and: entries });
+    return entries.length === 1 ? entries[0] : entries;
   }
 
   return '';

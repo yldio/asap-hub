@@ -80,8 +80,8 @@ export class ResearchOutputSquidexDataProvider
     const containsFilters = (search || '')
       .split(' ')
       .filter(Boolean)
-      .reduce((res, word: string) => {
-        return [
+      .reduce(
+        (res, word: string) => [
           ...res,
           {
             [`data/title/iv`]: {
@@ -93,8 +93,9 @@ export class ResearchOutputSquidexDataProvider
               contains: word,
             },
           },
-        ];
-      }, [] as Filter[]);
+        ],
+        [] as Filter[],
+      );
 
     const searchQ = containsFilters.length
       ? containsFilters.length === 1
@@ -106,7 +107,7 @@ export class ResearchOutputSquidexDataProvider
     const filtersAndSearch = [filterQ, searchQ].filter(Boolean);
     const query =
       filtersAndSearch.length === 1 ? filtersAndSearch[0] : filtersAndSearch;
-    const filterGraphql = buildODataFilter(query);
+    const filterGraphql = buildODataFilter(query as Filter);
 
     const { queryResearchOutputsContentsWithTotal } =
       await this.squidexGraphqlClient.request<
@@ -260,7 +261,7 @@ export type FetchResearchOutputOptions = FetchOptions<ResearchOutputFilter> & {
   includeDrafts?: boolean;
 };
 
-const makeODataFilter = (filter?: ResearchOutputFilter): any => {
+const makeODataFilter = (filter?: ResearchOutputFilter): Filter | null => {
   if (filter) {
     const entries = Object.entries(filter).reduce((res, [key, val]) => {
       if (Array.isArray(val)) {
@@ -276,10 +277,10 @@ const makeODataFilter = (filter?: ResearchOutputFilter): any => {
       return [...res, { [`data/${key}/iv`]: val }];
     }, [] as Filter[]);
 
-    return entries.length === 1 ? entries[0] : entries;
+    return entries.length === 1 ? (entries[0] as Filter) : entries;
   }
 
-  return '';
+  return null;
 };
 
 const getAuthorIdList = (authorDataObject: AuthorUpsertDataObject) => {

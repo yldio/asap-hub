@@ -706,7 +706,7 @@ describe('ResearchOutputs data provider', () => {
           {
             ...expectedDefaultParams,
             filter:
-              "(contains(data/title/iv, 'Title') or contains(data/tags/iv, 'Title'))",
+              "((contains(data/title/iv,'Title')) or (contains(data/tags/iv,'Title')))",
           },
           expect.anything(),
         );
@@ -726,7 +726,7 @@ describe('ResearchOutputs data provider', () => {
           {
             ...expectedDefaultParams,
             filter:
-              "(data/documentType/iv eq 'some-type' and data/title/iv eq 'some-title')",
+              "data/documentType/iv eq 'some-type' and data/title/iv eq 'some-title'",
           },
           expect.anything(),
         );
@@ -746,7 +746,7 @@ describe('ResearchOutputs data provider', () => {
           {
             ...expectedDefaultParams,
             filter:
-              "((data/documentType/iv eq 'some-type-1' or data/documentType/iv eq 'some-type-2') and data/title/iv eq 'some-title')",
+              "((data/documentType/iv eq 'some-type-1') or (data/documentType/iv eq 'some-type-2')) and data/title/iv eq 'some-title'",
           },
           expect.anything(),
         );
@@ -762,8 +762,8 @@ describe('ResearchOutputs data provider', () => {
         });
 
         const expectedFilter =
-          "((data/documentType/iv eq 'Grant Document' or data/documentType/iv eq 'Presentation')) " +
-          "and (contains(data/title/iv, 'Title') or contains(data/tags/iv, 'Title'))";
+          "((data/documentType/iv eq 'Grant Document') or (data/documentType/iv eq 'Presentation')) " +
+          "and ((contains(data/title/iv,'Title')) or (contains(data/tags/iv,'Title')))";
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           {
@@ -781,7 +781,7 @@ describe('ResearchOutputs data provider', () => {
         });
 
         const expectedFilter =
-          "(contains(data/title/iv, 'some') or contains(data/tags/iv, 'some') or contains(data/title/iv, 'words') or contains(data/tags/iv, 'words'))";
+          "((contains(data/title/iv,'some')) or (contains(data/tags/iv,'some')) or (contains(data/title/iv,'words')) or (contains(data/tags/iv,'words')))";
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           {
@@ -799,7 +799,7 @@ describe('ResearchOutputs data provider', () => {
         });
 
         const expectedFilter =
-          "(contains(data/title/iv, '%27%27') or contains(data/tags/iv, '%27%27'))";
+          "((contains(data/title/iv,'''')) or (contains(data/tags/iv,'''')))";
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           {
@@ -810,14 +810,14 @@ describe('ResearchOutputs data provider', () => {
         );
       });
 
-      test('Should sanitise double quotation mark in the search parameter by doubling it and encoding to hex for the squidex filter', async () => {
+      test('Should sanitise double quotation mark in the search parameter by escaping it for the squidex filter', async () => {
         await researchOutputDataProvider.fetch({
           ...defaultParams,
           search: '"',
         });
 
         const expectedFilter =
-          "(contains(data/title/iv, '%22') or contains(data/tags/iv, '%22'))";
+          "((contains(data/title/iv,'\"')) or (contains(data/tags/iv,'\"')))";
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           {

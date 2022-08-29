@@ -9,5 +9,6 @@ export {
   Theme,
   UsersPage,
   WorkingGroupsPage,
+  WorkingGroupOverview,
   WorkingGroupDetailPage,
 } from './templates';

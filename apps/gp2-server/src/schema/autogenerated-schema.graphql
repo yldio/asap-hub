@@ -1484,18 +1484,34 @@ type WorkingGroups implements Content {
   version: Int!
 }
 
+"""The structure of the Description field of the Working Groups content type."""
+type WorkingGroupsDataDescriptionDto {
+  iv: String
+}
+
+"""The structure of the Description field of the Working Groups content input type."""
+input WorkingGroupsDataDescriptionInputDto {
+  iv: String
+}
+
 """The structure of the Working Groups data type."""
 type WorkingGroupsDataDto {
+  description: WorkingGroupsDataDescriptionDto
   leadingMembers: WorkingGroupsDataLeadingMembersDto
   members: WorkingGroupsDataMembersDto
+  primaryEmail: WorkingGroupsDataPrimaryEmailDto
+  secondaryEmail: WorkingGroupsDataSecondaryEmailDto
   shortDescription: WorkingGroupsDataShortDescriptionDto
   title: WorkingGroupsDataTitleDto
 }
 
 """The structure of the Working Groups data input type."""
 input WorkingGroupsDataInputDto {
+  description: WorkingGroupsDataDescriptionInputDto
   leadingMembers: WorkingGroupsDataLeadingMembersInputDto
   members: WorkingGroupsDataMembersInputDto
+  primaryEmail: WorkingGroupsDataPrimaryEmailInputDto
+  secondaryEmail: WorkingGroupsDataSecondaryEmailInputDto
   shortDescription: WorkingGroupsDataShortDescriptionInputDto
   title: WorkingGroupsDataTitleInputDto
 }
@@ -1532,6 +1548,26 @@ input WorkingGroupsDataMembersInputDto {
   iv: [WorkingGroupsDataMembersChildInputDto!]
 }
 
+"""The structure of the Working Group Email field of the Working Groups content type."""
+type WorkingGroupsDataPrimaryEmailDto {
+  iv: String
+}
+
+"""The structure of the Working Group Email field of the Working Groups content input type."""
+input WorkingGroupsDataPrimaryEmailInputDto {
+  iv: String
+}
+
+"""The structure of the WG's Lead Email field of the Working Groups content type."""
+type WorkingGroupsDataSecondaryEmailDto {
+  iv: String
+}
+
+"""The structure of the WG's Lead Email field of the Working Groups content input type."""
+input WorkingGroupsDataSecondaryEmailInputDto {
+  iv: String
+}
+
 """The structure of the Short Description field of the Working Groups content type."""
 type WorkingGroupsDataShortDescriptionDto {
   iv: String
@@ -1554,8 +1590,11 @@ input WorkingGroupsDataTitleInputDto {
 
 """The structure of the flat Working Groups data type."""
 type WorkingGroupsFlatDataDto {
+  description: String
   leadingMembers: String
   members: [WorkingGroupsDataMembersChildDto!]
+  primaryEmail: String
+  secondaryEmail: String
   shortDescription: String
   title: String
 }

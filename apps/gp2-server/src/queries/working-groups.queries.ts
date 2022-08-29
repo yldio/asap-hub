@@ -8,8 +8,8 @@ export const workingGroupContentQueryFragment = gql`
       shortDescription
       leadingMembers
       description
-      wgEmail
-      leadEmail
+      primaryEmail
+      secondaryEmail
       members {
         role
         user {

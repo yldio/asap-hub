@@ -1434,18 +1434,34 @@ export type WorkingGroupsReferencingUsersContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
+/** The structure of the Description field of the Working Groups content type. */
+export type WorkingGroupsDataDescriptionDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Description field of the Working Groups content input type. */
+export type WorkingGroupsDataDescriptionInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
 /** The structure of the Working Groups data type. */
 export type WorkingGroupsDataDto = {
+  description: Maybe<WorkingGroupsDataDescriptionDto>;
   leadingMembers: Maybe<WorkingGroupsDataLeadingMembersDto>;
   members: Maybe<WorkingGroupsDataMembersDto>;
+  primaryEmail: Maybe<WorkingGroupsDataPrimaryEmailDto>;
+  secondaryEmail: Maybe<WorkingGroupsDataSecondaryEmailDto>;
   shortDescription: Maybe<WorkingGroupsDataShortDescriptionDto>;
   title: Maybe<WorkingGroupsDataTitleDto>;
 };
 
 /** The structure of the Working Groups data input type. */
 export type WorkingGroupsDataInputDto = {
+  description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
   leadingMembers: InputMaybe<WorkingGroupsDataLeadingMembersInputDto>;
   members: InputMaybe<WorkingGroupsDataMembersInputDto>;
+  primaryEmail: InputMaybe<WorkingGroupsDataPrimaryEmailInputDto>;
+  secondaryEmail: InputMaybe<WorkingGroupsDataSecondaryEmailInputDto>;
   shortDescription: InputMaybe<WorkingGroupsDataShortDescriptionInputDto>;
   title: InputMaybe<WorkingGroupsDataTitleInputDto>;
 };
@@ -1482,6 +1498,26 @@ export type WorkingGroupsDataMembersInputDto = {
   iv: InputMaybe<Array<WorkingGroupsDataMembersChildInputDto>>;
 };
 
+/** The structure of the Working Group Email field of the Working Groups content type. */
+export type WorkingGroupsDataPrimaryEmailDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Working Group Email field of the Working Groups content input type. */
+export type WorkingGroupsDataPrimaryEmailInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the WG's Lead Email field of the Working Groups content type. */
+export type WorkingGroupsDataSecondaryEmailDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the WG's Lead Email field of the Working Groups content input type. */
+export type WorkingGroupsDataSecondaryEmailInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
 /** The structure of the Short Description field of the Working Groups content type. */
 export type WorkingGroupsDataShortDescriptionDto = {
   iv: Maybe<Scalars['String']>;
@@ -1504,8 +1540,11 @@ export type WorkingGroupsDataTitleInputDto = {
 
 /** The structure of the flat Working Groups data type. */
 export type WorkingGroupsFlatDataDto = {
+  description: Maybe<Scalars['String']>;
   leadingMembers: Maybe<Scalars['String']>;
   members: Maybe<Array<WorkingGroupsDataMembersChildDto>>;
+  primaryEmail: Maybe<Scalars['String']>;
+  secondaryEmail: Maybe<Scalars['String']>;
   shortDescription: Maybe<Scalars['String']>;
   title: Maybe<Scalars['String']>;
 };
@@ -1724,7 +1763,12 @@ export type FetchUsersQuery = {
 export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
   flatData: Pick<
     WorkingGroupsFlatDataDto,
-    'title' | 'shortDescription' | 'leadingMembers'
+    | 'title'
+    | 'shortDescription'
+    | 'leadingMembers'
+    | 'description'
+    | 'primaryEmail'
+    | 'secondaryEmail'
   > & {
     members: Maybe<
       Array<
@@ -1753,7 +1797,12 @@ export type FetchWorkingGroupQuery = {
     Pick<WorkingGroups, 'id'> & {
       flatData: Pick<
         WorkingGroupsFlatDataDto,
-        'title' | 'shortDescription' | 'leadingMembers'
+        | 'title'
+        | 'shortDescription'
+        | 'leadingMembers'
+        | 'description'
+        | 'primaryEmail'
+        | 'secondaryEmail'
       > & {
         members: Maybe<
           Array<
@@ -1786,7 +1835,12 @@ export type FetchWorkingGroupsQuery = {
           Pick<WorkingGroups, 'id'> & {
             flatData: Pick<
               WorkingGroupsFlatDataDto,
-              'title' | 'shortDescription' | 'leadingMembers'
+              | 'title'
+              | 'shortDescription'
+              | 'leadingMembers'
+              | 'description'
+              | 'primaryEmail'
+              | 'secondaryEmail'
             > & {
               members: Maybe<
                 Array<
@@ -2007,6 +2061,15 @@ export const WorkingGroupContentFragmentDoc = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'leadingMembers' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'primaryEmail' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'secondaryEmail' },
                 },
                 {
                   kind: 'Field',

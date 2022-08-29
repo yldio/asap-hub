@@ -12,6 +12,9 @@ export const getWorkingGroupDataObject = (): gp2.WorkingGroupDataObject => ({
   id: '42',
   title: 'Working Group',
   shortDescription: 'Short description',
+  description: 'longer description',
+  primaryEmail: 'primary.email@example.com',
+  secondaryEmail: 'secondary.email@example.com',
   leadingMembers: 'Leading members',
   members: [],
 });
@@ -50,6 +53,9 @@ export const getGraphQLWorkingGroup = (): GraphQLWorkingGroup => ({
   flatData: {
     title: 'Working Group',
     shortDescription: 'Short description',
+    description: 'longer description',
+    primaryEmail: 'primary.email@example.com',
+    secondaryEmail: 'secondary.email@example.com',
     leadingMembers: 'Leading members',
     members: [],
   },

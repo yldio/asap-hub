@@ -125,6 +125,9 @@ export function parseWorkingGroupToDataObject(
     id: workingGroup.id,
     title: workingGroup.flatData.title || '',
     shortDescription: workingGroup.flatData.shortDescription || '',
+    description: workingGroup.flatData.description || '',
+    primaryEmail: workingGroup.flatData.primaryEmail || undefined,
+    secondaryEmail: workingGroup.flatData.secondaryEmail || undefined,
     leadingMembers: workingGroup.flatData.leadingMembers || '',
     members,
   };

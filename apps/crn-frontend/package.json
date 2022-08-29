@@ -22,7 +22,7 @@
     "@asap-hub/routing": "workspace:*",
     "@asap-hub/unsupported-browser-page": "workspace:*",
     "@asap-hub/validation": "workspace:*",
-    "@auth0/auth0-spa-js": "1.22.2",
+    "@auth0/auth0-spa-js": "1.22.3",
     "@fast-csv/format": "4.3.5",
     "@sentry/react": "6.11.0",
     "@sentry/tracing": "6.11.0",

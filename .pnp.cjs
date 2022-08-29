@@ -467,7 +467,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@auth0/auth0-spa-js",\
-        "npm:1.22.2"\
+        "npm:1.22.3"\
       ],\
       [\
         "@auth0/s3",\
@@ -10223,7 +10223,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/auth", "workspace:packages/auth"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@asap-hub/model", "workspace:packages/model"],\
-            ["@auth0/auth0-spa-js", "npm:1.22.2"],\
+            ["@auth0/auth0-spa-js", "npm:1.22.3"],\
             ["@babel/runtime-corejs3", "npm:7.18.9"],\
             ["@types/jest", "npm:26.0.24"],\
             ["@types/node", "npm:14.18.26"]\
@@ -10345,7 +10345,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/routing", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/routing"],\
             ["@asap-hub/unsupported-browser-page", "workspace:packages/unsupported-browser-page"],\
             ["@asap-hub/validation", "workspace:packages/validation"],\
-            ["@auth0/auth0-spa-js", "npm:1.22.2"],\
+            ["@auth0/auth0-spa-js", "npm:1.22.3"],\
             ["@babel/runtime-corejs3", "npm:7.18.9"],\
             ["@fast-csv/format", "npm:4.3.5"],\
             ["@sentry/cli", "npm:1.74.5"],\
@@ -11028,7 +11028,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/routing", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/routing"],\
             ["@asap-hub/unsupported-browser-page", "workspace:packages/unsupported-browser-page"],\
             ["@asap-hub/validation", "workspace:packages/validation"],\
-            ["@auth0/auth0-spa-js", "npm:1.22.2"],\
+            ["@auth0/auth0-spa-js", "npm:1.22.3"],\
             ["@babel/runtime-corejs3", "npm:7.18.9"],\
             ["@fast-csv/format", "npm:4.3.5"],\
             ["@sentry/cli", "npm:1.74.5"],\
@@ -11264,7 +11264,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/react-context", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/react-context"],\
             ["@asap-hub/routing", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/routing"],\
             ["@asap-hub/validation", "workspace:packages/validation"],\
-            ["@auth0/auth0-spa-js", "npm:1.22.2"],\
+            ["@auth0/auth0-spa-js", "npm:1.22.3"],\
             ["@babel/core", "npm:7.18.13"],\
             ["@babel/preset-react", "virtual:61a64643837afd5405cc03238cfc085017b2368a7dc8660b30e3544523c3f52527959ac7ec64eb44bcb071ccdae5690543b0a4ef2dd3608212fed3cd93acc0b8#npm:7.18.6"],\
             ["@babel/runtime-corejs3", "npm:7.18.9"],\
@@ -11350,7 +11350,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/react-context", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/react-context"],\
             ["@asap-hub/routing", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/routing"],\
             ["@asap-hub/validation", "workspace:packages/validation"],\
-            ["@auth0/auth0-spa-js", "npm:1.22.2"],\
+            ["@auth0/auth0-spa-js", "npm:1.22.3"],\
             ["@babel/core", "npm:7.18.13"],\
             ["@babel/preset-react", "virtual:61a64643837afd5405cc03238cfc085017b2368a7dc8660b30e3544523c3f52527959ac7ec64eb44bcb071ccdae5690543b0a4ef2dd3608212fed3cd93acc0b8#npm:7.18.6"],\
             ["@babel/runtime-corejs3", "npm:7.18.9"],\
@@ -11440,7 +11440,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/react-context", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/react-context"],\
             ["@asap-hub/routing", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/routing"],\
             ["@asap-hub/validation", "workspace:packages/validation"],\
-            ["@auth0/auth0-spa-js", "npm:1.22.2"],\
+            ["@auth0/auth0-spa-js", "npm:1.22.3"],\
             ["@babel/core", "npm:7.18.13"],\
             ["@babel/preset-react", "virtual:61a64643837afd5405cc03238cfc085017b2368a7dc8660b30e3544523c3f52527959ac7ec64eb44bcb071ccdae5690543b0a4ef2dd3608212fed3cd93acc0b8#npm:7.18.6"],\
             ["@babel/runtime-corejs3", "npm:7.18.9"],\
@@ -11531,7 +11531,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/react-context", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/react-context"],\
             ["@asap-hub/routing", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/routing"],\
             ["@asap-hub/validation", "workspace:packages/validation"],\
-            ["@auth0/auth0-spa-js", "npm:1.22.2"],\
+            ["@auth0/auth0-spa-js", "npm:1.22.3"],\
             ["@babel/core", "npm:7.18.13"],\
             ["@babel/preset-react", "virtual:61a64643837afd5405cc03238cfc085017b2368a7dc8660b30e3544523c3f52527959ac7ec64eb44bcb071ccdae5690543b0a4ef2dd3608212fed3cd93acc0b8#npm:7.18.6"],\
             ["@babel/runtime-corejs3", "npm:7.18.9"],\
@@ -11895,13 +11895,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@auth0/auth0-spa-js", [\
-        ["npm:1.22.2", {\
-          "packageLocation": "./.yarn/cache/@auth0-auth0-spa-js-npm-1.22.2-131e539a7c-24f3fed2eb.zip/node_modules/@auth0/auth0-spa-js/",\
+        ["npm:1.22.3", {\
+          "packageLocation": "./.yarn/cache/@auth0-auth0-spa-js-npm-1.22.3-24337da74a-b78138b75f.zip/node_modules/@auth0/auth0-spa-js/",\
           "packageDependencies": [\
-            ["@auth0/auth0-spa-js", "npm:1.22.2"],\
+            ["@auth0/auth0-spa-js", "npm:1.22.3"],\
             ["abortcontroller-polyfill", "npm:1.7.3"],\
             ["browser-tabs-lock", "npm:1.2.15"],\
-            ["core-js", "npm:3.23.5"],\
+            ["core-js", "npm:3.25.0"],\
             ["es-cookie", "npm:1.3.2"],\
             ["fast-text-encoding", "npm:1.0.4"],\
             ["promise-polyfill", "npm:8.2.3"],\
@@ -40111,17 +40111,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:3.23.5", {\
-          "packageLocation": "./.yarn/cache/core-js-npm-3.23.5-8ae36c9718-0277d46b15.zip/node_modules/core-js/",\
-          "packageDependencies": [\
-            ["core-js", "npm:3.23.5"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:3.24.1", {\
           "packageLocation": "./.yarn/cache/core-js-npm-3.24.1-01484c0f43-6fb5bf0fd9.zip/node_modules/core-js/",\
           "packageDependencies": [\
             ["core-js", "npm:3.24.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:3.25.0", {\
+          "packageLocation": "./.yarn/cache/core-js-npm-3.25.0-554f4f8ded-5a72740bf5.zip/node_modules/core-js/",\
+          "packageDependencies": [\
+            ["core-js", "npm:3.25.0"]\
           ],\
           "linkType": "HARD"\
         }],\

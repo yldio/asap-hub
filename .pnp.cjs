@@ -2187,7 +2187,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/jsonwebtoken",\
-        "npm:8.5.8"\
+        "npm:8.5.9"\
       ],\
       [\
         "@types/jwt-decode",\
@@ -10485,7 +10485,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/hapi__joi", "npm:17.1.8"],\
             ["@types/jest", "npm:26.0.24"],\
             ["@types/jest-when", "npm:3.5.2"],\
-            ["@types/jsonwebtoken", "npm:8.5.8"],\
+            ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["@types/jwt-decode", "npm:2.2.1"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
             ["@types/lodash.get", "npm:4.4.7"],\
@@ -10626,7 +10626,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/auth", "workspace:packages/auth"],\
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@babel/runtime-corejs3", "npm:7.18.9"],\
-            ["@types/jsonwebtoken", "npm:8.5.8"],\
+            ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["core-js", "npm:3.24.1"],\
             ["date-fns", "npm:2.29.2"],\
             ["jsonwebtoken", "npm:8.5.1"],\
@@ -11147,7 +11147,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/cors", "npm:2.8.12"],\
             ["@types/express", "npm:4.17.13"],\
             ["@types/jest", "npm:26.0.24"],\
-            ["@types/jsonwebtoken", "npm:8.5.8"],\
+            ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
             ["@types/node", "npm:14.18.26"],\
             ["@types/serverless", "npm:3.12.8"],\
@@ -11244,7 +11244,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.18.6"],\
             ["@babel/runtime-corejs3", "npm:7.18.9"],\
             ["@types/jest", "npm:26.0.24"],\
-            ["@types/jsonwebtoken", "npm:8.5.8"],\
+            ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["jsonwebtoken", "npm:8.5.1"]\
           ],\
           "linkType": "SOFT"\
@@ -11728,7 +11728,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/aws-lambda", "npm:8.10.102"],\
             ["@types/express", "npm:4.17.13"],\
             ["@types/jest", "npm:26.0.24"],\
-            ["@types/jsonwebtoken", "npm:8.5.8"],\
+            ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["@types/uuid", "npm:8.3.4"],\
             ["ajv", "npm:8.11.0"],\
@@ -32987,10 +32987,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:8.5.8", {\
-          "packageLocation": "./.yarn/cache/@types-jsonwebtoken-npm-8.5.8-798e14708c-56738a918c.zip/node_modules/@types/jsonwebtoken/",\
+        ["npm:8.5.9", {\
+          "packageLocation": "./.yarn/cache/@types-jsonwebtoken-npm-8.5.9-79c2843a81-33815ab02d.zip/node_modules/@types/jsonwebtoken/",\
           "packageDependencies": [\
-            ["@types/jsonwebtoken", "npm:8.5.8"],\
+            ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["@types/node", "npm:13.11.1"]\
           ],\
           "linkType": "HARD"\

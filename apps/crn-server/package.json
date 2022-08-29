@@ -116,7 +116,7 @@
     "@types/hapi__joi": "17.1.8",
     "@types/jest": "26.0.24",
     "@types/jest-when": "3.5.2",
-    "@types/jsonwebtoken": "8.5.8",
+    "@types/jsonwebtoken": "8.5.9",
     "@types/jwt-decode": "2.2.1",
     "@types/jwt-encode": "workspace:*",
     "@types/lodash.get": "4.4.7",

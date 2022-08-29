@@ -265,16 +265,13 @@ const makeODataFilter = (filter?: ResearchOutputFilter): Filter | null => {
   if (filter) {
     const entries = Object.entries(filter).reduce((res, [key, val]) => {
       if (Array.isArray(val)) {
-        return [
-          ...res,
-          {
-            or: val.map((valElement) => ({
-              [`data/${key}/iv`]: valElement,
-            })),
-          },
-        ];
+        return res.concat({
+          or: val.map((valElement) => ({
+            [`data/${key}/iv`]: valElement,
+          })),
+        });
       }
-      return [...res, { [`data/${key}/iv`]: val }];
+      return res.concat({ [`data/${key}/iv`]: val });
     }, [] as Filter[]);
 
     return entries.length === 1 ? (entries[0] as Filter) : entries;

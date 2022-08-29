@@ -19,10 +19,10 @@ import {
   InputUser,
   parseDate,
   RestUser,
-  sanitiseForSquidex,
   SquidexGraphqlClient,
   SquidexRestClient,
 } from '@asap-hub/squidex';
+import { Filter } from 'odata-query';
 import {
   FetchUserQuery,
   FetchUserQueryVariables,
@@ -33,7 +33,11 @@ import {
 import { isTeamRole } from '../entities';
 import { FETCH_USER, FETCH_USERS } from '../queries/users.queries';
 import logger from '../utils/logger';
-import { createUrl } from '../utils/urls';
+import {
+  buildEqFilterForWords,
+  buildODataFilter,
+  createUrl,
+} from '../utils/urls';
 
 export type CMSOrcidWork = OrcidWork;
 
@@ -183,24 +187,21 @@ const cleanUser = (userToUpdate: UserUpdateDataObject) =>
   }, {} as { [key: string]: { iv: unknown } });
 
 const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
-  const searchFilter = [
-    ...(search || '')
-      .split(' ')
-      .filter(Boolean) // removes whitespaces
-      .map(sanitiseForSquidex)
-      .reduce(
-        (acc: string[], word: string) =>
-          acc.concat(
-            `(${[
-              [`contains(data/firstName/iv, '${word}')`],
-              [`contains(data/lastName/iv, '${word}')`],
-              [`contains(data/institution/iv, '${word}')`],
-              [`contains(data/expertiseAndResourceTags/iv, '${word}')`],
-            ].join(' or ')})`,
-          ),
-        [],
-      ),
-  ].join(' and ');
+  const searchFilter = (search || '')
+    .split(' ')
+    .filter(Boolean) // removes whitespaces
+    .reduce(
+      (acc: Filter[], word: string) =>
+        acc.concat({
+          or: [
+            { 'data/firstName/iv': { contains: word } },
+            { 'data/lastName/iv': { contains: word } },
+            { 'data/institution/iv': { contains: word } },
+            { 'data/expertiseAndResourceTags/iv': { contains: word } },
+          ],
+        }),
+      [],
+    );
   const {
     role,
     labId,
@@ -210,48 +211,28 @@ const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
     hidden = true,
     orcid,
   } = filter || {};
-  const filterRoles = (role || [])
-    .reduce(
-      (acc: string[], word: string) =>
-        acc.concat([`data/teams/iv/role eq '${word}'`]),
-      [],
-    )
-    .join(' or ');
+  const filterRoles = buildEqFilterForWords('teams', role, 'role');
 
-  const filterLabs = (labId || [])
-    .reduce(
-      (acc: string[], id: string) => acc.concat([`data/labs/iv eq '${id}'`]),
-      [],
-    )
-    .join(' or ');
+  const filterLabs = buildEqFilterForWords('labs', labId);
 
-  const filterTeams = (teamId || [])
-    .reduce(
-      (acc: string[], id: string) =>
-        acc.concat([`data/teams/iv/id eq '${id}'`]),
-      [],
-    )
-    .join(' or ');
-  const filterCode = code && `data/connections/iv/code eq '${code}'`;
+  const filterTeams = buildEqFilterForWords('teams', teamId, 'id');
+  const filterCode = code && { 'data/connections/iv/code': code };
 
-  const filterHidden = hidden && "data/role/iv ne 'Hidden'";
-  const filterNonOnboarded = onboarded && 'data/onboarded/iv eq true';
-  const filterOrcid = orcid && `contains(data/order/iv, '${orcid}')`;
+  const filterHidden = hidden && { not: { 'data/role/iv': 'Hidden' } };
+  const filterNonOnboarded = onboarded && { 'data/onboarded/iv': true };
+  const filterOrcid = orcid && { 'data/order/iv': { contains: orcid } };
 
   const queryFilter = [
-    filterTeams && `(${filterTeams})`,
-    filterRoles && `(${filterRoles})`,
-    filterLabs && `(${filterLabs})`,
+    filterTeams,
+    filterRoles,
+    filterLabs,
     filterCode,
     filterNonOnboarded,
     filterHidden,
     filterOrcid,
-    searchFilter && `(${searchFilter})`,
-  ]
-    .filter(Boolean)
-    .join(' and ')
-    .trim();
-  return queryFilter;
+    ...searchFilter,
+  ].filter(Boolean);
+  return buildODataFilter(queryFilter);
 };
 
 export type GraphqlUserTeam = NonNullable<

@@ -2399,7 +2399,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/source-map-support",\
-        "npm:0.5.4"\
+        "npm:0.5.6"\
       ],\
       [\
         "@types/stack-utils",\
@@ -10496,7 +10496,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/parse-data-url", "npm:3.0.0"],\
             ["@types/pump", "npm:1.1.1"],\
             ["@types/serverless", "npm:3.12.8"],\
-            ["@types/source-map-support", "npm:0.5.4"],\
+            ["@types/source-map-support", "npm:0.5.6"],\
             ["@types/stream-json", "npm:1.7.2"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["@types/uuid", "npm:8.3.4"],\
@@ -11151,7 +11151,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
             ["@types/node", "npm:14.18.26"],\
             ["@types/serverless", "npm:3.12.8"],\
-            ["@types/source-map-support", "npm:0.5.4"],\
+            ["@types/source-map-support", "npm:0.5.6"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["@types/uuid", "npm:8.3.4"],\
             ["@yarnpkg/pnpify", "npm:3.1.4"],\
@@ -33606,10 +33606,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/source-map-support", [\
-        ["npm:0.5.4", {\
-          "packageLocation": "./.yarn/cache/@types-source-map-support-npm-0.5.4-1c4eb2be20-160ff77e8a.zip/node_modules/@types/source-map-support/",\
+        ["npm:0.5.6", {\
+          "packageLocation": "./.yarn/cache/@types-source-map-support-npm-0.5.6-5db5ff1656-b2b52b3e49.zip/node_modules/@types/source-map-support/",\
           "packageDependencies": [\
-            ["@types/source-map-support", "npm:0.5.4"],\
+            ["@types/source-map-support", "npm:0.5.6"],\
             ["source-map", "npm:0.6.1"]\
           ],\
           "linkType": "HARD"\

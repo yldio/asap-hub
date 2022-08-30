@@ -10,6 +10,7 @@ import {
   getSquidexReminderReseachOutputsContents,
   getEventHappeningTodayReminder,
   getSquidexReminderEventsContents,
+  getEventHappeningNowReminder,
 } from '../fixtures/reminders.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
@@ -504,6 +505,65 @@ describe('Reminder Data Provider', () => {
       });
     });
 
+    describe('Event Happening Now Reminder', () => {
+      beforeAll(() => {
+        jest.useFakeTimers('modern');
+      });
+
+      afterAll(() => {
+        jest.useRealTimers();
+      });
+
+      beforeEach(async () => {});
+
+      test('Should fetch the reminder when it has already started', async () => {
+        // set current time to one minute after the start of the fixture event
+        jest.setSystemTime(DateTime.fromISO('2022-01-01T08:01:00Z').toJSDate());
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.startDate =
+          '2022-01-01T08:00:00Z';
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.endDate =
+          '2022-01-01T10:00:00Z';
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        const expectedEventHappeningNowReminder =
+          getEventHappeningNowReminder();
+        expectedEventHappeningNowReminder.data.startDate =
+          '2022-01-01T08:00:00Z';
+        expectedEventHappeningNowReminder.data.endDate = '2022-01-01T10:00:00Z';
+        expect(result).toEqual({
+          total: 1,
+          items: [expectedEventHappeningNowReminder],
+        });
+      });
+
+      test('Should not fetch the reminder when it has already ended', async () => {
+        // set current time to one minute after the end of the fixture event
+        jest.setSystemTime(DateTime.fromISO('2022-01-01T10:01:00Z').toJSDate());
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.startDate =
+          '2022-01-01T08:00:00Z';
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.endDate =
+          '2022-01-01T10:00:00Z';
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+    });
+
     describe('All types of reminders', () => {
       beforeAll(() => {
         jest.useFakeTimers('modern');
@@ -520,17 +580,21 @@ describe('Reminder Data Provider', () => {
 
         const researchOutput1 = getSquidexReminderReseachOutputsContents();
         researchOutput1.id = 'research-output-1';
-        researchOutput1.flatData.addedDate = '2022-01-01T10:00:00Z';
+        researchOutput1.flatData.addedDate = '2022-01-01T09:00:00Z';
         const researchOutput2 = getSquidexReminderReseachOutputsContents();
         researchOutput2.id = 'research-output-2';
         researchOutput2.flatData.addedDate = '2022-01-01T14:00:00Z';
 
         const event1 = getSquidexReminderEventsContents();
         event1.id = 'event-1';
+        // using event start-date for sorting
         event1.flatData.startDate = '2022-01-01T12:00:00Z';
+        event1.flatData.endDate = '2022-01-01T13:00:00Z';
         const event2 = getSquidexReminderEventsContents();
         event2.id = 'event-2';
-        event2.flatData.startDate = '2022-01-01T15:00:00Z';
+        event2.flatData.startDate = '2022-01-01T08:00:00Z';
+        // using event end-date for sorting
+        event2.flatData.endDate = '2022-01-01T10:00:00Z';
 
         squidexGraphqlResponse.queryEventsContents = [event1, event2];
         squidexGraphqlResponse.queryResearchOutputsContents = [
@@ -545,9 +609,9 @@ describe('Reminder Data Provider', () => {
 
         const reminderIds = result.items.map((reminder) => reminder.id);
         expect(reminderIds).toEqual([
-          `event-happening-today-${event2.id}`,
           `research-output-published-${researchOutput2.id}`,
           `event-happening-today-${event1.id}`,
+          `event-happening-now-${event2.id}`,
           `research-output-published-${researchOutput1.id}`,
         ]);
       });

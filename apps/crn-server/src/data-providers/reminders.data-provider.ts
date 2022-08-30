@@ -1,8 +1,10 @@
 import {
+  EventHappeningNowReminder,
   EventHappeningTodayReminder,
   FetchRemindersOptions,
   isResearchOutputDocumentType,
   ListReminderDataObject,
+  ReminderDataObject,
   ResearchOutputPublishedReminder,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
@@ -47,13 +49,10 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
     const eventReminders = getEventRemindersFromQuery(queryEventsContents);
     const reminders = [...researchOutputReminders, ...eventReminders];
 
-    const sortedReminders = reminders.sort((a, b) => {
-      const aStartDate = DateTime.fromISO(
-        a.entity === 'Research Output' ? a.data.addedDate : a.data.startDate,
-      );
-      const bStartDate = DateTime.fromISO(
-        b.entity === 'Research Output' ? b.data.addedDate : b.data.startDate,
-      );
+    const sortedReminders = reminders.sort((reminderA, reminderB) => {
+      const aStartDate = getSortDate(reminderA);
+      const bStartDate = getSortDate(reminderB);
+
       return bStartDate.diff(aStartDate).as('seconds');
     });
 
@@ -159,24 +158,60 @@ const getResearchOutputRemindersFromQuery = (
 
 const getEventRemindersFromQuery = (
   queryEventsContents: FetchReminderDataQuery['queryEventsContents'],
-): EventHappeningTodayReminder[] => {
-  const eventReminders = (
-    queryEventsContents || []
-  ).map<EventHappeningTodayReminder>((event) => ({
-    id: `event-happening-today-${event.id}`,
-    entity: 'Event',
-    type: 'Happening Today',
-    data: {
-      eventId: event.id,
-      title: event.flatData.title || '',
-      startDate: event.flatData.startDate,
-    },
-  }));
+): (EventHappeningTodayReminder | EventHappeningNowReminder)[] => {
+  const eventReminders = (queryEventsContents || []).reduce<
+    (EventHappeningTodayReminder | EventHappeningNowReminder)[]
+  >((events, event) => {
+    const startDate = DateTime.fromISO(event.flatData.startDate);
+    const endDate = DateTime.fromISO(event.flatData.endDate);
 
-  // remove event reminders that have already started
-  const filteredEventReminders = eventReminders.filter((event) => {
-    const startDate = DateTime.fromISO(event.data.startDate);
-    return startDate > DateTime.local();
-  });
-  return filteredEventReminders;
+    if (startDate > DateTime.local()) {
+      return [
+        ...events,
+        {
+          id: `event-happening-today-${event.id}`,
+          entity: 'Event',
+          type: 'Happening Today',
+          data: {
+            eventId: event.id,
+            title: event.flatData.title || '',
+            startDate: event.flatData.startDate,
+          },
+        },
+      ];
+    }
+
+    if (endDate > DateTime.local()) {
+      return [
+        ...events,
+        {
+          id: `event-happening-now-${event.id}`,
+          entity: 'Event',
+          type: 'Happening Now',
+          data: {
+            eventId: event.id,
+            title: event.flatData.title || '',
+            startDate: event.flatData.startDate,
+            endDate: event.flatData.endDate,
+          },
+        },
+      ];
+    }
+
+    return events;
+  }, []);
+
+  return eventReminders;
+};
+
+const getSortDate = (reminder: ReminderDataObject): DateTime => {
+  if (reminder.entity === 'Research Output') {
+    return DateTime.fromISO(reminder.data.addedDate);
+  }
+
+  if (reminder.type === 'Happening Today') {
+    return DateTime.fromISO(reminder.data.startDate);
+  }
+
+  return DateTime.fromISO(reminder.data.endDate);
 };

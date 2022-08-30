@@ -1,4 +1,5 @@
 import {
+  EventHappeningNowReminder,
   EventHappeningTodayReminder,
   FetchRemindersOptions,
   ResearchOutputPublishedReminder,
@@ -7,6 +8,8 @@ import Reminders from '../../src/controllers/reminders';
 import {
   getResearchOutputPublishedReminder,
   getReminderResponse,
+  getEventHappeningTodayReminder,
+  getEventHappeningNowReminder,
 } from '../fixtures/reminders.fixtures';
 import { reminderDataProviderMock } from '../mocks/reminder-data-provider.mock';
 
@@ -54,21 +57,6 @@ describe('Reminder Controller', () => {
       expect(reminderDataProviderMock.fetch).toBeCalledWith(options);
     });
 
-    test('Should throw an error when the reminder is not supported', async () => {
-      const reminderDataObject = getResearchOutputPublishedReminder();
-      reminderDataObject.entity = 'Research Output';
-      reminderDataObject.type = 'some-type' as any;
-
-      reminderDataProviderMock.fetch.mockResolvedValueOnce({
-        total: 1,
-        items: [reminderDataObject],
-      });
-
-      await expect(reminderController.fetch(options)).rejects.toThrow(
-        "Reminder type 'some-type' for entity 'Research Output' is not supported",
-      );
-    });
-
     describe('Description and href', () => {
       test('Should return the correct description and href for the research-output-published reminder', async () => {
         const reminderDataObject: ResearchOutputPublishedReminder = {
@@ -98,9 +86,7 @@ describe('Reminder Controller', () => {
 
       test('Should return the correct description and href for the event-happening-today reminder', async () => {
         const reminderDataObject: EventHappeningTodayReminder = {
-          ...getResearchOutputPublishedReminder(),
-          entity: 'Event',
-          type: 'Happening Today',
+          ...getEventHappeningTodayReminder(),
           data: {
             startDate: '2022-02-28T17:00:00.000Z',
             eventId: 'some-event-id',
@@ -123,9 +109,7 @@ describe('Reminder Controller', () => {
 
       test('Should return the event-happening-today description with the time formatted for the desired timezone', async () => {
         const reminderDataObject: EventHappeningTodayReminder = {
-          ...getResearchOutputPublishedReminder(),
-          entity: 'Event',
-          type: 'Happening Today',
+          ...getEventHappeningTodayReminder(),
           data: {
             startDate: '2022-02-28T17:00:00.000Z',
             eventId: 'some-event-id',
@@ -146,6 +130,25 @@ describe('Reminder Controller', () => {
 
         expect(items[0]).toMatchObject({
           description: `Today there is the Some Test Event Title event happening at 12.00 PM.`,
+          href: `/events/some-event-id`,
+        });
+      });
+
+      test('Should return the correct description and href for the event-happening-now online event reminder', async () => {
+        const reminderDataObject: EventHappeningNowReminder =
+          getEventHappeningNowReminder();
+        reminderDataObject.data.title = 'Some Test Event Title';
+        reminderDataObject.data.eventId = 'some-event-id';
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+
+        expect(items[0]).toMatchObject({
+          description: `Some Test Event Title event is happening now! Click here to join the meeting!`,
           href: `/events/some-event-id`,
         });
       });

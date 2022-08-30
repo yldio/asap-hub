@@ -1,195 +1,187 @@
 {
-  "previewUrls": {},
-  "properties": {
-    "label": "Working Groups",
-    "validateOnPublish": false
-  },
-  "category": "Content",
-  "scripts": {},
-  "isPublished": true,
-  "fieldRules": [],
-  "fieldsInLists": [],
-  "fieldsInReferences": [],
-  "fields": [
-    {
-      "name": "title",
-      "properties": {
-        "isRequired": true,
-        "isRequiredOnPublish": false,
-        "isHalfWidth": false,
-        "fieldType": "String",
-        "createEnum": false,
-        "editor": "Input",
-        "inlineEditable": false,
-        "isEmbeddable": false,
-        "isUnique": false,
-        "contentType": "Unspecified",
-        "label": "Title"
-      },
-      "isLocked": false,
-      "isHidden": false,
-      "isDisabled": false,
-      "partitioning": "invariant"
+  "$schema": "./../__json/schema.json",
+  "name": "working-groups",
+  "isSingleton": false,
+  "isPublished": false,
+  "schema": {
+    "noFieldDeletion": false,
+    "noFieldRecreation": false,
+    "properties": {
+      "label": "Working Groups",
+      "validateOnPublish": false
     },
-    {
-      "name": "shortDescription",
-      "properties": {
-        "isRequired": true,
-        "isRequiredOnPublish": false,
-        "isHalfWidth": false,
-        "fieldType": "String",
-        "createEnum": false,
-        "editor": "Input",
-        "inlineEditable": false,
-        "isEmbeddable": false,
-        "isUnique": false,
-        "contentType": "Unspecified",
-        "label": "Short Description"
-      },
-      "isLocked": false,
-      "isHidden": false,
-      "isDisabled": false,
-      "partitioning": "invariant"
-    },
-    {
-      "name": "description",
-      "properties": {
-        "isRequired": false,
-        "isRequiredOnPublish": false,
-        "isHalfWidth": false,
-        "fieldType": "String",
-        "createEnum": false,
-        "editor": "TextArea",
-        "inlineEditable": false,
-        "isEmbeddable": false,
-        "isUnique": false,
-        "maxLength": 2500,
-        "contentType": "Unspecified",
-        "label": "Description"
-      },
-      "isLocked": false,
-      "isHidden": false,
-      "isDisabled": false,
-      "partitioning": "invariant"
-    },
-    {
-      "name": "leadingMembers",
-      "properties": {
-        "isRequired": false,
-        "isRequiredOnPublish": false,
-        "isHalfWidth": false,
-        "fieldType": "String",
-        "createEnum": false,
-        "editor": "Input",
-        "inlineEditable": false,
-        "isEmbeddable": false,
-        "isUnique": false,
-        "contentType": "Unspecified",
-        "label": "Leading Members"
-      },
-      "isLocked": false,
-      "isHidden": false,
-      "isDisabled": false,
-      "partitioning": "invariant"
-    },
-    {
-      "name": "members",
-      "properties": {
-        "isRequired": false,
-        "isRequiredOnPublish": false,
-        "isHalfWidth": false,
-        "fieldType": "Array",
-        "label": "Members"
-      },
-      "isLocked": false,
-      "isHidden": false,
-      "isDisabled": false,
-      "partitioning": "invariant",
-      "nested": [
-        {
-          "name": "user",
-          "properties": {
-            "isRequired": true,
-            "isRequiredOnPublish": false,
-            "isHalfWidth": true,
-            "fieldType": "References",
-            "editor": "List",
-            "minItems": 1,
-            "maxItems": 1,
-            "allowDuplicates": false,
-            "resolveReference": false,
-            "mustBePublished": false,
-            "schemaIds": ["ad5e8a3d-6b9b-4f84-9b07-373330dd3bde"],
-            "label": "User"
-          },
-          "isLocked": false,
-          "isHidden": false,
-          "isDisabled": false
-        },
-        {
-          "name": "role",
-          "properties": {
-            "isRequired": true,
-            "isRequiredOnPublish": false,
-            "isHalfWidth": true,
-            "fieldType": "String",
-            "createEnum": false,
-            "editor": "Dropdown",
-            "inlineEditable": true,
-            "isEmbeddable": false,
-            "isUnique": false,
-            "allowedValues": ["Lead", "Co-lead", "Working group member"],
-            "contentType": "Unspecified",
-            "label": "Role"
-          },
-          "isLocked": false,
-          "isHidden": false,
-          "isDisabled": false
+    "scripts": {},
+    "fieldsInReferences": [],
+    "fieldsInLists": [],
+    "fields": [
+      {
+        "name": "title",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Title",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
-      ]
-    },
-    {
-      "name": "primaryEmail",
-      "properties": {
-        "isRequired": false,
-        "isRequiredOnPublish": false,
-        "isHalfWidth": true,
-        "fieldType": "String",
-        "createEnum": false,
-        "editor": "Input",
-        "inlineEditable": true,
-        "isEmbeddable": false,
-        "isUnique": true,
-        "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
-        "contentType": "Unspecified",
-        "label": "Working Group Email"
       },
-      "isLocked": false,
-      "isHidden": false,
-      "isDisabled": false,
-      "partitioning": "invariant"
-    },
-    {
-      "name": "secondaryEmail",
-      "properties": {
-        "isRequired": false,
-        "isRequiredOnPublish": false,
-        "isHalfWidth": true,
-        "fieldType": "String",
-        "createEnum": false,
-        "editor": "Input",
-        "inlineEditable": true,
-        "isEmbeddable": false,
-        "isUnique": true,
-        "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
-        "contentType": "Unspecified",
-        "label": "WG's Lead Email"
+      {
+        "name": "shortDescription",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Short Description",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
       },
-      "isLocked": false,
-      "isHidden": false,
-      "isDisabled": false,
-      "partitioning": "invariant"
-    }
-  ],
-  "type": "Default"
+      {
+        "name": "description",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "maxLength": 2500,
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "TextArea",
+          "label": "Description",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "leadingMembers",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Leading Members",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "members",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "Members",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        },
+        "nested": [
+          {
+            "name": "user",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "References",
+              "minItems": 1,
+              "maxItems": 1,
+              "allowDuplicates": false,
+              "resolveReference": false,
+              "mustBePublished": false,
+              "editor": "List",
+              "schemaIds": ["users"],
+              "label": "User",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          },
+          {
+            "name": "role",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "allowedValues": ["Lead", "Co-lead", "Working group member"],
+              "isUnique": false,
+              "inlineEditable": true,
+              "contentType": "Unspecified",
+              "editor": "Dropdown",
+              "label": "Role",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          }
+        ]
+      },
+      {
+        "name": "primaryEmail",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
+          "isUnique": true,
+          "inlineEditable": true,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Working Group Email",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "secondaryEmail",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
+          "isUnique": true,
+          "inlineEditable": true,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "WG's Lead Email",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      }
+    ],
+    "previewUrls": {},
+    "category": "Content",
+    "isPublished": true
+  }
 }

@@ -8,13 +8,13 @@ describe('WorkingGroupCard', () => {
   it('renders the title', () => {
     render(<WorkingGroupCard {...defaultProps} />);
     expect(
-      screen.getByRole('heading', { level: 3, name: /Working Group 42/i }),
+      screen.getByRole('heading', { level: 3, name: /Working Group Title/i }),
     ).toBeInTheDocument();
   });
   it('links to the detail page', () => {
     render(<WorkingGroupCard {...defaultProps} />);
     expect(
-      screen.getByRole('link', { name: /Working Group 42/i }),
+      screen.getByRole('link', { name: /Working Group Title/i }),
     ).toBeInTheDocument();
   });
   it('renders a count of the members', () => {

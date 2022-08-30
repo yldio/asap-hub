@@ -2,7 +2,10 @@ import { useRouteParams, gp2 } from '@asap-hub/routing';
 
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { WorkingGroupDetailPage } from '@asap-hub/gp2-components';
+import {
+  WorkingGroupDetailPage,
+  WorkingGroupOverview,
+} from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 
 import { useWorkingGroupById } from './state';
@@ -21,7 +24,9 @@ const WorkingGroupDetail = () => {
               workingGroups({}).workingGroup({ workingGroupId }).overview({}).$
             }
           >
-            <Frame title="Overview">Overview</Frame>
+            <Frame title="Overview">
+              <WorkingGroupOverview {...workingGroupData} />
+            </Frame>
           </Route>
           <Redirect
             to={

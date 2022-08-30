@@ -507,7 +507,7 @@ describe('Reminder Data Provider', () => {
 
     describe('Event Happening Now Reminder', () => {
       beforeAll(() => {
-        jest.useFakeTimers('modern');
+        jest.useFakeTimers();
       });
 
       afterAll(() => {

@@ -24,7 +24,7 @@
       "email",
       "onboarded",
       "connections",
-      "dismissGettingStarted",
+      "dismissedGettingStarted",
       "adminNotes",
       "meta.id",
       "role",
@@ -813,8 +813,8 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
-      }
-      ,{
+      },
+      {
         "name": "dismissedGettingStarted",
         "isHidden": false,
         "isLocked": false,
@@ -832,7 +832,6 @@
           "isHalfWidth": false
         }
       },
-
       {
         "name": "connections",
         "isHidden": false,

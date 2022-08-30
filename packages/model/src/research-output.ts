@@ -272,7 +272,10 @@ export type ResearchOutputPostRequest = {
   usedInPublication?: boolean;
 };
 
-export type ResearchOutputPutRequest = ResearchOutputPostRequest;
+export type ResearchOutputPutRequest = Omit<
+  ResearchOutputPostRequest,
+  'addedDate'
+>;
 
 export const convertDecisionToBoolean = (
   decision: string | null | DecisionOption,

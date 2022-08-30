@@ -24,6 +24,7 @@
       "email",
       "onboarded",
       "connections",
+      "dismissGettingStarted",
       "adminNotes",
       "meta.id",
       "role",
@@ -812,7 +813,26 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
+      }
+      ,{
+        "name": "dismissedGettingStarted",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Boolean",
+          "defaultValue": false,
+          "inlineEditable": true,
+          "editor": "Toggle",
+          "label": "Dismissed Getting Started dialog",
+          "hints": "Use this to hide the Getting Started component on the home page",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
       },
+
       {
         "name": "connections",
         "isHidden": false,

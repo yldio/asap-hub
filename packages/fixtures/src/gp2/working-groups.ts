@@ -5,6 +5,7 @@ const mockedWorkingGroup = {
   title: 'Working Group Title',
   members: [],
   shortDescription: 'This is a short description',
+  description: 'This is a long description',
   leadingMembers: 'This is a list of leading members',
 };
 

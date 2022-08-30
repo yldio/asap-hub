@@ -7,6 +7,9 @@ export const workingGroupContentQueryFragment = gql`
       title
       shortDescription
       leadingMembers
+      description
+      primaryEmail
+      secondaryEmail
       members {
         role
         user {

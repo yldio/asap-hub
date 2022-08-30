@@ -58,6 +58,7 @@ describe('getWorkingGroups', () => {
           title: 'Working Group 42',
           members: [],
           shortDescription: 'This is a short description 42',
+          description: 'This is a long description 42',
           leadingMembers: 'This is a list of leading members 42',
         },
       ],

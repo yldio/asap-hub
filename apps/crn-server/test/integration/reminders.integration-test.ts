@@ -355,7 +355,7 @@ describe('Reminders', () => {
     let fetchRemindersOptions: FetchRemindersOptions;
 
     beforeAll(async () => {
-      jest.useFakeTimers('modern');
+      jest.useFakeTimers();
 
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();

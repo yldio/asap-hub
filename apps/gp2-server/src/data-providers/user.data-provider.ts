@@ -362,6 +362,11 @@ export const parseGraphQLUserToDataObject = (
       item.flatData && typeof item.flatData.onboarded === 'boolean'
         ? item.flatData.onboarded
         : undefined,
+    dismissedGettingStarted:
+      item.flatData &&
+      typeof item.flatData.dismissedGettingStarted === 'boolean'
+        ? item.flatData.dismissedGettingStarted
+        : undefined,
     createdDate,
     orcid,
     firstName: item.flatData.firstName || '',

@@ -8,7 +8,7 @@ import usersIcon from '../icons/users-icon';
 import workingGroupIcon from '../icons/working-group-icon';
 import NavigationLink from '../molecules/NavigationLink';
 
-const { workingGroups, users } = gp2;
+const { workingGroups, users, projects } = gp2;
 const {
   largeDesktopScreen,
   mobileScreen,
@@ -80,7 +80,7 @@ const MainNavigation: React.FC = () => (
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={network({}).$} icon={projectIcon} enabled={false}>
+        <NavigationLink href={projects({}).$} icon={projectIcon}>
           Projects
         </NavigationLink>
       </li>

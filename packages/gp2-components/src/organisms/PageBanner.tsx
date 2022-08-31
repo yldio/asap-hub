@@ -9,7 +9,7 @@ import { css } from '@emotion/react';
 const { mobileScreen, rem, tabletScreen, vminLinearCalcClamped } = pixels;
 
 type PageBannerProp = {
-  image: string;
+  imageAndPosition: object;
   title: string;
   description: string;
 };
@@ -52,26 +52,26 @@ const textContainerStyles = css({
   },
 });
 
-const imageBannerStyles = (image: string) =>
-  css({
-    width: '100%',
-    maxWidth: rem(headerMaxWidth),
-    height: rem(72),
-    [drawerQuery]: {
-      height: rem(48),
-    },
-    backgroundImage: `url(${image})`,
-    borderRadius: `8px 8px 0px 0px`,
-    backgroundSize: '100%',
-  });
+const imageBannerStyles = (imageAndPosition: object) => css({
+  width: '100%',
+  maxWidth: rem(headerMaxWidth),
+  height: rem(72),
+  [drawerQuery]: {
+    height: rem(48),
+  },
+  backgroundImage: `url(${imageAndPosition.image})`,
+  borderRadius: `8px 8px 0px 0px`,
+  backgroundSize: '100%',
+  backgroundPosition : imageAndPosition.backgroundPosition
+});
 
 const PageBanner: React.FC<PageBannerProp> = ({
-  image,
+  imageAndPosition,
   title,
   description,
 }) => (
   <header css={headerStyles}>
-    <div css={imageBannerStyles(image)}></div>
+    <div css={imageBannerStyles(imageAndPosition)}></div>
     <div css={[cardStyles, accents.default]}>
       <div css={textContainerStyles}>
         <h1

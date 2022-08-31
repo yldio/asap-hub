@@ -7,9 +7,10 @@ import { FC, lazy, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import { auth0State } from './auth/state';
+import Projects from './projects/Projects';
 import Users from './users/Users';
 
-const { workingGroups, users } = gp2;
+const { workingGroups, users, projects } = gp2;
 const loadDashboard = () =>
   import(/* webpackChunkName: "dashboard" */ './dashboard/Dashboard');
 
@@ -54,6 +55,11 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
         <Route path={workingGroups.template}>
           <Frame title="Working Groups">
             <WorkingGroups />
+          </Frame>
+        </Route>
+        <Route path={projects.template}>
+          <Frame title="Projects">
+            <Projects />
           </Frame>
         </Route>
         <Route>

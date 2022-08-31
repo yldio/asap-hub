@@ -7,6 +7,7 @@ export {
   DashboardPageBody,
   Layout,
   Theme,
+  ProjectsPage,
   UsersPage,
   WorkingGroupsPage,
   WorkingGroupOverview,

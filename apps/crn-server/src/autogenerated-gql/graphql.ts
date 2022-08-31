@@ -8220,6 +8220,7 @@ export type UsersContentFragment = Pick<
     | 'degree'
     | 'email'
     | 'contactEmail'
+    | 'dismissedGettingStarted'
     | 'firstName'
     | 'institution'
     | 'jobTitle'
@@ -8302,6 +8303,7 @@ export type FetchUserQuery = {
         | 'degree'
         | 'email'
         | 'contactEmail'
+        | 'dismissedGettingStarted'
         | 'firstName'
         | 'institution'
         | 'jobTitle'
@@ -8391,6 +8393,7 @@ export type FetchUsersQuery = {
               | 'degree'
               | 'email'
               | 'contactEmail'
+              | 'dismissedGettingStarted'
               | 'firstName'
               | 'institution'
               | 'jobTitle'
@@ -10639,6 +10642,10 @@ export const UsersContentFragmentDoc = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'contactEmail' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'dismissedGettingStarted' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'institution' } },

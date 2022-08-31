@@ -43,6 +43,9 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         onboarded: {
           iv: true,
         },
+        dismissedGettingStarted: {
+          iv: false,
+        },
         labs: { iv: [] },
       },
     },
@@ -67,6 +70,9 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         role: { iv: 'Grantee' },
         onboarded: {
           iv: true,
+        },
+        dismissedGettingStarted: {
+          iv: false,
         },
         labs: { iv: [] },
       },
@@ -98,6 +104,9 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         role: { iv: 'Grantee' },
         onboarded: {
           iv: true,
+        },
+        dismissedGettingStarted: {
+          iv: false,
         },
         labs: { iv: [] },
       },

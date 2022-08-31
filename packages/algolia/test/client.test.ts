@@ -145,6 +145,7 @@ describe('Algolia Search Client', () => {
       hitsPerPage: 10,
       page: 0,
       filters: 'some-filters AND (__meta.type:"research-output")',
+      queryType: 'prefixAll',
     });
   });
 
@@ -156,6 +157,7 @@ describe('Algolia Search Client', () => {
     expect(response).toEqual(searchUserResponse);
     expect(algoliaSearchIndex.search).toBeCalledWith('query', {
       filters: '__meta.type:"user"',
+      queryType: 'prefixAll',
     });
   });
 
@@ -172,6 +174,7 @@ describe('Algolia Search Client', () => {
     expect(response).toEqual(searchEventResponse);
     expect(reverseAlgoliaSearchIndex.search).toBeCalledWith('query', {
       filters: '__meta.type:"event"',
+      queryType: 'prefixAll',
     });
   });
 
@@ -183,6 +186,7 @@ describe('Algolia Search Client', () => {
       'query',
       {
         filters: 'some-filters',
+        queryType: 'prefixAll',
       },
     );
 
@@ -190,6 +194,7 @@ describe('Algolia Search Client', () => {
     expect(algoliaSearchIndex.search).toBeCalledWith('query', {
       filters:
         'some-filters AND (__meta.type:"user" OR __meta.type:"external-author" OR __meta.type:"lab")',
+      queryType: 'prefixAll',
     });
   });
 });

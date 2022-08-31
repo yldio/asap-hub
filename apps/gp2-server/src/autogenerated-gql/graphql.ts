@@ -952,6 +952,18 @@ export type UsersDataDegreeInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Dismissed Getting Started dialog field of the Users content type. */
+export type UsersDataDismissedGettingStartedDto = {
+  /** Use this field to dismiss the getting started dialog. */
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Dismissed Getting Started dialog field of the Users content input type. */
+export type UsersDataDismissedGettingStartedInputDto = {
+  /** Use this field to dismiss the getting started dialog. */
+  iv: InputMaybe<Scalars['Boolean']>;
+};
+
 /** The structure of the Users data type. */
 export type UsersDataDto = {
   adminNotes: Maybe<UsersDataAdminNotesDto>;
@@ -962,6 +974,7 @@ export type UsersDataDto = {
   contactEmail: Maybe<UsersDataContactEmailDto>;
   country: Maybe<UsersDataCountryDto>;
   degree: Maybe<UsersDataDegreeDto>;
+  dismissedGettingStarted: Maybe<UsersDataDismissedGettingStartedDto>;
   email: Maybe<UsersDataEmailDto>;
   expertiseAndResourceDescription: Maybe<UsersDataExpertiseAndResourceDescriptionDto>;
   expertiseAndResourceTags: Maybe<UsersDataExpertiseAndResourceTagsDto>;
@@ -1034,6 +1047,7 @@ export type UsersDataInputDto = {
   contactEmail: InputMaybe<UsersDataContactEmailInputDto>;
   country: InputMaybe<UsersDataCountryInputDto>;
   degree: InputMaybe<UsersDataDegreeInputDto>;
+  dismissedGettingStarted: InputMaybe<UsersDataDismissedGettingStartedInputDto>;
   email: InputMaybe<UsersDataEmailInputDto>;
   expertiseAndResourceDescription: InputMaybe<UsersDataExpertiseAndResourceDescriptionInputDto>;
   expertiseAndResourceTags: InputMaybe<UsersDataExpertiseAndResourceTagsInputDto>;
@@ -1297,6 +1311,8 @@ export type UsersFlatDataDto = {
   contactEmail: Maybe<Scalars['String']>;
   country: Maybe<Scalars['String']>;
   degree: Maybe<Scalars['String']>;
+  /** Use this field to dismiss the getting started dialog. */
+  dismissedGettingStarted: Maybe<Scalars['Boolean']>;
   email: Maybe<Scalars['String']>;
   expertiseAndResourceDescription: Maybe<Scalars['String']>;
   expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
@@ -1565,6 +1581,7 @@ export type UsersContentFragment = Pick<
     UsersFlatDataDto,
     | 'biography'
     | 'degree'
+    | 'dismissedGettingStarted'
     | 'email'
     | 'contactEmail'
     | 'firstName'
@@ -1629,6 +1646,7 @@ export type FetchUserQuery = {
         UsersFlatDataDto,
         | 'biography'
         | 'degree'
+        | 'dismissedGettingStarted'
         | 'email'
         | 'contactEmail'
         | 'firstName'
@@ -1700,6 +1718,7 @@ export type FetchUsersQuery = {
               UsersFlatDataDto,
               | 'biography'
               | 'degree'
+              | 'dismissedGettingStarted'
               | 'email'
               | 'contactEmail'
               | 'firstName'
@@ -1904,6 +1923,10 @@ export const UsersContentFragmentDoc = {
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'biography' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'degree' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'dismissedGettingStarted' },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'email' } },
                 {
                   kind: 'Field',

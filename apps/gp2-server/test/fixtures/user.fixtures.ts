@@ -206,6 +206,7 @@ export const getGraphQLUser = (
     institution: 'some institution',
     jobTitle: 'some job title',
     onboarded: true,
+    dismissedGettingStarted: false,
     orcidLastModifiedDate: null,
     orcidLastSyncDate: null,
     reachOut: 'some reach out',

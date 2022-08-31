@@ -311,6 +311,7 @@ export const fetchExpectation: ListUserResponse = {
       city: 'some city',
       contactEmail: 'some@contact.email',
       country: 'some country',
+      dismissedGettingStarted: false,
       institution: 'some institution',
       jobTitle: 'some job title',
       orcid: 'orcid',

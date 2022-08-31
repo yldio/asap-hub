@@ -994,13 +994,13 @@ input UsersDataDegreeInputDto {
 
 """The structure of the Dismissed Getting Started dialog field of the Users content type."""
 type UsersDataDismissedGettingStartedDto {
-  """Use this field to dismiss the getting started dialog."""
+  """Use this field when the user has dismissed the getting started dialog"""
   iv: Boolean
 }
 
 """The structure of the Dismissed Getting Started dialog field of the Users content input type."""
 input UsersDataDismissedGettingStartedInputDto {
-  """Use this field to dismiss the getting started dialog."""
+  """Use this field when the user has dismissed the getting started dialog"""
   iv: Boolean
 }
 
@@ -1349,7 +1349,7 @@ type UsersFlatDataDto {
   contactEmail: String
   country: String
   degree: String
-  """Use this field to dismiss the getting started dialog."""
+  """Use this field when the user has dismissed the getting started dialog"""
   dismissedGettingStarted: Boolean
   email: String
   expertiseAndResourceDescription: String

@@ -954,13 +954,13 @@ export type UsersDataDegreeInputDto = {
 
 /** The structure of the Dismissed Getting Started dialog field of the Users content type. */
 export type UsersDataDismissedGettingStartedDto = {
-  /** Use this field to dismiss the getting started dialog. */
+  /** Use this field when the user has dismissed the getting started dialog */
   iv: Maybe<Scalars['Boolean']>;
 };
 
 /** The structure of the Dismissed Getting Started dialog field of the Users content input type. */
 export type UsersDataDismissedGettingStartedInputDto = {
-  /** Use this field to dismiss the getting started dialog. */
+  /** Use this field when the user has dismissed the getting started dialog */
   iv: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -1311,7 +1311,7 @@ export type UsersFlatDataDto = {
   contactEmail: Maybe<Scalars['String']>;
   country: Maybe<Scalars['String']>;
   degree: Maybe<Scalars['String']>;
-  /** Use this field to dismiss the getting started dialog. */
+  /** Use this field when the user has dismissed the getting started dialog */
   dismissedGettingStarted: Maybe<Scalars['Boolean']>;
   email: Maybe<Scalars['String']>;
   expertiseAndResourceDescription: Maybe<Scalars['String']>;

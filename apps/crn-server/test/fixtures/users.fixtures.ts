@@ -249,6 +249,7 @@ export const getUserResponse = (): UserResponse => ({
   id: 'user-id-1',
   biography: 'some bio',
   onboarded: true,
+  dismissedGettingStarted: false,
   createdDate: '2020-09-23T20:45:22.000Z',
   questions: ['Question 1', 'Question 2'],
   expertiseAndResourceTags: [

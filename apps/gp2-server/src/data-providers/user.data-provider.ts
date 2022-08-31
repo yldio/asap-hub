@@ -247,6 +247,7 @@ export const parseUserToDataObject = (user: RestUser): UserDataObject => {
   return {
     id: user.id,
     onboarded: user.data.onboarded.iv,
+    dismissedGettingStarted: user.data.dismissedGettingStarted.iv,
     createdDate: parseDate(user.created).toISOString(),
     lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
     email: user.data.email.iv,
@@ -366,7 +367,7 @@ export const parseGraphQLUserToDataObject = (
       item.flatData &&
       typeof item.flatData.dismissedGettingStarted === 'boolean'
         ? item.flatData.dismissedGettingStarted
-        : undefined,
+        : false,
     createdDate,
     orcid,
     firstName: item.flatData.firstName || '',

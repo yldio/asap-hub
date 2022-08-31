@@ -8,11 +8,13 @@ import { css } from '@emotion/react';
 
 const { mobileScreen, rem, tabletScreen, vminLinearCalcClamped } = pixels;
 
+type imageAndPosition = {
+  image: string;
+  backgroundPosition: string;
+};
+
 type PageBannerProp = {
-  imageAndPosition: {
-    image: string;
-    backgroundPosition: String;
-  };
+  imageAndPosition: imageAndPosition;
   title: string;
   description: string;
 };
@@ -55,7 +57,7 @@ const textContainerStyles = css({
   },
 });
 
-const imageBannerStyles = ({ image, backgroundPosition }: object) => {
+const imageBannerStyles = ({ image, backgroundPosition }: imageAndPosition) => {
   return css({
     width: '100%',
     maxWidth: rem(headerMaxWidth),

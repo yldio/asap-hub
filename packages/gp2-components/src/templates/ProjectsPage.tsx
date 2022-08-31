@@ -2,9 +2,9 @@ import { projectsImage } from '../images';
 import PageBanner from '../organisms/PageBanner';
 
 const props = {
-  imageAndPosition : {
+  imageAndPosition: {
     image: projectsImage,
-    backgroundPosition : 'center'
+    backgroundPosition: 'center',
   },
   title: 'Project Directory',
   description:

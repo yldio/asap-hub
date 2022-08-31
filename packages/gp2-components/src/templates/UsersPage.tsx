@@ -2,9 +2,9 @@ import { usersHeaderImage } from '../images';
 import PageBanner from '../organisms/PageBanner';
 
 const props = {
-  imageAndPosition : {
+  imageAndPosition: {
     image: usersHeaderImage,
-    backgroundPosition : 'top'
+    backgroundPosition: 'top',
   },
   title: 'User Directory',
   description:

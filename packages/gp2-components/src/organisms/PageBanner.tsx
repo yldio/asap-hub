@@ -9,7 +9,10 @@ import { css } from '@emotion/react';
 const { mobileScreen, rem, tabletScreen, vminLinearCalcClamped } = pixels;
 
 type PageBannerProp = {
-  imageAndPosition: object;
+  imageAndPosition: {
+    image: string;
+    backgroundPosition: String;
+  };
   title: string;
   description: string;
 };
@@ -52,39 +55,43 @@ const textContainerStyles = css({
   },
 });
 
-const imageBannerStyles = (imageAndPosition: object) => css({
-  width: '100%',
-  maxWidth: rem(headerMaxWidth),
-  height: rem(72),
-  [drawerQuery]: {
-    height: rem(48),
-  },
-  backgroundImage: `url(${imageAndPosition.image})`,
-  borderRadius: `8px 8px 0px 0px`,
-  backgroundSize: '100%',
-  backgroundPosition : imageAndPosition.backgroundPosition
-});
+const imageBannerStyles = ({ image, backgroundPosition }: object) => {
+  return css({
+    width: '100%',
+    maxWidth: rem(headerMaxWidth),
+    height: rem(72),
+    [drawerQuery]: {
+      height: rem(48),
+    },
+    backgroundImage: `url(${image})`,
+    borderRadius: `8px 8px 0px 0px`,
+    backgroundSize: '100%',
+    backgroundPosition: backgroundPosition,
+  });
+};
 
 const PageBanner: React.FC<PageBannerProp> = ({
   imageAndPosition,
   title,
   description,
-}) => (
-  <header css={headerStyles}>
-    <div css={imageBannerStyles(imageAndPosition)}></div>
-    <div css={[cardStyles, accents.default]}>
-      <div css={textContainerStyles}>
-        <h1
-          css={css({
-            fontSize: '39px',
-            lineHeight: '48px',
-          })}
-        >
-          {title}
-        </h1>
-        <Paragraph accent="lead">{description}</Paragraph>
+}) => {
+  return (
+    <header css={headerStyles}>
+      <div css={imageBannerStyles(imageAndPosition)}></div>
+      <div css={[cardStyles, accents.default]}>
+        <div css={textContainerStyles}>
+          <h1
+            css={css({
+              fontSize: '39px',
+              lineHeight: '48px',
+            })}
+          >
+            {title}
+          </h1>
+          <Paragraph accent="lead">{description}</Paragraph>
+        </div>
       </div>
-    </div>
-  </header>
-);
+    </header>
+  );
+};
 export default PageBanner;

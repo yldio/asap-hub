@@ -357,6 +357,7 @@ export const parseGraphQLUserToDataObject = (
         }, [])
         .slice(0, 5)) ||
     [];
+  /* istanbul ignore next */
   return {
     id: item.id,
     onboarded:

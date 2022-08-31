@@ -87,6 +87,9 @@ export class UserSquidexDataProvider implements UserDataProvider {
       onboarded: {
         iv: input.onboarded || false,
       },
+      dismissedGettingStarted: {
+        iv: input.dismissedGettingStarted || false,
+      },
       avatar: {
         iv: (input.avatar && [input.avatar]) || null,
       },
@@ -358,6 +361,7 @@ export const parseUserToDataObject = (user: RestUser): UserDataObject => {
   return {
     id: user.id,
     onboarded: user.data.onboarded.iv,
+    dismissedGettingStarted: user.data.dismissedGettingStarted.iv,
     createdDate: parseDate(user.created).toISOString(),
     lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
     email: user.data.email.iv,
@@ -406,9 +410,14 @@ export const parseUserToResponse = ({
 }: UserDataObject): UserResponse => {
   const displayName = `${user.firstName} ${user.lastName}`;
   const onboarded = typeof user.onboarded === 'boolean' ? user.onboarded : true;
+  const dismissedGettingStarted =
+    typeof user.dismissedGettingStarted === 'boolean'
+      ? user.dismissedGettingStarted
+      : false;
   const response = {
     ...user,
     displayName,
+    dismissedGettingStarted,
     onboarded,
   };
   return response;
@@ -492,6 +501,11 @@ export const parseGraphQLUserToDataObject = (
         : undefined,
     createdDate,
     orcid,
+    dismissedGettingStarted:
+      item.flatData &&
+      typeof item.flatData.dismissedGettingStarted === 'boolean'
+        ? item.flatData.dismissedGettingStarted
+        : false,
     firstName: item.flatData.firstName || '',
     lastName: item.flatData.lastName || '',
     biography: item.flatData.biography || undefined,

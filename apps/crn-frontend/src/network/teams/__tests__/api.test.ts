@@ -146,7 +146,6 @@ describe('teamResearchOutput', () => {
     asapFunded: false,
     usedInPublication: false,
     sharingStatus: 'Public',
-    addedDate: '2020-01-01',
     publishDate: undefined,
     description: '',
     tags: [],

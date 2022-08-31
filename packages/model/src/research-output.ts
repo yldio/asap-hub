@@ -248,7 +248,6 @@ export type AuthorPostRequest =
 
 export type ResearchOutputPostRequest = {
   accession?: string;
-  addedDate: string;
   asapFunded?: boolean;
   authors?: AuthorPostRequest[];
   description: string;
@@ -272,10 +271,7 @@ export type ResearchOutputPostRequest = {
   usedInPublication?: boolean;
 };
 
-export type ResearchOutputPutRequest = Omit<
-  ResearchOutputPostRequest,
-  'addedDate'
->;
+export type ResearchOutputPutRequest = ResearchOutputPostRequest;
 
 export const convertDecisionToBoolean = (
   decision: string | null | DecisionOption,

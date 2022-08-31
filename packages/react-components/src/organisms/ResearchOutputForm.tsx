@@ -401,7 +401,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
             documentType === 'Lab Resource' && labCatalogNumber !== ''
               ? labCatalogNumber
               : undefined,
-          ...(isEditMode ? {} : { addedDate: new Date().toISOString() }),
           methods,
           organisms,
           environments,
@@ -466,7 +465,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
             environments={environments}
             onChangeEnvironments={setEnvironments}
             type={type}
-            isEditMode={researchOutputData !== undefined}
+            isEditMode={isEditMode}
           />
           <ResearchOutputContributorsCard
             isSaving={isSaving}

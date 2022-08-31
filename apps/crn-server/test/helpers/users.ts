@@ -12,6 +12,7 @@ const chance = new Chance();
 export const createUser = (overwrites?: Partial<User>): Promise<RestUser> => {
   const userData: User = {
     onboarded: true,
+    dismissedGettingStarted: false,
     firstName: chance.first(),
     lastName: chance.last(),
     jobTitle: chance.suffix({ full: true }),

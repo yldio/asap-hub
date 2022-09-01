@@ -41,17 +41,21 @@ const Dashboard: FC<Record<string, never>> = () => {
   usePrefetchCalendars();
   const patchUser = usePatchUserById(id);
   const user = useUserById(id);
+  const dismissedGettingStarted = user
+    ? user.dismissedGettingStarted
+    : undefined;
 
   return (
     <>
-      <DashboardPage firstName={firstName}>
+      <DashboardPage
+        firstName={firstName}
+        dismissedGettingStarted={dismissedGettingStarted}
+      >
         <Frame title={null}>
           <Body
             {...dashboard}
             reminders={items}
-            dismissedGettingStarted={
-              user ? user.dismissedGettingStarted : undefined
-            }
+            dismissedGettingStarted={dismissedGettingStarted}
             roles={roles}
             userId={id}
             teamId={teams[0]?.id}

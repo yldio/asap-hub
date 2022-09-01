@@ -110,17 +110,6 @@ it('renders reminders', async () => {
   expect(screen.getByTitle('Event')).toBeInTheDocument();
 });
 
-it('does not show getting started with feature flag disabled ((REGRESSION))', async () => {
-  disable('GETTING_STARTED');
-  mockGetUser.mockResolvedValue({
-    ...userResponse,
-    dismissedGettingStarted: false,
-  });
-  await renderDashboard({});
-
-  expect(screen.queryByText(/Get Started with ASAP/i)).toBeNull();
-});
-
 it('toggles the not show getting started', async () => {
   mockGetUser.mockResolvedValue({
     ...userResponse,

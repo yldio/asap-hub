@@ -1,9 +1,9 @@
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 
 import { getButtonChildren, getButtonStyles } from '../button';
 import { defaultThemeVariant, ThemeVariant } from '../theme';
 import { noop } from '../utils';
-import { styles as linkStyles, themeStyles } from './Link';
+import { getLinkColors, styles as linkStyles, themeStyles } from './Link';
 
 const buttonAsLinkStyles = css({
   display: 'inline',
@@ -35,14 +35,13 @@ interface LinkStyleButtonProps {
   readonly primary?: undefined;
   readonly active?: undefined;
   readonly small?: undefined;
-  readonly theme?: ThemeVariant | null;
+  readonly theme?: ThemeVariant;
   readonly noMargin?: undefined;
 }
 type ButtonProps = (NormalButtonProps | LinkStyleButtonProps) & {
   readonly submit?: boolean;
-
   readonly children?: React.ReactNode;
-
+  readonly overrideStyles?: SerializedStyles;
   readonly onClick?: () => void;
 };
 const Button: React.FC<ButtonProps> = ({
@@ -56,6 +55,7 @@ const Button: React.FC<ButtonProps> = ({
   submit = primary,
   children,
   onClick = noop,
+  overrideStyles,
 }) => (
   <button
     type={submit ? 'submit' : 'button'}
@@ -64,9 +64,9 @@ const Button: React.FC<ButtonProps> = ({
       onClick();
       event.preventDefault();
     }}
-    css={
+    css={({ colors }) => [
       linkStyle
-        ? [linkStyles, buttonAsLinkStyles, theme && themeStyles[theme]]
+        ? [linkStyles, buttonAsLinkStyles, getLinkColors(colors, theme)]
         : getButtonStyles({
             primary,
             small,
@@ -74,8 +74,9 @@ const Button: React.FC<ButtonProps> = ({
             active,
             children,
             noMargin,
-          })
-    }
+          }),
+      overrideStyles,
+    ]}
   >
     {getButtonChildren(children)}
   </button>

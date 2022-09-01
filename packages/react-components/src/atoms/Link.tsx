@@ -27,7 +27,10 @@ export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
   dark: css({ color: paper.rgb, ':active': { color: paper.rgb } }),
 };
 
-const getLinkColors = (colors: Theme['colors'], themeVariant: ThemeVariant) =>
+export const getLinkColors = (
+  colors: Theme['colors'],
+  themeVariant: ThemeVariant,
+) =>
   colors?.primary500
     ? css({ color: colors.primary500.rgba })
     : themeStyles[themeVariant];

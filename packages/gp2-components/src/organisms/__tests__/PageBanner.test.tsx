@@ -20,4 +20,12 @@ describe('PageBanner', () => {
       'url(image.png)',
     );
   });
+  it('uses the position as a background-position', () => {
+    render(
+      <PageBanner title="" position="top" description="" image="image.png" />,
+    );
+    const imageContainer = screen.getByRole('banner').firstElementChild;
+    expect(imageContainer).toBeVisible();
+    expect(getComputedStyle(imageContainer!).backgroundPosition).toBe('top');
+  });
 });

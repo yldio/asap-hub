@@ -1,5 +1,5 @@
 import { drawerQuery, pixels } from '@asap-hub/react-components';
-import { gp2, network } from '@asap-hub/routing';
+import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React from 'react';
 import dashboardIcon from '../icons/dashboard-icon';

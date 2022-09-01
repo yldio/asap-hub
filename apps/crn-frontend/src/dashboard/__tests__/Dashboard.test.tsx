@@ -164,4 +164,13 @@ describe('dismissing the getting started option', () => {
       ).toBeNull();
     });
   });
+  it('correctly renders getting started block when dismissedGettingStarted is undefined', async () => {
+    mockGetUser.mockResolvedValue({
+      ...userResponse,
+      dismissedGettingStarted: undefined,
+    });
+    await renderDashboard({});
+
+    expect(screen.queryByText(/Get Started with ASAP/i)).toBeVisible();
+  });
 });

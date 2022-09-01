@@ -410,10 +410,7 @@ export const parseUserToResponse = ({
 }: UserDataObject): UserResponse => {
   const displayName = `${user.firstName} ${user.lastName}`;
   const onboarded = typeof user.onboarded === 'boolean' ? user.onboarded : true;
-  const dismissedGettingStarted =
-    typeof user.dismissedGettingStarted === 'boolean'
-      ? user.dismissedGettingStarted
-      : false;
+  const dismissedGettingStarted = !!user.dismissedGettingStarted;
   const response = {
     ...user,
     displayName,

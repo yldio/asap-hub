@@ -247,7 +247,6 @@ export const parseUserToDataObject = (user: RestUser): UserDataObject => {
   return {
     id: user.id,
     onboarded: user.data.onboarded.iv,
-    dismissedGettingStarted: user.data.dismissedGettingStarted.iv,
     createdDate: parseDate(user.created).toISOString(),
     lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
     email: user.data.email.iv,
@@ -357,18 +356,12 @@ export const parseGraphQLUserToDataObject = (
         }, [])
         .slice(0, 5)) ||
     [];
-  /* istanbul ignore next */
   return {
     id: item.id,
     onboarded:
       item.flatData && typeof item.flatData.onboarded === 'boolean'
         ? item.flatData.onboarded
         : undefined,
-    dismissedGettingStarted:
-      item.flatData &&
-      typeof item.flatData.dismissedGettingStarted === 'boolean'
-        ? item.flatData.dismissedGettingStarted
-        : false,
     createdDate,
     orcid,
     firstName: item.flatData.firstName || '',

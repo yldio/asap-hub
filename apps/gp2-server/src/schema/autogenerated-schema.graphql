@@ -992,18 +992,6 @@ input UsersDataDegreeInputDto {
   iv: String
 }
 
-"""The structure of the Dismissed Getting Started dialog field of the Users content type."""
-type UsersDataDismissedGettingStartedDto {
-  """Use this field when the user has dismissed the getting started dialog"""
-  iv: Boolean
-}
-
-"""The structure of the Dismissed Getting Started dialog field of the Users content input type."""
-input UsersDataDismissedGettingStartedInputDto {
-  """Use this field when the user has dismissed the getting started dialog"""
-  iv: Boolean
-}
-
 """The structure of the Users data type."""
 type UsersDataDto {
   adminNotes: UsersDataAdminNotesDto
@@ -1014,7 +1002,6 @@ type UsersDataDto {
   contactEmail: UsersDataContactEmailDto
   country: UsersDataCountryDto
   degree: UsersDataDegreeDto
-  dismissedGettingStarted: UsersDataDismissedGettingStartedDto
   email: UsersDataEmailDto
   expertiseAndResourceDescription: UsersDataExpertiseAndResourceDescriptionDto
   expertiseAndResourceTags: UsersDataExpertiseAndResourceTagsDto
@@ -1087,7 +1074,6 @@ input UsersDataInputDto {
   contactEmail: UsersDataContactEmailInputDto
   country: UsersDataCountryInputDto
   degree: UsersDataDegreeInputDto
-  dismissedGettingStarted: UsersDataDismissedGettingStartedInputDto
   email: UsersDataEmailInputDto
   expertiseAndResourceDescription: UsersDataExpertiseAndResourceDescriptionInputDto
   expertiseAndResourceTags: UsersDataExpertiseAndResourceTagsInputDto
@@ -1349,8 +1335,6 @@ type UsersFlatDataDto {
   contactEmail: String
   country: String
   degree: String
-  """Use this field when the user has dismissed the getting started dialog"""
-  dismissedGettingStarted: Boolean
   email: String
   expertiseAndResourceDescription: String
   expertiseAndResourceTags: [String!]

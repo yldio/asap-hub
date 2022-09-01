@@ -37,6 +37,7 @@ export interface User<
   TLabConnection = UserLabConnection,
 > {
   onboarded: boolean;
+  dismissedGettingStarted: boolean;
   avatar: TAvatar[];
   biography?: string;
   connections: { code: string }[];

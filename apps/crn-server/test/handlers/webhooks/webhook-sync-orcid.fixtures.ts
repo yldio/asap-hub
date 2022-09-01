@@ -26,6 +26,9 @@ export const fetchUserResponse: RestUser = {
     onboarded: {
       iv: true,
     },
+    dismissedGettingStarted: {
+      iv: false,
+    },
     labs: { iv: [] },
   },
   created: '2020-08-27T13:20:57Z',
@@ -72,6 +75,9 @@ export const updateUserEvent: WebhookPayload<User> = {
       onboarded: {
         iv: true,
       },
+      dismissedGettingStarted: {
+        iv: false,
+      },
       labs: { iv: [] },
     },
     dataOld: {
@@ -102,6 +108,9 @@ export const updateUserEvent: WebhookPayload<User> = {
       teams: { iv: [] },
       onboarded: {
         iv: true,
+      },
+      dismissedGettingStarted: {
+        iv: false,
       },
       labs: { iv: [] },
     },
@@ -146,6 +155,9 @@ export const createUserEvent: WebhookPayload<User> = {
       },
       onboarded: {
         iv: true,
+      },
+      dismissedGettingStarted: {
+        iv: false,
       },
       labs: { iv: [] },
     },

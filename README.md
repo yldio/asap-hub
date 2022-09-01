@@ -90,11 +90,15 @@ The [`docs`](docs) folder contains overall architecture / decision documentation
 
 ## Squidex schema changes and graphql
 
-Once schema changes are added via packages/squidex/schema and released the GraphQL definitions need to be updated. This command updates the schema and queries according to the graphql schema of the application your environment is pointing to (see .env).
+Squidex is our content management software, and manages our data. When you want to make a change, there are a specific set of steps which need to be taken in order to ensure that the software builds correctly.
+
+First of all, make the schema changes you want on your PR branch via [the Squidex UI](https://squidex.io), the details to log into the ops account are available from the team. You'll also want to update your `.env` file with the `SQUIDEX_CLIENT_ID`, `SQUIDEX_CLIENT_SECRET` (you can get these from 'My Profile'), and `SQUIDEX_APP_NAME` (the name of your PR app instance).
+
+After you've made and published the changes, you can regenerate the local schemas and queries by running this command (if you need to add anything to queries, you'll need to make those changes before running the command):
 
 `yarn schema:update`
 
-Then commit the changed.
+Then commit the changed files.
 
 ## Migrate squidex fields
 

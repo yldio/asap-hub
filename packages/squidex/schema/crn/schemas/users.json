@@ -24,6 +24,7 @@
       "email",
       "onboarded",
       "connections",
+      "dismissedGettingStarted",
       "adminNotes",
       "meta.id",
       "role",
@@ -809,6 +810,24 @@
           "label": "Onboarding complete",
           "hints": "Use this to allow the user to see the full Hub and skip profile completion",
           "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "dismissedGettingStarted",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Boolean",
+          "defaultValue": false,
+          "inlineEditable": true,
+          "editor": "Toggle",
+          "label": "Dismissed Getting Started dialog",
+          "hints": "Use this to hide the Getting Started component on the home page",
+          "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }

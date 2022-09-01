@@ -753,6 +753,26 @@ describe('User data provider', () => {
         });
         expect((result as any).connections).not.toBeDefined();
       });
+      test('correctly parses whether the user has dismissed getting started', () => {
+        const given = fetchUserResponseDataObject();
+        const result = parseUserToResponse({
+          ...given,
+          dismissedGettingStarted: true,
+        });
+        expect(result.dismissedGettingStarted).toEqual(true);
+
+        const secondResult = parseUserToResponse({
+          ...given,
+          dismissedGettingStarted: false,
+        });
+        expect(secondResult.dismissedGettingStarted).toEqual(false);
+
+        const thirdResult = parseUserToResponse({
+          ...given,
+          dismissedGettingStarted: undefined,
+        });
+        expect(thirdResult.dismissedGettingStarted).toEqual(false);
+      });
     });
   });
 });

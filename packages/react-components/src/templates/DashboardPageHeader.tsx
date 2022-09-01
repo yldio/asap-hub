@@ -25,7 +25,7 @@ type DashboardPageHeaderProps = {
 
 const DashboardPageHeader: React.FC<DashboardPageHeaderProps> = ({
   firstName,
-  dismissedGettingStarted,
+  dismissedGettingStarted = false,
 }) => (
   <header css={containerStyles}>
     <Display styleAsHeading={2}>{`Welcome to the Hub${

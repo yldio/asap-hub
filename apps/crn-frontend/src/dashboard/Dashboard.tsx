@@ -41,7 +41,6 @@ const Dashboard: FC<Record<string, never>> = () => {
   usePrefetchCalendars();
   const patchUser = usePatchUserById(id);
   const user = useUserById(id);
-  /* istanbul ignore next */
   const dismissedGettingStarted =
     user && typeof user.dismissedGettingStarted === 'boolean'
       ? user.dismissedGettingStarted

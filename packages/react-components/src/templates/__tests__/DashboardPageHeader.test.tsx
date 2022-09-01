@@ -26,10 +26,7 @@ it('displays user first name in welcome mesage', () => {
 describe('switches off the subtext if user dismissed the getting started text', () => {
   it('Correctly shows the subtext if dismissedGettingStarted is false', () => {
     render(
-      <DashboardPageHeader
-        firstName="Mike"
-        dismissedGettingStarted={false}
-      />,
+      <DashboardPageHeader firstName="Mike" dismissedGettingStarted={false} />,
     );
 
     expect(

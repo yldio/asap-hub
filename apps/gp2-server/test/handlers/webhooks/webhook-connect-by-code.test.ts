@@ -39,6 +39,7 @@ const user: RestUser = {
     onboarded: {
       iv: true,
     },
+    dismissedGettingStarted: { iv: false },
     labs: { iv: [] },
   },
 };

@@ -16,6 +16,7 @@ const expandableMaxHeight = 120;
 const textStyles = css({
   maxHeight: rem(expandableMaxHeight),
   overflowY: 'clip',
+  margin: 0,
 });
 
 const expandedTextStyles = css({
@@ -40,6 +41,7 @@ const buttonContainerStyles = css({
   display: 'flex',
   justifyContent: 'center',
   width: '100%',
+  marginTop: rem(16),
 });
 
 const expandableButtonIcon = css({

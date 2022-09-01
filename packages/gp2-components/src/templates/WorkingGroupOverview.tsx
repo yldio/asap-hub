@@ -17,50 +17,62 @@ type WorkingGroupOverviewProps = Pick<
 
 const { rem } = pixels;
 
+const containerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(32),
+  padding: `${rem(32)} 0 ${rem(48)}`,
+});
+
+const contentStyles = css({
+  marginTop: rem(32),
+});
+
 const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
   description,
   primaryEmail,
   secondaryEmail,
   members,
 }) => (
-  <div
-    css={css({
-      display: 'flex',
-      flexDirection: 'column',
-      gap: rem(32),
-      padding: `${rem(32)} 0 ${rem(48)}`,
-    })}
-  >
+  <div css={containerStyles}>
     <Card>
-      <Headline3>Description</Headline3>
-      <ExpandableText>{description}</ExpandableText>
+      <Headline3 noMargin>Description</Headline3>
+      <div css={contentStyles}>
+        <ExpandableText>{description}</ExpandableText>
+      </div>
     </Card>
     <Card>
-      <Headline3>Contact Information</Headline3>
-      <EmailSection
-        contactEmails={[
-          { email: primaryEmail, contact: 'WG Email' },
-          { email: secondaryEmail, contact: 'Lead Email' },
-        ]}
-      />
-    </Card>
-    {members.length ? (
-      <Card>
-        <Headline3>{`Working Group Members (${members.length})`}</Headline3>
-        <MembersList
-          members={members.map(
-            ({ role, firstName, lastName, avatarUrl, userId: id }) => ({
-              firstLine: `${firstName} ${lastName}`,
-              secondLine: role,
-              avatarUrl,
-              firstName,
-              lastName,
-              id,
-            }),
-          )}
+      <Headline3 noMargin>Contact Information</Headline3>
+      <div css={contentStyles}>
+        <EmailSection
+          contactEmails={[
+            { email: primaryEmail, contact: 'WG Email' },
+            { email: secondaryEmail, contact: 'Lead Email' },
+          ]}
         />
+      </div>
+    </Card>
+    {!!members.length && (
+      <Card>
+        <Headline3
+          noMargin
+        >{`Working Group Members (${members.length})`}</Headline3>
+        <div css={contentStyles}>
+          <MembersList
+            members={members.map(
+              ({ role, firstName, lastName, avatarUrl, userId: id }) => ({
+                firstLine: `${firstName} ${lastName}`,
+                secondLine: role,
+                avatarUrl,
+                firstName,
+                lastName,
+                id,
+              }),
+            )}
+          />
+        </div>
       </Card>
-    ) : null}
+    )}
   </div>
 );
 

@@ -20,6 +20,7 @@
       "orcid",
       "email",
       "onboarded",
+      "dismissedGettingStarted",
       "connections",
       "adminNotes",
       "meta.id",
@@ -144,6 +145,24 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": true
         }
+      },
+      {
+        "name": "dismissedGettingStarted",
+        "properties": {
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "Boolean",
+          "editor": "Toggle",
+          "inlineEditable": true,
+          "defaultValue": false,
+          "label": "Dismissed Getting Started dialog",
+          "hints": "Use this field when the user has dismissed the getting started dialog"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
       },
       {
         "name": "labs",

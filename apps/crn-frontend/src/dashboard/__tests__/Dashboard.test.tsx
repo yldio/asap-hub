@@ -172,5 +172,9 @@ describe('dismissing the getting started option', () => {
     await renderDashboard({});
 
     expect(screen.queryByText(/Get Started with ASAP/i)).toBeVisible();
+    // We should also expect the subtext on the header to be present.
+    expect(
+      screen.getByText(/The ASAP Hub is the private meeting point for/),
+    ).toBeVisible();
   });
 });

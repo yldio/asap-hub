@@ -12,6 +12,7 @@ import Users from '../../controllers/users';
 import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
 import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
 import { getAuthToken } from '../../utils/auth';
+import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
@@ -35,6 +36,7 @@ const users = new Users(userDataProvider, assetDataProvider);
 const connectByCodeHandler = connectByCodeHandlerFactory(
   users,
   auth0SharedSecret,
+  logger,
 );
 
 export const unloggedHandler: lambda.Handler =

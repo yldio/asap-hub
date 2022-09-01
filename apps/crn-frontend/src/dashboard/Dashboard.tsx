@@ -46,13 +46,13 @@ const Dashboard: FC<Record<string, never>> = () => {
     <>
       <DashboardPage
         firstName={firstName}
-        dismissedGettingStarted={user.dismissedGettingStarted}
+        dismissedGettingStarted={user?.dismissedGettingStarted}
       >
         <Frame title={null}>
           <Body
             {...dashboard}
             reminders={items}
-            dismissedGettingStarted={dismissedGettingStarted}
+            dismissedGettingStarted={user?.dismissedGettingStarted}
             roles={roles}
             userId={id}
             teamId={teams[0]?.id}

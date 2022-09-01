@@ -46,7 +46,7 @@ const Dashboard: FC<Record<string, never>> = () => {
     <>
       <DashboardPage
         firstName={firstName}
-        dismissedGettingStarted={dismissedGettingStarted}
+        dismissedGettingStarted={user.dismissedGettingStarted}
       >
         <Frame title={null}>
           <Body

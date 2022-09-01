@@ -8,7 +8,6 @@ import {
 } from '@asap-hub/fixtures';
 import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
-import { disable } from '@asap-hub/flags';
 
 import Dashboard from '../Dashboard';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';

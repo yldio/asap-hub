@@ -27,7 +27,7 @@ describe('switches off the subtext if user dismissed the getting started text', 
   it('Correctly shows the subtext if dismissedGettingStarted is false', () => {
     render(
       <DashboardPageHeader
-        firstName={'Mike'}
+        firstName="Mike"
         dismissedGettingStarted={false}
       />,
     );

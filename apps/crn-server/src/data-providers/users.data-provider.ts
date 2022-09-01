@@ -502,11 +502,7 @@ export const parseGraphQLUserToDataObject = (
         : undefined,
     createdDate,
     orcid,
-    dismissedGettingStarted: !!item.flatData?.dismissedGettingStarted
-      item.flatData &&
-      typeof item.flatData.dismissedGettingStarted === 'boolean'
-        ? item.flatData.dismissedGettingStarted
-        : false,
+    dismissedGettingStarted: !!item.flatData?.dismissedGettingStarted,
     firstName: item.flatData.firstName || '',
     lastName: item.flatData.lastName || '',
     biography: item.flatData.biography || undefined,

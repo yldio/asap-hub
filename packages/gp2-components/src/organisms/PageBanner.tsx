@@ -53,8 +53,8 @@ const textContainerStyles = css({
   },
 });
 
-const imageBannerStyles = (image: string, position: string) => {
-  return css({
+const imageBannerStyles = (image: string, position: string) =>
+  css({
     width: '100%',
     maxWidth: rem(headerMaxWidth),
     height: rem(72),
@@ -66,31 +66,28 @@ const imageBannerStyles = (image: string, position: string) => {
     backgroundSize: '100%',
     backgroundPosition: position,
   });
-};
 
 const PageBanner: React.FC<PageBannerProp> = ({
   image,
   position = 'center',
   title,
   description,
-}) => {
-  return (
-    <header css={headerStyles}>
-      <div css={imageBannerStyles(image, position)}></div>
-      <div css={[cardStyles, accents.default]}>
-        <div css={textContainerStyles}>
-          <h1
-            css={css({
-              fontSize: '39px',
-              lineHeight: '48px',
-            })}
-          >
-            {title}
-          </h1>
-          <Paragraph accent="lead">{description}</Paragraph>
-        </div>
+}) => (
+  <header css={headerStyles}>
+    <div css={imageBannerStyles(image, position)}></div>
+    <div css={[cardStyles, accents.default]}>
+      <div css={textContainerStyles}>
+        <h1
+          css={css({
+            fontSize: '39px',
+            lineHeight: '48px',
+          })}
+        >
+          {title}
+        </h1>
+        <Paragraph accent="lead">{description}</Paragraph>
       </div>
-    </header>
-  );
-};
+    </div>
+  </header>
+);
 export default PageBanner;

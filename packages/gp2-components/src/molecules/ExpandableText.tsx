@@ -20,7 +20,7 @@ const textStyles = css({
 });
 
 const expandedTextStyles = css({
-  maxHeight: rem(24 * 250), //aproximation of possible max height (2500 characters) 100 chars per line
+  maxHeight: rem(24 * 250), // aproximation of possible max height (2500 characters) 100 chars per line
   transition: 'max-height 200ms ease-in-out',
   background: colorWithTransparency(lead, 0).rgba,
 });

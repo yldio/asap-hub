@@ -3,7 +3,7 @@ import { css, SerializedStyles } from '@emotion/react';
 import { getButtonChildren, getButtonStyles } from '../button';
 import { defaultThemeVariant, ThemeVariant } from '../theme';
 import { noop } from '../utils';
-import { getLinkColors, styles as linkStyles, themeStyles } from './Link';
+import { getLinkColors, styles as linkStyles } from './Link';
 
 const buttonAsLinkStyles = css({
   display: 'inline',

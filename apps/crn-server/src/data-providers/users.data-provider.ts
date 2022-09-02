@@ -33,11 +33,8 @@ import {
 import { isTeamRole } from '../entities';
 import { FETCH_USER, FETCH_USERS } from '../queries/users.queries';
 import logger from '../utils/logger';
-import {
-  buildEqFilterForWords,
-  buildODataFilter,
-  createUrl,
-} from '../utils/urls';
+import { createUrl } from '../utils/urls';
+import { buildEqFilterForWords, buildODataFilter } from '../utils/odata';
 
 export type CMSOrcidWork = OrcidWork;
 

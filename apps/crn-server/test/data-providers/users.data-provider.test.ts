@@ -555,7 +555,7 @@ describe('User data provider', () => {
         },
       );
     });
-    test('Should sanitise double quotation mark by encoding to hex', async () => {
+    test('Should escape double quotation mark by encoding to hex', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );

@@ -29,7 +29,9 @@ import {
 } from '../queries/research-outputs.queries';
 import { parseGraphQLResearchOutput } from '../entities/research-output';
 import logger from '../utils/logger';
-import { buildODataFilter } from '../utils/urls';
+import { buildODataFilter, makeODataFilter } from '../utils/odata';
+import { getFirstOrAll } from '../utils/arrays';
+import { ResearchOutputFilter } from '../types';
 
 export interface ResearchOutputDataProvider {
   fetchById(id: string): Promise<ResearchOutputDataObject | null>;
@@ -80,7 +82,7 @@ export class ResearchOutputSquidexDataProvider
     const containsFilters = (search || '')
       .split(' ')
       .filter(Boolean)
-      .reduce(
+      .reduce<Filter[]>(
         (res, word: string) => [
           ...res,
           {
@@ -94,15 +96,12 @@ export class ResearchOutputSquidexDataProvider
             },
           },
         ],
-        [] as Filter[],
+        [],
       );
 
     const searchQ = containsFilters.length
-      ? containsFilters.length === 1
-        ? containsFilters[0]
-        : { or: containsFilters }
+      ? getFirstOrAll(containsFilters)
       : null;
-
     const filterQ = makeODataFilter(filter);
     const filtersAndSearch = [filterQ, searchQ].filter(Boolean);
     const query =
@@ -251,33 +250,8 @@ export class ResearchOutputSquidexDataProvider
   }
 }
 
-type ResearchOutputFilter = {
-  documentType?: string | string[];
-  title?: string;
-  link?: string;
-};
-
 export type FetchResearchOutputOptions = FetchOptions<ResearchOutputFilter> & {
   includeDrafts?: boolean;
-};
-
-const makeODataFilter = (filter?: ResearchOutputFilter): Filter | null => {
-  if (filter) {
-    const entries = Object.entries(filter).reduce((res, [key, val]) => {
-      if (Array.isArray(val)) {
-        return res.concat({
-          or: val.map((valElement) => ({
-            [`data/${key}/iv`]: valElement,
-          })),
-        });
-      }
-      return res.concat({ [`data/${key}/iv`]: val });
-    }, [] as Filter[]);
-
-    return entries.length === 1 ? (entries[0] as Filter) : entries;
-  }
-
-  return null;
 };
 
 const getAuthorIdList = (authorDataObject: AuthorUpsertDataObject) => {

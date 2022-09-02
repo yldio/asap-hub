@@ -1,4 +1,4 @@
-export type Flag = 'PERSISTENT_EXAMPLE' | 'REMINDERS' | 'GETTING_STARTED';
+export type Flag = 'PERSISTENT_EXAMPLE' | 'REMINDERS';
 
 export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {

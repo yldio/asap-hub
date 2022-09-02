@@ -8,7 +8,6 @@ import {
 } from '@asap-hub/fixtures';
 import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
-import { disable } from '@asap-hub/flags';
 
 import Dashboard from '../Dashboard';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -110,50 +109,72 @@ it('renders reminders', async () => {
   expect(screen.getByTitle('Event')).toBeInTheDocument();
 });
 
-it('does not show getting started with feature flag disabled ((REGRESSION))', async () => {
-  disable('GETTING_STARTED');
-  mockGetUser.mockResolvedValue({
-    ...userResponse,
-    dismissedGettingStarted: false,
+describe('dismissing the getting started option', () => {
+  it('toggles the not show getting started', async () => {
+    mockGetUser.mockResolvedValue({
+      ...userResponse,
+      dismissedGettingStarted: true,
+    });
+    await renderDashboard({});
+    await waitFor(() => {
+      expect(screen.queryByText(/Get Started with ASAP/i)).toBeNull();
+      // We should also expect the subtext on the header to be removed.
+      expect(
+        screen.queryByText(/The ASAP Hub is the private meeting point for/),
+      ).toBeNull();
+    });
   });
-  await renderDashboard({});
 
-  expect(screen.queryByText(/Get Started with ASAP/i)).toBeNull();
-});
+  it('shows and can dismiss getting started', async () => {
+    mockGetUser.mockResolvedValue({
+      ...userResponse,
+      dismissedGettingStarted: false,
+    });
+    await renderDashboard({});
 
-it('toggles the not show getting started', async () => {
-  mockGetUser.mockResolvedValue({
-    ...userResponse,
-    dismissedGettingStarted: true,
-  });
-  await renderDashboard({});
-  await waitFor(() =>
-    expect(screen.queryByText(/Get Started with ASAP/i)).toBeNull(),
-  );
-});
+    expect(screen.queryByText(/Get Started with ASAP/i)).toBeVisible();
+    userEvent.click(screen.getByText(/show/i));
 
-it('shows and can dismiss getting started', async () => {
-  mockGetUser.mockResolvedValue({
-    ...userResponse,
-    dismissedGettingStarted: false,
-  });
-  await renderDashboard({});
-
-  expect(screen.queryByText(/Get Started with ASAP/i)).toBeVisible();
-  userEvent.click(screen.getByText(/show/i));
-
-  expect(screen.getByText(/Remove help/i)).toBeVisible();
-  expect(screen.getByText(/Cancel/i).closest('a')).toHaveAttribute('href', '/');
-  expect(screen.getByTitle('Close').closest('a')).toHaveAttribute('href', '/');
-
-  userEvent.click(screen.getByText('Remove'));
-
-  await waitFor(() => {
-    expect(mockPatchUser).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({ dismissedGettingStarted: true }),
-      expect.anything(),
+    expect(screen.getByText(/Remove help/i)).toBeVisible();
+    // We should also expect the subtext on the header to be present.
+    expect(
+      screen.getByText(/The ASAP Hub is the private meeting point for/),
+    ).toBeVisible();
+    expect(screen.getByText(/Cancel/i).closest('a')).toHaveAttribute(
+      'href',
+      '/',
     );
-    expect(screen.queryByText(/Remove help/i)).toBeNull();
+    expect(screen.getByTitle('Close').closest('a')).toHaveAttribute(
+      'href',
+      '/',
+    );
+
+    userEvent.click(screen.getByText('Remove'));
+
+    await waitFor(() => {
+      expect(mockPatchUser).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({ dismissedGettingStarted: true }),
+        expect.anything(),
+      );
+      expect(screen.queryByText(/Remove help/i)).toBeNull();
+      // We should also expect the subtext on the header to be removed.
+      expect(
+        screen.queryByText(/The ASAP Hub is the private meeting point for/),
+      ).toBeNull();
+    });
+  });
+  it('correctly renders getting started block when dismissedGettingStarted is undefined', async () => {
+    mockGetUser.mockResolvedValue({
+      ...userResponse,
+      dismissedGettingStarted: undefined,
+    });
+    await renderDashboard({});
+
+    expect(screen.queryByText(/Get Started with ASAP/i)).toBeVisible();
+    // We should also expect the subtext on the header to be present.
+    expect(
+      screen.getByText(/The ASAP Hub is the private meeting point for/),
+    ).toBeVisible();
   });
 });

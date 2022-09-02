@@ -52,6 +52,7 @@ const apiHostname =
   stage === 'production' ? `api.${hostname}` : `api-${stage}.${hostname}`;
 const appUrl = `https://${appHostname}`;
 const currentRevision = process.env.CI_COMMIT_SHA;
+const nodeEnv = 'production';
 
 export const plugins = [
   './serverless-plugins/serverless-webpack',
@@ -91,6 +92,7 @@ const serverlessConfig: AWS = {
       },
     },
     environment: {
+      NODE_ENV: nodeEnv,
       SQUIDEX_APP_NAME: squidexAppName,
       SQUIDEX_BASE_URL: squidexBaseUrl,
       SQUIDEX_CLIENT_ID: squidexClientId,

@@ -992,6 +992,18 @@ input UsersDataDegreeInputDto {
   iv: String
 }
 
+"""The structure of the Dismissed Getting Started dialog field of the Users content type."""
+type UsersDataDismissedGettingStartedDto {
+  """Use this field when the user has dismissed the getting started dialog"""
+  iv: Boolean
+}
+
+"""The structure of the Dismissed Getting Started dialog field of the Users content input type."""
+input UsersDataDismissedGettingStartedInputDto {
+  """Use this field when the user has dismissed the getting started dialog"""
+  iv: Boolean
+}
+
 """The structure of the Users data type."""
 type UsersDataDto {
   adminNotes: UsersDataAdminNotesDto
@@ -1002,6 +1014,7 @@ type UsersDataDto {
   contactEmail: UsersDataContactEmailDto
   country: UsersDataCountryDto
   degree: UsersDataDegreeDto
+  dismissedGettingStarted: UsersDataDismissedGettingStartedDto
   email: UsersDataEmailDto
   expertiseAndResourceDescription: UsersDataExpertiseAndResourceDescriptionDto
   expertiseAndResourceTags: UsersDataExpertiseAndResourceTagsDto
@@ -1074,6 +1087,7 @@ input UsersDataInputDto {
   contactEmail: UsersDataContactEmailInputDto
   country: UsersDataCountryInputDto
   degree: UsersDataDegreeInputDto
+  dismissedGettingStarted: UsersDataDismissedGettingStartedInputDto
   email: UsersDataEmailInputDto
   expertiseAndResourceDescription: UsersDataExpertiseAndResourceDescriptionInputDto
   expertiseAndResourceTags: UsersDataExpertiseAndResourceTagsInputDto
@@ -1335,6 +1349,8 @@ type UsersFlatDataDto {
   contactEmail: String
   country: String
   degree: String
+  """Use this field when the user has dismissed the getting started dialog"""
+  dismissedGettingStarted: Boolean
   email: String
   expertiseAndResourceDescription: String
   expertiseAndResourceTags: [String!]
@@ -1484,18 +1500,34 @@ type WorkingGroups implements Content {
   version: Int!
 }
 
+"""The structure of the Description field of the Working Groups content type."""
+type WorkingGroupsDataDescriptionDto {
+  iv: String
+}
+
+"""The structure of the Description field of the Working Groups content input type."""
+input WorkingGroupsDataDescriptionInputDto {
+  iv: String
+}
+
 """The structure of the Working Groups data type."""
 type WorkingGroupsDataDto {
+  description: WorkingGroupsDataDescriptionDto
   leadingMembers: WorkingGroupsDataLeadingMembersDto
   members: WorkingGroupsDataMembersDto
+  primaryEmail: WorkingGroupsDataPrimaryEmailDto
+  secondaryEmail: WorkingGroupsDataSecondaryEmailDto
   shortDescription: WorkingGroupsDataShortDescriptionDto
   title: WorkingGroupsDataTitleDto
 }
 
 """The structure of the Working Groups data input type."""
 input WorkingGroupsDataInputDto {
+  description: WorkingGroupsDataDescriptionInputDto
   leadingMembers: WorkingGroupsDataLeadingMembersInputDto
   members: WorkingGroupsDataMembersInputDto
+  primaryEmail: WorkingGroupsDataPrimaryEmailInputDto
+  secondaryEmail: WorkingGroupsDataSecondaryEmailInputDto
   shortDescription: WorkingGroupsDataShortDescriptionInputDto
   title: WorkingGroupsDataTitleInputDto
 }
@@ -1532,6 +1564,26 @@ input WorkingGroupsDataMembersInputDto {
   iv: [WorkingGroupsDataMembersChildInputDto!]
 }
 
+"""The structure of the Working Group Email field of the Working Groups content type."""
+type WorkingGroupsDataPrimaryEmailDto {
+  iv: String
+}
+
+"""The structure of the Working Group Email field of the Working Groups content input type."""
+input WorkingGroupsDataPrimaryEmailInputDto {
+  iv: String
+}
+
+"""The structure of the WG's Lead Email field of the Working Groups content type."""
+type WorkingGroupsDataSecondaryEmailDto {
+  iv: String
+}
+
+"""The structure of the WG's Lead Email field of the Working Groups content input type."""
+input WorkingGroupsDataSecondaryEmailInputDto {
+  iv: String
+}
+
 """The structure of the Short Description field of the Working Groups content type."""
 type WorkingGroupsDataShortDescriptionDto {
   iv: String
@@ -1554,8 +1606,11 @@ input WorkingGroupsDataTitleInputDto {
 
 """The structure of the flat Working Groups data type."""
 type WorkingGroupsFlatDataDto {
+  description: String
   leadingMembers: String
   members: [WorkingGroupsDataMembersChildDto!]
+  primaryEmail: String
+  secondaryEmail: String
   shortDescription: String
   title: String
 }

@@ -4,8 +4,8 @@ import { ResearchOutputDataObject } from './research-output';
 
 type ReminderEntity = 'Research Output' | 'Event';
 
-type ResearchOutputReminderType = 'Published' | 'Share';
-type EventReminderType = 'Happening Today';
+type ResearchOutputReminderType = 'Published';
+type EventReminderType = 'Happening Today' | 'Happening Now';
 type ReminderType = ResearchOutputReminderType | EventReminderType;
 interface Reminder {
   id: string;
@@ -36,12 +36,6 @@ export interface ResearchOutputPublishedReminder
   };
 }
 
-export interface ResearchOutputShareReminder extends ResearchOutputReminder {
-  entity: 'Research Output';
-  type: 'Share';
-  data: undefined;
-}
-
 export interface EventHappeningTodayReminder extends EventReminder {
   entity: 'Event';
   type: 'Happening Today';
@@ -52,10 +46,21 @@ export interface EventHappeningTodayReminder extends EventReminder {
   };
 }
 
+export interface EventHappeningNowReminder extends EventReminder {
+  entity: 'Event';
+  type: 'Happening Now';
+  data: {
+    eventId: EventResponse['id'];
+    title: EventResponse['title'];
+    startDate: EventResponse['startDate'];
+    endDate: EventResponse['endDate'];
+  };
+}
+
 export type ReminderDataObject =
   | ResearchOutputPublishedReminder
-  | ResearchOutputShareReminder
-  | EventHappeningTodayReminder;
+  | EventHappeningTodayReminder
+  | EventHappeningNowReminder;
 
 export type ListReminderDataObject = ListResponse<ReminderDataObject>;
 

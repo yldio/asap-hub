@@ -7,7 +7,9 @@ export {
   DashboardPageBody,
   Layout,
   Theme,
+  ProjectsPage,
   UsersPage,
   WorkingGroupsPage,
+  WorkingGroupOverview,
   WorkingGroupDetailPage,
 } from './templates';

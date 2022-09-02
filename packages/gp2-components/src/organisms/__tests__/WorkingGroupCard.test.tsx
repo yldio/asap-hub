@@ -1,25 +1,20 @@
+import { createWorkingGroupResponse } from '@asap-hub/fixtures';
 import { gp2 } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import { WorkingGroupCard } from '..';
 
 describe('WorkingGroupCard', () => {
-  const defaultProps = {
-    id: '42',
-    title: 'Working Group 42',
-    members: [],
-    shortDescription: 'This is a short description',
-    leadingMembers: 'This is a list of leading members',
-  };
+  const defaultProps = createWorkingGroupResponse();
   it('renders the title', () => {
     render(<WorkingGroupCard {...defaultProps} />);
     expect(
-      screen.getByRole('heading', { level: 3, name: /Working Group 42/i }),
+      screen.getByRole('heading', { level: 3, name: /Working Group Title/i }),
     ).toBeInTheDocument();
   });
   it('links to the detail page', () => {
     render(<WorkingGroupCard {...defaultProps} />);
     expect(
-      screen.getByRole('link', { name: /Working Group 42/i }),
+      screen.getByRole('link', { name: /Working Group Title/i }),
     ).toBeInTheDocument();
   });
   it('renders a count of the members', () => {

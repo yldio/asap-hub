@@ -75,4 +75,19 @@ describe('WorkingGroupDetail', () => {
       }),
     ).toBeVisible();
   });
+
+  it('renders the members section', async () => {
+    const workingGroup = createWorkingGroupResponse();
+    workingGroup.members = [
+      {
+        userId: 'uuid',
+        firstName: 'John',
+        lastName: 'Doe',
+        role: 'Lead',
+      },
+    ];
+    mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+    await renderWorkingGroupDetail(workingGroup.id);
+    expect(screen.getByText(/Working Group Members/i)).toBeVisible();
+  });
 });

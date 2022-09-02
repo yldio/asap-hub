@@ -99,6 +99,7 @@ export const getGraphQLUser = (
     institution: 'some institution',
     jobTitle: 'some job title',
     onboarded: true,
+    dismissedGettingStarted: false,
     orcidLastModifiedDate: null,
     orcidLastSyncDate: null,
     reachOut: 'some reach out',
@@ -165,6 +166,7 @@ export const patchResponse = (): RestUser => ({
   id: 'userId',
   data: {
     onboarded: { iv: true },
+    dismissedGettingStarted: { iv: false },
     reachOut: { iv: 'some reach out' },
     responsibilities: { iv: 'some responsibilities' },
     expertiseAndResourceDescription: { iv: 'some expertiseAndResourceTags' },
@@ -216,6 +218,7 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
   lastModifiedDate: '2020-09-25T09:42:51.132Z',
   lastName: 'Ronaldo',
   onboarded: true,
+  dismissedGettingStarted: false,
   orcid: '363-98-9330',
   orcidWorks: [],
   questions: [],
@@ -249,6 +252,7 @@ export const getUserResponse = (): UserResponse => ({
   id: 'user-id-1',
   biography: 'some bio',
   onboarded: true,
+  dismissedGettingStarted: false,
   createdDate: '2020-09-23T20:45:22.000Z',
   questions: ['Question 1', 'Question 2'],
   expertiseAndResourceTags: [
@@ -311,6 +315,7 @@ export const fetchExpectation: ListUserResponse = {
       city: 'some city',
       contactEmail: 'some@contact.email',
       country: 'some country',
+      dismissedGettingStarted: false,
       institution: 'some institution',
       jobTitle: 'some job title',
       orcid: 'orcid',
@@ -419,6 +424,9 @@ export const updateUserEvent: WebhookPayload<User> = {
       onboarded: {
         iv: true,
       },
+      dismissedGettingStarted: {
+        iv: false,
+      },
       labs: { iv: [] },
     },
     dataOld: {
@@ -449,6 +457,9 @@ export const updateUserEvent: WebhookPayload<User> = {
       teams: { iv: [] },
       onboarded: {
         iv: true,
+      },
+      dismissedGettingStarted: {
+        iv: false,
       },
       labs: { iv: [] },
     },
@@ -494,6 +505,9 @@ export const userPublishedEvent: WebhookPayload<User> = {
       onboarded: {
         iv: true,
       },
+      dismissedGettingStarted: {
+        iv: false,
+      },
       labs: { iv: [] },
     },
   },
@@ -526,6 +540,7 @@ export const getUserDataObject = (): UserDataObject => ({
   id: 'user-id-1',
   biography: 'some bio',
   onboarded: true,
+  dismissedGettingStarted: false,
   createdDate: '2020-09-23T20:45:22.000Z',
   questions: ['Question 1', 'Question 2'],
   expertiseAndResourceTags: [
@@ -602,6 +617,7 @@ export const getInputUser = (): InputUser['data'] => ({
   },
   biography: { iv: 'some bio' },
   onboarded: { iv: true },
+  dismissedGettingStarted: { iv: false },
   questions: { iv: [{ question: 'Question 1' }, { question: 'Question 2' }] },
   expertiseAndResourceTags: {
     iv: [

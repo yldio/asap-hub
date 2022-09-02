@@ -10,6 +10,7 @@ const { mobileScreen, rem, tabletScreen, vminLinearCalcClamped } = pixels;
 
 type PageBannerProp = {
   image: string;
+  position?: string;
   title: string;
   description: string;
 };
@@ -52,7 +53,7 @@ const textContainerStyles = css({
   },
 });
 
-const imageBannerStyles = (image: string) =>
+const imageBannerStyles = (image: string, position: string) =>
   css({
     width: '100%',
     maxWidth: rem(headerMaxWidth),
@@ -63,15 +64,17 @@ const imageBannerStyles = (image: string) =>
     backgroundImage: `url(${image})`,
     borderRadius: `8px 8px 0px 0px`,
     backgroundSize: '100%',
+    backgroundPosition: position,
   });
 
 const PageBanner: React.FC<PageBannerProp> = ({
   image,
+  position = 'center',
   title,
   description,
 }) => (
   <header css={headerStyles}>
-    <div css={imageBannerStyles(image)}></div>
+    <div css={imageBannerStyles(image, position)}></div>
     <div css={[cardStyles, accents.default]}>
       <div css={textContainerStyles}>
         <h1

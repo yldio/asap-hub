@@ -11,6 +11,7 @@ export const getUserResponse = (): UserResponse => ({
   id: 'user-id-1',
   biography: 'some bio',
   onboarded: true,
+  dismissedGettingStarted: false,
   createdDate: '2020-09-23T20:45:22.000Z',
   questions: ['Question 1', 'Question 2'],
   expertiseAndResourceTags: [
@@ -68,6 +69,7 @@ export const getUserWebhookPayload = (
     version: 42,
     data: {
       onboarded: { iv: true },
+      dismissedGettingStarted: { iv: false },
       jobTitle: { iv: 'some job title' },
       avatar: { iv: ['https://www.example.com/avatar.jpg'] },
       connections: { iv: [] },
@@ -86,6 +88,7 @@ export const patchResponse = (): RestUser => ({
   id: 'userId',
   data: {
     onboarded: { iv: true },
+    dismissedGettingStarted: { iv: false },
     reachOut: { iv: 'some reach out' },
     responsibilities: { iv: 'some responsibilities' },
     expertiseAndResourceDescription: { iv: 'some expertiseAndResourceTags' },
@@ -119,6 +122,7 @@ export const getUserDataObject = (): UserDataObject => ({
   id: 'user-id-1',
   biography: 'some bio',
   onboarded: true,
+  dismissedGettingStarted: false,
   createdDate: '2020-09-23T20:45:22.000Z',
   questions: ['Question 1', 'Question 2'],
   expertiseAndResourceTags: [
@@ -175,6 +179,7 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
   lastModifiedDate: '2020-09-25T09:42:51.132Z',
   lastName: 'Ronaldo',
   onboarded: true,
+  dismissedGettingStarted: false,
   orcid: '363-98-9330',
   orcidWorks: [],
   questions: [],
@@ -201,6 +206,7 @@ export const getGraphQLUser = (
     institution: 'some institution',
     jobTitle: 'some job title',
     onboarded: true,
+    dismissedGettingStarted: false,
     orcidLastModifiedDate: null,
     orcidLastSyncDate: null,
     reachOut: 'some reach out',

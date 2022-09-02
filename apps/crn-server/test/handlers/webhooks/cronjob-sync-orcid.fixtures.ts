@@ -29,6 +29,9 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         onboarded: {
           iv: true,
         },
+        dismissedGettingStarted: {
+          iv: false,
+        },
         labs: { iv: [] },
       },
       created: '2020-08-27T13:20:57Z',
@@ -59,6 +62,9 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         teams: { iv: [] },
         onboarded: {
           iv: true,
+        },
+        dismissedGettingStarted: {
+          iv: false,
         },
         labs: { iv: [] },
       },

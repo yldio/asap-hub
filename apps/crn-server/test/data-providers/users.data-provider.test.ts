@@ -555,7 +555,7 @@ describe('User data provider', () => {
         },
       );
     });
-    test('Should sanitise double quotation mark by encoding to hex', async () => {
+    test('Should escape double quotation mark by encoding to hex', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
@@ -752,6 +752,26 @@ describe('User data provider', () => {
           connections: [{ code: 'a connection' }],
         });
         expect((result as any).connections).not.toBeDefined();
+      });
+      test('correctly parses whether the user has dismissed getting started', () => {
+        const given = fetchUserResponseDataObject();
+        const result = parseUserToResponse({
+          ...given,
+          dismissedGettingStarted: true,
+        });
+        expect(result.dismissedGettingStarted).toEqual(true);
+
+        const secondResult = parseUserToResponse({
+          ...given,
+          dismissedGettingStarted: false,
+        });
+        expect(secondResult.dismissedGettingStarted).toEqual(false);
+
+        const thirdResult = parseUserToResponse({
+          ...given,
+          dismissedGettingStarted: undefined,
+        });
+        expect(thirdResult.dismissedGettingStarted).toEqual(false);
       });
     });
   });

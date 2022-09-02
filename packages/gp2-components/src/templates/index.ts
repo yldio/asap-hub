@@ -3,6 +3,8 @@ export { default as DashboardPage } from './DashboardPage';
 export { default as DashboardPageBody } from './DashboardPageBody';
 export { default as Layout } from './Layout';
 export { default as Theme } from './Theme';
+export { default as ProjectsPage } from './ProjectsPage';
 export { default as UsersPage } from './UsersPage';
 export { default as WorkingGroupsPage } from './WorkingGroupsPage';
+export { default as WorkingGroupOverview } from './WorkingGroupOverview';
 export { default as WorkingGroupDetailPage } from './WorkingGroupDetailPage';

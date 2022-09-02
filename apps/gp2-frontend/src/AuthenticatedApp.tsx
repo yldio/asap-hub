@@ -7,15 +7,21 @@ import { FC, lazy, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import { auth0State } from './auth/state';
+import Users from './users/Users';
 
-const { workingGroups } = gp2;
+const { workingGroups, users, projects } = gp2;
 const loadDashboard = () =>
   import(/* webpackChunkName: "dashboard" */ './dashboard/Dashboard');
 
 const loadWorkingGroups = () =>
   import(/* webpackChunkName: "working-groups" */ './working-groups/Routes');
+
+const loadProjects = () =>
+  import(/* webpackChunkName: "projects" */ './projects/Projects');
+
 const Dashboard = lazy(loadDashboard);
 const WorkingGroups = lazy(loadWorkingGroups);
+const Projects = lazy(loadProjects);
 
 const AuthenticatedApp: FC<Record<string, never>> = () => {
   const auth0 = useAuth0();
@@ -30,7 +36,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
 
   useEffect(() => {
     // order by the likelyhood of user navigating there
-    loadDashboard().then(loadWorkingGroups);
+    loadDashboard().then(loadWorkingGroups).then(loadProjects);
   }, []);
 
   if (!user || !recoilAuth0) {
@@ -45,9 +51,19 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
             <Dashboard />
           </Frame>
         </Route>
+        <Route path={users.template}>
+          <Frame title="Users">
+            <Users />
+          </Frame>
+        </Route>
         <Route path={workingGroups.template}>
           <Frame title="Working Groups">
             <WorkingGroups />
+          </Frame>
+        </Route>
+        <Route path={projects.template}>
+          <Frame title="Projects">
+            <Projects />
           </Frame>
         </Route>
         <Route>

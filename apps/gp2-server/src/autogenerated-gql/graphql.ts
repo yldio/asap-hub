@@ -952,6 +952,18 @@ export type UsersDataDegreeInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Dismissed Getting Started dialog field of the Users content type. */
+export type UsersDataDismissedGettingStartedDto = {
+  /** Use this field when the user has dismissed the getting started dialog */
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Dismissed Getting Started dialog field of the Users content input type. */
+export type UsersDataDismissedGettingStartedInputDto = {
+  /** Use this field when the user has dismissed the getting started dialog */
+  iv: InputMaybe<Scalars['Boolean']>;
+};
+
 /** The structure of the Users data type. */
 export type UsersDataDto = {
   adminNotes: Maybe<UsersDataAdminNotesDto>;
@@ -962,6 +974,7 @@ export type UsersDataDto = {
   contactEmail: Maybe<UsersDataContactEmailDto>;
   country: Maybe<UsersDataCountryDto>;
   degree: Maybe<UsersDataDegreeDto>;
+  dismissedGettingStarted: Maybe<UsersDataDismissedGettingStartedDto>;
   email: Maybe<UsersDataEmailDto>;
   expertiseAndResourceDescription: Maybe<UsersDataExpertiseAndResourceDescriptionDto>;
   expertiseAndResourceTags: Maybe<UsersDataExpertiseAndResourceTagsDto>;
@@ -1034,6 +1047,7 @@ export type UsersDataInputDto = {
   contactEmail: InputMaybe<UsersDataContactEmailInputDto>;
   country: InputMaybe<UsersDataCountryInputDto>;
   degree: InputMaybe<UsersDataDegreeInputDto>;
+  dismissedGettingStarted: InputMaybe<UsersDataDismissedGettingStartedInputDto>;
   email: InputMaybe<UsersDataEmailInputDto>;
   expertiseAndResourceDescription: InputMaybe<UsersDataExpertiseAndResourceDescriptionInputDto>;
   expertiseAndResourceTags: InputMaybe<UsersDataExpertiseAndResourceTagsInputDto>;
@@ -1297,6 +1311,8 @@ export type UsersFlatDataDto = {
   contactEmail: Maybe<Scalars['String']>;
   country: Maybe<Scalars['String']>;
   degree: Maybe<Scalars['String']>;
+  /** Use this field when the user has dismissed the getting started dialog */
+  dismissedGettingStarted: Maybe<Scalars['Boolean']>;
   email: Maybe<Scalars['String']>;
   expertiseAndResourceDescription: Maybe<Scalars['String']>;
   expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
@@ -1434,18 +1450,34 @@ export type WorkingGroupsReferencingUsersContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
+/** The structure of the Description field of the Working Groups content type. */
+export type WorkingGroupsDataDescriptionDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Description field of the Working Groups content input type. */
+export type WorkingGroupsDataDescriptionInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
 /** The structure of the Working Groups data type. */
 export type WorkingGroupsDataDto = {
+  description: Maybe<WorkingGroupsDataDescriptionDto>;
   leadingMembers: Maybe<WorkingGroupsDataLeadingMembersDto>;
   members: Maybe<WorkingGroupsDataMembersDto>;
+  primaryEmail: Maybe<WorkingGroupsDataPrimaryEmailDto>;
+  secondaryEmail: Maybe<WorkingGroupsDataSecondaryEmailDto>;
   shortDescription: Maybe<WorkingGroupsDataShortDescriptionDto>;
   title: Maybe<WorkingGroupsDataTitleDto>;
 };
 
 /** The structure of the Working Groups data input type. */
 export type WorkingGroupsDataInputDto = {
+  description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
   leadingMembers: InputMaybe<WorkingGroupsDataLeadingMembersInputDto>;
   members: InputMaybe<WorkingGroupsDataMembersInputDto>;
+  primaryEmail: InputMaybe<WorkingGroupsDataPrimaryEmailInputDto>;
+  secondaryEmail: InputMaybe<WorkingGroupsDataSecondaryEmailInputDto>;
   shortDescription: InputMaybe<WorkingGroupsDataShortDescriptionInputDto>;
   title: InputMaybe<WorkingGroupsDataTitleInputDto>;
 };
@@ -1482,6 +1514,26 @@ export type WorkingGroupsDataMembersInputDto = {
   iv: InputMaybe<Array<WorkingGroupsDataMembersChildInputDto>>;
 };
 
+/** The structure of the Working Group Email field of the Working Groups content type. */
+export type WorkingGroupsDataPrimaryEmailDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Working Group Email field of the Working Groups content input type. */
+export type WorkingGroupsDataPrimaryEmailInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the WG's Lead Email field of the Working Groups content type. */
+export type WorkingGroupsDataSecondaryEmailDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the WG's Lead Email field of the Working Groups content input type. */
+export type WorkingGroupsDataSecondaryEmailInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
 /** The structure of the Short Description field of the Working Groups content type. */
 export type WorkingGroupsDataShortDescriptionDto = {
   iv: Maybe<Scalars['String']>;
@@ -1504,8 +1556,11 @@ export type WorkingGroupsDataTitleInputDto = {
 
 /** The structure of the flat Working Groups data type. */
 export type WorkingGroupsFlatDataDto = {
+  description: Maybe<Scalars['String']>;
   leadingMembers: Maybe<Scalars['String']>;
   members: Maybe<Array<WorkingGroupsDataMembersChildDto>>;
+  primaryEmail: Maybe<Scalars['String']>;
+  secondaryEmail: Maybe<Scalars['String']>;
   shortDescription: Maybe<Scalars['String']>;
   title: Maybe<Scalars['String']>;
 };
@@ -1526,6 +1581,7 @@ export type UsersContentFragment = Pick<
     UsersFlatDataDto,
     | 'biography'
     | 'degree'
+    | 'dismissedGettingStarted'
     | 'email'
     | 'contactEmail'
     | 'firstName'
@@ -1590,6 +1646,7 @@ export type FetchUserQuery = {
         UsersFlatDataDto,
         | 'biography'
         | 'degree'
+        | 'dismissedGettingStarted'
         | 'email'
         | 'contactEmail'
         | 'firstName'
@@ -1661,6 +1718,7 @@ export type FetchUsersQuery = {
               UsersFlatDataDto,
               | 'biography'
               | 'degree'
+              | 'dismissedGettingStarted'
               | 'email'
               | 'contactEmail'
               | 'firstName'
@@ -1724,7 +1782,12 @@ export type FetchUsersQuery = {
 export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
   flatData: Pick<
     WorkingGroupsFlatDataDto,
-    'title' | 'shortDescription' | 'leadingMembers'
+    | 'title'
+    | 'shortDescription'
+    | 'leadingMembers'
+    | 'description'
+    | 'primaryEmail'
+    | 'secondaryEmail'
   > & {
     members: Maybe<
       Array<
@@ -1753,7 +1816,12 @@ export type FetchWorkingGroupQuery = {
     Pick<WorkingGroups, 'id'> & {
       flatData: Pick<
         WorkingGroupsFlatDataDto,
-        'title' | 'shortDescription' | 'leadingMembers'
+        | 'title'
+        | 'shortDescription'
+        | 'leadingMembers'
+        | 'description'
+        | 'primaryEmail'
+        | 'secondaryEmail'
       > & {
         members: Maybe<
           Array<
@@ -1786,7 +1854,12 @@ export type FetchWorkingGroupsQuery = {
           Pick<WorkingGroups, 'id'> & {
             flatData: Pick<
               WorkingGroupsFlatDataDto,
-              'title' | 'shortDescription' | 'leadingMembers'
+              | 'title'
+              | 'shortDescription'
+              | 'leadingMembers'
+              | 'description'
+              | 'primaryEmail'
+              | 'secondaryEmail'
             > & {
               members: Maybe<
                 Array<
@@ -1850,6 +1923,10 @@ export const UsersContentFragmentDoc = {
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'biography' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'degree' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'dismissedGettingStarted' },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'email' } },
                 {
                   kind: 'Field',
@@ -2007,6 +2084,15 @@ export const WorkingGroupContentFragmentDoc = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'leadingMembers' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'primaryEmail' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'secondaryEmail' },
                 },
                 {
                   kind: 'Field',

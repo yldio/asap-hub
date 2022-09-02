@@ -4845,6 +4845,18 @@ export type UsersDataDegreeInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Dismissed Getting Started dialog field of the Users content type. */
+export type UsersDataDismissedGettingStartedDto = {
+  /** Use this to hide the Getting Started component on the home page */
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Dismissed Getting Started dialog field of the Users content input type. */
+export type UsersDataDismissedGettingStartedInputDto = {
+  /** Use this to hide the Getting Started component on the home page */
+  iv: InputMaybe<Scalars['Boolean']>;
+};
+
 /** The structure of the Users data type. */
 export type UsersDataDto = {
   adminNotes: Maybe<UsersDataAdminNotesDto>;
@@ -4855,6 +4867,7 @@ export type UsersDataDto = {
   contactEmail: Maybe<UsersDataContactEmailDto>;
   country: Maybe<UsersDataCountryDto>;
   degree: Maybe<UsersDataDegreeDto>;
+  dismissedGettingStarted: Maybe<UsersDataDismissedGettingStartedDto>;
   email: Maybe<UsersDataEmailDto>;
   expertiseAndResourceDescription: Maybe<UsersDataExpertiseAndResourceDescriptionDto>;
   expertiseAndResourceTags: Maybe<UsersDataExpertiseAndResourceTagsDto>;
@@ -4928,6 +4941,7 @@ export type UsersDataInputDto = {
   contactEmail: InputMaybe<UsersDataContactEmailInputDto>;
   country: InputMaybe<UsersDataCountryInputDto>;
   degree: InputMaybe<UsersDataDegreeInputDto>;
+  dismissedGettingStarted: InputMaybe<UsersDataDismissedGettingStartedInputDto>;
   email: InputMaybe<UsersDataEmailInputDto>;
   expertiseAndResourceDescription: InputMaybe<UsersDataExpertiseAndResourceDescriptionInputDto>;
   expertiseAndResourceTags: InputMaybe<UsersDataExpertiseAndResourceTagsInputDto>;
@@ -5216,6 +5230,8 @@ export type UsersFlatDataDto = {
   contactEmail: Maybe<Scalars['String']>;
   country: Maybe<Scalars['String']>;
   degree: Maybe<Scalars['String']>;
+  /** Use this to hide the Getting Started component on the home page */
+  dismissedGettingStarted: Maybe<Scalars['Boolean']>;
   email: Maybe<Scalars['String']>;
   expertiseAndResourceDescription: Maybe<Scalars['String']>;
   expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
@@ -7322,7 +7338,7 @@ export type FetchReminderDataQuery = {
   queryEventsContents: Maybe<
     Array<
       Pick<Events, 'id'> & {
-        flatData: Pick<EventsFlatDataDto, 'startDate' | 'title'>;
+        flatData: Pick<EventsFlatDataDto, 'startDate' | 'endDate' | 'title'>;
       }
     >
   >;
@@ -8204,6 +8220,7 @@ export type UsersContentFragment = Pick<
     | 'degree'
     | 'email'
     | 'contactEmail'
+    | 'dismissedGettingStarted'
     | 'firstName'
     | 'institution'
     | 'jobTitle'
@@ -8286,6 +8303,7 @@ export type FetchUserQuery = {
         | 'degree'
         | 'email'
         | 'contactEmail'
+        | 'dismissedGettingStarted'
         | 'firstName'
         | 'institution'
         | 'jobTitle'
@@ -8375,6 +8393,7 @@ export type FetchUsersQuery = {
               | 'degree'
               | 'email'
               | 'contactEmail'
+              | 'dismissedGettingStarted'
               | 'firstName'
               | 'institution'
               | 'jobTitle'
@@ -10624,6 +10643,10 @@ export const UsersContentFragmentDoc = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'contactEmail' },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'dismissedGettingStarted' },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'institution' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
@@ -12151,6 +12174,10 @@ export const FetchReminderDataDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'startDate' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'endDate' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                     ],

@@ -33,11 +33,8 @@ import {
 import { isTeamRole } from '../entities';
 import { FETCH_USER, FETCH_USERS } from '../queries/users.queries';
 import logger from '../utils/logger';
-import {
-  buildEqFilterForWords,
-  buildODataFilter,
-  createUrl,
-} from '../utils/urls';
+import { createUrl } from '../utils/urls';
+import { buildEqFilterForWords, buildODataFilter } from '../utils/odata';
 
 export type CMSOrcidWork = OrcidWork;
 
@@ -90,6 +87,9 @@ export class UserSquidexDataProvider implements UserDataProvider {
       },
       onboarded: {
         iv: input.onboarded || false,
+      },
+      dismissedGettingStarted: {
+        iv: input.dismissedGettingStarted || false,
       },
       avatar: {
         iv: (input.avatar && [input.avatar]) || null,
@@ -339,6 +339,7 @@ export const parseUserToDataObject = (user: RestUser): UserDataObject => {
   return {
     id: user.id,
     onboarded: user.data.onboarded.iv,
+    dismissedGettingStarted: user.data.dismissedGettingStarted.iv,
     createdDate: parseDate(user.created).toISOString(),
     lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
     email: user.data.email.iv,
@@ -387,9 +388,11 @@ export const parseUserToResponse = ({
 }: UserDataObject): UserResponse => {
   const displayName = `${user.firstName} ${user.lastName}`;
   const onboarded = typeof user.onboarded === 'boolean' ? user.onboarded : true;
+  const dismissedGettingStarted = !!user.dismissedGettingStarted;
   const response = {
     ...user,
     displayName,
+    dismissedGettingStarted,
     onboarded,
   };
   return response;
@@ -465,6 +468,7 @@ export const parseGraphQLUserToDataObject = (
         }, [])
         .slice(0, 5)) ||
     [];
+
   return {
     id: item.id,
     onboarded:
@@ -473,6 +477,7 @@ export const parseGraphQLUserToDataObject = (
         : undefined,
     createdDate,
     orcid,
+    dismissedGettingStarted: !!item.flatData?.dismissedGettingStarted,
     firstName: item.flatData.firstName || '',
     lastName: item.flatData.lastName || '',
     biography: item.flatData.biography || undefined,

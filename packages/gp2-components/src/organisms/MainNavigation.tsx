@@ -1,5 +1,5 @@
 import { drawerQuery, pixels } from '@asap-hub/react-components';
-import { gp2, network } from '@asap-hub/routing';
+import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React from 'react';
 import dashboardIcon from '../icons/dashboard-icon';
@@ -8,7 +8,7 @@ import usersIcon from '../icons/users-icon';
 import workingGroupIcon from '../icons/working-group-icon';
 import NavigationLink from '../molecules/NavigationLink';
 
-const { workingGroups } = gp2;
+const { workingGroups, users, projects } = gp2;
 const {
   largeDesktopScreen,
   mobileScreen,
@@ -66,7 +66,7 @@ const MainNavigation: React.FC = () => (
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={network({}).$} icon={usersIcon} enabled={false}>
+        <NavigationLink href={users({}).$} icon={usersIcon}>
           Users
         </NavigationLink>
       </li>
@@ -80,7 +80,7 @@ const MainNavigation: React.FC = () => (
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={network({}).$} icon={projectIcon} enabled={false}>
+        <NavigationLink href={projects({}).$} icon={projectIcon}>
           Projects
         </NavigationLink>
       </li>

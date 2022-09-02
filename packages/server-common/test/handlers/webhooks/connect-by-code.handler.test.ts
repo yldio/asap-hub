@@ -1,5 +1,6 @@
 import { UserController } from '../../../src/controllers';
 import { connectByCodeHandlerFactory } from '../../../src/handlers/webhooks/connect-by-code.handler';
+import { Logger } from '../../../src/utils';
 import { getConnectByCodeRequest } from '../../helpers/events';
 const secret = 'secret';
 
@@ -7,7 +8,10 @@ describe('Connect by code handler', () => {
   const userController = {
     connectByCode: jest.fn(),
   } as unknown as jest.Mocked<UserController>;
-  const handler = connectByCodeHandlerFactory(userController, secret);
+  const logger = {
+    debug: jest.fn(),
+  } as unknown as jest.Mocked<Logger>;
+  const handler = connectByCodeHandlerFactory(userController, secret, logger);
   describe('POST /webhook/users/connections - validations', () => {
     test('returns 400 when code is not defined', async () => {
       const event = getConnectByCodeRequest(

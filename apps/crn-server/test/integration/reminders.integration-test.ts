@@ -23,6 +23,7 @@ import { getTeamCreateDataObject } from '../fixtures/teams.fixtures';
 import { getUserCreateDataObject } from '../fixtures/users.fixtures';
 import { createRandomOrcid } from '../helpers/users';
 import {
+  EventHappeningNowReminder,
   EventHappeningTodayReminder,
   FetchRemindersOptions,
   ResearchOutputCreateDataObject,
@@ -347,6 +348,93 @@ describe('Reminders', () => {
     });
   });
 
+  describe('Event Happening Now Reminder', () => {
+    let userId: string;
+    let calendarId: string;
+    let eventIdsForDeletion: string[] = [];
+    let fetchRemindersOptions: FetchRemindersOptions;
+
+    beforeAll(async () => {
+      jest.useFakeTimers('modern');
+
+      const teamCreateDataObject = getTeamCreateDataObject();
+      teamCreateDataObject.applicationNumber = chance.name();
+      const teamId = await teamDataProvider.create(teamCreateDataObject);
+
+      const userCreateDataObject = getUserInput(teamId);
+      userId = await userDataProvider.create(userCreateDataObject);
+      fetchRemindersOptions = { userId, timezone: 'Europe/London' };
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    beforeEach(async () => {
+      const calendarInput = getCalendarInputForReminder();
+      ({ id: calendarId } = await calendarController.create(calendarInput));
+    });
+
+    afterEach(async () => {
+      await Promise.all(
+        eventIdsForDeletion.map((id) => eventRestClient.delete(id)),
+      );
+      eventIdsForDeletion = [];
+    });
+
+    test('Should see the reminder when the event has started but has not finished', async () => {
+      // setting system time to 10:05AM in UTC
+      jest.setSystemTime(new Date('2022-08-10T10:05:00.0Z'));
+
+      const eventInput = getEventInput(calendarId);
+      // the event starts at 10AM and ends at 11AM in UTC
+      eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
+      eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
+
+      const event = await eventController.create(eventInput);
+      eventIdsForDeletion = [event.id];
+
+      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+      const expectedReminder: EventHappeningNowReminder = {
+        id: `event-happening-now-${event.id}`,
+        entity: 'Event',
+        type: 'Happening Now',
+        data: {
+          eventId: event.id,
+          startDate: event.data.startDate.iv,
+          endDate: event.data.endDate.iv,
+          title: event.data.title.iv,
+        },
+      };
+
+      expect(reminders).toEqual({
+        total: 1,
+        items: [expectedReminder],
+      });
+    });
+
+    test('Should not see the reminder when the event has already ended', async () => {
+      // setting system time to 11:05AM in UTC
+      jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
+
+      const eventInput = getEventInput(calendarId);
+      // the event starts at 10AM and ends at 11AM in UTC
+      eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
+      eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
+
+      const event = await eventController.create(eventInput);
+      eventIdsForDeletion = [event.id];
+
+      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+      expect(reminders).toEqual({
+        total: 0,
+        items: [],
+      });
+    });
+  });
+
   describe('Multiple reminders', () => {
     let teamId: string;
     let calendarId: string;
@@ -384,12 +472,17 @@ describe('Reminders', () => {
 
     test('Should retrive multiple reminders and sort them by the date they refer to, in a ascending order (earliest first)', async () => {
       // setting system time to 9:00AM in UTC
-      jest.setSystemTime(new Date('2022-08-10T05:00:00.0Z'));
+      jest.setSystemTime(new Date('2022-08-10T09:00:00.0Z'));
 
       const researchOutputInput1 = getResearchOutputInput(teamId, creatorId);
-      // Research Output added at 11:00AM today
+      // Research Output added at 05:00AM today
       researchOutputInput1.addedDate = new Date(
-        '2022-08-10T11:00:00.0Z',
+        '2022-08-10T05:00:00.0Z',
+      ).toISOString();
+      const researchOutputInput2 = getResearchOutputInput(teamId, creatorId);
+      // Research Output added at 03:00AM today
+      researchOutputInput2.addedDate = new Date(
+        '2022-08-10T03:00:00.0Z',
       ).toISOString();
 
       const eventInput1 = getEventInput(calendarId);
@@ -397,14 +490,9 @@ describe('Reminders', () => {
       eventInput1.startDate = new Date('2022-08-10T12:00:00.0Z').toISOString();
 
       const eventInput2 = getEventInput(calendarId);
-      // the event happening at 1:00PM today
-      eventInput2.startDate = new Date('2022-08-10T13:00:00.0Z').toISOString();
-
-      const researchOutputInput2 = getResearchOutputInput(teamId, creatorId);
-      // Research Output added at 2:00PM today
-      researchOutputInput2.addedDate = new Date(
-        '2022-08-10T14:00:00.0Z',
-      ).toISOString();
+      // the event starting at 8AM and ending at 10AM today
+      eventInput2.startDate = new Date('2022-08-10T08:00:00.0Z').toISOString();
+      eventInput2.endDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
 
       const researchOutputId1 = await researchOutputDataProvider.create(
         researchOutputInput1,
@@ -424,13 +512,13 @@ describe('Reminders', () => {
       expect(reminders).toEqual({
         total: 4,
         items: [
-          expect.objectContaining({
-            id: `research-output-published-${researchOutputId2}`,
-          }),
-          expect.objectContaining({ id: `event-happening-today-${event2Id}` }),
           expect.objectContaining({ id: `event-happening-today-${event1Id}` }),
+          expect.objectContaining({ id: `event-happening-now-${event2Id}` }),
           expect.objectContaining({
             id: `research-output-published-${researchOutputId1}`,
+          }),
+          expect.objectContaining({
+            id: `research-output-published-${researchOutputId2}`,
           }),
         ],
       });

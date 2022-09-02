@@ -24,6 +24,9 @@ export type WorkingGroupDataObject = {
   id: string;
   title: string;
   shortDescription: string;
+  description: string;
+  primaryEmail?: string;
+  secondaryEmail?: string;
   leadingMembers?: string;
   members: WorkingGroupMember[];
 };

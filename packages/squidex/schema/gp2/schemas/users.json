@@ -8,60 +8,22 @@
       "validateOnPublish": false
     },
     "scripts": {},
-    "fieldsInReferences": ["firstName", "lastName", "orcid"],
+    "fieldsInReferences": ["firstName", "lastName"],
     "fieldsInLists": [
       "meta.status.color",
       "avatar",
       "firstName",
       "lastName",
-      "orcid",
       "email",
-      "onboarded",
-      "dismissedGettingStarted",
       "connections",
-      "adminNotes",
       "meta.id",
       "role",
-      "labs",
-      "degree",
-      "country",
-      "city",
-      "institution",
-      "jobTitle",
-      "responsibilities",
-      "researchInterests",
-      "expertiseAndResourceDescription",
-      "expertiseAndResourceTags",
-      "questions",
-      "biography",
-      "social",
-      "contactEmail",
-      "orcidWorks",
-      "orcidLastSyncDate",
-      "reachOut",
       "meta.created",
       "meta.createdBy.avatar",
       "meta.lastModified",
       "meta.lastModifiedBy.avatar"
     ],
     "fields": [
-      {
-        "name": "separatorBasicData",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "UI",
-          "editor": "Separator",
-          "label": "Basic Data ",
-          "hints": "Mandatory for grantees - they can only publish profile if this section complete",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
       {
         "name": "firstName",
         "isHidden": false,
@@ -128,225 +90,6 @@
         }
       },
       {
-        "name": "orcid",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "pattern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}(\\d|X)$",
-          "patternMessage": "ORCID must have the following format: 0000-0000-0000-0000",
-          "isUnique": true,
-          "isEmbeddable": false,
-          "inlineEditable": true,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "ORCID",
-          "hints": "Mandatory for grantees. They cannot publish profile without an ORCID. ORCIDs cannot be repeated on the Hub",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
-      {
-        "name": "dismissedGettingStarted",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Boolean",
-          "defaultValue": false,
-          "inlineEditable": true,
-          "editor": "Toggle",
-          "label": "Dismissed Getting Started dialog",
-          "hints": "Use this field when the user has dismissed the getting started dialog",
-          "isRequired": true,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "labs",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "References",
-          "allowDuplicates": false,
-          "resolveReference": false,
-          "mustBePublished": true,
-          "editor": "List",
-          "schemaIds": [],
-          "label": "Labs",
-          "hints": "Mandatory for grantees. They cannot publish profile without a lab.",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "separatorHeader",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "UI",
-          "editor": "Separator",
-          "label": "Header Data",
-          "hints": "General information that is shown on the profile's header",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "degree",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "allowedValues": [
-            "BA",
-            "BSc",
-            "MD",
-            "MSc",
-            "MD, PhD",
-            "PhD",
-            "MPH",
-            "MA",
-            "MBA"
-          ],
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": true,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "Dropdown",
-          "label": "Degree",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
-      {
-        "name": "country",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": true,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Country",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
-      {
-        "name": "city",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": true,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "City",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
-      {
-        "name": "jobTitle",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": true,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Job Title",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
-      {
-        "name": "institution",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": true,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Institution",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
-      {
-        "name": "contactEmail",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": true,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Correspondence Email",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
-      {
         "name": "avatar",
         "isHidden": false,
         "isLocked": false,
@@ -371,444 +114,90 @@
         }
       },
       {
-        "name": "social",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Array",
-          "maxItems": 1,
-          "label": "Social Links",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        },
-        "nested": [
-          {
-            "name": "website1",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "isEmbeddable": false,
-              "inlineEditable": true,
-              "createEnum": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Website 1",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "website2",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "isEmbeddable": false,
-              "inlineEditable": true,
-              "createEnum": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Website 2",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "linkedIn",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "isEmbeddable": false,
-              "inlineEditable": true,
-              "createEnum": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "LinkedIn",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "researcherId",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "isEmbeddable": false,
-              "inlineEditable": true,
-              "createEnum": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Researcher ID",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "twitter",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "isEmbeddable": false,
-              "inlineEditable": true,
-              "createEnum": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Twitter",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "github",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "isEmbeddable": false,
-              "inlineEditable": true,
-              "createEnum": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Github",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "googleScholar",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "isEmbeddable": false,
-              "inlineEditable": true,
-              "createEnum": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Google Scholar",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "researchGate",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "isEmbeddable": false,
-              "inlineEditable": true,
-              "createEnum": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Research Gate",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          }
-        ]
-      },
-      {
-        "name": "separatorResearch",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "UI",
-          "editor": "Separator",
-          "label": "Research Tab",
-          "hints": "This data shows up in the first tab",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "responsibilities",
+        "name": "region",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": false,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "TextArea",
-          "label": "Responsibilities",
-          "hints": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "researchInterests",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": false,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "TextArea",
-          "label": "Research Interests",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "reachOut",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "minLength": 0,
-          "maxLength": 250,
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": false,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "TextArea",
-          "label": "Reach Out",
-          "hints": "Reach out reasons (only relevant for \"Staff\" users)",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "expertiseAndResourceDescription",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
+          "allowedValues": [
+            "Africa",
+            "Asia",
+            "Australia/Australiasia",
+            "Europe",
+            "North America",
+            "South America",
+            "Latin America"
+          ],
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,
           "createEnum": false,
           "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Expertise and Resources Description",
-          "isRequired": false,
+          "editor": "Dropdown",
+          "label": "Region",
+          "isRequired": true,
           "isRequiredOnPublish": false,
-          "isHalfWidth": false
+          "isHalfWidth": true
         }
       },
       {
-        "name": "expertiseAndResourceTags",
+        "name": "degree",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Tags",
-          "createEnum": false,
-          "editor": "Tags",
-          "label": "Expertise and Resources",
+          "allowedValues": [
+            "AA",
+            "AAS",
+            "BA",
+            "BSc",
+            "MSc",
+            "PhD",
+            "MD",
+            "MD_PhD",
+            "MPH",
+            "MA",
+            "MBA",
+            "PharmD",
+            "MBBS"
+          ],
+          "editor": "Checkboxes",
+          "label": "Degree",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": false
+          "isHalfWidth": true
         }
       },
       {
-        "name": "questions",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Array",
-          "minItems": 0,
-          "maxItems": 4,
-          "label": "Open Questions",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        },
-        "nested": [
-          {
-            "name": "question",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "isEmbeddable": false,
-              "inlineEditable": true,
-              "createEnum": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Question",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": true,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": false
-            }
-          }
-        ]
-      },
-      {
-        "name": "separatorBackground",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "UI",
-          "editor": "Separator",
-          "label": "Background Tab",
-          "hints": "This data shows up in the second tab",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "biography",
+        "name": "role",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
+          "defaultValue": "",
+          "allowedValues": [
+            "Working Group Participant",
+            "Network Investigator",
+            "Network Collaborator",
+            "Administrator",
+            "Trainee"
+          ],
           "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": false,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "TextArea",
-          "label": "Biography",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "separatorAdminNotes",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "UI",
-          "editor": "Separator",
-          "label": "Admin Notes",
-          "hints": "This is ASAP internal content and it's not being shown on the Hub",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "adminNotes",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": false,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "TextArea",
-          "label": "Admin Notes",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "separatorTechnical",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "UI",
-          "editor": "Separator",
-          "label": "Technical",
-          "hints": "Fields used mostly by our API",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "onboarded",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Boolean",
-          "defaultValue": false,
           "inlineEditable": true,
-          "editor": "Toggle",
-          "label": "Onboarding complete",
-          "hints": "Use this to allow the user to see the full Hub and skip profile completion",
+          "contentType": "Unspecified",
+          "editor": "Dropdown",
+          "label": "GP2 Hub Role",
+          "hints": "Role on the GP2 Hub",
+          "placeholder": "",
           "isRequired": true,
           "isRequiredOnPublish": false,
-          "isHalfWidth": false
+          "isHalfWidth": true
         }
       },
       {
@@ -846,234 +235,6 @@
               "isRequired": true,
               "isRequiredOnPublish": false,
               "isHalfWidth": false
-            }
-          }
-        ]
-      },
-      {
-        "name": "role",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "defaultValue": "Grantee",
-          "allowedValues": ["Staff", "Grantee", "Guest", "Hidden"],
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": true,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "Dropdown",
-          "label": "ASAP Hub Role",
-          "hints": "Role on the ASAP Hub",
-          "placeholder": "",
-          "isRequired": true,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
-      {
-        "name": "orcidLastSyncDate",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": true,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "ORCID Last Sync Date",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
-      {
-        "name": "orcidLastModifiedDate",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": true,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "ORCID Last Modified Date",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
-      {
-        "name": "lastModifiedDate",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": false,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Last Modified Date",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
-      {
-        "name": "orcidWorks",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Array",
-          "label": "ORCID Works",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        },
-        "nested": [
-          {
-            "name": "id",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "isEmbeddable": false,
-              "inlineEditable": false,
-              "createEnum": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "ID",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "doi",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "isEmbeddable": false,
-              "inlineEditable": true,
-              "createEnum": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "DOI",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "title",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "isEmbeddable": false,
-              "inlineEditable": true,
-              "createEnum": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Title",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "type",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "isEmbeddable": false,
-              "inlineEditable": true,
-              "createEnum": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Type",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "lastModifiedDate",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "isEmbeddable": false,
-              "inlineEditable": true,
-              "createEnum": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Last Modified Date",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "publicationDate",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "Json",
-              "label": "Publication Date",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
             }
           }
         ]

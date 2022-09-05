@@ -224,7 +224,10 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   addedDate?: string;
 };
 
-export type ResearchOutputUpdateDataObject = Omit<ResearchOutputCoreObject, 'addedDate'> & {
+export type ResearchOutputUpdateDataObject = Omit<
+  ResearchOutputCoreObject,
+  'addedDate'
+> & {
   authors: AuthorUpsertDataObject[];
   environmentIds: string[];
   labIds: string[];

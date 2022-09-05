@@ -865,9 +865,10 @@ describe('ResearchOutputs data provider', () => {
             outputs: { iv: ['output-1', researchOutputId] },
           })
           .reply(200);
-        const result = await researchOutputDataProvider.create(
-          {...researchOutputRequest, addedDate: now },
-        );
+        const result = await researchOutputDataProvider.create({
+          ...researchOutputRequest,
+          addedDate: now,
+        });
         expect(result).toEqual(researchOutputId);
       });
 

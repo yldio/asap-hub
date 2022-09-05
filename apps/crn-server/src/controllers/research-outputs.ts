@@ -88,7 +88,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       organismIds: organisms,
       environmentIds: environments,
       subtypeId: subtype,
-      addedDate: new Date(Date.now()).toISOString()
+      addedDate: new Date(Date.now()).toISOString(),
     };
 
     const researchOutputId = await this.researchOutputDataProvider.create(

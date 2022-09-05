@@ -282,8 +282,11 @@ export const getResearchOutputCreateDataObject =
 
 export const getResearchOutputUpdateDataObject =
   (): ResearchOutputUpdateDataObject => {
-    const { createdBy: _, addedDate: __, ...researchOutputCreateDataObject } =
-      getResearchOutputCreateDataObject();
+    const {
+      createdBy: _,
+      addedDate: __,
+      ...researchOutputCreateDataObject
+    } = getResearchOutputCreateDataObject();
 
     return {
       ...researchOutputCreateDataObject,
@@ -291,64 +294,70 @@ export const getResearchOutputUpdateDataObject =
     };
   };
 
-export const getRestResearchOutputCreateData =
-  (addedDate?: string): InputResearchOutput['data'] => ({
-    documentType: { iv: 'Bioinformatics' },
-    link: { iv: 'http://a.link' },
-    title: { iv: 'Test Proposal 1234' },
-    asapFunded: { iv: 'Yes' },
-    sharingStatus: { iv: 'Network Only' },
-    addedDate: { iv: addedDate || '2021-05-21T13:18:31Z' },
-    publishDate: { iv: '2021-05-21T13:18:31Z' },
-    description: { iv: 'Text' },
-    tags: { iv: ['tag', 'test'] },
-    methods: {
-      iv: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
-    },
-    organisms: {
-      iv: ['d77a7607-7b9a-4ef1-99ee-c389b33ea95b'],
-    },
-    environments: {
-      iv: ['8a936e45-6d5e-42a6-8acd-b849ab10f3f8'],
-    },
-    subtype: {
-      iv: ['dd0da578-5573-4758-b1db-43a078f5076e'],
-    },
-    type: { iv: 'Software' },
-    labs: {
-      iv: [
-        '99c78dd7-627e-4fbd-aaec-d1977895189e',
-        'cd7be402-84d7-4d21-a360-82e2695f2dd9',
-      ],
-    },
-    authors: { iv: ['user-id-1', 'user-id-2'] },
-    createdBy: { iv: ['userId'] },
-    updatedBy: { iv: ['userId'] },
-    usedInAPublication: { iv: 'No' },
-    doi: { iv: null },
-    accession: { iv: null },
-    rrid: { iv: 'RRID:AB_90755' },
-    labCatalogNumber: {
-      iv: 'http://example.com',
-    },
-    usageNotes: {
-      iv: 'some access instructions',
-    },
-  });
+export const getRestResearchOutputCreateData = (
+  addedDate?: string,
+): InputResearchOutput['data'] => ({
+  documentType: { iv: 'Bioinformatics' },
+  link: { iv: 'http://a.link' },
+  title: { iv: 'Test Proposal 1234' },
+  asapFunded: { iv: 'Yes' },
+  sharingStatus: { iv: 'Network Only' },
+  addedDate: { iv: addedDate || '2021-05-21T13:18:31Z' },
+  publishDate: { iv: '2021-05-21T13:18:31Z' },
+  description: { iv: 'Text' },
+  tags: { iv: ['tag', 'test'] },
+  methods: {
+    iv: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
+  },
+  organisms: {
+    iv: ['d77a7607-7b9a-4ef1-99ee-c389b33ea95b'],
+  },
+  environments: {
+    iv: ['8a936e45-6d5e-42a6-8acd-b849ab10f3f8'],
+  },
+  subtype: {
+    iv: ['dd0da578-5573-4758-b1db-43a078f5076e'],
+  },
+  type: { iv: 'Software' },
+  labs: {
+    iv: [
+      '99c78dd7-627e-4fbd-aaec-d1977895189e',
+      'cd7be402-84d7-4d21-a360-82e2695f2dd9',
+    ],
+  },
+  authors: { iv: ['user-id-1', 'user-id-2'] },
+  createdBy: { iv: ['userId'] },
+  updatedBy: { iv: ['userId'] },
+  usedInAPublication: { iv: 'No' },
+  doi: { iv: null },
+  accession: { iv: null },
+  rrid: { iv: 'RRID:AB_90755' },
+  labCatalogNumber: {
+    iv: 'http://example.com',
+  },
+  usageNotes: {
+    iv: 'some access instructions',
+  },
+});
 
 export const getResearchOutputUpdateData = (): ResearchOutputUpdateData => ({
   ...getResearchOutputPutRequest(),
   updatedBy: 'userId',
 });
 
-export const getRestResearchOutputUpdateData =
-  (): Omit<InputResearchOutput['data'], 'addedDate'> => {
-    const { createdBy: _, addedDate: __, ...restResearchOutputData } =
-      getRestResearchOutputCreateData();
-    return {
-      doi: { iv: null },
-      accession: { iv: null },
-      rrid: { iv: null },
-      ...restResearchOutputData,
-    };
+export const getRestResearchOutputUpdateData = (): Omit<
+  InputResearchOutput['data'],
+  'addedDate'
+> => {
+  const {
+    createdBy: _,
+    addedDate: __,
+    ...restResearchOutputData
+  } = getRestResearchOutputCreateData();
+  return {
+    doi: { iv: null },
+    accession: { iv: null },
+    rrid: { iv: null },
+    ...restResearchOutputData,
   };
+};

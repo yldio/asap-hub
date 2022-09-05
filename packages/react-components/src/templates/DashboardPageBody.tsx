@@ -9,12 +9,7 @@ import {
 } from '@asap-hub/routing';
 import { TeamRole, UserResponse } from '@asap-hub/model';
 
-import {
-  PagesSection,
-  NewsSection,
-  HelpSection,
-  RemindersCard,
-} from '../organisms';
+import { NewsSection, HelpSection, RemindersCard } from '../organisms';
 import { perRem } from '../pixels';
 import { Card, Paragraph, Link, Headline2 } from '../atoms';
 import { lead } from '..';

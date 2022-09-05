@@ -22,6 +22,17 @@ type AppMutations {
     """The status for the content."""
     status: String!
   ): Dashboard!
+  """Change a Projects content."""
+  changeProjectsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): Projects!
   """Change a Users content."""
   changeUsersContent(
     """The timestamp when the status should be changed."""
@@ -55,6 +66,17 @@ type AppMutations {
     """The initial status."""
     status: String
   ): Dashboard!
+  """Creates an Projects content."""
+  createProjectsContent(
+    """The data for the content."""
+    data: ProjectsDataInputDto!
+    """The optional custom content ID."""
+    id: String
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): Projects!
   """Creates an Users content."""
   createUsersContent(
     """The data for the content."""
@@ -84,6 +106,13 @@ type AppMutations {
     """The id of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
+  """Delete an Projects content."""
+  deleteProjectsContent(
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The id of the content (usually GUID)."""
+    id: String!
+  ): EntitySavedResultDto!
   """Delete an Users content."""
   deleteUsersContent(
     """The expected version."""
@@ -107,6 +136,15 @@ type AppMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Dashboard!
+  """Patch an Projects content by id."""
+  patchProjectsContent(
+    """The data for the content."""
+    data: ProjectsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): Projects!
   """Patch an Users content by id."""
   patchUsersContent(
     """The data for the content."""
@@ -136,6 +174,17 @@ type AppMutations {
     """The status for the content."""
     status: String!
   ): Dashboard! @deprecated(reason: "Use 'changeDashboardContent' instead")
+  """Publish a Projects content."""
+  publishProjectsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): Projects! @deprecated(reason: "Use 'changeProjectsContent' instead")
   """Publish a Users content."""
   publishUsersContent(
     """The timestamp when the status should be changed."""
@@ -167,6 +216,15 @@ type AppMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Dashboard!
+  """Update an Projects content by id."""
+  updateProjectsContent(
+    """The data for the content."""
+    data: ProjectsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): Projects!
   """Update an Users content by id."""
   updateUsersContent(
     """The data for the content."""
@@ -200,6 +258,21 @@ type AppMutations {
     """The initial status."""
     status: String
   ): Dashboard!
+  """Upsert an Projects content by id."""
+  upsertProjectsContent(
+    """The data for the content."""
+    data: ProjectsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): Projects!
   """Upsert an Users content by id."""
   upsertUsersContent(
     """The data for the content."""
@@ -246,6 +319,13 @@ type AppQueries {
     """The optional version of the content to retrieve an older instance (not cached)."""
     version: Int
   ): Dashboard
+  """Find an Projects content by id."""
+  findProjectsContent(
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The optional version of the content to retrieve an older instance (not cached)."""
+    version: Int
+  ): Projects
   """Find an Users content by id."""
   findUsersContent(
     """The ID of the object (usually GUID)."""
@@ -308,6 +388,32 @@ type AppQueries {
     """Optional number of contents to take."""
     top: Int
   ): DashboardResultDto
+  """Query Projects content items."""
+  queryProjectsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Projects!]
+  """Query Projects content items with total count."""
+  queryProjectsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): ProjectsResultDto
   """Query Users content items."""
   queryUsersContents(
     """Optional OData filter."""
@@ -522,6 +628,32 @@ type Dashboard implements Content {
     """Optional number of contents to take."""
     top: Int
   ): DashboardResultDto
+  """Query Projects content items."""
+  referencesProjectsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Projects!]
+  """Query Projects content items with total count."""
+  referencesProjectsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): ProjectsResultDto
   """Query Users content items."""
   referencesUsersContents(
     """Optional OData filter."""
@@ -658,7 +790,7 @@ input DashboardDataNewsInputDto {
   iv: [String!]
 }
 
-union DashboardDataNewsUnionDto = Dashboard | Users | WorkingGroups
+union DashboardDataNewsUnionDto = Dashboard | Projects | Users | WorkingGroups
 
 """The structure of the Where to Start field of the Dashboard content type."""
 type DashboardDataPagesDto {
@@ -670,7 +802,7 @@ input DashboardDataPagesInputDto {
   iv: [String!]
 }
 
-union DashboardDataPagesUnionDto = Dashboard | Users | WorkingGroups
+union DashboardDataPagesUnionDto = Dashboard | Projects | Users | WorkingGroups
 
 """The structure of the flat Dashboard data type."""
 type DashboardFlatDataDto {
@@ -699,6 +831,231 @@ scalar Instant
 scalar JsonScalar
 
 scalar Long
+
+"""The structure of a Projects content type."""
+type Projects implements Content {
+  """The timestamp when the object was created."""
+  created: Instant!
+  """The user who created the object."""
+  createdBy: String!
+  """The user who created the object."""
+  createdByUser: User!
+  """The data of the content."""
+  data: ProjectsDataDto!
+  """The edit token."""
+  editToken: String
+  """The flat data of the content."""
+  flatData: ProjectsFlatDataDto!
+  """The ID of the object (usually GUID)."""
+  id: String!
+  """The timestamp when the object was updated the last time."""
+  lastModified: Instant!
+  """The user who updated the object the last time."""
+  lastModifiedBy: String!
+  """The user who updated the object the last time."""
+  lastModifiedByUser: User!
+  """The new status of the content."""
+  newStatus: String
+  """The status color of the content."""
+  newStatusColor: String
+  """Query Users content items."""
+  referencesUsersContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Users!]
+  """Query Users content items with total count."""
+  referencesUsersContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): UsersResultDto
+  """Query Dashboard content items."""
+  referencingDashboardContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Dashboard!]
+  """Query Dashboard content items with total count."""
+  referencingDashboardContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): DashboardResultDto
+  """Query Users content items."""
+  referencingUsersContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Users!]
+  """Query Users content items with total count."""
+  referencingUsersContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): UsersResultDto
+  """The status of the content."""
+  status: String!
+  """The status color of the content."""
+  statusColor: String!
+  """The URL to the content."""
+  url: String!
+  """The version of the objec."""
+  version: Int!
+}
+
+"""The structure of the Projects data type."""
+type ProjectsDataDto {
+  endDate: ProjectsDataEndDateDto
+  members: ProjectsDataMembersDto
+  projectProposal: ProjectsDataProjectProposalDto
+  startDate: ProjectsDataStartDateDto
+  status: ProjectsDataStatusDto
+  title: ProjectsDataTitleDto
+}
+
+"""The structure of the End Date field of the Projects content type."""
+type ProjectsDataEndDateDto {
+  iv: Instant
+}
+
+"""The structure of the End Date field of the Projects content input type."""
+input ProjectsDataEndDateInputDto {
+  iv: Instant
+}
+
+"""The structure of the Projects data input type."""
+input ProjectsDataInputDto {
+  endDate: ProjectsDataEndDateInputDto
+  members: ProjectsDataMembersInputDto
+  projectProposal: ProjectsDataProjectProposalInputDto
+  startDate: ProjectsDataStartDateInputDto
+  status: ProjectsDataStatusInputDto
+  title: ProjectsDataTitleInputDto
+}
+
+"""The structure of the Members nested schema."""
+type ProjectsDataMembersChildDto {
+  user: [Users!]
+}
+
+"""The structure of the Members nested schema."""
+input ProjectsDataMembersChildInputDto {
+  user: [String!]
+}
+
+"""The structure of the Members field of the Projects content type."""
+type ProjectsDataMembersDto {
+  iv: [ProjectsDataMembersChildDto!]
+}
+
+"""The structure of the Members field of the Projects content input type."""
+input ProjectsDataMembersInputDto {
+  iv: [ProjectsDataMembersChildInputDto!]
+}
+
+"""The structure of the Project Proposal field of the Projects content type."""
+type ProjectsDataProjectProposalDto {
+  """External link for a project proposal"""
+  iv: String
+}
+
+"""The structure of the Project Proposal field of the Projects content input type."""
+input ProjectsDataProjectProposalInputDto {
+  """External link for a project proposal"""
+  iv: String
+}
+
+"""The structure of the Start Date field of the Projects content type."""
+type ProjectsDataStartDateDto {
+  iv: Instant
+}
+
+"""The structure of the Start Date field of the Projects content input type."""
+input ProjectsDataStartDateInputDto {
+  iv: Instant
+}
+
+"""The structure of the Status field of the Projects content type."""
+type ProjectsDataStatusDto {
+  iv: String
+}
+
+"""The structure of the Status field of the Projects content input type."""
+input ProjectsDataStatusInputDto {
+  iv: String
+}
+
+"""The structure of the Title field of the Projects content type."""
+type ProjectsDataTitleDto {
+  iv: String
+}
+
+"""The structure of the Title field of the Projects content input type."""
+input ProjectsDataTitleInputDto {
+  iv: String
+}
+
+"""The structure of the flat Projects data type."""
+type ProjectsFlatDataDto {
+  endDate: Instant
+  members: [ProjectsDataMembersChildDto!]
+  """External link for a project proposal"""
+  projectProposal: String
+  startDate: Instant
+  status: String
+  title: String
+}
+
+"""List of Projects items and total count."""
+type ProjectsResultDto {
+  """The contents."""
+  items: [Projects!]
+  """The total count of  contents."""
+  total: Int!
+}
 
 """A user that created or modified a content or asset."""
 type User {
@@ -762,6 +1119,32 @@ type Users implements Content {
     """Optional number of contents to take."""
     top: Int
   ): DashboardResultDto
+  """Query Projects content items."""
+  referencesProjectsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Projects!]
+  """Query Projects content items with total count."""
+  referencesProjectsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): ProjectsResultDto
   """Query Users content items."""
   referencesUsersContents(
     """Optional OData filter."""
@@ -840,6 +1223,32 @@ type Users implements Content {
     """Optional number of contents to take."""
     top: Int
   ): DashboardResultDto
+  """Query Projects content items."""
+  referencingProjectsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Projects!]
+  """Query Projects content items with total count."""
+  referencingProjectsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): ProjectsResultDto
   """Query Users content items."""
   referencingUsersContents(
     """Optional OData filter."""
@@ -1142,7 +1551,7 @@ input UsersDataLabsInputDto {
   iv: [String!]
 }
 
-union UsersDataLabsUnionDto = Dashboard | Users | WorkingGroups
+union UsersDataLabsUnionDto = Dashboard | Projects | Users | WorkingGroups
 
 """The structure of the Last Modified Date field of the Users content type."""
 type UsersDataLastModifiedDateDto {

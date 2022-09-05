@@ -12,6 +12,14 @@ import {
   Event,
 } from '@asap-hub/squidex';
 import { Chance } from 'chance';
+import {
+  EventHappeningNowReminder,
+  EventHappeningTodayReminder,
+  FetchRemindersOptions,
+  ResearchOutputCreateDataObject,
+  ResearchOutputPublishedReminder,
+  UserCreateDataObject,
+} from '@asap-hub/model';
 import { appName, baseUrl } from '../../src/config';
 import { ReminderSquidexDataProvider } from '../../src/data-providers/reminders.data-provider';
 import { ResearchOutputSquidexDataProvider } from '../../src/data-providers/research-outputs.data-provider';
@@ -22,14 +30,6 @@ import { getResearchOutputCreateDataObject } from '../fixtures/research-output.f
 import { getTeamCreateDataObject } from '../fixtures/teams.fixtures';
 import { getUserCreateDataObject } from '../fixtures/users.fixtures';
 import { createRandomOrcid } from '../helpers/users';
-import {
-  EventHappeningNowReminder,
-  EventHappeningTodayReminder,
-  FetchRemindersOptions,
-  ResearchOutputCreateDataObject,
-  ResearchOutputPublishedReminder,
-  UserCreateDataObject,
-} from '@asap-hub/model';
 import Events from '../../src/controllers/events';
 import { getEventRestResponse } from '../fixtures/events.fixtures';
 import Calendars from '../../src/controllers/calendars';
@@ -309,8 +309,8 @@ describe('Reminders', () => {
 
       // requesting reminders for the user based in LA where 5AM UTC is 10PM the previous day
       const timezone = 'America/Los_Angeles';
-      const fetchRemindersOptions = { userId, timezone };
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
+      const fetchRemindersOpts = { userId, timezone };
+      const reminders = await reminderDataProvider.fetch(fetchRemindersOpts);
 
       expect(reminders).toEqual({
         total: 0,

@@ -132,12 +132,17 @@ describe('ResearchOutputs controller', () => {
         new GenericError(),
       );
 
-      expect(
+      await expect(
         researchOutputs.create(getResearchOutputCreateData()),
       ).rejects.toThrow(GenericError);
     });
 
     test('Should create the new research output and return it', async () => {
+      const mockDate = new Date('2010-01-01');
+      const spy = jest
+        .spyOn(global, 'Date')
+       .mockImplementation(() => mockDate as unknown as string)
+      
       const researchOutputCreateData = getResearchOutputCreateData();
       const researchOutputId = 'research-output-id-1';
       researchOutputDataProviderMock.create.mockResolvedValueOnce(
@@ -150,9 +155,11 @@ describe('ResearchOutputs controller', () => {
 
       const researchOutputCreateDataObject =
         getResearchOutputCreateDataObject();
-      expect(researchOutputDataProviderMock.create).toBeCalledWith(
-        researchOutputCreateDataObject,
-      );
+      expect(researchOutputDataProviderMock.create).toBeCalledWith({
+        ...researchOutputCreateDataObject,
+        addedDate: mockDate.toISOString()
+      });
+      spy.mockRestore();
     });
 
     describe('Validating uniqueness', () => {
@@ -445,7 +452,7 @@ describe('ResearchOutputs controller', () => {
           expect.objectContaining({
             authors: [
               {
-                externalAuthorId: externalAuthorId,
+                externalAuthorId,
               },
             ],
           }),
@@ -478,7 +485,7 @@ describe('ResearchOutputs controller', () => {
         new GenericError(),
       );
 
-      expect(
+      await expect(
         researchOutputs.update(researchOutputId, getResearchOutputUpdateData()),
       ).rejects.toThrow(GenericError);
     });
@@ -488,7 +495,7 @@ describe('ResearchOutputs controller', () => {
         new NotFoundError(),
       );
 
-      expect(
+      await expect(
         researchOutputs.update(researchOutputId, getResearchOutputUpdateData()),
       ).rejects.toThrow(NotFoundError);
     });
@@ -806,7 +813,7 @@ describe('ResearchOutputs controller', () => {
           expect.objectContaining({
             authors: [
               {
-                externalAuthorId: externalAuthorId,
+                externalAuthorId,
               },
             ],
           }),

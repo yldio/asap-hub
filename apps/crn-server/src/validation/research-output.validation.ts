@@ -78,7 +78,6 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       asapFunded: { type: 'boolean', nullable: true },
       sharingStatus: { type: 'string' },
       usedInPublication: { type: 'boolean', nullable: true },
-      addedDate: { type: 'string' },
       publishDate: { type: 'string', format: 'date-time', nullable: true },
       labs: {
         type: 'array',
@@ -138,7 +137,6 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       'tags',
       'title',
       'sharingStatus',
-      'addedDate',
       'teams',
       'methods',
       'organisms',

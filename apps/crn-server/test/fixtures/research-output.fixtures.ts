@@ -282,7 +282,7 @@ export const getResearchOutputCreateDataObject =
 
 export const getResearchOutputUpdateDataObject =
   (): ResearchOutputUpdateDataObject => {
-    const { createdBy: _, ...researchOutputCreateDataObject } =
+    const { createdBy: _, addedDate: __, ...researchOutputCreateDataObject } =
       getResearchOutputCreateDataObject();
 
     return {
@@ -292,13 +292,13 @@ export const getResearchOutputUpdateDataObject =
   };
 
 export const getRestResearchOutputCreateData =
-  (): InputResearchOutput['data'] => ({
+  (addedDate?: string): InputResearchOutput['data'] => ({
     documentType: { iv: 'Bioinformatics' },
     link: { iv: 'http://a.link' },
     title: { iv: 'Test Proposal 1234' },
     asapFunded: { iv: 'Yes' },
     sharingStatus: { iv: 'Network Only' },
-    addedDate: { iv: '2021-05-21T13:18:31Z' },
+    addedDate: { iv: addedDate || '2021-05-21T13:18:31Z' },
     publishDate: { iv: '2021-05-21T13:18:31Z' },
     description: { iv: 'Text' },
     tags: { iv: ['tag', 'test'] },
@@ -342,8 +342,8 @@ export const getResearchOutputUpdateData = (): ResearchOutputUpdateData => ({
 });
 
 export const getRestResearchOutputUpdateData =
-  (): InputResearchOutput['data'] => {
-    const { createdBy, ...restResearchOutputData } =
+  (): Omit<InputResearchOutput['data'], 'addedDate'> => {
+    const { createdBy: _, addedDate: __, ...restResearchOutputData } =
       getRestResearchOutputCreateData();
     return {
       doi: { iv: null },

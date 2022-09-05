@@ -221,9 +221,10 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   organismIds: string[];
   subtypeId?: string;
   teamIds: string[];
+  addedDate?: string;
 };
 
-export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
+export type ResearchOutputUpdateDataObject = Omit<ResearchOutputCoreObject, 'addedDate'> & {
   authors: AuthorUpsertDataObject[];
   environmentIds: string[];
   labIds: string[];

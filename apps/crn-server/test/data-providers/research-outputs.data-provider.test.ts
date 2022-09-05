@@ -848,12 +848,13 @@ describe('ResearchOutputs data provider', () => {
         const researchOutputRequest = getResearchOutputCreateDataObject();
         const teamId = researchOutputRequest.teamIds[0];
         const researchOutputId = 'created-output-id';
+        const now = Date.now().toString();
 
         nock(baseUrl)
           // Create the ResearchOutput
           .post(
             `/api/content/${appName}/research-outputs?publish=true`,
-            getRestResearchOutputCreateData(),
+            getRestResearchOutputCreateData(now),
           )
           .reply(201, { id: researchOutputId })
           .get(`/api/content/${appName}/teams/${teamId}`)
@@ -864,9 +865,8 @@ describe('ResearchOutputs data provider', () => {
             outputs: { iv: ['output-1', researchOutputId] },
           })
           .reply(200);
-
         const result = await researchOutputDataProvider.create(
-          researchOutputRequest,
+          {...researchOutputRequest, addedDate: now },
         );
         expect(result).toEqual(researchOutputId);
       });

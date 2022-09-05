@@ -34,7 +34,7 @@ const expandableTextStyles = css({
   WebkitTextFillColor: 'transparent',
   backgroundClip: 'text',
   textFillColor: 'transparent',
-  transition: 'max-height 300ms ease-in-out, background 300ms ease-in',
+  transition: 'max-height 300ms ease-in-out',
 });
 
 const buttonContainerStyles = css({

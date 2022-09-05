@@ -30,7 +30,7 @@ export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
 export const getLinkColors = (
   colors: Theme['colors'],
   themeVariant: ThemeVariant,
-) =>
+): SerializedStyles =>
   colors?.primary500
     ? css({ color: colors.primary500.rgba })
     : themeStyles[themeVariant];

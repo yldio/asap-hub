@@ -31,6 +31,116 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
+      },
+      {
+        "name": "members",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "Members",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        },
+        "nested": [
+          {
+            "name": "user",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "References",
+              "minItems": 1,
+              "maxItems": 1,
+              "allowDuplicates": false,
+              "resolveReference": false,
+              "mustBePublished": false,
+              "editor": "List",
+              "schemaIds": ["users"],
+              "label": "User",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          }
+        ]
+      },
+      {
+        "name": "startdate",
+        "ishidden": false,
+        "islocked": false,
+        "isdisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldtype": "datetime",
+          "editor": "datetime",
+          "label": "start date",
+          "placeholder": "",
+          "isrequired": true,
+          "isrequiredonpublish": false,
+          "ishalfwidth": true
+        }
+      },
+      {
+        "name": "enddate",
+        "ishidden": false,
+        "islocked": false,
+        "isdisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldtype": "datetime",
+          "editor": "datetime",
+          "label": "end date",
+          "placeholder": "",
+          "isrequired": false,
+          "isrequiredonpublish": false,
+          "ishalfwidth": true
+        }
+      },
+      {
+        "name": "status",
+        "ishidden": false,
+        "islocked": false,
+        "isdisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldtype": "string",
+          "defaultvalue": "active",
+          "allowedvalues": ["active", "inactive", "completed"],
+          "isunique": false,
+          "inlineeditable": true,
+          "contenttype": "unspecified",
+          "editor": "dropdown",
+          "label": "status",
+          "isrequired": true,
+          "isrequiredonpublish": false,
+          "ishalfwidth": true
+        }
+      },
+      {
+        "name": "projectProposal",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+          "patternMessage": "URL must start with http:// or https://",
+          "isUnique": true,
+          "inlineEditable": true,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Project Proposal",
+          "hints": "External link for a project proposal",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
       }
     ],
     "previewUrls": {},

@@ -10,7 +10,10 @@
       "label": "Projects",
       "validateOnPublish": false
     },
-    "scripts": {},
+    "scripts": {
+      "create": "if(ctx.data.endDate.iv && new Date(ctx.data.startDate.iv) > new Date(ctx.data.endDate.iv)) {\n    reject('Start date date cannot be greater than end date')\n}",
+      "update": "if(ctx.data.endDate.iv && new Date(ctx.data.startDate.iv) > new Date(ctx.data.endDate.iv)) {\n    reject('Start date date cannot be greater than end date')\n}"
+    },
     "fieldsInReferences": [],
     "fieldsInLists": [],
     "fields": [

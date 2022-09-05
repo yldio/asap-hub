@@ -8,7 +8,6 @@ import {
   dashboard,
 } from '@asap-hub/routing';
 import { TeamRole, UserResponse } from '@asap-hub/model';
-import { isEnabled } from '@asap-hub/flags';
 
 import {
   PagesSection,
@@ -42,11 +41,10 @@ const infoStyles = css({
   lineHeight: `${24 / perRem} em`,
 });
 
-type DashboardPageBodyProps = Omit<
-  ComponentProps<typeof PagesSection>,
-  'title'
+type DashboardPageBodyProps = Pick<
+  ComponentProps<typeof RemindersCard>,
+  'reminders'
 > &
-  Pick<ComponentProps<typeof RemindersCard>, 'reminders'> &
   Omit<ComponentProps<typeof NewsSection>, 'title'> & {
     readonly userId: string;
     readonly teamId?: string;
@@ -57,7 +55,6 @@ type DashboardPageBodyProps = Omit<
 const publishRoles: TeamRole[] = ['ASAP Staff', 'Project Manager'];
 
 const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
-  pages,
   news,
   userId,
   teamId,
@@ -110,22 +107,17 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           />
         </div>
       )}
-      {isEnabled('REMINDERS') && (
-        <div>
-          <Headline2 styleAsHeading={3}>Reminders</Headline2>
-          <div css={infoStyles}>
-            We will remind you of the most important tasks you need to do.
-          </div>
-          <RemindersCard
-            reminders={reminders}
-            limit={3}
-            canPublish={canPublish}
-          />
+      <div>
+        <Headline2 styleAsHeading={3}>Reminders</Headline2>
+        <div css={infoStyles}>
+          We will remind you of the most important tasks you need to do.
         </div>
-      )}
-      {pages.length ? (
-        <PagesSection title="Not sure where to start?" pages={pages} />
-      ) : null}
+        <RemindersCard
+          reminders={reminders}
+          limit={3}
+          canPublish={canPublish}
+        />
+      </div>
       {news.length ? (
         <NewsSection title="Latest News from ASAP" news={news} />
       ) : null}

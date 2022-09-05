@@ -7,7 +7,7 @@ import {
 } from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
-import { useRef, useState } from 'react';
+import React, { useState } from 'react';
 
 const { rem } = pixels;
 
@@ -60,10 +60,9 @@ const expandedButtonIcon = css({
 
 const ExpandableText: React.FC = ({ children }) => {
   const [expanded, setExpanded] = useState(false);
-  const textElement = useRef<HTMLParagraphElement>(null);
-
+  const textElement = React.useRef<HTMLParagraphElement>(null);
   const showToggle =
-    (textElement.current?.scrollHeight || 0) > expandableMaxHeight;
+    (textElement?.current?.scrollHeight || 0) > expandableMaxHeight;
 
   return (
     <div>

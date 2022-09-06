@@ -19,7 +19,7 @@ export type ProjectDataObject = {
   startDate: string;
   endDate?: string;
   status: ProjectStatus;
-  projectProposal?: string;
+  projectProposalUrl?: string;
   members: ProjectMember[];
 };
 

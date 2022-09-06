@@ -110,7 +110,7 @@ export function parseProjectToDataObject(
     startDate: project.flatData.startDate || '',
     endDate: project.flatData.endDate || undefined,
     status: project.flatData.status,
-    projectProposal: project.flatData.projectProposal || undefined,
+    projectProposalUrl: project.flatData.projectProposal || undefined,
     members,
   };
 }

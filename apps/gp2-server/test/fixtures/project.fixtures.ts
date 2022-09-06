@@ -14,7 +14,7 @@ export const getProjectDataObject = (): gp2.ProjectDataObject => ({
   startDate: '2020-07-06',
   endDate: '2021-12-28',
   status: 'Completed',
-  projectProposal: 'http://a-proposal',
+  projectProposalUrl: 'http://a-proposal',
   members: [],
 });
 

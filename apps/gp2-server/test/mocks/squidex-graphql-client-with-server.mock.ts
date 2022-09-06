@@ -10,6 +10,7 @@ import {
   print,
 } from 'graphql';
 import { getSquidexGraphqlDashboard } from '../fixtures/dashboard.fixtures';
+import { getGraphQLProject } from '../fixtures/project.fixtures';
 import { getGraphQLUser } from '../fixtures/user.fixtures';
 import { getGraphQLWorkingGroup } from '../fixtures/working-group.fixtures';
 
@@ -35,39 +36,26 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     UsersResultDto: resultDto,
     WorkingGroups: () => getGraphQLWorkingGroup(),
     WorkingGroupsResultDto: resultDto,
+    Projects: () => getGraphQLProject(),
+    ProjectsResultDto: resultDto,
   };
   const store = createMockStore({
     schema,
     mocks,
     typePolicies: {
-      ExternalAuthors: {
+      WorkingGroups: {
         keyFieldName: false,
       },
-      UsersDataTeamsChildDto: {
+      WorkingGroupsDataMembersChildDto: {
         keyFieldName: false,
       },
-      Teams: {
+      Projects: {
         keyFieldName: false,
       },
-      Groups: {
-        keyFieldName: false,
-      },
-      Calendars: {
-        keyFieldName: false,
-      },
-      Events: {
-        keyFieldName: false,
-      },
-      GroupsDataLeadersChildDto: {
-        keyFieldName: false,
-      },
-      GroupsFlatDataDto: {
+      ProjectsDataMembersChildDto: {
         keyFieldName: false,
       },
       Users: {
-        keyFieldName: false,
-      },
-      ResearchTags: {
         keyFieldName: false,
       },
     },

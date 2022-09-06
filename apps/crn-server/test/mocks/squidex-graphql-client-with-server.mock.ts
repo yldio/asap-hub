@@ -13,13 +13,13 @@ import { getSquidexGraphqlCalendar } from '../fixtures/calendars.fixtures';
 import { getSquidexGraphqlDashboard } from '../fixtures/dashboard.fixtures';
 import { getSquidexGraphqlDiscover } from '../fixtures/discover.fixtures';
 import { getSquidexGraphqlEvent } from '../fixtures/events.fixtures';
+import { getGraphQLExternalAuthor } from '../fixtures/external-authors.fixtures';
 import { getSquidexGraphqlGroup } from '../fixtures/groups.fixtures';
 import { getSquidexGraphqlLab } from '../fixtures/labs.fixtures';
 import { getSquidexGraphqlResearchOutput } from '../fixtures/research-output.fixtures';
+import { getSquidexGraphqlResearchTags } from '../fixtures/research-tag.fixtures';
 import { getSquidexGraphqlTeam } from '../fixtures/teams.fixtures';
 import { getGraphQLUser } from '../fixtures/users.fixtures';
-import { getGraphQLExternalAuthor } from '../fixtures/external-authors.fixtures';
-import { getSquidexGraphqlResearchTags } from '../fixtures/research-tag.fixtures';
 
 export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
   const schema = loadSchemaSync(

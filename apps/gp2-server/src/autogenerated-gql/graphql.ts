@@ -1965,6 +1965,93 @@ export type WorkingGroupsResultDto = {
   total: Scalars['Int'];
 };
 
+export type ProjectContentFragment = Pick<Projects, 'id'> & {
+  flatData: Pick<
+    ProjectsFlatDataDto,
+    'title' | 'startDate' | 'endDate' | 'status' | 'projectProposal'
+  > & {
+    members: Maybe<
+      Array<{
+        user: Maybe<
+          Array<
+            Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+              flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
+                avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+              };
+            }
+          >
+        >;
+      }>
+    >;
+  };
+};
+
+export type FetchProjectQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchProjectQuery = {
+  findProjectsContent: Maybe<
+    Pick<Projects, 'id'> & {
+      flatData: Pick<
+        ProjectsFlatDataDto,
+        'title' | 'startDate' | 'endDate' | 'status' | 'projectProposal'
+      > & {
+        members: Maybe<
+          Array<{
+            user: Maybe<
+              Array<
+                Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+                  flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
+                    avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                  };
+                }
+              >
+            >;
+          }>
+        >;
+      };
+    }
+  >;
+};
+
+export type FetchProjectsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type FetchProjectsQuery = {
+  queryProjectsContentsWithTotal: Maybe<
+    Pick<ProjectsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<Projects, 'id'> & {
+            flatData: Pick<
+              ProjectsFlatDataDto,
+              'title' | 'startDate' | 'endDate' | 'status' | 'projectProposal'
+            > & {
+              members: Maybe<
+                Array<{
+                  user: Maybe<
+                    Array<
+                      Pick<
+                        Users,
+                        'id' | 'created' | 'lastModified' | 'version'
+                      > & {
+                        flatData: Pick<
+                          UsersFlatDataDto,
+                          'firstName' | 'lastName'
+                        > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                      }
+                    >
+                  >;
+                }>
+              >;
+            };
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export type UsersContentFragment = Pick<
   Users,
   'id' | 'created' | 'lastModified' | 'version'
@@ -2280,6 +2367,106 @@ export type FetchWorkingGroupsQuery = {
   >;
 };
 
+export const ProjectContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProjectContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Projects' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'projectProposal' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'members' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'created' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastModified' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'version' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'avatar' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ProjectContentFragment, unknown>;
 export const UsersContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -2559,6 +2746,108 @@ export const WorkingGroupContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<WorkingGroupContentFragment, unknown>;
+export const FetchProjectDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchProject' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findProjectsContent' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'ProjectContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ProjectContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchProjectQuery, FetchProjectQueryVariables>;
+export const FetchProjectsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchProjects' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryProjectsContentsWithTotal' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderby' },
+                value: {
+                  kind: 'StringValue',
+                  value: 'created desc',
+                  block: false,
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProjectContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ProjectContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchProjectsQuery, FetchProjectsQueryVariables>;
 export const FetchUserDocument = {
   kind: 'Document',
   definitions: [

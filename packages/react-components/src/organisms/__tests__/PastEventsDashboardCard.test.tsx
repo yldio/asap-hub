@@ -32,4 +32,5 @@ it('renders an event', () => {
   expect(screen.getByText('No presentations')).toBeVisible();
   expect(screen.getByText('Videos')).toBeVisible();
   expect(screen.getByText('Notes coming soon')).toBeVisible();
+  expect(screen.getByText('FRI, 1 JAN 1999')).toBeVisible();
 });

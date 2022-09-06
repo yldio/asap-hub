@@ -40,6 +40,10 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
   {
     type: 'object',
     properties: {
+      addedDate: {
+        type: 'string',
+        nullable: true,
+      },
       documentType: {
         type: 'string',
         enum: researchOutputDocumentTypes,

@@ -320,7 +320,6 @@ describe('/research-outputs/ route', () => {
         'tags',
         'title',
         'sharingStatus',
-        'addedDate',
         'teams',
       ])(
         'Should return a validation error when %s is missing',
@@ -648,7 +647,6 @@ describe('/research-outputs/ route', () => {
         'tags',
         'title',
         'sharingStatus',
-        'addedDate',
         'teams',
         'methods',
         'organisms',

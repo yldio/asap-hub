@@ -2,7 +2,7 @@
 
 const crossSmall = (
   <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} fill="#C2C9CE">
-    <title>Close</title>
+    <title>Cross</title>
     <path
       stroke="none"
       fillRule="evenodd"

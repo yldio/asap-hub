@@ -49,9 +49,7 @@ const Dashboard: FC<Record<string, never>> = () => {
           <Body
             {...dashboard}
             reminders={items}
-            dismissedGettingStarted={
-              user ? user.dismissedGettingStarted : undefined
-            }
+            dismissedGettingStarted={user?.dismissedGettingStarted}
             roles={roles}
             userId={id}
             teamId={teams[0]?.id}

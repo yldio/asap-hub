@@ -25,7 +25,7 @@ const gridTitleStyles = css({
 const rowTitleStyles = css({
   paddingTop: `${33 / perRem}em`,
   paddingBottom: `${15 / perRem}em`,
-  ':first-child': { paddingTop: 0 },
+  ':first-of-type': { paddingTop: 0 },
   [`@media (min-width: ${tabletScreen.min}px)`]: { display: 'none' },
 });
 

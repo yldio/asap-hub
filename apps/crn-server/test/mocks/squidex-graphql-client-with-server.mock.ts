@@ -67,31 +67,10 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     schema,
     mocks,
     typePolicies: {
-      ExternalAuthors: {
-        keyFieldName: false,
-      },
       UsersDataTeamsChildDto: {
         keyFieldName: false,
       },
       Teams: {
-        keyFieldName: false,
-      },
-      Groups: {
-        keyFieldName: false,
-      },
-      Calendars: {
-        keyFieldName: false,
-      },
-      Events: {
-        keyFieldName: false,
-      },
-      GroupsDataLeadersChildDto: {
-        keyFieldName: false,
-      },
-      GroupsFlatDataDto: {
-        keyFieldName: false,
-      },
-      Users: {
         keyFieldName: false,
       },
       ResearchTags: {

@@ -42,23 +42,6 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
   const store = createMockStore({
     schema,
     mocks,
-    typePolicies: {
-      WorkingGroups: {
-        keyFieldName: false,
-      },
-      WorkingGroupsDataMembersChildDto: {
-        keyFieldName: false,
-      },
-      Projects: {
-        keyFieldName: false,
-      },
-      ProjectsDataMembersChildDto: {
-        keyFieldName: false,
-      },
-      Users: {
-        keyFieldName: false,
-      },
-    },
   });
   const schemaWithMocks = addMocksToSchema({
     schema,

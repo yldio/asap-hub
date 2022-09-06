@@ -19,7 +19,7 @@ describe('/projects/ route', () => {
   });
 
   describe('GET /projects', () => {
-    test('Should return 200 when no working groups are found', async () => {
+    test('Should return 200 when no projects are found', async () => {
       projectControllerMock.fetch.mockResolvedValueOnce({
         total: 0,
         items: [],
@@ -51,8 +51,8 @@ describe('/projects/ route', () => {
       expect(projectControllerMock.fetch).toBeCalled();
     });
   });
-  describe('GET /project/{working_group_id}', () => {
-    test('Should return 404 when working group doesnt exist', async () => {
+  describe('GET /project/{project_id}', () => {
+    test('Should return 404 when project doesnt exist', async () => {
       projectControllerMock.fetchById.mockRejectedValueOnce(Boom.notFound());
 
       const response = await supertest(app).get('/project/123');

@@ -16,7 +16,7 @@ describe('Project controller', () => {
   });
 
   describe('Fetch', () => {
-    test('Should return the working group', async () => {
+    test('Should return the project', async () => {
       projectDataProviderMock.fetch.mockResolvedValue(
         getListProjectDataObject(),
       );
@@ -25,7 +25,7 @@ describe('Project controller', () => {
       expect(result).toEqual(getListProjectsResponse());
     });
 
-    test('Should return empty list when there are no working groups', async () => {
+    test('Should return empty list when there are no projects', async () => {
       projectDataProviderMock.fetch.mockResolvedValue({
         total: 0,
         items: [],
@@ -40,7 +40,7 @@ describe('Project controller', () => {
       jest.resetAllMocks();
     });
 
-    test('Should throw when working group is not found', async () => {
+    test('Should throw when project is not found', async () => {
       projectDataProviderMock.fetchById.mockResolvedValue(null);
 
       await expect(projectController.fetchById('not-found')).rejects.toThrow(
@@ -48,11 +48,11 @@ describe('Project controller', () => {
       );
     });
 
-    test('Should return the working group when it finds it', async () => {
+    test('Should return the project when it finds it', async () => {
       projectDataProviderMock.fetchById.mockResolvedValue(
         getProjectDataObject(),
       );
-      const result = await projectController.fetchById('working-group-id');
+      const result = await projectController.fetchById('project-id');
 
       expect(result).toEqual(getProjectResponse());
     });

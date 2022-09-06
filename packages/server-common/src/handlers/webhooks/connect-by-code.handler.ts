@@ -4,8 +4,8 @@ import { Logger, validateAuth0Request } from '../../utils';
 import { validateWebhookConnectByCodeBody } from '../../validation';
 
 export const connectByCodeHandlerFactory =
-  (
-    users: UserController,
+  <T>(
+    users: UserController<T>,
     auth0SharedSecret: string,
     logger: Logger,
   ): ((request: lambda.Request) => Promise<{ statusCode: number }>) =>

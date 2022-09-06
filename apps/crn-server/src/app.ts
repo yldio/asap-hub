@@ -221,11 +221,14 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Handlers
   const authHandler =
     libs.authHandler ||
-    authHandlerFactory(
+    authHandlerFactory<UserResponse>(
       decodeToken,
       userController.fetchByCode.bind(userController),
       userResponseCacheClient,
       logger,
+      (req, user) => {
+        req.loggedInUser = user;
+      },
     );
   const tracingHandler = tracingHandlerFactory(libs.tracer);
   const sentryTransactionIdHandler =

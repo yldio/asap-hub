@@ -1,5 +1,5 @@
-import { User } from '@asap-hub/auth';
-import { userMock } from '@asap-hub/fixtures';
+import { createUserResponse } from '@asap-hub/fixtures';
+import { UserResponse } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import { Router } from 'express';
 import supertest from 'supertest';
@@ -13,11 +13,12 @@ import { pageControllerMock } from '../mocks/page-controller.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
 
 describe('Permission middleware', () => {
-  const nonOnboardedUserMock: User = {
-    ...userMock,
+  const mockUser = createUserResponse();
+  const nonOnboardedUserMock: UserResponse = {
+    ...mockUser,
     onboarded: false,
   };
-  const userMockFactory = jest.fn<User | undefined, []>();
+  const userMockFactory = jest.fn<UserResponse | undefined, []>();
   const authHandlerMock: AuthHandler = (req, _res, next) => {
     req.loggedInUser = userMockFactory();
     next();
@@ -42,7 +43,7 @@ describe('Permission middleware', () => {
   // test the generic permission handler
   describe('Permission handler', () => {
     test('Should allow access for onboarded users', async () => {
-      userMockFactory.mockReturnValueOnce(userMock);
+      userMockFactory.mockReturnValueOnce(mockUser);
 
       const response = await supertest(appWithMockedAuth).get(
         '/route-with-permission-middleware',
@@ -80,7 +81,7 @@ describe('Permission middleware', () => {
 
     describe('Onboarded users', () => {
       beforeEach(() => {
-        userMockFactory.mockReturnValueOnce(userMock);
+        userMockFactory.mockReturnValueOnce(mockUser);
       });
 
       test('Should allow access to /groups endpoint', async () => {
@@ -124,7 +125,7 @@ describe('Permission middleware', () => {
           userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
 
           const response = await supertest(appWithMockedAuth).get(
-            `/users/${userMock.id}`,
+            `/users/${mockUser.id}`,
           );
           expect(response.status).toBe(200);
         });
@@ -141,7 +142,7 @@ describe('Permission middleware', () => {
           userControllerMock.update.mockResolvedValueOnce(getUserResponse());
 
           const response = await supertest(appWithMockedAuth)
-            .patch(`/users/${userMock.id}`)
+            .patch(`/users/${mockUser.id}`)
             .send({ jobTitle: 'CEO' });
 
           expect(response.status).toBe(200);

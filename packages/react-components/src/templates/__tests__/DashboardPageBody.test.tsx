@@ -33,6 +33,15 @@ it('renders multiple news cards', () => {
   ).toEqual(['News Title', 'Event Title']);
 });
 
+it('renders news section when there are no news', () => {
+  render(<DashboardPageBody {...props} news={[]} />);
+
+  expect(screen.queryByText('Latest news from ASAP')).not.toBeInTheDocument();
+  expect(
+    screen.getAllByRole('heading').map(({ textContent }) => textContent),
+  ).toEqual(expect.arrayContaining(['Page 1 title', 'Page 2 title']));
+});
+
 it('renders news section', () => {
   render(<DashboardPageBody {...props} />);
 

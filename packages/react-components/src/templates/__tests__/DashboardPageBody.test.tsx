@@ -25,21 +25,36 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   dismissedGettingStarted: false,
 };
 it('renders multiple news cards', () => {
-  render(<DashboardPageBody {...props} />);
+  render(
+    <DashboardPageBody
+      {...props}
+      news={[
+        {
+          id: '55724942-3408-4ad6-9a73-14b92226ffb6',
+          created: '2020-09-07T17:36:54Z',
+          title: 'News Title 1',
+          type: 'News',
+        },
+        {
+          id: '55724942-3408-4ad6-9a73-14b92226ffb77',
+          created: '2020-09-07T17:36:54Z',
+          title: 'Event Title 1',
+          type: 'Event',
+        },
+      ]}
+    />,
+  );
   expect(
     screen
       .queryAllByText(/title/i, { selector: 'h4' })
       .map(({ textContent }) => textContent),
-  ).toEqual(['News Title', 'Event Title']);
+  ).toEqual(['News Title 1', 'Event Title 1']);
 });
 
 it('renders news section when there are no news', () => {
   render(<DashboardPageBody {...props} news={[]} />);
 
   expect(screen.queryByText('Latest news from ASAP')).not.toBeInTheDocument();
-  expect(
-    screen.getAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(expect.arrayContaining(['Page 1 title', 'Page 2 title']));
 });
 
 it('renders news section', () => {

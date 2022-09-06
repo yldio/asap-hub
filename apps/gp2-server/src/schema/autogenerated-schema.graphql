@@ -732,32 +732,6 @@ type Dashboard implements Content {
     """Optional number of contents to take."""
     top: Int
   ): DashboardResultDto
-  """Query Users content items."""
-  referencingUsersContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): [Users!]
-  """Query Users content items with total count."""
-  referencingUsersContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): UsersResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -1311,16 +1285,6 @@ type Users implements Content {
   version: Int!
 }
 
-"""The structure of the Admin Notes field of the Users content type."""
-type UsersDataAdminNotesDto {
-  iv: String
-}
-
-"""The structure of the Admin Notes field of the Users content input type."""
-input UsersDataAdminNotesInputDto {
-  iv: String
-}
-
 """The structure of the Avatar field of the Users content type."""
 type UsersDataAvatarDto {
   iv: [Asset!]
@@ -1329,26 +1293,6 @@ type UsersDataAvatarDto {
 """The structure of the Avatar field of the Users content input type."""
 input UsersDataAvatarInputDto {
   iv: [String!]
-}
-
-"""The structure of the Biography field of the Users content type."""
-type UsersDataBiographyDto {
-  iv: String
-}
-
-"""The structure of the Biography field of the Users content input type."""
-input UsersDataBiographyInputDto {
-  iv: String
-}
-
-"""The structure of the City field of the Users content type."""
-type UsersDataCityDto {
-  iv: String
-}
-
-"""The structure of the City field of the Users content input type."""
-input UsersDataCityInputDto {
-  iv: String
 }
 
 """The structure of the Connections nested schema."""
@@ -1371,79 +1315,26 @@ input UsersDataConnectionsInputDto {
   iv: [UsersDataConnectionsChildInputDto!]
 }
 
-"""The structure of the Correspondence Email field of the Users content type."""
-type UsersDataContactEmailDto {
-  iv: String
-}
-
-"""The structure of the Correspondence Email field of the Users content input type."""
-input UsersDataContactEmailInputDto {
-  iv: String
-}
-
-"""The structure of the Country field of the Users content type."""
-type UsersDataCountryDto {
-  iv: String
-}
-
-"""The structure of the Country field of the Users content input type."""
-input UsersDataCountryInputDto {
-  iv: String
-}
-
 """The structure of the Degree field of the Users content type."""
 type UsersDataDegreeDto {
-  iv: String
+  iv: [degreeEnum!]
 }
 
 """The structure of the Degree field of the Users content input type."""
 input UsersDataDegreeInputDto {
-  iv: String
-}
-
-"""The structure of the Dismissed Getting Started dialog field of the Users content type."""
-type UsersDataDismissedGettingStartedDto {
-  """Use this field when the user has dismissed the getting started dialog"""
-  iv: Boolean
-}
-
-"""The structure of the Dismissed Getting Started dialog field of the Users content input type."""
-input UsersDataDismissedGettingStartedInputDto {
-  """Use this field when the user has dismissed the getting started dialog"""
-  iv: Boolean
+  iv: [degreeEnum!]
 }
 
 """The structure of the Users data type."""
 type UsersDataDto {
-  adminNotes: UsersDataAdminNotesDto
   avatar: UsersDataAvatarDto
-  biography: UsersDataBiographyDto
-  city: UsersDataCityDto
   connections: UsersDataConnectionsDto
-  contactEmail: UsersDataContactEmailDto
-  country: UsersDataCountryDto
   degree: UsersDataDegreeDto
-  dismissedGettingStarted: UsersDataDismissedGettingStartedDto
   email: UsersDataEmailDto
-  expertiseAndResourceDescription: UsersDataExpertiseAndResourceDescriptionDto
-  expertiseAndResourceTags: UsersDataExpertiseAndResourceTagsDto
   firstName: UsersDataFirstNameDto
-  institution: UsersDataInstitutionDto
-  jobTitle: UsersDataJobTitleDto
-  labs: UsersDataLabsDto
-  lastModifiedDate: UsersDataLastModifiedDateDto
   lastName: UsersDataLastNameDto
-  onboarded: UsersDataOnboardedDto
-  orcid: UsersDataOrcidDto
-  orcidLastModifiedDate: UsersDataOrcidLastModifiedDateDto
-  orcidLastSyncDate: UsersDataOrcidLastSyncDateDto
-  orcidWorks: UsersDataOrcidWorksDto
-  questions: UsersDataQuestionsDto
-  reachOut: UsersDataReachOutDto
-  researchInterests: UsersDataResearchInterestsDto
-  responsibilities: UsersDataResponsibilitiesDto
+  region: UsersDataRegionDto
   role: UsersDataRoleDto
-  social: UsersDataSocialDto
 }
 
 """The structure of the Email field of the Users content type."""
@@ -1454,26 +1345,6 @@ type UsersDataEmailDto {
 """The structure of the Email field of the Users content input type."""
 input UsersDataEmailInputDto {
   iv: String
-}
-
-"""The structure of the Expertise and Resources Description field of the Users content type."""
-type UsersDataExpertiseAndResourceDescriptionDto {
-  iv: String
-}
-
-"""The structure of the Expertise and Resources Description field of the Users content input type."""
-input UsersDataExpertiseAndResourceDescriptionInputDto {
-  iv: String
-}
-
-"""The structure of the Expertise and Resources field of the Users content type."""
-type UsersDataExpertiseAndResourceTagsDto {
-  iv: [String!]
-}
-
-"""The structure of the Expertise and Resources field of the Users content input type."""
-input UsersDataExpertiseAndResourceTagsInputDto {
-  iv: [String!]
 }
 
 """The structure of the First Name field of the Users content type."""
@@ -1488,33 +1359,13 @@ input UsersDataFirstNameInputDto {
 
 """The structure of the Users data input type."""
 input UsersDataInputDto {
-  adminNotes: UsersDataAdminNotesInputDto
   avatar: UsersDataAvatarInputDto
-  biography: UsersDataBiographyInputDto
-  city: UsersDataCityInputDto
   connections: UsersDataConnectionsInputDto
-  contactEmail: UsersDataContactEmailInputDto
-  country: UsersDataCountryInputDto
   degree: UsersDataDegreeInputDto
-  dismissedGettingStarted: UsersDataDismissedGettingStartedInputDto
   email: UsersDataEmailInputDto
-  expertiseAndResourceDescription: UsersDataExpertiseAndResourceDescriptionInputDto
-  expertiseAndResourceTags: UsersDataExpertiseAndResourceTagsInputDto
   firstName: UsersDataFirstNameInputDto
-  institution: UsersDataInstitutionInputDto
-  jobTitle: UsersDataJobTitleInputDto
-  labs: UsersDataLabsInputDto
-  lastModifiedDate: UsersDataLastModifiedDateInputDto
   lastName: UsersDataLastNameInputDto
-  onboarded: UsersDataOnboardedInputDto
-  orcid: UsersDataOrcidInputDto
-  orcidLastModifiedDate: UsersDataOrcidLastModifiedDateInputDto
-  orcidLastSyncDate: UsersDataOrcidLastSyncDateInputDto
-  orcidWorks: UsersDataOrcidWorksInputDto
-  questions: UsersDataQuestionsInputDto
-  reachOut: UsersDataReachOutInputDto
-  researchInterests: UsersDataResearchInterestsInputDto
-  responsibilities: UsersDataResponsibilitiesInputDto
+  region: UsersDataRegionInputDto
   role: UsersDataRoleInputDto
   social: UsersDataSocialInputDto
 }
@@ -1573,218 +1424,39 @@ input UsersDataLastNameInputDto {
   iv: String
 }
 
-"""The structure of the Onboarding complete field of the Users content type."""
-type UsersDataOnboardedDto {
-  """Use this to allow the user to see the full Hub and skip profile completion"""
-  iv: Boolean
-}
-
-"""The structure of the Onboarding complete field of the Users content input type."""
-input UsersDataOnboardedInputDto {
-  """Use this to allow the user to see the full Hub and skip profile completion"""
-  iv: Boolean
-}
-
-"""The structure of the ORCID field of the Users content type."""
-type UsersDataOrcidDto {
-  """Mandatory for grantees. They cannot publish profile without an ORCID. ORCIDs cannot be repeated on the Hub"""
+"""The structure of the Region field of the Users content type."""
+type UsersDataRegionDto {
   iv: String
 }
 
-"""The structure of the ORCID field of the Users content input type."""
-input UsersDataOrcidInputDto {
-  """Mandatory for grantees. They cannot publish profile without an ORCID. ORCIDs cannot be repeated on the Hub"""
+"""The structure of the Region field of the Users content input type."""
+input UsersDataRegionInputDto {
   iv: String
 }
 
-"""The structure of the ORCID Last Modified Date field of the Users content type."""
-type UsersDataOrcidLastModifiedDateDto {
-  iv: String
-}
-
-"""The structure of the ORCID Last Modified Date field of the Users content input type."""
-input UsersDataOrcidLastModifiedDateInputDto {
-  iv: String
-}
-
-"""The structure of the ORCID Last Sync Date field of the Users content type."""
-type UsersDataOrcidLastSyncDateDto {
-  iv: String
-}
-
-"""The structure of the ORCID Last Sync Date field of the Users content input type."""
-input UsersDataOrcidLastSyncDateInputDto {
-  iv: String
-}
-
-"""The structure of the ORCID Works nested schema."""
-type UsersDataOrcidWorksChildDto {
-  doi: String
-  id: String
-  lastModifiedDate: String
-  publicationDate(
-    """The path to the json value."""
-    path: String
-  ): JsonScalar
-  title: String
-  type: String
-}
-
-"""The structure of the ORCID Works nested schema."""
-input UsersDataOrcidWorksChildInputDto {
-  doi: String
-  id: String
-  lastModifiedDate: String
-  publicationDate: JsonScalar
-  title: String
-  type: String
-}
-
-"""The structure of the ORCID Works field of the Users content type."""
-type UsersDataOrcidWorksDto {
-  iv: [UsersDataOrcidWorksChildDto!]
-}
-
-"""The structure of the ORCID Works field of the Users content input type."""
-input UsersDataOrcidWorksInputDto {
-  iv: [UsersDataOrcidWorksChildInputDto!]
-}
-
-"""The structure of the Open Questions nested schema."""
-type UsersDataQuestionsChildDto {
-  question: String
-}
-
-"""The structure of the Open Questions nested schema."""
-input UsersDataQuestionsChildInputDto {
-  question: String
-}
-
-"""The structure of the Open Questions field of the Users content type."""
-type UsersDataQuestionsDto {
-  iv: [UsersDataQuestionsChildDto!]
-}
-
-"""The structure of the Open Questions field of the Users content input type."""
-input UsersDataQuestionsInputDto {
-  iv: [UsersDataQuestionsChildInputDto!]
-}
-
-"""The structure of the Reach Out field of the Users content type."""
-type UsersDataReachOutDto {
-  """Reach out reasons (only relevant for "Staff" users)"""
-  iv: String
-}
-
-"""The structure of the Reach Out field of the Users content input type."""
-input UsersDataReachOutInputDto {
-  """Reach out reasons (only relevant for "Staff" users)"""
-  iv: String
-}
-
-"""The structure of the Research Interests field of the Users content type."""
-type UsersDataResearchInterestsDto {
-  iv: String
-}
-
-"""The structure of the Research Interests field of the Users content input type."""
-input UsersDataResearchInterestsInputDto {
-  iv: String
-}
-
-"""The structure of the Responsibilities field of the Users content type."""
-type UsersDataResponsibilitiesDto {
-  iv: String
-}
-
-"""The structure of the Responsibilities field of the Users content input type."""
-input UsersDataResponsibilitiesInputDto {
-  iv: String
-}
-
-"""The structure of the ASAP Hub Role field of the Users content type."""
+"""The structure of the GP2 Hub Role field of the Users content type."""
 type UsersDataRoleDto {
-  """Role on the ASAP Hub"""
+  """Role on the GP2 Hub"""
   iv: String
 }
 
-"""The structure of the ASAP Hub Role field of the Users content input type."""
+"""The structure of the GP2 Hub Role field of the Users content input type."""
 input UsersDataRoleInputDto {
-  """Role on the ASAP Hub"""
+  """Role on the GP2 Hub"""
   iv: String
-}
-
-"""The structure of the Social Links nested schema."""
-type UsersDataSocialChildDto {
-  github: String
-  googleScholar: String
-  linkedIn: String
-  researchGate: String
-  researcherId: String
-  twitter: String
-  website1: String
-  website2: String
-}
-
-"""The structure of the Social Links nested schema."""
-input UsersDataSocialChildInputDto {
-  github: String
-  googleScholar: String
-  linkedIn: String
-  researchGate: String
-  researcherId: String
-  twitter: String
-  website1: String
-  website2: String
-}
-
-"""The structure of the Social Links field of the Users content type."""
-type UsersDataSocialDto {
-  iv: [UsersDataSocialChildDto!]
-}
-
-"""The structure of the Social Links field of the Users content input type."""
-input UsersDataSocialInputDto {
-  iv: [UsersDataSocialChildInputDto!]
 }
 
 """The structure of the flat Users data type."""
 type UsersFlatDataDto {
-  adminNotes: String
   avatar: [Asset!]
-  biography: String
-  city: String
   connections: [UsersDataConnectionsChildDto!]
-  contactEmail: String
-  country: String
-  degree: String
-  """Use this field when the user has dismissed the getting started dialog"""
-  dismissedGettingStarted: Boolean
+  degree: [degreeEnum!]
   email: String
-  expertiseAndResourceDescription: String
-  expertiseAndResourceTags: [String!]
   firstName: String
-  institution: String
-  jobTitle: String
-  """Mandatory for grantees. They cannot publish profile without a lab."""
-  labs: [UsersDataLabsUnionDto!]
-  lastModifiedDate: String
   lastName: String
-  """Use this to allow the user to see the full Hub and skip profile completion"""
-  onboarded: Boolean
-  """Mandatory for grantees. They cannot publish profile without an ORCID. ORCIDs cannot be repeated on the Hub"""
-  orcid: String
-  orcidLastModifiedDate: String
-  orcidLastSyncDate: String
-  orcidWorks: [UsersDataOrcidWorksChildDto!]
-  questions: [UsersDataQuestionsChildDto!]
-  """Reach out reasons (only relevant for "Staff" users)"""
-  reachOut: String
-  researchInterests: String
-  responsibilities: String
-  """Role on the ASAP Hub"""
+  region: String
+  """Role on the GP2 Hub"""
   role: String
-  social: [UsersDataSocialChildDto!]
 }
 
 """List of Users items and total count."""
@@ -1873,32 +1545,6 @@ type WorkingGroups implements Content {
     """Optional number of contents to take."""
     top: Int
   ): DashboardResultDto
-  """Query Users content items."""
-  referencingUsersContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): [Users!]
-  """Query Users content items with total count."""
-  referencingUsersContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): UsersResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -2030,4 +1676,33 @@ type WorkingGroupsResultDto {
   items: [WorkingGroups!]
   """The total count of  contents."""
   total: Int!
+}
+
+enum degreeEnum {
+  """AA"""
+  AA
+  """AAS"""
+  AAS
+  """BA"""
+  BA
+  """BSc"""
+  BSc
+  """MA"""
+  MA
+  """MBA"""
+  MBA
+  """MBBS"""
+  MBBS
+  """MD"""
+  MD
+  """MD_PhD"""
+  MD_PhD
+  """MPH"""
+  MPH
+  """MSc"""
+  MSc
+  """PhD"""
+  PhD
+  """PharmD"""
+  PharmD
 }

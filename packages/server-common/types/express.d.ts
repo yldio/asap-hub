@@ -1,8 +1,3 @@
-import { APIGatewayProxyEventV2 } from 'aws-lambda';
-import { Span } from 'opentracing';
-import { Logger } from 'pino-http';
-import { UserResponse } from '@asap-hub/model';
-
 export {};
 
 declare global {
@@ -10,7 +5,6 @@ declare global {
   namespace Express {
     interface Request {
       context: APIGatewayProxyEventV2['requestContext'];
-      loggedInUser?: UserResponse;
       span?: Span;
     }
 

@@ -1,6 +1,6 @@
 /* eslint-disable */
-import * as graphql from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import * as graphql from './graphql';
 
 const documents = {
   '\n  fragment ProjectContent on Projects {\n    id\n    flatData {\n      title\n      startDate\n      endDate\n      status\n      projectProposal\n      members {\n        user {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            avatar {\n              id\n            }\n            firstName\n            lastName\n          }\n        }\n      }\n    }\n  }\n':
@@ -9,7 +9,7 @@ const documents = {
     graphql.FetchProjectDocument,
   '\n  query FetchProjects {\n    queryProjectsContentsWithTotal(orderby: "created desc") {\n      total\n      items {\n        ...ProjectContent\n      }\n    }\n  }\n  \n':
     graphql.FetchProjectsDocument,
-  '\n  fragment UsersContent on Users {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      avatar {\n        id\n      }\n      biography\n      degree\n      dismissedGettingStarted\n      email\n      contactEmail\n      firstName\n      institution\n      jobTitle\n      lastModifiedDate\n      lastName\n      country\n      city\n      onboarded\n      orcid\n      orcidLastModifiedDate\n      orcidLastSyncDate\n      orcidWorks {\n        doi\n        id\n        lastModifiedDate\n        publicationDate\n        title\n        type\n      }\n      questions {\n        question\n      }\n      expertiseAndResourceTags\n      expertiseAndResourceDescription\n      social {\n        github\n        googleScholar\n        linkedIn\n        researcherId\n        researchGate\n        twitter\n        website1\n        website2\n      }\n      role\n      responsibilities\n      researchInterests\n      reachOut\n    }\n  }\n':
+  '\n  fragment UsersContent on Users {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      avatar {\n        id\n      }\n      degree\n      email\n      firstName\n      lastName\n      region\n      role\n    }\n  }\n':
     graphql.UsersContentFragmentDoc,
   '\n  query FetchUser($id: String!) {\n    findUsersContent(id: $id) {\n      ...UsersContent\n    }\n  }\n  \n':
     graphql.FetchUserDocument,
@@ -33,8 +33,8 @@ export function gql(
   source: '\n  query FetchProjects {\n    queryProjectsContentsWithTotal(orderby: "created desc") {\n      total\n      items {\n        ...ProjectContent\n      }\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchProjects {\n    queryProjectsContentsWithTotal(orderby: "created desc") {\n      total\n      items {\n        ...ProjectContent\n      }\n    }\n  }\n  \n'];
 export function gql(
-  source: '\n  fragment UsersContent on Users {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      avatar {\n        id\n      }\n      biography\n      degree\n      dismissedGettingStarted\n      email\n      contactEmail\n      firstName\n      institution\n      jobTitle\n      lastModifiedDate\n      lastName\n      country\n      city\n      onboarded\n      orcid\n      orcidLastModifiedDate\n      orcidLastSyncDate\n      orcidWorks {\n        doi\n        id\n        lastModifiedDate\n        publicationDate\n        title\n        type\n      }\n      questions {\n        question\n      }\n      expertiseAndResourceTags\n      expertiseAndResourceDescription\n      social {\n        github\n        googleScholar\n        linkedIn\n        researcherId\n        researchGate\n        twitter\n        website1\n        website2\n      }\n      role\n      responsibilities\n      researchInterests\n      reachOut\n    }\n  }\n',
-): typeof documents['\n  fragment UsersContent on Users {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      avatar {\n        id\n      }\n      biography\n      degree\n      dismissedGettingStarted\n      email\n      contactEmail\n      firstName\n      institution\n      jobTitle\n      lastModifiedDate\n      lastName\n      country\n      city\n      onboarded\n      orcid\n      orcidLastModifiedDate\n      orcidLastSyncDate\n      orcidWorks {\n        doi\n        id\n        lastModifiedDate\n        publicationDate\n        title\n        type\n      }\n      questions {\n        question\n      }\n      expertiseAndResourceTags\n      expertiseAndResourceDescription\n      social {\n        github\n        googleScholar\n        linkedIn\n        researcherId\n        researchGate\n        twitter\n        website1\n        website2\n      }\n      role\n      responsibilities\n      researchInterests\n      reachOut\n    }\n  }\n'];
+  source: '\n  fragment UsersContent on Users {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      avatar {\n        id\n      }\n      degree\n      email\n      firstName\n      lastName\n      region\n      role\n    }\n  }\n',
+): typeof documents['\n  fragment UsersContent on Users {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      avatar {\n        id\n      }\n      degree\n      email\n      firstName\n      lastName\n      region\n      role\n    }\n  }\n'];
 export function gql(
   source: '\n  query FetchUser($id: String!) {\n    findUsersContent(id: $id) {\n      ...UsersContent\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchUser($id: String!) {\n    findUsersContent(id: $id) {\n      ...UsersContent\n    }\n  }\n  \n'];

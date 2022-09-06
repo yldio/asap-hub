@@ -29,15 +29,6 @@ describe('Users controller', () => {
 
       expect(result).toEqual(getUserResponse());
     });
-
-    test('Should default onboarded flag to true when its null', async () => {
-      const userData = getUserDataObject();
-      userData.onboarded = null;
-      userDataProviderMock.fetchById.mockResolvedValue(userData);
-      const result = await userController.fetchById('user-id');
-
-      expect(result?.onboarded).toEqual(true);
-    });
   });
 
   describe('fetchByCode', () => {

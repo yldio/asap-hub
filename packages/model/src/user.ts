@@ -2,11 +2,11 @@ import { FetchOptions, ListResponse } from './common';
 import { LabResponse } from './lab';
 import { TeamRole } from './team';
 
-export const userRole = ['Staff', 'Grantee', 'Guest', 'Hidden'] as const;
+export const crnUserRoles = ['Staff', 'Grantee', 'Guest', 'Hidden'] as const;
 
-export type Role = typeof userRole[number];
+export type Role = typeof crnUserRoles[number];
 
-export const userDegree = [
+export const crnUserDegrees = [
   'BA',
   'BSc',
   'MSc',
@@ -17,7 +17,7 @@ export const userDegree = [
   'MA',
   'MBA',
 ] as const;
-export type UserDegree = typeof userDegree[number];
+export type UserDegree = typeof crnUserDegrees[number];
 
 export interface Invitee {
   email: string;
@@ -110,7 +110,7 @@ export interface UserSocialLinks {
   researchGate?: string;
 }
 
-interface Connection {
+export interface Connection {
   code: string;
 }
 

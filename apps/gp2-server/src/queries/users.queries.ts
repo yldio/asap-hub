@@ -10,49 +10,12 @@ export const usersContentQueryFragment = gql`
       avatar {
         id
       }
-      biography
       degree
-      dismissedGettingStarted
       email
-      contactEmail
       firstName
-      institution
-      jobTitle
-      lastModifiedDate
       lastName
-      country
-      city
-      onboarded
-      orcid
-      orcidLastModifiedDate
-      orcidLastSyncDate
-      orcidWorks {
-        doi
-        id
-        lastModifiedDate
-        publicationDate
-        title
-        type
-      }
-      questions {
-        question
-      }
-      expertiseAndResourceTags
-      expertiseAndResourceDescription
-      social {
-        github
-        googleScholar
-        linkedIn
-        researcherId
-        researchGate
-        twitter
-        website1
-        website2
-      }
+      region
       role
-      responsibilities
-      researchInterests
-      reachOut
     }
   }
 `;

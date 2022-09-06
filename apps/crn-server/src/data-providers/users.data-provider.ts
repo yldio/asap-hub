@@ -9,9 +9,9 @@ import {
   UserCreateDataObject,
   UserDataObject,
   UserDegree,
-  userDegree,
+  crnUserDegrees,
   UserResponse,
-  userRole,
+  crnUserRoles,
   UserTeam,
   UserUpdateDataObject,
 } from '@asap-hub/model';
@@ -374,10 +374,10 @@ export const parseUserToDataObject = (user: RestUser): UserDataObject => {
   };
 };
 const isUserRole = (data: string): data is Role =>
-  (userRole as ReadonlyArray<string>).includes(data);
+  (crnUserRoles as ReadonlyArray<string>).includes(data);
 
 const isUserDegree = (data: string): data is UserDegree =>
-  (userDegree as ReadonlyArray<string>).includes(data);
+  (crnUserDegrees as ReadonlyArray<string>).includes(data);
 
 const isOrcidWorkType = (data: string): data is OrcidWorkType =>
   (orcidWorkType as ReadonlyArray<string>).includes(data);

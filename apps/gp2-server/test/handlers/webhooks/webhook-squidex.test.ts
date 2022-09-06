@@ -1,4 +1,3 @@
-import { User } from '@asap-hub/squidex';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { EventBridge } from 'aws-sdk';
 import { eventBus, eventSource } from '../../../src/config';
@@ -32,12 +31,10 @@ describe('Squidex event webhook', () => {
   });
 
   test('Should return 204 when no event type is provided', async () => {
-    const payload = {
-      ...getUserWebhookPayload('user-id', 'UsersUpdated'),
-      type: undefined as unknown as string,
-    };
+    const payload = getUserWebhookPayload('user-id', 'UsersUpdated');
+    payload.type = undefined as unknown as string;
     const res = (await handler(
-      createSignedPayload<User>(payload),
+      createSignedPayload(payload),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(204);

@@ -1,16 +1,17 @@
 import { User } from '@asap-hub/auth';
-import { userMock } from '@asap-hub/fixtures';
-import { pino, Logger } from '@asap-hub/server-common';
+import { createUserResponse, userMock } from '@asap-hub/fixtures';
+import { Logger, pino } from '@asap-hub/server-common';
 import { RequestHandler, Router } from 'express';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { sentryTransactionIdHandlerMock } from '../mocks/sentry-transaction-id-handler.mock';
 
 describe('User info logging handler', () => {
+  const mockUser = createUserResponse();
   // mock auth handler
   const getUser: jest.MockedFunction<() => User | undefined> = jest.fn();
   const authHandlerMock: RequestHandler = async (req, _res, next) => {
-    req.loggedInUser = getUser();
+    req.loggedInUser = mockUser;
     next();
   };
 

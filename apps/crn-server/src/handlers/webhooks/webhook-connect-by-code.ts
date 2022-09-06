@@ -1,3 +1,4 @@
+import { UserResponse } from '@asap-hub/model';
 import { connectByCodeHandlerFactory } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import {
@@ -33,7 +34,7 @@ const userDataProvider = new UserSquidexDataProvider(
 );
 const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 const users = new Users(userDataProvider, assetDataProvider);
-const connectByCodeHandler = connectByCodeHandlerFactory(
+const connectByCodeHandler = connectByCodeHandlerFactory<UserResponse>(
   users,
   auth0SharedSecret,
   logger,

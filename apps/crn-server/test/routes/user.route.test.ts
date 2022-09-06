@@ -1,25 +1,26 @@
-import supertest from 'supertest';
+import { NotFoundError } from '@asap-hub/errors';
+import { createUserResponse, userMock } from '@asap-hub/fixtures';
+import { FetchOptions, UserResponse } from '@asap-hub/model';
+import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import Crypto from 'crypto';
-import { FetchOptions, UserResponse } from '@asap-hub/model';
-import { userMock } from '@asap-hub/fixtures';
-import { AuthHandler } from '@asap-hub/server-common';
-import { NotFoundError } from '@asap-hub/errors';
+import supertest from 'supertest';
 import { appFactory } from '../../src/app';
+import { listGroupsResponse } from '../fixtures/groups.fixtures';
 import {
   fetchExpectation,
+  getUserResponse,
   updateAvatarBody,
   userPatchRequest,
-  getUserResponse,
 } from '../fixtures/users.fixtures';
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
-import { listGroupsResponse } from '../fixtures/groups.fixtures';
 
 describe('/users/ route', () => {
   const authHandlerMock: AuthHandler = (req, _res, next) => {
+    const mockUser = createUserResponse();
     req.loggedInUser = {
-      ...userMock,
+      ...mockUser,
       teams: [
         {
           id: 'team-id-1',

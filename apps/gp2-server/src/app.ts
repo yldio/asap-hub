@@ -1,4 +1,4 @@
-import { UserResponse } from '@asap-hub/model';
+import { gp2 } from '@asap-hub/model';
 import {
   AuthHandler,
   authHandlerFactory,
@@ -78,7 +78,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     baseUrl,
   });
   const decodeToken = decodeTokenFactory(auth0Audience);
-  const userResponseCacheClient = new MemoryCacheClient<UserResponse>();
+  const userResponseCacheClient = new MemoryCacheClient<gp2.UserResponse>();
 
   // Data Providers
 
@@ -108,11 +108,14 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Handlers
   const authHandler =
     libs.authHandler ||
-    authHandlerFactory(
+    authHandlerFactory<gp2.UserResponse>(
       decodeToken,
       userController.fetchByCode.bind(userController),
       userResponseCacheClient,
       logger,
+      (req, user) => {
+        req.loggedInUser = user;
+      },
     );
 
   // Routes

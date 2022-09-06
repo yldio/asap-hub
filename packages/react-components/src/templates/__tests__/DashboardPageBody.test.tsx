@@ -25,6 +25,14 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   dismissedGettingStarted: false,
 };
 
+it('renders news section', () => {
+  render(<DashboardPageBody {...props} />);
+
+  expect(
+    screen.getAllByRole('heading').map(({ textContent }) => textContent),
+  ).toEqual(expect.arrayContaining(['News Title', 'Event Title']));
+});
+
 it('hides add links to your work space section when user is not a member of a team', () => {
   const { rerender } = render(<DashboardPageBody {...props} teamId="12345" />);
   expect(screen.queryByText(/Add important links/i)).toBeVisible();

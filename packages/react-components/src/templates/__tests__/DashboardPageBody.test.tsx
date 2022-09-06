@@ -24,6 +24,14 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   reminders: [],
   dismissedGettingStarted: false,
 };
+it('renders multiple news cards', () => {
+  render(<DashboardPageBody {...props} />);
+  expect(
+    screen
+      .queryAllByText(/title/i, { selector: 'h4' })
+      .map(({ textContent }) => textContent),
+  ).toEqual(['News Title', 'Event Title']);
+});
 
 it('renders news section', () => {
   render(<DashboardPageBody {...props} />);

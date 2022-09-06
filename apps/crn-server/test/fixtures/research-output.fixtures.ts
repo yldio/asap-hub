@@ -225,6 +225,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     lastUpdatedPartial: _lastUpdatedPartial,
     doi: _doi,
     accession: _accession,
+    addedDate: _addedDate,
     labs,
     authors,
     teams,

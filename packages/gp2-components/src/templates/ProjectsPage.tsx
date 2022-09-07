@@ -12,10 +12,12 @@ const props = {
 };
 
 const projectProps = {
-  title: 'project title',
-  status: 'Active',
-  startDate: '',
-  endDate: '',
+  id: '42',
+  title: 'A Project',
+  startDate: '2020-07-06',
+  endDate: '2021-12-28',
+  status: 'Completed',
+  projectProposalUrl: 'http://a-proposal',
   members: [],
 };
 

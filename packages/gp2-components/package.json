@@ -26,6 +26,7 @@
     "@asap-hub/routing": "workspace:*",
     "@babel/runtime-corejs3": "7.18.9",
     "core-js": "3.24.1",
+    "date-fns": "2.29.2",
     "emotion-normalize": "11.0.1"
   },
   "devDependencies": {

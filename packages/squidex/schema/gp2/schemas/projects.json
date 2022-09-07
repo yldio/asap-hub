@@ -79,7 +79,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "DateTime",
-          "editor": "DateTime",
+          "editor": "Date",
           "label": "Start Date",
           "placeholder": "",
           "isRequired": true,
@@ -95,7 +95,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "DateTime",
-          "editor": "DateTime",
+          "editor": "Date",
           "label": "End Date",
           "placeholder": "",
           "isRequired": false,

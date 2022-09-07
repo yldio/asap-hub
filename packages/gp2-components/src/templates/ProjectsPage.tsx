@@ -16,7 +16,7 @@ const projectProps = {
   title: 'A Project',
   startDate: '2020-07-06',
   endDate: '2021-12-28',
-  status: 'Completed',
+  status: 'Completed' as const,
   projectProposalUrl: 'http://a-proposal',
   members: [],
 };

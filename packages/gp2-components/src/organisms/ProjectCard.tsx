@@ -1,10 +1,11 @@
-import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import {
   Card,
   ExternalLink,
-  Headline3,
   lead,
+  LinkHeadline,
   utils,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
@@ -17,8 +18,8 @@ import colors from '../templates/colors';
 const { getCounterString } = utils;
 
 type ProjectCardProps = Pick<
-  gp2.ProjectResponse,
-  'title' | 'status' | 'startDate' | 'endDate' | 'members'
+  gp2Model.ProjectResponse,
+  'title' | 'status' | 'startDate' | 'endDate' | 'members' | 'id'
 >;
 
 const calcDuration = (start: string, end?: string) => {
@@ -38,6 +39,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   startDate,
   endDate,
   members,
+  id,
 }) => (
   <Card stroke strokeColor={statusStyles[status].color}>
     <div css={css({ display: 'flex', flexDirection: 'row', gap: '8px' })}>
@@ -46,7 +48,16 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         <ExternalLink href="google.com" label="View proposal" />
       </div>
     </div>
-    <Headline3>{title}</Headline3>
+    <LinkHeadline
+      href={
+        gp2Routing.projects({}).project({
+          projectId: id,
+        }).$
+      }
+      level={3}
+    >
+      {title}
+    </LinkHeadline>
     <div
       css={css({
         display: 'flex',

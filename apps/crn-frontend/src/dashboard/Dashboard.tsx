@@ -13,13 +13,19 @@ import { useRouteMatch } from 'react-router-dom';
 
 import { useDashboardState, useReminderState } from './state';
 import { usePatchUserById, useUserById } from '../network/users/state';
+import { useEvents } from '../events/state';
+import { getEventListOptions } from '../events/options';
 
 const loadBody = () =>
   import(/* webpackChunkName: "dashboard-body" */ './Body');
 const Body = lazy(loadBody);
 loadBody();
 
-const Dashboard: FC<Record<string, never>> = () => {
+type DashboardProps = {
+  currentTime: Date;
+};
+
+const Dashboard: FC<DashboardProps> = ({ currentTime }) => {
   const currentUser = useCurrentUser();
   if (!currentUser) {
     throw new Error('Failed to find out who is currently logged in');
@@ -42,6 +48,14 @@ const Dashboard: FC<Record<string, never>> = () => {
   const patchUser = usePatchUserById(id);
   const user = useUserById(id);
 
+  const pageSize = 3;
+  const upcomingEvents = useEvents(
+    getEventListOptions(currentTime, {
+      past: false,
+      pageSize,
+    }),
+  );
+
   return (
     <>
       <DashboardPage
@@ -56,6 +70,7 @@ const Dashboard: FC<Record<string, never>> = () => {
             roles={roles}
             userId={id}
             teamId={teams[0]?.id}
+            upcomingEvents={upcomingEvents}
           />
         </Frame>
       </DashboardPage>

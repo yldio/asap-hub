@@ -7,7 +7,7 @@ import {
   sharedResearch,
   dashboard,
 } from '@asap-hub/routing';
-import { TeamRole, UserResponse } from '@asap-hub/model';
+import { ListEventResponse, TeamRole, UserResponse } from '@asap-hub/model';
 import { isEnabled } from '@asap-hub/flags';
 
 import {
@@ -15,6 +15,7 @@ import {
   NewsSection,
   HelpSection,
   RemindersCard,
+  DashboardUpcomingEvents,
 } from '../organisms';
 import { perRem } from '../pixels';
 import { Card, Paragraph, Link, Headline2 } from '../atoms';
@@ -52,6 +53,8 @@ type DashboardPageBodyProps = Omit<
     readonly teamId?: string;
   } & Pick<UserResponse, 'dismissedGettingStarted'> & {
     roles: TeamRole[];
+  } & {
+    upcomingEvents?: ListEventResponse;
   };
 
 const publishRoles: TeamRole[] = ['ASAP Staff', 'Project Manager'];
@@ -64,6 +67,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   roles,
   reminders,
   dismissedGettingStarted,
+  upcomingEvents,
 }) => {
   const canPublish = roles.some((role) => publishRoles.includes(role));
 
@@ -110,6 +114,10 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           />
         </div>
       )}
+      <DashboardUpcomingEvents
+        upcomingEvents={upcomingEvents?.items}
+        upcomingEventsCount={upcomingEvents?.total}
+      />
       {isEnabled('REMINDERS') && (
         <div>
           <Headline2 styleAsHeading={3}>Reminders</Headline2>

@@ -1,6 +1,9 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
-import { createPageResponse } from '@asap-hub/fixtures';
+import {
+  createListEventResponse,
+  createPageResponse,
+} from '@asap-hub/fixtures';
 import { disable } from '@asap-hub/flags';
 
 import DashboardPageBody from '../DashboardPageBody';
@@ -26,6 +29,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   roles: [],
   reminders: [],
   dismissedGettingStarted: false,
+  upcomingEvents: undefined,
 };
 
 it('renders multiple news cards', () => {
@@ -61,6 +65,25 @@ it('hides add links to your work space section when user is not a member of a te
   expect(screen.queryByText(/Add important links/i)).toBeVisible();
   rerender(<DashboardPageBody {...props} teamId={undefined} />);
   expect(screen.queryByText(/Add important links/i)).toBeNull();
+});
+
+it('displays events cards or placeholder if there are no events', () => {
+  const { rerender } = render(
+    <DashboardPageBody
+      {...props}
+      upcomingEvents={createListEventResponse(4)}
+    />,
+  );
+  expect(screen.getByText('Upcoming Events')).toBeVisible();
+  expect(screen.getByText("Here're some upcoming events.")).toBeVisible();
+  expect(screen.getByText('Event 1')).toBeVisible();
+  expect(screen.getByRole('link', { name: 'View All →' })).toBeVisible();
+
+  rerender(<DashboardPageBody {...props} upcomingEvents={undefined} />);
+  expect(screen.getByText('Upcoming Events')).toBeVisible();
+  expect(screen.getByText("Here're some upcoming events.")).toBeVisible();
+
+  expect(screen.getByText('There are no upcoming events.')).toBeVisible();
 });
 
 describe('the reminders card', () => {

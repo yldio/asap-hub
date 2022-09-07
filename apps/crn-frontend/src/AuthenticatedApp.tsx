@@ -61,6 +61,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     return <Loading />;
   }
 
+  const currentTime = new Date();
   return (
     <Onboardable>
       {(onboardable) => (
@@ -87,7 +88,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                 ]}
               >
                 <Frame title="Dashboard">
-                  <Dashboard />
+                  <Dashboard currentTime={currentTime} />
                 </Frame>
               </Route>
               <Route path={discover.template}>

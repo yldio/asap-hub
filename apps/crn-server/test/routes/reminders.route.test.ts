@@ -3,7 +3,7 @@ import { AuthHandler } from '@asap-hub/server-common';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { getListReminderResponse } from '../fixtures/reminders.fixtures';
-import { httpLoggerMock, loggerMock } from '../mocks/logger.mock';
+import { loggerMock } from '../mocks/logger.mock';
 import { reminderControllerMock } from '../mocks/reminder-controller.mock';
 
 describe('/reminders/ route', () => {
@@ -16,7 +16,6 @@ describe('/reminders/ route', () => {
     authHandler: authHandlerMock,
     reminderController: reminderControllerMock,
     logger: loggerMock,
-    httpLogger: httpLoggerMock,
   });
 
   afterEach(() => {

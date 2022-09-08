@@ -10,7 +10,7 @@ import {
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { eventControllerMock } from '../mocks/event-controller.mock';
 import { groupControllerMock } from '../mocks/group-controller.mock';
-import { httpLoggerMock, loggerMock } from '../mocks/logger.mock';
+import { loggerMock } from '../mocks/logger.mock';
 
 describe('/groups/ route', () => {
   const app = appFactory({
@@ -18,7 +18,6 @@ describe('/groups/ route', () => {
     groupController: groupControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
-    httpLogger: httpLoggerMock,
   });
 
   afterEach(() => {

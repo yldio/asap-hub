@@ -4,7 +4,7 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { listNewsResponse } from '../fixtures/news.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
-import { httpLoggerMock, loggerMock } from '../mocks/logger.mock';
+import { loggerMock } from '../mocks/logger.mock';
 import { newsControllerMock } from '../mocks/news-controller.mock';
 
 describe('/news/ route', () => {
@@ -12,7 +12,6 @@ describe('/news/ route', () => {
     newsController: newsControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
-    httpLogger: httpLoggerMock,
   });
 
   afterEach(() => {

@@ -14,7 +14,7 @@ import {
   userPatchRequest,
 } from '../fixtures/users.fixtures';
 import { groupControllerMock } from '../mocks/group-controller.mock';
-import { httpLoggerMock, loggerMock } from '../mocks/logger.mock';
+import { loggerMock } from '../mocks/logger.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
 
 describe('/users/ route', () => {
@@ -41,14 +41,12 @@ describe('/users/ route', () => {
     userController: userControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
-    httpLogger: httpLoggerMock,
   });
 
   const app = appFactory({
     groupController: groupControllerMock,
     userController: userControllerMock,
     logger: loggerMock,
-    httpLogger: httpLoggerMock,
   });
 
   afterEach(() => {

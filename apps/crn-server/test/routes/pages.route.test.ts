@@ -2,14 +2,13 @@ import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { pageResponse } from '../fixtures/page.fixtures';
-import { httpLoggerMock, loggerMock } from '../mocks/logger.mock';
+import { loggerMock } from '../mocks/logger.mock';
 import { pageControllerMock } from '../mocks/page-controller.mock';
 
 describe('/pages/ route', () => {
   const app = appFactory({
     pageController: pageControllerMock,
     logger: loggerMock,
-    httpLogger: httpLoggerMock,
   });
 
   afterEach(() => {

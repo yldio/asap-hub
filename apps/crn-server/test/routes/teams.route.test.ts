@@ -11,7 +11,7 @@ import {
   getTeamResponse,
 } from '../fixtures/teams.fixtures';
 import { groupControllerMock } from '../mocks/group-controller.mock';
-import { httpLoggerMock, loggerMock } from '../mocks/logger.mock';
+import { loggerMock } from '../mocks/logger.mock';
 import { teamControllerMock } from '../mocks/team-controller.mock';
 
 describe('/teams/ route', () => {
@@ -34,7 +34,6 @@ describe('/teams/ route', () => {
     teamController: teamControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
-    httpLogger: httpLoggerMock,
   });
 
   afterEach(() => {

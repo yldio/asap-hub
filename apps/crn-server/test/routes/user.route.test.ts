@@ -1,5 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
-import { createUserResponse, userMock } from '@asap-hub/fixtures';
+import { createUserResponse } from '@asap-hub/fixtures';
 import { FetchOptions, UserResponse } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
@@ -14,9 +14,11 @@ import {
   userPatchRequest,
 } from '../fixtures/users.fixtures';
 import { groupControllerMock } from '../mocks/group-controller.mock';
+import { httpLoggerMock, loggerMock } from '../mocks/logger.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
 
 describe('/users/ route', () => {
+  const userMock = createUserResponse();
   const authHandlerMock: AuthHandler = (req, _res, next) => {
     const mockUser = createUserResponse();
     req.loggedInUser = {
@@ -38,11 +40,15 @@ describe('/users/ route', () => {
     groupController: groupControllerMock,
     userController: userControllerMock,
     authHandler: authHandlerMock,
+    logger: loggerMock,
+    httpLogger: httpLoggerMock,
   });
 
   const app = appFactory({
     groupController: groupControllerMock,
     userController: userControllerMock,
+    logger: loggerMock,
+    httpLogger: httpLoggerMock,
   });
 
   afterEach(() => {

@@ -6,6 +6,7 @@ import {
   news as newsRoute,
   sharedResearch,
   dashboard,
+  events as eventsRoute,
 } from '@asap-hub/routing';
 import { TeamRole, UserResponse } from '@asap-hub/model';
 
@@ -39,6 +40,11 @@ const infoStyles = css({
   color: lead.rgb,
   padding: `${3 / perRem}em 0 ${24 / perRem}em`,
   lineHeight: `${24 / perRem} em`,
+});
+
+const viewAllStyles = css({
+  marginTop: `${24 / perRem}em`,
+  textAlign: 'right',
 });
 
 type DashboardPageBodyProps = Pick<
@@ -127,6 +133,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           Explore previous events and learn about what was discussed.
         </div>
         <PastEventsDashboardCard events={events} />
+        <p css={viewAllStyles}>
+          <Link href={eventsRoute({}).past({}).$}>View All →</Link>
+        </p>
       </div>
       {news.length ? (
         <NewsSection title="Latest News from ASAP" news={news} />

@@ -66,7 +66,7 @@ const ExpandableText: React.FC = ({ children }) => {
     setShowToggle(
       (textElement?.current?.scrollHeight || 0) > expandableMaxHeight,
     );
-  });
+  }, [textElement?.current?.scrollHeight]);
 
   return (
     <div>

@@ -1,6 +1,9 @@
 import { ComponentProps } from 'react';
 import { DashboardPageBody } from '@asap-hub/react-components';
-import { createListReminderResponse } from '@asap-hub/fixtures';
+import {
+  createEventResponse,
+  createListReminderResponse,
+} from '@asap-hub/fixtures';
 import { number } from '@storybook/addon-knobs';
 
 export default {
@@ -26,6 +29,11 @@ const props = (): ComponentProps<typeof DashboardPageBody> => ({
   userId: 'u42',
   teamId: 't42',
   roles: [],
+  events: [
+    createEventResponse({}, 1),
+    createEventResponse({}, 2),
+    createEventResponse({}, 3),
+  ],
   reminders: createListReminderResponse(number('Reminders', 3)).items,
 });
 

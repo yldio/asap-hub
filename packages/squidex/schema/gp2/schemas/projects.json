@@ -1,0 +1,153 @@
+{
+  "$schema": "./../__json/schema.json",
+  "name": "projects",
+  "isSingleton": false,
+  "isPublished": false,
+  "schema": {
+    "noFieldDeletion": false,
+    "noFieldRecreation": false,
+    "properties": {
+      "label": "Projects",
+      "validateOnPublish": false
+    },
+    "scripts": {
+      "create": "if(ctx.data.endDate.iv && new Date(ctx.data.startDate.iv) > new Date(ctx.data.endDate.iv)) {\n    reject('Start date date cannot be greater than end date')\n}",
+      "update": "if(ctx.data.endDate.iv && new Date(ctx.data.startDate.iv) > new Date(ctx.data.endDate.iv)) {\n    reject('Start date date cannot be greater than end date')\n}"
+    },
+    "fieldsInReferences": [],
+    "fieldsInLists": [],
+    "fields": [
+      {
+        "name": "title",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Title",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "members",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "Members",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        },
+        "nested": [
+          {
+            "name": "user",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "References",
+              "minItems": 1,
+              "maxItems": 1,
+              "allowDuplicates": false,
+              "resolveReference": false,
+              "mustBePublished": false,
+              "editor": "List",
+              "schemaIds": ["users"],
+              "label": "User",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          }
+        ]
+      },
+      {
+        "name": "startDate",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "DateTime",
+          "editor": "DateTime",
+          "label": "Start Date",
+          "placeholder": "",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "endDate",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "DateTime",
+          "editor": "DateTime",
+          "label": "End Date",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "status",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "defaultValue": "Active",
+          "allowedValues": ["Active", "Inactive", "Completed"],
+          "isUnique": false,
+          "inlineEditable": true,
+          "contentType": "Unspecified",
+          "editor": "Dropdown",
+          "label": "Status",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "projectProposal",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+          "patternMessage": "URL must start with http:// or https://",
+          "isUnique": true,
+          "inlineEditable": true,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Project Proposal",
+          "hints": "External link for a project proposal",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      }
+    ],
+    "previewUrls": {},
+    "category": "Content",
+    "isPublished": true
+  }
+}

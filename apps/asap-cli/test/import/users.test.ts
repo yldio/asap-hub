@@ -62,6 +62,9 @@ const body = {
   labs: {
     iv: [],
   },
+  dismissedGettingStarted: {
+    iv: false,
+  },
   researchInterests: { iv: 'Research Interests' },
   responsibilities: { iv: 'Responsibilities' },
 };

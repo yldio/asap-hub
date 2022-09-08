@@ -29,24 +29,32 @@ export type Scalars = {
 export type AppMutations = {
   /** Change a Dashboard content. */
   changeDashboardContent: Dashboard;
+  /** Change a Projects content. */
+  changeProjectsContent: Projects;
   /** Change a Users content. */
   changeUsersContent: Users;
   /** Change a Working Groups content. */
   changeWorkingGroupsContent: WorkingGroups;
   /** Creates an Dashboard content. */
   createDashboardContent: Dashboard;
+  /** Creates an Projects content. */
+  createProjectsContent: Projects;
   /** Creates an Users content. */
   createUsersContent: Users;
   /** Creates an Working Groups content. */
   createWorkingGroupsContent: WorkingGroups;
   /** Delete an Dashboard content. */
   deleteDashboardContent: EntitySavedResultDto;
+  /** Delete an Projects content. */
+  deleteProjectsContent: EntitySavedResultDto;
   /** Delete an Users content. */
   deleteUsersContent: EntitySavedResultDto;
   /** Delete an Working Groups content. */
   deleteWorkingGroupsContent: EntitySavedResultDto;
   /** Patch an Dashboard content by id. */
   patchDashboardContent: Dashboard;
+  /** Patch an Projects content by id. */
+  patchProjectsContent: Projects;
   /** Patch an Users content by id. */
   patchUsersContent: Users;
   /** Patch an Working Groups content by id. */
@@ -56,6 +64,11 @@ export type AppMutations = {
    * @deprecated Use 'changeDashboardContent' instead
    */
   publishDashboardContent: Dashboard;
+  /**
+   * Publish a Projects content.
+   * @deprecated Use 'changeProjectsContent' instead
+   */
+  publishProjectsContent: Projects;
   /**
    * Publish a Users content.
    * @deprecated Use 'changeUsersContent' instead
@@ -68,12 +81,16 @@ export type AppMutations = {
   publishWorkingGroupsContent: WorkingGroups;
   /** Update an Dashboard content by id. */
   updateDashboardContent: Dashboard;
+  /** Update an Projects content by id. */
+  updateProjectsContent: Projects;
   /** Update an Users content by id. */
   updateUsersContent: Users;
   /** Update an Working Groups content by id. */
   updateWorkingGroupsContent: WorkingGroups;
   /** Upsert an Dashboard content by id. */
   upsertDashboardContent: Dashboard;
+  /** Upsert an Projects content by id. */
+  upsertProjectsContent: Projects;
   /** Upsert an Users content by id. */
   upsertUsersContent: Users;
   /** Upsert an Working Groups content by id. */
@@ -82,6 +99,14 @@ export type AppMutations = {
 
 /** The app mutations. */
 export type AppMutationsChangeDashboardContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
+export type AppMutationsChangeProjectsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -113,6 +138,14 @@ export type AppMutationsCreateDashboardContentArgs = {
 };
 
 /** The app mutations. */
+export type AppMutationsCreateProjectsContentArgs = {
+  data: ProjectsDataInputDto;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type AppMutationsCreateUsersContentArgs = {
   data: UsersDataInputDto;
   id: InputMaybe<Scalars['String']>;
@@ -130,6 +163,12 @@ export type AppMutationsCreateWorkingGroupsContentArgs = {
 
 /** The app mutations. */
 export type AppMutationsDeleteDashboardContentArgs = {
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+};
+
+/** The app mutations. */
+export type AppMutationsDeleteProjectsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
@@ -154,6 +193,13 @@ export type AppMutationsPatchDashboardContentArgs = {
 };
 
 /** The app mutations. */
+export type AppMutationsPatchProjectsContentArgs = {
+  data: ProjectsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type AppMutationsPatchUsersContentArgs = {
   data: UsersDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -169,6 +215,14 @@ export type AppMutationsPatchWorkingGroupsContentArgs = {
 
 /** The app mutations. */
 export type AppMutationsPublishDashboardContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
+export type AppMutationsPublishProjectsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -199,6 +253,13 @@ export type AppMutationsUpdateDashboardContentArgs = {
 };
 
 /** The app mutations. */
+export type AppMutationsUpdateProjectsContentArgs = {
+  data: ProjectsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type AppMutationsUpdateUsersContentArgs = {
   data: UsersDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -215,6 +276,16 @@ export type AppMutationsUpdateWorkingGroupsContentArgs = {
 /** The app mutations. */
 export type AppMutationsUpsertDashboardContentArgs = {
   data: DashboardDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type AppMutationsUpsertProjectsContentArgs = {
+  data: ProjectsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   patch?: InputMaybe<Scalars['Boolean']>;
@@ -248,6 +319,8 @@ export type AppQueries = {
   findAsset: Maybe<Asset>;
   /** Find an Dashboard content by id. */
   findDashboardContent: Maybe<Dashboard>;
+  /** Find an Projects content by id. */
+  findProjectsContent: Maybe<Projects>;
   /** Find an Users content by id. */
   findUsersContent: Maybe<Users>;
   /** Find an Working Groups content by id. */
@@ -260,6 +333,10 @@ export type AppQueries = {
   queryDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
   queryDashboardContentsWithTotal: Maybe<DashboardResultDto>;
+  /** Query Projects content items. */
+  queryProjectsContents: Maybe<Array<Projects>>;
+  /** Query Projects content items with total count. */
+  queryProjectsContentsWithTotal: Maybe<ProjectsResultDto>;
   /** Query Users content items. */
   queryUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -277,6 +354,12 @@ export type AppQueriesFindAssetArgs = {
 
 /** The app queries. */
 export type AppQueriesFindDashboardContentArgs = {
+  id: Scalars['String'];
+  version: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type AppQueriesFindProjectsContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
@@ -320,6 +403,24 @@ export type AppQueriesQueryDashboardContentsArgs = {
 
 /** The app queries. */
 export type AppQueriesQueryDashboardContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type AppQueriesQueryProjectsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type AppQueriesQueryProjectsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -512,6 +613,10 @@ export type Dashboard = Content & {
   referencesDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
   referencesDashboardContentsWithTotal: Maybe<DashboardResultDto>;
+  /** Query Projects content items. */
+  referencesProjectsContents: Maybe<Array<Projects>>;
+  /** Query Projects content items with total count. */
+  referencesProjectsContentsWithTotal: Maybe<ProjectsResultDto>;
   /** Query Users content items. */
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -549,6 +654,24 @@ export type DashboardReferencesDashboardContentsArgs = {
 
 /** The structure of a Dashboard content type. */
 export type DashboardReferencesDashboardContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Dashboard content type. */
+export type DashboardReferencesProjectsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Dashboard content type. */
+export type DashboardReferencesProjectsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -650,7 +773,11 @@ export type DashboardDataNewsInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
-export type DashboardDataNewsUnionDto = Dashboard | Users | WorkingGroups;
+export type DashboardDataNewsUnionDto =
+  | Dashboard
+  | Projects
+  | Users
+  | WorkingGroups;
 
 /** The structure of the Where to Start field of the Dashboard content type. */
 export type DashboardDataPagesDto = {
@@ -662,7 +789,11 @@ export type DashboardDataPagesInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
-export type DashboardDataPagesUnionDto = Dashboard | Users | WorkingGroups;
+export type DashboardDataPagesUnionDto =
+  | Dashboard
+  | Projects
+  | Users
+  | WorkingGroups;
 
 /** The structure of the flat Dashboard data type. */
 export type DashboardFlatDataDto = {
@@ -682,6 +813,219 @@ export type DashboardResultDto = {
 export type EntitySavedResultDto = {
   /** The new version of the item. */
   version: Scalars['Long'];
+};
+
+/** The structure of a Projects content type. */
+export type Projects = Content & {
+  /** The timestamp when the object was created. */
+  created: Scalars['Instant'];
+  /** The user who created the object. */
+  createdBy: Scalars['String'];
+  /** The user who created the object. */
+  createdByUser: User;
+  /** The data of the content. */
+  data: ProjectsDataDto;
+  /** The edit token. */
+  editToken: Maybe<Scalars['String']>;
+  /** The flat data of the content. */
+  flatData: ProjectsFlatDataDto;
+  /** The ID of the object (usually GUID). */
+  id: Scalars['String'];
+  /** The timestamp when the object was updated the last time. */
+  lastModified: Scalars['Instant'];
+  /** The user who updated the object the last time. */
+  lastModifiedBy: Scalars['String'];
+  /** The user who updated the object the last time. */
+  lastModifiedByUser: User;
+  /** The new status of the content. */
+  newStatus: Maybe<Scalars['String']>;
+  /** The status color of the content. */
+  newStatusColor: Maybe<Scalars['String']>;
+  /** Query Users content items. */
+  referencesUsersContents: Maybe<Array<Users>>;
+  /** Query Users content items with total count. */
+  referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** Query Dashboard content items. */
+  referencingDashboardContents: Maybe<Array<Dashboard>>;
+  /** Query Dashboard content items with total count. */
+  referencingDashboardContentsWithTotal: Maybe<DashboardResultDto>;
+  /** Query Users content items. */
+  referencingUsersContents: Maybe<Array<Users>>;
+  /** Query Users content items with total count. */
+  referencingUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** The status of the content. */
+  status: Scalars['String'];
+  /** The status color of the content. */
+  statusColor: Scalars['String'];
+  /** The URL to the content. */
+  url: Scalars['String'];
+  /** The version of the objec. */
+  version: Scalars['Int'];
+};
+
+/** The structure of a Projects content type. */
+export type ProjectsReferencesUsersContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Projects content type. */
+export type ProjectsReferencesUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Projects content type. */
+export type ProjectsReferencingDashboardContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Projects content type. */
+export type ProjectsReferencingDashboardContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Projects content type. */
+export type ProjectsReferencingUsersContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Projects content type. */
+export type ProjectsReferencingUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of the Projects data type. */
+export type ProjectsDataDto = {
+  endDate: Maybe<ProjectsDataEndDateDto>;
+  members: Maybe<ProjectsDataMembersDto>;
+  projectProposal: Maybe<ProjectsDataProjectProposalDto>;
+  startDate: Maybe<ProjectsDataStartDateDto>;
+  status: Maybe<ProjectsDataStatusDto>;
+  title: Maybe<ProjectsDataTitleDto>;
+};
+
+/** The structure of the End Date field of the Projects content type. */
+export type ProjectsDataEndDateDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the End Date field of the Projects content input type. */
+export type ProjectsDataEndDateInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
+/** The structure of the Projects data input type. */
+export type ProjectsDataInputDto = {
+  endDate: InputMaybe<ProjectsDataEndDateInputDto>;
+  members: InputMaybe<ProjectsDataMembersInputDto>;
+  projectProposal: InputMaybe<ProjectsDataProjectProposalInputDto>;
+  startDate: InputMaybe<ProjectsDataStartDateInputDto>;
+  status: InputMaybe<ProjectsDataStatusInputDto>;
+  title: InputMaybe<ProjectsDataTitleInputDto>;
+};
+
+/** The structure of the Members nested schema. */
+export type ProjectsDataMembersChildDto = {
+  user: Maybe<Array<Users>>;
+};
+
+/** The structure of the Members nested schema. */
+export type ProjectsDataMembersChildInputDto = {
+  user: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Members field of the Projects content type. */
+export type ProjectsDataMembersDto = {
+  iv: Maybe<Array<ProjectsDataMembersChildDto>>;
+};
+
+/** The structure of the Members field of the Projects content input type. */
+export type ProjectsDataMembersInputDto = {
+  iv: InputMaybe<Array<ProjectsDataMembersChildInputDto>>;
+};
+
+/** The structure of the Project Proposal field of the Projects content type. */
+export type ProjectsDataProjectProposalDto = {
+  /** External link for a project proposal */
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Project Proposal field of the Projects content input type. */
+export type ProjectsDataProjectProposalInputDto = {
+  /** External link for a project proposal */
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Start Date field of the Projects content type. */
+export type ProjectsDataStartDateDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Start Date field of the Projects content input type. */
+export type ProjectsDataStartDateInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
+/** The structure of the Status field of the Projects content type. */
+export type ProjectsDataStatusDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Status field of the Projects content input type. */
+export type ProjectsDataStatusInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Title field of the Projects content type. */
+export type ProjectsDataTitleDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Title field of the Projects content input type. */
+export type ProjectsDataTitleInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the flat Projects data type. */
+export type ProjectsFlatDataDto = {
+  endDate: Maybe<Scalars['Instant']>;
+  members: Maybe<Array<ProjectsDataMembersChildDto>>;
+  /** External link for a project proposal */
+  projectProposal: Maybe<Scalars['String']>;
+  startDate: Maybe<Scalars['Instant']>;
+  status: Maybe<Scalars['String']>;
+  title: Maybe<Scalars['String']>;
+};
+
+/** List of Projects items and total count. */
+export type ProjectsResultDto = {
+  /** The contents. */
+  items: Maybe<Array<Projects>>;
+  /** The total count of  contents. */
+  total: Scalars['Int'];
 };
 
 /** A user that created or modified a content or asset. */
@@ -724,6 +1068,10 @@ export type Users = Content & {
   referencesDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
   referencesDashboardContentsWithTotal: Maybe<DashboardResultDto>;
+  /** Query Projects content items. */
+  referencesProjectsContents: Maybe<Array<Projects>>;
+  /** Query Projects content items with total count. */
+  referencesProjectsContentsWithTotal: Maybe<ProjectsResultDto>;
   /** Query Users content items. */
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -736,6 +1084,10 @@ export type Users = Content & {
   referencingDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
   referencingDashboardContentsWithTotal: Maybe<DashboardResultDto>;
+  /** Query Projects content items. */
+  referencingProjectsContents: Maybe<Array<Projects>>;
+  /** Query Projects content items with total count. */
+  referencingProjectsContentsWithTotal: Maybe<ProjectsResultDto>;
   /** Query Users content items. */
   referencingUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -765,6 +1117,24 @@ export type UsersReferencesDashboardContentsArgs = {
 
 /** The structure of a Users content type. */
 export type UsersReferencesDashboardContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencesProjectsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencesProjectsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -819,6 +1189,24 @@ export type UsersReferencingDashboardContentsArgs = {
 
 /** The structure of a Users content type. */
 export type UsersReferencingDashboardContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencingProjectsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencingProjectsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -952,6 +1340,18 @@ export type UsersDataDegreeInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Dismissed Getting Started dialog field of the Users content type. */
+export type UsersDataDismissedGettingStartedDto = {
+  /** Use this field when the user has dismissed the getting started dialog */
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Dismissed Getting Started dialog field of the Users content input type. */
+export type UsersDataDismissedGettingStartedInputDto = {
+  /** Use this field when the user has dismissed the getting started dialog */
+  iv: InputMaybe<Scalars['Boolean']>;
+};
+
 /** The structure of the Users data type. */
 export type UsersDataDto = {
   adminNotes: Maybe<UsersDataAdminNotesDto>;
@@ -962,6 +1362,7 @@ export type UsersDataDto = {
   contactEmail: Maybe<UsersDataContactEmailDto>;
   country: Maybe<UsersDataCountryDto>;
   degree: Maybe<UsersDataDegreeDto>;
+  dismissedGettingStarted: Maybe<UsersDataDismissedGettingStartedDto>;
   email: Maybe<UsersDataEmailDto>;
   expertiseAndResourceDescription: Maybe<UsersDataExpertiseAndResourceDescriptionDto>;
   expertiseAndResourceTags: Maybe<UsersDataExpertiseAndResourceTagsDto>;
@@ -1034,6 +1435,7 @@ export type UsersDataInputDto = {
   contactEmail: InputMaybe<UsersDataContactEmailInputDto>;
   country: InputMaybe<UsersDataCountryInputDto>;
   degree: InputMaybe<UsersDataDegreeInputDto>;
+  dismissedGettingStarted: InputMaybe<UsersDataDismissedGettingStartedInputDto>;
   email: InputMaybe<UsersDataEmailInputDto>;
   expertiseAndResourceDescription: InputMaybe<UsersDataExpertiseAndResourceDescriptionInputDto>;
   expertiseAndResourceTags: InputMaybe<UsersDataExpertiseAndResourceTagsInputDto>;
@@ -1088,7 +1490,11 @@ export type UsersDataLabsInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
-export type UsersDataLabsUnionDto = Dashboard | Users | WorkingGroups;
+export type UsersDataLabsUnionDto =
+  | Dashboard
+  | Projects
+  | Users
+  | WorkingGroups;
 
 /** The structure of the Last Modified Date field of the Users content type. */
 export type UsersDataLastModifiedDateDto = {
@@ -1297,6 +1703,8 @@ export type UsersFlatDataDto = {
   contactEmail: Maybe<Scalars['String']>;
   country: Maybe<Scalars['String']>;
   degree: Maybe<Scalars['String']>;
+  /** Use this field when the user has dismissed the getting started dialog */
+  dismissedGettingStarted: Maybe<Scalars['Boolean']>;
   email: Maybe<Scalars['String']>;
   expertiseAndResourceDescription: Maybe<Scalars['String']>;
   expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
@@ -1557,6 +1965,93 @@ export type WorkingGroupsResultDto = {
   total: Scalars['Int'];
 };
 
+export type ProjectContentFragment = Pick<Projects, 'id'> & {
+  flatData: Pick<
+    ProjectsFlatDataDto,
+    'title' | 'startDate' | 'endDate' | 'status' | 'projectProposal'
+  > & {
+    members: Maybe<
+      Array<{
+        user: Maybe<
+          Array<
+            Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+              flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
+                avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+              };
+            }
+          >
+        >;
+      }>
+    >;
+  };
+};
+
+export type FetchProjectQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchProjectQuery = {
+  findProjectsContent: Maybe<
+    Pick<Projects, 'id'> & {
+      flatData: Pick<
+        ProjectsFlatDataDto,
+        'title' | 'startDate' | 'endDate' | 'status' | 'projectProposal'
+      > & {
+        members: Maybe<
+          Array<{
+            user: Maybe<
+              Array<
+                Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+                  flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
+                    avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                  };
+                }
+              >
+            >;
+          }>
+        >;
+      };
+    }
+  >;
+};
+
+export type FetchProjectsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type FetchProjectsQuery = {
+  queryProjectsContentsWithTotal: Maybe<
+    Pick<ProjectsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<Projects, 'id'> & {
+            flatData: Pick<
+              ProjectsFlatDataDto,
+              'title' | 'startDate' | 'endDate' | 'status' | 'projectProposal'
+            > & {
+              members: Maybe<
+                Array<{
+                  user: Maybe<
+                    Array<
+                      Pick<
+                        Users,
+                        'id' | 'created' | 'lastModified' | 'version'
+                      > & {
+                        flatData: Pick<
+                          UsersFlatDataDto,
+                          'firstName' | 'lastName'
+                        > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                      }
+                    >
+                  >;
+                }>
+              >;
+            };
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export type UsersContentFragment = Pick<
   Users,
   'id' | 'created' | 'lastModified' | 'version'
@@ -1565,6 +2060,7 @@ export type UsersContentFragment = Pick<
     UsersFlatDataDto,
     | 'biography'
     | 'degree'
+    | 'dismissedGettingStarted'
     | 'email'
     | 'contactEmail'
     | 'firstName'
@@ -1629,6 +2125,7 @@ export type FetchUserQuery = {
         UsersFlatDataDto,
         | 'biography'
         | 'degree'
+        | 'dismissedGettingStarted'
         | 'email'
         | 'contactEmail'
         | 'firstName'
@@ -1700,6 +2197,7 @@ export type FetchUsersQuery = {
               UsersFlatDataDto,
               | 'biography'
               | 'degree'
+              | 'dismissedGettingStarted'
               | 'email'
               | 'contactEmail'
               | 'firstName'
@@ -1869,6 +2367,106 @@ export type FetchWorkingGroupsQuery = {
   >;
 };
 
+export const ProjectContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProjectContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Projects' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'projectProposal' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'members' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'created' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastModified' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'version' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'avatar' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ProjectContentFragment, unknown>;
 export const UsersContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -1904,6 +2502,10 @@ export const UsersContentFragmentDoc = {
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'biography' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'degree' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'dismissedGettingStarted' },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'email' } },
                 {
                   kind: 'Field',
@@ -2144,6 +2746,108 @@ export const WorkingGroupContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<WorkingGroupContentFragment, unknown>;
+export const FetchProjectDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchProject' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findProjectsContent' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'ProjectContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ProjectContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchProjectQuery, FetchProjectQueryVariables>;
+export const FetchProjectsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchProjects' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryProjectsContentsWithTotal' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderby' },
+                value: {
+                  kind: 'StringValue',
+                  value: 'created desc',
+                  block: false,
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProjectContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ProjectContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchProjectsQuery, FetchProjectsQueryVariables>;
 export const FetchUserDocument = {
   kind: 'Document',
   definitions: [

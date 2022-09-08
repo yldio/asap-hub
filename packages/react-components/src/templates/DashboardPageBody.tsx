@@ -72,7 +72,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
 
   return (
     <div css={styles}>
-      {isEnabled('GETTING_STARTED') && !dismissedGettingStarted && (
+      {!dismissedGettingStarted && (
         <div>
           <Headline2 styleAsHeading={3}>Get Started with ASAP</Headline2>
           <div css={infoStyles}>

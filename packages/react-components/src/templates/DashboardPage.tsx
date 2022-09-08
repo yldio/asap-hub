@@ -11,9 +11,16 @@ const mainStyles = css({
 
 type DashboardPageProps = ComponentProps<typeof DashboardPageHeader>;
 
-const Dashboard: React.FC<DashboardPageProps> = ({ firstName, children }) => (
+const Dashboard: React.FC<DashboardPageProps> = ({
+  firstName,
+  dismissedGettingStarted,
+  children,
+}) => (
   <article>
-    <DashboardPageHeader firstName={firstName} />
+    <DashboardPageHeader
+      firstName={firstName}
+      dismissedGettingStarted={dismissedGettingStarted}
+    />
     <main css={mainStyles}>{children}</main>
   </article>
 );

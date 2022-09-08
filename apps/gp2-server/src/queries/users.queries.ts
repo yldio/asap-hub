@@ -12,6 +12,7 @@ export const usersContentQueryFragment = gql`
       }
       biography
       degree
+      dismissedGettingStarted
       email
       contactEmail
       firstName

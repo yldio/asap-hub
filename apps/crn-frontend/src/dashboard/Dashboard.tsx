@@ -47,7 +47,10 @@ const Dashboard: FC<Record<string, never>> = () => {
 
   return (
     <>
-      <DashboardPage firstName={firstName}>
+      <DashboardPage
+        firstName={firstName}
+        dismissedGettingStarted={user?.dismissedGettingStarted}
+      >
         <Frame title={null}>
           <Body
             {...dashboard}

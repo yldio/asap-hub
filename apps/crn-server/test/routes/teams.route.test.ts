@@ -1,17 +1,18 @@
-import supertest from 'supertest';
-import Boom from '@hapi/boom';
 import { User } from '@asap-hub/auth';
-import { AuthHandler } from '@asap-hub/server-common';
 import { userMock } from '@asap-hub/fixtures';
+import { FetchOptions, FetchTeamsOptions } from '@asap-hub/model';
+import { AuthHandler } from '@asap-hub/server-common';
+import Boom from '@hapi/boom';
+import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import * as fixtures from '../fixtures/groups.fixtures';
-import { groupControllerMock } from '../mocks/group-controller.mock';
-import { teamControllerMock } from '../mocks/team-controller.mock';
 import {
   getListTeamResponse,
   getTeamResponse,
 } from '../fixtures/teams.fixtures';
-import { FetchOptions, FetchTeamsOptions } from '@asap-hub/model';
+import { groupControllerMock } from '../mocks/group-controller.mock';
+import { httpLoggerMock, loggerMock } from '../mocks/logger.mock';
+import { teamControllerMock } from '../mocks/team-controller.mock';
 
 describe('/teams/ route', () => {
   const loggedUser: User = {
@@ -32,6 +33,8 @@ describe('/teams/ route', () => {
     groupController: groupControllerMock,
     teamController: teamControllerMock,
     authHandler: authHandlerMock,
+    logger: loggerMock,
+    httpLogger: httpLoggerMock,
   });
 
   afterEach(() => {

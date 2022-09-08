@@ -2,12 +2,15 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { getListResearchTagResponse } from '../fixtures/research-tag.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
+import { httpLoggerMock, loggerMock } from '../mocks/logger.mock';
 import { researchTagControllerMock } from '../mocks/research-tags-controller.mock';
 
 describe('/research-tags/ route', () => {
   const app = appFactory({
     authHandler: authHandlerMock,
     researchTagController: researchTagControllerMock,
+    logger: loggerMock,
+    httpLogger: httpLoggerMock,
   });
 
   afterEach(() => {

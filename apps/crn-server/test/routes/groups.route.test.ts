@@ -1,21 +1,24 @@
-import supertest from 'supertest';
-import Boom from '@hapi/boom';
 import { FetchOptions, ListEventResponse } from '@asap-hub/model';
+import Boom from '@hapi/boom';
+import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { authHandlerMock } from '../mocks/auth-handler.mock';
-import { groupControllerMock } from '../mocks/group-controller.mock';
-import { eventControllerMock } from '../mocks/event-controller.mock';
 import { FetchEventsOptions } from '../../src/controllers/events';
 import {
   getGroupResponse,
   getListGroupResponse,
 } from '../fixtures/groups.fixtures';
+import { authHandlerMock } from '../mocks/auth-handler.mock';
+import { eventControllerMock } from '../mocks/event-controller.mock';
+import { groupControllerMock } from '../mocks/group-controller.mock';
+import { httpLoggerMock, loggerMock } from '../mocks/logger.mock';
 
 describe('/groups/ route', () => {
   const app = appFactory({
     eventController: eventControllerMock,
     groupController: groupControllerMock,
     authHandler: authHandlerMock,
+    logger: loggerMock,
+    httpLogger: httpLoggerMock,
   });
 
   afterEach(() => {

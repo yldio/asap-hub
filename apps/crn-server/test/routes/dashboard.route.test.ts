@@ -1,13 +1,16 @@
+import supertest from 'supertest';
 import { appFactory } from '../../src/app';
+import { squidexGraphqlDashboardResponse } from '../fixtures/dashboard.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { dashboardControllerMock } from '../mocks/dashboard-controller.mock';
-import supertest from 'supertest';
-import { squidexGraphqlDashboardResponse } from '../fixtures/dashboard.fixtures';
+import { httpLoggerMock, loggerMock } from '../mocks/logger.mock';
 
 describe('/dashboard/ route', () => {
   const app = appFactory({
     dashboardController: dashboardControllerMock,
     authHandler: authHandlerMock,
+    logger: loggerMock,
+    httpLogger: httpLoggerMock,
   });
 
   describe('GET /dashboard', () => {

@@ -140,7 +140,7 @@ export const getResearchOutputDataObject = (): ResearchOutputDataObject => ({
   description: 'Text',
   tags: ['tag', 'test'],
   authors: fetchExpectation.items,
-  teams: [{ id: 'team-id-1', displayName: 'Team A' }],
+  teams: [{ id: 'team-id-0', displayName: 'Team A' }],
   publishDate: '2021-05-21T13:18:31Z',
   labCatalogNumber: 'http://example.com',
   rrid: 'RRID:AB_90755',

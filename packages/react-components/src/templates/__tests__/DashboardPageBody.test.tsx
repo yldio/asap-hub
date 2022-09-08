@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
-import { createEventResponse } from '@asap-hub/fixtures';
+import { createListEventResponse } from '@asap-hub/fixtures';
 
 import DashboardPageBody from '../DashboardPageBody';
 
@@ -75,11 +75,7 @@ it('hides add links to your work space section when user is not a member of a te
 });
 
 describe('the past events card', () => {
-  const events = [
-    createEventResponse({}, 0),
-    createEventResponse({}, 1),
-    createEventResponse({}, 2),
-  ];
+  const events = createListEventResponse(3).items;
   it('renders multiple past events', () => {
     render(<DashboardPageBody {...props} events={events} />);
     expect(

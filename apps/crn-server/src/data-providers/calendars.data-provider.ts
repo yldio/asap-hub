@@ -35,7 +35,7 @@ export interface CalendarDataProvider {
   ): Promise<CalendarRawDataObject>;
   fetch(
     options: FetchCalendarOptions,
-  ): Promise<CalendarRawDataObject[] | FetchCalendarError[]>;
+  ): Promise<CalendarRawDataObject[] | FetchCalendarError>;
   fetchById(id: string): Promise<CalendarRawDataObject | FetchCalendarError>;
   fetchByResourceId(
     resourceId: string,
@@ -130,7 +130,7 @@ export default class CalendarSquidexDataProvider {
 
   async fetch(
     options: FetchCalendarOptions,
-  ): Promise<CalendarRawDataObject[] | FetchCalendarError[]> {
+  ): Promise<CalendarRawDataObject[] | FetchCalendarError> {
     const { maxExpiration, onlyActive, take, skip } = options;
 
     const { queryCalendarsContentsWithTotal } =
@@ -146,14 +146,14 @@ export default class CalendarSquidexDataProvider {
 
     if (queryCalendarsContentsWithTotal === null) {
       logger.warn('queryCalendarsContentsWithTotal returned null');
-      return [FetchCalendarError.FetchError];
+      return FetchCalendarError.FetchError;
     }
 
     const { items: calendars } = queryCalendarsContentsWithTotal;
 
     if (calendars === null) {
       logger.warn('queryCalendarsContentsWithTotal items returned null');
-      return [FetchCalendarError.CalendarNotFound];
+      return FetchCalendarError.CalendarNotFound;
     }
 
     let graphqlCalendars: GraphqlCalendar[] = calendars;
@@ -189,7 +189,7 @@ export default class CalendarSquidexDataProvider {
     }
 
     if (graphqlCalendars.length === 0) {
-      return [FetchCalendarError.CalendarNotFound];
+      return FetchCalendarError.CalendarNotFound;
     }
 
     const res = await Promise.all(
@@ -207,7 +207,7 @@ export default class CalendarSquidexDataProvider {
       return resCalendars;
     }
 
-    return errors;
+    return errors[0] || FetchCalendarError.FetchError;
   }
 
   async fetchById(

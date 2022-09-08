@@ -35,7 +35,7 @@ export interface CalendarDataProvider {
   ): Promise<CalendarRawDataObject>;
   fetch(
     options: FetchCalendarOptions,
-  ): Promise<CalendarRawDataObject[] | FetchCalendarError>;
+  ): Promise<CalendarRawDataObject[] | FetchCalendarError[]>;
   fetchById(id: string): Promise<CalendarRawDataObject | FetchCalendarError>;
   fetchByResourceId(
     resourceId: string,

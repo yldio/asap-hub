@@ -1,5 +1,25 @@
+import { ComponentProps, FC } from 'react';
+import { User } from '@asap-hub/auth';
 import { DashboardPageBody } from '@asap-hub/react-components';
+import { useEvents } from '../events/state';
+import { getEventListOptions } from '../events/options';
 
-const Body = DashboardPageBody;
+type BodyProps = Omit<ComponentProps<typeof DashboardPageBody>, 'events'> & {
+  date: Date;
+  user: User;
+};
+
+const Body: FC<BodyProps> = ({ date, user, ...props }) => {
+  const { items: events } = useEvents(
+    getEventListOptions(date, {
+      past: true,
+      pageSize: 3,
+      currentPage: 1,
+    }),
+    user,
+  );
+
+  return <DashboardPageBody events={events} {...props} />;
+};
 
 export default Body;

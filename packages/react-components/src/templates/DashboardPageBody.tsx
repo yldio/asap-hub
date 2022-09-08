@@ -9,7 +9,12 @@ import {
 } from '@asap-hub/routing';
 import { TeamRole, UserResponse } from '@asap-hub/model';
 
-import { NewsSection, HelpSection, RemindersCard } from '../organisms';
+import {
+  NewsSection,
+  HelpSection,
+  RemindersCard,
+  PastEventsDashboardCard,
+} from '../organisms';
 import { perRem } from '../pixels';
 import { Card, Paragraph, Link, Headline2 } from '../atoms';
 import { lead } from '..';
@@ -40,6 +45,8 @@ type DashboardPageBodyProps = Pick<
   ComponentProps<typeof RemindersCard>,
   'reminders'
 > &
+  Pick<ComponentProps<typeof RemindersCard>, 'reminders'> &
+  Pick<ComponentProps<typeof PastEventsDashboardCard>, 'events'> &
   Omit<ComponentProps<typeof NewsSection>, 'title'> & {
     readonly userId: string;
     readonly teamId?: string;
@@ -55,6 +62,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   teamId,
   roles,
   reminders,
+  events,
   dismissedGettingStarted,
 }) => {
   const canPublish = roles.some((role) => publishRoles.includes(role));
@@ -112,6 +120,13 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           limit={3}
           canPublish={canPublish}
         />
+      </div>
+      <div>
+        <Headline2 styleAsHeading={3}>Past Events</Headline2>
+        <div css={infoStyles}>
+          Explore previous events and learn about what was discussed.
+        </div>
+        <PastEventsDashboardCard events={events} />
       </div>
       {news.length ? (
         <NewsSection title="Latest News from ASAP" news={news} />

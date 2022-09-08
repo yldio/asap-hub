@@ -18,6 +18,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
       type: 'Event',
     },
   ],
+  events: [],
   userId: '42',
   teamId: '1337',
   roles: [],

@@ -1,0 +1,156 @@
+import { appName, baseUrl } from '../../src/config';
+import {
+  parseProjectToDataObject,
+  ProjectSquidexDataProvider,
+} from '../../src/data-providers/project.data-provider';
+import {
+  getGraphQLProject,
+  getGraphQLProjectMember,
+  getListProjectDataObject,
+  getProjectDataObject,
+  getSquidexProjectGraphqlResponse,
+  getSquidexProjectsGraphqlResponse,
+} from '../fixtures/project.fixtures';
+import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
+import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
+
+describe('Project Data Provider', () => {
+  const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
+  const projectDataProvider = new ProjectSquidexDataProvider(
+    squidexGraphqlClientMock,
+  );
+
+  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
+  const projectDataProviderMockGraphqlServer = new ProjectSquidexDataProvider(
+    squidexGraphqlClientMockServer,
+  );
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
+  describe('Fetch', () => {
+    test('Should fetch the project from squidex graphql', async () => {
+      const result = await projectDataProviderMockGraphqlServer.fetch();
+
+      expect(result).toMatchObject(getListProjectDataObject());
+    });
+
+    test('Should return an empty result', async () => {
+      const mockResponse = getSquidexProjectsGraphqlResponse();
+      mockResponse.queryProjectsContentsWithTotal!.items = [];
+      mockResponse.queryProjectsContentsWithTotal!.total = 0;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await projectDataProvider.fetch();
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return an empty result if the client returns a response with a null items property', async () => {
+      const mockResponse = getSquidexProjectsGraphqlResponse();
+      mockResponse.queryProjectsContentsWithTotal = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await projectDataProvider.fetch();
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return an empty result if the client returns a response with a null query property', async () => {
+      const mockResponse = getSquidexProjectsGraphqlResponse();
+      mockResponse.queryProjectsContentsWithTotal!.items = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await projectDataProvider.fetch();
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should default null title, startDate to an empty string', async () => {
+      const mockResponse = getSquidexProjectsGraphqlResponse();
+      const Project = getGraphQLProject();
+      Project.flatData.title = null;
+      Project.flatData.startDate = null;
+      mockResponse.queryProjectsContentsWithTotal!.items = [Project];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const { items } = await projectDataProvider.fetch();
+      expect(items[0]).toMatchObject({
+        title: '',
+        startDate: '',
+      });
+    });
+    describe('FetchById', () => {
+      test('Should fetch the project from squidex graphql', async () => {
+        const result = await projectDataProviderMockGraphqlServer.fetchById(
+          'project-id',
+        );
+
+        expect(result).toMatchObject(getProjectDataObject());
+      });
+      test('Should return null when the project is not found', async () => {
+        const mockResponse = getSquidexProjectGraphqlResponse();
+        mockResponse.findProjectsContent = null;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        expect(await projectDataProvider.fetchById('not-found')).toBeNull();
+      });
+    });
+
+    describe('Parsing', () => {
+      test('the project is parsed', () => {
+        const Project = getGraphQLProject();
+        const ProjectDataObject = parseProjectToDataObject(Project);
+        const expected = getProjectDataObject();
+        expect(ProjectDataObject).toEqual(expected);
+      });
+      test('invalid status', () => {
+        const Project = getGraphQLProject();
+        Project.flatData.status = 'invalid-status';
+        expect(() =>
+          parseProjectToDataObject(Project),
+        ).toThrowErrorMatchingInlineSnapshot(
+          '"Invalid status: invalid-status"',
+        );
+      });
+
+      test('the members in project are parsed', () => {
+        const Project = getGraphQLProject();
+        Project.flatData.members = [getGraphQLProjectMember()];
+        const { members } = parseProjectToDataObject(Project);
+        expect(members).toEqual([
+          {
+            userId: '42',
+            firstName: 'Tony',
+            lastName: 'Stark',
+          },
+        ]);
+      });
+
+      test('undefined members returns empty array', () => {
+        const Project = getGraphQLProject();
+        Project.flatData.members = undefined!;
+        const { members } = parseProjectToDataObject(Project);
+        expect(members).toEqual([]);
+      });
+
+      test('avatar urls are added if available', () => {
+        const Project = getGraphQLProject();
+        const member = getGraphQLProjectMember();
+        member!.user![0]!.flatData.avatar = [{ id: 'avatar-id' }];
+        Project.flatData.members = [member];
+        const { members } = parseProjectToDataObject(Project);
+        expect(members[0]?.avatarUrl).toEqual(
+          `${baseUrl}/api/assets/${appName}/avatar-id`,
+        );
+      });
+
+      test('should skip the user from the result if the user property is undefined', () => {
+        const Project = getGraphQLProject();
+        const member = getGraphQLProjectMember();
+        member!.user = undefined!;
+        Project.flatData.members = [member];
+        const { members } = parseProjectToDataObject(Project);
+        expect(members).toEqual([]);
+      });
+    });
+  });
+});

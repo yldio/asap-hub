@@ -1,10 +1,6 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
-import {
-  createListEventResponse,
-  createPageResponse,
-} from '@asap-hub/fixtures';
-import { disable } from '@asap-hub/flags';
+import { createListEventResponse } from '@asap-hub/fixtures';
 
 import DashboardPageBody from '../DashboardPageBody';
 
@@ -23,7 +19,6 @@ const props: ComponentProps<typeof DashboardPageBody> = {
       type: 'Event',
     },
   ],
-  pages: [createPageResponse('1'), createPageResponse('2')],
   userId: '42',
   teamId: '1337',
   roles: [],
@@ -31,30 +26,42 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   dismissedGettingStarted: false,
   upcomingEvents: undefined,
 };
-
 it('renders multiple news cards', () => {
-  render(<DashboardPageBody {...props} />);
+  render(
+    <DashboardPageBody
+      {...props}
+      news={[
+        {
+          id: '55724942-3408-4ad6-9a73-14b92226ffb6',
+          created: '2020-09-07T17:36:54Z',
+          title: 'News Title 1',
+          type: 'News',
+        },
+        {
+          id: '55724942-3408-4ad6-9a73-14b92226ffb77',
+          created: '2020-09-07T17:36:54Z',
+          title: 'Event Title 1',
+          type: 'Event',
+        },
+      ]}
+    />,
+  );
   expect(
     screen
       .queryAllByText(/title/i, { selector: 'h4' })
       .map(({ textContent }) => textContent),
-  ).toEqual(['Page 1 title', 'Page 2 title', 'News Title', 'Event Title']);
+  ).toEqual(['News Title 1', 'Event Title 1']);
 });
 
 it('renders news section when there are no news', () => {
   render(<DashboardPageBody {...props} news={[]} />);
 
   expect(screen.queryByText('Latest news from ASAP')).not.toBeInTheDocument();
-  expect(
-    screen.getAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(expect.arrayContaining(['Page 1 title', 'Page 2 title']));
 });
 
-it('renders news section when there are no pages', () => {
-  render(<DashboardPageBody {...props} pages={[]} />);
-  expect(
-    screen.queryByText('Not sure where to start?'),
-  ).not.toBeInTheDocument();
+it('renders news section', () => {
+  render(<DashboardPageBody {...props} />);
+
   expect(
     screen.getAllByRole('heading').map(({ textContent }) => textContent),
   ).toEqual(expect.arrayContaining(['News Title', 'Event Title']));
@@ -71,12 +78,14 @@ it('displays events cards or placeholder if there are no events', () => {
   const { rerender } = render(
     <DashboardPageBody
       {...props}
-      upcomingEvents={createListEventResponse(4)}
+      upcomingEvents={createListEventResponse(4, { customTitle: 'TestEvent' })}
     />,
   );
   expect(screen.getByText('Upcoming Events')).toBeVisible();
   expect(screen.getByText("Here're some upcoming events.")).toBeVisible();
-  expect(screen.getByText('Event 1')).toBeVisible();
+  expect(screen.getByText('TestEvent 1')).toBeVisible();
+  expect(screen.getByText('TestEvent 2')).toBeVisible();
+  expect(screen.getByText('TestEvent 3')).toBeVisible();
   expect(screen.getByRole('link', { name: 'View All →' })).toBeVisible();
 
   rerender(<DashboardPageBody {...props} upcomingEvents={undefined} />);
@@ -87,14 +96,6 @@ it('displays events cards or placeholder if there are no events', () => {
 });
 
 describe('the reminders card', () => {
-  it('does not show reminders when the feature flag is disabled (REGRESSION)', () => {
-    const { rerender } = render(<DashboardPageBody {...props} />);
-    expect(screen.getByText(/remind/i, { selector: 'h2' })).toBeVisible();
-    disable('REMINDERS');
-    rerender(<DashboardPageBody {...props} />);
-    expect(screen.queryByText(/remind/i, { selector: 'h2' })).toBeNull();
-  });
-
   it.each`
     description                                                | roles                                   | selector
     ${'shows messaging for staff'}                             | ${['ASAP Staff']}                       | ${/no reminders/i}

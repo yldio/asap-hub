@@ -27,10 +27,15 @@ import {
 import Dashboard, {
   DashboardController,
 } from './controllers/dashboard.controller';
+import Projects, { ProjectController } from './controllers/project.controller';
 import Users, { UserController } from './controllers/user.controller';
 import WorkingGroups, {
   WorkingGroupController,
 } from './controllers/working-group.controller';
+import {
+  ProjectDataProvider,
+  ProjectSquidexDataProvider,
+} from './data-providers/project.data-provider';
 import {
   UserDataProvider,
   UserSquidexDataProvider,
@@ -40,6 +45,7 @@ import {
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-group.data-provider';
 import { dashboardRouteFactory } from './routes/dashboard.route';
+import { projectRouteFactory } from './routes/project.route';
 import { userPublicRouteFactory } from './routes/user.route';
 import { workingGroupRouteFactory } from './routes/working-group.route';
 import pinoLogger from './utils/logger';
@@ -82,17 +88,22 @@ export const appFactory = (libs: Libs = {}): Express => {
   const workingGroupDataProvider =
     libs.workingGroupDataProvider ||
     new WorkingGroupSquidexDataProvider(squidexGraphqlClient);
+  const projectDataProvider =
+    libs.projectDataProvider ||
+    new ProjectSquidexDataProvider(squidexGraphqlClient);
 
   // Controllers
   const dashboardController =
     libs.dashboardController || new Dashboard(squidexGraphqlClient);
 
+  const workingGroupController =
+    libs.workingGroupController || new WorkingGroups(workingGroupDataProvider);
+  const projectController =
+    libs.projectController || new Projects(projectDataProvider);
   /**
    * Public routes --->
    */
   const userController = libs.userController || new Users(userDataProvider);
-  const workingGroupController =
-    libs.workingGroupController || new WorkingGroups(workingGroupDataProvider);
 
   // Handlers
   const authHandler =
@@ -107,7 +118,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Routes
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const userPublicRoutes = userPublicRouteFactory(userController);
-  const workinGroupRoutes = workingGroupRouteFactory(workingGroupController);
+  const workingGroupRoutes = workingGroupRouteFactory(workingGroupController);
+  const projectRoutes = projectRouteFactory(projectController);
 
   app.use(userPublicRoutes);
   // Auth
@@ -117,7 +129,8 @@ export const appFactory = (libs: Libs = {}): Express => {
    * Routes requiring onboarding below
    */
   app.use(dashboardRoutes);
-  app.use(workinGroupRoutes);
+  app.use(workingGroupRoutes);
+  app.use(projectRoutes);
 
   // Catch all
   app.get('*', async (_req, res) => {
@@ -138,8 +151,10 @@ export type Libs = {
   userDataProvider?: UserDataProvider;
   dashboardController?: DashboardController;
   workingGroupDataProvider?: WorkingGroupDataProvider;
+  projectDataProvider?: ProjectDataProvider;
   userController?: UserController;
   workingGroupController?: WorkingGroupController;
+  projectController?: ProjectController;
   authHandler?: AuthHandler;
   logger?: Logger;
 };

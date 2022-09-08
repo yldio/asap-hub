@@ -11,18 +11,6 @@ export default {
 };
 
 const props = (): ComponentProps<typeof DashboardPageBody> => ({
-  pages: [
-    {
-      id: 'uuid-1',
-      path: '/',
-      title: 'Welcome Package',
-      shortText: [
-        "Find your way around the grant, ASAP's ways of working, the deadlines and what is expected of grantees.",
-        'Open to read the Welcome Package',
-      ].join(''),
-      text: '',
-    },
-  ],
   news: [
     {
       id: 'uuid-1',

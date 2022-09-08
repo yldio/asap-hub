@@ -28,6 +28,7 @@ export {
   TabLink,
   Toggle,
   Tooltip,
+  MaterialAvailability,
 } from './atoms';
 export * from './colors';
 export * from './hooks';
@@ -107,6 +108,7 @@ export {
   OnboardingFooter,
   PageCard,
   PagesSection,
+  PastEventsDashboardCard,
   PeopleCard,
   ProfileCardList,
   ProfileExpertiseAndResources,

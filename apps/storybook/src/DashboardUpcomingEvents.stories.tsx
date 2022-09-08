@@ -10,8 +10,7 @@ const numberOfEvents = number('Number of Events', 3);
 
 export const Default = () => (
   <DashboardUpcomingEvents
-    upcomingEvents={createListEventResponse(numberOfEvents).items}
-    upcomingEventsCount={numberOfEvents}
+    upcomingEvents={createListEventResponse(numberOfEvents)}
   />
 );
 

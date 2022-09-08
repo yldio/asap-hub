@@ -32,17 +32,6 @@ type ProjectCardProps = Pick<
   | 'projectProposalUrl'
 >;
 
-const calcDuration = (start: string, end?: string) => {
-  if (!end) return '';
-  const startDate = new Date(start);
-  const endDate = new Date(end);
-
-  const monthDuration =
-    12 * (endDate.getFullYear() - startDate.getFullYear()) +
-    (endDate.getMonth() - startDate.getMonth());
-  return `(${monthDuration} mos)`;
-};
-
 const rowStyles = css({
   display: 'flex',
   flexDirection: 'column',

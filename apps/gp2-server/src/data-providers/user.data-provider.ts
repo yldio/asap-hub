@@ -131,10 +131,7 @@ const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
   const { code } = filter || {};
   const filterCode = code && `data/connections/iv/code eq '${code}'`;
 
-  const queryFilter = [
-    filterCode,
-    searchFilter && `(${searchFilter})`,
-  ]
+  const queryFilter = [filterCode, searchFilter && `(${searchFilter})`]
     .filter(Boolean)
     .join(' and ')
     .trim();
@@ -143,7 +140,6 @@ const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
 
 const isUserRole = (data: string): data is gp2.Role =>
   (gp2.gp2UserRoles as ReadonlyArray<string>).includes(data);
-
 
 export const parseGraphQLUserToDataObject = (
   item: NonNullable<FetchUserQuery['findUsersContent']>,

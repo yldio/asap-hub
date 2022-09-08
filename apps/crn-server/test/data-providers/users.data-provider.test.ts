@@ -714,7 +714,7 @@ describe('User data provider', () => {
         expect(parsedTeams).toEqual([
           {
             displayName: 'Team A',
-            id: 'team-id-1',
+            id: 'team-id-0',
             proposal: 'proposalId1',
             role: 'Lead PI (Core Leadership)',
           },

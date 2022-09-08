@@ -59,7 +59,6 @@ export const authHandlerFactory =
     }
 
     assignLoggedInUserToContext(req, user);
-    // req.loggedInUser = user;
 
     next();
   };

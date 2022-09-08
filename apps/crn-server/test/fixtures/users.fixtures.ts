@@ -142,7 +142,7 @@ export const getGraphQLUser = (
         role: 'Lead PI (Core Leadership)',
         id: [
           {
-            id: 'team-id-1',
+            id: 'team-id-0',
             flatData: {
               displayName: 'Team A',
               proposal: [{ id: 'proposalId1' }],
@@ -292,7 +292,7 @@ export const getUserResponse = (): UserResponse => ({
   },
   teams: [
     {
-      id: 'team-id-1',
+      id: 'team-id-0',
       role: 'Lead PI (Core Leadership)',
       displayName: 'Team A',
       proposal: 'proposalId1',
@@ -579,7 +579,7 @@ export const getUserDataObject = (): UserDataObject => ({
   },
   teams: [
     {
-      id: 'team-id-1',
+      id: 'team-id-0',
       role: 'Lead PI (Core Leadership)',
       displayName: 'Team A',
       proposal: 'proposalId1',
@@ -657,7 +657,7 @@ export const getInputUser = (): InputUser['data'] => ({
   teams: {
     iv: [
       {
-        id: ['team-id-1'],
+        id: ['team-id-0'],
         role: 'Lead PI (Core Leadership)',
       },
     ],

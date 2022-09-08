@@ -1,7 +1,6 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { format } from 'date-fns';
-import formatDistance from 'date-fns/formatDistanceStrict';
+import { format, formatDistanceStrict as formatDistance } from 'date-fns';
 import {
   Card,
   crossQuery,

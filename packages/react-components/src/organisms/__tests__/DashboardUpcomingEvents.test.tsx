@@ -5,24 +5,20 @@ import DashboardUpcomingEvents from '../DashboardUpcomingEvents';
 it('shows the event cards and the view all link', () => {
   const { getByText, getByRole } = render(
     <DashboardUpcomingEvents
-      upcomingEvents={createListEventResponse(3).items}
-      upcomingEventsCount={4}
+      upcomingEvents={createListEventResponse(4, { customTitle: 'TestEvent' })}
     />,
   );
 
-  expect(getByText('Upcoming Events')).toBeVisible();
-  expect(getByText("Here're some upcoming events.")).toBeVisible();
+  expect(getByText('TestEvent 1')).toBeVisible();
+  expect(getByText('TestEvent 2')).toBeVisible();
+  expect(getByText('TestEvent 3')).toBeVisible();
 
-  expect(getByText('Event 1')).toBeVisible();
   expect(getByRole('link', { name: 'View All →' })).toBeVisible();
 });
 
-it('does not show the link where there are 3 ore less upcoming evetns', () => {
+it('does not show the link where there are 3 ore less upcoming events', () => {
   const { queryByRole } = render(
-    <DashboardUpcomingEvents
-      upcomingEvents={createListEventResponse(3).items}
-      upcomingEventsCount={3}
-    />,
+    <DashboardUpcomingEvents upcomingEvents={createListEventResponse(3)} />,
   );
   expect(queryByRole('link', { name: 'View All →' })).not.toBeInTheDocument();
 });
@@ -30,7 +26,5 @@ it('does not show the link where there are 3 ore less upcoming evetns', () => {
 it('show the placeholder card if there are no events', () => {
   const { getByText } = render(<DashboardUpcomingEvents />);
 
-  expect(getByText('Upcoming Events')).toBeVisible();
-  expect(getByText("Here're some upcoming events.")).toBeVisible();
   expect(getByText('There are no upcoming events.')).toBeVisible();
 });

@@ -1,4 +1,4 @@
-import { FC, lazy, useEffect } from 'react';
+import { FC, lazy, useEffect, useState } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { useResetRecoilState, useRecoilState } from 'recoil';
 import { NotFoundPage, Layout, Loading } from '@asap-hub/react-components';
@@ -39,6 +39,7 @@ const Events = lazy(loadEvents);
 const AuthenticatedApp: FC<Record<string, never>> = () => {
   const auth0 = useAuth0();
   const [recoilAuth0, setAuth0] = useRecoilState(auth0State);
+  const [currentTime] = useState(new Date());
   const resetAuth0 = useResetRecoilState(auth0State);
   useEffect(() => {
     setAuth0(auth0);
@@ -61,7 +62,6 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     return <Loading />;
   }
 
-  const currentTime = new Date();
   return (
     <Onboardable>
       {(onboardable) => (

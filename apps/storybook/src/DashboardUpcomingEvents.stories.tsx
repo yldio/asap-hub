@@ -6,7 +6,7 @@ export default {
   title: 'Organisms / Dashboard / Upcoming Events',
 };
 
-const numberOfEvents = number('Number of Events', 4);
+const numberOfEvents = number('Number of Events', 3);
 
 export const Default = () => (
   <DashboardUpcomingEvents

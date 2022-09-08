@@ -114,10 +114,11 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           />
         </div>
       )}
-      <DashboardUpcomingEvents
-        upcomingEvents={upcomingEvents?.items}
-        upcomingEventsCount={upcomingEvents?.total}
-      />
+      <div>
+        <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
+        <div css={infoStyles}>Here're some upcoming events.</div>
+        <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
+      </div>
       {isEnabled('REMINDERS') && (
         <div>
           <Headline2 styleAsHeading={3}>Reminders</Headline2>

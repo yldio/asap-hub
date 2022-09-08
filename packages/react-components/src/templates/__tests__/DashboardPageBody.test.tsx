@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
+import { createEventResponse } from '@asap-hub/fixtures';
 
 import DashboardPageBody from '../DashboardPageBody';
 
@@ -71,6 +72,31 @@ it('hides add links to your work space section when user is not a member of a te
   expect(screen.queryByText(/Add important links/i)).toBeVisible();
   rerender(<DashboardPageBody {...props} teamId={undefined} />);
   expect(screen.queryByText(/Add important links/i)).toBeNull();
+});
+
+describe('the past events card', () => {
+  const events = [
+    createEventResponse({}, 0),
+    createEventResponse({}, 1),
+    createEventResponse({}, 2),
+  ];
+  it('renders multiple past events', () => {
+    render(<DashboardPageBody {...props} events={events} />);
+    expect(
+      screen.getAllByRole('link').map(({ textContent }) => textContent),
+    ).toEqual(expect.arrayContaining(['Event 0', 'Event 1', 'Event 2']));
+  });
+
+  it('renders the link to view all past events', () => {
+    render(<DashboardPageBody {...props} events={events} />);
+    // screen.debug(screen.getByTestId('view-past-events').closest('a'));
+    expect(
+      screen.getByTestId('view-past-events').querySelector('a'),
+    ).toHaveTextContent('View All');
+    expect(
+      screen.getByTestId('view-past-events').querySelector('a'),
+    ).toHaveAttribute('href', '/events/past');
+  });
 });
 
 describe('the reminders card', () => {

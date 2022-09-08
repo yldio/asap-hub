@@ -1,6 +1,7 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { format } from 'date-fns';
+import formatDistance from 'date-fns/formatDistanceStrict';
 import {
   Card,
   crossQuery,
@@ -110,9 +111,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           {`${format(new Date(startDate), 'MMM yyyy')}${
             endDate ? ` - ${format(new Date(endDate), 'MMM yyyy')} · ` : ''
           }`}
-          <span css={{ color: colors.neutral800.rgba }}>
-            {calcDuration(startDate, endDate)}
-          </span>
+          {endDate && (
+            <span css={{ color: colors.neutral800.rgba }}>
+              {`(${formatDistance(new Date(startDate), new Date(endDate), {
+                unit: 'month',
+              })})`}
+            </span>
+          )}
         </span>
       </IconWithLabel>
     </div>

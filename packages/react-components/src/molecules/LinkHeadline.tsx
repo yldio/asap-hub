@@ -1,4 +1,4 @@
-import { css, Theme } from '@emotion/react';
+import { css, SerializedStyles, Theme } from '@emotion/react';
 import { ComponentProps } from 'react';
 import {
   Anchor,
@@ -13,7 +13,7 @@ import { styles } from '../atoms/Link';
 import { fern } from '../colors';
 import { headlineStyles } from '../text';
 
-export const hover = (colors: Theme['colors']) =>
+export const hover = (colors: Theme['colors']): SerializedStyles =>
   css({
     ':hover': {
       color: colors?.primary500?.rgba || fern.rgb,

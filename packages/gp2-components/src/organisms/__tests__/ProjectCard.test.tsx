@@ -42,6 +42,6 @@ describe('ProjectCard', () => {
   it('renders the month duration if it has an end date', () => {
     render(<ProjectCard {...defaultProps} />);
     expect(screen.getByText('Jul 2020 - Dec 2021 ·')).toBeVisible();
-    expect(screen.getByText('(17 mos)')).toBeVisible();
+    expect(screen.getByText('(18 months)')).toBeVisible();
   });
 });

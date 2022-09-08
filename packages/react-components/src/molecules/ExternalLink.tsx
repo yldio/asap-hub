@@ -10,7 +10,12 @@ const containerStyles = css({
   display: 'flex',
 });
 const borderWidth = 1;
-const styles = (colors: Theme['colors'], withLabel = true) =>
+const styles = (
+  colors: Theme['colors'],
+  withLabel = true,
+  noMargin: boolean,
+  full: boolean,
+) =>
   css({
     display: 'flex',
     alignItems: 'center',
@@ -22,10 +27,10 @@ const styles = (colors: Theme['colors'], withLabel = true) =>
     borderRadius: `${36 / perRem}em`,
     boxSizing: 'border-box',
     border: `${borderWidth}px solid ${colors?.primary500?.rgba || fern.rgb}`,
-    margin: `${12 / perRem}em 0`,
+    margin: noMargin ? '0' : `${12 / perRem}em 0`,
     padding: withLabel ? `0 ${(12 - borderWidth) / perRem}em` : 0,
     [`@media (max-width: ${mobileScreen.max}px)`]: {
-      padding: 0,
+      padding: full ? `0 ${(12 - borderWidth) / perRem}em` : 0,
     },
     svg: {
       stroke: colors?.primary500?.rgba || fern.rgb,
@@ -41,32 +46,42 @@ const styles = (colors: Theme['colors'], withLabel = true) =>
     },
   });
 
-const textStyles = css({
-  paddingTop: `${1 / perRem}em`,
-  fontSize: `${13.6 / perRem}em`,
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    display: 'none',
-  },
-});
+const textStyles = (full: boolean) =>
+  css({
+    paddingTop: `${1 / perRem}em`,
+    fontSize: `${13.6 / perRem}em`,
+    [`@media (max-width: ${mobileScreen.max}px)`]: {
+      display: full ? 'initial' : 'none',
+    },
+  });
 
 type ExternalLinkProps = {
   readonly href: string;
   readonly icon?: JSX.Element;
   readonly label?: string;
+  readonly noMargin?: boolean;
+  readonly full?: boolean;
 };
 const ExternalLink: React.FC<ExternalLinkProps> = ({
   href,
   icon = externalLinkIcon,
   label,
+  noMargin = false,
+  full = false,
 }) => (
   <div css={containerStyles}>
     <Anchor href={href}>
-      <div css={({ colors }) => styles(colors, !!label)}>
+      <span css={({ colors }) => styles(colors, !!label, noMargin, full)}>
         {icon}
-        <div css={({ colors }) => [textStyles, getLinkColors(colors, 'light')]}>
+        <span
+          css={({ colors }) => [
+            textStyles(full),
+            getLinkColors(colors, 'light'),
+          ]}
+        >
           {label}
-        </div>
-      </div>
+        </span>
+      </span>
     </Anchor>
   </div>
 );

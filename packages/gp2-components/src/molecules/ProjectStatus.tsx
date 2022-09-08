@@ -14,12 +14,12 @@ export const statusStyles: Record<
     borderColor: colors.info900.rgba,
     backgroundColor: colors.info100.rgba,
   },
-  Inactive: {
+  Completed: {
     color: colors.secondary900.rgba,
     borderColor: colors.secondary900.rgba,
     backgroundColor: colors.secondary100.rgba,
   },
-  Completed: {
+  Inactive: {
     color: colors.warning900.rgba,
     borderColor: colors.warning900.rgba,
     backgroundColor: colors.warning100.rgba,
@@ -27,7 +27,9 @@ export const statusStyles: Record<
 };
 
 const ProjectStatus: React.FC<ProjectStatusProps> = ({ status }) => (
-  <Pill overrideStyles={css(statusStyles[status])}>{status}</Pill>
+  <Pill overrideStyles={css({ ...statusStyles[status], margin: 0 })}>
+    {status}
+  </Pill>
 );
 
 export default ProjectStatus;

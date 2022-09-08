@@ -3,9 +3,11 @@ import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import {
   Card,
+  crossQuery,
   ExternalLink,
   lead,
   LinkHeadline,
+  pixels,
   utils,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
@@ -16,22 +18,37 @@ import ProjectStatus, { statusStyles } from '../molecules/ProjectStatus';
 import colors from '../templates/colors';
 
 const { getCounterString } = utils;
+const { rem } = pixels;
 
 type ProjectCardProps = Pick<
   gp2Model.ProjectResponse,
-  'title' | 'status' | 'startDate' | 'endDate' | 'members' | 'id'
+  | 'title'
+  | 'status'
+  | 'startDate'
+  | 'endDate'
+  | 'members'
+  | 'id'
+  | 'projectProposalUrl'
 >;
 
 const calcDuration = (start: string, end?: string) => {
   if (!end) return '';
   const startDate = new Date(start);
   const endDate = new Date(end);
-  console.log(startDate, endDate);
+
   const monthDuration =
     12 * (endDate.getFullYear() - startDate.getFullYear()) +
     (endDate.getMonth() - startDate.getMonth());
   return `(${monthDuration} mos)`;
 };
+
+const rowStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  [crossQuery]: {
+    flexDirection: 'row',
+  },
+});
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
   title,
@@ -40,13 +57,29 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   endDate,
   members,
   id,
+  projectProposalUrl,
 }) => (
   <Card stroke strokeColor={statusStyles[status].color}>
-    <div css={css({ display: 'flex', flexDirection: 'row', gap: '8px' })}>
-      <ProjectStatus status={status} />
-      <div css={css({ marginLeft: 'auto' })}>
-        <ExternalLink href="google.com" label="View proposal" />
+    <div css={[rowStyles, css({ gap: rem(4) })]}>
+      <div css={css({ display: 'inline-flex' })}>
+        <ProjectStatus status={status} />
       </div>
+      {projectProposalUrl && (
+        <div
+          css={css({
+            [crossQuery]: {
+              marginLeft: 'auto',
+            },
+          })}
+        >
+          <ExternalLink
+            href={projectProposalUrl}
+            label="View proposal"
+            noMargin
+            full
+          />
+        </div>
+      )}
     </div>
     <LinkHeadline
       href={
@@ -59,12 +92,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       {title}
     </LinkHeadline>
     <div
-      css={css({
-        display: 'flex',
-        flexDirection: 'row',
-        gap: '32px',
-        color: lead.rgb,
-      })}
+      css={[
+        rowStyles,
+        css({
+          [crossQuery]: {
+            gap: rem(32),
+          },
+          color: lead.rgb,
+        }),
+      ]}
     >
       <IconWithLabel icon={usersIcon}>
         {getCounterString(members.length, 'Member')}
@@ -72,7 +108,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       <IconWithLabel icon={dateIcon}>
         <span>
           {`${format(new Date(startDate), 'MMM yyyy')}${
-            endDate && ` - ${format(new Date(endDate), 'MMM yyyy')} · `
+            endDate ? ` - ${format(new Date(endDate), 'MMM yyyy')} · ` : ''
           }`}
           <span css={{ color: colors.neutral800.rgba }}>
             {calcDuration(startDate, endDate)}

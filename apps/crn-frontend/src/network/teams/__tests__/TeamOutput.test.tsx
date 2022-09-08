@@ -140,7 +140,7 @@ describe('TeamOutput', () => {
         labs: ['l0'],
         authors: [
           {
-            userId: 'u2',
+            userId: 'user-id-2',
           },
         ],
         methods: [],

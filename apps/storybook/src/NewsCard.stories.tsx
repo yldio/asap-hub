@@ -25,10 +25,10 @@ const newsProps = (): ComponentProps<typeof NewsCard> => ({
   noPill: boolean('No Pill', false),
 });
 
-const eventProps = (): ComponentProps<typeof NewsCard> => ({
+const tutorialProps = (): ComponentProps<typeof NewsCard> => ({
   id: 'uuid-2',
   created: new Date().toISOString(),
-  type: 'Event' as const,
+  type: 'Tutorial' as const,
   title: text(
     'Title',
     'Welcome to the ASAP Collaborative Initiative: The Science & the scientists',
@@ -38,4 +38,4 @@ const eventProps = (): ComponentProps<typeof NewsCard> => ({
 
 export const News = () => <NewsCard {...newsProps()} />;
 
-export const Event = () => <NewsCard {...eventProps()} />;
+export const Tutorial = () => <NewsCard {...tutorialProps()} />;

@@ -18,7 +18,7 @@ const props = (): ComponentProps<typeof DashboardPageBody> => ({
     {
       id: 'uuid-2',
       created: new Date().toISOString(),
-      type: 'Event' as const,
+      type: 'Tutorial' as const,
       title:
         'Welcome to the ASAP Collaborative Initiative: The Science & the scientists',
     },

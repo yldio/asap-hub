@@ -14,8 +14,8 @@ const props: ComponentProps<typeof DashboardPageBody> = {
     {
       id: '55724942-3408-4ad6-9a73-14b92226ffb77',
       created: '2020-09-07T17:36:54Z',
-      title: 'Event Title',
-      type: 'Event',
+      title: 'Tutorial Title',
+      type: 'Tutorial',
     },
   ],
   userId: '42',
@@ -38,8 +38,8 @@ it('renders multiple news cards', () => {
         {
           id: '55724942-3408-4ad6-9a73-14b92226ffb77',
           created: '2020-09-07T17:36:54Z',
-          title: 'Event Title 1',
-          type: 'Event',
+          title: 'Tutorial Title 1',
+          type: 'Tutorial',
         },
       ]}
     />,
@@ -48,7 +48,7 @@ it('renders multiple news cards', () => {
     screen
       .queryAllByText(/title/i, { selector: 'h4' })
       .map(({ textContent }) => textContent),
-  ).toEqual(['News Title 1', 'Event Title 1']);
+  ).toEqual(['News Title 1', 'Tutorial Title 1']);
 });
 
 it('renders news section when there are no news', () => {
@@ -62,7 +62,7 @@ it('renders news section', () => {
 
   expect(
     screen.getAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(expect.arrayContaining(['News Title', 'Event Title']));
+  ).toEqual(expect.arrayContaining(['News Title', 'Tutorial Title']));
 });
 
 it('hides add links to your work space section when user is not a member of a team', () => {

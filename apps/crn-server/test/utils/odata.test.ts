@@ -1,33 +1,4 @@
-import { buildEqFilterForWords, makeODataFilter } from '../../src/utils/odata';
-
-describe('makeODataFilter', () => {
-  test('converts the object to a format accepted by OData', () => {
-    expect(
-      makeODataFilter({
-        title: 'some title',
-        link: 'https://somelink.com',
-        documentType: ['a', 'b', 'c'],
-      }),
-    ).toStrictEqual([
-      { 'data/title/iv': 'some title' },
-      { 'data/link/iv': 'https://somelink.com' },
-      {
-        or: [
-          { 'data/documentType/iv': 'a' },
-          { 'data/documentType/iv': 'b' },
-          { 'data/documentType/iv': 'c' },
-        ],
-      },
-    ]);
-  });
-
-  describe('when the filter is not defined', () => {
-    test('returns null', () => {
-      expect(makeODataFilter()).toBeNull();
-      expect(makeODataFilter(undefined)).toBeNull();
-    });
-  });
-});
+import { buildEqFilterForWords } from '../../src/utils/odata';
 
 describe('buildEqFilterForWords', () => {
   test('builds the query correctly', () => {

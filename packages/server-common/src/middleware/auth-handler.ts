@@ -1,11 +1,10 @@
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
 import { createHash } from 'crypto';
-import { RequestHandler } from 'express';
+import { Request, RequestHandler } from 'express';
 import { CacheClient } from '../clients/cache.client';
 import { Logger } from '../utils/logger';
 import { DecodeToken } from '../utils/validate-token';
-import { Request } from 'express'
 
 export const authHandlerFactory =
   <T>(

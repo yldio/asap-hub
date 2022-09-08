@@ -19,7 +19,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
       type: 'Event',
     },
   ],
-  events: [],
+  pastEvents: [],
   userId: '42',
   teamId: '1337',
   roles: [],
@@ -77,15 +77,15 @@ it('hides add links to your work space section when user is not a member of a te
 describe('the past events card', () => {
   const events = createListEventResponse(3).items;
   it('renders multiple past events', () => {
-    render(<DashboardPageBody {...props} events={events} />);
+    render(<DashboardPageBody {...props} pastEvents={events} />);
     expect(
       screen.getAllByRole('link').map(({ textContent }) => textContent),
     ).toEqual(expect.arrayContaining(['Event 0', 'Event 1', 'Event 2']));
   });
 
   it('renders the link to view all past events', () => {
-    render(<DashboardPageBody {...props} events={events} />);
-    // screen.debug(screen.getByTestId('view-past-events').closest('a'));
+    render(<DashboardPageBody {...props} pastEvents={events} />);
+
     expect(
       screen.getByTestId('view-past-events').querySelector('a'),
     ).toHaveTextContent('View All');

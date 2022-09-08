@@ -52,11 +52,11 @@ type DashboardPageBodyProps = Pick<
   'reminders'
 > &
   Pick<ComponentProps<typeof RemindersCard>, 'reminders'> &
-  Pick<ComponentProps<typeof PastEventsDashboardCard>, 'events'> &
   Omit<ComponentProps<typeof NewsSection>, 'title'> & {
     readonly userId: string;
     readonly teamId?: string;
   } & Pick<UserResponse, 'dismissedGettingStarted'> & {
+    pastEvents: ComponentProps<typeof PastEventsDashboardCard>['events'];
     roles: TeamRole[];
   };
 
@@ -68,7 +68,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   teamId,
   roles,
   reminders,
-  events,
+  pastEvents,
   dismissedGettingStarted,
 }) => {
   const canPublish = roles.some((role) => publishRoles.includes(role));
@@ -132,7 +132,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <div css={infoStyles}>
           Explore previous events and learn about what was discussed.
         </div>
-        <PastEventsDashboardCard events={events} />
+        <PastEventsDashboardCard events={pastEvents} />
         <p css={viewAllStyles} data-testid="view-past-events">
           <Link href={eventsRoute({}).past({}).$}>View All →</Link>
         </p>

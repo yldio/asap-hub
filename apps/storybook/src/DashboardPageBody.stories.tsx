@@ -29,7 +29,7 @@ const props = (): ComponentProps<typeof DashboardPageBody> => ({
   userId: 'u42',
   teamId: 't42',
   roles: [],
-  events: [
+  pastEvents: [
     createEventResponse({}, 1),
     createEventResponse({}, 2),
     createEventResponse({}, 3),

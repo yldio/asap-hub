@@ -10,7 +10,7 @@ type BodyProps = Omit<ComponentProps<typeof DashboardPageBody>, 'events'> & {
 };
 
 const Body: FC<BodyProps> = ({ date, user, ...props }) => {
-  const { items: events } = useEvents(
+  const { items: pastEvents } = useEvents(
     getEventListOptions(date, {
       past: true,
       pageSize: 3,
@@ -19,7 +19,7 @@ const Body: FC<BodyProps> = ({ date, user, ...props }) => {
     user,
   );
 
-  return <DashboardPageBody events={events} {...props} />;
+  return <DashboardPageBody {...props} pastEvents={pastEvents} />;
 };
 
 export default Body;

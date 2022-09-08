@@ -1,14 +1,14 @@
+import { createUserResponse, getJwtPayload } from '@asap-hub/fixtures';
+import { UserResponse } from '@asap-hub/model';
+import express, { Express, RequestHandler, Router } from 'express';
 import 'express-async-errors';
 import supertest from 'supertest';
-import express, { Router, Express, RequestHandler } from 'express';
-import { createUserResponse, getJwtPayload } from '@asap-hub/fixtures';
+import { MemoryCacheClient } from '../../src/clients/cache.client';
 import { authHandlerFactory } from '../../src/middleware/auth-handler';
 import { errorHandlerFactory } from '../../src/middleware/error-handler';
-import { getHttpLogger, Logger } from '../../src/utils/logger';
+import { getHttpLogger } from '../../src/utils/logger';
 import { DecodeToken } from '../../src/utils/validate-token';
 import { loggerMock } from '../mocks/logger.mock';
-import { UserResponse } from '@asap-hub/model';
-import { MemoryCacheClient } from '../../src/clients/cache.client';
 
 describe('Authentication middleware', () => {
   const mockRoutes = Router();
@@ -26,6 +26,7 @@ describe('Authentication middleware', () => {
 
   const httpLogger = getHttpLogger({ logger: loggerMock });
   const errorHandler = errorHandlerFactory();
+  const assignLoggedInUserToContext = jest.fn();
 
   beforeEach(() => {
     const cacheClient = new MemoryCacheClient<UserResponse>();
@@ -34,6 +35,7 @@ describe('Authentication middleware', () => {
       fetchByCode,
       cacheClient,
       loggerMock,
+      assignLoggedInUserToContext,
     );
     app = express();
     app.use(httpLogger);
@@ -133,7 +135,7 @@ describe('Authentication middleware', () => {
     expect(fetchByCode).toBeCalledTimes(2);
   });
 
-  test('Should fetch the logged in user by sub parameter and add them to the req object', async () => {
+  test('Should fetch the logged in user by sub parameter and call the callback with the user', async () => {
     decodeToken.mockResolvedValueOnce(jwtPayload);
 
     const response = await supertest(app)
@@ -141,6 +143,9 @@ describe('Authentication middleware', () => {
       .set('Authorization', 'Bearer something');
 
     expect(fetchByCode).toBeCalledWith(jwtPayload.sub);
-    expect(response.body).toEqual(createUserResponse());
+    expect(assignLoggedInUserToContext).toBeCalledWith(
+      expect.anything(),
+      createUserResponse(),
+    );
   });
 });

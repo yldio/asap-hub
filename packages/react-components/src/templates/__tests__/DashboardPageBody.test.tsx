@@ -20,6 +20,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
       type: 'Event',
     },
   ],
+  events: [],
   pages: [createPageResponse('1'), createPageResponse('2')],
   userId: '42',
   teamId: '1337',

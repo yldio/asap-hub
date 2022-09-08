@@ -15,6 +15,7 @@ import {
   NewsSection,
   HelpSection,
   RemindersCard,
+  PastEventsDashboardCard,
 } from '../organisms';
 import { perRem } from '../pixels';
 import { Card, Paragraph, Link, Headline2 } from '../atoms';
@@ -47,6 +48,7 @@ type DashboardPageBodyProps = Omit<
   'title'
 > &
   Pick<ComponentProps<typeof RemindersCard>, 'reminders'> &
+  Pick<ComponentProps<typeof PastEventsDashboardCard>, 'events'> &
   Omit<ComponentProps<typeof NewsSection>, 'title'> & {
     readonly userId: string;
     readonly teamId?: string;
@@ -63,6 +65,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   teamId,
   roles,
   reminders,
+  events,
   dismissedGettingStarted,
 }) => {
   const canPublish = roles.some((role) => publishRoles.includes(role));
@@ -123,6 +126,13 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           />
         </div>
       )}
+      <div>
+        <Headline2 styleAsHeading={3}>Past Events</Headline2>
+        <div css={infoStyles}>
+          Explore previous events and learn about what was discussed.
+        </div>
+        <PastEventsDashboardCard events={events} />
+      </div>
       {pages.length ? (
         <PagesSection title="Not sure where to start?" pages={pages} />
       ) : null}

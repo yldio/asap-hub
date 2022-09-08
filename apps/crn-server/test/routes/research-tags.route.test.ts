@@ -2,7 +2,7 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { getListResearchTagResponse } from '../fixtures/research-tag.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
-import { httpLoggerMock, loggerMock } from '../mocks/logger.mock';
+import { loggerMock } from '../mocks/logger.mock';
 import { researchTagControllerMock } from '../mocks/research-tags-controller.mock';
 
 describe('/research-tags/ route', () => {
@@ -10,7 +10,6 @@ describe('/research-tags/ route', () => {
     authHandler: authHandlerMock,
     researchTagController: researchTagControllerMock,
     logger: loggerMock,
-    httpLogger: httpLoggerMock,
   });
 
   afterEach(() => {

@@ -2,7 +2,7 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { LabsController } from '../../src/controllers/labs';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
-import { httpLoggerMock, loggerMock } from '../mocks/logger.mock';
+import { loggerMock } from '../mocks/logger.mock';
 
 describe('/labs/ route', () => {
   const labsControlerMock: jest.Mocked<LabsController> = {
@@ -12,7 +12,6 @@ describe('/labs/ route', () => {
     labsController: labsControlerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
-    httpLogger: httpLoggerMock,
   });
   afterEach(() => {
     labsControlerMock.fetch.mockReset();

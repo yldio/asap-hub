@@ -3,14 +3,13 @@ import { appFactory } from '../../src/app';
 import { squidexGraphqlDashboardResponse } from '../fixtures/dashboard.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { dashboardControllerMock } from '../mocks/dashboard-controller.mock';
-import { httpLoggerMock, loggerMock } from '../mocks/logger.mock';
+import { loggerMock } from '../mocks/logger.mock';
 
 describe('/dashboard/ route', () => {
   const app = appFactory({
     dashboardController: dashboardControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
-    httpLogger: httpLoggerMock,
   });
 
   describe('GET /dashboard', () => {

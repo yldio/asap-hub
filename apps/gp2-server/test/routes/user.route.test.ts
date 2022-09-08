@@ -2,11 +2,13 @@ import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { getUserResponse } from '../fixtures/user.fixtures';
+import { loggerMock } from '../mocks/logger.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
 
 describe('/users/ route', () => {
   const app = appFactory({
     userController: userControllerMock,
+    logger: loggerMock,
   });
 
   afterEach(() => {

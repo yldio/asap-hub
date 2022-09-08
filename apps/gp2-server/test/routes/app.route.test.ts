@@ -1,11 +1,13 @@
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
+import { loggerMock } from '../mocks/logger.mock';
 
 describe('App default routes', () => {
   test('Should return a 404 when the path is not found', async () => {
     const appNoAuth = appFactory({
       authHandler: authHandlerMock,
+      logger: loggerMock,
     });
 
     const response = await supertest(appNoAuth).get('/some-invalid-path');
@@ -19,7 +21,9 @@ describe('App default routes', () => {
   });
 
   test('Should return a 401 when the auth header is not present', async () => {
-    const app = appFactory();
+    const app = appFactory({
+      logger: loggerMock,
+    });
 
     const response = await supertest(app).get('/dashboard');
 

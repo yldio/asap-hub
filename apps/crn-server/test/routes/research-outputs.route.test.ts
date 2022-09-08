@@ -8,7 +8,7 @@ import {
   getResearchOutputResponse,
 } from '../fixtures/research-output.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
-import { httpLoggerMock, loggerMock } from '../mocks/logger.mock';
+import { loggerMock } from '../mocks/logger.mock';
 import { researchOutputControllerMock } from '../mocks/research-outputs-controller.mock';
 
 describe('/research-outputs/ route', () => {
@@ -16,7 +16,6 @@ describe('/research-outputs/ route', () => {
     researchOutputController: researchOutputControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
-    httpLogger: httpLoggerMock,
   });
 
   afterEach(() => {

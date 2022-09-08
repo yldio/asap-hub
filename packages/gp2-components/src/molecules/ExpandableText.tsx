@@ -7,9 +7,9 @@ import {
 } from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 
-const { rem } = pixels;
+const { rem, lineHeight } = pixels;
 
 const expandableMaxHeight = 120;
 
@@ -20,8 +20,8 @@ const textStyles = css({
 });
 
 const expandedTextStyles = css({
-  maxHeight: rem(24 * 250), // aproximation of possible max height (2500 characters) 100 chars per line
-  transition: 'max-height 200ms ease-in-out',
+  maxHeight: rem(lineHeight * 500), // aproximation of possible max height (2500 characters)
+  transition: 'max-height 300ms linear',
   background: colorWithTransparency(lead, 0).rgba,
 });
 
@@ -34,7 +34,7 @@ const expandableTextStyles = css({
   WebkitTextFillColor: 'transparent',
   backgroundClip: 'text',
   textFillColor: 'transparent',
-  transition: 'max-height 300ms ease-in-out',
+  transition: 'max-height 300ms linear',
 });
 
 const buttonContainerStyles = css({
@@ -60,9 +60,13 @@ const expandedButtonIcon = css({
 
 const ExpandableText: React.FC = ({ children }) => {
   const [expanded, setExpanded] = useState(false);
+  const [showToggle, setShowToggle] = useState(false);
   const textElement = React.useRef<HTMLParagraphElement>(null);
-  const showToggle =
-    (textElement?.current?.scrollHeight || 0) > expandableMaxHeight;
+  useLayoutEffect(() => {
+    setShowToggle(
+      (textElement?.current?.scrollHeight || 0) > expandableMaxHeight,
+    );
+  });
 
   return (
     <div>

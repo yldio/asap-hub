@@ -44,7 +44,7 @@ export default class Calendars implements CalendarController {
     };
   }
 
-  static async handleFetchCalendarError<T>(item: T | FetchCalendarError) {
+  static async handleFetchCalendarError<T>(item: T | FetchCalendarError): Promise<T> {
     if (
       typeof item === 'number' &&
       item === FetchCalendarError.CalendarNotFound

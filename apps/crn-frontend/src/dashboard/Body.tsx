@@ -29,6 +29,7 @@ const Body: FC<BodyProps> = ({ date, user, ...props }) => {
       pageSize,
     }),
   );
+
   return (
     <DashboardPageBody
       {...props}

@@ -22,7 +22,6 @@ jest.mock('../../shared-research/api');
 jest.mock('../../network/teams/api');
 jest.mock('../../network/users/api');
 
-const time = new Date('2021-12-28T14:00:00.000Z');
 const userResponse = createUserResponse({});
 afterEach(() => {
   jest.clearAllMocks();
@@ -48,7 +47,7 @@ const renderDashboard = async (user: Partial<User>) => {
         >
           <Auth0Provider user={user}>
             <WhenReady>
-              <Dashboard currentTime={time} />
+              <Dashboard />
             </WhenReady>
           </Auth0Provider>
         </RecoilRoot>

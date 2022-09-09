@@ -26,6 +26,7 @@ import {
 } from '@asap-hub/squidex';
 import { getAuthToken } from '../../src/utils/auth';
 import { appName, baseUrl } from '../../src/config';
+import CalendarSquidexDataProvider from '../../src/data-providers/calendars.data-provider';
 
 describe('Calendars controller', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
@@ -34,15 +35,19 @@ describe('Calendars controller', () => {
     'calendars',
     { appName, baseUrl },
   );
-  const calendarsController = new Calendars(
-    squidexGraphqlClientMock,
+  const calendarDataProvider = new CalendarSquidexDataProvider(
     calendarRestClient,
+    squidexGraphqlClientMock,
   );
+  const calendarsController = new Calendars(calendarDataProvider);
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-  const calendarsControllerMockGraphql = new Calendars(
-    squidexGraphqlClientMockServer,
+  const calendarDataProviderMockServer = new CalendarSquidexDataProvider(
     calendarRestClient,
+    squidexGraphqlClientMockServer,
+  );
+  const calendarsControllerMockGraphql = new Calendars(
+    calendarDataProviderMockServer,
   );
 
   beforeAll(() => {

@@ -84,7 +84,7 @@ describe('Reminders', () => {
   );
   const calendarDataProvider = new CalendarSquidexDataProvider(
     calendarRestClient,
-    squidexGraphqlClient
+    squidexGraphqlClient,
   );
   const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
     squidexGraphqlClient,
@@ -93,7 +93,6 @@ describe('Reminders', () => {
   );
   // @todo https://asaphub.atlassian.net/browse/CRN-937
   const eventController = new Events(squidexGraphqlClient, eventRestClient);
-  // @todo https://asaphub.atlassian.net/browse/CRN-937
   const calendarController = new Calendars(calendarDataProvider);
 
   describe('Research Output Published Reminder', () => {

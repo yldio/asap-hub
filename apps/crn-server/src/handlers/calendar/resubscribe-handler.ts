@@ -3,6 +3,7 @@ import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { DateTime } from 'luxon';
 import { appName, baseUrl } from '../../config';
 import Calendars, { CalendarController } from '../../controllers/calendars';
+import CalendarSquidexDataProvider from '../../data-providers/calendars.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import getJWTCredentials from '../../utils/aws-secret-manager';
 import logger from '../../utils/logger';
@@ -73,10 +74,14 @@ const calendarRestClient = new SquidexRest<RestCalendar>(
   'calendars',
   { appName, baseUrl },
 );
+const calendarDataProvider = new CalendarSquidexDataProvider(
+  calendarRestClient,
+  squidexGraphqlClient,
+);
 
 export const handler = sentryWrapper(
   resubscribeCalendarsHandlerFactory(
-    new Calendars(squidexGraphqlClient, calendarRestClient),
+    new Calendars(calendarDataProvider),
     unsubscribeFromEventChangesFactory(getJWTCredentials),
     subscribeToEventChangesFactory(getJWTCredentials),
   ),

@@ -20,6 +20,7 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { validateBody } from '../../validation/subscribe-handler.validation';
 import { CalendarEvent, CalendarPayload } from '../event-bus';
+import CalendarSquidexDataProvider from '../../data-providers/calendars.data-provider';
 
 export const calendarCreatedHandlerFactory =
   (
@@ -182,10 +183,14 @@ const calendarRestClient = new SquidexRest<RestCalendar>(
   'calendars',
   { appName, baseUrl },
 );
+const calendarDataProvider = new CalendarSquidexDataProvider(
+  calendarRestClient,
+  squidexGraphqlClient,
+);
 const webhookHandler = calendarCreatedHandlerFactory(
   subscribeToEventChangesFactory(getJWTCredentialsAWS),
   unsubscribeFromEventChangesFactory(getJWTCredentialsAWS),
-  new Calendars(squidexGraphqlClient, calendarRestClient),
+  new Calendars(calendarDataProvider),
   new AlertsSentry(Sentry.captureException.bind(Sentry)),
 );
 

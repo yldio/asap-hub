@@ -110,11 +110,6 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         </div>
       )}
       <div>
-        <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
-        <div css={infoStyles}>Here're some upcoming events.</div>
-        <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
-      </div>
-      <div>
         <Headline2 styleAsHeading={3}>Reminders</Headline2>
         <div css={infoStyles}>
           We will remind you of the most important tasks you need to do.
@@ -124,6 +119,11 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           limit={3}
           canPublish={canPublish}
         />
+      </div>
+      <div>
+        <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
+        <div css={infoStyles}>Here're some upcoming events.</div>
+        <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
       </div>
       {news.length ? (
         <NewsSection title="Latest News from ASAP" news={news} />

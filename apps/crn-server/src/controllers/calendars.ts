@@ -34,7 +34,7 @@ export default class Calendars implements CalendarController {
     this.dataProvider = dataProvider;
   }
 
-  async parseRawCalendar(
+  static async parseRawCalendar(
     raw: CalendarRawDataObject,
   ): Promise<CalendarResponse> {
     return {
@@ -44,16 +44,22 @@ export default class Calendars implements CalendarController {
     };
   }
 
-  async handleFetchCalendarError<T>(item: T | FetchCalendarError) {
-    if ((item as any) === FetchCalendarError.CalendarNotFound) {
+  static async handleFetchCalendarError<T>(item: T | FetchCalendarError) {
+    if (
+      typeof item === 'number' &&
+      item === FetchCalendarError.CalendarNotFound
+    ) {
       throw Boom.notFound();
     }
 
-    if ((item as any) === FetchCalendarError.InvalidColor) {
+    if (typeof item === 'number' && item === FetchCalendarError.InvalidColor) {
       throw Boom.badGateway('Invalid color');
     }
 
-    if ((item as any) === FetchCalendarError.MissingRequiredData) {
+    if (
+      typeof item === 'number' &&
+      item === FetchCalendarError.MissingRequiredData
+    ) {
       throw Boom.badGateway('Missing required data');
     }
 
@@ -62,13 +68,13 @@ export default class Calendars implements CalendarController {
 
   async fetch(): Promise<ListCalendarResponse> {
     try {
-      const calendars = await this.handleFetchCalendarError<
+      const calendars = await Calendars.handleFetchCalendarError<
         CalendarRawDataObject[]
       >(await this.dataProvider.fetch({ take: 50, skip: 0, onlyActive: true }));
 
       return {
         total: calendars.length,
-        items: await Promise.all(calendars.map(this.parseRawCalendar)),
+        items: await Promise.all(calendars.map(Calendars.parseRawCalendar)),
       };
     } catch (e) {
       if (isBoom(e)) {
@@ -86,7 +92,7 @@ export default class Calendars implements CalendarController {
     options: FetchCalendarOptions,
   ): Promise<CalendarRawDataObject[]> {
     try {
-      const calendars = await this.handleFetchCalendarError<
+      const calendars = await Calendars.handleFetchCalendarError<
         CalendarRawDataObject[]
       >(await this.dataProvider.fetch(options));
 
@@ -105,7 +111,7 @@ export default class Calendars implements CalendarController {
    * and change it.
    */
   async fetchByResourceId(resourceId: string): Promise<RestCalendar> {
-    const calendar = await this.handleFetchCalendarError<RestCalendar>(
+    const calendar = await Calendars.handleFetchCalendarError<RestCalendar>(
       await this.dataProvider.fetchByResourceId(resourceId),
     );
 
@@ -121,17 +127,18 @@ export default class Calendars implements CalendarController {
     calendarId: string,
     options?: { raw: boolean },
   ): Promise<CalendarRawDataObject | CalendarResponse> {
-    const calendar = await this.handleFetchCalendarError<CalendarRawDataObject>(
-      await this.dataProvider.fetchById(calendarId),
-    );
+    const calendar =
+      await Calendars.handleFetchCalendarError<CalendarRawDataObject>(
+        await this.dataProvider.fetchById(calendarId),
+      );
 
     return options?.raw === true
       ? calendar
-      : await this.parseRawCalendar(calendar);
+      : Calendars.parseRawCalendar(calendar);
   }
 
   async getSyncToken(calendarId: string): Promise<string | undefined> {
-    const res = await this.handleFetchCalendarError<CalendarRawDataObject>(
+    const res = await Calendars.handleFetchCalendarError<CalendarRawDataObject>(
       await this.dataProvider.fetchById(calendarId),
     );
 
@@ -142,7 +149,7 @@ export default class Calendars implements CalendarController {
     calendarId: string,
     data: Partial<Calendar>,
   ): Promise<CalendarResponse> {
-    return await this.parseRawCalendar(
+    return Calendars.parseRawCalendar(
       await this.dataProvider.update(calendarId, data),
     );
   }
@@ -153,7 +160,7 @@ export default class Calendars implements CalendarController {
     const res = await this.dataProvider.create(data);
 
     return {
-      ...(await this.parseRawCalendar(res)),
+      ...(await Calendars.parseRawCalendar(res)),
       googleCalendarId: res.googleCalendarId,
     };
   }

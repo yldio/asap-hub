@@ -35,7 +35,7 @@ describe('News controller', () => {
           q: JSON.stringify({
             take: 8,
             skip: 5,
-            filter: { path: 'data.type.iv', op: 'ne', value: 'Training' },
+            filter: { path: 'data.type.iv', op: 'ne', value: 'Tutorial' },
             sort: [{ order: 'descending', path: 'created' }],
           }),
         })
@@ -56,7 +56,7 @@ describe('News controller', () => {
           q: JSON.stringify({
             take: 8,
             skip: 5,
-            filter: { path: 'data.type.iv', op: 'ne', value: 'Training' },
+            filter: { path: 'data.type.iv', op: 'ne', value: 'Tutorial' },
             sort: [{ order: 'descending', path: 'created' }],
           }),
         })
@@ -77,7 +77,7 @@ describe('News controller', () => {
           q: JSON.stringify({
             take: 8,
             skip: 5,
-            filter: { path: 'data.type.iv', op: 'ne', value: 'Training' },
+            filter: { path: 'data.type.iv', op: 'ne', value: 'Tutorial' },
             sort: [{ order: 'descending', path: 'created' }],
           }),
         })
@@ -110,7 +110,7 @@ describe('News controller', () => {
           q: JSON.stringify({
             take: 8,
             skip: 5,
-            filter: { path: 'data.type.iv', op: 'ne', value: 'Training' },
+            filter: { path: 'data.type.iv', op: 'ne', value: 'Tutorial' },
             sort: [{ order: 'descending', path: 'created' }],
           }),
         })

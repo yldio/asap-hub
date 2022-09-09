@@ -19,7 +19,7 @@ export default class News implements NewsController {
       filter: {
         path: 'data.type.iv',
         op: 'ne',
-        value: 'Training',
+        value: 'Tutorial',
       },
       sort: [{ order: 'descending', path: 'created' }],
     });

@@ -90,11 +90,9 @@ const calendarRestClient = new SquidexRest<RestCalendar, InputCalendar>(
 );
 const calendarDataProvider = new CalendarSquidexDataProvider(
   calendarRestClient,
-  squidexGraphqlClient
+  squidexGraphqlClient,
 );
-const calendarController = new Calendars(
-  calendarDataProvider
-);
+const calendarController = new Calendars(calendarDataProvider);
 const syncCalendar = syncCalendarFactory(
   syncEventFactory(new Events(squidexGraphqlClient, eventRestClient)),
   getJWTCredentials,

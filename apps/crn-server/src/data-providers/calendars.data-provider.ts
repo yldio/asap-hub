@@ -179,12 +179,9 @@ export default class CalendarSquidexDataProvider {
 
     if (maxExpiration) {
       graphqlCalendars = graphqlCalendars.filter(
-        (calendar: GraphqlCalendar) => {
-          return (
-            calendar?.flatData.expirationDate &&
-            calendar.flatData.expirationDate < maxExpiration
-          );
-        },
+        (calendar: GraphqlCalendar) =>
+          calendar?.flatData.expirationDate &&
+          calendar.flatData.expirationDate < maxExpiration
       );
     }
 
@@ -197,10 +194,10 @@ export default class CalendarSquidexDataProvider {
     );
 
     const errors: FetchCalendarError[] = res.filter(
-      (el: any) => el in FetchCalendarError,
+      el => (el as number) in FetchCalendarError,
     ) as FetchCalendarError[];
     const resCalendars: CalendarRawDataObject[] = res.filter(
-      (el: any) => !(el in FetchCalendarError),
+      el => !((el as number) in FetchCalendarError),
     ) as CalendarRawDataObject[];
 
     if (resCalendars.length > 0) {
@@ -219,7 +216,7 @@ export default class CalendarSquidexDataProvider {
         FetchCalendarQueryVariables
       >(FETCH_CALENDAR, { id });
 
-    return await this.parseSquidexGraphqlResponseToRaw(calendar);
+    return this.parseSquidexGraphqlResponseToRaw(calendar);
   }
 
   async fetchByResourceId(

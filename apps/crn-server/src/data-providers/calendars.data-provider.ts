@@ -181,7 +181,7 @@ export default class CalendarSquidexDataProvider {
       graphqlCalendars = graphqlCalendars.filter(
         (calendar: GraphqlCalendar) =>
           calendar?.flatData.expirationDate &&
-          calendar.flatData.expirationDate < maxExpiration
+          calendar.flatData.expirationDate < maxExpiration,
       );
     }
 
@@ -194,10 +194,10 @@ export default class CalendarSquidexDataProvider {
     );
 
     const errors: FetchCalendarError[] = res.filter(
-      el => (el as number) in FetchCalendarError,
+      (el) => (el as number) in FetchCalendarError,
     ) as FetchCalendarError[];
     const resCalendars: CalendarRawDataObject[] = res.filter(
-      el => !((el as number) in FetchCalendarError),
+      (el) => !((el as number) in FetchCalendarError),
     ) as CalendarRawDataObject[];
 
     if (resCalendars.length > 0) {

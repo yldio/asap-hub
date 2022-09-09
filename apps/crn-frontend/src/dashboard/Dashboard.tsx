@@ -1,4 +1,4 @@
-import { FC, lazy } from 'react';
+import { FC, lazy, useState } from 'react';
 import { DashboardPage, ConfirmModal } from '@asap-hub/react-components';
 import { dashboard as dashboardRoute } from '@asap-hub/routing';
 import {
@@ -20,6 +20,8 @@ const Body = lazy(loadBody);
 loadBody();
 
 const Dashboard: FC<Record<string, never>> = () => {
+  const [date] = useState(new Date());
+
   const currentUser = useCurrentUser();
   if (!currentUser) {
     throw new Error('Failed to find out who is currently logged in');
@@ -31,6 +33,7 @@ const Dashboard: FC<Record<string, never>> = () => {
   const { firstName, id, teams } = currentUser;
   const dashboard = useDashboardState();
   const { items } = useReminderState();
+
   const roles = useCurrentUserTeamRoles();
   usePrefetchTeams({
     currentPage: 0,
@@ -52,6 +55,8 @@ const Dashboard: FC<Record<string, never>> = () => {
           <Body
             {...dashboard}
             reminders={items}
+            date={date}
+            user={currentUser}
             dismissedGettingStarted={user?.dismissedGettingStarted}
             roles={roles}
             userId={id}

@@ -884,32 +884,6 @@ type Projects implements Content {
     """Optional number of contents to take."""
     top: Int
   ): DashboardResultDto
-  """Query Users content items."""
-  referencingUsersContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): [Users!]
-  """Query Users content items with total count."""
-  referencingUsersContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): UsersResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -1068,110 +1042,6 @@ type Users implements Content {
   """The status color of the content."""
   newStatusColor: String
   """Query Dashboard content items."""
-  referencesDashboardContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): [Dashboard!]
-  """Query Dashboard content items with total count."""
-  referencesDashboardContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): DashboardResultDto
-  """Query Projects content items."""
-  referencesProjectsContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): [Projects!]
-  """Query Projects content items with total count."""
-  referencesProjectsContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): ProjectsResultDto
-  """Query Users content items."""
-  referencesUsersContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): [Users!]
-  """Query Users content items with total count."""
-  referencesUsersContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): UsersResultDto
-  """Query Working Groups content items."""
-  referencesWorkingGroupsContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): [WorkingGroups!]
-  """Query Working Groups content items with total count."""
-  referencesWorkingGroupsContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): WorkingGroupsResultDto
-  """Query Dashboard content items."""
   referencingDashboardContents(
     """Optional OData filter."""
     filter: String
@@ -1223,32 +1093,6 @@ type Users implements Content {
     """Optional number of contents to take."""
     top: Int
   ): ProjectsResultDto
-  """Query Users content items."""
-  referencingUsersContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): [Users!]
-  """Query Users content items with total count."""
-  referencingUsersContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of contents to skip."""
-    skip: Int = 0
-    """Optional number of contents to take."""
-    top: Int
-  ): UsersResultDto
   """Query Working Groups content items."""
   referencingWorkingGroupsContents(
     """Optional OData filter."""
@@ -1317,12 +1161,12 @@ input UsersDataConnectionsInputDto {
 
 """The structure of the Degree field of the Users content type."""
 type UsersDataDegreeDto {
-  iv: [degreeEnum!]
+  iv: [String!]
 }
 
 """The structure of the Degree field of the Users content input type."""
 input UsersDataDegreeInputDto {
-  iv: [degreeEnum!]
+  iv: [String!]
 }
 
 """The structure of the Users data type."""
@@ -1367,51 +1211,6 @@ input UsersDataInputDto {
   lastName: UsersDataLastNameInputDto
   region: UsersDataRegionInputDto
   role: UsersDataRoleInputDto
-  social: UsersDataSocialInputDto
-}
-
-"""The structure of the Institution field of the Users content type."""
-type UsersDataInstitutionDto {
-  iv: String
-}
-
-"""The structure of the Institution field of the Users content input type."""
-input UsersDataInstitutionInputDto {
-  iv: String
-}
-
-"""The structure of the Job Title field of the Users content type."""
-type UsersDataJobTitleDto {
-  iv: String
-}
-
-"""The structure of the Job Title field of the Users content input type."""
-input UsersDataJobTitleInputDto {
-  iv: String
-}
-
-"""The structure of the Labs field of the Users content type."""
-type UsersDataLabsDto {
-  """Mandatory for grantees. They cannot publish profile without a lab."""
-  iv: [UsersDataLabsUnionDto!]
-}
-
-"""The structure of the Labs field of the Users content input type."""
-input UsersDataLabsInputDto {
-  """Mandatory for grantees. They cannot publish profile without a lab."""
-  iv: [String!]
-}
-
-union UsersDataLabsUnionDto = Dashboard | Projects | Users | WorkingGroups
-
-"""The structure of the Last Modified Date field of the Users content type."""
-type UsersDataLastModifiedDateDto {
-  iv: String
-}
-
-"""The structure of the Last Modified Date field of the Users content input type."""
-input UsersDataLastModifiedDateInputDto {
-  iv: String
 }
 
 """The structure of the Last Name field of the Users content type."""
@@ -1450,7 +1249,7 @@ input UsersDataRoleInputDto {
 type UsersFlatDataDto {
   avatar: [Asset!]
   connections: [UsersDataConnectionsChildDto!]
-  degree: [degreeEnum!]
+  degree: [String!]
   email: String
   firstName: String
   lastName: String
@@ -1676,33 +1475,4 @@ type WorkingGroupsResultDto {
   items: [WorkingGroups!]
   """The total count of  contents."""
   total: Int!
-}
-
-enum degreeEnum {
-  """AA"""
-  AA
-  """AAS"""
-  AAS
-  """BA"""
-  BA
-  """BSc"""
-  BSc
-  """MA"""
-  MA
-  """MBA"""
-  MBA
-  """MBBS"""
-  MBBS
-  """MD"""
-  MD
-  """MD_PhD"""
-  MD_PhD
-  """MPH"""
-  MPH
-  """MSc"""
-  MSc
-  """PhD"""
-  PhD
-  """PharmD"""
-  PharmD
 }

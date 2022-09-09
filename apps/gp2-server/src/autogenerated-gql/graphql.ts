@@ -827,10 +827,6 @@ export type Projects = Content & {
   referencingDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
   referencingDashboardContentsWithTotal: Maybe<DashboardResultDto>;
-  /** Query Users content items. */
-  referencingUsersContents: Maybe<Array<Users>>;
-  /** Query Users content items with total count. */
-  referencingUsersContentsWithTotal: Maybe<UsersResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -870,24 +866,6 @@ export type ProjectsReferencingDashboardContentsArgs = {
 
 /** The structure of a Projects content type. */
 export type ProjectsReferencingDashboardContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Projects content type. */
-export type ProjectsReferencingUsersContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Projects content type. */
-export type ProjectsReferencingUsersContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -1043,33 +1021,13 @@ export type Users = Content & {
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
   /** Query Dashboard content items. */
-  referencesDashboardContents: Maybe<Array<Dashboard>>;
+  referencingDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
-  referencesDashboardContentsWithTotal: Maybe<DashboardResultDto>;
-  /** Query Projects content items. */
-  referencesProjectsContents: Maybe<Array<Projects>>;
-  /** Query Projects content items with total count. */
-  referencesProjectsContentsWithTotal: Maybe<ProjectsResultDto>;
-  /** Query Users content items. */
-  referencesUsersContents: Maybe<Array<Users>>;
-  /** Query Users content items with total count. */
-  referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
-  /** Query Working Groups content items. */
-  referencesWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
-  /** Query Working Groups content items with total count. */
-  referencesWorkingGroupsContentsWithTotal: Maybe<WorkingGroupsResultDto>;
-  /** Query Dashboard content items. */
+  referencingDashboardContentsWithTotal: Maybe<DashboardResultDto>;
   /** Query Projects content items. */
   referencingProjectsContents: Maybe<Array<Projects>>;
   /** Query Projects content items with total count. */
   referencingProjectsContentsWithTotal: Maybe<ProjectsResultDto>;
-  /** Query Users content items. */
-  referencingUsersContents: Maybe<Array<Users>>;
-  /** Query Users content items with total count. */
-  referencingUsersContentsWithTotal: Maybe<UsersResultDto>;
-  referencingDashboardContents: Maybe<Array<Dashboard>>;
-  /** Query Dashboard content items with total count. */
-  referencingDashboardContentsWithTotal: Maybe<DashboardResultDto>;
   /** Query Working Groups content items. */
   referencingWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
   /** Query Working Groups content items with total count. */
@@ -1082,78 +1040,6 @@ export type Users = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencesDashboardContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencesDashboardContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencesProjectsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencesProjectsContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencesUsersContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencesUsersContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencesWorkingGroupsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencesWorkingGroupsContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */
@@ -1185,24 +1071,6 @@ export type UsersReferencingProjectsContentsArgs = {
 
 /** The structure of a Users content type. */
 export type UsersReferencingProjectsContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencingUsersContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencingUsersContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -1260,12 +1128,12 @@ export type UsersDataConnectionsInputDto = {
 
 /** The structure of the Degree field of the Users content type. */
 export type UsersDataDegreeDto = {
-  iv: Maybe<Array<DegreeEnum>>;
+  iv: Maybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Degree field of the Users content input type. */
 export type UsersDataDegreeInputDto = {
-  iv: InputMaybe<Array<DegreeEnum>>;
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Users data type. */
@@ -1310,55 +1178,6 @@ export type UsersDataInputDto = {
   lastName: InputMaybe<UsersDataLastNameInputDto>;
   region: InputMaybe<UsersDataRegionInputDto>;
   role: InputMaybe<UsersDataRoleInputDto>;
-  social: any;
-};
-
-/** The structure of the Institution field of the Users contuent type. */
-export type UsersDataInstitutionDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Institution field of the Users content input type. */
-export type UsersDataInstitutionInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the Job Title field of the Users content type. */
-export type UsersDataJobTitleDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Job Title field of the Users content input type. */
-export type UsersDataJobTitleInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the Labs field of the Users content type. */
-export type UsersDataLabsDto = {
-  /** Mandatory for grantees. They cannot publish profile without a lab. */
-  iv: Maybe<Array<UsersDataLabsUnionDto>>;
-};
-
-/** The structure of the Labs field of the Users content input type. */
-export type UsersDataLabsInputDto = {
-  /** Mandatory for grantees. They cannot publish profile without a lab. */
-  iv: InputMaybe<Array<Scalars['String']>>;
-};
-
-export type UsersDataLabsUnionDto =
-  | Dashboard
-  | Projects
-  | Users
-  | WorkingGroups;
-
-/** The structure of the Last Modified Date field of the Users content type. */
-export type UsersDataLastModifiedDateDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Last Modified Date field of the Users content input type. */
-export type UsersDataLastModifiedDateInputDto = {
-  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Last Name field of the Users content type. */
@@ -1397,7 +1216,7 @@ export type UsersDataRoleInputDto = {
 export type UsersFlatDataDto = {
   avatar: Maybe<Array<Asset>>;
   connections: Maybe<Array<UsersDataConnectionsChildDto>>;
-  degree: Maybe<Array<DegreeEnum>>;
+  degree: Maybe<Array<Scalars['String']>>;
   email: Maybe<Scalars['String']>;
   firstName: Maybe<Scalars['String']>;
   lastName: Maybe<Scalars['String']>;
@@ -1703,34 +1522,6 @@ export type FetchProjectsQuery = {
     }
   >;
 };
-export enum DegreeEnum {
-  /** AA */
-  Aa = 'AA',
-  /** AAS */
-  Aas = 'AAS',
-  /** BA */
-  Ba = 'BA',
-  /** BSc */
-  BSc = 'BSc',
-  /** MA */
-  Ma = 'MA',
-  /** MBA */
-  Mba = 'MBA',
-  /** MBBS */
-  Mbbs = 'MBBS',
-  /** MD */
-  Md = 'MD',
-  /** MD_PhD */
-  MdPhD = 'MD_PhD',
-  /** MPH */
-  Mph = 'MPH',
-  /** MSc */
-  MSc = 'MSc',
-  /** PhD */
-  PhD = 'PhD',
-  /** PharmD */
-  PharmD = 'PharmD',
-}
 
 export type UsersContentFragment = Pick<
   Users,

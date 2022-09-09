@@ -1,9 +1,8 @@
 import { css, CSSObject } from '@emotion/react';
-
+import { borderRadius, paddingStyles } from '../card';
 import * as colors from '../colors';
 import { perRem } from '../pixels';
 import { themes } from '../theme';
-import { paddingStyles, borderRadius } from '../card';
 
 const containerStyles = css({
   boxSizing: 'border-box',
@@ -48,9 +47,9 @@ export const accents: Record<AccentVariant, CSSObject> = {
   },
 };
 
-const strokeStyles = (color: string) =>
+const strokeStyles = (color: string, strokeSize: number) =>
   css({
-    background: `linear-gradient(${color}, ${color}) no-repeat left/${borderRadius}px 100%`,
+    background: `linear-gradient(${color}, ${color}) no-repeat left/${strokeSize}px 100%`,
   });
 
 interface CardProps {
@@ -58,6 +57,7 @@ interface CardProps {
   readonly padding?: boolean;
   readonly stroke?: boolean;
   readonly strokeColor?: string;
+  readonly strokeSize?: number;
 
   readonly children: React.ReactNode;
 }
@@ -67,12 +67,13 @@ const Card: React.FC<CardProps> = ({
   padding = true,
   stroke = false,
   strokeColor = colors.cerulean.rgb,
+  strokeSize = borderRadius,
 }) => (
   <section
     css={[
       themes.light,
       containerStyles,
-      stroke && strokeStyles(strokeColor),
+      stroke && strokeStyles(strokeColor, strokeSize),
       padding && paddingStyles,
       accents[accent],
     ]}

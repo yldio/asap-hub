@@ -10,7 +10,7 @@ type ProjectsBodyProps = {
 const gridContainerStyles = css({
   display: 'grid',
   gridGap: `${24 / perRem}em`,
-  gridTemplateColumns: '1fr 1fr',
+  gridTemplateColumns: '1fr',
   marginTop: `${48 / perRem}em`,
 
   [drawerQuery]: {

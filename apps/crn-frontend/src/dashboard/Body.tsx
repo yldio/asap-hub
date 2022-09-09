@@ -17,7 +17,7 @@ const Body: FC<BodyProps> = ({ date, user, ...props }) => {
     getEventListOptions(date, {
       past: true,
       pageSize: 3,
-      currentPage: 1,
+      currentPage: 0,
     }),
     user,
   );

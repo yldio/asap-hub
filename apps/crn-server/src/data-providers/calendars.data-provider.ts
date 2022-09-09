@@ -88,7 +88,9 @@ export default class CalendarSquidexDataProvider {
     };
   }
 
-  async parseSquidexGraphqlResponseToRaw(calendar: GraphqlCalendar) {
+  async parseSquidexGraphqlResponseToRaw(
+    calendar: GraphqlCalendar,
+  ): Promise<CalendarRawDataObject | FetchCalendarError> {
     if (!calendar) {
       return FetchCalendarError.CalendarNotFound;
     }

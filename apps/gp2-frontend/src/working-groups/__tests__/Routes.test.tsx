@@ -15,6 +15,7 @@ import { getWorkingGroups } from '../api';
 import Routes from '../Routes';
 import { refreshWorkingGroupsState } from '../state';
 
+jest.setTimeout(30000);
 const renderRoutes = async () => {
   render(
     <RecoilRoot

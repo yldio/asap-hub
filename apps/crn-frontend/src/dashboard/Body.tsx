@@ -4,7 +4,10 @@ import { DashboardPageBody } from '@asap-hub/react-components';
 import { useEvents } from '../events/state';
 import { getEventListOptions } from '../events/options';
 
-type BodyProps = Omit<ComponentProps<typeof DashboardPageBody>, 'events'> & {
+type BodyProps = Omit<
+  ComponentProps<typeof DashboardPageBody>,
+  'pastEvents'
+> & {
   date: Date;
   user: User;
 };

@@ -1,7 +1,7 @@
+import { CalendarRawDataObject } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import nock from 'nock';
 import { asapApiUrl, googleApiToken, googleApiUrl } from '../../../src/config';
-import { CalendarRaw } from '../../../src/controllers/calendars';
 import {
   calendarCreatedHandlerFactory,
   SubscribeToEventChanges,
@@ -497,7 +497,7 @@ function generateHandler(
   alerts: jest.Mocked<Alerts>,
 ) {
   const fetchById = jest.fn(() =>
-    Promise.resolve({ version: currentVersion } as CalendarRaw),
+    Promise.resolve({ version: currentVersion } as CalendarRawDataObject),
   );
   const handler = calendarCreatedHandlerFactory(
     subscribe,

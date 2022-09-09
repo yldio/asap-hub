@@ -144,6 +144,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Tags",
+          "createEnum": true,
           "allowedValues": [
             "AA",
             "AAS",

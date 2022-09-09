@@ -73,7 +73,7 @@ export default class CalendarSquidexDataProvider {
     this.squidexGraphqlClient = squidexGraphqlClient;
   }
 
-  async parseSquidexRestResponseToRaw(
+  static async parseSquidexRestResponseToRaw(
     calendar: RestCalendar,
   ): Promise<CalendarRawDataObject> {
     return {
@@ -88,7 +88,7 @@ export default class CalendarSquidexDataProvider {
     };
   }
 
-  async parseSquidexGraphqlResponseToRaw(
+  static async parseSquidexGraphqlResponseToRaw(
     calendar: GraphqlCalendar,
   ): Promise<CalendarRawDataObject | FetchCalendarError> {
     if (!calendar) {
@@ -118,7 +118,7 @@ export default class CalendarSquidexDataProvider {
   async create(create: Calendar): Promise<CalendarRawDataObject> {
     const res = await this.squidexRestClient.create(parseToSquidex(create));
 
-    return this.parseSquidexRestResponseToRaw(res);
+    return CalendarSquidexDataProvider.parseSquidexRestResponseToRaw(res);
   }
 
   async update(
@@ -127,7 +127,7 @@ export default class CalendarSquidexDataProvider {
   ): Promise<CalendarRawDataObject> {
     const res = await this.squidexRestClient.patch(id, parseToSquidex(update));
 
-    return this.parseSquidexRestResponseToRaw(res);
+    return CalendarSquidexDataProvider.parseSquidexRestResponseToRaw(res);
   }
 
   async fetch(
@@ -192,7 +192,9 @@ export default class CalendarSquidexDataProvider {
     }
 
     const res = await Promise.all(
-      calendars.map(this.parseSquidexGraphqlResponseToRaw),
+      calendars.map(
+        CalendarSquidexDataProvider.parseSquidexGraphqlResponseToRaw,
+      ),
     );
 
     const errors: FetchCalendarError[] = res.filter(
@@ -218,7 +220,9 @@ export default class CalendarSquidexDataProvider {
         FetchCalendarQueryVariables
       >(FETCH_CALENDAR, { id });
 
-    return this.parseSquidexGraphqlResponseToRaw(calendar);
+    return CalendarSquidexDataProvider.parseSquidexGraphqlResponseToRaw(
+      calendar,
+    );
   }
 
   async fetchByResourceId(

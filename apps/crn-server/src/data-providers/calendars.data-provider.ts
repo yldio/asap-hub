@@ -116,7 +116,7 @@ export default class CalendarSquidexDataProvider {
   async create(create: Calendar): Promise<CalendarRawDataObject> {
     const res = await this.squidexRestClient.create(parseToSquidex(create));
 
-    return await this.parseSquidexRestResponseToRaw(res);
+    return this.parseSquidexRestResponseToRaw(res);
   }
 
   async update(
@@ -125,7 +125,7 @@ export default class CalendarSquidexDataProvider {
   ): Promise<CalendarRawDataObject> {
     const res = await this.squidexRestClient.patch(id, parseToSquidex(update));
 
-    return await this.parseSquidexRestResponseToRaw(res);
+    return this.parseSquidexRestResponseToRaw(res);
   }
 
   async fetch(

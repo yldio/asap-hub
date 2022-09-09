@@ -82,7 +82,7 @@ it('displays events cards or placeholder if there are no events', () => {
     />,
   );
   expect(screen.getByText('Upcoming Events')).toBeVisible();
-  expect(screen.getByText("Here're some upcoming events.")).toBeVisible();
+  expect(screen.getByText('Here are some upcoming events.')).toBeVisible();
   expect(screen.getByText('TestEvent 1')).toBeVisible();
   expect(screen.getByText('TestEvent 2')).toBeVisible();
   expect(screen.getByText('TestEvent 3')).toBeVisible();
@@ -90,7 +90,7 @@ it('displays events cards or placeholder if there are no events', () => {
 
   rerender(<DashboardPageBody {...props} upcomingEvents={undefined} />);
   expect(screen.getByText('Upcoming Events')).toBeVisible();
-  expect(screen.getByText("Here're some upcoming events.")).toBeVisible();
+  expect(screen.getByText('Here are some upcoming events.')).toBeVisible();
 
   expect(screen.getByText('There are no upcoming events.')).toBeVisible();
 });

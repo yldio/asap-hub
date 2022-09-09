@@ -158,7 +158,7 @@ export default class CalendarSquidexDataProvider {
 
     let graphqlCalendars: GraphqlCalendar[] = calendars;
 
-    if (!!onlyActive) {
+    if (onlyActive) {
       graphqlCalendars = graphqlCalendars.filter(
         (calendar: GraphqlCalendar) => {
           if (

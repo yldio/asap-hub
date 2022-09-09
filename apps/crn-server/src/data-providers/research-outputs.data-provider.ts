@@ -29,7 +29,11 @@ import {
 } from '../queries/research-outputs.queries';
 import { parseGraphQLResearchOutput } from '../entities/research-output';
 import logger from '../utils/logger';
-import { buildODataFilter, ResearchOutputFilter, getFirstOrAll } from '../utils/odata';
+import {
+  buildODataFilter,
+  ResearchOutputFilter,
+  getFirstOrAll,
+} from '../utils/odata';
 
 export const makeODataFilter = (
   filter?: ResearchOutputFilter,

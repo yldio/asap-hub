@@ -29,9 +29,33 @@ import {
 } from '../queries/research-outputs.queries';
 import { parseGraphQLResearchOutput } from '../entities/research-output';
 import logger from '../utils/logger';
-import { buildODataFilter, makeODataFilter } from '../utils/odata';
-import { getFirstOrAll } from '../utils/arrays';
-import { ResearchOutputFilter } from '../types';
+import {
+  buildODataFilter,
+  ResearchOutputFilter,
+  getFirstOrAll,
+} from '../utils/odata';
+
+export const makeODataFilter = (
+  filter?: ResearchOutputFilter,
+): Filter | null => {
+  if (!filter) {
+    return null;
+  }
+
+  const entries = Object.entries(filter).reduce<Filter[]>((res, [key, val]) => {
+    if (Array.isArray(val)) {
+      return res.concat({
+        or: val.map((valElement) => ({
+          [`data/${key}/iv`]: valElement,
+        })),
+      });
+    }
+
+    return res.concat({ [`data/${key}/iv`]: val });
+  }, []);
+
+  return entries.length === 1 ? (entries[0] as Filter) : entries;
+};
 
 export interface ResearchOutputDataProvider {
   fetchById(id: string): Promise<ResearchOutputDataObject | null>;

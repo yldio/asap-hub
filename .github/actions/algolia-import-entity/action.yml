@@ -39,7 +39,7 @@ runs:
       shell: bash
       run: |
         yarn export:entity $ENTITY -f $ENTITY.json
-        yarn workspace @asap-hub/algolia run algolia import -s "../../${ENTITY}.json" -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -t ./scripts/algolia-transformation.js
+        yarn workspace @asap-hub/algolia run algolia import -s "../../${ENTITY}.json" -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -b 100 -t ./scripts/algolia-transformation.js
       env:
         ALGOLIA_API_KEY: ${{ inputs.algolia-api-key }}
         ALGOLIA_APP_ID: ${{ inputs.algolia-app-id }}

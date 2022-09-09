@@ -1,8 +1,7 @@
-export type Flag = 'PERSISTENT_EXAMPLE' | 'REMINDERS';
+export type Flag = 'PERSISTENT_EXAMPLE';
 
 export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
-  REMINDERS: undefined,
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
 };

@@ -1,33 +1,24 @@
 import buildQuery, { Filter } from 'odata-query';
-import { ResearchOutputFilter } from '../types';
-import { getFirstOrAll } from './arrays';
 
 const FILTER_URL_QUERY_PARAM = '?$filter=';
 
-export const makeODataFilter = (
-  filter?: ResearchOutputFilter,
-): Filter | null => {
-  if (!filter) {
-    return null;
-  }
-
-  const entries = Object.entries(filter).reduce<Filter[]>((res, [key, val]) => {
-    if (Array.isArray(val)) {
-      return res.concat({
-        or: val.map((valElement) => ({
-          [`data/${key}/iv`]: valElement,
-        })),
-      });
-    }
-
-    return res.concat({ [`data/${key}/iv`]: val });
-  }, []);
-
-  return entries.length === 1 ? (entries[0] as Filter) : entries;
+export type ResearchOutputFilter = {
+  documentType?: string | string[];
+  title?: string;
+  link?: string;
 };
 
 export const buildODataFilter = (filterObj: Filter): string =>
   buildQuery({ filter: filterObj }).replace(FILTER_URL_QUERY_PARAM, '');
+
+export const getFirstOrAll = <T>(
+  arr: Array<T>,
+):
+  | T
+  | {
+      or: T[];
+    }
+  | undefined => (arr.length === 1 ? arr[0] : { or: arr });
 
 export const buildEqFilterForWords = (
   field: string,

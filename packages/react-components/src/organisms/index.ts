@@ -28,6 +28,7 @@ export { default as NoEvents } from './NoEvents';
 export { default as OnboardingFooter } from './OnboardingFooter';
 export { default as PageCard } from './PageCard';
 export { default as PagesSection } from './PagesSection';
+export { default as PastEventsDashboardCard } from './PastEventsDashboardCard';
 export { default as PeopleCard } from './PeopleCard';
 export { default as ProfileCardList } from './ProfileCardList';
 export { default as ProfileExpertiseAndResources } from './ProfileExpertiseAndResources';

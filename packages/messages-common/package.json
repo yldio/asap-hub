@@ -16,8 +16,8 @@
     "@babel/core": "7.18.13",
     "@babel/preset-react": "7.18.6",
     "@babel/runtime-corejs3": "7.18.9",
-    "@emotion/cache": "11.10.1",
-    "@emotion/react": "11.10.0",
+    "@emotion/cache": "11.10.3",
+    "@emotion/react": "11.10.4",
     "@emotion/server": "11.10.0",
     "aws-sdk": "2.1197.0",
     "babel-loader": "8.2.5",
@@ -33,7 +33,7 @@
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@types/babel__core": "7.1.19",
-    "@types/react": "17.0.48",
+    "@types/react": "17.0.49",
     "@types/react-dom": "17.0.17"
   }
 }

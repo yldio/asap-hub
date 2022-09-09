@@ -555,7 +555,7 @@ describe('User data provider', () => {
         },
       );
     });
-    test('Should escape double quotation mark by encoding to hex', async () => {
+    test('Should escape double quotation mark by escaping it', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
@@ -589,7 +589,7 @@ describe('User data provider', () => {
       const fetchOptions: FetchUsersOptions = {
         take: 12,
         skip: 2,
-        search: 'Solène',
+        search: 'Solène "session" **',
       };
       await userDataProvider.fetch(fetchOptions);
 
@@ -598,7 +598,17 @@ describe('User data provider', () => {
         " ((contains(data/firstName/iv,'Solène'))" +
         " or (contains(data/lastName/iv,'Solène'))" +
         " or (contains(data/institution/iv,'Solène'))" +
-        " or (contains(data/expertiseAndResourceTags/iv,'Solène')))";
+        " or (contains(data/expertiseAndResourceTags/iv,'Solène')))" +
+
+        " and ((contains(data/firstName/iv,'\"session\"'))" +
+        " or (contains(data/lastName/iv,'\"session\"'))" +
+        " or (contains(data/institution/iv,'\"session\"'))" +
+        " or (contains(data/expertiseAndResourceTags/iv,'\"session\"')))" +
+
+        " and ((contains(data/firstName/iv,'**'))" +
+        " or (contains(data/lastName/iv,'**'))" +
+        " or (contains(data/institution/iv,'**'))" +
+        " or (contains(data/expertiseAndResourceTags/iv,'**')))";
 
       expect(squidexGraphqlClientMock.request).toBeCalledWith(
         expect.anything(),

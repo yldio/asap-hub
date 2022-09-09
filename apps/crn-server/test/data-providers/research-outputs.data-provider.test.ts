@@ -813,7 +813,7 @@ describe('ResearchOutputs data provider', () => {
         );
       });
 
-      test('Should sanitise double quotation mark in the search parameter by escaping it for the squidex filter', async () => {
+      test('Should sanitise double quotation mark in the search parameter by escaping it', async () => {
         await researchOutputDataProvider.fetch({
           ...defaultParams,
           search: '"',

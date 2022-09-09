@@ -124,7 +124,7 @@ describe('Group Data Provider', () => {
       );
     });
 
-    test('Should sanitise double quotation mark by encoding to hex', async () => {
+    test('Should sanitise double quotation mark by escaping it', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexGroupsGraphqlResponse(),
       );

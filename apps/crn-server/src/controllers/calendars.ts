@@ -3,18 +3,16 @@ import { RestCalendar, Calendar } from '@asap-hub/squidex';
 import {
   ListCalendarResponse,
   CalendarResponse,
-  FetchPaginationOptions,
   FetchCalendarError,
   CalendarRawDataObject,
+  FetchCalendarOptions,
 } from '@asap-hub/model';
 import logger from '../utils/logger';
 import { CalendarDataProvider } from '../data-providers/calendars.data-provider';
 
 export interface CalendarController {
-  fetch: (options: FetchPaginationOptions) => Promise<ListCalendarResponse>;
-  fetchRaw: (
-    options: { maxExpiration: number } & FetchPaginationOptions,
-  ) => Promise<CalendarRawDataObject[]>;
+  fetch: (options: FetchCalendarOptions) => Promise<ListCalendarResponse>;
+  fetchRaw: (options: FetchCalendarOptions) => Promise<CalendarRawDataObject[]>;
   fetchByResourceId: (resourceId: string) => Promise<RestCalendar>;
   getSyncToken: (calendarId: string) => Promise<string | undefined>;
   update: (
@@ -23,7 +21,10 @@ export interface CalendarController {
   ) => Promise<CalendarResponse>;
   create: (data: Calendar) => Promise<CalendarResponse>;
   fetchById(id: string, options?: { raw: false }): Promise<CalendarResponse>;
-  fetchById(id: string, options?: { raw: true }): Promise<CalendarRaw>;
+  fetchById(
+    id: string,
+    options?: { raw: true },
+  ): Promise<CalendarRawDataObject>;
 }
 
 export default class Calendars implements CalendarController {
@@ -33,7 +34,7 @@ export default class Calendars implements CalendarController {
     this.dataProvider = dataProvider;
   }
 
-  private async parseRawCalendar(
+  async parseRawCalendar(
     raw: CalendarRawDataObject,
   ): Promise<CalendarResponse> {
     return {
@@ -43,7 +44,7 @@ export default class Calendars implements CalendarController {
     };
   }
 
-  private async handleFetchCalendarError<T>(item: T | FetchCalendarError) {
+  async handleFetchCalendarError<T>(item: T | FetchCalendarError) {
     if ((item as any) === FetchCalendarError.CalendarNotFound) {
       throw Boom.notFound();
     }
@@ -82,7 +83,7 @@ export default class Calendars implements CalendarController {
   }
 
   async fetchRaw(
-    options: { maxExpiration?: number } & FetchPaginationOptions,
+    options: FetchCalendarOptions,
   ): Promise<CalendarRawDataObject[]> {
     try {
       const calendars = await this.handleFetchCalendarError<
@@ -112,11 +113,14 @@ export default class Calendars implements CalendarController {
   }
 
   fetchById(id: string, options?: { raw: false }): Promise<CalendarResponse>;
-  fetchById(id: string, options?: { raw: true }): Promise<CalendarRaw>;
+  fetchById(
+    id: string,
+    options?: { raw: true },
+  ): Promise<CalendarRawDataObject>;
   async fetchById(
     calendarId: string,
     options?: { raw: boolean },
-  ): Promise<CalendarRaw | CalendarResponse> {
+  ): Promise<CalendarRawDataObject | CalendarResponse> {
     const calendar = await this.handleFetchCalendarError<CalendarRawDataObject>(
       await this.dataProvider.fetchById(calendarId),
     );

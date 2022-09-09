@@ -19,6 +19,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
       type: 'Event',
     },
   ],
+  pastEvents: [],
   userId: '42',
   teamId: '1337',
   roles: [],
@@ -86,13 +87,36 @@ it('displays events cards or placeholder if there are no events', () => {
   expect(screen.getByText('TestEvent 1')).toBeVisible();
   expect(screen.getByText('TestEvent 2')).toBeVisible();
   expect(screen.getByText('TestEvent 3')).toBeVisible();
-  expect(screen.getByRole('link', { name: 'View All →' })).toBeVisible();
+  expect(
+    screen.getByTestId('view-upcoming-events').querySelector('a'),
+  ).toHaveTextContent('View All');
 
   rerender(<DashboardPageBody {...props} upcomingEvents={undefined} />);
   expect(screen.getByText('Upcoming Events')).toBeVisible();
   expect(screen.getByText('Here are some upcoming events.')).toBeVisible();
 
   expect(screen.getByText('There are no upcoming events.')).toBeVisible();
+});
+
+describe('the past events card', () => {
+  const events = createListEventResponse(3).items;
+  it('renders multiple past events', () => {
+    render(<DashboardPageBody {...props} pastEvents={events} />);
+    expect(
+      screen.getAllByRole('link').map(({ textContent }) => textContent),
+    ).toEqual(expect.arrayContaining(['Event 0', 'Event 1', 'Event 2']));
+  });
+
+  it('renders the link to view all past events', () => {
+    render(<DashboardPageBody {...props} pastEvents={events} />);
+
+    expect(
+      screen.getByTestId('view-past-events').querySelector('a'),
+    ).toHaveTextContent('View All');
+    expect(
+      screen.getByTestId('view-past-events').querySelector('a'),
+    ).toHaveAttribute('href', '/events/past');
+  });
 });
 
 describe('the reminders card', () => {

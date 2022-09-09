@@ -49,7 +49,7 @@ const DashboardUpcomingEvents: React.FC<DashboardUpcomingEventsProps> = ({
           </Fragment>
         ))}
         {upcomingEvents.total > MAX_ALLOWED_EVENTS && (
-          <div css={viewallLink}>
+          <div data-testid="view-upcoming-events" css={viewallLink}>
             <Link href={events({}).upcoming({}).$}>View All →</Link>
           </div>
         )}

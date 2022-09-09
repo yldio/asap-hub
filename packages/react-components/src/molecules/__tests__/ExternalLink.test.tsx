@@ -4,7 +4,7 @@ import ExternalLink from '../ExternalLink';
 
 it('renders an external link as an icon with label', () => {
   const { getByText, getByTitle } = render(
-    <ExternalLink label="example" href="http://example.com" />,
+    <ExternalLink label="example" href="http://example.com" full />,
   );
   expect(getByText('example').closest('a')).toHaveAttribute(
     'href',

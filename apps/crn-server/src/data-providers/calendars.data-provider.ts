@@ -73,7 +73,7 @@ export default class CalendarSquidexDataProvider {
     this.squidexGraphqlClient = squidexGraphqlClient;
   }
 
-  private async parseSquidexRestResponseToRaw(
+  async parseSquidexRestResponseToRaw(
     calendar: RestCalendar,
   ): Promise<CalendarRawDataObject> {
     return {
@@ -88,7 +88,7 @@ export default class CalendarSquidexDataProvider {
     };
   }
 
-  private async parseSquidexGraphqlResponseToRaw(calendar: GraphqlCalendar) {
+  async parseSquidexGraphqlResponseToRaw(calendar: GraphqlCalendar) {
     if (!calendar) {
       return FetchCalendarError.CalendarNotFound;
     }

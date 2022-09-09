@@ -1,7 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import { drawerQuery, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-// import WorkingGroupCard from './WorkingGroupCard';
+import ProjectCard from './ProjectCard';
 
 const { perRem } = pixels;
 type ProjectsBodyProps = {
@@ -18,13 +18,12 @@ const gridContainerStyles = css({
   },
 });
 
-const WorkingGroupsBody: React.FC<ProjectsBodyProps> = ({ projects }) => (
+const ProjectsBody: React.FC<ProjectsBodyProps> = ({ projects }) => (
   <article css={gridContainerStyles}>
     {projects.items.map((project) => (
-      <h3 key={project.id}>{project.title}</h3>
-      // <WorkingGroupCard key={workingGroup.id} {...workingGroup} />
+      <ProjectCard key={project.id} {...project} />
     ))}
   </article>
 );
 
-export default WorkingGroupsBody;
+export default ProjectsBody;

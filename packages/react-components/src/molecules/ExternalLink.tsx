@@ -1,16 +1,21 @@
-import { css } from '@emotion/react';
+import { css, Theme } from '@emotion/react';
 
 import { Anchor } from '../atoms';
 import { externalLinkIcon } from '../icons';
 import { fern, pine } from '../colors';
 import { mobileScreen, perRem } from '../pixels';
-import { themeStyles as linkStyles } from '../atoms/Link';
+import { getLinkColors } from '../atoms/Link';
 
 const containerStyles = css({
   display: 'flex',
 });
 const borderWidth = 1;
-const styles = (withLabel = true) =>
+const styles = (
+  colors: Theme['colors'],
+  withLabel: boolean,
+  noMargin: boolean,
+  full: boolean,
+) =>
   css({
     display: 'flex',
     alignItems: 'center',
@@ -18,53 +23,65 @@ const styles = (withLabel = true) =>
     height: '24px',
     width: 'max-content',
     minWidth: '24px',
-    color: fern.rgb,
+    color: colors?.primary500?.rgba || fern.rgb,
     borderRadius: `${36 / perRem}em`,
     boxSizing: 'border-box',
-    border: `${borderWidth}px solid ${fern.rgb}`,
-    margin: `${12 / perRem}em 0`,
+    border: `${borderWidth}px solid ${colors?.primary500?.rgba || fern.rgb}`,
+    margin: noMargin ? '0' : `${12 / perRem}em 0`,
     padding: withLabel ? `0 ${(12 - borderWidth) / perRem}em` : 0,
     [`@media (max-width: ${mobileScreen.max}px)`]: {
-      padding: 0,
+      padding: full ? `0 ${(12 - borderWidth) / perRem}em` : 0,
     },
     svg: {
-      stroke: fern.rgb,
+      stroke: colors?.primary500?.rgba || fern.rgb,
       width: `${17.8 / perRem}em`,
       height: `${17.8 / perRem}em`,
     },
     ':hover, :focus': {
-      color: pine.rgb,
-      borderColor: pine.rgb,
+      color: colors?.primary500?.rgba || pine.rgb,
+      borderColor: colors?.primary500?.rgba || pine.rgb,
       svg: {
-        stroke: pine.rgb,
+        stroke: colors?.primary500?.rgba || pine.rgb,
       },
     },
   });
 
-const textStyles = css({
-  paddingTop: `${1 / perRem}em`,
-  fontSize: `${13.6 / perRem}em`,
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    display: 'none',
-  },
-});
+const textStyles = (full: boolean) =>
+  css({
+    paddingTop: `${1 / perRem}em`,
+    fontSize: `${13.6 / perRem}em`,
+    [`@media (max-width: ${mobileScreen.max}px)`]: {
+      display: full ? 'initial' : 'none',
+    },
+  });
 
 type ExternalLinkProps = {
   readonly href: string;
   readonly icon?: JSX.Element;
   readonly label?: string;
+  readonly noMargin?: boolean;
+  readonly full?: boolean;
 };
 const ExternalLink: React.FC<ExternalLinkProps> = ({
   href,
   icon = externalLinkIcon,
   label,
+  noMargin = false,
+  full = false,
 }) => (
   <div css={containerStyles}>
     <Anchor href={href}>
-      <div css={styles(!!label)}>
+      <span css={({ colors }) => styles(colors, !!label, noMargin, full)}>
         {icon}
-        <div css={[textStyles, linkStyles.light]}>{label}</div>
-      </div>
+        <span
+          css={({ colors }) => [
+            textStyles(full),
+            getLinkColors(colors, 'light'),
+          ]}
+        >
+          {label}
+        </span>
+      </span>
     </Anchor>
   </div>
 );

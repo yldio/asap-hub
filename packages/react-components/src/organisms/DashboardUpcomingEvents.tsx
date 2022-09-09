@@ -48,7 +48,7 @@ const DashboardUpcomingEvents: React.FC<DashboardUpcomingEventsProps> = ({
             />
           </Fragment>
         ))}
-        {upcomingEvents.total > MAX_ALLOWED_EVENTS && (
+        {upcomingEvents.total > MAX_ALLOWED_EVENTS - 1 && (
           <div css={viewallLink}>
             <Link href={events({}).upcoming({}).$}>View All →</Link>
           </div>

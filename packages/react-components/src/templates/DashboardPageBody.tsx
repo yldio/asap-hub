@@ -22,7 +22,7 @@ import { confidentialIcon, giftIcon, learnIcon } from '../icons';
 
 const styles = css({
   display: 'grid',
-  gridRowGap: `${72 / perRem}em`,
+  gridRowGap: `${56 / perRem}em`,
   marginBottom: `${24 / perRem}em`,
 });
 
@@ -122,7 +122,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
       </div>
       <div>
         <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
-        <div css={infoStyles}>Here're some upcoming events.</div>
+        <div css={infoStyles}>Here are some upcoming events.</div>
         <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
       </div>
       {news.length ? (

@@ -599,12 +599,10 @@ describe('User data provider', () => {
         " or (contains(data/lastName/iv,'Solène'))" +
         " or (contains(data/institution/iv,'Solène'))" +
         " or (contains(data/expertiseAndResourceTags/iv,'Solène')))" +
-
-        " and ((contains(data/firstName/iv,'\"session\"'))" +
-        " or (contains(data/lastName/iv,'\"session\"'))" +
-        " or (contains(data/institution/iv,'\"session\"'))" +
-        " or (contains(data/expertiseAndResourceTags/iv,'\"session\"')))" +
-
+        ' and ((contains(data/firstName/iv,\'"session"\'))' +
+        ' or (contains(data/lastName/iv,\'"session"\'))' +
+        ' or (contains(data/institution/iv,\'"session"\'))' +
+        ' or (contains(data/expertiseAndResourceTags/iv,\'"session"\')))' +
         " and ((contains(data/firstName/iv,'**'))" +
         " or (contains(data/lastName/iv,'**'))" +
         " or (contains(data/institution/iv,'**'))" +

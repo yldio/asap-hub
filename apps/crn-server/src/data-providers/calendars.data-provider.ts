@@ -27,6 +27,8 @@ import {
 import { FETCH_CALENDAR, FETCH_CALENDARS } from '../queries/calendars.queries';
 import logger from '../utils/logger';
 
+const defaultCalendarColor = '#333333';
+
 export interface CalendarDataProvider {
   create(create: CalendarDataObject): Promise<CalendarRawDataObject>;
   update(
@@ -107,7 +109,7 @@ export default class CalendarSquidexDataProvider {
       id: calendar.id,
       version: calendar.version,
       googleCalendarId: calendar.flatData.googleCalendarId,
-      color: calendar.flatData.color,
+      color: calendar.flatData.color || defaultCalendarColor,
       name: calendar.flatData.name,
       expirationDate: calendar.flatData.expirationDate ?? null,
       resourceId: calendar.flatData.resourceId ?? null,

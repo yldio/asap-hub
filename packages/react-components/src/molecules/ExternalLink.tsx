@@ -12,7 +12,7 @@ const containerStyles = css({
 const borderWidth = 1;
 const styles = (
   colors: Theme['colors'],
-  withLabel = true,
+  withLabel: boolean,
   noMargin: boolean,
   full: boolean,
 ) =>

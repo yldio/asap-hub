@@ -1,8 +1,5 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "discover",
-  "isSingleton": true,
-  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -80,7 +77,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "About Us",
@@ -150,7 +149,11 @@
       }
     ],
     "previewUrls": {},
+    "fieldRules": [],
     "category": "Content",
     "isPublished": true
-  }
+  },
+  "name": "discover",
+  "isSingleton": true,
+  "schemaType": "Singleton"
 }

@@ -1,8 +1,5 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "research-outputs",
-  "isSingleton": false,
-  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -68,7 +65,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Title",
@@ -95,7 +94,9 @@
             "Article"
           ],
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Document type",
@@ -153,7 +154,9 @@
             "Viral Vector"
           ],
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Type",
@@ -199,43 +202,43 @@
       },
       {
         "name": "createdBy",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": true,
+        "partitioning": "invariant",
         "properties": {
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false,
           "fieldType": "References",
-          "editor": "List",
           "maxItems": 1,
           "allowDuplicates": false,
           "resolveReference": false,
           "mustBePublished": false,
+          "editor": "List",
           "schemaIds": ["users"],
-          "label": "Created by"
-        },
-        "isLocked": false,
-        "isHidden": false,
-        "isDisabled": true,
-        "partitioning": "invariant"
+          "label": "Created by",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
       },
       {
         "name": "updatedBy",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": true,
+        "partitioning": "invariant",
         "properties": {
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false,
           "fieldType": "References",
-          "editor": "List",
           "maxItems": 1,
           "allowDuplicates": false,
           "resolveReference": false,
           "mustBePublished": false,
+          "editor": "List",
           "schemaIds": ["users"],
-          "label": "Updated by"
-        },
-        "isLocked": false,
-        "isHidden": false,
-        "isDisabled": true,
-        "partitioning": "invariant"
+          "label": "Updated by",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
       },
       {
         "name": "link",
@@ -248,7 +251,9 @@
           "pattern": "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
           "patternMessage": "URL must start with http:// or https://",
           "isUnique": true,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "External Link",
@@ -284,7 +289,9 @@
           "fieldType": "String",
           "defaultValue": "",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Description",
@@ -311,8 +318,7 @@
           "label": "Methods",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": true,
-          "inlineEditable": true
+          "isHalfWidth": true
         }
       },
       {
@@ -331,8 +337,7 @@
           "label": "Organism",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": true,
-          "inlineEditable": true
+          "isHalfWidth": true
         }
       },
       {
@@ -351,8 +356,7 @@
           "label": "Environment",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": true,
-          "inlineEditable": true
+          "isHalfWidth": true
         }
       },
       {
@@ -363,17 +367,16 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "References",
+          "maxItems": 1,
           "allowDuplicates": false,
           "resolveReference": false,
           "mustBePublished": true,
           "editor": "Tags",
-          "maxItems": 1,
           "schemaIds": ["research-tags"],
           "label": "Subtype",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": true,
-          "inlineEditable": true
+          "isHalfWidth": true
         }
       },
       {
@@ -384,6 +387,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Tags",
+          "createEnum": false,
           "editor": "Tags",
           "label": "Tags",
           "hints": "",
@@ -402,7 +406,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Usage Notes",
@@ -495,7 +501,9 @@
           "defaultValue": "Not Sure",
           "allowedValues": ["Yes", "No", "Not Sure"],
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "ASAP Funded",
@@ -516,7 +524,9 @@
           "defaultValue": "Network Only",
           "allowedValues": ["Public", "Network Only"],
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Sharing Status",
@@ -536,7 +546,9 @@
           "defaultValue": "Not Sure",
           "allowedValues": ["Yes", "No", "Not Sure"],
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Used in a Publication",
@@ -573,7 +585,9 @@
           "fieldType": "String",
           "pattern": "^RRID:[a-zA-Z]+.+$",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Identifier (RRID)",
@@ -594,7 +608,9 @@
           "fieldType": "String",
           "pattern": "^(\\w+\\d+(\\.\\d+)?)|(NP_\\d+)$",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Identifier (Accession #)",
@@ -615,7 +631,9 @@
           "fieldType": "String",
           "pattern": "^(doi\\:)?\\d{2}\\.\\d{4}.*$",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Identifier (DOI)",
@@ -635,7 +653,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Lab Catalog Number",
@@ -655,7 +675,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Admin notes",
@@ -670,7 +692,11 @@
     "previewUrls": {
       "Web": "https://hub.asap.science/shared-research/${id}"
     },
+    "fieldRules": [],
     "category": "Storage",
     "isPublished": true
-  }
+  },
+  "name": "research-outputs",
+  "isSingleton": false,
+  "schemaType": "Default"
 }

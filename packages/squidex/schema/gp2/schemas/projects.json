@@ -1,8 +1,5 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "projects",
-  "isSingleton": false,
-  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -26,7 +23,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Title",
@@ -114,7 +113,9 @@
           "defaultValue": "Active",
           "allowedValues": ["Active", "Inactive", "Completed"],
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Status",
@@ -134,7 +135,9 @@
           "pattern": "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
           "patternMessage": "URL must start with http:// or https://",
           "isUnique": true,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Project Proposal",
@@ -147,7 +150,11 @@
       }
     ],
     "previewUrls": {},
+    "fieldRules": [],
     "category": "Content",
     "isPublished": true
-  }
+  },
+  "name": "projects",
+  "isSingleton": false,
+  "schemaType": "Default"
 }

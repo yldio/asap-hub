@@ -1,8 +1,5 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "working-groups",
-  "isSingleton": false,
-  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -23,7 +20,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Title",
@@ -41,7 +40,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Short Description",
@@ -60,7 +61,9 @@
           "fieldType": "String",
           "maxLength": 2500,
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "TextArea",
           "label": "Description",
@@ -78,7 +81,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Leading Members",
@@ -130,7 +135,9 @@
               "fieldType": "String",
               "allowedValues": ["Lead", "Co-lead", "Working group member"],
               "isUnique": false,
+              "isEmbeddable": false,
               "inlineEditable": true,
+              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Dropdown",
               "label": "Role",
@@ -151,7 +158,9 @@
           "fieldType": "String",
           "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
           "isUnique": true,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Working Group Email",
@@ -170,7 +179,9 @@
           "fieldType": "String",
           "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
           "isUnique": true,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "WG's Lead Email",
@@ -181,7 +192,11 @@
       }
     ],
     "previewUrls": {},
+    "fieldRules": [],
     "category": "Content",
     "isPublished": true
-  }
+  },
+  "name": "working-groups",
+  "isSingleton": false,
+  "schemaType": "Default"
 }

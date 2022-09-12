@@ -1,8 +1,5 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "pages",
-  "isSingleton": false,
-  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -35,7 +32,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Title",
@@ -53,7 +52,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": true,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Path",
@@ -73,7 +74,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Short Text",
@@ -93,7 +96,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Text",
@@ -114,7 +119,9 @@
           "fieldType": "String",
           "pattern": "",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "External Link",
@@ -132,7 +139,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "External Link Text",
@@ -147,7 +156,11 @@
     "previewUrls": {
       "Web": "https://hub.asap.science${data.path.iv}"
     },
+    "fieldRules": [],
     "category": "Content",
     "isPublished": true
-  }
+  },
+  "name": "pages",
+  "isSingleton": false,
+  "schemaType": "Default"
 }

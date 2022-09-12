@@ -37,6 +37,8 @@ runs:
         sq config use $SQUIDEX_APP_NAME
         .github/scripts/squidex-sync/config-rules.sh packages/squidex/schema/${{ inputs.app }}/rules
 
+        cat packages/squidex/schema/gp2/schemas/users.json
+
         if [[
           "$APP" == "crn" && "$CRN_API_URL" == *"asap"*
         ]]; then

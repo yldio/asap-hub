@@ -17,7 +17,7 @@ export const authHandlerFactory =
   ): RequestHandler =>
   async (req, _res, next) => {
     const { headers } = req;
-    console.log('In authhandler');
+
     if (!headers.authorization) {
       throw Boom.unauthorized();
     }

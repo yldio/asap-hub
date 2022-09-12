@@ -1,6 +1,4 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { format, formatDistanceStrict as formatDistance } from 'date-fns';
 import {
   Card,
   crossQuery,
@@ -10,11 +8,13 @@ import {
   pixels,
   utils,
 } from '@asap-hub/react-components';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
+import { format, formatDistanceStrict as formatDistance } from 'date-fns';
 import dateIcon from '../icons/date-icon';
 import usersIcon from '../icons/users-icon';
 import IconWithLabel from '../molecules/IconWithLabel';
-import ProjectStatus, { statusStyles } from '../molecules/ProjectStatus';
+import ProjectStatus from '../molecules/ProjectStatus';
 import colors from '../templates/colors';
 
 const { getCounterString } = utils;
@@ -39,6 +39,21 @@ const rowStyles = css({
   },
 });
 
+export const cardStyles: Record<
+  gp2Model.ProjectResponse['status'],
+  { color: string }
+> = {
+  Active: {
+    color: colors.info500.rgba,
+  },
+  Completed: {
+    color: colors.secondary500.rgba,
+  },
+  Inactive: {
+    color: colors.warning500.rgba,
+  },
+};
+
 const ProjectCard: React.FC<ProjectCardProps> = ({
   title,
   status,
@@ -48,7 +63,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   id,
   projectProposalUrl,
 }) => (
-  <Card stroke strokeColor={statusStyles[status].color}>
+  <Card stroke strokeColor={cardStyles[status].color} strokeSize={9}>
     <div css={[rowStyles, css({ gap: rem(4) })]}>
       <div css={css({ display: 'inline-flex' })}>
         <ProjectStatus status={status} />

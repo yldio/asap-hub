@@ -1,22 +1,22 @@
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
 import { createHash } from 'crypto';
-import { RequestHandler } from 'express';
+import { Request, RequestHandler } from 'express';
 import { CacheClient } from '../clients/cache.client';
-import {
-  AssignUserToContext,
-  RequestWithUser,
-} from '../utils/assign-user-to-context';
 import { Logger } from '../utils/logger';
 import { DecodeToken } from '../utils/validate-token';
 
+interface AssignUserToContext<UserResponse> {
+  (req: Request, user: UserResponse): void;
+}
+
 export const authHandlerFactory =
-  <T>(
+  <UserResponse>(
     decodeToken: DecodeToken,
-    fetchByCode: (code: string) => Promise<T>,
-    cacheClient: CacheClient<T>,
+    fetchByCode: (code: string) => Promise<UserResponse>,
+    cacheClient: CacheClient<UserResponse>,
     logger: Logger,
-    assignLoggedInUserToContext: AssignUserToContext,
+    assignUserToContext: AssignUserToContext<UserResponse>,
   ): RequestHandler =>
   async (req, _res, next) => {
     const { headers } = req;
@@ -62,7 +62,7 @@ export const authHandlerFactory =
       throw Boom.unauthorized();
     }
 
-    assignLoggedInUserToContext(req as RequestWithUser<T>, user);
+    assignUserToContext(req, user);
 
     next();
   };

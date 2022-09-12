@@ -1,6 +1,5 @@
 import { gp2 } from '@asap-hub/model';
 import {
-  assignUserToContext,
   AuthHandler,
   authHandlerFactory,
   decodeTokenFactory,
@@ -49,6 +48,7 @@ import { dashboardRouteFactory } from './routes/dashboard.route';
 import { projectRouteFactory } from './routes/project.route';
 import { userPublicRouteFactory } from './routes/user.route';
 import { workingGroupRouteFactory } from './routes/working-group.route';
+import assignUserToContext from './utils/assign-user-to-context';
 import pinoLogger from './utils/logger';
 
 export const appFactory = (libs: Libs = {}): Express => {

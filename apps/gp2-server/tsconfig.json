@@ -17,7 +17,7 @@
     "test/**/*.json",
     "@types/**/*.d.ts",
     "serverless.ts"
-  ],
+ ],
   "references": [
     { "path": "../../packages/errors" },
     { "path": "../../packages/fixtures" },

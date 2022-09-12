@@ -1,5 +1,5 @@
 import { gp2 } from '@asap-hub/model';
-import { drawerQuery, pixels } from '@asap-hub/react-components';
+import { pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import ProjectCard from './ProjectCard';
 
@@ -8,14 +8,10 @@ type ProjectsBodyProps = {
   projects: gp2.ListProjectResponse;
 };
 const gridContainerStyles = css({
-  display: 'grid',
-  gridGap: `${24 / perRem}em`,
-  gridTemplateColumns: '1fr',
+  display: 'flex',
+  flexDirection: 'column',
+  rowGap: `${24 / perRem}em`,
   marginTop: `${48 / perRem}em`,
-
-  [drawerQuery]: {
-    gridTemplateColumns: '1fr',
-  },
 });
 
 const ProjectsBody: React.FC<ProjectsBodyProps> = ({ projects }) => (

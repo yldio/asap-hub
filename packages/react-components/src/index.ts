@@ -92,6 +92,7 @@ export {
   EventConversation,
   EventMaterials,
   EventSearch,
+  DashboardUpcomingEvents,
   GoogleCalendar,
   GroupCard,
   GroupInformation,

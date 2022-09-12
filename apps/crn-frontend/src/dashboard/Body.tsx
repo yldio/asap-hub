@@ -13,16 +13,30 @@ type BodyProps = Omit<
 };
 
 const Body: FC<BodyProps> = ({ date, user, ...props }) => {
+  const pageSize = 3;
   const { items: pastEvents } = useEvents(
     getEventListOptions(date, {
       past: true,
-      pageSize: 3,
+      pageSize,
       currentPage: 0,
     }),
     user,
   );
 
-  return <DashboardPageBody {...props} pastEvents={pastEvents} />;
+  const upcomingEvents = useEvents(
+    getEventListOptions(date, {
+      past: false,
+      pageSize,
+    }),
+  );
+
+  return (
+    <DashboardPageBody
+      {...props}
+      pastEvents={pastEvents}
+      upcomingEvents={upcomingEvents}
+    />
+  );
 };
 
 export default Body;

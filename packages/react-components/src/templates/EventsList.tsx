@@ -12,14 +12,25 @@ const containerStyles = css({
 
 type EventsListProps = Omit<ComponentProps<typeof ResultList>, 'children'> & {
   events: ReadonlyArray<EventResponse>;
+  showNumberOfSpeakers?: boolean;
+  showTeams?: boolean;
 };
 
-const EventsListPage: FC<EventsListProps> = ({ events, ...props }) => (
+const EventsListPage: FC<EventsListProps> = ({
+  events,
+  showNumberOfSpeakers = true,
+  showTeams = true,
+  ...props
+}) => (
   <div css={containerStyles}>
     <ResultList {...props}>
       {events.map((event) => (
         <Fragment key={event.id}>
-          <EventCard {...event} />
+          <EventCard
+            {...event}
+            showNumberOfSpeakers={showNumberOfSpeakers}
+            showTeams={showTeams}
+          />
         </Fragment>
       ))}
     </ResultList>

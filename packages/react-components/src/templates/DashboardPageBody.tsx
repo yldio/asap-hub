@@ -8,12 +8,12 @@ import {
   dashboard,
   events as eventsRoute,
 } from '@asap-hub/routing';
-import { TeamRole, UserResponse } from '@asap-hub/model';
-
+import { TeamRole, UserResponse, ListEventResponse } from '@asap-hub/model';
 import {
   NewsSection,
   HelpSection,
   RemindersCard,
+  DashboardUpcomingEvents,
   PastEventsDashboardCard,
 } from '../organisms';
 import { perRem } from '../pixels';
@@ -24,7 +24,7 @@ import { confidentialIcon, giftIcon, learnIcon } from '../icons';
 
 const styles = css({
   display: 'grid',
-  gridRowGap: `${72 / perRem}em`,
+  gridRowGap: `${56 / perRem}em`,
   marginBottom: `${24 / perRem}em`,
 });
 
@@ -58,6 +58,8 @@ type DashboardPageBodyProps = Pick<
   } & Pick<UserResponse, 'dismissedGettingStarted'> & {
     pastEvents: ComponentProps<typeof PastEventsDashboardCard>['events'];
     roles: TeamRole[];
+  } & {
+    upcomingEvents?: ListEventResponse;
   };
 
 const publishRoles: TeamRole[] = ['ASAP Staff', 'Project Manager'];
@@ -70,6 +72,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   reminders,
   pastEvents,
   dismissedGettingStarted,
+  upcomingEvents,
 }) => {
   const canPublish = roles.some((role) => publishRoles.includes(role));
 
@@ -126,6 +129,11 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           limit={3}
           canPublish={canPublish}
         />
+      </div>
+      <div>
+        <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
+        <div css={infoStyles}>Here are some upcoming events.</div>
+        <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
       </div>
       <div>
         <Headline2 styleAsHeading={3}>Past Events</Headline2>

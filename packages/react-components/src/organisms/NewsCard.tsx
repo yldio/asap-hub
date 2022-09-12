@@ -57,7 +57,6 @@ const footerStyles = css({
 
 const placeholders: Record<NewsType, JSX.Element> = {
   News: newsPlaceholder,
-  Training: trainingPlaceholderIcon,
   Tutorial: trainingPlaceholderIcon,
   'Working Groups': trainingPlaceholderIcon,
 };

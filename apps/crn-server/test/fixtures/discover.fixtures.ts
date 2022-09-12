@@ -57,7 +57,7 @@ const squidexGraphqlDiscoverFlatData = (): NonNullable<
         text: 'Content',
         link: 'https://hub.asap.science',
         linkText: 'ASAP Training',
-        type: 'Training',
+        type: 'Tutorial',
         shortText: 'Short text',
         thumbnail: [
           {
@@ -204,7 +204,7 @@ export const getDiscoverResponse = (): DiscoverResponse => ({
       text: 'Content',
       link: 'https://hub.asap.science',
       linkText: 'ASAP Training',
-      type: 'Training',
+      type: 'Tutorial',
     },
   ],
   workingGroups: [

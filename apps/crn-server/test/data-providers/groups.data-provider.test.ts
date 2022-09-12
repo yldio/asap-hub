@@ -97,7 +97,7 @@ describe('Group Data Provider', () => {
       expect(result).toEqual({ total: 1, items: [getGroupDataObject()] });
     });
 
-    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+    test('Should sanitise single quotes by doubling them', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexGroupsGraphqlResponse(),
       );

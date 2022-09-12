@@ -795,7 +795,7 @@ describe('ResearchOutputs data provider', () => {
         );
       });
 
-      test('Should sanitise single quote in the search parameter by doubling it and encoding to hex for the squidex filter', async () => {
+      test('Should sanitise single quote in the search parameter by doubling it for the squidex filter', async () => {
         await researchOutputDataProvider.fetch({
           ...defaultParams,
           search: "'",

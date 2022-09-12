@@ -528,7 +528,7 @@ describe('User data provider', () => {
       );
       expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
-    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+    test('Should sanitise single quotes by doubling them', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );

@@ -11,15 +11,6 @@ export type ResearchOutputFilter = {
 export const buildODataFilter = (filterObj: Filter): string =>
   buildQuery({ filter: filterObj }).replace(FILTER_URL_QUERY_PARAM, '');
 
-export const getFirstOrAll = <T>(
-  arr: Array<T>,
-):
-  | T
-  | {
-      or: T[];
-    }
-  | undefined => (arr.length === 1 ? arr[0] : { or: arr });
-
 export const buildEqFilterForWords = (
   field: string,
   words?: string[],
@@ -31,9 +22,9 @@ export const buildEqFilterForWords = (
 
   const filterKey = `data/${field}/iv${subField ? `/${subField}` : ''}`;
   const filters = words.reduce(
-    (acc: Filter[], word: string) => acc.concat({ [filterKey]: word }),
+    (acc: Filter[], word: string) => acc.concat([{ [filterKey]: word }]),
     [],
   );
 
-  return getFirstOrAll(filters) as Filter;
+  return filters.length === 1 ? (filters[0] as Filter) : { or: filters };
 };

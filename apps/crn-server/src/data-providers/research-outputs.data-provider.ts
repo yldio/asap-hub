@@ -29,11 +29,7 @@ import {
 } from '../queries/research-outputs.queries';
 import { parseGraphQLResearchOutput } from '../entities/research-output';
 import logger from '../utils/logger';
-import {
-  buildODataFilter,
-  ResearchOutputFilter,
-  getFirstOrAll,
-} from '../utils/odata';
+import { buildODataFilter, ResearchOutputFilter } from '../utils/odata';
 
 export const makeODataFilter = (
   filter?: ResearchOutputFilter,
@@ -124,7 +120,9 @@ export class ResearchOutputSquidexDataProvider
       );
 
     const searchQ = containsFilters.length
-      ? getFirstOrAll(containsFilters)
+      ? containsFilters.length === 1
+        ? containsFilters[0]
+        : { or: containsFilters }
       : null;
     const filterQ = makeODataFilter(filter);
     const filtersAndSearch = [filterQ, searchQ].filter(Boolean);

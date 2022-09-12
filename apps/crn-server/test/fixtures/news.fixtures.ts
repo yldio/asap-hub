@@ -35,13 +35,13 @@ export const newsSquidexApiResponse: {
       id: 'news-2',
       data: {
         title: {
-          iv: 'Event 2',
+          iv: 'Tutorial 2',
         },
         type: {
-          iv: 'Event',
+          iv: 'Tutorial',
         },
         shortText: {
-          iv: 'Short text of event 2',
+          iv: 'Short text of tutorial 2',
         },
         text: {
           iv: '<p>text</p>',
@@ -71,9 +71,9 @@ export const listNewsResponse: ListNewsResponse = {
     },
     {
       id: 'news-2',
-      title: 'Event 2',
-      type: 'Event',
-      shortText: 'Short text of event 2',
+      title: 'Tutorial 2',
+      type: 'Tutorial',
+      shortText: 'Short text of tutorial 2',
       text: '<p>text</p>',
       thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid2`,
       created: '2020-09-16T14:31:19.000Z',

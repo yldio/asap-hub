@@ -15,8 +15,8 @@ const props: ComponentProps<typeof DashboardPageBody> = {
     {
       id: '55724942-3408-4ad6-9a73-14b92226ffb77',
       created: '2020-09-07T17:36:54Z',
-      title: 'Event Title',
-      type: 'Event',
+      title: 'Tutorial Title',
+      type: 'Tutorial',
     },
   ],
   pages: [createPageResponse('1'), createPageResponse('2')],
@@ -30,7 +30,7 @@ it('renders multiple news cards', () => {
     screen
       .queryAllByText(/title/i, { selector: 'h4' })
       .map(({ textContent }) => textContent),
-  ).toEqual(['Page 1 title', 'Page 2 title', 'News Title', 'Event Title']);
+  ).toEqual(['Page 1 title', 'Page 2 title', 'News Title', 'Tutorial Title']);
 });
 
 it('renders news section when there are no news', () => {
@@ -49,5 +49,5 @@ it('renders news section when there are no pages', () => {
   ).not.toBeInTheDocument();
   expect(
     screen.getAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(expect.arrayContaining(['News Title', 'Event Title']));
+  ).toEqual(expect.arrayContaining(['News Title', 'Tutorial Title']));
 });

@@ -1,17 +1,15 @@
 import {
   FetchUsersOptions,
+  isUserDegree,
+  isUserRole,
   LabResponse,
   ListUserDataObject,
   OrcidWork,
   OrcidWorkType,
   orcidWorkType,
-  Role,
   UserCreateDataObject,
   UserDataObject,
-  UserDegree,
-  crnUserDegrees,
   UserResponse,
-  crnUserRoles,
   UserTeam,
   UserUpdateDataObject,
 } from '@asap-hub/model';
@@ -373,11 +371,6 @@ export const parseUserToDataObject = (user: RestUser): UserDataObject => {
     connections: user.data.connections?.iv ?? undefined,
   };
 };
-const isUserRole = (data: string): data is Role =>
-  (crnUserRoles as ReadonlyArray<string>).includes(data);
-
-const isUserDegree = (data: string): data is UserDegree =>
-  (crnUserDegrees as ReadonlyArray<string>).includes(data);
 
 const isOrcidWorkType = (data: string): data is OrcidWorkType =>
   (orcidWorkType as ReadonlyArray<string>).includes(data);

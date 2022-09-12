@@ -7,7 +7,7 @@ import {
 } from '../src/research-output';
 
 describe('Research Output Model', () => {
-  describe('Type', () => {
+  describe('Document Type', () => {
     it('should recognize correct type', () => {
       expect(isResearchOutputDocumentType('Dataset')).toEqual(true);
     });

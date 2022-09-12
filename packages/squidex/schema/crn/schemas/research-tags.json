@@ -40,12 +40,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "allowedValues": [
-            "Method",
-            "Organism",
-            "Environment",
-            "Subtype"
-          ],
+          "allowedValues": ["Method", "Organism", "Environment", "Subtype"],
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": false,
@@ -119,10 +114,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Tags",
-          "allowedValues": [
-            "Research Output",
-            "User"
-          ],
+          "allowedValues": ["Research Output", "User"],
           "createEnum": false,
           "editor": "Checkboxes",
           "label": "Entities",

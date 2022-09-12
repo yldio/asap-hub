@@ -8,10 +8,7 @@
       "validateOnPublish": false
     },
     "scripts": {},
-    "fieldsInReferences": [
-      "name",
-      "orcid"
-    ],
+    "fieldsInReferences": ["name", "orcid"],
     "fieldsInLists": [
       "meta.status.color",
       "name",

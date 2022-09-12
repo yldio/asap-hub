@@ -8,9 +8,7 @@
       "validateOnPublish": false
     },
     "scripts": {},
-    "fieldsInReferences": [
-      "title"
-    ],
+    "fieldsInReferences": ["title"],
     "fieldsInLists": [
       "meta.status.color",
       "title",

@@ -11,10 +11,7 @@
       "create": "const teamsSpeakersSet = new Set();\n\nif (\n    ctx.data.speakers\n    && ctx.data.speakers.iv\n) {\n    for (const speaker of ctx.data.speakers.iv) {\n        if (!speaker.team && !speaker.user) {\n            return reject('You must select team or user or both for spekaer');\n        }\n        \n        if (\n            speaker.team.length === 1\n            && speaker.user.length === 1\n        ) {\n            const teamSpeaker = `${speaker.team[0]}-${speaker.user[0]}`;\n            if (teamsSpeakersSet.has(teamSpeaker)) {\n                return reject('Duplicates with same team and speaker are not allowed');\n            }\n            \n            teamsSpeakersSet.add(teamSpeaker);\n            \n            getReference(speaker.user[0], function (users) {\n              if (users && users.length === 1 && users[0].SchemaId.name === 'external-authors') {\n                  return reject('Selecting team for speaker is not allowed when user is external author');\n              }\n            });\n        }     \n    }\n}",
       "update": "const teamsSpeakersSet = new Set();\n\nif (\n    ctx.data.speakers\n    && ctx.data.speakers.iv\n) {\n    for (const speaker of ctx.data.speakers.iv) {\n        if (!speaker.team && !speaker.user) {\n            return reject('You must select team or user or both for spekaer');\n        }\n        \n        if (\n            speaker.team.length === 1\n            && speaker.user.length === 1\n        ) {\n            const teamSpeaker = `${speaker.team[0]}-${speaker.user[0]}`;\n            if (teamsSpeakersSet.has(teamSpeaker)) {\n                return reject('Duplicates with same team and speaker are not allowed');\n            }\n            \n            teamsSpeakersSet.add(teamSpeaker);\n            \n            getReference(speaker.user[0], function (users) {\n              if (users && users.length === 1 && users[0].SchemaId.name === 'external-authors') {\n                  return reject('Selecting team for speaker is not allowed when user is external author');\n              }\n            });\n        }     \n    }\n}"
     },
-    "fieldsInReferences": [
-      "title",
-      "startDate"
-    ],
+    "fieldsInReferences": ["title", "startDate"],
     "fieldsInLists": [
       "meta.status.color",
       "title",
@@ -92,11 +89,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "allowedValues": [
-            "Confirmed",
-            "Tentative",
-            "Cancelled"
-          ],
+          "allowedValues": ["Confirmed", "Tentative", "Cancelled"],
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": false,
@@ -125,9 +118,7 @@
           "resolveReference": true,
           "mustBePublished": false,
           "editor": "Dropdown",
-          "schemaIds": [
-            "calendars"
-          ],
+          "schemaIds": ["calendars"],
           "label": "Calendar",
           "isRequired": true,
           "isRequiredOnPublish": false,
@@ -288,9 +279,7 @@
               "resolveReference": false,
               "mustBePublished": false,
               "editor": "List",
-              "schemaIds": [
-                "teams"
-              ],
+              "schemaIds": ["teams"],
               "label": "Team",
               "isRequired": false,
               "isRequiredOnPublish": false,
@@ -309,10 +298,7 @@
               "resolveReference": false,
               "mustBePublished": false,
               "editor": "List",
-              "schemaIds": [
-                "users",
-                "external-authors"
-              ],
+              "schemaIds": ["users", "external-authors"],
               "label": "User",
               "isRequired": false,
               "isRequiredOnPublish": false,

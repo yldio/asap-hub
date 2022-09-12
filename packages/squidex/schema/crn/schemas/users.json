@@ -11,11 +11,7 @@
       "create": "if(JSON.stringify(ctx.data.teams.iv).indexOf('ASAP Staff') > 0  && ctx.data.role.iv !== 'Staff') {\n    reject('Only Staff can be given this team role. Change ASAP Hub Role to \"Staff\".')\n}",
       "update": "if(JSON.stringify(ctx.data.teams.iv).indexOf('ASAP Staff') > 0  && ctx.data.role.iv !== 'Staff') {\n    reject('Only Staff can be given this team role. Change ASAP Hub Role to \"Staff\".')\n}"
     },
-    "fieldsInReferences": [
-      "firstName",
-      "lastName",
-      "orcid"
-    ],
+    "fieldsInReferences": ["firstName", "lastName", "orcid"],
     "fieldsInLists": [
       "meta.status.color",
       "avatar",
@@ -171,9 +167,7 @@
           "resolveReference": false,
           "mustBePublished": true,
           "editor": "List",
-          "schemaIds": [
-            "labs"
-          ],
+          "schemaIds": ["labs"],
           "label": "Labs",
           "hints": "Mandatory for grantees. They cannot publish profile without a lab.",
           "placeholder": "",
@@ -211,9 +205,7 @@
               "resolveReference": false,
               "mustBePublished": false,
               "editor": "Dropdown",
-              "schemaIds": [
-                "teams"
-              ],
+              "schemaIds": ["teams"],
               "label": "ID",
               "hints": "",
               "placeholder": "",
@@ -940,12 +932,7 @@
         "properties": {
           "fieldType": "String",
           "defaultValue": "Grantee",
-          "allowedValues": [
-            "Staff",
-            "Grantee",
-            "Guest",
-            "Hidden"
-          ],
+          "allowedValues": ["Staff", "Grantee", "Guest", "Hidden"],
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,

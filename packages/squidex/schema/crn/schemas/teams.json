@@ -8,9 +8,7 @@
       "validateOnPublish": false
     },
     "scripts": {},
-    "fieldsInReferences": [
-      "displayName"
-    ],
+    "fieldsInReferences": ["displayName"],
     "fieldsInLists": [
       "meta.status.color",
       "displayName",
@@ -97,9 +95,7 @@
           "resolveReference": true,
           "mustBePublished": false,
           "editor": "Dropdown",
-          "schemaIds": [
-            "research-outputs"
-          ],
+          "schemaIds": ["research-outputs"],
           "label": "Proposal",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -158,9 +154,7 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
-          "schemaIds": [
-            "research-outputs"
-          ],
+          "schemaIds": ["research-outputs"],
           "label": "Shared Research",
           "isRequired": false,
           "isRequiredOnPublish": false,

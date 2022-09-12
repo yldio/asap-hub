@@ -8,9 +8,7 @@
       "validateOnPublish": false
     },
     "scripts": {},
-    "fieldsInReferences": [
-      "name"
-    ],
+    "fieldsInReferences": ["name"],
     "fieldsInLists": [
       "meta.status.color",
       "thumbnail",
@@ -171,9 +169,7 @@
           "resolveReference": true,
           "mustBePublished": false,
           "editor": "Dropdown",
-          "schemaIds": [
-            "calendars"
-          ],
+          "schemaIds": ["calendars"],
           "label": "Calendars",
           "hints": "",
           "placeholder": "",
@@ -287,9 +283,7 @@
               "resolveReference": false,
               "mustBePublished": false,
               "editor": "List",
-              "schemaIds": [
-                "users"
-              ],
+              "schemaIds": ["users"],
               "label": "User",
               "hints": "",
               "placeholder": "",
@@ -305,10 +299,7 @@
             "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "allowedValues": [
-                "Project Manager",
-                "Chair"
-              ],
+              "allowedValues": ["Project Manager", "Chair"],
               "isUnique": false,
               "isEmbeddable": false,
               "inlineEditable": true,
@@ -335,9 +326,7 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "Tags",
-          "schemaIds": [
-            "teams"
-          ],
+          "schemaIds": ["teams"],
           "label": "Teams",
           "hints": "",
           "placeholder": "",

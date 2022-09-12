@@ -11,10 +11,7 @@
       "create": "if(new Date(ctx.data.publishDate.iv) > new Date()) {\n    reject('Publish date date cannot be greater than today')\n}\n",
       "update": "const modified = Object.keys(ctx.data)\n        .filter(key => JSON.stringify(ctx.data[key]) !== JSON.stringify(ctx.oldData[key]))\n        .filter(key => key !== 'publishDate' && key !== 'adminNotes');\n        \nif (modified.length > 0) {\n    ctx.data.lastUpdatedPartial.iv = new Date().toISOString().split('.')[0]+\"Z\";\n    replace();\n}\n\n"
     },
-    "fieldsInReferences": [
-      "title",
-      "documentType"
-    ],
+    "fieldsInReferences": ["title", "documentType"],
     "fieldsInLists": [
       "meta.status.color",
       "title",
@@ -216,9 +213,7 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
-          "schemaIds": [
-            "users"
-          ],
+          "schemaIds": ["users"],
           "label": "Created by",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -238,9 +233,7 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
-          "schemaIds": [
-            "users"
-          ],
+          "schemaIds": ["users"],
           "label": "Updated by",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -321,9 +314,7 @@
           "resolveReference": false,
           "mustBePublished": true,
           "editor": "Tags",
-          "schemaIds": [
-            "research-tags"
-          ],
+          "schemaIds": ["research-tags"],
           "label": "Methods",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -342,9 +333,7 @@
           "resolveReference": false,
           "mustBePublished": true,
           "editor": "Tags",
-          "schemaIds": [
-            "research-tags"
-          ],
+          "schemaIds": ["research-tags"],
           "label": "Organism",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -363,9 +352,7 @@
           "resolveReference": false,
           "mustBePublished": true,
           "editor": "Tags",
-          "schemaIds": [
-            "research-tags"
-          ],
+          "schemaIds": ["research-tags"],
           "label": "Environment",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -385,9 +372,7 @@
           "resolveReference": false,
           "mustBePublished": true,
           "editor": "Tags",
-          "schemaIds": [
-            "research-tags"
-          ],
+          "schemaIds": ["research-tags"],
           "label": "Subtype",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -461,9 +446,7 @@
           "resolveReference": false,
           "mustBePublished": true,
           "editor": "List",
-          "schemaIds": [
-            "labs"
-          ],
+          "schemaIds": ["labs"],
           "label": "Labs",
           "hints": "",
           "placeholder": "",
@@ -484,10 +467,7 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
-          "schemaIds": [
-            "users",
-            "external-authors"
-          ],
+          "schemaIds": ["users", "external-authors"],
           "label": "Authors",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -519,11 +499,7 @@
         "properties": {
           "fieldType": "String",
           "defaultValue": "Not Sure",
-          "allowedValues": [
-            "Yes",
-            "No",
-            "Not Sure"
-          ],
+          "allowedValues": ["Yes", "No", "Not Sure"],
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,
@@ -546,10 +522,7 @@
         "properties": {
           "fieldType": "String",
           "defaultValue": "Network Only",
-          "allowedValues": [
-            "Public",
-            "Network Only"
-          ],
+          "allowedValues": ["Public", "Network Only"],
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,
@@ -571,11 +544,7 @@
         "properties": {
           "fieldType": "String",
           "defaultValue": "Not Sure",
-          "allowedValues": [
-            "Yes",
-            "No",
-            "Not Sure"
-          ],
+          "allowedValues": ["Yes", "No", "Not Sure"],
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,

@@ -23,9 +23,7 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
-          "schemaIds": [
-            "pages"
-          ],
+          "schemaIds": ["pages"],
           "label": "Grantee Guidance",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -44,9 +42,7 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
-          "schemaIds": [
-            "news-and-events"
-          ],
+          "schemaIds": ["news-and-events"],
           "label": "Training",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -65,9 +61,7 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
-          "schemaIds": [
-            "news-and-events"
-          ],
+          "schemaIds": ["news-and-events"],
           "label": "Working Groups",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -106,9 +100,7 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
-          "schemaIds": [
-            "users"
-          ],
+          "schemaIds": ["users"],
           "label": "ASAP Team Members",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -129,9 +121,7 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
-          "schemaIds": [
-            "teams"
-          ],
+          "schemaIds": ["teams"],
           "label": "ASAP Team",
           "isRequired": true,
           "isRequiredOnPublish": false,
@@ -150,9 +140,7 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
-          "schemaIds": [
-            "users"
-          ],
+          "schemaIds": ["users"],
           "label": "Scientific Advisory Board",
           "isRequired": false,
           "isRequiredOnPublish": false,

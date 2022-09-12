@@ -23,9 +23,7 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
-          "schemaIds": [
-            "news-and-events"
-          ],
+          "schemaIds": ["news-and-events"],
           "label": "Latest News from ASAP",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -44,9 +42,7 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
-          "schemaIds": [
-            "pages"
-          ],
+          "schemaIds": ["pages"],
           "label": "Where to Start",
           "isRequired": false,
           "isRequiredOnPublish": false,

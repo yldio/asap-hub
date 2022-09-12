@@ -8,11 +8,7 @@
       "validateOnPublish": false
     },
     "scripts": {},
-    "fieldsInReferences": [
-      "firstName",
-      "lastName",
-      "orcid"
-    ],
+    "fieldsInReferences": ["firstName", "lastName", "orcid"],
     "fieldsInLists": [
       "meta.status.color",
       "avatar",
@@ -863,12 +859,7 @@
         "properties": {
           "fieldType": "String",
           "defaultValue": "Grantee",
-          "allowedValues": [
-            "Staff",
-            "Grantee",
-            "Guest",
-            "Hidden"
-          ],
+          "allowedValues": ["Staff", "Grantee", "Guest", "Hidden"],
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,

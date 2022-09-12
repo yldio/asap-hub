@@ -119,9 +119,7 @@
               "resolveReference": false,
               "mustBePublished": false,
               "editor": "List",
-              "schemaIds": [
-                "users"
-              ],
+              "schemaIds": ["users"],
               "label": "User",
               "isRequired": true,
               "isRequiredOnPublish": false,
@@ -135,11 +133,7 @@
             "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "allowedValues": [
-                "Lead",
-                "Co-lead",
-                "Working group member"
-              ],
+              "allowedValues": ["Lead", "Co-lead", "Working group member"],
               "isUnique": false,
               "isEmbeddable": false,
               "inlineEditable": true,

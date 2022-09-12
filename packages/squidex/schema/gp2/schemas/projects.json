@@ -61,9 +61,7 @@
               "resolveReference": false,
               "mustBePublished": false,
               "editor": "List",
-              "schemaIds": [
-                "users"
-              ],
+              "schemaIds": ["users"],
               "label": "User",
               "isRequired": true,
               "isRequiredOnPublish": false,
@@ -113,11 +111,7 @@
         "properties": {
           "fieldType": "String",
           "defaultValue": "Active",
-          "allowedValues": [
-            "Active",
-            "Inactive",
-            "Completed"
-          ],
+          "allowedValues": ["Active", "Inactive", "Completed"],
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,

@@ -8,9 +8,7 @@
       "validateOnPublish": false
     },
     "scripts": {},
-    "fieldsInReferences": [
-      "title"
-    ],
+    "fieldsInReferences": ["title"],
     "fieldsInLists": [
       "meta.status.color",
       "thumbnail",
@@ -54,12 +52,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "allowedValues": [
-            "News",
-            "Training",
-            "Tutorial",
-            "Working Groups"
-          ],
+          "allowedValues": ["News", "Training", "Tutorial", "Working Groups"],
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,

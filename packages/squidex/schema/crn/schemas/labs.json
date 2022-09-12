@@ -1,8 +1,5 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "labs",
-  "isSingleton": false,
-  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -11,7 +8,9 @@
       "validateOnPublish": false
     },
     "scripts": {},
-    "fieldsInReferences": ["name"],
+    "fieldsInReferences": [
+      "name"
+    ],
     "fieldsInLists": [
       "meta.status.color",
       "name",
@@ -30,7 +29,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Name",
@@ -43,7 +44,11 @@
       }
     ],
     "previewUrls": {},
+    "fieldRules": [],
     "category": "Content",
     "isPublished": true
-  }
+  },
+  "name": "labs",
+  "isSingleton": false,
+  "schemaType": "Default"
 }

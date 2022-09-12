@@ -1,8 +1,5 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "groups",
-  "isSingleton": false,
-  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -11,7 +8,9 @@
       "validateOnPublish": false
     },
     "scripts": {},
-    "fieldsInReferences": ["name"],
+    "fieldsInReferences": [
+      "name"
+    ],
     "fieldsInLists": [
       "meta.status.color",
       "thumbnail",
@@ -55,7 +54,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Name",
@@ -90,6 +91,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Tags",
+          "createEnum": false,
           "editor": "Tags",
           "label": "Expertise (Tags)",
           "isRequired": false,
@@ -106,7 +108,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "TextArea",
           "label": "Description",
@@ -125,8 +129,8 @@
           "fieldType": "Assets",
           "previewMode": "Image",
           "maxItems": 1,
-          "mustBeImage": false,
           "resolveFirst": true,
+          "mustBeImage": false,
           "resolveImage": true,
           "allowDuplicates": false,
           "label": "Thumbnail",
@@ -167,7 +171,9 @@
           "resolveReference": true,
           "mustBePublished": false,
           "editor": "Dropdown",
-          "schemaIds": ["calendars"],
+          "schemaIds": [
+            "calendars"
+          ],
           "label": "Calendars",
           "hints": "",
           "placeholder": "",
@@ -200,7 +206,9 @@
               "fieldType": "String",
               "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
               "isUnique": false,
+              "isEmbeddable": false,
               "inlineEditable": true,
+              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Slack Link",
@@ -218,7 +226,9 @@
               "fieldType": "String",
               "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
               "isUnique": false,
+              "isEmbeddable": false,
               "inlineEditable": true,
+              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Google Drive Link",
@@ -277,7 +287,9 @@
               "resolveReference": false,
               "mustBePublished": false,
               "editor": "List",
-              "schemaIds": ["users"],
+              "schemaIds": [
+                "users"
+              ],
               "label": "User",
               "hints": "",
               "placeholder": "",
@@ -293,9 +305,14 @@
             "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "allowedValues": ["Project Manager", "Chair"],
+              "allowedValues": [
+                "Project Manager",
+                "Chair"
+              ],
               "isUnique": false,
+              "isEmbeddable": false,
               "inlineEditable": true,
+              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Dropdown",
               "label": "Role",
@@ -318,7 +335,9 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "Tags",
-          "schemaIds": ["teams"],
+          "schemaIds": [
+            "teams"
+          ],
           "label": "Teams",
           "hints": "",
           "placeholder": "",
@@ -329,7 +348,11 @@
       }
     ],
     "previewUrls": {},
+    "fieldRules": [],
     "category": "Storage",
     "isPublished": true
-  }
+  },
+  "name": "groups",
+  "isSingleton": false,
+  "schemaType": "Default"
 }

@@ -1,8 +1,5 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "external-authors",
-  "isSingleton": false,
-  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -11,7 +8,10 @@
       "validateOnPublish": false
     },
     "scripts": {},
-    "fieldsInReferences": ["name", "orcid"],
+    "fieldsInReferences": [
+      "name",
+      "orcid"
+    ],
     "fieldsInLists": [
       "meta.status.color",
       "name",
@@ -31,7 +31,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Name",
@@ -51,7 +53,9 @@
           "pattern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}(\\d|X)$",
           "patternMessage": "ORCID must have the following format: 0000-0000-0000-0000",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "ORCID",
@@ -63,7 +67,11 @@
       }
     ],
     "previewUrls": {},
+    "fieldRules": [],
     "category": "Storage",
     "isPublished": true
-  }
+  },
+  "name": "external-authors",
+  "isSingleton": false,
+  "schemaType": "Default"
 }

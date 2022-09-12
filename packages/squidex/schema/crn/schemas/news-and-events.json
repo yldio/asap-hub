@@ -1,8 +1,5 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "news-and-events",
-  "isSingleton": false,
-  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -11,7 +8,9 @@
       "validateOnPublish": false
     },
     "scripts": {},
-    "fieldsInReferences": ["title"],
+    "fieldsInReferences": [
+      "title"
+    ],
     "fieldsInLists": [
       "meta.status.color",
       "thumbnail",
@@ -36,7 +35,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Title",
@@ -53,9 +54,16 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "allowedValues": ["News", "Training", "Tutorial", "Working Groups"],
+          "allowedValues": [
+            "News",
+            "Training",
+            "Tutorial",
+            "Working Groups"
+          ],
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Type",
@@ -73,7 +81,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Short Text",
@@ -92,8 +102,9 @@
         "properties": {
           "fieldType": "Assets",
           "previewMode": "Image",
-          "mustBeImage": true,
+          "expectedType": "Image",
           "resolveFirst": true,
+          "mustBeImage": true,
           "resolveImage": true,
           "allowDuplicates": false,
           "label": "Thumbnail",
@@ -112,7 +123,9 @@
           "fieldType": "String",
           "pattern": "",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "External Link",
@@ -130,7 +143,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "External Link Text",
@@ -165,7 +180,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Text",
@@ -176,7 +193,11 @@
       }
     ],
     "previewUrls": {},
+    "fieldRules": [],
     "category": "Content",
     "isPublished": true
-  }
+  },
+  "name": "news-and-events",
+  "isSingleton": false,
+  "schemaType": "Default"
 }

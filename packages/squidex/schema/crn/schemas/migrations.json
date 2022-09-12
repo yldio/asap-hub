@@ -1,8 +1,5 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "migrations",
-  "isSingleton": false,
-  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -23,7 +20,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": true,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Name",
@@ -36,7 +35,11 @@
       }
     ],
     "previewUrls": {},
+    "fieldRules": [],
     "category": "Content",
     "isPublished": true
-  }
+  },
+  "name": "migrations",
+  "isSingleton": false,
+  "schemaType": "Default"
 }

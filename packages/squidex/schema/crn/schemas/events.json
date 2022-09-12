@@ -1,8 +1,5 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "events",
-  "isSingleton": false,
-  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -14,7 +11,10 @@
       "create": "const teamsSpeakersSet = new Set();\n\nif (\n    ctx.data.speakers\n    && ctx.data.speakers.iv\n) {\n    for (const speaker of ctx.data.speakers.iv) {\n        if (!speaker.team && !speaker.user) {\n            return reject('You must select team or user or both for spekaer');\n        }\n        \n        if (\n            speaker.team.length === 1\n            && speaker.user.length === 1\n        ) {\n            const teamSpeaker = `${speaker.team[0]}-${speaker.user[0]}`;\n            if (teamsSpeakersSet.has(teamSpeaker)) {\n                return reject('Duplicates with same team and speaker are not allowed');\n            }\n            \n            teamsSpeakersSet.add(teamSpeaker);\n            \n            getReference(speaker.user[0], function (users) {\n              if (users && users.length === 1 && users[0].SchemaId.name === 'external-authors') {\n                  return reject('Selecting team for speaker is not allowed when user is external author');\n              }\n            });\n        }     \n    }\n}",
       "update": "const teamsSpeakersSet = new Set();\n\nif (\n    ctx.data.speakers\n    && ctx.data.speakers.iv\n) {\n    for (const speaker of ctx.data.speakers.iv) {\n        if (!speaker.team && !speaker.user) {\n            return reject('You must select team or user or both for spekaer');\n        }\n        \n        if (\n            speaker.team.length === 1\n            && speaker.user.length === 1\n        ) {\n            const teamSpeaker = `${speaker.team[0]}-${speaker.user[0]}`;\n            if (teamsSpeakersSet.has(teamSpeaker)) {\n                return reject('Duplicates with same team and speaker are not allowed');\n            }\n            \n            teamsSpeakersSet.add(teamSpeaker);\n            \n            getReference(speaker.user[0], function (users) {\n              if (users && users.length === 1 && users[0].SchemaId.name === 'external-authors') {\n                  return reject('Selecting team for speaker is not allowed when user is external author');\n              }\n            });\n        }     \n    }\n}"
     },
-    "fieldsInReferences": ["title", "startDate"],
+    "fieldsInReferences": [
+      "title",
+      "startDate"
+    ],
     "fieldsInLists": [
       "meta.status.color",
       "title",
@@ -54,7 +54,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Title",
@@ -90,9 +92,15 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "allowedValues": ["Confirmed", "Tentative", "Cancelled"],
+          "allowedValues": [
+            "Confirmed",
+            "Tentative",
+            "Cancelled"
+          ],
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Status",
@@ -117,7 +125,9 @@
           "resolveReference": true,
           "mustBePublished": false,
           "editor": "Dropdown",
-          "schemaIds": ["calendars"],
+          "schemaIds": [
+            "calendars"
+          ],
           "label": "Calendar",
           "isRequired": true,
           "isRequiredOnPublish": false,
@@ -167,7 +177,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Meeting Link",
@@ -205,8 +217,8 @@
           "fieldType": "Assets",
           "previewMode": "Image",
           "maxItems": 1,
-          "mustBeImage": false,
           "resolveFirst": true,
+          "mustBeImage": false,
           "resolveImage": true,
           "allowDuplicates": false,
           "label": "Thumbnail",
@@ -225,6 +237,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Tags",
+          "createEnum": false,
           "editor": "Tags",
           "label": "Tags",
           "isRequired": false,
@@ -275,7 +288,9 @@
               "resolveReference": false,
               "mustBePublished": false,
               "editor": "List",
-              "schemaIds": ["teams"],
+              "schemaIds": [
+                "teams"
+              ],
               "label": "Team",
               "isRequired": false,
               "isRequiredOnPublish": false,
@@ -294,7 +309,10 @@
               "resolveReference": false,
               "mustBePublished": false,
               "editor": "List",
-              "schemaIds": ["users", "external-authors"],
+              "schemaIds": [
+                "users",
+                "external-authors"
+              ],
               "label": "User",
               "isRequired": false,
               "isRequiredOnPublish": false,
@@ -346,7 +364,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Notes",
@@ -383,7 +403,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Video Recording",
@@ -420,7 +442,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Presentation",
@@ -472,7 +496,9 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
+              "isEmbeddable": false,
               "inlineEditable": true,
+              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Title",
@@ -493,7 +519,9 @@
               "pattern": "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
               "patternMessage": "URL must start with http:// or https://",
               "isUnique": false,
+              "isEmbeddable": false,
               "inlineEditable": true,
+              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "URL",
@@ -529,7 +557,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "TextArea",
           "label": "Description",
@@ -549,7 +579,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Start Date Time Zone",
@@ -584,7 +616,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "End Date Time Zone",
@@ -602,7 +636,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Google Event Link",
@@ -622,7 +658,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": true,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Google Id",
@@ -635,7 +673,11 @@
       }
     ],
     "previewUrls": {},
+    "fieldRules": [],
     "category": "Storage",
     "isPublished": true
-  }
+  },
+  "name": "events",
+  "isSingleton": false,
+  "schemaType": "Default"
 }

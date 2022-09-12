@@ -1,8 +1,5 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "research-tags",
-  "isSingleton": false,
-  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -24,7 +21,9 @@
           "fieldType": "String",
           "minCharacters": 3,
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Name",
@@ -41,9 +40,16 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "allowedValues": ["Method", "Organism", "Environment", "Subtype"],
+          "allowedValues": [
+            "Method",
+            "Organism",
+            "Environment",
+            "Subtype"
+          ],
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Category",
@@ -97,6 +103,7 @@
             "Sample Prep",
             "Shipment Procedure"
           ],
+          "createEnum": false,
           "editor": "Checkboxes",
           "label": "Types",
           "isRequired": false,
@@ -112,7 +119,11 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Tags",
-          "allowedValues": ["Research Output", "User"],
+          "allowedValues": [
+            "Research Output",
+            "User"
+          ],
+          "createEnum": false,
           "editor": "Checkboxes",
           "label": "Entities",
           "hints": "List of associated entities",
@@ -123,7 +134,11 @@
       }
     ],
     "previewUrls": {},
+    "fieldRules": [],
     "category": "Storage",
     "isPublished": true
-  }
+  },
+  "name": "research-tags",
+  "isSingleton": false,
+  "schemaType": "Default"
 }

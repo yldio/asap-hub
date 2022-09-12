@@ -1,8 +1,5 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "teams",
-  "isSingleton": false,
-  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -11,7 +8,9 @@
       "validateOnPublish": false
     },
     "scripts": {},
-    "fieldsInReferences": ["displayName"],
+    "fieldsInReferences": [
+      "displayName"
+    ],
     "fieldsInLists": [
       "meta.status.color",
       "displayName",
@@ -38,7 +37,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Display Name",
@@ -56,7 +57,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": true,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Application Number",
@@ -73,6 +76,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Tags",
+          "createEnum": false,
           "editor": "Tags",
           "label": "Expertise and Resources",
           "isRequired": false,
@@ -93,7 +97,9 @@
           "resolveReference": true,
           "mustBePublished": false,
           "editor": "Dropdown",
-          "schemaIds": ["research-outputs"],
+          "schemaIds": [
+            "research-outputs"
+          ],
           "label": "Proposal",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -109,7 +115,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Project Title",
@@ -127,7 +135,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Project Summary",
@@ -148,7 +158,9 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
-          "schemaIds": ["research-outputs"],
+          "schemaIds": [
+            "research-outputs"
+          ],
           "label": "Shared Research",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -177,7 +189,9 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
+              "isEmbeddable": false,
               "inlineEditable": true,
+              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Name",
@@ -194,7 +208,9 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
+              "isEmbeddable": false,
               "inlineEditable": true,
+              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Description",
@@ -211,7 +227,9 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
+              "isEmbeddable": false,
               "inlineEditable": true,
+              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "URL",
@@ -226,7 +244,11 @@
     "previewUrls": {
       "Web": "https://hub.asap.science/network/teams/${id}"
     },
+    "fieldRules": [],
     "category": "Storage",
     "isPublished": true
-  }
+  },
+  "name": "teams",
+  "isSingleton": false,
+  "schemaType": "Default"
 }

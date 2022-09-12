@@ -3,7 +3,10 @@ import Intercept from 'apr-intercept';
 import { createHash } from 'crypto';
 import { RequestHandler } from 'express';
 import { CacheClient } from '../clients/cache.client';
-import { AssignUserToContext } from '../utils/assign-user-to-context';
+import {
+  AssignUserToContext,
+  RequestWithUser,
+} from '../utils/assign-user-to-context';
 import { Logger } from '../utils/logger';
 import { DecodeToken } from '../utils/validate-token';
 
@@ -59,7 +62,7 @@ export const authHandlerFactory =
       throw Boom.unauthorized();
     }
 
-    assignLoggedInUserToContext(req, user);
+    assignLoggedInUserToContext(req as RequestWithUser<T>, user);
 
     next();
   };

@@ -3,6 +3,10 @@ import { appFactory } from '../../src/app';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
 
+jest.mock('@asap-hub/server-common', () => ({
+  ...jest.requireActual('@asap-hub/server-common'),
+  assignUserToContext: jest.fn(),
+}));
 describe('App default routes', () => {
   test('Should return a 404 when the path is not found', async () => {
     const appNoAuth = appFactory({

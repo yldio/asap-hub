@@ -138,7 +138,7 @@ describe('Authentication middleware', () => {
   test('Should fetch the logged in user by sub parameter and call the callback with the user', async () => {
     decodeToken.mockResolvedValueOnce(jwtPayload);
 
-    const response = await supertest(app)
+    await supertest(app)
       .get('/test-route')
       .set('Authorization', 'Bearer something');
 

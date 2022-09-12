@@ -1,5 +1,6 @@
 import { UserResponse } from '@asap-hub/model';
 import {
+  assignUserToContext,
   AuthHandler,
   authHandlerFactory,
   decodeTokenFactory,
@@ -226,9 +227,7 @@ export const appFactory = (libs: Libs = {}): Express => {
       userController.fetchByCode.bind(userController),
       userResponseCacheClient,
       logger,
-      (req, user) => {
-        req.loggedInUser = user;
-      },
+      assignUserToContext,
     );
   const tracingHandler = tracingHandlerFactory(libs.tracer);
   const sentryTransactionIdHandler =

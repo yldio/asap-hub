@@ -1,3 +1,4 @@
+export * from './assign-user-to-context';
 export * from './logger';
 export * from './send-email';
 export * from './sentry-wrapper';

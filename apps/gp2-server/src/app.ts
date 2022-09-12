@@ -1,5 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import {
+  assignUserToContext,
   AuthHandler,
   authHandlerFactory,
   decodeTokenFactory,
@@ -113,9 +114,7 @@ export const appFactory = (libs: Libs = {}): Express => {
       userController.fetchByCode.bind(userController),
       userResponseCacheClient,
       logger,
-      (req, user) => {
-        req.loggedInUser = user;
-      },
+      assignUserToContext,
     );
 
   // Routes

@@ -3,15 +3,15 @@ import { pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import ProjectCard from './ProjectCard';
 
-const { perRem } = pixels;
+const { rem } = pixels;
 type ProjectsBodyProps = {
   projects: gp2.ListProjectResponse;
 };
 const gridContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  rowGap: `${24 / perRem}em`,
-  marginTop: `${48 / perRem}em`,
+  rowGap: rem(24),
+  marginTop: rem(48),
 });
 
 const ProjectsBody: React.FC<ProjectsBodyProps> = ({ projects }) => (

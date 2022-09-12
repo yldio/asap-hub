@@ -2,6 +2,7 @@ import {
   createProjectResponse,
   createProjectsResponse,
 } from '@asap-hub/fixtures';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
   screen,
@@ -27,8 +28,8 @@ const renderProjectsList = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/projects']}>
-              <Route path="/projects">
+            <MemoryRouter initialEntries={[gp2Routing.projects({}).$]}>
+              <Route path={gp2Routing.projects.template}>
                 <Projects />
               </Route>
             </MemoryRouter>

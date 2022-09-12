@@ -1,4 +1,9 @@
 import {
+  createWorkingGroupResponse,
+  createWorkingGroupsResponse,
+} from '@asap-hub/fixtures';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
+import {
   render,
   screen,
   waitForElementToBeRemoved,
@@ -6,10 +11,6 @@ import {
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import {
-  createWorkingGroupsResponse,
-  createWorkingGroupResponse,
-} from '@asap-hub/fixtures';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getWorkingGroups } from '../api';
 import { refreshWorkingGroupsState } from '../state';
@@ -27,8 +28,8 @@ const renderWorkingGroupsList = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/working-groups']}>
-              <Route path="/working-groups">
+            <MemoryRouter initialEntries={[gp2Routing.workingGroups({}).$]}>
+              <Route path={gp2Routing.workingGroups.template}>
                 <WorkingGroups />
               </Route>
             </MemoryRouter>

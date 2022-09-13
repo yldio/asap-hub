@@ -1,6 +1,6 @@
 import { createUserResponse, getJwtPayload } from '@asap-hub/fixtures';
 import { UserResponse } from '@asap-hub/model';
-import express, { Express, RequestHandler, Router } from 'express';
+import express, { Express, Request, RequestHandler, Router } from 'express';
 import 'express-async-errors';
 import supertest from 'supertest';
 import { MemoryCacheClient } from '../../src/clients/cache.client';
@@ -26,8 +26,9 @@ describe('Authentication middleware', () => {
 
   const httpLogger = getHttpLogger({ logger: loggerMock });
   const errorHandler = errorHandlerFactory();
-  const assignLoggedInUserToContext = jest.fn();
+  const assignUserToContext = jest.fn();
 
+  let request: Request;
   beforeEach(() => {
     const cacheClient = new MemoryCacheClient<UserResponse>();
     authHandler = authHandlerFactory(
@@ -35,10 +36,14 @@ describe('Authentication middleware', () => {
       fetchByCode,
       cacheClient,
       loggerMock,
-      assignLoggedInUserToContext,
+      assignUserToContext,
     );
     app = express();
     app.use(httpLogger);
+    app.use((req, _res, next) => {
+      request = req;
+      next();
+    });
     app.use(authHandler);
     app.use(mockRoutes);
     app.use(errorHandler);
@@ -143,9 +148,6 @@ describe('Authentication middleware', () => {
       .set('Authorization', 'Bearer something');
 
     expect(fetchByCode).toBeCalledWith(jwtPayload.sub);
-    expect(assignLoggedInUserToContext).toBeCalledWith(
-      expect.anything(),
-      createUserResponse(),
-    );
+    expect(assignUserToContext).toBeCalledWith(request, createUserResponse());
   });
 });

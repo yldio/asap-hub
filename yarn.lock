@@ -348,7 +348,7 @@ __metadata:
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.18.9
-    "@types/node": 14.18.26
+    "@types/node": 14.18.28
     "@types/prettier": 2.7.0
     algoliasearch: 4.14.2
     prettier: 2.7.1
@@ -411,7 +411,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.18.9
     "@types/jest": 26.0.24
     "@types/jsdom": 16.2.3
-    "@types/node": 14.18.26
+    "@types/node": 14.18.28
     core-js: 3.24.1
     jsdom: 16.5.3
   languageName: unknown
@@ -429,7 +429,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.18.9
     "@types/auth0-js": 9.14.6
     "@types/jest": 26.0.24
-    "@types/node": 14.18.26
+    "@types/node": 14.18.28
     "@types/pify": 3.0.2
     auth0-js: 9.19.0
     camelcase: 6.3.0
@@ -463,7 +463,7 @@ __metadata:
     "@auth0/auth0-spa-js": 1.22.3
     "@babel/runtime-corejs3": 7.18.9
     "@types/jest": 26.0.24
-    "@types/node": 14.18.26
+    "@types/node": 14.18.28
   languageName: unknown
   linkType: soft
 
@@ -534,7 +534,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": 26.0.24
     "@types/nock": 11.1.0
-    "@types/node": 14.18.26
+    "@types/node": 14.18.28
     "@types/qs": 6.9.7
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.17
@@ -588,7 +588,7 @@ __metadata:
     "@emotion/react": 11.10.4
     "@emotion/server": 11.10.0
     "@types/babel__core": 7.1.19
-    "@types/node": 14.18.26
+    "@types/node": 14.18.28
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.17
     aws-sdk: 2.1197.0
@@ -831,7 +831,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@types/history": 4.7.11
     "@types/jest": 26.0.24
-    "@types/node": 14.18.26
+    "@types/node": 14.18.28
     "@types/react": 17.0.49
     "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": 5.9.5
@@ -980,7 +980,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": 26.0.24
     "@types/nock": 11.1.0
-    "@types/node": 14.18.26
+    "@types/node": 14.18.28
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.17
     "@types/react-router-dom": 5.3.3
@@ -1033,7 +1033,7 @@ __metadata:
     "@emotion/react": 11.10.4
     "@emotion/server": 11.10.0
     "@types/babel__core": 7.1.19
-    "@types/node": 14.18.26
+    "@types/node": 14.18.28
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.17
     aws-sdk: 2.1197.0
@@ -1083,7 +1083,7 @@ __metadata:
     "@types/jest": 26.0.24
     "@types/jsonwebtoken": 8.5.9
     "@types/jwt-encode": "workspace:*"
-    "@types/node": 14.18.26
+    "@types/node": 14.18.28
     "@types/serverless": 3.12.8
     "@types/source-map-support": 0.5.4
     "@types/supertest": 2.0.12
@@ -1458,7 +1458,7 @@ __metadata:
     "@babel/core": 7.18.13
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.18.9
-    "@types/node": 14.18.26
+    "@types/node": 14.18.28
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.17
     react: 17.0.2
@@ -12947,10 +12947,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:14.18.26":
-  version: 14.18.26
-  resolution: "@types/node@npm:14.18.26"
-  checksum: c6ac3f9d4f6f77c0fa5ac17757779ad4d9835abfe3af5708b7552597cb5c7c1103e83499ccaf767a1cfa70040990bcf3f58761c547051dc8d5077f3c419091b1
+"@types/node@npm:14.18.28":
+  version: 14.18.28
+  resolution: "@types/node@npm:14.18.28"
+  checksum: 44225b3d8f13f4aba9a7bffec8dbc9be8fd396d26b8a1f58b1389da83fdc7485edb5642639e23b34f0efa349dafe4df618294122f0b39c8726df2b9e11413768
   languageName: node
   linkType: hard
 

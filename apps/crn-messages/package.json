@@ -22,7 +22,7 @@
     "@emotion/cache": "11.10.3",
     "@emotion/react": "11.10.4",
     "@emotion/server": "11.10.0",
-    "@types/node": "14.18.26",
+    "@types/node": "14.18.28",
     "aws-sdk": "2.1197.0",
     "babel-loader": "8.2.5",
     "babel-preset-react-app": "10.0.1",

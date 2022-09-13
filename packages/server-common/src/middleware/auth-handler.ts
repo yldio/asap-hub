@@ -6,17 +6,17 @@ import { CacheClient } from '../clients/cache.client';
 import { Logger } from '../utils/logger';
 import { DecodeToken } from '../utils/validate-token';
 
-interface AssignUserToContext<UserResponse> {
-  (req: Request, user: UserResponse): void;
+interface AssignUserToContext<TUserResponse> {
+  (req: Request, user: TUserResponse): void;
 }
 
 export const authHandlerFactory =
-  <UserResponse>(
+  <TUserResponse>(
     decodeToken: DecodeToken,
-    fetchByCode: (code: string) => Promise<UserResponse>,
-    cacheClient: CacheClient<UserResponse>,
+    fetchByCode: (code: string) => Promise<TUserResponse>,
+    cacheClient: CacheClient<TUserResponse>,
     logger: Logger,
-    assignUserToContext: AssignUserToContext<UserResponse>,
+    assignUserToContext: AssignUserToContext<TUserResponse>,
   ): RequestHandler =>
   async (req, _res, next) => {
     const { headers } = req;

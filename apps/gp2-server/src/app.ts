@@ -1,4 +1,4 @@
-import { UserResponse } from '@asap-hub/model';
+import { gp2 } from '@asap-hub/model';
 import {
   AuthHandler,
   authHandlerFactory,
@@ -48,6 +48,7 @@ import { dashboardRouteFactory } from './routes/dashboard.route';
 import { projectRouteFactory } from './routes/project.route';
 import { userPublicRouteFactory } from './routes/user.route';
 import { workingGroupRouteFactory } from './routes/working-group.route';
+import assignUserToContext from './utils/assign-user-to-context';
 import pinoLogger from './utils/logger';
 
 export const appFactory = (libs: Libs = {}): Express => {
@@ -78,7 +79,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     baseUrl,
   });
   const decodeToken = decodeTokenFactory(auth0Audience);
-  const userResponseCacheClient = new MemoryCacheClient<UserResponse>();
+  const userResponseCacheClient = new MemoryCacheClient<gp2.UserResponse>();
 
   // Data Providers
 
@@ -108,11 +109,12 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Handlers
   const authHandler =
     libs.authHandler ||
-    authHandlerFactory(
+    authHandlerFactory<gp2.UserResponse>(
       decodeToken,
       userController.fetchByCode.bind(userController),
       userResponseCacheClient,
       logger,
+      assignUserToContext,
     );
 
   // Routes

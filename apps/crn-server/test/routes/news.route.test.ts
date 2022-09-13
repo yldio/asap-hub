@@ -1,15 +1,17 @@
+import { NewsResponse } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
-import { NewsResponse } from '@asap-hub/model';
 import { appFactory } from '../../src/app';
-import { authHandlerMock } from '../mocks/auth-handler.mock';
-import { newsControllerMock } from '../mocks/news-controller.mock';
 import { listNewsResponse } from '../fixtures/news.fixtures';
+import { authHandlerMock } from '../mocks/auth-handler.mock';
+import { loggerMock } from '../mocks/logger.mock';
+import { newsControllerMock } from '../mocks/news-controller.mock';
 
 describe('/news/ route', () => {
   const app = appFactory({
     newsController: newsControllerMock,
     authHandler: authHandlerMock,
+    logger: loggerMock,
   });
 
   afterEach(() => {

@@ -1,18 +1,22 @@
-import { createHash } from 'crypto';
-import { RequestHandler } from 'express';
 import Boom from '@hapi/boom';
-import { UserResponse } from '@asap-hub/model';
 import Intercept from 'apr-intercept';
+import { createHash } from 'crypto';
+import { Request, RequestHandler } from 'express';
+import { CacheClient } from '../clients/cache.client';
 import { Logger } from '../utils/logger';
 import { DecodeToken } from '../utils/validate-token';
-import { CacheClient } from '../clients/cache.client';
+
+interface AssignUserToContext<TUserResponse> {
+  (req: Request, user: TUserResponse): void;
+}
 
 export const authHandlerFactory =
-  (
+  <TUserResponse>(
     decodeToken: DecodeToken,
-    fetchByCode: (code: string) => Promise<UserResponse>,
-    cacheClient: CacheClient<UserResponse>,
+    fetchByCode: (code: string) => Promise<TUserResponse>,
+    cacheClient: CacheClient<TUserResponse>,
     logger: Logger,
+    assignUserToContext: AssignUserToContext<TUserResponse>,
   ): RequestHandler =>
   async (req, _res, next) => {
     const { headers } = req;
@@ -40,7 +44,7 @@ export const authHandlerFactory =
     }
 
     const tokenHash = createHash('sha256').update(token).digest('hex');
-    let user: UserResponse | null = cacheClient.get(tokenHash);
+    let user = cacheClient.get(tokenHash);
 
     if (user === null) {
       try {
@@ -58,7 +62,7 @@ export const authHandlerFactory =
       throw Boom.unauthorized();
     }
 
-    req.loggedInUser = user;
+    assignUserToContext(req, user);
 
     next();
   };

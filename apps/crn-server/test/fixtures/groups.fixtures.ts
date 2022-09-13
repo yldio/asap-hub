@@ -465,7 +465,7 @@ export const getGroupDataObject = (): GroupDataObject => ({
   },
   teams: [
     {
-      id: 'team-id-1',
+      id: 'team-id-0',
       displayName: 'Team A',
       lastModifiedDate: '2020-11-26T11:56:04.000Z',
       expertiseAndResourceTags: ['Animal resources'],

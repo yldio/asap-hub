@@ -1,5 +1,6 @@
-import nock from 'nock';
+import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { RestTeam, SquidexRest } from '@asap-hub/squidex';
+import nock from 'nock';
 import { appName, baseUrl } from '../../src/config';
 import { TeamSquidexDataProvider } from '../../src/data-providers/teams.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
@@ -15,7 +16,6 @@ import { getGraphQLUser } from '../fixtures/users.fixtures';
 import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
-import { GenericError, NotFoundError } from '@asap-hub/errors';
 
 describe('Team Data Provider', () => {
   const teamRestclient = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
@@ -500,7 +500,7 @@ describe('Team Data Provider', () => {
       });
 
       test('Should parse the team user correctly when the avatar is undefined', async () => {
-        const teamId = 'team-id-1';
+        const teamId = 'team-id-0';
         const squidexGraphqlResponse = getSquidexTeamGraphqlResponse();
         const graphqlUser1 = getGraphQLUser();
         (graphqlUser1.flatData!.avatar as unknown) = undefined;

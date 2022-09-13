@@ -1,10 +1,6 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
-import { UserResponse, UserUpdateRequest } from '@asap-hub/model';
-import { UserController as BaseController } from '@asap-hub/server-common';
-import {
-  parseUserToResponse,
-  UserDataProvider,
-} from '../data-providers/user.data-provider';
+import { gp2 } from '@asap-hub/model';
+import { UserDataProvider } from '../data-providers/user.data-provider';
 
 export type FetchUsersFilter = {
   role?: string[];
@@ -25,10 +21,11 @@ export type FetchOptions<TFilter = string[]> = {
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
 
-export interface UserController extends BaseController {
-  fetchByCode(code: string): Promise<UserResponse>;
-  update(id: string, update: UserUpdateRequest): Promise<UserResponse>;
-  fetchById(id: string): Promise<UserResponse>;
+export interface UserController {
+  fetchByCode(code: string): Promise<gp2.UserResponse>;
+  fetchById(id: string): Promise<gp2.UserResponse>;
+  update(id: string, update: gp2.UserUpdateRequest): Promise<gp2.UserResponse>;
+  connectByCode(welcomeCode: string, userId: string): Promise<gp2.UserResponse>;
 }
 
 export default class Users implements UserController {
@@ -38,12 +35,15 @@ export default class Users implements UserController {
     this.userDataProvider = userDataProvider;
   }
 
-  async update(id: string, update: UserUpdateRequest): Promise<UserResponse> {
+  async update(
+    id: string,
+    update: gp2.UserUpdateRequest,
+  ): Promise<gp2.UserResponse> {
     await this.userDataProvider.update(id, update);
     return this.fetchById(id);
   }
 
-  async fetchById(id: string): Promise<UserResponse> {
+  async fetchById(id: string): Promise<gp2.UserResponse> {
     const user = await this.userDataProvider.fetchById(id);
     if (!user) {
       throw new NotFoundError(undefined, `user with id ${id} not found`);
@@ -52,7 +52,7 @@ export default class Users implements UserController {
     return parseUserToResponse(user);
   }
 
-  async fetchByCode(code: string): Promise<UserResponse> {
+  async fetchByCode(code: string): Promise<gp2.UserResponse> {
     const { items: users } = await this.queryByCode(code);
     if (users.length === 0) {
       throw new NotFoundError(undefined, `user with code ${code} not found`);
@@ -68,7 +68,7 @@ export default class Users implements UserController {
   async connectByCode(
     welcomeCode: string,
     userId: string,
-  ): Promise<UserResponse> {
+  ): Promise<gp2.UserResponse> {
     const { items } = await this.queryByCode(welcomeCode);
 
     if (!items || items.length > 1 || !items[0]) {
@@ -96,3 +96,15 @@ export default class Users implements UserController {
     });
   }
 }
+
+export const parseUserToResponse = ({
+  connections: _,
+  ...user
+}: gp2.UserDataObject): gp2.UserResponse => {
+  const displayName = `${user.firstName} ${user.lastName}`;
+  const response = {
+    ...user,
+    displayName,
+  };
+  return response;
+};

@@ -629,10 +629,6 @@ export type Dashboard = Content & {
   referencingDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
   referencingDashboardContentsWithTotal: Maybe<DashboardResultDto>;
-  /** Query Users content items. */
-  referencingUsersContents: Maybe<Array<Users>>;
-  /** Query Users content items with total count. */
-  referencingUsersContentsWithTotal: Maybe<UsersResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -726,24 +722,6 @@ export type DashboardReferencingDashboardContentsArgs = {
 
 /** The structure of a Dashboard content type. */
 export type DashboardReferencingDashboardContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Dashboard content type. */
-export type DashboardReferencingUsersContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Dashboard content type. */
-export type DashboardReferencingUsersContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -849,10 +827,6 @@ export type Projects = Content & {
   referencingDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
   referencingDashboardContentsWithTotal: Maybe<DashboardResultDto>;
-  /** Query Users content items. */
-  referencingUsersContents: Maybe<Array<Users>>;
-  /** Query Users content items with total count. */
-  referencingUsersContentsWithTotal: Maybe<UsersResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -892,24 +866,6 @@ export type ProjectsReferencingDashboardContentsArgs = {
 
 /** The structure of a Projects content type. */
 export type ProjectsReferencingDashboardContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Projects content type. */
-export type ProjectsReferencingUsersContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Projects content type. */
-export type ProjectsReferencingUsersContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -1065,22 +1021,6 @@ export type Users = Content & {
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
   /** Query Dashboard content items. */
-  referencesDashboardContents: Maybe<Array<Dashboard>>;
-  /** Query Dashboard content items with total count. */
-  referencesDashboardContentsWithTotal: Maybe<DashboardResultDto>;
-  /** Query Projects content items. */
-  referencesProjectsContents: Maybe<Array<Projects>>;
-  /** Query Projects content items with total count. */
-  referencesProjectsContentsWithTotal: Maybe<ProjectsResultDto>;
-  /** Query Users content items. */
-  referencesUsersContents: Maybe<Array<Users>>;
-  /** Query Users content items with total count. */
-  referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
-  /** Query Working Groups content items. */
-  referencesWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
-  /** Query Working Groups content items with total count. */
-  referencesWorkingGroupsContentsWithTotal: Maybe<WorkingGroupsResultDto>;
-  /** Query Dashboard content items. */
   referencingDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
   referencingDashboardContentsWithTotal: Maybe<DashboardResultDto>;
@@ -1088,10 +1028,6 @@ export type Users = Content & {
   referencingProjectsContents: Maybe<Array<Projects>>;
   /** Query Projects content items with total count. */
   referencingProjectsContentsWithTotal: Maybe<ProjectsResultDto>;
-  /** Query Users content items. */
-  referencingUsersContents: Maybe<Array<Users>>;
-  /** Query Users content items with total count. */
-  referencingUsersContentsWithTotal: Maybe<UsersResultDto>;
   /** Query Working Groups content items. */
   referencingWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
   /** Query Working Groups content items with total count. */
@@ -1104,78 +1040,6 @@ export type Users = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencesDashboardContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencesDashboardContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencesProjectsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencesProjectsContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencesUsersContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencesUsersContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencesWorkingGroupsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencesWorkingGroupsContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */
@@ -1215,24 +1079,6 @@ export type UsersReferencingProjectsContentsWithTotalArgs = {
 };
 
 /** The structure of a Users content type. */
-export type UsersReferencingUsersContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
-export type UsersReferencingUsersContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Users content type. */
 export type UsersReferencingWorkingGroupsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
@@ -1250,16 +1096,6 @@ export type UsersReferencingWorkingGroupsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-/** The structure of the Admin Notes field of the Users content type. */
-export type UsersDataAdminNotesDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Admin Notes field of the Users content input type. */
-export type UsersDataAdminNotesInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
 /** The structure of the Avatar field of the Users content type. */
 export type UsersDataAvatarDto = {
   iv: Maybe<Array<Asset>>;
@@ -1268,26 +1104,6 @@ export type UsersDataAvatarDto = {
 /** The structure of the Avatar field of the Users content input type. */
 export type UsersDataAvatarInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
-};
-
-/** The structure of the Biography field of the Users content type. */
-export type UsersDataBiographyDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Biography field of the Users content input type. */
-export type UsersDataBiographyInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the City field of the Users content type. */
-export type UsersDataCityDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the City field of the Users content input type. */
-export type UsersDataCityInputDto = {
-  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Connections nested schema. */
@@ -1310,79 +1126,26 @@ export type UsersDataConnectionsInputDto = {
   iv: InputMaybe<Array<UsersDataConnectionsChildInputDto>>;
 };
 
-/** The structure of the Correspondence Email field of the Users content type. */
-export type UsersDataContactEmailDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Correspondence Email field of the Users content input type. */
-export type UsersDataContactEmailInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the Country field of the Users content type. */
-export type UsersDataCountryDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Country field of the Users content input type. */
-export type UsersDataCountryInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
 /** The structure of the Degree field of the Users content type. */
 export type UsersDataDegreeDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: Maybe<Array<DegreeEnum>>;
 };
 
 /** The structure of the Degree field of the Users content input type. */
 export type UsersDataDegreeInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the Dismissed Getting Started dialog field of the Users content type. */
-export type UsersDataDismissedGettingStartedDto = {
-  /** Use this field when the user has dismissed the getting started dialog */
-  iv: Maybe<Scalars['Boolean']>;
-};
-
-/** The structure of the Dismissed Getting Started dialog field of the Users content input type. */
-export type UsersDataDismissedGettingStartedInputDto = {
-  /** Use this field when the user has dismissed the getting started dialog */
-  iv: InputMaybe<Scalars['Boolean']>;
+  iv: InputMaybe<Array<DegreeEnum>>;
 };
 
 /** The structure of the Users data type. */
 export type UsersDataDto = {
-  adminNotes: Maybe<UsersDataAdminNotesDto>;
   avatar: Maybe<UsersDataAvatarDto>;
-  biography: Maybe<UsersDataBiographyDto>;
-  city: Maybe<UsersDataCityDto>;
   connections: Maybe<UsersDataConnectionsDto>;
-  contactEmail: Maybe<UsersDataContactEmailDto>;
-  country: Maybe<UsersDataCountryDto>;
   degree: Maybe<UsersDataDegreeDto>;
-  dismissedGettingStarted: Maybe<UsersDataDismissedGettingStartedDto>;
   email: Maybe<UsersDataEmailDto>;
-  expertiseAndResourceDescription: Maybe<UsersDataExpertiseAndResourceDescriptionDto>;
-  expertiseAndResourceTags: Maybe<UsersDataExpertiseAndResourceTagsDto>;
   firstName: Maybe<UsersDataFirstNameDto>;
-  institution: Maybe<UsersDataInstitutionDto>;
-  jobTitle: Maybe<UsersDataJobTitleDto>;
-  labs: Maybe<UsersDataLabsDto>;
-  lastModifiedDate: Maybe<UsersDataLastModifiedDateDto>;
   lastName: Maybe<UsersDataLastNameDto>;
-  onboarded: Maybe<UsersDataOnboardedDto>;
-  orcid: Maybe<UsersDataOrcidDto>;
-  orcidLastModifiedDate: Maybe<UsersDataOrcidLastModifiedDateDto>;
-  orcidLastSyncDate: Maybe<UsersDataOrcidLastSyncDateDto>;
-  orcidWorks: Maybe<UsersDataOrcidWorksDto>;
-  questions: Maybe<UsersDataQuestionsDto>;
-  reachOut: Maybe<UsersDataReachOutDto>;
-  researchInterests: Maybe<UsersDataResearchInterestsDto>;
-  responsibilities: Maybe<UsersDataResponsibilitiesDto>;
+  region: Maybe<UsersDataRegionDto>;
   role: Maybe<UsersDataRoleDto>;
-  social: Maybe<UsersDataSocialDto>;
 };
 
 /** The structure of the Email field of the Users content type. */
@@ -1393,26 +1156,6 @@ export type UsersDataEmailDto = {
 /** The structure of the Email field of the Users content input type. */
 export type UsersDataEmailInputDto = {
   iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the Expertise and Resources Description field of the Users content type. */
-export type UsersDataExpertiseAndResourceDescriptionDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Expertise and Resources Description field of the Users content input type. */
-export type UsersDataExpertiseAndResourceDescriptionInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the Expertise and Resources field of the Users content type. */
-export type UsersDataExpertiseAndResourceTagsDto = {
-  iv: Maybe<Array<Scalars['String']>>;
-};
-
-/** The structure of the Expertise and Resources field of the Users content input type. */
-export type UsersDataExpertiseAndResourceTagsInputDto = {
-  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the First Name field of the Users content type. */
@@ -1427,83 +1170,14 @@ export type UsersDataFirstNameInputDto = {
 
 /** The structure of the Users data input type. */
 export type UsersDataInputDto = {
-  adminNotes: InputMaybe<UsersDataAdminNotesInputDto>;
   avatar: InputMaybe<UsersDataAvatarInputDto>;
-  biography: InputMaybe<UsersDataBiographyInputDto>;
-  city: InputMaybe<UsersDataCityInputDto>;
   connections: InputMaybe<UsersDataConnectionsInputDto>;
-  contactEmail: InputMaybe<UsersDataContactEmailInputDto>;
-  country: InputMaybe<UsersDataCountryInputDto>;
   degree: InputMaybe<UsersDataDegreeInputDto>;
-  dismissedGettingStarted: InputMaybe<UsersDataDismissedGettingStartedInputDto>;
   email: InputMaybe<UsersDataEmailInputDto>;
-  expertiseAndResourceDescription: InputMaybe<UsersDataExpertiseAndResourceDescriptionInputDto>;
-  expertiseAndResourceTags: InputMaybe<UsersDataExpertiseAndResourceTagsInputDto>;
   firstName: InputMaybe<UsersDataFirstNameInputDto>;
-  institution: InputMaybe<UsersDataInstitutionInputDto>;
-  jobTitle: InputMaybe<UsersDataJobTitleInputDto>;
-  labs: InputMaybe<UsersDataLabsInputDto>;
-  lastModifiedDate: InputMaybe<UsersDataLastModifiedDateInputDto>;
   lastName: InputMaybe<UsersDataLastNameInputDto>;
-  onboarded: InputMaybe<UsersDataOnboardedInputDto>;
-  orcid: InputMaybe<UsersDataOrcidInputDto>;
-  orcidLastModifiedDate: InputMaybe<UsersDataOrcidLastModifiedDateInputDto>;
-  orcidLastSyncDate: InputMaybe<UsersDataOrcidLastSyncDateInputDto>;
-  orcidWorks: InputMaybe<UsersDataOrcidWorksInputDto>;
-  questions: InputMaybe<UsersDataQuestionsInputDto>;
-  reachOut: InputMaybe<UsersDataReachOutInputDto>;
-  researchInterests: InputMaybe<UsersDataResearchInterestsInputDto>;
-  responsibilities: InputMaybe<UsersDataResponsibilitiesInputDto>;
+  region: InputMaybe<UsersDataRegionInputDto>;
   role: InputMaybe<UsersDataRoleInputDto>;
-  social: InputMaybe<UsersDataSocialInputDto>;
-};
-
-/** The structure of the Institution field of the Users content type. */
-export type UsersDataInstitutionDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Institution field of the Users content input type. */
-export type UsersDataInstitutionInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the Job Title field of the Users content type. */
-export type UsersDataJobTitleDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Job Title field of the Users content input type. */
-export type UsersDataJobTitleInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the Labs field of the Users content type. */
-export type UsersDataLabsDto = {
-  /** Mandatory for grantees. They cannot publish profile without a lab. */
-  iv: Maybe<Array<UsersDataLabsUnionDto>>;
-};
-
-/** The structure of the Labs field of the Users content input type. */
-export type UsersDataLabsInputDto = {
-  /** Mandatory for grantees. They cannot publish profile without a lab. */
-  iv: InputMaybe<Array<Scalars['String']>>;
-};
-
-export type UsersDataLabsUnionDto =
-  | Dashboard
-  | Projects
-  | Users
-  | WorkingGroups;
-
-/** The structure of the Last Modified Date field of the Users content type. */
-export type UsersDataLastModifiedDateDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Last Modified Date field of the Users content input type. */
-export type UsersDataLastModifiedDateInputDto = {
-  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Last Name field of the Users content type. */
@@ -1516,220 +1190,39 @@ export type UsersDataLastNameInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the Onboarding complete field of the Users content type. */
-export type UsersDataOnboardedDto = {
-  /** Use this to allow the user to see the full Hub and skip profile completion */
-  iv: Maybe<Scalars['Boolean']>;
-};
-
-/** The structure of the Onboarding complete field of the Users content input type. */
-export type UsersDataOnboardedInputDto = {
-  /** Use this to allow the user to see the full Hub and skip profile completion */
-  iv: InputMaybe<Scalars['Boolean']>;
-};
-
-/** The structure of the ORCID field of the Users content type. */
-export type UsersDataOrcidDto = {
-  /** Mandatory for grantees. They cannot publish profile without an ORCID. ORCIDs cannot be repeated on the Hub */
+/** The structure of the Region field of the Users content type. */
+export type UsersDataRegionDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the ORCID field of the Users content input type. */
-export type UsersDataOrcidInputDto = {
-  /** Mandatory for grantees. They cannot publish profile without an ORCID. ORCIDs cannot be repeated on the Hub */
+/** The structure of the Region field of the Users content input type. */
+export type UsersDataRegionInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the ORCID Last Modified Date field of the Users content type. */
-export type UsersDataOrcidLastModifiedDateDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the ORCID Last Modified Date field of the Users content input type. */
-export type UsersDataOrcidLastModifiedDateInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the ORCID Last Sync Date field of the Users content type. */
-export type UsersDataOrcidLastSyncDateDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the ORCID Last Sync Date field of the Users content input type. */
-export type UsersDataOrcidLastSyncDateInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the ORCID Works nested schema. */
-export type UsersDataOrcidWorksChildDto = {
-  doi: Maybe<Scalars['String']>;
-  id: Maybe<Scalars['String']>;
-  lastModifiedDate: Maybe<Scalars['String']>;
-  publicationDate: Maybe<Scalars['JsonScalar']>;
-  title: Maybe<Scalars['String']>;
-  type: Maybe<Scalars['String']>;
-};
-
-/** The structure of the ORCID Works nested schema. */
-export type UsersDataOrcidWorksChildDtoPublicationDateArgs = {
-  path: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the ORCID Works nested schema. */
-export type UsersDataOrcidWorksChildInputDto = {
-  doi: InputMaybe<Scalars['String']>;
-  id: InputMaybe<Scalars['String']>;
-  lastModifiedDate: InputMaybe<Scalars['String']>;
-  publicationDate: InputMaybe<Scalars['JsonScalar']>;
-  title: InputMaybe<Scalars['String']>;
-  type: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the ORCID Works field of the Users content type. */
-export type UsersDataOrcidWorksDto = {
-  iv: Maybe<Array<UsersDataOrcidWorksChildDto>>;
-};
-
-/** The structure of the ORCID Works field of the Users content input type. */
-export type UsersDataOrcidWorksInputDto = {
-  iv: InputMaybe<Array<UsersDataOrcidWorksChildInputDto>>;
-};
-
-/** The structure of the Open Questions nested schema. */
-export type UsersDataQuestionsChildDto = {
-  question: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Open Questions nested schema. */
-export type UsersDataQuestionsChildInputDto = {
-  question: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the Open Questions field of the Users content type. */
-export type UsersDataQuestionsDto = {
-  iv: Maybe<Array<UsersDataQuestionsChildDto>>;
-};
-
-/** The structure of the Open Questions field of the Users content input type. */
-export type UsersDataQuestionsInputDto = {
-  iv: InputMaybe<Array<UsersDataQuestionsChildInputDto>>;
-};
-
-/** The structure of the Reach Out field of the Users content type. */
-export type UsersDataReachOutDto = {
-  /** Reach out reasons (only relevant for "Staff" users) */
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Reach Out field of the Users content input type. */
-export type UsersDataReachOutInputDto = {
-  /** Reach out reasons (only relevant for "Staff" users) */
-  iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the Research Interests field of the Users content type. */
-export type UsersDataResearchInterestsDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Research Interests field of the Users content input type. */
-export type UsersDataResearchInterestsInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the Responsibilities field of the Users content type. */
-export type UsersDataResponsibilitiesDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Responsibilities field of the Users content input type. */
-export type UsersDataResponsibilitiesInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the ASAP Hub Role field of the Users content type. */
+/** The structure of the GP2 Hub Role field of the Users content type. */
 export type UsersDataRoleDto = {
-  /** Role on the ASAP Hub */
+  /** Role on the GP2 Hub */
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the ASAP Hub Role field of the Users content input type. */
+/** The structure of the GP2 Hub Role field of the Users content input type. */
 export type UsersDataRoleInputDto = {
-  /** Role on the ASAP Hub */
+  /** Role on the GP2 Hub */
   iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the Social Links nested schema. */
-export type UsersDataSocialChildDto = {
-  github: Maybe<Scalars['String']>;
-  googleScholar: Maybe<Scalars['String']>;
-  linkedIn: Maybe<Scalars['String']>;
-  researchGate: Maybe<Scalars['String']>;
-  researcherId: Maybe<Scalars['String']>;
-  twitter: Maybe<Scalars['String']>;
-  website1: Maybe<Scalars['String']>;
-  website2: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Social Links nested schema. */
-export type UsersDataSocialChildInputDto = {
-  github: InputMaybe<Scalars['String']>;
-  googleScholar: InputMaybe<Scalars['String']>;
-  linkedIn: InputMaybe<Scalars['String']>;
-  researchGate: InputMaybe<Scalars['String']>;
-  researcherId: InputMaybe<Scalars['String']>;
-  twitter: InputMaybe<Scalars['String']>;
-  website1: InputMaybe<Scalars['String']>;
-  website2: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the Social Links field of the Users content type. */
-export type UsersDataSocialDto = {
-  iv: Maybe<Array<UsersDataSocialChildDto>>;
-};
-
-/** The structure of the Social Links field of the Users content input type. */
-export type UsersDataSocialInputDto = {
-  iv: InputMaybe<Array<UsersDataSocialChildInputDto>>;
 };
 
 /** The structure of the flat Users data type. */
 export type UsersFlatDataDto = {
-  adminNotes: Maybe<Scalars['String']>;
   avatar: Maybe<Array<Asset>>;
-  biography: Maybe<Scalars['String']>;
-  city: Maybe<Scalars['String']>;
   connections: Maybe<Array<UsersDataConnectionsChildDto>>;
-  contactEmail: Maybe<Scalars['String']>;
-  country: Maybe<Scalars['String']>;
-  degree: Maybe<Scalars['String']>;
-  /** Use this field when the user has dismissed the getting started dialog */
-  dismissedGettingStarted: Maybe<Scalars['Boolean']>;
+  degree: Maybe<Array<DegreeEnum>>;
   email: Maybe<Scalars['String']>;
-  expertiseAndResourceDescription: Maybe<Scalars['String']>;
-  expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
   firstName: Maybe<Scalars['String']>;
-  institution: Maybe<Scalars['String']>;
-  jobTitle: Maybe<Scalars['String']>;
-  /** Mandatory for grantees. They cannot publish profile without a lab. */
-  labs: Maybe<Array<UsersDataLabsUnionDto>>;
-  lastModifiedDate: Maybe<Scalars['String']>;
   lastName: Maybe<Scalars['String']>;
-  /** Use this to allow the user to see the full Hub and skip profile completion */
-  onboarded: Maybe<Scalars['Boolean']>;
-  /** Mandatory for grantees. They cannot publish profile without an ORCID. ORCIDs cannot be repeated on the Hub */
-  orcid: Maybe<Scalars['String']>;
-  orcidLastModifiedDate: Maybe<Scalars['String']>;
-  orcidLastSyncDate: Maybe<Scalars['String']>;
-  orcidWorks: Maybe<Array<UsersDataOrcidWorksChildDto>>;
-  questions: Maybe<Array<UsersDataQuestionsChildDto>>;
-  /** Reach out reasons (only relevant for "Staff" users) */
-  reachOut: Maybe<Scalars['String']>;
-  researchInterests: Maybe<Scalars['String']>;
-  responsibilities: Maybe<Scalars['String']>;
-  /** Role on the ASAP Hub */
+  region: Maybe<Scalars['String']>;
+  /** Role on the GP2 Hub */
   role: Maybe<Scalars['String']>;
-  social: Maybe<Array<UsersDataSocialChildDto>>;
 };
 
 /** List of Users items and total count. */
@@ -1774,10 +1267,6 @@ export type WorkingGroups = Content & {
   referencingDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
   referencingDashboardContentsWithTotal: Maybe<DashboardResultDto>;
-  /** Query Users content items. */
-  referencingUsersContents: Maybe<Array<Users>>;
-  /** Query Users content items with total count. */
-  referencingUsersContentsWithTotal: Maybe<UsersResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -1817,24 +1306,6 @@ export type WorkingGroupsReferencingDashboardContentsArgs = {
 
 /** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencingDashboardContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Working Groups content type. */
-export type WorkingGroupsReferencingUsersContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Working Groups content type. */
-export type WorkingGroupsReferencingUsersContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -1965,6 +1436,35 @@ export type WorkingGroupsResultDto = {
   total: Scalars['Int'];
 };
 
+export enum DegreeEnum {
+  /** AA */
+  Aa = 'AA',
+  /** AAS */
+  Aas = 'AAS',
+  /** BA */
+  Ba = 'BA',
+  /** BSc */
+  BSc = 'BSc',
+  /** MA */
+  Ma = 'MA',
+  /** MBA */
+  Mba = 'MBA',
+  /** MBBS */
+  Mbbs = 'MBBS',
+  /** MD */
+  Md = 'MD',
+  /** MD_PhD */
+  MdPhD = 'MD_PhD',
+  /** MPH */
+  Mph = 'MPH',
+  /** MSc */
+  MSc = 'MSc',
+  /** PhD */
+  PhD = 'PhD',
+  /** PharmD */
+  PharmD = 'PharmD',
+}
+
 export type ProjectContentFragment = Pick<Projects, 'id'> & {
   flatData: Pick<
     ProjectsFlatDataDto,
@@ -2058,60 +1558,8 @@ export type UsersContentFragment = Pick<
 > & {
   flatData: Pick<
     UsersFlatDataDto,
-    | 'biography'
-    | 'degree'
-    | 'dismissedGettingStarted'
-    | 'email'
-    | 'contactEmail'
-    | 'firstName'
-    | 'institution'
-    | 'jobTitle'
-    | 'lastModifiedDate'
-    | 'lastName'
-    | 'country'
-    | 'city'
-    | 'onboarded'
-    | 'orcid'
-    | 'orcidLastModifiedDate'
-    | 'orcidLastSyncDate'
-    | 'expertiseAndResourceTags'
-    | 'expertiseAndResourceDescription'
-    | 'role'
-    | 'responsibilities'
-    | 'researchInterests'
-    | 'reachOut'
-  > & {
-    avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-    orcidWorks: Maybe<
-      Array<
-        Pick<
-          UsersDataOrcidWorksChildDto,
-          | 'doi'
-          | 'id'
-          | 'lastModifiedDate'
-          | 'publicationDate'
-          | 'title'
-          | 'type'
-        >
-      >
-    >;
-    questions: Maybe<Array<Pick<UsersDataQuestionsChildDto, 'question'>>>;
-    social: Maybe<
-      Array<
-        Pick<
-          UsersDataSocialChildDto,
-          | 'github'
-          | 'googleScholar'
-          | 'linkedIn'
-          | 'researcherId'
-          | 'researchGate'
-          | 'twitter'
-          | 'website1'
-          | 'website2'
-        >
-      >
-    >;
-  };
+    'degree' | 'email' | 'firstName' | 'lastName' | 'region' | 'role'
+  > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
 };
 
 export type FetchUserQueryVariables = Exact<{
@@ -2123,60 +1571,8 @@ export type FetchUserQuery = {
     Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
       flatData: Pick<
         UsersFlatDataDto,
-        | 'biography'
-        | 'degree'
-        | 'dismissedGettingStarted'
-        | 'email'
-        | 'contactEmail'
-        | 'firstName'
-        | 'institution'
-        | 'jobTitle'
-        | 'lastModifiedDate'
-        | 'lastName'
-        | 'country'
-        | 'city'
-        | 'onboarded'
-        | 'orcid'
-        | 'orcidLastModifiedDate'
-        | 'orcidLastSyncDate'
-        | 'expertiseAndResourceTags'
-        | 'expertiseAndResourceDescription'
-        | 'role'
-        | 'responsibilities'
-        | 'researchInterests'
-        | 'reachOut'
-      > & {
-        avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-        orcidWorks: Maybe<
-          Array<
-            Pick<
-              UsersDataOrcidWorksChildDto,
-              | 'doi'
-              | 'id'
-              | 'lastModifiedDate'
-              | 'publicationDate'
-              | 'title'
-              | 'type'
-            >
-          >
-        >;
-        questions: Maybe<Array<Pick<UsersDataQuestionsChildDto, 'question'>>>;
-        social: Maybe<
-          Array<
-            Pick<
-              UsersDataSocialChildDto,
-              | 'github'
-              | 'googleScholar'
-              | 'linkedIn'
-              | 'researcherId'
-              | 'researchGate'
-              | 'twitter'
-              | 'website1'
-              | 'website2'
-            >
-          >
-        >;
-      };
+        'degree' | 'email' | 'firstName' | 'lastName' | 'region' | 'role'
+      > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
     }
   >;
 };
@@ -2195,62 +1591,8 @@ export type FetchUsersQuery = {
           Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
             flatData: Pick<
               UsersFlatDataDto,
-              | 'biography'
-              | 'degree'
-              | 'dismissedGettingStarted'
-              | 'email'
-              | 'contactEmail'
-              | 'firstName'
-              | 'institution'
-              | 'jobTitle'
-              | 'lastModifiedDate'
-              | 'lastName'
-              | 'country'
-              | 'city'
-              | 'onboarded'
-              | 'orcid'
-              | 'orcidLastModifiedDate'
-              | 'orcidLastSyncDate'
-              | 'expertiseAndResourceTags'
-              | 'expertiseAndResourceDescription'
-              | 'role'
-              | 'responsibilities'
-              | 'researchInterests'
-              | 'reachOut'
-            > & {
-              avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-              orcidWorks: Maybe<
-                Array<
-                  Pick<
-                    UsersDataOrcidWorksChildDto,
-                    | 'doi'
-                    | 'id'
-                    | 'lastModifiedDate'
-                    | 'publicationDate'
-                    | 'title'
-                    | 'type'
-                  >
-                >
-              >;
-              questions: Maybe<
-                Array<Pick<UsersDataQuestionsChildDto, 'question'>>
-              >;
-              social: Maybe<
-                Array<
-                  Pick<
-                    UsersDataSocialChildDto,
-                    | 'github'
-                    | 'googleScholar'
-                    | 'linkedIn'
-                    | 'researcherId'
-                    | 'researchGate'
-                    | 'twitter'
-                    | 'website1'
-                    | 'website2'
-                  >
-                >
-              >;
-            };
+              'degree' | 'email' | 'firstName' | 'lastName' | 'region' | 'role'
+            > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
           }
         >
       >;
@@ -2500,133 +1842,12 @@ export const UsersContentFragmentDoc = {
                     ],
                   },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'biography' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'degree' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'dismissedGettingStarted' },
-                },
                 { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'contactEmail' },
-                },
                 { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'institution' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'lastModifiedDate' },
-                },
                 { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'country' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'city' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'orcidLastModifiedDate' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'orcidLastSyncDate' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'orcidWorks' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'doi' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'lastModifiedDate' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'publicationDate' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'questions' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'question' },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'expertiseAndResourceTags' },
-                },
-                {
-                  kind: 'Field',
-                  name: {
-                    kind: 'Name',
-                    value: 'expertiseAndResourceDescription',
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'social' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'github' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'googleScholar' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'linkedIn' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'researcherId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'researchGate' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'twitter' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'website1' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'website2' },
-                      },
-                    ],
-                  },
-                },
+                { kind: 'Field', name: { kind: 'Name', value: 'region' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'role' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'responsibilities' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'researchInterests' },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'reachOut' } },
               ],
             },
           },

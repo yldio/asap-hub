@@ -12,11 +12,11 @@ import {
   parseToSquidex,
   RestResearchOutput,
   RestTeam,
-  sanitiseForSquidex,
   SquidexGraphqlClient,
   SquidexRestClient,
 } from '@asap-hub/squidex';
 import Boom from '@hapi/boom';
+import { Filter } from 'odata-query';
 import {
   FetchResearchOutputQuery,
   FetchResearchOutputQueryVariables,
@@ -29,6 +29,29 @@ import {
 } from '../queries/research-outputs.queries';
 import { parseGraphQLResearchOutput } from '../entities/research-output';
 import logger from '../utils/logger';
+import { buildODataFilter, ResearchOutputFilter } from '../utils/odata';
+
+export const makeODataFilter = (
+  filter?: ResearchOutputFilter,
+): Filter | null => {
+  if (!filter) {
+    return null;
+  }
+
+  const entries = Object.entries(filter).reduce<Filter[]>((res, [key, val]) => {
+    if (Array.isArray(val)) {
+      return res.concat({
+        or: val.map((valElement) => ({
+          [`data/${key}/iv`]: valElement,
+        })),
+      });
+    }
+
+    return res.concat({ [`data/${key}/iv`]: val });
+  }, []);
+
+  return entries.length === 1 ? (entries[0] as Filter) : entries;
+};
 
 export interface ResearchOutputDataProvider {
   fetchById(id: string): Promise<ResearchOutputDataObject | null>;
@@ -76,24 +99,36 @@ export class ResearchOutputSquidexDataProvider
   }): Promise<ListResearchOutputDataObject> {
     const { search, filter, take = 8, skip = 0, includeDrafts } = options;
 
-    const searchQ = (search || '')
+    const containsFilters = (search || '')
       .split(' ')
       .filter(Boolean)
-      .map(sanitiseForSquidex)
-      .reduce(
-        (acc: string[], word: string) =>
-          acc.concat(
-            `contains(data/title/iv, '${word}') or contains(data/tags/iv, '${word}')`,
-          ),
+      .reduce<Filter[]>(
+        (res, word: string) => [
+          ...res,
+          {
+            [`data/title/iv`]: {
+              contains: word,
+            },
+          },
+          {
+            [`data/tags/iv`]: {
+              contains: word,
+            },
+          },
+        ],
         [],
-      )
-      .join(' or ');
+      );
 
+    const searchQ = containsFilters.length
+      ? containsFilters.length === 1
+        ? containsFilters[0]
+        : { or: containsFilters }
+      : null;
     const filterQ = makeODataFilter(filter);
-
-    const filterGraphql = [filterQ && `(${filterQ})`, searchQ && `(${searchQ})`]
-      .filter(Boolean)
-      .join(' and ');
+    const filtersAndSearch = [filterQ, searchQ].filter(Boolean);
+    const query =
+      filtersAndSearch.length === 1 ? filtersAndSearch[0] : filtersAndSearch;
+    const filterGraphql = buildODataFilter(query as Filter);
 
     const { queryResearchOutputsContentsWithTotal } =
       await this.squidexGraphqlClient.request<
@@ -237,34 +272,8 @@ export class ResearchOutputSquidexDataProvider
   }
 }
 
-type ResearchOutputFilter = {
-  documentType?: string | string[];
-  title?: string;
-  link?: string;
-};
-
 export type FetchResearchOutputOptions = FetchOptions<ResearchOutputFilter> & {
   includeDrafts?: boolean;
-};
-
-const makeODataFilter = (filter?: ResearchOutputFilter): string => {
-  if (filter) {
-    return Object.entries(filter)
-      .map(([key, val]) => {
-        if (Array.isArray(val)) {
-          return `(${val
-            .map(
-              (valElement) =>
-                `data/${key}/iv eq '${sanitiseForSquidex(valElement)}'`,
-            )
-            .join(' or ')})`;
-        }
-        return `data/${key}/iv eq '${sanitiseForSquidex(val)}'`;
-      })
-      .join(' and ');
-  }
-
-  return '';
 };
 
 const getAuthorIdList = (authorDataObject: AuthorUpsertDataObject) => {

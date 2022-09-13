@@ -76,13 +76,13 @@ describe('Group Data Provider', () => {
         search: 'first last',
       };
       const expectedFilter =
-        "(contains(data/name/iv, 'first')" +
-        " or contains(data/description/iv, 'first')" +
-        " or contains(data/tags/iv, 'first'))" +
+        "((contains(data/name/iv,'first'))" +
+        " or (contains(data/description/iv,'first'))" +
+        " or (contains(data/tags/iv,'first')))" +
         ' and' +
-        " (contains(data/name/iv, 'last')" +
-        " or contains(data/description/iv, 'last')" +
-        " or contains(data/tags/iv, 'last'))";
+        " ((contains(data/name/iv,'last'))" +
+        " or (contains(data/description/iv,'last'))" +
+        " or (contains(data/tags/iv,'last')))";
 
       const result = await groupDataProvider.fetch(fetchOptions);
 
@@ -97,7 +97,7 @@ describe('Group Data Provider', () => {
       expect(result).toEqual({ total: 1, items: [getGroupDataObject()] });
     });
 
-    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+    test('Should sanitise single quotes by doubling them', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexGroupsGraphqlResponse(),
       );
@@ -108,9 +108,9 @@ describe('Group Data Provider', () => {
         search: "'",
       };
       const expectedFilter =
-        "(contains(data/name/iv, '%27%27')" +
-        " or contains(data/description/iv, '%27%27')" +
-        " or contains(data/tags/iv, '%27%27'))";
+        "((contains(data/name/iv,''''))" +
+        " or (contains(data/description/iv,''''))" +
+        " or (contains(data/tags/iv,'''')))";
 
       await groupDataProvider.fetch(fetchOptions);
 
@@ -124,7 +124,7 @@ describe('Group Data Provider', () => {
       );
     });
 
-    test('Should sanitise double quotation mark by encoding to hex', async () => {
+    test('Should sanitise double quotation mark by escaping it', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexGroupsGraphqlResponse(),
       );
@@ -135,9 +135,9 @@ describe('Group Data Provider', () => {
         search: '"',
       };
       const expectedFilter =
-        "(contains(data/name/iv, '%22')" +
-        " or contains(data/description/iv, '%22')" +
-        " or contains(data/tags/iv, '%22'))";
+        "((contains(data/name/iv,'\"'))" +
+        " or (contains(data/description/iv,'\"'))" +
+        " or (contains(data/tags/iv,'\"')))";
 
       await groupDataProvider.fetch(fetchOptions);
 
@@ -189,7 +189,7 @@ describe('Group Data Provider', () => {
         skip: 3,
       });
 
-      const expectedFilter = `data/teams/iv in ['${teamIds[0]}', '${teamIds[1]}']`;
+      const expectedFilter = `data/teams/iv in ('${teamIds[0]}','${teamIds[1]}')`;
       expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         {
@@ -229,7 +229,7 @@ describe('Group Data Provider', () => {
 
       await groupDataProvider.fetch({ filter: { userId, teamId: teamIds } });
 
-      const teamFilter = `data/teams/iv in ['${teamIds[0]}', '${teamIds[1]}']`;
+      const teamFilter = `data/teams/iv in ('${teamIds[0]}','${teamIds[1]}')`;
       const userFilter = `data/leaders/iv/user eq '${userId}'`;
       expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),

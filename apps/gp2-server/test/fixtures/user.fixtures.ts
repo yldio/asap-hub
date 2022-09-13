@@ -59,7 +59,6 @@ export const patchResponse = (): SquidexGp2.InputUser => ({
   lastModified: '2020-09-25T09:42:51Z',
   version: 42,
 });
-// export const restUserMock = patchResponse;
 
 export const getUserDataObject = (): gp2.UserDataObject => ({
   id: 'user-id-1',

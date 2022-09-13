@@ -12,6 +12,7 @@ import { v4 as uuid } from 'uuid';
 import { getEventListOptions } from '../../events/options';
 import { useEvents } from '../../events/state';
 import { usePaginationParams } from '../../hooks/pagination';
+import { useResearchOutputs } from '../../shared-research/state';
 import { useCanCreateUpdateResearchOutput, useTeamById } from './state';
 
 const loadAbout = () =>
@@ -73,6 +74,14 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     }),
   );
 
+  const teamOutputsResult = useResearchOutputs({
+    filters: new Set(),
+    currentPage: 0,
+    searchQuery: '',
+    pageSize,
+    teamId,
+  });
+
   if (team) {
     return (
       <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
@@ -87,63 +96,65 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
               teamListElementId={teamListElementId}
               upcomingEventsCount={upcomingEventsResult.total}
               pastEventsCount={pastEventsResult.total}
-              teamOutputsCount={team.outputs?.length}
+              teamOutputsCount={teamOutputsResult.total}
               {...team}
             >
-              <Route path={path + route({ teamId }).about.template}>
-                <Frame title="About">
-                  <About teamListElementId={teamListElementId} team={team} />
-                </Frame>
-              </Route>
-              <Route path={path + route({ teamId }).outputs.template}>
-                <SearchFrame title="outputs">
-                  <Outputs teamId={teamId} />
-                </SearchFrame>
-              </Route>
-              {team.tools && (
-                <Route path={path + route({ teamId }).workspace.template}>
-                  <Frame title="Workspace">
-                    <Workspace team={{ ...team, tools: team.tools }} />
+              <Switch>
+                <Route path={path + route({ teamId }).about.template}>
+                  <Frame title="About">
+                    <About teamListElementId={teamListElementId} team={team} />
                   </Frame>
                 </Route>
-              )}
-              <Route path={path + route({ teamId }).upcoming.template}>
-                <Frame title="Upcoming Events">
-                  <EventsList
-                    constraint={{ teamId }}
-                    currentTime={currentTime}
-                    past={false}
-                    events={upcomingEventsResult}
-                    noEventsComponent={
-                      <NoEvents
-                        displayName={team.displayName}
-                        type="team"
-                        past={false}
-                        link={events({}).upcoming({}).$}
-                      />
-                    }
-                  />
-                </Frame>
-              </Route>
-              <Route path={path + route({ teamId }).past.template}>
-                <Frame title="Past Events">
-                  <EventsList
-                    events={pastEventsResult}
-                    constraint={{ teamId }}
-                    currentTime={currentTime}
-                    past={true}
-                    noEventsComponent={
-                      <NoEvents
-                        displayName={team.displayName}
-                        type="team"
-                        past={true}
-                        link={events({}).past({}).$}
-                      />
-                    }
-                  />
-                </Frame>
-              </Route>
-              <Redirect to={route({ teamId }).about({}).$} />
+                <Route path={path + route({ teamId }).outputs.template}>
+                  <SearchFrame title="outputs">
+                    <Outputs teamId={teamId} />
+                  </SearchFrame>
+                </Route>
+                {team.tools && (
+                  <Route path={path + route({ teamId }).workspace.template}>
+                    <Frame title="Workspace">
+                      <Workspace team={{ ...team, tools: team.tools }} />
+                    </Frame>
+                  </Route>
+                )}
+                <Route path={path + route({ teamId }).upcoming.template}>
+                  <Frame title="Upcoming Events">
+                    <EventsList
+                      constraint={{ teamId }}
+                      currentTime={currentTime}
+                      past={false}
+                      events={upcomingEventsResult}
+                      noEventsComponent={
+                        <NoEvents
+                          displayName={team.displayName}
+                          type="team"
+                          past={false}
+                          link={events({}).upcoming({}).$}
+                        />
+                      }
+                    />
+                  </Frame>
+                </Route>
+                <Route path={path + route({ teamId }).past.template}>
+                  <Frame title="Past Events">
+                    <EventsList
+                      events={pastEventsResult}
+                      constraint={{ teamId }}
+                      currentTime={currentTime}
+                      past={true}
+                      noEventsComponent={
+                        <NoEvents
+                          displayName={team.displayName}
+                          type="team"
+                          past={true}
+                          link={events({}).past({}).$}
+                        />
+                      }
+                    />
+                  </Frame>
+                </Route>
+                <Redirect to={route({ teamId }).about({}).$} />
+              </Switch>
             </TeamProfilePage>
           </Switch>
         </Frame>

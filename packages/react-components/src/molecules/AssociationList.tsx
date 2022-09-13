@@ -22,6 +22,7 @@ const itemStyles = css({
   borderBottom: `1px solid ${silver.rgb}`,
   paddingBottom: `${24 / perRem}em`,
   paddingTop: `${24 / perRem}em`,
+  color: lead.rgb,
 
   '&:first-child': {
     paddingTop: `${18 / perRem}em`,
@@ -35,7 +36,6 @@ const inlineItemStyles = css({
 });
 
 const bulletStyles = css({
-  color: lead.rgb,
   padding: `0 ${6 / perRem}em`,
   'li:last-of-type > &': {
     display: 'none',

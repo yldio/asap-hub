@@ -73,7 +73,7 @@
     "browserslist-useragent-regexp": "3.0.2",
     "cross-env": "7.0.3",
     "identity-obj-proxy": "3.0.0",
-    "jose": "2.0.5",
+    "jose": "2.0.6",
     "nock": "13.0.11",
     "pirates": "4.0.5",
     "react-scripts": "4.0.3",

@@ -6066,7 +6066,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "jose",\
-        "npm:2.0.5"\
+        "npm:2.0.6"\
       ],\
       [\
         "jpeg-js",\
@@ -10384,7 +10384,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["date-fns", "npm:2.29.2"],\
             ["history", "npm:4.10.1"],\
             ["identity-obj-proxy", "npm:3.0.0"],\
-            ["jose", "npm:2.0.5"],\
+            ["jose", "npm:2.0.6"],\
             ["nock", "npm:13.0.11"],\
             ["pirates", "npm:4.0.5"],\
             ["qs", "npm:6.11.0"],\
@@ -11071,7 +11071,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["date-fns", "npm:2.29.2"],\
             ["history", "npm:4.10.1"],\
             ["identity-obj-proxy", "npm:3.0.0"],\
-            ["jose", "npm:2.0.5"],\
+            ["jose", "npm:2.0.6"],\
             ["nock", "npm:13.0.11"],\
             ["pirates", "npm:4.0.5"],\
             ["react", "npm:17.0.2"],\
@@ -51084,10 +51084,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["jose", [\
-        ["npm:2.0.5", {\
-          "packageLocation": "./.yarn/cache/jose-npm-2.0.5-f7da318eaf-80a3447b51.zip/node_modules/jose/",\
+        ["npm:2.0.6", {\
+          "packageLocation": "./.yarn/cache/jose-npm-2.0.6-28b3274077-c13a95f38f.zip/node_modules/jose/",\
           "packageDependencies": [\
-            ["jose", "npm:2.0.5"],\
+            ["jose", "npm:2.0.6"],\
             ["@panva/asn1.js", "npm:1.0.0"]\
           ],\
           "linkType": "HARD"\

@@ -8,7 +8,8 @@ export default class MoveResearchOutputTextToDescription extends Migration {
     await applyToAllItemsInCollection<RestNews>(
       'news-and-events',
       async (news, squidexClient) => {
-        if (news.data.type.iv !== 'Training') return;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if ((news.data.type.iv as any) !== 'Training') return;
 
         await squidexClient.patch(news.id, {
           type: {
@@ -26,7 +27,8 @@ export default class MoveResearchOutputTextToDescription extends Migration {
 
         await squidexClient.patch(news.id, {
           type: {
-            iv: 'Training',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            iv: 'Training' as any,
           },
         });
       },

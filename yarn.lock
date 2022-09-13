@@ -460,7 +460,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
-    "@auth0/auth0-spa-js": 1.22.3
+    "@auth0/auth0-spa-js": 1.22.4
     "@babel/runtime-corejs3": 7.18.9
     "@types/jest": 26.0.24
     "@types/node": 14.18.26
@@ -520,7 +520,7 @@ __metadata:
     "@asap-hub/routing": "workspace:*"
     "@asap-hub/unsupported-browser-page": "workspace:*"
     "@asap-hub/validation": "workspace:*"
-    "@auth0/auth0-spa-js": 1.22.3
+    "@auth0/auth0-spa-js": 1.22.4
     "@babel/runtime-corejs3": 7.18.9
     "@fast-csv/format": 4.3.5
     "@sentry/cli": 1.74.5
@@ -966,7 +966,7 @@ __metadata:
     "@asap-hub/routing": "workspace:*"
     "@asap-hub/unsupported-browser-page": "workspace:*"
     "@asap-hub/validation": "workspace:*"
-    "@auth0/auth0-spa-js": 1.22.3
+    "@auth0/auth0-spa-js": 1.22.4
     "@babel/runtime-corejs3": 7.18.9
     "@fast-csv/format": 4.3.5
     "@sentry/cli": 1.74.5
@@ -1188,7 +1188,7 @@ __metadata:
     "@asap-hub/react-context": "workspace:*"
     "@asap-hub/routing": "workspace:*"
     "@asap-hub/validation": "workspace:*"
-    "@auth0/auth0-spa-js": 1.22.3
+    "@auth0/auth0-spa-js": 1.22.4
     "@babel/core": 7.18.13
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.18.9
@@ -1478,9 +1478,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@auth0/auth0-spa-js@npm:1.22.3":
-  version: 1.22.3
-  resolution: "@auth0/auth0-spa-js@npm:1.22.3"
+"@auth0/auth0-spa-js@npm:1.22.4":
+  version: 1.22.4
+  resolution: "@auth0/auth0-spa-js@npm:1.22.4"
   dependencies:
     abortcontroller-polyfill: ^1.7.3
     browser-tabs-lock: ^1.2.15
@@ -1489,7 +1489,7 @@ __metadata:
     fast-text-encoding: ^1.0.4
     promise-polyfill: ^8.2.3
     unfetch: ^4.2.0
-  checksum: b78138b75fe81b9dbbaeaa1cf463930d97d9cc44a0720d6530139d167a5ddd55c89b5686035ce3430ca7246c208ec7d29d782615170dc410e8f2147c40bce1e4
+  checksum: 7bd7242f2c4408d074437a9c0ba43aa0da46b6d3a2418f042760ca70e67bc129c4f8bd54f69f3763f9c30370b3ed0e16699e38bd457862cb6cb99b7190eb97d6
   languageName: node
   linkType: hard
 

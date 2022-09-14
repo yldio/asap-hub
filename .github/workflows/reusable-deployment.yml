@@ -188,6 +188,30 @@ jobs:
           squidex-ci-client-secret: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
 
+  crn-contentful-schema:
+    needs: [crn-sls-deploy]
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Synchronize Contentful
+        run: |
+          yarn workspace @asap-hub/contentful schema:import --management-token=$CONTENTFUL_MANAGEMENT_TOKEN
+        env:
+          CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
+          CONTENTFUL_ENVIRONMENT: dev
   ses:
     needs: [crn-sls-deploy]
     runs-on: ubuntu-latest

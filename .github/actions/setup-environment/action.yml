@@ -56,6 +56,9 @@ outputs:
   cache-prefix-transpile:
     description: 'Cache Prefix Transpile'
     value: ${{ steps.vars.outputs.cache-prefix-transpile }}
+  contentful-space-id:
+    description: 'Contentful Space ID'
+    value: ${{ steps.vars.outputs.contentful-space-id }}
   crn-aws-acm-certificate-arn:
     description: 'CRN AWS ACM Certificate ARN'
     value: ${{ steps.vars.outputs.crn-aws-acm-certificate-arn }}

@@ -1,5 +1,5 @@
 import type { User } from '@asap-hub/auth';
-import type { gp2, UserMetadataResponse, UserResponse } from '@asap-hub/model';
+import type { gp2, UserMetadataResponse } from '@asap-hub/model';
 import got from 'got';
 import { URL, URLSearchParams } from 'url';
 import { handleError } from './handle-error';
@@ -7,13 +7,11 @@ import type { Rule } from './types';
 
 type Auth0UserResponse = UserMetadataResponse | gp2.UserResponse;
 
-function isUserResponse(
+const isUserResponse = (
   response: UserMetadataResponse | gp2.UserResponse,
-): response is UserResponse & { algoliaApiKey: string } {
-  return 'onboarded' in (response as UserMetadataResponse);
-}
+): response is UserMetadataResponse => 'onboarded' in response;
 
-const extractUser = (response: Auth0UserResponse) => {
+const extractUser = (response: Auth0UserResponse): User => {
   if (isUserResponse(response)) {
     const {
       id,
@@ -43,11 +41,11 @@ const extractUser = (response: Auth0UserResponse) => {
       algoliaApiKey,
     };
   }
-  const { id, email, firstName, lastName, avatarUrl } = response;
+  const { id, email, displayName, firstName, lastName, avatarUrl } = response;
 
   return {
     id,
-    displayName: '',
+    displayName,
     email,
     firstName,
     lastName,

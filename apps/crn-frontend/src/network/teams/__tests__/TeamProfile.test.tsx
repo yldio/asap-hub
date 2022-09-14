@@ -131,20 +131,40 @@ it.each`
   expect(await screen.findByText(/Event 0/i)).toBeVisible();
   expect(mockGetEventsFromAlgolia).toBeCalledTimes(2);
 
-  expect(mockGetEventsFromAlgolia).toHaveBeenCalledWith(expect.anything(), {
-    before: '2021-12-28T13:00:00.000Z',
-    currentPage: 0,
-    filters: new Set(),
-    pageSize: 10,
-    searchQuery: '',
-    constraint: {
-      teamId: 't0',
+  expect(mockGetEventsFromAlgolia).toHaveBeenNthCalledWith(
+    1,
+    expect.anything(),
+    {
+      after: '2021-12-28T13:00:00.000Z',
+      currentPage: 0,
+      filters: new Set(),
+      pageSize: 10,
+      searchQuery: '',
+      constraint: {
+        teamId: 't0',
+      },
     },
-    sort: {
-      sortBy: 'endDate',
-      sortOrder: 'desc',
+  );
+
+  expect(mockGetEventsFromAlgolia).toHaveBeenNthCalledWith(
+    2,
+    expect.anything(),
+    {
+      before: '2021-12-28T13:00:00.000Z',
+      currentPage: 0,
+      filters: new Set(),
+      pageSize: 10,
+      searchQuery: '',
+      constraint: {
+        teamId: 't0',
+        notStatus: 'Cancelled',
+      },
+      sort: {
+        sortBy: 'endDate',
+        sortOrder: 'desc',
+      },
     },
-  });
+  );
 });
 
 const renderPage = async (

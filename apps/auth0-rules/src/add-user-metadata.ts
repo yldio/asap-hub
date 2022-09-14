@@ -1,10 +1,13 @@
 import type { User } from '@asap-hub/auth';
-import type { UserMetadataResponse } from '@asap-hub/model';
+import type { gp2, UserResponse } from '@asap-hub/model';
 import got from 'got';
 import { URL, URLSearchParams } from 'url';
 import { handleError } from './handle-error';
 import type { Rule } from './types';
 
+type Auth0UserResponse =
+  | (UserResponse & { algoliaApiKey: string })
+  | gp2.UserResponse;
 const addUserMetadata: Rule<{ invitationCode: string }> = async (
   auth0User,
   context,
@@ -30,6 +33,30 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
   const apiSharedSecret = configuration?.API_SHARED_SECRET;
 
   try {
+    const response = await got(`${apiURL}/webhook/users/${auth0User.user_id}`, {
+      headers: {
+        Authorization: `Basic ${apiSharedSecret}`,
+      },
+      timeout: 10000,
+    }).json<Auth0UserResponse>();
+
+    let user: User = extractUser(response);
+
+    context.idToken[new URL('/user', redirect_uri).toString()] = user;
+    // Uncomment for dev auth0. This allows pointing to dev api from local FE
+    // context.idToken[new URL('/user', 'https://dev.hub.asap.science').toString()] = user;
+
+    return callback(null, auth0User, context);
+  } catch (err) {
+    const error = handleError(err);
+    return callback(error);
+  }
+};
+
+export default addUserMetadata;
+
+function extractUser(response: Auth0UserResponse) {
+  if ('onboarded' in response) {
     const {
       id,
       onboarded,
@@ -40,14 +67,9 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
       avatarUrl,
       teams,
       algoliaApiKey,
-    } = await got(`${apiURL}/webhook/users/${auth0User.user_id}`, {
-      headers: {
-        Authorization: `Basic ${apiSharedSecret}`,
-      },
-      timeout: 10000,
-    }).json<UserMetadataResponse>();
+    } = response;
 
-    const user: User = {
+    return {
       id,
       onboarded,
       displayName,
@@ -62,15 +84,19 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
       })),
       algoliaApiKey,
     };
-    context.idToken[new URL('/user', redirect_uri).toString()] = user;
-    // Uncomment for dev auth0. This allows pointing to dev api from local FE
-    // context.idToken[new URL('/user', 'https://dev.hub.asap.science').toString()] = user;
+  } else {
+    const { id, displayName, email, firstName, lastName, avatar } = response;
 
-    return callback(null, auth0User, context);
-  } catch (err) {
-    const error = handleError(err);
-    return callback(error);
+    return {
+      id,
+      displayName,
+      email,
+      firstName,
+      lastName,
+      avatarUrl: avatar,
+      teams: [],
+      onboarded: false,
+      algoliaApiKey: '',
+    };
   }
-};
-
-export default addUserMetadata;
+}

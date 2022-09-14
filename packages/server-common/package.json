@@ -42,7 +42,7 @@
     "@babel/core": "7.18.13",
     "@babel/parser": "7.18.13",
     "@types/apr-intercept": "workspace:*",
-    "@types/aws-lambda": "8.10.103",
+    "@types/aws-lambda": "8.10.104",
     "@types/express": "4.17.13",
     "@types/jest": "26.0.24",
     "@types/jsonwebtoken": "8.5.9",

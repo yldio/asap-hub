@@ -2087,7 +2087,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/express",\
-        "npm:4.17.13"\
+        "npm:4.17.14"\
       ],\
       [\
         "@types/express-serve-static-core",\
@@ -10485,7 +10485,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/chance", "npm:1.1.3"],\
             ["@types/cors", "npm:2.8.12"],\
             ["@types/debug", "npm:4.1.7"],\
-            ["@types/express", "npm:4.17.13"],\
+            ["@types/express", "npm:4.17.14"],\
             ["@types/graphql", "npm:14.5.0"],\
             ["@types/hapi", "npm:18.0.7"],\
             ["@types/hapi__boom", "npm:9.0.1"],\
@@ -11158,7 +11158,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
             ["@types/aws-lambda", "npm:8.10.103"],\
             ["@types/cors", "npm:2.8.12"],\
-            ["@types/express", "npm:4.17.13"],\
+            ["@types/express", "npm:4.17.14"],\
             ["@types/jest", "npm:26.0.24"],\
             ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
@@ -11739,7 +11739,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/serverless", "npm:6.19.7"],\
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
             ["@types/aws-lambda", "npm:8.10.103"],\
-            ["@types/express", "npm:4.17.13"],\
+            ["@types/express", "npm:4.17.14"],\
             ["@types/jest", "npm:26.0.24"],\
             ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["@types/supertest", "npm:2.0.12"],\
@@ -33035,10 +33035,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:4.17.13", {\
-          "packageLocation": "./.yarn/cache/@types-express-npm-4.17.13-0e12fe9c24-12a2a0e6c4.zip/node_modules/@types/express/",\
+        ["npm:4.17.14", {\
+          "packageLocation": "./.yarn/cache/@types-express-npm-4.17.14-076e1b4711-15c1af46d0.zip/node_modules/@types/express/",\
           "packageDependencies": [\
-            ["@types/express", "npm:4.17.13"],\
+            ["@types/express", "npm:4.17.14"],\
             ["@types/body-parser", "npm:1.19.0"],\
             ["@types/express-serve-static-core", "npm:4.17.18"],\
             ["@types/qs", "npm:6.9.5"],\
@@ -44706,7 +44706,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/express-async-errors-virtual-c5b601ee87/0/cache/express-async-errors-npm-3.1.1-c0a6b1e552-3a2a6df8ea.zip/node_modules/express-async-errors/",\
           "packageDependencies": [\
             ["express-async-errors", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1"],\
-            ["@types/express", "npm:4.17.13"],\
+            ["@types/express", "npm:4.17.14"],\
             ["express", "npm:4.18.1"]\
           ],\
           "packagePeers": [\

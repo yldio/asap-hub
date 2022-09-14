@@ -79,6 +79,7 @@ export const fetchUserResponseDataObject = (): gp2.UserDataObject => ({
   id: 'userId',
   lastName: 'Ronaldo',
   role: 'Trainee',
+  region: 'Europe',
 });
 
 export const getGraphQLUser = (

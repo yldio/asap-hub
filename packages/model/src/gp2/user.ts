@@ -29,7 +29,7 @@ export const gp2UserDegrees = [
 export type UserDegree = typeof gp2UserDegrees[number];
 
 export type UserDataObject = {
-  avatar?: string;
+  avatarUrl?: string;
   connections?: Connection[];
   createdDate: string;
   degrees?: UserDegree[];
@@ -37,7 +37,7 @@ export type UserDataObject = {
   firstName: string;
   id: string;
   lastName: string;
-  region?: string;
+  region: string;
   role: Role;
 };
 

@@ -127,9 +127,6 @@ describe('User data provider', () => {
       expect(nock.isDone()).toBe(true);
     });
     test('Should convert empty strings to null', async () => {
-      const mockResponse = getUserDataObject();
-
-      delete mockResponse.region;
       nock(baseUrl)
         .get(`/api/content/${appName}/users/${userId}`)
         .reply(200, fetchUserResponse())

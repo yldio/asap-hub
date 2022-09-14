@@ -1,6 +1,6 @@
 import { eventMaterialTypes } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { fern, tin } from '../colors';
+import { charcoal, tin } from '../colors';
 import { crossSmallIcon, tickSmallIcon } from '../icons';
 import { perRem } from '../pixels';
 
@@ -12,10 +12,10 @@ const baseStyles = css({
 });
 
 const availableStyles = css({
-  color: fern.rgb,
+  color: charcoal.rgb,
   svg: {
-    fill: fern.rgb,
-    stroke: fern.rgb,
+    fill: charcoal.rgb,
+    stroke: charcoal.rgb,
   },
 });
 

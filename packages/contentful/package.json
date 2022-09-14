@@ -1,0 +1,18 @@
+{
+  "name": "@asap-hub/contentful",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "16.x"
+  },
+  "module": "build/index.js",
+  "main": "build-cjs/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build:babel": "../../scripts/build-babel.sh build",
+    "watch:babel": "../../scripts/build-babel.sh watch"
+  },
+  "devDependencies": {
+    "contentful-cli": "^1.15.6"
+  }
+}

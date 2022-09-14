@@ -8,6 +8,52 @@ import type { Rule } from './types';
 type Auth0UserResponse =
   | (UserResponse & { algoliaApiKey: string })
   | gp2.UserResponse;
+
+const extractUser = (response: Auth0UserResponse) => {
+  if ('onboarded' in response) {
+    const {
+      id,
+      onboarded,
+      displayName,
+      email,
+      firstName,
+      lastName,
+      avatarUrl,
+      teams,
+      algoliaApiKey,
+    } = response;
+
+    return {
+      id,
+      onboarded,
+      displayName,
+      email,
+      firstName,
+      lastName,
+      avatarUrl,
+      teams: teams.map((team) => ({
+        id: team.id,
+        displayName: team.displayName,
+        role: team.role,
+      })),
+      algoliaApiKey,
+    };
+  }
+  const { id, displayName, email, firstName, lastName, avatar } = response;
+
+  return {
+    id,
+    displayName,
+    email,
+    firstName,
+    lastName,
+    avatarUrl: avatar,
+    teams: [],
+    onboarded: false,
+    algoliaApiKey: '',
+  };
+};
+
 const addUserMetadata: Rule<{ invitationCode: string }> = async (
   auth0User,
   context,
@@ -40,7 +86,7 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
       timeout: 10000,
     }).json<Auth0UserResponse>();
 
-    let user: User = extractUser(response);
+    const user: User = extractUser(response);
 
     context.idToken[new URL('/user', redirect_uri).toString()] = user;
     // Uncomment for dev auth0. This allows pointing to dev api from local FE
@@ -54,49 +100,3 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
 };
 
 export default addUserMetadata;
-
-function extractUser(response: Auth0UserResponse) {
-  if ('onboarded' in response) {
-    const {
-      id,
-      onboarded,
-      displayName,
-      email,
-      firstName,
-      lastName,
-      avatarUrl,
-      teams,
-      algoliaApiKey,
-    } = response;
-
-    return {
-      id,
-      onboarded,
-      displayName,
-      email,
-      firstName,
-      lastName,
-      avatarUrl,
-      teams: teams.map((team) => ({
-        id: team.id,
-        displayName: team.displayName,
-        role: team.role,
-      })),
-      algoliaApiKey,
-    };
-  } else {
-    const { id, displayName, email, firstName, lastName, avatar } = response;
-
-    return {
-      id,
-      displayName,
-      email,
-      firstName,
-      lastName,
-      avatarUrl: avatar,
-      teams: [],
-      onboarded: false,
-      algoliaApiKey: '',
-    };
-  }
-}

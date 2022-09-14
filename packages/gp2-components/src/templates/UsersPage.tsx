@@ -11,9 +11,9 @@ const bannerProps = {
     'Explore the directory to discover more about our GP2 members that make up the private network.',
 };
 
-const UsersPage: React.FC<ComponentProps<typeof UsersPageBody>> = ({
-  users,
-}) => (
+type UserPageProps = ComponentProps<typeof UsersPageBody>;
+
+const UsersPage: React.FC<UserPageProps> = ({ users }) => (
   <article>
     <PageBanner {...bannerProps} />
     <main>

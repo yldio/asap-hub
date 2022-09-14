@@ -24,7 +24,6 @@ const gridContainerStyles = css({
 const UsersPageBody: React.FC<UsersPageBodyProps> = ({ users }) => (
   <article css={gridContainerStyles}>
     {users.map((user) => (
-      //<p>Working...</p>
       <UserCard key={user.id} {...user} />
     ))}
   </article>

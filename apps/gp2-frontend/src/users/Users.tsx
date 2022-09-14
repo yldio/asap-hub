@@ -1,59 +1,27 @@
 import { UsersPage } from '@asap-hub/gp2-components';
 import { FC, useEffect, useState } from 'react';
+import { gp2 } from '@asap-hub/model';
 
-const getUsers = () => {
-  const result = [
+const getUsers = (): gp2.ListUserResponse => {
+  const items = [
     {
-      id: 'u42',
+      createdDate: '2020/03/03',
+      email: 'pmars@email.com',
+      firstName: 'Phillip',
       displayName: 'Phillip Mars',
-      degree: ['PhD'],
-      firstName: 'Phillip',
+      id: 'u42',
       lastName: 'Mars',
-      avatarUrl: '',
-      role: 'GP2 Admin',
       region: 'Australasia',
-      workingGroups: [{ id: 0, name: 'Underrepresented Populations' }],
-      projects: [{ id: 0, name: 'Genetic determinants of progression in PD' }],
-      tags: [
-        'Neurological Diseases',
-        'Clinical Neurology',
-        'Adult Neurology',
-        'Neuroimaging',
-        'Neurologic Examination',
-        'Neuroprotection',
-        'Movement Disorders',
-        'Neurodegenerative Diseases',
-        'Neurological Diseases',
-      ],
-    },
-    {
-      id: 'u43',
-      displayName: 'Phil Mars',
-      degree: ['PhD'],
-      firstName: 'Phillip',
-      lastName: 'Mars',
-      avatarUrl: '',
-      role: 'GP2 Admin',
-      region: 'Australasia',
-      workingGroups: [{ id: 0, name: 'Underrepresented Populations' }],
-      projects: [{ id: 0, name: 'Genetic determinants of progression in PD' }],
-      tags: [
-        'Neurological Diseases',
-        'Clinical Neurology',
-        'Adult Neurology',
-        'Neuroimaging',
-        'Neurologic Examination',
-        'Neuroprotection',
-        'Movement Disorders',
-        'Neurodegenerative Diseases',
-        'Neurological Diseases',
-      ],
+      role: 'Network Collaborator' as const,
     },
   ];
-  return result;
+  return {
+    items,
+    total: 1,
+  };
 };
 
-const Users: FC<Record<string, never>> = () => {
+const Users: FC = () => {
   const [users, setUser] = useState(getUsers());
   useEffect(() => {
     setUser(getUsers());

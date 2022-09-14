@@ -93,9 +93,11 @@ describe('/users/ route', () => {
       test('Should return the results correctly when a filter is used', async () => {
         userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);
 
-        const response = await supertest(appWithMockedAuth).get(
-          '/users?filter=Project+Manager',
-        );
+        const response = await supertest(appWithMockedAuth)
+          .get('/users')
+          .query({
+            filter: 'Project Manager',
+          });
 
         expect(response.status).toBe(200);
       });
@@ -103,9 +105,11 @@ describe('/users/ route', () => {
       test('Should return the results correctly when multiple filters are used', async () => {
         userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);
 
-        const response = await supertest(appWithMockedAuth).get(
-          '/users?filter=Project+Manager&filter=Lead+PI',
-        );
+        const response = await supertest(appWithMockedAuth)
+          .get('/users')
+          .query({
+            filter: ['Project Manager', 'Lead PI'],
+          });
 
         expect(response.status).toBe(200);
       });

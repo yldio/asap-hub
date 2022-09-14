@@ -1,7 +1,6 @@
 import { ComponentProps, FC } from 'react';
 import { User } from '@asap-hub/auth';
 import { DashboardPageBody } from '@asap-hub/react-components';
-import { EventConstraint } from '@asap-hub/model';
 import { useEvents } from '../events/state';
 import { getEventListOptions } from '../events/options';
 
@@ -20,7 +19,6 @@ const Body: FC<BodyProps> = ({ date, user, ...props }) => {
       past: true,
       pageSize,
       currentPage: 0,
-      constraint: { notStatus: 'Cancelled' } as EventConstraint,
     }),
     user,
   );

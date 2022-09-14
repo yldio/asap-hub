@@ -66,7 +66,7 @@ describe('getEvents', () => {
       ['event'],
       '',
       {
-        filters: 'endDateTimestamp < 1609498800',
+        filters: '(endDateTimestamp < 1609498800) AND (NOT status:Cancelled)',
         hitsPerPage: 10,
         page: 0,
       },

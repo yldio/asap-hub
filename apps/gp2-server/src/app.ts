@@ -46,7 +46,7 @@ import {
 } from './data-providers/working-group.data-provider';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { projectRouteFactory } from './routes/project.route';
-import { userPublicRouteFactory } from './routes/user.route';
+import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
 import { workingGroupRouteFactory } from './routes/working-group.route';
 import assignUserToContext from './utils/assign-user-to-context';
 import pinoLogger from './utils/logger';
@@ -120,6 +120,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Routes
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const userPublicRoutes = userPublicRouteFactory(userController);
+  const userRoutes = userRouteFactory(userController);
   const workingGroupRoutes = workingGroupRouteFactory(workingGroupController);
   const projectRoutes = projectRouteFactory(projectController);
 
@@ -130,6 +131,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   /**
    * Routes requiring onboarding below
    */
+  app.use(userRoutes);
   app.use(dashboardRoutes);
   app.use(workingGroupRoutes);
   app.use(projectRoutes);

@@ -1,4 +1,4 @@
-import { NewsPage } from '@asap-hub/react-components';
+import { NewsPage, noop } from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './layout';
 
@@ -7,4 +7,8 @@ export default {
   decorators: [LayoutDecorator],
 };
 
-export const Normal = () => <NewsPage>Page Content</NewsPage>;
+export const Normal = () => (
+  <NewsPage searchQuery="" onChangeSearch={noop}>
+    Page Content
+  </NewsPage>
+);

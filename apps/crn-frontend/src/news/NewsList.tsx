@@ -2,11 +2,19 @@ import { NewsPageBody } from '@asap-hub/react-components';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useNews } from './state';
 
-const NewsList: React.FC<Record<string, never>> = () => {
+interface NewsListProps {
+  searchQuery?: string;
+  filters?: Set<string>;
+}
+
+const NewsList: React.FC<NewsListProps> = ({
+  searchQuery = '',
+  filters = new Set(),
+}) => {
   const { currentPage, pageSize } = usePaginationParams();
   const result = useNews({
-    searchQuery: '',
-    filters: new Set(),
+    searchQuery,
+    filters,
     currentPage,
     pageSize,
   });

@@ -10,6 +10,7 @@ export const usersContentQueryFragment = gql`
       avatar {
         id
       }
+      alumniSinceDate
       biography
       degree
       email

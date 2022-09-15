@@ -166,7 +166,7 @@ export const parseGraphQLUserToDataObject = (
     lastName: item.flatData.lastName || '',
     degrees,
     email: item.flatData.email || '',
-    region: item.flatData.region || undefined,
+    region: item.flatData.region || '',
     role: item.flatData.role,
   };
 };

@@ -1,4 +1,5 @@
-import { UserMetadataResponse } from '@asap-hub/model';
+import type { User as Auth0User } from '@asap-hub/auth';
+import { gp2, UserMetadataResponse } from '@asap-hub/model';
 import nock from 'nock';
 import addUserMetadata from '../add-user-metadata';
 import * as handleError from '../handle-error';
@@ -97,6 +98,17 @@ const apiUser: UserMetadataResponse = {
   algoliaApiKey: 'test-api-key',
 };
 
+const gp2ApiUser: gp2.UserResponse = {
+  displayName: 'Joao Tiago',
+  firstName: 'Joao',
+  lastName: 'Tiago',
+  email: 'joao.tiago@yld.io',
+  id: 'myRandomId123',
+  createdDate: '2020-08-21T14:23:31.924Z',
+  role: 'Trainee',
+  region: 'Europe',
+};
+
 describe('Auth0 Rule - Add User Metadata', () => {
   const apiURL = 'https://api.hub.asap.science';
   const appDomain = 'hub.asap.science';
@@ -149,7 +161,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('adds the user metadata on successful fetch', async () => {
+  it('adds the user metadata on successful fetch for crn', async () => {
     nock(apiURL, {
       reqheaders: {
         authorization: `Basic ${apiSharedSecret}`,
@@ -168,7 +180,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
     expect(err).toBeFalsy();
     expect(resUser).not.toBeNull();
     expect(resContext).not.toBeNull();
-    expect(resContext.idToken['https://hub.asap.science/user']).toStrictEqual({
+    const expectedUser: Auth0User = {
       displayName: 'Joao Tiago',
       email: 'joao.tiago@yld.io',
       id: 'myRandomId123',
@@ -184,9 +196,56 @@ describe('Auth0 Rule - Add User Metadata', () => {
         },
       ],
       algoliaApiKey: 'test-api-key',
-    });
+    };
+    expect(resContext.idToken['https://hub.asap.science/user']).toStrictEqual(
+      expectedUser,
+    );
   });
 
+  it('adds the user metadata on successful fetch for gp2', async () => {
+    nock(apiURL, {
+      reqheaders: {
+        authorization: `Basic ${apiSharedSecret}`,
+      },
+    })
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, gp2ApiUser);
+
+    const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
+      jest.fn();
+
+    await addUserMetadata(
+      user,
+      {
+        ...context,
+        request: {
+          query: {},
+          body: { redirect_uri: 'https://gp2.asap.science/' },
+        },
+      },
+      cb,
+    );
+
+    expect(cb).toHaveBeenCalled();
+    const [err, resUser, resContext] = cb.mock.calls[0];
+    expect(err).toBeFalsy();
+    expect(resUser).not.toBeNull();
+    expect(resContext).not.toBeNull();
+    const expectedUser: Auth0User = {
+      displayName: 'Joao Tiago',
+      email: 'joao.tiago@yld.io',
+      id: 'myRandomId123',
+      onboarded: true,
+      firstName: 'Joao',
+      lastName: 'Tiago',
+      avatarUrl: undefined,
+      algoliaApiKey: '',
+      teams: [],
+    };
+    expect(resContext.idToken['https://gp2.asap.science/user']).toStrictEqual(
+      expectedUser,
+    );
+  });
   it('adds the user metadata on successful fetch when fetch uri provided in request body', async () => {
     nock(apiURL, {
       reqheaders: {
@@ -216,7 +275,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
     expect(err).toBeFalsy();
     expect(resUser).not.toBeNull();
     expect(resContext).not.toBeNull();
-    expect(resContext.idToken['https://other-uri.com/user']).toStrictEqual({
+    const expectedUser: Auth0User = {
       displayName: 'Joao Tiago',
       email: 'joao.tiago@yld.io',
       id: 'myRandomId123',
@@ -232,7 +291,10 @@ describe('Auth0 Rule - Add User Metadata', () => {
         },
       ],
       algoliaApiKey: 'test-api-key',
-    });
+    };
+    expect(resContext.idToken['https://other-uri.com/user']).toStrictEqual(
+      expectedUser,
+    );
   });
 
   describe('When a PR redirect uri is given', () => {
@@ -263,9 +325,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
 
       expect(cb).toHaveBeenCalled();
       const resContext = cb.mock.calls[0][2];
-      expect(
-        resContext.idToken['https://1234.hub.asap.science/user'],
-      ).toStrictEqual({
+      const expectedUser: Auth0User = {
         displayName: 'Joao Tiago',
         email: 'joao.tiago@yld.io',
         id: 'myRandomId123',
@@ -281,7 +341,10 @@ describe('Auth0 Rule - Add User Metadata', () => {
           },
         ],
         algoliaApiKey: 'test-api-key',
-      });
+      };
+      expect(
+        resContext.idToken['https://1234.hub.asap.science/user'],
+      ).toStrictEqual(expectedUser);
     });
 
     it('fetches user metadata from the PR API url for a different domain', async () => {
@@ -313,9 +376,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
 
       expect(cb).toHaveBeenCalled();
       const resContext = cb.mock.calls[0][2];
-      expect(
-        resContext.idToken['https://1234.gp2.asap.science/user'],
-      ).toStrictEqual({
+      const expectedUser: Auth0User = {
         displayName: 'Joao Tiago',
         email: 'joao.tiago@yld.io',
         id: 'myRandomId123',
@@ -331,7 +392,10 @@ describe('Auth0 Rule - Add User Metadata', () => {
           },
         ],
         algoliaApiKey: 'test-api-key',
-      });
+      };
+      expect(
+        resContext.idToken['https://1234.gp2.asap.science/user'],
+      ).toStrictEqual(expectedUser);
     });
   });
 });

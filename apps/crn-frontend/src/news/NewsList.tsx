@@ -3,14 +3,11 @@ import { usePagination, usePaginationParams } from '../hooks';
 import { useNews } from './state';
 
 interface NewsListProps {
-  searchQuery?: string;
-  filters?: Set<string>;
+  searchQuery: string;
+  filters: Set<string>;
 }
 
-const NewsList: React.FC<NewsListProps> = ({
-  searchQuery = '',
-  filters = new Set(),
-}) => {
+const NewsList: React.FC<NewsListProps> = ({ searchQuery, filters }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const result = useNews({
     searchQuery,

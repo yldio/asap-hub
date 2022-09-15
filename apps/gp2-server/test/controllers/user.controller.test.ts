@@ -10,6 +10,29 @@ describe('Users controller', () => {
     jest.resetAllMocks();
   });
 
+  describe('Fetch', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
+    test('Should return the users', async () => {
+      userDataProviderMock.fetch.mockResolvedValue({
+        total: 1,
+        items: [getUserDataObject()],
+      });
+      const result = await userController.fetch({});
+
+      expect(result).toEqual({ items: [getUserResponse()], total: 1 });
+    });
+
+    test('Should return empty list when there are no users', async () => {
+      userDataProviderMock.fetch.mockResolvedValue({ total: 0, items: [] });
+      const result = await userController.fetch({});
+
+      expect(result).toEqual({ items: [], total: 0 });
+    });
+  });
+
   describe('FetchById', () => {
     beforeEach(() => {
       jest.resetAllMocks();

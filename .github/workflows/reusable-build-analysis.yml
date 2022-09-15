@@ -16,7 +16,7 @@ jobs:
   bundlewatch:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
+      image: ghcr.io/yldio/asap-hub/node-python-sq:702f129e96908e57a5ca9572a9956409f644207f
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -47,7 +47,7 @@ jobs:
   build-output:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
+      image: ghcr.io/yldio/asap-hub/node-python-sq:702f129e96908e57a5ca9572a9956409f644207f
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

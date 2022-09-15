@@ -22,6 +22,7 @@ export type FetchOptions<TFilter = string[]> = {
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
 
 export interface UserController {
+  fetch(options: FetchUsersOptions): Promise<gp2.ListUserResponse>;
   fetchByCode(code: string): Promise<gp2.UserResponse>;
   fetchById(id: string): Promise<gp2.UserResponse>;
   update(id: string, update: gp2.UserUpdateRequest): Promise<gp2.UserResponse>;
@@ -41,6 +42,14 @@ export default class Users implements UserController {
   ): Promise<gp2.UserResponse> {
     await this.userDataProvider.update(id, update);
     return this.fetchById(id);
+  }
+
+  async fetch(options: FetchUsersOptions): Promise<gp2.ListUserResponse> {
+    const { total, items: users } = await this.userDataProvider.fetch(options);
+
+    const items = total > 0 ? users.map(parseUserToResponse) : [];
+
+    return { total, items };
   }
 
   async fetchById(id: string): Promise<gp2.UserResponse> {

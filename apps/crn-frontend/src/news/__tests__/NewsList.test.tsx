@@ -3,8 +3,9 @@ import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { renderHook } from '@testing-library/react-hooks';
-import { createNewsResponse } from '@asap-hub/fixtures';
+import { createListNewsResponse } from '@asap-hub/fixtures';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { NewsFrequency } from '@asap-hub/model';
 
 import { usePagination, usePaginationParams } from '../../hooks';
 import NewsAndEventsPage from '../Routes';
@@ -17,19 +18,17 @@ jest.mock('../api');
 const mockGetNews = getNews as jest.MockedFunction<typeof getNews>;
 const pageSize = 10;
 
-const getMockedResponse = (items = 10, total = 10) => ({
-  total,
-  items: Array.from({ length: items }, (_, idx) => ({
-    ...createNewsResponse(idx + 1),
-    title: 'News Item',
-  })),
-});
 afterEach(() => {
   mockGetNews.mockClear();
 });
 mockConsoleError();
 
-const renderPage = async () => {
+const renderPage = async (
+  { filters, searchQuery } = {
+    filters: new Set<NewsFrequency>(),
+    searchQuery: '',
+  },
+) => {
   const result = render(
     <RecoilRoot
       initializeState={({ reset }) =>
@@ -37,8 +36,8 @@ const renderPage = async () => {
           newsIndexState({
             currentPage: 0,
             pageSize,
-            filters: new Set(),
-            searchQuery: '',
+            filters,
+            searchQuery,
           }),
         )
       }
@@ -67,7 +66,7 @@ const renderPage = async () => {
 };
 
 it('renders the page title', async () => {
-  mockGetNews.mockResolvedValue(getMockedResponse(pageSize, pageSize));
+  mockGetNews.mockResolvedValue(createListNewsResponse(pageSize, pageSize));
 
   const { getByRole } = await renderPage();
 
@@ -76,7 +75,9 @@ it('renders the page title', async () => {
 
 it('renders a counter with the total number of items', async () => {
   const numberOfItems = 20;
-  mockGetNews.mockResolvedValue(getMockedResponse(pageSize, numberOfItems));
+  mockGetNews.mockResolvedValue(
+    createListNewsResponse(pageSize, numberOfItems),
+  );
 
   const { getByText } = await renderPage();
   await waitFor(() => expect(mockGetNews).toHaveBeenCalled());
@@ -85,7 +86,9 @@ it('renders a counter with the total number of items', async () => {
 
 it('renders a paginated list of news', async () => {
   const numberOfItems = 40;
-  mockGetNews.mockResolvedValue(getMockedResponse(pageSize, numberOfItems));
+  mockGetNews.mockResolvedValue(
+    createListNewsResponse(pageSize, numberOfItems),
+  );
 
   const { result } = renderHook(
     () => ({

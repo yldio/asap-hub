@@ -1082,10 +1082,12 @@
       {
         "name": "alumniSinceDate",
         "properties": {
+          "fieldType": "DateTime",
+          "label": "Alumni Since Date",
+          "hints": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false,
-          "fieldType": "DateTime",
           "editor": "Date"
         },
         "isLocked": false,

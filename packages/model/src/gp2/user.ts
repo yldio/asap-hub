@@ -50,4 +50,5 @@ export type ListUserDataObject = ListResponse<UserDataObject>;
 export interface UserResponse extends Omit<UserDataObject, 'connections'> {
   displayName: string;
 }
+export type ListUserResponse = ListResponse<UserResponse>;
 export type UserUpdateRequest = UserUpdateDataObject;

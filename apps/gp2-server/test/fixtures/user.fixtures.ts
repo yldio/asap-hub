@@ -19,6 +19,23 @@ export const getUserResponse = (): gp2.UserResponse => ({
   role: 'Trainee',
 });
 
+export const fetchExpectation: gp2.ListUserResponse = {
+  total: 2,
+  items: [
+    getUserResponse(),
+    {
+      id: 'user-id-2',
+      createdDate: '2020-09-23T20:45:22.000Z',
+      displayName: 'Tony Stark',
+      email: 'T@ark.io',
+      firstName: 'Tony',
+      lastName: 'Stark',
+      region: 'America',
+      degrees: ['MSc'],
+      role: 'Network Investigator',
+    },
+  ],
+};
 export const getUserWebhookPayload = (
   id: string,
   type: UserEvent,

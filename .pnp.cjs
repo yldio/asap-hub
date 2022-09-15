@@ -9310,7 +9310,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "use-debounce",\
-        "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.3"\
+        "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.4"\
       ],\
       [\
         "use-deep-compare-effect",\
@@ -10399,7 +10399,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["recoil", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fcrn-frontend%40workspace%3Aapps%2Fcrn-frontend"],\
             ["streamsaver", "npm:2.0.6"],\
             ["typescript", "patch:typescript@npm%3A4.6.4#~builtin<compat/typescript>::version=4.6.4&hash=7ad353"],\
-            ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.3"],\
+            ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.4"],\
             ["use-deep-compare-effect", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:1.6.1"],\
             ["uuid", "npm:8.3.2"],\
             ["web-streams-polyfill", "npm:3.2.1"]\
@@ -11085,7 +11085,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["recoil", "virtual:c4ae2f625a4ac5aa649abbf60db7c71aca414aadbf350d87ea37595af32595ce70907b878a98750e798e6867f5b52cf0a985bd4cd784c0ad5a3f626d3cbad95a#patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fgp2-frontend%40workspace%3Aapps%2Fgp2-frontend"],\
             ["streamsaver", "npm:2.0.6"],\
             ["typescript", "patch:typescript@npm%3A4.6.4#~builtin<compat/typescript>::version=4.6.4&hash=7ad353"],\
-            ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.3"],\
+            ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.4"],\
             ["use-deep-compare-effect", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:1.6.1"],\
             ["uuid", "npm:8.3.2"],\
             ["web-streams-polyfill", "npm:3.2.1"]\
@@ -11337,7 +11337,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rehype-toc", "npm:3.0.2"],\
             ["serialize-error", "npm:7.0.1"],\
             ["unified", "npm:9.2.2"],\
-            ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.3"],\
+            ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.4"],\
             ["util", "npm:0.12.4"],\
             ["uuid", "npm:8.3.2"]\
           ],\
@@ -11423,7 +11423,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rehype-toc", "npm:3.0.2"],\
             ["serialize-error", "npm:7.0.1"],\
             ["unified", "npm:9.2.2"],\
-            ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.3"],\
+            ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.4"],\
             ["util", "npm:0.12.4"],\
             ["uuid", "npm:8.3.2"]\
           ],\
@@ -11513,7 +11513,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rehype-toc", "npm:3.0.2"],\
             ["serialize-error", "npm:7.0.1"],\
             ["unified", "npm:9.2.2"],\
-            ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.3"],\
+            ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.4"],\
             ["util", "npm:0.12.4"],\
             ["uuid", "npm:8.3.2"]\
           ],\
@@ -11603,7 +11603,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rehype-toc", "npm:3.0.2"],\
             ["serialize-error", "npm:7.0.1"],\
             ["unified", "npm:9.2.2"],\
-            ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.3"],\
+            ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.4"],\
             ["util", "npm:0.12.4"],\
             ["uuid", "npm:8.3.2"]\
           ],\
@@ -64032,17 +64032,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["use-debounce", [\
-        ["npm:8.0.3", {\
-          "packageLocation": "./.yarn/cache/use-debounce-npm-8.0.3-bc475cf73f-1790e540b5.zip/node_modules/use-debounce/",\
+        ["npm:8.0.4", {\
+          "packageLocation": "./.yarn/cache/use-debounce-npm-8.0.4-407aae03dd-0f8b9e571f.zip/node_modules/use-debounce/",\
           "packageDependencies": [\
-            ["use-debounce", "npm:8.0.3"]\
+            ["use-debounce", "npm:8.0.4"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/use-debounce-virtual-74a2ba81a4/0/cache/use-debounce-npm-8.0.3-bc475cf73f-1790e540b5.zip/node_modules/use-debounce/",\
+        ["virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.4", {\
+          "packageLocation": "./.yarn/__virtual__/use-debounce-virtual-213e5c932e/0/cache/use-debounce-npm-8.0.4-407aae03dd-0f8b9e571f.zip/node_modules/use-debounce/",\
           "packageDependencies": [\
-            ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.3"],\
+            ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.4"],\
             ["@types/react", "npm:17.0.49"],\
             ["react", "npm:17.0.2"]\
           ],\

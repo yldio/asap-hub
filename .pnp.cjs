@@ -3799,7 +3799,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "contentful-cli",\
-        "npm:1.15.6"\
+        "npm:1.15.7"\
       ],\
       [\
         "contentful-export",\
@@ -10531,7 +10531,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/contentful/",\
           "packageDependencies": [\
             ["@asap-hub/contentful", "workspace:packages/contentful"],\
-            ["contentful-cli", "npm:1.15.6"]\
+            ["contentful-cli", "npm:1.15.7"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -40844,10 +40844,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["contentful-cli", [\
-        ["npm:1.15.6", {\
-          "packageLocation": "./.yarn/cache/contentful-cli-npm-1.15.6-26aab7983f-1df519417d.zip/node_modules/contentful-cli/",\
+        ["npm:1.15.7", {\
+          "packageLocation": "./.yarn/cache/contentful-cli-npm-1.15.7-bced395be0-080b82d03f.zip/node_modules/contentful-cli/",\
           "packageDependencies": [\
-            ["contentful-cli", "npm:1.15.6"],\
+            ["contentful-cli", "npm:1.15.7"],\
             ["ast-types", "npm:0.14.2"],\
             ["bfj", "npm:7.0.2"],\
             ["blessed", "npm:0.1.81"],\

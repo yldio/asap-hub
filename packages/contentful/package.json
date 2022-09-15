@@ -15,6 +15,6 @@
     "schema:import": "contentful space import --content-model-only=true --space-id=$CONTENTFUL_SPACE_ID --environment-id=$CONTENTFUL_ENVIRONMENT --content-file=./schema/schema.json"
   },
   "devDependencies": {
-    "contentful-cli": "^1.15.6"
+    "contentful-cli": "1.15.7"
   }
 }

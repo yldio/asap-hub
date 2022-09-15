@@ -471,7 +471,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful@workspace:packages/contentful"
   dependencies:
-    contentful-cli: ^1.15.6
+    contentful-cli: 1.15.7
   languageName: unknown
   linkType: soft
 
@@ -18873,9 +18873,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-cli@npm:^1.15.6":
-  version: 1.15.6
-  resolution: "contentful-cli@npm:1.15.6"
+"contentful-cli@npm:1.15.7":
+  version: 1.15.7
+  resolution: "contentful-cli@npm:1.15.7"
   dependencies:
     ast-types: ^0.14.2
     bfj: ^7.0.2
@@ -18914,7 +18914,7 @@ __metadata:
     yargs: ~13.3.2
   bin:
     contentful: bin/contentful.js
-  checksum: 1df519417d28b0bcf6644aacaa4c370869547bf1c25609e556bf0832228c88ec46e69314297c7a74a544212a226d7dcba02f877d175d855a902e1c84ace1bf13
+  checksum: 080b82d03fc6f51695945e73e58e8884ad4b85e51e68ef97b6daba4aa7c56a175c9cd4906ac7a2a1a0bc200a299242b5567ada425fbb23e3636bbfd8e92e04a3
   languageName: node
   linkType: hard
 

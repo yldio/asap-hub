@@ -38,6 +38,9 @@ on:
       GP2_AUTH0_SHARED_SECRET:
         description: 'GP2 Auth0 Shared Secret'
         required: false
+      CONTENTFUL_MANAGEMENT_TOKEN:
+        description: 'Contentful Management Token'
+        required: true
 
 jobs:
   crn-sls-deploy:
@@ -190,6 +193,7 @@ jobs:
 
   crn-contentful-schema:
     needs: [crn-sls-deploy]
+    if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -205,13 +209,17 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
+      - name: Cache rebuild output
+        uses: ./.github/actions/cache-unplugged
+        with:
+          environment-name: ${{ inputs.environment-name }}
       - name: Synchronize Contentful
         run: |
           yarn workspace @asap-hub/contentful schema:import --management-token=$CONTENTFUL_MANAGEMENT_TOKEN
         env:
           CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
-          CONTENTFUL_ENVIRONMENT: dev
+          CONTENTFUL_ENVIRONMENT: ${{ inputs.environment-name }}
   ses:
     needs: [crn-sls-deploy]
     runs-on: ubuntu-latest

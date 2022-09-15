@@ -17,6 +17,9 @@ on:
       LIGHTSTEP_TOKEN:
         description: 'Lightstep Token'
         required: true
+      CONTENTFUL_MANAGEMENT_TOKEN:
+        description: 'Contentful Management Token'
+        required: true
       CRN_SQUIDEX_API_CLIENT_SECRET:
         description: 'CRN Squidex Client Secret'
         required: true

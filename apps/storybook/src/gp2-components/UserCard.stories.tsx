@@ -1,6 +1,5 @@
-import { UserCard, Theme } from '@asap-hub/gp2-components';
-
-import { text, select, array, number } from '@storybook/addon-knobs';
+import { Theme, UserCard } from '@asap-hub/gp2-components';
+import { array, number, select, text } from '@storybook/addon-knobs';
 
 export default {
   title: 'GP2 / Organisms / User Directory / User Card',
@@ -41,7 +40,7 @@ export const Normal = () => {
         firstName={text('First Name', 'Phillip')}
         lastName={text('Last Name', 'Mars')}
         avatarUrl={text('Avatar URL', '')}
-        role={'GP2 Admin'}
+        role={'Administrator'}
         region={region}
         workingGroups={Array(number('Number of Working Groups', 1))
           .fill({

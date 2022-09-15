@@ -1,14 +1,11 @@
-//import { gp2 } from '@asap-hub/model';
-import { pixels, drawerQuery } from '@asap-hub/react-components';
+import { gp2 } from '@asap-hub/model';
+import { drawerQuery, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { ComponentProps } from 'react';
 import UserCard from './UserCard';
-
-//import UserCard from './UserCard';
 
 const { perRem } = pixels;
 type UsersPageBodyProps = {
-  users: ComponentProps<typeof UserCard>[];
+  users: gp2.ListUserResponse;
 };
 const gridContainerStyles = css({
   display: 'grid',
@@ -23,7 +20,7 @@ const gridContainerStyles = css({
 
 const UsersPageBody: React.FC<UsersPageBodyProps> = ({ users }) => (
   <article css={gridContainerStyles}>
-    {users.map((user) => (
+    {users.items.map((user) => (
       <UserCard key={user.id} {...user} />
     ))}
   </article>

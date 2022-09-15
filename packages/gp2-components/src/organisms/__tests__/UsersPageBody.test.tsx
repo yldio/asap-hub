@@ -1,54 +1,41 @@
+import { gp2 } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import UsersPageBody from '../UsersPageBody';
 
-const users = [
-  {
-    id: 'u42',
-    displayName: 'John Doe',
-    degree: ['PhD'],
-    firstName: 'John',
-    lastName: 'Doe',
-    avatarUrl: '',
-    role: 'GP2 Admin',
-    region: 'Europe',
-    workingGroups: [{ id: 0, name: 'Underrepresented Populations' }],
-    projects: [{ id: 0, name: 'Genetic determinants of progression in PD' }],
-    tags: [
-      'Neurological Diseases',
-      'Clinical Neurology',
-      'Adult Neurology',
-      'Neuroimaging',
-      'Neurologic Examination',
-      'Neuroprotection',
-      'Movement Disorders',
-      'Neurodegenerative Diseases',
-      'Neurological Diseases',
-    ],
-  },
-  {
-    id: 'u59',
-    displayName: 'Sam Smyth',
-    degree: ['PhD'],
-    firstName: 'Sam',
-    lastName: 'Smyth',
-    avatarUrl: '',
-    role: 'GP2 Admin',
-    region: 'Africa',
-    workingGroups: [{ id: 0, name: 'Underrepresented Populations' }],
-    projects: [{ id: 0, name: 'Genetic determinants of progression in PD' }],
-    tags: [
-      'Neurological Diseases',
-      'Clinical Neurology',
-      'Adult Neurology',
-      'Neuroimaging',
-      'Neurologic Examination',
-    ],
-  },
-];
+const users: gp2.ListUserResponse = {
+  items: [
+    {
+      id: 'u42',
+      createdDate: '',
+      email: '',
+      displayName: 'John Doe',
+      degrees: ['PhD' as const],
+      firstName: 'John',
+      lastName: 'Doe',
+      avatarUrl: '',
+      role: 'Administrator' as const,
+      region: 'Europe' as const,
+    },
+    {
+      id: 'u59',
+      createdDate: '',
+      email: '',
+      displayName: 'Sam Smyth',
+      degrees: ['PhD' as const],
+      firstName: 'Sam',
+      lastName: 'Smyth',
+      avatarUrl: '',
+      role: 'Administrator' as const,
+      region: 'Africa' as const,
+    },
+  ],
+  total: 2,
+};
 
 describe('UsersPageBody', () => {
   it('renders a user', () => {
-    render(<UsersPageBody users={[users[0]]} />);
+    const userToRender = { items: [users.items[0]], total: 1 };
+    render(<UsersPageBody users={userToRender} />);
     expect(
       screen.getByRole('heading', { name: /John Doe, PhD/i }),
     ).toBeVisible();

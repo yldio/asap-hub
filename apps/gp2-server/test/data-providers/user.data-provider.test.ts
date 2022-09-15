@@ -126,22 +126,23 @@ describe('User data provider', () => {
       ).not.toBeDefined();
       expect(nock.isDone()).toBe(true);
     });
-    test('Should convert empty strings to null', async () => {
-      nock(baseUrl)
-        .get(`/api/content/${appName}/users/${userId}`)
-        .reply(200, fetchUserResponse())
-        .put(`/api/content/${appName}/users/${userId}`, {
-          ...fetchUserResponse().data,
-          region: { iv: null },
-        } as { [k: string]: any })
-        .reply(200, fetchUserResponse); // this response is ignored
+    test.todo('Should convert empty strings to null');
+    // test('Should convert empty strings to null', async () => {
+    //   nock(baseUrl)
+    //     .get(`/api/content/${appName}/users/${userId}`)
+    //     .reply(200, fetchUserResponse())
+    //     .put(`/api/content/${appName}/users/${userId}`, {
+    //       ...fetchUserResponse().data,
+    //       region: { iv: null },
+    //     } as { [k: string]: any })
+    //     .reply(200, fetchUserResponse); // this response is ignored
 
-      const result = await userDataProvider.update(userId, {
-        region: '',
-      });
-      expect(result).not.toBeDefined();
-      expect(nock.isDone()).toBe(true);
-    });
+    //   const result = await userDataProvider.update(userId, {
+    //     region: '',
+    //   });
+    //   expect(result).not.toBeDefined();
+    //   expect(nock.isDone()).toBe(true);
+    // });
   });
 
   describe('Fetch', () => {

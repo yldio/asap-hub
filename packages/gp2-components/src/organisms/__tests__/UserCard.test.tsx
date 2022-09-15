@@ -7,10 +7,10 @@ describe('UserCard', () => {
     displayName: 'Homer Simpson',
     firstName: 'Homer',
     lastName: 'Simpson',
-    degree: ['PHD'],
+    degrees: ['PhD' as const],
     projects: [],
     workingGroups: [],
-    role: 'GP2 Admin',
+    role: 'Administrator' as const,
     region: 'Europe' as const,
     tags: [
       'Genetics',
@@ -27,13 +27,13 @@ describe('UserCard', () => {
   });
   it('renders the name with the degrees', () => {
     const { rerender } = render(<UserCard {...defaultProps} />);
-    expect(screen.getByText('Homer Simpson, PHD')).toBeInTheDocument();
-    rerender(<UserCard {...defaultProps} degree={['MD', 'PHD']} />);
-    expect(screen.getByText('Homer Simpson, MD, PHD')).toBeInTheDocument();
+    expect(screen.getByText('Homer Simpson, PhD')).toBeInTheDocument();
+    rerender(<UserCard {...defaultProps} degrees={['MD', 'PhD']} />);
+    expect(screen.getByText('Homer Simpson, MD, PhD')).toBeInTheDocument();
   });
   it('renders user info', () => {
     render(<UserCard {...defaultProps} />);
-    expect(screen.getByText('GP2 Admin')).toBeInTheDocument();
+    expect(screen.getByText('Administrator')).toBeInTheDocument();
     expect(
       screen.getByText('Europe', { selector: 'span' }),
     ).toBeInTheDocument();

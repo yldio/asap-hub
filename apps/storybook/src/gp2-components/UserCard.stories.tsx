@@ -1,4 +1,5 @@
 import { Theme, UserCard } from '@asap-hub/gp2-components';
+import { gp2 } from '@asap-hub/model';
 import { array, number, select, text } from '@storybook/addon-knobs';
 
 export default {
@@ -6,7 +7,6 @@ export default {
 };
 
 export const Normal = () => {
-  const degree = array('Degree', ['PhD', 'MBA']);
   const tags = array('Tags', [
     'Neurological Diseases',
     'Clinical Neurology',
@@ -23,7 +23,6 @@ export const Normal = () => {
     [
       'Africa',
       'Asia',
-      'Australasia',
       'Europe',
       'North America',
       'Latin America',
@@ -36,7 +35,7 @@ export const Normal = () => {
       <UserCard
         id="u42"
         displayName={text('Display Name', 'Phillip Mars')}
-        degree={degree}
+        degrees={gp2.userDegrees.map((d) => d)}
         firstName={text('First Name', 'Phillip')}
         lastName={text('Last Name', 'Mars')}
         avatarUrl={text('Avatar URL', '')}

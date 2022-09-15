@@ -1,7 +1,7 @@
-import { usersHeaderImage } from '../images';
-import UsersPageBody from '../organisms/UsersPageBody';
-import PageBanner from '../organisms/PageBanner';
 import { ComponentProps } from 'react';
+import { usersHeaderImage } from '../images';
+import PageBanner from '../organisms/PageBanner';
+import UsersPageBody from '../organisms/UsersPageBody';
 
 const bannerProps = {
   image: usersHeaderImage,
@@ -13,11 +13,11 @@ const bannerProps = {
 
 type UserPageProps = ComponentProps<typeof UsersPageBody>;
 
-const UsersPage: React.FC<UserPageProps> = ({ users }) => (
+const UsersPage: React.FC<UserPageProps> = (props) => (
   <article>
     <PageBanner {...bannerProps} />
     <main>
-      <UsersPageBody users={users} />
+      <UsersPageBody {...props} />
     </main>
   </article>
 );

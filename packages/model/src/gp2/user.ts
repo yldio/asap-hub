@@ -1,7 +1,7 @@
 import { ListResponse } from '../common';
 import { Connection } from '../user';
 
-export const gp2UserRoles = [
+export const userRoles = [
   'Working Group Participant',
   'Network Investigator',
   'Network Collaborator',
@@ -9,9 +9,9 @@ export const gp2UserRoles = [
   'Trainee',
 ] as const;
 
-export type Role = typeof gp2UserRoles[number];
+export type UserRole = typeof userRoles[number];
 
-export const gp2UserDegrees = [
+export const userDegrees = [
   'AA',
   'AAS',
   'BA',
@@ -26,7 +26,25 @@ export const gp2UserDegrees = [
   'PharmD',
   'MBBS',
 ] as const;
-export type UserDegree = typeof gp2UserDegrees[number];
+export type UserDegree = typeof userDegrees[number];
+
+export const userRegions = [
+  'Africa',
+  'Asia',
+  'Australia/Australiasia',
+  'Europe',
+  'North America',
+  'Latin America',
+  'South America',
+] as const;
+
+export type UserRegion = typeof userRegions[number];
+
+export const isUserRole = (data: string): data is UserRole =>
+  (userRoles as ReadonlyArray<string>).includes(data);
+
+export const isUserRegion = (data: string): data is UserRegion =>
+  (userRegions as ReadonlyArray<string>).includes(data);
 
 export type UserDataObject = {
   avatarUrl?: string;
@@ -37,8 +55,8 @@ export type UserDataObject = {
   firstName: string;
   id: string;
   lastName: string;
-  region: string;
-  role: Role;
+  region: UserRegion;
+  role: UserRole;
 };
 
 export type UserUpdateDataObject = Partial<

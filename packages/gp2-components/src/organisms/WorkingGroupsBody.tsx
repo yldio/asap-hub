@@ -1,5 +1,5 @@
 import { gp2 } from '@asap-hub/model';
-import { pixels, drawerQuery } from '@asap-hub/react-components';
+import { drawerQuery, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import WorkingGroupCard from './WorkingGroupCard';
 

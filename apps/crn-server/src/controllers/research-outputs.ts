@@ -74,6 +74,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       organisms: __,
       environments: ___,
       subtype: ____,
+      addedDate,
       ...input
     } = researchOutputCreateData;
 
@@ -88,7 +89,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       organismIds: organisms,
       environmentIds: environments,
       subtypeId: subtype,
-      addedDate: new Date(Date.now()).toISOString(),
+      addedDate: addedDate || new Date(Date.now()).toISOString(),
     };
 
     const researchOutputId = await this.researchOutputDataProvider.create(
@@ -305,6 +306,7 @@ export interface ResearchOutputController {
 }
 export type ResearchOutputCreateData = ResearchOutputPostRequest & {
   createdBy: string;
+  addedDate?: string;
 };
 
 export type ResearchOutputUpdateData = ResearchOutputPutRequest & {

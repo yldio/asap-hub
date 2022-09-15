@@ -126,9 +126,11 @@ describe('/research-outputs/ route', () => {
     const researchOutputResponse = getResearchOutputResponse();
 
     test('Should return a 201 when is hit', async () => {
-      const createResearchOutputRequest = {
-        ...getResearchOutputPostRequest(),
-      };
+      const {
+        // @ts-ignore
+        addedDate: _addedDate,
+        ...createResearchOutputRequest
+      } = getResearchOutputPostRequest();
 
       researchOutputControllerMock.create.mockResolvedValueOnce(
         researchOutputResponse,
@@ -149,7 +151,12 @@ describe('/research-outputs/ route', () => {
     });
 
     test('Should return 403 when user is not permitted to create research output', async () => {
-      const researchOutput = getResearchOutputPostRequest();
+      const {
+        // @ts-ignore
+        addedDate: _addedDate,
+        ...researchOutput
+      } = getResearchOutputPostRequest();
+
       const response = await supertest(app)
         .post('/research-outputs/')
         .send({
@@ -160,7 +167,12 @@ describe('/research-outputs/ route', () => {
     });
 
     test('Should return a 500 error when creating a research output fails due to server error', async () => {
-      const researchOutput = getResearchOutputPostRequest();
+      const {
+        // @ts-ignore
+        addedDate: _addedDate,
+        ...researchOutput
+      } = getResearchOutputPostRequest();
+
       researchOutputControllerMock.create.mockRejectedValueOnce(
         Boom.badImplementation(),
       );
@@ -177,6 +189,8 @@ describe('/research-outputs/ route', () => {
         rrid: _rrid,
         doi: _doi,
         accession: _accession,
+        // @ts-ignore
+        addedDate: _addedDate,
         ...researchOutput
       } = getResearchOutputPostRequest();
 
@@ -352,11 +366,17 @@ describe('/research-outputs/ route', () => {
       );
 
       describe('Authors validation', () => {
+        const {
+          // @ts-ignore
+          addedDate: _addedDate,
+          ...researchOutputPostRequest
+        } = getResearchOutputPostRequest();
+
         test('Should return a validation error when required field is missing', async () => {
           const response = await supertest(app)
             .post('/research-outputs')
             .send({
-              ...getResearchOutputPostRequest(),
+              ...researchOutputPostRequest,
               authors: [{ name: 'random-value' }],
             })
             .set('Accept', 'application/json');
@@ -394,7 +414,7 @@ describe('/research-outputs/ route', () => {
           const response = await supertest(app)
             .post('/research-outputs')
             .send({
-              ...getResearchOutputPostRequest(),
+              ...researchOutputPostRequest,
               authors: [
                 {
                   userId: 'userId-1',
@@ -419,7 +439,7 @@ describe('/research-outputs/ route', () => {
           const response = await supertest(app)
             .post('/research-outputs')
             .send({
-              ...getResearchOutputPostRequest(),
+              ...researchOutputPostRequest,
               authors: [
                 {
                   userId: 'userId-1',
@@ -443,7 +463,7 @@ describe('/research-outputs/ route', () => {
           const response = await supertest(app)
             .post('/research-outputs')
             .send({
-              ...getResearchOutputPostRequest(),
+              ...researchOutputPostRequest,
               authors: [
                 {
                   userId: 'userId-1',
@@ -473,6 +493,8 @@ describe('/research-outputs/ route', () => {
       rrid: _rrid,
       doi: _doi,
       accession: _accession,
+      // @ts-ignore
+      addedDate: _addedDate,
       ...researchOutputPutRequest
     } = getResearchOutputPutRequest();
 

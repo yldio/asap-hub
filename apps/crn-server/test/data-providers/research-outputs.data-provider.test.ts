@@ -835,7 +835,6 @@ describe('ResearchOutputs data provider', () => {
 
   describe('Create and update', () => {
     afterEach(() => {
-      // eslint-disable-next-line jest/no-standalone-expect
       expect(nock.isDone()).toBe(true);
     });
 
@@ -848,13 +847,12 @@ describe('ResearchOutputs data provider', () => {
         const researchOutputRequest = getResearchOutputCreateDataObject();
         const teamId = researchOutputRequest.teamIds[0];
         const researchOutputId = 'created-output-id';
-        const now = Date.now().toString();
 
         nock(baseUrl)
           // Create the ResearchOutput
           .post(
             `/api/content/${appName}/research-outputs?publish=true`,
-            getRestResearchOutputCreateData(now),
+            getRestResearchOutputCreateData(),
           )
           .reply(201, { id: researchOutputId })
           .get(`/api/content/${appName}/teams/${teamId}`)
@@ -865,10 +863,9 @@ describe('ResearchOutputs data provider', () => {
             outputs: { iv: ['output-1', researchOutputId] },
           })
           .reply(200);
-        const result = await researchOutputDataProvider.create({
-          ...researchOutputRequest,
-          addedDate: now,
-        });
+        const result = await researchOutputDataProvider.create(
+          researchOutputRequest,
+        );
         expect(result).toEqual(researchOutputId);
       });
 

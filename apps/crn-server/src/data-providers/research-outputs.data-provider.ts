@@ -181,7 +181,6 @@ export class ResearchOutputSquidexDataProvider
       environmentIds,
       organismIds,
       subtypeId,
-      addedDate,
       ...researchOutputData
     } = input;
     const { usedInPublication, ...researchOutput } = parseToSquidex({
@@ -198,7 +197,6 @@ export class ResearchOutputSquidexDataProvider
       environments: environmentIds,
       organisms: organismIds,
       subtype: (subtypeId && [subtypeId]) || [],
-      addedDate: addedDate || new Date(Date.now()).toISOString(),
     });
 
     const { id: researchOutputId } =

@@ -6,7 +6,10 @@ import NewsPageBody from '../NewsPageBody';
 it('renders multiple news cards', () => {
   const { getAllByRole } = render(
     <NewsPageBody
-      news={[createNewsResponse('1'), createNewsResponse('2')]}
+      news={[
+        createNewsResponse({ key: '1' }),
+        createNewsResponse({ key: '2' }),
+      ]}
       numberOfPages={1}
       renderPageHref={(idx) => `${idx}`}
       currentPage={0}

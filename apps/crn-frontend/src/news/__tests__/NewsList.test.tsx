@@ -6,9 +6,11 @@ import { renderHook } from '@testing-library/react-hooks';
 import { createListNewsResponse } from '@asap-hub/fixtures';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { NewsFrequency } from '@asap-hub/model';
+import { fireEvent } from '@testing-library/dom';
+import userEvent from '@testing-library/user-event';
 
 import { usePagination, usePaginationParams } from '../../hooks';
-import NewsAndEventsPage from '../Routes';
+import NewsPage from '../Routes';
 import { newsIndexState } from '../state';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getNews } from '../api';
@@ -23,12 +25,7 @@ afterEach(() => {
 });
 mockConsoleError();
 
-const renderPage = async (
-  { filters, searchQuery } = {
-    filters: new Set<NewsFrequency>(),
-    searchQuery: '',
-  },
-) => {
+const renderPage = async () => {
   const result = render(
     <RecoilRoot
       initializeState={({ reset }) =>
@@ -36,8 +33,8 @@ const renderPage = async (
           newsIndexState({
             currentPage: 0,
             pageSize,
-            filters,
-            searchQuery,
+            filters: new Set<NewsFrequency>(),
+            searchQuery: '',
           }),
         )
       }
@@ -47,7 +44,7 @@ const renderPage = async (
           <WhenReady>
             <MemoryRouter initialEntries={['/news']}>
               <Route path="/news">
-                <NewsAndEventsPage />
+                <NewsPage />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -115,4 +112,32 @@ it('renders error message when when the request it not a 2XX', async () => {
   const { getByText } = await renderPage();
   expect(mockGetNews).toHaveBeenCalled();
   expect(getByText(/Something went wrong/i)).toBeVisible();
+});
+
+it('can perform a search', async () => {
+  mockGetNews.mockResolvedValue(createListNewsResponse(pageSize));
+  const { getByPlaceholderText } = await renderPage();
+  fireEvent.change(getByPlaceholderText(/news/i), {
+    target: { value: 'example' },
+  });
+  await waitFor(() =>
+    expect(mockGetNews).toHaveBeenLastCalledWith(
+      expect.objectContaining({ searchQuery: 'example' }),
+      expect.anything(),
+    ),
+  );
+});
+
+it('can perform a filter search', async () => {
+  mockGetNews.mockResolvedValue(createListNewsResponse(pageSize));
+  const { getByTitle, getByText } = await renderPage();
+  userEvent.click(getByTitle('Filter'));
+  userEvent.click(getByText(/Biweekly/i));
+
+  await waitFor(() =>
+    expect(mockGetNews).toHaveBeenLastCalledWith(
+      expect.objectContaining({ filters: new Set('Biweekly Newsletter') }),
+      expect.anything(),
+    ),
+  );
 });

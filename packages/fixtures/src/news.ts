@@ -1,4 +1,4 @@
-import { NewsType, NewsResponse } from '@asap-hub/model';
+import { NewsType, NewsResponse, ListNewsResponse } from '@asap-hub/model';
 
 type FixtureOptions = {
   key: string | number;
@@ -17,7 +17,10 @@ export const createNewsResponse = ({
   created: new Date().toISOString(),
 });
 
-export const createListNewsResponse = (items = 10, total = 10) => ({
+export const createListNewsResponse = (
+  items = 10,
+  total = 10,
+): ListNewsResponse => ({
   total,
   items: Array.from({ length: items }, (_, idx) => ({
     ...createNewsResponse({ key: idx + 1 }),

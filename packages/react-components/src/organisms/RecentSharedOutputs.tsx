@@ -21,10 +21,6 @@ const gridMixin = {
 const gridStyles = css({
   display: 'grid',
   flexFlow: 'column',
-  gap: `${21 / perRem}em`,
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
-    gap: `${21 / perRem}em`,
-  },
 });
 
 const labelStyle = css({
@@ -44,8 +40,12 @@ const groupStyle = css({
 });
 
 const headerStyle = css({
-  ...gridMixin,
-
+  display: 'grid',
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    gridTemplateColumns: '2fr 1fr 0.8fr',
+    gridAutoFlow: 'column',
+    alignItems: 'start',
+  },
   [`@media (max-width: ${mobileScreen.width}px)`]: {
     display: 'none',
   },
@@ -53,6 +53,16 @@ const headerStyle = css({
 
 const speakerListStyles = css({
   ...gridMixin,
+  paddingTop: `${21 / perRem}em`,
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    ...gridMixin,
+    ':nth-child(1)': {
+      paddingTop: `${3 / perRem}em`,
+    },
+    ':nth-last-child(1)': {
+      gridAutoRows: `${48 / perRem}em`,
+    },
+  },
   ':nth-last-child(n+2)': {
     borderBottom: `1px solid ${steel.rgb}`,
   },
@@ -72,7 +82,7 @@ const paragraphStyle = css({
   color: lead.rgb,
   [`@media (max-width: ${mobileScreen.width}px)`]: {
     marginTop: `${15 / perRem}em`,
-    marginBottom: `${33 / perRem}em`,
+    marginBottom: `${21 / perRem}em`,
   },
 });
 

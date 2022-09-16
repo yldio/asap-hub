@@ -471,7 +471,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful@workspace:packages/contentful"
   dependencies:
+    "@graphql-codegen/cli": 2.12.0
+    "@graphql-codegen/gql-tag-operations-preset": 1.5.5
+    "@graphql-codegen/introspection": 2.2.1
+    "@graphql-codegen/schema-ast": 2.5.1
+    "@graphql-codegen/typescript": 2.7.3
+    "@graphql-codegen/typescript-operations": 2.5.3
+    "@graphql-typed-document-node/core": 3.1.1
     contentful-cli: 1.15.7
+    graphql-tag: 2.12.6
+    graphql-typescript-integration: 1.2.0
   languageName: unknown
   linkType: soft
 

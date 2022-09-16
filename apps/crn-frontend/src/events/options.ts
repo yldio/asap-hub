@@ -48,12 +48,7 @@ export const getEventListOptions = (
   return {
     searchQuery,
     currentPage,
-    constraint: past
-      ? {
-          ...constraint,
-          notStatus: 'Cancelled',
-        }
-      : constraint,
+    constraint,
     pageSize,
     filters: new Set(),
     ...(past

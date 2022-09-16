@@ -66,6 +66,29 @@ describe('getEvents', () => {
       ['event'],
       '',
       {
+        filters: 'endDateTimestamp < 1609498800',
+        hitsPerPage: 10,
+        page: 0,
+      },
+      true,
+    );
+  });
+
+  it('makes request for events before a date filtering cancelled ones', async () => {
+    search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
+
+    await getEvents(
+      algoliaSearchClient,
+      getEventListOptions(new Date('2021-01-01T12:00:00'), {
+        past: true,
+        constraint: { notStatus: 'Cancelled' },
+      }),
+    );
+
+    expect(search).toBeCalledWith(
+      ['event'],
+      '',
+      {
         filters: '(endDateTimestamp < 1609498800) AND (NOT status:Cancelled)',
         hitsPerPage: 10,
         page: 0,

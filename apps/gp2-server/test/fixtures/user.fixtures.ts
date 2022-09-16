@@ -30,7 +30,7 @@ export const fetchExpectation: gp2.ListUserResponse = {
       email: 'T@ark.io',
       firstName: 'Tony',
       lastName: 'Stark',
-      region: 'America',
+      region: 'North America',
       degrees: ['MSc'],
       role: 'Network Investigator',
     },

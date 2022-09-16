@@ -138,18 +138,18 @@ const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
   return queryFilter;
 };
 
-const isUserRole = (data: string): data is gp2.Role =>
-  (gp2.gp2UserRoles as ReadonlyArray<string>).includes(data);
-
 export const parseGraphQLUserToDataObject = (
   item: NonNullable<FetchUserQuery['findUsersContent']>,
 ): gp2.UserDataObject => {
   const createdDate = parseDate(item.created).toISOString();
 
-  if (!item.flatData.role || !isUserRole(item.flatData.role)) {
+  if (!item.flatData.role || !gp2.isUserRole(item.flatData.role)) {
     throw new Error('Invalid user role');
   }
 
+  if (!item.flatData.region || !gp2.isUserRegion(item.flatData.region)) {
+    throw new Error('Invalid user region');
+  }
   const degrees: gp2.UserDegree[] | undefined =
     item.flatData.degree?.map<gp2.UserDegree>((degree) => {
       if (degree === 'MD_PhD') {
@@ -166,7 +166,7 @@ export const parseGraphQLUserToDataObject = (
     lastName: item.flatData.lastName || '',
     degrees,
     email: item.flatData.email || '',
-    region: item.flatData.region || '',
+    region: item.flatData.region,
     role: item.flatData.role,
   };
 };

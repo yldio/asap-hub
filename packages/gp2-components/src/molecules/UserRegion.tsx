@@ -1,3 +1,4 @@
+import { gp2 } from '@asap-hub/model';
 import regionAfricaIcon from '../icons/region-africa-icon';
 import regionAsia from '../icons/region-asia-icon';
 import regionAustralasiaIcon from '../icons/region-australasia-icon';
@@ -7,22 +8,10 @@ import regionNorthAmericaIcon from '../icons/region-north-america-icon';
 import regionSouthAmericaIcon from '../icons/region-south-america-icon';
 import IconWithLabel from './IconWithLabel';
 
-export const regions = [
-  'Africa',
-  'Asia',
-  'Australasia',
-  'Europe',
-  'North America',
-  'Latin America',
-  'South America',
-] as const;
-
-export type Region = typeof regions[number];
-
-const regionIcons: { [key in Region]: JSX.Element } = {
+const regionIcons: { [key in gp2.UserRegion]: JSX.Element } = {
   Africa: regionAfricaIcon,
   Asia: regionAsia,
-  Australasia: regionAustralasiaIcon,
+  'Australia/Australiasia': regionAustralasiaIcon,
   Europe: regionEuropeIcon,
   'North America': regionNorthAmericaIcon,
   'Latin America': regionLatinAmericaIcon,
@@ -30,7 +19,7 @@ const regionIcons: { [key in Region]: JSX.Element } = {
 };
 
 type UserRegionProps = {
-  region: Region;
+  region: gp2.UserRegion;
 };
 
 const UserRegion: React.FC<UserRegionProps> = ({ region }) => (

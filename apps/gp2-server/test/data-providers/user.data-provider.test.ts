@@ -70,6 +70,17 @@ describe('User data provider', () => {
         userDataProvider.fetchById('user-id'),
       ).rejects.toThrowErrorMatchingInlineSnapshot('"Invalid user role"');
     });
+
+    test('Should throw when the user has an invalid region', async () => {
+      const invalidUser = getGraphQLUser();
+      invalidUser.flatData.region = 'invalid-region';
+      const mockResponse = getSquidexUserGraphqlResponse(invalidUser);
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      expect(() =>
+        userDataProvider.fetchById('user-id'),
+      ).rejects.toThrowErrorMatchingInlineSnapshot('"Invalid user region"');
+    });
     test('Should correctly map MD, PhD Correctly', async () => {
       const degreeUser = getGraphQLUser();
       degreeUser.flatData.degree = ['MD_PhD'] as DegreeEnum[];
@@ -124,22 +135,6 @@ describe('User data provider', () => {
           lastName: 'Smith',
         }),
       ).not.toBeDefined();
-      expect(nock.isDone()).toBe(true);
-    });
-    test('Should convert empty strings to null', async () => {
-      nock(baseUrl)
-        .get(`/api/content/${appName}/users/${userId}`)
-        .reply(200, fetchUserResponse())
-        .put(`/api/content/${appName}/users/${userId}`, {
-          ...fetchUserResponse().data,
-          region: { iv: null },
-        } as { [k: string]: any })
-        .reply(200, fetchUserResponse); // this response is ignored
-
-      const result = await userDataProvider.update(userId, {
-        region: '',
-      });
-      expect(result).not.toBeDefined();
       expect(nock.isDone()).toBe(true);
     });
   });

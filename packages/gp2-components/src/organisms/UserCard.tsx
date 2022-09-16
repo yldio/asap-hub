@@ -1,6 +1,4 @@
-import { css } from '@emotion/react';
-import { network } from '@asap-hub/routing';
-
+import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   Anchor,
   Avatar,
@@ -8,6 +6,8 @@ import {
   pixels,
   TagList,
 } from '@asap-hub/react-components';
+import { network } from '@asap-hub/routing';
+import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import UserCardInfo from '../molecules/UserCardInfo';
 
@@ -16,17 +16,20 @@ const { rem, tabletScreen } = pixels;
 const avatarSize = 132;
 
 type UserCardProps = Pick<
-  ComponentProps<typeof UserCardInfo>,
-  'region' | 'projects' | 'role' | 'workingGroups'
+  gp2Model.UserResponse,
+  | 'id'
+  | 'displayName'
+  | 'firstName'
+  | 'lastName'
+  | 'avatarUrl'
+  | 'degrees'
+  | 'region'
+  | 'role'
 > & {
-  id: string;
-  displayName: string;
-  firstName: string;
-  lastName: string;
-  avatarUrl?: string;
-  degree: string[];
-  tags: string[];
-};
+  tags?: string[];
+} & Partial<
+    Pick<ComponentProps<typeof UserCardInfo>, 'projects' | 'workingGroups'>
+  >;
 
 const containerStyles = css({
   display: 'grid',
@@ -63,12 +66,12 @@ const UserCard: React.FC<UserCardProps> = ({
   firstName,
   lastName,
   avatarUrl,
-  degree,
+  degrees,
   role,
   region,
-  workingGroups,
-  projects,
-  tags,
+  workingGroups = [],
+  projects = [],
+  tags = [],
 }) => {
   const userHref = network({}).users({}).user({ userId: id }).$;
 
@@ -89,7 +92,7 @@ const UserCard: React.FC<UserCardProps> = ({
             <Anchor href={userHref}>
               <h3 css={titleStyles}>
                 {displayName}
-                {degree && !!degree.length && `, ${degree.join(', ')}`}
+                {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
               </h3>
             </Anchor>
           </div>

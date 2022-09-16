@@ -8,8 +8,8 @@ export interface User<TAvatar = string> {
   email: string;
   firstName: string;
   lastName: string;
-  region?: string;
-  role: gp2.Role;
+  region?: gp2.UserRegion;
+  role: gp2.UserRole;
 }
 
 export interface RestUser extends Entity, Rest<User> {}

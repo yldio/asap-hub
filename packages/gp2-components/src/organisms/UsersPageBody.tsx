@@ -1,11 +1,11 @@
 import { gp2 } from '@asap-hub/model';
 import { drawerQuery, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import WorkingGroupCard from './WorkingGroupCard';
+import UserCard from './UserCard';
 
 const { perRem } = pixels;
-type WorkingGroupsBodyProps = {
-  workingGroups: gp2.ListWorkingGroupResponse;
+type UsersPageBodyProps = {
+  users: gp2.ListUserResponse;
 };
 const gridContainerStyles = css({
   display: 'grid',
@@ -18,14 +18,12 @@ const gridContainerStyles = css({
   },
 });
 
-const WorkingGroupsBody: React.FC<WorkingGroupsBodyProps> = ({
-  workingGroups,
-}) => (
+const UsersPageBody: React.FC<UsersPageBodyProps> = ({ users }) => (
   <article css={gridContainerStyles}>
-    {workingGroups.items.map((workingGroup) => (
-      <WorkingGroupCard key={workingGroup.id} {...workingGroup} />
+    {users.items.map((user) => (
+      <UserCard key={user.id} {...user} />
     ))}
   </article>
 );
 
-export default WorkingGroupsBody;
+export default UsersPageBody;

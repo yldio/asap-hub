@@ -70,6 +70,17 @@ describe('User data provider', () => {
         userDataProvider.fetchById('user-id'),
       ).rejects.toThrowErrorMatchingInlineSnapshot('"Invalid user role"');
     });
+
+    test('Should throw when the user has an invalid region', async () => {
+      const invalidUser = getGraphQLUser();
+      invalidUser.flatData.region = 'invalid-region';
+      const mockResponse = getSquidexUserGraphqlResponse(invalidUser);
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      expect(() =>
+        userDataProvider.fetchById('user-id'),
+      ).rejects.toThrowErrorMatchingInlineSnapshot('"Invalid user region"');
+    });
     test('Should correctly map MD, PhD Correctly', async () => {
       const degreeUser = getGraphQLUser();
       degreeUser.flatData.degree = ['MD_PhD'] as DegreeEnum[];

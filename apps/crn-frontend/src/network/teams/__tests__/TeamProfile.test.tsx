@@ -132,13 +132,17 @@ it.each`
   expect(mockGetEventsFromAlgolia).toBeCalledTimes(2);
 
   expect(mockGetEventsFromAlgolia).toHaveBeenCalledWith(expect.anything(), {
-    after: '2021-12-28T13:00:00.000Z',
+    before: '2021-12-28T13:00:00.000Z',
     currentPage: 0,
     filters: new Set(),
     pageSize: 10,
     searchQuery: '',
     constraint: {
       teamId: 't0',
+    },
+    sort: {
+      sortBy: 'endDate',
+      sortOrder: 'desc',
     },
   });
 });

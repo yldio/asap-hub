@@ -221,7 +221,7 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   organismIds: string[];
   subtypeId?: string;
   teamIds: string[];
-  addedDate?: string;
+  addedDate: string;
 };
 
 export type ResearchOutputUpdateDataObject = Omit<

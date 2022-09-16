@@ -126,11 +126,7 @@ describe('/research-outputs/ route', () => {
     const researchOutputResponse = getResearchOutputResponse();
 
     test('Should return a 201 when is hit', async () => {
-      const {
-        // @ts-ignore
-        addedDate: _addedDate,
-        ...createResearchOutputRequest
-      } = getResearchOutputPostRequest();
+      const { ...createResearchOutputRequest } = getResearchOutputPostRequest();
 
       researchOutputControllerMock.create.mockResolvedValueOnce(
         researchOutputResponse,
@@ -151,11 +147,7 @@ describe('/research-outputs/ route', () => {
     });
 
     test('Should return 403 when user is not permitted to create research output', async () => {
-      const {
-        // @ts-ignore
-        addedDate: _addedDate,
-        ...researchOutput
-      } = getResearchOutputPostRequest();
+      const { ...researchOutput } = getResearchOutputPostRequest();
 
       const response = await supertest(app)
         .post('/research-outputs/')
@@ -167,11 +159,7 @@ describe('/research-outputs/ route', () => {
     });
 
     test('Should return a 500 error when creating a research output fails due to server error', async () => {
-      const {
-        // @ts-ignore
-        addedDate: _addedDate,
-        ...researchOutput
-      } = getResearchOutputPostRequest();
+      const { ...researchOutput } = getResearchOutputPostRequest();
 
       researchOutputControllerMock.create.mockRejectedValueOnce(
         Boom.badImplementation(),
@@ -189,8 +177,6 @@ describe('/research-outputs/ route', () => {
         rrid: _rrid,
         doi: _doi,
         accession: _accession,
-        // @ts-ignore
-        addedDate: _addedDate,
         ...researchOutput
       } = getResearchOutputPostRequest();
 
@@ -366,11 +352,7 @@ describe('/research-outputs/ route', () => {
       );
 
       describe('Authors validation', () => {
-        const {
-          // @ts-ignore
-          addedDate: _addedDate,
-          ...researchOutputPostRequest
-        } = getResearchOutputPostRequest();
+        const { ...researchOutputPostRequest } = getResearchOutputPostRequest();
 
         test('Should return a validation error when required field is missing', async () => {
           const response = await supertest(app)
@@ -493,8 +475,6 @@ describe('/research-outputs/ route', () => {
       rrid: _rrid,
       doi: _doi,
       accession: _accession,
-      // @ts-ignore
-      addedDate: _addedDate,
       ...researchOutputPutRequest
     } = getResearchOutputPutRequest();
 

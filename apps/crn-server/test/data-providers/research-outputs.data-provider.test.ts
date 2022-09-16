@@ -985,11 +985,13 @@ describe('ResearchOutputs data provider', () => {
       test('Should update the existing research-output and return its ID', async () => {
         const researchOutputUpdateData = getResearchOutputUpdateDataObject();
 
+        const { addedDate: _, ...restResearchOutputUpdateData } =
+          getRestResearchOutputUpdateData();
         nock(baseUrl)
           .patch(
             `/api/content/${appName}/research-outputs/${researchOutputId}`,
             {
-              ...getRestResearchOutputUpdateData(),
+              ...restResearchOutputUpdateData,
               updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
             },
           )

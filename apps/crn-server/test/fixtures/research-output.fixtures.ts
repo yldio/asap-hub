@@ -225,6 +225,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     lastUpdatedPartial: _lastUpdatedPartial,
     doi: _doi,
     accession: _accession,
+    addedDate: _addedDate,
     labs,
     authors,
     teams,
@@ -282,8 +283,11 @@ export const getResearchOutputCreateDataObject =
 
 export const getResearchOutputUpdateDataObject =
   (): ResearchOutputUpdateDataObject => {
-    const { createdBy: _, ...researchOutputCreateDataObject } =
-      getResearchOutputCreateDataObject();
+    const {
+      createdBy: _,
+      addedDate: __,
+      ...researchOutputCreateDataObject
+    } = getResearchOutputCreateDataObject();
 
     return {
       ...researchOutputCreateDataObject,
@@ -341,16 +345,14 @@ export const getResearchOutputUpdateData = (): ResearchOutputUpdateData => ({
   updatedBy: 'userId',
 });
 
-export const getRestResearchOutputUpdateData = (): Omit<
-  InputResearchOutput['data'],
-  'addedDate'
-> => {
-  const { createdBy: _, ...restResearchOutputData } =
-    getRestResearchOutputCreateData();
-  return {
-    doi: { iv: null },
-    accession: { iv: null },
-    rrid: { iv: null },
-    ...restResearchOutputData,
+export const getRestResearchOutputUpdateData =
+  (): InputResearchOutput['data'] => {
+    const { createdBy: _, ...restResearchOutputData } =
+      getRestResearchOutputCreateData();
+    return {
+      doi: { iv: null },
+      accession: { iv: null },
+      rrid: { iv: null },
+      ...restResearchOutputData,
+    };
   };
-};

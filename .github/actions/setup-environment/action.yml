@@ -59,6 +59,9 @@ outputs:
   contentful-space-id:
     description: 'Contentful Space ID'
     value: ${{ steps.vars.outputs.contentful-space-id }}
+  contentful-environment:
+    description: 'Contentful Environment'
+    value: ${{ steps.vars.outputs.contentful-environment }}
   crn-aws-acm-certificate-arn:
     description: 'CRN AWS ACM Certificate ARN'
     value: ${{ steps.vars.outputs.crn-aws-acm-certificate-arn }}

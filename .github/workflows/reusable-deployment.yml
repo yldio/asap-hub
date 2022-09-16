@@ -219,7 +219,7 @@ jobs:
         env:
           CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
-          CONTENTFUL_ENVIRONMENT: ${{ inputs.environment-name }}
+          CONTENTFUL_ENVIRONMENT: ${{ steps.setup.outputs.contentful-environment }}
   ses:
     needs: [crn-sls-deploy]
     runs-on: ubuntu-latest

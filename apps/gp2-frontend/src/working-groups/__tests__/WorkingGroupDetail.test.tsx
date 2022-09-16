@@ -1,19 +1,17 @@
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
-  waitForElementToBeRemoved,
   screen,
+  waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
-
-import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { createWorkingGroupResponse } from '@asap-hub/fixtures';
-
+import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { getWorkingGroup } from '../api';
 import { refreshWorkingGroupState } from '../state';
 import WorkingGroupDetail from '../WorkingGroupDetail';
-import { getWorkingGroup } from '../api';
 
 jest.mock('../api');
 
@@ -60,7 +58,7 @@ describe('WorkingGroupDetail', () => {
   >;
 
   it('renders header with title', async () => {
-    const workingGroup = createWorkingGroupResponse();
+    const workingGroup = gp2Fixtures.createWorkingGroupResponse();
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
     await renderWorkingGroupDetail(workingGroup.id);
     expect(screen.getByRole('banner')).toBeVisible();
@@ -77,7 +75,7 @@ describe('WorkingGroupDetail', () => {
   });
 
   it('renders the members section', async () => {
-    const workingGroup = createWorkingGroupResponse();
+    const workingGroup = gp2Fixtures.createWorkingGroupResponse();
     workingGroup.members = [
       {
         userId: 'uuid',

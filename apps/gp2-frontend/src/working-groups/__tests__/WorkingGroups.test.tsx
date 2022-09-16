@@ -1,7 +1,4 @@
-import {
-  createWorkingGroupResponse,
-  createWorkingGroupsResponse,
-} from '@asap-hub/fixtures';
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
@@ -48,7 +45,9 @@ it('renders the Title', async () => {
   const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
     typeof getWorkingGroups
   >;
-  mockGetWorkingGroups.mockResolvedValueOnce(createWorkingGroupsResponse());
+  mockGetWorkingGroups.mockResolvedValueOnce(
+    gp2Fixtures.createWorkingGroupsResponse(),
+  );
   await renderWorkingGroupsList();
   expect(
     screen.getByRole('heading', { name: 'Working Groups' }),
@@ -59,16 +58,16 @@ it('renders a list of working groups', async () => {
   const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
     typeof getWorkingGroups
   >;
-  const firstGroup = createWorkingGroupResponse({
+  const firstGroup = gp2Fixtures.createWorkingGroupResponse({
     id: '42',
     title: 'Working Group 42',
   });
-  const secondGroup = createWorkingGroupResponse({
+  const secondGroup = gp2Fixtures.createWorkingGroupResponse({
     id: '11',
     title: 'Working Group 11',
   });
   mockGetWorkingGroups.mockResolvedValue(
-    createWorkingGroupsResponse([firstGroup, secondGroup]),
+    gp2Fixtures.createWorkingGroupsResponse([firstGroup, secondGroup]),
   );
   await renderWorkingGroupsList();
   expect(

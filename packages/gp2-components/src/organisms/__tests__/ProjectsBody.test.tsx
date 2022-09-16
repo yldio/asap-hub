@@ -1,13 +1,10 @@
-import {
-  createProjectResponse,
-  createProjectsResponse,
-} from '@asap-hub/fixtures';
+import { gp2 } from '@asap-hub/fixtures';
 import { render, screen } from '@testing-library/react';
 import ProjectsBody from '../ProjectsBody';
 
 describe('ProjectsBody', () => {
   it('renders a working group', () => {
-    render(<ProjectsBody projects={createProjectsResponse()} />);
+    render(<ProjectsBody projects={gp2.createProjectsResponse()} />);
     expect(
       screen.getByRole('heading', { name: /Project Title/i }),
     ).toBeVisible();
@@ -15,11 +12,11 @@ describe('ProjectsBody', () => {
 
   it('renders multiple working groups', () => {
     const projects = [
-      createProjectResponse({ id: '11', title: 'Project 11' }),
-      createProjectResponse({ id: '42', title: 'Project 42' }),
+      gp2.createProjectResponse({ id: '11', title: 'Project 11' }),
+      gp2.createProjectResponse({ id: '42', title: 'Project 42' }),
     ];
 
-    const projectsResponse = createProjectsResponse(projects);
+    const projectsResponse = gp2.createProjectsResponse(projects);
 
     render(<ProjectsBody projects={projectsResponse} />);
     expect(screen.getByRole('heading', { name: /Project 11/i })).toBeVisible();

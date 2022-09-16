@@ -36,6 +36,7 @@ export interface User<
   TSocial = Omit<UserSocialLinks, 'orcid'>,
   TLabConnection = UserLabConnection,
 > {
+  alumniSinceDate?: string;
   onboarded: boolean;
   dismissedGettingStarted: boolean;
   avatar: TAvatar[];

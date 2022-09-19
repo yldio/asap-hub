@@ -3007,7 +3007,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "auth0-js",\
-        "npm:9.19.0"\
+        "npm:9.19.1"\
       ],\
       [\
         "auto-bind",\
@@ -10486,7 +10486,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:26.0.24"],\
             ["@types/node", "npm:14.18.26"],\
             ["@types/pify", "npm:3.0.2"],\
-            ["auth0-js", "npm:9.19.0"],\
+            ["auth0-js", "npm:9.19.1"],\
             ["camelcase", "npm:6.3.0"],\
             ["pify", "npm:5.0.0"]\
           ],\
@@ -37202,10 +37202,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["auth0-js", [\
-        ["npm:9.19.0", {\
-          "packageLocation": "./.yarn/cache/auth0-js-npm-9.19.0-e1624d8ec5-f02f0ed1a1.zip/node_modules/auth0-js/",\
+        ["npm:9.19.1", {\
+          "packageLocation": "./.yarn/cache/auth0-js-npm-9.19.1-dbf29f155f-ecc159a7fa.zip/node_modules/auth0-js/",\
           "packageDependencies": [\
-            ["auth0-js", "npm:9.19.0"],\
+            ["auth0-js", "npm:9.19.1"],\
             ["base64-js", "npm:1.5.1"],\
             ["idtoken-verifier", "npm:2.2.2"],\
             ["js-cookie", "npm:2.2.1"],\

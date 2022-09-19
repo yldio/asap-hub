@@ -1,21 +1,18 @@
 import { gp2 } from '@asap-hub/model';
-import { drawerQuery, pixels } from '@asap-hub/react-components';
+import { pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import UserCard from './UserCard';
 
-const { perRem } = pixels;
+const { rem } = pixels;
 type UsersPageBodyProps = {
   users: gp2.ListUserResponse;
 };
-const gridContainerStyles = css({
-  display: 'grid',
-  gridGap: `${24 / perRem}em`,
-  gridTemplateColumns: '1fr 1fr',
-  marginTop: `${48 / perRem}em`,
 
-  [drawerQuery]: {
-    gridTemplateColumns: '1fr',
-  },
+const gridContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  rowGap: rem(24),
+  marginTop: rem(48),
 });
 
 const UsersPageBody: React.FC<UsersPageBodyProps> = ({ users }) => (

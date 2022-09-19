@@ -11,8 +11,8 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "schema:export:crn": "contentful space export --skip-content=true --space-id=$CONTENTFUL_SPACE_ID --environment-id=$CONTENTFUL_ENVIRONMENT --content-file=./schema/crn-schema.json",
-    "schema:import:crn": "contentful space import --content-model-only=true --space-id=$CONTENTFUL_SPACE_ID --environment-id=$CONTENTFUL_ENVIRONMENT --content-file=./schema/crn-schema.json",
+    "space:export:crn": "contentful space export --skip-content=true --space-id=$CONTENTFUL_SPACE_ID --environment-id=$CONTENTFUL_ENVIRONMENT --content-file=./schema/crn-schema.json",
+    "space:import:crn": "contentful space import --content-model-only=true --space-id=$CONTENTFUL_SPACE_ID --environment-id=$CONTENTFUL_ENVIRONMENT --content-file=./schema/crn-schema.json",
     "schema:update:crn": "graphql-codegen --config codegen.yml"
   },
   "devDependencies": {

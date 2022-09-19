@@ -480,7 +480,7 @@ __metadata:
     "@graphql-typed-document-node/core": 3.1.1
     contentful-cli: 1.15.7
     graphql-tag: 2.12.6
-    graphql-typescript-integration: 1.2.0
+    graphql-typescript-integration: 1.2.1
   languageName: unknown
   linkType: soft
 
@@ -710,7 +710,7 @@ __metadata:
     got: 11.8.5
     graphql: 15.8.0
     graphql-tag: 2.12.6
-    graphql-typescript-integration: 1.2.0
+    graphql-typescript-integration: 1.2.1
     jest-when: 3.5.1
     jsonwebtoken: 8.5.1
     jwt-decode: 2.2.0
@@ -1117,7 +1117,7 @@ __metadata:
     express-async-errors: 3.1.1
     graphql: 15.8.0
     graphql-tag: 2.12.6
-    graphql-typescript-integration: 1.2.0
+    graphql-typescript-integration: 1.2.1
     jsonwebtoken: 8.5.1
     jwt-encode: 1.0.1
     nock: 13.0.11
@@ -23981,16 +23981,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-typescript-integration@npm:1.2.0":
-  version: 1.2.0
-  resolution: "graphql-typescript-integration@npm:1.2.0"
+"graphql-typescript-integration@npm:1.2.1":
+  version: 1.2.1
+  resolution: "graphql-typescript-integration@npm:1.2.1"
   dependencies:
-    "@graphql-codegen/add": "npm:^2.0.2"
-    "@graphql-codegen/typed-document-node": "npm:^1.18.9"
-    "@graphql-codegen/typescript": "npm:^1.22.4"
-    "@graphql-codegen/typescript-operations": "npm:^1.18.3"
-    tslib: "npm:^2.3.0"
-  checksum: 062c559055eb720f8a04f23838db27e3483d9b93f0c69e437d757887823c7e960441b42e0d0a0797d31b42a2cf089455e61a57c1cad122bdf33ef1c2682b8495
+    "@graphql-codegen/add": ^2.0.2
+    "@graphql-codegen/typed-document-node": ^1.18.9
+    "@graphql-codegen/typescript": ^1.22.4
+    "@graphql-codegen/typescript-operations": ^1.18.3
+    tslib: ^2.3.0
+  checksum: c56d4c8cfe5024011b537c06934f968ad6894b936d5373c4962a0ae4ed9a3c28069ef3b15037e0629135e283409aa24aeb4217051e61451f41dae4962deb054e
   languageName: node
   linkType: hard
 

@@ -133,7 +133,7 @@
     "@types/uuid": "8.3.4",
     "babel-loader": "8.2.5",
     "copy-webpack-plugin": "9.1.0",
-    "graphql-typescript-integration": "1.2.0",
+    "graphql-typescript-integration": "1.2.1",
     "jest-when": "3.5.1",
     "jwt-encode": "1.0.1",
     "node-dev": "6.7.0",

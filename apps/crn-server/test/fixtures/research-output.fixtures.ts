@@ -283,11 +283,8 @@ export const getResearchOutputCreateDataObject =
 
 export const getResearchOutputUpdateDataObject =
   (): ResearchOutputUpdateDataObject => {
-    const {
-      createdBy: _,
-      addedDate: __,
-      ...researchOutputCreateDataObject
-    } = getResearchOutputCreateDataObject();
+    const { createdBy: _, ...researchOutputCreateDataObject } =
+      getResearchOutputCreateDataObject();
 
     return {
       ...researchOutputCreateDataObject,

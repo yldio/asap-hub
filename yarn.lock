@@ -546,7 +546,7 @@ __metadata:
     "@testing-library/dom": 7.31.2
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
-    "@testing-library/react-hooks": 4.0.1
+    "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
     "@types/jest": 26.0.24
@@ -927,7 +927,7 @@ __metadata:
     "@testing-library/dom": 7.31.2
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
-    "@testing-library/react-hooks": 4.0.1
+    "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 12.8.3
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
@@ -993,7 +993,7 @@ __metadata:
     "@testing-library/dom": 7.31.2
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
-    "@testing-library/react-hooks": 4.0.1
+    "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
     "@types/jest": 26.0.24
@@ -1217,7 +1217,7 @@ __metadata:
     "@testing-library/dom": 7.31.2
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
-    "@testing-library/react-hooks": 4.0.1
+    "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 12.8.3
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
@@ -1289,7 +1289,7 @@ __metadata:
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.18.9
     "@testing-library/react": 11.2.7
-    "@testing-library/react-hooks": 4.0.1
+    "@testing-library/react-hooks": 8.0.1
     "@types/jest": 26.0.24
     "@types/react": 17.0.49
     "@types/testing-library__jest-dom": 5.9.5
@@ -11659,17 +11659,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react-hooks@npm:4.0.1":
-  version: 4.0.1
-  resolution: "@testing-library/react-hooks@npm:4.0.1"
+"@testing-library/react-hooks@npm:8.0.1":
+  version: 8.0.1
+  resolution: "@testing-library/react-hooks@npm:8.0.1"
   dependencies:
-    "@babel/runtime": "npm:^7.12.5"
-    "@types/react": "npm:>=16.9.0"
-    "@types/react-test-renderer": "npm:>=16.9.0"
+    "@babel/runtime": ^7.12.5
+    react-error-boundary: ^3.1.0
   peerDependencies:
-    react: ">=16.9.0"
-    react-test-renderer: ">=16.9.0"
-  checksum: fb385c5f51d4f72bfc2ffab355d3bcf35559b47a4b9667d70b88afb1baac9a3f624859a38bb5b91b8ed262130157a2230c23a7adfefd9146ae1c2273137d5c70
+    "@types/react": ^16.9.0 || ^17.0.0
+    react: ^16.9.0 || ^17.0.0
+    react-dom: ^16.9.0 || ^17.0.0
+    react-test-renderer: ^16.9.0 || ^17.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    react-dom:
+      optional: true
+    react-test-renderer:
+      optional: true
+  checksum: 7fe44352e920deb5cb1876f80d64e48615232072c9d5382f1e0284b3aab46bb1c659a040b774c45cdf084a5257b8fe463f7e08695ad8480d8a15635d4d3d1f6d
   languageName: node
   linkType: hard
 
@@ -12783,15 +12791,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-test-renderer@npm:>=16.9.0":
-  version: 17.0.0
-  resolution: "@types/react-test-renderer@npm:17.0.0"
-  dependencies:
-    "@types/react": "npm:*"
-  checksum: 54767cc32d6da64228bd924fff8221e6ad9227505995b458b72990d49e7758694c7dfb2b85842ac304d7c95348737d2f2d19291f8f108de62e58339b14934f89
-  languageName: node
-  linkType: hard
-
 "@types/react-transition-group@npm:*":
   version: 4.4.0
   resolution: "@types/react-transition-group@npm:4.4.0"
@@ -12822,16 +12821,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:>=16.9.0, @types/react@npm:^17.0.0":
-  version: 17.0.0
-  resolution: "@types/react@npm:17.0.0"
-  dependencies:
-    "@types/prop-types": "npm:*"
-    csstype: "npm:^3.0.2"
-  checksum: 0767d1c635613cb08de1ad6b8f73e3ee01ae0069733fa56382c72a8dbed741849e74f62a17756c7b76ccd2b57dd9891d5767c3134f35788720c6bb9c186a933b
-  languageName: node
-  linkType: hard
-
 "@types/react@npm:^17":
   version: 17.0.45
   resolution: "@types/react@npm:17.0.45"
@@ -12840,6 +12829,16 @@ __metadata:
     "@types/scheduler": "npm:*"
     csstype: "npm:^3.0.2"
   checksum: 3cc13a02824c13f6fa4807a83abd065ac1d9943359e76bd995cc7cd2b4148c1176ebd54a30a9f4eb8a0f141ff359d712876f256c4fee707e4290607ef8410b3e
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:^17.0.0":
+  version: 17.0.0
+  resolution: "@types/react@npm:17.0.0"
+  dependencies:
+    "@types/prop-types": "npm:*"
+    csstype: "npm:^3.0.2"
+  checksum: 0767d1c635613cb08de1ad6b8f73e3ee01ae0069733fa56382c72a8dbed741849e74f62a17756c7b76ccd2b57dd9891d5767c3134f35788720c6bb9c186a933b
   languageName: node
   linkType: hard
 
@@ -33223,7 +33222,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:3.1.4":
+"react-error-boundary@npm:3.1.4, react-error-boundary@npm:^3.1.0":
   version: 3.1.4
   resolution: "react-error-boundary@npm:3.1.4"
   dependencies:

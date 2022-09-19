@@ -54,7 +54,8 @@
     "watch:typecheck": "yarn build:typecheck -w"
   },
   "resolutions": {
-    "encoding": "0.1.13"
+    "encoding": "0.1.13",
+    "expect-playwright": "0.8.0"
   },
   "dependenciesMeta": {
     "aws-sdk": {

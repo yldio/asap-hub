@@ -15,7 +15,6 @@ import { getWorkingGroups } from '../api';
 import Routes from '../Routes';
 import { refreshWorkingGroupsState } from '../state';
 
-jest.setTimeout(30000);
 const renderRoutes = async () => {
   render(
     <RecoilRoot
@@ -36,7 +35,9 @@ const renderRoutes = async () => {
       </Suspense>
     </RecoilRoot>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  return waitForElementToBeRemoved(() => screen.queryByText(/loading/i), {
+    timeout: 30_000,
+  });
 };
 beforeEach(() => {
   jest.resetAllMocks();
@@ -66,5 +67,5 @@ describe('Routes', () => {
     expect(
       screen.getByRole('heading', { name: 'Working Group 11' }),
     ).toBeInTheDocument();
-  });
+  }, 30_000);
 });

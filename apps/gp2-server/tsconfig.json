@@ -26,5 +26,8 @@
     { "path": "../../packages/server-common" },
     { "path": "../../packages/services-common" },
     { "path": "../../packages/squidex" }
-  ]
+  ],
+  "ts-node": {
+    "files": true
+  }
 }

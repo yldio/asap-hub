@@ -1,0 +1,32 @@
+{
+  "name": "@asap-hub/contentful",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "16.x"
+  },
+  "module": "build/index.js",
+  "main": "build-cjs/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build:babel": "../../scripts/build-babel.sh build",
+    "watch:babel": "../../scripts/build-babel.sh watch",
+    "space:export:crn": "contentful space export --skip-content=true --space-id=$CONTENTFUL_SPACE_ID --environment-id=$CONTENTFUL_ENVIRONMENT --content-file=./schema/crn-schema.json",
+    "space:import:crn": "contentful space import --content-model-only=true --space-id=$CONTENTFUL_SPACE_ID --environment-id=$CONTENTFUL_ENVIRONMENT --content-file=./schema/crn-schema.json",
+    "schema:update:crn": "graphql-codegen --config codegen.yml"
+  },
+  "dependencies": {
+    "graphql-tag": "2.12.6"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "2.12.0",
+    "@graphql-codegen/gql-tag-operations-preset": "1.5.5",
+    "@graphql-codegen/introspection": "2.2.1",
+    "@graphql-codegen/schema-ast": "2.5.1",
+    "@graphql-codegen/typescript": "2.7.3",
+    "@graphql-codegen/typescript-operations": "2.5.3",
+    "@graphql-typed-document-node/core": "3.1.1",
+    "contentful-cli": "1.15.7",
+    "graphql-typescript-integration": "1.2.0"
+  }
+}

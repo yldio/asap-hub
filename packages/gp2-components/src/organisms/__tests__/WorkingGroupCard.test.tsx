@@ -1,10 +1,10 @@
-import { createWorkingGroupResponse } from '@asap-hub/fixtures';
-import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import { WorkingGroupCard } from '..';
 
 describe('WorkingGroupCard', () => {
-  const defaultProps = createWorkingGroupResponse();
+  const defaultProps = gp2Fixtures.createWorkingGroupResponse();
   it('renders the title', () => {
     render(<WorkingGroupCard {...defaultProps} />);
     expect(
@@ -22,7 +22,7 @@ describe('WorkingGroupCard', () => {
     expect(screen.getByText(/0 members/i)).toBeInTheDocument();
   });
   it('renders a single count of the members', () => {
-    const props: gp2.WorkingGroupResponse = {
+    const props: gp2Model.WorkingGroupResponse = {
       ...defaultProps,
       members: [
         {

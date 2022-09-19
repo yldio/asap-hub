@@ -1,7 +1,4 @@
-import {
-  createWorkingGroupResponse,
-  createWorkingGroupsResponse,
-} from '@asap-hub/fixtures';
+import { gp2 } from '@asap-hub/fixtures';
 import {
   render,
   screen,
@@ -49,16 +46,16 @@ describe('Routes', () => {
     const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
       typeof getWorkingGroups
     >;
-    const firstGroup = createWorkingGroupResponse({
+    const firstGroup = gp2.createWorkingGroupResponse({
       id: '42',
       title: 'Working Group 42',
     });
-    const secondGroup = createWorkingGroupResponse({
+    const secondGroup = gp2.createWorkingGroupResponse({
       id: '11',
       title: 'Working Group 11',
     });
     mockGetWorkingGroups.mockResolvedValue(
-      createWorkingGroupsResponse([firstGroup, secondGroup]),
+      gp2.createWorkingGroupsResponse([firstGroup, secondGroup]),
     );
     await renderRoutes();
     expect(

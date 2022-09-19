@@ -119,6 +119,7 @@ export {
   ResearchOutputHeader,
   RichText,
   RichTextCard,
+  RecentSharedOutputs,
   SearchAndFilter,
   SharedResearchCard,
   SharedResearchListCard,

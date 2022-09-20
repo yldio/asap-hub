@@ -490,6 +490,14 @@ describe('ResearchOutputs controller', () => {
       ).rejects.toThrow(GenericError);
     });
 
+    test('Should throw when existing addedDate can not be retrieved from a not found research output', async () => {
+      researchOutputDataProviderMock.fetchById.mockResolvedValueOnce(null);
+
+      await expect(
+        researchOutputs.update(researchOutputId, getResearchOutputUpdateData()),
+      ).rejects.toThrow(NotFoundError);
+    });
+
     test('Should throw when the research output does not exist', async () => {
       researchOutputDataProviderMock.update.mockRejectedValueOnce(
         new NotFoundError(),

@@ -2,6 +2,8 @@ import {
   ListNewsResponse,
   NewsResponse,
   FetchNewsOptions,
+  NewsFrequency,
+  FetchNewsFilter,
 } from '@asap-hub/model';
 import {
   RestNews,
@@ -18,6 +20,42 @@ const notTutorialFilter: Filter = {
   value: 'Tutorial',
 };
 
+const getFiltersQuery = (filter?: FetchNewsFilter) => {
+  const frequencyFilter = filter?.frequency;
+
+  const selectByFrequencyFilter = {
+    path: 'data.frequency.iv',
+    op: 'in',
+    value: frequencyFilter,
+  } as Filter;
+
+  // Select news that were created before
+  // frequency field was created
+  const selectNewsArticlesFilter = {
+    path: 'data.frequency.iv',
+    op: 'empty',
+    value: null,
+  } as Filter;
+
+  if (frequencyFilter) {
+    if (frequencyFilter.includes('News Articles')) {
+      return {
+        and: [
+          notTutorialFilter,
+          {
+            or: [selectNewsArticlesFilter, selectByFrequencyFilter],
+          },
+        ],
+      };
+    }
+    return {
+      and: [notTutorialFilter, selectByFrequencyFilter],
+    };
+  }
+
+  return notTutorialFilter;
+};
+
 export default class News implements NewsController {
   newsSquidexRestClient: SquidexRestClient<RestNews>;
 
@@ -28,38 +66,7 @@ export default class News implements NewsController {
   async fetch(options?: FetchNewsOptions): Promise<ListNewsResponse> {
     const { total, items } = await this.newsSquidexRestClient.fetch({
       ...options,
-      filter: options?.filter?.frequency
-        ? !options?.filter?.frequency.includes('News Articles')
-          ? {
-              and: [
-                notTutorialFilter,
-                {
-                  path: 'data.frequency.iv',
-                  op: 'in',
-                  value: options.filter.frequency,
-                },
-              ],
-            }
-          : {
-              and: [
-                notTutorialFilter,
-                {
-                  or: [
-                    {
-                      path: 'data.frequency.iv',
-                      op: 'empty',
-                      value: null,
-                    },
-                    {
-                      path: 'data.frequency.iv',
-                      op: 'in',
-                      value: options.filter.frequency,
-                    },
-                  ],
-                } as LogicalFilter,
-              ],
-            }
-        : notTutorialFilter,
+      filter: getFiltersQuery(options?.filter),
       sort: [{ order: 'descending', path: 'created' }],
     });
 

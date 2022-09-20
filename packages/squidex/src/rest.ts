@@ -96,6 +96,7 @@ export class Squidex<
         .json();
       return res as Results<T>;
     } catch (err) {
+      console.log('\n\n\n !!!!', err);
       if (err instanceof HTTPError) {
         if (err.response.statusCode === 404) {
           return {

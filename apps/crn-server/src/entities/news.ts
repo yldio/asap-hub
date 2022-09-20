@@ -8,6 +8,7 @@ export const parseNews = (item: RestNews): NewsResponse => ({
   created: parseDate(item.created).toISOString(),
   shortText: item.data.shortText?.iv,
   text: item.data.text?.iv,
+  frequency: item.data.frequency?.iv,
   link: item.data.link?.iv,
   linkText: item.data.linkText?.iv,
   thumbnail: item.data.thumbnail?.iv

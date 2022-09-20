@@ -1,4 +1,8 @@
-import { ListNewsResponse, NewsResponse } from '@asap-hub/model';
+import {
+  ListNewsResponse,
+  NewsResponse,
+  FetchNewsOptions,
+} from '@asap-hub/model';
 import { RestNews, SquidexRestClient } from '@asap-hub/squidex';
 
 import { parseNews } from '../entities';
@@ -10,17 +14,29 @@ export default class News implements NewsController {
     this.newsSquidexRestClient = newsSquidexRestClient;
   }
 
-  async fetch(options?: {
-    take?: number;
-    skip?: number;
-  }): Promise<ListNewsResponse> {
+  async fetch(options?: FetchNewsOptions): Promise<ListNewsResponse> {
     const { total, items } = await this.newsSquidexRestClient.fetch({
       ...options,
-      filter: {
-        path: 'data.type.iv',
-        op: 'ne',
-        value: 'Tutorial',
-      },
+      filter: options?.filter?.frequency
+        ? {
+            and: [
+              {
+                path: 'data.type.iv',
+                op: 'ne',
+                value: 'Tutorial',
+              },
+              {
+                path: 'data.frequency.iv',
+                op: 'in',
+                value: options.filter.frequency,
+              },
+            ],
+          }
+        : {
+            path: 'data.type.iv',
+            op: 'ne',
+            value: 'Tutorial',
+          },
       sort: [{ order: 'descending', path: 'created' }],
     });
 
@@ -37,9 +53,6 @@ export default class News implements NewsController {
 }
 
 export interface NewsController {
-  fetch: (options?: {
-    take?: number;
-    skip?: number;
-  }) => Promise<ListNewsResponse>;
+  fetch: (options?: FetchNewsOptions) => Promise<ListNewsResponse>;
   fetchById: (id: string) => Promise<NewsResponse>;
 }

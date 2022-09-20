@@ -17,6 +17,7 @@
       "title",
       "shortText",
       "text",
+      "frequency",
       "link",
       "meta.created",
       "meta.createdBy.avatar",
@@ -105,6 +106,32 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
+      },
+      {
+        "name": "frequency",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "createEnum": false,
+          "editor": "Dropdown",
+          "inlineEditable": true,
+          "isEmbeddable": false,
+          "isUnique": false,
+          "allowedValues": [
+            "Biweekly Newsletter",
+            "CRN Quarterly",
+            "News Articles"
+          ],
+          "contentType": "Unspecified",
+          "label": "Frequency",
+          "editorUrl": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
       },
       {
         "name": "link",

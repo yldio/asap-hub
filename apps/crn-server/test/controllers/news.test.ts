@@ -120,6 +120,39 @@ describe('News controller', () => {
 
       expect(result.items[0]!.thumbnail).toBeUndefined();
     });
+
+    test('Should return filtered results when frequency is set', async () => {
+      nock(baseUrl)
+        .get(`/api/content/${appName}/news-and-events`)
+        .query({
+          q: JSON.stringify({
+            take: 8,
+            skip: 5,
+            filter: {
+              and: [
+                { path: 'data.type.iv', op: 'ne', value: 'Tutorial' },
+                {
+                  path: 'data.frequency.iv',
+                  op: 'in',
+                  value: ['CRN Quarterly'],
+                },
+              ],
+            },
+            sort: [{ order: 'descending', path: 'created' }],
+          }),
+        })
+        .reply(200, newsSquidexApiResponse);
+
+      const result = await news.fetch({
+        take: 8,
+        skip: 5,
+        filter: {
+          frequency: ['CRN Quarterly'],
+        },
+      });
+
+      expect(result).toEqual(listNewsResponse);
+    });
   });
 
   describe('Fetch-by-id method', () => {

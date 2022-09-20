@@ -3322,6 +3322,7 @@ export type NewsAndEventsDataDateInputDto = {
 /** The structure of the News data type. */
 export type NewsAndEventsDataDto = {
   date: Maybe<NewsAndEventsDataDateDto>;
+  frequency: Maybe<NewsAndEventsDataFrequencyDto>;
   link: Maybe<NewsAndEventsDataLinkDto>;
   linkText: Maybe<NewsAndEventsDataLinkTextDto>;
   shortText: Maybe<NewsAndEventsDataShortTextDto>;
@@ -3331,9 +3332,20 @@ export type NewsAndEventsDataDto = {
   type: Maybe<NewsAndEventsDataTypeDto>;
 };
 
+/** The structure of the Frequency field of the News content type. */
+export type NewsAndEventsDataFrequencyDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Frequency field of the News content input type. */
+export type NewsAndEventsDataFrequencyInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
 /** The structure of the News data input type. */
 export type NewsAndEventsDataInputDto = {
   date: InputMaybe<NewsAndEventsDataDateInputDto>;
+  frequency: InputMaybe<NewsAndEventsDataFrequencyInputDto>;
   link: InputMaybe<NewsAndEventsDataLinkInputDto>;
   linkText: InputMaybe<NewsAndEventsDataLinkTextInputDto>;
   shortText: InputMaybe<NewsAndEventsDataShortTextInputDto>;
@@ -3421,6 +3433,7 @@ export type NewsAndEventsDataTypeInputDto = {
 export type NewsAndEventsFlatDataDto = {
   /** Property only used on Event type items */
   date: Maybe<Scalars['Instant']>;
+  frequency: Maybe<Scalars['String']>;
   link: Maybe<Scalars['String']>;
   /** Leave this empty to show "Open External Link" */
   linkText: Maybe<Scalars['String']>;

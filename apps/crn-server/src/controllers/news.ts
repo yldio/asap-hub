@@ -72,8 +72,10 @@ export default class News implements NewsController {
   }
 
   async fetch(options?: FetchNewsOptions): Promise<ListNewsResponse> {
+    const { search: _search, ...optionsWithoutSearch } = options || {};
+
     const { total, items } = await this.newsSquidexRestClient.fetch({
-      ...options,
+      ...optionsWithoutSearch,
       filter: getFiltersQuery(options) as Query['filter'],
       sort: [{ order: 'descending', path: 'created' }],
     });

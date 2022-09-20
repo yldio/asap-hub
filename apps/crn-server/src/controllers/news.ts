@@ -3,9 +3,20 @@ import {
   NewsResponse,
   FetchNewsOptions,
 } from '@asap-hub/model';
-import { RestNews, SquidexRestClient } from '@asap-hub/squidex';
+import {
+  RestNews,
+  SquidexRestClient,
+  Filter,
+  LogicalFilter,
+} from '@asap-hub/squidex';
 
 import { parseNews } from '../entities';
+
+const notTutorialFilter: Filter = {
+  path: 'data.type.iv',
+  op: 'ne',
+  value: 'Tutorial',
+};
 
 export default class News implements NewsController {
   newsSquidexRestClient: SquidexRestClient<RestNews>;
@@ -18,25 +29,37 @@ export default class News implements NewsController {
     const { total, items } = await this.newsSquidexRestClient.fetch({
       ...options,
       filter: options?.filter?.frequency
-        ? {
-            and: [
-              {
-                path: 'data.type.iv',
-                op: 'ne',
-                value: 'Tutorial',
-              },
-              {
-                path: 'data.frequency.iv',
-                op: 'in',
-                value: options.filter.frequency,
-              },
-            ],
-          }
-        : {
-            path: 'data.type.iv',
-            op: 'ne',
-            value: 'Tutorial',
-          },
+        ? !options?.filter?.frequency.includes('News Articles')
+          ? {
+              and: [
+                notTutorialFilter,
+                {
+                  path: 'data.frequency.iv',
+                  op: 'in',
+                  value: options.filter.frequency,
+                },
+              ],
+            }
+          : {
+              and: [
+                notTutorialFilter,
+                {
+                  or: [
+                    {
+                      path: 'data.frequency.iv',
+                      op: 'empty',
+                      value: null,
+                    },
+                    {
+                      path: 'data.frequency.iv',
+                      op: 'in',
+                      value: options.filter.frequency,
+                    },
+                  ],
+                } as LogicalFilter,
+              ],
+            }
+        : notTutorialFilter,
       sort: [{ order: 'descending', path: 'created' }],
     });
 

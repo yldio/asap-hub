@@ -17,10 +17,12 @@ const documents = {
     graphql.FetchUsersDocument,
   '\n  fragment WorkingGroupContent on WorkingGroups {\n    id\n    flatData {\n      title\n      shortDescription\n      leadingMembers\n      description\n      primaryEmail\n      secondaryEmail\n      members {\n        role\n        user {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            avatar {\n              id\n            }\n            firstName\n            lastName\n          }\n        }\n      }\n    }\n  }\n':
     graphql.WorkingGroupContentFragmentDoc,
+  '\n  fragment WorkingGroupNetworkContent on WorkingGroupNetwork {\n    id\n    flatData {\n      complexDisease {\n        ...WorkingGroupContent\n      }\n      monogenic {\n        ...WorkingGroupContent\n      }\n      operational {\n        ...WorkingGroupContent\n      }\n      support {\n        ...WorkingGroupContent\n      }\n    }\n  }\n':
+    graphql.WorkingGroupNetworkContentFragmentDoc,
   '\n  query FetchWorkingGroup($id: String!) {\n    findWorkingGroupsContent(id: $id) {\n      ...WorkingGroupContent\n    }\n  }\n  \n':
     graphql.FetchWorkingGroupDocument,
-  '\n  query FetchWorkingGroups {\n    queryWorkingGroupsContentsWithTotal(orderby: "created desc") {\n      total\n      items {\n        ...WorkingGroupContent\n      }\n    }\n  }\n  \n':
-    graphql.FetchWorkingGroupsDocument,
+  '\n  query FetchWorkingGroupNetwork {\n    queryWorkingGroupNetworkContents {\n      ...WorkingGroupNetworkContent\n    }\n  }\n  \n':
+    graphql.FetchWorkingGroupNetworkDocument,
 };
 
 export function gql(
@@ -45,11 +47,14 @@ export function gql(
   source: '\n  fragment WorkingGroupContent on WorkingGroups {\n    id\n    flatData {\n      title\n      shortDescription\n      leadingMembers\n      description\n      primaryEmail\n      secondaryEmail\n      members {\n        role\n        user {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            avatar {\n              id\n            }\n            firstName\n            lastName\n          }\n        }\n      }\n    }\n  }\n',
 ): typeof documents['\n  fragment WorkingGroupContent on WorkingGroups {\n    id\n    flatData {\n      title\n      shortDescription\n      leadingMembers\n      description\n      primaryEmail\n      secondaryEmail\n      members {\n        role\n        user {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            avatar {\n              id\n            }\n            firstName\n            lastName\n          }\n        }\n      }\n    }\n  }\n'];
 export function gql(
+  source: '\n  fragment WorkingGroupNetworkContent on WorkingGroupNetwork {\n    id\n    flatData {\n      complexDisease {\n        ...WorkingGroupContent\n      }\n      monogenic {\n        ...WorkingGroupContent\n      }\n      operational {\n        ...WorkingGroupContent\n      }\n      support {\n        ...WorkingGroupContent\n      }\n    }\n  }\n',
+): typeof documents['\n  fragment WorkingGroupNetworkContent on WorkingGroupNetwork {\n    id\n    flatData {\n      complexDisease {\n        ...WorkingGroupContent\n      }\n      monogenic {\n        ...WorkingGroupContent\n      }\n      operational {\n        ...WorkingGroupContent\n      }\n      support {\n        ...WorkingGroupContent\n      }\n    }\n  }\n'];
+export function gql(
   source: '\n  query FetchWorkingGroup($id: String!) {\n    findWorkingGroupsContent(id: $id) {\n      ...WorkingGroupContent\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchWorkingGroup($id: String!) {\n    findWorkingGroupsContent(id: $id) {\n      ...WorkingGroupContent\n    }\n  }\n  \n'];
 export function gql(
-  source: '\n  query FetchWorkingGroups {\n    queryWorkingGroupsContentsWithTotal(orderby: "created desc") {\n      total\n      items {\n        ...WorkingGroupContent\n      }\n    }\n  }\n  \n',
-): typeof documents['\n  query FetchWorkingGroups {\n    queryWorkingGroupsContentsWithTotal(orderby: "created desc") {\n      total\n      items {\n        ...WorkingGroupContent\n      }\n    }\n  }\n  \n'];
+  source: '\n  query FetchWorkingGroupNetwork {\n    queryWorkingGroupNetworkContents {\n      ...WorkingGroupNetworkContent\n    }\n  }\n  \n',
+): typeof documents['\n  query FetchWorkingGroupNetwork {\n    queryWorkingGroupNetworkContents {\n      ...WorkingGroupNetworkContent\n    }\n  }\n  \n'];
 
 export function gql(source: string): unknown;
 export function gql(source: string) {

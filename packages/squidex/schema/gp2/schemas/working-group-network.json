@@ -19,13 +19,14 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "References",
+          "minItems": 1,
           "allowDuplicates": false,
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
           "schemaIds": ["working-groups"],
           "label": "Operational Working Groups",
-          "isRequired": false,
+          "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
@@ -38,13 +39,14 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "References",
+          "minItems": 1,
           "allowDuplicates": false,
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
           "schemaIds": ["working-groups"],
           "label": "Monogenic Working Groups",
-          "isRequired": false,
+          "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
@@ -57,13 +59,14 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "References",
+          "minItems": 1,
           "allowDuplicates": false,
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
           "schemaIds": ["working-groups"],
           "label": "Complex Disease Working Groups",
-          "isRequired": false,
+          "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
@@ -76,13 +79,14 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "References",
+          "minItems": 1,
           "allowDuplicates": false,
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
           "schemaIds": ["working-groups"],
           "label": "Support Working Groups",
-          "isRequired": false,
+          "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }

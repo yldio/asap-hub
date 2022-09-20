@@ -33,6 +33,8 @@ export type AppMutations = {
   changeProjectsContent: Projects;
   /** Change a Users content. */
   changeUsersContent: Users;
+  /** Change a Working Group Network content. */
+  changeWorkingGroupNetworkContent: WorkingGroupNetwork;
   /** Change a Working Groups content. */
   changeWorkingGroupsContent: WorkingGroups;
   /** Creates an Dashboard content. */
@@ -41,6 +43,8 @@ export type AppMutations = {
   createProjectsContent: Projects;
   /** Creates an Users content. */
   createUsersContent: Users;
+  /** Creates an Working Group Network content. */
+  createWorkingGroupNetworkContent: WorkingGroupNetwork;
   /** Creates an Working Groups content. */
   createWorkingGroupsContent: WorkingGroups;
   /** Delete an Dashboard content. */
@@ -49,6 +53,8 @@ export type AppMutations = {
   deleteProjectsContent: EntitySavedResultDto;
   /** Delete an Users content. */
   deleteUsersContent: EntitySavedResultDto;
+  /** Delete an Working Group Network content. */
+  deleteWorkingGroupNetworkContent: EntitySavedResultDto;
   /** Delete an Working Groups content. */
   deleteWorkingGroupsContent: EntitySavedResultDto;
   /** Patch an Dashboard content by id. */
@@ -57,6 +63,8 @@ export type AppMutations = {
   patchProjectsContent: Projects;
   /** Patch an Users content by id. */
   patchUsersContent: Users;
+  /** Patch an Working Group Network content by id. */
+  patchWorkingGroupNetworkContent: WorkingGroupNetwork;
   /** Patch an Working Groups content by id. */
   patchWorkingGroupsContent: WorkingGroups;
   /**
@@ -75,6 +83,11 @@ export type AppMutations = {
    */
   publishUsersContent: Users;
   /**
+   * Publish a Working Group Network content.
+   * @deprecated Use 'changeWorkingGroupNetworkContent' instead
+   */
+  publishWorkingGroupNetworkContent: WorkingGroupNetwork;
+  /**
    * Publish a Working Groups content.
    * @deprecated Use 'changeWorkingGroupsContent' instead
    */
@@ -85,6 +98,8 @@ export type AppMutations = {
   updateProjectsContent: Projects;
   /** Update an Users content by id. */
   updateUsersContent: Users;
+  /** Update an Working Group Network content by id. */
+  updateWorkingGroupNetworkContent: WorkingGroupNetwork;
   /** Update an Working Groups content by id. */
   updateWorkingGroupsContent: WorkingGroups;
   /** Upsert an Dashboard content by id. */
@@ -93,6 +108,8 @@ export type AppMutations = {
   upsertProjectsContent: Projects;
   /** Upsert an Users content by id. */
   upsertUsersContent: Users;
+  /** Upsert an Working Group Network content by id. */
+  upsertWorkingGroupNetworkContent: WorkingGroupNetwork;
   /** Upsert an Working Groups content by id. */
   upsertWorkingGroupsContent: WorkingGroups;
 };
@@ -115,6 +132,14 @@ export type AppMutationsChangeProjectsContentArgs = {
 
 /** The app mutations. */
 export type AppMutationsChangeUsersContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
+export type AppMutationsChangeWorkingGroupNetworkContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -154,6 +179,14 @@ export type AppMutationsCreateUsersContentArgs = {
 };
 
 /** The app mutations. */
+export type AppMutationsCreateWorkingGroupNetworkContentArgs = {
+  data: WorkingGroupNetworkDataInputDto;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type AppMutationsCreateWorkingGroupsContentArgs = {
   data: WorkingGroupsDataInputDto;
   id: InputMaybe<Scalars['String']>;
@@ -175,6 +208,12 @@ export type AppMutationsDeleteProjectsContentArgs = {
 
 /** The app mutations. */
 export type AppMutationsDeleteUsersContentArgs = {
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+};
+
+/** The app mutations. */
+export type AppMutationsDeleteWorkingGroupNetworkContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
@@ -202,6 +241,13 @@ export type AppMutationsPatchProjectsContentArgs = {
 /** The app mutations. */
 export type AppMutationsPatchUsersContentArgs = {
   data: UsersDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type AppMutationsPatchWorkingGroupNetworkContentArgs = {
+  data: WorkingGroupNetworkDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -238,6 +284,14 @@ export type AppMutationsPublishUsersContentArgs = {
 };
 
 /** The app mutations. */
+export type AppMutationsPublishWorkingGroupNetworkContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
 export type AppMutationsPublishWorkingGroupsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -262,6 +316,13 @@ export type AppMutationsUpdateProjectsContentArgs = {
 /** The app mutations. */
 export type AppMutationsUpdateUsersContentArgs = {
   data: UsersDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type AppMutationsUpdateWorkingGroupNetworkContentArgs = {
+  data: WorkingGroupNetworkDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -304,6 +365,16 @@ export type AppMutationsUpsertUsersContentArgs = {
 };
 
 /** The app mutations. */
+export type AppMutationsUpsertWorkingGroupNetworkContentArgs = {
+  data: WorkingGroupNetworkDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type AppMutationsUpsertWorkingGroupsContentArgs = {
   data: WorkingGroupsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -323,6 +394,8 @@ export type AppQueries = {
   findProjectsContent: Maybe<Projects>;
   /** Find an Users content by id. */
   findUsersContent: Maybe<Users>;
+  /** Find an Working Group Network content by id. */
+  findWorkingGroupNetworkContent: Maybe<WorkingGroupNetwork>;
   /** Find an Working Groups content by id. */
   findWorkingGroupsContent: Maybe<WorkingGroups>;
   /** Get assets. */
@@ -341,6 +414,10 @@ export type AppQueries = {
   queryUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   queryUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** Query Working Group Network content items. */
+  queryWorkingGroupNetworkContents: Maybe<Array<WorkingGroupNetwork>>;
+  /** Query Working Group Network content items with total count. */
+  queryWorkingGroupNetworkContentsWithTotal: Maybe<WorkingGroupNetworkResultDto>;
   /** Query Working Groups content items. */
   queryWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
   /** Query Working Groups content items with total count. */
@@ -366,6 +443,12 @@ export type AppQueriesFindProjectsContentArgs = {
 
 /** The app queries. */
 export type AppQueriesFindUsersContentArgs = {
+  id: Scalars['String'];
+  version: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type AppQueriesFindWorkingGroupNetworkContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
@@ -439,6 +522,24 @@ export type AppQueriesQueryUsersContentsArgs = {
 
 /** The app queries. */
 export type AppQueriesQueryUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type AppQueriesQueryWorkingGroupNetworkContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type AppQueriesQueryWorkingGroupNetworkContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -621,6 +722,10 @@ export type Dashboard = Content & {
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** Query Working Group Network content items. */
+  referencesWorkingGroupNetworkContents: Maybe<Array<WorkingGroupNetwork>>;
+  /** Query Working Group Network content items with total count. */
+  referencesWorkingGroupNetworkContentsWithTotal: Maybe<WorkingGroupNetworkResultDto>;
   /** Query Working Groups content items. */
   referencesWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
   /** Query Working Groups content items with total count. */
@@ -694,6 +799,24 @@ export type DashboardReferencesUsersContentsWithTotalArgs = {
 };
 
 /** The structure of a Dashboard content type. */
+export type DashboardReferencesWorkingGroupNetworkContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Dashboard content type. */
+export type DashboardReferencesWorkingGroupNetworkContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Dashboard content type. */
 export type DashboardReferencesWorkingGroupsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
@@ -755,6 +878,7 @@ export type DashboardDataNewsUnionDto =
   | Dashboard
   | Projects
   | Users
+  | WorkingGroupNetwork
   | WorkingGroups;
 
 /** The structure of the Where to Start field of the Dashboard content type. */
@@ -771,6 +895,7 @@ export type DashboardDataPagesUnionDto =
   | Dashboard
   | Projects
   | Users
+  | WorkingGroupNetwork
   | WorkingGroups;
 
 /** The structure of the flat Dashboard data type. */
@@ -1233,6 +1358,158 @@ export type UsersResultDto = {
   total: Scalars['Int'];
 };
 
+/** The structure of a Working Group Network content type. */
+export type WorkingGroupNetwork = Content & {
+  /** The timestamp when the object was created. */
+  created: Scalars['Instant'];
+  /** The user who created the object. */
+  createdBy: Scalars['String'];
+  /** The user who created the object. */
+  createdByUser: User;
+  /** The data of the content. */
+  data: WorkingGroupNetworkDataDto;
+  /** The edit token. */
+  editToken: Maybe<Scalars['String']>;
+  /** The flat data of the content. */
+  flatData: WorkingGroupNetworkFlatDataDto;
+  /** The ID of the object (usually GUID). */
+  id: Scalars['String'];
+  /** The timestamp when the object was updated the last time. */
+  lastModified: Scalars['Instant'];
+  /** The user who updated the object the last time. */
+  lastModifiedBy: Scalars['String'];
+  /** The user who updated the object the last time. */
+  lastModifiedByUser: User;
+  /** The new status of the content. */
+  newStatus: Maybe<Scalars['String']>;
+  /** The status color of the content. */
+  newStatusColor: Maybe<Scalars['String']>;
+  /** Query Working Groups content items. */
+  referencesWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
+  /** Query Working Groups content items with total count. */
+  referencesWorkingGroupsContentsWithTotal: Maybe<WorkingGroupsResultDto>;
+  /** Query Dashboard content items. */
+  referencingDashboardContents: Maybe<Array<Dashboard>>;
+  /** Query Dashboard content items with total count. */
+  referencingDashboardContentsWithTotal: Maybe<DashboardResultDto>;
+  /** The status of the content. */
+  status: Scalars['String'];
+  /** The status color of the content. */
+  statusColor: Scalars['String'];
+  /** The URL to the content. */
+  url: Scalars['String'];
+  /** The version of the objec. */
+  version: Scalars['Int'];
+};
+
+/** The structure of a Working Group Network content type. */
+export type WorkingGroupNetworkReferencesWorkingGroupsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Working Group Network content type. */
+export type WorkingGroupNetworkReferencesWorkingGroupsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Working Group Network content type. */
+export type WorkingGroupNetworkReferencingDashboardContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Working Group Network content type. */
+export type WorkingGroupNetworkReferencingDashboardContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of the Complex Disease Working Groups field of the Working Group Network content type. */
+export type WorkingGroupNetworkDataComplexDiseaseDto = {
+  iv: Maybe<Array<WorkingGroups>>;
+};
+
+/** The structure of the Complex Disease Working Groups field of the Working Group Network content input type. */
+export type WorkingGroupNetworkDataComplexDiseaseInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Working Group Network data type. */
+export type WorkingGroupNetworkDataDto = {
+  complexDisease: Maybe<WorkingGroupNetworkDataComplexDiseaseDto>;
+  monogenic: Maybe<WorkingGroupNetworkDataMonogenicDto>;
+  operational: Maybe<WorkingGroupNetworkDataOperationalDto>;
+  support: Maybe<WorkingGroupNetworkDataSupportDto>;
+};
+
+/** The structure of the Working Group Network data input type. */
+export type WorkingGroupNetworkDataInputDto = {
+  complexDisease: InputMaybe<WorkingGroupNetworkDataComplexDiseaseInputDto>;
+  monogenic: InputMaybe<WorkingGroupNetworkDataMonogenicInputDto>;
+  operational: InputMaybe<WorkingGroupNetworkDataOperationalInputDto>;
+  support: InputMaybe<WorkingGroupNetworkDataSupportInputDto>;
+};
+
+/** The structure of the Monogenic Working Groups field of the Working Group Network content type. */
+export type WorkingGroupNetworkDataMonogenicDto = {
+  iv: Maybe<Array<WorkingGroups>>;
+};
+
+/** The structure of the Monogenic Working Groups field of the Working Group Network content input type. */
+export type WorkingGroupNetworkDataMonogenicInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Operational Working Groups field of the Working Group Network content type. */
+export type WorkingGroupNetworkDataOperationalDto = {
+  iv: Maybe<Array<WorkingGroups>>;
+};
+
+/** The structure of the Operational Working Groups field of the Working Group Network content input type. */
+export type WorkingGroupNetworkDataOperationalInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Support Working Groups field of the Working Group Network content type. */
+export type WorkingGroupNetworkDataSupportDto = {
+  iv: Maybe<Array<WorkingGroups>>;
+};
+
+/** The structure of the Support Working Groups field of the Working Group Network content input type. */
+export type WorkingGroupNetworkDataSupportInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the flat Working Group Network data type. */
+export type WorkingGroupNetworkFlatDataDto = {
+  complexDisease: Maybe<Array<WorkingGroups>>;
+  monogenic: Maybe<Array<WorkingGroups>>;
+  operational: Maybe<Array<WorkingGroups>>;
+  support: Maybe<Array<WorkingGroups>>;
+};
+
+/** List of Working Group Network items and total count. */
+export type WorkingGroupNetworkResultDto = {
+  /** The contents. */
+  items: Maybe<Array<WorkingGroupNetwork>>;
+  /** The total count of  contents. */
+  total: Scalars['Int'];
+};
+
 /** The structure of a Working Groups content type. */
 export type WorkingGroups = Content & {
   /** The timestamp when the object was created. */
@@ -1267,6 +1544,10 @@ export type WorkingGroups = Content & {
   referencingDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
   referencingDashboardContentsWithTotal: Maybe<DashboardResultDto>;
+  /** Query Working Group Network content items. */
+  referencingWorkingGroupNetworkContents: Maybe<Array<WorkingGroupNetwork>>;
+  /** Query Working Group Network content items with total count. */
+  referencingWorkingGroupNetworkContentsWithTotal: Maybe<WorkingGroupNetworkResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -1306,6 +1587,24 @@ export type WorkingGroupsReferencingDashboardContentsArgs = {
 
 /** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencingDashboardContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencingWorkingGroupNetworkContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencingWorkingGroupNetworkContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -1628,6 +1927,154 @@ export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
   };
 };
 
+export type WorkingGroupNetworkContentFragment = Pick<
+  WorkingGroupNetwork,
+  'id'
+> & {
+  flatData: {
+    complexDisease: Maybe<
+      Array<
+        Pick<WorkingGroups, 'id'> & {
+          flatData: Pick<
+            WorkingGroupsFlatDataDto,
+            | 'title'
+            | 'shortDescription'
+            | 'leadingMembers'
+            | 'description'
+            | 'primaryEmail'
+            | 'secondaryEmail'
+          > & {
+            members: Maybe<
+              Array<
+                Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                  user: Maybe<
+                    Array<
+                      Pick<
+                        Users,
+                        'id' | 'created' | 'lastModified' | 'version'
+                      > & {
+                        flatData: Pick<
+                          UsersFlatDataDto,
+                          'firstName' | 'lastName'
+                        > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                      }
+                    >
+                  >;
+                }
+              >
+            >;
+          };
+        }
+      >
+    >;
+    monogenic: Maybe<
+      Array<
+        Pick<WorkingGroups, 'id'> & {
+          flatData: Pick<
+            WorkingGroupsFlatDataDto,
+            | 'title'
+            | 'shortDescription'
+            | 'leadingMembers'
+            | 'description'
+            | 'primaryEmail'
+            | 'secondaryEmail'
+          > & {
+            members: Maybe<
+              Array<
+                Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                  user: Maybe<
+                    Array<
+                      Pick<
+                        Users,
+                        'id' | 'created' | 'lastModified' | 'version'
+                      > & {
+                        flatData: Pick<
+                          UsersFlatDataDto,
+                          'firstName' | 'lastName'
+                        > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                      }
+                    >
+                  >;
+                }
+              >
+            >;
+          };
+        }
+      >
+    >;
+    operational: Maybe<
+      Array<
+        Pick<WorkingGroups, 'id'> & {
+          flatData: Pick<
+            WorkingGroupsFlatDataDto,
+            | 'title'
+            | 'shortDescription'
+            | 'leadingMembers'
+            | 'description'
+            | 'primaryEmail'
+            | 'secondaryEmail'
+          > & {
+            members: Maybe<
+              Array<
+                Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                  user: Maybe<
+                    Array<
+                      Pick<
+                        Users,
+                        'id' | 'created' | 'lastModified' | 'version'
+                      > & {
+                        flatData: Pick<
+                          UsersFlatDataDto,
+                          'firstName' | 'lastName'
+                        > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                      }
+                    >
+                  >;
+                }
+              >
+            >;
+          };
+        }
+      >
+    >;
+    support: Maybe<
+      Array<
+        Pick<WorkingGroups, 'id'> & {
+          flatData: Pick<
+            WorkingGroupsFlatDataDto,
+            | 'title'
+            | 'shortDescription'
+            | 'leadingMembers'
+            | 'description'
+            | 'primaryEmail'
+            | 'secondaryEmail'
+          > & {
+            members: Maybe<
+              Array<
+                Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                  user: Maybe<
+                    Array<
+                      Pick<
+                        Users,
+                        'id' | 'created' | 'lastModified' | 'version'
+                      > & {
+                        flatData: Pick<
+                          UsersFlatDataDto,
+                          'firstName' | 'lastName'
+                        > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                      }
+                    >
+                  >;
+                }
+              >
+            >;
+          };
+        }
+      >
+    >;
+  };
+};
+
 export type FetchWorkingGroupQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -1665,47 +2112,158 @@ export type FetchWorkingGroupQuery = {
   >;
 };
 
-export type FetchWorkingGroupsQueryVariables = Exact<{ [key: string]: never }>;
+export type FetchWorkingGroupNetworkQueryVariables = Exact<{
+  [key: string]: never;
+}>;
 
-export type FetchWorkingGroupsQuery = {
-  queryWorkingGroupsContentsWithTotal: Maybe<
-    Pick<WorkingGroupsResultDto, 'total'> & {
-      items: Maybe<
-        Array<
-          Pick<WorkingGroups, 'id'> & {
-            flatData: Pick<
-              WorkingGroupsFlatDataDto,
-              | 'title'
-              | 'shortDescription'
-              | 'leadingMembers'
-              | 'description'
-              | 'primaryEmail'
-              | 'secondaryEmail'
-            > & {
-              members: Maybe<
-                Array<
-                  Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
-                    user: Maybe<
-                      Array<
-                        Pick<
-                          Users,
-                          'id' | 'created' | 'lastModified' | 'version'
-                        > & {
-                          flatData: Pick<
-                            UsersFlatDataDto,
-                            'firstName' | 'lastName'
-                          > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-                        }
-                      >
-                    >;
-                  }
-                >
-              >;
-            };
-          }
-        >
-      >;
-    }
+export type FetchWorkingGroupNetworkQuery = {
+  queryWorkingGroupNetworkContents: Maybe<
+    Array<
+      Pick<WorkingGroupNetwork, 'id'> & {
+        flatData: {
+          complexDisease: Maybe<
+            Array<
+              Pick<WorkingGroups, 'id'> & {
+                flatData: Pick<
+                  WorkingGroupsFlatDataDto,
+                  | 'title'
+                  | 'shortDescription'
+                  | 'leadingMembers'
+                  | 'description'
+                  | 'primaryEmail'
+                  | 'secondaryEmail'
+                > & {
+                  members: Maybe<
+                    Array<
+                      Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                        user: Maybe<
+                          Array<
+                            Pick<
+                              Users,
+                              'id' | 'created' | 'lastModified' | 'version'
+                            > & {
+                              flatData: Pick<
+                                UsersFlatDataDto,
+                                'firstName' | 'lastName'
+                              > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                            }
+                          >
+                        >;
+                      }
+                    >
+                  >;
+                };
+              }
+            >
+          >;
+          monogenic: Maybe<
+            Array<
+              Pick<WorkingGroups, 'id'> & {
+                flatData: Pick<
+                  WorkingGroupsFlatDataDto,
+                  | 'title'
+                  | 'shortDescription'
+                  | 'leadingMembers'
+                  | 'description'
+                  | 'primaryEmail'
+                  | 'secondaryEmail'
+                > & {
+                  members: Maybe<
+                    Array<
+                      Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                        user: Maybe<
+                          Array<
+                            Pick<
+                              Users,
+                              'id' | 'created' | 'lastModified' | 'version'
+                            > & {
+                              flatData: Pick<
+                                UsersFlatDataDto,
+                                'firstName' | 'lastName'
+                              > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                            }
+                          >
+                        >;
+                      }
+                    >
+                  >;
+                };
+              }
+            >
+          >;
+          operational: Maybe<
+            Array<
+              Pick<WorkingGroups, 'id'> & {
+                flatData: Pick<
+                  WorkingGroupsFlatDataDto,
+                  | 'title'
+                  | 'shortDescription'
+                  | 'leadingMembers'
+                  | 'description'
+                  | 'primaryEmail'
+                  | 'secondaryEmail'
+                > & {
+                  members: Maybe<
+                    Array<
+                      Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                        user: Maybe<
+                          Array<
+                            Pick<
+                              Users,
+                              'id' | 'created' | 'lastModified' | 'version'
+                            > & {
+                              flatData: Pick<
+                                UsersFlatDataDto,
+                                'firstName' | 'lastName'
+                              > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                            }
+                          >
+                        >;
+                      }
+                    >
+                  >;
+                };
+              }
+            >
+          >;
+          support: Maybe<
+            Array<
+              Pick<WorkingGroups, 'id'> & {
+                flatData: Pick<
+                  WorkingGroupsFlatDataDto,
+                  | 'title'
+                  | 'shortDescription'
+                  | 'leadingMembers'
+                  | 'description'
+                  | 'primaryEmail'
+                  | 'secondaryEmail'
+                > & {
+                  members: Maybe<
+                    Array<
+                      Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                        user: Maybe<
+                          Array<
+                            Pick<
+                              Users,
+                              'id' | 'created' | 'lastModified' | 'version'
+                            > & {
+                              flatData: Pick<
+                                UsersFlatDataDto,
+                                'firstName' | 'lastName'
+                              > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                            }
+                          >
+                        >;
+                      }
+                    >
+                  >;
+                };
+              }
+            >
+          >;
+        };
+      }
+    >
   >;
 };
 
@@ -1967,6 +2525,87 @@ export const WorkingGroupContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<WorkingGroupContentFragment, unknown>;
+export const WorkingGroupNetworkContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'WorkingGroupNetworkContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'WorkingGroupNetwork' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'complexDisease' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'WorkingGroupContent' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'monogenic' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'WorkingGroupContent' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'operational' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'WorkingGroupContent' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'support' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'WorkingGroupContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...WorkingGroupContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<WorkingGroupNetworkContentFragment, unknown>;
 export const FetchProjectDocument = {
   kind: 'Document',
   definitions: [
@@ -2270,49 +2909,25 @@ export const FetchWorkingGroupDocument = {
   FetchWorkingGroupQuery,
   FetchWorkingGroupQueryVariables
 >;
-export const FetchWorkingGroupsDocument = {
+export const FetchWorkingGroupNetworkDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'FetchWorkingGroups' },
+      name: { kind: 'Name', value: 'FetchWorkingGroupNetwork' },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
           {
             kind: 'Field',
-            name: {
-              kind: 'Name',
-              value: 'queryWorkingGroupsContentsWithTotal',
-            },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'orderby' },
-                value: {
-                  kind: 'StringValue',
-                  value: 'created desc',
-                  block: false,
-                },
-              },
-            ],
+            name: { kind: 'Name', value: 'queryWorkingGroupNetworkContents' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
                 {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'items' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'WorkingGroupContent' },
-                      },
-                    ],
-                  },
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'WorkingGroupNetworkContent' },
                 },
               ],
             },
@@ -2320,9 +2935,9 @@ export const FetchWorkingGroupsDocument = {
         ],
       },
     },
-    ...WorkingGroupContentFragmentDoc.definitions,
+    ...WorkingGroupNetworkContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
-  FetchWorkingGroupsQuery,
-  FetchWorkingGroupsQueryVariables
+  FetchWorkingGroupNetworkQuery,
+  FetchWorkingGroupNetworkQueryVariables
 >;

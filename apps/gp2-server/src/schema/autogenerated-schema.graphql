@@ -44,6 +44,17 @@ type AppMutations {
     """The status for the content."""
     status: String!
   ): Users!
+  """Change a Working Group Network content."""
+  changeWorkingGroupNetworkContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): WorkingGroupNetwork!
   """Change a Working Groups content."""
   changeWorkingGroupsContent(
     """The timestamp when the status should be changed."""
@@ -88,6 +99,17 @@ type AppMutations {
     """The initial status."""
     status: String
   ): Users!
+  """Creates an Working Group Network content."""
+  createWorkingGroupNetworkContent(
+    """The data for the content."""
+    data: WorkingGroupNetworkDataInputDto!
+    """The optional custom content ID."""
+    id: String
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): WorkingGroupNetwork!
   """Creates an Working Groups content."""
   createWorkingGroupsContent(
     """The data for the content."""
@@ -115,6 +137,13 @@ type AppMutations {
   ): EntitySavedResultDto!
   """Delete an Users content."""
   deleteUsersContent(
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The id of the content (usually GUID)."""
+    id: String!
+  ): EntitySavedResultDto!
+  """Delete an Working Group Network content."""
+  deleteWorkingGroupNetworkContent(
     """The expected version."""
     expectedVersion: Int = -2
     """The id of the content (usually GUID)."""
@@ -154,6 +183,15 @@ type AppMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Users!
+  """Patch an Working Group Network content by id."""
+  patchWorkingGroupNetworkContent(
+    """The data for the content."""
+    data: WorkingGroupNetworkDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): WorkingGroupNetwork!
   """Patch an Working Groups content by id."""
   patchWorkingGroupsContent(
     """The data for the content."""
@@ -196,6 +234,17 @@ type AppMutations {
     """The status for the content."""
     status: String!
   ): Users! @deprecated(reason: "Use 'changeUsersContent' instead")
+  """Publish a Working Group Network content."""
+  publishWorkingGroupNetworkContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): WorkingGroupNetwork! @deprecated(reason: "Use 'changeWorkingGroupNetworkContent' instead")
   """Publish a Working Groups content."""
   publishWorkingGroupsContent(
     """The timestamp when the status should be changed."""
@@ -234,6 +283,15 @@ type AppMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Users!
+  """Update an Working Group Network content by id."""
+  updateWorkingGroupNetworkContent(
+    """The data for the content."""
+    data: WorkingGroupNetworkDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): WorkingGroupNetwork!
   """Update an Working Groups content by id."""
   updateWorkingGroupsContent(
     """The data for the content."""
@@ -288,6 +346,21 @@ type AppMutations {
     """The initial status."""
     status: String
   ): Users!
+  """Upsert an Working Group Network content by id."""
+  upsertWorkingGroupNetworkContent(
+    """The data for the content."""
+    data: WorkingGroupNetworkDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): WorkingGroupNetwork!
   """Upsert an Working Groups content by id."""
   upsertWorkingGroupsContent(
     """The data for the content."""
@@ -333,6 +406,13 @@ type AppQueries {
     """The optional version of the content to retrieve an older instance (not cached)."""
     version: Int
   ): Users
+  """Find an Working Group Network content by id."""
+  findWorkingGroupNetworkContent(
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The optional version of the content to retrieve an older instance (not cached)."""
+    version: Int
+  ): WorkingGroupNetwork
   """Find an Working Groups content by id."""
   findWorkingGroupsContent(
     """The ID of the object (usually GUID)."""
@@ -440,6 +520,32 @@ type AppQueries {
     """Optional number of contents to take."""
     top: Int
   ): UsersResultDto
+  """Query Working Group Network content items."""
+  queryWorkingGroupNetworkContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [WorkingGroupNetwork!]
+  """Query Working Group Network content items with total count."""
+  queryWorkingGroupNetworkContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): WorkingGroupNetworkResultDto
   """Query Working Groups content items."""
   queryWorkingGroupsContents(
     """Optional OData filter."""
@@ -680,6 +786,32 @@ type Dashboard implements Content {
     """Optional number of contents to take."""
     top: Int
   ): UsersResultDto
+  """Query Working Group Network content items."""
+  referencesWorkingGroupNetworkContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [WorkingGroupNetwork!]
+  """Query Working Group Network content items with total count."""
+  referencesWorkingGroupNetworkContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): WorkingGroupNetworkResultDto
   """Query Working Groups content items."""
   referencesWorkingGroupsContents(
     """Optional OData filter."""
@@ -764,7 +896,7 @@ input DashboardDataNewsInputDto {
   iv: [String!]
 }
 
-union DashboardDataNewsUnionDto = Dashboard | Projects | Users | WorkingGroups
+union DashboardDataNewsUnionDto = Dashboard | Projects | Users | WorkingGroupNetwork | WorkingGroups
 
 """The structure of the Where to Start field of the Dashboard content type."""
 type DashboardDataPagesDto {
@@ -776,7 +908,7 @@ input DashboardDataPagesInputDto {
   iv: [String!]
 }
 
-union DashboardDataPagesUnionDto = Dashboard | Projects | Users | WorkingGroups
+union DashboardDataPagesUnionDto = Dashboard | Projects | Users | WorkingGroupNetwork | WorkingGroups
 
 """The structure of the flat Dashboard data type."""
 type DashboardFlatDataDto {
@@ -1266,6 +1398,166 @@ type UsersResultDto {
   total: Int!
 }
 
+"""The structure of a Working Group Network content type."""
+type WorkingGroupNetwork implements Content {
+  """The timestamp when the object was created."""
+  created: Instant!
+  """The user who created the object."""
+  createdBy: String!
+  """The user who created the object."""
+  createdByUser: User!
+  """The data of the content."""
+  data: WorkingGroupNetworkDataDto!
+  """The edit token."""
+  editToken: String
+  """The flat data of the content."""
+  flatData: WorkingGroupNetworkFlatDataDto!
+  """The ID of the object (usually GUID)."""
+  id: String!
+  """The timestamp when the object was updated the last time."""
+  lastModified: Instant!
+  """The user who updated the object the last time."""
+  lastModifiedBy: String!
+  """The user who updated the object the last time."""
+  lastModifiedByUser: User!
+  """The new status of the content."""
+  newStatus: String
+  """The status color of the content."""
+  newStatusColor: String
+  """Query Working Groups content items."""
+  referencesWorkingGroupsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [WorkingGroups!]
+  """Query Working Groups content items with total count."""
+  referencesWorkingGroupsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): WorkingGroupsResultDto
+  """Query Dashboard content items."""
+  referencingDashboardContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [Dashboard!]
+  """Query Dashboard content items with total count."""
+  referencingDashboardContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): DashboardResultDto
+  """The status of the content."""
+  status: String!
+  """The status color of the content."""
+  statusColor: String!
+  """The URL to the content."""
+  url: String!
+  """The version of the objec."""
+  version: Int!
+}
+
+"""The structure of the Complex Disease Working Groups field of the Working Group Network content type."""
+type WorkingGroupNetworkDataComplexDiseaseDto {
+  iv: [WorkingGroups!]
+}
+
+"""The structure of the Complex Disease Working Groups field of the Working Group Network content input type."""
+input WorkingGroupNetworkDataComplexDiseaseInputDto {
+  iv: [String!]
+}
+
+"""The structure of the Working Group Network data type."""
+type WorkingGroupNetworkDataDto {
+  complexDisease: WorkingGroupNetworkDataComplexDiseaseDto
+  monogenic: WorkingGroupNetworkDataMonogenicDto
+  operational: WorkingGroupNetworkDataOperationalDto
+  support: WorkingGroupNetworkDataSupportDto
+}
+
+"""The structure of the Working Group Network data input type."""
+input WorkingGroupNetworkDataInputDto {
+  complexDisease: WorkingGroupNetworkDataComplexDiseaseInputDto
+  monogenic: WorkingGroupNetworkDataMonogenicInputDto
+  operational: WorkingGroupNetworkDataOperationalInputDto
+  support: WorkingGroupNetworkDataSupportInputDto
+}
+
+"""The structure of the Monogenic Working Groups field of the Working Group Network content type."""
+type WorkingGroupNetworkDataMonogenicDto {
+  iv: [WorkingGroups!]
+}
+
+"""The structure of the Monogenic Working Groups field of the Working Group Network content input type."""
+input WorkingGroupNetworkDataMonogenicInputDto {
+  iv: [String!]
+}
+
+"""The structure of the Operational Working Groups field of the Working Group Network content type."""
+type WorkingGroupNetworkDataOperationalDto {
+  iv: [WorkingGroups!]
+}
+
+"""The structure of the Operational Working Groups field of the Working Group Network content input type."""
+input WorkingGroupNetworkDataOperationalInputDto {
+  iv: [String!]
+}
+
+"""The structure of the Support Working Groups field of the Working Group Network content type."""
+type WorkingGroupNetworkDataSupportDto {
+  iv: [WorkingGroups!]
+}
+
+"""The structure of the Support Working Groups field of the Working Group Network content input type."""
+input WorkingGroupNetworkDataSupportInputDto {
+  iv: [String!]
+}
+
+"""The structure of the flat Working Group Network data type."""
+type WorkingGroupNetworkFlatDataDto {
+  complexDisease: [WorkingGroups!]
+  monogenic: [WorkingGroups!]
+  operational: [WorkingGroups!]
+  support: [WorkingGroups!]
+}
+
+"""List of Working Group Network items and total count."""
+type WorkingGroupNetworkResultDto {
+  """The contents."""
+  items: [WorkingGroupNetwork!]
+  """The total count of  contents."""
+  total: Int!
+}
+
 """The structure of a Working Groups content type."""
 type WorkingGroups implements Content {
   """The timestamp when the object was created."""
@@ -1344,6 +1636,32 @@ type WorkingGroups implements Content {
     """Optional number of contents to take."""
     top: Int
   ): DashboardResultDto
+  """Query Working Group Network content items."""
+  referencingWorkingGroupNetworkContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): [WorkingGroupNetwork!]
+  """Query Working Group Network content items with total count."""
+  referencingWorkingGroupNetworkContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of contents to skip."""
+    skip: Int = 0
+    """Optional number of contents to take."""
+    top: Int
+  ): WorkingGroupNetworkResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""

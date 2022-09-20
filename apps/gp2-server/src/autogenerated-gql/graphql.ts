@@ -1128,12 +1128,12 @@ export type UsersDataConnectionsInputDto = {
 
 /** The structure of the Degree field of the Users content type. */
 export type UsersDataDegreeDto = {
-  iv: Maybe<Array<DegreeEnum>>;
+  iv: Maybe<Scalars['String']>;
 };
 
 /** The structure of the Degree field of the Users content input type. */
 export type UsersDataDegreeInputDto = {
-  iv: InputMaybe<Array<DegreeEnum>>;
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Users data type. */
@@ -1216,7 +1216,7 @@ export type UsersDataRoleInputDto = {
 export type UsersFlatDataDto = {
   avatar: Maybe<Array<Asset>>;
   connections: Maybe<Array<UsersDataConnectionsChildDto>>;
-  degree: Maybe<Array<DegreeEnum>>;
+  degree: Maybe<Scalars['String']>;
   email: Maybe<Scalars['String']>;
   firstName: Maybe<Scalars['String']>;
   lastName: Maybe<Scalars['String']>;
@@ -1435,35 +1435,6 @@ export type WorkingGroupsResultDto = {
   /** The total count of  contents. */
   total: Scalars['Int'];
 };
-
-export enum DegreeEnum {
-  /** AA */
-  Aa = 'AA',
-  /** AAS */
-  Aas = 'AAS',
-  /** BA */
-  Ba = 'BA',
-  /** BSc */
-  BSc = 'BSc',
-  /** MA */
-  Ma = 'MA',
-  /** MBA */
-  Mba = 'MBA',
-  /** MBBS */
-  Mbbs = 'MBBS',
-  /** MD */
-  Md = 'MD',
-  /** MD_PhD */
-  MdPhD = 'MD_PhD',
-  /** MPH */
-  Mph = 'MPH',
-  /** MSc */
-  MSc = 'MSc',
-  /** PhD */
-  PhD = 'PhD',
-  /** PharmD */
-  PharmD = 'PharmD',
-}
 
 export type ProjectContentFragment = Pick<Projects, 'id'> & {
   flatData: Pick<

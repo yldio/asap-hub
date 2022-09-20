@@ -5369,7 +5369,13 @@ export type FetchDashboardQuery = {
             > & {
               flatData: Pick<
                 NewsAndEventsFlatDataDto,
-                'title' | 'shortText' | 'text' | 'type' | 'link' | 'linkText'
+                | 'title'
+                | 'shortText'
+                | 'text'
+                | 'type'
+                | 'frequency'
+                | 'link'
+                | 'linkText'
               > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
             }
           >
@@ -5403,7 +5409,13 @@ export type FetchDiscoverQuery = {
             > & {
               flatData: Pick<
                 NewsAndEventsFlatDataDto,
-                'title' | 'shortText' | 'text' | 'type' | 'link' | 'linkText'
+                | 'title'
+                | 'shortText'
+                | 'text'
+                | 'type'
+                | 'frequency'
+                | 'link'
+                | 'linkText'
               > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
             }
           >
@@ -5416,7 +5428,13 @@ export type FetchDiscoverQuery = {
             > & {
               flatData: Pick<
                 NewsAndEventsFlatDataDto,
-                'title' | 'shortText' | 'text' | 'type' | 'link' | 'linkText'
+                | 'title'
+                | 'shortText'
+                | 'text'
+                | 'type'
+                | 'frequency'
+                | 'link'
+                | 'linkText'
               > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
             }
           >
@@ -7323,7 +7341,7 @@ export type NewsFragment = Pick<
 > & {
   flatData: Pick<
     NewsAndEventsFlatDataDto,
-    'title' | 'shortText' | 'text' | 'type' | 'link' | 'linkText'
+    'title' | 'shortText' | 'text' | 'type' | 'frequency' | 'link' | 'linkText'
   > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
 };
 
@@ -9866,6 +9884,7 @@ export const NewsFragmentDoc = {
                     ],
                   },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'frequency' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'link' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'linkText' } },
               ],

@@ -1,7 +1,4 @@
-import {
-  createProjectResponse,
-  createProjectsResponse,
-} from '@asap-hub/fixtures';
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
@@ -48,7 +45,7 @@ it('renders the Title', async () => {
   const mockGetProjects = getProjects as jest.MockedFunction<
     typeof getProjects
   >;
-  mockGetProjects.mockResolvedValueOnce(createProjectsResponse());
+  mockGetProjects.mockResolvedValueOnce(gp2Fixtures.createProjectsResponse());
   await renderProjectsList();
   expect(
     screen.getByRole('heading', { name: 'Project Title' }),
@@ -59,16 +56,16 @@ it('renders a list of working groups', async () => {
   const mockGetProjects = getProjects as jest.MockedFunction<
     typeof getProjects
   >;
-  const firstProject = createProjectResponse({
+  const firstProject = gp2Fixtures.createProjectResponse({
     id: '42',
     title: 'Project 42',
   });
-  const secondProject = createProjectResponse({
+  const secondProject = gp2Fixtures.createProjectResponse({
     id: '11',
     title: 'Project 11',
   });
   mockGetProjects.mockResolvedValue(
-    createProjectsResponse([firstProject, secondProject]),
+    gp2Fixtures.createProjectsResponse([firstProject, secondProject]),
   );
   await renderProjectsList();
   expect(

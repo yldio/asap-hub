@@ -1,6 +1,8 @@
 import { UsersPage } from '@asap-hub/gp2-components';
-import { FC } from 'react';
+import { useUsersState } from './state';
 
-const Users: FC<Record<string, never>> = () => <UsersPage />;
-
+const Users: React.FC<Record<string, never>> = () => {
+  const users = useUsersState();
+  return <UsersPage users={users} />;
+};
 export default Users;

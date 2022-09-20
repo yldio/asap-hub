@@ -1,5 +1,5 @@
-import { createWorkingGroupResponse } from '@asap-hub/fixtures';
-import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
 import { getWorkingGroup, getWorkingGroups } from '../api';
@@ -13,7 +13,7 @@ describe('getWorkingGroup', () => {
   });
 
   it('returns a successfully fetched working group by id', async () => {
-    const workingGroupResponse = createWorkingGroupResponse();
+    const workingGroupResponse = gp2Fixtures.createWorkingGroupResponse();
     const { id } = workingGroupResponse;
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get(`/working-group/${id}`)
@@ -50,8 +50,8 @@ describe('getWorkingGroups', () => {
   });
 
   it('returns a successfully fetched working groups', async () => {
-    const workingGroupResponse: gp2.ListWorkingGroupResponse = {
-      items: [createWorkingGroupResponse()],
+    const workingGroupResponse: gp2Model.ListWorkingGroupResponse = {
+      items: [gp2Fixtures.createWorkingGroupResponse()],
       total: 1,
     };
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })

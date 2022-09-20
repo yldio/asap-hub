@@ -1,5 +1,5 @@
-import { createProjectResponse } from '@asap-hub/fixtures';
-import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
 import { getProject, getProjects } from '../api';
@@ -13,7 +13,7 @@ describe('getProject', () => {
   });
 
   it('returns a successfully fetched project by id', async () => {
-    const projectResponse = createProjectResponse();
+    const projectResponse = gp2Fixtures.createProjectResponse();
     const { id } = projectResponse;
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get(`/project/${id}`)
@@ -50,8 +50,8 @@ describe('getProjects', () => {
   });
 
   it('returns a successfully fetched projects', async () => {
-    const projectsResponse: gp2.ListProjectResponse = {
-      items: [createProjectResponse()],
+    const projectsResponse: gp2Model.ListProjectResponse = {
+      items: [gp2Fixtures.createProjectResponse()],
       total: 1,
     };
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })

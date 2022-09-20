@@ -24,3 +24,4 @@ react-app-gtm-container-id=GTM-M5HZBRZ
 react-app-sentry-dsn=https://8cd3c59be8ec4118aa6f6c59487b9e56@o850903.ingest.sentry.io/5893160
 ses-region=us-east-1
 sls-stage=production
+contentful-environment=Production

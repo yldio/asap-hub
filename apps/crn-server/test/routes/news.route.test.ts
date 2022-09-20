@@ -54,6 +54,23 @@ describe('/news/ route', () => {
       expect(newsControllerMock.fetch).toBeCalledWith(expectedParams);
     });
 
+    test('Should call the controller with the right filters', async () => {
+      const expectedParams = {
+        take: 15,
+        skip: 5,
+        filter: 'CRN Quaterly',
+      };
+
+      await supertest(app).get('/news').query(expectedParams);
+
+      expect(newsControllerMock.fetch).toBeCalledWith({
+        ...expectedParams,
+        filter: {
+          frequency: ['CRN Quaterly'],
+        },
+      });
+    });
+
     describe('Parameter validation', () => {
       test('Should return a validation error when additional fields exist', async () => {
         const response = await supertest(app).get(`/news`).query({

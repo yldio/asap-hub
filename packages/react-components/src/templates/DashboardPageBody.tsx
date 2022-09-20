@@ -8,13 +8,19 @@ import {
   dashboard,
   events as eventsRoute,
 } from '@asap-hub/routing';
-import { TeamRole, UserResponse, ListEventResponse } from '@asap-hub/model';
+import {
+  TeamRole,
+  UserResponse,
+  ListEventResponse,
+  ListResearchOutputResponse,
+} from '@asap-hub/model';
 import {
   NewsSection,
   HelpSection,
   RemindersCard,
   DashboardUpcomingEvents,
   PastEventsDashboardCard,
+  RecentSharedOutputs,
 } from '../organisms';
 import { perRem } from '../pixels';
 import { Card, Paragraph, Link, Headline2 } from '../atoms';
@@ -60,6 +66,7 @@ type DashboardPageBodyProps = Pick<
     roles: TeamRole[];
   } & {
     upcomingEvents?: ListEventResponse;
+    recentSharedOutputs?: ListResearchOutputResponse;
   };
 
 const publishRoles: TeamRole[] = ['ASAP Staff', 'Project Manager'];
@@ -73,6 +80,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   pastEvents,
   dismissedGettingStarted,
   upcomingEvents,
+  recentSharedOutputs,
 }) => {
   const canPublish = roles.some((role) => publishRoles.includes(role));
 
@@ -144,6 +152,18 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <p css={viewAllStyles} data-testid="view-past-events">
           <Link href={eventsRoute({}).past({}).$}>View All →</Link>
         </p>
+      </div>
+      <div>
+        <Headline2 styleAsHeading={3}>Recent Shared Research</Headline2>
+        <div css={infoStyles}>
+          Explore the latest shared research and learn more about them.
+        </div>
+        <RecentSharedOutputs outputs={recentSharedOutputs?.items} />
+        {recentSharedOutputs && recentSharedOutputs.total > 5 && (
+          <p css={viewAllStyles} data-testid="view-recent-shared-outputs">
+            <Link href={sharedResearch({}).$}>View All →</Link>
+          </p>
+        )}
       </div>
       {news.length ? (
         <NewsSection title="Latest News from ASAP" news={news} />

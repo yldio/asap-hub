@@ -1,7 +1,10 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
-import { createListEventResponse } from '@asap-hub/fixtures';
-
+import {
+  createListEventResponse,
+  createListResearchOutputResponse,
+  createResearchOutputResponse,
+} from '@asap-hub/fixtures';
 import DashboardPageBody from '../DashboardPageBody';
 
 const props: ComponentProps<typeof DashboardPageBody> = {
@@ -26,6 +29,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   reminders: [],
   dismissedGettingStarted: false,
   upcomingEvents: undefined,
+  recentSharedOutputs: createListResearchOutputResponse(5),
 };
 it('renders multiple news cards', () => {
   render(
@@ -116,6 +120,56 @@ describe('the past events card', () => {
     expect(
       screen.getByTestId('view-past-events').querySelector('a'),
     ).toHaveAttribute('href', '/events/past');
+  });
+});
+
+describe('the recent shared outputs card', () => {
+  it('renders multiple recent outputs', () => {
+    const { getByText } = render(
+      <DashboardPageBody
+        {...props}
+        recentSharedOutputs={{
+          items: [
+            {
+              ...createResearchOutputResponse(),
+              title: 'Shared 1',
+              documentType: 'Article',
+            },
+            {
+              ...createResearchOutputResponse(),
+              title: 'Shared 2',
+              documentType: 'Article',
+            },
+            {
+              ...createResearchOutputResponse(),
+              title: 'Shared 3',
+              documentType: 'Article',
+            },
+          ],
+          total: 3,
+        }}
+      />,
+    );
+
+    expect(getByText('Shared 1')).toBeVisible();
+    expect(getByText('Shared 2')).toBeVisible();
+    expect(getByText('Shared 3')).toBeVisible();
+  });
+
+  it('renders the link to view all shared research', () => {
+    render(
+      <DashboardPageBody
+        {...props}
+        recentSharedOutputs={createListResearchOutputResponse(6)}
+      />,
+    );
+
+    expect(
+      screen.getByTestId('view-recent-shared-outputs').querySelector('a'),
+    ).toHaveTextContent('View All');
+    expect(
+      screen.getByTestId('view-recent-shared-outputs').querySelector('a'),
+    ).toHaveAttribute('href', '/shared-research');
   });
 });
 

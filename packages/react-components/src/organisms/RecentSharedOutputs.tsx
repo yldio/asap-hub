@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 
 import { Card, Headline4, Link } from '../atoms';
 import { formatDateToTimezone } from '../date';
-import { mobileScreen, perRem, tabletScreen } from '../pixels';
+import { perRem, tabletScreen } from '../pixels';
 import { lead, steel } from '../colors';
 import { protocol } from '../icons';
 
@@ -24,7 +24,7 @@ const gridStyles = css({
 });
 
 const labelStyle = css({
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     gridTemplateColumns: '1fr 1fr 1fr',
     gridAutoFlow: 'column',
     alignItems: 'start',
@@ -46,7 +46,7 @@ const headerStyle = css({
     gridAutoFlow: 'column',
     alignItems: 'start',
   },
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     display: 'none',
   },
 });
@@ -66,7 +66,7 @@ const speakerListStyles = css({
   ':nth-last-child(n+2)': {
     borderBottom: `1px solid ${steel.rgb}`,
   },
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     gridAutoFlow: 'row',
     alignItems: 'start',
   },
@@ -80,17 +80,17 @@ const paragraphStyle = css({
   flexDirection: 'row',
   gap: `${6 / perRem}em`,
   color: lead.rgb,
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     marginTop: `${15 / perRem}em`,
     marginBottom: `${21 / perRem}em`,
   },
 });
 
 type RecentSharedOutputProp = {
-  outputs: ResearchOutputResponse[];
+  outputs?: ResearchOutputResponse[];
 };
 
-const RecentSharedOutput: React.FC<RecentSharedOutputProp> = ({ outputs }) => (
+const RecentSharedOutputs: React.FC<RecentSharedOutputProp> = ({ outputs }) => (
   <Card>
     <div css={headerStyle}>
       <Headline4 styleAsHeading={4}>Shared Output</Headline4>
@@ -98,48 +98,49 @@ const RecentSharedOutput: React.FC<RecentSharedOutputProp> = ({ outputs }) => (
       <Headline4 styleAsHeading={4}>Date</Headline4>
     </div>
     <div css={gridStyles}>
-      {outputs.map((output) => (
-        <div key={output.id} css={speakerListStyles}>
-          <div css={groupStyle}>
-            <div css={labelStyle}>
-              <span>Shared Output</span>
+      {outputs &&
+        outputs.map((output) => (
+          <div key={output.id} css={speakerListStyles}>
+            <div css={groupStyle}>
+              <div css={labelStyle}>
+                <span>Shared Output</span>
+              </div>
+              <div css={paragraphStyle}>
+                <Link
+                  href={
+                    sharedResearch({}).researchOutput({
+                      researchOutputId: output.id,
+                    }).$
+                  }
+                  ellipsed
+                >
+                  {output.title}
+                </Link>
+              </div>
             </div>
-            <div css={paragraphStyle}>
-              <Link
-                href={
-                  sharedResearch({}).researchOutput({
-                    researchOutputId: output.id,
-                  }).$
-                }
-                ellipsed
-              >
-                {output.title}
-              </Link>
+            <div css={groupStyle}>
+              <div css={labelStyle}>
+                <span>Type of Output</span>
+              </div>
+              <p css={paragraphStyle}>
+                {protocol} {output.documentType}
+              </p>
+            </div>
+            <div css={groupStyle}>
+              <div css={labelStyle}>
+                <span>Date</span>
+              </div>
+              <p css={paragraphStyle}>
+                {formatDateToTimezone(
+                  output.addedDate,
+                  'E, d MMM y',
+                ).toUpperCase()}
+              </p>
             </div>
           </div>
-          <div css={groupStyle}>
-            <div css={labelStyle}>
-              <span>Type of Output</span>
-            </div>
-            <p css={paragraphStyle}>
-              {protocol} {output.documentType}
-            </p>
-          </div>
-          <div css={groupStyle}>
-            <div css={labelStyle}>
-              <span>Date</span>
-            </div>
-            <p css={paragraphStyle}>
-              {formatDateToTimezone(
-                output.addedDate,
-                'E, d MMM y',
-              ).toUpperCase()}
-            </p>
-          </div>
-        </div>
-      ))}
+        ))}
     </div>
   </Card>
 );
 
-export default RecentSharedOutput;
+export default RecentSharedOutputs;

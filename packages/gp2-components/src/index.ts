@@ -11,6 +11,8 @@ export {
   DashboardPage,
   DashboardPageBody,
   Layout,
+  Theme,
+  ProjectDetailPage,
   ProjectsPage,
   Theme,
   UsersPage,

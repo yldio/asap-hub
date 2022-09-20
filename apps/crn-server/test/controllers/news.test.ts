@@ -121,6 +121,23 @@ describe('News controller', () => {
       expect(result.items[0]!.thumbnail).toBeUndefined();
     });
 
+    test('Should query data properly when request does not have options', async () => {
+      nock(baseUrl)
+        .get(`/api/content/${appName}/news-and-events`)
+        .query({
+          q: JSON.stringify({
+            take: 8,
+            filter: { path: 'data.type.iv', op: 'ne', value: 'Tutorial' },
+            sort: [{ order: 'descending', path: 'created' }],
+          }),
+        })
+        .reply(200, newsSquidexApiResponse);
+
+      const result = await news.fetch();
+
+      expect(result).toEqual(listNewsResponse);
+    });
+
     describe('Frequency Filter', () => {
       test('Should query data properly when News Articles is selected', async () => {
         nock(baseUrl)
@@ -199,7 +216,7 @@ describe('News controller', () => {
     });
 
     describe('Text Filter', () => {
-      test('Should query data properly when passing search param', async () => {
+      test('Should query data properly when passing search param and no frequency is selected', async () => {
         nock(baseUrl)
           .get(`/api/content/${appName}/news-and-events`)
           .query({
@@ -220,6 +237,41 @@ describe('News controller', () => {
         const result = await news.fetch({
           take: 8,
           skip: 5,
+          search: 'hey',
+        });
+
+        expect(result).toEqual(listNewsResponse);
+      });
+
+      test('Should query data properly when passing search param and frequency is selected', async () => {
+        nock(baseUrl)
+          .get(`/api/content/${appName}/news-and-events`)
+          .query({
+            q: JSON.stringify({
+              take: 8,
+              skip: 5,
+              filter: {
+                and: [
+                  { path: 'data.type.iv', op: 'ne', value: 'Tutorial' },
+                  {
+                    path: 'data.frequency.iv',
+                    op: 'in',
+                    value: ['CRN Quarterly'],
+                  },
+                  { path: 'data.title.iv', op: 'contains', value: 'hey' },
+                ],
+              },
+              sort: [{ order: 'descending', path: 'created' }],
+            }),
+          })
+          .reply(200, newsSquidexApiResponse);
+
+        const result = await news.fetch({
+          take: 8,
+          skip: 5,
+          filter: {
+            frequency: ['CRN Quarterly'],
+          },
           search: 'hey',
         });
 

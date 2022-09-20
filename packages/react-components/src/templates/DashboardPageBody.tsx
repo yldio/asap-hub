@@ -142,6 +142,11 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
         <div css={infoStyles}>Here are some upcoming events.</div>
         <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
+        {upcomingEvents && upcomingEvents.total > 3 && (
+          <p css={viewAllStyles} data-testid="view-upcoming-events">
+            <Link href={eventsRoute({}).upcoming({}).$}>View All →</Link>
+          </p>
+        )}
       </div>
       <div>
         <Headline2 styleAsHeading={3}>Past Events</Headline2>
@@ -156,7 +161,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
       <div>
         <Headline2 styleAsHeading={3}>Recent Shared Research</Headline2>
         <div css={infoStyles}>
-          Explore the latest shared research and learn more about them.
+          Explore and learn more about the latest Shared Research.
         </div>
         <RecentSharedOutputs outputs={recentSharedOutputs?.items} />
         {recentSharedOutputs && recentSharedOutputs.total > 5 && (

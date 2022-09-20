@@ -11,7 +11,7 @@ import { protocol } from '../icons';
 const gridMixin = {
   display: 'grid',
   [`@media (min-width: ${tabletScreen.width}px)`]: {
-    gridTemplateColumns: '2fr 1fr 0.8fr',
+    gridTemplateColumns: '3fr 2fr 2fr',
     gridAutoFlow: 'column',
     alignItems: 'start',
     gridAutoRows: `${66 / perRem}em`,
@@ -42,9 +42,10 @@ const groupStyle = css({
 const headerStyle = css({
   display: 'grid',
   [`@media (min-width: ${tabletScreen.width}px)`]: {
-    gridTemplateColumns: '2fr 1fr 0.8fr',
+    gridTemplateColumns: '3fr 2fr 2fr',
     gridAutoFlow: 'column',
     alignItems: 'start',
+    columnGap: `${15 / perRem}em`,
   },
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     display: 'none',
@@ -54,6 +55,7 @@ const headerStyle = css({
 const speakerListStyles = css({
   ...gridMixin,
   paddingTop: `${21 / perRem}em`,
+  columnGap: `${15 / perRem}em`,
   [`@media (min-width: ${tabletScreen.width}px)`]: {
     ...gridMixin,
     ':nth-child(1)': {
@@ -93,9 +95,9 @@ type RecentSharedOutputProp = {
 const RecentSharedOutputs: React.FC<RecentSharedOutputProp> = ({ outputs }) => (
   <Card>
     <div css={headerStyle}>
-      <Headline4 styleAsHeading={4}>Shared Output</Headline4>
-      <Headline4 styleAsHeading={4}>Type of Output</Headline4>
-      <Headline4 styleAsHeading={4}>Date</Headline4>
+      <Headline4 styleAsHeading={5}>Shared Output</Headline4>
+      <Headline4 styleAsHeading={5}>Type of Output</Headline4>
+      <Headline4 styleAsHeading={5}>Date</Headline4>
     </div>
     <div css={gridStyles}>
       {outputs &&

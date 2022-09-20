@@ -733,7 +733,7 @@ __metadata:
     serverless-http: 2.7.0
     serverless-iam-roles-per-function: 2.0.2
     serverless-s3-sync: 3.0.0
-    serverless-webpack: 5.8.0
+    serverless-webpack: 5.9.1
     source-map-support: 0.5.21
     stream-json: 1.7.4
     supertest: 6.2.4
@@ -1125,7 +1125,7 @@ __metadata:
     serverless: 3.22.0
     serverless-http: 2.7.0
     serverless-s3-sync: 3.0.0
-    serverless-webpack: 5.8.0
+    serverless-webpack: 5.9.1
     source-map-support: 0.5.21
     supertest: 6.2.4
     ts-node: 10.9.1
@@ -16858,17 +16858,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"builtin-modules@npm:^3.0.0, builtin-modules@npm:^3.2.0":
+"builtin-modules@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "builtin-modules@npm:3.1.0"
+  checksum: 954d8004f21961c92218eab15a02d3cea1c6c19312a8228546cdd8feae1dafc1aaa4746c2a8f9be9df15255756cc622fde702ce0ef8a319abfe1a505ca99f38d
+  languageName: node
+  linkType: hard
+
+"builtin-modules@npm:^3.2.0":
   version: 3.2.0
   resolution: "builtin-modules@npm:3.2.0"
   checksum: 0265aa1ba78e1a16f4e18668d815cb43fb364e6a6b8aa9189c6f44c7b894a551a43b323c40206959d2d4b2568c1f2805607ad6c88adc306a776ce6904cca6715
   languageName: node
   linkType: hard
 
-"builtin-modules@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "builtin-modules@npm:3.1.0"
-  checksum: 954d8004f21961c92218eab15a02d3cea1c6c19312a8228546cdd8feae1dafc1aaa4746c2a8f9be9df15255756cc622fde702ce0ef8a319abfe1a505ca99f38d
+"builtin-modules@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "builtin-modules@npm:3.3.0"
+  checksum: db021755d7ed8be048f25668fe2117620861ef6703ea2c65ed2779c9e3636d5c3b82325bd912244293959ff3ae303afa3471f6a15bf5060c103e4cc3a839749d
   languageName: node
   linkType: hard
 
@@ -25452,12 +25459,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-builtin-module@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "is-builtin-module@npm:3.1.0"
+"is-builtin-module@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "is-builtin-module@npm:3.2.0"
   dependencies:
-    builtin-modules: "npm:^3.0.0"
-  checksum: f1e5dd2cd5f252d4d799b20a0c8c4f7e9c399c4d141749af76ca0121058d4062c3015d026f1b1409dd3d2a4ddfb9b15cf6eb9c370fed53fea8652ce35b5e95cb
+    builtin-modules: ^3.3.0
+  checksum: 0315751b898feff0646511c896e88b608a755c5025d0ce9a3ad25783de50be870e47dafb838cebbb06fbb2a948b209ea55348eee267836c9dd40d3a11ec717d3
   languageName: node
   linkType: hard
 
@@ -35357,15 +35364,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"serverless-webpack@npm:5.8.0":
-  version: 5.8.0
-  resolution: "serverless-webpack@npm:5.8.0"
+"serverless-webpack@npm:5.9.1":
+  version: 5.9.1
+  resolution: "serverless-webpack@npm:5.9.1"
   dependencies:
     archiver: ^5.3.1
     bluebird: ^3.7.2
     fs-extra: ^9.1.0
     glob: ^7.2.3
-    is-builtin-module: ^3.1.0
+    is-builtin-module: ^3.2.0
     lodash: ^4.17.21
     semver: ^7.3.7
     ts-node: ">= 8.3.0"
@@ -35375,7 +35382,7 @@ __metadata:
   dependenciesMeta:
     ts-node:
       optional: true
-  checksum: 6265be2441a6c8005b5304bd82be609391b19ece36fc44f16d3bbe9dd5ea45f7ee67e28fcfc628573ee49299bf1f898e23a3116c88f40d57ec2ec2bcdaa10b29
+  checksum: 20d0bcdb990b4277f71bbed4fead8f9b5872f91410262adcec75dd5f928fca9ebb83ef702909f3461fd9acf6fde254b4ac2d4194aa921ce7a173f5a2738e4415
   languageName: node
   linkType: hard
 

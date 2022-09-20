@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@babel/runtime-corejs3": "7.18.9",
+    "@babel/runtime-corejs3": "7.19.1",
     "@types/jest": "26.0.24"
   }
 }

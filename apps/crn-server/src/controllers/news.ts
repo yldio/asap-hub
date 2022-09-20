@@ -2,9 +2,9 @@ import {
   ListNewsResponse,
   NewsResponse,
   FetchNewsOptions,
-  FetchNewsFilter,
+  NewsFrequency,
 } from '@asap-hub/model';
-import { RestNews, SquidexRestClient, Filter } from '@asap-hub/squidex';
+import { RestNews, SquidexRestClient, Filter, Query } from '@asap-hub/squidex';
 
 import { parseNews } from '../entities';
 
@@ -14,9 +14,7 @@ const notTutorialFilter: Filter = {
   value: 'Tutorial',
 };
 
-const getFiltersQuery = (filter?: FetchNewsFilter) => {
-  const frequencyFilter = filter?.frequency;
-
+const getFrequencyFilter = (frequencyFilter: NewsFrequency[]) => {
   const selectByFrequencyFilter = {
     path: 'data.frequency.iv',
     op: 'in',
@@ -31,23 +29,39 @@ const getFiltersQuery = (filter?: FetchNewsFilter) => {
     value: null,
   } as Filter;
 
-  if (frequencyFilter) {
-    if (frequencyFilter.includes('News Articles')) {
-      return {
-        and: [
-          notTutorialFilter,
-          {
-            or: [selectNewsArticlesFilter, selectByFrequencyFilter],
-          },
-        ],
-      };
-    }
+  if (frequencyFilter.includes('News Articles')) {
     return {
-      and: [notTutorialFilter, selectByFrequencyFilter],
+      and: [
+        notTutorialFilter,
+        {
+          or: [selectNewsArticlesFilter, selectByFrequencyFilter],
+        },
+      ],
     };
   }
 
-  return notTutorialFilter;
+  return {
+    and: [notTutorialFilter, selectByFrequencyFilter],
+  };
+};
+
+const getFiltersQuery = (options?: FetchNewsOptions) => {
+  const textSearchFilter = {
+    path: 'data.title.iv',
+    op: 'contains',
+    value: options?.search,
+  };
+
+  if (options?.filter?.frequency) {
+    const filterQuery = getFrequencyFilter(options.filter.frequency);
+
+    return options?.search
+      ? { and: [...filterQuery.and, textSearchFilter] }
+      : filterQuery;
+  }
+  return options?.search
+    ? { and: [notTutorialFilter, textSearchFilter] }
+    : notTutorialFilter;
 };
 
 export default class News implements NewsController {
@@ -60,7 +74,7 @@ export default class News implements NewsController {
   async fetch(options?: FetchNewsOptions): Promise<ListNewsResponse> {
     const { total, items } = await this.newsSquidexRestClient.fetch({
       ...options,
-      filter: getFiltersQuery(options?.filter),
+      filter: getFiltersQuery(options) as Query['filter'],
       sort: [{ order: 'descending', path: 'created' }],
     });
 

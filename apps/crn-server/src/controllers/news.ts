@@ -2,15 +2,9 @@ import {
   ListNewsResponse,
   NewsResponse,
   FetchNewsOptions,
-  NewsFrequency,
   FetchNewsFilter,
 } from '@asap-hub/model';
-import {
-  RestNews,
-  SquidexRestClient,
-  Filter,
-  LogicalFilter,
-} from '@asap-hub/squidex';
+import { RestNews, SquidexRestClient, Filter } from '@asap-hub/squidex';
 
 import { parseNews } from '../entities';
 

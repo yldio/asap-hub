@@ -57,6 +57,7 @@ describe('parse GraphQL news entities', () => {
         text: 'text',
         link: 'http://a.link',
         linkText: 'Link text',
+        frequency: 'Biweekly Newsletter',
       },
     };
 
@@ -90,6 +91,7 @@ describe('parse GraphQL news entities', () => {
         text: 'text',
         link: 'http://a.link',
         linkText: 'Link text',
+        frequency: 'Biweekly Newsletter',
       },
     };
     expect(parseGraphQLNews(news).type).toEqual(expected);

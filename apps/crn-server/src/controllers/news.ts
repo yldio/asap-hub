@@ -19,7 +19,7 @@ const getFrequencyFilter = (frequencyFilter: NewsFrequency[]) => {
     path: 'data.frequency.iv',
     op: 'in',
     value: frequencyFilter,
-  } as Filter;
+  };
 
   // Select news that were created before
   // frequency field was created
@@ -27,7 +27,7 @@ const getFrequencyFilter = (frequencyFilter: NewsFrequency[]) => {
     path: 'data.frequency.iv',
     op: 'empty',
     value: null,
-  } as Filter;
+  };
 
   if (frequencyFilter.includes('News Articles')) {
     return {

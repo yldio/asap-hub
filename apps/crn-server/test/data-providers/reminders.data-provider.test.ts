@@ -564,6 +564,23 @@ describe('Reminder Data Provider', () => {
       });
     });
 
+    describe('Video upserted in Event Reminder', () => {
+      beforeAll(() => {
+        jest.useFakeTimers('modern');
+      });
+
+      afterAll(() => {
+        jest.useRealTimers();
+      });
+
+      beforeEach(async () => {});
+
+      test.todo(
+        'Should fetch the event if its video was upserted recently',
+        async () => {},
+      );
+    });
+
     describe('All types of reminders', () => {
       beforeAll(() => {
         jest.useFakeTimers('modern');

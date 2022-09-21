@@ -54,10 +54,11 @@ describe('/news/ route', () => {
       expect(newsControllerMock.fetch).toBeCalledWith(expectedParams);
     });
 
-    test('Should call the controller with the right filters', async () => {
+    test('Should call the controller with the right filter and search params', async () => {
       const expectedParams = {
         take: 15,
         skip: 5,
+        search: 'brain',
         filter: 'CRN Quaterly',
       };
 

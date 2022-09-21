@@ -2,10 +2,11 @@ import { css } from '@emotion/react';
 import { UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
-import { Card, Avatar, Caption } from '../atoms';
+import { Card, Avatar, Caption, StateTag } from '../atoms';
 import { LinkHeadline, UserProfilePersonalText, ImageLink } from '../molecules';
-import { tabletScreen } from '../pixels';
+import { tabletScreen, perRem } from '../pixels';
 import { formatDate } from '../date';
+import { alumniBadge } from '../icons';
 
 const containerStyles = css({
   display: 'grid',
@@ -30,14 +31,23 @@ const profileTextStyles = css({
 
 const moveStyles = css({
   [`@media (min-width: ${tabletScreen.min}px)`]: {
+    display: 'flex',
+    alignItems: 'baseline',
+    columnGap: `${15 / perRem}em`,
     flexBasis: 'auto',
     order: -1,
   },
+  [`@media (max-width: ${tabletScreen.min}px)`]: {
+    marginBottom: `${15 / perRem}em`,
+  },
 });
+
+const alumniBadgeStyles = css({});
 
 type PeopleCardProps = Pick<
   UserResponse,
   | 'id'
+  | 'alumniSinceDate'
   | 'avatarUrl'
   | 'displayName'
   | 'firstName'
@@ -52,6 +62,7 @@ type PeopleCardProps = Pick<
 >;
 const PeopleCard: React.FC<PeopleCardProps> = ({
   id,
+  alumniSinceDate,
   displayName,
   createdDate,
   firstName,
@@ -74,7 +85,13 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
               {displayName}
               {degree && `, ${degree}`}
             </LinkHeadline>
+            {alumniSinceDate && (
+              <span css={alumniBadgeStyles} data-testid="alumni-badge">
+                <StateTag icon={alumniBadge} label="Alumni" />
+              </span>
+            )}
           </div>
+
           <div css={profileTextStyles}>
             <UserProfilePersonalText {...props} />
           </div>

@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { createUserResponse } from '@asap-hub/fixtures';
 
 import PeopleCard from '../PeopleCard';
@@ -30,6 +30,7 @@ it('renders the date in the correct format', () => {
     `"Joined: 1st January 2021"`,
   );
 });
+
 it('links to the profile', () => {
   const { getByText } = render(
     <PeopleCard {...props} displayName="John Doe" id="42" />,
@@ -39,4 +40,15 @@ it('links to the profile', () => {
     'href',
     expect.stringMatching(/42$/),
   );
+});
+
+describe('alumni badge', () => {
+  it('renders the alumni badge when required', () => {
+    render(<PeopleCard {...props} alumniSinceDate="2022-01-01" />);
+    expect(screen.getByTestId('alumni-badge')).toHaveTextContent('Alumni');
+  });
+  it('does not render alumni badge for non alumni', () => {
+    render(<PeopleCard {...props} alumniSinceDate={undefined} />);
+    expect(screen.queryByTestId('alumni-badge')).toBeNull();
+  });
 });

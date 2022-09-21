@@ -11,7 +11,8 @@ const bannerProps = {
     'Explore the directory to discover more about our GP2 members that make up the private network.',
 };
 
-type UserPageProps = ComponentProps<typeof UsersPageBody>;
+type UserPageProps = ComponentProps<typeof UsersPageBody> &
+  ComponentProps<typeof UsersPageBody>;
 
 const UsersPage: React.FC<UserPageProps> = (props) => (
   <article>

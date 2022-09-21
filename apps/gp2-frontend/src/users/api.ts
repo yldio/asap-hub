@@ -1,11 +1,12 @@
-import { createSentryHeaders } from '@asap-hub/frontend-utils';
+import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
-import { API_BASE_URL } from '../config';
+import createListApiUrl from '../CreateListApiUrl';
 
 export const getUsers = async (
+  options: GetListOptions,
   authorization: string,
 ): Promise<gp2.ListUserResponse> => {
-  const resp = await fetch(`${API_BASE_URL}/users`, {
+  const resp = await fetch(createListApiUrl('users', options).toString(), {
     headers: { authorization, ...createSentryHeaders() },
   });
   if (!resp.ok) {

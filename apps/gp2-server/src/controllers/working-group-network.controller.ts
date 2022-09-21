@@ -5,7 +5,7 @@ export interface WorkingGroupNetworkController {
   fetch(): Promise<gp2.ListWorkingGroupNetworkResponse>;
 }
 
-export default class WorkingGroupNetworkGroups
+export default class WorkingGroupNetwork
   implements WorkingGroupNetworkController
 {
   constructor(

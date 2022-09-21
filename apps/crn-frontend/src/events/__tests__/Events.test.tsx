@@ -16,7 +16,7 @@ import Events from '../Events';
 import { getEventListOptions } from '../options';
 import { eventsState } from '../state';
 
-jest.useFakeTimers('modern');
+jest.useFakeTimers();
 
 jest.mock('../calendar/api');
 jest.mock('../api');

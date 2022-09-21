@@ -386,7 +386,7 @@ __metadata:
     "@types/apr-intercept": "workspace:*"
     "@types/babel__core": 7.1.19
     "@types/hapi__boom": 9.0.1
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/jwt-decode": 2.2.1
     "@types/jwt-encode": "workspace:*"
     "@types/luxon": 1.26.4
@@ -422,7 +422,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/core": 7.19.1
     "@babel/runtime-corejs3": 7.19.1
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/jsdom": 16.2.3
     "@types/node": 14.18.26
     core-js: 3.24.1
@@ -441,12 +441,12 @@ __metadata:
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.19.1
     "@types/auth0-js": 9.14.6
-    "@types/jest": 26.0.24
-    "@types/node": 14.18.26
+    "@types/jest": 27.5.1
     "@types/pify": 3.0.2
     auth0-js: 9.19.1
     camelcase: 6.3.0
     pify: 5.0.0
+    util: ^0.12.4
   languageName: unknown
   linkType: soft
 
@@ -461,7 +461,7 @@ __metadata:
     "@babel/preset-env": 7.19.1
     "@babel/preset-typescript": 7.18.6
     "@babel/runtime-corejs3": 7.19.1
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     got: 11.8.5
     nock: 13.0.11
   languageName: unknown
@@ -475,7 +475,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.4
     "@babel/runtime-corejs3": 7.19.1
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/node": 14.18.26
   languageName: unknown
   linkType: soft
@@ -513,7 +513,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/jsdom": 16.2.3
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.17
@@ -524,12 +524,16 @@ __metadata:
     history: 4.10.1
     identity-obj-proxy: 3.0.0
     jsdom: 16.5.3
+    path-browserify: 1.0.1
     react: 17.0.2
     react-app-polyfill: 3.0.0
+    react-app-rewired: 2.2.1
     react-dom: 17.0.2
     react-router-dom: 5.3.3
     react-scripts: 5.0.1
     typescript: 4.6.4
+    util: ^0.12.4
+    webpack: 5.74.0
   languageName: unknown
   linkType: soft
 
@@ -562,14 +566,14 @@ __metadata:
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/nock": 11.1.0
     "@types/node": 14.18.26
     "@types/qs": 6.9.7
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.17
     "@types/react-router-dom": 5.3.3
-    "@types/react-test-renderer": 17.0.2
+    "@types/react-test-renderer": 18.0.0
     "@types/streamsaver": 2.0.1
     "@types/testing-library__jest-dom": 5.14.5
     "@types/testing-library__react": 10.0.1
@@ -583,10 +587,12 @@ __metadata:
     identity-obj-proxy: 3.0.0
     jose: 2.0.6
     nock: 13.0.11
+    path-browserify: 1.0.1
     pirates: 4.0.5
     qs: 6.11.0
     react: 17.0.2
     react-app-polyfill: 3.0.0
+    react-app-rewired: 2.2.1
     react-dom: 17.0.2
     react-error-boundary: 3.1.4
     react-router-dom: 5.3.3
@@ -594,12 +600,14 @@ __metadata:
     react-scripts: 5.0.1
     react-test-renderer: 17.0.2
     recoil: "patch:recoil@^0.1.2#../../patches/recoil.patch"
+    stream-browserify: 3.0.0
     streamsaver: 2.0.6
     typescript: 4.6.4
     use-debounce: 8.0.4
     use-deep-compare-effect: 1.6.1
     uuid: 8.3.2
     web-streams-polyfill: 3.2.1
+    webpack: 5.74.0
   languageName: unknown
   linkType: soft
 
@@ -684,7 +692,7 @@ __metadata:
     "@types/hapi__boom": 9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": 17.1.8
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/jest-when": 3.5.2
     "@types/jsonwebtoken": 8.5.9
     "@types/jwt-decode": 2.2.1
@@ -770,7 +778,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/runtime-corejs3": 7.19.1
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
   languageName: unknown
   linkType: soft
 
@@ -842,7 +850,7 @@ __metadata:
   dependencies:
     "@babel/runtime-corejs3": 7.19.1
     "@types/asap-hub__inline-environment": "workspace:*"
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     core-js: 3.24.1
   languageName: unknown
   linkType: soft
@@ -861,7 +869,7 @@ __metadata:
     "@sentry/react": 6.11.0
     "@testing-library/react": 11.2.7
     "@types/history": 4.7.11
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/node": 14.18.26
     "@types/react": 17.0.49
     "@types/react-router-dom": 5.3.3
@@ -900,7 +908,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/jsdom": 16.2.3
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.17
@@ -911,12 +919,14 @@ __metadata:
     history: 4.10.1
     identity-obj-proxy: 3.0.0
     jsdom: 16.5.3
+    path-browserify: 1.0.1
     react: 17.0.2
     react-app-polyfill: 3.0.0
     react-dom: 17.0.2
     react-router-dom: 5.3.3
     react-scripts: 5.0.1
     typescript: 4.6.4
+    util: 0.12.4
   languageName: unknown
   linkType: soft
 
@@ -945,7 +955,7 @@ __metadata:
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
     "@types/history": 4.7.11
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.17
     "@types/react-router-dom": 5.3.3
@@ -1009,7 +1019,7 @@ __metadata:
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/nock": 11.1.0
     "@types/node": 14.18.26
     "@types/react": 17.0.49
@@ -1029,9 +1039,11 @@ __metadata:
     identity-obj-proxy: 3.0.0
     jose: 2.0.6
     nock: 13.0.11
+    path-browserify: 1.0.1
     pirates: 4.0.5
     react: 17.0.2
     react-app-polyfill: 3.0.0
+    react-app-rewired: 2.2.1
     react-dom: 17.0.2
     react-error-boundary: 3.1.4
     react-router-dom: 5.3.3
@@ -1039,6 +1051,7 @@ __metadata:
     react-scripts: 5.0.1
     react-test-renderer: 17.0.2
     recoil: "patch:recoil@^0.1.2#../../patches/recoil.patch"
+    stream-browserify: ^3.0.0
     streamsaver: 2.0.6
     typescript: 4.6.4
     use-debounce: 8.0.4
@@ -1111,7 +1124,7 @@ __metadata:
     "@types/aws-lambda": 8.10.103
     "@types/cors": 2.8.12
     "@types/express": 4.17.13
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/jsonwebtoken": 8.5.9
     "@types/jwt-encode": "workspace:*"
     "@types/node": 14.18.26
@@ -1200,7 +1213,7 @@ __metadata:
     "@babel/preset-env": 7.19.1
     "@babel/preset-typescript": 7.18.6
     "@babel/runtime-corejs3": 7.19.1
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/jsonwebtoken": 8.5.9
     jsonwebtoken: 8.5.1
   languageName: unknown
@@ -1235,7 +1248,7 @@ __metadata:
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
     "@types/history": 4.7.11
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/ramda": 0.27.20
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.17
@@ -1303,7 +1316,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.19.1
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/react": 17.0.49
     "@types/testing-library__jest-dom": 5.14.5
     "@types/testing-library__react": 10.0.1
@@ -1353,7 +1366,7 @@ __metadata:
     "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": 8.10.103
     "@types/express": 4.17.13
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/jsonwebtoken": 8.5.9
     "@types/supertest": 2.0.12
     "@types/uuid": 8.3.4
@@ -1394,7 +1407,7 @@ __metadata:
     "@types/hapi__boom": 9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": 17.1.8
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/jwt-decode": 2.2.1
     "@types/jwt-encode": "workspace:*"
     apr-intercept: 3.0.4
@@ -1428,7 +1441,7 @@ __metadata:
     "@types/hapi__boom": 9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": 17.1.8
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/jwt-decode": 2.2.1
     "@types/jwt-encode": "workspace:*"
     "@types/luxon": 1.26.4
@@ -12331,13 +12344,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:26.0.24":
-  version: 26.0.24
-  resolution: "@types/jest@npm:26.0.24"
+"@types/jest@npm:27.5.1":
+  version: 27.5.1
+  resolution: "@types/jest@npm:27.5.1"
   dependencies:
-    jest-diff: "npm:^26.0.0"
-    pretty-format: "npm:^26.0.0"
-  checksum: ae39675412f08d884926254e9b12bfd2b5a4e4d204c94d3148cb942174a474930d0c60540133c968f22241d4712b7940c96cbc883096eb326a4d5b206fb78bd0
+    jest-matcher-utils: ^27.0.0
+    pretty-format: ^27.0.0
+  checksum: be20e39f7aaf17179109c0060d0a0489cec2034d4e2e28a631284c7ecd13c5ae52f62697a33a0e89b03b6cfe54e9d5e8c2bd387ab2bd90d6071d68c63b86d1e3
   languageName: node
   linkType: hard
 
@@ -12840,6 +12853,15 @@ __metadata:
   dependencies:
     "@types/react": "npm:^17"
   checksum: 0be325798b6b38cc31fbb11f2f1e1a5578cc3b23eddf1ddd1ab58ccf50966e8f779383084d8bc3a7db3108ad815af8fbae5c0f54329a88d52200e01547d85c33
+  languageName: node
+  linkType: hard
+
+"@types/react-test-renderer@npm:18.0.0":
+  version: 18.0.0
+  resolution: "@types/react-test-renderer@npm:18.0.0"
+  dependencies:
+    "@types/react": "*"
+  checksum: 6afc938a1d7618d88ab8793e251f0bd5981bf3f08c1b600f74df3f8800b92589ea534dc6dcb7c8d683893fcc740bf8d7843a42bf2dae59785cfe88f004bd7b0b
   languageName: node
   linkType: hard
 
@@ -15258,7 +15280,7 @@ __metadata:
     "@jeysal/babel-plugin-ramda": 2.0.1
     "@peculiar/webcrypto": 1.4.0
     "@testing-library/jest-dom": 5.16.5
-    "@types/jest": 26.0.24
+    "@types/jest": 27.5.1
     "@types/webpack": 4.41.32
     "@yarnpkg/pnpify": 3.1.5
     babel-eslint: 10.1.0
@@ -19882,13 +19904,6 @@ __metadata:
   version: 25.2.6
   resolution: "diff-sequences@npm:25.2.6"
   checksum: 082c1eb691cc8bffdeca10e1df561fe85c3786420c135d05d5642fdada7dafbc3f77372a67cc3aff6313c272d76d646df768554873d897cf1d15a63dd232e7aa
-  languageName: node
-  linkType: hard
-
-"diff-sequences@npm:^26.6.2":
-  version: 26.6.2
-  resolution: "diff-sequences@npm:26.6.2"
-  checksum: 79af871776ef149a7ff3345d6b1bf37fe6e81f68632aa5542787851f6f60fba19b0be22fdd1e06046f56ae7382763ccfe94a982c39ee72bd107aef435ecbc0cf
   languageName: node
   linkType: hard
 
@@ -24741,7 +24756,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inherits@npm:2, inherits@npm:2.0.4, inherits@npm:^2.0.0, inherits@npm:^2.0.1, inherits@npm:^2.0.3, inherits@npm:^2.0.4, inherits@npm:~2.0.1, inherits@npm:~2.0.3":
+"inherits@npm:2, inherits@npm:2.0.4, inherits@npm:^2.0.0, inherits@npm:^2.0.1, inherits@npm:^2.0.3, inherits@npm:^2.0.4, inherits@npm:~2.0.1, inherits@npm:~2.0.3, inherits@npm:~2.0.4":
   version: 2.0.4
   resolution: "inherits@npm:2.0.4"
   checksum: 4a48a733847879d6cf6691860a6b1e3f0f4754176e4d71494c41f3475553768b10f84b5ce1d40fbd0e34e6bfbb864ee35858ad4dd2cf31e02fc4a154b724d7f1
@@ -26013,18 +26028,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-diff@npm:^26.0.0":
-  version: 26.6.2
-  resolution: "jest-diff@npm:26.6.2"
-  dependencies:
-    chalk: "npm:^4.0.0"
-    diff-sequences: "npm:^26.6.2"
-    jest-get-type: "npm:^26.3.0"
-    pretty-format: "npm:^26.6.2"
-  checksum: d00d297f31e1ac0252127089892432caa7a11c69bde29cf3bb6c7a839c8afdb95cf1fd401f9df16a4422745da2e6a5d94b428b30666a2540c38e1c5699915c2d
-  languageName: node
-  linkType: hard
-
 "jest-diff@npm:^27.5.1":
   version: 27.5.1
   resolution: "jest-diff@npm:27.5.1"
@@ -26095,13 +26098,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-get-type@npm:^26.3.0":
-  version: 26.3.0
-  resolution: "jest-get-type@npm:26.3.0"
-  checksum: 1cc6465ae4f5e880be22ba52fd270fa64c21994915f81b41f8f7553a7957dd8e077cc8d03035de9412e2d739f8bad6a032ebb5dab5805692a5fb9e20dd4ea666
-  languageName: node
-  linkType: hard
-
 "jest-get-type@npm:^27.5.1":
   version: 27.5.1
   resolution: "jest-get-type@npm:27.5.1"
@@ -26168,7 +26164,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-matcher-utils@npm:^27.5.1":
+"jest-matcher-utils@npm:^27.0.0, jest-matcher-utils@npm:^27.5.1":
   version: 27.5.1
   resolution: "jest-matcher-utils@npm:27.5.1"
   dependencies:
@@ -30263,6 +30259,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"path-browserify@npm:1.0.1":
+  version: 1.0.1
+  resolution: "path-browserify@npm:1.0.1"
+  checksum: c6d7fa376423fe35b95b2d67990060c3ee304fc815ff0a2dc1c6c3cfaff2bd0d572ee67e18f19d0ea3bbe32e8add2a05021132ac40509416459fffee35200699
+  languageName: node
+  linkType: hard
+
 "path-case@npm:^3.0.4":
   version: 3.0.4
   resolution: "path-case@npm:3.0.4"
@@ -31831,7 +31834,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^26.0.0, pretty-format@npm:^26.6.2":
+"pretty-format@npm:^26.6.2":
   version: 26.6.2
   resolution: "pretty-format@npm:26.6.2"
   dependencies:
@@ -31843,7 +31846,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^27.5.1":
+"pretty-format@npm:^27.0.0, pretty-format@npm:^27.5.1":
   version: 27.5.1
   resolution: "pretty-format@npm:27.5.1"
   dependencies:
@@ -32451,6 +32454,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-app-rewired@npm:2.2.1":
+  version: 2.2.1
+  resolution: "react-app-rewired@npm:2.2.1"
+  dependencies:
+    semver: ^5.6.0
+  peerDependencies:
+    react-scripts: ">=2.1.3"
+  bin:
+    react-app-rewired: bin/index.js
+  checksum: 0b330c2b46413dc5fbb68e68c07704830397b1cfc8335f65d8f856bfbb6c4d8259fad049fc2a117c18794f321e726b844649266f42ff4c3fa044f00be48c1850
+  languageName: node
+  linkType: hard
+
 "react-colorful@npm:^5.1.2":
   version: 5.5.1
   resolution: "react-colorful@npm:5.5.1"
@@ -32941,7 +32957,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"readable-stream@npm:^3.0.0, readable-stream@npm:^3.0.6, readable-stream@npm:^3.1.1, readable-stream@npm:^3.4.0, readable-stream@npm:^3.6.0":
+"readable-stream@npm:^3.0.0, readable-stream@npm:^3.0.6, readable-stream@npm:^3.1.1, readable-stream@npm:^3.4.0, readable-stream@npm:^3.5.0, readable-stream@npm:^3.6.0":
   version: 3.6.0
   resolution: "readable-stream@npm:3.6.0"
   dependencies:
@@ -35344,6 +35360,16 @@ __metadata:
   dependencies:
     "@figspec/react": "npm:^1.0.0"
   checksum: 0ea3ef4d1b08b5604ac0592697793a5e30eac33fae8499bd772a1568bc21bb2ea67ed638d9b4c2f4e94713ceb5321e23fb4985d381e3c9c61094abe3a6b58063
+  languageName: node
+  linkType: hard
+
+"stream-browserify@npm:3.0.0, stream-browserify@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "stream-browserify@npm:3.0.0"
+  dependencies:
+    inherits: ~2.0.4
+    readable-stream: ^3.5.0
+  checksum: 4c47ef64d6f03815a9ca3874e2319805e8e8a85f3550776c47ce523b6f4c6cd57f40e46ec6a9ab8ad260fde61863c2718f250d3bedb3fe9052444eb9abfd9921
   languageName: node
   linkType: hard
 
@@ -38567,6 +38593,43 @@ __metadata:
   languageName: node
   linkType: hard
 
+"webpack@npm:5.74.0, webpack@npm:^5.64.4":
+  version: 5.74.0
+  resolution: "webpack@npm:5.74.0"
+  dependencies:
+    "@types/eslint-scope": ^3.7.3
+    "@types/estree": ^0.0.51
+    "@webassemblyjs/ast": 1.11.1
+    "@webassemblyjs/wasm-edit": 1.11.1
+    "@webassemblyjs/wasm-parser": 1.11.1
+    acorn: ^8.7.1
+    acorn-import-assertions: ^1.7.6
+    browserslist: ^4.14.5
+    chrome-trace-event: ^1.0.2
+    enhanced-resolve: ^5.10.0
+    es-module-lexer: ^0.9.0
+    eslint-scope: 5.1.1
+    events: ^3.2.0
+    glob-to-regexp: ^0.4.1
+    graceful-fs: ^4.2.9
+    json-parse-even-better-errors: ^2.3.1
+    loader-runner: ^4.2.0
+    mime-types: ^2.1.27
+    neo-async: ^2.6.2
+    schema-utils: ^3.1.0
+    tapable: ^2.1.1
+    terser-webpack-plugin: ^5.1.3
+    watchpack: ^2.4.0
+    webpack-sources: ^3.2.3
+  peerDependenciesMeta:
+    webpack-cli:
+      optional: true
+  bin:
+    webpack: bin/webpack.js
+  checksum: 320c41369a75051b19e18c63f408b3dcc481852e992f83d311771c5ec0f05f2946385e8ebef62030cf3587f0a3d2f12779ffdb191569a966847289ba7313f946
+  languageName: node
+  linkType: hard
+
 "webpack@npm:>=4.43.0 <6.0.0":
   version: 5.72.0
   resolution: "webpack@npm:5.72.0"
@@ -38601,43 +38664,6 @@ __metadata:
   bin:
     webpack: bin/webpack.js
   checksum: 8365f1466d0f7adbf80ebc9b780f263a28eeeabcd5fb515249bfd9a56ab7fe8d29ea53df3d9364d0732ab39ae774445eb28abce694ed375b13882a6b2fe93ffc
-  languageName: node
-  linkType: hard
-
-"webpack@npm:^5.64.4":
-  version: 5.74.0
-  resolution: "webpack@npm:5.74.0"
-  dependencies:
-    "@types/eslint-scope": ^3.7.3
-    "@types/estree": ^0.0.51
-    "@webassemblyjs/ast": 1.11.1
-    "@webassemblyjs/wasm-edit": 1.11.1
-    "@webassemblyjs/wasm-parser": 1.11.1
-    acorn: ^8.7.1
-    acorn-import-assertions: ^1.7.6
-    browserslist: ^4.14.5
-    chrome-trace-event: ^1.0.2
-    enhanced-resolve: ^5.10.0
-    es-module-lexer: ^0.9.0
-    eslint-scope: 5.1.1
-    events: ^3.2.0
-    glob-to-regexp: ^0.4.1
-    graceful-fs: ^4.2.9
-    json-parse-even-better-errors: ^2.3.1
-    loader-runner: ^4.2.0
-    mime-types: ^2.1.27
-    neo-async: ^2.6.2
-    schema-utils: ^3.1.0
-    tapable: ^2.1.1
-    terser-webpack-plugin: ^5.1.3
-    watchpack: ^2.4.0
-    webpack-sources: ^3.2.3
-  peerDependenciesMeta:
-    webpack-cli:
-      optional: true
-  bin:
-    webpack: bin/webpack.js
-  checksum: 320c41369a75051b19e18c63f408b3dcc481852e992f83d311771c5ec0f05f2946385e8ebef62030cf3587f0a3d2f12779ffdb191569a966847289ba7313f946
   languageName: node
   linkType: hard
 

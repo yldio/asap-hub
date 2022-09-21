@@ -2,7 +2,7 @@ import {
   ALGOLIA_APP_ID,
   ALGOLIA_INDEX,
 } from '@asap-hub/crn-frontend/src/config';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-hooks/server';
 import { RecoilRoot } from 'recoil';
 import { algoliaSearchClientFactory } from '@asap-hub/algolia';
 

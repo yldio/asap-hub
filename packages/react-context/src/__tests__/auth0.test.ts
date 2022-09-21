@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-hooks/server';
 import { useAuth0 } from '../auth0';
 
 describe('the default context value', () => {

@@ -218,7 +218,7 @@ describe('Reminders', () => {
     let fetchRemindersOptions: FetchRemindersOptions;
 
     beforeAll(async () => {
-      jest.useFakeTimers('modern');
+      jest.useFakeTimers();
 
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
@@ -355,7 +355,7 @@ describe('Reminders', () => {
     let fetchRemindersOptions: FetchRemindersOptions;
 
     beforeAll(async () => {
-      jest.useFakeTimers('modern');
+      jest.useFakeTimers();
 
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
@@ -443,7 +443,7 @@ describe('Reminders', () => {
     let eventIdsForDeletion: string[] = [];
 
     beforeAll(async () => {
-      jest.useFakeTimers('modern');
+      jest.useFakeTimers();
 
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();

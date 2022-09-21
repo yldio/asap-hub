@@ -4765,6 +4765,16 @@ export type UsersDataAdminNotesInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Alumni Since Date field of the Users content type. */
+export type UsersDataAlumniSinceDateDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Alumni Since Date field of the Users content input type. */
+export type UsersDataAlumniSinceDateInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
 /** The structure of the Avatar field of the Users content type. */
 export type UsersDataAvatarDto = {
   iv: Maybe<Array<Asset>>;
@@ -4860,6 +4870,7 @@ export type UsersDataDismissedGettingStartedInputDto = {
 /** The structure of the Users data type. */
 export type UsersDataDto = {
   adminNotes: Maybe<UsersDataAdminNotesDto>;
+  alumniSinceDate: Maybe<UsersDataAlumniSinceDateDto>;
   avatar: Maybe<UsersDataAvatarDto>;
   biography: Maybe<UsersDataBiographyDto>;
   city: Maybe<UsersDataCityDto>;
@@ -4934,6 +4945,7 @@ export type UsersDataFirstNameInputDto = {
 /** The structure of the Users data input type. */
 export type UsersDataInputDto = {
   adminNotes: InputMaybe<UsersDataAdminNotesInputDto>;
+  alumniSinceDate: InputMaybe<UsersDataAlumniSinceDateInputDto>;
   avatar: InputMaybe<UsersDataAvatarInputDto>;
   biography: InputMaybe<UsersDataBiographyInputDto>;
   city: InputMaybe<UsersDataCityInputDto>;
@@ -5223,6 +5235,7 @@ export type UsersDataTeamsInputDto = {
 /** The structure of the flat Users data type. */
 export type UsersFlatDataDto = {
   adminNotes: Maybe<Scalars['String']>;
+  alumniSinceDate: Maybe<Scalars['Instant']>;
   avatar: Maybe<Array<Asset>>;
   biography: Maybe<Scalars['String']>;
   city: Maybe<Scalars['String']>;

@@ -1,4 +1,4 @@
-import { UsersPage } from '@asap-hub/gp2-components';
+import { UsersPage, UsersPageBody } from '@asap-hub/gp2-components';
 import { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useUsersState } from './state';
@@ -59,12 +59,14 @@ const Users: React.FC<Record<string, never>> = () => {
     pageSize,
   );
   return (
-    <UsersPage
-      users={users}
-      numberOfPages={numberOfPages}
-      currentPageIndex={currentPage}
-      renderPageHref={renderPageHref}
-    />
+    <UsersPage>
+      <UsersPageBody
+        users={users}
+        numberOfPages={numberOfPages}
+        currentPageIndex={currentPage}
+        renderPageHref={renderPageHref}
+      />
+    </UsersPage>
   );
 };
 export default Users;

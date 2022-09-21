@@ -22,3 +22,11 @@ export const createWorkingGroupsResponse = (
   items,
   total: items.length,
 });
+
+export const createWorkingGroupNetworkResponse =
+  (): gp2.ListWorkingGroupNetworkResponse => ({
+    total: 1,
+    items: [
+      { role: 'complexDisease', workingGroups: [createWorkingGroupResponse()] },
+    ],
+  });

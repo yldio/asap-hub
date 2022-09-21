@@ -1,4 +1,4 @@
-import { ListResponse } from './common';
+import { FetchOptions, ListResponse } from './common';
 
 /* istanbul ignore next */
 export const newsType = ['News', 'Tutorial', 'Working Groups'] as const;
@@ -24,3 +24,9 @@ export interface NewsResponse {
   created: string;
 }
 export type ListNewsResponse = ListResponse<NewsResponse>;
+
+export type FetchNewsFilter = {
+  frequency?: NewsFrequency[];
+};
+
+export type FetchNewsOptions = FetchOptions<FetchNewsFilter>;

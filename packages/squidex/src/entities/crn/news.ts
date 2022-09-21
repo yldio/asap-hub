@@ -1,6 +1,5 @@
+import { NewsFrequency, NewsType } from '@asap-hub/model';
 import { Rest, Entity, Graphql } from '../common';
-
-export type NewsType = 'News' | 'Tutorial' | 'Working Groups';
 
 export interface News<TThumbnail = string> {
   type: NewsType;
@@ -8,6 +7,7 @@ export interface News<TThumbnail = string> {
   shortText: string;
   thumbnail: TThumbnail[];
   text: string;
+  frequency?: NewsFrequency;
   link?: string;
   linkText?: string;
 }

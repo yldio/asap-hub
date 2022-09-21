@@ -4994,12 +4994,12 @@ input UsersDataAdminNotesInputDto {
   iv: String
 }
 
-"""The structure of the Alumni Since Date field of the Users content type."""
+"""The structure of the AlumniSinceDate field of the Users content type."""
 type UsersDataAlumniSinceDateDto {
   iv: Instant
 }
 
-"""The structure of the Alumni Since Date field of the Users content input type."""
+"""The structure of the AlumniSinceDate field of the Users content input type."""
 input UsersDataAlumniSinceDateInputDto {
   iv: Instant
 }

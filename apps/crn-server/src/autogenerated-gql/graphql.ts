@@ -4765,12 +4765,12 @@ export type UsersDataAdminNotesInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the Alumni Since Date field of the Users content type. */
+/** The structure of the AlumniSinceDate field of the Users content type. */
 export type UsersDataAlumniSinceDateDto = {
   iv: Maybe<Scalars['Instant']>;
 };
 
-/** The structure of the Alumni Since Date field of the Users content input type. */
+/** The structure of the AlumniSinceDate field of the Users content input type. */
 export type UsersDataAlumniSinceDateInputDto = {
   iv: InputMaybe<Scalars['Instant']>;
 };

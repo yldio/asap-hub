@@ -17,12 +17,12 @@ export class WorkingGroupNetworkSquidexDataProvider
   constructor(private squidexGraphlClient: SquidexGraphqlClient) {}
 
   async fetch(): Promise<gp2.ListWorkingGroupNetworkDataObject> {
-    const result = await this.squidexGraphlClient.request<
-      FetchWorkingGroupNetworkQuery,
-      FetchWorkingGroupNetworkQueryVariables
-    >(FETCH_WORKING_GROUP_NETWORK);
+    const { queryWorkingGroupNetworkContents: networks } =
+      await this.squidexGraphlClient.request<
+        FetchWorkingGroupNetworkQuery,
+        FetchWorkingGroupNetworkQueryVariables
+      >(FETCH_WORKING_GROUP_NETWORK);
 
-    const networks = result.queryWorkingGroupNetworkContents;
     if (!networks || networks.length === 0 || !networks[0]) {
       return {
         items: [],

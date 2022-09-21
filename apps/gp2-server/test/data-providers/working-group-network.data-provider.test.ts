@@ -26,7 +26,7 @@ describe('Working Group Network Data Provider', () => {
   });
 
   describe('Fetch', () => {
-    test('Should fetch the working group from squidex graphql', async () => {
+    test('Should fetch the working group network from squidex graphql', async () => {
       const result = await workingGroupDataProviderMockGraphqlServer.fetch();
 
       expect(result).toMatchObject(getListWorkingGroupNetworkDataObject());
@@ -52,12 +52,31 @@ describe('Working Group Network Data Provider', () => {
   });
 
   describe('Parsing', () => {
-    test('the working group is parsed', () => {
-      const workingGroup = getGraphQLWorkingGroupNetwork();
-      const workingGroupDataObject =
-        parseWorkingGroupNetworkToDataObject(workingGroup);
+    test('the working group network is parsed', () => {
+      const workingGroupNetwork = getGraphQLWorkingGroupNetwork();
+      const workingGroupNetworkDataObject =
+        parseWorkingGroupNetworkToDataObject(workingGroupNetwork);
       const expected = getWorkingGroupNetworkDataObject();
-      expect(workingGroupDataObject).toEqual(expected);
+      expect(workingGroupNetworkDataObject).toEqual(expected);
+    });
+    test('empty array returned when network role not found in response', () => {
+      const workingGroupNetwork = getGraphQLWorkingGroupNetwork();
+      workingGroupNetwork.flatData.complexDisease = null;
+      const workingGroupNetworkDataObject =
+        parseWorkingGroupNetworkToDataObject(workingGroupNetwork);
+      const expected = getWorkingGroupNetworkDataObject();
+
+      expect(workingGroupNetworkDataObject).toEqual(
+        expected.map((network) => {
+          if (network.role === 'complexDisease') {
+            return {
+              ...network,
+              workingGroups: [],
+            };
+          }
+          return network;
+        }),
+      );
     });
   });
 });

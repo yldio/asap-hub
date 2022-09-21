@@ -48,3 +48,9 @@ export const getSquidexWorkingGroupNetworkGraphqlResponse =
   (): FetchWorkingGroupNetworkQuery => ({
     queryWorkingGroupNetworkContents: [getGraphQLWorkingGroupNetwork()],
   });
+
+export const getListWorkingGroupNetworkResponse =
+  (): gp2.ListWorkingGroupNetworkResponse => ({
+    total: 4,
+    items: getWorkingGroupNetworkDataObject(),
+  });

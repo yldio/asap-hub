@@ -1,17 +1,15 @@
-import { projectsImage } from '../images';
-import PageBanner from '../organisms/PageBanner';
+import { ComponentProps } from 'react';
+import ProjectsBody from '../organisms/ProjectsBody';
+import ProjectsHeader from '../organisms/ProjectsHeader';
 
-const props = {
-  image: projectsImage,
-  position: 'center',
-  title: 'Project Directory',
-  description:
-    'Explore past and present GP2 projects being carried out by teams within the network and discover open opportunities to join them.',
-};
+type ProjectsPageProps = ComponentProps<typeof ProjectsBody>;
 
-const ProjectsPage: React.FC = () => (
+const ProjectsPage: React.FC<ProjectsPageProps> = (props) => (
   <article>
-    <PageBanner {...props} />
+    <ProjectsHeader />
+    <main>
+      <ProjectsBody {...props} />
+    </main>
   </article>
 );
 

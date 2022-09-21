@@ -1,8 +1,5 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "groups",
-  "isSingleton": false,
-  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -55,7 +52,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Name",
@@ -90,6 +89,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Tags",
+          "createEnum": false,
           "editor": "Tags",
           "label": "Expertise (Tags)",
           "isRequired": false,
@@ -106,7 +106,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "TextArea",
           "label": "Description",
@@ -125,8 +127,8 @@
           "fieldType": "Assets",
           "previewMode": "Image",
           "maxItems": 1,
-          "mustBeImage": false,
           "resolveFirst": true,
+          "mustBeImage": false,
           "resolveImage": true,
           "allowDuplicates": false,
           "label": "Thumbnail",
@@ -200,7 +202,9 @@
               "fieldType": "String",
               "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
               "isUnique": false,
+              "isEmbeddable": false,
               "inlineEditable": true,
+              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Slack Link",
@@ -218,7 +222,9 @@
               "fieldType": "String",
               "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
               "isUnique": false,
+              "isEmbeddable": false,
               "inlineEditable": true,
+              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Google Drive Link",
@@ -295,7 +301,9 @@
               "fieldType": "String",
               "allowedValues": ["Project Manager", "Chair"],
               "isUnique": false,
+              "isEmbeddable": false,
               "inlineEditable": true,
+              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Dropdown",
               "label": "Role",
@@ -329,7 +337,11 @@
       }
     ],
     "previewUrls": {},
+    "fieldRules": [],
     "category": "Storage",
     "isPublished": true
-  }
+  },
+  "name": "groups",
+  "isSingleton": false,
+  "schemaType": "Default"
 }

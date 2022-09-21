@@ -27,7 +27,11 @@ type EventCardProps = ComponentProps<typeof EventInfo> &
     | 'presentation'
     | 'meetingMaterials'
     | 'speakers'
-  >;
+  > & {
+    showNumberOfSpeakers?: boolean;
+    showTeams?: boolean;
+    displayToast?: boolean;
+  };
 
 const buttonStyle = css({
   [`@media (max-width: ${mobileScreen.max}px)`]: {
@@ -39,6 +43,9 @@ const buttonStyle = css({
 const EventCard: React.FC<EventCardProps> = ({
   status,
   speakers,
+  showNumberOfSpeakers = true,
+  showTeams = true,
+  displayToast = true,
   ...props
 }) => {
   const considerStartedAfter = subMinutes(
@@ -48,10 +55,12 @@ const EventCard: React.FC<EventCardProps> = ({
 
   const hasStarted = useDateHasPassed(considerStartedAfter);
   const hasFinished = useDateHasPassed(considerEndedAfter(props.endDate));
-  const toastCardProps = (): Omit<
-    ComponentProps<typeof ToastCard>,
-    'children'
-  > => {
+  const toastCardProps = (
+    shouldDisplayToast: boolean,
+  ): Omit<ComponentProps<typeof ToastCard>, 'children'> => {
+    if (shouldDisplayToast === false) {
+      return {};
+    }
     if (status === 'Cancelled') {
       return {
         toastContent: 'This event has been cancelled',
@@ -133,13 +142,13 @@ const EventCard: React.FC<EventCardProps> = ({
   };
 
   return (
-    <ToastCard {...toastCardProps()}>
+    <ToastCard {...toastCardProps(displayToast)}>
       <EventInfo
         {...props}
         status={status}
         speakers={speakers}
-        showNumberOfSpeakers={true}
-        showTeams={true}
+        showNumberOfSpeakers={showNumberOfSpeakers}
+        showTeams={showTeams}
       />
     </ToastCard>
   );

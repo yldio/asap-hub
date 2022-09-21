@@ -27,9 +27,9 @@ export const squidexGraphqlDashboardFlatData = () => ({
       lastModified: '2020-10-15T17:55:21Z',
       version: 42,
       flatData: {
-        title: 'Event 2',
-        type: 'Event',
-        shortText: 'Short text of event 2',
+        title: 'News 2',
+        type: 'News',
+        shortText: 'Short text of news 2',
         text: '<p>text</p>',
         thumbnail: [
           {
@@ -64,11 +64,11 @@ export const squidexGraphqlDashboardResponse = (): DashboardResponse => ({
     {
       created: '2020-09-24T11:06:27.164Z',
       id: 'guid-news-2',
-      shortText: 'Short text of event 2',
+      shortText: 'Short text of news 2',
       text: '<p>text</p>',
       thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid2`,
-      title: 'Event 2',
-      type: 'Event',
+      title: 'News 2',
+      type: 'News',
     },
   ],
   pages: [],

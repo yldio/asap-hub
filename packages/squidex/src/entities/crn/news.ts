@@ -1,6 +1,6 @@
 import { Rest, Entity, Graphql } from '../common';
 
-export type NewsType = 'News' | 'Event' | 'Training';
+export type NewsType = 'News' | 'Tutorial' | 'Working Groups';
 
 export interface News<TThumbnail = string> {
   type: NewsType;

@@ -465,7 +465,7 @@ export const getGroupDataObject = (): GroupDataObject => ({
   },
   teams: [
     {
-      id: 'team-id-1',
+      id: 'team-id-0',
       displayName: 'Team A',
       lastModifiedDate: '2020-11-26T11:56:04.000Z',
       expertiseAndResourceTags: ['Animal resources'],
@@ -474,7 +474,6 @@ export const getGroupDataObject = (): GroupDataObject => ({
         'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
       proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
       tools: [],
-      outputs: [],
     },
   ],
   leaders: [

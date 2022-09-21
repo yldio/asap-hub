@@ -1,12 +1,7 @@
 import { ListResponse } from './common';
 
-/* istanbul ignore next */ export const newsType = [
-  'News',
-  'Event',
-  'Training',
-  'Tutorial',
-  'Working Groups',
-] as const;
+/* istanbul ignore next */
+export const newsType = ['News', 'Tutorial', 'Working Groups'] as const;
 
 export type NewsType = typeof newsType[number];
 

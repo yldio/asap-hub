@@ -95,4 +95,5 @@ export type EventConstraint = {
   groupId?: string;
   userId?: string;
   teamId?: string;
+  notStatus?: string;
 };

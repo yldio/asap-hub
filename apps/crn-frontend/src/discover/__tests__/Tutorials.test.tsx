@@ -43,8 +43,8 @@ it('renders tutorial page with two items', async () => {
   mockGetDiscover.mockResolvedValue({
     ...createDiscoverResponse(),
     training: [
-      createNewsResponse('First One', 'Training'),
-      createNewsResponse('Second One', 'Training'),
+      createNewsResponse('First One', 'Tutorial'),
+      createNewsResponse('Second One', 'Tutorial'),
     ],
   });
 
@@ -53,7 +53,7 @@ it('renders tutorial page with two items', async () => {
     screen
       .getAllByRole('heading', { level: 4 })
       .map(({ textContent }) => textContent),
-  ).toEqual(['Training First One title', 'Training Second One title']);
+  ).toEqual(['Tutorial First One title', 'Tutorial Second One title']);
 });
 
 it('renders the correct title and subtitle', async () => {

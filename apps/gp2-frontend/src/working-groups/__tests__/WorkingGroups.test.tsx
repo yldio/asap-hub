@@ -1,3 +1,5 @@
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
   screen,
@@ -6,10 +8,6 @@ import {
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import {
-  createWorkingGroupsResponse,
-  createWorkingGroupResponse,
-} from '@asap-hub/fixtures';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getWorkingGroups } from '../api';
 import { refreshWorkingGroupsState } from '../state';
@@ -27,8 +25,8 @@ const renderWorkingGroupsList = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/working-groups']}>
-              <Route path="/working-groups">
+            <MemoryRouter initialEntries={[gp2Routing.workingGroups({}).$]}>
+              <Route path={gp2Routing.workingGroups.template}>
                 <WorkingGroups />
               </Route>
             </MemoryRouter>
@@ -47,7 +45,9 @@ it('renders the Title', async () => {
   const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
     typeof getWorkingGroups
   >;
-  mockGetWorkingGroups.mockResolvedValueOnce(createWorkingGroupsResponse());
+  mockGetWorkingGroups.mockResolvedValueOnce(
+    gp2Fixtures.createWorkingGroupsResponse(),
+  );
   await renderWorkingGroupsList();
   expect(
     screen.getByRole('heading', { name: 'Working Groups' }),
@@ -58,16 +58,16 @@ it('renders a list of working groups', async () => {
   const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
     typeof getWorkingGroups
   >;
-  const firstGroup = createWorkingGroupResponse({
+  const firstGroup = gp2Fixtures.createWorkingGroupResponse({
     id: '42',
     title: 'Working Group 42',
   });
-  const secondGroup = createWorkingGroupResponse({
+  const secondGroup = gp2Fixtures.createWorkingGroupResponse({
     id: '11',
     title: 'Working Group 11',
   });
   mockGetWorkingGroups.mockResolvedValue(
-    createWorkingGroupsResponse([firstGroup, secondGroup]),
+    gp2Fixtures.createWorkingGroupsResponse([firstGroup, secondGroup]),
   );
   await renderWorkingGroupsList();
   expect(

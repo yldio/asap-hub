@@ -73,6 +73,7 @@ interface FixtureOptions {
   numberOfExternalSpeakers?: number;
   numberOfUnknownSpeakers?: number;
   isEventInThePast?: boolean;
+  customTitle?: string;
 }
 
 export const createEventResponse = (
@@ -82,6 +83,7 @@ export const createEventResponse = (
     numberOfUnknownSpeakers = 1,
     numberOfExternalSpeakers = 1,
     isEventInThePast = false,
+    customTitle = 'Event',
   }: FixtureOptions = {},
   itemIndex = 0,
 ): EventResponse => ({
@@ -101,7 +103,7 @@ export const createEventResponse = (
   description: `Event ${itemIndex} description`,
   status: 'Confirmed',
   tags: [],
-  title: `Event ${itemIndex}`,
+  title: `${customTitle} ${itemIndex}`,
   lastModifiedDate: new Date().toISOString(),
   meetingLink: 'https://example.com/meeting',
   hideMeetingLink: false,

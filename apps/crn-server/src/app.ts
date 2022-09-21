@@ -96,6 +96,7 @@ import { researchOutputRouteFactory } from './routes/research-outputs.route';
 import { researchTagsRouteFactory } from './routes/research-tags.route';
 import { teamRouteFactory } from './routes/teams.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
+import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import pinoLogger from './utils/logger';
 
@@ -221,11 +222,12 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Handlers
   const authHandler =
     libs.authHandler ||
-    authHandlerFactory(
+    authHandlerFactory<UserResponse>(
       decodeToken,
       userController.fetchByCode.bind(userController),
       userResponseCacheClient,
       logger,
+      assignUserToContext,
     );
   const tracingHandler = tracingHandlerFactory(libs.tracer);
   const sentryTransactionIdHandler =

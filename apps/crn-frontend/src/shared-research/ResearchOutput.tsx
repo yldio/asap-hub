@@ -35,7 +35,7 @@ const ResearchOutput: React.FC = () => {
           }
         >
           <TeamOutput
-            teamId={researchOutputData.teams[0].id}
+            teamId={researchOutputData.teams[0]?.id}
             researchOutputData={researchOutputData}
           />
         </Route>

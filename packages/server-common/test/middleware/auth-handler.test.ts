@@ -1,14 +1,14 @@
+import { createUserResponse, getJwtPayload } from '@asap-hub/fixtures';
+import { UserResponse } from '@asap-hub/model';
+import express, { Express, Request, RequestHandler, Router } from 'express';
 import 'express-async-errors';
 import supertest from 'supertest';
-import express, { Router, Express, RequestHandler } from 'express';
-import { createUserResponse, getJwtPayload } from '@asap-hub/fixtures';
+import { MemoryCacheClient } from '../../src/clients/cache.client';
 import { authHandlerFactory } from '../../src/middleware/auth-handler';
 import { errorHandlerFactory } from '../../src/middleware/error-handler';
-import { getHttpLogger, Logger } from '../../src/utils/logger';
+import { getHttpLogger } from '../../src/utils/logger';
 import { DecodeToken } from '../../src/utils/validate-token';
 import { loggerMock } from '../mocks/logger.mock';
-import { UserResponse } from '@asap-hub/model';
-import { MemoryCacheClient } from '../../src/clients/cache.client';
 
 describe('Authentication middleware', () => {
   const mockRoutes = Router();
@@ -26,7 +26,9 @@ describe('Authentication middleware', () => {
 
   const httpLogger = getHttpLogger({ logger: loggerMock });
   const errorHandler = errorHandlerFactory();
+  const assignUserToContext = jest.fn();
 
+  let request: Request;
   beforeEach(() => {
     const cacheClient = new MemoryCacheClient<UserResponse>();
     authHandler = authHandlerFactory(
@@ -34,9 +36,14 @@ describe('Authentication middleware', () => {
       fetchByCode,
       cacheClient,
       loggerMock,
+      assignUserToContext,
     );
     app = express();
     app.use(httpLogger);
+    app.use((req, _res, next) => {
+      request = req;
+      next();
+    });
     app.use(authHandler);
     app.use(mockRoutes);
     app.use(errorHandler);
@@ -133,14 +140,14 @@ describe('Authentication middleware', () => {
     expect(fetchByCode).toBeCalledTimes(2);
   });
 
-  test('Should fetch the logged in user by sub parameter and add them to the req object', async () => {
+  test('Should fetch the logged in user by sub parameter and call the callback with the user', async () => {
     decodeToken.mockResolvedValueOnce(jwtPayload);
 
-    const response = await supertest(app)
+    await supertest(app)
       .get('/test-route')
       .set('Authorization', 'Bearer something');
 
     expect(fetchByCode).toBeCalledWith(jwtPayload.sub);
-    expect(response.body).toEqual(createUserResponse());
+    expect(assignUserToContext).toBeCalledWith(request, createUserResponse());
   });
 });

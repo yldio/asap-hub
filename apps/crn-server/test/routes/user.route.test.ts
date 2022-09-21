@@ -1,25 +1,28 @@
-import supertest from 'supertest';
+import { NotFoundError } from '@asap-hub/errors';
+import { createUserResponse } from '@asap-hub/fixtures';
+import { FetchOptions, UserResponse } from '@asap-hub/model';
+import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import Crypto from 'crypto';
-import { FetchOptions, UserResponse } from '@asap-hub/model';
-import { userMock } from '@asap-hub/fixtures';
-import { AuthHandler } from '@asap-hub/server-common';
-import { NotFoundError } from '@asap-hub/errors';
+import supertest from 'supertest';
 import { appFactory } from '../../src/app';
+import { listGroupsResponse } from '../fixtures/groups.fixtures';
 import {
   fetchExpectation,
+  getUserResponse,
   updateAvatarBody,
   userPatchRequest,
-  getUserResponse,
 } from '../fixtures/users.fixtures';
 import { groupControllerMock } from '../mocks/group-controller.mock';
+import { loggerMock } from '../mocks/logger.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
-import { listGroupsResponse } from '../fixtures/groups.fixtures';
 
 describe('/users/ route', () => {
+  const userMock = createUserResponse();
   const authHandlerMock: AuthHandler = (req, _res, next) => {
+    const mockUser = createUserResponse();
     req.loggedInUser = {
-      ...userMock,
+      ...mockUser,
       teams: [
         {
           id: 'team-id-1',
@@ -37,11 +40,13 @@ describe('/users/ route', () => {
     groupController: groupControllerMock,
     userController: userControllerMock,
     authHandler: authHandlerMock,
+    logger: loggerMock,
   });
 
   const app = appFactory({
     groupController: groupControllerMock,
     userController: userControllerMock,
+    logger: loggerMock,
   });
 
   afterEach(() => {
@@ -118,9 +123,11 @@ describe('/users/ route', () => {
       test('Should return the results correctly when a filter is used', async () => {
         userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);
 
-        const response = await supertest(appWithMockedAuth).get(
-          '/users?filter=Project+Manager',
-        );
+        const response = await supertest(appWithMockedAuth)
+          .get('/users')
+          .query({
+            filter: 'Project Manager',
+          });
 
         expect(response.status).toBe(200);
       });
@@ -128,10 +135,11 @@ describe('/users/ route', () => {
       test('Should return the results correctly when multiple filters are used', async () => {
         userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);
 
-        const response = await supertest(appWithMockedAuth).get(
-          '/users?filter=Project+Manager&filter=Lead+PI',
-        );
-
+        const response = await supertest(appWithMockedAuth)
+          .get('/users')
+          .query({
+            filter: ['Project Manager', 'Lead PI'],
+          });
         expect(response.status).toBe(200);
       });
     });

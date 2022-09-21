@@ -1,9 +1,8 @@
-import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
-import { createWorkingGroupResponse } from '@asap-hub/fixtures';
-
 import { API_BASE_URL } from '../../config';
-import { getWorkingGroups, getWorkingGroup } from '../api';
+import { getWorkingGroup, getWorkingGroups } from '../api';
 
 jest.mock('../../config');
 
@@ -14,7 +13,7 @@ describe('getWorkingGroup', () => {
   });
 
   it('returns a successfully fetched working group by id', async () => {
-    const workingGroupResponse = createWorkingGroupResponse();
+    const workingGroupResponse = gp2Fixtures.createWorkingGroupResponse();
     const { id } = workingGroupResponse;
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get(`/working-group/${id}`)
@@ -51,17 +50,8 @@ describe('getWorkingGroups', () => {
   });
 
   it('returns a successfully fetched working groups', async () => {
-    const workingGroupResponse: gp2.ListWorkingGroupResponse = {
-      items: [
-        {
-          id: '42',
-          title: 'Working Group 42',
-          members: [],
-          shortDescription: 'This is a short description 42',
-          description: 'This is a long description 42',
-          leadingMembers: 'This is a list of leading members 42',
-        },
-      ],
+    const workingGroupResponse: gp2Model.ListWorkingGroupResponse = {
+      items: [gp2Fixtures.createWorkingGroupResponse()],
       total: 1,
     };
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })

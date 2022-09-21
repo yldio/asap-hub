@@ -1,5 +1,3 @@
-import { UserResponse } from '@asap-hub/model';
-
-export interface UserController {
-  connectByCode(welcomeCode: string, userId: string): Promise<UserResponse>;
+export interface UserController<T> {
+  connectByCode(welcomeCode: string, userId: string): Promise<T>;
 }

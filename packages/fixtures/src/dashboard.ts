@@ -7,9 +7,7 @@ export const createDashboardResponse = (
 ): DashboardResponse => ({
   news: [
     ...Array.from({ length }).map((_, i) => createNewsResponse(`${i}`, 'News')),
-    ...Array.from({ length }).map((_, i) =>
-      createNewsResponse(`${i}`, 'Event'),
-    ),
+    ...Array.from({ length }).map((_, i) => createNewsResponse(`${i}`, 'News')),
   ],
   pages: ['content', 'about', 'slides'].map(createPageResponse),
 });

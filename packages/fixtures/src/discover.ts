@@ -5,7 +5,7 @@ import { createUserResponse } from './users';
 
 export const createDiscoverResponse = (): DiscoverResponse => ({
   aboutUs: '<h1>About us</h1>',
-  training: [createNewsResponse(`demo workshop`, 'Training')],
+  training: [createNewsResponse(`demo workshop`, 'Tutorial')],
   pages: [createPageResponse('demo page')],
   members: [createUserResponse()],
   scientificAdvisoryBoard: [createUserResponse()],

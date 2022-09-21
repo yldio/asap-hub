@@ -1,8 +1,12 @@
 import { UserResponse } from '@asap-hub/model';
-import { validateUserInviteParameters } from '@asap-hub/server-common';
+import {
+  validateFetchOptions,
+  validateUserInviteParameters,
+} from '@asap-hub/server-common';
 import Boom, { isBoom } from '@hapi/boom';
 import { Response, Router } from 'express';
 import { UserController } from '../controllers/user.controller';
+import { validateUserParameters } from '../validation/user.validation';
 
 export const userPublicRouteFactory = (
   userController: UserController,
@@ -34,4 +38,30 @@ export const userPublicRouteFactory = (
   return userPublicRoutes;
 };
 
+export const userRouteFactory = (userController: UserController): Router => {
+  const userRoutes = Router();
+
+  userRoutes.get('/users', async (req, res) => {
+    const options = validateFetchOptions(req.query);
+
+    const userFetchOptions = {
+      ...options,
+      filter: options.filter && { role: options.filter },
+    };
+
+    const result = await userController.fetch(userFetchOptions);
+
+    res.json(result);
+  });
+
+  userRoutes.get<{ userId: string }>('/users/:userId', async (req, res) => {
+    const { userId } = validateUserParameters(req.params);
+
+    const result = await userController.fetchById(userId);
+
+    res.json(result);
+  });
+
+  return userRoutes;
+};
 type UserPublicResponse = Pick<UserResponse, 'id' | 'displayName'>;

@@ -12,6 +12,7 @@
     "teams.role",
     "speakers.user.id",
     "speakers.team.id",
+    "status",
     "group.id"
   ],
   "attributesToIndex": [

@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { Ellipsis } from '.';
 import { steel, lead, paper } from '../colors';
 import { lineHeight, perRem } from '../pixels';
@@ -22,10 +22,11 @@ const styles = css({
 
 type PillProps = {
   readonly children?: React.ReactNode;
+  readonly overrideStyles?: SerializedStyles;
 };
 
-const Pill: React.FC<PillProps> = ({ children }) => (
-  <span css={styles}>
+const Pill: React.FC<PillProps> = ({ children, overrideStyles }) => (
+  <span css={[styles, overrideStyles]}>
     <Ellipsis>
       <small>{children}</small>
     </Ellipsis>

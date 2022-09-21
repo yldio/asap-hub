@@ -8,12 +8,14 @@ import {
   getResearchOutputResponse,
 } from '../fixtures/research-output.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
+import { loggerMock } from '../mocks/logger.mock';
 import { researchOutputControllerMock } from '../mocks/research-outputs-controller.mock';
 
 describe('/research-outputs/ route', () => {
   const app = appFactory({
     researchOutputController: researchOutputControllerMock,
     authHandler: authHandlerMock,
+    logger: loggerMock,
   });
 
   afterEach(() => {
@@ -140,7 +142,7 @@ describe('/research-outputs/ route', () => {
       expect(response.status).toBe(201);
       expect(researchOutputControllerMock.create).toBeCalledWith({
         ...createResearchOutputRequest,
-        createdBy: 'userMockId',
+        createdBy: 'user-id-0',
       });
 
       expect(response.body).toEqual(researchOutputResponse);
@@ -488,7 +490,7 @@ describe('/research-outputs/ route', () => {
       expect(response.status).toBe(200);
       expect(researchOutputControllerMock.update).toBeCalledWith('abc123', {
         ...researchOutputPutRequest,
-        updatedBy: 'userMockId',
+        updatedBy: 'user-id-0',
       });
       expect(response.body).toEqual(researchOutputResponse);
     });

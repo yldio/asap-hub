@@ -4,6 +4,7 @@ import { ComponentProps, Fragment } from 'react';
 import projectIcon from '../icons/project-icon';
 import roleIcon from '../icons/role-icon';
 import workingGroupIcon from '../icons/working-group-icon';
+import colors from '../templates/colors';
 import IconWithLabel from './IconWithLabel';
 import UserRegion from './UserRegion';
 
@@ -56,7 +57,7 @@ const workingGroupsLinkStyles = css({
   },
 });
 
-const subduedText = css({ color: 'rgba(146, 153, 158, 1)' });
+const subduedText = css({ color: colors.neutral800.rgba });
 
 const UserCardInfo: React.FC<UserCardInfoProps> = ({
   role,

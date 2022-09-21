@@ -1,13 +1,15 @@
-import supertest from 'supertest';
 import { ListCalendarResponse } from '@asap-hub/model';
+import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { calendarControllerMock } from '../mocks/calendar-controller.mock';
+import { loggerMock } from '../mocks/logger.mock';
 
 describe('/calendars/ route', () => {
   const app = appFactory({
     calendarController: calendarControllerMock,
     authHandler: authHandlerMock,
+    logger: loggerMock,
   });
 
   describe('GET /calendars', () => {

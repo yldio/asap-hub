@@ -1,18 +1,20 @@
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { authHandlerMock } from '../mocks/auth-handler.mock';
-import { eventControllerMock } from '../mocks/event-controller.mock';
 import { FetchEventsOptions } from '../../src/controllers/events';
 import {
   getEventResponse,
   listEventResponse,
 } from '../fixtures/events.fixtures';
+import { authHandlerMock } from '../mocks/auth-handler.mock';
+import { eventControllerMock } from '../mocks/event-controller.mock';
+import { loggerMock } from '../mocks/logger.mock';
 
 describe('/events/ routes', () => {
   const app = appFactory({
     authHandler: authHandlerMock,
     eventController: eventControllerMock,
+    logger: loggerMock,
   });
 
   afterEach(() => {

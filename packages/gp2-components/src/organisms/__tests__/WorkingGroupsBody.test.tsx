@@ -1,14 +1,12 @@
-import {
-  createWorkingGroupResponse,
-  createWorkingGroupsResponse,
-} from '@asap-hub/fixtures';
-
+import { gp2 } from '@asap-hub/fixtures';
 import { render, screen } from '@testing-library/react';
 import WorkingGroupsBody from '../WorkingGroupsBody';
 
 describe('WorkingGroupsBody', () => {
   it('renders a working group', () => {
-    render(<WorkingGroupsBody workingGroups={createWorkingGroupsResponse()} />);
+    render(
+      <WorkingGroupsBody workingGroups={gp2.createWorkingGroupsResponse()} />,
+    );
     expect(
       screen.getByRole('heading', { name: /Working Group Title/i }),
     ).toBeVisible();
@@ -16,11 +14,12 @@ describe('WorkingGroupsBody', () => {
 
   it('renders multiple working groups', () => {
     const workingGroups = [
-      createWorkingGroupResponse({ id: '11', title: 'Working Group 11' }),
-      createWorkingGroupResponse({ id: '42', title: 'Working Group 42' }),
+      gp2.createWorkingGroupResponse({ id: '11', title: 'Working Group 11' }),
+      gp2.createWorkingGroupResponse({ id: '42', title: 'Working Group 42' }),
     ];
 
-    const workingGroupsResponse = createWorkingGroupsResponse(workingGroups);
+    const workingGroupsResponse =
+      gp2.createWorkingGroupsResponse(workingGroups);
 
     render(<WorkingGroupsBody workingGroups={workingGroupsResponse} />);
     expect(

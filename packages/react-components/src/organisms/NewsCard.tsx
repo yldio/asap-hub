@@ -5,11 +5,7 @@ import { news } from '@asap-hub/routing';
 import { Card, Paragraph, Headline4, Pill } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../date';
-import {
-  newsPlaceholder,
-  newsEventPlaceholderIcon,
-  trainingPlaceholderIcon,
-} from '../icons';
+import { newsPlaceholder, trainingPlaceholderIcon } from '../icons';
 import { ExternalLink, LinkHeadline, ImageLink } from '../molecules';
 import { lead } from '..';
 import { captionStyles } from '../text';
@@ -61,8 +57,6 @@ const footerStyles = css({
 
 const placeholders: Record<NewsType, JSX.Element> = {
   News: newsPlaceholder,
-  Event: newsEventPlaceholderIcon,
-  Training: trainingPlaceholderIcon,
   Tutorial: trainingPlaceholderIcon,
   'Working Groups': trainingPlaceholderIcon,
 };

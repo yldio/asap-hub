@@ -18,6 +18,7 @@ const getFilter = (filters: string[], constraint?: EventConstraint) => {
     constraint?.teamId && `speakers.team.id: "${constraint.teamId}"`,
     constraint?.userId && `speakers.user.id: "${constraint.userId}"`,
     constraint?.groupId && `group.id: "${constraint.groupId}"`,
+    constraint?.notStatus && `NOT status:${constraint.notStatus}`,
   ]
     .filter(Boolean)
     .join(' AND ');

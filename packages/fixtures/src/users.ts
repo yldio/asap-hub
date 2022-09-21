@@ -1,5 +1,4 @@
-import { ListUserResponse, UserTeam, UserResponse } from '@asap-hub/model';
-
+import { ListUserResponse, UserResponse, UserTeam } from '@asap-hub/model';
 import { createLabs } from './labs';
 
 const listUserResponseTeam: Omit<UserTeam, 'id'> = {
@@ -49,7 +48,7 @@ export const createUserTeams = ({
 }): UserTeam[] =>
   Array.from({ length: teams }, (_, teamIndex) => ({
     ...listUserResponseTeam,
-    id: `t${teamIndex}`,
+    id: `team-id-${teamIndex}`,
   }));
 
 export const createUserResponse = (
@@ -57,7 +56,7 @@ export const createUserResponse = (
   itemIndex = 0,
 ): UserResponse => ({
   ...listUserResponseItem,
-  id: `u${itemIndex}`,
+  id: `user-id-${itemIndex}`,
   displayName: `${listUserResponseItem.displayName} ${itemIndex + 1}`,
   teams: createUserTeams(options),
   labs: createLabs(options),

@@ -19,6 +19,11 @@ export const userDegree = [
 ] as const;
 export type UserDegree = typeof userDegree[number];
 
+export const isUserRole = (data: string): data is Role =>
+  (userRole as ReadonlyArray<string>).includes(data);
+
+export const isUserDegree = (data: string): data is UserDegree =>
+  (userDegree as ReadonlyArray<string>).includes(data);
 export interface Invitee {
   email: string;
   firstName: string;
@@ -110,7 +115,7 @@ export interface UserSocialLinks {
   researchGate?: string;
 }
 
-interface Connection {
+export interface Connection {
   code: string;
 }
 

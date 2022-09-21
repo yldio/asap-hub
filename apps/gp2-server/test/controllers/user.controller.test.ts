@@ -10,6 +10,29 @@ describe('Users controller', () => {
     jest.resetAllMocks();
   });
 
+  describe('Fetch', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
+    test('Should return the users', async () => {
+      userDataProviderMock.fetch.mockResolvedValue({
+        total: 1,
+        items: [getUserDataObject()],
+      });
+      const result = await userController.fetch({});
+
+      expect(result).toEqual({ items: [getUserResponse()], total: 1 });
+    });
+
+    test('Should return empty list when there are no users', async () => {
+      userDataProviderMock.fetch.mockResolvedValue({ total: 0, items: [] });
+      const result = await userController.fetch({});
+
+      expect(result).toEqual({ items: [], total: 0 });
+    });
+  });
+
   describe('FetchById', () => {
     beforeEach(() => {
       jest.resetAllMocks();
@@ -28,15 +51,6 @@ describe('Users controller', () => {
       const result = await userController.fetchById('user-id');
 
       expect(result).toEqual(getUserResponse());
-    });
-
-    test('Should default onboarded flag to true when its null', async () => {
-      const userData = getUserDataObject();
-      userData.onboarded = null;
-      userDataProviderMock.fetchById.mockResolvedValue(userData);
-      const result = await userController.fetchById('user-id');
-
-      expect(result?.onboarded).toEqual(true);
     });
   });
 

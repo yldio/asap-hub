@@ -6,10 +6,16 @@ import {
   news as newsRoute,
   sharedResearch,
   dashboard,
+  events as eventsRoute,
 } from '@asap-hub/routing';
-import { TeamRole, UserResponse } from '@asap-hub/model';
-
-import { NewsSection, HelpSection, RemindersCard } from '../organisms';
+import { TeamRole, UserResponse, ListEventResponse } from '@asap-hub/model';
+import {
+  NewsSection,
+  HelpSection,
+  RemindersCard,
+  DashboardUpcomingEvents,
+  PastEventsDashboardCard,
+} from '../organisms';
 import { perRem } from '../pixels';
 import { Card, Paragraph, Link, Headline2 } from '../atoms';
 import { lead } from '..';
@@ -18,7 +24,7 @@ import { confidentialIcon, giftIcon, learnIcon } from '../icons';
 
 const styles = css({
   display: 'grid',
-  gridRowGap: `${72 / perRem}em`,
+  gridRowGap: `${56 / perRem}em`,
   marginBottom: `${24 / perRem}em`,
 });
 
@@ -36,15 +42,24 @@ const infoStyles = css({
   lineHeight: `${24 / perRem} em`,
 });
 
+const viewAllStyles = css({
+  marginTop: `${24 / perRem}em`,
+  textAlign: 'right',
+});
+
 type DashboardPageBodyProps = Pick<
   ComponentProps<typeof RemindersCard>,
   'reminders'
 > &
+  Pick<ComponentProps<typeof RemindersCard>, 'reminders'> &
   Omit<ComponentProps<typeof NewsSection>, 'title'> & {
     readonly userId: string;
     readonly teamId?: string;
   } & Pick<UserResponse, 'dismissedGettingStarted'> & {
+    pastEvents: ComponentProps<typeof PastEventsDashboardCard>['events'];
     roles: TeamRole[];
+  } & {
+    upcomingEvents?: ListEventResponse;
   };
 
 const publishRoles: TeamRole[] = ['ASAP Staff', 'Project Manager'];
@@ -55,7 +70,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   teamId,
   roles,
   reminders,
+  pastEvents,
   dismissedGettingStarted,
+  upcomingEvents,
 }) => {
   const canPublish = roles.some((role) => publishRoles.includes(role));
 
@@ -112,6 +129,21 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           limit={3}
           canPublish={canPublish}
         />
+      </div>
+      <div>
+        <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
+        <div css={infoStyles}>Here are some upcoming events.</div>
+        <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
+      </div>
+      <div>
+        <Headline2 styleAsHeading={3}>Past Events</Headline2>
+        <div css={infoStyles}>
+          Explore previous events and learn about what was discussed.
+        </div>
+        <PastEventsDashboardCard events={pastEvents} />
+        <p css={viewAllStyles} data-testid="view-past-events">
+          <Link href={eventsRoute({}).past({}).$}>View All →</Link>
+        </p>
       </div>
       {news.length ? (
         <NewsSection title="Latest News from ASAP" news={news} />

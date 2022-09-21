@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
+import { createListEventResponse } from '@asap-hub/fixtures';
 
 import DashboardPageBody from '../DashboardPageBody';
 
@@ -14,15 +15,17 @@ const props: ComponentProps<typeof DashboardPageBody> = {
     {
       id: '55724942-3408-4ad6-9a73-14b92226ffb77',
       created: '2020-09-07T17:36:54Z',
-      title: 'Event Title',
-      type: 'Event',
+      title: 'Tutorial Title',
+      type: 'Tutorial',
     },
   ],
+  pastEvents: [],
   userId: '42',
   teamId: '1337',
   roles: [],
   reminders: [],
   dismissedGettingStarted: false,
+  upcomingEvents: undefined,
 };
 it('renders multiple news cards', () => {
   render(
@@ -38,8 +41,8 @@ it('renders multiple news cards', () => {
         {
           id: '55724942-3408-4ad6-9a73-14b92226ffb77',
           created: '2020-09-07T17:36:54Z',
-          title: 'Event Title 1',
-          type: 'Event',
+          title: 'Tutorial Title 1',
+          type: 'Tutorial',
         },
       ]}
     />,
@@ -48,7 +51,7 @@ it('renders multiple news cards', () => {
     screen
       .queryAllByText(/title/i, { selector: 'h4' })
       .map(({ textContent }) => textContent),
-  ).toEqual(['News Title 1', 'Event Title 1']);
+  ).toEqual(['News Title 1', 'Tutorial Title 1']);
 });
 
 it('renders news section when there are no news', () => {
@@ -62,7 +65,7 @@ it('renders news section', () => {
 
   expect(
     screen.getAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(expect.arrayContaining(['News Title', 'Event Title']));
+  ).toEqual(expect.arrayContaining(['News Title', 'Tutorial Title']));
 });
 
 it('hides add links to your work space section when user is not a member of a team', () => {
@@ -70,6 +73,50 @@ it('hides add links to your work space section when user is not a member of a te
   expect(screen.queryByText(/Add important links/i)).toBeVisible();
   rerender(<DashboardPageBody {...props} teamId={undefined} />);
   expect(screen.queryByText(/Add important links/i)).toBeNull();
+});
+
+it('displays events cards or placeholder if there are no events', () => {
+  const { rerender } = render(
+    <DashboardPageBody
+      {...props}
+      upcomingEvents={createListEventResponse(4, { customTitle: 'TestEvent' })}
+    />,
+  );
+  expect(screen.getByText('Upcoming Events')).toBeVisible();
+  expect(screen.getByText('Here are some upcoming events.')).toBeVisible();
+  expect(screen.getByText('TestEvent 1')).toBeVisible();
+  expect(screen.getByText('TestEvent 2')).toBeVisible();
+  expect(screen.getByText('TestEvent 3')).toBeVisible();
+  expect(
+    screen.getByTestId('view-upcoming-events').querySelector('a'),
+  ).toHaveTextContent('View All');
+
+  rerender(<DashboardPageBody {...props} upcomingEvents={undefined} />);
+  expect(screen.getByText('Upcoming Events')).toBeVisible();
+  expect(screen.getByText('Here are some upcoming events.')).toBeVisible();
+
+  expect(screen.getByText('There are no upcoming events.')).toBeVisible();
+});
+
+describe('the past events card', () => {
+  const events = createListEventResponse(3).items;
+  it('renders multiple past events', () => {
+    render(<DashboardPageBody {...props} pastEvents={events} />);
+    expect(
+      screen.getAllByRole('link').map(({ textContent }) => textContent),
+    ).toEqual(expect.arrayContaining(['Event 0', 'Event 1', 'Event 2']));
+  });
+
+  it('renders the link to view all past events', () => {
+    render(<DashboardPageBody {...props} pastEvents={events} />);
+
+    expect(
+      screen.getByTestId('view-past-events').querySelector('a'),
+    ).toHaveTextContent('View All');
+    expect(
+      screen.getByTestId('view-past-events').querySelector('a'),
+    ).toHaveAttribute('href', '/events/past');
+  });
 });
 
 describe('the reminders card', () => {

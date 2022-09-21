@@ -1,6 +1,9 @@
 import { ComponentProps } from 'react';
 import { DashboardPageBody } from '@asap-hub/react-components';
-import { createListReminderResponse } from '@asap-hub/fixtures';
+import {
+  createListEventResponse,
+  createListReminderResponse,
+} from '@asap-hub/fixtures';
 import { number } from '@storybook/addon-knobs';
 
 export default {
@@ -18,7 +21,7 @@ const props = (): ComponentProps<typeof DashboardPageBody> => ({
     {
       id: 'uuid-2',
       created: new Date().toISOString(),
-      type: 'Event' as const,
+      type: 'Tutorial' as const,
       title:
         'Welcome to the ASAP Collaborative Initiative: The Science & the scientists',
     },
@@ -26,7 +29,9 @@ const props = (): ComponentProps<typeof DashboardPageBody> => ({
   userId: 'u42',
   teamId: 't42',
   roles: [],
+  pastEvents: createListEventResponse(3).items,
   reminders: createListReminderResponse(number('Reminders', 3)).items,
+  upcomingEvents: createListEventResponse(number('Number of events', 4)),
 });
 
 export const Normal = () => <DashboardPageBody {...props()} />;

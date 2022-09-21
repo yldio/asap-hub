@@ -1,8 +1,5 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "my-schema",
-  "isSingleton": false,
-  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -20,7 +17,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "isRequired": true,
@@ -30,5 +29,8 @@
       }
     ],
     "isPublished": true
-  }
+  },
+  "name": "my-schema",
+  "isSingleton": false,
+  "schemaType": "Default"
 }

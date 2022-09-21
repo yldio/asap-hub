@@ -1,8 +1,5 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "events",
-  "isSingleton": false,
-  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -54,7 +51,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Title",
@@ -92,7 +91,9 @@
           "fieldType": "String",
           "allowedValues": ["Confirmed", "Tentative", "Cancelled"],
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Status",
@@ -167,7 +168,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Meeting Link",
@@ -205,8 +208,8 @@
           "fieldType": "Assets",
           "previewMode": "Image",
           "maxItems": 1,
-          "mustBeImage": false,
           "resolveFirst": true,
+          "mustBeImage": false,
           "resolveImage": true,
           "allowDuplicates": false,
           "label": "Thumbnail",
@@ -225,6 +228,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Tags",
+          "createEnum": false,
           "editor": "Tags",
           "label": "Tags",
           "isRequired": false,
@@ -346,7 +350,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Notes",
@@ -383,7 +389,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Video Recording",
@@ -420,7 +428,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Presentation",
@@ -472,7 +482,9 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
+              "isEmbeddable": false,
               "inlineEditable": true,
+              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Title",
@@ -493,7 +505,9 @@
               "pattern": "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
               "patternMessage": "URL must start with http:// or https://",
               "isUnique": false,
+              "isEmbeddable": false,
               "inlineEditable": true,
+              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "URL",
@@ -529,7 +543,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "TextArea",
           "label": "Description",
@@ -549,7 +565,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Start Date Time Zone",
@@ -584,7 +602,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "End Date Time Zone",
@@ -602,7 +622,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Google Event Link",
@@ -622,7 +644,9 @@
         "properties": {
           "fieldType": "String",
           "isUnique": true,
+          "isEmbeddable": false,
           "inlineEditable": false,
+          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Google Id",
@@ -635,7 +659,11 @@
       }
     ],
     "previewUrls": {},
+    "fieldRules": [],
     "category": "Storage",
     "isPublished": true
-  }
+  },
+  "name": "events",
+  "isSingleton": false,
+  "schemaType": "Default"
 }

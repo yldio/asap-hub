@@ -45,7 +45,7 @@
     "jsdom": "16.5.3",
     "react-app-rewired": "2.2.1",
     "react-scripts": "5.0.1",
-    "typescript": "4.7.4",
+    "typescript": "4.6.4",
     "webpack": "5.74.0"
   }
 }

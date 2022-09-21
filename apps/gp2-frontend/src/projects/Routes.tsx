@@ -4,17 +4,17 @@ import { lazy, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 const loadProjects = () =>
-  import(/* webpackChunkName: "working-groups-list" */ './Projects');
-// const loadProjectDetail = () =>
-//   import(/* webpackChunkName: "working-groups-detail" */ './ProjectDetail');
+  import(/* webpackChunkName: "project-list" */ './Projects');
+const loadProjectDetail = () =>
+  import(/* webpackChunkName: "project-detail" */ './ProjectDetail');
 
 const Projects = lazy(loadProjects);
-// const ProjectDetail = lazy(loadProjectDetail);
+const ProjectDetail = lazy(loadProjectDetail);
 
 const { projects } = gp2;
 const Routes: React.FC<Record<string, never>> = () => {
   useEffect(() => {
-    loadProjects(); //.then(loadProjectDetail);
+    loadProjects().then(loadProjectDetail);
   }, []);
   const { path } = useRouteMatch();
 
@@ -23,9 +23,9 @@ const Routes: React.FC<Record<string, never>> = () => {
       <Route exact path={path}>
         <Projects />
       </Route>
-      {/* <Route path={path + projects({}).project.template}>
+      <Route path={path + projects({}).project.template}>
         <ProjectDetail />
-      </Route> */}
+      </Route>
       <Route component={NotFoundPage} />
     </Switch>
   );

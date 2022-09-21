@@ -4,6 +4,7 @@ import { useProjectsState } from './state';
 
 const Projects: FC<Record<string, never>> = () => {
   const projects = useProjectsState();
+  console.log(projects);
   return <ProjectsPage projects={projects} />;
 };
 

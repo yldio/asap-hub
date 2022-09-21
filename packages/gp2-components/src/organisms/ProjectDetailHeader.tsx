@@ -61,7 +61,9 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
       </div>
     </CardWithBackground>
     <TabNav>
-      <TabLink href={gp2Routing.projects({}).project({ projectId: id }).$}>
+      <TabLink
+        href={gp2Routing.projects({}).project({ projectId: id }).overview({}).$}
+      >
         Overview
       </TabLink>
     </TabNav>

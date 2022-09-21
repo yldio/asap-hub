@@ -46,7 +46,7 @@ it('renders the Title', async () => {
     typeof getWorkingGroups
   >;
   mockGetWorkingGroups.mockResolvedValueOnce(
-    gp2Fixtures.createWorkingGroupsResponse(),
+    gp2Fixtures.createWorkingGroupNetworkResponse(),
   );
   await renderWorkingGroupsList();
   expect(
@@ -66,9 +66,16 @@ it('renders a list of working groups', async () => {
     id: '11',
     title: 'Working Group 11',
   });
-  mockGetWorkingGroups.mockResolvedValue(
-    gp2Fixtures.createWorkingGroupsResponse([firstGroup, secondGroup]),
-  );
+  const response = {
+    total: 2,
+    items: [
+      {
+        role: 'complexDisease' as const,
+        workingGroups: [firstGroup, secondGroup],
+      },
+    ],
+  };
+  mockGetWorkingGroups.mockResolvedValue(response);
   await renderWorkingGroupsList();
   expect(
     screen.getByRole('heading', { name: 'Working Group 42' }),

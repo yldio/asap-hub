@@ -7,27 +7,25 @@ export type WorkingGroupsBodyProps = {
 
 const WorkingGroupsBody: React.FC<WorkingGroupsBodyProps> = ({
   workingGroupNetwork,
-}) => {
-  return (
-    <>
-      <WorkingGroupNetwork
-        role={'operational'}
-        workingGroupNetwork={workingGroupNetwork}
-      />
-      <WorkingGroupNetwork
-        role={'monogenic'}
-        workingGroupNetwork={workingGroupNetwork}
-      />
-      <WorkingGroupNetwork
-        role={'complexDisease'}
-        workingGroupNetwork={workingGroupNetwork}
-      />
-      <WorkingGroupNetwork
-        role={'support'}
-        workingGroupNetwork={workingGroupNetwork}
-      />
-    </>
-  );
-};
+}) => (
+  <>
+    <WorkingGroupNetwork
+      role={'operational'}
+      workingGroupNetwork={workingGroupNetwork}
+    />
+    <WorkingGroupNetwork
+      role={'monogenic'}
+      workingGroupNetwork={workingGroupNetwork}
+    />
+    <WorkingGroupNetwork
+      role={'complexDisease'}
+      workingGroupNetwork={workingGroupNetwork}
+    />
+    <WorkingGroupNetwork
+      role={'support'}
+      workingGroupNetwork={workingGroupNetwork}
+    />
+  </>
+);
 
 export default WorkingGroupsBody;

@@ -55,7 +55,7 @@
     "algoliasearch": "4.14.2",
     "apr-intercept": "3.0.4",
     "aws-lambda": "1.0.7",
-    "aws-sdk": "2.1197.0",
+    "aws-sdk": "2.1220.0",
     "aws-xray-sdk": "3.3.7",
     "chance": "1.1.8",
     "cors": "2.8.5",

@@ -16,8 +16,9 @@
     "@babel/runtime-corejs3": "7.19.1",
     "auth0-js": "9.19.1",
     "camelcase": "6.3.0",
+    "path-browserify": "1.0.1",
     "pify": "5.0.0",
-    "util": "^0.12.4"
+    "util": "0.12.4"
   },
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:*",
@@ -27,6 +28,7 @@
     "@babel/preset-react": "7.18.6",
     "@types/auth0-js": "9.14.6",
     "@types/jest": "27.5.1",
+    "@types/node": "14.18.26",
     "@types/pify": "3.0.2"
   }
 }

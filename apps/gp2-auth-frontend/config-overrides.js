@@ -3,7 +3,6 @@ module.exports = function override(config) {
   const fallback = config.resolve.fallback || {};
   Object.assign(fallback, {
     path: require.resolve('path-browserify'),
-    util: require.resolve('util/'),
   });
   config.resolve.fallback = fallback;
   config.plugins = (config.plugins || []).concat([

@@ -36,7 +36,10 @@ const lintConfigs = [
 ].map(([dir, packageOrApp]) => ({
   rootDir: resolve(dir, packageOrApp),
   runner: require.resolve('jest-runner-eslint'),
-  testMatch: ['<rootDir>/src/**/*.{js,jsx,ts,tsx}'],
+  testMatch: [
+    '<rootDir>/src/**/*.{js,jsx,ts,tsx}',
+    '!**/*.browser-test.{js,jsx,ts,tsx}',
+  ],
 
   modulePathIgnorePatterns: ['<rootDir>/build(-cjs)?/'],
 

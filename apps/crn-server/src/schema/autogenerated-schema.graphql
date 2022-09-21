@@ -2402,6 +2402,7 @@ type EventsDataDto {
   title: EventsDataTitleDto
   videoRecording: EventsDataVideoRecordingDto
   videoRecordingPermanentlyUnavailable: EventsDataVideoRecordingPermanentlyUnavailableDto
+  videoRecordingUpdatedAt: EventsDataVideoRecordingUpdatedAtDto
 }
 
 """The structure of the End Date field of the Events content type."""
@@ -2492,6 +2493,7 @@ input EventsDataInputDto {
   title: EventsDataTitleInputDto
   videoRecording: EventsDataVideoRecordingInputDto
   videoRecordingPermanentlyUnavailable: EventsDataVideoRecordingPermanentlyUnavailableInputDto
+  videoRecordingUpdatedAt: EventsDataVideoRecordingUpdatedAtInputDto
 }
 
 """The structure of the Meeting Link field of the Events content type."""
@@ -2696,6 +2698,16 @@ input EventsDataVideoRecordingPermanentlyUnavailableInputDto {
   iv: Boolean
 }
 
+"""The structure of the Video Recording Updated At field of the Events content type."""
+type EventsDataVideoRecordingUpdatedAtDto {
+  iv: Instant
+}
+
+"""The structure of the Video Recording Updated At field of the Events content input type."""
+input EventsDataVideoRecordingUpdatedAtInputDto {
+  iv: Instant
+}
+
 """The structure of the flat Events data type."""
 type EventsFlatDataDto {
   calendar: [Calendars!]
@@ -2731,6 +2743,7 @@ type EventsFlatDataDto {
   videoRecording: String
   """This box is automatically ticked if no output is added after 14 days from the event's end date."""
   videoRecordingPermanentlyUnavailable: Boolean
+  videoRecordingUpdatedAt: Instant
 }
 
 """List of Events items and total count."""

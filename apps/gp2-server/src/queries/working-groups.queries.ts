@@ -30,26 +30,6 @@ export const workingGroupContentQueryFragment = gql`
   }
 `;
 
-export const workingGroupNetworkQueryFragment = gql`
-  fragment WorkingGroupNetworkContent on WorkingGroupNetwork {
-    id
-    flatData {
-      complexDisease {
-        ...WorkingGroupContent
-      }
-      monogenic {
-        ...WorkingGroupContent
-      }
-      operational {
-        ...WorkingGroupContent
-      }
-      support {
-        ...WorkingGroupContent
-      }
-    }
-  }
-`;
-
 export const FETCH_WORKING_GROUP = gql`
   query FetchWorkingGroup($id: String!) {
     findWorkingGroupsContent(id: $id) {
@@ -60,10 +40,13 @@ export const FETCH_WORKING_GROUP = gql`
 `;
 
 export const FETCH_WORKING_GROUPS = gql`
-  query FetchWorkingGroupNetwork {
-    queryWorkingGroupNetworkContents {
-      ...WorkingGroupNetworkContent
+  query FetchWorkingGroups {
+    queryWorkingGroupsContentsWithTotal(orderby: "created desc") {
+      total
+      items {
+        ...WorkingGroupContent
+      }
     }
   }
-  ${workingGroupNetworkQueryFragment}
+  ${workingGroupContentQueryFragment}
 `;

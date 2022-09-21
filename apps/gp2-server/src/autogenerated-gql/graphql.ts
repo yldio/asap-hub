@@ -1899,34 +1899,6 @@ export type FetchUsersQuery = {
   >;
 };
 
-export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
-  flatData: Pick<
-    WorkingGroupsFlatDataDto,
-    | 'title'
-    | 'shortDescription'
-    | 'leadingMembers'
-    | 'description'
-    | 'primaryEmail'
-    | 'secondaryEmail'
-  > & {
-    members: Maybe<
-      Array<
-        Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
-          user: Maybe<
-            Array<
-              Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-                flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
-                  avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                };
-              }
-            >
-          >;
-        }
-      >
-    >;
-  };
-};
-
 export type WorkingGroupNetworkContentFragment = Pick<
   WorkingGroupNetwork,
   'id'
@@ -2073,43 +2045,6 @@ export type WorkingGroupNetworkContentFragment = Pick<
       >
     >;
   };
-};
-
-export type FetchWorkingGroupQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-export type FetchWorkingGroupQuery = {
-  findWorkingGroupsContent: Maybe<
-    Pick<WorkingGroups, 'id'> & {
-      flatData: Pick<
-        WorkingGroupsFlatDataDto,
-        | 'title'
-        | 'shortDescription'
-        | 'leadingMembers'
-        | 'description'
-        | 'primaryEmail'
-        | 'secondaryEmail'
-      > & {
-        members: Maybe<
-          Array<
-            Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
-              user: Maybe<
-                Array<
-                  Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-                    flatData: Pick<
-                      UsersFlatDataDto,
-                      'firstName' | 'lastName'
-                    > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-                  }
-                >
-              >;
-            }
-          >
-        >;
-      };
-    }
-  >;
 };
 
 export type FetchWorkingGroupNetworkQueryVariables = Exact<{
@@ -2264,6 +2199,115 @@ export type FetchWorkingGroupNetworkQuery = {
         };
       }
     >
+  >;
+};
+
+export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
+  flatData: Pick<
+    WorkingGroupsFlatDataDto,
+    | 'title'
+    | 'shortDescription'
+    | 'leadingMembers'
+    | 'description'
+    | 'primaryEmail'
+    | 'secondaryEmail'
+  > & {
+    members: Maybe<
+      Array<
+        Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+          user: Maybe<
+            Array<
+              Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+                flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
+                  avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                };
+              }
+            >
+          >;
+        }
+      >
+    >;
+  };
+};
+
+export type FetchWorkingGroupQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchWorkingGroupQuery = {
+  findWorkingGroupsContent: Maybe<
+    Pick<WorkingGroups, 'id'> & {
+      flatData: Pick<
+        WorkingGroupsFlatDataDto,
+        | 'title'
+        | 'shortDescription'
+        | 'leadingMembers'
+        | 'description'
+        | 'primaryEmail'
+        | 'secondaryEmail'
+      > & {
+        members: Maybe<
+          Array<
+            Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+              user: Maybe<
+                Array<
+                  Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+                    flatData: Pick<
+                      UsersFlatDataDto,
+                      'firstName' | 'lastName'
+                    > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                  }
+                >
+              >;
+            }
+          >
+        >;
+      };
+    }
+  >;
+};
+
+export type FetchWorkingGroupsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type FetchWorkingGroupsQuery = {
+  queryWorkingGroupsContentsWithTotal: Maybe<
+    Pick<WorkingGroupsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<WorkingGroups, 'id'> & {
+            flatData: Pick<
+              WorkingGroupsFlatDataDto,
+              | 'title'
+              | 'shortDescription'
+              | 'leadingMembers'
+              | 'description'
+              | 'primaryEmail'
+              | 'secondaryEmail'
+            > & {
+              members: Maybe<
+                Array<
+                  Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                    user: Maybe<
+                      Array<
+                        Pick<
+                          Users,
+                          'id' | 'created' | 'lastModified' | 'version'
+                        > & {
+                          flatData: Pick<
+                            UsersFlatDataDto,
+                            'firstName' | 'lastName'
+                          > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                        }
+                      >
+                    >;
+                  }
+                >
+              >;
+            };
+          }
+        >
+      >;
+    }
   >;
 };
 
@@ -2854,6 +2898,38 @@ export const FetchUsersDocument = {
     ...UsersContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchUsersQuery, FetchUsersQueryVariables>;
+export const FetchWorkingGroupNetworkDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchWorkingGroupNetwork' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryWorkingGroupNetworkContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'WorkingGroupNetworkContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...WorkingGroupNetworkContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchWorkingGroupNetworkQuery,
+  FetchWorkingGroupNetworkQueryVariables
+>;
 export const FetchWorkingGroupDocument = {
   kind: 'Document',
   definitions: [
@@ -2909,25 +2985,49 @@ export const FetchWorkingGroupDocument = {
   FetchWorkingGroupQuery,
   FetchWorkingGroupQueryVariables
 >;
-export const FetchWorkingGroupNetworkDocument = {
+export const FetchWorkingGroupsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'FetchWorkingGroupNetwork' },
+      name: { kind: 'Name', value: 'FetchWorkingGroups' },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'queryWorkingGroupNetworkContents' },
+            name: {
+              kind: 'Name',
+              value: 'queryWorkingGroupsContentsWithTotal',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderby' },
+                value: {
+                  kind: 'StringValue',
+                  value: 'created desc',
+                  block: false,
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
                 {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'WorkingGroupNetworkContent' },
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'WorkingGroupContent' },
+                      },
+                    ],
+                  },
                 },
               ],
             },
@@ -2935,9 +3035,9 @@ export const FetchWorkingGroupNetworkDocument = {
         ],
       },
     },
-    ...WorkingGroupNetworkContentFragmentDoc.definitions,
+    ...WorkingGroupContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
-  FetchWorkingGroupNetworkQuery,
-  FetchWorkingGroupNetworkQueryVariables
+  FetchWorkingGroupsQuery,
+  FetchWorkingGroupsQueryVariables
 >;

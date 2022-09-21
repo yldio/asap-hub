@@ -1,3 +1,4 @@
 export * from './project';
-export * from './working-group';
 export * from './user';
+export * from './working-group';
+export * from './working-group-network';

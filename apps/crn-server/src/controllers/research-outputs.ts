@@ -88,6 +88,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       organismIds: organisms,
       environmentIds: environments,
       subtypeId: subtype,
+      addedDate: new Date(Date.now()).toISOString(),
     };
 
     const researchOutputId = await this.researchOutputDataProvider.create(
@@ -116,6 +117,16 @@ export default class ResearchOutputs implements ResearchOutputController {
       ...input
     } = researchOutputUpdateData;
 
+    const currentResearchOutput =
+      await this.researchOutputDataProvider.fetchById(id);
+
+    if (!currentResearchOutput) {
+      throw new NotFoundError(
+        undefined,
+        `research-output with id ${id} not found`,
+      );
+    }
+
     const researchOutputUpdateDataObject: ResearchOutputUpdateDataObject = {
       ...input,
       teamIds: teams,
@@ -127,6 +138,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       organismIds: organisms,
       environmentIds: environments,
       subtypeId: subtype,
+      addedDate: currentResearchOutput.addedDate,
     };
 
     const researchOutputId = await this.researchOutputDataProvider.update(

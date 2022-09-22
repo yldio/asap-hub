@@ -211,7 +211,6 @@ describe('on submit', () => {
     authors: [],
     teams: ['TEAMID'],
     sharingStatus: 'Network Only',
-    addedDate: expect.anything(),
     methods: [],
     organisms: [],
     environments: [],

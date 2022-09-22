@@ -248,7 +248,6 @@ export type AuthorPostRequest =
 
 export type ResearchOutputPostRequest = {
   accession?: string;
-  addedDate: string;
   asapFunded?: boolean;
   authors?: AuthorPostRequest[];
   description: string;

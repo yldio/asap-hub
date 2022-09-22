@@ -8,6 +8,11 @@ it('renders a tag label with content', () => {
 });
 
 it('renders an icon if provided', () => {
-  render(<StateTag label="Text" icon={<span data-testid="icon">icon</span>} />);
-  expect(screen.getByTestId('icon')).toBeInTheDocument();
+  const testSvg = (
+    <svg>
+      <title>Icon</title>
+    </svg>
+  );
+  render(<StateTag label="Text" icon={testSvg} />);
+  expect(screen.getByTitle('Icon')).toBeInTheDocument();
 });

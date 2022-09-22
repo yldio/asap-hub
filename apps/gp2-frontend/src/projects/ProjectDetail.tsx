@@ -2,7 +2,7 @@ import { useRouteParams, gp2 } from '@asap-hub/routing';
 
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { ProjectDetailPage, ProjectOverview } from '@asap-hub/gp2-components';
+import { ProjectDetailPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 
 import { useProjectById } from './state';
@@ -17,9 +17,7 @@ const ProjectDetail = () => {
       <ProjectDetailPage backHref={backHref} {...projectData}>
         <Switch>
           <Route path={projects({}).project({ projectId }).overview({}).$}>
-            <Frame title="Overview">
-              <ProjectOverview {...projectData} />
-            </Frame>
+            <Frame title="Overview"></Frame>
           </Route>
           <Redirect to={projects({}).project({ projectId }).overview({}).$} />
         </Switch>

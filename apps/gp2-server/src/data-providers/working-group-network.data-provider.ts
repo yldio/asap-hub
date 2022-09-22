@@ -23,7 +23,7 @@ export class WorkingGroupNetworkSquidexDataProvider
         FetchWorkingGroupNetworkQueryVariables
       >(FETCH_WORKING_GROUP_NETWORK);
 
-    if (!networks || networks.length === 0 || !networks[0]) {
+    if (!networks || !networks[0]) {
       return {
         items: [],
         total: 0,

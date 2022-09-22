@@ -58,6 +58,7 @@ export const eventContentFragment = gql`
             flatData {
               firstName
               lastName
+              onboarded
               avatar {
                 id
               }

@@ -29,6 +29,9 @@ import Dashboard, {
 } from './controllers/dashboard.controller';
 import Projects, { ProjectController } from './controllers/project.controller';
 import Users, { UserController } from './controllers/user.controller';
+import WorkingGroupNetwork, {
+  WorkingGroupNetworkController,
+} from './controllers/working-group-network.controller';
 import WorkingGroups, {
   WorkingGroupController,
 } from './controllers/working-group.controller';
@@ -41,12 +44,17 @@ import {
   UserSquidexDataProvider,
 } from './data-providers/user.data-provider';
 import {
+  WorkingGroupNetworkDataProvider,
+  WorkingGroupNetworkSquidexDataProvider,
+} from './data-providers/working-group-network.data-provider';
+import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-group.data-provider';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { projectRouteFactory } from './routes/project.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
+import { workingGroupNetworkRouteFactory } from './routes/working-group-network.route';
 import { workingGroupRouteFactory } from './routes/working-group.route';
 import assignUserToContext from './utils/assign-user-to-context';
 import pinoLogger from './utils/logger';
@@ -89,6 +97,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const workingGroupDataProvider =
     libs.workingGroupDataProvider ||
     new WorkingGroupSquidexDataProvider(squidexGraphqlClient);
+  const workingGroupNetworkDataProvider =
+    libs.workingGroupNetworkDataProvider ||
+    new WorkingGroupNetworkSquidexDataProvider(squidexGraphqlClient);
   const projectDataProvider =
     libs.projectDataProvider ||
     new ProjectSquidexDataProvider(squidexGraphqlClient);
@@ -99,6 +110,9 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   const workingGroupController =
     libs.workingGroupController || new WorkingGroups(workingGroupDataProvider);
+  const workingGroupNetworkController =
+    libs.workingGroupNetworkController ||
+    new WorkingGroupNetwork(workingGroupNetworkDataProvider);
   const projectController =
     libs.projectController || new Projects(projectDataProvider);
   /**
@@ -122,6 +136,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userPublicRoutes = userPublicRouteFactory(userController);
   const userRoutes = userRouteFactory(userController);
   const workingGroupRoutes = workingGroupRouteFactory(workingGroupController);
+  const workingGroupNetworkRoutes = workingGroupNetworkRouteFactory(
+    workingGroupNetworkController,
+  );
   const projectRoutes = projectRouteFactory(projectController);
 
   app.use(userPublicRoutes);
@@ -134,6 +151,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(userRoutes);
   app.use(dashboardRoutes);
   app.use(workingGroupRoutes);
+  app.use(workingGroupNetworkRoutes);
   app.use(projectRoutes);
 
   // Catch all
@@ -155,9 +173,11 @@ export type Libs = {
   userDataProvider?: UserDataProvider;
   dashboardController?: DashboardController;
   workingGroupDataProvider?: WorkingGroupDataProvider;
+  workingGroupNetworkDataProvider?: WorkingGroupNetworkDataProvider;
   projectDataProvider?: ProjectDataProvider;
   userController?: UserController;
   workingGroupController?: WorkingGroupController;
+  workingGroupNetworkController?: WorkingGroupNetworkController;
   projectController?: ProjectController;
   authHandler?: AuthHandler;
   logger?: Logger;

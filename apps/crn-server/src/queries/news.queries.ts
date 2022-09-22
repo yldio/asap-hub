@@ -14,6 +14,7 @@ export const newsQueryFragment = gql`
       thumbnail {
         id
       }
+      frequency
       link
       linkText
     }

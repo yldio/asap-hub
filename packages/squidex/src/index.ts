@@ -7,7 +7,13 @@ export * from './utils';
 export * from './entities';
 export { SquidexGraphqlError } from './graphql';
 export type { SquidexGraphqlClient } from './graphql';
-export type { SquidexRestClient, Query, Results } from './rest';
+export type {
+  SquidexRestClient,
+  Query,
+  Results,
+  Filter,
+  LogicalFilter,
+} from './rest';
 
 export class SquidexGraphql extends SquidexGraphqlNoAuth {
   constructor(

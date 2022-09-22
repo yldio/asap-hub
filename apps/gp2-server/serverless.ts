@@ -216,7 +216,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         AUTH0_CLIENT_ID: auth0ClientId,
-        AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
+        AUTH0_SHARED_SECRET: auth0SharedSecret,
         SENTRY_DSN: sentryDsnHandlers,
       },
     },

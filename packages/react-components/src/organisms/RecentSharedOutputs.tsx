@@ -1,76 +1,77 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
-import { Card, Headline4, Link } from '../atoms';
+import { Card, Link } from '../atoms';
 import { formatDateToTimezone } from '../date';
 import { perRem, tabletScreen } from '../pixels';
-import { lead, steel } from '../colors';
-import { protocol } from '../icons';
+import { charcoal, lead, steel } from '../colors';
+import {
+  protocol,
+  article,
+  dataset,
+  bioinformatics,
+  labResource,
+  grantDocument,
+} from '../icons';
 
-const gridMixin = {
-  display: 'grid',
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
-    gridTemplateColumns: '3fr 2fr 2fr',
-    gridAutoFlow: 'column',
-    alignItems: 'start',
-    gridAutoRows: `${66 / perRem}em`,
-  },
+export const getIconForDocumentType = (
+  documentType: string,
+): EmotionJSX.Element => {
+  switch (documentType) {
+    case 'Protocol':
+      return protocol;
+    case 'Article':
+      return article;
+    case 'Dataset':
+      return dataset;
+    case 'Bioinformatics':
+      return bioinformatics;
+    case 'Lab Resource':
+      return labResource;
+    case 'Grant Document':
+      return grantDocument;
+    default:
+      return protocol;
+  }
 };
 
-const gridStyles = css({
+const container = css({
   display: 'grid',
-  flexFlow: 'column',
+  color: lead.rgb,
 });
 
-const labelStyle = css({
-  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
-    gridTemplateColumns: '1fr 1fr 1fr',
-    gridAutoFlow: 'column',
-    alignItems: 'start',
-    display: 'inline-block',
-    fontWeight: 'bold',
-  },
+const gridTitleStyles = css({
   display: 'none',
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    display: 'inherit',
+    borderBottom: 0,
+    marginBottom: 0,
+    paddingBottom: `${15 / perRem}em`,
+  },
 });
 
-const groupStyle = css({
-  display: 'flex',
-  flexFlow: 'column',
+const rowTitleStyles = css({
+  paddingTop: `${33 / perRem}em`,
+  paddingBottom: `${15 / perRem}em`,
+  ':first-of-type': { paddingTop: 0 },
+  [`@media (min-width: ${tabletScreen.min}px)`]: { display: 'none' },
 });
 
-const headerStyle = css({
+const rowStyles = css({
   display: 'grid',
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
+  borderBottom: `1px solid ${steel.rgb}`,
+  paddingBottom: `${21 / perRem}em`,
+  marginBottom: `${21 / perRem}em`,
+  ':last-child': {
+    borderBottom: 'none',
+    marginBottom: 0,
+    paddingBottom: 0,
+  },
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridTemplateColumns: '3fr 2fr 2fr',
-    gridAutoFlow: 'column',
-    alignItems: 'start',
     columnGap: `${15 / perRem}em`,
-  },
-  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
-    display: 'none',
-  },
-});
-
-const speakerListStyles = css({
-  ...gridMixin,
-  paddingTop: `${21 / perRem}em`,
-  columnGap: `${15 / perRem}em`,
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
-    ...gridMixin,
-    ':nth-child(1)': {
-      paddingTop: `${3 / perRem}em`,
-    },
-    ':nth-last-child(1)': {
-      gridAutoRows: `${48 / perRem}em`,
-    },
-  },
-  ':nth-last-child(n+2)': {
-    borderBottom: `1px solid ${steel.rgb}`,
-  },
-  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
-    gridAutoFlow: 'row',
-    alignItems: 'start',
   },
 });
 
@@ -82,11 +83,9 @@ const paragraphStyle = css({
   flexDirection: 'row',
   gap: `${6 / perRem}em`,
   color: lead.rgb,
-  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
-    marginTop: `${15 / perRem}em`,
-    marginBottom: `${21 / perRem}em`,
-  },
 });
+
+const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
 
 type RecentSharedOutputProp = {
   outputs?: ResearchOutputResponse[];
@@ -94,51 +93,34 @@ type RecentSharedOutputProp = {
 
 const RecentSharedOutputs: React.FC<RecentSharedOutputProp> = ({ outputs }) => (
   <Card>
-    <div css={headerStyle}>
-      <Headline4 styleAsHeading={5}>Shared Output</Headline4>
-      <Headline4 styleAsHeading={5}>Type of Output</Headline4>
-      <Headline4 styleAsHeading={5}>Date</Headline4>
-    </div>
-    <div css={gridStyles}>
+    <div css={container}>
+      <div css={[rowStyles, gridTitleStyles]}>
+        <span css={titleStyles}>Shared Output</span>
+        <span css={titleStyles}>Type of Output</span>
+        <span css={titleStyles}>Date</span>
+      </div>
       {outputs &&
-        outputs.map((output) => (
-          <div key={output.id} css={speakerListStyles}>
-            <div css={groupStyle}>
-              <div css={labelStyle}>
-                <span>Shared Output</span>
-              </div>
-              <div css={paragraphStyle}>
-                <Link
-                  href={
-                    sharedResearch({}).researchOutput({
-                      researchOutputId: output.id,
-                    }).$
-                  }
-                  ellipsed
-                >
-                  {output.title}
-                </Link>
-              </div>
-            </div>
-            <div css={groupStyle}>
-              <div css={labelStyle}>
-                <span>Type of Output</span>
-              </div>
-              <p css={paragraphStyle}>
-                {protocol} {output.documentType}
-              </p>
-            </div>
-            <div css={groupStyle}>
-              <div css={labelStyle}>
-                <span>Date</span>
-              </div>
-              <p css={paragraphStyle}>
-                {formatDateToTimezone(
-                  output.addedDate,
-                  'E, d MMM y',
-                ).toUpperCase()}
-              </p>
-            </div>
+        outputs.map(({ id, documentType, addedDate, title }) => (
+          <div key={id} css={[rowStyles]}>
+            <span css={[titleStyles, rowTitleStyles]}>Event</span>
+            <Link
+              ellipsed
+              href={
+                sharedResearch({}).researchOutput({
+                  researchOutputId: id,
+                }).$
+              }
+            >
+              {title}
+            </Link>
+            <span css={[titleStyles, rowTitleStyles]}>Meeting Materials</span>
+            <p css={paragraphStyle}>
+              {getIconForDocumentType(documentType)} {documentType}
+            </p>
+            <span css={[titleStyles, rowTitleStyles]}>Date</span>
+            <span>
+              {formatDateToTimezone(addedDate, 'E, d MMM y').toUpperCase()}
+            </span>
           </div>
         ))}
     </div>

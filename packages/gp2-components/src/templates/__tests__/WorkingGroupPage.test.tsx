@@ -6,12 +6,10 @@ describe('WorkingGroupsPage', () => {
     render(<WorkingGroupsPage />);
     expect(screen.getByRole('banner')).toBeVisible();
   });
-  it('renders a children', () => {
-    render(
-      <WorkingGroupsPage>
-        <div>here is a child component</div>
-      </WorkingGroupsPage>,
+  it('renders the children', () => {
+    const { getByText } = render(
+      <WorkingGroupsPage>Content</WorkingGroupsPage>,
     );
-    expect(screen.getByText('here is a child component')).toBeVisible();
+    expect(getByText('Content')).toBeVisible();
   });
 });

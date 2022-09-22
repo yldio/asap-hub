@@ -1,4 +1,5 @@
 import {
+  VideoEventReminder,
   EventHappeningNowReminder,
   EventHappeningTodayReminder,
   FetchRemindersOptions,
@@ -159,6 +160,54 @@ const getResearchOutputRemindersFromQuery = (
 const getEventRemindersFromQuery = (
   queryEventsContents: FetchReminderDataQuery['queryEventsContents'],
 ): (EventHappeningTodayReminder | EventHappeningNowReminder)[] => {
+  const eventReminders = (queryEventsContents || []).reduce<
+    (EventHappeningTodayReminder | EventHappeningNowReminder)[]
+  >((events, event) => {
+    const startDate = DateTime.fromISO(event.flatData.startDate);
+    const endDate = DateTime.fromISO(event.flatData.endDate);
+
+    if (startDate > DateTime.local()) {
+      return [
+        ...events,
+        {
+          id: `event-happening-today-${event.id}`,
+          entity: 'Event',
+          type: 'Happening Today',
+          data: {
+            eventId: event.id,
+            title: event.flatData.title || '',
+            startDate: event.flatData.startDate,
+          },
+        },
+      ];
+    }
+
+    if (endDate > DateTime.local()) {
+      return [
+        ...events,
+        {
+          id: `event-happening-now-${event.id}`,
+          entity: 'Event',
+          type: 'Happening Now',
+          data: {
+            eventId: event.id,
+            title: event.flatData.title || '',
+            startDate: event.flatData.startDate,
+            endDate: event.flatData.endDate,
+          },
+        },
+      ];
+    }
+
+    return events;
+  }, []);
+
+  return eventReminders;
+};
+
+const getEventMaterialRemindersFromQuery = (
+  queryEventsContents: FetchReminderDataQuery['queryEventsContents'],
+): VideoEventReminder[] => {
   const eventReminders = (queryEventsContents || []).reduce<
     (EventHappeningTodayReminder | EventHappeningNowReminder)[]
   >((events, event) => {

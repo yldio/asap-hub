@@ -48,7 +48,13 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
       findUsersContent,
     );
     const eventReminders = getEventRemindersFromQuery(queryEventsContents);
-    const reminders = [...researchOutputReminders, ...eventReminders];
+    const eventMaterialReminders =
+      getEventMaterialRemindersFromQuery(queryEventsContents);
+    const reminders = [
+      ...researchOutputReminders,
+      ...eventReminders,
+      ...eventMaterialReminders,
+    ];
 
     const sortedReminders = reminders.sort((reminderA, reminderB) => {
       const aStartDate = getSortDate(reminderA);
@@ -87,7 +93,7 @@ export const getEventFilter = (zone: string): string => {
     .plus({ day: 1 })
     .toUTC();
 
-  return `data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO}`;
+  return `data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO} or data/videoRecordingUpdatedAt/iv ge ${lastMidnightISO} and data/videoRecordingUpdatedAt/iv le ${todayMidnightISO}`;
 };
 
 const getUserTeamIds = (
@@ -209,45 +215,23 @@ const getEventMaterialRemindersFromQuery = (
   queryEventsContents: FetchReminderDataQuery['queryEventsContents'],
 ): VideoEventReminder[] => {
   const eventReminders = (queryEventsContents || []).reduce<
-    (EventHappeningTodayReminder | EventHappeningNowReminder)[]
+    VideoEventReminder[]
   >((events, event) => {
-    const startDate = DateTime.fromISO(event.flatData.startDate);
-    const endDate = DateTime.fromISO(event.flatData.endDate);
-
-    if (startDate > DateTime.local()) {
-      return [
-        ...events,
-        {
-          id: `event-happening-today-${event.id}`,
-          entity: 'Event',
-          type: 'Happening Today',
-          data: {
-            eventId: event.id,
-            title: event.flatData.title || '',
-            startDate: event.flatData.startDate,
-          },
+    return [
+      ...events,
+      {
+        id: `video-event-updated-${event.id}`,
+        entity: 'Event Material',
+        type: 'Video',
+        data: {
+          eventId: event.id,
+          title: event.flatData.title || '',
+          startDate: event.flatData.startDate,
+          endDate: event.flatData.endDate,
+          videoRecordingUpdatedAt: event.flatData.videoRecordingUpdatedAt,
         },
-      ];
-    }
-
-    if (endDate > DateTime.local()) {
-      return [
-        ...events,
-        {
-          id: `event-happening-now-${event.id}`,
-          entity: 'Event',
-          type: 'Happening Now',
-          data: {
-            eventId: event.id,
-            title: event.flatData.title || '',
-            startDate: event.flatData.startDate,
-            endDate: event.flatData.endDate,
-          },
-        },
-      ];
-    }
-
-    return events;
+      },
+    ];
   }, []);
 
   return eventReminders;

@@ -584,11 +584,9 @@ describe('Reminder Data Provider', () => {
           queryResearchOutputsContents: [],
           queryEventsContents: [
             {
-              ...squidexGraphqlResponse.queryEventsContents,
+              ...squidexGraphqlResponse.queryEventsContents![0],
               flatData: {
-                ...(squidexGraphqlResponse.queryEventsContents?.length
-                  ? squidexGraphqlResponse.queryEventsContents[0]?.flatData
-                  : {}),
+                ...squidexGraphqlResponse.queryEventsContents![0]?.flatData,
                 endDate: '2022-08-24T16:30:54.000Z',
                 startDate: '2022-08-24T16:20:14.000Z',
                 videoRecordingUpdatedAt: '2022-09-01T08:00:00Z',

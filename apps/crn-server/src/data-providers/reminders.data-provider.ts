@@ -47,9 +47,11 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
       queryResearchOutputsContents,
       findUsersContent,
     );
+
     const eventReminders = getEventRemindersFromQuery(queryEventsContents);
     const eventMaterialReminders =
       getEventMaterialRemindersFromQuery(queryEventsContents);
+
     const reminders = [
       ...researchOutputReminders,
       ...eventReminders,
@@ -93,7 +95,7 @@ export const getEventFilter = (zone: string): string => {
     .plus({ day: 1 })
     .toUTC();
 
-  return `data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO} or data/videoRecordingUpdatedAt/iv ge ${lastMidnightISO} and data/videoRecordingUpdatedAt/iv le ${todayMidnightISO}`;
+  return `data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO}`;
 };
 
 const getUserTeamIds = (
@@ -216,8 +218,8 @@ const getEventMaterialRemindersFromQuery = (
 ): VideoEventReminder[] => {
   const eventReminders = (queryEventsContents || []).reduce<
     VideoEventReminder[]
-  >((events, event) => {
-    return [
+  >(
+    (events, event) => [
       ...events,
       {
         id: `video-event-updated-${event.id}`,
@@ -231,8 +233,9 @@ const getEventMaterialRemindersFromQuery = (
           videoRecordingUpdatedAt: event.flatData.videoRecordingUpdatedAt,
         },
       },
-    ];
-  }, []);
+    ],
+    [],
+  );
 
   return eventReminders;
 };
@@ -244,6 +247,10 @@ const getSortDate = (reminder: ReminderDataObject): DateTime => {
 
   if (reminder.type === 'Happening Today') {
     return DateTime.fromISO(reminder.data.startDate);
+  }
+
+  if (reminder.type === 'Video') {
+    return DateTime.fromISO(reminder.data.videoRecordingUpdatedAt);
   }
 
   return DateTime.fromISO(reminder.data.endDate);

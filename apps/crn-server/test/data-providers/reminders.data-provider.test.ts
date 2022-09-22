@@ -36,7 +36,7 @@ describe('Reminder Data Provider', () => {
     const timezone = 'Europe/London';
     const fetchRemindersOptions: FetchRemindersOptions = { userId, timezone };
 
-    describe('Research Output Published Reminder', () => {
+    describe.only('Research Output Published Reminder', () => {
       test('Should fetch the reminder from squidex graphql', async () => {
         const result = await reminderDataProviderMockGraphql.fetch(
           fetchRemindersOptions,
@@ -576,7 +576,7 @@ describe('Reminder Data Provider', () => {
 
       beforeEach(async () => {});
 
-      test.only('Should fetch the event if its video was upserted recently', async () => {
+      test('Should fetch the event if its video was upserted recently', async () => {
         jest.setSystemTime(DateTime.fromISO('2022-09-01T10:00:00Z').toJSDate());
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlClientMock.request.mockResolvedValueOnce({
@@ -642,11 +642,13 @@ describe('Reminder Data Provider', () => {
         // using event start-date for sorting
         event1.flatData.startDate = '2022-01-01T12:00:00Z';
         event1.flatData.endDate = '2022-01-01T13:00:00Z';
+        event1.flatData.videoRecordingUpdatedAt = '2022-01-01T11:00:00Z';
         const event2 = getSquidexReminderEventsContents();
         event2.id = 'event-2';
         event2.flatData.startDate = '2022-01-01T08:00:00Z';
         // using event end-date for sorting
         event2.flatData.endDate = '2022-01-01T10:00:00Z';
+        event2.flatData.videoRecordingUpdatedAt = '2022-01-01T7:00:00Z';
 
         squidexGraphqlResponse.queryEventsContents = [event1, event2];
         squidexGraphqlResponse.queryResearchOutputsContents = [

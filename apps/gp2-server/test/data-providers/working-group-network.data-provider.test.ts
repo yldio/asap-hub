@@ -59,24 +59,18 @@ describe('Working Group Network Data Provider', () => {
       const expected = getWorkingGroupNetworkDataObject();
       expect(workingGroupNetworkDataObject).toEqual(expected);
     });
+
     test('empty array returned when network role not found in response', () => {
       const workingGroupNetwork = getGraphQLWorkingGroupNetwork();
       workingGroupNetwork.flatData.complexDisease = null;
       const workingGroupNetworkDataObject =
         parseWorkingGroupNetworkToDataObject(workingGroupNetwork);
-      const expected = getWorkingGroupNetworkDataObject();
 
-      expect(workingGroupNetworkDataObject).toEqual(
-        expected.map((network) => {
-          if (network.role === 'complexDisease') {
-            return {
-              ...network,
-              workingGroups: [],
-            };
-          }
-          return network;
-        }),
-      );
+      const complexDiseaseWorkingGroups = workingGroupNetworkDataObject
+        .filter(({ role }) => role === 'complexDisease')
+        .flatMap(({ workingGroups }) => workingGroups);
+
+      expect(complexDiseaseWorkingGroups).toEqual([]);
     });
   });
 });

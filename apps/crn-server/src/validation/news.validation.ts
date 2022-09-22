@@ -1,5 +1,36 @@
 import { JSONSchemaType } from 'ajv';
-import { validateInput } from '@asap-hub/server-common';
+import {
+  NewsFrequency,
+  FetchNewsOptions,
+  newsFrequency,
+} from '@asap-hub/model';
+import {
+  fetchOptionsValidationSchema,
+  validateInput,
+} from '@asap-hub/server-common';
+
+const newsFetchValidationSchema: JSONSchemaType<
+  Omit<FetchNewsOptions, 'filter'> & { filter?: NewsFrequency[] }
+> = {
+  type: 'object',
+  properties: {
+    ...fetchOptionsValidationSchema.properties,
+    filter: {
+      type: 'array',
+      nullable: true,
+      items: { enum: newsFrequency },
+    },
+  },
+  additionalProperties: false,
+};
+
+export const validateNewsFetchParameters = validateInput(
+  newsFetchValidationSchema,
+  {
+    skipNull: true,
+    coerce: true,
+  },
+);
 
 type NewsParameters = {
   newsId: string;

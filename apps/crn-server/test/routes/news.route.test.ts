@@ -59,7 +59,7 @@ describe('/news/ route', () => {
         take: 15,
         skip: 5,
         search: 'brain',
-        filter: 'CRN Quaterly',
+        filter: 'CRN Quarterly',
       };
 
       await supertest(app).get('/news').query(expectedParams);
@@ -67,7 +67,7 @@ describe('/news/ route', () => {
       expect(newsControllerMock.fetch).toBeCalledWith({
         ...expectedParams,
         filter: {
-          frequency: ['CRN Quaterly'],
+          frequency: ['CRN Quarterly'],
         },
       });
     });
@@ -83,6 +83,14 @@ describe('/news/ route', () => {
       test('Should return a validation error when the arguments are not valid', async () => {
         const response = await supertest(app).get(`/news`).query({
           take: 'invalid param',
+        });
+
+        expect(response.status).toBe(400);
+      });
+
+      test('Should return a validation error when the filter is not valid', async () => {
+        const response = await supertest(app).get(`/news`).query({
+          filter: 'Triweekly',
         });
 
         expect(response.status).toBe(400);

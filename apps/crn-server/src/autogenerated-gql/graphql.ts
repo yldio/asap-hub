@@ -4791,16 +4791,6 @@ export type UsersDataAdminNotesInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the AlumniSinceDate field of the Users content type. */
-export type UsersDataAlumniSinceDateDto = {
-  iv: Maybe<Scalars['Instant']>;
-};
-
-/** The structure of the AlumniSinceDate field of the Users content input type. */
-export type UsersDataAlumniSinceDateInputDto = {
-  iv: InputMaybe<Scalars['Instant']>;
-};
-
 /** The structure of the Avatar field of the Users content type. */
 export type UsersDataAvatarDto = {
   iv: Maybe<Array<Asset>>;
@@ -4896,7 +4886,6 @@ export type UsersDataDismissedGettingStartedInputDto = {
 /** The structure of the Users data type. */
 export type UsersDataDto = {
   adminNotes: Maybe<UsersDataAdminNotesDto>;
-  alumniSinceDate: Maybe<UsersDataAlumniSinceDateDto>;
   avatar: Maybe<UsersDataAvatarDto>;
   biography: Maybe<UsersDataBiographyDto>;
   city: Maybe<UsersDataCityDto>;
@@ -4971,7 +4960,6 @@ export type UsersDataFirstNameInputDto = {
 /** The structure of the Users data input type. */
 export type UsersDataInputDto = {
   adminNotes: InputMaybe<UsersDataAdminNotesInputDto>;
-  alumniSinceDate: InputMaybe<UsersDataAlumniSinceDateInputDto>;
   avatar: InputMaybe<UsersDataAvatarInputDto>;
   biography: InputMaybe<UsersDataBiographyInputDto>;
   city: InputMaybe<UsersDataCityInputDto>;
@@ -5261,7 +5249,6 @@ export type UsersDataTeamsInputDto = {
 /** The structure of the flat Users data type. */
 export type UsersFlatDataDto = {
   adminNotes: Maybe<Scalars['String']>;
-  alumniSinceDate: Maybe<Scalars['Instant']>;
   avatar: Maybe<Array<Asset>>;
   biography: Maybe<Scalars['String']>;
   city: Maybe<Scalars['String']>;
@@ -5532,6 +5519,7 @@ export type EventContentFragment = Pick<
     | 'notes'
     | 'videoRecordingPermanentlyUnavailable'
     | 'videoRecording'
+    | 'videoRecordingUpdatedAt'
     | 'presentationPermanentlyUnavailable'
     | 'presentation'
     | 'meetingMaterialsPermanentlyUnavailable'
@@ -5866,6 +5854,7 @@ export type FetchEventsQuery = {
               | 'notes'
               | 'videoRecordingPermanentlyUnavailable'
               | 'videoRecording'
+              | 'videoRecordingUpdatedAt'
               | 'presentationPermanentlyUnavailable'
               | 'presentation'
               | 'meetingMaterialsPermanentlyUnavailable'
@@ -6248,6 +6237,7 @@ export type FetchEventQuery = {
         | 'notes'
         | 'videoRecordingPermanentlyUnavailable'
         | 'videoRecording'
+        | 'videoRecordingUpdatedAt'
         | 'presentationPermanentlyUnavailable'
         | 'presentation'
         | 'meetingMaterialsPermanentlyUnavailable'
@@ -7398,7 +7388,10 @@ export type FetchReminderDataQuery = {
   queryEventsContents: Maybe<
     Array<
       Pick<Events, 'id'> & {
-        flatData: Pick<EventsFlatDataDto, 'startDate' | 'endDate' | 'title'>;
+        flatData: Pick<
+          EventsFlatDataDto,
+          'startDate' | 'endDate' | 'title' | 'videoRecordingUpdatedAt'
+        >;
       }
     >
   >;
@@ -9533,6 +9526,10 @@ export const EventContentFragmentDoc = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'videoRecording' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'videoRecordingUpdatedAt' },
                 },
                 {
                   kind: 'Field',
@@ -12248,6 +12245,13 @@ export const FetchReminderDataDocument = {
                         name: { kind: 'Name', value: 'endDate' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'videoRecordingUpdatedAt',
+                        },
+                      },
                     ],
                   },
                 },

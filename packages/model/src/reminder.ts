@@ -2,11 +2,15 @@ import { ListResponse } from './common';
 import { EventResponse } from './event';
 import { ResearchOutputDataObject } from './research-output';
 
-type ReminderEntity = 'Research Output' | 'Event';
+type ReminderEntity = 'Research Output' | 'Event' | 'Event Material';
 
 type ResearchOutputReminderType = 'Published';
 type EventReminderType = 'Happening Today' | 'Happening Now';
-type ReminderType = ResearchOutputReminderType | EventReminderType;
+type EventMaterialReminderType = 'Video';
+type ReminderType =
+  | ResearchOutputReminderType
+  | EventReminderType
+  | EventMaterialReminderType;
 interface Reminder {
   id: string;
   entity: ReminderEntity;
@@ -22,6 +26,11 @@ interface ResearchOutputReminder extends Reminder {
 interface EventReminder extends Reminder {
   entity: 'Event';
   type: EventReminderType;
+}
+
+interface EventMaterialReminder extends Reminder {
+  entity: 'Event Material';
+  type: EventMaterialReminderType;
 }
 
 export interface ResearchOutputPublishedReminder
@@ -54,6 +63,18 @@ export interface EventHappeningNowReminder extends EventReminder {
     title: EventResponse['title'];
     startDate: EventResponse['startDate'];
     endDate: EventResponse['endDate'];
+  };
+}
+
+export interface VideoEventReminder extends EventMaterialReminder {
+  entity: 'Event Material';
+  type: 'Video';
+  data: {
+    eventId: EventResponse['id'];
+    title: EventResponse['title'];
+    startDate: EventResponse['startDate'];
+    endDate: EventResponse['endDate'];
+    videoRecordingUpdatedAt: EventResponse['videoRecordingUpdatedAt'];
   };
 }
 

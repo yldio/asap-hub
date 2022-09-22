@@ -11,6 +11,7 @@ import {
   getEventHappeningTodayReminder,
   getSquidexReminderEventsContents,
   getEventHappeningNowReminder,
+  getVideoEventUpdatedReminder,
 } from '../fixtures/reminders.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
@@ -575,10 +576,46 @@ describe('Reminder Data Provider', () => {
 
       beforeEach(async () => {});
 
-      test.todo(
-        'Should fetch the event if its video was upserted recently',
-        async () => {},
-      );
+      test.only('Should fetch the event if its video was upserted recently', async () => {
+        jest.setSystemTime(DateTime.fromISO('2022-09-01T10:00:00Z').toJSDate());
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlClientMock.request.mockResolvedValueOnce({
+          ...squidexGraphqlResponse,
+          queryResearchOutputsContents: [],
+          queryEventsContents: [
+            {
+              ...squidexGraphqlResponse.queryEventsContents,
+              flatData: {
+                ...(squidexGraphqlResponse.queryEventsContents?.length
+                  ? squidexGraphqlResponse.queryEventsContents[0]?.flatData
+                  : {}),
+                endDate: '2022-08-24T16:30:54.000Z',
+                startDate: '2022-08-24T16:20:14.000Z',
+                videoRecordingUpdatedAt: '2022-09-01T08:00:00Z',
+              },
+            },
+          ],
+        });
+
+        const expectedVideoEventUpdatedReminder =
+          getVideoEventUpdatedReminder();
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({
+          total: 1,
+          items: [
+            {
+              ...expectedVideoEventUpdatedReminder,
+              data: {
+                ...expectedVideoEventUpdatedReminder.data,
+                startDate: '2022-08-24T16:20:14.000Z',
+                endDate: '2022-08-24T16:30:54.000Z',
+                videoRecordingUpdatedAt: '2022-09-01T08:00:00Z',
+              },
+            },
+          ],
+        });
+      });
     });
 
     describe('All types of reminders', () => {

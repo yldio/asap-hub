@@ -1,4 +1,5 @@
 import {
+  VideoEventReminder,
   EventHappeningNowReminder,
   EventHappeningTodayReminder,
   ListReminderDataObject,
@@ -56,6 +57,22 @@ export const getEventHappeningNowReminder = (): EventHappeningNowReminder => {
       startDate: eventResponse.startDate,
       endDate: eventResponse.endDate,
       title: eventResponse.title,
+    },
+  };
+};
+
+export const getVideoEventUpdatedReminder = (): VideoEventReminder => {
+  const eventResponse = getEventResponse();
+  return {
+    id: `video-event-updated-${eventResponse.id}`,
+    entity: 'Event Material',
+    type: 'Video',
+    data: {
+      eventId: eventResponse.id,
+      startDate: eventResponse.startDate,
+      endDate: eventResponse.endDate,
+      title: eventResponse.title,
+      videoRecordingUpdatedAt: eventResponse.videoRecordingUpdatedAt,
     },
   };
 };
@@ -120,6 +137,7 @@ export const getSquidexReminderEventsContents = (): NonNullable<
       startDate: event.flatData.startDate,
       endDate: event.flatData.endDate,
       title: event.flatData.title,
+      videoRecordingUpdatedAt: event.flatData.videoRecordingUpdatedAt,
     },
   };
 };

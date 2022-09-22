@@ -81,7 +81,8 @@ export interface VideoEventReminder extends EventMaterialReminder {
 export type ReminderDataObject =
   | ResearchOutputPublishedReminder
   | EventHappeningTodayReminder
-  | EventHappeningNowReminder;
+  | EventHappeningNowReminder
+  | VideoEventReminder;
 
 export type ListReminderDataObject = ListResponse<ReminderDataObject>;
 

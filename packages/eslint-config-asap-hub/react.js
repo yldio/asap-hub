@@ -9,7 +9,6 @@ module.exports = {
   plugins: ['prettier'],
   rules: {
     'prettier/prettier': 'error',
-
     '@typescript-eslint/explicit-function-return-type': 'off',
 
     // testing-library's waitFor is sometimes used in beforeEach and requires an expect inside

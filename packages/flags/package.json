@@ -18,6 +18,6 @@
   },
   "devDependencies": {
     "@types/asap-hub__inline-environment": "workspace:*",
-    "@types/jest": "28.1.8"
+    "@types/jest": "27.5.1"
   }
 }

@@ -129,7 +129,6 @@ describe('TeamOutput', () => {
       {
         doi,
         documentType: 'Lab Resource',
-        addedDate: expect.anything(),
         tags: [],
         sharingStatus: 'Network Only',
         teams: [teamId],

@@ -225,6 +225,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     lastUpdatedPartial: _lastUpdatedPartial,
     doi: _doi,
     accession: _accession,
+    addedDate: _addedDate,
     labs,
     authors,
     teams,
@@ -343,7 +344,7 @@ export const getResearchOutputUpdateData = (): ResearchOutputUpdateData => ({
 
 export const getRestResearchOutputUpdateData =
   (): InputResearchOutput['data'] => {
-    const { createdBy, ...restResearchOutputData } =
+    const { createdBy: _, ...restResearchOutputData } =
       getRestResearchOutputCreateData();
     return {
       doi: { iv: null },

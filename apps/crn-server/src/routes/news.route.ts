@@ -1,7 +1,9 @@
-import { validateFetchPaginationOptions } from '@asap-hub/server-common';
 import { Router } from 'express';
 import { NewsController } from '../controllers/news';
-import { validateNewsParameters } from '../validation/news.validation';
+import {
+  validateNewsFetchParameters,
+  validateNewsParameters,
+} from '../validation/news.validation';
 
 export const newsRouteFactory = (newsController: NewsController): Router => {
   const newsRoutes = Router();
@@ -9,9 +11,14 @@ export const newsRouteFactory = (newsController: NewsController): Router => {
   newsRoutes.get('/news', async (req, res) => {
     const { query } = req;
 
-    const options = validateFetchPaginationOptions(query);
+    const options = validateNewsFetchParameters(query);
 
-    const result = await newsController.fetch(options);
+    const result = await newsController.fetch({
+      ...options,
+      filter: options.filter && {
+        frequency: options.filter,
+      },
+    });
 
     res.json(result);
   });

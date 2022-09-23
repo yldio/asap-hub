@@ -835,7 +835,6 @@ describe('ResearchOutputs data provider', () => {
 
   describe('Create and update', () => {
     afterEach(() => {
-      // eslint-disable-next-line jest/no-standalone-expect
       expect(nock.isDone()).toBe(true);
     });
 
@@ -864,7 +863,6 @@ describe('ResearchOutputs data provider', () => {
             outputs: { iv: ['output-1', researchOutputId] },
           })
           .reply(200);
-
         const result = await researchOutputDataProvider.create(
           researchOutputRequest,
         );
@@ -987,11 +985,12 @@ describe('ResearchOutputs data provider', () => {
       test('Should update the existing research-output and return its ID', async () => {
         const researchOutputUpdateData = getResearchOutputUpdateDataObject();
 
+        const restResearchOutputUpdateData = getRestResearchOutputUpdateData();
         nock(baseUrl)
           .patch(
             `/api/content/${appName}/research-outputs/${researchOutputId}`,
             {
-              ...getRestResearchOutputUpdateData(),
+              ...restResearchOutputUpdateData,
               updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
             },
           )

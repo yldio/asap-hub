@@ -12,6 +12,7 @@ import {
 import { getSquidexGraphqlDashboard } from '../fixtures/dashboard.fixtures';
 import { getGraphQLProject } from '../fixtures/project.fixtures';
 import { getGraphQLUser } from '../fixtures/user.fixtures';
+import { getGraphQLWorkingGroupNetwork } from '../fixtures/working-group-network.fixtures';
 import { getGraphQLWorkingGroup } from '../fixtures/working-group.fixtures';
 
 export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
@@ -36,6 +37,8 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     UsersResultDto: resultDto,
     WorkingGroups: () => getGraphQLWorkingGroup(),
     WorkingGroupsResultDto: resultDto,
+    WorkingGroupNetwork: () => getGraphQLWorkingGroupNetwork(),
+    WorkingGroupNetworkResultDto: resultDto,
     Projects: () => getGraphQLProject(),
     ProjectsResultDto: resultDto,
   };

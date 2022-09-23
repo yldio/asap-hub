@@ -56,6 +56,7 @@ const squidexGraphqlDiscoverFlatData = (): NonNullable<
         title: 'Title',
         text: 'Content',
         link: 'https://hub.asap.science',
+        frequency: 'Biweekly Newsletter',
         linkText: 'ASAP Training',
         type: 'Tutorial',
         shortText: 'Short text',
@@ -77,6 +78,7 @@ const squidexGraphqlDiscoverFlatData = (): NonNullable<
       flatData: {
         title: 'Title',
         text: 'Content',
+        frequency: 'Biweekly Newsletter',
         link: 'https://hub.asap.science',
         linkText: 'Working group 1',
         type: 'Working Groups',

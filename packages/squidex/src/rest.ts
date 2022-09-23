@@ -20,8 +20,15 @@ export interface Filter {
     | 'ne'
     | 'contains'
     | 'startsWith'
-    | 'endsWith';
-  value: string[] | number[] | string | number | boolean;
+    | 'endsWith'
+    | 'empty';
+  value: string[] | number[] | string | number | boolean | null;
+}
+
+export interface LogicalFilter {
+  and?: Filter[];
+  not?: Filter;
+  or?: Filter[];
 }
 
 export interface Query {
@@ -29,9 +36,9 @@ export interface Query {
   skip?: number;
   filter?:
     | {
-        and?: Filter[];
+        and?: (Filter | LogicalFilter)[];
         not?: Filter;
-        or?: Filter[];
+        or?: (Filter | LogicalFilter)[];
       }
     | Filter;
   sort?: {

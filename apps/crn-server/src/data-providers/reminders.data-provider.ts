@@ -226,12 +226,6 @@ const getEventMaterialRemindersFromQuery = (
     const ONE_DAY_IN_SECONDS = 24 * 60 * 60;
     const secondsFromVideoUpdatedAt =
       DateTime.local().toSeconds() - videoRecordingUpdatedAt.toSeconds();
-    // console.log('*** now', DateTime.local().toJSDate());
-    // console.log(
-    //   '*** videoRecordingUpdatedAt',
-    //   videoRecordingUpdatedAt.toJSDate(),
-    // );
-    // console.log('secondsFromVideoUpdatedAt', secondsFromVideoUpdatedAt);
     return secondsFromVideoUpdatedAt <= ONE_DAY_IN_SECONDS &&
       secondsFromVideoUpdatedAt > 0
       ? [

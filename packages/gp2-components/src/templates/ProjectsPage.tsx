@@ -1,10 +1,6 @@
-import { ComponentProps } from 'react';
-import ProjectsBody from '../organisms/ProjectsBody';
 import ProjectsHeader from '../organisms/ProjectsHeader';
 
-type ProjectsPageProps = ComponentProps<typeof ProjectsBody>;
-
-const ProjectsPage: React.FC<ProjectsPageProps> = ({ children }) => (
+const ProjectsPage: React.FC = ({ children }) => (
   <article>
     <ProjectsHeader />
     <main>{children}</main>

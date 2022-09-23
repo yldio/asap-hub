@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { NewsResponse, NewsType } from '@asap-hub/model';
 import { news } from '@asap-hub/routing';
 
-import { Card, Paragraph, Headline4, Pill } from '../atoms';
+import { Card, Paragraph, Headline4 } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../date';
 import { newsPlaceholder, trainingPlaceholderIcon } from '../icons';
@@ -61,9 +61,7 @@ const placeholders: Record<NewsType, JSX.Element> = {
   'Working Groups': trainingPlaceholderIcon,
 };
 
-type NewsCardProps = NewsResponse & {
-  noPill?: boolean;
-};
+type NewsCardProps = NewsResponse;
 
 const NewsCard: React.FC<NewsCardProps> = ({
   id,
@@ -75,7 +73,6 @@ const NewsCard: React.FC<NewsCardProps> = ({
   linkText,
   shortText,
   created,
-  noPill = false,
 }) => {
   const titleComponent = text ? (
     <LinkHeadline href={news({}).article({ articleId: id }).$} level={4}>
@@ -85,7 +82,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
     <Headline4>{title}</Headline4>
   );
   const newsLink = text && news({}).article({ articleId: id }).$;
-  const newsIamge = (
+  const newsImage = (
     <>
       {thumbnail ? (
         <img
@@ -104,15 +101,14 @@ const NewsCard: React.FC<NewsCardProps> = ({
       <div css={cardStyle}>
         <div css={imageContainerStyle}>
           {newsLink ? (
-            <ImageLink link={newsLink}>{newsIamge}</ImageLink>
+            <ImageLink link={newsLink}>{newsImage}</ImageLink>
           ) : (
-            newsIamge
+            newsImage
           )}
         </div>
         <div css={containerStyle}>
           <div css={headerStyles}>
             <div css={{ paddingRight: `${15 / perRem}em` }}>
-              {noPill ? null : <Pill>{type}</Pill>}
               {titleComponent}
             </div>
             {link ? <ExternalLink label={linkText} href={link} /> : null}

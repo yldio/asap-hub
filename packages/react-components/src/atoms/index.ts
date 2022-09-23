@@ -31,6 +31,7 @@ export { default as TextField } from './TextField';
 export { default as Toggle } from './Toggle';
 export { default as Tooltip } from './Tooltip';
 export { default as Typeahead } from './Typeahead';
+export { default as WarningText } from './WarningText';
 
 export type { DropdownProps } from './Dropdown';
 export type { MultiSelectOptionsType, MultiSelectProps } from './MultiSelect';

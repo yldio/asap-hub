@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { steel, mint, tin } from '../colors';
+import { steel, mint, tin, apricot, clay } from '../colors';
 import { perRem } from '../pixels';
 import Ellipsis from './Ellipsis';
 
@@ -33,20 +33,33 @@ const disabledStyles = css({
   color: tin.rgb,
 });
 
+const inactiveStyles = css({
+  backgroundColor: apricot.rgb,
+  color: clay.rgb,
+  border: 'transparent',
+});
+
 type TagProps = {
   readonly enabled?: boolean;
   readonly highlight?: boolean;
   readonly children?: React.ReactNode;
+  readonly inactive?: boolean;
 };
 
 const Tag: React.FC<TagProps> = ({
   children,
   highlight = false,
   enabled = true,
+  inactive = false,
 }) => (
   <div css={containerStyles}>
     <div
-      css={[styles, highlight && highlightStyles, !enabled && disabledStyles]}
+      css={[
+        styles,
+        highlight && highlightStyles,
+        !enabled && disabledStyles,
+        inactive && inactiveStyles,
+      ]}
     >
       <Ellipsis>{children}</Ellipsis>
     </div>

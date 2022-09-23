@@ -6,7 +6,7 @@ import { network } from '@asap-hub/routing';
 import { paper, lead, steel } from '../colors';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { Display, Link, TabLink } from '../atoms';
+import { Display, Link, TabLink, Tag } from '../atoms';
 import { teamIcon } from '../icons';
 import { TabNav } from '../molecules';
 import { EventSearch } from '../organisms';
@@ -30,6 +30,11 @@ const belowHeadlineStyles = css({
 
 const controlsStyles = css({
   padding: `0 ${contentSidePaddingWithNavigation(10)}`,
+});
+const titleStyle = css({
+  display: 'flex',
+  flexFlow: 'row',
+  gap: `${16 / perRem}em`,
 });
 
 type GroupProfileHeaderProps = {
@@ -59,7 +64,10 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
   return (
     <header>
       <div css={visualHeaderStyles}>
-        <Display styleAsHeading={2}>{name}</Display>
+        <div css={titleStyle}>
+          <Display styleAsHeading={2}>{name}</Display>
+          {!active && <Tag inactive>Inactive</Tag>}
+        </div>
         <div css={belowHeadlineStyles}>
           <div
             css={{

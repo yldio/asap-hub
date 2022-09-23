@@ -29,6 +29,7 @@ export {
   Toggle,
   Tooltip,
   MaterialAvailability,
+  WarningText,
 } from './atoms';
 export * from './colors';
 export * from './hooks';

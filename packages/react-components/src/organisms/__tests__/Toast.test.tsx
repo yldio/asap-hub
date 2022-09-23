@@ -43,4 +43,5 @@ describe('when closable', () => {
 it('renders the correct icon', () => {
   expect(getIcon('info')).toBe(infoCircleYellow);
   expect(getIcon('alert')).toBe(errorIcon);
+  expect(getIcon()).toBe(errorIcon);
 });

@@ -82,7 +82,7 @@ const wrapStyles = css({
   flexWrap: 'wrap',
 });
 
-export const getIcon = (accent: 'alert' | 'info'): EmotionJSX.Element => {
+export const getIcon = (accent?: 'alert' | 'info'): EmotionJSX.Element => {
   switch (accent) {
     case 'alert':
       return errorIcon;

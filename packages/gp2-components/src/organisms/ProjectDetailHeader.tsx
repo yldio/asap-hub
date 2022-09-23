@@ -1,32 +1,47 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   BackLink,
+  crossQuery,
   drawerQuery,
+  ExternalLink,
   pixels,
   Subtitle,
-  TabLink,
-  TabNav,
   utils,
 } from '@asap-hub/react-components';
-import { gp2 as gp2Routing } from '@asap-hub/routing';
 
 import { css } from '@emotion/react';
 
-import projectIcon from '../icons/project-icon';
 import usersIcon from '../icons/users-icon';
+import dateIcon from '../icons/date-icon';
 import { projectsImage } from '../images';
 import CardWithBackground from '../molecules/CardWithBackground';
 import IconWithLabel from '../molecules/IconWithLabel';
+import ProjectStatus from '../molecules/ProjectStatus';
+import { format, formatDistanceStrict as formatDistance } from 'date-fns';
+import colors from '../templates/colors';
 
 const { rem } = pixels;
 
 type ProjectDetailHeaderProps = Pick<
   gp2Model.ProjectResponse,
-  'title' | 'members' | 'id'
+  | 'title'
+  | 'status'
+  | 'startDate'
+  | 'endDate'
+  | 'members'
+  | 'id'
+  | 'projectProposalUrl'
 > & {
-  projects?: unknown[];
   backHref: string;
 };
+
+const rowStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  [crossQuery]: {
+    flexDirection: 'row',
+  },
+});
 
 const infoContainerStyles = css({
   display: 'flex',
@@ -40,33 +55,61 @@ const infoContainerStyles = css({
 const { getCounterString } = utils;
 
 const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
-  backHref,
   title,
+  status,
+  startDate,
+  endDate,
   members,
-  projects,
   id,
+  projectProposalUrl,
+  backHref,
 }) => (
   <header>
     <BackLink href={backHref} />
     <CardWithBackground image={projectsImage}>
+      <div css={[rowStyles, css({ gap: rem(4) })]}>
+        <div css={css({ display: 'inline-flex' })}>
+          <ProjectStatus status={status} />
+        </div>
+        {projectProposalUrl && (
+          <div
+            css={css({
+              [crossQuery]: {
+                marginLeft: 'auto',
+              },
+            })}
+          >
+            <ExternalLink
+              href={projectProposalUrl}
+              label="View proposal"
+              noMargin
+              full
+            />
+          </div>
+        )}
+      </div>
       <Subtitle>Project</Subtitle>
       <h2>{title}</h2>
       <div css={infoContainerStyles}>
         <IconWithLabel icon={usersIcon}>
           {getCounterString(members.length, 'member')}
         </IconWithLabel>
-        <IconWithLabel icon={projectIcon}>
-          {getCounterString(projects?.length || 0, 'project')}
+        <IconWithLabel icon={dateIcon}>
+          <span>
+            {`${format(new Date(startDate), 'MMM yyyy')}${
+              endDate ? ` - ${format(new Date(endDate), 'MMM yyyy')} · ` : ''
+            }`}
+            {endDate && (
+              <span css={{ color: colors.neutral800.rgba }}>
+                {`(${formatDistance(new Date(startDate), new Date(endDate), {
+                  unit: 'month',
+                })})`}
+              </span>
+            )}
+          </span>
         </IconWithLabel>
       </div>
     </CardWithBackground>
-    <TabNav>
-      <TabLink
-        href={gp2Routing.projects({}).project({ projectId: id }).overview({}).$}
-      >
-        Overview
-      </TabLink>
-    </TabNav>
   </header>
 );
 export default ProjectDetailHeader;

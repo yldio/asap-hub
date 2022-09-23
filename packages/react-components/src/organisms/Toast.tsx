@@ -1,9 +1,10 @@
 import { ReactNode } from 'react';
 import { css } from '@emotion/react';
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 import { layoutStyles } from '../text';
 import { Paragraph } from '../atoms';
-import { crossIcon, errorIcon } from '../icons';
+import { crossIcon, errorIcon, infoCircleYellow } from '../icons';
 import {
   perRem,
   lineHeight,
@@ -11,7 +12,7 @@ import {
   mobileScreen,
   largeDesktopScreen,
 } from '../pixels';
-import { rose, ember } from '../colors';
+import { rose, ember, apricot, warning900 } from '../colors';
 
 const SIDE_PADDING = 24;
 
@@ -45,9 +46,16 @@ const styles = css({
     'px',
   )} ${SIDE_PADDING / perRem}em`,
   position: 'relative',
+});
 
+const alertStyles = css({
   backgroundColor: rose.rgb,
   color: ember.rgb,
+});
+
+const infoStyles = css({
+  backgroundColor: apricot.rgb,
+  color: warning900.rgb,
 });
 
 const alertIconStyles = css(iconStyles, alignIconWithParagraphStyles, {
@@ -74,19 +82,35 @@ const wrapStyles = css({
   flexWrap: 'wrap',
 });
 
+export const getIcon = (accent: 'alert' | 'info'): EmotionJSX.Element => {
+  switch (accent) {
+    case 'alert':
+      return errorIcon;
+    case 'info':
+      return infoCircleYellow;
+    default:
+      return errorIcon;
+  }
+};
+
 interface ToastProps {
   children: ReactNode;
   onClose?: () => void;
+  accent?: 'alert' | 'info';
 }
-const Toast: React.FC<ToastProps> = ({ children, onClose }) => (
-  <section css={styles}>
+const Toast: React.FC<ToastProps> = ({
+  children,
+  onClose,
+  accent = 'alert',
+}) => (
+  <section css={[styles, accent === 'alert' ? alertStyles : infoStyles]}>
     {onClose && (
       <button onClick={onClose} css={[buttonResetStyles, crossIconStyles]}>
         {crossIcon}
       </button>
     )}
     <div css={wrapStyles}>
-      <div css={alertIconStyles}>{errorIcon}</div>
+      <div css={alertIconStyles}>{getIcon(accent)}</div>
       <div css={[wrapStyles, !onClose && { justifyContent: 'center' }]}>
         <Paragraph>{children}</Paragraph>
         {onClose && <span css={crossPlaceholderStyles}> </span>}

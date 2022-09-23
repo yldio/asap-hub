@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import GroupProfileHeader from './GroupProfileHeader';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { WarningText } from '../atoms';
+import { Toast } from '../organisms';
 
 const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(10)}`,
@@ -18,7 +18,9 @@ const GroupProfilePage: React.FC<GroupProfilePageProps> = ({
 }) => (
   <article>
     {!active && (
-      <WarningText text="This group is inactive and might not have all content available." />
+      <Toast accent="info">
+        This group is inactive and might not have all content available.
+      </Toast>
     )}
     <GroupProfileHeader {...props} active={active} />
     <main css={mainStyles}>{children}</main>

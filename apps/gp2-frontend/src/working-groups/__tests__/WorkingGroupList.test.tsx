@@ -11,7 +11,7 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getWorkingGroups } from '../api';
 import { refreshWorkingGroupsState } from '../state';
-import WorkingGroups from '../WorkingGroups';
+import WorkingGroupList from '../WorkingGroupList';
 
 jest.mock('../api');
 
@@ -27,7 +27,7 @@ const renderWorkingGroupsList = async () => {
           <WhenReady>
             <MemoryRouter initialEntries={[gp2Routing.workingGroups({}).$]}>
               <Route path={gp2Routing.workingGroups.template}>
-                <WorkingGroups />
+                <WorkingGroupList />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -39,19 +39,6 @@ const renderWorkingGroupsList = async () => {
 };
 beforeEach(() => {
   jest.resetAllMocks();
-});
-
-it('renders the Title', async () => {
-  const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
-    typeof getWorkingGroups
-  >;
-  mockGetWorkingGroups.mockResolvedValueOnce(
-    gp2Fixtures.createWorkingGroupNetworkResponse(),
-  );
-  await renderWorkingGroupsList();
-  expect(
-    screen.getByRole('heading', { name: 'Working Groups' }),
-  ).toBeInTheDocument();
 });
 
 it('renders a list of working groups', async () => {

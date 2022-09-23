@@ -20,16 +20,12 @@ export const buildScript = (envVars: typeof env): void => {
 
 export const scriptReplacements = [
   {
-    regex: /static\/js\/main\.[0-9a-f]{8}\.chunk\.js$/,
+    regex: /static\/js\/main\.[0-9a-f]{8}\.js$/,
     replacement: 'static/js/main.chunk.js',
-  },
-  {
-    regex: /static\/js\/2\.[0-9a-f]{8}\.chunk\.js$/,
-    replacement: 'static/js/2.chunk.js',
   },
 ];
 
-// This allow us to bypass the issue of not having the HTMLScriptElement class on a node enviroment without having to actually import a polyfill for it
+// This allow us to bypass the issue of not having the HTMLScriptElement class on a node environment without having to actually import a polyfill for it
 type ScriptElement = Element & {
   src: string;
 };

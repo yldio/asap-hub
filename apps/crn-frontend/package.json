@@ -16,6 +16,7 @@
   "dependencies": {
     "@asap-hub/algolia": "workspace:*",
     "@asap-hub/auth": "workspace:*",
+    "@asap-hub/fixtures": "workspace:*",
     "@asap-hub/flags": "workspace:*",
     "@asap-hub/frontend-utils": "workspace:*",
     "@asap-hub/model": "workspace:*",
@@ -51,7 +52,6 @@
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@asap-hub/fixtures": "workspace:*",
     "@babel/runtime-corejs3": "7.19.1",
     "@sentry/cli": "1.74.5",
     "@testing-library/dom": "7.31.2",

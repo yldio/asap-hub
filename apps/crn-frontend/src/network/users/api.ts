@@ -110,7 +110,6 @@ export const postUserAvatar = async (
 };
 
 // Partial response type
-/* eslint-disable camelcase */
 export interface InstitutionsResponse {
   readonly number_of_results: number;
   readonly time_taken: number;

@@ -576,42 +576,79 @@ describe('Reminder Data Provider', () => {
 
       beforeEach(async () => {});
 
-      test('Should fetch the event if its video was upserted recently', async () => {
-        jest.setSystemTime(DateTime.fromISO('2022-09-01T10:00:00Z').toJSDate());
+      test('Should fetch the reminder if its video was upserted in the last 24 hours', async () => {
+        const videoRecordingUpdatedAt = '2022-09-01T08:00:00Z';
+        // set the current date to seconds after the video recording updated at
+        const time = DateTime.fromISO(videoRecordingUpdatedAt)
+          .plus({ seconds: 40 })
+          .toJSDate();
+        jest.setSystemTime(time);
+
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
-        squidexGraphqlClientMock.request.mockResolvedValueOnce({
-          ...squidexGraphqlResponse,
-          queryResearchOutputsContents: [],
-          queryEventsContents: [
-            {
-              ...squidexGraphqlResponse.queryEventsContents![0],
-              flatData: {
-                ...squidexGraphqlResponse.queryEventsContents![0]?.flatData,
-                endDate: '2022-08-24T16:30:54.000Z',
-                startDate: '2022-08-24T16:20:14.000Z',
-                videoRecordingUpdatedAt: '2022-09-01T08:00:00Z',
-              },
-            },
-          ],
-        });
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.videoRecordingUpdatedAt =
+          videoRecordingUpdatedAt;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
 
         const expectedVideoEventUpdatedReminder =
           getVideoEventUpdatedReminder();
+        expectedVideoEventUpdatedReminder.data.videoRecordingUpdatedAt =
+          videoRecordingUpdatedAt;
 
         const result = await reminderDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({
           total: 1,
-          items: [
-            {
-              ...expectedVideoEventUpdatedReminder,
-              data: {
-                ...expectedVideoEventUpdatedReminder.data,
-                startDate: '2022-08-24T16:20:14.000Z',
-                endDate: '2022-08-24T16:30:54.000Z',
-                videoRecordingUpdatedAt: '2022-09-01T08:00:00Z',
-              },
-            },
-          ],
+          items: [expectedVideoEventUpdatedReminder],
+        });
+      });
+
+      test('Should not fetch the reminder if its video was upserted after 24 hours', async () => {
+        const videoRecordingUpdatedAt = '2022-09-01T08:00:00Z';
+        // set the current date to more than 24 hours after the video recording updated at
+        const time = DateTime.fromISO(videoRecordingUpdatedAt)
+          .plus({ hours: 24, minutes: 1 })
+          .toJSDate();
+        jest.setSystemTime(time);
+
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.videoRecordingUpdatedAt =
+          videoRecordingUpdatedAt;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+
+      test('Should not fetch the reminder if its video was upserted before now', async () => {
+        /* This in theory could never happen, it would mean that the video will be upserted in the future */
+
+        const videoRecordingUpdatedAt = '2022-09-01T08:00:00Z';
+        // set the current date to more than 24 hours after the video recording updated at
+        const time = DateTime.fromISO(videoRecordingUpdatedAt)
+          .minus({ minutes: 1 })
+          .toJSDate();
+        jest.setSystemTime(time);
+
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.videoRecordingUpdatedAt =
+          videoRecordingUpdatedAt;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({
+          total: 0,
+          items: [],
         });
       });
     });

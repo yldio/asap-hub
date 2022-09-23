@@ -86,7 +86,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
               {degree && `, ${degree}`}
             </LinkHeadline>
             {alumniSinceDate && (
-              <span css={alumniBadgeStyles} data-testid="alumni-badge">
+              <span css={alumniBadgeStyles}>
                 <StateTag icon={alumniBadge} label="Alumni" />
               </span>
             )}

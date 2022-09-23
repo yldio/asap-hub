@@ -45,10 +45,14 @@ it('links to the profile', () => {
 describe('alumni badge', () => {
   it('renders the alumni badge when required', () => {
     render(<PeopleCard {...props} alumniSinceDate="2022-01-01" />);
-    expect(screen.getByTestId('alumni-badge')).toHaveTextContent('Alumni');
+
+    expect(screen.getByText('Alumni')).toBeInTheDocument();
+    expect(screen.getByTitle('Alumni Badge')).toBeInTheDocument();
   });
   it('does not render alumni badge for non alumni', () => {
     render(<PeopleCard {...props} alumniSinceDate={undefined} />);
-    expect(screen.queryByTestId('alumni-badge')).toBeNull();
+
+    expect(screen.queryByText('Alumni')).not.toBeInTheDocument();
+    expect(screen.queryByTitle('Alumni Badge')).not.toBeInTheDocument();
   });
 });

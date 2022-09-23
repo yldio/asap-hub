@@ -218,24 +218,39 @@ const getEventMaterialRemindersFromQuery = (
 ): VideoEventReminder[] => {
   const eventReminders = (queryEventsContents || []).reduce<
     VideoEventReminder[]
-  >(
-    (events, event) => [
-      ...events,
-      {
-        id: `video-event-updated-${event.id}`,
-        entity: 'Event Material',
-        type: 'Video',
-        data: {
-          eventId: event.id,
-          title: event.flatData.title || '',
-          startDate: event.flatData.startDate,
-          endDate: event.flatData.endDate,
-          videoRecordingUpdatedAt: event.flatData.videoRecordingUpdatedAt,
-        },
-      },
-    ],
-    [],
-  );
+  >((events, event) => {
+    const videoRecordingUpdatedAt = DateTime.fromISO(
+      event.flatData.videoRecordingUpdatedAt,
+    );
+
+    const ONE_DAY_IN_SECONDS = 24 * 60 * 60;
+    const secondsFromVideoUpdatedAt =
+      DateTime.local().toSeconds() - videoRecordingUpdatedAt.toSeconds();
+    // console.log('*** now', DateTime.local().toJSDate());
+    // console.log(
+    //   '*** videoRecordingUpdatedAt',
+    //   videoRecordingUpdatedAt.toJSDate(),
+    // );
+    // console.log('secondsFromVideoUpdatedAt', secondsFromVideoUpdatedAt);
+    return secondsFromVideoUpdatedAt <= ONE_DAY_IN_SECONDS &&
+      secondsFromVideoUpdatedAt > 0
+      ? [
+          ...events,
+          {
+            id: `video-event-updated-${event.id}`,
+            entity: 'Event Material',
+            type: 'Video',
+            data: {
+              eventId: event.id,
+              title: event.flatData.title || '',
+              startDate: event.flatData.startDate,
+              endDate: event.flatData.endDate,
+              videoRecordingUpdatedAt: event.flatData.videoRecordingUpdatedAt,
+            },
+          },
+        ]
+      : events;
+  }, []);
 
   return eventReminders;
 };

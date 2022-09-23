@@ -36,7 +36,7 @@ describe('Reminder Data Provider', () => {
     const timezone = 'Europe/London';
     const fetchRemindersOptions: FetchRemindersOptions = { userId, timezone };
 
-    describe.only('Research Output Published Reminder', () => {
+    describe('Research Output Published Reminder', () => {
       test('Should fetch the reminder from squidex graphql', async () => {
         const result = await reminderDataProviderMockGraphql.fetch(
           fetchRemindersOptions,

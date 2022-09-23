@@ -16,19 +16,19 @@
     "react": "^17.0.2"
   },
   "dependencies": {
+    "@asap-hub/auth": "workspace:*",
     "@asap-hub/flags": "workspace:*",
     "@babel/runtime-corejs3": "7.19.1",
     "core-js": "3.24.1"
   },
   "devDependencies": {
-    "@asap-hub/auth": "workspace:*",
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@babel/core": "7.19.1",
     "@babel/preset-react": "7.18.6",
     "@testing-library/react": "11.2.7",
     "@testing-library/react-hooks": "8.0.1",
-    "@types/jest": "26.0.24",
+    "@types/jest": "27.5.1",
     "@types/react": "17.0.49",
     "@types/testing-library__jest-dom": "5.14.5",
     "@types/testing-library__react": "10.0.1",

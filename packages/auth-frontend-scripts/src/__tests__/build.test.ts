@@ -64,8 +64,8 @@ describe('build', () => {
         "<!doctype html><html lang=\\"en\\"><head></head><body>
                   <script src=\\"/static/js/2.chunk.js\\">
                   </script><script src=\\"/static/js/main.chunk.js\\"></script>
-                
-              
+
+
             </body></html>",
       ]
     `);

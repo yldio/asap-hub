@@ -14,10 +14,13 @@
     "release:frontend": "node ./scripts/sentry-release.js"
   },
   "dependencies": {
+    "@asap-hub/algolia": "workspace:*",
     "@asap-hub/auth": "workspace:*",
+    "@asap-hub/fixtures": "workspace:*",
     "@asap-hub/flags": "workspace:*",
     "@asap-hub/frontend-utils": "workspace:*",
     "@asap-hub/gp2-components": "workspace:*",
+    "@asap-hub/model": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
     "@asap-hub/react-context": "workspace:*",
     "@asap-hub/routing": "workspace:*",
@@ -44,11 +47,8 @@
     "web-streams-polyfill": "3.2.1"
   },
   "devDependencies": {
-    "@asap-hub/algolia": "workspace:*",
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@asap-hub/fixtures": "workspace:*",
-    "@asap-hub/model": "workspace:*",
     "@babel/runtime-corejs3": "7.19.1",
     "@sentry/cli": "1.74.5",
     "@testing-library/dom": "7.31.2",
@@ -57,7 +57,7 @@
     "@testing-library/react-hooks": "8.0.1",
     "@testing-library/user-event": "12.8.3",
     "@types/history": "4.7.11",
-    "@types/jest": "26.0.24",
+    "@types/jest": "27.5.1",
     "@types/nock": "11.1.0",
     "@types/node": "14.18.31",
     "@types/react": "17.0.49",
@@ -75,7 +75,7 @@
     "jose": "2.0.6",
     "nock": "13.0.11",
     "pirates": "4.0.5",
-    "react-scripts": "4.0.3",
+    "react-scripts": "5.0.1",
     "react-test-renderer": "17.0.2",
     "typescript": "4.6.4"
   }

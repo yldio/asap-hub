@@ -95,7 +95,13 @@ export const getEventFilter = (zone: string): string => {
     .plus({ day: 1 })
     .toUTC();
 
-  return `data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO}`;
+  const lastDayISO = DateTime.fromObject({
+    zone,
+  })
+    .minus({ day: 1 })
+    .toUTC();
+
+  return `data/videoRecordingUpdatedAt/iv ge ${lastDayISO} or (data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO})`;
 };
 
 const getUserTeamIds = (

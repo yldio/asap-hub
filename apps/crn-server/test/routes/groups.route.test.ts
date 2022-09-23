@@ -160,6 +160,7 @@ describe('/groups/ route', () => {
             lastModifiedDate: '2020-12-11T14:33:50Z',
             meetingMaterials: [],
             speakers: [],
+            videoRecordingUpdatedAt: '2020-12-12T14:33:50Z',
           },
         ],
       };

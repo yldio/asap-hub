@@ -679,7 +679,7 @@ describe('Reminder Data Provider', () => {
         // using event start-date for sorting
         event1.flatData.startDate = '2022-01-01T12:00:00Z';
         event1.flatData.endDate = '2022-01-01T13:00:00Z';
-        event1.flatData.videoRecordingUpdatedAt = '2022-01-01T11:00:00Z';
+        event1.flatData.videoRecordingUpdatedAt = '2022-01-01T08:00:00Z';
         const event2 = getSquidexReminderEventsContents();
         event2.id = 'event-2';
         event2.flatData.startDate = '2022-01-01T08:00:00Z';
@@ -704,6 +704,7 @@ describe('Reminder Data Provider', () => {
           `event-happening-today-${event1.id}`,
           `event-happening-now-${event2.id}`,
           `research-output-published-${researchOutput1.id}`,
+          `video-event-updated-${event1.id}`,
         ]);
       });
     });

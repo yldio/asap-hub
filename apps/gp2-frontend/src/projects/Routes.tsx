@@ -1,10 +1,12 @@
+import { Frame } from '@asap-hub/frontend-utils';
+import { ProjectsPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { lazy, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 const loadProjects = () =>
-  import(/* webpackChunkName: "project-list" */ './Projects');
+  import(/* webpackChunkName: "project-list" */ './ProjectList');
 const loadProjectDetail = () =>
   import(/* webpackChunkName: "project-detail" */ './ProjectDetail');
 
@@ -21,7 +23,11 @@ const Routes: React.FC<Record<string, never>> = () => {
   return (
     <Switch>
       <Route exact path={path}>
-        <Projects />
+        <ProjectsPage>
+          <Frame title="Projects">
+            <Projects />
+          </Frame>
+        </ProjectsPage>
       </Route>
       <Route path={path + projects({}).project.template}>
         <ProjectDetail />

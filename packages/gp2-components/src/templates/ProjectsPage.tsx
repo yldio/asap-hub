@@ -4,12 +4,10 @@ import ProjectsHeader from '../organisms/ProjectsHeader';
 
 type ProjectsPageProps = ComponentProps<typeof ProjectsBody>;
 
-const ProjectsPage: React.FC<ProjectsPageProps> = (props) => (
+const ProjectsPage: React.FC<ProjectsPageProps> = ({ children }) => (
   <article>
     <ProjectsHeader />
-    <main>
-      <ProjectsBody {...props} />
-    </main>
+    <main>{children}</main>
   </article>
 );
 

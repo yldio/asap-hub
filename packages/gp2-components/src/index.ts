@@ -2,6 +2,7 @@ export * from './images';
 export * from './messages';
 export {
   NavigationHeader,
+  ProjectsBody,
   UserCard,
   UsersPageBody,
   WorkingGroupsBody,
@@ -11,9 +12,9 @@ export {
   DashboardPage,
   DashboardPageBody,
   Layout,
-  Theme,
   ProjectDetailPage,
   ProjectsPage,
+  Theme,
   UsersPage,
   WorkingGroupDetailPage,
   WorkingGroupOverview,

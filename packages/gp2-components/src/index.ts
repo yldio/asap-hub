@@ -1,15 +1,15 @@
 export * from './images';
 export * from './messages';
-export { NavigationHeader, UserCard } from './organisms';
+export { NavigationHeader, UserCard, WorkingGroupsBody } from './organisms';
 export {
   BasicLayout,
   DashboardPage,
   DashboardPageBody,
   Layout,
-  Theme,
   ProjectsPage,
+  Theme,
   UsersPage,
-  WorkingGroupsPage,
-  WorkingGroupOverview,
   WorkingGroupDetailPage,
+  WorkingGroupOverview,
+  WorkingGroupsPage,
 } from './templates';

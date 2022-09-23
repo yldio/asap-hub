@@ -54,9 +54,15 @@ describe('Routes', () => {
       id: '11',
       title: 'Working Group 11',
     });
-    mockGetWorkingGroups.mockResolvedValue(
-      gp2.createWorkingGroupsResponse([firstGroup, secondGroup]),
-    );
+    mockGetWorkingGroups.mockResolvedValue({
+      total: 1,
+      items: [
+        {
+          role: 'support',
+          workingGroups: [firstGroup, secondGroup],
+        },
+      ],
+    });
     await renderRoutes();
     expect(
       screen.getByRole('heading', { name: 'Working Group 42' }),

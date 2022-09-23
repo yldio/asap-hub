@@ -1,15 +1,9 @@
-import { ComponentProps } from 'react';
-import WorkingGroupsBody from '../organisms/WorkingGroupsBody';
 import WorkingGroupsHeader from '../organisms/WorkingGroupsHeader';
 
-type WorkingGroupsPageProps = ComponentProps<typeof WorkingGroupsBody>;
-
-const WorkingGroupsPage: React.FC<WorkingGroupsPageProps> = (props) => (
+const WorkingGroupsPage: React.FC = ({ children }) => (
   <article>
     <WorkingGroupsHeader />
-    <main>
-      <WorkingGroupsBody {...props} />
-    </main>
+    <main>{children}</main>
   </article>
 );
 

@@ -24,6 +24,7 @@ export const getIconForDocumentType = (
       return protocol;
     case 'Article':
       return article;
+      // return article;
     case 'Dataset':
       return dataset;
     case 'Bioinformatics':

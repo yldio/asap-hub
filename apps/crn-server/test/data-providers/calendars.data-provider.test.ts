@@ -31,14 +31,6 @@ describe('Calendars data provider', () => {
   });
 
   describe('Create & update', () => {
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
-    });
-
-    afterEach(() => {
-      nock.cleanAll();
-    });
-
     test('Correctly creates on Squidex', async () => {
       const calendar = getCreateCalendarDataObject();
       const result = await calendarDataProvider.create(calendar);

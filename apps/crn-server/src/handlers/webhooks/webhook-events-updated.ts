@@ -9,7 +9,6 @@ import {
 import Boom from '@hapi/boom';
 import { Handler } from 'aws-lambda';
 import { appName, baseUrl, googleApiToken } from '../../config';
-import Calendars, { CalendarController } from '../../controllers/calendars';
 import Events from '../../controllers/events';
 import { getAuthToken } from '../../utils/auth';
 import getJWTCredentials from '../../utils/aws-secret-manager';
@@ -20,10 +19,13 @@ import {
 } from '../../utils/sync-google-calendar';
 import { syncEventFactory } from '../../utils/sync-google-event';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import CalendarSquidexDataProvider from '../../data-providers/calendars.data-provider';
+import CalendarSquidexDataProvider, {
+  CalendarDataProvider,
+} from '../../data-providers/calendars.data-provider';
+import { FetchCalendarError } from '@asap-hub/model';
 
 export const webhookEventUpdatedHandlerFactory = (
-  calendars: CalendarController,
+  calendarDataProvider: CalendarDataProvider,
   syncCalendar: SyncCalendar,
 ): lambda.Handler =>
   lambda.http(async (request) => {
@@ -46,7 +48,18 @@ export const webhookEventUpdatedHandlerFactory = (
     let calendar: RestCalendar;
 
     try {
-      calendar = await calendars.fetchByResourceId(resourceId);
+      const calendarResult = await calendarDataProvider.fetchByResourceId(
+        resourceId,
+      );
+
+      if (
+        typeof calendarResult === 'number' &&
+        calendarResult in FetchCalendarError
+      ) {
+        throw new Error('Failed to fetch calendar by resource ID.');
+      }
+
+      calendar = calendarResult as RestCalendar;
     } catch (error) {
       logger.error(error, 'Error fetching calendar');
       throw Boom.badGateway();
@@ -63,7 +76,7 @@ export const webhookEventUpdatedHandlerFactory = (
     );
 
     if (nextSyncToken) {
-      await calendars
+      await calendarDataProvider
         .update(squidexCalendarId, { syncToken: nextSyncToken })
         .catch((err) => {
           logger.error(err, 'Error updating syncToken');
@@ -92,12 +105,11 @@ const calendarDataProvider = new CalendarSquidexDataProvider(
   calendarRestClient,
   squidexGraphqlClient,
 );
-const calendarController = new Calendars(calendarDataProvider);
 const syncCalendar = syncCalendarFactory(
   syncEventFactory(new Events(squidexGraphqlClient, eventRestClient)),
   getJWTCredentials,
 );
 
 export const handler: Handler = sentryWrapper(
-  webhookEventUpdatedHandlerFactory(calendarController, syncCalendar),
+  webhookEventUpdatedHandlerFactory(calendarDataProvider, syncCalendar),
 );

@@ -33,6 +33,26 @@ export const getCalendarInput = (): Calendar => {
   };
 };
 
+export const getCreateCalendarDataObject = (): Calendar => {
+  const {
+    googleCalendarId,
+    color,
+    name,
+    syncToken,
+    resourceId,
+    expirationDate,
+  } = getCalendarRaw();
+
+  return {
+    googleCalendarId,
+    color,
+    name,
+    syncToken: syncToken || undefined,
+    resourceId,
+    expirationDate: expirationDate || undefined,
+  };
+};
+
 export const getCalendarResponse = (): CalendarResponse => ({
   id: '3@group.calendar.google.com',
   color: '#2952A3',

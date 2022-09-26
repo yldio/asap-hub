@@ -33,50 +33,15 @@ export default class Calendars implements CalendarController {
   constructor(dataProvider: CalendarDataProvider) {
     this.dataProvider = dataProvider;
   }
-
-  static async parseRawCalendar(
-    raw: CalendarRawDataObject,
-  ): Promise<CalendarResponse> {
-    return {
-      id: raw.googleCalendarId,
-      name: raw.name,
-      color: raw.color,
-    };
-  }
-
-  static async handleFetchCalendarError<T>(
-    item: T | FetchCalendarError,
-  ): Promise<T> {
-    if (
-      typeof item === 'number' &&
-      item === FetchCalendarError.CalendarNotFound
-    ) {
-      throw Boom.notFound();
-    }
-
-    if (typeof item === 'number' && item === FetchCalendarError.InvalidColor) {
-      throw Boom.badGateway('Invalid colour');
-    }
-
-    if (
-      typeof item === 'number' &&
-      item === FetchCalendarError.MissingRequiredData
-    ) {
-      throw Boom.badGateway('Missing required data');
-    }
-
-    return item as T;
-  }
-
   async fetch(): Promise<ListCalendarResponse> {
     try {
-      const calendars = await Calendars.handleFetchCalendarError<
-        CalendarRawDataObject[]
-      >(await this.dataProvider.fetch({ take: 50, skip: 0, onlyActive: true }));
+      const calendars = handleFetchCalendarError(
+        await this.dataProvider.fetch({ take: 50, skip: 0, onlyActive: true }),
+      );
 
       return {
         total: calendars.length,
-        items: await Promise.all(calendars.map(Calendars.parseRawCalendar)),
+        items: calendars.map(parseRawCalendar),
       };
     } catch (e) {
       if (isBoom(e)) {
@@ -94,9 +59,9 @@ export default class Calendars implements CalendarController {
     options: FetchCalendarOptions,
   ): Promise<CalendarRawDataObject[]> {
     try {
-      const calendars = await Calendars.handleFetchCalendarError<
-        CalendarRawDataObject[]
-      >(await this.dataProvider.fetch(options));
+      const calendars = handleFetchCalendarError(
+        await this.dataProvider.fetch(options),
+      );
 
       return calendars;
     } catch (e) {
@@ -113,7 +78,7 @@ export default class Calendars implements CalendarController {
    * and change it.
    */
   async fetchByResourceId(resourceId: string): Promise<RestCalendar> {
-    const calendar = await Calendars.handleFetchCalendarError<RestCalendar>(
+    const calendar = handleFetchCalendarError<RestCalendar>(
       await this.dataProvider.fetchByResourceId(resourceId),
     );
 
@@ -129,18 +94,15 @@ export default class Calendars implements CalendarController {
     calendarId: string,
     options?: { raw: boolean },
   ): Promise<CalendarRawDataObject | CalendarResponse> {
-    const calendar =
-      await Calendars.handleFetchCalendarError<CalendarRawDataObject>(
-        await this.dataProvider.fetchById(calendarId),
-      );
+    const calendar = handleFetchCalendarError<CalendarRawDataObject>(
+      await this.dataProvider.fetchById(calendarId),
+    );
 
-    return options?.raw === true
-      ? calendar
-      : Calendars.parseRawCalendar(calendar);
+    return options?.raw === true ? calendar : parseRawCalendar(calendar);
   }
 
   async getSyncToken(calendarId: string): Promise<string | undefined> {
-    const res = await Calendars.handleFetchCalendarError<CalendarRawDataObject>(
+    const res = handleFetchCalendarError<CalendarRawDataObject>(
       await this.dataProvider.fetchById(calendarId),
     );
 
@@ -151,9 +113,7 @@ export default class Calendars implements CalendarController {
     calendarId: string,
     data: Partial<Calendar>,
   ): Promise<CalendarResponse> {
-    return Calendars.parseRawCalendar(
-      await this.dataProvider.update(calendarId, data),
-    );
+    return parseRawCalendar(await this.dataProvider.update(calendarId, data));
   }
 
   async create(
@@ -162,8 +122,36 @@ export default class Calendars implements CalendarController {
     const res = await this.dataProvider.create(data);
 
     return {
-      ...(await Calendars.parseRawCalendar(res)),
+      ...parseRawCalendar(res),
       googleCalendarId: res.googleCalendarId,
     };
   }
 }
+
+const parseRawCalendar = (raw: CalendarRawDataObject): CalendarResponse => ({
+  id: raw.googleCalendarId,
+  name: raw.name,
+  color: raw.color,
+});
+
+const handleFetchCalendarError = <T>(item: T | FetchCalendarError): T => {
+  if (
+    typeof item === 'number' &&
+    item === FetchCalendarError.CalendarNotFound
+  ) {
+    throw Boom.notFound();
+  }
+
+  if (typeof item === 'number' && item === FetchCalendarError.InvalidColor) {
+    throw Boom.badGateway('Invalid colour');
+  }
+
+  if (
+    typeof item === 'number' &&
+    item === FetchCalendarError.MissingRequiredData
+  ) {
+    throw Boom.badGateway('Missing required data');
+  }
+
+  return item as T;
+};

@@ -137,6 +137,7 @@ export const getSquidexGraphqlEventSpeakerWithUser = (): NonNullable<
         avatar: [],
         firstName: 'Adam',
         lastName: 'Brown',
+        onboarded: true,
         teams: [
           {
             id: [

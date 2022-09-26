@@ -146,6 +146,23 @@ describe('events entity', () => {
       ]);
     });
 
+    test('Should return the team only when the user is not onboarded', () => {
+      const squidexSpeaker = getSquidexGraphqlEventSpeakerWithUser();
+      (
+        squidexSpeaker.user![0]!.flatData as GraphqlEventSpeakerUser['flatData']
+      ).onboarded = false;
+
+      const eventSpeaker = getEventSpeakerUser();
+      eventSpeaker.team.id = 'the-team-id';
+
+      const expectedEventSpeakers: EventSpeakerTeam = {
+        team: getEventSpeakerUser().team,
+      };
+      expect(parseGraphQLSpeakers([squidexSpeaker])).toStrictEqual([
+        expectedEventSpeakers,
+      ]);
+    });
+
     test('Should return the external user', () => {
       const squidexSpeaker = getSquidexGraphqlEventSpeakerWithExternalUser();
 
@@ -172,6 +189,7 @@ describe('events entity', () => {
           ],
           firstName: 'Adam',
           lastName: 'Brown',
+          onboarded: true,
           teams: [
             {
               id: [

@@ -5802,7 +5802,10 @@ export type EventContentFragment = Pick<
                   flatData: Pick<ExternalAuthorsFlatDataDto, 'name' | 'orcid'>;
                 })
             | ({ __typename: 'Users' } & Pick<Users, 'id'> & {
-                  flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
+                  flatData: Pick<
+                    UsersFlatDataDto,
+                    'firstName' | 'lastName' | 'onboarded'
+                  > & {
                     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                     teams: Maybe<
                       Array<
@@ -6184,7 +6187,7 @@ export type FetchEventsQuery = {
                       | ({ __typename: 'Users' } & Pick<Users, 'id'> & {
                             flatData: Pick<
                               UsersFlatDataDto,
-                              'firstName' | 'lastName'
+                              'firstName' | 'lastName' | 'onboarded'
                             > & {
                               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                               teams: Maybe<
@@ -6532,7 +6535,7 @@ export type FetchEventQuery = {
                 | ({ __typename: 'Users' } & Pick<Users, 'id'> & {
                       flatData: Pick<
                         UsersFlatDataDto,
-                        'firstName' | 'lastName'
+                        'firstName' | 'lastName' | 'onboarded'
                       > & {
                         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                         teams: Maybe<
@@ -9679,6 +9682,13 @@ export const EventContentFragmentDoc = {
                                           name: {
                                             kind: 'Name',
                                             value: 'lastName',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'onboarded',
                                           },
                                         },
                                         {

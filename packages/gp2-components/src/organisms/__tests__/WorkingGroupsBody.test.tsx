@@ -15,10 +15,10 @@ describe('WorkingGroupsBody', () => {
       screen.getByRole('heading', { name: /Monogenic Working Group/i }),
     ).toBeVisible();
     expect(
-      screen.getByRole('heading', { name: /Complex Disease Working Group/i }),
+      screen.getByRole('heading', { name: /Complex Disease Network/i }),
     ).toBeVisible();
     expect(
-      screen.getByRole('heading', { name: /Support Working Group/i }),
+      screen.getByRole('heading', { name: /Steering Commitee/i }),
     ).toBeVisible();
   });
 });

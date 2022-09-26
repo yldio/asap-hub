@@ -2,7 +2,7 @@ import { ListResponse } from '../common';
 import { WorkingGroupDataObject } from './working-group';
 
 export const workingGroupNetworkRole = [
-  'steeringCommittee',
+  'steeringCommitee',
   'complexDisease',
   'monogenic',
   'operational',

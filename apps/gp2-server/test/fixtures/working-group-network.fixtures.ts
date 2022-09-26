@@ -9,6 +9,10 @@ import {
 export const getWorkingGroupNetworkDataObject =
   (): gp2.WorkingGroupNetworkDataObject[] => [
     {
+      role: 'steeringCommitee',
+      workingGroups: [getWorkingGroupDataObject()],
+    },
+    {
       role: 'complexDisease',
       workingGroups: [getWorkingGroupDataObject()],
     },
@@ -20,19 +24,15 @@ export const getWorkingGroupNetworkDataObject =
       role: 'operational',
       workingGroups: [getWorkingGroupDataObject()],
     },
-    {
-      role: 'support',
-      workingGroups: [getWorkingGroupDataObject()],
-    },
   ];
 
 export const getGraphQLWorkingGroupNetwork = (): GraphQLWorkingGroupNetwork => {
   return {
     id: '11',
     flatData: {
+      steeringCommitee: [getGraphQLWorkingGroup()],
       complexDisease: [getGraphQLWorkingGroup()],
       operational: [getGraphQLWorkingGroup()],
-      support: [getGraphQLWorkingGroup()],
       monogenic: [getGraphQLWorkingGroup()],
     },
   };

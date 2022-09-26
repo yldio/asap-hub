@@ -5,6 +5,9 @@ export const workingGroupNetworkQueryFragment = gql`
   fragment WorkingGroupNetworkContent on WorkingGroupNetwork {
     id
     flatData {
+      steeringCommitee {
+        ...WorkingGroupContent
+      }
       complexDisease {
         ...WorkingGroupContent
       }
@@ -12,9 +15,6 @@ export const workingGroupNetworkQueryFragment = gql`
         ...WorkingGroupContent
       }
       operational {
-        ...WorkingGroupContent
-      }
-      support {
         ...WorkingGroupContent
       }
     }

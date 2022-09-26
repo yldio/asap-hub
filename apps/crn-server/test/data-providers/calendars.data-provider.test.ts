@@ -4,7 +4,6 @@ import { appName, baseUrl } from '../../src/config';
 import CalendarSquidexDataProvider from '../../src/data-providers/calendars.data-provider';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 import { identity } from '../helpers/squidex';
-import nock from 'nock/types';
 import { getCreateCalendarDataObject } from '../fixtures/calendars.fixtures';
 import { CalendarRawDataObject, FetchCalendarError } from '@asap-hub/model';
 

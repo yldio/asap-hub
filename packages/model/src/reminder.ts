@@ -2,7 +2,7 @@ import { ListResponse } from './common';
 import { EventResponse } from './event';
 import { ResearchOutputDataObject } from './research-output';
 
-type ReminderEntity = 'Research Output' | 'Event' | 'Event Material';
+type ReminderEntity = 'Research Output' | 'Event';
 
 type ResearchOutputReminderType = 'Published';
 type EventReminderType = 'Happening Today' | 'Happening Now';
@@ -29,7 +29,7 @@ interface EventReminder extends Reminder {
 }
 
 interface EventMaterialReminder extends Reminder {
-  entity: 'Event Material';
+  entity: 'Event';
   type: EventMaterialReminderType;
 }
 
@@ -67,7 +67,7 @@ export interface EventHappeningNowReminder extends EventReminder {
 }
 
 export interface VideoEventReminder extends EventMaterialReminder {
-  entity: 'Event Material';
+  entity: 'Event';
   type: 'Video';
   data: {
     eventId: EventResponse['id'];

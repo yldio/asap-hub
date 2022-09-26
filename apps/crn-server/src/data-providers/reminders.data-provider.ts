@@ -238,7 +238,7 @@ const getEventMaterialRemindersFromQuery = (
           ...events,
           {
             id: `video-event-updated-${event.id}`,
-            entity: 'Event Material',
+            entity: 'Event',
             type: 'Video',
             data: {
               eventId: event.id,

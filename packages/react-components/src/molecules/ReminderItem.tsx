@@ -32,7 +32,6 @@ const linkStyles = css({
 const iconMap: Record<ReminderResponse['entity'], React.ReactElement> = {
   'Research Output': calendarIcon,
   Event: eventIcon,
-  'Event Material': eventIcon,
 };
 
 type ReminderProps = Pick<ReminderResponse, 'description' | 'href'> & {

@@ -225,15 +225,14 @@ const getVideoUpdatedRemindersFromQuery = (
   const eventReminders = (queryEventsContents || []).reduce<
     VideoEventReminder[]
   >((events, event) => {
-    const videoRecordingUpdatedAt = DateTime.fromISO(
-      event.flatData.videoRecordingUpdatedAt,
-    );
+    const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
 
-    const ONE_DAY_IN_SECONDS = 24 * 60 * 60;
-    const secondsFromVideoUpdatedAt =
-      DateTime.local().toSeconds() - videoRecordingUpdatedAt.toSeconds();
-    return secondsFromVideoUpdatedAt <= ONE_DAY_IN_SECONDS &&
-      secondsFromVideoUpdatedAt > 0
+    const msBetweenNowAndVideoUpdatedAt = DateTime.now().diff(
+      DateTime.fromISO(event.flatData.videoRecordingUpdatedAt),
+    ).milliseconds;
+
+    return msBetweenNowAndVideoUpdatedAt <= ONE_DAY_IN_MS &&
+      msBetweenNowAndVideoUpdatedAt > 0
       ? [
           ...events,
           {

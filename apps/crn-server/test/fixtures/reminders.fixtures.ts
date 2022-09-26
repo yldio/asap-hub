@@ -66,7 +66,7 @@ export const getVideoEventUpdatedReminder = (): VideoEventReminder => {
   return {
     id: `video-event-updated-${eventResponse.id}`,
     entity: 'Event',
-    type: 'Video',
+    type: 'Video Updated',
     data: {
       eventId: eventResponse.id,
       startDate: eventResponse.startDate,

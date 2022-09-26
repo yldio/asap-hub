@@ -5,12 +5,8 @@ import { ResearchOutputDataObject } from './research-output';
 type ReminderEntity = 'Research Output' | 'Event';
 
 type ResearchOutputReminderType = 'Published';
-type EventReminderType = 'Happening Today' | 'Happening Now';
-type EventMaterialReminderType = 'Video';
-type ReminderType =
-  | ResearchOutputReminderType
-  | EventReminderType
-  | EventMaterialReminderType;
+type EventReminderType = 'Happening Today' | 'Happening Now' | 'Video Updated';
+type ReminderType = ResearchOutputReminderType | EventReminderType;
 interface Reminder {
   id: string;
   entity: ReminderEntity;
@@ -26,11 +22,6 @@ interface ResearchOutputReminder extends Reminder {
 interface EventReminder extends Reminder {
   entity: 'Event';
   type: EventReminderType;
-}
-
-interface EventMaterialReminder extends Reminder {
-  entity: 'Event';
-  type: EventMaterialReminderType;
 }
 
 export interface ResearchOutputPublishedReminder
@@ -66,9 +57,9 @@ export interface EventHappeningNowReminder extends EventReminder {
   };
 }
 
-export interface VideoEventReminder extends EventMaterialReminder {
+export interface VideoEventReminder extends EventReminder {
   entity: 'Event';
-  type: 'Video';
+  type: 'Video Updated';
   data: {
     eventId: EventResponse['id'];
     title: EventResponse['title'];

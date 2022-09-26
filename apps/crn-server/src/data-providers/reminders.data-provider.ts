@@ -50,7 +50,7 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
 
     const eventReminders = getEventRemindersFromQuery(queryEventsContents);
     const eventMaterialReminders =
-      getEventMaterialRemindersFromQuery(queryEventsContents);
+      getVideoUpdatedRemindersFromQuery(queryEventsContents);
 
     const reminders = [
       ...researchOutputReminders,
@@ -219,7 +219,7 @@ const getEventRemindersFromQuery = (
   return eventReminders;
 };
 
-const getEventMaterialRemindersFromQuery = (
+const getVideoUpdatedRemindersFromQuery = (
   queryEventsContents: FetchReminderDataQuery['queryEventsContents'],
 ): VideoEventReminder[] => {
   const eventReminders = (queryEventsContents || []).reduce<
@@ -239,7 +239,7 @@ const getEventMaterialRemindersFromQuery = (
           {
             id: `video-event-updated-${event.id}`,
             entity: 'Event',
-            type: 'Video',
+            type: 'Video Updated',
             data: {
               eventId: event.id,
               title: event.flatData.title || '',
@@ -264,7 +264,7 @@ const getSortDate = (reminder: ReminderDataObject): DateTime => {
     return DateTime.fromISO(reminder.data.startDate);
   }
 
-  if (reminder.type === 'Video') {
+  if (reminder.type === 'Video Updated') {
     return DateTime.fromISO(reminder.data.videoRecordingUpdatedAt);
   }
 

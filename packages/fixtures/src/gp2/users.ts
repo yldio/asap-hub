@@ -19,9 +19,7 @@ export const createUserResponse = (
   ...overrides,
 });
 
-export const createUsersResponse = (
-  items = [createUserResponse()],
-): gp2.ListUserResponse => ({
-  items,
-  total: items.length,
+export const createUsersResponse = (items = 1): gp2.ListUserResponse => ({
+  items: Array.from({ length: items }, () => createUserResponse()),
+  total: items,
 });

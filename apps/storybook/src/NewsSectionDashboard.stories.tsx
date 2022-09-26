@@ -20,7 +20,6 @@ const props = (): ComponentProps<typeof NewsSection> => ({
         'Discover current and planned tools (e.g., animal & cell models, antibodies, vectors, tissues, etc.) in a sortable table. This will be a living reference.',
       link: text('Link', 'https://picsum.photos/200'),
       linkText: text('Link Text', 'External Link'),
-      noPill: true,
     },
   ],
 });

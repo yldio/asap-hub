@@ -102,6 +102,7 @@ export class AlgoliaSearchClient {
       filters: requestOptions?.filters
         ? `${requestOptions.filters} AND (${entityTypesFilter})`
         : entityTypesFilter,
+      queryType: 'prefixAll',
     };
 
     return descendingEvents

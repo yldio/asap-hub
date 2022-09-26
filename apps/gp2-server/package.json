@@ -51,7 +51,7 @@
     "@graphql-tools/mock": "8.7.6",
     "@serverless/typescript": "3.19.0",
     "@types/apr-intercept": "workspace:*",
-    "@types/aws-lambda": "8.10.103",
+    "@types/aws-lambda": "8.10.106",
     "@types/cors": "2.8.12",
     "@types/express": "4.17.13",
     "@types/jest": "26.0.24",

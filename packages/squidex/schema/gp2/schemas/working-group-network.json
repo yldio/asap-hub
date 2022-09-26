@@ -12,7 +12,7 @@
     "fieldsInLists": [],
     "fields": [
       {
-        "name": "steeringCommittee",
+        "name": "steeringCommitee",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,

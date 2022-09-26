@@ -1450,18 +1450,28 @@ export type WorkingGroupNetworkDataComplexDiseaseInputDto = {
 
 /** The structure of the Working Group Network data type. */
 export type WorkingGroupNetworkDataDto = {
+  steeringCommitee: Maybe<WorkingGroupNetworkDataSteeringCommiteeDto>;
   complexDisease: Maybe<WorkingGroupNetworkDataComplexDiseaseDto>;
   monogenic: Maybe<WorkingGroupNetworkDataMonogenicDto>;
   operational: Maybe<WorkingGroupNetworkDataOperationalDto>;
-  support: Maybe<WorkingGroupNetworkDataSupportDto>;
 };
 
 /** The structure of the Working Group Network data input type. */
 export type WorkingGroupNetworkDataInputDto = {
+  steeringCommitee: InputMaybe<WorkingGroupNetworkDataSteeringCommiteeInputDto>;
   complexDisease: InputMaybe<WorkingGroupNetworkDataComplexDiseaseInputDto>;
   monogenic: InputMaybe<WorkingGroupNetworkDataMonogenicInputDto>;
   operational: InputMaybe<WorkingGroupNetworkDataOperationalInputDto>;
-  support: InputMaybe<WorkingGroupNetworkDataSupportInputDto>;
+};
+
+/** The structure of the Steering Commitee Working Groups field of the Working Group Network content type. */
+export type WorkingGroupNetworkDataSteeringCommiteeDto = {
+  iv: Maybe<Array<WorkingGroups>>;
+};
+
+/** The structure of the Steering Commitee Working Groups field of the Working Group Network content input type. */
+export type WorkingGroupNetworkDataSteeringCommiteeInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Monogenic Working Groups field of the Working Group Network content type. */
@@ -1484,22 +1494,12 @@ export type WorkingGroupNetworkDataOperationalInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
-/** The structure of the Support Working Groups field of the Working Group Network content type. */
-export type WorkingGroupNetworkDataSupportDto = {
-  iv: Maybe<Array<WorkingGroups>>;
-};
-
-/** The structure of the Support Working Groups field of the Working Group Network content input type. */
-export type WorkingGroupNetworkDataSupportInputDto = {
-  iv: InputMaybe<Array<Scalars['String']>>;
-};
-
 /** The structure of the flat Working Group Network data type. */
 export type WorkingGroupNetworkFlatDataDto = {
+  steeringCommitee: Maybe<Array<WorkingGroups>>;
   complexDisease: Maybe<Array<WorkingGroups>>;
   monogenic: Maybe<Array<WorkingGroups>>;
   operational: Maybe<Array<WorkingGroups>>;
-  support: Maybe<Array<WorkingGroups>>;
 };
 
 /** List of Working Group Network items and total count. */
@@ -1904,6 +1904,41 @@ export type WorkingGroupNetworkContentFragment = Pick<
   'id'
 > & {
   flatData: {
+    steeringCommitee: Maybe<
+      Array<
+        Pick<WorkingGroups, 'id'> & {
+          flatData: Pick<
+            WorkingGroupsFlatDataDto,
+            | 'title'
+            | 'shortDescription'
+            | 'leadingMembers'
+            | 'description'
+            | 'primaryEmail'
+            | 'secondaryEmail'
+          > & {
+            members: Maybe<
+              Array<
+                Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                  user: Maybe<
+                    Array<
+                      Pick<
+                        Users,
+                        'id' | 'created' | 'lastModified' | 'version'
+                      > & {
+                        flatData: Pick<
+                          UsersFlatDataDto,
+                          'firstName' | 'lastName'
+                        > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                      }
+                    >
+                  >;
+                }
+              >
+            >;
+          };
+        }
+      >
+    >;
     complexDisease: Maybe<
       Array<
         Pick<WorkingGroups, 'id'> & {
@@ -2009,41 +2044,6 @@ export type WorkingGroupNetworkContentFragment = Pick<
         }
       >
     >;
-    support: Maybe<
-      Array<
-        Pick<WorkingGroups, 'id'> & {
-          flatData: Pick<
-            WorkingGroupsFlatDataDto,
-            | 'title'
-            | 'shortDescription'
-            | 'leadingMembers'
-            | 'description'
-            | 'primaryEmail'
-            | 'secondaryEmail'
-          > & {
-            members: Maybe<
-              Array<
-                Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
-                  user: Maybe<
-                    Array<
-                      Pick<
-                        Users,
-                        'id' | 'created' | 'lastModified' | 'version'
-                      > & {
-                        flatData: Pick<
-                          UsersFlatDataDto,
-                          'firstName' | 'lastName'
-                        > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-                      }
-                    >
-                  >;
-                }
-              >
-            >;
-          };
-        }
-      >
-    >;
   };
 };
 
@@ -2056,6 +2056,41 @@ export type FetchWorkingGroupNetworkQuery = {
     Array<
       Pick<WorkingGroupNetwork, 'id'> & {
         flatData: {
+          steeringCommitee: Maybe<
+            Array<
+              Pick<WorkingGroups, 'id'> & {
+                flatData: Pick<
+                  WorkingGroupsFlatDataDto,
+                  | 'title'
+                  | 'shortDescription'
+                  | 'leadingMembers'
+                  | 'description'
+                  | 'primaryEmail'
+                  | 'secondaryEmail'
+                > & {
+                  members: Maybe<
+                    Array<
+                      Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                        user: Maybe<
+                          Array<
+                            Pick<
+                              Users,
+                              'id' | 'created' | 'lastModified' | 'version'
+                            > & {
+                              flatData: Pick<
+                                UsersFlatDataDto,
+                                'firstName' | 'lastName'
+                              > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                            }
+                          >
+                        >;
+                      }
+                    >
+                  >;
+                };
+              }
+            >
+          >;
           complexDisease: Maybe<
             Array<
               Pick<WorkingGroups, 'id'> & {
@@ -2127,41 +2162,6 @@ export type FetchWorkingGroupNetworkQuery = {
             >
           >;
           operational: Maybe<
-            Array<
-              Pick<WorkingGroups, 'id'> & {
-                flatData: Pick<
-                  WorkingGroupsFlatDataDto,
-                  | 'title'
-                  | 'shortDescription'
-                  | 'leadingMembers'
-                  | 'description'
-                  | 'primaryEmail'
-                  | 'secondaryEmail'
-                > & {
-                  members: Maybe<
-                    Array<
-                      Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
-                        user: Maybe<
-                          Array<
-                            Pick<
-                              Users,
-                              'id' | 'created' | 'lastModified' | 'version'
-                            > & {
-                              flatData: Pick<
-                                UsersFlatDataDto,
-                                'firstName' | 'lastName'
-                              > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-                            }
-                          >
-                        >;
-                      }
-                    >
-                  >;
-                };
-              }
-            >
-          >;
-          support: Maybe<
             Array<
               Pick<WorkingGroups, 'id'> & {
                 flatData: Pick<
@@ -2591,6 +2591,19 @@ export const WorkingGroupNetworkContentFragmentDoc = {
               selections: [
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'steeringCommitee' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'WorkingGroupContent' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'complexDisease' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -2618,19 +2631,6 @@ export const WorkingGroupNetworkContentFragmentDoc = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'operational' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'WorkingGroupContent' },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'support' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [

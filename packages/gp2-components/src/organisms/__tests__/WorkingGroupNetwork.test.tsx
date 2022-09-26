@@ -58,7 +58,10 @@ describe('WorkingGroupBody', () => {
     const workingGroupNetwork = {
       total: 1,
       items: [
-        { role: 'support' as const, workingGroups: ignoredWorkingGroups },
+        {
+          role: 'steeringCommitee' as const,
+          workingGroups: ignoredWorkingGroups,
+        },
         { role: 'complexDisease' as const, workingGroups },
       ],
     };

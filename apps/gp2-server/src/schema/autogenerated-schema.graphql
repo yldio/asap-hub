@@ -1498,10 +1498,10 @@ input WorkingGroupNetworkDataComplexDiseaseInputDto {
 
 """The structure of the Working Group Network data type."""
 type WorkingGroupNetworkDataDto {
+  steeringCommitee: WorkingGroupNetworkDataSteeringCommiteeDto
   complexDisease: WorkingGroupNetworkDataComplexDiseaseDto
   monogenic: WorkingGroupNetworkDataMonogenicDto
   operational: WorkingGroupNetworkDataOperationalDto
-  support: WorkingGroupNetworkDataSupportDto
 }
 
 """The structure of the Working Group Network data input type."""
@@ -1509,7 +1509,7 @@ input WorkingGroupNetworkDataInputDto {
   complexDisease: WorkingGroupNetworkDataComplexDiseaseInputDto
   monogenic: WorkingGroupNetworkDataMonogenicInputDto
   operational: WorkingGroupNetworkDataOperationalInputDto
-  support: WorkingGroupNetworkDataSupportInputDto
+  steeringCommitee: WorkingGroupNetworkDataSteeringCommiteeInputDto
 }
 
 """The structure of the Monogenic Working Groups field of the Working Group Network content type."""
@@ -1532,22 +1532,22 @@ input WorkingGroupNetworkDataOperationalInputDto {
   iv: [String!]
 }
 
-"""The structure of the Support Working Groups field of the Working Group Network content type."""
-type WorkingGroupNetworkDataSupportDto {
+"""The structure of the Steering Commitee Working Groups field of the Working Group Network content type."""
+type WorkingGroupNetworkDataSteeringCommiteeDto {
   iv: [WorkingGroups!]
 }
 
-"""The structure of the Support Working Groups field of the Working Group Network content input type."""
-input WorkingGroupNetworkDataSupportInputDto {
+"""The structure of the Steering Commitee Working Groups field of the Working Group Network content input type."""
+input WorkingGroupNetworkDataSteeringCommiteeInputDto {
   iv: [String!]
 }
 
 """The structure of the flat Working Group Network data type."""
 type WorkingGroupNetworkFlatDataDto {
+  steeringCommitee: [WorkingGroups!]
   complexDisease: [WorkingGroups!]
   monogenic: [WorkingGroups!]
   operational: [WorkingGroups!]
-  support: [WorkingGroups!]
 }
 
 """List of Working Group Network items and total count."""

@@ -16,7 +16,7 @@ const props = (): ComponentProps<typeof NewsPageBody> => {
 
   return {
     news: Array.from({ length: numberOfItems })
-      .map((_, idx) => createNewsResponse(`${idx + 1}`))
+      .map((_, idx) => createNewsResponse({ key: `${idx + 1}` }))
       .slice(currentPage * pageSize, currentPage * pageSize + pageSize),
     renderPageHref: (index) => `#${index}`,
     numberOfItems,

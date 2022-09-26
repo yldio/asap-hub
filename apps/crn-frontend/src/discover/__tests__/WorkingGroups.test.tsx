@@ -43,8 +43,8 @@ it('renders working group page with two items', async () => {
   mockGetDiscover.mockResolvedValue({
     ...createDiscoverResponse(),
     workingGroups: [
-      createNewsResponse('First One', 'Working Groups'),
-      createNewsResponse('Second One', 'Working Groups'),
+      createNewsResponse({ key: 'First One', type: 'Working Groups' }),
+      createNewsResponse({ key: 'Second One', type: 'Working Groups' }),
     ],
   });
 
@@ -63,8 +63,8 @@ it('renders the correct title and subtitle', async () => {
   mockGetDiscover.mockResolvedValue({
     ...createDiscoverResponse(),
     workingGroups: [
-      createNewsResponse('First One', 'Working Groups'),
-      createNewsResponse('Second One', 'Working Groups'),
+      createNewsResponse({ key: 'First One', type: 'Working Groups' }),
+      createNewsResponse({ key: 'Second One', type: 'Working Groups' }),
     ],
   });
 

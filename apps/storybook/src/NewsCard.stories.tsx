@@ -1,4 +1,4 @@
-import { boolean, text } from '@storybook/addon-knobs';
+import { text } from '@storybook/addon-knobs';
 
 import { NewsCard } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
@@ -22,7 +22,6 @@ const newsProps = (): ComponentProps<typeof NewsCard> => ({
     'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',
   ),
   thumbnail: text('Thumbnail', 'https://picsum.photos/200'),
-  noPill: boolean('No Pill', false),
 });
 
 const tutorialProps = (): ComponentProps<typeof NewsCard> => ({

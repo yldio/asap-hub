@@ -6,4 +6,6 @@ export default {
   component: NewsDetailsPage,
 };
 
-export const Normal = () => <NewsDetailsPage {...createNewsResponse('1')} />;
+export const Normal = () => (
+  <NewsDetailsPage {...createNewsResponse({ key: '1' })} />
+);

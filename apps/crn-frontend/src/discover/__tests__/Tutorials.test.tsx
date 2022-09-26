@@ -43,8 +43,8 @@ it('renders tutorial page with two items', async () => {
   mockGetDiscover.mockResolvedValue({
     ...createDiscoverResponse(),
     training: [
-      createNewsResponse('First One', 'Tutorial'),
-      createNewsResponse('Second One', 'Tutorial'),
+      createNewsResponse({ key: 'First One', type: 'Tutorial' }),
+      createNewsResponse({ key: 'Second One', type: 'Tutorial' }),
     ],
   });
 

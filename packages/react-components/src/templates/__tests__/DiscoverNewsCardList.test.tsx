@@ -25,8 +25,8 @@ it('renders news items', () => {
       title="Tutorials"
       subtitle="Explore our tutorials to understand how you can use the Hub and work with the tools."
       news={[
-        createNewsResponse('First One', 'Tutorial'),
-        createNewsResponse('Second One', 'Tutorial'),
+        createNewsResponse({ key: 'First One', type: 'Tutorial' }),
+        createNewsResponse({ key: 'Second One', type: 'Tutorial' }),
       ]}
     />,
   );

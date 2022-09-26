@@ -141,7 +141,6 @@ export const parseGraphQLEvent = (
     meetingMaterialsPermanentlyUnavailable,
     notes,
     videoRecording,
-    videoRecordingUpdatedAt,
     presentation,
     meetingMaterials,
   } = item.flatData;
@@ -175,7 +174,6 @@ export const parseGraphQLEvent = (
       isStale,
       undefined,
     ),
-    videoRecordingUpdatedAt,
     presentation: getMeetingMaterial(
       presentation,
       !!presentationPermanentlyUnavailable,

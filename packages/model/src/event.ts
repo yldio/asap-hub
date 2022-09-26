@@ -63,7 +63,6 @@ export interface EventResponse {
   // `null` means it is not intended to add materials to the event in the future.
   notes?: string | null;
   videoRecording?: string | null;
-  videoRecordingUpdatedAt: string;
   presentation?: string | null;
   meetingMaterials:
     | {

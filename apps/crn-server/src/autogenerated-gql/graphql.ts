@@ -5519,7 +5519,6 @@ export type EventContentFragment = Pick<
     | 'notes'
     | 'videoRecordingPermanentlyUnavailable'
     | 'videoRecording'
-    | 'videoRecordingUpdatedAt'
     | 'presentationPermanentlyUnavailable'
     | 'presentation'
     | 'meetingMaterialsPermanentlyUnavailable'
@@ -5854,7 +5853,6 @@ export type FetchEventsQuery = {
               | 'notes'
               | 'videoRecordingPermanentlyUnavailable'
               | 'videoRecording'
-              | 'videoRecordingUpdatedAt'
               | 'presentationPermanentlyUnavailable'
               | 'presentation'
               | 'meetingMaterialsPermanentlyUnavailable'
@@ -6237,7 +6235,6 @@ export type FetchEventQuery = {
         | 'notes'
         | 'videoRecordingPermanentlyUnavailable'
         | 'videoRecording'
-        | 'videoRecordingUpdatedAt'
         | 'presentationPermanentlyUnavailable'
         | 'presentation'
         | 'meetingMaterialsPermanentlyUnavailable'
@@ -9526,10 +9523,6 @@ export const EventContentFragmentDoc = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'videoRecording' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'videoRecordingUpdatedAt' },
                 },
                 {
                   kind: 'Field',

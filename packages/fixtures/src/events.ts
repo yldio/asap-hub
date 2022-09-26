@@ -1,5 +1,5 @@
 import {
-  EventResponse,
+  ReminderEventResponse,
   EventSpeakerExternalUser,
   EventSpeakerUser,
   EventSpeakerUserData,
@@ -86,7 +86,7 @@ export const createEventResponse = (
     customTitle = 'Event',
   }: FixtureOptions = {},
   itemIndex = 0,
-): EventResponse => ({
+): ReminderEventResponse => ({
   id: `event-${itemIndex}`,
   calendar: createCalendarResponse(itemIndex),
   startDate: new Date().toISOString(),

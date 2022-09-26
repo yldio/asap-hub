@@ -24,7 +24,6 @@ export const eventContentFragment = gql`
       notes
       videoRecordingPermanentlyUnavailable
       videoRecording
-      videoRecordingUpdatedAt
       presentationPermanentlyUnavailable
       presentation
       meetingMaterialsPermanentlyUnavailable

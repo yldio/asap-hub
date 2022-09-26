@@ -64,7 +64,6 @@ export const getEventResponse = (): EventResponse => ({
   endDateTimeZone: 'UTC',
   notes: 'These are the notes from the meeting',
   videoRecording: '<embeded>video</embeded>',
-  videoRecordingUpdatedAt: '2010-08-01T08:00:04.000Z',
   presentation: '<embeded>presentation</embeded>',
   meetingMaterials: [
     {

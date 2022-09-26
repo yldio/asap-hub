@@ -24,13 +24,13 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   teamId: '1337',
 };
 
-it('renders multiple news cards', () => {
+it('renders pages cards and the first news card', () => {
   render(<DashboardPageBody {...props} />);
   expect(
     screen
       .queryAllByText(/title/i, { selector: 'h4' })
       .map(({ textContent }) => textContent),
-  ).toEqual(['Page 1 title', 'Page 2 title', 'News Title', 'Tutorial Title']);
+  ).toEqual(['Page 1 title', 'Page 2 title', 'News Title']);
 });
 
 it('renders news section when there are no news', () => {
@@ -49,5 +49,12 @@ it('renders news section when there are no pages', () => {
   ).not.toBeInTheDocument();
   expect(
     screen.getAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(expect.arrayContaining(['News Title', 'Tutorial Title']));
+  ).toEqual(expect.arrayContaining(['News Title']));
+  expect(screen.getByTestId('view-news').querySelector('a')).toHaveTextContent(
+    'View All',
+  );
+  expect(screen.getByTestId('view-news').querySelector('a')).toHaveAttribute(
+    'href',
+    '/news',
+  );
 });

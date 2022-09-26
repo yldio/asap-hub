@@ -5,7 +5,7 @@ import {
   createListReminderResponse,
   createListResearchOutputResponse,
 } from '@asap-hub/fixtures';
-import { number } from '@storybook/addon-knobs';
+import { number, text } from '@storybook/addon-knobs';
 
 export default {
   title: 'Templates / Dashboard / Page Body',
@@ -17,7 +17,11 @@ const props = (): ComponentProps<typeof DashboardPageBody> => ({
       id: 'uuid-1',
       created: new Date().toISOString(),
       type: 'News' as const,
-      title: "Coordinating different research interests into Parkinson's",
+      title: 'Learn about Protocols.io, an ASAP preferred tool',
+      shortText:
+        'Discover current and planned tools (e.g., animal & cell models, antibodies, vectors, tissues, etc.) in a sortable table. This will be a living reference.',
+      link: text('Link', 'https://picsum.photos/200'),
+      linkText: text('Link Text', 'External Link'),
     },
     {
       id: 'uuid-2',

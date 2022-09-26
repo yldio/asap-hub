@@ -1502,7 +1502,6 @@ type WorkingGroupNetworkDataDto {
   monogenic: WorkingGroupNetworkDataMonogenicDto
   operational: WorkingGroupNetworkDataOperationalDto
   steeringCommitee: WorkingGroupNetworkDataSteeringCommiteeDto
-  support: WorkingGroupNetworkDataSupportDto
 }
 
 """The structure of the Working Group Network data input type."""
@@ -1511,7 +1510,6 @@ input WorkingGroupNetworkDataInputDto {
   monogenic: WorkingGroupNetworkDataMonogenicInputDto
   operational: WorkingGroupNetworkDataOperationalInputDto
   steeringCommitee: WorkingGroupNetworkDataSteeringCommiteeInputDto
-  support: WorkingGroupNetworkDataSupportInputDto
 }
 
 """The structure of the Monogenic Working Groups field of the Working Group Network content type."""
@@ -1544,23 +1542,12 @@ input WorkingGroupNetworkDataSteeringCommiteeInputDto {
   iv: [String!]
 }
 
-"""The structure of the Support Working Groups field of the Working Group Network content type."""
-type WorkingGroupNetworkDataSupportDto {
-  iv: [WorkingGroups!]
-}
-
-"""The structure of the Support Working Groups field of the Working Group Network content input type."""
-input WorkingGroupNetworkDataSupportInputDto {
-  iv: [String!]
-}
-
 """The structure of the flat Working Group Network data type."""
 type WorkingGroupNetworkFlatDataDto {
   complexDisease: [WorkingGroups!]
   monogenic: [WorkingGroups!]
   operational: [WorkingGroups!]
   steeringCommitee: [WorkingGroups!]
-  support: [WorkingGroups!]
 }
 
 """List of Working Group Network items and total count."""

@@ -1454,7 +1454,6 @@ export type WorkingGroupNetworkDataDto = {
   monogenic: Maybe<WorkingGroupNetworkDataMonogenicDto>;
   operational: Maybe<WorkingGroupNetworkDataOperationalDto>;
   steeringCommitee: Maybe<WorkingGroupNetworkDataSteeringCommiteeDto>;
-  support: Maybe<WorkingGroupNetworkDataSupportDto>;
 };
 
 /** The structure of the Working Group Network data input type. */
@@ -1463,7 +1462,6 @@ export type WorkingGroupNetworkDataInputDto = {
   monogenic: InputMaybe<WorkingGroupNetworkDataMonogenicInputDto>;
   operational: InputMaybe<WorkingGroupNetworkDataOperationalInputDto>;
   steeringCommitee: InputMaybe<WorkingGroupNetworkDataSteeringCommiteeInputDto>;
-  support: InputMaybe<WorkingGroupNetworkDataSupportInputDto>;
 };
 
 /** The structure of the Monogenic Working Groups field of the Working Group Network content type. */
@@ -1496,23 +1494,12 @@ export type WorkingGroupNetworkDataSteeringCommiteeInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
-/** The structure of the Support Working Groups field of the Working Group Network content type. */
-export type WorkingGroupNetworkDataSupportDto = {
-  iv: Maybe<Array<WorkingGroups>>;
-};
-
-/** The structure of the Support Working Groups field of the Working Group Network content input type. */
-export type WorkingGroupNetworkDataSupportInputDto = {
-  iv: InputMaybe<Array<Scalars['String']>>;
-};
-
 /** The structure of the flat Working Group Network data type. */
 export type WorkingGroupNetworkFlatDataDto = {
   complexDisease: Maybe<Array<WorkingGroups>>;
   monogenic: Maybe<Array<WorkingGroups>>;
   operational: Maybe<Array<WorkingGroups>>;
   steeringCommitee: Maybe<Array<WorkingGroups>>;
-  support: Maybe<Array<WorkingGroups>>;
 };
 
 /** List of Working Group Network items and total count. */

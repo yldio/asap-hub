@@ -478,7 +478,7 @@ __metadata:
     "@graphql-codegen/typescript": 2.7.3
     "@graphql-codegen/typescript-operations": 2.5.3
     "@graphql-typed-document-node/core": 3.1.1
-    contentful-cli: 1.15.10
+    contentful-cli: 1.15.15
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
   languageName: unknown
@@ -18415,9 +18415,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-cli@npm:1.15.10":
-  version: 1.15.10
-  resolution: "contentful-cli@npm:1.15.10"
+"contentful-cli@npm:1.15.15":
+  version: 1.15.15
+  resolution: "contentful-cli@npm:1.15.15"
   dependencies:
     ast-types: ^0.14.2
     bfj: ^7.0.2
@@ -18456,7 +18456,7 @@ __metadata:
     yargs: ~13.3.2
   bin:
     contentful: bin/contentful.js
-  checksum: 71e14142f0a92250565969ed7d5d764f586c6e9ee18ba6f4e656a68a2e5b4dd698da8cf913bc7f039de45954cf43480bf4912a795b570a187ee829fa4596daa4
+  checksum: d3ca8736b44ab6d0a8589307dcb17dfe5fe8b786b0928fc90cb6956fbc2df545c2622bcc4fe2e934c7db4335c68beb3a45514ad07eb6d555baed7646c4a64f5e
   languageName: node
   linkType: hard
 

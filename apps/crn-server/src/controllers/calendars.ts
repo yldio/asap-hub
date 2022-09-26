@@ -55,7 +55,7 @@ export default class Calendars implements CalendarController {
     }
 
     if (typeof item === 'number' && item === FetchCalendarError.InvalidColor) {
-      throw Boom.badGateway('Invalid color');
+      throw Boom.badGateway('Invalid colour');
     }
 
     if (

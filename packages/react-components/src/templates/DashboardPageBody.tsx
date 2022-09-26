@@ -171,7 +171,16 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         )}
       </div>
       {news.length ? (
-        <NewsSection title="Latest News from ASAP" news={news} />
+        <div>
+          <NewsSection
+            news={[news[0]]}
+            title="Latest News from ASAP"
+            subtitle="Explore the latest shared research and learn more about them."
+          />
+          <p css={viewAllStyles} data-testid="view-news">
+            <Link href={newsRoute({}).$}>View All →</Link>
+          </p>
+        </div>
       ) : null}
       <section>
         <Headline2 styleAsHeading={3}>You may want to try</Headline2>

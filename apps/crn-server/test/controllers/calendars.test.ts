@@ -27,37 +27,22 @@ import {
 import { getAuthToken } from '../../src/utils/auth';
 import { appName, baseUrl } from '../../src/config';
 import CalendarSquidexDataProvider from '../../src/data-providers/calendars.data-provider';
+import { calendarDataProviderMock } from '../mocks/calendar-data-provider.mock';
 
-describe('Calendars controller', () => {
-  const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const calendarRestClient = new SquidexRest<RestCalendar, InputCalendar>(
-    getAuthToken,
-    'calendars',
-    { appName, baseUrl },
-  );
-  const calendarDataProvider = new CalendarSquidexDataProvider(
-    calendarRestClient,
-    squidexGraphqlClientMock,
-  );
-  const calendarsController = new Calendars(calendarDataProvider);
+describe('Calendars Controller', () => {
+  const calendarsController = new Calendars(calendarDataProviderMock);
 
-  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-  const calendarDataProviderMockServer = new CalendarSquidexDataProvider(
-    calendarRestClient,
-    squidexGraphqlClientMockServer,
-  );
-  const calendarsControllerMockGraphql = new Calendars(
-    calendarDataProviderMockServer,
-  );
-
-  beforeAll(() => {
-    identity();
+  beforeEach(() => {
     jest.resetAllMocks();
   });
 
   describe('Fetch method', () => {
-    test('Should fetch the calendars from squidex graphql', async () => {
-      const result = await calendarsControllerMockGraphql.fetch();
+    test.only('Should fetch the calendars', async () => {
+      calendarDataProviderMock.fetch.mockResolvedValue({
+        total: 1,
+        items: [getUserDataObject()],
+      });
+      const result = await calendarsController.fetch();
 
       expect(result).toMatchObject(getListCalendarResponse());
     });

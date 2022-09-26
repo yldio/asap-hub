@@ -62,10 +62,14 @@ export interface CalendarDataObject {
   expirationDate?: number | null;
 }
 
-export type CalendarRawDataObject = CalendarDataObject & {
-  id: string;
-  version: number;
-};
+export type CalendarCreateDataObject = CalendarDataObject;
+
+export type ListCalendarDataObject = ListResponse<CalendarDataObject>;
+
+// export type CalendarRawDataObject = CalendarDataObject & {
+//   id: string;
+//   version: number;
+// };
 
 export enum FetchCalendarError {
   FetchError,

@@ -14,10 +14,6 @@ describe('Users controller', () => {
   });
 
   describe('Fetch', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
-
     test('Should return the users', async () => {
       userDataProviderMock.fetch.mockResolvedValue({
         total: 1,

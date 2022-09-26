@@ -6,7 +6,7 @@ import { network } from '@asap-hub/routing';
 import { paper, lead, steel } from '../colors';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { Display, Link, TabLink, Tag } from '../atoms';
+import { Display, Link, StateTag, TabLink } from '../atoms';
 import { teamIcon } from '../icons';
 import { TabNav } from '../molecules';
 import { EventSearch } from '../organisms';
@@ -35,6 +35,7 @@ const titleStyle = css({
   display: 'flex',
   flexFlow: 'row',
   gap: `${16 / perRem}em`,
+  alignItems: 'center',
 });
 
 type GroupProfileHeaderProps = {
@@ -66,7 +67,7 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
       <div css={visualHeaderStyles}>
         <div css={titleStyle}>
           <Display styleAsHeading={2}>{name}</Display>
-          {!active && <Tag inactive>Inactive</Tag>}
+          {!active && <StateTag label="Inactive" />}
         </div>
         <div css={belowHeadlineStyles}>
           <div

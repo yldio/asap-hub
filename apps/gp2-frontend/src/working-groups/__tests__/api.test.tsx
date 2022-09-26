@@ -50,12 +50,10 @@ describe('getWorkingGroups', () => {
   });
 
   it('returns a successfully fetched working groups', async () => {
-    const workingGroupResponse: gp2Model.ListWorkingGroupResponse = {
-      items: [gp2Fixtures.createWorkingGroupResponse()],
-      total: 1,
-    };
+    const workingGroupResponse: gp2Model.ListWorkingGroupNetworkResponse =
+      gp2Fixtures.createWorkingGroupNetworkResponse();
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/working-groups')
+      .get('/working-group-network')
       .reply(200, workingGroupResponse);
 
     const result = await getWorkingGroups('Bearer x');
@@ -64,7 +62,7 @@ describe('getWorkingGroups', () => {
 
   it('errors for error status', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/working-groups')
+      .get('/working-group-network')
       .reply(500);
 
     await expect(

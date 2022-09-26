@@ -147,6 +147,7 @@ export interface UserDataObject extends Invitee {
 export type ListUserDataObject = ListResponse<UserDataObject>;
 export interface UserResponse
   extends Omit<UserDataObject, 'onboarded' | 'connections'> {
+  alumniSinceDate?: string;
   onboarded: boolean;
   displayName: string;
 }

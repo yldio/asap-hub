@@ -7,7 +7,6 @@ import { FC, lazy, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import { auth0State } from './auth/state';
-import Users from './users/Users';
 
 const { workingGroups, users, projects } = gp2;
 const loadDashboard = () =>
@@ -19,15 +18,19 @@ const loadWorkingGroups = () =>
 const loadProjects = () =>
   import(/* webpackChunkName: "projects" */ './projects/Projects');
 
+const loadUsers = () => import(/* webpackChunkName: "users" */ './users/Users');
+
 const Dashboard = lazy(loadDashboard);
 const WorkingGroups = lazy(loadWorkingGroups);
 const Projects = lazy(loadProjects);
+const Users = lazy(loadUsers);
 
 const AuthenticatedApp: FC<Record<string, never>> = () => {
   const auth0 = useAuth0();
   const [recoilAuth0, setAuth0] = useRecoilState(auth0State);
   const resetAuth0 = useResetRecoilState(auth0State);
   const { path } = useRouteMatch();
+
   useEffect(() => {
     setAuth0(auth0);
     return () => resetAuth0();
@@ -36,7 +39,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
 
   useEffect(() => {
     // order by the likelyhood of user navigating there
-    loadDashboard().then(loadWorkingGroups).then(loadProjects);
+    loadDashboard().then(loadUsers).then(loadWorkingGroups).then(loadProjects);
   }, []);
 
   if (!user || !recoilAuth0) {

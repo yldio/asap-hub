@@ -1,12 +1,11 @@
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
-
 import { API_BASE_URL } from '../config';
 
 export const getWorkingGroups = async (
   authorization: string,
-): Promise<gp2.ListWorkingGroupResponse> => {
-  const resp = await fetch(`${API_BASE_URL}/working-groups`, {
+): Promise<gp2.ListWorkingGroupNetworkResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/working-group-network`, {
     headers: { authorization, ...createSentryHeaders() },
   });
   if (!resp.ok) {

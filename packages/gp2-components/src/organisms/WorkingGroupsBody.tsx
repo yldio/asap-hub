@@ -1,31 +1,31 @@
 import { gp2 } from '@asap-hub/model';
-import { drawerQuery, pixels } from '@asap-hub/react-components';
-import { css } from '@emotion/react';
-import WorkingGroupCard from './WorkingGroupCard';
+import WorkingGroupNetwork from './WorkingGroupNetwork';
 
-const { perRem } = pixels;
-type WorkingGroupsBodyProps = {
-  workingGroups: gp2.ListWorkingGroupResponse;
+export type WorkingGroupsBodyProps = {
+  workingGroupNetwork: gp2.ListWorkingGroupNetworkResponse;
 };
-const gridContainerStyles = css({
-  display: 'grid',
-  gridGap: `${24 / perRem}em`,
-  gridTemplateColumns: '1fr 1fr',
-  marginTop: `${48 / perRem}em`,
-
-  [drawerQuery]: {
-    gridTemplateColumns: '1fr',
-  },
-});
 
 const WorkingGroupsBody: React.FC<WorkingGroupsBodyProps> = ({
-  workingGroups,
+  workingGroupNetwork,
 }) => (
-  <article css={gridContainerStyles}>
-    {workingGroups.items.map((workingGroup) => (
-      <WorkingGroupCard key={workingGroup.id} {...workingGroup} />
-    ))}
-  </article>
+  <>
+    <WorkingGroupNetwork
+      role={'operational'}
+      workingGroupNetwork={workingGroupNetwork}
+    />
+    <WorkingGroupNetwork
+      role={'monogenic'}
+      workingGroupNetwork={workingGroupNetwork}
+    />
+    <WorkingGroupNetwork
+      role={'complexDisease'}
+      workingGroupNetwork={workingGroupNetwork}
+    />
+    <WorkingGroupNetwork
+      role={'support'}
+      workingGroupNetwork={workingGroupNetwork}
+    />
+  </>
 );
 
 export default WorkingGroupsBody;

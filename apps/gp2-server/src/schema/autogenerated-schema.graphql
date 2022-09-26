@@ -1293,12 +1293,12 @@ input UsersDataConnectionsInputDto {
 
 """The structure of the Degree field of the Users content type."""
 type UsersDataDegreeDto {
-  iv: String
+  iv: [degreeEnum!]
 }
 
 """The structure of the Degree field of the Users content input type."""
 input UsersDataDegreeInputDto {
-  iv: String
+  iv: [degreeEnum!]
 }
 
 """The structure of the Users data type."""
@@ -1381,7 +1381,7 @@ input UsersDataRoleInputDto {
 type UsersFlatDataDto {
   avatar: [Asset!]
   connections: [UsersDataConnectionsChildDto!]
-  degree: String
+  degree: [degreeEnum!]
   email: String
   firstName: String
   lastName: String
@@ -1502,6 +1502,7 @@ type WorkingGroupNetworkDataDto {
   monogenic: WorkingGroupNetworkDataMonogenicDto
   operational: WorkingGroupNetworkDataOperationalDto
   steeringCommitee: WorkingGroupNetworkDataSteeringCommiteeDto
+  support: WorkingGroupNetworkDataSupportDto
 }
 
 """The structure of the Working Group Network data input type."""
@@ -1510,6 +1511,7 @@ input WorkingGroupNetworkDataInputDto {
   monogenic: WorkingGroupNetworkDataMonogenicInputDto
   operational: WorkingGroupNetworkDataOperationalInputDto
   steeringCommitee: WorkingGroupNetworkDataSteeringCommiteeInputDto
+  support: WorkingGroupNetworkDataSupportInputDto
 }
 
 """The structure of the Monogenic Working Groups field of the Working Group Network content type."""
@@ -1542,12 +1544,23 @@ input WorkingGroupNetworkDataSteeringCommiteeInputDto {
   iv: [String!]
 }
 
+"""The structure of the Support Working Groups field of the Working Group Network content type."""
+type WorkingGroupNetworkDataSupportDto {
+  iv: [WorkingGroups!]
+}
+
+"""The structure of the Support Working Groups field of the Working Group Network content input type."""
+input WorkingGroupNetworkDataSupportInputDto {
+  iv: [String!]
+}
+
 """The structure of the flat Working Group Network data type."""
 type WorkingGroupNetworkFlatDataDto {
   complexDisease: [WorkingGroups!]
   monogenic: [WorkingGroups!]
   operational: [WorkingGroups!]
   steeringCommitee: [WorkingGroups!]
+  support: [WorkingGroups!]
 }
 
 """List of Working Group Network items and total count."""
@@ -1793,4 +1806,33 @@ type WorkingGroupsResultDto {
   items: [WorkingGroups!]
   """The total count of  contents."""
   total: Int!
+}
+
+enum degreeEnum {
+  """AA"""
+  AA
+  """AAS"""
+  AAS
+  """BA"""
+  BA
+  """BSc"""
+  BSc
+  """MA"""
+  MA
+  """MBA"""
+  MBA
+  """MBBS"""
+  MBBS
+  """MD"""
+  MD
+  """MD_PhD"""
+  MD_PhD
+  """MPH"""
+  MPH
+  """MSc"""
+  MSc
+  """PhD"""
+  PhD
+  """PharmD"""
+  PharmD
 }

@@ -169,7 +169,9 @@ export const getSquidexGraphqlEventSpeakerWithExternalUser = (): NonNullable<
   ],
 });
 
-const squidexGraphqlEventsFlatData = (): EventContentFragment['flatData'] => ({
+const squidexGraphqlEventsFlatData = (): EventContentFragment['flatData'] & {
+  videoRecordingUpdatedAt: string;
+} => ({
   description: 'This event is awesome',
   endDate: '2009-12-24T16:30:54.000Z',
   startDate: '2009-12-24T16:20:14.000Z',

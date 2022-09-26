@@ -1,3 +1,4 @@
+import { FetchCalendarError } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
 import {
   InputCalendar,
@@ -22,7 +23,6 @@ import { sentryWrapper } from '../../utils/sentry-wrapper';
 import CalendarSquidexDataProvider, {
   CalendarDataProvider,
 } from '../../data-providers/calendars.data-provider';
-import { FetchCalendarError } from '@asap-hub/model';
 
 export const webhookEventUpdatedHandlerFactory = (
   calendarDataProvider: CalendarDataProvider,

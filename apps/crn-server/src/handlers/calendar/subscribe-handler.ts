@@ -1,3 +1,4 @@
+import { CalendarRawDataObject, FetchCalendarError } from '@asap-hub/model';
 import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import { Auth } from 'googleapis';
@@ -22,7 +23,6 @@ import { CalendarEvent, CalendarPayload } from '../event-bus';
 import CalendarSquidexDataProvider, {
   CalendarDataProvider,
 } from '../../data-providers/calendars.data-provider';
-import { CalendarRawDataObject, FetchCalendarError } from '@asap-hub/model';
 
 export const calendarCreatedHandlerFactory =
   (

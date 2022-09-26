@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import DashboardUpcomingEvents from '../DashboardUpcomingEvents';
 
 it('shows the event cards and the view all link', () => {
-  const { getByText, getByRole } = render(
+  const { getByText } = render(
     <DashboardUpcomingEvents
       upcomingEvents={createListEventResponse(4, { customTitle: 'TestEvent' })}
     />,
@@ -12,8 +12,6 @@ it('shows the event cards and the view all link', () => {
   expect(getByText('TestEvent 1')).toBeVisible();
   expect(getByText('TestEvent 2')).toBeVisible();
   expect(getByText('TestEvent 3')).toBeVisible();
-
-  expect(getByRole('link', { name: 'View All →' })).toBeVisible();
 });
 
 it('does not show the link where there are 3 ore less upcoming events', () => {

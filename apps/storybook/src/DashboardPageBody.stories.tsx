@@ -3,6 +3,7 @@ import { DashboardPageBody } from '@asap-hub/react-components';
 import {
   createListEventResponse,
   createListReminderResponse,
+  createListResearchOutputResponse,
 } from '@asap-hub/fixtures';
 import { number } from '@storybook/addon-knobs';
 
@@ -32,6 +33,9 @@ const props = (): ComponentProps<typeof DashboardPageBody> => ({
   pastEvents: createListEventResponse(3).items,
   reminders: createListReminderResponse(number('Reminders', 3)).items,
   upcomingEvents: createListEventResponse(number('Number of events', 4)),
+  recentSharedOutputs: createListResearchOutputResponse(
+    number('Number of outputs', 5),
+  ),
 });
 
 export const Normal = () => <DashboardPageBody {...props()} />;

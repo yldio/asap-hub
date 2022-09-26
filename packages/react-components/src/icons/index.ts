@@ -39,6 +39,7 @@ export { default as googleScholarIcon } from './google-scholar';
 export { default as googleSigninLightNormalIcon } from './google-signin-light-normal';
 export { default as gp2Logo } from './gp2-logo';
 export { default as groupsIcon } from './groups';
+export { default as grantDocument } from './grantDocument';
 export { default as hidePasswordIcon } from './hide-password';
 export { default as infoCircleIcon } from './info-circle';
 export { default as infoIcon } from './info';

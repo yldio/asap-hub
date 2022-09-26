@@ -69,8 +69,6 @@ export const getVideoEventUpdatedReminder = (): VideoEventReminder => {
     type: 'Video Updated',
     data: {
       eventId: eventResponse.id,
-      startDate: eventResponse.startDate,
-      endDate: eventResponse.endDate,
       title: eventResponse.title,
       videoRecordingUpdatedAt: eventResponse.videoRecordingUpdatedAt,
     },

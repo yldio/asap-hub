@@ -565,7 +565,7 @@ describe('Reminder Data Provider', () => {
       });
     });
 
-    describe('Video upserted in Event Reminder', () => {
+    describe('Video Updated Reminder', () => {
       beforeAll(() => {
         jest.useFakeTimers('modern');
       });
@@ -576,7 +576,7 @@ describe('Reminder Data Provider', () => {
 
       beforeEach(async () => {});
 
-      test('Should fetch the reminder if its video was upserted in the last 24 hours', async () => {
+      test('Should fetch the reminder if a video was updated in an event between now and 24 hours ago', async () => {
         const videoRecordingUpdatedAt = '2022-09-01T08:00:00Z';
         // set the current date to seconds after the video recording updated at
         const time = DateTime.fromISO(videoRecordingUpdatedAt)
@@ -604,7 +604,7 @@ describe('Reminder Data Provider', () => {
         });
       });
 
-      test('Should not fetch the reminder if its video was upserted after 24 hours', async () => {
+      test('Should not fetch the reminder if a video in an event was updated more that 24 hours ago', async () => {
         const videoRecordingUpdatedAt = '2022-09-01T08:00:00Z';
         // set the current date to more than 24 hours after the video recording updated at
         const time = DateTime.fromISO(videoRecordingUpdatedAt)
@@ -627,8 +627,8 @@ describe('Reminder Data Provider', () => {
         });
       });
 
-      test('Should not fetch the reminder if its video was upserted before now', async () => {
-        /* This in theory could never happen, it would mean that the video will be upserted in the future */
+      test('Should not fetch the reminder if a video in an event was updated after the current time', async () => {
+        /* This in theory could never happen, it would mean that the video will be updated in the future */
 
         const videoRecordingUpdatedAt = '2022-09-01T08:00:00Z';
         // set the current date to more than 24 hours after the video recording updated at

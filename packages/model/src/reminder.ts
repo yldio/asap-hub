@@ -63,8 +63,6 @@ export interface VideoEventReminder extends EventReminder {
   data: {
     eventId: EventResponse['id'];
     title: EventResponse['title'];
-    startDate: EventResponse['startDate'];
-    endDate: EventResponse['endDate'];
     videoRecordingUpdatedAt: EventResponse['videoRecordingUpdatedAt'];
   };
 }

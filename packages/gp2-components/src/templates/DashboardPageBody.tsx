@@ -1,12 +1,15 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
-import { PagesSection, pixels, NewsSection } from '@asap-hub/react-components';
-import { Link } from '@asap-hub/react-components/build';
-import { news as newsRoute } from '@asap-hub/routing/build';
-import { perRem } from '@asap-hub/react-components/build/pixels';
+import {
+  PagesSection,
+  pixels,
+  NewsSection,
+  Link,
+} from '@asap-hub/react-components';
+import { news as newsRoute } from '@asap-hub/routing';
 
-const { rem } = pixels;
+const { rem, perRem } = pixels;
 
 const styles = css({
   display: 'grid',

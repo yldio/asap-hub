@@ -2,10 +2,10 @@ import { ListResponse } from '../common';
 import { WorkingGroupDataObject } from './working-group';
 
 export const workingGroupNetworkRole = [
+  'steeringCommitee',
   'complexDisease',
   'monogenic',
   'operational',
-  'support',
 ] as const;
 
 export type WorkingGroupNetworkRole = typeof workingGroupNetworkRole[number];

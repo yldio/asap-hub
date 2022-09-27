@@ -40,7 +40,7 @@ export const Groups = () => components.groupsIcon;
 export const HidePassword = () => components.hidePasswordIcon;
 export const Info = () => components.infoIcon;
 export const InfoCircle = () => components.infoCircleIcon;
-export const infoCircleYellow = () => components.infoCircleYellow;
+export const InfoCircleYellow = () => components.infoCircleYellow;
 export const InfoInfo = () => components.infoInfoIcon;
 export const Lab = () => components.labIcon;
 export const LastPage = () => components.lastPageIcon;

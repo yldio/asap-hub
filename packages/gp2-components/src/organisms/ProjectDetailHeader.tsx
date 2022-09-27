@@ -11,14 +11,15 @@ import {
 
 import { css } from '@emotion/react';
 
+import { format, formatDistanceStrict as formatDistance } from 'date-fns';
+import colors from '../templates/colors';
+
 import usersIcon from '../icons/users-icon';
 import dateIcon from '../icons/date-icon';
 import { projectsImage } from '../images';
 import CardWithBackground from '../molecules/CardWithBackground';
 import IconWithLabel from '../molecules/IconWithLabel';
 import ProjectStatus from '../molecules/ProjectStatus';
-import { format, formatDistanceStrict as formatDistance } from 'date-fns';
-import colors from '../templates/colors';
 
 const { rem } = pixels;
 

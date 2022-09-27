@@ -1,12 +1,9 @@
 import {
   CalendarDataObject,
-  CalendarRawDataObject,
-  FetchCalendarError,
   FetchCalendarOptions,
   isGoogleLegacyCalendarColor,
   ListCalendarDataObject,
 } from '@asap-hub/model';
-import Intercept from 'apr-intercept';
 import {
   Calendar,
   InputCalendar,
@@ -32,17 +29,9 @@ const defaultCalendarColor = '#333333';
 
 export interface CalendarDataProvider {
   create(create: CalendarDataObject): Promise<string>;
-  update(
-    id: string,
-    update: Partial<CalendarDataObject>,
-  ): Promise<void>;
-  fetch(
-    options: FetchCalendarOptions,
-  ): Promise<ListCalendarDataObject>;
-  fetchById(id: string): Promise<CalendarDataObject>;
-  // fetchByResourceId(
-  //   resourceId: string,
-  // ): Promise<RestCalendar | FetchCalendarError>;
+  update(id: string, update: Partial<CalendarDataObject>): Promise<void>;
+  fetch(options: FetchCalendarOptions): Promise<ListCalendarDataObject>;
+  fetchById(id: string): Promise<CalendarDataObject | null>;
 }
 
 export type GraphqlCalendar = Maybe<
@@ -227,29 +216,4 @@ export default class CalendarSquidexDataProvider {
       calendar,
     );
   }
-
-  // async fetchByResourceId(
-  //   resourceId: string,
-  // ): Promise<RestCalendar | FetchCalendarError> {
-  //   const [err, res] = await Intercept(
-  //     this.squidexRestClient.client
-  //       .get('calendars', {
-  //         searchParams: {
-  //           $top: 1,
-  //           $filter: `data/resourceId/iv eq '${resourceId}`,
-  //         },
-  //       })
-  //       .json() as Promise<{ items: RestCalendar[] }>,
-  //   );
-
-  //   if (err) {
-  //     return FetchCalendarError.FetchError;
-  //   }
-
-  //   if (res.items.length === 0 || !res.items[0]) {
-  //     return FetchCalendarError.CalendarNotFound;
-  //   }
-
-  //   return res.items[0];
-  // }
 }

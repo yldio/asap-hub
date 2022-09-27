@@ -1,9 +1,9 @@
 import {
-  CalendarRawDataObject,
+  CalendarDataObject,
   CalendarResponse,
   ListCalendarResponse,
 } from '@asap-hub/model';
-import { Calendar, RestCalendar, Results } from '@asap-hub/squidex';
+import { RestCalendar, Results } from '@asap-hub/squidex';
 import {
   FetchCalendarQuery,
   FetchCalendarsQuery,
@@ -12,7 +12,7 @@ import {
 import { CalendarEvent, CalendarPayload } from '../../src/handlers/event-bus';
 import { getSquidexGraphqlGroup } from './groups.fixtures';
 
-export const getCalendarRaw = (): CalendarRawDataObject => ({
+export const getCalendarDataObject = (): CalendarDataObject => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   color: '#2952A3',
   name: 'Tech 4a - iPSCs - 3D & Co-cultures',
@@ -23,35 +23,6 @@ export const getCalendarRaw = (): CalendarRawDataObject => ({
   version: 42,
 });
 
-export const getCalendarInput = (): Calendar => {
-  const { id: _id, version: _version, ...calendarInput } = getCalendarRaw();
-
-  return {
-    ...calendarInput,
-    syncToken: calendarInput.syncToken || undefined,
-    expirationDate: calendarInput.expirationDate || undefined,
-  };
-};
-
-export const getCreateCalendarDataObject = (): Calendar => {
-  const {
-    googleCalendarId,
-    color,
-    name,
-    syncToken,
-    resourceId,
-    expirationDate,
-  } = getCalendarRaw();
-
-  return {
-    googleCalendarId,
-    color,
-    name,
-    syncToken: syncToken || undefined,
-    resourceId,
-    expirationDate: expirationDate || undefined,
-  };
-};
 
 export const getCalendarResponse = (): CalendarResponse => ({
   id: '3@group.calendar.google.com',

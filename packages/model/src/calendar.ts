@@ -47,43 +47,36 @@ export const googleLegacyCalendarColor = [
 
 export type GoogleLegacyCalendarColor =
   typeof googleLegacyCalendarColor[number];
-export interface CalendarResponse {
-  id: string;
-  name: string;
-  color: GoogleLegacyCalendarColor;
-}
 
 export interface CalendarDataObject {
+  id: string;
   googleCalendarId: string;
   color: GoogleLegacyCalendarColor;
   name: string;
   syncToken?: string | null;
   resourceId?: string | null;
   expirationDate?: number | null;
+  version: number;
 }
 
 export type CalendarCreateDataObject = CalendarDataObject;
 
 export type ListCalendarDataObject = ListResponse<CalendarDataObject>;
 
-// export type CalendarRawDataObject = CalendarDataObject & {
-//   id: string;
-//   version: number;
-// };
-
-export enum FetchCalendarError {
-  FetchError,
-  CalendarNotFound,
-  MissingRequiredData,
-  InvalidColor,
+export interface CalendarResponse {
+  id: string;
+  name: string;
+  color: GoogleLegacyCalendarColor;
 }
 
-export type FetchCalendarOptions = FetchPaginationOptions & {
-  maxExpiration?: number;
-  onlyActive?: boolean;
-};
-
 export type ListCalendarResponse = ListResponse<CalendarResponse>;
+
+export interface CalendarUpdateRequest {
+  resourceId?: string | null;
+  expirationDate?: number | null;
+}
+
+export type FetchCalendarOptions = FetchPaginationOptions;
 
 export const isGoogleLegacyCalendarColor = (
   data: string | null,

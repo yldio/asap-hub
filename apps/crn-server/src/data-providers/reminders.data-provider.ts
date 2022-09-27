@@ -1,4 +1,5 @@
 import {
+  VideoEventReminder,
   EventHappeningNowReminder,
   EventHappeningTodayReminder,
   FetchRemindersOptions,
@@ -46,8 +47,16 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
       queryResearchOutputsContents,
       findUsersContent,
     );
+
     const eventReminders = getEventRemindersFromQuery(queryEventsContents);
-    const reminders = [...researchOutputReminders, ...eventReminders];
+    const videoUpdatedReminders =
+      getVideoUpdatedRemindersFromQuery(queryEventsContents);
+
+    const reminders = [
+      ...researchOutputReminders,
+      ...eventReminders,
+      ...videoUpdatedReminders,
+    ];
 
     const sortedReminders = reminders.sort((reminderA, reminderB) => {
       const aStartDate = getSortDate(reminderA);
@@ -86,7 +95,13 @@ export const getEventFilter = (zone: string): string => {
     .plus({ day: 1 })
     .toUTC();
 
-  return `data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO}`;
+  const lastDayISO = DateTime.fromObject({
+    zone,
+  })
+    .minus({ day: 1 })
+    .toUTC();
+
+  return `data/videoRecordingUpdatedAt/iv ge ${lastDayISO} or (data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO})`;
 };
 
 const getUserTeamIds = (
@@ -204,6 +219,39 @@ const getEventRemindersFromQuery = (
   return eventReminders;
 };
 
+const getVideoUpdatedRemindersFromQuery = (
+  queryEventsContents: FetchReminderDataQuery['queryEventsContents'],
+): VideoEventReminder[] => {
+  const eventReminders = (queryEventsContents || []).reduce<
+    VideoEventReminder[]
+  >((events, event) => {
+    const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
+
+    const msBetweenNowAndVideoUpdatedAt = DateTime.now().diff(
+      DateTime.fromISO(event.flatData.videoRecordingUpdatedAt),
+    ).milliseconds;
+
+    return msBetweenNowAndVideoUpdatedAt <= ONE_DAY_IN_MS &&
+      msBetweenNowAndVideoUpdatedAt > 0
+      ? [
+          ...events,
+          {
+            id: `video-event-updated-${event.id}`,
+            entity: 'Event',
+            type: 'Video Updated',
+            data: {
+              eventId: event.id,
+              title: event.flatData.title || '',
+              videoRecordingUpdatedAt: event.flatData.videoRecordingUpdatedAt,
+            },
+          },
+        ]
+      : events;
+  }, []);
+
+  return eventReminders;
+};
+
 const getSortDate = (reminder: ReminderDataObject): DateTime => {
   if (reminder.entity === 'Research Output') {
     return DateTime.fromISO(reminder.data.addedDate);
@@ -211,6 +259,10 @@ const getSortDate = (reminder: ReminderDataObject): DateTime => {
 
   if (reminder.type === 'Happening Today') {
     return DateTime.fromISO(reminder.data.startDate);
+  }
+
+  if (reminder.type === 'Video Updated') {
+    return DateTime.fromISO(reminder.data.videoRecordingUpdatedAt);
   }
 
   return DateTime.fromISO(reminder.data.endDate);

@@ -2311,6 +2311,7 @@ export type EventsDataDto = {
   title: Maybe<EventsDataTitleDto>;
   videoRecording: Maybe<EventsDataVideoRecordingDto>;
   videoRecordingPermanentlyUnavailable: Maybe<EventsDataVideoRecordingPermanentlyUnavailableDto>;
+  videoRecordingUpdatedAt: Maybe<EventsDataVideoRecordingUpdatedAtDto>;
 };
 
 /** The structure of the End Date field of the Events content type. */
@@ -2401,6 +2402,7 @@ export type EventsDataInputDto = {
   title: InputMaybe<EventsDataTitleInputDto>;
   videoRecording: InputMaybe<EventsDataVideoRecordingInputDto>;
   videoRecordingPermanentlyUnavailable: InputMaybe<EventsDataVideoRecordingPermanentlyUnavailableInputDto>;
+  videoRecordingUpdatedAt: InputMaybe<EventsDataVideoRecordingUpdatedAtInputDto>;
 };
 
 /** The structure of the Meeting Link field of the Events content type. */
@@ -2605,6 +2607,16 @@ export type EventsDataVideoRecordingPermanentlyUnavailableInputDto = {
   iv: InputMaybe<Scalars['Boolean']>;
 };
 
+/** The structure of the Video Recording Updated At field of the Events content type. */
+export type EventsDataVideoRecordingUpdatedAtDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Video Recording Updated At field of the Events content input type. */
+export type EventsDataVideoRecordingUpdatedAtInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
 /** The structure of the flat Events data type. */
 export type EventsFlatDataDto = {
   calendar: Maybe<Array<Calendars>>;
@@ -2640,6 +2652,7 @@ export type EventsFlatDataDto = {
   videoRecording: Maybe<Scalars['String']>;
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
   videoRecordingPermanentlyUnavailable: Maybe<Scalars['Boolean']>;
+  videoRecordingUpdatedAt: Maybe<Scalars['Instant']>;
 };
 
 /** List of Events items and total count. */
@@ -7385,7 +7398,10 @@ export type FetchReminderDataQuery = {
   queryEventsContents: Maybe<
     Array<
       Pick<Events, 'id'> & {
-        flatData: Pick<EventsFlatDataDto, 'startDate' | 'endDate' | 'title'>;
+        flatData: Pick<
+          EventsFlatDataDto,
+          'startDate' | 'endDate' | 'title' | 'videoRecordingUpdatedAt'
+        >;
       }
     >
   >;
@@ -12235,6 +12251,13 @@ export const FetchReminderDataDocument = {
                         name: { kind: 'Name', value: 'endDate' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'videoRecordingUpdatedAt',
+                        },
+                      },
                     ],
                   },
                 },

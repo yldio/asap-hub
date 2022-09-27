@@ -48,6 +48,17 @@ export default class Reminders implements ReminderController {
           };
         }
 
+        if (reminder.entity === 'Event' && reminder.type === 'Video Updated') {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            href: events({}).event({
+              eventId: reminder.data.eventId,
+            }).$,
+            description: `Video(s) for ${reminder.data.title} event has been shared.`,
+          };
+        }
+
         return {
           id: reminder.id,
           entity: reminder.entity,

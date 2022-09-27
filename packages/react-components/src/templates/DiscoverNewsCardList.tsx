@@ -22,11 +22,7 @@ const DiscoverNewsCardList: React.FC<DiscoverNewsCardListProps> = ({
   news,
 }) => (
   <div css={styles}>
-    <NewsSection
-      title={title}
-      subtitle={subtitle}
-      news={news.map((item) => ({ ...item, noPill: true }))}
-    />
+    <NewsSection title={title} subtitle={subtitle} news={news} />
     <HelpSection />
   </div>
 );

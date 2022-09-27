@@ -4,6 +4,8 @@ import { NewsPage } from '@asap-hub/react-components';
 import { news } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
 
+import { useSearch } from '../hooks';
+
 const loadNewsList = () =>
   import(/* webpackChunkName: "news-list" */ './NewsList');
 const loadNews = () =>
@@ -16,12 +18,24 @@ const News: FC<Record<string, never>> = () => {
   useEffect(() => {
     loadNews().then(loadNewsList);
   });
+  const {
+    searchQuery,
+    debouncedSearchQuery,
+    setSearchQuery,
+    filters,
+    toggleFilter,
+  } = useSearch();
   return (
     <Switch>
       <Route exact path={path}>
-        <NewsPage>
+        <NewsPage
+          searchQuery={searchQuery}
+          onChangeSearch={setSearchQuery}
+          filters={filters}
+          onChangeFilter={toggleFilter}
+        >
           <Frame title={null}>
-            <NewsList />
+            <NewsList filters={filters} searchQuery={debouncedSearchQuery} />
           </Frame>
         </NewsPage>
       </Route>

@@ -32,7 +32,7 @@ describe('getNews', () => {
   it('returns successfully fetched news', async () => {
     const news = {
       total: 1,
-      items: [createNewsResponse(1)],
+      items: [createNewsResponse({ key: 1 })],
     } as ListNewsResponse;
     nock(API_BASE_URL)
       .get('/news')
@@ -61,7 +61,7 @@ describe('getNewsById', () => {
   });
 
   it('returns a successfully fetched newsItem', async () => {
-    const newsItem = createNewsResponse('42');
+    const newsItem = createNewsResponse({ key: '42' });
     nock(API_BASE_URL).get('/news/42').reply(200, newsItem);
     expect(await getNewsById('42', '')).toEqual(newsItem);
   });

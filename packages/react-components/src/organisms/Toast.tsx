@@ -1,17 +1,17 @@
 import { ReactNode } from 'react';
 import { css } from '@emotion/react';
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 import { layoutStyles } from '../text';
 import { Paragraph } from '../atoms';
-import { crossIcon, errorIcon } from '../icons';
+import { crossIcon, errorIcon, infoCircleYellow } from '../icons';
 import {
   perRem,
-  lineHeight,
   vminLinearCalcClamped,
   mobileScreen,
   largeDesktopScreen,
 } from '../pixels';
-import { rose, ember } from '../colors';
+import { rose, ember, apricot, warning900 } from '../colors';
 
 const SIDE_PADDING = 24;
 
@@ -22,9 +22,6 @@ const buttonResetStyles = css({
 });
 
 const iconStyles = css({
-  width: `${lineHeight / perRem}em`,
-  height: `${lineHeight / perRem}em`,
-
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -45,14 +42,31 @@ const styles = css({
     'px',
   )} ${SIDE_PADDING / perRem}em`,
   position: 'relative',
+});
 
+const alertStyles = css({
   backgroundColor: rose.rgb,
   color: ember.rgb,
 });
 
-const alertIconStyles = css(iconStyles, alignIconWithParagraphStyles, {
+const infoStyles = css({
+  backgroundColor: apricot.rgb,
+  color: warning900.rgb,
+  height: `${56 / perRem}em`,
+  display: 'flex',
+  alignItems: 'center',
+  paddingLeft: `${16 / perRem}em`,
+  paddingRight: `${16 / perRem}em`,
+});
+
+const alertIconStyles = css(iconStyles, {
   marginRight: `${12 / perRem}em`,
 });
+
+const infoIconStyles = css(iconStyles, {
+  marginRight: `${16 / perRem}em`,
+});
+
 const crossIconStyles = css(iconStyles, alignIconWithParagraphStyles, {
   position: 'absolute',
   right: SIDE_PADDING, // right is from border box, not content box
@@ -72,21 +86,38 @@ const crossPlaceholderStyles = css(iconStyles, {
 const wrapStyles = css({
   display: 'flex',
   flexWrap: 'wrap',
+  flexFlow: 'row',
 });
+
+type ToastAccents = 'alert' | 'info';
+
+export const getIcon = (accent: ToastAccents): EmotionJSX.Element => {
+  if (accent === 'info') {
+    return infoCircleYellow;
+  }
+  return errorIcon;
+};
 
 interface ToastProps {
   children: ReactNode;
   onClose?: () => void;
+  accent?: ToastAccents;
 }
-const Toast: React.FC<ToastProps> = ({ children, onClose }) => (
-  <section css={styles}>
+const Toast: React.FC<ToastProps> = ({
+  children,
+  onClose,
+  accent = 'alert',
+}) => (
+  <section css={[styles, accent === 'alert' ? alertStyles : infoStyles]}>
     {onClose && (
       <button onClick={onClose} css={[buttonResetStyles, crossIconStyles]}>
         {crossIcon}
       </button>
     )}
     <div css={wrapStyles}>
-      <div css={alertIconStyles}>{errorIcon}</div>
+      <div css={[accent === 'alert' ? alertIconStyles : infoIconStyles]}>
+        {getIcon(accent)}
+      </div>
       <div css={[wrapStyles, !onClose && { justifyContent: 'center' }]}>
         <Paragraph>{children}</Paragraph>
         {onClose && <span css={crossPlaceholderStyles}> </span>}

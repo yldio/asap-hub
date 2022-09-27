@@ -4,9 +4,9 @@ import formatDistance from 'date-fns/formatDistance';
 import { network } from '@asap-hub/routing';
 
 import { paper, lead, steel } from '../colors';
-import { perRem } from '../pixels';
+import { perRem, tabletScreen } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { Display, Link, TabLink } from '../atoms';
+import { Display, Link, StateTag, TabLink } from '../atoms';
 import { teamIcon } from '../icons';
 import { TabNav } from '../molecules';
 import { EventSearch } from '../organisms';
@@ -30,6 +30,18 @@ const belowHeadlineStyles = css({
 
 const controlsStyles = css({
   padding: `0 ${contentSidePaddingWithNavigation(10)}`,
+});
+const titleStyle = css({
+  display: 'flex',
+  flexFlow: 'row',
+  gap: `${15 / perRem}em`,
+  alignItems: 'center',
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+    flexFlow: 'column',
+    gap: 3,
+    alignItems: 'flex-start',
+    paddingBottom: `${12 / perRem}em`,
+  },
 });
 
 type GroupProfileHeaderProps = {
@@ -59,7 +71,10 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
   return (
     <header>
       <div css={visualHeaderStyles}>
-        <Display styleAsHeading={2}>{name}</Display>
+        <div css={titleStyle}>
+          <Display styleAsHeading={2}>{name}</Display>
+          {!active && <StateTag label="Inactive" />}
+        </div>
         <div css={belowHeadlineStyles}>
           <div
             css={{

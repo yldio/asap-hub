@@ -7,8 +7,8 @@ describe('ProjectDetailHeader', () => {
     title: 'Main Project',
     status: 'Active' as const,
     members: [],
-    startDate: '2022-09-22',
-    endDate: '2022-09-30',
+    startDate: '2022-09-22T00:00:00Z',
+    endDate: '2022-09-30T00:00:00Z',
     projectProposalUrl: '',
   };
 

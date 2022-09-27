@@ -94,7 +94,6 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
         </IconWithLabel>
         <IconWithLabel icon={dateIcon}>
           <span>
-            {startDate}
             {`${format(new Date(startDate), 'MMM yyyy')}${
               endDate ? ` - ${format(new Date(endDate), 'MMM yyyy')} · ` : ''
             }`}

@@ -4,9 +4,12 @@ import ProjectDetailPage from '../ProjectDetailPage';
 describe('ProjectDetailPage', () => {
   const defaultProps = {
     backHref: '/back',
-    title: 'Project',
+    title: 'Main Project',
+    status: 'Active' as const,
     members: [],
-    id: '1',
+    startDate: '2022-09-22T00:00:00Z',
+    endDate: '2022-09-30T00:00:00Z',
+    projectProposalUrl: '',
   };
   it('renders header', () => {
     render(<ProjectDetailPage {...defaultProps}></ProjectDetailPage>);

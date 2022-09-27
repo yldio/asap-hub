@@ -9,13 +9,14 @@ describe('ProjectDetailHeader', () => {
     members: [],
     startDate: '2022-09-22T00:00:00Z',
     endDate: '2022-09-30T00:00:00Z',
-    projectProposalUrl: '',
+    projectProposalUrl: 'www.google.pt',
   };
 
   it('renders title, number of members and number of projects', () => {
     render(<ProjectDetailHeader {...defaultProps} />);
     expect(screen.getByRole('heading', { name: 'Main Project' })).toBeVisible();
     expect(screen.getByText('0 members')).toBeVisible();
+    expect(screen.getByText('View proposal')).toBeVisible();
   });
 
   it('renders backlink', () => {

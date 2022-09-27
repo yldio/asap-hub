@@ -33,10 +33,6 @@ describe('Users controller', () => {
   });
 
   describe('FetchById', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
-
     test('Should throw when user is not found', async () => {
       userDataProviderMock.fetchById.mockResolvedValue(null);
 
@@ -114,10 +110,6 @@ describe('Users controller', () => {
   });
 
   describe('update', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
-
     test('Should return the newly updated user', async () => {
       const mockResponse = getUserDataObject();
       userDataProviderMock.fetchById.mockResolvedValue(mockResponse);
@@ -130,10 +122,6 @@ describe('Users controller', () => {
 
   describe('updateAvatar', () => {
     beforeEach(nock.cleanAll);
-
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
 
     test('should return 200 when syncs asset and updates users profile', async () => {
       assetDataProviderMock.create.mockResolvedValueOnce('42');
@@ -184,10 +172,6 @@ describe('Users controller', () => {
   });
 
   describe('connectByCode', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
-
     test('should connect and return the user on success', async () => {
       const userId = '42';
       const user = getUserDataObject();
@@ -238,8 +222,6 @@ describe('Users controller', () => {
   describe('syncOrcidProfile', () => {
     const userId = 'userId';
     const orcid = '363-98-9330';
-
-    beforeEach(() => jest.resetAllMocks());
 
     test('should successfully fetch and update user - with id', async () => {
       const user = { ...getUserDataObject(), orcid };

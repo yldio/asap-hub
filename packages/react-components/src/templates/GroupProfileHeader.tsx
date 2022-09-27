@@ -40,6 +40,7 @@ const titleStyle = css({
     flexFlow: 'column',
     gap: 3,
     alignItems: 'flex-start',
+    paddingBottom: `${12 / perRem}em`,
   },
 });
 

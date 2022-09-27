@@ -23,9 +23,6 @@ const buttonResetStyles = css({
 });
 
 const iconStyles = css({
-  width: `${lineHeight / perRem}em`,
-  height: `${lineHeight / perRem}em`,
-
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -56,11 +53,21 @@ const alertStyles = css({
 const infoStyles = css({
   backgroundColor: apricot.rgb,
   color: warning900.rgb,
+  height: `${56 / perRem}em`,
+  display: 'flex',
+  alignItems: 'center',
+  paddingLeft: `${16 / perRem}em`,
+  paddingRight: `${16 / perRem}em`,
 });
 
-const alertIconStyles = css(iconStyles, alignIconWithParagraphStyles, {
+const alertIconStyles = css(iconStyles, {
   marginRight: `${12 / perRem}em`,
 });
+
+const infoIconStyles = css(iconStyles, {
+  marginRight: `${16 / perRem}em`,
+});
+
 const crossIconStyles = css(iconStyles, alignIconWithParagraphStyles, {
   position: 'absolute',
   right: SIDE_PADDING, // right is from border box, not content box
@@ -111,7 +118,9 @@ const Toast: React.FC<ToastProps> = ({
       </button>
     )}
     <div css={wrapStyles}>
-      <div css={alertIconStyles}>{getIcon(accent)}</div>
+      <div css={[accent === 'alert' ? alertIconStyles : infoIconStyles]}>
+        {getIcon(accent)}
+      </div>
       <div css={[wrapStyles, !onClose && { justifyContent: 'center' }]}>
         <Paragraph>{children}</Paragraph>
         {onClose && <span css={crossPlaceholderStyles}> </span>}

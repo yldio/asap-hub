@@ -59,7 +59,12 @@ export interface CalendarDataObject {
   version: number;
 }
 
-export type CalendarCreateDataObject = CalendarDataObject;
+export type CalendarCreateDataObject = Omit<
+  CalendarDataObject,
+  'version' | 'id'
+>;
+
+export type CalendarUpdateDataObject = Partial<CalendarCreateDataObject>;
 
 export type ListCalendarDataObject = ListResponse<CalendarDataObject>;
 

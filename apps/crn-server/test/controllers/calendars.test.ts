@@ -21,7 +21,7 @@ describe('Calendars Controller', () => {
         total: 1,
         items: [getCalendarDataObject()],
       });
-      const result = await calendarsController.fetch({});
+      const result = await calendarsController.fetch();
 
       expect(result).toMatchObject(getListCalendarResponse());
     });
@@ -31,21 +31,20 @@ describe('Calendars Controller', () => {
         total: 0,
         items: [],
       });
-      const result = await calendarsController.fetch({});
+      const result = await calendarsController.fetch();
 
       expect(result).toEqual({ items: [], total: 0 });
     });
 
-    test('Should call the data provider with correct parameters', async () => {
+    test('Should ask the data provider for active calendars only', async () => {
       calendarDataProviderMock.fetch.mockResolvedValue({
         total: 1,
         items: [getCalendarDataObject()],
       });
-      await calendarsController.fetch({ skip: 13, take: 9 });
+      await calendarsController.fetch();
 
       expect(calendarDataProviderMock.fetch).toBeCalledWith({
-        skip: 13,
-        take: 9,
+        active: true,
       });
     });
   });

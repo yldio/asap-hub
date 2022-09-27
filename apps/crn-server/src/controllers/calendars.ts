@@ -1,7 +1,6 @@
 import {
   ListCalendarResponse,
   CalendarResponse,
-  FetchPaginationOptions,
   CalendarDataObject,
   CalendarUpdateRequest,
 } from '@asap-hub/model';
@@ -9,7 +8,7 @@ import { NotFoundError } from '@asap-hub/errors';
 import { CalendarDataProvider } from '../data-providers/calendars.data-provider';
 
 export interface CalendarController {
-  fetch: (options: FetchPaginationOptions) => Promise<ListCalendarResponse>;
+  fetch: () => Promise<ListCalendarResponse>;
   fetchById(id: string, options?: { raw: false }): Promise<CalendarResponse>;
   update: (
     calendarId: string,
@@ -23,8 +22,10 @@ export default class Calendars implements CalendarController {
   constructor(dataProvider: CalendarDataProvider) {
     this.dataProvider = dataProvider;
   }
-  async fetch(options: FetchPaginationOptions): Promise<ListCalendarResponse> {
-    const { total, items: calendars } = await this.dataProvider.fetch(options);
+  async fetch(): Promise<ListCalendarResponse> {
+    const { total, items: calendars } = await this.dataProvider.fetch({
+      active: true,
+    });
 
     const items =
       total > 0 ? calendars.map(parseCalendarDataObjectToResponse) : [];
@@ -55,7 +56,10 @@ export default class Calendars implements CalendarController {
 }
 
 export const parseCalendarDataObjectToResponse = (
-  calendarDataObject: CalendarDataObject,
+  calendarDataObject: Pick<
+    CalendarDataObject,
+    'googleCalendarId' | 'color' | 'name'
+  >,
 ): CalendarResponse => ({
   id: calendarDataObject.googleCalendarId,
   name: calendarDataObject.name,

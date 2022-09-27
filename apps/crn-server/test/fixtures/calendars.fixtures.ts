@@ -1,9 +1,11 @@
 import {
+  CalendarCreateDataObject,
   CalendarDataObject,
   CalendarResponse,
+  ListCalendarDataObject,
   ListCalendarResponse,
 } from '@asap-hub/model';
-import { RestCalendar, Results } from '@asap-hub/squidex';
+import { RestCalendar } from '@asap-hub/squidex';
 import {
   FetchCalendarQuery,
   FetchCalendarsQuery,
@@ -23,6 +25,15 @@ export const getCalendarDataObject = (): CalendarDataObject => ({
   version: 42,
 });
 
+export const getCalendarCreateDataObject = (): CalendarCreateDataObject => {
+  const { id: _id, version: _version, ...data } = getCalendarDataObject();
+  return data;
+};
+
+export const getListCalendarDataObject = (): ListCalendarDataObject => ({
+  total: 1,
+  items: [getCalendarDataObject()],
+});
 
 export const getCalendarResponse = (): CalendarResponse => ({
   id: '3@group.calendar.google.com',
@@ -36,50 +47,19 @@ export const getListCalendarResponse = (): ListCalendarResponse => ({
 });
 
 export const getRestCalendar = (): RestCalendar => ({
-  id: 'cms-calendar-id-1',
+  id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   data: {
-    googleCalendarId: { iv: 'calendar-id-1' },
-    color: { iv: '#5C1158' },
-    name: { iv: 'Kubernetes Meetups' },
+    googleCalendarId: { iv: '3@group.calendar.google.com' },
+    color: { iv: '#2952A3' },
+    name: { iv: 'Tech 4a - iPSCs - 3D & Co-cultures' },
     resourceId: { iv: 'resource-id' },
     syncToken: { iv: 'sync-token' },
-    expirationDate: { iv: 1614697798681 },
+    expirationDate: { iv: 1617196357000 },
   },
   created: '2021-01-07T16:44:09Z',
   lastModified: '2021-01-07T16:44:09Z',
   version: 42,
 });
-
-export const calendarsRest: RestCalendar[] = [
-  {
-    id: 'cms-calendar-id-1',
-    data: {
-      googleCalendarId: { iv: 'calendar-id-1' },
-      color: { iv: '#4E5D6C' },
-      name: { iv: 'Kubernetes Meetups' },
-      resourceId: { iv: 'resource-id' },
-      syncToken: { iv: 'sync-token' },
-      expirationDate: { iv: 1614697798681 },
-    },
-    created: '2021-01-07T16:44:09Z',
-    lastModified: '2021-01-07T16:44:09Z',
-    version: 42,
-  },
-  {
-    id: 'cms-calendar-id-2',
-    data: {
-      googleCalendarId: { iv: 'calendar-id-2' },
-      color: { iv: '#B1365F' },
-      name: { iv: 'Service Mesh Conferences' },
-      resourceId: { iv: 'resource-id-2' },
-      syncToken: { iv: 'sync-token-2' },
-      expirationDate: { iv: 1614697798681 },
-    },
-    created: '2021-01-07T16:44:09Z',
-    lastModified: '2021-01-07T16:44:09Z',
-    version: 42,
-  },
-];
 
 export const calendarsListRestResponse = () => [
   {
@@ -103,11 +83,6 @@ export const calendarsListRestResponse = () => [
     version: 42,
   },
 ];
-
-export const getCalendarsRestResponse = (): Results<RestCalendar> => ({
-  total: 2,
-  items: calendarsRest,
-});
 
 export const getCalendarsGraphqlResponse = (): {
   data: NonNullable<FetchCalendarQuery>;

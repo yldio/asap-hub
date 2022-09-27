@@ -4,7 +4,7 @@ import formatDistance from 'date-fns/formatDistance';
 import { network } from '@asap-hub/routing';
 
 import { paper, lead, steel } from '../colors';
-import { perRem } from '../pixels';
+import { perRem, tabletScreen } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { Display, Link, StateTag, TabLink } from '../atoms';
 import { teamIcon } from '../icons';
@@ -34,8 +34,13 @@ const controlsStyles = css({
 const titleStyle = css({
   display: 'flex',
   flexFlow: 'row',
-  gap: `${16 / perRem}em`,
+  gap: `${15 / perRem}em`,
   alignItems: 'center',
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+    flexFlow: 'column',
+    gap: 3,
+    alignItems: 'flex-start',
+  },
 });
 
 type GroupProfileHeaderProps = {

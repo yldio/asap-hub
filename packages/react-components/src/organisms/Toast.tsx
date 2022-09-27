@@ -80,6 +80,7 @@ const crossPlaceholderStyles = css(iconStyles, {
 const wrapStyles = css({
   display: 'flex',
   flexWrap: 'wrap',
+  flexFlow: 'row',
 });
 
 export const getIcon = (accent?: 'alert' | 'info'): EmotionJSX.Element => {

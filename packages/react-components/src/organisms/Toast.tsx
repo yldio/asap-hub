@@ -7,7 +7,6 @@ import { Paragraph } from '../atoms';
 import { crossIcon, errorIcon, infoCircleYellow } from '../icons';
 import {
   perRem,
-  lineHeight,
   vminLinearCalcClamped,
   mobileScreen,
   largeDesktopScreen,
@@ -90,21 +89,19 @@ const wrapStyles = css({
   flexFlow: 'row',
 });
 
-export const getIcon = (accent?: 'alert' | 'info'): EmotionJSX.Element => {
-  switch (accent) {
-    case 'alert':
-      return errorIcon;
-    case 'info':
-      return infoCircleYellow;
-    default:
-      return errorIcon;
+type ToastAccents = 'alert' | 'info';
+
+export const getIcon = (accent: ToastAccents): EmotionJSX.Element => {
+  if (accent === 'info') {
+    return infoCircleYellow;
   }
+  return errorIcon;
 };
 
 interface ToastProps {
   children: ReactNode;
   onClose?: () => void;
-  accent?: 'alert' | 'info';
+  accent?: ToastAccents;
 }
 const Toast: React.FC<ToastProps> = ({
   children,

@@ -5,16 +5,17 @@ describe('ProjectDetailHeader', () => {
   const defaultProps = {
     backHref: '/back',
     title: 'Main Project',
+    status: 'Active' as const,
     members: [],
-    projects: [],
-    id: '1',
+    startDate: '2022-09-22',
+    endDate: '2022-09-30',
+    projectProposalUrl: '',
   };
 
   it('renders title, number of members and number of projects', () => {
     render(<ProjectDetailHeader {...defaultProps} />);
     expect(screen.getByRole('heading', { name: 'Main Project' })).toBeVisible();
     expect(screen.getByText('0 members')).toBeVisible();
-    expect(screen.getByText('0 projects')).toBeVisible();
   });
 
   it('renders backlink', () => {
@@ -22,10 +23,5 @@ describe('ProjectDetailHeader', () => {
     expect(
       screen.getByRole('link', { name: 'Chevron Left Back' }),
     ).toHaveAttribute('href', '/back');
-  });
-
-  it('renders overview tab', () => {
-    render(<ProjectDetailHeader {...defaultProps} />);
-    expect(screen.getByRole('link', { name: 'Overview' })).toBeVisible();
   });
 });

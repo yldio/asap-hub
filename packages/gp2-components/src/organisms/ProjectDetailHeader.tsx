@@ -29,7 +29,6 @@ type ProjectDetailHeaderProps = Pick<
   | 'startDate'
   | 'endDate'
   | 'members'
-  | 'id'
   | 'projectProposalUrl'
 > & {
   backHref: string;
@@ -60,7 +59,6 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
   startDate,
   endDate,
   members,
-  id,
   projectProposalUrl,
   backHref,
 }) => (

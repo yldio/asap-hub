@@ -555,7 +555,6 @@ __metadata:
     "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.4
     "@babel/runtime-corejs3": 7.19.1
-    "@fast-csv/format": 4.3.5
     "@sentry/cli": 1.74.5
     "@sentry/react": 6.11.0
     "@sentry/tracing": 6.11.0
@@ -581,6 +580,7 @@ __metadata:
     browser-image-compression: 1.0.17
     browserslist-useragent-regexp: 3.0.2
     cross-env: 7.0.3
+    csv-stringify: ^6.2.0
     date-fns: 2.29.3
     fs: "npm:browserify-fs@1.0.0"
     history: 4.10.1
@@ -1009,7 +1009,6 @@ __metadata:
     "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.4
     "@babel/runtime-corejs3": 7.19.1
-    "@fast-csv/format": 4.3.5
     "@sentry/cli": 1.74.5
     "@sentry/react": 6.11.0
     "@sentry/tracing": 6.11.0
@@ -1050,12 +1049,10 @@ __metadata:
     react-scripts: 5.0.1
     react-test-renderer: 17.0.2
     recoil: "patch:recoil@^0.1.2#../../patches/recoil.patch"
-    streamsaver: 2.0.6
     typescript: 4.6.4
     use-debounce: 8.0.4
     use-deep-compare-effect: 1.6.1
     uuid: 8.3.2
-    web-streams-polyfill: 3.2.1
   languageName: unknown
   linkType: soft
 
@@ -8478,20 +8475,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fast-csv/format@npm:4.3.5":
-  version: 4.3.5
-  resolution: "@fast-csv/format@npm:4.3.5"
-  dependencies:
-    "@types/node": "npm:^14.0.1"
-    lodash.escaperegexp: "npm:^4.1.2"
-    lodash.isboolean: "npm:^3.0.3"
-    lodash.isequal: "npm:^4.5.0"
-    lodash.isfunction: "npm:^3.0.9"
-    lodash.isnil: "npm:^4.0.0"
-  checksum: 36d5fb76c26179bd1718dffd49fc88f4ab62675464d7ec44c5f1de55b8c454ecdf3faf84fe291df934832233f531d24c810a71cc0c390c7c4df09685d614c65b
-  languageName: node
-  linkType: hard
-
 "@figspec/components@npm:^1.0.0":
   version: 1.0.0
   resolution: "@figspec/components@npm:1.0.0"
@@ -12568,13 +12551,6 @@ __metadata:
   version: 14.18.31
   resolution: "@types/node@npm:14.18.31"
   checksum: df33021d673a5e3c943cf96c9f3fbccf364d20f487b2ab7eb49db144974c2049f0a91e9358df09235f543c1f0b11388c5b0b636ae1f2ed55a27c75f63bc3d2c5
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^14.0.1":
-  version: 14.17.18
-  resolution: "@types/node@npm:14.17.18"
-  checksum: 386f1ce851f5efb9c51ab7b4f6c7110a7c85f7a06ea5456ddf262bae0f0132a9b8b7d9e7b78228989bb50c44f1c55b7b5afc56915f0bdce25925d10fa18d2d90
   languageName: node
   linkType: hard
 
@@ -19129,6 +19105,13 @@ __metadata:
   version: 4.16.3
   resolution: "csv-parse@npm:4.16.3"
   checksum: 5ad7790fc31c32ca1623bad1a54906134ba44fa109e8dd2dfda440bf7e9fd93610d9076a78f45c872701bfafdf7f93c9b75500c09d7efd6611d863f1d45ec69f
+  languageName: node
+  linkType: hard
+
+"csv-stringify@npm:^6.2.0":
+  version: 6.2.0
+  resolution: "csv-stringify@npm:6.2.0"
+  checksum: c2fa074fbf2bcb8cea966c1bdf89d377f1f79bbd33e13092131cac511363479a4e7a923f26fe741e2ef5bad479a400c72e18ceb4b7c33e1f0a60cf33f5c31f1c
   languageName: node
   linkType: hard
 
@@ -27643,13 +27626,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.escaperegexp@npm:^4.1.2":
-  version: 4.1.2
-  resolution: "lodash.escaperegexp@npm:4.1.2"
-  checksum: 6d99452b1cfd6073175a9b741a9b09ece159eac463f86f02ea3bee2e2092923fce812c8d2bf446309cc52d1d61bf9af51c8118b0d7421388e6cead7bd3798f0f
-  languageName: node
-  linkType: hard
-
 "lodash.flatten@npm:^4.4.0":
   version: 4.4.0
   resolution: "lodash.flatten@npm:4.4.0"
@@ -27685,31 +27661,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.isequal@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "lodash.isequal@npm:4.5.0"
-  checksum: da27515dc5230eb1140ba65ff8de3613649620e8656b19a6270afe4866b7bd461d9ba2ac8a48dcc57f7adac4ee80e1de9f965d89d4d81a0ad52bb3eec2609644
-  languageName: node
-  linkType: hard
-
-"lodash.isfunction@npm:^3.0.9":
-  version: 3.0.9
-  resolution: "lodash.isfunction@npm:3.0.9"
-  checksum: 99e54c34b1e8a9ba75c034deb39cedbd2aca7af685815e67a2a8ec4f73ec9748cda6ebee5a07d7de4b938e90d421fd280e9c385cc190f903ac217ac8aff30314
-  languageName: node
-  linkType: hard
-
 "lodash.isinteger@npm:^4.0.4":
   version: 4.0.4
   resolution: "lodash.isinteger@npm:4.0.4"
   checksum: 6034821b3fc61a2ffc34e7d5644bb50c5fd8f1c0121c554c21ac271911ee0c0502274852845005f8651d51e199ee2e0cfebfe40aaa49c7fe617f603a8a0b1691
-  languageName: node
-  linkType: hard
-
-"lodash.isnil@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "lodash.isnil@npm:4.0.0"
-  checksum: ebf8df69879badd6ad99c4f64c54c470248df5cf92b208ca730861b1d8ac058da7b632ac811d18b0929d93cbac8d8fc866e781ee816b0142c56952e85edc682f
   languageName: node
   linkType: hard
 

@@ -1387,10 +1387,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.3.2"\
       ],\
       [\
-        "@fast-csv/format",\
-        "npm:4.3.5"\
-      ],\
-      [\
         "@figspec/components",\
         "npm:1.0.0"\
       ],\
@@ -4142,6 +4138,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:4.16.3"\
       ],\
       [\
+        "csv-stringify",\
+        "npm:6.2.0"\
+      ],\
+      [\
         "csvtojson",\
         "npm:2.0.10"\
       ],\
@@ -6569,10 +6569,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:4.5.0"\
       ],\
       [\
-        "lodash.escaperegexp",\
-        "npm:4.1.2"\
-      ],\
-      [\
         "lodash.flatten",\
         "npm:4.4.0"\
       ],\
@@ -6593,20 +6589,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.0.3"\
       ],\
       [\
-        "lodash.isequal",\
-        "npm:4.5.0"\
-      ],\
-      [\
-        "lodash.isfunction",\
-        "npm:3.0.9"\
-      ],\
-      [\
         "lodash.isinteger",\
         "npm:4.0.4"\
-      ],\
-      [\
-        "lodash.isnil",\
-        "npm:4.0.0"\
       ],\
       [\
         "lodash.isnumber",\
@@ -10684,7 +10668,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/validation", "workspace:packages/validation"],\
             ["@auth0/auth0-spa-js", "npm:1.22.4"],\
             ["@babel/runtime-corejs3", "npm:7.19.1"],\
-            ["@fast-csv/format", "npm:4.3.5"],\
             ["@sentry/cli", "npm:1.74.5"],\
             ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:6.11.0"],\
             ["@sentry/tracing", "npm:6.11.0"],\
@@ -10710,6 +10693,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["browser-image-compression", "npm:1.0.17"],\
             ["browserslist-useragent-regexp", "npm:3.0.2"],\
             ["cross-env", "npm:7.0.3"],\
+            ["csv-stringify", "npm:6.2.0"],\
             ["date-fns", "npm:2.29.3"],\
             ["fs", [\
               "browserify-fs",\
@@ -11391,7 +11375,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/validation", "workspace:packages/validation"],\
             ["@auth0/auth0-spa-js", "npm:1.22.4"],\
             ["@babel/runtime-corejs3", "npm:7.19.1"],\
-            ["@fast-csv/format", "npm:4.3.5"],\
             ["@sentry/cli", "npm:1.74.5"],\
             ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:6.11.0"],\
             ["@sentry/tracing", "npm:6.11.0"],\
@@ -11435,12 +11418,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-scripts", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:5.0.1"],\
             ["react-test-renderer", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:17.0.2"],\
             ["recoil", "virtual:c4ae2f625a4ac5aa649abbf60db7c71aca414aadbf350d87ea37595af32595ce70907b878a98750e798e6867f5b52cf0a985bd4cd784c0ad5a3f626d3cbad95a#patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=7f34ba&locator=%40asap-hub%2Fgp2-frontend%40workspace%3Aapps%2Fgp2-frontend"],\
-            ["streamsaver", "npm:2.0.6"],\
             ["typescript", "patch:typescript@npm%3A4.6.4#~builtin<compat/typescript>::version=4.6.4&hash=7ad353"],\
             ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.4"],\
             ["use-deep-compare-effect", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:1.6.1"],\
-            ["uuid", "npm:8.3.2"],\
-            ["web-streams-polyfill", "npm:3.2.1"]\
+            ["uuid", "npm:8.3.2"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -26028,21 +26009,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@fast-csv/format", [\
-        ["npm:4.3.5", {\
-          "packageLocation": "./.yarn/cache/@fast-csv-format-npm-4.3.5-e0dba6439e-36d5fb76c2.zip/node_modules/@fast-csv/format/",\
-          "packageDependencies": [\
-            ["@fast-csv/format", "npm:4.3.5"],\
-            ["@types/node", "npm:14.17.18"],\
-            ["lodash.escaperegexp", "npm:4.1.2"],\
-            ["lodash.isboolean", "npm:3.0.3"],\
-            ["lodash.isequal", "npm:4.5.0"],\
-            ["lodash.isfunction", "npm:3.0.9"],\
-            ["lodash.isnil", "npm:4.0.0"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["@figspec/components", [\
         ["npm:1.0.0", {\
           "packageLocation": "./.yarn/cache/@figspec-components-npm-1.0.0-6aa6b061b0-c1649e11ec.zip/node_modules/@figspec/components/",\
@@ -33188,13 +33154,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-13.11.1-ea46d1204d-bda5133257.zip/node_modules/@types/node/",\
           "packageDependencies": [\
             ["@types/node", "npm:13.11.1"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:14.17.18", {\
-          "packageLocation": "./.yarn/cache/@types-node-npm-14.17.18-89c5bb75f1-386f1ce851.zip/node_modules/@types/node/",\
-          "packageDependencies": [\
-            ["@types/node", "npm:14.17.18"]\
           ],\
           "linkType": "HARD"\
         }],\
@@ -41146,6 +41105,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/csv-parse-npm-4.16.3-792211a891-5ad7790fc3.zip/node_modules/csv-parse/",\
           "packageDependencies": [\
             ["csv-parse", "npm:4.16.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["csv-stringify", [\
+        ["npm:6.2.0", {\
+          "packageLocation": "./.yarn/cache/csv-stringify-npm-6.2.0-b7c6150f1a-c2fa074fbf.zip/node_modules/csv-stringify/",\
+          "packageDependencies": [\
+            ["csv-stringify", "npm:6.2.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -51414,15 +51382,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["lodash.escaperegexp", [\
-        ["npm:4.1.2", {\
-          "packageLocation": "./.yarn/cache/lodash.escaperegexp-npm-4.1.2-c5b90e0e9c-6d99452b1c.zip/node_modules/lodash.escaperegexp/",\
-          "packageDependencies": [\
-            ["lodash.escaperegexp", "npm:4.1.2"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["lodash.flatten", [\
         ["npm:4.4.0", {\
           "packageLocation": "./.yarn/cache/lodash.flatten-npm-4.4.0-495935e617-0ac34a393d.zip/node_modules/lodash.flatten/",\
@@ -51468,38 +51427,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["lodash.isequal", [\
-        ["npm:4.5.0", {\
-          "packageLocation": "./.yarn/cache/lodash.isequal-npm-4.5.0-f8b0f64d63-da27515dc5.zip/node_modules/lodash.isequal/",\
-          "packageDependencies": [\
-            ["lodash.isequal", "npm:4.5.0"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["lodash.isfunction", [\
-        ["npm:3.0.9", {\
-          "packageLocation": "./.yarn/cache/lodash.isfunction-npm-3.0.9-72aaa7f66c-99e54c34b1.zip/node_modules/lodash.isfunction/",\
-          "packageDependencies": [\
-            ["lodash.isfunction", "npm:3.0.9"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["lodash.isinteger", [\
         ["npm:4.0.4", {\
           "packageLocation": "./.yarn/cache/lodash.isinteger-npm-4.0.4-42add9f4e1-6034821b3f.zip/node_modules/lodash.isinteger/",\
           "packageDependencies": [\
             ["lodash.isinteger", "npm:4.0.4"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["lodash.isnil", [\
-        ["npm:4.0.0", {\
-          "packageLocation": "./.yarn/cache/lodash.isnil-npm-4.0.0-8c8ee34fe6-ebf8df6987.zip/node_modules/lodash.isnil/",\
-          "packageDependencies": [\
-            ["lodash.isnil", "npm:4.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\

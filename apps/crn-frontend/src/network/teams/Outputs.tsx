@@ -62,10 +62,10 @@ const OutputsList: React.FC<OutputsListProps> = ({
   const exportResults = () =>
     algoliaResultsToStream<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
       createCsvFileStream(
-        { headers: true },
         `SharedOutputs_Team${utils
           .titleCase(displayName)
           .replace(/[\W_]+/g, '')}_${format(new Date(), 'MMddyy')}.csv`,
+        { header: true },
       ),
       (paginationParams) =>
         getResearchOutputs(client, {

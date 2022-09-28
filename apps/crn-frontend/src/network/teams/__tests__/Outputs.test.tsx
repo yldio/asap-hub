@@ -177,8 +177,8 @@ it('triggers export with the same parameters and custom file name', async () => 
 
   userEvent.click(getByText(/export/i));
   expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
-    expect.anything(),
     expect.stringMatching(/SharedOutputs_TeamExampleTeam123_\d+\.csv/),
+    expect.anything(),
   );
   await waitFor(() =>
     expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {

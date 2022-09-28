@@ -180,8 +180,8 @@ it('triggers export with the same parameters and custom filename', async () => {
 
   userEvent.click(getByText(/export/i));
   expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
-    expect.anything(),
     expect.stringMatching(/SharedOutputs_JohnSmith_\d+\.csv/),
+    expect.anything(),
   );
   await waitFor(() =>
     expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {

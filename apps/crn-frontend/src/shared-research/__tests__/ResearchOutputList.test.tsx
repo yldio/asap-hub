@@ -80,8 +80,8 @@ it('triggers and export with the same parameters', async () => {
   const { getByText } = await renderResearchOutputList('example');
   userEvent.click(getByText(/export/i));
   expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
-    expect.anything(),
     expect.stringMatching(/SharedOutputs_\d+\.csv/),
+    expect.anything(),
   );
   expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
     searchQuery: '',

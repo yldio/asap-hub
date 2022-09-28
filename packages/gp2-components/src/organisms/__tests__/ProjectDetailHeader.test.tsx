@@ -15,7 +15,7 @@ describe('ProjectDetailHeader', () => {
   it('renders title, number of members and number of projects', () => {
     render(<ProjectDetailHeader {...defaultProps} />);
     expect(screen.getByRole('heading', { name: 'Main Project' })).toBeVisible();
-    expect(screen.getByText('0 members')).toBeVisible();
+    expect(screen.getByText('0 Members')).toBeVisible();
     expect(screen.getByText('View proposal')).toBeVisible();
   });
 

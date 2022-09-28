@@ -4,20 +4,14 @@ import {
   drawerQuery,
   pixels,
   Subtitle,
-  utils,
 } from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
 
-import { format, formatDistanceStrict as formatDistance } from 'date-fns';
-import colors from '../templates/colors';
-
-import usersIcon from '../icons/users-icon';
-import dateIcon from '../icons/date-icon';
 import { projectsImage } from '../images';
 import CardWithBackground from '../molecules/CardWithBackground';
-import IconWithLabel from '../molecules/IconWithLabel';
 import ProjectSummaryHeader from './ProjectSummaryHeader';
+import ProjectSummaryFooter from './ProjectSummaryFooter';
 
 const { rem } = pixels;
 
@@ -42,8 +36,6 @@ const infoContainerStyles = css({
   },
 });
 
-const { getCounterString } = utils;
-
 const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
   title,
   status,
@@ -63,23 +55,11 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
       <Subtitle>Project</Subtitle>
       <h2>{title}</h2>
       <div css={infoContainerStyles}>
-        <IconWithLabel icon={usersIcon}>
-          {getCounterString(members.length, 'member')}
-        </IconWithLabel>
-        <IconWithLabel icon={dateIcon}>
-          <span>
-            {`${format(new Date(startDate), 'MMM yyyy')}${
-              endDate ? ` - ${format(new Date(endDate), 'MMM yyyy')} · ` : ''
-            }`}
-            {endDate && (
-              <span css={{ color: colors.neutral800.rgba }}>
-                {`(${formatDistance(new Date(startDate), new Date(endDate), {
-                  unit: 'month',
-                })})`}
-              </span>
-            )}
-          </span>
-        </IconWithLabel>
+        <ProjectSummaryFooter
+          members={members}
+          startDate={startDate}
+          endDate={endDate}
+        />
       </div>
     </CardWithBackground>
   </header>

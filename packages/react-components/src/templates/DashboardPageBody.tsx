@@ -22,7 +22,7 @@ import {
   PastEventsDashboardCard,
   RecentSharedOutputs,
 } from '../organisms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { Card, Paragraph, Link, Headline2 } from '../atoms';
 import { lead } from '..';
 import { Accordion } from '../molecules';
@@ -30,26 +30,26 @@ import { confidentialIcon, giftIcon, learnIcon } from '../icons';
 
 const styles = css({
   display: 'grid',
-  gridRowGap: `${56 / perRem}em`,
-  marginBottom: `${24 / perRem}em`,
+  gridRowGap: `${rem(56)}em`,
+  marginBottom: `${rem(25)}em`,
 });
 
 const containerStyles = css({
-  marginTop: `${24 / perRem}em`,
+  marginTop: `${rem(24)}em`,
 });
 
 const listStyles = css({
-  paddingLeft: `${18 / perRem}em`,
+  paddingLeft: `${rem(18)}em`,
 });
 
 const infoStyles = css({
   color: lead.rgb,
-  padding: `${3 / perRem}em 0 ${24 / perRem}em`,
-  lineHeight: `${24 / perRem} em`,
+  padding: `${rem(3)}em 0 ${rem(24)}em`,
+  lineHeight: `${rem(24)} em`,
 });
 
 const viewAllStyles = css({
-  marginTop: `${24 / perRem}em`,
+  marginTop: `${rem(24)}em`,
   textAlign: 'right',
 });
 
@@ -154,9 +154,11 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           Explore previous events and learn about what was discussed.
         </div>
         <PastEventsDashboardCard events={pastEvents} />
-        <p css={viewAllStyles} data-testid="view-past-events">
-          <Link href={eventsRoute({}).past({}).$}>View All →</Link>
-        </p>
+        {pastEvents && pastEvents.length > 3 && (
+          <p css={viewAllStyles} data-testid="view-past-events">
+            <Link href={eventsRoute({}).past({}).$}>View All →</Link>
+          </p>
+        )}
       </div>
       <div>
         <Headline2 styleAsHeading={3}>Recent Shared Research</Headline2>

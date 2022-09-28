@@ -18,7 +18,7 @@ const props = (): ComponentProps<typeof NewsSection> => ({
       title: 'Learn about Protocols.io, an ASAP preferred tool',
       shortText:
         'Discover current and planned tools (e.g., animal & cell models, antibodies, vectors, tissues, etc.) in a sortable table. This will be a living reference.',
-      link: text('Link', 'https://picsum.photos/200'),
+      link: text('Link', 'https://example.com'),
       linkText: text('Link Text', 'External Link'),
     },
   ],

@@ -9,7 +9,7 @@ import {
 } from '@asap-hub/react-components';
 import { news as newsRoute } from '@asap-hub/routing';
 
-const { rem, perRem } = pixels;
+const { rem } = pixels;
 
 const styles = css({
   display: 'grid',
@@ -18,7 +18,7 @@ const styles = css({
 });
 
 const viewAllStyles = css({
-  marginTop: `${24 / perRem}em`,
+  marginTop: `${rem(24)}`,
   textAlign: 'right',
 });
 
@@ -42,7 +42,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
     {news.length ? (
       <div>
         <NewsSection
-          title="Latest News"
+          title="Latest News from ASAP"
           subtitle="Explore the latest shared research and learn more about them."
           news={[news[0]]}
         />

@@ -61,16 +61,9 @@ it('renders news section when there are no news', () => {
 it('renders news section', () => {
   render(<DashboardPageBody {...props} />);
 
-  expect(
-    screen.getAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(expect.arrayContaining(['News Title']));
-  expect(screen.getByTestId('view-news').querySelector('a')).toHaveTextContent(
-    'View All',
-  );
-  expect(screen.getByTestId('view-news').querySelector('a')).toHaveAttribute(
-    'href',
-    '/news',
-  );
+  expect(screen.getByText('Latest News from ASAP')).toBeVisible();
+  expect(screen.getByText('News Title')).toBeVisible();
+  expect(screen.getByText('View All →', { selector: 'a' })).toBeVisible();
 });
 
 it('hides add links to your work space section when user is not a member of a team', () => {
@@ -104,7 +97,7 @@ it('displays events cards or placeholder if there are no events', () => {
 });
 
 describe('the past events card', () => {
-  const events = createListEventResponse(3).items;
+  const events = createListEventResponse(4).items;
   it('renders multiple past events', () => {
     render(<DashboardPageBody {...props} pastEvents={events} />);
     expect(

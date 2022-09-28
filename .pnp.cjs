@@ -8336,10 +8336,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:2.0.1"\
       ],\
       [\
-        "replace-ext",\
-        "npm:1.0.0"\
-      ],\
-      [\
         "request",\
         "npm:2.88.2"\
       ],\
@@ -9632,7 +9628,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "vfile",\
-        "npm:4.2.0"\
+        "npm:4.2.1"\
       ],\
       [\
         "vfile-location",\
@@ -47006,7 +47002,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ccount", "npm:1.0.5"],\
             ["hastscript", "npm:5.1.2"],\
             ["property-information", "npm:5.5.0"],\
-            ["vfile", "npm:4.2.0"],\
+            ["vfile", "npm:4.2.1"],\
             ["web-namespaces", "npm:1.1.4"]\
           ],\
           "linkType": "HARD"\
@@ -47050,7 +47046,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["html-void-elements", "npm:1.0.5"],\
             ["parse5", "npm:6.0.1"],\
             ["unist-util-position", "npm:3.1.0"],\
-            ["vfile", "npm:4.2.0"],\
+            ["vfile", "npm:4.2.1"],\
             ["web-namespaces", "npm:1.1.4"],\
             ["xtend", "npm:4.0.2"],\
             ["zwitch", "npm:1.0.5"]\
@@ -59114,15 +59110,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["replace-ext", [\
-        ["npm:1.0.0", {\
-          "packageLocation": "./.yarn/cache/replace-ext-npm-1.0.0-5d4ecb34ac-123e5c2804.zip/node_modules/replace-ext/",\
-          "packageDependencies": [\
-            ["replace-ext", "npm:1.0.0"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["request", [\
         ["npm:2.88.2", {\
           "packageLocation": "./.yarn/cache/request-npm-2.88.2-f4a57c72c4-4e112c087f.zip/node_modules/request/",\
@@ -63574,7 +63561,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["is-buffer", "npm:2.0.4"],\
             ["is-plain-obj", "npm:2.1.0"],\
             ["trough", "npm:1.0.5"],\
-            ["vfile", "npm:4.2.0"]\
+            ["vfile", "npm:4.2.1"]\
           ],\
           "linkType": "HARD"\
         }],\
@@ -63587,7 +63574,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["is-buffer", "npm:2.0.4"],\
             ["is-plain-obj", "npm:2.1.0"],\
             ["trough", "npm:1.0.5"],\
-            ["vfile", "npm:4.2.0"]\
+            ["vfile", "npm:4.2.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -64316,13 +64303,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["vfile", [\
-        ["npm:4.2.0", {\
-          "packageLocation": "./.yarn/cache/vfile-npm-4.2.0-c3dcb6dc90-89d3410d8c.zip/node_modules/vfile/",\
+        ["npm:4.2.1", {\
+          "packageLocation": "./.yarn/cache/vfile-npm-4.2.1-fb052a35e5-ee5726e10d.zip/node_modules/vfile/",\
           "packageDependencies": [\
-            ["vfile", "npm:4.2.0"],\
+            ["vfile", "npm:4.2.1"],\
             ["@types/unist", "npm:2.0.3"],\
             ["is-buffer", "npm:2.0.4"],\
-            ["replace-ext", "npm:1.0.0"],\
             ["unist-util-stringify-position", "npm:2.0.3"],\
             ["vfile-message", "npm:2.0.4"]\
           ],\

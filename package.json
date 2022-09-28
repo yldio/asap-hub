@@ -55,7 +55,8 @@
   },
   "resolutions": {
     "encoding": "0.1.13",
-    "expect-playwright": "0.8.0"
+    "expect-playwright": "0.8.0",
+    "vfile": "4.2.1"
   },
   "dependenciesMeta": {
     "aws-sdk": {

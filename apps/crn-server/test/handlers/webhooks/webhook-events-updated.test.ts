@@ -1,33 +1,10 @@
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { CalendarResponse, GoogleLegacyCalendarColor } from '@asap-hub/model';
-import { RestCalendar } from '@asap-hub/squidex';
 import { webhookEventUpdatedHandlerFactory } from '../../../src/handlers/webhooks/webhook-events-updated';
 import { getApiGatewayEvent } from '../../helpers/events';
-import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
 import { SyncCalendar } from '../../../src/utils/sync-google-calendar';
 import { googleApiToken } from '../../../src/config';
-
-const googleCalendarId = 'calendar-id@group.calendar.google.com';
-const squidexCalendarId = 'squidex-calendar-id';
-
-const updateCalendarResponse: CalendarResponse = {
-  id: googleCalendarId,
-  color: '#5C1158' as GoogleLegacyCalendarColor,
-  name: 'Kubernetes Meetups',
-};
-
-const fetchCalendarRawResponse: RestCalendar = {
-  id: squidexCalendarId,
-  data: {
-    googleCalendarId: { iv: googleCalendarId },
-    color: { iv: '#5C1158' as GoogleLegacyCalendarColor },
-    name: { iv: 'Kubernetes Meetups' },
-    syncToken: { iv: 'google-sync-token' },
-  },
-  created: '2021-01-07T16:44:09Z',
-  lastModified: '2021-01-07T16:44:09Z',
-  version: 42,
-};
+import { calendarDataProviderMock } from '../../mocks/calendar-data-provider.mock';
+import { getListCalendarDataObject } from '../../fixtures/calendars.fixtures';
 
 describe('Event Webhook', () => {
   afterEach(() => {
@@ -37,7 +14,7 @@ describe('Event Webhook', () => {
   const syncCalendarMock: jest.MockedFunction<SyncCalendar> = jest.fn();
 
   const handler = webhookEventUpdatedHandlerFactory(
-    calendarControllerMock,
+    calendarDataProviderMock,
     syncCalendarMock,
   );
 
@@ -70,7 +47,7 @@ describe('Event Webhook', () => {
   });
 
   test('Should return 502 when fails to get calendar from squidex', async () => {
-    calendarControllerMock.fetchByResourceId.mockRejectedValueOnce(
+    calendarDataProviderMock.fetch.mockRejectedValueOnce(
       new Error('Squidex Error'),
     );
 
@@ -82,20 +59,21 @@ describe('Event Webhook', () => {
   });
 
   test('Should return 200 and save nextSyncToken to squidex when it receives one from google', async () => {
-    calendarControllerMock.fetchByResourceId.mockResolvedValueOnce(
-      fetchCalendarRawResponse,
+    const listCalendarDataObject = getListCalendarDataObject();
+    calendarDataProviderMock.fetch.mockResolvedValueOnce(
+      getListCalendarDataObject(),
     );
     syncCalendarMock.mockResolvedValueOnce('next-sync-token-1234');
-    calendarControllerMock.update.mockResolvedValueOnce(updateCalendarResponse);
+    calendarDataProviderMock.update.mockResolvedValueOnce(undefined);
 
     const res = (await handler(
       getApiGatewayEvent(googlePayload),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(200);
-    expect(calendarControllerMock.update).toHaveBeenCalledTimes(1);
-    expect(calendarControllerMock.update).toHaveBeenCalledWith(
-      squidexCalendarId,
+    expect(calendarDataProviderMock.update).toHaveBeenCalledTimes(1);
+    expect(calendarDataProviderMock.update).toHaveBeenCalledWith(
+      listCalendarDataObject.items[0]!.id,
       {
         syncToken: 'next-sync-token-1234',
       },
@@ -103,26 +81,27 @@ describe('Event Webhook', () => {
   });
 
   test('Should return 200 event when doesnt receive a syncToken', async () => {
-    calendarControllerMock.fetchByResourceId.mockResolvedValueOnce(
-      fetchCalendarRawResponse,
+    calendarDataProviderMock.fetch.mockResolvedValueOnce(
+      getListCalendarDataObject(),
     );
     syncCalendarMock.mockResolvedValueOnce(undefined);
-    calendarControllerMock.update.mockResolvedValueOnce(updateCalendarResponse);
+    calendarDataProviderMock.update.mockResolvedValueOnce(undefined);
 
     const res = (await handler(
       getApiGatewayEvent(googlePayload),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(200);
-    expect(calendarControllerMock.update).toHaveBeenCalledTimes(0);
+    expect(calendarDataProviderMock.update).toHaveBeenCalledTimes(0);
   });
 
   test('Should return 200 even when fails to save nextSyncToken to squidex', async () => {
-    calendarControllerMock.fetchByResourceId.mockResolvedValueOnce(
-      fetchCalendarRawResponse,
+    const listCalendarDataObject = getListCalendarDataObject();
+    calendarDataProviderMock.fetch.mockResolvedValueOnce(
+      getListCalendarDataObject(),
     );
     syncCalendarMock.mockResolvedValueOnce('next-sync-token-1234');
-    calendarControllerMock.update.mockRejectedValueOnce(
+    calendarDataProviderMock.update.mockRejectedValueOnce(
       new Error('Squidex Error'),
     );
 
@@ -131,9 +110,9 @@ describe('Event Webhook', () => {
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(200);
-    expect(calendarControllerMock.update).toHaveBeenCalledTimes(1);
-    expect(calendarControllerMock.update).toHaveBeenCalledWith(
-      squidexCalendarId,
+    expect(calendarDataProviderMock.update).toHaveBeenCalledTimes(1);
+    expect(calendarDataProviderMock.update).toHaveBeenCalledWith(
+      listCalendarDataObject.items[0]!.id,
       {
         syncToken: 'next-sync-token-1234',
       },

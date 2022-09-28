@@ -1,4 +1,3 @@
-import { CalendarRawDataObject, FetchCalendarError } from '@asap-hub/model';
 import { ScheduledHandlerAsync } from '@asap-hub/server-common';
 import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { DateTime } from 'luxon';
@@ -25,22 +24,9 @@ export const resubscribeCalendarsHandlerFactory =
   ): ScheduledHandlerAsync =>
   async () => {
     const now = DateTime.local();
-    const calendarsResult = await calendarDataProvider.fetch({
+    const { items: calendars } = await calendarDataProvider.fetch({
       maxExpiration: now.plus({ days: 1 }).toMillis(),
-      take: 100,
-      skip: 0,
     });
-
-    if (
-      typeof calendarsResult === 'number' &&
-      calendarsResult in FetchCalendarError
-    ) {
-      logger.error('Error retrieving calendars to resubscribe.');
-
-      return;
-    }
-
-    const calendars = calendarsResult as CalendarRawDataObject[];
 
     const calendarIds = calendars.map((calendar) => calendar.id);
     logger.info(

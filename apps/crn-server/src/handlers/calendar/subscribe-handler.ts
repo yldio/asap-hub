@@ -1,4 +1,3 @@
-import { CalendarRawDataObject, FetchCalendarError } from '@asap-hub/model';
 import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import { Auth } from 'googleapis';
@@ -54,13 +53,13 @@ export const calendarCreatedHandlerFactory =
 
       const result = await calendarDataProvider.fetchById(payload.id);
 
-      if (typeof result === 'number' && result in FetchCalendarError) {
+      if (!result) {
         logger.error('Failed to retrieve calendar by ID.');
 
         return 'OK';
       }
 
-      const { version } = result as CalendarRawDataObject;
+      const { version } = result;
 
       if (version > (payload.version as number)) {
         logger.warn(

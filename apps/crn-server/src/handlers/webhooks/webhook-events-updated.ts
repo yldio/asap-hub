@@ -1,4 +1,3 @@
-import { FetchCalendarError } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
 import {
   InputCalendar,
@@ -7,6 +6,7 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
+import { CalendarDataObject } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { Handler } from 'aws-lambda';
 import { appName, baseUrl, googleApiToken } from '../../config';
@@ -45,29 +45,26 @@ export const webhookEventUpdatedHandlerFactory = (
       throw Boom.badRequest('Missing x-goog-resource-id header');
     }
 
-    let calendar: RestCalendar;
+    let calendar: CalendarDataObject;
 
     try {
-      const calendarResult = await calendarDataProvider.fetchByResourceId(
+      const calendars = await calendarDataProvider.fetch({
         resourceId,
-      );
+      });
 
-      if (
-        typeof calendarResult === 'number' &&
-        calendarResult in FetchCalendarError
-      ) {
+      if (!calendars.items[0]) {
         throw new Error('Failed to fetch calendar by resource ID.');
       }
 
-      calendar = calendarResult as RestCalendar;
+      [calendar] = calendars.items;
     } catch (error) {
       logger.error(error, 'Error fetching calendar');
       throw Boom.badGateway();
     }
 
     const squidexCalendarId = calendar.id;
-    const googleCalendarId = calendar.data.googleCalendarId.iv;
-    const syncToken = calendar.data.syncToken?.iv;
+    const { googleCalendarId } = calendar;
+    const syncToken = calendar.syncToken || undefined;
 
     const nextSyncToken = await syncCalendar(
       googleCalendarId,

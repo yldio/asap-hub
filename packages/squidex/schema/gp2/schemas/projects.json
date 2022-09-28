@@ -147,6 +147,87 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
+      },
+      {
+        "name": "description",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "maxLength": 2500,
+          "isUnique": false,
+          "isEmbeddable": false,
+          "inlineEditable": false,
+          "createEnum": false,
+          "contentType": "Unspecified",
+          "editor": "TextArea",
+          "label": "Description",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "pmEemail",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
+          "isUnique": true,
+          "isEmbeddable": false,
+          "inlineEditable": true,
+          "createEnum": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "PM Email",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "leadEemail",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
+          "isUnique": true,
+          "isEmbeddable": false,
+          "inlineEditable": true,
+          "createEnum": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Lead Email",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "keywords",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Tags",
+          "maxItems": 6,
+          "minItems": 1,
+          "createEnum": false,
+          "editor": "Tags",
+          "label": "Keywords",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
       }
     ],
     "previewUrls": {},

@@ -14,7 +14,7 @@ import dateIcon from '../icons/date-icon';
 import usersIcon from '../icons/users-icon';
 import IconWithLabel from '../molecules/IconWithLabel';
 import colors from '../templates/colors';
-import ProjectSummary from './ProjectSummary';
+import ProjectSummaryHeader from './ProjectSummaryHeader';
 
 const { getCounterString } = utils;
 const { rem } = pixels;
@@ -63,7 +63,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   projectProposalUrl,
 }) => (
   <Card stroke strokeColor={cardStyles[status].color} strokeSize={9}>
-    <ProjectSummary projectProposalUrl={projectProposalUrl} status={status} />
+    <ProjectSummaryHeader
+      projectProposalUrl={projectProposalUrl}
+      status={status}
+    />
     <LinkHeadline
       href={
         gp2Routing.projects({}).project({

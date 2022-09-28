@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
-import ProjectSummary from '../ProjectSummary';
+import ProjectSummaryHeader from '../ProjectSummaryHeader';
 
 describe('UserCard', () => {
   const defaultProps = {
     status: 'Active' as const,
   };
   it('renders the project status', () => {
-    render(<ProjectSummary {...defaultProps} />);
+    render(<ProjectSummaryHeader {...defaultProps} />);
     expect(screen.getByText(/active/i)).toBeVisible();
   });
 
@@ -15,7 +15,7 @@ describe('UserCard', () => {
       ...defaultProps,
       projectProposalUrl: 'www.google.com',
     };
-    render(<ProjectSummary {...props} />);
+    render(<ProjectSummaryHeader {...props} />);
     expect(screen.getByText('View proposal').closest('a')).toHaveAttribute(
       'href',
       'www.google.com',
@@ -23,7 +23,7 @@ describe('UserCard', () => {
   });
 
   it('does not render the proposed link if not available', () => {
-    render(<ProjectSummary {...defaultProps} />);
+    render(<ProjectSummaryHeader {...defaultProps} />);
     expect(screen.queryByText('View proposal')).not.toBeInTheDocument();
   });
 });

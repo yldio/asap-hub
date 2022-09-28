@@ -17,7 +17,7 @@ import dateIcon from '../icons/date-icon';
 import { projectsImage } from '../images';
 import CardWithBackground from '../molecules/CardWithBackground';
 import IconWithLabel from '../molecules/IconWithLabel';
-import ProjectSummary from './ProjectSummary';
+import ProjectSummaryHeader from './ProjectSummaryHeader';
 
 const { rem } = pixels;
 
@@ -56,7 +56,10 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
   <header>
     <BackLink href={backHref} />
     <CardWithBackground image={projectsImage}>
-      <ProjectSummary projectProposalUrl={projectProposalUrl} status={status} />
+      <ProjectSummaryHeader
+        projectProposalUrl={projectProposalUrl}
+        status={status}
+      />
       <Subtitle>Project</Subtitle>
       <h2>{title}</h2>
       <div css={infoContainerStyles}>

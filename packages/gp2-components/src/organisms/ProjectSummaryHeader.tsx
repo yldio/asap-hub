@@ -14,12 +14,12 @@ const rowStyles = css({
   },
 });
 
-type ProjectSummaryProps = Pick<
+type ProjectSummaryHeaderProps = Pick<
   gp2Model.ProjectResponse,
   'status' | 'projectProposalUrl'
 >;
 
-const ProjectSummary: React.FC<ProjectSummaryProps> = ({
+const ProjectSummaryHeader: React.FC<ProjectSummaryHeaderProps> = ({
   status,
   projectProposalUrl,
 }) => (
@@ -46,4 +46,4 @@ const ProjectSummary: React.FC<ProjectSummaryProps> = ({
   </div>
 );
 
-export default ProjectSummary;
+export default ProjectSummaryHeader;

@@ -1,9 +1,7 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   BackLink,
-  crossQuery,
   drawerQuery,
-  ExternalLink,
   pixels,
   Subtitle,
   utils,
@@ -19,7 +17,7 @@ import dateIcon from '../icons/date-icon';
 import { projectsImage } from '../images';
 import CardWithBackground from '../molecules/CardWithBackground';
 import IconWithLabel from '../molecules/IconWithLabel';
-import ProjectStatus from '../molecules/ProjectStatus';
+import ProjectSummary from './ProjectSummary';
 
 const { rem } = pixels;
 
@@ -34,14 +32,6 @@ type ProjectDetailHeaderProps = Pick<
 > & {
   backHref: string;
 };
-
-const rowStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-  [crossQuery]: {
-    flexDirection: 'row',
-  },
-});
 
 const infoContainerStyles = css({
   display: 'flex',
@@ -66,27 +56,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
   <header>
     <BackLink href={backHref} />
     <CardWithBackground image={projectsImage}>
-      <div css={[rowStyles, css({ gap: rem(4) })]}>
-        <div css={css({ display: 'inline-flex' })}>
-          <ProjectStatus status={status} />
-        </div>
-        {projectProposalUrl && (
-          <div
-            css={css({
-              [crossQuery]: {
-                marginLeft: 'auto',
-              },
-            })}
-          >
-            <ExternalLink
-              href={projectProposalUrl}
-              label="View proposal"
-              noMargin
-              full
-            />
-          </div>
-        )}
-      </div>
+      <ProjectSummary projectProposalUrl={projectProposalUrl} status={status} />
       <Subtitle>Project</Subtitle>
       <h2>{title}</h2>
       <div css={infoContainerStyles}>

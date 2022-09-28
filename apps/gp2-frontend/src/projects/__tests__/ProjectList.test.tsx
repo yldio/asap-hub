@@ -10,7 +10,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getProjects } from '../api';
-import Projects from '../Projects';
+import ProjectList from '../ProjectList';
 import { refreshProjectsState } from '../state';
 
 jest.mock('../api');
@@ -27,7 +27,7 @@ const renderProjectsList = async () => {
           <WhenReady>
             <MemoryRouter initialEntries={[gp2Routing.projects({}).$]}>
               <Route path={gp2Routing.projects.template}>
-                <Projects />
+                <ProjectList />
               </Route>
             </MemoryRouter>
           </WhenReady>

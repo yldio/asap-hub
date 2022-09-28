@@ -1,6 +1,11 @@
 export * from './images';
 export * from './messages';
-export { NavigationHeader, UserCard, WorkingGroupsBody } from './organisms';
+export {
+  NavigationHeader,
+  UserCard,
+  UsersPageBody,
+  WorkingGroupsBody,
+} from './organisms';
 export {
   BasicLayout,
   DashboardPage,

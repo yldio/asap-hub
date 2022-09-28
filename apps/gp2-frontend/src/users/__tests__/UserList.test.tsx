@@ -1,12 +1,12 @@
-import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route } from 'react-router-dom';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { render, waitFor } from '@testing-library/react';
-import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { render, screen, waitFor } from '@testing-library/react';
+import { Suspense } from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUsers } from '../api';
 import { refreshUsersState } from '../state';
-import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import UserList from '../UserList';
 
 jest.mock('../api');
@@ -15,11 +15,11 @@ jest.mock('../../users/api');
 const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
 
 const renderUserList = async (
-  listGroupResponse: gp2.ListUserResponse = gp2Fixtures.createUsersResponse(),
+  listGroupResponse: gp2Model.ListUserResponse = gp2Fixtures.createUsersResponse(),
 ) => {
   mockGetUsers.mockResolvedValue(listGroupResponse);
 
-  const result = render(
+  render(
     <RecoilRoot
       initializeState={({ set }) => {
         set(refreshUsersState, Math.random());
@@ -37,9 +37,8 @@ const renderUserList = async (
     </RecoilRoot>,
   );
   await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
-  return result;
 };
 
 it('fetches the user information', async () => {
@@ -56,7 +55,7 @@ it('fetches the user information', async () => {
 });
 
 it('renders a list of fetched groups', async () => {
-  const { container } = await renderUserList({
+  await renderUserList({
     total: 2,
     items: gp2Fixtures.createUsersResponse(2).items.map((user, i) => ({
       ...user,
@@ -64,6 +63,10 @@ it('renders a list of fetched groups', async () => {
       displayName: `Display Name ${i}`,
     })),
   });
-  expect(container.textContent).toContain('Display Name 0');
-  expect(container.textContent).toContain('Display Name 1');
+  expect(
+    screen.getByRole('heading', { name: /display name 0/i }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole('heading', { name: /display name 1/i }),
+  ).toBeInTheDocument();
 });

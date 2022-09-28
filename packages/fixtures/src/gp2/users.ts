@@ -20,6 +20,8 @@ export const createUserResponse = (
 });
 
 export const createUsersResponse = (items = 1): gp2.ListUserResponse => ({
-  items: Array.from({ length: items }, () => createUserResponse()),
+  items: Array.from({ length: items }, (_, id) =>
+    createUserResponse({ id: String(id) }),
+  ),
   total: items,
 });

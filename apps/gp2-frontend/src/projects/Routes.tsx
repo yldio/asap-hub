@@ -5,18 +5,18 @@ import { gp2 } from '@asap-hub/routing';
 import { lazy, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-const loadProjects = () =>
+const loadProjectList = () =>
   import(/* webpackChunkName: "project-list" */ './ProjectList');
 const loadProjectDetail = () =>
   import(/* webpackChunkName: "project-detail" */ './ProjectDetail');
 
-const Projects = lazy(loadProjects);
+const ProjectList = lazy(loadProjectList);
 const ProjectDetail = lazy(loadProjectDetail);
 
 const { projects } = gp2;
 const Routes: React.FC<Record<string, never>> = () => {
   useEffect(() => {
-    loadProjects().then(loadProjectDetail);
+    loadProjectList().then(loadProjectDetail);
   }, []);
   const { path } = useRouteMatch();
 
@@ -25,7 +25,7 @@ const Routes: React.FC<Record<string, never>> = () => {
       <Route exact path={path}>
         <ProjectsPage>
           <Frame title="Projects">
-            <Projects />
+            <ProjectList />
           </Frame>
         </ProjectsPage>
       </Route>

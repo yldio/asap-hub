@@ -1,0 +1,49 @@
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { crossQuery, ExternalLink, pixels } from '@asap-hub/react-components';
+
+import { css } from '@emotion/react';
+import ProjectStatus from '../molecules/ProjectStatus';
+
+const { rem } = pixels;
+
+const rowStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  [crossQuery]: {
+    flexDirection: 'row',
+  },
+});
+
+type ProjectSummaryProps = Pick<
+  gp2Model.ProjectResponse,
+  'status' | 'projectProposalUrl'
+>;
+
+const ProjectSummary: React.FC<ProjectSummaryProps> = ({
+  status,
+  projectProposalUrl,
+}) => (
+  <div css={[rowStyles, css({ gap: rem(4) })]}>
+    <div css={css({ display: 'inline-flex' })}>
+      <ProjectStatus status={status} />
+    </div>
+    {projectProposalUrl && (
+      <div
+        css={css({
+          [crossQuery]: {
+            marginLeft: 'auto',
+          },
+        })}
+      >
+        <ExternalLink
+          href={projectProposalUrl}
+          label="View proposal"
+          noMargin
+          full
+        />
+      </div>
+    )}
+  </div>
+);
+
+export default ProjectSummary;

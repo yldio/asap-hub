@@ -155,6 +155,26 @@ describe('Calendars data provider', () => {
       );
     });
 
+    test('Should filter calendars by the resourceId', async () => {
+      const resourceId = 'some-resource-id';
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexCalendarsGraphqlResponse(),
+      );
+
+      const result = await calendarDataProvider.fetch({ resourceId });
+
+      expect(squidexGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 50,
+          skip: 0,
+          filter: `data/resourceId/iv eq '${resourceId}'`,
+          order: 'data/name/iv asc',
+        },
+      );
+      expect(result).toEqual({ total: 1, items: [getCalendarDataObject()] });
+    });
+
     test('Should default missing data to an empty string', async () => {
       const calendarResponse = getSquidexCalendarsGraphqlResponse();
       calendarResponse.queryCalendarsContentsWithTotal!.items![0]!.flatData.name =

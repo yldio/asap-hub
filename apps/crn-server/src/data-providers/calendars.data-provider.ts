@@ -24,6 +24,7 @@ import logger from '../utils/logger';
 export type FetchCalendarProviderOptions = {
   maxExpiration?: number;
   active?: boolean;
+  resourceId?: string;
 };
 
 type GraphqlCalendar = NonNullable<FetchCalendarQuery['findCalendarsContent']>;
@@ -66,11 +67,15 @@ export default class CalendarSquidexDataProvider {
   async fetch(
     options?: FetchCalendarProviderOptions,
   ): Promise<ListCalendarDataObject> {
-    const { maxExpiration, active } = options || {};
+    const { maxExpiration, active, resourceId } = options || {};
 
     let filter = '';
     if (maxExpiration) {
       filter = `data/expirationDate/iv lt ${maxExpiration}`;
+    }
+
+    if (resourceId) {
+      filter = `data/resourceId/iv eq '${resourceId}'`;
     }
 
     const { queryCalendarsContentsWithTotal } =

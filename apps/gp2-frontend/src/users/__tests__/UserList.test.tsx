@@ -1,6 +1,11 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { render, screen, waitFor } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -36,9 +41,7 @@ const renderUserList = async (
       </Suspense>
     </RecoilRoot>,
   );
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
+  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
 it('fetches the user information', async () => {

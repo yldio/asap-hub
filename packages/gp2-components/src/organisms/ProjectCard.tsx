@@ -2,7 +2,6 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   Card,
   crossQuery,
-  ExternalLink,
   lead,
   LinkHeadline,
   pixels,
@@ -14,8 +13,8 @@ import { format, formatDistanceStrict as formatDistance } from 'date-fns';
 import dateIcon from '../icons/date-icon';
 import usersIcon from '../icons/users-icon';
 import IconWithLabel from '../molecules/IconWithLabel';
-import ProjectStatus from '../molecules/ProjectStatus';
 import colors from '../templates/colors';
+import ProjectSummary from './ProjectSummary';
 
 const { getCounterString } = utils;
 const { rem } = pixels;
@@ -64,27 +63,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   projectProposalUrl,
 }) => (
   <Card stroke strokeColor={cardStyles[status].color} strokeSize={9}>
-    <div css={[rowStyles, css({ gap: rem(4) })]}>
-      <div css={css({ display: 'inline-flex' })}>
-        <ProjectStatus status={status} />
-      </div>
-      {projectProposalUrl && (
-        <div
-          css={css({
-            [crossQuery]: {
-              marginLeft: 'auto',
-            },
-          })}
-        >
-          <ExternalLink
-            href={projectProposalUrl}
-            label="View proposal"
-            noMargin
-            full
-          />
-        </div>
-      )}
-    </div>
+    <ProjectSummary projectProposalUrl={projectProposalUrl} status={status} />
     <LinkHeadline
       href={
         gp2Routing.projects({}).project({

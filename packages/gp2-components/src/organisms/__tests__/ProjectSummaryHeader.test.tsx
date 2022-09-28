@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import ProjectSummaryHeader from '../ProjectSummaryHeader';
 
-describe('UserCard', () => {
+describe('ProjectSummaryHeader', () => {
   const defaultProps = {
     status: 'Active' as const,
   };

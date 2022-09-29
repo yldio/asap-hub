@@ -95,6 +95,7 @@ export const getGraphQLUser = (
   created: '2020-09-23T20:45:22Z',
   ...user,
   flatData: {
+    alumniSinceDate: '2020-10-22T15:33:18Z',
     biography: 'some bio',
     institution: 'some institution',
     jobTitle: 'some job title',

@@ -26,7 +26,6 @@ module.exports = {
 
   moduleNameMapper: {
     '^@asap-hub/([^/]+)$': '@asap-hub/$1/src',
-    uuid: require.resolve('uuid'),
   },
   modulePathIgnorePatterns: [
     '<rootDir>/build(-cjs)?',

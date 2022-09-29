@@ -85,14 +85,15 @@ const parseProjectMembers = (user: GraphQLProjectMemberUser) => {
   };
 };
 
-export function parseProjectToDataObject(
-  project: GraphQLProject,
-): gp2.ProjectDataObject {
-  if (!isProjectStatus(project.flatData.status)) {
-    throw new Error(`Invalid status: ${project.flatData.status}`);
+export function parseProjectToDataObject({
+  id,
+  flatData: project,
+}: GraphQLProject): gp2.ProjectDataObject {
+  if (!isProjectStatus(project.status)) {
+    throw new Error(`Invalid status: ${project.status}`);
   }
   const members =
-    project.flatData.members?.reduce(
+    project.members?.reduce(
       (membersList: gp2.ProjectMember[], member: GraphQLProjectMember) => {
         const user = member.user && member.user[0];
         if (!user) {
@@ -105,12 +106,14 @@ export function parseProjectToDataObject(
     ) || [];
 
   return {
-    id: project.id,
-    title: project.flatData.title || '',
-    startDate: project.flatData.startDate || '',
-    endDate: project.flatData.endDate || undefined,
-    status: project.flatData.status,
-    projectProposalUrl: project.flatData.projectProposal || undefined,
+    id,
+    title: project.title || '',
+    startDate: project.startDate || '',
+    endDate: project.endDate || undefined,
+    status: project.status,
+    projectProposalUrl: project.projectProposal || undefined,
+    pmEmail: project.pmEmail || undefined,
+    leadEmail: project.leadEmail || undefined,
     members,
   };
 }

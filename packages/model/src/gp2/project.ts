@@ -21,6 +21,8 @@ export type ProjectDataObject = {
   status: ProjectStatus;
   projectProposalUrl?: string;
   members: ProjectMember[];
+  pmEmail?: string;
+  leadEmail?: string;
 };
 
 export type ListProjectDataObject = ListResponse<ProjectDataObject>;

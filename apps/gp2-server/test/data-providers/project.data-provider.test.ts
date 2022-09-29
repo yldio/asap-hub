@@ -66,10 +66,10 @@ describe('Project Data Provider', () => {
 
     test('Should default null title, startDate to an empty string', async () => {
       const mockResponse = getSquidexProjectsGraphqlResponse();
-      const Project = getGraphQLProject();
-      Project.flatData.title = null;
-      Project.flatData.startDate = null;
-      mockResponse.queryProjectsContentsWithTotal!.items = [Project];
+      const project = getGraphQLProject();
+      project.flatData.title = null;
+      project.flatData.startDate = null;
+      mockResponse.queryProjectsContentsWithTotal!.items = [project];
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       const { items } = await projectDataProvider.fetch();
@@ -97,25 +97,25 @@ describe('Project Data Provider', () => {
 
     describe('Parsing', () => {
       test('the project is parsed', () => {
-        const Project = getGraphQLProject();
-        const ProjectDataObject = parseProjectToDataObject(Project);
+        const project = getGraphQLProject();
+        const ProjectDataObject = parseProjectToDataObject(project);
         const expected = getProjectDataObject();
         expect(ProjectDataObject).toEqual(expected);
       });
       test('invalid status', () => {
-        const Project = getGraphQLProject();
-        Project.flatData.status = 'invalid-status';
+        const project = getGraphQLProject();
+        project.flatData.status = 'invalid-status';
         expect(() =>
-          parseProjectToDataObject(Project),
+          parseProjectToDataObject(project),
         ).toThrowErrorMatchingInlineSnapshot(
           '"Invalid status: invalid-status"',
         );
       });
 
       test('the members in project are parsed', () => {
-        const Project = getGraphQLProject();
-        Project.flatData.members = [getGraphQLProjectMember()];
-        const { members } = parseProjectToDataObject(Project);
+        const project = getGraphQLProject();
+        project.flatData.members = [getGraphQLProjectMember()];
+        const { members } = parseProjectToDataObject(project);
         expect(members).toEqual([
           {
             userId: '42',
@@ -126,30 +126,46 @@ describe('Project Data Provider', () => {
       });
 
       test('undefined members returns empty array', () => {
-        const Project = getGraphQLProject();
-        Project.flatData.members = undefined!;
-        const { members } = parseProjectToDataObject(Project);
+        const project = getGraphQLProject();
+        project.flatData.members = undefined!;
+        const { members } = parseProjectToDataObject(project);
         expect(members).toEqual([]);
       });
 
       test('avatar urls are added if available', () => {
-        const Project = getGraphQLProject();
+        const project = getGraphQLProject();
         const member = getGraphQLProjectMember();
         member!.user![0]!.flatData.avatar = [{ id: 'avatar-id' }];
-        Project.flatData.members = [member];
-        const { members } = parseProjectToDataObject(Project);
+        project.flatData.members = [member];
+        const { members } = parseProjectToDataObject(project);
         expect(members[0]?.avatarUrl).toEqual(
           `${baseUrl}/api/assets/${appName}/avatar-id`,
         );
       });
 
       test('should skip the user from the result if the user property is undefined', () => {
-        const Project = getGraphQLProject();
+        const project = getGraphQLProject();
         const member = getGraphQLProjectMember();
         member!.user = undefined!;
-        Project.flatData.members = [member];
-        const { members } = parseProjectToDataObject(Project);
+        project.flatData.members = [member];
+        const { members } = parseProjectToDataObject(project);
         expect(members).toEqual([]);
+      });
+
+      test('pm emails are added if available', () => {
+        const email = 'tony@starkenterprises.com';
+        const project = getGraphQLProject();
+        project.flatData.pmEmail = email;
+        const { pmEmail } = parseProjectToDataObject(project);
+        expect(pmEmail).toEqual(email);
+      });
+
+      test('lead emails are added if available', () => {
+        const email = 'tony@starkenterprises.com';
+        const project = getGraphQLProject();
+        project.flatData.leadEmail = email;
+        const { leadEmail } = parseProjectToDataObject(project);
+        expect(leadEmail).toEqual(email);
       });
     });
   });

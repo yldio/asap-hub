@@ -10,6 +10,7 @@ export const fetchTeamsResponse: { total: number; items: RestTeam[] } = {
       created: '2020-09-24T11:06:27.164Z',
       data: {
         displayName: { iv: 'team' },
+        active: { iv: true },
         applicationNumber: { iv: 'app' },
         projectTitle: { iv: 'title' },
         expertiseAndResourceTags: { iv: [] },

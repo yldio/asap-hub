@@ -61,6 +61,9 @@ const insertTeam = async (data: Data, cache: Cache): Promise<RestTeam> => {
     applicationNumber: {
       iv: application,
     },
+    active: {
+      iv: true,
+    },
     projectTitle: {
       iv: projectTitle,
     },

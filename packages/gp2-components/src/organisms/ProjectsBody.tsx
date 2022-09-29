@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import ProjectCard from './ProjectCard';
 
 const { rem } = pixels;
-type ProjectsBodyProps = {
+export type ProjectsBodyProps = {
   projects: gp2.ListProjectResponse;
 };
 const gridContainerStyles = css({

@@ -1,5 +1,7 @@
 import { gp2 } from '@asap-hub/model';
+import { PageControls } from '@asap-hub/react-components';
 import { render, screen } from '@testing-library/react';
+import { ComponentProps } from 'react';
 import UsersPageBody from '../UsersPageBody';
 
 const users: gp2.ListUserResponse = {
@@ -31,18 +33,23 @@ const users: gp2.ListUserResponse = {
   ],
   total: 2,
 };
+const pageProps: ComponentProps<typeof PageControls> = {
+  currentPageIndex: 1,
+  numberOfPages: 10,
+  renderPageHref: (page) => `some-page`,
+};
 
 describe('UsersPageBody', () => {
   it('renders a user', () => {
     const userToRender = { items: [users.items[0]], total: 1 };
-    render(<UsersPageBody users={userToRender} />);
+    render(<UsersPageBody users={userToRender} {...pageProps} />);
     expect(
       screen.getByRole('heading', { name: /John Doe, PhD/i }),
     ).toBeVisible();
   });
 
   it('renders multiple users', () => {
-    render(<UsersPageBody users={users} />);
+    render(<UsersPageBody users={users} {...pageProps} />);
     expect(
       screen.getByRole('heading', { name: /John Doe, PhD/i }),
     ).toBeVisible();

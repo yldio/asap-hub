@@ -58,7 +58,7 @@ describe('Routes', () => {
       total: 1,
       items: [
         {
-          role: 'support',
+          role: 'steeringCommitee',
           workingGroups: [firstGroup, secondGroup],
         },
       ],

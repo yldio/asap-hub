@@ -1,7 +1,13 @@
 import { gp2 } from '@asap-hub/model';
-import { atom, atomFamily, selector, useRecoilValue } from 'recoil';
+import {
+  atom,
+  atomFamily,
+  selector,
+  selectorFamily,
+  useRecoilValue,
+} from 'recoil';
 import { authorizationState } from '../auth/state';
-import { getProjects } from './api';
+import { getProject, getProjects } from './api';
 
 export const fetchProjectsState = selector<gp2.ListProjectResponse>({
   key: 'fetchProjectsState',
@@ -27,3 +33,24 @@ export const refreshProjectState = atomFamily<number, string>({
 });
 
 export const useProjectsState = () => useRecoilValue(projectsState);
+
+const fetchProjectState = selectorFamily<
+  gp2.ProjectResponse | undefined,
+  string
+>({
+  key: 'fetchProject',
+  get:
+    (id) =>
+    async ({ get }) => {
+      get(refreshProjectState(id));
+      const authorization = get(authorizationState);
+      return getProject(id, authorization);
+    },
+});
+
+const projectState = atomFamily<gp2.ProjectResponse | undefined, string>({
+  key: 'project',
+  default: fetchProjectState,
+});
+
+export const useProjectById = (id: string) => useRecoilValue(projectState(id));

@@ -22,6 +22,11 @@ it('renders the name as a heading', () => {
   expect(screen.getByRole('heading')).toHaveTextContent('My Group');
 });
 
+it('renders the tag for inactive groups', () => {
+  render(<GroupProfileHeader {...props} name="My Group" active={false} />);
+  expect(screen.getByText('Inactive')).toBeVisible();
+});
+
 it('shows the number of teams and links to them', () => {
   render(<GroupProfileHeader {...props} numberOfTeams={1} />);
   expect(screen.getByText(/1 team(\s|$)/i).closest('a')).toHaveAttribute(

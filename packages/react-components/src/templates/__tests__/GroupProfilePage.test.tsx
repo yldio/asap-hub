@@ -11,6 +11,7 @@ const props: ComponentProps<typeof GroupProfilePage> = {
   numberOfTeams: 1,
   pastEventsCount: 0,
   upcomingEventsCount: 0,
+  active: true,
 };
 
 it('renders the header', () => {
@@ -23,4 +24,23 @@ it('renders the header', () => {
 it('renders the children', () => {
   render(<GroupProfilePage {...props}>Page Content</GroupProfilePage>);
   expect(screen.getByText('Page Content')).toBeVisible();
+});
+
+it('renders the inactive group header for inactive group', () => {
+  render(<GroupProfilePage {...props} name="My Group" active={false} />);
+  expect(
+    screen.getByText(
+      'This group is inactive and might not have all content available.',
+    ),
+  ).toBeVisible();
+  expect(screen.getByTitle('Info Circle Yellow')).toBeInTheDocument();
+});
+
+it('does not render the inactive group header for active group', () => {
+  render(<GroupProfilePage {...props} name="My Group" active={true} />);
+  expect(
+    screen.queryByText(
+      'This group is inactive and might not have all content available.',
+    ),
+  ).not.toBeInTheDocument();
 });

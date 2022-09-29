@@ -7398,7 +7398,10 @@ export type FetchReminderDataQuery = {
   queryEventsContents: Maybe<
     Array<
       Pick<Events, 'id'> & {
-        flatData: Pick<EventsFlatDataDto, 'startDate' | 'endDate' | 'title'>;
+        flatData: Pick<
+          EventsFlatDataDto,
+          'startDate' | 'endDate' | 'title' | 'videoRecordingUpdatedAt'
+        >;
       }
     >
   >;
@@ -12255,6 +12258,13 @@ export const FetchReminderDataDocument = {
                         name: { kind: 'Name', value: 'endDate' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'videoRecordingUpdatedAt',
+                        },
+                      },
                     ],
                   },
                 },

@@ -3,10 +3,10 @@ import { apricot, clay } from '../colors';
 import { lineHeight, perRem } from '../pixels';
 
 const styles = css({
-  display: 'inline-block',
+  display: 'flex',
+  alignItems: 'center',
   boxSizing: 'border-box',
   height: `calc(${lineHeight}px + ${6 / perRem}em)`,
-  padding: `${3 / perRem}em 0 `,
 
   backgroundColor: apricot.rgb,
   color: clay.rgb,

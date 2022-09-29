@@ -53,6 +53,10 @@ export const getGraphQLProject = (): GraphQLProject => ({
     status: 'Completed',
     projectProposal: 'http://a-proposal',
     members: [],
+    description: 'test description',
+    keywords: [],
+    pmEmail: 'tony@stark.com',
+    leadEmail: 'peter@parker.com',
   },
 });
 export const getGraphQLProjectMember = (): GraphQLProjectMember => ({

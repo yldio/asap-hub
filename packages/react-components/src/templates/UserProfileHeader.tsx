@@ -63,8 +63,6 @@ const containerStyles = css({
   },
 });
 
-const alumniBadgeStyles = css({});
-
 const nameHeaderStyles = css({
   display: 'flex',
   alignItems: 'center',
@@ -211,11 +209,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                 </div>
               ) : null}
             </div>
-            {alumniSinceDate && (
-              <div css={alumniBadgeStyles}>
-                <StateTag icon={alumniBadge} label="Alumni" />
-              </div>
-            )}
+            {alumniSinceDate && <StateTag icon={alumniBadge} label="Alumni" />}
           </div>
           <UserProfilePersonalText
             institution={institution}

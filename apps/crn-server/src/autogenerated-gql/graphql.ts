@@ -8279,6 +8279,7 @@ export type UsersContentFragment = Pick<
 > & {
   flatData: Pick<
     UsersFlatDataDto,
+    | 'alumniSinceDate'
     | 'biography'
     | 'degree'
     | 'email'
@@ -8362,6 +8363,7 @@ export type FetchUserQuery = {
     Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
       flatData: Pick<
         UsersFlatDataDto,
+        | 'alumniSinceDate'
         | 'biography'
         | 'degree'
         | 'email'
@@ -8452,6 +8454,7 @@ export type FetchUsersQuery = {
           Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
             flatData: Pick<
               UsersFlatDataDto,
+              | 'alumniSinceDate'
               | 'biography'
               | 'degree'
               | 'email'
@@ -10697,6 +10700,10 @@ export const UsersContentFragmentDoc = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'alumniSinceDate' },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'avatar' },

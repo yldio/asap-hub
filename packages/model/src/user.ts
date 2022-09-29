@@ -120,6 +120,7 @@ export interface Connection {
 }
 
 export interface UserDataObject extends Invitee {
+  alumniSinceDate?: string;
   id: string;
   onboarded?: boolean | null;
   dismissedGettingStarted?: boolean;
@@ -147,7 +148,6 @@ export interface UserDataObject extends Invitee {
 export type ListUserDataObject = ListResponse<UserDataObject>;
 export interface UserResponse
   extends Omit<UserDataObject, 'onboarded' | 'connections'> {
-  alumniSinceDate?: string;
   onboarded: boolean;
   displayName: string;
 }

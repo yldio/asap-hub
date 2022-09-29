@@ -1014,8 +1014,10 @@ export type ProjectsDataDto = {
   endDate: Maybe<ProjectsDataEndDateDto>;
   keywords: Maybe<ProjectsDataKeywordsDto>;
   leadEemail: Maybe<ProjectsDataLeadEemailDto>;
+  leadEmail: Maybe<ProjectsDataLeadEmailDto>;
   members: Maybe<ProjectsDataMembersDto>;
   pmEemail: Maybe<ProjectsDataPmEemailDto>;
+  pmEmail: Maybe<ProjectsDataPmEmailDto>;
   projectProposal: Maybe<ProjectsDataProjectProposalDto>;
   startDate: Maybe<ProjectsDataStartDateDto>;
   status: Maybe<ProjectsDataStatusDto>;
@@ -1038,8 +1040,10 @@ export type ProjectsDataInputDto = {
   endDate: InputMaybe<ProjectsDataEndDateInputDto>;
   keywords: InputMaybe<ProjectsDataKeywordsInputDto>;
   leadEemail: InputMaybe<ProjectsDataLeadEemailInputDto>;
+  leadEmail: InputMaybe<ProjectsDataLeadEmailInputDto>;
   members: InputMaybe<ProjectsDataMembersInputDto>;
   pmEemail: InputMaybe<ProjectsDataPmEemailInputDto>;
+  pmEmail: InputMaybe<ProjectsDataPmEmailInputDto>;
   projectProposal: InputMaybe<ProjectsDataProjectProposalInputDto>;
   startDate: InputMaybe<ProjectsDataStartDateInputDto>;
   status: InputMaybe<ProjectsDataStatusInputDto>;
@@ -1063,6 +1067,16 @@ export type ProjectsDataLeadEemailDto = {
 
 /** The structure of the Lead Email field of the Projects content input type. */
 export type ProjectsDataLeadEemailInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Lead Email field of the Projects content type. */
+export type ProjectsDataLeadEmailDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Lead Email field of the Projects content input type. */
+export type ProjectsDataLeadEmailInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
@@ -1093,6 +1107,16 @@ export type ProjectsDataPmEemailDto = {
 
 /** The structure of the PM Email field of the Projects content input type. */
 export type ProjectsDataPmEemailInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the PM Email field of the Projects content type. */
+export type ProjectsDataPmEmailDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the PM Email field of the Projects content input type. */
+export type ProjectsDataPmEmailInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
@@ -1144,8 +1168,10 @@ export type ProjectsFlatDataDto = {
   endDate: Maybe<Scalars['Instant']>;
   keywords: Maybe<Array<Scalars['String']>>;
   leadEemail: Maybe<Scalars['String']>;
+  leadEmail: Maybe<Scalars['String']>;
   members: Maybe<Array<ProjectsDataMembersChildDto>>;
   pmEemail: Maybe<Scalars['String']>;
+  pmEmail: Maybe<Scalars['String']>;
   /** External link for a project proposal */
   projectProposal: Maybe<Scalars['String']>;
   startDate: Maybe<Scalars['Instant']>;
@@ -1819,7 +1845,15 @@ export enum DegreeEnum {
 export type ProjectContentFragment = Pick<Projects, 'id'> & {
   flatData: Pick<
     ProjectsFlatDataDto,
-    'title' | 'startDate' | 'endDate' | 'status' | 'projectProposal'
+    | 'title'
+    | 'startDate'
+    | 'endDate'
+    | 'status'
+    | 'projectProposal'
+    | 'description'
+    | 'pmEmail'
+    | 'leadEmail'
+    | 'keywords'
   > & {
     members: Maybe<
       Array<{
@@ -1846,7 +1880,15 @@ export type FetchProjectQuery = {
     Pick<Projects, 'id'> & {
       flatData: Pick<
         ProjectsFlatDataDto,
-        'title' | 'startDate' | 'endDate' | 'status' | 'projectProposal'
+        | 'title'
+        | 'startDate'
+        | 'endDate'
+        | 'status'
+        | 'projectProposal'
+        | 'description'
+        | 'pmEmail'
+        | 'leadEmail'
+        | 'keywords'
       > & {
         members: Maybe<
           Array<{
@@ -1876,7 +1918,15 @@ export type FetchProjectsQuery = {
           Pick<Projects, 'id'> & {
             flatData: Pick<
               ProjectsFlatDataDto,
-              'title' | 'startDate' | 'endDate' | 'status' | 'projectProposal'
+              | 'title'
+              | 'startDate'
+              | 'endDate'
+              | 'status'
+              | 'projectProposal'
+              | 'description'
+              | 'pmEmail'
+              | 'leadEmail'
+              | 'keywords'
             > & {
               members: Maybe<
                 Array<{
@@ -2391,6 +2441,10 @@ export const ProjectContentFragmentDoc = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'projectProposal' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'pmEmail' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'leadEmail' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'keywords' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'members' },

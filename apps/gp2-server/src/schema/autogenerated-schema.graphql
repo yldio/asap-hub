@@ -1042,8 +1042,10 @@ type ProjectsDataDto {
   endDate: ProjectsDataEndDateDto
   keywords: ProjectsDataKeywordsDto
   leadEemail: ProjectsDataLeadEemailDto
+  leadEmail: ProjectsDataLeadEmailDto
   members: ProjectsDataMembersDto
   pmEemail: ProjectsDataPmEemailDto
+  pmEmail: ProjectsDataPmEmailDto
   projectProposal: ProjectsDataProjectProposalDto
   startDate: ProjectsDataStartDateDto
   status: ProjectsDataStatusDto
@@ -1066,8 +1068,10 @@ input ProjectsDataInputDto {
   endDate: ProjectsDataEndDateInputDto
   keywords: ProjectsDataKeywordsInputDto
   leadEemail: ProjectsDataLeadEemailInputDto
+  leadEmail: ProjectsDataLeadEmailInputDto
   members: ProjectsDataMembersInputDto
   pmEemail: ProjectsDataPmEemailInputDto
+  pmEmail: ProjectsDataPmEmailInputDto
   projectProposal: ProjectsDataProjectProposalInputDto
   startDate: ProjectsDataStartDateInputDto
   status: ProjectsDataStatusInputDto
@@ -1091,6 +1095,16 @@ type ProjectsDataLeadEemailDto {
 
 """The structure of the Lead Email field of the Projects content input type."""
 input ProjectsDataLeadEemailInputDto {
+  iv: String
+}
+
+"""The structure of the Lead Email field of the Projects content type."""
+type ProjectsDataLeadEmailDto {
+  iv: String
+}
+
+"""The structure of the Lead Email field of the Projects content input type."""
+input ProjectsDataLeadEmailInputDto {
   iv: String
 }
 
@@ -1121,6 +1135,16 @@ type ProjectsDataPmEemailDto {
 
 """The structure of the PM Email field of the Projects content input type."""
 input ProjectsDataPmEemailInputDto {
+  iv: String
+}
+
+"""The structure of the PM Email field of the Projects content type."""
+type ProjectsDataPmEmailDto {
+  iv: String
+}
+
+"""The structure of the PM Email field of the Projects content input type."""
+input ProjectsDataPmEmailInputDto {
   iv: String
 }
 
@@ -1172,8 +1196,10 @@ type ProjectsFlatDataDto {
   endDate: Instant
   keywords: [String!]
   leadEemail: String
+  leadEmail: String
   members: [ProjectsDataMembersChildDto!]
   pmEemail: String
+  pmEmail: String
   """External link for a project proposal"""
   projectProposal: String
   startDate: Instant

@@ -109,6 +109,29 @@ it('shows placeholder text for degree on own profile when omitted', () => {
   expect(queryByText(/, BA/i)).toBeVisible();
 });
 
+it('shows the alumni badge when user is alumni', () => {
+  const { queryByText, queryByTitle, rerender } = render(
+    <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+      <UserProfileHeader
+        {...boilerplateProps}
+        alumniSinceDate={new Date().toISOString()}
+        degree={undefined}
+      />
+      ,
+    </UserProfileContext.Provider>,
+  );
+  expect(queryByText('Alumni')).toBeInTheDocument();
+  expect(queryByTitle('Alumni Badge')).toBeInTheDocument();
+
+  rerender(
+    <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+      <UserProfileHeader {...boilerplateProps} degree={undefined} />,
+    </UserProfileContext.Provider>,
+  );
+  expect(queryByText('Alumni')).not.toBeInTheDocument();
+  expect(queryByTitle('Alumni Badge')).not.toBeInTheDocument();
+});
+
 it('shows lab information if the user is in a lab', async () => {
   const { container, rerender } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>

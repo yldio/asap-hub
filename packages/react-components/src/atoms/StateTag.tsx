@@ -3,20 +3,18 @@ import { apricot, clay } from '../colors';
 import { lineHeight, perRem } from '../pixels';
 
 const styles = css({
-  display: 'inline-block',
+  display: 'inline-flex',
   boxSizing: 'border-box',
+  padding: `${3 / perRem}em 0`,
   height: `calc(${lineHeight}px + ${6 / perRem}em)`,
-  padding: `${3 / perRem}em 0 `,
-
   backgroundColor: apricot.rgb,
   color: clay.rgb,
-
   borderRadius: `${18 / perRem}em`,
 });
 
 const iconStyles = css({
-  position: 'relative',
-  top: `${3 / perRem}em`,
+  display: 'inline-flex',
+  alignSelf: 'center',
   marginLeft: `${9 / perRem}em`,
   marginRight: `${3 / perRem}em`,
 });

@@ -115,6 +115,7 @@ export const getTeamsEvent = (
   eventName: string,
   data = {
     displayName: { iv: 'Team 1' },
+    active: { iv: true },
     applicationNumber: { iv: '12345' },
     expertiseAndResourceTags: { iv: [] },
     proposal: { iv: [] },
@@ -124,6 +125,7 @@ export const getTeamsEvent = (
   },
   dataOld = {
     displayName: { iv: 'Team 1' },
+    active: { iv: true },
     applicationNumber: { iv: '12345' },
     expertiseAndResourceTags: { iv: [] },
     proposal: { iv: [] },
@@ -191,6 +193,7 @@ export const updateEvent: TeamEventGenerator = (id: string) =>
 
 export const getTeamCreateDataObject = (): TeamCreateDataObject => ({
   applicationNumber: 'ASAP-000420',
+  active: true,
   displayName: 'Team A',
   projectSummary: 'project-summary',
   projectTitle:
@@ -210,6 +213,9 @@ export const getInputTeam = (): InputTeam['data'] => ({
   applicationNumber: { iv: 'ASAP-000420' },
   displayName: {
     iv: 'Team A',
+  },
+  active: {
+    iv: true,
   },
   projectSummary: { iv: 'project-summary' },
   projectTitle: {

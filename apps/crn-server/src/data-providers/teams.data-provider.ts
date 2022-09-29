@@ -127,6 +127,7 @@ export class TeamSquidexDataProvider implements TeamDataProvider {
   async create(input: TeamCreateDataObject): Promise<string> {
     const inputTeam: InputTeam['data'] = {
       applicationNumber: { iv: input.applicationNumber },
+      active: { iv: input.active },
       displayName: { iv: input.displayName },
       expertiseAndResourceTags: { iv: input.expertiseAndResourceTags },
       projectTitle: { iv: input.projectTitle },

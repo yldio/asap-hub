@@ -52,6 +52,7 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
 
 export type TeamCreateDataObject = {
   applicationNumber: string;
+  active: boolean;
   displayName: string;
   expertiseAndResourceTags: string[];
   researchOutputIds?: string[];

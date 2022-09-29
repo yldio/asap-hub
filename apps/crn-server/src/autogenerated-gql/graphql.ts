@@ -4465,6 +4465,16 @@ export type TeamsReferencingUsersContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
+/** The structure of the The team is active field of the Teams content type. */
+export type TeamsDataActiveDto = {
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the The team is active field of the Teams content input type. */
+export type TeamsDataActiveInputDto = {
+  iv: InputMaybe<Scalars['Boolean']>;
+};
+
 /** The structure of the Application Number field of the Teams content type. */
 export type TeamsDataApplicationNumberDto = {
   iv: Maybe<Scalars['String']>;
@@ -4487,9 +4497,11 @@ export type TeamsDataDisplayNameInputDto = {
 
 /** The structure of the Teams data type. */
 export type TeamsDataDto = {
+  active: Maybe<TeamsDataActiveDto>;
   applicationNumber: Maybe<TeamsDataApplicationNumberDto>;
   displayName: Maybe<TeamsDataDisplayNameDto>;
   expertiseAndResourceTags: Maybe<TeamsDataExpertiseAndResourceTagsDto>;
+  inactiveSince: Maybe<TeamsDataInactiveSinceDto>;
   outputs: Maybe<TeamsDataOutputsDto>;
   projectSummary: Maybe<TeamsDataProjectSummaryDto>;
   projectTitle: Maybe<TeamsDataProjectTitleDto>;
@@ -4507,11 +4519,23 @@ export type TeamsDataExpertiseAndResourceTagsInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
+/** The structure of the The team is inactive since field of the Teams content type. */
+export type TeamsDataInactiveSinceDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the The team is inactive since field of the Teams content input type. */
+export type TeamsDataInactiveSinceInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
 /** The structure of the Teams data input type. */
 export type TeamsDataInputDto = {
+  active: InputMaybe<TeamsDataActiveInputDto>;
   applicationNumber: InputMaybe<TeamsDataApplicationNumberInputDto>;
   displayName: InputMaybe<TeamsDataDisplayNameInputDto>;
   expertiseAndResourceTags: InputMaybe<TeamsDataExpertiseAndResourceTagsInputDto>;
+  inactiveSince: InputMaybe<TeamsDataInactiveSinceInputDto>;
   outputs: InputMaybe<TeamsDataOutputsInputDto>;
   projectSummary: InputMaybe<TeamsDataProjectSummaryInputDto>;
   projectTitle: InputMaybe<TeamsDataProjectTitleInputDto>;
@@ -4585,9 +4609,11 @@ export type TeamsDataToolsInputDto = {
 
 /** The structure of the flat Teams data type. */
 export type TeamsFlatDataDto = {
+  active: Maybe<Scalars['Boolean']>;
   applicationNumber: Maybe<Scalars['String']>;
   displayName: Maybe<Scalars['String']>;
   expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
+  inactiveSince: Maybe<Scalars['Instant']>;
   outputs: Maybe<Array<ResearchOutputs>>;
   projectSummary: Maybe<Scalars['String']>;
   projectTitle: Maybe<Scalars['String']>;

@@ -7,7 +7,9 @@
       "label": "Teams",
       "validateOnPublish": false
     },
-    "scripts": {},
+    "scripts": {
+      "update": "const wasActive = !!ctx.oldData.active.iv\nconst isActive = !!ctx.data.active.iv\n\nconst becameInactive = wasActive && !isActive\n\nconst becameActive = !wasActive && isActive\n\nif (becameInactive) {\n    ctx.data.inactiveSince.iv = new Date().toISOString()\n    replace();\n} else if (becameActive) {\n    ctx.data.inactiveSince.iv = null\n    replace();\n}\n\n"
+    },
     "fieldsInReferences": ["displayName"],
     "fieldsInLists": [
       "meta.status.color",
@@ -45,6 +47,38 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": true
         }
+      },
+      {
+        "name": "active",
+        "properties": {
+          "isRequired": true,
+          "isRequiredOnPublish": true,
+          "isHalfWidth": true,
+          "fieldType": "Boolean",
+          "editor": "Checkbox",
+          "inlineEditable": true,
+          "defaultValue": true,
+          "label": "The team is active"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "inactiveSince",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true,
+          "fieldType": "DateTime",
+          "editor": "DateTime",
+          "label": "The team is inactive since"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": true,
+        "partitioning": "invariant"
       },
       {
         "name": "applicationNumber",

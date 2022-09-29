@@ -18,7 +18,8 @@ const loadWorkingGroups = () =>
 const loadProjects = () =>
   import(/* webpackChunkName: "projects" */ './projects/Routes');
 
-const loadUsers = () => import(/* webpackChunkName: "users" */ './users/Users');
+const loadUsers = () =>
+  import(/* webpackChunkName: "users" */ './users/Routes');
 
 const Dashboard = lazy(loadDashboard);
 const WorkingGroups = lazy(loadWorkingGroups);

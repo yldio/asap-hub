@@ -9,6 +9,7 @@ const boilerplateProps: Omit<
   id: '42',
   projectTitle: 'Unknown',
   displayName: 'Doe, J',
+  active: true,
   lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),
   members: [],
   expertiseAndResourceTags: [],

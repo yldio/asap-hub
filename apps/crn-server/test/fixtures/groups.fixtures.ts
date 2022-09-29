@@ -469,6 +469,7 @@ export const getGroupDataObject = (): GroupDataObject => ({
       id: 'team-id-0',
       displayName: 'Team A',
       active: true,
+      inactiveSince: null,
       lastModifiedDate: '2020-11-26T11:56:04.000Z',
       expertiseAndResourceTags: ['Animal resources'],
 

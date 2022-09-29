@@ -47,7 +47,7 @@ describe('Teams', () => {
     expect(beforeSwitchToInactive?.active).toEqual(true);
 
     await teamDataProvider.update(id, {
-      active: false,
+      active: { iv: false },
     });
 
     const afterSwitchToInactive = await teamDataProvider.fetchById(id);
@@ -60,7 +60,7 @@ describe('Teams', () => {
     ).toBeLessThan(1000);
 
     await teamDataProvider.update(id, {
-      active: true,
+      active: { iv: true },
     });
 
     const afterSwitchToActiveAgain = await teamDataProvider.fetchById(id);

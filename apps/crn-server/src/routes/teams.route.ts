@@ -55,15 +55,18 @@ export const teamRouteFactory = (
       const { body, params } = req;
 
       const { teamId } = validateTeamParameters(params);
-      const { tools } = validateTeamPatchRequest(body);
+      const patchRequestParams = validateTeamPatchRequest(body);
 
-      if (!req.loggedInUser!.teams.find(({ id }) => id === teamId)) {
-        throw Boom.forbidden();
+      if ('tools' in patchRequestParams) {
+        const { tools } = patchRequestParams;
+        if (!req.loggedInUser!.teams.find(({ id }) => id === teamId)) {
+          throw Boom.forbidden();
+        }
+
+        const result = await teamsController.update(teamId, tools);
+
+        res.json(result);
       }
-
-      const result = await teamsController.update(teamId, tools);
-
-      res.json(result);
     },
   );
 

@@ -23,6 +23,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
   id: 'team-id-0',
   displayName: 'Team A',
   active: true,
+  inactiveSince: null,
   lastModifiedDate: '2020-11-26T11:56:04.000Z',
   labCount: 2,
   expertiseAndResourceTags: ['Animal resources'],

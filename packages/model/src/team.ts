@@ -24,9 +24,11 @@ export interface TeamCreateRequest {
   proposalURL?: string;
 }
 
-export type TeamUpdateDataObject = {
-  tools: TeamTool[];
-};
+export type TeamUpdateDataObject =
+  | {
+      tools: TeamTool[];
+    }
+  | { active: { iv: boolean } };
 
 export type TeamPatchRequest = TeamUpdateDataObject;
 
@@ -44,7 +46,7 @@ export interface TeamMember {
 export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   id: string;
   active: boolean;
-  inactiveSince?: string;
+  inactiveSince?: string | null;
   expertiseAndResourceTags: string[];
   members: TeamMember[];
   lastModifiedDate: string;

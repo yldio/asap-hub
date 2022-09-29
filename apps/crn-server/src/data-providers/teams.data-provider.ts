@@ -111,17 +111,23 @@ export class TeamSquidexDataProvider implements TeamDataProvider {
   }
 
   async update(id: string, update: TeamUpdateDataObject): Promise<void> {
-    const cleanTools = update.tools.map((tool) =>
-      Object.entries(tool).reduce(
-        (acc, [key, value]) =>
-          value?.trim && value?.trim() === ''
-            ? acc // deleted field
-            : { ...acc, [key]: value },
-        {} as TeamTool,
-      ),
-    );
+    if ('tools' in update) {
+      const cleanTools = update.tools.map((tool) =>
+        Object.entries(tool).reduce(
+          (acc, [key, value]) =>
+            value?.trim && value?.trim() === ''
+              ? acc // deleted field
+              : { ...acc, [key]: value },
+          {} as TeamTool,
+        ),
+      );
 
-    await this.teamSquidexRestClient.patch(id, { tools: { iv: cleanTools } });
+      await this.teamSquidexRestClient.patch(id, { tools: { iv: cleanTools } });
+    }
+
+    if ('active' in update) {
+      await this.teamSquidexRestClient.patch(id, update);
+    }
   }
 
   async create(input: TeamCreateDataObject): Promise<string> {

@@ -1,7 +1,3 @@
-import {
-  Auth0Provider,
-  WhenReady,
-} from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { createListCalendarResponse } from '@asap-hub/fixtures';
 import { events } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -9,14 +5,14 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../api';
 import { getCalendars } from '../calendar/api';
 import { refreshCalendarsState } from '../calendar/state';
 import Events from '../Events';
 import { getEventListOptions } from '../options';
 import { eventsState } from '../state';
-
-jest.useFakeTimers();
 
 jest.mock('../calendar/api');
 jest.mock('../api');
@@ -30,13 +26,13 @@ const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<
 
 const renderEventsPage = async (pathname = events({}).$) => {
   const result = render(
-    <RecoilRoot
-      initializeState={({ set, reset }) => {
-        set(refreshCalendarsState, Math.random());
-        reset(eventsState(getEventListOptions(new Date(), { past: false })));
-      }}
-    >
-      <Suspense fallback="loading">
+    <Suspense fallback="loading">
+      <RecoilRoot
+        initializeState={({ set, reset }) => {
+          set(refreshCalendarsState, Math.random());
+          reset(eventsState(getEventListOptions(new Date(), { past: false })));
+        }}
+      >
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname }]}>
@@ -46,8 +42,8 @@ const renderEventsPage = async (pathname = events({}).$) => {
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+      </RecoilRoot>
+    </Suspense>,
   );
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),

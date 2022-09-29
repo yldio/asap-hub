@@ -495,6 +495,7 @@ export const parseGraphQLUserToDataObject = (
     lastModifiedDate: item.flatData.lastModifiedDate || createdDate,
     teams,
     social,
+    alumniSinceDate: item.flatData.alumniSinceDate || undefined,
     avatarUrl: flatAvatar?.length
       ? createUrl(flatAvatar.map((a) => a.id))[0]
       : undefined,

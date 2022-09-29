@@ -3,9 +3,9 @@ import { UserProfileContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
-import { Avatar, Display, Link, TabLink } from '../atoms';
+import { Avatar, Display, Link, TabLink, StateTag } from '../atoms';
 import { paper, tin } from '../colors';
-import { editIcon, uploadIcon } from '../icons';
+import { editIcon, uploadIcon, alumniBadge } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { SocialIcons, TabNav, UserProfilePersonalText } from '../molecules';
@@ -60,6 +60,18 @@ const containerStyles = css({
       30,
       'px',
     ),
+  },
+});
+
+const alumniBadgeStyles = css({});
+
+const nameHeaderStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: `${15 / perRem}em`,
+  [`@media (max-width: ${tabletScreen.min}px)`]: {
+    flexWrap: 'wrap',
+    marginBottom: `${24 / perRem}em`,
   },
 });
 
@@ -127,6 +139,7 @@ const editButtonContainer = css({
 type UserProfileHeaderProps = Pick<
   UserResponse,
   | 'id'
+  | 'alumniSinceDate'
   | 'avatarUrl'
   | 'contactEmail'
   | 'email'
@@ -155,6 +168,7 @@ type UserProfileHeaderProps = Pick<
 
 const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   id,
+  alumniSinceDate,
   displayName,
   country,
   city,
@@ -186,15 +200,22 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
     <header css={[containerStyles]}>
       <section css={personalInfoStyles}>
         <div>
-          <div css={{ display: 'flex' }}>
-            <Display styleAsHeading={2}>{displayName}</Display>
-            {degree ? (
-              <Display styleAsHeading={2}>, {degree}</Display>
-            ) : isOwnProfile ? (
-              <div css={{ color: tin.rgb }}>
-                <Display styleAsHeading={2}>, Degree</Display>
+          <div css={nameHeaderStyles}>
+            <div css={{ display: 'flex' }}>
+              <Display styleAsHeading={2}>{displayName}</Display>
+              {degree ? (
+                <Display styleAsHeading={2}>, {degree}</Display>
+              ) : isOwnProfile ? (
+                <div css={{ color: tin.rgb }}>
+                  <Display styleAsHeading={2}>, Degree</Display>
+                </div>
+              ) : null}
+            </div>
+            {alumniSinceDate && (
+              <div css={alumniBadgeStyles}>
+                <StateTag icon={alumniBadge} label="Alumni" />
               </div>
-            ) : null}
+            )}
           </div>
           <UserProfilePersonalText
             institution={institution}

@@ -9,6 +9,8 @@ export const teamsContentQueryFragment = gql`
     flatData {
       applicationNumber
       displayName
+      active
+      inactiveSince
       projectSummary
       projectTitle
       expertiseAndResourceTags

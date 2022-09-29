@@ -7,7 +7,9 @@
       "label": "Teams",
       "validateOnPublish": false
     },
-    "scripts": {},
+    "scripts": {
+      "update": "const wasActive = !!ctx.oldData.active.iv;\nconst isActive = !!ctx.data.active.iv;\n\nconst becameInactive = wasActive && !isActive;\nconst becameActive = !wasActive && isActive;\n\nif (becameInactive) {\n    ctx.data.inactiveSince.iv = new Date().toISOString();\n    replace();\n}\n\nif (becameActive) {\n    ctx.data.inactiveSince.iv = null;\n    replace();\n}\n"
+    },
     "fieldsInReferences": ["displayName"],
     "fieldsInLists": [
       "meta.status.color",

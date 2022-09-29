@@ -17,6 +17,7 @@ export type TeamTool = { name: string; description?: string; url: string };
 
 export interface TeamCreateRequest {
   displayName: string;
+  active: boolean;
   applicationNumber: string;
   projectTitle: string;
   projectSummary?: string;
@@ -42,6 +43,8 @@ export interface TeamMember {
 
 export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   id: string;
+  active: boolean;
+  inactiveSince?: string;
   expertiseAndResourceTags: string[];
   members: TeamMember[];
   lastModifiedDate: string;

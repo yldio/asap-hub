@@ -5591,6 +5591,8 @@ export type EventContentFragment = Pick<
                         TeamsFlatDataDto,
                         | 'applicationNumber'
                         | 'displayName'
+                        | 'active'
+                        | 'inactiveSince'
                         | 'projectSummary'
                         | 'projectTitle'
                         | 'expertiseAndResourceTags'
@@ -5933,6 +5935,8 @@ export type FetchEventsQuery = {
                                   TeamsFlatDataDto,
                                   | 'applicationNumber'
                                   | 'displayName'
+                                  | 'active'
+                                  | 'inactiveSince'
                                   | 'projectSummary'
                                   | 'projectTitle'
                                   | 'expertiseAndResourceTags'
@@ -6309,6 +6313,8 @@ export type FetchEventQuery = {
                             TeamsFlatDataDto,
                             | 'applicationNumber'
                             | 'displayName'
+                            | 'active'
+                            | 'inactiveSince'
                             | 'projectSummary'
                             | 'projectTitle'
                             | 'expertiseAndResourceTags'
@@ -6658,6 +6664,8 @@ export type GroupsContentFragment = Pick<
             TeamsFlatDataDto,
             | 'applicationNumber'
             | 'displayName'
+            | 'active'
+            | 'inactiveSince'
             | 'projectSummary'
             | 'projectTitle'
             | 'expertiseAndResourceTags'
@@ -6899,6 +6907,8 @@ export type FetchGroupsQuery = {
                       TeamsFlatDataDto,
                       | 'applicationNumber'
                       | 'displayName'
+                      | 'active'
+                      | 'inactiveSince'
                       | 'projectSummary'
                       | 'projectTitle'
                       | 'expertiseAndResourceTags'
@@ -7153,6 +7163,8 @@ export type FetchGroupQuery = {
                 TeamsFlatDataDto,
                 | 'applicationNumber'
                 | 'displayName'
+                | 'active'
+                | 'inactiveSince'
                 | 'projectSummary'
                 | 'projectTitle'
                 | 'expertiseAndResourceTags'
@@ -7973,6 +7985,8 @@ export type TeamsContentFragment = Pick<
     TeamsFlatDataDto,
     | 'applicationNumber'
     | 'displayName'
+    | 'active'
+    | 'inactiveSince'
     | 'projectSummary'
     | 'projectTitle'
     | 'expertiseAndResourceTags'
@@ -8077,6 +8091,8 @@ export type FetchTeamQuery = {
         TeamsFlatDataDto,
         | 'applicationNumber'
         | 'displayName'
+        | 'active'
+        | 'inactiveSince'
         | 'projectSummary'
         | 'projectTitle'
         | 'expertiseAndResourceTags'
@@ -8190,6 +8206,8 @@ export type FetchTeamsQuery = {
               TeamsFlatDataDto,
               | 'applicationNumber'
               | 'displayName'
+              | 'active'
+              | 'inactiveSince'
               | 'projectSummary'
               | 'projectTitle'
               | 'expertiseAndResourceTags'
@@ -8657,6 +8675,11 @@ export const TeamsContentFragmentDoc = {
                   name: { kind: 'Name', value: 'applicationNumber' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'active' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'inactiveSince' },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'projectSummary' },

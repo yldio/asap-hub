@@ -4670,6 +4670,16 @@ type Teams implements Content {
   version: Int!
 }
 
+"""The structure of the The team is active field of the Teams content type."""
+type TeamsDataActiveDto {
+  iv: Boolean
+}
+
+"""The structure of the The team is active field of the Teams content input type."""
+input TeamsDataActiveInputDto {
+  iv: Boolean
+}
+
 """The structure of the Application Number field of the Teams content type."""
 type TeamsDataApplicationNumberDto {
   iv: String
@@ -4692,9 +4702,11 @@ input TeamsDataDisplayNameInputDto {
 
 """The structure of the Teams data type."""
 type TeamsDataDto {
+  active: TeamsDataActiveDto
   applicationNumber: TeamsDataApplicationNumberDto
   displayName: TeamsDataDisplayNameDto
   expertiseAndResourceTags: TeamsDataExpertiseAndResourceTagsDto
+  inactiveSince: TeamsDataInactiveSinceDto
   outputs: TeamsDataOutputsDto
   projectSummary: TeamsDataProjectSummaryDto
   projectTitle: TeamsDataProjectTitleDto
@@ -4712,11 +4724,23 @@ input TeamsDataExpertiseAndResourceTagsInputDto {
   iv: [String!]
 }
 
+"""The structure of the The team is inactive since field of the Teams content type."""
+type TeamsDataInactiveSinceDto {
+  iv: Instant
+}
+
+"""The structure of the The team is inactive since field of the Teams content input type."""
+input TeamsDataInactiveSinceInputDto {
+  iv: Instant
+}
+
 """The structure of the Teams data input type."""
 input TeamsDataInputDto {
+  active: TeamsDataActiveInputDto
   applicationNumber: TeamsDataApplicationNumberInputDto
   displayName: TeamsDataDisplayNameInputDto
   expertiseAndResourceTags: TeamsDataExpertiseAndResourceTagsInputDto
+  inactiveSince: TeamsDataInactiveSinceInputDto
   outputs: TeamsDataOutputsInputDto
   projectSummary: TeamsDataProjectSummaryInputDto
   projectTitle: TeamsDataProjectTitleInputDto
@@ -4790,9 +4814,11 @@ input TeamsDataToolsInputDto {
 
 """The structure of the flat Teams data type."""
 type TeamsFlatDataDto {
+  active: Boolean
   applicationNumber: String
   displayName: String
   expertiseAndResourceTags: [String!]
+  inactiveSince: Instant
   outputs: [ResearchOutputs!]
   projectSummary: String
   projectTitle: String

@@ -14,6 +14,7 @@ export {
   Layout,
   ProjectDetailPage,
   ProjectsPage,
+  UserDetailPage,
   Theme,
   UsersPage,
   WorkingGroupDetailPage,

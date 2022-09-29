@@ -6,7 +6,7 @@ import {
   pixels,
   TagList,
 } from '@asap-hub/react-components';
-import { network } from '@asap-hub/routing';
+import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import UserCardInfo from '../molecules/UserCardInfo';
@@ -73,7 +73,7 @@ const UserCard: React.FC<UserCardProps> = ({
   projects = [],
   tags = [],
 }) => {
-  const userHref = network({}).users({}).user({ userId: id }).$;
+  const userHref = gp2.users({}).user({ userId: id }).$;
 
   return (
     <Card>

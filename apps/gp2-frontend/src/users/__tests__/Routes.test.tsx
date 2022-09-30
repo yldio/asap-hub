@@ -44,33 +44,10 @@ jest.mock('../api');
 describe('Routes', () => {
   it('renders a list of users', async () => {
     const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
-    const firstGroup = gp2.createUserResponse({
-      id: '1',
-      displayName: 'Homer Simpson',
-      firstName: 'Homer',
-      lastName: 'Simpson',
-      degrees: ['PhD' as const],
-      role: 'Administrator' as const,
-      region: 'Europe' as const,
-    });
-    const secondGroup = gp2.createUserResponse({
-      id: '2',
-      displayName: 'Ned Flanders',
-      firstName: 'Ned',
-      lastName: 'Flanders',
-      degrees: ['PhD' as const],
-      role: 'Administrator' as const,
-      region: 'Africa' as const,
-    });
-    mockGetUsers.mockResolvedValue(
-      gp2.createUsersResponse([firstGroup, secondGroup]),
-    );
+    mockGetUsers.mockResolvedValue(gp2.createUsersResponse(1));
     await renderRoutes();
     expect(
-      screen.getByRole('heading', { name: 'Ned Flanders, PhD' }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: 'Homer Simpson, PhD' }),
+      screen.getByRole('heading', { name: 'Tom Hardy, PhD' }),
     ).toBeInTheDocument();
   }, 30_000);
 });

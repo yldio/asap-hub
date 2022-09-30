@@ -42,6 +42,7 @@ export interface TeamMember {
 
 export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   id: string;
+  inactiveSince: string | null;
   expertiseAndResourceTags: string[];
   members: TeamMember[];
   lastModifiedDate: string;

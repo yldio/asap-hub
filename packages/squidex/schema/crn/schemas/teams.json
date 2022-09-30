@@ -47,6 +47,21 @@
         }
       },
       {
+        "name": "inactiveSince",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "DateTime",
+          "editor": "Date",
+          "label": "The team is inactive since"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
         "name": "applicationNumber",
         "isHidden": false,
         "isLocked": false,

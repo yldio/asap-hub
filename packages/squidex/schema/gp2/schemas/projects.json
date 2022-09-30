@@ -8,8 +8,8 @@
       "validateOnPublish": false
     },
     "scripts": {
-      "create": "if(ctx.data.endDate.iv && new Date(ctx.data.startDate.iv) > new Date(ctx.data.endDate.iv)) {\n    reject('Start date date cannot be greater than end date')\n}",
-      "update": "if(ctx.data.endDate.iv && new Date(ctx.data.startDate.iv) > new Date(ctx.data.endDate.iv)) {\n    reject('Start date date cannot be greater than end date')\n}"
+      "create": "if(ctx.data.endDate.iv && new Date(ctx.data.startDate.iv) > new Date(ctx.data.endDate.iv)) {\n    reject('Start date date cannot be greater than end date')\n}\nif(!ctx.data.pmEmail.iv && !ctx.data.leadEmail.iv) { \n reject('pm or lead email should be entered') \n}\n",
+      "update": "if(ctx.data.endDate.iv && new Date(ctx.data.startDate.iv) > new Date(ctx.data.endDate.iv)) {\n    reject('Start date date cannot be greater than end date')\n}\nif(!ctx.data.pmEmail.iv && !ctx.data.leadEmail.iv) { \n reject('pm or lead email should be entered') \n}\n"
     },
     "fieldsInReferences": [],
     "fieldsInLists": [],
@@ -170,7 +170,7 @@
         }
       },
       {
-        "name": "pmEemail",
+        "name": "pmEmail",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -185,13 +185,13 @@
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "PM Email",
-          "isRequired": true,
+          "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": true
         }
       },
       {
-        "name": "leadEemail",
+        "name": "leadEmail",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -206,7 +206,7 @@
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Lead Email",
-          "isRequired": true,
+          "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": true
         }
@@ -218,7 +218,7 @@
         "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
-          "fieldType": "String",
+          "fieldType": "Tags",
           "createEnum": true,
           "allowedValues": [
             "Movement Disorders",
@@ -268,7 +268,7 @@
           "minItems": 1,
           "editor": "Tags",
           "label": "Keywords",
-          "isRequired": false,
+          "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": true
         }

@@ -1013,10 +1013,8 @@ export type ProjectsDataDto = {
   description: Maybe<ProjectsDataDescriptionDto>;
   endDate: Maybe<ProjectsDataEndDateDto>;
   keywords: Maybe<ProjectsDataKeywordsDto>;
-  leadEemail: Maybe<ProjectsDataLeadEemailDto>;
   leadEmail: Maybe<ProjectsDataLeadEmailDto>;
   members: Maybe<ProjectsDataMembersDto>;
-  pmEemail: Maybe<ProjectsDataPmEemailDto>;
   pmEmail: Maybe<ProjectsDataPmEmailDto>;
   projectProposal: Maybe<ProjectsDataProjectProposalDto>;
   startDate: Maybe<ProjectsDataStartDateDto>;
@@ -1039,10 +1037,8 @@ export type ProjectsDataInputDto = {
   description: InputMaybe<ProjectsDataDescriptionInputDto>;
   endDate: InputMaybe<ProjectsDataEndDateInputDto>;
   keywords: InputMaybe<ProjectsDataKeywordsInputDto>;
-  leadEemail: InputMaybe<ProjectsDataLeadEemailInputDto>;
   leadEmail: InputMaybe<ProjectsDataLeadEmailInputDto>;
   members: InputMaybe<ProjectsDataMembersInputDto>;
-  pmEemail: InputMaybe<ProjectsDataPmEemailInputDto>;
   pmEmail: InputMaybe<ProjectsDataPmEmailInputDto>;
   projectProposal: InputMaybe<ProjectsDataProjectProposalInputDto>;
   startDate: InputMaybe<ProjectsDataStartDateInputDto>;
@@ -1058,16 +1054,6 @@ export type ProjectsDataKeywordsDto = {
 /** The structure of the Keywords field of the Projects content input type. */
 export type ProjectsDataKeywordsInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
-};
-
-/** The structure of the Lead Email field of the Projects content type. */
-export type ProjectsDataLeadEemailDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Lead Email field of the Projects content input type. */
-export type ProjectsDataLeadEemailInputDto = {
-  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Lead Email field of the Projects content type. */
@@ -1098,16 +1084,6 @@ export type ProjectsDataMembersDto = {
 /** The structure of the Members field of the Projects content input type. */
 export type ProjectsDataMembersInputDto = {
   iv: InputMaybe<Array<ProjectsDataMembersChildInputDto>>;
-};
-
-/** The structure of the PM Email field of the Projects content type. */
-export type ProjectsDataPmEemailDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the PM Email field of the Projects content input type. */
-export type ProjectsDataPmEemailInputDto = {
-  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the PM Email field of the Projects content type. */
@@ -1167,10 +1143,8 @@ export type ProjectsFlatDataDto = {
   description: Maybe<Scalars['String']>;
   endDate: Maybe<Scalars['Instant']>;
   keywords: Maybe<Array<Scalars['String']>>;
-  leadEemail: Maybe<Scalars['String']>;
   leadEmail: Maybe<Scalars['String']>;
   members: Maybe<Array<ProjectsDataMembersChildDto>>;
-  pmEemail: Maybe<Scalars['String']>;
   pmEmail: Maybe<Scalars['String']>;
   /** External link for a project proposal */
   projectProposal: Maybe<Scalars['String']>;

@@ -13,6 +13,7 @@ export {
   DashboardPageBody,
   Layout,
   ProjectDetailPage,
+  ProjectOverview,
   ProjectsPage,
   Theme,
   UsersPage,

@@ -24,7 +24,7 @@ const titleStyle = css({
   marginBottom: `${-12 / perRem}em`,
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     flexFlow: 'column-reverse',
-    gap: 0,
+    gap: `${4 / perRem}em`,
     alignItems: 'flex-start',
   },
 });

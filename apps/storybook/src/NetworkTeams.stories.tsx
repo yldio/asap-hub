@@ -24,6 +24,7 @@ const teamsProps = (): ComponentProps<typeof NetworkTeams> => {
   return {
     teams: Array.from({ length: numberOfItems }, (_, i) => ({
       id: `t${i}`,
+      active: true,
       displayName: `Barnes, A. ${i + 1}`,
       projectTitle:
         'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',

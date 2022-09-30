@@ -6,6 +6,7 @@ import NetworkTeams from '../NetworkTeams';
 const team: ComponentProps<typeof NetworkTeams>['teams'][0] = {
   id: '42',
   displayName: 'Unknown',
+  active: true,
   projectTitle: 'Unknown Project Title',
   members: [],
   expertiseAndResourceTags: [],

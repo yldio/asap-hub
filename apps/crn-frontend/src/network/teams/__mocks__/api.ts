@@ -25,11 +25,13 @@ export const getTeam = jest.fn(
 
 export const patchTeam = jest.fn(
   async (id: string, patch: TeamPatchRequest): Promise<TeamResponse> => {
-    const user = await getTeam(id);
-    return {
-      ...user,
-      ...patch,
-    };
+    const team = await getTeam(id);
+    return 'tools' in patch
+      ? {
+          ...team,
+          ...patch,
+        }
+      : team;
   },
 );
 

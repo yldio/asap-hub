@@ -8,15 +8,15 @@ import { useProjectById } from './state';
 const { projects } = gp2;
 const ProjectDetail = () => {
   const { projectId } = useRouteParams(projects({}).project);
-  const projectData = useProjectById(projectId);
+  const project = useProjectById(projectId);
   const backHref = useBackHref() ?? projects({}).$;
-  if (projectData) {
+  if (project) {
     return (
-      <ProjectDetailPage backHref={backHref} {...projectData}>
+      <ProjectDetailPage backHref={backHref} {...project}>
         <Switch>
           <Route path={projects({}).project({ projectId }).overview({}).$}>
             <Frame title="Overview">
-              <ProjectOverview {...projectData} />
+              <ProjectOverview {...project} />
             </Frame>
           </Route>
           <Redirect to={projects({}).project({ projectId }).overview({}).$} />

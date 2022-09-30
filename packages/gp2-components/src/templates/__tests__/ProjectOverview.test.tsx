@@ -1,3 +1,4 @@
+import { gp2 } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import ProjectOverview from '../ProjectOverview';
 
@@ -18,13 +19,13 @@ describe('ProjectOverview', () => {
       screen.getByRole('heading', { name: 'Contact Information' }),
     ).toBeInTheDocument();
   });
-  it('renders the keywords', () => {
+  it.each(gp2.projectKeywords)('renders the keyword: %s', (keyword) => {
     render(
-      <ProjectOverview {...defaultProps} keywords={['Genetics']}>
+      <ProjectOverview {...defaultProps} keywords={[keyword]}>
         Body
       </ProjectOverview>,
     );
 
-    expect(screen.getByText('Genetics')).toBeInTheDocument();
+    expect(screen.getByText(keyword)).toBeInTheDocument();
   });
 });

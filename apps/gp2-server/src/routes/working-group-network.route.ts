@@ -10,9 +10,9 @@ export const workingGroupNetworkRouteFactory = (
   workingGroupNetworkRoutes.get<unknown, gp2.ListWorkingGroupNetworkResponse>(
     '/working-group-network',
     async (_req, res) => {
-      const result = await workingGroupNetworkController.fetch();
+      const workingGroupNetwork = await workingGroupNetworkController.fetch();
 
-      res.json(result);
+      res.json(workingGroupNetwork);
     },
   );
 

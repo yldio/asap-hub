@@ -19,11 +19,11 @@ export const userPublicRouteFactory = (
       const { code } = validateUserInviteParameters(req.params);
 
       try {
-        const result = await userController.fetchByCode(code);
+        const user = await userController.fetchByCode(code);
 
         res.json({
-          id: result.id,
-          displayName: result.displayName,
+          id: user.id,
+          displayName: user.displayName,
         });
       } catch (error) {
         if (isBoom(error, 403)) {
@@ -49,17 +49,17 @@ export const userRouteFactory = (userController: UserController): Router => {
       filter: options.filter && { role: options.filter },
     };
 
-    const result = await userController.fetch(userFetchOptions);
+    const users = await userController.fetch(userFetchOptions);
 
-    res.json(result);
+    res.json(users);
   });
 
   userRoutes.get<{ userId: string }>('/users/:userId', async (req, res) => {
     const { userId } = validateUserParameters(req.params);
 
-    const result = await userController.fetchById(userId);
+    const user = await userController.fetchById(userId);
 
-    res.json(result);
+    res.json(user);
   });
 
   return userRoutes;

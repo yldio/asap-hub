@@ -2,8 +2,8 @@ import { css } from '@emotion/react';
 import { TeamResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
-import { Card, Anchor, Paragraph } from '../atoms';
-import { perRem } from '../pixels';
+import { Card, Anchor, Paragraph, StateTag } from '../atoms';
+import { perRem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
 import { teamIcon, labIcon } from '../icons';
 import { LinkHeadline, TagList } from '../molecules';
@@ -15,6 +15,18 @@ const teamMemberMetaStyles = css({
   alignItems: 'center',
   padding: `${12 / perRem}em 0`,
   gap: `${24 / perRem}em`,
+});
+const titleStyle = css({
+  display: 'flex',
+  flexFlow: 'row',
+  gap: `${16 / perRem}em`,
+  alignItems: 'center',
+  marginBottom: `${-12 / perRem}em`,
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+    flexFlow: 'column-reverse',
+    gap: 0,
+    alignItems: 'flex-start',
+  },
 });
 const tagsPadding = css({
   paddingBottom: `${12 / perRem}em`,
@@ -29,6 +41,7 @@ type TeamCardProps = Pick<
   TeamResponse,
   | 'id'
   | 'displayName'
+  | 'active'
   | 'projectTitle'
   | 'expertiseAndResourceTags'
   | 'members'
@@ -38,19 +51,23 @@ type TeamCardProps = Pick<
 const TeamCard: React.FC<TeamCardProps> = ({
   id,
   displayName,
+  active,
   projectTitle,
   expertiseAndResourceTags,
   members,
   labCount,
 }) => (
-  <Card>
-    <LinkHeadline
-      level={2}
-      styleAsHeading={4}
-      href={network({}).teams({}).team({ teamId: id }).$}
-    >
-      Team {displayName}
-    </LinkHeadline>
+  <Card accent={active ? 'default' : 'neutral200'}>
+    <div css={titleStyle}>
+      <LinkHeadline
+        level={2}
+        styleAsHeading={4}
+        href={network({}).teams({}).team({ teamId: id }).$}
+      >
+        Team {displayName}
+      </LinkHeadline>
+      {!active && <StateTag label="Inactive" />}
+    </div>
     <Anchor href={network({}).teams({}).team({ teamId: id }).$}>
       <Paragraph accent="lead">{projectTitle}</Paragraph>
     </Anchor>

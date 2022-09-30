@@ -1,4 +1,4 @@
-import { number, text } from '@storybook/addon-knobs';
+import { number, text, boolean } from '@storybook/addon-knobs';
 
 import { TeamCard } from '@asap-hub/react-components';
 
@@ -26,6 +26,7 @@ const teamCardProps = () => {
   return {
     id: 'ee98d044-79a7-4028-915d-7f88793e3190',
     displayName: text('Display Name', 'Barnes, A.'),
+    active: boolean('Is the team active?', true),
     projectTitle:
       'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
 

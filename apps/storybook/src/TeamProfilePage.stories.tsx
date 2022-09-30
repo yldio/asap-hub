@@ -1,6 +1,6 @@
 import { TeamProfilePage } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
-import { number, select, text } from '@storybook/addon-knobs';
+import { boolean, number, select, text } from '@storybook/addon-knobs';
 import { formatISO, subDays } from 'date-fns';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
@@ -14,7 +14,7 @@ export default {
 const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
   id: '42',
   displayName: 'Ramirez, T',
-  active: true,
+  active: boolean('Is the team active?', true),
   projectTitle:
     'Molecular actions of PD-associated pathological proteins using in vitro human pluripotent steam cell brain organoids.',
   projectSummary:

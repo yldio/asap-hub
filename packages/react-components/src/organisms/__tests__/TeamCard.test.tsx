@@ -14,6 +14,7 @@ const member = {
 const teamCardProps: ComponentProps<typeof TeamCard> = {
   id: 'ee98d044-79a7-4028-915d-7f88793e3190',
   displayName: 'A Barnes',
+  active: true,
   projectTitle:
     'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
   expertiseAndResourceTags: [
@@ -34,6 +35,15 @@ it('renders the title', () => {
   const { getByRole } = render(<TeamCard {...teamCardProps} />);
   expect(getByRole('heading').textContent).toEqual('Team A Barnes');
   expect(getByRole('heading').tagName).toEqual('H2');
+});
+
+it('renders the state tag for a inactive group', () => {
+  const { getByText, rerender, queryByText } = render(
+    <TeamCard {...teamCardProps} active={false} />,
+  );
+  expect(getByText('Inactive')).toBeVisible();
+  rerender(<TeamCard {...teamCardProps} active={true} />);
+  expect(queryByText('Inactive')).not.toBeInTheDocument();
 });
 
 it('uses singular for one team member', () => {

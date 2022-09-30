@@ -550,7 +550,7 @@ describe('Team Data Provider', () => {
       ).rejects.toThrow(NotFoundError);
     });
 
-    test('Should update the team', async () => {
+    test('Should update the team when passing tools', async () => {
       const teamId = 'team-id-1';
       const squidexGraphqlResponse = getSquidexTeamGraphqlResponse();
       squidexGraphqlClientMock.request.mockResolvedValue(
@@ -565,6 +565,25 @@ describe('Team Data Provider', () => {
 
       await teamDataProvider.update(teamId, { tools: [] });
     });
+
+    test.each([{ active: true }, { active: false }])(
+      'Should update the team when passing active with value $active',
+      async ({ active }) => {
+        const teamId = 'team-id-1';
+        const squidexGraphqlResponse = getSquidexTeamGraphqlResponse();
+        squidexGraphqlClientMock.request.mockResolvedValue(
+          squidexGraphqlResponse,
+        );
+
+        nock(baseUrl)
+          .patch(`/api/content/${appName}/teams/${teamId}`, {
+            active: { iv: active },
+          })
+          .reply(200, {}); // response is not used
+
+        await teamDataProvider.update(teamId, { active: { iv: active } });
+      },
+    );
 
     test('Should clean tool payload by removing a property set to null', async () => {
       const teamId = 'team-id-1';

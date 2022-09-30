@@ -27,6 +27,11 @@ it('renders the name as the top-level heading', () => {
   expect(screen.getByRole('heading').tagName).toBe('H1');
 });
 
+it('renders the tag for inactive teams', () => {
+  render(<TeamProfileHeader {...boilerplateProps} active={false} />);
+  expect(screen.getByText('Inactive')).toBeVisible();
+});
+
 it('renders a list of members', () => {
   render(
     <TeamProfileHeader

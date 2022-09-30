@@ -14,6 +14,12 @@ describe('ProjectOverview', () => {
     ).toBeInTheDocument();
     expect(screen.getByText(description)).toBeInTheDocument();
   });
+  it('does not render the description if unavailable', () => {
+    render(<ProjectOverview {...defaultProps} />);
+    expect(
+      screen.queryByRole('heading', { name: 'Description' }),
+    ).not.toBeInTheDocument();
+  });
   it('renders the contact information', () => {
     render(<ProjectOverview {...defaultProps} />);
     expect(

@@ -38,12 +38,14 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   keywords,
 }) => (
   <div css={containerStyles}>
-    <Card>
-      <Headline3 noMargin>Description</Headline3>
-      <div css={contentStyles}>
-        <ExpandableText>{description}</ExpandableText>
-      </div>
-    </Card>
+    {!!description && (
+      <Card>
+        <Headline3 noMargin>Description</Headline3>
+        <div css={contentStyles}>
+          <ExpandableText>{description}</ExpandableText>
+        </div>
+      </Card>
+    )}
     <div css={columnStyles}>
       <Card>
         <Headline3 noMargin>Contact Information</Headline3>

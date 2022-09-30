@@ -9,7 +9,7 @@ type ProjectOverviewProps = Pick<
   'pmEmail' | 'leadEmail' | 'description' | 'keywords'
 >;
 
-const { rem } = pixels;
+const { rem, smallDesktopScreen } = pixels;
 
 const containerStyles = css({
   display: 'flex',
@@ -22,6 +22,15 @@ const contentStyles = css({
   marginTop: rem(32),
 });
 
+const columnStyles = css({
+  display: 'grid',
+  columnGap: rem(32),
+  gridRowGap: rem(32),
+  [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
+    gridTemplateColumns: '1fr 1fr',
+    rowGap: rem(32),
+  },
+});
 const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   description,
   pmEmail,
@@ -35,21 +44,23 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
         <ExpandableText>{description}</ExpandableText>
       </div>
     </Card>
-    <Card>
-      <Headline3 noMargin>Contact Information</Headline3>
-      <div css={contentStyles}>
-        <EmailSection
-          contactEmails={[
-            { email: pmEmail, contact: 'PM Email' },
-            { email: leadEmail, contact: 'Lead Email' },
-          ]}
-        />
-      </div>
-    </Card>
-    <Card>
-      <Headline3 noMargin>Keywords</Headline3>
-      <TagList tags={keywords} />
-    </Card>
+    <div css={columnStyles}>
+      <Card>
+        <Headline3 noMargin>Contact Information</Headline3>
+        <div css={contentStyles}>
+          <EmailSection
+            contactEmails={[
+              { email: pmEmail, contact: 'PM Email' },
+              { email: leadEmail, contact: 'Lead Email' },
+            ]}
+          />
+        </div>
+      </Card>
+      <Card>
+        <Headline3 noMargin>Keywords</Headline3>
+        <TagList tags={keywords} />
+      </Card>
+    </div>
   </div>
 );
 

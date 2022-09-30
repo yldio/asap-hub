@@ -18,6 +18,7 @@ const titleStyle = css({
   flexFlow: 'row',
   gap: `${16 / perRem}em`,
   alignItems: 'center',
+  marginBottom: `${-12 / perRem}em`,
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     flexFlow: 'column-reverse',
     gap: 0,

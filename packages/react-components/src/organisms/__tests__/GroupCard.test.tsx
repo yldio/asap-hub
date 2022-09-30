@@ -23,10 +23,12 @@ it('renders the group name linking to the group', () => {
 });
 
 it('renders the state tag for a inactive group', () => {
-  const { getByText } = render(
+  const { getByText, rerender, queryByText } = render(
     <GroupCard {...props} id="42" name="My Group" active={false} />,
   );
   expect(getByText('Inactive')).toBeVisible();
+  rerender(<GroupCard {...props} id="42" name="My Group" active={true} />);
+  expect(queryByText('Inactive')).not.toBeInTheDocument();
 });
 
 it('generates a singular team count', () => {

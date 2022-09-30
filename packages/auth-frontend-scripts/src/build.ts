@@ -41,6 +41,8 @@ export const replaceScripts = (buildDir: string): void => {
     [...document.querySelectorAll('script[src]')].forEach((script: Element) => {
       if (isScriptElement(script)) {
         // eslint-disable-next-line no-param-reassign
+        script.innerHTML = ' '; // This is a hack to prevent the script tag from being self closing.
+        // eslint-disable-next-line no-param-reassign
         script.src = script.src.replace(regex, (match: string) => {
           copyFileSync(
             resolve(buildDir, match),

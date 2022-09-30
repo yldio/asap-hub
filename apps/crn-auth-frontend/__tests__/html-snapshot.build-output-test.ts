@@ -55,7 +55,9 @@ describe('the built index.html', () => {
           <script
             defer="defer"
             src="https://dev.hub.asap.science/.auth/static/js/main.chunk.js"
-          />
+          >
+             
+          </script>
         </head>
         <body>
           <noscript>

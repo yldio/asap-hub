@@ -63,10 +63,7 @@ describe('build', () => {
       Array [
         "/index.html",
         "<!doctype html><html lang=\\"en\\"><head>
-                <script defer=\\"defer\\" src=\\"https://dev.hub.asap.science/.auth/static/js/main.chunk.js\\">
-              </head>
-              </html>
-            </script></head><body></body></html>",
+                <script defer=\\"defer\\" src=\\"https://dev.hub.asap.science/.auth/static/js/main.chunk.js\\"> </script></head><body></body></html>",
       ]
     `);
   });

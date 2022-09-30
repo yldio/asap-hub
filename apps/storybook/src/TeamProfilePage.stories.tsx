@@ -14,7 +14,11 @@ export default {
 const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
   id: '42',
   displayName: 'Ramirez, T',
-  inactiveSince: null,
+  inactiveSince: select(
+    'Team is inactive since',
+    ['2022-09-30', null],
+    '2022-09-30',
+  ),
   projectTitle:
     'Molecular actions of PD-associated pathological proteins using in vitro human pluripotent steam cell brain organoids.',
   projectSummary:

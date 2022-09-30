@@ -18,4 +18,13 @@ describe('ProjectOverview', () => {
       screen.getByRole('heading', { name: 'Contact Information' }),
     ).toBeInTheDocument();
   });
+  it('renders the keywords', () => {
+    render(
+      <ProjectOverview {...defaultProps} keywords={['Genetics']}>
+        Body
+      </ProjectOverview>,
+    );
+
+    expect(screen.getByText('Genetics')).toBeInTheDocument();
+  });
 });

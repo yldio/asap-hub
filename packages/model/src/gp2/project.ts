@@ -13,7 +13,7 @@ export type ProjectMember = {
   avatarUrl?: string;
 };
 
-const projectKeywords = [
+export const projectKeywords = [
   'Movement Disorders',
   'Epidemiology',
   'Neurology',

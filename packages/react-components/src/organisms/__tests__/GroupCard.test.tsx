@@ -24,10 +24,10 @@ it('renders the group name linking to the group', () => {
 
 it('renders the state tag for a inactive group', () => {
   const { getByText, rerender, queryByText } = render(
-    <GroupCard {...props} id="42" name="My Group" active={false} />,
+    <GroupCard {...props} active={false} />,
   );
   expect(getByText('Inactive')).toBeVisible();
-  rerender(<GroupCard {...props} id="42" name="My Group" active={true} />);
+  rerender(<GroupCard {...props} active={true} />);
   expect(queryByText('Inactive')).not.toBeInTheDocument();
 });
 

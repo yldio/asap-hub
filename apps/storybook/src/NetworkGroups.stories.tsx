@@ -17,6 +17,7 @@ const groupsProps = (): ComponentProps<typeof NetworkGroups> => {
       description: 'Group Description',
       tags: ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5', 'Tag 6'],
       numberOfTeams: 3,
+      active: true,
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),
     numberOfItems,
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),

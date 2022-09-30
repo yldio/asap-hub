@@ -28,10 +28,9 @@ const titleStyle = css({
 
 type GroupCardProps = Pick<
   GroupResponse,
-  'id' | 'name' | 'description' | 'tags'
+  'id' | 'name' | 'description' | 'tags' | 'active'
 > & {
   readonly numberOfTeams: number;
-  readonly active?: boolean;
 };
 const GroupCard: React.FC<GroupCardProps> = ({
   id,

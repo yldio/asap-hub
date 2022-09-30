@@ -15,14 +15,13 @@ const iconStyles = css({
 
 const titleStyle = css({
   display: 'flex',
-  flexFlow: 'row',
-  gap: `${16 / perRem}em`,
-  alignItems: 'center',
-  marginBottom: `${-12 / perRem}em`,
-  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
-    flexFlow: 'column-reverse',
-    gap: 0,
-    alignItems: 'flex-start',
+  flexFlow: 'column-reverse',
+  alignItems: 'flex-start',
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    flexFlow: 'row',
+    gap: `${16 / perRem}em`,
+    alignItems: 'center',
+    marginBottom: `${-12 / perRem}em`,
   },
 });
 

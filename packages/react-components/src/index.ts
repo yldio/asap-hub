@@ -126,6 +126,7 @@ export {
   SharedResearchListCard,
   SpeakersList,
   SsoButtons,
+  CollaborationsTable,
   TeamCard,
   TeamGroupsCard,
   TeamMembersSection,

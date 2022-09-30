@@ -50,6 +50,7 @@ export { default as SharedResearchListCard } from './SharedResearchListCard';
 export { default as SharedResearchMetadata } from './SharedResearchMetadata';
 export { default as SharedResearchOutputHeaderCard } from './SharedResearchOutputHeaderCard';
 export { default as SpeakersList } from './SpeakersList';
+export { default as CollaborationsTable } from './CollaborationsTable';
 export { default as TeamCard } from './TeamCard';
 export { default as TeamGroupsCard } from './TeamGroupsCard';
 export { default as TeamMembersSection } from './TeamMembersSection';

@@ -12,4 +12,10 @@ describe('ProjectOverview', () => {
       screen.getByRole('heading', { name: 'Description' }),
     ).toBeInTheDocument();
   });
+  it('renders the contact information', () => {
+    render(<ProjectOverview {...defaultProps} />);
+    expect(
+      screen.getByRole('heading', { name: 'Contact Information' }),
+    ).toBeInTheDocument();
+  });
 });

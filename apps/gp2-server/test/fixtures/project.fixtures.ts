@@ -16,6 +16,10 @@ export const getProjectDataObject = (): gp2.ProjectDataObject => ({
   status: 'Completed',
   projectProposalUrl: 'http://a-proposal',
   members: [],
+  keywords: ['R'],
+  description: 'test description',
+  leadEmail: 'peter@parker.com',
+  pmEmail: 'tony@stark.com',
 });
 
 export const getListProjectDataObject = (): gp2.ListProjectResponse => ({
@@ -54,7 +58,7 @@ export const getGraphQLProject = (): GraphQLProject => ({
     projectProposal: 'http://a-proposal',
     members: [],
     description: 'test description',
-    keywords: [],
+    keywords: ['R'],
     pmEmail: 'tony@stark.com',
     leadEmail: 'peter@parker.com',
   },

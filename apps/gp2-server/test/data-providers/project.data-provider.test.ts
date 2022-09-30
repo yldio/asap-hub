@@ -167,6 +167,22 @@ describe('Project Data Provider', () => {
         const { leadEmail } = parseProjectToDataObject(project);
         expect(leadEmail).toEqual(email);
       });
+
+      test('description is added if available', () => {
+        const expectedDescription = 'this is a description';
+        const project = getGraphQLProject();
+        project.flatData.description = expectedDescription;
+        const { description } = parseProjectToDataObject(project);
+        expect(description).toEqual(expectedDescription);
+      });
+
+      test('keywords are added', () => {
+        const expectedKeywords = ['Outreach'];
+        const project = getGraphQLProject();
+        project.flatData.keywords = expectedKeywords;
+        const { keywords } = parseProjectToDataObject(project);
+        expect(keywords).toEqual(expectedKeywords);
+      });
     });
   });
 });

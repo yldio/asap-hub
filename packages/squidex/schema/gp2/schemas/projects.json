@@ -219,6 +219,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
+          "createEnum": true,
           "allowedValues": [
             "Movement Disorders",
             "Epidemiology",
@@ -265,7 +266,6 @@
           ],
           "maxItems": 6,
           "minItems": 1,
-          "createEnum": false,
           "editor": "Tags",
           "label": "Keywords",
           "isRequired": false,

@@ -1,6 +1,6 @@
 import { ListResponse } from '../common';
 
-const projectStatus = ['Active', 'Inactive', 'Completed'] as const;
+export const projectStatus = ['Active', 'Inactive', 'Completed'] as const;
 export type ProjectStatus = typeof projectStatus[number];
 
 export const isProjectStatus = (data: string | null): data is ProjectStatus =>
@@ -59,6 +59,9 @@ export const projectKeywords = [
 ] as const;
 
 export type ProjectKeywords = typeof projectKeywords[number];
+export const isProjectKeyword = (
+  data: string | null,
+): data is ProjectKeywords => projectKeywords.includes(data as ProjectKeywords);
 
 export type ProjectDataObject = {
   description?: string;

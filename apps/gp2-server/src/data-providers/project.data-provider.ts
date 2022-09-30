@@ -104,6 +104,10 @@ export function parseProjectToDataObject({
       [],
     ) || [];
 
+  if (project.keywords && !project.keywords.every(gp2.isProjectKeyword)) {
+    throw new TypeError('Invalid keyword received from Squidex');
+  }
+
   return {
     id,
     title: project.title || '',
@@ -115,6 +119,6 @@ export function parseProjectToDataObject({
     leadEmail: project.leadEmail || undefined,
     description: project.description || undefined,
     members,
-    keywords: project.keywords as unknown as gp2.ProjectKeywords[], // TODO: fix this typing with enum from Squidex
+    keywords: project.keywords || [],
   };
 }

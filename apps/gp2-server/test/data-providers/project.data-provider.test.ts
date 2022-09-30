@@ -183,6 +183,13 @@ describe('Project Data Provider', () => {
         const { keywords } = parseProjectToDataObject(project);
         expect(keywords).toEqual(expectedKeywords);
       });
+
+      test('keywords are valid', () => {
+        const expectedKeywords = ['invalid-keyword'];
+        const project = getGraphQLProject();
+        project.flatData.keywords = expectedKeywords;
+        expect(() => parseProjectToDataObject(project)).toThrow();
+      });
     });
   });
 });

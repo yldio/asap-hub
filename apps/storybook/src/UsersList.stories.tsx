@@ -1,7 +1,7 @@
 import { createListUserResponse } from '@asap-hub/fixtures';
 import { ExternalAuthorResponse } from '@asap-hub/model';
 import { UsersList } from '@asap-hub/react-components';
-import { number } from '@storybook/addon-knobs';
+import { date, number } from '@storybook/addon-knobs';
 
 export default {
   title: 'Molecules / Users / List',
@@ -22,6 +22,9 @@ export const External = () => (
         (_, i): ExternalAuthorResponse => ({
           id: `external-author-${i + 1}`,
           displayName: `John Number ${i + 1}`,
+          alumniSinceDate: new Date(
+            date('Alumni Since Date', new Date(2021, 6, 12, 14, 32)),
+          ).toISOString()
         }),
       )}
   />

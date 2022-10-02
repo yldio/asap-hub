@@ -1,3 +1,4 @@
+import { CalendarRawDataObject, FetchCalendarError } from '@asap-hub/model';
 import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import { Auth } from 'googleapis';
@@ -10,7 +11,6 @@ import {
   googleApiToken,
   googleApiUrl,
 } from '../../config';
-import Calendars, { CalendarController } from '../../controllers/calendars';
 import { Alerts, AlertsSentry } from '../../utils/alerts';
 import { getAuthToken } from '../../utils/auth';
 import getJWTCredentialsAWS, {
@@ -20,12 +20,15 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { validateBody } from '../../validation/subscribe-handler.validation';
 import { CalendarEvent, CalendarPayload } from '../event-bus';
+import CalendarSquidexDataProvider, {
+  CalendarDataProvider,
+} from '../../data-providers/calendars.data-provider';
 
 export const calendarCreatedHandlerFactory =
   (
     subscribe: SubscribeToEventChanges,
     unsubscribe: UnsubscribeFromEventChanges,
-    calendarController: CalendarController,
+    calendarDataProvider: CalendarDataProvider,
     alerts: Alerts,
   ) =>
   async (
@@ -49,9 +52,15 @@ export const calendarCreatedHandlerFactory =
         return 'OK';
       }
 
-      const { version } = await calendarController.fetchById(payload.id, {
-        raw: true,
-      });
+      const result = await calendarDataProvider.fetchById(payload.id);
+
+      if (typeof result === 'number' && result in FetchCalendarError) {
+        logger.error('Failed to retrieve calendar by ID.');
+
+        return 'OK';
+      }
+
+      const { version } = result as CalendarRawDataObject;
 
       if (version > (payload.version as number)) {
         logger.warn(
@@ -64,7 +73,7 @@ export const calendarCreatedHandlerFactory =
         try {
           await unsubscribe(payload.dataOld.resourceId?.iv, payload.id);
 
-          await calendarController.update(payload.id, {
+          await calendarDataProvider.update(payload.id, {
             resourceId: null,
           });
         } catch (error) {
@@ -85,7 +94,7 @@ export const calendarCreatedHandlerFactory =
           payload.id,
         );
 
-        await calendarController.update(payload.id, {
+        await calendarDataProvider.update(payload.id, {
           resourceId,
           expirationDate: expiration,
         });
@@ -182,10 +191,14 @@ const calendarRestClient = new SquidexRest<RestCalendar>(
   'calendars',
   { appName, baseUrl },
 );
+const calendarDataProvider = new CalendarSquidexDataProvider(
+  calendarRestClient,
+  squidexGraphqlClient,
+);
 const webhookHandler = calendarCreatedHandlerFactory(
   subscribeToEventChangesFactory(getJWTCredentialsAWS),
   unsubscribeFromEventChangesFactory(getJWTCredentialsAWS),
-  new Calendars(squidexGraphqlClient, calendarRestClient),
+  calendarDataProvider,
   new AlertsSentry(Sentry.captureException.bind(Sentry)),
 );
 

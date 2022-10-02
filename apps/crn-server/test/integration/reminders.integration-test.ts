@@ -35,6 +35,7 @@ import Events from '../../src/controllers/events';
 import { getEventRestResponse } from '../fixtures/events.fixtures';
 import Calendars from '../../src/controllers/calendars';
 import { getCalendarInput } from '../fixtures/calendars.fixtures';
+import CalendarSquidexDataProvider from '../../src/data-providers/calendars.data-provider';
 
 jest.setTimeout(30000);
 
@@ -81,6 +82,10 @@ describe('Reminders', () => {
     'calendars',
     { appName, baseUrl },
   );
+  const calendarDataProvider = new CalendarSquidexDataProvider(
+    calendarRestClient,
+    squidexGraphqlClient,
+  );
   const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
     squidexGraphqlClient,
     researchOutputRestClient,
@@ -88,11 +93,7 @@ describe('Reminders', () => {
   );
   // @todo https://asaphub.atlassian.net/browse/CRN-937
   const eventController = new Events(squidexGraphqlClient, eventRestClient);
-  // @todo https://asaphub.atlassian.net/browse/CRN-937
-  const calendarController = new Calendars(
-    squidexGraphqlClient,
-    calendarRestClient,
-  );
+  const calendarController = new Calendars(calendarDataProvider);
 
   describe('Research Output Published Reminder', () => {
     let creatorId: string;

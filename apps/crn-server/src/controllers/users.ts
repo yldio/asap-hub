@@ -58,6 +58,7 @@ export default class Users implements UserController {
 
   async fetchById(id: string): Promise<UserResponse> {
     const user = await this.userDataProvider.fetchById(id);
+
     if (!user) {
       throw new NotFoundError(undefined, `user with id ${id} not found`);
     }

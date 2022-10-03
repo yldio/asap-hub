@@ -1,16 +1,12 @@
 import { GroupRole } from '@asap-hub/model';
-import { GraphqlCalendar } from './calendar';
+import { Rest, Entity } from '../common';
 
-import { Rest, Entity, Graphql } from '../common';
-import { GraphqlTeam } from './team';
-import { GraphqlUser } from './user';
-
-export interface GroupUserConnection<T = string> {
+interface GroupUserConnection<T = string> {
   role: GroupRole;
   user: Array<T | undefined>;
 }
 
-export interface Group<
+interface Group<
   TUserConnection = string,
   TTeamConnection = string,
   TCalendar = string,
@@ -30,6 +26,3 @@ export interface Group<
 }
 
 export interface RestGroup extends Entity, Rest<Group> {}
-export interface GraphqlGroup
-  extends Entity,
-    Graphql<Group<GraphqlUser, GraphqlTeam, GraphqlCalendar, Entity>> {}

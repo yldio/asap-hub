@@ -8,7 +8,6 @@ import {
   RestEvent,
   RestCalendar,
   InputCalendar,
-  Calendar,
   Event,
 } from '@asap-hub/squidex';
 import { Chance } from 'chance';
@@ -20,6 +19,7 @@ import {
   ResearchOutputCreateDataObject,
   ResearchOutputPublishedReminder,
   UserCreateDataObject,
+  CalendarCreateDataObject,
 } from '@asap-hub/model';
 import { appName, baseUrl } from '../../src/config';
 import { ReminderSquidexDataProvider } from '../../src/data-providers/reminders.data-provider';
@@ -33,8 +33,8 @@ import { getUserCreateDataObject } from '../fixtures/users.fixtures';
 import { createRandomOrcid } from '../helpers/users';
 import Events from '../../src/controllers/events';
 import { getEventRestResponse } from '../fixtures/events.fixtures';
-import Calendars from '../../src/controllers/calendars';
-import { getCalendarInput } from '../fixtures/calendars.fixtures';
+import CalendarSquidexDataProvider from '../../src/data-providers/calendars.data-provider';
+import { getCalendarCreateDataObject } from '../fixtures/calendars.fixtures';
 
 jest.setTimeout(30000);
 
@@ -81,6 +81,10 @@ describe('Reminders', () => {
     'calendars',
     { appName, baseUrl },
   );
+  const calendarDataProvider = new CalendarSquidexDataProvider(
+    calendarRestClient,
+    squidexGraphqlClient,
+  );
   const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
     squidexGraphqlClient,
     researchOutputRestClient,
@@ -88,11 +92,6 @@ describe('Reminders', () => {
   );
   // @todo https://asaphub.atlassian.net/browse/CRN-937
   const eventController = new Events(squidexGraphqlClient, eventRestClient);
-  // @todo https://asaphub.atlassian.net/browse/CRN-937
-  const calendarController = new Calendars(
-    squidexGraphqlClient,
-    calendarRestClient,
-  );
 
   describe('Research Output Published Reminder', () => {
     let creatorId: string;
@@ -235,7 +234,7 @@ describe('Reminders', () => {
 
     beforeEach(async () => {
       const calendarInput = getCalendarInputForReminder();
-      ({ id: calendarId } = await calendarController.create(calendarInput));
+      calendarId = await calendarDataProvider.create(calendarInput);
 
       const timezone = 'Europe/London';
       fetchRemindersOptions = { userId, timezone };
@@ -327,9 +326,7 @@ describe('Reminders', () => {
       const event1 = await eventController.create(eventInput1);
 
       const calendarInput2 = getCalendarInputForReminder();
-      const { id: calendarId2 } = await calendarController.create(
-        calendarInput2,
-      );
+      const calendarId2 = await calendarDataProvider.create(calendarInput2);
       const eventInput2 = getEventInput(calendarId);
       eventInput2.calendar = [calendarId2];
       eventInput2.startDate = new Date('2022-08-10T17:00:00.0Z').toISOString();
@@ -373,7 +370,7 @@ describe('Reminders', () => {
 
     beforeEach(async () => {
       const calendarInput = getCalendarInputForReminder();
-      ({ id: calendarId } = await calendarController.create(calendarInput));
+      calendarId = await calendarDataProvider.create(calendarInput);
     });
 
     afterEach(async () => {
@@ -460,7 +457,7 @@ describe('Reminders', () => {
 
     beforeEach(async () => {
       const calendarInput = getCalendarInputForReminder();
-      ({ id: calendarId } = await calendarController.create(calendarInput));
+      calendarId = await calendarDataProvider.create(calendarInput);
     });
 
     afterEach(async () => {
@@ -580,7 +577,7 @@ describe('Reminders', () => {
       userId1 = await userDataProvider.create(userCreateDataObject);
 
       const calendarInput = getCalendarInputForReminder();
-      ({ id: calendarId } = await calendarController.create(calendarInput));
+      calendarId = await calendarDataProvider.create(calendarInput);
     });
 
     afterAll(() => {
@@ -658,8 +655,8 @@ describe('Reminders', () => {
     avatar: undefined,
   });
 
-  const getCalendarInputForReminder = (): Calendar => ({
-    ...getCalendarInput(),
+  const getCalendarInputForReminder = (): CalendarCreateDataObject => ({
+    ...getCalendarCreateDataObject(),
     resourceId: chance.string(),
     googleCalendarId: chance.email(),
   });

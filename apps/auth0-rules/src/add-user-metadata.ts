@@ -88,6 +88,10 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
       timeout: 10000,
     }).json<Auth0UserResponse>();
 
+    if (isUserResponse(response) && response.alumniSinceDate) {
+      return callback(new UnauthorizedError('alumni-user-access-denied'));
+    }
+
     const user: User = extractUser(response);
 
     context.idToken[new URL('/user', redirect_uri).toString()] = user;

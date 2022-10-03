@@ -5,6 +5,11 @@ import addUserMetadata from '../add-user-metadata';
 import * as handleError from '../handle-error';
 import type { RuleContext, User } from '../types';
 
+class UnauthorizedError {}
+const unauthorizedErrorMock: jest.MockedClass<typeof UnauthorizedError> = jest
+  .fn()
+  .mockImplementation(() => new UnauthorizedError());
+
 declare global {
   namespace NodeJS {
     interface Global {
@@ -13,6 +18,8 @@ declare global {
         APP_ORIGIN: string;
         API_SHARED_SECRET: string;
       };
+
+      UnauthorizedError: typeof UnauthorizedError;
     }
   }
 }
@@ -114,19 +121,24 @@ describe('Auth0 Rule - Add User Metadata', () => {
   const appDomain = 'hub.asap.science';
   const apiSharedSecret = 'auth0_shared_secret';
 
+  const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
+    jest.fn();
+
   beforeEach(() => {
     global.configuration = {
       APP_DOMAIN: appDomain,
       APP_ORIGIN: apiURL,
       API_SHARED_SECRET: apiSharedSecret,
     };
+    global.UnauthorizedError = unauthorizedErrorMock;
     nock.cleanAll();
   });
 
-  it('errors if the redirect_uri is missing', async () => {
-    const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
-      jest.fn();
+  afterEach(() => {
+    cb.mockClear();
+  });
 
+  it('errors if the redirect_uri is missing', async () => {
     await addUserMetadata(
       user,
       { ...context, request: { query: {}, body: {} } },
@@ -148,9 +160,6 @@ describe('Auth0 Rule - Add User Metadata', () => {
       .get(`/webhook/users/${user.user_id}`)
       .reply(404);
 
-    const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
-      jest.fn();
-
     await addUserMetadata(user, context, cb);
 
     expect(cb).toHaveBeenCalled();
@@ -169,9 +178,6 @@ describe('Auth0 Rule - Add User Metadata', () => {
     })
       .get(`/webhook/users/${user.user_id}`)
       .reply(200, apiUser);
-
-    const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
-      jest.fn();
 
     await addUserMetadata(user, context, cb);
 
@@ -211,9 +217,6 @@ describe('Auth0 Rule - Add User Metadata', () => {
       .get(`/webhook/users/${user.user_id}`)
       .reply(200, gp2ApiUser);
 
-    const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
-      jest.fn();
-
     await addUserMetadata(
       user,
       {
@@ -246,6 +249,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
       expectedUser,
     );
   });
+
   it('adds the user metadata on successful fetch when fetch uri provided in request body', async () => {
     nock(apiURL, {
       reqheaders: {
@@ -254,9 +258,6 @@ describe('Auth0 Rule - Add User Metadata', () => {
     })
       .get(`/webhook/users/${user.user_id}`)
       .reply(200, apiUser);
-
-    const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
-      jest.fn();
 
     await addUserMetadata(
       user,
@@ -297,6 +298,30 @@ describe('Auth0 Rule - Add User Metadata', () => {
     );
   });
 
+  describe('For a CRN user', () => {
+    it('Should invoke the callback with an error when the user is an alumni', async () => {
+      const alumniMetadata: UserMetadataResponse = {
+        ...apiUser,
+        alumniSinceDate: '2021-01-01',
+      };
+
+      nock(apiURL, {
+        reqheaders: {
+          authorization: `Basic ${apiSharedSecret}`,
+        },
+      })
+        .get(`/webhook/users/${user.user_id}`)
+        .reply(200, alumniMetadata);
+
+      await addUserMetadata(user, context, cb);
+
+      expect(cb).toHaveBeenCalledWith(expect.any(UnauthorizedError));
+      expect(unauthorizedErrorMock).toHaveBeenCalledWith(
+        'alumni-user-access-denied',
+      );
+    });
+  });
+
   describe('When a PR redirect uri is given', () => {
     it('fetches user metadata from the PR API', async () => {
       const apiPRUrl = 'https://api-1234.hub.asap.science';
@@ -307,9 +332,6 @@ describe('Auth0 Rule - Add User Metadata', () => {
       })
         .get(`/webhook/users/${user.user_id}`)
         .reply(200, apiUser);
-
-      const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
-        jest.fn();
 
       await addUserMetadata(
         user,
@@ -358,9 +380,6 @@ describe('Auth0 Rule - Add User Metadata', () => {
       })
         .get(`/webhook/users/${user.user_id}`)
         .reply(200, apiUser);
-
-      const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
-        jest.fn();
 
       await addUserMetadata(
         user,

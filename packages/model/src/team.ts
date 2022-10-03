@@ -17,6 +17,7 @@ export type TeamTool = { name: string; description?: string; url: string };
 
 export interface TeamCreateRequest {
   displayName: string;
+  inactiveSince?: string;
   applicationNumber: string;
   projectTitle: string;
   projectSummary?: string;
@@ -53,6 +54,7 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
 export type TeamCreateDataObject = {
   applicationNumber: string;
   displayName: string;
+  inactiveSince?: string;
   expertiseAndResourceTags: string[];
   researchOutputIds?: string[];
   projectSummary?: string;

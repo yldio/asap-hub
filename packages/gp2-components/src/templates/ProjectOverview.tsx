@@ -1,5 +1,11 @@
 import { ProjectResponse } from '@asap-hub/model/src/gp2';
-import { Card, Headline3, pixels, TagList } from '@asap-hub/react-components';
+import {
+  Card,
+  crossQuery,
+  Headline3,
+  pixels,
+  TagList,
+} from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import ExpandableText from '../molecules/ExpandableText';
 import EmailSection from '../organisms/EmailSection';
@@ -9,7 +15,7 @@ type ProjectOverviewProps = Pick<
   'pmEmail' | 'leadEmail' | 'description' | 'keywords'
 >;
 
-const { rem, smallDesktopScreen } = pixels;
+const { rem } = pixels;
 
 const containerStyles = css({
   display: 'flex',
@@ -26,7 +32,7 @@ const columnStyles = css({
   display: 'grid',
   columnGap: rem(32),
   gridRowGap: rem(32),
-  [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
+  [crossQuery]: {
     gridTemplateColumns: '1fr 1fr',
     rowGap: rem(32),
   },

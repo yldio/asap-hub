@@ -9,7 +9,6 @@ import TeamProfileHeader from '../TeamProfileHeader';
 const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   id: '42',
   displayName: 'John, D',
-  inactiveSince: null,
   projectTitle: 'Unknown',
   members: [],
   expertiseAndResourceTags: [],

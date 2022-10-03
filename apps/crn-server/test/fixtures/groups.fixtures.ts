@@ -261,7 +261,6 @@ export const listGroupsResponse: ListGroupResponse = {
       teams: [
         {
           id: 'team-id-1',
-          inactiveSince: null,
           displayName: 'Lee, M',
           lastModifiedDate: '2020-12-11T15:06:26.000Z',
           expertiseAndResourceTags: [],
@@ -468,7 +467,6 @@ export const getGroupDataObject = (): GroupDataObject => ({
     {
       id: 'team-id-0',
       displayName: 'Team A',
-      inactiveSince: null,
       lastModifiedDate: '2020-11-26T11:56:04.000Z',
       expertiseAndResourceTags: ['Animal resources'],
 

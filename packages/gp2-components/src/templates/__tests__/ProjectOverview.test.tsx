@@ -26,7 +26,7 @@ describe('ProjectOverview', () => {
       screen.getByRole('heading', { name: 'Contact Information' }),
     ).toBeInTheDocument();
   });
-  it('renders the pmEmail information', () => {
+  it('renders the PM email information', () => {
     render(<ProjectOverview {...defaultProps} pmEmail={'tony@stark.com'} />);
     expect(
       screen.getByRole('link', { name: 'tony@stark.com' }),
@@ -38,7 +38,7 @@ describe('ProjectOverview', () => {
       screen.queryByRole('heading', { name: 'Lead Email' }),
     ).not.toBeInTheDocument();
   });
-  it('renders the leadEmail information', () => {
+  it('renders the lead email information', () => {
     render(
       <ProjectOverview {...defaultProps} leadEmail={'peter@parker.com'} />,
     );
@@ -52,7 +52,7 @@ describe('ProjectOverview', () => {
       screen.queryByRole('heading', { name: 'PM Email' }),
     ).not.toBeInTheDocument();
   });
-  it('renders both the leadEmail and PM email information', () => {
+  it('renders both the lead email and PM email information', () => {
     render(
       <ProjectOverview
         {...defaultProps}

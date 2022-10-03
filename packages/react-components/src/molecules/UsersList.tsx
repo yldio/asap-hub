@@ -96,9 +96,6 @@ const UsersList: FC<UsersListProps> = ({
                 <Avatar {...user} imageUrl={getPlaceholderAvatarUrl()} />
               )}
               <span css={nameStyles}>{user.displayName}</span>
-              {user.alumniSinceDate && (
-                <span css={iconStyles}>{alumniBadge}</span>
-              )}
             </div>
           )}
         </li>

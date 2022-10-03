@@ -2,7 +2,9 @@ import { ScheduledHandlerAsync } from '@asap-hub/server-common';
 import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { DateTime } from 'luxon';
 import { appName, baseUrl } from '../../config';
-import Calendars, { CalendarController } from '../../controllers/calendars';
+import CalendarSquidexDataProvider, {
+  CalendarDataProvider,
+} from '../../data-providers/calendars.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import getJWTCredentials from '../../utils/aws-secret-manager';
 import logger from '../../utils/logger';
@@ -16,16 +18,14 @@ import {
 
 export const resubscribeCalendarsHandlerFactory =
   (
-    calendarController: CalendarController,
+    calendarDataProvider: CalendarDataProvider,
     unsubscribe: UnsubscribeFromEventChanges,
     subscribe: SubscribeToEventChanges,
   ): ScheduledHandlerAsync =>
   async () => {
     const now = DateTime.local();
-    const calendars = await calendarController.fetchRaw({
+    const { items: calendars } = await calendarDataProvider.fetch({
       maxExpiration: now.plus({ days: 1 }).toMillis(),
-      take: 100,
-      skip: 0,
     });
 
     const calendarIds = calendars.map((calendar) => calendar.id);
@@ -39,7 +39,7 @@ export const resubscribeCalendarsHandlerFactory =
         if (calendar.resourceId) {
           try {
             await unsubscribe(calendar.resourceId, calendar.id);
-            await calendarController.update(calendar.id, {
+            await calendarDataProvider.update(calendar.id, {
               resourceId: null,
             });
           } catch (error) {
@@ -53,7 +53,7 @@ export const resubscribeCalendarsHandlerFactory =
             calendar.id,
           );
 
-          await calendarController.update(calendar.id, {
+          await calendarDataProvider.update(calendar.id, {
             resourceId,
             expirationDate: expiration,
           });
@@ -73,10 +73,14 @@ const calendarRestClient = new SquidexRest<RestCalendar>(
   'calendars',
   { appName, baseUrl },
 );
+const calendarDataProvider = new CalendarSquidexDataProvider(
+  calendarRestClient,
+  squidexGraphqlClient,
+);
 
 export const handler = sentryWrapper(
   resubscribeCalendarsHandlerFactory(
-    new Calendars(squidexGraphqlClient, calendarRestClient),
+    calendarDataProvider,
     unsubscribeFromEventChangesFactory(getJWTCredentials),
     subscribeToEventChangesFactory(getJWTCredentials),
   ),

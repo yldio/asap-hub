@@ -51,6 +51,7 @@ import {
   AssetDataProvider,
   AssetSquidexDataProvider,
 } from './data-providers/assets.data-provider';
+import CalendarSquidexDataProvider from './data-providers/calendars.data-provider';
 import {
   ExternalAuthorDataProvider,
   ExternalAuthorSquidexDataProvider,
@@ -188,11 +189,13 @@ export const appFactory = (libs: Libs = {}): Express => {
   const externalAuthorDataProvider =
     libs.externalAuthorDataProvider ||
     new ExternalAuthorSquidexDataProvider(externalAuthorRestClient);
+  const calendarDataProvider =
+    libs.calendarDataProvider ||
+    new CalendarSquidexDataProvider(calendarRestClient, squidexGraphqlClient);
 
   // Controllers
   const calendarController =
-    libs.calendarController ||
-    new Calendars(squidexGraphqlClient, calendarRestClient);
+    libs.calendarController || new Calendars(calendarDataProvider);
   const dashboardController =
     libs.dashboardController || new Dashboard(squidexGraphqlClient);
   const newsController = libs.newsController || new News(newsRestClient);
@@ -338,6 +341,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 
 export type Libs = {
   calendarController?: CalendarController;
+  calendarDataProvider?: CalendarSquidexDataProvider;
   dashboardController?: DashboardController;
   discoverController?: DiscoverController;
   eventController?: EventController;

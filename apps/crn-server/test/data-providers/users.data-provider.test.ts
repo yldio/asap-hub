@@ -55,12 +55,12 @@ describe('User data provider', () => {
   });
 
   describe('FetchById', () => {
-    // const usersMockGraphqlServer = new Users(squidexGraphqlClientMockServer);
     test('Should fetch the users from squidex graphql', async () => {
       const result = await usersMockGraphqlServer.fetchById('user-id');
 
       expect(result).toMatchObject(getUserDataObject());
     });
+
     test('Should return null when the user is not found', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       mockResponse.findUsersContent = null;
@@ -68,6 +68,7 @@ describe('User data provider', () => {
 
       expect(await userDataProvider.fetchById('not-found')).toBeNull();
     });
+
     test('Should return the user when they are found, even if they are not onboarded', async () => {
       const nonOnboardedUserResponse = getSquidexUserGraphqlResponse();
       nonOnboardedUserResponse.findUsersContent!.flatData.onboarded = false;
@@ -448,14 +449,12 @@ describe('User data provider', () => {
   });
 
   describe('Fetch', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-    });
     test('Should fetch the users from squidex graphql', async () => {
       const result = await usersMockGraphqlServer.fetch({});
 
       expect(result).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
+
     test('Should return an empty result', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
       mockResponse.queryUsersContentsWithTotal!.items = [];
@@ -465,6 +464,7 @@ describe('User data provider', () => {
       const result = await userDataProvider.fetch({});
       expect(result).toEqual({ total: 0, items: [] });
     });
+
     test('Should return an empty result when the client returns a response with query property set to null', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
       mockResponse.queryUsersContentsWithTotal = null;
@@ -473,6 +473,7 @@ describe('User data provider', () => {
       const result = await userDataProvider.fetch({});
       expect(result).toEqual({ total: 0, items: [] });
     });
+
     test('Should return an empty result when the client returns a response with items property set to null', async () => {
       const mockResponse = getSquidexUsersGraphqlResponse();
       mockResponse.queryUsersContentsWithTotal!.items = null;

@@ -28,8 +28,8 @@ const titleStyle = css({
     alignItems: 'flex-start',
   },
 });
-const tagsPadding = css({
-  paddingBottom: `${12 / perRem}em`,
+const tagsContainer = css({
+  margin: `${24 / perRem}em 0 ${12 / perRem}em 0`,
 });
 const iconStyles = css({
   display: 'inline-grid',
@@ -74,7 +74,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
       </Paragraph>
     </Anchor>
     {!!expertiseAndResourceTags.length && (
-      <div css={tagsPadding}>
+      <div css={tagsContainer}>
         <TagList min={5} max={5} tags={expertiseAndResourceTags} />
       </div>
     )}

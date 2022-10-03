@@ -6,6 +6,7 @@ import {
 import {
   GraphQLProject,
   GraphQLProjectMember,
+  GraphQLProjectMilestone,
 } from '../../src/data-providers/project.data-provider';
 
 export const getProjectDataObject = (): gp2.ProjectDataObject => ({
@@ -20,6 +21,7 @@ export const getProjectDataObject = (): gp2.ProjectDataObject => ({
   description: 'test description',
   leadEmail: 'peter@parker.com',
   pmEmail: 'tony@stark.com',
+  milestones: [],
 });
 
 export const getListProjectDataObject = (): gp2.ListProjectResponse => ({
@@ -61,6 +63,7 @@ export const getGraphQLProject = (): GraphQLProject => ({
     keywords: ['R'],
     pmEmail: 'tony@stark.com',
     leadEmail: 'peter@parker.com',
+    milestones: [],
   },
 });
 export const getGraphQLProjectMember = (): GraphQLProjectMember => ({
@@ -77,4 +80,11 @@ export const getGraphQLProjectMember = (): GraphQLProjectMember => ({
       },
     },
   ],
+});
+
+export const getGraphQLProjectMilestone = (): GraphQLProjectMilestone => ({
+  title: 'A project milestone',
+  status: 'Active',
+  description: null,
+  link: null,
 });

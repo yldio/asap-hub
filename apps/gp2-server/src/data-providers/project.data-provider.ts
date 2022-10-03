@@ -70,6 +70,10 @@ type GraphQLProjectMemberUser = NonNullable<
   NonNullable<GraphQLProjectMember>['user']
 >[number];
 
+export type GraphQLProjectMilestone = NonNullable<
+  NonNullable<GraphQLProject['flatData']>['milestones']
+>[number];
+
 const parseProjectMembers = (user: GraphQLProjectMemberUser) => {
   const flatAvatar = user.flatData.avatar || [];
   const avatarUrl =
@@ -107,6 +111,27 @@ export function parseProjectToDataObject({
   if (project.keywords && !project.keywords.every(gp2.isProjectKeyword)) {
     throw new TypeError('Invalid keyword received from Squidex');
   }
+  const milestones =
+    project.milestones?.reduce(
+      (
+        milestoneList: gp2.ProjectMilestone[],
+        milestone: GraphQLProjectMilestone,
+      ) => {
+        if (!gp2.isProjectMilestoneStatus(milestone.status)) {
+          throw new Error(`Invalid status: ${milestone.status}`);
+        }
+        return [
+          ...milestoneList,
+          {
+            title: milestone.title || '',
+            status: milestone.status || '',
+            link: milestone.link || undefined,
+            description: milestone.description || undefined,
+          },
+        ];
+      },
+      [],
+    ) || [];
 
   return {
     id,
@@ -120,5 +145,6 @@ export function parseProjectToDataObject({
     description: project.description || undefined,
     members,
     keywords: project.keywords || [],
+    milestones,
   };
 }

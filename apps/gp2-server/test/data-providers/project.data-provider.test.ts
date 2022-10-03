@@ -6,6 +6,7 @@ import {
 import {
   getGraphQLProject,
   getGraphQLProjectMember,
+  getGraphQLProjectMilestone,
   getListProjectDataObject,
   getProjectDataObject,
   getSquidexProjectGraphqlResponse,
@@ -151,16 +152,6 @@ describe('Project Data Provider', () => {
           const { members } = parseProjectToDataObject(Project);
           expect(members).toEqual([]);
         });
-      });
-
-      describe('milestones', () => {
-        test('undefined milestones returns empty array', () => {
-          const Project = getGraphQLProject();
-          Project.flatData.milestones = undefined!;
-          const { milestones } = parseProjectToDataObject(Project);
-          expect(milestones).toEqual([]);
-        });
-
         test('pm emails are added if available', () => {
           const email = 'tony@starkenterprises.com';
           const project = getGraphQLProject();
@@ -184,7 +175,6 @@ describe('Project Data Provider', () => {
           const { description } = parseProjectToDataObject(project);
           expect(description).toEqual(expectedDescription);
         });
-
         test('keywords are added', () => {
           const expectedKeywords = ['Outreach'];
           const project = getGraphQLProject();
@@ -198,6 +188,44 @@ describe('Project Data Provider', () => {
           const project = getGraphQLProject();
           project.flatData.keywords = expectedKeywords;
           expect(() => parseProjectToDataObject(project)).toThrow();
+        });
+      });
+
+      describe('milestones', () => {
+        test('undefined milestones returns empty array', () => {
+          const Project = getGraphQLProject();
+          Project.flatData.milestones = undefined!;
+          const { milestones } = parseProjectToDataObject(Project);
+          expect(milestones).toEqual([]);
+        });
+        test('the milestones are parsed', () => {
+          const Project = getGraphQLProject();
+          Project.flatData.milestones = [getGraphQLProjectMilestone()];
+          const { milestones } = parseProjectToDataObject(Project);
+          expect(milestones).toEqual([
+            {
+              title: 'A project milestone',
+              status: 'Active',
+            },
+          ]);
+        });
+        test('if present it parses the link', () => {
+          const Project = getGraphQLProject();
+          const milestone = getGraphQLProjectMilestone();
+          const link = 'it-is-a-link';
+          milestone.link = link;
+          Project.flatData.milestones = [milestone];
+          const { milestones } = parseProjectToDataObject(Project);
+          expect(milestones[0]?.link).toEqual(link);
+        });
+        test('if present it parses the description', () => {
+          const Project = getGraphQLProject();
+          const milestone = getGraphQLProjectMilestone();
+          const description = 'it-is-a-description';
+          milestone.description = description;
+          Project.flatData.milestones = [milestone];
+          const { milestones } = parseProjectToDataObject(Project);
+          expect(milestones[0]?.description).toEqual(description);
         });
       });
     });

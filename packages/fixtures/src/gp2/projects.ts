@@ -7,6 +7,7 @@ const mockedProject: gp2.ProjectResponse = {
   startDate: '2021-12-28',
   status: 'Active',
   keywords: [],
+  milestones: [],
 };
 
 export const createProjectResponse = (

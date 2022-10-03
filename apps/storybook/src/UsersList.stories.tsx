@@ -10,7 +10,17 @@ export default {
 
 export const Normal = () => (
   <UsersList
-    users={createListUserResponse(number('Number of Users', 3)).items}
+    users={createListUserResponse(number('Number of Users', 3)).items.map(
+      (u, i) => ({
+        ...u,
+        alumniSinceDate:
+          i % 2 === 0
+            ? new Date(
+                date('Alumni Since Date', new Date(2021, 6, 12, 14, 32)),
+              ).toISOString()
+            : undefined,
+      }),
+    )}
     max={number('Max Authors', 3)}
   />
 );
@@ -22,9 +32,12 @@ export const External = () => (
         (_, i): ExternalAuthorResponse => ({
           id: `external-author-${i + 1}`,
           displayName: `John Number ${i + 1}`,
-          alumniSinceDate: new Date(
-            date('Alumni Since Date', new Date(2021, 6, 12, 14, 32)),
-          ).toISOString()
+          alumniSinceDate:
+            i % 2 === 0
+              ? new Date(
+                  date('Alumni Since Date', new Date(2021, 6, 12, 14, 32)),
+                ).toISOString()
+              : undefined,
         }),
       )}
   />

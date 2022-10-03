@@ -99,9 +99,7 @@ export const parseGraphQLTeam = (
   return {
     id: team.id,
     displayName,
-    inactiveSince: team.flatData.inactiveSince
-      ? team.flatData.inactiveSince
-      : undefined,
+    inactiveSince: team.flatData.inactiveSince ?? undefined,
     labCount,
     projectTitle: team.flatData.projectTitle,
     lastModifiedDate: parseDate(team.lastModified).toISOString(),

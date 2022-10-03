@@ -10,6 +10,7 @@ import { GraphqlUser } from './user';
 export interface Team<T = string> {
   applicationNumber: string;
   displayName: string;
+  inactiveSince?: string;
   projectSummary?: string;
   projectTitle: string;
   proposal?: T[];

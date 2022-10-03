@@ -10,6 +10,15 @@ const Signin: React.FC<Record<string, never>> = () => {
   const searchParams = new URLSearchParams(search);
   const history = useHistory();
 
+  const getAuthFailureCode = (
+    error: boolean,
+    errorDescription: string | null,
+  ): 'alumni' | 'invalid' | undefined => {
+    if (!error) return undefined;
+    if (errorDescription === 'alumni-user-access-denied') return 'alumni';
+    return 'invalid';
+  };
+
   const signin = () =>
     loginWithRedirect({
       prompt: 'login',
@@ -22,7 +31,10 @@ const Signin: React.FC<Record<string, never>> = () => {
       <UtilityBar>
         <WelcomePage
           onClick={signin}
-          authFailed={searchParams.has('state') && searchParams.has('error')}
+          authFailed={getAuthFailureCode(
+            searchParams.has('state') && searchParams.has('error'),
+            searchParams.get('error_description'),
+          )}
           onCloseAuthFailedToast={() => {
             const newSearchParams = new URLSearchParams(
               history.location.search,

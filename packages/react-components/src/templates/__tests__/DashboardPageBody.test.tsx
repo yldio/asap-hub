@@ -102,7 +102,9 @@ describe('the past events card', () => {
     render(<DashboardPageBody {...props} pastEvents={events} />);
     expect(
       screen.getAllByRole('link').map(({ textContent }) => textContent),
-    ).toEqual(expect.arrayContaining(['Event 0', 'Event 1', 'Event 2']));
+    ).toEqual(
+      expect.arrayContaining(['Event 0', 'Event 1', 'Event 2', 'Event 3']),
+    );
   });
 
   it('renders the link to view all past events', () => {

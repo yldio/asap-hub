@@ -30,26 +30,26 @@ import { confidentialIcon, giftIcon, learnIcon } from '../icons';
 
 const styles = css({
   display: 'grid',
-  gridRowGap: `${rem(56)}`,
-  marginBottom: `${rem(25)}`,
+  gridRowGap: rem(56),
+  marginBottom: rem(25),
 });
 
 const containerStyles = css({
-  marginTop: `${rem(24)}`,
+  marginTop: rem(24),
 });
 
 const listStyles = css({
-  paddingLeft: `${rem(18)}`,
+  paddingLeft: rem(18),
 });
 
 const infoStyles = css({
   color: lead.rgb,
   padding: `${rem(3)} 0 ${rem(24)}`,
-  lineHeight: `${rem(24)}`,
+  lineHeight: rem(24),
 });
 
 const viewAllStyles = css({
-  marginTop: `${rem(24)}`,
+  marginTop: rem(24),
   textAlign: 'right',
 });
 

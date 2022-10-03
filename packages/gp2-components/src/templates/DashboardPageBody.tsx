@@ -13,12 +13,12 @@ const { rem } = pixels;
 
 const styles = css({
   display: 'grid',
-  gridRowGap: `${rem(72)}`,
-  marginBottom: `${rem(24)}`,
+  gridRowGap: rem(72),
+  marginBottom: rem(24),
 });
 
 const viewAllStyles = css({
-  marginTop: `${rem(24)}`,
+  marginTop: rem(24),
   textAlign: 'right',
 });
 

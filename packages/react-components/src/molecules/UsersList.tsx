@@ -8,7 +8,7 @@ import { isInternalUser } from '@asap-hub/validation';
 import { Avatar } from '../atoms';
 import { ImageLink } from '.';
 import { perRem } from '../pixels';
-import {alumniBadge, userPlaceholderIcon} from '../icons';
+import { alumniBadge, userPlaceholderIcon } from '../icons';
 import { lead } from '../colors';
 
 const getPlaceholderAvatarUrl = () =>
@@ -55,7 +55,13 @@ interface UsersListProps {
   users: ReadonlyArray<
     | Pick<
         UserResponse,
-        'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'id' | 'email' | 'alumniSinceDate'
+        | 'displayName'
+        | 'firstName'
+        | 'lastName'
+        | 'avatarUrl'
+        | 'id'
+        | 'email'
+        | 'alumniSinceDate'
       >
     | ExternalAuthorResponse
   >;
@@ -76,7 +82,9 @@ const UsersList: FC<UsersListProps> = ({
                 <Avatar {...user} imageUrl={user.avatarUrl} />
               </ImageLink>
               <span css={nameStyles}>{user.displayName}</span>
-              {user.alumniSinceDate && (<span css={iconStyles}>{alumniBadge}</span>)}
+              {user.alumniSinceDate && (
+                <span css={iconStyles}>{alumniBadge}</span>
+              )}
             </div>
           ) : (
             <div css={userStyles}>
@@ -88,6 +96,9 @@ const UsersList: FC<UsersListProps> = ({
                 <Avatar {...user} imageUrl={getPlaceholderAvatarUrl()} />
               )}
               <span css={nameStyles}>{user.displayName}</span>
+              {user.alumniSinceDate && (
+                <span css={iconStyles}>{alumniBadge}</span>
+              )}
             </div>
           )}
         </li>

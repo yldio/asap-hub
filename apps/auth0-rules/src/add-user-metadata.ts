@@ -2,7 +2,6 @@ import type { User } from '@asap-hub/auth';
 import type { gp2, UserMetadataResponse } from '@asap-hub/model';
 import got from 'got';
 import { URL, URLSearchParams } from 'url';
-import { handleError } from './handle-error';
 import type { Rule } from './types';
 
 type Auth0UserResponse = UserMetadataResponse | gp2.UserResponse;
@@ -10,6 +9,13 @@ type Auth0UserResponse = UserMetadataResponse | gp2.UserResponse;
 const isUserResponse = (
   response: UserMetadataResponse | gp2.UserResponse,
 ): response is UserMetadataResponse => 'onboarded' in response;
+
+const handleError = (err: unknown): Error => {
+  if (err instanceof Error) {
+    return err;
+  }
+  return new Error('Unexpected Error');
+};
 
 const extractUser = (response: Auth0UserResponse): User => {
   if (isUserResponse(response)) {

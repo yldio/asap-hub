@@ -4490,6 +4490,7 @@ export type TeamsDataDto = {
   applicationNumber: Maybe<TeamsDataApplicationNumberDto>;
   displayName: Maybe<TeamsDataDisplayNameDto>;
   expertiseAndResourceTags: Maybe<TeamsDataExpertiseAndResourceTagsDto>;
+  inactiveSince: Maybe<TeamsDataInactiveSinceDto>;
   outputs: Maybe<TeamsDataOutputsDto>;
   projectSummary: Maybe<TeamsDataProjectSummaryDto>;
   projectTitle: Maybe<TeamsDataProjectTitleDto>;
@@ -4507,11 +4508,22 @@ export type TeamsDataExpertiseAndResourceTagsInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
+/** The structure of the The team is inactive since field of the Teams content type. */
+export type TeamsDataInactiveSinceDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the The team is inactive since field of the Teams content input type. */
+export type TeamsDataInactiveSinceInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
 /** The structure of the Teams data input type. */
 export type TeamsDataInputDto = {
   applicationNumber: InputMaybe<TeamsDataApplicationNumberInputDto>;
   displayName: InputMaybe<TeamsDataDisplayNameInputDto>;
   expertiseAndResourceTags: InputMaybe<TeamsDataExpertiseAndResourceTagsInputDto>;
+  inactiveSince: InputMaybe<TeamsDataInactiveSinceInputDto>;
   outputs: InputMaybe<TeamsDataOutputsInputDto>;
   projectSummary: InputMaybe<TeamsDataProjectSummaryInputDto>;
   projectTitle: InputMaybe<TeamsDataProjectTitleInputDto>;
@@ -4588,6 +4600,7 @@ export type TeamsFlatDataDto = {
   applicationNumber: Maybe<Scalars['String']>;
   displayName: Maybe<Scalars['String']>;
   expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
+  inactiveSince: Maybe<Scalars['Instant']>;
   outputs: Maybe<Array<ResearchOutputs>>;
   projectSummary: Maybe<Scalars['String']>;
   projectTitle: Maybe<Scalars['String']>;
@@ -5565,6 +5578,7 @@ export type EventContentFragment = Pick<
                         TeamsFlatDataDto,
                         | 'applicationNumber'
                         | 'displayName'
+                        | 'inactiveSince'
                         | 'projectSummary'
                         | 'projectTitle'
                         | 'expertiseAndResourceTags'
@@ -5907,6 +5921,7 @@ export type FetchEventsQuery = {
                                   TeamsFlatDataDto,
                                   | 'applicationNumber'
                                   | 'displayName'
+                                  | 'inactiveSince'
                                   | 'projectSummary'
                                   | 'projectTitle'
                                   | 'expertiseAndResourceTags'
@@ -6283,6 +6298,7 @@ export type FetchEventQuery = {
                             TeamsFlatDataDto,
                             | 'applicationNumber'
                             | 'displayName'
+                            | 'inactiveSince'
                             | 'projectSummary'
                             | 'projectTitle'
                             | 'expertiseAndResourceTags'
@@ -6632,6 +6648,7 @@ export type GroupsContentFragment = Pick<
             TeamsFlatDataDto,
             | 'applicationNumber'
             | 'displayName'
+            | 'inactiveSince'
             | 'projectSummary'
             | 'projectTitle'
             | 'expertiseAndResourceTags'
@@ -6873,6 +6890,7 @@ export type FetchGroupsQuery = {
                       TeamsFlatDataDto,
                       | 'applicationNumber'
                       | 'displayName'
+                      | 'inactiveSince'
                       | 'projectSummary'
                       | 'projectTitle'
                       | 'expertiseAndResourceTags'
@@ -7127,6 +7145,7 @@ export type FetchGroupQuery = {
                 TeamsFlatDataDto,
                 | 'applicationNumber'
                 | 'displayName'
+                | 'inactiveSince'
                 | 'projectSummary'
                 | 'projectTitle'
                 | 'expertiseAndResourceTags'
@@ -7947,6 +7966,7 @@ export type TeamsContentFragment = Pick<
     TeamsFlatDataDto,
     | 'applicationNumber'
     | 'displayName'
+    | 'inactiveSince'
     | 'projectSummary'
     | 'projectTitle'
     | 'expertiseAndResourceTags'
@@ -8051,6 +8071,7 @@ export type FetchTeamQuery = {
         TeamsFlatDataDto,
         | 'applicationNumber'
         | 'displayName'
+        | 'inactiveSince'
         | 'projectSummary'
         | 'projectTitle'
         | 'expertiseAndResourceTags'
@@ -8164,6 +8185,7 @@ export type FetchTeamsQuery = {
               TeamsFlatDataDto,
               | 'applicationNumber'
               | 'displayName'
+              | 'inactiveSince'
               | 'projectSummary'
               | 'projectTitle'
               | 'expertiseAndResourceTags'
@@ -8631,6 +8653,10 @@ export const TeamsContentFragmentDoc = {
                   name: { kind: 'Name', value: 'applicationNumber' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'inactiveSince' },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'projectSummary' },

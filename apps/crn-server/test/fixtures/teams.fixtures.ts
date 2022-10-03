@@ -75,6 +75,7 @@ export const getSquidexGraphqlTeam = ({
     flatData: {
       applicationNumber: 'ASAP-000420',
       displayName: 'Team A',
+      inactiveSince: undefined,
       projectSummary: null,
       projectTitle:
         'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
@@ -192,6 +193,7 @@ export const updateEvent: TeamEventGenerator = (id: string) =>
 export const getTeamCreateDataObject = (): TeamCreateDataObject => ({
   applicationNumber: 'ASAP-000420',
   displayName: 'Team A',
+  inactiveSince: undefined,
   projectSummary: 'project-summary',
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
@@ -211,6 +213,7 @@ export const getInputTeam = (): InputTeam['data'] => ({
   displayName: {
     iv: 'Team A',
   },
+  inactiveSince: { iv: null },
   projectSummary: { iv: 'project-summary' },
   projectTitle: {
     iv: 'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',

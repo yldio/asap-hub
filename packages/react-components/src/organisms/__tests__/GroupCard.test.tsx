@@ -9,6 +9,7 @@ const props: ComponentProps<typeof GroupCard> = {
   tags: ['Tag 1', 'Tag 2'],
   description: 'My Group Description',
   numberOfTeams: 2,
+  active: true,
 };
 
 it('renders the group name linking to the group', () => {
@@ -19,6 +20,15 @@ it('renders the group name linking to the group', () => {
     'href',
     expect.stringMatching(/42$/),
   );
+});
+
+it('renders the state tag for a inactive group', () => {
+  const { getByText, rerender, queryByText } = render(
+    <GroupCard {...props} active={false} />,
+  );
+  expect(getByText('Inactive')).toBeVisible();
+  rerender(<GroupCard {...props} active={true} />);
+  expect(queryByText('Inactive')).not.toBeInTheDocument();
 });
 
 it('generates a singular team count', () => {

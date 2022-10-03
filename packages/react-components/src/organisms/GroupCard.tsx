@@ -2,10 +2,10 @@ import { css } from '@emotion/react';
 import { GroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
-import { Card, Paragraph, Anchor } from '../atoms';
+import { Card, Paragraph, Anchor, StateTag } from '../atoms';
 import { LinkHeadline, TagList } from '../molecules';
 import { teamIcon } from '../icons';
-import { perRem } from '../pixels';
+import { perRem, tabletScreen } from '../pixels';
 
 const iconStyles = css({
   display: 'inline-grid',
@@ -13,9 +13,21 @@ const iconStyles = css({
   paddingRight: `${15 / perRem}em`,
 });
 
+const titleStyle = css({
+  display: 'flex',
+  flexFlow: 'column-reverse',
+  alignItems: 'flex-start',
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    flexFlow: 'row',
+    gap: `${16 / perRem}em`,
+    alignItems: 'center',
+    marginBottom: `${-12 / perRem}em`,
+  },
+});
+
 type GroupCardProps = Pick<
   GroupResponse,
-  'id' | 'name' | 'description' | 'tags'
+  'id' | 'name' | 'description' | 'tags' | 'active'
 > & {
   readonly numberOfTeams: number;
 };
@@ -25,15 +37,19 @@ const GroupCard: React.FC<GroupCardProps> = ({
   description,
   tags,
   numberOfTeams,
+  active,
 }) => (
-  <Card>
-    <LinkHeadline
-      href={network({}).groups({}).group({ groupId: id }).$}
-      level={2}
-      styleAsHeading={4}
-    >
-      {name}
-    </LinkHeadline>
+  <Card accent={active ? 'default' : 'neutral200'}>
+    <div css={titleStyle}>
+      <LinkHeadline
+        href={network({}).groups({}).group({ groupId: id }).$}
+        level={2}
+        styleAsHeading={4}
+      >
+        {name}
+      </LinkHeadline>
+      {!active && <StateTag label="Inactive" />}
+    </div>
     <Anchor href={network({}).groups({}).group({ groupId: id }).$}>
       <Paragraph accent="lead">{description}</Paragraph>
     </Anchor>

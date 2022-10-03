@@ -1162,6 +1162,7 @@ type ProjectsDataDto {
   keywords: ProjectsDataKeywordsDto
   leadEmail: ProjectsDataLeadEmailDto
   members: ProjectsDataMembersDto
+  milestones: ProjectsDataMilestonesDto
   pmEmail: ProjectsDataPmEmailDto
   projectProposal: ProjectsDataProjectProposalDto
   startDate: ProjectsDataStartDateDto
@@ -1186,6 +1187,7 @@ input ProjectsDataInputDto {
   keywords: ProjectsDataKeywordsInputDto
   leadEmail: ProjectsDataLeadEmailInputDto
   members: ProjectsDataMembersInputDto
+  milestones: ProjectsDataMilestonesInputDto
   pmEmail: ProjectsDataPmEmailInputDto
   projectProposal: ProjectsDataProjectProposalInputDto
   startDate: ProjectsDataStartDateInputDto
@@ -1231,6 +1233,32 @@ type ProjectsDataMembersDto {
 """The structure of the Members field of the Projects content input type."""
 input ProjectsDataMembersInputDto {
   iv: [ProjectsDataMembersChildInputDto!]
+}
+
+"""The structure of the Project Milestones nested schema."""
+type ProjectsDataMilestonesChildDto {
+  description: String
+  link: String
+  status: String
+  title: String
+}
+
+"""The structure of the Project Milestones nested schema."""
+input ProjectsDataMilestonesChildInputDto {
+  description: String
+  link: String
+  status: String
+  title: String
+}
+
+"""The structure of the Project Milestones field of the Projects content type."""
+type ProjectsDataMilestonesDto {
+  iv: [ProjectsDataMilestonesChildDto!]
+}
+
+"""The structure of the Project Milestones field of the Projects content input type."""
+input ProjectsDataMilestonesInputDto {
+  iv: [ProjectsDataMilestonesChildInputDto!]
 }
 
 """The structure of the PM Email field of the Projects content type."""
@@ -1292,6 +1320,7 @@ type ProjectsFlatDataDto {
   keywords: [String!]
   leadEmail: String
   members: [ProjectsDataMembersChildDto!]
+  milestones: [ProjectsDataMilestonesChildDto!]
   pmEmail: String
   """External link for a project proposal"""
   projectProposal: String

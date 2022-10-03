@@ -54,6 +54,38 @@ it('does not link external users', () => {
   expect(getByText(/John Doe/).closest('a')).toBeNull();
 });
 
+describe('alumni badge', () => {
+  it('shows alumni badge if alumni user', () => {
+    const { getByText } = render(
+      <UsersList
+        max={1}
+        users={Array.from({ length: 1 }).map(
+          () =>
+            ({
+              displayName: 'John Doe',
+              alumniSinceDate: new Date(2021, 6, 12, 14, 32).toISOString(),
+            } as ExternalAuthorResponse),
+        )}
+      />,
+    );
+    expect(getByText('Alumni Badge')).toBeInTheDocument();
+  });
+  it('does not show alumni badge if user is not alumni', () => {
+    const { queryByText } = render(
+      <UsersList
+        max={1}
+        users={Array.from({ length: 1 }).map(
+          () =>
+            ({
+              displayName: 'John Doe',
+            } as ExternalAuthorResponse),
+        )}
+      />,
+    );
+    expect(queryByText('Alumni Badge')).not.toBeInTheDocument();
+  });
+});
+
 describe('maximum users', () => {
   it('truncates user list when maximum exceeded and shows additional count', () => {
     const { getAllByRole, getByText } = render(

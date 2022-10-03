@@ -76,7 +76,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
     <Avatar imageUrl={avatarUrl} firstName={firstName} lastName={lastName} />
   );
   return (
-    <Card>
+    <Card accent={alumniSinceDate ? 'neutral200' : undefined}>
       <div css={[containerStyles]}>
         <ImageLink link={userHref}>{userAvatar}</ImageLink>
         <div css={textContainerStyles}>
@@ -95,11 +95,9 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
           <div css={profileTextStyles}>
             <UserProfilePersonalText {...props} />
           </div>
-          <div css={moveStyles}>
-            <Caption accent={'lead'} asParagraph>
-              Joined: {formatDate(new Date(createdDate))}
-            </Caption>
-          </div>
+          <Caption accent={'lead'} asParagraph>
+            Joined: {formatDate(new Date(createdDate))}
+          </Caption>
         </div>
       </div>
     </Card>

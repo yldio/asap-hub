@@ -1,4 +1,4 @@
-import { ListResponse } from './common';
+import { FetchPaginationOptions, ListResponse } from './common';
 
 export const googleLegacyCalendarColor = [
   '#B1365F',
@@ -47,6 +47,27 @@ export const googleLegacyCalendarColor = [
 
 export type GoogleLegacyCalendarColor =
   typeof googleLegacyCalendarColor[number];
+
+export interface CalendarDataObject {
+  id: string;
+  googleCalendarId: string;
+  color: GoogleLegacyCalendarColor;
+  name: string;
+  syncToken?: string | null;
+  resourceId?: string | null;
+  expirationDate?: number | null;
+  version: number;
+}
+
+export type CalendarCreateDataObject = Omit<
+  CalendarDataObject,
+  'version' | 'id'
+>;
+
+export type CalendarUpdateDataObject = Partial<CalendarCreateDataObject>;
+
+export type ListCalendarDataObject = ListResponse<CalendarDataObject>;
+
 export interface CalendarResponse {
   id: string;
   name: string;
@@ -54,6 +75,13 @@ export interface CalendarResponse {
 }
 
 export type ListCalendarResponse = ListResponse<CalendarResponse>;
+
+export interface CalendarUpdateRequest {
+  resourceId?: string | null;
+  expirationDate?: number | null;
+}
+
+export type FetchCalendarOptions = FetchPaginationOptions;
 
 export const isGoogleLegacyCalendarColor = (
   data: string | null,

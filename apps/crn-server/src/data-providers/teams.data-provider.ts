@@ -128,6 +128,7 @@ export class TeamSquidexDataProvider implements TeamDataProvider {
     const inputTeam: InputTeam['data'] = {
       applicationNumber: { iv: input.applicationNumber },
       displayName: { iv: input.displayName },
+      inactiveSince: { iv: input.inactiveSince || null },
       expertiseAndResourceTags: { iv: input.expertiseAndResourceTags },
       projectTitle: { iv: input.projectTitle },
       outputs: { iv: input.researchOutputIds || [] },

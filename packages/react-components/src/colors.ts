@@ -97,3 +97,5 @@ export const neutral200 = color(246, 249, 251);
 export const informationInfo500 = color(12, 141, 195);
 
 export const semanticInformationInfo100 = color(230, 243, 249);
+
+export const warning900 = color(181, 107, 11);

@@ -1,5 +1,5 @@
 import {
-  EventResponse,
+  ReminderEventResponse,
   EventSpeakerExternalUser,
   EventSpeakerUser,
   EventSpeakerUserData,
@@ -86,7 +86,7 @@ export const createEventResponse = (
     customTitle = 'Event',
   }: FixtureOptions = {},
   itemIndex = 0,
-): EventResponse => ({
+): ReminderEventResponse => ({
   id: `event-${itemIndex}`,
   calendar: createCalendarResponse(itemIndex),
   startDate: new Date().toISOString(),
@@ -110,6 +110,7 @@ export const createEventResponse = (
   notes: 'Meeting notes go here',
   presentation: 'Presentation',
   videoRecording: 'Video Recording',
+  videoRecordingUpdatedAt: new Date().toISOString(),
   meetingMaterials: Array.from({ length: meetingMaterials }).map((_, i) => ({
     title: `Material ${i + 1}`,
     url: `https://example.com/materials/${i}`,

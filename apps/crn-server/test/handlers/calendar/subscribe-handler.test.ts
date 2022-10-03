@@ -1,7 +1,6 @@
 import { EventBridgeEvent } from 'aws-lambda';
 import nock from 'nock';
 import { asapApiUrl, googleApiToken, googleApiUrl } from '../../../src/config';
-import { CalendarRaw } from '../../../src/controllers/calendars';
 import {
   calendarCreatedHandlerFactory,
   SubscribeToEventChanges,
@@ -15,8 +14,9 @@ import {
 } from '../../../src/handlers/event-bus';
 import { Alerts } from '../../../src/utils/alerts';
 import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
+import { getCalendarDataObject } from '../../fixtures/calendars.fixtures';
 import { createEventBridgeEventMock } from '../../helpers/events';
-import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
+import { calendarDataProviderMock } from '../../mocks/calendar-data-provider.mock';
 import { googleApiAuthJWTCredentials } from '../../mocks/google-api.mock';
 import {
   inOrderfirstSave,
@@ -40,7 +40,12 @@ describe('Calendar handler', () => {
   const alerts: jest.Mocked<Alerts> = {
     error: jest.fn(),
   };
-  const handler = generateHandler(23, subscribe, unsubscribe, alerts);
+  const handler = calendarCreatedHandlerFactory(
+    subscribe,
+    unsubscribe,
+    calendarDataProviderMock,
+    alerts,
+  );
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -87,7 +92,7 @@ describe('Calendar handler', () => {
 
       expect(res).toBe('OK');
       expect(subscribe).not.toHaveBeenCalled();
-      expect(calendarControllerMock.update).not.toHaveBeenCalled();
+      expect(calendarDataProviderMock.update).not.toHaveBeenCalled();
     });
   });
 
@@ -104,7 +109,7 @@ describe('Calendar handler', () => {
         getCalendarCreateEvent().payload.data.googleCalendarId.iv,
         getCalendarCreateEvent().payload.id,
       );
-      expect(calendarControllerMock.update).toHaveBeenCalledWith(
+      expect(calendarDataProviderMock.update).toHaveBeenCalledWith(
         getCalendarCreateEvent().payload.id,
         {
           resourceId,
@@ -124,8 +129,13 @@ describe('Calendar handler', () => {
     });
 
     test('Should unsubscribe and skip the subscription if the calendar ID was set to an empty string', async () => {
-      const calendarUpdateEvent = getCalendarUpdateEvent();
+      const calendarUpdateEvent = getCalendarUpdateEvent(2);
       calendarUpdateEvent.payload.data.googleCalendarId.iv = '';
+
+      calendarDataProviderMock.fetchById.mockResolvedValueOnce({
+        ...getCalendarDataObject(),
+        version: 1,
+      });
 
       const res = await handler(
         getEvent('CalendarsUpdated', calendarUpdateEvent),
@@ -156,9 +166,14 @@ describe('Calendar handler', () => {
     describe('Calendar ID changed', () => {
       const resourceId = 'some-resource-id';
       const expiration = 123456;
+
       test('Should unsubscribe and remove the resourceId then resubscribe', async () => {
-        const calendarUpdateEvent = getCalendarUpdateEvent();
+        const calendarUpdateEvent = getCalendarUpdateEvent(2);
         subscribe.mockResolvedValueOnce({ resourceId, expiration });
+        calendarDataProviderMock.fetchById.mockResolvedValueOnce({
+          ...getCalendarDataObject(),
+          version: 1,
+        });
 
         const res = await handler(
           getEvent('CalendarsUpdated', calendarUpdateEvent),
@@ -169,7 +184,7 @@ describe('Calendar handler', () => {
           calendarUpdateEvent.payload.dataOld!.resourceId!.iv,
           calendarUpdateEvent.payload.id,
         );
-        expect(calendarControllerMock.update).toHaveBeenCalledWith(
+        expect(calendarDataProviderMock.update).toHaveBeenCalledWith(
           calendarUpdateEvent.payload.id,
           {
             resourceId: null,
@@ -195,10 +210,15 @@ describe('Calendar handler', () => {
     describe('Old resource was not defined', () => {
       const resourceId = 'some-resource-id';
       const expiration = 123456;
+
       test('Should not unsubscribe', async () => {
-        const calendarUpdateEvent = getCalendarUpdateEvent();
+        const calendarUpdateEvent = getCalendarUpdateEvent(2);
         calendarUpdateEvent.payload.dataOld!.resourceId = undefined;
         subscribe.mockResolvedValueOnce({ resourceId, expiration });
+        calendarDataProviderMock.fetchById.mockResolvedValueOnce({
+          ...getCalendarDataObject(),
+          version: 1,
+        });
 
         const res = await handler(
           getEvent('CalendarsUpdated', calendarUpdateEvent),
@@ -208,6 +228,7 @@ describe('Calendar handler', () => {
         expect(unsubscribe).not.toHaveBeenCalled();
         expect(subscribe).toHaveBeenCalled();
       });
+
       test('Should not unsubscribe or subscribe is the version is old', async () => {
         const calendarUpdateEvent = getCalendarUpdateEvent(11);
         calendarUpdateEvent.payload.dataOld!.resourceId = undefined;
@@ -226,8 +247,11 @@ describe('Calendar handler', () => {
     test('Should alert and continue to subscription even when unsubscribing failed', async () => {
       const resourceId = 'some-resource-id';
       const expiration = 123456;
-      const calendarUpdateEvent = getCalendarUpdateEvent();
-
+      const calendarUpdateEvent = getCalendarUpdateEvent(2);
+      calendarDataProviderMock.fetchById.mockResolvedValueOnce({
+        ...getCalendarDataObject(),
+        version: 1,
+      });
       subscribe.mockResolvedValueOnce({ resourceId, expiration });
       const error = new Error();
       unsubscribe.mockRejectedValueOnce(error);
@@ -241,6 +265,7 @@ describe('Calendar handler', () => {
       expect(alerts.error).toBeCalledWith(error);
     });
   });
+
   describe('multilple calls', () => {
     test(`events played in order should update accordingly.
     The first event invalidates a calender,
@@ -338,6 +363,10 @@ describe('Calendar handler', () => {
       );
       const resourceId = 'some-resource-id';
       const expiration = 123456;
+      calendarDataProviderMock.fetchById.mockResolvedValueOnce({
+        ...getCalendarDataObject(),
+        version: currentVersion,
+      });
       subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
       const res = await handler(getEvent('CalendarsUpdated', event));
@@ -345,11 +374,11 @@ describe('Calendar handler', () => {
       expect(res).toBe('OK');
       const { dataOld, id, data, version } = event.payload;
       expect(unsubscribe).toHaveBeenCalledWith(dataOld!.resourceId!.iv, id);
-      expect(calendarControllerMock.update).toHaveBeenCalledWith(id, {
+      expect(calendarDataProviderMock.update).toHaveBeenCalledWith(id, {
         resourceId: null,
       });
       expect(subscribe).toHaveBeenCalledWith(data.googleCalendarId.iv, id);
-      expect(calendarControllerMock.update).toHaveBeenCalledWith(id, {
+      expect(calendarDataProviderMock.update).toHaveBeenCalledWith(id, {
         resourceId,
         expirationDate: expiration,
       });
@@ -370,11 +399,15 @@ describe('Calendar handler', () => {
         unsubscribe,
         alerts,
       );
+      calendarDataProviderMock.fetchById.mockResolvedValueOnce({
+        ...getCalendarDataObject(),
+        version: currentVersion,
+      });
       const res = await handler(getEvent('CalendarsUpdated', event));
       expect(res).toBe('OK');
       expect(unsubscribe).not.toHaveBeenCalled();
       expect(subscribe).not.toHaveBeenCalled();
-      expect(calendarControllerMock.update).not.toHaveBeenCalled();
+      expect(calendarDataProviderMock.update).not.toHaveBeenCalled();
       return outOfOrder ? currentVersion : event.payload.version;
     };
     type EventExpects = (
@@ -483,7 +516,7 @@ const getEvent = (type?: CalendarEvent, detail?: CalendarPayload) =>
     type || 'CalendarsPublished',
   );
 
-function generateHandler(
+const generateHandler = (
   currentVersion: number,
   subscribe: jest.MockedFunction<
     (
@@ -495,15 +528,15 @@ function generateHandler(
     (resourceId: string, channelId: string) => Promise<void>
   >,
   alerts: jest.Mocked<Alerts>,
-) {
+) => {
   const fetchById = jest.fn(() =>
-    Promise.resolve({ version: currentVersion } as CalendarRaw),
+    Promise.resolve({ ...getCalendarDataObject(), version: currentVersion }),
   );
   const handler = calendarCreatedHandlerFactory(
     subscribe,
     unsubscribe,
-    { ...calendarControllerMock, fetchById },
+    { ...calendarDataProviderMock, fetchById },
     alerts,
   );
   return handler;
-}
+};

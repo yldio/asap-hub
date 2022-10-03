@@ -2311,6 +2311,7 @@ export type EventsDataDto = {
   title: Maybe<EventsDataTitleDto>;
   videoRecording: Maybe<EventsDataVideoRecordingDto>;
   videoRecordingPermanentlyUnavailable: Maybe<EventsDataVideoRecordingPermanentlyUnavailableDto>;
+  videoRecordingUpdatedAt: Maybe<EventsDataVideoRecordingUpdatedAtDto>;
 };
 
 /** The structure of the End Date field of the Events content type. */
@@ -2401,6 +2402,7 @@ export type EventsDataInputDto = {
   title: InputMaybe<EventsDataTitleInputDto>;
   videoRecording: InputMaybe<EventsDataVideoRecordingInputDto>;
   videoRecordingPermanentlyUnavailable: InputMaybe<EventsDataVideoRecordingPermanentlyUnavailableInputDto>;
+  videoRecordingUpdatedAt: InputMaybe<EventsDataVideoRecordingUpdatedAtInputDto>;
 };
 
 /** The structure of the Meeting Link field of the Events content type. */
@@ -2605,6 +2607,16 @@ export type EventsDataVideoRecordingPermanentlyUnavailableInputDto = {
   iv: InputMaybe<Scalars['Boolean']>;
 };
 
+/** The structure of the Video Recording Updated At field of the Events content type. */
+export type EventsDataVideoRecordingUpdatedAtDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Video Recording Updated At field of the Events content input type. */
+export type EventsDataVideoRecordingUpdatedAtInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
 /** The structure of the flat Events data type. */
 export type EventsFlatDataDto = {
   calendar: Maybe<Array<Calendars>>;
@@ -2640,6 +2652,7 @@ export type EventsFlatDataDto = {
   videoRecording: Maybe<Scalars['String']>;
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
   videoRecordingPermanentlyUnavailable: Maybe<Scalars['Boolean']>;
+  videoRecordingUpdatedAt: Maybe<Scalars['Instant']>;
 };
 
 /** List of Events items and total count. */
@@ -4477,6 +4490,7 @@ export type TeamsDataDto = {
   applicationNumber: Maybe<TeamsDataApplicationNumberDto>;
   displayName: Maybe<TeamsDataDisplayNameDto>;
   expertiseAndResourceTags: Maybe<TeamsDataExpertiseAndResourceTagsDto>;
+  inactiveSince: Maybe<TeamsDataInactiveSinceDto>;
   outputs: Maybe<TeamsDataOutputsDto>;
   projectSummary: Maybe<TeamsDataProjectSummaryDto>;
   projectTitle: Maybe<TeamsDataProjectTitleDto>;
@@ -4494,11 +4508,22 @@ export type TeamsDataExpertiseAndResourceTagsInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
+/** The structure of the The team is inactive since field of the Teams content type. */
+export type TeamsDataInactiveSinceDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the The team is inactive since field of the Teams content input type. */
+export type TeamsDataInactiveSinceInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
 /** The structure of the Teams data input type. */
 export type TeamsDataInputDto = {
   applicationNumber: InputMaybe<TeamsDataApplicationNumberInputDto>;
   displayName: InputMaybe<TeamsDataDisplayNameInputDto>;
   expertiseAndResourceTags: InputMaybe<TeamsDataExpertiseAndResourceTagsInputDto>;
+  inactiveSince: InputMaybe<TeamsDataInactiveSinceInputDto>;
   outputs: InputMaybe<TeamsDataOutputsInputDto>;
   projectSummary: InputMaybe<TeamsDataProjectSummaryInputDto>;
   projectTitle: InputMaybe<TeamsDataProjectTitleInputDto>;
@@ -4575,6 +4600,7 @@ export type TeamsFlatDataDto = {
   applicationNumber: Maybe<Scalars['String']>;
   displayName: Maybe<Scalars['String']>;
   expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
+  inactiveSince: Maybe<Scalars['Instant']>;
   outputs: Maybe<Array<ResearchOutputs>>;
   projectSummary: Maybe<Scalars['String']>;
   projectTitle: Maybe<Scalars['String']>;
@@ -5552,6 +5578,7 @@ export type EventContentFragment = Pick<
                         TeamsFlatDataDto,
                         | 'applicationNumber'
                         | 'displayName'
+                        | 'inactiveSince'
                         | 'projectSummary'
                         | 'projectTitle'
                         | 'expertiseAndResourceTags'
@@ -5894,6 +5921,7 @@ export type FetchEventsQuery = {
                                   TeamsFlatDataDto,
                                   | 'applicationNumber'
                                   | 'displayName'
+                                  | 'inactiveSince'
                                   | 'projectSummary'
                                   | 'projectTitle'
                                   | 'expertiseAndResourceTags'
@@ -6270,6 +6298,7 @@ export type FetchEventQuery = {
                             TeamsFlatDataDto,
                             | 'applicationNumber'
                             | 'displayName'
+                            | 'inactiveSince'
                             | 'projectSummary'
                             | 'projectTitle'
                             | 'expertiseAndResourceTags'
@@ -6619,6 +6648,7 @@ export type GroupsContentFragment = Pick<
             TeamsFlatDataDto,
             | 'applicationNumber'
             | 'displayName'
+            | 'inactiveSince'
             | 'projectSummary'
             | 'projectTitle'
             | 'expertiseAndResourceTags'
@@ -6860,6 +6890,7 @@ export type FetchGroupsQuery = {
                       TeamsFlatDataDto,
                       | 'applicationNumber'
                       | 'displayName'
+                      | 'inactiveSince'
                       | 'projectSummary'
                       | 'projectTitle'
                       | 'expertiseAndResourceTags'
@@ -7114,6 +7145,7 @@ export type FetchGroupQuery = {
                 TeamsFlatDataDto,
                 | 'applicationNumber'
                 | 'displayName'
+                | 'inactiveSince'
                 | 'projectSummary'
                 | 'projectTitle'
                 | 'expertiseAndResourceTags'
@@ -7385,7 +7417,10 @@ export type FetchReminderDataQuery = {
   queryEventsContents: Maybe<
     Array<
       Pick<Events, 'id'> & {
-        flatData: Pick<EventsFlatDataDto, 'startDate' | 'endDate' | 'title'>;
+        flatData: Pick<
+          EventsFlatDataDto,
+          'startDate' | 'endDate' | 'title' | 'videoRecordingUpdatedAt'
+        >;
       }
     >
   >;
@@ -7931,6 +7966,7 @@ export type TeamsContentFragment = Pick<
     TeamsFlatDataDto,
     | 'applicationNumber'
     | 'displayName'
+    | 'inactiveSince'
     | 'projectSummary'
     | 'projectTitle'
     | 'expertiseAndResourceTags'
@@ -8035,6 +8071,7 @@ export type FetchTeamQuery = {
         TeamsFlatDataDto,
         | 'applicationNumber'
         | 'displayName'
+        | 'inactiveSince'
         | 'projectSummary'
         | 'projectTitle'
         | 'expertiseAndResourceTags'
@@ -8148,6 +8185,7 @@ export type FetchTeamsQuery = {
               TeamsFlatDataDto,
               | 'applicationNumber'
               | 'displayName'
+              | 'inactiveSince'
               | 'projectSummary'
               | 'projectTitle'
               | 'expertiseAndResourceTags'
@@ -8263,6 +8301,7 @@ export type UsersContentFragment = Pick<
 > & {
   flatData: Pick<
     UsersFlatDataDto,
+    | 'alumniSinceDate'
     | 'biography'
     | 'degree'
     | 'email'
@@ -8346,6 +8385,7 @@ export type FetchUserQuery = {
     Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
       flatData: Pick<
         UsersFlatDataDto,
+        | 'alumniSinceDate'
         | 'biography'
         | 'degree'
         | 'email'
@@ -8436,6 +8476,7 @@ export type FetchUsersQuery = {
           Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
             flatData: Pick<
               UsersFlatDataDto,
+              | 'alumniSinceDate'
               | 'biography'
               | 'degree'
               | 'email'
@@ -8612,6 +8653,10 @@ export const TeamsContentFragmentDoc = {
                   name: { kind: 'Name', value: 'applicationNumber' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'inactiveSince' },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'projectSummary' },
@@ -10683,6 +10728,10 @@ export const UsersContentFragmentDoc = {
               selections: [
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'alumniSinceDate' },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'avatar' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -12235,6 +12284,13 @@ export const FetchReminderDataDocument = {
                         name: { kind: 'Name', value: 'endDate' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'videoRecordingUpdatedAt',
+                        },
+                      },
                     ],
                   },
                 },

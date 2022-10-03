@@ -8,17 +8,18 @@ import {
   RestEvent,
   RestCalendar,
   InputCalendar,
-  Calendar,
   Event,
 } from '@asap-hub/squidex';
 import { Chance } from 'chance';
 import {
+  VideoEventReminder,
   EventHappeningNowReminder,
   EventHappeningTodayReminder,
   FetchRemindersOptions,
   ResearchOutputCreateDataObject,
   ResearchOutputPublishedReminder,
   UserCreateDataObject,
+  CalendarCreateDataObject,
 } from '@asap-hub/model';
 import { appName, baseUrl } from '../../src/config';
 import { ReminderSquidexDataProvider } from '../../src/data-providers/reminders.data-provider';
@@ -32,8 +33,8 @@ import { getUserCreateDataObject } from '../fixtures/users.fixtures';
 import { createRandomOrcid } from '../helpers/users';
 import Events from '../../src/controllers/events';
 import { getEventRestResponse } from '../fixtures/events.fixtures';
-import Calendars from '../../src/controllers/calendars';
-import { getCalendarInput } from '../fixtures/calendars.fixtures';
+import CalendarSquidexDataProvider from '../../src/data-providers/calendars.data-provider';
+import { getCalendarCreateDataObject } from '../fixtures/calendars.fixtures';
 
 jest.setTimeout(30000);
 
@@ -80,6 +81,10 @@ describe('Reminders', () => {
     'calendars',
     { appName, baseUrl },
   );
+  const calendarDataProvider = new CalendarSquidexDataProvider(
+    calendarRestClient,
+    squidexGraphqlClient,
+  );
   const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
     squidexGraphqlClient,
     researchOutputRestClient,
@@ -87,11 +92,6 @@ describe('Reminders', () => {
   );
   // @todo https://asaphub.atlassian.net/browse/CRN-937
   const eventController = new Events(squidexGraphqlClient, eventRestClient);
-  // @todo https://asaphub.atlassian.net/browse/CRN-937
-  const calendarController = new Calendars(
-    squidexGraphqlClient,
-    calendarRestClient,
-  );
 
   describe('Research Output Published Reminder', () => {
     let creatorId: string;
@@ -234,7 +234,7 @@ describe('Reminders', () => {
 
     beforeEach(async () => {
       const calendarInput = getCalendarInputForReminder();
-      ({ id: calendarId } = await calendarController.create(calendarInput));
+      calendarId = await calendarDataProvider.create(calendarInput);
 
       const timezone = 'Europe/London';
       fetchRemindersOptions = { userId, timezone };
@@ -326,9 +326,7 @@ describe('Reminders', () => {
       const event1 = await eventController.create(eventInput1);
 
       const calendarInput2 = getCalendarInputForReminder();
-      const { id: calendarId2 } = await calendarController.create(
-        calendarInput2,
-      );
+      const calendarId2 = await calendarDataProvider.create(calendarInput2);
       const eventInput2 = getEventInput(calendarId);
       eventInput2.calendar = [calendarId2];
       eventInput2.startDate = new Date('2022-08-10T17:00:00.0Z').toISOString();
@@ -372,7 +370,7 @@ describe('Reminders', () => {
 
     beforeEach(async () => {
       const calendarInput = getCalendarInputForReminder();
-      ({ id: calendarId } = await calendarController.create(calendarInput));
+      calendarId = await calendarDataProvider.create(calendarInput);
     });
 
     afterEach(async () => {
@@ -435,6 +433,129 @@ describe('Reminders', () => {
     });
   });
 
+  describe('Event - Video Updated Reminder', () => {
+    let userId: string;
+    let calendarId: string;
+    let eventIdsForDeletion: string[] = [];
+    let fetchRemindersOptions: FetchRemindersOptions;
+
+    beforeAll(async () => {
+      jest.useFakeTimers('modern');
+
+      const teamCreateDataObject = getTeamCreateDataObject();
+      teamCreateDataObject.applicationNumber = chance.name();
+      const teamId = await teamDataProvider.create(teamCreateDataObject);
+
+      const userCreateDataObject = getUserInput(teamId);
+      userId = await userDataProvider.create(userCreateDataObject);
+      fetchRemindersOptions = { userId, timezone: 'Europe/London' };
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    beforeEach(async () => {
+      const calendarInput = getCalendarInputForReminder();
+      calendarId = await calendarDataProvider.create(calendarInput);
+    });
+
+    afterEach(async () => {
+      await Promise.all(
+        eventIdsForDeletion.map((id) => eventRestClient.delete(id)),
+      );
+      eventIdsForDeletion = [];
+    });
+
+    test('Should see the reminder when a video was updated in an event between now and 24 hours ago', async () => {
+      // setting system time to 10:05AM in UTC
+      jest.setSystemTime(new Date('2022-09-26T10:05:00.0Z'));
+
+      const eventInput = getEventInput(calendarId);
+      eventInput.videoRecordingUpdatedAt = new Date(
+        '2022-09-26T08:00:00.0Z',
+      ).toISOString();
+
+      const event = await eventController.create(eventInput);
+      eventIdsForDeletion = [event.id];
+
+      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+      const expectedReminder: VideoEventReminder = {
+        id: `video-event-updated-${event.id}`,
+        entity: 'Event',
+        type: 'Video Updated',
+        data: {
+          eventId: event.id,
+          title: event.data.title.iv,
+          videoRecordingUpdatedAt: event.data.videoRecordingUpdatedAt!.iv,
+        },
+      };
+
+      expect(reminders).toEqual({
+        total: 1,
+        items: [expectedReminder],
+      });
+    });
+
+    test('Should not see the reminder when a video was updated in an event more than 24 hours ago', async () => {
+      // setting system time to 10:05AM in UTC
+      jest.setSystemTime(new Date('2022-09-26T10:05:00.0Z'));
+
+      const eventInput = getEventInput(calendarId);
+      eventInput.videoRecordingUpdatedAt = new Date(
+        '2022-09-22T08:00:00.0Z',
+      ).toISOString();
+
+      const event = await eventController.create(eventInput);
+      eventIdsForDeletion = [event.id];
+
+      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+      expect(reminders).toEqual({
+        total: 0,
+        items: [],
+      });
+    });
+
+    test('Should not see the reminder when a video in an event was updated after the current time', async () => {
+      // setting system time to 10:05AM in UTC
+      jest.setSystemTime(new Date('2022-09-26T10:05:00.0Z'));
+
+      const eventInput = getEventInput(calendarId);
+      eventInput.videoRecordingUpdatedAt = new Date(
+        '2022-09-27T08:00:00.0Z',
+      ).toISOString();
+
+      const event = await eventController.create(eventInput);
+      eventIdsForDeletion = [event.id];
+
+      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+      expect(reminders).toEqual({
+        total: 0,
+        items: [],
+      });
+    });
+
+    test('Should not see the reminder when a video was never updated in an event', async () => {
+      // setting system time to 10:05AM in UTC
+      jest.setSystemTime(new Date('2022-09-26T10:05:00.0Z'));
+
+      const eventInput = getEventInput(calendarId);
+
+      const event = await eventController.create(eventInput);
+      eventIdsForDeletion = [event.id];
+
+      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+      expect(reminders).toEqual({
+        total: 0,
+        items: [],
+      });
+    });
+  });
+
   describe('Multiple reminders', () => {
     let teamId: string;
     let calendarId: string;
@@ -456,7 +577,7 @@ describe('Reminders', () => {
       userId1 = await userDataProvider.create(userCreateDataObject);
 
       const calendarInput = getCalendarInputForReminder();
-      ({ id: calendarId } = await calendarController.create(calendarInput));
+      calendarId = await calendarDataProvider.create(calendarInput);
     });
 
     afterAll(() => {
@@ -534,13 +655,17 @@ describe('Reminders', () => {
     avatar: undefined,
   });
 
-  const getCalendarInputForReminder = (): Calendar => ({
-    ...getCalendarInput(),
+  const getCalendarInputForReminder = (): CalendarCreateDataObject => ({
+    ...getCalendarCreateDataObject(),
     resourceId: chance.string(),
     googleCalendarId: chance.email(),
   });
 
-  const getEventInput = (calendarId: string): Event<string, string> => ({
+  interface EventInput extends Event {
+    videoRecordingUpdatedAt?: string;
+  }
+
+  const getEventInput = (calendarId: string): EventInput => ({
     ...getEventRestResponse(),
     calendar: [calendarId],
     googleId: chance.string(),

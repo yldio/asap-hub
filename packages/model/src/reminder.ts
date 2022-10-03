@@ -5,7 +5,7 @@ import { ResearchOutputDataObject } from './research-output';
 type ReminderEntity = 'Research Output' | 'Event';
 
 type ResearchOutputReminderType = 'Published';
-type EventReminderType = 'Happening Today' | 'Happening Now';
+type EventReminderType = 'Happening Today' | 'Happening Now' | 'Video Updated';
 type ReminderType = ResearchOutputReminderType | EventReminderType;
 interface Reminder {
   id: string;
@@ -17,6 +17,10 @@ interface Reminder {
 interface ResearchOutputReminder extends Reminder {
   entity: 'Research Output';
   type: ResearchOutputReminderType;
+}
+
+export interface ReminderEventResponse extends EventResponse {
+  videoRecordingUpdatedAt: string;
 }
 
 interface EventReminder extends Reminder {
@@ -40,9 +44,9 @@ export interface EventHappeningTodayReminder extends EventReminder {
   entity: 'Event';
   type: 'Happening Today';
   data: {
-    eventId: EventResponse['id'];
-    title: EventResponse['title'];
-    startDate: EventResponse['startDate'];
+    eventId: ReminderEventResponse['id'];
+    title: ReminderEventResponse['title'];
+    startDate: ReminderEventResponse['startDate'];
   };
 }
 
@@ -50,17 +54,28 @@ export interface EventHappeningNowReminder extends EventReminder {
   entity: 'Event';
   type: 'Happening Now';
   data: {
-    eventId: EventResponse['id'];
-    title: EventResponse['title'];
-    startDate: EventResponse['startDate'];
-    endDate: EventResponse['endDate'];
+    eventId: ReminderEventResponse['id'];
+    title: ReminderEventResponse['title'];
+    startDate: ReminderEventResponse['startDate'];
+    endDate: ReminderEventResponse['endDate'];
+  };
+}
+
+export interface VideoEventReminder extends EventReminder {
+  entity: 'Event';
+  type: 'Video Updated';
+  data: {
+    eventId: ReminderEventResponse['id'];
+    title: ReminderEventResponse['title'];
+    videoRecordingUpdatedAt: ReminderEventResponse['videoRecordingUpdatedAt'];
   };
 }
 
 export type ReminderDataObject =
   | ResearchOutputPublishedReminder
   | EventHappeningTodayReminder
-  | EventHappeningNowReminder;
+  | EventHappeningNowReminder
+  | VideoEventReminder;
 
 export type ListReminderDataObject = ListResponse<ReminderDataObject>;
 

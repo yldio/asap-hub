@@ -16,7 +16,7 @@ const loadWorkingGroups = () =>
   import(/* webpackChunkName: "working-groups" */ './working-groups/Routes');
 
 const loadProjects = () =>
-  import(/* webpackChunkName: "projects" */ './projects/Projects');
+  import(/* webpackChunkName: "projects" */ './projects/Routes');
 
 const loadUsers = () => import(/* webpackChunkName: "users" */ './users/Users');
 

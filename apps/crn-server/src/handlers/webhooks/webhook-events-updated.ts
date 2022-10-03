@@ -6,10 +6,10 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
+import { CalendarDataObject } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { Handler } from 'aws-lambda';
 import { appName, baseUrl, googleApiToken } from '../../config';
-import Calendars, { CalendarController } from '../../controllers/calendars';
 import Events from '../../controllers/events';
 import { getAuthToken } from '../../utils/auth';
 import getJWTCredentials from '../../utils/aws-secret-manager';
@@ -20,9 +20,12 @@ import {
 } from '../../utils/sync-google-calendar';
 import { syncEventFactory } from '../../utils/sync-google-event';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
+import CalendarSquidexDataProvider, {
+  CalendarDataProvider,
+} from '../../data-providers/calendars.data-provider';
 
 export const webhookEventUpdatedHandlerFactory = (
-  calendars: CalendarController,
+  calendarDataProvider: CalendarDataProvider,
   syncCalendar: SyncCalendar,
 ): lambda.Handler =>
   lambda.http(async (request) => {
@@ -42,18 +45,26 @@ export const webhookEventUpdatedHandlerFactory = (
       throw Boom.badRequest('Missing x-goog-resource-id header');
     }
 
-    let calendar: RestCalendar;
+    let calendar: CalendarDataObject;
 
     try {
-      calendar = await calendars.fetchByResourceId(resourceId);
+      const calendars = await calendarDataProvider.fetch({
+        resourceId,
+      });
+
+      if (!calendars.items[0]) {
+        throw new Error('Failed to fetch calendar by resource ID.');
+      }
+
+      [calendar] = calendars.items;
     } catch (error) {
       logger.error(error, 'Error fetching calendar');
       throw Boom.badGateway();
     }
 
     const squidexCalendarId = calendar.id;
-    const googleCalendarId = calendar.data.googleCalendarId.iv;
-    const syncToken = calendar.data.syncToken?.iv;
+    const { googleCalendarId } = calendar;
+    const syncToken = calendar.syncToken || undefined;
 
     const nextSyncToken = await syncCalendar(
       googleCalendarId,
@@ -62,7 +73,7 @@ export const webhookEventUpdatedHandlerFactory = (
     );
 
     if (nextSyncToken) {
-      await calendars
+      await calendarDataProvider
         .update(squidexCalendarId, { syncToken: nextSyncToken })
         .catch((err) => {
           logger.error(err, 'Error updating syncToken');
@@ -87,9 +98,9 @@ const calendarRestClient = new SquidexRest<RestCalendar, InputCalendar>(
   'calendars',
   { appName, baseUrl },
 );
-const calendarController = new Calendars(
-  squidexGraphqlClient,
+const calendarDataProvider = new CalendarSquidexDataProvider(
   calendarRestClient,
+  squidexGraphqlClient,
 );
 const syncCalendar = syncCalendarFactory(
   syncEventFactory(new Events(squidexGraphqlClient, eventRestClient)),
@@ -97,5 +108,5 @@ const syncCalendar = syncCalendarFactory(
 );
 
 export const handler: Handler = sentryWrapper(
-  webhookEventUpdatedHandlerFactory(calendarController, syncCalendar),
+  webhookEventUpdatedHandlerFactory(calendarDataProvider, syncCalendar),
 );

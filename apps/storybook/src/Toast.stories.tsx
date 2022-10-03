@@ -11,6 +11,11 @@ export default {
 export const Normal = () => (
   <Toast>{text('Message', 'Something happened.')}</Toast>
 );
+
+export const Info = () => (
+  <Toast accent="info">{text('Message', 'Something happened.')}</Toast>
+);
+
 export const Closable = () => (
   <Toast onClose={() => {}}>{text('Message', 'Something happened.')}</Toast>
 );

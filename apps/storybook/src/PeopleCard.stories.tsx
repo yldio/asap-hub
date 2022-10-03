@@ -19,6 +19,8 @@ const props = {
   createdDate: new Date(
     date('Created Date', new Date(2020, 6, 12, 14, 32)),
   ).toISOString(),
+  city: text('City', 'New Haven'),
+  country: text('Country', 'United States'),
   degree: degree === 'Empty' ? undefined : degree,
   institution: text('Institution', 'Yale University'),
   firstName: text('First Name', 'Phillip'),

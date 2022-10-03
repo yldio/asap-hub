@@ -169,10 +169,13 @@ export const getSquidexGraphqlEventSpeakerWithExternalUser = (): NonNullable<
   ],
 });
 
-const squidexGraphqlEventsFlatData = (): EventContentFragment['flatData'] => ({
+const squidexGraphqlEventsFlatData = (): EventContentFragment['flatData'] & {
+  videoRecordingUpdatedAt: string;
+} => ({
   description: 'This event is awesome',
   endDate: '2009-12-24T16:30:54.000Z',
   startDate: '2009-12-24T16:20:14.000Z',
+  videoRecordingUpdatedAt: '2010-08-01T08:00:04.000Z',
   meetingLink: 'https://zoom.com/room/123',
   hideMeetingLink: false,
   status: 'Confirmed',

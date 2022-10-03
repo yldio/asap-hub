@@ -348,8 +348,8 @@ __metadata:
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.19.1
-    "@types/node": 14.18.30
-    "@types/prettier": 2.7.0
+    "@types/node": 14.18.31
+    "@types/prettier": 2.7.1
     algoliasearch: 4.14.2
     prettier: 2.7.1
   languageName: unknown
@@ -377,7 +377,7 @@ __metadata:
     "@types/jwt-decode": 2.2.1
     "@types/jwt-encode": "workspace:*"
     "@types/luxon": 1.26.4
-    "@types/prettier": 2.7.0
+    "@types/prettier": 2.7.1
     "@types/pump": 1.1.1
     "@types/through2-concurrent": 2.0.1
     "@types/uuid": 8.3.4
@@ -411,7 +411,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.19.1
     "@types/jest": 26.0.24
     "@types/jsdom": 16.2.3
-    "@types/node": 14.18.30
+    "@types/node": 14.18.31
     core-js: 3.24.1
     jsdom: 16.5.3
   languageName: unknown
@@ -429,7 +429,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.19.1
     "@types/auth0-js": 9.14.6
     "@types/jest": 26.0.24
-    "@types/node": 14.18.30
+    "@types/node": 14.18.31
     "@types/pify": 3.0.2
     auth0-js: 9.19.1
     camelcase: 6.3.0
@@ -463,7 +463,7 @@ __metadata:
     "@auth0/auth0-spa-js": 1.22.4
     "@babel/runtime-corejs3": 7.19.1
     "@types/jest": 26.0.24
-    "@types/node": 14.18.30
+    "@types/node": 14.18.31
   languageName: unknown
   linkType: soft
 
@@ -478,7 +478,7 @@ __metadata:
     "@graphql-codegen/typescript": 2.7.3
     "@graphql-codegen/typescript-operations": 2.5.3
     "@graphql-typed-document-node/core": 3.1.1
-    contentful-cli: 1.15.15
+    contentful-cli: 1.15.16
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
   languageName: unknown
@@ -551,7 +551,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": 26.0.24
     "@types/nock": 11.1.0
-    "@types/node": 14.18.30
+    "@types/node": 14.18.31
     "@types/qs": 6.9.7
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.17
@@ -605,7 +605,7 @@ __metadata:
     "@emotion/react": 11.10.4
     "@emotion/server": 11.10.0
     "@types/babel__core": 7.1.19
-    "@types/node": 14.18.30
+    "@types/node": 14.18.31
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.17
     aws-sdk: 2.1220.0
@@ -696,7 +696,7 @@ __metadata:
     apr-intercept: 3.0.4
     aws-lambda: 1.0.7
     aws-sdk: 2.1220.0
-    aws-xray-sdk: 3.3.7
+    aws-xray-sdk: 3.3.8
     babel-loader: 8.2.5
     chance: 1.1.8
     copy-webpack-plugin: 9.1.0
@@ -849,7 +849,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@types/history": 4.7.11
     "@types/jest": 26.0.24
-    "@types/node": 14.18.30
+    "@types/node": 14.18.31
     "@types/react": 17.0.49
     "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": 5.14.5
@@ -998,7 +998,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": 26.0.24
     "@types/nock": 11.1.0
-    "@types/node": 14.18.30
+    "@types/node": 14.18.31
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.17
     "@types/react-router-dom": 5.3.3
@@ -1051,7 +1051,7 @@ __metadata:
     "@emotion/react": 11.10.4
     "@emotion/server": 11.10.0
     "@types/babel__core": 7.1.19
-    "@types/node": 14.18.30
+    "@types/node": 14.18.31
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.17
     aws-sdk: 2.1220.0
@@ -1101,7 +1101,7 @@ __metadata:
     "@types/jest": 26.0.24
     "@types/jsonwebtoken": 8.5.9
     "@types/jwt-encode": "workspace:*"
-    "@types/node": 14.18.30
+    "@types/node": 14.18.31
     "@types/serverless": 3.12.8
     "@types/source-map-support": 0.5.4
     "@types/supertest": 2.0.12
@@ -1476,7 +1476,7 @@ __metadata:
     "@babel/core": 7.19.1
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.19.1
-    "@types/node": 14.18.30
+    "@types/node": 14.18.31
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.17
     react: 17.0.2
@@ -12603,10 +12603,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:14.18.30":
-  version: 14.18.30
-  resolution: "@types/node@npm:14.18.30"
-  checksum: 347b2aa53631a2b2056f5d7b98e695eac40e8a83cbc4ee40ab7b2684f1fd4ada3d6522343a3f1ab610fbcd8457c4ad77103240474d568c905d62c1b5d6666589
+"@types/node@npm:14.18.31":
+  version: 14.18.31
+  resolution: "@types/node@npm:14.18.31"
+  checksum: df33021d673a5e3c943cf96c9f3fbccf364d20f487b2ab7eb49db144974c2049f0a91e9358df09235f543c1f0b11388c5b0b636ae1f2ed55a27c75f63bc3d2c5
   languageName: node
   linkType: hard
 
@@ -12686,10 +12686,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prettier@npm:2.7.0":
-  version: 2.7.0
-  resolution: "@types/prettier@npm:2.7.0"
-  checksum: bf5d0c7c1270909b39399539ac106d20ddaa85fe92eb1d59922dc99159604b4f8d5e41b0045fb29c8011585cf5bca2350b7441ef3d9816c08bd0e10ebd4b31d4
+"@types/prettier@npm:2.7.1":
+  version: 2.7.1
+  resolution: "@types/prettier@npm:2.7.1"
+  checksum: 5e3f58e229d6c73b5f5cae2e8f96c1c4a5b5805f83459e17a045ba8e96152b1d38e86b63e3172fb159dac923388699660862b75b2d37e54220805f0e691e26f1
   languageName: node
   linkType: hard
 
@@ -15331,7 +15331,7 @@ __metadata:
     babel-plugin-transform-inline-environment-variables: 0.5.0-alpha.42
     babel-preset-react-app: 10.0.1
     bundlewatch: 0.3.3
-    dotenv: 16.0.1
+    dotenv: 16.0.3
     escape-string-regexp: 4.0.0
     eslint: 7.32.0
     hyperform: 0.12.1
@@ -15723,9 +15723,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-xray-sdk-core@npm:3.3.7":
-  version: 3.3.7
-  resolution: "aws-xray-sdk-core@npm:3.3.7"
+"aws-xray-sdk-core@npm:3.3.8":
+  version: 3.3.8
+  resolution: "aws-xray-sdk-core@npm:3.3.8"
   dependencies:
     "@aws-sdk/service-error-classification": ^3.4.1
     "@aws-sdk/types": ^3.4.1
@@ -15733,52 +15733,52 @@ __metadata:
     atomic-batcher: ^1.0.2
     cls-hooked: ^4.2.2
     semver: ^5.3.0
-  checksum: 186a052be472b35326b89d50713ef7143f73e916861c43f73b97ebafebfeb4258bf414a9052c38e3dd54cbdb4b1a10deda632defc7e2f7dde0bafe77b5381928
+  checksum: a49bee2d90f9ae8c8ba6dc85cffbd7a49f6d846e214f4370a44ec6a34e7bf2562282ff5e855b5e7b1bee4b4387b1ca848c1ff02f606c3a3c23a88129302a5092
   languageName: node
   linkType: hard
 
-"aws-xray-sdk-express@npm:3.3.7":
-  version: 3.3.7
-  resolution: "aws-xray-sdk-express@npm:3.3.7"
+"aws-xray-sdk-express@npm:3.3.8":
+  version: 3.3.8
+  resolution: "aws-xray-sdk-express@npm:3.3.8"
   dependencies:
     "@types/express": "*"
   peerDependencies:
-    aws-xray-sdk-core: ^3.3.7
-  checksum: cfc2e7821e5a5b8079ce07f0dfa1339da5bff2e42907e6c7d2fe0e39d0653f58b289ae9ff03505939ca0731bf80689d0176371fe91daf87247b5d83a2d9b50df
+    aws-xray-sdk-core: ^3.3.8
+  checksum: 8a7282fe10505d7eb08d5bbf64a944b7a60b7cf93a96b0ea77ca6bf6019f7b7d3544ef2c19169627f3f27aa95f73203f72a92871ee24b8efb54d97107f78fe99
   languageName: node
   linkType: hard
 
-"aws-xray-sdk-mysql@npm:3.3.7":
-  version: 3.3.7
-  resolution: "aws-xray-sdk-mysql@npm:3.3.7"
+"aws-xray-sdk-mysql@npm:3.3.8":
+  version: 3.3.8
+  resolution: "aws-xray-sdk-mysql@npm:3.3.8"
   dependencies:
     "@types/mysql": "*"
   peerDependencies:
-    aws-xray-sdk-core: ^3.3.7
-  checksum: 8123cfe0451782371b7a385abfb3bd39d55d78635b411060c371ecf489a67e187ebe9ed7bdfe67dc49939e3625361458278845623e5b463cee221f11d489aed4
+    aws-xray-sdk-core: ^3.3.8
+  checksum: 9fcdb7c31b3605b9034ab09d7a21ec9a36e7b0523f51c98ae539fef992307a4d10ce7fff9bb0f2fe7c334d643391b7af8238221b4cd6fe5d996e5d6959c56c65
   languageName: node
   linkType: hard
 
-"aws-xray-sdk-postgres@npm:3.3.7":
-  version: 3.3.7
-  resolution: "aws-xray-sdk-postgres@npm:3.3.7"
+"aws-xray-sdk-postgres@npm:3.3.8":
+  version: 3.3.8
+  resolution: "aws-xray-sdk-postgres@npm:3.3.8"
   dependencies:
     "@types/pg": "*"
   peerDependencies:
-    aws-xray-sdk-core: ^3.3.7
-  checksum: deadf95bc275526893b697abd4cfe99a078cdf8173319c40c6687e8d978694295f4965739ad96f9fd3f788d65ca946f4849aace1684d640e7c10a0699701c560
+    aws-xray-sdk-core: ^3.3.8
+  checksum: 75fa2aee74fa8c878831132478e58ed967853b92fc80489233d0651d9a25e00ab6fc63fbde7fb300ad79ffeeb6b371667f0bdc25b8fdbaeb5b3fef2706d649ee
   languageName: node
   linkType: hard
 
-"aws-xray-sdk@npm:3.3.7":
-  version: 3.3.7
-  resolution: "aws-xray-sdk@npm:3.3.7"
+"aws-xray-sdk@npm:3.3.8":
+  version: 3.3.8
+  resolution: "aws-xray-sdk@npm:3.3.8"
   dependencies:
-    aws-xray-sdk-core: 3.3.7
-    aws-xray-sdk-express: 3.3.7
-    aws-xray-sdk-mysql: 3.3.7
-    aws-xray-sdk-postgres: 3.3.7
-  checksum: 2809cd907e44e1fe30014deb5ae4859f0cd1c53e9828321dd4d0c4f29666f3232ae658f947910057f3b7d98ac3d0fbb18e6aa803f8d7249b4b3291a8e11e6d66
+    aws-xray-sdk-core: 3.3.8
+    aws-xray-sdk-express: 3.3.8
+    aws-xray-sdk-mysql: 3.3.8
+    aws-xray-sdk-postgres: 3.3.8
+  checksum: 79cc1c1923f8a45a1637fc8f69ed40d6f2ff817f40cad5c89218034d71c697509be9f99640e90b4b1f1780e659641b3f8de63ac7832e32e2944c9941ed94358a
   languageName: node
   linkType: hard
 
@@ -18415,9 +18415,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-cli@npm:1.15.15":
-  version: 1.15.15
-  resolution: "contentful-cli@npm:1.15.15"
+"contentful-cli@npm:1.15.16":
+  version: 1.15.16
+  resolution: "contentful-cli@npm:1.15.16"
   dependencies:
     ast-types: ^0.14.2
     bfj: ^7.0.2
@@ -18456,7 +18456,7 @@ __metadata:
     yargs: ~13.3.2
   bin:
     contentful: bin/contentful.js
-  checksum: d3ca8736b44ab6d0a8589307dcb17dfe5fe8b786b0928fc90cb6956fbc2df545c2622bcc4fe2e934c7db4335c68beb3a45514ad07eb6d555baed7646c4a64f5e
+  checksum: f86425df3e77e58dd12126ad7de4907a5675585b6b55494402d20c368fb387891691c463190eef1254913907e090484c4c2d20699463a951eb07beaf61168323
   languageName: node
   linkType: hard
 
@@ -20477,10 +20477,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:16.0.1, dotenv@npm:^16.0.0":
-  version: 16.0.1
-  resolution: "dotenv@npm:16.0.1"
-  checksum: f459ffce07b977b7f15d8cc4ee69cdff77d4dd8c5dc8c85d2d485ee84655352c2415f9dd09d42b5b5985ced3be186130871b34e2f3e2569ebc72fbc2e8096792
+"dotenv@npm:16.0.3":
+  version: 16.0.3
+  resolution: "dotenv@npm:16.0.3"
+  checksum: afcf03f373d7a6d62c7e9afea6328e62851d627a4e73f2e12d0a8deae1cd375892004f3021883f8aec85932cd2834b091f568ced92b4774625b321db83b827f8
   languageName: node
   linkType: hard
 
@@ -20495,6 +20495,13 @@ __metadata:
   version: 10.0.0
   resolution: "dotenv@npm:10.0.0"
   checksum: f412c5fe8c24fbe313d302d2500e247ba8a1946492db405a4de4d30dd0eb186a88a43f13c958c5a7de303938949c4231c56994f97d05c4bc1f22478d631b4005
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^16.0.0":
+  version: 16.0.1
+  resolution: "dotenv@npm:16.0.1"
+  checksum: f459ffce07b977b7f15d8cc4ee69cdff77d4dd8c5dc8c85d2d485ee84655352c2415f9dd09d42b5b5985ced3be186130871b34e2f3e2569ebc72fbc2e8096792
   languageName: node
   linkType: hard
 

@@ -1,12 +1,22 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import Toast from '../Toast';
+import Toast, { getIcon } from '../Toast';
 import { noop } from '../../utils';
+import { errorIcon, infoCircleYellow } from '../../icons';
 
-it('renders the children', () => {
-  const { getByText } = render(<Toast>error message</Toast>);
+it('renders the children and default icon', () => {
+  const { getByText, getByTitle } = render(<Toast>error message</Toast>);
   expect(getByText('error message')).toBeVisible();
+  expect(getByTitle('Error Icon')).toBeInTheDocument();
+});
+
+it('renders with the info accent', () => {
+  const { getByText, getByTitle } = render(
+    <Toast accent="info">info message</Toast>,
+  );
+  expect(getByText('info message')).toBeVisible();
+  expect(getByTitle('Info Circle Yellow')).toBeInTheDocument();
 });
 
 it('does not render a close button by default', () => {
@@ -28,4 +38,9 @@ describe('when closable', () => {
     userEvent.click(getByTitle(/close/i));
     expect(handleClose).toHaveBeenCalled();
   });
+});
+
+it('renders the correct icon', () => {
+  expect(getIcon('info')).toBe(infoCircleYellow);
+  expect(getIcon('alert')).toBe(errorIcon);
 });

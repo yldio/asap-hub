@@ -1,4 +1,6 @@
+import { PageControls } from '@asap-hub/react-components';
 import { render, screen } from '@testing-library/react';
+import { ComponentProps } from 'react';
 import UsersPage from '../UsersPage';
 
 const props = {
@@ -35,10 +37,15 @@ const props = {
     total: 1,
   },
 };
+const pageProps: ComponentProps<typeof PageControls> = {
+  currentPageIndex: 1,
+  numberOfPages: 10,
+  renderPageHref: (page) => `some-page`,
+};
 
 describe('UsersPage', () => {
   it('renders a banner', () => {
-    render(<UsersPage {...props} />);
+    render(<UsersPage {...props} {...pageProps} />);
     expect(screen.getByRole('banner')).toBeVisible();
   });
 });

@@ -11,6 +11,7 @@ const props: ComponentProps<typeof NetworkGroups> = {
       tags: [],
       description: 'Desc 0',
       numberOfTeams: 1,
+      active: true,
     },
     {
       id: '1',
@@ -18,6 +19,7 @@ const props: ComponentProps<typeof NetworkGroups> = {
       tags: [],
       description: 'Desc 1',
       numberOfTeams: 1,
+      active: true,
     },
   ],
   numberOfItems: 2,

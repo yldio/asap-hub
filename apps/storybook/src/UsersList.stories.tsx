@@ -32,12 +32,6 @@ export const External = () => (
         (_, i): ExternalAuthorResponse => ({
           id: `external-author-${i + 1}`,
           displayName: `John Number ${i + 1}`,
-          alumniSinceDate:
-            i % 2 === 0
-              ? new Date(
-                  date('Alumni Since Date', new Date(2021, 6, 12, 14, 32)),
-                ).toISOString()
-              : undefined,
         }),
       )}
   />

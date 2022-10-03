@@ -2001,6 +2001,14 @@ export type ProjectContentFragment = Pick<Projects, 'id'> & {
         >;
       }>
     >;
+    milestones: Maybe<
+      Array<
+        Pick<
+          ProjectsDataMilestonesChildDto,
+          'title' | 'description' | 'status' | 'link'
+        >
+      >
+    >;
   };
 };
 
@@ -2035,6 +2043,14 @@ export type FetchProjectQuery = {
               >
             >;
           }>
+        >;
+        milestones: Maybe<
+          Array<
+            Pick<
+              ProjectsDataMilestonesChildDto,
+              'title' | 'description' | 'status' | 'link'
+            >
+          >
         >;
       };
     }
@@ -2077,6 +2093,14 @@ export type FetchProjectsQuery = {
                     >
                   >;
                 }>
+              >;
+              milestones: Maybe<
+                Array<
+                  Pick<
+                    ProjectsDataMilestonesChildDto,
+                    'title' | 'description' | 'status' | 'link'
+                  >
+                >
               >;
             };
           }
@@ -2639,6 +2663,25 @@ export const ProjectContentFragmentDoc = {
                           ],
                         },
                       },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'milestones' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'link' } },
                     ],
                   },
                 },

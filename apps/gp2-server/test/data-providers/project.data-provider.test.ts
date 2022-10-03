@@ -112,83 +112,93 @@ describe('Project Data Provider', () => {
         );
       });
 
-      test('the members in project are parsed', () => {
-        const project = getGraphQLProject();
-        project.flatData.members = [getGraphQLProjectMember()];
-        const { members } = parseProjectToDataObject(project);
-        expect(members).toEqual([
-          {
-            userId: '42',
-            firstName: 'Tony',
-            lastName: 'Stark',
-          },
-        ]);
+      describe('members', () => {
+        test('the members in project are parsed', () => {
+          const Project = getGraphQLProject();
+          Project.flatData.members = [getGraphQLProjectMember()];
+          const { members } = parseProjectToDataObject(Project);
+          expect(members).toEqual([
+            {
+              userId: '42',
+              firstName: 'Tony',
+              lastName: 'Stark',
+            },
+          ]);
+        });
+
+        test('undefined members returns empty array', () => {
+          const Project = getGraphQLProject();
+          Project.flatData.members = undefined!;
+          const { members } = parseProjectToDataObject(Project);
+          expect(members).toEqual([]);
+        });
+        test('avatar urls are added if available', () => {
+          const Project = getGraphQLProject();
+          const member = getGraphQLProjectMember();
+          member!.user![0]!.flatData.avatar = [{ id: 'avatar-id' }];
+          Project.flatData.members = [member];
+          const { members } = parseProjectToDataObject(Project);
+          expect(members[0]?.avatarUrl).toEqual(
+            `${baseUrl}/api/assets/${appName}/avatar-id`,
+          );
+        });
+
+        test('should skip the user from the result if the user property is undefined', () => {
+          const Project = getGraphQLProject();
+          const member = getGraphQLProjectMember();
+          member!.user = undefined!;
+          Project.flatData.members = [member];
+          const { members } = parseProjectToDataObject(Project);
+          expect(members).toEqual([]);
+        });
       });
 
-      test('undefined members returns empty array', () => {
-        const project = getGraphQLProject();
-        project.flatData.members = undefined!;
-        const { members } = parseProjectToDataObject(project);
-        expect(members).toEqual([]);
-      });
+      describe('milestones', () => {
+        test('undefined milestones returns empty array', () => {
+          const Project = getGraphQLProject();
+          Project.flatData.milestones = undefined!;
+          const { milestones } = parseProjectToDataObject(Project);
+          expect(milestones).toEqual([]);
+        });
 
-      test('avatar urls are added if available', () => {
-        const project = getGraphQLProject();
-        const member = getGraphQLProjectMember();
-        member!.user![0]!.flatData.avatar = [{ id: 'avatar-id' }];
-        project.flatData.members = [member];
-        const { members } = parseProjectToDataObject(project);
-        expect(members[0]?.avatarUrl).toEqual(
-          `${baseUrl}/api/assets/${appName}/avatar-id`,
-        );
-      });
+        test('pm emails are added if available', () => {
+          const email = 'tony@starkenterprises.com';
+          const project = getGraphQLProject();
+          project.flatData.pmEmail = email;
+          const { pmEmail } = parseProjectToDataObject(project);
+          expect(pmEmail).toEqual(email);
+        });
 
-      test('should skip the user from the result if the user property is undefined', () => {
-        const project = getGraphQLProject();
-        const member = getGraphQLProjectMember();
-        member!.user = undefined!;
-        project.flatData.members = [member];
-        const { members } = parseProjectToDataObject(project);
-        expect(members).toEqual([]);
-      });
+        test('lead emails are added if available', () => {
+          const email = 'tony@starkenterprises.com';
+          const project = getGraphQLProject();
+          project.flatData.leadEmail = email;
+          const { leadEmail } = parseProjectToDataObject(project);
+          expect(leadEmail).toEqual(email);
+        });
 
-      test('pm emails are added if available', () => {
-        const email = 'tony@starkenterprises.com';
-        const project = getGraphQLProject();
-        project.flatData.pmEmail = email;
-        const { pmEmail } = parseProjectToDataObject(project);
-        expect(pmEmail).toEqual(email);
-      });
+        test('description is added if available', () => {
+          const expectedDescription = 'this is a description';
+          const project = getGraphQLProject();
+          project.flatData.description = expectedDescription;
+          const { description } = parseProjectToDataObject(project);
+          expect(description).toEqual(expectedDescription);
+        });
 
-      test('lead emails are added if available', () => {
-        const email = 'tony@starkenterprises.com';
-        const project = getGraphQLProject();
-        project.flatData.leadEmail = email;
-        const { leadEmail } = parseProjectToDataObject(project);
-        expect(leadEmail).toEqual(email);
-      });
+        test('keywords are added', () => {
+          const expectedKeywords = ['Outreach'];
+          const project = getGraphQLProject();
+          project.flatData.keywords = expectedKeywords;
+          const { keywords } = parseProjectToDataObject(project);
+          expect(keywords).toEqual(expectedKeywords);
+        });
 
-      test('description is added if available', () => {
-        const expectedDescription = 'this is a description';
-        const project = getGraphQLProject();
-        project.flatData.description = expectedDescription;
-        const { description } = parseProjectToDataObject(project);
-        expect(description).toEqual(expectedDescription);
-      });
-
-      test('keywords are added', () => {
-        const expectedKeywords = ['Outreach'];
-        const project = getGraphQLProject();
-        project.flatData.keywords = expectedKeywords;
-        const { keywords } = parseProjectToDataObject(project);
-        expect(keywords).toEqual(expectedKeywords);
-      });
-
-      test('keywords are valid', () => {
-        const expectedKeywords = ['invalid-keyword'];
-        const project = getGraphQLProject();
-        project.flatData.keywords = expectedKeywords;
-        expect(() => parseProjectToDataObject(project)).toThrow();
+        test('keywords are valid', () => {
+          const expectedKeywords = ['invalid-keyword'];
+          const project = getGraphQLProject();
+          project.flatData.keywords = expectedKeywords;
+          expect(() => parseProjectToDataObject(project)).toThrow();
+        });
       });
     });
   });

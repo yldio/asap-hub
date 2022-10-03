@@ -3,7 +3,7 @@ import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
-import { Anchor, Avatar, Display, Link, TabLink } from '../atoms';
+import { Anchor, Avatar, Display, Link, StateTag, TabLink } from '../atoms';
 import { lead, paper, pine } from '../colors';
 import {
   article,
@@ -17,7 +17,7 @@ import {
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { DropdownButton, TabNav } from '../molecules';
-import { mobileScreen, perRem } from '../pixels';
+import { mobileScreen, perRem, tabletScreen } from '../pixels';
 import { getCounterString } from '../utils';
 
 const MAX_MEMBER_AVATARS = 5;
@@ -28,6 +28,18 @@ const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(10)} 0`,
 });
 
+const titleStyle = css({
+  display: 'flex',
+  flexFlow: 'row',
+  gap: `${15 / perRem}em`,
+  alignItems: 'center',
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+    flexFlow: 'column',
+    gap: 3,
+    alignItems: 'flex-start',
+    paddingBottom: `${12 / perRem}em`,
+  },
+});
 const contactSectionStyles = css({
   alignItems: 'center',
 
@@ -130,6 +142,7 @@ const iconStyles = css({
 });
 
 type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
+  readonly inactiveSince?: string;
   readonly tools?: ReadonlyArray<TeamTool>;
   readonly teamListElementId: string;
   readonly upcomingEventsCount?: number;
@@ -140,6 +153,7 @@ type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   id,
   displayName,
+  inactiveSince,
   members,
   pointOfContact,
   tools,
@@ -154,7 +168,11 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
 
   return (
     <header css={containerStyles}>
-      <Display styleAsHeading={2}>Team {displayName}</Display>
+      <div css={titleStyle}>
+        <Display styleAsHeading={2}>Team {displayName}</Display>
+        {!!inactiveSince && <StateTag label="Inactive" />}
+      </div>
+
       <section
         css={canCreateUpdate ? createSectionStyles : contactSectionStyles}
       >

@@ -3,9 +3,46 @@ import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { getUsers } from '../api';
+import { getUser, getUsers } from '../api';
 
 jest.mock('../../config');
+
+describe('getUser', () => {
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+    nock.cleanAll();
+  });
+
+  it('returns a successfully fetched user by id', async () => {
+    const userResponse = gp2Fixtures.createUserResponse();
+    const { id } = userResponse;
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get(`/users/${id}`)
+      .reply(200, userResponse);
+    const result = await getUser(id, 'Bearer x');
+    expect(result).toEqual(userResponse);
+  });
+
+  it('returns undefined if server returns 404', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get(`/users/unknown-id`)
+      .reply(404);
+    const result = await getUser('unknown-id', 'Bearer x');
+    expect(result).toBeUndefined();
+  });
+
+  it('errors for error status', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get(`/users/unknown-id`)
+      .reply(500);
+
+    await expect(
+      getUser('unknown-id', 'Bearer x'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch user with id unknown-id. Expected status 2xx or 404. Received status 500."`,
+    );
+  });
+});
 
 describe('getUsers', () => {
   afterEach(() => {

@@ -124,6 +124,60 @@ export default class MoveRepurposedFields extends Migration {
 The up function is triggered by `asap-hub-{env}-runMigrations`
 The down function is triggered by `asap-hub-{env}-rollbackMigrations`
 
+## Running integration tests locally
+
+- Install python 3
+- From the root run
+  ```sh
+  pip3 install -r .github/scripts/squidex/requirements.txt
+  ```
+- Install Squidex CLI https://github.com/Squidex/squidex-samples/releases
+
+  - For macOS + zsh users:
+
+    In order to be able to run executable file, run in the terminal
+
+    ```sh
+    cd /directory/with/executable
+    chmod +x sq
+    sudo cp sq /usr/local/bin/
+    ```
+
+    For z shell users, edit ~/.zshrc and add the following line:
+
+    ```
+    alias sq=./sq
+    ```
+
+    Apply the changes running in the terminal:
+
+    ```
+    source ~/.zshrc
+    ```
+
+- Set env vars
+
+  - For zsh users:
+    Open `~/.zshenv` and add:
+
+    ```
+    export SQUIDEX_CLIENT_ID=*****
+    export SQUIDEX_CLIENT_SECRET=*****
+    export SQUIDEX_BASE_URL=https://cloud.squidex.io
+    export SQUIDEX_APP_NAME=<choose-any-name>
+    export APP=crn
+    ```
+
+    Run `source ~/.zshenv`
+
+- Then you are going to be able to run create-app script:
+
+  ```sh
+  python3 .github/scripts/squidex/create-app.py
+  ```
+
+- Run `yarn test:integration` to see the tests running locally.
+
 ## Docker Images
 
 ### Image name

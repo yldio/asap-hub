@@ -55,13 +55,14 @@ it('does not link external users', () => {
 });
 
 describe('alumni badge', () => {
-  it('shows alumni badge if alumni user', () => {
+  it('shows alumni badge for internal and alumni users', () => {
     const { getByText } = render(
       <UsersList
         max={1}
         users={Array.from({ length: 1 }).map(
           () =>
             ({
+              ...createUserResponse(),
               displayName: 'John Doe',
               alumniSinceDate: new Date(2021, 6, 12, 14, 32).toISOString(),
             } as ExternalAuthorResponse),
@@ -71,6 +72,20 @@ describe('alumni badge', () => {
     expect(getByText('Alumni Badge')).toBeInTheDocument();
   });
   it('does not show alumni badge if user is not alumni', () => {
+    const { queryByText } = render(
+      <UsersList
+        max={1}
+        users={Array.from({ length: 1 }).map(
+          () =>
+            ({
+              displayName: 'John Doe',
+            } as ExternalAuthorResponse),
+        )}
+      />,
+    );
+    expect(queryByText('Alumni Badge')).not.toBeInTheDocument();
+  });
+  it('does not show alumni badge for external users', () => {
     const { queryByText } = render(
       <UsersList
         max={1}

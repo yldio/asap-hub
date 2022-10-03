@@ -1,4 +1,3 @@
-import { validateFetchPaginationOptions } from '@asap-hub/server-common';
 import { Router } from 'express';
 import { CalendarController } from '../controllers/calendars';
 
@@ -7,12 +6,8 @@ export const calendarRouteFactory = (
 ): Router => {
   const calendarRoutes = Router();
 
-  calendarRoutes.get('/calendars', async (req, res) => {
-    const parameters = req.query;
-
-    const query = validateFetchPaginationOptions(parameters);
-
-    const result = await calendarController.fetch(query);
+  calendarRoutes.get('/calendars', async (_req, res) => {
+    const result = await calendarController.fetch();
 
     res.json(result);
   });

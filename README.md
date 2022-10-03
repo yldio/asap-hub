@@ -8,7 +8,7 @@
 
 ### Node.js
 
-To work on this repository, you need to have [Node.js](https://nodejs.org/) installed. We are using the version specified in the [`.nvmrc`](.nvmrc) file. If you use [NVM](https://github.com/nvm-sh/nvm), running `nvm use` in the repo root will switch to the right version automatically.
+To work on this repository, you need to have [Node.js](https://nodejs.org/) installed. We are using the version specified in the [`.nvmrc`](.nvmrc) file. If you use [NVM](https://github.com/nvm-sh/nvm), running `nvm use` in the repo root will switch to the right version automatically. If you use [ASDF](https://asdf-vm.com/) set up with the `nodejs` module, running `asdf install` will do the same.
 
 ### Yarn
 

@@ -49,23 +49,30 @@ const users: gp2.ListUserResponse = {
   ],
   total: 2,
 };
+
 const pageProps: ComponentProps<typeof PageControls> = {
   currentPageIndex: 1,
   numberOfPages: 10,
   renderPageHref: (page) => `some-page`,
 };
 
+const defaultProps = {
+  ...pageProps,
+  users,
+  filtersHref: 'filters',
+};
+
 describe('UsersPageBody', () => {
   it('renders a user', () => {
     const userToRender = { items: [users.items[0]], total: 1 };
-    render(<UsersPageBody users={userToRender} {...pageProps} />);
+    render(<UsersPageBody {...defaultProps} users={userToRender} />);
     expect(
       screen.getByRole('heading', { name: /Tony Stark, PhD/i }),
     ).toBeVisible();
   });
 
   it('renders multiple users', () => {
-    render(<UsersPageBody users={users} {...pageProps} />);
+    render(<UsersPageBody {...defaultProps} users={users} />);
     expect(
       screen.getByRole('heading', { name: /Tony Stark, PhD/i }),
     ).toBeVisible();

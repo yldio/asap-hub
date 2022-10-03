@@ -32,6 +32,7 @@ export {
   WorkingGroupNetwork,
   ProjectSummaryFooter,
   ProjectSummaryHeader,
+  FiltersModal,
 } from './organisms';
 export {
   BasicLayout,

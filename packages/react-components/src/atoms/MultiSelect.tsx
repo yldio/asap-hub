@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 import {
   ComponentProps,
   ReactElement,
@@ -151,7 +151,7 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
   creatable = false,
 }: MultiSelectProps<T>): ReactElement => {
   const [validationMsg, setValidationMsg] = useState('');
-
+  const theme = useTheme();
   // This is to handle a bug with Select where the right click would make it impossible to write
   let inputRef: RefType<T> = null;
   const handleOnContextMenu = () => {
@@ -191,7 +191,7 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
       ...components,
     },
     noOptionsMessage,
-    styles: reactMultiSelectStyles(!!validationMsg),
+    styles: reactMultiSelectStyles(theme, !!validationMsg),
 
     ref: (ref: RefType<T>) => {
       inputRef = ref;

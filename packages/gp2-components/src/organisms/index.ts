@@ -17,3 +17,4 @@ export { default as WorkingGroupDetailHeader } from './WorkingGroupDetailHeader'
 export { default as WorkingGroupCard } from './WorkingGroupCard';
 export { default as WorkingGroupNetwork } from './WorkingGroupNetwork';
 export { default as WorkingGroupsBody } from './WorkingGroupsBody';
+export { default as FiltersModal } from './FiltersModal';

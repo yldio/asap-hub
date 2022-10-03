@@ -8,6 +8,7 @@ export {
   UserCard,
   UsersPageBody,
   WorkingGroupsBody,
+  FiltersModal,
 } from './organisms';
 export {
   BasicLayout,

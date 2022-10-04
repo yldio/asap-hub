@@ -46,7 +46,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           subtitle="Explore the latest shared research and learn more about them."
           news={[news[0]]}
         />
-        <p css={viewAllStyles} data-testid="view-news">
+        <p css={viewAllStyles}>
           <Link href={newsRoute({}).$}>View All →</Link>
         </p>
       </div>

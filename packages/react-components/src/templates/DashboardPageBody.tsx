@@ -177,7 +177,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             title="Latest News from ASAP"
             subtitle="Explore the latest shared research and learn more about them."
           />
-          <p css={viewAllStyles} data-testid="view-news">
+          <p css={viewAllStyles}>
             <Link href={newsRoute({}).$}>View All →</Link>
           </p>
         </div>

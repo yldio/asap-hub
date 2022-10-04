@@ -69,7 +69,7 @@
     "@types/asap-hub__assets": "workspace:*",
     "@types/hast-util-sanitize": "workspace:*",
     "@types/history": "4.7.11",
-    "@types/jest": "26.0.24",
+    "@types/jest": "27.5.1",
     "@types/ramda": "0.27.20",
     "@types/react": "17.0.49",
     "@types/react-dom": "17.0.17",

@@ -422,9 +422,7 @@ describe('Event controller', () => {
     });
     describe('Event link', () => {
       beforeEach(() => {
-        jest
-          .useFakeTimers('modern')
-          .setSystemTime(new Date('2021-06-06T10:00:00Z'));
+        jest.useFakeTimers().setSystemTime(new Date('2021-06-06T10:00:00Z'));
       });
 
       afterEach(() => jest.clearAllMocks());
@@ -466,7 +464,7 @@ describe('Event controller', () => {
 
     describe('Past event materials states', () => {
       beforeEach(() => {
-        jest.useFakeTimers('modern');
+        jest.useFakeTimers();
         jest.clearAllMocks();
       });
 
@@ -607,9 +605,7 @@ describe('Event controller', () => {
 
     describe('Event link', () => {
       beforeEach(() => {
-        jest
-          .useFakeTimers('modern')
-          .setSystemTime(new Date('2021-06-06T10:00:00Z'));
+        jest.useFakeTimers().setSystemTime(new Date('2021-06-06T10:00:00Z'));
       });
 
       afterEach(() => jest.clearAllMocks());

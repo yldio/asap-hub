@@ -1,7 +1,8 @@
 import { EntityResponses, SearchEntityResponse } from '@asap-hub/algolia';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
-import { CsvFormatterStream, Row, format } from '@fast-csv/format';
+/* eslint-disable-next-line import/no-unresolved */
+import { stringify, Options, Stringifier } from 'csv-stringify/browser/esm';
 import { WritableStream } from 'web-streams-polyfill/ponyfill';
 import streamSaver from 'streamsaver';
 
@@ -13,9 +14,11 @@ const EXCEL_CELL_SAFE_CHARACTER_LIMIT = Math.floor(
   (EXCEL_CELL_CHARACTER_LIMIT - 2) / 2, // Cell likely wrapped with ""; " escapes to ""
 );
 
+type CSVValue = string | undefined | boolean;
+
 type ResearchOutputCSV = Record<
   keyof Omit<ResearchOutputResponse, 'team'>,
-  string | undefined | boolean
+  CSVValue
 >;
 
 const htmlToCsvText = (html: string = '') => {
@@ -91,31 +94,33 @@ export const researchOutputToCSV = (
   lastModifiedDate: output.lastModifiedDate,
 });
 
-export const createCsvFileStream = (
-  csvOptions: Parameters<typeof format>[0],
-  fileName: string,
-) => {
-  const csvStream = format({ writeBOM: true, ...csvOptions });
+export const createCsvFileStream = (fileName: string, csvOptions?: Options) => {
   // If the WritableStream is not available (Firefox, Safari), take it from the ponyfill
   if (!window.WritableStream) {
     streamSaver.WritableStream = WritableStream;
   }
   const fileWriter = streamSaver.createWriteStream(fileName).getWriter();
-  csvStream
-    .on('data', (data) => fileWriter.write(data))
+  const stringifier = stringify({ bom: true, ...csvOptions });
+  return stringifier
+    .on('readable', () => {
+      let row;
+      while ((row = stringifier.read()) !== null) {
+        fileWriter.write(row);
+      }
+    })
     .on('end', () => fileWriter.close());
-  return csvStream;
 };
 
 export const algoliaResultsToStream = async <T extends keyof EntityResponses>(
-  csvStream: CsvFormatterStream<Row, Row>,
+  csvStream: Stringifier,
   getResults: ({
     currentPage,
     pageSize,
   }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
     Promise<SearchEntityResponse<T>>
   >,
-  transform: (result: EntityResponses[T]) => Row,
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  transform: (result: EntityResponses[T]) => Record<string, any>,
 ) => {
   let morePages = true;
   let currentPage = 0;

@@ -193,9 +193,7 @@ describe('Fetch-user-by-code handler', () => {
 
       test('should ask for a key with expiration which is 601 minutes (10 hours 1 minute) ahead of now', async () => {
         const dateReference = '2021-07-06T09:21:23.000Z';
-        jest
-          .useFakeTimers('modern')
-          .setSystemTime(new Date(dateReference).getTime());
+        jest.useFakeTimers().setSystemTime(new Date(dateReference).getTime());
         const handler = fetchUserByCodeHandlerFactory(
           userControllerMock,
           algoliaClientMock,

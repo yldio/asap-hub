@@ -18,6 +18,7 @@
     "react-router-last-location": "2.0.1"
   },
   "dependencies": {
+    "@asap-hub/model": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
     "@babel/runtime-corejs3": "7.19.1",
     "@sentry/react": "6.11.0",
@@ -28,12 +29,11 @@
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@asap-hub/model": "workspace:*",
     "@babel/core": "7.19.1",
     "@babel/preset-react": "7.18.6",
     "@testing-library/react": "11.2.7",
     "@types/history": "4.7.11",
-    "@types/jest": "26.0.24",
+    "@types/jest": "27.5.1",
     "@types/node": "14.18.31",
     "@types/react": "17.0.49",
     "@types/react-router-dom": "5.3.3",

@@ -3,7 +3,7 @@ import { addSeconds, subSeconds } from 'date-fns';
 import { formatDateToTimezone, useDateHasPassed } from '../date';
 import { getLocalTimezone } from '../localization';
 
-jest.useFakeTimers('modern');
+jest.useFakeTimers();
 
 jest.mock('../localization');
 const mockGetLocalTimezone = getLocalTimezone as jest.MockedFunction<

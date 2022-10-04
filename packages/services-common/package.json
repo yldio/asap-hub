@@ -36,7 +36,7 @@
     "@types/hapi__boom": "9.0.1",
     "@types/hapi__bourne": "workspace:*",
     "@types/hapi__joi": "17.1.8",
-    "@types/jest": "26.0.24",
+    "@types/jest": "27.5.1",
     "@types/jwt-decode": "2.2.1",
     "@types/jwt-encode": "workspace:*",
     "chance": "1.1.8",

@@ -20,16 +20,12 @@ export const buildScript = (envVars: typeof env): void => {
 
 export const scriptReplacements = [
   {
-    regex: /static\/js\/main\.[0-9a-f]{8}\.chunk\.js$/,
+    regex: /static\/js\/main\.[0-9a-f]{8}\.js$/,
     replacement: 'static/js/main.chunk.js',
-  },
-  {
-    regex: /static\/js\/2\.[0-9a-f]{8}\.chunk\.js$/,
-    replacement: 'static/js/2.chunk.js',
   },
 ];
 
-// This allow us to bypass the issue of not having the HTMLScriptElement class on a node enviroment without having to actually import a polyfill for it
+// This allow us to bypass the issue of not having the HTMLScriptElement class on a node environment without having to actually import a polyfill for it
 type ScriptElement = Element & {
   src: string;
 };
@@ -44,6 +40,8 @@ export const replaceScripts = (buildDir: string): void => {
   scriptReplacements.forEach(({ regex, replacement }) => {
     [...document.querySelectorAll('script[src]')].forEach((script: Element) => {
       if (isScriptElement(script)) {
+        // eslint-disable-next-line no-param-reassign
+        script.innerHTML = ' '; // This is a hack to prevent the script tag from being self closing.
         // eslint-disable-next-line no-param-reassign
         script.src = script.src.replace(regex, (match: string) => {
           copyFileSync(

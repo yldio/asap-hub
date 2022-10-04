@@ -11,8 +11,6 @@ import { eventsState } from '../state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import EventList from '../EventList';
 
-jest.useFakeTimers();
-
 jest.mock('../api');
 
 const renderEventsListPage = async (

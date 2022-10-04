@@ -17,7 +17,7 @@ export const useGifReplay = (
   return `${url}#${rand}`;
 };
 
-export const usePrevious = <T extends unknown>(value: T): T | undefined => {
+export const usePrevious = <T>(value: T): T | undefined => {
   const ref = useRef<T>();
   useEffect(() => {
     ref.current = value;

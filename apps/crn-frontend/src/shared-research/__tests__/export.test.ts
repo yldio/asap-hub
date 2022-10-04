@@ -4,8 +4,8 @@ import {
   createUserResponse,
 } from '@asap-hub/fixtures';
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { CsvFormatterStream, Row } from '@fast-csv/format';
 import { waitFor } from '@testing-library/dom';
+import { Stringifier } from 'csv-stringify';
 import streamSaver from 'streamsaver';
 
 import { createAlgoliaResponse } from '../../__fixtures__/algolia';
@@ -16,7 +16,10 @@ import {
   EXCEL_CELL_CHARACTER_LIMIT,
 } from '../export';
 
-const mockWriteStream = { write: jest.fn(), close: jest.fn() };
+const mockWriteStream = {
+  write: jest.fn(),
+  close: jest.fn(),
+};
 jest.mock('streamsaver', () => ({
   createWriteStream: jest.fn(() => ({
     getWriter: jest.fn(() => mockWriteStream),
@@ -172,28 +175,28 @@ describe('researchOutputToCSV', () => {
 
 describe('createCsvFileStream', () => {
   it('Creates a CSV file write stream, writes headers and ordered data, closes saver stream when csv stream closed', async () => {
-    const csvStream = createCsvFileStream(
-      { headers: ['a', 'b'] },
-      'example.csv',
-    );
+    const csvStream = createCsvFileStream('example.csv', {
+      header: true,
+      bom: false,
+    });
     expect(streamSaver.createWriteStream).toHaveBeenCalledWith('example.csv');
 
     csvStream.write({
-      b: 'test2',
       a: 'test',
+      b: 'test2',
     });
-
-    expect(mockWriteStream.write.mock.calls[1].toString()).toEqual('a,b');
-    expect(mockWriteStream.write.mock.calls[2].toString()).toMatch(
-      /test,test2/,
-    );
-
     csvStream.end();
     await waitFor(() => expect(mockWriteStream.close).toHaveBeenCalled());
+    expect(mockWriteStream.write.mock.calls[0].toString())
+      .toMatchInlineSnapshot(`
+      "a,b
+      test,test2
+      "
+    `);
   });
 
   it('Limits RTF fields to maximum safe excel cell character limit after escaping', async () => {
-    const csvStream = createCsvFileStream(undefined, 'example.csv');
+    const csvStream = createCsvFileStream('example.csv');
     const output: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
       description: '"'.repeat(EXCEL_CELL_CHARACTER_LIMIT * 2),
@@ -207,12 +210,13 @@ describe('createCsvFileStream', () => {
       a: description,
     });
     csvStream.end();
-    expect(
-      mockWriteStream.write.mock.calls[1][0].toString().length,
-    ).toBeLessThanOrEqual(EXCEL_CELL_CHARACTER_LIMIT);
-    expect(
-      mockWriteStream.write.mock.calls[2][0].toString().length,
-    ).toBeLessThanOrEqual(EXCEL_CELL_CHARACTER_LIMIT);
+    await waitFor(() => expect(mockWriteStream.close).toHaveBeenCalled());
+    const csvOutput = (
+      mockWriteStream.write.mock.calls[0].toString() as string
+    ).split('\n');
+
+    expect(csvOutput[0].length).toBeLessThanOrEqual(EXCEL_CELL_CHARACTER_LIMIT);
+    expect(csvOutput[1].length).toBeLessThanOrEqual(EXCEL_CELL_CHARACTER_LIMIT);
   });
 });
 
@@ -223,7 +227,7 @@ describe('algoliaResultsToStream', () => {
   };
   it('streams one page of results', async () => {
     await algoliaResultsToStream(
-      mockCsvStream as unknown as CsvFormatterStream<Row, Row>,
+      mockCsvStream as unknown as Stringifier,
       () =>
         Promise.resolve(
           createAlgoliaResponse(
@@ -250,7 +254,7 @@ describe('algoliaResultsToStream', () => {
 
   it('streams multiple pages of results', async () => {
     await algoliaResultsToStream(
-      mockCsvStream as unknown as CsvFormatterStream<Row, Row>,
+      mockCsvStream as unknown as Stringifier,
       (parameters) =>
         Promise.resolve(
           createAlgoliaResponse(
@@ -293,7 +297,7 @@ describe('algoliaResultsToStream', () => {
 
   it('streams transformed results', async () => {
     await algoliaResultsToStream(
-      mockCsvStream as unknown as CsvFormatterStream<Row, Row>,
+      mockCsvStream as unknown as Stringifier,
       () =>
         Promise.resolve(
           createAlgoliaResponse(

@@ -5,7 +5,7 @@ import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import JoinEvent from '../JoinEvent';
 import { silver } from '../../colors';
 
-jest.useFakeTimers('modern');
+jest.useFakeTimers();
 
 it('renders a link to the meeting', () => {
   const { getByText } = render(

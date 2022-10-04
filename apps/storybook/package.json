@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@asap-hub/fixtures": "workspace:*",
+    "@asap-hub/flags": "workspace:*",
     "@asap-hub/gp2-components": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
@@ -32,7 +33,6 @@
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@asap-hub/flags": "workspace:*",
     "@babel/core": "7.19.1",
     "@types/history": "4.7.11",
     "@types/react": "17.0.49",

@@ -44,29 +44,26 @@ describe('build', () => {
     mockReadFileSync.mockReturnValue(`
       <!doctype html>
         <html lang="en">
-          <body>
-            <script src="/static/js/2.eb5d7501.chunk.js">
-            </script><script src="/static/js/main.f9ee5131.chunk.js"></script>
-          </body>
+        <head>
+          <script
+            defer="defer"
+            src="https://dev.hub.asap.science/.auth/static/js/main.80665dab.js"
+          />
+        </head>
         </html>
       `);
     build('/', {});
     expect(mockReadFileSync).toBeCalledWith('/index.html');
 
     expect(mockCopyFileSync.mock.calls).toEqual([
-      ['/static/js/main.f9ee5131.chunk.js', '/static/js/main.chunk.js'],
-      ['/static/js/2.eb5d7501.chunk.js', '/static/js/2.chunk.js'],
+      ['/static/js/main.80665dab.js', '/static/js/main.chunk.js'],
     ]);
 
     expect(mockWriteFileSync.mock.calls[0]).toMatchInlineSnapshot(`
       Array [
         "/index.html",
-        "<!doctype html><html lang=\\"en\\"><head></head><body>
-                  <script src=\\"/static/js/2.chunk.js\\">
-                  </script><script src=\\"/static/js/main.chunk.js\\"></script>
-                
-              
-            </body></html>",
+        "<!doctype html><html lang=\\"en\\"><head>
+                <script defer=\\"defer\\" src=\\"https://dev.hub.asap.science/.auth/static/js/main.chunk.js\\"> </script></head><body></body></html>",
       ]
     `);
   });

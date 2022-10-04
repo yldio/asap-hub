@@ -43,6 +43,28 @@ describe('Squidex Graphql Client', () => {
       expect(res).toEqual({ id: 'id' });
     });
 
+    test('returns data when the content-type header is application/graphql+json', async () => {
+      nock(baseUrl)
+        .post(
+          `/api/content/${appName}/graphql`,
+          JSON.stringify({ query: '{ id }' }),
+        )
+        .reply(
+          200,
+          {
+            data: {
+              id: 'id',
+            },
+          },
+          {
+            'content-type': 'application/graphql+json',
+          },
+        );
+
+      const res = await squidexGraphqlClient.request('{ id }');
+      expect(res).toEqual({ id: 'id' });
+    });
+
     test('adds the X-Unpublished header when drafts are requested', async () => {
       nock(baseUrl)
         .post(

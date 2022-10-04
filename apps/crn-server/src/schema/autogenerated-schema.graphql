@@ -2393,6 +2393,7 @@ type EventsDataDto {
   notesPermanentlyUnavailable: EventsDataNotesPermanentlyUnavailableDto
   presentation: EventsDataPresentationDto
   presentationPermanentlyUnavailable: EventsDataPresentationPermanentlyUnavailableDto
+  presentationUpdatedAt: EventsDataPresentationUpdatedAtDto
   speakers: EventsDataSpeakersDto
   startDate: EventsDataStartDateDto
   startDateTimeZone: EventsDataStartDateTimeZoneDto
@@ -2484,6 +2485,7 @@ input EventsDataInputDto {
   notesPermanentlyUnavailable: EventsDataNotesPermanentlyUnavailableInputDto
   presentation: EventsDataPresentationInputDto
   presentationPermanentlyUnavailable: EventsDataPresentationPermanentlyUnavailableInputDto
+  presentationUpdatedAt: EventsDataPresentationUpdatedAtInputDto
   speakers: EventsDataSpeakersInputDto
   startDate: EventsDataStartDateInputDto
   startDateTimeZone: EventsDataStartDateTimeZoneInputDto
@@ -2588,6 +2590,16 @@ type EventsDataPresentationPermanentlyUnavailableDto {
 input EventsDataPresentationPermanentlyUnavailableInputDto {
   """This box is automatically ticked if no output is added after 14 days from the event's end date."""
   iv: Boolean
+}
+
+"""The structure of the Presentation Updated At field of the Events content type."""
+type EventsDataPresentationUpdatedAtDto {
+  iv: Instant
+}
+
+"""The structure of the Presentation Updated At field of the Events content input type."""
+input EventsDataPresentationUpdatedAtInputDto {
+  iv: Instant
 }
 
 """The structure of the Speakers nested schema."""
@@ -2732,6 +2744,7 @@ type EventsFlatDataDto {
   presentation: String
   """This box is automatically ticked if no output is added after 14 days from the event's end date."""
   presentationPermanentlyUnavailable: Boolean
+  presentationUpdatedAt: Instant
   speakers: [EventsDataSpeakersChildDto!]
   startDate: Instant
   startDateTimeZone: String

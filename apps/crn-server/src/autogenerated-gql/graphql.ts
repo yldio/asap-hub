@@ -2302,6 +2302,7 @@ export type EventsDataDto = {
   notesPermanentlyUnavailable: Maybe<EventsDataNotesPermanentlyUnavailableDto>;
   presentation: Maybe<EventsDataPresentationDto>;
   presentationPermanentlyUnavailable: Maybe<EventsDataPresentationPermanentlyUnavailableDto>;
+  presentationUpdatedAt: Maybe<EventsDataPresentationUpdatedAtDto>;
   speakers: Maybe<EventsDataSpeakersDto>;
   startDate: Maybe<EventsDataStartDateDto>;
   startDateTimeZone: Maybe<EventsDataStartDateTimeZoneDto>;
@@ -2393,6 +2394,7 @@ export type EventsDataInputDto = {
   notesPermanentlyUnavailable: InputMaybe<EventsDataNotesPermanentlyUnavailableInputDto>;
   presentation: InputMaybe<EventsDataPresentationInputDto>;
   presentationPermanentlyUnavailable: InputMaybe<EventsDataPresentationPermanentlyUnavailableInputDto>;
+  presentationUpdatedAt: InputMaybe<EventsDataPresentationUpdatedAtInputDto>;
   speakers: InputMaybe<EventsDataSpeakersInputDto>;
   startDate: InputMaybe<EventsDataStartDateInputDto>;
   startDateTimeZone: InputMaybe<EventsDataStartDateTimeZoneInputDto>;
@@ -2497,6 +2499,16 @@ export type EventsDataPresentationPermanentlyUnavailableDto = {
 export type EventsDataPresentationPermanentlyUnavailableInputDto = {
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
   iv: InputMaybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Presentation Updated At field of the Events content type. */
+export type EventsDataPresentationUpdatedAtDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Presentation Updated At field of the Events content input type. */
+export type EventsDataPresentationUpdatedAtInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
 };
 
 /** The structure of the Speakers nested schema. */
@@ -2641,6 +2653,7 @@ export type EventsFlatDataDto = {
   presentation: Maybe<Scalars['String']>;
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
   presentationPermanentlyUnavailable: Maybe<Scalars['Boolean']>;
+  presentationUpdatedAt: Maybe<Scalars['Instant']>;
   speakers: Maybe<Array<EventsDataSpeakersChildDto>>;
   startDate: Maybe<Scalars['Instant']>;
   startDateTimeZone: Maybe<Scalars['String']>;
@@ -7419,7 +7432,11 @@ export type FetchReminderDataQuery = {
       Pick<Events, 'id'> & {
         flatData: Pick<
           EventsFlatDataDto,
-          'startDate' | 'endDate' | 'title' | 'videoRecordingUpdatedAt'
+          | 'startDate'
+          | 'endDate'
+          | 'title'
+          | 'videoRecordingUpdatedAt'
+          | 'presentationUpdatedAt'
         >;
       }
     >
@@ -12290,6 +12307,10 @@ export const FetchReminderDataDocument = {
                           kind: 'Name',
                           value: 'videoRecordingUpdatedAt',
                         },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'presentationUpdatedAt' },
                       },
                     ],
                   },

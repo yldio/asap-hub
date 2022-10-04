@@ -33,6 +33,7 @@ export const FETCH_REMINDER_DATA = gql`
         endDate
         title
         videoRecordingUpdatedAt
+        presentationUpdatedAt
       }
     }
   }

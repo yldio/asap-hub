@@ -6,9 +6,9 @@ import { lazy, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 const loadUserList = () =>
-  import(/* webpackChunkName: "project-list" */ './UserList');
+  import(/* webpackChunkName: "user-list" */ './UserList');
 const loadUserDetail = () =>
-  import(/* webpackChunkName: "project-detail" */ './UserDetail');
+  import(/* webpackChunkName: "user-detail" */ './UserDetail');
 
 const UserList = lazy(loadUserList);
 const UserDetail = lazy(loadUserDetail);

@@ -35,12 +35,12 @@ const fetchUserState = selectorFamily<gp2.UserResponse | undefined, string>({
     },
 });
 
-const UserState = atomFamily<gp2.UserResponse | undefined, string>({
-  key: 'User',
+const userState = atomFamily<gp2.UserResponse | undefined, string>({
+  key: 'user',
   default: fetchUserState,
 });
 
 export const useUsersState = (options: GetListOptions) =>
   useRecoilValue(usersState(options));
 
-export const useUserById = (id: string) => useRecoilValue(UserState(id));
+export const useUserById = (id: string) => useRecoilValue(userState(id));

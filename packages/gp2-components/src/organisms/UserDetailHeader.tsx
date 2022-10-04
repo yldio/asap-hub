@@ -1,10 +1,15 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { Avatar, BackLink, pixels } from '@asap-hub/react-components';
+import {
+  Avatar,
+  BackLink,
+  crossQuery,
+  pixels,
+} from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { usersHeaderImage } from '../images';
 import CardWithBackground from '../molecules/CardWithBackground';
 
-const { rem, tabletScreen } = pixels;
+const { rem } = pixels;
 
 type UserDetailHeaderProps = Pick<
   gp2Model.UserResponse,
@@ -26,7 +31,7 @@ const containerStyles = css({
   display: 'grid',
   columnGap: rem(32),
   rowGap: rem(12),
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
+  [crossQuery]: {
     gridTemplateColumns: `${rem(avatarSize)} auto`,
   },
 });

@@ -57,7 +57,7 @@ describe('UserDetail', () => {
     expect(screen.getByRole('banner')).toBeVisible();
   });
 
-  it('renders not found if no working group is returned', async () => {
+  it('renders not found if no user is returned', async () => {
     mockGetUser.mockResolvedValueOnce(undefined);
     await renderUserDetail('unknown-id');
     expect(

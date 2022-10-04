@@ -38,7 +38,7 @@ const itemStyles = css({
 const userStyles = css({
   overflow: 'hidden',
   display: 'grid',
-  gridTemplateColumns: 'min-content 1fr 0.5fr',
+  gridTemplateColumns: 'min-content 1fr min-content',
   gridColumnGap: `${9 / perRem}em`,
   alignItems: 'center',
 });

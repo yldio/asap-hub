@@ -24,7 +24,7 @@
     "debug": "4.3.4",
     "got": "11.8.5",
     "graphql": "15.8.0",
-    "graphql-request": "3.4.0",
+    "graphql-request": "4.3.0",
     "jwt-decode": "2.2.0"
   },
   "devDependencies": {

@@ -1412,7 +1412,7 @@ __metadata:
     debug: 4.3.4
     got: 11.8.5
     graphql: 15.8.0
-    graphql-request: 3.4.0
+    graphql-request: 4.3.0
     jwt-decode: 2.2.0
     jwt-encode: 1.0.1
     nock: 13.0.11
@@ -1446,7 +1446,7 @@ __metadata:
     debug: 4.3.4
     got: 11.8.5
     graphql: 15.8.0
-    graphql-request: 3.4.0
+    graphql-request: 4.3.0
     jwt-decode: 2.2.0
     jwt-encode: 1.0.1
     luxon: 1.26.0
@@ -18666,15 +18666,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-fetch@npm:^3.0.6":
-  version: 3.0.6
-  resolution: "cross-fetch@npm:3.0.6"
-  dependencies:
-    node-fetch: "npm:2.6.1"
-  checksum: fc855278c3bae191a00003eed618a40b48dfadf25ccf707ffdb173add97921f89ef459815bc5cbd20554de713da4f0a2c1258f83e60895efdeab5a7834c6e3b6
-  languageName: node
-  linkType: hard
-
 "cross-fetch@npm:^3.1.5":
   version: 3.1.5
   resolution: "cross-fetch@npm:3.1.5"
@@ -23432,20 +23423,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-request@npm:3.4.0":
-  version: 3.4.0
-  resolution: "graphql-request@npm:3.4.0"
-  dependencies:
-    cross-fetch: "npm:^3.0.6"
-    extract-files: "npm:^9.0.0"
-    form-data: "npm:^3.0.0"
-  peerDependencies:
-    graphql: 14.x || 15.x
-  checksum: 5be0398af5cd02694893169bcc3b92f454910dac3b257aa350fa59686d8ef24334619f0b5bdd2fdefea654eab9544ec6f270688255dde9eeff5475d5e64ea073
-  languageName: node
-  linkType: hard
-
-"graphql-request@npm:^4.0.0":
+"graphql-request@npm:4.3.0, graphql-request@npm:^4.0.0":
   version: 4.3.0
   resolution: "graphql-request@npm:4.3.0"
   dependencies:

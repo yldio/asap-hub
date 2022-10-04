@@ -56,7 +56,8 @@
   "resolutions": {
     "encoding": "0.1.13",
     "expect-playwright": "0.8.0",
-    "vfile": "4.2.1"
+    "vfile": "4.2.1",
+    "graphql-request@4.3.0": "patch:graphql-request@npm:4.3.0#.yarn/patches/graphql-request-npm-4.3.0-dcf481b653.patch"
   },
   "dependenciesMeta": {
     "aws-sdk": {

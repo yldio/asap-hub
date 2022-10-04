@@ -59,14 +59,11 @@ describe('alumni badge', () => {
     const { getByText } = render(
       <UsersList
         max={1}
-        users={Array.from({ length: 1 }).map(
-          () =>
-            ({
-              ...createUserResponse(),
-              displayName: 'John Doe',
-              alumniSinceDate: new Date(2021, 6, 12, 14, 32).toISOString(),
-            } as ExternalAuthorResponse),
-        )}
+        users={Array.from({ length: 1 }).map(() => ({
+          ...createUserResponse(),
+          displayName: 'John Doe',
+          alumniSinceDate: new Date(2021, 6, 12, 14, 32).toISOString(),
+        }))}
       />,
     );
     expect(getByText('Alumni Badge')).toBeInTheDocument();
@@ -75,12 +72,10 @@ describe('alumni badge', () => {
     const { queryByText } = render(
       <UsersList
         max={1}
-        users={Array.from({ length: 1 }).map(
-          () =>
-            ({
-              displayName: 'John Doe',
-            } as ExternalAuthorResponse),
-        )}
+        users={Array.from({ length: 1 }).map(() => ({
+          ...createUserResponse(),
+          displayName: 'John Doe',
+        }))}
       />,
     );
     expect(queryByText('Alumni Badge')).not.toBeInTheDocument();

@@ -40,7 +40,9 @@ it('renders the inactive team header for inactive team', () => {
 });
 
 it('does not render the inactive team header for active team', () => {
-  const { queryByText } = render(<TeamProfilePage {...boilerplateProps} />);
+  const { queryByText } = render(
+    <TeamProfilePage {...boilerplateProps} inactiveSince={undefined} />,
+  );
   expect(
     queryByText(
       'This team is inactive and might not have all content available.',

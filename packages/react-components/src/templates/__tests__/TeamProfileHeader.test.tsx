@@ -37,7 +37,7 @@ it('renders the tag for inactive teams', () => {
 });
 
 it('does not render the tag for active teams', () => {
-  render(<TeamProfileHeader {...boilerplateProps} />);
+  render(<TeamProfileHeader {...boilerplateProps} inactiveSince={undefined} />);
   expect(screen.queryByText('Inactive')).not.toBeInTheDocument();
 });
 

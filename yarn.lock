@@ -23438,14 +23438,14 @@ __metadata:
 
 "graphql-request@patch:graphql-request@npm:4.3.0#.yarn/patches/graphql-request-npm-4.3.0-dcf481b653.patch::locator=asap-hub%40workspace%3A.":
   version: 4.3.0
-  resolution: "graphql-request@patch:graphql-request@npm%3A4.3.0#.yarn/patches/graphql-request-npm-4.3.0-dcf481b653.patch::version=4.3.0&hash=b63ec0&locator=asap-hub%40workspace%3A."
+  resolution: "graphql-request@patch:graphql-request@npm%3A4.3.0#.yarn/patches/graphql-request-npm-4.3.0-dcf481b653.patch::version=4.3.0&hash=7dfc21&locator=asap-hub%40workspace%3A."
   dependencies:
     cross-fetch: ^3.1.5
     extract-files: ^9.0.0
     form-data: ^3.0.0
   peerDependencies:
     graphql: 14 - 16
-  checksum: 1d9bccac08a11b5842c2af60273911a48fbe7a16651d2aed587d8e941d2273254f228eb34ca9a068a2431b990457c2f1896aec1db38168064a7eaeb036fce1d5
+  checksum: 5882891ae58f1c36cbf7eaadea45dd074504ceefd3cd219e841517b3cb5607e68b4c119115340b73a87a720b9008dd115d6e8426c7ffaae03885a8c6e86df182
   languageName: node
   linkType: hard
 

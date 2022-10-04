@@ -1,0 +1,13 @@
+diff --git a/dist/index.js b/dist/index.js
+index 5f79a5fb5253370aa1b83037b47a4c5e55a7d64e..5b56782252a94a8d39ef3637d966849def0ff041 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -412,7 +412,7 @@ function getResult(response, jsonSerializer) {
+                             contentType = value;
+                         }
+                     });
+-                    if (!(contentType && contentType.toLowerCase().startsWith('application/json'))) return [3 /*break*/, 2];
++                    if (!(contentType && contentType.toLowerCase().indexOf('json'))) return [3 /*break*/, 2];
+                     _b = (_a = jsonSerializer).parse;
+                     return [4 /*yield*/, response.text()];
+                 case 1: return [2 /*return*/, _b.apply(_a, [_c.sent()])];

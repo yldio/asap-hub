@@ -111,6 +111,7 @@ export const createEventResponse = (
   presentation: 'Presentation',
   videoRecording: 'Video Recording',
   videoRecordingUpdatedAt: new Date().toISOString(),
+  presentationUpdatedAt: new Date().toISOString(),
   meetingMaterials: Array.from({ length: meetingMaterials }).map((_, i) => ({
     title: `Material ${i + 1}`,
     url: `https://example.com/materials/${i}`,

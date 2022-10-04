@@ -48,14 +48,19 @@ export default class Reminders implements ReminderController {
           };
         }
 
-        if (reminder.entity === 'Event' && reminder.type === 'Video Updated') {
+        if (
+          reminder.entity === 'Event' &&
+          ['Video Updated', 'Presentation Updated'].includes(reminder.type)
+        ) {
+          const material =
+            reminder.type === 'Video Updated' ? 'Video(s)' : 'Presentation(s)';
           return {
             id: reminder.id,
             entity: reminder.entity,
             href: events({}).event({
               eventId: reminder.data.eventId,
             }).$,
-            description: `Video(s) for ${reminder.data.title} event has been shared.`,
+            description: `${material} for ${reminder.data.title} event has been shared.`,
           };
         }
 

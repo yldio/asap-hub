@@ -24,6 +24,7 @@ export interface Event<TCalendar = string, TThumbnail = string> {
   videoRecordingUpdatedAt?: string;
   presentationPermanentlyUnavailable?: boolean;
   presentation?: string;
+  presentationUpdatedAt?: string;
   meetingMaterialsPermanentlyUnavailable?: boolean;
   meetingMaterials?: {
     title: string;

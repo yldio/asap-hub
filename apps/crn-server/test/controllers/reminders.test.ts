@@ -3,7 +3,6 @@ import {
   EventHappeningTodayReminder,
   FetchRemindersOptions,
   ResearchOutputPublishedReminder,
-  VideoEventReminder,
 } from '@asap-hub/model';
 import Reminders from '../../src/controllers/reminders';
 import {
@@ -12,6 +11,7 @@ import {
   getEventHappeningTodayReminder,
   getEventHappeningNowReminder,
   getVideoEventUpdatedReminder,
+  getPresentationUpdatedReminder,
 } from '../fixtures/reminders.fixtures';
 import { reminderDataProviderMock } from '../mocks/reminder-data-provider.mock';
 
@@ -155,25 +155,29 @@ describe('Reminder Controller', () => {
         });
       });
 
-      test('Should return the correct description and href for the video-event-updated reminder', async () => {
-        const reminderDataObject: VideoEventReminder =
-          getVideoEventUpdatedReminder();
-        reminderDataObject.data.title = 'Some Test Event Title';
-        reminderDataObject.data.eventId = 'some-event-id';
+      test.each`
+        reminderType      | reminderDataObject                  | expectedDescription
+        ${'Video'}        | ${getVideoEventUpdatedReminder()}   | ${'Video(s) for Some Test Event Title event has been shared.'}
+        ${'Presentation'} | ${getPresentationUpdatedReminder()} | ${'Presentation(s) for Some Test Event Title event has been shared.'}
+      `(
+        'Should return the correct description and href for the $reminderType reminder',
+        async ({ reminderDataObject, expectedDescription }) => {
+          reminderDataObject.data.title = 'Some Test Event Title';
+          reminderDataObject.data.eventId = 'some-event-id';
 
-        reminderDataProviderMock.fetch.mockResolvedValueOnce({
-          total: 1,
-          items: [reminderDataObject],
-        });
+          reminderDataProviderMock.fetch.mockResolvedValueOnce({
+            total: 1,
+            items: [reminderDataObject],
+          });
 
-        const { items } = await reminderController.fetch(options);
+          const { items } = await reminderController.fetch(options);
 
-        expect(items[0]).toMatchObject({
-          description:
-            'Video(s) for Some Test Event Title event has been shared.',
-          href: `/events/some-event-id`,
-        });
-      });
+          expect(items[0]).toMatchObject({
+            description: expectedDescription,
+            href: `/events/some-event-id`,
+          });
+        },
+      );
     });
   });
 });

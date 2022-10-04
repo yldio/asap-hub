@@ -8,8 +8,8 @@
       "validateOnPublish": false
     },
     "scripts": {
-      "create": "if(new Date(ctx.data.publishDate.iv) > new Date()) {\n    reject('Publish date date cannot be greater than today')\n}\n",
-      "update": "const modified = Object.keys(ctx.data)\n        .filter(key => JSON.stringify(ctx.data[key]) !== JSON.stringify(ctx.oldData[key]))\n        .filter(key => key !== 'publishDate' && key !== 'adminNotes');\n        \nif (modified.length > 0) {\n    ctx.data.lastUpdatedPartial.iv = new Date().toISOString().split('.')[0]+\"Z\";\n    replace();\n}\n\n"
+      "create": "if(new Date(ctx.data.publishDate.iv) > new Date()) {\n    reject('Publish date date cannot be greater than today')\n}\nif(!ctx.data.leadEemail.iv && !!ctx.data.pmEemail.iv) {\n reject('Enter at least one lead or PM email') \n } \n",
+      "update": "const modified = Object.keys(ctx.data)\n        .filter(key => JSON.stringify(ctx.data[key]) !== JSON.stringify(ctx.oldData[key]))\n        .filter(key => key !== 'publishDate' && key !== 'adminNotes');\n        \nif (modified.length > 0) {\n    ctx.data.lastUpdatedPartial.iv = new Date().toISOString().split('.')[0]+\"Z\";\n    replace();\n}\n\nif(!ctx.data.leadEemail.iv && !!ctx.data.pmEemail.iv) {\n reject('Enter at least one lead or PM email') \n } \n"
     },
     "fieldsInReferences": ["title", "documentType"],
     "fieldsInLists": [

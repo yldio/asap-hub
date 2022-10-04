@@ -3,7 +3,7 @@ import * as graphql from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
-  '\n  fragment ProjectContent on Projects {\n    id\n    flatData {\n      title\n      startDate\n      endDate\n      status\n      projectProposal\n      members {\n        user {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            avatar {\n              id\n            }\n            firstName\n            lastName\n          }\n        }\n      }\n    }\n  }\n':
+  '\n  fragment ProjectContent on Projects {\n    id\n    flatData {\n      title\n      startDate\n      endDate\n      status\n      projectProposal\n      description\n      pmEmail\n      leadEmail\n      keywords\n      members {\n        user {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            avatar {\n              id\n            }\n            firstName\n            lastName\n          }\n        }\n      }\n    }\n  }\n':
     graphql.ProjectContentFragmentDoc,
   '\n  query FetchProject($id: String!) {\n    findProjectsContent(id: $id) {\n      ...ProjectContent\n    }\n  }\n  \n':
     graphql.FetchProjectDocument,
@@ -28,8 +28,8 @@ const documents = {
 };
 
 export function gql(
-  source: '\n  fragment ProjectContent on Projects {\n    id\n    flatData {\n      title\n      startDate\n      endDate\n      status\n      projectProposal\n      members {\n        user {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            avatar {\n              id\n            }\n            firstName\n            lastName\n          }\n        }\n      }\n    }\n  }\n',
-): typeof documents['\n  fragment ProjectContent on Projects {\n    id\n    flatData {\n      title\n      startDate\n      endDate\n      status\n      projectProposal\n      members {\n        user {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            avatar {\n              id\n            }\n            firstName\n            lastName\n          }\n        }\n      }\n    }\n  }\n'];
+  source: '\n  fragment ProjectContent on Projects {\n    id\n    flatData {\n      title\n      startDate\n      endDate\n      status\n      projectProposal\n      description\n      pmEmail\n      leadEmail\n      keywords\n      members {\n        user {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            avatar {\n              id\n            }\n            firstName\n            lastName\n          }\n        }\n      }\n    }\n  }\n',
+): typeof documents['\n  fragment ProjectContent on Projects {\n    id\n    flatData {\n      title\n      startDate\n      endDate\n      status\n      projectProposal\n      description\n      pmEmail\n      leadEmail\n      keywords\n      members {\n        user {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            avatar {\n              id\n            }\n            firstName\n            lastName\n          }\n        }\n      }\n    }\n  }\n'];
 export function gql(
   source: '\n  query FetchProject($id: String!) {\n    findProjectsContent(id: $id) {\n      ...ProjectContent\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchProject($id: String!) {\n    findProjectsContent(id: $id) {\n      ...ProjectContent\n    }\n  }\n  \n'];

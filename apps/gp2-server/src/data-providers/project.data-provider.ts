@@ -1,5 +1,4 @@
 import { gp2 } from '@asap-hub/model';
-import { isProjectStatus, ProjectDataObject } from '@asap-hub/model/src/gp2';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import {
   FetchProjectQuery,
@@ -11,13 +10,13 @@ import { FETCH_PROJECT, FETCH_PROJECTS } from '../queries/projects.queries';
 import { createUrl } from '../utils/urls';
 
 export interface ProjectDataProvider {
-  fetchById(id: string): Promise<ProjectDataObject | null>;
+  fetchById(id: string): Promise<gp2.ProjectDataObject | null>;
   fetch(): Promise<gp2.ListProjectDataObject>;
 }
 export class ProjectSquidexDataProvider implements ProjectDataProvider {
   constructor(private squidexGraphlClient: SquidexGraphqlClient) {}
 
-  async fetchById(id: string): Promise<ProjectDataObject | null> {
+  async fetchById(id: string): Promise<gp2.ProjectDataObject | null> {
     const { findProjectsContent } = await this.queryFetchByIdData(id);
     if (!findProjectsContent) {
       return null;
@@ -85,14 +84,15 @@ const parseProjectMembers = (user: GraphQLProjectMemberUser) => {
   };
 };
 
-export function parseProjectToDataObject(
-  project: GraphQLProject,
-): gp2.ProjectDataObject {
-  if (!isProjectStatus(project.flatData.status)) {
-    throw new Error(`Invalid status: ${project.flatData.status}`);
+export function parseProjectToDataObject({
+  id,
+  flatData: project,
+}: GraphQLProject): gp2.ProjectDataObject {
+  if (!gp2.isProjectStatus(project.status)) {
+    throw new Error(`Invalid status: ${project.status}`);
   }
   const members =
-    project.flatData.members?.reduce(
+    project.members?.reduce(
       (membersList: gp2.ProjectMember[], member: GraphQLProjectMember) => {
         const user = member.user && member.user[0];
         if (!user) {
@@ -104,13 +104,21 @@ export function parseProjectToDataObject(
       [],
     ) || [];
 
+  if (project.keywords && !project.keywords.every(gp2.isProjectKeyword)) {
+    throw new TypeError('Invalid keyword received from Squidex');
+  }
+
   return {
-    id: project.id,
-    title: project.flatData.title || '',
-    startDate: project.flatData.startDate || '',
-    endDate: project.flatData.endDate || undefined,
-    status: project.flatData.status,
-    projectProposalUrl: project.flatData.projectProposal || undefined,
+    id,
+    title: project.title || '',
+    startDate: project.startDate || '',
+    endDate: project.endDate || undefined,
+    status: project.status,
+    projectProposalUrl: project.projectProposal || undefined,
+    pmEmail: project.pmEmail || undefined,
+    leadEmail: project.leadEmail || undefined,
+    description: project.description || undefined,
     members,
+    keywords: project.keywords || [],
   };
 }

@@ -7,9 +7,9 @@ export const dashboardRouteFactory = (
   const dashboardRoutes = Router();
 
   dashboardRoutes.get('/dashboard', async (_req, res) => {
-    const result = await dashboardController.fetch();
+    const dashboard = await dashboardController.fetch();
 
-    res.json(result);
+    res.json(dashboard);
   });
 
   return dashboardRoutes;

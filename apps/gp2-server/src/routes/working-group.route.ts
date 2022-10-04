@@ -11,9 +11,9 @@ export const workingGroupRouteFactory = (
   workingGroupRoutes.get<unknown, gp2.ListWorkingGroupResponse>(
     '/working-groups',
     async (_req, res) => {
-      const result = await workingGroupController.fetch();
+      const workingGroups = await workingGroupController.fetch();
 
-      res.json(result);
+      res.json(workingGroups);
     },
   );
 
@@ -23,9 +23,11 @@ export const workingGroupRouteFactory = (
       const { params } = req;
 
       const { workingGroupId } = validateWorkingGroupParameters(params);
-      const result = await workingGroupController.fetchById(workingGroupId);
+      const workingGroup = await workingGroupController.fetchById(
+        workingGroupId,
+      );
 
-      res.json(result);
+      res.json(workingGroup);
     },
   );
   return workingGroupRoutes;

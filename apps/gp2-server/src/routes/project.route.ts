@@ -11,9 +11,9 @@ export const projectRouteFactory = (
   projectRoutes.get<unknown, gp2.ListProjectResponse>(
     '/projects',
     async (_req, res) => {
-      const result = await projectController.fetch();
+      const projects = await projectController.fetch();
 
-      res.json(result);
+      res.json(projects);
     },
   );
 
@@ -23,9 +23,9 @@ export const projectRouteFactory = (
       const { params } = req;
 
       const { projectId } = validateProjectParameters(params);
-      const result = await projectController.fetchById(projectId);
+      const project = await projectController.fetchById(projectId);
 
-      res.json(result);
+      res.json(project);
     },
   );
   return projectRoutes;

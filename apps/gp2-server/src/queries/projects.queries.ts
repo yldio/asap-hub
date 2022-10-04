@@ -9,6 +9,10 @@ export const projectContentQueryFragment = gql`
       endDate
       status
       projectProposal
+      description
+      pmEmail
+      leadEmail
+      keywords
       members {
         user {
           id

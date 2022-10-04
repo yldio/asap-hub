@@ -998,10 +998,24 @@ export type ProjectsReferencingDashboardContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
+/** The structure of the Description field of the Projects content type. */
+export type ProjectsDataDescriptionDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Description field of the Projects content input type. */
+export type ProjectsDataDescriptionInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
 /** The structure of the Projects data type. */
 export type ProjectsDataDto = {
+  description: Maybe<ProjectsDataDescriptionDto>;
   endDate: Maybe<ProjectsDataEndDateDto>;
+  keywords: Maybe<ProjectsDataKeywordsDto>;
+  leadEmail: Maybe<ProjectsDataLeadEmailDto>;
   members: Maybe<ProjectsDataMembersDto>;
+  pmEmail: Maybe<ProjectsDataPmEmailDto>;
   projectProposal: Maybe<ProjectsDataProjectProposalDto>;
   startDate: Maybe<ProjectsDataStartDateDto>;
   status: Maybe<ProjectsDataStatusDto>;
@@ -1020,12 +1034,36 @@ export type ProjectsDataEndDateInputDto = {
 
 /** The structure of the Projects data input type. */
 export type ProjectsDataInputDto = {
+  description: InputMaybe<ProjectsDataDescriptionInputDto>;
   endDate: InputMaybe<ProjectsDataEndDateInputDto>;
+  keywords: InputMaybe<ProjectsDataKeywordsInputDto>;
+  leadEmail: InputMaybe<ProjectsDataLeadEmailInputDto>;
   members: InputMaybe<ProjectsDataMembersInputDto>;
+  pmEmail: InputMaybe<ProjectsDataPmEmailInputDto>;
   projectProposal: InputMaybe<ProjectsDataProjectProposalInputDto>;
   startDate: InputMaybe<ProjectsDataStartDateInputDto>;
   status: InputMaybe<ProjectsDataStatusInputDto>;
   title: InputMaybe<ProjectsDataTitleInputDto>;
+};
+
+/** The structure of the Keywords field of the Projects content type. */
+export type ProjectsDataKeywordsDto = {
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Keywords field of the Projects content input type. */
+export type ProjectsDataKeywordsInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Lead Email field of the Projects content type. */
+export type ProjectsDataLeadEmailDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Lead Email field of the Projects content input type. */
+export type ProjectsDataLeadEmailInputDto = {
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Members nested schema. */
@@ -1046,6 +1084,16 @@ export type ProjectsDataMembersDto = {
 /** The structure of the Members field of the Projects content input type. */
 export type ProjectsDataMembersInputDto = {
   iv: InputMaybe<Array<ProjectsDataMembersChildInputDto>>;
+};
+
+/** The structure of the PM Email field of the Projects content type. */
+export type ProjectsDataPmEmailDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the PM Email field of the Projects content input type. */
+export type ProjectsDataPmEmailInputDto = {
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Project Proposal field of the Projects content type. */
@@ -1092,8 +1140,12 @@ export type ProjectsDataTitleInputDto = {
 
 /** The structure of the flat Projects data type. */
 export type ProjectsFlatDataDto = {
+  description: Maybe<Scalars['String']>;
   endDate: Maybe<Scalars['Instant']>;
+  keywords: Maybe<Array<Scalars['String']>>;
+  leadEmail: Maybe<Scalars['String']>;
   members: Maybe<Array<ProjectsDataMembersChildDto>>;
+  pmEmail: Maybe<Scalars['String']>;
   /** External link for a project proposal */
   projectProposal: Maybe<Scalars['String']>;
   startDate: Maybe<Scalars['Instant']>;
@@ -1767,7 +1819,15 @@ export enum DegreeEnum {
 export type ProjectContentFragment = Pick<Projects, 'id'> & {
   flatData: Pick<
     ProjectsFlatDataDto,
-    'title' | 'startDate' | 'endDate' | 'status' | 'projectProposal'
+    | 'title'
+    | 'startDate'
+    | 'endDate'
+    | 'status'
+    | 'projectProposal'
+    | 'description'
+    | 'pmEmail'
+    | 'leadEmail'
+    | 'keywords'
   > & {
     members: Maybe<
       Array<{
@@ -1794,7 +1854,15 @@ export type FetchProjectQuery = {
     Pick<Projects, 'id'> & {
       flatData: Pick<
         ProjectsFlatDataDto,
-        'title' | 'startDate' | 'endDate' | 'status' | 'projectProposal'
+        | 'title'
+        | 'startDate'
+        | 'endDate'
+        | 'status'
+        | 'projectProposal'
+        | 'description'
+        | 'pmEmail'
+        | 'leadEmail'
+        | 'keywords'
       > & {
         members: Maybe<
           Array<{
@@ -1824,7 +1892,15 @@ export type FetchProjectsQuery = {
           Pick<Projects, 'id'> & {
             flatData: Pick<
               ProjectsFlatDataDto,
-              'title' | 'startDate' | 'endDate' | 'status' | 'projectProposal'
+              | 'title'
+              | 'startDate'
+              | 'endDate'
+              | 'status'
+              | 'projectProposal'
+              | 'description'
+              | 'pmEmail'
+              | 'leadEmail'
+              | 'keywords'
             > & {
               members: Maybe<
                 Array<{
@@ -2339,6 +2415,10 @@ export const ProjectContentFragmentDoc = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'projectProposal' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'pmEmail' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'leadEmail' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'keywords' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'members' },

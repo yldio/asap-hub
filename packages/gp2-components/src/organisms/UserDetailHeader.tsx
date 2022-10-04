@@ -78,12 +78,10 @@ const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({
         />
 
         <div css={textContainerStyles}>
-          <div>
-            <h3 css={titleStyles}>
-              {displayName}
-              {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
-            </h3>
-          </div>
+          <h3 css={titleStyles}>
+            {displayName}
+            {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
+          </h3>
         </div>
       </div>
     </CardWithBackground>

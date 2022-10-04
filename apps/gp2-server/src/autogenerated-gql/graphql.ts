@@ -26,7 +26,7 @@ export type Scalars = {
 };
 
 /** The app mutations. */
-export type AppMutations = {
+export type ApplicationMutations = {
   /** Change a Dashboard content. */
   changeDashboardContent: Dashboard;
   /** Change a Projects content. */
@@ -115,7 +115,7 @@ export type AppMutations = {
 };
 
 /** The app mutations. */
-export type AppMutationsChangeDashboardContentArgs = {
+export type ApplicationMutationsChangeDashboardContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -123,7 +123,7 @@ export type AppMutationsChangeDashboardContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsChangeProjectsContentArgs = {
+export type ApplicationMutationsChangeProjectsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -131,7 +131,7 @@ export type AppMutationsChangeProjectsContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsChangeUsersContentArgs = {
+export type ApplicationMutationsChangeUsersContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -139,7 +139,7 @@ export type AppMutationsChangeUsersContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsChangeWorkingGroupNetworkContentArgs = {
+export type ApplicationMutationsChangeWorkingGroupNetworkContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -147,7 +147,7 @@ export type AppMutationsChangeWorkingGroupNetworkContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsChangeWorkingGroupsContentArgs = {
+export type ApplicationMutationsChangeWorkingGroupsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -155,7 +155,7 @@ export type AppMutationsChangeWorkingGroupsContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsCreateDashboardContentArgs = {
+export type ApplicationMutationsCreateDashboardContentArgs = {
   data: DashboardDataInputDto;
   id: InputMaybe<Scalars['String']>;
   publish?: InputMaybe<Scalars['Boolean']>;
@@ -163,7 +163,7 @@ export type AppMutationsCreateDashboardContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsCreateProjectsContentArgs = {
+export type ApplicationMutationsCreateProjectsContentArgs = {
   data: ProjectsDataInputDto;
   id: InputMaybe<Scalars['String']>;
   publish?: InputMaybe<Scalars['Boolean']>;
@@ -171,7 +171,7 @@ export type AppMutationsCreateProjectsContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsCreateUsersContentArgs = {
+export type ApplicationMutationsCreateUsersContentArgs = {
   data: UsersDataInputDto;
   id: InputMaybe<Scalars['String']>;
   publish?: InputMaybe<Scalars['Boolean']>;
@@ -179,7 +179,7 @@ export type AppMutationsCreateUsersContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsCreateWorkingGroupNetworkContentArgs = {
+export type ApplicationMutationsCreateWorkingGroupNetworkContentArgs = {
   data: WorkingGroupNetworkDataInputDto;
   id: InputMaybe<Scalars['String']>;
   publish?: InputMaybe<Scalars['Boolean']>;
@@ -187,7 +187,7 @@ export type AppMutationsCreateWorkingGroupNetworkContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsCreateWorkingGroupsContentArgs = {
+export type ApplicationMutationsCreateWorkingGroupsContentArgs = {
   data: WorkingGroupsDataInputDto;
   id: InputMaybe<Scalars['String']>;
   publish?: InputMaybe<Scalars['Boolean']>;
@@ -195,72 +195,72 @@ export type AppMutationsCreateWorkingGroupsContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsDeleteDashboardContentArgs = {
+export type ApplicationMutationsDeleteDashboardContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
-export type AppMutationsDeleteProjectsContentArgs = {
+export type ApplicationMutationsDeleteProjectsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
-export type AppMutationsDeleteUsersContentArgs = {
+export type ApplicationMutationsDeleteUsersContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
-export type AppMutationsDeleteWorkingGroupNetworkContentArgs = {
+export type ApplicationMutationsDeleteWorkingGroupNetworkContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
-export type AppMutationsDeleteWorkingGroupsContentArgs = {
+export type ApplicationMutationsDeleteWorkingGroupsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
 /** The app mutations. */
-export type AppMutationsPatchDashboardContentArgs = {
+export type ApplicationMutationsPatchDashboardContentArgs = {
   data: DashboardDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
-export type AppMutationsPatchProjectsContentArgs = {
+export type ApplicationMutationsPatchProjectsContentArgs = {
   data: ProjectsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
-export type AppMutationsPatchUsersContentArgs = {
+export type ApplicationMutationsPatchUsersContentArgs = {
   data: UsersDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
-export type AppMutationsPatchWorkingGroupNetworkContentArgs = {
+export type ApplicationMutationsPatchWorkingGroupNetworkContentArgs = {
   data: WorkingGroupNetworkDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
-export type AppMutationsPatchWorkingGroupsContentArgs = {
+export type ApplicationMutationsPatchWorkingGroupsContentArgs = {
   data: WorkingGroupsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
-export type AppMutationsPublishDashboardContentArgs = {
+export type ApplicationMutationsPublishDashboardContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -268,7 +268,7 @@ export type AppMutationsPublishDashboardContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsPublishProjectsContentArgs = {
+export type ApplicationMutationsPublishProjectsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -276,7 +276,7 @@ export type AppMutationsPublishProjectsContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsPublishUsersContentArgs = {
+export type ApplicationMutationsPublishUsersContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -284,7 +284,7 @@ export type AppMutationsPublishUsersContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsPublishWorkingGroupNetworkContentArgs = {
+export type ApplicationMutationsPublishWorkingGroupNetworkContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -292,7 +292,7 @@ export type AppMutationsPublishWorkingGroupNetworkContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsPublishWorkingGroupsContentArgs = {
+export type ApplicationMutationsPublishWorkingGroupsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -300,42 +300,42 @@ export type AppMutationsPublishWorkingGroupsContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsUpdateDashboardContentArgs = {
+export type ApplicationMutationsUpdateDashboardContentArgs = {
   data: DashboardDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
-export type AppMutationsUpdateProjectsContentArgs = {
+export type ApplicationMutationsUpdateProjectsContentArgs = {
   data: ProjectsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
-export type AppMutationsUpdateUsersContentArgs = {
+export type ApplicationMutationsUpdateUsersContentArgs = {
   data: UsersDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
-export type AppMutationsUpdateWorkingGroupNetworkContentArgs = {
+export type ApplicationMutationsUpdateWorkingGroupNetworkContentArgs = {
   data: WorkingGroupNetworkDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
-export type AppMutationsUpdateWorkingGroupsContentArgs = {
+export type ApplicationMutationsUpdateWorkingGroupsContentArgs = {
   data: WorkingGroupsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
-export type AppMutationsUpsertDashboardContentArgs = {
+export type ApplicationMutationsUpsertDashboardContentArgs = {
   data: DashboardDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -345,7 +345,7 @@ export type AppMutationsUpsertDashboardContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsUpsertProjectsContentArgs = {
+export type ApplicationMutationsUpsertProjectsContentArgs = {
   data: ProjectsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -355,7 +355,7 @@ export type AppMutationsUpsertProjectsContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsUpsertUsersContentArgs = {
+export type ApplicationMutationsUpsertUsersContentArgs = {
   data: UsersDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -365,7 +365,7 @@ export type AppMutationsUpsertUsersContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsUpsertWorkingGroupNetworkContentArgs = {
+export type ApplicationMutationsUpsertWorkingGroupNetworkContentArgs = {
   data: WorkingGroupNetworkDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -375,7 +375,7 @@ export type AppMutationsUpsertWorkingGroupNetworkContentArgs = {
 };
 
 /** The app mutations. */
-export type AppMutationsUpsertWorkingGroupsContentArgs = {
+export type ApplicationMutationsUpsertWorkingGroupsContentArgs = {
   data: WorkingGroupsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -385,7 +385,7 @@ export type AppMutationsUpsertWorkingGroupsContentArgs = {
 };
 
 /** The app queries. */
-export type AppQueries = {
+export type ApplicationQueries = {
   /** Find an asset by id. */
   findAsset: Maybe<Asset>;
   /** Find an Dashboard content by id. */
@@ -425,42 +425,42 @@ export type AppQueries = {
 };
 
 /** The app queries. */
-export type AppQueriesFindAssetArgs = {
+export type ApplicationQueriesFindAssetArgs = {
   id: Scalars['String'];
 };
 
 /** The app queries. */
-export type AppQueriesFindDashboardContentArgs = {
-  id: Scalars['String'];
-  version: InputMaybe<Scalars['Int']>;
-};
-
-/** The app queries. */
-export type AppQueriesFindProjectsContentArgs = {
+export type ApplicationQueriesFindDashboardContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
-export type AppQueriesFindUsersContentArgs = {
+export type ApplicationQueriesFindProjectsContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
-export type AppQueriesFindWorkingGroupNetworkContentArgs = {
+export type ApplicationQueriesFindUsersContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
-export type AppQueriesFindWorkingGroupsContentArgs = {
+export type ApplicationQueriesFindWorkingGroupNetworkContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
-export type AppQueriesQueryAssetsArgs = {
+export type ApplicationQueriesFindWorkingGroupsContentArgs = {
+  id: Scalars['String'];
+  version: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryAssetsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -468,7 +468,7 @@ export type AppQueriesQueryAssetsArgs = {
 };
 
 /** The app queries. */
-export type AppQueriesQueryAssetsWithTotalArgs = {
+export type ApplicationQueriesQueryAssetsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -476,7 +476,7 @@ export type AppQueriesQueryAssetsWithTotalArgs = {
 };
 
 /** The app queries. */
-export type AppQueriesQueryDashboardContentsArgs = {
+export type ApplicationQueriesQueryDashboardContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -485,7 +485,7 @@ export type AppQueriesQueryDashboardContentsArgs = {
 };
 
 /** The app queries. */
-export type AppQueriesQueryDashboardContentsWithTotalArgs = {
+export type ApplicationQueriesQueryDashboardContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -494,7 +494,7 @@ export type AppQueriesQueryDashboardContentsWithTotalArgs = {
 };
 
 /** The app queries. */
-export type AppQueriesQueryProjectsContentsArgs = {
+export type ApplicationQueriesQueryProjectsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -503,7 +503,7 @@ export type AppQueriesQueryProjectsContentsArgs = {
 };
 
 /** The app queries. */
-export type AppQueriesQueryProjectsContentsWithTotalArgs = {
+export type ApplicationQueriesQueryProjectsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -512,7 +512,7 @@ export type AppQueriesQueryProjectsContentsWithTotalArgs = {
 };
 
 /** The app queries. */
-export type AppQueriesQueryUsersContentsArgs = {
+export type ApplicationQueriesQueryUsersContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -521,7 +521,7 @@ export type AppQueriesQueryUsersContentsArgs = {
 };
 
 /** The app queries. */
-export type AppQueriesQueryUsersContentsWithTotalArgs = {
+export type ApplicationQueriesQueryUsersContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -530,7 +530,7 @@ export type AppQueriesQueryUsersContentsWithTotalArgs = {
 };
 
 /** The app queries. */
-export type AppQueriesQueryWorkingGroupNetworkContentsArgs = {
+export type ApplicationQueriesQueryWorkingGroupNetworkContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -539,7 +539,7 @@ export type AppQueriesQueryWorkingGroupNetworkContentsArgs = {
 };
 
 /** The app queries. */
-export type AppQueriesQueryWorkingGroupNetworkContentsWithTotalArgs = {
+export type ApplicationQueriesQueryWorkingGroupNetworkContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -548,7 +548,7 @@ export type AppQueriesQueryWorkingGroupNetworkContentsWithTotalArgs = {
 };
 
 /** The app queries. */
-export type AppQueriesQueryWorkingGroupsContentsArgs = {
+export type ApplicationQueriesQueryWorkingGroupsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -557,12 +557,28 @@ export type AppQueriesQueryWorkingGroupsContentsArgs = {
 };
 
 /** The app queries. */
-export type AppQueriesQueryWorkingGroupsContentsWithTotalArgs = {
+export type ApplicationQueriesQueryWorkingGroupsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
+};
+
+export type ApplicationSubscriptions = {
+  /** Subscribe to asset events. */
+  assetChanges: Maybe<EnrichedAssetEvent>;
+  /** Subscribe to content events. */
+  contentChanges: Maybe<EnrichedContentEvent>;
+};
+
+export type ApplicationSubscriptionsAssetChangesArgs = {
+  type: InputMaybe<EnrichedAssetEventType>;
+};
+
+export type ApplicationSubscriptionsContentChangesArgs = {
+  schemaName: InputMaybe<Scalars['String']>;
+  type: InputMaybe<EnrichedContentEventType>;
 };
 
 /** An asset */
@@ -911,6 +927,120 @@ export type DashboardResultDto = {
   /** The total count of  contents. */
   total: Scalars['Int'];
 };
+
+/** An asset event */
+export type EnrichedAssetEvent = {
+  /** The type of the asset. */
+  assetType: AssetType;
+  /** The timestamp when the object was created. */
+  created: Scalars['Instant'];
+  /** The user who created the object. */
+  createdBy: Scalars['String'];
+  /** The user who created the object. */
+  createdByUser: User;
+  /** The hash of the file. Can be null for old files. */
+  fileHash: Scalars['String'];
+  /** The file name of the asset. */
+  fileName: Scalars['String'];
+  /** The size of the file in bytes. */
+  fileSize: Scalars['Int'];
+  /** The file type (file extension) of the asset. */
+  fileType: Scalars['String'];
+  /** The version of the file. */
+  fileVersion: Scalars['Int'];
+  /** The ID of the object (usually GUID). */
+  id: Scalars['String'];
+  /**
+   * Determines if the uploaded file is an image.
+   * @deprecated Use 'type' field instead.
+   */
+  isImage: Scalars['Boolean'];
+  /** True, when the asset is not public. */
+  isProtected: Scalars['Boolean'];
+  /** The timestamp when the object was updated the last time. */
+  lastModified: Scalars['Instant'];
+  /** The user who updated the object the last time. */
+  lastModifiedBy: Scalars['String'];
+  /** The user who updated the object the last time. */
+  lastModifiedByUser: User;
+  /** The asset metadata. */
+  metadata: Maybe<Scalars['JsonScalar']>;
+  /** The mime type. */
+  mimeType: Scalars['String'];
+  /**
+   * The height of the image in pixels if the asset is an image.
+   * @deprecated Use 'metadata' field instead.
+   */
+  pixelHeight: Maybe<Scalars['Int']>;
+  /**
+   * The width of the image in pixels if the asset is an image.
+   * @deprecated Use 'metadata' field instead.
+   */
+  pixelWidth: Maybe<Scalars['Int']>;
+  /** The file name as slug. */
+  slug: Scalars['String'];
+  /** The source URL of the asset. */
+  sourceUrl: Scalars['String'];
+  /** The thumbnail URL to the asset. */
+  thumbnailUrl: Maybe<Scalars['String']>;
+  /** The type of the event, e.g. 'Created' or 'Updated'. */
+  type: Maybe<EnrichedAssetEventType>;
+  /** The URL to the asset. */
+  url: Scalars['String'];
+  /** The version of the objec. */
+  version: Scalars['Int'];
+};
+
+/** An asset event */
+export type EnrichedAssetEventMetadataArgs = {
+  path: InputMaybe<Scalars['String']>;
+};
+
+export enum EnrichedAssetEventType {
+  Annotated = 'ANNOTATED',
+  Created = 'CREATED',
+  Deleted = 'DELETED',
+  Updated = 'UPDATED',
+}
+
+/** An content event */
+export type EnrichedContentEvent = {
+  /** The timestamp when the object was created. */
+  created: Scalars['Instant'];
+  /** The user who created the object. */
+  createdBy: Scalars['String'];
+  /** The user who created the object. */
+  createdByUser: User;
+  /** The data of the content. */
+  data: Maybe<Scalars['JsonScalar']>;
+  /** The previous data of the content. */
+  dataOld: Maybe<Scalars['JsonScalar']>;
+  /** The ID of the object (usually GUID). */
+  id: Scalars['String'];
+  /** The timestamp when the object was updated the last time. */
+  lastModified: Scalars['Instant'];
+  /** The user who updated the object the last time. */
+  lastModifiedBy: Scalars['String'];
+  /** The user who updated the object the last time. */
+  lastModifiedByUser: User;
+  /** The new status of the content. */
+  newStatus: Maybe<Scalars['String']>;
+  /** The status of the content. */
+  status: Scalars['String'];
+  /** The type of the event, e.g. 'Created' or 'Updated'. */
+  type: Maybe<EnrichedContentEventType>;
+  /** The version of the objec. */
+  version: Scalars['Int'];
+};
+
+export enum EnrichedContentEventType {
+  Created = 'CREATED',
+  Deleted = 'DELETED',
+  Published = 'PUBLISHED',
+  StatusChanged = 'STATUS_CHANGED',
+  Unpublished = 'UNPUBLISHED',
+  Updated = 'UPDATED',
+}
 
 /** The result of a mutation */
 export type EntitySavedResultDto = {
@@ -1305,12 +1435,41 @@ export type UsersDataConnectionsInputDto = {
 
 /** The structure of the Degree field of the Users content type. */
 export type UsersDataDegreeDto = {
-  iv: Maybe<Array<DegreeEnum>>;
+  iv: Maybe<Array<UsersDataDegreeEnum>>;
 };
+
+export enum UsersDataDegreeEnum {
+  /** AA */
+  Aa = 'AA',
+  /** AAS */
+  Aas = 'AAS',
+  /** BA */
+  Ba = 'BA',
+  /** BSc */
+  BSc = 'BSc',
+  /** MA */
+  Ma = 'MA',
+  /** MBA */
+  Mba = 'MBA',
+  /** MBBS */
+  Mbbs = 'MBBS',
+  /** MD */
+  Md = 'MD',
+  /** MD_PhD */
+  MdPhD = 'MD_PhD',
+  /** MPH */
+  Mph = 'MPH',
+  /** MSc */
+  MSc = 'MSc',
+  /** PhD */
+  PhD = 'PhD',
+  /** PharmD */
+  PharmD = 'PharmD',
+}
 
 /** The structure of the Degree field of the Users content input type. */
 export type UsersDataDegreeInputDto = {
-  iv: InputMaybe<Array<DegreeEnum>>;
+  iv: InputMaybe<Array<UsersDataDegreeEnum>>;
 };
 
 /** The structure of the Users data type. */
@@ -1393,7 +1552,7 @@ export type UsersDataRoleInputDto = {
 export type UsersFlatDataDto = {
   avatar: Maybe<Array<Asset>>;
   connections: Maybe<Array<UsersDataConnectionsChildDto>>;
-  degree: Maybe<Array<DegreeEnum>>;
+  degree: Maybe<Array<UsersDataDegreeEnum>>;
   email: Maybe<Scalars['String']>;
   firstName: Maybe<Scalars['String']>;
   lastName: Maybe<Scalars['String']>;
@@ -1786,35 +1945,6 @@ export type WorkingGroupsResultDto = {
   /** The total count of  contents. */
   total: Scalars['Int'];
 };
-
-export enum DegreeEnum {
-  /** AA */
-  Aa = 'AA',
-  /** AAS */
-  Aas = 'AAS',
-  /** BA */
-  Ba = 'BA',
-  /** BSc */
-  BSc = 'BSc',
-  /** MA */
-  Ma = 'MA',
-  /** MBA */
-  Mba = 'MBA',
-  /** MBBS */
-  Mbbs = 'MBBS',
-  /** MD */
-  Md = 'MD',
-  /** MD_PhD */
-  MdPhD = 'MD_PhD',
-  /** MPH */
-  Mph = 'MPH',
-  /** MSc */
-  MSc = 'MSc',
-  /** PhD */
-  PhD = 'PhD',
-  /** PharmD */
-  PharmD = 'PharmD',
-}
 
 export type ProjectContentFragment = Pick<Projects, 'id'> & {
   flatData: Pick<

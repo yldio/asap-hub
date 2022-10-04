@@ -7,6 +7,7 @@ import {
   ListReminderDataObject,
   ReminderDataObject,
   ResearchOutputPublishedReminder,
+  PresentationUpdatedReminder,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { DateTime } from 'luxon';
@@ -49,13 +50,13 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
     );
 
     const eventReminders = getEventRemindersFromQuery(queryEventsContents);
-    const videoUpdatedReminders =
-      getVideoUpdatedRemindersFromQuery(queryEventsContents);
+    const eventMaterialsReminders =
+      getEventMaterialsRemindersFromQuery(queryEventsContents);
 
     const reminders = [
       ...researchOutputReminders,
       ...eventReminders,
-      ...videoUpdatedReminders,
+      ...eventMaterialsReminders,
     ];
 
     const sortedReminders = reminders.sort((reminderA, reminderB) => {
@@ -101,7 +102,7 @@ export const getEventFilter = (zone: string): string => {
     .minus({ day: 1 })
     .toUTC();
 
-  return `data/videoRecordingUpdatedAt/iv ge ${lastDayISO} or (data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO})`;
+  return `data/videoRecordingUpdatedAt/iv ge ${lastDayISO} or data/presentationUpdatedAt/iv ge ${lastDayISO} or (data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO})`;
 };
 
 const getUserTeamIds = (
@@ -219,34 +220,49 @@ const getEventRemindersFromQuery = (
   return eventReminders;
 };
 
-const getVideoUpdatedRemindersFromQuery = (
+const wasMaterialUpdatedInLast24Hours = (date: string) => {
+  const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
+
+  const msBetweenNowAndMaterialUpdatedAt = DateTime.now().diff(
+    DateTime.fromISO(date),
+  ).milliseconds;
+
+  return (
+    msBetweenNowAndMaterialUpdatedAt <= ONE_DAY_IN_MS &&
+    msBetweenNowAndMaterialUpdatedAt > 0
+  );
+};
+
+const getEventMaterialsRemindersFromQuery = (
   queryEventsContents: FetchReminderDataQuery['queryEventsContents'],
-): VideoEventReminder[] => {
+): (VideoEventReminder | PresentationUpdatedReminder)[] => {
   const eventReminders = (queryEventsContents || []).reduce<
-    VideoEventReminder[]
+    (VideoEventReminder | PresentationUpdatedReminder)[]
   >((events, event) => {
-    const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
+    const {
+      id: eventId,
+      flatData: { title, videoRecordingUpdatedAt, presentationUpdatedAt },
+    } = event;
 
-    const msBetweenNowAndVideoUpdatedAt = DateTime.now().diff(
-      DateTime.fromISO(event.flatData.videoRecordingUpdatedAt),
-    ).milliseconds;
+    if (wasMaterialUpdatedInLast24Hours(videoRecordingUpdatedAt)) {
+      events.push({
+        id: `video-event-updated-${eventId}`,
+        entity: 'Event',
+        type: 'Video Updated',
+        data: { eventId, title: title || '', videoRecordingUpdatedAt },
+      });
+    }
 
-    return msBetweenNowAndVideoUpdatedAt <= ONE_DAY_IN_MS &&
-      msBetweenNowAndVideoUpdatedAt > 0
-      ? [
-          ...events,
-          {
-            id: `video-event-updated-${event.id}`,
-            entity: 'Event',
-            type: 'Video Updated',
-            data: {
-              eventId: event.id,
-              title: event.flatData.title || '',
-              videoRecordingUpdatedAt: event.flatData.videoRecordingUpdatedAt,
-            },
-          },
-        ]
-      : events;
+    if (wasMaterialUpdatedInLast24Hours(presentationUpdatedAt)) {
+      events.push({
+        id: `presentation-event-updated-${eventId}`,
+        entity: 'Event',
+        type: 'Presentation Updated',
+        data: { eventId, title: title || '', presentationUpdatedAt },
+      });
+    }
+
+    return events;
   }, []);
 
   return eventReminders;
@@ -263,6 +279,10 @@ const getSortDate = (reminder: ReminderDataObject): DateTime => {
 
   if (reminder.type === 'Video Updated') {
     return DateTime.fromISO(reminder.data.videoRecordingUpdatedAt);
+  }
+
+  if (reminder.type === 'Presentation Updated') {
+    return DateTime.fromISO(reminder.data.presentationUpdatedAt);
   }
 
   return DateTime.fromISO(reminder.data.endDate);

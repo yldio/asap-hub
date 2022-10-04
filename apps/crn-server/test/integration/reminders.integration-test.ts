@@ -12,7 +12,6 @@ import {
 } from '@asap-hub/squidex';
 import { Chance } from 'chance';
 import {
-  VideoEventReminder,
   EventHappeningNowReminder,
   EventHappeningTodayReminder,
   FetchRemindersOptions,
@@ -433,128 +432,208 @@ describe('Reminders', () => {
     });
   });
 
-  describe('Event - Video Updated Reminder', () => {
-    let userId: string;
-    let calendarId: string;
-    let eventIdsForDeletion: string[] = [];
-    let fetchRemindersOptions: FetchRemindersOptions;
+  interface TestProps {
+    material: 'Video' | 'Presentation';
+    materialUpdatedAtName: 'videoRecordingUpdatedAt' | 'presentationUpdatedAt';
+    materialContentName: 'videoRecording' | 'presentation';
+  }
 
-    beforeAll(async () => {
-      jest.useFakeTimers('modern');
+  describe.each`
+    material          | materialUpdatedAtName        | materialContentName
+    ${'Video'}        | ${'videoRecordingUpdatedAt'} | ${'videoRecording'}
+    ${'Presentation'} | ${'presentationUpdatedAt'}   | ${'presentation'}
+  `(
+    'Event - $material Updated Reminder',
+    ({ material, materialUpdatedAtName, materialContentName }: TestProps) => {
+      let userId: string;
+      let calendarId: string;
+      let eventIdsForDeletion: string[] = [];
+      let fetchRemindersOptions: FetchRemindersOptions;
 
-      const teamCreateDataObject = getTeamCreateDataObject();
-      teamCreateDataObject.applicationNumber = chance.name();
-      const teamId = await teamDataProvider.create(teamCreateDataObject);
+      beforeAll(async () => {
+        jest.useFakeTimers('modern');
 
-      const userCreateDataObject = getUserInput(teamId);
-      userId = await userDataProvider.create(userCreateDataObject);
-      fetchRemindersOptions = { userId, timezone: 'Europe/London' };
-    });
+        const teamCreateDataObject = getTeamCreateDataObject();
+        teamCreateDataObject.applicationNumber = chance.name();
+        const teamId = await teamDataProvider.create(teamCreateDataObject);
 
-    afterAll(() => {
-      jest.useRealTimers();
-    });
-
-    beforeEach(async () => {
-      const calendarInput = getCalendarInputForReminder();
-      calendarId = await calendarDataProvider.create(calendarInput);
-    });
-
-    afterEach(async () => {
-      await Promise.all(
-        eventIdsForDeletion.map((id) => eventRestClient.delete(id)),
-      );
-      eventIdsForDeletion = [];
-    });
-
-    test('Should see the reminder when a video was updated in an event between now and 24 hours ago', async () => {
-      // setting system time to 10:05AM in UTC
-      jest.setSystemTime(new Date('2022-09-26T10:05:00.0Z'));
-
-      const eventInput = getEventInput(calendarId);
-      eventInput.videoRecordingUpdatedAt = new Date(
-        '2022-09-26T08:00:00.0Z',
-      ).toISOString();
-
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
-
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      const expectedReminder: VideoEventReminder = {
-        id: `video-event-updated-${event.id}`,
-        entity: 'Event',
-        type: 'Video Updated',
-        data: {
-          eventId: event.id,
-          title: event.data.title.iv,
-          videoRecordingUpdatedAt: event.data.videoRecordingUpdatedAt!.iv,
-        },
-      };
-
-      expect(reminders).toEqual({
-        total: 1,
-        items: [expectedReminder],
+        const userCreateDataObject = getUserInput(teamId);
+        userId = await userDataProvider.create(userCreateDataObject);
+        fetchRemindersOptions = { userId, timezone: 'Europe/London' };
       });
-    });
 
-    test('Should not see the reminder when a video was updated in an event more than 24 hours ago', async () => {
-      // setting system time to 10:05AM in UTC
-      jest.setSystemTime(new Date('2022-09-26T10:05:00.0Z'));
-
-      const eventInput = getEventInput(calendarId);
-      eventInput.videoRecordingUpdatedAt = new Date(
-        '2022-09-22T08:00:00.0Z',
-      ).toISOString();
-
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
-
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders).toEqual({
-        total: 0,
-        items: [],
+      afterAll(() => {
+        jest.useRealTimers();
       });
-    });
 
-    test('Should not see the reminder when a video in an event was updated after the current time', async () => {
-      // setting system time to 10:05AM in UTC
-      jest.setSystemTime(new Date('2022-09-26T10:05:00.0Z'));
-
-      const eventInput = getEventInput(calendarId);
-      eventInput.videoRecordingUpdatedAt = new Date(
-        '2022-09-27T08:00:00.0Z',
-      ).toISOString();
-
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
-
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders).toEqual({
-        total: 0,
-        items: [],
+      beforeEach(async () => {
+        const calendarInput = getCalendarInputForReminder();
+        calendarId = await calendarDataProvider.create(calendarInput);
       });
-    });
 
-    test('Should not see the reminder when a video was never updated in an event', async () => {
-      // setting system time to 10:05AM in UTC
-      jest.setSystemTime(new Date('2022-09-26T10:05:00.0Z'));
-
-      const eventInput = getEventInput(calendarId);
-
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
-
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders).toEqual({
-        total: 0,
-        items: [],
+      afterEach(async () => {
+        await Promise.all(
+          eventIdsForDeletion.map((id) => eventRestClient.delete(id)),
+        );
+        eventIdsForDeletion = [];
       });
-    });
-  });
+
+      test(`Should see the reminder when a ${material} was updated in an event between now and 24 hours ago`, async () => {
+        // setting system time to 10:05AM in UTC
+        jest.setSystemTime(new Date('2022-09-26T10:05:00.0Z'));
+
+        const eventInput = getEventInput(calendarId);
+
+        const event = await eventController.create({
+          ...eventInput,
+          [materialUpdatedAtName]: new Date(
+            '2022-09-26T08:00:00.0Z',
+          ).toISOString(),
+        });
+        eventIdsForDeletion = [event.id];
+
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+
+        const expectedReminder = {
+          id: `${material.toLowerCase()}-event-updated-${event.id}`,
+          entity: 'Event',
+          type: `${material} Updated`,
+          data: {
+            eventId: event.id,
+            title: event.data.title.iv,
+            [materialUpdatedAtName]: event.data[materialUpdatedAtName]?.iv,
+          },
+        };
+
+        expect(reminders).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
+      });
+
+      test(`Should not see the reminder when a ${material} was updated in an event more than 24 hours ago`, async () => {
+        // setting system time to 10:05AM in UTC
+        jest.setSystemTime(new Date('2022-09-26T10:05:00.0Z'));
+
+        const eventInput = getEventInput(calendarId);
+
+        const event = await eventController.create({
+          ...eventInput,
+          [materialUpdatedAtName]: new Date(
+            '2022-09-22T08:00:00.0Z',
+          ).toISOString(),
+        });
+        eventIdsForDeletion = [event.id];
+
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+
+      test(`Should not see the reminder when a ${material} in an event was updated after the current time`, async () => {
+        // setting system time to 10:05AM in UTC
+        jest.setSystemTime(new Date('2022-09-26T10:05:00.0Z'));
+
+        const eventInput = getEventInput(calendarId);
+
+        const event = await eventController.create({
+          ...eventInput,
+          [materialUpdatedAtName]: new Date(
+            '2022-09-27T08:00:00.0Z',
+          ).toISOString(),
+        });
+
+        eventIdsForDeletion = [event.id];
+
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+
+      test(`Should not see the reminder when a ${material} was never updated in an event`, async () => {
+        // setting system time to 10:05AM in UTC
+        jest.setSystemTime(new Date('2022-09-26T10:05:00.0Z'));
+
+        const eventInput = getEventInput(calendarId);
+
+        const event = await eventController.create(eventInput);
+        eventIdsForDeletion = [event.id];
+
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+
+      test(`Should not see the reminder when ${material} was erased in an event`, async () => {
+        jest.useRealTimers();
+
+        const eventInput = getEventInput(calendarId);
+
+        const event = await eventController.create(eventInput);
+
+        // user updates material
+        await eventController.update(event.id, {
+          [materialContentName]: 'I am a material',
+        });
+
+        eventIdsForDeletion = [event.id];
+
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+
+        const expectedReminder = {
+          id: `${material.toLowerCase()}-event-updated-${event.id}`,
+          entity: 'Event',
+          type: `${material} Updated`,
+          data: {
+            eventId: event.id,
+            title: event.data.title.iv,
+            [materialUpdatedAtName]: expect.any(String),
+          },
+        };
+
+        expect(reminders).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
+
+        // This edge case will be addressed for video in a separate ticket
+        if (material !== 'Video') {
+          // user erases material
+          await eventController.update(event.id, {
+            [materialContentName]: '',
+          });
+
+          const remindersAfterUpdate = await reminderDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          expect(remindersAfterUpdate).toEqual({
+            total: 0,
+            items: [],
+          });
+        }
+      });
+    },
+  );
 
   describe('Multiple reminders', () => {
     let teamId: string;
@@ -661,11 +740,7 @@ describe('Reminders', () => {
     googleCalendarId: chance.email(),
   });
 
-  interface EventInput extends Event {
-    videoRecordingUpdatedAt?: string;
-  }
-
-  const getEventInput = (calendarId: string): EventInput => ({
+  const getEventInput = (calendarId: string): Event => ({
     ...getEventRestResponse(),
     calendar: [calendarId],
     googleId: chance.string(),

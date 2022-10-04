@@ -1,4 +1,8 @@
-import { FetchRemindersOptions } from '@asap-hub/model';
+import {
+  FetchRemindersOptions,
+  PresentationUpdatedReminder,
+  VideoEventReminder,
+} from '@asap-hub/model';
 import { DateTime } from 'luxon';
 import {
   getEventFilter,
@@ -12,6 +16,7 @@ import {
   getSquidexReminderEventsContents,
   getEventHappeningNowReminder,
   getVideoEventUpdatedReminder,
+  getPresentationUpdatedReminder,
 } from '../fixtures/reminders.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
@@ -482,7 +487,7 @@ describe('Reminder Data Provider', () => {
           jest.setSystemTime(new Date('2022-08-10T12:00:00.0Z'));
 
           expect(getEventFilter('Europe/London')).toEqual(
-            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or (data/startDate/iv ge 2022-08-09T23:00:00.000Z and data/startDate/iv le 2022-08-10T23:00:00.000Z)`,
+            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or data/presentationUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or (data/startDate/iv ge 2022-08-09T23:00:00.000Z and data/startDate/iv le 2022-08-10T23:00:00.000Z)`,
           );
         });
 
@@ -491,7 +496,7 @@ describe('Reminder Data Provider', () => {
           jest.setSystemTime(new Date('2022-08-10T12:00:00.0Z'));
 
           expect(getEventFilter('America/Los_Angeles')).toEqual(
-            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or (data/startDate/iv ge 2022-08-10T07:00:00.000Z and data/startDate/iv le 2022-08-11T07:00:00.000Z)`,
+            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or data/presentationUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or (data/startDate/iv ge 2022-08-10T07:00:00.000Z and data/startDate/iv le 2022-08-11T07:00:00.000Z)`,
           );
         });
 
@@ -500,7 +505,7 @@ describe('Reminder Data Provider', () => {
           jest.setSystemTime(new Date('2022-08-10T02:00:00.0Z'));
 
           expect(getEventFilter('America/Los_Angeles')).toEqual(
-            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T02:00:00.000Z or (data/startDate/iv ge 2022-08-09T07:00:00.000Z and data/startDate/iv le 2022-08-10T07:00:00.000Z)`,
+            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T02:00:00.000Z or data/presentationUpdatedAt/iv ge 2022-08-09T02:00:00.000Z or (data/startDate/iv ge 2022-08-09T07:00:00.000Z and data/startDate/iv le 2022-08-10T07:00:00.000Z)`,
           );
         });
       });
@@ -565,7 +570,126 @@ describe('Reminder Data Provider', () => {
       });
     });
 
-    describe('Video Updated Reminder', () => {
+    interface TestProps {
+      material: 'Video' | 'Presentation';
+      materialUpdatedAtName:
+        | 'videoRecordingUpdatedAt'
+        | 'presentationUpdatedAt';
+      expectedMaterialReminder:
+        | PresentationUpdatedReminder
+        | VideoEventReminder;
+    }
+
+    describe.each`
+      material          | materialUpdatedAtName        | expectedMaterialReminder
+      ${'Video'}        | ${'videoRecordingUpdatedAt'} | ${getVideoEventUpdatedReminder()}
+      ${'Presentation'} | ${'presentationUpdatedAt'}   | ${getPresentationUpdatedReminder()}
+    `(
+      '$material Updated Reminder',
+      ({
+        material,
+        materialUpdatedAtName,
+        expectedMaterialReminder,
+      }: TestProps) => {
+        beforeAll(() => {
+          jest.useFakeTimers('modern');
+        });
+
+        afterAll(() => {
+          jest.useRealTimers();
+        });
+
+        test(`Should fetch the reminder if a ${material} was updated in an event between now and 24 hours ago`, async () => {
+          const materialUpdatedAt = '2022-09-01T08:00:00Z';
+          // set the current date to seconds after the material updated at
+          const time = DateTime.fromISO(materialUpdatedAt)
+            .plus({ seconds: 40 })
+            .toJSDate();
+          jest.setSystemTime(time);
+
+          const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+          squidexGraphqlResponse.queryResearchOutputsContents = [];
+          squidexGraphqlResponse.queryEventsContents![0]!.flatData[
+            materialUpdatedAtName
+          ] = materialUpdatedAt;
+          squidexGraphqlClientMock.request.mockResolvedValueOnce(
+            squidexGraphqlResponse,
+          );
+
+          const result = await reminderDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result).toEqual({
+            total: 1,
+            items: [
+              {
+                ...expectedMaterialReminder,
+                data: {
+                  ...expectedMaterialReminder.data,
+                  [materialUpdatedAtName]: materialUpdatedAt,
+                },
+              },
+            ],
+          });
+        });
+
+        test(`Should not fetch the reminder if a ${material} in an event was updated more that 24 hours ago`, async () => {
+          const materialUpdatedAt = '2022-09-01T08:00:00Z';
+          // set the current date to more than 24 hours after the material updated at
+          const time = DateTime.fromISO(materialUpdatedAt)
+            .plus({ hours: 24, minutes: 1 })
+            .toJSDate();
+          jest.setSystemTime(time);
+
+          const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+          squidexGraphqlResponse.queryResearchOutputsContents = [];
+          squidexGraphqlResponse.queryEventsContents![0]!.flatData[
+            materialUpdatedAtName
+          ] = materialUpdatedAt;
+          squidexGraphqlClientMock.request.mockResolvedValueOnce(
+            squidexGraphqlResponse,
+          );
+
+          const result = await reminderDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result).toEqual({
+            total: 0,
+            items: [],
+          });
+        });
+
+        test(`Should not fetch the reminder if a ${material} in an event was updated after the current time`, async () => {
+          /* This in theory could never happen, it would mean that the material will be updated in the future */
+
+          const materialUpdatedAt = '2022-09-01T08:00:00Z';
+          // set current time to 1 minute before the material is going to be updated
+          const time = DateTime.fromISO(materialUpdatedAt)
+            .minus({ minutes: 1 })
+            .toJSDate();
+          jest.setSystemTime(time);
+
+          const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+          squidexGraphqlResponse.queryResearchOutputsContents = [];
+          squidexGraphqlResponse.queryEventsContents![0]!.flatData[
+            materialUpdatedAtName
+          ] = materialUpdatedAt;
+          squidexGraphqlClientMock.request.mockResolvedValueOnce(
+            squidexGraphqlResponse,
+          );
+
+          const result = await reminderDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result).toEqual({
+            total: 0,
+            items: [],
+          });
+        });
+      },
+    );
+
+    describe('Multiple material reminders', () => {
       beforeAll(() => {
         jest.useFakeTimers('modern');
       });
@@ -574,81 +698,37 @@ describe('Reminder Data Provider', () => {
         jest.useRealTimers();
       });
 
-      beforeEach(async () => {});
-
-      test('Should fetch the reminder if a video was updated in an event between now and 24 hours ago', async () => {
-        const videoRecordingUpdatedAt = '2022-09-01T08:00:00Z';
-        // set the current date to seconds after the video recording updated at
-        const time = DateTime.fromISO(videoRecordingUpdatedAt)
+      test(`Should fetch the reminders if more than one material was updated in an event between now and 24 hours ago`, async () => {
+        const materialsUpdatedAt = '2022-09-01T08:00:00Z';
+        // set the current date to seconds after the material updated at
+        const time = DateTime.fromISO(materialsUpdatedAt)
           .plus({ seconds: 40 })
           .toJSDate();
         jest.setSystemTime(time);
 
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.presentationUpdatedAt =
+          materialsUpdatedAt;
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.videoRecordingUpdatedAt =
-          videoRecordingUpdatedAt;
-        squidexGraphqlClientMock.request.mockResolvedValueOnce(
-          squidexGraphqlResponse,
-        );
-
-        const expectedVideoEventUpdatedReminder =
-          getVideoEventUpdatedReminder();
-        expectedVideoEventUpdatedReminder.data.videoRecordingUpdatedAt =
-          videoRecordingUpdatedAt;
-
-        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
-        expect(result).toEqual({
-          total: 1,
-          items: [expectedVideoEventUpdatedReminder],
-        });
-      });
-
-      test('Should not fetch the reminder if a video in an event was updated more that 24 hours ago', async () => {
-        const videoRecordingUpdatedAt = '2022-09-01T08:00:00Z';
-        // set the current date to more than 24 hours after the video recording updated at
-        const time = DateTime.fromISO(videoRecordingUpdatedAt)
-          .plus({ hours: 24, minutes: 1 })
-          .toJSDate();
-        jest.setSystemTime(time);
-
-        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
-        squidexGraphqlResponse.queryResearchOutputsContents = [];
-        squidexGraphqlResponse.queryEventsContents![0]!.flatData.videoRecordingUpdatedAt =
-          videoRecordingUpdatedAt;
+          materialsUpdatedAt;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
 
         const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        const presentationUpdatedReminder = getPresentationUpdatedReminder();
+        presentationUpdatedReminder.data.presentationUpdatedAt =
+          materialsUpdatedAt;
+
+        const videoEventUpdatedReminder = getVideoEventUpdatedReminder();
+        videoEventUpdatedReminder.data.videoRecordingUpdatedAt =
+          materialsUpdatedAt;
+
         expect(result).toEqual({
-          total: 0,
-          items: [],
-        });
-      });
-
-      test('Should not fetch the reminder if a video in an event was updated after the current time', async () => {
-        /* This in theory could never happen, it would mean that the video will be updated in the future */
-
-        const videoRecordingUpdatedAt = '2022-09-01T08:00:00Z';
-        // set the current date to more than 24 hours after the video recording updated at
-        const time = DateTime.fromISO(videoRecordingUpdatedAt)
-          .minus({ minutes: 1 })
-          .toJSDate();
-        jest.setSystemTime(time);
-
-        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
-        squidexGraphqlResponse.queryResearchOutputsContents = [];
-        squidexGraphqlResponse.queryEventsContents![0]!.flatData.videoRecordingUpdatedAt =
-          videoRecordingUpdatedAt;
-        squidexGraphqlClientMock.request.mockResolvedValueOnce(
-          squidexGraphqlResponse,
-        );
-
-        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
-        expect(result).toEqual({
-          total: 0,
-          items: [],
+          total: 2,
+          items: [videoEventUpdatedReminder, presentationUpdatedReminder],
         });
       });
     });
@@ -680,6 +760,7 @@ describe('Reminder Data Provider', () => {
         event1.flatData.startDate = '2022-01-01T12:00:00Z';
         event1.flatData.endDate = '2022-01-01T13:00:00Z';
         event1.flatData.videoRecordingUpdatedAt = '2022-01-01T08:00:00Z';
+        event1.flatData.presentationUpdatedAt = '2022-01-01T08:02:00Z';
         const event2 = getSquidexReminderEventsContents();
         event2.id = 'event-2';
         event2.flatData.startDate = '2022-01-01T08:00:00Z';
@@ -704,6 +785,7 @@ describe('Reminder Data Provider', () => {
           `event-happening-today-${event1.id}`,
           `event-happening-now-${event2.id}`,
           `research-output-published-${researchOutput1.id}`,
+          `presentation-event-updated-${event1.id}`,
           `video-event-updated-${event1.id}`,
         ]);
       });

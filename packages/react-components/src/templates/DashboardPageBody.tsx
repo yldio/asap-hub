@@ -154,11 +154,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           Explore previous events and learn about what was discussed.
         </div>
         <PastEventsDashboardCard events={pastEvents} />
-        {pastEvents && pastEvents.length > 3 && (
-          <p css={viewAllStyles} data-testid="view-past-events">
-            <Link href={eventsRoute({}).past({}).$}>View All →</Link>
-          </p>
-        )}
+        <p css={viewAllStyles} data-testid="view-past-events">
+          <Link href={eventsRoute({}).past({}).$}>View All →</Link>
+        </p>
       </div>
       <div>
         <Headline2 styleAsHeading={3}>Recent Shared Research</Headline2>

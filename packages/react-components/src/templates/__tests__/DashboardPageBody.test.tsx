@@ -63,7 +63,12 @@ it('renders news section', () => {
 
   expect(screen.getByText('Latest News from ASAP')).toBeVisible();
   expect(screen.getByText('News Title')).toBeVisible();
-  expect(screen.getByText('View All →', { selector: 'a' })).toBeVisible();
+  expect(
+    screen
+      .getAllByText('View All →', { selector: 'a' })
+      .map(({ textContent }) => textContent),
+    // There are two View all links because the past events one is always shown
+  ).toEqual(expect.arrayContaining(['View All →', 'View All →']));
 });
 
 it('hides add links to your work space section when user is not a member of a team', () => {
@@ -97,14 +102,12 @@ it('displays events cards or placeholder if there are no events', () => {
 });
 
 describe('the past events card', () => {
-  const events = createListEventResponse(4).items;
+  const events = createListEventResponse(3).items;
   it('renders multiple past events', () => {
     render(<DashboardPageBody {...props} pastEvents={events} />);
     expect(
       screen.getAllByRole('link').map(({ textContent }) => textContent),
-    ).toEqual(
-      expect.arrayContaining(['Event 0', 'Event 1', 'Event 2', 'Event 3']),
-    );
+    ).toEqual(expect.arrayContaining(['Event 0', 'Event 1', 'Event 2']));
   });
 
   it('renders the link to view all past events', () => {

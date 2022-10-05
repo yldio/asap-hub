@@ -28,7 +28,7 @@ export class AssetSquidexDataProvider implements AssetDataProvider {
         headers: form.getHeaders(),
         body: form,
       })
-      .json();
+      .json<{ id: string }>();
     return assetId;
   }
 }

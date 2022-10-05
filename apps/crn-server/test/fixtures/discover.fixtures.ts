@@ -206,7 +206,6 @@ export const getDiscoverResponse = (): DiscoverResponse => ({
       text: 'Content',
       link: 'https://hub.asap.science',
       linkText: 'ASAP Training',
-      type: 'Tutorial',
     },
   ],
   workingGroups: [

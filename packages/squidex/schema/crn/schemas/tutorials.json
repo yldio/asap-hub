@@ -1,0 +1,154 @@
+{
+  "$schema": "./../__json/schema.json",
+  "schema": {
+    "noFieldDeletion": false,
+    "noFieldRecreation": false,
+    "properties": {
+      "label": "Tutorials",
+      "validateOnPublish": false
+    },
+    "scripts": {},
+    "previewUrls": {},
+    "fieldRules": [],
+    "category": "Content",
+    "isPublished": true,
+    "fieldsInLists": [
+      "meta.status.color",
+      "title",
+      "shortText",
+      "thumbnail",
+      "link",
+      "linkText",
+      "text",
+      "meta.lastModified"
+    ],
+    "fieldsInReferences": [],
+    "fields": [
+      {
+        "name": "title",
+        "properties": {
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "createEnum": false,
+          "editor": "Input",
+          "inlineEditable": true,
+          "isEmbeddable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "Title"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "shortText",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "createEnum": false,
+          "editor": "Input",
+          "inlineEditable": true,
+          "isEmbeddable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "Short Text",
+          "hints": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "thumbnail",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "Assets",
+          "previewMode": "Image",
+          "resolveFirst": true,
+          "expectedType": "Image",
+          "mustBeImage": true,
+          "resolveImage": true,
+          "allowDuplicates": false,
+          "label": "Thumbnail"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "link",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "createEnum": false,
+          "editor": "Input",
+          "inlineEditable": true,
+          "isEmbeddable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "External Link"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "linkText",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "createEnum": false,
+          "editor": "Input",
+          "inlineEditable": true,
+          "isEmbeddable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "External Link Text",
+          "hints": "Leave this empty to show \"Open External Link\""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "text",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "createEnum": false,
+          "editor": "Input",
+          "inlineEditable": false,
+          "isEmbeddable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "Text"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      }
+    ]
+  },
+  "schemaType": "Default",
+  "name": "tutorials",
+  "isSingleton": false
+}

@@ -58,7 +58,7 @@ describe('parse GraphQL tutorials entities', () => {
       title: 'Title',
       shortText: 'shortText',
       text: 'text',
-      thumbnail: 'https://cloud.squidex.io/api/assets/asap-local/uuid',
+      thumbnail: `${baseUrl}/api/assets/${appName}/uuid`,
     };
 
     expect(

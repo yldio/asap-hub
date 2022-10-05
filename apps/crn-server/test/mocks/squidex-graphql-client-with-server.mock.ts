@@ -59,7 +59,7 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     EventsResultDto: resultDto,
     Labs: () => getSquidexGraphqlLab(),
     LabsResultDto: resultDto,
-    AppQueries: () => ({
+    ApplicationQueries: () => ({
       queryResearchOutputsContents: [...new Array(1)],
     }),
   };

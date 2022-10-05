@@ -74,7 +74,7 @@ describe('alumni badge', () => {
         max={1}
         users={Array.from({ length: 1 }).map(() => ({
           ...createUserResponse(),
-          displayName: 'John Doe',
+          displayName: 'John Do',
         }))}
       />,
     );
@@ -87,7 +87,7 @@ describe('alumni badge', () => {
         users={Array.from({ length: 1 }).map(
           () =>
             ({
-              displayName: 'John Doe',
+              displayName: 'John Do',
             } as ExternalAuthorResponse),
         )}
       />,

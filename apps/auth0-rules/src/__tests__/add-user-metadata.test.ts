@@ -5,9 +5,8 @@ import addUserMetadata from '../add-user-metadata';
 import type { RuleContext, User } from '../types';
 
 class UnauthorizedError {}
-const unauthorizedErrorMock: jest.MockedClass<typeof UnauthorizedError> = jest
-  .fn()
-  .mockImplementation(() => new UnauthorizedError());
+const unauthorizedErrorMock: jest.MockedClass<typeof UnauthorizedError> =
+  jest.fn(() => new UnauthorizedError());
 
 declare global {
   namespace NodeJS {

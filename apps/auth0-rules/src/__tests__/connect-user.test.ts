@@ -1,6 +1,5 @@
 import nock from 'nock';
 import connectUser from '../connect-user';
-import * as handleError from '../handle-error';
 import type { RuleContext, User } from '../types';
 
 declare global {
@@ -87,6 +86,8 @@ describe('Auth0 Rule - Connect User', () => {
   const apiSharedSecret = 'auth0_shared_secret';
   const invitation_code = 'sampleInvitationCode';
 
+  const cb: jest.MockedFunction<Parameters<typeof connectUser>[2]> = jest.fn();
+
   beforeEach(() => {
     global.configuration = {
       APP_DOMAIN: appDomain,
@@ -96,11 +97,13 @@ describe('Auth0 Rule - Connect User', () => {
     nock.cleanAll();
   });
 
-  it('should callback with same user + context if receives no invitation_code', () => {
-    const cb: jest.MockedFunction<Parameters<typeof connectUser>[2]> =
-      jest.fn();
+  afterEach(() => {
+    cb.mockClear();
+  });
 
+  it('should callback with same user + context if receives no invitation_code', () => {
     connectUser(user, context, cb);
+
     expect(cb).toHaveBeenCalled();
     const [err, resUser, resContext] = cb.mock.calls[0];
     expect(err).toBeFalsy();
@@ -109,7 +112,6 @@ describe('Auth0 Rule - Connect User', () => {
   });
 
   it('should return an error if fails to connect the user', async () => {
-    const spy = jest.spyOn(handleError, 'handleError');
     nock(apiURL, {
       reqheaders: {
         authorization: `Basic ${apiSharedSecret}`,
@@ -121,21 +123,17 @@ describe('Auth0 Rule - Connect User', () => {
       })
       .reply(404);
 
-    const cb: jest.MockedFunction<Parameters<typeof connectUser>[2]> =
-      jest.fn();
-
     await connectUser(
       user,
       { ...context, request: { query: { invitation_code }, body: {} } },
       cb,
     );
 
-    expect(cb).toHaveBeenCalled();
+    expect(cb).toHaveBeenCalledWith(expect.any(Error));
     const [err, resUser, resContext] = cb.mock.calls[0];
     expect(err).not.toBeNull();
     expect(resUser).toBeUndefined();
     expect(resContext).toBeUndefined();
-    expect(spy).toHaveBeenCalled();
   });
 
   it('should connect user if receives an invitation_code', async () => {
@@ -150,9 +148,6 @@ describe('Auth0 Rule - Connect User', () => {
       })
       .reply(202);
 
-    const cb: jest.MockedFunction<Parameters<typeof connectUser>[2]> =
-      jest.fn();
-
     await connectUser(
       user,
       { ...context, request: { query: { invitation_code }, body: {} } },
@@ -164,5 +159,55 @@ describe('Auth0 Rule - Connect User', () => {
     expect(err).toBeFalsy();
     expect(resUser).not.toBeNull();
     expect(resContext).not.toBeNull();
+  });
+
+  describe('handle errors', () => {
+    beforeEach(() => {
+      nock(apiURL, {
+        reqheaders: {
+          authorization: `Basic ${apiSharedSecret}`,
+        },
+      })
+        .post('/webhook/users/connections', {
+          code: invitation_code,
+          userId: user.user_id,
+        })
+        .reply(202);
+    });
+
+    test('should handle Errors', async () => {
+      const error = new Error('test');
+      cb.mockImplementationOnce(() => {
+        throw error;
+      });
+
+      await connectUser(
+        user,
+        { ...context, request: { query: { invitation_code }, body: {} } },
+        cb,
+      );
+
+      expect(cb).toBeCalledWith(error);
+    });
+
+    test.each([
+      'What?!',
+      11,
+      { what: 'is this' },
+      null,
+      new Promise(() => {}),
+      undefined,
+    ])('should handle non Errors, %s', async (literal) => {
+      cb.mockImplementationOnce(() => {
+        throw literal;
+      });
+      await connectUser(
+        user,
+        { ...context, request: { query: { invitation_code }, body: {} } },
+        cb,
+      );
+
+      expect(cb).toBeCalledWith(expect.any(Error));
+    });
   });
 });

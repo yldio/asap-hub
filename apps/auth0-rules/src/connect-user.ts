@@ -1,6 +1,12 @@
 import got from 'got';
-import { handleError } from './handle-error';
 import type { Rule } from './types';
+
+const handleError = (err: unknown): Error => {
+  if (err instanceof Error) {
+    return err;
+  }
+  return new Error('Unexpected Error');
+};
 
 const connectUser: Rule<{ invitation_code: string }> = async (
   user,

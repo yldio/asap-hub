@@ -2,7 +2,6 @@ import type { User as Auth0User } from '@asap-hub/auth';
 import { gp2, UserMetadataResponse } from '@asap-hub/model';
 import nock from 'nock';
 import addUserMetadata from '../add-user-metadata';
-import * as handleError from '../handle-error';
 import type { RuleContext, User } from '../types';
 
 class UnauthorizedError {}
@@ -151,7 +150,6 @@ describe('Auth0 Rule - Add User Metadata', () => {
   });
 
   it('errors if it fails to fetch the user', async () => {
-    const spy = jest.spyOn(handleError, 'handleError');
     nock(apiURL, {
       reqheaders: {
         authorization: `Basic ${apiSharedSecret}`,
@@ -162,12 +160,11 @@ describe('Auth0 Rule - Add User Metadata', () => {
 
     await addUserMetadata(user, context, cb);
 
-    expect(cb).toHaveBeenCalled();
+    expect(cb).toHaveBeenCalledWith(expect.any(Error));
     const [err, resUser, resContext] = cb.mock.calls[0];
     expect(String(err)).toMatch(/(^|\D)404(\D|$)/i);
     expect(resUser).toBeUndefined();
     expect(resContext).toBeUndefined();
-    expect(spy).toHaveBeenCalled();
   });
 
   it('adds the user metadata on successful fetch for crn', async () => {
@@ -415,6 +412,45 @@ describe('Auth0 Rule - Add User Metadata', () => {
       expect(
         resContext.idToken['https://1234.gp2.asap.science/user'],
       ).toStrictEqual(expectedUser);
+    });
+  });
+
+  describe('handle errors', () => {
+    beforeEach(() => {
+      nock(apiURL, {
+        reqheaders: {
+          authorization: `Basic ${apiSharedSecret}`,
+        },
+      })
+        .get(`/webhook/users/${user.user_id}`)
+        .reply(200, apiUser);
+    });
+
+    test('should handle Errors', async () => {
+      const error = new Error('test');
+      cb.mockImplementationOnce(() => {
+        throw error;
+      });
+
+      await addUserMetadata(user, context, cb);
+
+      expect(cb).toBeCalledWith(error);
+    });
+
+    test.each([
+      'What?!',
+      11,
+      { what: 'is this' },
+      null,
+      new Promise(() => {}),
+      undefined,
+    ])('should handle non Errors, %s', async (literal) => {
+      cb.mockImplementationOnce(() => {
+        throw literal;
+      });
+      await addUserMetadata(user, context, cb);
+
+      expect(cb).toBeCalledWith(expect.any(Error));
     });
   });
 });

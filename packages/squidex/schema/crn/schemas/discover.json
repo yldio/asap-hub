@@ -41,7 +41,7 @@
           "allowDuplicates": false,
           "resolveReference": false,
           "mustBePublished": false,
-          "schemaIds": ["71489266-ed3c-4c93-a160-22223b126bfb"],
+          "schemaIds": ["tutorials"],
           "label": "Training"
         },
         "isLocked": false,

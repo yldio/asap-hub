@@ -6,7 +6,11 @@ export type ProjectStatus = typeof projectStatus[number];
 export const isProjectStatus = (data: string | null): data is ProjectStatus =>
   projectStatus.includes(data as ProjectStatus);
 
-const projectMilestoneStatus = ['Active', 'Not Started', 'Completed'] as const;
+export const projectMilestoneStatus = [
+  'Active',
+  'Not Started',
+  'Completed',
+] as const;
 export type ProjectMilestoneStatus = typeof projectMilestoneStatus[number];
 
 export const isProjectMilestoneStatus = (

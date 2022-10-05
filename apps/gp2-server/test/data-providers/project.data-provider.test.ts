@@ -227,6 +227,15 @@ describe('Project Data Provider', () => {
           const { milestones } = parseProjectToDataObject(Project);
           expect(milestones[0]?.description).toEqual(description);
         });
+        test('throws with invalid status', () => {
+          const Project = getGraphQLProject();
+          const milestone = getGraphQLProjectMilestone();
+          milestone.status = 'an-invalid-status';
+          Project.flatData.milestones = [milestone];
+          expect(() => parseProjectToDataObject(Project)).toThrowError(
+            new TypeError('Invalid status: an-invalid-status from Squidex'),
+          );
+        });
       });
     });
   });

@@ -118,7 +118,9 @@ export function parseProjectToDataObject({
         milestone: GraphQLProjectMilestone,
       ) => {
         if (!gp2.isProjectMilestoneStatus(milestone.status)) {
-          throw new Error(`Invalid status: ${milestone.status}`);
+          throw new TypeError(
+            `Invalid status: ${milestone.status} from Squidex`,
+          );
         }
         return [
           ...milestoneList,

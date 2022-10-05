@@ -209,6 +209,16 @@ yarn ctf-migrate create add-foo-field -c bar
 
 Note: the `content_type` is the slug, not the display name, so `externalAuthors` not `External Authors`.
 
+### Initiating an Environment
+
+*Note: This is not something you will need to do regularly, I have documented it for the rare case where you are creating a new environment from scratch and not cloning one which is already using migrations.*
+
+The following command will create the migration content schema:
+
+```
+yarn ctf-migrate init
+```
+
 ### Running Migrations
 
 To run outstanding migrations, first do a dry run:

@@ -1,24 +1,27 @@
-module.exports.description = 'Create content model for UserTeam'
+module.exports.description = 'Create content model for UserTeam';
 
 module.exports.up = (migration) => {
-  const userTeam = migration.createContentType('userTeam')
+  const userTeam = migration
+    .createContentType('userTeam')
     .name('UserTeam')
-    .description('')
+    .description('');
 
-  userTeam.createField('user')
+  userTeam
+    .createField('user')
     .name('User')
     .type('Link')
     .validations([{ linkContentType: ['users'] }])
-    .linkType('Entry')
+    .linkType('Entry');
 
-  userTeam.createField('team')
+  userTeam
+    .createField('team')
     .name('Team')
     .type('Link')
     .validations([{ linkContentType: ['teams'] }])
-    .linkType('Entry')
+    .linkType('Entry');
 
-  userTeam.changeFieldControl('user', 'builtin', 'entryLinkEditor')
-  userTeam.changeFieldControl('team', 'builtin', 'entryLinkEditor')
-}
+  userTeam.changeFieldControl('user', 'builtin', 'entryLinkEditor');
+  userTeam.changeFieldControl('team', 'builtin', 'entryLinkEditor');
+};
 
-module.exports.down = migration => migration.deleteContentType('userTeam')
+module.exports.down = (migration) => migration.deleteContentType('userTeam');

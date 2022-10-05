@@ -186,10 +186,10 @@ In order to support the migration from Squidex to Contentful, we've set up a mig
 
 There are four variables which you will need to set in `.env`:
 
- - `CONTENTFUL_SPACE_ID` is the Contentful Space which migrations should be run against (the default in `.env.example` is the ASAP-HUB Space);
- - `CONTENTFUL_ENV_ID` is the Contentful Environment on which to run migrations;
- - `CONTENTFUL_MANAGEMENT_ACCESS_TOKEN` is your access token for Contentful, you can create one in the Contentful dashboard under Account Settings > Tokens > Generate Personal Token; and
- - `CONTENTFUL_MIGRATIONS_DIR` which must be set to the fully-qualified path to the migrations, which will be the location of `asap-hub`, `packages/contentful/migrations`.
+- `CONTENTFUL_SPACE_ID` is the Contentful Space which migrations should be run against (the default in `.env.example` is the ASAP-HUB Space);
+- `CONTENTFUL_ENV_ID` is the Contentful Environment on which to run migrations;
+- `CONTENTFUL_MANAGEMENT_ACCESS_TOKEN` is your access token for Contentful, you can create one in the Contentful dashboard under Account Settings > Tokens > Generate Personal Token; and
+- `CONTENTFUL_MIGRATIONS_DIR` which must be set to the fully-qualified path to the migrations, which will be the location of `asap-hub`, `packages/contentful/migrations`.
 
 If you don't understand these concepts, you will need to familiarise yourself with the [Contentful documentation](https://contentful.com/developers/docs) before writing migrations.
 
@@ -221,8 +221,8 @@ Then repeat the command without `--dry-run` if all looks good.
 
 There are also convenience methods for this:
 
- - `yarn contentful:migrate:dryrun`
- - `yarn contentful:migrate`
+- `yarn contentful:migrate:dryrun`
+- `yarn contentful:migrate`
 
 ### Rolling back a Migration
 

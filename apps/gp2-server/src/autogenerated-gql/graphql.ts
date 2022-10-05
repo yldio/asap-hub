@@ -1222,7 +1222,7 @@ export type ProjectsDataMembersInputDto = {
 export type ProjectsDataMilestonesChildDto = {
   description: Maybe<Scalars['String']>;
   link: Maybe<Scalars['String']>;
-  status: Maybe<Scalars['String']>;
+  status: Maybe<ProjectsDataMilestonesStatusEnum>;
   title: Maybe<Scalars['String']>;
 };
 
@@ -1230,7 +1230,7 @@ export type ProjectsDataMilestonesChildDto = {
 export type ProjectsDataMilestonesChildInputDto = {
   description: InputMaybe<Scalars['String']>;
   link: InputMaybe<Scalars['String']>;
-  status: InputMaybe<Scalars['String']>;
+  status: InputMaybe<ProjectsDataMilestonesStatusEnum>;
   title: InputMaybe<Scalars['String']>;
 };
 
@@ -1243,6 +1243,15 @@ export type ProjectsDataMilestonesDto = {
 export type ProjectsDataMilestonesInputDto = {
   iv: InputMaybe<Array<ProjectsDataMilestonesChildInputDto>>;
 };
+
+export enum ProjectsDataMilestonesStatusEnum {
+  /** Active */
+  Active = 'Active',
+  /** Completed */
+  Completed = 'Completed',
+  /** Not_Started */
+  NotStarted = 'Not_Started',
+}
 
 /** The structure of the PM Email field of the Projects content type. */
 export type ProjectsDataPmEmailDto = {
@@ -1278,12 +1287,21 @@ export type ProjectsDataStartDateInputDto = {
 
 /** The structure of the Status field of the Projects content type. */
 export type ProjectsDataStatusDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: Maybe<ProjectsDataStatusEnum>;
 };
+
+export enum ProjectsDataStatusEnum {
+  /** Active */
+  Active = 'Active',
+  /** Completed */
+  Completed = 'Completed',
+  /** Inactive */
+  Inactive = 'Inactive',
+}
 
 /** The structure of the Status field of the Projects content input type. */
 export type ProjectsDataStatusInputDto = {
-  iv: InputMaybe<Scalars['String']>;
+  iv: InputMaybe<ProjectsDataStatusEnum>;
 };
 
 /** The structure of the Title field of the Projects content type. */
@@ -1308,7 +1326,7 @@ export type ProjectsFlatDataDto = {
   /** External link for a project proposal */
   projectProposal: Maybe<Scalars['String']>;
   startDate: Maybe<Scalars['Instant']>;
-  status: Maybe<Scalars['String']>;
+  status: Maybe<ProjectsDataStatusEnum>;
   title: Maybe<Scalars['String']>;
 };
 

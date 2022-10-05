@@ -99,37 +99,22 @@ describe('Project Data Provider', () => {
     describe('Parsing', () => {
       test('the project is parsed', () => {
         const project = getGraphQLProject();
-        const ProjectDataObject = parseProjectToDataObject(project);
+        const projectDataObject = parseProjectToDataObject(project);
         const expected = getProjectDataObject();
-        expect(ProjectDataObject).toEqual(expected);
+        expect(projectDataObject).toEqual(expected);
       });
-      test('invalid status', () => {
+      test('with no status', () => {
         const project = getGraphQLProject();
-        project.flatData.status = 'invalid-status';
-        expect(() =>
-          parseProjectToDataObject(project),
-        ).toThrowErrorMatchingInlineSnapshot(
-          '"Invalid status: invalid-status"',
+        project.flatData.status = null;
+        expect(() => parseProjectToDataObject(project)).toThrowError(
+          new TypeError('status is unknown'),
         );
       });
 
       describe('members', () => {
-        test('the members in project are parsed', () => {
-          const Project = getGraphQLProject();
-          Project.flatData.members = [getGraphQLProjectMember()];
-          const { members } = parseProjectToDataObject(Project);
-          expect(members).toEqual([
-            {
-              userId: '42',
-              firstName: 'Tony',
-              lastName: 'Stark',
-            },
-          ]);
-        });
-
         test('undefined members returns empty array', () => {
           const Project = getGraphQLProject();
-          Project.flatData.members = undefined!;
+          Project.flatData.members = null;
           const { members } = parseProjectToDataObject(Project);
           expect(members).toEqual([]);
         });
@@ -147,7 +132,7 @@ describe('Project Data Provider', () => {
         test('should skip the user from the result if the user property is undefined', () => {
           const Project = getGraphQLProject();
           const member = getGraphQLProjectMember();
-          member!.user = undefined!;
+          member!.user = null;
           Project.flatData.members = [member];
           const { members } = parseProjectToDataObject(Project);
           expect(members).toEqual([]);
@@ -193,47 +178,36 @@ describe('Project Data Provider', () => {
 
       describe('milestones', () => {
         test('undefined milestones returns empty array', () => {
-          const Project = getGraphQLProject();
-          Project.flatData.milestones = undefined!;
-          const { milestones } = parseProjectToDataObject(Project);
+          const project = getGraphQLProject();
+          project.flatData.milestones = null;
+          const { milestones } = parseProjectToDataObject(project);
           expect(milestones).toEqual([]);
         });
-        test('the milestones are parsed', () => {
-          const Project = getGraphQLProject();
-          Project.flatData.milestones = [getGraphQLProjectMilestone()];
-          const { milestones } = parseProjectToDataObject(Project);
-          expect(milestones).toEqual([
-            {
-              title: 'A project milestone',
-              status: 'Active',
-            },
-          ]);
-        });
         test('if present it parses the link', () => {
-          const Project = getGraphQLProject();
+          const project = getGraphQLProject();
           const milestone = getGraphQLProjectMilestone();
           const link = 'it-is-a-link';
           milestone.link = link;
-          Project.flatData.milestones = [milestone];
-          const { milestones } = parseProjectToDataObject(Project);
+          project.flatData.milestones = [milestone];
+          const { milestones } = parseProjectToDataObject(project);
           expect(milestones[0]?.link).toEqual(link);
         });
         test('if present it parses the description', () => {
-          const Project = getGraphQLProject();
+          const project = getGraphQLProject();
           const milestone = getGraphQLProjectMilestone();
           const description = 'it-is-a-description';
           milestone.description = description;
-          Project.flatData.milestones = [milestone];
-          const { milestones } = parseProjectToDataObject(Project);
+          project.flatData.milestones = [milestone];
+          const { milestones } = parseProjectToDataObject(project);
           expect(milestones[0]?.description).toEqual(description);
         });
         test('throws with invalid status', () => {
-          const Project = getGraphQLProject();
+          const project = getGraphQLProject();
           const milestone = getGraphQLProjectMilestone();
-          milestone.status = 'an-invalid-status';
-          Project.flatData.milestones = [milestone];
-          expect(() => parseProjectToDataObject(Project)).toThrowError(
-            new TypeError('Invalid status: an-invalid-status from Squidex'),
+          milestone.status = null;
+          project.flatData.milestones = [milestone];
+          expect(() => parseProjectToDataObject(project)).toThrowError(
+            new TypeError('milestone status is unknown'),
           );
         });
       });

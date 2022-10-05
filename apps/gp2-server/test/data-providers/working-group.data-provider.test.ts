@@ -122,7 +122,8 @@ describe('Working Group Data Provider', () => {
 
     test('undefined members returns empty array', () => {
       const workingGroup = getGraphQLWorkingGroup();
-      workingGroup.flatData.members = undefined!;
+
+      workingGroup.flatData.members = null;
       const { members } = parseWorkingGroupToDataObject(workingGroup);
       expect(members).toEqual([]);
     });
@@ -153,7 +154,7 @@ describe('Working Group Data Provider', () => {
     test('should skip the user from the result if the user property is undefined', () => {
       const workingGroup = getGraphQLWorkingGroup();
       const member = getGraphQLWorkingGroupMember();
-      member!.user = undefined!;
+      member!.user = null;
       workingGroup.flatData.members = [member];
       const { members } = parseWorkingGroupToDataObject(workingGroup);
       expect(members).toEqual([]);

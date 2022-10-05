@@ -1,22 +1,10 @@
 import { ListResponse } from '../common';
 
-export const projectStatus = ['Active', 'Inactive', 'Completed'] as const;
+const projectStatus = ['Active', 'Inactive', 'Completed'] as const;
 export type ProjectStatus = typeof projectStatus[number];
 
-export const isProjectStatus = (data: string | null): data is ProjectStatus =>
-  projectStatus.includes(data as ProjectStatus);
-
-export const projectMilestoneStatus = [
-  'Active',
-  'Not Started',
-  'Completed',
-] as const;
+const projectMilestoneStatus = ['Active', 'Not Started', 'Completed'] as const;
 export type ProjectMilestoneStatus = typeof projectMilestoneStatus[number];
-
-export const isProjectMilestoneStatus = (
-  data: string | null,
-): data is ProjectMilestoneStatus =>
-  projectMilestoneStatus.includes(data as ProjectMilestoneStatus);
 
 export type ProjectMember = {
   userId: string;

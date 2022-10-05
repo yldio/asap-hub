@@ -50,20 +50,15 @@ const squidexGraphqlDiscoverFlatData = (): NonNullable<
     {
       id: 'uuid-training-1',
       created: '2020-09-24T11:06:27.164Z',
-      lastModified: '2020-10-15T17:55:21Z',
-      version: 42,
       flatData: {
         title: 'Title',
         text: 'Content',
         link: 'https://hub.asap.science',
-        frequency: 'Biweekly Newsletter',
         linkText: 'ASAP Training',
-        type: 'Tutorial',
         shortText: 'Short text',
         thumbnail: [
           {
             id: 'thumbnail-uuid1',
-            thumbnailUrl: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
           },
         ],
       },

@@ -36,6 +36,15 @@ it('renders the title', () => {
   expect(getByRole('heading').tagName).toEqual('H2');
 });
 
+it('renders the state tag for a inactive group', () => {
+  const { getByText, rerender, queryByText } = render(
+    <TeamCard {...teamCardProps} inactiveSince="2022-09-30T09:00:00Z" />,
+  );
+  expect(getByText('Inactive')).toBeVisible();
+  rerender(<TeamCard {...teamCardProps} />);
+  expect(queryByText('Inactive')).not.toBeInTheDocument();
+});
+
 it('uses singular for one team member', () => {
   const { getByText } = render(
     <TeamCard {...teamCardProps} members={[member]} />,

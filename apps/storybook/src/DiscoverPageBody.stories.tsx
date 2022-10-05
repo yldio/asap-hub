@@ -100,7 +100,6 @@ const props = (): ComponentProps<typeof DiscoverPageBody> => ({
     {
       id: 'uuid-1',
       created: new Date().toISOString(),
-      type: 'Tutorial',
       title: "Coordinating different research interests into Parkinson's",
       shortText:
         'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',

@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { NewsResponse, NewsType } from '@asap-hub/model';
+import { NewsResponse, NewsType, TutorialsResponse } from '@asap-hub/model';
 import { news } from '@asap-hub/routing';
 
 import { Card, Paragraph, Headline4 } from '../atoms';
@@ -61,11 +61,8 @@ const placeholders: Record<NewsType, JSX.Element> = {
   'Working Groups': trainingPlaceholderIcon,
 };
 
-type NewsCardProps = NewsResponse;
-
-const NewsCard: React.FC<NewsCardProps> = ({
+const NewsCard: React.FC<NewsResponse | TutorialsResponse> = ({
   id,
-  type,
   title,
   thumbnail,
   text,
@@ -73,6 +70,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
   linkText,
   shortText,
   created,
+  ...rest
 }) => {
   const titleComponent = text ? (
     <LinkHeadline href={news({}).article({ articleId: id }).$} level={4}>
@@ -82,6 +80,8 @@ const NewsCard: React.FC<NewsCardProps> = ({
     <Headline4>{title}</Headline4>
   );
   const newsLink = text && news({}).article({ articleId: id }).$;
+  const type = 'type' in rest ? rest.type : 'Tutorial';
+
   const newsImage = (
     <>
       {thumbnail ? (

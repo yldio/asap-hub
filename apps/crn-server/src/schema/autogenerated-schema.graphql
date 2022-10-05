@@ -1,6 +1,7 @@
 schema {
-  query: AppQueries
-  mutation: AppMutations
+  query: ApplicationQueries
+  mutation: ApplicationMutations
+  subscription: ApplicationSubscriptions
 }
 
 "Enable Memory Caching"
@@ -10,7 +11,7 @@ directive @cache(
 ) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
 
 """The app mutations."""
-type AppMutations {
+type ApplicationMutations {
   """Change a Calendars content."""
   changeCalendarsContent(
     """The timestamp when the status should be changed."""
@@ -323,98 +324,98 @@ type AppMutations {
   deleteCalendarsContent(
     """The expected version."""
     expectedVersion: Int = -2
-    """The id of the content (usually GUID)."""
+    """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
   """Delete an Dashboard content."""
   deleteDashboardContent(
     """The expected version."""
     expectedVersion: Int = -2
-    """The id of the content (usually GUID)."""
+    """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
   """Delete an Discover ASAP content."""
   deleteDiscoverContent(
     """The expected version."""
     expectedVersion: Int = -2
-    """The id of the content (usually GUID)."""
+    """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
   """Delete an Events content."""
   deleteEventsContent(
     """The expected version."""
     expectedVersion: Int = -2
-    """The id of the content (usually GUID)."""
+    """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
   """Delete an External authors content."""
   deleteExternalAuthorsContent(
     """The expected version."""
     expectedVersion: Int = -2
-    """The id of the content (usually GUID)."""
+    """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
   """Delete an Groups content."""
   deleteGroupsContent(
     """The expected version."""
     expectedVersion: Int = -2
-    """The id of the content (usually GUID)."""
+    """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
   """Delete an Labs content."""
   deleteLabsContent(
     """The expected version."""
     expectedVersion: Int = -2
-    """The id of the content (usually GUID)."""
+    """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
   """Delete an Migrations content."""
   deleteMigrationsContent(
     """The expected version."""
     expectedVersion: Int = -2
-    """The id of the content (usually GUID)."""
+    """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
   """Delete an News content."""
   deleteNewsAndEventsContent(
     """The expected version."""
     expectedVersion: Int = -2
-    """The id of the content (usually GUID)."""
+    """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
   """Delete an Pages content."""
   deletePagesContent(
     """The expected version."""
     expectedVersion: Int = -2
-    """The id of the content (usually GUID)."""
+    """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
   """Delete an Research Outputs content."""
   deleteResearchOutputsContent(
     """The expected version."""
     expectedVersion: Int = -2
-    """The id of the content (usually GUID)."""
+    """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
   """Delete an Research Tags content."""
   deleteResearchTagsContent(
     """The expected version."""
     expectedVersion: Int = -2
-    """The id of the content (usually GUID)."""
+    """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
   """Delete an Teams content."""
   deleteTeamsContent(
     """The expected version."""
     expectedVersion: Int = -2
-    """The id of the content (usually GUID)."""
+    """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
   """Delete an Users content."""
   deleteUsersContent(
     """The expected version."""
     expectedVersion: Int = -2
-    """The id of the content (usually GUID)."""
+    """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
   """Patch an Calendars content by id."""
@@ -1036,10 +1037,10 @@ type AppMutations {
 }
 
 """The app queries."""
-type AppQueries {
+type ApplicationQueries {
   """Find an asset by id."""
   findAsset(
-    """The id of the asset (usually GUID)."""
+    """The ID of the asset (usually GUID)."""
     id: String!
   ): Asset
   """Find an Calendars content by id."""
@@ -1146,9 +1147,9 @@ type AppQueries {
     filter: String
     """Optional OData order definition."""
     orderby: String
-    """Optional number of assets to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of assets to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Asset!]!
   """Get assets and total count."""
@@ -1157,9 +1158,9 @@ type AppQueries {
     filter: String
     """Optional OData order definition."""
     orderby: String
-    """Optional number of assets to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of assets to take."""
+    """Optional number of items to take."""
     top: Int
   ): AssetResultDto!
   """Query Calendars content items."""
@@ -1170,9 +1171,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Calendars!]
   """Query Calendars content items with total count."""
@@ -1183,9 +1184,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): CalendarsResultDto
   """Query Dashboard content items."""
@@ -1196,9 +1197,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Dashboard!]
   """Query Dashboard content items with total count."""
@@ -1209,9 +1210,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): DashboardResultDto
   """Query Discover ASAP content items."""
@@ -1222,9 +1223,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Discover!]
   """Query Discover ASAP content items with total count."""
@@ -1235,9 +1236,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): DiscoverResultDto
   """Query Events content items."""
@@ -1248,9 +1249,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Events!]
   """Query Events content items with total count."""
@@ -1261,9 +1262,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): EventsResultDto
   """Query External authors content items."""
@@ -1274,9 +1275,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [ExternalAuthors!]
   """Query External authors content items with total count."""
@@ -1287,9 +1288,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): ExternalAuthorsResultDto
   """Query Groups content items."""
@@ -1300,9 +1301,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Groups!]
   """Query Groups content items with total count."""
@@ -1313,9 +1314,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): GroupsResultDto
   """Query Labs content items."""
@@ -1326,9 +1327,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Labs!]
   """Query Labs content items with total count."""
@@ -1339,9 +1340,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): LabsResultDto
   """Query Migrations content items."""
@@ -1352,9 +1353,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Migrations!]
   """Query Migrations content items with total count."""
@@ -1365,9 +1366,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): MigrationsResultDto
   """Query News content items."""
@@ -1378,9 +1379,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [NewsAndEvents!]
   """Query News content items with total count."""
@@ -1391,9 +1392,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): NewsAndEventsResultDto
   """Query Pages content items."""
@@ -1404,9 +1405,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Pages!]
   """Query Pages content items with total count."""
@@ -1417,9 +1418,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): PagesResultDto
   """Query Research Outputs content items."""
@@ -1430,9 +1431,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [ResearchOutputs!]
   """Query Research Outputs content items with total count."""
@@ -1443,9 +1444,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): ResearchOutputsResultDto
   """Query Research Tags content items."""
@@ -1456,9 +1457,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [ResearchTags!]
   """Query Research Tags content items with total count."""
@@ -1469,9 +1470,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): ResearchTagsResultDto
   """Query Teams content items."""
@@ -1482,9 +1483,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Teams!]
   """Query Teams content items with total count."""
@@ -1495,9 +1496,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): TeamsResultDto
   """Query Users content items."""
@@ -1508,9 +1509,9 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Users!]
   """Query Users content items with total count."""
@@ -1521,11 +1522,26 @@ type AppQueries {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): UsersResultDto
+}
+
+type ApplicationSubscriptions {
+  """Subscribe to asset events."""
+  assetChanges(
+    """The type of the event, e.g. 'Created' or 'Updated'."""
+    type: EnrichedAssetEventType
+  ): EnrichedAssetEvent
+  """Subscribe to content events."""
+  contentChanges(
+    """The name of the schema."""
+    schemaName: String
+    """The type of the event, e.g. 'Created' or 'Updated'."""
+    type: EnrichedContentEventType
+  ): EnrichedContentEvent
 }
 
 """An asset"""
@@ -1638,9 +1654,9 @@ type Calendars implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Events!]
   """Query Events content items with total count."""
@@ -1651,9 +1667,9 @@ type Calendars implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): EventsResultDto
   """Query Groups content items."""
@@ -1664,9 +1680,9 @@ type Calendars implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Groups!]
   """Query Groups content items with total count."""
@@ -1677,9 +1693,9 @@ type Calendars implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): GroupsResultDto
   """The status of the content."""
@@ -1859,9 +1875,9 @@ type Dashboard implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [NewsAndEvents!]
   """Query News content items with total count."""
@@ -1872,9 +1888,9 @@ type Dashboard implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): NewsAndEventsResultDto
   """Query Pages content items."""
@@ -1885,9 +1901,9 @@ type Dashboard implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Pages!]
   """Query Pages content items with total count."""
@@ -1898,9 +1914,9 @@ type Dashboard implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): PagesResultDto
   """The status of the content."""
@@ -1993,9 +2009,9 @@ type Discover implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [NewsAndEvents!]
   """Query News content items with total count."""
@@ -2006,9 +2022,9 @@ type Discover implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): NewsAndEventsResultDto
   """Query Pages content items."""
@@ -2019,9 +2035,9 @@ type Discover implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Pages!]
   """Query Pages content items with total count."""
@@ -2032,9 +2048,9 @@ type Discover implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): PagesResultDto
   """Query Teams content items."""
@@ -2045,9 +2061,9 @@ type Discover implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Teams!]
   """Query Teams content items with total count."""
@@ -2058,9 +2074,9 @@ type Discover implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): TeamsResultDto
   """Query Users content items."""
@@ -2071,9 +2087,9 @@ type Discover implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Users!]
   """Query Users content items with total count."""
@@ -2084,9 +2100,9 @@ type Discover implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): UsersResultDto
   """The status of the content."""
@@ -2210,6 +2226,109 @@ type DiscoverResultDto {
   total: Int!
 }
 
+"""An asset event"""
+type EnrichedAssetEvent {
+  """The type of the asset."""
+  assetType: AssetType!
+  """The timestamp when the object was created."""
+  created: Instant!
+  """The user who created the object."""
+  createdBy: String!
+  """The user who created the object."""
+  createdByUser: User!
+  """The hash of the file. Can be null for old files."""
+  fileHash: String!
+  """The file name of the asset."""
+  fileName: String!
+  """The size of the file in bytes."""
+  fileSize: Int!
+  """The file type (file extension) of the asset."""
+  fileType: String!
+  """The version of the file."""
+  fileVersion: Int!
+  """The ID of the object (usually GUID)."""
+  id: String!
+  """Determines if the uploaded file is an image."""
+  isImage: Boolean! @deprecated(reason: "Use 'type' field instead.")
+  """True, when the asset is not public."""
+  isProtected: Boolean!
+  """The timestamp when the object was updated the last time."""
+  lastModified: Instant!
+  """The user who updated the object the last time."""
+  lastModifiedBy: String!
+  """The user who updated the object the last time."""
+  lastModifiedByUser: User!
+  """The asset metadata."""
+  metadata(
+    """The path to the json value."""
+    path: String
+  ): JsonScalar
+  """The mime type."""
+  mimeType: String!
+  """The height of the image in pixels if the asset is an image."""
+  pixelHeight: Int @deprecated(reason: "Use 'metadata' field instead.")
+  """The width of the image in pixels if the asset is an image."""
+  pixelWidth: Int @deprecated(reason: "Use 'metadata' field instead.")
+  """The file name as slug."""
+  slug: String!
+  """The source URL of the asset."""
+  sourceUrl: String!
+  """The thumbnail URL to the asset."""
+  thumbnailUrl: String
+  """The type of the event, e.g. 'Created' or 'Updated'."""
+  type: EnrichedAssetEventType
+  """The URL to the asset."""
+  url: String!
+  """The version of the objec."""
+  version: Int!
+}
+
+enum EnrichedAssetEventType {
+  ANNOTATED
+  CREATED
+  DELETED
+  UPDATED
+}
+
+"""An content event"""
+type EnrichedContentEvent {
+  """The timestamp when the object was created."""
+  created: Instant!
+  """The user who created the object."""
+  createdBy: String!
+  """The user who created the object."""
+  createdByUser: User!
+  """The data of the content."""
+  data: JsonScalar
+  """The previous data of the content."""
+  dataOld: JsonScalar
+  """The ID of the object (usually GUID)."""
+  id: String!
+  """The timestamp when the object was updated the last time."""
+  lastModified: Instant!
+  """The user who updated the object the last time."""
+  lastModifiedBy: String!
+  """The user who updated the object the last time."""
+  lastModifiedByUser: User!
+  """The new status of the content."""
+  newStatus: String
+  """The status of the content."""
+  status: String!
+  """The type of the event, e.g. 'Created' or 'Updated'."""
+  type: EnrichedContentEventType
+  """The version of the objec."""
+  version: Int!
+}
+
+enum EnrichedContentEventType {
+  CREATED
+  DELETED
+  PUBLISHED
+  STATUS_CHANGED
+  UNPUBLISHED
+  UPDATED
+}
+
 """The result of a mutation"""
 type EntitySavedResultDto {
   """The new version of the item."""
@@ -2250,9 +2369,9 @@ type Events implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Calendars!]
   """Query Calendars content items with total count."""
@@ -2263,9 +2382,9 @@ type Events implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): CalendarsResultDto
   """Query External authors content items."""
@@ -2276,9 +2395,9 @@ type Events implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [ExternalAuthors!]
   """Query External authors content items with total count."""
@@ -2289,9 +2408,9 @@ type Events implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): ExternalAuthorsResultDto
   """Query Teams content items."""
@@ -2302,9 +2421,9 @@ type Events implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Teams!]
   """Query Teams content items with total count."""
@@ -2315,9 +2434,9 @@ type Events implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): TeamsResultDto
   """Query Users content items."""
@@ -2328,9 +2447,9 @@ type Events implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Users!]
   """Query Users content items with total count."""
@@ -2341,9 +2460,9 @@ type Events implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): UsersResultDto
   """The status of the content."""
@@ -2801,9 +2920,9 @@ type ExternalAuthors implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Events!]
   """Query Events content items with total count."""
@@ -2814,9 +2933,9 @@ type ExternalAuthors implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): EventsResultDto
   """Query Research Outputs content items."""
@@ -2827,9 +2946,9 @@ type ExternalAuthors implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [ResearchOutputs!]
   """Query Research Outputs content items with total count."""
@@ -2840,9 +2959,9 @@ type ExternalAuthors implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): ResearchOutputsResultDto
   """The status of the content."""
@@ -2938,9 +3057,9 @@ type Groups implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Calendars!]
   """Query Calendars content items with total count."""
@@ -2951,9 +3070,9 @@ type Groups implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): CalendarsResultDto
   """Query Teams content items."""
@@ -2964,9 +3083,9 @@ type Groups implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Teams!]
   """Query Teams content items with total count."""
@@ -2977,9 +3096,9 @@ type Groups implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): TeamsResultDto
   """Query Users content items."""
@@ -2990,9 +3109,9 @@ type Groups implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Users!]
   """Query Users content items with total count."""
@@ -3003,9 +3122,9 @@ type Groups implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): UsersResultDto
   """The status of the content."""
@@ -3222,9 +3341,9 @@ type Labs implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [ResearchOutputs!]
   """Query Research Outputs content items with total count."""
@@ -3235,9 +3354,9 @@ type Labs implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): ResearchOutputsResultDto
   """Query Users content items."""
@@ -3248,9 +3367,9 @@ type Labs implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Users!]
   """Query Users content items with total count."""
@@ -3261,9 +3380,9 @@ type Labs implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): UsersResultDto
   """The status of the content."""
@@ -3414,9 +3533,9 @@ type NewsAndEvents implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Dashboard!]
   """Query Dashboard content items with total count."""
@@ -3427,9 +3546,9 @@ type NewsAndEvents implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): DashboardResultDto
   """Query Discover ASAP content items."""
@@ -3440,9 +3559,9 @@ type NewsAndEvents implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Discover!]
   """Query Discover ASAP content items with total count."""
@@ -3453,9 +3572,9 @@ type NewsAndEvents implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): DiscoverResultDto
   """The status of the content."""
@@ -3654,9 +3773,9 @@ type Pages implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Dashboard!]
   """Query Dashboard content items with total count."""
@@ -3667,9 +3786,9 @@ type Pages implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): DashboardResultDto
   """Query Discover ASAP content items."""
@@ -3680,9 +3799,9 @@ type Pages implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Discover!]
   """Query Discover ASAP content items with total count."""
@@ -3693,9 +3812,9 @@ type Pages implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): DiscoverResultDto
   """The status of the content."""
@@ -3840,9 +3959,9 @@ type ResearchOutputs implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [ExternalAuthors!]
   """Query External authors content items with total count."""
@@ -3853,9 +3972,9 @@ type ResearchOutputs implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): ExternalAuthorsResultDto
   """Query Labs content items."""
@@ -3866,9 +3985,9 @@ type ResearchOutputs implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Labs!]
   """Query Labs content items with total count."""
@@ -3879,9 +3998,9 @@ type ResearchOutputs implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): LabsResultDto
   """Query Research Tags content items."""
@@ -3892,9 +4011,9 @@ type ResearchOutputs implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [ResearchTags!]
   """Query Research Tags content items with total count."""
@@ -3905,9 +4024,9 @@ type ResearchOutputs implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): ResearchTagsResultDto
   """Query Users content items."""
@@ -3918,9 +4037,9 @@ type ResearchOutputs implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Users!]
   """Query Users content items with total count."""
@@ -3931,9 +4050,9 @@ type ResearchOutputs implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): UsersResultDto
   """Query Teams content items."""
@@ -3944,9 +4063,9 @@ type ResearchOutputs implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Teams!]
   """Query Teams content items with total count."""
@@ -3957,9 +4076,9 @@ type ResearchOutputs implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): TeamsResultDto
   """The status of the content."""
@@ -4414,9 +4533,9 @@ type ResearchTags implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [ResearchOutputs!]
   """Query Research Outputs content items with total count."""
@@ -4427,9 +4546,9 @@ type ResearchTags implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): ResearchOutputsResultDto
   """The status of the content."""
@@ -4551,9 +4670,9 @@ type Teams implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [ResearchOutputs!]
   """Query Research Outputs content items with total count."""
@@ -4564,9 +4683,9 @@ type Teams implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): ResearchOutputsResultDto
   """Query Discover ASAP content items."""
@@ -4577,9 +4696,9 @@ type Teams implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Discover!]
   """Query Discover ASAP content items with total count."""
@@ -4590,9 +4709,9 @@ type Teams implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): DiscoverResultDto
   """Query Events content items."""
@@ -4603,9 +4722,9 @@ type Teams implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Events!]
   """Query Events content items with total count."""
@@ -4616,9 +4735,9 @@ type Teams implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): EventsResultDto
   """Query Groups content items."""
@@ -4629,9 +4748,9 @@ type Teams implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Groups!]
   """Query Groups content items with total count."""
@@ -4642,9 +4761,9 @@ type Teams implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): GroupsResultDto
   """Query Users content items."""
@@ -4655,9 +4774,9 @@ type Teams implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Users!]
   """Query Users content items with total count."""
@@ -4668,9 +4787,9 @@ type Teams implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): UsersResultDto
   """The status of the content."""
@@ -4878,9 +4997,9 @@ type Users implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Labs!]
   """Query Labs content items with total count."""
@@ -4891,9 +5010,9 @@ type Users implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): LabsResultDto
   """Query Teams content items."""
@@ -4904,9 +5023,9 @@ type Users implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Teams!]
   """Query Teams content items with total count."""
@@ -4917,9 +5036,9 @@ type Users implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): TeamsResultDto
   """Query Discover ASAP content items."""
@@ -4930,9 +5049,9 @@ type Users implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Discover!]
   """Query Discover ASAP content items with total count."""
@@ -4943,9 +5062,9 @@ type Users implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): DiscoverResultDto
   """Query Events content items."""
@@ -4956,9 +5075,9 @@ type Users implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Events!]
   """Query Events content items with total count."""
@@ -4969,9 +5088,9 @@ type Users implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): EventsResultDto
   """Query Groups content items."""
@@ -4982,9 +5101,9 @@ type Users implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [Groups!]
   """Query Groups content items with total count."""
@@ -4995,9 +5114,9 @@ type Users implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): GroupsResultDto
   """Query Research Outputs content items."""
@@ -5008,9 +5127,9 @@ type Users implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): [ResearchOutputs!]
   """Query Research Outputs content items with total count."""
@@ -5021,9 +5140,9 @@ type Users implements Content {
     orderby: String
     """Optional OData full text search."""
     search: String
-    """Optional number of contents to skip."""
+    """Optional number of items to skip."""
     skip: Int = 0
-    """Optional number of contents to take."""
+    """Optional number of items to take."""
     top: Int
   ): ResearchOutputsResultDto
   """The status of the content."""

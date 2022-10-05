@@ -77,7 +77,7 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
   }
 
   const prUrlRegex = new RegExp(
-    `https://(?<pr_number>[0-9]+).${configuration.APP_DOMAIN}/`,
+    `https://(?<pr_number>[0-9]+).${configuration.APP_DOMAIN}`,
   );
   const matches = prUrlRegex.exec(redirect_uri);
 

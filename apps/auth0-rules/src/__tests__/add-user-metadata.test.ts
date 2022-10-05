@@ -335,7 +335,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
           ...context,
           request: {
             query: {},
-            body: { redirect_uri: 'https://1234.hub.asap.science/' },
+            body: { redirect_uri: 'https://1234.hub.asap.science' },
           },
         },
         cb,

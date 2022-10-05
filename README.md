@@ -198,13 +198,13 @@ If you don't understand these concepts, you will need to familiarise yourself wi
 Once you've completed the steps above, you can create a new migration file with:
 
 ```
-yarn ctf-migrate create <name> -c <content_type>
+yarn workspace @asap-hub/contentful ctf-migrate create <name> -c <content_type>
 ```
 
 So if you wanted to add a `foo` field to the `bar` content type:
 
 ```
-yarn ctf-migrate create add-foo-field -c bar
+yarn workspace @asap-hub/contentful ctf-migrate create add-foo-field -c bar
 ```
 
 Note: the `content_type` is the slug, not the display name, so `externalAuthors` not `External Authors`.
@@ -216,7 +216,7 @@ Note: the `content_type` is the slug, not the display name, so `externalAuthors`
 The following command will create the migration content schema:
 
 ```
-yarn ctf-migrate init
+yarn workspace @asap-hub/contentful ctf-migrate init
 ```
 
 ### Running Migrations
@@ -224,15 +224,15 @@ yarn ctf-migrate init
 To run outstanding migrations, first do a dry run:
 
 ```
-yarn ctf-migrate up --all --dry-run
+yarn workspace @asap-hub/contentful ctf-migrate up --all --dry-run
 ```
 
 Then repeat the command without `--dry-run` if all looks good.
 
 There are also convenience methods for this:
 
-- `yarn contentful:migrate:dryrun`
-- `yarn contentful:migrate`
+- `yarn workspace @asap-hub/contentful space:migrate:crn:dryrun`
+- `yarn workspace @asap-hub/contentful space:migrate:crn`
 
 ### Rolling back a Migration
 

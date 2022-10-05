@@ -24,7 +24,8 @@ it('renders the name as a heading', () => {
 
 it('renders the tag for inactive groups', () => {
   render(<GroupProfileHeader {...props} name="My Group" active={false} />);
-  expect(screen.getByText('Inactive')).toBeVisible();
+  expect(screen.getByText('Inactive', { selector: 'span' })).toBeVisible();
+  expect(screen.getByTitle('Inactive')).toBeInTheDocument();
 });
 
 it('shows the number of teams and links to them', () => {

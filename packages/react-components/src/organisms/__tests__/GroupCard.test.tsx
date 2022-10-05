@@ -23,10 +23,11 @@ it('renders the group name linking to the group', () => {
 });
 
 it('renders the state tag for a inactive group', () => {
-  const { getByText, rerender, queryByText } = render(
+  const { getByText, getByTitle, rerender, queryByText } = render(
     <GroupCard {...props} active={false} />,
   );
-  expect(getByText('Inactive')).toBeVisible();
+  expect(getByText('Inactive', { selector: 'span' })).toBeVisible();
+  expect(getByTitle('Inactive')).toBeInTheDocument();
   rerender(<GroupCard {...props} active={true} />);
   expect(queryByText('Inactive')).not.toBeInTheDocument();
 });

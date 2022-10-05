@@ -27,6 +27,8 @@
     "build:typecheck": "tsc -b -v $(node scripts/get-composite-ts-projects.js)",
     "check:packages": "yarn install --immutable --immutable-cache",
     "clean": "rimraf \"{apps,packages}/*/{build*,*.tsbuildinfo}\" \"coverage\" \".serverless*\"",
+    "contentful:migrate:dryrun": "yarn ctf-migrate up --all --dry-run",
+    "contentful:migrate": "yarn ctf-migrate up --all",
     "export:entity": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/crn-server/tsconfig.json --files=./apps/crn-server/@types ./apps/crn-server/scripts/cli.ts export",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",

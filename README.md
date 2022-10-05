@@ -219,6 +219,11 @@ yarn ctf-migrate up --all --dry-run
 
 Then repeat the command without `--dry-run` if all looks good.
 
+There are also convenience methods for this:
+
+ - `yarn contentful:migrate:dryrun`
+ - `yarn contentful:migrate`
+
 ### Rolling back a Migration
 
 Rollbacks are per-content type, and can be used like this:

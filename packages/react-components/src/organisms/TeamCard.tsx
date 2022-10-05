@@ -3,7 +3,7 @@ import { TeamResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { Card, Anchor, Paragraph, StateTag } from '../atoms';
-import { perRem, tabletScreen } from '../pixels';
+import { perRem, mobileScreen } from '../pixels';
 import { lead } from '../colors';
 import { teamIcon, labIcon } from '../icons';
 import { LinkHeadline, TagList } from '../molecules';
@@ -18,14 +18,15 @@ const teamMemberMetaStyles = css({
 });
 const titleStyle = css({
   display: 'flex',
-  flexFlow: 'row',
-  gap: `${16 / perRem}em`,
-  alignItems: 'center',
-  marginBottom: `${4 / perRem}em`,
-  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
-    flexFlow: 'column-reverse',
-    gap: `${4 / perRem}em`,
-    alignItems: 'flex-start',
+  flexFlow: 'column-reverse',
+  gap: `${4 / perRem}em`,
+  alignItems: 'flex-start',
+
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    flexFlow: 'row',
+    gap: `${16 / perRem}em`,
+    alignItems: 'center',
+    marginBottom: `${4 / perRem}em`,
   },
 });
 const tagsContainer = css({

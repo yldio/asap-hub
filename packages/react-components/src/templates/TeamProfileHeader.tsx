@@ -17,7 +17,7 @@ import {
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { DropdownButton, TabNav } from '../molecules';
-import { mobileScreen, perRem, tabletScreen } from '../pixels';
+import { mobileScreen, perRem } from '../pixels';
 import { getCounterString } from '../utils';
 
 const MAX_MEMBER_AVATARS = 5;
@@ -30,14 +30,14 @@ const containerStyles = css({
 
 const titleStyle = css({
   display: 'flex',
-  flexFlow: 'row',
-  gap: `${15 / perRem}em`,
-  alignItems: 'center',
-  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
-    flexFlow: 'column',
-    gap: 3,
-    alignItems: 'flex-start',
-    paddingBottom: `${12 / perRem}em`,
+  flexFlow: 'column',
+  gap: 3,
+  alignItems: 'flex-start',
+  paddingBottom: `${12 / perRem}em`,
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    flexFlow: 'row',
+    gap: `${15 / perRem}em`,
+    alignItems: 'center',
   },
 });
 const contactSectionStyles = css({

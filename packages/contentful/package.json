@@ -16,6 +16,7 @@
     "schema:update:crn": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "contentful-migrate": "^0.17.0",
     "graphql-tag": "2.12.6"
   },
   "devDependencies": {

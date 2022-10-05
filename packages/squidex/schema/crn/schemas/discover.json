@@ -32,22 +32,22 @@
       },
       {
         "name": "training",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
         "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
           "fieldType": "References",
+          "editor": "List",
           "allowDuplicates": false,
           "resolveReference": false,
           "mustBePublished": false,
-          "editor": "List",
-          "schemaIds": ["news-and-events"],
-          "label": "Training",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
+          "schemaIds": ["26af2004-6afc-4d0d-a96f-cf39f9dd8fc9"],
+          "label": "Training"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
       },
       {
         "name": "workingGroups",

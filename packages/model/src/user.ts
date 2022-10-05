@@ -3,8 +3,10 @@ import { LabResponse } from './lab';
 import { TeamRole } from './team';
 
 export const userRole = ['Staff', 'Grantee', 'Guest', 'Hidden'] as const;
-
 export type Role = typeof userRole[number];
+
+export const userTag = ['CRN Member', 'Alumni Member'] as const;
+export type UserTagType = typeof userTag[number];
 
 export const userDegree = [
   'BA',
@@ -144,6 +146,7 @@ export interface UserDataObject extends Invitee {
   social?: UserSocialLinks;
   labs: LabResponse[];
   connections?: Connection[];
+  _tags?: UserTagType[];
 }
 export type ListUserDataObject = ListResponse<UserDataObject>;
 export interface UserResponse

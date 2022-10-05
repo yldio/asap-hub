@@ -1,4 +1,5 @@
 import {
+  userTag,
   ExternalAuthorResponse,
   ListResponse,
   ListUserResponse,
@@ -6,7 +7,6 @@ import {
   UserPatchRequest,
   UserAvatarPostRequest,
 } from '@asap-hub/model';
-
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { GetListOptions, createSentryHeaders } from '@asap-hub/frontend-utils';
 
@@ -34,9 +34,24 @@ export const getUsers = async (
   algoliaClient: AlgoliaSearchClient,
   { searchQuery, filters, currentPage, pageSize }: GetListOptions,
 ): Promise<ListUserResponse> => {
-  const algoliaFilters = Array.from(filters)
+  const isTagFilter = (filter: string) =>
+    (userTag as unknown as string[]).includes(filter);
+  const filterArray = Array.from(filters);
+
+  const tagFilters = filterArray
+    .filter(isTagFilter)
+    .map((filter) => `_tags: "${filter}"`)
+    .join(' OR ');
+
+  const roleFilters = filterArray
+    .filter((filter) => !isTagFilter(filter))
     .map((filter) => `teams.role:"${filter}"`)
     .join(' OR ');
+
+  const algoliaFilters =
+    tagFilters && roleFilters
+      ? `(${tagFilters}) AND (${roleFilters})`
+      : tagFilters || roleFilters;
 
   const result = await algoliaClient.search(['user'], searchQuery, {
     filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,

@@ -1,6 +1,6 @@
 import { ListResponse } from './common';
 
-export interface TutorialsResponse {
+export interface TutorialsDataObject {
   id: string;
   title: string;
   shortText?: string;
@@ -10,4 +10,6 @@ export interface TutorialsResponse {
   text?: string;
   created: string;
 }
+export type TutorialsResponse = TutorialsDataObject;
+
 export type ListTutorialsResponse = ListResponse<TutorialsResponse>;

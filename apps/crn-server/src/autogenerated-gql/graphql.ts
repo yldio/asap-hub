@@ -8715,6 +8715,28 @@ export type FetchTeamsQuery = {
   >;
 };
 
+export type TutorialsContentFragment = Pick<Tutorials, 'id' | 'created'> & {
+  flatData: Pick<
+    TutorialsFlatDataDto,
+    'title' | 'shortText' | 'text' | 'link' | 'linkText'
+  > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
+};
+
+export type FetchTutorialsQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchTutorialsQuery = {
+  findTutorialsContent: Maybe<
+    Pick<Tutorials, 'id' | 'created'> & {
+      flatData: Pick<
+        TutorialsFlatDataDto,
+        'title' | 'shortText' | 'text' | 'link' | 'linkText'
+      > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
+    }
+  >;
+};
+
 export type UsersContentFragment = Pick<
   Users,
   'id' | 'created' | 'lastModified' | 'version'
@@ -11123,6 +11145,50 @@ export const ResearchTagContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ResearchTagContentFragment, unknown>;
+export const TutorialsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TutorialsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Tutorials' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'thumbnail' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'linkText' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<TutorialsContentFragment, unknown>;
 export const UsersContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -13201,6 +13267,58 @@ export const FetchTeamsDocument = {
     ...TeamsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchTeamsQuery, FetchTeamsQueryVariables>;
+export const FetchTutorialsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchTutorials' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findTutorialsContent' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'TutorialsContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...TutorialsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchTutorialsQuery, FetchTutorialsQueryVariables>;
 export const FetchUserDocument = {
   kind: 'Document',
   definitions: [

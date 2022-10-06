@@ -58,10 +58,10 @@ describe('alumni badge', () => {
     const { getByText } = render(
       <UsersList
         max={1}
-        users={Array.from({ length: 1 }).map(() => ({
+        users={[{
           ...createUserResponse(),
           alumniSinceDate: new Date(2021, 6, 12, 14, 32).toISOString(),
-        }))}
+        }]}
       />,
     );
     expect(getByText('Alumni Badge')).toBeInTheDocument();
@@ -70,9 +70,9 @@ describe('alumni badge', () => {
     const { queryByText } = render(
       <UsersList
         max={1}
-        users={Array.from({ length: 1 }).map(() => ({
+        users={[{
           ...createUserResponse(),
-        }))}
+        }]}
       />,
     );
     expect(queryByText('Alumni Badge')).not.toBeInTheDocument();
@@ -81,10 +81,10 @@ describe('alumni badge', () => {
     const { queryByText } = render(
       <UsersList
         max={1}
-        users={Array.from({ length: 1 }).map(() => ({
+        users={[{
           id: 'external-author-1',
           displayName: 'John Doe',
-        }))}
+        }]}
       />,
     );
     expect(queryByText('Alumni Badge')).not.toBeInTheDocument();

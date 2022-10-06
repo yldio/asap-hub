@@ -6,7 +6,6 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { permissionHandler } from '../../src/middleware/permission-handler';
 import { listGroupsResponse } from '../fixtures/groups.fixtures';
-import { pageResponse } from '../fixtures/page.fixtures';
 import { getUserResponse } from '../fixtures/users.fixtures';
 import { calendarControllerMock } from '../mocks/calendar-controller.mock';
 import { dashboardControllerMock } from '../mocks/dashboard-controller.mock';
@@ -130,27 +129,31 @@ describe('Permission middleware', () => {
         userMockFactory.mockReturnValueOnce(nonOnboardedUserMock);
       });
 
-      test('Should deny access to /groups endpoint', async () => {
-        const response = await supertest(appWithMockedAuth).get('/groups');
+      test.each`
+        endpoint                   | access
+        ${'calendars'}             | ${'deny'}
+        ${'dashboard'}             | ${'deny'}
+        ${'discover'}              | ${'deny'}
+        ${'groups'}                | ${'deny'}
+        ${'labs'}                  | ${'deny'}
+        ${'news'}                  | ${'deny'}
+        ${'pages/some-other-page'} | ${'allow'}
+        ${'reminders'}             | ${'deny'}
+        ${'reminders'}             | ${'deny'}
+        ${'research-outputs'}      | ${'deny'}
+        ${'research-tags'}         | ${'deny'}
+        ${'teams'}                 | ${'deny'}
+        ${'users'}                 | ${'deny'}
+      `(
+        'Should $access access to /$endpoint endpoint',
+        async ({ endpoint, access }) => {
+          const response = await supertest(appWithMockedAuth).get(
+            `/${endpoint}`,
+          );
 
-        expect(response.status).toBe(403);
-      });
-
-      test('Should deny access to /users endpoint', async () => {
-        const response = await supertest(appWithMockedAuth).get('/users');
-
-        expect(response.status).toBe(403);
-      });
-
-      test('Should allow access to public /pages endpoint', async () => {
-        pageControllerMock.fetchByPath.mockResolvedValueOnce(pageResponse);
-
-        const response = await supertest(appWithMockedAuth).get(
-          '/pages/some-other-page',
-        );
-
-        expect(response.status).toBe(200);
-      });
+          expect(response.status).toBe(access === 'allow' ? 200 : 403);
+        },
+      );
 
       describe('User profile', () => {
         test('Should allow access to GET /users/{user_id} when the requested user is the logged-in user', async () => {

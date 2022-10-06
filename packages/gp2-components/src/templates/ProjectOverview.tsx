@@ -8,11 +8,12 @@ import {
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import ExpandableText from '../molecules/ExpandableText';
+import { ProjectMilestones } from '../organisms';
 import EmailSection from '../organisms/EmailSection';
 
 type ProjectOverviewProps = Pick<
   ProjectResponse,
-  'pmEmail' | 'leadEmail' | 'description' | 'keywords'
+  'pmEmail' | 'leadEmail' | 'description' | 'keywords' | 'milestones'
 >;
 
 const { rem } = pixels;
@@ -42,6 +43,7 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   pmEmail,
   leadEmail,
   keywords,
+  milestones,
 }) => (
   <div css={containerStyles}>
     {!!description && (
@@ -69,6 +71,9 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
         <TagList tags={keywords} />
       </Card>
     </div>
+    <Card>
+      <ProjectMilestones milestones={milestones} />
+    </Card>
   </div>
 );
 

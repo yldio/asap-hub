@@ -2,6 +2,7 @@ export * from './images';
 export * from './messages';
 export {
   NavigationHeader,
+  ProjectMilestones,
   ProjectsBody,
   UserCard,
   UsersPageBody,

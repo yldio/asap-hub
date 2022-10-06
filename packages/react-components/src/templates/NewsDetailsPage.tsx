@@ -51,7 +51,7 @@ const NewsDetailsPage: React.FC<NewsDetailsPageProps> = ({
   return (
     <div css={containerStyles}>
       <Card>
-        <Pill>{type ? type : 'Tutorial'}</Pill>
+        <Pill>{type ?? 'Tutorial'}</Pill>
         <Display styleAsHeading={3}>{title}</Display>
         {publishDateComponent}
         <div css={richTextContainer}>

@@ -580,7 +580,7 @@ __metadata:
     browser-image-compression: 1.0.17
     browserslist-useragent-regexp: 3.0.2
     cross-env: 7.0.3
-    csv-stringify: ^6.2.0
+    csv-stringify: 6.2.0
     date-fns: 2.29.3
     fs: "npm:browserify-fs@1.0.0"
     history: 4.10.1
@@ -599,7 +599,7 @@ __metadata:
     react-scripts: 5.0.1
     react-test-renderer: 17.0.2
     recoil: "patch:recoil@^0.1.2#../../patches/recoil.patch"
-    stream: "npm:stream-browserify@3"
+    stream: "npm:stream-browserify@3.0.0"
     streamsaver: 2.0.6
     typescript: 4.6.4
     use-debounce: 8.0.4
@@ -19107,7 +19107,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csv-stringify@npm:^6.2.0":
+"csv-stringify@npm:6.2.0":
   version: 6.2.0
   resolution: "csv-stringify@npm:6.2.0"
   checksum: c2fa074fbf2bcb8cea966c1bdf89d377f1f79bbd33e13092131cac511363479a4e7a923f26fe741e2ef5bad479a400c72e18ceb4b7c33e1f0a60cf33f5c31f1c
@@ -35435,7 +35435,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stream@npm:stream-browserify@3":
+"stream@npm:stream-browserify@3.0.0":
   version: 3.0.0
   resolution: "stream-browserify@npm:3.0.0"
   dependencies:

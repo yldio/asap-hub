@@ -102,9 +102,9 @@ describe('maximum users', () => {
     const { getAllByRole, getByText } = render(
       <UsersList
         max={3}
-        users={Array.from({ length: 5 }).map(() => ({
-          id: 'external-author-1',
-          displayName: 'John Doe',
+        users={Array.from({ length: 5 }).map((e, i) => ({
+          id: `external-author-${i}`,
+          displayName: `Display Name ${i}`,
         }))}
       />,
     );
@@ -115,9 +115,9 @@ describe('maximum users', () => {
     const { getAllByRole } = render(
       <UsersList
         max={3}
-        users={Array.from({ length: 3 }).map(() => ({
-          id: 'external-author-1',
-          displayName: 'John Doe',
+        users={Array.from({ length: 3 }).map((e, i) => ({
+          id: `external-author-${i}`,
+          displayName: `Display Name ${i}`,
         }))}
       />,
     );

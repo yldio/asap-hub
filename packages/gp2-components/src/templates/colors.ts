@@ -14,6 +14,5 @@ const colors = {
   warning500: color(206, 128, 26),
   warning900: color(181, 107, 11),
   error900: color(176, 10, 26),
-  success900: color(40, 121, 83),
 };
 export default colors;

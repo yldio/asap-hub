@@ -40,7 +40,7 @@ export const getUsers = async (
 
   const tagFilters = filterArray
     .filter(isTagFilter)
-    .map((filter) => `_tags: "${filter}"`)
+    .map((filter) => `_tags:"${filter}"`)
     .join(' OR ');
 
   const roleFilters = filterArray

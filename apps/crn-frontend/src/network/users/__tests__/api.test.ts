@@ -115,6 +115,26 @@ describe('getUsers', () => {
     });
   });
 
+  it('can filter the users by tag', async () => {
+    await getUsers(algoliaSearchClient, {
+      ...defaultOptions,
+      filters: new Set(['Alumni Member']),
+    });
+    expect(search).toHaveBeenCalledWith(['user'], '', {
+      filters: '_tags:"Alumni Member"',
+    });
+  });
+
+  it('can filter the users by tag and role', async () => {
+    await getUsers(algoliaSearchClient, {
+      ...defaultOptions,
+      filters: new Set(['Alumni Member', 'Project Manager']),
+    });
+    expect(search).toHaveBeenCalledWith(['user'], '', {
+      filters: '(_tags:"Alumni Member") AND (teams.role:"Project Manager")',
+    });
+  });
+
   it('returns successfully fetched users', async () => {
     const users = createListUserResponse(1);
     const transformedUsers = {

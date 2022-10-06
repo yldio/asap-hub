@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { NewsResponse, NewsType, TutorialsResponse } from '@asap-hub/model';
-import { tutorials } from '@asap-hub/routing';
+import { news, tutorials } from '@asap-hub/routing';
 
 import { Card, Paragraph, Headline4 } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
@@ -72,15 +72,19 @@ const NewsCard: React.FC<NewsResponse | TutorialsResponse> = ({
   created,
   ...rest
 }) => {
+  const type = 'type' in rest ? rest.type : 'Tutorial';
+  const href =
+    type === 'Tutorial'
+      ? tutorials({}).article({ articleId: id }).$
+      : news({}).article({ articleId: id }).$;
   const titleComponent = text ? (
-    <LinkHeadline href={tutorials({}).article({ articleId: id }).$} level={4}>
+    <LinkHeadline href={href} level={4}>
       {title}
     </LinkHeadline>
   ) : (
     <Headline4>{title}</Headline4>
   );
-  const newsLink = text && tutorials({}).article({ articleId: id }).$;
-  const type = 'type' in rest ? rest.type : 'Tutorial';
+  const newsLink = text && href;
 
   const newsImage = (
     <>

@@ -63,20 +63,32 @@ describe('News', () => {
     expect(getByRole('link').textContent).toContain('Name');
   });
 
-  it('links to detail page when text is present', () => {
-    const { rerender, getByText, queryByRole } = render(
-      <NewsCard {...newsCardProps} />,
-    );
-    expect(queryByRole('link')).not.toBeInTheDocument();
+  it.each`
+    type                | route
+    ${'News'}           | ${'news'}
+    ${'Working Groups'} | ${'news'}
+    ${undefined}        | ${'tutorials'}
+  `(
+    'links to detail page when text is present and type is $type',
+    ({ type, route }) => {
+      const { rerender, getByText, queryByRole } = render(
+        <NewsCard {...newsCardProps} />,
+      );
+      expect(queryByRole('link')).not.toBeInTheDocument();
 
-    rerender(
-      <NewsCard
-        {...newsCardProps}
-        text={'<h1>title</h1>'}
-        title="findThis"
-        id="news-1"
-      />,
-    );
-    expect(getByText('findThis')).toHaveAttribute('href', '/news/news-1');
-  });
+      const { type: _type, ...newsCardPropsWithoutType } = newsCardProps;
+      const mockType = type ? { type } : {};
+
+      rerender(
+        <NewsCard
+          {...newsCardPropsWithoutType}
+          {...mockType}
+          text={'<h1>title</h1>'}
+          title="findThis"
+          id="news-1"
+        />,
+      );
+      expect(getByText('findThis')).toHaveAttribute('href', `/${route}/news-1`);
+    },
+  );
 });

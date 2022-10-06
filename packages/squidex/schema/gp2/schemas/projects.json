@@ -115,7 +115,7 @@
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
+          "createEnum": true,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Status",
@@ -272,6 +272,104 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": true
         }
+      },
+      {
+        "name": "milestones",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "Project Milestones",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        },
+        "nested": [
+          {
+            "name": "title",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "Title",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
+            }
+          },
+          {
+            "name": "description",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "Description",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
+            }
+          },
+          {
+            "name": "status",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "defaultValue": "Not Started",
+              "allowedValues": ["Not_Started", "Active", "Completed"],
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": true,
+              "contentType": "Unspecified",
+              "editor": "Dropdown",
+              "label": "Status",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          },
+          {
+            "name": "link",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "pattern": "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+              "patternMessage": "URL must start with http:// or https://",
+              "isUnique": true,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "External Link",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          }
+        ]
       }
     ],
     "previewUrls": {},

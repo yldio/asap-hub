@@ -1162,6 +1162,7 @@ type ProjectsDataDto {
   keywords: ProjectsDataKeywordsDto
   leadEmail: ProjectsDataLeadEmailDto
   members: ProjectsDataMembersDto
+  milestones: ProjectsDataMilestonesDto
   pmEmail: ProjectsDataPmEmailDto
   projectProposal: ProjectsDataProjectProposalDto
   startDate: ProjectsDataStartDateDto
@@ -1186,6 +1187,7 @@ input ProjectsDataInputDto {
   keywords: ProjectsDataKeywordsInputDto
   leadEmail: ProjectsDataLeadEmailInputDto
   members: ProjectsDataMembersInputDto
+  milestones: ProjectsDataMilestonesInputDto
   pmEmail: ProjectsDataPmEmailInputDto
   projectProposal: ProjectsDataProjectProposalInputDto
   startDate: ProjectsDataStartDateInputDto
@@ -1233,6 +1235,41 @@ input ProjectsDataMembersInputDto {
   iv: [ProjectsDataMembersChildInputDto!]
 }
 
+"""The structure of the Project Milestones nested schema."""
+type ProjectsDataMilestonesChildDto {
+  description: String
+  link: String
+  status: ProjectsDataMilestonesStatusEnum
+  title: String
+}
+
+"""The structure of the Project Milestones nested schema."""
+input ProjectsDataMilestonesChildInputDto {
+  description: String
+  link: String
+  status: ProjectsDataMilestonesStatusEnum
+  title: String
+}
+
+"""The structure of the Project Milestones field of the Projects content type."""
+type ProjectsDataMilestonesDto {
+  iv: [ProjectsDataMilestonesChildDto!]
+}
+
+"""The structure of the Project Milestones field of the Projects content input type."""
+input ProjectsDataMilestonesInputDto {
+  iv: [ProjectsDataMilestonesChildInputDto!]
+}
+
+enum ProjectsDataMilestonesStatusEnum {
+  """Active"""
+  Active
+  """Completed"""
+  Completed
+  """Not_Started"""
+  Not_Started
+}
+
 """The structure of the PM Email field of the Projects content type."""
 type ProjectsDataPmEmailDto {
   iv: String
@@ -1267,12 +1304,21 @@ input ProjectsDataStartDateInputDto {
 
 """The structure of the Status field of the Projects content type."""
 type ProjectsDataStatusDto {
-  iv: String
+  iv: ProjectsDataStatusEnum
+}
+
+enum ProjectsDataStatusEnum {
+  """Active"""
+  Active
+  """Completed"""
+  Completed
+  """Inactive"""
+  Inactive
 }
 
 """The structure of the Status field of the Projects content input type."""
 input ProjectsDataStatusInputDto {
-  iv: String
+  iv: ProjectsDataStatusEnum
 }
 
 """The structure of the Title field of the Projects content type."""
@@ -1292,11 +1338,12 @@ type ProjectsFlatDataDto {
   keywords: [String!]
   leadEmail: String
   members: [ProjectsDataMembersChildDto!]
+  milestones: [ProjectsDataMilestonesChildDto!]
   pmEmail: String
   """External link for a project proposal"""
   projectProposal: String
   startDate: Instant
-  status: String
+  status: ProjectsDataStatusEnum
   title: String
 }
 

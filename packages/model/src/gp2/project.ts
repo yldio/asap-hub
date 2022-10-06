@@ -1,10 +1,10 @@
 import { ListResponse } from '../common';
 
-export const projectStatus = ['Active', 'Inactive', 'Completed'] as const;
+const projectStatus = ['Active', 'Inactive', 'Completed'] as const;
 export type ProjectStatus = typeof projectStatus[number];
 
-export const isProjectStatus = (data: string | null): data is ProjectStatus =>
-  projectStatus.includes(data as ProjectStatus);
+const projectMilestoneStatus = ['Active', 'Not Started', 'Completed'] as const;
+export type ProjectMilestoneStatus = typeof projectMilestoneStatus[number];
 
 export type ProjectMember = {
   userId: string;
@@ -63,6 +63,13 @@ export const isProjectKeyword = (
   data: string | null,
 ): data is ProjectKeywords => projectKeywords.includes(data as ProjectKeywords);
 
+export type ProjectMilestone = {
+  description?: string;
+  link?: string;
+  status: ProjectMilestoneStatus;
+  title: string;
+};
+
 export type ProjectDataObject = {
   description?: string;
   endDate?: string;
@@ -70,6 +77,7 @@ export type ProjectDataObject = {
   keywords: ProjectKeywords[];
   leadEmail?: string;
   members: ProjectMember[];
+  milestones: ProjectMilestone[];
   pmEmail?: string;
   projectProposalUrl?: string;
   startDate: string;

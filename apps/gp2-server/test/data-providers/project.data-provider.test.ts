@@ -6,6 +6,7 @@ import {
 import {
   getGraphQLProject,
   getGraphQLProjectMember,
+  getGraphQLProjectMilestone,
   getListProjectDataObject,
   getProjectDataObject,
   getSquidexProjectGraphqlResponse,
@@ -98,97 +99,117 @@ describe('Project Data Provider', () => {
     describe('Parsing', () => {
       test('the project is parsed', () => {
         const project = getGraphQLProject();
-        const ProjectDataObject = parseProjectToDataObject(project);
+        const projectDataObject = parseProjectToDataObject(project);
         const expected = getProjectDataObject();
-        expect(ProjectDataObject).toEqual(expected);
+        expect(projectDataObject).toEqual(expected);
       });
-      test('invalid status', () => {
+      test('with no status', () => {
         const project = getGraphQLProject();
-        project.flatData.status = 'invalid-status';
-        expect(() =>
-          parseProjectToDataObject(project),
-        ).toThrowErrorMatchingInlineSnapshot(
-          '"Invalid status: invalid-status"',
+        project.flatData.status = null;
+        expect(() => parseProjectToDataObject(project)).toThrowError(
+          new TypeError('status is unknown'),
         );
       });
 
-      test('the members in project are parsed', () => {
-        const project = getGraphQLProject();
-        project.flatData.members = [getGraphQLProjectMember()];
-        const { members } = parseProjectToDataObject(project);
-        expect(members).toEqual([
-          {
-            userId: '42',
-            firstName: 'Tony',
-            lastName: 'Stark',
-          },
-        ]);
+      describe('members', () => {
+        test('undefined members returns empty array', () => {
+          const Project = getGraphQLProject();
+          Project.flatData.members = null;
+          const { members } = parseProjectToDataObject(Project);
+          expect(members).toEqual([]);
+        });
+        test('avatar urls are added if available', () => {
+          const Project = getGraphQLProject();
+          const member = getGraphQLProjectMember();
+          member!.user![0]!.flatData.avatar = [{ id: 'avatar-id' }];
+          Project.flatData.members = [member];
+          const { members } = parseProjectToDataObject(Project);
+          expect(members[0]?.avatarUrl).toEqual(
+            `${baseUrl}/api/assets/${appName}/avatar-id`,
+          );
+        });
+
+        test('should skip the user from the result if the user property is undefined', () => {
+          const Project = getGraphQLProject();
+          const member = getGraphQLProjectMember();
+          member!.user = null;
+          Project.flatData.members = [member];
+          const { members } = parseProjectToDataObject(Project);
+          expect(members).toEqual([]);
+        });
+        test('pm emails are added if available', () => {
+          const email = 'tony@starkenterprises.com';
+          const project = getGraphQLProject();
+          project.flatData.pmEmail = email;
+          const { pmEmail } = parseProjectToDataObject(project);
+          expect(pmEmail).toEqual(email);
+        });
+
+        test('lead emails are added if available', () => {
+          const email = 'tony@starkenterprises.com';
+          const project = getGraphQLProject();
+          project.flatData.leadEmail = email;
+          const { leadEmail } = parseProjectToDataObject(project);
+          expect(leadEmail).toEqual(email);
+        });
+
+        test('description is added if available', () => {
+          const expectedDescription = 'this is a description';
+          const project = getGraphQLProject();
+          project.flatData.description = expectedDescription;
+          const { description } = parseProjectToDataObject(project);
+          expect(description).toEqual(expectedDescription);
+        });
+        test('keywords are added', () => {
+          const expectedKeywords = ['Outreach'];
+          const project = getGraphQLProject();
+          project.flatData.keywords = expectedKeywords;
+          const { keywords } = parseProjectToDataObject(project);
+          expect(keywords).toEqual(expectedKeywords);
+        });
+
+        test('keywords are valid', () => {
+          const expectedKeywords = ['invalid-keyword'];
+          const project = getGraphQLProject();
+          project.flatData.keywords = expectedKeywords;
+          expect(() => parseProjectToDataObject(project)).toThrow();
+        });
       });
 
-      test('undefined members returns empty array', () => {
-        const project = getGraphQLProject();
-        project.flatData.members = undefined!;
-        const { members } = parseProjectToDataObject(project);
-        expect(members).toEqual([]);
-      });
-
-      test('avatar urls are added if available', () => {
-        const project = getGraphQLProject();
-        const member = getGraphQLProjectMember();
-        member!.user![0]!.flatData.avatar = [{ id: 'avatar-id' }];
-        project.flatData.members = [member];
-        const { members } = parseProjectToDataObject(project);
-        expect(members[0]?.avatarUrl).toEqual(
-          `${baseUrl}/api/assets/${appName}/avatar-id`,
-        );
-      });
-
-      test('should skip the user from the result if the user property is undefined', () => {
-        const project = getGraphQLProject();
-        const member = getGraphQLProjectMember();
-        member!.user = undefined!;
-        project.flatData.members = [member];
-        const { members } = parseProjectToDataObject(project);
-        expect(members).toEqual([]);
-      });
-
-      test('pm emails are added if available', () => {
-        const email = 'tony@starkenterprises.com';
-        const project = getGraphQLProject();
-        project.flatData.pmEmail = email;
-        const { pmEmail } = parseProjectToDataObject(project);
-        expect(pmEmail).toEqual(email);
-      });
-
-      test('lead emails are added if available', () => {
-        const email = 'tony@starkenterprises.com';
-        const project = getGraphQLProject();
-        project.flatData.leadEmail = email;
-        const { leadEmail } = parseProjectToDataObject(project);
-        expect(leadEmail).toEqual(email);
-      });
-
-      test('description is added if available', () => {
-        const expectedDescription = 'this is a description';
-        const project = getGraphQLProject();
-        project.flatData.description = expectedDescription;
-        const { description } = parseProjectToDataObject(project);
-        expect(description).toEqual(expectedDescription);
-      });
-
-      test('keywords are added', () => {
-        const expectedKeywords = ['Outreach'];
-        const project = getGraphQLProject();
-        project.flatData.keywords = expectedKeywords;
-        const { keywords } = parseProjectToDataObject(project);
-        expect(keywords).toEqual(expectedKeywords);
-      });
-
-      test('keywords are valid', () => {
-        const expectedKeywords = ['invalid-keyword'];
-        const project = getGraphQLProject();
-        project.flatData.keywords = expectedKeywords;
-        expect(() => parseProjectToDataObject(project)).toThrow();
+      describe('milestones', () => {
+        test('undefined milestones returns empty array', () => {
+          const project = getGraphQLProject();
+          project.flatData.milestones = null;
+          const { milestones } = parseProjectToDataObject(project);
+          expect(milestones).toEqual([]);
+        });
+        test('if present it parses the link', () => {
+          const project = getGraphQLProject();
+          const milestone = getGraphQLProjectMilestone();
+          const link = 'it-is-a-link';
+          milestone.link = link;
+          project.flatData.milestones = [milestone];
+          const { milestones } = parseProjectToDataObject(project);
+          expect(milestones[0]?.link).toEqual(link);
+        });
+        test('if present it parses the description', () => {
+          const project = getGraphQLProject();
+          const milestone = getGraphQLProjectMilestone();
+          const description = 'it-is-a-description';
+          milestone.description = description;
+          project.flatData.milestones = [milestone];
+          const { milestones } = parseProjectToDataObject(project);
+          expect(milestones[0]?.description).toEqual(description);
+        });
+        test('throws with invalid status', () => {
+          const project = getGraphQLProject();
+          const milestone = getGraphQLProjectMilestone();
+          milestone.status = null;
+          project.flatData.milestones = [milestone];
+          expect(() => parseProjectToDataObject(project)).toThrowError(
+            new TypeError('milestone status is unknown'),
+          );
+        });
       });
     });
   });

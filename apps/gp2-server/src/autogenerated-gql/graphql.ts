@@ -1145,6 +1145,7 @@ export type ProjectsDataDto = {
   keywords: Maybe<ProjectsDataKeywordsDto>;
   leadEmail: Maybe<ProjectsDataLeadEmailDto>;
   members: Maybe<ProjectsDataMembersDto>;
+  milestones: Maybe<ProjectsDataMilestonesDto>;
   pmEmail: Maybe<ProjectsDataPmEmailDto>;
   projectProposal: Maybe<ProjectsDataProjectProposalDto>;
   startDate: Maybe<ProjectsDataStartDateDto>;
@@ -1169,6 +1170,7 @@ export type ProjectsDataInputDto = {
   keywords: InputMaybe<ProjectsDataKeywordsInputDto>;
   leadEmail: InputMaybe<ProjectsDataLeadEmailInputDto>;
   members: InputMaybe<ProjectsDataMembersInputDto>;
+  milestones: InputMaybe<ProjectsDataMilestonesInputDto>;
   pmEmail: InputMaybe<ProjectsDataPmEmailInputDto>;
   projectProposal: InputMaybe<ProjectsDataProjectProposalInputDto>;
   startDate: InputMaybe<ProjectsDataStartDateInputDto>;
@@ -1216,6 +1218,41 @@ export type ProjectsDataMembersInputDto = {
   iv: InputMaybe<Array<ProjectsDataMembersChildInputDto>>;
 };
 
+/** The structure of the Project Milestones nested schema. */
+export type ProjectsDataMilestonesChildDto = {
+  description: Maybe<Scalars['String']>;
+  link: Maybe<Scalars['String']>;
+  status: Maybe<ProjectsDataMilestonesStatusEnum>;
+  title: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Project Milestones nested schema. */
+export type ProjectsDataMilestonesChildInputDto = {
+  description: InputMaybe<Scalars['String']>;
+  link: InputMaybe<Scalars['String']>;
+  status: InputMaybe<ProjectsDataMilestonesStatusEnum>;
+  title: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Project Milestones field of the Projects content type. */
+export type ProjectsDataMilestonesDto = {
+  iv: Maybe<Array<ProjectsDataMilestonesChildDto>>;
+};
+
+/** The structure of the Project Milestones field of the Projects content input type. */
+export type ProjectsDataMilestonesInputDto = {
+  iv: InputMaybe<Array<ProjectsDataMilestonesChildInputDto>>;
+};
+
+export enum ProjectsDataMilestonesStatusEnum {
+  /** Active */
+  Active = 'Active',
+  /** Completed */
+  Completed = 'Completed',
+  /** Not_Started */
+  NotStarted = 'Not_Started',
+}
+
 /** The structure of the PM Email field of the Projects content type. */
 export type ProjectsDataPmEmailDto = {
   iv: Maybe<Scalars['String']>;
@@ -1250,12 +1287,21 @@ export type ProjectsDataStartDateInputDto = {
 
 /** The structure of the Status field of the Projects content type. */
 export type ProjectsDataStatusDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: Maybe<ProjectsDataStatusEnum>;
 };
+
+export enum ProjectsDataStatusEnum {
+  /** Active */
+  Active = 'Active',
+  /** Completed */
+  Completed = 'Completed',
+  /** Inactive */
+  Inactive = 'Inactive',
+}
 
 /** The structure of the Status field of the Projects content input type. */
 export type ProjectsDataStatusInputDto = {
-  iv: InputMaybe<Scalars['String']>;
+  iv: InputMaybe<ProjectsDataStatusEnum>;
 };
 
 /** The structure of the Title field of the Projects content type. */
@@ -1275,11 +1321,12 @@ export type ProjectsFlatDataDto = {
   keywords: Maybe<Array<Scalars['String']>>;
   leadEmail: Maybe<Scalars['String']>;
   members: Maybe<Array<ProjectsDataMembersChildDto>>;
+  milestones: Maybe<Array<ProjectsDataMilestonesChildDto>>;
   pmEmail: Maybe<Scalars['String']>;
   /** External link for a project proposal */
   projectProposal: Maybe<Scalars['String']>;
   startDate: Maybe<Scalars['Instant']>;
-  status: Maybe<Scalars['String']>;
+  status: Maybe<ProjectsDataStatusEnum>;
   title: Maybe<Scalars['String']>;
 };
 
@@ -1972,6 +2019,14 @@ export type ProjectContentFragment = Pick<Projects, 'id'> & {
         >;
       }>
     >;
+    milestones: Maybe<
+      Array<
+        Pick<
+          ProjectsDataMilestonesChildDto,
+          'title' | 'description' | 'status' | 'link'
+        >
+      >
+    >;
   };
 };
 
@@ -2006,6 +2061,14 @@ export type FetchProjectQuery = {
               >
             >;
           }>
+        >;
+        milestones: Maybe<
+          Array<
+            Pick<
+              ProjectsDataMilestonesChildDto,
+              'title' | 'description' | 'status' | 'link'
+            >
+          >
         >;
       };
     }
@@ -2048,6 +2111,14 @@ export type FetchProjectsQuery = {
                     >
                   >;
                 }>
+              >;
+              milestones: Maybe<
+                Array<
+                  Pick<
+                    ProjectsDataMilestonesChildDto,
+                    'title' | 'description' | 'status' | 'link'
+                  >
+                >
               >;
             };
           }
@@ -2610,6 +2681,25 @@ export const ProjectContentFragmentDoc = {
                           ],
                         },
                       },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'milestones' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'link' } },
                     ],
                   },
                 },

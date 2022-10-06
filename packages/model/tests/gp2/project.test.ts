@@ -1,21 +1,6 @@
-import {
-  isProjectKeyword,
-  isProjectStatus,
-  projectKeywords,
-  projectStatus,
-} from '../../src/gp2';
+import { isProjectKeyword, projectKeywords } from '../../src/gp2';
 
 describe('Project', () => {
-  describe('status', () => {
-    it.each(projectStatus)('should recognize correct status - %s', (status) => {
-      expect(isProjectStatus(status)).toEqual(true);
-    });
-
-    it('should not recognize incorrect status', () => {
-      expect(isProjectStatus('not-a-status')).toEqual(false);
-    });
-  });
-
   describe('Keywords', () => {
     it.each(projectKeywords)(
       'should recognize correct keyword - %s',

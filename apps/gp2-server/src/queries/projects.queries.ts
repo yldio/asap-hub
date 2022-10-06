@@ -28,6 +28,12 @@ export const projectContentQueryFragment = gql`
           }
         }
       }
+      milestones {
+        title
+        description
+        status
+        link
+      }
     }
   }
 `;

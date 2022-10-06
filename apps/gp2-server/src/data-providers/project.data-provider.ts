@@ -58,9 +58,11 @@ export class ProjectSquidexDataProvider implements ProjectDataProvider {
 
 export type GraphQLProject = NonNullable<
   NonNullable<
-    NonNullable<FetchProjectsQuery>['queryProjectsContentsWithTotal']
-  >['items']
->[number];
+    NonNullable<
+      NonNullable<FetchProjectsQuery>['queryProjectsContentsWithTotal']
+    >['items']
+  >[number]
+>;
 
 export type GraphQLProjectMember = NonNullable<
   NonNullable<GraphQLProject['flatData']>['members']
@@ -69,6 +71,10 @@ export type GraphQLProjectMember = NonNullable<
 type GraphQLProjectMemberUser = NonNullable<
   NonNullable<GraphQLProjectMember>['user']
 >[number];
+
+export type GraphQLProjectMilestone = NonNullable<
+  NonNullable<NonNullable<GraphQLProject['flatData']>['milestones']>[number]
+>;
 
 const parseProjectMembers = (user: GraphQLProjectMemberUser) => {
   const flatAvatar = user.flatData.avatar || [];
@@ -88,8 +94,8 @@ export function parseProjectToDataObject({
   id,
   flatData: project,
 }: GraphQLProject): gp2.ProjectDataObject {
-  if (!gp2.isProjectStatus(project.status)) {
-    throw new Error(`Invalid status: ${project.status}`);
+  if (!project.status) {
+    throw new TypeError('status is unknown');
   }
   const members =
     project.members?.reduce(
@@ -107,6 +113,21 @@ export function parseProjectToDataObject({
   if (project.keywords && !project.keywords.every(gp2.isProjectKeyword)) {
     throw new TypeError('Invalid keyword received from Squidex');
   }
+  const milestones =
+    project.milestones?.map((milestone: GraphQLProjectMilestone) => {
+      if (!milestone.status) {
+        throw new TypeError('milestone status is unknown');
+      }
+      const status: gp2.ProjectMilestoneStatus =
+        milestone.status === 'Not_Started' ? 'Not Started' : milestone.status;
+
+      return {
+        title: milestone.title || '',
+        status,
+        link: milestone.link || undefined,
+        description: milestone.description || undefined,
+      };
+    }) || [];
 
   return {
     id,
@@ -120,5 +141,6 @@ export function parseProjectToDataObject({
     description: project.description || undefined,
     members,
     keywords: project.keywords || [],
+    milestones,
   };
 }

@@ -58,10 +58,12 @@ describe('alumni badge', () => {
     const { getByText } = render(
       <UsersList
         max={1}
-        users={[{
-          ...createUserResponse(),
-          alumniSinceDate: new Date(2021, 6, 12, 14, 32).toISOString(),
-        }]}
+        users={[
+          {
+            ...createUserResponse(),
+            alumniSinceDate: new Date(2021, 6, 12, 14, 32).toISOString(),
+          },
+        ]}
       />,
     );
     expect(getByText('Alumni Badge')).toBeInTheDocument();
@@ -70,9 +72,11 @@ describe('alumni badge', () => {
     const { queryByText } = render(
       <UsersList
         max={1}
-        users={[{
-          ...createUserResponse(),
-        }]}
+        users={[
+          {
+            ...createUserResponse(),
+          },
+        ]}
       />,
     );
     expect(queryByText('Alumni Badge')).not.toBeInTheDocument();
@@ -81,10 +85,12 @@ describe('alumni badge', () => {
     const { queryByText } = render(
       <UsersList
         max={1}
-        users={[{
-          id: 'external-author-1',
-          displayName: 'John Doe',
-        }]}
+        users={[
+          {
+            id: 'external-author-1',
+            displayName: 'John Doe',
+          },
+        ]}
       />,
     );
     expect(queryByText('Alumni Badge')).not.toBeInTheDocument();

@@ -19,6 +19,7 @@ import { getSquidexGraphqlLab } from '../fixtures/labs.fixtures';
 import { getSquidexGraphqlResearchOutput } from '../fixtures/research-output.fixtures';
 import { getSquidexGraphqlResearchTags } from '../fixtures/research-tag.fixtures';
 import { getSquidexGraphqlTeam } from '../fixtures/teams.fixtures';
+import { getSquidexGraphqlTutorial } from '../fixtures/tutorials.fixtures';
 import { getGraphQLUser } from '../fixtures/users.fixtures';
 
 export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
@@ -49,6 +50,8 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     UsersResultDto: resultDto,
     Teams: () => getSquidexGraphqlTeam({}),
     TeamsResultDto: resultDto,
+    Tutorials: () => getSquidexGraphqlTutorial(),
+    TutorialsResultDto: resultDto,
     Discover: () => getSquidexGraphqlDiscover(),
     DiscoveryResultDto: resultDto,
     Dashboard: () => getSquidexGraphqlDashboard(),

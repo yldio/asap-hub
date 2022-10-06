@@ -2,7 +2,7 @@ import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { atom, atomFamily, selectorFamily, useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
-import { getUsers } from './api';
+import { getUser, getUsers } from './api';
 
 export const usersState = selectorFamily<gp2.ListUserResponse, GetListOptions>({
   key: 'usersState',
@@ -24,5 +24,23 @@ export const refreshUserState = atomFamily<number, string>({
   default: 0,
 });
 
+const fetchUserState = selectorFamily<gp2.UserResponse | undefined, string>({
+  key: 'fetchUser',
+  get:
+    (id) =>
+    async ({ get }) => {
+      get(refreshUserState(id));
+      const authorization = get(authorizationState);
+      return getUser(id, authorization);
+    },
+});
+
+const userState = atomFamily<gp2.UserResponse | undefined, string>({
+  key: 'user',
+  default: fetchUserState,
+});
+
 export const useUsersState = (options: GetListOptions) =>
   useRecoilValue(usersState(options));
+
+export const useUserById = (id: string) => useRecoilValue(userState(id));

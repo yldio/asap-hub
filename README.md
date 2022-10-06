@@ -178,6 +178,71 @@ The down function is triggered by `asap-hub-{env}-rollbackMigrations`
 
 - Run `yarn test:integration` to see the tests running locally.
 
+## Contentful Migrations
+
+In order to support the migration from Squidex to Contentful, we've set up a migration system which allows us to track our changes on a per-content type basis, and preserve the history. This is done using [contentful-migrate](https://github.com/deluan/contentful-migrate), a thin third-party wrapper around the official [contentful-migration](https://github.com/contentful/contentful-migration) tool.
+
+### Environment Setup
+
+There are four variables which you will need to set in `.env`:
+
+- `CONTENTFUL_SPACE_ID` is the Contentful Space which migrations should be run against (the default in `.env.example` is the ASAP-HUB Space);
+- `CONTENTFUL_ENV_ID` is the Contentful Environment on which to run migrations;
+- `CONTENTFUL_MANAGEMENT_ACCESS_TOKEN` is your access token for Contentful, you can create one in the Contentful dashboard under Account Settings > Tokens > Generate Personal Token; and
+
+If you don't understand these concepts, you will need to familiarise yourself with the [Contentful documentation](https://contentful.com/developers/docs) before writing migrations.
+
+### Creating a New Migration
+
+Once you've completed the steps above, you can create a new migration file with:
+
+```
+yarn workspace @asap-hub/contentful ctf-migrate create <name> -c <content_type>
+```
+
+So if you wanted to add a `foo` field to the `bar` content type:
+
+```
+yarn workspace @asap-hub/contentful ctf-migrate create add-foo-field -c bar
+```
+
+Note: the `content_type` is the slug, not the display name, so `externalAuthors` not `External Authors`.
+
+### Initiating an Environment
+
+_Note: This is not something you will need to do regularly, I have documented it for the rare case where you are creating a new environment from scratch and not cloning one which is already using migrations._
+
+The following command will create the migration content schema:
+
+```
+yarn workspace @asap-hub/contentful ctf-migrate init
+```
+
+### Running Migrations
+
+To run outstanding migrations, first do a dry run:
+
+```
+yarn workspace @asap-hub/contentful ctf-migrate up --all --dry-run
+```
+
+Then repeat the command without `--dry-run` if all looks good.
+
+There are also convenience methods for this:
+
+- `yarn workspace @asap-hub/contentful space:migrate:crn:dryrun`
+- `yarn workspace @asap-hub/contentful space:migrate:crn`
+
+### Rolling back a Migration
+
+Rollbacks are per-content type, and can be used like this:
+
+```
+yarn ctf-migrate down -c <content_type> --dry-run
+```
+
+Then repeat the command without `--dry-run` if all looks good.
+
 ## Docker Images
 
 ### Image name

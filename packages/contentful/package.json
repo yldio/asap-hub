@@ -11,11 +11,12 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "space:export:crn": "contentful space export --skip-content=true --space-id=$CONTENTFUL_SPACE_ID --environment-id=$CONTENTFUL_ENVIRONMENT --content-file=./schema/crn-schema.json",
-    "space:import:crn": "contentful space import --content-model-only=true --space-id=$CONTENTFUL_SPACE_ID --environment-id=$CONTENTFUL_ENVIRONMENT --content-file=./schema/crn-schema.json",
+    "space:migrate:crn": "yarn ctf-migrate up --all",
+    "space:migrate:crn:dryrun": "yarn ctf-migrate up --all --dry-run",
     "schema:update:crn": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "contentful-migrate": "^0.17.0",
     "graphql-tag": "2.12.6"
   },
   "devDependencies": {

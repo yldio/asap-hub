@@ -1,22 +1,5 @@
 import { TutorialsResponse } from '@asap-hub/model';
-// import { GetListOptions } from '@asap-hub/frontend-utils';
 import { API_BASE_URL } from '../../config';
-// import createListApiUrl from '../CreateListApiUrl';
-
-// export const getNews = async (
-//   options: GetListOptions,
-//   authorization: string,
-// ): Promise<ListNewsResponse> => {
-//   const resp = await fetch(createListApiUrl('news', options).toString(), {
-//     headers: { authorization },
-//   });
-//   if (!resp.ok) {
-//     throw new Error(
-//       `Failed to fetch the news. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-//     );
-//   }
-//   return resp.json();
-// };
 
 export const getTutorialById = async (
   id: string,

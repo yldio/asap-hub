@@ -12,4 +12,5 @@ export * from './reminder';
 export * from './research-outputs';
 export * from './research-tags';
 export * from './teams';
+export * from './tutorials';
 export * from './users';

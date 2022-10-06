@@ -210,7 +210,7 @@ Note: the `content_type` is the slug, not the display name, so `externalAuthors`
 
 ### Initiating an Environment
 
-*Note: This is not something you will need to do regularly, I have documented it for the rare case where you are creating a new environment from scratch and not cloning one which is already using migrations.*
+_Note: This is not something you will need to do regularly, I have documented it for the rare case where you are creating a new environment from scratch and not cloning one which is already using migrations._
 
 The following command will create the migration content schema:
 

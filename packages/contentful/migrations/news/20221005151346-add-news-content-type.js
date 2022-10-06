@@ -2,10 +2,10 @@ module.exports.description = 'Adds content type for news.';
 
 module.exports.up = (migration) => {
   const news = migration
-        .createContentType('news')
-        .name('News')
-        .displayField('id')
-        .description('ASAP Hub News');
+    .createContentType('news')
+    .name('News')
+    .displayField('id')
+    .description('ASAP Hub News');
 
   news.createField('id').name('ID').type('Symbol');
 

@@ -4,7 +4,6 @@ export { default as DashboardPageBody } from './DashboardPageBody';
 export { default as Layout } from './Layout';
 export { default as ProjectOverview } from './ProjectOverview';
 export { default as ProjectDetailPage } from './ProjectDetailPage';
-export { default as ProjectOverview } from './ProjectOverview';
 export { default as UserDetailPage } from './UserDetailPage';
 export { default as ProjectsPage } from './ProjectsPage';
 export { default as Theme } from './Theme';

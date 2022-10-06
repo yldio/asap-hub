@@ -1,5 +1,5 @@
 import {
-  userTag,
+  userTags,
   ExternalAuthorResponse,
   ListResponse,
   ListUserResponse,
@@ -35,7 +35,7 @@ export const getUsers = async (
   { searchQuery, filters, currentPage, pageSize }: GetListOptions,
 ): Promise<ListUserResponse> => {
   const isTagFilter = (filter: string) =>
-    (userTag as unknown as string[]).includes(filter);
+    (userTags as unknown as string[]).includes(filter);
   const filterArray = Array.from(filters);
 
   const tagFilters = filterArray

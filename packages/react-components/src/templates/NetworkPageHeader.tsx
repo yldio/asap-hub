@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { TeamRole, Role, UserTagType } from '@asap-hub/model';
+import { TeamRole, Role, UserTag } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { Display, Paragraph, TabLink } from '../atoms';
@@ -49,7 +49,7 @@ type NetworkPageHeaderProps = (
   onChangeSearchQuery?: (newSearchQuery: string) => void;
 };
 
-const userFilters: Option<TeamRole | Role | UserTagType>[] = [
+const userFilters: Option<TeamRole | Role | UserTag>[] = [
   { label: 'Lead PI', value: 'Lead PI (Core Leadership)' },
   { label: 'Co-PI', value: 'Co-PI (Core Leadership)' },
   { label: 'Project Manager', value: 'Project Manager' },

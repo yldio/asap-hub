@@ -141,6 +141,8 @@ jobs:
         with:
           cache-prefix: ${{ steps.setup.outputs.cache-prefix-definitions }}
           environment-name: ${{ inputs.environment-name }}
+      - run: |
+          yarn check:packages
       - name: Build
         env:
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}

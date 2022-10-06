@@ -24,10 +24,11 @@ export default class Labs implements LabsController {
       .join(' and ');
 
     const { queryLabsContentsWithTotal } =
-      await this.squidexGraphQlClient.request<FetchLabsQuery, unknown>(
-        FETCH_LABS,
-        { filter: queryFilter, top: take, skip },
-      );
+      await this.squidexGraphQlClient.request<FetchLabsQuery>(FETCH_LABS, {
+        filter: queryFilter,
+        top: take,
+        skip,
+      });
     if (queryLabsContentsWithTotal === null) {
       return {
         total: 0,

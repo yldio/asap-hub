@@ -37,7 +37,9 @@ type SquidexEntityObject<DataObject> = {
     : { iv: NoUndefined<DataObject[Property]> };
 };
 
-export const parseToSquidex = <T>(object: T): SquidexEntityObject<T> =>
+export const parseToSquidex = <T extends object>(
+  object: T,
+): SquidexEntityObject<T> =>
   Object.entries(object).reduce(
     (acc, [key, value]) =>
       typeof value === 'undefined'

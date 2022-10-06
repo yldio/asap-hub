@@ -17,10 +17,10 @@ export default class Dashboard {
   }
 
   async fetch(): Promise<DashboardResponse> {
-    const { queryDashboardContents } = await this.squidexGraphqlClient.request<
-      FetchDashboardQuery,
-      unknown
-    >(FETCH_DASHBOARD);
+    const { queryDashboardContents } =
+      await this.squidexGraphqlClient.request<FetchDashboardQuery>(
+        FETCH_DASHBOARD,
+      );
     if (
       !queryDashboardContents ||
       queryDashboardContents.length === 0 ||

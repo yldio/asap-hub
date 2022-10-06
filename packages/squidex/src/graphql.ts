@@ -6,7 +6,10 @@ type SquidexRequestOptions = {
   includeDrafts?: boolean;
 };
 export interface SquidexGraphqlClient {
-  request<T, V>(
+  request<
+    T extends { [key: string]: unknown } = { [key: string]: unknown },
+    V extends { [key: string]: unknown } = { [key: string]: unknown },
+  >(
     query: string | DocumentNode,
     variables?: V,
     options?: SquidexRequestOptions,

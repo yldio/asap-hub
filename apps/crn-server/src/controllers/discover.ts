@@ -13,10 +13,10 @@ export default class Discover implements DiscoverController {
   }
 
   async fetch(): Promise<DiscoverResponse> {
-    const { queryDiscoverContents } = await this.squidexGraphqlClient.request<
-      FetchDiscoverQuery,
-      unknown
-    >(FETCH_DISCOVER);
+    const { queryDiscoverContents } =
+      await this.squidexGraphqlClient.request<FetchDiscoverQuery>(
+        FETCH_DISCOVER,
+      );
 
     if (
       !queryDiscoverContents ||

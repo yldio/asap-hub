@@ -97,6 +97,9 @@ export const researchOutputToCSV = (
 export const createCsvFileStream = (fileName: string, csvOptions?: Options) => {
   // If the WritableStream is not available (Firefox, Safari), take it from the ponyfill
   if (!window.WritableStream) {
+    // Upgrading to TS 4.8 complains about this polyfil's types. Hoping we can remove this at some point
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     streamSaver.WritableStream = WritableStream;
   }
   const fileWriter = streamSaver.createWriteStream(fileName).getWriter();

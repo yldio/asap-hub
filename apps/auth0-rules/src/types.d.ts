@@ -4,6 +4,7 @@ declare global {
     APP_DOMAIN: string;
     API_SHARED_SECRET: string;
   };
+  class UnauthorizedError extends Error {}
 }
 
 export type User = {

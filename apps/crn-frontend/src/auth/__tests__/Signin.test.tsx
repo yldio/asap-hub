@@ -122,35 +122,58 @@ describe('when clicking the button', () => {
 describe('after a failed flow', () => {
   let history: History;
   let result!: RenderResult;
-  beforeEach(() => {
-    history = createMemoryHistory({
-      initialEntries: [
-        '/?search&state=state&error=access_denied&error_description=Forbidden',
-      ],
-    });
-    result = render(
-      <Router history={history}>
-        <Signin />
-      </Router>,
-    );
-  });
 
-  it('shows an error message', () => {
-    expect(result.container).toHaveTextContent(/problem/i);
-  });
-
-  describe('when closing the error message', () => {
+  describe('for an unknown error', () => {
     beforeEach(() => {
-      userEvent.click(result.getByText(/close/i));
+      history = createMemoryHistory({
+        initialEntries: [
+          '/?search&state=state&error=access_denied&error_description=Forbidden',
+        ],
+      });
+      result = render(
+        <Router history={history}>
+          <Signin />
+        </Router>,
+      );
     });
 
-    it('hides the error message', () => {
-      expect(result.container).not.toHaveTextContent(/problem/i);
+    it('shows an error message', () => {
+      expect(result.container).toHaveTextContent(/problem with your account/i);
     });
 
-    it('removes related query params', () => {
-      const searchParams = new URLSearchParams(history.location.search);
-      expect([...searchParams.keys()]).toEqual(['search']);
+    describe('when closing the error message', () => {
+      beforeEach(() => {
+        userEvent.click(result.getByText(/close/i));
+      });
+
+      it('hides the error message', () => {
+        expect(result.container).not.toHaveTextContent(/problem/i);
+      });
+
+      it('removes related query params', () => {
+        const searchParams = new URLSearchParams(history.location.search);
+        expect([...searchParams.keys()]).toEqual(['search']);
+      });
+    });
+  });
+
+  describe('for an alumni error', () => {
+    beforeEach(() => {
+      history = createMemoryHistory({
+        initialEntries: [
+          '/?search&state=state&error=access_denied&error_description=alumni-user-access-denied',
+        ],
+      });
+      result = render(
+        <Router history={history}>
+          <Signin />
+        </Router>,
+      );
+    });
+
+    it('shows an error message and contact info', () => {
+      expect(result.container).toHaveTextContent(/Alumni user/i);
+      expect(result.container).toHaveTextContent(/for further assistance/i);
     });
   });
 });

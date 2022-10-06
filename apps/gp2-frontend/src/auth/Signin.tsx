@@ -36,7 +36,11 @@ const Signin: React.FC<Record<string, never>> = () => {
       <UtilityBar>
         <WelcomePage
           onClick={signin}
-          authFailed={searchParams.has('state') && searchParams.has('error')}
+          authFailed={
+            searchParams.has('state') && searchParams.has('error')
+              ? 'invalid'
+              : undefined
+          }
           onCloseAuthFailedToast={() => {
             const newSearchParams = new URLSearchParams(
               history.location.search,

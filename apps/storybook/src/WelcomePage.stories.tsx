@@ -16,7 +16,7 @@ export const AllowSignup = () => (
 export const AuthError = () => (
   <WelcomePage
     onClick={action('sign-in-click')}
-    authFailed
+    authFailed={'invalid'}
     onCloseAuthFailedToast={action('close-auth-failed-toast-click')}
   />
 );

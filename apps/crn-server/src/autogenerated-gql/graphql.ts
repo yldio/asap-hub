@@ -11727,54 +11727,8 @@ export const FetchDiscoverDocument = {
                           kind: 'SelectionSet',
                           selections: [
                             {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'created' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'flatData' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'title' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'shortText' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'text' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'thumbnail' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'link' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'linkText' },
-                                  },
-                                ],
-                              },
+                              kind: 'FragmentSpread',
+                              name: { kind: 'Name', value: 'TutorialsContent' },
                             },
                           ],
                         },
@@ -12025,6 +11979,7 @@ export const FetchDiscoverDocument = {
         ],
       },
     },
+    ...TutorialsContentFragmentDoc.definitions,
     ...NewsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchDiscoverQuery, FetchDiscoverQueryVariables>;

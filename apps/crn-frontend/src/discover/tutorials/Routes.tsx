@@ -7,7 +7,7 @@ const loadTutorial = () =>
   import(/* webpackChunkName: "tutorials-details-page" */ './Tutorial');
 const TutorialDetailsPage = lazy(loadTutorial);
 
-const News: FC<Record<string, never>> = () => {
+const Tutorial: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
   useEffect(() => {
     loadTutorial();
@@ -24,4 +24,4 @@ const News: FC<Record<string, never>> = () => {
   );
 };
 
-export default News;
+export default Tutorial;

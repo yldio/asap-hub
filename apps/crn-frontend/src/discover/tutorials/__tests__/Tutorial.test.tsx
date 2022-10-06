@@ -57,7 +57,7 @@ const renderPage = async () => {
   return result;
 };
 
-describe('news detail page', () => {
+describe('Tutorial detail page', () => {
   beforeEach(() => {
     mockGetTutorialById.mockClear();
   });

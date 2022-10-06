@@ -1,21 +1,21 @@
 import { NotFoundPage, NewsDetailsPage } from '@asap-hub/react-components';
-import { news as newsRoute, useRouteParams } from '@asap-hub/routing';
+import { tutorials as tutorialsRoute, useRouteParams } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
 
 import { useTutorialById } from './state';
 
 const Tutorial: React.FC<Record<string, never>> = () => {
-  const { articleId } = useRouteParams(newsRoute({}).article);
+  const { articleId } = useRouteParams(tutorialsRoute({}).article);
 
-  const news = useTutorialById(articleId);
+  const tutorial = useTutorialById(articleId);
 
-  if (news) {
+  if (tutorial) {
     const props = {
-      ...news,
-      text: news.text || '',
+      ...tutorial,
+      text: tutorial.text || '',
     };
     return (
-      <Frame title={news.title}>
+      <Frame title={tutorial.title}>
         <NewsDetailsPage {...props} />
       </Frame>
     );

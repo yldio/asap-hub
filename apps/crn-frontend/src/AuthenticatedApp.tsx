@@ -29,7 +29,7 @@ const loadDashboard = () =>
 const loadDiscover = () =>
   import(/* webpackChunkName: "discover" */ './discover/Routes');
 const loadDiscoverTutorials = () =>
-  import(/* webpackChunkName: "news" */ './discover/tutorials/Routes');
+  import(/* webpackChunkName: "tutorials" */ './discover/tutorials/Routes');
 const loadEvents = () =>
   import(/* webpackChunkName: "events" */ './events/Events');
 const News = lazy(loadNews);

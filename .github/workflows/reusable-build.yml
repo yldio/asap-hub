@@ -145,6 +145,8 @@ jobs:
           yarn check:packages
       - name: Build
         env:
+          CRN_AUTH_FRONTEND_BASE_URL: '${{ steps.setup.outputs.crn-auth-url}}'
+          GP2_AUTH_FRONTEND_BASE_URL: '${{ steps.setup.outputs.gp2-auth-url}}'
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           REACT_APP_ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
           REACT_APP_API_BASE_URL: ${{ steps.setup.outputs.crn-api-url }}

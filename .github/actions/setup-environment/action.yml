@@ -26,6 +26,9 @@ outputs:
   crn-app-url:
     description: 'CRN APP Url'
     value: ${{ steps.vars.outputs.crn-app-url }}
+  crn-auth-url:
+    description: 'CRN Auth Url'
+    value: ${{ steps.vars.outputs.crn-auth-url }}
   crn-auth0-audience:
     description: 'CRN Auth0 Audience'
     value: ${{ steps.vars.outputs.crn-auth0-audience }}
@@ -71,6 +74,9 @@ outputs:
   gp2-app-url:
     description: 'GP2 APP Url'
     value: ${{ steps.vars.outputs.gp2-app-url }}
+  gp2-auth-url:
+    description: 'GP2 Auth Url'
+    value: ${{ steps.vars.outputs.gp2-auth-url }}
   gp2-aws-acm-certificate-arn:
     description: 'GP2 AWS ACM Certificate ARN'
     value: ${{ steps.vars.outputs.gp2-aws-acm-certificate-arn }}

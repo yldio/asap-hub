@@ -3,7 +3,11 @@ import { ListResponse } from '../common';
 const projectStatus = ['Active', 'Inactive', 'Completed'] as const;
 export type ProjectStatus = typeof projectStatus[number];
 
-const projectMilestoneStatus = ['Active', 'Not Started', 'Completed'] as const;
+export const projectMilestoneStatus = [
+  'Active',
+  'Not Started',
+  'Completed',
+] as const;
 export type ProjectMilestoneStatus = typeof projectMilestoneStatus[number];
 
 export type ProjectMember = {

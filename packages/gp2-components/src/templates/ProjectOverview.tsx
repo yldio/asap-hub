@@ -68,7 +68,9 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
       </Card>
       <Card>
         <Headline3 noMargin>Keywords</Headline3>
-        <TagList tags={keywords} />
+        <div css={css({ paddingTop: rem(24) })}>
+          <TagList tags={keywords} />
+        </div>
       </Card>
     </div>
     <Card>

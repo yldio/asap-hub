@@ -84,7 +84,10 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
   });
 
   return {
-    request: async <T extends { [key: string]: any }, V>(
+    request: async <
+      T extends { [key: string]: any } = { [key: string]: any },
+      V extends { [key: string]: any } = { [key: string]: any },
+    >(
       query: string | DocumentNode,
       variables?: V,
     ): Promise<T> => {

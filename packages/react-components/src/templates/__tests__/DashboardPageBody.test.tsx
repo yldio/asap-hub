@@ -31,7 +31,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   upcomingEvents: undefined,
   recentSharedOutputs: createListResearchOutputResponse(5),
 };
-it('renders first news card', () => {
+it('renders multiple news cards', () => {
   render(
     <DashboardPageBody
       {...props}
@@ -42,6 +42,12 @@ it('renders first news card', () => {
           title: 'News Title 1',
           type: 'News',
         },
+        {
+          id: '55724942-3408-4ad6-9a73-14b92226ffb77',
+          created: '2020-09-07T17:36:54Z',
+          title: 'Tutorial Title 1',
+          type: 'Tutorial',
+        },
       ]}
     />,
   );
@@ -49,7 +55,7 @@ it('renders first news card', () => {
     screen
       .queryAllByText(/title/i, { selector: 'h4' })
       .map(({ textContent }) => textContent),
-  ).toEqual(['News Title 1']);
+  ).toEqual(['News Title 1', 'Tutorial Title 1']);
 });
 
 it('renders news section when there are no news', () => {

@@ -65,7 +65,7 @@ it('renders dashboard header', async () => {
   expect(await screen.findByText(/welcome/i, { selector: 'h1' })).toBeVisible();
 });
 
-it('renders dashboard with first news', async () => {
+it('renders dashboard with news', async () => {
   mockGetDashboard.mockResolvedValue({
     news: [
       {
@@ -88,7 +88,7 @@ it('renders dashboard with first news', async () => {
     firstName: 'John',
   });
   expect(await screen.findByText(/john/i, { selector: 'h1' })).toBeVisible();
-  expect(screen.queryAllByText(/title/i, { selector: 'h4' }).length).toBe(1);
+  expect(screen.queryAllByText(/title/i, { selector: 'h4' }).length).toBe(2);
   expect(
     screen.getAllByText(/title/i, { selector: 'h4' }).at(0)?.textContent,
   ).toEqual('News Title');

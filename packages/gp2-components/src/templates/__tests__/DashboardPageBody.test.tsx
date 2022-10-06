@@ -24,13 +24,13 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   teamId: '1337',
 };
 
-it('renders pages cards and the first news card', () => {
+it('renders multiple news cards', () => {
   render(<DashboardPageBody {...props} />);
   expect(
     screen
       .queryAllByText(/title/i, { selector: 'h4' })
       .map(({ textContent }) => textContent),
-  ).toEqual(['Page 1 title', 'Page 2 title', 'News Title']);
+  ).toEqual(['Page 1 title', 'Page 2 title', 'News Title', 'Tutorial Title']);
 });
 
 it('renders news section when there are no news', () => {
@@ -49,5 +49,6 @@ it('renders news section when there are no pages', () => {
   ).not.toBeInTheDocument();
   expect(screen.getByText('Latest News from ASAP')).toBeVisible();
   expect(screen.getByText('News Title')).toBeVisible();
+  expect(screen.getByText('Tutorial Title')).toBeVisible();
   expect(screen.getByText('View All →', { selector: 'a' })).toBeVisible();
 });

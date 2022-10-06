@@ -173,7 +173,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
       {news.length ? (
         <div>
           <NewsSection
-            news={[news[0]]}
+            news={news}
             title="Latest News from ASAP"
             subtitle="Explore the latest shared research and learn more about them."
           />

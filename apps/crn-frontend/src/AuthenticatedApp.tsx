@@ -8,6 +8,7 @@ import {
   discover,
   sharedResearch,
   news,
+  tutorials,
   events,
   dashboard,
 } from '@asap-hub/routing';
@@ -27,6 +28,8 @@ const loadDashboard = () =>
   import(/* webpackChunkName: "dashboard" */ './dashboard/Dashboard');
 const loadDiscover = () =>
   import(/* webpackChunkName: "discover" */ './discover/Routes');
+const loadDiscoverTutorials = () =>
+  import(/* webpackChunkName: "news" */ './discover/tutorials/Routes');
 const loadEvents = () =>
   import(/* webpackChunkName: "events" */ './events/Events');
 const News = lazy(loadNews);
@@ -34,6 +37,7 @@ const Network = lazy(loadNetwork);
 const SharedResearch = lazy(loadSharedResearch);
 const Dashboard = lazy(loadDashboard);
 const Discover = lazy(loadDiscover);
+const DiscoverTutorials = lazy(loadDiscoverTutorials);
 const Events = lazy(loadEvents);
 
 const AuthenticatedApp: FC<Record<string, never>> = () => {
@@ -52,6 +56,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
       .then(loadNetwork)
       .then(loadSharedResearch)
       .then(loadDiscover)
+      .then(loadDiscoverTutorials)
       .then(loadEvents);
   }, []);
 
@@ -93,6 +98,11 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
               <Route path={discover.template}>
                 <Frame title="Discover ASAP">
                   <Discover />
+                </Frame>
+              </Route>
+              <Route path={tutorials.template}>
+                <Frame title="Tutorials">
+                  <DiscoverTutorials />
                 </Frame>
               </Route>
               <Route path={news.template}>

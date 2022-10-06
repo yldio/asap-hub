@@ -23,8 +23,8 @@ const richTextContainer = css({
 
 type NewsDetailsPageProps = Pick<
   NewsResponse,
-  'text' | 'title' | 'type' | 'created' | 'link' | 'linkText'
->;
+  'text' | 'title' | 'created' | 'link' | 'linkText'
+> & { type?: string };
 
 const NewsDetailsPage: React.FC<NewsDetailsPageProps> = ({
   text = '',

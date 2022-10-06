@@ -19,7 +19,6 @@ import {
   RestPage,
   RestResearchOutput,
   RestTeam,
-  RestTutorials,
   RestUser,
   SquidexGraphql,
   SquidexRest,
@@ -135,14 +134,6 @@ export const appFactory = (libs: Libs = {}): Express => {
     appName,
     baseUrl,
   });
-  const tutorialsRestClient = new SquidexRest<RestTutorials, InputUser>(
-    getAuthToken,
-    'tutorials',
-    {
-      appName,
-      baseUrl,
-    },
-  );
   const userRestClient = new SquidexRest<RestUser, InputUser>(
     getAuthToken,
     'users',
@@ -187,7 +178,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     new TeamSquidexDataProvider(squidexGraphqlClient, teamRestClient);
   const tutorialsDataProvider =
     libs.tutorialsDataProvider ||
-    new TutorialsSquidexDataProvider(squidexGraphqlClient, tutorialsRestClient);
+    new TutorialsSquidexDataProvider(squidexGraphqlClient);
   const userDataProvider =
     libs.userDataProvider ||
     new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);

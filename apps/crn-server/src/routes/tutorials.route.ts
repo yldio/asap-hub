@@ -1,19 +1,19 @@
 import { Router } from 'express';
 import { TutorialsController } from '../controllers/tutorials';
-import { validateNewsParameters } from '../validation/news.validation';
+import { validateTutorialParameters } from '../validation/tutorial.validation';
 
 export const tutorialsRouteFactory = (
   tutorialsController: TutorialsController,
 ): Router => {
   const tutorialsRoutes = Router();
 
-  tutorialsRoutes.get<{ tutorialsId: string }>(
-    '/tutorials/:tutorialsId',
+  tutorialsRoutes.get<{ tutorialId: string }>(
+    '/tutorials/:tutorialId',
     async (req, res) => {
       const { params } = req;
-      const { newsId } = validateNewsParameters(params);
-
-      const result = await tutorialsController.fetchById(newsId);
+      const { tutorialId } = validateTutorialParameters(params);
+      console.log('tutorialId', tutorialId);
+      const result = await tutorialsController.fetchById(tutorialId);
 
       res.json(result);
     },

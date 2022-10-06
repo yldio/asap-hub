@@ -1,6 +1,5 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { render } from '@testing-library/react';
-import { ExternalAuthorResponse } from '@asap-hub/model';
 import { createUserResponse } from '@asap-hub/fixtures';
 
 import UsersList from '../UsersList';
@@ -31,7 +30,7 @@ it('falls back to a placeholder icon for an external user', () => {
         {
           id: 'external-author-1',
           displayName: 'John Doe',
-        } as ExternalAuthorResponse,
+        },
       ]}
     />,
   );
@@ -47,7 +46,7 @@ it('does not link external users', () => {
         {
           id: 'external-author-1',
           displayName: 'John Doe',
-        } as ExternalAuthorResponse,
+        },
       ]}
     />,
   );
@@ -61,7 +60,6 @@ describe('alumni badge', () => {
         max={1}
         users={Array.from({ length: 1 }).map(() => ({
           ...createUserResponse(),
-          displayName: 'John Doe',
           alumniSinceDate: new Date(2021, 6, 12, 14, 32).toISOString(),
         }))}
       />,
@@ -74,22 +72,19 @@ describe('alumni badge', () => {
         max={1}
         users={Array.from({ length: 1 }).map(() => ({
           ...createUserResponse(),
-          displayName: 'John Do',
         }))}
       />,
     );
     expect(queryByText('Alumni Badge')).not.toBeInTheDocument();
   });
-  it('does not show alumni badge for external users', () => {
+  it('does not show alumni badge for external authors', () => {
     const { queryByText } = render(
       <UsersList
         max={1}
-        users={Array.from({ length: 1 }).map(
-          () =>
-            ({
-              displayName: 'John Do',
-            } as ExternalAuthorResponse),
-        )}
+        users={Array.from({ length: 1 }).map(() => ({
+          id: 'external-author-1',
+          displayName: 'John Doe',
+        }))}
       />,
     );
     expect(queryByText('Alumni Badge')).not.toBeInTheDocument();
@@ -101,12 +96,10 @@ describe('maximum users', () => {
     const { getAllByRole, getByText } = render(
       <UsersList
         max={3}
-        users={Array.from({ length: 5 }).map(
-          () =>
-            ({
-              displayName: 'John Doe',
-            } as ExternalAuthorResponse),
-        )}
+        users={Array.from({ length: 5 }).map(() => ({
+          id: 'external-author-1',
+          displayName: 'John Doe',
+        }))}
       />,
     );
     expect(getAllByRole('listitem').length).toEqual(4);
@@ -116,12 +109,10 @@ describe('maximum users', () => {
     const { getAllByRole } = render(
       <UsersList
         max={3}
-        users={Array.from({ length: 3 }).map(
-          () =>
-            ({
-              displayName: 'John Doe',
-            } as ExternalAuthorResponse),
-        )}
+        users={Array.from({ length: 3 }).map(() => ({
+          id: 'external-author-1',
+          displayName: 'John Doe',
+        }))}
       />,
     );
     expect(getAllByRole('listitem').length).toEqual(3);

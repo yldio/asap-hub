@@ -14,6 +14,9 @@ on:
       CRN_SQUIDEX_CI_CLIENT_SECRET:
         description: 'CRN Squidex Client Secret'
         required: true
+      CONTENTFUL_MANAGEMENT_TOKEN:
+        description: 'Contentful management token'
+        required: true
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -47,7 +50,7 @@ jobs:
         run: |
           yarn workspace @asap-hub/contentful space:migrate:crn
         env:
-          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: 'Guess'
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: '5v6w5j61tndm'
           CONTENTFUL_ENV_ID: 'Development'
 

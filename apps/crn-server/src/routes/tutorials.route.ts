@@ -10,9 +10,7 @@ export const tutorialsRouteFactory = (
   tutorialsRoutes.get<{ tutorialId: string }>(
     '/tutorials/:tutorialId',
     async (req, res) => {
-      const { params } = req;
-      const { tutorialId } = validateTutorialParameters(params);
-      console.log('tutorialId', tutorialId);
+      const { tutorialId } = validateTutorialParameters(req.params);
       const result = await tutorialsController.fetchById(tutorialId);
 
       res.json(result);

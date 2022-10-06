@@ -6,5 +6,9 @@ export const permissionHandler: RequestHandler = async (req, _res, next) => {
     throw Boom.forbidden('User is not onboarded');
   }
 
+  if (req.loggedInUser.alumniSinceDate) {
+    throw Boom.forbidden('User is an alumni');
+  }
+
   next();
 };

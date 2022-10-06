@@ -8,15 +8,28 @@ import { permissionHandler } from '../../src/middleware/permission-handler';
 import { listGroupsResponse } from '../fixtures/groups.fixtures';
 import { pageResponse } from '../fixtures/page.fixtures';
 import { getUserResponse } from '../fixtures/users.fixtures';
+import { calendarControllerMock } from '../mocks/calendar-controller.mock';
+import { dashboardControllerMock } from '../mocks/dashboard-controller.mock';
+import { discoverControllerMock } from '../mocks/discover-controller.mock';
 import { groupControllerMock } from '../mocks/group-controller.mock';
+import { newsControllerMock } from '../mocks/news-controller.mock';
 import { pageControllerMock } from '../mocks/page-controller.mock';
+import { researchOutputControllerMock } from '../mocks/research-outputs-controller.mock';
+import { researchTagControllerMock } from '../mocks/research-tags-controller.mock';
+import { teamControllerMock } from '../mocks/team-controller.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
+import { labControllerMock } from '../mocks/lab-controller.mock';
+import { reminderControllerMock } from '../mocks/reminder-controller.mock';
 
 describe('Permission middleware', () => {
   const mockUser = createUserResponse();
   const nonOnboardedUserMock: UserResponse = {
     ...mockUser,
     onboarded: false,
+  };
+  const alumniUser: UserResponse = {
+    ...mockUser,
+    alumniSinceDate: '2020-01-01',
   };
   const userMockFactory = jest.fn<UserResponse | undefined, []>();
   const authHandlerMock: AuthHandler = (req, _res, next) => {
@@ -36,6 +49,15 @@ describe('Permission middleware', () => {
     groupController: groupControllerMock,
     userController: userControllerMock,
     pageController: pageControllerMock,
+    teamController: teamControllerMock,
+    researchTagController: researchTagControllerMock,
+    researchOutputController: researchOutputControllerMock,
+    calendarController: calendarControllerMock,
+    dashboardController: dashboardControllerMock,
+    discoverController: discoverControllerMock,
+    labsController: labControllerMock,
+    newsController: newsControllerMock,
+    reminderController: reminderControllerMock,
     authHandler: authHandlerMock,
     mockRequestHandlers: [mockRoutes],
   });
@@ -54,6 +76,16 @@ describe('Permission middleware', () => {
 
     test('Should deny access for non-onboarded users', async () => {
       userMockFactory.mockReturnValueOnce(nonOnboardedUserMock);
+
+      const response = await supertest(appWithMockedAuth).get(
+        '/route-with-permission-middleware',
+      );
+
+      expect(response.status).toBe(403);
+    });
+
+    test('Should deny access for alumnis', async () => {
+      userMockFactory.mockReturnValueOnce(alumniUser);
 
       const response = await supertest(appWithMockedAuth).get(
         '/route-with-permission-middleware',
@@ -148,6 +180,38 @@ describe('Permission middleware', () => {
           expect(response.status).toBe(200);
         });
       });
+    });
+
+    describe('Alumnis', () => {
+      beforeEach(() => {
+        userMockFactory.mockReturnValueOnce(alumniUser);
+      });
+
+      test.each`
+        endpoint                   | access
+        ${'calendars'}             | ${'deny'}
+        ${'dashboard'}             | ${'deny'}
+        ${'discover'}              | ${'deny'}
+        ${'groups'}                | ${'deny'}
+        ${'labs'}                  | ${'deny'}
+        ${'news'}                  | ${'deny'}
+        ${'pages/some-other-page'} | ${'allow'}
+        ${'reminders'}             | ${'deny'}
+        ${'reminders'}             | ${'deny'}
+        ${'research-outputs'}      | ${'deny'}
+        ${'research-tags'}         | ${'deny'}
+        ${'teams'}                 | ${'deny'}
+        ${'users'}                 | ${'deny'}
+      `(
+        'Should $access access to /$endpoint endpoint',
+        async ({ endpoint, access }) => {
+          const response = await supertest(appWithMockedAuth).get(
+            `/${endpoint}`,
+          );
+
+          expect(response.status).toBe(access === 'allow' ? 200 : 403);
+        },
+      );
     });
   });
 });

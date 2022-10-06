@@ -50,7 +50,7 @@ jobs:
         run: |
           yarn workspace @asap-hub/contentful space:migrate:crn
         env:
-          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: 'Not the real secret'
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: 'Guess'
           CONTENTFUL_SPACE_ID: '5v6w5j61tndm'
           CONTENTFUL_ENV_ID: 'Development'
 

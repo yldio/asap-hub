@@ -215,11 +215,11 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Synchronize Contentful
         run: |
-          yarn workspace @asap-hub/contentful space:import:crn --management-token=$CONTENTFUL_MANAGEMENT_TOKEN
+          yarn workspace @asap-hub/contentful space:migrate:crn
         env:
-          CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
-          CONTENTFUL_ENVIRONMENT: ${{ steps.setup.outputs.contentful-environment }}
+          CONTENTFUL_ENV_ID: ${{ steps.setup.outputs.contentful-environment }}
   ses:
     needs: [crn-sls-deploy]
     runs-on: ubuntu-latest

@@ -7,8 +7,8 @@ type SquidexRequestOptions = {
 };
 export interface SquidexGraphqlClient {
   request<
-    T extends { [key: string]: any } = { [key: string]: any },
-    V extends { [key: string]: any } = { [key: string]: any },
+    T extends { [key: string]: unknown } = { [key: string]: unknown },
+    V extends { [key: string]: unknown } = { [key: string]: unknown },
   >(
     query: string | DocumentNode,
     variables?: V,
